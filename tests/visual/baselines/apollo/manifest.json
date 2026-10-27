@@ -3239,6 +3239,411 @@
       "capturedAt": "2026-10-27T03:56:30.106Z",
       "reviewedAt": "2026-10-27T03:58:54.254Z",
       "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "tag/basic__light__mobile": {
+      "sha256": "84e616f249ce379b6e0910b10076820e2d19bd3451f57473f24c320cf7f491e9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:05:48.147Z",
+      "reviewedAt": "2026-10-27T06:11:37.791Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/basic__light__tablet": {
+      "sha256": "4919c7b9b71821dede8ea45d3a38eef171e9df997276aab722605c3e0183f9cc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:05:50.158Z",
+      "reviewedAt": "2026-10-27T06:11:37.793Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/basic__light__desktop": {
+      "sha256": "32e2b1d6cbee13d7a537d6f3ba07fcf0f8b80f5d3c298c1a7f12212171410270",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:05:52.196Z",
+      "reviewedAt": "2026-10-27T06:11:37.793Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/colors__light__mobile": {
+      "sha256": "c51e086c1ca3ebb06b997a82e8f9db1d237c4a255f1241fca065f4a329f5a598",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:05:54.461Z",
+      "reviewedAt": "2026-10-27T06:11:37.794Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/colors__light__tablet": {
+      "sha256": "0854cade1c3b65387852b97ab060797bd1f4e202d98c34e5fd0bed255a93f06e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:05:56.921Z",
+      "reviewedAt": "2026-10-27T06:11:37.794Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/colors__light__desktop": {
+      "sha256": "f2f06d5222840d84cc2804fac6d57f31052cd3f823d38094492475dbf844ce84",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:05:59.181Z",
+      "reviewedAt": "2026-10-27T06:11:37.794Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/complete-content__light__mobile": {
+      "sha256": "f7aecb50a04f745a05ea7dc51c30429b64c8d5285d4055c9321093098629bf9e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:01.404Z",
+      "reviewedAt": "2026-10-27T06:11:37.795Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/complete-content__light__tablet": {
+      "sha256": "84c5b18db449f017847a5c31ddc78b43aacd8876baac1d45d75389b6ed595d86",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:03.484Z",
+      "reviewedAt": "2026-10-27T06:11:37.795Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/complete-content__light__desktop": {
+      "sha256": "e8c8b7a14918898dcc4cb0b7bdf3ba0583b1a76cff6f96e6389428f012c68136",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:05.580Z",
+      "reviewedAt": "2026-10-27T06:11:37.796Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/close-action__light__mobile": {
+      "sha256": "f0a4d418dcf994a355aa4518eeafbf59627029378db2727419a7741585ab3af1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:07.611Z",
+      "reviewedAt": "2026-10-27T06:11:37.796Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/close-action__light__tablet": {
+      "sha256": "48546648788eea31dd2f712dd47c225e51788038cb5dc3e617bd5cf089fab1d8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:09.689Z",
+      "reviewedAt": "2026-10-27T06:11:37.796Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/close-action__light__desktop": {
+      "sha256": "41e8339e3026c88d87df24d152d82a29aeb83bd6a92bbb4224921e414f02fc1c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:11.730Z",
+      "reviewedAt": "2026-10-27T06:11:37.797Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/close-canceled__light__mobile": {
+      "sha256": "55fc3e28aff804204fc750b56e56e7a086fbbf58b3266f5d614a645e1ff76de6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:13.756Z",
+      "reviewedAt": "2026-10-27T06:11:37.797Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/close-canceled__light__tablet": {
+      "sha256": "24384c9571049e226b10f03fa736b02f6ec44804d6525fb20d7f777919985910",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:15.800Z",
+      "reviewedAt": "2026-10-27T06:11:37.798Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/close-canceled__light__desktop": {
+      "sha256": "b3053fe2809bd55b8d38269bd0dba8a4762e452f3bd3f392b318575f8c273144",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:17.910Z",
+      "reviewedAt": "2026-10-27T06:11:37.798Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/checkable__light__mobile": {
+      "sha256": "2e36bbf801a68cf133fff37b2b79e65c84a5acef127cf3d96803b501d1521d95",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:19.918Z",
+      "reviewedAt": "2026-10-27T06:11:37.798Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/checkable__light__tablet": {
+      "sha256": "80029e5ee87b0236abd41925e41d8f61b475ba019d9c11f873b39ec6703adab6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:21.947Z",
+      "reviewedAt": "2026-10-27T06:11:37.799Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/checkable__light__desktop": {
+      "sha256": "f791eeaef0f22584f1048063b36b754c3a955fca51f1ff337bc2c551b4e7cb9b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:23.969Z",
+      "reviewedAt": "2026-10-27T06:11:37.799Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/group-models__light__mobile": {
+      "sha256": "2d3d71d4c095c8b17333be856834ce669ea53d644a1b142fca7682c764bb91d4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:26.067Z",
+      "reviewedAt": "2026-10-27T06:11:37.799Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/group-models__light__tablet": {
+      "sha256": "2ff4c86c2dd921f2f5b0c930fc9927e06d8bfced8c0dfa61671513eb854caafb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:28.148Z",
+      "reviewedAt": "2026-10-27T06:11:37.800Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/group-models__light__desktop": {
+      "sha256": "1cadefdf56ecb28837dfd6ff3a5895d8564838fe64771847a7ba83b38d6de75d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:30.269Z",
+      "reviewedAt": "2026-10-27T06:11:37.801Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/disabled__light__mobile": {
+      "sha256": "412508fae737bdaf082d60e968d37000626d113f47ad108af5003479f2b73a8e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:32.286Z",
+      "reviewedAt": "2026-10-27T06:11:37.802Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/disabled__light__tablet": {
+      "sha256": "09adf6d9dc4305e29b798a7c11ab23826b4234acbfb9158fff6b0ac43f4ec365",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:34.265Z",
+      "reviewedAt": "2026-10-27T06:11:37.802Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/disabled__light__desktop": {
+      "sha256": "7926b6928053aa371fc9d0b1ea45bf8c5252f7099f026c623d0b293984eeac85",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:36.307Z",
+      "reviewedAt": "2026-10-27T06:11:37.803Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/semantic__light__mobile": {
+      "sha256": "d0ba9327afe47d8045a167ddfa276d7624f1ebe2e118bded8bf23baa736e1225",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:38.446Z",
+      "reviewedAt": "2026-10-27T06:11:37.803Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/semantic__light__tablet": {
+      "sha256": "0a58f0b3e2da98d62bca51be7b2441ac8e3883e31b53d3549c17cd39d6423425",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:40.911Z",
+      "reviewedAt": "2026-10-27T06:11:37.804Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/semantic__light__desktop": {
+      "sha256": "6d3e3c46faaf44f6c9b2bcb9ae983bb48fecaef968dca77444e65ae198c80d83",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:43.244Z",
+      "reviewedAt": "2026-10-27T06:11:37.804Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/current-provider__light__mobile": {
+      "sha256": "066a9aa69a02027d7b5e9a80fe8a3d1e0549e6974457b26ed580770352330c7c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:45.911Z",
+      "reviewedAt": "2026-10-27T06:11:37.805Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/current-provider__light__tablet": {
+      "sha256": "07f8be761cef6ccf63488492addb231a998a5d156dc6a6cb305837fb33f0e1a8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:48.473Z",
+      "reviewedAt": "2026-10-27T06:11:37.806Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/current-provider__light__desktop": {
+      "sha256": "5ed67e5c5b180a89f61b5310cbd3e60ad3e6905d11ee2e7a0e567fa324ee6a6f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:50.900Z",
+      "reviewedAt": "2026-10-27T06:11:37.807Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/rtl__light__mobile": {
+      "sha256": "1cdd85adbf29d1e68dac7c7ba144a976adccd28aace60f77b12fefa0e7c91c2a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:53.062Z",
+      "reviewedAt": "2026-10-27T06:11:37.808Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/rtl__light__tablet": {
+      "sha256": "2c87fc7e493c21a0091ea69d8af98113372c517e043cd5c6fde31447bd41e9b4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:55.193Z",
+      "reviewedAt": "2026-10-27T06:11:37.809Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/rtl__light__desktop": {
+      "sha256": "f49c81503463ade482aae90debd0f9f05f59dc67c229a003b77cb8ea1b111856",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:57.350Z",
+      "reviewedAt": "2026-10-27T06:11:37.810Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/theme-dark__light__mobile": {
+      "sha256": "abb3e8996a30359dbd7a1a15fc8c07dfa7721875a08b43cb66ca472d5effc9e3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:06:59.462Z",
+      "reviewedAt": "2026-10-27T06:11:37.810Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/theme-dark__light__tablet": {
+      "sha256": "2cd3b719312c4c8ee0dfef3f5942a984b62b98651959658230ca4fceb3a7204b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:07:01.595Z",
+      "reviewedAt": "2026-10-27T06:11:37.811Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/theme-dark__light__desktop": {
+      "sha256": "2a16f5ef194bae373ff99d38750caed5d2106db37d6b86455b9d238ccf5d4ad2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:07:03.705Z",
+      "reviewedAt": "2026-10-27T06:11:37.814Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/theme-compact__light__mobile": {
+      "sha256": "3ef7c86dd1187dffef9fc4c267ffdc8dce918a1deed69def48f38fdb487ce4db",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:07:05.818Z",
+      "reviewedAt": "2026-10-27T06:11:37.814Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/theme-compact__light__tablet": {
+      "sha256": "35f75798d700f07ada82caa63a7ed0f50bd5be2801ec193db3a6a1b18c7fa8ea",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:07:07.918Z",
+      "reviewedAt": "2026-10-27T06:11:37.814Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/theme-compact__light__desktop": {
+      "sha256": "9eb2594d0d5c4aa7e1661eb5de28cf816d684fcdc4ea111150453b8fe4cdbc10",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:07:10.048Z",
+      "reviewedAt": "2026-10-27T06:11:37.815Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/theme-dark-compact__light__mobile": {
+      "sha256": "d5c298d90cc9ef0303f6d199978a3d173778b933a52f8546522ebdd12fc7bd46",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:07:12.155Z",
+      "reviewedAt": "2026-10-27T06:11:37.815Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/theme-dark-compact__light__tablet": {
+      "sha256": "865bd2c14b4643ed285f60a380ca3d4015acc2863a7c111c9f26575a0872d3ed",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:07:14.285Z",
+      "reviewedAt": "2026-10-27T06:11:37.816Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/theme-dark-compact__light__desktop": {
+      "sha256": "a142cb28b1f5bcf4847c1987f5121a829a800efc4fb6bfdd419b4e18a32ad93a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:07:16.397Z",
+      "reviewedAt": "2026-10-27T06:11:37.817Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/native-focus__light__mobile": {
+      "sha256": "b9ceb86f217e77fd0173073a9d062bd8befed080f241f929c1ba673f249ee2ee",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:07:18.471Z",
+      "reviewedAt": "2026-10-27T06:11:37.819Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/native-focus__light__tablet": {
+      "sha256": "fbf321ba4fef3b55d8cbc35f69902d87d0b490f70e4d7f57874e32abfaafeb7e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:07:20.531Z",
+      "reviewedAt": "2026-10-27T06:11:37.819Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "tag/native-focus__light__desktop": {
+      "sha256": "2b1f26d5045c29d29ef29c4a7ecb6d22729a319ead5665a7b5a32c3d1c4cb271",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "dirty": false,
+      "capturedAt": "2026-10-27T06:07:22.629Z",
+      "reviewedAt": "2026-10-27T06:11:37.820Z",
+      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
     }
   }
 }

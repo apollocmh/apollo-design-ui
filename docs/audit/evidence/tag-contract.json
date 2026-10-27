@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "7a3db0489c78df2a936548888c0881d29fed2989",
-  "status": "grouped-implementation-verified-pending-clean-visual-and-final-docs-acceptance",
+  "status": "accepted-awaiting-authorized-docs-publication",
   "baselineSources": [
     {
       "file": "packages/ui/src/tag/Tag.ts",
@@ -12962,7 +12962,7 @@
           "passed": true
         },
         {
-          "name": "HTML drag events reorder without stale capture",
+          "name": "native browser pointer drag reorders without stale capture",
           "passed": true
         }
       ],
@@ -13212,7 +13212,206 @@
         ],
         "fallbackDocuments": [],
         "errors": []
-      }
+      },
+      "browser": {
+        "base": "http://127.0.0.1:4478/apollo-design-ui",
+        "browser": "150.0.7871.125",
+        "results": [
+          {
+            "demo": "animation",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "animation",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "basic",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "basic",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "checkable",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "checkable",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "colorful",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "colorful",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "component-token",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "component-token",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "control",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "control",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "customize",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "customize",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "disabled",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "disabled",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "draggable",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "draggable",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "icon",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "icon",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "status",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "status",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "style-class",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "style-class",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "name": "actual published add, focused input, model and close",
+            "passed": true
+          },
+          {
+            "name": "actual strong single/multiple Vue models and native keyboard",
+            "passed": true
+          },
+          {
+            "name": "actual current three component Tokens through public Provider",
+            "passed": true
+          },
+          {
+            "name": "actual complete closeIcon slot cancellation and real link attrs",
+            "passed": true
+          },
+          {
+            "name": "physical component document and all twelve actual lazy demo cards",
+            "httpStatus": 200,
+            "passed": true
+          }
+        ],
+        "fallbackDocuments": [],
+        "errors": []
+      },
+      "buildRoutes": 85,
+      "finalPostMinifierGuard": true
     },
     "actualConsumers": {
       "browser": "150.0.7871.125",
@@ -13512,13 +13711,290 @@
       },
       "passed": 457,
       "note": "Tag was129 before the two extra nested activation cases; the current separate Tag run is131. List test helper generic instantiation and ConfigProvider are included."
+    },
+    "unifiedRuntime": {
+      "passed": 1088,
+      "failed": 0,
+      "pending": 0,
+      "groups": {
+        "_internal": 57,
+        "drawer": 87,
+        "config-provider": 115,
+        "listy": 60,
+        "list": 153,
+        "modal": 138,
+        "notification": 98,
+        "select": 152,
+        "tag": 131,
+        "tour": 97
+      },
+      "command": "pnpm exec vitest run packages/ui/src/_internal packages/ui/src/tag packages/ui/src/modal packages/ui/src/drawer packages/ui/src/notification packages/ui/src/tour packages/ui/src/select packages/ui/src/list packages/ui/src/config-provider --project unit --project dom-contract --project a11y --project theme --maxWorkers=1 --no-file-parallelism",
+      "note": "The list path filter also includes Listy;153 List and60 Listy, not213 List."
+    },
+    "visual": {
+      "implementationCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+      "reviewed": 45,
+      "tagRawRGBAExact": 45,
+      "tagRawDifferences": [],
+      "pixelComparison": {
+        "total": 102,
+        "tag": 45,
+        "list": 57,
+        "passed": 102,
+        "diffPixels": 0,
+        "settingsUnchanged": true
+      },
+      "preservedApprovedRecordsAndPngs": 360,
+      "preservedReferences": 13,
+      "listRasterBoundary": {
+        "ids": [
+          "list/loading__light__mobile",
+          "list/loading__light__tablet",
+          "list/loading__light__desktop"
+        ],
+        "rawChangedPixels": [
+          112,
+          104,
+          104
+        ],
+        "maxChannelDifference": [
+          40,
+          30,
+          30
+        ],
+        "pixelmatchDiffPixels": [
+          0,
+          0,
+          0
+        ],
+        "note": "Existing pixelmatch antialias rules and threshold unchanged. No byte-identity claim for these candidates; prior approved files/records remain unchanged.",
+        "bounds": {
+          "mobile": [
+            176,
+            158,
+            199,
+            181
+          ],
+          "tablet": [
+            372,
+            158,
+            395,
+            181
+          ],
+          "desktop": [
+            708,
+            158,
+            731,
+            181
+          ]
+        }
+      },
+      "review": {
+        "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+        "dirty": false,
+        "candidateCount": 102,
+        "all45IndividuallyViewed": true,
+        "reviewed": [
+          {
+            "id": "tag/basic__light__mobile",
+            "sha256": "84e616f249ce379b6e0910b10076820e2d19bd3451f57473f24c320cf7f491e9"
+          },
+          {
+            "id": "tag/basic__light__tablet",
+            "sha256": "4919c7b9b71821dede8ea45d3a38eef171e9df997276aab722605c3e0183f9cc"
+          },
+          {
+            "id": "tag/basic__light__desktop",
+            "sha256": "32e2b1d6cbee13d7a537d6f3ba07fcf0f8b80f5d3c298c1a7f12212171410270"
+          },
+          {
+            "id": "tag/colors__light__mobile",
+            "sha256": "c51e086c1ca3ebb06b997a82e8f9db1d237c4a255f1241fca065f4a329f5a598"
+          },
+          {
+            "id": "tag/colors__light__tablet",
+            "sha256": "0854cade1c3b65387852b97ab060797bd1f4e202d98c34e5fd0bed255a93f06e"
+          },
+          {
+            "id": "tag/colors__light__desktop",
+            "sha256": "f2f06d5222840d84cc2804fac6d57f31052cd3f823d38094492475dbf844ce84"
+          },
+          {
+            "id": "tag/complete-content__light__mobile",
+            "sha256": "f7aecb50a04f745a05ea7dc51c30429b64c8d5285d4055c9321093098629bf9e"
+          },
+          {
+            "id": "tag/complete-content__light__tablet",
+            "sha256": "84c5b18db449f017847a5c31ddc78b43aacd8876baac1d45d75389b6ed595d86"
+          },
+          {
+            "id": "tag/complete-content__light__desktop",
+            "sha256": "e8c8b7a14918898dcc4cb0b7bdf3ba0583b1a76cff6f96e6389428f012c68136"
+          },
+          {
+            "id": "tag/close-action__light__mobile",
+            "sha256": "f0a4d418dcf994a355aa4518eeafbf59627029378db2727419a7741585ab3af1"
+          },
+          {
+            "id": "tag/close-action__light__tablet",
+            "sha256": "48546648788eea31dd2f712dd47c225e51788038cb5dc3e617bd5cf089fab1d8"
+          },
+          {
+            "id": "tag/close-action__light__desktop",
+            "sha256": "41e8339e3026c88d87df24d152d82a29aeb83bd6a92bbb4224921e414f02fc1c"
+          },
+          {
+            "id": "tag/close-canceled__light__mobile",
+            "sha256": "55fc3e28aff804204fc750b56e56e7a086fbbf58b3266f5d614a645e1ff76de6"
+          },
+          {
+            "id": "tag/close-canceled__light__tablet",
+            "sha256": "24384c9571049e226b10f03fa736b02f6ec44804d6525fb20d7f777919985910"
+          },
+          {
+            "id": "tag/close-canceled__light__desktop",
+            "sha256": "b3053fe2809bd55b8d38269bd0dba8a4762e452f3bd3f392b318575f8c273144"
+          },
+          {
+            "id": "tag/checkable__light__mobile",
+            "sha256": "2e36bbf801a68cf133fff37b2b79e65c84a5acef127cf3d96803b501d1521d95"
+          },
+          {
+            "id": "tag/checkable__light__tablet",
+            "sha256": "80029e5ee87b0236abd41925e41d8f61b475ba019d9c11f873b39ec6703adab6"
+          },
+          {
+            "id": "tag/checkable__light__desktop",
+            "sha256": "f791eeaef0f22584f1048063b36b754c3a955fca51f1ff337bc2c551b4e7cb9b"
+          },
+          {
+            "id": "tag/group-models__light__mobile",
+            "sha256": "2d3d71d4c095c8b17333be856834ce669ea53d644a1b142fca7682c764bb91d4"
+          },
+          {
+            "id": "tag/group-models__light__tablet",
+            "sha256": "2ff4c86c2dd921f2f5b0c930fc9927e06d8bfced8c0dfa61671513eb854caafb"
+          },
+          {
+            "id": "tag/group-models__light__desktop",
+            "sha256": "1cadefdf56ecb28837dfd6ff3a5895d8564838fe64771847a7ba83b38d6de75d"
+          },
+          {
+            "id": "tag/disabled__light__mobile",
+            "sha256": "412508fae737bdaf082d60e968d37000626d113f47ad108af5003479f2b73a8e"
+          },
+          {
+            "id": "tag/disabled__light__tablet",
+            "sha256": "09adf6d9dc4305e29b798a7c11ab23826b4234acbfb9158fff6b0ac43f4ec365"
+          },
+          {
+            "id": "tag/disabled__light__desktop",
+            "sha256": "7926b6928053aa371fc9d0b1ea45bf8c5252f7099f026c623d0b293984eeac85"
+          },
+          {
+            "id": "tag/semantic__light__mobile",
+            "sha256": "d0ba9327afe47d8045a167ddfa276d7624f1ebe2e118bded8bf23baa736e1225"
+          },
+          {
+            "id": "tag/semantic__light__tablet",
+            "sha256": "0a58f0b3e2da98d62bca51be7b2441ac8e3883e31b53d3549c17cd39d6423425"
+          },
+          {
+            "id": "tag/semantic__light__desktop",
+            "sha256": "6d3e3c46faaf44f6c9b2bcb9ae983bb48fecaef968dca77444e65ae198c80d83"
+          },
+          {
+            "id": "tag/current-provider__light__mobile",
+            "sha256": "066a9aa69a02027d7b5e9a80fe8a3d1e0549e6974457b26ed580770352330c7c"
+          },
+          {
+            "id": "tag/current-provider__light__tablet",
+            "sha256": "07f8be761cef6ccf63488492addb231a998a5d156dc6a6cb305837fb33f0e1a8"
+          },
+          {
+            "id": "tag/current-provider__light__desktop",
+            "sha256": "5ed67e5c5b180a89f61b5310cbd3e60ad3e6905d11ee2e7a0e567fa324ee6a6f"
+          },
+          {
+            "id": "tag/rtl__light__mobile",
+            "sha256": "1cdd85adbf29d1e68dac7c7ba144a976adccd28aace60f77b12fefa0e7c91c2a"
+          },
+          {
+            "id": "tag/rtl__light__tablet",
+            "sha256": "2c87fc7e493c21a0091ea69d8af98113372c517e043cd5c6fde31447bd41e9b4"
+          },
+          {
+            "id": "tag/rtl__light__desktop",
+            "sha256": "f49c81503463ade482aae90debd0f9f05f59dc67c229a003b77cb8ea1b111856"
+          },
+          {
+            "id": "tag/theme-dark__light__mobile",
+            "sha256": "abb3e8996a30359dbd7a1a15fc8c07dfa7721875a08b43cb66ca472d5effc9e3"
+          },
+          {
+            "id": "tag/theme-dark__light__tablet",
+            "sha256": "2cd3b719312c4c8ee0dfef3f5942a984b62b98651959658230ca4fceb3a7204b"
+          },
+          {
+            "id": "tag/theme-dark__light__desktop",
+            "sha256": "2a16f5ef194bae373ff99d38750caed5d2106db37d6b86455b9d238ccf5d4ad2"
+          },
+          {
+            "id": "tag/theme-compact__light__mobile",
+            "sha256": "3ef7c86dd1187dffef9fc4c267ffdc8dce918a1deed69def48f38fdb487ce4db"
+          },
+          {
+            "id": "tag/theme-compact__light__tablet",
+            "sha256": "35f75798d700f07ada82caa63a7ed0f50bd5be2801ec193db3a6a1b18c7fa8ea"
+          },
+          {
+            "id": "tag/theme-compact__light__desktop",
+            "sha256": "9eb2594d0d5c4aa7e1661eb5de28cf816d684fcdc4ea111150453b8fe4cdbc10"
+          },
+          {
+            "id": "tag/theme-dark-compact__light__mobile",
+            "sha256": "d5c298d90cc9ef0303f6d199978a3d173778b933a52f8546522ebdd12fc7bd46"
+          },
+          {
+            "id": "tag/theme-dark-compact__light__tablet",
+            "sha256": "865bd2c14b4643ed285f60a380ca3d4015acc2863a7c111c9f26575a0872d3ed"
+          },
+          {
+            "id": "tag/theme-dark-compact__light__desktop",
+            "sha256": "a142cb28b1f5bcf4847c1987f5121a829a800efc4fb6bfdd419b4e18a32ad93a"
+          },
+          {
+            "id": "tag/native-focus__light__mobile",
+            "sha256": "b9ceb86f217e77fd0173073a9d062bd8befed080f241f929c1ba673f249ee2ee"
+          },
+          {
+            "id": "tag/native-focus__light__tablet",
+            "sha256": "fbf321ba4fef3b55d8cbc35f69902d87d0b490f70e4d7f57874e32abfaafeb7e"
+          },
+          {
+            "id": "tag/native-focus__light__desktop",
+            "sha256": "2b1f26d5045c29d29ef29c4a7ecb6d22729a319ead5665a7b5a32c3d1c4cb271"
+          }
+        ],
+        "relatedListCandidateDifferences": [
+          "list/loading__light__desktop",
+          "list/loading__light__mobile",
+          "list/loading__light__tablet"
+        ],
+        "relatedListCandidateDifferencesClassification": "Only3 loading SVG antialias differences, confirmed within spinner24x24 bounds; unchanged pixelmatch compares all102 with0 differing pixels. All45 Tag rawRGBA comparisons are exact."
+      },
+      "globalIntegrity": {
+        "approved": 405,
+        "matrix": 1368,
+        "pending": 963,
+        "command": "node tests/visual/apollo.mjs --check --approved-only",
+        "isWholeLibraryVisualGate": false
+      }
     }
   },
   "pending": [
-    "Clean source Apollo45 visual capture, individual review, approval and exact comparison",
-    "Post-minifier-guard original Demo theme and actual built Docs browser verification",
-    "Final complete inventory acceptance, current Registry state and authorized Docs deployment",
-    "Other components/foundations and the eventual same-final-commit full-library gate remain outside this Tag unit"
+    "Authorized accepted documentation deployment and live receipt",
+    "Other component/foundation audits and eventual full-library same-final-commit gates are separate remaining global work"
   ],
   "unitIntegrationFindings": {
     "nativeActivation": {
@@ -13955,5 +14431,72 @@
   "scopeBoundary": {
     "contentSlotInventory": "Regenerated from current source:201 heuristic review candidates. The scanner follows the closable alias into its closeIcon data; this unit verifies closable is configuration and does not invent a closable slot. This heuristic row is not an outstanding Tag API defect.",
     "browser": "Actual Chrome150 on darwin/x64; other engines/devices are not claimed."
-  }
+  },
+  "implementationCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+  "acceptanceChecklist": [
+    {
+      "area": "Tag props and all4 semantics",
+      "classification": "verified",
+      "evidence": "131 runtime,296 actual compressed colour,29 actual Docs"
+    },
+    {
+      "area": "CheckableTag checked/click/keydown emits",
+      "classification": "verified",
+      "evidence": "35 root-cause contracts,57 actual demo checks,17 SSR/hydration groups"
+    },
+    {
+      "area": "Group typed single/multiple/dynamic models and options",
+      "classification": "verified",
+      "evidence": "Strong actual source/published SFC,0/empty-string and uncontrolled/current-config cases"
+    },
+    {
+      "area": "Complete/conditional/empty slots and stable business state",
+      "classification": "verified",
+      "evidence": "Current render slots, original glyph attrs/events, focus/draft/identity and native hydration"
+    },
+    {
+      "area": "Native close/link, cancellation and ancestor interaction",
+      "classification": "verified",
+      "evidence": "9 native link/close and2 real Select activation keys inside50 consumers"
+    },
+    {
+      "area": "Current Provider/locale/direction/disabled and adjacent instances",
+      "classification": "verified",
+      "evidence": "35 contracts,17 actual SSR/hydration checks and45 reviewed visual cases"
+    },
+    {
+      "area": "Native attrs/string-array-object styles and current priority",
+      "classification": "verified",
+      "evidence": "Tag/Checkable/Group boundaries and all12 original demos"
+    },
+    {
+      "area": "Current3 Token/source alias/native variable colours",
+      "classification": "verified",
+      "evidence": "296 checks including actual foreground tint,actual CSS variable surface and default CSS minification"
+    },
+    {
+      "area": "Install/root/deep/statics/public expose",
+      "classification": "verified",
+      "evidence": "190-file2289 type gate,8 ref/model/static checks and actual published12 SFC demos"
+    },
+    {
+      "area": "Shared closable and installer consumers",
+      "classification": "verified",
+      "evidence": "One unified1088 runtime gate across10 collected groups plus full public types"
+    },
+    {
+      "area": "All12 demos, real pointer drag and bilingual docs",
+      "classification": "verified",
+      "evidence": "57 demo/themed/interaction checks,29 actual Docs checks,161 Docs tests and85 SSG routes"
+    },
+    {
+      "area": "Original reference integrity and own visuals",
+      "classification": "verified",
+      "evidence": "13 original reference files unchanged;360 prior approvals preserved;45 Tag rawRGBA exact and102 existing visual-gate passes"
+    }
+  ],
+  "notVerified": [
+    "Other browser engines and device/touch-specific behaviour",
+    "A full-library final gate: the overall audit is still ongoing"
+  ]
 }

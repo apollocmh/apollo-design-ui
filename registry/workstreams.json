@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-27T06:05:02.201Z",
+  "generatedAt": "2026-10-27T06:29:06.401Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 90,
-      "ready": 2
+      "done": 91,
+      "ready": 1
     },
     "byKind": {
       "foundation": 13,
@@ -35,12 +35,11 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 2,
+    "readyCount": 1,
     "cannotFinishCount": 0,
-    "currentBatchSize": 2,
+    "currentBatchSize": 1,
     "currentBatchIds": [
-      "X:docs-site",
-      "COMP:tag"
+      "X:docs-site"
     ],
     "hardBlockingDecisionCount": 0,
     "parallelismNote": "currentBatchSize 是「同一时刻可开工数」的下界估计（贪心）。真实并行度还取决于执行者数量。"
@@ -379,8 +378,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 22,
-      "doneCount": 21,
-      "readyCount": 1,
+      "doneCount": 22,
+      "readyCount": 0,
       "itemIds": [
         "COMP:avatar",
         "COMP:badge",
@@ -684,8 +683,8 @@
         "25 个组件 11 维度 completed"
       ],
       "itemCount": 26,
-      "doneCount": 24,
-      "readyCount": 2,
+      "doneCount": 25,
+      "readyCount": 1,
       "blockedCount": 0,
       "waitingCount": 0,
       "complete": false,
@@ -1567,18 +1566,16 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "ready",
+      "status": "done",
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 0,
-      "why": "2026-10-27 Tag三件套成组实现：完整内容/原生关闭按钮/内部链接、当前配置/attrs、Vue模型与三Token、12原Demo已修。Tag131/131；相关共享629、List213、ConfigProvider115通过（不重复共1088）。公开类型2289、发布SFC/refs负例、实际50消费者、压缩颜色296、L7严格11项通过。45清洁自有视觉及最终Demo/Docs仍验收，状态testing。",
+      "why": "2026-10-27 Tag三件套完整清单统一验收，实现c49f300b。1088相关运行（Tag131/List153/Listy60等10组）、2289类型门禁、真实发布SFC/refs、296实际压缩颜色、9关闭、50消费者、57原Demo、17 SSR水合、29实际Docs和严格L7通过。45自有视觉逐张审阅且原始RGBA全一致；Tag+List102项按既有门禁0差异，List三加载SVG原始AA差异另记；原360记录/图与13参考不变。授权文档发布回执随后登记，全库审计继续。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P1",
       "dagLevel": 2,
-      "blockers": [],
-      "softBlockers": [],
-      "cannotFinish": false
+      "blockers": []
     },
     {
       "id": "COMP:badge",
@@ -3361,7 +3358,6 @@
     }
   ],
   "currentBatch": [
-    "X:docs-site",
-    "COMP:tag"
+    "X:docs-site"
   ]
 }

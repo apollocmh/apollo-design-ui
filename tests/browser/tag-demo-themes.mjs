@@ -220,12 +220,10 @@ try {
     }
   });
   await show('draggable');
-  await check('HTML drag events reorder without stale capture', async () => {
+  await check('native browser pointer drag reorders without stale capture', async () => {
     const nodes = page.locator('.apollo-tag');
     const transfer = await page.evaluateHandle(() => new DataTransfer());
-    await nodes.nth(0).dispatchEvent('dragstart', { dataTransfer: transfer });
-    await nodes.nth(2).dispatchEvent('dragover', { dataTransfer: transfer });
-    await nodes.nth(2).dispatchEvent('drop', { dataTransfer: transfer });
+    await nodes.nth(0).dragTo(nodes.nth(2));
     assert.deepEqual(await nodes.allTextContents(), ['Tag 2', 'Tag 3', 'Tag 1']);
     await nodes.nth(0).dispatchEvent('drop', { dataTransfer: transfer });
     assert.deepEqual(await nodes.allTextContents(), ['Tag 2', 'Tag 3', 'Tag 1']);

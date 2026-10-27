@@ -88,9 +88,20 @@ Empty六Props、三个完整原生槽、四语义、当前Provider/方向/语言
 - [条件描述槽](/components/empty/demo/description)
 - [Empty完整清单](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-empty-contract-audit.md)
 
+## Tag 三件套完整清单已统一验收
+
+Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方向、原生 attrs/style、独立关闭按钮与内部链接、Vue 事件和强类型模型、三个已有 Token 已修复，十二原 Demo 全部保留并修正真实操作。Select 内关闭键盘误选与压缩 CSS 丢失颜色同步修复。
+
+冻结实现 `c49f300b`：Tag131项、相关不重复1088项运行回归，全库类型门禁2289项、真实发布SFC及严格L7通过；生产颜色296、关闭9、实际消费者50、原Demo57、SSR/水合17、实际Docs29项通过。45张自有视觉逐张审阅，原始RGBA复验全部一致；连同List共102项按既有门禁零差异。List三张加载图的SVG抗锯齿边界已记录，原360条批准记录及图片保持不变。其他组件和基础包继续审计。
+
+- [强类型选择模型](/components/tag/demo/checkable)
+- [真正可添加和关闭的标签](/components/tag/demo/control)
+- [三个当前组件Token](/components/tag/demo/component-token)
+- [Tag完整盘点与证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-tag-contract-audit.md)
+
 ## 还没有完成什么
 
-全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有199项候选待逐项复核，候选不等于缺陷。当前自有视觉矩阵1332项，已批准360项，其余972项随后续完整整改单元验收。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
+全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有201项启发式候选待逐项复核，候选不等于缺陷。当前自有视觉矩阵1368项，已批准405项，其余963项随后续完整整改单元验收。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
 
 ## 查看证据与后续进展
 
@@ -161,9 +172,9 @@ The final related gate passes 2,352 runtime tests and 398 public type checks. Bu
 
 ## Remaining work
 
-This snapshot has 360 approved Apollo visual cases out of 1,332; the remaining 972 await review within later audit units.
+This snapshot has 405 approved Apollo visual cases out of 1,368; the remaining 963 await review within later audit units.
 
-Other components and foundation packages still require their complete audits. The content inventory has 199 candidates awaiting review; candidates are not confirmed defects. Final whole-library gates remain required after all remediation finishes. Touch pinch, other browsers and unspecified cross-document combinations are outside this unit's verified scope.
+Other components and foundation packages still require their complete audits. The content inventory has 201 heuristic review candidates; candidates are not confirmed defects. Final whole-library gates remain required after all remediation finishes. Touch pinch, other browsers and unspecified cross-document combinations are outside this unit's verified scope.
 
 [Image audit and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-25-image-contract-audit.md) · [H05 evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-repository-format-audit.md) · [Ongoing issues](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/KNOWN-ISSUES.md) · [Build-time Git history](/changelog)
 
@@ -174,12 +185,13 @@ All six props, three complete native slots, four semantic regions, current Provi
 
 The frozen implementation 12cf9fee passed 2856 related runtime checks, 434 public type tests, 54 production browser checks, 40 actual popup checks, 18 Empty consumer checks, 24 demo/theme checks, eight Node SSR checks and six hydration groups. All 17 actual Docs checks passed. The 45 individually reviewed Empty visuals and 57 related List visuals are pixel-exact; all 315 earlier review records and PNGs remain unchanged. The library-wide audit continues.
 
+## Tag complete audit accepted
 
-## Tag 三件套正在统一验收
+Tag, CheckableTag and CheckableTagGroup now provide complete stable content, current configuration/locale/direction, native attrs/styles, an owned close button beside the inner link, Vue events and strongly typed models, and the three existing tokens. All twelve original demos remain functional. Select keyboard activation and compressed CSS colour consumption are corrected.
 
-完整盘点后已修复内容丢失、配置快照、原生style、关闭按钮和强类型双向绑定，并修复十二原Demo的实际操作。阶段运行128项、共享629项、生产颜色296项、关闭9项、Demo57项、SSR/水合17项通过；全库公开类型2289项和根严格检查通过。发布声明、实际关联Demo、Docs和自有视觉仍验收中。
+Frozen implementation c49f300b passes131 Tag runtime checks,1088 nonduplicated related checks,2289 tests in the public type gate, actual published SFC consumption and strict L7. Production colour296, close9, consumers50, original demos57, SSR/hydration17 and actual Docs29 checks pass. All45 individually reviewed Tag visuals are raw-RGBA exact; the102-image comparison including List passes unchanged settings. Three List loading captures have recorded SVG antialias differences; all360 prior review records/PNGs are preserved. Other components and foundations remain under audit.
 
-- [强类型选择模型](/components/tag/demo/checkable)
-- [真正可添加和关闭的标签](/components/tag/demo/control)
-- [三个当前组件Token](/components/tag/demo/component-token)
-- [Tag完整盘点与证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-tag-contract-audit.md)
+- [Strong selection models](/components/tag/demo/checkable)
+- [Working add and close controls](/components/tag/demo/control)
+- [Current Tag component tokens](/components/tag/demo/component-token)
+- [Complete Tag evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-tag-contract-audit.md)
