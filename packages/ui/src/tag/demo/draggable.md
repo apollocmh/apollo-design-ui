@@ -5,4 +5,4 @@ title:
   en-US: Draggable
 ---
 
-拖拽排序（antd 用 @dnd-kit 实现；此处用 HTML5 原生拖拽等价替换）。
+使用原生 HTML 拖拽事件重排标签。此 Demo 演示指针拖拽，不提供键盘排序。

@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-27T04:24:17.438Z",
+  "generatedAt": "2026-10-27T06:05:02.201Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 91,
-      "ready": 1
+      "done": 90,
+      "ready": 2
     },
     "byKind": {
       "foundation": 13,
@@ -35,11 +35,12 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 1,
+    "readyCount": 2,
     "cannotFinishCount": 0,
-    "currentBatchSize": 1,
+    "currentBatchSize": 2,
     "currentBatchIds": [
-      "X:docs-site"
+      "X:docs-site",
+      "COMP:tag"
     ],
     "hardBlockingDecisionCount": 0,
     "parallelismNote": "currentBatchSize 是「同一时刻可开工数」的下界估计（贪心）。真实并行度还取决于执行者数量。"
@@ -378,8 +379,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 22,
-      "doneCount": 22,
-      "readyCount": 0,
+      "doneCount": 21,
+      "readyCount": 1,
       "itemIds": [
         "COMP:avatar",
         "COMP:badge",
@@ -683,8 +684,8 @@
         "25 个组件 11 维度 completed"
       ],
       "itemCount": 26,
-      "doneCount": 25,
-      "readyCount": 1,
+      "doneCount": 24,
+      "readyCount": 2,
       "blockedCount": 0,
       "waitingCount": 0,
       "complete": false,
@@ -1566,16 +1567,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 0,
-      "why": "",
+      "why": "2026-10-27 Tag三件套成组实现：完整内容/原生关闭按钮/内部链接、当前配置/attrs、Vue模型与三Token、12原Demo已修。Tag131/131；相关共享629、List213、ConfigProvider115通过（不重复共1088）。公开类型2289、发布SFC/refs负例、实际50消费者、压缩颜色296、L7严格11项通过。45清洁自有视觉及最终Demo/Docs仍验收，状态testing。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P1",
       "dagLevel": 2,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:badge",
@@ -3358,6 +3361,7 @@
     }
   ],
   "currentBatch": [
-    "X:docs-site"
+    "X:docs-site",
+    "COMP:tag"
   ]
 }

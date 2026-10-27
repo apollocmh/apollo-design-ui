@@ -221,6 +221,23 @@ export const COMPONENTS = {
     ],
   },
   tag: {
+    apolloVariants: [
+      'basic',
+      'colors',
+      'complete-content',
+      'close-action',
+      'close-canceled',
+      'checkable',
+      'group-models',
+      'disabled',
+      'semantic',
+      'current-provider',
+      'rtl',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+      'native-focus',
+    ],
     // 3 个 variant × 3 个 viewport = 9 张
     variants: ['basic', 'checkable', 'semantic'],
   },

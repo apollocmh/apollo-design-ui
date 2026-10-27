@@ -5,4 +5,4 @@ title:
   en-US: Semantic classNames and styles
 ---
 
-通过 `classNames` / `styles` 自定义语义结构。
+通过 `classNames` / `styles` 配置 root、icon、content、close 四个语义区域；原生 `style` 最后覆盖根样式。

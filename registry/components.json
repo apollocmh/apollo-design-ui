@@ -32,7 +32,8 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 72
+      "completed": 71,
+      "testing": 1
     },
     "byPriority": {
       "P0": 8,
@@ -51,8 +52,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 72,
-    "remainingCount": 0
+    "completedCount": 71,
+    "remainingCount": 1
   },
   "milestones": [],
   "components": [
@@ -749,7 +750,7 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "completed",
+      "status": "testing",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -776,16 +777,17 @@
       "interactionStatus": "done",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
+      "visualStatus": "in-progress",
+      "docsStatus": "in-progress",
+      "notes": "2026-10-27 Tag三件套成组实现：完整内容/原生关闭按钮/内部链接、当前配置/attrs、Vue模型与三Token、12原Demo已修。Tag131/131；相关共享629、List213、ConfigProvider115通过（不重复共1088）。公开类型2289、发布SFC/refs负例、实际50消费者、压缩颜色296、L7严格11项通过。45清洁自有视觉及最终Demo/Docs仍验收，状态testing。",
       "layerNotes": {
-        "interaction": "click（Tag/CheckableTag）、close-icon 点击+键盘（Enter/空格）、Group onChange。关闭流程 stopPropagation→onClose→defaultPrevented→visible=false（DOM 保留 -hidden）。",
-        "type": "8 例（正例 + 2 负例）。variant 三值、语义四槽、color 联合断言。",
-        "a11y": "CheckableTag role=checkbox + aria-checked；close-icon role=button + aria-label（locale）。axe 扫 11 demo 0 violation。",
-        "token": "3 个 Component Token。defaultBg=#f5f5f5、solidTextColor=#fff 以 seed 实色落地（与 antd cssVar 产物一致）；defaultColor 走 var(--apollo-color-text)。",
-        "compat": "24 条机械基线（ConfigProvider 包裹对齐 iconPrefixCls）。24/24，豁免 PLATFORM×2（CSSOM 颜色序列化）。Wave 不进基线。",
-        "visual": "9/9 全 exact（3 variant × 3 viewport）。"
+        "interaction": "原生 close(MouseEvent)/checked/value 更新与 change 各一次；关闭按钮与链接兄弟，取消/禁用/完整槽/当前配置/模型已补。",
+        "type": "全库190文件2289公开类型、8项Tag公开ref/静态子组件/模式类型；根与实际发布SFC（全部12原Demo）严格检查通过。",
+        "a11y": "当前 close 原生 button/locale、checkbox/group 语义；296颜色/axe、9关闭、48原Demo主题+9交互、17 SSR/水合通过。",
+        "token": "三个已有 Token 消费当前源配置，替换/移除及原生变量；filled/outlined 明度、solid实际背景前景通过真实浏览器矩阵。",
+        "compat": "原24机械JSON与共享投影未改；稳定内容/所属原生按钮、内部链接和CSS变量的必要差异逐条精确登记并加完整矩阵反向守卫。",
+        "visual": "原9参考PNG保留；Apollo15状态×3视口45张待清洁采集、逐张审阅与复验。",
+        "currentAudit": "完整清单/结构化证据/迁移均在docs/audit与docs/migrations。当前成组实现已验证，45清洁视觉、最终Demo/Docs和发布仍待验收。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -812,7 +814,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "pending"
     },
     {
       "name": "badge",

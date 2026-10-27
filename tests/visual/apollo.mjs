@@ -24,6 +24,7 @@ import { prepareResultVisual } from './result-state.mjs';
 import { prepareSkeletonVisual } from './skeleton-state.mjs';
 import { prepareSpinVisual } from './spin-state.mjs';
 import { prepareStatisticVisual } from './statistic-state.mjs';
+import { prepareTagVisual } from './tag-state.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '../..');
@@ -210,6 +211,7 @@ async function main() {
               'result',
               'button',
               'empty',
+              'tag',
             ].includes(item.component) && item.variant === 'native-focus',
         });
         const state =
@@ -231,7 +233,9 @@ async function main() {
                           ? await prepareButtonVisual(page, item.variant)
                           : item.component === 'empty'
                             ? await prepareEmptyVisual(page, item.variant)
-                            : undefined;
+                            : item.component === 'tag'
+                              ? await prepareTagVisual(page, item.variant)
+                              : undefined;
         fs.mkdirSync(path.dirname(output), { recursive: true });
         await screenshotElement(page, '#stage', output);
         if (errors.length) throw new Error(errors.join(' | '));

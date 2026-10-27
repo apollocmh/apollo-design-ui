@@ -96,7 +96,7 @@ function mergeClosableConfigs(
   propConfig: ClosableConfig | boolean | null,
   contextConfig: ClosableConfig | boolean | null,
   fallbackConfig: ClosableConfig,
-): ClosableConfig | boolean {
+): ClosableConfig | false {
   if (propConfig === false) {
     return false;
   }
@@ -121,24 +121,28 @@ function mergeClosableConfigs(
  *    （notification 的 D98 早就用 cloneVNode 做了同一件事）。漏掉它导致 modal 的
  *    `-close-x` span 比 antd 少一个 `aria-label=Close`（dom-probe modal/basic 实测）。
  */
+export function resolveClosableConfig(
+  propCloseCollection: ClosableCollection | undefined,
+  contextCloseCollection: ClosableCollection | undefined,
+  fallbackCloseCollection: ClosableFallback = {},
+): ClosableConfig | false {
+  return mergeClosableConfigs(
+    computeClosableConfig(propCloseCollection?.closable, propCloseCollection?.closeIcon),
+    computeClosableConfig(contextCloseCollection?.closable, contextCloseCollection?.closeIcon),
+    { closeIcon: h(CloseOutlined), ...fallbackCloseCollection },
+  );
+}
+
 export function computeClosable(
   propCloseCollection: ClosableCollection | undefined,
   contextCloseCollection: ClosableCollection | undefined,
   fallbackCloseCollection: ClosableFallback = {},
 ): ClosableResult {
-  const propConfig = computeClosableConfig(
-    propCloseCollection?.closable,
-    propCloseCollection?.closeIcon,
+  const merged = resolveClosableConfig(
+    propCloseCollection,
+    contextCloseCollection,
+    fallbackCloseCollection,
   );
-  const contextConfig = computeClosableConfig(
-    contextCloseCollection?.closable,
-    contextCloseCollection?.closeIcon,
-  );
-  const mergedFallback: ClosableConfig = {
-    closeIcon: h(CloseOutlined),
-    ...fallbackCloseCollection,
-  };
-  const merged = mergeClosableConfigs(propConfig, contextConfig, mergedFallback);
   const closeBtnIsDisabled = typeof merged !== 'boolean' ? !!merged?.disabled : false;
   if (merged === false) {
     return { closable: false, closeIconNode: null, closeBtnIsDisabled, ariaProps: {} };

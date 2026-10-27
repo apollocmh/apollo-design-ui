@@ -1,28 +1,26 @@
 <script setup lang="ts">
-// 对齐 antd 的 style-class demo（createStaticStyles 未落地 —— 内联对象等价）
-import { Tag } from '@apollo-design/ui';
+import { CheckCircleOutlined } from '@apollo-design/icons';
+import { Tag, type TagSemanticClassNames, type TagSemanticStyles } from '@apollo-design/ui';
 
-const classNames = {
+const classNames: TagSemanticClassNames = {
   root: 'demo-tag-root',
   icon: 'demo-tag-icon',
+  content: 'demo-tag-content',
+  close: 'demo-tag-close',
 };
-const styles = {
+const styles: TagSemanticStyles = {
   root: { padding: '2px 6px', borderRadius: '4px' },
+  icon: { fontSize: '14px' },
+  content: { fontWeight: 600 },
+  close: { marginInlineStart: '8px' },
 };
 </script>
-
 <template>
-  <Tag
-    :class-names="classNames"
-    :styles="styles"
-    closable
-  >
+  <Tag :class-names="classNames" :styles="styles" :style="[{ paddingInline: '10px' }]" closable>
+    <template #icon><CheckCircleOutlined aria-hidden="true" /></template>
     Tag with semantic slots
   </Tag>
 </template>
-
-<style>
-.demo-tag-root {
-  border-color: #2db7f5;
-}
+<style scoped>
+.demo-tag-root { border-color: var(--apollo-color-primary); }
 </style>

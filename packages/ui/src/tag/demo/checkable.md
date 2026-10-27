@@ -5,4 +5,4 @@ title:
   en-US: Checkable
 ---
 
-CheckableTag 与 CheckableTagGroup（单选 / 多选）。
+使用 `v-model:checked` 与 `v-model:value`，展示独立勾选、单选及多选；空格键切换当前项。

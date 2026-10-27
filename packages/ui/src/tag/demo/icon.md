@@ -5,4 +5,4 @@ title:
   en-US: Icon
 ---
 
-带图标的标签（裸 svg 的居中修正见样式层 `> svg` 规则）。
+通过 `#icon` 插槽添加图标，使用 `v-model:checked` 同步选择状态；支持点击与空格键。

@@ -5,36 +5,48 @@
  * 提供（Vue 侧无「静态属性」惯例，antd 的 `Tag.CheckableTag` 语义由两者等价表达）。
  */
 
-import { withInstall } from '../_internal/with-install';
+import { type WithInstall, withInstall } from '../_internal/with-install';
 import CheckableTagComponent from './CheckableTag';
 import CheckableTagGroupComponent from './CheckableTagGroup';
 import TagComponent from './Tag';
 
-/** Tag 组件。注册名 `ATag`（COMPONENT-RULES.md 规则 R2）。 */
-export const Tag = withInstall(TagComponent);
-
-/** 可勾选标签（antd 的 `Tag.CheckableTag`）。 */
 export const CheckableTag = withInstall(CheckableTagComponent);
-
-/** 可勾选标签组（antd 的 `Tag.CheckableTagGroup`）。 */
-export const CheckableTagGroup = withInstall(CheckableTagGroupComponent);
-
-// antd 的静态属性形态（`Tag.CheckableTag`）逐字保留 —— 两处引用同一定义
-(Tag as { CheckableTag?: unknown }).CheckableTag = CheckableTag;
-(Tag as { CheckableTagGroup?: unknown }).CheckableTagGroup = CheckableTagGroup;
+export const CheckableTagGroup: WithInstall<typeof CheckableTagGroupComponent> = withInstall(
+  CheckableTagGroupComponent,
+);
+export const Tag: WithInstall<
+  typeof TagComponent & {
+    CheckableTag: typeof CheckableTag;
+    CheckableTagGroup: typeof CheckableTagGroup;
+  }
+> = withInstall(Object.assign(TagComponent, { CheckableTag, CheckableTagGroup }));
 
 export default Tag;
 
 export { easeInOutCubic } from '../_internal/scroll-to';
 export type {
+  CheckableTagEmits,
+  CheckableTagGroupEmits,
   CheckableTagGroupProps,
+  CheckableTagGroupRef,
+  CheckableTagGroupValue,
   CheckableTagOption,
   CheckableTagProps,
+  CheckableTagRef,
+  CheckableTagSlots,
+  CheckableTagValue,
+  GroupSemanticClassNames,
+  GroupSemanticStyles,
+  TagClosable,
+  TagClosableConfig,
   TagColor,
+  TagConfig,
+  TagEmits,
   TagProps,
   TagRef,
   TagSemanticClassNames,
   TagSemanticStyles,
+  TagSlots,
   TagVariant,
 } from './interface';
 export { genTagStyle } from './style';

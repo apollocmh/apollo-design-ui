@@ -1,6 +1,4 @@
 <script setup lang="ts">
-// 对齐 antd 的 status demo
-
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
@@ -9,10 +7,9 @@ import {
   SyncOutlined,
 } from '@apollo-design/icons';
 import { Tag } from '@apollo-design/ui';
-import { h } from 'vue';
 
 const variants = ['filled', 'solid', 'outlined'] as const;
-const presets = ['success', 'processing', 'warning', 'error', 'default'];
+const presets = ['success', 'processing', 'warning', 'error', 'default'] as const;
 const iconMap = {
   success: CheckCircleOutlined,
   processing: SyncOutlined,
@@ -24,9 +21,9 @@ const iconMap = {
 
 <template>
   <div v-for="variant in variants" :key="variant">
-    <h4>Status ({{ variant }})</h4>
+    <p>Status ({{ variant }})</p>
     <Tag v-for="s in presets" :key="s" :color="s" :variant="variant">
-      <component :is="h(iconMap[s as keyof typeof iconMap])" />
+      <template #icon><component :is="iconMap[s]" aria-hidden="true" /></template>
       {{ s }}
     </Tag>
   </div>

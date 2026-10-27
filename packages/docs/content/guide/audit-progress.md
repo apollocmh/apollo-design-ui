@@ -173,3 +173,13 @@ Other components and foundation packages still require their complete audits. Th
 All six props, three complete native slots, four semantic regions, current Provider/direction/locale, valid image data, media layout/contrast, and all six original demos have been accepted. The shared Trigger now carries current source theme variables across native portals while preserving explicit popup styles and business state.
 
 The frozen implementation 12cf9fee passed 2856 related runtime checks, 434 public type tests, 54 production browser checks, 40 actual popup checks, 18 Empty consumer checks, 24 demo/theme checks, eight Node SSR checks and six hydration groups. All 17 actual Docs checks passed. The 45 individually reviewed Empty visuals and 57 related List visuals are pixel-exact; all 315 earlier review records and PNGs remain unchanged. The library-wide audit continues.
+
+
+## Tag 三件套正在统一验收
+
+完整盘点后已修复内容丢失、配置快照、原生style、关闭按钮和强类型双向绑定，并修复十二原Demo的实际操作。阶段运行128项、共享629项、生产颜色296项、关闭9项、Demo57项、SSR/水合17项通过；全库公开类型2289项和根严格检查通过。发布声明、实际关联Demo、Docs和自有视觉仍验收中。
+
+- [强类型选择模型](/components/tag/demo/checkable)
+- [真正可添加和关闭的标签](/components/tag/demo/control)
+- [三个当前组件Token](/components/tag/demo/component-token)
+- [Tag完整盘点与证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-tag-contract-audit.md)

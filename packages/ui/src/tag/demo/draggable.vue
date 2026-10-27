@@ -1,6 +1,4 @@
 <script setup lang="ts">
-// 对齐 antd 的 draggable demo（@dnd-kit 未落地 —— HTML5 原生 draggable 等价替换）
-
 import { Tag } from '@apollo-design/ui';
 import { ref } from 'vue';
 
@@ -16,9 +14,11 @@ const onDragStart = (i: number) => {
   dragIndex.value = i;
 };
 const onDrop = (i: number) => {
-  if (dragIndex.value < 0 || dragIndex.value === i) return;
+  const from = dragIndex.value;
+  dragIndex.value = -1;
+  if (from < 0 || from === i) return;
   const next = [...items.value];
-  const moved = next.splice(dragIndex.value, 1)[0];
+  const moved = next.splice(from, 1)[0];
   if (!moved) return;
   next.splice(i, 0, moved);
   items.value = next;
@@ -33,6 +33,7 @@ const onDrop = (i: number) => {
     draggable="true"
     :style="{ cursor: 'move' }"
     @dragstart="onDragStart(i)"
+    @dragend="dragIndex = -1"
     @dragover.prevent
     @drop="onDrop(i)"
   >

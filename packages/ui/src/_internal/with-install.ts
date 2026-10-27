@@ -9,10 +9,10 @@
  * 本项目所有组件都带 `A` 前缀，避免与用户自己的组件重名。
  */
 
-import type { App, Component, Plugin } from 'vue';
+import type { App, Component, ObjectPlugin } from 'vue';
 
 /** 带 `install` 的组件。 */
-export type WithInstall<T extends Component> = T & Plugin;
+export type WithInstall<T extends Component> = T & ObjectPlugin;
 
 export function withInstall<T extends Component>(component: T): WithInstall<T> {
   const target = component as WithInstall<T>;

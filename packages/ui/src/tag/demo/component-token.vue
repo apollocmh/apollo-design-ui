@@ -1,24 +1,24 @@
 <script setup lang="ts">
-// 对齐 antd 的 component-token demo：覆盖 Tag 的默认底色、文字色与 solid 文字色。
-import { Tag } from '@apollo-design/ui';
+import { ConfigProvider, Tag } from '@apollo-design/ui';
+import { computed, ref } from 'vue';
+
+const alternate = ref(false);
+const theme = computed(() => ({
+  // A dark solid surface pairs with the explicit light solid foreground.
+  token: { green: alternate.value ? '#304b80' : '#155a32' },
+  components: {
+    Tag: alternate.value
+      ? { defaultBg: '#e5e9ff', defaultColor: '#1b2559', solidTextColor: '#ffffff' }
+      : { defaultBg: '#fff7e6', defaultColor: '#5c3100', solidTextColor: '#fffbe6' },
+  },
+}));
 </script>
-
 <template>
-  <div class="demo-tag-token">
-    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
-      <Tag>Default</Tag>
-      <Tag>Another</Tag>
-      <Tag color="blue">Blue</Tag>
-      <Tag color="green" variant="solid">Solid</Tag>
-      <Tag variant="outlined">Outlined</Tag>
+  <button type="button" @click="alternate = !alternate">Switch component tokens</button>
+  <ConfigProvider :theme="theme">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-block-start: 8px">
+      <Tag>Default</Tag><Tag>Another</Tag><Tag color="blue">Blue</Tag>
+      <Tag color="green" variant="solid">Solid</Tag><Tag variant="outlined">Outlined</Tag>
     </div>
-  </div>
+  </ConfigProvider>
 </template>
-
-<style>
-.demo-tag-token .apollo-tag {
-  --apollo-tag-default-bg: #fff7e6;
-  --apollo-tag-default-color: #d46b08;
-  --apollo-tag-solid-text-color: #fffbe6;
-}
-</style>

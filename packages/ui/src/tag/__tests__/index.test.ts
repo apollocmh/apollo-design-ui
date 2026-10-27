@@ -23,12 +23,11 @@ describe('Tag · 结构', () => {
     expect(w2.find('.apollo-tag').classes()).toContain('apollo-tag-solid');
   });
 
-  it('非预设色 → 动态内联色（filled：浅底 hsl.l=0.95 + 原色文字）', () => {
+  it('非预设色 → 原色与浅底变量，实际文字对比度由发布 CSS 验证', () => {
     const w = mount(Tag, { props: { color: '#2db7f5' }, slots: { default: () => 'x' } });
     const style = w.find('.apollo-tag').attributes('style') ?? '';
-    // antd 实测产物：backgroundColor:#e7f6fe;color:#2db7f5
-    expect(style).toContain('background-color: rgb(231, 246, 254)');
-    expect(style).toContain('color: rgb(45, 183, 245)');
+    expect(style).toContain('--apollo-tag-custom-bg: #e7f6fe');
+    expect(style).toContain('--apollo-tag-custom-color: #2db7f5');
     expect(style).not.toContain('border-color');
     // 无预设色类
     expect(w.find('.apollo-tag').classes()).not.toContain('apollo-tag-#2db7f5');
@@ -40,8 +39,8 @@ describe('Tag · 结构', () => {
       slots: { default: () => 'x' },
     });
     const style = w.find('.apollo-tag').attributes('style') ?? '';
-    expect(style).toContain('background-color: rgb(45, 183, 245)');
-    expect(style).not.toContain('e7f6fe');
+    expect(style).toContain('--apollo-tag-custom-color: #2db7f5');
+    expect(w.classes()).toContain('apollo-tag-solid');
   });
 
   it('inverse color：-inverse 后缀 → solid 且去后缀', () => {
@@ -60,9 +59,9 @@ describe('Tag · 结构', () => {
       props: { href: 'https://x', target: '_blank' },
       slots: { default: () => 'x' },
     });
-    expect(w.find('a.apollo-tag').exists()).toBe(true);
-    expect(w.find('a.apollo-tag').attributes('href')).toBe('https://x');
-    expect(w.find('a.apollo-tag').attributes('target')).toBe('_blank');
+    expect(w.find('.apollo-tag-content a').exists()).toBe(true);
+    expect(w.find('.apollo-tag-content a').attributes('href')).toBe('https://x');
+    expect(w.find('.apollo-tag-content a').attributes('target')).toBe('_blank');
   });
 
   it('disabled：href 置 undefined + aria-disabled + -disabled 类', () => {
@@ -70,9 +69,9 @@ describe('Tag · 结构', () => {
       props: { href: 'https://x', disabled: true },
       slots: { default: () => 'x' },
     });
-    expect(w.find('a.apollo-tag').attributes('href')).toBeUndefined();
-    expect(w.find('a.apollo-tag').attributes('aria-disabled')).toBe('true');
-    expect(w.find('a.apollo-tag').classes()).toContain('apollo-tag-disabled');
+    expect(w.find('.apollo-tag-content a').attributes('href')).toBeUndefined();
+    expect(w.find('.apollo-tag-content a').attributes('aria-disabled')).toBe('true');
+    expect(w.find('.apollo-tag').classes()).toContain('apollo-tag-disabled');
   });
 
   it('aria/data attrs 透传', () => {
@@ -87,19 +86,19 @@ describe('Tag · closable', () => {
     const w = mount(Tag, { props: { closable: true } });
     const icon = w.find('.apollo-tag-close-icon');
     expect(icon.exists()).toBe(true);
-    expect(icon.attributes('role')).toBe('button');
-    expect(icon.attributes('tabindex')).toBe('0');
+    expect(icon.element.tagName).toBe('BUTTON');
+    expect(icon.attributes('type')).toBe('button');
     expect(icon.attributes('aria-label')).toBe('Close');
   });
 
-  it('close-icon 自定义 vnode（单层 span 保留文本 —— antd 的 replaceElement 语义；C8-R2 后走 #closeIcon 插槽）', () => {
+  it('closeIcon 内容保留在所属原生按钮内', () => {
     const w = mount(Tag, {
       props: { closable: true },
       slots: { closeIcon: () => h('em', null, 'x') },
     });
     const icon = w.find('.apollo-tag-close-icon');
     expect(icon.exists()).toBe(true);
-    expect(icon.attributes('role')).toBe('button');
+    expect(icon.element.tagName).toBe('BUTTON');
     expect(icon.text()).toBe('x');
   });
 
@@ -134,21 +133,28 @@ describe('Tag · closable', () => {
 
   it('close-icon 键盘（Enter 触发 click → 关闭）', async () => {
     const w = mount(Tag, { props: { closable: true } });
-    await w.find('.apollo-tag-close-icon').trigger('keydown', { key: 'Enter' });
+    const action = w.find('button.apollo-tag-close-icon');
+    await action.trigger('keydown', { key: 'Enter' });
+    // VTU does not synthesise browser activation. The native browser Enter/Space
+    // scenario lives in tests/browser/tag-link-contracts.mjs; no duplicate JS activation.
+    expect(w.emitted('close')).toBeUndefined();
+    await action.trigger('click');
+    expect(w.emitted('close')).toHaveLength(1);
     expect(w.find('.apollo-tag').classes()).toContain('apollo-tag-hidden');
   });
 });
 
 describe('Tag · icon 与语义槽位', () => {
-  it('icon 存在 → children 包 content 槽 + icon 克隆注入类', () => {
+  it('icon 与 content 使用各自的稳定语义宿主，业务节点保持原样', () => {
     // C8-R2：icon 走 `#icon` 插槽
     const w = mount(Tag, {
       props: { classNames: { icon: 'user-icon', content: 'user-content' } },
       slots: { default: () => 'text', icon: () => h('i', { class: 'my-icon' }) },
     });
-    expect(w.find('i.my-icon').classes()).toContain('user-icon');
-    expect(w.find('.apollo-tag span').classes()).toContain('user-content');
-    expect(w.find('.apollo-tag span').text()).toBe('text');
+    expect(w.find('.apollo-tag-icon').classes()).toContain('user-icon');
+    expect(w.find('i.my-icon').classes()).toEqual(['my-icon']);
+    expect(w.find('.apollo-tag-content').classes()).toContain('user-content');
+    expect(w.find('.apollo-tag-content').text()).toBe('text');
   });
 
   it('★ style prop 覆盖 styles.root（动态色在 styles.root 之前）', () => {

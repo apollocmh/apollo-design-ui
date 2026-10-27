@@ -1,23 +1,29 @@
 <script setup lang="ts">
-// 对齐 antd 的 control demo（Input/Tooltip 未落地 —— 原生 input + Tag 等价组合）
-
 import { PlusOutlined } from '@apollo-design/icons';
 import { Space, Tag } from '@apollo-design/ui';
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 
 const tags = ref(['Tag 1', 'Tag 2', 'Tag 3']);
 const inputVisible = ref(false);
 const inputValue = ref('');
+const input = ref<HTMLInputElement | null>(null);
+const addButton = ref<HTMLButtonElement | null>(null);
 
-const showInput = () => {
+const showInput = async () => {
   inputVisible.value = true;
+  await nextTick();
+  input.value?.focus();
 };
-const handleInputConfirm = () => {
-  if (inputValue.value && !tags.value.includes(inputValue.value)) {
-    tags.value = [...tags.value, inputValue.value];
+const handleInputConfirm = async () => {
+  if (!inputVisible.value) return;
+  const text = inputValue.value.trim();
+  if (text && !tags.value.includes(text)) {
+    tags.value = [...tags.value, text];
   }
   inputVisible.value = false;
   inputValue.value = '';
+  await nextTick();
+  addButton.value?.focus();
 };
 
 const handleClose = (removed: string) => {
@@ -30,14 +36,16 @@ const handleClose = (removed: string) => {
     <Tag v-for="tag in tags" :key="tag" closable @close="handleClose(tag)">{{ tag }}</Tag>
     <input
       v-if="inputVisible"
+      ref="input"
+      v-model="inputValue"
       type="text"
-      size="small"
+      aria-label="New tag name"
       :style="{ width: '78px', marginRight: '8px', verticalAlign: 'top' }"
       @blur="handleInputConfirm"
-      @keydown.enter="handleInputConfirm"
+      @keydown.enter.prevent="handleInputConfirm"
     >
-    <Tag v-else :style="{ borderStyle: 'dashed', cursor: 'pointer' }" @click="showInput">
-      <PlusOutlined /> New Tag
-    </Tag>
+    <button v-else ref="addButton" type="button" @click="showInput">
+      <PlusOutlined aria-hidden="true" /> New Tag
+    </button>
   </Space>
 </template>

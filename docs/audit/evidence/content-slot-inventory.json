@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 535,
+    "rows": 543,
     "byCategory": {
-      "data": 123,
-      "component-content-candidate": 154,
+      "data": 121,
+      "component-content-candidate": 155,
       "deprecated": 53,
-      "internal": 128,
-      "render-function-candidate": 65,
+      "internal": 136,
+      "render-function-candidate": 66,
       "configuration": 12
     },
     "byDecision": {
-      "keep-data": 135,
-      "review": 199,
-      "skip": 181,
+      "keep-data": 133,
+      "review": 201,
+      "skip": 189,
       "implemented-verified": 20
     }
   },
@@ -2422,6 +2422,34 @@
     {
       "component": "config-provider",
       "owner": "ConfigProviderProps",
+      "prop": "empty",
+      "category": "render-function-candidate",
+      "source": "packages/ui/src/config-provider/interface.ts:124",
+      "slotRuntime": {
+        "status": "not-run",
+        "files": []
+      },
+      "slotType": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/config-provider/__tests__/index.test.ts",
+          "packages/ui/src/config-provider/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "review",
+      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+    },
+    {
+      "component": "config-provider",
+      "owner": "ConfigProviderProps",
       "prop": "renderEmpty",
       "category": "render-function-candidate",
       "source": "packages/ui/src/config-provider/interface.ts:109",
@@ -4690,39 +4718,10 @@
     },
     {
       "component": "empty",
-      "owner": "EmptyConfig",
-      "prop": "image",
-      "category": "data",
-      "source": "packages/ui/src/empty/interface.ts:122",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/empty/__tests__/a11y.test.ts",
-          "packages/ui/src/empty/__tests__/index.test.ts",
-          "packages/ui/src/empty/__tests__/semantic.test.ts"
-        ]
-      },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
-    },
-    {
-      "component": "empty",
       "owner": "EmptyProps",
       "prop": "description",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/empty/interface.ts:95",
+      "source": "packages/ui/src/empty/interface.ts:46",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -4730,17 +4729,22 @@
         ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/demo/description.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/empty/__tests__/a11y.test.ts",
+          "packages/ui/src/empty/__tests__/contract-audit.test.ts",
           "packages/ui/src/empty/__tests__/index.test.ts",
           "packages/ui/src/empty/__tests__/semantic.test.ts"
         ]
@@ -4753,14 +4757,54 @@
       "owner": "EmptyProps",
       "prop": "image",
       "category": "render-function-candidate",
-      "source": "packages/ui/src/empty/interface.ts:88",
+      "source": "packages/ui/src/empty/interface.ts:44",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/Empty.vue"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/demo/customize.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/__tests__/a11y.test.ts",
+          "packages/ui/src/empty/__tests__/contract-audit.test.ts",
+          "packages/ui/src/empty/__tests__/index.test.ts",
+          "packages/ui/src/empty/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "review",
+      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+    },
+    {
+      "component": "empty",
+      "owner": "EmptySlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/empty/interface.ts:63",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/Empty.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "not-found",
@@ -4769,13 +4813,84 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/empty/__tests__/contract-audit.test.ts",
+          "packages/ui/src/empty/__tests__/index.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "empty",
+      "owner": "EmptySlots",
+      "prop": "description",
+      "category": "internal",
+      "source": "packages/ui/src/empty/interface.ts:62",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/Empty.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/demo/description.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
           "packages/ui/src/empty/__tests__/a11y.test.ts",
+          "packages/ui/src/empty/__tests__/contract-audit.test.ts",
           "packages/ui/src/empty/__tests__/index.test.ts",
           "packages/ui/src/empty/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "empty",
+      "owner": "EmptySlots",
+      "prop": "image",
+      "category": "internal",
+      "source": "packages/ui/src/empty/interface.ts:61",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/Empty.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/demo/customize.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/empty/__tests__/a11y.test.ts",
+          "packages/ui/src/empty/__tests__/contract-audit.test.ts",
+          "packages/ui/src/empty/__tests__/index.test.ts",
+          "packages/ui/src/empty/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "flex",
@@ -13442,7 +13557,7 @@
       "owner": "CheckableTagOption",
       "prop": "label",
       "category": "data",
-      "source": "packages/ui/src/tag/interface.ts:83",
+      "source": "packages/ui/src/tag/interface.ts:85",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -13466,10 +13581,84 @@
     },
     {
       "component": "tag",
-      "owner": "TagConfig",
-      "prop": "closeIcon",
-      "category": "data",
-      "source": "packages/ui/src/tag/interface.ts:63",
+      "owner": "CheckableTagSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/tag/interface.ts:66",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/CheckableTag.ts",
+          "packages/ui/src/tag/Tag.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/__tests__/contract-audit.test.ts",
+          "packages/ui/src/tag/__tests__/index.test.ts",
+          "packages/ui/src/tag/__tests__/s30-issue30.test.ts",
+          "packages/ui/src/tag/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "tag",
+      "owner": "CheckableTagSlots",
+      "prop": "icon",
+      "category": "internal",
+      "source": "packages/ui/src/tag/interface.ts:67",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/CheckableTag.ts",
+          "packages/ui/src/tag/Tag.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/demo/customize.vue",
+          "packages/ui/src/tag/demo/icon.vue",
+          "packages/ui/src/tag/demo/status.vue",
+          "packages/ui/src/tag/demo/style-class.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/__tests__/contract-audit.test.ts",
+          "packages/ui/src/tag/__tests__/index.test.ts",
+          "packages/ui/src/tag/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "tag",
+      "owner": "TagProps",
+      "prop": "closable",
+      "category": "component-content-candidate",
+      "source": "packages/ui/src/tag/interface.ts:32",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -13485,13 +13674,124 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/tag/__tests__/contract-audit.test.ts",
           "packages/ui/src/tag/__tests__/index.test.ts",
           "packages/ui/src/tag/__tests__/s30-issue30.test.ts",
           "packages/ui/src/tag/__tests__/semantic.test.ts"
         ]
       },
-      "decision": "keep-data",
-      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+      "decision": "review",
+      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+    },
+    {
+      "component": "tag",
+      "owner": "TagSlots",
+      "prop": "closeIcon",
+      "category": "internal",
+      "source": "packages/ui/src/tag/interface.ts:42",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/Tag.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/demo/basic.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/__tests__/contract-audit.test.ts",
+          "packages/ui/src/tag/__tests__/index.test.ts",
+          "packages/ui/src/tag/__tests__/s30-issue30.test.ts",
+          "packages/ui/src/tag/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "tag",
+      "owner": "TagSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/tag/interface.ts:40",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/CheckableTag.ts",
+          "packages/ui/src/tag/Tag.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/__tests__/contract-audit.test.ts",
+          "packages/ui/src/tag/__tests__/index.test.ts",
+          "packages/ui/src/tag/__tests__/s30-issue30.test.ts",
+          "packages/ui/src/tag/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "tag",
+      "owner": "TagSlots",
+      "prop": "icon",
+      "category": "internal",
+      "source": "packages/ui/src/tag/interface.ts:41",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/CheckableTag.ts",
+          "packages/ui/src/tag/Tag.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/demo/customize.vue",
+          "packages/ui/src/tag/demo/icon.vue",
+          "packages/ui/src/tag/demo/status.vue",
+          "packages/ui/src/tag/demo/style-class.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/tag/__tests__/contract-audit.test.ts",
+          "packages/ui/src/tag/__tests__/index.test.ts",
+          "packages/ui/src/tag/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "time-picker",

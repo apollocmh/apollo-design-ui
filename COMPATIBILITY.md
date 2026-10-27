@@ -48,3 +48,5 @@ Result全部状态的完整图标槽/默认图形开关、条件内容、原生�
 Button完整内容宿主、独立color/variant、加载请求与指示器分离、当前Provider/58 Token及合法发布工具入口修正见[Button契约迁移](docs/migrations/button-contracts.md)；内部Search/Dropdown/FloatButton链路同步调整。
 
 Empty 的完整 image/description/footer 内容、当前 Provider/语言、自然布局、空宿主及默认文字对比度修正见 [Empty 契约迁移](docs/migrations/empty-contracts.md)；保留插画几何与原始参考证据。
+
+Tag / CheckableTag / CheckableTagGroup 的完整内容、所属原生关闭按钮/链接、Vue 事件和强类型模型、当前 Provider/三个 Token 与两套真实语义，集中见 [Tag 契约迁移](docs/migrations/tag-contracts.md)；原始参考矩阵保留，开发期直接修正错误 DOM/回调形态。

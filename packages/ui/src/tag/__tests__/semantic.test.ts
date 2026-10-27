@@ -14,9 +14,11 @@
  */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import { describe, expect, it } from 'vitest';
 import { h } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/tag.dom.json';
 import { CheckableTag, CheckableTagGroup, Tag } from '../index';
+import { tagContractDifferences } from './contract-differences';
 
 const specs: Record<string, { render: () => DomRenderResult }> = {
   'tag:prefix-cls:no-props': { render: () => h(Tag, {}, () => 'x') },
@@ -73,24 +75,21 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
 domContractTest('Tag', {
   baseline,
   keepStyle: true,
-  allow: {
-    // PLATFORM：客户端 CSSOM 把 hex 序列化为 rgb()（React SSR 是字符串拼接）。
-    'tag:custom-color-filled': {
-      reason: 'PLATFORM · CSSOM 颜色序列化',
-      diff: [
-        '$/span[0]: style 不同 [background-color:#e7f6fe;color:#2db7f5] vs [background-color:rgb(231,246,254);color:rgb(45,183,245)]',
-      ],
-    },
-    'tag:custom-color-solid': {
-      reason: 'PLATFORM · CSSOM 颜色序列化',
-      diff: [
-        '$/span[0]: style 不同 [background-color:#2db7f5] vs [background-color:rgb(45,183,245)]',
-      ],
-    },
-  },
+  allow: tagContractDifferences,
   render: (id) => {
     const spec = specs[id];
     if (!spec) throw new Error(`[Tag L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
     return spec.render();
   },
+});
+
+// The reference matrix remains complete in both directions. Differences are finite,
+// explained in the migration and replaced by native behavioural/browser assertions.
+describe('Tag reference preservation', () => {
+  it('retains all 24 original scenarios without unused allowances', () => {
+    const ids = baseline.cases.map((item) => item.id).sort();
+    expect(ids).toHaveLength(24);
+    expect(Object.keys(specs).sort()).toEqual(ids);
+    expect(Object.keys(tagContractDifferences).sort()).toEqual(ids);
+  });
 });

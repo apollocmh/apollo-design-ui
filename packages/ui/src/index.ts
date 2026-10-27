@@ -610,14 +610,28 @@ export { prepareComponentToken as prepareSwitchComponentToken } from './switch/s
 //    预设 13 色 × 3 variant 与状态四色 × 3 variant 的规则由生成器循环产出。
 // ---------------------------------------------------------------------------
 export type {
+  CheckableTagEmits,
+  CheckableTagGroupEmits,
   CheckableTagGroupProps,
+  CheckableTagGroupRef,
+  CheckableTagGroupValue,
   CheckableTagOption,
   CheckableTagProps,
+  CheckableTagRef,
+  CheckableTagSlots,
+  CheckableTagValue,
+  GroupSemanticClassNames,
+  GroupSemanticStyles,
+  TagClosable,
+  TagClosableConfig,
   TagColor,
+  TagConfig,
+  TagEmits,
   TagProps,
   TagRef,
   TagSemanticClassNames,
   TagSemanticStyles,
+  TagSlots,
   TagVariant,
 } from './tag';
 export { CheckableTag, CheckableTagGroup, Tag } from './tag';

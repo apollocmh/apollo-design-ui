@@ -22,11 +22,11 @@ const customs = ['#f50', '#2db7f5', '#87d068', '#108ee9'];
 
 <template>
   <div v-for="variant in variants" :key="variant">
-    <h4>Presets ({{ variant }})</h4>
+    <p>Presets ({{ variant }})</p>
     <Tag v-for="p in presets" :key="p" :color="p" :variant="variant">{{ p }}</Tag>
-    <h4>Status ({{ variant }})</h4>
+    <p>Status ({{ variant }})</p>
     <Tag v-for="s in status" :key="s" :color="s" :variant="variant">{{ s }}</Tag>
-    <h4>Custom ({{ variant }})</h4>
+    <p>Custom ({{ variant }})</p>
     <Tag v-for="c in customs" :key="c" :color="c" :variant="variant">{{ c }}</Tag>
   </div>
 </template>

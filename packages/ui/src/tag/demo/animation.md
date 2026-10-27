@@ -1,8 +1,8 @@
 ---
 order: 10
 title:
-  zh-CN: 关闭动画
-  en-US: Animation
+  zh-CN: 关闭与重置
+  en-US: Close and reset
 ---
 
-关闭标签（关闭后 DOM 保留，`-hidden` 类隐藏 —— antd 逐字语义）。
+通过父级状态卸载关闭的标签，Reset 重新挂载。Tag 自身默认关闭保留 DOM 并以 `-hidden` 隐藏；此 Demo 不宣称关闭过渡动画。

@@ -41,7 +41,7 @@ const mountA11y = async (
   props: Record<string, unknown> = {},
   slots?: ListSlots<string>,
 ): Promise<VueWrapper> => {
-  const wrapper = mount(List, { props, slots, attachTo: document.body });
+  const wrapper = mount(List<string>, { props, slots, attachTo: document.body });
   await nextTick();
   return wrapper;
 };

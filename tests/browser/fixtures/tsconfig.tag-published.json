@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": { "paths": {} },
+  "include": [
+    "TagPublicContracts.vue",
+    "TagPublishedContracts.ts",
+    "../../../packages/ui/src/tag/demo/*.vue"
+  ],
+  "exclude": []
+}

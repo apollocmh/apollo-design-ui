@@ -14,9 +14,9 @@ describe('Tag · 主题无关性', () => {
   const css = genTagStyle('apollo');
 
   it('Component Token 3 个 CSS 变量声明在根类', () => {
-    expect(css).toContain('--apollo-tag-default-bg:#f5f5f5');
+    expect(css).toContain('--apollo-tag-default-bg:var(--apollo-color-fill-tertiary)');
     expect(css).toContain('--apollo-tag-default-color:var(--apollo-color-text)');
-    expect(css).toContain('--apollo-tag-solid-text-color:#fff');
+    expect(css).toContain('--apollo-tag-solid-text-color:var(--apollo-tag-auto-solid-color)');
   });
 
   it('预设色 × 三 variant（blue 抽样）', () => {

@@ -101,7 +101,7 @@ describe('#30.2 自定义关闭图标的 onClick 不能执行两次', () => {
 });
 
 describe('#30.3 动态 disabled（false → true → false）', () => {
-  it('[A] Tag：切换后立即生效（类名 + 关闭图标 tabindex）', async () => {
+  it('[A] Tag：切换后立即生效（类名 + 原生按钮 disabled）', async () => {
     const disabled = ref(false);
     const Host = defineComponent({
       setup: () => () =>
@@ -112,20 +112,20 @@ describe('#30.3 动态 disabled（false → true → false）', () => {
     const w = mount(Host, { attachTo: document.body });
     await nextTick();
     const root = () => document.querySelector<HTMLElement>('.apollo-tag');
-    const icon = () => document.querySelector<HTMLElement>('.apollo-tag-close-icon');
+    const icon = () => document.querySelector<HTMLButtonElement>('.apollo-tag-close-icon');
 
     expect(root()?.classList.contains('apollo-tag-disabled')).toBe(false);
-    expect(icon()?.getAttribute('tabindex')).toBe('0');
+    expect(icon()?.disabled).toBe(false);
 
     disabled.value = true;
     await nextTick();
     expect(root()?.classList.contains('apollo-tag-disabled')).toBe(true);
-    expect(icon()?.getAttribute('tabindex')).toBe('-1');
+    expect(icon()?.disabled).toBe(true);
 
     disabled.value = false;
     await nextTick();
     expect(root()?.classList.contains('apollo-tag-disabled')).toBe(false);
-    expect(icon()?.getAttribute('tabindex')).toBe('0');
+    expect(icon()?.disabled).toBe(false);
     w.unmount();
   });
 

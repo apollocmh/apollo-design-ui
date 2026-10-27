@@ -22,7 +22,7 @@ afterEach(() => {
 
 /** 用 `dataSource` + #item 造一个最简列表。 */
 const mountList = (props: Record<string, unknown> = {}, slots: ListSlots<string> = {}) =>
-  mount(List, { props, slots });
+  mount(List<string>, { props, slots });
 
 describe('List · L1 结构与类名（判据 1 / 2 / 7 / 10）', () => {
   it('默认渲染 `apollo-list` + `-split` + `-css-var`，不渲染分页/页头/页脚', () => {

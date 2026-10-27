@@ -1,26 +1,23 @@
-/**
- * Tag 的 Component Token（3 个）。
- *
- * 契约来源：antd 6.6.4 的 `es/tag/style/index.js` 的 prepareComponentToken。
- * `defaultBg`（colorFillTertiary onBackground colorBgContainer）与
- * `solidTextColor`（isBright(colorBgSolid) 判定）是**运行时算出的实色** ——
- * antd cssVar 产物同样是实色（#f5f5f5 / #fff），以 seed 常量落地（badge 范式）。
- */
-
-import type { AliasToken } from '@apollo-design/theme';
+import { type AliasToken, getDesignToken } from '@apollo-design/theme';
+import { Color } from '@apollo-design/utils';
+import { onBackground } from '../../_internal/color-composite';
 
 export interface ComponentToken {
-  /** 默认底色（= colorFillTertiary 在 colorBgContainer 上合成的实色）。 */
   defaultBg?: string;
-  /** 默认文字色（= colorText）。 */
   defaultColor?: string;
-  /** solid variant 的文字色（= isBright(colorBgSolid) ? '#000' : '#fff'）。 */
   solidTextColor?: string;
 }
-
-/** 与 antd 的 `prepareComponentToken` 逐字对应（默认值以 CSS 变量声明落地）。 */
-export const prepareTagComponentToken = (token?: AliasToken): Partial<ComponentToken> => ({
-  defaultBg: '#f5f5f5',
-  defaultColor: token?.colorText ?? 'rgba(0,0,0,0.88)',
-  solidTextColor: '#fff',
-});
+export function prepareTagComponentToken(
+  token: AliasToken = getDesignToken(),
+): Required<ComponentToken> {
+  let background = token.colorFillTertiary;
+  if (!background.includes('var(') && !token.colorBgContainer.includes('var(')) {
+    background = onBackground(background, token.colorBgContainer).toHexString();
+  }
+  let solid = '#fff';
+  if (/^(#|rgb|hsl)/.test(token.colorBgSolid)) {
+    const color = new Color(token.colorBgSolid);
+    if (color.r * 0.299 + color.g * 0.587 + color.b * 0.114 >= 128) solid = '#000';
+  }
+  return { defaultBg: background, defaultColor: token.colorText, solidTextColor: solid };
+}
