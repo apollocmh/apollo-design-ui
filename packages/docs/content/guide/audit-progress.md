@@ -65,13 +65,21 @@ List验收还修复了关联的全屏加载正文错位、遮罩语义和文案�
 
 预览状态使用顶层`v-model:open`，分组当前项使用`v-model:current`；内容使用Vue具名插槽，变换通知使用`@transform`。失效的旧回调字段已直接移除。复制当前示例和API时请使用本次站点内容。
 
-## 当前收口：Button / Result
+## Button / Result 完整清单已统一验收
 
-本阶段已实现 Button 的完整 Vue 内容、当前 Provider、加载生命周期和 58 个既有 Token，保留全部 20 个原 Demo；同时修复 Compact/Search 的状态传递及关联示例。最终发布产物 147 项 Button 浏览器检查、51 项真实消费者检查及 1168 项颜色检查通过。Result 的共享按钮问题已修复，两个整改单元正在统一验收自有视觉、最终示例与站点；尚未标记完成。[完整范围、验证与剩余项](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-button-contract-audit.md)。
+Button 的完整 Vue 内容、当前 Provider、加载生命周期、原生根行为和 58 个既有 Token 已修复，保留全部 20 个原 Demo；Result 的五个完整槽、六个语义落点、四个 Token 与三种异常插画已验收，保留全部 10 个原 Demo。关联 Compact/Search、FloatButton 及异步/事件示例同步修正。
+
+最终相关四层 2352 项、公开类型 398 项、Button 147 项生产浏览器与 51 项真实消费者检查通过；颜色矩阵 1168/1168，原 Demo 四算法分别 80/80 与 40/40，实际站点页面及交互分别 43/43 与 23/23。两组件各 39 张自有视觉已逐张审阅批准，连同 QRCode 共 114 张最终逐像素一致。全库其他审计继续进行。
+
+- [加载请求、延迟指示器与恢复](/components/button/demo/loading)
+- [当前 Button Token、原生变量与保留草稿](/components/button/demo/component-token)
+- [完整自定义结果内容与状态切换](/components/result/demo/custom-icon)
+- [Button 范围、迁移及验证证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-button-contract-audit.md)
+- [Result 范围与验收边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-result-contract-audit.md)
 
 ## 还没有完成什么
 
-全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有199项候选待逐项复核，候选不等于缺陷。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
+全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有199项候选待逐项复核，候选不等于缺陷。本次自有视觉矩阵1308项，已批准315项，其余993项随后续完整整改单元验收。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
 
 ## 查看证据与后续进展
 
@@ -128,11 +136,21 @@ List acceptance also fixed fullscreen loading flow, actual mask semantics, reada
 
 Use top-level `v-model:open`, group `v-model:current`, named content slots and `@transform`. Obsolete callback fields have been removed directly.
 
-## Current acceptance: Button / Result
+## Button / Result accepted
 
-Button now consumes complete Vue content, current Provider values, loading state and all 58 existing tokens. All 20 original demos remain. The final published build passes 147 Button browser checks, 51 actual consumer checks and 1,168 colour checks. Compact/Search state propagation and related demos are repaired. Button and Result still await unified visual, final-demo and site acceptance; neither unit is marked complete. [Scope, evidence and remaining work](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-button-contract-audit.md).
+Button now consumes complete Vue content, current Provider values, native root behavior, loading state and all 58 existing tokens. All 20 original demos remain. Result's five complete slots, six semantic parts, four tokens and three exception illustrations are verified; all 10 original demos remain. Related Compact/Search, FloatButton and async/event demos are repaired.
+
+The final related gate passes 2,352 runtime tests and 398 public type checks. Button passes 147 production browser checks, 51 actual consumer checks and 1,168 colour checks. Original demo theme matrices pass 80/80 and 40/40; actual site pages and interactions pass 43/43 and 23/23. All 39 images per component were individually reviewed and approved; the final 114-image comparison, including QRCode, has zero differing pixels. The wider library audit continues.
+
+- [Loading and recovery](/components/button/demo/loading)
+- [Current tokens and a preserved draft](/components/button/demo/component-token)
+- [Complete custom Result content](/components/result/demo/custom-icon)
+- [Button scope and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-button-contract-audit.md)
+- [Result scope and boundaries](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-result-contract-audit.md)
 
 ## Remaining work
+
+This snapshot has 315 approved Apollo visual cases out of 1,308; the remaining 993 await review within later audit units.
 
 Other components and foundation packages still require their complete audits. The content inventory has 199 candidates awaiting review; candidates are not confirmed defects. Final whole-library gates remain required after all remediation finishes. Touch pinch, other browsers and unspecified cross-document combinations are outside this unit's verified scope.
 

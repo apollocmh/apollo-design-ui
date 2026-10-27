@@ -6,6 +6,10 @@ subtitle: Button
 
 A button triggers an action or navigates through a native anchor.
 
+## When To Use
+
+Use a button to submit a form, confirm an operation or trigger an action. Use `href` for navigation through a native link.
+
 ## Examples
 
 All 20 original demos remain: `basic`, `block`, `chinese-chars-loading`, `chinese-space`, `color-variant`, `component-token`, `custom-disabled-bg`, `danger`, `disabled`, `ghost`, `href`, `icon`, `icon-placement`, `linear-gradient`, `loading`, `multiple`, `semantic`, `shape`, `size`, `style-class`.

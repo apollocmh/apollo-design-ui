@@ -1,13 +1,13 @@
 {
   "entries": {
     "button/type__light__desktop": {
-      "sha256": "e4b756aab91ee02563991fdf5fac26f64f47ed0a5695ab58fcb3914a66097ed2",
-      "environment": "darwin/arm64/155.0.8059.85/系统 Chrome",
-      "sourceCommit": "6867166a256fc4cef13580c8fe4c79243e00d4c6",
+      "sha256": "15c83045432110c0a14d3bb4cff8bdb3889042acaf09f883b82cde640347c31c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
       "dirty": false,
-      "capturedAt": "2026-10-23T08:54:33.179Z",
-      "reviewedAt": "2026-10-23T08:58:42.062Z",
-      "reviewNote": "Codex visual review: Apollo type variant at desktop/light. Primary, Default, Dashed, Text, Link and Chinese labels are legible; button heights, borders, spacing and stage bounds are intact. Reviewed generated Apollo pixels at commit 6867166a; this approves only this scenario, not other variants or states."
+      "capturedAt": "2026-10-27T01:09:51.855Z",
+      "reviewedAt": "2026-10-27T01:16:07.288Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
     },
     "image/basic__light__mobile": {
       "sha256": "133757cb952fbd0082c86028df5de0eaa0278ab2b245a56cbf493902094f01cd",
@@ -2141,6 +2141,699 @@
       "capturedAt": "2026-10-26T20:46:18.131Z",
       "reviewedAt": "2026-10-26T20:46:40.871Z",
       "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
+    },
+    "button/type__light__mobile": {
+      "sha256": "c6f606fcf5b322ade87f7c4dc548b91b5f99d516aa84a7a7ee1e258a27f6b9e9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:09:47.691Z",
+      "reviewedAt": "2026-10-27T01:16:07.286Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/type__light__tablet": {
+      "sha256": "d3f4dbef7c59e3e8859f403ce9a8c620eae4abbfcf7d0abca32414293129def7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:09:49.783Z",
+      "reviewedAt": "2026-10-27T01:16:07.287Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/complete-content__light__mobile": {
+      "sha256": "97f5b21a528080611b4203613655fd0916a8a04c269bb85b4b71c5f6ce6ef918",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:09:53.987Z",
+      "reviewedAt": "2026-10-27T01:16:07.288Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/complete-content__light__tablet": {
+      "sha256": "1774cc800a3855dce525d0dc3a027467888a30d62b28073c21b750a75d7d2b60",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:09:56.282Z",
+      "reviewedAt": "2026-10-27T01:16:07.289Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/complete-content__light__desktop": {
+      "sha256": "e2baaa47b88b5e82f6dd6ec9e34d8318da43b047950252505eefd6abd35eaa5c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:09:58.472Z",
+      "reviewedAt": "2026-10-27T01:16:07.289Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/loading-states__light__mobile": {
+      "sha256": "70a81fefd4913d16d964a1e135de7a531a466ec5093baf1ce612ddee4b997762",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:00.561Z",
+      "reviewedAt": "2026-10-27T01:16:07.289Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/loading-states__light__tablet": {
+      "sha256": "966131a4170c106b4792e8d6062a9bea9550242efaa5a5b861921d2359ee118b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:02.777Z",
+      "reviewedAt": "2026-10-27T01:16:07.290Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/loading-states__light__desktop": {
+      "sha256": "6fb01e9cdb032e948a167351caa7e1ea8cbf0e2aa675ac56221052814f524a9a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:04.839Z",
+      "reviewedAt": "2026-10-27T01:16:07.290Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/native-disabled__light__mobile": {
+      "sha256": "b27186519e2cc93ce7d26741084216455ef419996d54bd8f1a47dceeb723afdc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:06.915Z",
+      "reviewedAt": "2026-10-27T01:16:07.290Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/native-disabled__light__tablet": {
+      "sha256": "88a0477acd4a48814a3d91a9ee9dedd60bb3f2923f9fcb32c7315922adbe70c6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:08.981Z",
+      "reviewedAt": "2026-10-27T01:16:07.291Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/native-disabled__light__desktop": {
+      "sha256": "ad8043c2555f2a52bf2fbd1134393c0c9e06b32ddedcecd821f7ffd7b6c36d40",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:11.133Z",
+      "reviewedAt": "2026-10-27T01:16:07.291Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/shapes__light__mobile": {
+      "sha256": "a98b3630805f05c912caae17068484ba311332629365d993f7aa9e65252c355b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:13.601Z",
+      "reviewedAt": "2026-10-27T01:16:07.291Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/shapes__light__tablet": {
+      "sha256": "41717492f1611d67eada6a1cdb63d5958bf74bdeb8a75121e363651a6b8b1260",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:15.696Z",
+      "reviewedAt": "2026-10-27T01:16:07.292Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/shapes__light__desktop": {
+      "sha256": "917e481cd1e7a2afb2bbb8f5b29aa42684e0665f3a8e55de044c7146b4b84d6f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:17.792Z",
+      "reviewedAt": "2026-10-27T01:16:07.292Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/semantic-tokens__light__mobile": {
+      "sha256": "fa15bca889c5b7201f72605eba8fe086c322f9a79e66f5c21b89d29faea85c1d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:19.869Z",
+      "reviewedAt": "2026-10-27T01:16:07.292Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/semantic-tokens__light__tablet": {
+      "sha256": "c0d016749ec1b3e8acc0b8256c4b6a032cb163db3caae954a0aa1865d288cd49",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:21.887Z",
+      "reviewedAt": "2026-10-27T01:16:07.293Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/semantic-tokens__light__desktop": {
+      "sha256": "6de3b955de13f6ccd1773fa94d35cd857e0f00932ab02351d2e9eda25e6487d6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:23.991Z",
+      "reviewedAt": "2026-10-27T01:16:07.293Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/current-provider__light__mobile": {
+      "sha256": "bebb9b099a7f8546743d4715006930d939ba9f8e809f89556abc44185affb1da",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:25.993Z",
+      "reviewedAt": "2026-10-27T01:16:07.293Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/current-provider__light__tablet": {
+      "sha256": "e1f55f6086fe8d626515c71bd8ac0a2635cd3114f641f60a3770135202356930",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:28.052Z",
+      "reviewedAt": "2026-10-27T01:16:07.294Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/current-provider__light__desktop": {
+      "sha256": "08ca99c41ee0227ee217a7284976263e7a7909578d6a416b3d2cd3ad6280201f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:30.146Z",
+      "reviewedAt": "2026-10-27T01:16:07.294Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/compact-layout__light__mobile": {
+      "sha256": "1909882f1f370b84807de9d31e3ab1e27abcc8234203eaf619152a893329f52f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:32.261Z",
+      "reviewedAt": "2026-10-27T01:16:07.295Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/compact-layout__light__tablet": {
+      "sha256": "9182f5081eff3c8bab6e8e716a284e90fa5a365473f71e5ee2232425703c855f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:34.364Z",
+      "reviewedAt": "2026-10-27T01:16:07.295Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/compact-layout__light__desktop": {
+      "sha256": "cfcfe8e89a108ea8ce47693846d9ca8dd31dbcbd27d0b742b84d8a6ac082b9b5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:36.474Z",
+      "reviewedAt": "2026-10-27T01:16:07.296Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/rtl__light__mobile": {
+      "sha256": "53e6a6953b8b2a33e10801161b4db09c4ef3617a41947a73b6fc0c73d225276c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:38.483Z",
+      "reviewedAt": "2026-10-27T01:16:07.296Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/rtl__light__tablet": {
+      "sha256": "ced5c26363c80ed71cb3432a32d3260b22faa1746d4e42dc18bc13d037fcae71",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:40.519Z",
+      "reviewedAt": "2026-10-27T01:16:07.296Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/rtl__light__desktop": {
+      "sha256": "1222c080717be5c2c38dfdc4c6a0963fb31b474ab06569fb380285942b2c3623",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:42.556Z",
+      "reviewedAt": "2026-10-27T01:16:07.297Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/theme-dark__light__mobile": {
+      "sha256": "733b812a6425521aebaa8109946c7c96f36d0562d590dd7d1c77a21fd88f2a72",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:44.617Z",
+      "reviewedAt": "2026-10-27T01:16:07.297Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/theme-dark__light__tablet": {
+      "sha256": "b9119fac9ffa30a4e2e8bc385d94210dd74168eed4cc1c33cd4f4d1134d8065a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:46.713Z",
+      "reviewedAt": "2026-10-27T01:16:07.297Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/theme-dark__light__desktop": {
+      "sha256": "33f8bdf9afcd98223fabe158ba9a79645c15bc3326b359cdd623ffa7cca6760b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:48.766Z",
+      "reviewedAt": "2026-10-27T01:16:07.298Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/theme-compact__light__mobile": {
+      "sha256": "941e7544a035da1b42e866061c9dab980f150d35ded993207e49fa49ee153d0d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:50.828Z",
+      "reviewedAt": "2026-10-27T01:16:07.298Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/theme-compact__light__tablet": {
+      "sha256": "3fe8eff9451b142faaecf9742ab16d21e2256e09ea24d47029974044c1e54cf7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:52.877Z",
+      "reviewedAt": "2026-10-27T01:16:07.298Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/theme-compact__light__desktop": {
+      "sha256": "3d76e580b4697d2e3a8636d9455b492720ba41f0aee309dc651bedd98fbd90eb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:54.966Z",
+      "reviewedAt": "2026-10-27T01:16:07.299Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/theme-dark-compact__light__mobile": {
+      "sha256": "ecd8bd014045864ac97a64fde6996c23c6c19ea446a96111128279e318618cc6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:57.029Z",
+      "reviewedAt": "2026-10-27T01:16:07.299Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/theme-dark-compact__light__tablet": {
+      "sha256": "63bd64b7ba964a0628e0c8b176c5d83623b6bfc8ea2d92a39cb1777633f5fa7a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:59.101Z",
+      "reviewedAt": "2026-10-27T01:16:07.300Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/theme-dark-compact__light__desktop": {
+      "sha256": "657594b80a54c46aaa27bd2bfdbe2c1b4e2b3da5eda36e688b997b97b368af9c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:01.166Z",
+      "reviewedAt": "2026-10-27T01:16:07.300Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/native-focus__light__mobile": {
+      "sha256": "ef4bbe6dcb4f4a4640ac9e260d7a6c7de5669d8972b6dc73c4c40ec184d5fddc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:03.229Z",
+      "reviewedAt": "2026-10-27T01:16:07.300Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/native-focus__light__tablet": {
+      "sha256": "4a5c92d8f8a2a609cdbd42a73356fcc991c426db7d0dd7152b7dd9c79fa9983a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:05.280Z",
+      "reviewedAt": "2026-10-27T01:16:07.301Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/native-focus__light__desktop": {
+      "sha256": "120e04e282dcdb33be91d2dcc6cdbd077b5cdcb5dbbd11ea091bd16f5a69f053",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:07.319Z",
+      "reviewedAt": "2026-10-27T01:16:07.301Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "result/info-success__light__mobile": {
+      "sha256": "3f58fc6e65f63374265e96877cc464549834990d6d3c64a7be756f9b34fa30b3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:09.339Z",
+      "reviewedAt": "2026-10-27T01:20:01.512Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/info-success__light__tablet": {
+      "sha256": "c3a2fa6ff069e0b320a1bf0e2226529ebf9bd9bbbbd40eb6c308dfc7c25f5e73",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:11.353Z",
+      "reviewedAt": "2026-10-27T01:20:01.513Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/info-success__light__desktop": {
+      "sha256": "fbcfdaaf114151aadf58b9920e364c8879478e049b43061e644a5647558a027f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:13.688Z",
+      "reviewedAt": "2026-10-27T01:20:01.514Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/warning-error__light__mobile": {
+      "sha256": "46a3380d95a19ffb6561c174fc610d4d18a640d2a4aa06820bc9c49b80fb26cc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:15.857Z",
+      "reviewedAt": "2026-10-27T01:20:01.514Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/warning-error__light__tablet": {
+      "sha256": "7edefa5a23b20ebf4e039420acfe1c1cfc235df980af94eb36cb78209833549d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:18.091Z",
+      "reviewedAt": "2026-10-27T01:20:01.515Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/warning-error__light__desktop": {
+      "sha256": "1b6793d808ddf13ed2612845447f6ebab884f52796022296b4736eb2f2de6330",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:20.438Z",
+      "reviewedAt": "2026-10-27T01:20:01.515Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/exception-403__light__mobile": {
+      "sha256": "632d1094d19246dfac7783ae5577d4c85d7878b2625f7311bfef1741efe0d048",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:22.714Z",
+      "reviewedAt": "2026-10-27T01:20:01.515Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/exception-403__light__tablet": {
+      "sha256": "7a58f374e73989942aab4b859d6e06b2016a0ba3ebfaa9720fa62cfd86da3ff1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:24.848Z",
+      "reviewedAt": "2026-10-27T01:20:01.516Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/exception-403__light__desktop": {
+      "sha256": "d7dd08ee559bf4701c4531de6864c96744d21808875d242eeecc95642f44c147",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:27.042Z",
+      "reviewedAt": "2026-10-27T01:20:01.516Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/exception-404__light__mobile": {
+      "sha256": "83f1bde33ca698d349371abc5df5c0e38648fd4a78cdd8c83788c26cb7811d73",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:29.102Z",
+      "reviewedAt": "2026-10-27T01:20:01.517Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/exception-404__light__tablet": {
+      "sha256": "4e7fc516fc1bced5e1d1083787c21a87817c75f7b398309d350ce7a68be2325f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:31.162Z",
+      "reviewedAt": "2026-10-27T01:20:01.517Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/exception-404__light__desktop": {
+      "sha256": "c5dbd96b9d4f775dc925ca60d96d668b73b43c6f8f041647cd470a9eb2d803e5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:33.224Z",
+      "reviewedAt": "2026-10-27T01:20:01.517Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/exception-500__light__mobile": {
+      "sha256": "ef010282b494275f517d697b6532d071af8d45f0793ddc2f1434f8e2aa8f8b29",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:35.252Z",
+      "reviewedAt": "2026-10-27T01:20:01.518Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/exception-500__light__tablet": {
+      "sha256": "920fd27f036fdefc2dddb333f69a6ef079f214e1d012e6602cc4cc0e5a9814e4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:37.309Z",
+      "reviewedAt": "2026-10-27T01:20:01.519Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/exception-500__light__desktop": {
+      "sha256": "ab3e1ac778eca8fbb018ae9ed6ce5dce23e72cac0b42a9d458e37325b7820259",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:39.361Z",
+      "reviewedAt": "2026-10-27T01:20:01.519Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/complete-content__light__mobile": {
+      "sha256": "f7e6e0768e1c50a09282fddd6331cc21deee6d4a2e7f6ff9062578427cbc3e65",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:41.414Z",
+      "reviewedAt": "2026-10-27T01:20:01.520Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/complete-content__light__tablet": {
+      "sha256": "58164a27fb34a52d4e4e3acfb13550ade2e80e2019e7238ba209516b6cf51393",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:43.504Z",
+      "reviewedAt": "2026-10-27T01:20:01.520Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/complete-content__light__desktop": {
+      "sha256": "e53a327461a9968dda845b95cb43295e709076443e8f354415ed0946461dc85a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:45.579Z",
+      "reviewedAt": "2026-10-27T01:20:01.520Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/empty-slots__light__mobile": {
+      "sha256": "cba6673f46fecaa147983c389b7bdd20ea6fdc6c16b19d0ada316440edbfff03",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:47.563Z",
+      "reviewedAt": "2026-10-27T01:20:01.521Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/empty-slots__light__tablet": {
+      "sha256": "afecafbc743311173902a2b864b59a683e582e661af531ba85beebebfe8250c6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:49.528Z",
+      "reviewedAt": "2026-10-27T01:20:01.521Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/empty-slots__light__desktop": {
+      "sha256": "c55dcdb1af68b6529ceb3c4c7fbe808cb7a7d13a85edee9d8b6f240e35f7bc0e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:51.496Z",
+      "reviewedAt": "2026-10-27T01:20:01.521Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/tokens__light__mobile": {
+      "sha256": "3e8bdf0d5abdb94881f193050da3e1f5950c0c8c120dd42004b03a37a41b0104",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:53.550Z",
+      "reviewedAt": "2026-10-27T01:20:01.522Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/tokens__light__tablet": {
+      "sha256": "9fc286a3cf5ed362a016ab489acef11fd1747b110663122660e38587b8040000",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:55.550Z",
+      "reviewedAt": "2026-10-27T01:20:01.522Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/tokens__light__desktop": {
+      "sha256": "7e5a01343489778c0724d217dfe05947a226dd29b1554508887a1d69ddf36b35",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:57.598Z",
+      "reviewedAt": "2026-10-27T01:20:01.522Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/rtl__light__mobile": {
+      "sha256": "cbcd5fefaba68065d8bde34f3dce3b4d0331bbd84f02c22fef881f17693c0348",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:59.649Z",
+      "reviewedAt": "2026-10-27T01:20:01.523Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/rtl__light__tablet": {
+      "sha256": "74dd4367ed33e8a42c4765bcf64bde21e465a1361b766387db91ff2e62fdeb10",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:01.725Z",
+      "reviewedAt": "2026-10-27T01:20:01.523Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/rtl__light__desktop": {
+      "sha256": "5fedf971b2e4063dc8db0a73b05ecfc1603e928f442bd7da9559e4a7b15a8b04",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:03.826Z",
+      "reviewedAt": "2026-10-27T01:20:01.524Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/theme-dark__light__mobile": {
+      "sha256": "345c07a5fd804bb6ed1718c4567298c59ebe8a99a4bdb7949cbf1deafc19ec90",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:05.998Z",
+      "reviewedAt": "2026-10-27T01:20:01.524Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/theme-dark__light__tablet": {
+      "sha256": "c1fe95e226a6dfcc51c9ee160d4347042b1020bd0f5b25bc053291ea2a698c1e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:08.135Z",
+      "reviewedAt": "2026-10-27T01:20:01.524Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/theme-dark__light__desktop": {
+      "sha256": "ca70d43f5208c48df1f6dfcac3de9bc551a9897381ed0e05b3351a5072ddfed1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:10.239Z",
+      "reviewedAt": "2026-10-27T01:20:01.525Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/theme-compact__light__mobile": {
+      "sha256": "f42f014bb119f86cbf89f2985efcabed31ca1f046cbf5713da53a77ca07673e0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:12.442Z",
+      "reviewedAt": "2026-10-27T01:20:01.525Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/theme-compact__light__tablet": {
+      "sha256": "e664fa1ea703e54294d7a0c00096744f3301af6b26f944791c1dab282079b9d1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:14.524Z",
+      "reviewedAt": "2026-10-27T01:20:01.525Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/theme-compact__light__desktop": {
+      "sha256": "426684279eda7bb05ceb155723d8c34f7e144d20e91f8f03eacd99d56faea631",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:16.652Z",
+      "reviewedAt": "2026-10-27T01:20:01.526Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/theme-dark-compact__light__mobile": {
+      "sha256": "090b2cb86c3cf58f3afbdcb19854f5a8f7148201d992bd3db0994e36112b5951",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:18.723Z",
+      "reviewedAt": "2026-10-27T01:20:01.526Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/theme-dark-compact__light__tablet": {
+      "sha256": "c47ee88e56422ae50ef17ea4132f6d26c180c14299cbcdcb50f544fd8fc8d508",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:20.972Z",
+      "reviewedAt": "2026-10-27T01:20:01.526Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/theme-dark-compact__light__desktop": {
+      "sha256": "b664d1b5531608d87c099972725c1484b3642aa76f9b2e84140ea158fc624fea",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:23.055Z",
+      "reviewedAt": "2026-10-27T01:20:01.527Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/native-focus__light__mobile": {
+      "sha256": "9e598ef033bd935ad342c1448e0c78665272784b56917e2049caaec1d66e8ba8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:25.204Z",
+      "reviewedAt": "2026-10-27T01:20:01.527Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/native-focus__light__tablet": {
+      "sha256": "a0c4ca2610d3de76bc9cd59cd21000a26523581586fa83b55a4870b164b4edec",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:27.303Z",
+      "reviewedAt": "2026-10-27T01:20:01.528Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "result/native-focus__light__desktop": {
+      "sha256": "e65dd7da9f1c7c865684493a2285a083f25bf0b573e58e0a395f49d2b07698c5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:12:29.436Z",
+      "reviewedAt": "2026-10-27T01:20:01.528Z",
+      "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
     }
   }
 }

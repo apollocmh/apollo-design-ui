@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "2cbadfc2b5abcf71df091c6b37e404ae2d557c6d",
-  "status": "grouped-implementation-awaiting-shared-button-and-final-acceptance",
+  "status": "accepted-local-checklist-complete-docs-deployment-pending",
   "scope": "Result, three static illustration components, maps/exports, six semantic parts, four tokens and ten original demos",
   "baselineSources": [
     {
@@ -45,9 +45,8 @@
     }
   ],
   "remaining": [
-    "Shared Button full inventory/remediation and required affected regressions.",
-    "Clean implementation capture, individual review, approval and exact comparison of 39 Result visuals.",
-    "Original checklist reconciliation, final actual Demo/Docs acceptance, Registry closure and publication."
+    "Publish the accepted Docs snapshot and record the actual deployment/live-browser receipt.",
+    "Continue other global audit units; whole-library final same-commit gates are still required after all remediation finishes."
   ],
   "before": {
     "total": 21,
@@ -961,10 +960,10 @@
     },
     {
       "file": "packages/ui/src/index.ts",
-      "sha256": "f9261998c2c2e089f99170e7b7283cbc38e6605eab8a2c2133ad1cdd6d73ce04"
+      "sha256": "cfbe3613011b2c95392559df254c545f281db235465f921d1de49dfbcd496f54"
     }
   ],
-  "sourceSha256": "b7ae0efd98a15a7a626cc88cd7f91606ccfa5098878df1f63b2524b1b033b351",
+  "sourceSha256": "20893aede0ce18def8aef6f6995608026bef0c98134335ab55eb290df6a36467",
   "fingerprintAlgorithm": "sha256 of compact JSON of productionSources in recorded order",
   "implementationStage": {
     "fourLayers": {
@@ -2235,23 +2234,6 @@
     "The first visual preflight could not resolve a fixture-only direct @apollo-design/icons import from the root test package. The fixture uses the existing public IconMap export; no dependencies or implementation changed.",
     "Actual Docs/demo runners retain all pages, interactions and axe rules, collect all failures and reject at the end. The 20/40 source-theme and 10/23 Docs failures are preserved, not converted to passes."
   ],
-  "blockers": [
-    {
-      "component": "button",
-      "reason": "Default primary white-on-blue text has 4.1:1 contrast; all ten original Result demos retained.",
-      "sourceThemes": {
-        "passed": 20,
-        "failed": 20,
-        "total": 40
-      },
-      "actualDocs": {
-        "passed": 13,
-        "failed": 10,
-        "total": 23
-      },
-      "next": "Complete linked Button audit and fix the shared root cause; rerun all affected Result acceptance."
-    }
-  ],
   "checks": [
     {
       "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/result --maxWorkers=1 --no-file-parallelism",
@@ -3154,5 +3136,216 @@
       ]
     },
     "cause": "Two paired-result fixture regions reused the same caller-owned aria-label. Distinct labels fix the fixture; all axes and role/label attributes remain. One corrected mobile pair preflight passes. Re-capture the complete matrix only after freezing the linked Button work."
+  },
+  "implementationCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+  "finalSourceDemos": {
+    "command": "node tests/browser/result-demo-themes.mjs",
+    "browser": "150.0.7871.125",
+    "total": 40,
+    "passed": 40,
+    "failed": 0,
+    "errors": [],
+    "scope": "All original 10 demos across default/dark/compact/combined source algorithms; no scenarios or axe rules removed."
+  },
+  "finalActualDocs": {
+    "command": "node tests/browser/result-docs.mjs",
+    "browser": "150.0.7871.125",
+    "total": 23,
+    "passed": 23,
+    "failed": 0,
+    "errors": [],
+    "scope": "All original demos in both actual site themes plus three live-control groups; local built site before prose-only heading/closure updates."
+  },
+  "finalVisual": {
+    "captureCommand": "node tests/visual/apollo.mjs --candidate --component button --component result",
+    "captureCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+    "dirty": false,
+    "reviewedIndividually": 39,
+    "approved": 39,
+    "compareCommand": "node tests/visual/apollo.mjs --component button --component result --component qr-code --no-build",
+    "sameRunChecks": 114,
+    "sameRunPassed": 114,
+    "componentCases": 39,
+    "componentDiffPixels": 0,
+    "QRCodeCases": 36,
+    "QRCodeDiffPixels": 0,
+    "allApprovedBefore": 238,
+    "allApprovedAfter": 315,
+    "previousApprovalsUnchanged": 237,
+    "previousApprovalReviewedAndUpdated": [
+      "button/type__light__desktop"
+    ],
+    "environment": "darwin/x64/Chrome150.0.7871.125/system Chrome",
+    "legacyButtonEnvironmentNote": "Previous single Button approval had a different browser environment, so its before comparison correctly failed the provenance guard. Original and new images were individually inspected before accepting the intentional readable primary foreground; final same-environment comparisons are all exact."
+  },
+  "docsBuild": {
+    "commands": [
+      "pnpm --filter @apollo-design/docs content:build",
+      "pnpm --filter @apollo-design/docs typecheck",
+      "pnpm --filter @apollo-design/docs test",
+      "pnpm --filter @apollo-design/docs build"
+    ],
+    "passed": true,
+    "files": 15,
+    "tests": 161,
+    "scope": "Before prose-only When To Use heading and acceptance-guide updates; content/SSG deployment probes are repeated for final prose.",
+    "finalProseContentAndSSG": {
+      "passed": true,
+      "commands": [
+        "pnpm --filter @apollo-design/docs content:build",
+        "pnpm --filter @apollo-design/docs build",
+        "pnpm --filter @apollo-design/docs content:check"
+      ],
+      "artifactProbe": {
+        "passed": true,
+        "checks": [
+          "index/404/sitemap/robots/button/icon physical files",
+          "base path",
+          "real Button When To Use SSR heading",
+          "icon catalog SSR body",
+          "all20 Button and10 Result original SSR demo cards"
+        ]
+      }
+    }
+  },
+  "resolvedSharedBlockers": [
+    {
+      "component": "button",
+      "reason": "Default primary white-on-blue text has 4.1:1 contrast; all ten original Result demos retained.",
+      "sourceThemes": {
+        "passed": 20,
+        "failed": 20,
+        "total": 40
+      },
+      "actualDocs": {
+        "passed": 13,
+        "failed": 10,
+        "total": 23
+      },
+      "resolvedBy": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "sourceThemesAfter": {
+        "total": 40,
+        "passed": 40,
+        "failed": 0
+      },
+      "actualDocsAfter": {
+        "total": 23,
+        "passed": 23,
+        "failed": 0
+      },
+      "state": "resolved",
+      "originalNext": "Complete linked Button audit and fix the shared root cause; rerun all affected Result acceptance."
+    }
+  ],
+  "blockers": [],
+  "finalUnifiedRuntime": {
+    "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/button/__tests__ packages/ui/src/space/__tests__ packages/ui/src/dropdown/__tests__ packages/ui/src/float-button/__tests__ packages/ui/src/input/__tests__ packages/ui/src/modal/__tests__ packages/ui/src/popconfirm/__tests__ packages/ui/src/qr-code/__tests__ packages/ui/src/result/__tests__ packages/ui/src/tour/__tests__ packages/ui/src/transfer/__tests__ packages/ui/src/date-picker/__tests__ packages/ui/src/table/__tests__ packages/ui/src/upload/__tests__ packages/ui/src/_internal/__tests__/button-consumer-updates.test.ts packages/ui/src/_internal/__tests__/button-content-reference.test.ts --maxWorkers=1 --no-file-parallelism",
+    "total": 2352,
+    "passed": 2352,
+    "failed": 0,
+    "pending": 0,
+    "byGroup": {
+      "_internal": 11,
+      "button": 360,
+      "date-picker": 424,
+      "dropdown": 80,
+      "float-button": 91,
+      "input": 151,
+      "modal": 138,
+      "popconfirm": 84,
+      "qr-code": 75,
+      "result": 99,
+      "space": 329,
+      "table": 183,
+      "tour": 97,
+      "transfer": 122,
+      "upload": 108
+    },
+    "implementationCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+    "scope": "All affected runtime groups together after the final Compact public-instance repair; this is not the whole-library gate."
+  },
+  "finalStrictTypes": {
+    "commands": [
+      "pnpm exec vue-tsc --noEmit -p tsconfig.json",
+      "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.button-contracts.json",
+      "pnpm exec vitest run --project types packages/ui/src/button/__tests__ packages/ui/src/result/__tests__ packages/ui/src/space/__tests__ packages/ui/src/config-provider/__tests__ packages/ui/src/input/__tests__ packages/ui/src/popconfirm/__tests__ packages/ui/src/upload/__tests__ packages/ui/src/float-button/__tests__ packages/ui/src/dropdown/__tests__ packages/ui/src/modal/__tests__ packages/ui/src/tour/__tests__ packages/ui/src/transfer/__tests__ packages/ui/src/date-picker/__tests__ packages/ui/src/table/__tests__ packages/ui/src/qr-code/__tests__ --maxWorkers=1 --no-file-parallelism"
+    ],
+    "root": {
+      "passed": true,
+      "diagnostics": 0
+    },
+    "sourceSFC": {
+      "passed": true,
+      "diagnostics": 0
+    },
+    "publicTypes": {
+      "files": 30,
+      "total": 398,
+      "passed": 398,
+      "failed": 0,
+      "typeErrors": 0
+    },
+    "scope": "Unchanged7e63e3e1 production sources after complete related-runtime gate;15 component/config type groups."
+  },
+  "acceptanceBoundary": {
+    "browser": "System Chrome150.0.7871.125 on darwin/x64",
+    "otherBrowsersAndPhysicalDevices": "not verified in this unit",
+    "globalAudit": "ongoing; the final full-library gate is not represented by these local unit counts",
+    "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+    "noOutstandingInScopeCodeBlocker": true
+  },
+  "initialImplementationProductionSources": [
+    {
+      "file": "packages/ui/src/result/Result.vue",
+      "sha256": "0f0207e5c635166fcb4bbc18247c7b9c1f513b4ed5c2f651c6c0dea7ecf9d3f1"
+    },
+    {
+      "file": "packages/ui/src/result/components/NoFound.ts",
+      "sha256": "c37efb0df7c72faa77c1413a6a1adb48d5f04275b1614a3160afb3da8aaf4618"
+    },
+    {
+      "file": "packages/ui/src/result/components/ServerError.ts",
+      "sha256": "ee6f0aed8280ee3eb1a85f56e40e5410f4d6f93a8c4993c9a85819cb42b64be7"
+    },
+    {
+      "file": "packages/ui/src/result/components/Unauthorized.ts",
+      "sha256": "7d4274c4b7d82e2a1624dc4e2e080811ad8b8e638e050a46a3e66412ac9ef09f"
+    },
+    {
+      "file": "packages/ui/src/result/index.ts",
+      "sha256": "06c73737aad50d95d021e5e3cd33cfc8bfeab72d46fe883756442da25248b93a"
+    },
+    {
+      "file": "packages/ui/src/result/interface.ts",
+      "sha256": "bbf2f4879d75884e558ba8d5896e49cc681548da0af658b3a8650367fe66ab2c"
+    },
+    {
+      "file": "packages/ui/src/result/maps.ts",
+      "sha256": "cc7c824991b7efc32c52996c6bf5d5c2ddf155fa9fd88ce1319753e1c17d2605"
+    },
+    {
+      "file": "packages/ui/src/result/style/index.ts",
+      "sha256": "65ba23038806cef3981e72609fbcbfeeb748cc650fb871eab5abe18ff2af732b"
+    },
+    {
+      "file": "packages/ui/src/result/style/token.ts",
+      "sha256": "b7ad7f19aab2f6c0efe1ad25e33060fceda6551544ae207e049e8f0a7a979a98"
+    },
+    {
+      "file": "packages/ui/src/index.ts",
+      "sha256": "f9261998c2c2e089f99170e7b7283cbc38e6605eab8a2c2133ad1cdd6d73ce04"
+    }
+  ],
+  "initialImplementationSha256": "b7ae0efd98a15a7a626cc88cd7f91606ccfa5098878df1f63b2524b1b033b351",
+  "frozenProductionSourcesMatchImplementationCommit": true,
+  "globalVisualCoverage": {
+    "fullCommand": "node tests/visual/apollo.mjs --check",
+    "result": "failed for unreviewed cases outside this accepted unit",
+    "selected": 1308,
+    "approved": 315,
+    "missingApprovedBaselines": 993,
+    "approvedSubsetCommand": "node tests/visual/apollo.mjs --check --approved-only",
+    "approvedSubset": "315 existing approved image hashes/review records checked; this does not represent rendered coverage of all1308 cases",
+    "next": "Remaining cases are accepted within subsequent complete audit units; do not weaken the full check."
   }
 }

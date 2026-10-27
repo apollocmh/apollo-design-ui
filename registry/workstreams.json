@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-27T01:08:28.268Z",
+  "generatedAt": "2026-10-27T01:38:08.362Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 89,
-      "ready": 3
+      "done": 91,
+      "ready": 1
     },
     "byKind": {
       "foundation": 13,
@@ -35,13 +35,11 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 3,
+    "readyCount": 1,
     "cannotFinishCount": 0,
-    "currentBatchSize": 3,
+    "currentBatchSize": 1,
     "currentBatchIds": [
-      "COMP:result",
-      "X:docs-site",
-      "COMP:button"
+      "X:docs-site"
     ],
     "hardBlockingDecisionCount": 0,
     "parallelismNote": "currentBatchSize 是「同一时刻可开工数」的下界估计（贪心）。真实并行度还取决于执行者数量。"
@@ -289,8 +287,8 @@
       ],
       "maxParallel": 3,
       "itemCount": 3,
-      "doneCount": 2,
-      "readyCount": 1,
+      "doneCount": 3,
+      "readyCount": 0,
       "itemIds": [
         "COMP:border-beam",
         "COMP:button",
@@ -416,8 +414,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 10,
-      "doneCount": 9,
-      "readyCount": 1,
+      "doneCount": 10,
+      "readyCount": 0,
       "itemIds": [
         "COMP:alert",
         "COMP:drawer",
@@ -609,11 +607,11 @@
         "流水线被证明可重复（不再需要为每个组件重新设计流程）"
       ],
       "itemCount": 20,
-      "doneCount": 19,
-      "readyCount": 1,
+      "doneCount": 20,
+      "readyCount": 0,
       "blockedCount": 0,
       "waitingCount": 0,
-      "complete": false,
+      "complete": true,
       "itemIds": [
         "COMP:affix",
         "COMP:alert",
@@ -685,8 +683,8 @@
         "25 个组件 11 维度 completed"
       ],
       "itemCount": 26,
-      "doneCount": 24,
-      "readyCount": 2,
+      "doneCount": 25,
+      "readyCount": 1,
       "blockedCount": 0,
       "waitingCount": 0,
       "complete": false,
@@ -1402,18 +1400,16 @@
       "conflicts": [
         "CF-STYLE-GLOBAL"
       ],
-      "status": "ready",
+      "status": "done",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 2,
-      "why": "Button完整契约与Result共享整改已形成实现里程碑：19 Props、两个完整槽、原生根/当前配置/加载生命周期、58既有Token及20原Demo集中修复。365四层/参考守卫、1168颜色、最终147浏览器、51消费者、SSR/水合/发布声明与UI严格L7通过。原65机械场景与27参考视觉保留；自有视觉、最终Demo/Docs统一验收仍开放，不宣称整单元完成。见 docs/audit/2026-10-27-button-contract-audit.md。",
+      "why": "2026-10-27 Button完整契约已统一收口：19 Props、两个完整槽、原生根/当前Provider/加载生命周期、58既有Token及20原Demo；关联Compact/Search、Float原生样式和示例事件/异步链路同步修复。2352相关四层、398公开类型、147生产浏览器、51实际消费者、1168颜色、8 SSR、20组水合与UI严格L7通过；39自有视觉批准并参与114图exact。全部原机械/参考场景保留，技术预算仅Button37→41/Input89→92KB且依据已记；全库其余单元继续。",
       "doneWhen": [],
       "group": "通用",
       "priority": "P0",
       "dagLevel": 2,
-      "blockers": [],
-      "softBlockers": [],
-      "cannotFinish": false
+      "blockers": []
     },
     {
       "id": "COMP:space",
@@ -1690,18 +1686,16 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "ready",
+      "status": "done",
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 0,
-      "why": "2026-10-27 Result完整盘点后修正Vue槽优先/条件存在性、原生根attrs/style、当前Provider/语义Props、四Token及真实内容色。18条修前行为和14项旧发布浏览器失败有证据；当前99四层、48类型、87生产浏览器、8 SSR、5水合/UI/严格L7通过。完整验收被共享Button primary对比度阻塞，实际Demo20/40失败全部保留，继续关联Button完整审计；见docs/audit/2026-10-27-result-contract-audit.md。",
+      "why": "2026-10-27 Result完整契约已统一收口：当前Props/Provider/原生attrs、五个完整槽、六语义与四Token、三静态插画/根导出及十原Demo同步验收。共享Button根因由7e63e3e1解除，原Demo40/40与实际Docs23/23通过；39自有视觉逐张批准，Button/Result/QRCode114图全部exact。99本组件四层/87生产浏览器/8 SSR/5组水合证据保留，最终2352关联四层/398类型/严格构建通过。其他浏览器/设备未冒称验收，全库整改继续。",
       "doneWhen": [],
       "group": "反馈",
       "priority": "P1",
       "dagLevel": 0,
-      "blockers": [],
-      "softBlockers": [],
-      "cannotFinish": false
+      "blockers": []
     },
     {
       "id": "COMP:watermark",
@@ -2207,7 +2201,6 @@
       "workstream": "WS-3",
       "wave": "W8",
       "dependsOn": [
-        "COMP:button",
         "FND:a11y",
         "FND:icons",
         "FND:overlay",
@@ -3365,8 +3358,6 @@
     }
   ],
   "currentBatch": [
-    "COMP:result",
-    "X:docs-site",
-    "COMP:button"
+    "X:docs-site"
   ]
 }

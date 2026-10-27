@@ -32,9 +32,7 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 70,
-      "testing": 1,
-      "blocked": 1
+      "completed": 72
     },
     "byPriority": {
       "P0": 8,
@@ -53,8 +51,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 70,
-    "remainingCount": 2
+    "completedCount": 72,
+    "remainingCount": 0
   },
   "milestones": [],
   "components": [
@@ -264,7 +262,7 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "M",
-      "status": "testing",
+      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 2,
@@ -285,16 +283,16 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "in-progress",
-      "tokenStatus": "in-progress",
-      "styleStatus": "in-progress",
-      "unitStatus": "in-progress",
-      "interactionStatus": "in-progress",
-      "typeStatus": "in-progress",
-      "a11yStatus": "in-progress",
-      "visualStatus": "in-progress",
-      "docsStatus": "in-progress",
-      "notes": "Button完整契约与Result共享整改已形成实现里程碑：19 Props、两个完整槽、原生根/当前配置/加载生命周期、58既有Token及20原Demo集中修复。365四层/参考守卫、1168颜色、最终147浏览器、51消费者、SSR/水合/发布声明与UI严格L7通过。原65机械场景与27参考视觉保留；自有视觉、最终Demo/Docs统一验收仍开放，不宣称整单元完成。见 docs/audit/2026-10-27-button-contract-audit.md。",
+      "apiStatus": "done",
+      "tokenStatus": "done",
+      "styleStatus": "done",
+      "unitStatus": "done",
+      "interactionStatus": "done",
+      "typeStatus": "done",
+      "a11yStatus": "done",
+      "visualStatus": "done",
+      "docsStatus": "done",
+      "notes": "2026-10-27 Button完整契约已统一收口：19 Props、两个完整槽、原生根/当前Provider/加载生命周期、58既有Token及20原Demo；关联Compact/Search、Float原生样式和示例事件/异步链路同步修复。2352相关四层、398公开类型、147生产浏览器、51实际消费者、1168颜色、8 SSR、20组水合与UI严格L7通过；39自有视觉批准并参与114图exact。全部原机械/参考场景保留，技术预算仅Button37→41/Input89→92KB且依据已记；全库其余单元继续。",
       "layerNotes": {
         "referenceHistory": {
           "unit": "L1+L2 = 113 例（`index.test.ts` 94 + `demo.test.ts` 14 + `style.test.ts` 5），另有 L4 66 / L5 27 / theme 17，四层合跑 **223 passed (223)**。覆盖率（`--coverage.include='packages/ui/src/button/**'`）：**Stmts 100 / Branch 98.42 / Funcs 100 / Lines 100**。残留 3 个未覆盖分支：`Button.vue:217`（`ButtonTypeMap[type] || []` 的兜底，`mergedType` 恒为 5 个键之一）、`Button.vue:532`（模板 `v-if` 的一支）、`style/index.ts:178`（`ghost ? 'none' : c.shadow` 的 ghost 支）。2026-09-20 顺带删掉一段**与上游不符的死代码**：`loading` 的 `delay > 0` 分支里我们多写了 `if (cfg.loading) { innerLoading.value = true; return; }`，而上游（`antd/es/button/Button.js:148-156`）该分支是**无条件** `setInnerLoading(true, { ms: delay })`；且那一支在本仓可证明**不可达**（`loadingOrDelay` 的构造保证 `loading === true ⇒ delay <= 0`，与 `delay > 0` 矛盾）。删掉后 Lines 从 98.13% → 100%，行为不变（不可达支）。",
@@ -303,8 +301,10 @@
           "compat": "L4 DOM 契约 66 例全绿 = 65 条机械 oracle 用例 + 1 条 D6 前缀豁免。机械 oracle 由 `tests/compat/baseline/button.mjs` **硬编码 65 个用例**、用 `react-dom/server.renderToStaticMarkup` 渲染 antd 6.6.4 产出 `tests/compat/baselines/button.dom.json`（`caseCount=65`），比对在 `__tests__/semantic.test.ts`。另备 3 份 fixture（`tests/compat/fixtures/button/{basic,loading,type-matrix}.json`）满足 AGENTS §6.1 的「至少 1 个」交付要求；⚠️ button 的 DOM 契约**不由 fixture 驱动**（那套「手写用例 + allow」机制未被 icons/empty 采用，见 `tests/compat/README.md` 末尾）。",
           "token": "57 个键。antd 6.6.4 `button/style/token.js:21-83` 的 `prepareComponentToken` 返回 58 键（45 显式 + 13 个 `${colorKey}ShadowColor`），本仓逐键对齐、唯一缺 `solidTextColor`（依赖 color-picker 的 `isBright(AggregationColor, \"#fff\")`，本仓无等价能力）—— 由 `theme.test.ts` 的一条「缺 solidTextColor」断言钉住。"
         },
-        "currentAudit": "docs/audit/2026-10-27-button-contract-audit.md；初始97回归7通过/90失败及1168浏览器颜色检查378通过/790失败均有修前证据。当前较早实现354四层/80 Demo主题通过；最后方向、导航及明度边界修正后须统一复验，未宣称整单元完成。",
-        "nativeAudit": "本轮状态为testing。当前证据区分修前/实现/验证及未完成视觉、Docs和全库最终门禁，详见 docs/audit/evidence/button-contract.json；历史验收记录仅作参考。"
+        "currentAudit": "2026-10-27完整清单已统一验收；实现7e63e3e1（Result核心ca5d2740），最终相关四层2352/2352、根/SFC严格类型及15组公开类型398/398、114张同次视觉全部0像素差异。按原清单逐项复核，当前范围无代码阻塞；全库审计与最终全量门禁仍继续。见 docs/audit/evidence/button-contract.json。",
+        "nativeAudit": "2026-10-27完整清单已统一验收；实现7e63e3e1（Result核心ca5d2740），最终相关四层2352/2352、根/SFC严格类型及15组公开类型398/398、114张同次视觉全部0像素差异。按原清单逐项复核，当前范围无代码阻塞；全库审计与最终全量门禁仍继续。见 docs/audit/evidence/button-contract.json。",
+        "visual": "清洁7e63e3e1的39张自有场景已逐张审阅批准；Button/Result/QRCode共114张同次逐像素exact。原参考场景保留，原238批准记录中237项及PNG完全不变；唯一旧Button图经原图/新图明确复核后更新浏览器环境及前景。",
+        "docs": "实际站点43/43（20原Demo×亮暗及3交互）通过；Docs161测试/严格类型/SSG及部署产物探针通过。授权线上更新与回执另记，不把本地通过当已上线。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1087,7 +1087,7 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "blocked",
+      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -1119,10 +1119,10 @@
       "unitStatus": "done",
       "interactionStatus": "done",
       "typeStatus": "done",
-      "a11yStatus": "blocked",
-      "visualStatus": "in-progress",
-      "docsStatus": "in-progress",
-      "notes": "2026-10-27 Result完整盘点后修正Vue槽优先/条件存在性、原生根attrs/style、当前Provider/语义Props、四Token及真实内容色。18条修前行为和14项旧发布浏览器失败有证据；当前99四层、48类型、87生产浏览器、8 SSR、5水合/UI/严格L7通过。完整验收被共享Button primary对比度阻塞，实际Demo20/40失败全部保留，继续关联Button完整审计；见docs/audit/2026-10-27-result-contract-audit.md。",
+      "a11yStatus": "done",
+      "visualStatus": "done",
+      "docsStatus": "done",
+      "notes": "2026-10-27 Result完整契约已统一收口：当前Props/Provider/原生attrs、五个完整槽、六语义与四Token、三静态插画/根导出及十原Demo同步验收。共享Button根因由7e63e3e1解除，原Demo40/40与实际Docs23/23通过；39自有视觉逐张批准，Button/Result/QRCode114图全部exact。99本组件四层/87生产浏览器/8 SSR/5组水合证据保留，最终2352关联四层/398类型/严格构建通过。其他浏览器/设备未冒称验收，全库整改继续。",
       "layerNotes": {
         "referenceHistory": {
           "interaction": "无事件/受控/焦点。L2 适用面：props 更新 → DOM 分支切换（status/icon 渲染分支）。",
@@ -1132,10 +1132,11 @@
           "compat": "15 条机械基线（tests/compat/baseline/result.mjs，ConfigProvider 包裹对齐 iconPrefixCls）。15/15 过，D6 豁免仅 no-props 一条。插画为静态 hex 直出，SSR 可逐字节对齐。",
           "visual": "9/9 全 exact（3 variant × 3 viewport）。"
         },
-        "currentAudit": "docs/audit/evidence/result-contract.json；7 Props、5个完整槽、6语义及4Token已集中修正。99条四层、48相关类型、87项生产浏览器、8项SSR、5组水合及UI/严格L7通过。完整单元尚未验收。",
+        "currentAudit": "2026-10-27完整清单已统一验收；实现7e63e3e1（Result核心ca5d2740），最终相关四层2352/2352、根/SFC严格类型及15组公开类型398/398、114张同次视觉全部0像素差异。按原清单逐项复核，当前范围无代码阻塞；全库审计与最终全量门禁仍继续。见 docs/audit/evidence/result-contract.json。",
         "interaction": "无业务事件/v-model；原生根事件一次触发、完整内容/编辑器身份/键盘/焦点/卸载重挂由当前行为及生产浏览器覆盖。",
-        "visual": "保留原3场景9参考；Apollo13状态39图矩阵已定义，脏工作区手机焦点/桌面暗紧凑预检通过并查看，尚未清洁提交全量采集/审阅/批准。",
-        "a11y": "Result自身默认及完整交互四主题axe通过；十实际Demo四算法40组合仅20通过，失败均为共享Button默认primary白字蓝底4.1:1。不得屏蔽/替换示例绕过，关联Button审计修复后必须全量复验。"
+        "visual": "清洁7e63e3e1的39张自有场景已逐张审阅批准；Button/Result/QRCode共114张同次逐像素exact。原参考场景保留，原238批准记录中237项及PNG完全不变；唯一旧Button图经原图/新图明确复核后更新浏览器环境及前景。",
+        "a11y": "共享Button对比度阻塞已解决；十原Demo四算法40/40、实际Docs23/23、87项Result浏览器及39自有图实际内容/axe通过。默认异常SVG装饰语义与原生自定义交互均保留；其他浏览器未实测。",
+        "docs": "实际站点23/23（10原Demo×亮暗及3交互）通过；Docs161测试/严格类型/SSG及部署产物探针通过。授权线上更新与回执另记，不把本地通过当已上线。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -2568,9 +2569,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "button"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",

@@ -6,6 +6,10 @@ subtitle: 按钮
 
 按钮触发操作，或通过原生链接导航。
 
+## 何时使用
+
+用于提交表单、确认操作或触发当前页面中的动作。需要跳转时使用 `href`，由原生链接承载导航。
+
 ## 代码演示
 
 保留全部 20 个原示例：`basic`, `block`, `chinese-chars-loading`, `chinese-space`, `color-variant`, `component-token`, `custom-disabled-bg`, `danger`, `disabled`, `ghost`, `href`, `icon`, `icon-placement`, `linear-gradient`, `loading`, `multiple`, `semantic`, `shape`, `size`, `style-class`.

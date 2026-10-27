@@ -85,3 +85,24 @@ Compact渲染转换中实际InstanceType的nativeElement曾缺失，新增直接
 自有Button13状态×三视口39图已登记，包括原批准type场景、完整内容、loading、禁用、形态、语义/Token、Provider、真实Compact、RTL、三种主题和键盘焦点；新增工具检查保留全部27原参考case与共用type标识。原Image“无关Button矩阵不变”的工具断言改用未变的Divider作为对照，Button参考矩阵及新自有矩阵另有完整检查。Result39图区域命名按每个原生id区分，修正的是重复可访问名，未删axe规则。上述新图仍待清洁实现采集、逐张审阅和批准。
 
 L7技术预算仅调整Button37→41KB、Input89→92KB，对应完整58 Token与当前作用域主题/原生内容/SSR安全加载的实现成本；实测约40.0/91.0KB，其他71项限制与全包30%比例不变。提交说明同时记录依据，不跳过门禁或逐字节反复调整。最终构建/声明/消费者浏览器、Docs和视觉仍按剩余清单推进。
+
+
+## 统一验收收口
+
+实现里程碑 **7e63e3e1** 已提交推送。最终生产源码逐文件核对仍与该提交一致；后续仅新增已审阅基线、浏览器验收脚本、文档正文和验收记录。原盘点全部行已按以下证据核对，本轮范围内没有未解决的代码缺陷或待裁决事项。
+
+| 原清单 | 最终验收证据 |
+|---|---|
+| type/color/variant/danger/ghost；shape/block/size | 源码四层、147生产浏览器及全20原Demo四算法80组合；square、独立回退、Compact当前尺寸均验证 |
+| disabled；href/htmlType/attrs；click | 原生button/anchor、表单submit/reset、原生样式三种形态、链接role/导航闸门、一次MouseEvent与焦点；147浏览器及相关2352四层通过 |
+| loading/delay/清理；icon及Provider loadingIcon | 请求立即阻止交互、延迟仅控制指示器；动态0/false/空值、组件去代理、图标替换、卸载/重挂/多实例、默认SVG/减少动画由源码、8 SSR、20组水合和实际Docs加载交互验证 |
+| default/#icon；autoInsertSpace；三语义 | 完整节点、条件/有意空槽、每render一次、稳定组件内容宿主与原始中文textContent；语义不克隆业务节点，DOM身份/草稿/焦点和当前状态通过源码、生产浏览器及39自有图验证 |
+| Provider/响应性；Expose/模型/导出 | 替换/移除/最近作用域、当前attrs及nativeElement；无新增模型或imperative方法；根/SFC严格类型、15组398公开类型、7组发布声明、SSR深入口及UI严格L7通过 |
+| 45+13 Token；颜色/样式/无障碍 | 全58实际消费与原生变量优先；默认/暗色/紧凑/组合、各色变体三态1168/1168，全部原Demo80/80；实际站点43/43及39自有图状态/axe通过 |
+| 真实消费者/共享层 | Compact完整六Props/槽/attrs/ref/Provider/首末项核对，Float原生样式、Dropdown图标路径、Search加载与实际事件/Promise示例集中修复；最终14组件组加内部守卫2352/2352，51实际消费者浏览器通过 |
+| 原20 Demo/双语文档/发布产物 | 全部保留，实际亮暗40页和3组控制43/43；Docs161测试/严格类型/SSG、物理正文/全部20卡片及部署产物探针通过；恢复部署要求的“何时使用”实际正文，不改门禁 |
+| 参考/视觉/Registry | 全65机械case及27参考视觉保留；精确content宿主差异和反向守卫继续生效；39自有图从清洁7e63e3e1逐张审阅批准，Button/Result/QRCode114图全部0像素差异，Registry更新为本轮completed |
+
+原238条Apollo批准记录中237条及PNG逐字节保持；唯一旧Button desktop图浏览器环境不同，先查看原图/新图并确认主按钮对比度修正，再明确更新批准记录，未把跨环境比较称exact。现有QRCode36张在本次相同环境全部exact。全部新图与逐张审阅说明由manifest记录。
+
+最终命令、修前失败、2352分组数量、398类型、真实页面及边界均在[结构化证据](evidence/button-contract.json)。本地整改单元已验收；线上部署回执随后记录。其他浏览器/实体设备未实测，D04任意前缀自动样式仍按原另案处理；全库其他审计及全部结束后的最终同一提交全量门禁继续，不以本轮通过替代。

@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "ca5d274067257193405ec94111ffdf05fded35fb",
-  "status": "grouped-implementation-awaiting-frozen-acceptance",
+  "status": "accepted-local-checklist-complete-docs-deployment-pending",
   "scope": "Button complete19 props, two slots, native click/ref, three semantic parts, 45 explicit and13 existing derived tokens, 20 original demos and13 runtime import sites",
   "baselineSources": [
     {
@@ -37,10 +37,8 @@
     "cause": "Default primary text contrast4.1:1; all scenarios retained."
   },
   "remaining": [
-    "Final20 original Button demos × four algorithms and10 Result demos × four algorithms; actual built Docs and interactions.",
-    "Clean-commit capture, individual review and approval of39 Button/39 Result owned visual cases; repeat affected approved Button/QRCode cases with all original approvals preserved unless explicitly reviewed.",
-    "Final Docs/Registry/checklist acceptance and authorized Docs deployment; Button/Result remain in progress.",
-    "Whole-library final same-commit gates remain required after all global remediation units finish."
+    "Publish the accepted Docs snapshot and record the actual deployment/live-browser receipt.",
+    "Continue other global audit units; whole-library final same-commit gates are still required after all remediation finishes."
   ],
   "beforeUnit": {
     "command": "pnpm exec vitest run --project unit packages/ui/src/button/__tests__/contract-audit.test.ts --maxWorkers=1 --no-file-parallelism",
@@ -4673,5 +4671,238 @@
     "failed": 4,
     "cause": "After adding an InstanceType ref, format auto-fix changed the template component import to type-only. Actual DOM was <spacecompact>, not a Vue component. Runtime import restored and exported component name asserted; final147/147 pass.",
     "assertionsRetained": true
+  },
+  "implementationCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+  "finalSourceDemos": {
+    "command": "node tests/browser/button-demo-themes.mjs",
+    "browser": "150.0.7871.125",
+    "total": 80,
+    "passed": 80,
+    "failed": 0,
+    "errors": [],
+    "scope": "All original 20 demos across default/dark/compact/combined source algorithms; no scenarios or axe rules removed."
+  },
+  "finalActualDocs": {
+    "command": "node tests/browser/button-docs.mjs",
+    "browser": "150.0.7871.125",
+    "total": 43,
+    "passed": 43,
+    "failed": 0,
+    "errors": [],
+    "scope": "Current built site: physical main Button SSR body, all20 main-page demo cards activated through the documented IntersectionObserver behavior,40 actual standalone theme pages and3 live-control groups.",
+    "mainSSR": {
+      "httpStatus": 200,
+      "originalDemoCards": 20,
+      "bodyHeading": true
+    },
+    "mainCardsActivatedByScroll": 20
+  },
+  "finalVisual": {
+    "captureCommand": "node tests/visual/apollo.mjs --candidate --component button --component result",
+    "captureCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+    "dirty": false,
+    "reviewedIndividually": 39,
+    "approved": 39,
+    "compareCommand": "node tests/visual/apollo.mjs --component button --component result --component qr-code --no-build",
+    "sameRunChecks": 114,
+    "sameRunPassed": 114,
+    "componentCases": 39,
+    "componentDiffPixels": 0,
+    "QRCodeCases": 36,
+    "QRCodeDiffPixels": 0,
+    "allApprovedBefore": 238,
+    "allApprovedAfter": 315,
+    "previousApprovalsUnchanged": 237,
+    "previousApprovalReviewedAndUpdated": [
+      "button/type__light__desktop"
+    ],
+    "environment": "darwin/x64/Chrome150.0.7871.125/system Chrome",
+    "legacyButtonEnvironmentNote": "Previous single Button approval had a different browser environment, so its before comparison correctly failed the provenance guard. Original and new images were individually inspected before accepting the intentional readable primary foreground; final same-environment comparisons are all exact."
+  },
+  "docsBuild": {
+    "commands": [
+      "pnpm --filter @apollo-design/docs content:build",
+      "pnpm --filter @apollo-design/docs typecheck",
+      "pnpm --filter @apollo-design/docs test",
+      "pnpm --filter @apollo-design/docs build"
+    ],
+    "passed": true,
+    "files": 15,
+    "tests": 161,
+    "scope": "Before prose-only When To Use heading and acceptance-guide updates; content/SSG deployment probes are repeated for final prose.",
+    "finalProseContentAndSSG": {
+      "passed": true,
+      "commands": [
+        "pnpm --filter @apollo-design/docs content:build",
+        "pnpm --filter @apollo-design/docs build",
+        "pnpm --filter @apollo-design/docs content:check"
+      ],
+      "artifactProbe": {
+        "passed": true,
+        "checks": [
+          "index/404/sitemap/robots/button/icon physical files",
+          "base path",
+          "real Button When To Use SSR heading",
+          "icon catalog SSR body",
+          "all20 Button and10 Result original SSR demo cards"
+        ]
+      }
+    }
+  },
+  "docsWhenToUseProbe": {
+    "before": {
+      "passed": false,
+      "reason": "Button documentation rewrite omitted the standard When To Use section required by Deploy Docs SSR content checks."
+    },
+    "repair": "Restore actual guidance in both language documents; retain the existing deployment assertion. Final content/SSG artifact checks are pending.",
+    "after": {
+      "passed": true,
+      "evidence": [
+        "PASS button: physical SSR body and all20 original demo cards",
+        "PASS result: physical SSR body and all10 original demo cards",
+        "PASS all deployment artifact probes, base path and icon catalog"
+      ],
+      "scope": "Both language sections restored; existing Deploy Docs assertion retained."
+    }
+  },
+  "actualDocsTransitionProbe": {
+    "firstRun": "All40 site demo/theme pages and timed operations passed; token pixel assertion initially sampled14px during the authored all-property CSS transition.",
+    "repair": "Wait for actual finite Web Animations to finish, then assert both the18px source variable and18px computed font; keep22px native priority and14px restoration, draft/focus/root identity and click assertions.",
+    "finalGroups": 43,
+    "passed": 43
+  },
+  "finalUnifiedRuntime": {
+    "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/button/__tests__ packages/ui/src/space/__tests__ packages/ui/src/dropdown/__tests__ packages/ui/src/float-button/__tests__ packages/ui/src/input/__tests__ packages/ui/src/modal/__tests__ packages/ui/src/popconfirm/__tests__ packages/ui/src/qr-code/__tests__ packages/ui/src/result/__tests__ packages/ui/src/tour/__tests__ packages/ui/src/transfer/__tests__ packages/ui/src/date-picker/__tests__ packages/ui/src/table/__tests__ packages/ui/src/upload/__tests__ packages/ui/src/_internal/__tests__/button-consumer-updates.test.ts packages/ui/src/_internal/__tests__/button-content-reference.test.ts --maxWorkers=1 --no-file-parallelism",
+    "total": 2352,
+    "passed": 2352,
+    "failed": 0,
+    "pending": 0,
+    "byGroup": {
+      "_internal": 11,
+      "button": 360,
+      "date-picker": 424,
+      "dropdown": 80,
+      "float-button": 91,
+      "input": 151,
+      "modal": 138,
+      "popconfirm": 84,
+      "qr-code": 75,
+      "result": 99,
+      "space": 329,
+      "table": 183,
+      "tour": 97,
+      "transfer": 122,
+      "upload": 108
+    },
+    "implementationCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+    "scope": "All affected runtime groups together after the final Compact public-instance repair; this is not the whole-library gate."
+  },
+  "finalStrictTypes": {
+    "commands": [
+      "pnpm exec vue-tsc --noEmit -p tsconfig.json",
+      "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.button-contracts.json",
+      "pnpm exec vitest run --project types packages/ui/src/button/__tests__ packages/ui/src/result/__tests__ packages/ui/src/space/__tests__ packages/ui/src/config-provider/__tests__ packages/ui/src/input/__tests__ packages/ui/src/popconfirm/__tests__ packages/ui/src/upload/__tests__ packages/ui/src/float-button/__tests__ packages/ui/src/dropdown/__tests__ packages/ui/src/modal/__tests__ packages/ui/src/tour/__tests__ packages/ui/src/transfer/__tests__ packages/ui/src/date-picker/__tests__ packages/ui/src/table/__tests__ packages/ui/src/qr-code/__tests__ --maxWorkers=1 --no-file-parallelism"
+    ],
+    "root": {
+      "passed": true,
+      "diagnostics": 0
+    },
+    "sourceSFC": {
+      "passed": true,
+      "diagnostics": 0
+    },
+    "publicTypes": {
+      "files": 30,
+      "total": 398,
+      "passed": 398,
+      "failed": 0,
+      "typeErrors": 0
+    },
+    "scope": "Unchanged7e63e3e1 production sources after complete related-runtime gate;15 component/config type groups."
+  },
+  "acceptanceBoundary": {
+    "browser": "System Chrome150.0.7871.125 on darwin/x64",
+    "otherBrowsersAndPhysicalDevices": "not verified in this unit",
+    "globalAudit": "ongoing; the final full-library gate is not represented by these local unit counts",
+    "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+    "noOutstandingInScopeCodeBlocker": true
+  },
+  "finalProductionSources": [
+    {
+      "file": "packages/ui/src/button/Button.vue",
+      "sha256": "41b3e90d10dbe99c0d22bf8386d296dd74da2e5a00a7f88a8a3bfc6f81dd53c3"
+    },
+    {
+      "file": "packages/ui/src/button/interface.ts",
+      "sha256": "70273acf0a37713d60a6c349ba2530e4a8f19fa1dbbac5704af6df8ec168f554"
+    },
+    {
+      "file": "packages/ui/src/button/index.ts",
+      "sha256": "e980f4e52e3f06652feb838650efef1bde48157fe1a8ef5573600ba734a5abd4"
+    },
+    {
+      "file": "packages/ui/src/button/use-button-theme.ts",
+      "sha256": "67fa694e4d7c73e037482ef36ecb15f2a766cfab8bf28ed22a01448c5fb564e8"
+    },
+    {
+      "file": "packages/ui/src/button/style/index.ts",
+      "sha256": "0a76cd9f327b442b14fb4a24b5c2d73b059a7154d0771edb879f4a0740226e1f"
+    },
+    {
+      "file": "packages/ui/src/button/style/token.ts",
+      "sha256": "c26d59ea1b6931ef0176c2779a939f0092b06aa5aa49ba58a710385a1e3b219a"
+    },
+    {
+      "file": "packages/ui/src/button/style/alias-tokens.ts",
+      "sha256": "4356c633df6fc02919ecd05bf5ec52764f33301e703283b87cd2595104c9d6c6"
+    },
+    {
+      "file": "packages/ui/src/space/Compact.vue",
+      "sha256": "9e996d3801469856c066df9a9ab33234aaa7c8aec61e4ffd960749fa8bbf7776"
+    },
+    {
+      "file": "packages/ui/src/float-button/FloatButton.ts",
+      "sha256": "e1dea58654922193f6115a78589aec8755805b0e2cecdb9ee533f959d02428b9"
+    },
+    {
+      "file": "packages/ui/src/float-button/style/index.ts",
+      "sha256": "5d8e989444098f3d66c9ad4a550724aff2449c702594dcd542c163a4e349d734"
+    },
+    {
+      "file": "packages/ui/src/dropdown/style/index.ts",
+      "sha256": "2bf4ddec8d56aebce14068dadc7d19360a2714368c466e35efd1d8657a1dcfff"
+    },
+    {
+      "file": "packages/ui/src/input/Search.ts",
+      "sha256": "d91cf44c2c5923c47997cdef97d495e85c9d7ac1aa3c4a573d8c708114d7c439"
+    },
+    {
+      "file": "packages/ui/src/index.ts",
+      "sha256": "cfbe3613011b2c95392559df254c545f281db235465f921d1de49dfbcd496f54"
+    }
+  ],
+  "finalProductionSha256": "2a6ef874234968cde031d9224ea3622377ff406f611b8b4ece2fb7b7b5324dc1",
+  "frozenProductionSourcesMatchImplementationCommit": true,
+  "globalVisualCoverage": {
+    "fullCommand": "node tests/visual/apollo.mjs --check",
+    "result": "failed for unreviewed cases outside this accepted unit",
+    "selected": 1308,
+    "approved": 315,
+    "missingApprovedBaselines": 993,
+    "approvedSubsetCommand": "node tests/visual/apollo.mjs --check --approved-only",
+    "approvedSubset": "315 existing approved image hashes/review records checked; this does not represent rendered coverage of all1308 cases",
+    "next": "Remaining cases are accepted within subsequent complete audit units; do not weaken the full check."
+  },
+  "docsMainLazyProbe": {
+    "firstAttempt": "A new main-page assertion incorrectly waited for offscreen lazy demos without scrolling and timed out.",
+    "sourceEvidence": "packages/docs/src/components/demo/DemoRenderer.vue intentionally activates loaders through IntersectionObserver.",
+    "replacementCoverage": "Scroll all20 original main-page cards into view and require actual Button nodes plus no loading/error state in each; retain all40 standalone theme pages and3 live interactions.",
+    "final": "mainSSR200/all20 cards and43/43 groups pass; no production change or removed scenario."
+  },
+  "finalValidationMetadata": {
+    "registry": "pnpm registry:check:19 checks/zero warnings",
+    "format": "pnpm exec biome check .:zero errors; existing37 warnings and5 infos",
+    "approvedVisualMetadata": "node tests/visual/apollo.mjs --check --approved-only:315 recorded hashes/review records verified",
+    "diff": "git diff --check:passed"
   }
 }
