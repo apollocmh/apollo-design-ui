@@ -79,7 +79,7 @@ Button 的完整 Vue 内容、当前 Provider、加载生命周期、原生根�
 
 ## Empty完整整改正在统一验收
 
-Empty六Props、三个完整原生槽、四语义、当前Provider/方向/语言、合法图片内容与布局/对比度已集中修复，六原Demo同步更新。核心证据：1151相关四层、20公开类型、50生产浏览器、24 Demo主题、8 SSR及6组水合通过。实际Docs与自有视觉仍在验收；关联Select弹层的主题变量丢失已复现，纳入当前必修。当前不计入已收口单元。
+Empty六Props、三个完整原生槽、四语义、当前Provider/方向/语言、合法图片内容与布局/对比度已集中修复，六原Demo同步更新。核心证据：1151相关四层、20公开类型、50生产浏览器、24 Demo主题、8 SSR及6组水合通过。实际Docs与自有视觉仍在验收；关联Trigger主题变量丢失已修复，八类公共弹层40项与六类Empty消费者18组通过；实际Docs17项通过，共享回归及自有视觉仍在验收。当前不计入已收口单元。
 
 - [完整自定义图片内容与业务草稿](/components/empty/demo/customize)
 - [动态Provider配置](/components/empty/demo/config-provider)

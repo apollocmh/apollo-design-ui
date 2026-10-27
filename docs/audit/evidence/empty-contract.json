@@ -269,7 +269,8 @@
     "Canonical zero-alpha rgba(0,0,0,0) reproduces Empty invalid NaN fills. The preliminary CSS keyword transparent was rejected by the shared Color parser before reaching Empty; no unrelated color-format support is added to this unit.",
     "Root genComponentCss is already exported. No missing style helper is invented, and Provider style remains its actual CSSProperties contract.",
     "Browser compact image height is 35*2.5=87.5px under current AliasToken, not 80px; two height failures in the saved pre-fix report are harness expectations, not product defects.",
-    "The draft retention unit fixture initially bound a constant controlled value; use a real reactive draft plus native input handler, preserving identity/focus assertions. Production browser uses an internally stateful Probe."
+    "The draft retention unit fixture initially bound a constant controlled value; use a real reactive draft plus native input handler, preserving identity/focus assertions. Production browser uses an internally stateful Probe.",
+    "Filter popup axe was initially sampled during its finite enter animation (1.69 contrast). Wait for the actual animation endpoint, preserving all axe rules; all six actual Empty consumers then pass without Table or test CSS changes."
   ],
   "browserBefore": {
     "browser": "150.0.7871.125",
@@ -1100,10 +1101,9 @@
     "errors": []
   },
   "pendingAcceptance": [
-    "reproduced shared Trigger/Portal CSS theme scope loss: Select popup Empty compact height stays35px instead of30.625px; List/Table pass; remaining browser consumer branches not yet run",
-    "actual built Docs examples and interactions",
-    "owned visual collection/review and related List regression",
-    "strict UI L7 and final complete checklist at one frozen source",
+    "shared Trigger consumer unified runtime gate is running",
+    "owned visual capture on a clean implementation commit, individual review and related List regression",
+    "final strict/types/L7/Docs checks and complete checklist on the frozen production source",
     "online documentation deployment receipt"
   ],
   "visualDryRun": {
@@ -1111,5 +1111,465 @@
     "stateAndAxe": "passed",
     "approved": false,
     "dirtySource": true
+  },
+  "coreImplementationCommit": "193cc3bb",
+  "triggerTheme": {
+    "baselineCommit": "193cc3bb",
+    "baselineSourceSha256": "82db5b2c4f8d63e3a3762df4dd36765e77f31de530252bc6bf1f22500114af8c",
+    "scope": "All29 existing Trigger props, native default slot and popup data, three exposed functions, existing overlay/Portal/motion lifecycle preserved; only current source Alias CSS variables are bridged to the actual popup, below explicit popupStyle. No new public API.",
+    "props": [
+      "prefixCls",
+      "popup",
+      "action",
+      "showAction",
+      "hideAction",
+      "open",
+      "defaultOpen",
+      "onOpenChange",
+      "afterOpenChange",
+      "disabled",
+      "mouseEnterDelay",
+      "mouseLeaveDelay",
+      "focusDelay",
+      "blurDelay",
+      "alignPoint",
+      "placement",
+      "builtinPlacements",
+      "popupAlign",
+      "getPopupContainer",
+      "motion",
+      "destroyOnHidden",
+      "forceRender",
+      "fresh",
+      "stretch",
+      "arrow",
+      "zIndex",
+      "popupClassName",
+      "popupStyle",
+      "onPopupAlign"
+    ],
+    "before": {
+      "passed": 0,
+      "failed": 4
+    },
+    "after": {
+      "passed": 4,
+      "failed": 0
+    },
+    "browser": {
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "consumer": "tooltip",
+          "check": "initial actual popup source aliases",
+          "passed": true
+        },
+        {
+          "consumer": "tooltip",
+          "check": "current source theme stage 1, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "tooltip",
+          "check": "current source theme stage 2, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "tooltip",
+          "check": "current source theme stage 0, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "tooltip",
+          "check": "close/reopen retains current source theme",
+          "passed": true
+        },
+        {
+          "consumer": "popover",
+          "check": "initial actual popup source aliases",
+          "passed": true
+        },
+        {
+          "consumer": "popover",
+          "check": "current source theme stage 1, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "popover",
+          "check": "current source theme stage 2, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "popover",
+          "check": "current source theme stage 0, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "popover",
+          "check": "close/reopen retains current source theme",
+          "passed": true
+        },
+        {
+          "consumer": "popconfirm",
+          "check": "initial actual popup source aliases",
+          "passed": true
+        },
+        {
+          "consumer": "popconfirm",
+          "check": "current source theme stage 1, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "popconfirm",
+          "check": "current source theme stage 2, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "popconfirm",
+          "check": "current source theme stage 0, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "popconfirm",
+          "check": "close/reopen retains current source theme",
+          "passed": true
+        },
+        {
+          "consumer": "dropdown",
+          "check": "initial actual popup source aliases",
+          "passed": true
+        },
+        {
+          "consumer": "dropdown",
+          "check": "current source theme stage 1, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "dropdown",
+          "check": "current source theme stage 2, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "dropdown",
+          "check": "current source theme stage 0, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "dropdown",
+          "check": "close/reopen retains current source theme",
+          "passed": true
+        },
+        {
+          "consumer": "menu",
+          "check": "initial actual popup source aliases",
+          "passed": true
+        },
+        {
+          "consumer": "menu",
+          "check": "current source theme stage 1, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "menu",
+          "check": "current source theme stage 2, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "menu",
+          "check": "current source theme stage 0, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "menu",
+          "check": "close/reopen retains current source theme",
+          "passed": true
+        },
+        {
+          "consumer": "date-picker",
+          "check": "initial actual popup source aliases",
+          "passed": true
+        },
+        {
+          "consumer": "date-picker",
+          "check": "current source theme stage 1, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "date-picker",
+          "check": "current source theme stage 2, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "date-picker",
+          "check": "current source theme stage 0, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "date-picker",
+          "check": "close/reopen retains current source theme",
+          "passed": true
+        },
+        {
+          "consumer": "range-picker",
+          "check": "initial actual popup source aliases",
+          "passed": true
+        },
+        {
+          "consumer": "range-picker",
+          "check": "current source theme stage 1, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "range-picker",
+          "check": "current source theme stage 2, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "range-picker",
+          "check": "current source theme stage 0, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "range-picker",
+          "check": "close/reopen retains current source theme",
+          "passed": true
+        },
+        {
+          "consumer": "tour",
+          "check": "initial actual popup source aliases",
+          "passed": true
+        },
+        {
+          "consumer": "tour",
+          "check": "current source theme stage 1, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "tour",
+          "check": "current source theme stage 2, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "tour",
+          "check": "current source theme stage 0, original popup",
+          "passed": true
+        },
+        {
+          "consumer": "tour",
+          "check": "close/reopen retains current source theme",
+          "passed": true
+        }
+      ],
+      "errors": []
+    }
+  },
+  "actualConsumers": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "consumer": "list",
+        "check": "current Provider/locale/direction true",
+        "passed": true
+      },
+      {
+        "consumer": "list",
+        "check": "current Provider/locale/direction false",
+        "passed": true
+      },
+      {
+        "consumer": "list",
+        "check": "actual compact media geometry and scoped Empty axe",
+        "passed": true
+      },
+      {
+        "consumer": "table",
+        "check": "current Provider/locale/direction true",
+        "passed": true
+      },
+      {
+        "consumer": "table",
+        "check": "current Provider/locale/direction false",
+        "passed": true
+      },
+      {
+        "consumer": "table",
+        "check": "actual compact media geometry and scoped Empty axe",
+        "passed": true
+      },
+      {
+        "consumer": "select",
+        "check": "current Provider/locale/direction true",
+        "passed": true
+      },
+      {
+        "consumer": "select",
+        "check": "current Provider/locale/direction false",
+        "passed": true
+      },
+      {
+        "consumer": "select",
+        "check": "actual compact media geometry and scoped Empty axe",
+        "passed": true
+      },
+      {
+        "consumer": "transfer",
+        "check": "current Provider/locale/direction true",
+        "passed": true
+      },
+      {
+        "consumer": "transfer",
+        "check": "current Provider/locale/direction false",
+        "passed": true
+      },
+      {
+        "consumer": "transfer",
+        "check": "actual compact media geometry and scoped Empty axe",
+        "passed": true
+      },
+      {
+        "consumer": "mentions",
+        "check": "current Provider/locale/direction true",
+        "passed": true
+      },
+      {
+        "consumer": "mentions",
+        "check": "current Provider/locale/direction false",
+        "passed": true
+      },
+      {
+        "consumer": "mentions",
+        "check": "actual compact media geometry and scoped Empty axe",
+        "passed": true
+      },
+      {
+        "consumer": "filter",
+        "check": "current Provider/locale/direction true",
+        "passed": true
+      },
+      {
+        "consumer": "filter",
+        "check": "current Provider/locale/direction false",
+        "passed": true
+      },
+      {
+        "consumer": "filter",
+        "check": "actual compact media geometry and scoped Empty axe",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "actualDocs": {
+    "base": "http://127.0.0.1:4477/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "theme": "light",
+        "httpStatus": 200,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "basic",
+        "theme": "dark",
+        "httpStatus": 200,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "simple",
+        "theme": "light",
+        "httpStatus": 200,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "simple",
+        "theme": "dark",
+        "httpStatus": 200,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "customize",
+        "theme": "light",
+        "httpStatus": 200,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "customize",
+        "theme": "dark",
+        "httpStatus": 200,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "config-provider",
+        "theme": "light",
+        "httpStatus": 200,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "config-provider",
+        "theme": "dark",
+        "httpStatus": 200,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "description",
+        "theme": "light",
+        "httpStatus": 200,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "description",
+        "theme": "dark",
+        "httpStatus": 200,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "style-class",
+        "theme": "light",
+        "httpStatus": 200,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "style-class",
+        "theme": "dark",
+        "httpStatus": 200,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "name": "actual complete image slot and working native draft",
+        "passed": true
+      },
+      {
+        "name": "actual named Provider image/style/class updates preserve the root",
+        "passed": true
+      },
+      {
+        "name": "actual conditional complete description suppresses fallback and empty spacing",
+        "passed": true
+      },
+      {
+        "name": "all four actual semantic hosts and current factories",
+        "passed": true
+      },
+      {
+        "name": "physical component document and all six actual lazy demo cards",
+        "httpStatus": 200,
+        "passed": true
+      }
+    ],
+    "fallbackDocuments": [],
+    "errors": []
   }
 }

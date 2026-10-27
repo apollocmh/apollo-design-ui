@@ -91,7 +91,7 @@
       "a11yStatus": "done",
       "visualStatus": "in-progress",
       "docsStatus": "in-progress",
-      "notes": "2026-10-27 Empty完整盘点后集中修复六Props/三完整槽、当前Provider/方向/语言、合法image数据、透明合成和自然布局/对比度；六原Demo同步更新。1151关联四层、20公开类型、严格检查、发布构建、50生产浏览器、24 Demo主题、8 SSR及6组水合通过。自有视觉、实际Docs及最终清单仍在验收，不以核心通过宣称整单完成。",
+      "notes": "2026-10-27 Empty完整盘点后集中修复六Props/三完整槽、当前Provider/方向/语言、合法image数据、透明合成和自然布局/对比度；六原Demo同步更新。1151关联四层、20公开类型、严格检查、发布构建、50生产浏览器、24 Demo主题、8 SSR及6组水合通过。自有视觉、实际Docs及最终清单仍在验收，不以核心通过宣称整单完成。 193cc3bb核心已推送；关联Trigger主题作用域4条红绿复现、八类popup40项及实际Empty消费者18组、Docs17项通过，统一共享回归及自有视觉继续验收。",
       "layerNotes": {
         "token": "antd 的 Empty 没有用户可覆盖的 Component Token。`style/index.js` 用 mergeToken 造了 4 个**内部** token（emptyImgCls / emptyImgHeight / emptyImgHeightMD / emptyImgHeightSM），它们不在 antd 的 ComponentToken 里，用户无法通过 theme.components.Empty 覆盖。我们也不暴露，改成 calc(var(--apollo-control-height-lg) * 2.5) 这类变量表达式，compact / 自定义 controlHeightLG 时高度仍会跟着变。「登记 0 个 token 并声称完成」与「确认它确实没有 token」是两件事，所以记 n/a 而不是 done。",
         "interaction": "无业务Emits/v-model；完整槽当前求值/条件移除、编辑草稿/实际根/焦点/选区、相邻Provider隔离及卸载重挂已由行为与生产浏览器验证。",

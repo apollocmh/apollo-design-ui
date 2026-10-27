@@ -596,3 +596,6 @@ Result99四层、87生产浏览器、8 SSR、5组水合证据保留；最终2352
 ### 2026-10-27 · Empty完整契约（核心已验证，统一验收进行中）
 
 已完整盘点六Props/三个内容槽、四语义、Provider/语言/主题及DefaultRenderEmpty实际消费者。39项修前复现11通过/28失败，集中修复当前配置快照、合法image数据、完整槽/空宿主、双透明NaN、媒体布局与说明对比度；六原Demo、类型和双语文档同步更新。当前1151相关四层、20类型、根/SFC严格检查、50项生产浏览器、24 Demo主题、8 SSR与6组水合通过。自有视觉、实际Docs及最终清单仍在验收；见[范围清单](audit/2026-10-27-empty-contract-audit.md)、[证据](audit/evidence/empty-contract.json)和[迁移](migrations/empty-contracts.md)。
+
+
+Empty核心提交193cc3bb已推送。关联验收复现Trigger/Portal丢失主题CSS作用域，已补当前Alias桥接且保留显式popupStyle优先级；4项修前全红/修后全绿，八类实际公共弹层40项及六类Empty消费者18组通过，实际Docs17项通过。共享层统一回归及清洁提交的自有视觉仍验收中，不关闭整单。

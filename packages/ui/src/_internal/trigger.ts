@@ -40,6 +40,7 @@ import {
   type FlipMemory,
   measureAlign,
 } from '@apollo-design/position';
+import { transformToken, useTheme } from '@apollo-design/theme';
 import { canUseDom } from '@apollo-design/utils';
 import {
   cloneVNode,
@@ -217,6 +218,12 @@ export const Trigger = defineComponent({
     },
   },
   setup(props, { slots, attrs, expose }) {
+    const theme = useTheme();
+    // Native Portal keeps injection, but leaves the Provider's DOM/CSS scope.
+    // Apply the current source aliases to the popup itself; local popup styles still win.
+    const popupThemeStyle = computed(() =>
+      Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : undefined,
+    );
     // ============================ Overlay ============================
     // 开合 / 事件 / 延迟 / Esc / 外部点击 —— 全部委托 overlay。
     const inMotion = ref(false);
@@ -676,6 +683,7 @@ export const Trigger = defineComponent({
                         !isMobile && alignedClassName.value,
                       ],
                       style: {
+                        ...popupThemeStyle.value,
                         '--arrow-x': `${info.arrowX || 0}px`,
                         '--arrow-y': `${info.arrowY || 0}px`,
                         ...offsetStyle.value,

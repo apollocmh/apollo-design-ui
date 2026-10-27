@@ -52,3 +52,14 @@ Demo初次浏览器扫描保留了真实链接对比度失败：默认蓝链接�
 未验证/本轮继续项：实际构建Docs页面及交互、自有视觉清洁提交采集与审阅、相关List视觉、UI严格L7及最终同一生产实现清单核对、线上站点更新。当前仅核心实现里程碑，不宣称整单或全库完成。
 
 关联浏览器验收新增实际复现：List/Table更新到紧凑主题时正常，Select实际body弹层中的Empty仍为35px而非30.625px。源码链路为ConfigProvider只向其display:contents宿主应用Alias变量，Trigger的Portal移出该宿主且没有传递当前主题变量；Vue注入仍有效，故Empty语言/配置更新通过而CSS布局失效。该既有主题接口在本轮关联链路中无效，纳入当前必修，先验证共享Trigger主题桥接与其实际消费者，再统一收口。其余consumer浏览器分支尚未完成，不据局部通过报告全链路正常。
+
+
+## 共享Trigger主题边界整改
+
+进一步核对Trigger现有29 Props、default槽/popup数据、forceAlign/nativeElement/popupElement三个Expose、当前overlay/Portal/motion与popupStyle链：Portal保留Vue注入但不保留DOM变量祖先，实际popup根没有当前Alias变量。修复仅在现有popup style最低优先级写入当前source Alias；显式popupStyle仍优先。无主题时不写默认内联变量，主题替换/移除及最近作用域保持响应性，无新增Props/Emits/model/兼容层。
+
+四个修前回归全部失败；修后4/4通过，含首帧、替换/删除、原生草稿/焦点、显式覆盖移除及相邻嵌套作用域。实际八类公共popup（Tooltip/Popover/Popconfirm/Dropdown/Menu/DatePicker/RangePicker/Tour）共40项初始/当前/暗紧凑/移除/重开检查通过；六类实际Empty消费者共18组通过，包括表格筛选面板，原根与当前配置/方向/Empty语言及紧凑尺寸有实际断言。
+
+表格筛选最初axe取样发生在有限入场动画中间，颜色对比1.69；等待真实动画结束后通过，未修改Table或测试颜色。Table筛选描述由Table自己的locale prop提供，消费者报告只声明Empty对显式文案的消费，未把它伪称全Table语言契约验收。
+
+实际构建文档的六Demo亮暗及四组交互、主文档六卡片共17项通过。当前共享层所有实际reader及间接消费者的统一四层门禁仍运行；视觉只完成候选布局/axe，尚未批准。核心提交193cc3bb已推送，整单继续验收。
