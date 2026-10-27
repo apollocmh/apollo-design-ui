@@ -102,7 +102,10 @@ describe('F11 Typography current ConfigProvider semantics', () => {
               },
             ),
         );
-        const wrapper = mount(Host, { attachTo: document.body });
+        const wrapper = mount(Host, {
+          attachTo: document.body,
+          global: { stubs: { teleport: false } },
+        });
         const root = rootOf(wrapper);
         assertField(root, field, false);
         assertLocal(root);
@@ -160,7 +163,10 @@ describe('F11 Typography current ConfigProvider semantics', () => {
             },
           ),
       );
-      const wrapper = mount(Host, { attachTo: document.body });
+      const wrapper = mount(Host, {
+        attachTo: document.body,
+        global: { stubs: { teleport: false } },
+      });
       for (const field of fields) assertField(rootOf(wrapper), field, false);
       expect(rootOf(wrapper).style.paddingTop).toBe('2px');
       assertLocal(rootOf(wrapper));
@@ -211,7 +217,10 @@ describe('F11 Typography current ConfigProvider semantics', () => {
             { default: () => h(Text, {}, { default: () => 'Function provider body' }) },
           ),
       );
-      const wrapper = mount(Host, { attachTo: document.body });
+      const wrapper = mount(Host, {
+        attachTo: document.body,
+        global: { stubs: { teleport: false } },
+      });
       const root = rootOf(wrapper);
       expect(first).toHaveBeenCalled();
       if (field === 'classNames') {
@@ -246,7 +255,10 @@ describe('F11 Typography current ConfigProvider semantics', () => {
           },
         ),
     );
-    const wrapper = mount(Host, { attachTo: document.body });
+    const wrapper = mount(Host, {
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
     configuration.value.style.marginTop = '12px';
     configuration.value.classNames.root = 'in-place-current';
     configuration.value.styles.root.paddingBottom = '9px';
@@ -275,7 +287,10 @@ describe('F11 Typography current ConfigProvider semantics', () => {
           { default: () => h(Text, {}, { default: () => 'Reactive function body' }) },
         ),
     );
-    const wrapper = mount(Host, { attachTo: document.body });
+    const wrapper = mount(Host, {
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
     current.value = true;
     await flushRender();
     expect(rootOf(wrapper).classList.contains('reactive-current')).toBe(true);
@@ -306,7 +321,10 @@ describe('F11 Typography current ConfigProvider semantics', () => {
           },
         ),
     );
-    const wrapper = mount(Host, { attachTo: document.body });
+    const wrapper = mount(Host, {
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
     expect(rootOf(wrapper).style.maxWidth).toBe('400px');
     configuration.value = { style: { maxWidth: '250px' }, styles: { root: { maxWidth: '200px' } } };
     await flushRender();
@@ -338,7 +356,10 @@ describe('F11 Typography current ConfigProvider semantics', () => {
           },
         ),
     );
-    const wrapper = mount(Host, { attachTo: document.body });
+    const wrapper = mount(Host, {
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
     configuration.value = { className: 'late-class', style: { marginTop: '12px' } };
     await flushRender();
     expect(rootOf(wrapper).classList.contains('late-class')).toBe(true);
@@ -371,7 +392,10 @@ describe('F11 Typography current ConfigProvider semantics', () => {
           },
         ),
     );
-    const wrapper = mount(Host, { attachTo: document.body });
+    const wrapper = mount(Host, {
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
     const root = rootOf(wrapper);
     const input = wrapper.get('input').element;
     if (!(input instanceof HTMLInputElement)) throw new Error('Expected a native input');

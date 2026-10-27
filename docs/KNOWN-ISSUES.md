@@ -630,6 +630,8 @@ Tag验收提交db24a00c已上线；工作流40461805810与Pages7352080560成功�
 
 实现9af2a24f、共享ef832304、视觉/Docs证据8a2410d9已推送。Avatar143通过；最终相关273文件4484条中4461通过、23为Typography既有失败，已在独立原db24a00c和4e2d9d04复现相同23条，没有排除测试或假报整批全绿。72类型、42源/发布浏览器、46原Demo主题交互、17 SSR水合、16消费、三包严格L7通过；CI全包拓扑L7再验151项0失败/0pending。48清洁自有图逐张批准/原始RGBA一致，相关105视觉通过，原405批准/PNG和42参考文件不变。Docs161及27本地/线上通过，workflow40486797828/Pages7355783533发布成功；20条Demo深链的既有404 SPA边界明示。Image按用户接受功能成本的裁决，仅预算更新80KB，其他预算/比较设置不变。全库453/1380图批准，927待审；不是全库最终通过。见[完整清单](audit/2026-10-27-avatar-contract-audit.md)、[证据](audit/evidence/avatar-contract.json)、[发布](audit/evidence/avatar-docs-publication.json)及[迁移](migrations/avatar-contracts.md)。
 
-### 2026-10-27 · Typography Provider既有回归（下一完整单元，FIX）
+### 2026-10-27 · Typography完整契约审计（进行中）
 
 关联整批发现provider-reactivity.test.ts32条9通过/23失败，涉及五入口对象/函数替换、样式/类及业务宿主身份；Avatar前db24a00c与共享修复前4e2d9d04独立运行均为相同23失败，相关Typography/context/semantic helper源码一致。历史d1e9fb11的32通过报告不替代当前红灯。保留原断言，下一步先完整盘点Typography全部Props/Slots/Emits/model/expose、响应式/Provider/样式/关联子组件，再按根因成组修复，不只修这23个断言。见[基线证据](audit/evidence/typography-provider-baseline-2026-10-27.json)。
+
+**Provider红灯裁定更正**：真实生产Chrome的五入口/编辑/富内容/原Demo全部通过；仅将该32条测试的Teleport默认替身改为真实Teleport，保持全部原断言与生产源码不变后，32/32通过。原23失败来自测试替身重挂载，不能认定Provider生产缺陷；原4484整批红灯作为历史真实结果保留，不改写。完整审计继续处理既有autoSize、两个标题Token、当前语言、attrs、复制/编辑/省略等实际链路，见[完整清单](audit/2026-10-27-typography-contract-audit.md)。

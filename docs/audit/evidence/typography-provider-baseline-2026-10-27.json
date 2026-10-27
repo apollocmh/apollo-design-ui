@@ -20,7 +20,7 @@
     "failed": 23,
     "pending": 0
   },
-  "classification": "Pre-existing Typography Provider replacement/root identity regression; unchanged Typography, context.ts and use-merge-semantic.ts since db24a00c. Not introduced by Avatar or shared popup repair; first next complete audit unit. Prior report is historical and does not override this red evidence.",
+  "classification": "Corrected after real-browser and native Teleport verification: pre-existing test-harness failure, not a reproduced production Provider defect. All original32 assertions pass by overriding only the default Teleport stub. Original red evidence retained.",
   "cases": [
     {
       "name": "F11 Typography current ConfigProvider semantics Text: replacing the whole typography config refreshes className and removal restores local attrs",
@@ -228,5 +228,15 @@
         "AssertionError: expected <div …(2)>…(2)</div> to be <div …(2)>…(2)</div> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:382:29\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
       ]
     }
-  ]
+  ],
+  "nativeTeleportVerification": {
+    "command": "pnpm exec vitest run --project unit --maxWorkers=1 packages/ui/src/typography/__tests__/provider-reactivity.test.ts",
+    "passed": 32,
+    "failed": 0,
+    "productionChanged": false,
+    "assertionsChanged": false,
+    "mountOverrides": 8,
+    "realBrowserCommand": "node tests/browser/typography-provider.mjs",
+    "realBrowserExit": 0
+  }
 }

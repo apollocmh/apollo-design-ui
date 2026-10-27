@@ -32,7 +32,8 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 72
+      "completed": 71,
+      "analyzing": 1
     },
     "byPriority": {
       "P0": 8,
@@ -51,8 +52,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 72,
-    "remainingCount": 0
+    "completedCount": 71,
+    "remainingCount": 1
   },
   "milestones": [],
   "components": [
@@ -603,7 +604,7 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "M",
-      "status": "completed",
+      "status": "analyzing",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -632,7 +633,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "含 Title / Text / Paragraph / Link 子组件，以及 ellipsis / copyable / editable 能力。\n2026-10-25 F11：14条真实默认槽回归修前12失败/2对照通过，修正四个子入口的槽缓存与CSS省略渲染外求槽。公开render传当前数据给私有状态层，保留元素/ref/量测；另修编辑aria-label漏传，15条局部通过。完整验证见 docs/audit/2026-10-25-typography-native-content-remediation.md，未升级历史视觉验收。\n2026-10-25 VERIFY：21条原生StyleValue公开路径回归原已通过，确认SFC mergeProps提前归一字符串，未修改实现；补动态样式示例并将Demo残留root-class-name改原生class。范围与Chrome/SSR证据见 docs/audit/2026-10-25-typography-style-verification.md，不因文档维护重验或升级组件维度。\n2026-10-25 F11：32条全局配置回归修前25失败/7已有通过，修复setup解构捕获旧配置。当前getter追踪整体/函数替换、晚加载和移除，保留既有原地mutation与样式优先级；证据见 docs/audit/2026-10-25-typography-provider-remediation.md，未升级视觉维度。",
+      "notes": "2026-10-27完整单元盘点：五入口/全部配置、14原Demo、两个Token及复制/编辑/省略链已核对。原23 Provider单测失败确认Teleport默认替身所致，真实Chrome及保持断言的原生Teleport32/32通过，未改生产Provider。既有autoSize、Token/语言、attrs与关键交互正成组复现；未宣称本单元完成。",
       "layerNotes": {
         "unit": "L1：5 个组件的标签/类名、七个装饰的嵌套顺序、四种语义 type、disabled、`component` 覆盖语义、style/classNames/styles 的合并优先级、四个子组件的 nativeElement 暴露、开发期告警（含 prefixCls 与 `in` 判据）。⚠️ 它**没有**证明与 antd 的 DOM 结构一致（那是 L4），也**没有**证明像素一致（那是 L6）。",
         "interaction": "L2：1) `copyable` 的 copied 状态机（`vi.useFakeTimers` 钉住 3s 回落）与 `icon`/`tooltips` 的二元组；2) `editable` 的三道按键门槛（`trim()` / IME 组合中不提交 / 带修饰键的 Enter 不提交）与「退出编辑态后焦点还给编辑图标」（`flush: post` 是必需的，`pre` 会让 focus 静默落空）；3) `ellipsis` 的 expand/collapse（`expandable: true` 展开后按钮消失，`collapsible` 保留）与受控 `expanded`；4) `onEllipsis` 只在**变化时**上报（Vue 的 ref 立刻更新，照抄 antd 的「先 setState 再比较闭包旧值」会变成恒等 —— 必须先比较后赋值）；5) JS 二分裁剪路径由**打桩布局**驱动（jsdom 没有布局引擎），桩里含一条真实浏览器行为「`display:inline` 的元素 `clientHeight` 恒为 0」。⚠️ 桩只能证明「二分在桩的规则下找到了最大的 n」，真实排版只由 L6 证明。",
@@ -5126,7 +5127,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-27 Avatar完整单元收口：实现9af2a24f，共享ef832304；本组件143通过，相关4484条4461通过/23为独立db24a00c同名Typography基线失败，未假报全绿。72类型、42浏览器、46Demo、17 SSR水合、16消费、Docs161/27本地与线上通过；48清洁自有图审查及原始RGBA一致、相关105视觉通过。全库其余单元/最终门禁继续。",
+      "notes": "2026-10-27 Avatar完整单元收口：实现9af2a24f，共享ef832304；本组件143通过，相关4484条4461通过/23为独立db24a00c同名Typography基线失败（后续证明Teleport桩所致，原生32/32），未假报全绿。72类型、42浏览器、46Demo、17 SSR水合、16消费、Docs161/27本地与线上通过；48清洁自有图审查及原始RGBA一致、相关105视觉通过。全库其余单元/最终门禁继续。",
       "layerNotes": {
         "currentAudit": "docs/audit/2026-10-27-avatar-contract-audit.md；avatar-contract.json、avatar-visual-browser.json、avatar-docs-publication.json和迁移。完整清单收口，仅Avatar；Typography基线23条另案优先整改。",
         "api": "click/error原生Vue事件，同步beforeFallback取消；image/icon完整槽和VNode数据；max单一配置，静态子组件/ref保持。",

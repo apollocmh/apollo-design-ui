@@ -8087,7 +8087,7 @@
     }
   ],
   "globalRemaining": [
-    "Typography pre-existing23 Provider replacement failures: next full unit",
+    "Complete Typography audit; previous23 Provider failures proven test-stub-only and corrected without changing production",
     "Other component/foundation complete audits and199 content candidates",
     "927 missing approved Apollo visual cases",
     "Final full-library gates on one final commit after all units"
@@ -8131,5 +8131,9 @@
       "command": "git diff --check",
       "exit": 0
     }
+  },
+  "baselineFailureClarification": {
+    "evidence": "docs/audit/evidence/typography-provider-baseline-2026-10-27.json",
+    "result": "The related batch really reported23 failures; later Typography inventory proved default Teleport stub remounts. Real browser and same32 assertions with native Teleport pass without production changes. Original batch is not rewritten as pass."
   }
 }
