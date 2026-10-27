@@ -180,14 +180,12 @@ try {
   assert.equal((await page.evaluate(() => window.avatarHydration.snapshot())).controlled, false);
   checks.push('controlled overflow honors refused and accepted updates exactly once');
   await page.addScriptTag({ path: createRequire(import.meta.url).resolve('axe-core/axe.min.js') });
-  const violations = await page
-    .locator('main')
-    .evaluate(async (n) =>
-      (await window.axe.run(n)).violations.map((v) => ({
-        id: v.id,
-        nodes: v.nodes.map((x) => x.failureSummary),
-      })),
-    );
+  const violations = await page.locator('main').evaluate(async (n) =>
+    (await window.axe.run(n)).violations.map((v) => ({
+      id: v.id,
+      nodes: v.nodes.map((x) => x.failureSummary),
+    })),
+  );
   assert.deepEqual(violations, []);
   checks.push('actual hydrated document axe');
   for (let i = 0; i < 3; i++) {

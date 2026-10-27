@@ -22,6 +22,7 @@ import {
   computed,
   type InjectionKey,
   inject,
+  type MaybeRefOrGetter,
   onMounted,
   onUnmounted,
   onUpdated,
@@ -29,6 +30,7 @@ import {
   type Ref,
   type ShallowRef,
   shallowRef,
+  toValue,
   watch,
 } from 'vue';
 
@@ -67,7 +69,7 @@ export interface UsePortalContainerOptions {
   /** 想要的可见性。响应式 */
   open: () => boolean;
   /** 关闭后是否卸载内容。默认 `true`（与 antd 一致） */
-  autoDestroy?: boolean;
+  autoDestroy?: MaybeRefOrGetter<boolean | undefined>;
   /**
    * 容器来源。四种形态见 `GetContainer`。
    * 不传 ⇒ 创建默认容器挂到 `document.body`。
@@ -142,8 +144,8 @@ export function usePortalContainer(options: UsePortalContainerOptions): UsePorta
 
   // ---- shouldRender：`mergedRender = shouldRender || open` ----
   const rendered = shallowRef(open());
-  watch(open, (next) => {
-    if (autoDestroy || next) rendered.value = next;
+  watch([open, () => toValue(autoDestroy) ?? true], ([next, destroy]) => {
+    if (destroy || next) rendered.value = next;
   });
   const mergedRender = computed(() => rendered.value || open());
 

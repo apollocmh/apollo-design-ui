@@ -13,6 +13,7 @@ import { type EscInfo, useWindowEscKeyDown } from './use-esc-key-down';
 import { usePortalContainer } from './use-portal';
 import { usePortalDocument } from './use-portal-document';
 import { useDocumentScrollLocker } from './use-scroll-locker';
+import { useTeleportFocus } from './use-teleport-focus';
 
 export const Portal = defineComponent({
   name: 'Portal',
@@ -56,7 +57,7 @@ export const Portal = defineComponent({
 
     const { container, shouldRender } = usePortalContainer({
       open: () => props.open,
-      autoDestroy: props.autoDestroy,
+      autoDestroy: () => props.autoDestroy,
       // 始终传 getter —— 让 `reResolveContainer` 每次都能读到最新的 prop。
       // ⚠️ 不能写成 `getContainer: props.getContainer`：那会把 spec（可能是一个函数）
       //    在 setup 时就固化下来。
@@ -89,11 +90,14 @@ export const Portal = defineComponent({
       return c as Element;
     });
 
+    const trackTeleport = useTeleportFocus(() => container.value);
     return () => {
       // `Portal.js:78-80`
-      if (!shouldRender.value) return null;
+      if (!shouldRender.value) return trackTeleport(null);
       // `h` 对 `typeof Teleport` 有专门重载，children 是**必填**参数 ⇒ 没有 slot 时传 `[]`
-      return h(Teleport, { to: teleportTo.value, disabled: inline.value }, slots.default?.() ?? []);
+      return trackTeleport(
+        h(Teleport, { to: teleportTo.value, disabled: inline.value }, slots.default?.() ?? []),
+      );
     };
   },
 });

@@ -1,3 +1,5 @@
+import { ref } from 'vue';
+import type { UsePortalContainerOptions } from '../index';
 /**
  * L3 —— 类型契约。
  *
@@ -137,4 +139,16 @@ describe('组合式函数与组件', () => {
     // @ts-expect-error 只接受 boolean
     portalInlineMock('yes');
   });
+});
+
+it('autoDestroy accepts current Vue sources while rejecting invalid values', () => {
+  const sources: UsePortalContainerOptions[] = [
+    { open: () => true, autoDestroy: true },
+    { open: () => true, autoDestroy: ref(false) },
+    { open: () => true, autoDestroy: () => undefined },
+  ];
+  expectTypeOf(sources).toEqualTypeOf<UsePortalContainerOptions[]>();
+  // @ts-expect-error destroy configuration must resolve to boolean or undefined
+  const invalid: UsePortalContainerOptions = { open: () => true, autoDestroy: 'always' };
+  void invalid;
 });

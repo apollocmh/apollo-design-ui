@@ -132,7 +132,7 @@ const Popover = defineComponent({
       style?: StyleLike;
     };
 
-    const prefixCls = props.prefixCls ?? context.getPrefixCls('popover');
+    const prefixCls = computed(() => props.prefixCls ?? context.getPrefixCls('popover'));
 
     // ============================ Merge ==============================
     const mergedMouseEnterDelay = computed(
@@ -218,7 +218,7 @@ const Popover = defineComponent({
               'div',
               {
                 key: 'title',
-                class: [`${prefixCls}-title`, mergedClassNames.value.title],
+                class: [`${prefixCls.value}-title`, mergedClassNames.value.title],
                 style: mergedStyles.value.title as StyleLike | undefined,
               },
               [title],
@@ -229,7 +229,7 @@ const Popover = defineComponent({
               'div',
               {
                 key: 'content',
-                class: [`${prefixCls}-content`, mergedClassNames.value.content],
+                class: [`${prefixCls.value}-content`, mergedClassNames.value.content],
                 style: mergedStyles.value.content as StyleLike | undefined,
               },
               [content],
@@ -253,7 +253,7 @@ const Popover = defineComponent({
         Tooltip,
         {
           ref: tooltipRef as never,
-          prefixCls,
+          prefixCls: prefixCls.value,
           arrow: mergedArrow.value.show ? mergedArrow.value : false,
           placement: props.placement ?? 'top',
           trigger: mergedTrigger.value,

@@ -175,7 +175,6 @@ const Tooltip = defineComponent({
 
     const context = useComponentConfig('tooltip');
     const direction = useDirection();
-    const { getPrefixCls } = context;
 
     const contextSemantic = context as {
       classNames?: TooltipSemanticType['classNames'];
@@ -196,7 +195,7 @@ const Tooltip = defineComponent({
     const injectFromPopover = inject(tooltipInjectKey, false);
     const semanticConfig: typeof contextSemantic = injectFromPopover ? {} : contextSemantic;
 
-    const prefixCls = props.prefixCls ?? getPrefixCls('tooltip');
+    const prefixCls = computed(() => props.prefixCls ?? context.getPrefixCls('tooltip'));
 
     // ============================ Merge ==============================
     const mergedMouseEnterDelay = computed(
@@ -252,7 +251,7 @@ const Tooltip = defineComponent({
     //    传 id 的实例必须有**唯一** id，否则同页多实例共用 `apollo-tooltip`，
     //    产生重复 ID 与歧义的 `aria-describedby`（Issue #24.2）。显式 id 始终优先。
     const innerId = useId();
-    const mergedId = computed(() => props.id ?? `${prefixCls}-${innerId}`);
+    const mergedId = computed(() => props.id ?? `${prefixCls.value}-${innerId}`);
 
     // ========================= Placements ============================
     const seed = getDesignToken() as unknown as {
@@ -281,7 +280,7 @@ const Tooltip = defineComponent({
     });
 
     // ======================== Merged Semantic ========================
-    const colorInfo = computed(() => parseTooltipColor(prefixCls, props.color));
+    const colorInfo = computed(() => parseTooltipColor(prefixCls.value, props.color));
     const contextStyleRoot = semanticConfig.style;
     const overlayStyleRoot = props.overlayStyle;
 
@@ -318,7 +317,7 @@ const Tooltip = defineComponent({
     const rootClassNames = computed(() =>
       clsx(
         props.overlayClassName,
-        direction.value === 'rtl' && `${prefixCls}-rtl`,
+        direction.value === 'rtl' && `${prefixCls.value}-rtl`,
         colorInfo.value.className,
         semanticConfig.className,
         mergedClassNames.value.root,
@@ -382,7 +381,7 @@ const Tooltip = defineComponent({
       const childProps = (child.props ?? {}) as { class?: unknown; 'aria-describedby'?: string };
       const openCls =
         tempOpen || (props.openClassName !== undefined && mergedOpen.value)
-          ? (props.openClassName ?? `${prefixCls}-open`)
+          ? (props.openClassName ?? `${prefixCls.value}-open`)
           : '';
       const childClass = normalizeClass([childProps.class, openCls]);
       const describedBy = [childProps['aria-describedby'], tempOpen ? mergedId.value : undefined]
@@ -400,7 +399,7 @@ const Tooltip = defineComponent({
       //    `classNames.arrow` / `styles.arrow` 全丢（Issue #24.6）。
       const arrowProp = mergedShowArrow.value
         ? {
-            content: h('span', { class: `${prefixCls}-arrow-content` }),
+            content: h('span', { class: `${prefixCls.value}-arrow-content` }),
             className: mergedClassNames.value.arrow,
             style: {
               ...(colorInfo.value.arrowStyle as StyleLike),
@@ -413,7 +412,7 @@ const Tooltip = defineComponent({
         'div',
         {
           id: mergedId.value,
-          class: clsx(`${prefixCls}-container`, mergedClassNames.value.container),
+          class: clsx(`${prefixCls.value}-container`, mergedClassNames.value.container),
           style: containerStyle.value as CSSProperties,
           role: 'tooltip',
           onClick: props.onPopupClick ? (e: MouseEvent) => props.onPopupClick?.(e) : undefined,
@@ -425,7 +424,7 @@ const Tooltip = defineComponent({
         Trigger,
         {
           ref: triggerRef as never,
-          prefixCls,
+          prefixCls: prefixCls.value,
           popup,
           // antd 的 ActionType 是 string，本仓只认 5 种动作 —— 未知动作在
           // resolveActions 里静默 no-op（语义安全），窄化 cast 登记 COMPATIBILITY
@@ -441,7 +440,7 @@ const Tooltip = defineComponent({
           popupAlign: props.align,
           getPopupContainer: mergedGetPopupContainer.value,
           motion: {
-            motionName: props.motion?.motionName ?? `${prefixCls}-zoom-big-fast`,
+            motionName: props.motion?.motionName ?? `${prefixCls.value}-zoom-big-fast`,
             motionDeadline: 1000,
           },
           destroyOnHidden: mergedDestroyOnHidden.value,

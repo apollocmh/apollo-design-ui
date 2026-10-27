@@ -51,6 +51,12 @@
 
   生产包浏览器验证：`node tests/browser/portal-owner.mjs`（真实iframe、开/闭ShadowRoot、原生滚轮、搬迁、IME、窗口层栈、重开和卸载）。这不代表焦点陷阱或Image整体已验收。
 
+## 当前销毁策略与搬迁焦点
+
+Portal 的 autoDestroy 随 prop 更新；usePortalContainer 的对应选项支持 Vue getter/ref。关闭后切换销毁策略会按当前值处理已挂载内容。
+
+反复切换容器时，本包保持自身编辑器的节点、草稿、选择和焦点，尊重已选外部焦点、非活动文档和普通更新中的主动 blur。具体边界与复现见 [Avatar关联审计](../../docs/audit/2026-10-27-avatar-contract-audit.md)；通用焦点陷阱与对话框层级管理仍在 utils/a11y。
+
 ## 明确不做（边界）
 
 - ❌ 不实现浮层定位（那是 @apollo-design/position 的职责）

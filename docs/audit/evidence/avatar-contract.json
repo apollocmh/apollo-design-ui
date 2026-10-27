@@ -3569,5 +3569,1264 @@
     "SSR empty alt serializes as a bare empty attribute; browser alt is the empty string.",
     "Three private group host CSS values preserve computed variable ownership, not additional public component Tokens.",
     "Full L7 is a build gate, not full-library runtime/type/visual completion."
-  ]
+  ],
+  "sharedPopupIncrement": {
+    "scope": "Existing AvatarGroup max.popover chain only; no claim of complete foundation or other popup component audit",
+    "before": {
+      "dynamicOptions": {
+        "results": [
+          {
+            "name": "default default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 9.72890988132843,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgba(0, 0, 0, 0.25)",
+              "foregroundRGB": [
+                23.219607843137258,
+                23.219607843137258,
+                23.219607843137258
+              ],
+              "backgroundRGB": [
+                191,
+                191,
+                191
+              ]
+            }
+          },
+          {
+            "name": "default actual default overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "dark default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 6.490598341619866,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgba(255, 255, 255, 0.25)",
+              "foregroundRGB": [
+                228.7696270665129,
+                228.7696270665129,
+                228.7696270665129
+              ],
+              "backgroundRGB": [
+                78.98039215686275,
+                78.98039215686275,
+                78.98039215686275
+              ]
+            }
+          },
+          {
+            "name": "dark actual default overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "compact default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 9.72890988132843,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgba(0, 0, 0, 0.25)",
+              "foregroundRGB": [
+                23.219607843137258,
+                23.219607843137258,
+                23.219607843137258
+              ],
+              "backgroundRGB": [
+                191,
+                191,
+                191
+              ]
+            }
+          },
+          {
+            "name": "compact actual default overlap",
+            "passed": true,
+            "actual": "-4px"
+          },
+          {
+            "name": "both default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 6.490598341619866,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgba(255, 255, 255, 0.25)",
+              "foregroundRGB": [
+                228.7696270665129,
+                228.7696270665129,
+                228.7696270665129
+              ],
+              "backgroundRGB": [
+                78.98039215686275,
+                78.98039215686275,
+                78.98039215686275
+              ]
+            }
+          },
+          {
+            "name": "both actual default overlap",
+            "passed": true,
+            "actual": "-4px"
+          },
+          {
+            "name": "inherited numeric Group actual dimensions",
+            "passed": true,
+            "actual": 56
+          },
+          {
+            "name": "inherited sparse responsive Group uses largest matching configured breakpoint",
+            "passed": true,
+            "actual": 44
+          },
+          {
+            "name": "direct sparse responsive size skips missing xl and lg",
+            "passed": true,
+            "actual": 44
+          },
+          {
+            "name": "root-only CSS resize recalculates text fit",
+            "passed": true,
+            "actual": {
+              "before": 0.541353,
+              "after": 1
+            }
+          },
+          {
+            "name": "current Token actual containerSize",
+            "passed": true,
+            "actual": "46px"
+          },
+          {
+            "name": "current Token actual containerSizeLG",
+            "passed": true,
+            "actual": "60px"
+          },
+          {
+            "name": "current Token actual containerSizeSM",
+            "passed": true,
+            "actual": "30px"
+          },
+          {
+            "name": "current Token actual textFontSize",
+            "passed": true,
+            "actual": "15px"
+          },
+          {
+            "name": "current Token actual textFontSizeLG",
+            "passed": true,
+            "actual": "17px"
+          },
+          {
+            "name": "current Token actual textFontSizeSM",
+            "passed": true,
+            "actual": "13px"
+          },
+          {
+            "name": "current Token actual iconFontSize",
+            "passed": true,
+            "actual": "23px"
+          },
+          {
+            "name": "current Token actual iconFontSizeLG",
+            "passed": true,
+            "actual": "28px"
+          },
+          {
+            "name": "current Token actual iconFontSizeSM",
+            "passed": true,
+            "actual": "16px"
+          },
+          {
+            "name": "current Token actual groupSpace",
+            "passed": true,
+            "actual": "9px"
+          },
+          {
+            "name": "current Token actual groupOverlapping",
+            "passed": true,
+            "actual": "-12px"
+          },
+          {
+            "name": "current Token actual groupBorderColor",
+            "passed": true,
+            "actual": "rgb(170, 187, 204)"
+          },
+          {
+            "name": "numeric text consumes current textFontSize Token",
+            "passed": true,
+            "actual": "15px"
+          },
+          {
+            "name": "unscoped overflow button inherits default group overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "default overflow button inherits actual group overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "native Group variable controls actual overlap and border",
+            "passed": true,
+            "actual": {
+              "overlap": "-17px",
+              "border": "rgb(10, 20, 30)"
+            }
+          },
+          {
+            "name": "actual Provider RTL reaches the Group layout",
+            "passed": true,
+            "actual": "rtl"
+          },
+          {
+            "name": "explicit Group prefix reaches associated child avatars",
+            "passed": true
+          },
+          {
+            "name": "native overflow keyboard entry",
+            "passed": true
+          },
+          {
+            "name": "current max.popover prefix and title after opening",
+            "passed": false,
+            "error": "The expression evaluated to a falsy value:\n\n  assert.ok((await popup.getAttribute('class')).includes('first-popover'))\n"
+          },
+          {
+            "name": "current max.popover semantic functions, full data and owned container",
+            "passed": true
+          },
+          {
+            "name": "current max.popover prefix, placement and title replacement",
+            "passed": false,
+            "error": "The expression evaluated to a falsy value:\n\n  assert.ok(classes.includes('second-popover') && classes.includes('placement-right'))\n"
+          },
+          {
+            "name": "current max.popover semantic styles and arrow replacement",
+            "passed": true
+          },
+          {
+            "name": "changing the popup container retains native business state and focus",
+            "passed": false,
+            "error": "Expected values to be strictly equal:\n\nfalse !== true\n"
+          }
+        ],
+        "errors": []
+      },
+      "dynamicDestroyAndClose": {
+        "results": [
+          {
+            "name": "default default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 9.72890988132843,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgba(0, 0, 0, 0.25)",
+              "foregroundRGB": [
+                23.219607843137258,
+                23.219607843137258,
+                23.219607843137258
+              ],
+              "backgroundRGB": [
+                191,
+                191,
+                191
+              ]
+            }
+          },
+          {
+            "name": "default actual default overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "dark default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 6.490598341619866,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgba(255, 255, 255, 0.25)",
+              "foregroundRGB": [
+                228.7696270665129,
+                228.7696270665129,
+                228.7696270665129
+              ],
+              "backgroundRGB": [
+                78.98039215686275,
+                78.98039215686275,
+                78.98039215686275
+              ]
+            }
+          },
+          {
+            "name": "dark actual default overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "compact default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 9.72890988132843,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgba(0, 0, 0, 0.25)",
+              "foregroundRGB": [
+                23.219607843137258,
+                23.219607843137258,
+                23.219607843137258
+              ],
+              "backgroundRGB": [
+                191,
+                191,
+                191
+              ]
+            }
+          },
+          {
+            "name": "compact actual default overlap",
+            "passed": true,
+            "actual": "-4px"
+          },
+          {
+            "name": "both default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 6.490598341619866,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgba(255, 255, 255, 0.25)",
+              "foregroundRGB": [
+                228.7696270665129,
+                228.7696270665129,
+                228.7696270665129
+              ],
+              "backgroundRGB": [
+                78.98039215686275,
+                78.98039215686275,
+                78.98039215686275
+              ]
+            }
+          },
+          {
+            "name": "both actual default overlap",
+            "passed": true,
+            "actual": "-4px"
+          },
+          {
+            "name": "inherited numeric Group actual dimensions",
+            "passed": true,
+            "actual": 56
+          },
+          {
+            "name": "inherited sparse responsive Group uses largest matching configured breakpoint",
+            "passed": true,
+            "actual": 44
+          },
+          {
+            "name": "direct sparse responsive size skips missing xl and lg",
+            "passed": true,
+            "actual": 44
+          },
+          {
+            "name": "root-only CSS resize recalculates text fit",
+            "passed": true,
+            "actual": {
+              "before": 0.541353,
+              "after": 1
+            }
+          },
+          {
+            "name": "current Token actual containerSize",
+            "passed": true,
+            "actual": "46px"
+          },
+          {
+            "name": "current Token actual containerSizeLG",
+            "passed": true,
+            "actual": "60px"
+          },
+          {
+            "name": "current Token actual containerSizeSM",
+            "passed": true,
+            "actual": "30px"
+          },
+          {
+            "name": "current Token actual textFontSize",
+            "passed": true,
+            "actual": "15px"
+          },
+          {
+            "name": "current Token actual textFontSizeLG",
+            "passed": true,
+            "actual": "17px"
+          },
+          {
+            "name": "current Token actual textFontSizeSM",
+            "passed": true,
+            "actual": "13px"
+          },
+          {
+            "name": "current Token actual iconFontSize",
+            "passed": true,
+            "actual": "23px"
+          },
+          {
+            "name": "current Token actual iconFontSizeLG",
+            "passed": true,
+            "actual": "28px"
+          },
+          {
+            "name": "current Token actual iconFontSizeSM",
+            "passed": true,
+            "actual": "16px"
+          },
+          {
+            "name": "current Token actual groupSpace",
+            "passed": true,
+            "actual": "9px"
+          },
+          {
+            "name": "current Token actual groupOverlapping",
+            "passed": true,
+            "actual": "-12px"
+          },
+          {
+            "name": "current Token actual groupBorderColor",
+            "passed": true,
+            "actual": "rgb(170, 187, 204)"
+          },
+          {
+            "name": "numeric text consumes current textFontSize Token",
+            "passed": true,
+            "actual": "15px"
+          },
+          {
+            "name": "unscoped overflow button inherits default group overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "default overflow button inherits actual group overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "native Group variable controls actual overlap and border",
+            "passed": true,
+            "actual": {
+              "overlap": "-17px",
+              "border": "rgb(10, 20, 30)"
+            }
+          },
+          {
+            "name": "actual Provider RTL reaches the Group layout",
+            "passed": true,
+            "actual": "rtl"
+          },
+          {
+            "name": "explicit Group prefix reaches associated child avatars",
+            "passed": true
+          },
+          {
+            "name": "native overflow keyboard entry",
+            "passed": true
+          },
+          {
+            "name": "current max.popover prefix and title after opening",
+            "passed": true
+          },
+          {
+            "name": "current max.popover semantic functions, full data and owned container",
+            "passed": true
+          },
+          {
+            "name": "current max.popover prefix, placement and title replacement",
+            "passed": true
+          },
+          {
+            "name": "current max.popover semantic styles and arrow replacement",
+            "passed": true
+          },
+          {
+            "name": "changing the popup container retains native business state and focus",
+            "passed": true
+          },
+          {
+            "name": "dynamic destroyOnHidden false retains the closed business editor",
+            "passed": false,
+            "error": "Expected values to be strictly equal:\n\n0 !== 1\n"
+          },
+          {
+            "name": "retained popup reopens with the same editor and draft",
+            "passed": false,
+            "error": "Expected values to be strictly equal:\n\nfalse !== true\n"
+          },
+          {
+            "name": "dynamic destroyOnHidden true destroys an already closed editor",
+            "passed": true
+          },
+          {
+            "name": "destroyed content reopens with a fresh editor",
+            "passed": true
+          },
+          {
+            "name": "controlled refused close retains popup focus",
+            "passed": true
+          },
+          {
+            "name": "accepted close returns owned popup focus to the native trigger",
+            "passed": false,
+            "error": "Expected values to be strictly equal:\n\nfalse !== true\n"
+          }
+        ],
+        "errors": []
+      },
+      "focusOwnership": {
+        "total": 15,
+        "passed": 11,
+        "failed": 4,
+        "pending": 0,
+        "cases": [
+          {
+            "name": "actual uncontrolled closing returns owned editor focus to its trigger",
+            "status": "passed"
+          },
+          {
+            "name": "refused controlled close leaves focus inside; accepted close restores it once",
+            "status": "passed"
+          },
+          {
+            "name": "closing does not take focus from another control",
+            "status": "passed"
+          },
+          {
+            "name": "owned focus is resolved in the actual ShadowRoot",
+            "status": "passed"
+          },
+          {
+            "name": "owned focus follows a popup in another same-origin document",
+            "status": "passed"
+          },
+          {
+            "name": "returning focus does not reopen a focus-trigger overlay (controlled=false)",
+            "status": "failed"
+          },
+          {
+            "name": "returning focus does not reopen a focus-trigger overlay (controlled=true)",
+            "status": "failed"
+          },
+          {
+            "name": "closing a cross-document popup does not steal focus from its parent document",
+            "status": "failed"
+          },
+          {
+            "name": "Portal owned focus Document moves the same native editor with draft, selection and focus",
+            "status": "passed"
+          },
+          {
+            "name": "Portal owned focus ShadowRoot moves the same native editor with draft, selection and focus",
+            "status": "passed"
+          },
+          {
+            "name": "keeps focus with its owning range when two Portals share a target",
+            "status": "passed"
+          },
+          {
+            "name": "does not replace an intentional outside focus during the update",
+            "status": "passed"
+          },
+          {
+            "name": "moves the focused editor to another same-origin document",
+            "status": "passed"
+          },
+          {
+            "name": "does not undo a deliberate blur during an ordinary child update",
+            "status": "passed"
+          },
+          {
+            "name": "moving an inactive frame subtree does not take focus from its parent document",
+            "status": "failed"
+          }
+        ]
+      },
+      "ordinaryIntentionalBlur": {
+        "total": 6,
+        "passed": 0,
+        "failed": 1,
+        "pending": 5,
+        "cases": [
+          {
+            "name": "Portal owned focus Document moves the same native editor with draft, selection and focus",
+            "status": "skipped"
+          },
+          {
+            "name": "Portal owned focus ShadowRoot moves the same native editor with draft, selection and focus",
+            "status": "skipped"
+          },
+          {
+            "name": "keeps focus with its owning range when two Portals share a target",
+            "status": "skipped"
+          },
+          {
+            "name": "does not replace an intentional outside focus during the update",
+            "status": "skipped"
+          },
+          {
+            "name": "moves the focused editor to another same-origin document",
+            "status": "skipped"
+          },
+          {
+            "name": "does not undo a deliberate blur during an ordinary child update",
+            "status": "failed"
+          }
+        ]
+      }
+    },
+    "verified": {
+      "targetedRuntime": {
+        "total": 19,
+        "passed": 19,
+        "failed": 0,
+        "pending": 0,
+        "cases": [
+          {
+            "name": "actual uncontrolled closing returns owned editor focus to its trigger",
+            "status": "passed"
+          },
+          {
+            "name": "refused controlled close leaves focus inside; accepted close restores it once",
+            "status": "passed"
+          },
+          {
+            "name": "closing does not take focus from another control",
+            "status": "passed"
+          },
+          {
+            "name": "owned focus is resolved in the actual ShadowRoot",
+            "status": "passed"
+          },
+          {
+            "name": "owned focus follows a popup in another same-origin document",
+            "status": "passed"
+          },
+          {
+            "name": "returning focus does not reopen a focus-trigger overlay (controlled=false)",
+            "status": "passed"
+          },
+          {
+            "name": "returning focus does not reopen a focus-trigger overlay (controlled=true)",
+            "status": "passed"
+          },
+          {
+            "name": "closing a cross-document popup does not steal focus from its parent document",
+            "status": "passed"
+          },
+          {
+            "name": "current autoDestroy controls retained content and destroying an already closed subtree",
+            "status": "passed"
+          },
+          {
+            "name": "Portal owned focus Document moves the same native editor with draft, selection and focus",
+            "status": "passed"
+          },
+          {
+            "name": "Portal owned focus ShadowRoot moves the same native editor with draft, selection and focus",
+            "status": "passed"
+          },
+          {
+            "name": "keeps focus with its owning range when two Portals share a target",
+            "status": "passed"
+          },
+          {
+            "name": "does not replace an intentional outside focus during the update (crossDocument=false)",
+            "status": "passed"
+          },
+          {
+            "name": "does not replace an intentional outside focus during the update (crossDocument=true)",
+            "status": "passed"
+          },
+          {
+            "name": "moves the focused editor to another same-origin document",
+            "status": "passed"
+          },
+          {
+            "name": "does not undo a deliberate blur during an ordinary child update",
+            "status": "passed"
+          },
+          {
+            "name": "moving an inactive frame subtree does not take focus from its parent document",
+            "status": "passed"
+          },
+          {
+            "name": "Tooltip current popup prefix updates root/content/id linkage without replacing its business editor",
+            "status": "passed"
+          },
+          {
+            "name": "Popover current popup prefix updates root/content/id linkage without replacing its business editor",
+            "status": "passed"
+          }
+        ]
+      },
+      "sourceBrowser": {
+        "results": [
+          {
+            "name": "default default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 9.72890988132843,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgba(0, 0, 0, 0.25)",
+              "foregroundRGB": [
+                23.219607843137258,
+                23.219607843137258,
+                23.219607843137258
+              ],
+              "backgroundRGB": [
+                191,
+                191,
+                191
+              ]
+            }
+          },
+          {
+            "name": "default actual default overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "dark default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 6.490598341619866,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgba(255, 255, 255, 0.25)",
+              "foregroundRGB": [
+                228.7696270665129,
+                228.7696270665129,
+                228.7696270665129
+              ],
+              "backgroundRGB": [
+                78.98039215686275,
+                78.98039215686275,
+                78.98039215686275
+              ]
+            }
+          },
+          {
+            "name": "dark actual default overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "compact default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 9.72890988132843,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgba(0, 0, 0, 0.25)",
+              "foregroundRGB": [
+                23.219607843137258,
+                23.219607843137258,
+                23.219607843137258
+              ],
+              "backgroundRGB": [
+                191,
+                191,
+                191
+              ]
+            }
+          },
+          {
+            "name": "compact actual default overlap",
+            "passed": true,
+            "actual": "-4px"
+          },
+          {
+            "name": "both default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 6.490598341619866,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgba(255, 255, 255, 0.25)",
+              "foregroundRGB": [
+                228.7696270665129,
+                228.7696270665129,
+                228.7696270665129
+              ],
+              "backgroundRGB": [
+                78.98039215686275,
+                78.98039215686275,
+                78.98039215686275
+              ]
+            }
+          },
+          {
+            "name": "both actual default overlap",
+            "passed": true,
+            "actual": "-4px"
+          },
+          {
+            "name": "inherited numeric Group actual dimensions",
+            "passed": true,
+            "actual": 56
+          },
+          {
+            "name": "inherited sparse responsive Group uses largest matching configured breakpoint",
+            "passed": true,
+            "actual": 44
+          },
+          {
+            "name": "direct sparse responsive size skips missing xl and lg",
+            "passed": true,
+            "actual": 44
+          },
+          {
+            "name": "root-only CSS resize recalculates text fit",
+            "passed": true,
+            "actual": {
+              "before": 0.541353,
+              "after": 1
+            }
+          },
+          {
+            "name": "current Token actual containerSize",
+            "passed": true,
+            "actual": "46px"
+          },
+          {
+            "name": "current Token actual containerSizeLG",
+            "passed": true,
+            "actual": "60px"
+          },
+          {
+            "name": "current Token actual containerSizeSM",
+            "passed": true,
+            "actual": "30px"
+          },
+          {
+            "name": "current Token actual textFontSize",
+            "passed": true,
+            "actual": "15px"
+          },
+          {
+            "name": "current Token actual textFontSizeLG",
+            "passed": true,
+            "actual": "17px"
+          },
+          {
+            "name": "current Token actual textFontSizeSM",
+            "passed": true,
+            "actual": "13px"
+          },
+          {
+            "name": "current Token actual iconFontSize",
+            "passed": true,
+            "actual": "23px"
+          },
+          {
+            "name": "current Token actual iconFontSizeLG",
+            "passed": true,
+            "actual": "28px"
+          },
+          {
+            "name": "current Token actual iconFontSizeSM",
+            "passed": true,
+            "actual": "16px"
+          },
+          {
+            "name": "current Token actual groupSpace",
+            "passed": true,
+            "actual": "9px"
+          },
+          {
+            "name": "current Token actual groupOverlapping",
+            "passed": true,
+            "actual": "-12px"
+          },
+          {
+            "name": "current Token actual groupBorderColor",
+            "passed": true,
+            "actual": "rgb(170, 187, 204)"
+          },
+          {
+            "name": "numeric text consumes current textFontSize Token",
+            "passed": true,
+            "actual": "15px"
+          },
+          {
+            "name": "unscoped overflow button inherits default group overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "default overflow button inherits actual group overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "native Group variable controls actual overlap and border",
+            "passed": true,
+            "actual": {
+              "overlap": "-17px",
+              "border": "rgb(10, 20, 30)"
+            }
+          },
+          {
+            "name": "actual Provider RTL reaches the Group layout",
+            "passed": true,
+            "actual": "rtl"
+          },
+          {
+            "name": "explicit Group prefix reaches associated child avatars",
+            "passed": true
+          },
+          {
+            "name": "native overflow keyboard entry",
+            "passed": true
+          },
+          {
+            "name": "current max.popover prefix and title after opening",
+            "passed": true
+          },
+          {
+            "name": "current max.popover semantic functions, full data and owned container",
+            "passed": true
+          },
+          {
+            "name": "current max.popover prefix, placement and title replacement",
+            "passed": true
+          },
+          {
+            "name": "current max.popover semantic styles and arrow replacement",
+            "passed": true
+          },
+          {
+            "name": "changing the popup container retains native business state and focus",
+            "passed": true
+          },
+          {
+            "name": "dynamic destroyOnHidden false retains the closed business editor",
+            "passed": true
+          },
+          {
+            "name": "retained popup reopens with the same editor and draft",
+            "passed": true
+          },
+          {
+            "name": "dynamic destroyOnHidden true destroys an already closed editor",
+            "passed": true
+          },
+          {
+            "name": "destroyed content reopens with a fresh editor",
+            "passed": true
+          },
+          {
+            "name": "controlled refused close retains popup focus",
+            "passed": true
+          },
+          {
+            "name": "accepted close returns owned popup focus to the native trigger",
+            "passed": true
+          }
+        ],
+        "errors": []
+      },
+      "publishedBrowser": {
+        "results": [
+          {
+            "name": "default default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 9.72890988132843,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgba(0, 0, 0, 0.25)",
+              "foregroundRGB": [
+                23.219607843137258,
+                23.219607843137258,
+                23.219607843137258
+              ],
+              "backgroundRGB": [
+                191,
+                191,
+                191
+              ]
+            }
+          },
+          {
+            "name": "default actual default overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "dark default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 6.490598341619866,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgba(255, 255, 255, 0.25)",
+              "foregroundRGB": [
+                228.7696270665129,
+                228.7696270665129,
+                228.7696270665129
+              ],
+              "backgroundRGB": [
+                78.98039215686275,
+                78.98039215686275,
+                78.98039215686275
+              ]
+            }
+          },
+          {
+            "name": "dark actual default overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "compact default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 9.72890988132843,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgba(0, 0, 0, 0.25)",
+              "foregroundRGB": [
+                23.219607843137258,
+                23.219607843137258,
+                23.219607843137258
+              ],
+              "backgroundRGB": [
+                191,
+                191,
+                191
+              ]
+            }
+          },
+          {
+            "name": "compact actual default overlap",
+            "passed": true,
+            "actual": "-4px"
+          },
+          {
+            "name": "both default actual text contrast",
+            "passed": true,
+            "actual": {
+              "ratio": 6.490598341619866,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgba(255, 255, 255, 0.25)",
+              "foregroundRGB": [
+                228.7696270665129,
+                228.7696270665129,
+                228.7696270665129
+              ],
+              "backgroundRGB": [
+                78.98039215686275,
+                78.98039215686275,
+                78.98039215686275
+              ]
+            }
+          },
+          {
+            "name": "both actual default overlap",
+            "passed": true,
+            "actual": "-4px"
+          },
+          {
+            "name": "inherited numeric Group actual dimensions",
+            "passed": true,
+            "actual": 56
+          },
+          {
+            "name": "inherited sparse responsive Group uses largest matching configured breakpoint",
+            "passed": true,
+            "actual": 44
+          },
+          {
+            "name": "direct sparse responsive size skips missing xl and lg",
+            "passed": true,
+            "actual": 44
+          },
+          {
+            "name": "root-only CSS resize recalculates text fit",
+            "passed": true,
+            "actual": {
+              "before": 0.541353,
+              "after": 1
+            }
+          },
+          {
+            "name": "current Token actual containerSize",
+            "passed": true,
+            "actual": "46px"
+          },
+          {
+            "name": "current Token actual containerSizeLG",
+            "passed": true,
+            "actual": "60px"
+          },
+          {
+            "name": "current Token actual containerSizeSM",
+            "passed": true,
+            "actual": "30px"
+          },
+          {
+            "name": "current Token actual textFontSize",
+            "passed": true,
+            "actual": "15px"
+          },
+          {
+            "name": "current Token actual textFontSizeLG",
+            "passed": true,
+            "actual": "17px"
+          },
+          {
+            "name": "current Token actual textFontSizeSM",
+            "passed": true,
+            "actual": "13px"
+          },
+          {
+            "name": "current Token actual iconFontSize",
+            "passed": true,
+            "actual": "23px"
+          },
+          {
+            "name": "current Token actual iconFontSizeLG",
+            "passed": true,
+            "actual": "28px"
+          },
+          {
+            "name": "current Token actual iconFontSizeSM",
+            "passed": true,
+            "actual": "16px"
+          },
+          {
+            "name": "current Token actual groupSpace",
+            "passed": true,
+            "actual": "9px"
+          },
+          {
+            "name": "current Token actual groupOverlapping",
+            "passed": true,
+            "actual": "-12px"
+          },
+          {
+            "name": "current Token actual groupBorderColor",
+            "passed": true,
+            "actual": "rgb(170, 187, 204)"
+          },
+          {
+            "name": "numeric text consumes current textFontSize Token",
+            "passed": true,
+            "actual": "15px"
+          },
+          {
+            "name": "unscoped overflow button inherits default group overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "default overflow button inherits actual group overlap",
+            "passed": true,
+            "actual": "-8px"
+          },
+          {
+            "name": "native Group variable controls actual overlap and border",
+            "passed": true,
+            "actual": {
+              "overlap": "-17px",
+              "border": "rgb(10, 20, 30)"
+            }
+          },
+          {
+            "name": "actual Provider RTL reaches the Group layout",
+            "passed": true,
+            "actual": "rtl"
+          },
+          {
+            "name": "explicit Group prefix reaches associated child avatars",
+            "passed": true
+          },
+          {
+            "name": "native overflow keyboard entry",
+            "passed": true
+          },
+          {
+            "name": "current max.popover prefix and title after opening",
+            "passed": true
+          },
+          {
+            "name": "current max.popover semantic functions, full data and owned container",
+            "passed": true
+          },
+          {
+            "name": "current max.popover prefix, placement and title replacement",
+            "passed": true
+          },
+          {
+            "name": "current max.popover semantic styles and arrow replacement",
+            "passed": true
+          },
+          {
+            "name": "changing the popup container retains native business state and focus",
+            "passed": true
+          },
+          {
+            "name": "dynamic destroyOnHidden false retains the closed business editor",
+            "passed": true
+          },
+          {
+            "name": "retained popup reopens with the same editor and draft",
+            "passed": true
+          },
+          {
+            "name": "dynamic destroyOnHidden true destroys an already closed editor",
+            "passed": true
+          },
+          {
+            "name": "destroyed content reopens with a fresh editor",
+            "passed": true
+          },
+          {
+            "name": "controlled refused close retains popup focus",
+            "passed": true
+          },
+          {
+            "name": "accepted close returns owned popup focus to the native trigger",
+            "passed": true
+          }
+        ],
+        "errors": []
+      },
+      "strict": {
+        "command": "pnpm lint:types",
+        "exit": 0
+      },
+      "format": {
+        "command": "pnpm lint:format (after build temporary declarations removed)",
+        "exit": 0,
+        "errors": 0,
+        "existingWarnings": 37,
+        "existingInfos": 5
+      },
+      "build": {
+        "command": "pnpm --filter @apollo-design/portal build && pnpm --filter @apollo-design/overlay build && pnpm --filter @apollo-design/ui build",
+        "exit": 0,
+        "cssFiles": 69
+      }
+    },
+    "productionSourceHashes": {
+      "packages/portal/src/use-portal.ts": "a2e09579f3ee8852773625c3bbf8832284a8c665df1eb7cc892aef129046ca54",
+      "packages/portal/src/portal.ts": "eb3c3ed3ab1b602fbf1edd1ebcce92f1a9b87d26cdc859628f435663808d53e6",
+      "packages/portal/src/use-portal-document.ts": "bde75754ee91e56f8193413c333bfa11a52d8a0392e6cf277c0e81b6c4ca4446",
+      "packages/portal/src/use-teleport-focus.ts": "602a30a6a9f2b743c95fac89f3db06f7292257ca4fe596af7ef0d3164c31ebfb",
+      "packages/overlay/src/use-overlay.ts": "24279462d3f32ae6fab3b065dde09486dd0007be112f3d694ae5fee3527c9ebe",
+      "packages/ui/src/tooltip/Tooltip.ts": "49cd17acf1f2411fcc476321f17e6fcdc825a2164152a61b6a26bc19f96af0e3",
+      "packages/ui/src/popover/Popover.ts": "f63304e7ebdf328ce4e48496910b23a0c4bd2b483b7e0ab0550917773dd3f72a"
+    },
+    "pending": [
+      "Frozen-source affected runtime batch",
+      "Fresh public type/build-gate checks",
+      "Final Docs, SSR and pixel checks"
+    ]
+  }
 }

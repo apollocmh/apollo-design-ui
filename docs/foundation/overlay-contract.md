@@ -388,7 +388,7 @@ const onScroll = () => { if (openRef.current && alignPoint && clickToHide) trigg
 
 - 定位几何 / 翻转 / 滚动容器测量 —— **`position`**
 - 挂载、容器、z-index 数值 —— **`portal`**
-- 焦点陷阱 / 焦点恢复 —— **`a11y`**（再导出自 `utils`）
+- 通用焦点陷阱与对话框层级管理 —— **`a11y`**；本包负责自己实际关闭后的所属触发元素焦点
 - 滚动锁定 —— **ui 交互语义**（`portal-contract.md` §3.6）
 - 离场动画（`inMotion` 的**产生**）—— **`motion`**；本包只**消费**它作为一个布尔入参
 - `unique` / `UniqueProvider`（多 trigger 共享一个浮层容器）—— v1 不做，见 §8 P4
@@ -562,3 +562,10 @@ antd Tooltip 传了 `unique: true`，是"多个 trigger 共享一个浮层容器
 4. **外部点击的 `composedPath` 分支在 jsdom 下只能测回落路径**（见 §7.1 第 3 条）。
 5. **无上游可对齐的部分**：`subPopupElements` 的向上透传（§3.12）在 v1 不做，
    其必要性仅由源码注释推断，没有组件侧证据。
+
+
+## 2026-10-27 所属关闭焦点
+
+useOverlay 在实际 open 从 true 变 false、焦点仍处于自己的原生浮层范围时归还触发元素。受控关闭请求被拒绝时保持编辑器焦点；用户已选择外部控件或非活动 iframe 时不改其焦点。归还焦点产生的原生 focus 事件不再排队重新打开焦点型浮层。定位、焦点陷阱与对话框层级管理仍遵循各自包职责。
+
+直接失败复现、受控/非受控、ShadowRoot、同源文档和外部焦点证据纳入 [Avatar完整单元](../audit/2026-10-27-avatar-contract-audit.md)，关联消费者统一回归后收口。

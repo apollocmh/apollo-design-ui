@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { genAvatarStyle } from '@apollo-design/ui';
+import { genAvatarStyle, genPopoverStyle } from '@apollo-design/ui';
 import vue from '@vitejs/plugin-vue';
 import { build, preview } from 'vite';
 import { launchBrowser } from '../visual/stabilize.mjs';
@@ -31,6 +31,14 @@ try {
     resolve: {
       alias: process.env.AVATAR_SOURCE
         ? [
+            {
+              find: /^@apollo-design\/overlay$/,
+              replacement: path.resolve(root, '../../../packages/overlay/src/index.ts'),
+            },
+            {
+              find: /^@apollo-design\/portal$/,
+              replacement: path.resolve(root, '../../../packages/portal/src/index.ts'),
+            },
             {
               find: /^@apollo-design\/ui$/,
               replacement: path.resolve(root, '../../../packages/ui/src/index.ts'),
@@ -281,6 +289,104 @@ try {
       return !n || getComputedStyle(n).display === 'none';
     });
     assert.equal(await button.evaluate((n) => document.activeElement === n), true);
+  });
+  await page.addStyleTag({ content: genPopoverStyle('first') + genPopoverStyle('second') });
+  await set({ popupStage: 1, open: true });
+  const popup = page.locator('.apollo-avatar-group-popover');
+  await popup.waitFor({ state: 'visible' });
+  await check('current max.popover prefix and title after opening', async () => {
+    assert.ok((await popup.getAttribute('class')).includes('first-popover'));
+    assert.ok((await popup.textContent()).includes('Title 1'));
+  });
+  await check('current max.popover semantic functions, full data and owned container', async () => {
+    assert.equal(await popup.locator('.popup-content-1').count(), 1);
+    assert.equal(
+      await popup.locator('.popup-content-1').evaluate((n) => getComputedStyle(n).paddingInline),
+      '7px',
+    );
+    assert.ok((await popup.textContent()).includes('Tail 1'));
+    assert.equal(
+      await popup.evaluate((n) => n.parentElement.matches('[data-popup-target="1"]')),
+      true,
+    );
+  });
+  const draft = page.locator('#popup-business');
+  await draft.fill('business draft');
+  await draft.focus();
+  const before = await draft.elementHandle();
+  await set({ popupStage: 2 });
+  await check('current max.popover prefix, placement and title replacement', async () => {
+    const classes = await popup.getAttribute('class');
+    assert.ok(classes.includes('second-popover') && classes.includes('placement-right'));
+    assert.ok((await popup.textContent()).includes('Title 2'));
+  });
+  await check('current max.popover semantic styles and arrow replacement', async () => {
+    assert.equal(
+      await popup.locator('.popup-content-2').evaluate((n) => getComputedStyle(n).paddingInline),
+      '14px',
+    );
+    assert.equal(await popup.locator('.second-popover-arrow').count(), 0);
+  });
+  await check('changing the popup container retains native business state and focus', async () => {
+    const actual = await before.evaluate((n) => ({
+      same: n === document.getElementById('popup-business'),
+      value: n.value,
+      focused: document.activeElement === n,
+      connected: n.isConnected,
+      count: document.querySelectorAll('#popup-business').length,
+    }));
+    assert.deepEqual(actual, {
+      same: true,
+      value: 'business draft',
+      focused: true,
+      connected: true,
+      count: 1,
+    });
+    assert.equal(
+      await popup.evaluate((n) => n.parentElement.matches('[data-popup-target="2"]')),
+      true,
+    );
+  });
+  await set({ retain: true, open: false });
+  await popup.waitFor({ state: 'hidden' });
+  await check('dynamic destroyOnHidden false retains the closed business editor', async () => {
+    assert.equal(await draft.count(), 1);
+    assert.equal(await before.evaluate((n) => n.isConnected && n.value === 'business draft'), true);
+  });
+  await set({ open: true });
+  await popup.waitFor({ state: 'visible' });
+  await check('retained popup reopens with the same editor and draft', async () => {
+    assert.equal(
+      await before.evaluate(
+        (n) => n === document.getElementById('popup-business') && n.value === 'business draft',
+      ),
+      true,
+    );
+  });
+  await set({ open: false });
+  await popup.waitFor({ state: 'hidden' });
+  await set({ retain: false });
+  await check('dynamic destroyOnHidden true destroys an already closed editor', async () => {
+    assert.equal(await draft.count(), 0);
+  });
+  await set({ open: true });
+  await popup.waitFor({ state: 'visible' });
+  await check('destroyed content reopens with a fresh editor', async () => {
+    assert.equal(await draft.inputValue(), '');
+  });
+  await draft.focus();
+  await page.keyboard.press('Escape');
+  await check('controlled refused close retains popup focus', async () => {
+    assert.equal(await draft.evaluate((n) => document.activeElement === n), true);
+    assert.equal(await popup.isVisible(), true);
+  });
+  await set({ open: false });
+  await popup.waitFor({ state: 'hidden' });
+  await check('accepted close returns owned popup focus to the native trigger', async () => {
+    assert.equal(
+      await page.locator('[data-overflow] button').evaluate((n) => document.activeElement === n),
+      true,
+    );
   });
 } finally {
   writeFileSync(

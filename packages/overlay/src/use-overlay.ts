@@ -49,6 +49,24 @@ import { createEscStack, type EscStack } from './esc-stack';
 /** 鼠标位置。`alignPoint`（右键菜单）定位用，单位是视口坐标。 */
 export type MousePosition = readonly [number, number];
 
+function isFocusScope(node: Node): node is Document | ShadowRoot {
+  return node.nodeType === 9 || (node.nodeType === 11 && 'host' in node);
+}
+
+function isActiveFrameDocument(doc: Document): boolean {
+  if (!doc.hasFocus()) return false;
+  for (
+    let frame = doc.defaultView?.frameElement;
+    frame;
+    frame = frame.ownerDocument.defaultView?.frameElement
+  ) {
+    const root = frame.getRootNode();
+    if ((isFocusScope(root) ? root.activeElement : frame.ownerDocument.activeElement) !== frame)
+      return false;
+  }
+  return true;
+}
+
 export interface UseOverlayOptions {
   /** 默认动作。`showAction` / `hideAction` 未指定时的回落值，默认 `'hover'`。 */
   action?: MaybeRefOrGetter<OverlayActionInput>;
@@ -178,6 +196,26 @@ export function useOverlay(options: UseOverlayOptions = {}): UseOverlayReturn {
 
   const disabled = computed(() => toValue(options.disabled) ?? false);
   const open = computed(() => rawOpenRef.value && !disabled.value);
+
+  let returningFocus = false;
+  // Only actual accepted hiding returns focus. Refused controlled requests and
+  // focus already moved outside this popup retain their current owner.
+  watch(open, (next, previous) => {
+    if (next || !previous) return;
+    const popup = popupRef.value,
+      target = targetRef.value;
+    if (!popup || !target?.isConnected || !isActiveFrameDocument(popup.ownerDocument)) return;
+    const root = popup.getRootNode();
+    const active = isFocusScope(root) ? root.activeElement : popup.ownerDocument.activeElement;
+    if (active && popup.contains(active)) {
+      returningFocus = true;
+      try {
+        target.focus({ preventScroll: true });
+      } finally {
+        returningFocus = false;
+      }
+    }
+  });
 
   /**
    * 内部入口。`delay` **照原样**传给延迟器 ——
@@ -378,7 +416,9 @@ export function useOverlay(options: UseOverlayOptions = {}): UseOverlayReturn {
 
     // -------- Focus（§3.7） --------
     if (show.has('focus')) {
-      props.onFocus = () => triggerOpen(true, focusDelay());
+      props.onFocus = () => {
+        if (!returningFocus) triggerOpen(true, focusDelay());
+      };
     }
     if (hide.has('focus')) {
       props.onBlur = () => triggerOpen(false, blurDelay());

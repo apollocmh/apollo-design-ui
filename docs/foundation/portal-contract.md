@@ -221,7 +221,7 @@ Escape子控件preventDefault优先，每次分发快照固定原始top，仍从
 
 ❌ 不做：
 - 浮层定位（`position`）
-- 焦点陷阱 / 焦点恢复（`a11y`）
+- 通用焦点陷阱与对话框层级焦点管理（`a11y`）；Portal 自身 DOM 搬迁的焦点保持由本包负责
 - 触发动作与显隐延迟（`overlay`）
 - 不依赖 `theme`（`zIndexPopupBase` 由调用方给）
 
@@ -377,3 +377,12 @@ antd 的默认容器是**裸 `<div>`**，没有任何 class。
    且没有 antd 的实测用例可参照。
 5. **没有证明滚动锁定与 Esc 的缺失不会造成回归** —— 那两项按 §3.6 属 ui，
    等 Modal/Drawer 落地时才会被真正检验。
+
+
+## 2026-10-27 Avatar 关联链路修正
+
+Portal 的 autoDestroy 读取当前值；组件仍接收 boolean，usePortalContainer 的选项支持 MaybeRefOrGetter<boolean | undefined>，默认 true。打开过的内容可在关闭时保留；关闭后切换为 true 会销毁；销毁后切换 false 不会擅自重新挂载。
+
+原生 Teleport 搬迁保留节点却可能使编辑器失焦。Portal 按实际已挂载首节点与当前结束锚点识别所属 DOM，保持草稿、选择和焦点；Vue 的 targetStart 在反复换容器后可能仍留原容器，不能将它当作当前起点。只在发生实际搬迁且该文档/所属范围仍拥有焦点时恢复，普通更新中的主动 blur、其他控件、非活动 iframe 和更新中明确选择的新焦点均保留。
+
+本增量的直接复现、Document/ShadowRoot/同源文档、多实例与不抢焦点测试，统一归档到 [Avatar完整单元](../audit/2026-10-27-avatar-contract-audit.md)。这不是 Portal 全部历史能力的新整体验收。

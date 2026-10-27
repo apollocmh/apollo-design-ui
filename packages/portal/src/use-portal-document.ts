@@ -1,7 +1,7 @@
 import { getCurrentInstance, onMounted, onScopeDispose, onUpdated, shallowRef, watch } from 'vue';
 import type { ContainerLike } from './container';
 
-function isNode(value: unknown): value is Node {
+export function isNode(value: unknown): value is Node {
   return (
     !!value &&
     typeof value === 'object' &&
