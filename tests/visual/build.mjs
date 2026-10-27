@@ -53,7 +53,12 @@ export async function buildSide(side, outDir) {
     // 绝对路径 `/assets/x.js` 会被解析到服务器根，直接 404。
     base: './',
     // 见 `DAYJS_DIR` 的说明：用例文件从根 `node_modules` 解析不到 dayjs
-    resolve: { alias: { dayjs: DAYJS_DIR } },
+    resolve: {
+      alias: {
+        dayjs: DAYJS_DIR,
+        '@apollo-design/icons': path.join(ROOT, 'packages/icons/dist/index.mjs'),
+      },
+    },
     // React 侧用 JSX automatic runtime（React 19 不再需要手写 import React）
     esbuild: side === 'react' ? { jsx: 'automatic' } : undefined,
     build: {
