@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "7a3db0489c78df2a936548888c0881d29fed2989",
-  "status": "accepted-awaiting-authorized-docs-publication",
+  "status": "accepted-and-published",
   "baselineSources": [
     {
       "file": "packages/ui/src/tag/Tag.ts",
@@ -14498,5 +14498,262 @@
   "notVerified": [
     "Other browser engines and device/touch-specific behaviour",
     "A full-library final gate: the overall audit is still ongoing"
-  ]
+  ],
+  "deployment": {
+    "sourceCommit": "db24a00c9dcb2747a3a9d84954ee8fba5fa518a5",
+    "workflowRunId": 40461805810,
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40461805810",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 122047921195,
+        "name": "构建文档站",
+        "conclusion": "success"
+      },
+      {
+        "id": 122049706437,
+        "name": "发布到 GitHub Pages",
+        "conclusion": "success"
+      }
+    ],
+    "pagesDeploymentId": 7352080560,
+    "pagesStatus": {
+      "created_at": "2026-10-27T06:39:20Z",
+      "environment_url": "https://apollocmh.github.io/apollo-design-ui/",
+      "log_url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40461805810/job/122049706437",
+      "state": "success"
+    },
+    "liveDocs": {
+      "base": "https://apollocmh.github.io/apollo-design-ui",
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "demo": "animation",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "animation",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "basic",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "basic",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "checkable",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "checkable",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "colorful",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "colorful",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "component-token",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "component-token",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "control",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "control",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "customize",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "customize",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "disabled",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "disabled",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "draggable",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "draggable",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "icon",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "icon",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "status",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "status",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "style-class",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "style-class",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "name": "actual published add, focused input, model and close",
+          "passed": true
+        },
+        {
+          "name": "actual strong single/multiple Vue models and native keyboard",
+          "passed": true
+        },
+        {
+          "name": "actual current three component Tokens through public Provider",
+          "passed": true
+        },
+        {
+          "name": "actual complete closeIcon slot cancellation and real link attrs",
+          "passed": true
+        },
+        {
+          "name": "physical component document and all twelve actual lazy demo cards",
+          "httpStatus": 200,
+          "passed": true
+        }
+      ],
+      "fallbackDocuments": [
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/animation?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/animation?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/basic?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/basic?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/checkable?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/checkable?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/colorful?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/colorful?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/component-token?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/component-token?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/control?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/control?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/customize?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/customize?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/disabled?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/disabled?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/draggable?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/draggable?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/icon?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/icon?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/status?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/status?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/style-class?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/tag/demo/style-class?theme=dark"
+      ],
+      "errors": []
+    },
+    "liveProgress": {
+      "url": "https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html?tag-audit=db24a00c",
+      "status": 200,
+      "source": "db24a00c9dcb2747a3a9d84954ee8fba5fa518a5",
+      "currentProgressVerified": true,
+      "tagAcceptanceVisible": true,
+      "date": "Tue, 27 Oct 2026 06:58:03 GMT"
+    },
+    "boundary": "实体组件页面和进度页HTTP200；24条Demo深链沿用Pages404 SPA兜底，实际渲染、交互及axe检查通过。不是全库最终门禁。"
+  }
 }
