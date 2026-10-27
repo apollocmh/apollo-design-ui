@@ -60,4 +60,7 @@ Result核心实现ca5d2740及共享Button实现 **7e63e3e1** 已提交推送。�
 
 Docs161测试、严格类型、SSG及真实发布正文/全部10卡片探针通过，Registry按本次证据解除blocked并更新completed。生产文件连同当前根导出逐文件确认仍与7e63e3e1一致；初期指纹和共享失败作为历史证据保留，当前指纹另行更新。详细命令与数据见[Result证据](evidence/result-contract.json)及[Button完整验收](2026-10-27-button-contract-audit.md)。
 
-本地整改单元已验收，线上部署回执随后记录。其他浏览器/实体设备和未列出的极端输入未实测；全库其他审计及结束后的最终同一提交全量门禁继续。
+本地整改单元已验收。线上已部署2bad0f31，工作流40435214689与Pages部署7348326300均成功；Button主页面20卡片/43项页面与交互、Result23项及进展页实际检查通过。其他浏览器/实体设备和未列出的极端输入未实测；全库其他审计及结束后的最终同一提交全量门禁继续。
+
+
+线上回执：[Deploy Docs40435214689](https://github.com/apollocmh/apollo-design-ui/actions/runs/40435214689)、[当前整改进展](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html)。示例深链仍采用既有GitHub Pages404 SPA兜底，测试明确区分该导航状态与实际示例渲染/交互；组件主页面和进展页为真实200正文。

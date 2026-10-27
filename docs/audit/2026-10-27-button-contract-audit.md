@@ -105,4 +105,7 @@ L7技术预算仅调整Button37→41KB、Input89→92KB，对应完整58 Token�
 
 原238条Apollo批准记录中237条及PNG逐字节保持；唯一旧Button desktop图浏览器环境不同，先查看原图/新图并确认主按钮对比度修正，再明确更新批准记录，未把跨环境比较称exact。现有QRCode36张在本次相同环境全部exact。全部新图与逐张审阅说明由manifest记录。
 
-最终命令、修前失败、2352分组数量、398类型、真实页面及边界均在[结构化证据](evidence/button-contract.json)。本地整改单元已验收；线上部署回执随后记录。其他浏览器/实体设备未实测，D04任意前缀自动样式仍按原另案处理；全库其他审计及全部结束后的最终同一提交全量门禁继续，不以本轮通过替代。
+最终命令、修前失败、2352分组数量、398类型、真实页面及边界均在[结构化证据](evidence/button-contract.json)。本地整改单元已验收。线上已部署2bad0f31，工作流40435214689与Pages部署7348326300均成功；Button主页面20卡片/43项页面与交互、Result23项及进展页实际检查通过。其他浏览器/实体设备未实测，D04任意前缀自动样式仍按原另案处理；全库其他审计及全部结束后的最终同一提交全量门禁继续，不以本轮通过替代。
+
+
+线上回执：[Deploy Docs40435214689](https://github.com/apollocmh/apollo-design-ui/actions/runs/40435214689)、[当前整改进展](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html)。示例深链仍采用既有GitHub Pages404 SPA兜底，测试明确区分该导航状态与实际示例渲染/交互；组件主页面和进展页为真实200正文。

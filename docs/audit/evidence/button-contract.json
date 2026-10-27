@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "ca5d274067257193405ec94111ffdf05fded35fb",
-  "status": "accepted-local-checklist-complete-docs-deployment-pending",
+  "status": "accepted-and-published",
   "scope": "Button complete19 props, two slots, native click/ref, three semantic parts, 45 explicit and13 existing derived tokens, 20 original demos and13 runtime import sites",
   "baselineSources": [
     {
@@ -37,8 +37,7 @@
     "cause": "Default primary text contrast4.1:1; all scenarios retained."
   },
   "remaining": [
-    "Publish the accepted Docs snapshot and record the actual deployment/live-browser receipt.",
-    "Continue other global audit units; whole-library final same-commit gates are still required after all remediation finishes."
+    "Continue other complete global audit units; all-library final same-commit gates remain required after all remediation is finished."
   ],
   "beforeUnit": {
     "command": "pnpm exec vitest run --project unit packages/ui/src/button/__tests__/contract-audit.test.ts --maxWorkers=1 --no-file-parallelism",
@@ -4904,5 +4903,42 @@
     "format": "pnpm exec biome check .:zero errors; existing37 warnings and5 infos",
     "approvedVisualMetadata": "node tests/visual/apollo.mjs --check --approved-only:315 recorded hashes/review records verified",
     "diff": "git diff --check:passed"
+  },
+  "delivery": {
+    "sourceCommit": "2bad0f31ce819974cad2bf2d85b31d5e8d941187",
+    "workflowRunId": 40435214689,
+    "workflowUrl": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40435214689",
+    "buildJobId": 121962156651,
+    "deployJobId": 121963533123,
+    "deploymentId": 7348326300,
+    "status": "success",
+    "publishedAt": "2026-10-27T01:58:10Z",
+    "url": "https://apollocmh.github.io/apollo-design-ui/",
+    "progressUrl": "https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html",
+    "liveVerifiedAt": "2026-10-27T03:04:22.227101+00:00",
+    "guide": {
+      "url": "https://apollocmh.github.io/apollo-design-ui/guide/audit-progress?receipt=2bad0f31",
+      "status": 200,
+      "sourceCommit": "2bad0f31ce819974cad2bf2d85b31d5e8d941187",
+      "verified": [
+        "accepted Button/Result section",
+        "2352 runtime",
+        "398 types",
+        "315 approved/993 pending visuals"
+      ],
+      "errors": []
+    },
+    "deepLinkBoundary": "Demo deep links use the existing GitHub Pages404 SPA fallback. The browser asserts404 for those navigation documents, then verifies the actual rendered demos, controls and axe. Main component/guide physical documents return200.",
+    "liveActualDocs": {
+      "command": "DOCS_URL=https://apollocmh.github.io/apollo-design-ui DOCS_DEMO_STATUS=404 node tests/browser/button-docs.mjs",
+      "checks": 43,
+      "passed": 43,
+      "errors": [],
+      "mainSSR": {
+        "httpStatus": 200,
+        "originalDemoCards": 20,
+        "bodyHeading": true
+      }
+    }
   }
 }
