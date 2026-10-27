@@ -1,18 +1,7 @@
-/**
- * Empty 的类型面。
- *
- * 契约来源：antd 6.6.4 的 `es/empty/index.d.ts`。**逐字段对齐**，包括
- * `@deprecated` 标记与可选性。有意差异见 `packages/ui/src/empty/README.md`。
- */
-
 import type { Component, CSSProperties, VNodeChild } from 'vue';
 import type { ComponentStyleConfig } from '../config-provider/context';
 
-// ---------------------------------------------------------------------------
-// 语义化
-// ---------------------------------------------------------------------------
-
-/** 语义化类名的四个槽位。与 antd 的 `EmptySemanticType['classNames']` 一致。 */
+/** Four independently styled hosts; arbitrary content retains its own attributes. */
 export interface EmptySemanticClassNames {
   root?: string;
   image?: string;
@@ -20,7 +9,6 @@ export interface EmptySemanticClassNames {
   footer?: string;
 }
 
-/** 语义化样式的四个槽位。 */
 export interface EmptySemanticStyles {
   root?: CSSProperties;
   image?: CSSProperties;
@@ -28,26 +16,15 @@ export interface EmptySemanticStyles {
   footer?: CSSProperties;
 }
 
-/**
- * 语义化输入：对象或函数。
- *
- * 对应 antd `GenerateSemantic<EmptySemanticType, EmptyProps>` 的
- * `classNamesAndFn` / `stylesAndFn`。函数式由裁决 `empty-semantic-fn` = B 决定支持。
- */
+/** Semantic factories receive the current local props. */
 export type EmptySemanticValue<T> = T | ((info: { props: EmptyProps }) => T);
 
-/**
- * antd 的 `EmptySemanticType`（不含函数式的形态）。
- *
- * 与 antd 一致地导出 —— 它是**用户写自定义封装时的类型锚点**，
- * 少了它迁移代码只能靠 `typeof props.classNames` 反推。
- */
+/** Provider configuration uses object semantics. */
 export interface EmptySemanticType {
   classNames?: EmptySemanticClassNames;
   styles?: EmptySemanticStyles;
 }
 
-/** antd 的 `EmptySemanticAllType`（含函数式的完整形态）。 */
 export interface EmptySemanticAllType {
   classNames: EmptySemanticClassNames;
   classNamesAndFn: EmptySemanticValue<EmptySemanticClassNames>;
@@ -55,69 +32,33 @@ export interface EmptySemanticAllType {
   stylesAndFn: EmptySemanticValue<EmptySemanticStyles>;
 }
 
-// ---------------------------------------------------------------------------
-// Props
-// ---------------------------------------------------------------------------
-
-/**
- * `image` 的取值。
- *
- * ⚠️ 与 antd 的 `React.ReactNode` 有一处**平台差异**（PLATFORM）：
- *    antd 允许传「React 元素」（`<MyImage />` 的求值结果），Vue 没有等价的「元素」概念
- *    —— 对应物是**组件本身**。所以这里额外接受 `Component`，
- *    而 `PRESENTED_IMAGE_DEFAULT` / `PRESENTED_IMAGE_SIMPLE` 正是两个组件对象。
- *
- * 判据（三选一，按顺序）：
- *   - `string` → 渲染成 `<img draggable={false} alt src>`
- *   - VNode   → 原样渲染
- *   - 组件    → `h(component)` 渲染
- */
+/** A top-level string is a URL; VNodes, arrays, primitives and component definitions are Vue content. */
 export type EmptyImage = VNodeChild | Component;
 
 export interface EmptyProps {
-  /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo`。 */
+  /** Full component prefix; defaults to ConfigProvider's root prefix plus `-empty`. */
   prefixCls?: string;
-  /**
-   * @deprecated Please use `styles.image` instead
-   *
-   * 与 `styles.image` **合并**（`{...imageStyle, ...styles.image}`），后者覆盖前者。
-   * 保留并输出开发期告警，与 antd 的废弃节奏一致。
-   */
+  /** @deprecated Please use `styles.image` instead. Both merge, with styles.image taking priority. */
   imageStyle?: CSSProperties;
-  /** 自定义插画。字符串时渲染成 `<img>`。默认 `PRESENTED_IMAGE_DEFAULT`。 */
+  /** Only undefined uses the Provider/default illustration; explicit empty values hide its host. */
   image?: EmptyImage;
-  /**
-   * 描述文案。
-   *
-   * 可以是 `false` —— 此时**不渲染** `-description` 节点。
-   * 不传（`undefined`）时取 locale 的 `Empty.description`。
-   */
+  /** Only undefined uses the current locale. A present description slot overrides this value. */
   description?: VNodeChild;
-  /** 语义化类名。 */
   classNames?: EmptySemanticValue<EmptySemanticClassNames>;
-  /** 语义化样式。 */
   styles?: EmptySemanticValue<EmptySemanticStyles>;
 }
 
-/**
- * 暴露给父组件的实例。
- *
- * ⚠️ 与 antd 的 `EmptyRef` 有一处差异（PLATFORM）：antd 声明 `nativeElement: HTMLDivElement`，
- *    但它在首次渲染前同样是 `null`（`useRef(null)`），只是类型没体现。
- *    我们按真实情况声明为可空 —— 让类型是真的。
- */
 export interface EmptyRef {
   nativeElement: HTMLDivElement | null;
 }
 
-// ---------------------------------------------------------------------------
-// ConfigProvider 上的 Empty 配置
-// ---------------------------------------------------------------------------
+type EmptyConfigFields = ComponentStyleConfig & EmptySemanticType & { image?: EmptyImage };
+/** Finite fields remain assignable to ConfigProvider's component configuration record. */
+export type EmptyConfig = { [K in keyof EmptyConfigFields]: EmptyConfigFields[K] };
 
-/**
- * `ConfigProvider` 的 `empty` 配置。与 antd 的
- * `EmptyConfig = ComponentStyleConfig & Pick<EmptyProps, 'classNames' | 'styles' | 'image'>` 一致。
- */
-export interface EmptyConfig extends ComponentStyleConfig, EmptySemanticType {
-  image?: EmptyImage;
+/** Present slots override their fallback, including intentional empty content. */
+export interface EmptySlots {
+  image?: () => VNodeChild;
+  description?: () => VNodeChild;
+  default?: () => VNodeChild;
 }

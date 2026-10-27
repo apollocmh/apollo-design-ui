@@ -5,18 +5,6 @@ title:
   en-US: Customize
 ---
 
-`image` 接受**字符串**（渲染成 `<img draggable="false">`）、**VNode** 或**组件**。
+使用原生 #image 插槽放入完整图形、编辑器和后续内容。自定义内容使用自然高度，更新配置时编辑草稿与焦点保持。存在的空插槽也优先于 image 默认值。
 
-⚠️ 与 antd 的一处平台差异：antd 传的是「React 元素」（`<MyImage />` 的求值结果），
-Vue 没有等价的元素概念，对应物是**组件本身**。
-
-```vue
-<script setup lang="ts">
-import { Empty } from '@apollo-design/ui';
-import CustomImage from './CustomImage.vue';
-</script>
-
-<template>
-  <Empty :image="CustomImage" description="Custom image" />
-</template>
-```
+image 数据仍接受 URL、VNode、组件定义、数组和数字；组件定义需提供正常的 render 或预编译模板。

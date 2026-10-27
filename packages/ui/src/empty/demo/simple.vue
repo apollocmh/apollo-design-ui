@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Empty, PRESENTED_IMAGE_SIMPLE } from '../../index';
+import { Empty, PRESENTED_IMAGE_SIMPLE } from '@apollo-design/ui';
 </script>
 
 <template>

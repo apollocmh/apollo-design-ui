@@ -59,7 +59,7 @@ describe('Empty · 可访问名', () => {
     expect(img.attributes('alt')).toBe('No data');
   });
 
-  it('传节点 description 时 <img> 的 alt 回退为 `empty`（不为空）', () => {
+  it('传节点 description 时 <img> 的 alt 回退为当前语言说明（不为空）', () => {
     const img = mount(Empty, {
       props: {
         prefixCls: P,
@@ -67,7 +67,7 @@ describe('Empty · 可访问名', () => {
         image: 'https://e.com/a.png',
       },
     }).find('img');
-    expect(img.attributes('alt')).toBe('empty');
+    expect(img.attributes('alt')).toBe('No data');
   });
 });
 

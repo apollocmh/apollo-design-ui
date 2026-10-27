@@ -131,3 +131,37 @@ describe('Empty · ref 与静态属性', () => {
     expectTypeOf<typeof PRESENTED_IMAGE_SIMPLE>().toMatchTypeOf<Component>();
   });
 });
+
+describe('Empty · actual public Vue surface', () => {
+  it('exports complete slots and a nullable InstanceType native element', async () => {
+    const { Empty } = await import('../index');
+    expectTypeOf<
+      InstanceType<typeof Empty>['nativeElement']
+    >().toEqualTypeOf<HTMLDivElement | null>();
+    expectTypeOf<import('../index').EmptySlots>().toEqualTypeOf<import('../../index').EmptySlots>();
+    expectTypeOf<import('../index').EmptyConfig>().toMatchTypeOf<
+      NonNullable<
+        import('../../config-provider/interface').ConfigProviderProps['components']
+      >[string]
+    >();
+    const slots: import('../index').EmptySlots = {
+      image: () => [h('span', 'First'), h('input'), 0],
+      description: () => false,
+      default: () => [h('button', 'Create'), h('strong', 'Tail')],
+    };
+    expectTypeOf(slots.image).toMatchTypeOf<(() => VNodeChild) | undefined>();
+  });
+
+  it('rejects unknown slots and invalid Provider fields', () => {
+    const negatives = () => {
+      // @ts-expect-error Empty has exactly image, description and default slots.
+      const slots: import('../index').EmptySlots = { body: () => h('span') };
+      // @ts-expect-error Provider style retains its existing CSSProperties contract.
+      const config: import('../index').EmptyConfig = { style: 'color: red' };
+      // @ts-expect-error No index signature silently accepts misspelled config fields.
+      const unknown: import('../index').EmptyConfig = { images: false };
+      return [slots, config, unknown];
+    };
+    expectTypeOf(negatives).toBeFunction();
+  });
+});

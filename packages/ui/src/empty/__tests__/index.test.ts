@@ -114,12 +114,12 @@ describe('Empty · alt 的计算（用 des 而不是 description）', () => {
     expect(w.find('img').attributes('alt')).toBe('Nothing');
   });
 
-  it('传节点 description：alt 回退为 `empty`', () => {
+  it('传节点 description：alt 回退为当前语言说明', () => {
     const w = mountEmpty({
       description: h('span', null, 'x'),
       image: 'https://example.com/a.png',
     });
-    expect(w.find('img').attributes('alt')).toBe('empty');
+    expect(w.find('img').attributes('alt')).toBe('No data');
   });
 
   it('传空字符串 description：alt 是空串（取值走传入值分支）', () => {

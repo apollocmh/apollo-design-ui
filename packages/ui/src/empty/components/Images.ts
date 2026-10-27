@@ -21,7 +21,7 @@
  * 的 L6 视觉比对实测抓出。生成器只负责把渲染产物的 hex 反查成 token 槽位。
  */
 
-import { useLocale } from '@apollo-design/locale';
+import { useLocaleReactive } from '@apollo-design/locale';
 import { useToken } from '@apollo-design/theme';
 import { Color } from '@apollo-design/utils';
 import { computed, defineComponent, markRaw } from 'vue';
@@ -36,6 +36,7 @@ function onBackground(color: string, background: string): string {
   const c = new Color(color).toRgb();
   const b = new Color(background).toRgb();
   const a = c.a + b.a * (1 - c.a);
+  if (a === 0) return '#00000000';
   const mix = (x: number, y: number) => Math.round((x * c.a + y * b.a * (1 - c.a)) / a);
   const hex = [mix(c.r, b.r), mix(c.g, b.g), mix(c.b, b.b)]
     .map((v) => v.toString(16).padStart(2, '0'))
@@ -76,9 +77,9 @@ function useSimpleArtworkColors() {
  * antd 是 `locale?.description || 'Empty'` —— 即「不传 locale 或 locale 没有描述时兜底
  * 字符串 `'Empty'`」。这是插画**唯一**的可访问名来源（见 L5 测试）。
  */
-function useArtworkTitle(): string {
-  const [locale] = useLocale('Empty');
-  return locale?.description || 'Empty';
+function useArtworkTitle() {
+  const [locale] = useLocaleReactive('Empty');
+  return computed(() => locale.value.description || 'Empty');
 }
 
 /**
@@ -101,7 +102,7 @@ export const EmptyImage = markRaw(
     setup() {
       const title = useArtworkTitle();
       const colors = useArtworkColors();
-      return () => renderDefaultEmptyImage({ title, colors: colors.value });
+      return () => renderDefaultEmptyImage({ title: title.value, colors: colors.value });
     },
   }),
 );
@@ -113,7 +114,7 @@ export const SimpleEmptyImage = markRaw(
     setup() {
       const title = useArtworkTitle();
       const colors = useSimpleArtworkColors();
-      return () => renderSimpleEmptyImage({ title, colors: colors.value });
+      return () => renderSimpleEmptyImage({ title: title.value, colors: colors.value });
     },
   }),
 );

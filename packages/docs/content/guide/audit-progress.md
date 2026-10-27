@@ -77,9 +77,18 @@ Button 的完整 Vue 内容、当前 Provider、加载生命周期、原生根�
 - [Button 范围、迁移及验证证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-button-contract-audit.md)
 - [Result 范围与验收边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-result-contract-audit.md)
 
+## Empty完整整改正在统一验收
+
+Empty六Props、三个完整原生槽、四语义、当前Provider/方向/语言、合法图片内容与布局/对比度已集中修复，六原Demo同步更新。核心证据：1151相关四层、20公开类型、50生产浏览器、24 Demo主题、8 SSR及6组水合通过。实际Docs与自有视觉仍在验收；关联Select弹层的主题变量丢失已复现，纳入当前必修。当前不计入已收口单元。
+
+- [完整自定义图片内容与业务草稿](/components/empty/demo/customize)
+- [动态Provider配置](/components/empty/demo/config-provider)
+- [条件描述槽](/components/empty/demo/description)
+- [Empty完整清单](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-empty-contract-audit.md)
+
 ## 还没有完成什么
 
-全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有199项候选待逐项复核，候选不等于缺陷。本次自有视觉矩阵1308项，已批准315项，其余993项随后续完整整改单元验收。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
+全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有199项候选待逐项复核，候选不等于缺陷。当前自有视觉矩阵1332项，已批准315项，其余1017项随后续完整整改单元验收。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
 
 ## 查看证据与后续进展
 
@@ -155,3 +164,8 @@ This snapshot has 315 approved Apollo visual cases out of 1,308; the remaining 9
 Other components and foundation packages still require their complete audits. The content inventory has 199 candidates awaiting review; candidates are not confirmed defects. Final whole-library gates remain required after all remediation finishes. Touch pinch, other browsers and unspecified cross-document combinations are outside this unit's verified scope.
 
 [Image audit and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-25-image-contract-audit.md) · [H05 evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-repository-format-audit.md) · [Ongoing issues](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/KNOWN-ISSUES.md) · [Build-time Git history](/changelog)
+
+
+### Empty acceptance in progress
+
+The six props, three complete native slots, four semantic regions, current Provider/direction/locale, valid image data and media layout/contrast have been repaired together. All six original demos remain. Core validation passed 1151 related runtime checks, 20 public type tests, 50 production browser checks, 24 demo/theme checks, eight Node SSR checks and six hydration groups. Actual Docs and reviewed Apollo visuals are still being accepted; this unit is not yet counted as closed.

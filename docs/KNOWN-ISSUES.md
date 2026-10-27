@@ -592,3 +592,7 @@ Result99四层、87生产浏览器、8 SSR、5组水合证据保留；最终2352
 入口是Result原Demo的primary文字对比度4.1:1；完整盘点扩到Button19 Props、两个槽、58既有Token、20原Demo和13个实际消费文件。初始97项行为回归7通过/90失败；97颜色组合×三态×四算法及四次axe共1168检查，378通过/790失败。当前已成组实现稳定内容宿主、当前Provider、加载调度/忙碌语义、Token消费、有效square与独立color/variant；Search、Dropdown、FloatButton关联调整，原65机械场景与全部原Demo保留。
 
 最终同一生产实现7e63e3e1的2352相关四层、398公开类型、根/SFC严格检查、147生产浏览器、51实际消费者、1168颜色、8 SSR与20组水合通过；20原Demo四算法80/80，实际站点43/43。39自有图逐张审阅批准，连同Result/QRCode共114图全exact；原238批准记录中237项及PNG不变，唯一旧Button图明确审阅后更新环境与可读前景。原65机械场景与27参考图保留，69份CSS/发布声明/UI严格L7及Docs161测试/SSG/部署探针通过。技术预算仅Button37→41/Input89→92KB，有实现依据且其他限制不变。当前范围无代码阻塞；文档站2bad0f31已上线并完成实际浏览器验证，回执见两组件证据；全库后续审计继续，不据局部结论称全库完成。见[完整范围](audit/2026-10-27-button-contract-audit.md)、[证据](audit/evidence/button-contract.json)和[迁移](migrations/button-contracts.md)。
+
+### 2026-10-27 · Empty完整契约（核心已验证，统一验收进行中）
+
+已完整盘点六Props/三个内容槽、四语义、Provider/语言/主题及DefaultRenderEmpty实际消费者。39项修前复现11通过/28失败，集中修复当前配置快照、合法image数据、完整槽/空宿主、双透明NaN、媒体布局与说明对比度；六原Demo、类型和双语文档同步更新。当前1151相关四层、20类型、根/SFC严格检查、50项生产浏览器、24 Demo主题、8 SSR与6组水合通过。自有视觉、实际Docs及最终清单仍在验收；见[范围清单](audit/2026-10-27-empty-contract-audit.md)、[证据](audit/evidence/empty-contract.json)和[迁移](migrations/empty-contracts.md)。

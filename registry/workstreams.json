@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-27T01:38:08.362Z",
+  "generatedAt": "2026-10-27T03:38:01.105Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 91,
-      "ready": 1
+      "done": 90,
+      "ready": 2
     },
     "byKind": {
       "foundation": 13,
@@ -35,10 +35,11 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 1,
+    "readyCount": 2,
     "cannotFinishCount": 0,
-    "currentBatchSize": 1,
+    "currentBatchSize": 2,
     "currentBatchIds": [
+      "COMP:empty",
       "X:docs-site"
     ],
     "hardBlockingDecisionCount": 0,
@@ -378,8 +379,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 22,
-      "doneCount": 22,
-      "readyCount": 0,
+      "doneCount": 21,
+      "readyCount": 1,
       "itemIds": [
         "COMP:avatar",
         "COMP:badge",
@@ -607,11 +608,11 @@
         "流水线被证明可重复（不再需要为每个组件重新设计流程）"
       ],
       "itemCount": 20,
-      "doneCount": 20,
-      "readyCount": 0,
+      "doneCount": 19,
+      "readyCount": 1,
       "blockedCount": 0,
       "waitingCount": 0,
-      "complete": true,
+      "complete": false,
       "itemIds": [
         "COMP:affix",
         "COMP:alert",
@@ -1347,16 +1348,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 51,
-      "why": "config-provider 的 defaultRenderEmpty 依赖它，因此必须先于 config-provider 完成。 2026-09-17：G1→G14 走完，10 个维度 done / 2 个 n/a（token / interaction，依据见 layerNotes） / 1 个 blocked（visualStatus —— L6 视觉回归基建尚未落地，见 blockers）。 本组件同时是组件侧流水线的第一块试金石：它暴露并修掉了 4 个基础设施缺口（ui 的 SFC 构建与类型产物、compat 基线机制、mountTest 的观察者误报、tests/build 的字母序构建）。",
+      "why": "2026-10-27 Empty完整盘点后集中修复六Props/三完整槽、当前Provider/方向/语言、合法image数据、透明合成和自然布局/对比度；六原Demo同步更新。1151关联四层、20公开类型、严格检查、发布构建、50生产浏览器、24 Demo主题、8 SSR及6组水合通过。自有视觉、实际Docs及最终清单仍在验收，不以核心通过宣称整单完成。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P0",
       "dagLevel": 0,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:config-provider",
@@ -1366,6 +1369,7 @@
       "workstream": "WS-7",
       "wave": "W5",
       "dependsOn": [
+        "COMP:empty",
         "FND:form-core",
         "FND:icons",
         "FND:motion",
@@ -3358,6 +3362,7 @@
     }
   ],
   "currentBatch": [
+    "COMP:empty",
     "X:docs-site"
   ]
 }

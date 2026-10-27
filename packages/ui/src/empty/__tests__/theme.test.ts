@@ -1,24 +1,9 @@
-/**
- * L1/L2 的主题矩阵：light / dark / compact / token-override 四态。
- *
- * ⚠️ 当前**只做到「四态下都能渲染」**，没做到「四态下视觉正确」。
- *
- * 原因不是偷懒，而是 Empty 的样式里没有任何**字面值**：所有颜色/尺寸都是
- * `var(--apollo-*)`（见 `style/index.ts`）。于是：
- *   - 主题切换改变的是**变量值**，不是我们的 CSS；
- *   - 断言「dark 下颜色不同」需要浏览器计算样式（jsdom 不做布局与层叠），
- *     那是 L6（`tests/visual`）的职责。
- *
- * 所以这里断言的是**这条架构性质本身**：四态下渲染结果一致（因为差异全在变量里），
- * 且渲染出的 CSS 变量引用是可解析的 `var(--apollo-*)` 形态。
- *
- * 「变量真的存在」由 `tests/build/run.mjs` 的 B7 校验（CSS 里引用的每个
- * `--apollo-*` 都必须在 theme 的 `tokens.css` 里有声明）—— 那才是这个风险的正解。
- */
-
 import { themeTest } from '@apollo-design/test-utils';
+import { darkAlgorithm } from '@apollo-design/theme';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import { defineComponent, h, nextTick, ref } from 'vue';
+import { ConfigProvider } from '../../config-provider';
 import { Empty } from '../index';
 import { genEmptyStyle } from '../style';
 
@@ -28,13 +13,33 @@ themeTest('Empty', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
 });
 
-describe('Empty · 主题无关性', () => {
-  it('四态下的 DOM 完全相同（差异全在 CSS 变量里）', () => {
-    const html = mount(Empty, { props: { prefixCls: P } }).html();
-    // 组件本身不读任何 token 值，所以同一份 HTML 在四态下都成立。
-    // 这条断言的作用是：一旦有人往组件里塞进「按主题分支」的逻辑，它会红。
-    expect(html).not.toContain('data-apollo-theme');
-    expect(html).toContain(`class="${P}-image"`);
+describe('Empty · source theme and static CSS', () => {
+  it('updates the current artwork palette without replacing either illustration', async () => {
+    const dark = ref(false);
+    const w = mount(
+      defineComponent({
+        setup: () => () =>
+          h(
+            ConfigProvider,
+            {
+              theme: dark.value ? { algorithm: darkAlgorithm } : undefined,
+            },
+            () => h(Empty),
+          ),
+      }),
+      { global: { stubs: { teleport: false } } },
+    );
+    const svg = w.get('svg').element;
+    const initial = w.findAll('[fill]').map((n) => n.attributes('fill'));
+    dark.value = true;
+    await nextTick();
+    expect(w.get('svg').element).toBe(svg);
+    expect(w.findAll('[fill]').map((n) => n.attributes('fill'))).not.toEqual(initial);
+    dark.value = false;
+    await nextTick();
+    expect(w.get('svg').element).toBe(svg);
+    expect(w.findAll('[fill]').map((n) => n.attributes('fill'))).toEqual(initial);
+    w.unmount();
   });
 
   it('★ 样式里没有任何字面视觉值（全部走 var(--apollo-*)）', () => {

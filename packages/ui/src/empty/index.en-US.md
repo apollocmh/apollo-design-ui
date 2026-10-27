@@ -1,19 +1,18 @@
 ---
 category: Data Display
 title: Empty
-subtitle: Empty state
 ---
 
-Placeholder shown when there is no data.
+A placeholder for an empty data region. Use the footer slot for actions such as creating the first item.
 
-## When to use
+## When To Use
 
-- Render it instead of leaving a blank area when a data set is empty.
-- Or use it as an onboarding slot — pass a "Create" button through the default slot.
+- Explain an empty list, table, or business region.
+- Supply complete image, description, and footer content through native Vue slots.
 
-## Demos
+## Examples
 
-See [`demo/`](./demo) (6 demos, covering the main antd scenarios.
+Six demos cover default/simple illustrations, complete custom content, current Provider settings, conditional descriptions, and all four semantic regions.
 
 ## API
 
@@ -21,83 +20,57 @@ See [`demo/`](./demo) (6 demos, covering the main antd scenarios.
 
 | Property | Description | Type | Default |
 |---|---|---|---|
-| prefixCls | Class name prefix | `string` | from ConfigProvider, falls back to `apollo` |
-| class / style | **Native root attrs** (not Props); `style` overrides `styles.root` | `string \| array \| object` / `CSSProperties` | — |
-| style | Inline style of the root element. **Overrides `styles.root`** | `CSSProperties` | — |
-| image | Custom illustration. A string renders as `<img draggable="false">` | `VNodeChild \| Component` | `PRESENTED_IMAGE_DEFAULT` |
-| imageStyle | ⚠️ Deprecated, use `styles.image`. Merged with `styles.image`, which wins | `CSSProperties` | — |
-| description | Description text. `false` hides the description block | `VNodeChild` | locale `Empty.description` (`No data` for `en_US`) |
-| classNames | Semantic class names | `EmptySemanticClassNames \| ((info: { props }) => EmptySemanticClassNames)` | — |
-| styles | Semantic styles | `EmptySemanticStyles \| ((info: { props }) => EmptySemanticStyles)` | — |
+| prefixCls | Full component prefix | `string` | `apollo-empty`, follows ConfigProvider |
+| image | A top-level string is an image URL; accepts components, VNodes, arrays and numbers. Only undefined falls back; null, booleans and empty content hide the image host | `EmptyImage` | Provider image or `PRESENTED_IMAGE_DEFAULT` |
+| imageStyle | Existing deprecated field: use styles.image. Both merge, with styles.image taking priority | `CSSProperties` | — |
+| description | Complete Vue content; only undefined uses the current locale. Empty content hides its host, while numeric 0 remains | `VNodeChild` | Current locale Empty.description |
+| classNames | Classes for four semantic regions; factories receive current local props | `EmptySemanticValue<EmptySemanticClassNames>` | — |
+| styles | Styles for four semantic regions; factories receive current local props | `EmptySemanticValue<EmptySemanticStyles>` | — |
+
+The native root accepts Vue class/style/dir, data/ARIA attributes and native event listeners. Native style supports strings, objects and arrays, and overrides styles.root. There are no business emits or v-model bindings.
 
 ### Slots
 
 | Name | Description |
 |---|---|
-| default | Footer content. Renders `<prefix>-footer` when non-empty |
+| image | Complete image content, overriding image and Provider defaults; custom content uses its natural height |
+| description | Complete description, overriding the prop and locale fallback |
+| default | Complete footer content, including multiple business controls |
 
-### Static properties / named exports
+Each slot is evaluated once during the current render. A present slot takes priority even when intentionally empty. Empty arrays, comments, booleans and empty Fragments create no spacing host. Business descendants retain their own attributes, editing state and focus.
 
-| Name | Description |
-|---|---|
-| `Empty.PRESENTED_IMAGE_DEFAULT` | Default illustration (184×152) |
-| `Empty.PRESENTED_IMAGE_SIMPLE` | Simple illustration (64×41). Adds a `<prefix>-normal` class to the root |
+### Provider and semantic regions
 
-Both are also available as named exports:
-`import { PRESENTED_IMAGE_SIMPLE } from '@apollo-design/ui'`.
+`ConfigProvider :components="{ empty }"` accepts a named `EmptyConfig` with image, className, style, classNames and styles. Configuration updates and removal remain reactive. Provider semantic settings use objects.
 
-> ⚠️ The `-normal` check is **reference equality** (`image === PRESENTED_IMAGE_SIMPLE`),
-> not "is it 64×41". A look-alike component you build yourself will not trigger it.
-
-### Semantic slots
-
-`classNames` / `styles` each have four slots: `root` / `image` / `description` / `footer`.
-
-Merge priority (low → high):
+The four regions are root, image, description and footer. Classes merge from Provider to local semantic classes and native root class. Root style priority is:
 
 ```
-ConfigProvider.empty.classNames/styles
-  → component classNames / styles
-  → native root class / style attrs
+Provider styles.root → Provider style → local styles.root → native root style
 ```
 
-Note that **`style` overrides `styles.root`** — that is antd's merge order, matched one-to-one.
+Local semantic styles override Provider styles for other regions. The legacy imageStyle has lower priority than styles.image. Fixed media height and opacity apply to built-in illustrations and URL images; complete custom content retains its layout and colors. Current Provider direction applies unless overridden by native dir.
 
-### Type exports
+### Static values, types and ref
 
-`EmptyProps`, `EmptyRef`, `EmptyConfig`, `EmptySemanticType`, `EmptySemanticAllType`,
-`EmptySemanticClassNames`, `EmptySemanticStyles`, `EmptySemanticValue`, `EmptyImage`.
+`Empty.PRESENTED_IMAGE_DEFAULT` and `Empty.PRESENTED_IMAGE_SIMPLE` are also named exports. Root and `@apollo-design/ui/empty` imports share their identity. These reusable component definitions render normally through Vue. The actual simple component or its VNode enables normal mode; lookalike custom artwork does not.
 
-### ref
+Exported types: EmptyProps, EmptySlots, EmptyImage, EmptyRef, EmptyConfig, EmptySemanticClassNames, EmptySemanticStyles, EmptySemanticValue, EmptySemanticType, EmptySemanticAllType.
 
-| Name | Description |
-|---|---|
-| nativeElement | The root `div`. `null` before the first render |
+| Expose | Type | Description |
+|---|---|---|
+| nativeElement | `HTMLDivElement \| null` | Actual root div; null before mount and after unmount |
 
-## Design notes
+URL image alt uses a string description, otherwise the current localized empty-state description. Built-in illustration titles update with the locale and retain accessible names in image-only states.
 
-### Two different checks for `description`
+### Theme and CSS
 
-| Check | Purpose |
-|---|---|
-| `description !== undefined` | Picks the **value**: a provided value wins (including `0` and `''`); locale is only used when omitted |
-| `isRenderable(description)` | Decides **whether to render**: `false` / `''` / `null` render no description block |
-
-So `:description="''"` takes `''` (locale is not consulted) but renders nothing.
-
-### Illustrations and themes
-
-The illustration's colors are emitted as `var(--apollo-*)`, so dark / compact themes
-follow automatically — no extra work per theme.
-
-### Importing styles
+Empty has no Component Token. Layout uses existing Alias Tokens. Illustration palettes derive from the current theme at runtime; generated geometry and source attribution are preserved. Default description text uses colorTextSecondary.
 
 ```ts
-import '@apollo-design/theme/dist/tokens.css'; // theme variables first
-import '@apollo-design/ui/empty/style.css';    // per component
-// or
-import '@apollo-design/ui/style.css';          // all components
+import '@apollo-design/theme/tokens.css';
+import '@apollo-design/ui/empty/style.css';
+// Or import '@apollo-design/ui/style.css';
 ```
 
-With a custom `prefixCls` (e.g. `my-app`), generate the CSS yourself via
-`genComponentCss('empty', 'my-app')` — the static artifacts only cover `apollo` and `ant`.
+Static CSS includes the apollo root prefix. For a custom root prefix my-app, set ConfigProvider prefix-cls to my-app and load CSS from `genComponentCss('empty', 'my-app')`. A direct component prefixCls receives the full value, such as my-app-empty.

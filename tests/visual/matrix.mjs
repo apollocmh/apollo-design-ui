@@ -104,6 +104,23 @@ export const COMPONENTS = {
     ],
   },
   empty: {
+    apolloVariants: [
+      'default',
+      'simple',
+      'no-description',
+      'custom-description',
+      'custom-image',
+      'with-footer',
+      'semantic',
+      'complete-content',
+      'empty-slots',
+      'config-current',
+      'rtl',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+      'native-focus',
+    ],
     variants: [
       'default', // 默认：locale 文案 + 默认插画
       'simple', // PRESENTED_IMAGE_SIMPLE（触发 -normal 类名）

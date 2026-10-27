@@ -272,6 +272,7 @@ export type {
   EmptySemanticStyles,
   EmptySemanticType,
   EmptySemanticValue,
+  EmptySlots,
 } from './empty';
 export {
   Empty,

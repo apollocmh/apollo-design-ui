@@ -46,3 +46,5 @@ Skeleton及五个子组件的原生根attrs/style、嵌套块配置、Image默�
 Result全部状态的完整图标槽/默认图形开关、条件内容、原生根attrs/style、当前Provider/四Token和装饰语义修正集中见[Result契约迁移](docs/migrations/result-contracts.md)；开发期直接修正，不为旧React图形分支增加兼容通道。
 
 Button完整内容宿主、独立color/variant、加载请求与指示器分离、当前Provider/58 Token及合法发布工具入口修正见[Button契约迁移](docs/migrations/button-contracts.md)；内部Search/Dropdown/FloatButton链路同步调整。
+
+Empty 的完整 image/description/footer 内容、当前 Provider/语言、自然布局、空宿主及默认文字对比度修正见 [Empty 契约迁移](docs/migrations/empty-contracts.md)；保留插画几何与原始参考证据。

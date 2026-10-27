@@ -102,7 +102,7 @@ const CASES: Record<string, () => DomRenderResult> = {
   'children:present': () => h(Empty, { prefixCls: PREFIX }),
   'children:button': () =>
     h(Empty, { prefixCls: PREFIX, description: 'Nothing' }, () => h('button', null, 'Create')),
-  // 空数组插槽 → `slots.default()` 返回 `[]` → `isRenderable([])` 为真 → 渲染空 footer。
+  // Native empty content creates no footer host; the original reference is preserved.
   // 与 React 侧 `children = []` 的结果逐条对应。
   'children:empty-array': () => h(Empty, { prefixCls: PREFIX }, () => []),
 
@@ -196,6 +196,18 @@ const CASES: Record<string, () => DomRenderResult> = {
  * 所以「这是唯一差异」本身是可证伪的 —— 任何**额外**漂移都会让用例红。
  */
 const ALLOW = {
+  'image:node': {
+    reason:
+      'Complete custom Vue image content uses its own layout instead of fixed media height/opacity. The original image class remains; the additional content class owns only this CSS boundary.',
+    deviationId: 'empty-native-content-layout',
+    diff: ['$/div[0]/div[0]: 类名不同 [apollo-image] vs [apollo-image apollo-image-content]'],
+  },
+  'children:empty-array': {
+    reason:
+      'An empty Vue footer creates no spacing host. Original reference data is retained; native empty-content and conditional-slot tests cover this correction.',
+    deviationId: 'empty-native-empty-footer',
+    diff: ['$/div[0]: 子节点数不同 3 vs 2'],
+  },
   'plain:no-props': {
     reason:
       'antd 的默认 prefixCls 是 `ant`，我们是 `apollo`（裁决 `prefix-cls-default` = A：默认 apollo，允许 ConfigProvider 覆盖为 ant）。' +

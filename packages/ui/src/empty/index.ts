@@ -52,4 +52,5 @@ export type {
   EmptySemanticStyles,
   EmptySemanticType,
   EmptySemanticValue,
+  EmptySlots,
 } from './interface';

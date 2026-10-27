@@ -1,0 +1,1115 @@
+{
+  "inventoryCommit": "2bad0f31ce819974cad2bf2d85b31d5e8d941187",
+  "status": "implemented-core-verified-acceptance-in-progress",
+  "scope": "Empty six Props, existing default/description and missing native image slot, four semantic parts, two public static illustrations, no Component Token, source aliases, six original demos, DefaultRenderEmpty dispatcher and actual consumers",
+  "baselineSources": [
+    {
+      "file": "packages/ui/src/empty/Empty.vue",
+      "sha256": "e2e6f623812c2951ab4921d9815934f96959b1dfe5b3ce00ebca9efaa0cf989a"
+    },
+    {
+      "file": "packages/ui/src/empty/interface.ts",
+      "sha256": "6a6f599b900b61da7a9a79342805b11a995f5254c3ddb851c7ccdba54ca7ab8d"
+    },
+    {
+      "file": "packages/ui/src/empty/index.ts",
+      "sha256": "11bd4a8b7a9f70ce5aed05e069ddb03772bd78a50a56befe807f713c8229d8cc"
+    },
+    {
+      "file": "packages/ui/src/empty/components/Images.ts",
+      "sha256": "efdf5beecdd881e275e275b79f2ba3f19be157cba56f7eb390eca35c49a2ea8d"
+    },
+    {
+      "file": "packages/ui/src/empty/components/NodeRenderer.ts",
+      "sha256": "85c8778b89c28ac4de6ef4b3eaf89b68910b8f14f09fac35483862b9c69b2353"
+    },
+    {
+      "file": "packages/ui/src/empty/components/artwork.ts",
+      "sha256": "a645787e2390aa8052bd5050ffc60ffe7bd3956d0ea9f5893ba4fc9c827a3d0d"
+    },
+    {
+      "file": "packages/ui/src/empty/style/index.ts",
+      "sha256": "f9a3c959881881c40e5191aeb1ff5da7971fd8ffac0b3b5a5ab8da7b9647f187"
+    },
+    {
+      "file": "packages/ui/src/config-provider/default-render-empty.ts",
+      "sha256": "5f0953ebab1a745ec88fa005eb295a9cf03bfda883532ceaca20468ad88c4fef"
+    }
+  ],
+  "runtimeConsumerSites": [
+    "config-provider/default-render-empty.ts",
+    "list/List.vue",
+    "table/Table.ts",
+    "table/hooks/use-filter.ts",
+    "select/Select.ts",
+    "transfer/Transfer.ts",
+    "mentions/Mentions.ts"
+  ],
+  "scopeNotes": [
+    "Built-in illustration components are already markRaw; do not misclassify them as newly broken proxy inputs. Custom component definitions in ordinary reactive data still need reproduction.",
+    "genComponentCss is already a legal root export; no new style-generator API is required. Fix the invalid theme/dist/tokens.css example and inaccurate static ant-prefix claim.",
+    "ComponentStyleConfig.style is CSSProperties only. Native root attrs support Vue string/array/object; do not widen Provider style to add an unrelated string/array capability.",
+    "RenderEmptyHandler is an existing accepted headless dispatcher, typed and validated during the List audit. Keep its API; trace its actual Empty consumers instead of inferring that every union member is a default consumer.",
+    "TreeSelect/Cascader currently default to literal Not Found when no global renderer is supplied. AutoComplete delegates to Select; verify that indirect path where applicable."
+  ],
+  "remaining": [
+    "Failing source/published-browser/SFC reproductions with production source hashes unchanged.",
+    "Grouped current configuration/attrs and complete native content/image/render/lifecycle repair; six demos and bilingual docs/types synced.",
+    "Unified related runtime/types, published entries/SSR/hydration, source theme/actual Docs, reviewed owned visual evidence and Registry closure; global audit continues."
+  ],
+  "beforeUnit": {
+    "command": "pnpm exec vitest run --project unit packages/ui/src/empty/__tests__/contract-audit.test.ts --maxWorkers=1 --no-file-parallelism",
+    "total": 39,
+    "passed": 11,
+    "failed": 28,
+    "sourceHashesVerified": true,
+    "nativeTeleport": true,
+    "cases": [
+      {
+        "name": "Empty complete native contracts treats explicit empty image data false as empty without Vue warnings",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:32:54\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3"
+      },
+      {
+        "name": "Empty complete native contracts treats explicit empty image data true as empty without Vue warnings",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:32:54\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3"
+      },
+      {
+        "name": "Empty complete native contracts treats explicit empty image data null as empty without Vue warnings",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:32:54\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3"
+      },
+      {
+        "name": "Empty complete native contracts treats explicit empty image data  as empty without Vue warnings",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:32:54\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3"
+      },
+      {
+        "name": "Empty complete native contracts treats explicit empty image data [] as empty without Vue warnings",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:32:54\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3"
+      },
+      {
+        "name": "Empty complete native contracts retains numeric image zero as native content",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be '0' // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:41:49\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/"
+      },
+      {
+        "name": "Empty complete native contracts renders complete image arrays and preserves caller VNode props",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be 'ImageTail0' // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:50:49\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712"
+      },
+      {
+        "name": "Empty complete native contracts renders valid component definitions from ordinary reactive data without warnings",
+        "status": "failed",
+        "failure": "AssertionError: expected \"warn\" to not be called at all, but actually been called 1 times\n\nReceived:\n\n  1st warn call:\n\n    Array [\n      \"[Vue warn]: Vue received a Component that was made a reactive object. This can lead to unnecessary performance overhead and should be avoided by marking the component with `markRaw` or using `shallowRef` instead of `ref`.\",\n      \"\n    Component that was made reactive: \",\n      Object {\n        \"setup\": [Function setup],\n      },\n      \"\n    \",\n      \" at <AImageNode\",\n      \"node=\",\n      Object {\n        \"setup\": [Function setup],\n      },\n      \"alt=\"No "
+      },
+      {
+        "name": "Empty complete native contracts recognizes a VNode of the actual built-in simple component",
+        "status": "failed",
+        "failure": "AssertionError: expected [ 'apollo-empty' ] to include 'apollo-empty-normal'\n    at Proxy.<anonymous> (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/index.m3L2HgmY.js:2067:15)\n    at Proxy.<anonymous> (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/index.m3L2HgmY"
+      },
+      {
+        "name": "Empty complete native contracts keeps complete existing Fragment image data",
+        "status": "passed",
+        "failure": null
+      },
+      {
+        "name": "Empty complete native contracts omits empty description data true",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:83:58\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3"
+      },
+      {
+        "name": "Empty complete native contracts omits empty description data []",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:83:58\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3"
+      },
+      {
+        "name": "Empty complete native contracts omits empty description data [ false, [Object] ]",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:83:58\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3"
+      },
+      {
+        "name": "Empty complete native contracts evaluates the complete image slot once per render",
+        "status": "failed",
+        "failure": "AssertionError: expected 'No data' to be 'FirstTail0' // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:97:53\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c2"
+      },
+      {
+        "name": "Empty complete native contracts evaluates the complete description slot once per render",
+        "status": "passed",
+        "failure": null
+      },
+      {
+        "name": "Empty complete native contracts evaluates the complete default slot once per render",
+        "status": "failed",
+        "failure": "AssertionError: expected \"vi.fn()\" to be called 1 times, but got 2 times\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:98:20\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a7"
+      },
+      {
+        "name": "Empty complete native contracts keeps an intentionally empty image slot empty",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:110:56\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f"
+      },
+      {
+        "name": "Empty complete native contracts keeps an intentionally empty description slot empty",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:110:56\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f"
+      },
+      {
+        "name": "Empty complete native contracts keeps an intentionally empty default slot empty",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:110:56\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2869:63\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f"
+      },
+      {
+        "name": "Empty complete native contracts reads conditional captured footer VNodes during the current render",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:124:53\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f"
+      },
+      {
+        "name": "Empty complete native contracts image slots own their complete business subtree and suppress the data fallback",
+        "status": "failed",
+        "failure": "Error: Unable to get input within: <div class=\"apollo-empty\">\n  <div class=\"apollo-empty-image\"><svg aria-label=\"Fallback\"></svg></div>\n  <div class=\"apollo-empty-description\">First</div>\n  <!--v-if-->\n</div>\n    at VueWrapper.get (/Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/@vue+test-utils@2.5.0_@vue+compiler-dom@3.5.42_@vue+server-renderer@3.5.42_vue@3.5.42_typescript@5.9.3_/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15)\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:159:23\n    at file:///Users/nanren/Code/apollo"
+      },
+      {
+        "name": "Empty complete native contracts consumes current Provider className and removes stale configuration",
+        "status": "failed",
+        "failure": "AssertionError: expected [ 'first' ] to deeply equal [ 'second' ]\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:248:23\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "Empty complete native contracts consumes current Provider style and removes stale configuration",
+        "status": "failed",
+        "failure": "AssertionError: expected 'red' to deeply equal 'blue'\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:248:23\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "Empty complete native contracts consumes current Provider classNames and removes stale configuration",
+        "status": "failed",
+        "failure": "AssertionError: expected [ 'first' ] to deeply equal [ 'second' ]\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:248:23\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "Empty complete native contracts consumes current Provider styles and removes stale configuration",
+        "status": "failed",
+        "failure": "AssertionError: expected 'red' to deeply equal 'blue'\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:248:23\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "Empty complete native contracts consumes current Provider image and removes stale configuration",
+        "status": "failed",
+        "failure": "AssertionError: expected true to deeply equal false\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:248:23\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "Empty complete native contracts updates native attrs/style/listeners without replacing the actual root",
+        "status": "passed",
+        "failure": null
+      },
+      {
+        "name": "Empty complete native contracts uses current direction and honors an explicit native override",
+        "status": "failed",
+        "failure": "AssertionError: expected [ 'apollo-empty' ] to include 'apollo-empty-rtl'\n    at Proxy.<anonymous> (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/index.m3L2HgmY.js:2067:15)\n    at Proxy.<anonymous> (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/index.m3L2HgmY.js"
+      },
+      {
+        "name": "Empty complete native contracts updates both public artwork titles and the visible description with the current locale",
+        "status": "failed",
+        "failure": "AssertionError: expected [ 'No data', 'No data' ] to deeply equal [ '暂无数据', '暂无数据' ]\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:318:57\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "Empty complete native contracts uses the current localized URL alternative for non-string descriptions",
+        "status": "failed",
+        "failure": "AssertionError: expected 'empty' to be 'No data' // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:338:44\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77"
+      },
+      {
+        "name": "Empty complete native contracts keeps fully transparent artwork source colors finite",
+        "status": "failed",
+        "failure": "AssertionError: expected true to be false // Object.is equality\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/empty/__tests__/contract-audit.test.ts:363:51\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      },
+      {
+        "name": "Empty complete native contracts preserves the accepted DefaultRenderEmpty Table dispatch",
+        "status": "passed",
+        "failure": null
+      },
+      {
+        "name": "Empty complete native contracts preserves the accepted DefaultRenderEmpty List dispatch",
+        "status": "passed",
+        "failure": null
+      },
+      {
+        "name": "Empty complete native contracts preserves the accepted DefaultRenderEmpty Select dispatch",
+        "status": "passed",
+        "failure": null
+      },
+      {
+        "name": "Empty complete native contracts preserves the accepted DefaultRenderEmpty TreeSelect dispatch",
+        "status": "passed",
+        "failure": null
+      },
+      {
+        "name": "Empty complete native contracts preserves the accepted DefaultRenderEmpty Cascader dispatch",
+        "status": "passed",
+        "failure": null
+      },
+      {
+        "name": "Empty complete native contracts preserves the accepted DefaultRenderEmpty Transfer dispatch",
+        "status": "passed",
+        "failure": null
+      },
+      {
+        "name": "Empty complete native contracts preserves the accepted DefaultRenderEmpty Mentions dispatch",
+        "status": "passed",
+        "failure": null
+      },
+      {
+        "name": "Empty complete native contracts preserves the accepted DefaultRenderEmpty Table.filter dispatch",
+        "status": "passed",
+        "failure": null
+      }
+    ]
+  },
+  "reproductionCorrections": [
+    "Initial it.each array rows spread tuple elements; corrected cases use object records so [] is actually passed as image/description rather than undefined. Superseded38-case report is not counted as product evidence.",
+    "VTU teleport-stub remounts provider descendants, falsely making snapshot values and locale titles look current. Native Teleport plus root identity is required; corrected39-case report has11 existing passes/28 genuine failures. No shared Provider production change is justified by the stub artifact.",
+    "Current Vue runtime attrs proxies track dependency access in both development and production. Native attrs/style/listener replacement already passes; do not claim its existing computed is broken merely from old comments. Render refactor will preserve this verified behavior.",
+    "Canonical zero-alpha rgba(0,0,0,0) reproduces Empty invalid NaN fills. The preliminary CSS keyword transparent was rejected by the shared Color parser before reaching Empty; no unrelated color-format support is added to this unit.",
+    "Root genComponentCss is already exported. No missing style helper is invented, and Provider style remains its actual CSSProperties contract.",
+    "Browser compact image height is 35*2.5=87.5px under current AliasToken, not 80px; two height failures in the saved pre-fix report are harness expectations, not product defects.",
+    "The draft retention unit fixture initially bound a constant controlled value; use a real reactive draft plus native input handler, preserving identity/focus assertions. Production browser uses an internally stateful Probe."
+  ],
+  "browserBefore": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "published native root",
+        "actual": "DIV",
+        "expected": "DIV",
+        "passed": true
+      },
+      {
+        "name": "published installation name",
+        "actual": "AEmpty",
+        "expected": "AEmpty",
+        "passed": true
+      },
+      {
+        "name": "both public static identities",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "current Provider class first",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "current Provider style first",
+        "actual": "",
+        "expected": "13px",
+        "passed": false
+      },
+      {
+        "name": "Provider preserves native root first",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "current Provider class second",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "current Provider style second",
+        "actual": "",
+        "expected": "17px",
+        "passed": false
+      },
+      {
+        "name": "Provider preserves native root second",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "current Provider class none",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "current Provider style none",
+        "actual": "",
+        "expected": "",
+        "passed": true
+      },
+      {
+        "name": "Provider preserves native root none",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native style \"padding-inline:11px\"",
+        "actual": "11px",
+        "expected": "11px",
+        "passed": true
+      },
+      {
+        "name": "native style [{\"paddingInline\":\"17px\"}]",
+        "actual": "17px",
+        "expected": "17px",
+        "passed": true
+      },
+      {
+        "name": "native style {\"paddingInline\":\"19px\"}",
+        "actual": "19px",
+        "expected": "19px",
+        "passed": true
+      },
+      {
+        "name": "native style undefined",
+        "actual": "",
+        "expected": "",
+        "passed": true
+      },
+      {
+        "name": "numeric image zero renders",
+        "actual": "",
+        "expected": "0",
+        "passed": false
+      },
+      {
+        "name": "explicit hidden image has no empty container",
+        "actual": 1,
+        "expected": 0,
+        "passed": false
+      },
+      {
+        "name": "complete image array survives",
+        "actual": "",
+        "expected": "Array imageTail0",
+        "passed": false
+      },
+      {
+        "name": "current default illustration language",
+        "actual": "暂无数据",
+        "expected": "暂无数据",
+        "passed": true
+      },
+      {
+        "name": "actual Provider direction",
+        "actual": "ltr",
+        "expected": "rtl",
+        "passed": false
+      },
+      {
+        "name": "native direction override",
+        "actual": "ltr",
+        "expected": "ltr",
+        "passed": true
+      },
+      {
+        "name": "wide URL image fits narrow viewport",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "complete native image content",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "complete native description content",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "complete native footer content",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "slot state survives data/Provider updates",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "slot root and focus remain",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "slot widgets are not remounted",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "complete image content stays within its host",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      },
+      {
+        "name": "intentional empty slots suppress all defaults and spacing hosts",
+        "actual": 2,
+        "expected": 0,
+        "passed": false
+      },
+      {
+        "name": "light actual default contrast/axe",
+        "actual": [
+          {
+            "id": "color-contrast",
+            "nodes": [
+              "Fix any of the following:\n  Element has insufficient color contrast of 3.36 (foreground color: #8c8c8c, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            ]
+          }
+        ],
+        "expected": [],
+        "passed": false
+      },
+      {
+        "name": "light illustration remains bounded",
+        "actual": "100px",
+        "expected": "100px",
+        "passed": true
+      },
+      {
+        "name": "dark actual default contrast/axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "dark illustration remains bounded",
+        "actual": "100px",
+        "expected": "100px",
+        "passed": true
+      },
+      {
+        "name": "compact actual default contrast/axe",
+        "actual": [
+          {
+            "id": "color-contrast",
+            "nodes": [
+              "Fix any of the following:\n  Element has insufficient color contrast of 3.36 (foreground color: #8c8c8c, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            ]
+          }
+        ],
+        "expected": [],
+        "passed": false
+      },
+      {
+        "name": "compact illustration remains bounded",
+        "actual": "87.5px",
+        "expected": "80px",
+        "passed": false
+      },
+      {
+        "name": "both actual default contrast/axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "both illustration remains bounded",
+        "actual": "87.5px",
+        "expected": "80px",
+        "passed": false
+      },
+      {
+        "name": "no page or Vue errors",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "verification": {
+    "runtime": {
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/empty packages/ui/src/config-provider packages/ui/src/list packages/ui/src/table packages/ui/src/select packages/ui/src/transfer packages/ui/src/mentions packages/ui/src/auto-complete --maxWorkers=1 --no-file-parallelism",
+      "total": 1151,
+      "passed": 1151,
+      "failed": 0,
+      "pending": 0,
+      "groups": {
+        "empty": 143,
+        "config-provider": 115,
+        "list": 153,
+        "listy": 60,
+        "table": 183,
+        "select": 152,
+        "transfer": 122,
+        "mentions": 152,
+        "auto-complete": 71
+      }
+    },
+    "publicTypes": {
+      "command": "pnpm exec vitest run --project types packages/ui/src/empty --maxWorkers=1 --no-file-parallelism",
+      "passed": 20,
+      "failed": 0,
+      "sourceErrors": 0
+    },
+    "strict": {
+      "command": "pnpm exec vue-tsc --noEmit -p tsconfig.json",
+      "exitCode": 0
+    },
+    "sfc": {
+      "command": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.empty-contracts.json",
+      "exitCode": 0
+    },
+    "build": {
+      "command": "pnpm --filter @apollo-design/ui run build",
+      "exitCode": 0,
+      "cssFiles": 69
+    },
+    "publishedTypes": {
+      "command": "node tests/consumer/empty-types.mjs",
+      "exitCode": 0,
+      "coverage": "all six real demo SFCs; named Provider config, exact root/deep/static/InstanceType/ref/slots and negative cases, no source aliases"
+    },
+    "l7": {
+      "command": "node tests/build/run.mjs --package ui --no-build --strict",
+      "checks": 11,
+      "fail": 0,
+      "pending": 0
+    },
+    "registry": {
+      "command": "pnpm registry:check",
+      "checks": 19,
+      "warnings": 0
+    }
+  },
+  "browserAfter": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "published native root",
+        "actual": "DIV",
+        "expected": "DIV",
+        "passed": true
+      },
+      {
+        "name": "published installation name",
+        "actual": "AEmpty",
+        "expected": "AEmpty",
+        "passed": true
+      },
+      {
+        "name": "both public static identities",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "current Provider class first",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "current Provider style first",
+        "actual": "13px",
+        "expected": "13px",
+        "passed": true
+      },
+      {
+        "name": "Provider preserves native root first",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "current Provider class second",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "current Provider style second",
+        "actual": "17px",
+        "expected": "17px",
+        "passed": true
+      },
+      {
+        "name": "Provider preserves native root second",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "current Provider class none",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "current Provider style none",
+        "actual": "",
+        "expected": "",
+        "passed": true
+      },
+      {
+        "name": "Provider preserves native root none",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "native style \"padding-inline:11px\"",
+        "actual": "11px",
+        "expected": "11px",
+        "passed": true
+      },
+      {
+        "name": "native style [{\"paddingInline\":\"17px\"}]",
+        "actual": "17px",
+        "expected": "17px",
+        "passed": true
+      },
+      {
+        "name": "native style {\"paddingInline\":\"19px\"}",
+        "actual": "19px",
+        "expected": "19px",
+        "passed": true
+      },
+      {
+        "name": "native style undefined",
+        "actual": "",
+        "expected": "",
+        "passed": true
+      },
+      {
+        "name": "numeric image zero renders",
+        "actual": "0",
+        "expected": "0",
+        "passed": true
+      },
+      {
+        "name": "explicit hidden image has no empty container",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "complete image array survives",
+        "actual": "Array imageTail0",
+        "expected": "Array imageTail0",
+        "passed": true
+      },
+      {
+        "name": "reactive component definitions render actual business artwork",
+        "actual": "Business diagram",
+        "expected": "Business diagram",
+        "passed": true
+      },
+      {
+        "name": "current default illustration language",
+        "actual": "暂无数据",
+        "expected": "暂无数据",
+        "passed": true
+      },
+      {
+        "name": "actual Provider direction",
+        "actual": "rtl",
+        "expected": "rtl",
+        "passed": true
+      },
+      {
+        "name": "native direction override",
+        "actual": "ltr",
+        "expected": "ltr",
+        "passed": true
+      },
+      {
+        "name": "wide URL image fits narrow viewport",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "complete native image content",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "complete native description content",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "complete native footer content",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "slot state survives data/Provider updates",
+        "actual": "Saved image draft",
+        "expected": "Saved image draft",
+        "passed": true
+      },
+      {
+        "name": "slot root and focus remain",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "slot widgets are not remounted",
+        "actual": 2,
+        "expected": 2,
+        "passed": true
+      },
+      {
+        "name": "complete image content stays within its host",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "intentional empty slots suppress all defaults and spacing hosts",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "light actual default contrast/axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "light illustration remains bounded",
+        "actual": "100px",
+        "expected": "100px",
+        "passed": true
+      },
+      {
+        "name": "dark actual default contrast/axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "dark illustration remains bounded",
+        "actual": "100px",
+        "expected": "100px",
+        "passed": true
+      },
+      {
+        "name": "compact actual default contrast/axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "compact illustration remains bounded",
+        "actual": "87.5px",
+        "expected": "87.5px",
+        "passed": true
+      },
+      {
+        "name": "both actual default contrast/axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "both illustration remains bounded",
+        "actual": "87.5px",
+        "expected": "87.5px",
+        "passed": true
+      },
+      {
+        "name": "current media height alias",
+        "actual": "130px",
+        "expected": "130px",
+        "passed": true
+      },
+      {
+        "name": "current image opacity alias",
+        "actual": "0.55",
+        "expected": "0.55",
+        "passed": true
+      },
+      {
+        "name": "current image spacing alias",
+        "actual": "11px",
+        "expected": "11px",
+        "passed": true
+      },
+      {
+        "name": "current description color alias",
+        "actual": "rgb(67, 82, 102)",
+        "expected": "rgb(67, 82, 102)",
+        "passed": true
+      },
+      {
+        "name": "current footer spacing alias",
+        "actual": "23px",
+        "expected": "23px",
+        "passed": true
+      },
+      {
+        "name": "current root spacing/font/line aliases",
+        "actual": [
+          "11px",
+          "18px",
+          "36px"
+        ],
+        "expected": [
+          "11px",
+          "18px",
+          "36px"
+        ],
+        "passed": true
+      },
+      {
+        "name": "current simple media height alias",
+        "actual": "52px",
+        "expected": "52px",
+        "passed": true
+      },
+      {
+        "name": "current simple margin alias",
+        "actual": "37px",
+        "expected": "37px",
+        "passed": true
+      },
+      {
+        "name": "alias removal restores default geometry",
+        "actual": "100px",
+        "expected": "100px",
+        "passed": true
+      },
+      {
+        "name": "no page or Vue errors",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "demos": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "theme": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "basic",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "basic",
+        "theme": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "basic",
+        "theme": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "simple",
+        "theme": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "simple",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "simple",
+        "theme": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "simple",
+        "theme": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "customize",
+        "theme": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "customize",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "customize",
+        "theme": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "customize",
+        "theme": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "config-provider",
+        "theme": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "config-provider",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "config-provider",
+        "theme": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "config-provider",
+        "theme": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "description",
+        "theme": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "description",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "description",
+        "theme": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "description",
+        "theme": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "style-class",
+        "theme": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "style-class",
+        "theme": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "style-class",
+        "theme": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "style-class",
+        "theme": "both",
+        "passed": true,
+        "violations": []
+      }
+    ],
+    "errors": []
+  },
+  "ssr": {
+    "results": [
+      {
+        "name": "root/deep/static identity and installation name",
+        "passed": true
+      },
+      {
+        "name": "native root attrs, string style and numeric description before mount",
+        "passed": true
+      },
+      {
+        "name": "all complete slots render once and suppress fallback component",
+        "passed": true
+      },
+      {
+        "name": "intentional empty slots leave no empty hosts or defaults",
+        "passed": true
+      },
+      {
+        "name": "legal empty image data is empty while zero/arrays retain full content",
+        "passed": true
+      },
+      {
+        "name": "current localized artwork and URL alternative before mount",
+        "passed": true
+      },
+      {
+        "name": "fully transparent current source palette has no nonfinite fills",
+        "passed": true
+      },
+      {
+        "name": "reactive component image preserves caller-owned attributes in both instances",
+        "passed": true
+      }
+    ],
+    "browserGlobals": false
+  },
+  "hydration": {
+    "browser": "150.0.7871.125",
+    "checks": [
+      "three actual published roots and complete native slots SSR without browser globals",
+      "hydration preserves all roots, pretyped image/footer drafts, focus and selection",
+      "Provider/locale/direction/theme replacement and removal preserve complete business content and nearest scope",
+      "repeated conditional image tails keep both editors and selection",
+      "unmount clears expose; remount creates fresh independent content",
+      "no hydration warnings or page errors"
+    ],
+    "errors": []
+  },
+  "pendingAcceptance": [
+    "reproduced shared Trigger/Portal CSS theme scope loss: Select popup Empty compact height stays35px instead of30.625px; List/Table pass; remaining browser consumer branches not yet run",
+    "actual built Docs examples and interactions",
+    "owned visual collection/review and related List regression",
+    "strict UI L7 and final complete checklist at one frozen source",
+    "online documentation deployment receipt"
+  ],
+  "visualDryRun": {
+    "count": 45,
+    "stateAndAxe": "passed",
+    "approved": false,
+    "dirtySource": true
+  }
+}

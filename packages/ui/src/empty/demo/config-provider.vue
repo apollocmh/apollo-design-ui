@@ -1,23 +1,20 @@
 <script setup lang="ts">
-import { provide } from 'vue';
-import { configContextKey, DEFAULT_CONFIG_CONTEXT, Empty } from '../../index';
+import { ConfigProvider, Empty, type EmptyConfig, PRESENTED_IMAGE_SIMPLE } from '@apollo-design/ui';
+import { computed, ref } from 'vue';
 
-/**
- * 用 ConfigProvider 的上下文全局配置 Empty。
- *
- * ⚠️ ConfigProvider **组件**本身尚未实现（走它自己的 G0→G14），所以这里直接
- *    `provide` 它的注入键 —— 这正是 ConfigProvider 未来会做的事，不是测试专用后门。
- */
-provide(configContextKey, {
-  ...DEFAULT_CONFIG_CONTEXT,
-  components: {
-    empty: {
-      image: 'https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg',
-    },
-  },
-});
+const custom = ref(false);
+// A deterministic original illustration keeps the URL-image example available offline.
+const image = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80" viewBox="0 0 120 80"><rect x="20" y="24" width="80" height="42" rx="8" fill="#8ba6bf"/><path d="M44 24V14h32v10M44 45h32" fill="none" stroke="#18344d" stroke-width="4"/></svg>')}`;
+const empty = computed<EmptyConfig>(() => ({
+  image: custom.value ? image : PRESENTED_IMAGE_SIMPLE,
+  className: custom.value ? 'empty-config-custom' : 'empty-config-simple',
+  styles: { description: { fontWeight: custom.value ? 600 : 400 } },
+}));
 </script>
 
 <template>
-  <Empty description="ConfigProvider 提供了默认插画" />
+  <label><input v-model="custom" type="checkbox" /> Change Provider configuration</label>
+  <ConfigProvider :components="{ empty }">
+    <Empty description="Current illustration from ConfigProvider" />
+  </ConfigProvider>
 </template>
