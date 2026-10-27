@@ -6,6 +6,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
+import { prepareAvatarVisual } from './avatar-state.mjs';
 import {
   acceptCandidates,
   checkEntry,
@@ -235,7 +236,9 @@ async function main() {
                             ? await prepareEmptyVisual(page, item.variant)
                             : item.component === 'tag'
                               ? await prepareTagVisual(page, item.variant)
-                              : undefined;
+                              : item.component === 'avatar'
+                                ? await prepareAvatarVisual(page, item.variant)
+                                : undefined;
         fs.mkdirSync(path.dirname(output), { recursive: true });
         await screenshotElement(page, '#stage', output);
         if (errors.length) throw new Error(errors.join(' | '));

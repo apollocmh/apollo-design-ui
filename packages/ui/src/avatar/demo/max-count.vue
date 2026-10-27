@@ -1,22 +1,12 @@
 <script setup lang="ts">
 // 对齐 antd 的 max-count demo（「maxCount 包含溢出元素」）。
 import { Avatar, AvatarGroup, Flex, InputNumber, Switch } from '@apollo-design/ui';
-import { computed, h, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const avatarCount = ref(4);
 const overflowInFinal = ref(true);
 
 const mergedMaxCount = computed(() => (overflowInFinal.value ? 2 : 3));
-
-const avatars = computed(() =>
-  Array.from({ length: avatarCount.value }, (_, i) =>
-    h(
-      Avatar,
-      { key: i, style: { backgroundColor: '#f56a00' } },
-      { default: () => String.fromCharCode(65 + i) },
-    ),
-  ),
-);
 </script>
 
 <template>
@@ -37,9 +27,9 @@ const avatars = computed(() =>
       <Switch :checked="overflowInFinal" aria-label="overflowInFinal" @update:checked="(v) => (overflowInFinal = v)" />
 
       <AvatarGroup
-        :max="{ count: mergedMaxCount, style: { backgroundColor: '#52c41a', color: '#fff' } }"
+        :max="{ count: mergedMaxCount, style: { backgroundColor: '#52c41a', color: '#1f1f1f' } }"
       >
-        <component :is="() => avatars" />
+        <Avatar v-for="i in avatarCount" :key="i" style="background: #f56a00; color: #1f1f1f">{{ String.fromCharCode(64 + i) }}</Avatar>
       </AvatarGroup>
     </Flex>
   </Flex>

@@ -29,13 +29,13 @@ const hidden = () => ({ display: hide.value ? 'none' : '' });
     <Button @click="changeScale">Change Avatar scale</Button>
   </Space>
   <div :style="{ textAlign: 'center', transform: `scale(${scale})`, marginTop: '24px' }">
-    <Avatar :size="size()" :style="{ ...hidden(), background: '#7265e6' }">Avatar</Avatar>
-    <Avatar :size="size()" src="invalid" :style="{ ...hidden(), background: '#00a2ae' }">
+    <Avatar :size="size()" :style="{ ...hidden(), background: '#7265e6', color: '#fff' }">Avatar</Avatar>
+    <Avatar :size="size()" src="data:image/png,invalid" :style="{ ...hidden(), background: '#00a2ae', color: '#1f1f1f' }">
       Invalid
     </Avatar>
     <div :style="hidden()">
-      <Avatar :size="size()" :style="{ background: '#7265e6' }">Avatar</Avatar>
-      <Avatar :size="size()" src="invalid" :style="{ background: '#00a2ae' }">Invalid</Avatar>
+      <Avatar :size="size()" :style="{ background: '#7265e6', color: '#fff' }">Avatar</Avatar>
+      <Avatar :size="size()" src="data:image/png,invalid" :style="{ background: '#00a2ae', color: '#1f1f1f' }">Invalid</Avatar>
     </div>
   </div>
 </template>

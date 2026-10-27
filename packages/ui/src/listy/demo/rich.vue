@@ -43,7 +43,7 @@ const toggleFollow = (item: (typeof items.value)[number]) => {
   <Listy :items="items" row-key="key" :height="300">
     <template #default="{ item }">
       <div style="display: flex; align-items: center; gap: 12px; width: 100%">
-        <Avatar style="background-color: #1677ff">{{ item.name.slice(0, 1) }}</Avatar>
+        <Avatar style="background-color: #1677ff; color: #000">{{ item.name.slice(0, 1) }}</Avatar>
         <div style="flex: 1; min-width: 0">
           <Text strong>{{ item.name }}</Text>
           <div><Text type="secondary" style="font-size: 12px">{{ item.role }}</Text></div>

@@ -1,26 +1,4 @@
-/**
- * L5 无障碍 —— Avatar 的 role/ARIA 契约与 axe 扫描。
- *
- * ── 判据（antd 6.6.4）────────────────────────────────────────────────────────
- *
- * | 项 | 判据 | 出处 |
- * |---|---|---|
- * | 根 | **`<span>`，不加 `role` / `aria-*`** | `Avatar.tsx:226` |
- * | `-string` span | 纯 `<span>`（无 role） | `Avatar.tsx:212/219` |
- * | `<img>` | 只带 `alt` / `crossorigin` / `srcset` / `draggable` | `Avatar.tsx:189-196` |
- * | `Avatar.Group` | 纯 `<div>`（**唯一的 `aria-*` 是 `-rtl` 时的方向，但那是 CSS 不是 aria**） | `AvatarGroup.tsx:132` |
- *
- * ⚠️ **为什么这几条必须钉**：Avatar 的语义**完全由原生元素承担**（`span` / `img`）——
- * 组件不该再叠 `role="img"`、`aria-label` 之类（上游没有）。钉住它们才能防止后来者
- * 「顺手加个 role」而改变读屏行为。
- *
- * ── 🚨 一条**上游行为**（不是 bug，但要登记）──────────────────────────────────
- *
- * `<Avatar src="…" />` **不传 `alt`** 时，渲染出的是**没有 `alt` 的 `<img>`**
- * ⇒ axe 的 `image-alt`（serious）。上游就是这样（`alt` 是可选 prop，不传就不落属性）。
- * ⇒ **`alt` 是使用者的责任**，本文件既钉「传了会落到 img 上」，也钉「不传就是 image-alt」
- * （后者用精确断言写清，而不是放宽阈值）。
- */
+/** Native static avatars, named/decorative images and owned overflow actions. */
 
 import { mount, type VueWrapper } from '@vue/test-utils';
 import axe from 'axe-core';
@@ -118,7 +96,7 @@ interface A11yScanCase {
 const SCAN_CASES: A11yScanCase[] = [
   { name: 'text', props: {}, slots: { default: () => 'U' } },
   { name: 'icon', props: { icon: h('span', { class: 'my-icon' }, 'i') } },
-  // ⚠️ 图片头像**必须**传 `alt`，否则 axe 的 `image-alt` 会红（见文件头）
+  // 具名头像使用明确alt；装饰默认值另有覆盖。
   { name: 'image', props: { src: 'x.png', alt: '用户头像' } },
   {
     name: 'square-large',
@@ -171,19 +149,13 @@ describe('Avatar · axe 扫描（L5）', () => {
     w.unmount();
   });
 
-  /**
-   * 🚨 **上游行为**：不传 `alt` 的图片头像 ⇒ `image-alt`（serious）。
-   *
-   * ⚠️ 这条**不是放宽阈值**，而是把「上游就是这样」精确钉住：
-   *    断言「唯一的 violation 恰好是 `image-alt`，且节点数 = 1」。
-   *    将来若有人给 `<img>` 硬塞一个 `alt=""`，这条会红 —— 那正是我们要拦的
-   *    （`alt=""` 会把图片标成「装饰性」，与上游语义不同）。
-   */
-  it('🚨 不传 `alt` ⇒ **恰好**一条 `image-alt`（上游行为，`alt` 是使用者责任）', async () => {
+  it('默认装饰图像有空alt，无image-alt违规；明确alt仍由原生img消费', async () => {
     const w = await mountA11y({ src: 'x.png' });
-
+    expect(w.get('img').attributes('alt')).toBe('');
     const violations = await runAxe();
-    expect(violations.map((v) => `${v.id}: ${v.nodes.length}`)).toEqual(['image-alt: 1']);
+    expect(violations.map((v) => `${v.id}: ${v.nodes.length}`)).toEqual([]);
+    await w.setProps({ alt: 'Olivia' });
+    expect(w.get('img').attributes('alt')).toBe('Olivia');
     w.unmount();
   });
 });

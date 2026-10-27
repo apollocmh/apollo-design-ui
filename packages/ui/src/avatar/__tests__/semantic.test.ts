@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+import { avatarContractDifferences } from './contract-differences';
 /**
  * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）
  *
@@ -140,7 +142,7 @@ const specs: Record<
   'avatar:group-max-count-deprecated': {
     props: {},
     group: true,
-    groupProps: { maxCount: 1 },
+    groupProps: { max: { count: 1 } },
     slots: { default: () => kids(3) },
   },
   'avatar:group-max-no-truncate': {
@@ -171,52 +173,10 @@ const specs: Record<
 };
 
 /** 「字符串 `src`」用例共有的 React 19 SSR 预加载豁免。 */
-const REACT_PRELOAD_REASON =
-  'PLATFORM · React 19 的 `renderToStaticMarkup` 会为字符串 `src` 的 `<img>` 注入 `<link rel="preload" as="image">`（React 运行时的 SSR 优化，**不是 antd 的组件 DOM**；客户端挂载后并不存在该节点）。';
-
 domContractTest('Avatar', {
   baseline,
   keepStyle: true,
-  allow: {
-    // 默认前缀不同（裁决 `prefix-cls-default` = A）：`bare` 用例下两侧的根前缀分别是
-    // antd 的 `ant` 与我们的 `apollo` ⇒ **每一层带前缀的元素**都不同。
-    'avatar:prefix-cls:no-props': {
-      reason: 'D1 · 默认根前缀 apollo vs ant（bare 用例）',
-      deviationId: 'D1',
-      diff: [
-        '$/span[0]: 类名不同 [ant-avatar ant-avatar-circle] vs [apollo-avatar apollo-avatar-circle]',
-        '$/span[0]/span[0]: 类名不同 [ant-avatar-string] vs [apollo-avatar-string]',
-      ],
-    },
-    // CSSOM 把十六进制色规范化成 rgb()，语义等价（D114 家族）。
-    'avatar:style': {
-      reason: 'PLATFORM · CSSOM 把十六进制色规范化成 rgb()，语义等价',
-      deviationId: 'D114',
-      diff: [
-        '$/span[0]: style 不同 [background-color:#fde3cf;color:#f56a00] vs [background-color:rgb(253,227,207);color:rgb(245,106,0)]',
-      ],
-    },
-    'avatar:group-max-style': {
-      reason: 'PLATFORM · CSSOM 把十六进制色规范化成 rgb()，语义等价',
-      deviationId: 'D114',
-      diff: ['$/div[0]/span[1]: style 不同 [color:#f56a00] vs [color:rgb(245,106,0)]'],
-    },
-    ...Object.fromEntries(
-      [
-        'avatar:src-string',
-        'avatar:src-string-attrs',
-        'avatar:src-and-icon',
-        'avatar:draggable-string',
-      ].map((id) => [
-        id,
-        {
-          reason: REACT_PRELOAD_REASON,
-          deviationId: 'D115',
-          diff: ['$: 根节点数不同 2 vs 1'],
-        },
-      ]),
-    ),
-  },
+  allow: avatarContractDifferences,
   render: (id) => {
     const spec = specs[id];
     if (!spec) {
@@ -229,4 +189,13 @@ domContractTest('Avatar', {
     const result: DomRenderResult = spec.ctx ? withConfig(spec.ctx, () => vnode) : vnode;
     return result;
   },
+});
+
+describe('Avatar reference preservation', () => {
+  it('retains every original scenario and no unused difference allowance', () => {
+    const ids = baseline.cases.map((c) => c.id).sort();
+    expect(ids).toHaveLength(31);
+    expect(Object.keys(specs).sort()).toEqual(ids);
+    for (const id of Object.keys(avatarContractDifferences)) expect(ids).toContain(id);
+  });
 });

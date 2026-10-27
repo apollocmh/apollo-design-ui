@@ -50,3 +50,5 @@ Button完整内容宿主、独立color/variant、加载请求与指示器分离�
 Empty 的完整 image/description/footer 内容、当前 Provider/语言、自然布局、空宿主及默认文字对比度修正见 [Empty 契约迁移](docs/migrations/empty-contracts.md)；保留插画几何与原始参考证据。
 
 Tag / CheckableTag / CheckableTagGroup 的完整内容、所属原生关闭按钮/链接、Vue 事件和强类型模型、当前 Provider/三个 Token 与两套真实语义，集中见 [Tag 契约迁移](docs/migrations/tag-contracts.md)；原始参考矩阵保留，开发期直接修正错误 DOM/回调形态。
+
+Avatar / AvatarGroup 的原生事件与同步取消钩子、完整内容槽、当前尺寸/Token、业务key和溢出按钮，集中见 [Avatar契约迁移](docs/migrations/avatar-contracts.md)；直接移除四个分组旧别名，保留原始参考证据。

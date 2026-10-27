@@ -5,23 +5,10 @@ title:
   en-US: Basic
 ---
 
-头像有三种尺寸，两种形状可选。
+## zh-CN
 
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 basic demo。
-import { Avatar, Space } from '@apollo-design/ui';
-</script>
+五种尺寸与圆形/方形；图标使用完整VNode数据。
 
-<template>
-  <Space vertical :size="16">
-    <Space wrap :size="16">
-      <Avatar :size="64" :icon="icon()" />
-      <Avatar size="large" :icon="icon()" />
-      <Avatar :icon="icon()" />
-      <Avatar size="small" :icon="icon()" />
-      <Avatar :size="14" :icon="icon()" />
-    </Space>
-  </Space>
-</template>
-```
+## en-US
+
+Five sizes and circle/square shapes, with complete icon VNode data.

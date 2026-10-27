@@ -5,18 +5,10 @@ title:
   en-US: Avatar.Group
 ---
 
-头像组合展现。`size` 与 `shape` 会经 context 透传给所有子头像。
+## zh-CN
 
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 group demo。
-import { Avatar, AvatarGroup } from '@apollo-design/ui';
-</script>
+组合直接头像、链接和Tooltip；max.count只计算可见子项，额外显示溢出按钮。
 
-<template>
-  <AvatarGroup>
-    <Avatar>K</Avatar>
-    <Avatar>L</Avatar>
-  </AvatarGroup>
-</template>
-```
+## en-US
+
+Combine avatars, a link and Tooltip. max.count counts visible children; the overflow button is additional.

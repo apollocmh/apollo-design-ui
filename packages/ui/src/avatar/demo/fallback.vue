@@ -2,8 +2,8 @@
 // 对齐 antd 的 fallback demo。
 import { Avatar, Space } from '@apollo-design/ui';
 
-// ⚠️ 上游用的是真实的不存在地址；本仓用一个**必然加载失败**的相对地址（不发外链请求）
-const broken = './not-exist-avatar.png';
+// Invalid local image data exercises the real image error without a network request.
+const broken = 'data:image/png,invalid';
 </script>
 
 <template>

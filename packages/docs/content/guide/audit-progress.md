@@ -99,9 +99,18 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 - [三个当前组件Token](/components/tag/demo/component-token)
 - [Tag完整盘点与证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-tag-contract-audit.md)
 
+## Avatar / AvatarGroup 成组修复，正在统一验收
+
+当前源码已修正完整内容槽、Vue原生事件和图片回退、数值/响应式尺寸继承、文字测量、当前Provider/12 Token、业务key、原生溢出按钮、RTL与局部前缀。九个原Demo保留，增加可切换Token演示；四个Group旧别名直接迁移。
+
+143条四层、12项类型、真实发布SFC、31浏览器、46个原Demo主题/交互、17 SSR/水合、16实际消费场景及全包严格L7 151项通过。List/Listy三处蓝底头像的暗色文字已明确配对。当前功能里程碑已交付；相关最终回归、Docs线上验收和48张清洁Apollo视觉仍待完成，不能据此宣称Avatar或全库收口。
+
+- [当前Avatar Token演示](/components/avatar/demo/component-token)
+- [Avatar完整盘点与证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-avatar-contract-audit.md)
+
 ## 还没有完成什么
 
-全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有201项启发式候选待逐项复核，候选不等于缺陷。当前自有视觉矩阵1368项，已批准405项，其余963项随后续完整整改单元验收。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
+全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有201项启发式候选待逐项复核，候选不等于缺陷。当前自有视觉矩阵1380项，已批准405项，其余975项随后续完整整改单元验收。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
 
 ## 查看证据与后续进展
 
@@ -172,7 +181,7 @@ The final related gate passes 2,352 runtime tests and 398 public type checks. Bu
 
 ## Remaining work
 
-This snapshot has 405 approved Apollo visual cases out of 1,368; the remaining 963 await review within later audit units.
+This snapshot has 405 approved Apollo visual cases out of 1,380; the remaining 975 await review within later audit units.
 
 Other components and foundation packages still require their complete audits. The content inventory has 201 heuristic review candidates; candidates are not confirmed defects. Final whole-library gates remain required after all remediation finishes. Touch pinch, other browsers and unspecified cross-document combinations are outside this unit's verified scope.
 
@@ -195,3 +204,13 @@ Frozen implementation c49f300b passes131 Tag runtime checks,1088 nonduplicated r
 - [Working add and close controls](/components/tag/demo/control)
 - [Current Tag component tokens](/components/tag/demo/component-token)
 - [Complete Tag evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-tag-contract-audit.md)
+
+
+## Avatar grouped remediation under acceptance
+
+Avatar and AvatarGroup now implement complete native slots/events, explicit image fallback cancellation, inherited numeric/responsive sizes and measurement, current Provider/twelve tokens, keyed business children, an owned overflow button, RTL and local prefixes. Nine original demos remain, with an additional working token example. Four legacy Group aliases are removed directly.
+
+143 runtime checks,12 Avatar type checks, actual published SFC consumption,31 browser checks,46 demo/theme interactions,17 SSR/hydration checks,16 actual consumer scenarios and all-package strict L7 (151 checks) pass. Three fixed blue consumer avatars now pair their foreground colour explicitly. Final related regression, live Docs acceptance and48 clean Apollo visual captures remain pending; this milestone is not unit-wide or library-wide completion.
+
+- [Working Avatar tokens](/components/avatar/demo/component-token)
+- [Complete inventory and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-avatar-contract-audit.md)

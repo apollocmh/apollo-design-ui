@@ -4,82 +4,72 @@ title: Avatar
 subtitle: 头像
 ---
 
-用来代表用户或事物，支持图片、图标或字符。
-
-## 何时使用
-
-- 需要展示用户头像、账号头像时；
-- 需要以图片、图标或字符代表某个实体时。
+以图片、图标或字符代表用户或事物。静态头像不进入 Tab 顺序；有操作时由外层原生链接或按钮提供交互。
 
 ## 代码演示
 
-见 [`demo/`](./demo)（**9 个**，覆盖 antd 的主要用户场景）。
+十个示例覆盖尺寸/形状、类型、动态字符与留白、徽标、分组、溢出计数、图片失败、隐藏后显示、响应式尺寸及当前组件 Token。`max-count` 的开关控制可见名额是否包含溢出指示器，Group 的 `max.count` 本身始终只计算可见子项。
 
-| demo | 内容 |
-|---|---|
-| `basic` | 三种尺寸 × 两种形状 |
-| `type` | 图标 / 字符 / 图片三种类型 |
-| `dynamic` | 字符较长时自动调整字号（可用 `gap` 设置左右留白） |
-| `badge` | 带徽标 |
-| `group` | `Avatar.Group` 组合（含 `max.count` 截断） |
-| `max-count` | `max.count` 包含溢出元素 |
-| `fallback` | 图片不存在时的回退 |
-| `toggle-debug` | 隐藏情况下计算字符对齐 |
-| `responsive` | 响应式尺寸 |
-
-⚠️ 与 antd 的 1 个 demo **未移植**（缺口见 `README.md` §5）：
-`component-token`（零运行时架构下 token 是构建期产物）。
-
-## API
-
-### Avatar
+## Avatar Props
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| shape | 形状 | `'circle' \| 'square'` | 取 `Avatar.Group` 的 `shape`，再兜底 `'circle'` |
-| size | 尺寸 | `SizeType \| 'default'(废弃) \| number \| ScreenSizeMap` | 取 `Avatar.Group` 的 `size` → `ConfigProvider.componentSize` → `'medium'` |
-| gap | 字符左右留白（像素） | `number` | `4` |
-| src | 图片来源。字符串 ⇒ `<img>`；VNode ⇒ 原样渲染 | `VNodeChild` | — |
-| srcSet | `<img>` 的 `srcset` | `string` | — |
-| draggable | `<img>` 的 `draggable` | `boolean \| 'true' \| 'false'` | — |
-| icon | 图标 | `VNodeChild` | — |
-| alt | `<img>` 的 `alt`。⚠️ **不传会没有 alt** ⇒ 读屏与 axe 都会报 | `string` | — |
-| crossOrigin | `<img>` 的 `crossorigin` | `'' \| 'anonymous' \| 'use-credentials'` | — |
-| onClick | 点击回调（**prop**，不是事件） | `(e?: MouseEvent) => void` | — |
-| onError | 图片加载失败回调。⚠️ **返回 `false` 阻止内置回退**（判据 `!== false`） | `() => boolean` | — |
-| prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取 |
-| class / style | **根元素原生 attrs**（不是 Props） | `string \| array \| object` / `CSSProperties` | — |
+| prefixCls | 本组件类名前缀 | `string` | 当前 ConfigProvider |
+| shape | 本地形状优先于 Group | `'circle' \| 'square'` | Group → `'circle'` |
+| size | 本地尺寸优先于 Group 和全局尺寸；响应式表取当前匹配且已配置的最大断点 | `SizeType \| 'default' \| number \| ScreenSizeMap` | Group → `componentSize` → `'medium'` |
+| gap | 默认内容缩放时预留的左右空间，像素 | `number` | `4` |
+| src | 字符串图片地址或完整 VNode 数据；图片失败后显示 icon/default | `VNodeChild` | — |
+| srcSet | 原生图片 srcset，变化后会重试图片 | `string` | — |
+| draggable | 原生图片拖拽属性 | `boolean \| 'true' \| 'false'` | — |
+| icon | 图标 VNode 数据 | `VNodeChild` | — |
+| alt | 原生图片替代文本；默认装饰图像，需表达身份时填写名称 | `string` | `''` |
+| crossOrigin | 原生图片 crossorigin | `'' \| 'anonymous' \| 'use-credentials'` | — |
+| beforeFallback | error 事件后同步调用；返回 false 保留失败图片 | `(event: Event) => boolean \| void` | — |
 
-> ⚠️ **渲染优先级是五路互斥**：字符串 `src` → `src` 是 VNode → `icon` → 字符（带缩放）→ 字符（首帧 `opacity:0`）。
+`class`、`style`、`id`、data/ARIA 和其他原生监听器落在稳定的 span 根；style 支持字符串、数组和对象，优先于尺寸、主题和 Provider 样式。文字内容在 SSR 即可见，挂载后随根和内容尺寸变化测量缩放。
 
-### Avatar.Group
+## Slots / Events
+
+| 插槽 | 内容 |
+|---|---|
+| image | 完整图片内容，存在时覆盖 src，包括有意为空的槽 |
+| icon | 无图片时的完整图标内容，存在时覆盖 icon 数据，包括空槽 |
+| default | 无图片/图标时的字符或完整业务内容 |
+
+| 事件 | 载荷 | 说明 |
+|---|---|---|
+| click | 原生 `MouseEvent` | 根点击一次发出一次；支持 `.once` 和合并监听器 |
+| error | 原生图片 `Event` | 加载失败时一次发出；监听器返回值不控制回退，取消使用 beforeFallback |
+
+## AvatarGroup / Avatar.Group
+
+两个入口指向同一个可安装组件。
 
 | 参数 | 说明 | 类型 |
 |---|---|---|
-| max | 溢出配置 | `{ count?, style?, popover? }` |
-| size | 透传给所有子头像（经 context） | `AvatarSize` |
-| shape | 透传给所有子头像（经 context） | `'circle' \| 'square'` |
-| maxCount / maxStyle / maxPopoverPlacement / maxPopoverTrigger | ⚠️ **都已废弃**，用 `max={{ … }}` | |
+| prefixCls | 组类名前缀 | `string` |
+| size | 经当前上下文传给子头像，支持数字、0和响应式表；子头像可覆盖 | `AvatarSize` |
+| shape | 经当前上下文传给子头像 | `'circle' \| 'square'` |
+| max | `{count?, style?, popover?}`：可见项数、指示器样式和 Popover 配置 | `AvatarGroupMax` |
 
-> ⚠️ `max.count` 为 `0`（或 `>=` 子元素数量）时**不截断**。
-> ⚠️ 子头像自己的 `size` / `shape` **覆盖** Group 透传的值。
+`max.count` 不包含 `+N` 指示器，0/未设置/负数/非有限数不限量，正小数向下取整。默认槽的直接子项（含展开的 Fragment、忽略注释）参与计数；需要多头像时直接使用 `v-for`。不读取业务组件内部渲染结果。
 
-### 实例方法（ref）
+溢出指示器拥有原生 button。默认保留 hover，同时支持点击和 Enter/Space；Escape 关闭并保留按钮焦点。显式 `focus` 和受控 `max.popover.open` 仍由 Popover 配置控制。`max.popover.content` 可覆盖浮层内容；`classNames` 对象/函数、styles、容器、触发方式和开关回调继续转发，`rootClassName` 是浮层配置类名。默认关闭销毁隐藏内容，可用 `destroyOnHidden:false` 保留内容状态。
 
-两个组件都暴露 `{ nativeElement }`（`Avatar` 是 `HTMLSpanElement`、`Avatar.Group` 是 `HTMLDivElement`）。
+组根原生 class/style/attrs 落在 div；两组件只暴露 `nativeElement`（span/div，可空）。没有头像业务 v-model 或额外实例方法。
 
-## Theme
+## Component Token
 
-### Component Token（12 个）
+通过 `ConfigProvider :theme="{components:{Avatar:{…}}}"` 设置当前组件 Token，支持源替换与移除、嵌套 Provider 和四种算法。每个实例与溢出内容读取所属主题；本地 style CSS 变量可覆盖对应根。
 
-| token | 说明 | 默认值 |
+| Token | 类型 | 默认来源 |
 |---|---|---|
-| `containerSize` / `containerSizeLG` / `containerSizeSM` | 头像尺寸（大/小） | `controlHeight` / `controlHeightLG` / `controlHeightSM` |
-| `textFontSize` / `textFontSizeLG` / `textFontSizeSM` | 头像文字大小 | `fontSize` |
-| `iconFontSize` / `iconFontSizeLG` / `iconFontSizeSM` | 头像图标大小 | `Math.round((fontSizeLG + fontSizeXL) / 2)` / `fontSizeHeading3` / `fontSize` |
-| `groupSpace` | 头像组间距 | `marginXXS` |
-| `groupOverlapping` | 头像组重叠宽度（**负**） | `-marginXS` |
-| `groupBorderColor` | 头像组边框颜色 | `colorBorderBg` |
+| containerSize / containerSizeLG / containerSizeSM | `number` | controlHeight / controlHeightLG / controlHeightSM |
+| textFontSize / textFontSizeLG / textFontSizeSM | `number` | fontSize |
+| iconFontSize / iconFontSizeSM | `number` | 平均字号 / fontSize |
+| iconFontSizeLG | `number \| string` | fontSizeHeading3 |
+| groupSpace | `number` | marginXXS |
+| groupOverlapping | `number`，允许负数 | -marginXS |
+| groupBorderColor | `string` | colorBorderBg |
 
-运行时调参用 CSS 变量：`--apollo-avatar-container-size` / `--apollo-avatar-group-overlapping` 等
-（12 个，变量名与 antd 的 `--ant-avatar-*` 同构）。
+开发版事件与 Group 旧别名的直接迁移见 [Avatar 迁移说明](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/migrations/avatar-contracts.md)。

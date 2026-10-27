@@ -24,7 +24,7 @@ const changeGap = () => {
 
 <template>
   <Space wrap>
-    <Avatar :style="{ backgroundColor: color, verticalAlign: 'middle' }" size="large" :gap="gap">
+    <Avatar :style="{ backgroundColor: color, color: index === 1 ? '#fff' : '#1f1f1f', verticalAlign: 'middle' }" size="large" :gap="gap">
       {{ user }}
     </Avatar>
     <Button

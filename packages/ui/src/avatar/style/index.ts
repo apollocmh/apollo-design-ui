@@ -1,45 +1,5 @@
-/**
- * Avatar 的样式生成（G4 产物）。
- *
- * 契约来源：antd 6.6.4 的 `es/avatar/style/index.js`（237 行）。选择器结构
- * **从真实产物提取**，不是推演 —— 可复现命令：
- *
- * ```sh
- * node tests/visual/debug/extract-avatar-css.mjs > /tmp/avatar-antd.css
- * ```
- *
- * 产物共 **24 条** `ant-avatar` 规则；本文件产出 **19 条**，差掉的 5 条是：
- * `resetComponent` 的 4 条 `box-sizing` 块（`BASE_CSS` 已覆盖，`badge` / `card` 范式）
- * 与 1 个 `.css-var-*` 声明块（其 12 条声明由 `genTokenDecls` 内联进根规则）。
- *
- * ── 从产物里抄下来的四处**非显然**结构 ────────────────────────────────────────
- *
- * 1. **`avatarSizeStyle` 是「一个工厂、三处复用」**（base / `-lg` / `-sm`）⇒ 它产出的
- *    `-square` / `-icon` 规则是**复合选择器**（`.{p}.{p}-square`），不是后代选择器。
- *    搞反会让「方形」作用到所有子孙。
- * 2. **两条规则用的是 `antCls` / `iconCls`，不是 `componentCls`**：
- *    `.{p} .{p}-image-img`（`.apollo-image-img`）与 `.{p}.{p}-icon > .apollo-icon`
- *    ⇒ D15 家族（`.anticon` → `.apollo-icon`）。
- * 3. **`-group` 的第三条是「子选择器 + `:not()`」**：`.{p}-group > *:not(:first-child)`
- *    —— 少一个 `>` 语义就变了（会作用到孙子）。
- * 4. **`resetComponent` 在产物里被 scoped 到 `.ant-avatar-css-var`**（cssVar 模式的产物形态；
- *    非 cssVar 时是 `.ant-avatar`）。本仓按 `card` / `breadcrumb` 的既有范式
- *    **合并进根规则**（`BASE_CSS` 已覆盖 box-sizing）。
- *
- * ── 2 个 `mergeToken` 派生的落点 ───────────────────────────────────────────────
- *
- * `avatarBg` / `avatarColor` 在上游是 `mergeToken` 派生（用户不可覆盖），产物里直接展开成
- * **全局** token 引用 ⇒ 本文件写 `var(--apollo-color-text-placeholder)` /
- * `var(--apollo-color-text-light-solid)`（详见 `style/token.ts`）。
- *
- * ── 这个函数证明什么 / 不证明什么 ────────────────────────────────────────────
- *
- * 证明：19 条规则的**选择器结构与声明顺序**与产物逐条对应；12 个 Component Token 的
- * 变量名与**构建期解析值**一致（`genTokenDecls`）。
- *
- * 不证明：视觉正确（L6 逐像素负责）；变量名存在于 `tokens.css`
- * （`test:build` 的 B7 校验）；`--apollo-*` 全局 token 的取值（theme 包负责）。
- */
+/** Static Avatar CSS and twelve default Token declarations. Selector foundations
+ * reference Ant Design 6.6.4; current Vue ownership and accessibility are Apollo contracts. */
 
 import { getDesignToken, token2CSSVar } from '@apollo-design/theme';
 import { type ComponentToken, prepareComponentToken } from './token';
@@ -51,7 +11,7 @@ let tokenCache: ComponentToken | null = null;
 
 function avatarTokenValues(): ComponentToken {
   if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken()) as ComponentToken;
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }
@@ -144,7 +104,7 @@ export function genAvatarStyle(rootPrefixCls: string): string {
     `  box-sizing:border-box;`,
     `  margin:0;`,
     `  padding:0;`,
-    `  color:${v('colorTextLightSolid')};`,
+    `  color:${v('colorText')};`,
     `  font-size:${tv('text-font-size')};`,
     `  line-height:${v('lineHeight')};`,
     `  list-style:none;`,
@@ -161,6 +121,13 @@ export function genAvatarStyle(rootPrefixCls: string): string {
     `  border:${v('lineWidth')} ${v('lineType')} transparent;`,
     ...sizeStyle(tv('container-size'), tv('text-font-size')),
     `}`,
+
+    `${cls}-string{flex:none;max-width:none;}`,
+    `${cls}-image-content{display:inline-flex;width:100%;height:100%;align-items:center;justify-content:center;}`,
+    `${cls}-image-content >img{width:100%;height:100%;object-fit:cover;}`,
+    `${cls}-icon-content{display:inline-flex;align-items:center;justify-content:center;}`,
+    `${group}-overflow{display:inline-flex;padding:0;border:0;background:transparent;font:inherit;border-radius:50%;vertical-align:middle;cursor:pointer;}`,
+    `${group}-overflow:focus-visible{outline:${v('controlOutlineWidth')} solid ${v('colorPrimary')};outline-offset:2px;}`,
 
     // ---- 图片态（`-image` 去掉背景）----
     `${cls}-image{`,
@@ -196,18 +163,25 @@ export function genAvatarStyle(rootPrefixCls: string): string {
 
     // ---- Avatar.Group ----
     `${group}{`,
+    ...genTokenDecls(p),
+    `  --${p}-avatar-current-group-overlapping:${tv('group-overlapping')};`,
+    `  --${p}-avatar-current-group-border-color:${tv('group-border-color')};`,
     `  display:inline-flex;`,
     `}`,
     `${group} ${cls}{`,
-    `  border-color:${tv('group-border-color')};`,
+    `  border-color:var(--${p}-avatar-current-group-border-color);`,
     `}`,
     // ⚠️ 子选择器 + `:not()`（少一个 `>` 会作用到孙子）
     `${group} >*:not(:first-child){`,
-    `  margin-inline-start:${tv('group-overlapping')};`,
+    `  margin-inline-start:var(--${p}-avatar-current-group-overlapping);`,
     `}`,
     // 溢出 Popover 里「+N」与隐藏头像之间的间距
+    `${group}-popover{`,
+    ...genTokenDecls(p),
+    `  --${p}-avatar-current-group-space:${tv('group-space')};`,
+    `}`,
     `${group}-popover ${cls}+${cls}{`,
-    `  margin-inline-start:${tv('group-space')};`,
+    `  margin-inline-start:var(--${p}-avatar-current-group-space);`,
     `}`,
   ].join('\n');
 }

@@ -2,6 +2,11 @@
 
 # Avatar 实现说明
 
+## 当前整改
+
+2026-10-27 的当前契约以双语API、导出类型和行为测试为准。完整单元清单见 [Avatar审计](../../../../docs/audit/2026-10-27-avatar-contract-audit.md)，集中公共变更见 [迁移](../../../../docs/migrations/avatar-contracts.md)。本次恢复当前Provider/全部12 Token、完整原生内容和事件、尺寸继承/测量及键盘溢出；保留9原Demo并增加真实Token演示。下文上游对照、旧回调/别名、缺少Token Demo和G/L通过数字均是历史记录，不能用来覆盖当前契约或宣称本轮验收完成。
+
+
 > 规则 R1：本文件必须记录（G11 前补齐）。
 
 ## 1. 对应 antd 组件

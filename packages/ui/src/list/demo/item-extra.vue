@@ -36,7 +36,7 @@ const totalLikes = computed(() => articles.value.reduce((sum, item) => sum + ite
         <ListItem>
           <ListItemMeta :title="article.title" :description="article.description">
             <template #avatar>
-              <Avatar style="background-color: #1677ff">{{ article.title.slice(0, 1) }}</Avatar>
+              <Avatar style="background-color: #1677ff; color: #000">{{ article.title.slice(0, 1) }}</Avatar>
             </template>
           </ListItemMeta>
           <template #extra>

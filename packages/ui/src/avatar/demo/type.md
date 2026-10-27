@@ -5,25 +5,10 @@ title:
   en-US: Type
 ---
 
-支持三种类型：**图标**、**字符**和**图片**。
+## zh-CN
 
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 type demo。⚠️ 图片用 **data URI**（外网图片会污染 L6 基线）
-import { Avatar, Space } from '@apollo-design/ui';
-import { h } from 'vue';
+图片、完整VNode、自定义颜色、字符与图标。自定义颜色成对指定前景和背景。
 
-const url =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
-</script>
+## en-US
 
-<template>
-  <Space :size="16" wrap>
-    <Avatar :icon="icon()" />
-    <Avatar>U</Avatar>
-    <Avatar :size="40">USER</Avatar>
-    <Avatar :src="url" alt="avatar" />
-    <Avatar :src="h('img', { draggable: false, src: url, alt: 'avatar' })" />
-  </Space>
-</template>
-```
+Images, complete VNodes, custom colours, characters and icons. Pair foreground and background colours.

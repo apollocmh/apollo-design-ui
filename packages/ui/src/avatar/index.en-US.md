@@ -4,82 +4,72 @@ title: Avatar
 subtitle: Avatar
 ---
 
-Avatars can be used to represent people or objects. They support images, icons, or characters.
-
-## When To Use
-
-- When showing a user/account avatar.
-- When representing an entity with an image, an icon, or characters.
+Represent a person or object using an image, icon or characters. Static avatars do not enter the Tab order; use a native link or button for an action.
 
 ## Demos
 
-See [`demo/`](./demo) (**9**, matching antd's user-visible demos).
+Ten examples cover size/shape, content types, dynamic characters/gap, badges, groups, overflow counts, image fallback, hidden layouts, responsive sizes and current component tokens. The max-count example switches whether its visible budget includes the indicator; `max.count` itself always counts visible children only.
 
-| demo | Content |
-|---|---|
-| `basic` | Three sizes × two shapes |
-| `type` | Icon / character / image |
-| `dynamic` | Auto font size for long strings (`gap` sets the side padding) |
-| `badge` | With badge |
-| `group` | `Avatar.Group` (incl. `max.count` truncation) |
-| `max-count` | `max.count` includes the overflow indicator |
-| `fallback` | Fallback when the image is missing |
-| `toggle-debug` | Compute character alignment while hidden |
-| `responsive` | Responsive size |
-
-⚠️ 1 antd demo is **not ported** (gap in `README.md` §5):
-`component-token` (tokens are build-time artifacts in a zero-runtime architecture).
-
-## API
-
-### Avatar
+## Avatar Props
 
 | Property | Description | Type | Default |
 |---|---|---|---|
-| shape | Shape | `'circle' \| 'square'` | `Avatar.Group`'s `shape`, then `'circle'` |
-| size | Size | `SizeType \| 'default'(deprecated) \| number \| ScreenSizeMap` | `Avatar.Group`'s `size` → `ConfigProvider.componentSize` → `'medium'` |
-| gap | Side padding of characters (px) | `number` | `4` |
-| src | Image source. A string renders `<img>`; a VNode is rendered as-is | `VNodeChild` | — |
-| srcSet | `<img>` `srcset` | `string` | — |
-| draggable | `<img>` `draggable` | `boolean \| 'true' \| 'false'` | — |
-| icon | Icon | `VNodeChild` | — |
-| alt | `<img>` `alt`. ⚠️ **Omitting it leaves the image without alt** (screen readers and axe will complain) | `string` | — |
-| crossOrigin | `<img>` `crossorigin` | `'' \| 'anonymous' \| 'use-credentials'` | — |
-| onClick | Click callback. ⚠️ This is a **prop**, not an event | `(e?: MouseEvent) => void` | — |
-| onError | Image error callback. ⚠️ **Return `false` to prevent the built-in fallback** (check is `!== false`) | `() => boolean` | — |
-| prefixCls | Class name prefix | `string` | from ConfigProvider |
-| class / style | **Native root attrs** (not Props) | `string \| array \| object` / `CSSProperties` | — |
+| prefixCls | Local component class prefix | `string` | current ConfigProvider |
+| shape | Local shape overrides Group | `'circle' \| 'square'` | Group → `'circle'` |
+| size | Local size overrides Group and global size; responsive maps use the largest matching configured breakpoint | `SizeType \| 'default' \| number \| ScreenSizeMap` | Group → componentSize → `'medium'` |
+| gap | Horizontal space reserved when scaling default content, px | `number` | `4` |
+| src | Image URL or complete VNode data; failures fall back to icon/default | `VNodeChild` | — |
+| srcSet | Native image srcset; changing it retries the image | `string` | — |
+| draggable | Native image draggable attribute | `boolean \| 'true' \| 'false'` | — |
+| icon | Complete icon data | `VNodeChild` | — |
+| alt | Native alternative; decorative by default, provide a name when identity matters | `string` | `''` |
+| crossOrigin | Native image crossorigin | `'' \| 'anonymous' \| 'use-credentials'` | — |
+| beforeFallback | Synchronous hook after error; return false to retain the failed image | `(event: Event) => boolean \| void` | — |
 
-> ⚠️ **Rendering priority is five-way exclusive**: string `src` → `src` is a VNode → `icon` → characters (scaled) → characters (first frame, `opacity:0`).
+Native class/style/id, data/ARIA and other native listeners target the stable span root. String, array and object styles override size, theme and Provider styles. Default text is visible during SSR; root and content resize observation updates its scale after mounting.
 
-### Avatar.Group
+## Slots / Events
+
+| Slot | Content |
+|---|---|
+| image | Complete image content; its presence overrides src, including an intentionally empty slot |
+| icon | Complete icon content when no image exists; its presence overrides icon data, including an empty slot |
+| default | Characters or complete business content when no image/icon exists |
+
+| Event | Payload | Behavior |
+|---|---|---|
+| click | native `MouseEvent` | Once per root click; merged listeners and `.once` work |
+| error | native image `Event` | Once per image failure; listener return values do not cancel fallback, use beforeFallback |
+
+## AvatarGroup / Avatar.Group
+
+Both exports identify the same installable component.
 
 | Property | Description | Type |
 |---|---|---|
-| max | Overflow config | `{ count?, style?, popover? }` |
-| size | Forwarded to every child avatar (via context) | `AvatarSize` |
-| shape | Forwarded to every child avatar (via context) | `'circle' \| 'square'` |
-| maxCount / maxStyle / maxPopoverPlacement / maxPopoverTrigger | ⚠️ **All deprecated**, use `max={{ … }}` | |
+| prefixCls | Group class prefix | `string` |
+| size | Current inherited size, including numbers, zero and responsive maps; children may override it | `AvatarSize` |
+| shape | Inherited shape | `'circle' \| 'square'` |
+| max | `{count?, style?, popover?}`: visible count, indicator style and Popover configuration | `AvatarGroupMax` |
 
-> ⚠️ No truncation happens when `max.count` is `0` (or `>=` the number of children).
-> ⚠️ A child's own `size` / `shape` **overrides** the value forwarded by the Group.
+`max.count` excludes the `+N` indicator. Zero, missing, negative and nonfinite counts are unlimited; positive fractions are floored. Direct default-slot children count after flattening Fragments and skipping comments. Render multiple avatars with a direct `v-for`; Group does not inspect a business component's internal output.
 
-### Ref
+Overflow owns a native button. Default hover also supports click and Enter/Space; Escape closes while preserving button focus. Explicit focus triggers and controlled `max.popover.open` remain Popover configuration. `max.popover.content` may override popup content. Object/function classNames, styles, containers, triggers and open callbacks are forwarded; rootClassName adds a popup class. Hidden content is destroyed by default; `destroyOnHidden:false` preserves its state.
 
-Both components expose `{ nativeElement }` (`HTMLSpanElement` for `Avatar`, `HTMLDivElement` for `Avatar.Group`).
+Native Group class/style/attrs target its div. Both components expose only nullable `nativeElement` (span/div). There is no avatar business model or additional instance method.
 
-## Theme
+## Component Token
 
-### Component Token (12)
+Configure current tokens through `ConfigProvider :theme="{components:{Avatar:{…}}}"`. Source replacement/removal, nested Providers and all four algorithms apply to each avatar and overflow content. Native style variables override their owning root.
 
-| Token | Description | Default |
+| Token | Type | Default source |
 |---|---|---|
-| `containerSize` / `containerSizeLG` / `containerSizeSM` | Avatar size (large/small) | `controlHeight` / `controlHeightLG` / `controlHeightSM` |
-| `textFontSize` / `textFontSizeLG` / `textFontSizeSM` | Font size of avatars | `fontSize` |
-| `iconFontSize` / `iconFontSizeLG` / `iconFontSizeSM` | Font size of avatar icons | `Math.round((fontSizeLG + fontSizeXL) / 2)` / `fontSizeHeading3` / `fontSize` |
-| `groupSpace` | Spacing between avatars in a group | `marginXXS` |
-| `groupOverlapping` | Overlapping of avatars in a group (**negative**) | `-marginXS` |
-| `groupBorderColor` | Border color of avatars in a group | `colorBorderBg` |
+| containerSize / containerSizeLG / containerSizeSM | `number` | controlHeight / controlHeightLG / controlHeightSM |
+| textFontSize / textFontSizeLG / textFontSizeSM | `number` | fontSize |
+| iconFontSize / iconFontSizeSM | `number` | average icon size / fontSize |
+| iconFontSizeLG | `number \| string` | fontSizeHeading3 |
+| groupSpace | `number` | marginXXS |
+| groupOverlapping | `number`, may be negative | -marginXS |
+| groupBorderColor | `string` | colorBorderBg |
 
-Runtime tuning uses CSS variables: `--apollo-avatar-container-size` / `--apollo-avatar-group-overlapping` …
-(12 of them, named the same way as antd's `--ant-avatar-*`).
+See the [Avatar migration notes](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/migrations/avatar-contracts.md) for development-stage event and Group alias changes.

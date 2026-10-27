@@ -36,7 +36,7 @@ const data = Array.from({ length: 3 }, (_, i) => ({
       <template #item="{ item }">
         <ListItem>
           <ListItemMeta :title="item.title" :description="item.description">
-            <template #avatar><Avatar style="background-color: #1677ff">{{ item.title.slice(0, 1) }}</Avatar></template>
+            <template #avatar><Avatar style="background-color: #1677ff; color: #000">{{ item.title.slice(0, 1) }}</Avatar></template>
           </ListItemMeta>
         </ListItem>
       </template>

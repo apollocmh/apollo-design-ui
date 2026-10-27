@@ -5,23 +5,10 @@ title:
   en-US: Compute alignment when hidden
 ---
 
-切换 Avatar 显示的时候，文本样式应该居中并正确调整字体大小。
+## zh-CN
 
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 toggle-debug demo。
-import { Avatar, Button, Space } from '@apollo-design/ui';
-import { ref } from 'vue';
+切换隐藏状态、头像尺寸和外层视觉缩放，验证恢复显示后的文字测量。
 
-const hide = ref(true);
-</script>
+## en-US
 
-<template>
-  <Space wrap>
-    <Button @click="toggle">Toggle Avatar visibility</Button>
-  </Space>
-  <div :style="{ textAlign: 'center' }">
-    <Avatar :style="{ ...hidden(), background: '#7265e6' }">Avatar</Avatar>
-  </div>
-</template>
-```
+Toggle visibility, avatar size and outer visual scaling to verify measurement after showing.

@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": { "paths": {} },
+  "include": [
+    "AvatarPublicContracts.vue",
+    "AvatarPublishedContracts.ts",
+    "../../../packages/ui/src/avatar/demo/*.vue"
+  ],
+  "exclude": []
+}

@@ -5,17 +5,10 @@ title:
   en-US: Responsive size
 ---
 
-头像大小可以根据屏幕大小自动调整。
+## zh-CN
 
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 responsive demo。
-import { Avatar } from '@apollo-design/ui';
+根据当前匹配且已配置的最大断点调整尺寸；显示文字以便观察。
 
-const responsiveSize = { xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 };
-</script>
+## en-US
 
-<template>
-  <Avatar :size="responsiveSize" />
-</template>
-```
+Use the largest matching configured breakpoint, with visible text to inspect the size.

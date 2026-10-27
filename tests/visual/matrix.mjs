@@ -1043,6 +1043,24 @@ export const COMPONENTS = {
     ],
   },
   avatar: {
+    apolloVariants: [
+      'basic',
+      'square',
+      'text',
+      'overflow',
+      'icon',
+      'src',
+      'numeric',
+      'badge',
+      'group',
+      'group-max',
+      'responsive',
+      'rtl',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+      'native-focus',
+    ],
     // 12 个 variant × 3 个 viewport = 36 张
     //
     // ⚠️ Avatar **没有浮层**（`group-max` 的溢出 Popover 在静态帧里不展开）

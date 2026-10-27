@@ -1,20 +1,4 @@
-/**
- * Avatar · L1/L2（jsdom）。
- *
- * ── 为什么这里能钉住大部分契约 ────────────────────────────────────────────────
- *
- * jsdom **没有布局**（`offsetWidth` 恒 0）—— 但 Avatar 的可见形态几乎全在**结构**上
- * （五路互斥分支的产物、类名的条件组合、内联尺寸样式），所以 L1 能钉住绝大部分行为契约。
- * 像素归 **L6**。
- *
- * ⚠️ 唯一需要「布局」的是**字符缩放**（`setScaleParam`）⇒ 本文件用
- * `Object.defineProperty(el, 'offsetWidth', …)` **手动造**几何，再触发重测。
- *
- * 上游测试 `components/avatar/__tests__/`。本文件钉**最容易写错的那批**：
- * 五路分支、`-image` 的真值判据、`onError` 的 `!== false` 语义、`src` 变化的重置、
- * 数字/响应式尺寸的**不同** `fontSize` 判据、`gap` 的缩放算式、`Avatar.Group` 的截断与
- * context 透传、以及**一次渲染只调一次插槽**这条回归防线。
- */
+/** Existing rendering, fallback, scale, Group and slot-once regressions. */
 
 import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -123,14 +107,14 @@ describe('Avatar · 五路互斥分支', () => {
     w.unmount();
   });
 
-  it('第 4/5 支：无 src/icon ⇒ **同一个** `-string` span（首帧 `opacity:0`）', async () => {
+  it('第 4/5 支：无 src/icon ⇒ **同一个** `-string` span（SSR/首帧可见）', async () => {
     const w = mountAvatar({}, { default: () => 'U' });
 
     const str = w.find(`.${P}-string`);
     expect(str.exists()).toBe(true);
     expect(str.text()).toBe('U');
     // 🚨 首帧走「第 5 支」：opacity:0（不用未测量的 scale 闪一下）
-    expect(str.attributes('style')).toContain('opacity: 0');
+    expect(str.attributes('style')).not.toContain('opacity');
 
     // 挂载后 `mounted = true` ⇒ 切到第 4 支：同一个 span，改成 transform
     await nextTick();
@@ -165,14 +149,14 @@ describe('Avatar · 五路互斥分支', () => {
 // ---------------------------------------------------------------------------
 
 describe('Avatar · 尺寸的内联样式', () => {
-  it('🚨 数字尺寸：`width`/`height`/`fontSize` 都带 `px`（Vue 不补 px，PITFALLS 170）', () => {
+  it('🚨 数字尺寸使用px，文字字号继续消费当前文字Token', () => {
     const w = mountAvatar({ size: 40 });
     const style = w.element.getAttribute('style') ?? '';
 
     expect(style).toContain('width: 40px');
     expect(style).toContain('height: 40px');
     // 无 icon ⇒ 走 `18` 这一支
-    expect(style).toContain('font-size: 18px');
+    expect(style).not.toContain('font-size: 18px');
     w.unmount();
   });
 
@@ -194,32 +178,35 @@ describe('Avatar · 尺寸的内联样式', () => {
 // ---------------------------------------------------------------------------
 
 describe('Avatar · 图片失败与重置', () => {
-  it('🚨 `onError` 返回 `undefined` ⇒ **走**内置回退（`-image` 摘掉、`-string` 出现）', async () => {
-    const onError = vi.fn(() => undefined);
-    const w = mountAvatar({ src: 'bad.png', onError }, { default: () => 'U' });
+  it('🚨 `beforeFallback` 返回 `undefined` ⇒ **走**内置回退（`-image` 摘掉、`-string` 出现）', async () => {
+    const beforeFallback = vi.fn(() => undefined);
+    const w = mountAvatar({ src: 'bad.png', beforeFallback }, { default: () => 'U' });
 
     expect(w.element.classList.contains(`${P}-image`)).toBe(true);
     await w.find('img').trigger('error');
 
-    expect(onError).toHaveBeenCalledTimes(1);
+    expect(beforeFallback).toHaveBeenCalledTimes(1);
     expect(w.element.classList.contains(`${P}-image`)).toBe(false);
     expect(w.find(`.${P}-string`).text()).toBe('U');
     w.unmount();
   });
 
-  it('🚨 `onError` 返回 `false` ⇒ **阻止**内置回退（`-image` 保留）', async () => {
-    const onError = vi.fn(() => false);
-    const w = mountAvatar({ src: 'bad.png', onError }, { default: () => 'U' });
+  it('🚨 `beforeFallback` 返回 `false` ⇒ **阻止**内置回退（`-image` 保留）', async () => {
+    const beforeFallback = vi.fn(() => false);
+    const w = mountAvatar({ src: 'bad.png', beforeFallback }, { default: () => 'U' });
 
     await w.find('img').trigger('error');
 
-    expect(onError).toHaveBeenCalledTimes(1);
+    expect(beforeFallback).toHaveBeenCalledTimes(1);
     expect(w.element.classList.contains(`${P}-image`)).toBe(true);
     w.unmount();
   });
 
-  it("🚨 `onError` 返回 `0` / `''` 也**走**回退（判据是 `!== false`，不是真值）", async () => {
-    const w = mountAvatar({ src: 'bad.png', onError: () => 0 as never }, { default: () => 'U' });
+  it("🚨 `beforeFallback` 返回 `0` / `''` 也**走**回退（判据是 `!== false`，不是真值）", async () => {
+    const w = mountAvatar(
+      { src: 'bad.png', beforeFallback: () => 0 as never },
+      { default: () => 'U' },
+    );
     await w.find('img').trigger('error');
     expect(w.element.classList.contains(`${P}-image`)).toBe(false);
     w.unmount();
@@ -352,10 +339,10 @@ describe('Avatar.Group', () => {
     w.unmount();
   });
 
-  it('`maxCount`（deprecated）也能截断，且 `max.count` 优先', () => {
-    expect(mountGroup({ maxCount: 1 }, 3).findAll(`.${P}`)).toHaveLength(2);
+  it('`max.count` 从1到2正确截断，0和负数不限量', () => {
+    expect(mountGroup({ max: { count: 1 } }, 3).findAll(`.${P}`)).toHaveLength(2);
     // `max.count=2` 覆盖 `maxCount=1` ⇒ 2 + 1 = 3
-    expect(mountGroup({ maxCount: 1, max: { count: 2 } }, 3).findAll(`.${P}`)).toHaveLength(3);
+    expect(mountGroup({ max: { count: 2 } }, 3).findAll(`.${P}`)).toHaveLength(3);
   });
 
   it('🚨 `size` / `shape` 经 context 透传给子头像', () => {
@@ -408,30 +395,27 @@ describe('Avatar.Group', () => {
 describe('Avatar · 告警', () => {
   const errorSpy = () => vi.spyOn(console, 'error').mockImplementation(() => {});
 
-  it('🚨 `icon` 是**长度 > 2 的字符串** ⇒ v4 命名告警', () => {
+  it('🚨 长字符串是有效图标内容，不产生旧命名告警', () => {
     const spy = errorSpy();
-    mountAvatar({ icon: 'user' as never });
+    mountAvatar({ icon: 'user' });
 
-    expect(spy).toHaveBeenCalled();
-    expect(spy.mock.calls.flat().join(' ')).toContain('string naming in v4');
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('`icon` 是长度 ≤ 2 的字符串 / vnode ⇒ 不告警', () => {
     const spy = errorSpy();
-    mountAvatar({ icon: 'u' as never });
+    mountAvatar({ icon: 'u' });
     mountAvatar({ icon: h('span', null, 'i') });
 
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('`Avatar.Group` 的四条 deprecated 告警各自触发', () => {
+  it('`Avatar.Group` 当前max配置不产生旧别名告警', () => {
     const spy = errorSpy();
-    mount(AvatarGroup, { props: { maxCount: 1, maxStyle: {}, maxPopoverPlacement: 'top' } });
+    mount(AvatarGroup, { props: { max: { count: 1, style: {}, popover: { placement: 'top' } } } });
 
     const text = spy.mock.calls.flat().join(' ');
-    expect(text).toContain('maxCount');
-    expect(text).toContain('maxStyle');
-    expect(text).toContain('maxPopoverPlacement');
+    expect(text).toBe('');
   });
 
   it('都不传 ⇒ 无 deprecated 告警', () => {

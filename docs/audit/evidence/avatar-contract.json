@@ -1,0 +1,3573 @@
+{
+  "inventoryCommit": "e5f63632",
+  "status": "implemented-functional-validation-passed-acceptance-pending",
+  "scope": "Avatar / AvatarGroup, 12 existing component Tokens, 9 original Demos plus actual Token Demo, 4 actual consuming Demos",
+  "before": {
+    "originalRuntime": {
+      "total": 112,
+      "passed": 112,
+      "failed": 0,
+      "pending": 0,
+      "cases": [
+        {
+          "name": "demo 条数等于 expectCount（9）",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/badge.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/basic.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/dynamic.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/fallback.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/group.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/max-count.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/responsive.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/toggle-debug.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/type.vue",
+          "status": "passed"
+        },
+        {
+          "name": "全部豁免都被用到（防腐烂）",
+          "status": "passed"
+        },
+        {
+          "name": "根是 `<span class=\"apollo-avatar apollo-avatar-circle apollo-avatar-css-var\">`",
+          "status": "passed"
+        },
+        {
+          "name": "`shape=\"square\"` ⇒ `-square`，**没有** `-circle`",
+          "status": "passed"
+        },
+        {
+          "name": "`size=\"large\"` ⇒ `-lg`；`size=\"small\"` ⇒ `-sm`；数字尺寸 ⇒ **不落类名**",
+          "status": "passed"
+        },
+        {
+          "name": "原生 `class`（字符串/数组/对象）/ `style` / attrs 落到根",
+          "status": "passed"
+        },
+        {
+          "name": "第 1 支：字符串 `src` ⇒ `<img>`，且根上 `-image`",
+          "status": "passed"
+        },
+        {
+          "name": "第 2 支：`src` 是 vnode ⇒ **原样渲染**（不包 `<img>`），且根上 `-image`",
+          "status": "passed"
+        },
+        {
+          "name": "第 3 支：`icon` ⇒ 渲染 icon，且根上 `-icon`",
+          "status": "passed"
+        },
+        {
+          "name": "第 4/5 支：无 src/icon ⇒ **同一个** `-string` span（首帧 `opacity:0`）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 第 4/5 支是**同一个元素**（挂载前后 `element` 引用不变）",
+          "status": "passed"
+        },
+        {
+          "name": "`src` 优先级高于 `icon`（字符串 src 赢）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 数字尺寸：`width`/`height`/`fontSize` 都带 `px`（Vue 不补 px，PITFALLS 170）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 数字尺寸 + `icon` ⇒ `fontSize = size / 2`",
+          "status": "passed"
+        },
+        {
+          "name": "字符串尺寸**不产生**内联样式",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `onError` 返回 `undefined` ⇒ **走**内置回退（`-image` 摘掉、`-string` 出现）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `onError` 返回 `false` ⇒ **阻止**内置回退（`-image` 保留）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `onError` 返回 `0` / `''` 也**走**回退（判据是 `!== false`，不是真值）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `src` 变化 ⇒ 重置「图片失败」（`-image` 回来）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `gap` 变化触发重测：`scale = (nodeWidth - gap*2) / childrenWidth`",
+          "status": "passed"
+        },
+        {
+          "name": "字符比容器窄 ⇒ 不缩放（`scale` 保持 1）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `gap * 2 >= nodeWidth` ⇒ 完全不缩放（`scale` 保持 1）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `src` 变化 ⇒ `scale` 重置为 1",
+          "status": "passed"
+        },
+        {
+          "name": "根是 `<div class=\"apollo-avatar-group apollo-avatar-css-var\">`，子头像平铺",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `max.count` ⇒ 截断成「前 N 个 + 一个 `+M`」，被隐藏的**不进 DOM**",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `max.count === 0` ⇒ **不截断**（判据是 `mergeCount &&`）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `max.count >= children.length` ⇒ 不截断",
+          "status": "passed"
+        },
+        {
+          "name": "`maxCount`（deprecated）也能截断，且 `max.count` 优先",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `size` / `shape` 经 context 透传给子头像",
+          "status": "passed"
+        },
+        {
+          "name": "子头像自己的 `size` / `shape` **覆盖** context",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `-rtl` 落在 **group 根**上（`Avatar` 自己不带 `-rtl`）",
+          "status": "passed"
+        },
+        {
+          "name": "`expose` 出的是 `{ nativeElement }`",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `icon` 是**长度 > 2 的字符串** ⇒ v4 命名告警",
+          "status": "passed"
+        },
+        {
+          "name": "`icon` 是长度 ≤ 2 的字符串 / vnode ⇒ 不告警",
+          "status": "passed"
+        },
+        {
+          "name": "`Avatar.Group` 的四条 deprecated 告警各自触发",
+          "status": "passed"
+        },
+        {
+          "name": "都不传 ⇒ 无 deprecated 告警",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `Avatar.Group` 一次渲染只调用插槽函数**一次**（children 被两处消费）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 children 变化时截断结果跟着变（缓存按渲染失效）",
+          "status": "passed"
+        },
+        {
+          "name": "[A] 用户的 root/container/arrow 三个语义槽都要保留",
+          "status": "passed"
+        },
+        {
+          "name": "[B] `rootClassName`（旧键）与 `classNames.root` 同时生效",
+          "status": "passed"
+        },
+        {
+          "name": "[C] 函数式 classNames 也要合并（不能被 root 顶掉）",
+          "status": "passed"
+        },
+        {
+          "name": "[D] 守卫：不给 classNames 时内置 `-popover` 仍落根，且 trigger/placement 生效",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:basic",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:prefix-cls:no-props",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:prefix-cls:custom",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:empty",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:shape-square",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:shape-circle",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-large",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-small",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-medium",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-number",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-number-icon",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-responsive",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-number-square",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:icon",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:src-string",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:src-string-attrs",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:src-vnode",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:src-and-icon",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:draggable-string",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:className",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:style",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:attrs",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-empty",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-max",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-max-style",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-max-count-deprecated",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-max-no-truncate",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-size-shape",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-rtl",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-className",
+          "status": "passed"
+        },
+        {
+          "name": "根是 `<span>` 且**不加 `role` / `aria-*`**",
+          "status": "passed"
+        },
+        {
+          "name": "`-string` span 也是纯 `<span>`（无 role）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `alt` 落到 `<img>` 上（图片头像的**唯一**可访问名来源）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 不含 `<img>` 时**全树没有任何 `aria-*`**",
+          "status": "passed"
+        },
+        {
+          "name": "`Avatar.Group` 的根是纯 `<div>`（无 role）",
+          "status": "passed"
+        },
+        {
+          "name": "Avatar 自己**不引入可聚焦元素**（`max` 溢出的触发器除外）",
+          "status": "passed"
+        },
+        {
+          "name": "text 无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "icon 无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "image 无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "square-large 无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "numeric 无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "`Avatar.Group`（含 `max` 溢出的 `+N`）无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "RTL 下也无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 不传 `alt` ⇒ **恰好**一条 `image-alt`（上游行为，`alt` 是使用者责任）",
+          "status": "passed"
+        },
+        {
+          "name": "`prepareComponentToken` 的**键与顺序**与上游一致（12 个）",
+          "status": "passed"
+        },
+        {
+          "name": "默认值逐条来自对应的别名 token（上游 `prepareComponentToken` 的算式）",
+          "status": "passed"
+        },
+        {
+          "name": "`genTokenDecls` 产出 **12** 条声明，变量名与顺序与 antd 的 css-var 块一致",
+          "status": "passed"
+        },
+        {
+          "name": "声明值是**构建期解析值**（颜色是字面量、尺寸带 `px`、负值保留符号）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 四个硬值 == antd 产物里的值（防腐断言）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 声明块**必须在根规则内部**（漏了它 = 12 个变量全未声明、头像塌成 0×0）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 规则引用的**自有**变量全部在 `genTokenDecls` 里（拼错 = 静默失效）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `genTokenDecls` 的每条都被规则引用（没有死变量）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 规则引用的 `--apollo-*` 全局 token 都在 `tokens.css` 里有声明",
+          "status": "passed"
+        },
+        {
+          "name": "avatarBg → colorTextPlaceholder",
+          "status": "passed"
+        },
+        {
+          "name": "avatarColor → colorTextLightSolid",
+          "status": "passed"
+        },
+        {
+          "name": "它们**不**出现在 `genTokenDecls` 里（派生值不是 Component Token）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 尺寸工厂产出的是**复合**选择器（`&{cls}-square` ⇒ `.apollo-avatar.apollo-avatar-square`）",
+          "status": "passed"
+        },
+        {
+          "name": "两条规则用的是 **antCls / iconCls**（`.apollo-image-img` / `.apollo-icon`）",
+          "status": "passed"
+        },
+        {
+          "name": "`-group` 的第三条是**子选择器 + `:not()`**",
+          "status": "passed"
+        },
+        {
+          "name": "`-group-popover` 用相邻兄弟选择器",
+          "status": "passed"
+        }
+      ]
+    },
+    "rootCauseContracts": {
+      "total": 19,
+      "passed": 1,
+      "failed": 18,
+      "pending": 0,
+      "cases": [
+        {
+          "name": "inherits numeric Group size and updates to explicit child size",
+          "status": "failed"
+        },
+        {
+          "name": "nested Groups retain explicit zero size",
+          "status": "failed"
+        },
+        {
+          "name": "preserves keyed child draft state on reorder",
+          "status": "failed"
+        },
+        {
+          "name": "updates only native Group attrs without requiring another prop change",
+          "status": "passed"
+        },
+        {
+          "name": "reads current Provider avatar config including replacement and removal",
+          "status": "failed"
+        },
+        {
+          "name": "native click listeners merge and once listeners emit native MouseEvents once",
+          "status": "failed"
+        },
+        {
+          "name": "error emits the original Event once and once listeners use the same payload",
+          "status": "failed"
+        },
+        {
+          "name": "beforeFallback may cancel without treating event listener return values as cancellation",
+          "status": "failed"
+        },
+        {
+          "name": "srcSet change retries a failed image without needing a different src",
+          "status": "failed"
+        },
+        {
+          "name": "the default image is decorative and explicit alt still wins",
+          "status": "failed"
+        },
+        {
+          "name": "complete image slot suppresses src, keeps all nodes and explicit empty suppresses fallback",
+          "status": "failed"
+        },
+        {
+          "name": "complete icon slot suppresses data, keeps all nodes and conditionally returns to data",
+          "status": "failed"
+        },
+        {
+          "name": "complete VNode image arrays and numeric zero are consumed as declared",
+          "status": "failed"
+        },
+        {
+          "name": "SSR text is visible and native roots are stable",
+          "status": "failed"
+        },
+        {
+          "name": "large gap resets previous text scaling instead of retaining stale scale",
+          "status": "failed"
+        },
+        {
+          "name": "overflow exposes a native keyboard button and keeps static avatars outside Tab order",
+          "status": "failed"
+        },
+        {
+          "name": "actual max-count Demo counts direct avatar children and updates its controls",
+          "status": "failed"
+        },
+        {
+          "name": "valid icon text has no obsolete upstream naming warning",
+          "status": "failed"
+        },
+        {
+          "name": "all twelve existing component Tokens follow current configuration on Avatar and Group",
+          "status": "failed"
+        }
+      ]
+    },
+    "productionBrowser": {
+      "results": [
+        {
+          "name": "default default actual text contrast",
+          "passed": false,
+          "error": "{\"ratio\":1.8388934157712187,\"foreground\":\"rgb(255, 255, 255)\",\"background\":\"rgba(0, 0, 0, 0.25)\",\"foregroundRGB\":[255,255,255],\"backgroundRGB\":[191,191,191]}"
+        },
+        {
+          "name": "default actual default overlap",
+          "passed": true,
+          "actual": "-8px"
+        },
+        {
+          "name": "dark default actual text contrast",
+          "passed": true,
+          "actual": {
+            "ratio": 8.193659099570759,
+            "foreground": "rgb(255, 255, 255)",
+            "background": "rgba(255, 255, 255, 0.25)",
+            "foregroundRGB": [
+              255,
+              255,
+              255
+            ],
+            "backgroundRGB": [
+              78.98039215686275,
+              78.98039215686275,
+              78.98039215686275
+            ]
+          }
+        },
+        {
+          "name": "dark actual default overlap",
+          "passed": true,
+          "actual": "-8px"
+        },
+        {
+          "name": "compact default actual text contrast",
+          "passed": false,
+          "error": "{\"ratio\":1.8388934157712187,\"foreground\":\"rgb(255, 255, 255)\",\"background\":\"rgba(0, 0, 0, 0.25)\",\"foregroundRGB\":[255,255,255],\"backgroundRGB\":[191,191,191]}"
+        },
+        {
+          "name": "compact actual default overlap",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'-8px' !== '-4px'\n"
+        },
+        {
+          "name": "both default actual text contrast",
+          "passed": true,
+          "actual": {
+            "ratio": 8.193659099570759,
+            "foreground": "rgb(255, 255, 255)",
+            "background": "rgba(255, 255, 255, 0.25)",
+            "foregroundRGB": [
+              255,
+              255,
+              255
+            ],
+            "backgroundRGB": [
+              78.98039215686275,
+              78.98039215686275,
+              78.98039215686275
+            ]
+          }
+        },
+        {
+          "name": "both actual default overlap",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'-8px' !== '-4px'\n"
+        },
+        {
+          "name": "inherited numeric Group actual dimensions",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n32 !== 56\n"
+        },
+        {
+          "name": "inherited sparse responsive Group uses largest matching configured breakpoint",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n32 !== 44\n"
+        },
+        {
+          "name": "direct sparse responsive size skips missing xl and lg",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n32 !== 44\n"
+        },
+        {
+          "name": "root-only CSS resize recalculates text fit",
+          "passed": false,
+          "error": "0.180451 → 0.180451"
+        },
+        {
+          "name": "current Token actual containerSize",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'32px' !== '46px'\n"
+        },
+        {
+          "name": "current Token actual containerSizeLG",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'40px' !== '60px'\n"
+        },
+        {
+          "name": "current Token actual containerSizeSM",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'24px' !== '30px'\n"
+        },
+        {
+          "name": "current Token actual textFontSize",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'14px' !== '15px'\n"
+        },
+        {
+          "name": "current Token actual textFontSizeLG",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'14px' !== '17px'\n"
+        },
+        {
+          "name": "current Token actual textFontSizeSM",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'14px' !== '13px'\n"
+        },
+        {
+          "name": "current Token actual iconFontSize",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'18px' !== '23px'\n"
+        },
+        {
+          "name": "current Token actual iconFontSizeLG",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'24px' !== '28px'\n"
+        },
+        {
+          "name": "current Token actual iconFontSizeSM",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'14px' !== '16px'\n"
+        },
+        {
+          "name": "current Token actual groupSpace",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'4px' !== '9px'\n"
+        },
+        {
+          "name": "current Token actual groupOverlapping",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'-8px' !== '-12px'\n"
+        },
+        {
+          "name": "current Token actual groupBorderColor",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'rgb(255, 255, 255)'\n- 'rgb(170, 187, 204)'\n       ^\n"
+        },
+        {
+          "name": "numeric text consumes current textFontSize Token",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'18px' !== '15px'\n"
+        },
+        {
+          "name": "native overflow keyboard entry",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n0 !== 1\n"
+        }
+      ],
+      "errors": []
+    },
+    "additionalIntegration": {
+      "results": [
+        {
+          "name": "default default actual text contrast",
+          "passed": true,
+          "actual": {
+            "ratio": 9.72890988132843,
+            "foreground": "rgba(0, 0, 0, 0.88)",
+            "background": "rgba(0, 0, 0, 0.25)",
+            "foregroundRGB": [
+              23.219607843137258,
+              23.219607843137258,
+              23.219607843137258
+            ],
+            "backgroundRGB": [
+              191,
+              191,
+              191
+            ]
+          }
+        },
+        {
+          "name": "default actual default overlap",
+          "passed": true,
+          "actual": "-8px"
+        },
+        {
+          "name": "dark default actual text contrast",
+          "passed": true,
+          "actual": {
+            "ratio": 6.490598341619866,
+            "foreground": "rgba(255, 255, 255, 0.85)",
+            "background": "rgba(255, 255, 255, 0.25)",
+            "foregroundRGB": [
+              228.7696270665129,
+              228.7696270665129,
+              228.7696270665129
+            ],
+            "backgroundRGB": [
+              78.98039215686275,
+              78.98039215686275,
+              78.98039215686275
+            ]
+          }
+        },
+        {
+          "name": "dark actual default overlap",
+          "passed": true,
+          "actual": "-8px"
+        },
+        {
+          "name": "compact default actual text contrast",
+          "passed": true,
+          "actual": {
+            "ratio": 9.72890988132843,
+            "foreground": "rgba(0, 0, 0, 0.88)",
+            "background": "rgba(0, 0, 0, 0.25)",
+            "foregroundRGB": [
+              23.219607843137258,
+              23.219607843137258,
+              23.219607843137258
+            ],
+            "backgroundRGB": [
+              191,
+              191,
+              191
+            ]
+          }
+        },
+        {
+          "name": "compact actual default overlap",
+          "passed": true,
+          "actual": "-4px"
+        },
+        {
+          "name": "both default actual text contrast",
+          "passed": true,
+          "actual": {
+            "ratio": 6.490598341619866,
+            "foreground": "rgba(255, 255, 255, 0.85)",
+            "background": "rgba(255, 255, 255, 0.25)",
+            "foregroundRGB": [
+              228.7696270665129,
+              228.7696270665129,
+              228.7696270665129
+            ],
+            "backgroundRGB": [
+              78.98039215686275,
+              78.98039215686275,
+              78.98039215686275
+            ]
+          }
+        },
+        {
+          "name": "both actual default overlap",
+          "passed": true,
+          "actual": "-4px"
+        },
+        {
+          "name": "inherited numeric Group actual dimensions",
+          "passed": true,
+          "actual": 56
+        },
+        {
+          "name": "inherited sparse responsive Group uses largest matching configured breakpoint",
+          "passed": true,
+          "actual": 44
+        },
+        {
+          "name": "direct sparse responsive size skips missing xl and lg",
+          "passed": true,
+          "actual": 44
+        },
+        {
+          "name": "root-only CSS resize recalculates text fit",
+          "passed": true,
+          "actual": {
+            "before": 0.541353,
+            "after": 1
+          }
+        },
+        {
+          "name": "current Token actual containerSize",
+          "passed": true,
+          "actual": "46px"
+        },
+        {
+          "name": "current Token actual containerSizeLG",
+          "passed": true,
+          "actual": "60px"
+        },
+        {
+          "name": "current Token actual containerSizeSM",
+          "passed": true,
+          "actual": "30px"
+        },
+        {
+          "name": "current Token actual textFontSize",
+          "passed": true,
+          "actual": "15px"
+        },
+        {
+          "name": "current Token actual textFontSizeLG",
+          "passed": true,
+          "actual": "17px"
+        },
+        {
+          "name": "current Token actual textFontSizeSM",
+          "passed": true,
+          "actual": "13px"
+        },
+        {
+          "name": "current Token actual iconFontSize",
+          "passed": true,
+          "actual": "23px"
+        },
+        {
+          "name": "current Token actual iconFontSizeLG",
+          "passed": true,
+          "actual": "28px"
+        },
+        {
+          "name": "current Token actual iconFontSizeSM",
+          "passed": true,
+          "actual": "16px"
+        },
+        {
+          "name": "current Token actual groupSpace",
+          "passed": true,
+          "actual": "9px"
+        },
+        {
+          "name": "current Token actual groupOverlapping",
+          "passed": true,
+          "actual": "-12px"
+        },
+        {
+          "name": "current Token actual groupBorderColor",
+          "passed": true,
+          "actual": "rgb(170, 187, 204)"
+        },
+        {
+          "name": "numeric text consumes current textFontSize Token",
+          "passed": true,
+          "actual": "15px"
+        },
+        {
+          "name": "unscoped overflow button inherits default group overlap",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'0px' !== '-8px'\n"
+        },
+        {
+          "name": "default overflow button inherits actual group overlap",
+          "passed": true,
+          "actual": "-8px"
+        },
+        {
+          "name": "native Group variable controls actual overlap and border",
+          "passed": false,
+          "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   border: 'rgb(255, 255, 255)',\n+   overlap: '-8px'\n-   border: 'rgb(10, 20, 30)',\n-   overlap: '-17px'\n  }\n"
+        },
+        {
+          "name": "actual Provider RTL reaches the Group layout",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n'ltr' !== 'rtl'\n"
+        },
+        {
+          "name": "explicit Group prefix reaches associated child avatars",
+          "passed": false,
+          "error": "Expected values to be strictly equal:\n\n0 !== 2\n"
+        },
+        {
+          "name": "native overflow keyboard entry",
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "actualConsumers": {
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "demo": "ListExtra",
+          "theme": "default",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListExtra",
+          "theme": "dark",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": false
+        },
+        {
+          "demo": "ListExtra",
+          "theme": "compact",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListExtra",
+          "theme": "both",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": false
+        },
+        {
+          "demo": "ListTokens",
+          "theme": "default",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListTokens",
+          "theme": "dark",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": false
+        },
+        {
+          "demo": "ListTokens",
+          "theme": "compact",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListTokens",
+          "theme": "both",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": false
+        },
+        {
+          "demo": "ListyRich",
+          "theme": "default",
+          "count": 4,
+          "colours": [
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListyRich",
+          "theme": "dark",
+          "count": 4,
+          "colours": [
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": false
+        },
+        {
+          "demo": "ListyRich",
+          "theme": "compact",
+          "count": 4,
+          "colours": [
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 4.700423164934792,
+              "foreground": "rgba(0, 0, 0, 0.88)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                2.674509803921569,
+                14.466666666666669,
+                31.000000000000004
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListyRich",
+          "theme": "both",
+          "count": 4,
+          "colours": [
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 3.390495575870114,
+              "foreground": "rgba(255, 255, 255, 0.85)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                220.27843137254902,
+                234.73333333333335,
+                255
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": false
+        },
+        {
+          "demo": "UploadAvatar",
+          "theme": "default",
+          "count": 1,
+          "colours": [],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "UploadAvatar",
+          "theme": "dark",
+          "count": 1,
+          "colours": [],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "UploadAvatar",
+          "theme": "compact",
+          "count": 1,
+          "colours": [],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "UploadAvatar",
+          "theme": "both",
+          "count": 1,
+          "colours": [],
+          "violations": [],
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "publicSfcType": "tests/browser/fixtures/AvatarPublicContracts.vue(13,33): error TS2322: Type 'ComponentStyleConfig' is not assignable to type 'ComponentConfigLike'.\n  Type 'ComponentStyleConfig' is not assignable to type '{ [key: string]: unknown; }'.\n    Index signature for type 'string' is missing in type 'ComponentStyleConfig'.\n"
+  },
+  "verified": {
+    "runtime": {
+      "total": 143,
+      "passed": 143,
+      "failed": 0,
+      "pending": 0,
+      "cases": [
+        {
+          "name": "inherits numeric Group size and updates to explicit child size",
+          "status": "passed"
+        },
+        {
+          "name": "nested Groups retain explicit zero size",
+          "status": "passed"
+        },
+        {
+          "name": "preserves keyed child draft state on reorder",
+          "status": "passed"
+        },
+        {
+          "name": "updates only native Group attrs without requiring another prop change",
+          "status": "passed"
+        },
+        {
+          "name": "reads current Provider avatar config including replacement and removal",
+          "status": "passed"
+        },
+        {
+          "name": "native click listeners merge and once listeners emit native MouseEvents once",
+          "status": "passed"
+        },
+        {
+          "name": "error emits the original Event once and once listeners use the same payload",
+          "status": "passed"
+        },
+        {
+          "name": "beforeFallback may cancel without treating event listener return values as cancellation",
+          "status": "passed"
+        },
+        {
+          "name": "srcSet change retries a failed image without needing a different src",
+          "status": "passed"
+        },
+        {
+          "name": "the default image is decorative and explicit alt still wins",
+          "status": "passed"
+        },
+        {
+          "name": "complete image slot suppresses src, keeps all nodes and explicit empty suppresses fallback",
+          "status": "passed"
+        },
+        {
+          "name": "complete icon slot suppresses data, keeps all nodes and conditionally returns to data",
+          "status": "passed"
+        },
+        {
+          "name": "complete VNode image arrays and numeric zero are consumed as declared",
+          "status": "passed"
+        },
+        {
+          "name": "SSR text is visible and native roots are stable",
+          "status": "passed"
+        },
+        {
+          "name": "large gap resets previous text scaling instead of retaining stale scale",
+          "status": "passed"
+        },
+        {
+          "name": "overflow exposes a native keyboard button and keeps static avatars outside Tab order",
+          "status": "passed"
+        },
+        {
+          "name": "actual max-count Demo counts direct avatar children and updates its controls",
+          "status": "passed"
+        },
+        {
+          "name": "valid icon text has no obsolete upstream naming warning",
+          "status": "passed"
+        },
+        {
+          "name": "all twelve existing component Tokens follow current configuration on Avatar and Group",
+          "status": "passed"
+        },
+        {
+          "name": "count 0 is unlimited",
+          "status": "passed"
+        },
+        {
+          "name": "count -1 is unlimited",
+          "status": "passed"
+        },
+        {
+          "name": "count NaN is unlimited",
+          "status": "passed"
+        },
+        {
+          "name": "count Infinity is unlimited",
+          "status": "passed"
+        },
+        {
+          "name": "fractional count floors once and the indicator counts actual hidden children",
+          "status": "passed"
+        },
+        {
+          "name": "local size and shape override current nested Group and Provider values",
+          "status": "passed"
+        },
+        {
+          "name": "explicit empty icon slot suppresses its data while image priority remains intact",
+          "status": "passed"
+        },
+        {
+          "name": "unrelated root and Provider updates preserve complete slot draft and focus",
+          "status": "passed"
+        },
+        {
+          "name": "current theme override replacement and removal restore fallback component values",
+          "status": "passed"
+        },
+        {
+          "name": "native Group and Avatar public refs point at their actual roots",
+          "status": "passed"
+        },
+        {
+          "name": "demo 条数等于 expectCount（10）",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/badge.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/basic.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/component-token.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/dynamic.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/fallback.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/group.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/max-count.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/responsive.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/toggle-debug.vue",
+          "status": "passed"
+        },
+        {
+          "name": "渲染 ../demo/type.vue",
+          "status": "passed"
+        },
+        {
+          "name": "全部豁免都被用到（防腐烂）",
+          "status": "passed"
+        },
+        {
+          "name": "根是 `<span class=\"apollo-avatar apollo-avatar-circle apollo-avatar-css-var\">`",
+          "status": "passed"
+        },
+        {
+          "name": "`shape=\"square\"` ⇒ `-square`，**没有** `-circle`",
+          "status": "passed"
+        },
+        {
+          "name": "`size=\"large\"` ⇒ `-lg`；`size=\"small\"` ⇒ `-sm`；数字尺寸 ⇒ **不落类名**",
+          "status": "passed"
+        },
+        {
+          "name": "原生 `class`（字符串/数组/对象）/ `style` / attrs 落到根",
+          "status": "passed"
+        },
+        {
+          "name": "第 1 支：字符串 `src` ⇒ `<img>`，且根上 `-image`",
+          "status": "passed"
+        },
+        {
+          "name": "第 2 支：`src` 是 vnode ⇒ **原样渲染**（不包 `<img>`），且根上 `-image`",
+          "status": "passed"
+        },
+        {
+          "name": "第 3 支：`icon` ⇒ 渲染 icon，且根上 `-icon`",
+          "status": "passed"
+        },
+        {
+          "name": "第 4/5 支：无 src/icon ⇒ **同一个** `-string` span（SSR/首帧可见）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 第 4/5 支是**同一个元素**（挂载前后 `element` 引用不变）",
+          "status": "passed"
+        },
+        {
+          "name": "`src` 优先级高于 `icon`（字符串 src 赢）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 数字尺寸使用px，文字字号继续消费当前文字Token",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 数字尺寸 + `icon` ⇒ `fontSize = size / 2`",
+          "status": "passed"
+        },
+        {
+          "name": "字符串尺寸**不产生**内联样式",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `beforeFallback` 返回 `undefined` ⇒ **走**内置回退（`-image` 摘掉、`-string` 出现）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `beforeFallback` 返回 `false` ⇒ **阻止**内置回退（`-image` 保留）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `beforeFallback` 返回 `0` / `''` 也**走**回退（判据是 `!== false`，不是真值）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `src` 变化 ⇒ 重置「图片失败」（`-image` 回来）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `gap` 变化触发重测：`scale = (nodeWidth - gap*2) / childrenWidth`",
+          "status": "passed"
+        },
+        {
+          "name": "字符比容器窄 ⇒ 不缩放（`scale` 保持 1）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `gap * 2 >= nodeWidth` ⇒ 完全不缩放（`scale` 保持 1）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `src` 变化 ⇒ `scale` 重置为 1",
+          "status": "passed"
+        },
+        {
+          "name": "根是 `<div class=\"apollo-avatar-group apollo-avatar-css-var\">`，子头像平铺",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `max.count` ⇒ 截断成「前 N 个 + 一个 `+M`」，被隐藏的**不进 DOM**",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `max.count === 0` ⇒ **不截断**（判据是 `mergeCount &&`）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `max.count >= children.length` ⇒ 不截断",
+          "status": "passed"
+        },
+        {
+          "name": "`max.count` 从1到2正确截断，0和负数不限量",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `size` / `shape` 经 context 透传给子头像",
+          "status": "passed"
+        },
+        {
+          "name": "子头像自己的 `size` / `shape` **覆盖** context",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `-rtl` 落在 **group 根**上（`Avatar` 自己不带 `-rtl`）",
+          "status": "passed"
+        },
+        {
+          "name": "`expose` 出的是 `{ nativeElement }`",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 长字符串是有效图标内容，不产生旧命名告警",
+          "status": "passed"
+        },
+        {
+          "name": "`icon` 是长度 ≤ 2 的字符串 / vnode ⇒ 不告警",
+          "status": "passed"
+        },
+        {
+          "name": "`Avatar.Group` 当前max配置不产生旧别名告警",
+          "status": "passed"
+        },
+        {
+          "name": "都不传 ⇒ 无 deprecated 告警",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `Avatar.Group` 一次渲染只调用插槽函数**一次**（children 被两处消费）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 children 变化时截断结果跟着变（缓存按渲染失效）",
+          "status": "passed"
+        },
+        {
+          "name": "[A] 用户的 root/container/arrow 三个语义槽都要保留",
+          "status": "passed"
+        },
+        {
+          "name": "[B] `rootClassName`（旧键）与 `classNames.root` 同时生效",
+          "status": "passed"
+        },
+        {
+          "name": "[C] 函数式 classNames 也要合并（不能被 root 顶掉）",
+          "status": "passed"
+        },
+        {
+          "name": "[D] 守卫：不给 classNames 时内置 `-popover` 仍落根，且 trigger/placement 生效",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:basic",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:prefix-cls:no-props",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:prefix-cls:custom",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:empty",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:shape-square",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:shape-circle",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-large",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-small",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-medium",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-number",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-number-icon",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-responsive",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:size-number-square",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:icon",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:src-string",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:src-string-attrs",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:src-vnode",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:src-and-icon",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:draggable-string",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:className",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:style",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:attrs",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-empty",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-max",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-max-style",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-max-count-deprecated",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-max-no-truncate",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-size-shape",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-rtl",
+          "status": "passed"
+        },
+        {
+          "name": "avatar:group-className",
+          "status": "passed"
+        },
+        {
+          "name": "retains every original scenario and no unused difference allowance",
+          "status": "passed"
+        },
+        {
+          "name": "根是 `<span>` 且**不加 `role` / `aria-*`**",
+          "status": "passed"
+        },
+        {
+          "name": "`-string` span 也是纯 `<span>`（无 role）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `alt` 落到 `<img>` 上（图片头像的**唯一**可访问名来源）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 不含 `<img>` 时**全树没有任何 `aria-*`**",
+          "status": "passed"
+        },
+        {
+          "name": "`Avatar.Group` 的根是纯 `<div>`（无 role）",
+          "status": "passed"
+        },
+        {
+          "name": "Avatar 自己**不引入可聚焦元素**（`max` 溢出的触发器除外）",
+          "status": "passed"
+        },
+        {
+          "name": "text 无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "icon 无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "image 无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "square-large 无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "numeric 无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "`Avatar.Group`（含 `max` 溢出的 `+N`）无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "RTL 下也无 axe violation",
+          "status": "passed"
+        },
+        {
+          "name": "默认装饰图像有空alt，无image-alt违规；明确alt仍由原生img消费",
+          "status": "passed"
+        },
+        {
+          "name": "`prepareComponentToken` 的**键与顺序**与上游一致（12 个）",
+          "status": "passed"
+        },
+        {
+          "name": "默认值逐条来自对应的别名 token（上游 `prepareComponentToken` 的算式）",
+          "status": "passed"
+        },
+        {
+          "name": "`genTokenDecls` 产出 **12** 条声明，变量名与顺序与 antd 的 css-var 块一致",
+          "status": "passed"
+        },
+        {
+          "name": "声明值是**构建期解析值**（颜色是字面量、尺寸带 `px`、负值保留符号）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 四个硬值 == antd 产物里的值（防腐断言）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 声明块**必须在根规则内部**（漏了它 = 12 个变量全未声明、头像塌成 0×0）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 规则引用的自有变量在公开或组宿主私有声明中均有定义",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 `genTokenDecls` 的每条都被规则引用（没有死变量）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 规则引用的 `--apollo-*` 全局 token 都在 `tokens.css` 里有声明",
+          "status": "passed"
+        },
+        {
+          "name": "avatarBg → colorTextPlaceholder",
+          "status": "passed"
+        },
+        {
+          "name": "accessible text → colorText",
+          "status": "passed"
+        },
+        {
+          "name": "它们**不**出现在 `genTokenDecls` 里（派生值不是 Component Token）",
+          "status": "passed"
+        },
+        {
+          "name": "🚨 尺寸工厂产出的是**复合**选择器（`&{cls}-square` ⇒ `.apollo-avatar.apollo-avatar-square`）",
+          "status": "passed"
+        },
+        {
+          "name": "两条规则用的是 **antCls / iconCls**（`.apollo-image-img` / `.apollo-icon`）",
+          "status": "passed"
+        },
+        {
+          "name": "`-group` 的第三条是**子选择器 + `:not()`**",
+          "status": "passed"
+        },
+        {
+          "name": "`-group-popover` 用相邻兄弟选择器",
+          "status": "passed"
+        }
+      ]
+    },
+    "productionBrowser": {
+      "results": [
+        {
+          "name": "default default actual text contrast",
+          "passed": true,
+          "actual": {
+            "ratio": 9.72890988132843,
+            "foreground": "rgba(0, 0, 0, 0.88)",
+            "background": "rgba(0, 0, 0, 0.25)",
+            "foregroundRGB": [
+              23.219607843137258,
+              23.219607843137258,
+              23.219607843137258
+            ],
+            "backgroundRGB": [
+              191,
+              191,
+              191
+            ]
+          }
+        },
+        {
+          "name": "default actual default overlap",
+          "passed": true,
+          "actual": "-8px"
+        },
+        {
+          "name": "dark default actual text contrast",
+          "passed": true,
+          "actual": {
+            "ratio": 6.490598341619866,
+            "foreground": "rgba(255, 255, 255, 0.85)",
+            "background": "rgba(255, 255, 255, 0.25)",
+            "foregroundRGB": [
+              228.7696270665129,
+              228.7696270665129,
+              228.7696270665129
+            ],
+            "backgroundRGB": [
+              78.98039215686275,
+              78.98039215686275,
+              78.98039215686275
+            ]
+          }
+        },
+        {
+          "name": "dark actual default overlap",
+          "passed": true,
+          "actual": "-8px"
+        },
+        {
+          "name": "compact default actual text contrast",
+          "passed": true,
+          "actual": {
+            "ratio": 9.72890988132843,
+            "foreground": "rgba(0, 0, 0, 0.88)",
+            "background": "rgba(0, 0, 0, 0.25)",
+            "foregroundRGB": [
+              23.219607843137258,
+              23.219607843137258,
+              23.219607843137258
+            ],
+            "backgroundRGB": [
+              191,
+              191,
+              191
+            ]
+          }
+        },
+        {
+          "name": "compact actual default overlap",
+          "passed": true,
+          "actual": "-4px"
+        },
+        {
+          "name": "both default actual text contrast",
+          "passed": true,
+          "actual": {
+            "ratio": 6.490598341619866,
+            "foreground": "rgba(255, 255, 255, 0.85)",
+            "background": "rgba(255, 255, 255, 0.25)",
+            "foregroundRGB": [
+              228.7696270665129,
+              228.7696270665129,
+              228.7696270665129
+            ],
+            "backgroundRGB": [
+              78.98039215686275,
+              78.98039215686275,
+              78.98039215686275
+            ]
+          }
+        },
+        {
+          "name": "both actual default overlap",
+          "passed": true,
+          "actual": "-4px"
+        },
+        {
+          "name": "inherited numeric Group actual dimensions",
+          "passed": true,
+          "actual": 56
+        },
+        {
+          "name": "inherited sparse responsive Group uses largest matching configured breakpoint",
+          "passed": true,
+          "actual": 44
+        },
+        {
+          "name": "direct sparse responsive size skips missing xl and lg",
+          "passed": true,
+          "actual": 44
+        },
+        {
+          "name": "root-only CSS resize recalculates text fit",
+          "passed": true,
+          "actual": {
+            "before": 0.541353,
+            "after": 1
+          }
+        },
+        {
+          "name": "current Token actual containerSize",
+          "passed": true,
+          "actual": "46px"
+        },
+        {
+          "name": "current Token actual containerSizeLG",
+          "passed": true,
+          "actual": "60px"
+        },
+        {
+          "name": "current Token actual containerSizeSM",
+          "passed": true,
+          "actual": "30px"
+        },
+        {
+          "name": "current Token actual textFontSize",
+          "passed": true,
+          "actual": "15px"
+        },
+        {
+          "name": "current Token actual textFontSizeLG",
+          "passed": true,
+          "actual": "17px"
+        },
+        {
+          "name": "current Token actual textFontSizeSM",
+          "passed": true,
+          "actual": "13px"
+        },
+        {
+          "name": "current Token actual iconFontSize",
+          "passed": true,
+          "actual": "23px"
+        },
+        {
+          "name": "current Token actual iconFontSizeLG",
+          "passed": true,
+          "actual": "28px"
+        },
+        {
+          "name": "current Token actual iconFontSizeSM",
+          "passed": true,
+          "actual": "16px"
+        },
+        {
+          "name": "current Token actual groupSpace",
+          "passed": true,
+          "actual": "9px"
+        },
+        {
+          "name": "current Token actual groupOverlapping",
+          "passed": true,
+          "actual": "-12px"
+        },
+        {
+          "name": "current Token actual groupBorderColor",
+          "passed": true,
+          "actual": "rgb(170, 187, 204)"
+        },
+        {
+          "name": "numeric text consumes current textFontSize Token",
+          "passed": true,
+          "actual": "15px"
+        },
+        {
+          "name": "unscoped overflow button inherits default group overlap",
+          "passed": true,
+          "actual": "-8px"
+        },
+        {
+          "name": "default overflow button inherits actual group overlap",
+          "passed": true,
+          "actual": "-8px"
+        },
+        {
+          "name": "native Group variable controls actual overlap and border",
+          "passed": true,
+          "actual": {
+            "overlap": "-17px",
+            "border": "rgb(10, 20, 30)"
+          }
+        },
+        {
+          "name": "actual Provider RTL reaches the Group layout",
+          "passed": true,
+          "actual": "rtl"
+        },
+        {
+          "name": "explicit Group prefix reaches associated child avatars",
+          "passed": true
+        },
+        {
+          "name": "native overflow keyboard entry",
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "demoThemes": {
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "demo": "basic",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "type",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "type",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "type",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "type",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "dynamic",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "dynamic",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "dynamic",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "dynamic",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "badge",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "badge",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "badge",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "badge",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "group",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "group",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "group",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "group",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "max-count",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "max-count",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "max-count",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "max-count",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "fallback",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "fallback",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "fallback",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "fallback",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "toggle-debug",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "toggle-debug",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "toggle-debug",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "toggle-debug",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "responsive",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "responsive",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "responsive",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "responsive",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "name": "actual dynamic name and gap refit",
+          "passed": true
+        },
+        {
+          "name": "actual native v-for count, switch and InputNumber",
+          "passed": true
+        },
+        {
+          "name": "actual invalid image data falls back without network requests",
+          "passed": true
+        },
+        {
+          "name": "hidden mount, show, size changes and outer CSS scale",
+          "passed": true
+        },
+        {
+          "name": "actual responsive Demo at three viewports",
+          "passed": true
+        },
+        {
+          "name": "actual Token toggle updates roots and open Teleport spacing",
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "actualConsumers": {
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "demo": "ListExtra",
+          "theme": "default",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListExtra",
+          "theme": "dark",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListExtra",
+          "theme": "compact",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListExtra",
+          "theme": "both",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListTokens",
+          "theme": "default",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListTokens",
+          "theme": "dark",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListTokens",
+          "theme": "compact",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListTokens",
+          "theme": "both",
+          "count": 3,
+          "colours": [
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListyRich",
+          "theme": "default",
+          "count": 4,
+          "colours": [
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListyRich",
+          "theme": "dark",
+          "count": 4,
+          "colours": [
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListyRich",
+          "theme": "compact",
+          "count": 4,
+          "colours": [
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "ListyRich",
+          "theme": "both",
+          "count": 4,
+          "colours": [
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            },
+            {
+              "ratio": 5.116844937908165,
+              "foreground": "rgb(0, 0, 0)",
+              "background": "rgb(22, 119, 255)",
+              "foregroundRGB": [
+                0,
+                0,
+                0
+              ],
+              "backgroundRGB": [
+                22,
+                119,
+                255
+              ]
+            }
+          ],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "UploadAvatar",
+          "theme": "default",
+          "count": 1,
+          "colours": [],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "UploadAvatar",
+          "theme": "dark",
+          "count": 1,
+          "colours": [],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "UploadAvatar",
+          "theme": "compact",
+          "count": 1,
+          "colours": [],
+          "violations": [],
+          "passed": true
+        },
+        {
+          "demo": "UploadAvatar",
+          "theme": "both",
+          "count": 1,
+          "colours": [],
+          "violations": [],
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "ssrHydration": {
+      "browser": "150.0.7871.125",
+      "checks": [
+        "Node SSR: visible text",
+        "Node SSR: decorative image",
+        "Node SSR: named image",
+        "Node SSR: complete image",
+        "Node SSR: complete icon",
+        "Node SSR: numeric inherited size",
+        "Node SSR: responsive map",
+        "Node SSR: overflow native button",
+        "hydration preserves four roots, pretyped editor, focus/selection and actual public refs",
+        "current theme/config/direction/prefix stage 1 preserves identity and adjacent isolation",
+        "current theme/config/direction/prefix stage 2 preserves identity and adjacent isolation",
+        "current theme/config/direction/prefix stage 0 preserves identity and adjacent isolation",
+        "keyed member reorder preserves actual editor, draft and focus",
+        "native Space/Enter/Escape and destroyOnHidden:false preserve popup business state",
+        "controlled overflow honors refused and accepted updates exactly once",
+        "actual hydrated document axe",
+        "three full unmount/remount cycles clear refs and popup ownership"
+      ],
+      "errors": []
+    },
+    "publicTypes": "Avatar 6 scenarios / 12 runtime+typecheck tests; zero type or source errors",
+    "sourceSfc": "vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.avatar-contracts.json: exit 0",
+    "publishedSfc": "vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.avatar-published.json: exit 0, root/deep/static/ref positive and negative types and all ten Demos",
+    "build": "UI declarations and 69 CSS succeeded; full topological strict L7: 151 checks, FAIL 0, PENDING 0, n/a 67",
+    "strict": "pnpm exec vue-tsc --noEmit: exit 0"
+  },
+  "implementationSourceHashes": {
+    "packages/ui/src/avatar/Avatar.vue": "cdb50ef720452c359468287f5ebb8ec839e63d58b88939eced14b27b1d3e6f3e",
+    "packages/ui/src/avatar/AvatarGroup.vue": "aa329edda7d90a3715424849487d6b7e8d53c3d253e4a8135aa4c806cfd8e6ec",
+    "packages/ui/src/avatar/PLAN.md": "88e50591663a9152da2dc40f27942f1305e6242be31b54ce25eed72da33551e1",
+    "packages/ui/src/avatar/README.md": "c5e47bd4612cade41d5477dde52203ec2f356d75315a73c7c55b25956694099e",
+    "packages/ui/src/avatar/context.ts": "2893abd0eb08f30a075c49c33d77ff8ee7d3bd27246037f374c6c98d29293fc6",
+    "packages/ui/src/avatar/demo/badge.md": "48d2c5092791522e0e80ac10bb41e39ddbcc5bb147f7c3ace0d9447eb4467403",
+    "packages/ui/src/avatar/demo/badge.vue": "1b242b9465a54d30967b3b1265afa4aa76f2c6d92b0594a7e5250a67415cf527",
+    "packages/ui/src/avatar/demo/basic.md": "64bc432faa59713083cb04fd308057c7430396e41d294007025ed691c7b52c3e",
+    "packages/ui/src/avatar/demo/basic.vue": "fdfa75fbac334173cd25d4d19eb0852c5efc5f8618328b0fcfa9fb652c0be80c",
+    "packages/ui/src/avatar/demo/component-token.md": "e01c9a4bdce9bf1004b26456648a28541fac45fce1b01403efc4c658d6e4c4c8",
+    "packages/ui/src/avatar/demo/component-token.vue": "498d317bf36cf7b3cf56fda3d9ee52bdbc7eedac2ab71588b9dc7b2bb758c8a3",
+    "packages/ui/src/avatar/demo/dynamic.md": "9f48b8d1bbcd4cc798f634d0fc0b44f5e9408235487307ee8c1b19101f1022a3",
+    "packages/ui/src/avatar/demo/dynamic.vue": "1f27fcfb722aa21c328bbf81ce2df9172018689ed75cdae6f87efa45683c51dc",
+    "packages/ui/src/avatar/demo/fallback.md": "f451feaf0a14fd78c38e0e2b1fd1038945eaee2ed3d3a240555b20052fb9c5fb",
+    "packages/ui/src/avatar/demo/fallback.vue": "550fd69685eef2538f95f2d22a64438581f60ec8a055b6831a729c578d92a453",
+    "packages/ui/src/avatar/demo/group.md": "bd3f8c29380b3b265f856cf4604078a9525cf66f5e625d6fef4c8ccf13aefbec",
+    "packages/ui/src/avatar/demo/group.vue": "6598dd47153ef424bd23e6d3dece0aa3ae9d88bb64b1d069e94c978904bdb9fd",
+    "packages/ui/src/avatar/demo/max-count.md": "546cd1ed7b0c4aa3bf6109474588ecd97a68fbe402c5ce35cf5c7e044987d7dc",
+    "packages/ui/src/avatar/demo/max-count.vue": "494566dee6c5cd4063caf77bc4330585f0d3feeee99ccbd4449b7082b2a79129",
+    "packages/ui/src/avatar/demo/responsive.md": "7a0984f18f7672735a43f13836539972ff701e0bb725b72f3169f9cf3f9accf8",
+    "packages/ui/src/avatar/demo/responsive.vue": "7c9621374dc17f0213b659fb4cdd1caaeda73969aa83877ab687c8cb9f7bc47d",
+    "packages/ui/src/avatar/demo/toggle-debug.md": "f0848dd49bd594ac200d6ff3271057bb5262fd5dc51480836b14b7ed7b76a2e5",
+    "packages/ui/src/avatar/demo/toggle-debug.vue": "c785c39cf2a01395b89b428ab8de6073a13d19a7b59a2f4f5833ff8b7a57f179",
+    "packages/ui/src/avatar/demo/type.md": "24d206f983e299887fc1476365588c2e7ea8fbfdbd0faf2ffa3e76ec1c6bdb35",
+    "packages/ui/src/avatar/demo/type.vue": "1513f33f2c0c384c41966ba2b4a5ca494d85f2dbb51f18074f5d146ce6905749",
+    "packages/ui/src/avatar/index.en-US.md": "3ff1c212e179353a27210888e1c56804aac611549619588ace7247c80fcd3fd1",
+    "packages/ui/src/avatar/index.ts": "20122b36000816683575b5c0bf0c44778f7c8554940c68d86a2f9226604a4aa8",
+    "packages/ui/src/avatar/index.zh-CN.md": "da444be20b9120007e9d32a98fe63b1090a39da8719217e930313fcfa2bdd2a5",
+    "packages/ui/src/avatar/interface.ts": "9f4dfcf12b8966d42473ea8e475deb3c566ed5ae81eff31c3bfa8e89e7ceccee",
+    "packages/ui/src/avatar/style/index.ts": "6dc709b4d5aeaca0e216f948af3d3f0724b231a83b5c7e37aea2332261d33ea4",
+    "packages/ui/src/avatar/style/token.ts": "731d42953ca07d28c559e866fe6d354afef05f63b12a0786a9a706c2d047da1a",
+    "packages/ui/src/avatar/use-avatar-theme.ts": "fed74b13da713cddde36e9f3e265971ec32b55854a634cdfe2919374b0ad5ab8"
+  },
+  "verifiedNormal": [
+    "Group native attrs update was verified normal before changes; regression retained.",
+    "max.count=0 remains unlimited; static avatars do not enter Tab order.",
+    "No Avatar business v-model or new instance method is required."
+  ],
+  "pending": [
+    "Final related consumers/shared runtime run",
+    "Root strict final result and global format/content/Registry checks",
+    "Actual Docs content/types/test/build/browser and authorized publication",
+    "Clean commit Apollo visual candidates, individual review, acceptance and exact comparison"
+  ],
+  "boundaries": [
+    "Custom image VNodes/slots own their native image error handling; Avatar handles its own string src image.",
+    "Remote consumer images alone use deterministic local SVG responses in browser verification.",
+    "SSR empty alt serializes as a bare empty attribute; browser alt is the empty string.",
+    "Three private group host CSS values preserve computed variable ownership, not additional public component Tokens.",
+    "Full L7 is a build gate, not full-library runtime/type/visual completion."
+  ]
+}

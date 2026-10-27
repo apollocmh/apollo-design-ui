@@ -5,19 +5,10 @@ title:
   en-US: maxCount includes overflow
 ---
 
-使用 HOC 封装 `Avatar.Group`，添加 `overflowInFinal` 属性。开启后 `max.count` 表示总共显示的元素数量，会预留 1 个位置给溢出指示器。
+## zh-CN
 
-```vue
-<script setup lang="ts">
-// 对齐 antd 的 max-count demo。
-import { Avatar, AvatarGroup } from '@apollo-design/ui';
-</script>
+直接v-for渲染头像。开关只改变演示中预留的可见名额：两项加指示器，或三项加指示器；不改变max.count定义。
 
-<template>
-  <AvatarGroup :max="{ count: 2 }">
-    <Avatar>A</Avatar>
-    <Avatar>B</Avatar>
-    <Avatar>C</Avatar>
-  </AvatarGroup>
-</template>
-```
+## en-US
+
+Render direct v-for children. The switch changes the demo budget: two visible items plus the indicator, or three plus the indicator; it does not redefine max.count.

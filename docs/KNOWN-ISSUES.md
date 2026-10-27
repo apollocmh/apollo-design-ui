@@ -624,3 +624,8 @@ Tag成组实现阶段补齐Select关联激活键红绿复现和默认CSS压缩�
 
 
 Tag验收提交db24a00c已上线；工作流40461805810与Pages7352080560成功。线上29项真实Demo/交互/十二卡片及200进度页通过，24条Demo既有404 SPA兜底明确登记。实现、验收与授权文档发布完成，回执见tag-contract.json；全库其他单元继续。
+
+
+### 2026-10-27 · Avatar / AvatarGroup 完整单元成组修复（验收中）
+
+完整盘点后保留初始19契约/26浏览器及补充4条集成红灯，成组修复Vue事件/取消回退、完整槽/数据、当前尺寸/测量/Provider/12 Token、业务key、原生溢出按钮、RTL和前缀；四旧Group别名直接迁移，9原Demo保留并补Token示例。当前143四层、12类型、实际发布SFC、31浏览器、46原Demo主题/交互、17 SSR水合、16真实消费和全包严格L7 151项通过。List/Listy三处蓝底头像暗色3.39已修正成对前景。最终相关回归、Docs与清洁自有视觉尚待验收，不表示Avatar或全库完成。见[完整清单](audit/2026-10-27-avatar-contract-audit.md)、[证据](audit/evidence/avatar-contract.json)及[迁移](migrations/avatar-contracts.md)。

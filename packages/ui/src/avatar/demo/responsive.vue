@@ -6,5 +6,5 @@ const responsiveSize = { xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 };
 </script>
 
 <template>
-  <Avatar :size="responsiveSize" />
+  <Avatar :size="responsiveSize">Vue</Avatar>
 </template>

@@ -152,8 +152,8 @@ describe('Avatar · 声明 ↔ 引用（双向）', () => {
     }
   });
 
-  it('🚨 规则引用的**自有**变量全部在 `genTokenDecls` 里（拼错 = 静默失效）', () => {
-    const declared = new Set(decls.map((d) => splitDecl(d)[0]));
+  it('🚨 规则引用的自有变量在公开或组宿主私有声明中均有定义', () => {
+    const declared = new Set([...css.matchAll(/(--apollo-avatar-[a-z-]+):/g)].map((m) => m[1]));
     const referenced = [...css.matchAll(/var\((--apollo-avatar-[a-z-]+)\)/g)].map(
       (m) => m[1] as string,
     );
@@ -196,7 +196,7 @@ describe('Avatar · 2 个 `mergeToken` 派生的落点（用户不可覆盖）',
    */
   it.each([
     ['avatarBg → colorTextPlaceholder', 'background:var(--apollo-color-text-placeholder)'],
-    ['avatarColor → colorTextLightSolid', 'color:var(--apollo-color-text-light-solid)'],
+    ['accessible text → colorText', 'color:var(--apollo-color-text)'],
   ])('%s', (_label, expected) => {
     expect(css).toContain(expected);
   });
