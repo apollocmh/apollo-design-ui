@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-26T05:52:49.021Z",
+  "generatedAt": "2026-10-27T10:23:51.236Z",
   "sourceFacts": "dependencies.json（包定义） + scaffold-packages.mjs（dir/phase2Order/deps/poc/notDo） + components.json（消费者） + packages/*/src（规模度量）",
   "legend": {
     "status": "todo → analyzing → implementing → testing → verifying → completed（blocked 为旁路状态）",
@@ -1238,9 +1238,9 @@
           "@apollo-design/overlay",
           "@apollo-design/ui"
         ],
-        "srcFiles": 8,
-        "srcLines": 1021,
-        "exportDeclarations": 40
+        "srcFiles": 9,
+        "srcLines": 1154,
+        "exportDeclarations": 42
       }
     },
     {
@@ -1704,7 +1704,7 @@
           "@apollo-design/ui"
         ],
         "srcFiles": 5,
-        "srcLines": 871,
+        "srcLines": 911,
         "exportDeclarations": 24
       }
     },

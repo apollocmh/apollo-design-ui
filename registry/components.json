@@ -32,8 +32,7 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 71,
-      "testing": 1
+      "completed": 72
     },
     "byPriority": {
       "P0": 8,
@@ -52,8 +51,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 71,
-    "remainingCount": 1
+    "completedCount": 72,
+    "remainingCount": 0
   },
   "milestones": [],
   "components": [
@@ -5098,7 +5097,7 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "M",
-      "status": "testing",
+      "status": "completed",
       "derived": {
         "dagLevel": 4,
         "unblocks": 0,
@@ -5125,18 +5124,18 @@
       "interactionStatus": "done",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "in-progress",
-      "docsStatus": "in-progress",
-      "notes": "2026-10-27完整单元成组整改：143四层、12类型、源/发布SFC、31生产浏览器、46实际Demo、17 SSR水合、16实际消费及全包严格L7 151项通过。四旧Group别名直接迁移；9原Demo保留并补Token例。相关最终回归、实际Docs和48张清洁Apollo视觉待验收，不宣称本单元或全库完成。",
+      "visualStatus": "done",
+      "docsStatus": "done",
+      "notes": "2026-10-27 Avatar完整单元收口：实现9af2a24f，共享ef832304；本组件143通过，相关4484条4461通过/23为独立db24a00c同名Typography基线失败，未假报全绿。72类型、42浏览器、46Demo、17 SSR水合、16消费、Docs161/27本地与线上通过；48清洁自有图审查及原始RGBA一致、相关105视觉通过。全库其余单元/最终门禁继续。",
       "layerNotes": {
-        "currentAudit": "docs/audit/2026-10-27-avatar-contract-audit.md；证据avatar-contract.json；迁移docs/migrations/avatar-contracts.md。完整清单统一验收中。",
+        "currentAudit": "docs/audit/2026-10-27-avatar-contract-audit.md；avatar-contract.json、avatar-visual-browser.json、avatar-docs-publication.json和迁移。完整清单收口，仅Avatar；Typography基线23条另案优先整改。",
         "api": "click/error原生Vue事件，同步beforeFallback取消；image/icon完整槽和VNode数据；max单一配置，静态子组件/ref保持。",
         "token": "12既有Token实际消费，当前源/替换/移除和四算法；Group/Popover所属宿主私有计算值保持原生变量优先级，不增加公开Token。",
         "interaction": "初始19契约18失败；当前业务key/草稿/焦点、尺寸测量、原生溢出键盘、受控接受/拒绝和三次重挂验证通过。",
         "type": "真实AvatarConfig→Provider类型红灯已修正闭合映射；12 Avatar类型和强类型源/发布SFC及全部10Demo通过。",
-        "a11y": "默认装饰alt、可见SSR文字、默认对比度和原生溢出焦点；当前实际浏览器/水合/消费检查通过，Docs最终待验。",
-        "visual": "48张当前Apollo候选待清洁提交生成/逐张审阅/复验；36历史参考图保留。",
-        "docs": "10Demo、双语API/元数据/迁移已同步；当前Docs构建不是本单元最终浏览器/发布回执，待统一验收。"
+        "a11y": "装饰alt、可见SSR文字、默认对比度和原生溢出焦点；axe/真实键盘、受控拒绝关闭、容器切换及所属关闭焦点验证，Chrome150。",
+        "visual": "清洁4e2d9d04逐张审阅48张，ef832304重建后原始RGBA48一致；Avatar/List105项既有门禁0差异，List三处SVG原始AA边界保留；原405批准/PNG和42参考文件不变。",
+        "docs": "10Demo、双语API/元数据/迁移同步；Docs161测试/85页SSG、27本地/线上浏览器通过，8a2410d9发布workflow40486797828成功；Demo深链20处现有404 SPA边界明示。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -5164,7 +5163,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     }
   ],
   "referenceEvidence": {

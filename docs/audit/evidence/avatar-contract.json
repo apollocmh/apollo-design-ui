@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "e5f63632",
-  "status": "implemented-functional-validation-passed-acceptance-pending",
+  "status": "avatar-unit-accepted-with-unrelated-baseline-failures-disclosed",
   "scope": "Avatar / AvatarGroup, 12 existing component Tokens, 9 original Demos plus actual Token Demo, 4 actual consuming Demos",
   "before": {
     "originalRuntime": {
@@ -3566,11 +3566,7 @@
     "max.count=0 remains unlimited; static avatars do not enter Tab order.",
     "No Avatar business v-model or new instance method is required."
   ],
-  "pending": [
-    "Frozen-source related four-layer runtime retry",
-    "Final Registry and formatting after acceptance state update",
-    "Authorized Docs publication and live browser receipt"
-  ],
+  "pending": [],
   "boundaries": [
     "Custom image VNodes/slots own their native image error handling; Avatar handles its own string src image.",
     "Remote consumer images alone use deterministic local SVG responses in browser verification.",
@@ -6303,6 +6299,1765 @@
           "fallbackDocuments": [],
           "errors": []
         }
+      },
+      "relatedRuntime": {
+        "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme --maxWorkers=2 packages/portal/src packages/overlay/src packages/ui/src/_internal packages/ui/src/avatar packages/ui/src/config-provider packages/ui/src/grid packages/ui/src/list packages/ui/src/listy packages/ui/src/upload packages/ui/src/color-picker packages/ui/src/date-picker packages/ui/src/drawer packages/ui/src/dropdown packages/ui/src/float-button packages/ui/src/form packages/ui/src/image packages/ui/src/mentions packages/ui/src/menu packages/ui/src/message packages/ui/src/modal packages/ui/src/notification packages/ui/src/popconfirm packages/ui/src/popover packages/ui/src/progress packages/ui/src/rate packages/ui/src/segmented packages/ui/src/select packages/ui/src/slider packages/ui/src/steps packages/ui/src/table packages/ui/src/tooltip packages/ui/src/tour packages/ui/src/tree-select packages/ui/src/typography --reporter=default --reporter=json --outputFile=/tmp/apollo-avatar-frozen-runtime-retry.json",
+        "exit": 1,
+        "files": 273,
+        "total": 4484,
+        "passed": 4461,
+        "failed": 23,
+        "pending": 0,
+        "durationSeconds": 443.16,
+        "perScope": {
+          "overlay": {
+            "passed": 68
+          },
+          "portal": {
+            "passed": 87
+          },
+          "_internal": {
+            "passed": 59
+          },
+          "avatar": {
+            "passed": 143
+          },
+          "config-provider": {
+            "passed": 115
+          },
+          "date-picker": {
+            "passed": 424
+          },
+          "color-picker": {
+            "passed": 144
+          },
+          "drawer": {
+            "passed": 87
+          },
+          "dropdown": {
+            "passed": 80
+          },
+          "float-button": {
+            "passed": 91
+          },
+          "grid": {
+            "passed": 91
+          },
+          "form": {
+            "passed": 142
+          },
+          "image": {
+            "passed": 381
+          },
+          "list": {
+            "passed": 153
+          },
+          "listy": {
+            "passed": 60
+          },
+          "mentions": {
+            "passed": 152
+          },
+          "message": {
+            "passed": 70
+          },
+          "menu": {
+            "passed": 122
+          },
+          "notification": {
+            "passed": 98
+          },
+          "modal": {
+            "passed": 138
+          },
+          "popconfirm": {
+            "passed": 84
+          },
+          "popover": {
+            "passed": 92
+          },
+          "progress": {
+            "passed": 101
+          },
+          "rate": {
+            "passed": 72
+          },
+          "segmented": {
+            "passed": 100
+          },
+          "select": {
+            "passed": 152
+          },
+          "slider": {
+            "passed": 145
+          },
+          "steps": {
+            "passed": 120
+          },
+          "table": {
+            "passed": 183
+          },
+          "tooltip": {
+            "passed": 95
+          },
+          "tour": {
+            "passed": 97
+          },
+          "tree-select": {
+            "passed": 115
+          },
+          "upload": {
+            "passed": 108
+          },
+          "typography": {
+            "passed": 292,
+            "failed": 23
+          }
+        },
+        "perFile": [
+          {
+            "file": "packages/overlay/src/__tests__/actions.test.ts",
+            "results": {
+              "passed": 20
+            }
+          },
+          {
+            "file": "packages/overlay/src/__tests__/close-focus.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/overlay/src/__tests__/esc-stack.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/overlay/src/__tests__/use-overlay.test.ts",
+            "results": {
+              "passed": 28
+            }
+          },
+          {
+            "file": "packages/portal/src/__tests__/container.test.ts",
+            "results": {
+              "passed": 24
+            }
+          },
+          {
+            "file": "packages/portal/src/__tests__/esc-key-down.test.ts",
+            "results": {
+              "passed": 7
+            }
+          },
+          {
+            "file": "packages/portal/src/__tests__/owner-effects.test.ts",
+            "results": {
+              "passed": 3
+            }
+          },
+          {
+            "file": "packages/portal/src/__tests__/portal-globals.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/portal/src/__tests__/portal-reactivity.test.ts",
+            "results": {
+              "passed": 1
+            }
+          },
+          {
+            "file": "packages/portal/src/__tests__/portal.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/portal/src/__tests__/scroll-locker.test.ts",
+            "results": {
+              "passed": 5
+            }
+          },
+          {
+            "file": "packages/portal/src/__tests__/teleport-focus.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/portal/src/__tests__/use-portal.test.ts",
+            "results": {
+              "passed": 24
+            }
+          },
+          {
+            "file": "packages/ui/src/_internal/__tests__/button-consumer-updates.test.ts",
+            "results": {
+              "passed": 6
+            }
+          },
+          {
+            "file": "packages/ui/src/_internal/__tests__/button-content-reference.test.ts",
+            "results": {
+              "passed": 5
+            }
+          },
+          {
+            "file": "packages/ui/src/_internal/__tests__/color-composite.test.ts",
+            "results": {
+              "passed": 6
+            }
+          },
+          {
+            "file": "packages/ui/src/_internal/__tests__/overflow.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/_internal/__tests__/popup-prefix.test.ts",
+            "results": {
+              "passed": 2
+            }
+          },
+          {
+            "file": "packages/ui/src/_internal/__tests__/trigger-theme.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/_internal/__tests__/trigger.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/_internal/__tests__/use-merge-semantic.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/avatar/__tests__/contract-audit.test.ts",
+            "results": {
+              "passed": 29
+            }
+          },
+          {
+            "file": "packages/ui/src/avatar/__tests__/demo.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/avatar/__tests__/index.test.ts",
+            "results": {
+              "passed": 36
+            }
+          },
+          {
+            "file": "packages/ui/src/avatar/__tests__/s29-issue29.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/config-provider/__tests__/demo.test.ts",
+            "results": {
+              "passed": 10
+            }
+          },
+          {
+            "file": "packages/ui/src/config-provider/__tests__/index.test.ts",
+            "results": {
+              "passed": 61
+            }
+          },
+          {
+            "file": "packages/ui/src/config-provider/__tests__/s39-issue39.test.ts",
+            "results": {
+              "passed": 6
+            }
+          },
+          {
+            "file": "packages/ui/src/config-provider/__tests__/s48-issue48.test.ts",
+            "results": {
+              "passed": 3
+            }
+          },
+          {
+            "file": "packages/ui/src/config-provider/__tests__/theme-state.test.ts",
+            "results": {
+              "passed": 3
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/demo.test.ts",
+            "results": {
+              "passed": 31
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/footer.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/index.test.ts",
+            "results": {
+              "passed": 33
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/input-attrs.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/mask-format.test.ts",
+            "results": {
+              "passed": 18
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/picker-pure.test.ts",
+            "results": {
+              "passed": 66
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/picker-typing.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/picker-value-change.test.ts",
+            "results": {
+              "passed": 36
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/popup-shell.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/s1-smoke.test.ts",
+            "results": {
+              "passed": 10
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/s2-commit.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/s2-typing.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/s3-mask.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/s4-focus.test.ts",
+            "results": {
+              "passed": 5
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/s5-mode.test.ts",
+            "results": {
+              "passed": 5
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/s5-multiple.test.ts",
+            "results": {
+              "passed": 9
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/s5-presets.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/s6-issue5.test.ts",
+            "results": {
+              "passed": 19
+            }
+          },
+          {
+            "file": "packages/ui/src/color-picker/__tests__/color.test.ts",
+            "results": {
+              "passed": 25
+            }
+          },
+          {
+            "file": "packages/ui/src/color-picker/__tests__/demo.test.ts",
+            "results": {
+              "passed": 18
+            }
+          },
+          {
+            "file": "packages/ui/src/color-picker/__tests__/dom-attrs.test.ts",
+            "results": {
+              "passed": 7
+            }
+          },
+          {
+            "file": "packages/ui/src/color-picker/__tests__/engine.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/color-picker/__tests__/index.test.ts",
+            "results": {
+              "passed": 20
+            }
+          },
+          {
+            "file": "packages/ui/src/drawer/__tests__/demo.test.ts",
+            "results": {
+              "passed": 20
+            }
+          },
+          {
+            "file": "packages/ui/src/drawer/__tests__/engine.test.ts",
+            "results": {
+              "passed": 10
+            }
+          },
+          {
+            "file": "packages/ui/src/drawer/__tests__/index.test.ts",
+            "results": {
+              "passed": 10
+            }
+          },
+          {
+            "file": "packages/ui/src/drawer/__tests__/s20-issue20.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/drawer/__tests__/slots.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/dropdown/__tests__/demo.test.ts",
+            "results": {
+              "passed": 21
+            }
+          },
+          {
+            "file": "packages/ui/src/dropdown/__tests__/index.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/dropdown/__tests__/s21-issue21.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/ui/src/float-button/__tests__/button-consumer-contracts.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/float-button/__tests__/demo.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/float-button/__tests__/index.test.ts",
+            "results": {
+              "passed": 23
+            }
+          },
+          {
+            "file": "packages/ui/src/float-button/__tests__/s27-issue27.test.ts",
+            "results": {
+              "passed": 9
+            }
+          },
+          {
+            "file": "packages/ui/src/grid/__tests__/breakpoint-reactivity.test.ts",
+            "results": {
+              "passed": 7
+            }
+          },
+          {
+            "file": "packages/ui/src/grid/__tests__/demo.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/grid/__tests__/index.test.ts",
+            "results": {
+              "passed": 21
+            }
+          },
+          {
+            "file": "packages/ui/src/form/__tests__/demo.test.ts",
+            "results": {
+              "passed": 37
+            }
+          },
+          {
+            "file": "packages/ui/src/form/__tests__/form.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/form/__tests__/prefix-reactivity.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/ui/src/form/__tests__/s8-issue8.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/contract-audit.test.ts",
+            "results": {
+              "passed": 59
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/demo.test.ts",
+            "results": {
+              "passed": 20
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/image-slot.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/index.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/interaction-contract.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/native-events.test.ts",
+            "results": {
+              "passed": 20
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/native-style.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/popup-provider.test.ts",
+            "results": {
+              "passed": 18
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/prefix-reactivity.test.ts",
+            "results": {
+              "passed": 14
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/preview-close.test.ts",
+            "results": {
+              "passed": 18
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/preview-focus.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/preview-motion.test.ts",
+            "results": {
+              "passed": 3
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/preview-slots.test.ts",
+            "results": {
+              "passed": 19
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/preview-state.test.ts",
+            "results": {
+              "passed": 29
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/preview-transform.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/provider-direction.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/provider-reactivity.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/registration-order.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/scale-bounds.test.ts",
+            "results": {
+              "passed": 14
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/theme-context.test.ts",
+            "results": {
+              "passed": 10
+            }
+          },
+          {
+            "file": "packages/ui/src/list/__tests__/contract-audit.test.ts",
+            "results": {
+              "passed": 22
+            }
+          },
+          {
+            "file": "packages/ui/src/list/__tests__/demo.test.ts",
+            "results": {
+              "passed": 14
+            }
+          },
+          {
+            "file": "packages/ui/src/list/__tests__/index.test.ts",
+            "results": {
+              "passed": 33
+            }
+          },
+          {
+            "file": "packages/ui/src/list/__tests__/item-slots.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/ui/src/list/__tests__/slots.test.ts",
+            "results": {
+              "passed": 9
+            }
+          },
+          {
+            "file": "packages/ui/src/listy/__tests__/demo.test.ts",
+            "results": {
+              "passed": 10
+            }
+          },
+          {
+            "file": "packages/ui/src/listy/__tests__/index.test.ts",
+            "results": {
+              "passed": 19
+            }
+          },
+          {
+            "file": "packages/ui/src/listy/__tests__/s38-issue38.test.ts",
+            "results": {
+              "passed": 6
+            }
+          },
+          {
+            "file": "packages/ui/src/mentions/__tests__/core-emits.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/mentions/__tests__/demo.test.ts",
+            "results": {
+              "passed": 18
+            }
+          },
+          {
+            "file": "packages/ui/src/mentions/__tests__/empty-slot.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/mentions/__tests__/engine.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/mentions/__tests__/index.test.ts",
+            "results": {
+              "passed": 29
+            }
+          },
+          {
+            "file": "packages/ui/src/mentions/__tests__/native-bindings.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/ui/src/mentions/__tests__/native-events.test.ts",
+            "results": {
+              "passed": 7
+            }
+          },
+          {
+            "file": "packages/ui/src/mentions/__tests__/native-keyboard.test.ts",
+            "results": {
+              "passed": 6
+            }
+          },
+          {
+            "file": "packages/ui/src/mentions/__tests__/popup-slot.test.ts",
+            "results": {
+              "passed": 3
+            }
+          },
+          {
+            "file": "packages/ui/src/message/__tests__/demo.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/message/__tests__/index.test.ts",
+            "results": {
+              "passed": 20
+            }
+          },
+          {
+            "file": "packages/ui/src/message/__tests__/s43-issue43.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/message/__tests__/s45-issue45.test.ts",
+            "results": {
+              "passed": 2
+            }
+          },
+          {
+            "file": "packages/ui/src/menu/__tests__/audit-2026-10-22.test.ts",
+            "results": {
+              "passed": 7
+            }
+          },
+          {
+            "file": "packages/ui/src/menu/__tests__/demo.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/menu/__tests__/engine.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/menu/__tests__/index.test.ts",
+            "results": {
+              "passed": 20
+            }
+          },
+          {
+            "file": "packages/ui/src/menu/__tests__/inline-motion.test.ts",
+            "results": {
+              "passed": 7
+            }
+          },
+          {
+            "file": "packages/ui/src/menu/__tests__/s22-issue22.test.ts",
+            "results": {
+              "passed": 20
+            }
+          },
+          {
+            "file": "packages/ui/src/notification/__tests__/audit-motion-config.test.ts",
+            "results": {
+              "passed": 2
+            }
+          },
+          {
+            "file": "packages/ui/src/notification/__tests__/audit-ref-stability.test.ts",
+            "results": {
+              "passed": 1
+            }
+          },
+          {
+            "file": "packages/ui/src/notification/__tests__/demo.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/notification/__tests__/engine.test.ts",
+            "results": {
+              "passed": 10
+            }
+          },
+          {
+            "file": "packages/ui/src/notification/__tests__/index.test.ts",
+            "results": {
+              "passed": 21
+            }
+          },
+          {
+            "file": "packages/ui/src/notification/__tests__/s44-issue44.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/notification/__tests__/s46-issue46.test.ts",
+            "results": {
+              "passed": 2
+            }
+          },
+          {
+            "file": "packages/ui/src/notification/__tests__/s47-issue47.test.ts",
+            "results": {
+              "passed": 3
+            }
+          },
+          {
+            "file": "packages/ui/src/modal/__tests__/demo.test.ts",
+            "results": {
+              "passed": 25
+            }
+          },
+          {
+            "file": "packages/ui/src/modal/__tests__/engine.test.ts",
+            "results": {
+              "passed": 19
+            }
+          },
+          {
+            "file": "packages/ui/src/modal/__tests__/index.test.ts",
+            "results": {
+              "passed": 26
+            }
+          },
+          {
+            "file": "packages/ui/src/modal/__tests__/s19-issue19.test.ts",
+            "results": {
+              "passed": 6
+            }
+          },
+          {
+            "file": "packages/ui/src/popconfirm/__tests__/async-demo.test.ts",
+            "results": {
+              "passed": 1
+            }
+          },
+          {
+            "file": "packages/ui/src/popconfirm/__tests__/demo.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/popconfirm/__tests__/icon-slot.test.ts",
+            "results": {
+              "passed": 6
+            }
+          },
+          {
+            "file": "packages/ui/src/popconfirm/__tests__/index.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/popover/__tests__/demo.test.ts",
+            "results": {
+              "passed": 14
+            }
+          },
+          {
+            "file": "packages/ui/src/popover/__tests__/index.test.ts",
+            "results": {
+              "passed": 10
+            }
+          },
+          {
+            "file": "packages/ui/src/popover/__tests__/native-attrs.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/popover/__tests__/s25-issue25.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/progress/__tests__/demo.test.ts",
+            "results": {
+              "passed": 19
+            }
+          },
+          {
+            "file": "packages/ui/src/progress/__tests__/index.test.ts",
+            "results": {
+              "passed": 30
+            }
+          },
+          {
+            "file": "packages/ui/src/rate/__tests__/demo.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/rate/__tests__/index.test.ts",
+            "results": {
+              "passed": 26
+            }
+          },
+          {
+            "file": "packages/ui/src/segmented/__tests__/demo.test.ts",
+            "results": {
+              "passed": 18
+            }
+          },
+          {
+            "file": "packages/ui/src/segmented/__tests__/index.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/segmented/__tests__/keyboard.test.ts",
+            "results": {
+              "passed": 10
+            }
+          },
+          {
+            "file": "packages/ui/src/select/__tests__/demo.test.ts",
+            "results": {
+              "passed": 38
+            }
+          },
+          {
+            "file": "packages/ui/src/select/__tests__/dynamic-options.test.ts",
+            "results": {
+              "passed": 7
+            }
+          },
+          {
+            "file": "packages/ui/src/select/__tests__/index.test.ts",
+            "results": {
+              "passed": 47
+            }
+          },
+          {
+            "file": "packages/ui/src/slider/__tests__/demo.test.ts",
+            "results": {
+              "passed": 17
+            }
+          },
+          {
+            "file": "packages/ui/src/slider/__tests__/index.test.ts",
+            "results": {
+              "passed": 64
+            }
+          },
+          {
+            "file": "packages/ui/src/steps/__tests__/demo.test.ts",
+            "results": {
+              "passed": 23
+            }
+          },
+          {
+            "file": "packages/ui/src/steps/__tests__/index.test.ts",
+            "results": {
+              "passed": 20
+            }
+          },
+          {
+            "file": "packages/ui/src/steps/__tests__/inline-slot.test.ts",
+            "results": {
+              "passed": 3
+            }
+          },
+          {
+            "file": "packages/ui/src/steps/__tests__/native-reactivity.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/table/__tests__/demo.test.ts",
+            "results": {
+              "passed": 46
+            }
+          },
+          {
+            "file": "packages/ui/src/table/__tests__/index.test.ts",
+            "results": {
+              "passed": 41
+            }
+          },
+          {
+            "file": "packages/ui/src/table/__tests__/s17-issue17.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/ui/src/table/__tests__/util.test.ts",
+            "results": {
+              "passed": 29
+            }
+          },
+          {
+            "file": "packages/ui/src/table/__tests__/virtual.test.ts",
+            "results": {
+              "passed": 9
+            }
+          },
+          {
+            "file": "packages/ui/src/tooltip/__tests__/content-slots.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/tooltip/__tests__/dbg.test.ts",
+            "results": {
+              "passed": 1
+            }
+          },
+          {
+            "file": "packages/ui/src/tooltip/__tests__/demo.test.ts",
+            "results": {
+              "passed": 17
+            }
+          },
+          {
+            "file": "packages/ui/src/tooltip/__tests__/index.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/tooltip/__tests__/s24-issue24.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/tour/__tests__/demo.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/tour/__tests__/index.test.ts",
+            "results": {
+              "passed": 31
+            }
+          },
+          {
+            "file": "packages/ui/src/tour/__tests__/keyboard.test.ts",
+            "results": {
+              "passed": 7
+            }
+          },
+          {
+            "file": "packages/ui/src/tour/__tests__/s53-issue53.test.ts",
+            "results": {
+              "passed": 6
+            }
+          },
+          {
+            "file": "packages/ui/src/tree-select/__tests__/compact.test.ts",
+            "results": {
+              "passed": 2
+            }
+          },
+          {
+            "file": "packages/ui/src/tree-select/__tests__/demo.test.ts",
+            "results": {
+              "passed": 21
+            }
+          },
+          {
+            "file": "packages/ui/src/tree-select/__tests__/s13-issue13.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/tree-select/__tests__/tree-select.test.ts",
+            "results": {
+              "passed": 19
+            }
+          },
+          {
+            "file": "packages/ui/src/tree-select/__tests__/utils.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/upload/__tests__/demo.test.ts",
+            "results": {
+              "passed": 25
+            }
+          },
+          {
+            "file": "packages/ui/src/upload/__tests__/index.test.ts",
+            "results": {
+              "passed": 25
+            }
+          },
+          {
+            "file": "packages/ui/src/typography/__tests__/demo.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/typography/__tests__/index.test.ts",
+            "results": {
+              "passed": 107
+            }
+          },
+          {
+            "file": "packages/ui/src/typography/__tests__/native-slots.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/typography/__tests__/native-styles.test.ts",
+            "results": {
+              "passed": 21
+            }
+          },
+          {
+            "file": "packages/ui/src/typography/__tests__/provider-reactivity.test.ts",
+            "results": {
+              "failed": 23,
+              "passed": 9
+            }
+          },
+          {
+            "file": "packages/ui/src/avatar/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 32
+            }
+          },
+          {
+            "file": "packages/ui/src/color-picker/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 23
+            }
+          },
+          {
+            "file": "packages/ui/src/config-provider/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 22
+            }
+          },
+          {
+            "file": "packages/ui/src/drawer/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/dropdown/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 5
+            }
+          },
+          {
+            "file": "packages/ui/src/float-button/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/form/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 21
+            }
+          },
+          {
+            "file": "packages/ui/src/grid/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 24
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 9
+            }
+          },
+          {
+            "file": "packages/ui/src/listy/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 7
+            }
+          },
+          {
+            "file": "packages/ui/src/list/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 35
+            }
+          },
+          {
+            "file": "packages/ui/src/menu/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 6
+            }
+          },
+          {
+            "file": "packages/ui/src/message/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/modal/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 9
+            }
+          },
+          {
+            "file": "packages/ui/src/notification/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 4
+            }
+          },
+          {
+            "file": "packages/ui/src/popover/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/popconfirm/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/progress/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 21
+            }
+          },
+          {
+            "file": "packages/ui/src/segmented/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 24
+            }
+          },
+          {
+            "file": "packages/ui/src/rate/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/select/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 10
+            }
+          },
+          {
+            "file": "packages/ui/src/slider/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 18
+            }
+          },
+          {
+            "file": "packages/ui/src/steps/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 37
+            }
+          },
+          {
+            "file": "packages/ui/src/tooltip/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 9
+            }
+          },
+          {
+            "file": "packages/ui/src/tour/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 14
+            }
+          },
+          {
+            "file": "packages/ui/src/tree-select/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 14
+            }
+          },
+          {
+            "file": "packages/ui/src/upload/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 20
+            }
+          },
+          {
+            "file": "packages/ui/src/typography/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 77
+            }
+          },
+          {
+            "file": "packages/ui/src/mentions/__tests__/semantic.test.ts",
+            "results": {
+              "passed": 20
+            }
+          },
+          {
+            "file": "packages/ui/src/avatar/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 14
+            }
+          },
+          {
+            "file": "packages/ui/src/config-provider/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 36
+            }
+          },
+          {
+            "file": "packages/ui/src/drawer/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 23
+            }
+          },
+          {
+            "file": "packages/ui/src/dropdown/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 20
+            }
+          },
+          {
+            "file": "packages/ui/src/float-button/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/color-picker/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/grid/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/form/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 41
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 22
+            }
+          },
+          {
+            "file": "packages/ui/src/listy/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 9
+            }
+          },
+          {
+            "file": "packages/ui/src/list/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/mentions/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 17
+            }
+          },
+          {
+            "file": "packages/ui/src/menu/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 18
+            }
+          },
+          {
+            "file": "packages/ui/src/message/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/modal/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 35
+            }
+          },
+          {
+            "file": "packages/ui/src/notification/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 19
+            }
+          },
+          {
+            "file": "packages/ui/src/popconfirm/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/progress/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 18
+            }
+          },
+          {
+            "file": "packages/ui/src/rate/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 10
+            }
+          },
+          {
+            "file": "packages/ui/src/segmented/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 21
+            }
+          },
+          {
+            "file": "packages/ui/src/select/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 38
+            }
+          },
+          {
+            "file": "packages/ui/src/slider/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 36
+            }
+          },
+          {
+            "file": "packages/ui/src/steps/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 22
+            }
+          },
+          {
+            "file": "packages/ui/src/popover/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 14
+            }
+          },
+          {
+            "file": "packages/ui/src/table/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 50
+            }
+          },
+          {
+            "file": "packages/ui/src/tooltip/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 18
+            }
+          },
+          {
+            "file": "packages/ui/src/tour/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 15
+            }
+          },
+          {
+            "file": "packages/ui/src/tree-select/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 22
+            }
+          },
+          {
+            "file": "packages/ui/src/typography/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 26
+            }
+          },
+          {
+            "file": "packages/ui/src/upload/__tests__/a11y.test.ts",
+            "results": {
+              "passed": 24
+            }
+          },
+          {
+            "file": "packages/ui/src/avatar/__tests__/theme.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/config-provider/__tests__/theme.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/ui/src/date-picker/__tests__/theme.test.ts",
+            "results": {
+              "passed": 45
+            }
+          },
+          {
+            "file": "packages/ui/src/color-picker/__tests__/theme.test.ts",
+            "results": {
+              "passed": 21
+            }
+          },
+          {
+            "file": "packages/ui/src/drawer/__tests__/theme.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/dropdown/__tests__/theme.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/float-button/__tests__/theme.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/grid/__tests__/theme.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/ui/src/image/__tests__/theme.test.ts",
+            "results": {
+              "passed": 17
+            }
+          },
+          {
+            "file": "packages/ui/src/list/__tests__/theme.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/listy/__tests__/theme.test.ts",
+            "results": {
+              "passed": 9
+            }
+          },
+          {
+            "file": "packages/ui/src/mentions/__tests__/theme.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/menu/__tests__/theme.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/message/__tests__/theme.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/modal/__tests__/theme.test.ts",
+            "results": {
+              "passed": 18
+            }
+          },
+          {
+            "file": "packages/ui/src/notification/__tests__/theme.test.ts",
+            "results": {
+              "passed": 16
+            }
+          },
+          {
+            "file": "packages/ui/src/popconfirm/__tests__/theme.test.ts",
+            "results": {
+              "passed": 9
+            }
+          },
+          {
+            "file": "packages/ui/src/popover/__tests__/theme.test.ts",
+            "results": {
+              "passed": 14
+            }
+          },
+          {
+            "file": "packages/ui/src/progress/__tests__/theme.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/rate/__tests__/theme.test.ts",
+            "results": {
+              "passed": 10
+            }
+          },
+          {
+            "file": "packages/ui/src/form/__tests__/theme.test.ts",
+            "results": {
+              "passed": 8
+            }
+          },
+          {
+            "file": "packages/ui/src/select/__tests__/theme.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/steps/__tests__/theme.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/segmented/__tests__/theme.test.ts",
+            "results": {
+              "passed": 11
+            }
+          },
+          {
+            "file": "packages/ui/src/tooltip/__tests__/theme.test.ts",
+            "results": {
+              "passed": 14
+            }
+          },
+          {
+            "file": "packages/ui/src/tree-select/__tests__/theme.test.ts",
+            "results": {
+              "passed": 12
+            }
+          },
+          {
+            "file": "packages/ui/src/tour/__tests__/theme.test.ts",
+            "results": {
+              "passed": 13
+            }
+          },
+          {
+            "file": "packages/ui/src/upload/__tests__/theme.test.ts",
+            "results": {
+              "passed": 14
+            }
+          },
+          {
+            "file": "packages/ui/src/typography/__tests__/theme.test.ts",
+            "results": {
+              "passed": 21
+            }
+          },
+          {
+            "file": "packages/ui/src/slider/__tests__/theme.test.ts",
+            "results": {
+              "passed": 10
+            }
+          }
+        ],
+        "failuresMatchOriginalBaseline": true,
+        "unrelatedBaselineEvidence": "docs/audit/evidence/typography-provider-baseline-2026-10-27.json",
+        "logSha256": "858e2034963e9385bf9b409091fac3e0ba6bead1a8ae8c5c3219e8f321a23419"
       }
     },
     "productionSourceHashes": {
@@ -6314,9 +8069,7 @@
       "packages/ui/src/tooltip/Tooltip.ts": "49cd17acf1f2411fcc476321f17e6fcdc825a2164152a61b6a26bc19f96af0e3",
       "packages/ui/src/popover/Popover.ts": "f63304e7ebdf328ce4e48496910b23a0c4bd2b483b7e0ab0550917773dd3f72a"
     },
-    "pending": [
-      "Frozen-source affected runtime retry"
-    ]
+    "pending": []
   },
   "productionCommits": {
     "avatar": "9af2a24f",
@@ -6332,5 +8085,51 @@
       "reason": "Progress inspection succeeded but diagnostic cleanup used dynamic import in inspector evaluation without VM callback, producing ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING. Product source unchanged. Retrying the complete same batch with maxWorkers=2 and default+JSON reporters, without diagnostic injection.",
       "logSha256": "4d91779be5423d7fefc39d2025fe1c2afe7ce0d55f5dfacf3889879da0180bd4"
     }
-  ]
+  ],
+  "globalRemaining": [
+    "Typography pre-existing23 Provider replacement failures: next full unit",
+    "Other component/foundation complete audits and199 content candidates",
+    "927 missing approved Apollo visual cases",
+    "Final full-library gates on one final commit after all units"
+  ],
+  "deployment": {
+    "evidence": "docs/audit/evidence/avatar-docs-publication.json",
+    "sourceCommit": "8a2410d9aba06bd94724020285c7e565b73d03f9",
+    "workflowRunId": 40486797828,
+    "pagesDeploymentId": 7355783533,
+    "conclusion": "success",
+    "liveBrowserChecks": 27,
+    "progressHttpStatus": 200
+  },
+  "acceptanceChecklist": {
+    "propsSlotsEventsImageState": "implemented-verified",
+    "modelExpose": "no new Avatar business model; nativeElement-only ref verified",
+    "reactivityAttrsProviderTokens": "implemented-verified",
+    "groupKeysPopupKeyboardFocus": "implemented-verified",
+    "sharedConsumers": "4461 passed,23 matching unrelated original Typography baseline failures explicitly retained",
+    "publicTypesBuild": "strict,source/published SFC,72 type checks; three rebuilt packages strict L7 and CI all-package151 pass",
+    "demosDocs": "46 demo/theme interactions,16 actual consumers,17 SSR/hydration,Docs161 and27 local/live pass",
+    "visual": "48 reviewed and raw RGBA exact;105 existing-gate comparisons pass;405 prior reviews/PNGs and42 reference files unchanged",
+    "registryFormat": "verified"
+  },
+  "finalMetadataChecks": {
+    "registry": {
+      "command": "pnpm registry:gen; node registry/tools/foundation-status.mjs; pnpm registry:workstreams; pnpm registry:check",
+      "exit": 0,
+      "checks": 19,
+      "warnings": 0,
+      "initialResult": "First check failed stale foundation source metrics; regenerated without changing acceptance/coverage statuses and reran complete check."
+    },
+    "format": {
+      "command": "pnpm lint:format",
+      "exit": 0,
+      "errors": 0,
+      "existingWarnings": 37,
+      "existingInfos": 5
+    },
+    "diff": {
+      "command": "git diff --check",
+      "exit": 0
+    }
+  }
 }

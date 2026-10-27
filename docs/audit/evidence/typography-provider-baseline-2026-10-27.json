@@ -1,0 +1,232 @@
+{
+  "baselineCommit": "db24a00c",
+  "preSharedCommit": "4e2d9d04",
+  "currentProductionCommits": [
+    "9af2a24f",
+    "ef832304"
+  ],
+  "command": "pnpm exec vitest run --project unit --maxWorkers=1 packages/ui/src/typography/__tests__/provider-reactivity.test.ts --reporter=json",
+  "baseline": {
+    "total": 32,
+    "passed": 9,
+    "failed": 23,
+    "pending": 0
+  },
+  "same23FailuresInRelatedBatch": true,
+  "relatedBatch": {
+    "files": 273,
+    "total": 4484,
+    "passed": 4461,
+    "failed": 23,
+    "pending": 0
+  },
+  "classification": "Pre-existing Typography Provider replacement/root identity regression; unchanged Typography, context.ts and use-merge-semantic.ts since db24a00c. Not introduced by Avatar or shared popup repair; first next complete audit unit. Prior report is historical and does not override this red evidence.",
+  "cases": [
+    {
+      "name": "F11 Typography current ConfigProvider semantics Text: replacing the whole typography config refreshes className and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <span …(2)></span> to be <span …(2)></span> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Text: replacing the whole typography config refreshes style and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <span …(2)></span> to be <span …(2)></span> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Text: replacing the whole typography config refreshes classNames and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <span …(2)></span> to be <span …(2)></span> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Text: replacing the whole typography config refreshes styles and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <span …(2)></span> to be <span …(2)></span> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Text: initial CSR and SSR provider configuration remain a passing control",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Title: replacing the whole typography config refreshes className and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <h1 …(2)></h1> to be <h1 …(2)></h1> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Title: replacing the whole typography config refreshes style and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <h1 …(2)></h1> to be <h1 …(2)></h1> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Title: replacing the whole typography config refreshes classNames and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <h1 …(2)></h1> to be <h1 …(2)></h1> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Title: replacing the whole typography config refreshes styles and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <h1 …(2)></h1> to be <h1 …(2)></h1> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Title: initial CSR and SSR provider configuration remain a passing control",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Paragraph: replacing the whole typography config refreshes className and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <div …(2)></div> to be <div …(2)></div> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Paragraph: replacing the whole typography config refreshes style and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <div …(2)></div> to be <div …(2)></div> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Paragraph: replacing the whole typography config refreshes classNames and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <div …(2)></div> to be <div …(2)></div> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Paragraph: replacing the whole typography config refreshes styles and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <div …(2)></div> to be <div …(2)></div> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Paragraph: initial CSR and SSR provider configuration remain a passing control",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Link: replacing the whole typography config refreshes className and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <a …(2)></a> to be <a …(2)></a> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Link: replacing the whole typography config refreshes style and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <a …(2)></a> to be <a …(2)></a> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Link: replacing the whole typography config refreshes classNames and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <a …(2)></a> to be <a …(2)></a> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Link: replacing the whole typography config refreshes styles and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <a …(2)></a> to be <a …(2)></a> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Link: initial CSR and SSR provider configuration remain a passing control",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Typography: replacing the whole typography config refreshes className and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <article …(2)></article> to be <article …(2)></article> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Typography: replacing the whole typography config refreshes style and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <article …(2)></article> to be <article …(2)></article> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Typography: replacing the whole typography config refreshes classNames and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <article …(2)></article> to be <article …(2)></article> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Typography: replacing the whole typography config refreshes styles and removal restores local attrs",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <article …(2)></article> to be <article …(2)></article> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:111:33\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics Typography: initial CSR and SSR provider configuration remain a passing control",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics replacing provider classNames functions uses the current callback with public semantic props",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected false to be true // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:220:79\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics replacing provider styles functions uses the current callback with public semantic props",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected '6px' to be '12px' // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:226:38\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics in-place mutations of already captured reactive config objects remain a passing control",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics provider functions reading a reactive ref remain a passing control",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics current flat provider style, semantic style, local style and native attrs keep their precedence",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics configuration can be added after mount instead of remaining at the empty defaults",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "F11 Typography current ConfigProvider semantics provider replacement preserves a rich native input, its draft and focus",
+      "status": "failed",
+      "failureMessages": [
+        "AssertionError: expected <div …(2)>…(2)</div> to be <div …(2)>…(2)</div> // Object.is equality\n    at /private/tmp/apollo-avatar-pre-shared.Lx4mUI/packages/ui/src/typography/__tests__/provider-reactivity.test.ts:382:29\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ]
+    }
+  ]
+}

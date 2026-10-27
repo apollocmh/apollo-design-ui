@@ -1,6 +1,6 @@
 # Avatar / AvatarGroup 完整整改单元
 
-盘点基线db24a00c（Tag发布回执5e3cf508不改变组件源码）。当前实现为9af2a24f，关联共享修复为ef832304；原始盘点、红灯与阶段证据按下文保留。完整单元正在最终统一验收，不能把旧四层112/112或任一阶段绿灯当作当前整库结论。
+盘点基线db24a00c（Tag发布回执5e3cf508不改变组件源码）。当前实现为9af2a24f，关联共享修复为ef832304；原始盘点、红灯与阶段证据按下文保留。Avatar完整单元已统一收口；关联整批中的23条Typography既有失败已用原基线独立复现并转入下一整改单元，未将整批或全库宣称为全绿。
 
 已读取Avatar/Group两实现、interface/context/两级导出、全部12 Token及CSS、9对原Demo、双语API、现有七测试文件和31机械场景；继续追踪到当前Provider视图、size注入、主题源、断点订阅、ResizeObserver、toArray、Popover→Tooltip→Trigger、Upload/List/Listy四处真实Demo消费。旧README/PLAN只作历史证据。
 
@@ -63,12 +63,25 @@ L7补充：新共享焦点实现使Image按需产物实测78.9KB，超过原78KB
 | 内容、尺寸与文字测量 | 已实现/已验证：完整/空/动态image/icon/default、合法VNode数组/0、尺寸继承与稀疏响应表、根/文字观察、SSR首帧可见；42发布浏览器、46原Demo交互与17 SSR/水合通过 |
 | attrs、ref、Provider与样式 | 已实现/已验证：原生样式合并、根身份、当前Provider/方向/前缀、12既有Token、原生组变量及Teleport主题；源/发布SFC及6文件72类型检查通过 |
 | Group计数、子项身份及关联浮层 | 已实现/已验证：max单一配置、0不限量、稳定业务key/编辑器；原生溢出按钮、Enter/Space/Escape、动态prefix/container/destroy、受控接受/拒绝与反复重挂 |
-| 焦点与共享影响 | 19专项、42源/发布浏览器、Portal所属文档10项、Image交互26项及叠层焦点脚本通过；当前关联组件四层整批仍在运行，尚未以阶段结果代替 |
+| 焦点与共享影响 | 19专项、42源/发布浏览器、Portal所属文档10项、Image交互26项及叠层焦点脚本通过；最终273文件4484条中4461通过、23为原db24a00c相同Typography失败，单独证据保留 |
 | 类型、声明和构建 | 根严格0错误，Portal→Overlay→UI重建成功/69CSS，三个包严格L7均0失败/0pending；Image单项80KB预算按用户明确裁决，原78KB失败保留 |
-| Demo、文档和实际消费 | 9原Demo保留并补既有Token例，10例×4算法+6交互共46通过，4真实消费×4算法16通过；Docs72组件/1006 Demo、类型、15文件161测试、85页SSG及实际27浏览器通过；线上发布待执行 |
+| Demo、文档和实际消费 | 9原Demo保留并补既有Token例，10例×4算法+6交互共46通过，4真实消费×4算法16通过；Docs72组件/1006 Demo、类型、15文件161测试、85页SSG及实际27浏览器通过；8a2410d9已发布，线上27项通过，物理组件/进展页200；20条Demo深链保留既有404 SPA边界 |
 | 机械和视觉 | 42原机械/fixture/36参考PNG/渲染器文件与db24a00c一致；清洁4e2d9d04的48张自有图逐张审查，ef832304重建后原始RGBA48一致，Avatar/List105项既有门禁0差异；List三处SVG原始AA边界保留 |
-| 派生状态和全仓边界 | 内容清单546行/199候选/22已验证，工具链12通过，453批准图哈希通过；最终Registry及文案后的格式仍待验。927缺图和其他整改单元保持开放，不宣称全库通过 |
+| 派生状态和全仓边界 | 内容清单546行/199候选/22已验证，工具链12通过，453批准图哈希通过；最终Registry及文案后的格式在收口提交前执行。927缺图和其他整改单元保持开放，不宣称全库通过 |
 
-本表全部适用行为已经实现；“最终关联整批”和“最终派生检查”尚未取得结果，因此此时仍不标记单元完成。完整视觉及保留证据见[avatar-visual-browser.json](evidence/avatar-visual-browser.json)。当前实测为Chrome150/darwin-x64；其他浏览器、触摸设备及未列出的跨文档组合未验证。没有需要用户裁决的未决公共API，也未新增无关能力。
+本表Avatar全部适用行为已实现并验证；关联整批真实结果和无关原基线失败均按下节披露，不以整批失败掩盖当前组件结果，也不将其改写为全库通过。完整视觉及保留证据见[avatar-visual-browser.json](evidence/avatar-visual-browser.json)。当前实测为Chrome150/darwin-x64；其他浏览器、触摸设备及未列出的跨文档组合未验证。没有需要用户裁决的未决公共API，也未新增无关能力。
 
 验证执行更正：单worker关联整批在进度诊断后被代理的清理命令打断，ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING来自inspector求值，不是产品断言。该次无最终报告、不能计为通过；原日志指纹保存于avatar-contract.json，完整同范围以双worker和default+JSON实时报告重跑，无附加诊断。其余已结束的独立门禁不受影响。
+
+
+## 统一收口与发布回执
+
+核心实现9af2a24f、视觉源码4e2d9d04、共享修复ef832304和视觉/文档证据8a2410d9均已推送；32份Avatar及7份共享生产源码指纹在最终验证时完全一致。阶段中断的首次整批无有效结果，重跑完整273文件得到**4484条：4461通过、23失败、0pending**。Avatar143、Portal87、Overlay68、Popover92、Tooltip95、Image381等均通过；仅Typography Provider回归文件23失败。同名23条在独立4e2d9d04及Avatar改动前db24a00c均复现（32条9通过/23失败），Typography/context/helper源码与db24a00c一致。因此判定为既有独立缺陷，保留红灯，不改断言、不排除文件，并优先进入下一完整Typography单元。见[基线证据](evidence/typography-provider-baseline-2026-10-27.json)。
+
+本单元验收结果：根严格/源发布SFC、6文件72类型、Portal→Overlay→UI声明/CSS构建及三包严格L7；42源/发布浏览器、46原Demo主题/交互、17 SSR水合、16实际消费、19专项以及Image/Portal既有浏览器；48自有图逐张批准和原始RGBA一致、105既有门禁视觉及原405批准/PNG完整性均通过。未降低比较阈值；Image单项预算80KB按明确用户裁决，原失败另存。内容清单546/199候选/22已验证、工具链12通过；最终派生检查另记，不拼接阶段绿灯宣称全库通过。
+
+8a2410d9的授权Docs发布[workflow40486797828](https://github.com/apollocmh/apollo-design-ui/actions/runs/40486797828)两job成功，Pages deployment7355783533成功。CI再次执行全包拓扑L7 **151项0失败/0pending/n/a67**、Docs161测试与构建。线上27项通过，10个Demo浅/暗主题及实际控件、完整物理组件页核对；进展页200并出现ef832304/453/927。20个Demo直链HTTP404由已有SPA兜底渲染，物理组件与进展页200，未谎称所有URL200。完整[发布证据](evidence/avatar-docs-publication.json)。
+
+Avatar本轮无未解决的已确认缺陷或裁决；原完整清单及当前关联链路收口。Typography既有23条、其余组件/基础包、199内容候选和927缺图继续开放；全部整改完成后，仍须对最终同一提交执行全量门禁。未验证的其他浏览器/触摸设备/未列跨文档组合与原始边界保留。
+
+最终派生检查：首次Registry因新增共享实现的foundation规模数据过期退出1，刷新foundation（仅文件/行/导出数量，未升级任何基础包质量状态）及workstreams后，完整registry:check19项0warning退出0。最终全仓格式3752文件0错误、保留37既有警告/5提示，diff检查通过；32+7生产源码指纹再次一致。单元收口提交只更新证据和派生状态，不冒称全库最终门禁。

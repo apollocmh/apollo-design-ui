@@ -1,0 +1,256 @@
+{
+  "sourceCommit": "8a2410d9aba06bd94724020285c7e565b73d03f9",
+  "workflowRunId": 40486797828,
+  "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40486797828",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 122130494798,
+      "name": "构建文档站",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 122131923619,
+      "name": "发布到 GitHub Pages",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "ciEvidence": {
+    "testFiles": 15,
+    "tests": 161,
+    "topologicalL7": {
+      "checks": 151,
+      "failed": 0,
+      "pending": 0,
+      "notApplicable": 67
+    },
+    "logLines": [
+      "2026-10-27T10:14:33.2137589Z       Tests  161 passed (161)",
+      "2026-10-27T10:16:43.1142009Z   检查项 151  |  FAIL 0  |  PENDING 0  |  n/a 67"
+    ],
+    "deploySuccess": [
+      "2026-10-27T10:17:41.2590071Z Reported success!"
+    ]
+  },
+  "pagesDeploymentId": 7355783533,
+  "liveDocs": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "basic",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "type",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "type",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "dynamic",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "dynamic",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "badge",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "badge",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "group",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "group",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "max-count",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "max-count",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "fallback",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "fallback",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "toggle-debug",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "toggle-debug",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "responsive",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "responsive",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "component-token",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "component-token",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "name": "published dynamic name and gap controls",
+        "passed": true
+      },
+      {
+        "name": "published native child count and actual InputNumber/Switch",
+        "passed": true
+      },
+      {
+        "name": "published current twelve Token configuration and native overflow",
+        "passed": true
+      },
+      {
+        "name": "published actual image failure fallback",
+        "passed": true
+      },
+      {
+        "name": "published hidden mount and show",
+        "passed": true
+      },
+      {
+        "name": "published responsive size in three actual viewports",
+        "passed": true
+      },
+      {
+        "name": "physical component document and ten lazy cards",
+        "httpStatus": 200,
+        "passed": true
+      }
+    ],
+    "fallbackDocuments": [
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/basic?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/basic?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/type?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/type?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/dynamic?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/dynamic?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/badge?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/badge?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/group?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/group?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/max-count?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/max-count?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/fallback?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/fallback?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/toggle-debug?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/toggle-debug?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/responsive?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/responsive?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/component-token?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/avatar/demo/component-token?theme=dark"
+    ],
+    "errors": []
+  },
+  "pagesStatus": {
+    "created_at": "2026-10-27T10:17:44Z",
+    "environment_url": "https://apollocmh.github.io/apollo-design-ui/",
+    "log_url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40486797828/job/122131923619",
+    "state": "success"
+  },
+  "progress": {
+    "url": "https://apollocmh.github.io/apollo-design-ui/guide/audit-progress?avatar-8a2410d9",
+    "httpStatus": 200,
+    "sourceCommit": "8a2410d9",
+    "markers": [
+      "Avatar / AvatarGroup 成组整改与可复核结果",
+      "ef832304",
+      "453",
+      "927"
+    ],
+    "verifiedAt": "2026-10-27T10:20:09.410Z"
+  },
+  "boundary": "20 demo deep links return the existing GitHub Pages 404 SPA fallback while rendering and interactions pass. Physical Avatar component and progress pages return200; no claim that all deep URLs return200."
+}
