@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "2bad0f31ce819974cad2bf2d85b31d5e8d941187",
-  "status": "implemented-core-verified-acceptance-in-progress",
+  "status": "accepted-local-docs-publish-pending",
   "scope": "Empty six Props, existing default/description and missing native image slot, four semantic parts, two public static illustrations, no Component Token, source aliases, six original demos, DefaultRenderEmpty dispatcher and actual consumers",
   "baselineSources": [
     {
@@ -584,7 +584,85 @@
     "registry": {
       "command": "pnpm registry:check",
       "checks": 19,
-      "warnings": 0
+      "warnings": 0,
+      "exitCode": 0
+    },
+    "finalRuntime": {
+      "numTotalTests": 2856,
+      "numPassedTests": 2856,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/_internal packages/ui/src/empty packages/ui/src/config-provider packages/ui/src/list packages/ui/src/table packages/ui/src/select packages/ui/src/tree-select packages/ui/src/cascader packages/ui/src/auto-complete packages/ui/src/transfer packages/ui/src/mentions packages/ui/src/date-picker packages/ui/src/time-picker packages/ui/src/dropdown packages/ui/src/menu packages/ui/src/popconfirm packages/ui/src/popover packages/ui/src/tooltip packages/ui/src/tour packages/ui/src/slider packages/ui/src/color-picker --maxWorkers=1 --no-file-parallelism",
+      "groups": {
+        "_internal": 57,
+        "auto-complete": 71,
+        "color-picker": 144,
+        "cascader": 140,
+        "config-provider": 115,
+        "date-picker": 424,
+        "empty": 143,
+        "dropdown": 80,
+        "listy": 60,
+        "list": 153,
+        "mentions": 152,
+        "menu": 122,
+        "popconfirm": 84,
+        "popover": 92,
+        "select": 152,
+        "slider": 145,
+        "table": 183,
+        "time-picker": 110,
+        "tooltip": 95,
+        "tour": 97,
+        "transfer": 122,
+        "tree-select": 115
+      }
+    },
+    "finalPublicTypes": {
+      "command": "pnpm exec vitest run --project types packages/ui/src/empty packages/ui/src/config-provider packages/ui/src/list packages/ui/src/table packages/ui/src/select packages/ui/src/tree-select packages/ui/src/cascader packages/ui/src/auto-complete packages/ui/src/transfer packages/ui/src/mentions packages/ui/src/date-picker packages/ui/src/time-picker packages/ui/src/dropdown packages/ui/src/menu packages/ui/src/popconfirm packages/ui/src/popover packages/ui/src/tooltip packages/ui/src/tour packages/ui/src/slider packages/ui/src/color-picker --maxWorkers=1 --no-file-parallelism",
+      "files": 46,
+      "passed": 434,
+      "failed": 0,
+      "sourceErrors": 0
+    },
+    "finalStrict": {
+      "rootCommand": "pnpm exec vue-tsc --noEmit -p tsconfig.json",
+      "sfcCommand": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.empty-contracts.json",
+      "exitCode": 0
+    },
+    "finalPublishedTypes": {
+      "command": "node tests/consumer/empty-types.mjs",
+      "exitCode": 0,
+      "sixRealSfcDemos": true,
+      "sourceAliases": false
+    },
+    "finalL7": {
+      "command": "node tests/build/run.mjs --package ui --no-build --strict",
+      "checks": 11,
+      "failed": 0,
+      "pending": 0
+    },
+    "docs": {
+      "commands": [
+        "pnpm --filter @apollo-design/docs run content:build",
+        "pnpm --filter @apollo-design/docs run typecheck",
+        "pnpm --filter @apollo-design/docs run test",
+        "pnpm --filter @apollo-design/docs run build"
+      ],
+      "files": 15,
+      "testsPassed": 161,
+      "typecheckExitCode": 0,
+      "ssgRoutes": 85,
+      "physicalHtmlFiles": 86,
+      "finalAcceptanceBuild": "passed"
+    },
+    "format": {
+      "command": "pnpm exec biome check .",
+      "files": 3696,
+      "errors": 0,
+      "warnings": 37,
+      "infos": 5,
+      "rulesOrThresholdsChanged": false
     }
   },
   "browserAfter": {
@@ -893,6 +971,30 @@
         "passed": true
       },
       {
+        "name": "current full prefix with actual published CSS generator audit",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "current full prefix with actual published CSS generator replacement",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "prefix replacement keeps the exposed native root",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "prefix removal restores current Provider default",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
         "name": "no page or Vue errors",
         "actual": [],
         "expected": [],
@@ -1101,10 +1203,7 @@
     "errors": []
   },
   "pendingAcceptance": [
-    "shared Trigger consumer unified runtime gate is running",
-    "owned visual capture on a clean implementation commit, individual review and related List regression",
-    "final strict/types/L7/Docs checks and complete checklist on the frozen production source",
-    "online documentation deployment receipt"
+    "authorized online documentation deployment receipt"
   ],
   "visualDryRun": {
     "count": 45,
@@ -1571,5 +1670,608 @@
     ],
     "fallbackDocuments": [],
     "errors": []
+  },
+  "implementationCommits": [
+    "193cc3bb",
+    "12cf9fee46e6b19a7c3a88142f7848144eae7a77"
+  ],
+  "scopeAcceptedAtCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+  "visual": {
+    "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+    "dirtySource": false,
+    "reviewedIndividually": 45,
+    "approvedEmpty": 45,
+    "finalCompared": 102,
+    "empty": 45,
+    "list": 57,
+    "pixelDifferences": 0,
+    "priorRecordsAndPngsPreserved": 315,
+    "approvedTotal": 360,
+    "matrixTotal": 1332,
+    "missingElsewhere": 972,
+    "fullLibraryVisualPassed": false,
+    "environment": "darwin/x64/150.0.7871.125/system Chrome",
+    "referenceAssetsChanged": false,
+    "results": [
+      {
+        "id": "empty/default__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/default__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/default__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/simple__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/simple__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/simple__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/no-description__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/no-description__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/no-description__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/custom-description__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/custom-description__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/custom-description__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/custom-image__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/custom-image__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/custom-image__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/with-footer__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/with-footer__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/with-footer__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/semantic__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/semantic__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/semantic__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/complete-content__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/complete-content__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/complete-content__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/empty-slots__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/empty-slots__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/empty-slots__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/config-current__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/config-current__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/config-current__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/rtl__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/rtl__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/rtl__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/theme-dark__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/theme-dark__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/theme-dark__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/theme-compact__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/theme-compact__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/theme-compact__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/theme-dark-compact__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/theme-dark-compact__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/theme-dark-compact__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/native-focus__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/native-focus__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "empty/native-focus__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/basic__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/basic__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/basic__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/meta__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/meta__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/meta__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/actions__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/actions__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/actions__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/bordered__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/bordered__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/bordered__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/vertical__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/vertical__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/vertical__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/grid__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/grid__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/grid__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/pagination__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/pagination__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/pagination__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/loading__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/loading__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/loading__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/loading-fullscreen__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/loading-fullscreen__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/loading-fullscreen__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/empty__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/empty__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/empty__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/size__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/size__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/size__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/rtl__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/rtl__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/rtl__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/extra__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/extra__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/extra__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/nested__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/nested__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/nested__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/tokens__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/tokens__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/tokens__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/theme-dark__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/theme-dark__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/theme-dark__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/theme-compact__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/theme-compact__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/theme-compact__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/theme-dark-compact__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/theme-dark-compact__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/theme-dark-compact__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/native-focus__light__mobile",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/native-focus__light__tablet",
+        "diffPixels": 0,
+        "reason": "exact"
+      },
+      {
+        "id": "list/native-focus__light__desktop",
+        "diffPixels": 0,
+        "reason": "exact"
+      }
+    ]
+  },
+  "remainingBoundaries": [
+    "global library audit and final full-library gates are still ongoing",
+    "browser evidence is system Chrome150 on macOS/x64 and simulated viewports; other engines/devices are not claimed",
+    "SSR evidence covers listed structure/data/current artwork and hydration cases, not an unexecuted full-library SSR audit"
+  ],
+  "finalProductionSources": [
+    {
+      "file": "packages/ui/src/empty/Empty.vue",
+      "sha256": "4576e630aaf2d4ee95eef472aed434864f9be313c10ba5c893359c1477c41681"
+    },
+    {
+      "file": "packages/ui/src/empty/interface.ts",
+      "sha256": "bfcb4bcab559dea0a86fd43600a301e73a4479663056cfa8368469bf83c37daa"
+    },
+    {
+      "file": "packages/ui/src/empty/index.ts",
+      "sha256": "34a3bf9e38cc4f4a05060706e4ed1fd26ee9691d49f3fdc7c424e8900870b8e4"
+    },
+    {
+      "file": "packages/ui/src/empty/components/Images.ts",
+      "sha256": "33edb00a0f4a00d7b3aa3ff6db89e50f620599c8ea0464fbe17f9204f3ae57fa"
+    },
+    {
+      "file": "packages/ui/src/empty/components/NodeRenderer.ts",
+      "sha256": "88c51c0d319a8d24e605ea5eac7b42e198937848b413f25757adab1c0d1732f8"
+    },
+    {
+      "file": "packages/ui/src/empty/components/artwork.ts",
+      "sha256": "a645787e2390aa8052bd5050ffc60ffe7bd3956d0ea9f5893ba4fc9c827a3d0d"
+    },
+    {
+      "file": "packages/ui/src/empty/style/index.ts",
+      "sha256": "0a2357d59b1df3a1fc306ecd4c3393f5f800a76f900ab56c024c7ddc5d19039e"
+    },
+    {
+      "file": "packages/ui/src/config-provider/default-render-empty.ts",
+      "sha256": "5f0953ebab1a745ec88fa005eb295a9cf03bfda883532ceaca20468ad88c4fef"
+    },
+    {
+      "file": "packages/ui/src/_internal/trigger.ts",
+      "sha256": "c04805dd517ca9cdef55814c50a86d0d5048198d56d670c4dca44e6816127b35"
+    }
+  ],
+  "checklistAcceptance": {
+    "sixPropsAndNativeAttrs": "verified",
+    "threeCompleteCurrentSlots": "verified",
+    "fourSemanticPartsAndPriority": "verified",
+    "currentProviderReplacementRemovalIsolation": "verified",
+    "currentLocaleAndNamedIllustrations": "verified",
+    "validImageShapesAndRawComponents": "verified",
+    "transparentSourcePalette": "verified",
+    "mediaOwnershipAndWideUrl": "verified",
+    "currentAliasTokensAndPrefixCssGenerator": "verified",
+    "nativeRefAndUnmountRemount": "verified",
+    "editorIdentityFocusAndSelection": "verified",
+    "allSixOriginalDemosAndBilingualApi": "verified",
+    "DefaultRenderEmptyAndActualConsumers": "verified",
+    "sharedTriggerThemeBridge": "verified",
+    "typesAndPublishedSfcConsumption": "verified",
+    "nodeSsrAndHydration": "verified",
+    "ownedVisualsAndListRegression": "verified",
+    "originalReferenceIntegrity": "verified"
+  },
+  "docsArtifacts": {
+    "physicalHtmlFiles": 86,
+    "emptySsrBody": true,
+    "progressCurrent": true,
+    "basePath": "apollo-design-ui"
   }
 }

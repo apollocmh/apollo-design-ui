@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-27T03:54:02.209Z",
+  "generatedAt": "2026-10-27T04:07:46.947Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 90,
-      "ready": 2
+      "done": 91,
+      "ready": 1
     },
     "byKind": {
       "foundation": 13,
@@ -35,11 +35,10 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 2,
+    "readyCount": 1,
     "cannotFinishCount": 0,
-    "currentBatchSize": 2,
+    "currentBatchSize": 1,
     "currentBatchIds": [
-      "COMP:empty",
       "X:docs-site"
     ],
     "hardBlockingDecisionCount": 0,
@@ -379,8 +378,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 22,
-      "doneCount": 21,
-      "readyCount": 1,
+      "doneCount": 22,
+      "readyCount": 0,
       "itemIds": [
         "COMP:avatar",
         "COMP:badge",
@@ -608,11 +607,11 @@
         "流水线被证明可重复（不再需要为每个组件重新设计流程）"
       ],
       "itemCount": 20,
-      "doneCount": 19,
-      "readyCount": 1,
+      "doneCount": 20,
+      "readyCount": 0,
       "blockedCount": 0,
       "waitingCount": 0,
-      "complete": false,
+      "complete": true,
       "itemIds": [
         "COMP:affix",
         "COMP:alert",
@@ -1348,18 +1347,16 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "ready",
+      "status": "done",
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 51,
-      "why": "2026-10-27 Empty完整盘点后集中修复六Props/三完整槽、当前Provider/方向/语言、合法image数据、透明合成和自然布局/对比度；六原Demo同步更新。1151关联四层、20公开类型、严格检查、发布构建、50生产浏览器、24 Demo主题、8 SSR及6组水合通过。自有视觉、实际Docs及最终清单仍在验收，不以核心通过宣称整单完成。 193cc3bb核心已推送；关联Trigger主题作用域4条红绿复现、八类popup40项及实际Empty消费者18组、Docs17项通过，统一共享回归及自有视觉继续验收。",
+      "why": "2026-10-27 Empty完整清单已统一验收，实现193cc3bb+12cf9fee：六Props/三完整槽/四语义、当前Provider/方向/语言/源Alias、合法image及自然布局/对比度、透明合成、六原Demo同步修复。关联Trigger/Portal主题桥接4条红绿复现；最终2856相关四层/434类型、54生产浏览器/40实际popup/18消费者、24 Demo主题/17实际Docs、8 SSR/6组水合、严格类型/发布消费/UI严格L7通过。45张自有视觉逐张审阅批准，连同List57张共102张全部0像素差异；原315记录及PNG不变。全库审计仍继续，部署回执另记。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P0",
       "dagLevel": 0,
-      "blockers": [],
-      "softBlockers": [],
-      "cannotFinish": false
+      "blockers": []
     },
     {
       "id": "COMP:config-provider",
@@ -1369,7 +1366,6 @@
       "workstream": "WS-7",
       "wave": "W5",
       "dependsOn": [
-        "COMP:empty",
         "FND:form-core",
         "FND:icons",
         "FND:motion",
@@ -3362,7 +3358,6 @@
     }
   ],
   "currentBatch": [
-    "COMP:empty",
     "X:docs-site"
   ]
 }

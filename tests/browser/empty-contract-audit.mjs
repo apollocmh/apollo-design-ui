@@ -4,6 +4,7 @@ import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { genComponentCss } from '@apollo-design/ui';
 import vue from '@vitejs/plugin-vue';
 import { build, preview } from 'vite';
 import { launchBrowser } from '../visual/stabilize.mjs';
@@ -272,6 +273,30 @@ try {
     'alias removal restores default geometry',
     await css('.apollo-empty-image', 'height'),
     '100px',
+  );
+  for (const prefix of ['audit', 'replacement']) {
+    await page.addStyleTag({ content: genComponentCss('empty', prefix) });
+    await set({ props: { prefixCls: `${prefix}-empty` }, image: 'simple' });
+    check(
+      `current full prefix with actual published CSS generator ${prefix}`,
+      await host.evaluate(
+        (n, prefix) =>
+          n.classList.contains(`${prefix}-empty-normal`) &&
+          getComputedStyle(n.querySelector(`.${prefix}-empty-image`)).height === '40px',
+        prefix,
+      ),
+    );
+  }
+  check(
+    'prefix replacement keeps the exposed native root',
+    await native.evaluate((n) => n.isConnected),
+  );
+  await set({ props: {}, image: 'default' });
+  check(
+    'prefix removal restores current Provider default',
+    await host.evaluate(
+      (n) => n.classList.contains('apollo-empty') && !n.className.includes('replacement-empty'),
+    ),
   );
   check('no page or Vue errors', errors, []);
   writeFileSync(

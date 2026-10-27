@@ -32,8 +32,7 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "visual-review": 1,
-      "completed": 71
+      "completed": 72
     },
     "byPriority": {
       "P0": 8,
@@ -52,8 +51,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 71,
-    "remainingCount": 1
+    "completedCount": 72,
+    "remainingCount": 0
   },
   "milestones": [],
   "components": [
@@ -64,7 +63,7 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "S",
-      "status": "visual-review",
+      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 51,
@@ -89,13 +88,15 @@
       "interactionStatus": "done",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "in-progress",
-      "docsStatus": "in-progress",
-      "notes": "2026-10-27 Empty完整盘点后集中修复六Props/三完整槽、当前Provider/方向/语言、合法image数据、透明合成和自然布局/对比度；六原Demo同步更新。1151关联四层、20公开类型、严格检查、发布构建、50生产浏览器、24 Demo主题、8 SSR及6组水合通过。自有视觉、实际Docs及最终清单仍在验收，不以核心通过宣称整单完成。 193cc3bb核心已推送；关联Trigger主题作用域4条红绿复现、八类popup40项及实际Empty消费者18组、Docs17项通过，统一共享回归及自有视觉继续验收。",
+      "visualStatus": "done",
+      "docsStatus": "done",
+      "notes": "2026-10-27 Empty完整清单已统一验收，实现193cc3bb+12cf9fee：六Props/三完整槽/四语义、当前Provider/方向/语言/源Alias、合法image及自然布局/对比度、透明合成、六原Demo同步修复。关联Trigger/Portal主题桥接4条红绿复现；最终2856相关四层/434类型、54生产浏览器/40实际popup/18消费者、24 Demo主题/17实际Docs、8 SSR/6组水合、严格类型/发布消费/UI严格L7通过。45张自有视觉逐张审阅批准，连同List57张共102张全部0像素差异；原315记录及PNG不变。全库审计仍继续，部署回执另记。",
       "layerNotes": {
-        "token": "antd 的 Empty 没有用户可覆盖的 Component Token。`style/index.js` 用 mergeToken 造了 4 个**内部** token（emptyImgCls / emptyImgHeight / emptyImgHeightMD / emptyImgHeightSM），它们不在 antd 的 ComponentToken 里，用户无法通过 theme.components.Empty 覆盖。我们也不暴露，改成 calc(var(--apollo-control-height-lg) * 2.5) 这类变量表达式，compact / 自定义 controlHeightLG 时高度仍会跟着变。「登记 0 个 token 并声称完成」与「确认它确实没有 token」是两件事，所以记 n/a 而不是 done。",
-        "interaction": "无业务Emits/v-model；完整槽当前求值/条件移除、编辑草稿/实际根/焦点/选区、相邻Provider隔离及卸载重挂已由行为与生产浏览器验证。",
-        "currentAudit": "范围 docs/audit/2026-10-27-empty-contract-audit.md；核心验证见 docs/audit/evidence/empty-contract.json。视觉/Docs及最终清单待验收，历史completed已切为本轮visual-review。"
+        "token": "当前公开接口没有Empty Component Token；样式八类Alias与当前插画调色已按源实现/实际浏览器验证，含替换/移除、紧凑和透明合成。tokenStatus=n/a仅指Component Token，不能误称不消费主题。",
+        "interaction": "无业务Emits/v-model；三个完整槽当前求值/条件空与移除、原生事件一次、草稿/根/焦点/选区、相邻Provider隔离及卸载重挂已验证。",
+        "currentAudit": "完整清单 docs/audit/2026-10-27-empty-contract-audit.md；证据 docs/audit/evidence/empty-contract.json。冻结生产实现12cf9fee：2856四层/434类型、54浏览器/40 popup/18消费者、45 Empty+57 List视觉exact；实际Docs17项通过，线上部署回执待记录。",
+        "visual": "清洁12cf9fee、macOS x64/Chrome150的45张候选逐张审阅批准；Empty/List102张最终diffPixels=0。原315批准记录和PNG不变，原机械JSON/投影/参考PNG及插画生成几何不变。",
+        "docs": "六个原Demo保留，公开Provider、完整原生image/description/footer及四语义示例同步；亮暗实际Docs17项、源Demo四算法24项与真实发布六SFC消费通过。最终报告生成/发布另有回执，不把本地通过称已上线。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -117,9 +118,14 @@
           "leafModules": [
             "config-provider/context"
           ]
-        }
+        },
+        "previousLayerNotes": {
+          "token": "antd 的 Empty 没有用户可覆盖的 Component Token。`style/index.js` 用 mergeToken 造了 4 个**内部** token（emptyImgCls / emptyImgHeight / emptyImgHeightMD / emptyImgHeightSM），它们不在 antd 的 ComponentToken 里，用户无法通过 theme.components.Empty 覆盖。我们也不暴露，改成 calc(var(--apollo-control-height-lg) * 2.5) 这类变量表达式，compact / 自定义 controlHeightLG 时高度仍会跟着变。「登记 0 个 token 并声称完成」与「确认它确实没有 token」是两件事，所以记 n/a 而不是 done。",
+          "interaction": "Empty 是纯展示组件：无事件、无状态、无受控/非受控语义、无键盘交互。TESTING.md 的 L2 要求覆盖「鼠标 / 键盘 / 焦点 / 受控 / 禁用」六类，这里一类都不适用。写几个 expect(exists()).toBe(true) 把格子填上属于反模式 A1（用形式上的用例掩盖未覆盖）。"
+        },
+        "previousNotes": "config-provider 的 defaultRenderEmpty 依赖它，因此必须先于 config-provider 完成。 2026-09-17：G1→G14 走完，10 个维度 done / 2 个 n/a（token / interaction，依据见 layerNotes） / 1 个 blocked（visualStatus —— L6 视觉回归基建尚未落地，见 blockers）。 本组件同时是组件侧流水线的第一块试金石：它暴露并修掉了 4 个基础设施缺口（ui 的 SFC 构建与类型产物、compat 基线机制、mountTest 的观察者误报、tests/build 的字母序构建）。"
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "config-provider",
@@ -206,9 +212,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "empty"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "n/a",

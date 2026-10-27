@@ -2834,6 +2834,411 @@
       "capturedAt": "2026-10-27T01:12:29.436Z",
       "reviewedAt": "2026-10-27T01:20:01.528Z",
       "reviewNote": "Reviewed all39 Result images individually across mobile/tablet/desktop from clean7e63e3e1. Four status icons,403/404/500 illustrations, complete native icon/title/subtitle/body and editor tails, deliberate empty slots, all four source-token effects, RTL, dark/compact/combined themes and actual keyboard focus are intact. Narrow titles wrap without clipping; current scoped backgrounds and readable text remain paired. All39 candidate state/axe checks pass;40 original demo theme combinations and23 actual Docs checks pass after the shared Button repair. Original reference oracles and historical9-case matrix are retained."
+    },
+    "empty/default__light__mobile": {
+      "sha256": "be317c456cbebff152184f87f04d726ce1a66f97fd055e340613a5e6e938c21e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:54:59.933Z",
+      "reviewedAt": "2026-10-27T03:58:54.236Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/default__light__tablet": {
+      "sha256": "e09c162898ed7a15c5d67aba37241329859dcad3e532246346482560857b1044",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:01.968Z",
+      "reviewedAt": "2026-10-27T03:58:54.237Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/default__light__desktop": {
+      "sha256": "e296794fe3c0b3b3e8a068d6451376622c52a774b5385d15ed035c9baa2e7ea2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:04.011Z",
+      "reviewedAt": "2026-10-27T03:58:54.237Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/simple__light__mobile": {
+      "sha256": "6b8a78147903e44680f2b75cc5ed99f2a6a5f88e86041a1d153e4f48b8c244bc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:06.034Z",
+      "reviewedAt": "2026-10-27T03:58:54.238Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/simple__light__tablet": {
+      "sha256": "a36caff265725a72d2f8cc7d4d64cdaa06b20cb08cf07b6c3ba16847a629fa13",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:08.067Z",
+      "reviewedAt": "2026-10-27T03:58:54.238Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/simple__light__desktop": {
+      "sha256": "30d182ffae390776c9b77d909b9bd925dac893b34a72abe833a5ab5266c1aefe",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:10.092Z",
+      "reviewedAt": "2026-10-27T03:58:54.239Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/no-description__light__mobile": {
+      "sha256": "9c9cce3c81df7693ffd62c85284abb0e9176ac057bc4996d056cef1ac9d37a9f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:12.126Z",
+      "reviewedAt": "2026-10-27T03:58:54.239Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/no-description__light__tablet": {
+      "sha256": "9040570e9c83054df13e67219786103ceee7c4fb39ffb97efefeea287ca98b1c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:14.164Z",
+      "reviewedAt": "2026-10-27T03:58:54.239Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/no-description__light__desktop": {
+      "sha256": "d4f49fd3d7589523da2112fa62adb5551856edfceca7c04fcb037dc0a87f8e78",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:16.134Z",
+      "reviewedAt": "2026-10-27T03:58:54.240Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/custom-description__light__mobile": {
+      "sha256": "114c7786cfde1b46dea5ad7e1ff66f53af50b8cf02049fd71fd8cc98080d5d93",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:18.164Z",
+      "reviewedAt": "2026-10-27T03:58:54.240Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/custom-description__light__tablet": {
+      "sha256": "1b20d76e05a8ea7526665df58feabb3e23dd442a48cbbe70e06afaa709159da2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:20.209Z",
+      "reviewedAt": "2026-10-27T03:58:54.240Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/custom-description__light__desktop": {
+      "sha256": "c29878f98ce9328fbeeb374e5ccc5a61563f7399b6202cc4c43e4ee4da0de242",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:22.259Z",
+      "reviewedAt": "2026-10-27T03:58:54.241Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/custom-image__light__mobile": {
+      "sha256": "24cb69df49b0577652581942220f98185f3f7019e62031a38e561d0ca887a180",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:24.254Z",
+      "reviewedAt": "2026-10-27T03:58:54.241Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/custom-image__light__tablet": {
+      "sha256": "a3bc2ec766c491be791908ec718f106f246eef4ce3189dd515c37d902d793aaf",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:26.278Z",
+      "reviewedAt": "2026-10-27T03:58:54.241Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/custom-image__light__desktop": {
+      "sha256": "2aa54ce5802fd1fa02f95e6a79a96d8560f71be6bda7e8d7ad50a7997adab496",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:28.340Z",
+      "reviewedAt": "2026-10-27T03:58:54.242Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/with-footer__light__mobile": {
+      "sha256": "7319bc0e7993069a09d005c4387cf2a63875f1ff1c5cb32f583916726499b9cb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:30.389Z",
+      "reviewedAt": "2026-10-27T03:58:54.242Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/with-footer__light__tablet": {
+      "sha256": "5230e6e7b57ca4308a28db6d85c903e65946f8a14083f5c4c0fed0960e0525f4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:32.396Z",
+      "reviewedAt": "2026-10-27T03:58:54.242Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/with-footer__light__desktop": {
+      "sha256": "666e69e4270019a5d5e5fee41d5fc93825799b225d028e63dec04d1101a91cee",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:34.449Z",
+      "reviewedAt": "2026-10-27T03:58:54.243Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/semantic__light__mobile": {
+      "sha256": "8f43f5a66b9765447f8dd6bcd85d81aeaab8d75063d70f40392de7a7a901f405",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:36.483Z",
+      "reviewedAt": "2026-10-27T03:58:54.243Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/semantic__light__tablet": {
+      "sha256": "8512723ad8d5c36a43d5f5851bc051e0e852e33f7ef8340d8c087418b7731e4a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:38.501Z",
+      "reviewedAt": "2026-10-27T03:58:54.244Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/semantic__light__desktop": {
+      "sha256": "b357bc1bda2f4d77d0f010ddc7c6b0493d0af97c7d04e8365bede3f9fc53d6f0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:40.559Z",
+      "reviewedAt": "2026-10-27T03:58:54.244Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/complete-content__light__mobile": {
+      "sha256": "212b1e2190ebc786d9e0d68a77137b3f038584975de0e146648958eff823f98e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:42.616Z",
+      "reviewedAt": "2026-10-27T03:58:54.244Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/complete-content__light__tablet": {
+      "sha256": "e9a81937ab2b1178465ae79ad3d7f27edf09f5c543bcbd602b663116d5865e2c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:44.681Z",
+      "reviewedAt": "2026-10-27T03:58:54.245Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/complete-content__light__desktop": {
+      "sha256": "a3be05e1ad643befd3911818e9bc71be5890dbcf628c5528a9fbd2ef4880b876",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:46.700Z",
+      "reviewedAt": "2026-10-27T03:58:54.245Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/empty-slots__light__mobile": {
+      "sha256": "3f98fcff9e1679641384b65814c1c70c501f9d5fca362c3ae0cd59d7abcad992",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:48.594Z",
+      "reviewedAt": "2026-10-27T03:58:54.245Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/empty-slots__light__tablet": {
+      "sha256": "1d8edf749167a991bb37654f90a78d3d09975ecaad337bfd5db615315072a7d9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:50.522Z",
+      "reviewedAt": "2026-10-27T03:58:54.246Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/empty-slots__light__desktop": {
+      "sha256": "8f0a73fa425523f44eb7756ae927230ca40d5f26101747bb4738c3c361af62e8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:52.459Z",
+      "reviewedAt": "2026-10-27T03:58:54.246Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/config-current__light__mobile": {
+      "sha256": "96b6d4564ef1a2387654996c731f42dfb9c8fb499420bcc13a7d4a710cce068a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:54.504Z",
+      "reviewedAt": "2026-10-27T03:58:54.247Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/config-current__light__tablet": {
+      "sha256": "fe9e74529c690a6d071ec6272d22ca11095eff26b0a981b6a2b081c593cb9a25",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:56.567Z",
+      "reviewedAt": "2026-10-27T03:58:54.247Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/config-current__light__desktop": {
+      "sha256": "4ce05b1499ae6b10408448616ca852da3a5d30562b49952a7912d2da7cebe3b1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:55:58.644Z",
+      "reviewedAt": "2026-10-27T03:58:54.248Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/rtl__light__mobile": {
+      "sha256": "5d23560c70d23522b8123d735ba5cc729c3180c34361953b03347bdc4f24f1cc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:00.612Z",
+      "reviewedAt": "2026-10-27T03:58:54.248Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/rtl__light__tablet": {
+      "sha256": "88687498ff1a447a076faa9fe6ff07ca8e3c5998177033ddd30a6c82076f6c89",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:02.626Z",
+      "reviewedAt": "2026-10-27T03:58:54.248Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/rtl__light__desktop": {
+      "sha256": "81d400c3d4aab188f71dea333c9eb0afc284272034fe64790a5c0b0c8c35964c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:04.645Z",
+      "reviewedAt": "2026-10-27T03:58:54.249Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/theme-dark__light__mobile": {
+      "sha256": "31ce62afddfaa0feb42be07edafaca6f4ed1ce7fe94e98e2f13e3b3bbeeaf85f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:06.621Z",
+      "reviewedAt": "2026-10-27T03:58:54.249Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/theme-dark__light__tablet": {
+      "sha256": "416792c8da41796c154bbb9cb0318d54643887d721a2f0f96de24d4ba31844ce",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:08.581Z",
+      "reviewedAt": "2026-10-27T03:58:54.249Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/theme-dark__light__desktop": {
+      "sha256": "ff3b166ce62ae538a56f2e2c85c5a1039f65ac14012284b47b3cb170fc518749",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:10.534Z",
+      "reviewedAt": "2026-10-27T03:58:54.250Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/theme-compact__light__mobile": {
+      "sha256": "117ccff1153bc32af9d87ed05fc211a7bce81280aa06d4b874c33b1a2c275749",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:12.493Z",
+      "reviewedAt": "2026-10-27T03:58:54.250Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/theme-compact__light__tablet": {
+      "sha256": "d942f3c6fd84ae1e0af4cefd83ae3ece9b62f13a6198c8222a20e9eec4d24420",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:14.466Z",
+      "reviewedAt": "2026-10-27T03:58:54.251Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/theme-compact__light__desktop": {
+      "sha256": "b46a1d96466a107ccc9899e4d24cbb5296f8bf95432270a400490ada0c3a8ae7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:16.446Z",
+      "reviewedAt": "2026-10-27T03:58:54.251Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/theme-dark-compact__light__mobile": {
+      "sha256": "170f18a0f3d09f314c0e8063390ea1da9f2c90153b5ce6eba1c09631f81edaa7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:18.390Z",
+      "reviewedAt": "2026-10-27T03:58:54.252Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/theme-dark-compact__light__tablet": {
+      "sha256": "02b1e1467afefb1182f71dd3908e7441914c756b4daeed06b1eb06c48223a67a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:20.608Z",
+      "reviewedAt": "2026-10-27T03:58:54.252Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/theme-dark-compact__light__desktop": {
+      "sha256": "a45938b4803dd3b7cb9fe544fa3ab3d9246854157188b6ca8b58a49d8cda5c8c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:23.046Z",
+      "reviewedAt": "2026-10-27T03:58:54.253Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/native-focus__light__mobile": {
+      "sha256": "edb361ef350c1e3bcdf35b4ebf04ec41ed8401537a3256a79bcbdc7bc86fe89c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:25.285Z",
+      "reviewedAt": "2026-10-27T03:58:54.253Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/native-focus__light__tablet": {
+      "sha256": "b34c28974743b735a18240fd8dadeb9e5553add1f6df8b08c2529ce1e88c1a16",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:27.749Z",
+      "reviewedAt": "2026-10-27T03:58:54.254Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
+    },
+    "empty/native-focus__light__desktop": {
+      "sha256": "f19cfdff81af28d3920cb0aee569b6cac54055df7045f4d14540d6fdefd86dfe",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "12cf9fee46e6b19a7c3a88142f7848144eae7a77",
+      "dirty": false,
+      "capturedAt": "2026-10-27T03:56:30.106Z",
+      "reviewedAt": "2026-10-27T03:58:54.254Z",
+      "reviewNote": "Individually inspected all45 Empty PNGs from clean12cf9fee / Chrome150 on darwin x64: default/simple/named image-only, complete description, bounded wide URL, footer, all four semantics, natural business editors, intentional empty slots, live Provider draft, RTL, dark/compact/both and native focus at three viewports. No clipping/overlap; typography and focus ring correct; runtime geometry and actual axe checks passed. Original reference assets remain unchanged."
     }
   }
 }
