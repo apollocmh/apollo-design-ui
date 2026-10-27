@@ -14,6 +14,7 @@ import {
   imagePath,
   readManifest,
 } from './baseline-store.mjs';
+import { prepareButtonVisual } from './button-state.mjs';
 import { prepareImageVisual } from './image-state.mjs';
 import { prepareListVisual } from './list-state.mjs';
 import { buildCases, COMPONENTS } from './matrix.mjs';
@@ -199,7 +200,7 @@ async function main() {
         });
         await stabilizePage(page, {
           preserveFocus:
-            ['list', 'spin', 'qr-code', 'statistic', 'skeleton', 'result'].includes(
+            ['list', 'spin', 'qr-code', 'statistic', 'skeleton', 'result', 'button'].includes(
               item.component,
             ) && item.variant === 'native-focus',
         });
@@ -218,7 +219,9 @@ async function main() {
                       ? await prepareSkeletonVisual(page, item.variant)
                       : item.component === 'result'
                         ? await prepareResultVisual(page, item.variant)
-                        : undefined;
+                        : item.component === 'button'
+                          ? await prepareButtonVisual(page, item.variant)
+                          : undefined;
         fs.mkdirSync(path.dirname(output), { recursive: true });
         await screenshotElement(page, '#stage', output);
         if (errors.length) throw new Error(errors.join(' | '));

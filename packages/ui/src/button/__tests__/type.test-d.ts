@@ -23,10 +23,12 @@
 
 import { describe, expectTypeOf, it } from 'vitest';
 import { type CSSProperties, defineComponent, h, type VNodeChild } from 'vue';
+import type { ConfigProviderProps } from '../../config-provider';
 import type { SizeType } from '../../config-provider/size-context';
 import type {
   Button,
   ButtonColorType,
+  ButtonComponentToken,
   ButtonConfig,
   ButtonHTMLType,
   ButtonIcon,
@@ -40,6 +42,8 @@ import type {
   ButtonShape,
   ButtonSize,
   ButtonSlot,
+  ButtonSlots,
+  ButtonTokenInput,
   ButtonType,
   ButtonVariantType,
 } from '../index';
@@ -293,4 +297,72 @@ describe('Button · 负例（应当报错）', () => {
     };
     expectTypeOf(negatives).toBeFunction();
   });
+});
+
+describe('Button · current full slots, tokens and real instance', () => {
+  it('complete slots return Vue content and the instance exposes a real nullable root', () => {
+    const slots: ButtonSlots = {
+      default: () => [h('strong', 'Save'), 0],
+      icon: () => [h('i', 'Icon'), h('b', 'Tail')],
+    };
+    expectTypeOf(slots).toMatchTypeOf<ButtonSlots>();
+    expectTypeOf<InstanceType<typeof Button>['nativeElement']>().toEqualTypeOf<
+      HTMLButtonElement | HTMLAnchorElement | null
+    >();
+  });
+  it('all58 component fields are available and helpers retain strict source inputs', () => {
+    const token: Partial<ButtonComponentToken> = {
+      solidTextColor: '#112233',
+      groupBorderColor: '#abcdef',
+      defaultBorderColorDisabled: '#aaaaaa',
+      blueShadowColor: '0 2px 0 transparent',
+      paddingBlock: 0,
+      contentFontSize: 0,
+    };
+    expectTypeOf(token).toMatchTypeOf<Partial<ButtonComponentToken>>();
+    expectTypeOf<ButtonTokenInput['contentFontSize']>().toEqualTypeOf<number | undefined>();
+    const negative = () => {
+      // @ts-expect-error complete slots still return Vue content, not arbitrary data objects
+      const bad: ButtonSlots = { default: () => ({ unexpected: 'object' }) };
+      // @ts-expect-error existing font-size token accepts numbers; CSS variables remain a separate native style channel
+      const font: Partial<ButtonComponentToken> = { contentFontSize: 'large' };
+      // @ts-expect-error semantics retain their documented object API
+      const styles: ButtonProps = { styles: () => ({ root: { opacity: 1 } }) };
+      void bad;
+      void font;
+      void styles;
+    };
+    void negative;
+  });
+});
+
+it('a named ButtonConfig binds directly to Provider without weakening its fields', () => {
+  const config: ButtonConfig = {
+    shape: 'round',
+    color: 'danger',
+    variant: 'solid',
+    loadingIcon: 0,
+    classNames: { content: 'owned' },
+    styles: { root: { opacity: 1 } },
+    autoInsertSpace: false,
+  };
+  const components: NonNullable<ConfigProviderProps['components']> = { button: config };
+  expectTypeOf(components).toMatchTypeOf<NonNullable<ConfigProviderProps['components']>>();
+  expectTypeOf<keyof ButtonConfig>().toEqualTypeOf<
+    | 'className'
+    | 'style'
+    | 'classNames'
+    | 'styles'
+    | 'shape'
+    | 'color'
+    | 'variant'
+    | 'loadingIcon'
+    | 'autoInsertSpace'
+  >();
+  const negative = () => {
+    // @ts-expect-error the finite Button config retains excess-property checks
+    const unknown: ButtonConfig = { arbitraryField: 1 };
+    void unknown;
+  };
+  void negative;
 });

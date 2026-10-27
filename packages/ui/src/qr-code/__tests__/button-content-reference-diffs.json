@@ -1,0 +1,8 @@
+{
+  "qr-code:status-expired": [
+    "$/div[0]: style 不同 [background-color:transparent;height:160px;width:160px] vs [height:160px;width:160px]",
+    "$/div[0]/div[0]/button[1]: 类名不同 [apollo-btn apollo-btn-color-link apollo-btn-link apollo-btn-variant-link] vs [apollo-btn apollo-btn-color-default apollo-btn-text apollo-btn-variant-text]",
+    "$/div[0]/div[0]/button[1]/span[1]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/canvas[1]: 我们多出属性 aria-label=\"QR code\""
+  ]
+}

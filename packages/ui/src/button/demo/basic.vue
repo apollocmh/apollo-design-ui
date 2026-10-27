@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button, Space } from '../../index';
+import { Button, Space } from '@apollo-design/ui';
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import { Button, Space } from '../../index';
     <Button type="dashed">Dashed</Button>
     <Button type="text">Text</Button>
     <Button type="link">Link</Button>
-    <!-- 两个中文字符会自动插入空格（-two-chinese-chars） -->
+    <!-- 两个中文字符会自动视觉字距（-two-chinese-chars） -->
     <Button type="primary">确定</Button>
   </Space>
 </template>

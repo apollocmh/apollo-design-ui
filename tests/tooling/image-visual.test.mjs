@@ -27,7 +27,7 @@ test('Apollo Image additions keep the optional reference matrix and unrelated co
   assert.equal(buildCases({ component: 'image' }).length, 9);
   assert.throws(() => buildCases({ component: 'image', variants: ['rich'] }));
   assert.deepEqual(
-    buildCases({ component: 'button', apollo: true }),
-    buildCases({ component: 'button' }),
+    buildCases({ component: 'divider', apollo: true }),
+    buildCases({ component: 'divider' }),
   );
 });

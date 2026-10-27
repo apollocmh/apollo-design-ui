@@ -1,3 +1,5 @@
+import { mergeButtonContentReferenceAllowances } from '../../_internal/__tests__/button-content-reference';
+import buttonContentDifferences from './button-content-reference-diffs.json';
 /**
  * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）—— Result
  *
@@ -87,15 +89,18 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
 domContractTest('Result', {
   baseline,
   keepStyle: true,
-  allow: Object.fromEntries(
-    Object.entries(differences).map(([id, diff]) => [
-      id,
-      {
-        reason:
-          'Default exception illustrations are decoration; the existing contract projection sees only added SVG aria-hidden; direct regressions also verify focusable=false. Complete Vue content and all original scenarios remain. See docs/migrations/result-contracts.md.',
-        diff,
-      },
-    ]),
+  allow: mergeButtonContentReferenceAllowances(
+    buttonContentDifferences,
+    Object.fromEntries(
+      Object.entries(differences).map(([id, diff]) => [
+        id,
+        {
+          reason:
+            'Default exception illustrations are decoration; the existing contract projection sees only added SVG aria-hidden; direct regressions also verify focusable=false. Complete Vue content and all original scenarios remain. See docs/migrations/result-contracts.md.',
+          diff,
+        },
+      ]),
+    ),
   ),
   render: (id) => {
     const spec = specs[id];

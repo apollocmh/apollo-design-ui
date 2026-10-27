@@ -28,7 +28,7 @@ const last = ref('');
         @click="last = 'circle'"
       />
     </Space>
-    <div style="margin-top: 12px; font-size: 12px; color: #999">
+    <div style="margin-top: 12px; font-size: 12px; color: var(--apollo-color-text-secondary)">
       最近点击的图标位置：{{ last || '-' }}
     </div>
   </div>

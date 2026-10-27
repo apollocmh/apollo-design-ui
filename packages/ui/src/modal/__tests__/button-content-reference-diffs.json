@@ -1,0 +1,30 @@
+{
+  "modal:pure-panel-no-close": [
+    "$/div[0]/div[0]/div[2]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[0]/div[2]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "modal:pure-panel-confirm": [
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "modal:pure-panel-info": [
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "modal:pure-panel-success": [
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "modal:pure-panel-error": [
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "modal:pure-panel-warning": [
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "modal:pure-panel-confirm-no-title": [
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[0]/div[0]/div[0]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "modal:pure-panel-footer-fn": [
+    "$/div[0]/div[0]/div[3]/div[0]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[0]/div[3]/div[0]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ]
+}

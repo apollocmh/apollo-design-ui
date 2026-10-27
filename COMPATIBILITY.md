@@ -44,3 +44,5 @@ Statistic/Timer/Countdown的原生#value业务作用域、当前计时方向/非
 Skeleton及五个子组件的原生根attrs/style、嵌套块配置、Image默认槽、当前八Token和装饰占位语义修正集中见[Skeleton契约迁移](docs/migrations/skeleton-contracts.md)；直接修正开发期错误形态，不新增兼容通道。
 
 Result全部状态的完整图标槽/默认图形开关、条件内容、原生根attrs/style、当前Provider/四Token和装饰语义修正集中见[Result契约迁移](docs/migrations/result-contracts.md)；开发期直接修正，不为旧React图形分支增加兼容通道。
+
+Button完整内容宿主、独立color/variant、加载请求与指示器分离、当前Provider/58 Token及合法发布工具入口修正见[Button契约迁移](docs/migrations/button-contracts.md)；内部Search/Dropdown/FloatButton链路同步调整。

@@ -572,9 +572,11 @@ D34–D40 是本组件新增的行。
    读的是 `ConfigProvider.componentSize`。两条路径都是 antd 的原样
    （Space 用 `space.size`、Compact 用 `componentSize`），**不是缺口** ——
    在这里列出是为了让「为什么两个组件的尺寸来源不同」有处可查。
-2. **`useCompactItemContext` 的消费方（10 个组件）尚未落地** ⇒ 协议只有
-   `Space.Addon` 一个真实消费者。等 Button 落地后应补一条「Button 在 Compact 里
-   拼出的类名」的跨组件用例（目前 `a11y.test.ts` 只断言了 Compact **不包裹**子节点）。
+2. **Compact真实消费者动态链路（2026-10-27更新）**：Button/Input.Search已实现。
+   本轮修复默认槽的computed缓存，改为每次render读取一次，保留原生attrs、key、
+   nativeElement及首末项上下文；新增真实Button焦点/节点身份、条件子级和Search
+   loading回归。见[关联审计](../../../../docs/audit/2026-10-27-button-contract-audit.md)。
+   本项不把下述旧参考视觉替身证据改称真实组件视觉验收。
 3. **L6 的 dark / compact 主题未覆盖**：零运行时下 `tokens.css` 是构建期产物，
    运行时切算法依赖 ConfigProvider。已登记在 `tests/visual/matrix.mjs` 的 `LIMITATIONS`。
 4. **L6 的边框合并只验证到替身**（§5.4）。

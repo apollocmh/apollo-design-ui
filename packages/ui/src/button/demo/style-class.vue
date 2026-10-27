@@ -13,7 +13,7 @@ const classNames: ButtonProps['classNames'] = {
 const styles: ButtonProps['styles'] = {
   root: { borderRadius: '18px', paddingInline: '20px' },
   content: { letterSpacing: '1px' },
-  icon: { color: '#fa8c16' },
+  icon: { fontSize: '20px' },
 };
 </script>
 
@@ -27,7 +27,7 @@ const styles: ButtonProps['styles'] = {
       <Button type="dashed" :class-names="classNames" :styles="styles" disabled>禁用按钮</Button>
     </Space>
     <p class="demo-button-style-wrap__hint">
-      root 控制圆角与内边距，content 控制字距，icon 单独着色。
+      root 控制圆角与内边距，content 控制字距，icon 单独设置字号。
     </p>
   </div>
 </template>
@@ -49,7 +49,7 @@ const styles: ButtonProps['styles'] = {
 
 .demo-button-style-wrap__hint {
   margin: 0;
-  color: #999;
+  color: var(--apollo-color-text-secondary);
   font-size: 12px;
 }
 </style>

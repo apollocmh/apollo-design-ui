@@ -1,3 +1,6 @@
+import { mount } from '@vue/test-utils';
+import { mergeButtonContentReferenceAllowances } from '../../_internal/__tests__/button-content-reference';
+import buttonContentDifferences from './button-content-reference-diffs.json';
 /**
  * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）—— Transfer
  *
@@ -227,10 +230,22 @@ const CASES: Record<string, () => DomRenderResult> = {
       { footer: () => h('div', { class: 'my-footer' }, 'footer') },
     ),
   // rtl 由 ConfigProvider 注入（与基线的 withProvider 同构）
-  'config:direction-rtl': () =>
-    h(ConfigProvider as never, { prefixCls: 'apollo', direction: 'rtl' } as never, () =>
-      h(Transfer as never, { ...base, prefixCls: 'apollo' } as never),
-    ),
+  'config:direction-rtl': () => {
+    const wrapper = mount(
+      defineComponent({
+        setup: () => () =>
+          h(ConfigProvider, { prefixCls: 'apollo', direction: 'rtl' }, () =>
+            h(Transfer, { ...base, prefixCls: 'apollo' }),
+          ),
+      }),
+      { global: { stubs: { teleport: false } } },
+    );
+    try {
+      return wrapper.html();
+    } finally {
+      wrapper.unmount();
+    }
+  },
 };
 
 /**
@@ -846,7 +861,7 @@ domContractTest('Transfer', {
     return build();
   },
   keepStyle: true,
-  allow: ALLOW,
+  allow: mergeButtonContentReferenceAllowances(buttonContentDifferences, ALLOW),
 });
 
 /** CASES 与基线一一对应（不多不少）—— 防「少测一条」。 */

@@ -5,4 +5,4 @@ title:
   en-US: Component Token
 ---
 
-本仓零运行时，组件 token 在构建期写入 CSS；这里通过覆盖按钮消费的 `--apollo-color-primary*` 与 `--apollo-border-radius*` 变量定制主色和圆角。
+通过当前 `ConfigProvider.theme.components.Button` 修改已有 Token，并保留 Alias 主色/圆角定制。支持动态配置、移除恢复、原生根变量覆盖；草稿和点击计数用于观察内容与状态是否保留。

@@ -46,7 +46,7 @@ const result = (props = {}, slots = {}) =>
     {
       id: 'result-main',
       role: 'region',
-      'aria-label': 'Operation outcome',
+      'aria-label': `Operation outcome ${props.id ?? 'result-main'}`,
       'data-native-result': 'yes',
       status: 'info',
       title: 'Operation result',

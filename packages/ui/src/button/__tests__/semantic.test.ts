@@ -41,6 +41,7 @@ import {
 import { disabledContextKey } from '../../config-provider/disabled-context';
 import { sizeContextKey } from '../../config-provider/size-context';
 import { Button } from '../index';
+import differences from './native-contract-reference-diffs.json';
 
 /** 两侧共用的前缀。与 `tests/compat/baseline/button.mjs` 里的 `PREFIX` 必须一致。 */
 const PREFIX = 'apollo';
@@ -274,7 +275,16 @@ domContractTest('Button', {
     return build();
   },
   keepStyle: true,
-  allow: ALLOW,
+  allow: Object.fromEntries(
+    Object.entries(differences).map(([id, diff]) => [
+      id,
+      {
+        reason:
+          'Apollo owns its content host and busy state, makes square and independent variant effective, and retains the original prefix difference. All original scenarios and the projection remain unchanged; exact additions are guarded below. See docs/migrations/button-contracts.md.',
+        diff,
+      },
+    ]),
+  ),
 });
 
 /** `CASES` 里多出来的 id 会让「少测一条」表现为「测试通过」，所以反向也校验一次。 */
@@ -284,4 +294,42 @@ describe('Button · 用例覆盖', () => {
     const caseIds = Object.keys(CASES).sort();
     expect(caseIds).toEqual(baselineIds);
   });
+});
+
+it('retains all65 reference scenarios and only the reviewed native contract differences', () => {
+  expect(baseline.cases).toHaveLength(65);
+  expect(Object.keys(differences)).toHaveLength(63);
+  for (const [id, lines] of Object.entries(differences))
+    for (const line of lines) {
+      if (id === 'prefix-cls:no-props' && ALLOW[id].diff.some((original) => original === line))
+        continue;
+      if (id === 'href:disabled' && line === '$/a[0]: 我们多出属性 role="link"') continue;
+      if (
+        id === 'variant:filled-only' &&
+        line ===
+          '$/button[0]: 类名不同 [apollo apollo-color-default apollo-default apollo-variant-outlined] vs [apollo apollo-color-default apollo-default apollo-variant-filled]'
+      )
+        continue;
+      if (
+        id === 'shape:square' &&
+        line ===
+          '$/button[0]: 类名不同 [apollo apollo-color-default apollo-default apollo-variant-outlined] vs [apollo apollo-color-default apollo-default apollo-square apollo-variant-outlined]'
+      )
+        continue;
+      if (
+        ['loading:custom-icon', 'loading:custom-icon-only'].includes(id) &&
+        /^\$\/button\[0\]: 我们多出属性 aria-(busy|disabled)="true"$/.test(line)
+      )
+        continue;
+      const match = line.match(
+        /^\$\/(?:button|a)\[0\]\/span\[[01]\]: 类名不同 \[(.*?)\] vs \[(.*?)\]$/,
+      );
+      expect(match, `${id}: ${line}`).not.toBeNull();
+      const before = (match?.[1] ?? '').split(' ').filter(Boolean);
+      const after = (match?.[2] ?? '').split(' ').filter(Boolean);
+      const added = after.filter((name) => !before.includes(name));
+      expect(added).toHaveLength(1);
+      expect(['apollo-content', 'custom-content', 'apollo-btn-content']).toContain(added[0]);
+      expect(after.filter((name) => name !== added[0])).toEqual(before);
+    }
 });

@@ -32,7 +32,8 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 71,
+      "completed": 70,
+      "testing": 1,
       "blocked": 1
     },
     "byPriority": {
@@ -52,8 +53,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 71,
-    "remainingCount": 1
+    "completedCount": 70,
+    "remainingCount": 2
   },
   "milestones": [],
   "components": [
@@ -263,11 +264,11 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "M",
-      "status": "completed",
+      "status": "testing",
       "derived": {
         "dagLevel": 2,
         "unblocks": 2,
-        "tokenCount": 43,
+        "tokenCount": 58,
         "tokenGroup": "Button"
       },
       "dependencies": {
@@ -284,22 +285,26 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "【第一个 Vertical Slice】选择理由见 docs/PHASE-1-REPORT.md §17：规模适中（M）、无浮层无引擎、覆盖 Props/Events/Slots/Expose/Token/样式/主题/动效/wave 全部机制，是验证整条流水线成本最低的组件。",
+      "apiStatus": "in-progress",
+      "tokenStatus": "in-progress",
+      "styleStatus": "in-progress",
+      "unitStatus": "in-progress",
+      "interactionStatus": "in-progress",
+      "typeStatus": "in-progress",
+      "a11yStatus": "in-progress",
+      "visualStatus": "in-progress",
+      "docsStatus": "in-progress",
+      "notes": "Button完整契约与Result共享整改已形成实现里程碑：19 Props、两个完整槽、原生根/当前配置/加载生命周期、58既有Token及20原Demo集中修复。365四层/参考守卫、1168颜色、最终147浏览器、51消费者、SSR/水合/发布声明与UI严格L7通过。原65机械场景与27参考视觉保留；自有视觉、最终Demo/Docs统一验收仍开放，不宣称整单元完成。见 docs/audit/2026-10-27-button-contract-audit.md。",
       "layerNotes": {
-        "unit": "L1+L2 = 113 例（`index.test.ts` 94 + `demo.test.ts` 14 + `style.test.ts` 5），另有 L4 66 / L5 27 / theme 17，四层合跑 **223 passed (223)**。覆盖率（`--coverage.include='packages/ui/src/button/**'`）：**Stmts 100 / Branch 98.42 / Funcs 100 / Lines 100**。残留 3 个未覆盖分支：`Button.vue:217`（`ButtonTypeMap[type] || []` 的兜底，`mergedType` 恒为 5 个键之一）、`Button.vue:532`（模板 `v-if` 的一支）、`style/index.ts:178`（`ghost ? 'none' : c.shadow` 的 ghost 支）。2026-09-20 顺带删掉一段**与上游不符的死代码**：`loading` 的 `delay > 0` 分支里我们多写了 `if (cfg.loading) { innerLoading.value = true; return; }`，而上游（`antd/es/button/Button.js:148-156`）该分支是**无条件** `setInnerLoading(true, { ms: delay })`；且那一支在本仓可证明**不可达**（`loadingOrDelay` 的构造保证 `loading === true ⇒ delay <= 0`，与 `delay > 0` 矛盾）。删掉后 Lines 从 98.13% → 100%，行为不变（不可达支）。",
-        "type": "L3 类型测试 16 例 / 15 条 `@ts-expect-error` 负例（`__tests__/type.test-d.ts`）。2026-09-20 修一处**平台差异**：`icon` / `loading.icon` 的类型从 `VNodeChild` 放宽为 `ButtonIcon = VNodeChild | Component`（与 `EmptyImage` 同一裁决，登记为 `docs/analysis/button.md` D7 / `README.md` D8）。原因：antd 的 `icon` 是 `React.ReactNode`，官方示例写 `icon={<SearchOutlined />}` —— React 里那是**已求值的元素**；Vue 没有这一形态，对应物是**组件对象**。⚠️ 放宽类型**只解决编译**：`NodeRenderer.normalizeNode()` 只做 `isVNode ? cloneVNode : 原样`，组件对象会被原样返回并渲染成字面量 `[object Object]`（实测复现），所以同时必须在进 `NodeRenderer` **之前** `h()` 包一层（`Button.vue` 的 `asIconNode()`）。运行期一侧由 L1 的 3 条用例（`icon` 传组件 / `loading.icon` 传组件 / ConfigProvider `loadingIcon` 传组件，均断言 `not.toContain('[object Object]')`）钉住。",
-        "visual": "L6 视觉回归 **24/27 通过**（21 张 0.000% exact + 3 张 antialias-noise ≤0.021%）。修复前为 0/27（0.233% – 2.326% 全 block-diff）。2026-09-20 复核**证伪**了原先「glyph hinting 抖动 / PLATFORM」的诊断：基线用 --mode baseline 重生成后**逐字节一致**，截图是确定的，不存在抖动。真因是**我方缺声明**（BUG，非 PLATFORM）：① `.apollo-btn` 未设 `line-height` —— antd 的 Button 不调用 `resetComponent`，靠 `antd/dist/reset.css` 的 `button{line-height:inherit}` 从环境继承（实测 22px）；本仓 BASE_CSS 没有这条表单控件归一化（`packages/ui/src/style/index.ts:90` 把「button 重置」列为未决缺口）⇒ 我们的 `<button>` 退回 UA `line-height:normal`，span 高 17px vs 22px、文字基线差 ~2.5px。② `-icon` 未带图标基线 —— ui 静态样式层尚未消费 `@apollo-design/icons` 的 `getIconStyle()`，图标 span 继承行高 22px 而 antd 的 `.anticon` 是 0。两处均在组件范围内修好。剩余 3 例 `type__light__{mobile,tablet,desktop}`（0.060% – 0.149%）的差异**只在**第 6 个按钮（`确定`）：antd 把两字 `join(\" \")` 成 `确 定`（真实空格、进 textContent），我们用 CSS letter-spacing（textContent 保持 `确定`）⇒ INTENDED，已登记为 COMPATIBILITY.md **D41**（本轮改写）。另（2026-09-20 补）：复核发现 `icon` 页原先只覆盖 VNode 形态，**看不见** D42 的组件形态缺陷，已补一条（React `icon={<SearchIcon />}` / Vue `icon: SearchIconComponent`，两侧 DOM 同形）；补后用 `--mode baseline` 重生成 27 张，`git status` **只动 3 张 `icon__light__*.png`**（另 24 张逐字节未变），并通过变异验证（去掉 `h()` ⇒ 0.000% exact → 3.078%–7.313% block-diff）。",
-        "compat": "L4 DOM 契约 66 例全绿 = 65 条机械 oracle 用例 + 1 条 D6 前缀豁免。机械 oracle 由 `tests/compat/baseline/button.mjs` **硬编码 65 个用例**、用 `react-dom/server.renderToStaticMarkup` 渲染 antd 6.6.4 产出 `tests/compat/baselines/button.dom.json`（`caseCount=65`），比对在 `__tests__/semantic.test.ts`。另备 3 份 fixture（`tests/compat/fixtures/button/{basic,loading,type-matrix}.json`）满足 AGENTS §6.1 的「至少 1 个」交付要求；⚠️ button 的 DOM 契约**不由 fixture 驱动**（那套「手写用例 + allow」机制未被 icons/empty 采用，见 `tests/compat/README.md` 末尾）。",
-        "token": "57 个键。antd 6.6.4 `button/style/token.js:21-83` 的 `prepareComponentToken` 返回 58 键（45 显式 + 13 个 `${colorKey}ShadowColor`），本仓逐键对齐、唯一缺 `solidTextColor`（依赖 color-picker 的 `isBright(AggregationColor, \"#fff\")`，本仓无等价能力）—— 由 `theme.test.ts` 的一条「缺 solidTextColor」断言钉住。"
+        "referenceHistory": {
+          "unit": "L1+L2 = 113 例（`index.test.ts` 94 + `demo.test.ts` 14 + `style.test.ts` 5），另有 L4 66 / L5 27 / theme 17，四层合跑 **223 passed (223)**。覆盖率（`--coverage.include='packages/ui/src/button/**'`）：**Stmts 100 / Branch 98.42 / Funcs 100 / Lines 100**。残留 3 个未覆盖分支：`Button.vue:217`（`ButtonTypeMap[type] || []` 的兜底，`mergedType` 恒为 5 个键之一）、`Button.vue:532`（模板 `v-if` 的一支）、`style/index.ts:178`（`ghost ? 'none' : c.shadow` 的 ghost 支）。2026-09-20 顺带删掉一段**与上游不符的死代码**：`loading` 的 `delay > 0` 分支里我们多写了 `if (cfg.loading) { innerLoading.value = true; return; }`，而上游（`antd/es/button/Button.js:148-156`）该分支是**无条件** `setInnerLoading(true, { ms: delay })`；且那一支在本仓可证明**不可达**（`loadingOrDelay` 的构造保证 `loading === true ⇒ delay <= 0`，与 `delay > 0` 矛盾）。删掉后 Lines 从 98.13% → 100%，行为不变（不可达支）。",
+          "type": "L3 类型测试 16 例 / 15 条 `@ts-expect-error` 负例（`__tests__/type.test-d.ts`）。2026-09-20 修一处**平台差异**：`icon` / `loading.icon` 的类型从 `VNodeChild` 放宽为 `ButtonIcon = VNodeChild | Component`（与 `EmptyImage` 同一裁决，登记为 `docs/analysis/button.md` D7 / `README.md` D8）。原因：antd 的 `icon` 是 `React.ReactNode`，官方示例写 `icon={<SearchOutlined />}` —— React 里那是**已求值的元素**；Vue 没有这一形态，对应物是**组件对象**。⚠️ 放宽类型**只解决编译**：`NodeRenderer.normalizeNode()` 只做 `isVNode ? cloneVNode : 原样`，组件对象会被原样返回并渲染成字面量 `[object Object]`（实测复现），所以同时必须在进 `NodeRenderer` **之前** `h()` 包一层（`Button.vue` 的 `asIconNode()`）。运行期一侧由 L1 的 3 条用例（`icon` 传组件 / `loading.icon` 传组件 / ConfigProvider `loadingIcon` 传组件，均断言 `not.toContain('[object Object]')`）钉住。",
+          "visual": "L6 视觉回归 **24/27 通过**（21 张 0.000% exact + 3 张 antialias-noise ≤0.021%）。修复前为 0/27（0.233% – 2.326% 全 block-diff）。2026-09-20 复核**证伪**了原先「glyph hinting 抖动 / PLATFORM」的诊断：基线用 --mode baseline 重生成后**逐字节一致**，截图是确定的，不存在抖动。真因是**我方缺声明**（BUG，非 PLATFORM）：① `.apollo-btn` 未设 `line-height` —— antd 的 Button 不调用 `resetComponent`，靠 `antd/dist/reset.css` 的 `button{line-height:inherit}` 从环境继承（实测 22px）；本仓 BASE_CSS 没有这条表单控件归一化（`packages/ui/src/style/index.ts:90` 把「button 重置」列为未决缺口）⇒ 我们的 `<button>` 退回 UA `line-height:normal`，span 高 17px vs 22px、文字基线差 ~2.5px。② `-icon` 未带图标基线 —— ui 静态样式层尚未消费 `@apollo-design/icons` 的 `getIconStyle()`，图标 span 继承行高 22px 而 antd 的 `.anticon` 是 0。两处均在组件范围内修好。剩余 3 例 `type__light__{mobile,tablet,desktop}`（0.060% – 0.149%）的差异**只在**第 6 个按钮（`确定`）：antd 把两字 `join(\" \")` 成 `确 定`（真实空格、进 textContent），我们用 CSS letter-spacing（textContent 保持 `确定`）⇒ INTENDED，已登记为 COMPATIBILITY.md **D41**（本轮改写）。另（2026-09-20 补）：复核发现 `icon` 页原先只覆盖 VNode 形态，**看不见** D42 的组件形态缺陷，已补一条（React `icon={<SearchIcon />}` / Vue `icon: SearchIconComponent`，两侧 DOM 同形）；补后用 `--mode baseline` 重生成 27 张，`git status` **只动 3 张 `icon__light__*.png`**（另 24 张逐字节未变），并通过变异验证（去掉 `h()` ⇒ 0.000% exact → 3.078%–7.313% block-diff）。",
+          "compat": "L4 DOM 契约 66 例全绿 = 65 条机械 oracle 用例 + 1 条 D6 前缀豁免。机械 oracle 由 `tests/compat/baseline/button.mjs` **硬编码 65 个用例**、用 `react-dom/server.renderToStaticMarkup` 渲染 antd 6.6.4 产出 `tests/compat/baselines/button.dom.json`（`caseCount=65`），比对在 `__tests__/semantic.test.ts`。另备 3 份 fixture（`tests/compat/fixtures/button/{basic,loading,type-matrix}.json`）满足 AGENTS §6.1 的「至少 1 个」交付要求；⚠️ button 的 DOM 契约**不由 fixture 驱动**（那套「手写用例 + allow」机制未被 icons/empty 采用，见 `tests/compat/README.md` 末尾）。",
+          "token": "57 个键。antd 6.6.4 `button/style/token.js:21-83` 的 `prepareComponentToken` 返回 58 键（45 显式 + 13 个 `${colorKey}ShadowColor`），本仓逐键对齐、唯一缺 `solidTextColor`（依赖 color-picker 的 `isBright(AggregationColor, \"#fff\")`，本仓无等价能力）—— 由 `theme.test.ts` 的一条「缺 solidTextColor」断言钉住。"
+        },
+        "currentAudit": "docs/audit/2026-10-27-button-contract-audit.md；初始97回归7通过/90失败及1168浏览器颜色检查378通过/790失败均有修前证据。当前较早实现354四层/80 Demo主题通过；最后方向、导航及明度边界修正后须统一复验，未宣称整单元完成。",
+        "nativeAudit": "本轮状态为testing。当前证据区分修前/实现/验证及未完成视觉、Docs和全库最终门禁，详见 docs/audit/evidence/button-contract.json；历史验收记录仅作参考。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -365,7 +370,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "button 的阻塞性依赖；同时是 Compact 间距语义的承载者，被大量表单组件复用。",
+      "notes": "button 的阻塞性依赖；同时是 Compact 间距语义的承载者，被大量表单组件复用。\n2026-10-27 Button关联修复：Compact默认槽从computed缓存改为当前render求值，保留六Props、Provider/首末项/原生attrs/nativeElement。真实Search loading、条件子级与Button焦点/身份复现已验证；关联四层统一运行中，未把历史视觉或全组件状态升级为本轮验收。见 docs/audit/2026-10-27-button-contract-audit.md。 当前最终Space/关联回归336项及实际实例44项类型通过，未提升历史全组件视觉状态。",
       "layerNotes": {
         "token": "antd 的 Space / Compact / Addon **都没有**用户可覆盖的 Component Token —— 三个 `ComponentToken` 都是空接口、`prepareComponentToken` 都返回 `{}`（`components/space/style/index.ts:7-8` 明确注释 `ComponentToken need to be empty by default`）。所以 `derived.tokenCount` 是 0、`registry/tokens.json` 里**不**加条目，本维度记 n/a 而不是 done（「登记 0 个 token 并声称完成」与「确认它确实没有 token」是两件事）。`style/token.ts` 用 `prepareComponentToken` 返回 `{}` 把「空」写成代码，`theme.test.ts` 断言它的键集为空。另有三个**内部** gap token（`spaceGapSmallSize` / `spaceGapMiddleSize` / `spaceGapLargeSize`，由 `mergeToken` 从 `paddingXS` / `padding` / `paddingLG` 派生）—— 它们不在 ComponentToken 里、用户覆盖不了，但六条 `-gap-*` 规则的取值全部来自它们（落成 `var(--apollo-padding-xs)` 这类变量引用，随主题自适应；唯一真源是 `SPACE_GAP_ALIASES`）。⚠️ 有一处**实现形态**差异（D38）：antd 用组件级 CSS 自定义属性（`--ant-space-addon-*`）做中间变量、status 段只改写变量；我们零运行时没有这个可覆盖点，改成内联为 `border-color` / `background` 并把 status×variant **展开成复合选择器** —— Addon 因此是 33 条规则而不是 29 条，且展开后特异性拉平（0,2,0），必须**重排选择器顺序**才能保持层叠等价（顺序契约由 theme.test.ts 显式断言）。",
         "interaction": "Space / Space.Compact / Space.Addon 都是**纯布局容器**：无事件、无状态、无受控/非受控语义、无键盘交互、无禁用态（`Addon` 的 `disabled` 只影响颜色，不设 `disabled` 属性、不拦截交互）。TESTING.md 的 L2 要求覆盖「鼠标 / 键盘 / 焦点 / 受控 / 禁用」六类，这里一类都不适用；写几个 `expect(exists()).toBe(true)` 把格子填上属于反模式 A1。⚠️ 一处**看起来像交互**、实际不在本层的东西：`Space.Compact` 会通过 `genCompactItemStyle` 改变子元素的 hover 层级（`-compact-item:hover` 的 `z-index: 4`、`[disabled]` 的 `z-index: 0`），但那些规则作用在**子组件自己的类名**上、且 L6 的截图是静态的（不触发 hover）⇒ 视觉层也观测不到。它的语义由 `theme.test.ts` 钉住**选择器与顺序**（可判定），层叠结果等真实 Button / Input 落地后再补。"
@@ -2046,7 +2051,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "2026-10-27 Button关联Demo修复：basic/default-file-list的change监听统一使用Vue @change；原生删除removed提示已验证，保留全部23 Demo。此项不是Upload全部API重新验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -2563,7 +2568,9 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
+      "blockedBy": [
+        "button"
+      ],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -3433,7 +3440,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。\n2026-10-25 F10：五个相关浮层/静态入口按Vue规则合并原生style，修复字符串挂载/SSR异常与面板语义转发。PurePanel原生style仅落根，container独立使用styles.container，按ADR0007直接迁移；证据及范围见 docs/audit/2026-10-25-overlay-native-styles-remediation.md，不表示全组件新增视觉验收。\n2026-10-25 F11：新增原生#icon，两入口支持当前/空/移除优先级与默认/VNode/false数据恢复，空槽移除图标包裹并保留正文输入；CSR/SSR/类型/实际消费端及浏览器证据见 docs/audit/2026-10-25-popconfirm-icon-slot-remediation.md。未升级历史视觉维度。",
+      "notes": "2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。\n2026-10-25 F10：五个相关浮层/静态入口按Vue规则合并原生style，修复字符串挂载/SSR异常与面板语义转发。PurePanel原生style仅落根，container独立使用styles.container，按ADR0007直接迁移；证据及范围见 docs/audit/2026-10-25-overlay-native-styles-remediation.md，不表示全组件新增视觉验收。\n2026-10-25 F11：新增原生#icon，两入口支持当前/空/移除优先级与默认/VNode/false数据恢复，空槽移除图标包裹并保留正文输入；CSR/SSR/类型/实际消费端及浏览器证据见 docs/audit/2026-10-25-popconfirm-icon-slot-remediation.md。未升级历史视觉维度。\n2026-10-27 Button关联Demo修复：原async示例返回实际Promise，取消/卸载结束并清理操作，修复立即关闭与取消后第二次确认失效。外部okButtonProps.loading独立传递回归正常；共享ActionButton关闭契约未变。7项关联复现通过，非全组件新增验收。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",

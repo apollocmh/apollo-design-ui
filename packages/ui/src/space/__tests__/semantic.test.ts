@@ -50,6 +50,7 @@
  */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import { mount } from '@vue/test-utils';
 import { defineComponent, h, type VNode, type VNodeChild } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/space.dom.json';
 import { ConfigProvider } from '../../config-provider';
@@ -78,12 +79,19 @@ const PREFIX = 'apollo';
  * D25 的完整理由见 `docs/analysis/config-provider.md` §6.1。
  */
 function withConfig(props: Record<string, unknown>, children: () => VNodeChild) {
-  return defineComponent({
+  const host = defineComponent({
     name: 'ASpaceCompatConfigProbe',
     setup() {
       return () => h(ConfigProvider, { prefixCls: PREFIX, ...props }, { default: children });
     },
   });
+  // Compare real Provider output, including its native Teleport, to the original oracle.
+  const wrapper = mount(host, { global: { stubs: { teleport: false } } });
+  try {
+    return wrapper.html();
+  } finally {
+    wrapper.unmount();
+  }
 }
 
 /**

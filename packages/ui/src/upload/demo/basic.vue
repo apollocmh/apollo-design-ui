@@ -40,7 +40,7 @@ const handleChange: UploadProps['onChange'] = (info) => {
     v-model:file-list="fileList"
     action="/upload.do"
     :custom-request="customRequest"
-    :on-change="handleChange"
+    @change="handleChange"
   >
     <Button>
       <template #icon><UploadOutlined /></template>

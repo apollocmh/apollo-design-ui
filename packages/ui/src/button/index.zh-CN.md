@@ -4,32 +4,11 @@ title: Button
 subtitle: 按钮
 ---
 
-按钮用于开始一个即时操作。
-
-## 何时使用
-
-- 需要触发一个动作（提交、确认、删除、跳转）。
-- 一个操作区域内**只放一个**主按钮（`type="primary"`），其余用次级按钮。
+按钮触发操作，或通过原生链接导航。
 
 ## 代码演示
 
-见 [`demo/`](./demo)（20 个，覆盖 type / size / loading / disabled / danger / ghost /
-block / icon / shape / color-variant / href / semantic）。
-
-| demo | 内容 |
-|---|---|
-| `basic` | 五种 `type`；最后一颗演示两个中文字自动插空格 |
-| `size` | `large` / 默认（`medium` / `middle`）/ `small`（`medium` 是 6.6.4 推荐写法） |
-| `loading` | 布尔形态与 `{ delay }` 形态 |
-| `disabled` | 含 `<a>` 分支（有 `href`）的禁用表达 |
-| `danger` | `danger` × 五种 `type` |
-| `ghost` | 幽灵按钮（常用在有色背景上） |
-| `block` | 撑满父容器宽度 |
-| `icon` | `icon` prop / `icon` 插槽 / `iconPlacement` / 仅图标 |
-| `shape` | `circle` / `round` / `square` |
-| `color-variant` | v6 的 `color` + `variant` 新写法 |
-| `href` | 渲染成 `<a>` 的链接按钮 |
-| `semantic` | 语义化 `classNames` / `styles` |
+保留全部 20 个原示例：`basic`, `block`, `chinese-chars-loading`, `chinese-space`, `color-variant`, `component-token`, `custom-disabled-bg`, `danger`, `disabled`, `ghost`, `href`, `icon`, `icon-placement`, `linear-gradient`, `loading`, `multiple`, `semantic`, `shape`, `size`, `style-class`.
 
 ## API
 
@@ -37,170 +16,121 @@ block / icon / shape / color-variant / href / semantic）。
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| type | 旧版类型糖，会被解析成 `color` + `variant` | `'default' \| 'primary' \| 'dashed' \| 'link' \| 'text'` | `'default'` |
-| color | 语义色或预设色（16 个） | `ButtonColorType` | — |
-| variant | 视觉变体 | `'outlined' \| 'dashed' \| 'solid' \| 'filled' \| 'text' \| 'link'` | — |
-| icon | 图标（v6 起是**节点**，不是字符串名）。也可传**组件**（见下方说明） | `ButtonIcon` = `VNodeChild \| Component` | — |
-| iconPlacement | 图标位置 | `'start' \| 'end'` | `'start'` |
-| ~~iconPosition~~ | ⚠️ 已废弃，请用 `iconPlacement` | `'start' \| 'end'` | — |
-| shape | 形状 | `'default' \| 'circle' \| 'round' \| 'square'` | `'default'` |
-| size | 尺寸。`medium` / `middle` 都是默认档，**不**产类名 | `'small' \| 'medium' \| 'middle' \| 'large'`（= `SizeType`） | 取 ConfigProvider 的 `componentSize` |
-| disabled | 禁用。判据是 `??` ⇒ 显式 `false` 能关闭父级的 `true` | `boolean` | — |
-| loading | 加载态 | `boolean \| { delay?: number; icon?: ButtonIcon }` | `false` |
-| ghost | 幽灵按钮。会把 `solid` 变体退化成 `outlined` | `boolean` | `false` |
-| danger | 危险按钮 | `boolean` | `false` |
-| block | 撑满父容器宽度 | `boolean` | `false` |
-| href | 有值 ⇒ 渲染 `<a>` | `string` | — |
-| htmlType | `<button>` 的原生 `type` | `'submit' \| 'button' \| 'reset'` | `'button'` |
-| autoInsertSpace | 两个中文字之间是否自动插空格 | `boolean` | `true` |
-| prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-btn` |
-| classNames | 语义化类名（**只支持对象形态**） | `ButtonSemanticClassNames` | — |
-| styles | 语义化样式（**只支持对象形态**） | `ButtonSemanticStyles` | — |
+| type | 视觉类型糖，显式 color/variant 可分别覆盖 | `ButtonType` | 'default' |
+| color | 独立生效的语义色或预设色 | `ButtonColorType` | — |
+| variant | 独立生效的视觉变体 | `ButtonVariantType` | — |
+| icon | 图标数据或 Vue 组件；#icon 优先 | `ButtonIcon` | — |
+| iconPosition | 已有废弃别名，使用 iconPlacement | `ButtonIconPlacement` | — |
+| iconPlacement | 图标位置，覆盖已有别名 | `ButtonIconPlacement` | 'start' |
+| shape | 形状；square 为方角 | `ButtonShape` | 'default' |
+| size | 尺寸，依次取局部、Compact、Provider | `ButtonSize` | — |
+| disabled | 禁用；显式 false 覆盖父级 true | `boolean` | — |
+| loading | 请求立即阻止点击，delay 只推迟指示器 | `ButtonLoading` | false |
+| prefixCls | 根类名前缀 | `string` | apollo-btn |
+| ghost | 透明背景；solid 映射为 outlined | `boolean` | false |
+| danger | 危险颜色糖，低于显式 color | `boolean` | false |
+| block | 撑满容器 | `boolean` | false |
+| href | 定义时渲染 a，空字符串也是有效链接值 | `string` | — |
+| htmlType | button 根的原生 type | `ButtonHTMLType` | 'button' |
+| autoInsertSpace | 两个中文字的视觉字距，保留连续原文 | `boolean` | true |
+| classNames | root/icon/content 对象式类名 | `ButtonSemanticClassNames` | — |
+| styles | root/icon/content 对象式样式 | `ButtonSemanticStyles` | — |
 
-### 根节点原生属性
+`ButtonType`: default / primary / dashed / link / text. `ButtonShape`: default / circle / round / square.
+`ButtonSize`: small / medium / middle / large. `ButtonVariantType`: outlined / dashed / solid / filled / text / link.
+`ButtonColorType`: default / primary / danger / blue / purple / cyan / green / magenta / pink / red / orange / yellow / volcano / geekblue / lime / gold.
+`ButtonHTMLType`: button / submit / reset. `ButtonIconPlacement`: start / end.
+`ButtonIcon = VNodeChild | Component`; `ButtonLoading = boolean | { delay?: number; icon?: ButtonIcon }`.
 
-根节点会根据 `href` 渲染为 `<button>` 或 `<a>`。Vue 原生 `class`、`style` 和其它 `$attrs` 会透传到这个根节点；`class` 支持字符串、数组、对象，`style` 调用值优先于 `styles.root`。它们不是 Button 专属 Props，因此不声明 `className` / `rootClassName` / `style`。
+### 当前配置与原生属性
 
-```vue
-<Button class="save-button" :style="{ color: 'rebeccapurple' }">保存</Button>
-```
+color、variant 各自先取显式值，再取 type/danger 糖，最后取当前 Provider；没有颜色时 solid 用 primary，其他变体用 default。显式 color 优先于 danger。ghost 把 solid 映射为 outlined。Provider 替换、删除、恢复均使用当前配置。
 
-### 事件
-
-| 名称 | 说明 | 参数 |
-|---|---|---|
-| click | 点击。**loading / disabled 时不触发**（且 `preventDefault`） | `(event: MouseEvent)` |
+Vue class、字符串/对象/数组 style 和其他原生 attrs 落在真实 button/anchor 根；原生 style 优先于语义根样式和源 Token。表单属性、原生事件正常消费。启用链接尊重调用者 tabindex；禁用时移除 href 并强制 tabindex=-1。自定义前缀需配套静态 CSS，例如 genButtonStyle('my-app') 对应 .my-app-btn。
 
 ### 插槽
 
-| 名称 | 说明 |
+| 名称 | 内容 |
 |---|---|
-| default | 按钮内容 |
-| icon | 图标。`icon` prop 优先于插槽 |
+| default | 完整 Vue 内容；注释和空 Fragment 不产生空宿主 |
+| icon | 完整 Vue 图标内容，优先于 icon 数据；有意空槽隐藏回退 |
 
-> **关于 `icon` 传组件**
->
-> Vue 没有「已求值元素」这一形态，对应物是**组件本身**，因此 `icon` 额外接受
-> `Component`：
->
-> ```vue
-> <!-- ✅ 与 antd 示例等价的写法 -->
-> <Button type="primary" :icon="SearchOutlined">Search</Button>
-> <!-- ✅ VNode 形态同样支持（两者渲染结果一致） -->
-> <Button type="primary" :icon="h(SearchOutlined)">Search</Button>
-> ```
->
-> ⚠️ 插槽仍只接受 `() => VNodeChild`，组件请走 prop：
-> `<template #icon><SearchOutlined /></template>`。
+组件拥有的 .apollo-btn-content 接收 content 类和样式。业务子 VNode、文字、状态和 ref 保持原样；中文字距由 CSS 实现，DOM 和可访问名保留连续原文。语义样式仅接受对象，不包含函数式 API。
 
-### 语义化槽位
+### Emits 与 ref
 
-`classNames` / `styles` 各有三个槽位：`root` / `icon` / `content`。
+click 发出一次原生 MouseEvent。disabled 或加载请求阻止激活、默认提交和事件传播，延迟显示期间也不触发 click。加载保留焦点，通过 aria-busy/aria-disabled 表达状态。有限正 delay 只延迟指示器；取消或卸载清理，单独替换图标不重计时，SSR 不创建计时器。内置加载图形为装饰；仅图标按钮应通过 aria-label 提供操作名称。
 
-合并优先级（低 → 高）：
+唯一 expose 是 nativeElement: HTMLButtonElement | HTMLAnchorElement | null，挂载前及卸载后为 null。没有 v-model 或其他 focus/blur 服务。
 
+### 组件 Token 与导出
+
+下列 45 个显式字段及 13 个已有预设阴影字段均消费当前 theme.components.Button。原生根变量（如 --apollo-btn-content-font-size）优先。数字长度转 px，字重/行高为无单位；有限非负尺寸保留 0，无效数字尺寸回退。移除源配置恢复继承/静态默认值。
+
+| Token | 职责 |
+|---|---|
+| fontWeight | 字重 |
+| iconGap | 图标与内容间距 |
+| defaultShadow | 阴影 |
+| primaryShadow | 阴影 |
+| dangerShadow | 阴影 |
+| primaryColor | 对应颜色及状态的文字、背景或边框 |
+| defaultColor | 对应颜色及状态的文字、背景或边框 |
+| defaultBg | 对应颜色及状态的文字、背景或边框 |
+| defaultBorderColor | 对应颜色及状态的文字、背景或边框 |
+| dangerColor | 对应颜色及状态的文字、背景或边框 |
+| defaultHoverBg | 对应颜色及状态的文字、背景或边框 |
+| defaultHoverColor | 对应颜色及状态的文字、背景或边框 |
+| defaultHoverBorderColor | 对应颜色及状态的文字、背景或边框 |
+| defaultActiveBg | 对应颜色及状态的文字、背景或边框 |
+| defaultActiveColor | 对应颜色及状态的文字、背景或边框 |
+| defaultActiveBorderColor | 对应颜色及状态的文字、背景或边框 |
+| borderColorDisabled | 对应颜色及状态的文字、背景或边框 |
+| defaultBorderColorDisabled | 对应颜色及状态的文字、背景或边框 |
+| groupBorderColor | 组及 Compact 接缝 |
+| defaultGhostColor | 对应颜色及状态的文字、背景或边框 |
+| ghostBg | 对应颜色及状态的文字、背景或边框 |
+| defaultGhostBorderColor | 对应颜色及状态的文字、背景或边框 |
+| solidTextColor | 对应颜色及状态的文字、背景或边框 |
+| textTextColor | 对应颜色及状态的文字、背景或边框 |
+| textTextHoverColor | 对应颜色及状态的文字、背景或边框 |
+| textTextActiveColor | 对应颜色及状态的文字、背景或边框 |
+| paddingInline | 对应尺寸内边距 |
+| paddingInlineLG | 对应尺寸内边距 |
+| paddingInlineSM | 对应尺寸内边距 |
+| paddingBlock | 对应尺寸内边距 |
+| paddingBlockLG | 对应尺寸内边距 |
+| paddingBlockSM | 对应尺寸内边距 |
+| onlyIconSize | 仅图标尺寸 |
+| onlyIconSizeLG | 仅图标尺寸 |
+| onlyIconSizeSM | 仅图标尺寸 |
+| linkHoverBg | 对应颜色及状态的文字、背景或边框 |
+| textHoverBg | 对应颜色及状态的文字、背景或边框 |
+| contentFontSize | 对应尺寸字号 |
+| contentFontSizeLG | 对应尺寸字号 |
+| contentFontSizeSM | 对应尺寸字号 |
+| contentLineHeight | 对应尺寸行高 |
+| contentLineHeightLG | 对应尺寸行高 |
+| contentLineHeightSM | 对应尺寸行高 |
+| defaultBgDisabled | 对应颜色及状态的文字、背景或边框 |
+| dashedBgDisabled | 对应颜色及状态的文字、背景或边框 |
+
+预设阴影：`blueShadowColor`, `purpleShadowColor`, `cyanShadowColor`, `greenShadowColor`, `magentaShadowColor`, `pinkShadowColor`, `redShadowColor`, `orangeShadowColor`, `yellowShadowColor`, `volcanoShadowColor`, `geekblueShadowColor`, `limeShadowColor`, `goldShadowColor`.
+
+```vue
+<ConfigProvider :theme="{components:{Button:{contentFontSize:18,paddingInline:24}}}">
+  <Button type="primary">Save</Button>
+</ConfigProvider>
 ```
-ConfigProvider.button.classNames/styles
-  → 组件的 classNames / styles
-  → 根节点原生 class / style attrs
-```
 
-其中调用处原生 **`:style` 会覆盖 `styles.root`**（保持合并优先级；该值走 Vue `$attrs`，不是 `ButtonProps.style`）。
+默认实色前景和彩色文字在 @supports 内使用原生 CSS 颜色能力，已有前景 Token 和原生样式保留显式控制；不支持的色值函数保留回退。透明及渐变表面须按实际背景配对。审计记录实际浏览器和主题范围，不宣称其他浏览器均已实测。
 
-⚠️ **不支持函数式变体**（`classNames` / `styles` 只接受对象）—— 依据
-`empty-semantic-fn` 开放决策的建议 B，与已完成的 divider / empty / space / spin 一致。
-
-### 类型导出
-
-`ButtonProps`、`ButtonRef`、`ButtonConfig`、`ButtonType`、`ButtonShape`、`ButtonSize`、
-`ButtonColorType`、`ButtonVariantType`、`ButtonHTMLType`、`ButtonIcon`、
-`ButtonIconPlacement`、`ButtonLoading`、`ButtonSemanticType`、`ButtonSemanticClassNames`、
-`ButtonSemanticStyles`、`ButtonSlot`。
-
-### ref
-
-| 名称 | 说明 |
-|---|---|
-| nativeElement | 根元素（`<button>` 或 `<a>`）。首次渲染前为 `null` |
-
-### 工具导出
-
-| 名称 | 说明 |
-|---|---|
-| `genButtonStyle(prefixCls)` | 生成该前缀下的 CSS 文本（自定义 `prefixCls` 时自行产出样式用） |
-| `prepareComponentToken(token)` | 组件 Token 的默认值计算（与 antd 的 `prepareComponentToken` 逐键一致，缺 `solidTextColor`）。⚠️ 目前只有深导入 `button/style/token`，未从 `button/index.ts` 再导出 |
-
-## 设计说明
-
-### `type` 与 `color` + `variant`
-
-`type` 是 v5 的旧写法，v6 里被解析成 `color` + `variant`：
-
-| type | color | variant |
-|---|---|---|
-| `primary` | `primary` | `solid` |
-| `default` | `default` | `outlined` |
-| `dashed` | `default` | `dashed` |
-| `text` | `default` | `text` |
-| `link` | `link` | `link` |
-
-⚠️ `color` 与 `variant` **同时给出**时优先级最高，压过 `type` / `danger`。
-只给其中一个不生效（会落到兜底 `default` / `outlined`）。
-⚠️ `filled` 在 `ButtonTypeMap` 里没有映射 ⇒ 只能由 `variant` 显式传入。
-
-### 类名约定
-
-- `-dangerous` 由 `danger` prop 产生
-- `-color-{x}` 中的 `danger` 写作 `dangerous`
-
-因此 `color="danger"` 而不传 `danger` 时，只有 `-color-dangerous`，没有 `-dangerous`。
-
-### `loading` 的两种形态
-
-| 形态 | 行为 |
-|---|---|
-| `true` | 立刻进入加载态 |
-| `{ delay: 1000 }` | **1000ms 后**才进入（防连点），且**不会自动复位** |
-| `{ delay: 0 }` / `{}` | 立刻进入（`delay <= 0` 即视为立即） |
-
-变回非加载**只能靠 `loading` prop 自己变回**。
-
-### 两个中文字
-
-`autoInsertSpace` 默认 `true`：内容**恰好**是两个汉字时，会在两字间留出间隙
-（并加上 `-two-chinese-chars` 类名）。判据是 `textContent` 匹配 `/^[\u4E00-\u9FA5]{2}$/`。
-
-⚠️ `text` / `link` 变体不插；有图标时不插；`loading` 时不插。
-视觉间距由样式实现，DOM 文本保持 `确定` 两个连续字符（便于可访问名与复制）。
-
-### `<a>` 与 `<button>` 的禁用**不对称**
-
-| 分支 | 表现 |
-|---|---|
-| `<button>` | 原生 `disabled` |
-| `<a>`（有 `href`） | 移除 `href` + `tabindex="-1"` + `aria-disabled="true"` + `-disabled` 类名 |
-
-`<a>` 没有原生 `disabled`，只能靠组合表达。
-
-### 无障碍
-
-- icon-only 按钮**必须**自己传 `aria-label` —— 组件不会凭空猜一个。
-- `loading` 不产出 `aria-busy` / `aria-live`；需要时请由业务侧补充。
-
-### 组件 Token
-
-57 个（antd 6.6.4 返回 58 个，唯一缺 `solidTextColor`，见 README §7.1）。
-⚠️ 目前**不能**在运行时覆盖（`tokens.css` 只声明 Alias 层变量）—— 全库缺口，
-临时手段是 `styles.root.*`。
-
-### 样式引入
+Button、genButtonStyle、prepareButtonComponentToken 从 @apollo-design/ui 和 @apollo-design/ui/button 导出。类型含 ButtonProps、ButtonRef、ButtonSlots、ButtonSlot、ButtonConfig、上述枚举/语义类型、ButtonComponentToken、ButtonTokenInput。旧文档中的 button/style/token 不是包导出路径。
 
 ```ts
-import '@apollo-design/theme/tokens.css';    // 主题变量，必须先引
-import '@apollo-design/ui/button/style.css'; // 按需
-// 或
-import '@apollo-design/ui/style.css';        // 汇总
+import '@apollo-design/theme/tokens.css';
+import '@apollo-design/ui/button/style.css';
+// Or import '@apollo-design/ui/style.css';
 ```
 
-自定义 `prefixCls`（如 `my-app`）时用 `genButtonStyle('my-app')` 自行产出 CSS ——
-静态产物只覆盖 `apollo` 与 `ant` 两套前缀。
+[契约迁移](../../../../docs/migrations/button-contracts.md)。

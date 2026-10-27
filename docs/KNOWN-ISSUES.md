@@ -586,3 +586,9 @@ Skeleton已进入整组契约整改，当前实现与未验边界见后续阶段
 完整盘点七Props、五槽、六语义、四Token、三静态插画及十原Demo后，集中修正Vue完整内容/当前槽、原生根attrs/style、Provider/语义当前性、源主题Token、装饰语义和普通文本颜色。原18条失败行为与14项旧发布浏览器失败已复现；当前99四层、48相关类型、87项生产浏览器、8 SSR、5水合及UI/严格L7通过，未修改体积预算。
 
 整单元尚未收口：十Demo四算法仅20/40通过，实际Docs亮暗及三交互仅13/23通过，失败均为共享Button primary白字蓝底对比度4.1:1。全部原场景和axe规则保留，未换按钮/改夹具颜色绕过；继续关联Button完整审计及根因修复。Result39图和最终统一清单仍待验收，线上不发布这一未完成阶段。见[Result完整清单](audit/2026-10-27-result-contract-audit.md)与[证据](audit/evidence/result-contract.json)。
+
+### 2026-10-27 · Button完整契约及Result关联整改（统一验收中）
+
+入口是Result原Demo的primary文字对比度4.1:1；完整盘点扩到Button19 Props、两个槽、58既有Token、20原Demo和13个实际消费文件。初始97项行为回归7通过/90失败；97颜色组合×三态×四算法及四次axe共1168检查，378通过/790失败。当前已成组实现稳定内容宿主、当前Provider、加载调度/忙碌语义、Token消费、有效square与独立color/variant；Search、Dropdown、FloatButton关联调整，原65机械场景与全部原Demo保留。
+
+当前Button四层及严格参考守卫365项、颜色1168项、最终发布产物原生浏览器147项、关联实际Demo51项、独立SSR8项与20组水合通过；关联14组四层2340项通过，11项Space夹具失败已用真实Teleport修正并复验Space329项，最终Space/新增消费者336项及44项实际实例类型通过。根严格检查、真实SFC、五组162项类型、发布声明、69份CSS及UI严格L7十一项通过。仍待最终原Demo矩阵、Button/Result自有视觉、实际Docs及统一收口，不据局部结果称全库通过。见[完整范围](audit/2026-10-27-button-contract-audit.md)、[证据](audit/evidence/button-contract.json)和[迁移](migrations/button-contracts.md)。

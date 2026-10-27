@@ -1,26 +1,39 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Button, Space } from '../../index';
+import { Button, Space } from '@apollo-design/ui';
+import { onUnmounted, ref } from 'vue';
 
 const loading = ref(false);
 const delayLoading = ref(false);
-
-function enter() {
-  loading.value = true;
-  delayLoading.value = true;
-  setTimeout(() => {
-    loading.value = false;
-    delayLoading.value = false;
-  }, 3000);
+const count = ref(0);
+let immediateTimer: ReturnType<typeof setTimeout> | undefined;
+let delayedTimer: ReturnType<typeof setTimeout> | undefined;
+function enter(delayed: boolean) {
+  const current = delayed ? delayLoading : loading;
+  if (current.value) return;
+  current.value = true;
+  count.value++;
+  const finish = () => {
+    current.value = false;
+  };
+  if (delayed) delayedTimer = setTimeout(finish, 3000);
+  else immediateTimer = setTimeout(finish, 3000);
 }
+onUnmounted(() => {
+  clearTimeout(immediateTimer);
+  clearTimeout(delayedTimer);
+});
 </script>
-
 <template>
-  <Space wrap>
-    <Button type="primary" loading>Loading</Button>
-    <Button type="primary" :loading="{ delay: 1000 }" @click="enter()">
-      Delay 1s（1000ms 内点击不触发 click）
-    </Button>
-    <Button type="primary" :loading="loading" @click="enter()">Click me</Button>
+  <Space orientation="vertical">
+    <Space wrap>
+      <Button type="primary" loading>Loading</Button>
+      <Button type="primary" :loading="delayLoading ? { delay: 1000 } : false" @click="enter(true)">
+        Delay 1s
+      </Button>
+      <Button type="primary" :loading="loading" @click="enter(false)">Click me</Button>
+    </Space>
+    <p aria-live="polite" style="margin:0;color:var(--apollo-color-text-secondary)">
+      已触发 {{ count }} 次；加载请求立即阻止重复点击，1 秒只延迟指示器显示，3 秒后恢复。
+    </p>
   </Space>
 </template>

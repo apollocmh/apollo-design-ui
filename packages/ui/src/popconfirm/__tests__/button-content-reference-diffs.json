@@ -1,0 +1,45 @@
+{
+  "popconfirm:pure-panel": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "popconfirm:pure-panel-title-only": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "popconfirm:pure-panel-zero-title": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "popconfirm:pure-panel-no-cancel": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "popconfirm:pure-panel-custom-text": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "popconfirm:pure-panel-empty-text": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "popconfirm:pure-panel-no-icon": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "popconfirm:pure-panel-ok-type": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "popconfirm:pure-panel-placement": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "popconfirm:pure-panel-render-fn": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "popconfirm:pure-panel-class-name": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ]
+}

@@ -252,10 +252,7 @@ export const SearchComponent = defineComponent({
           ? String(enterButton)
           : undefined;
 
-      // antd 的 Button 收到 `children=true`：不渲染内容，但让 `-icon-only` 为假。
-      // 本仓 Button 已把「raw children 含 true」纳入 icon-only 判据（Button.vue）。
-      const children =
-        text !== undefined ? () => text : enterButton === true ? () => true : undefined;
+      const children = text === undefined ? undefined : () => text;
 
       return h(
         Button,

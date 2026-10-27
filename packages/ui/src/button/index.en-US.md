@@ -4,33 +4,11 @@ title: Button
 subtitle: Button
 ---
 
-A button triggers an immediate action.
-
-## When To Use
-
-- To start an action: submit, confirm, delete, navigate.
-- Put **only one** primary button (`type="primary"`) in an action area; use secondary
-  buttons for the rest.
+A button triggers an action or navigates through a native anchor.
 
 ## Examples
 
-See [`demo/`](./demo) — 12 demos covering type / size / loading / disabled / danger /
-ghost / block / icon / shape / color-variant / href / semantic.
-
-| demo | content |
-|---|---|
-| `basic` | the five `type` values; the last one demos auto spacing for two Chinese chars |
-| `size` | `large` / default (`medium` / `middle`) / `small` |
-| `loading` | boolean form and `{ delay }` form |
-| `disabled` | including the `<a>` branch (with `href`) |
-| `danger` | `danger` × the five `type` values |
-| `ghost` | ghost button (for colored backgrounds) |
-| `block` | full width of the parent |
-| `icon` | `icon` prop / `icon` slot / `iconPlacement` / icon only |
-| `shape` | `circle` / `round` / `square` |
-| `color-variant` | the v6 `color` + `variant` API |
-| `href` | renders an `<a>` |
-| `semantic` | semantic `classNames` / `styles` |
+All 20 original demos remain: `basic`, `block`, `chinese-chars-loading`, `chinese-space`, `color-variant`, `component-token`, `custom-disabled-bg`, `danger`, `disabled`, `ghost`, `href`, `icon`, `icon-placement`, `linear-gradient`, `loading`, `multiple`, `semantic`, `shape`, `size`, `style-class`.
 
 ## API
 
@@ -38,174 +16,121 @@ ghost / block / icon / shape / color-variant / href / semantic.
 
 | Property | Description | Type | Default |
 |---|---|---|---|
-| type | legacy sugar; resolved into `color` + `variant` | `'default' \| 'primary' \| 'dashed' \| 'link' \| 'text'` | `'default'` |
-| color | semantic or preset color (16 values) | `ButtonColorType` | — |
-| variant | visual variant | `'outlined' \| 'dashed' \| 'solid' \| 'filled' \| 'text' \| 'link'` | — |
-| icon | icon (since v6 it is a **node**, not a string name). A **component** is also accepted (see below) | `ButtonIcon` = `VNodeChild \| Component` | — |
-| iconPlacement | icon position | `'start' \| 'end'` | `'start'` |
-| ~~iconPosition~~ | ⚠️ deprecated, use `iconPlacement` | `'start' \| 'end'` | — |
-| shape | shape | `'default' \| 'circle' \| 'round' \| 'square'` | `'default'` |
-| size | size. Both `medium` and `middle` are the default tier and emit **no** class | `'small' \| 'medium' \| 'middle' \| 'large'` (= `SizeType`) | ConfigProvider `componentSize` |
-| disabled | disabled. Merged with `??` ⇒ explicit `false` can turn off a parent `true` | `boolean` | — |
-| loading | loading state | `boolean \| { delay?: number; icon?: ButtonIcon }` | `false` |
-| ghost | ghost button. Degrades a `solid` variant to `outlined` | `boolean` | `false` |
-| danger | danger button | `boolean` | `false` |
-| block | fill the parent width | `boolean` | `false` |
-| href | when set, renders an `<a>` | `string` | — |
-| htmlType | native `type` of `<button>` | `'submit' \| 'button' \| 'reset'` | `'button'` |
-| autoInsertSpace | insert a space between two Chinese characters | `boolean` | `true` |
-| prefixCls | class name prefix | `string` | from ConfigProvider, falls back to `apollo-btn` |
-| classNames | semantic class names (**object form only**) | `ButtonSemanticClassNames` | — |
-| styles | semantic styles (**object form only**) | `ButtonSemanticStyles` | — |
+| type | Visual shorthand; color/variant independently override it | `ButtonType` | 'default' |
+| color | Independent semantic or preset color | `ButtonColorType` | — |
+| variant | Independent visual variant | `ButtonVariantType` | — |
+| icon | Icon data or Vue component; #icon takes precedence | `ButtonIcon` | — |
+| iconPosition | Existing deprecated alias; use iconPlacement | `ButtonIconPlacement` | — |
+| iconPlacement | Icon position, ahead of the existing alias | `ButtonIconPlacement` | 'start' |
+| shape | Shape; square has zero corner radius | `ButtonShape` | 'default' |
+| size | Size: local, Compact, then Provider | `ButtonSize` | — |
+| disabled | Disabled; explicit false overrides inherited true | `boolean` | — |
+| loading | Immediately blocks activation; delay postpones the indicator | `ButtonLoading` | false |
+| prefixCls | Root class prefix | `string` | apollo-btn |
+| ghost | Transparent background; solid maps to outlined | `boolean` | false |
+| danger | Danger color shorthand, below explicit color | `boolean` | false |
+| block | Full container width | `boolean` | false |
+| href | Defined renders an anchor, including an empty string | `string` | — |
+| htmlType | Native button type | `ButtonHTMLType` | 'button' |
+| autoInsertSpace | Visual spacing for two Chinese characters; original text is retained | `boolean` | true |
+| classNames | Object classes for root/icon/content | `ButtonSemanticClassNames` | — |
+| styles | Object styles for root/icon/content | `ButtonSemanticStyles` | — |
 
-### Native root attributes
+`ButtonType`: default / primary / dashed / link / text. `ButtonShape`: default / circle / round / square.
+`ButtonSize`: small / medium / middle / large. `ButtonVariantType`: outlined / dashed / solid / filled / text / link.
+`ButtonColorType`: default / primary / danger / blue / purple / cyan / green / magenta / pink / red / orange / yellow / volcano / geekblue / lime / gold.
+`ButtonHTMLType`: button / submit / reset. `ButtonIconPlacement`: start / end.
+`ButtonIcon = VNodeChild | Component`; `ButtonLoading = boolean | { delay?: number; icon?: ButtonIcon }`.
 
-The root is `<button>` or `<a>` depending on `href`. Vue-native `class`, `style`, and other `$attrs` fall through to that root; `class` supports string, array, and object forms. Caller `style` overrides `styles.root`. These are not Button-specific Props, so `className`, `rootClassName`, and `style` are not declared in `ButtonProps`.
+### Current configuration and native attributes
 
-```vue
-<Button class="save-button" :style="{ color: 'rebeccapurple' }">Save</Button>
-```
+Each explicit color/variant wins independently, followed by type/danger shorthand, then current Provider values. Without a color, solid uses primary; other variants use default. Ghost maps solid to outlined. Provider replacement, removal and restoration use current values.
 
-### Events
-
-| Name | Description | Arguments |
-|---|---|---|
-| click | click. **Not emitted while loading / disabled** (and `preventDefault` is called) | `(event: MouseEvent)` |
+Vue class and all native style forms merge onto the real button/anchor root. Native style wins over semantic root style and source tokens. Native events and form attributes retain their normal behavior. Enabled anchors respect caller tabindex; disabled anchors lose href and force tabindex=-1. Prefixes require matching static CSS; genButtonStyle('my-app') generates .my-app-btn styles.
 
 ### Slots
 
-| Name | Description |
+| Name | Content |
 |---|---|
-| default | button content |
-| icon | icon. The `icon` prop takes precedence over this slot |
+| default | Complete Vue content; comments and empty fragments do not create an empty host |
+| icon | Complete Vue icon content, before icon data; an intentionally empty slot hides the fallback |
 
-> **Passing a component to `icon`** (platform difference, same ruling as `Empty`'s `image`)
->
-> antd's `icon` is `React.ReactNode`, and its examples write `icon={<SearchOutlined />}` —
-> in React that is an **already-evaluated element**. Vue has no such thing; its counterpart
-> is the **component itself**, so `Component` is accepted here as well:
->
-> ```vue
-> <!-- ✅ equivalent to the antd example -->
-> <Button type="primary" :icon="SearchOutlined">Search</Button>
-> <!-- ✅ the VNode form works too (identical output) -->
-> <Button type="primary" :icon="h(SearchOutlined)">Search</Button>
-> ```
->
-> ⚠️ The slot still only accepts `() => VNodeChild`; pass components through the prop:
-> `<template #icon><SearchOutlined /></template>`.
+The owned .apollo-btn-content receives content classes/styles. Business child VNodes, text, state and refs remain intact. Chinese spacing uses CSS and preserves the accessible text. Semantics accept objects; function forms are not part of this API.
 
-### Semantic slots
+### Emits and ref
 
-`classNames` / `styles` each have three slots: `root` / `icon` / `content`.
+click emits one native MouseEvent. Disabled or requested loading prevents activation/default submission and propagation; the pending delay already blocks click. Loading retains focus and exposes aria-busy/aria-disabled. Only the indicator waits for a finite positive delay; cancellation/unmount clears it, icon replacement does not restart it, and SSR creates no delay timer. Owned loading graphics are decorative. Give icon-only buttons an accessible name through aria-label.
 
-Merge order (low → high):
+The only expose is nativeElement: HTMLButtonElement | HTMLAnchorElement | null, including null before mount/after unmount. There is no v-model or additional focus/blur service.
 
+### Component tokens and exports
+
+All 45 explicit fields below and the 13 existing preset shadow fields are consumed by current theme.components.Button. Native root variables win, such as --apollo-btn-content-font-size. Numeric lengths use px; font weight and line-height remain unitless. Finite nonnegative sizes, including zero, are retained; invalid numeric sizes fall back. Removing source configuration restores inherited/static defaults.
+
+| Token | Target |
+|---|---|
+| fontWeight | Font weight |
+| iconGap | Icon/content gap |
+| defaultShadow | Shadow |
+| primaryShadow | Shadow |
+| dangerShadow | Shadow |
+| primaryColor | Corresponding color/state foreground, background or border |
+| defaultColor | Corresponding color/state foreground, background or border |
+| defaultBg | Corresponding color/state foreground, background or border |
+| defaultBorderColor | Corresponding color/state foreground, background or border |
+| dangerColor | Corresponding color/state foreground, background or border |
+| defaultHoverBg | Corresponding color/state foreground, background or border |
+| defaultHoverColor | Corresponding color/state foreground, background or border |
+| defaultHoverBorderColor | Corresponding color/state foreground, background or border |
+| defaultActiveBg | Corresponding color/state foreground, background or border |
+| defaultActiveColor | Corresponding color/state foreground, background or border |
+| defaultActiveBorderColor | Corresponding color/state foreground, background or border |
+| borderColorDisabled | Corresponding color/state foreground, background or border |
+| defaultBorderColorDisabled | Corresponding color/state foreground, background or border |
+| groupBorderColor | Group/Compact seams |
+| defaultGhostColor | Corresponding color/state foreground, background or border |
+| ghostBg | Corresponding color/state foreground, background or border |
+| defaultGhostBorderColor | Corresponding color/state foreground, background or border |
+| solidTextColor | Corresponding color/state foreground, background or border |
+| textTextColor | Corresponding color/state foreground, background or border |
+| textTextHoverColor | Corresponding color/state foreground, background or border |
+| textTextActiveColor | Corresponding color/state foreground, background or border |
+| paddingInline | Size-specific padding |
+| paddingInlineLG | Size-specific padding |
+| paddingInlineSM | Size-specific padding |
+| paddingBlock | Size-specific padding |
+| paddingBlockLG | Size-specific padding |
+| paddingBlockSM | Size-specific padding |
+| onlyIconSize | Icon-only size |
+| onlyIconSizeLG | Icon-only size |
+| onlyIconSizeSM | Icon-only size |
+| linkHoverBg | Corresponding color/state foreground, background or border |
+| textHoverBg | Corresponding color/state foreground, background or border |
+| contentFontSize | Size-specific font size |
+| contentFontSizeLG | Size-specific font size |
+| contentFontSizeSM | Size-specific font size |
+| contentLineHeight | Size-specific line height |
+| contentLineHeightLG | Size-specific line height |
+| contentLineHeightSM | Size-specific line height |
+| defaultBgDisabled | Corresponding color/state foreground, background or border |
+| dashedBgDisabled | Corresponding color/state foreground, background or border |
+
+Preset shadows: `blueShadowColor`, `purpleShadowColor`, `cyanShadowColor`, `greenShadowColor`, `magentaShadowColor`, `pinkShadowColor`, `redShadowColor`, `orangeShadowColor`, `yellowShadowColor`, `volcanoShadowColor`, `geekblueShadowColor`, `limeShadowColor`, `goldShadowColor`.
+
+```vue
+<ConfigProvider :theme="{components:{Button:{contentFontSize:18,paddingInline:24}}}">
+  <Button type="primary">Save</Button>
+</ConfigProvider>
 ```
-ConfigProvider.button.classNames/styles
-  → component classNames / styles
-  → native root class / style attrs
-```
 
-The caller's native **`:style` overrides `styles.root`** (preserving precedence while using Vue `$attrs`, not `ButtonProps.style`).
+Default solid foreground and colored text use native CSS color functions within @supports; existing foreground tokens and native styles keep explicit control. The original fallback remains for unsupported functions. Transparent/gradient surfaces require paired caller colors. The audit records the actual browser/theme scope; this does not claim every browser has been tested.
 
-⚠️ The **function form is not supported** (`classNames` / `styles` accept objects only) —
-per open decision `empty-semantic-fn` = B, consistent with divider / empty / space / spin.
-
-### Type exports
-
-`ButtonProps`, `ButtonRef`, `ButtonConfig`, `ButtonType`, `ButtonShape`, `ButtonSize`,
-`ButtonColorType`, `ButtonVariantType`, `ButtonHTMLType`, `ButtonIcon`,
-`ButtonIconPlacement`, `ButtonLoading`, `ButtonSemanticType`, `ButtonSemanticClassNames`,
-`ButtonSemanticStyles`, `ButtonSlot`.
-
-### ref
-
-| Name | Description |
-|---|---|
-| nativeElement | the root element (`<button>` or `<a>`). `null` before first render |
-
-### Utility exports
-
-| Name | Description |
-|---|---|
-| `genButtonStyle(prefixCls)` | builds the CSS text for that prefix (for custom `prefixCls`) |
-| `prepareComponentToken(token)` | default Component Token computation (key-by-key identical to antd's, minus `solidTextColor`). ⚠️ deep import from `button/style/token`; not re-exported from `button/index.ts` |
-
-## Design Notes
-
-### `type` vs `color` + `variant`
-
-`type` is the v5 API; in v6 it is resolved into `color` + `variant`:
-
-| type | color | variant |
-|---|---|---|
-| `primary` | `primary` | `solid` |
-| `default` | `default` | `outlined` |
-| `dashed` | `default` | `dashed` |
-| `text` | `default` | `text` |
-| `link` | `link` | `link` |
-
-⚠️ `color` **and** `variant` together win over `type` / `danger`.
-Passing only one of them has no effect (it falls back to `default` / `outlined`).
-⚠️ `filled` has no mapping in `ButtonTypeMap` ⇒ it can only be set via `variant`.
-
-### Two inconsistencies in class names (upstream behavior, not typos)
-
-- `-dangerous` uses the **raw `danger` prop**
-- `-color-{x}` rewrites `danger` into `dangerous`
-
-So `color="danger"` without the `danger` prop yields `-color-dangerous` but **no** `-dangerous`.
-
-### The two `loading` forms
-
-| Form | Behavior |
-|---|---|
-| `true` | enters loading immediately |
-| `{ delay: 1000 }` | enters loading **after 1000ms** (anti double-click) and **never resets automatically** |
-| `{ delay: 0 }` / `{}` | immediate (`delay <= 0` means immediate) |
-
-Leaving the loading state requires the `loading` prop itself to change back.
-
-### Two Chinese characters
-
-With `autoInsertSpace` (default `true`), content that is **exactly** two Chinese characters
-gets a gap between them (plus the `-two-chinese-chars` class). The test is
-`textContent` matching `/^[\u4E00-\u9FA5]{2}$/`.
-
-⚠️ Not applied to `text` / `link` variants, when an icon is present, or while loading.
-The gap is produced by styles; the DOM text stays the two characters `确定` so the
-accessible name and copy behavior remain clean.
-
-### `<a>` and `<button>` express `disabled` **asymmetrically**
-
-| Branch | Expression |
-|---|---|
-| `<button>` | native `disabled` |
-| `<a>` (with `href`) | `href` removed + `tabindex="-1"` + `aria-disabled="true"` + `-disabled` class |
-
-`<a>` has no native `disabled`, so the combination is the only way.
-
-### Accessibility
-
-- Icon-only buttons **must** be given an `aria-label` by the caller — the component never
-  invents one.
-- `loading` emits no `aria-busy` / `aria-live`; add them in your application if needed.
-
-### Component Token
-
-57 tokens (antd 6.6.4 returns 58; the only missing one is `solidTextColor`, see README §7.1).
-⚠️ They **cannot** be overridden at runtime yet (`tokens.css` only declares Alias-level
-variables) — a repo-wide gap; use `styles.root.*` for now.
-
-### Importing styles
+Button, genButtonStyle and prepareButtonComponentToken are exported from @apollo-design/ui and @apollo-design/ui/button. Types include ButtonProps, ButtonRef, ButtonSlots, ButtonSlot, ButtonConfig, the enums/semantic types above, ButtonComponentToken and ButtonTokenInput. The old documented button/style/token path is not a package export.
 
 ```ts
-import '@apollo-design/theme/tokens.css';    // design tokens, must come first
-import '@apollo-design/ui/button/style.css'; // on demand
-// or
-import '@apollo-design/ui/style.css';        // everything
+import '@apollo-design/theme/tokens.css';
+import '@apollo-design/ui/button/style.css';
+// Or import '@apollo-design/ui/style.css';
 ```
 
-With a custom `prefixCls` (e.g. `my-app`), build the CSS yourself via
-`genButtonStyle('my-app')` — the static output only covers the `apollo` and `ant` prefixes.
+[Contract migration](../../../../docs/migrations/button-contracts.md).

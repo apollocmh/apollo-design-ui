@@ -1,51 +1,9 @@
 /**
- * Button 的 Component Token。
- *
- * 契约来源：antd 6.6.4 `es/button/style/token.js` 的 `prepareComponentToken` 与
- * `es/button/style/token.d.ts` 的 `ComponentToken`。**名称、数量、默认值算法逐条对齐**。
- *
- * ── 数量（读 `token.d.ts` 数出来的，不是估算） ──────────────────────────────────
- *
- * | 项 | 数量 | 说明 |
- * |---|---:|---|
- * | antd `ComponentToken` 接口字段 | **43** | `token.d.ts:4-231` |
- * | antd `prepareComponentToken` 返回的键 | **58** | 43 + 13 个 `${colorKey}ShadowColor` + 2 个「返回了但没写进接口」的键 |
- *
- * 那 2 个「返回了但没写进接口」的键是 `groupBorderColor`（`token.js:54`，`style/group.js`
- * 真的消费它）与 `defaultBorderColorDisabled`（`token.js:63`，目前无人消费）。
- * 本文件把它们**声明进接口** —— 否则 TS 会拒绝返回它们，而丢掉等于丢掉 `group` 的边框色。
- *
- * ── ⚠️ 缺口 1：`solidTextColor` 无法计算（未编造，如实登记） ──────────────────────
- *
- * antd 的算法是（`token.js:28`）：
- *
- * ```ts
- * const solidTextColor = isBright(new AggregationColor(token.colorBgSolid), '#fff') ? '#000' : '#fff';
- * ```
- *
- * `isBright` 与 `AggregationColor` 都来自 **color-picker**（`es/color-picker/components/ColorPresets`、
- * `es/color-picker/color`）。本仓库**未实现 color-picker**，且已 grep 确认：
- * `packages/utils/src/color/` 只有 `Color` / `generatePalette`，`packages/theme` 也没有
- * `isBright` / `AggregationColor` 的等价能力 ⇒ **没有等价实现**，不是"换个名字就有"。
- *
- ⇒ `prepareComponentToken` 的返回里**不含** `solidTextColor`（类型上它是可选的）。
- *    消费方 `style/index.ts` 对「default + solid」这条组合的落地方式见那里的注释。
- *
- * ── ⚠️ 缺口 2（不是缺口，是可解的）：13 个 `${colorKey}ShadowColor` ────────────────
- *
- * `token.js:29-32`：`0 ${controlOutlineWidth} 0 ${getAlphaColor(token[`${k}1`], token.colorBgContainer)}`。
- * `getAlphaColor` 本仓库**有**（`packages/theme/src/shared/get-alpha-color.ts`，与 antd 逐字同构），
- * `PresetColors` 也有（`packages/theme/src/seed.ts`）⇒ 可以在**拿到 token 对象**时算出来。
- * 所以 `prepareComponentToken` 完整返回这 13 个值。
- *
- * 但它们**不能**写成 `var(--apollo-*)`：`getAlphaColor` 是一个「反解不透明色」的
- * 迭代算法（O(100) 暴力搜索 alpha），CSS 里没有等价表达式。⇒ 由 `style/index.ts`
- * 在**构建期**把 `prepareComponentToken(getDesignToken())` 的结果内联进 CSS，
- * 代价是这 13 个阴影色不随 dark 主题自适应（差异 D7 家族，文档里登记）。
- *
- * ── 这个模块没有证明什么 ──────────────────────────────────────────────────────
- *   - 没证明 `solidTextColor` 的取值（那是缺口 1）。
- *   - 没证明视觉正确（L6 的逐像素比对负责）。
+ * Existing Button tokens: 45 explicit fields and 13 preset shadow colours.
+ * prepareComponentToken derives every default from the current source theme.
+ * Button projects scoped values as static CSS variables; explicit foreground
+ * overrides remain authoritative and native CSS supplies automatic contrast.
+ * The complete consumption inventory is recorded in the Button contract audit.
  */
 
 import {
@@ -53,7 +11,6 @@ import {
   getAlphaColor,
   getLineHeight,
   type PresetColorKey,
-  PresetColors,
 } from '@apollo-design/theme';
 import type { CSSProperties } from 'vue';
 
@@ -62,15 +19,7 @@ export type PresetShadowColorToken = {
   [K in PresetColorKey as `${K}ShadowColor`]: string;
 };
 
-/**
- * Button 的 Component Token。
- *
- * 与 antd 的 `ComponentToken` 逐字段对齐；注释里的 `@desc` / `@descEN` 与 antd 同构
- * （文档表格由它们生成）。
- *
- * ⚠️ `solidTextColor` 是本项目唯一**无法**给出默认值的字段（缺口 1），
- *    因此它在 `prepareComponentToken` 的返回里缺省 —— 类型上标成可选以让这一点显式。
- */
+/** Existing public fields; runtime defaults are complete. */
 export interface ComponentToken {
   /** @desc 文字字重 @descEN Font weight of text */
   fontWeight: CSSProperties['fontWeight'];
@@ -194,34 +143,44 @@ export type ButtonTokenInput = AliasToken &
  */
 export function prepareComponentToken(
   token: ButtonTokenInput,
-): Partial<ComponentToken> & PresetShadowColorToken {
-  const contentFontSize = token.contentFontSize ?? token.fontSize;
-  const contentFontSizeSM = token.contentFontSizeSM ?? token.fontSize;
-  // ⚠️ 大号回落的是 `fontSizeLG`，不是 `fontSize`（`token.js:24`）
-  const contentFontSizeLG = token.contentFontSizeLG ?? token.fontSizeLG;
-  const contentLineHeight = getLineHeight(contentFontSize);
-  const contentLineHeightSM = getLineHeight(contentFontSizeSM);
-  const contentLineHeightLG = getLineHeight(contentFontSizeLG);
+): Required<ComponentToken> & PresetShadowColorToken {
+  const font = (value: number | undefined, fallback: number): number =>
+    typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : fallback;
+  const contentFontSize = font(token.contentFontSize, token.fontSize);
+  const contentFontSizeSM = font(token.contentFontSizeSM, token.fontSize);
+  const contentFontSizeLG = font(token.contentFontSizeLG, token.fontSizeLG);
+  const lineHeight = (size: number): number =>
+    size === 0 ? token.lineHeight : getLineHeight(size);
+  const contentLineHeight = lineHeight(contentFontSize);
+  const contentLineHeightSM = lineHeight(contentFontSizeSM);
+  const contentLineHeightLG = lineHeight(contentFontSizeLG);
 
-  // antd 这里写的是 `PresetColors.reduce((prev, k) => ({...prev, ...}))`；
-  // 我们改成循环 —— 语义相同，但避开 accumulator 上的展开（biome noAccumulatingSpread）。
-  const shadowColorTokens = {} as PresetShadowColorToken;
-  for (const colorKey of PresetColors) {
-    shadowColorTokens[`${colorKey}ShadowColor`] =
-      `0 ${token.controlOutlineWidth}px 0 ${getAlphaColor(token[`${colorKey}1`], token.colorBgContainer)}`;
-  }
-
+  const shadow = (color: PresetColorKey): string =>
+    `0 ${token.controlOutlineWidth}px 0 ${getAlphaColor(token[`${color}1`], token.colorBgContainer)}`;
   const defaultBgDisabled = token.colorBgContainerDisabled;
   const dashedBgDisabled = token.colorBgContainerDisabled;
 
   return {
-    ...shadowColorTokens,
+    blueShadowColor: shadow('blue'),
+    purpleShadowColor: shadow('purple'),
+    cyanShadowColor: shadow('cyan'),
+    greenShadowColor: shadow('green'),
+    magentaShadowColor: shadow('magenta'),
+    pinkShadowColor: shadow('pink'),
+    redShadowColor: shadow('red'),
+    orangeShadowColor: shadow('orange'),
+    yellowShadowColor: shadow('yellow'),
+    volcanoShadowColor: shadow('volcano'),
+    geekblueShadowColor: shadow('geekblue'),
+    limeShadowColor: shadow('lime'),
+    goldShadowColor: shadow('gold'),
     fontWeight: 400,
     iconGap: token.marginXS,
     defaultShadow: `0 ${token.controlOutlineWidth}px 0 ${token.controlTmpOutline}`,
     primaryShadow: `0 ${token.controlOutlineWidth}px 0 ${token.controlOutline}`,
     dangerShadow: `0 ${token.controlOutlineWidth}px 0 ${token.colorErrorOutline}`,
     primaryColor: token.colorTextLightSolid,
+    solidTextColor: token.colorTextLightSolid,
     dangerColor: token.colorTextLightSolid,
     borderColorDisabled: token.colorBorderDisabled,
     defaultGhostColor: token.colorBgContainer,
@@ -243,7 +202,7 @@ export function prepareComponentToken(
     defaultColor: token.colorText,
     defaultBg: token.colorBgContainer,
     defaultBorderColor: token.colorBorder,
-    defaultBorderColorDisabled: token.colorBorder,
+    defaultBorderColorDisabled: token.colorBorderDisabled,
     defaultHoverBg: token.colorBgContainer,
     defaultHoverColor: token.colorPrimaryHover,
     defaultHoverBorderColor: token.colorPrimaryHover,

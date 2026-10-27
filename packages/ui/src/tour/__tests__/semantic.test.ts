@@ -1,3 +1,5 @@
+import { mergeButtonContentReferenceAllowances } from '../../_internal/__tests__/button-content-reference';
+import buttonContentDifferences from './button-content-reference-diffs.json';
 /**
  * Tour · L4 DOM 契约 + 语义化槽位。
  *
@@ -82,7 +84,7 @@ const CASES: Record<string, () => DomRenderResult> = {
 domContractTest('Tour', {
   baseline,
   keepStyle: false,
-  allow: {},
+  allow: mergeButtonContentReferenceAllowances(buttonContentDifferences, {}),
   render: (id) => {
     const build = CASES[id];
     if (!build) {

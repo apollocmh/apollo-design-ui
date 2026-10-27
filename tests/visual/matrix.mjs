@@ -54,6 +54,21 @@ export const COMPONENTS = {
     ],
   },
   button: {
+    apolloVariants: [
+      'type',
+      'complete-content',
+      'loading-states',
+      'native-disabled',
+      'shapes',
+      'semantic-tokens',
+      'current-provider',
+      'compact-layout',
+      'rtl',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+      'native-focus',
+    ],
     // 9 个 variant × 3 个 viewport = 27 张
     variants: [
       'type', // 五种旧版类型糖 + 两个中文字（D7 的形态差异在像素层裁决）

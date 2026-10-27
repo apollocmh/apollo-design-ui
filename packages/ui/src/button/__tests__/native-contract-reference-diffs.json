@@ -1,0 +1,86 @@
+{
+  "plain:with-text": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "prefix-cls:custom": ["$/button[0]/span[0]: 类名不同 [] vs [custom-content]"],
+  "prefix-cls:no-props": [
+    "$/button[0]: 类名不同 [ant-btn ant-btn-color-default ant-btn-default ant-btn-variant-outlined] vs [apollo-btn apollo-btn-color-default apollo-btn-default apollo-btn-variant-outlined]",
+    "$/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "html-type:default": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "html-type:submit": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "html-type:reset": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "type:primary": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "type:default": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "type:dashed": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "type:text": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "type:link": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "danger:alone": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "danger:primary": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "danger:dashed": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "danger:text": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "danger:false": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "color:danger-only": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "color-variant:blue-solid": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "color-variant:cyan-filled": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "color-variant:green-dashed": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "color-variant:gold-link": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "variant:solid-only": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "variant:filled-only": [
+    "$/button[0]: 类名不同 [apollo apollo-color-default apollo-default apollo-variant-outlined] vs [apollo apollo-color-default apollo-default apollo-variant-filled]",
+    "$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"
+  ],
+  "color-variant:over-type": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "ghost:primary": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "ghost:default": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "ghost:dashed": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "ghost:link": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "ghost:false": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "size:small": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "size:middle": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "size:large": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "shape:circle": ["$/button[0]/span[1]: 类名不同 [] vs [apollo-content]"],
+  "shape:round": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "shape:square": [
+    "$/button[0]: 类名不同 [apollo apollo-color-default apollo-default apollo-variant-outlined] vs [apollo apollo-color-default apollo-default apollo-square apollo-variant-outlined]",
+    "$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"
+  ],
+  "block": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "icon:with-text": ["$/button[0]/span[1]: 类名不同 [] vs [apollo-content]"],
+  "icon:placement-end": ["$/button[0]/span[1]: 类名不同 [] vs [apollo-content]"],
+  "icon:position-end": ["$/button[0]/span[1]: 类名不同 [] vs [apollo-content]"],
+  "loading:custom-icon": [
+    "$/button[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/button[0]: 我们多出属性 aria-disabled=\"true\"",
+    "$/button[0]/span[1]: 类名不同 [] vs [apollo-content]"
+  ],
+  "loading:custom-icon-only": [
+    "$/button[0]: 我们多出属性 aria-busy=\"true\"",
+    "$/button[0]: 我们多出属性 aria-disabled=\"true\""
+  ],
+  "disabled:button": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "disabled:button-false": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "href:enabled": ["$/a[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "href:disabled": [
+    "$/a[0]: 我们多出属性 role=\"link\"",
+    "$/a[0]/span[0]: 类名不同 [] vs [apollo-content]"
+  ],
+  "href:target": ["$/a[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "class:className": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "class:rootClassName": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "class:both": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "attrs:passthrough": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "semantic:classNames-root": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "semantic:classNames-all": [
+    "$/button[0]/span[1]: 类名不同 [cn-content] vs [apollo-content cn-content]"
+  ],
+  "semantic:styles-all": ["$/button[0]/span[1]: 类名不同 [] vs [apollo-content]"],
+  "style:style-over-root": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "config:className": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "config:classNames": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "config:color-variant": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "config:variant-solid-only": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "config:shape": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "config:auto-insert-space-off": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "direction:rtl": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "size-context": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"],
+  "disabled-context": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-content]"]
+}

@@ -1,3 +1,5 @@
+import { mergeButtonContentReferenceAllowances } from '../../_internal/__tests__/button-content-reference';
+import buttonContentDifferences from './button-content-reference-diffs.json';
 /**
  * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）—— Popconfirm
  *
@@ -74,7 +76,7 @@ const CASES: Record<string, () => DomRenderResult> = {
 domContractTest('Popconfirm', {
   baseline,
   keepStyle: false,
-  allow: {},
+  allow: mergeButtonContentReferenceAllowances(buttonContentDifferences, {}),
   render: (id) => {
     const build = CASES[id];
     if (!build) {

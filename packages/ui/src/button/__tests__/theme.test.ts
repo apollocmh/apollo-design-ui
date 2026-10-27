@@ -1,34 +1,12 @@
-/**
- * L1/L2 的主题矩阵 + Component Token 断言
- *
- * ⚠️ 与 Divider 一样，**只做到「四态下都能渲染 + Token 计算逐键与 antd 对齐」**，
- *    没做到「四态下视觉正确」。原因不是偷懒：Button 的样式里没有**任何字面视觉值**，
- *    颜色/圆角/高度/间距/阴影全部是 `var(--apollo-*)`（见 `style/index.ts`）。
- *    主题切换改变的是**变量值**，不是我们的 CSS；断言「dark 下颜色不同」需要浏览器
- *    计算样式（jsdom 不做布局与层叠），那是 L6 的职责。
- *
- * ── 这一层真正在防什么 ────────────────────────────────────────────────────────
- *
- * `prepareComponentToken` 是**纯函数**（Alias token → Component token）。它写错了
- * 不会有任何测试红 —— 因为产物是 CSS 文本，jsdom 不计算层叠，L4 的 DOM 契约也看不到
- * 变量名。所以这里把它当**普通函数**逐键断言，是这个风险的唯一正解。
- *
- * ── 两处**如实登记**的缺口（不掩饰，也没有偷偷补）────────────────────────────
- *
- * 1. `solidTextColor` **不在**返回值里。antd 用 color-picker 的
- *    `isBright(new AggregationColor(token.colorBgSolid), '#fff')` 算它
- *    （`button/style/token.js:28`），本仓库没有等价能力 ⇒ 缺失，且由断言钉住「就是缺」。
- *    影响：亮色主题下 antd 算出的也是 `#fff`，我们退回 `colorTextLightSolid`，两者相同；
- *    **暗色主题会分叉**（`style/index.ts` 文件头「缺口 1」）。
- * 2. 13 个 `${colorKey}ShadowColor` 由 `getAlphaColor` 迭代求解，CSS 里没有等价写法
- *    ⇒ 构建期算出并内联成 `rgba(...)`。代价：这 13 个阴影色**不随 dark 主题自适应**。
- */
+/** Current Button token preparation; source/theme/browser acceptance is recorded separately. */
 
 import { themeTest } from '@apollo-design/test-utils';
+import { getDesignToken } from '@apollo-design/theme';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../index';
 import { genButtonStyle } from '../style';
+import type { ButtonTokenInput } from '../style/token';
 import { prepareComponentToken } from '../style/token';
 
 const P = 'apollo-btn';
@@ -39,6 +17,7 @@ themeTest('Button', {
 
 /** 一个够用的 Alias token 切片：值都是**整数或短字符串**，便于手算期望值。 */
 const ALIAS = {
+  ...getDesignToken(),
   fontSize: 14,
   fontSizeLG: 16,
   controlHeight: 32,
@@ -74,7 +53,7 @@ const ALIAS = {
   geekblue1: '#f0f5ff',
   lime1: '#fcffe6',
   gold1: '#fffbe6',
-} as never;
+} satisfies ButtonTokenInput;
 
 /**
  * antd 6.6.4 `button/style/token.js:20-82` 的返回键全集（**减去** `solidTextColor`）。
@@ -82,7 +61,8 @@ const ALIAS = {
  * 逐键抄自上游，不是从我们的实现反推的。多一个少一个都红 —— 这是「Token 面漂移」
  * 唯一的可执行判据（`registry/components.json` 的 `derived.tokenCount` 只是个数字）。
  */
-const ANTD_TOKEN_KEYS = [
+const BUTTON_TOKEN_KEYS = [
+  'solidTextColor',
   'blueShadowColor',
   'borderColorDisabled',
   'contentFontSize',
@@ -143,15 +123,21 @@ const ANTD_TOKEN_KEYS = [
 ].sort();
 
 describe('Button · Component Token', () => {
-  it('★ 返回键与 antd 6.6.4 逐键一致（缺 `solidTextColor`，见文件头缺口 1）', () => {
+  it('全部58个现有字段均有默认值，含solidTextColor与13个阴影', () => {
     const keys = Object.keys(prepareComponentToken(ALIAS)).sort();
-    expect(keys).toEqual(ANTD_TOKEN_KEYS);
+    expect(keys).toEqual(BUTTON_TOKEN_KEYS);
   });
 
-  it('★ `solidTextColor` 缺失是**登记的缺口**，不是漏写', () => {
-    // 若哪天补上了 color-picker 的 `isBright`，这条会红 —— 那时应当同时更新
-    // `style/index.ts` 文件头的「缺口 1」与 `README.md` §7，并把这条断言改成正向断言。
-    expect(prepareComponentToken(ALIAS)).not.toHaveProperty('solidTextColor');
+  it('solidTextColor 准备默认值，自动前景由浏览器按实际实色背景处理', () => {
+    expect(prepareComponentToken(ALIAS).solidTextColor).toBe(ALIAS.colorTextLightSolid);
+  });
+  it('字号0保留，非有限负值回退且所有派生值有限', () => {
+    for (const contentFontSize of [0, -1, Number.NaN, Number.POSITIVE_INFINITY]) {
+      const token = prepareComponentToken({ ...ALIAS, contentFontSize });
+      expect(token.contentFontSize).toBe(contentFontSize === 0 ? 0 : ALIAS.fontSize);
+      expect(Number.isFinite(token.contentLineHeight)).toBe(true);
+      expect(Number.isFinite(token.paddingBlock)).toBe(true);
+    }
   });
 
   it('字面量 Token：`fontWeight` 恒为 400', () => {
@@ -196,7 +182,7 @@ describe('Button · Component Token', () => {
   });
 
   it('★ 派生自 Alias 的 token 跟着入参走（换 Alias 值 ⇒ 换结果）', () => {
-    const other = { ...(ALIAS as Record<string, unknown>), marginXS: 20 } as never;
+    const other = { ...ALIAS, marginXS: 20 } satisfies ButtonTokenInput;
     expect(prepareComponentToken(other).iconGap).toBe(20);
     expect(prepareComponentToken(ALIAS).iconGap).toBe(8);
   });

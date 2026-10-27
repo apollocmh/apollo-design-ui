@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { SearchOutlined } from '@apollo-design/icons';
-import { Button } from '../../index';
+import { Button } from '@apollo-design/ui';
 </script>
 
 <template>

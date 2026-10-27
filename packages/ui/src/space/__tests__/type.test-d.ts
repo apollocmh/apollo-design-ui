@@ -256,6 +256,9 @@ describe('Space · ref / config / slot', () => {
   it('三个 ref 的 `nativeElement` 都可空（与 antd 的 PLATFORM 差异）', () => {
     expectTypeOf<SpaceRef['nativeElement']>().toEqualTypeOf<HTMLDivElement | null>();
     expectTypeOf<SpaceCompactRef['nativeElement']>().toEqualTypeOf<HTMLDivElement | null>();
+    expectTypeOf<
+      InstanceType<typeof SpaceCompact>['nativeElement']
+    >().toEqualTypeOf<HTMLDivElement | null>();
     expectTypeOf<SpaceAddonRef['nativeElement']>().toEqualTypeOf<HTMLDivElement | null>();
   });
 

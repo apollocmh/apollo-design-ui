@@ -1,3 +1,6 @@
+import { diffHtml } from '@apollo-design/test-utils';
+import { expect, it } from 'vitest';
+import { mountCase, resolveRenderable } from '../../../../test-utils/src/render';
 /**
  * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）—— FloatButton
  *
@@ -29,6 +32,22 @@ const CASES: Record<string, () => DomRenderResult> = {
 };
 
 const ALLOW = {
+  content: {
+    reason:
+      'FloatButton owns one content span inside Button’s owned content host. Deep contents are independently compared below; no reference/projection changes.',
+    diff: [
+      '$/button[0]/span[0]: 类名不同 [apollo-float-btn-content] vs [apollo-btn-content]',
+      '$/button[0]/span[0]: 子节点数不同 0 vs 1',
+    ],
+  },
+  description: {
+    reason:
+      'The existing description alias uses the same native owned content structure, with independent deep comparison below.',
+    diff: [
+      '$/button[0]/span[0]: 类名不同 [apollo-float-btn-content] vs [apollo-btn-content]',
+      '$/button[0]/span[0]: 子节点数不同 0 vs 1',
+    ],
+  },
   plain: {
     reason:
       'UPSTREAM\uff1aantd \u7684 React \u7a7a\u5b50\u8282\u70b9\u8ba1\u6570\u602a\u7656 \u2014\u2014 FloatButton \u7ed9 Button \u4f20\u7684 children \u662f [content(null), badge(null)]\uff0cReact.Children.count \u628a null \u4e5f\u8ba1\u4e3a 2 \u21d2 Button \u7684 icon-only \u5224\u636e\uff08hasChildren=true\uff09\u4e0d\u843d `-icon-only` \u7c7b\uff1bVue \u4fa7\u7a7a\u8282\u70b9\u88ab\u8fc7\u6ee4 \u21d2 \u6b63\u5e38\u843d\u7c7b\u3002FloatButton \u5c42\u7684 `-icon-only` \u7c7b\u4e24\u4fa7\u4e00\u81f4\uff08COMPATIBILITY.md D113\uff0c\u767b\u8bb0\u4e3a\u4e0a\u6e38\u602a\u7656\u4e0d\u8ddf\u968f\uff09\u3002',
@@ -120,3 +139,30 @@ describe('FloatButton · 用例覆盖', () => {
     expect(caseIds).toEqual(baselineIds);
   });
 });
+
+it.each(['content', 'description'])(
+  'retains every original deep content attribute and child for %s',
+  (id) => {
+    const reference = baseline.cases.find((c) => c.id === id);
+    const build = CASES[id];
+    if (!reference || !build) throw new Error(`Missing original FloatButton reference ${id}`);
+    const mounted = mountCase(() => resolveRenderable(build(), id));
+    try {
+      const detached = document.createElement('div');
+      detached.innerHTML = mounted.html();
+      const host = detached.querySelector('.apollo-btn-content');
+      if (!host) throw new Error('Missing owned Button content host');
+      expect(host.getAttributeNames()).toEqual(['class']);
+      expect(host.className).toBe('apollo-btn-content');
+      expect(host.childElementCount).toBe(1);
+      const content = host.firstElementChild;
+      if (!content) throw new Error('Missing owned FloatButton content');
+      expect(content.tagName).toBe('SPAN');
+      expect(content.className).toBe('apollo-float-btn-content');
+      host.replaceWith(content);
+      expect(diffHtml(reference.html, detached.innerHTML, { profile: 'contract' })).toEqual([]);
+    } finally {
+      mounted.destroy();
+    }
+  },
+);

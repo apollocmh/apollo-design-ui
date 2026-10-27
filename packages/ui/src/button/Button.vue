@@ -1,53 +1,25 @@
-<script setup lang="ts">
-/**
- * Button —— 按钮。
- *
- * 契约来源：antd 6.6.4 的 `components/button/Button.tsx`。DOM 结构、类名、分支判据
- * **逐条对齐**，行号记录在 `docs/analysis/button.md`。
- *
- * ── 七条最容易写错、且都已在分析产物里钉住行号的判据 ──────────────────────────
- *
- *   1. `color` / `variant` 的解析有 6 层回退（`Button.tsx:181-211`），`ghost` 还要
- *      把 `solid` 退化成 `outlined`（`:213-218`）。
- *   2. `-dangerous` 用的是**原始 `danger` prop**，而 `-color-{x}` 里 danger 被改写成
- *      `dangerous`（`:220-221, :378, :380`）—— 两处不一致是上游真实行为。
- *   3. `mergedDisabled` / `mergedShape` 用 `??`（`:230, :179`）—— 与 config-provider 的
- *      `componentSize` 用 `||` 不对称，不能互相"统一"。
- *   4. 两个中文字的检测 effect **故意不写依赖数组**（`:283` 注释）⇒ 等价于每次渲染后
- *      都跑。Vue 侧必须在 `onUpdated` 也检测，只在 `onMounted` 跑一次会漏（D6）。
- *   5. `<a>` 分支与 `<button>` 分支的 disabled 表达**不对称**（`:449-465` vs `:467-481`）。
- *   6. 点击在 `innerLoading || mergedDisabled` 时被拦截且 `preventDefault`（`:293-308`）。
- *   7. `-icon-only` 的判据含 `children !== 0`（`:384`）—— `0` 算有内容。
- */
-
+<script lang="ts">
 import { LoadingOutlined } from '@apollo-design/icons';
-import { isNumber, isVNode, useDevWarning } from '@apollo-design/utils';
+import { isEmptyVNode, mergeDomAttrs, useDevWarning } from '@apollo-design/utils';
 import {
   Comment,
-  type Component,
-  type CSSProperties,
-  cloneVNode,
   computed,
+  defineComponent,
   Fragment,
   h,
-  mergeProps,
+  isVNode,
   onMounted,
   onUnmounted,
-  onUpdated,
-  ref,
-  shallowReactive,
-  Text as TextVNode,
-  useAttrs,
-  useSlots,
-  type VNode,
+  type PropType,
+  type SlotsType,
+  shallowRef,
+  toRaw,
   type VNodeChild,
   watch,
   watchEffect,
 } from 'vue';
-// ⚠️ 这个渲染器是**平台原语**（模板里没有「渲染一个 VNodeChild 变量」的语法），
-//    不属于 Empty。等 `_internal/` 有归置位时应上移，不要在 Button 里复制一份。
 import { NodeRenderer } from '../_internal/node-renderer';
-import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
+import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
@@ -59,724 +31,285 @@ import type {
   ButtonProps,
   ButtonSemanticClassNames,
   ButtonSemanticStyles,
+  ButtonSlots,
   ButtonType,
   ButtonVariantType,
 } from './interface';
+import { useButtonTheme } from './use-button-theme';
 
-defineOptions({ name: 'AButton', inheritAttrs: false });
-
-/**
- * ⚠️⚠️ `disabled` / `ghost` / `danger` / `block` 的 `undefined` 默认值**不是冗余的**。
- *
- * 只要 prop 的运行时类型含 `Boolean` 且没有 `default`，Vue 就会把「未传」赋成 `false`。
- * 而这四个的合并判据都是 `??`：
- *   - `mergedDisabled = props.disabled ?? DisabledContext`（`:230`）
- *   - 若 `disabled` 被转成 `false`，ConfigProvider 的 `componentDisabled` 就**永久失效**。
- * ⇒ 显式声明 `default: undefined` 让 Vue 走 `hasDefault` 分支跳过转换（PITFALLS 46）。
- */
-const props = withDefaults(defineProps<ButtonProps>(), {
-  type: undefined,
-  color: undefined,
-  variant: undefined,
-  icon: undefined,
-  iconPosition: undefined,
-  iconPlacement: undefined,
-  shape: undefined,
-  size: undefined,
-  disabled: undefined,
-  loading: false,
-  prefixCls: undefined,
-  ghost: undefined,
-  danger: undefined,
-  block: undefined,
-  href: undefined,
-  htmlType: 'button',
-  autoInsertSpace: undefined,
-  classNames: undefined,
-  styles: undefined,
-});
-
-const emit = defineEmits<{
-  click: [event: MouseEvent];
-}>();
-
-defineSlots<{
-  default?: () => unknown;
-  icon?: () => unknown;
-}>();
-
-const slots = useSlots();
-const attrs = useAttrs();
-
-const {
-  getPrefixCls,
-  className: contextClassName,
-  style: contextStyle,
-  classNames: contextClassNames,
-  styles: contextStyles,
-  shape: contextShape,
-  color: contextColor,
-  variant: contextVariant,
-  loadingIcon: contextLoadingIcon,
-  autoInsertSpace: contextAutoInsertSpace,
-} = useComponentConfig<ButtonConfig>('button');
-const direction = useDirection();
-
-const prefixCls = computed(() => getPrefixCls('btn', props.prefixCls));
-
-// ---------------------------------------------------------------------------
-// children / icon
-// ---------------------------------------------------------------------------
-
-/**
- * 「这个子节点算不算内容」—— `React.Children.toArray` + `isReactRenderable` 的
- * Vue 对应物。判据逐条来自上游：
- *
- *   - `React.Children.toArray` 丢弃 `null` / `undefined` / **布尔**
- *   - `isReactRenderable(v)`（`@rc-component/util/es/is.js:17`）
- *     = `v !== null && v !== undefined && v !== false && v !== ''`
- *     ⇒ **空字符串不算内容**（但 `0` 算 —— 上游 `-icon-only` 的判据里专门有
- *     `children !== 0`，`:384`）
- *   - Vue 特有的 **Comment vnode**：`v-if="false"` 的条件插槽编译出的是
- *     `createCommentVNode('v-if', true)`。它**不是**内容，但在 Vue 里是实打实的
- *     一个节点 ⇒ 不过滤就会让「只含条件插槽 / 空插槽」的 Button 被判定成「有内容」，
- *     表现为**少一个 `-icon-only`、多一个空 `<span>` 包裹**（Issue #1.5）。
- *   - 空文本 vnode（`createTextVNode('')`）同上。
- */
-function isRenderableChild(node: VNodeChild): boolean {
-  if (node === null || node === undefined || typeof node === 'boolean') return false;
-  if (node === '') return false;
-  if (isVNode(node)) {
-    if (node.type === Comment) return false;
-    if (node.type === TextVNode && (node.children === '' || node.children === null)) return false;
-  }
-  return true;
+function iconNode(value: ButtonIcon): VNodeChild {
+  if (value == null || (typeof value !== 'object' && typeof value !== 'function')) return value;
+  if (isVNode(value) || Array.isArray(value)) return value;
+  return h(toRaw(value));
 }
 
-/**
- * 默认插槽的 VNode 列表。上游的 `toArray(children)`（`:160`）。
- *
- * ⚠️ 必须**先过滤**再判 `length`：`needInserted`（`childNodes.length === 1`）、
- *    `hasChildren`（`-icon-only` 与内容包裹的开关）都吃这个长度。
- */
-const childNodes = computed<VNodeChild[]>(() => {
-  const raw = slots.default ? slots.default() : [];
-  return (Array.isArray(raw) ? raw : [raw]).filter(isRenderableChild);
-});
-
-/**
- * 是否有内容。判据含 `children !== 0`（`:384`）—— `0` 算有内容。
- *
- * ⚠️ 必须**经由 `childNodes`** 判定，不能直接 `!!slots.default`。
- *    Vue 的插槽是**函数**，在渲染函数之外调用它会触发
- *    `[Vue warn]: Slot "default" invoked outside of the render function`。
- *    而 `needInserted` 是在 `onMounted` / `onUpdated` 里读的（对应上游那个无依赖数组的
- *    effect）—— 那条路径上 `childNodes` 若是**首次**求值就会踩到这个警告。
- *    让 `hasChildren`（模板里的 `v-if`，渲染期必读）先把它读一遍，
- *    `computed` 的缓存就保证了后续读取不再调用插槽函数。
- */
-const hasRenderableChildren = computed(() => childNodes.value.length > 0);
-
-/**
- * antd 的 `-icon-only` 判据吃的是**原始 `children`**：
- * `!children && children !== 0 && !!iconType`。布尔 `true` 在 React 里是
- * 「有 children」（虽然不渲染任何内容），而 `React.Children.toArray` 又会把它丢掉。
- *
- * Vue 没有布尔子节点，但 `Input.Search` 的 `enterButton={true}` 正是靠
- * 「传一个 `true` 子节点」让 antd 的 Button 不加 `-icon-only`。这里把
- * `true` 单独算进 raw 判据、但不放进可渲染列表，从而同时满足两件事：
- *   - `-icon-only` 不出现（与 antd 的宽度 / padding 一致）；
- *   - 模板不产生任何内容包裹 span（与 antd 的 DOM 一致）。
- */
-const hasRawChildren = computed(() => {
-  const raw = slots.default ? slots.default() : [];
-  const list = Array.isArray(raw) ? raw : [raw];
-  return list.some((node) => (node as unknown) === true || isRenderableChild(node));
-});
-
-/**
- * 把 `icon` / `loading.icon` 归一化成「Vue 能渲染的东西」。
- *
- * ── 为什么需要这一层 ────────────────────────────────────────────────────────
- *
- * antd 的 `icon` 是 `React.ReactNode`，文档与示例都写 `<SearchOutlined />` ——
- * 在 React 里那是个**已求值的元素**。Vue 没有「元素」这个形态，对应物是
- * **组件本身**（`SearchOutlined` 这个对象）。所以 `ButtonIcon` 额外接受 `Component`
- * （与 `EmptyImage` 同一裁决，见 `interface.ts`）。
- *
- * 但组件对象**不是** VNodeChild —— 直接交给 `<NodeRenderer>` 会被
- * `normalizeNode()` 原样返回，模板再把它 `toDisplayString` 成
- * 字面量文本 **`[object Object]`**（实测，见 `__tests__/index.test.ts`
- * 的「icon 传组件」用例）。所以必须在**进 NodeRenderer 之前** `h()` 包一层。
- *
- * ── 判据（与 `ImageNode` 的三分支同源）──────────────────────────────────────
- *
- * `VNodeChildAtom = VNode | string | number | boolean | null | undefined | void`
- * （`@vue/runtime-core` 的 `runtime-core.d.ts:1226`），**不含函数形态** ——
- * 所以「非原始值且非 VNode」就只可能是组件，判定没有歧义：
- *
- *   - `null` / `undefined` / 字符串 / 数字 / 布尔 → 原样（交给 NodeRenderer）
- *   - VNode / 数组（含插槽返回的 `VNode[]`）      → 原样
- *   - 其余（组件对象 / 函数式组件）               → `h(v)`
- *
- * ⚠️ 不要在这里 `cloneVNode` —— `NodeRenderer` 已经做了（PITFALLS：VNode 可变，
- *    同一常量 VNode 被两个 Button 渲染时第二次会看到上次留下的 `el`）。
- */
-function asIconNode(value: ButtonIcon | undefined): VNodeChild {
-  if (value == null) return value as VNodeChild;
-  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-    return value;
+/** Read known text for SSR without rewriting any caller-owned VNode. */
+function knownText(value: VNodeChild): string | undefined {
+  if (value == null || typeof value === 'boolean') return '';
+  if (typeof value === 'string' || typeof value === 'number') return String(value);
+  if (Array.isArray(value)) {
+    const parts = value.map(knownText);
+    return parts.some((part) => part === undefined) ? undefined : parts.join('');
   }
-  if (isVNode(value) || Array.isArray(value)) return value as VNodeChild;
-  return h(value as Component);
+  if (!isVNode(value) || value.type === Comment) return '';
+  if (typeof value.type !== 'string' && value.type !== Fragment && typeof value.type !== 'symbol')
+    return undefined;
+  if (typeof value.children === 'string') return value.children;
+  return Array.isArray(value.children) ? knownText(value.children) : undefined;
 }
-
-/** `icon` prop 与 `icon` 插槽都能传图标，**prop 优先**。 */
-const mergedIcon = computed<VNodeChild>(() =>
-  asIconNode(props.icon ?? (slots.icon ? slots.icon() : undefined)),
-);
-
-// ---------------------------------------------------------------------------
-// color / variant 解析（`:181-221`）
-// ---------------------------------------------------------------------------
-
-type ColorVariantPair = [color?: ButtonColorType, variant?: ButtonVariantType];
-
-const ButtonTypeMap: Partial<Record<ButtonType, ColorVariantPair>> = {
+const chinesePair = /^[\u4e00-\u9fa5]{2}$/;
+type ResolvedColor = ButtonColorType | 'link';
+const typeStyle: Record<ButtonType, readonly [ResolvedColor, ButtonVariantType]> = {
   default: ['default', 'outlined'],
   primary: ['primary', 'solid'],
   dashed: ['default', 'dashed'],
-  // `link` 不是真颜色，antd 为了兼容才这样映射（`:122-123`）
-  link: ['link' as ButtonColorType, 'link'],
+  link: ['link', 'link'],
   text: ['default', 'text'],
 };
 
-const mergedType = computed<ButtonType>(() => props.type || 'default');
-
-/**
- * ⚠️ 用 `computed` 而不是 IIFE：上游是 `useMemo`，会对 `props` 变化重算。
- *    若写成 setup 期求值一次的 IIFE，`type` / `danger` 后续变化不会重新解析。
- *
- * ⚠️ `contextColor` / `contextVariant` 来自 **ConfigProvider**（`Button.tsx:175-176`），
- *    与 `props.color` / `props.variant` 是**两组不同的变量** —— 混用会让
- *    `if (variant === 'solid')` 那条的 TS 窄化把 `'solid'` 排除掉
- *    （因为前一条 `if` 已经 return），表现为 TS2367。
- */
-const parsed = computed<ColorVariantPair>(() => {
-  // 显式 color + variant 优先
-  if (props.color && props.variant) return [props.color, props.variant];
-  // 旧版 type / danger 糖
-  if (props.type || props.danger) {
-    const pair = ButtonTypeMap[mergedType.value] || [];
-    if (props.danger) return ['danger', pair[1]];
-    return pair;
-  }
-  if (props.variant === 'solid') return ['primary', props.variant];
-  // >>> Context 回退
-  if (contextColor && contextVariant) return [contextColor, contextVariant];
-  if (contextVariant === 'solid') return ['primary', contextVariant];
-  return ['default', 'outlined'];
-});
-
-const ghost = computed(() => !!props.ghost);
-
-const mergedColor = computed(() =>
-  ghost.value && parsed.value[1] === 'solid' ? parsed.value[0] : parsed.value[0],
-);
-const mergedVariant = computed<ButtonVariantType | undefined>(() =>
-  ghost.value && parsed.value[1] === 'solid' ? 'outlined' : parsed.value[1],
-);
-
-const isDanger = computed(() => mergedColor.value === 'danger');
-const mergedColorText = computed(() => (isDanger.value ? 'dangerous' : mergedColor.value));
-
-/** 无边框变体（不插空格、不加 ghost 背景、不套 Wave）。 */
-const isUnBordered = computed(
-  () => mergedVariant.value === 'text' || mergedVariant.value === 'link',
-);
-
-// ---------------------------------------------------------------------------
-// 回退链（全部 `??`）
-// ---------------------------------------------------------------------------
-
-const mergedShape = computed(() => props.shape ?? contextShape ?? 'default');
-const mergedInsertSpace = computed(() => props.autoInsertSpace ?? contextAutoInsertSpace ?? true);
-
-const mergedDisabled = useDisabled(() => props.disabled);
-
-/**
- * ⚠️ 必须传 **getter**，不能传 `prefixCls.value` / `direction.value` 的**快照**。
- *
- * `useCompactItemContext` 内部是 `computed(() => … toValue(prefixCls) …)`；传裸值
- * 时 `toValue` 返回的就是那个字符串，`computed` 再也追踪不到 `prefixCls` / `direction`
- * 的变化 ⇒ 动态切 `prefixCls` 或切 RTL 之后，紧凑类名会**停在旧前缀/旧方向**上
- * （Issue #1.3）。其余 12 个消费方传的都是 ref / getter，Button 是唯一的例外。
- */
-const { compactSize, compactItemClassnames } = useCompactItemContext(
-  () => prefixCls.value,
-  () => direction.value,
-);
-
-/**
- * ⚠️ 回调**必须**接住 `ctxSize`：antd 写的是
- * `useSize((ctxSize) => customizeSize ?? compactSize ?? groupSize ?? ctxSize)`，
- * 若在回调里丢掉 `ctxSize`（`useSize(() => props.size ?? compactSize)`），
- * ConfigProvider 的 `componentSize` 会**静默失效** —— DOM 全对，只是尺寸永远是默认。
- * （`groupSize` 来自已废弃的 `Button.Group`，按 D5 不实现。）
- */
-const sizeFullName = useSize((ctxSize) => props.size ?? compactSize?.value ?? ctxSize);
-
-// ---------------------------------------------------------------------------
-// loading（`:100-114, 234-236, 261-267`）
-// ---------------------------------------------------------------------------
-
-interface LoadingConfig {
-  loading: boolean;
-  delay: number;
-}
-
-const loadingOrDelay = computed<LoadingConfig>(() => {
-  const loading = props.loading;
-  if (loading && typeof loading === 'object') {
-    const delay = isNumber(loading.delay) ? loading.delay : 0;
-    return { loading: delay <= 0, delay };
-  }
-  return { loading: !!loading, delay: 0 };
-});
-
-/**
- * inner loading。
- *
- * ⚠️ 语义对齐 `useDelayState`：`delay > 0` 时**延迟到点才置 true**；
- *    变 false 只靠 `loading` prop 变回（不会自动复位）。
- */
-const innerLoading = ref(loadingOrDelay.value.loading);
-let delayTimer: ReturnType<typeof setTimeout> | null = null;
-
-watch(
-  loadingOrDelay,
-  (cfg) => {
-    if (delayTimer !== null) {
-      clearTimeout(delayTimer);
-      delayTimer = null;
-    }
-    // ⚠️ 这里**不能**再判 `cfg.loading`。上游（`Button.js:148-156`）是：
-    //
-    //     if (loadingOrDelay.delay > 0) setInnerLoading(true, { ms: delay });
-    //     else                          setInnerLoading(loadingOrDelay.loading, true);
-    //
-    // 第一支**无条件**把待定值置 `true`，没有「若已 loading 就直接置 true」这一层。
-    // 而且那一层在本仓可证明**不可达**：`loadingOrDelay` 的构造决定了
-    // `loading === true ⇒ delay <= 0`（`:281`），与 `delay > 0` 矛盾。
-    // 曾经多写的那一支是死代码，还让 `Button.vue` 的覆盖率停在 98.13%
-    // （未覆盖行正是它）—— 死代码 + 覆盖率噪音，两样都不要。
-    if (cfg.delay > 0) {
-      delayTimer = setTimeout(() => {
-        innerLoading.value = true;
-        delayTimer = null;
-      }, cfg.delay);
-      return;
-    }
-    innerLoading.value = cfg.loading;
-  },
-  { immediate: true, flush: 'sync' },
-);
-
-onUnmounted(() => {
-  if (delayTimer !== null) clearTimeout(delayTimer);
-});
-
-const mergedLoadingIcon = computed<VNodeChild>(() =>
-  asIconNode(
-    props.loading && typeof props.loading === 'object'
-      ? props.loading.icon || contextLoadingIcon
-      : contextLoadingIcon,
-  ),
-);
-
-/**
- * 图标区里真正渲染的东西（`:243-256`）。
- *
- * ```
- * icon && !innerLoading   → icon
- * loading && loadingIcon  → loadingIcon
- * 其余                     → 内置 LoadingOutlined
- * ```
- *
- * ⚠️ 第三支的判据是「加载态」而不是「有没有图标」：antd 的 `DefaultLoadingIcon` 在
- *    `visible = !!loading` 且 `removeOnLeave` 下**不渲染**，所以「不加载且无图标」这一支
- *    由外层 `v-if="iconType"` 挡掉，这里不必再判一次。
- */
-const iconNode = computed<VNodeChild>(() =>
-  innerLoading.value ? (mergedLoadingIcon.value ?? h(LoadingOutlined)) : mergedIcon.value,
-);
-
-// ---------------------------------------------------------------------------
-// 两个中文字（`:244-245, 270-283` + `buttonHelpers.tsx:11`）
-// ---------------------------------------------------------------------------
-
-const TWO_CN_CHAR = /^[一-龥]{2}$/;
-
-const rootRef = ref<HTMLButtonElement | HTMLAnchorElement | null>(null);
-const hasTwoCNChar = ref(false);
-
-/** `needInserted`：单个子节点、无图标、且不是无边框变体。 */
-const needInserted = computed(
-  () => childNodes.value.length === 1 && !mergedIcon.value && !isUnBordered.value,
-);
-
-/**
- * ⚠️ 上游这个 effect **故意不写依赖数组** ⇒ 每次渲染后都跑。
- *    Vue 侧对应 `onMounted` + `onUpdated` **两处**，缺 `onUpdated` 会漏掉
- *    「挂载时合法、之后更新成两字」的情形（D6）。
- */
-/**
- * antd 6 的 spaceChildren（buttonHelpers.js / button.js:271）：只要
- * `needInserted && mergedInsertSpace` 就把两字中文用**真实空格** join ——
- * **不依赖 hasTwoCNChar**（检测 effect 读的是变换后的 textContent，对纯文本
- * 恒为 false，6.6.4 的 `-two-chinese-chars` 类因此在字符串场景实际不出现 ——
- * React 实测探针：'确 定' 且无类。类与 first-letter CSS 仍保留（对齐上游），
- * 服务于「子节点是组件」等 transform 覆盖不到的场景）。
- */
-const twoCNCharText = computed<string | undefined>(() => {
-  if (!(needInserted.value && mergedInsertSpace.value)) return undefined;
-  const first = childNodes.value[0];
-  // 插槽返回裸字符串，或 Vue 编译出的 Text vnode（`<slot />` 的常见形态）都要处理
-  const text =
-    typeof first === 'string'
-      ? first
-      : isVNode(first) && first.type === TextVNode && typeof first.children === 'string'
-        ? (first.children as string)
-        : undefined;
-  // spaceChildren 内部对每个子节点做 isTwoCNChar 检查 —— 非两字不插
-  return text !== undefined && TWO_CN_CHAR.test(text) ? text.split('').join(' ') : undefined;
-});
-
-function detectTwoCNChar() {
-  if (!rootRef.value || !mergedInsertSpace.value) return;
-  const text = rootRef.value.textContent || '';
-  const next = needInserted.value && TWO_CN_CHAR.test(text);
-  if (next !== hasTwoCNChar.value) hasTwoCNChar.value = next;
-}
-
-onMounted(detectTwoCNChar);
-onUpdated(detectTwoCNChar);
-
-// ---------------------------------------------------------------------------
-// 语义化合并
-// ---------------------------------------------------------------------------
-
-/**
- * ⚠️ 用 `shallowReactive` 而不是 `reactive`：
- *    `ButtonProps.icon` / `loading.icon` 的类型含 `VNodeChild`（递归类型），
- *    `reactive<T>()` 的 `UnwrapRef` 会做**深展开** ⇒ 触发 TS2589
- *    （"Type instantiation is excessively deep"）。这里只替换顶层键，
- *    不需要深层响应式 —— `shallowReactive` 正好避开深展开。
- *    （与 PITFALLS 86 同源，只是那次受害的是 `ref<T>`。）
- */
-const semanticProps = shallowReactive({ ...props }) as ButtonProps;
-watchEffect(() => {
-  Object.assign(semanticProps, props, {
-    type: mergedType.value,
-    color: mergedColor.value,
-    variant: mergedVariant.value,
-    danger: isDanger.value,
-    shape: mergedShape.value,
-    size: sizeFullName.value,
-    disabled: mergedDisabled.value,
-    loading: innerLoading.value,
-  });
-});
-
-const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
-  ButtonProps,
-  ButtonSemanticClassNames,
-  ButtonSemanticStyles
->(
-  [() => contextClassNames, () => props.classNames],
-  [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
-  semanticProps,
-);
-
-// ---------------------------------------------------------------------------
-// 类名（`:369-397`）
-// ---------------------------------------------------------------------------
-
-const iconType = computed(() => (innerLoading.value ? 'loading' : mergedIcon.value));
-const mergedIconPlacement = computed(() => props.iconPlacement ?? props.iconPosition ?? 'start');
-
-const rootClass = computed(() => [
-  prefixCls.value,
-  contextClassName,
-  {
-    [`${prefixCls.value}-${mergedShape.value}`]:
-      mergedShape.value !== 'default' && mergedShape.value !== 'square' && mergedShape.value,
-    [`${prefixCls.value}-${mergedType.value}`]: mergedType.value,
-    // ⚠️ 用的是原始 `danger` prop，不是 `isDanger`
-    [`${prefixCls.value}-dangerous`]: props.danger,
-    [`${prefixCls.value}-color-${mergedColorText.value}`]: mergedColorText.value,
-    [`${prefixCls.value}-variant-${mergedVariant.value}`]: mergedVariant.value,
-    [`${prefixCls.value}-lg`]: sizeFullName.value === 'large',
-    [`${prefixCls.value}-sm`]: sizeFullName.value === 'small',
-    [`${prefixCls.value}-two-chinese-chars`]:
-      hasTwoCNChar.value && mergedInsertSpace.value && !innerLoading.value,
-    // ⚠️ 上游是 `!children && children !== 0 && !!iconType`（`:384`）。`children !== 0`
-    //    这一支由 `childNodes` 的过滤器保证：`0` / `'0'` 是**内容**，不会被剔掉
-    //    ⇒ `hasChildren` 为真 ⇒ 不挂 `-icon-only`。空串 / `false` / Comment 则被剔掉。
-    [`${prefixCls.value}-icon-only`]: !hasRawChildren.value && !!iconType.value,
-    [`${prefixCls.value}-background-ghost`]: ghost.value && !isUnBordered.value,
-    [`${prefixCls.value}-loading`]: innerLoading.value,
-    [`${prefixCls.value}-block`]: props.block,
-    [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
-    [`${prefixCls.value}-icon-end`]: mergedIconPlacement.value === 'end',
-  },
-  compactItemClassnames?.value,
-  mergedClassNames.value.root,
-]);
-
-// ---------------------------------------------------------------------------
-// 样式与属性
-// ---------------------------------------------------------------------------
-
-const rootStyleAttrs = computed(() => styleAttrs(mergedStyles.value.root));
-const iconStyleAttrs = computed(() => styleAttrs(mergedStyles.value.icon));
-
-/**
- * Root `class` / `style` are Vue fallthrough attrs, merged with generated state and semantic
- * classes plus ConfigProvider / semantic root styles. Re-read attrs during render because
- * useAttrs() is intentionally non-reactive.
- *
- * ⚠️ **这个对象必须在模板里排在受控属性之前**（`v-bind` 先、`href`/`tabindex`/
- *    `aria-disabled` 后）。antd 的 `<a>` 分支是 `{...linkButtonRestProps, className, href,
- *    style, onClick, ref, tabIndex, "aria-disabled"}`（`Button.js:273-284`）——
- *    用户透传的属性**在前**、组件受控的属性**在后**，后者胜。
- *    此前模板把 `v-bind` 写在最后，于是 `<Button href disabled tabindex="5">` 的
- *    `tabindex` / `aria-disabled` 会被用户值覆盖 ⇒ 禁用的锚点仍可 Tab 聚焦
- *    （Issue #1.2）。
- */
-const getRootAttrs = (isAnchor = false) =>
-  mergeProps(
-    {
-      class: [
-        rootClass.value,
-        isAnchor ? { [`${prefixCls.value}-disabled`]: mergedDisabled.value } : undefined,
-      ],
-      ...rootStyleAttrs.value,
+export default defineComponent({
+  name: 'AButton',
+  inheritAttrs: false,
+  expose: ['nativeElement'],
+  props: {
+    type: String as PropType<ButtonProps['type']>,
+    color: String as PropType<ButtonProps['color']>,
+    variant: String as PropType<ButtonProps['variant']>,
+    icon: {
+      type: [String, Number, Boolean, Object, Array, Function] as PropType<ButtonIcon>,
+      default: undefined,
     },
-    attrs,
-  );
-
-const contentStyleAttrs = computed(() => styleAttrs(mergedStyles.value.content));
-
-/**
- * ★ `-loading-icon` 的条件比「在加载」更窄：它只在**走内置加载图标**时出现。
- *
- * ```
- * loading && mergedLoadingIcon  → `<span class="-icon">{mergedLoadingIcon}</span>`   ← 没有
- * 其余（加载中且没有自定义加载图标）→ DefaultLoadingIcon → `-icon -loading-icon`     ← 有
- * ```
- *
- * （`Button.tsx:243-256`：只有第三支 `defaultLoadingIconElement` 才会经过
- * `InnerLoadingIcon`，`-loading-icon` 是它加的。自定义加载图标走的是
- * `iconWrapperElement`，不带这个类。）L4 的 `loading:custom-icon` 用例钉住这一条。
- */
-const iconClass = computed(() => [
-  `${prefixCls.value}-icon`,
-  { [`${prefixCls.value}-loading-icon`]: innerLoading.value && !mergedLoadingIcon.value },
-  mergedClassNames.value.icon,
-]);
-/**
- * ⚠️ 返回**裸值**而不是 `[value]`。antd 的字符串分支是
- * `createElement("span", { className, style }, …)`，`className` 为 `undefined` 时
- * React **不输出**该属性；而 Vue 的 `:class="[undefined]"` 会输出 `class=""`
- * —— 与元素分支（`cloneVNode` 合并 class）自相矛盾，也与 antd 的产物不一致。
- * （顺带修：Issue #1 的关联面「内容包裹节点」。）
- */
-const contentClass = computed(() => mergedClassNames.value.content);
-
-/**
- * antd `buttonHelpers.js` 的 `spaceChildren` / `splitCNCharsBySpace` 元素分支：
- * `classNames.content` / `styles.content` 落到**元素子级**时是 `cloneElement`
- * **直接合并**（只有字符串 / Fragment 才包一层 `<span class={classNames.content}>`）。
- *
- * 本仓此前一律包 wrapper —— 对字符串子级与 antd 等价，但对元素子级会多出一个
- * **在流 flex item**：FloatButton 的 badge 是唯一消费方，float-btn 根上的
- * `gap: calc(var(--apollo-padding-xxs) / 2)` 会为这个 0 高 wrapper 多排一份间隙
- * ⇒ 图标整体上移 1px（badge-tooltip 三视口 block-diff，KNOWN-ISSUES §1.10）。
- *
- * ⚠️ 只有「子级全部是元素 vnode」**且**语义通道确实传了 content 类名/样式时才走
- * 合并分支；纯文本（含两个中文字）等其余情形保持模板的 wrapper 路径 ——
- * 那与 antd 的字符串分支等价，且不惊动任何既有 L4 夹具。
- */
-/**
- * antd `spaceChildren`（`buttonHelpers.js:66` → `splitCNCharsBySpace`）的 Vue 对应物：
- * **逐个子节点**决定「包不包 `<span>`」——
- *
- *   · 字符串 / 数字 → 包 `<span class={content} style={content}>`（用于两字中文插空格）
- *   · Fragment      → 包 `<span class style>`
- *   · 元素 vnode    → `cloneVNode` **只合并 class / style，不包**
- *
- * 🚨 **为什么必须有它**：本仓此前是「含文字就把**全部**子节点包进一个 `<span>`」，
- *    而 antd **不包元素子节点** ⇒ 我们比 antd 多一层，把从 antd 移植过来的
- *    **`>` 直接子选择器全部打断**（实测：`dropdown` 的
- *    `.apollo-dropdown-trigger.apollo-btn > .apollo-icon-down` 永不命中，
- *    React 侧 12px、Vue 侧 14px）。见开放决策 `button-children-wrapper`。
- *
- * ⚠️ 返回 `null` ⇒ 走模板既有 wrapper 路径（**纯文本**场景）。
- *    那条路径已被 L4 夹具与 27 张 L6 基线覆盖，不动它以免惊动既有契约。
- */
-const contentNodes = computed<VNode[] | null>(() => {
-  const kids = childNodes.value;
-  if (kids.length === 0) return null;
-
-  // 没有任何元素子节点 ⇒ 纯文本 / 纯 Fragment 之外的情形，交回模板既有路径
-  const hasElement = kids.some(
-    (k) => isVNode(k) && k.type !== TextVNode && k.type !== Fragment && k.type !== Comment,
-  );
-  if (!hasElement) return null;
-
-  const cls = mergedClassNames.value.content;
-  const style = mergedStyles.value.content;
-  const insert = needInserted.value && mergedInsertSpace.value;
-
-  const spaceText = (text: string): string =>
-    insert && TWO_CN_CHAR.test(text) ? text.split('').join(' ') : text;
-
-  return kids.map((k, i) => {
-    if (!isVNode(k)) {
-      return h('span', { class: cls, style, key: `t${i}` }, spaceText(String(k ?? '')));
-    }
-    if (k.type === TextVNode) {
-      const text = typeof k.children === 'string' ? k.children : '';
-      return h('span', { class: cls, style, key: `t${i}` }, spaceText(text));
-    }
-    if (k.type === Comment) return k;
-    if (k.type === Fragment) {
-      return h('span', { class: cls, style, key: `f${i}` }, [k]);
-    }
-    // 元素：与 antd `cloneElement` 同语义 —— 合并 class / style，**不额外包一层**
-    const cloned = cloneVNode(k, { class: cls as never, style: style as never });
-    // `splitCNCharsBySpace` 的**元素分支**（`buttonHelpers.js:30-36`）：
-    // `isString(child.type) && isTwoCNChar(child.props.children)` 时把 children
-    // 逐字拆开再 join —— 与字符串分支同一判据，只是落点是元素**自己的** children。
-    // 漏了它 ⇒ `<Button><span>确定</span></Button>` 不插空格，而 antd 插（Issue #1.4）。
-    if (
-      insert &&
-      typeof k.type === 'string' &&
-      typeof k.children === 'string' &&
-      TWO_CN_CHAR.test(k.children)
-    ) {
-      // ⚠️ `cloneVNode` 的 extraProps **不接管** `children`（只合并 props，children
-      //    仍取自原 vnode）⇒ 必须在克隆产物上直接改写；此时它是全新对象，安全。
-      cloned.children = spaceText(k.children);
-    }
-    return cloned;
-  });
+    iconPosition: String as PropType<ButtonProps['iconPosition']>,
+    iconPlacement: String as PropType<ButtonProps['iconPlacement']>,
+    shape: String as PropType<ButtonProps['shape']>,
+    size: String as PropType<ButtonProps['size']>,
+    disabled: { type: Boolean, default: undefined },
+    loading: { type: [Boolean, Object] as PropType<ButtonProps['loading']>, default: false },
+    prefixCls: String,
+    ghost: { type: Boolean, default: undefined },
+    danger: { type: Boolean, default: undefined },
+    block: { type: Boolean, default: undefined },
+    href: String,
+    htmlType: { type: String as PropType<ButtonProps['htmlType']>, default: 'button' },
+    autoInsertSpace: { type: Boolean, default: undefined },
+    classNames: Object as PropType<ButtonSemanticClassNames>,
+    styles: Object as PropType<ButtonSemanticStyles>,
+  },
+  emits: { click: (_event: MouseEvent) => true },
+  slots: Object as SlotsType<ButtonSlots>,
+  setup(props, { attrs, slots, emit }) {
+    const context = useComponentConfig<ButtonConfig>('button');
+    const direction = useDirection();
+    const prefix = computed(() => context.getPrefixCls('btn', props.prefixCls));
+    const themeStyle = useButtonTheme(() => prefix.value);
+    const disabled = useDisabled(() => props.disabled);
+    const { compactSize, compactItemClassnames } = useCompactItemContext(
+      () => prefix.value,
+      () => direction.value,
+    );
+    const size = useSize((provider) => props.size ?? compactSize?.value ?? provider);
+    const semantic = useMergeSemantic<ButtonProps, ButtonSemanticClassNames, ButtonSemanticStyles>(
+      [() => context.classNames, () => props.classNames],
+      [() => context.styles, () => semanticRootStyle(context.style), () => props.styles],
+      props,
+    );
+    const appearance = computed(() => {
+      const variant =
+        props.variant ?? (props.type ? typeStyle[props.type]?.[1] : context.variant) ?? 'outlined';
+      const color =
+        props.color ??
+        (props.danger ? 'danger' : props.type ? typeStyle[props.type]?.[0] : context.color) ??
+        (variant === 'solid' ? 'primary' : 'default');
+      return { color, variant: props.ghost && variant === 'solid' ? 'outlined' : variant };
+    });
+    const requestedLoading = computed(() => Boolean(props.loading));
+    const delay = computed(() => {
+      const value = props.loading && typeof props.loading === 'object' ? props.loading.delay : 0;
+      return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : 0;
+    });
+    const visibleLoading = shallowRef(requestedLoading.value && delay.value === 0);
+    let mounted = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const cancelDelay = () => {
+      if (timer !== undefined) clearTimeout(timer);
+      timer = undefined;
+    };
+    const updateLoading = () => {
+      cancelDelay();
+      if (!requestedLoading.value) visibleLoading.value = false;
+      else if (delay.value === 0) visibleLoading.value = true;
+      else if (mounted && !visibleLoading.value) {
+        timer = setTimeout(() => {
+          visibleLoading.value = true;
+          timer = undefined;
+        }, delay.value);
+      }
+    };
+    watch([requestedLoading, delay], updateLoading, { flush: 'sync' });
+    const root = shallowRef<HTMLButtonElement | HTMLAnchorElement | null>(null);
+    const contentRoot = shallowRef<HTMLElement | null>(null);
+    const observedText = shallowRef('');
+    let observer: MutationObserver | undefined;
+    watch(
+      contentRoot,
+      (element) => {
+        observer?.disconnect();
+        if (!element) {
+          observedText.value = '';
+          return;
+        }
+        const read = () => {
+          observedText.value = element.textContent ?? '';
+        };
+        read();
+        if (typeof MutationObserver !== 'undefined') {
+          observer = new MutationObserver(read);
+          observer.observe(element, { childList: true, characterData: true, subtree: true });
+        }
+      },
+      { flush: 'post' },
+    );
+    onMounted(() => {
+      mounted = true;
+      updateLoading();
+    });
+    onUnmounted(() => {
+      mounted = false;
+      cancelDelay();
+      observer?.disconnect();
+    });
+    const warning = useDevWarning('Button');
+    watchEffect(() => {
+      warning(
+        !(
+          props.ghost &&
+          (appearance.value.variant === 'link' || appearance.value.variant === 'text')
+        ),
+        "`link` or `text` button can't be a `ghost` button.",
+      );
+      warning.deprecated(props.iconPosition === undefined, 'iconPosition', 'iconPlacement');
+    });
+    const onClick = (event: MouseEvent) => {
+      if (requestedLoading.value || disabled.value) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+      emit('click', event);
+    };
+    const renderButton = () => {
+      const cls = prefix.value;
+      const content = slots.default?.();
+      const slotIcon = slots.icon?.();
+      const normalIcon = slots.icon ? slotIcon : iconNode(props.icon);
+      const loadingValue =
+        props.loading && typeof props.loading === 'object' && props.loading.icon !== undefined
+          ? props.loading.icon
+          : context.loadingIcon;
+      const displayedIcon = visibleLoading.value
+        ? loadingValue === undefined
+          ? h(LoadingOutlined, { 'aria-hidden': 'true', focusable: 'false' })
+          : iconNode(loadingValue)
+        : normalIcon;
+      const hasIcon = !isEmptyVNode(displayedIcon);
+      const hasContent = !isEmptyVNode(content);
+      const { color, variant } = appearance.value;
+      const insertSpace = props.autoInsertSpace ?? context.autoInsertSpace ?? true;
+      const text = knownText(content) ?? observedText.value;
+      const spaced =
+        insertSpace &&
+        !hasIcon &&
+        !requestedLoading.value &&
+        variant !== 'link' &&
+        variant !== 'text' &&
+        chinesePair.test(text);
+      const shape = props.shape ?? context.shape ?? 'default';
+      const classes = semantic.classNames.value;
+      const styles = semantic.styles.value;
+      const anchor = props.href !== undefined;
+      return h(
+        anchor ? 'a' : 'button',
+        mergeDomAttrs(
+          {
+            ref: root,
+            class: [
+              cls,
+              context.className,
+              classes.root,
+              `${cls}-${props.type ?? 'default'}`,
+              `${cls}-color-${color === 'danger' ? 'dangerous' : color}`,
+              `${cls}-variant-${variant}`,
+              compactItemClassnames?.value,
+              {
+                [`${cls}-${shape}`]: shape !== 'default',
+                [`${cls}-dangerous`]: props.danger,
+                [`${cls}-sm`]: size.value === 'small',
+                [`${cls}-lg`]: size.value === 'large',
+                [`${cls}-two-chinese-chars`]: spaced,
+                [`${cls}-icon-only`]: hasIcon && !hasContent,
+                [`${cls}-loading`]: visibleLoading.value,
+                [`${cls}-block`]: props.block,
+                [`${cls}-rtl`]: direction.value === 'rtl',
+                [`${cls}-icon-end`]: (props.iconPlacement ?? props.iconPosition) === 'end',
+                [`${cls}-background-ghost`]:
+                  props.ghost && variant !== 'text' && variant !== 'link',
+                [`${cls}-disabled`]: anchor && disabled.value,
+              },
+            ],
+            style: [themeStyle.value, styles.root],
+          },
+          attrs,
+          {
+            ...(anchor
+              ? {
+                  href: disabled.value || requestedLoading.value ? undefined : props.href,
+                  tabindex: disabled.value ? -1 : (attrs.tabindex ?? 0),
+                }
+              : { type: props.htmlType, disabled: disabled.value }),
+            ...(anchor && (disabled.value || requestedLoading.value)
+              ? { role: attrs.role ?? 'link' }
+              : {}),
+            dir: attrs.dir ?? direction.value,
+            'aria-busy': requestedLoading.value || undefined,
+            'aria-disabled': requestedLoading.value || (anchor ? disabled.value : undefined),
+            onClick,
+          },
+        ),
+        [
+          hasIcon
+            ? h(
+                'span',
+                {
+                  key: 'icon',
+                  class: [
+                    `${cls}-icon`,
+                    classes.icon,
+                    { [`${cls}-loading-icon`]: visibleLoading.value && loadingValue === undefined },
+                  ],
+                  style: styles.icon,
+                },
+                [h(NodeRenderer, { node: displayedIcon })],
+              )
+            : null,
+          hasContent
+            ? h(
+                'span',
+                {
+                  key: 'content',
+                  ref: contentRoot,
+                  class: [`${cls}-content`, classes.content],
+                  style: styles.content,
+                },
+                [h(NodeRenderer, { node: content })],
+              )
+            : null,
+        ],
+      );
+    };
+    return { nativeElement: root, renderButton };
+  },
+  render() {
+    return this.renderButton();
+  },
 });
-
-const elementContentNodes = computed<VNode[] | null>(() => {
-  const cls = mergedClassNames.value.content;
-  const style = mergedStyles.value.content;
-  if (cls === undefined && style === undefined) return null;
-  const kids = childNodes.value;
-  if (kids.length === 0) return null;
-  const allElements = kids.every(
-    (k) => isVNode(k) && k.type !== TextVNode && k.type !== Fragment && k.type !== Comment,
-  );
-  if (!allElements) return null;
-  // cloneVNode 会把 class / style 与子元素已有的合并（antd cloneElement 同语义）
-  return kids.map((k) => cloneVNode(k as VNode, { class: cls as never, style: style as never }));
-});
-
-// ---------------------------------------------------------------------------
-// 事件（`:293-308`）
-// ---------------------------------------------------------------------------
-
-const onClick = (e: MouseEvent) => {
-  if (innerLoading.value || mergedDisabled.value) {
-    e.preventDefault();
-    return;
-  }
-  emit('click', e);
-};
-
-// ---------------------------------------------------------------------------
-// 开发期告警（`:311-327`）
-// ---------------------------------------------------------------------------
-
-const warning = useDevWarning('Button');
-watchEffect(() => {
-  warning(
-    !(typeof props.icon === 'string' && props.icon.length > 2),
-    '`icon` is using VNode instead of string naming in v4.',
-  );
-  warning(
-    !(ghost.value && isUnBordered.value),
-    "`link` or `text` button can't be a `ghost` button.",
-  );
-  warning.deprecated(props.iconPosition === undefined, 'iconPosition', 'iconPlacement');
-});
-
-// ---------------------------------------------------------------------------
-// 暴露
-// ---------------------------------------------------------------------------
-
-defineExpose({ nativeElement: rootRef });
 </script>
-
-<template>
-  <a
-    v-if="href !== undefined"
-    ref="rootRef"
-    v-bind="getRootAttrs(true)"
-    :href="mergedDisabled ? undefined : href"
-    :tabindex="mergedDisabled ? -1 : 0"
-    :aria-disabled="mergedDisabled"
-    @click="onClick"
-  >
-    <span v-if="iconType" :class="iconClass" v-bind="iconStyleAttrs">
-      <NodeRenderer :node="iconNode" />
-    </span>
-    <template v-if="contentNodes">
-      <NodeRenderer v-for="(node, i) in contentNodes" :key="i" :node="node" />
-    </template>
-    <span
-      v-else-if="hasRenderableChildren && elementContentNodes === null"
-      :class="contentClass"
-      v-bind="contentStyleAttrs"
-    >
-      <template v-if="twoCNCharText !== undefined">{{ twoCNCharText }}</template>
-      <slot v-else />
-    </span>
-    <template v-else-if="elementContentNodes !== null">
-      <NodeRenderer v-for="(node, i) in elementContentNodes" :key="i" :node="node" />
-    </template>
-  </a>
-
-  <button
-    v-else
-    ref="rootRef"
-    v-bind="getRootAttrs()"
-    :type="htmlType"
-    :disabled="mergedDisabled"
-    @click="onClick"
-  >
-    <span v-if="iconType" :class="iconClass" v-bind="iconStyleAttrs">
-      <NodeRenderer :node="iconNode" />
-    </span>
-    <template v-if="contentNodes">
-      <NodeRenderer v-for="(node, i) in contentNodes" :key="i" :node="node" />
-    </template>
-    <span
-      v-else-if="hasRenderableChildren && elementContentNodes === null"
-      :class="contentClass"
-      v-bind="contentStyleAttrs"
-    >
-      <template v-if="twoCNCharText !== undefined">{{ twoCNCharText }}</template>
-      <slot v-else />
-    </span>
-    <template v-else-if="elementContentNodes !== null">
-      <NodeRenderer v-for="(node, i) in elementContentNodes" :key="i" :node="node" />
-    </template>
-  </button>
-</template>

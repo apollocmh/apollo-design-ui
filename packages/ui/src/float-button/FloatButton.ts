@@ -17,21 +17,27 @@
 
 import { FileTextOutlined } from '@apollo-design/icons';
 import { useZIndex } from '@apollo-design/portal';
-import { isPlainObject, useDevWarning } from '@apollo-design/utils';
+import { isPlainObject, mergeDomAttrs, useDevWarning } from '@apollo-design/utils';
 import {
-  type ComponentPublicInstance,
-  type CSSProperties,
   computed,
   defineComponent,
   h,
+  normalizeStyle,
   type PropType,
   ref,
   type VNodeChild,
   watchEffect,
 } from 'vue';
+import { NodeRenderer } from '../_internal/node-renderer';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import Badge from '../badge';
 import Button from '../button/Button.vue';
+import type {
+  ButtonProps,
+  ButtonRef,
+  ButtonSemanticClassNames,
+  ButtonSemanticStyles,
+} from '../button/interface';
 import { useConfigContext, useDirection } from '../config-provider/context';
 import Tooltip from '../tooltip/Tooltip';
 import {
@@ -108,8 +114,8 @@ const FloatButtonComponent = defineComponent({
     // ---- 语义合并：内置基线（icon/content 类名）+ context + 用户 ----
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       FloatButtonProps,
-      FloatButtonProps['classNames'] extends infer C ? (C extends object ? C : never) : never,
-      FloatButtonProps['styles'] extends infer S ? (S extends object ? S : never) : never
+      ButtonSemanticClassNames,
+      ButtonSemanticStyles
     >(
       [
         () => ({ icon: `${prefixCls.value}-icon`, content: `${prefixCls.value}-content` }),
@@ -120,21 +126,22 @@ const FloatButtonComponent = defineComponent({
       props,
     );
 
-    // ---- zIndex ----
-    // 根 `style` 是 Vue 原生 attrs（zIndex 也从它读，与 antd 同判）
-    const zIndex = useZIndex('FloatButton', (): number | undefined =>
-      typeof attrs.style === 'object' && attrs.style !== null
-        ? ((attrs.style as CSSProperties).zIndex as number | undefined)
-        : undefined,
-    );
-
-    const mergedStyle = computed<Record<string, unknown>>(() => ({
-      ...((typeof attrs.style === 'object' && attrs.style !== null ? attrs.style : {}) as Record<
-        string,
-        unknown
-      >),
-      zIndex: zIndex.value,
-    }));
+    // Read the same current Vue style sequence consumed by the real Button root.
+    const explicitZIndex = (): string | number | undefined => {
+      const style = normalizeStyle([mergedStyles.value.root, attrs.style]);
+      if (!style || typeof style === 'string') return undefined;
+      let value: string | number | undefined;
+      for (const [name, current] of Object.entries(style))
+        if (name === 'zIndex' || name === 'z-index') value = current;
+      return value;
+    };
+    const zIndex = useZIndex('FloatButton', () => {
+      const value = explicitZIndex();
+      if (typeof value === 'number' && Number.isFinite(value)) return value;
+      if (typeof value === 'string' && value.trim() && Number.isFinite(Number(value)))
+        return Number(value);
+      return undefined;
+    });
 
     // ---- badge ----
     const badgeNode = computed<VNodeChild>(() => {
@@ -173,13 +180,10 @@ const FloatButtonComponent = defineComponent({
     const iconOnly = computed(() => !isRenderableContent(mergedContent.value));
 
     // nativeElement 中继：Button 的 expose 面（focus 目标元素）
-    const buttonRef = ref<ComponentPublicInstance | null>(null);
+    const buttonRef = ref<ButtonRef | null>(null);
     expose({
       get nativeElement() {
-        return (
-          (buttonRef.value as unknown as { nativeElement?: HTMLElement | null } | null)
-            ?.nativeElement ?? null
-        );
+        return buttonRef.value?.nativeElement ?? null;
       },
     });
 
@@ -192,42 +196,53 @@ const FloatButtonComponent = defineComponent({
     });
 
     return () => {
+      const buttonProps: ButtonProps = {
+        type: mergedType.value,
+        shape: mergedShape.value === 'circle' ? 'circle' : 'default',
+        size: 'large',
+        icon: mergedIcon.value,
+        href: props.href,
+        htmlType: props.htmlType,
+        disabled: props.disabled,
+        classNames: { root: mergedClassNames.value.root, icon: mergedClassNames.value.icon },
+        styles: { root: mergedStyles.value.root, icon: mergedStyles.value.icon },
+      };
+      const fallback =
+        explicitZIndex() === undefined && zIndex.value !== undefined
+          ? { zIndex: zIndex.value }
+          : undefined;
       const buttonNode = h(
         Button,
-        {
+        mergeDomAttrs({ style: fallback }, attrs, {
+          ...buttonProps,
           ref: buttonRef,
-          ...attrs,
-          type: mergedType.value,
-          shape: mergedShape.value,
-          size: 'large',
-          icon: mergedIcon.value as never,
-          href: props.href,
           target: props.target,
-          htmlType: props.htmlType,
-          disabled: props.disabled,
           'aria-label': props['aria-label'],
           class: [
             prefixCls.value,
-            // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-            attrs.class,
             `${prefixCls.value}-${mergedType.value}`,
             `${prefixCls.value}-${mergedShape.value}`,
             direction.value === 'rtl' ? `${prefixCls.value}-rtl` : '',
             mergedIndividual.value ? `${prefixCls.value}-individual` : '',
             iconOnly.value ? `${prefixCls.value}-icon-only` : '',
-          ]
-            .filter(Boolean)
-            .join(' '),
-          style: mergedStyle.value,
-          classNames: mergedClassNames.value as never,
-          styles: mergedStyles.value as never,
-        } as never,
+          ],
+        }),
         {
           // ⚠️ 空 content/badge 不进 children（否则多出空节点 ⇒ L4 子节点数错位）
           default: () =>
-            [mergedContent.value, badgeNode.value].filter(
-              (n) => n !== null && n !== undefined && n !== false,
-            ),
+            [
+              isRenderableContent(mergedContent.value)
+                ? h(
+                    'span',
+                    {
+                      class: mergedClassNames.value.content,
+                      style: mergedStyles.value.content,
+                    },
+                    [h(NodeRenderer, { node: mergedContent.value })],
+                  )
+                : null,
+              badgeNode.value,
+            ].filter((n) => n !== null && n !== undefined && n !== false),
         },
       );
 

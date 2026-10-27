@@ -1,16 +1,18 @@
 <script setup lang="ts">
-// 两个中文字 + loading：自动插入空格的检测与加载态共存
+// 两个中文字 + loading：视觉字距与加载态共存
 import { Button, Space } from '@apollo-design/ui';
-import { ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 
 const loading = ref(false);
 const status = ref('未提交');
+let timer: ReturnType<typeof setTimeout> | undefined;
+onUnmounted(() => clearTimeout(timer));
 
 function submit(): void {
   if (loading.value) return;
   loading.value = true;
   status.value = '提交中…';
-  window.setTimeout(() => {
+  timer = setTimeout(() => {
     loading.value = false;
     status.value = '提交完成';
   }, 1500);
@@ -24,7 +26,7 @@ function submit(): void {
       <Button loading>取消</Button>
       <Button type="primary" :loading="loading" @click="submit">提交</Button>
     </Space>
-    <div style="font-size: 12px; color: #999">
+    <div aria-live="polite" style="font-size: 12px; color: var(--apollo-color-text-secondary)">
       状态：{{ status }}（loading 图标与两个中文字之间仍保持自动间距）
     </div>
   </Space>

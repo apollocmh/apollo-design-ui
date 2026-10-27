@@ -24,7 +24,7 @@ const clicks = ref(0);
         <Button type="primary" @click="clicks++">可点击 {{ clicks }}</Button>
       </Space>
     </ConfigProvider>
-    <div style="margin-top: 12px; font-size: 12px; color: #999">
+    <div style="margin-top: 12px; font-size: 12px; color: var(--apollo-color-text-secondary)">
       上方禁用按钮的背景 / 边框 / 文字来自 ConfigProvider 的 theme.token 覆盖
     </div>
   </div>

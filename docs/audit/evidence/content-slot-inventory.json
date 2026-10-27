@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 533,
+    "rows": 535,
     "byCategory": {
       "data": 123,
       "component-content-candidate": 154,
       "deprecated": 53,
-      "internal": 126,
+      "internal": 128,
       "render-function-candidate": 65,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 135,
       "review": 199,
-      "skip": 179,
+      "skip": 181,
       "implemented-verified": 20
     }
   },
@@ -1208,7 +1208,7 @@
       "owner": "ButtonProps",
       "prop": "icon",
       "category": "render-function-candidate",
-      "source": "packages/ui/src/button/interface.ts:147",
+      "source": "packages/ui/src/button/interface.ts:54",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -1216,8 +1216,10 @@
         ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/button/interface.ts"
+        ]
       },
       "slotDemo": {
         "status": "source-reference",
@@ -1229,6 +1231,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/button/__tests__/a11y.test.ts",
+          "packages/ui/src/button/__tests__/contract-audit.test.ts",
           "packages/ui/src/button/__tests__/index.test.ts",
           "packages/ui/src/button/__tests__/semantic.test.ts"
         ]
@@ -1241,7 +1244,7 @@
       "owner": "ButtonProps",
       "prop": "loading",
       "category": "render-function-candidate",
-      "source": "packages/ui/src/button/interface.ts:154",
+      "source": "packages/ui/src/button/interface.ts:61",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -1258,12 +1261,83 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/button/__tests__/a11y.test.ts",
+          "packages/ui/src/button/__tests__/contract-audit.test.ts",
           "packages/ui/src/button/__tests__/index.test.ts",
           "packages/ui/src/button/__tests__/semantic.test.ts"
         ]
       },
       "decision": "review",
       "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
+    },
+    {
+      "component": "button",
+      "owner": "ButtonSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/button/interface.ts:79",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/button/Button.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/button/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/button/__tests__/a11y.test.ts",
+          "packages/ui/src/button/__tests__/contract-audit.test.ts",
+          "packages/ui/src/button/__tests__/index.test.ts",
+          "packages/ui/src/button/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "button",
+      "owner": "ButtonSlots",
+      "prop": "icon",
+      "category": "internal",
+      "source": "packages/ui/src/button/interface.ts:80",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/button/Button.vue"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/button/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/button/demo/icon.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/button/__tests__/a11y.test.ts",
+          "packages/ui/src/button/__tests__/contract-audit.test.ts",
+          "packages/ui/src/button/__tests__/index.test.ts",
+          "packages/ui/src/button/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "calendar",

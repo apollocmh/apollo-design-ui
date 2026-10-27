@@ -1,0 +1,38 @@
+{
+  "actions": [
+    "$/div[0]/div[0]/div[0]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"Select all data\"",
+    "$/div[0]/div[0]/div[0]/span[1]: 类名不同 [anticon anticon-down apollo-dropdown-trigger] vs [apollo-dropdown-trigger apollo-icon apollo-icon-down]",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[0]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content1\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[1]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content2\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[2]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content3\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[3]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content4\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[4]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content5\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[5]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content6\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[6]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content7\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[7]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content8\"",
+    "$/div[0]/div[1]/button[0]/span[0]/span[0]: 类名不同 [anticon anticon-right] vs [apollo-icon apollo-icon-right]",
+    "$/div[0]/div[1]/button[0]/span[1]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/button[1]/span[0]/span[0]: 类名不同 [anticon anticon-left] vs [apollo-icon apollo-icon-left]",
+    "$/div[0]/div[1]/button[1]/span[1]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[2]/div[0]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"Select all data\"",
+    "$/div[0]/div[2]/div[0]/span[1]: 类名不同 [anticon anticon-down apollo-dropdown-trigger] vs [apollo-dropdown-trigger apollo-icon apollo-icon-down]"
+  ],
+  "operations": [
+    "$/div[0]/div[0]/div[0]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"Select all data\"",
+    "$/div[0]/div[0]/div[0]/span[1]: 类名不同 [anticon anticon-down apollo-dropdown-trigger] vs [apollo-dropdown-trigger apollo-icon apollo-icon-down]",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[0]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content1\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[1]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content2\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[2]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content3\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[3]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content4\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[4]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content5\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[5]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content6\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[6]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content7\"",
+    "$/div[0]/div[0]/div[1]/ul[0]/li[7]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"content8\"",
+    "$/div[0]/div[1]/button[0]/span[0]/span[0]: 类名不同 [anticon anticon-right] vs [apollo-icon apollo-icon-right]",
+    "$/div[0]/div[1]/button[0]/span[1]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/button[1]/span[0]/span[0]: 类名不同 [anticon anticon-left] vs [apollo-icon apollo-icon-left]",
+    "$/div[0]/div[1]/button[1]/span[1]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[2]/div[0]/label[0]/span[0]/input[0]: 我们多出属性 aria-label=\"Select all data\"",
+    "$/div[0]/div[2]/div[0]/span[1]: 类名不同 [anticon anticon-down apollo-dropdown-trigger] vs [apollo-dropdown-trigger apollo-icon apollo-icon-down]"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "dropdown:basic": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"],
+  "dropdown:placement": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"],
+  "dropdown:arrow": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"],
+  "dropdown:disabled": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"],
+  "dropdown:closed": ["$/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"]
+}

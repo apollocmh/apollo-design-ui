@@ -14,9 +14,11 @@
 import { domContractTest } from '@apollo-design/test-utils';
 import { h } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/modal.dom.json';
+import { mergeButtonContentReferenceAllowances } from '../../_internal/__tests__/button-content-reference';
 import NormalCancelBtn from '../components/NormalCancelBtn';
 import NormalOkBtn from '../components/NormalOkBtn';
 import PurePanel from '../PurePanel';
+import buttonContentDifferences from './button-content-reference-diffs.json';
 
 const BP = { prefixCls: 'apollo-modal' };
 
@@ -63,6 +65,7 @@ const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
 };
 
 domContractTest('Modal', {
+  allow: mergeButtonContentReferenceAllowances(buttonContentDifferences),
   baseline,
   render: (id) => {
     const spec = specs[id];

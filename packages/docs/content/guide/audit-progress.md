@@ -65,6 +65,10 @@ List验收还修复了关联的全屏加载正文错位、遮罩语义和文案�
 
 预览状态使用顶层`v-model:open`，分组当前项使用`v-model:current`；内容使用Vue具名插槽，变换通知使用`@transform`。失效的旧回调字段已直接移除。复制当前示例和API时请使用本次站点内容。
 
+## 当前收口：Button / Result
+
+本阶段已实现 Button 的完整 Vue 内容、当前 Provider、加载生命周期和 58 个既有 Token，保留全部 20 个原 Demo；同时修复 Compact/Search 的状态传递及关联示例。最终发布产物 147 项 Button 浏览器检查、51 项真实消费者检查及 1168 项颜色检查通过。Result 的共享按钮问题已修复，两个整改单元正在统一验收自有视觉、最终示例与站点；尚未标记完成。[完整范围、验证与剩余项](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-button-contract-audit.md)。
+
 ## 还没有完成什么
 
 全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有199项候选待逐项复核，候选不等于缺陷。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
@@ -123,6 +127,10 @@ List acceptance also fixed fullscreen loading flow, actual mask semantics, reada
 - [Complete Image API and examples](/components/image)
 
 Use top-level `v-model:open`, group `v-model:current`, named content slots and `@transform`. Obsolete callback fields have been removed directly.
+
+## Current acceptance: Button / Result
+
+Button now consumes complete Vue content, current Provider values, loading state and all 58 existing tokens. All 20 original demos remain. The final published build passes 147 Button browser checks, 51 actual consumer checks and 1,168 colour checks. Compact/Search state propagation and related demos are repaired. Button and Result still await unified visual, final-demo and site acceptance; neither unit is marked complete. [Scope, evidence and remaining work](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-button-contract-audit.md).
 
 ## Remaining work
 

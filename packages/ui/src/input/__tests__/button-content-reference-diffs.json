@@ -1,0 +1,5 @@
+{
+  "input:search-enter-button-text": [
+    "$/div[0]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ]
+}

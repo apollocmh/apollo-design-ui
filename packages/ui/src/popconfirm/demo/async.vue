@@ -2,7 +2,7 @@
 // 对齐 antd 的 async demo：受控 open + 异步确认
 
 import { Button, Popconfirm } from '@apollo-design/ui';
-import { ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 
 const open = ref(false);
 const confirmLoading = ref(false);
@@ -11,17 +11,34 @@ const showPopconfirm = () => {
   open.value = true;
 };
 
-const handleOk = () => {
+let timer: ReturnType<typeof setTimeout> | undefined;
+let finish: (() => void) | undefined;
+
+const handleOk = (): Promise<void> => {
   confirmLoading.value = true;
-  setTimeout(() => {
-    open.value = false;
-    confirmLoading.value = false;
-  }, 2000);
+  return new Promise((resolve) => {
+    finish = resolve;
+    timer = setTimeout(() => {
+      timer = undefined;
+      finish = undefined;
+      open.value = false;
+      confirmLoading.value = false;
+      resolve();
+    }, 2000);
+  });
 };
 
 const handleCancel = () => {
+  clearTimeout(timer);
+  timer = undefined;
   open.value = false;
+  confirmLoading.value = false;
+  const resolve = finish;
+  finish = undefined;
+  resolve?.();
 };
+
+onBeforeUnmount(handleCancel);
 </script>
 
 <template>

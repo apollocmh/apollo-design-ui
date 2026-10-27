@@ -1,0 +1,28 @@
+{
+  "tour:pure-panel": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[3]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "tour:pure-panel-cover": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[4]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/div[0]/div[0]/div[4]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "tour:pure-panel-primary": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[3]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]",
+    "$/div[0]/div[1]/div[0]/div[0]/div[3]/div[1]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "tour:pure-panel-close-icon-false": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[1]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "tour:pure-panel-custom-close-icon": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[2]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "tour:pure-panel-button-props": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[2]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "tour:pure-panel-single-step": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[2]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "tour:pure-panel-class-name": [
+    "$/div[0]/div[1]/div[0]/div[0]/div[3]/div[1]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ]
+}

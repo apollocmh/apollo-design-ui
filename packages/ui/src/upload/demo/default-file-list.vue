@@ -31,7 +31,7 @@ const onChange: UploadProps['onChange'] = (info) => {
       action="/upload.do"
       :default-file-list="defaultFileList"
       :custom-request="customRequest"
-      :on-change="onChange"
+      @change="onChange"
     >
       <Button>
         <template #icon><UploadOutlined /></template>

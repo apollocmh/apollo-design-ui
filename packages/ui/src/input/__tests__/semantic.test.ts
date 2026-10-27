@@ -1,3 +1,5 @@
+import { mergeButtonContentReferenceAllowances } from '../../_internal/__tests__/button-content-reference';
+import buttonContentDifferences from './button-content-reference-diffs.json';
 /**
  * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）—— Input 家族
  *
@@ -126,7 +128,7 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
 domContractTest('Input', {
   baseline,
   keepStyle: true,
-  allow: {
+  allow: mergeButtonContentReferenceAllowances(buttonContentDifferences, {
     'input:search-enter-button': {
       reason:
         'PLATFORM (D136): antd 的 Button 收到 children=true（不计入内容但影响 icon-only 判据）；Vue 把布尔子节点归一成 Comment，Button 仍加 -icon-only。Search 样式已补齐 15px 内边距与宽度，视觉一致，仅类名差异。',
@@ -135,7 +137,7 @@ domContractTest('Input', {
         '$/div[0]/button[1]: 类名不同 [apollo-btn apollo-btn-color-primary apollo-btn-compact-item apollo-btn-compact-last-item apollo-btn-default apollo-btn-variant-solid apollo-input-btn] vs [apollo-btn apollo-btn-color-primary apollo-btn-compact-item apollo-btn-compact-last-item apollo-btn-default apollo-btn-icon-only apollo-btn-variant-solid apollo-input-btn]',
       ],
     },
-  },
+  }),
   render: (id) => {
     if (id === 'input:rtl' || id === 'input:rtl-affix') {
       // 方向由 ConfigProvider 注入（input-number 同范式：SSR 探针注入方向）

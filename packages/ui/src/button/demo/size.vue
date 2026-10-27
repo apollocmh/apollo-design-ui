@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button, Space } from '../../index';
+import { Button, Space } from '@apollo-design/ui';
 </script>
 
 <template>

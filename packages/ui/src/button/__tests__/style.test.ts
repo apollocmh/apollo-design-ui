@@ -21,9 +21,10 @@
  *    只能构建期算出并内联（见 `style/index.ts` 文件头「缺口 2」）。
  */
 
-import { getDesignToken, transformToken } from '@apollo-design/theme';
+import { getDesignToken, token2CSSVar, transformToken } from '@apollo-design/theme';
 import { describe, expect, it } from 'vitest';
 import { genButtonStyle } from '../style';
+import { buttonAliasTokens } from '../style/alias-tokens';
 
 const CSS = genButtonStyle('apollo');
 const CSS_ANT = genButtonStyle('ant');
@@ -42,14 +43,26 @@ function declaredThemeVars(): Set<string> {
 }
 
 describe('Button · 样式静态一致性', () => {
+  it('Source projection covers exactly the aliases consumed by actual generated CSS', () => {
+    const declared = declaredThemeVars();
+    const used = new Set(
+      [...CSS.matchAll(/var\((--apollo-[a-z0-9-]+)/g)]
+        .map((m) => m[1])
+        .filter((name) => name !== undefined && declared.has(name)),
+    );
+    expect([...new Set(buttonAliasTokens.map((name) => token2CSSVar(name)))].sort()).toEqual(
+      [...used].sort(),
+    );
+  });
   it('CSS 里没有 undefined / NaN（表驱动生成的静默失败）', () => {
     expect(CSS).not.toContain('undefined');
     expect(CSS).not.toContain('NaN');
     expect(CSS_ANT).not.toContain('undefined');
   });
 
-  it('引用到的每个 --apollo-* 都在 theme 的 tokens.css 里声明过（B7 的源码层复算）', () => {
+  it('每个变量引用均有 Theme 或组件局部声明（B7 的源码层复算）', () => {
     const declared = declaredThemeVars();
+    for (const match of CSS.matchAll(/(--apollo-[a-z0-9-]+)\s*:/g)) declared.add(match[1] ?? '');
     const used = new Set(CSS.match(/var\((--apollo-[a-z0-9-]+)/g)?.map((m) => m.slice(4)) ?? []);
     expect(used.size).toBeGreaterThan(20);
     const missing = [...used].filter((name) => !declared.has(name));

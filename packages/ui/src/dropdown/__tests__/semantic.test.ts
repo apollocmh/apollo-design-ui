@@ -1,3 +1,5 @@
+import { mergeButtonContentReferenceAllowances } from '../../_internal/__tests__/button-content-reference';
+import buttonContentDifferences from './button-content-reference-diffs.json';
 /**
  * L4 · DOM 契约（与 antd 6.6.4 的机械 oracle 逐字比对）—— Dropdown
  *
@@ -63,6 +65,7 @@ const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
 };
 
 domContractTest('Dropdown', {
+  allow: mergeButtonContentReferenceAllowances(buttonContentDifferences),
   baseline,
   render: (id) => {
     const spec = specs[id];

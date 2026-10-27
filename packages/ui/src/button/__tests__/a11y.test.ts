@@ -122,9 +122,10 @@ describe('Button · 键盘与焦点', () => {
     expect(document.activeElement).not.toBe(w.element);
   });
 
-  it('★ loading 时不设 `aria-busy`：如实对齐上游（缺口登记在 README §7）', () => {
+  it('loading 立即提供忙碌和不可操作语义，保留自然焦点', () => {
     const w = mountBtn({ loading: true });
-    expect(w.attributes('aria-busy')).toBeUndefined();
+    expect(w.attributes('aria-busy')).toBe('true');
+    expect(w.attributes('aria-disabled')).toBe('true');
     expect(w.attributes('aria-live')).toBeUndefined();
   });
 });
@@ -143,11 +144,11 @@ describe('Button · 图标按钮的可访问名', () => {
     expect(w.attributes('aria-label')).toBe('搜索');
   });
 
-  it('有文字内容时，内容本身就是可访问名（两字中文按 antd 默认插空格；不凭空加 aria-*）', () => {
+  it('完整文字直接提供可访问名，中文保持连续', () => {
     const w = mountBtn({}, { default: () => '保存' });
-    // antd 实测（SSR 探针）：两字中文 + 默认 autoInsertSpace ⇒ `保 存`（空格 join），
-    // 且**不**加 aria-label —— 本用例原来期望 `保存`，与上游行为相反（L5 重跑抓到）。
-    expect(w.text()).toBe('保 存');
+    // Apollo 的视觉字距不改写原文和可访问名。
+    expect(w.text()).toBe('保存');
+    expect(w.classes()).toContain(`${P}-two-chinese-chars`);
     expect(w.attributes('aria-label')).toBeUndefined();
   });
 });

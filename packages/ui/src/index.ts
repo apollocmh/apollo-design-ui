@@ -161,12 +161,10 @@ export { prepareComponentToken as prepareBreadcrumbComponentToken } from './brea
 // ---------------------------------------------------------------------------
 // Button —— 按钮
 //
-// ⚠️ 样式已注册进 `COMPONENT_STYLES`（`./style`），`dist/button/style.css` 由构建钩子产出。
-//    两处已知的、如实登记的能力缺口见 `./button/style` 的文件头注释：
-//    `solidTextColor`（依赖 color-picker 的 `isBright`）与 13 个预设阴影色（构建期求解）。
-// ---------------------------------------------------------------------------
+// 当前完整内容、配置及样式整改见 docs/audit/2026-10-27-button-contract-audit.md。
 export type {
   ButtonColorType,
+  ButtonComponentToken,
   ButtonConfig,
   ButtonHTMLType,
   ButtonIcon,
@@ -180,10 +178,12 @@ export type {
   ButtonShape,
   ButtonSize,
   ButtonSlot,
+  ButtonSlots,
+  ButtonTokenInput,
   ButtonType,
   ButtonVariantType,
 } from './button';
-export { Button } from './button';
+export { Button, genButtonStyle, prepareButtonComponentToken } from './button';
 export type {
   ComponentConfigLike,
   ConfigProviderProps,

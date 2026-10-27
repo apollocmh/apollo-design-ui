@@ -1,0 +1,4677 @@
+{
+  "inventoryCommit": "ca5d274067257193405ec94111ffdf05fded35fb",
+  "status": "grouped-implementation-awaiting-frozen-acceptance",
+  "scope": "Button complete19 props, two slots, native click/ref, three semantic parts, 45 explicit and13 existing derived tokens, 20 original demos and13 runtime import sites",
+  "baselineSources": [
+    {
+      "file": "packages/ui/src/button/Button.vue",
+      "sha256": "31213b886670a64363bef364141a2e0dbaf08675c8a12181b9de91adfdaca98b"
+    },
+    {
+      "file": "packages/ui/src/button/index.ts",
+      "sha256": "b1a437db278daaa2875c37a37a9b579d04c03cd4daf0042d2510b722275b6cad"
+    },
+    {
+      "file": "packages/ui/src/button/interface.ts",
+      "sha256": "181aa68baf1a5aa05c2e5ca123c99d39ec3f7571068ecd41ec09a9145bddd1ef"
+    },
+    {
+      "file": "packages/ui/src/button/style/index.ts",
+      "sha256": "a37c235af38f08676577920a66656a6dd5a5ba0818c5bc12c44908bc69ea9da6"
+    },
+    {
+      "file": "packages/ui/src/button/style/token.ts",
+      "sha256": "22594366d458832ca4ff0e20c7790bda9e8e8e46fb93c4e50a3cef95333f065d"
+    },
+    {
+      "file": "packages/ui/src/index.ts",
+      "sha256": "f9261998c2c2e089f99170e7b7283cbc38e6605eab8a2c2133ad1cdd6d73ce04"
+    }
+  ],
+  "existingSharedFailure": {
+    "resultEvidence": "docs/audit/evidence/result-contract.json",
+    "sourceDemosPassed": 20,
+    "sourceDemosFailed": 20,
+    "actualDocsPassed": 13,
+    "actualDocsFailed": 10,
+    "cause": "Default primary text contrast4.1:1; all scenarios retained."
+  },
+  "remaining": [
+    "Final20 original Button demos × four algorithms and10 Result demos × four algorithms; actual built Docs and interactions.",
+    "Clean-commit capture, individual review and approval of39 Button/39 Result owned visual cases; repeat affected approved Button/QRCode cases with all original approvals preserved unless explicitly reviewed.",
+    "Final Docs/Registry/checklist acceptance and authorized Docs deployment; Button/Result remain in progress.",
+    "Whole-library final same-commit gates remain required after all global remediation units finish."
+  ],
+  "beforeUnit": {
+    "command": "pnpm exec vitest run --project unit packages/ui/src/button/__tests__/contract-audit.test.ts --maxWorkers=1 --no-file-parallelism",
+    "total": 97,
+    "passed": 7,
+    "failed": 90,
+    "baselineSourceHashesVerified": true,
+    "tests": [
+      {
+        "name": "Button complete public contracts consumes independently provided color default",
+        "status": "passed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color primary",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color danger",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color blue",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color purple",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color cyan",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color green",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color magenta",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color pink",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color red",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color orange",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color yellow",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color volcano",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color geekblue",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color lime",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided color gold",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided variant outlined",
+        "status": "passed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided variant dashed",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided variant solid",
+        "status": "passed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided variant filled",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided variant text",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes independently provided variant link",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts reads current Provider fields after replacement, removal and restoration without changing root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts materializes each full Vue slot only once per render",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts reads dynamically added/empty/removed icon slots before the fallback data prop",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts reads dynamically added/empty/removed complete default slots",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts owns content styles without cloning business children or changing their props",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts keeps caller Chinese text and accessible name while applying visual spacing",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts makes square an effective shape",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts retains explicit tabindex for enabled anchors and protects disabled anchors",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts blocks requested loading immediately while delaying only the indicator",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts does not restart a pending delay when only loading icon data changes",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts uses explicit zero and empty loading icons instead of truthiness fallbacks",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts never schedules client delay timers during SSR",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts cleans repeated pending delays on cancellation, unmount and independent remount",
+        "status": "passed"
+      },
+      {
+        "name": "Button complete public contracts keeps valid native style forms, root focus and a real nullable expose",
+        "status": "passed"
+      },
+      {
+        "name": "Button complete public contracts preserves child component state and refs across styles, theme and content updates",
+        "status": "passed"
+      },
+      {
+        "name": "Button complete public contracts does not issue obsolete string icon naming warnings for valid Vue text content",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts records all 58 existing token fields without dropping legacy or preset fields",
+        "status": "passed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token fontWeight on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token iconGap on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultShadow on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token primaryShadow on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token dangerShadow on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token primaryColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultBg on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultBorderColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token dangerColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultHoverBg on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultHoverColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultHoverBorderColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultActiveBg on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultActiveColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultActiveBorderColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token borderColorDisabled on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultBorderColorDisabled on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token groupBorderColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultGhostColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token ghostBg on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultGhostBorderColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token solidTextColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token textTextColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token textTextHoverColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token textTextActiveColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token paddingInline on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token paddingInlineLG on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token paddingInlineSM on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token paddingBlock on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token paddingBlockLG on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token paddingBlockSM on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token onlyIconSize on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token onlyIconSizeLG on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token onlyIconSizeSM on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token linkHoverBg on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token textHoverBg on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token contentFontSize on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token contentFontSizeLG on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token contentFontSizeSM on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token contentLineHeight on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token contentLineHeightLG on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token contentLineHeightSM on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token defaultBgDisabled on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token dashedBgDisabled on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token blueShadowColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token purpleShadowColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token cyanShadowColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token greenShadowColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token magentaShadowColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token pinkShadowColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token redShadowColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token orangeShadowColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token yellowShadowColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token volcanoShadowColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token geekblueShadowColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token limeShadowColor on the owning root",
+        "status": "failed"
+      },
+      {
+        "name": "Button complete public contracts consumes published component token goldShadowColor on the owning root",
+        "status": "failed"
+      }
+    ]
+  },
+  "beforeColors": {
+    "checks": 1168,
+    "passed": 378,
+    "failed": 790,
+    "browser": "150.0.7871.125",
+    "errors": [],
+    "modes": {
+      "default": {
+        "checks": 292,
+        "failed": 221,
+        "lowestRatio": 1.1692254551879184,
+        "failedCases": [
+          {
+            "id": "default-outlined",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "default-dashed",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "default-link",
+            "state": "normal",
+            "ratio": 1.4115336199566344
+          },
+          {
+            "id": "default-link",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "primary-outlined",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "primary-outlined",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "primary-dashed",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "primary-dashed",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "primary-solid",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "primary-solid",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "primary-filled",
+            "state": "normal",
+            "ratio": 3.664147049265507
+          },
+          {
+            "id": "primary-filled",
+            "state": "hover",
+            "ratio": 2.163001494571
+          },
+          {
+            "id": "primary-filled",
+            "state": "active",
+            "ratio": 3.547827494354441
+          },
+          {
+            "id": "primary-text",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "primary-text",
+            "state": "hover",
+            "ratio": 2.163001494571
+          },
+          {
+            "id": "primary-text",
+            "state": "active",
+            "ratio": 3.547827494354441
+          },
+          {
+            "id": "primary-link",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "primary-link",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "danger-outlined",
+            "state": "normal",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "danger-outlined",
+            "state": "hover",
+            "ratio": 2.5623945514666824
+          },
+          {
+            "id": "danger-dashed",
+            "state": "normal",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "danger-dashed",
+            "state": "hover",
+            "ratio": 2.5623945514666824
+          },
+          {
+            "id": "danger-solid",
+            "state": "normal",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "danger-solid",
+            "state": "hover",
+            "ratio": 2.5623945514666824
+          },
+          {
+            "id": "danger-filled",
+            "state": "normal",
+            "ratio": 2.9893791872798183
+          },
+          {
+            "id": "danger-filled",
+            "state": "hover",
+            "ratio": 2.054861294715021
+          },
+          {
+            "id": "danger-filled",
+            "state": "active",
+            "ratio": 3.2355416170550666
+          },
+          {
+            "id": "danger-text",
+            "state": "normal",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "danger-text",
+            "state": "hover",
+            "ratio": 2.054861294715021
+          },
+          {
+            "id": "danger-text",
+            "state": "active",
+            "ratio": 3.2355416170550666
+          },
+          {
+            "id": "danger-link",
+            "state": "normal",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "danger-link",
+            "state": "hover",
+            "ratio": 2.5623945514666824
+          },
+          {
+            "id": "blue-outlined",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "blue-outlined",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "blue-dashed",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "blue-dashed",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "blue-solid",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "blue-solid",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "blue-filled",
+            "state": "normal",
+            "ratio": 3.664147049265507
+          },
+          {
+            "id": "blue-filled",
+            "state": "hover",
+            "ratio": 2.163001494571
+          },
+          {
+            "id": "blue-filled",
+            "state": "active",
+            "ratio": 3.547827494354441
+          },
+          {
+            "id": "blue-text",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "blue-text",
+            "state": "hover",
+            "ratio": 2.163001494571
+          },
+          {
+            "id": "blue-text",
+            "state": "active",
+            "ratio": 3.547827494354441
+          },
+          {
+            "id": "blue-link",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "blue-link",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "purple-filled",
+            "state": "hover",
+            "ratio": 3.5745537478919327
+          },
+          {
+            "id": "purple-text",
+            "state": "hover",
+            "ratio": 3.5745537478919327
+          },
+          {
+            "id": "cyan-outlined",
+            "state": "normal",
+            "ratio": 2.205091947226454
+          },
+          {
+            "id": "cyan-outlined",
+            "state": "hover",
+            "ratio": 1.922127719192336
+          },
+          {
+            "id": "cyan-outlined",
+            "state": "active",
+            "ratio": 3.549078872339943
+          },
+          {
+            "id": "cyan-dashed",
+            "state": "normal",
+            "ratio": 2.205091947226454
+          },
+          {
+            "id": "cyan-dashed",
+            "state": "hover",
+            "ratio": 1.922127719192336
+          },
+          {
+            "id": "cyan-dashed",
+            "state": "active",
+            "ratio": 3.549078872339943
+          },
+          {
+            "id": "cyan-solid",
+            "state": "normal",
+            "ratio": 2.205091947226454
+          },
+          {
+            "id": "cyan-solid",
+            "state": "hover",
+            "ratio": 1.922127719192336
+          },
+          {
+            "id": "cyan-solid",
+            "state": "active",
+            "ratio": 3.549078872339943
+          },
+          {
+            "id": "cyan-filled",
+            "state": "normal",
+            "ratio": 2.106556445870954
+          },
+          {
+            "id": "cyan-filled",
+            "state": "hover",
+            "ratio": 1.5776952727090117
+          },
+          {
+            "id": "cyan-filled",
+            "state": "active",
+            "ratio": 2.4721209839871747
+          },
+          {
+            "id": "cyan-text",
+            "state": "normal",
+            "ratio": 2.205091947226454
+          },
+          {
+            "id": "cyan-text",
+            "state": "hover",
+            "ratio": 1.5776952727090117
+          },
+          {
+            "id": "cyan-text",
+            "state": "active",
+            "ratio": 2.4721209839871747
+          },
+          {
+            "id": "cyan-link",
+            "state": "normal",
+            "ratio": 2.205091947226454
+          },
+          {
+            "id": "cyan-link",
+            "state": "hover",
+            "ratio": 1.922127719192336
+          },
+          {
+            "id": "cyan-link",
+            "state": "active",
+            "ratio": 3.549078872339943
+          },
+          {
+            "id": "green-outlined",
+            "state": "normal",
+            "ratio": 2.265456480615804
+          },
+          {
+            "id": "green-outlined",
+            "state": "hover",
+            "ratio": 1.9236868603045751
+          },
+          {
+            "id": "green-outlined",
+            "state": "active",
+            "ratio": 3.46265742251993
+          },
+          {
+            "id": "green-dashed",
+            "state": "normal",
+            "ratio": 2.265456480615804
+          },
+          {
+            "id": "green-dashed",
+            "state": "hover",
+            "ratio": 1.9236868603045751
+          },
+          {
+            "id": "green-dashed",
+            "state": "active",
+            "ratio": 3.46265742251993
+          },
+          {
+            "id": "green-solid",
+            "state": "normal",
+            "ratio": 2.265456480615804
+          },
+          {
+            "id": "green-solid",
+            "state": "hover",
+            "ratio": 1.9236868603045751
+          },
+          {
+            "id": "green-solid",
+            "state": "active",
+            "ratio": 3.46265742251993
+          },
+          {
+            "id": "green-filled",
+            "state": "normal",
+            "ratio": 2.20563235548718
+          },
+          {
+            "id": "green-filled",
+            "state": "hover",
+            "ratio": 1.6487086075326363
+          },
+          {
+            "id": "green-filled",
+            "state": "active",
+            "ratio": 2.521708674539841
+          },
+          {
+            "id": "green-text",
+            "state": "normal",
+            "ratio": 2.265456480615804
+          },
+          {
+            "id": "green-text",
+            "state": "hover",
+            "ratio": 1.6487086075326363
+          },
+          {
+            "id": "green-text",
+            "state": "active",
+            "ratio": 2.521708674539841
+          },
+          {
+            "id": "green-link",
+            "state": "normal",
+            "ratio": 2.265456480615804
+          },
+          {
+            "id": "green-link",
+            "state": "hover",
+            "ratio": 1.9236868603045751
+          },
+          {
+            "id": "green-link",
+            "state": "active",
+            "ratio": 3.46265742251993
+          },
+          {
+            "id": "magenta-outlined",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "magenta-outlined",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "magenta-dashed",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "magenta-dashed",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "magenta-solid",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "magenta-solid",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "magenta-filled",
+            "state": "normal",
+            "ratio": 3.5406650113687266
+          },
+          {
+            "id": "magenta-filled",
+            "state": "hover",
+            "ratio": 2.2984659264295355
+          },
+          {
+            "id": "magenta-filled",
+            "state": "active",
+            "ratio": 3.1754804753962365
+          },
+          {
+            "id": "magenta-text",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "magenta-text",
+            "state": "hover",
+            "ratio": 2.2984659264295355
+          },
+          {
+            "id": "magenta-text",
+            "state": "active",
+            "ratio": 3.1754804753962365
+          },
+          {
+            "id": "magenta-link",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "magenta-link",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "pink-outlined",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "pink-outlined",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "pink-dashed",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "pink-dashed",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "pink-solid",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "pink-solid",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "pink-filled",
+            "state": "normal",
+            "ratio": 3.5406650113687266
+          },
+          {
+            "id": "pink-filled",
+            "state": "hover",
+            "ratio": 2.2984659264295355
+          },
+          {
+            "id": "pink-filled",
+            "state": "active",
+            "ratio": 3.1754804753962365
+          },
+          {
+            "id": "pink-text",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "pink-text",
+            "state": "hover",
+            "ratio": 2.2984659264295355
+          },
+          {
+            "id": "pink-text",
+            "state": "active",
+            "ratio": 3.1754804753962365
+          },
+          {
+            "id": "pink-link",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "pink-link",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "red-outlined",
+            "state": "normal",
+            "ratio": 4.078304398271295
+          },
+          {
+            "id": "red-outlined",
+            "state": "hover",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "red-dashed",
+            "state": "normal",
+            "ratio": 4.078304398271295
+          },
+          {
+            "id": "red-dashed",
+            "state": "hover",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "red-solid",
+            "state": "normal",
+            "ratio": 4.078304398271295
+          },
+          {
+            "id": "red-solid",
+            "state": "hover",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "red-filled",
+            "state": "normal",
+            "ratio": 3.7078337291035104
+          },
+          {
+            "id": "red-filled",
+            "state": "hover",
+            "ratio": 2.2895754967778945
+          },
+          {
+            "id": "red-filled",
+            "state": "active",
+            "ratio": 2.914207505285166
+          },
+          {
+            "id": "red-text",
+            "state": "normal",
+            "ratio": 4.078304398271295
+          },
+          {
+            "id": "red-text",
+            "state": "hover",
+            "ratio": 2.2895754967778945
+          },
+          {
+            "id": "red-text",
+            "state": "active",
+            "ratio": 2.914207505285166
+          },
+          {
+            "id": "red-link",
+            "state": "normal",
+            "ratio": 4.078304398271295
+          },
+          {
+            "id": "red-link",
+            "state": "hover",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "orange-outlined",
+            "state": "normal",
+            "ratio": 2.37889779166389
+          },
+          {
+            "id": "orange-outlined",
+            "state": "hover",
+            "ratio": 1.908879211229534
+          },
+          {
+            "id": "orange-outlined",
+            "state": "active",
+            "ratio": 3.5557096216960273
+          },
+          {
+            "id": "orange-dashed",
+            "state": "normal",
+            "ratio": 2.37889779166389
+          },
+          {
+            "id": "orange-dashed",
+            "state": "hover",
+            "ratio": 1.908879211229534
+          },
+          {
+            "id": "orange-dashed",
+            "state": "active",
+            "ratio": 3.5557096216960273
+          },
+          {
+            "id": "orange-solid",
+            "state": "normal",
+            "ratio": 2.37889779166389
+          },
+          {
+            "id": "orange-solid",
+            "state": "hover",
+            "ratio": 1.908879211229534
+          },
+          {
+            "id": "orange-solid",
+            "state": "active",
+            "ratio": 3.5557096216960273
+          },
+          {
+            "id": "orange-filled",
+            "state": "normal",
+            "ratio": 2.2315126062381907
+          },
+          {
+            "id": "orange-filled",
+            "state": "hover",
+            "ratio": 1.580861013693597
+          },
+          {
+            "id": "orange-filled",
+            "state": "active",
+            "ratio": 2.570027411611827
+          },
+          {
+            "id": "orange-text",
+            "state": "normal",
+            "ratio": 2.37889779166389
+          },
+          {
+            "id": "orange-text",
+            "state": "hover",
+            "ratio": 1.580861013693597
+          },
+          {
+            "id": "orange-text",
+            "state": "active",
+            "ratio": 2.570027411611827
+          },
+          {
+            "id": "orange-link",
+            "state": "normal",
+            "ratio": 2.37889779166389
+          },
+          {
+            "id": "orange-link",
+            "state": "hover",
+            "ratio": 1.908879211229534
+          },
+          {
+            "id": "orange-link",
+            "state": "active",
+            "ratio": 3.5557096216960273
+          },
+          {
+            "id": "yellow-outlined",
+            "state": "normal",
+            "ratio": 1.3808969272912015
+          },
+          {
+            "id": "yellow-outlined",
+            "state": "hover",
+            "ratio": 1.2126415841948253
+          },
+          {
+            "id": "yellow-outlined",
+            "state": "active",
+            "ratio": 2.0810838436681376
+          },
+          {
+            "id": "yellow-dashed",
+            "state": "normal",
+            "ratio": 1.3808969272912015
+          },
+          {
+            "id": "yellow-dashed",
+            "state": "hover",
+            "ratio": 1.2126415841948253
+          },
+          {
+            "id": "yellow-dashed",
+            "state": "active",
+            "ratio": 2.0810838436681376
+          },
+          {
+            "id": "yellow-solid",
+            "state": "normal",
+            "ratio": 1.3808969272912015
+          },
+          {
+            "id": "yellow-solid",
+            "state": "hover",
+            "ratio": 1.2126415841948253
+          },
+          {
+            "id": "yellow-solid",
+            "state": "active",
+            "ratio": 2.0810838436681376
+          },
+          {
+            "id": "yellow-filled",
+            "state": "normal",
+            "ratio": 1.3585921766050368
+          },
+          {
+            "id": "yellow-filled",
+            "state": "hover",
+            "ratio": 1.1692254551879184
+          },
+          {
+            "id": "yellow-filled",
+            "state": "active",
+            "ratio": 1.927232895412071
+          },
+          {
+            "id": "yellow-text",
+            "state": "normal",
+            "ratio": 1.3808969272912015
+          },
+          {
+            "id": "yellow-text",
+            "state": "hover",
+            "ratio": 1.1692254551879184
+          },
+          {
+            "id": "yellow-text",
+            "state": "active",
+            "ratio": 1.927232895412071
+          },
+          {
+            "id": "yellow-link",
+            "state": "normal",
+            "ratio": 1.3808969272912015
+          },
+          {
+            "id": "yellow-link",
+            "state": "hover",
+            "ratio": 1.2126415841948253
+          },
+          {
+            "id": "yellow-link",
+            "state": "active",
+            "ratio": 2.0810838436681376
+          },
+          {
+            "id": "volcano-outlined",
+            "state": "normal",
+            "ratio": 3.307244796156873
+          },
+          {
+            "id": "volcano-outlined",
+            "state": "hover",
+            "ratio": 2.585650384808338
+          },
+          {
+            "id": "volcano-dashed",
+            "state": "normal",
+            "ratio": 3.307244796156873
+          },
+          {
+            "id": "volcano-dashed",
+            "state": "hover",
+            "ratio": 2.585650384808338
+          },
+          {
+            "id": "volcano-solid",
+            "state": "normal",
+            "ratio": 3.307244796156873
+          },
+          {
+            "id": "volcano-solid",
+            "state": "hover",
+            "ratio": 2.585650384808338
+          },
+          {
+            "id": "volcano-filled",
+            "state": "normal",
+            "ratio": 3.010867051947891
+          },
+          {
+            "id": "volcano-filled",
+            "state": "hover",
+            "ratio": 1.9486771752818706
+          },
+          {
+            "id": "volcano-filled",
+            "state": "active",
+            "ratio": 2.9285863990813357
+          },
+          {
+            "id": "volcano-text",
+            "state": "normal",
+            "ratio": 3.307244796156873
+          },
+          {
+            "id": "volcano-text",
+            "state": "hover",
+            "ratio": 1.9486771752818706
+          },
+          {
+            "id": "volcano-text",
+            "state": "active",
+            "ratio": 2.9285863990813357
+          },
+          {
+            "id": "volcano-link",
+            "state": "normal",
+            "ratio": 3.307244796156873
+          },
+          {
+            "id": "volcano-link",
+            "state": "hover",
+            "ratio": 2.585650384808338
+          },
+          {
+            "id": "geekblue-outlined",
+            "state": "hover",
+            "ratio": 3.6507826394248215
+          },
+          {
+            "id": "geekblue-dashed",
+            "state": "hover",
+            "ratio": 3.6507826394248215
+          },
+          {
+            "id": "geekblue-solid",
+            "state": "hover",
+            "ratio": 3.6507826394248215
+          },
+          {
+            "id": "geekblue-filled",
+            "state": "hover",
+            "ratio": 2.8511898449811843
+          },
+          {
+            "id": "geekblue-text",
+            "state": "hover",
+            "ratio": 2.8511898449811843
+          },
+          {
+            "id": "geekblue-link",
+            "state": "hover",
+            "ratio": 3.6507826394248215
+          },
+          {
+            "id": "lime-outlined",
+            "state": "normal",
+            "ratio": 1.6897393232827866
+          },
+          {
+            "id": "lime-outlined",
+            "state": "hover",
+            "ratio": 1.4521100831682898
+          },
+          {
+            "id": "lime-outlined",
+            "state": "active",
+            "ratio": 2.5279128240829967
+          },
+          {
+            "id": "lime-dashed",
+            "state": "normal",
+            "ratio": 1.6897393232827866
+          },
+          {
+            "id": "lime-dashed",
+            "state": "hover",
+            "ratio": 1.4521100831682898
+          },
+          {
+            "id": "lime-dashed",
+            "state": "active",
+            "ratio": 2.5279128240829967
+          },
+          {
+            "id": "lime-solid",
+            "state": "normal",
+            "ratio": 1.6897393232827866
+          },
+          {
+            "id": "lime-solid",
+            "state": "hover",
+            "ratio": 1.4521100831682898
+          },
+          {
+            "id": "lime-solid",
+            "state": "active",
+            "ratio": 2.5279128240829967
+          },
+          {
+            "id": "lime-filled",
+            "state": "normal",
+            "ratio": 1.6564050793423144
+          },
+          {
+            "id": "lime-filled",
+            "state": "hover",
+            "ratio": 1.372088974900672
+          },
+          {
+            "id": "lime-filled",
+            "state": "active",
+            "ratio": 2.311128538038898
+          },
+          {
+            "id": "lime-text",
+            "state": "normal",
+            "ratio": 1.6897393232827866
+          },
+          {
+            "id": "lime-text",
+            "state": "hover",
+            "ratio": 1.372088974900672
+          },
+          {
+            "id": "lime-text",
+            "state": "active",
+            "ratio": 2.311128538038898
+          },
+          {
+            "id": "lime-link",
+            "state": "normal",
+            "ratio": 1.6897393232827866
+          },
+          {
+            "id": "lime-link",
+            "state": "hover",
+            "ratio": 1.4521100831682898
+          },
+          {
+            "id": "lime-link",
+            "state": "active",
+            "ratio": 2.5279128240829967
+          },
+          {
+            "id": "gold-outlined",
+            "state": "normal",
+            "ratio": 1.9000521668277568
+          },
+          {
+            "id": "gold-outlined",
+            "state": "hover",
+            "ratio": 1.5782489851759853
+          },
+          {
+            "id": "gold-outlined",
+            "state": "active",
+            "ratio": 2.867401812984788
+          },
+          {
+            "id": "gold-dashed",
+            "state": "normal",
+            "ratio": 1.9000521668277568
+          },
+          {
+            "id": "gold-dashed",
+            "state": "hover",
+            "ratio": 1.5782489851759853
+          },
+          {
+            "id": "gold-dashed",
+            "state": "active",
+            "ratio": 2.867401812984788
+          },
+          {
+            "id": "gold-solid",
+            "state": "normal",
+            "ratio": 1.9000521668277568
+          },
+          {
+            "id": "gold-solid",
+            "state": "hover",
+            "ratio": 1.5782489851759853
+          },
+          {
+            "id": "gold-solid",
+            "state": "active",
+            "ratio": 2.867401812984788
+          },
+          {
+            "id": "gold-filled",
+            "state": "normal",
+            "ratio": 1.8270816871923332
+          },
+          {
+            "id": "gold-filled",
+            "state": "hover",
+            "ratio": 1.392335546768952
+          },
+          {
+            "id": "gold-filled",
+            "state": "active",
+            "ratio": 2.301616820697057
+          },
+          {
+            "id": "gold-text",
+            "state": "normal",
+            "ratio": 1.9000521668277568
+          },
+          {
+            "id": "gold-text",
+            "state": "hover",
+            "ratio": 1.392335546768952
+          },
+          {
+            "id": "gold-text",
+            "state": "active",
+            "ratio": 2.301616820697057
+          },
+          {
+            "id": "gold-link",
+            "state": "normal",
+            "ratio": 1.9000521668277568
+          },
+          {
+            "id": "gold-link",
+            "state": "hover",
+            "ratio": 1.5782489851759853
+          },
+          {
+            "id": "gold-link",
+            "state": "active",
+            "ratio": 2.867401812984788
+          },
+          {
+            "id": "type-link",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "type-link",
+            "state": "hover",
+            "ratio": 2.2499579590817818
+          }
+        ]
+      },
+      "dark": {
+        "checks": 292,
+        "failed": 174,
+        "lowestRatio": 1,
+        "failedCases": [
+          {
+            "id": "default-outlined",
+            "state": "active",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "default-dashed",
+            "state": "active",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "default-solid",
+            "state": "normal",
+            "ratio": 1.1094282311686163
+          },
+          {
+            "id": "default-solid",
+            "state": "hover",
+            "ratio": 1
+          },
+          {
+            "id": "default-solid",
+            "state": "active",
+            "ratio": 1.225713951880611
+          },
+          {
+            "id": "default-link",
+            "state": "normal",
+            "ratio": 1.8331349155863543
+          },
+          {
+            "id": "default-link",
+            "state": "active",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "primary-outlined",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "primary-outlined",
+            "state": "active",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "primary-dashed",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "primary-dashed",
+            "state": "active",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "primary-solid",
+            "state": "hover",
+            "ratio": 3.5379534511342134
+          },
+          {
+            "id": "primary-filled",
+            "state": "normal",
+            "ratio": 2.469326058702777
+          },
+          {
+            "id": "primary-filled",
+            "state": "hover",
+            "ratio": 2.84100055788199
+          },
+          {
+            "id": "primary-filled",
+            "state": "active",
+            "ratio": 1.7712627685403424
+          },
+          {
+            "id": "primary-text",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "primary-text",
+            "state": "hover",
+            "ratio": 2.84100055788199
+          },
+          {
+            "id": "primary-text",
+            "state": "active",
+            "ratio": 1.7712627685403424
+          },
+          {
+            "id": "primary-link",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "primary-link",
+            "state": "active",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "danger-outlined",
+            "state": "normal",
+            "ratio": 4.349838805989423
+          },
+          {
+            "id": "danger-outlined",
+            "state": "active",
+            "ratio": 3.0030453009207485
+          },
+          {
+            "id": "danger-dashed",
+            "state": "normal",
+            "ratio": 4.349838805989423
+          },
+          {
+            "id": "danger-dashed",
+            "state": "active",
+            "ratio": 3.0030453009207485
+          },
+          {
+            "id": "danger-solid",
+            "state": "normal",
+            "ratio": 4.235222704033309
+          },
+          {
+            "id": "danger-solid",
+            "state": "hover",
+            "ratio": 3.055060700282557
+          },
+          {
+            "id": "danger-filled",
+            "state": "normal",
+            "ratio": 4.014756916751127
+          },
+          {
+            "id": "danger-filled",
+            "state": "active",
+            "ratio": 1.970247590747899
+          },
+          {
+            "id": "danger-text",
+            "state": "normal",
+            "ratio": 4.349838805989423
+          },
+          {
+            "id": "danger-text",
+            "state": "active",
+            "ratio": 1.970247590747899
+          },
+          {
+            "id": "danger-link",
+            "state": "normal",
+            "ratio": 4.349838805989423
+          },
+          {
+            "id": "danger-link",
+            "state": "active",
+            "ratio": 3.0030453009207485
+          },
+          {
+            "id": "blue-outlined",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "blue-outlined",
+            "state": "hover",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "blue-dashed",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "blue-dashed",
+            "state": "hover",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "blue-solid",
+            "state": "active",
+            "ratio": 3.5379534511342134
+          },
+          {
+            "id": "blue-filled",
+            "state": "normal",
+            "ratio": 3.350852698142929
+          },
+          {
+            "id": "blue-filled",
+            "state": "hover",
+            "ratio": 2.112522508230684
+          },
+          {
+            "id": "blue-filled",
+            "state": "active",
+            "ratio": 3.6210715317878908
+          },
+          {
+            "id": "blue-text",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "blue-text",
+            "state": "hover",
+            "ratio": 2.112522508230684
+          },
+          {
+            "id": "blue-text",
+            "state": "active",
+            "ratio": 3.6210715317878908
+          },
+          {
+            "id": "blue-link",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "blue-link",
+            "state": "hover",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "purple-outlined",
+            "state": "normal",
+            "ratio": 2.2285039674059672
+          },
+          {
+            "id": "purple-outlined",
+            "state": "hover",
+            "ratio": 1.7642887834649377
+          },
+          {
+            "id": "purple-outlined",
+            "state": "active",
+            "ratio": 3.456347068474164
+          },
+          {
+            "id": "purple-dashed",
+            "state": "normal",
+            "ratio": 2.2285039674059672
+          },
+          {
+            "id": "purple-dashed",
+            "state": "hover",
+            "ratio": 1.7642887834649377
+          },
+          {
+            "id": "purple-dashed",
+            "state": "active",
+            "ratio": 3.456347068474164
+          },
+          {
+            "id": "purple-filled",
+            "state": "normal",
+            "ratio": 2.1827816027110436
+          },
+          {
+            "id": "purple-filled",
+            "state": "hover",
+            "ratio": 1.6077763374265839
+          },
+          {
+            "id": "purple-filled",
+            "state": "active",
+            "ratio": 2.816356562930472
+          },
+          {
+            "id": "purple-text",
+            "state": "normal",
+            "ratio": 2.2285039674059672
+          },
+          {
+            "id": "purple-text",
+            "state": "hover",
+            "ratio": 1.6077763374265839
+          },
+          {
+            "id": "purple-text",
+            "state": "active",
+            "ratio": 2.816356562930472
+          },
+          {
+            "id": "purple-link",
+            "state": "normal",
+            "ratio": 2.2285039674059672
+          },
+          {
+            "id": "purple-link",
+            "state": "hover",
+            "ratio": 1.7642887834649377
+          },
+          {
+            "id": "purple-link",
+            "state": "active",
+            "ratio": 3.456347068474164
+          },
+          {
+            "id": "cyan-outlined",
+            "state": "hover",
+            "ratio": 4.141905429234487
+          },
+          {
+            "id": "cyan-dashed",
+            "state": "hover",
+            "ratio": 4.141905429234487
+          },
+          {
+            "id": "cyan-solid",
+            "state": "normal",
+            "ratio": 2.9190291384443694
+          },
+          {
+            "id": "cyan-solid",
+            "state": "hover",
+            "ratio": 4.4478408270698795
+          },
+          {
+            "id": "cyan-solid",
+            "state": "active",
+            "ratio": 2.328720179127759
+          },
+          {
+            "id": "cyan-filled",
+            "state": "hover",
+            "ratio": 2.976273035470108
+          },
+          {
+            "id": "cyan-filled",
+            "state": "active",
+            "ratio": 4.398369480324413
+          },
+          {
+            "id": "cyan-text",
+            "state": "hover",
+            "ratio": 2.976273035470108
+          },
+          {
+            "id": "cyan-text",
+            "state": "active",
+            "ratio": 4.398369480324413
+          },
+          {
+            "id": "cyan-link",
+            "state": "hover",
+            "ratio": 4.141905429234487
+          },
+          {
+            "id": "green-outlined",
+            "state": "hover",
+            "ratio": 4.048887623108855
+          },
+          {
+            "id": "green-dashed",
+            "state": "hover",
+            "ratio": 4.048887623108855
+          },
+          {
+            "id": "green-solid",
+            "state": "normal",
+            "ratio": 2.979897994814097
+          },
+          {
+            "id": "green-solid",
+            "state": "active",
+            "ratio": 2.323703367487618
+          },
+          {
+            "id": "green-filled",
+            "state": "hover",
+            "ratio": 2.871227403931196
+          },
+          {
+            "id": "green-filled",
+            "state": "active",
+            "ratio": 4.406568229705634
+          },
+          {
+            "id": "green-text",
+            "state": "hover",
+            "ratio": 2.871227403931196
+          },
+          {
+            "id": "green-text",
+            "state": "active",
+            "ratio": 4.406568229705634
+          },
+          {
+            "id": "green-link",
+            "state": "hover",
+            "ratio": 4.048887623108855
+          },
+          {
+            "id": "magenta-outlined",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "magenta-outlined",
+            "state": "hover",
+            "ratio": 2.6106892527245567
+          },
+          {
+            "id": "magenta-dashed",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "magenta-dashed",
+            "state": "hover",
+            "ratio": 2.6106892527245567
+          },
+          {
+            "id": "magenta-solid",
+            "state": "active",
+            "ratio": 3.585798569320182
+          },
+          {
+            "id": "magenta-filled",
+            "state": "normal",
+            "ratio": 3.483226798806793
+          },
+          {
+            "id": "magenta-filled",
+            "state": "hover",
+            "ratio": 2.1662012456024833
+          },
+          {
+            "id": "magenta-filled",
+            "state": "active",
+            "ratio": 3.62512267572986
+          },
+          {
+            "id": "magenta-text",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "magenta-text",
+            "state": "hover",
+            "ratio": 2.1662012456024833
+          },
+          {
+            "id": "magenta-text",
+            "state": "active",
+            "ratio": 3.62512267572986
+          },
+          {
+            "id": "magenta-link",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "magenta-link",
+            "state": "hover",
+            "ratio": 2.6106892527245567
+          },
+          {
+            "id": "pink-outlined",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "pink-outlined",
+            "state": "hover",
+            "ratio": 2.6106892527245567
+          },
+          {
+            "id": "pink-dashed",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "pink-dashed",
+            "state": "hover",
+            "ratio": 2.6106892527245567
+          },
+          {
+            "id": "pink-solid",
+            "state": "active",
+            "ratio": 3.585798569320182
+          },
+          {
+            "id": "pink-filled",
+            "state": "normal",
+            "ratio": 3.483226798806793
+          },
+          {
+            "id": "pink-filled",
+            "state": "hover",
+            "ratio": 2.1662012456024833
+          },
+          {
+            "id": "pink-filled",
+            "state": "active",
+            "ratio": 3.62512267572986
+          },
+          {
+            "id": "pink-text",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "pink-text",
+            "state": "hover",
+            "ratio": 2.1662012456024833
+          },
+          {
+            "id": "pink-text",
+            "state": "active",
+            "ratio": 3.62512267572986
+          },
+          {
+            "id": "pink-link",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "pink-link",
+            "state": "hover",
+            "ratio": 2.6106892527245567
+          },
+          {
+            "id": "red-outlined",
+            "state": "normal",
+            "ratio": 3.51642402921495
+          },
+          {
+            "id": "red-outlined",
+            "state": "hover",
+            "ratio": 2.4761810671031315
+          },
+          {
+            "id": "red-dashed",
+            "state": "normal",
+            "ratio": 3.51642402921495
+          },
+          {
+            "id": "red-dashed",
+            "state": "hover",
+            "ratio": 2.4761810671031315
+          },
+          {
+            "id": "red-solid",
+            "state": "active",
+            "ratio": 3.868354981876177
+          },
+          {
+            "id": "red-filled",
+            "state": "normal",
+            "ratio": 3.3520682421090764
+          },
+          {
+            "id": "red-filled",
+            "state": "hover",
+            "ratio": 2.087874602057754
+          },
+          {
+            "id": "red-filled",
+            "state": "active",
+            "ratio": 3.474649583236992
+          },
+          {
+            "id": "red-text",
+            "state": "normal",
+            "ratio": 3.51642402921495
+          },
+          {
+            "id": "red-text",
+            "state": "hover",
+            "ratio": 2.087874602057754
+          },
+          {
+            "id": "red-text",
+            "state": "active",
+            "ratio": 3.474649583236992
+          },
+          {
+            "id": "red-link",
+            "state": "normal",
+            "ratio": 3.51642402921495
+          },
+          {
+            "id": "red-link",
+            "state": "hover",
+            "ratio": 2.4761810671031315
+          },
+          {
+            "id": "orange-outlined",
+            "state": "hover",
+            "ratio": 3.918834082790088
+          },
+          {
+            "id": "orange-dashed",
+            "state": "hover",
+            "ratio": 3.918834082790088
+          },
+          {
+            "id": "orange-solid",
+            "state": "normal",
+            "ratio": 3.127240777013101
+          },
+          {
+            "id": "orange-solid",
+            "state": "active",
+            "ratio": 2.3029723931313355
+          },
+          {
+            "id": "orange-filled",
+            "state": "hover",
+            "ratio": 2.818244617975435
+          },
+          {
+            "id": "orange-text",
+            "state": "hover",
+            "ratio": 2.818244617975435
+          },
+          {
+            "id": "orange-link",
+            "state": "hover",
+            "ratio": 3.918834082790088
+          },
+          {
+            "id": "yellow-solid",
+            "state": "normal",
+            "ratio": 1.8735069263372246
+          },
+          {
+            "id": "yellow-solid",
+            "state": "hover",
+            "ratio": 2.992182142986655
+          },
+          {
+            "id": "yellow-solid",
+            "state": "active",
+            "ratio": 1.4884254233091092
+          },
+          {
+            "id": "yellow-filled",
+            "state": "hover",
+            "ratio": 3.7341878604410783
+          },
+          {
+            "id": "yellow-text",
+            "state": "hover",
+            "ratio": 3.7341878604410783
+          },
+          {
+            "id": "volcano-outlined",
+            "state": "normal",
+            "ratio": 4.311859542308215
+          },
+          {
+            "id": "volcano-outlined",
+            "state": "hover",
+            "ratio": 2.993483791227073
+          },
+          {
+            "id": "volcano-dashed",
+            "state": "normal",
+            "ratio": 4.311859542308215
+          },
+          {
+            "id": "volcano-dashed",
+            "state": "hover",
+            "ratio": 2.993483791227073
+          },
+          {
+            "id": "volcano-solid",
+            "state": "normal",
+            "ratio": 4.2725269432477
+          },
+          {
+            "id": "volcano-solid",
+            "state": "active",
+            "ratio": 3.0778871268015227
+          },
+          {
+            "id": "volcano-filled",
+            "state": "normal",
+            "ratio": 4.01045981572582
+          },
+          {
+            "id": "volcano-filled",
+            "state": "hover",
+            "ratio": 2.3857724755710534
+          },
+          {
+            "id": "volcano-filled",
+            "state": "active",
+            "ratio": 3.951703068703968
+          },
+          {
+            "id": "volcano-text",
+            "state": "normal",
+            "ratio": 4.311859542308215
+          },
+          {
+            "id": "volcano-text",
+            "state": "hover",
+            "ratio": 2.3857724755710534
+          },
+          {
+            "id": "volcano-text",
+            "state": "active",
+            "ratio": 3.951703068703968
+          },
+          {
+            "id": "volcano-link",
+            "state": "normal",
+            "ratio": 4.311859542308215
+          },
+          {
+            "id": "volcano-link",
+            "state": "hover",
+            "ratio": 2.993483791227073
+          },
+          {
+            "id": "geekblue-outlined",
+            "state": "normal",
+            "ratio": 2.583181143312951
+          },
+          {
+            "id": "geekblue-outlined",
+            "state": "hover",
+            "ratio": 1.9993510343383498
+          },
+          {
+            "id": "geekblue-outlined",
+            "state": "active",
+            "ratio": 4.287560014820581
+          },
+          {
+            "id": "geekblue-dashed",
+            "state": "normal",
+            "ratio": 2.583181143312951
+          },
+          {
+            "id": "geekblue-dashed",
+            "state": "hover",
+            "ratio": 1.9993510343383498
+          },
+          {
+            "id": "geekblue-dashed",
+            "state": "active",
+            "ratio": 4.287560014820581
+          },
+          {
+            "id": "geekblue-solid",
+            "state": "active",
+            "ratio": 4.29674127156969
+          },
+          {
+            "id": "geekblue-filled",
+            "state": "normal",
+            "ratio": 2.5071595958273294
+          },
+          {
+            "id": "geekblue-filled",
+            "state": "hover",
+            "ratio": 1.775128848869902
+          },
+          {
+            "id": "geekblue-filled",
+            "state": "active",
+            "ratio": 3.3230645875631057
+          },
+          {
+            "id": "geekblue-text",
+            "state": "normal",
+            "ratio": 2.583181143312951
+          },
+          {
+            "id": "geekblue-text",
+            "state": "hover",
+            "ratio": 1.775128848869902
+          },
+          {
+            "id": "geekblue-text",
+            "state": "active",
+            "ratio": 3.3230645875631057
+          },
+          {
+            "id": "geekblue-link",
+            "state": "normal",
+            "ratio": 2.583181143312951
+          },
+          {
+            "id": "geekblue-link",
+            "state": "hover",
+            "ratio": 1.9993510343383498
+          },
+          {
+            "id": "geekblue-link",
+            "state": "active",
+            "ratio": 4.287560014820581
+          },
+          {
+            "id": "lime-solid",
+            "state": "normal",
+            "ratio": 2.279136174673195
+          },
+          {
+            "id": "lime-solid",
+            "state": "hover",
+            "ratio": 3.546939121715044
+          },
+          {
+            "id": "lime-solid",
+            "state": "active",
+            "ratio": 1.771139194570228
+          },
+          {
+            "id": "lime-filled",
+            "state": "hover",
+            "ratio": 3.344981836826543
+          },
+          {
+            "id": "lime-text",
+            "state": "hover",
+            "ratio": 3.344981836826543
+          },
+          {
+            "id": "gold-solid",
+            "state": "normal",
+            "ratio": 2.532431444235693
+          },
+          {
+            "id": "gold-solid",
+            "state": "hover",
+            "ratio": 3.919342752930549
+          },
+          {
+            "id": "gold-solid",
+            "state": "active",
+            "ratio": 1.9198626683114497
+          },
+          {
+            "id": "gold-filled",
+            "state": "hover",
+            "ratio": 3.1644318337086363
+          },
+          {
+            "id": "gold-text",
+            "state": "hover",
+            "ratio": 3.1644318337086363
+          },
+          {
+            "id": "type-link",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "type-link",
+            "state": "hover",
+            "ratio": 1.83284602469966
+          },
+          {
+            "id": "type-link",
+            "state": "active",
+            "ratio": 2.547083548696809
+          }
+        ]
+      },
+      "compact": {
+        "checks": 292,
+        "failed": 221,
+        "lowestRatio": 1.1692254551879184,
+        "failedCases": [
+          {
+            "id": "default-outlined",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "default-dashed",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "default-link",
+            "state": "normal",
+            "ratio": 1.4115336199566344
+          },
+          {
+            "id": "default-link",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "primary-outlined",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "primary-outlined",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "primary-dashed",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "primary-dashed",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "primary-solid",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "primary-solid",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "primary-filled",
+            "state": "normal",
+            "ratio": 3.664147049265507
+          },
+          {
+            "id": "primary-filled",
+            "state": "hover",
+            "ratio": 2.163001494571
+          },
+          {
+            "id": "primary-filled",
+            "state": "active",
+            "ratio": 3.547827494354441
+          },
+          {
+            "id": "primary-text",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "primary-text",
+            "state": "hover",
+            "ratio": 2.163001494571
+          },
+          {
+            "id": "primary-text",
+            "state": "active",
+            "ratio": 3.547827494354441
+          },
+          {
+            "id": "primary-link",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "primary-link",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "danger-outlined",
+            "state": "normal",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "danger-outlined",
+            "state": "hover",
+            "ratio": 2.5623945514666824
+          },
+          {
+            "id": "danger-dashed",
+            "state": "normal",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "danger-dashed",
+            "state": "hover",
+            "ratio": 2.5623945514666824
+          },
+          {
+            "id": "danger-solid",
+            "state": "normal",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "danger-solid",
+            "state": "hover",
+            "ratio": 2.5623945514666824
+          },
+          {
+            "id": "danger-filled",
+            "state": "normal",
+            "ratio": 2.9893791872798183
+          },
+          {
+            "id": "danger-filled",
+            "state": "hover",
+            "ratio": 2.054861294715021
+          },
+          {
+            "id": "danger-filled",
+            "state": "active",
+            "ratio": 3.2355416170550666
+          },
+          {
+            "id": "danger-text",
+            "state": "normal",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "danger-text",
+            "state": "hover",
+            "ratio": 2.054861294715021
+          },
+          {
+            "id": "danger-text",
+            "state": "active",
+            "ratio": 3.2355416170550666
+          },
+          {
+            "id": "danger-link",
+            "state": "normal",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "danger-link",
+            "state": "hover",
+            "ratio": 2.5623945514666824
+          },
+          {
+            "id": "blue-outlined",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "blue-outlined",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "blue-dashed",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "blue-dashed",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "blue-solid",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "blue-solid",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "blue-filled",
+            "state": "normal",
+            "ratio": 3.664147049265507
+          },
+          {
+            "id": "blue-filled",
+            "state": "hover",
+            "ratio": 2.163001494571
+          },
+          {
+            "id": "blue-filled",
+            "state": "active",
+            "ratio": 3.547827494354441
+          },
+          {
+            "id": "blue-text",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "blue-text",
+            "state": "hover",
+            "ratio": 2.163001494571
+          },
+          {
+            "id": "blue-text",
+            "state": "active",
+            "ratio": 3.547827494354441
+          },
+          {
+            "id": "blue-link",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "blue-link",
+            "state": "hover",
+            "ratio": 2.989521182683272
+          },
+          {
+            "id": "purple-filled",
+            "state": "hover",
+            "ratio": 3.5745537478919327
+          },
+          {
+            "id": "purple-text",
+            "state": "hover",
+            "ratio": 3.5745537478919327
+          },
+          {
+            "id": "cyan-outlined",
+            "state": "normal",
+            "ratio": 2.205091947226454
+          },
+          {
+            "id": "cyan-outlined",
+            "state": "hover",
+            "ratio": 1.922127719192336
+          },
+          {
+            "id": "cyan-outlined",
+            "state": "active",
+            "ratio": 3.549078872339943
+          },
+          {
+            "id": "cyan-dashed",
+            "state": "normal",
+            "ratio": 2.205091947226454
+          },
+          {
+            "id": "cyan-dashed",
+            "state": "hover",
+            "ratio": 1.922127719192336
+          },
+          {
+            "id": "cyan-dashed",
+            "state": "active",
+            "ratio": 3.549078872339943
+          },
+          {
+            "id": "cyan-solid",
+            "state": "normal",
+            "ratio": 2.205091947226454
+          },
+          {
+            "id": "cyan-solid",
+            "state": "hover",
+            "ratio": 1.922127719192336
+          },
+          {
+            "id": "cyan-solid",
+            "state": "active",
+            "ratio": 3.549078872339943
+          },
+          {
+            "id": "cyan-filled",
+            "state": "normal",
+            "ratio": 2.106556445870954
+          },
+          {
+            "id": "cyan-filled",
+            "state": "hover",
+            "ratio": 1.5776952727090117
+          },
+          {
+            "id": "cyan-filled",
+            "state": "active",
+            "ratio": 2.4721209839871747
+          },
+          {
+            "id": "cyan-text",
+            "state": "normal",
+            "ratio": 2.205091947226454
+          },
+          {
+            "id": "cyan-text",
+            "state": "hover",
+            "ratio": 1.5776952727090117
+          },
+          {
+            "id": "cyan-text",
+            "state": "active",
+            "ratio": 2.4721209839871747
+          },
+          {
+            "id": "cyan-link",
+            "state": "normal",
+            "ratio": 2.205091947226454
+          },
+          {
+            "id": "cyan-link",
+            "state": "hover",
+            "ratio": 1.922127719192336
+          },
+          {
+            "id": "cyan-link",
+            "state": "active",
+            "ratio": 3.549078872339943
+          },
+          {
+            "id": "green-outlined",
+            "state": "normal",
+            "ratio": 2.265456480615804
+          },
+          {
+            "id": "green-outlined",
+            "state": "hover",
+            "ratio": 1.9236868603045751
+          },
+          {
+            "id": "green-outlined",
+            "state": "active",
+            "ratio": 3.46265742251993
+          },
+          {
+            "id": "green-dashed",
+            "state": "normal",
+            "ratio": 2.265456480615804
+          },
+          {
+            "id": "green-dashed",
+            "state": "hover",
+            "ratio": 1.9236868603045751
+          },
+          {
+            "id": "green-dashed",
+            "state": "active",
+            "ratio": 3.46265742251993
+          },
+          {
+            "id": "green-solid",
+            "state": "normal",
+            "ratio": 2.265456480615804
+          },
+          {
+            "id": "green-solid",
+            "state": "hover",
+            "ratio": 1.9236868603045751
+          },
+          {
+            "id": "green-solid",
+            "state": "active",
+            "ratio": 3.46265742251993
+          },
+          {
+            "id": "green-filled",
+            "state": "normal",
+            "ratio": 2.20563235548718
+          },
+          {
+            "id": "green-filled",
+            "state": "hover",
+            "ratio": 1.6487086075326363
+          },
+          {
+            "id": "green-filled",
+            "state": "active",
+            "ratio": 2.521708674539841
+          },
+          {
+            "id": "green-text",
+            "state": "normal",
+            "ratio": 2.265456480615804
+          },
+          {
+            "id": "green-text",
+            "state": "hover",
+            "ratio": 1.6487086075326363
+          },
+          {
+            "id": "green-text",
+            "state": "active",
+            "ratio": 2.521708674539841
+          },
+          {
+            "id": "green-link",
+            "state": "normal",
+            "ratio": 2.265456480615804
+          },
+          {
+            "id": "green-link",
+            "state": "hover",
+            "ratio": 1.9236868603045751
+          },
+          {
+            "id": "green-link",
+            "state": "active",
+            "ratio": 3.46265742251993
+          },
+          {
+            "id": "magenta-outlined",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "magenta-outlined",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "magenta-dashed",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "magenta-dashed",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "magenta-solid",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "magenta-solid",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "magenta-filled",
+            "state": "normal",
+            "ratio": 3.5406650113687266
+          },
+          {
+            "id": "magenta-filled",
+            "state": "hover",
+            "ratio": 2.2984659264295355
+          },
+          {
+            "id": "magenta-filled",
+            "state": "active",
+            "ratio": 3.1754804753962365
+          },
+          {
+            "id": "magenta-text",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "magenta-text",
+            "state": "hover",
+            "ratio": 2.2984659264295355
+          },
+          {
+            "id": "magenta-text",
+            "state": "active",
+            "ratio": 3.1754804753962365
+          },
+          {
+            "id": "magenta-link",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "magenta-link",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "pink-outlined",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "pink-outlined",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "pink-dashed",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "pink-dashed",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "pink-solid",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "pink-solid",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "pink-filled",
+            "state": "normal",
+            "ratio": 3.5406650113687266
+          },
+          {
+            "id": "pink-filled",
+            "state": "hover",
+            "ratio": 2.2984659264295355
+          },
+          {
+            "id": "pink-filled",
+            "state": "active",
+            "ratio": 3.1754804753962365
+          },
+          {
+            "id": "pink-text",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "pink-text",
+            "state": "hover",
+            "ratio": 2.2984659264295355
+          },
+          {
+            "id": "pink-text",
+            "state": "active",
+            "ratio": 3.1754804753962365
+          },
+          {
+            "id": "pink-link",
+            "state": "normal",
+            "ratio": 3.9037511442410624
+          },
+          {
+            "id": "pink-link",
+            "state": "hover",
+            "ratio": 3.012118335275566
+          },
+          {
+            "id": "red-outlined",
+            "state": "normal",
+            "ratio": 4.078304398271295
+          },
+          {
+            "id": "red-outlined",
+            "state": "hover",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "red-dashed",
+            "state": "normal",
+            "ratio": 4.078304398271295
+          },
+          {
+            "id": "red-dashed",
+            "state": "hover",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "red-solid",
+            "state": "normal",
+            "ratio": 4.078304398271295
+          },
+          {
+            "id": "red-solid",
+            "state": "hover",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "red-filled",
+            "state": "normal",
+            "ratio": 3.7078337291035104
+          },
+          {
+            "id": "red-filled",
+            "state": "hover",
+            "ratio": 2.2895754967778945
+          },
+          {
+            "id": "red-filled",
+            "state": "active",
+            "ratio": 2.914207505285166
+          },
+          {
+            "id": "red-text",
+            "state": "normal",
+            "ratio": 4.078304398271295
+          },
+          {
+            "id": "red-text",
+            "state": "hover",
+            "ratio": 2.2895754967778945
+          },
+          {
+            "id": "red-text",
+            "state": "active",
+            "ratio": 2.914207505285166
+          },
+          {
+            "id": "red-link",
+            "state": "normal",
+            "ratio": 4.078304398271295
+          },
+          {
+            "id": "red-link",
+            "state": "hover",
+            "ratio": 3.267743233071127
+          },
+          {
+            "id": "orange-outlined",
+            "state": "normal",
+            "ratio": 2.37889779166389
+          },
+          {
+            "id": "orange-outlined",
+            "state": "hover",
+            "ratio": 1.908879211229534
+          },
+          {
+            "id": "orange-outlined",
+            "state": "active",
+            "ratio": 3.5557096216960273
+          },
+          {
+            "id": "orange-dashed",
+            "state": "normal",
+            "ratio": 2.37889779166389
+          },
+          {
+            "id": "orange-dashed",
+            "state": "hover",
+            "ratio": 1.908879211229534
+          },
+          {
+            "id": "orange-dashed",
+            "state": "active",
+            "ratio": 3.5557096216960273
+          },
+          {
+            "id": "orange-solid",
+            "state": "normal",
+            "ratio": 2.37889779166389
+          },
+          {
+            "id": "orange-solid",
+            "state": "hover",
+            "ratio": 1.908879211229534
+          },
+          {
+            "id": "orange-solid",
+            "state": "active",
+            "ratio": 3.5557096216960273
+          },
+          {
+            "id": "orange-filled",
+            "state": "normal",
+            "ratio": 2.2315126062381907
+          },
+          {
+            "id": "orange-filled",
+            "state": "hover",
+            "ratio": 1.580861013693597
+          },
+          {
+            "id": "orange-filled",
+            "state": "active",
+            "ratio": 2.570027411611827
+          },
+          {
+            "id": "orange-text",
+            "state": "normal",
+            "ratio": 2.37889779166389
+          },
+          {
+            "id": "orange-text",
+            "state": "hover",
+            "ratio": 1.580861013693597
+          },
+          {
+            "id": "orange-text",
+            "state": "active",
+            "ratio": 2.570027411611827
+          },
+          {
+            "id": "orange-link",
+            "state": "normal",
+            "ratio": 2.37889779166389
+          },
+          {
+            "id": "orange-link",
+            "state": "hover",
+            "ratio": 1.908879211229534
+          },
+          {
+            "id": "orange-link",
+            "state": "active",
+            "ratio": 3.5557096216960273
+          },
+          {
+            "id": "yellow-outlined",
+            "state": "normal",
+            "ratio": 1.3808969272912015
+          },
+          {
+            "id": "yellow-outlined",
+            "state": "hover",
+            "ratio": 1.2126415841948253
+          },
+          {
+            "id": "yellow-outlined",
+            "state": "active",
+            "ratio": 2.0810838436681376
+          },
+          {
+            "id": "yellow-dashed",
+            "state": "normal",
+            "ratio": 1.3808969272912015
+          },
+          {
+            "id": "yellow-dashed",
+            "state": "hover",
+            "ratio": 1.2126415841948253
+          },
+          {
+            "id": "yellow-dashed",
+            "state": "active",
+            "ratio": 2.0810838436681376
+          },
+          {
+            "id": "yellow-solid",
+            "state": "normal",
+            "ratio": 1.3808969272912015
+          },
+          {
+            "id": "yellow-solid",
+            "state": "hover",
+            "ratio": 1.2126415841948253
+          },
+          {
+            "id": "yellow-solid",
+            "state": "active",
+            "ratio": 2.0810838436681376
+          },
+          {
+            "id": "yellow-filled",
+            "state": "normal",
+            "ratio": 1.3585921766050368
+          },
+          {
+            "id": "yellow-filled",
+            "state": "hover",
+            "ratio": 1.1692254551879184
+          },
+          {
+            "id": "yellow-filled",
+            "state": "active",
+            "ratio": 1.927232895412071
+          },
+          {
+            "id": "yellow-text",
+            "state": "normal",
+            "ratio": 1.3808969272912015
+          },
+          {
+            "id": "yellow-text",
+            "state": "hover",
+            "ratio": 1.1692254551879184
+          },
+          {
+            "id": "yellow-text",
+            "state": "active",
+            "ratio": 1.927232895412071
+          },
+          {
+            "id": "yellow-link",
+            "state": "normal",
+            "ratio": 1.3808969272912015
+          },
+          {
+            "id": "yellow-link",
+            "state": "hover",
+            "ratio": 1.2126415841948253
+          },
+          {
+            "id": "yellow-link",
+            "state": "active",
+            "ratio": 2.0810838436681376
+          },
+          {
+            "id": "volcano-outlined",
+            "state": "normal",
+            "ratio": 3.307244796156873
+          },
+          {
+            "id": "volcano-outlined",
+            "state": "hover",
+            "ratio": 2.585650384808338
+          },
+          {
+            "id": "volcano-dashed",
+            "state": "normal",
+            "ratio": 3.307244796156873
+          },
+          {
+            "id": "volcano-dashed",
+            "state": "hover",
+            "ratio": 2.585650384808338
+          },
+          {
+            "id": "volcano-solid",
+            "state": "normal",
+            "ratio": 3.307244796156873
+          },
+          {
+            "id": "volcano-solid",
+            "state": "hover",
+            "ratio": 2.585650384808338
+          },
+          {
+            "id": "volcano-filled",
+            "state": "normal",
+            "ratio": 3.010867051947891
+          },
+          {
+            "id": "volcano-filled",
+            "state": "hover",
+            "ratio": 1.9486771752818706
+          },
+          {
+            "id": "volcano-filled",
+            "state": "active",
+            "ratio": 2.9285863990813357
+          },
+          {
+            "id": "volcano-text",
+            "state": "normal",
+            "ratio": 3.307244796156873
+          },
+          {
+            "id": "volcano-text",
+            "state": "hover",
+            "ratio": 1.9486771752818706
+          },
+          {
+            "id": "volcano-text",
+            "state": "active",
+            "ratio": 2.9285863990813357
+          },
+          {
+            "id": "volcano-link",
+            "state": "normal",
+            "ratio": 3.307244796156873
+          },
+          {
+            "id": "volcano-link",
+            "state": "hover",
+            "ratio": 2.585650384808338
+          },
+          {
+            "id": "geekblue-outlined",
+            "state": "hover",
+            "ratio": 3.6507826394248215
+          },
+          {
+            "id": "geekblue-dashed",
+            "state": "hover",
+            "ratio": 3.6507826394248215
+          },
+          {
+            "id": "geekblue-solid",
+            "state": "hover",
+            "ratio": 3.6507826394248215
+          },
+          {
+            "id": "geekblue-filled",
+            "state": "hover",
+            "ratio": 2.8511898449811843
+          },
+          {
+            "id": "geekblue-text",
+            "state": "hover",
+            "ratio": 2.8511898449811843
+          },
+          {
+            "id": "geekblue-link",
+            "state": "hover",
+            "ratio": 3.6507826394248215
+          },
+          {
+            "id": "lime-outlined",
+            "state": "normal",
+            "ratio": 1.6897393232827866
+          },
+          {
+            "id": "lime-outlined",
+            "state": "hover",
+            "ratio": 1.4521100831682898
+          },
+          {
+            "id": "lime-outlined",
+            "state": "active",
+            "ratio": 2.5279128240829967
+          },
+          {
+            "id": "lime-dashed",
+            "state": "normal",
+            "ratio": 1.6897393232827866
+          },
+          {
+            "id": "lime-dashed",
+            "state": "hover",
+            "ratio": 1.4521100831682898
+          },
+          {
+            "id": "lime-dashed",
+            "state": "active",
+            "ratio": 2.5279128240829967
+          },
+          {
+            "id": "lime-solid",
+            "state": "normal",
+            "ratio": 1.6897393232827866
+          },
+          {
+            "id": "lime-solid",
+            "state": "hover",
+            "ratio": 1.4521100831682898
+          },
+          {
+            "id": "lime-solid",
+            "state": "active",
+            "ratio": 2.5279128240829967
+          },
+          {
+            "id": "lime-filled",
+            "state": "normal",
+            "ratio": 1.6564050793423144
+          },
+          {
+            "id": "lime-filled",
+            "state": "hover",
+            "ratio": 1.372088974900672
+          },
+          {
+            "id": "lime-filled",
+            "state": "active",
+            "ratio": 2.311128538038898
+          },
+          {
+            "id": "lime-text",
+            "state": "normal",
+            "ratio": 1.6897393232827866
+          },
+          {
+            "id": "lime-text",
+            "state": "hover",
+            "ratio": 1.372088974900672
+          },
+          {
+            "id": "lime-text",
+            "state": "active",
+            "ratio": 2.311128538038898
+          },
+          {
+            "id": "lime-link",
+            "state": "normal",
+            "ratio": 1.6897393232827866
+          },
+          {
+            "id": "lime-link",
+            "state": "hover",
+            "ratio": 1.4521100831682898
+          },
+          {
+            "id": "lime-link",
+            "state": "active",
+            "ratio": 2.5279128240829967
+          },
+          {
+            "id": "gold-outlined",
+            "state": "normal",
+            "ratio": 1.9000521668277568
+          },
+          {
+            "id": "gold-outlined",
+            "state": "hover",
+            "ratio": 1.5782489851759853
+          },
+          {
+            "id": "gold-outlined",
+            "state": "active",
+            "ratio": 2.867401812984788
+          },
+          {
+            "id": "gold-dashed",
+            "state": "normal",
+            "ratio": 1.9000521668277568
+          },
+          {
+            "id": "gold-dashed",
+            "state": "hover",
+            "ratio": 1.5782489851759853
+          },
+          {
+            "id": "gold-dashed",
+            "state": "active",
+            "ratio": 2.867401812984788
+          },
+          {
+            "id": "gold-solid",
+            "state": "normal",
+            "ratio": 1.9000521668277568
+          },
+          {
+            "id": "gold-solid",
+            "state": "hover",
+            "ratio": 1.5782489851759853
+          },
+          {
+            "id": "gold-solid",
+            "state": "active",
+            "ratio": 2.867401812984788
+          },
+          {
+            "id": "gold-filled",
+            "state": "normal",
+            "ratio": 1.8270816871923332
+          },
+          {
+            "id": "gold-filled",
+            "state": "hover",
+            "ratio": 1.392335546768952
+          },
+          {
+            "id": "gold-filled",
+            "state": "active",
+            "ratio": 2.301616820697057
+          },
+          {
+            "id": "gold-text",
+            "state": "normal",
+            "ratio": 1.9000521668277568
+          },
+          {
+            "id": "gold-text",
+            "state": "hover",
+            "ratio": 1.392335546768952
+          },
+          {
+            "id": "gold-text",
+            "state": "active",
+            "ratio": 2.301616820697057
+          },
+          {
+            "id": "gold-link",
+            "state": "normal",
+            "ratio": 1.9000521668277568
+          },
+          {
+            "id": "gold-link",
+            "state": "hover",
+            "ratio": 1.5782489851759853
+          },
+          {
+            "id": "gold-link",
+            "state": "active",
+            "ratio": 2.867401812984788
+          },
+          {
+            "id": "type-link",
+            "state": "normal",
+            "ratio": 4.104091535864498
+          },
+          {
+            "id": "type-link",
+            "state": "hover",
+            "ratio": 2.2499579590817818
+          }
+        ]
+      },
+      "both": {
+        "checks": 292,
+        "failed": 174,
+        "lowestRatio": 1,
+        "failedCases": [
+          {
+            "id": "default-outlined",
+            "state": "active",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "default-dashed",
+            "state": "active",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "default-solid",
+            "state": "normal",
+            "ratio": 1.1094282311686163
+          },
+          {
+            "id": "default-solid",
+            "state": "hover",
+            "ratio": 1
+          },
+          {
+            "id": "default-solid",
+            "state": "active",
+            "ratio": 1.225713951880611
+          },
+          {
+            "id": "default-link",
+            "state": "normal",
+            "ratio": 1.8331349155863543
+          },
+          {
+            "id": "default-link",
+            "state": "active",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "primary-outlined",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "primary-outlined",
+            "state": "active",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "primary-dashed",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "primary-dashed",
+            "state": "active",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "primary-solid",
+            "state": "hover",
+            "ratio": 3.5379534511342134
+          },
+          {
+            "id": "primary-filled",
+            "state": "normal",
+            "ratio": 2.469326058702777
+          },
+          {
+            "id": "primary-filled",
+            "state": "hover",
+            "ratio": 2.84100055788199
+          },
+          {
+            "id": "primary-filled",
+            "state": "active",
+            "ratio": 1.7712627685403424
+          },
+          {
+            "id": "primary-text",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "primary-text",
+            "state": "hover",
+            "ratio": 2.84100055788199
+          },
+          {
+            "id": "primary-text",
+            "state": "active",
+            "ratio": 1.7712627685403424
+          },
+          {
+            "id": "primary-link",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "primary-link",
+            "state": "active",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "danger-outlined",
+            "state": "normal",
+            "ratio": 4.349838805989423
+          },
+          {
+            "id": "danger-outlined",
+            "state": "active",
+            "ratio": 3.0030453009207485
+          },
+          {
+            "id": "danger-dashed",
+            "state": "normal",
+            "ratio": 4.349838805989423
+          },
+          {
+            "id": "danger-dashed",
+            "state": "active",
+            "ratio": 3.0030453009207485
+          },
+          {
+            "id": "danger-solid",
+            "state": "normal",
+            "ratio": 4.235222704033309
+          },
+          {
+            "id": "danger-solid",
+            "state": "hover",
+            "ratio": 3.055060700282557
+          },
+          {
+            "id": "danger-filled",
+            "state": "normal",
+            "ratio": 4.014756916751127
+          },
+          {
+            "id": "danger-filled",
+            "state": "active",
+            "ratio": 1.970247590747899
+          },
+          {
+            "id": "danger-text",
+            "state": "normal",
+            "ratio": 4.349838805989423
+          },
+          {
+            "id": "danger-text",
+            "state": "active",
+            "ratio": 1.970247590747899
+          },
+          {
+            "id": "danger-link",
+            "state": "normal",
+            "ratio": 4.349838805989423
+          },
+          {
+            "id": "danger-link",
+            "state": "active",
+            "ratio": 3.0030453009207485
+          },
+          {
+            "id": "blue-outlined",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "blue-outlined",
+            "state": "hover",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "blue-dashed",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "blue-dashed",
+            "state": "hover",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "blue-solid",
+            "state": "active",
+            "ratio": 3.5379534511342134
+          },
+          {
+            "id": "blue-filled",
+            "state": "normal",
+            "ratio": 3.350852698142929
+          },
+          {
+            "id": "blue-filled",
+            "state": "hover",
+            "ratio": 2.112522508230684
+          },
+          {
+            "id": "blue-filled",
+            "state": "active",
+            "ratio": 3.6210715317878908
+          },
+          {
+            "id": "blue-text",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "blue-text",
+            "state": "hover",
+            "ratio": 2.112522508230684
+          },
+          {
+            "id": "blue-text",
+            "state": "active",
+            "ratio": 3.6210715317878908
+          },
+          {
+            "id": "blue-link",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "blue-link",
+            "state": "hover",
+            "ratio": 2.547083548696809
+          },
+          {
+            "id": "purple-outlined",
+            "state": "normal",
+            "ratio": 2.2285039674059672
+          },
+          {
+            "id": "purple-outlined",
+            "state": "hover",
+            "ratio": 1.7642887834649377
+          },
+          {
+            "id": "purple-outlined",
+            "state": "active",
+            "ratio": 3.456347068474164
+          },
+          {
+            "id": "purple-dashed",
+            "state": "normal",
+            "ratio": 2.2285039674059672
+          },
+          {
+            "id": "purple-dashed",
+            "state": "hover",
+            "ratio": 1.7642887834649377
+          },
+          {
+            "id": "purple-dashed",
+            "state": "active",
+            "ratio": 3.456347068474164
+          },
+          {
+            "id": "purple-filled",
+            "state": "normal",
+            "ratio": 2.1827816027110436
+          },
+          {
+            "id": "purple-filled",
+            "state": "hover",
+            "ratio": 1.6077763374265839
+          },
+          {
+            "id": "purple-filled",
+            "state": "active",
+            "ratio": 2.816356562930472
+          },
+          {
+            "id": "purple-text",
+            "state": "normal",
+            "ratio": 2.2285039674059672
+          },
+          {
+            "id": "purple-text",
+            "state": "hover",
+            "ratio": 1.6077763374265839
+          },
+          {
+            "id": "purple-text",
+            "state": "active",
+            "ratio": 2.816356562930472
+          },
+          {
+            "id": "purple-link",
+            "state": "normal",
+            "ratio": 2.2285039674059672
+          },
+          {
+            "id": "purple-link",
+            "state": "hover",
+            "ratio": 1.7642887834649377
+          },
+          {
+            "id": "purple-link",
+            "state": "active",
+            "ratio": 3.456347068474164
+          },
+          {
+            "id": "cyan-outlined",
+            "state": "hover",
+            "ratio": 4.141905429234487
+          },
+          {
+            "id": "cyan-dashed",
+            "state": "hover",
+            "ratio": 4.141905429234487
+          },
+          {
+            "id": "cyan-solid",
+            "state": "normal",
+            "ratio": 2.9190291384443694
+          },
+          {
+            "id": "cyan-solid",
+            "state": "hover",
+            "ratio": 4.4478408270698795
+          },
+          {
+            "id": "cyan-solid",
+            "state": "active",
+            "ratio": 2.328720179127759
+          },
+          {
+            "id": "cyan-filled",
+            "state": "hover",
+            "ratio": 2.976273035470108
+          },
+          {
+            "id": "cyan-filled",
+            "state": "active",
+            "ratio": 4.398369480324413
+          },
+          {
+            "id": "cyan-text",
+            "state": "hover",
+            "ratio": 2.976273035470108
+          },
+          {
+            "id": "cyan-text",
+            "state": "active",
+            "ratio": 4.398369480324413
+          },
+          {
+            "id": "cyan-link",
+            "state": "hover",
+            "ratio": 4.141905429234487
+          },
+          {
+            "id": "green-outlined",
+            "state": "hover",
+            "ratio": 4.048887623108855
+          },
+          {
+            "id": "green-dashed",
+            "state": "hover",
+            "ratio": 4.048887623108855
+          },
+          {
+            "id": "green-solid",
+            "state": "normal",
+            "ratio": 2.979897994814097
+          },
+          {
+            "id": "green-solid",
+            "state": "active",
+            "ratio": 2.323703367487618
+          },
+          {
+            "id": "green-filled",
+            "state": "hover",
+            "ratio": 2.871227403931196
+          },
+          {
+            "id": "green-filled",
+            "state": "active",
+            "ratio": 4.406568229705634
+          },
+          {
+            "id": "green-text",
+            "state": "hover",
+            "ratio": 2.871227403931196
+          },
+          {
+            "id": "green-text",
+            "state": "active",
+            "ratio": 4.406568229705634
+          },
+          {
+            "id": "green-link",
+            "state": "hover",
+            "ratio": 4.048887623108855
+          },
+          {
+            "id": "magenta-outlined",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "magenta-outlined",
+            "state": "hover",
+            "ratio": 2.6106892527245567
+          },
+          {
+            "id": "magenta-dashed",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "magenta-dashed",
+            "state": "hover",
+            "ratio": 2.6106892527245567
+          },
+          {
+            "id": "magenta-solid",
+            "state": "active",
+            "ratio": 3.585798569320182
+          },
+          {
+            "id": "magenta-filled",
+            "state": "normal",
+            "ratio": 3.483226798806793
+          },
+          {
+            "id": "magenta-filled",
+            "state": "hover",
+            "ratio": 2.1662012456024833
+          },
+          {
+            "id": "magenta-filled",
+            "state": "active",
+            "ratio": 3.62512267572986
+          },
+          {
+            "id": "magenta-text",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "magenta-text",
+            "state": "hover",
+            "ratio": 2.1662012456024833
+          },
+          {
+            "id": "magenta-text",
+            "state": "active",
+            "ratio": 3.62512267572986
+          },
+          {
+            "id": "magenta-link",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "magenta-link",
+            "state": "hover",
+            "ratio": 2.6106892527245567
+          },
+          {
+            "id": "pink-outlined",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "pink-outlined",
+            "state": "hover",
+            "ratio": 2.6106892527245567
+          },
+          {
+            "id": "pink-dashed",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "pink-dashed",
+            "state": "hover",
+            "ratio": 2.6106892527245567
+          },
+          {
+            "id": "pink-solid",
+            "state": "active",
+            "ratio": 3.585798569320182
+          },
+          {
+            "id": "pink-filled",
+            "state": "normal",
+            "ratio": 3.483226798806793
+          },
+          {
+            "id": "pink-filled",
+            "state": "hover",
+            "ratio": 2.1662012456024833
+          },
+          {
+            "id": "pink-filled",
+            "state": "active",
+            "ratio": 3.62512267572986
+          },
+          {
+            "id": "pink-text",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "pink-text",
+            "state": "hover",
+            "ratio": 2.1662012456024833
+          },
+          {
+            "id": "pink-text",
+            "state": "active",
+            "ratio": 3.62512267572986
+          },
+          {
+            "id": "pink-link",
+            "state": "normal",
+            "ratio": 3.6955532789164356
+          },
+          {
+            "id": "pink-link",
+            "state": "hover",
+            "ratio": 2.6106892527245567
+          },
+          {
+            "id": "red-outlined",
+            "state": "normal",
+            "ratio": 3.51642402921495
+          },
+          {
+            "id": "red-outlined",
+            "state": "hover",
+            "ratio": 2.4761810671031315
+          },
+          {
+            "id": "red-dashed",
+            "state": "normal",
+            "ratio": 3.51642402921495
+          },
+          {
+            "id": "red-dashed",
+            "state": "hover",
+            "ratio": 2.4761810671031315
+          },
+          {
+            "id": "red-solid",
+            "state": "active",
+            "ratio": 3.868354981876177
+          },
+          {
+            "id": "red-filled",
+            "state": "normal",
+            "ratio": 3.3520682421090764
+          },
+          {
+            "id": "red-filled",
+            "state": "hover",
+            "ratio": 2.087874602057754
+          },
+          {
+            "id": "red-filled",
+            "state": "active",
+            "ratio": 3.474649583236992
+          },
+          {
+            "id": "red-text",
+            "state": "normal",
+            "ratio": 3.51642402921495
+          },
+          {
+            "id": "red-text",
+            "state": "hover",
+            "ratio": 2.087874602057754
+          },
+          {
+            "id": "red-text",
+            "state": "active",
+            "ratio": 3.474649583236992
+          },
+          {
+            "id": "red-link",
+            "state": "normal",
+            "ratio": 3.51642402921495
+          },
+          {
+            "id": "red-link",
+            "state": "hover",
+            "ratio": 2.4761810671031315
+          },
+          {
+            "id": "orange-outlined",
+            "state": "hover",
+            "ratio": 3.918834082790088
+          },
+          {
+            "id": "orange-dashed",
+            "state": "hover",
+            "ratio": 3.918834082790088
+          },
+          {
+            "id": "orange-solid",
+            "state": "normal",
+            "ratio": 3.127240777013101
+          },
+          {
+            "id": "orange-solid",
+            "state": "active",
+            "ratio": 2.3029723931313355
+          },
+          {
+            "id": "orange-filled",
+            "state": "hover",
+            "ratio": 2.818244617975435
+          },
+          {
+            "id": "orange-text",
+            "state": "hover",
+            "ratio": 2.818244617975435
+          },
+          {
+            "id": "orange-link",
+            "state": "hover",
+            "ratio": 3.918834082790088
+          },
+          {
+            "id": "yellow-solid",
+            "state": "normal",
+            "ratio": 1.8735069263372246
+          },
+          {
+            "id": "yellow-solid",
+            "state": "hover",
+            "ratio": 2.992182142986655
+          },
+          {
+            "id": "yellow-solid",
+            "state": "active",
+            "ratio": 1.4884254233091092
+          },
+          {
+            "id": "yellow-filled",
+            "state": "hover",
+            "ratio": 3.7341878604410783
+          },
+          {
+            "id": "yellow-text",
+            "state": "hover",
+            "ratio": 3.7341878604410783
+          },
+          {
+            "id": "volcano-outlined",
+            "state": "normal",
+            "ratio": 4.311859542308215
+          },
+          {
+            "id": "volcano-outlined",
+            "state": "hover",
+            "ratio": 2.993483791227073
+          },
+          {
+            "id": "volcano-dashed",
+            "state": "normal",
+            "ratio": 4.311859542308215
+          },
+          {
+            "id": "volcano-dashed",
+            "state": "hover",
+            "ratio": 2.993483791227073
+          },
+          {
+            "id": "volcano-solid",
+            "state": "normal",
+            "ratio": 4.2725269432477
+          },
+          {
+            "id": "volcano-solid",
+            "state": "active",
+            "ratio": 3.0778871268015227
+          },
+          {
+            "id": "volcano-filled",
+            "state": "normal",
+            "ratio": 4.01045981572582
+          },
+          {
+            "id": "volcano-filled",
+            "state": "hover",
+            "ratio": 2.3857724755710534
+          },
+          {
+            "id": "volcano-filled",
+            "state": "active",
+            "ratio": 3.951703068703968
+          },
+          {
+            "id": "volcano-text",
+            "state": "normal",
+            "ratio": 4.311859542308215
+          },
+          {
+            "id": "volcano-text",
+            "state": "hover",
+            "ratio": 2.3857724755710534
+          },
+          {
+            "id": "volcano-text",
+            "state": "active",
+            "ratio": 3.951703068703968
+          },
+          {
+            "id": "volcano-link",
+            "state": "normal",
+            "ratio": 4.311859542308215
+          },
+          {
+            "id": "volcano-link",
+            "state": "hover",
+            "ratio": 2.993483791227073
+          },
+          {
+            "id": "geekblue-outlined",
+            "state": "normal",
+            "ratio": 2.583181143312951
+          },
+          {
+            "id": "geekblue-outlined",
+            "state": "hover",
+            "ratio": 1.9993510343383498
+          },
+          {
+            "id": "geekblue-outlined",
+            "state": "active",
+            "ratio": 4.287560014820581
+          },
+          {
+            "id": "geekblue-dashed",
+            "state": "normal",
+            "ratio": 2.583181143312951
+          },
+          {
+            "id": "geekblue-dashed",
+            "state": "hover",
+            "ratio": 1.9993510343383498
+          },
+          {
+            "id": "geekblue-dashed",
+            "state": "active",
+            "ratio": 4.287560014820581
+          },
+          {
+            "id": "geekblue-solid",
+            "state": "active",
+            "ratio": 4.29674127156969
+          },
+          {
+            "id": "geekblue-filled",
+            "state": "normal",
+            "ratio": 2.5071595958273294
+          },
+          {
+            "id": "geekblue-filled",
+            "state": "hover",
+            "ratio": 1.775128848869902
+          },
+          {
+            "id": "geekblue-filled",
+            "state": "active",
+            "ratio": 3.3230645875631057
+          },
+          {
+            "id": "geekblue-text",
+            "state": "normal",
+            "ratio": 2.583181143312951
+          },
+          {
+            "id": "geekblue-text",
+            "state": "hover",
+            "ratio": 1.775128848869902
+          },
+          {
+            "id": "geekblue-text",
+            "state": "active",
+            "ratio": 3.3230645875631057
+          },
+          {
+            "id": "geekblue-link",
+            "state": "normal",
+            "ratio": 2.583181143312951
+          },
+          {
+            "id": "geekblue-link",
+            "state": "hover",
+            "ratio": 1.9993510343383498
+          },
+          {
+            "id": "geekblue-link",
+            "state": "active",
+            "ratio": 4.287560014820581
+          },
+          {
+            "id": "lime-solid",
+            "state": "normal",
+            "ratio": 2.279136174673195
+          },
+          {
+            "id": "lime-solid",
+            "state": "hover",
+            "ratio": 3.546939121715044
+          },
+          {
+            "id": "lime-solid",
+            "state": "active",
+            "ratio": 1.771139194570228
+          },
+          {
+            "id": "lime-filled",
+            "state": "hover",
+            "ratio": 3.344981836826543
+          },
+          {
+            "id": "lime-text",
+            "state": "hover",
+            "ratio": 3.344981836826543
+          },
+          {
+            "id": "gold-solid",
+            "state": "normal",
+            "ratio": 2.532431444235693
+          },
+          {
+            "id": "gold-solid",
+            "state": "hover",
+            "ratio": 3.919342752930549
+          },
+          {
+            "id": "gold-solid",
+            "state": "active",
+            "ratio": 1.9198626683114497
+          },
+          {
+            "id": "gold-filled",
+            "state": "hover",
+            "ratio": 3.1644318337086363
+          },
+          {
+            "id": "gold-text",
+            "state": "hover",
+            "ratio": 3.1644318337086363
+          },
+          {
+            "id": "type-link",
+            "state": "normal",
+            "ratio": 3.5509015896457163
+          },
+          {
+            "id": "type-link",
+            "state": "hover",
+            "ratio": 1.83284602469966
+          },
+          {
+            "id": "type-link",
+            "state": "active",
+            "ratio": 2.547083548696809
+          }
+        ]
+      }
+    }
+  },
+  "intermediateValidation": {
+    "fourLayers": {
+      "total": 354,
+      "passed": 354,
+      "scope": "before final native direction, anchor activation, default graphic and additional cache regressions"
+    },
+    "sourceDemos": {
+      "combinations": 80,
+      "passed": 80,
+      "scope": "all20 original demos times four algorithms; before final default-tone bound adjustment"
+    },
+    "colorsFirstRepair": {
+      "total": 1168,
+      "passed": 1164,
+      "failed": 4,
+      "cause": "red-filled/red-text active light and compact4.190359768:1; stronger default tone pending final matrix"
+    },
+    "notComplete": true,
+    "productionBrowser": {
+      "checks": 142,
+      "passed": 142,
+      "consumedTokens": 58,
+      "scope": "before additional explicit link-role assertions; motion endpoint measured through real reduced-motion preference"
+    },
+    "colorsFinal": {
+      "checks": 1168,
+      "passed": 1168,
+      "scope": "all97 combinations, all3 states, all4 algorithms and all4 axe runs; before link-role-only change"
+    },
+    "plainNodeSSR": {
+      "checks": 8,
+      "passed": 8,
+      "scope": "before explicit link-role assertion"
+    }
+  },
+  "additionalLinkRoleReproduction": {
+    "selectedTests": 1,
+    "failed": 1,
+    "otherTestsNotSelected": 101,
+    "failure": "disabled/pending anchor loses implicit link semantics after href removal",
+    "phase": "established before native link role repair"
+  },
+  "additionalReactiveComponentReproduction": {
+    "selected": 1,
+    "failed": 1,
+    "otherTestsNotSelected": 102,
+    "vueWarnings": 2,
+    "cause": "valid Vue component options stored in normal reactive Provider objects were forwarded as proxies",
+    "repair": "unwrap only component definitions with Vue toRaw, preserving original VNode/content paths"
+  },
+  "consumerReproductions": {
+    "initialBrowser": {
+      "checks": 51,
+      "passed": 46,
+      "failed": 5,
+      "transferFailures": 2,
+      "transferCause": "Test selected nonexistent .apollo-transfer-list; actual .apollo-transfer-section shows original content and movement."
+    },
+    "beforeFocused": {
+      "total": 5,
+      "passed": 1,
+      "failed": 4,
+      "phase": "before current Compact rendering and actual Popconfirm/Upload demo repairs"
+    },
+    "additionalCancelBefore": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "cause": "Canceled unresolved promise leaves shared ActionButton pending when reopened"
+    },
+    "afterFocused": {
+      "command": "pnpm exec vitest run --project unit packages/ui/src/popconfirm/__tests__/async-demo.test.ts packages/ui/src/_internal/__tests__/button-consumer-updates.test.ts --maxWorkers=1 --no-file-parallelism",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "scope": "Compact dynamic child/attrs/focus/conditional slots; Search dynamic loading; actual Popconfirm promise/reopen/cancel; external loading; original Upload removed event"
+    }
+  },
+  "budgetRevision": {
+    "policy": "Technical implementation milestone; existing entry limits adjusted explicitly, no checks skipped.",
+    "entries": {
+      "Button": {
+        "oldKb": 37,
+        "newKb": 41,
+        "measuredKb": 40.0
+      },
+      "Input": {
+        "oldKb": 89,
+        "newKb": 92,
+        "measuredKb": 91.0
+      }
+    },
+    "reason": "Complete existing58 Button component tokens with live scoped theme derivation, native content and SSR-safe loading; Input consumes the same Button implementation.",
+    "otherEntryLimitsChanged": false,
+    "fullBundleRatio": 0.3
+  },
+  "implementedValidation": {
+    "buttonFourLayersAndReferenceGuards": {
+      "total": 365,
+      "passed": 365,
+      "failed": 0,
+      "source": "/tmp/apollo-button-frozen-four-layers.json"
+    },
+    "colors": {
+      "total": 1168,
+      "passed": 1168,
+      "failed": 0,
+      "errors": []
+    },
+    "productionBrowser": {
+      "total": 147,
+      "passed": 147,
+      "failed": 0,
+      "errors": [],
+      "command": "node tests/browser/button-contract-audit.mjs",
+      "scope": "Final published UI and SFC with real Compact native root/name, sizes and group token consumption; all58 tokens retained."
+    },
+    "ssr": {
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": []
+    },
+    "hydration": {
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "errors": []
+    },
+    "relatedFirstClosure": {
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme <14 affected component groups plus two strict internal regression files> --maxWorkers=1 --no-file-parallelism",
+      "total": 2351,
+      "passed": 2340,
+      "failed": 11,
+      "pending": 0,
+      "remainingFailureScope": "Only Space provider-related mechanical DOM fixtures; exact native Teleport reproduction/repair still required.",
+      "scope": "Full related groups, not all72 components; final Demo cancellation-settlement repair verified separately by seven focused checks."
+    },
+    "sourceDemosEarlier": {
+      "combinations": 80,
+      "passed": 80,
+      "phase": "before final colour-bound/link-role adjustments; retained as intermediate evidence only"
+    },
+    "unverified": [
+      "New39 Button visual scenarios and39 Result scenarios; none newly approved.",
+      "Final rebuilt publication/consumer browser/Docs revalidation is in progress.",
+      "Whole-library gate has not been claimed."
+    ],
+    "spaceClosure": {
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/space/__tests__ --maxWorkers=1 --no-file-parallelism",
+      "total": 329,
+      "passed": 329,
+      "failed": 0,
+      "pending": 0,
+      "reason": "All11 previous Provider-related mechanical failures were native Teleport stub artifacts, reproduced exactly; fixture now uses the real Teleport. Original126-case oracle/projection/allowances unchanged.",
+      "originalBaselinePreserved": true
+    },
+    "tooling": {
+      "command": "node --test tests/tooling/*.test.mjs",
+      "passed": 18,
+      "failed": 0,
+      "note": "Image tooling now uses unchanged Divider as its unrelated control; new Button tooling retains all27 reference cases, shared approved type IDs and all39 owned-case IDs. No original baseline removed."
+    },
+    "spaceAndFinalConsumerClosure": {
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/space/__tests__ packages/ui/src/_internal/__tests__/button-consumer-updates.test.ts packages/ui/src/popconfirm/__tests__/async-demo.test.ts --maxWorkers=1 --no-file-parallelism",
+      "total": 336,
+      "passed": 336,
+      "failed": 0,
+      "pending": 0
+    },
+    "strictSource": {
+      "command": "pnpm exec vue-tsc --noEmit -p tsconfig.json",
+      "passed": true,
+      "scope": "before final Compact public-instance binding, covered by its subsequent44 type checks and336 related runtime checks; finalUI declarations build follows"
+    },
+    "sourceSFC": {
+      "command": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.button-contracts.json",
+      "passed": true,
+      "scope": "before extra Compact instance ref was added; final published consumer includes the current SFC"
+    },
+    "selectedTypeGroups": {
+      "command": "pnpm exec vitest run --project types packages/ui/src/button/__tests__ packages/ui/src/space/__tests__ packages/ui/src/input/__tests__ packages/ui/src/popconfirm/__tests__ packages/ui/src/upload/__tests__ --maxWorkers=1 --no-file-parallelism",
+      "files": 12,
+      "passed": 162,
+      "failed": 0,
+      "typeErrors": 0,
+      "scope": "before additional actual-InstanceType assertion; Space44 subsequent checks cover the final addition"
+    },
+    "relatedBrowser": {
+      "total": 51,
+      "passed": 51,
+      "failed": 0,
+      "errors": [],
+      "command": "node tests/browser/button-consumers.mjs",
+      "scope": "13 actual scenarios: date confirmation, Dropdown/Button, FloatButton, Search, Modal regular/async, Popconfirm, QRCode refresh, Table filter, Tour navigation, Transfer movement and Upload removal."
+    },
+    "finalUIBuild": {
+      "command": "pnpm --filter @apollo-design/ui build",
+      "passed": true,
+      "declarations": true,
+      "componentCSSFiles": 69,
+      "warning": "Unbuild checks prospective files before the completion hook; actual dts/CSS verified afterward by strict L7."
+    },
+    "finalPublishedSFC": {
+      "command": "node tests/consumer/list-types.mjs",
+      "passed": true,
+      "groups": [
+        "List",
+        "Spin",
+        "QRCode",
+        "Statistic",
+        "Skeleton",
+        "Result",
+        "Button"
+      ],
+      "scope": "Uses current fixture with Compact nativeElement instance typing; actual browser separately proves runtime export."
+    },
+    "finalSSR": {
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "errors": [],
+      "command": "node tests/consumer/button-ssr.mjs"
+    },
+    "finalL7": {
+      "command": "node tests/build/run.mjs --package ui --no-build --strict",
+      "checks": 11,
+      "failed": 0,
+      "pending": 0,
+      "scope": "UI rebuilt immediately before this check; --no-build is explicit dist reuse, not a skipped export/type/dependency/CSS/budget gate."
+    },
+    "format": {
+      "command": "pnpm exec biome check .",
+      "errors": 0,
+      "existingWarnings": 37,
+      "existingInfos": 5
+    },
+    "registry": {
+      "command": "pnpm registry:check",
+      "passed": true,
+      "contentInventory": {
+        "interfaceFiles": 73,
+        "rows": 535,
+        "reviewCandidates": 199
+      }
+    }
+  },
+  "compactInstanceType": {
+    "before": {
+      "command": "pnpm exec vitest run --project types packages/ui/src/space/__tests__/type.test-d.ts --maxWorkers=1 --no-file-parallelism",
+      "passed": 43,
+      "failed": 1,
+      "failure": "Property nativeElement does not exist on InstanceType<typeof SpaceCompact> after initial render conversion"
+    },
+    "after": {
+      "passed": 44,
+      "failed": 0,
+      "typeErrors": 0,
+      "repair": "Explicit nativeElement exposure and setup binding, as used by Button; runtime size remains String per public SpaceCompactProps."
+    }
+  },
+  "fixtureImportReproduction": {
+    "total": 146,
+    "passed": 142,
+    "failed": 4,
+    "cause": "After adding an InstanceType ref, format auto-fix changed the template component import to type-only. Actual DOM was <spacecompact>, not a Vue component. Runtime import restored and exported component name asserted; final147/147 pass.",
+    "assertionsRetained": true
+  }
+}

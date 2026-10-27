@@ -1,47 +1,12 @@
-/**
- * Button 的类型面。
- *
- * 契约来源：antd 6.6.4 的 `es/button/Button.d.ts` 与 `es/button/buttonHelpers.d.ts`
- * （行为实现见 `/tmp/antd-repo/.../button/Button.tsx`，逐条行号记录在
- * `docs/analysis/button.md`）。**逐字段对齐**，包括 `@deprecated` 标记与可选性。
- *
- * ── 与 antd 类型面的差异（都有据可查）────────────────────────────────────────
- *
- * 1. `children` 不在 Props 里（规则 C19）—— Vue 侧是默认插槽。
- * 2. `SizeType` 以别名 `ButtonSize` 导出（`type ButtonSize = SizeType`）。antd 的
- *    `SizeType` 住在 config-provider；这里不重复导出**同名**类型，避免 `index.ts`
- *    重名导出（与 Divider 同一处置），但集合本身**不再手抄** —— 手抄过一次就漏了
- *    `medium`（Issue #1.1）。
- * 3. `React.CSSProperties` → Vue 的 `CSSProperties`，`React.ReactNode` → `VNodeChild`
- *    （规则 C16 / C18）。
- *    例外：`icon` / `loading.icon` 另接 `Component` —— Vue 没有「React 元素」这一
- *    形态，其对应物是组件本身（与 `EmptyImage` 同一裁决）。见 {@link ButtonIcon}。
- * 4. ⚠️ **语义化不支持函数式变体**（`classNamesAndFn` / `stylesAndFn`）。
- *    依据 `empty-semantic-fn` 开放决策的建议 B：形态统一优先。
- *    已完成的 divider / spin / space 同样不支持 —— 见 `docs/analysis/button.md` §1。
- */
-
 import type { Component, CSSProperties, VNodeChild } from 'vue';
 import type { ComponentStyleConfig } from '../config-provider/context';
 import type { SizeType } from '../config-provider/size-context';
 
-// ---------------------------------------------------------------------------
-// 基础枚举（取值集合逐字来自 antd 的 `buttonHelpers.d.ts`）
-// ---------------------------------------------------------------------------
-
-/** 按钮类型（旧 API，v6 里被 `color` + `variant` 取代，但仍受支持）。 */
+/** Visual shorthand; explicit color and variant may independently override it. */
 export type ButtonType = 'default' | 'primary' | 'dashed' | 'link' | 'text';
-
-/** 按钮形状。 */
 export type ButtonShape = 'default' | 'circle' | 'round' | 'square';
-
-/** `<button>` 的原生 `type`。 */
 export type ButtonHTMLType = 'submit' | 'button' | 'reset';
-
-/** 视觉变体。`filled` 存在但 `ButtonTypeMap` 未映射 ⇒ 只能由 `variant` 显式传入。 */
 export type ButtonVariantType = 'outlined' | 'dashed' | 'solid' | 'filled' | 'text' | 'link';
-
-/** 语义色 + 预设色。注意 `'link'` 不是真颜色，antd 为了兼容才放进这个联合。 */
 export type ButtonColorType =
   | 'default'
   | 'primary'
@@ -59,93 +24,35 @@ export type ButtonColorType =
   | 'geekblue'
   | 'lime'
   | 'gold';
-
-/**
- * 尺寸。
- *
- * ⚠️ **直接别名到 `config-provider` 的 `SizeType`**，不另立枚举 —— 上游 `ButtonProps.size`
- *    的类型就是 `SizeType`（`Button.d.ts:8,24`），而 6.6.4 的 `SizeType` 是
- *    `'small' | 'medium' | 'middle' | 'large' | undefined`（`SizeContext.d.ts:5`）。
- *
- *    此前这里手写 `'small' | 'middle' | 'large'`，**漏了 `medium`** ⇒
- *    「与当前基准支持的 medium 不一致；运行时与类型定义分叉」（Issue #1.1）。
- *    用别名而不是再抄一份，是为了让以后 `SizeType` 变化时不会再分叉。
- *
- * 类名映射只有两档（`Button.js:230-231`）：`large` ⇒ `-lg`、`small` ⇒ `-sm`；
- * `medium` / `middle` 都是**默认档**，不产生尺寸类名（与 antd 一致）。
- */
 export type ButtonSize = SizeType;
-
-/** 图标位置。 */
 export type ButtonIconPlacement = 'start' | 'end';
-
-/**
- * `icon` / `loading.icon` 的取值。
- *
- * ⚠️ 与 antd 的 `React.ReactNode` 有一处**平台差异**（PLATFORM），与 `EmptyImage`
- *    （`packages/ui/src/empty/interface.ts:75`）**同一裁决**：antd 允许传「React 元素」
- *    （`<SearchOutlined />` 的求值结果），Vue 没有等价的「元素」概念 —— 对应物是
- *    **组件本身**。所以这里额外接受 `Component`。
- *
- * 判据（按顺序）：
- *   - `null` / VNode / 字符串等 → 原样渲染
- *   - 组件（对象或函数）      → `h(component)` 包一层
- *
- * ⚠️ 少了 `h()` 这一步，render 会返回一个**组件对象** —— Vue 只认 vnode，
- *    结果是模板把对象 `toDisplayString` 成字面量文本 **`[object Object]`**
- *    （实测，见 `__tests__/index.test.ts` 的「icon 传组件」用例）。
- */
+/** Renderable data or a Vue component; complete #icon content takes precedence. */
 export type ButtonIcon = VNodeChild | Component;
-
-/**
- * loading 的两种形态。
- *
- * ⚠️ 对象形态的判据是「`delay` 是否存在且 > 0」，不是「是不是对象」——
- *    见 `docs/analysis/button.md` §4.2（`Button.tsx:100-114`）。
- */
+/** A request blocks activation immediately; delay only postpones its indicator. */
 export type ButtonLoading = boolean | { delay?: number; icon?: ButtonIcon };
-
-// ---------------------------------------------------------------------------
-// 语义化
-// ---------------------------------------------------------------------------
 
 export interface ButtonSemanticClassNames {
   root?: string;
   icon?: string;
   content?: string;
 }
-
 export interface ButtonSemanticStyles {
   root?: CSSProperties;
   icon?: CSSProperties;
   content?: CSSProperties;
 }
-
 export interface ButtonSemanticType {
   classNames?: ButtonSemanticClassNames;
   styles?: ButtonSemanticStyles;
 }
 
-// ---------------------------------------------------------------------------
-// Props
-// ---------------------------------------------------------------------------
-
-/**
- * Button 的 Props。
- *
- * ⚠️ 合成事件在 Vue 侧是 `emit`，不在 Props 里 —— 见 `Button.vue` 的 `defineEmits`。
- * 根 `class` / `style` 使用 Vue 原生 fallthrough attrs，不重复声明 React 风格 root aliases。
- * `className` / `rootClassName` / `style` 不属于 `ButtonProps`；ConfigProvider 的
- * `ButtonConfig` 仍继承 `ComponentStyleConfig.className/style` 作为配置对象字段。
- */
+/** Native class/style and other root attributes belong to Vue attrs. */
 export interface ButtonProps {
-  /** 旧版类型糖，会被解析成 `color` + `variant`（见 `ButtonTypeMap`）。 */
   type?: ButtonType;
   color?: ButtonColorType;
   variant?: ButtonVariantType;
-  /** 图标。也支持 `icon` 插槽（prop 优先）。可传 VNode，也可传组件（见 {@link ButtonIcon}）。 */
   icon?: ButtonIcon;
-  /** @deprecated 请用 `iconPlacement` */
+  /** @deprecated Use iconPlacement. */
   iconPosition?: ButtonIconPlacement;
   iconPlacement?: ButtonIconPlacement;
   shape?: ButtonShape;
@@ -156,34 +63,23 @@ export interface ButtonProps {
   ghost?: boolean;
   danger?: boolean;
   block?: boolean;
-  /** 有值 ⇒ 渲染 `<a>`，否则渲染 `<button>`。 */
+  /** Defined, including an empty string, renders an anchor. */
   href?: string;
   htmlType?: ButtonHTMLType;
-  /** 两个中文字之间是否自动插空格。默认 `true`（上游 `?? true`）。 */
+  /** Visual spacing for two Chinese characters; original text remains unchanged. */
   autoInsertSpace?: boolean;
   classNames?: ButtonSemanticClassNames;
   styles?: ButtonSemanticStyles;
 }
-
-// ---------------------------------------------------------------------------
-// 其它
-// ---------------------------------------------------------------------------
-
 export interface ButtonRef {
-  /** 根元素（`<button>` 或 `<a>`）。 */
   nativeElement: HTMLButtonElement | HTMLAnchorElement | null;
 }
-
 export type ButtonSlot = () => VNodeChild;
-
-/**
- * ConfigProvider 的 `button` 段。
- *
- * 比 DividerConfig 多了 4 项 —— 它们来自上游 `useComponentConfig('button')` 的解构
- * （`Button.tsx:165-177`）：`loadingIcon` / `shape` / `color` / `variant`，
- * 以及 `autoInsertSpace`。
- */
-export type ButtonConfig = ComponentStyleConfig &
+export interface ButtonSlots {
+  default?: ButtonSlot;
+  icon?: ButtonSlot;
+}
+type ButtonConfigFields = ComponentStyleConfig &
   Pick<ButtonProps, 'classNames' | 'styles'> & {
     loadingIcon?: ButtonIcon;
     shape?: ButtonShape;
@@ -191,3 +87,6 @@ export type ButtonConfig = ComponentStyleConfig &
     variant?: ButtonVariantType;
     autoInsertSpace?: boolean;
   };
+
+/** A closed config object retains every field and is assignable to the Provider config map. */
+export type ButtonConfig = { [Key in keyof ButtonConfigFields]: ButtonConfigFields[Key] };

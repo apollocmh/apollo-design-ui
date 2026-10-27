@@ -1,0 +1,8 @@
+{
+  "result:success": ["$/div[0]/div[3]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"],
+  "result:404": [
+    "$/div[0]/div[0]/svg[0]: 我们多出属性 aria-hidden=\"true\"",
+    "$/div[0]/div[3]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+  ],
+  "result:semantic": ["$/div[0]/div[3]/button[0]/span[0]: 类名不同 [] vs [apollo-btn-content]"]
+}

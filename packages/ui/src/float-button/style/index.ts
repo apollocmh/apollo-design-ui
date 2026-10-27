@@ -62,6 +62,7 @@ const RULES = `
  *    square + content 的 auto 高形态字号差 2px 直接显形。按 D5 折进根类。 */
 .apollo-float-btn{font-family:var(--apollo-font-family);font-size:var(--apollo-font-size);box-sizing:border-box;}
 .apollo-float-btn-rtl{direction:rtl;}
+.apollo-float-btn>.apollo-btn-content{display:contents;}
 .apollo-float-btn.apollo-float-btn-individual{position:fixed;z-index:var(--apollo-z-index-popup-base);inset-inline-end:var(--apollo-margin-lg);bottom:var(--apollo-margin-xxl);}
 /* ⚠️ antd 这条阴影在 :where(.css-hash) 之下 = 特异性 (0,2,0)，排在 button 之后
  *    ⇒ 压过 Button variant 的临时描边阴影（antd 同为 (0,2,0) 但靠加载顺序）。

@@ -1,224 +1,97 @@
-<script setup lang="ts">
-/**
- * Space.Compact —— 让表单组件之间紧凑连接并合并边框。
- *
- * 契约来源：antd 6.6.4 的 `es/space/Compact.js`（165 行）。
- *
- * ── 它自己几乎不做样式 ─────────────────────────────────────────────────────────
- *
- * Compact 只做两件事：
- *   1. 渲染一个 `<div class="{prefix}-space-compact …">` 容器；
- *   2. 把 `compactSize` / `compactDirection` / `isFirstItem` / `isLastItem`
- *      通过 `CompactItem` 广播给每个子节点。
- *
- * 真正的「合并边框」类名（`-compact-item` / `-compact-first-item` /
- * `-compact-last-item`）由**下游组件自己**拼 —— 用它们自己的前缀
- * （`apollo-btn-compact-item`）。协议见 `./Compact.ts` 的文件头。
- *
- * ── 四条最容易写错的判据 ───────────────────────────────────────────────────────
- *
- *   1. **`prefixCls` 的后缀是 `'space-compact'`**，不是 `'compact'` ——
- *      所以不传时兜底是 `apollo-space-compact`（上游 `Compact.tsx:107`）。
- *   2. **`vertical` 未传 ≠ `false`**（PITFALLS 46 / D21，见 `withDefaults` 注释）。
- *   3. **`isFirstItem` / `isLastItem` 的合取**：
- *      `i === 0 && (!outerContext || outerContext.isFirstItem)` ——
- *      嵌套 Compact 时，内层的首项只有在**外层也是首项**时才算首项
- *      （上游 `Compact.tsx:140-143`，由 `compact-nested` demo 覆盖）。
- *   4. **`toArray(children)` 不带 `keepEmpty`**（与 `Space` 相反）——
- *      Compact 不需要「空占位占下标」，`false` 子节点直接丢弃。
- *
- * ── 与 antd 的平台差异 ─────────────────────────────────────────────────────────
- *
- *   - `size` 走 `useSize((ctx) => size ?? ctx)`，与 antd 逐字同形；`ConfigProvider`
- *     的 `componentSize` 优先于 Compact 的 `size` 之外的来源，而 `size` prop
- *     优先于 context（上游用例：`Space.Compact should inherit the size from
- *     ConfigProvider if the componentSize is set`）。
- *   - `direction` 走 `useDirection()`（`ComputedRef`）而不是 `ConfigContext` 的解构
- *     快照（D27）。
- */
-
+<script lang="ts">
 import { toArray, useDevWarning } from '@apollo-design/utils';
-import { computed, inject, ref, useAttrs, useSlots, type VNode, watchEffect } from 'vue';
-import { styleAttrs } from '../_internal/use-merge-semantic';
+import {
+  computed,
+  defineComponent,
+  h,
+  inject,
+  mergeProps,
+  type PropType,
+  ref,
+  type SlotsType,
+  type VNode,
+  watchEffect,
+} from 'vue';
 import { useConfigContext, useDirection } from '../config-provider/context';
 import { useSize } from '../config-provider/size-context';
-import {
-  CompactItem,
-  type SpaceCompactItemContextType,
-  spaceCompactItemContextKey,
-} from './Compact';
+import { CompactItem, spaceCompactItemContextKey } from './Compact';
 import type { SpaceCompactProps, SpaceSlot } from './interface';
 import { useOrientation } from './useOrientation';
 
-defineOptions({ name: 'ASpaceCompact', inheritAttrs: false });
-
-/**
- * ⚠️⚠️ `vertical` 的 `undefined` 默认值**不是冗余的**。
- *
- * Vue 的 Boolean prop 转换：只要 prop 的运行时类型含 `Boolean`，且调用方没传、
- * 也没有 `default`，Vue 就会把它赋成 `false`。而 `useOrientation` 的判据是
- * `typeof vertical === 'boolean'` —— 它把「未传」与「显式传 false」当作两条不同
- * 分支，所以 `<Space.Compact direction="vertical" />` 会**静默**变成水平排列。
- * 声明 `default`（哪怕值是 `undefined`）会让 Vue 走 `hasDefault` 分支、跳过转换。
- * 这是 PITFALLS 第 46 条（D21），与 `Space` / `Divider` 同一根源。
- */
-const props = withDefaults(defineProps<SpaceCompactProps>(), {
-  prefixCls: undefined,
-  size: undefined,
-  direction: undefined,
-  orientation: undefined,
-  vertical: undefined,
-  block: undefined,
-});
-
-const slots = useSlots();
-const attrs = useAttrs();
-defineSlots<{ default?: SpaceSlot }>();
-
-/** antd 用 `React.useContext(ConfigContext)` 而不是 `useComponentConfig` —— 逐字对齐。 */
-const { getPrefixCls } = useConfigContext();
-const direction = useDirection();
-
-/**
- * **外层**的紧凑上下文。
- *
- * 它决定「本 Compact 的首项/末项在外层是否也是首项/末项」—— 嵌套 Compact 时
- * 内层的首项若在外层不是首项，就不能合并圆角（否则中间那个会被削成直角）。
- *
- * ⚠️ 值是 `ComputedRef<… | null>`：`null` 是**合法取值**，表示「被
- *    `NoCompactStyle` 显式隔离」。它必须与 `undefined`（没有 Provider）走**同一条**
- *    分支 —— 上游的判据是 `!compactItemContext || compactItemContext?.isFirstItem`
- *    （`Compact.js:98-99`），而 `!null` 在 JS 里为真。
- *    此前本仓只判 `!outerContext`（**ref 对象**是否存在），`null` 落到了
- *    `!!outerContext.value?.isFirstItem` ⇒ 恒 false ⇒ 隔离后的 Compact
- *    首末项都不加 `-compact-first-item` / `-compact-last-item`，圆角全丢
- *    （Issue #2.2）。
- */
-const outerContext = inject(spaceCompactItemContextKey, undefined);
-
-/** 外层上下文的值；`undefined` 与 `null` 都归一成 `undefined`（见上）。 */
-const outerItemContext = (): SpaceCompactItemContextType | undefined =>
-  outerContext?.value ?? undefined;
-
-const prefixCls = computed(() => getPrefixCls('space-compact', props.prefixCls));
-
-const orientationPair = useOrientation(
-  () => props.orientation,
-  () => props.vertical,
-  () => props.direction,
-);
-const mergedOrientation = computed(() => orientationPair.value[0]);
-const mergedVertical = computed(() => orientationPair.value[1]);
-
-/**
- * 子组件尺寸。
- *
- * `useSize` 的三条分支逐字来自 antd 的 `hooks/useSize`：
- * `!customSize` ⇒ context；字符串 ⇒ 自身；函数 ⇒ `fn(context)`。
- * 这里传函数 ⇒ `size ?? contextSize`，即 **`size` prop 优先于
- * ConfigProvider 的 `componentSize`**（上游有专门用例）。
- */
-const mergedSize = useSize((ctxSize) => props.size ?? ctxSize);
-
-/**
- * 子节点。
- *
- * ⚠️ 与 `Space` 不同，这里**不带 `keepEmpty`** —— antd 的
- * `toArray(children)` 把 `false` / `null` / `undefined` 全部丢弃，
- * 下标与 DOM 都只看「真实存在」的子节点。
- * `slots.default` 不存在时 `toArray` 得到 `[]`（`undefined` 在非 keepEmpty 下不补位）。
- */
-const childNodes = computed<VNode[]>(() => toArray(() => slots.default?.()));
-
-const hasChildren = computed(() => childNodes.value.length > 0);
-
-/**
- * 根类名。顺序逐字对齐 antd 的 `clsx(...)`（`Compact.tsx:109-119`）：
- * `prefixCls` → `-rtl`? → `-block`? → `-vertical`? → `className` → `rootClassName`。
- * （没有 CSS-in-JS 的 hashId —— D5。）
- */
-const rootClass = computed(() => [
-  prefixCls.value,
-  {
-    [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
-    [`${prefixCls.value}-block`]: props.block,
-    [`${prefixCls.value}-vertical`]: mergedVertical.value,
+export default defineComponent({
+  name: 'ASpaceCompact',
+  inheritAttrs: false,
+  expose: ['nativeElement'],
+  props: {
+    prefixCls: { type: String, default: undefined },
+    size: { type: String as PropType<SpaceCompactProps['size']>, default: undefined },
+    direction: { type: String as PropType<SpaceCompactProps['direction']>, default: undefined },
+    orientation: { type: String as PropType<SpaceCompactProps['orientation']>, default: undefined },
+    // Preserve absence: explicit false overrides the deprecated direction prop.
+    vertical: { type: Boolean, default: undefined },
+    block: { type: Boolean, default: undefined },
   },
-]);
+  slots: Object as SlotsType<{ default?: SpaceSlot }>,
+  setup(props, { slots, attrs }) {
+    const { getPrefixCls } = useConfigContext();
+    const direction = useDirection();
+    const prefixCls = computed(() => getPrefixCls('space-compact', props.prefixCls));
+    const outerContext = inject(spaceCompactItemContextKey, undefined);
+    const orientation = useOrientation(
+      () => props.orientation,
+      () => props.vertical,
+      () => props.direction,
+    );
+    const mergedSize = useSize((contextSize) => props.size ?? contextSize);
+    const rootRef = ref<HTMLDivElement | null>(null);
 
-/**
- * 根元素属性。
- *
- * ⚠️ 根 `class` / `style` 是 Vue 原生 attrs（上游的 `className` / `rootClassName` / `style`
- *    都随 `{...restProps}` 落根），整体由 `$attrs` 透传即可。
- *
- * 🚨 与 `Space.vue` 同判（Issue #2.1）：必须是**普通函数**、渲染期求值。
- *    包成 `computed(() => ({...attrs}))` 后，`useAttrs()` 的普通对象不参与追踪
- *    ⇒ 只有 `class` / `style` / `aria-*` 变化时永远返回旧快照。
- */
-const getRootAttrs = () => ({ ...attrs });
+    const warning = useDevWarning('Space.Compact');
+    watchEffect(() => {
+      warning.deprecated(props.direction === undefined, 'direction', 'orientation');
+    });
 
-/** `v-for` 的 key。antd：`child?.key || \`${prefixCls}-item-${i}\``（`Compact.tsx:134`）。 */
-const compactItemKey = (child: VNode, index: number): string | number => {
-  const key = child.key;
-  if (typeof key === 'string' || typeof key === 'number') return key;
-  return `${prefixCls.value}-item-${index}`;
-};
-
-/**
- * 首项判据：下标为 0 **且**外层（若存在且**未被隔离**）也是首项。
- *
- * ⚠️ `!outer` 这一支不能省：没有外层时 `outer` 是 `undefined`，此时「下标 0 就是首项」
- *    成立。`NoCompactStyle` 注入的 `null` 也走这一支（上游 `!compactItemContext`
- *    对 `null` 为真）—— 见 `outerItemContext` 的注释。
- */
-const isFirstItem = (index: number): boolean => {
-  const outer = outerItemContext();
-  return index === 0 && (!outer || !!outer.isFirstItem);
-};
-
-/** 末项判据：下标为最后一个 **且**外层（若存在且未被隔离）也是末项。 */
-const isLastItem = (index: number): boolean => {
-  const outer = outerItemContext();
-  return index === childNodes.value.length - 1 && (!outer || !!outer.isLastItem);
-};
-
-// ---------------------------------------------------------------------------
-// 开发期告警
-//
-// ⚠️ 组件名是 `'Space.Compact'`（不是 `'Space'`）—— 上游用例
-//    `space-compact.test.tsx:213-215` 断言的正是这个前缀。
-// ⚠️ 判据从 `!direction` 改成 `direction === undefined`：Vue 的 props 恒含全部
-//    声明键（PITFALLS 46 / D21）。antd 用的是真值判断 `!direction` ——
-//    两者在「传 `''`」这类边界上不同，但 `direction` 的类型是
-//    `'horizontal' | 'vertical'`，`''` 不在其中，所以没有可观测差异。
-// ---------------------------------------------------------------------------
-const warning = useDevWarning('Space.Compact');
-watchEffect(() => {
-  warning.deprecated(props.direction === undefined, 'direction', 'orientation');
+    const renderCompact = () => {
+      // Compiled slots can replace their VNodes without changing a computed dependency.
+      const children: VNode[] = toArray(() => slots.default?.());
+      if (!children.length) return null;
+      const prefix = prefixCls.value;
+      const outer = outerContext?.value;
+      const [compactDirection, vertical] = orientation.value;
+      return h(
+        'div',
+        mergeProps(
+          {
+            ref: rootRef,
+            class: [
+              prefix,
+              {
+                [`${prefix}-rtl`]: direction.value === 'rtl',
+                [`${prefix}-block`]: props.block,
+                [`${prefix}-vertical`]: vertical,
+              },
+            ],
+          },
+          attrs,
+        ),
+        children.map((child, index) =>
+          h(CompactItem, {
+            key:
+              typeof child.key === 'string' || typeof child.key === 'number'
+                ? child.key
+                : `${prefix}-item-${index}`,
+            compactSize: mergedSize.value,
+            compactDirection,
+            isFirstItem: index === 0 && (!outer || !!outer.isFirstItem),
+            isLastItem: index === children.length - 1 && (!outer || !!outer.isLastItem),
+            node: child,
+          }),
+        ),
+      );
+    };
+    return { nativeElement: rootRef, renderCompact };
+  },
+  render() {
+    return this.renderCompact();
+  },
 });
-
-// ---------------------------------------------------------------------------
-// 暴露
-// ---------------------------------------------------------------------------
-const rootRef = ref<HTMLDivElement | null>(null);
-defineExpose({ nativeElement: rootRef });
 </script>
-
-<template>
-  <div v-if="hasChildren" ref="rootRef" :class="rootClass" v-bind="getRootAttrs()">
-    <!--
-      `CompactItem` 不产生任何元素（纯 provider）—— 与 antd 的 `<CompactItem>` 一致。
-      所以这个 v-for 在 DOM 上完全不可见，只影响下游组件拼出来的类名。
-    -->
-    <CompactItem
-      v-for="(child, index) in childNodes"
-      :key="compactItemKey(child, index)"
-      :compact-size="mergedSize"
-      :compact-direction="mergedOrientation"
-      :is-first-item="isFirstItem(index)"
-      :is-last-item="isLastItem(index)"
-      :node="child"
-    />
-  </div>
-</template>

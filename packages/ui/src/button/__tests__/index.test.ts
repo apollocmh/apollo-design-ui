@@ -239,8 +239,8 @@ describe('Button · color / variant 六层回退', () => {
 
   it('第 3 层：`variant === "solid"` 但没有 color ⇒ primary + solid', () => {
     expect(colorVariantOf({ variant: 'solid' })).toEqual(['primary', 'solid']);
-    // 其它 variant 单独给出**不**走这一条（会落到 context / 兜底）
-    expect(colorVariantOf({ variant: 'filled' })).toEqual(['default', 'outlined']);
+    // 其他 variant 也独立生效，颜色回退 default。
+    expect(colorVariantOf({ variant: 'filled' })).toEqual(['default', 'filled']);
   });
 
   it('第 4 层：ConfigProvider 的 color + variant', () => {
@@ -319,14 +319,14 @@ describe('Button · dangerous vs color-dangerous', () => {
     expect(classesOf({ danger: false })).not.toContain(`${P}-dangerous`);
   });
 
-  it('danger + color=blue+variant ⇒ color 被覆盖成 dangerous（type/danger 分支在显式分支之后）', () => {
+  it('显式 color 独立覆盖 danger 糖', () => {
     // color+variant 同时给出走第 1 层 ⇒ danger 不参与
     expect(colorVariantOf({ danger: true, color: 'blue', variant: 'solid' })).toEqual([
       'blue',
       'solid',
     ]);
-    // 只给 color（没有 variant）⇒ 走 type/danger 分支（color 被 danger 覆盖）
-    expect(colorVariantOf({ danger: true, color: 'blue' })).toEqual(['dangerous', 'outlined']);
+    // 单独 color 同样是显式值，不被 danger 覆盖。
+    expect(colorVariantOf({ danger: true, color: 'blue' })).toEqual(['blue', 'outlined']);
   });
 });
 
@@ -375,10 +375,10 @@ describe('Button · size / shape / disabled 回退', () => {
     expect(w.classes()).not.toContain(`${P}-lg`);
   });
 
-  it('shape：circle / round ⇒ -{shape}；default / square ⇒ 不加', () => {
+  it('shape：circle / round / square 均有对应类；default 不加形状类', () => {
     expect(classesOf({ shape: 'circle' })).toContain(`${P}-circle`);
     expect(classesOf({ shape: 'round' })).toContain(`${P}-round`);
-    expect(classesOf({ shape: 'square' })).not.toContain(`${P}-square`);
+    expect(classesOf({ shape: 'square' })).toContain(`${P}-square`);
     // ⚠️ 不能断言「没有 `-default`」—— 那个类名是 `-{mergedType}` 产出的，恒在。
     expect(classesOf({})).not.toContain(`${P}-circle`);
     expect(classesOf({})).not.toContain(`${P}-square`);
@@ -522,25 +522,24 @@ describe('Button · loading', () => {
 // ===========================================================================
 
 describe('Button · 两个中文字自动插空格', () => {
-  it('★ 恰好两个汉字 ⇒ 内容用真实空格 join（antd 6 的 spaceChildren）', async () => {
+  it('两个汉字保留连续 DOM 文字，视觉字距由组件宿主承担', async () => {
     const w = withText({}, '确定');
     await nextTick();
-    // React 实测（antd 6.6.4 探针）：textContent 是 '确 定'。
-    expect(w.text()).toBe('确 定');
-    // 检测 effect 读的是**变换后**的 textContent（'确 定' 非两字）⇒ 类实际不出现。
-    // 6.6.4 保留了类与 CSS（服务组件子节点场景），但对字符串子节点是自否定的。
-    expect(w.classes()).not.toContain(`${P}-two-chinese-chars`);
+    expect(w.text()).toBe('确定');
+    expect(w.classes()).toContain(`${P}-two-chinese-chars`);
+    expect(w.get(`.${P}-content`).text()).toBe('确定');
   });
 
-  it('★ 用 `<span>` 包住两个汉字时**也要**拆 —— Issue #1.4', async () => {
-    // antd `splitCNCharsBySpace` 的元素分支（`buttonHelpers.js:30-36`）：
-    // `isString(child.type) && isTwoCNChar(child.props.children)` 时 cloneElement
-    // 并把 children 逐字 join。此前本仓只处理字符串 / Text vnode 子节点，
-    // 元素子节点直接 cloneVNode ⇒ `<span>确定</span>` 不插空格，而 antd 插。
-    const w = mount(Button, { slots: { default: () => h('span', null, '确定') } });
+  it('原生子节点保留原文、属性和自己的样式', async () => {
+    const w = mount(Button, {
+      slots: {
+        default: () => h('span', { class: 'business-text', style: { opacity: 0.9 } }, '确定'),
+      },
+    });
     await nextTick();
-    expect(w.find('span').text()).toBe('确 定');
-    expect(w.html()).not.toContain('<span>确定</span>');
+    expect(w.get('.business-text').text()).toBe('确定');
+    expect(w.get('.business-text').attributes('style')).toContain('opacity: 0.9');
+    expect(w.classes()).toContain(`${P}-two-chinese-chars`);
   });
 
   it('元素包裹但内容不是两字 ⇒ 原样（判据是 `^{2}$`，不是「有元素就拆」）', async () => {
@@ -604,10 +603,10 @@ describe('Button · 两个中文字自动插空格', () => {
       { default: () => '确定' },
     );
     await nextTick();
-    expect(w2.text()).toBe('确 定');
+    expect(w2.text()).toBe('确定');
   });
 
-  it('★ 更新成两字也要变换（onUpdated）—— 只在 onMounted 跑会漏掉这条', async () => {
+  it('响应文字变化更新视觉字距并保留连续文本', async () => {
     const text = ref('确定');
     const Host = defineComponent({
       setup() {
@@ -616,17 +615,17 @@ describe('Button · 两个中文字自动插空格', () => {
     });
     const w = mount(Host);
     await nextTick();
-    expect(w.find('button').text()).toBe('确 定');
+    expect(w.find('button').text()).toBe('确定');
     // 先更新成非两字（应当摘掉类名），再更新回两字（应当重新戴上）
     text.value = 'Cancel';
     await nextTick();
     expect(w.find('button').classes()).not.toContain(`${P}-two-chinese-chars`);
     text.value = '取消';
     await nextTick();
-    expect(w.find('button').text()).toBe('取 消');
+    expect(w.find('button').text()).toBe('取消');
   });
 
-  it('★ 挂载时不是两字、之后变成两字 ⇒ 变换（D6 的正脸）', async () => {
+  it('挂载后从非中文切到两个中文字仍更新字距', async () => {
     const text = ref('Cancel');
     const Host = defineComponent({
       setup() {
@@ -637,7 +636,8 @@ describe('Button · 两个中文字自动插空格', () => {
     expect(w.find('button').classes()).not.toContain(`${P}-two-chinese-chars`);
     text.value = '提交';
     await nextTick();
-    expect(w.find('button').text(), 'onUpdated 缺失时这条会红').toBe('提 交');
+    expect(w.find('button').text()).toBe('提交');
+    expect(w.find('button').classes()).toContain(`${P}-two-chinese-chars`);
   });
 
   it('loading 时不插（判据含 `!innerLoading`）', () => {
@@ -679,7 +679,7 @@ describe('Button · href 分支（<a> vs <button>）', () => {
     expect(w.attributes('aria-disabled')).toBe('false');
   });
 
-  it('★ <a> 分支：受控的 tabindex / aria-disabled **压过**用户透传的同名属性 —— Issue #1.2', () => {
+  it('链接禁用时保护 tabindex；启用时保留调用者 tabindex，状态语义仍受控', () => {
     // antd 的 <a> 是 `{...linkButtonRestProps, …, tabIndex, "aria-disabled"}`
     // （`Button.js:273-284`）—— 透传在前、受控在后。此前本仓模板把 `v-bind` 写在最后，
     // 用户值会覆盖组件值 ⇒ 禁用锚点仍能 Tab 聚焦、且 aria-disabled 撒谎。
@@ -689,12 +689,12 @@ describe('Button · href 分支（<a> vs <button>）', () => {
     });
     expect(w.attributes('tabindex')).toBe('-1');
     expect(w.attributes('aria-disabled')).toBe('true');
-    // 未禁用时同样：受控值是 tabindex=0 / aria-disabled=false
+    // 启用的原生链接可自定义 Tab 顺序，禁用语义仍由组件负责。
     const w2 = mount(Button, {
       props: { href: '#' },
       attrs: { tabindex: '5', 'aria-disabled': 'true' },
     });
-    expect(w2.attributes('tabindex')).toBe('0');
+    expect(w2.attributes('tabindex')).toBe('5');
     expect(w2.attributes('aria-disabled')).toBe('false');
   });
 
@@ -790,7 +790,7 @@ describe('Button · icon', () => {
     expect(w.find('.my-icon').exists()).toBe(true);
   });
 
-  it('icon 插槽也能传（prop 优先于插槽）', () => {
+  it('完整 icon 插槽优先于数据 prop', () => {
     const viaSlot = mount(Button, { slots: { icon: () => h('i', { class: 'slot-icon' }) } });
     expect(viaSlot.find('.slot-icon').exists()).toBe(true);
 
@@ -798,8 +798,8 @@ describe('Button · icon', () => {
       props: { icon: h('i', { class: 'prop-icon' }) },
       slots: { icon: () => h('i', { class: 'slot-icon' }) },
     });
-    expect(both.find('.prop-icon').exists()).toBe(true);
-    expect(both.find('.slot-icon').exists()).toBe(false);
+    expect(both.find('.prop-icon').exists()).toBe(false);
+    expect(both.find('.slot-icon').exists()).toBe(true);
   });
 
   it('★ 无内容 + 有图标 ⇒ -icon-only', () => {
@@ -1088,9 +1088,10 @@ describe('Button · classNames / styles 语义化', () => {
 // ===========================================================================
 
 describe('Button · 开发期告警', () => {
-  it('★ `icon` 传长度 > 2 的字符串 ⇒ breaking 告警', async () => {
+  it('有效字符串图标不触发过时的 v4 命名告警', async () => {
     const out = await capturedWarnings(() => mountBtn({ icon: 'search' }));
-    expect(out).toContain('`icon` is using VNode instead of string naming in v4.');
+    expect(out).not.toContain('`icon` is using VNode instead of string naming in v4.');
+    expect(mountBtn({ icon: 'search' }).text()).toBe('search');
   });
 
   it('`icon` 传短字符串 / 传组件 ⇒ 不告警', async () => {
@@ -1111,14 +1112,11 @@ describe('Button · 开发期告警', () => {
     );
   });
 
-  it('★ 只有 `variant="link"`（没有 color）**不**告警：解析落回 default/outlined', async () => {
-    // ⚠️ 这条容易写错：`color && variant` 要**两个都有**才走显式分支，
-    //    只有 `variant` 时会一路落到兜底 `['default', 'outlined']` ⇒ 不是无边框变体。
-    //    用 `type="link"` 才会真的解析成 link 变体（见上一条）。
-    expect(await capturedWarnings(() => mountBtn({ variant: 'link', ghost: true }))).not.toContain(
+  it('单独 variant="link" 生效，ghost 无效组合仍告警', async () => {
+    expect(await capturedWarnings(() => mountBtn({ variant: 'link', ghost: true }))).toContain(
       "can't be a `ghost` button",
     );
-    expect(mountBtn({ variant: 'link', ghost: true }).classes()).toContain(`${P}-variant-outlined`);
+    expect(mountBtn({ variant: 'link', ghost: true }).classes()).toContain(`${P}-variant-link`);
   });
 
   it('ghost + 有边框变体 ⇒ 不告警', async () => {
