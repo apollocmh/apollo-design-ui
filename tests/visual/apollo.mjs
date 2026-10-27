@@ -213,6 +213,7 @@ async function main() {
               'button',
               'empty',
               'tag',
+              'avatar',
             ].includes(item.component) && item.variant === 'native-focus',
         });
         const state =

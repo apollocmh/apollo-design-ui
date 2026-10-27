@@ -110,7 +110,7 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 
 ## 还没有完成什么
 
-全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有201项启发式候选待逐项复核，候选不等于缺陷。当前自有视觉矩阵1380项，已批准405项，其余975项随后续完整整改单元验收。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
+全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有199项启发式候选待逐项复核，候选不等于缺陷。当前自有视觉矩阵1380项，已批准405项，其余975项随后续完整整改单元验收。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
 
 ## 查看证据与后续进展
 
@@ -183,7 +183,7 @@ The final related gate passes 2,352 runtime tests and 398 public type checks. Bu
 
 This snapshot has 405 approved Apollo visual cases out of 1,380; the remaining 975 await review within later audit units.
 
-Other components and foundation packages still require their complete audits. The content inventory has 201 heuristic review candidates; candidates are not confirmed defects. Final whole-library gates remain required after all remediation finishes. Touch pinch, other browsers and unspecified cross-document combinations are outside this unit's verified scope.
+Other components and foundation packages still require their complete audits. The content inventory has 199 heuristic review candidates; candidates are not confirmed defects. Final whole-library gates remain required after all remediation finishes. Touch pinch, other browsers and unspecified cross-document combinations are outside this unit's verified scope.
 
 [Image audit and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-25-image-contract-audit.md) · [H05 evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-repository-format-audit.md) · [Ongoing issues](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/KNOWN-ISSUES.md) · [Build-time Git history](/changelog)
 

@@ -159,8 +159,29 @@ describe('组件页数据', () => {
 });
 
 describe('demo 元数据', () => {
-  it('demo 全量可枚举（1005 个，含QRCode与Skeleton组件Token示例）', () => {
-    expect(allDemos.length).toBe(1005);
+  it('demo 全量可枚举（1006 个，含Avatar组件Token示例）', () => {
+    expect(allDemos.length).toBe(1006);
+    expect(
+      allDemos
+        .map((demo) => demo.id)
+        .filter((id) => id.startsWith('avatar-demo-'))
+        .sort(),
+    ).toEqual(
+      [
+        'basic',
+        'type',
+        'dynamic',
+        'badge',
+        'group',
+        'max-count',
+        'fallback',
+        'toggle-debug',
+        'responsive',
+        'component-token',
+      ]
+        .map((name) => `avatar-demo-${name}`)
+        .sort(),
+    );
     expect(
       allDemos
         .map((demo) => demo.id)

@@ -77,7 +77,11 @@ const theme = (name) =>
               ],
             },
           ),
-          av(undefined, { size: 64 }, { icon: () => [h(UserOutlined), h('small', 'Tail'), 0] }),
+          av(
+            undefined,
+            { size: 64, style: { fontSize: '14px' } },
+            { icon: () => [h(UserOutlined), h('small', 'Tail'), 0] },
+          ),
         ]),
       ]),
   );
