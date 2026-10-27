@@ -778,7 +778,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-27 Tag三件套完整清单统一验收，实现c49f300b。1088相关运行（Tag131/List153/Listy60等10组）、2289类型门禁、真实发布SFC/refs、296实际压缩颜色、9关闭、50消费者、57原Demo、17 SSR水合、29实际Docs和严格L7通过。45自有视觉逐张审阅且原始RGBA全一致；Tag+List102项按既有门禁0差异，List三加载SVG原始AA差异另记；原360记录/图与13参考不变。授权文档发布回执随后登记，全库审计继续。",
+      "notes": "2026-10-27 Tag三件套完整清单统一验收，实现c49f300b。1088相关运行（Tag131/List153/Listy60等10组）、2289类型门禁、真实发布SFC/refs、296实际压缩颜色、9关闭、50消费者、57原Demo、17 SSR水合、29实际Docs和严格L7通过。45自有视觉逐张审阅且原始RGBA全一致；Tag+List102项按既有门禁0差异，List三加载SVG原始AA差异另记；原360记录/图与13参考不变。验收db24a00c已发布，工作流40461805810/Pages7352080560成功，线上29项与200进度页通过，全库审计继续。",
       "layerNotes": {
         "interaction": "原生 close(MouseEvent)/checked/value 更新与 change 各一次；关闭按钮与链接兄弟，取消/禁用/完整槽/当前配置/模型已补。",
         "type": "全库190文件2289公开类型、8项Tag公开ref/静态子组件/模式类型；根与实际发布SFC（全部12原Demo）严格检查通过。",
@@ -786,9 +786,9 @@
         "token": "3既有Token当前源配置与移除/覆盖有效；原生特性条件保留light-dark以避免默认CSS压缩产生失效helper；296真实颜色/色相/对比度/Token与CSS变量通过。",
         "compat": "原24机械JSON与共享投影未改；稳定内容/所属原生按钮、内部链接和CSS变量的必要差异逐条精确登记并加完整矩阵反向守卫。",
         "visual": "45清洁c49f300b自有图逐张审阅批准，Tag45原始RGBA完全一致；加List57共102门禁0差异。三List加载SVG只存在已记录AA边界，原批准图/记录不变，设置未改。",
-        "currentAudit": "完整清单docs/audit/2026-10-27-tag-contract-audit.md；统一证据docs/audit/evidence/tag-contract.json；迁移docs/migrations/tag-contracts.md。冻结c49f300b完整单元通过；授权部署回执另记。",
+        "currentAudit": "完整清单docs/audit/2026-10-27-tag-contract-audit.md；统一证据docs/audit/evidence/tag-contract.json；迁移docs/migrations/tag-contracts.md。冻结c49f300b完整单元通过；验收db24a00c已上线，发布/线上回执见统一证据deployment。",
         "unit": "一次统一1088/1088、0失败/待定；_internal57/Drawer87/ConfigProvider115/List153/Listy60/Modal138/Notification98/Select152/Tag131/Tour97。",
-        "docs": "12原Demo保留；48主题+9交互57项（含真实指针拖拽），实际Docs29项、类型、161测试、85路由构建通过。进度页双语记录，授权部署回执另记。"
+        "docs": "12原Demo保留；48主题+9交互57项（含真实指针拖拽），实际Docs29项、类型、161测试、85路由构建通过。进度页双语记录，验收db24a00c已发布，线上29项和200进度页通过；Demo深链沿用已登记404 SPA兜底。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",

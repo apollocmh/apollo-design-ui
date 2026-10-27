@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-27T07:03:56.273Z",
+  "generatedAt": "2026-10-27T07:07:30.340Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -1570,7 +1570,7 @@
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 0,
-      "why": "2026-10-27 Tag三件套完整清单统一验收，实现c49f300b。1088相关运行（Tag131/List153/Listy60等10组）、2289类型门禁、真实发布SFC/refs、296实际压缩颜色、9关闭、50消费者、57原Demo、17 SSR水合、29实际Docs和严格L7通过。45自有视觉逐张审阅且原始RGBA全一致；Tag+List102项按既有门禁0差异，List三加载SVG原始AA差异另记；原360记录/图与13参考不变。授权文档发布回执随后登记，全库审计继续。",
+      "why": "2026-10-27 Tag三件套完整清单统一验收，实现c49f300b。1088相关运行（Tag131/List153/Listy60等10组）、2289类型门禁、真实发布SFC/refs、296实际压缩颜色、9关闭、50消费者、57原Demo、17 SSR水合、29实际Docs和严格L7通过。45自有视觉逐张审阅且原始RGBA全一致；Tag+List102项按既有门禁0差异，List三加载SVG原始AA差异另记；原360记录/图与13参考不变。验收db24a00c已发布，工作流40461805810/Pages7352080560成功，线上29项与200进度页通过，全库审计继续。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P1",
