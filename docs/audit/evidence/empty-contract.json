@@ -1,6 +1,6 @@
 {
   "inventoryCommit": "2bad0f31ce819974cad2bf2d85b31d5e8d941187",
-  "status": "accepted-local-docs-publish-pending",
+  "status": "accepted-and-published",
   "scope": "Empty six Props, existing default/description and missing native image slot, four semantic parts, two public static illustrations, no Component Token, source aliases, six original demos, DefaultRenderEmpty dispatcher and actual consumers",
   "baselineSources": [
     {
@@ -1202,9 +1202,7 @@
     ],
     "errors": []
   },
-  "pendingAcceptance": [
-    "authorized online documentation deployment receipt"
-  ],
+  "pendingAcceptance": [],
   "visualDryRun": {
     "count": 45,
     "stateAndAxe": "passed",
@@ -2273,5 +2271,166 @@
     "emptySsrBody": true,
     "progressCurrent": true,
     "basePath": "apollo-design-ui"
+  },
+  "deployment": {
+    "sourceCommit": "230fe3cf59e1f1c9c6a29b23a74c4652fdadaa9f",
+    "workflowRunId": 40448643538,
+    "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40448643538",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 122005862855,
+        "name": "构建文档站",
+        "conclusion": "success"
+      },
+      {
+        "id": 122006911823,
+        "name": "发布到 GitHub Pages",
+        "conclusion": "success"
+      }
+    ],
+    "pagesDeploymentId": 7350216642,
+    "pagesStatus": {
+      "created_at": "2026-10-27T04:18:16Z",
+      "environment_url": "https://apollocmh.github.io/apollo-design-ui/",
+      "log_url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40448643538/job/122006911823",
+      "state": "success"
+    },
+    "liveSite": "https://apollocmh.github.io/apollo-design-ui/",
+    "liveDocs": {
+      "base": "https://apollocmh.github.io/apollo-design-ui",
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "demo": "basic",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "basic",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "simple",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "simple",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "customize",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "customize",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "config-provider",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "config-provider",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "description",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "description",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "style-class",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "style-class",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "name": "actual complete image slot and working native draft",
+          "passed": true
+        },
+        {
+          "name": "actual named Provider image/style/class updates preserve the root",
+          "passed": true
+        },
+        {
+          "name": "actual conditional complete description suppresses fallback and empty spacing",
+          "passed": true
+        },
+        {
+          "name": "all four actual semantic hosts and current factories",
+          "passed": true
+        },
+        {
+          "name": "physical component document and all six actual lazy demo cards",
+          "httpStatus": 200,
+          "passed": true
+        }
+      ],
+      "fallbackDocuments": [
+        "https://apollocmh.github.io/apollo-design-ui/components/empty/demo/basic?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/empty/demo/basic?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/empty/demo/simple?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/empty/demo/simple?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/empty/demo/customize?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/empty/demo/customize?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/empty/demo/config-provider?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/empty/demo/config-provider?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/empty/demo/description?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/empty/demo/description?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/empty/demo/style-class?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/empty/demo/style-class?theme=dark"
+      ],
+      "errors": []
+    },
+    "liveProgress": {
+      "url": "https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html?empty-audit=230fe3cf",
+      "status": 200,
+      "source": "230fe3cf59e1f1c9c6a29b23a74c4652fdadaa9f",
+      "currentProgressVerified": true,
+      "date": "Tue, 27 Oct 2026 04:21:15 GMT"
+    },
+    "httpBoundary": "Physical Empty/guide documents return200;12 deep demo navigations use the existing Pages404 SPA fallback, with actual Vue demos/controls/axe checked successfully."
   }
 }
