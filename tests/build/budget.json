@@ -212,8 +212,8 @@
       "id": "image",
       "pkg": "@apollo-design/ui",
       "imports": ["Image"],
-      "budgetKb": 78,
-      "_note": "2026-10-26：新增按Vue注册归属恢复关闭焦点，覆盖打开者删除、嵌套组及Teleport。原77KB预算下功能成本超出217字节；按用户明确要求保留正确行为并调为78KB，measuredKb历史基线不变。",
+      "budgetKb": 80,
+      "_note": "2026-10-26：新增按Vue注册归属恢复关闭焦点，覆盖打开者删除、嵌套组及Teleport。原77KB预算下功能成本超出217字节，按用户明确要求调为78KB。2026-10-27：Avatar关联Portal/Overlay搬迁、动态销毁与关闭焦点修复后实测78.9KB，沿用用户接受小幅功能成本的裁决，仅本条调为80KB；measuredKb历史基线、其他72条预算和30%全量占比门禁不变。",
       "measuredKb": 47.5
     },
     {

@@ -3644,6 +3644,438 @@
       "capturedAt": "2026-10-27T06:07:22.629Z",
       "reviewedAt": "2026-10-27T06:11:37.820Z",
       "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+    },
+    "avatar/basic__light__mobile": {
+      "sha256": "9cc03f08f1b36ef5557255f7ae60fd9fe5fcf193a4f21c1f0c53abb1309d5b20",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:29.392Z",
+      "reviewedAt": "2026-10-27T08:14:06.544Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/basic__light__tablet": {
+      "sha256": "cdc3496eb37a5bd999314731f414c871453053d70fd39cd4127e5738ad95d5cd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:31.261Z",
+      "reviewedAt": "2026-10-27T08:14:06.545Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/basic__light__desktop": {
+      "sha256": "b5c198986a864470af02b20659b61cd4d3b77c2d0f8d2d751dbf2fb367025aed",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:33.128Z",
+      "reviewedAt": "2026-10-27T08:14:06.546Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/square__light__mobile": {
+      "sha256": "bb6a834efdfbdcd6d330171ed578debdd18bb73dc6b97b8b0ea6a1f1c8f42e5f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:34.985Z",
+      "reviewedAt": "2026-10-27T08:14:06.546Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/square__light__tablet": {
+      "sha256": "519a7861490f006109a77a124fe22499a41c92b241fd9e6698a081315c60ccc6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:36.826Z",
+      "reviewedAt": "2026-10-27T08:14:06.546Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/square__light__desktop": {
+      "sha256": "32dfb72f966e42ac2f07b4b3859f7e9849a339d70c8e69f43a854d426a015712",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:38.692Z",
+      "reviewedAt": "2026-10-27T08:14:06.546Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/text__light__mobile": {
+      "sha256": "64a779e89595f186f98c02c4627f9b79901addef09b1de2704194c7c431e137b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:40.585Z",
+      "reviewedAt": "2026-10-27T08:14:06.547Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/text__light__tablet": {
+      "sha256": "32849ef1b054299af7f9e8c7c02d5d44fed93d4d93c8e4cda122574b28bf6bd4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:42.491Z",
+      "reviewedAt": "2026-10-27T08:14:06.547Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/text__light__desktop": {
+      "sha256": "256abcc20f81e976fbeb7a44b84af7f8ce3fb51c1500310fae9cfe66c7c422dc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:44.387Z",
+      "reviewedAt": "2026-10-27T08:14:06.547Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/overflow__light__mobile": {
+      "sha256": "ad4f7812859495fc5b3951e7a8ebefc5188106d9a9791fa178347184f695fb8c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:46.278Z",
+      "reviewedAt": "2026-10-27T08:14:06.548Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/overflow__light__tablet": {
+      "sha256": "d7ec875b03244f98f1003340b436f5e554054d975941f0bafdd1c1eab6605f04",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:48.170Z",
+      "reviewedAt": "2026-10-27T08:14:06.548Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/overflow__light__desktop": {
+      "sha256": "4d33ded4d3eb9e1cc48a00293ab2a8c2e47d28eef737a243031464cc69db5fa5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:50.067Z",
+      "reviewedAt": "2026-10-27T08:14:06.548Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/icon__light__mobile": {
+      "sha256": "3df41dceb29cc18f845d41a2e00465483d55beeb1f6aa4c1b73244da1503faa5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:51.924Z",
+      "reviewedAt": "2026-10-27T08:14:06.548Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/icon__light__tablet": {
+      "sha256": "9578632bc340c9ca94ad5dac4d806cf82adb26d6f69083de8e7ffedd51531164",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:53.780Z",
+      "reviewedAt": "2026-10-27T08:14:06.549Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/icon__light__desktop": {
+      "sha256": "5afad0429d0fc2657450f4f4cfad906c8883b3c5527870bd3a9e6888b49af669",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:55.628Z",
+      "reviewedAt": "2026-10-27T08:14:06.549Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/src__light__mobile": {
+      "sha256": "fe9eb8121b1eecbbc566ea4c1701403bc9c180ce4d3fe91dc09b0a265f578b3d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:57.466Z",
+      "reviewedAt": "2026-10-27T08:14:06.549Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/src__light__tablet": {
+      "sha256": "6741d0071869a9715b09cdac21332cb327e150494aee4192c3809d1a89a3e2a4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:08:59.341Z",
+      "reviewedAt": "2026-10-27T08:14:06.549Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/src__light__desktop": {
+      "sha256": "c0524f5df2a3002ad6bc6508f69e1c26c5595c9a6ad88ee7c6a3ddfd3f95b623",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:01.186Z",
+      "reviewedAt": "2026-10-27T08:14:06.550Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/numeric__light__mobile": {
+      "sha256": "f8ee25ce5de7a222b3e2d554027edd177d99221fd2465e8a72fc7d1adf5b3eef",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:03.062Z",
+      "reviewedAt": "2026-10-27T08:14:06.550Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/numeric__light__tablet": {
+      "sha256": "110451804c47a8552c59c78ec7df8a0f170554352e4f0503dc0060517c947847",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:04.938Z",
+      "reviewedAt": "2026-10-27T08:14:06.550Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/numeric__light__desktop": {
+      "sha256": "e0f4b615d05a95fd645ca5509e12db4291f2fb22fd1bdc47f64e722279259183",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:06.823Z",
+      "reviewedAt": "2026-10-27T08:14:06.550Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/badge__light__mobile": {
+      "sha256": "ce7b49d0635793bf6dd8163239851e491f751d97f83b2993ff28969a33e9b53c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:08.750Z",
+      "reviewedAt": "2026-10-27T08:14:06.551Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/badge__light__tablet": {
+      "sha256": "6ab694d383a19911bcba7bd87eec69ce476fe3d5092f47cb0ed09babf55f1fc4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:10.659Z",
+      "reviewedAt": "2026-10-27T08:14:06.551Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/badge__light__desktop": {
+      "sha256": "88ea486342997496d5b08d4a46e7268fc446efc4390b686cd60efb83459a0737",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:12.576Z",
+      "reviewedAt": "2026-10-27T08:14:06.551Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/group__light__mobile": {
+      "sha256": "7fecbfdfc5e05470ea76fb439ce4851f5f70d91e4d5c2b14b9aa28ae347b1600",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:14.509Z",
+      "reviewedAt": "2026-10-27T08:14:06.551Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/group__light__tablet": {
+      "sha256": "b3552dc66c2201a8cc93dc9fd499433d74d9689ff5d25b7eaca5611ee86c936d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:16.400Z",
+      "reviewedAt": "2026-10-27T08:14:06.551Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/group__light__desktop": {
+      "sha256": "19c32142d48bf84204f7ab36777e1b9ff94253f21f928fecbfdafe74b4321f11",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:18.277Z",
+      "reviewedAt": "2026-10-27T08:14:06.552Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/group-max__light__mobile": {
+      "sha256": "a565d766be9606680ccebdd16b522b3e87f5d2bd10bdd9dff4623d51bb62310a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:20.225Z",
+      "reviewedAt": "2026-10-27T08:14:06.552Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/group-max__light__tablet": {
+      "sha256": "0fc3177df6d5d67ca0f8533334249ea700929a994e2e79e05f2c14cafa2c17f4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:22.191Z",
+      "reviewedAt": "2026-10-27T08:14:06.552Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/group-max__light__desktop": {
+      "sha256": "17ceeecabf31b4ee94f117f4be00b7f443caeca224b023ce1d0ef2fc787b7812",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:24.182Z",
+      "reviewedAt": "2026-10-27T08:14:06.553Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/responsive__light__mobile": {
+      "sha256": "4e3a8184ce1cc23eecc52efff33b993b15775a437aea7c2e096ebedd5ecafd95",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:26.054Z",
+      "reviewedAt": "2026-10-27T08:14:06.553Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/responsive__light__tablet": {
+      "sha256": "7c4b6f261bca4c7a3053689ead1474ab473893125fb6bd478f3ce243595ce61c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:27.929Z",
+      "reviewedAt": "2026-10-27T08:14:06.553Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/responsive__light__desktop": {
+      "sha256": "75e733639a95066af7751c77e961eb31336b2d45f61e5d8a53c99923b74d23e9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:29.805Z",
+      "reviewedAt": "2026-10-27T08:14:06.553Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/rtl__light__mobile": {
+      "sha256": "bf57d65ce59a02d5350ed287e9316f824ac685f067dda96f05b24a99911a4dec",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:31.697Z",
+      "reviewedAt": "2026-10-27T08:14:06.554Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/rtl__light__tablet": {
+      "sha256": "81031ca1db5596ba1ef8c98c69514679a85169623c99ebc0f84c038d7123b385",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:33.585Z",
+      "reviewedAt": "2026-10-27T08:14:06.554Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/rtl__light__desktop": {
+      "sha256": "8e9f5c2d5ed857a1fe606bf1057ee69c1a6ad2d7c235a6b856a4468af6b09076",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:35.458Z",
+      "reviewedAt": "2026-10-27T08:14:06.555Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/theme-dark__light__mobile": {
+      "sha256": "ac18371f27a471093135e41cd1cc42a2c5542db65034e7d11d7f84a43e9e842c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:37.489Z",
+      "reviewedAt": "2026-10-27T08:14:06.555Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/theme-dark__light__tablet": {
+      "sha256": "58135f7224fb6363f25330bb5b9be6550100ad9ef37f22e31ca0841af54390a1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:39.537Z",
+      "reviewedAt": "2026-10-27T08:14:06.556Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/theme-dark__light__desktop": {
+      "sha256": "2c8b8cfb51adcde820f3b7f9ba84fc63dcd6a5e453ff5a7c3031653073a72813",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:41.599Z",
+      "reviewedAt": "2026-10-27T08:14:06.556Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/theme-compact__light__mobile": {
+      "sha256": "e61f3e8e8e56f29c4c25374f5b0c4652e2814fe4f22cdb81e78a5bd4e9f6e24b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:43.646Z",
+      "reviewedAt": "2026-10-27T08:14:06.556Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/theme-compact__light__tablet": {
+      "sha256": "6d091a376684876ce6cbea1ec79cdc6ab78f52a6e6f107b37c1d42e6a731e7da",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:45.686Z",
+      "reviewedAt": "2026-10-27T08:14:06.557Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/theme-compact__light__desktop": {
+      "sha256": "a6e600244048fb43da8c30156bfc09059d41b4babfdfcbdfb1b63d473ff333b3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:48.180Z",
+      "reviewedAt": "2026-10-27T08:14:06.557Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/theme-dark-compact__light__mobile": {
+      "sha256": "3e5e0195e599b79f4e0f4e6ff50cc0f3f8aded58269b82dd2eb0fe493896e564",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:50.575Z",
+      "reviewedAt": "2026-10-27T08:14:06.558Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/theme-dark-compact__light__tablet": {
+      "sha256": "de89eb4fdaaf7937309805f659b47de7514e1600e0d0c4a30851fe656a406cae",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:52.913Z",
+      "reviewedAt": "2026-10-27T08:14:06.558Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/theme-dark-compact__light__desktop": {
+      "sha256": "42234cf3384418212de70368b6d049eb88648b1b180318b5873655f84e957cf8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:55.235Z",
+      "reviewedAt": "2026-10-27T08:14:06.559Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/native-focus__light__mobile": {
+      "sha256": "253f462496623b5ad7ccd61b91ba8e835ea40174bed61c63edaaf929d48e8e66",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:57.553Z",
+      "reviewedAt": "2026-10-27T08:14:06.559Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/native-focus__light__tablet": {
+      "sha256": "8703306c7942836840272c6f57c77ee34effddfd93439ebf36e27f141028f368",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:09:59.844Z",
+      "reviewedAt": "2026-10-27T08:14:06.560Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+    },
+    "avatar/native-focus__light__desktop": {
+      "sha256": "64c3063800e1526c38b8da98f95f04882cb7d398761bdb695c6324e5ae21e515",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "dirty": false,
+      "capturedAt": "2026-10-27T08:10:02.180Z",
+      "reviewedAt": "2026-10-27T08:14:06.561Z",
+      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
     }
   }
 }

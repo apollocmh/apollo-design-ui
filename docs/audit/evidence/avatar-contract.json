@@ -3516,7 +3516,16 @@
     "sourceSfc": "vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.avatar-contracts.json: exit 0",
     "publishedSfc": "vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.avatar-published.json: exit 0, root/deep/static/ref positive and negative types and all ten Demos",
     "build": "UI declarations and 69 CSS succeeded; full topological strict L7: 151 checks, FAIL 0, PENDING 0, n/a 67",
-    "strict": "pnpm exec vue-tsc --noEmit: exit 0"
+    "strict": "pnpm exec vue-tsc --noEmit: exit 0",
+    "finalVisual": {
+      "evidence": "docs/audit/evidence/avatar-visual-browser.json",
+      "avatarReviewed": 48,
+      "avatarRawExact": 48,
+      "avatarAndListComparisonPassed": 105,
+      "priorApprovedUnchanged": 405,
+      "approved": 453,
+      "matrix": 1380
+    }
   },
   "implementationSourceHashes": {
     "packages/ui/src/avatar/Avatar.vue": "cdb50ef720452c359468287f5ebb8ec839e63d58b88939eced14b27b1d3e6f3e",
@@ -3558,10 +3567,9 @@
     "No Avatar business v-model or new instance method is required."
   ],
   "pending": [
-    "Final related consumers/shared runtime run",
-    "Root strict final result and global format/content/Registry checks",
-    "Actual Docs content/types/test/build/browser and authorized publication",
-    "Clean commit Apollo visual candidates, individual review, acceptance and exact comparison"
+    "Frozen-source related four-layer runtime retry",
+    "Final Registry and formatting after acceptance state update",
+    "Authorized Docs publication and live browser receipt"
   ],
   "boundaries": [
     "Custom image VNodes/slots own their native image error handling; Avatar handles its own string src image.",
@@ -4812,6 +4820,1489 @@
         "command": "pnpm --filter @apollo-design/portal build && pnpm --filter @apollo-design/overlay build && pnpm --filter @apollo-design/ui build",
         "exit": 0,
         "cssFiles": 69
+      },
+      "publicTypes": {
+        "command": "pnpm exec vitest run --project types --maxWorkers=1 packages/ui/src/avatar packages/portal/src packages/overlay/src",
+        "files": 6,
+        "passed": 72,
+        "typeErrors": 0,
+        "exit": 0
+      },
+      "sourceSfc": {
+        "command": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.avatar-contracts.json",
+        "exit": 0
+      },
+      "publishedSfc": {
+        "command": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/tsconfig.avatar-published.json",
+        "exit": 0
+      },
+      "l7": {
+        "command": "node tests/build/run.mjs --package <portal|overlay|ui> --strict --no-build (after explicit ordered rebuild)",
+        "portal": {
+          "checks": 11,
+          "failed": 0,
+          "pending": 0,
+          "notApplicable": 5
+        },
+        "overlay": {
+          "checks": 11,
+          "failed": 0,
+          "pending": 0,
+          "notApplicable": 5
+        },
+        "ui": {
+          "checks": 11,
+          "failed": 0,
+          "pending": 0,
+          "notApplicable": 0
+        },
+        "initialUiFailure": {
+          "check": "B6",
+          "entry": "image",
+          "actualKb": 78.9,
+          "oldBudgetKb": 78,
+          "otherEntriesPassed": 72
+        },
+        "userApprovedImageBudgetKb": 80,
+        "budgetReason": "User explicitly accepts small functional cost rather than repeated byte optimisation; only Image budget changes; historical measuredKb and other gates remain."
+      },
+      "portalOwnerBrowser": {
+        "browser": "150.0.7871.125",
+        "result": "passed",
+        "checks": [
+          "owner-lock-and-native-wheel",
+          "stable-container-and-node",
+          "open-and-closed-shadow",
+          "native-container-and-source-adoption",
+          "independent-window-stacks",
+          "snapshot-top-flags",
+          "native-cancellation",
+          "IME-window-isolation",
+          "live-callback",
+          "reopen-and-unmount"
+        ],
+        "issues": []
+      },
+      "imageInteractionsBrowser": {
+        "browser": "150.0.7871.125",
+        "results": [
+          {
+            "target": "image",
+            "scenario": "rich",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "image",
+            "scenario": "rich-no-origin",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "image",
+            "scenario": "cover",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "image",
+            "scenario": "progress",
+            "failures": []
+          },
+          {
+            "target": "image",
+            "scenario": "frame",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "image",
+            "scenario": "shadow-open",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "image",
+            "scenario": "shadow-closed",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "Chrome native AX roles/names and real keyboard; axe cannot resolve closed roots"
+          },
+          {
+            "target": "image",
+            "scenario": "shadow-source",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "Chrome native AX roles/names and real keyboard; axe cannot resolve closed roots"
+          },
+          {
+            "target": "image",
+            "scenario": "inline",
+            "failures": [],
+            "entry": "internal Preview inline (two layouts)",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "image",
+            "scenario": "motion",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "group",
+            "scenario": "rich",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "group",
+            "scenario": "rich-no-origin",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "group",
+            "scenario": "cover",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "group",
+            "scenario": "progress",
+            "failures": []
+          },
+          {
+            "target": "group",
+            "scenario": "frame",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "group",
+            "scenario": "shadow-open",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "group",
+            "scenario": "shadow-closed",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "Chrome native AX roles/names and real keyboard; axe cannot resolve closed roots"
+          },
+          {
+            "target": "group",
+            "scenario": "shadow-source",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "Chrome native AX roles/names and real keyboard; axe cannot resolve closed roots"
+          },
+          {
+            "target": "group",
+            "scenario": "inline",
+            "failures": [],
+            "entry": "internal Preview inline (two layouts)",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "group",
+            "scenario": "motion",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "group",
+            "scenario": "remove-trigger",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "group",
+            "scenario": "remove-trigger-rich",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "group",
+            "scenario": "remove-trigger-nested",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "group",
+            "scenario": "remove-trigger-teleport",
+            "failures": [],
+            "entry": "public Image/PreviewGroup through declared container types",
+            "accessibility": "full axe and real interaction"
+          },
+          {
+            "target": "public-demo",
+            "scenario": "rich-preview-and-cover",
+            "failures": []
+          },
+          {
+            "target": "public-demo",
+            "scenario": "group-opener-removal-and-reset",
+            "failures": []
+          }
+        ],
+        "issues": []
+      },
+      "imageFocusBrowser": {
+        "command": "node tests/browser/image-preview-focus.mjs",
+        "exit": 0,
+        "scenarios": [
+          "native Enter,Escape/mouse restoration,Tab/ShiftTab,external focus lock,controlled refusal,lazy defaultOpen,whole unmount,accessible names",
+          "stacked preview parent teardown",
+          "parent-first unmount preserving surviving focus"
+        ]
+      },
+      "finalSsrHydration": {
+        "browser": "150.0.7871.125",
+        "checks": [
+          "Node SSR: visible text",
+          "Node SSR: decorative image",
+          "Node SSR: named image",
+          "Node SSR: complete image",
+          "Node SSR: complete icon",
+          "Node SSR: numeric inherited size",
+          "Node SSR: responsive map",
+          "Node SSR: overflow native button",
+          "hydration preserves four roots, pretyped editor, focus/selection and actual public refs",
+          "current theme/config/direction/prefix stage 1 preserves identity and adjacent isolation",
+          "current theme/config/direction/prefix stage 2 preserves identity and adjacent isolation",
+          "current theme/config/direction/prefix stage 0 preserves identity and adjacent isolation",
+          "keyed member reorder preserves actual editor, draft and focus",
+          "native Space/Enter/Escape and destroyOnHidden:false preserve popup business state",
+          "controlled overflow honors refused and accepted updates exactly once",
+          "actual hydrated document axe",
+          "three full unmount/remount cycles clear refs and popup ownership"
+        ],
+        "errors": []
+      },
+      "finalDemos": {
+        "browser": "150.0.7871.125",
+        "results": [
+          {
+            "demo": "basic",
+            "theme": "default",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "basic",
+            "theme": "dark",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "basic",
+            "theme": "compact",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "basic",
+            "theme": "both",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "type",
+            "theme": "default",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "type",
+            "theme": "dark",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "type",
+            "theme": "compact",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "type",
+            "theme": "both",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "dynamic",
+            "theme": "default",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "dynamic",
+            "theme": "dark",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "dynamic",
+            "theme": "compact",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "dynamic",
+            "theme": "both",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "badge",
+            "theme": "default",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "badge",
+            "theme": "dark",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "badge",
+            "theme": "compact",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "badge",
+            "theme": "both",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "group",
+            "theme": "default",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "group",
+            "theme": "dark",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "group",
+            "theme": "compact",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "group",
+            "theme": "both",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "max-count",
+            "theme": "default",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "max-count",
+            "theme": "dark",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "max-count",
+            "theme": "compact",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "max-count",
+            "theme": "both",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "fallback",
+            "theme": "default",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "fallback",
+            "theme": "dark",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "fallback",
+            "theme": "compact",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "fallback",
+            "theme": "both",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "toggle-debug",
+            "theme": "default",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "toggle-debug",
+            "theme": "dark",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "toggle-debug",
+            "theme": "compact",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "toggle-debug",
+            "theme": "both",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "responsive",
+            "theme": "default",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "responsive",
+            "theme": "dark",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "responsive",
+            "theme": "compact",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "responsive",
+            "theme": "both",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "component-token",
+            "theme": "default",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "component-token",
+            "theme": "dark",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "component-token",
+            "theme": "compact",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "demo": "component-token",
+            "theme": "both",
+            "passed": true,
+            "violations": []
+          },
+          {
+            "name": "actual dynamic name and gap refit",
+            "passed": true
+          },
+          {
+            "name": "actual native v-for count, switch and InputNumber",
+            "passed": true
+          },
+          {
+            "name": "actual invalid image data falls back without network requests",
+            "passed": true
+          },
+          {
+            "name": "hidden mount, show, size changes and outer CSS scale",
+            "passed": true
+          },
+          {
+            "name": "actual responsive Demo at three viewports",
+            "passed": true
+          },
+          {
+            "name": "actual Token toggle updates roots and open Teleport spacing",
+            "passed": true
+          }
+        ],
+        "errors": []
+      },
+      "finalConsumers": {
+        "browser": "150.0.7871.125",
+        "results": [
+          {
+            "demo": "ListExtra",
+            "theme": "default",
+            "count": 3,
+            "colours": [
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              }
+            ],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "ListExtra",
+            "theme": "dark",
+            "count": 3,
+            "colours": [
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              }
+            ],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "ListExtra",
+            "theme": "compact",
+            "count": 3,
+            "colours": [
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              }
+            ],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "ListExtra",
+            "theme": "both",
+            "count": 3,
+            "colours": [
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              }
+            ],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "ListTokens",
+            "theme": "default",
+            "count": 3,
+            "colours": [
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              }
+            ],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "ListTokens",
+            "theme": "dark",
+            "count": 3,
+            "colours": [
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              }
+            ],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "ListTokens",
+            "theme": "compact",
+            "count": 3,
+            "colours": [
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              }
+            ],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "ListTokens",
+            "theme": "both",
+            "count": 3,
+            "colours": [
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              }
+            ],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "ListyRich",
+            "theme": "default",
+            "count": 4,
+            "colours": [
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              }
+            ],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "ListyRich",
+            "theme": "dark",
+            "count": 4,
+            "colours": [
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              }
+            ],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "ListyRich",
+            "theme": "compact",
+            "count": 4,
+            "colours": [
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              }
+            ],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "ListyRich",
+            "theme": "both",
+            "count": 4,
+            "colours": [
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              },
+              {
+                "ratio": 5.116844937908165,
+                "foreground": "rgb(0, 0, 0)",
+                "background": "rgb(22, 119, 255)",
+                "foregroundRGB": [
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundRGB": [
+                  22,
+                  119,
+                  255
+                ]
+              }
+            ],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "UploadAvatar",
+            "theme": "default",
+            "count": 1,
+            "colours": [],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "UploadAvatar",
+            "theme": "dark",
+            "count": 1,
+            "colours": [],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "UploadAvatar",
+            "theme": "compact",
+            "count": 1,
+            "colours": [],
+            "violations": [],
+            "passed": true
+          },
+          {
+            "demo": "UploadAvatar",
+            "theme": "both",
+            "count": 1,
+            "colours": [],
+            "violations": [],
+            "passed": true
+          }
+        ],
+        "errors": []
+      },
+      "docs": {
+        "commands": [
+          "pnpm --filter @apollo-design/docs content:build",
+          "pnpm --filter @apollo-design/docs content:check",
+          "pnpm --filter @apollo-design/docs typecheck",
+          "pnpm --filter @apollo-design/docs test",
+          "pnpm --filter @apollo-design/docs build",
+          "DOCS_URL=http://127.0.0.1:4478/apollo-design-ui node tests/browser/avatar-docs.mjs"
+        ],
+        "exit": 0,
+        "testFiles": 15,
+        "tests": 161,
+        "components": 72,
+        "demos": 1006,
+        "ssgRoutes": 85,
+        "browser": {
+          "base": "http://127.0.0.1:4478/apollo-design-ui",
+          "browser": "150.0.7871.125",
+          "results": [
+            {
+              "demo": "basic",
+              "theme": "light",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "basic",
+              "theme": "dark",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "type",
+              "theme": "light",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "type",
+              "theme": "dark",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "dynamic",
+              "theme": "light",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "dynamic",
+              "theme": "dark",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "badge",
+              "theme": "light",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "badge",
+              "theme": "dark",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "group",
+              "theme": "light",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "group",
+              "theme": "dark",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "max-count",
+              "theme": "light",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "max-count",
+              "theme": "dark",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "fallback",
+              "theme": "light",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "fallback",
+              "theme": "dark",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "toggle-debug",
+              "theme": "light",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "toggle-debug",
+              "theme": "dark",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "responsive",
+              "theme": "light",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "responsive",
+              "theme": "dark",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "component-token",
+              "theme": "light",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "demo": "component-token",
+              "theme": "dark",
+              "httpStatus": 200,
+              "axe": [],
+              "passed": true
+            },
+            {
+              "name": "published dynamic name and gap controls",
+              "passed": true
+            },
+            {
+              "name": "published native child count and actual InputNumber/Switch",
+              "passed": true
+            },
+            {
+              "name": "published current twelve Token configuration and native overflow",
+              "passed": true
+            },
+            {
+              "name": "published actual image failure fallback",
+              "passed": true
+            },
+            {
+              "name": "published hidden mount and show",
+              "passed": true
+            },
+            {
+              "name": "published responsive size in three actual viewports",
+              "passed": true
+            },
+            {
+              "name": "physical component document and ten lazy cards",
+              "httpStatus": 200,
+              "passed": true
+            }
+          ],
+          "fallbackDocuments": [],
+          "errors": []
+        }
       }
     },
     "productionSourceHashes": {
@@ -4824,9 +6315,22 @@
       "packages/ui/src/popover/Popover.ts": "f63304e7ebdf328ce4e48496910b23a0c4bd2b483b7e0ab0550917773dd3f72a"
     },
     "pending": [
-      "Frozen-source affected runtime batch",
-      "Fresh public type/build-gate checks",
-      "Final Docs, SSR and pixel checks"
+      "Frozen-source affected runtime retry"
     ]
-  }
+  },
+  "productionCommits": {
+    "avatar": "9af2a24f",
+    "sharedPopup": "ef832304",
+    "visualHarness": "4e2d9d04"
+  },
+  "verificationAttempts": [
+    {
+      "command": "Affected four-layer batch, maxWorkers=1",
+      "result": "invalidated-by-agent-diagnostic",
+      "exit": 1,
+      "assertionResult": "No final test report; not counted as pass",
+      "reason": "Progress inspection succeeded but diagnostic cleanup used dynamic import in inspector evaluation without VM callback, producing ERR_VM_DYNAMIC_IMPORT_CALLBACK_MISSING. Product source unchanged. Retrying the complete same batch with maxWorkers=2 and default+JSON reporters, without diagnostic injection.",
+      "logSha256": "4d91779be5423d7fefc39d2025fe1c2afe7ce0d55f5dfacf3889879da0180bd4"
+    }
+  ]
 }
