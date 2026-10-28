@@ -6,6 +6,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
+import { prepareAlertVisual } from './alert-state.mjs';
 import { prepareAvatarVisual } from './avatar-state.mjs';
 import { prepareBadgeVisual } from './badge-state.mjs';
 import {
@@ -20,8 +21,10 @@ import { prepareBreadcrumbVisual } from './breadcrumb-state.mjs';
 import { prepareButtonVisual } from './button-state.mjs';
 import { prepareDescriptionsVisual } from './descriptions-state.mjs';
 import { prepareEmptyVisual } from './empty-state.mjs';
+import { prepareFlexVisual } from './flex-state.mjs';
 import { prepareGridVisual } from './grid-state.mjs';
 import { prepareImageVisual } from './image-state.mjs';
+import { prepareLayoutVisual } from './layout-state.mjs';
 import { prepareListVisual } from './list-state.mjs';
 import { buildCases, COMPONENTS } from './matrix.mjs';
 import { prepareQRCodeVisual } from './qrcode-state.mjs';
@@ -35,6 +38,9 @@ import { prepareTimelineVisual } from './timeline-state.mjs';
 import { prepareTypographyVisual } from './typography-state.mjs';
 
 const visualPreparers = {
+  layout: prepareLayoutVisual,
+  flex: prepareFlexVisual,
+  alert: prepareAlertVisual,
   avatar: prepareAvatarVisual,
   badge: prepareBadgeVisual,
   breadcrumb: prepareBreadcrumbVisual,
@@ -254,6 +260,9 @@ async function main() {
               'timeline',
               'grid',
               'space',
+              'flex',
+              'alert',
+              'layout',
             ].includes(item.component) &&
               item.variant === 'native-focus'),
         });

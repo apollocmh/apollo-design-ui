@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T19:28:07.552Z",
+  "generatedAt": "2026-10-28T21:44:08.189Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 89,
-      "ready": 2,
+      "done": 86,
+      "ready": 5,
       "blocked": 1
     },
     "byKind": {
@@ -36,12 +36,15 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 2,
+    "readyCount": 5,
     "cannotFinishCount": 0,
-    "currentBatchSize": 2,
+    "currentBatchSize": 5,
     "currentBatchIds": [
+      "COMP:alert",
       "X:docs-site",
-      "COMP:space"
+      "COMP:space",
+      "COMP:flex",
+      "COMP:layout"
     ],
     "hardBlockingDecisionCount": 0,
     "parallelismNote": "currentBatchSize 是「同一时刻可开工数」的下界估计（贪心）。真实并行度还取决于执行者数量。"
@@ -306,8 +309,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 6,
-      "doneCount": 5,
-      "readyCount": 1,
+      "doneCount": 3,
+      "readyCount": 3,
       "itemIds": [
         "COMP:divider",
         "COMP:flex",
@@ -416,8 +419,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 10,
-      "doneCount": 10,
-      "readyCount": 0,
+      "doneCount": 9,
+      "readyCount": 1,
       "itemIds": [
         "COMP:alert",
         "COMP:drawer",
@@ -609,11 +612,11 @@
         "流水线被证明可重复（不再需要为每个组件重新设计流程）"
       ],
       "itemCount": 19,
-      "doneCount": 19,
-      "readyCount": 0,
+      "doneCount": 18,
+      "readyCount": 1,
       "blockedCount": 0,
       "waitingCount": 0,
-      "complete": true,
+      "complete": false,
       "itemIds": [
         "COMP:affix",
         "COMP:alert",
@@ -684,8 +687,8 @@
         "25 个组件 11 维度 completed"
       ],
       "itemCount": 26,
-      "doneCount": 24,
-      "readyCount": 2,
+      "doneCount": 22,
+      "readyCount": 4,
       "blockedCount": 0,
       "waitingCount": 0,
       "complete": false,
@@ -1450,16 +1453,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 1,
-      "why": "",
+      "why": "2026-10-29本轮状态：13ba8d0d源码120回归、60浏览器、6个Demo严格消费；新来源统一整改中。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。",
       "doneWhen": [],
       "group": "布局",
       "priority": "P0",
       "dagLevel": 2,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:grid",
@@ -1546,16 +1551,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "",
+      "why": "2026-10-29本轮状态：e1ff1b47完整源码清单198回归、35浏览器、11Demo主题/交互47项、51视觉准备、20类型及独立严格消费通过。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。",
       "doneWhen": [],
       "group": "布局",
       "priority": "P1",
       "dagLevel": 2,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:tag",
@@ -1619,16 +1626,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。",
+      "why": "2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。\n2026-10-29本轮状态：29cba1e0完整源码清单142回归、29浏览器、15Demo共180场景、60视觉准备、18类型及公开严格消费通过。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。",
       "doneWhen": [],
       "group": "反馈",
       "priority": "P1",
       "dagLevel": 0,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:skeleton",
@@ -2600,6 +2609,7 @@
       "workstream": "WS-7",
       "wave": "W7",
       "dependsOn": [
+        "COMP:flex",
         "COMP:space",
         "FND:icons",
         "FND:motion",
@@ -3373,7 +3383,10 @@
     }
   ],
   "currentBatch": [
+    "COMP:alert",
     "X:docs-site",
-    "COMP:space"
+    "COMP:space",
+    "COMP:flex",
+    "COMP:layout"
   ]
 }

@@ -2,11 +2,15 @@
 import assert from 'node:assert/strict';
 import { writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { buildCases } from '../visual/matrix.mjs';
 import { launchBrowser } from '../visual/stabilize.mjs';
 
 const base = (process.env.DOCS_URL ?? 'http://127.0.0.1:4480/apollo-design-ui').replace(/\/$/, '');
 const expectedStatus = Number(process.env.DOCS_DEMO_STATUS ?? 200);
 const expectedAcceptedUnits = Number(process.env.DOCS_ACCEPTED_UNITS ?? 17);
+const expectedPlannedVisuals = Number(
+  process.env.DOCS_PLANNED_VISUALS ?? buildCases({ apollo: true }).length,
+);
 const units = [
   { name: 'descriptions', count: 13, demos: ['basic', 'custom-label'] },
   { name: 'breadcrumb', count: 11, demos: ['native', 'overlay'] },
@@ -154,7 +158,7 @@ try {
           .innerText()
       ).trim();
       assert.match(delivered, new RegExp(`^${expectedAcceptedUnits}(?:个|\\s)`));
-      await main.getByText('1602', { exact: false }).first().waitFor();
+      await main.getByText(String(expectedPlannedVisuals), { exact: false }).first().waitFor();
       assert.ok((await main.textContent()).includes('69'));
       localeChecks.push({ locale, heading: titles[locale], delivered });
     });

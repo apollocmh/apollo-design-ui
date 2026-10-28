@@ -132,6 +132,22 @@ export const COMPONENTS = {
     ],
   },
   flex: {
+    apolloVariants: [
+      'basic',
+      'vertical',
+      'gap',
+      'wrap',
+      'justify-align',
+      'default-and-stretch',
+      'complete-content',
+      'empty-host',
+      'current-provider',
+      'custom-component',
+      'native-focus',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+    ],
     // 5 个 variant × 3 个 viewport = 15 张
     variants: [
       'basic', // 水平默认 + vertical 切换（gap=medium）
@@ -302,6 +318,28 @@ export const COMPONENTS = {
     ],
   },
   alert: {
+    apolloVariants: [
+      'basic',
+      'types',
+      'description',
+      'icons',
+      'custom-icon',
+      'actions',
+      'banner',
+      'filled',
+      'semantic',
+      'empty-slots',
+      'close-content',
+      'provider-current',
+      'tokens',
+      'rtl',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+      'native-focus',
+      'error-boundary',
+      'closed',
+    ],
     // 6 个 variant × 3 个 viewport = 18 张
     variants: [
       'basic', // 四 type（outlined，无图标）
@@ -323,6 +361,27 @@ export const COMPONENTS = {
     ],
   },
   layout: {
+    apolloVariants: [
+      'basic',
+      'side',
+      'side-light',
+      'collapsible',
+      'collapsed',
+      'zero-width',
+      'standalone',
+      'responsive',
+      'rtl',
+      'current-provider',
+      'conditional-trigger',
+      'keyboard-trigger',
+      'native-focus',
+      'native-styles',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+    ],
+    // Native cases capture the complete toggle; the historical reference keeps its old allowance.
+    apolloDuplicateAllow: [],
     // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
     // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
     duplicateAllow: [

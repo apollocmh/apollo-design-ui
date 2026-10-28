@@ -32,8 +32,8 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 70,
-      "testing": 2
+      "completed": 67,
+      "testing": 5
     },
     "byPriority": {
       "P0": 8,
@@ -52,8 +52,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 70,
-    "remainingCount": 2
+    "completedCount": 67,
+    "remainingCount": 5
   },
   "milestones": [],
   "components": [
@@ -415,7 +415,7 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "S",
-      "status": "completed",
+      "status": "testing",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -434,21 +434,21 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
+      "apiStatus": "in-progress",
+      "tokenStatus": "n/a",
+      "styleStatus": "in-progress",
       "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
+      "interactionStatus": "in-progress",
+      "typeStatus": "in-progress",
+      "a11yStatus": "in-progress",
+      "visualStatus": "in-progress",
+      "docsStatus": "in-progress",
+      "notes": "2026-10-29本轮状态：13ba8d0d源码120回归、60浏览器、6个Demo严格消费；新来源统一整改中。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。",
       "layerNotes": {
         "interaction": "Flex 是纯布局容器，无事件/受控/焦点/禁用；L2 唯一适用类是「props 更新 → DOM 更新」，由 L1 的响应式用例（setProps vertical 切换）承担。其余五类 n/a。",
         "type": "8 例（6 正例 + 3 负例，负例 @ts-expect-error 包在永不调用的闭包里）。gap 类型刻意不用 LiteralUnion —— (string & {}) 会让 SFC 编译器把运行时 prop 推成 String|Object，挂 Number 触发开发期告警。",
         "a11y": "Flex 无 ARIA 输出是上游语义（布局容器不承载可访问性信息）。axe 扫 6 个 demo 0 violation + 显式断言「无 role/aria-*」+ 键盘路径架构上不适用。",
-        "token": "0 个 Component Token（与 antd prepareComponentToken = () => ({}) 逐字一致）。gap 三档是别名派生（flexGapSM=paddingXS/flexGap=padding/flexGapLG=paddingLG），以 var(--apollo-padding-*) 消费，B7 校验。",
+        "token": "无ComponentToken；gap使用当前Alias。源码120回归及独立消费端通过，sourceActive共享来源边界与发布验收继续。",
         "compat": "39 条机械基线（tests/compat/baseline/flex.mjs，renderToStaticMarkup 产出）。39/39 过，3 条豁免：D6（默认前缀）、flex:number 与 gap:zero（PLATFORM：SSR 字符串 vs 真实 DOM CSSOM 的序列化规范化，语义等价）。keepStyle: true 钉死 ctx style → prop style 的覆盖顺序。"
       },
       "referenceEvidence": {
@@ -682,7 +682,7 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "M",
-      "status": "completed",
+      "status": "testing",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -702,16 +702,16 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
+      "apiStatus": "in-progress",
+      "tokenStatus": "in-progress",
+      "styleStatus": "in-progress",
       "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
+      "interactionStatus": "in-progress",
+      "typeStatus": "in-progress",
+      "a11yStatus": "in-progress",
+      "visualStatus": "in-progress",
+      "docsStatus": "in-progress",
+      "notes": "2026-10-29本轮状态：e1ff1b47完整源码清单198回归、35浏览器、11Demo主题/交互47项、51视觉准备、20类型及独立严格消费通过。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。",
       "layerNotes": {
         "interaction": "L2：trigger click 折叠（受控/非受控）、零宽触发器 click、多 Sider 逐个移除后 -has-sider 消失、响应式 onBreakpoint 挂载即触发一次。",
         "type": "18 例（正例 + 4 负例）。SiderProps 联合、语义槽 {root,body} 对象/函数两态、CollapseType 二元、LayoutProps 无语义槽。",
@@ -900,7 +900,7 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "M",
-      "status": "completed",
+      "status": "testing",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -919,16 +919,16 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
+      "apiStatus": "in-progress",
+      "tokenStatus": "in-progress",
+      "styleStatus": "in-progress",
       "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。",
+      "interactionStatus": "in-progress",
+      "typeStatus": "in-progress",
+      "a11yStatus": "in-progress",
+      "visualStatus": "in-progress",
+      "docsStatus": "in-progress",
+      "notes": "2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。\n2026-10-29本轮状态：29cba1e0完整源码清单142回归、29浏览器、15Demo共180场景、60视觉准备、18类型及公开严格消费通过。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。",
       "layerNotes": {
         "interaction": "L2：关闭按钮 click（onClose / closable.onClose 优先级）、afterClose 经 transitionend 驱动 leave 结束、根元素 mouseenter/leave/click、错误边界切换。",
         "type": "9 例（正例 + 4 负例）。AlertType/AlertVariant 联合、语义七槽、AlertClosable 三字段、Ref nativeElement 可空。",
@@ -1751,7 +1751,7 @@
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
-        "tokenCount": 0,
+        "tokenCount": 19,
         "tokenGroup": "Input"
       },
       "dependencies": {
@@ -3584,6 +3584,7 @@
         ]
       },
       "blockedBy": [
+        "flex",
         "space"
       ],
       "blockers": [],

@@ -687,3 +687,11 @@ Descriptions5ab9b3c4、Breadcrumb40ec3962、Timeline3ce8d1d2、Grid04be6282与Sp
 Descriptions、Breadcrumb、Timeline、Grid的完整清单已核对并统一验收。52个发布Demo模板、222张正式审阅批准及批准后清洁重渲染raw精确、既存537回归、69样式产物与真实CSS消费者、根严格/UI L7及Docs161+32分别通过，原1692份PNG保持。完整交付计数由13升17/72，759/1602视觉批准。Addon下划线2f47f423已单独源/发布验收，Space仍待Input当前主题/autoSize/覆盖链与最终75图，不提前标全完。[最终范围与证据](audit/evidence/four-unit-final-acceptance.json)。
 
 四单元进展已实际发布：faa80fed / [部署40755814408](https://github.com/apollocmh/apollo-design-ui/actions/runs/40755814408)成功；CI全部包构建、L7 151项零失败/待定（67不适用）、Docs161通过。线上原32条通过且零页面/Vue错误；验收脚本修正每次导航强制中文的问题后，新增可见中英文标题与17单元计数断言，两个实际语言都通过。原断言保留，22个Demo深链404为既有SPA回退。[线上回执](audit/evidence/four-unit-docs-publication.json)。
+
+### 2026-10-29 · Flex / Alert / Layout源码里程碑与共享来源整改
+
+完整盘点后，Flex `13ba8d0d`、Layout家族 `e1ff1b47`、Alert/ErrorBoundary `29cba1e0` 已分别提交。Flex源码120回归/60浏览器；Layout198回归/35浏览器及全部11Demo；Alert142回归/29浏览器及全部15Demo的180组场景通过。新增typed Slots/Emits、当前Provider/native attrs、焦点/生命周期/Token和迁移说明同步；独立严格消费及所属类型均有实际exit 0证据。完整范围分别见三份2026-10-29组件清单，正式发布产物与视觉/Docs仍待统一验收，不能按源码阶段标整单元完成。
+
+共享主题来源已完整补盘844个UI运行文件中的102个主题导入，确认24条Alias writer及关联数据/Portal消费链。`5c527297`补明确来源元数据及最近Provider继承，`134ddbf7`修正数据消费者越过最近ThemeProvider；producer/reader相关100项通过。显式空ThemeProvider仍是默认主题来源，不能等同无来源；无theme的ConfigProvider也不能覆盖CSS-only作用域。消费端按同一根因成组整改中，Input主题/19既有字段/尺寸与autoSize关联链继续；完整Input公开API及Theme基础包其它生命周期能力没有据此关闭。范围见[主题来源清单](audit/2026-10-29-theme-source-presence-audit.md)。
+
+本组原生视觉计划Flex42、Alert60、Layout51共153项，全部51个历史参考场景保持。当前计划1704张、批准仍759张、945待验收，完整交付仍17/72。Registry将三组件改为testing，Input登记原有19字段而非新增能力。当前源码/发布/视觉/线上证据严格分阶段，不把本次局部门禁称为最终同一提交全库门禁。

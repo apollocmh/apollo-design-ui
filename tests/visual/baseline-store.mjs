@@ -63,7 +63,9 @@ export function duplicateProblems(entries, definitions) {
   }
   return [...groups.values()].flatMap(({ component, variants }) => {
     if (variants.length < 2) return [];
-    const allowed = definitions[component]?.duplicateAllow?.some(
+    const definition = definitions[component];
+    const allowances = definition?.apolloDuplicateAllow ?? definition?.duplicateAllow;
+    const allowed = allowances?.some(
       (allowance) =>
         allowance.reason?.trim() &&
         variants.every((variant) => allowance.variants.includes(variant)),

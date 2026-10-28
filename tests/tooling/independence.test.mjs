@@ -13,6 +13,7 @@ import {
   imagePath,
   readManifest,
 } from '../visual/baseline-store.mjs';
+import { buildCases } from '../visual/matrix.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -121,6 +122,36 @@ test('visual duplicates require a scenario explanation, without crossing theme o
     ).length,
     1,
   );
+});
+
+test('Apollo duplicate rules can reject an obsolete reference allowance', () => {
+  const entries = {
+    'layout/side__light__desktop': { environment: 'test', sha256: 'same' },
+    'layout/collapsible__light__desktop': { environment: 'test', sha256: 'same' },
+  };
+  const reference = [{ variants: ['side', 'collapsible'], reason: 'Historical clipped toggle' }];
+  assert.equal(duplicateProblems(entries, { layout: { duplicateAllow: reference } }).length, 0);
+  assert.equal(
+    duplicateProblems(entries, {
+      layout: { duplicateAllow: reference, apolloDuplicateAllow: [] },
+    }).length,
+    1,
+  );
+});
+
+test('audited Flex Alert and Layout states preserve the historical reference matrix', () => {
+  for (const [component, nativeCount, referenceCount] of [
+    ['flex', 42, 15],
+    ['alert', 60, 18],
+    ['layout', 51, 18],
+  ]) {
+    const native = buildCases({ component, apollo: true });
+    assert.equal(native.length, nativeCount);
+    assert.equal(new Set(native.map((item) => item.id)).size, nativeCount);
+    assert.equal(buildCases({ component }).length, referenceCount);
+    assert.equal(native.filter((item) => item.variant === 'native-focus').length, 3);
+    assert.throws(() => buildCases({ component, variants: ['native-focus'] }));
+  }
 });
 
 test('visual CLI accepts package-manager separators and rejects unknown options', () => {

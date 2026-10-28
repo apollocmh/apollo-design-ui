@@ -12,12 +12,23 @@ order: 0
 | 范围 | 当前结果 |
 | --- | --- |
 | 72个组件主单元 | 17个已完整验收；Descriptions / Breadcrumb / Timeline / Grid 本批通过 |
-| 当前并行 | Space关联Input继续；下一组Flex、Alert、Layout先完整盘点 |
-| 其余组件 | 54个尚待按本轮完整标准收口；已有局部修复继续保留 |
+| 当前并行 | Space关联Input、Flex、Alert/ErrorBoundary、Layout家族；按完整清单验收 |
+| 其余组件 | 51个尚待按本轮完整标准收口（含Input完整API）；已有局部修复继续保留 |
 | 13个基础包 | 已有共享链路专项证据；逐包当前复核继续，不能把消费场景通过当作整包完成 |
 | 最终验收 | 所有整改单元结束后，对最终同一提交执行全量门禁 |
 
 [完整72项工作清单、证据与剩余边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md)。组件复杂度不同，上述数量不代表工时百分比。
+
+## 2026-10-29：下一组源码里程碑，发布验收进行中
+
+Flex 的当前根节点、完整内容与对齐契约已提交；Layout 家族的 Vue 折叠模型、原生键盘按钮、零宽焦点、响应式生命周期和 19 个既有 Token 已提交。Alert/ErrorBoundary 的完整源码清单也已提交；Input 关联链正在完成最终复核。主题来源专项已修正提供链和数据读取链：显式空 ThemeProvider 恢复默认主题，无主题来源的 CSS-only 作用域保持生效。
+
+本组新增 Flex 42、Alert 60、Layout 51 个原生视觉场景，保留全部旧参考场景。当前计划 1704 张，已批准仍为 759 张，945 张待验收；源码测试与视觉状态准备不能替代新鲜发布产物、正式审图或线上验收。完整交付仍为 17/72。
+
+- [Flex 当前 API 与示例](/components/flex)
+- [Alert / ErrorBoundary 当前用法](/components/alert)
+- [Layout / Sider 与真实导航](/components/layout)
+- [Input 主题与尺寸示例](/components/input/demo/component-token)
 
 ## 2026-10-29：四个组件已统一验收，Space关联链继续
 
@@ -180,12 +191,23 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 | Scope | Current evidence |
 | --- | --- |
 |72 component units|17 fully accepted; Descriptions, Breadcrumb, Timeline and Grid pass this batch|
-|Parallel work|Space and Input continue; Flex, Alert and Layout enter full inventory next|
-|Other components|54 still await complete current-source acceptance;earlier partial fixes remain valid|
+|Parallel work|Space with Input, Flex, Alert/ErrorBoundary and the Layout family follow complete checklists|
+|Other components|51 await full acceptance, including the complete Input API; earlier partial fixes remain valid|
 |13 foundation packages|Existing shared-chain evidence remains;current per-package review continues|
 |Final gate|Run whole-library gates on the same final commit after all units close|
 
 [All72 units, evidence and remaining boundaries](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md). These counts are not weighted work percentages.
+
+## Next source milestone; published acceptance continues
+
+Flex root/content/alignment contracts and the Layout family's Vue collapse model, native keyboard controls, zero-width focus, responsive lifecycle and 19 existing tokens have been committed. Alert/ErrorBoundary's complete source checklist is also committed; Input's related theme/sizing unit is finishing its verification. The shared theme producer and data reader now honor the nearest explicit source, including an empty ThemeProvider, while preserving scopes that only use CSS variables.
+
+The new native matrix contains 42 Flex, 60 Alert and 51 Layout scenarios. All historical references remain. Of 1704 planned visuals, 759 remain approved and 945 await acceptance. Source tests and state preparation do not establish published, visual or live-site acceptance. Complete delivery remains 17 of 72.
+
+- [Flex API and demos](/components/flex)
+- [Alert and ErrorBoundary](/components/alert)
+- [Layout and Sider](/components/layout)
+- [Input theme and sizing](/components/input/demo/component-token)
 
 ## Four units accepted; the Space and Input chain continues
 
