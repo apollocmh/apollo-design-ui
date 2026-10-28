@@ -1,0 +1,81 @@
+{
+  "sourceCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+  "measurements": [
+    {
+      "id": "flex",
+      "bytes": 23297,
+      "kib": 22.7509765625,
+      "previousBudgetKb": 10,
+      "historicalMeasuredKb": 3.3
+    },
+    {
+      "id": "input",
+      "bytes": 97699,
+      "kib": 95.4091796875,
+      "previousBudgetKb": 92,
+      "historicalMeasuredKb": 55.9
+    },
+    {
+      "id": "layout",
+      "bytes": 33636,
+      "kib": 32.84765625,
+      "previousBudgetKb": 32,
+      "historicalMeasuredKb": 17.4
+    },
+    {
+      "id": "layout-sider",
+      "bytes": 33636,
+      "kib": 32.84765625,
+      "previousBudgetKb": 32,
+      "historicalMeasuredKb": 17.4
+    },
+    {
+      "id": "skeleton",
+      "bytes": 36890,
+      "kib": 36.025390625,
+      "previousBudgetKb": 36,
+      "historicalMeasuredKb": 14.5
+    }
+  ],
+  "budgetChanges": [
+    {
+      "id": "flex",
+      "fromKb": 10,
+      "toKb": 24,
+      "reason": "完整Vue根/Provider/attrs/对齐契约及共享默认主题来源读取；useTheme保留可启用fallback所需的既有Token计算链"
+    },
+    {
+      "id": "input",
+      "fromKb": 92,
+      "toKb": 97,
+      "reason": "当前Alias与19既有Token、Group/OTP尺寸、autoSize祖先排版观察和正确Search原生覆盖"
+    },
+    {
+      "id": "layout",
+      "fromKb": 32,
+      "toKb": 34,
+      "reason": "Layout家族当前主题/19字段、Vue折叠事件、原生键盘/零宽焦点与响应式生命周期"
+    },
+    {
+      "id": "layout-sider",
+      "fromKb": 32,
+      "toKb": 34,
+      "reason": "与Layout相同家族导出图：当前主题/19字段、原生键盘/零宽焦点和响应式生命周期"
+    },
+    {
+      "id": "skeleton",
+      "fromKb": 36,
+      "toKb": 37,
+      "reason": "共享ThemeContext来源识别与默认上下文计算所需成本（本次仅比旧36KiB多26字节）"
+    }
+  ],
+  "unchanged": "All 73 historical measurements, the other 68 budgets, externals and full-import 30% ratio remain unchanged.",
+  "previousStrictGate": {
+    "exitCode": 1,
+    "failures": [
+      "B6: five justified functional-cost budgets exceeded"
+    ],
+    "evidence": "/tmp/apollo-3f68-ui-l7.json"
+  },
+  "nextGate": "Run strict UI L7 against these same frozen artifacts from the final verification commit."
+}

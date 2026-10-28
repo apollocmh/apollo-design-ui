@@ -1,33 +1,44 @@
 {
   "_readme": "B6 —— tree-shaking 体积预算。判据：单独 import 某组件后，Vite/rolldown 产物（minify: esbuild，\nexternal: [vue, dayjs]）的字节数不得超过 budgetKb，且不得超过「全量 import * as all」的 maxRatioOfFull。\n\n⚠️ budgetKb 只能因**技术原因**上调，且必须在 commit message 写明理由。\n   把预算设成「等于全量」等于宣告本门禁永不失败 —— 那是 AGENTS.md H8 明禁的降低验收标准。\n\nmeasuredKb 是确立预算时的实测值（2026-10-07，裁决 ui-tree-shaking = A+B+D 落地后首次实测），\n   仅供回溯参考、不参与判定。budgetKb = ceil(measuredKb * 1.5 + 5)。\n\n单条重定**只改那一条**（其余条目的 measuredKb 保持确立时原值，便于回溯），并可带 `_note`\n   写明技术原因 —— app 已于 2026-10-15 因 #40 接线 HookAPI 而重定，见该条目。\n   整表重定用 `node tests/build/checks/treeshake.mjs --measure-all`。",
-  "external": ["vue", "dayjs"],
+  "external": [
+    "vue",
+    "dayjs"
+  ],
   "maxRatioOfFull": 0.3,
   "entries": [
     {
       "id": "affix",
       "pkg": "@apollo-design/ui",
-      "imports": ["Affix"],
+      "imports": [
+        "Affix"
+      ],
       "budgetKb": 14,
       "measuredKb": 6
     },
     {
       "id": "alert",
       "pkg": "@apollo-design/ui",
-      "imports": ["Alert"],
+      "imports": [
+        "Alert"
+      ],
       "budgetKb": 53,
       "measuredKb": 31.7
     },
     {
       "id": "anchor",
       "pkg": "@apollo-design/ui",
-      "imports": ["Anchor"],
+      "imports": [
+        "Anchor"
+      ],
       "budgetKb": 35,
       "measuredKb": 19.4
     },
     {
       "id": "app",
       "pkg": "@apollo-design/ui",
-      "imports": ["App"],
+      "imports": [
+        "App"
+      ],
       "budgetKb": 194,
       "measuredKb": 125.7,
       "_note": "2026-10-15 重定：App 按契约必须提供 message/modal/notification 的 context（#40 接线 useMessage/useModal/useNotification），三者合计 ~87KB；其中 modal 又必然传导 skeleton（loading 占位）与 button（footer 按钮）—— antd modal/Modal.js:20 同样 import Skeleton from '../skeleton'，逐字同源，非本仓摇树缺陷。125.7KB 仍远低于 maxRatioOfFull 上限（2025.1KB × 30% = 607.5KB），门禁照旧有效：误引入 table/date-picker 级依赖会立刻超 194KB。"
@@ -35,28 +46,36 @@
     {
       "id": "auto-complete",
       "pkg": "@apollo-design/ui",
-      "imports": ["AutoComplete"],
+      "imports": [
+        "AutoComplete"
+      ],
       "budgetKb": 212,
       "measuredKb": 137.3
     },
     {
       "id": "avatar",
       "pkg": "@apollo-design/ui",
-      "imports": ["Avatar"],
+      "imports": [
+        "Avatar"
+      ],
       "budgetKb": 120,
       "measuredKb": 76.1
     },
     {
       "id": "back-top",
       "pkg": "@apollo-design/ui",
-      "imports": ["BackTop"],
+      "imports": [
+        "BackTop"
+      ],
       "budgetKb": 40,
       "measuredKb": 23
     },
     {
       "id": "badge",
       "pkg": "@apollo-design/ui",
-      "imports": ["Badge"],
+      "imports": [
+        "Badge"
+      ],
       "budgetKb": 47,
       "measuredKb": 21.3,
       "_note": "2026-10-28 Badge/Ribbon整组契约整改：完整Vue内容、原生根attrs/ref、当前Provider/Alias/九Token、数字可访问性与reduced-motion。功能首轮按需实测45.4KB，最终合并宿主版本按47KB门禁验收，原37KB不足，按用户接受实际功能成本的裁决仅本项调整到47KB；保留历史measuredKb及其他预算/全量30%限制，不引入React或CSS-in-JS运行时。"
@@ -64,21 +83,27 @@
     {
       "id": "border-beam",
       "pkg": "@apollo-design/ui",
-      "imports": ["BorderBeam"],
+      "imports": [
+        "BorderBeam"
+      ],
       "budgetKb": 11,
       "measuredKb": 3.6
     },
     {
       "id": "breadcrumb",
       "pkg": "@apollo-design/ui",
-      "imports": ["Breadcrumb"],
+      "imports": [
+        "Breadcrumb"
+      ],
       "budgetKb": 130,
       "measuredKb": 83.2
     },
     {
       "id": "button",
       "pkg": "@apollo-design/ui",
-      "imports": ["Button"],
+      "imports": [
+        "Button"
+      ],
       "budgetKb": 41,
       "measuredKb": 20.9,
       "_note": "2026-10-27 Button完整契约技术重定：19 Props/完整Vue槽、SSR安全加载、当前SourceTheme/58既有组件Token及按背景选择前景现已实际接通；按需实测40.0KB，原37KB不足。仅本条调整到41KB，保留历史measuredKb和全量30%约束；不引入React或CSS-in-JS运行时。"
@@ -86,133 +111,173 @@
     {
       "id": "calendar",
       "pkg": "@apollo-design/ui",
-      "imports": ["Calendar"],
+      "imports": [
+        "Calendar"
+      ],
       "budgetKb": 294,
       "measuredKb": 192.6
     },
     {
       "id": "card",
       "pkg": "@apollo-design/ui",
-      "imports": ["Card"],
+      "imports": [
+        "Card"
+      ],
       "budgetKb": 178,
       "measuredKb": 115.3
     },
     {
       "id": "carousel",
       "pkg": "@apollo-design/ui",
-      "imports": ["Carousel"],
+      "imports": [
+        "Carousel"
+      ],
       "budgetKb": 45,
       "measuredKb": 26.7
     },
     {
       "id": "cascader",
       "pkg": "@apollo-design/ui",
-      "imports": ["Cascader"],
+      "imports": [
+        "Cascader"
+      ],
       "budgetKb": 172,
       "measuredKb": 110.8
     },
     {
       "id": "checkbox",
       "pkg": "@apollo-design/ui",
-      "imports": ["Checkbox"],
+      "imports": [
+        "Checkbox"
+      ],
       "budgetKb": 19,
       "measuredKb": 8.8
     },
     {
       "id": "collapse",
       "pkg": "@apollo-design/ui",
-      "imports": ["Collapse"],
+      "imports": [
+        "Collapse"
+      ],
       "budgetKb": 50,
       "measuredKb": 29.8
     },
     {
       "id": "color-picker",
       "pkg": "@apollo-design/ui",
-      "imports": ["ColorPicker"],
+      "imports": [
+        "ColorPicker"
+      ],
       "budgetKb": 424,
       "measuredKb": 278.8
     },
     {
       "id": "config-provider",
       "pkg": "@apollo-design/ui",
-      "imports": ["ConfigProvider"],
+      "imports": [
+        "ConfigProvider"
+      ],
       "budgetKb": 53,
       "measuredKb": 31.5
     },
     {
       "id": "date-picker",
       "pkg": "@apollo-design/ui",
-      "imports": ["DatePicker"],
+      "imports": [
+        "DatePicker"
+      ],
       "budgetKb": 254,
       "measuredKb": 165.8
     },
     {
       "id": "descriptions",
       "pkg": "@apollo-design/ui",
-      "imports": ["Descriptions"],
+      "imports": [
+        "Descriptions"
+      ],
       "budgetKb": 51,
       "measuredKb": 30.1
     },
     {
       "id": "divider",
       "pkg": "@apollo-design/ui",
-      "imports": ["Divider"],
+      "imports": [
+        "Divider"
+      ],
       "budgetKb": 17,
       "measuredKb": 7.5
     },
     {
       "id": "drawer",
       "pkg": "@apollo-design/ui",
-      "imports": ["Drawer"],
+      "imports": [
+        "Drawer"
+      ],
       "budgetKb": 96,
       "measuredKb": 60.4
     },
     {
       "id": "dropdown",
       "pkg": "@apollo-design/ui",
-      "imports": ["Dropdown"],
+      "imports": [
+        "Dropdown"
+      ],
       "budgetKb": 133,
       "measuredKb": 85.1
     },
     {
       "id": "empty",
       "pkg": "@apollo-design/ui",
-      "imports": ["Empty"],
+      "imports": [
+        "Empty"
+      ],
       "budgetKb": 56,
       "measuredKb": 33.6
     },
     {
       "id": "flex",
       "pkg": "@apollo-design/ui",
-      "imports": ["Flex"],
-      "budgetKb": 10,
-      "measuredKb": 3.3
+      "imports": [
+        "Flex"
+      ],
+      "budgetKb": 24,
+      "measuredKb": 3.3,
+      "_note": "2026-10-29：完整Vue根/Provider/attrs/对齐契约及共享默认主题来源读取；useTheme保留可启用fallback所需的既有Token计算链；冻结3f68bd2d实际23297字节/22.751KiB，预算10→24KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。"
     },
     {
       "id": "float-button",
       "pkg": "@apollo-design/ui",
-      "imports": ["FloatButton"],
+      "imports": [
+        "FloatButton"
+      ],
       "budgetKb": 161,
       "measuredKb": 104
     },
     {
       "id": "form",
       "pkg": "@apollo-design/ui",
-      "imports": ["Form"],
+      "imports": [
+        "Form"
+      ],
       "budgetKb": 230,
       "measuredKb": 149.6
     },
     {
       "id": "grid",
       "pkg": "@apollo-design/ui",
-      "imports": ["Row", "Col"],
+      "imports": [
+        "Row",
+        "Col"
+      ],
       "budgetKb": 44,
       "measuredKb": 25.5
     },
     {
       "id": "image",
       "pkg": "@apollo-design/ui",
-      "imports": ["Image"],
+      "imports": [
+        "Image"
+      ],
       "budgetKb": 80,
       "_note": "2026-10-26：新增按Vue注册归属恢复关闭焦点，覆盖打开者删除、嵌套组及Teleport。原77KB预算下功能成本超出217字节，按用户明确要求调为78KB。2026-10-27：Avatar关联Portal/Overlay搬迁、动态销毁与关闭焦点修复后实测78.9KB，沿用用户接受小幅功能成本的裁决，仅本条调为80KB；measuredKb历史基线、其他72条预算和30%全量占比门禁不变。",
       "measuredKb": 47.5
@@ -220,64 +285,84 @@
     {
       "id": "input",
       "pkg": "@apollo-design/ui",
-      "imports": ["Input"],
-      "budgetKb": 92,
+      "imports": [
+        "Input"
+      ],
+      "budgetKb": 97,
       "measuredKb": 55.9,
-      "_note": "2026-10-27 Button完整契约传导：Input.Search真实消费Button，现有SourceTheme/58Token与原生槽/加载生命周期实现使按需实测91.0KB，原89KB不足；仅本条调整到92KB，保留历史measuredKb及全量30%约束。"
+      "_note": "2026-10-27 Button完整契约传导：Input.Search真实消费Button，现有SourceTheme/58Token与原生槽/加载生命周期实现使按需实测91.0KB，原89KB不足；仅本条调整到92KB，保留历史measuredKb及全量30%约束。\n2026-10-29：当前Alias与19既有Token、Group/OTP尺寸、autoSize祖先排版观察和正确Search原生覆盖；冻结3f68bd2d实际97699字节/95.409KiB，预算92→97KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。"
     },
     {
       "id": "input-number",
       "pkg": "@apollo-design/ui",
-      "imports": ["InputNumber"],
+      "imports": [
+        "InputNumber"
+      ],
       "budgetKb": 67,
       "measuredKb": 41
     },
     {
       "id": "layout",
       "pkg": "@apollo-design/ui",
-      "imports": ["Layout"],
-      "budgetKb": 32,
-      "measuredKb": 17.4
+      "imports": [
+        "Layout"
+      ],
+      "budgetKb": 34,
+      "measuredKb": 17.4,
+      "_note": "2026-10-29：Layout家族当前主题/19字段、Vue折叠事件、原生键盘/零宽焦点与响应式生命周期；冻结3f68bd2d实际33636字节/32.848KiB，预算32→34KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。"
     },
     {
       "id": "layout-sider",
       "pkg": "@apollo-design/ui",
-      "imports": ["LayoutSider"],
-      "budgetKb": 32,
-      "measuredKb": 17.4
+      "imports": [
+        "LayoutSider"
+      ],
+      "budgetKb": 34,
+      "measuredKb": 17.4,
+      "_note": "2026-10-29：与Layout相同家族导出图：当前主题/19字段、原生键盘/零宽焦点和响应式生命周期；冻结3f68bd2d实际33636字节/32.848KiB，预算32→34KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。"
     },
     {
       "id": "list",
       "pkg": "@apollo-design/ui",
-      "imports": ["List"],
+      "imports": [
+        "List"
+      ],
       "budgetKb": 256,
       "measuredKb": 167.2
     },
     {
       "id": "listy",
       "pkg": "@apollo-design/ui",
-      "imports": ["Listy"],
+      "imports": [
+        "Listy"
+      ],
       "budgetKb": 62,
       "measuredKb": 37.9
     },
     {
       "id": "masonry",
       "pkg": "@apollo-design/ui",
-      "imports": ["Masonry"],
+      "imports": [
+        "Masonry"
+      ],
       "budgetKb": 68,
       "measuredKb": 41.7
     },
     {
       "id": "mentions",
       "pkg": "@apollo-design/ui",
-      "imports": ["Mentions"],
+      "imports": [
+        "Mentions"
+      ],
       "budgetKb": 165,
       "measuredKb": 106.4
     },
     {
       "id": "menu",
       "pkg": "@apollo-design/ui",
-      "imports": ["Menu"],
+      "imports": [
+        "Menu"
+      ],
       "budgetKb": 145,
       "measuredKb": 92.7,
       "_note": "2026-10-21 重定：折叠态标题 Tooltip 落地（antd MenuItem.tsx 同款：Menu 依赖 Tooltip）。Tooltip 必然传导 Trigger/overlay/portal/motion/position ≈ 60KB，与 menu 自身 32.7KB 合计 92.7KB；antd 的 Menu 同样静态 import Tooltip，非本仓摇树缺陷。仍远低于 maxRatioOfFull（2040.6KB × 30% = 612.2KB），误引入 table/date-picker 级依赖会立刻超预算。"
@@ -285,113 +370,145 @@
     {
       "id": "message",
       "pkg": "@apollo-design/ui",
-      "imports": ["message"],
+      "imports": [
+        "message"
+      ],
       "budgetKb": 82,
       "measuredKb": 50.8
     },
     {
       "id": "modal",
       "pkg": "@apollo-design/ui",
-      "imports": ["Modal"],
+      "imports": [
+        "Modal"
+      ],
       "budgetKb": 173,
       "measuredKb": 111.5
     },
     {
       "id": "notification",
       "pkg": "@apollo-design/ui",
-      "imports": ["notification"],
+      "imports": [
+        "notification"
+      ],
       "budgetKb": 93,
       "measuredKb": 58.4
     },
     {
       "id": "pagination",
       "pkg": "@apollo-design/ui",
-      "imports": ["Pagination"],
+      "imports": [
+        "Pagination"
+      ],
       "budgetKb": 228,
       "measuredKb": 148.5
     },
     {
       "id": "popconfirm",
       "pkg": "@apollo-design/ui",
-      "imports": ["Popconfirm"],
+      "imports": [
+        "Popconfirm"
+      ],
       "budgetKb": 142,
       "measuredKb": 91.1
     },
     {
       "id": "popover",
       "pkg": "@apollo-design/ui",
-      "imports": ["Popover"],
+      "imports": [
+        "Popover"
+      ],
       "budgetKb": 106,
       "measuredKb": 67.2
     },
     {
       "id": "progress",
       "pkg": "@apollo-design/ui",
-      "imports": ["Progress"],
+      "imports": [
+        "Progress"
+      ],
       "budgetKb": 127,
       "measuredKb": 81
     },
     {
       "id": "qr-code",
       "pkg": "@apollo-design/ui",
-      "imports": ["QrCode"],
+      "imports": [
+        "QrCode"
+      ],
       "budgetKb": 101,
       "measuredKb": 63.6
     },
     {
       "id": "radio",
       "pkg": "@apollo-design/ui",
-      "imports": ["Radio"],
+      "imports": [
+        "Radio"
+      ],
       "budgetKb": 25,
       "measuredKb": 13.2
     },
     {
       "id": "rate",
       "pkg": "@apollo-design/ui",
-      "imports": ["Rate"],
+      "imports": [
+        "Rate"
+      ],
       "budgetKb": 120,
       "measuredKb": 76.5
     },
     {
       "id": "result",
       "pkg": "@apollo-design/ui",
-      "imports": ["Result"],
+      "imports": [
+        "Result"
+      ],
       "budgetKb": 79,
       "measuredKb": 48.7
     },
     {
       "id": "segmented",
       "pkg": "@apollo-design/ui",
-      "imports": ["Segmented"],
+      "imports": [
+        "Segmented"
+      ],
       "budgetKb": 116,
       "measuredKb": 73.6
     },
     {
       "id": "select",
       "pkg": "@apollo-design/ui",
-      "imports": ["Select"],
+      "imports": [
+        "Select"
+      ],
       "budgetKb": 205,
       "measuredKb": 133.2
     },
     {
       "id": "skeleton",
       "pkg": "@apollo-design/ui",
-      "imports": ["Skeleton"],
-      "budgetKb": 36,
+      "imports": [
+        "Skeleton"
+      ],
+      "budgetKb": 37,
       "measuredKb": 14.5,
-      "_note": "2026-10-27: all six Skeleton forms now resolve current source themes and eight published tokens, route native root attrs/styles, preserve complete slots and own decorative loading semantics. Necessary theme resolution changes the isolated Skeleton import to 35.9KB (full UI 2067.2KB, about 1.74%). Following the user-authorized development-stage allowance for justified growth, only Skeleton cap changes 27→36KB. Historical measuredKb, every other cap and the 30% full-import guard remain unchanged. See docs/audit/2026-10-27-skeleton-contract-audit.md."
+      "_note": "2026-10-27: all six Skeleton forms now resolve current source themes and eight published tokens, route native root attrs/styles, preserve complete slots and own decorative loading semantics. Necessary theme resolution changes the isolated Skeleton import to 35.9KB (full UI 2067.2KB, about 1.74%). Following the user-authorized development-stage allowance for justified growth, only Skeleton cap changes 27→36KB. Historical measuredKb, every other cap and the 30% full-import guard remain unchanged. See docs/audit/2026-10-27-skeleton-contract-audit.md.\n2026-10-29：共享ThemeContext来源识别与默认上下文计算所需成本（本次仅比旧36KiB多26字节）；冻结3f68bd2d实际36890字节/36.025KiB，预算36→37KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。"
     },
     {
       "id": "slider",
       "pkg": "@apollo-design/ui",
-      "imports": ["Slider"],
+      "imports": [
+        "Slider"
+      ],
       "budgetKb": 138,
       "measuredKb": 88.4
     },
     {
       "id": "space",
       "pkg": "@apollo-design/ui",
-      "imports": ["Space"],
+      "imports": [
+        "Space"
+      ],
       "budgetKb": 33,
       "measuredKb": 13.1,
       "_note": "2026-10-29: e0062edd connects current scoped Alias tokens in Space/Compact/Addon and stable keyed-fragment ownership/native focus restoration, with real compact consumers. Isolated published Space now measures 31.5KB. Accept this documented functional cost under the user's development-stage size decision; only Space's old 25KB cap becomes 33KB. Historical measurement, other 72 caps and the full-library ratio guard remain unchanged. See docs/audit/2026-10-28-space-contract-audit.md."
@@ -399,7 +516,9 @@
     {
       "id": "spin",
       "pkg": "@apollo-design/ui",
-      "imports": ["Spin"],
+      "imports": [
+        "Spin"
+      ],
       "budgetKb": 34,
       "measuredKb": 10.9,
       "_note": "2026-10-26: four published component tokens now consume the current source theme, including alias projection and runtime theme resolution; native slots/SSR progress are complete. Current isolated import measures 32.9KB. With user authorization to accept justified development-stage size growth, only Spin's old 22KB cap becomes 34KB; the historical measurement and all other caps/ratio guards remain unchanged. See docs/audit/2026-10-26-spin-contract-audit.md."
@@ -407,14 +526,18 @@
     {
       "id": "splitter",
       "pkg": "@apollo-design/ui",
-      "imports": ["Splitter"],
+      "imports": [
+        "Splitter"
+      ],
       "budgetKb": 49,
       "measuredKb": 29
     },
     {
       "id": "statistic",
       "pkg": "@apollo-design/ui",
-      "imports": ["Statistic"],
+      "imports": [
+        "Statistic"
+      ],
       "budgetKb": 43,
       "measuredKb": 23.7,
       "_note": "2026-10-27: current source-theme resolution for both published font tokens, complete native value slots, reactive clock direction/SSR cleanup and typed compound exports now measure 42.6KB. Following the authorized development-stage allowance for necessary size growth, only the old Statistic 41KB cap becomes 43KB. Historical 23.7KB measurement, all other caps and the 30% full-import guard remain unchanged. Technical cause and failing/passing L7 evidence: docs/audit/2026-10-27-statistic-contract-audit.md."
@@ -422,98 +545,126 @@
     {
       "id": "steps",
       "pkg": "@apollo-design/ui",
-      "imports": ["Steps"],
+      "imports": [
+        "Steps"
+      ],
       "budgetKb": 125,
       "measuredKb": 79.4
     },
     {
       "id": "switch",
       "pkg": "@apollo-design/ui",
-      "imports": ["Switch"],
+      "imports": [
+        "Switch"
+      ],
       "budgetKb": 32,
       "measuredKb": 17.5
     },
     {
       "id": "table",
       "pkg": "@apollo-design/ui",
-      "imports": ["Table"],
+      "imports": [
+        "Table"
+      ],
       "budgetKb": 484,
       "measuredKb": 318.7
     },
     {
       "id": "tabs",
       "pkg": "@apollo-design/ui",
-      "imports": ["Tabs"],
+      "imports": [
+        "Tabs"
+      ],
       "budgetKb": 158,
       "measuredKb": 101.9
     },
     {
       "id": "tag",
       "pkg": "@apollo-design/ui",
-      "imports": ["Tag"],
+      "imports": [
+        "Tag"
+      ],
       "budgetKb": 51,
       "measuredKb": 30.2
     },
     {
       "id": "time-picker",
       "pkg": "@apollo-design/ui",
-      "imports": ["TimePicker"],
+      "imports": [
+        "TimePicker"
+      ],
       "budgetKb": 267,
       "measuredKb": 174.6
     },
     {
       "id": "timeline",
       "pkg": "@apollo-design/ui",
-      "imports": ["Timeline"],
+      "imports": [
+        "Timeline"
+      ],
       "budgetKb": 129,
       "measuredKb": 82.6
     },
     {
       "id": "tooltip",
       "pkg": "@apollo-design/ui",
-      "imports": ["Tooltip"],
+      "imports": [
+        "Tooltip"
+      ],
       "budgetKb": 101,
       "measuredKb": 63.8
     },
     {
       "id": "tour",
       "pkg": "@apollo-design/ui",
-      "imports": ["Tour"],
+      "imports": [
+        "Tour"
+      ],
       "budgetKb": 143,
       "measuredKb": 91.6
     },
     {
       "id": "transfer",
       "pkg": "@apollo-design/ui",
-      "imports": ["Transfer"],
+      "imports": [
+        "Transfer"
+      ],
       "budgetKb": 364,
       "measuredKb": 239.3
     },
     {
       "id": "tree",
       "pkg": "@apollo-design/ui",
-      "imports": ["Tree"],
+      "imports": [
+        "Tree"
+      ],
       "budgetKb": 137,
       "measuredKb": 87.8
     },
     {
       "id": "tree-select",
       "pkg": "@apollo-design/ui",
-      "imports": ["TreeSelect"],
+      "imports": [
+        "TreeSelect"
+      ],
       "budgetKb": 254,
       "measuredKb": 165.6
     },
     {
       "id": "typography",
       "pkg": "@apollo-design/ui",
-      "imports": ["Typography"],
+      "imports": [
+        "Typography"
+      ],
       "budgetKb": 154,
       "measuredKb": 99
     },
     {
       "id": "upload",
       "pkg": "@apollo-design/ui",
-      "imports": ["Upload"],
+      "imports": [
+        "Upload"
+      ],
       "budgetKb": 141,
       "measuredKb": 66.8,
       "_note": "2026-10-29: 2ef32069 replaces the ineffective fixed Upload progress DOM with the real public Progress component, enabling all six existing progress fields. Published Upload measures 137.736KB; the prior frozen Upload plus Progress measures 137.763KB, proving the added graph is the required component composition, not a tree-shaking leak. Accept this documented functional cost under the user's development-stage size decision; only Upload's cap changes from 106KB to 141KB. Preserve historical measuredKb=66.8, all other caps and the 30% full-library ratio guard. See docs/audit/2026-10-29-upload-progress-audit.md."
@@ -521,7 +672,9 @@
     {
       "id": "watermark",
       "pkg": "@apollo-design/ui",
-      "imports": ["Watermark"],
+      "imports": [
+        "Watermark"
+      ],
       "budgetKb": 46,
       "measuredKb": 27.1
     }
