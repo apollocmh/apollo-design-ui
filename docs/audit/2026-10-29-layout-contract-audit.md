@@ -104,3 +104,43 @@
 - 所属两源码/测试文件 Biome check --write exit 0，`/tmp/apollo-layout-fallback-biome.log`；后续只读 check 和 git diff --check 同样通过。
 
 补充冻结四个变更文件：use-layout-theme.ts、contracts.test.ts、本审计与所属 migration。新清单及全部 53 文件的当前 SHA-256 为 `/tmp/apollo-layout-fallback-source-freeze.json`；旧 `/tmp/apollo-layout-source-freeze.json` 原样保留，49 个文件无变化。所有本次 reader 已正常退出；没有包构建、dist 写入、提交或推送。Demo/视觉状态准备器的前阶段 47/47、51/51 未在此窄修复重复运行，也未冒充本次发布验证；主线程应在新鲜 Theme → UI 构建后统一发布和最终同提交门禁。
+
+## 正式审图后的浮动按钮演示布局复核
+
+主线程尚未批准旧 51 张 Layout 候选图；正式审图发现 zero-width mobile 的按钮覆盖 Content 标题。旧 helper 只验证了控件可见、容器几何和 axe，漏掉控件与正文文字行的相交关系。本轮范围仅为原生 case、所属 Demo 的空间预留及相应真实浏览器断言，不修改 Layout/Sider 实现、库 CSS/API、旧 Vue/React 参考、Registry、共享 runner/matrix 或 dist，不包构建。
+
+### 修复前完整只读盘点
+
+基准 HEAD `ad70dd7ce368f6a1449c5a6480ae20499ec354df`。完整读取 17 个原生 case 与全部 11 个 Demo；用已冻结的新鲜发布 JS/CSS（3f68 build、b9e5 验证树）执行 363 次实际几何快照，证据 `/tmp/apollo-layout-occlusion-readonly.json`，脚本 `/tmp/apollo-layout-occlusion-audit.mjs`。覆盖正式 mobile 375×667、tablet 768×1024、desktop 1440×900；11 Demo 的四主题 × LTR/RTL；存在浮动按钮时再请求键盘切换。固定受控 zero-width case 的切换请求保持原状态，未冒充已展开；RTL/响应式及两个 Demo 实际切换。0 运行时错误、0 实现源码导入，reader 已退出。
+
+| 必修场景 | 快照 / 相交 | 实际根因与所需调整 |
+| --- | --- | --- |
+| native zero-width | 6 / 6 | 固定收起布局的浮动按钮覆盖 Content 标题和首段；Content 预留操作行 |
+| native responsive | 5 / 4 | mobile/tablet 初始及展开时都有浮动按钮并覆盖标题/首段；跟随实际 breakpoint 状态预留，desktop 无按钮时保留原布局 |
+| native rtl | 6 / 6 | RTL 浮动按钮从相反侧进入 Content，覆盖同一标题/首段；使用与方向无关的 block 空间预留，保持控件位置 |
+| Demo responsive | 40 / 32 | 四主题、两个方向、小屏收起/展开时按钮覆盖 Home 面包屑；仅 broken 状态预留操作行 |
+| Demo collapsible-overlay | 48 / 36 | 绝对定位 Sider 的按钮覆盖 Details/Home；展开和收起均预留操作行，保留该示例的覆盖式面板结构 |
+
+正常原生 case 全量清单（各 3 个正式视口、共 42 次无相交）：basic、side、side-light、collapsible、collapsed、standalone、current-provider、conditional-trigger、keyboard-trigger、native-focus、native-styles、theme-dark、theme-compact、theme-dark-compact。正常 Demo 全量清单（各 24 次、共 216 次无相交）：basic、top、side、top-side、top-side-2、fixed、fixed-sider、custom-trigger、component-token。共 84 次相交，只涉及上述五个落点；没有把无浮动按钮的正常场景一律加空白。
+
+### 修改清单与验收
+
+先为 helper 增加 Range.getClientRects 真实可见文字行与原生触发器 getBoundingClientRect 的严格不相交断言，并保留宽高、完整视口可见性；通过未改布局的原生/Demo 浏览器红灯确认覆盖。随后统一调整原生 case 的三个适用分支及两个 Demo，在 Content 顶部按当前 Alias 按钮尺寸和既有间距预留操作空间；同步两份 Demo 说明。Demo fixture 支持真实方向，持续门禁覆盖两个 Demo 的四主题 × 两方向 × 三视口初始/键盘切换/恢复；原生 harness 使用正式三视口的真实高度。
+
+本轮验收要求全部 17 case、全部 11 Demo 原有检查保留，新旧几何断言通过；新增断言不可通过隐藏/缩小控件、关闭规则或豁免相交实现。需要严格消费者和受影响四项目回归；最后核对库实现/CSS/API、旧参考与 dist 无改动。正式新 bundle、228 候选复捕及审阅由主线程统一，旧图仍未批准。
+
+### 本轮执行与交付
+
+- 先加断言后改布局：`LAYOUT_SOURCE=1 LAYOUT_VISUAL_EVIDENCE=/tmp/apollo-layout-occlusion-native-red.json node tests/browser/layout-visual-states.mjs` 为 43/51、8 个目标失败；`LAYOUT_SOURCE=1 LAYOUT_DEMOS_EVIDENCE=/tmp/apollo-layout-occlusion-demos-red.json node tests/browser/layout-demos.mjs` 为 49/95、46 个目标失败，均 0 运行时错误。失败具体记录按钮与 Content/Current layout content、Home/Details 的实际交叠矩形，没有修改既有断言或参考。
+- 布局调整只落在五个已盘点位置：native zero-width/rtl 和 below 时的 responsive，Demo overlay 和 broken 时的 responsive。沿 block 方向预留当前 controlHeightLG 与原有 12px/20px 内容间距，覆盖当前四主题与 RTL；responsive 无浮动按钮时恢复原间距。按钮及库 CSS 的位置/尺寸/语义保持不变。
+- 新 helper 使用可见文字行 Range.getClientRects 与表单控件的真实 bbox，逐个和内置按钮 bbox 严格判断不相交；同时验证按钮可见、正尺寸和完整视口内位置。17 原生 case 全部使用该断言，browser harness 采用与正式截图一致的 375×667、768×1024、1440×900。
+- Demo 门禁保留原 47 项，并增加两 Demo × 四主题 × LTR/RTL × 三正式视口，共 48 项，初始、Enter 切换、Space 恢复均校验真实状态及 bbox；desktop responsive 无浮动按钮时仍校验正文，不伪造按钮或跳过整个场景。
+- `LAYOUT_SOURCE=1 LAYOUT_VISUAL_EVIDENCE=/tmp/apollo-layout-occlusion-native-green.json node tests/browser/layout-visual-states.mjs`：51/51、0 运行时错误、reader 退出、入口指纹不变。
+- `LAYOUT_SOURCE=1 LAYOUT_DEMOS_EVIDENCE=/tmp/apollo-layout-occlusion-demos-green.json node tests/browser/layout-demos.mjs`：95/95，保留全部 11 Demo 四主题 axe/原交互，新增 48 项空间与双向键盘场景通过；0 运行时错误、reader 退出、入口指纹不变。
+- `LAYOUT_SOURCE=1 LAYOUT_TYPES_EVIDENCE=/tmp/apollo-layout-occlusion-types.json node tests/consumer/layout-types.mjs`：严格根/子路径正负例及 11 Demo 通过，exit 0。
+- `pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/layout --maxWorkers=1 --reporter=json --outputFile=/tmp/apollo-layout-occlusion-four-projects.json`：7 文件 203/203，未修改测试预算、DOM 参考或差异豁免；日志同名 .log，exit 0。
+- 完整复核脚本再次执行，`/tmp/apollo-layout-occlusion-complete-green.json` 的 363 次快照均无文字交叠，0 运行时错误、0 实现源码导入、reader 退出。与修复前逐键对照，全部按钮坐标、尺寸、展开状态一致；其余 14 原生 case、9 Demo 的正文几何逐项不变。这一补充复核使用冻结发布 JS/CSS与当前演示临时 bundle，不等同于正式新候选图验收。
+- 已逐张目视查看 `/tmp/apollo-layout-occlusion-green-images/` 下 7 张 mobile 诊断图：三个原生 case、两个 Demo 的 LTR/RTL。native 标题/正文和 responsive 面包屑避开按钮；overlay 保留绝对面板本身覆盖页面的演示目的，浮动按钮已避开文字行。没有批准或覆盖正式基线。
+- 所属 Biome check 与 git diff --check 通过。相对本轮 HEAD，Layout/Sider 实现、公开类型/导出、库 style、旧 Vue/React Layout case 无改动；全部改动是 10 个演示/测试/本审计文件。完整 53 文件的新指纹在 `/tmp/apollo-layout-occlusion-source-freeze.json`，前阶段 manifest 保留。
+
+当前属于源码/演示与定向浏览器验证完成，正式 228 张新 bundle 候选复捕、审阅、Registry/Docs 和最终同提交全量门禁仍归主线程执行。没有包构建、提交、推送或 dist 写入。

@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import vue from '@vitejs/plugin-vue';
 import { build, preview } from 'vite';
 import { prepareLayoutVisual } from '../visual/layout-state.mjs';
+import { VIEWPORTS } from '../visual/matrix.mjs';
 import { launchBrowser } from '../visual/stabilize.mjs';
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..'),
@@ -103,7 +104,7 @@ try {
     preview: { host: '127.0.0.1', port: 0 },
   });
   ({ browser } = await launchBrowser());
-  const page = await browser.newPage({ viewport: { width: 375, height: 900 } });
+  const page = await browser.newPage({ viewport: { width: 375, height: 667 } });
   page.on('pageerror', (error) => errors.push(error.message));
   page.on('console', (message) => {
     if (message.type() === 'error' || message.text().includes('[Vue warn]'))
@@ -113,16 +114,16 @@ try {
   await page.waitForFunction(() => window.layoutReady);
   const variants = await page.evaluate(() => window.layoutVariants);
   assert.equal(variants.length, 17);
-  for (const width of [375, 768, 1440])
+  for (const { width, height } of VIEWPORTS)
     for (const variant of variants) {
       try {
-        await page.setViewportSize({ width, height: 900 });
+        await page.setViewportSize({ width, height });
         await page.goto(server.resolvedUrls.local[0] + '?variant=' + variant);
         await page.waitForFunction(() => window.layoutReady);
         const actual = await prepareLayoutVisual(page, variant);
-        results.push({ width, variant, passed: true, actual });
+        results.push({ width, height, variant, passed: true, actual });
       } catch (error) {
-        results.push({ width, variant, passed: false, error: error.message });
+        results.push({ width, height, variant, passed: false, error: error.message });
       }
       console.log((results.at(-1).passed ? 'PASS ' : 'FAIL ') + variant + ' / ' + width);
     }

@@ -1,6 +1,83 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
+/** Visible copy and form controls must keep their own space beside owned Sider controls. */
+export async function assertLayoutContentClear(page, selector) {
+  const actual = await page.locator(selector).evaluate((root) => {
+    const visible = (element) =>
+      element.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
+    const inContent = (element) =>
+      visible(element) && !element.closest('aside,[inert],[aria-hidden="true"]');
+    const targets = [];
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (!node.textContent.trim() || !inContent(node.parentElement)) continue;
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      for (const rect of range.getClientRects()) {
+        if (rect.width > 0 && rect.height > 0)
+          targets.push({ label: node.textContent.trim(), rect: rect.toJSON() });
+      }
+    }
+    for (const element of root.querySelectorAll('input,textarea,select,button,a[href]')) {
+      if (inContent(element))
+        targets.push({
+          label:
+            element.getAttribute('aria-label') || element.textContent.trim() || element.tagName,
+          rect: element.getBoundingClientRect().toJSON(),
+        });
+    }
+    const triggers = [
+      ...root.querySelectorAll(
+        '.apollo-layout-sider-trigger,.apollo-layout-sider-zero-width-trigger',
+      ),
+    ].map((button) => ({
+      floating: button.classList.contains('apollo-layout-sider-zero-width-trigger'),
+      visible: visible(button) && !button.closest('[inert],[aria-hidden="true"]'),
+      rect: button.getBoundingClientRect().toJSON(),
+    }));
+    const overlaps = [];
+    for (const trigger of triggers)
+      for (const target of targets) {
+        const a = trigger.rect,
+          b = target.rect;
+        if (
+          Math.min(a.right, b.right) > Math.max(a.left, b.left) &&
+          Math.min(a.bottom, b.bottom) > Math.max(a.top, b.top)
+        )
+          overlaps.push({ label: target.label, trigger: a, content: b });
+      }
+    return {
+      triggers,
+      targetCount: targets.length,
+      overlaps,
+      viewport: { width: innerWidth, height: innerHeight },
+    };
+  });
+  for (const trigger of actual.triggers) {
+    assert.equal(trigger.visible, true, 'The owned control must remain visible');
+    assert.ok(
+      trigger.rect.width > 0 && trigger.rect.height > 0,
+      'The owned control must retain its size',
+    );
+    assert.ok(
+      trigger.rect.left >= 0 && trigger.rect.right <= actual.viewport.width + 1,
+      'The owned control must fit horizontally in the viewport',
+    );
+    assert.ok(
+      trigger.rect.top >= 0 && trigger.rect.bottom <= actual.viewport.height + 1,
+      'The owned control must fit vertically in the viewport',
+    );
+  }
+  assert.deepEqual(
+    actual.overlaps,
+    [],
+    'Sider controls must not overlap visible content: ' + JSON.stringify(actual.overlaps),
+  );
+  return actual;
+}
+
 export async function prepareLayoutVisual(page, variant) {
   const frame = page.locator('[data-layout-visual]');
   assert.equal(await frame.getAttribute('data-layout-visual'), variant);
@@ -140,5 +217,5 @@ export async function prepareLayoutVisual(page, variant) {
     ),
     [],
   );
-  return geometry;
+  return { ...geometry, content: await assertLayoutContentClear(page, '[data-layout-visual]') };
 }

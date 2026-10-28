@@ -23,8 +23,10 @@ export default defineComponent({
       window.layoutDemoReady = true;
     });
     return () =>
-      h(ConfigProvider, { theme: { algorithm } }, () =>
-        h('div', { id: 'layout-demo', style: { minWidth: 0 } }, h(demo)),
+      h(
+        ConfigProvider,
+        { direction: query.get('dir') === 'rtl' ? 'rtl' : 'ltr', theme: { algorithm } },
+        () => h('div', { id: 'layout-demo', style: { minWidth: 0 } }, h(demo)),
       );
   },
 });

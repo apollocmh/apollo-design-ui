@@ -14,6 +14,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vue from '@vitejs/plugin-vue';
 import { build, preview } from 'vite';
+import { assertLayoutContentClear } from '../visual/layout-state.mjs';
+import { VIEWPORTS } from '../visual/matrix.mjs';
 import { launchBrowser } from '../visual/stabilize.mjs';
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..'),
@@ -137,8 +139,10 @@ try {
       );
       await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     });
-  const open = async (demo, theme) => {
-    await page.goto(server.resolvedUrls.local[0] + '?demo=' + demo + '&theme=' + theme);
+  const open = async (demo, theme, direction = 'ltr') => {
+    await page.goto(
+      server.resolvedUrls.local[0] + '?demo=' + demo + '&theme=' + theme + '&dir=' + direction,
+    );
     await page.waitForFunction(() => window.layoutDemoReady === true);
     await settle();
   };
@@ -146,6 +150,7 @@ try {
     for (const demo of demos)
       await check(demo + ' / ' + theme, async () => {
         await open(demo, theme);
+        await assertLayoutContentClear(page, '#layout-demo');
         assert.ok((await page.locator('#layout-demo .apollo-layout').count()) > 0);
         assert.equal(await page.locator('#layout-demo .demo-menu').count(), 0);
         if (demo !== 'basic')
@@ -195,12 +200,14 @@ try {
           await trigger.focus();
           await trigger.press('Enter');
           await settle();
+          await assertLayoutContentClear(page, '#layout-demo');
           assert.equal(
             await page.locator('.apollo-layout-sider-children').evaluate((node) => node.inert),
             true,
           );
           await trigger.press('Space');
           await settle();
+          await assertLayoutContentClear(page, '#layout-demo');
           assert.equal(
             await page.locator('.apollo-layout-sider-children').evaluate((node) => node.inert),
             false,
@@ -221,12 +228,14 @@ try {
         return {
           layouts: await page.locator('.apollo-layout').count(),
           menus: await page.locator('.apollo-menu').count(),
+          content: await assertLayoutContentClear(page, '#layout-demo'),
         };
       });
   for (const width of [375, 991, 1200])
     await check('responsive actual viewport ' + width, async () => {
       await page.setViewportSize({ width, height: 900 });
       await open('responsive', 'light');
+      await assertLayoutContentClear(page, '#layout-demo');
       const below = width < 992;
       assert.equal(
         await page
@@ -243,6 +252,7 @@ try {
         await trigger.focus();
         await trigger.press('Enter');
         await settle();
+        await assertLayoutContentClear(page, '#layout-demo');
         assert.equal(
           await page.locator('aside').evaluate((node) => node.getBoundingClientRect().width),
           180,
@@ -252,6 +262,30 @@ try {
         );
       }
     });
+  for (const viewport of VIEWPORTS)
+    for (const theme of ['light', 'dark', 'compact', 'both'])
+      for (const direction of ['ltr', 'rtl'])
+        for (const demo of ['responsive', 'collapsible-overlay'])
+          await check(
+            'floating content ' + demo + ' / ' + theme + ' / ' + direction + ' / ' + viewport.id,
+            async () => {
+              await page.setViewportSize({ width: viewport.width, height: viewport.height });
+              await open(demo, theme, direction);
+              const before = await assertLayoutContentClear(page, '#layout-demo');
+              const trigger = page.locator('.apollo-layout-sider-zero-width-trigger');
+              if (!(await trigger.count())) return { before };
+              const expanded = await trigger.getAttribute('aria-expanded');
+              await trigger.press('Enter');
+              await settle();
+              assert.notEqual(await trigger.getAttribute('aria-expanded'), expanded);
+              const toggled = await assertLayoutContentClear(page, '#layout-demo');
+              await trigger.press('Space');
+              await settle();
+              assert.equal(await trigger.getAttribute('aria-expanded'), expanded);
+              const restored = await assertLayoutContentClear(page, '#layout-demo');
+              return { before, toggled, restored };
+            },
+          );
   assert.deepEqual(fingerprints(), before);
   writeFileSync(
     evidence,

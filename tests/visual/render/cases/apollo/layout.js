@@ -23,7 +23,8 @@ const Scenario = defineComponent({
       stage = ref(0),
       root = ref(null),
       sider = ref(null),
-      collapsed = ref(false);
+      collapsed = ref(false),
+      below = ref(false);
     const events = [];
     onMounted(() => {
       window.layoutVisual = {
@@ -91,6 +92,11 @@ const Scenario = defineComponent({
         'rtl',
       ].includes(name);
       const fullHeight = toggle || responsive;
+      const floating = name === 'zero-width' || name === 'rtl' || (responsive && below.value);
+      const contentStyle = {
+        padding: '12px',
+        ...(floating ? { paddingBlockStart: 'calc(var(--apollo-control-height-lg) + 12px)' } : {}),
+      };
       const side = () =>
         h(
           LayoutSider,
@@ -112,6 +118,9 @@ const Scenario = defineComponent({
               if (responsive) collapsed.value = value;
             },
             onCollapse: (value, type) => events.push([value, type]),
+            onBreakpoint: (value) => {
+              below.value = value;
+            },
           },
           {
             default: nav,
@@ -124,12 +133,12 @@ const Scenario = defineComponent({
       const footer = () => h(LayoutFooter, null, () => 'Apollo Design');
       const children = () =>
         name === 'basic'
-          ? [header(), h(LayoutContent, { style: { padding: '12px' } }, content), footer()]
+          ? [header(), h(LayoutContent, { style: contentStyle }, content), footer()]
           : [
               side(),
               h(Layout, null, () => [
                 header(),
-                h(LayoutContent, { style: { padding: '12px' } }, content),
+                h(LayoutContent, { style: contentStyle }, content),
                 footer(),
               ]),
             ];
@@ -139,7 +148,7 @@ const Scenario = defineComponent({
               header(),
               h('div', { style: { display: 'flex', minHeight: '220px' } }, [
                 side(),
-                h(LayoutContent, { style: { padding: '12px', minWidth: 0 } }, content),
+                h(LayoutContent, { style: { ...contentStyle, minWidth: 0 } }, content),
               ]),
               footer(),
             ]

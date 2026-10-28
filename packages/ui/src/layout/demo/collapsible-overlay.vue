@@ -20,7 +20,7 @@ const crumbs = [
 <style scoped>
 .demo-header { display: flex; align-items: center; gap: 16px; padding-inline: 20px; }
 .demo-header :deep(.apollo-menu-horizontal) { flex: 1; min-width: 0; }
-.demo-content { min-width: 0; padding: 20px; }
+.demo-content { min-width: 0; padding: 20px; padding-block-start: calc(var(--apollo-control-height-lg) + 20px); }
 .demo-card { min-height: 240px; padding: 20px; background: var(--apollo-color-bg-container); color: var(--apollo-color-text); border-radius: var(--apollo-border-radius-lg); }
 .demo-footer { text-align: center; }
 .demo-breadcrumb { margin-bottom: 16px; }
