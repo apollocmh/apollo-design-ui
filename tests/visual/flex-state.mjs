@@ -81,6 +81,7 @@ export async function prepareFlexVisual(page, variant) {
   if (variant === 'gap') {
     for (const [name, gap] of [
       ['small', 8],
+      ['medium', 16],
       ['middle', 16],
       ['large', 24],
       ['16px', 16],

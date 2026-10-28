@@ -168,7 +168,7 @@ export default {
   gap: () =>
     frame(
       'gap',
-      ['small', 'middle', 'large', '16px'].map((gap) =>
+      ['small', 'medium', 'middle', 'large', '16px'].map((gap) =>
         specimen(`gap-${gap}`, `${gap} gap`, { gap }),
       ),
     ),
