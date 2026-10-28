@@ -13,6 +13,7 @@ import {
   computed,
   defineComponent,
   h,
+  normalizeStyle,
   type PropType,
   type Ref,
   ref,
@@ -60,6 +61,7 @@ import type {
   TableRowSelection,
   TableSlots,
 } from './interface';
+import { useTableTheme } from './use-table-theme';
 import { getPaginationSize, normalizePlacement } from './util';
 
 const tableSlots: SlotsType<TableSlots> = {};
@@ -146,7 +148,7 @@ const Table = defineComponent({
   },
   // ⚠️ 不解构 `attrs` —— Table **没关** `inheritAttrs`（见下方 class/style 的说明），
   //    attrs 由 Vue 自动落根，这里读了也不用。
-  setup(props, { expose, slots }) {
+  setup(props, { attrs, expose, slots }) {
     const {
       getPrefixCls,
       direction: contextDirection,
@@ -171,6 +173,20 @@ const Table = defineComponent({
     );
     const rootPrefix = getPrefixCls('table', props.prefixCls);
     const prefixCls = rootPrefix;
+    const sourceStyle = useTableTheme(() => prefixCls);
+    const tableVariables = computed(() => {
+      const style = { ...sourceStyle.value };
+      const native = normalizeStyle([attrs.style]);
+      for (const source of [
+        props.styles?.root,
+        native && typeof native === 'object' ? native : undefined,
+      ])
+        for (const [key, value] of Object.entries(source ?? {}))
+          if (key.startsWith('--') && (typeof value === 'string' || typeof value === 'number'))
+            style[key] = String(value);
+      return style;
+    });
+
     const dropdownPrefixCls = getPrefixCls('dropdown', props.dropdownPrefixCls);
     const hashId = '';
 
@@ -714,7 +730,7 @@ const Table = defineComponent({
                 transformColumns: transformColumns as never,
                 getContainerWidth,
                 internalOnlyExpandColumnWidth: undefined,
-                style: undefined,
+                style: tableVariables.value,
                 internalStyle: undefined,
                 virtual: props.virtual,
                 listItemHeight: props.virtual ? listItemHeight.value : undefined,

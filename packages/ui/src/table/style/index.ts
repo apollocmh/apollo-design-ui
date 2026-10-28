@@ -1,106 +1,86 @@
-/**
- * Table 的样式生成。
- *
- * 契约来源：antd 6.6.4 `es/table/style/*.js`（真实产物用
- * `tests/visual/debug/extract-table-css.mjs` SSR 提取：**200 条规则 / 194 唯一选择器 /
- * 37 条组件 token**，T0.3 实测 —— registry 的 31 是字面键数，少了 5 个派生值 + 1 个
- * 算式值）。
- *
- * ── 移植规则（与 date-picker/style 同族） ──────────────────────────────────────
- * 1. `--{p}-table-*` 组件 token 落成**根类 + `-css-var` 类**上的局部声明块
- *    （⚠️ PITFALLS 342：过滤下拉 `.{p}-table-filter-dropdown` 走 Portal，
- *    不在 `.{p}-table` 子树里 ⇒ 只有根块的话 var 全部静默回退）。
- * 2. 组件 token 的**值**在模块加载期用 `getDesignToken()` + `onBackground` 算出并
- *    内联（D7 家族：不随运行时暗色主题自适应 —— 与 button 的 13 个阴影色同判）。
- *    两个非纯别名的 token：
- *    - `expandIconMarginTop`：算式 `(fontSize*lineHeight - lineWidth*3)/2 -
- *      ceil((fontSizeSM*1.4 - lineWidth*3)/2)`；
- *    - `headerIconColor`：`colorIcon` 的 alpha × `opacityLoading`（`Color.setAlpha`）。
- * 3. 全局别名 token 用 `v()` 引用 `--apollo-*`（B7 可校验）。
- * 4. 规则主体从真实产物机械搬运：`:where(.css-hash)` 前缀去除、`ant-table` →
- *    `{p}-table`、其余 `ant-*` → `apollo-*`（dropdown/tree/menu/descriptions 等
- *    子组件类名，本仓这些组件恒用 apollo 前缀）、`.anticon` → `.apollo-icon`。
- *
- * ── 这个函数没有证明什么 ──────────────────────────────────────────────────────
- * - 没证明**视觉**正确（L6 的逐像素比对负责）。
- * - 没证明变量名存在（B7 负责）。
+/** Static Table rules and current-theme derived defaults. Table and filter portals
+ * consume the same forty variables; default light declarations remain unchanged.
+ * Mechanical reference: antd6.6.4 table styles; see the dated audit for validation.
  */
 
-import { getDesignToken, token2CSSVar } from '@apollo-design/theme';
+import { type AliasToken, getDesignToken, token2CSSVar } from '@apollo-design/theme';
 import { Color } from '@apollo-design/utils';
 import { onBackground } from '../../_internal/color-composite';
 
 /** token 名 → `var(--apollo-*)`。变量名由 theme 包的命名函数给出，不手写字面量。 */
 const v = (token: string): string => `var(${token2CSSVar(token)})`;
 
-// ============================ 37 条组件 token（构建期内联） ============================
+// Default CSS is generated once; Provider instances derive values from their current theme.
 
-const T = getDesignToken();
+const DEFAULT_TABLE_TOKEN = getDesignToken();
 
-const FILL_ALTER_SOLID = onBackground(T.colorFillAlter, T.colorBgContainer).toHexString();
-const FILL_SECONDARY_SOLID = onBackground(T.colorFillSecondary, T.colorBgContainer).toHexString();
-const FILL_CONTENT_SOLID = onBackground(T.colorFillContent, T.colorBgContainer).toHexString();
+export function getTableTokenValues(T: AliasToken): Record<string, string> {
+  const FILL_ALTER_SOLID = onBackground(T.colorFillAlter, T.colorBgContainer).toHexString();
+  const FILL_SECONDARY_SOLID = onBackground(T.colorFillSecondary, T.colorBgContainer).toHexString();
+  const FILL_CONTENT_SOLID = onBackground(T.colorFillContent, T.colorBgContainer).toHexString();
 
-const COLOR_ICON = new Color(T.colorIcon);
-const COLOR_ICON_HOVER = new Color(T.colorIconHover);
-const HEADER_ICON_COLOR = COLOR_ICON.setAlpha(COLOR_ICON.a * T.opacityLoading).toHexString();
-const HEADER_ICON_HOVER_COLOR = COLOR_ICON_HOVER.setAlpha(
-  COLOR_ICON_HOVER.a * T.opacityLoading,
-).toHexString();
+  const COLOR_ICON = new Color(T.colorIcon);
+  const COLOR_ICON_HOVER = new Color(T.colorIconHover);
+  const HEADER_ICON_COLOR = COLOR_ICON.setAlpha(COLOR_ICON.a * T.opacityLoading).toHexString();
+  const HEADER_ICON_HOVER_COLOR = COLOR_ICON_HOVER.setAlpha(
+    COLOR_ICON_HOVER.a * T.opacityLoading,
+  ).toHexString();
 
-const HALF_INNER = T.controlInteractiveSize / 2 - T.lineWidth;
-const EXPAND_ICON_SIZE = HALF_INNER * 2 + T.lineWidth * 3;
-const EXPAND_ICON_SCALE = T.controlInteractiveSize / EXPAND_ICON_SIZE;
-const EXPAND_ICON_MARGIN_TOP =
-  (T.fontSize * T.lineHeight - T.lineWidth * 3) / 2 -
-  Math.ceil((T.fontSizeSM * 1.4 - T.lineWidth * 3) / 2);
+  const HALF_INNER = T.controlInteractiveSize / 2 - T.lineWidth;
+  const EXPAND_ICON_SIZE = HALF_INNER * 2 + T.lineWidth * 3;
+  const EXPAND_ICON_SCALE = T.controlInteractiveSize / EXPAND_ICON_SIZE;
+  const EXPAND_ICON_MARGIN_TOP =
+    (T.fontSize * T.lineHeight - T.lineWidth * 3) / 2 -
+    Math.ceil((T.fontSizeSM * 1.4 - T.lineWidth * 3) / 2);
 
-/** antd `es/table/style/index.js` 的 prepareComponentToken 映射（37 键逐字）。 */
+  return {
+    'header-bg': `${FILL_ALTER_SOLID}`,
+    'header-color': `${v('colorTextHeading')}`,
+    'header-sort-active-bg': `${FILL_SECONDARY_SOLID}`,
+    'header-sort-hover-bg': `${FILL_CONTENT_SOLID}`,
+    'body-sort-bg': `${FILL_ALTER_SOLID}`,
+    'row-hover-bg': `${FILL_ALTER_SOLID}`,
+    'row-selected-bg': `${v('controlItemBgActive')}`,
+    'row-selected-hover-bg': `${v('controlItemBgActiveHover')}`,
+    'row-expanded-bg': `${T.colorFillAlter}`,
+    'cell-padding-block': `${v('padding')}`,
+    'cell-padding-inline': `${v('padding')}`,
+    'cell-padding-block-md': `${v('paddingSM')}`,
+    'cell-padding-inline-md': `${v('paddingXS')}`,
+    'cell-padding-block-sm': `${v('paddingXS')}`,
+    'cell-padding-inline-sm': `${v('paddingXS')}`,
+    'border-color': `${v('colorBorderSecondary')}`,
+    'header-border-radius': `${v('borderRadiusLG')}`,
+    'footer-bg': `${FILL_ALTER_SOLID}`,
+    'footer-color': `${v('colorTextHeading')}`,
+    'cell-font-size': `${v('fontSize')}`,
+    'cell-font-size-md': `${v('fontSize')}`,
+    'cell-font-size-sm': `${v('fontSize')}`,
+    'header-split-color': `${v('colorBorderSecondary')}`,
+    'fixed-header-sort-active-bg': `${FILL_SECONDARY_SOLID}`,
+    'header-filter-hover-bg': `${T.colorFillContent}`,
+    'filter-dropdown-menu-bg': `${v('colorBgContainer')}`,
+    'filter-dropdown-bg': `${v('colorBgContainer')}`,
+    'expand-icon-bg': `${v('colorBgContainer')}`,
+    'selection-column-width': `${v('controlHeight')}`,
+    'sticky-scroll-bar-bg': `${v('colorTextPlaceholder')}`,
+    'sticky-scroll-bar-border-radius': `100px`,
+    'expand-icon-margin-top': `${EXPAND_ICON_MARGIN_TOP}px`,
+    'header-icon-color': `${HEADER_ICON_COLOR}`,
+    'header-icon-hover-color': `${HEADER_ICON_HOVER_COLOR}`,
+    'expand-icon-half-inner': `${HALF_INNER}px`,
+    'expand-icon-size': `${EXPAND_ICON_SIZE}px`,
+    'expand-icon-scale': `${EXPAND_ICON_SCALE}`,
+    'cell-fix-start-shadow': `inset 10px 0 8px -8px ${v('colorSplit')}`,
+    'cell-fix-end-shadow': `inset -10px 0 8px -8px ${v('colorSplit')}`,
+    'filter-dropdown-menu-radius': `unset`,
+  };
+}
+
 export function genTableTokenDecls(p: string): string[] {
-  const P = p;
-  return [
-    `--${P}-table-header-bg:${FILL_ALTER_SOLID}`,
-    `--${P}-table-header-color:${v('colorTextHeading')}`,
-    `--${P}-table-header-sort-active-bg:${FILL_SECONDARY_SOLID}`,
-    `--${P}-table-header-sort-hover-bg:${FILL_CONTENT_SOLID}`,
-    `--${P}-table-body-sort-bg:${FILL_ALTER_SOLID}`,
-    `--${P}-table-row-hover-bg:${FILL_ALTER_SOLID}`,
-    `--${P}-table-row-selected-bg:${v('controlItemBgActive')}`,
-    `--${P}-table-row-selected-hover-bg:${v('controlItemBgActiveHover')}`,
-    `--${P}-table-row-expanded-bg:${T.colorFillAlter}`,
-    `--${P}-table-cell-padding-block:${v('padding')}`,
-    `--${P}-table-cell-padding-inline:${v('padding')}`,
-    `--${P}-table-cell-padding-block-md:${v('paddingSM')}`,
-    `--${P}-table-cell-padding-inline-md:${v('paddingXS')}`,
-    `--${P}-table-cell-padding-block-sm:${v('paddingXS')}`,
-    `--${P}-table-cell-padding-inline-sm:${v('paddingXS')}`,
-    `--${P}-table-border-color:${v('colorBorderSecondary')}`,
-    `--${P}-table-header-border-radius:${v('borderRadiusLG')}`,
-    `--${P}-table-footer-bg:${FILL_ALTER_SOLID}`,
-    `--${P}-table-footer-color:${v('colorTextHeading')}`,
-    `--${P}-table-cell-font-size:${v('fontSize')}`,
-    `--${P}-table-cell-font-size-md:${v('fontSize')}`,
-    `--${P}-table-cell-font-size-sm:${v('fontSize')}`,
-    `--${P}-table-header-split-color:${v('colorBorderSecondary')}`,
-    `--${P}-table-fixed-header-sort-active-bg:${FILL_SECONDARY_SOLID}`,
-    `--${P}-table-header-filter-hover-bg:${T.colorFillContent}`,
-    `--${P}-table-filter-dropdown-menu-bg:${v('colorBgContainer')}`,
-    `--${P}-table-filter-dropdown-bg:${v('colorBgContainer')}`,
-    `--${P}-table-expand-icon-bg:${v('colorBgContainer')}`,
-    `--${P}-table-selection-column-width:${v('controlHeight')}`,
-    `--${P}-table-sticky-scroll-bar-bg:${v('colorTextPlaceholder')}`,
-    `--${P}-table-sticky-scroll-bar-border-radius:100px`,
-    `--${P}-table-expand-icon-margin-top:${EXPAND_ICON_MARGIN_TOP}px`,
-    `--${P}-table-header-icon-color:${HEADER_ICON_COLOR}`,
-    `--${P}-table-header-icon-hover-color:${HEADER_ICON_HOVER_COLOR}`,
-    `--${P}-table-expand-icon-half-inner:${HALF_INNER}px`,
-    `--${P}-table-expand-icon-size:${EXPAND_ICON_SIZE}px`,
-    `--${P}-table-expand-icon-scale:${EXPAND_ICON_SCALE}`,
-    // ── 派生 token（antd 规则侧的固定几何值，升级为声明以过 E10；值与产物逐字）──
-    `--${P}-table-cell-fix-start-shadow:inset 10px 0 8px -8px ${v('colorSplit')}`,
-    `--${P}-table-cell-fix-end-shadow:inset -10px 0 8px -8px ${v('colorSplit')}`,
-    `--${P}-table-filter-dropdown-menu-radius:unset`,
-  ];
+  return Object.entries(getTableTokenValues(DEFAULT_TABLE_TOKEN)).map(
+    ([key, value]) => `--${p}-table-${key}:${value}`,
+  );
 }
 
 /**

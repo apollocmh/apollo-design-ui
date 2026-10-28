@@ -35,6 +35,7 @@ import type {
   TableKey,
   TableLocale,
 } from '../interface';
+import { useTableTheme } from '../use-table-theme';
 import { getColumnKey, getColumnPos, renderColumnTitle } from '../util';
 
 // ============================== 类型 ==============================
@@ -320,6 +321,8 @@ function defineFilterDropdownComponent() {
       rootClassName: { type: String, default: undefined },
     },
     setup(props, { slots }) {
+      const tablePrefix = () => props.prefixCls.replace(/-filter$/, '');
+      const tableStyle = useTableTheme(tablePrefix);
       const column = computed(() => props.column);
       const {
         filterResetToDefaultFilteredValue,
@@ -648,7 +651,8 @@ function defineFilterDropdownComponent() {
         dropdownContent = h(
           FilterWrapper,
           {
-            className: clsx(`${props.prefixCls}-dropdown`, 'apollo-table-css-var'),
+            className: clsx(`${props.prefixCls}-dropdown`, `${tablePrefix()}-css-var`),
+            style: tableStyle.value,
           },
           { default: () => dropdownInner },
         );

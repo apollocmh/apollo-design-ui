@@ -181,3 +181,7 @@ import { Table } from '@apollo-design/ui';
 - `caption` 提供表格的可访问名。
 
 分页内容使用 `#paginationItemRender="{ page, type, element }"`、`#paginationTotal="{ total, range }"` 和 `#paginationSizeChanger="info"`。每个分页器接收当前作用域，支持顶部/底部及动态插槽；配置对象只放数据和业务事件，旧 itemRender/showTotal/sizeChangerRender 函数入口已移除。
+
+## 当前主题变量
+
+表头、排序、悬浮及筛选浮层的派生颜色跟随当前 ConfigProvider 主题，既有 Table 组件 Token 支持替换和移除，尺寸覆盖支持 0。原生根 CSS 变量优先于主题默认值；筛选 Portal 使用同一主题源。默认浅色的 40 条 CSS 变量声明保持不变。

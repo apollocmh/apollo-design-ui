@@ -144,3 +144,7 @@ Extends all `Pagination` props, plus:
 > Set `pagination: false` to hide the pagination. Default page size is 10.
 
 Pagination content uses #paginationItemRender="{ page, type, element }", #paginationTotal="{ total, range }" and #paginationSizeChanger="info". Each pager receives its current scope, including top/bottom pagers and dynamic slots. Configuration holds data and business events; itemRender/showTotal/sizeChangerRender function entries are removed.
+
+## Current theme variables
+
+Derived header, sorting, hover and filter-popup colours follow the current ConfigProvider theme. Existing Table component token overrides support replacement, removal and zero sizes. Native root CSS variables take precedence; filter portals use the same theme source. The forty default light CSS declarations are unchanged.
