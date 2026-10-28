@@ -60,3 +60,5 @@ Avatar / AvatarGroup 的原生事件与同步取消钩子、完整内容槽、�
 ### D-typography-native-controls
 
 开发阶段按 ADR0007 直接修正 Link 的 span/a 所属结构、text 编辑键盘入口与原生按钮内装饰图标语义。原 76 场景、参考 HTML 与参考 PNG 不变；19 个场景的精确差异存于 Typography contract-differences.ts，任何额外差异继续失败。详情与迁移见 Typography 契约迁移。
+
+Descriptions 的稳定原生描述项、当前配置/十Token、所属attrs与label槽修正见[Descriptions契约迁移](docs/migrations/descriptions-contracts.md)。Timeline 的原生根事件、实际ref、完整标量内容、当前六Token与显式方向见[Timeline契约迁移](docs/migrations/timeline-contracts.md)。Breadcrumb 的所属内容/菜单按钮、参数、原生attrs、当前七Token与内容槽见[Breadcrumb契约迁移](docs/migrations/breadcrumb-contracts.md)；三单元仍待产物/正式视觉/Docs统一验收，共享Menu Enter导航为本轮必修未完成。

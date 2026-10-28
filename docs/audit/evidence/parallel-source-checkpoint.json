@@ -1,0 +1,124 @@
+{
+  "runtime": {
+    "files": 73,
+    "total": 964,
+    "passed": 964,
+    "failed": 0
+  },
+  "types": {
+    "files": 10,
+    "total": 122,
+    "passed": 122,
+    "failed": 0
+  },
+  "stage": "Frozen source checkpoint for session restart; three component units remain in unified acceptance",
+  "baseCommit": "89afa186",
+  "strictRootTypes": "passed",
+  "descriptionsSourceConsumptionTypes": "passed",
+  "format": {
+    "errors": 0,
+    "warnings": 37,
+    "infos": 9
+  },
+  "timelineTypeIntegration": "Exact finite TimelineConfig object and explicit fixture token Record; no casts/index signatures; integrated122 types pass",
+  "browser": {
+    "descriptions": {
+      "checks": 62,
+      "failed": 0
+    },
+    "descriptionsHydration": {
+      "checks": 10,
+      "failed": 0
+    },
+    "timeline": {
+      "checks": 17,
+      "failed": 0
+    },
+    "breadcrumb": {
+      "checks": 14,
+      "passed": 13,
+      "failed": 1,
+      "consoleErrors": 0
+    }
+  },
+  "requiredUnfinished": [
+    "Menu Enter on the focused href menuitem closes but does not activate its owned anchor; Breadcrumb real browser failure retained",
+    "Build final UI from current source, strict L7 and published consumers",
+    "Complete original Demo/theme/interaction matrix, Docs checks/build/deployment for these three units",
+    "Clean Apollo candidates, review, approve and compare",
+    "Final whole-library same-commit gates after all audit units close"
+  ],
+  "commands": [
+    "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/overlay/src packages/ui/src/dropdown packages/ui/src/tooltip packages/ui/src/popover packages/ui/src/popconfirm packages/ui/src/_internal packages/ui/src/timeline packages/ui/src/steps packages/ui/src/descriptions packages/ui/src/breadcrumb --maxWorkers=2",
+    "pnpm exec vitest run --project types packages/overlay/src packages/ui/src/timeline packages/ui/src/steps packages/ui/src/descriptions packages/ui/src/breadcrumb --maxWorkers=1",
+    "pnpm lint:types",
+    "node node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p tests/browser/fixtures/DescriptionsSourceTypes.json",
+    "pnpm lint:format"
+  ],
+  "sourceHashes": {
+    "packages/ui/src/descriptions/DescriptionsItem.ts": "b459810eb704a0d05ffa9b2f9390a415413a299be198e0016360879c744682a5",
+    "packages/ui/src/descriptions/Descriptions.ts": "52811209da002718b640f3dcc494063769689ad24b8baa6314bf5b94c73c2eea",
+    "packages/ui/src/descriptions/items.ts": "7d06de852ebecd5df952ccadce69759f5390c301828f9e17edcebc8c4d8519cf",
+    "packages/ui/src/descriptions/context.ts": "f9957df407049ee30e4bf336127dcfb64c78c783dce402e86bbdba927ef50bcf",
+    "packages/ui/src/descriptions/interface.ts": "9103bb380eafe4e5283a594376c67bf2d709a41018cfd7f2689f182a9c3dd2a4",
+    "packages/ui/src/descriptions/index.ts": "fe8046981229629c3084eaee00e44c50a826aabd0ee7d7186c9bedaacb5e3cfb",
+    "packages/ui/src/descriptions/use-descriptions-theme.ts": "3d2a98918d704bd236989041a72d93465f82ee282a9a44b6c7314ca891e15fe7",
+    "packages/ui/src/descriptions/style/index.ts": "6cc09c8b91f5e1b482f462997440d1a6b48b5daa7a9980b07b8215eb0a42a923",
+    "packages/ui/src/descriptions/style/token.ts": "66626bf09f864ff5974c22ade297e8d371c8ad17c81f398ff233aede051ab1ea",
+    "packages/ui/src/breadcrumb/useItems.ts": "573507c4d05ac6e1dfd6baeb1f6195662c23990af99f16922bb0b31cd405a672",
+    "packages/ui/src/breadcrumb/BreadcrumbSeparator.ts": "c72f2c2ae158977f90668427501616ae0e45366dd0a9bc67cc784bdec3a09da5",
+    "packages/ui/src/breadcrumb/context.ts": "cfc0b1ac2c8dccf72dda87d9fedd6903d1e2c55281aee10e33e33e8ba29d04cd",
+    "packages/ui/src/breadcrumb/interface.ts": "22f5b64bd58f3ee78d0a70bcaccaf67460131d87d7402a20e933d3d8c4756a92",
+    "packages/ui/src/breadcrumb/useItemRender.ts": "66fd57cb22392da56d5ee76b11ff31718cca206b589b8b8004e2d9da4e509352",
+    "packages/ui/src/breadcrumb/index.ts": "38faa41dc78280b422de609c5e903428a87b015c53d46f850d15535fc4b18c69",
+    "packages/ui/src/breadcrumb/use-breadcrumb-theme.ts": "13d7a390060f445f0078fbc533952cfd2586506348f94f36cdea19751cff3dd2",
+    "packages/ui/src/breadcrumb/Breadcrumb.ts": "0d8b7ebb6301bd0abecb12ae1204c91713e6a0669fc9876c527a69982d553f80",
+    "packages/ui/src/breadcrumb/BreadcrumbItem.ts": "656f8ee507f5a27c1d33581ef5176105ba9e871dc30d002218a56e4754cd3b70",
+    "packages/ui/src/breadcrumb/style/index.ts": "60816bc065ca29785ab7e482c7cfb1e9ec01a7679b62d1e4f84278ad9e3ddeec",
+    "packages/ui/src/breadcrumb/style/token.ts": "88a61a4c1131931a16a278202e460a68f43eec2ddf2100433a9ab84a14493a70",
+    "packages/ui/src/timeline/use-items.ts": "ec070752dd958c7fa80664c8d4a80594f3f53e42d7e71a8c0b601cdaf8293dd7",
+    "packages/ui/src/timeline/interface.ts": "e96c72598a3d8f5b24459c305609702a9b68b215dd02312257a8d5602c84ae1c",
+    "packages/ui/src/timeline/index.ts": "a5900b32d2c32d607872b2150b1f67f4656445948ec53d9f01b3043b008108ad",
+    "packages/ui/src/timeline/Timeline.ts": "9e5f1c8b625f6d03726c6ea7b9b8701f815dae458b1fd81db277885e13fcec5b",
+    "packages/ui/src/timeline/use-theme.ts": "8772e4b3f88ab9d65ed7ef377edc5b7f498786f2411211444f33f80d84dcafd8",
+    "packages/ui/src/timeline/style/context.ts": "d9bf6ccf0d675a30cfc9e734289ac4fa12be23aa305816e6b292a01a43932ac3",
+    "packages/ui/src/timeline/style/index.ts": "4ba0afc514dd55b0102a4e008d4e9890ef26e01bb859fd92f1ab600f1bf72aba",
+    "packages/ui/src/timeline/style/horizontal.ts": "7f637012e77a9f82c7f6cdbbe860638a56e67571e548df8451e685ff370aae94",
+    "packages/ui/src/timeline/style/token.ts": "c064e0be2ae071e4644034b01a618227b2b0c03de55745611c2d117622b5d819",
+    "packages/ui/src/steps/useDisplaySteps.ts": "96243d617c488861aa1f83ba49add19566c7491f3ded2e3786ad0292dd12ae1b",
+    "packages/ui/src/steps/ProgressIcon.ts": "cee417dba32915a5d258ccc9fd03957548e1a41e8ac1e17daac75af04a8d3fda",
+    "packages/ui/src/steps/PanelArrow.ts": "6328658e0353703c089590678d610805e929e1e0c9378b7b613d02b8e6918a8f",
+    "packages/ui/src/steps/context.ts": "10877bc07a5ac8b7759d79fa7f59cb5a1a8887cbc07cef73180bd3e5333980ca",
+    "packages/ui/src/steps/Step.ts": "010a6fed242835b622d3b5c32bbf6b5c8decbd9f4f1f0eaa14860bba8394418f",
+    "packages/ui/src/steps/interface.ts": "142cabce7d177d21a99bc1db724577f2cf4bb5d7d5474fdb34f20c5fa835c641",
+    "packages/ui/src/steps/Rail.ts": "6b72528f7b25f4dae8de02d3081dd2ae898b945d2925700c12c75b719f83cdcf",
+    "packages/ui/src/steps/index.ts": "e0f51619a7fae625df592d2830faec30c99288b0a9797f892672bd02a2cd5e46",
+    "packages/ui/src/steps/StepIcon.ts": "b02c0e596fe9000339d770d22d238f4a506bd12a36266e9ff50aa419a196c706",
+    "packages/ui/src/steps/Steps.ts": "8abc7adefb8c13a9a575a8a51cc7ae8b7ccf9daa38e6c80a2efdb30438feab52",
+    "packages/ui/src/steps/style/index.ts": "4d69e09848f9cc71ed6b30b226ddcea00be689c35ae931f3e6e9f9bbffab25c3",
+    "packages/ui/src/steps/style/token.ts": "c7d2643b98dc5c435788d45ea092ed4fc448bd1e48ac82ab53d16d5a7cad56ff",
+    "packages/overlay/src/delay.ts": "28c1a839f209aa29b29f2b183ed626021ebb96e0ac604617d7a11639d08dc7d0",
+    "packages/overlay/src/use-overlay.ts": "43feb08abec2f837f91298863dc97337b5d7d94891d7a3de342e4cc899550142",
+    "packages/overlay/src/actions.ts": "d8a061ab95cb3d81b19d4379d5ca1b53fed58aa42a635e6959842ed9ffbedd4a",
+    "packages/overlay/src/index.ts": "86b64cc41402c88ebad7970b314d383d302ee93c293716daf14cd6cb24bb4889",
+    "packages/overlay/src/esc-stack.ts": "c67dcb4df8eb2db84065e5c7696860e5aa8dd1d71c454a03b846e7a637b3f9e9"
+  },
+  "sourceCommit": "adec7ade",
+  "sourceCommits": [
+    "89afa186",
+    "cabc97c8",
+    "48ca2313",
+    "adec7ade"
+  ],
+  "metadataChecks": {
+    "registry": "passed after regenerating affected foundation facts",
+    "contentSlots": 560,
+    "docsContent": "72 components passed",
+    "format": {
+      "errors": 0,
+      "warnings": 37,
+      "infos": 9
+    }
+  },
+  "restartHandoff": "docs/audit/2026-10-28-restart-handoff.md"
+}

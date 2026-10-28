@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-27T10:23:51.236Z",
+  "generatedAt": "2026-10-28T14:38:24.678Z",
   "sourceFacts": "dependencies.json（包定义） + scaffold-packages.mjs（dir/phase2Order/deps/poc/notDo） + components.json（消费者） + packages/*/src（规模度量）",
   "legend": {
     "status": "todo → analyzing → implementing → testing → verifying → completed（blocked 为旁路状态）",
@@ -1653,7 +1653,7 @@
       "layerNotes": "L4/L5/L6 判 n/a：本包不产 DOM 结构（R4 无视觉）、无 ARIA 语义（组件层负责）、无渲染产物。Esc 的键盘语义已在 L2 用真实 KeyboardEvent 覆盖。",
       "blockedBy": [],
       "blockers": [],
-      "notes": "2026-09-18 收口。契约先于实现（docs/foundation/overlay-contract.md）。\n\n三个**读源码才发现**的关键事实（推翻了先前的直觉，写在契约里防止后人改回去）：\n1. `@rc-component/trigger` 3.10.1 的产物里没有任何 Esc/keydown —— Esc 的监听与\n   LIFO 栈在 `@rc-component/portal/es/useEscKeyDown.js`，trigger 只在 index.js:232-236\n   消费 `onEsc({top})`。本包承接的是 rc-portal 那部分能力（portal-contract §3.6 已排除）。\n2. antd 的 z-index **不是** LIFO 栈，而是「组件类型偏移 + 嵌套上下文累加」，且最外层\n   浮层不设 z-index。所以 packages/overlay/README.md 里「后开的浮层在上层」那句是错的，\n   z-index 归 portal；本包唯一的栈是 Esc 栈（两者是独立机制）。\n3. Vue 的事件 prop 名必须全小写（onMouseenter 而非 onMouseEnter）—— Vue 的 parseName\n   会 hyphenate，写成 React 风格会解析成不存在的 `mouse-enter`，静默失效。\n\n与 React 的形态差异：不用 cloneElement，改为返回 targetProps/popupProps 供 v-bind。",
+      "notes": "2026-09-18 收口。契约先于实现（docs/foundation/overlay-contract.md）。\n\n三个**读源码才发现**的关键事实（推翻了先前的直觉，写在契约里防止后人改回去）：\n1. `@rc-component/trigger` 3.10.1 的产物里没有任何 Esc/keydown —— Esc 的监听与\n   LIFO 栈在 `@rc-component/portal/es/useEscKeyDown.js`，trigger 只在 index.js:232-236\n   消费 `onEsc({top})`。本包承接的是 rc-portal 那部分能力（portal-contract §3.6 已排除）。\n2. antd 的 z-index **不是** LIFO 栈，而是「组件类型偏移 + 嵌套上下文累加」，且最外层\n   浮层不设 z-index。所以 packages/overlay/README.md 里「后开的浮层在上层」那句是错的，\n   z-index 归 portal；本包唯一的栈是 Esc 栈（两者是独立机制）。\n3. Vue 的事件 prop 名必须全小写（onMouseenter 而非 onMouseEnter）—— Vue 的 parseName\n   会 hyphenate，写成 React 风格会解析成不存在的 `mouse-enter`，静默失效。\n\n与 React 的形态差异：不用 cloneElement，改为返回 targetProps/popupProps 供 v-bind。\n2026-10-28窄修89afa186：外部实际受控显隐变化同步清除本实例旧触发延迟；4条复现修前3红，Overlay/Dropdown/Tooltip/Popover/Popconfirm/内部相关42文件482条通过，Breadcrumb实际菜单关闭不再延迟重开。仅当前源码专项证据，不代表整包重审或新L7通过；集成构建待执行。见docs/audit/2026-10-28-overlay-controlled-delay-audit.md。",
       "verification": {
         "verifiedAt": "2026-10-04",
         "unit": {
@@ -1704,7 +1704,7 @@
           "@apollo-design/ui"
         ],
         "srcFiles": 5,
-        "srcLines": 911,
+        "srcLines": 915,
         "exportDeclarations": 24
       }
     },

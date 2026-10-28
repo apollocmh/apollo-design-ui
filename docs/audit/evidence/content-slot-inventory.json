@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 549,
+    "rows": 560,
     "byCategory": {
-      "data": 121,
-      "component-content-candidate": 155,
+      "data": 124,
+      "component-content-candidate": 154,
       "deprecated": 53,
-      "internal": 142,
+      "internal": 151,
       "render-function-candidate": 66,
       "configuration": 12
     },
     "byDecision": {
-      "keep-data": 133,
-      "review": 199,
-      "skip": 195,
+      "keep-data": 136,
+      "review": 198,
+      "skip": 204,
       "implemented-verified": 22
     }
   },
@@ -1038,22 +1038,30 @@
       "owner": "BreadcrumbItemProps",
       "prop": "dropdownIcon",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/breadcrumb/interface.ts:213",
+      "source": "packages/ui/src/breadcrumb/interface.ts:100",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/Breadcrumb.ts",
+          "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/demo/native.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
           "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
         ]
       },
@@ -1065,23 +1073,31 @@
       "owner": "BreadcrumbItemProps",
       "prop": "separator",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/breadcrumb/interface.ts:218",
+      "source": "packages/ui/src/breadcrumb/interface.ts:102",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/Breadcrumb.ts",
+          "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/demo/native.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
           "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
         ]
@@ -1094,7 +1110,7 @@
       "owner": "BreadcrumbItemSlots",
       "prop": "default",
       "category": "internal",
-      "source": "packages/ui/src/breadcrumb/interface.ts:224",
+      "source": "packages/ui/src/breadcrumb/interface.ts:106",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -1117,6 +1133,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
           "packages/ui/src/breadcrumb/__tests__/semantic.test.ts",
           "packages/ui/src/breadcrumb/__tests__/vue-slots.test.ts"
@@ -1127,10 +1144,82 @@
     },
     {
       "component": "breadcrumb",
+      "owner": "BreadcrumbItemSlots",
+      "prop": "dropdownIcon",
+      "category": "internal",
+      "source": "packages/ui/src/breadcrumb/interface.ts:108",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/Breadcrumb.ts",
+          "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/demo/native.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "breadcrumb",
+      "owner": "BreadcrumbItemSlots",
+      "prop": "separator",
+      "category": "internal",
+      "source": "packages/ui/src/breadcrumb/interface.ts:107",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/Breadcrumb.ts",
+          "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/demo/native.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/index.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "breadcrumb",
       "owner": "BreadcrumbItemType",
       "prop": "title",
       "category": "data",
-      "source": "packages/ui/src/breadcrumb/interface.ts:62",
+      "source": "packages/ui/src/breadcrumb/interface.ts:15",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -1147,6 +1236,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
           "packages/ui/src/breadcrumb/__tests__/semantic.test.ts",
           "packages/ui/src/breadcrumb/__tests__/vue-slots.test.ts"
@@ -1158,9 +1248,84 @@
     {
       "component": "breadcrumb",
       "owner": "BreadcrumbMenuItem",
+      "prop": "extra",
+      "category": "data",
+      "source": "packages/ui/src/menu/interface.ts:75",
+      "slotRuntime": {
+        "status": "not-run",
+        "files": []
+      },
+      "slotType": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "not-found",
+        "files": []
+      },
+      "decision": "keep-data",
+      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+    },
+    {
+      "component": "breadcrumb",
+      "owner": "BreadcrumbMenuItem",
+      "prop": "icon",
+      "category": "data",
+      "source": "packages/ui/src/menu/interface.ts:72",
+      "slotRuntime": {
+        "status": "not-run",
+        "files": []
+      },
+      "slotType": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "not-found",
+        "files": []
+      },
+      "decision": "keep-data",
+      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+    },
+    {
+      "component": "breadcrumb",
+      "owner": "BreadcrumbMenuItem",
+      "prop": "itemIcon",
+      "category": "data",
+      "source": "packages/ui/src/menu/interface.ts:73",
+      "slotRuntime": {
+        "status": "not-run",
+        "files": []
+      },
+      "slotType": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "not-found",
+        "files": []
+      },
+      "decision": "keep-data",
+      "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+    },
+    {
+      "component": "breadcrumb",
+      "owner": "BreadcrumbMenuItem",
       "prop": "label",
       "category": "data",
-      "source": "packages/ui/src/breadcrumb/interface.ts:101",
+      "source": "packages/ui/src/breadcrumb/interface.ts:40",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -1177,6 +1342,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
           "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
         ]
       },
@@ -1188,7 +1354,7 @@
       "owner": "BreadcrumbMenuItem",
       "prop": "title",
       "category": "data",
-      "source": "packages/ui/src/breadcrumb/interface.ts:100",
+      "source": "packages/ui/src/breadcrumb/interface.ts:39",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -1205,6 +1371,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
           "packages/ui/src/breadcrumb/__tests__/semantic.test.ts",
           "packages/ui/src/breadcrumb/__tests__/vue-slots.test.ts"
@@ -1218,22 +1385,30 @@
       "owner": "BreadcrumbProps",
       "prop": "dropdownIcon",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/breadcrumb/interface.ts:162",
+      "source": "packages/ui/src/breadcrumb/interface.ts:73",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/Breadcrumb.ts",
+          "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/demo/native.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
           "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
         ]
       },
@@ -1245,23 +1420,31 @@
       "owner": "BreadcrumbProps",
       "prop": "separator",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/breadcrumb/interface.ts:160",
+      "source": "packages/ui/src/breadcrumb/interface.ts:72",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/Breadcrumb.ts",
+          "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/demo/native.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
           "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
         ]
@@ -1274,7 +1457,7 @@
       "owner": "BreadcrumbSeparatorSlots",
       "prop": "default",
       "category": "internal",
-      "source": "packages/ui/src/breadcrumb/interface.ts:246",
+      "source": "packages/ui/src/breadcrumb/interface.ts:112",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -1297,6 +1480,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
           "packages/ui/src/breadcrumb/__tests__/semantic.test.ts",
           "packages/ui/src/breadcrumb/__tests__/vue-slots.test.ts"
@@ -1310,23 +1494,31 @@
       "owner": "BreadcrumbSeparatorType",
       "prop": "separator",
       "category": "data",
-      "source": "packages/ui/src/breadcrumb/interface.ts:86",
+      "source": "packages/ui/src/breadcrumb/interface.ts:32",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/Breadcrumb.ts",
+          "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/demo/native.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
           "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
         ]
@@ -1339,7 +1531,7 @@
       "owner": "BreadcrumbSlots",
       "prop": "default",
       "category": "internal",
-      "source": "packages/ui/src/breadcrumb/interface.ts:184",
+      "source": "packages/ui/src/breadcrumb/interface.ts:84",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -1362,6 +1554,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
           "packages/ui/src/breadcrumb/__tests__/index.test.ts",
           "packages/ui/src/breadcrumb/__tests__/semantic.test.ts",
           "packages/ui/src/breadcrumb/__tests__/vue-slots.test.ts"
@@ -1373,9 +1566,44 @@
     {
       "component": "breadcrumb",
       "owner": "BreadcrumbSlots",
+      "prop": "dropdownIcon",
+      "category": "internal",
+      "source": "packages/ui/src/breadcrumb/interface.ts:87",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/Breadcrumb.ts",
+          "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/demo/native.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "breadcrumb",
+      "owner": "BreadcrumbSlots",
       "prop": "itemRender",
       "category": "internal",
-      "source": "packages/ui/src/breadcrumb/interface.ts:185",
+      "source": "packages/ui/src/breadcrumb/interface.ts:85",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -1397,8 +1625,46 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
           "packages/ui/src/breadcrumb/__tests__/semantic.test.ts",
           "packages/ui/src/breadcrumb/__tests__/vue-slots.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "breadcrumb",
+      "owner": "BreadcrumbSlots",
+      "prop": "separator",
+      "category": "internal",
+      "source": "packages/ui/src/breadcrumb/interface.ts:86",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/Breadcrumb.ts",
+          "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/demo/native.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/breadcrumb/__tests__/a11y.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/index.test.ts",
+          "packages/ui/src/breadcrumb/__tests__/semantic.test.ts"
         ]
       },
       "decision": "skip",
@@ -4356,10 +4622,82 @@
     },
     {
       "component": "descriptions",
+      "owner": "DescriptionsItemSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/descriptions/interface.ts:94",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/Descriptions.ts",
+          "packages/ui/src/descriptions/DescriptionsItem.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/__tests__/contracts.test.ts",
+          "packages/ui/src/descriptions/__tests__/index.test.ts",
+          "packages/ui/src/descriptions/__tests__/render-rows.test.ts",
+          "packages/ui/src/descriptions/__tests__/s31-issue31.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "descriptions",
+      "owner": "DescriptionsItemSlots",
+      "prop": "label",
+      "category": "internal",
+      "source": "packages/ui/src/descriptions/interface.ts:95",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/DescriptionsItem.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/demo/custom-item.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/__tests__/contracts.test.ts",
+          "packages/ui/src/descriptions/__tests__/index.test.ts",
+          "packages/ui/src/descriptions/__tests__/render-rows.test.ts",
+          "packages/ui/src/descriptions/__tests__/s31-issue31.test.ts",
+          "packages/ui/src/descriptions/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "descriptions",
       "owner": "DescriptionsItemType",
       "prop": "children",
       "category": "data",
-      "source": "packages/ui/src/descriptions/interface.ts:26",
+      "source": "packages/ui/src/descriptions/interface.ts:12",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -4375,6 +4713,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/descriptions/__tests__/contracts.test.ts",
           "packages/ui/src/descriptions/__tests__/index.test.ts",
           "packages/ui/src/descriptions/__tests__/render-rows.test.ts",
           "packages/ui/src/descriptions/__tests__/s31-issue31.test.ts",
@@ -4389,22 +4728,29 @@
       "owner": "DescriptionsItemType",
       "prop": "label",
       "category": "data",
-      "source": "packages/ui/src/descriptions/interface.ts:24",
+      "source": "packages/ui/src/descriptions/interface.ts:11",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/DescriptionsItem.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/demo/custom-item.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/descriptions/__tests__/contracts.test.ts",
           "packages/ui/src/descriptions/__tests__/index.test.ts",
           "packages/ui/src/descriptions/__tests__/render-rows.test.ts",
           "packages/ui/src/descriptions/__tests__/s31-issue31.test.ts",
@@ -4416,40 +4762,10 @@
     },
     {
       "component": "descriptions",
-      "owner": "DescriptionsProps",
-      "prop": "children",
-      "category": "component-content-candidate",
-      "source": "packages/ui/src/descriptions/interface.ts:92",
-      "slotRuntime": {
-        "status": "not-run",
-        "files": []
-      },
-      "slotType": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotDemo": {
-        "status": "not-found",
-        "files": []
-      },
-      "slotTest": {
-        "status": "source-reference",
-        "files": [
-          "packages/ui/src/descriptions/__tests__/index.test.ts",
-          "packages/ui/src/descriptions/__tests__/render-rows.test.ts",
-          "packages/ui/src/descriptions/__tests__/s31-issue31.test.ts",
-          "packages/ui/src/descriptions/__tests__/semantic.test.ts"
-        ]
-      },
-      "decision": "review",
-      "reason": "Props 命名仅为候选；须核对公开组件、实际消费、别名和契约。静态命中不代表运行通过，未命中也不直接判定缺少插槽。"
-    },
-    {
-      "component": "descriptions",
       "owner": "DescriptionsRowItem",
       "prop": "children",
       "category": "data",
-      "source": "packages/ui/src/descriptions/interface.ts:107",
+      "source": "packages/ui/src/descriptions/interface.ts:12",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -4465,6 +4781,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/descriptions/__tests__/contracts.test.ts",
           "packages/ui/src/descriptions/__tests__/index.test.ts",
           "packages/ui/src/descriptions/__tests__/render-rows.test.ts",
           "packages/ui/src/descriptions/__tests__/s31-issue31.test.ts",
@@ -4479,22 +4796,29 @@
       "owner": "DescriptionsRowItem",
       "prop": "label",
       "category": "data",
-      "source": "packages/ui/src/descriptions/interface.ts:106",
+      "source": "packages/ui/src/descriptions/interface.ts:11",
       "slotRuntime": {
-        "status": "not-run",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/DescriptionsItem.ts"
+        ]
       },
       "slotType": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/interface.ts"
+        ]
       },
       "slotDemo": {
-        "status": "not-found",
-        "files": []
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/demo/custom-item.vue"
+        ]
       },
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/descriptions/__tests__/contracts.test.ts",
           "packages/ui/src/descriptions/__tests__/index.test.ts",
           "packages/ui/src/descriptions/__tests__/render-rows.test.ts",
           "packages/ui/src/descriptions/__tests__/s31-issue31.test.ts",
@@ -4503,6 +4827,114 @@
       },
       "decision": "keep-data",
       "reason": "数据或配置字段，不能机械补同名组件插槽；必要时逐项评估 scoped slot。"
+    },
+    {
+      "component": "descriptions",
+      "owner": "DescriptionsSlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/descriptions/interface.ts:89",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/Descriptions.ts",
+          "packages/ui/src/descriptions/DescriptionsItem.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "not-found",
+        "files": []
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/__tests__/contracts.test.ts",
+          "packages/ui/src/descriptions/__tests__/index.test.ts",
+          "packages/ui/src/descriptions/__tests__/render-rows.test.ts",
+          "packages/ui/src/descriptions/__tests__/s31-issue31.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "descriptions",
+      "owner": "DescriptionsSlots",
+      "prop": "extra",
+      "category": "internal",
+      "source": "packages/ui/src/descriptions/interface.ts:91",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/Descriptions.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/demo/component-token.vue",
+          "packages/ui/src/descriptions/demo/custom-item.vue",
+          "packages/ui/src/descriptions/demo/extra-button.vue",
+          "packages/ui/src/descriptions/demo/extra.vue",
+          "packages/ui/src/descriptions/demo/vertical-border.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/__tests__/contracts.test.ts",
+          "packages/ui/src/descriptions/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "descriptions",
+      "owner": "DescriptionsSlots",
+      "prop": "title",
+      "category": "internal",
+      "source": "packages/ui/src/descriptions/interface.ts:90",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/Descriptions.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/demo/extra-button.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/descriptions/__tests__/contracts.test.ts",
+          "packages/ui/src/descriptions/__tests__/index.test.ts",
+          "packages/ui/src/descriptions/__tests__/semantic.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
     },
     {
       "component": "drawer",
@@ -14835,7 +15267,7 @@
       "owner": "TimelineItemType",
       "prop": "children",
       "category": "deprecated",
-      "source": "packages/ui/src/timeline/interface.ts:66",
+      "source": "packages/ui/src/timeline/interface.ts:64",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -14851,6 +15283,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/timeline/__tests__/contracts.test.ts",
           "packages/ui/src/timeline/__tests__/index.test.ts",
           "packages/ui/src/timeline/__tests__/semantic.test.ts"
         ]
@@ -14863,7 +15296,7 @@
       "owner": "TimelineItemType",
       "prop": "content",
       "category": "data",
-      "source": "packages/ui/src/timeline/interface.ts:62",
+      "source": "packages/ui/src/timeline/interface.ts:60",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -14880,6 +15313,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/timeline/__tests__/a11y.test.ts",
+          "packages/ui/src/timeline/__tests__/contracts.test.ts",
           "packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue",
           "packages/ui/src/timeline/__tests__/index.test.ts",
           "packages/ui/src/timeline/__tests__/item-semantics.test.ts",
@@ -14896,7 +15330,7 @@
       "owner": "TimelineItemType",
       "prop": "dot",
       "category": "deprecated",
-      "source": "packages/ui/src/timeline/interface.ts:71",
+      "source": "packages/ui/src/timeline/interface.ts:69",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -14912,6 +15346,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/timeline/__tests__/contracts.test.ts",
           "packages/ui/src/timeline/__tests__/index.test.ts",
           "packages/ui/src/timeline/__tests__/semantic.test.ts"
         ]
@@ -14924,7 +15359,7 @@
       "owner": "TimelineItemType",
       "prop": "icon",
       "category": "data",
-      "source": "packages/ui/src/timeline/interface.ts:69",
+      "source": "packages/ui/src/timeline/interface.ts:67",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -14952,7 +15387,7 @@
       "owner": "TimelineItemType",
       "prop": "label",
       "category": "deprecated",
-      "source": "packages/ui/src/timeline/interface.ts:64",
+      "source": "packages/ui/src/timeline/interface.ts:62",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -14968,6 +15403,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/timeline/__tests__/contracts.test.ts",
           "packages/ui/src/timeline/__tests__/index.test.ts",
           "packages/ui/src/timeline/__tests__/semantic.test.ts"
         ]
@@ -14980,7 +15416,7 @@
       "owner": "TimelineItemType",
       "prop": "title",
       "category": "data",
-      "source": "packages/ui/src/timeline/interface.ts:60",
+      "source": "packages/ui/src/timeline/interface.ts:58",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -14997,6 +15433,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/timeline/__tests__/a11y.test.ts",
+          "packages/ui/src/timeline/__tests__/contracts.test.ts",
           "packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue",
           "packages/ui/src/timeline/__tests__/index.test.ts",
           "packages/ui/src/timeline/__tests__/item-semantics.test.ts",
@@ -15013,7 +15450,7 @@
       "owner": "TimelineProps",
       "prop": "pending",
       "category": "deprecated",
-      "source": "packages/ui/src/timeline/interface.ts:128",
+      "source": "packages/ui/src/timeline/interface.ts:126",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -15030,6 +15467,7 @@
         "status": "source-reference",
         "files": [
           "packages/ui/src/timeline/__tests__/a11y.test.ts",
+          "packages/ui/src/timeline/__tests__/contracts.test.ts",
           "packages/ui/src/timeline/__tests__/index.test.ts",
           "packages/ui/src/timeline/__tests__/semantic.test.ts"
         ]
@@ -15042,7 +15480,7 @@
       "owner": "TimelineProps",
       "prop": "pendingDot",
       "category": "deprecated",
-      "source": "packages/ui/src/timeline/interface.ts:130",
+      "source": "packages/ui/src/timeline/interface.ts:128",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -15069,7 +15507,7 @@
       "owner": "TimelineSlots",
       "prop": "itemContent",
       "category": "internal",
-      "source": "packages/ui/src/timeline/interface.ts:154",
+      "source": "packages/ui/src/timeline/interface.ts:151",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -15091,6 +15529,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/timeline/__tests__/contracts.test.ts",
           "packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue",
           "packages/ui/src/timeline/__tests__/item-semantics.test.ts",
           "packages/ui/src/timeline/__tests__/item-slots.test.ts"
@@ -15104,7 +15543,7 @@
       "owner": "TimelineSlots",
       "prop": "itemIcon",
       "category": "internal",
-      "source": "packages/ui/src/timeline/interface.ts:155",
+      "source": "packages/ui/src/timeline/interface.ts:152",
       "slotRuntime": {
         "status": "source-reference",
         "files": [
@@ -15138,7 +15577,7 @@
       "owner": "TimelineSlots",
       "prop": "itemTitle",
       "category": "internal",
-      "source": "packages/ui/src/timeline/interface.ts:153",
+      "source": "packages/ui/src/timeline/interface.ts:150",
       "slotRuntime": {
         "status": "source-reference",
         "files": [

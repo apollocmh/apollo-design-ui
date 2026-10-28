@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T14:13:08.631Z",
+  "generatedAt": "2026-10-28T14:37:59.751Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -2110,7 +2110,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-28当前完整契约并行审计中；历史completed及已有局部修复不等于本轮验收。完整清单/红灯见对应本轮contract-audit，统一验收后更新。",
+      "why": "2026-10-28并行源码保存点：cabc97c8；源码119四层、62Chrome/10水合，13Demo源码消费类型通过。集成964运行时/122类型/根严格通过；发布产物、完整Demo/Docs/正式视觉统一验收未完成，见对应contract-audit及parallel-source-checkpoint证据。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P2",
@@ -2805,7 +2805,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-28当前完整契约并行审计中；历史completed及已有局部修复不等于本轮验收。完整清单/红灯见对应本轮contract-audit，统一验收后更新。",
+      "why": "2026-10-28并行源码保存点：adec7ade；当前源码实现/110相关四层通过，真实浏览器13/14，Menu Enter href导航仍为本轮必修红灯。集成964运行时/122类型/根严格通过；发布产物、完整Demo/Docs/正式视觉统一验收未完成，见对应contract-audit及parallel-source-checkpoint证据。",
       "doneWhen": [],
       "group": "导航",
       "priority": "P5",
@@ -2881,7 +2881,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-28当前完整契约并行审计中；历史completed及已有局部修复不等于本轮验收。完整清单/红灯见对应本轮contract-audit，统一验收后更新。",
+      "why": "2026-10-28并行源码保存点：48ca2313；Timeline/Steps249四层、17源码浏览器通过，原生事件/实际ref/六Token修复。集成964运行时/122类型/根严格通过；发布产物、完整Demo/Docs/正式视觉统一验收未完成，见对应contract-audit及parallel-source-checkpoint证据。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P5",

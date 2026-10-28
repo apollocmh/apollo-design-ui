@@ -655,3 +655,9 @@ Typography最终验收提交22186737已上线；workflow40670124684构建/Pages�
 2026-10-28 Badge本地完整清单已统一验收：冻结d0bf2cef视觉42/42原始RGBA exact，Avatar48/48 exact；原495项492完全不变，三张已审前景更新各26像素。1257/104/172/64/12SSR/16消费/13Demo发布模板/UI L7及Docs161+32通过。最终Docs发布与线上回执待收口，详见[最终验收](audit/evidence/badge-final-acceptance.json)。当前537/1422视觉批准、885待验收，全库其他整改单元继续。
 
 2026-10-28 Badge最终回执：验收47b98296、部署40701370080成功；CI Docs161/拓扑L7 151零失败零待定，线上32零错误/26既有SPA回退。完整单元已收口，其他审计继续。详见badge-docs-publication.json。
+
+### 2026-10-28 · 三路并行源码保存点（未完整验收）
+
+Descriptions cabc97c8、Timeline/Steps 48ca2313、Breadcrumb adec7ade 已按各自完整清单成组实施；Overlay延迟失效89afa186同步修复。合并源码73文件964运行时、10文件122类型、根严格、Descriptions源码消费类型通过。Descriptions真实Chrome62与水合10通过；Timeline源码浏览器17通过；Breadcrumb14项13通过/1失败，零浏览器错误。唯一真实红灯是共享Menu聚焦href项后Enter只关闭、不导航，属于本轮必修，保留复现，不归后续优化。
+
+三单元发布UI/声明消费、完整Demo主题矩阵、Docs/正式Apollo视觉及全库最终同提交门禁尚未执行；不能按源码绿灯标为全部完成。源码类型的两处集成红灯已修正，合并122类型通过。接续见[重启保存点](audit/2026-10-28-restart-handoff.md)与[结构化证据](audit/evidence/parallel-source-checkpoint.json)。
