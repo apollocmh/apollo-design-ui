@@ -1,25 +1,10 @@
-/**
- * Sider 的样式生成（genSiderStyle）。
- *
- * 契约来源：antd 6.6.4 `es/layout/style/sider.js` 的 `genSiderStyle` +
- * extractStyle 实测产物（cssVar 模式，hash 已去掉）。
- *
- * ⚠️ 与 Layout 共用同一份 `prepareComponentToken` —— 所以这里也要声明那 19 个
- *    token（antd 的 `genStyleHooks(['Layout','Sider'], …)` 同样是各声明一份）。
- * ⚠️ `margin-top:-0.1px`：antd 源码写 `-0.1`，cssinjs 的 `unit()` 补 px。
- * ⚠️ `inset-inline-end: calc(var(--…-zero-trigger-width) * -1)`：antd 用
- *    `token.calc(x).mul(-1)`，产物就是这个 calc。
- */
+/** Static Sider styles with current Alias fallbacks and logical trigger geometry. */
 
 import { token2CSSVar } from '@apollo-design/theme';
-import { genTokenDecls } from './index';
+import { layoutTokenValue } from './defaults';
 
 /** token 名 → `var(--apollo-*)`。 */
 const v = (token: string): string => `var(${token2CSSVar(token)})`;
-
-/** Component Token 的 CSS 变量名。 */
-const cv = (rootPrefixCls: string, name: string): string =>
-  `var(--${rootPrefixCls}-layout-${name})`;
 
 /**
  * 生成 Sider 的静态 CSS。
@@ -29,18 +14,15 @@ const cv = (rootPrefixCls: string, name: string): string =>
 export function genSiderStyle(rootPrefixCls: string): string {
   const cls = `.${rootPrefixCls}-layout-sider`;
   const menuCls = `.${rootPrefixCls}-menu`;
-  const t = (name: string) => cv(rootPrefixCls, name);
-
-  // Sider 需要自己的一份 token 声明（与 Layout 块内容一致）
-  const tokenDecls = genTokenDecls(rootPrefixCls).join('');
+  const t = (name: Parameters<typeof layoutTokenValue>[1]) => layoutTokenValue(rootPrefixCls, name);
 
   const rules: string[] = [
-    // ---- Component Token 声明 ----
     `${cls}{`,
-    tokenDecls,
-    // resetComponent（同 Layout；漏了它两侧字体就不同）
+    // Standalone Sider owns the same structural font reset as Layout.
     `  font-family:${v('fontFamily')};`,
     `  font-size:${v('fontSize')};`,
+    `  line-height:${v('lineHeight')};`,
+    `  color:${v('colorTextLightSolid')};`,
     `  box-sizing:border-box;`,
     // ---- genSiderStyle ----
     `  position:relative;`,
@@ -68,6 +50,18 @@ export function genSiderStyle(rootPrefixCls: string): string {
     `${cls}-zero-width ${cls}-children{`,
     `  overflow:hidden;`,
     `}`,
+    `${cls} ${cls}-trigger,${cls} ${cls}-zero-width-trigger{`,
+    `  margin:0;`,
+    `  padding:0;`,
+    `  border:0;`,
+    `  font:inherit;`,
+    `  appearance:none;`,
+    `  box-sizing:border-box;`,
+    `}`,
+    `${cls} ${cls}-trigger:focus-visible,${cls} ${cls}-zero-width-trigger:focus-visible{`,
+    `  outline:${v('lineWidthFocus')} solid ${v('colorPrimary')};`,
+    `  outline-offset:calc(${v('lineWidthFocus')} * -1);`,
+    `}`,
     `${cls} ${cls}-trigger{`,
     `  position:fixed;`,
     `  bottom:0;`,
@@ -93,7 +87,9 @@ export function genSiderStyle(rootPrefixCls: string): string {
     `  align-items:center;`,
     `  justify-content:center;`,
     `  background:${t('sider-bg')};`,
-    `  border-radius:0 ${v('borderRadiusLG')} ${v('borderRadiusLG')} 0;`,
+    `  border-radius:0;`,
+    `  border-start-end-radius:${v('borderRadiusLG')};`,
+    `  border-end-end-radius:${v('borderRadiusLG')};`,
     `  cursor:pointer;`,
     `  transition:background-color ${v('motionDurationSlow')} ease;`,
     `}`,
@@ -108,12 +104,17 @@ export function genSiderStyle(rootPrefixCls: string): string {
     `  background:rgba(255, 255, 255, 0.2);`,
     `}`,
     `${cls} ${cls}-zero-width-trigger-right{`,
+    `  inset-inline-end:auto;`,
     `  inset-inline-start:calc(${t('zero-trigger-width')} * -1);`,
-    `  border-radius:${v('borderRadiusLG')} 0 0 ${v('borderRadiusLG')};`,
+    `  border-start-end-radius:0;`,
+    `  border-end-end-radius:0;`,
+    `  border-start-start-radius:${v('borderRadiusLG')};`,
+    `  border-end-start-radius:${v('borderRadiusLG')};`,
     `}`,
     // ==================== Light ====================
     `${cls}-light{`,
     `  background:${t('light-sider-bg')};`,
+    `  color:${v('colorText')};`,
     `}`,
     `${cls}-light ${cls}-trigger{`,
     `  color:${t('light-trigger-color')};`,
@@ -124,6 +125,13 @@ export function genSiderStyle(rootPrefixCls: string): string {
     `  background:${t('light-trigger-bg')};`,
     `  border:${v('lineWidth')} ${v('lineType')} ${t('body-bg')};`,
     `  border-inline-start:0;`,
+    `}`,
+    `${cls}-light ${cls}-zero-width-trigger-right{`,
+    `  border-inline-start:${v('lineWidth')} ${v('lineType')} ${t('body-bg')};`,
+    `  border-inline-end:0;`,
+    `}`,
+    `@media (prefers-reduced-motion:reduce){`,
+    `${cls},${cls} ${cls}-trigger,${cls} ${cls}-zero-width-trigger,${cls} ${cls}-zero-width-trigger::after{transition:none;}`,
     `}`,
   ];
 

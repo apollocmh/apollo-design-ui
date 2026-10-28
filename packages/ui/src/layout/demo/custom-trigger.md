@@ -5,6 +5,4 @@ title:
   en-US: Custom trigger
 ---
 
-`trigger={null}` 关掉内置触发器，改用外部按钮控制折叠。
-
-> 与 antd 的差异：本仓 `Menu` 尚未落地，演示里的导航用等价的原生 `ul/li` 结构。
+trigger=null 隐藏内置按钮，在 Header 使用有名称与展开状态的真实 Button；v-model:collapsed 控制侧边栏与 Menu。

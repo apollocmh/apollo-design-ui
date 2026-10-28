@@ -8,6 +8,8 @@
 import { demoTest } from '@apollo-design/test-utils';
 
 demoTest('Layout', {
+  // ConfigProvider preserves identity by moving real DOM; a Teleport stub cannot model it.
+  global: { stubs: { teleport: false } },
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
   expectCount: 11,
 });

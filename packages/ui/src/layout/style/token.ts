@@ -78,7 +78,7 @@ export const prepareComponentToken = (token: AliasToken): ComponentToken => {
     headerBg: LAYOUT_HEADER_BG,
     headerHeight: token.controlHeight * 2,
     headerPadding: `0 ${paddingInline}px`,
-    headerColor: token.colorText,
+    headerColor: token.colorTextLightSolid,
     footerPadding: `${token.controlHeightSM}px ${paddingInline}px`,
     footerBg: token.colorBgLayout,
     siderBg: LAYOUT_SIDER_BG,

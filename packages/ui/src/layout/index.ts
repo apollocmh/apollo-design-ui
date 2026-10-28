@@ -46,11 +46,14 @@ export type {
   LayoutContextProps,
   LayoutProps,
   LayoutRef,
+  LayoutSlots,
   SiderContextProps,
+  SiderEmits,
   SiderProps,
   SiderRef,
   SiderSemanticClassNames,
   SiderSemanticStyles,
+  SiderSlots,
   SiderTheme,
 } from './interface';
 export { genLayoutStyle } from './style';

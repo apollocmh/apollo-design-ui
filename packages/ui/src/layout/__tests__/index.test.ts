@@ -166,13 +166,14 @@ describe('Sider · 折叠', () => {
     expect(w.classes()).not.toContain('apollo-layout-sider-collapsed');
   });
 
-  it('零宽触发器：span + click 触发折叠', async () => {
+  it('零宽触发器：native button + click 触发折叠（ADR0007）', async () => {
     const onCollapse = vi.fn();
     const w = mount(Sider, {
       props: { collapsible: true, collapsedWidth: 0, onCollapse },
     });
     const trigger = w.find('.apollo-layout-sider-zero-width-trigger');
-    expect(trigger.element.tagName).toBe('SPAN');
+    expect(trigger.element.tagName).toBe('BUTTON');
+    expect(trigger.attributes('type')).toBe('button');
     await trigger.trigger('click');
     expect(onCollapse).toHaveBeenCalledWith(true, 'clickTrigger');
   });

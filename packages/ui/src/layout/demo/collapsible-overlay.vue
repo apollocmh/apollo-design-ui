@@ -1,92 +1,51 @@
 <script setup lang="ts">
-// 对齐 antd 的 collapsible-overlay demo（PLATFORM 替换：Menu → 等价原生 ul/li）
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@apollo-design/icons';
-import { Layout } from '@apollo-design/ui';
-import { h, ref } from 'vue';
+import { Breadcrumb, Layout, Menu } from '@apollo-design/ui';
+import { ref } from 'vue';
 
 const { Header, Content, Footer, Sider } = Layout;
-
 const collapsed = ref(false);
-const navItems = ['nav 1', 'nav 2', 'nav 3', 'nav 4'];
-
-// ⚠️ 同上：模板内联箭头函数参数会隐式 any
-const onCollapse = (c: boolean) => {
-  collapsed.value = c;
-};
+const nav = [
+  { key: 'home', label: 'Overview' },
+  { key: 'projects', label: 'Projects' },
+  { key: 'settings', label: 'Settings' },
+];
+const crumbs = [
+  { title: 'Home', href: '#/layout-home' },
+  { title: 'Projects' },
+  { title: 'Details' },
+];
 </script>
-
-<template>
-  <Layout class="demo-layout-overlay">
-    <Sider
-      collapsible
-      :collapsed="collapsed"
-      collapsed-width="0"
-      class="demo-layout-overlay-sider"
-      :trigger="collapsed ? h(MenuUnfoldOutlined) : h(MenuFoldOutlined)"
-      :on-collapse="onCollapse"
-    >
-      <div class="demo-layout-logo-vertical" />
-      <ul class="demo-menu demo-menu-dark demo-menu-inline">
-        <li v-for="item in navItems" :key="item" class="demo-menu-item">{{ item }}</li>
-      </ul>
-    </Sider>
-    <Layout>
-      <Header class="demo-layout-header" />
-      <Content class="demo-layout-content">
-        <div class="demo-layout-card">Content</div>
-      </Content>
-      <Footer class="demo-layout-footer">Ant Design ©2026 Created by Ant UED</Footer>
-    </Layout>
-  </Layout>
-</template>
+<template><Layout class="demo-overlay"><Sider v-model:collapsed="collapsed" collapsible :collapsed-width="0" :width="180" class="demo-overlay-sider"><Menu class="demo-navigation" theme="dark" mode="inline" :items="nav" :default-selected-keys="['home']" /></Sider><Layout><Header class="demo-header">Overlay navigation</Header><Content class="demo-content"><Breadcrumb class="demo-breadcrumb" :items="crumbs" /><div class="demo-card">Project content</div></Content><Footer class="demo-footer">Apollo Design · Workspace</Footer></Layout></Layout></template>
 
 <style scoped>
-.demo-layout-overlay {
-  position: relative;
-  min-height: 360px;
+.demo-header { display: flex; align-items: center; gap: 16px; padding-inline: 20px; }
+.demo-header :deep(.apollo-menu-horizontal) { flex: 1; min-width: 0; }
+.demo-content { min-width: 0; padding: 20px; }
+.demo-card { min-height: 240px; padding: 20px; background: var(--apollo-color-bg-container); color: var(--apollo-color-text); border-radius: var(--apollo-border-radius-lg); }
+.demo-footer { text-align: center; }
+.demo-breadcrumb { margin-bottom: 16px; }
+
+:deep(.demo-navigation .apollo-menu-submenu-selected > .apollo-menu-submenu-title) {
+  color: var(--apollo-color-text);
+  background: var(--apollo-color-primary-bg);
 }
-.demo-layout-overlay-sider {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  inset-inline-start: 0;
-  z-index: 10;
+/* Keep selected navigation readable in the demo's current theme. */
+:deep(.demo-navigation), :deep(.demo-navigation .apollo-menu) {
+  --apollo-menu-item-bg: var(--apollo-color-bg-container);
+  --apollo-menu-item-color: var(--apollo-color-text);
+  --apollo-menu-group-title-color: var(--apollo-color-text-secondary);
+  --apollo-menu-sub-menu-item-bg: var(--apollo-color-fill-alter);
+  --apollo-menu-sub-menu-item-selected-color: var(--apollo-color-text);
+  --apollo-menu-item-selected-color: var(--apollo-color-text);
+  --apollo-menu-item-selected-bg: var(--apollo-color-primary-bg);
+  --apollo-menu-horizontal-item-selected-color: var(--apollo-color-text);
+  --apollo-menu-horizontal-item-selected-bg: var(--apollo-color-primary-bg);
+  --apollo-menu-dark-item-selected-color: var(--apollo-color-text);
+  --apollo-menu-dark-item-selected-bg: var(--apollo-color-primary-bg);
 }
-.demo-layout-logo-vertical {
-  height: 32px;
-  margin: 16px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-}
-.demo-layout-header {
-  padding: 0;
-  background: #fff;
-}
-.demo-layout-content {
-  margin: 24px 16px 0;
-}
-.demo-layout-card {
-  min-height: 280px;
-  padding: 24px;
-  background: #fff;
-  border-radius: 8px;
-}
-.demo-layout-footer {
-  text-align: center;
-}
-.demo-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin: 0;
-  padding: 8px;
-  list-style: none;
-}
-.demo-menu-item {
-  padding: 4px 12px;
-  border-radius: 6px;
-  color: rgba(255, 255, 255, 0.65);
-  cursor: pointer;
-  white-space: nowrap;
-}
+</style>
+
+<style scoped>
+.demo-overlay { position: relative; min-height: 360px; }
+.demo-overlay-sider { position: absolute; inset-block: 0; inset-inline-start: 0; z-index: 2; }
 </style>

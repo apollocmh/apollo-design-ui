@@ -1,82 +1,65 @@
 <script setup lang="ts">
-// 对齐 antd 的 component-token demo
-// ⚠️ PLATFORM 替换：antd 用 `ConfigProvider theme.components.Layout` 改 Component
-//    Token；本仓的 Component Token 是 CSS 变量（`--apollo-layout-*`），直接在
-//    根元素 style 里覆写即可（同样作用于整棵子树，与 antd 的嵌套覆盖同结构）。
-import { Layout } from '@apollo-design/ui';
+import type { ThemeConfig } from '@apollo-design/theme';
+import { Breadcrumb, ConfigProvider, Layout, Menu } from '@apollo-design/ui';
+import { computed, ref } from 'vue';
 
-const { Header, Content, Sider } = Layout;
-
-const navItems = ['nav 1', 'nav 2', 'nav 3'];
-const tokenOverride = {
-  '--apollo-layout-body-bg': '#fff',
-  '--apollo-layout-header-bg': '#1677ff',
-  '--apollo-layout-header-height': '64px',
-  '--apollo-layout-header-padding': '0 24px',
-  '--apollo-layout-header-color': '#fff',
-  '--apollo-layout-sider-bg': '#800080',
+const { Header, Content, Footer, Sider } = Layout;
+const custom = ref(true);
+const componentFields: Record<string, string | number> = {
+  headerBg: 'var(--apollo-color-primary-bg)',
+  headerColor: 'var(--apollo-color-text)',
+  headerHeight: 72,
+  headerPadding: '0 20px',
+  footerPadding: '16px 20px',
+  siderBg: '#343e59',
+  triggerBg: '#343e59',
+  triggerHeight: 40,
+  zeroTriggerWidth: 36,
+  zeroTriggerHeight: 36,
 };
+const theme = computed<ThemeConfig>(() =>
+  custom.value ? { components: { Layout: componentFields } } : {},
+);
+const nav = [
+  { key: 'home', label: 'Overview' },
+  { key: 'projects', label: 'Projects' },
+  { key: 'settings', label: 'Settings' },
+];
+const crumbs = [
+  { title: 'Home', href: '#/layout-home' },
+  { title: 'Projects' },
+  { title: 'Details' },
+];
 </script>
-
 <template>
-  <Layout :style="tokenOverride">
-    <Header class="demo-layout-header">
-      <div class="demo-layout-logo" />
-      <div class="demo-layout-title">Apollo Design</div>
-    </Header>
-    <Layout>
-      <Sider width="200">
-        <ul class="demo-menu demo-menu-dark demo-menu-inline">
-          <li v-for="item in navItems" :key="item" class="demo-menu-item">{{ item }}</li>
-        </ul>
-      </Sider>
-      <Content class="demo-layout-content">
-        <div class="demo-layout-breadcrumb">Home / List / App</div>
-        <div class="demo-layout-card">Content</div>
-      </Content>
-    </Layout>
-  </Layout>
+  <div><button type="button" @click="custom = !custom">{{ custom ? 'Use default tokens' : 'Use component tokens' }}</button>
+  <ConfigProvider :theme="theme"><Layout><Header class="demo-header">Current Layout tokens</Header><Layout><Sider collapsible :width="160"><Menu class="demo-navigation" theme="dark" mode="inline" :items="nav" :default-selected-keys="['projects']" /></Sider><Content class="demo-content"><Breadcrumb class="demo-breadcrumb" :items="crumbs" /><div class="demo-card">Project content</div></Content></Layout><Footer class="demo-footer">Apollo Design · Workspace</Footer></Layout></ConfigProvider></div>
 </template>
 
 <style scoped>
-.demo-layout-header {
-  display: flex;
-  align-items: center;
+.demo-header { display: flex; align-items: center; gap: 16px; padding-inline: 20px; }
+.demo-header :deep(.apollo-menu-horizontal) { flex: 1; min-width: 0; }
+.demo-content { min-width: 0; padding: 20px; }
+.demo-card { min-height: 240px; padding: 20px; background: var(--apollo-color-bg-container); color: var(--apollo-color-text); border-radius: var(--apollo-border-radius-lg); }
+.demo-footer { text-align: center; }
+.demo-breadcrumb { margin-bottom: 16px; }
+
+:deep(.demo-navigation .apollo-menu-submenu-selected > .apollo-menu-submenu-title) {
+  color: var(--apollo-color-text);
+  background: var(--apollo-color-primary-bg);
 }
-.demo-layout-logo {
-  width: 32px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 6px;
-}
-.demo-layout-title {
-  margin-inline-start: 24px;
-  font-size: 24px;
-}
-.demo-layout-content {
-  padding: 0 24px;
-}
-.demo-layout-breadcrumb {
-  margin-block: 16px;
-}
-.demo-layout-card {
-  min-height: 360px;
-  padding: 24px;
-  background: #f5f5f5;
-  border-radius: 8px;
-}
-.demo-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin: 0;
-  padding: 8px;
-  list-style: none;
-}
-.demo-menu-item {
-  padding: 4px 12px;
-  border-radius: 6px;
-  color: rgba(255, 255, 255, 0.65);
-  cursor: pointer;
+/* Keep selected navigation readable in the demo's current theme. */
+:deep(.demo-navigation), :deep(.demo-navigation .apollo-menu) {
+  --apollo-menu-item-bg: var(--apollo-color-bg-container);
+  --apollo-menu-item-color: var(--apollo-color-text);
+  --apollo-menu-group-title-color: var(--apollo-color-text-secondary);
+  --apollo-menu-sub-menu-item-bg: var(--apollo-color-fill-alter);
+  --apollo-menu-sub-menu-item-selected-color: var(--apollo-color-text);
+  --apollo-menu-item-selected-color: var(--apollo-color-text);
+  --apollo-menu-item-selected-bg: var(--apollo-color-primary-bg);
+  --apollo-menu-horizontal-item-selected-color: var(--apollo-color-text);
+  --apollo-menu-horizontal-item-selected-bg: var(--apollo-color-primary-bg);
+  --apollo-menu-dark-item-selected-color: var(--apollo-color-text);
+  --apollo-menu-dark-item-selected-bg: var(--apollo-color-primary-bg);
 }
 </style>

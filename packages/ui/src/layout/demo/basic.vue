@@ -1,59 +1,22 @@
 <script setup lang="ts">
-// 对齐 antd 的 basic demo（本 demo 不依赖 Menu）
-import { Flex, Layout } from '@apollo-design/ui';
-import type { CSSProperties } from 'vue';
+import { Layout } from '@apollo-design/ui';
+import { ref } from 'vue';
 
-const { Header, Footer, Sider, Content } = Layout;
-
-const headerStyle: CSSProperties = {
-  textAlign: 'center',
-  color: '#fff',
-  height: 64,
-  paddingInline: 48,
-  lineHeight: '64px',
-  backgroundColor: '#4096ff',
-};
-const contentStyle: CSSProperties = {
-  textAlign: 'center',
-  minHeight: 120,
-  lineHeight: '120px',
-  color: '#fff',
-  backgroundColor: '#0958d9',
-};
-const siderStyle: CSSProperties = {
-  textAlign: 'center',
-  lineHeight: '120px',
-  color: '#fff',
-  backgroundColor: '#1677ff',
-};
-const footerStyle: CSSProperties = {
-  textAlign: 'center',
-  color: '#fff',
-  backgroundColor: '#4096ff',
-};
-const layoutStyle: CSSProperties = {
-  borderRadius: 8,
-  overflow: 'hidden',
-  width: 'calc(50% - 8px)',
-  maxWidth: 'calc(50% - 8px)',
-};
+const { Header, Content, Footer, Sider } = Layout;
+const withSider = ref(false);
 </script>
-
 <template>
-  <Flex gap="middle" wrap>
-    <Layout :style="layoutStyle">
-      <Header :style="headerStyle">Header</Header>
-      <Content :style="contentStyle">Content</Content>
-      <Footer :style="footerStyle">Footer</Footer>
+  <div>
+    <label><input v-model="withSider" type="checkbox" /> Include sidebar</label>
+    <Layout class="demo-basic">
+      <Header>Header</Header>
+      <Layout v-if="withSider"><Sider width="25%">Sider</Sider><Content class="demo-basic-content">Content</Content></Layout>
+      <Content v-else class="demo-basic-content">Content</Content>
+      <Footer>Footer</Footer>
     </Layout>
-
-    <Layout :style="layoutStyle">
-      <Header :style="headerStyle">Header</Header>
-      <Layout>
-        <Sider width="25%" :style="siderStyle">Sider</Sider>
-        <Content :style="contentStyle">Content</Content>
-      </Layout>
-      <Footer :style="footerStyle">Footer</Footer>
-    </Layout>
-  </Flex>
+  </div>
 </template>
+<style scoped>
+.demo-basic { overflow: hidden; border-radius: var(--apollo-border-radius-lg); text-align: center; }
+.demo-basic-content { min-height: 120px; padding: 24px; background: var(--apollo-color-primary-bg); }
+</style>

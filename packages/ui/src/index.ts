@@ -1262,11 +1262,14 @@ export type {
   CollapseType as LayoutCollapseType,
   LayoutProps,
   LayoutRef,
+  LayoutSlots,
   SiderContextProps as LayoutSiderContextProps,
+  SiderEmits as LayoutSiderEmits,
   SiderProps as LayoutSiderProps,
   SiderRef as LayoutSiderRef,
   SiderSemanticClassNames as LayoutSiderSemanticClassNames,
   SiderSemanticStyles as LayoutSiderSemanticStyles,
+  SiderSlots as LayoutSiderSlots,
   SiderTheme as LayoutSiderTheme,
 } from './layout';
 export {

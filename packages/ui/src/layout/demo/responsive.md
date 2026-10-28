@@ -5,7 +5,4 @@ title:
   en-US: Responsive
 ---
 
-Layout.Sider 支持响应式布局：配置 `breakpoint` 后，视窗宽度小于断点时 Sider 收起为
-`collapsedWidth`，设为 0 会出现特殊 trigger。
-
-> 与 antd 的差异：本仓 `Menu` 尚未落地，演示里的导航用等价的原生 `ul/li` 结构。
+breakpoint=lg 在挂载时报告当前媒体状态，零宽触发器可用键盘展开；页面显示 breakpoint/collapse 的真实事件结果。

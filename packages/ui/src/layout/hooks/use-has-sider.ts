@@ -10,19 +10,16 @@
  *    `ant-layout-has-sider`，那时 `addSider` 还没跑（mount 后才有）。
  */
 
-import type { VNode, VNodeChild } from 'vue';
+import { Fragment, isVNode, type VNodeChild } from 'vue';
 import { SiderComponent } from '../Sider';
 
 /** 展平一层 children（antd 的 `toArray(children)` + some）。 */
-function hasSiderNode(nodes: VNodeChild | VNodeChild[] | undefined | null): boolean {
-  if (nodes === undefined || nodes === null) return false;
-  const list = Array.isArray(nodes) ? nodes : [nodes];
-  return list.some((node) => {
-    if (!node || typeof node !== 'object') return false;
-    const vnode = node as VNode;
-    // `type === Sider`（withInstall 返回同一对象，故只比这一个引用即可）
-    return vnode.type === SiderComponent;
-  });
+function hasSiderNode(nodes: unknown): boolean {
+  if (Array.isArray(nodes)) return nodes.some(hasSiderNode);
+  if (!isVNode(nodes)) return false;
+  if (nodes.type === SiderComponent) return true;
+  // Fragments are transparent; a nested Layout owns its own Siders.
+  return nodes.type === Fragment && hasSiderNode(nodes.children);
 }
 
 export function useHasSider(

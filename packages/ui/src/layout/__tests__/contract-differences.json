@@ -1,0 +1,84 @@
+{
+  "sider:width-zero": {
+    "deviationId": "layout-native-vue-contracts",
+    "reason": "ADR0007: Sider owns native keyboard toggle buttons with names, expanded/controls linkage and decorative icons; zero-width body is hidden/inert. Original 32 reference cases and keepStyle remain. contracts.test.ts and browser/layout-contracts.mjs verify replacement state, focus, media and accessibility behavior; see docs/migrations/layout-contracts.md.",
+    "diff": ["$/aside[0]/div[0]: 我们多出属性 aria-hidden=\"true\""]
+  },
+  "sider:collapsible": {
+    "deviationId": "layout-native-vue-contracts",
+    "reason": "ADR0007: Sider owns native keyboard toggle buttons with names, expanded/controls linkage and decorative icons; zero-width body is hidden/inert. Original 32 reference cases and keepStyle remain. contracts.test.ts and browser/layout-contracts.mjs verify replacement state, focus, media and accessibility behavior; see docs/migrations/layout-contracts.md.",
+    "diff": [
+      "$/aside[0]/div[1]: 标签不同 <div> vs <button>",
+      "$/aside[0]/div[1]: 我们多出属性 aria-controls=\"{i0}\"",
+      "$/aside[0]/div[1]: 我们多出属性 aria-expanded=\"true\"",
+      "$/aside[0]/div[1]: 我们多出属性 aria-label=\"Collapse sidebar\"",
+      "$/aside[0]/div[1]/span[0]: 我们多出属性 aria-hidden=\"true\""
+    ]
+  },
+  "sider:collapsed-width-zero": {
+    "deviationId": "layout-native-vue-contracts",
+    "reason": "ADR0007: Sider owns native keyboard toggle buttons with names, expanded/controls linkage and decorative icons; zero-width body is hidden/inert. Original 32 reference cases and keepStyle remain. contracts.test.ts and browser/layout-contracts.mjs verify replacement state, focus, media and accessibility behavior; see docs/migrations/layout-contracts.md.",
+    "diff": [
+      "$/aside[0]/span[1]: 标签不同 <span> vs <button>",
+      "$/aside[0]/span[1]: 我们多出属性 aria-controls=\"{i0}\"",
+      "$/aside[0]/span[1]: 我们多出属性 aria-expanded=\"true\"",
+      "$/aside[0]/span[1]: 我们多出属性 aria-label=\"Collapse sidebar\"",
+      "$/aside[0]/span[1]/span[0]: 我们多出属性 aria-hidden=\"true\""
+    ]
+  },
+  "sider:collapsed-width-zero-collapsed": {
+    "deviationId": "layout-native-vue-contracts",
+    "reason": "ADR0007: Sider owns native keyboard toggle buttons with names, expanded/controls linkage and decorative icons; zero-width body is hidden/inert. Original 32 reference cases and keepStyle remain. contracts.test.ts and browser/layout-contracts.mjs verify replacement state, focus, media and accessibility behavior; see docs/migrations/layout-contracts.md.",
+    "diff": [
+      "$/aside[0]/div[0]: 我们多出属性 aria-hidden=\"true\"",
+      "$/aside[0]/span[1]: 标签不同 <span> vs <button>",
+      "$/aside[0]/span[1]: 我们多出属性 aria-controls=\"{i0}\"",
+      "$/aside[0]/span[1]: 我们多出属性 aria-expanded=\"false\"",
+      "$/aside[0]/span[1]: 我们多出属性 aria-label=\"Expand sidebar\"",
+      "$/aside[0]/span[1]/span[0]: 我们多出属性 aria-hidden=\"true\""
+    ]
+  },
+  "sider:zero-width-trigger-style": {
+    "deviationId": "layout-native-vue-contracts",
+    "reason": "ADR0007: Sider owns native keyboard toggle buttons with names, expanded/controls linkage and decorative icons; zero-width body is hidden/inert. Original 32 reference cases and keepStyle remain. contracts.test.ts and browser/layout-contracts.mjs verify replacement state, focus, media and accessibility behavior; see docs/migrations/layout-contracts.md.",
+    "diff": [
+      "$/aside[0]/span[1]: 标签不同 <span> vs <button>",
+      "$/aside[0]/span[1]: 我们多出属性 aria-controls=\"{i0}\"",
+      "$/aside[0]/span[1]: 我们多出属性 aria-expanded=\"true\"",
+      "$/aside[0]/span[1]: 我们多出属性 aria-label=\"Collapse sidebar\"",
+      "$/aside[0]/span[1]/span[0]: 我们多出属性 aria-hidden=\"true\""
+    ]
+  },
+  "sider:reverse-arrow": {
+    "deviationId": "layout-native-vue-contracts",
+    "reason": "ADR0007: Sider owns native keyboard toggle buttons with names, expanded/controls linkage and decorative icons; zero-width body is hidden/inert. Original 32 reference cases and keepStyle remain. contracts.test.ts and browser/layout-contracts.mjs verify replacement state, focus, media and accessibility behavior; see docs/migrations/layout-contracts.md.",
+    "diff": [
+      "$/aside[0]/div[1]: 标签不同 <div> vs <button>",
+      "$/aside[0]/div[1]: 我们多出属性 aria-controls=\"{i0}\"",
+      "$/aside[0]/div[1]: 我们多出属性 aria-expanded=\"true\"",
+      "$/aside[0]/div[1]: 我们多出属性 aria-label=\"Collapse sidebar\"",
+      "$/aside[0]/div[1]/span[0]: 我们多出属性 aria-hidden=\"true\""
+    ]
+  },
+  "sider:semantic-fn": {
+    "deviationId": "layout-native-vue-contracts",
+    "reason": "ADR0007: Sider owns native keyboard toggle buttons with names, expanded/controls linkage and decorative icons; zero-width body is hidden/inert. Original 32 reference cases and keepStyle remain. contracts.test.ts and browser/layout-contracts.mjs verify replacement state, focus, media and accessibility behavior; see docs/migrations/layout-contracts.md.",
+    "diff": [
+      "$/aside[0]/div[1]: 标签不同 <div> vs <button>",
+      "$/aside[0]/div[1]: 我们多出属性 aria-controls=\"{i0}\"",
+      "$/aside[0]/div[1]: 我们多出属性 aria-expanded=\"true\"",
+      "$/aside[0]/div[1]: 我们多出属性 aria-label=\"Collapse sidebar\"",
+      "$/aside[0]/div[1]/span[0]: 我们多出属性 aria-hidden=\"true\""
+    ]
+  },
+  "sider:custom-trigger": {
+    "deviationId": "layout-native-vue-contracts",
+    "reason": "ADR0007: Sider owns native keyboard toggle buttons with names, expanded/controls linkage and decorative icons; zero-width body is hidden/inert. Original 32 reference cases and keepStyle remain. contracts.test.ts and browser/layout-contracts.mjs verify replacement state, focus, media and accessibility behavior; see docs/migrations/layout-contracts.md.",
+    "diff": [
+      "$/aside[0]/div[1]: 标签不同 <div> vs <button>",
+      "$/aside[0]/div[1]: 我们多出属性 aria-controls=\"{i0}\"",
+      "$/aside[0]/div[1]: 我们多出属性 aria-expanded=\"true\"",
+      "$/aside[0]/div[1]: 我们多出属性 aria-label=\"Collapse sidebar\""
+    ]
+  }
+}

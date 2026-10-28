@@ -5,6 +5,4 @@ title:
   en-US: Collapsible overlay
 ---
 
-`collapsedWidth={0}` 时 Sider 完全收起，触发器浮在内容之上（自定义 trigger 图标）。
-
-> 与 antd 的差异：本仓 `Menu` 尚未落地，演示里的导航用等价的原生 `ul/li` 结构。
+使用原生绝对定位的覆盖式 Sider；零宽时保留正文实例并移出键盘/无障碍树，内置按钮可反复展开。

@@ -1,14 +1,8 @@
-/**
- * Layout 的类型定义（G2 产物）。
- *
- * 契约来源：antd 6.6.4 的 `es/layout/layout.d.ts` / `es/layout/Sider.d.ts`。
- * **逐字段对齐**（名称、可选性、默认值）。差异：`React.CSSProperties` → Vue 的
- * `CSSProperties`、`React.ReactNode` → `VNodeChild`（规则 C16 / C18）。
- */
+/** Public Layout family contracts: Vue content, state, events and native element refs. */
 
 import type { ComputedRef, CSSProperties, VNodeChild } from 'vue';
 
-/** 响应式断点（antd 的 `_util/responsiveObserver` 的 Breakpoint）。 */
+/** 响应式断点。 */
 export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl';
 
 /** 折叠来源。 */
@@ -26,9 +20,24 @@ export interface LayoutProps {
   hasSider?: boolean;
 }
 
+export interface LayoutSlots {
+  default?: () => VNodeChild;
+}
+
+export interface SiderSlots extends LayoutSlots {
+  /** Content of the owned toggle button; an existing slot wins over trigger data. */
+  trigger?: () => VNodeChild;
+}
+
+export interface SiderEmits {
+  'update:collapsed': (collapsed: boolean) => void;
+  collapse: (collapsed: boolean, type: CollapseType) => void;
+  breakpoint: (broken: boolean) => void;
+}
+
 /**
- * ConfigProvider 的 `layout` 配置面（antd 的 `useComponentConfig('layout')`）。
- * 只有 className / style 两项参与 Layout 本体（Header/Footer/Content 不读）。
+ * ConfigProvider 的 `layout` 配置面。
+ * className 用于 Layout/Sider，style 只用于 Layout 本体。
  */
 export interface LayoutConfig {
   className?: string;
@@ -73,6 +82,7 @@ export interface SiderProps {
   collapsible?: boolean;
   /** 当前收起状态（受控）。 */
   collapsed?: boolean;
+  'onUpdate:collapsed'?: (collapsed: boolean) => void;
   /** 非受控初始值。@default false */
   defaultCollapsed?: boolean;
   /** 翻转箭头方向。@default false */

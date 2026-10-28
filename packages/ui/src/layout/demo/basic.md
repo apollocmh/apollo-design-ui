@@ -5,4 +5,4 @@ title:
   en-US: Basic
 ---
 
-典型的页面布局（Header / Content / Footer 与 Sider 的两种组合）。
+切换单一预览，比较无侧栏与有侧栏的两种真实布局；每次保留一个有效 main 地标。

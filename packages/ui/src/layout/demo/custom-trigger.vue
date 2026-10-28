@@ -1,75 +1,49 @@
 <script setup lang="ts">
-// 对齐 antd 的 custom-trigger demo
-// - `trigger={null}` 关掉内置触发器，改用 Header 里的 Button 控制（antd 同结构）
-// - PLATFORM 替换：Menu → 等价原生 ul/li
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@apollo-design/icons';
-import { Button, Layout } from '@apollo-design/ui';
+import { Breadcrumb, Button, Layout, Menu } from '@apollo-design/ui';
 import { h, ref } from 'vue';
 
-const { Header, Sider, Content } = Layout;
-
+const { Header, Content, Sider } = Layout;
 const collapsed = ref(false);
-const navItems = ['nav 1', 'nav 2', 'nav 3'];
+const nav = [
+  { key: 'home', label: 'Overview' },
+  { key: 'projects', label: 'Projects' },
+  { key: 'settings', label: 'Settings' },
+];
+const crumbs = [
+  { title: 'Home', href: '#/layout-home' },
+  { title: 'Projects' },
+  { title: 'Details' },
+];
 </script>
-
-<template>
-  <Layout>
-    <Sider :trigger="null" collapsible :collapsed="collapsed">
-      <div class="demo-layout-logo-vertical" />
-      <ul class="demo-menu demo-menu-dark demo-menu-inline">
-        <li v-for="item in navItems" :key="item" class="demo-menu-item">{{ item }}</li>
-      </ul>
-    </Sider>
-    <Layout>
-      <Header class="demo-layout-header">
-        <Button
-          type="text"
-          :icon="collapsed ? h(MenuUnfoldOutlined) : h(MenuFoldOutlined)"
-          :style="{ fontSize: '16px', width: 64, height: 64 }"
-          @click="collapsed = !collapsed"
-        />
-      </Header>
-      <Content class="demo-layout-content">
-        <div class="demo-layout-card">Content</div>
-      </Content>
-    </Layout>
-  </Layout>
-</template>
+<template><Layout><Sider v-model:collapsed="collapsed" :trigger="null" collapsible :width="160"><Menu class="demo-navigation" theme="dark" mode="inline" :items="nav" :default-selected-keys="['home']" /></Sider><Layout><Header class="demo-header"><Button type="text" :aria-label="collapsed ? 'Expand navigation' : 'Collapse navigation'" :aria-expanded="!collapsed" :icon="h(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined)" class="demo-custom-toggle" @click="collapsed = !collapsed" /></Header><Content class="demo-content"><Breadcrumb class="demo-breadcrumb" :items="crumbs" /><div class="demo-card">Project content</div></Content></Layout></Layout></template>
 
 <style scoped>
-.demo-layout-logo-vertical {
-  height: 32px;
-  margin: 16px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+.demo-header { display: flex; align-items: center; gap: 16px; padding-inline: 20px; }
+.demo-header :deep(.apollo-menu-horizontal) { flex: 1; min-width: 0; }
+.demo-content { min-width: 0; padding: 20px; }
+.demo-card { min-height: 240px; padding: 20px; background: var(--apollo-color-bg-container); color: var(--apollo-color-text); border-radius: var(--apollo-border-radius-lg); }
+.demo-footer { text-align: center; }
+.demo-breadcrumb { margin-bottom: 16px; }
+
+:deep(.demo-navigation .apollo-menu-submenu-selected > .apollo-menu-submenu-title) {
+  color: var(--apollo-color-text);
+  background: var(--apollo-color-primary-bg);
 }
-.demo-layout-header {
-  padding: 0;
-  background: #fff;
-}
-.demo-layout-content {
-  margin: 24px 16px;
-  padding: 24px;
-  min-height: 360px;
-  background: #fff;
-  border-radius: 8px;
-}
-.demo-layout-card {
-  min-height: 280px;
-}
-.demo-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin: 0;
-  padding: 8px;
-  list-style: none;
-}
-.demo-menu-item {
-  padding: 4px 12px;
-  border-radius: 6px;
-  color: rgba(255, 255, 255, 0.65);
-  cursor: pointer;
-  white-space: nowrap;
+/* Keep selected navigation readable in the demo's current theme. */
+:deep(.demo-navigation), :deep(.demo-navigation .apollo-menu) {
+  --apollo-menu-item-bg: var(--apollo-color-bg-container);
+  --apollo-menu-item-color: var(--apollo-color-text);
+  --apollo-menu-group-title-color: var(--apollo-color-text-secondary);
+  --apollo-menu-sub-menu-item-bg: var(--apollo-color-fill-alter);
+  --apollo-menu-sub-menu-item-selected-color: var(--apollo-color-text);
+  --apollo-menu-item-selected-color: var(--apollo-color-text);
+  --apollo-menu-item-selected-bg: var(--apollo-color-primary-bg);
+  --apollo-menu-horizontal-item-selected-color: var(--apollo-color-text);
+  --apollo-menu-horizontal-item-selected-bg: var(--apollo-color-primary-bg);
+  --apollo-menu-dark-item-selected-color: var(--apollo-color-text);
+  --apollo-menu-dark-item-selected-bg: var(--apollo-color-primary-bg);
 }
 </style>
+
+<style scoped>.demo-custom-toggle { color: inherit; }</style>

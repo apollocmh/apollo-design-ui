@@ -5,17 +5,24 @@
 
 import { themeTest } from '@apollo-design/test-utils';
 import { describe, expect, it } from 'vitest';
-import { genLayoutStyle, genSiderStyle } from '../style';
+import { genLayoutStyle, genSiderStyle, genTokenDecls } from '../style';
 
-themeTest('Layout', {
-  demos: import.meta.glob('../demo/*.vue', { eager: true }),
-});
+const demos = import.meta.glob('../demo/*.vue', { eager: true });
+it('retains all eleven Layout demos', () => expect(Object.keys(demos)).toHaveLength(11));
+// Keep every demo in every theme, with the unchanged per-test time budget.
+for (const [name, demo] of Object.entries(demos))
+  themeTest('Layout / ' + name, {
+    global: { stubs: { teleport: false } },
+    demos: { [name]: demo },
+    expectCount: 1,
+  });
 
 describe('Layout · 主题无关性', () => {
   const css = genLayoutStyle('apollo');
   const siderCss = genSiderStyle('apollo');
 
-  it('19 个 Component Token 声明在根类', () => {
+  it('19 public fields have explicit declarations and actual property fallbacks without root resets', () => {
+    expect(genTokenDecls('apollo')).toHaveLength(19);
     for (const name of [
       'body-bg',
       'color-bg-body',
@@ -37,26 +44,25 @@ describe('Layout · 主题无关性', () => {
       'light-trigger-bg',
       'light-trigger-color',
     ]) {
-      expect(css).toContain(`--apollo-layout-${name}:`);
+      expect(css + siderCss).toContain(`var(--apollo-layout-${name},`);
     }
+    expect(css + siderCss).not.toMatch(/--apollo-layout-(?:body-bg|sider-bg):/);
   });
 
   it('派生用 calc / var（不写死 64px、50px）', () => {
-    expect(css).toContain('--apollo-layout-header-height:calc(var(--apollo-control-height) * 2)');
-    expect(css).toContain(
-      '--apollo-layout-header-padding:0 calc(var(--apollo-control-height-lg) * 1.25)',
+    expect(css).toContain('calc(var(--apollo-control-height) * 2)');
+    expect(css).toContain('0 calc(var(--apollo-control-height-lg) * 1.25)');
+    expect(siderCss).toContain(
+      'calc(var(--apollo-control-height-lg) + var(--apollo-margin-xxs) * 2)',
     );
     expect(css).toContain(
-      '--apollo-layout-trigger-height:calc(var(--apollo-control-height-lg) + var(--apollo-margin-xxs) * 2)',
-    );
-    expect(css).toContain(
-      '--apollo-layout-footer-padding:var(--apollo-control-height-sm) calc(var(--apollo-control-height-lg) * 1.25)',
+      'var(--apollo-control-height-sm) calc(var(--apollo-control-height-lg) * 1.25)',
     );
   });
 
   it('Layout 主体规则（flex / has-sider / rtl）', () => {
     expect(css).toContain('.apollo-layout{');
-    expect(css).toContain('background:var(--apollo-layout-body-bg)');
+    expect(css).toContain('background:var(--apollo-layout-body-bg,');
     expect(css).toContain('.apollo-layout.apollo-layout-has-sider{');
     expect(css).toContain('flex-direction:row;');
     expect(css).toContain('.apollo-layout-rtl{');
@@ -65,7 +71,7 @@ describe('Layout · 主题无关性', () => {
 
   it('Header / Footer / Content 三段', () => {
     expect(css).toContain('.apollo-layout-header{');
-    expect(css).toContain('line-height:var(--apollo-layout-header-height);');
+    expect(css).toContain('line-height:var(--apollo-layout-header-height,');
     expect(css).toContain('.apollo-layout-footer{');
     expect(css).toContain('.apollo-layout-content{');
     expect(css).toContain('min-height:0;');
@@ -75,12 +81,10 @@ describe('Layout · 主题无关性', () => {
     expect(siderCss).toContain('.apollo-layout-sider{');
     expect(siderCss).toContain('transition:all var(--apollo-motion-duration-mid),background 0s;');
     expect(siderCss).toContain('.apollo-layout-sider .apollo-layout-sider-trigger{');
-    expect(siderCss).toContain(
-      'inset-inline-end:calc(var(--apollo-layout-zero-trigger-width) * -1);',
-    );
+    expect(siderCss).toContain('inset-inline-end:calc(var(--apollo-layout-zero-trigger-width,');
     expect(siderCss).toContain('.apollo-layout-sider-light{');
     expect(siderCss).toContain(
-      'border:var(--apollo-line-width) var(--apollo-line-type) var(--apollo-layout-body-bg);',
+      'border:var(--apollo-line-width) var(--apollo-line-type) var(--apollo-layout-body-bg,',
     );
   });
 
@@ -88,7 +92,8 @@ describe('Layout · 主题无关性', () => {
     const ant = genLayoutStyle('ant');
     // ⚠️ 全局 alias token 的变量名恒为 `--apollo-*`（theme 包产出单一套 CSS 变量），
     //    只有**组件前缀**随 rootPrefixCls 变（alert / tag 同约定）。
-    expect(ant).toContain('--ant-layout-body-bg:var(--apollo-color-bg-layout)');
-    expect(genSiderStyle('ant')).toContain('--ant-layout-sider-bg:#001529');
+    expect(ant).toContain('background:var(--ant-layout-body-bg,');
+    expect(ant).toContain('var(--apollo-color-bg-layout)');
+    expect(genSiderStyle('ant')).toContain('background:var(--ant-layout-sider-bg,');
   });
 });

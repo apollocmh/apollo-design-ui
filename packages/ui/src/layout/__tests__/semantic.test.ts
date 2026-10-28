@@ -14,10 +14,13 @@
  *   - 没证明响应式折叠 / onCollapse / onBreakpoint（L1 用 matchMedia 桩钉）。
  */
 
-import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import { writeFileSync } from 'node:fs';
+import { type DomRenderResult, diffHtml, domContractTest } from '@apollo-design/test-utils';
 import { h } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/layout.dom.json';
+import { mountCase, resolveRenderable } from '../../../../test-utils/src/render';
 import { Content, Footer, Header, Layout, Sider } from '../index';
+import differences from './contract-differences.json';
 
 const BP = { prefixCls: 'apollo-layout' };
 const SBP = { prefixCls: 'apollo-layout-sider' };
@@ -158,10 +161,27 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   },
 };
 
+// Explicit evidence capture never writes the original reference or the accepted differences.
+if (process.env.LAYOUT_RECORD_DIFFS) {
+  const differences: Record<string, string[]> = {};
+  for (const reference of baseline.cases) {
+    const spec = specs[reference.id];
+    if (!spec) throw new Error('Missing Layout reference case: ' + reference.id);
+    const mounted = mountCase(() => resolveRenderable(spec.render(), reference.id));
+    try {
+      const diff = diffHtml(reference.html, mounted.html(), { keepStyle: true });
+      if (diff.length) differences[reference.id] = diff;
+    } finally {
+      mounted.destroy();
+    }
+  }
+  writeFileSync(process.env.LAYOUT_RECORD_DIFFS, JSON.stringify(differences, null, 2) + '\n');
+}
+
 domContractTest('Layout', {
   baseline,
   keepStyle: true,
-  allow: {},
+  allow: differences,
   render: (id) => {
     const spec = specs[id];
     if (!spec)

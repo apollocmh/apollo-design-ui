@@ -5,6 +5,4 @@ title:
   en-US: Fixed sider
 ---
 
-侧边栏固定（sticky + 自身滚动），适合导航较长的场景。
-
-> 与 antd 的差异：本仓 `Menu` 尚未落地，演示里的导航用等价的原生 `ul/li` 结构。
+使用 Sider 原生 sticky/overflow 样式建立固定导航；正文与页脚保留 Layout 结构。
