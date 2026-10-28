@@ -226,7 +226,6 @@ const SelectEngine = defineComponent({
     }
 
     // --------------------------- 外观 ---------------------------
-    const mergedSize = useSize<SizeType | undefined>((ctx) => props.size ?? ctx);
     const { variant, enableVariantCls } = useVariant({
       component: 'select',
       variant: () => props.variant,
@@ -241,7 +240,13 @@ const SelectEngine = defineComponent({
     const mergedDirection = computed<'ltr' | 'rtl'>(
       () => props.direction ?? directionCtx.value ?? 'ltr',
     );
-    const { compactItemClassnames } = useCompactItemContext(prefixCls, () => mergedDirection.value);
+    const { compactSize, compactItemClassnames } = useCompactItemContext(
+      prefixCls,
+      () => mergedDirection.value,
+    );
+    const mergedSize = useSize<SizeType | undefined>(
+      (ctx) => props.size ?? compactSize.value ?? ctx,
+    );
 
     const tokenValues = selectTokenValues();
     const listHeight = computed(() => props.listHeight ?? 256);

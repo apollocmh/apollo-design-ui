@@ -1,0 +1,55 @@
+{
+  "sourceOnly": true,
+  "sizeFix": {
+    "regression": "Small/large/current/removal/local override/Provider fallback/NoCompactStyle/input identity/focus",
+    "initialFailure": "Compact small Select did not receive apollo-select-sm"
+  },
+  "paintFix": {
+    "change": "Static selector background fallback #fff to existing colorBgContainer Alias; native inline variables retain priority",
+    "initialFailure": "dark/both multi-chip #fdfdfd on #f0f0f0, contrast 1.12"
+  },
+  "validation": {
+    "selectSuites": [
+      {
+        "file": "packages/ui/src/select/__tests__/demo.test.ts",
+        "passed": 38,
+        "failed": 0
+      },
+      {
+        "file": "packages/ui/src/select/__tests__/dynamic-options.test.ts",
+        "passed": 7,
+        "failed": 0
+      },
+      {
+        "file": "packages/ui/src/select/__tests__/index.test.ts",
+        "passed": 47,
+        "failed": 0
+      },
+      {
+        "file": "packages/ui/src/select/__tests__/space-compact.test.ts",
+        "passed": 2,
+        "failed": 0
+      },
+      {
+        "file": "packages/ui/src/select/__tests__/semantic.test.ts",
+        "passed": 10,
+        "failed": 0
+      },
+      {
+        "file": "packages/ui/src/select/__tests__/a11y.test.ts",
+        "passed": 38,
+        "failed": 0
+      },
+      {
+        "file": "packages/ui/src/select/__tests__/theme.test.ts",
+        "passed": 12,
+        "failed": 0
+      }
+    ],
+    "spaceBrowserReport": "space-browser-source.json"
+  },
+  "notVerified": [
+    "Published JS/CSS",
+    "Select full contract and all component tokens"
+  ]
+}
