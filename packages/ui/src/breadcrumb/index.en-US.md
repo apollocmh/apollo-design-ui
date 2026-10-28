@@ -4,125 +4,80 @@ title: Breadcrumb
 subtitle: Breadcrumb
 ---
 
-Displays the location of the current page in the system hierarchy, and allows navigating back up.
-
-## When To Use
-
-- When the system has more than two levels of hierarchy;
-- When it is necessary to tell the user "where you are";
-- When you need to provide upward navigation.
+Shows the current page in a hierarchy and provides upward navigation. Use data items or compose `BreadcrumbItem` / `BreadcrumbSeparator` in the default slot.
 
 ## Examples
 
-See [`demo/`](./demo) (**9** demos, mirroring antd's user-visible demos).
-
-| demo | Description |
-|---|---|
-| `basic` | The simplest usage (the last item has no `href` ⇒ rendered as a `<span>`) |
-| `separator` | Override the default `/` with `separator` |
-| `separator-component` | A **standalone** separator via `type: 'separator'` (coexists with the default one) |
-| `with-icon` | Icons inside `title` (including a **third-party bare `<svg>`**) |
-| `with-params` | `params` replaces `:key` with the actual value |
-| `overlay` | An item's `menu` ⇒ a dropdown |
-| `debug-routes` | ⚠️ The deprecated `routes` channel (`breadcrumbName` → `title`) |
-
-⚠️ **2** antd demos are **not ported** (see `README.md` §5):
-`style-class` (requires `antd-style`) · `component-token` (tokens are build-time artifacts in this zero-runtime architecture).
+`demo/` contains 11 paired examples covering navigation, icons, parameters, menus, separators, native children, scoped content, semantic styles and theme variables. `debug-routes` demonstrates migration of legacy route data.
 
 ## API
 
-### Props
-
-| Property | Description | Type | Default | Global config |
-|---|---|---|---|---|
-| items | Route data; native child composition is also supported | `BreadcrumbItemInput[]` | — | × |
-| routes | ⚠️ **Deprecated**, use `items` | `BreadcrumbItemInput[]` | — | × |
-| params | Route params, used to replace `:key` in `title` / `path` | `Record<string, unknown>` | `{}` | × |
-| separator | Customize the separator | `VNodeChild` | `/` | ✅ (`breadcrumb.separator`) |
-| dropdownIcon | Customize the dropdown icon | `VNodeChild` | `<DownOutlined />` | ✅ (`breadcrumb.dropdownIcon`) |
-
-| classNames | Semantic class names (`root` / `item` / `separator`), function form supported | `BreadcrumbSemanticClassNames \| ((info) => …)` | — | ✅ (`breadcrumb.classNames`) |
-| styles | Semantic styles (three slots), function form supported | `BreadcrumbSemanticStyles \| ((info) => …)` | — | ✅ (`breadcrumb.styles`) |
-| prefixCls | Class name prefix | `string` | from ConfigProvider, fallback `apollo-breadcrumb` | × |
-| class / style | Native root attrs (not Props) | `string` / `CSSProperties` | — | × |
-| style | Inline style of the root element | `CSSProperties` | — | × |
-
-#### BreadcrumbItemInput
-
-```ts
-type BreadcrumbItemInput = Partial<BreadcrumbItemType & BreadcrumbSeparatorType>;
-```
-
-`BreadcrumbItemType`:
+### Breadcrumb
 
 | Property | Description | Type | Default |
-|---|---|---|---|
-| title | The name (strings go through `:param` substitution; vnodes are rendered as-is) | `VNodeChild` | — |
-| href | Link destination. **Cannot be used together with `path`** | `string` | — |
-| path | Concatenated path; **each level prepends the previous `path`**. Cannot be used with `href` | `string` | — |
-| menu | Menu configuration (wraps this item with a `Dropdown`) | `BreadcrumbItemMenu` | — |
-| dropdownProps | Custom configuration for the dropdown popup | `DropdownProps` | — |
-| onClick | Click handler | `(e: MouseEvent) => void` | — |
-| className | ⚠️ Lands on the **link element** (`<a>` / `<span>`), **not** the `<li>` | `string` | — |
-| style | ⚠️ **Never reaches the DOM** (upstream quirk, confirmed by the L4 mechanical oracle — see `docs/analysis/breadcrumb.md` §6.2) | `CSSProperties` | — |
-| key | List key (falls back to the index) | `string \| number` | — |
-| breadcrumbName | ⚠️ **Deprecated**, use `title` (only used by the `routes` channel) | `string` | — |
-| children | ⚠️ **Deprecated**, use `menu` (children become `menu.items`, **one level only**) | `Omit<BreadcrumbItemType, 'children'>[]` | — |
-| `aria-*` / `data-*` | Passed through to the link element (the `pickAttrs` allowlist) | — | — |
+| --- | --- | --- | --- |
+| items | Data source; a provided `[]` stays empty and does not evaluate the default slot | `BreadcrumbItemInput[]` | — |
+| routes | Deprecated legacy data channel; use items | `BreadcrumbItemInput[]` | — |
+| params | Replaces complete `:key` names in string titles/paths; supports repeated names, zero and empty strings; missing/null values preserve placeholders | `Record<string, unknown>` | `{}` |
+| separator | Automatic separator; slot first, then prop → current Provider → default | `VNodeChild` | `/` |
+| dropdownIcon | Decorative menu button icon; slot first, then prop → current Provider → default | `VNodeChild` | `DownOutlined` |
+| prefixCls | Current prefix of this navigation and its owned Item/Separator nodes; custom prefixes require matching static CSS | `string` | `apollo-breadcrumb` |
+| classNames | root/item/separator classes; functions receive current resolved props | `BreadcrumbSemanticClassNames \| ((info: { props: BreadcrumbProps }) => BreadcrumbSemanticClassNames)` | — |
+| styles | Styles for the same semantic regions; functions receive current resolved props | `BreadcrumbSemanticStyles \| ((info: { props: BreadcrumbProps }) => BreadcrumbSemanticStyles)` | — |
 
-`BreadcrumbSeparatorType` (an item with `type: 'separator'`):
+Native class/style, id, ARIA/data attrs and listeners belong to the root nav. Native style overrides semantic styles and theme variables. Provider `components.breadcrumb` supports className, style, classNames, styles, separator and dropdownIcon, using current values. Breadcrumb has no component event or model; it exposes `nativeElement: HTMLElement | null`.
 
-| Property | Description | Type | Default |
-|---|---|---|---|
-| type | Marks the item as a separator (**required**) | `'separator'` | — |
-| separator | The separator to display | `VNodeChild` | `/` |
+| Slot | Scope | Behavior |
+| --- | --- | --- |
+| default | — | Native children, only when neither items nor routes is provided; retains caller keys |
+| itemRender | `{ route, params, routes, paths, href }` | Replaces a data item's default content; paths/href belong to that item |
+| separator | — | Replaces automatic separators |
+| dropdownIcon | — | Replaces the decorative menu button icon |
 
-### Three details you must know
+A present slot wins, including intentionally empty content. Conditional slots update and restore prop/default content when removed. The last item has no automatic separator. Custom itemRender content goes into a stable host; callers own its links, ARIA, listeners and styles.
 
-1. **There is no separator after the last item**: upstream sets the last item's `separator`
-   to `''`, and `isRenderable('')` is falsy ⇒ that `<li>` is **not rendered**.
-   (`type: 'separator'` + `separator: ''` renders an **empty** `<li>` instead — a different thing.)
-2. **`href` accumulates**: with the `path` channel, the n-th item's `href` is `#/` plus the
-   first n `path` segments — not "its own path".
-3. **The separator's prefix is the "root prefix"**: `BreadcrumbSeparator` uses
-   `getPrefixCls('breadcrumb')` (ConfigProvider's root prefix), **unrelated** to the
-   `prefixCls` prop ⇒ with `prefixCls="apollo"` the items are `apollo-item` while the
-   separator is `apollo-breadcrumb-separator`.
+### Data items
 
-### Semantic DOM
+`BreadcrumbItemInput = Partial<BreadcrumbItemType & BreadcrumbSeparatorType>`.
 
-| Slot | Lands on |
-|---|---|
-| `root` | The root `<nav>` |
-| `item` | Each item's `<li>` (**excluding** separators) |
-| `separator` | The separator's `<li>` |
+| Field | Description | Type |
+| --- | --- | --- |
+| key | Business identity; defaults to index; provide stable keys when reordering | `string \| number` |
+| title | Complete Vue content; only strings substitute parameters | `VNodeChild` |
+| href | Direct destination | `string` |
+| path | Accumulates this and previous path segments as `#/a/b`; takes precedence over href | `string` |
+| className / style | Classes and effective inline styles of the default link/text/action button | `string` / `CSSProperties` |
+| onClick | Native click on default content; an item without href uses a native button | `(event: MouseEvent) => void` |
+| `aria-*` / `data-*` | Attributes of default content | — |
+| menu | Menu items and Menu configuration | `BreadcrumbItemMenu` |
+| dropdownProps | Dropdown configuration; controlled state uses open/onOpenChange | `DropdownProps` |
+| breadcrumbName / children | Deprecated legacy routes title/one-level menu conversion | `string` / `Omit<BreadcrumbItemType, 'children'>[]` |
+| type / separator | `type: 'separator'` creates an independent decorative separator and does not accumulate a path | `'separator'` / `VNodeChild` |
 
-### #itemRender
+Menu items support key, label/title, href, path, and Menu's disabled, icon, extra and business event fields. Explicit href wins; otherwise path appends to the current breadcrumb href, or is used directly without a base. A provided label, including empty content, takes precedence over title.
 
-Use `#itemRender="{ route, params, routes, paths, href }"`. Paths and href belong to the current route and include parameter substitution. An empty slot suppresses default content; removing the slot restores the default link renderer. The function prop is removed directly, without a compatibility layer or deprecation period.
+### BreadcrumbItem / BreadcrumbSeparator
 
-```vue
-<Breadcrumb :items="items" :params="params">
-  <template #itemRender="{ route, href }">
-    <a :href="href">{{ route.title }}</a>
-  </template>
-</Breadcrumb>
-```
+BreadcrumbItem supports href, menu, dropdownProps, dropdownIcon, separator and prefixCls. The default slot supplies complete content; #separator and #dropdownIcon override local props and then fall back to the owning Breadcrumb's current values. Native class/style, id, ARIA/data attrs and listeners belong to the owning li. @click receives one native MouseEvent. The final item's automatic separator is suppressed.
 
-`BreadcrumbSlots` / `BreadcrumbItemSlotProps` expose the slot contract. BreadcrumbItem/BreadcrumbSeparator and the default slot are supported native Vue composition, with no component deprecation warning. Default children are read once per render and retain caller keys during reorder. Data items take precedence over the default slot.
+BreadcrumbSeparator has a default content slot and native attrs on its decorative `<li aria-hidden="true">`. No slot renders `/`; a present empty slot stays empty. Prefix and semantic styles come from its owning Breadcrumb. Attributes cannot expose decorative content to assistive technology. Both children are supported without component deprecation warnings and have no extra expose or model.
+
+### Menu keyboard and focus
+
+The navigation link and menu button are siblings. The named native menu button supports pointer, Enter, Space and ArrowDown opening. Keyboard opening moves focus into the menu, which owns its arrow-key behavior. Escape requests closing. Accepted closing returns focus only when it still belongs to that menu; controlled refusal and external focus retain their owner. Default trigger actions are hover/click on the arrow button. dropdownProps.trigger can customize pointer behavior while native keyboard access remains available.
 
 ## Design Token
 
-**7 Component Tokens** (all alias-derived ⇒ emitted as `var(--apollo-breadcrumb-*)`):
+Current themes, dark/compact algorithms, nested Providers and runtime replacements apply root CSS variables. Native style may override them.
 
-| token | Default source | Consumer |
-|---|---|---|
-| `itemColor` | `colorTextDescription` | `color` of `.{p}` |
-| `lastItemColor` | `colorText` | `.{p}-item:last-child` |
-| `iconFontSize` | `fontSize` | `.{p} .apollo-icon` |
-| `linkColor` | `colorTextDescription` | `.{p}-item a` |
-| `linkHoverColor` | `colorText` | `.{p}-item a:hover` / `.{p}-overlay-link:hover` |
-| `separatorColor` | `colorTextDescription` | `.{p}-separator` |
-| `separatorMargin` | `marginXS` | `margin-inline` of `.{p}-separator` |
+| Token | Default source | Consumer |
+| --- | --- | --- |
+| itemColor | colorTextSecondary | Ordinary text |
+| lastItemColor | colorText | Final item text |
+| linkColor | colorTextSecondary | Default link/action button |
+| linkHoverColor | colorText | Link/menu area hover |
+| iconFontSize | fontSize | Apollo icons in content; dropdown arrow uses fontSizeIcon |
+| separatorColor | colorTextDescription | Decorative separator |
+| separatorMargin | marginXS | Separator inline margins |
 
-⚠️ Like antd, there are **no** `mergeToken` derived values (upstream is `mergeToken(token, {})`, empty).
+See [Breadcrumb contract migration](../../../../docs/migrations/breadcrumb-contracts.md).

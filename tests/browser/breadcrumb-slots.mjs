@@ -1,4 +1,4 @@
-/** F11: native Breadcrumb scoped items and keyed children against production dist. */
+/** F11: scoped items/keyed children against source aliases or published dist. */
 import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -18,6 +18,29 @@ try {
     configFile: false,
     logLevel: 'warn',
     plugins: [vue()],
+    resolve: {
+      alias:
+        process.env.BREADCRUMB_SOURCE === '1'
+          ? [
+              'ui',
+              'theme',
+              'utils',
+              'icons',
+              'motion',
+              'portal',
+              'position',
+              'overlay',
+              'a11y',
+              'virtual-list',
+              'form-core',
+              'picker',
+              'locale',
+            ].map((name) => ({
+              find: new RegExp('^@apollo-design/' + name + '$'),
+              replacement: path.resolve(root, '../../../packages/' + name + '/src/index.ts'),
+            }))
+          : [],
+    },
     build: {
       outDir,
       emptyOutDir: true,

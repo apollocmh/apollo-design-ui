@@ -9,10 +9,12 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'apollo-breadcrumb-types-'));
 try {
-  assert.ok(
-    fs.existsSync(path.join(root, 'packages/ui/dist/breadcrumb/Breadcrumb.d.ts')),
-    'Build UI first',
-  );
+  const sourceMode = process.env.BREADCRUMB_SOURCE === '1';
+  if (!sourceMode)
+    assert.ok(
+      fs.existsSync(path.join(root, 'packages/ui/dist/breadcrumb/Breadcrumb.d.ts')),
+      'Build UI first',
+    );
   assert.equal(
     fs.existsSync(path.join(root, 'packages/ui/dist/breadcrumb/__tests__')),
     false,
@@ -25,6 +27,57 @@ try {
   );
   assert.ok(source.includes("from '@apollo-design/ui'"));
   fs.writeFileSync(path.join(temp, 'Consumer.vue'), source);
+  fs.copyFileSync(
+    path.join(root, 'packages/ui/src/breadcrumb/demo/native.vue'),
+    path.join(temp, 'Native.vue'),
+  );
+  fs.writeFileSync(
+    path.join(temp, 'Contracts.vue'),
+    `<script setup lang="ts">
+import { Breadcrumb, BreadcrumbItem, BreadcrumbSeparator, type BreadcrumbItemProps, type BreadcrumbMenuItem } from '@apollo-design/ui';
+const item: BreadcrumbMenuItem = { key: 0, href: '#target', disabled: true, onClick: ({ key, domEvent }) => { void key; void domEvent; } };
+// @ts-expect-error Native Item class replaces the old React-style content prop.
+const invalidClass: BreadcrumbItemProps = { className: 'legacy' };
+// @ts-expect-error Native style is an attr and no longer a component-specific prop.
+const invalidStyle: BreadcrumbItemProps = { style: { color: 'red' } };
+// @ts-expect-error Menu callbacks receive MenuInfo, not a DOM MouseEvent.
+const invalidEvent: BreadcrumbMenuItem = { onClick: (_event: MouseEvent) => {} };
+void invalidClass; void invalidStyle; void invalidEvent;
+</script>
+<template>
+  <Breadcrumb :items="[{ title: 'A', menu: { items: [item] } } ]">
+    <template #separator><span>›</span></template>
+    <template #dropdownIcon><b>↓</b></template>
+    <template #itemRender="{ route, paths, href }"><a :href="href" :data-path="paths.join('/')">{{ route.title }}</a></template>
+  </Breadcrumb>
+  <Breadcrumb>
+    <BreadcrumbItem :class="['native', { active: true }]" :style="['color: red', { padding: '2px' }]">
+      <template #default>Native</template><template #separator><b>|</b></template><template #dropdownIcon><b>↓</b></template>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator><span>·</span></BreadcrumbSeparator>
+  </Breadcrumb>
+</template>`,
+  );
+  const sourcePaths = sourceMode
+    ? Object.fromEntries(
+        [
+          'ui',
+          'utils',
+          'theme',
+          'icons',
+          'motion',
+          'portal',
+          'position',
+          'overlay',
+          'a11y',
+          'virtual-list',
+          'form-core',
+          'picker',
+          'locale',
+        ].map((name) => ['@apollo-design/' + name, [path.join(root, 'packages/' + name + '/src')]]),
+      )
+    : {};
+
   fs.writeFileSync(
     path.join(temp, 'tsconfig.json'),
     JSON.stringify(
@@ -33,15 +86,17 @@ try {
           target: 'ES2022',
           module: 'ESNext',
           moduleResolution: 'Bundler',
-          lib: ['ES2022', 'DOM'],
+          lib: ['ES2023', 'DOM', 'DOM.Iterable'],
           strict: true,
+          noUncheckedIndexedAccess: sourceMode,
+          useUnknownInCatchVariables: true,
           noEmit: true,
           skipLibCheck: true,
-          types: [],
+          types: sourceMode ? ['vite/client', 'node'] : [],
           baseUrl: temp,
-          paths: {},
+          paths: sourcePaths,
         },
-        include: ['Consumer.vue'],
+        include: ['Consumer.vue', 'Native.vue', 'Contracts.vue'],
       },
       null,
       2,
@@ -57,7 +112,7 @@ try {
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published Breadcrumb declarations: named item slot, route/path/href inference and native child composition; no test fixtures shipped',
+    `PASS ${sourceMode ? 'source' : 'published'} Breadcrumb declarations: named content slots, route/path/href inference, native attrs and menu callback negative cases; no test fixtures shipped`,
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

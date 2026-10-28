@@ -1,0 +1,416 @@
+{
+  "breadcrumb:basic": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:prefix-cls:no-props": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]: 类名不同 [ant-breadcrumb] vs [apollo-breadcrumb]",
+      "$/nav[0]/ol[0]/li[0]: 类名不同 [ant-breadcrumb-item] vs [apollo-breadcrumb-item]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [ant-breadcrumb-link] vs [apollo-breadcrumb-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [ant-breadcrumb-separator] vs [apollo-breadcrumb-separator]",
+      "$/nav[0]/ol[0]/li[2]: 类名不同 [ant-breadcrumb-item] vs [apollo-breadcrumb-item]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 类名不同 [ant-breadcrumb-link] vs [apollo-breadcrumb-content]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [ant-breadcrumb-separator] vs [apollo-breadcrumb-separator]",
+      "$/nav[0]/ol[0]/li[4]: 类名不同 [ant-breadcrumb-item] vs [apollo-breadcrumb-item]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [ant-breadcrumb-link] vs [apollo-breadcrumb-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:prefix-cls:custom": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [custom-link] vs [custom-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [custom-separator]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 类名不同 [custom-link] vs [custom-content]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-separator] vs [custom-separator]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [custom-link] vs [custom-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:rtl": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:separator-default": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:separator-custom": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:separator-empty": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[1]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[1]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:separator-item": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[3]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[3]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:separator-item-empty": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[3]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[3]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:path": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:path-slash": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:params-empty": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:params-falsy": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:href-direct": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:title-vnode": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/span[0]/span[0]: 类名不同 [title-span] vs [apollo-link]",
+      "$/nav[0]/ol[0]/li[0]/span[0]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:title-empty": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:routes": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/span[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 类名不同 [apollo-dropdown-trigger apollo-overlay-link] vs [apollo-content apollo-overlay-link]",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 标签不同 <span> vs <button>",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 类名不同 [apollo-icon apollo-icon-down] vs [apollo-dropdown-trigger apollo-menu-trigger]",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 属性 aria-label 不同 \"down\" vs \"Open breadcrumb menu\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 我们缺少属性 role=\"img\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 我们多出属性 aria-expanded=\"false\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 我们多出属性 aria-haspopup=\"menu\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]: 标签不同 <svg> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]: 我们缺少属性 data-icon=\"down\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]/path[0]: 标签不同 <path> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]/path[0]: 类名不同 [] vs [apollo-icon apollo-icon-down]",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]/path[0]: 我们多出属性 aria-label=\"down\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]/path[0]: 我们多出属性 role=\"img\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]/path[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:items-over-routes": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:children": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]: 类名不同 [apollo-breadcrumb-item] vs [apollo-item]",
+      "$/nav[0]/ol[0]/li[0]/span[0]: 类名不同 [apollo-breadcrumb-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/span[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-item] vs [apollo-item]",
+      "$/nav[0]/ol[0]/li[3]/span[0]: 类名不同 [apollo-breadcrumb-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[3]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:children-separator": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]: 类名不同 [apollo-breadcrumb-item] vs [apollo-item]",
+      "$/nav[0]/ol[0]/li[0]/span[0]: 类名不同 [apollo-breadcrumb-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/span[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]: 类名不同 [apollo-breadcrumb-item] vs [apollo-item]",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 类名不同 [apollo-breadcrumb-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:item-render": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/span[0]: 类名不同 [custom-render] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/span[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 类名不同 [custom-render] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [custom-render] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:item-class-style": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link item-cls] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:item-data-aria": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 我们缺少属性 aria-label=\"A 项\"",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 我们缺少属性 data-testid=\"x\"",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:key-number": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/span[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:menu": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 类名不同 [apollo-dropdown-trigger apollo-overlay-link] vs [apollo-content apollo-overlay-link]",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 标签不同 <span> vs <button>",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 类名不同 [apollo-icon apollo-icon-down] vs [apollo-dropdown-trigger apollo-menu-trigger]",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 属性 aria-label 不同 \"down\" vs \"Open breadcrumb menu\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 我们缺少属性 role=\"img\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 我们多出属性 aria-expanded=\"false\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 我们多出属性 aria-haspopup=\"menu\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]: 标签不同 <svg> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]: 我们缺少属性 data-icon=\"down\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]/path[0]: 标签不同 <path> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]/path[0]: 类名不同 [] vs [apollo-icon apollo-icon-down]",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]/path[0]: 我们多出属性 aria-label=\"down\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]/path[0]: 我们多出属性 role=\"img\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]/svg[0]/path[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:dropdown-icon": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/span[0]: 类名不同 [apollo-dropdown-trigger apollo-overlay-link] vs [apollo-content apollo-overlay-link]",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 标签不同 <span> vs <button>",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 类名不同 [my-icon] vs [apollo-dropdown-trigger apollo-menu-trigger]",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 我们多出属性 aria-expanded=\"false\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 我们多出属性 aria-haspopup=\"menu\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 我们多出属性 aria-label=\"Open breadcrumb menu\"",
+      "$/nav[0]/ol[0]/li[2]/span[0]/span[1]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:class-names": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator custom-separator] vs [apollo-separator custom-separator]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-separator custom-separator] vs [apollo-separator custom-separator]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:styles": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]: style 不同 [background:#fafafa] vs [background:rgb(250,250,250)]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "breadcrumb:class-names-fn": {
+    "deviationId": "breadcrumb-native-vue-contracts",
+    "reason": "ADR0007: stable content hosts, owned native menu button and parent prefix; effective data style and complete parameter substitution. Original reference and scenarios are retained; contract-audit.test.ts and browser/breadcrumb-contracts.mjs verify the replacements.",
+    "diff": [
+      "$/nav[0]/ol[0]/li[0]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[0]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[1]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 标签不同 <a> vs <span>",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[2]/a[0]: 子节点数不同 0 vs 1",
+      "$/nav[0]/ol[0]/li[3]: 类名不同 [apollo-breadcrumb-separator] vs [apollo-separator]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 类名不同 [apollo-link] vs [apollo-content]",
+      "$/nav[0]/ol[0]/li[4]/span[0]: 子节点数不同 0 vs 1"
+    ]
+  }
+}

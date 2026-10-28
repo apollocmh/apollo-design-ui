@@ -1,36 +1,5 @@
-/**
- * Breadcrumb 的样式生成（G4 产物）。
- *
- * 契约来源：antd 6.6.4 的 `es/breadcrumb/style/index.js`（177 行）。
- * 选择器结构**从真实产物提取**，不是推演 —— 可复现命令：
- *
- * ```sh
- * # React SSR + cssinjs extractStyle（与 tests/visual/debug/extract-*-css.mjs 同一套路）
- * node /tmp/bc-extract/extract.mjs | grep -o '[^{}]*ant-breadcrumb[^{}]*{[^{}]*}'
- * ```
- *
- * 产物共 **21 条** `ant-breadcrumb` 规则；本文件产出 **18 条**，差掉的 4 条是
- * `resetComponent` 的 `box-sizing` 重复块（`BASE_CSS` 已覆盖，`badge` / `spin` 范式）。
- *
- * ── 从产物里抄下来的三处**非显然**结构 ────────────────────────────────────────
- *
- * 1. **`iconCls` 是后代选择器**：`.{p} .apollo-icon { font-size: iconFontSize }`
- *    —— 不是 `.{p}-icon`。`.anticon` → `.apollo-icon`（D15）。
- * 2. **`.{p}-link > svg` 是「裸 svg」专用规则**（第三方图标库直接渲染 `<svg>`，
- *    `.apollo-icon` 的 reset 够不到它）⇒ `display:inline-block` + `vertical-align:middle`
- *    + `margin-block-end:0.2em`。兄弟选择器那一组有 **4 个**分支
- *    （`.apollo-icon + span` / `.apollo-icon + a` / `svg + span` / `svg + a`）。
- * 3. **`-overlay-link` 的 hover 有两条**：`.{p}-overlay-link:hover a { color: … }`
- *    与 `.{p}-overlay-link a:hover { background-color: transparent }` ——
- *    少了第二条，内层链接会多出一层 hover 底色。
- *
- * ── 这个函数证明什么 / 不证明什么 ────────────────────────────────────────────
- *
- * 证明：18 条规则的**选择器结构与声明顺序**与产物逐条对应；7 个 Component Token 的
- * 变量名与**构建期解析值**一致（`genTokenDecls`）。
- *
- * 不证明：视觉正确（L6 逐像素负责）；变量名存在于 `tokens.css`
- * （`test:build` 的 B7 校验）；`--apollo-*` 全局 token 的取值（theme 包负责）。
+/** Breadcrumb static CSS. Original selector reference: antd 6.6.4 (MIT).
+ * Apollo owns current content/button semantics, accessible colours and theme variables.
  */
 
 import { getDesignToken, token2CSSVar } from '@apollo-design/theme';
@@ -43,7 +12,7 @@ let tokenCache: ComponentToken | null = null;
 
 function breadcrumbTokenValues(): ComponentToken {
   if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken()) as ComponentToken;
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }
@@ -77,6 +46,7 @@ export function genBreadcrumbStyle(rootPrefixCls: string): string {
   const separator = `${cls}-separator`;
   const link = `${cls}-link`;
   const overlayLink = `${cls}-overlay-link`;
+  const action = `${item} button${link}`;
   const icon = `.${p}-icon`;
 
   /** Component Token 的变量引用（`--{p}-breadcrumb-*`）。 */
@@ -114,7 +84,7 @@ export function genBreadcrumbStyle(rootPrefixCls: string): string {
     `}`,
 
     // ---- 链接（只作用于 `a`；非链接项是 `<span>`，没有这层内边距与 hover）----
-    `${item} a{`,
+    `${item} a,${action}{`,
     `  color:${tv('link-color')};`,
     `  transition:color ${v('motionDurationMid')};`,
     `  padding:0 ${v('paddingXXS')};`,
@@ -123,16 +93,18 @@ export function genBreadcrumbStyle(rootPrefixCls: string): string {
     `  display:inline-block;`,
     `  margin-inline:calc(${v('marginXXS')} * -1);`,
     `}`,
-    `${item} a:hover{`,
+    `${item} a:hover,${action}:hover{`,
     `  color:${tv('link-hover-color')};`,
     `  background-color:${v('colorBgTextHover')};`,
     `}`,
     // antd 的 `genFocusStyle`
-    `${item} a:focus-visible{`,
+    `${item} a:focus-visible,${action}:focus-visible{`,
     `  outline:${v('lineWidthFocus')} solid ${v('colorPrimaryBorder')};`,
     `  outline-offset:1px;`,
     `  transition:outline-offset 0s,outline 0s;`,
     `}`,
+
+    `${action}{border:0;background:transparent;font:inherit;line-height:inherit;cursor:pointer;}`,
 
     // ---- 最后一项 ----
     `${item}:last-child{`,
@@ -178,6 +150,32 @@ export function genBreadcrumbStyle(rootPrefixCls: string): string {
     `${overlayLink} a:hover{`,
     `  background-color:transparent;`,
     `}`,
+
+    // A menu button owns its focus and events separately from the navigation link.
+    `${cls}-menu-trigger{`,
+    `  display:inline-flex;`,
+    `  align-items:center;`,
+    `  justify-content:center;`,
+    `  min-width:24px;`,
+    `  min-height:24px;`,
+    `  vertical-align:middle;`,
+    `  appearance:none;`,
+    `  border:0;`,
+    `  background:transparent;`,
+    `  color:inherit;`,
+    `  font:inherit;`,
+    `  padding:0;`,
+    `  margin-inline-start:${v('marginXXS')};`,
+    `  cursor:pointer;`,
+    `  line-height:inherit;`,
+    `  border-radius:${v('borderRadiusSM')};`,
+    `}`,
+    `${cls}-menu-trigger .${p}-icon{font-size:${v('fontSizeIcon')};}`,
+    `${cls}-menu-trigger:focus-visible{`,
+    `  outline:${v('lineWidthFocus')} solid ${v('colorPrimaryBorder')};`,
+    `  outline-offset:1px;`,
+    `}`,
+    `${cls}-menu-trigger:disabled{cursor:default;}`,
 
     // ---- RTL ----
     `${cls}.${p}-breadcrumb-rtl{`,

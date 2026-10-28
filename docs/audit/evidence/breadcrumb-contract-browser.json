@@ -1,0 +1,72 @@
+{
+  "source": true,
+  "browser": "150.0.7871.125",
+  "results": [
+    {
+      "name": "current params, complete content, semantic props and explicit empty data",
+      "passed": true
+    },
+    {
+      "name": "native attrs, keyed input identity, focus and provider appearance/removal",
+      "passed": true
+    },
+    {
+      "name": "conditional/empty/restored separator and dropdown icon slots preserve controls",
+      "passed": true
+    },
+    {
+      "name": "independent navigation link and native keyboard menu, Escape focus return",
+      "passed": true
+    },
+    {
+      "name": "controlled refusal/acceptance and ownership of focus",
+      "passed": true
+    },
+    {
+      "name": "menu selection emits one close request and multiple instances remain independent",
+      "passed": true
+    },
+    {
+      "name": "keyboard menu destination activation follows its href once",
+      "passed": false,
+      "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#/42/42/child\" until \"load\"\n============================================================"
+    },
+    {
+      "name": "all seven custom tokens and nested theme have actual computed consumers",
+      "passed": true,
+      "actual": {
+        "color": "rgb(22, 76, 126)",
+        "lastColor": "rgb(135, 56, 0)",
+        "linkColor": "rgb(7, 86, 33)",
+        "separatorColor": "rgb(117, 69, 0)",
+        "separatorMargin": "17px",
+        "iconFontSize": "23px"
+      }
+    },
+    {
+      "name": "default: real browser axe and text contrast",
+      "passed": true
+    },
+    {
+      "name": "dark: real browser axe and text contrast",
+      "passed": true
+    },
+    {
+      "name": "compact: real browser axe and text contrast",
+      "passed": true
+    },
+    {
+      "name": "both: real browser axe and text contrast",
+      "passed": true
+    },
+    {
+      "name": "dynamic owner prefix and unmount/remount cleanup",
+      "passed": true
+    },
+    {
+      "name": "SSR hydration preserves DOM and current theme updates",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

@@ -1,23 +1,5 @@
-/**
- * L5 无障碍 —— Breadcrumb 的 role/ARIA 契约与 axe 扫描。
- *
- * ── 判据（antd 6.6.4）────────────────────────────────────────────────────────
- *
- * | 项 | 判据 | 出处 |
- * |---|---|---|
- * | 根 | **`<nav>`**（原生 landmark ⇒ 读屏能跳转到「导航」），**不加 `role`** | `Breadcrumb.tsx:304` |
- * | 列表 | `<ol>` + `<li>`（原生列表语义；**不是** `role="list"` 模拟） | `Breadcrumb.tsx:310` |
- * | 链接项 | **真 `<a href="#/…">`**（键盘/读屏天然可用） | `useItemRender.tsx:51` |
- * | 非链接项 | `<span>`（**没有** `role` / `tabindex`） | `useItemRender.tsx:58` |
- * | 分隔符 | `<li aria-hidden="true">` —— **组件唯一**的 `aria-*` | `BreadcrumbSeparator.tsx:20` |
- *
- * ⚠️ **为什么这几条必须钉**：Breadcrumb 的语义**完全由原生元素承担**
- * （`nav` / `ol` / `li` / `a`）—— 组件不该再叠 `role="navigation"`、
- * `aria-label`、`aria-current` 之类（上游没有）。钉住它们才能防止后来者
- * 「顺手加个 role」而改变读屏行为。
- *
- * ⚠️ **`aria-hidden="true"` 落在分隔符的 `<li>` 上**意味着读屏**不朗读**分隔符，
- * 而列表项的计数也少一项 —— 这是上游的刻意选择（分隔符是纯视觉装饰），照抄。
+/** Native navigation/list semantics, decorative separators, owned named menu button
+ * and axe smoke coverage. Real browser colour/keyboard/focus coverage is in breadcrumb-contracts.mjs.
  */
 
 import { mount } from '@vue/test-utils';
@@ -117,7 +99,7 @@ describe('Breadcrumb · role / ARIA 契约（L5）', () => {
     w.unmount();
   });
 
-  it('🚨 分隔符是 `<li aria-hidden="true">`（组件**唯一**的 `aria-*`）', async () => {
+  it('🚨 分隔符是 `<li aria-hidden="true">`（装饰内容）', async () => {
     const w = await mountA11y({ items: ITEMS });
 
     const separators = w.findAll(`.${P}-separator`);
@@ -139,7 +121,7 @@ describe('Breadcrumb · role / ARIA 契约（L5）', () => {
     w.unmount();
   });
 
-  it('`menu` 项的外层是 `<span class="-overlay-link">`（Dropdown 的触发元素，不加 `role`）', async () => {
+  it('`menu` 项的外层是 `<span class="-overlay-link">`（内容和独立按钮的稳定宿主，不加 `role`）', async () => {
     const w = await mountA11y({ items: MENU_ITEMS });
     await nextTick();
 

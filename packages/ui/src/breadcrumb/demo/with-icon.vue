@@ -21,7 +21,7 @@ const ChartIcon = () =>
   );
 
 const items: BreadcrumbItemInput[] = [
-  { href: '', title: h(HomeOutlined) },
+  { href: '', title: h(HomeOutlined), 'aria-label': 'Home' },
   { href: '', title: [h(UserOutlined), h('span', null, 'Application List')] },
   { href: '', title: [h(ChartIcon), h('span', null, 'Dashboard')] },
   { title: 'Application' },

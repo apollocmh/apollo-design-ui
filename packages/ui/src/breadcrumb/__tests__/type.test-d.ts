@@ -1,21 +1,4 @@
-/**
- * L3 · 类型测试（含负例）
- *
- * ⚠️ `*.test-d.ts` 会被 vitest **真的执行**：负例必须包在**永不调用的闭包**里，
- *    否则运行时崩溃（TESTING.md / PITFALLS 74）。
- *
- * ── 本文件钉的六类判据 ───────────────────────────────────────────────────────
- *
- * 1. **本组件「没有」的东西**：`children` prop（Vue 侧是默认插槽，规则 C19）、
- *    **任何组件事件**（根 `<nav>` 不挂事件；item 的 `onClick` 是**数据字段**）。
- * 2. **`ref` 的形状**：`{ nativeElement: HTMLElement | null }` —— 是**对象**，不是 DOM 本身。
- * 3. **`params` 是 `Record<string, unknown>`**（泛型 `<T>` 的非泛型实例化）⇒
- *    `itemRender` 的入参**不能写窄**（函数参数逆变）。
- * 4. **`itemRender` 只收 4 个实参**（没有 `href`）—— 用 `parameters` 断言个数。
- * 5. **`BreadcrumbItemInput` 的三处形状**：`type: 'separator'`、
- *    `children` 是**去掉 `children` 的自身数组**（`Omit`）、`aria-*` / `data-*` 可透传。
- * 6. **可安装**：三个组件都是 `withInstall` 的产物；`BreadcrumbWithSub` 挂 `Item` / `Separator`。
- */
+/** Public Vue content, native attrs and menu data, with meaningful positive/negative cases. */
 
 import { describe, expectTypeOf, it } from 'vitest';
 import type { VNodeChild } from 'vue';
@@ -26,6 +9,7 @@ import type {
   BreadcrumbItemMenu,
   BreadcrumbItemProps,
   BreadcrumbItemSlotProps,
+  BreadcrumbItemSlots,
   BreadcrumbItemType,
   BreadcrumbKey,
   BreadcrumbMenuItem,
@@ -224,3 +208,37 @@ const checkRemovedRenderer = () => {
   void slot;
 };
 void checkRemovedRenderer;
+
+it('current content slots and native Item attrs have public types', () => {
+  expectTypeOf<keyof BreadcrumbItemSlots>().toEqualTypeOf<
+    'default' | 'separator' | 'dropdownIcon'
+  >();
+  expectTypeOf<BreadcrumbSlots>().toHaveProperty('separator');
+  expectTypeOf<BreadcrumbSlots>().toHaveProperty('dropdownIcon');
+  type ItemProps = InstanceType<typeof BreadcrumbItem>['$props'];
+  const native: ItemProps = {
+    class: ['native', { active: true }],
+    style: ['color: red', { padding: '2px' }],
+  };
+  expectTypeOf(native).toMatchTypeOf<ItemProps>();
+  const menuItem: BreadcrumbMenuItem = {
+    key: 0,
+    href: '#route',
+    disabled: true,
+    onClick: ({ domEvent, key }) => {
+      void domEvent;
+      void key;
+    },
+  };
+  expectTypeOf(menuItem).toMatchTypeOf<BreadcrumbMenuItem>();
+  const negative = () => {
+    // @ts-expect-error Native root class replaces the old React-style Item prop.
+    const badClass: BreadcrumbItemProps = { className: 'legacy' };
+    // @ts-expect-error Native style is an attr; it is not a component-specific content prop.
+    const badStyle: BreadcrumbItemProps = { style: { color: 'red' } };
+    // @ts-expect-error Menu business clicks receive MenuInfo, not a DOM MouseEvent.
+    const badMenu: BreadcrumbMenuItem = { onClick: (_event: MouseEvent) => {} };
+    return [badClass, badStyle, badMenu];
+  };
+  void negative;
+});

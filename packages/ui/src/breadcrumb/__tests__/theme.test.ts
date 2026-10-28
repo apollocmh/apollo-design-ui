@@ -67,10 +67,10 @@ describe('Breadcrumb · Component Token 判定值', () => {
 
   it('7 个默认值逐条来自对应的**别名 token**（全部是别名派生）', () => {
     const t = prepareComponentToken(token);
-    expect(t.itemColor).toBe(token.colorTextDescription);
+    expect(t.itemColor).toBe(token.colorTextSecondary);
     expect(t.lastItemColor).toBe(token.colorText);
     expect(t.iconFontSize).toBe(token.fontSize);
-    expect(t.linkColor).toBe(token.colorTextDescription);
+    expect(t.linkColor).toBe(token.colorTextSecondary);
     expect(t.linkHoverColor).toBe(token.colorText);
     expect(t.separatorColor).toBe(token.colorTextDescription);
     expect(t.separatorMargin).toBe(token.marginXS);
@@ -83,9 +83,9 @@ describe('Breadcrumb · Component Token 判定值', () => {
 
   it('声明值是**构建期解析值**（颜色是字面量、尺寸带 `px`）', () => {
     const map = new Map(decls.map(splitDecl));
-    expect(map.get('--apollo-breadcrumb-item-color')).toBe(String(token.colorTextDescription));
+    expect(map.get('--apollo-breadcrumb-item-color')).toBe(String(token.colorTextSecondary));
     expect(map.get('--apollo-breadcrumb-last-item-color')).toBe(String(token.colorText));
-    expect(map.get('--apollo-breadcrumb-link-color')).toBe(String(token.colorTextDescription));
+    expect(map.get('--apollo-breadcrumb-link-color')).toBe(String(token.colorTextSecondary));
     expect(map.get('--apollo-breadcrumb-link-hover-color')).toBe(String(token.colorText));
     expect(map.get('--apollo-breadcrumb-separator-color')).toBe(String(token.colorTextDescription));
     expect(map.get('--apollo-breadcrumb-icon-font-size')).toBe(`${token.fontSize}px`);
