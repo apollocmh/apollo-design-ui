@@ -5,19 +5,13 @@ title:
   en-US: Wrap
 ---
 
-自动换行。`wrap` 只在水平方向有意义。
+实际按钮换行，水平间距 8px、行距 16px。
 
-配合元组 `size`（`[横向, 纵向]`）可以分别控制「同一行内的间距」与「换行后的行距」。
+Wrap real Buttons with an 8px horizontal and 16px vertical gap.
 
 ```vue
 <script setup lang="ts">
-import { Space } from '@apollo-design/ui';
-import { BTN_DEFAULT } from './_standin';
+import { Button, Space } from '@apollo-design/ui';
 </script>
-
-<template>
-  <Space :size="[8, 16]" wrap>
-    <button v-for="i in 20" :key="i" type="button" :style="BTN_DEFAULT">Button</button>
-  </Space>
-</template>
+<template><Space :size="[8, 16]" wrap><Button v-for="i in 20" :key="i">Button {{ i }}</Button></Space></template>
 ```

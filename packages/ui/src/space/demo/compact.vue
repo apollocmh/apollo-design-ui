@@ -1,129 +1,36 @@
 <script setup lang="ts">
-import { Space, SpaceAddon, SpaceCompact } from '../../index';
-import { BTN_PRIMARY, BTN_TEXT, INPUT, INPUT_DISABLED, SELECT } from './_standin';
+import {
+  Button,
+  DatePicker,
+  Input,
+  InputNumber,
+  Select,
+  Space,
+  SpaceAddon,
+  SpaceCompact,
+} from '@apollo-design/ui';
+
+const provinces = [
+  { value: 'zhejiang', label: 'Zhejiang' },
+  { value: 'jiangsu', label: 'Jiangsu' },
+];
+const actions = [
+  { value: 'signup', label: 'Sign Up' },
+  { value: 'signin', label: 'Sign In' },
+];
 </script>
-
 <template>
-  <Space orientation="vertical">
-    <SpaceCompact block>
-      <input :style="{ ...INPUT, width: '20%' }" aria-label="area code" value="0571" />
-      <input :style="{ ...INPUT, width: '30%' }" aria-label="phone" value="26888888" />
-    </SpaceCompact>
-
-    <SpaceCompact block size="small">
-      <input
-        :style="{ ...INPUT, width: 'calc(100% - 200px)' }"
-        aria-label="site url"
-        value="https://ant.design"
-      />
-      <button type="button" :style="BTN_PRIMARY">Submit</button>
-    </SpaceCompact>
-
-    <SpaceCompact block>
-      <input
-        :style="{ ...INPUT, width: 'calc(100% - 200px)' }"
-        aria-label="git url"
-        value="git@github.com:ant-design/ant-design.git"
-      />
-      <button type="button" :style="BTN_TEXT">Copy</button>
-    </SpaceCompact>
-
-    <SpaceCompact block>
-      <select :style="SELECT" aria-label="province">
-        <option>Zhejiang</option>
-        <option>Jiangsu</option>
-      </select>
-      <input
-        :style="{ ...INPUT, width: '50%' }"
-        aria-label="district"
-        value="Xihu District, Hangzhou"
-      />
-    </SpaceCompact>
-
-    <SpaceCompact block>
-      <select :style="{ ...SELECT, width: '50%' }" aria-label="multi province" multiple size="3">
-        <option selected>Zhejiang</option>
-        <option>Jiangsu</option>
-      </select>
-      <input
-        :style="{ ...INPUT, width: '50%' }"
-        aria-label="district 2"
-        value="Xihu District, Hangzhou"
-      />
-    </SpaceCompact>
-
-    <SpaceCompact block>
-      <select :style="SELECT" aria-label="option">
-        <option>Option1</option>
-        <option>Option2</option>
-      </select>
-      <input :style="{ ...INPUT, width: '50%' }" aria-label="input content" value="input content" />
-      <input :style="INPUT" aria-label="number" type="number" value="12" />
-    </SpaceCompact>
-
-    <SpaceCompact block>
-      <input :style="{ ...INPUT, width: '50%' }" aria-label="date prefix" value="input content" />
-      <input :style="{ ...INPUT, width: '50%' }" aria-label="date" type="date" />
-    </SpaceCompact>
-
-    <SpaceCompact block>
-      <select :style="SELECT" aria-label="sign">
-        <option>Sign Up</option>
-        <option>Sign In</option>
-      </select>
-      <input :style="{ ...INPUT, width: '70%' }" aria-label="email" placeholder="Email" />
-    </SpaceCompact>
-
-    <SpaceCompact block>
-      <select :style="SELECT" aria-label="between">
-        <option>Between</option>
-        <option>Except</option>
-      </select>
-      <input
-        :style="{ ...INPUT, width: '100px', textAlign: 'center' }"
-        aria-label="minimum"
-        placeholder="Minimum"
-      />
-      <input
-        :style="{
-          ...INPUT_DISABLED,
-          width: '30px',
-          textAlign: 'center',
-          borderInlineStart: '0',
-          borderInlineEnd: '0',
-          pointerEvents: 'none',
-        }"
-        aria-label="separator"
-        placeholder="~"
-        disabled
-      />
-      <input
-        :style="{ ...INPUT, width: '100px', textAlign: 'center' }"
-        aria-label="maximum"
-        placeholder="Maximum"
-      />
-    </SpaceCompact>
-
-    <SpaceCompact>
-      <input :style="INPUT" aria-label="addon input" placeholder="input here" />
-      <SpaceAddon>$</SpaceAddon>
-      <input
-        :style="{ ...INPUT, width: '100%' }"
-        aria-label="addon number a"
-        placeholder="another input"
-      />
-      <input
-        :style="{ ...INPUT, width: '100%' }"
-        aria-label="addon number b"
-        placeholder="another input"
-      />
-      <SpaceAddon>$</SpaceAddon>
-    </SpaceCompact>
-
-    <SpaceCompact>
-      <button type="button" :style="BTN_PRIMARY">Button</button>
-      <input :style="INPUT" aria-label="addon tail" placeholder="input here" />
-      <SpaceAddon>$</SpaceAddon>
-    </SpaceCompact>
+  <Space orientation="vertical" style="display: flex">
+    <SpaceCompact block><Input aria-label="Area code" default-value="0571" style="width: 20%" /><Input aria-label="Phone" default-value="26888888" style="width: 80%" /></SpaceCompact>
+    <SpaceCompact block size="small"><Input aria-label="Site URL" default-value="https://example.com" /><Button type="primary">Submit</Button></SpaceCompact>
+    <SpaceCompact block><Input aria-label="Git URL" default-value="git@example.com:project/repository.git" /><Button>Copy</Button></SpaceCompact>
+    <SpaceCompact block><Select aria-label="Province" :options="provinces" default-value="zhejiang" style="width: 140px" /><Input aria-label="District" default-value="Xihu District, Hangzhou" /></SpaceCompact>
+    <SpaceCompact block><Select aria-label="Multiple provinces" :options="provinces" mode="multiple" :default-value="['zhejiang']" style="width: 50%" /><Input aria-label="Second district" default-value="Xihu District, Hangzhou" style="width: 50%" /></SpaceCompact>
+    <SpaceCompact block><Select aria-label="Option" :options="provinces" default-value="zhejiang" style="width: 140px" /><Input aria-label="Input content" placeholder="Input content" /><InputNumber aria-label="Quantity" :default-value="12" /></SpaceCompact>
+    <SpaceCompact block><Input aria-label="Date prefix" placeholder="Booking reference" /><DatePicker aria-label="Booking date" /></SpaceCompact>
+    <SpaceCompact block><Select aria-label="Account action" :options="actions" default-value="signup" style="width: 140px" /><Input aria-label="Email" placeholder="Email" /></SpaceCompact>
+    <SpaceCompact block><Select aria-label="Range rule" :options="[{ value: 'between', label: 'Between' }, { value: 'except', label: 'Except' }]" default-value="between" style="width: 130px" /><InputNumber aria-label="Minimum" placeholder="Minimum" /><SpaceAddon>~</SpaceAddon><InputNumber aria-label="Maximum" placeholder="Maximum" /></SpaceCompact>
+    <SpaceCompact block><Input aria-label="First amount" placeholder="First amount" /><SpaceAddon>$</SpaceAddon><Input aria-label="Second amount" placeholder="Second amount" /><Input aria-label="Third amount" placeholder="Third amount" /><SpaceAddon>$</SpaceAddon></SpaceCompact>
+    <SpaceCompact block><Button type="primary">Button</Button><Input aria-label="Amount with unit" placeholder="Input here" /><SpaceAddon>$</SpaceAddon></SpaceCompact>
   </Space>
 </template>

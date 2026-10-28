@@ -1,80 +1,11 @@
 /**
- * Space / Compact / Addon 的样式生成。
- *
- * 契约来源：antd 6.6.4 的 `es/space/style/index.js`（Space）、`style/compact.js`
- * （Compact）、`style/addon.js`（Addon）。选择器结构、属性、取值来源**逐条对齐**。
- *
- * ── 选择器结构是从 antd 的**真实产物**提取的，不是推演的 ─────────────────────────
- *
- * 用 `@ant-design/cssinjs` 的 `extractStyle` 渲染 antd 6.6.4 的 Space / Space.Compact /
- * Space.Addon 并提取 CSS（去掉 `:where(.css-dev-only-*)` 与 `@layer` 包裹层后），
- * 逐条抄下来。实测：
- *
- * | 来源 | antd 条数 | 本文件条数 | 差 |
- * |---|---:|---:|---|
- * | Space（`genSpaceStyle`） | 16 | 16 | 0 |
- * | Compact（`style/compact.ts`） | 4 | 4 | 0 |
- * | Addon（`style/addon.ts`） | 29 | 33 | **+4** |
- * | 合计 | **49** | **53** | +4 |
- *
- * ⚠️ **+4 是 D38 的展开代价，不是漏抄**（见下方 D38 那张表）：
- *    antd 的 status 只改中间变量（`--addon-border-color-outlined` 等），
- *    variant 再引用它 —— 所以 status × variant 的组合**不额外产生规则**。
- *    我们展开成「status+variant」的复合选择器后，每种组合各占一条：
- *      `-status-error-variant-outlined` / `-status-warning-variant-outlined` /
- *      `-status-error-variant-filled` / `-status-warning-variant-filled`。
- *    4 = 2 个 status × 2 个「消费该变量的 variant」。
- *
- * ⚠️ 另一个**容易被漏掉的事实**：Space 与 Compact **没有** `genCommonStyle` 的重置规则
- *    （`[class^="…"]{box-sizing}` 那四条）—— 因为上游 `genStyleHooks(['Space','Compact'], …,
- *    { resetStyle: false })` 显式关掉了。Addon 走默认值，所以**有**那四条。
- *    实测产物确认：Space / Compact 的块里一条 `[class^=` 都没有。
- *
- * ⚠️ 三处最容易写错的地方：
- *
- *   1. **`.{prefix}-space .{prefix}-space-item:empty{display:none}` 是后代选择器**，
- *      不是顶级。写成顶级会让「所有 `-item` 都隐藏」—— 因为它丢掉了
- *      「必须位于 space 内部」这个约束。
- *   2. **`.{prefix}-space-align{flex-direction:column}` 这条看着像笔误但不是**：
- *      antd 的 `&-align` 上确实写了 `flexDirection: column`（`style/index.ts:29`），
- *      然后 `&-align-center` 等再覆盖 `align-items`。逐字保留。
- *   3. **Addon 的组件级 CSS 自定义属性必须内联**（见下）。
- *
- * ── ⚠️ Addon：`--apollo-space-addon-*` 不能照抄（差异 D38）──────────────────────
- *
- * antd 用 `genCssVar(antCls, 'space-addon')` 在规则**内部**声明了一批组件级自定义属性
- * （`--apollo-space-addon-addon-border-color` 等），再用 `var()` 引用它们 ——
- * 靠「自定义属性在同元素上被更具体的选择器覆盖」实现 variant / status 的优先级。
- *
- * 我们不能照抄，因为 `tests/build/run.mjs` 的 **B7** 要求 ui 的每份 CSS 里出现的
- * 每个 `var(--apollo-*)` 都能在 `packages/theme/dist/tokens.css` 的 `:root` 里找到声明
- * —— 这些变量是组件内局部声明的，B7 看不到它们（它只解析 theme 的 `:root` 块）。
- *
- * 所以这里把「自定义属性间接层」**展开成等价的选择器**。展开的规则是：
- * 某个属性在元素上的最终取值 = 所有匹配规则中特异性最高（同特异性取最后）的那条。
- * 逐条对照见下表（左边是 antd 的机制，右边是本文件的写法）：
- *
- * | antd | 本文件 |
- * |---|---|
- * | 基座 `border-color:var(--bc)`，`--bc:colorBorder` | `.addon{border-color:var(--apollo-color-border)}` |
- * | `-variant-outlined` 把 `--bc` 指向 `--bc-outlined` | `.addon-variant-outlined{border-color:var(--apollo-color-border)}` |
- * | `-variant-filled`：`--bc:transparent`、`--bg:var(--bg-filled)` | `.addon-variant-filled{border-color:transparent;background:var(--apollo-color-bg-container-disabled)}` |
- * | `-status-error` 改 `--bc-outlined` / `--bg-filled` | `.addon-status-error.addon-variant-outlined{border-color:var(--apollo-color-error)}` + `.addon-status-error.addon-variant-filled{background:var(--apollo-color-error-bg)}` |
- * | `-variant-filled.addon-disabled`（特异性 0,2,0）压过 `-variant-filled`（0,1,0） | 同选择器（0,2,0），但**必须排在 status 规则之后** |
- *
- * 最后一行是唯一有陷阱的一条：展开后 `-variant-filled.addon-disabled` 与
- * `-status-error.addon-variant-filled` 的**特异性相同**（都是 0,2,0），只能靠
- * 声明顺序决胜 —— 而 antd 那边靠的是特异性差。所以这里把 disabled 那条**放到
- * status 之后**（见下方 `⚠️ 顺序即契约` 标记）。
- * 反例：「filled + error + disabled」的 Addon 背景应当是 disabled 色，
- * 顺序写反会变成 error 背景。
- *
- * ── 这个函数没有证明什么 ──────────────────────────────────────────────────────
- *   - 没证明**视觉**正确（L6 的逐像素比对负责）。
- *   - 没证明变量名存在（B7 负责）。
- *   - 没证明 Addon 的**层叠**与 antd 等价 —— 上面那张表是推导，不是实测。
- *     实测成本很高（要构造 4 变体 × 4 状态 × 禁用 的组合并逐元素比对 computed style），
- *     已登记为 `docs/analysis/space.md` §12 的待验证问题。
+ * Static Space / Compact / Addon CSS, using existing Alias tokens.
+ * Historical source: Ant Design 6.6.4 space/style (see docs/analysis/space.md).
+ * Current rules: Space 16, Compact 4, Addon 31. The 2026-10-28 audit replaces
+ * five positional/duplicate edge rules with context-based horizontal/vertical
+ * joining, retaining all singleton corners and the actual shared border.
+ * Variant/status/disabled selector order preserves the established paint cascade.
+ * Browser evidence verifies actual theme colors and geometry; rule counts alone do not.
  */
 
 import { token2CSSVar } from '@apollo-design/theme';
@@ -246,23 +177,6 @@ export function genSpaceStyle(prefixCls: string): string {
     `  border-radius:${v('borderRadiusSM')};`,
     `  font-size:${v('fontSizeSM')};`,
     `}`,
-    `${addonCls}-compact-last-item{`,
-    `  border-end-start-radius:0;`,
-    `  border-start-start-radius:0;`,
-    `}`,
-    `${addonCls}-compact-first-item{`,
-    `  border-end-end-radius:0;`,
-    `  border-start-end-radius:0;`,
-    `}`,
-    `${addonCls}-compact-item:not(:first-child):not(:last-child){`,
-    `  border-radius:0;`,
-    `}`,
-    `${addonCls}-compact-item:not(:last-child){`,
-    `  border-inline-end-width:0;`,
-    `}`,
-    `${addonCls}-compact-item:not(:first-child){`,
-    `  border-inline-start-width:0;`,
-    `}`,
     '',
     // ---- Variants（展开自 `--addon-border-color` / `--addon-background`）----
     `${addonCls}-variant-outlined{`,
@@ -286,10 +200,10 @@ export function genSpaceStyle(prefixCls: string): string {
     //    「status + variant」的复合选择器，而不是给 `-status-error` 直接设 border-color
     //    （后者会让 `variant="filled"` + `status="error"` 的边框从 transparent 变成 error 色）。
     `${addonCls}-status-error{`,
-    `  color:${v('colorError')};`,
+    `  color:color-mix(in srgb,${v('colorErrorText')} 50%,${v('colorText')});`,
     `}`,
     `${addonCls}-status-warning{`,
-    `  color:${v('colorWarning')};`,
+    `  color:color-mix(in srgb,${v('colorWarningText')} 50%,${v('colorText')});`,
     `}`,
     `${addonCls}-status-error${addonCls}-variant-outlined{`,
     `  border-color:${v('colorError')};`,
@@ -317,19 +231,22 @@ export function genSpaceStyle(prefixCls: string): string {
     `${addonCompact}-item:not(${addonCompact}-last-item){`,
     `  margin-inline-end:calc(${lineWidth} * -1);`,
     `}`,
-    `${addonCompact}-item:not(${addonCls}-status-success){`,
+    `${addonCompact}-vertical-item:not(${addonCompact}-vertical-last-item){`,
+    `  margin-bottom:calc(${lineWidth} * -1);`,
+    `}`,
+    `${addonCompact}-item:not(${addonCls}-status-success),${addonCompact}-vertical-item:not(${addonCls}-status-success){`,
     `  z-index:2;`,
     `}`,
-    `${addonCompact}-item:active{`,
+    `${addonCompact}-item:active,${addonCompact}-vertical-item:active{`,
     `  z-index:3;`,
     `}`,
-    `${addonCompact}-item:hover{`,
+    `${addonCompact}-item:hover,${addonCompact}-vertical-item:hover{`,
     `  z-index:4;`,
     `}`,
-    `${addonCompact}-item[disabled]{`,
+    `${addonCompact}-item[disabled],${addonCompact}-vertical-item[disabled],${addonCompact}-item${addonCls}-disabled,${addonCompact}-vertical-item${addonCls}-disabled{`,
     `  z-index:0;`,
     `}`,
-    `${addonCompact}-item:not(${addonCompact}-first-item):not(${addonCompact}-last-item){`,
+    `${addonCompact}-item:not(${addonCompact}-first-item):not(${addonCompact}-last-item),${addonCompact}-vertical-item:not(${addonCompact}-vertical-first-item):not(${addonCompact}-vertical-last-item){`,
     `  border-radius:0;`,
     `}`,
     `${addonCompact}-item:not(${addonCompact}-last-item)${addonCompact}-first-item,${addonCompact}-item:not(${addonCompact}-last-item)${addonCompact}-first-item${addonCls}-sm,${addonCompact}-item:not(${addonCompact}-last-item)${addonCompact}-first-item${addonCls}-lg{`,
@@ -339,6 +256,14 @@ export function genSpaceStyle(prefixCls: string): string {
     `${addonCompact}-item:not(${addonCompact}-first-item)${addonCompact}-last-item,${addonCompact}-item:not(${addonCompact}-first-item)${addonCompact}-last-item${addonCls}-sm,${addonCompact}-item:not(${addonCompact}-first-item)${addonCompact}-last-item${addonCls}-lg{`,
     `  border-start-start-radius:0;`,
     `  border-end-start-radius:0;`,
+    `}`,
+    `${addonCompact}-vertical-item:not(${addonCompact}-vertical-last-item)${addonCompact}-vertical-first-item{`,
+    `  border-end-start-radius:0;`,
+    `  border-end-end-radius:0;`,
+    `}`,
+    `${addonCompact}-vertical-item:not(${addonCompact}-vertical-first-item)${addonCompact}-vertical-last-item{`,
+    `  border-start-start-radius:0;`,
+    `  border-start-end-radius:0;`,
     `}`,
     '',
   ].join('\n');

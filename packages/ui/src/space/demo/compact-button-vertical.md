@@ -5,42 +5,20 @@ title:
   en-US: Compact Button Vertical
 ---
 
-垂直方向的紧凑布局，目前仅支持 Button 组合。
+纵向紧凑按钮支持默认、虚线、主按钮和 outlined 外观。
 
-⚠️ 垂直模式目前**只有 Button 实现了对应的边框合并样式** —— 这是上游的现状，不是我们的缺口。
-其它表单组件的垂直紧凑拼接样式尚未落地，所以这里只演示 Button。
+Vertical compact Buttons with default, dashed, primary and outlined appearances.
 
 ```vue
 <script setup lang="ts">
-import { Space, SpaceCompact } from '@apollo-design/ui';
-import { BTN_DASHED, BTN_DEFAULT, BTN_PRIMARY } from './_standin';
-
-/** `variant="outlined"` 是 antd 6 的新写法，等价于默认的 `BTN_DEFAULT`。 */
-const BTN_OUTLINED = BTN_DEFAULT;
+import { Button, Space, SpaceCompact } from '@apollo-design/ui';
 </script>
-
 <template>
-  <Space>
-    <SpaceCompact orientation="vertical">
-      <button type="button" :style="BTN_DEFAULT">Button 1</button>
-      <button type="button" :style="BTN_DEFAULT">Button 2</button>
-      <button type="button" :style="BTN_DEFAULT">Button 3</button>
-    </SpaceCompact>
-    <SpaceCompact orientation="vertical">
-      <button type="button" :style="BTN_DASHED">Button 1</button>
-      <button type="button" :style="BTN_DASHED">Button 2</button>
-      <button type="button" :style="BTN_DASHED">Button 3</button>
-    </SpaceCompact>
-    <SpaceCompact orientation="vertical">
-      <button type="button" :style="BTN_PRIMARY">Button 1</button>
-      <button type="button" :style="BTN_PRIMARY">Button 2</button>
-      <button type="button" :style="BTN_PRIMARY">Button 3</button>
-    </SpaceCompact>
-    <SpaceCompact orientation="vertical">
-      <button type="button" :style="BTN_OUTLINED">Button 1</button>
-      <button type="button" :style="BTN_OUTLINED">Button 2</button>
-      <button type="button" :style="BTN_OUTLINED">Button 3</button>
-    </SpaceCompact>
+  <Space align="start" wrap>
+    <SpaceCompact orientation="vertical"><Button v-for="i in 3" :key="i">Button {{ i }}</Button></SpaceCompact>
+    <SpaceCompact orientation="vertical"><Button v-for="i in 3" :key="i" type="dashed">Button {{ i }}</Button></SpaceCompact>
+    <SpaceCompact orientation="vertical"><Button v-for="i in 3" :key="i" type="primary">Button {{ i }}</Button></SpaceCompact>
+    <SpaceCompact orientation="vertical"><Button v-for="i in 3" :key="i" variant="outlined">Button {{ i }}</Button></SpaceCompact>
   </Space>
 </template>
 ```

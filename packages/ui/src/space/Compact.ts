@@ -1,37 +1,8 @@
 /**
- * `Space.Compact` 的**跨组件上下文协议**。
- *
- * 契约来源：antd 6.6.4 的 `es/space/Compact.js` 里除默认导出之外的全部内容
- * （`SpaceCompactItemContext` / `useCompactItemContext` / `NoCompactStyle` / `CompactItem`）。
- *
- * ── 这个模块为什么比 Compact 组件本身更重要 ────────────────────────────────────
- *
- * `useCompactItemContext` 被 **10 个组件**消费（Button / Input / TextArea /
- * Input.Search / InputNumber / Select / TreeSelect / Cascader / DatePicker /
- * Dropdown.Button / ColorPicker）。Compact 只负责**算**出
- * `compactSize` / `compactDirection` / `isFirstItem` / `isLastItem` 并广播，
- * 真正把 `-compact-item` / `-compact-first-item` / `-compact-last-item` 类名
- * 拼到元素上的是**下游组件自己**（用它们自己的 `prefixCls`）。
- *
- * 所以：
- *   - 拼出来的类名是 `apollo-btn-compact-item`（下游前缀），
- *     **不是** `apollo-space-compact-item`。
- *   - 路径必须是 `space/Compact`（与 antd 同路径），下游才能照抄 import。
- *
- * ── `NoCompactStyle` 存在的理由 ────────────────────────────────────────────────
- *
- * 浮层（Modal / Drawer / Tooltip / Dropdown）里的内容虽然在 React 组件树上
- * 是 Compact 的后代，但在**视觉上**不属于紧凑组。所以 `ContextIsolator`
- * 用 `NoCompactStyle` 把上下文重置为 `null`。
- * `space-compact.test.tsx` 有 4 条用例专门测这个（Modal / Dropdown / Drawer / Tooltip）。
- *
- * ── 与 antd 的差异（PLATFORM / D27）─────────────────────────────────────────────
- *
- * antd 返回**裸值**（每次渲染重算）。Vue 的 `inject` 是 setup 期快照，
- * 裸值不会随 Compact 的 props 变化而更新 —— 所以这里返回 `ComputedRef`。
- * 下游在 `computed` / render 里读 `.value` 即可（与 `size-context.ts` 同形）。
+ * Reactive compact protocol shared by Button, input families, Select, Cascader,
+ * TreeSelect, picker families, ColorPicker and Addon. Consumers use their own prefix.
+ * Historical source: Ant Design 6.6.4 space/Compact; see docs/analysis/space.md.
  */
-
 import {
   type ComputedRef,
   computed,

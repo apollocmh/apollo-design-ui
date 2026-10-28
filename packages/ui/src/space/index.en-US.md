@@ -4,271 +4,89 @@ title: Space
 subtitle: Spacing
 ---
 
-Set the spacing between components.
-
-## When To Use
-
-- Avoid components sticking together; keep the spacing consistent.
-- Suitable for horizontal spacing between inline elements.
-- Supports various horizontal alignments.
-- Use `Space.Compact` when form components need to be joined tightly with merged borders.
+Space separates content. SpaceCompact joins adjacent controls, and SpaceAddon adds a custom cell.
 
 ## Examples
 
-See [`demo/`](./demo) (15 demos, covering the main antd scenarios.
-
-| demo | What it shows |
-|---|---|
-| `base` | Basic usage: default spacing between three buttons |
-| `vertical` | Vertical spacing: `orientation="vertical"` + three cards |
-| `size` | Gap sizes `small` / `medium` / `large` and the number `24` |
-| `align` | Alignment `center` / `start` / `end` / `baseline` |
-| `wrap` | Auto wrapping + the row gap of `size={[8, 16]}` |
-| `separator` | Separator: a plain string and a (vertical) `Divider` |
-| `compact` | Compact layout: `block`, two inputs, input + button |
-| `compact-buttons` | Compact button group |
-| `compact-button-vertical` | Vertical compact button group |
-| `compact-nested` | Nested compact layout (first/last item needs a cross-level conjunction) |
-| `compact-debug` | Compact layout debugging (falsy children and where `compactSize` lands) |
-| `debug` | Index semantics of falsy children (`null` / `false` / `0`) |
-| `gap-in-line` | The row gap when wrapping |
-| `style-class` | Semantic `classNames` / `styles` |
-| `component-token` | Component Token (⚠️ upstream has no token at all, see "Design notes") |
+The [15 real demos](./demo) cover basic/vertical spacing, sizes, alignment, wrapping, separators, compact controls, horizontal/vertical button groups, nested groups, empty content, row gaps, semantic styles and Alias themes.
 
 ## API
 
 ### Space
 
-#### Props
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| prefixCls | Complete DOM class prefix | `string` | ConfigProvider prefix + `-space` |
+| size | Gap or `[horizontal, vertical]` gaps | `SpaceSize \| [SpaceSize, SpaceSize]` | Current `components.space.size`, then `'small'` |
+| orientation | Layout direction; highest priority | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| vertical | Explicit false also overrides legacy direction | `boolean` | — |
+| align | Horizontal default is center; vertical omission adds no alignment | `'start' \| 'end' \| 'center' \| 'baseline'` | Horizontal `'center'` |
+| separator | Complete Vue content data, including numeric zero | `VNodeChild` | — |
+| wrap | Enables flex wrapping; vertical wrapping needs a bounded height | `boolean` | `false` |
+| classNames | root/item/separator classes; object or function receiving current `{ props }` | `SpaceSemanticValue<SpaceSemanticClassNames>` | — |
+| styles | root/item/separator styles; object or function receiving current `{ props }` | `SpaceSemanticValue<SpaceSemanticStyles>` | — |
+| ~~direction~~ | Deprecated; use orientation | `'horizontal' \| 'vertical'` | — |
+| ~~split~~ | Deprecated; use separator data or #separator | `VNodeChild` | — |
+
+`SpaceSize = 'small' | 'medium' | 'middle' | 'large' | number`. Presets use the paddingXS/padding/paddingLG Alias tokens. Numeric gaps use px. Zero is a valid zero gap and never falls back to the preset; NaN adds no gap.
+
+| Slot | Description |
+| --- | --- |
+| default | Current content; each nonempty child has an item host |
+| separator | Overrides separator/split data; an intentionally empty slot hides separators |
+
+Slots are read during render and support conditional addition, replacement and removal. Priority is #separator → separator when not undefined → split. Null, booleans, empty strings and comments are empty; zero is content. Separators appear only between content items.
+
+Arrays and Fragments flatten while preserving keyed Fragment scopes. String, number and Symbol keys, theme changes and class/prefix updates retain business child identity. Unkeyed children retain identity by position. A missing/empty child list produces no root. Empty placeholders within a nonempty list can retain the root without item hosts.
+
+### SpaceCompact
 
 | Property | Description | Type | Default |
-|---|---|---|---|
-| prefixCls | Class name prefix | `string` | From ConfigProvider, falling back to `apollo-space` |
-| size | Gap size. A preset string becomes a class name, a number becomes an inline `gap`; an array is read as `[horizontal, vertical]` | `SpaceSize \| [SpaceSize, SpaceSize]` | From ConfigProvider `space.size`, falling back to `'small'` |
-| orientation | Direction. Highest priority | `'horizontal' \| 'vertical'` | `'horizontal'` |
-| vertical | Whether it is vertical. `orientation` takes precedence when both are set | `boolean` | — |
-| align | Alignment. ⚠️ When vertical, omitting it does **not** fall back to `center` | `'start' \| 'end' \| 'center' \| 'baseline'` | `'center'` when horizontal, — when vertical |
-| separator | Sets the separator | `VNodeChild` | — |
-| wrap | Whether to wrap automatically. Only effective when horizontal | `boolean` | `false` |
-| class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`). `style` **overrides `styles.root`** | `string \| array \| object` / `CSSProperties` | — |
-| classNames | Semantic class names | `SpaceSemanticValue<SpaceSemanticClassNames>` | — |
-| styles | Semantic inline styles | `SpaceSemanticValue<SpaceSemanticStyles>` | — |
-| ~~direction~~ | ⚠️ Deprecated, use `orientation` | `'horizontal' \| 'vertical'` | — |
-| ~~split~~ | ⚠️ Deprecated, use `separator` | `VNodeChild` | — |
+| --- | --- | --- | --- |
+| prefixCls | Complete DOM class prefix | `string` | Provider prefix + `-space-compact` |
+| size | Size passed to child controls | `SizeType` | Current ConfigProvider.componentSize |
+| orientation | Layout direction | `'horizontal' \| 'vertical'` | `'horizontal'` |
+| vertical | Explicit boolean direction, below orientation | `boolean` | — |
+| block | Fills the parent width | `boolean` | `false` |
+| ~~direction~~ | Deprecated; use orientation | `'horizontal' \| 'vertical'` | — |
 
-`SpaceSize` = `SizeType | number`, `SizeType` = `'small' | 'middle' | 'medium' | 'large'`.
+The default slot contains real compact controls; no child DOM wrapper is added. Null, booleans, comments and empty text do not occupy edge positions; zero remains content. Nested first/last boundaries are combined with the outer group. Controls consume compactSize, compactDirection, isFirstItem and isLastItem using their own prefix. Where size is supported, a local size wins over current compactSize, then the Provider size.
 
-⚠️ The two rules for `size` are **different**:
+`useCompactItemContext(prefixCls, direction)` returns three ComputedRefs: compactSize, compactDirection and compactItemClassnames. Horizontal classes use `-compact-item/first-item/last-item`; vertical classes use `-compact-vertical-*`; RTL adds the corresponding item-rtl class. NoCompactStyle provides null to isolate its subtree; siblings remain unaffected and isolated controls use their own/Provider configuration.
 
-| Input | Result |
-|---|---|
-| Preset string | Class names `-gap-row-{size}` / `-gap-col-{size}`; the value comes from CSS variables |
-| Non-zero number | Inline `row-gap` / `column-gap` (**`px` is appended automatically**) |
-| `0` / `NaN` / numeric string | **Nothing is added** (`isValidGapNumber`'s truthiness short-circuit excludes `0`) |
-
-#### Slots
-
-| Name | Description |
-|---|---|
-| default | The content to space out. Every child is wrapped in an `-item` |
-
-⚠️ Non-renderable children (`null` / `undefined` / empty string / comment node) get **no `-item`
-wrapper at all**; but a **component that itself renders `null`** (e.g. `<Null/>`) *is* renderable
-⇒ it gets an empty `-item`, hidden by CSS `:empty{display:none}`.
-
-#### Semantic slots
-
-`classNames` / `styles` each have three slots: `root` / `item` / `separator`.
-
-Merge priority (low → high):
-
-```
-ConfigProvider.space.classNames/styles
-  → component classNames / styles
-  → native root class / style attrs
-```
-
-**`style` overrides `styles.root`** (this is antd's merge order, mirrored verbatim).
-
-#### ref
-
-| Name | Description |
-|---|---|
-| nativeElement | The root `div`. `null` before the first render; the root element is **not rendered** when there are no children, so it is `null` then too |
-
-### Space.Compact
-
-Joins form components tightly and merges their borders.
-
-#### Props
+### SpaceAddon
 
 | Property | Description | Type | Default |
-|---|---|---|---|
-| prefixCls | Class name prefix. ⚠️ The suffix is `space-compact` | `string` | From ConfigProvider, falling back to `apollo-space-compact` |
-| size | Size of the child components. Takes precedence over ConfigProvider's `componentSize` | `SizeType` | From ConfigProvider `componentSize` |
-| orientation | Direction. Highest priority | `'horizontal' \| 'vertical'` | `'horizontal'` |
-| vertical | Whether it is vertical. `orientation` takes precedence when both are set | `boolean` | — |
-| block | Stretch to the width of the parent | `boolean` | `false` |
-| class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`) | `string \| array \| object` / `CSSProperties` | — |
-| ~~direction~~ | ⚠️ Deprecated, use `orientation` | `'horizontal' \| 'vertical'` | — |
+| --- | --- | --- | --- |
+| prefixCls | Complete DOM class prefix | `string` | Provider prefix + `-space-addon` |
+| variant | Cell appearance | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` |
+| disabled | Decorative disabled cell state; child controls manage their own disabled state | `boolean` | `false` |
+| status | Validation appearance | `'error' \| 'warning' \| 'success' \| 'validating' \| ''` | — |
 
-#### Slots
+The default slot accepts complete Vue content. Current compact size and boundaries control the cell. Horizontal/vertical/RTL groups retain outer corners; a singleton retains all four corners. Error/warning text equally blends the existing colorErrorText/colorWarningText and current colorText Alias while borders retain status colors. Disabled text overrides status text, and filled + disabled restores the disabled background. Success/validating retain status classes without adding paint changes.
 
-| Name | Description |
-|---|---|
-| default | The form components to join. ⚠️ Compact does **not** wrap its children, it only broadcasts the context |
+### Native attrs, refs and configuration
 
-⚠️ Unlike `Space`, Compact **discards** falsy children (they do not take up an index).
+All three components route native class/style/listeners/data/ARIA attrs to their root div. Native style accepts Vue objects, strings and arrays. There are no business emits or v-models, and no implicit list/form roles. Actual buttons and inputs own interaction semantics.
 
-#### ref
+Each ref exposes only `nativeElement: HTMLDivElement | null`. It is null before mounting and while Space/Compact have no content. Addon always has a root.
 
-| Name | Description |
-|---|---|
-| nativeElement | The root `div`. `null` before the first render; the root element is not rendered when there are no children |
+Configure Space with `ConfigProvider :components="{ space: { size, className, style, classNames, styles } }"`. Replacement/removal takes effect immediately. Classes concatenate. Style priority is Provider semantic → Provider root style → local semantic → native attrs. Semantic functions receive current merged size/orientation/align.
 
-#### Cross-component protocol
+### Themes and exports
 
-Compact does not build class names itself — it broadcasts four values to its children, and each
-**child** builds the class names with **its own prefix**:
+Space, Compact and Addon define no component tokens; prepareSpaceComponentToken returns `{}`. Existing Alias tokens control gaps, font, borders, radii and Addon paint. Current aliases support ConfigProvider, ThemeProvider, nested scopes and SSR. Root native style variables have the final priority.
 
 ```ts
-import { useCompactItemContext } from '@apollo-design/ui';
-
-const { compactSize, compactDirection, compactItemClassnames } = useCompactItemContext(
-  prefixCls,   // your own prefix, e.g. 'apollo-btn'
-  direction,   // text direction; under 'rtl' one extra -item-rtl
-);
-// compactItemClassnames: ComputedRef<string>
-// → 'apollo-btn-compact-item apollo-btn-compact-first-item'
+import { Space, SpaceCompact, SpaceAddon } from '@apollo-design/ui';
+import '@apollo-design/theme/tokens.css';
+import '@apollo-design/ui/space/style.css';
 ```
 
-| Return value | Type | Description |
-|---|---|---|
-| compactSize | `ComputedRef<SizeType \| undefined>` | The size the child should adopt |
-| compactDirection | `ComputedRef<'horizontal' \| 'vertical' \| undefined>` | The compact direction. Under `vertical` the class names gain an extra hyphen pair |
-| compactItemClassnames | `ComputedRef<string>` | The assembled class name string (empty means "not inside a Compact") |
+Real Button/Input/Select controls also require their CSS; alternatively import `@apollo-design/ui/style.css`.
 
-Class name order: `-compact-item` → `-compact-first-item`? → `-compact-last-item`? →
-`-compact-item-rtl`?. ⚠️ Under `vertical` they become `-compact-vertical-item` /
-`-compact-vertical-first-item`.
+Static aliases Space.Compact/Space.Addon and separate ASpace/ASpaceCompact/ASpaceAddon install names remain. Public component/ref/size/config/semantic types and existing context/helper exports are retained.
 
-Content inside overlays (Modal / Drawer / Tooltip / Dropdown) is part of the Compact tree of the
-downstream component, but visually it is not part of the compact group — use `NoCompactStyle` to
-reset the context to `null`.
+prefixCls changes DOM names; arbitrary prefix CSS is not generated at runtime. `genSpaceStyle('brand')` creates static `.brand-space`, `.brand-space-compact` and `.brand-space-addon` rules. Provider prefixes should match pre-generated CSS. Default output uses apollo.
 
-### Space.Addon
-
-A custom cell inside a compact layout (available since antd@5.29.0).
-
-#### Props
-
-| Property | Description | Type | Default |
-|---|---|---|---|
-| prefixCls | Class name prefix. ⚠️ The suffix is `space-addon` | `string` | From ConfigProvider, falling back to `apollo-space-addon` |
-| variant | Visual variant | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` |
-| status | Validation status | `'error' \| 'warning' \| 'success' \| 'validating' \| ''` | — |
-| disabled | Disabled state. ⚠️ Only changes the color, it does **not** set the `disabled` attribute | `boolean` | `false` |
-| class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`) | `string \| array \| object` / `CSSProperties` | — |
-
-#### Slots
-
-| Name | Description |
-|---|---|
-| default | The content of the cell |
-
-#### ref
-
-| Name | Description |
-|---|---|
-| nativeElement | The root `div` |
-
-### Type exports
-
-`SpaceProps`, `SpaceRef`, `SpaceSize`, `SpaceAlign`, `SpaceSlot`, `SpaceConfig`,
-`SpaceSemanticType`, `SpaceSemanticAllType`, `SpaceSemanticClassNames`,
-`SpaceSemanticStyles`, `SpaceSemanticValue`, `SpaceCompactProps`, `SpaceCompactRef`,
-`SpaceCompactItemContextType`, `SpaceAddonProps`, `SpaceAddonRef`,
-`SpaceComponentToken`, `InputStatus`.
-
-### Utility exports
-
-| Name | Description |
-|---|---|
-| `genSpaceStyle(prefixCls)` | Generates the CSS text for that prefix (for custom `prefixCls`) |
-| `prepareSpaceComponentToken(token)` | Computes the component token defaults (identical to antd's `prepareComponentToken`: it returns `{}`) |
-| `useCompactItemContext(prefixCls, direction)` | The compact item context (see above) |
-| `NoCompactStyle` | Isolates a subtree from the compact context |
-| `useOrientation(orientation, vertical, legacyDirection)` | Merges the direction, returning `ComputedRef<[Orientation, boolean]>` |
-| `isValidOrientation(value)` | Whether the value is a valid direction |
-| `isPresetSize(size)` / `isValidGapNumber(size)` | The two rules for `size` |
-| `getStatusClassNames(prefixCls, status, hasFeedback?)` | Status → class names |
-
-## Design notes
-
-### Orientation priority
-
-`orientation` > `vertical` > `direction`, falling back to `horizontal` when none is given.
-
-⚠️ The check for `vertical` is `typeof vertical === 'boolean'`, **not a truthiness check** — so
-"not passed" and "explicitly `false`" are two different branches: an explicit `false` overrides
-`direction`.
-
-### The default of `align`
-
-When horizontal, an omitted `align` folds into `center`; **when vertical, an omitted `align` stays
-`undefined`** (no `-align-*` class name is produced). The check is `align === undefined`, not a
-truthiness check.
-
-### `separator` and `split`
-
-`separator` wins; `split` is only used when it is not passed (the check is `??`, so passing `''`
-does **not** fall back). Whether the separator is **rendered** is a truthiness check, though ⇒ both
-`separator=""` and `separator={0}` are **not rendered**.
-
-⚠️ That last point is a **behavioral difference** from antd (we render one extra empty
-`-item-separator` span). It is registered as a defect difference in `COMPATIBILITY.md` §9.2; see
-[`README.md`](./README.md) §6.
-
-### Child indices
-
-`latestIndex` only counts children that "have content", and the `reduce` seed is `0` ⇒ no separator
-is produced when everything is empty. `Space` uses `keepEmpty` to preserve the **index** of falsy
-children (aligning with React's `traverseAllChildren`), while `Compact` discards them outright.
-
-### Component tokens
-
-| Token | Default | Description |
-|---|---|---|
-| — | — | ⚠️ **Space / Compact / Addon have no Component Token at all** |
-
-All three `ComponentToken`s in antd 6.6.4 are **empty interfaces** and `prepareComponentToken`
-returns `{}`:
-
-```ts
-// biome-ignore lint/suspicious/noEmptyInterface: ComponentToken need to be empty by default
-export interface ComponentToken {}
-export const prepareComponentToken: GetDefaultToken<'Space'> = () => ({});
-```
-
-So `theme.components.Space` **cannot override anything upstream either** — this is not a gap of
-this repository.
-
-`spaceGapSmallSize` / `spaceGapMiddleSize` / `spaceGapLargeSize` are **internal** tokens (derived
-by `mergeToken` from `paddingXS` / `padding` / `paddingLG`); users cannot override them. They only
-determine the values of the six `-gap-*` rules. To change how the presets look, change the
-corresponding Alias token (`--apollo-padding-xs` / `--apollo-padding` / `--apollo-padding-lg`).
-
-### Importing styles
-
-```ts
-import '@apollo-design/theme/tokens.css';     // theme variables first
-import '@apollo-design/ui/style.css';         // all component styles
-```
-
-⚠️ Importing `@apollo-design/ui/space/style.css` on demand is **not available yet** —
-`dist/space/style.css` is indeed produced by the build, but `packages/ui/package.json`'s `exports`
-does not expose that subpath yet (verified: `ERR_PACKAGE_PATH_NOT_EXPORTED`). Until it is added,
-import the aggregated `style.css`.
-
-For a custom `prefixCls` (e.g. `my-app`), generate the CSS yourself with `genSpaceStyle('my-app')` —
-the static output only covers the `apollo` and `ant` prefixes.
+See the [migration record](../../../../docs/migrations/space-contracts.md) for behavior changes and prior syntax.

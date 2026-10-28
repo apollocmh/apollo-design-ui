@@ -1,37 +1,16 @@
 <script setup lang="ts">
-import { Space } from '../../index';
-import { ALIGN_BOX, BTN_PRIMARY, MOCK_BOX, ROW_WRAP } from './_standin';
-</script>
+import { Button, Flex, Space, type SpaceAlign } from '@apollo-design/ui';
 
+const alignments: SpaceAlign[] = ['center', 'start', 'end', 'baseline'];
+</script>
 <template>
-  <div :style="ROW_WRAP">
-    <div :style="ALIGN_BOX">
-      <Space align="center">
-        center
-        <button type="button" :style="BTN_PRIMARY">Primary</button>
-        <span :style="MOCK_BOX">Block</span>
-      </Space>
-    </div>
-    <div :style="ALIGN_BOX">
-      <Space align="start">
-        start
-        <button type="button" :style="BTN_PRIMARY">Primary</button>
-        <span :style="MOCK_BOX">Block</span>
-      </Space>
-    </div>
-    <div :style="ALIGN_BOX">
-      <Space align="end">
-        end
-        <button type="button" :style="BTN_PRIMARY">Primary</button>
-        <span :style="MOCK_BOX">Block</span>
-      </Space>
-    </div>
-    <div :style="ALIGN_BOX">
-      <Space align="baseline">
-        baseline
-        <button type="button" :style="BTN_PRIMARY">Primary</button>
-        <span :style="MOCK_BOX">Block</span>
-      </Space>
-    </div>
-  </div>
+  <Flex wrap="wrap" align="start">
+    <Space v-for="align in alignments" :key="align" :align="align" class="alignment-box">
+      {{ align }}<Button type="primary">Primary</Button><span class="tall-block">Block</span>
+    </Space>
+  </Flex>
 </template>
+<style scoped>
+.alignment-box { margin: 4px; padding: 4px; border: 1px solid var(--apollo-color-primary); }
+.tall-block { display: inline-block; padding: 24px 16px; color: var(--apollo-color-text); background: var(--apollo-color-fill-secondary); }
+</style>

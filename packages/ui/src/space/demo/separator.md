@@ -5,23 +5,16 @@ title:
   en-US: Separator
 ---
 
-相邻组件分隔符。`separator` 接受任意节点，所以可以放 `Divider` 这类组件。
+通过 `#separator` 使用 Divider；分隔符插槽优先于 separator/split 数据，故意留空可以隐藏。
 
-⚠️ `separator` 为**假值**（`0` / `''` / `null`）时**不渲染**分隔符 —— 判据是真值，不是 `??`。
-`split` 是它的废弃别名（`mergedSeparator = separator ?? split`），传它会输出开发期告警。
+Use Divider through #separator; a present slot takes priority over separator/split data, including intentional empty content.
 
 ```vue
 <script setup lang="ts">
-import { h } from 'vue';
 import { Divider, Space } from '@apollo-design/ui';
-import { LINK } from './_standin';
 </script>
-
 <template>
-  <Space :separator="h(Divider, { orientation: 'vertical' })">
-    <a href="#separator" :style="LINK">Link</a>
-    <a href="#separator" :style="LINK">Link</a>
-    <a href="#separator" :style="LINK">Link</a>
-  </Space>
+  <Space><template #separator><Divider orientation="vertical" /></template><a href="#first">First link</a><a href="#second">Second link</a><a href="#third">Third link</a></Space>
 </template>
+<style scoped>a { color: inherit; text-decoration: underline; }</style>
 ```

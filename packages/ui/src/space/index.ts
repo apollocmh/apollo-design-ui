@@ -1,24 +1,4 @@
-/**
- * Space 的公共导出。
- *
- * 与 antd 的 `es/space/index.js` 对齐的对外面：
- *   - 默认导出 `Space`，并挂 `Space.Compact` / `Space.Addon` 静态别名
- *   - 全部类型（`SpaceProps` / `SpaceRef` / `SpaceSize` / 语义化类型 / `SpaceConfig`）
- *   - **跨组件协议**：`useCompactItemContext` / `NoCompactStyle` /
- *     `SpaceCompactItemContextType` —— 它们被 10 个下游组件消费，
- *     是本组件最重要的导出（见 `./Compact.ts` 的文件头）
- *
- * ── 两处与 antd 的**结构**差异 ─────────────────────────────────────────────────
- *
- *   1. antd 只导出 `Space`，`Compact` / `Addon` 通过静态属性访问。
- *      我们**额外**导出 `SpaceCompact` / `SpaceAddon` —— Vue 的模板里没有
- *      `<Space.Compact>` 这种写法，具名导出是唯一能直接在模板里用的形态。
- *      静态别名**同时保留**（render 函数 / JSX 用户可以用 `Space.Compact`）。
- *   2. `Orientation` **不从这里导出**：antd 也是从 `_util/hooks` 导出它而不是从
- *      `space`；而我们的 barrel 已经从 `./divider` 导出了同名类型，
- *      再导一次会冲突（见 `interface.ts` 的文件头，差异 D35）。
- */
-
+/** Public Space components, install names, static aliases and cross-component protocols. */
 import { withInstall } from '../_internal/with-install';
 import AddonComponent from './Addon.vue';
 import CompactComponent from './Compact.vue';
@@ -45,7 +25,7 @@ export const Space = Object.assign(withInstall(SpaceComponent), {
 export default Space;
 
 // ---------------------------------------------------------------------------
-// 跨组件协议（下游 10 个组件消费）
+// 跨组件协议（实际控件消费）
 // ---------------------------------------------------------------------------
 export {
   CompactItem,

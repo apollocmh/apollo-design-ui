@@ -1,13 +1,6 @@
 <script setup lang="ts">
-import { Space } from '../../index';
-import { BTN_PRIMARY, BTN_TEXT } from './_standin';
+import { Button, Space } from '@apollo-design/ui';
 </script>
-
 <template>
-  <Space>
-    Space
-    <button type="button" :style="BTN_PRIMARY">Button</button>
-    <button type="button" :style="BTN_TEXT">Upload</button>
-    <button type="button" :style="BTN_TEXT">Confirm</button>
-  </Space>
+  <Space>Space <Button type="primary">Save</Button><Button>Upload</Button><Button type="text">Confirm</Button></Space>
 </template>

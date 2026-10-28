@@ -110,12 +110,17 @@ describe('Space · Props', () => {
     void _never;
   });
 
-  it('★ C8-R2 后 `separator` / `split` 收窄为 `string`（富内容走 `#separator` 插槽）', () => {
-    // ⚠️ 这两个 prop 在运行时是 `VNodeChild`，而 `VNodeChild` 的联合里**含 `void`**。
-    //    Vue 的 Boolean 强转会把「没传」变成 `false`，所以 `withDefaults` 必须显式给
-    //    `undefined`（PITFALLS 46）。类型面上它们仍然接受 `undefined`。
-    expectTypeOf<SpaceProps['separator']>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<SpaceProps['split']>().toEqualTypeOf<string | undefined>();
+  it('separator / split retain documented VNode data, including zero and empty values', () => {
+    expectTypeOf<SpaceProps['separator']>().toEqualTypeOf<VNodeChild>();
+    expectTypeOf<SpaceProps['split']>().toEqualTypeOf<VNodeChild>();
+    const data: SpaceProps = { separator: [0, 'text', null], split: false };
+    expectTypeOf(data).toMatchTypeOf<SpaceProps>();
+    const invalid = () => {
+      // @ts-expect-error Content data is not a render callback; use #separator.
+      const callback: SpaceProps = { separator: () => 'text' };
+      return callback;
+    };
+    void invalid;
   });
 
   it('`vertical` / `wrap` 是可选布尔（不是 `boolean`）', () => {

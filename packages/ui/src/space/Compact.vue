@@ -1,5 +1,6 @@
 <script lang="ts">
-import { toArray, useDevWarning } from '@apollo-design/utils';
+import { transformToken, useTheme } from '@apollo-design/theme';
+import { useDevWarning } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
@@ -9,13 +10,15 @@ import {
   type PropType,
   ref,
   type SlotsType,
-  type VNode,
   watchEffect,
 } from 'vue';
+import { styleAttrs } from '../_internal/use-merge-semantic';
 import { useConfigContext, useDirection } from '../config-provider/context';
 import { useSize } from '../config-provider/size-context';
 import { CompactItem, spaceCompactItemContextKey } from './Compact';
+import { createSpaceChildren } from './children';
 import type { SpaceCompactProps, SpaceSlot } from './interface';
+import { useSpaceFocus } from './use-focus';
 import { useOrientation } from './useOrientation';
 
 export default defineComponent({
@@ -33,9 +36,9 @@ export default defineComponent({
   },
   slots: Object as SlotsType<{ default?: SpaceSlot }>,
   setup(props, { slots, attrs }) {
-    const { getPrefixCls } = useConfigContext();
+    const config = useConfigContext();
     const direction = useDirection();
-    const prefixCls = computed(() => getPrefixCls('space-compact', props.prefixCls));
+    const prefixCls = computed(() => config.getPrefixCls('space-compact', props.prefixCls));
     const outerContext = inject(spaceCompactItemContextKey, undefined);
     const orientation = useOrientation(
       () => props.orientation,
@@ -44,15 +47,21 @@ export default defineComponent({
     );
     const mergedSize = useSize((contextSize) => props.size ?? contextSize);
     const rootRef = ref<HTMLDivElement | null>(null);
+    useSpaceFocus(rootRef);
+    const theme = useTheme();
+    const themeStyle = computed(() =>
+      Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : {},
+    );
 
     const warning = useDevWarning('Space.Compact');
     watchEffect(() => {
       warning.deprecated(props.direction === undefined, 'direction', 'orientation');
     });
 
+    const readChildren = createSpaceChildren();
     const renderCompact = () => {
       // Compiled slots can replace their VNodes without changing a computed dependency.
-      const children: VNode[] = toArray(() => slots.default?.());
+      const children = readChildren(slots.default?.());
       if (!children.length) return null;
       const prefix = prefixCls.value;
       const outer = outerContext?.value;
@@ -62,6 +71,7 @@ export default defineComponent({
         mergeProps(
           {
             ref: rootRef,
+            ...styleAttrs(themeStyle.value),
             class: [
               prefix,
               {
@@ -73,17 +83,14 @@ export default defineComponent({
           },
           attrs,
         ),
-        children.map((child, index) =>
+        children.map(({ node, key }, index) =>
           h(CompactItem, {
-            key:
-              typeof child.key === 'string' || typeof child.key === 'number'
-                ? child.key
-                : `${prefix}-item-${index}`,
+            key,
             compactSize: mergedSize.value,
             compactDirection,
             isFirstItem: index === 0 && (!outer || !!outer.isFirstItem),
             isLastItem: index === children.length - 1 && (!outer || !!outer.isLastItem),
-            node: child,
+            node,
           }),
         ),
       );

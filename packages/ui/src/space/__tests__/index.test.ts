@@ -445,14 +445,12 @@ describe('Space · separator / split', () => {
     expect(w.findAll(`.${P}-item-separator`)).toHaveLength(0);
   });
 
-  it('★★ 上游缺陷（DEFECT）：`separator={0}` 在 antd 里会把数字 `0` 漏成文本节点，我们**不复刻**', () => {
-    // antd：`{index < latestIndex && separator && (<span>…</span>)}` 在 `separator === 0`
-    // 时求值成数字 `0`，React 把它渲染成文本 ⇒ DOM 是 `<div>a</div>0<div>b</div>`。
-    // C8-R2 后富内容走 `#separator` 插槽：显式渲染 `0` 会得到 **span 包裹**的 0
-    // （仍是「不产生裸文本节点」的 D40 意图），空插槽归一为 '' ⇒ 不渲染 span。
-    const w = mountSpace({ separator: 0 as unknown as string }, ['a', 'b']);
-    expect(w.findAll(`.${P}-item-separator`)).toHaveLength(0);
-    expect(w.element.textContent).toBe('ab');
+  it('numeric zero is valid separator data inside its semantic host (SPACE-01)', () => {
+    const w = mountSpace({ separator: 0 }, ['a', 'b']);
+    // Documented VNodeChild data preserves zero in the owned semantic separator.
+    expect(w.findAll(`.${P}-item-separator`)).toHaveLength(1);
+    expect(w.find(`.${P}-item-separator`).text()).toBe('0');
+    expect(w.element.textContent).toBe('a0b');
   });
 
   it('富内容分隔符走 `#separator` 插槽（C8-R2：VNode 不再是 prop）', () => {

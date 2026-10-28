@@ -41,7 +41,7 @@ import type { SizeType } from '../config-provider/size-context';
  *    v7 移除，但存量代码在传）。裁掉任一个都会让对应写法静默失效。
  */
 export function isPresetSize(size?: SizeType | string | number): size is SizeType {
-  return ['small', 'middle', 'medium', 'large'].includes(size as string);
+  return size === 'small' || size === 'middle' || size === 'medium' || size === 'large';
 }
 
 /**

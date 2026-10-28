@@ -1,50 +1,17 @@
-/**
- * `Item` —— `Space` 的每个子节点外面那一层包裹。
- *
- * 契约来源：antd 6.6.4 的 `es/space/Item.js`（47 行，逐条对齐）。
- *
- * ── 它渲染成**两个根节点**（Fragment）─────────────────────────────────────────
- *
- * ```html
- * <div class="{prefix}-space-item">…子节点…</div>
- * <span class="{prefix}-space-item-separator">…分隔符…</span>   <!-- 条件渲染 -->
- * ```
- *
- * Vue 3 支持多根组件，所以直接返回数组即可 —— 不需要额外的包裹元素
- * （加了会让 DOM 契约与 antd 不一致）。
- *
- * ── 三条判据，全在 antd 的 4 行代码里 ─────────────────────────────────────────
- *
- *   1. **`!isReactRenderable(children)` ⇒ 整个 Item 返回 `null`**（连 `-item` div
- *      都不渲染）。Vue 侧的对应物是 `isEmptyVNode`（Comment vnode / 空文本 vnode
- *      / 递归为空的 Fragment）。
- *      ⚠️ 注意与「渲染出空的 `-item`」区分：`<Null/>`（组件本身渲染 null）**是**
- *      可渲染的 —— 它的 vnode 是组件型，`isEmptyVNode` 为假 ⇒ 渲染出空的 `-item`，
- *      由 CSS `:empty{display:none}` 隐藏。上游用例：
- *      `index.test.tsx` 的 `should render the hidden empty item wrapper`。
- *
- *   2. **分隔符的判据是 `index < latestIndex && separator`**。前一半让「最后一个
- *      有内容的 item」之后没有分隔符；后一半是**真值**判断（不是 `isRenderable`）
- *      —— 所以 `separator={0}` / `separator=""` 都**不渲染** span。
- *
- *   3. **VNode 必须 `cloneVNode`**。Vue 的 VNode 是**可变对象**（patch 时会写入
- *      `el` / `component`），同一个 VNode 对象被渲染两次时第二次会看到上一次的
- *      `el`，行为未定义。`toArray` 产出的 vnode 与 `separator` 都可能是调用方
- *      持有的同一个对象（例如模块级常量分隔符），所以这里统一克隆。
- *      （依据：`empty/components/NodeRenderer.ts` 的实测结论。）
- *
- * ── 为什么用 `node` prop 而不是默认插槽 ────────────────────────────────────────
- *
- * antd 的 `Item` 接的是 `children`（单个节点）。Vue 的插槽只能拿到**数组**，
- * 而 `isEmptyVNode([])` 为真（`[].every(...)` 恒真）—— 于是「插槽没内容」与
- * 「子节点是空占位」会被混成同一条分支。虽然 `Space` 保证每个 Item 恰好一个子节点，
- * 但把这条隐含前提写成代码（prop 而不是插槽）更不容易被后来的改动破坏。
- */
-
+/** Space content hosts and a DOM-free latestIndex provider. VNode data stays owned by its semantic region. */
 import { isEmptyVNode } from '@apollo-design/utils';
-import { type CSSProperties, defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import {
+  type CSSProperties,
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  provide,
+  type VNodeChild,
+} from 'vue';
 import { normalizeNode, type RenderableNode } from '../_internal/node-renderer';
-import { useSpaceContext } from './context';
+import type { SpaceChild } from './children';
+import { spaceContextKey, useSpaceContext } from './context';
 import type { SpaceSemanticClassNames, SpaceSemanticStyles } from './interface';
 
 export const Item = defineComponent({
@@ -98,7 +65,7 @@ export const Item = defineComponent({
       ];
 
       // 判据 2：`index < latestIndex` 且 `separator` 为真值。
-      if (props.index < context.value.latestIndex && separator) {
+      if (props.index < context.value.latestIndex && !isEmptyVNode(separator)) {
         nodes.push(
           h(
             'span',
@@ -113,5 +80,42 @@ export const Item = defineComponent({
 
       return nodes;
     };
+  },
+});
+
+/** A DOM-free provider receives rendered slots, so context never caches slot presence. */
+export const SpaceItems = defineComponent({
+  name: 'ASpaceItems',
+  props: {
+    items: { type: Array as PropType<SpaceChild[]>, required: true },
+    prefix: { type: String, required: true },
+    separator: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    classNames: { type: Object as PropType<SpaceSemanticClassNames>, required: true },
+    styles: { type: Object as PropType<SpaceSemanticStyles>, required: true },
+  },
+  setup(props) {
+    provide(
+      spaceContextKey,
+      computed(() => ({
+        latestIndex: props.items.reduce(
+          (latest, child, index) => (isEmptyVNode(child.node) ? latest : index),
+          0,
+        ),
+      })),
+    );
+    return () =>
+      props.items.map(({ node, key }, index) =>
+        h(Item, {
+          key,
+          prefix: props.prefix,
+          className: [`${props.prefix}-item`, props.classNames.item].filter(Boolean).join(' '),
+          index,
+          node,
+          separator: props.separator,
+          style: props.styles.item,
+          classNames: props.classNames,
+          styles: props.styles,
+        }),
+      );
   },
 });

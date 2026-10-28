@@ -5,20 +5,15 @@ title:
   en-US: Basic
 ---
 
-相邻组件水平间距。
+使用真实 Button 和默认插槽内容设置间距。
+
+Use real Buttons and default slot content with consistent spacing.
 
 ```vue
 <script setup lang="ts">
-import { Space } from '@apollo-design/ui';
-import { BTN_PRIMARY, BTN_TEXT } from './_standin';
+import { Button, Space } from '@apollo-design/ui';
 </script>
-
 <template>
-  <Space>
-    Space
-    <button type="button" :style="BTN_PRIMARY">Button</button>
-    <button type="button" :style="BTN_TEXT">Upload</button>
-    <button type="button" :style="BTN_TEXT">Confirm</button>
-  </Space>
+  <Space>Space <Button type="primary">Save</Button><Button>Upload</Button><Button type="text">Confirm</Button></Space>
 </template>
 ```

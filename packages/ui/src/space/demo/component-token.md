@@ -5,45 +5,17 @@ title:
   en-US: Component Token
 ---
 
-自定义 `Space.Addon` 的主题样式。
+Space / Compact / Addon 当前没有组件 Token。使用已有 Alias Token 在 ConfigProvider 中局部调整预设 gap 与 Addon 颜色；不虚构 theme.components.Space 字段。
 
-⚠️ **Space / Space.Compact / Space.Addon 的 Component Token 是空的。**
-antd 6.6.4 的 `style/index.ts` 里 `ComponentToken` 就是一个空接口、
-`prepareComponentToken` 返回 `{}` —— 所以 `theme.components.Space` **没有任何可覆盖的字段**。
-这不是我们没做，是上游本来就没有（见 `style/token.ts` 的文件头）。
-
-这个 demo 演示的是**等价的临时手段**：零运行时架构下，Addon 的规则消费的是 Alias 层变量
-（`color: var(--apollo-color-text)`），所以**就地重声明该变量**就能达到 antd 那边
-`theme.components.Addon.colorText` 的效果。变量声明在 `SpaceAddon` 自己身上，
-作用域与 antd 的「只影响 Addon」一致。
-
-同样的手段可以覆盖 `--apollo-padding-sm`（内边距）、`--apollo-border-radius`（圆角）、
-`--apollo-line-width`（边框粗细）。完整清单见 `README.md` §5.3。
+Space, Compact and Addon have no component tokens. Existing Alias tokens in ConfigProvider control local preset gaps and Addon paint.
 
 ```vue
 <script setup lang="ts">
-import { SpaceAddon, SpaceCompact } from '@apollo-design/ui';
-import { BTN_PRIMARY } from './_standin';
-
-/**
- * ⚠️ Space / Space.Compact / Space.Addon 的 Component Token **是空的**
- *    （antd 的 `ComponentToken` 就是空接口，`prepareComponentToken` 返回 `{}`）。
- *    所以 `theme.components.Space` **没有任何可覆盖的字段** —— 这不是我们没做，
- *    是上游本来就没有（见 `style/token.ts` 的文件头与 `README.md` §5.3）。
- *
- * 这个 demo 演示的是**等价的临时手段**：零运行时架构下，Addon 的规则消费的是
- * Alias 层变量（`color:var(--apollo-color-text)`），所以**就地重声明该变量**
- * 就能达到 antd 那边 `theme.components.Addon.colorText` 的效果。
- *
- * 变量声明在 Addon 自己身上，作用域与 antd 的「只影响 Addon」一致。
- */
-const ADDON_COLOR_TEXT_BLUE = { '--apollo-color-text': 'blue' } as const;
+import { Button, ConfigProvider, Space, SpaceAddon, SpaceCompact } from '@apollo-design/ui';
 </script>
-
 <template>
-  <SpaceCompact>
-    <SpaceAddon :style="ADDON_COLOR_TEXT_BLUE">Addon</SpaceAddon>
-    <button type="button" :style="BTN_PRIMARY">Button</button>
-  </SpaceCompact>
+  <ConfigProvider :theme="{ token: { paddingXS: 12, colorText: '#224466', colorBgContainer: '#ffffff', colorBgContainerDisabled: '#e8f0f8' } }">
+    <Space orientation="vertical"><Space><Button>Alias gap</Button><Button>Current theme</Button></Space><SpaceCompact><SpaceAddon>Scoped addon</SpaceAddon><Button type="primary">Button</Button></SpaceCompact></Space>
+  </ConfigProvider>
 </template>
 ```

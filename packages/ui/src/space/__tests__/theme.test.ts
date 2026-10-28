@@ -18,10 +18,10 @@
  *
  * ── 规则条数为什么值得断言 ────────────────────────────────────────────────────
  *
- * `style/index.ts` 的文件头声称「antd 实测 49 条、我们 53 条」。声称的数目必须**可执行地**
+ * `style/index.ts` 的文件头声称「Space 16、Compact 4、Addon 31 条（2026-10-28）」。声称的数目必须**可执行地**
  * 被验证，否则它会随实现漂移成一句谎话（这条就是踩出来的：初稿写的是
  * 「Addon 34 条」，实测 antd 是 29 条 —— 见 PITFALLS 115）。
- * 所以下面把 16 / 4 / 33 三个数钉死，并把 +4 的**来源**也钉死。
+ * 所以下面把 16 / 4 / 31 三个数钉死，并把 +4 的**来源**也钉死。
  */
 
 import { themeTest } from '@apollo-design/test-utils';
@@ -35,10 +35,13 @@ const P = 'apollo-space';
 const PC = 'apollo-space-compact';
 const PA = 'apollo-space-addon';
 
-themeTest('Space', {
-  demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 15,
-});
+const demos = import.meta.glob('../demo/*.vue', { eager: true });
+it('covers all fifteen real demos in every theme', () =>
+  expect(Object.keys(demos)).toHaveLength(15));
+// Each real demo owns four bounded tests; keep the existing 5s limit and all warning assertions.
+for (const [path, demo] of Object.entries(demos)) {
+  themeTest(`Space/${path}`, { demos: { [path]: demo }, expectCount: 1 });
+}
 
 /**
  * 把产物切成**规则的选择器**。
@@ -146,12 +149,12 @@ describe('Space · 样式产物的规则条数（文件头声称的数目必须�
     expect(groups.compact).toEqual([`.${PC}`, `.${PC}-block`, `.${PC}-vertical`, `.${PC}-rtl`]);
   });
 
-  it('★ Addon 恰好 33 条 = antd 实测 29 条 + D38 展开的 4 条', () => {
+  it('Addon has 31 rules: preserve paint while fixing singleton and vertical edges (SPACE-04)', () => {
     // antd 是 29 条：genCommonStyle 的 4 条重置 + genSpaceAddonStyle 的 20 条 +
     // genCompactItemStyle({focus:false}) 的 5 条 = 29。
     // 我们多 4 条，因为 status 在 antd 里只改中间变量、不额外产规则，
     // 展开成「status+variant」复合选择器后每种组合各占一条。
-    expect(groups.addon).toHaveLength(33);
+    expect(groups.addon).toHaveLength(31);
   });
 
   it('★ +4 的来源逐条列出（不是「多抄了 4 条」）', () => {
@@ -181,11 +184,11 @@ describe('Space · 样式产物的规则条数（文件头声称的数目必须�
     expect(groups.addon.filter((s) => resetShape.test(s))).toHaveLength(2);
   });
 
-  it('总条数 = 16 + 4 + 33 = 53（文件头表格里的那个数）', () => {
+  it('Current static rules: Space 16 + Compact 4 + Addon 31 = 51', () => {
     expect(groups.space).toHaveLength(16);
     expect(groups.compact).toHaveLength(4);
-    expect(groups.addon).toHaveLength(33);
-    expect(groups.all).toHaveLength(53);
+    expect(groups.addon).toHaveLength(31);
+    expect(groups.all).toHaveLength(51);
   });
 
   it('★ 六条 gap 规则的取值全部来自别名 token（不是内联定值）', () => {
@@ -290,9 +293,13 @@ describe('Space · Addon 的「顺序即契约」（变异验证逼出来的用�
     // antd 的导出顺序是 `genStyleHooks('Addon', (token) => [genSpaceAddonStyle(token),
     // genCompactItemStyle(token, { focus: false })])` —— 紧凑项那段在后。
     // 它要压过 `-compact-last-item` / `-compact-first-item` 的圆角设置。
-    const lastBase = addon.indexOf(`.${PA}-compact-item:not(:first-child)`);
+    const lastBase = addon.indexOf(`.${PA}-variant-filled.${PA}-disabled`);
     const firstCompactItem = addon.findIndex((s) => s.includes('-compact-item:not(.'));
+    expect(lastBase).toBeGreaterThan(-1);
     expect(firstCompactItem).toBeGreaterThan(lastBase);
+    expect(addon.slice(firstCompactItem).every((selector) => selector.includes('-compact'))).toBe(
+      true,
+    );
   });
 });
 

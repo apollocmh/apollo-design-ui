@@ -1,37 +1,12 @@
 <script setup lang="ts">
-import { SpaceCompact } from '../../index';
-import { BTN_DEFAULT, BTN_PRIMARY } from './_standin';
-</script>
+import { Button, Space, SpaceCompact } from '@apollo-design/ui';
 
+const actions = ['Like', 'Comment', 'Star', 'Heart', 'Share', 'Download', 'More'];
+</script>
 <template>
-  <div>
-    <SpaceCompact block>
-      <button type="button" :style="BTN_DEFAULT">Like</button>
-      <button type="button" :style="BTN_DEFAULT">Comment</button>
-      <button type="button" :style="BTN_DEFAULT">Star</button>
-      <button type="button" :style="BTN_DEFAULT">Heart</button>
-      <button type="button" :style="BTN_DEFAULT">Share</button>
-      <button type="button" :style="BTN_DEFAULT">Download</button>
-      <button type="button" :style="BTN_DEFAULT">More</button>
-    </SpaceCompact>
-    <br />
-    <SpaceCompact block>
-      <button type="button" :style="BTN_PRIMARY">Button 1</button>
-      <button type="button" :style="BTN_PRIMARY">Button 2</button>
-      <button type="button" :style="BTN_PRIMARY">Button 3</button>
-      <button type="button" :style="BTN_PRIMARY">Button 4</button>
-      <button type="button" :style="BTN_PRIMARY" disabled>Download</button>
-      <button type="button" :style="BTN_PRIMARY">Download</button>
-    </SpaceCompact>
-    <br />
-    <SpaceCompact block>
-      <button type="button" :style="BTN_DEFAULT">Button 1</button>
-      <button type="button" :style="BTN_DEFAULT">Button 2</button>
-      <button type="button" :style="BTN_DEFAULT">Button 3</button>
-      <button type="button" :style="BTN_DEFAULT" disabled>Download</button>
-      <button type="button" :style="BTN_DEFAULT">Download</button>
-      <button type="button" :style="BTN_PRIMARY">Button 4</button>
-      <button type="button" :style="BTN_PRIMARY">More</button>
-    </SpaceCompact>
-  </div>
+  <Space orientation="vertical" style="display: flex">
+    <SpaceCompact block><Button v-for="action in actions" :key="action">{{ action }}</Button></SpaceCompact>
+    <SpaceCompact block><Button v-for="i in 6" :key="i" type="primary" :disabled="i === 5">Button {{ i }}</Button></SpaceCompact>
+    <SpaceCompact block><Button v-for="i in 5" :key="i" :disabled="i === 4">Button {{ i }}</Button><Button type="primary">More</Button></SpaceCompact>
+  </Space>
 </template>

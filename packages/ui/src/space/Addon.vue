@@ -35,7 +35,8 @@
  *   - `direction` 走 `useDirection()`（D27）。
  */
 
-import { computed, ref, useAttrs, useSlots, type VNodeChild } from 'vue';
+import { transformToken, useTheme } from '@apollo-design/theme';
+import { computed, mergeProps, ref, useAttrs, type VNodeChild } from 'vue';
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import { useConfigContext, useDirection } from '../config-provider/context';
 import { useCompactItemContext } from './Compact';
@@ -52,14 +53,17 @@ const props = withDefaults(defineProps<SpaceAddonProps>(), {
   status: undefined,
 });
 
-const slots = useSlots();
 const attrs = useAttrs();
 defineSlots<{ default?: () => VNodeChild }>();
 
-const { getPrefixCls } = useConfigContext();
+const config = useConfigContext();
 const direction = useDirection();
 
-const prefixCls = computed(() => getPrefixCls('space-addon', props.prefixCls));
+const prefixCls = computed(() => config.getPrefixCls('space-addon', props.prefixCls));
+const theme = useTheme();
+const themeStyle = computed(() =>
+  Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : {},
+);
 
 /**
  * 紧凑上下文。
@@ -91,7 +95,7 @@ const rootClass = computed(() => [
  *    渲染期求值 —— `useAttrs()` 的普通对象不参与依赖追踪，包成 `computed`
  *    会让「只改 class / style / aria-*」的更新读到旧快照。
  */
-const getRootAttrs = () => ({ ...attrs });
+const getRootAttrs = () => mergeProps(styleAttrs(themeStyle.value), attrs);
 
 const rootRef = ref<HTMLDivElement | null>(null);
 defineExpose({ nativeElement: rootRef });
