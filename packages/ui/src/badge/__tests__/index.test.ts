@@ -86,7 +86,7 @@ describe('Badge · 判据链（Badge.js 逐条）', () => {
 
   it('borderColor 旧用法 → box-shadow inset', () => {
     const w = mount(Badge, {
-      props: { count: 5, style: { borderColor: '#d9d9d9', background: '#fff' } as never },
+      props: { count: 5, styles: { indicator: { borderColor: '#d9d9d9', background: '#fff' } } },
       slots: { default: box },
     });
     const style = w.find('.apollo-scroll-number').attributes('style') ?? '';
@@ -214,12 +214,10 @@ describe('Badge · 其它', () => {
   });
 });
 
-describe('Badge · count 为 VNode 的克隆分支（2026-10-04 补钉）', () => {
-  // antd Badge.js:122（displayNode cloneElement，合并 offset/indicator style）
-  // + ScrollNumber.js:55（children cloneElement，注入 `-custom-component` + motion 类）。
-  // 「组件子节点内嵌两字的空间插入」在 antd 6.6.4 已不存在（仅剩 CSS `-multiple-words`，
-  // 我们同样有）—— 原登记的 gap 是 v4 时代遗留，本轮对拍证伪关闭。
-  it('count 为 VNode：cloneVNode 注入 `-custom-component` 且保留原类名/样式', () => {
+describe('Badge · complete VNode count ownership', () => {
+  // ADR0007: own a native host for every rich count. The original content assertions
+  // remain; the semantic marker belongs to the host, not a cloned business node.
+  it('count VNode keeps its class/style while the native indicator owns semantics', () => {
     const w = mount(Badge, {
       props: {
         count: h('span', { class: 'my-count', style: { fontSize: '12px' } }, '确定'),
@@ -228,7 +226,7 @@ describe('Badge · count 为 VNode 的克隆分支（2026-10-04 补钉）', () =
     });
     const node = w.find('.my-count');
     expect(node.exists()).toBe(true);
-    expect(node.classes()).toContain('apollo-scroll-number-custom-component');
+    expect(w.get('.apollo-scroll-number-custom-component .my-count').element).toBe(node.element);
     expect(node.attributes('style')).toContain('font-size: 12px');
   });
 });

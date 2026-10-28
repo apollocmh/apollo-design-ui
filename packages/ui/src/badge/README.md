@@ -1,64 +1,9 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
+# Badge / Ribbon 实现说明
 
-# Badge 实现说明（Badge + Ribbon）
+公开契约以双语 API、导出类型及行为回归为准；算法的历史参考是 antd 6.6.4，原二十六机械场景、HTML、十八张参考 PNG 与来源保留。参考 DOM 不要求 Vue 内容丢失、错误样式落点或重复朗读。
 
-## 1. 对应 antd 组件
+Badge 公开边界逐帧读取 default/count/text，私有 Indicator 接收普通内容，完整富内容与数字滚动分离。可见内容缓存供离场动画使用；状态和计数保留同一个原生根。数字子组件只拆数字字符，负号原样；过渡序列只有当前值参与朗读，定时器随卸载清理。
 
-- antd 6.6.4 · `es/badge/`（只读参照，H2）
-- 分析产物：`docs/analysis/badge.md`（G1，先于实现存在）
+两个根使用原生 attrs/class/style 与只读 nativeElement。Ribbon 的 text 数据用 NodeRenderer，#text 按存在性优先。Provider 保留当前视图；九个既有 Token 从当前 Alias 派生并消费组件覆盖，静态 CSS 默认值保留。可读实色前景从实际背景派生，作者显式颜色仍优先；系统 reduced-motion 停止装饰动画。
 
-## 2. 与 antd 的行为差异清单
-
-（同步到 `COMPATIBILITY.md` §9；分类依据 AGENTS.md §4.3）
-
-| # | 差异 | 分类 | 证据 |
-|---|---|---|---|
-| D6 | 前缀 `apollo-badge`/`apollo-scroll-number`/`apollo-ribbon` vs `ant-*` | INTENDED（裁决 `prefix-cls-default` = A） | L4 `*:prefix-cls:no-props` |
-| D5 | 无 CSS-in-JS hash 包裹类 | INTENDED（D5） | L4 全部用例 |
-| — | `#2db7f5` → CSSOM 序列化为 `rgb(45,183,245)`（React SSR 是字符串拼接） | PLATFORM（语义等价） | L4 `*:custom-color` ×3 |
-| — | Component Token 的派生乘除（`indicatorHeight=20`）以默认 seed 常量落地，主题覆盖 alias token 不改变 | 已知边界（同 grid 断点） | style/token.ts |
-| — | offset 数字补 px：React 自动 / Vue 手动（L4 用数字对齐 + L1 钉数字路径） | PLATFORM | L1 offset 用例 |
-| — | ~~空间插入（spaceChildren）cloneElement 分支未实现~~ **已证伪关闭（2026-10-04）**：antd 6.6.4 Badge 已无 v4 的 spaceChildren 两字插入逻辑；两条真实 cloneElement 分支（Badge.js:122 displayNode 样式合并 / ScrollNumber.js:55 `-custom-component` 注入）我们均已实现并补 L1 钉住 | ~~已知缺口~~ 已闭合 | index.test.ts「count 为 VNode 的克隆分支」 |
-
-以上 L6 为带日期的历史参考，不替代当前 Apollo 基线验收。
-
-2026-10-24 F05：公开 Badge.vue 在 render 中读取 typed #count/#text，按普通 props 交给私有 BadgeIndicator.vue。空 slot 覆盖 prop；静态富内容不用数字滚动，指示器保留语义样式、offset 与离场缓存。数字 prop 原有三组缓存及 ScrollNumber/SingleNumber 链路继续保留，真实示例为 content-slots。
-
-## 3. .vue / .tsx 选择
-
-- `Badge.vue` / 私有 `BadgeIndicator.vue` / `Ribbon.vue` / `SingleNumber.vue`：SFC。
-- `ScrollNumber.ts`：render 函数（children 分支要 cloneVNode，SFC 模板表达不了；spin/Indicator 范式）。
-- `parseFlex` 类纯函数：`isPresetColor` 抽到 `_internal/preset-color.ts`（共享层，三次法则）。
-
-## 4. Component Token 清单（9 个）
-
-`indicatorZIndex('auto') / indicatorHeight(20) / indicatorHeightSM(14) / dotSize(6) /
-textFontSize(12) / textFontSizeSM(12) / textFontWeight('normal') / statusSize(6) / paddingInline(8)`
-
-落地形态：CSS 变量声明在 `.apollo-badge` / `.apollo-ribbon-wrapper`（B7 认组件 CSS
-局部声明 —— grid 落地时扩展），规则侧全部 `var()` 消费。名称与默认值计算方式与 antd
-`prepareComponentToken` 逐字对齐。
-
-## 5. 共享层
-
-- 新增 `_internal/preset-color.ts`：PresetColors / isPresetColor / isPresetStatusColor
-  （badge 的 color/status；后续 Tag / Alert 复用）。
-- 复用 `@apollo-design/motion` 的 CSSMotion（badge 是第一个消费者；为此修了首帧
-  mergedVisible 的 SSR 缺陷）。
-
-## 6. 已知缺口
-
-- antd demo 的 `Avatar` / `Icon`（Plus/Minus） / `Card` 未落地：playground 类 demo 用
-  原生元素等价替换。
-- ~~spaceChildren 的 cloneElement 分支未实现~~ **已证伪关闭（2026-10-04）**：antd 6.6.4
-  的 Badge/ScrollNumber 只剩两条 cloneElement 分支（displayNode 样式合并、
-  `-custom-component` 类注入），本仓均已实现并有 L1 用例；v4 的两字空间插入已从
-  上游删除（`-multiple-words` 纯 CSS 方案，本仓同构）。
-- `title` 的 `false` 与 `null` 语义（显式禁用）已实现；`text === true` 不渲染（上游原样）。
-
-## 7. 插画色（Empty 连带修复）
-
-badge 收口的 L6 全量回归暴露 Empty 插画色问题：antd 的 empty.js 在运行时用
-getDesignToken(theme) 解析 token 再 getAsSolidColor 合成 —— **主题切换会改变插画色**。
-`empty/components/artwork.ts` 已重新生成为 `ctx.colors.<role>` 引用（生成器
-`registry/tools/gen-empty-artwork.mjs`），`Images.ts` 从 useToken() 实时合成。
+完整范围与分类见 [当前清单](../../../../docs/audit/2026-10-28-badge-contract-audit.md)，开发期直接修正见 [迁移说明](../../../../docs/migrations/badge-contracts.md)。当前实现/验收状态以清单和证据为准；历史 completed 不代表新单元或全库门禁通过。

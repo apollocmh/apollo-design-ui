@@ -36,6 +36,14 @@ import {
 /** token 名 → `var(--apollo-*)`。变量名由 theme 包的命名函数给出，不手写字面量。 */
 const v = (token: string): string => `var(${token2CSSVar(token)})`;
 
+/** Relative linear-sRGB luminance chooses black/white with at least 4.5:1 on opaque sRGB colors.
+ * Explicit semantic color styles still win. The .179 threshold is the equal-contrast point.
+ */
+const readableOn = (background: string): string => {
+  const channel = 'round(up, clamp(0, calc(0.179 - r * 0.2126 - g * 0.7152 - b * 0.0722), 1), 1)';
+  return `color(from ${background} srgb-linear ${channel} ${channel} ${channel})`;
+};
+
 /**
  * 生成 Badge 的全部静态 CSS（badge + scroll-number + ribbon）。
  *
@@ -104,30 +112,34 @@ export function genBadgeStyle(rootPrefixCls: string): string {
 
     // ---- count（数字指示器）----
     `${b} ${b}-count{`,
+    `  --${rootPrefixCls}-badge-indicator-background:${v('colorError')};`,
     `  display:inline-flex;`,
     `  justify-content:center;`,
     `  z-index:var(--${rootPrefixCls}-badge-indicator-z-index);`,
     `  min-width:var(--${rootPrefixCls}-badge-indicator-height);`,
     `  height:var(--${rootPrefixCls}-badge-indicator-height);`,
     `  color:${v('colorTextLightSolid')};`,
+    `  color:${readableOn(`var(--${rootPrefixCls}-badge-indicator-background)`)};`,
     `  font-weight:var(--${rootPrefixCls}-badge-text-font-weight);`,
     `  font-size:var(--${rootPrefixCls}-badge-text-font-size);`,
     `  line-height:var(--${rootPrefixCls}-badge-indicator-height);`,
     `  white-space:nowrap;`,
     `  text-align:center;`,
-    `  background:${v('colorError')};`,
+    `  background:var(--${rootPrefixCls}-badge-indicator-background);`,
     `  border-radius:calc(var(--${rootPrefixCls}-badge-indicator-height) / 2);`,
     `  box-shadow:0 0 0 ${v('lineWidth')} ${v('colorBorderBg')};`,
     `  transition:background-color ${v('motionDurationMid')};`,
     `}`,
     `${b} ${b}-count a{`,
-    `  color:${v('colorTextLightSolid')};`,
+    `  color:inherit;`,
     `}`,
+    `${b} ${b}-count${s}-custom-component:empty{display:none;}`,
     `${b} ${b}-count a:hover{`,
-    `  color:${v('colorTextLightSolid')};`,
+    `  color:inherit;`,
     `}`,
     `a:hover ${b} ${b}-count{`,
-    `  background:${v('colorErrorHover')};`,
+    `  --${rootPrefixCls}-badge-indicator-background:${v('colorErrorHover')};`,
+    `  background:var(--${rootPrefixCls}-badge-indicator-background);`,
     `}`,
     `${b} ${b}-count-sm{`,
     `  min-width:var(--${rootPrefixCls}-badge-indicator-height-sm);`,
@@ -226,12 +238,14 @@ export function genBadgeStyle(rootPrefixCls: string): string {
   for (const key of PRESET_COLORS) {
     rules.push(
       `${b}.${b.slice(1)} ${b}-color-${key}{`,
+      `  --${rootPrefixCls}-badge-indicator-background:${v(`${key}-6`)};`,
       `  background:${v(`${key}-6`)};`,
       `}`,
       `${b}.${b.slice(1)} ${b}-color-${key}:not(${b}-count){`,
       `  color:${v(`${key}-6`)};`,
       `}`,
       `a:hover ${b}.${b.slice(1)} ${b}-color-${key}{`,
+      `  --${rootPrefixCls}-badge-indicator-background:${v(`${key}-6`)};`,
       `  background:${v(`${key}-6`)};`,
       `}`,
     );
@@ -287,12 +301,13 @@ export function genBadgeStyle(rootPrefixCls: string): string {
     `  -webkit-transform-style:preserve-3d;`,
     `  -webkit-backface-visibility:hidden;`,
     `}`,
-    `${b} ${s} ${s}-only >p.${rootPrefixCls}-scroll-number-only-unit{`,
-    `  height:var(--${rootPrefixCls}-badge-indicator-height);`,
+    `${b} ${s} ${s}-only >span.${rootPrefixCls}-scroll-number-only-unit{`,
+    `  height:inherit;`,
     `  margin:0;`,
     `  -webkit-transform-style:preserve-3d;`,
     `  -webkit-backface-visibility:hidden;`,
     `}`,
+    `${b} ${b}-count-sm ${s}-only{height:var(--${rootPrefixCls}-badge-indicator-height-sm);}`,
     `${b} ${s} ${s}-symbol{`,
     `  vertical-align:top;`,
     `}`,
@@ -312,6 +327,7 @@ export function genBadgeStyle(rootPrefixCls: string): string {
     `  position:relative;`,
     `}`,
     `${r}{`,
+    `  --${rootPrefixCls}-ribbon-background:${v('colorPrimary')};`,
     `  margin:0;`,
     `  padding:0 ${v('paddingXS')};`,
     `  color:${v('colorPrimary')};`,
@@ -327,6 +343,7 @@ export function genBadgeStyle(rootPrefixCls: string): string {
     `}`,
     `${r} ${r}-content{`,
     `  color:${v('colorTextLightSolid')};`,
+    `  color:${readableOn(`var(--${rootPrefixCls}-ribbon-background)`)};`,
     `}`,
     `${r} ${r}-corner{`,
     `  position:absolute;`,
@@ -345,6 +362,7 @@ export function genBadgeStyle(rootPrefixCls: string): string {
   for (const key of PRESET_COLORS) {
     rules.push(
       `${r}.${r.slice(1)}-color-${key}{`,
+      `  --${rootPrefixCls}-ribbon-background:${v(`${key}-6`)};`,
       `  background:${v(`${key}-6`)};`,
       `  color:${v(`${key}-6`)};`,
       `}`,
@@ -372,6 +390,11 @@ export function genBadgeStyle(rootPrefixCls: string): string {
     `}`,
     `${r}-rtl{`,
     `  direction:rtl;`,
+    `}`,
+    `@media (prefers-reduced-motion:reduce){`,
+    `${b}.${b.slice(1)}-status ${b}-status-processing::after{animation:none;}`,
+    `${b} ${s},${b} ${s} ${s}-only{transition:none;}`,
+    `${b} ${b}-zoom-appear,${b} ${b}-zoom-enter,${b} ${b}-zoom-leave{animation:none;}`,
     `}`,
   );
 

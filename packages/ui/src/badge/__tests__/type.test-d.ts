@@ -4,11 +4,42 @@
 
 import { describe, expectTypeOf, it } from 'vitest';
 import type { VNodeChild } from 'vue';
-import type { BadgeSlots } from '../../index';
-import type { Badge } from '../index';
+import type { BadgeRef, BadgeSlots, RibbonRef, RibbonSlots } from '../../index';
+import type { Badge, Ribbon } from '../index';
 import type { BadgeProps, RibbonProps } from '../interface';
 
 describe('Badge · Props 类型', () => {
+  it('public instances expose actual native elements and typed Ribbon slots', () => {
+    expectTypeOf<typeof Badge.Ribbon>().toEqualTypeOf<typeof Ribbon>();
+    expectTypeOf<InstanceType<typeof Badge>['nativeElement']>().toEqualTypeOf<HTMLElement | null>();
+    expectTypeOf<
+      InstanceType<typeof Ribbon>['nativeElement']
+    >().toEqualTypeOf<HTMLElement | null>();
+    expectTypeOf<InstanceType<typeof Badge>>().toMatchTypeOf<BadgeRef>();
+    expectTypeOf<InstanceType<typeof Ribbon>>().toMatchTypeOf<RibbonRef>();
+    expectTypeOf<NonNullable<RibbonSlots['default']>>().toEqualTypeOf<() => VNodeChild>();
+    expectTypeOf<NonNullable<RibbonSlots['text']>>().toEqualTypeOf<() => VNodeChild>();
+    const check = (badge: InstanceType<typeof Badge>, ribbon: InstanceType<typeof Ribbon>) => {
+      ribbon.$slots.text?.();
+      // @ts-expect-error nativeElement is an owned readonly element reference
+      badge.nativeElement = null;
+      // @ts-expect-error nativeElement is an owned readonly wrapper reference
+      ribbon.nativeElement = null;
+    };
+    void check;
+  });
+  it('root style is a native attribute, not a content-targeted object prop', () => {
+    const check = () => {
+      // @ts-expect-error indicator styles belong to styles.indicator; native attrs are not BadgeProps
+      const oldBadge: BadgeProps = { style: { color: 'red' } };
+      // @ts-expect-error Ribbon also keeps native style out of the content props
+      const oldRibbon: RibbonProps = { style: { color: 'red' } };
+      // @ts-expect-error content functions are replaced by native slots, not accepted as text data
+      const callback: RibbonProps = { text: () => 'Old callback' };
+      return [oldBadge, oldRibbon, callback];
+    };
+    void check;
+  });
   it('content slots have public callable types and internal flags stay private', () => {
     expectTypeOf<NonNullable<BadgeSlots['count']>>().toEqualTypeOf<() => VNodeChild>();
     const check = (vm: InstanceType<typeof Badge>) => {

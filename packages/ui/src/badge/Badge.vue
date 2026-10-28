@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { isEmptyVNode } from '@apollo-design/utils';
-import { useAttrs, type VNodeChild } from 'vue';
+import { ref, useAttrs, type VNodeChild } from 'vue';
 import BadgeIndicator from './BadgeIndicator.vue';
-import type { BadgeProps, BadgeSlots } from './interface';
+import type { BadgeProps, BadgeRef, BadgeSlots } from './interface';
 
 defineOptions({ name: 'ABadge', inheritAttrs: false });
 const props = withDefaults(defineProps<BadgeProps>(), {
@@ -14,6 +14,12 @@ const props = withDefaults(defineProps<BadgeProps>(), {
 });
 const slots = defineSlots<BadgeSlots>();
 const attrs = useAttrs();
+const indicator = ref<BadgeRef | null>(null);
+defineExpose({
+  get nativeElement() {
+    return indicator.value?.nativeElement ?? null;
+  },
+});
 
 // Normalize only emptiness. Rich template content never enters digit/overflow parsing.
 const slotContent = (node: VNodeChild): VNodeChild => (isEmptyVNode(node) ? null : node);
@@ -21,6 +27,7 @@ const slotContent = (node: VNodeChild): VNodeChild => (isEmptyVNode(node) ? null
 
 <template>
   <BadgeIndicator
+    ref="indicator"
     v-bind="{ ...attrs, ...props }"
     :count="slots.count ? slotContent(slots.count()) : props.count"
     :text="slots.text ? slotContent(slots.text()) : props.text"

@@ -6,7 +6,7 @@ import { Badge } from '@apollo-design/ui';
 <template>
   <a href="#">
     <Badge :count="5">
-      <div style="width: 40px; height: 40px; background: #f0f0f0; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center">link</div>
+      <div style="width: 40px; height: 40px; background: var(--apollo-color-fill-alter); border-radius: 4px; display: inline-flex; align-items: center; justify-content: center">link</div>
     </Badge>
   </a>
 </template>

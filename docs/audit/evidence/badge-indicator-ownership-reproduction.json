@@ -1,0 +1,101 @@
+{
+  "scope": "Existing count VNodeChild shape/visibility/title contracts, same Badge unit",
+  "baselineSource": "Functional working tree before native count host consolidation; no milestone commit yet",
+  "tests": [
+    {
+      "name": "complete native VNode count has an owned native indicator with semantic attributes",
+      "status": "failed",
+      "failure": "AssertionError: expected 'STRONG' to be 'SUP' // Object.is equality"
+    },
+    {
+      "name": "complete array count has an owned native indicator with semantic attributes",
+      "status": "failed",
+      "failure": "Error: Unable to get .apollo-scroll-number-custom-component within: <span class=\"apollo-badge apollo-badge-not-a-wrapper\"><sup data-show=\"true\" class=\"apollo-scroll-number owned-indicator apollo-badge-count apollo-badge-multiple-words\" style=\"padding-left: 7px;\" title=\"Custom count\"><strong>First</strong> / <em>Last</em>0</sup><!--v-if--></span>"
+    },
+    {
+      "name": "complete Fragment count has an owned native indicator with semantic attributes",
+      "status": "failed",
+      "failure": "Error: Unable to get .apollo-scroll-number-custom-component within: <span class=\"apollo-badge apollo-badge-not-a-wrapper\"><strong>First</strong> / <em>Last</em>0<!--v-if--></span>"
+    },
+    {
+      "name": "complete text VNode count has an owned native indicator with semantic attributes",
+      "status": "failed",
+      "failure": "Error: Unable to get .apollo-scroll-number-custom-component within: <span class=\"apollo-badge apollo-badge-not-a-wrapper\">First / Last0<!--v-if--></span>"
+    },
+    {
+      "name": "complete multiple-root component count has an owned native indicator with semantic attributes",
+      "status": "failed",
+      "failure": "Error: Unable to get .apollo-scroll-number-custom-component within: <span class=\"apollo-badge apollo-badge-not-a-wrapper\"><strong>First</strong> / <em>Last</em>0<!--v-if--></span>"
+    },
+    {
+      "name": "null count cannot create an empty indicator or hide independent text",
+      "status": "failed",
+      "failure": "AssertionError: expected true to be false // Object.is equality"
+    },
+    {
+      "name": "false count cannot create an empty indicator or hide independent text",
+      "status": "failed",
+      "failure": "AssertionError: expected true to be false // Object.is equality"
+    },
+    {
+      "name": "true count cannot create an empty indicator or hide independent text",
+      "status": "failed",
+      "failure": "AssertionError: expected true to be false // Object.is equality"
+    },
+    {
+      "name": "zero count cannot create an empty indicator or hide independent text",
+      "status": "failed",
+      "failure": "Error: Unable to get .apollo-badge-status-text within: <span class=\"apollo-badge apollo-badge-not-a-wrapper\"><!----><!--v-if--></span>"
+    },
+    {
+      "name": "string zero count cannot create an empty indicator or hide independent text",
+      "status": "failed",
+      "failure": "Error: Unable to get .apollo-badge-status-text within: <span class=\"apollo-badge apollo-badge-not-a-wrapper\"><!----><!--v-if--></span>"
+    },
+    {
+      "name": "empty string count cannot create an empty indicator or hide independent text",
+      "status": "failed",
+      "failure": "AssertionError: expected true to be false // Object.is equality"
+    },
+    {
+      "name": "empty array count cannot create an empty indicator or hide independent text",
+      "status": "failed",
+      "failure": "AssertionError: expected true to be false // Object.is equality"
+    },
+    {
+      "name": "empty Fragment count cannot create an empty indicator or hide independent text",
+      "status": "passed"
+    },
+    {
+      "name": "empty text VNode count cannot create an empty indicator or hide independent text",
+      "status": "passed"
+    },
+    {
+      "name": "new standalone status titles cannot inherit a stale leaving count",
+      "status": "failed",
+      "failure": "AssertionError: expected '8' to be undefined"
+    }
+  ],
+  "summary": {
+    "total": 15,
+    "failed": 13,
+    "passed": 2
+  },
+  "browser": {
+    "checks": 156,
+    "failed": [
+      {
+        "name": "all five complete VNode count shapes use the same owned native indicator",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n+     host: 'STRONG',\n+     semantic: false,\n-     host: 'SUP',\n-     semantic: true,\n      text: 'First / Last0',\n+     title: null\n-     title: 'Custom count'\n    },\n    {\n+     host: undefined,\n+     semantic: undefined,\n+     text: undefined,\n+     title: undefined\n-     host: 'SUP',\n-     semantic: true,\n-     text: 'First / Last0',\n-     title: 'Custom count'\n    },\n    {\n+     host: undefined,\n+     semantic: undefined,\n+     text: undefined,\n+     title: undefined\n-     host: 'SUP',\n-     semantic: true,\n-     text: 'First / Last0',\n-     title: 'Custom count'\n    },\n    {\n+     host: undefined,\n+     semantic: undefined,\n+     text: undefined,\n+     title: undefined\n-     host: 'SUP',\n-     semantic: true,\n-     text: 'First / Last0',\n-     title: 'Custom count'\n    },\n    {\n+     host: undefined,\n+     semantic: undefined,\n+     text: undefined,\n+     title: undefined\n-     host: 'SUP',\n-     semantic: true,\n-     text: 'First / Last0',\n-     title: 'Custom count'\n    }\n  ]\n"
+      },
+      {
+        "name": "all empty count forms keep captions without empty indicators or stale status titles",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    {\n      caption: 'Caption',\n+     indicator: true\n-     indicator: false\n    },\n    {\n      caption: 'Caption',\n+     indicator: true\n-     indicator: false\n    },\n    {\n      caption: 'Caption',\n+     indicator: true\n-     indicator: false\n    },\n    {\n+     caption: undefined,\n-     caption: 'Caption',\n      indicator: false\n    },\n    {\n+     caption: undefined,\n-     caption: 'Caption',\n      indicator: false\n    },\n    {\n      caption: 'Caption',\n+     indicator: true\n-     indicator: false\n    },\n    {\n      caption: 'Caption',\n+     indicator: true\n-     indicator: false\n    },\n    {\n      caption: 'Caption',\n      indicator: false\n    },\n"
+      }
+    ],
+    "errors": []
+  },
+  "rootCause": "The single VNode clone branch has no owning DOM for Fragment/text/multiple-root components and drops indicator classes/title. Count and caption visibility were coupled; generic isRenderable does not model Vue empty content. Existing native content class/style assertions are retained; only semantic marker ownership moves to the native indicator per ADR0007."
+}

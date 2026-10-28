@@ -1,0 +1,2039 @@
+{
+  "baselineCommit": "b20af70a",
+  "scope": "docs/audit/2026-10-28-badge-contract-audit.md",
+  "originalRuntime": {
+    "total": 95,
+    "passed": 95,
+    "failed": 0
+  },
+  "groupedReproductions": {
+    "total": 32,
+    "passed": 8,
+    "failed": 24,
+    "results": [
+      {
+        "name": "wrapped Badge: native root style accepts string",
+        "status": "failed",
+        "failure": "AssertionError: expected 'margin-left: 7px;' to contain 'padding: 13px'"
+      },
+      {
+        "name": "wrapped Badge: native root style accepts array",
+        "status": "failed",
+        "failure": "AssertionError: expected 'margin-left: 7px;' to contain 'padding: 13px'"
+      },
+      {
+        "name": "wrapped Badge: native root style accepts object",
+        "status": "failed",
+        "failure": "AssertionError: expected 'margin-left: 7px;' to contain 'padding: 13px'"
+      },
+      {
+        "name": "standalone Badge: native root style accepts string",
+        "status": "failed",
+        "failure": "AssertionError: expected 'margin-left: 7px;' to contain 'padding: 13px'"
+      },
+      {
+        "name": "standalone Badge: native root style accepts array",
+        "status": "failed",
+        "failure": "AssertionError: expected 'margin-left: 7px;' to contain 'padding: 13px'"
+      },
+      {
+        "name": "standalone Badge: native root style accepts object",
+        "status": "failed",
+        "failure": "AssertionError: expected 'margin-left: 7px;' to contain 'padding: 13px'"
+      },
+      {
+        "name": "status Badge: native root style accepts string",
+        "status": "passed"
+      },
+      {
+        "name": "status Badge: native root style accepts array",
+        "status": "passed"
+      },
+      {
+        "name": "status Badge: native root style accepts object",
+        "status": "passed"
+      },
+      {
+        "name": "Ribbon: native root style accepts string",
+        "status": "failed",
+        "failure": "AssertionError: expected 'margin-left: 7px;' to contain 'padding: 13px'"
+      },
+      {
+        "name": "Ribbon: native root style accepts array",
+        "status": "failed",
+        "failure": "AssertionError: expected 'margin-left: 7px;' to contain 'padding: 13px'"
+      },
+      {
+        "name": "Ribbon: native root style accepts object",
+        "status": "failed",
+        "failure": "AssertionError: expected 'margin-left: 7px;' to contain 'padding: 13px'"
+      },
+      {
+        "name": "Badge exposes its actual stable root across status/count changes and clears it on unmount",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be <span tabindex=\"0\" …(1)>…(1)</span> // Object.is equality"
+      },
+      {
+        "name": "ABadge: Provider configuration replacement/removal keeps business content",
+        "status": "failed",
+        "failure": "AssertionError: expected false to be true // Object.is equality"
+      },
+      {
+        "name": "ARibbon: Provider configuration replacement/removal keeps business content",
+        "status": "failed",
+        "failure": "AssertionError: expected false to be true // Object.is equality"
+      },
+      {
+        "name": "dot overrides 0 count",
+        "status": "failed",
+        "failure": "Error: Unable to get .apollo-badge-dot within: <span class=\"apollo-badge apollo-badge-not-a-wrapper\"><!----><!--v-if--></span>"
+      },
+      {
+        "name": "dot overrides 0 count",
+        "status": "failed",
+        "failure": "Error: Unable to get .apollo-badge-dot within: <span class=\"apollo-badge apollo-badge-not-a-wrapper\"><!----><!--v-if--></span>"
+      },
+      {
+        "name": "dot overrides null count",
+        "status": "passed"
+      },
+      {
+        "name": "numeric text zero cannot hide an independent nonzero count",
+        "status": "failed",
+        "failure": "Error: Unable to get .apollo-badge-count within: <span class=\"apollo-badge apollo-badge-not-a-wrapper\"><!----><!--v-if--></span>"
+      },
+      {
+        "name": "status indicators consume explicit title and disable it dynamically",
+        "status": "failed",
+        "failure": "AssertionError: expected undefined to be 'Current status' // Object.is equality"
+      },
+      {
+        "name": "negative integer counts preserve their sign and never render NaN",
+        "status": "failed",
+        "failure": "AssertionError: expected 'NaN12' to be '-12' // Object.is equality"
+      },
+      {
+        "name": "animated digits expose only the current value as accessible text",
+        "status": "failed",
+        "failure": "AssertionError: expected '1256789' to be '29' // Object.is equality"
+      },
+      {
+        "name": "offset preserves 1.5 as a logical CSS length",
+        "status": "failed",
+        "failure": "AssertionError: expected 'margin-top: -2.5px; inset-inline-end:…' to contain 'inset-inline-end: -1.5px'"
+      },
+      {
+        "name": "offset preserves 1.5em as a logical CSS length",
+        "status": "failed",
+        "failure": "AssertionError: expected 'margin-top: 2rem; inset-inline-end: -…' to contain 'inset-inline-end: calc(-1 * 1.5em)'"
+      },
+      {
+        "name": "offset preserves 25% as a logical CSS length",
+        "status": "failed",
+        "failure": "AssertionError: expected 'margin-top: 10%; inset-inline-end: -2…' to contain 'inset-inline-end: calc(-1 * 25%)'"
+      },
+      {
+        "name": "Ribbon renders complete array text data",
+        "status": "failed",
+        "failure": "AssertionError: expected '' to be 'First / Second' // Object.is equality"
+      },
+      {
+        "name": "Ribbon renders complete Fragment text data",
+        "status": "passed"
+      },
+      {
+        "name": "Ribbon renders complete zero text data",
+        "status": "passed"
+      },
+      {
+        "name": "Ribbon #text is typed native content with empty precedence and prop restoration",
+        "status": "failed",
+        "failure": "AssertionError: expected 'Fallback' to be 'FirstSecond' // Object.is equality"
+      },
+      {
+        "name": "count VNode data retains complete content and business identity across updates",
+        "status": "passed"
+      },
+      {
+        "name": "existing nine tokens derive from the current AliasToken",
+        "status": "failed",
+        "failure": "AssertionError: expected { indicatorZIndex: 'auto', …(8) } to deeply equal { indicatorZIndex: 'auto', …(8) }"
+      },
+      {
+        "name": "numeric motion fallback timers are removed when the instance unmounts",
+        "status": "passed"
+      }
+    ]
+  },
+  "browser": {
+    "browser": "150.0.7871.125",
+    "source": true,
+    "results": [
+      {
+        "name": "default: nine tokens replace, accept zero, and restore",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   dot: '6px',\n+   height: '20px',\n+   padding: '8px',\n+   size: '12px',\n+   smallHeight: '14px',\n+   smallSize: '12px',\n+   status: '6px',\n+   weight: '400',\n+   z: 'auto'\n-   dot: '10px',\n-   height: '30px',\n-   padding: '13px',\n-   size: '15px',\n-   smallHeight: '18px',\n-   smallSize: '11px',\n-   status: '9px',\n-   weight: '700',\n-   z: '13'\n  }\n"
+      },
+      {
+        "name": "dark: nine tokens replace, accept zero, and restore",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   dot: '6px',\n+   height: '20px',\n+   padding: '8px',\n+   size: '12px',\n+   smallHeight: '14px',\n+   smallSize: '12px',\n+   status: '6px',\n+   weight: '400',\n+   z: 'auto'\n-   dot: '10px',\n-   height: '30px',\n-   padding: '13px',\n-   size: '15px',\n-   smallHeight: '18px',\n-   smallSize: '11px',\n-   status: '9px',\n-   weight: '700',\n-   z: '13'\n  }\n"
+      },
+      {
+        "name": "compact: nine tokens replace, accept zero, and restore",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   dot: '6px',\n+   height: '20px',\n+   padding: '8px',\n+   size: '12px',\n+   smallHeight: '14px',\n+   smallSize: '12px',\n+   status: '6px',\n+   weight: '400',\n+   z: 'auto'\n-   dot: '10px',\n-   height: '30px',\n-   padding: '13px',\n-   size: '15px',\n-   smallHeight: '18px',\n-   smallSize: '11px',\n-   status: '9px',\n-   weight: '700',\n-   z: '13'\n  }\n"
+      },
+      {
+        "name": "both: nine tokens replace, accept zero, and restore",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   dot: '6px',\n+   height: '20px',\n+   padding: '8px',\n+   size: '12px',\n+   smallHeight: '14px',\n+   smallSize: '12px',\n+   status: '6px',\n+   weight: '400',\n+   z: 'auto'\n-   dot: '10px',\n-   height: '30px',\n-   padding: '13px',\n-   size: '15px',\n-   smallHeight: '18px',\n-   smallSize: '11px',\n-   status: '9px',\n-   weight: '700',\n-   z: '13'\n  }\n"
+      },
+      {
+        "name": "current Provider and native attrs retain both business drafts and focus",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   exposed: false,\n-   exposed: true,\n    focused: true,\n+   padding: '0px',\n+   provider: false,\n-   padding: '7px',\n-   provider: true,\n    root: true,\n    same: true,\n    value: 'Local draft'\n  }\n"
+      },
+      {
+        "name": "Ribbon complete native text slot honors empty precedence and restoration",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'Fallback'\n- 'FirstSecond'\n"
+      },
+      {
+        "name": "fractional and CSS offsets retain logical geometry",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n\n'-1px' !== '-1.5px'\n"
+      },
+      {
+        "name": "rolling digits have one current accessible value and correct small track height",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n\n'NaN12' !== '-12'\n"
+      },
+      {
+        "name": "reduced motion stops status ripple and digit transitions",
+        "passed": false,
+        "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'apollo-badge-status-processing'\n- 'none'\n"
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 0",
+        "passed": false,
+        "actual": {
+          "ratio": 3.267743233071127,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            255,
+            77,
+            79
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 1",
+        "passed": false,
+        "actual": {
+          "ratio": 3.9037511442410624,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 2",
+        "passed": false,
+        "actual": {
+          "ratio": 4.078304398271295,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            245,
+            34,
+            45
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 3",
+        "passed": false,
+        "actual": {
+          "ratio": 1.3808969272912015,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            219,
+            20
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 4",
+        "passed": false,
+        "actual": {
+          "ratio": 2.37889779166389,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            140,
+            22
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 5",
+        "passed": false,
+        "actual": {
+          "ratio": 2.205091947226454,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            19,
+            194,
+            194
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 6",
+        "passed": false,
+        "actual": {
+          "ratio": 2.265456480615804,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            82,
+            196,
+            26
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 7",
+        "passed": false,
+        "actual": {
+          "ratio": 4.104091535864498,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            22,
+            119,
+            255
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 6.937632053032151,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            114,
+            46,
+            209
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 5.851817390466204,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            47,
+            84,
+            235
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 10",
+        "passed": false,
+        "actual": {
+          "ratio": 3.9037511442410624,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 11",
+        "passed": false,
+        "actual": {
+          "ratio": 3.307244796156873,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            84,
+            28
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 12",
+        "passed": false,
+        "actual": {
+          "ratio": 1.9000521668277568,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            173,
+            20
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 13",
+        "passed": false,
+        "actual": {
+          "ratio": 1.6897393232827866,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            160,
+            217,
+            17
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 14",
+        "passed": false,
+        "actual": {
+          "ratio": 2.2817439519989633,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 15",
+        "passed": false,
+        "actual": {
+          "ratio": 1,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 0",
+        "passed": false,
+        "actual": {
+          "ratio": 4.104091535864498,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            22,
+            119,
+            255
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 1",
+        "passed": false,
+        "actual": {
+          "ratio": 3.9037511442410624,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 2",
+        "passed": false,
+        "actual": {
+          "ratio": 4.078304398271295,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            245,
+            34,
+            45
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 3",
+        "passed": false,
+        "actual": {
+          "ratio": 1.3808969272912015,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            219,
+            20
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 4",
+        "passed": false,
+        "actual": {
+          "ratio": 2.37889779166389,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            140,
+            22
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 5",
+        "passed": false,
+        "actual": {
+          "ratio": 2.205091947226454,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            19,
+            194,
+            194
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 6",
+        "passed": false,
+        "actual": {
+          "ratio": 2.265456480615804,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            82,
+            196,
+            26
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 7",
+        "passed": false,
+        "actual": {
+          "ratio": 4.104091535864498,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            22,
+            119,
+            255
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 6.937632053032151,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            114,
+            46,
+            209
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 5.851817390466204,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            47,
+            84,
+            235
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 10",
+        "passed": false,
+        "actual": {
+          "ratio": 3.9037511442410624,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 11",
+        "passed": false,
+        "actual": {
+          "ratio": 3.307244796156873,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            84,
+            28
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 12",
+        "passed": false,
+        "actual": {
+          "ratio": 1.9000521668277568,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            173,
+            20
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 13",
+        "passed": false,
+        "actual": {
+          "ratio": 1.6897393232827866,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            160,
+            217,
+            17
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 14",
+        "passed": false,
+        "actual": {
+          "ratio": 2.2817439519989633,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 15",
+        "passed": false,
+        "actual": {
+          "ratio": 1,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 0",
+        "passed": false,
+        "actual": {
+          "ratio": 4.235222704033309,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            220,
+            68,
+            70
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 1",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 2",
+        "passed": true,
+        "actual": {
+          "ratio": 5.238997321413601,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            211,
+            32,
+            41
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 3",
+        "passed": false,
+        "actual": {
+          "ratio": 1.8735069263372246,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            189,
+            20
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 4",
+        "passed": false,
+        "actual": {
+          "ratio": 3.127240777013101,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            122,
+            22
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 5",
+        "passed": false,
+        "actual": {
+          "ratio": 2.9190291384443694,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            19,
+            168,
+            168
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 6",
+        "passed": false,
+        "actual": {
+          "ratio": 2.979897994814097,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            73,
+            170,
+            25
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 7",
+        "passed": true,
+        "actual": {
+          "ratio": 5.188129156755824,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            22,
+            104,
+            220
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 8.266772839294436,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            100,
+            42,
+            181
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 7.131724431212165,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            43,
+            74,
+            203
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 10",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 11",
+        "passed": false,
+        "actual": {
+          "ratio": 4.2725269432477,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            74,
+            27
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 12",
+        "passed": false,
+        "actual": {
+          "ratio": 2.532431444235693,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            150,
+            20
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 13",
+        "passed": false,
+        "actual": {
+          "ratio": 2.279136174673195,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            139,
+            187,
+            17
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 14",
+        "passed": false,
+        "actual": {
+          "ratio": 2.2817439519989633,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 15",
+        "passed": false,
+        "actual": {
+          "ratio": 1,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 0",
+        "passed": true,
+        "actual": {
+          "ratio": 5.188129156755824,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            22,
+            104,
+            220
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 1",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 2",
+        "passed": true,
+        "actual": {
+          "ratio": 5.238997321413601,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            211,
+            32,
+            41
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 3",
+        "passed": false,
+        "actual": {
+          "ratio": 1.8735069263372246,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            189,
+            20
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 4",
+        "passed": false,
+        "actual": {
+          "ratio": 3.127240777013101,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            122,
+            22
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 5",
+        "passed": false,
+        "actual": {
+          "ratio": 2.9190291384443694,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            19,
+            168,
+            168
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 6",
+        "passed": false,
+        "actual": {
+          "ratio": 2.979897994814097,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            73,
+            170,
+            25
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 7",
+        "passed": true,
+        "actual": {
+          "ratio": 5.188129156755824,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            22,
+            104,
+            220
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 8.266772839294436,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            100,
+            42,
+            181
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 7.131724431212165,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            43,
+            74,
+            203
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 10",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 11",
+        "passed": false,
+        "actual": {
+          "ratio": 4.2725269432477,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            74,
+            27
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 12",
+        "passed": false,
+        "actual": {
+          "ratio": 2.532431444235693,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            150,
+            20
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 13",
+        "passed": false,
+        "actual": {
+          "ratio": 2.279136174673195,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            139,
+            187,
+            17
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 14",
+        "passed": false,
+        "actual": {
+          "ratio": 2.2817439519989633,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 15",
+        "passed": false,
+        "actual": {
+          "ratio": 1,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 0",
+        "passed": false,
+        "actual": {
+          "ratio": 3.267743233071127,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            255,
+            77,
+            79
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 1",
+        "passed": false,
+        "actual": {
+          "ratio": 3.9037511442410624,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 2",
+        "passed": false,
+        "actual": {
+          "ratio": 4.078304398271295,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            245,
+            34,
+            45
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 3",
+        "passed": false,
+        "actual": {
+          "ratio": 1.3808969272912015,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            219,
+            20
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 4",
+        "passed": false,
+        "actual": {
+          "ratio": 2.37889779166389,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            140,
+            22
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 5",
+        "passed": false,
+        "actual": {
+          "ratio": 2.205091947226454,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            19,
+            194,
+            194
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 6",
+        "passed": false,
+        "actual": {
+          "ratio": 2.265456480615804,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            82,
+            196,
+            26
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 7",
+        "passed": false,
+        "actual": {
+          "ratio": 4.104091535864498,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            22,
+            119,
+            255
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 6.937632053032151,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            114,
+            46,
+            209
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 5.851817390466204,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            47,
+            84,
+            235
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 10",
+        "passed": false,
+        "actual": {
+          "ratio": 3.9037511442410624,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 11",
+        "passed": false,
+        "actual": {
+          "ratio": 3.307244796156873,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            84,
+            28
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 12",
+        "passed": false,
+        "actual": {
+          "ratio": 1.9000521668277568,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            173,
+            20
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 13",
+        "passed": false,
+        "actual": {
+          "ratio": 1.6897393232827866,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            160,
+            217,
+            17
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 14",
+        "passed": false,
+        "actual": {
+          "ratio": 2.2817439519989633,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 15",
+        "passed": false,
+        "actual": {
+          "ratio": 1,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 0",
+        "passed": false,
+        "actual": {
+          "ratio": 4.104091535864498,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            22,
+            119,
+            255
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 1",
+        "passed": false,
+        "actual": {
+          "ratio": 3.9037511442410624,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 2",
+        "passed": false,
+        "actual": {
+          "ratio": 4.078304398271295,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            245,
+            34,
+            45
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 3",
+        "passed": false,
+        "actual": {
+          "ratio": 1.3808969272912015,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            219,
+            20
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 4",
+        "passed": false,
+        "actual": {
+          "ratio": 2.37889779166389,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            140,
+            22
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 5",
+        "passed": false,
+        "actual": {
+          "ratio": 2.205091947226454,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            19,
+            194,
+            194
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 6",
+        "passed": false,
+        "actual": {
+          "ratio": 2.265456480615804,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            82,
+            196,
+            26
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 7",
+        "passed": false,
+        "actual": {
+          "ratio": 4.104091535864498,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            22,
+            119,
+            255
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 6.937632053032151,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            114,
+            46,
+            209
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 5.851817390466204,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            47,
+            84,
+            235
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 10",
+        "passed": false,
+        "actual": {
+          "ratio": 3.9037511442410624,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 11",
+        "passed": false,
+        "actual": {
+          "ratio": 3.307244796156873,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            84,
+            28
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 12",
+        "passed": false,
+        "actual": {
+          "ratio": 1.9000521668277568,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            250,
+            173,
+            20
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 13",
+        "passed": false,
+        "actual": {
+          "ratio": 1.6897393232827866,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            160,
+            217,
+            17
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 14",
+        "passed": false,
+        "actual": {
+          "ratio": 2.2817439519989633,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 15",
+        "passed": false,
+        "actual": {
+          "ratio": 1,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 0",
+        "passed": false,
+        "actual": {
+          "ratio": 4.235222704033309,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            220,
+            68,
+            70
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 1",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 2",
+        "passed": true,
+        "actual": {
+          "ratio": 5.238997321413601,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            211,
+            32,
+            41
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 3",
+        "passed": false,
+        "actual": {
+          "ratio": 1.8735069263372246,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            189,
+            20
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 4",
+        "passed": false,
+        "actual": {
+          "ratio": 3.127240777013101,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            122,
+            22
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 5",
+        "passed": false,
+        "actual": {
+          "ratio": 2.9190291384443694,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            19,
+            168,
+            168
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 6",
+        "passed": false,
+        "actual": {
+          "ratio": 2.979897994814097,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            73,
+            170,
+            25
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 7",
+        "passed": true,
+        "actual": {
+          "ratio": 5.188129156755824,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            22,
+            104,
+            220
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 8.266772839294436,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            100,
+            42,
+            181
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 7.131724431212165,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            43,
+            74,
+            203
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 10",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 11",
+        "passed": false,
+        "actual": {
+          "ratio": 4.2725269432477,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            74,
+            27
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 12",
+        "passed": false,
+        "actual": {
+          "ratio": 2.532431444235693,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            150,
+            20
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 13",
+        "passed": false,
+        "actual": {
+          "ratio": 2.279136174673195,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            139,
+            187,
+            17
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 14",
+        "passed": false,
+        "actual": {
+          "ratio": 2.2817439519989633,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 15",
+        "passed": false,
+        "actual": {
+          "ratio": 1,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 0",
+        "passed": true,
+        "actual": {
+          "ratio": 5.188129156755824,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            22,
+            104,
+            220
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 1",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 2",
+        "passed": true,
+        "actual": {
+          "ratio": 5.238997321413601,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            211,
+            32,
+            41
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 3",
+        "passed": false,
+        "actual": {
+          "ratio": 1.8735069263372246,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            189,
+            20
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 4",
+        "passed": false,
+        "actual": {
+          "ratio": 3.127240777013101,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            122,
+            22
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 5",
+        "passed": false,
+        "actual": {
+          "ratio": 2.9190291384443694,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            19,
+            168,
+            168
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 6",
+        "passed": false,
+        "actual": {
+          "ratio": 2.979897994814097,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            73,
+            170,
+            25
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 7",
+        "passed": true,
+        "actual": {
+          "ratio": 5.188129156755824,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            22,
+            104,
+            220
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 8.266772839294436,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            100,
+            42,
+            181
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 7.131724431212165,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            43,
+            74,
+            203
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 10",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 11",
+        "passed": false,
+        "actual": {
+          "ratio": 4.2725269432477,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            74,
+            27
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 12",
+        "passed": false,
+        "actual": {
+          "ratio": 2.532431444235693,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            216,
+            150,
+            20
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 13",
+        "passed": false,
+        "actual": {
+          "ratio": 2.279136174673195,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            139,
+            187,
+            17
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 14",
+        "passed": false,
+        "actual": {
+          "ratio": 2.2817439519989633,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 15",
+        "passed": false,
+        "actual": {
+          "ratio": 1,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "rgb(255, 255, 255)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "real browser axe has no violations",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       [\n+         'sup[title=\"-12\"] > bdi > .apollo-scroll-number-only:nth-child(1) > .apollo-scroll-number-only-unit.current'\n+       ],\n+       [\n+         '.apollo-ribbon-color-yellow > .apollo-ribbon-content'\n+       ],\n+       [\n+         '.apollo-ribbon-color-orange > .apollo-ribbon-content'\n+       ],\n+       [\n+         '.apollo-ribbon-color-cyan > .apollo-ribbon-content'\n+       ],\n+       [\n+         '.apollo-ribbon-color-green > .apollo-ribbon-content'\n+       ],\n+       [\n+         '.apollo-ribbon-color-volcano > .apollo-ribbon-content'\n+       ],\n+       [\n+         '.apollo-ribbon-color-gold > .apollo-ribbon-content'\n+       ],\n+       [\n+         '.apollo-ribbon-color-lime > .apollo-ribbon-content'\n+       ],\n+       [\n+         'div[data-ribbon-color=\"#2db7f5\"] > .apollo-ribbon.apollo-ribbon-placement-end > .apollo-ribbon-content'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+      }
+    ],
+    "errors": []
+  },
+  "consumerInventory": {
+    "scannedFiles": 2995,
+    "positiveControl": {
+      "file": "packages/ui/src/badge/demo/basic.vue",
+      "imports": [
+        "Badge"
+      ]
+    },
+    "consumers": [
+      {
+        "file": "packages/ui/src/avatar/demo/badge.vue",
+        "imports": [
+          "Badge"
+        ]
+      },
+      {
+        "file": "packages/ui/src/calendar/demo/notice-calendar.vue",
+        "imports": [
+          "Badge"
+        ]
+      },
+      {
+        "file": "packages/ui/src/float-button/FloatButton.ts",
+        "imports": [
+          "Badge"
+        ]
+      },
+      {
+        "file": "packages/ui/src/radio/demo/badge.vue",
+        "imports": [
+          "Badge"
+        ]
+      }
+    ]
+  },
+  "sourceDigests": {
+    "packages/ui/src/badge/Badge.vue": "a43ce64273be6886d95bf8094c7ff368d571ce37e048992fd44d1cb1cf9449f1",
+    "packages/ui/src/badge/BadgeIndicator.vue": "f4e3472fd7dac96a97fe51029693c03b397251c695db5e490ffe7af9b3e8143d",
+    "packages/ui/src/badge/Ribbon.vue": "e7317620a62bd1144bff45e52fc5e35a559314592a82f2a12ad6f798b63f4ba3",
+    "packages/ui/src/badge/ScrollNumber.ts": "624b53b375bcc2cfb5d5403563e00c58591a9cf9bae7c84218a68213705ed6a2",
+    "packages/ui/src/badge/SingleNumber.vue": "6c0dceed72d6e5a45986d1d45a8092f7d18bc303708ed6a6b8effb78cf3f92d5",
+    "packages/ui/src/badge/interface.ts": "ad9638f3cf48f90323bb4b5ce953ccba3a15a5edba5e52e6056240036566d968",
+    "packages/ui/src/badge/style/index.ts": "255055f0f2894b25004edf1ea373cc0d39bc49232be6ce233b59a875ce45cb4a",
+    "packages/ui/src/badge/style/token.ts": "0d7ba6f114faa17b49fc2b2838357a30866cd732769d77c5893f7a704308b779"
+  },
+  "testBoundary": "Provider tests use actual Teleport. The default Teleport stub remounted content; after correcting the fixture the real red is stale classes/styles/direction, while the original browser business identity remains intact. No production Provider engine change."
+}

@@ -1,52 +1,38 @@
 <script setup lang="ts">
-/**
- * Badge —— 徽标数。
- *
- * 私有指示器引擎。数字 prop 路径保留已有缓存、封顶和数字滚动；公开边界传入
- * 的模板内容走静态分支。历史算法参考 antd 6.6.4 `es/badge/Badge.js`，
- * 当前契约与差异见本组件 API 和 README。
- *
- * ── 六条最容易写错的判据（docs/analysis/badge.md §2）─────────────────────────
- *
- *   1. **isZero**：`displayCount === '0' || displayCount === 0 || text === '0' || text === 0`
- *      （值与串都算；text 的 '0' 串也算）。
- *   2. **ignoreCount = count === null || (isZero && !showZero)** —— count 未传
- *      （null）即「忽略 count」，是状态点模式的前置条件（hasStatus）。
- *   3. **isStatusBadge**（独立渲染分支）：`!children && hasStatus && (text || hasStatusValue || !ignoreCount)`。
- *      该分支根元素与状态点分离渲染，状态文本颜色取 `styles.root.color`。
- *   4. **三组 ref 缓存**（livingCount / displayCount / isDot）：隐藏（离场动画）
- *      期间保持上一次的显示值 —— motion 撤场不闪变。
- *   5. **offset 的 px 补全**：`insetInlineEnd: -parseInt(offset[0])`（React 输出
- *      `-8px`）、`marginTop: offset[1]` 数字补 px —— Vue patchStyle 不转换（清单 #1）。
- *   6. **CSSMotion**：`motionName: ${prefixCls}-zoom`、`motionAppear: false`（挂载
- *      不动画）、`motionDeadline: 1000`；wrapper 与 not-a-wrapper 各有一组 zoom keyframes。
+/** Private Badge display engine. Public slots are evaluated by Badge.vue; this
+ * engine keeps the last visible count for leave motion and reads current configuration.
+ * The original digit/motion algorithm reference is antd 6.6.4 es/badge/Badge.js.
+ * Current native contracts and finite reference differences are documented by this unit.
  */
 
 import { CSSMotion } from '@apollo-design/motion';
 import {
+  isEmptyVNode,
   isNonNullable,
   isNumber,
-  isRenderable,
   isString,
   useDevWarning,
 } from '@apollo-design/utils';
 import {
   type CSSProperties,
-  cloneVNode,
   computed,
+  isVNode,
+  mergeProps,
+  onMounted,
+  onScopeDispose,
   ref,
   shallowRef,
   useAttrs,
-  type VNode,
   type VNodeChild,
   watchEffect,
 } from 'vue';
 import { NodeRenderer } from '../_internal/node-renderer';
 import { isPresetColor } from '../_internal/preset-color';
 import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig } from '../config-provider/context';
+import { type ComponentStyleConfig, useComponentConfig } from '../config-provider/context';
 import type { BadgeProps, BadgeSemanticClassNames, BadgeSemanticStyles } from './interface';
 import ScrollNumber from './ScrollNumber';
+import { useBadgeTheme } from './use-badge-theme';
 
 defineOptions({ name: 'ApolloBadgeIndicator', inheritAttrs: false });
 
@@ -55,7 +41,6 @@ const props = withDefaults(
   {
     prefixCls: undefined,
     scrollNumberPrefixCls: undefined,
-    style: undefined,
     count: null,
     overflowCount: 99,
     dot: false,
@@ -76,22 +61,29 @@ const attrs = useAttrs();
 const warning = useDevWarning('Badge');
 warning.deprecated(props.size !== 'default', 'size="default"', 'size="medium"');
 
-const {
-  getPrefixCls,
-  direction,
-  className: contextClassName,
-  style: contextStyle,
-  classNames: contextClassNames,
-  styles: contextStyles,
-} = useComponentConfig<Record<string, never>>('badge');
+const context = useComponentConfig<BadgeProps & ComponentStyleConfig>('badge');
 
-const prefixCls = computed(() => getPrefixCls('badge', props.prefixCls));
+const prefixCls = computed(() => context.getPrefixCls('badge', props.prefixCls));
 const scrollNumberPrefixCls = computed(() =>
-  getPrefixCls('scroll-number', props.scrollNumberPrefixCls),
+  context.getPrefixCls('scroll-number', props.scrollNumberPrefixCls),
 );
+const themeStyle = useBadgeTheme(() => prefixCls.value);
+const rootRef = ref<HTMLElement | null>(null);
+defineExpose({ nativeElement: rootRef });
+const reducedMotion = ref(false);
+let media: MediaQueryList | undefined;
+const updateMotion = () => {
+  reducedMotion.value = media?.matches ?? false;
+};
+onMounted(() => {
+  media = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  updateMotion();
+  media?.addEventListener('change', updateMotion);
+});
+onScopeDispose(() => media?.removeEventListener('change', updateMotion));
 
 // ---------------------------------------------------------------------------
-// 判据链（顺序即契约，Badge.js 原样）
+// Numeric visibility, status and independent text have separate ownership.
 // ---------------------------------------------------------------------------
 
 const numberedDisplayCount = computed<VNodeChild>(() => {
@@ -102,13 +94,12 @@ const numberedDisplayCount = computed<VNodeChild>(() => {
 
 const isZero = computed(
   () =>
-    !props.customCount &&
-    (numberedDisplayCount.value === '0' ||
-      numberedDisplayCount.value === 0 ||
-      props.text === '0' ||
-      props.text === 0),
+    !props.customCount && (numberedDisplayCount.value === '0' || numberedDisplayCount.value === 0),
 );
-const ignoreCount = computed(() => props.count === null || (isZero.value && !props.showZero));
+const ignoreCount = computed(() => isEmptyVNode(props.count) || (isZero.value && !props.showZero));
+const showStatusTextNode = computed(
+  () => !isEmptyVNode(props.text) && (props.text !== 0 || props.showZero),
+);
 const hasStatus = computed(
   () => (isNonNullable(props.status) || isNonNullable(props.color)) && ignoreCount.value,
 );
@@ -118,7 +109,7 @@ const isStatusBadge = computed(
     !!(
       !props.hasWrapper &&
       hasStatus.value &&
-      (props.text || hasStatusValue.value || !ignoreCount.value)
+      (showStatusTextNode.value || hasStatusValue.value || !ignoreCount.value)
     ),
 );
 
@@ -129,10 +120,13 @@ const isStatusBadge = computed(
 const offsetStyle = computed<CSSProperties | undefined>(() => {
   if (!props.offset) return undefined;
   const [x, y] = props.offset;
-  const horizontal = Number.parseInt(String(x), 10);
+  const horizontal =
+    typeof x === 'number' || /^[-+]?\d*\.?\d+$/.test(x.trim())
+      ? `${-Number(x)}px`
+      : `calc(-1 * ${x})`;
   return {
     marginTop: typeof y === 'number' ? `${y}px` : y,
-    insetInlineEnd: `${-horizontal}px`,
+    insetInlineEnd: horizontal,
   };
 });
 
@@ -145,13 +139,12 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   BadgeSemanticClassNames,
   BadgeSemanticStyles
 >(
-  [() => contextClassNames, () => props.classNames],
+  [() => context.classNames, () => props.classNames],
   [
-    () => contextStyles,
+    () => context.styles,
     // antd 的 useSemanticRootStyle：style prop 按 isStatusBadge 归入 root 或 indicator
-    () => semanticRootStyle(contextStyle, isStatusBadge.value ? 'root' : 'indicator'),
+    () => semanticRootStyle(context.style, isStatusBadge.value ? 'root' : 'indicator'),
     () => props.styles,
-    () => semanticRootStyle(props.style, isStatusBadge.value ? 'root' : 'indicator'),
   ],
   props,
 );
@@ -160,28 +153,30 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
 // 隐藏与三组缓存
 // ---------------------------------------------------------------------------
 
-const showAsDot = computed(() => props.dot && !isZero.value);
+const showAsDot = computed(() => props.dot);
 const mergedCount = computed(() => (showAsDot.value ? '' : numberedDisplayCount.value));
 
-const isHidden = computed(() => {
-  // An explicitly empty rich count suppresses its indicator even with separate text.
-  if (props.customCount && !showAsDot.value) return !isRenderable(mergedCount.value);
-  const isEmpty = !isRenderable(mergedCount.value) && !isRenderable(props.text);
-  return (isEmpty || (isZero.value && !props.showZero)) && !showAsDot.value;
-});
+const isHidden = computed(
+  () => !showAsDot.value && (isEmptyVNode(mergedCount.value) || (isZero.value && !props.showZero)),
+);
+const richCount = computed(
+  () =>
+    !showAsDot.value &&
+    (props.customCount || isVNode(mergedCount.value) || Array.isArray(mergedCount.value)),
+);
 
 // Count should be cache in case hidden change it（antd 原注释）——离场动画期间保持旧值
 // shallowRef：缓存的是「展示用的旧值」，不需要深层响应式（VNode 深代理也会炸类型实例化）
 const livingCount = shallowRef(props.count);
 const displayCount = shallowRef(mergedCount.value);
 const isDotCache = shallowRef(showAsDot.value);
-const customCountCache = shallowRef(props.customCount && !showAsDot.value);
+const customCountCache = shallowRef(richCount.value);
 watchEffect(() => {
   if (!isHidden.value) {
     livingCount.value = props.count;
     displayCount.value = mergedCount.value;
     isDotCache.value = showAsDot.value;
-    customCountCache.value = props.customCount && !showAsDot.value;
+    customCountCache.value = richCount.value;
   }
 });
 
@@ -192,19 +187,10 @@ watchEffect(() => {
 // >>> Title（title=null/false 显式禁用；不传回落 count）
 const titleNode = computed<string | undefined>(() => {
   if (props.title === null || props.title === false) return undefined;
-  const fallback =
-    isString(livingCount.value) || isNumber(livingCount.value)
-      ? String(livingCount.value)
-      : undefined;
-  return (props.title ?? fallback) as string | undefined;
+  const count = isStatusBadge.value ? props.count : livingCount.value;
+  const fallback = isString(count) || isNumber(count) ? String(count) : undefined;
+  return props.title ?? fallback;
 });
-
-// >>> Status Text（text === 0 受 showZero 控制；text === true 不渲染 —— antd 原样）
-const showStatusTextNode = computed(
-  () =>
-    (props.customCount || !isHidden.value) &&
-    (props.text === 0 ? props.showZero : !!props.text && props.text !== true),
-);
 
 const isInternalColor = computed(() => isPresetColor(props.color, false));
 
@@ -227,6 +213,18 @@ const statusStyle = computed<CSSProperties>(() => {
   return style;
 });
 
+const indicatorStyle = computed<CSSProperties>(() => {
+  const style: CSSProperties = {
+    ...offsetStyle.value,
+    ...mergedStyles.value.indicator,
+    ...(props.color && !isInternalColor.value ? { background: props.color } : {}),
+  };
+  const background = style.background ?? style.backgroundColor;
+  if (typeof background === 'string')
+    style[`--${prefixCls.value}-indicator-background`] = background;
+  return style;
+});
+
 const badgeClassName = computed(() => {
   const cls = prefixCls.value;
   return [
@@ -234,35 +232,36 @@ const badgeClassName = computed(() => {
     {
       [`${cls}-status`]: hasStatus.value,
       [`${cls}-not-a-wrapper`]: !props.hasWrapper,
-      [`${cls}-rtl`]: direction === 'rtl',
+      [`${cls}-rtl`]: context.direction === 'rtl',
     },
-    contextClassName,
+    context.className,
     mergedClassNames.value.root,
   ];
 });
 
 // 根 `class` / `style` 是 Vue 原生 attrs（`class` 经此透传到根 span）。
-const rootAttrs = attrs;
-
-// count 为 VNode 时（antd 的 displayNode）：合并 offset/indicator 样式后传给 ScrollNumber。
-// ⚠️ 必须 cloneVNode 而不是 h(vnode, ...) —— h() 的第一参数是组件/标签**类型**，
-// 把 VNode 当 type 造出的 vnode 会静默破坏 CSSMotion 的子树 patch（2026-09-22 实测）。
-const displayNode = computed<VNode | undefined>(() => {
-  const count = livingCount.value;
-  if (count && typeof count === 'object' && '__v_isVNode' in (count as VNode)) {
-    return cloneVNode(count as VNode, {
-      style: { ...offsetStyle.value, ...mergedStyles.value.indicator },
-    });
-  }
-  return undefined;
-});
+function rootAttrs() {
+  return mergeProps(
+    {
+      dir: context.direction,
+      style: [
+        themeStyle.value,
+        isStatusBadge.value ? offsetStyle.value : undefined,
+        mergedStyles.value.root,
+      ],
+    },
+    attrs,
+  );
+}
 </script>
 
 <template>
-  <span v-if="isStatusBadge" v-bind="{ ...rootAttrs, ...styleAttrs({ ...offsetStyle, ...mergedStyles.root }) }" :class="badgeClassName">
+  <span ref="rootRef" v-bind="rootAttrs()" :class="badgeClassName">
+    <template v-if="isStatusBadge">
     <span
       :class="[mergedClassNames.indicator, indicatorExtraClass]"
       v-bind="styleAttrs({ ...mergedStyles.indicator, ...statusStyle })"
+      :title="titleNode"
     />
     <span
       v-if="showStatusTextNode"
@@ -271,18 +270,17 @@ const displayNode = computed<VNode | undefined>(() => {
     >
       <NodeRenderer :node="text" />
     </span>
-  </span>
-
-  <span v-else v-bind="{ ...rootAttrs, ...styleAttrs(mergedStyles.root) }" :class="badgeClassName">
+    </template>
+    <template v-else>
     <slot />
-    <CSSMotion :visible="!isHidden" :motion-name="`${prefixCls}-zoom`" :motion-appear="false" :motion-deadline="1000">
+    <CSSMotion :visible="!isHidden" :motion-name="`${prefixCls}-zoom`" :motion-appear="false" :motion-deadline="1000" :support-motion="reducedMotion ? false : undefined">
       <template #default="{ className: motionClassName }">
         <sup
           v-if="customCountCache"
           :data-show="!isHidden"
           :class="[scrollNumberPrefixCls, `${scrollNumberPrefixCls}-custom-component`, mergedClassNames.indicator, indicatorExtraClass, `${prefixCls}-count`, { [`${prefixCls}-count-sm`]: size === 'small' }, motionClassName]"
           :title="titleNode"
-          :style="{ ...offsetStyle, ...mergedStyles.indicator, ...(color && !isInternalColor ? { background: color } : {}) }"
+          :style="indicatorStyle"
         ><NodeRenderer :node="displayCount" /></sup>
         <ScrollNumber
           v-else
@@ -292,14 +290,13 @@ const displayNode = computed<VNode | undefined>(() => {
           :class-name="[mergedClassNames.indicator, indicatorExtraClass, { [`${prefixCls}-dot`]: isDotCache, [`${prefixCls}-count`]: !isDotCache, [`${prefixCls}-count-sm`]: size === 'small', [`${prefixCls}-multiple-words`]: !isDotCache && displayCount && String(displayCount).length > 1 }]"
           :count="displayCount"
           :title="titleNode"
-          :style="{ ...offsetStyle, ...mergedStyles.indicator, ...(color && !isInternalColor ? { background: color } : {}) }"
-        >
-          <component :is="displayNode" v-if="displayNode" />
-        </ScrollNumber>
+          :style="indicatorStyle"
+        />
       </template>
     </CSSMotion>
     <span v-if="showStatusTextNode" :class="`${prefixCls}-status-text`">
       <NodeRenderer :node="text" />
     </span>
+    </template>
   </span>
 </template>

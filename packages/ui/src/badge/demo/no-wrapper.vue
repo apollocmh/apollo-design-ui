@@ -8,7 +8,7 @@ import { Badge, Space } from '@apollo-design/ui';
     <Badge :count="25" />
     <Badge
       :count="4"
-      :styles="{ indicator: { backgroundColor: '#fff', color: '#999', boxShadow: '0 0 0 1px #d9d9d9 inset' } }"
+      :styles="{ indicator: { backgroundColor: 'var(--apollo-color-bg-container)', color: 'var(--apollo-color-text-secondary)', boxShadow: '0 0 0 1px #d9d9d9 inset' } }"
     />
     <Badge class="demo-cls" :styles="{ indicator: { backgroundColor: '#52c41a' } }" :count="54" />
   </Space>

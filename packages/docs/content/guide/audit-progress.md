@@ -7,6 +7,18 @@ order: 0
 
 ## zh-CN
 
+## 2026-10-28：Badge / Ribbon 核心内容与配置已验证，统一验收中
+
+按完整源码清单成组修正原生根 style/ref、完整内容、当前 Provider 和九个已有 Token。数字保留负号，动画只朗读当前值；零值计数和文字互不误伤，位移保留 CSS 长度，实色前景与 reduced-motion 已验证。Badge.Ribbon 发布类型保持精确，13 个原 Demo 全部保留并同步。
+
+61 文件 1250 项相关四层、104 项类型、根严格、157 项发布浏览器、52 组原 Demo 主题与 12 项实际交互、12 项 SSR/水合、四个实际消费示例的 16 次渲染，以及发布声明与严格 UI L7 已通过。包裹态状态点、富内容间距、显式阴影/方向覆盖，以及自有视觉和最终 Docs 发布回执尚待统一验收，本单元不标记全部完成；全库当前仍为 495/1398 张批准、903 张待验收。
+
+- [Badge 当前 API 与 13 个示例](/components/badge)
+- [完整内容、条件空槽与两个草稿](/components/badge/demo/content-slots)
+- [九个 Token、零值与当前方向](/components/badge/demo/style-class)
+- [数字滚动与负号](/components/badge/demo/change)
+- [完整清单与阶段证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-badge-contract-audit.md)
+
 ## 2026-10-28：Typography 功能整改完成，完整清单已统一验收
 
 Typography / Text / Title / Paragraph / Link 的复制、编辑、省略、当前语言、两个标题 Token、原生 attrs/ref 和键盘焦点已按完整清单验收。Link 的导航和自有按钮独立，编辑器不会误触发链接监听；四种编辑入口的原生尺寸、单行与自动高度已修正。关联 Table 的四十个派生变量跟随当前主题。
@@ -138,6 +150,17 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 阶段结果会同步记录在本页、更新日志和对应验收清单中。
 
 ## en-US
+
+## Badge / Ribbon core content and configuration verified; unified acceptance in progress
+
+Native root style/refs, complete content, current Provider/nine tokens, negative counts, accessible digit motion, zero independence, CSS offsets, readable opaque colors and reduced-motion have been corrected as one unit. Badge.Ribbon retains exact public types. All thirteen original demos remain.
+
+61 related files/1250 runtime checks,104 type checks, strict compilation,157 published-browser checks,52 demo/theme renders and12 real interactions,12 SSR/hydration checks,16 actual consumer renders, published declarations and strict UI L7 pass. Apollo visual review and final documentation publication remain pending. The library-wide visual inventory remains495/1398 approved,903 pending; this stage does not complete the library audit.
+
+- [Current Badge API and examples](/components/badge)
+- [Complete content and conditional slots](/components/badge/demo/content-slots)
+- [Nine current tokens and direction](/components/badge/demo/style-class)
+- [Full scope and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-badge-contract-audit.md)
 
 ## Typography complete contract audit accepted
 

@@ -54,7 +54,7 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   'badge:status-text': { render: () => h(Badge, { ...BP, status: 'success', text: 'Success' }) },
   'badge:status-processing': { render: () => h(Badge, { ...BP, status: 'processing' }) },
   'badge:status-zero-text-show-zero': {
-    render: () => h(Badge, { ...BP, status: 'success', text: 0 as never, showZero: true }),
+    render: () => h(Badge, { ...BP, status: 'success', text: 0, showZero: true }),
   },
   'badge:status-preset-color': {
     render: () => h(Badge, { ...BP, status: 'success', color: 'blue' }),
@@ -100,8 +100,12 @@ domContractTest('Badge', {
     // PLATFORM：客户端 CSSOM 把 #2db7f5 序列化为 rgb(45,183,245)；React SSR 是字符串拼接。
     // 语义等价（同一颜色），序列化路径差异 —— 与 calc 化简 / min-width:0→0px 同源。
     'badge:custom-color': {
-      reason: 'PLATFORM · CSSOM 颜色序列化 #2db7f5 → rgb(45,183,245)',
-      diff: ['$/span[0]/sup[1]: style 不同 [background:#2db7f5] vs [background:rgb(45,183,245)]'],
+      reason:
+        'Apollo readable foreground derives from the actual custom background; private variable plus CSSOM serialization. See badge-contracts migration.',
+      deviationId: 'D-badge-readable-background',
+      diff: [
+        '$/span[0]/sup[1]: style 不同 [background:#2db7f5] vs [--apollo-badge-indicator-background:#2db7f5;background:rgb(45,183,245)]',
+      ],
     },
     'badge:status-custom-color': {
       reason: 'PLATFORM · CSSOM 颜色序列化 #2db7f5 → rgb(45,183,245)',
@@ -110,9 +114,11 @@ domContractTest('Badge', {
       ],
     },
     'ribbon:custom-color': {
-      reason: 'PLATFORM · CSSOM 颜色序列化 #2db7f5 → rgb(45,183,245)（corner 的 color 同）',
+      reason:
+        'Apollo readable ribbon content derives from the custom background; corner geometry/color stays unchanged. See badge-contracts migration.',
+      deviationId: 'D-badge-readable-background',
       diff: [
-        '$/div[0]/div[1]: style 不同 [background:#2db7f5] vs [background:rgb(45,183,245)]',
+        '$/div[0]/div[1]: style 不同 [background:#2db7f5] vs [--apollo-ribbon-background:#2db7f5;background:rgb(45,183,245)]',
         '$/div[0]/div[1]/div[1]: style 不同 [color:#2db7f5] vs [color:rgb(45,183,245)]',
       ],
     },

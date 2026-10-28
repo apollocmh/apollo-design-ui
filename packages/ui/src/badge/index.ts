@@ -10,13 +10,11 @@ import { withInstall } from '../_internal/with-install';
 import BadgeComponent from './Badge.vue';
 import RibbonComponent from './Ribbon.vue';
 
-/** Badge 组件。注册名 `ABadge`（COMPONENT-RULES.md 规则 R2）。 */
-export const Badge = withInstall(BadgeComponent);
-
 /** Ribbon 组件。注册名 `ARibbon`；同时挂为 `Badge.Ribbon`（antd 用法）。 */
 export const Ribbon = withInstall(RibbonComponent);
 
-Badge.Ribbon = Ribbon;
+/** The compound export keeps Ribbon's actual props, slots and expose types. */
+export const Badge = withInstall(Object.assign(BadgeComponent, { Ribbon }));
 
 export default Badge;
 
@@ -33,6 +31,7 @@ export type {
   RibbonRef,
   RibbonSemanticClassNames,
   RibbonSemanticStyles,
+  RibbonSlots,
   ScrollNumberProps,
 } from './interface';
 export { genBadgeStyle } from './style';

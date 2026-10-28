@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T10:22:18.499Z",
+  "generatedAt": "2026-10-28T11:57:13.267Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 91,
-      "ready": 1
+      "done": 90,
+      "ready": 2
     },
     "byKind": {
       "foundation": 13,
@@ -35,11 +35,12 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 1,
+    "readyCount": 2,
     "cannotFinishCount": 0,
-    "currentBatchSize": 1,
+    "currentBatchSize": 2,
     "currentBatchIds": [
-      "X:docs-site"
+      "X:docs-site",
+      "COMP:badge"
     ],
     "hardBlockingDecisionCount": 0,
     "parallelismNote": "currentBatchSize 是「同一时刻可开工数」的下界估计（贪心）。真实并行度还取决于执行者数量。"
@@ -378,8 +379,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 22,
-      "doneCount": 22,
-      "readyCount": 0,
+      "doneCount": 21,
+      "readyCount": 1,
       "itemIds": [
         "COMP:avatar",
         "COMP:badge",
@@ -683,8 +684,8 @@
         "25 个组件 11 维度 completed"
       ],
       "itemCount": 26,
-      "doneCount": 25,
-      "readyCount": 1,
+      "doneCount": 24,
+      "readyCount": 2,
       "blockedCount": 0,
       "waitingCount": 0,
       "complete": false,
@@ -1590,16 +1591,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 1,
-      "why": "\n2026-10-24 F05：typed #count/#text 与数字 prop 分支分离；空 slot、当前内容、原数字缓存及 SSR 水合覆盖，见 docs/audit/2026-10-24-badge-slots-remediation.md。历史 completed/视觉参考不作为本次 Apollo 基线验收。",
+      "why": "2026-10-28完整当前清单已盘点并成组修复。修前32行为8通过/24失败、146浏览器42通过/104失败；当前相关1250、类型104、根严格、157发布浏览器、64 Demo主题/交互、12 SSR水合、16实际消费渲染、13Demo发布声明与严格UI L7通过。自有视觉与Docs统一验收仍进行中；见本轮清单与functional-stage证据，不宣称全库完成。 同一范围的包裹态状态点、富内容padding、显式阴影及原生方向覆盖矩阵仍待统一核验，缺陷在本单元修复。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P1",
       "dagLevel": 2,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:alert",
@@ -2586,6 +2589,7 @@
       "workstream": "WS-7",
       "wave": "W7",
       "dependsOn": [
+        "COMP:badge",
         "FND:icons",
         "FND:motion",
         "FND:theme",
@@ -3358,6 +3362,7 @@
     }
   ],
   "currentBatch": [
-    "X:docs-site"
+    "X:docs-site",
+    "COMP:badge"
   ]
 }

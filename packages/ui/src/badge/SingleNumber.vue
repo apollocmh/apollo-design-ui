@@ -73,9 +73,7 @@ const state = computed(() => {
     // Nothing to change
     return {
       transitionNone: true,
-      units: [
-        { key: value.value, n: value.value, value: value.value, offset: 0, current: true },
-      ] as Unit[],
+      units: [{ key: value.value, n: value.value, value: value.value, offset: 0, current: true }],
       translateY: 0,
     };
   }
@@ -116,6 +114,7 @@ const containerStyle = computed<{ transition?: string; transform?: string }>(() 
       v-for="u in state.units"
       :key="u.key"
       :class="[`${prefixCls}-only-unit`, { current: u.current }]"
+      :aria-hidden="u.value !== value ? 'true' : undefined"
       :style="u.offset ? { position: 'absolute', top: `${u.offset}00%`, left: '0' } : undefined"
     >
       {{ u.value }}

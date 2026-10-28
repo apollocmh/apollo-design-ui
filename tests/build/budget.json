@@ -57,8 +57,9 @@
       "id": "badge",
       "pkg": "@apollo-design/ui",
       "imports": ["Badge"],
-      "budgetKb": 37,
-      "measuredKb": 21.3
+      "budgetKb": 47,
+      "measuredKb": 21.3,
+      "_note": "2026-10-28 Badge/Ribbon整组契约整改：完整Vue内容、原生根attrs/ref、当前Provider/Alias/九Token、数字可访问性与reduced-motion。功能首轮按需实测45.4KB，最终合并宿主版本按47KB门禁验收，原37KB不足，按用户接受实际功能成本的裁决仅本项调整到47KB；保留历史measuredKb及其他预算/全量30%限制，不引入React或CSS-in-JS运行时。"
     },
     {
       "id": "border-beam",

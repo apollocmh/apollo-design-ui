@@ -23,6 +23,8 @@ Vue 公共语义与 React 回调/DOM 冲突的直接修正规则见 [ADR 0007](d
 
 Typography 的固定标签类型、Link 原生操作树、编辑/复制/测量、有效 Token 和关联 Table 主题变量修正见 [Typography 契约迁移](docs/migrations/typography-contracts.md)。
 
+Badge / Ribbon 的原生根 style/ref、完整 text 内容/槽、当前配置与九 Token、数字/偏移及可读前景修正见 [Badge 契约迁移](docs/migrations/badge-contracts.md)；直接修正开发期错误落点，原二十六场景和参考证据保留。
+
 ## 上游参考与历史回归
 
 List 当前配置、稳定内容结构、嵌套样式与分页修正，以及共享 `RenderEmptyHandler` 类型收窄，集中见 [List 契约迁移](docs/migrations/list-contracts.md)。

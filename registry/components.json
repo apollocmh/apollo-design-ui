@@ -32,7 +32,8 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 72
+      "completed": 71,
+      "testing": 1
     },
     "byPriority": {
       "P0": 8,
@@ -51,8 +52,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 72,
-    "remainingCount": 0
+    "completedCount": 71,
+    "remainingCount": 1
   },
   "milestones": [],
   "components": [
@@ -825,7 +826,7 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "completed",
+      "status": "testing",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -845,23 +846,25 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
+      "apiStatus": "in-progress",
+      "tokenStatus": "in-progress",
+      "styleStatus": "in-progress",
       "unitStatus": "done",
       "interactionStatus": "done",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-24 F05：typed #count/#text 与数字 prop 分支分离；空 slot、当前内容、原数字缓存及 SSR 水合覆盖，见 docs/audit/2026-10-24-badge-slots-remediation.md。历史 completed/视觉参考不作为本次 Apollo 基线验收。",
+      "visualStatus": "in-progress",
+      "docsStatus": "in-progress",
+      "notes": "2026-10-28完整当前清单已盘点并成组修复。修前32行为8通过/24失败、146浏览器42通过/104失败；当前相关1250、类型104、根严格、157发布浏览器、64 Demo主题/交互、12 SSR水合、16实际消费渲染、13Demo发布声明与严格UI L7通过。自有视觉与Docs统一验收仍进行中；见本轮清单与functional-stage证据，不宣称全库完成。 同一范围的包裹态状态点、富内容padding、显式阴影及原生方向覆盖矩阵仍待统一核验，缺陷在本单元修复。",
       "layerNotes": {
-        "interaction": "Badge 无事件/受控/焦点。L2 适用面：props 更新→DOM（count/dot/status 切换）、值变化→数字滚动单元重渲染。motion zoom 时间线由 B8 SSR + L6 覆盖。",
-        "type": "8 例（正例 + 3 负例 @ts-expect-error 永不调用闭包）。status 五枚举、size 三值、offset 二元组、Ribbon.placement 精确断言。",
-        "a11y": "Badge 不输出 ARIA（上游语义）。axe 扫 12 demo 0 violation + 断言 wrapper/not-a-wrapper/ribbon 三分支无 role/aria-*。",
-        "token": "9 个 Component Token 以 CSS 变量声明在 .apollo-badge/.apollo-ribbon-wrapper（B7 认组件 CSS 局部声明）；派生乘除（indicatorHeight=20）以默认 seed 常量落地，主题覆盖 alias token 不改变之 —— 登记 README §7 已知边界。",
-        "compat": "26 条机械基线（tests/compat/baseline/badge.mjs）。26/26 过。豁免：D6×2（badge/ribbon 默认前缀）+ ribbon 四层 D6 连带、PLATFORM×3（CSSOM 把 #2db7f5 序列化为 rgb(45,183,245)，React SSR 为字符串拼接）。motion 离场刻意不进基线（客户端时序）。",
-        "visual": "18/18 全 exact（6 variant × 3 viewport）。收口连带修复 BASE_CSS 的 html{line-height:1.15} 缺失（inline 空隙行高差 1px）。"
+        "interaction": "原生根attrs/style/ref及稳定模式切换；完整内容、空槽优先、当前Provider与业务身份；负号/数字可访问文本、偏移、reduced-motion。157发布浏览器及64实际Demo主题/交互通过。 完整VNode计数共用实际宿主；九种空计数、独立文字与状态title分离，条件组件保留一次挂载。",
+        "type": "相关10文件104类型、根严格通过；发布Badge/Ribbon/Badge.Ribbon精确Props/Slots/readonlyRef、StyleValue及13真实Demo通过，无源别名。",
+        "a11y": "真实Chrome157契约/颜色和13 Demo四算法axe通过；动画轨道仅当前数字参与朗读，不自动创建live region；作者自定义样式/透明渐变需配对前景。",
+        "token": "九个既有Token从当前Alias派生，消费theme.components.Badge；适用零值/替换/移除及原生CSS变量优先，四算法实际浏览器验证。",
+        "compat": "原26机械场景保留；仅两个自定义色场景精确追加前景推导私有背景变量，原HTML/参考PNG不改，未放宽阈值。",
+        "visual": "历史18张参考图仍保留；本轮Apollo自有视觉候选、审阅及复比尚待完成，不能把原上游参考标作新验收。",
+        "currentAudit": "docs/audit/2026-10-28-badge-contract-audit.md；baseline及functional-stage证据；迁移docs/migrations/badge-contracts.md。",
+        "docs": "实现、类型、13原Demo及双语API/迁移同步；Docs全量门禁和最终发布/线上回执仍待验收。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -3574,7 +3577,9 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
+      "blockedBy": [
+        "badge"
+      ],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",

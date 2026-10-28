@@ -100,6 +100,7 @@ export type {
   RibbonRef,
   RibbonSemanticClassNames,
   RibbonSemanticStyles,
+  RibbonSlots,
 } from './badge';
 export { Badge, Ribbon } from './badge';
 export { genBadgeStyle } from './badge/style';
