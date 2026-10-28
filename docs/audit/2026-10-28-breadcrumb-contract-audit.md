@@ -38,3 +38,48 @@
 新增菜单空标题回归3条修前全红，修后相关41条通过；源码root vue-tsc/consumer与F11浏览器通过。Overlay接受受控值变化同步清延迟后，同一真实浏览器的菜单选择不再延迟重开。主浏览器14组13通过/1失败，零页面/Vue错误；唯一失败为共享Menu Enter未激活href链接，保留断言并列本轮必修。
 
 主线程已修TimelineConfig类型来源，冻结源码合并验收73文件964运行时、10文件122类型、根严格与Descriptions源码消费类型均exit0；格式零错误（37既有warning、9info）。详见parallel-source-checkpoint.json。最终发布构建/声明消费、完整Demo主题矩阵、Docs、自有视觉尚未执行，本单元不标完成。
+
+## 重启续验范围与清单（修改前）
+
+从 `adec7ade` 已提交实现与完整清单续验，当前工作树起点 `1b361487`。重新追踪当前三个组件、useItems/useItemRender、context、theme/style、双语 API、11 个原 Demo、契约测试与浏览器入口；没有把原本正常的 title 数组/Fragment 记作修复。
+
+| 续验项 | 分类 | 验收要求 |
+| --- | --- | --- |
+| 既有 Props/Slots/attrs/Provider/七 Token 与 SSR 链路 | 已有证据，需当前回归 | 保留已提交红绿证据；同一源码的单元/类型与真实浏览器回放，不能替代发布检查。 |
+| 14 组原契约浏览器中的 Menu Enter href | 本轮必修，共享实现由主线程负责 | 保留真实按键→URL 导航→关闭断言，不改点击替代或移除导航；共享修复后重放。 |
+| 发布模式样式来源 | 本轮必修的验证缺口 | 既有入口无论 source 开关都注入 gen*Style 结果；改为发布 JS + 发布 tokens.css/ui style.css，不再混入源码生成样式，并记录构建模块来源。 |
+| 11 个原 Demo 的四主题及关键交互 | 必须补齐 | 原 Demo 逐个挂载，default/dark/compact/both 共44种渲染；检查 axe、有效CSS、完整内容与菜单/条件槽/参数/输入身份交互。 |
+| Apollo 原生视觉 fixture/helper | 必须准备，由主线程接入与正式审图 | 保留8个历史参考场景；另覆盖完整内容、无标题菜单、条件内容、当前Provider、键盘菜单/焦点与三种主题。不得改参考图或共享matrix/runner/manifest。 |
+| 声明/产物/Docs/视觉最终结果 | 等待集成后验收 | 不建 dist；主线程明确 dist-ready 后才运行发布读取。正式视觉捕获、批准和最终同一提交全量门禁由主线程统一完成。 |
+
+目前无新增公共 API 决策项；不扩大到 Router 或 Dropdown/Menu 全包能力。
+
+### 续验实现与源码冻结结果
+
+- 发布入口校正：`breadcrumb-style-mode.mjs` 只在源码模式加载 `BreadcrumbSourceStyles.ts`；发布模式使用真实 `@apollo-design/theme/tokens.css` 与 `@apollo-design/ui/style.css`，构建模块检查要求两条 CSS 入口、已输出 CSS、零包运行时源码模块及零 source-style 入口。浏览器另检查有效 flex 样式和 source-only 标记。没有将源码样式混入产物结论。
+- 原 11 Demo × 4 主题新增完整浏览器矩阵，共44项渲染/axe与16项真实交互。首次54/60绿，2项红灯复现 `component-token` 固定前景对比度，另4项为共享 Menu Enter 导航。示例改用当前可读语义颜色后44项渲染全部通过，总56/60绿，剩余4项导航断言未删改；零页面/Vue错误。相关对比度、参数、条件/空/恢复槽、3次切换、输入身份、受控菜单、Escape与legacy路径均在同一脚本验收。
+- `tests/consumer/breadcrumb-types.mjs` 现在检查全部11个原 Demo，同时保留槽作用域、原生 attrs 和事件负例；source模式不读dist。
+- 四层当前 `unit/dom-contract/a11y/theme` 为7文件114项通过（`--maxWorkers=1`）；source消费11Demo及负例通过。
+- `types` 为2文件40项断言通过但命令exit1，根 `vue-tsc` exit2：同一工作树其他并行整改单元有5条源码诊断，Grid contracts:18的深实例化，Space contracts:65/70/73/85的内容/配置类型。Breadcrumb本单元无诊断，仍不把这次类型命令报成通过；由所属执行者修正后集成重放。
+- 原主契约14组当前13/14绿，唯一仍为 Menu Enter 未跟随 href；SSR水合、全部七Token、attrs/Provider/条件内容等13组保留通过。Menu实现由主线程修复后必须同断言重放。
+- Apollo原生17状态 × mobile/tablet/desktop =51项源码烟测通过（含axe、自然宽度、菜单无裁切、完整内容、当前Provider七Token/RTL、输入/按钮身份、无标题展开菜单及键盘焦点）。这是fixture行为检查，**不是正式截图批准或发布产物证据**。
+
+命令与结构化红绿结果见 [breadcrumb-restart-source.json](evidence/breadcrumb-restart-source.json)。源码状态在 `1b361487` 基础的共享工作树验收，主线程另记录冻结后的实际提交；没有运行构建或修改dist/共享矩阵/参考图。
+
+### 主线程正式视觉接入
+
+`tests/visual/render/cases/apollo/breadcrumb.js` 导出17个场景：basic、with-icon、separator、separator-item、with-params、overlay、semantic、rtl、complete-content、no-title-menu、conditional-content、current-provider、keyboard-menu、native-focus、theme-dark、theme-compact、theme-dark-compact。在共享matrix只新增Breadcrumb的`apolloVariants`，保留原8个参考`variants`。Vue renderer通过已有apollo模块glob自动发现文件。
+
+共享`apollo.mjs`导入并分派 `prepareBreadcrumbVisual(page, item.variant)`；Breadcrumb的原生焦点、键盘菜单、空标题菜单、条件内容及当前Provider场景需保留focus outline（建议Breadcrumb统一 `preserveFocus: true`）。helper在正式截图前直接验证当前状态/axe/边界，菜单通过`getPopupContainer`进入本场景340px高frame，`#stage`截图包含已打开的菜单。未改共享runner/manifest/baseline；正式捕获、逐图审阅和同提交复比仍由主线程完成。
+
+发布浏览器待主线程dist-ready后执行 `node tests/browser/breadcrumb-contracts.mjs`、`node tests/browser/breadcrumb-demo-themes.mjs`、`node tests/browser/breadcrumb-visual-states.mjs`，声明另跑`node tests/consumer/breadcrumb-types.mjs`。默认均发布模式；源码模式显式设`BREADCRUMB_SOURCE=1`。F11历史脚本保留，完整槽/输入场景也在当前真实CSS Demo矩阵中独立覆盖。
+
+### 共享 Menu 修复集成后的续验
+
+主线程完成 Menu 所属原生操作的集中修复并通知源码可重放后，先保留旧 URL 匹配式实际执行。Enter 已到达 `http://127.0.0.1:57996/BreadcrumbContracts.html#/42/42/child`，Demo 四主题均到达 `http://127.0.0.1:57997/BreadcrumbDemos.html#guide`。原 `**/#/42/42/child` / `**/#guide` 错误要求 hash 前存在 `/`，因 `.html#...` 而假红。此 fixture 问题与主线程独立建立并修复的 Menu15条原生操作红绿分开记录，不把有误匹配式当成最终导航判据。
+
+匹配式改为完整 `${origin}BreadcrumbContracts.html#/42/42/child` / `${origin}BreadcrumbDemos.html#guide`，并额外精确比较当前URL。每个原 Demo 开始时清理 hash，原生菜单交互另断言从空 hash 开始，保证每种主题都独立证明新导航；菜单关闭、焦点返回、禁用项与原有14组检查全部保留。SSR Vite仅扫描本单元HTML，避免扫描同目录其他组件的virtual入口。
+
+同一共享工作树重放 `BREADCRUMB_SOURCE=1 node tests/browser/breadcrumb-contracts.mjs` 为14/14通过，`BREADCRUMB_SOURCE=1 node tests/browser/breadcrumb-demo-themes.mjs` 为60/60通过；均正常exit0、零页面/Vue错误。之前原glob诊断两次运行保留结果后在清理阶段停留，已定向结束其进程；最终修正后的两次正式源码重放正常结束，不以诊断运行替代最终结果。证据见 [breadcrumb-menu-ready-source.json](evidence/breadcrumb-menu-ready-source.json)。F11原脚本亦已通过，Chrome150.0.7871.125，零页面/Vue错误。
+
+本单元源码及fixture再次冻结，全部编辑停止；发布JS+CSS、正式Apollo图像批准、Docs和最终同一提交全量门禁仍等主线程统一验收，未把源码浏览器通过宣称为单元完整交付。

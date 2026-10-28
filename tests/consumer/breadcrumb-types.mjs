@@ -10,16 +10,17 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'apollo-breadcrumb-types-'));
 try {
   const sourceMode = process.env.BREADCRUMB_SOURCE === '1';
-  if (!sourceMode)
+  if (!sourceMode) {
     assert.ok(
       fs.existsSync(path.join(root, 'packages/ui/dist/breadcrumb/Breadcrumb.d.ts')),
       'Build UI first',
     );
-  assert.equal(
-    fs.existsSync(path.join(root, 'packages/ui/dist/breadcrumb/__tests__')),
-    false,
-    'Test fixtures must not enter published declarations',
-  );
+    assert.equal(
+      fs.existsSync(path.join(root, 'packages/ui/dist/breadcrumb/__tests__')),
+      false,
+      'Test fixtures must not enter published declarations',
+    );
+  }
   fs.symlinkSync(path.join(root, 'node_modules'), path.join(temp, 'node_modules'), 'dir');
   const source = fs.readFileSync(
     path.join(root, 'packages/ui/src/breadcrumb/demo/scoped-item.vue'),
@@ -31,6 +32,15 @@ try {
     path.join(root, 'packages/ui/src/breadcrumb/demo/native.vue'),
     path.join(temp, 'Native.vue'),
   );
+  const demoDir = path.join(root, 'packages/ui/src/breadcrumb/demo');
+  const demoNames = fs.readdirSync(demoDir).filter((name) => name.endsWith('.vue'));
+  assert.equal(
+    demoNames.length,
+    11,
+    'Keep every original Breadcrumb demo in consumer type coverage',
+  );
+  for (const name of demoNames)
+    fs.copyFileSync(path.join(demoDir, name), path.join(temp, `demo-${name}`));
   fs.writeFileSync(
     path.join(temp, 'Contracts.vue'),
     `<script setup lang="ts">
@@ -96,7 +106,7 @@ void invalidClass; void invalidStyle; void invalidEvent;
           baseUrl: temp,
           paths: sourcePaths,
         },
-        include: ['Consumer.vue', 'Native.vue', 'Contracts.vue'],
+        include: ['*.vue'],
       },
       null,
       2,
@@ -112,7 +122,7 @@ void invalidClass; void invalidStyle; void invalidEvent;
     { stdio: 'inherit' },
   );
   console.log(
-    `PASS ${sourceMode ? 'source' : 'published'} Breadcrumb declarations: named content slots, route/path/href inference, native attrs and menu callback negative cases; no test fixtures shipped`,
+    `PASS ${sourceMode ? 'source' : 'published'} Breadcrumb declarations: all11 original demos, named content slots, route/path/href inference, native attrs and menu callback negative cases${sourceMode ? '' : '; no test fixtures shipped'}`,
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

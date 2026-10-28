@@ -10,31 +10,18 @@ import { build, createServer, preview } from 'vite';
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { launchBrowser } from '../visual/stabilize.mjs';
+import {
+  assertBreadcrumbStyleMode,
+  breadcrumbAliases,
+  breadcrumbStyleMode,
+} from './breadcrumb-style-mode.mjs';
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const root = path.join(repo, 'tests/browser/fixtures');
 const outDir = mkdtempSync(path.join(tmpdir(), 'apollo-breadcrumb-contracts-'));
 const source = process.env.BREADCRUMB_SOURCE === '1';
-const alias = source
-  ? [
-      'ui',
-      'theme',
-      'utils',
-      'icons',
-      'motion',
-      'portal',
-      'position',
-      'overlay',
-      'a11y',
-      'virtual-list',
-      'form-core',
-      'picker',
-      'locale',
-    ].map((name) => ({
-      find: new RegExp(`^@apollo-design/${name}$`),
-      replacement: path.join(repo, `packages/${name}/src/index.ts`),
-    }))
-  : [];
+const alias = breadcrumbAliases(repo, source);
+const styleMode = breadcrumbStyleMode(source);
 const errors = [],
   results = [];
 let server, browser, ssr;
@@ -50,8 +37,9 @@ try {
     root,
     configFile: false,
     logLevel: 'warn',
-    plugins: [vue()],
+    plugins: [vue(), styleMode.plugin],
     resolve: { alias },
+    optimizeDeps: { entries: ['BreadcrumbContracts.html'] },
   };
   await build({
     ...config,
@@ -213,8 +201,10 @@ try {
     await destination.waitFor({ state: 'visible' });
     await destination.focus();
     await destination.press('Enter');
-    await page.waitForURL('**/#/42/42/child');
+    await page.waitForURL(`${origin}BreadcrumbContracts.html#/42/42/child`);
+    assert.equal(page.url(), `${origin}BreadcrumbContracts.html#/42/42/child`);
     await destination.waitFor({ state: 'hidden' });
+    return { url: page.url() };
   });
   await check(
     'all seven custom tokens and nested theme have actual computed consumers',
@@ -303,7 +293,14 @@ try {
     assert.equal(await input.inputValue(), 'hydrated draft');
     assert.equal(await nav.locator('a').nth(1).getAttribute('href'), '#/9/9');
   });
-  const evidence = { source, browser: await browser.version(), results, errors };
+  await assertBreadcrumbStyleMode(page, source);
+  const evidence = {
+    source,
+    styles: styleMode.evidence,
+    browser: await browser.version(),
+    results,
+    errors,
+  };
   writeFileSync(
     process.env.BREADCRUMB_EVIDENCE ?? '/tmp/apollo-breadcrumb-browser.json',
     `${JSON.stringify(evidence, null, 2)}\n`,

@@ -1,0 +1,761 @@
+{
+  "baseCommit": "1b361487904626f0ddf2c0c4803c87b3a0cb6454",
+  "sourceOnly": true,
+  "navigationAssertionCorrection": "Replace globs requiring slash immediately before # with exact full .html pathname and hash; reset hash before every original Demo activation; retain all 14 checks and menu-close/focus assertions.",
+  "published": "not run; awaiting main dist-ready",
+  "formalVisualApproval": "not run; owned by main",
+  "contracts_old_glob_probe": {
+    "source": true,
+    "styles": {
+      "source": true,
+      "cssAssets": [],
+      "publishedCSS": [],
+      "runtimeSourceCount": 1905,
+      "breadcrumbSources": [
+        "packages/ui/src/breadcrumb/style/index.ts",
+        "packages/ui/src/breadcrumb/context.ts",
+        "packages/ui/src/breadcrumb/useItemRender.ts",
+        "packages/ui/src/breadcrumb/useItems.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbSeparator.ts",
+        "packages/ui/src/breadcrumb/Breadcrumb.ts",
+        "packages/ui/src/breadcrumb/use-breadcrumb-theme.ts",
+        "packages/ui/src/breadcrumb/style/token.ts",
+        "packages/ui/src/breadcrumb/index.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+      ]
+    },
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "current params, complete content, semantic props and explicit empty data",
+        "passed": true
+      },
+      {
+        "name": "native attrs, keyed input identity, focus and provider appearance/removal",
+        "passed": true
+      },
+      {
+        "name": "conditional/empty/restored separator and dropdown icon slots preserve controls",
+        "passed": true
+      },
+      {
+        "name": "independent navigation link and native keyboard menu, Escape focus return",
+        "passed": true
+      },
+      {
+        "name": "controlled refusal/acceptance and ownership of focus",
+        "passed": true
+      },
+      {
+        "name": "menu selection emits one close request and multiple instances remain independent",
+        "passed": true
+      },
+      {
+        "name": "keyboard menu destination activation follows its href once",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#/42/42/child\" until \"load\"\n============================================================\nActual URL after Enter: http://127.0.0.1:57996/BreadcrumbContracts.html#/42/42/child"
+      },
+      {
+        "name": "all seven custom tokens and nested theme have actual computed consumers",
+        "passed": true,
+        "actual": {
+          "color": "rgb(22, 76, 126)",
+          "lastColor": "rgb(135, 56, 0)",
+          "linkColor": "rgb(7, 86, 33)",
+          "separatorColor": "rgb(117, 69, 0)",
+          "separatorMargin": "17px",
+          "iconFontSize": "23px"
+        }
+      },
+      {
+        "name": "default: real browser axe and text contrast",
+        "passed": true
+      },
+      {
+        "name": "dark: real browser axe and text contrast",
+        "passed": true
+      },
+      {
+        "name": "compact: real browser axe and text contrast",
+        "passed": true
+      },
+      {
+        "name": "both: real browser axe and text contrast",
+        "passed": true
+      },
+      {
+        "name": "dynamic owner prefix and unmount/remount cleanup",
+        "passed": true
+      },
+      {
+        "name": "SSR hydration preserves DOM and current theme updates",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "command": "BREADCRUMB_SOURCE=1 node tests/browser/breadcrumb-contracts.mjs",
+    "exitCode": 143,
+    "terminationNote": "Results persisted; probe hung during cleanup after intentional old-glob failures and its own process was terminated. Final exact-URL replays both exited normally with 0.",
+    "checks": 14,
+    "passed": 13,
+    "failed": 1
+  },
+  "demos_old_glob_probe": {
+    "source": true,
+    "browser": "150.0.7871.125",
+    "styles": {
+      "source": true,
+      "cssAssets": [
+        "assets/BreadcrumbDemos-C-N4K8k0.css"
+      ],
+      "publishedCSS": [],
+      "runtimeSourceCount": 1905,
+      "breadcrumbSources": [
+        "packages/ui/src/breadcrumb/style/index.ts",
+        "packages/ui/src/breadcrumb/context.ts",
+        "packages/ui/src/breadcrumb/useItemRender.ts",
+        "packages/ui/src/breadcrumb/useItems.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbSeparator.ts",
+        "packages/ui/src/breadcrumb/Breadcrumb.ts",
+        "packages/ui/src/breadcrumb/use-breadcrumb-theme.ts",
+        "packages/ui/src/breadcrumb/style/token.ts",
+        "packages/ui/src/breadcrumb/index.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+      ]
+    },
+    "results": [
+      {
+        "name": "basic/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "basic/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "basic/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "basic/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "default: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "default: controlled native menu keyboard href and content slots",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#guide\" until \"load\"\n============================================================\nActual URL after Enter: http://127.0.0.1:57997/BreadcrumbDemos.html#guide"
+      },
+      {
+        "name": "default: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "default: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      },
+      {
+        "name": "dark: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "dark: controlled native menu keyboard href and content slots",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#guide\" until \"load\"\n============================================================\nActual URL after Enter: http://127.0.0.1:57997/BreadcrumbDemos.html#guide"
+      },
+      {
+        "name": "dark: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "dark: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      },
+      {
+        "name": "compact: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "compact: controlled native menu keyboard href and content slots",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#guide\" until \"load\"\n============================================================\nActual URL after Enter: http://127.0.0.1:57997/BreadcrumbDemos.html#guide"
+      },
+      {
+        "name": "compact: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "compact: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      },
+      {
+        "name": "both: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "both: controlled native menu keyboard href and content slots",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#guide\" until \"load\"\n============================================================\nActual URL after Enter: http://127.0.0.1:57997/BreadcrumbDemos.html#guide"
+      },
+      {
+        "name": "both: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "both: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "command": "BREADCRUMB_SOURCE=1 node tests/browser/breadcrumb-demo-themes.mjs",
+    "exitCode": 143,
+    "terminationNote": "Results persisted; probe hung during cleanup after intentional old-glob failures and its own process was terminated. Final exact-URL replays both exited normally with 0.",
+    "checks": 60,
+    "passed": 56,
+    "failed": 4
+  },
+  "contracts_exact_url_green": {
+    "source": true,
+    "styles": {
+      "source": true,
+      "cssAssets": [],
+      "publishedCSS": [],
+      "runtimeSourceCount": 1906,
+      "breadcrumbSources": [
+        "packages/ui/src/breadcrumb/style/index.ts",
+        "packages/ui/src/breadcrumb/context.ts",
+        "packages/ui/src/breadcrumb/useItemRender.ts",
+        "packages/ui/src/breadcrumb/useItems.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbSeparator.ts",
+        "packages/ui/src/breadcrumb/Breadcrumb.ts",
+        "packages/ui/src/breadcrumb/use-breadcrumb-theme.ts",
+        "packages/ui/src/breadcrumb/style/token.ts",
+        "packages/ui/src/breadcrumb/index.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+      ]
+    },
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "current params, complete content, semantic props and explicit empty data",
+        "passed": true
+      },
+      {
+        "name": "native attrs, keyed input identity, focus and provider appearance/removal",
+        "passed": true
+      },
+      {
+        "name": "conditional/empty/restored separator and dropdown icon slots preserve controls",
+        "passed": true
+      },
+      {
+        "name": "independent navigation link and native keyboard menu, Escape focus return",
+        "passed": true
+      },
+      {
+        "name": "controlled refusal/acceptance and ownership of focus",
+        "passed": true
+      },
+      {
+        "name": "menu selection emits one close request and multiple instances remain independent",
+        "passed": true
+      },
+      {
+        "name": "keyboard menu destination activation follows its href once",
+        "passed": true,
+        "actual": {
+          "url": "http://127.0.0.1:60960/BreadcrumbContracts.html#/42/42/child"
+        }
+      },
+      {
+        "name": "all seven custom tokens and nested theme have actual computed consumers",
+        "passed": true,
+        "actual": {
+          "color": "rgb(22, 76, 126)",
+          "lastColor": "rgb(135, 56, 0)",
+          "linkColor": "rgb(7, 86, 33)",
+          "separatorColor": "rgb(117, 69, 0)",
+          "separatorMargin": "17px",
+          "iconFontSize": "23px"
+        }
+      },
+      {
+        "name": "default: real browser axe and text contrast",
+        "passed": true
+      },
+      {
+        "name": "dark: real browser axe and text contrast",
+        "passed": true
+      },
+      {
+        "name": "compact: real browser axe and text contrast",
+        "passed": true
+      },
+      {
+        "name": "both: real browser axe and text contrast",
+        "passed": true
+      },
+      {
+        "name": "dynamic owner prefix and unmount/remount cleanup",
+        "passed": true
+      },
+      {
+        "name": "SSR hydration preserves DOM and current theme updates",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "command": "BREADCRUMB_SOURCE=1 node tests/browser/breadcrumb-contracts.mjs",
+    "exitCode": 0,
+    "checks": 14,
+    "passed": 14,
+    "failed": 0
+  },
+  "demos_exact_url_green": {
+    "source": true,
+    "browser": "150.0.7871.125",
+    "styles": {
+      "source": true,
+      "cssAssets": [
+        "assets/BreadcrumbDemos-C-N4K8k0.css"
+      ],
+      "publishedCSS": [],
+      "runtimeSourceCount": 1906,
+      "breadcrumbSources": [
+        "packages/ui/src/breadcrumb/style/index.ts",
+        "packages/ui/src/breadcrumb/context.ts",
+        "packages/ui/src/breadcrumb/useItemRender.ts",
+        "packages/ui/src/breadcrumb/useItems.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbSeparator.ts",
+        "packages/ui/src/breadcrumb/Breadcrumb.ts",
+        "packages/ui/src/breadcrumb/use-breadcrumb-theme.ts",
+        "packages/ui/src/breadcrumb/style/token.ts",
+        "packages/ui/src/breadcrumb/index.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+      ]
+    },
+    "results": [
+      {
+        "name": "basic/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "basic/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "basic/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "basic/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "default: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "default: controlled native menu keyboard href and content slots",
+        "passed": true,
+        "actual": {
+          "url": "http://127.0.0.1:60961/BreadcrumbDemos.html#guide"
+        }
+      },
+      {
+        "name": "default: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "default: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      },
+      {
+        "name": "dark: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "dark: controlled native menu keyboard href and content slots",
+        "passed": true,
+        "actual": {
+          "url": "http://127.0.0.1:60961/BreadcrumbDemos.html#guide"
+        }
+      },
+      {
+        "name": "dark: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "dark: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      },
+      {
+        "name": "compact: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "compact: controlled native menu keyboard href and content slots",
+        "passed": true,
+        "actual": {
+          "url": "http://127.0.0.1:60961/BreadcrumbDemos.html#guide"
+        }
+      },
+      {
+        "name": "compact: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "compact: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      },
+      {
+        "name": "both: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "both: controlled native menu keyboard href and content slots",
+        "passed": true,
+        "actual": {
+          "url": "http://127.0.0.1:60961/BreadcrumbDemos.html#guide"
+        }
+      },
+      {
+        "name": "both: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "both: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "command": "BREADCRUMB_SOURCE=1 node tests/browser/breadcrumb-demo-themes.mjs",
+    "exitCode": 0,
+    "checks": 60,
+    "passed": 60,
+    "failed": 0
+  }
+}

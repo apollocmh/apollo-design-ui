@@ -43,6 +43,8 @@
 
 7 Token 保持名称，通过当前 Provider 的 components.Breadcrumb 与 CSS 变量生效。正文 itemColor/linkColor 默认来源从 colorTextDescription 改为 colorTextSecondary，修复默认/紧凑下普通文字对比度不足；separatorColor 仍是装饰描述色。暗色、紧凑、嵌套、SSR/水合和主题替换使用当前来源；原生根 style 保留最高覆盖优先级。
 
+`component-token` 原 Demo 的固定蓝色/紫色在暗色及暗色紧凑主题下对比度仅为 2.99/1.86。示例仍通过根组件变量自定义视觉，但颜色值改为当前 `colorTextSecondary` / `colorText` 语义变量；四主题真实浏览器 axe 保留为回归，不以改变背景或豁免对比度通过。
+
 ## 参考差异与验收边界
 
 原 30 个 React DOM 场景、参考 HTML/PNG 保留。稳定宿主、所属前缀、有效 style、完整参数和原生菜单按钮导致的有限差异记录在 `breadcrumb/__tests__/contract-differences.json`，仍逐条精确匹配，未放宽阈值。当前功能/浏览器/SSR 证据与共享阻塞见 [审计记录](../audit/2026-10-28-breadcrumb-contract-audit.md)。源码局部通过不代表最终同一提交的发布产物、Docs 或 Apollo 视觉验收通过。

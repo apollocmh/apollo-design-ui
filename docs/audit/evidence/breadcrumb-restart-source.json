@@ -1,0 +1,1426 @@
+{
+  "baseCommit": "1b361487904626f0ddf2c0c4803c87b3a0cb6454",
+  "sourceOnly": true,
+  "published": "not run; awaiting main dist-ready",
+  "formalVisualApproval": "not run; owned by main",
+  "commands": {
+    "runtime": {
+      "command": "pnpm exec vitest run packages/ui/src/breadcrumb --project unit --project dom-contract --project a11y --project theme --maxWorkers=1",
+      "files": 7,
+      "tests": 114,
+      "exitCode": 0
+    },
+    "sourceConsumer": {
+      "command": "BREADCRUMB_SOURCE=1 node tests/consumer/breadcrumb-types.mjs",
+      "originalDemos": 11,
+      "exitCode": 0
+    },
+    "types": {
+      "command": "pnpm exec vitest run packages/ui/src/breadcrumb --project types --maxWorkers=1",
+      "files": 2,
+      "tests": 40,
+      "exitCode": 1,
+      "sourceErrors": [
+        "grid/__tests__/contracts.test.ts:18 TS2589",
+        "space/__tests__/contracts.test.ts:65 TS2322",
+        "space/__tests__/contracts.test.ts:70 TS2322",
+        "space/__tests__/contracts.test.ts:73 TS2322",
+        "space/__tests__/contracts.test.ts:85 TS2769"
+      ]
+    },
+    "rootStrict": {
+      "command": "pnpm exec vue-tsc --noEmit -p tsconfig.json",
+      "exitCode": 2,
+      "sourceErrors": "same five shared-worktree errors as types; zero Breadcrumb diagnostics"
+    }
+  },
+  "contracts_before_menu_fix": {
+    "source": true,
+    "styles": {
+      "source": true,
+      "cssAssets": [],
+      "publishedCSS": [],
+      "runtimeSourceCount": 1903,
+      "breadcrumbSources": [
+        "packages/ui/src/breadcrumb/style/index.ts",
+        "packages/ui/src/breadcrumb/context.ts",
+        "packages/ui/src/breadcrumb/useItemRender.ts",
+        "packages/ui/src/breadcrumb/useItems.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbSeparator.ts",
+        "packages/ui/src/breadcrumb/Breadcrumb.ts",
+        "packages/ui/src/breadcrumb/use-breadcrumb-theme.ts",
+        "packages/ui/src/breadcrumb/style/token.ts",
+        "packages/ui/src/breadcrumb/index.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+      ]
+    },
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "current params, complete content, semantic props and explicit empty data",
+        "passed": true
+      },
+      {
+        "name": "native attrs, keyed input identity, focus and provider appearance/removal",
+        "passed": true
+      },
+      {
+        "name": "conditional/empty/restored separator and dropdown icon slots preserve controls",
+        "passed": true
+      },
+      {
+        "name": "independent navigation link and native keyboard menu, Escape focus return",
+        "passed": true
+      },
+      {
+        "name": "controlled refusal/acceptance and ownership of focus",
+        "passed": true
+      },
+      {
+        "name": "menu selection emits one close request and multiple instances remain independent",
+        "passed": true
+      },
+      {
+        "name": "keyboard menu destination activation follows its href once",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#/42/42/child\" until \"load\"\n============================================================"
+      },
+      {
+        "name": "all seven custom tokens and nested theme have actual computed consumers",
+        "passed": true,
+        "actual": {
+          "color": "rgb(22, 76, 126)",
+          "lastColor": "rgb(135, 56, 0)",
+          "linkColor": "rgb(7, 86, 33)",
+          "separatorColor": "rgb(117, 69, 0)",
+          "separatorMargin": "17px",
+          "iconFontSize": "23px"
+        }
+      },
+      {
+        "name": "default: real browser axe and text contrast",
+        "passed": true
+      },
+      {
+        "name": "dark: real browser axe and text contrast",
+        "passed": true
+      },
+      {
+        "name": "compact: real browser axe and text contrast",
+        "passed": true
+      },
+      {
+        "name": "both: real browser axe and text contrast",
+        "passed": true
+      },
+      {
+        "name": "dynamic owner prefix and unmount/remount cleanup",
+        "passed": true
+      },
+      {
+        "name": "SSR hydration preserves DOM and current theme updates",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "command": "BREADCRUMB_SOURCE=1 node tests/browser/breadcrumb-contracts.mjs",
+    "checks": 14,
+    "passed": 13,
+    "failed": 1
+  },
+  "demos_initial_red": {
+    "source": true,
+    "browser": "150.0.7871.125",
+    "styles": {
+      "source": true,
+      "cssAssets": [
+        "assets/BreadcrumbDemos-C-N4K8k0.css"
+      ],
+      "publishedCSS": [],
+      "runtimeSourceCount": 1903,
+      "breadcrumbSources": [
+        "packages/ui/src/breadcrumb/style/index.ts",
+        "packages/ui/src/breadcrumb/context.ts",
+        "packages/ui/src/breadcrumb/useItemRender.ts",
+        "packages/ui/src/breadcrumb/useItems.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbSeparator.ts",
+        "packages/ui/src/breadcrumb/Breadcrumb.ts",
+        "packages/ui/src/breadcrumb/use-breadcrumb-theme.ts",
+        "packages/ui/src/breadcrumb/style/token.ts",
+        "packages/ui/src/breadcrumb/index.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+      ]
+    },
+    "results": [
+      {
+        "name": "basic/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "basic/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "basic/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "basic/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/dark: original demo, real CSS and axe",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       {\n+         failureSummary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.99 (foreground color: #0958d9, background color: #141414, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         html: '<a href=\"\">Home</a>'\n+       },\n+       {\n+         failureSummary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.99 (foreground color: #0958d9, background color: #141414, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         html: '<a href=\"\">Application Center</a>'\n+       },\n+       {\n+         failureSummary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.86 (foreground color: #531dab, background color: #141414, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         html: '<span class=\"apollo-breadcrumb-link\">Application List</span>'\n+       }\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "name": "component-token/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/both: original demo, real CSS and axe",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       {\n+         failureSummary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.99 (foreground color: #0958d9, background color: #141414, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         html: '<a href=\"\">Home</a>'\n+       },\n+       {\n+         failureSummary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 2.99 (foreground color: #0958d9, background color: #141414, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         html: '<a href=\"\">Application Center</a>'\n+       },\n+       {\n+         failureSummary: 'Fix any of the following:\\n' +\n+           '  Element has insufficient color contrast of 1.86 (foreground color: #531dab, background color: #141414, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1',\n+         html: '<span class=\"apollo-breadcrumb-link\">Application List</span>'\n+       }\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "name": "debug-routes/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "default: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "default: controlled native menu keyboard href and content slots",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#guide\" until \"load\"\n============================================================"
+      },
+      {
+        "name": "default: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "default: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      },
+      {
+        "name": "dark: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "dark: controlled native menu keyboard href and content slots",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#guide\" until \"load\"\n============================================================"
+      },
+      {
+        "name": "dark: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "dark: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      },
+      {
+        "name": "compact: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "compact: controlled native menu keyboard href and content slots",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#guide\" until \"load\"\n============================================================"
+      },
+      {
+        "name": "compact: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "compact: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      },
+      {
+        "name": "both: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "both: controlled native menu keyboard href and content slots",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#guide\" until \"load\"\n============================================================"
+      },
+      {
+        "name": "both: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "both: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "command": "BREADCRUMB_SOURCE=1 node tests/browser/breadcrumb-demo-themes.mjs",
+    "checks": 60,
+    "passed": 54,
+    "failed": 6
+  },
+  "demos_after_readable_colors_before_menu_fix": {
+    "source": true,
+    "browser": "150.0.7871.125",
+    "styles": {
+      "source": true,
+      "cssAssets": [
+        "assets/BreadcrumbDemos-C-N4K8k0.css"
+      ],
+      "publishedCSS": [],
+      "runtimeSourceCount": 1903,
+      "breadcrumbSources": [
+        "packages/ui/src/breadcrumb/style/index.ts",
+        "packages/ui/src/breadcrumb/context.ts",
+        "packages/ui/src/breadcrumb/useItemRender.ts",
+        "packages/ui/src/breadcrumb/useItems.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbSeparator.ts",
+        "packages/ui/src/breadcrumb/Breadcrumb.ts",
+        "packages/ui/src/breadcrumb/use-breadcrumb-theme.ts",
+        "packages/ui/src/breadcrumb/style/token.ts",
+        "packages/ui/src/breadcrumb/index.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+      ]
+    },
+    "results": [
+      {
+        "name": "basic/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "basic/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "basic/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "basic/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "component-token/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "debug-routes/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "native/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "overlay/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "scoped-item/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator-component/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "separator/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "style-class/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-icon/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/default: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/dark: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/compact: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "with-params/both: original demo, real CSS and axe",
+        "passed": true
+      },
+      {
+        "name": "default: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "default: controlled native menu keyboard href and content slots",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#guide\" until \"load\"\n============================================================"
+      },
+      {
+        "name": "default: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "default: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      },
+      {
+        "name": "dark: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "dark: controlled native menu keyboard href and content slots",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#guide\" until \"load\"\n============================================================"
+      },
+      {
+        "name": "dark: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "dark: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      },
+      {
+        "name": "compact: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "compact: controlled native menu keyboard href and content slots",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#guide\" until \"load\"\n============================================================"
+      },
+      {
+        "name": "compact: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "compact: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      },
+      {
+        "name": "both: scoped item empty/restore/current params and keyed drafts",
+        "passed": true
+      },
+      {
+        "name": "both: controlled native menu keyboard href and content slots",
+        "passed": false,
+        "error": "page.waitForURL: Timeout 5000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation to \"**/#guide\" until \"load\"\n============================================================"
+      },
+      {
+        "name": "both: original overlay opens and keyboard closes without following external links",
+        "passed": true
+      },
+      {
+        "name": "both: original variables, explicit separators and legacy routes have real consumers",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "command": "BREADCRUMB_SOURCE=1 node tests/browser/breadcrumb-demo-themes.mjs",
+    "checks": 60,
+    "passed": 56,
+    "failed": 4
+  },
+  "visual_fixture_smoke": {
+    "source": true,
+    "browser": "150.0.7871.125",
+    "styles": {
+      "source": true,
+      "cssAssets": [],
+      "publishedCSS": [],
+      "runtimeSourceCount": 1903,
+      "breadcrumbSources": [
+        "packages/ui/src/breadcrumb/style/index.ts",
+        "packages/ui/src/breadcrumb/context.ts",
+        "packages/ui/src/breadcrumb/useItemRender.ts",
+        "packages/ui/src/breadcrumb/useItems.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbSeparator.ts",
+        "packages/ui/src/breadcrumb/Breadcrumb.ts",
+        "packages/ui/src/breadcrumb/use-breadcrumb-theme.ts",
+        "packages/ui/src/breadcrumb/style/token.ts",
+        "packages/ui/src/breadcrumb/index.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
+      ]
+    },
+    "results": [
+      {
+        "viewport": "mobile",
+        "variant": "basic",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "with-icon",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "separator",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "separator-item",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "with-params",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "overlay",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "semantic",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "rtl",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "complete-content",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "no-title-menu",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 1,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "conditional-content",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "current-provider",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "keyboard-menu",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 1,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "native-focus",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "theme-dark",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(20, 20, 20)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "theme-compact",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "mobile",
+        "variant": "theme-dark-compact",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(20, 20, 20)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "basic",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "with-icon",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "separator",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "separator-item",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "with-params",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "overlay",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "semantic",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "rtl",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "complete-content",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "no-title-menu",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 1,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "conditional-content",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "current-provider",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "keyboard-menu",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 1,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "native-focus",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "theme-dark",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(20, 20, 20)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "theme-compact",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "tablet",
+        "variant": "theme-dark-compact",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(20, 20, 20)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "basic",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "with-icon",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "separator",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "separator-item",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "with-params",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "overlay",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "semantic",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "rtl",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "complete-content",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "no-title-menu",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 1,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "conditional-content",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "current-provider",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "keyboard-menu",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 1,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "native-focus",
+        "passed": true,
+        "actual": {
+          "roots": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "theme-dark",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(20, 20, 20)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "theme-compact",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      },
+      {
+        "viewport": "desktop",
+        "variant": "theme-dark-compact",
+        "passed": true,
+        "actual": {
+          "roots": 2,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(20, 20, 20)",
+          "invalidText": false,
+          "menus": 0,
+          "clippedMenus": 0
+        }
+      }
+    ],
+    "errors": [],
+    "command": "BREADCRUMB_SOURCE=1 node tests/browser/breadcrumb-visual-states.mjs",
+    "checks": 51,
+    "passed": 51,
+    "failed": 0
+  }
+}

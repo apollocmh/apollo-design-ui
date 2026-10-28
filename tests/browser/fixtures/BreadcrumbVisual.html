@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><link rel="icon" href="data:,"><title>Breadcrumb native visual states</title>
+<style>body{margin:0}#stage{width:100%}</style></head>
+<body><div id="stage"></div><script type="module">
+import { createApp, h, nextTick, ref } from 'vue';
+import cases from '../../visual/render/cases/apollo/breadcrumb.js';
+const variant = ref('basic');
+const revision = ref(0);
+window.setBreadcrumbVisual = async (name) => {
+  if (!cases[name]) throw new Error(`Unknown Breadcrumb variant: ${name}`);
+  variant.value = name;
+  revision.value++;
+  await nextTick();
+};
+window.breadcrumbVariants = Object.keys(cases);
+createApp({ setup: () => () => h('div', { key: revision.value }, [cases[variant.value]()]) }).mount('#stage');
+</script></body></html>

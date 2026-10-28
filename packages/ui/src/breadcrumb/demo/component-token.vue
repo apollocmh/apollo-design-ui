@@ -11,10 +11,10 @@ const items: BreadcrumbItemInput[] = [
 ];
 
 const tokenStyle = {
-  '--apollo-breadcrumb-link-color': '#0958d9',
-  '--apollo-breadcrumb-link-hover-color': '#eb2f96',
-  '--apollo-breadcrumb-last-item-color': '#531dab',
-  '--apollo-breadcrumb-separator-color': '#eb2f96',
+  '--apollo-breadcrumb-link-color': 'var(--apollo-color-text-secondary)',
+  '--apollo-breadcrumb-link-hover-color': 'var(--apollo-color-text)',
+  '--apollo-breadcrumb-last-item-color': 'var(--apollo-color-text)',
+  '--apollo-breadcrumb-separator-color': 'var(--apollo-color-text-secondary)',
   '--apollo-breadcrumb-separator-margin': '12px',
 };
 </script>
