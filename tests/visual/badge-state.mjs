@@ -55,5 +55,16 @@ export async function prepareBadgeVisual(page, variant) {
   }));
   assert.equal(state.invalidText, false);
   assert.ok(state.scrollWidth <= state.width + 1, JSON.stringify(state));
+  const overlaps = await stage.evaluate(
+    (n) =>
+      [...n.querySelectorAll('[data-badge-business]')].filter((card) => {
+        const ribbon = card.closest('.apollo-ribbon-wrapper')?.querySelector('.apollo-ribbon');
+        if (!ribbon) return false;
+        const text = document.createRange();
+        text.selectNodeContents(card);
+        return text.getBoundingClientRect().top < ribbon.getBoundingClientRect().bottom;
+      }).length,
+  );
+  assert.equal(overlaps, 0, 'Visual business content reserves space beneath the ribbon');
   return state;
 }

@@ -3835,31 +3835,31 @@
       "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
     },
     "avatar/badge__light__mobile": {
-      "sha256": "ce7b49d0635793bf6dd8163239851e491f751d97f83b2993ff28969a33e9b53c",
+      "sha256": "bd98d1f0ea5b08f6e4a32edf81e54e7c3c10a6efdb3a739dafd7784c1b336a12",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
       "dirty": false,
-      "capturedAt": "2026-10-27T08:09:08.750Z",
-      "reviewedAt": "2026-10-27T08:14:06.551Z",
-      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+      "capturedAt": "2026-10-28T13:22:50.669Z",
+      "reviewedAt": "2026-10-28T13:25:07.946Z",
+      "reviewNote": "Reviewed all three df5e0436 clean candidates against prior approvals: Badge count foreground now follows measured readable opaque-color contrast; avatar geometry and dot placement are preserved. Other 45 Avatar candidates are byte-identical."
     },
     "avatar/badge__light__tablet": {
-      "sha256": "6ab694d383a19911bcba7bd87eec69ce476fe3d5092f47cb0ed09babf55f1fc4",
+      "sha256": "7589e8ef3c11b6489a2f58ca8aca198683ee819af7fa19b0d71b30d633c66a4a",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
       "dirty": false,
-      "capturedAt": "2026-10-27T08:09:10.659Z",
-      "reviewedAt": "2026-10-27T08:14:06.551Z",
-      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+      "capturedAt": "2026-10-28T13:22:52.602Z",
+      "reviewedAt": "2026-10-28T13:25:07.948Z",
+      "reviewNote": "Reviewed all three df5e0436 clean candidates against prior approvals: Badge count foreground now follows measured readable opaque-color contrast; avatar geometry and dot placement are preserved. Other 45 Avatar candidates are byte-identical."
     },
     "avatar/badge__light__desktop": {
-      "sha256": "88ea486342997496d5b08d4a46e7268fc446efc4390b686cd60efb83459a0737",
+      "sha256": "eae240070559f7dfcf7fe3033242d9f30b36bbf4999b63cb23ac31b4debf6369",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "4e2d9d040327f7cab469a5f577990ed93f07e8d8",
+      "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
       "dirty": false,
-      "capturedAt": "2026-10-27T08:09:12.576Z",
-      "reviewedAt": "2026-10-27T08:14:06.551Z",
-      "reviewNote": "Reviewed all 48 Avatar images individually at mobile/tablet/desktop from clean 4e2d9d04 (implementation 9af2a24f): size/shape/image/glyph/text fit, groups and overlap, responsive/RTL, dark/compact/combined, complete native content, visible keyboard focus and opened overflow. Preserve the 42 original reference files and all 405 prior Apollo reviews/images; no comparison settings changed."
+      "capturedAt": "2026-10-28T13:22:54.827Z",
+      "reviewedAt": "2026-10-28T13:25:07.948Z",
+      "reviewNote": "Reviewed all three df5e0436 clean candidates against prior approvals: Badge count foreground now follows measured readable opaque-color contrast; avatar geometry and dot placement are preserved. Other 45 Avatar candidates are byte-identical."
     },
     "avatar/group__light__mobile": {
       "sha256": "7fecbfdfc5e05470ea76fb439ce4851f5f70d91e4d5c2b14b9aa28ae347b1600",

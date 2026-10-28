@@ -1,0 +1,366 @@
+{
+  "stage": "Badge first batch rejected; fixture correction frozen for recapture",
+  "firstBatch": {
+    "sourceCommit": "df5e0436",
+    "dirty": false,
+    "reviewed": 42,
+    "accepted": 0,
+    "reason": "Visual fixture card padding placed business text beneath overlaid ribbon; auto-direction sample also needs a sized anchor",
+    "entries": {
+      "badge/basic__light__mobile": {
+        "sha256": "f617f353762466bec2fba9cd27c608c414395731575149790cb2075c3a9d05b1",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:20:43.307Z"
+      },
+      "badge/basic__light__tablet": {
+        "sha256": "b4bb1c3ba3c5f02981304f8d74e072e4d0aeaf563b17b03b1a3015d1d4dfaddc",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:20:45.363Z"
+      },
+      "badge/basic__light__desktop": {
+        "sha256": "17a0cb932af3285592f81f7c74512efaa8c98954d6dedc7db4862fb30a09345e",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:20:47.411Z"
+      },
+      "badge/status__light__mobile": {
+        "sha256": "5a58e6e62e6af3f6bbcf90a29ce61a8c14897f83228022ba4887e8a706b0ee48",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:20:49.433Z"
+      },
+      "badge/status__light__tablet": {
+        "sha256": "706a81979852a9d3d7f478f02085fdb3ffce3585f3a91cad478e642ee2f726aa",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:20:51.460Z"
+      },
+      "badge/status__light__desktop": {
+        "sha256": "932ad452e11ecf439b39061afd9577e2b3ef74f5653f9857b7912a9648e08a1b",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:20:53.476Z"
+      },
+      "badge/colorful__light__mobile": {
+        "sha256": "d0ac6f7e5f006b48da47ba7d7db42358493125e0bed597b3bcb87054fba7f650",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:20:55.587Z"
+      },
+      "badge/colorful__light__tablet": {
+        "sha256": "f2ed7a2d1cf4c893a37b15cfd919b12cac1e713063b19dc7887f78394ac85982",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:20:57.699Z"
+      },
+      "badge/colorful__light__desktop": {
+        "sha256": "7a656cd473c0d3df3269f59ec408f47816fd2812de6c713251580f231c0513a9",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:20:59.817Z"
+      },
+      "badge/dot__light__mobile": {
+        "sha256": "e11ec549b39961d026f5f44255da8940260fb02b69b45736d6fa1ed6126d3f81",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:01.797Z"
+      },
+      "badge/dot__light__tablet": {
+        "sha256": "81fe904a2f1fec316c60ebe1e336f9ae4a5be7c5663ea3a72bc7cf1337eac3a9",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:03.794Z"
+      },
+      "badge/dot__light__desktop": {
+        "sha256": "b1fe72f3bd69ddaa9b3dea60dc94047b527b06ecd80510125735ee69cf8f674a",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:05.790Z"
+      },
+      "badge/ribbon__light__mobile": {
+        "sha256": "7c416845285966f8eb8804f6dee69fc47aabac1c5a2dcac0c28d7e921ca4b33b",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:07.729Z"
+      },
+      "badge/ribbon__light__tablet": {
+        "sha256": "118a92ef9795ae625d93b8e8d96fd6c01c22a03cc7b5b3ae2c7e131c313d5849",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:09.725Z"
+      },
+      "badge/ribbon__light__desktop": {
+        "sha256": "39630041b7fe409c33fe689f8e5391c4fc2d490aaf3bb48a4a2bbedf4c5be962",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:11.705Z"
+      },
+      "badge/offset-size__light__mobile": {
+        "sha256": "aef15edc4c821c8dbbae29035bc8d479fcb227aa20d6c93d42fa1eb7b89c060f",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:13.743Z"
+      },
+      "badge/offset-size__light__tablet": {
+        "sha256": "56811985dad7277dc130ab0e113d7753acf244dcd1998bfd8404dcf9ae492b12",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:15.754Z"
+      },
+      "badge/offset-size__light__desktop": {
+        "sha256": "504a4de56c675274a9a5d43fbde213f58a679d34943004c548dc6c7df0b04103",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:17.819Z"
+      },
+      "badge/complete-content__light__mobile": {
+        "sha256": "be2373fd1f923b19dbce96e07ef405d0edcaa0eddd2d738400f56ea28eb358d5",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:19.960Z"
+      },
+      "badge/complete-content__light__tablet": {
+        "sha256": "f85462ed45cdb30ddc1574bc187e55f87f0a79c74e21c4b7f1a74dc8cb277042",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:22.050Z"
+      },
+      "badge/complete-content__light__desktop": {
+        "sha256": "f65d6040aaf62393399b3fc99d60bb815be14100bcf2e5eab0702833ce2ba0b2",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:24.135Z"
+      },
+      "badge/status-placement__light__mobile": {
+        "sha256": "d8ee349c18a591bf01ee037eae5e88822155cd85dd20730f403ef75529e052ea",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:26.212Z"
+      },
+      "badge/status-placement__light__tablet": {
+        "sha256": "9bb0362f371cfac67603a40b48a560db9ba63648484bb088d37aaf0bb3feab95",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:28.275Z"
+      },
+      "badge/status-placement__light__desktop": {
+        "sha256": "efe680a6179fbce2407a67409cb3c0dcf4134afacbb13760dc28cb6d4420dd5c",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:30.373Z"
+      },
+      "badge/semantic-tokens__light__mobile": {
+        "sha256": "08d427509f107723e8eec3461c59071690762aebd571d90f0aa66cb76484c1cc",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:32.449Z"
+      },
+      "badge/semantic-tokens__light__tablet": {
+        "sha256": "652bc89eacdacf2738365e1426df97ba4109461a419c47f258b63737b876fbe8",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:34.524Z"
+      },
+      "badge/semantic-tokens__light__desktop": {
+        "sha256": "0d1acaed29227fa0c9c5f130abde04badcb3f5344bf2ec7d6f452af355305ea6",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:36.624Z"
+      },
+      "badge/current-provider__light__mobile": {
+        "sha256": "3d925e22e3c2da230d7710e3fe1c1bbf0d8bf695832349331b297dd7da346e8a",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:38.747Z"
+      },
+      "badge/current-provider__light__tablet": {
+        "sha256": "320b8a240e08c7748f9b46c9705a7489dfc53858c8d348b512d617f79134e51b",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:40.880Z"
+      },
+      "badge/current-provider__light__desktop": {
+        "sha256": "1ba3add750e8c3bc5e75e7a1052099ba22f6de706fb5a8114ac1c1257667e76d",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:43.037Z"
+      },
+      "badge/native-focus__light__mobile": {
+        "sha256": "38a59445a77a3acb055ef54607482e1920b9853065cef90ba1063f7d7adf6f6d",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:45.047Z"
+      },
+      "badge/native-focus__light__tablet": {
+        "sha256": "76ae3747d63e0525fd3c1882610c8185755f4bfa9b68f18e99b11bb94e5c09be",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:47.002Z"
+      },
+      "badge/native-focus__light__desktop": {
+        "sha256": "b97784458d41c9c07664f4de27a0cb1dada5769bc268b230276a6f12526a8c0d",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:48.942Z"
+      },
+      "badge/theme-dark__light__mobile": {
+        "sha256": "52d5ce9fe8b348437ef127ef85257804b8f1a7a2ccc69a624c595c6184075256",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:51.021Z"
+      },
+      "badge/theme-dark__light__tablet": {
+        "sha256": "48712fc263152ab11c7f16d0ca085125c5d6c0f968193bef6784c18cca376cc7",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:53.098Z"
+      },
+      "badge/theme-dark__light__desktop": {
+        "sha256": "c58e8d12295a087246e7b391055d12b268e3da68b86f29764cc1f9ae93dc859f",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:55.183Z"
+      },
+      "badge/theme-compact__light__mobile": {
+        "sha256": "8aad9b08e11a5bc570a74ae4396e97c4e0dcab20f1dc9200a46b95cd1ef14728",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:57.240Z"
+      },
+      "badge/theme-compact__light__tablet": {
+        "sha256": "51c632b5ab56c99bfc6edb3d0a76f9f86e240f7a50c3ae5bace8d81833f686c5",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:21:59.317Z"
+      },
+      "badge/theme-compact__light__desktop": {
+        "sha256": "815fb21e9d5dbb80a2dc49e6d5fb6cd0d9fa33b899296b4e1831183ce981e86e",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:22:02.092Z"
+      },
+      "badge/theme-dark-compact__light__mobile": {
+        "sha256": "08d67199a2c56e396912e750010eab5ef1f10c2567f68f706487b83a4a67d0e6",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:22:04.616Z"
+      },
+      "badge/theme-dark-compact__light__tablet": {
+        "sha256": "4537d035cd98604fc777cf87053740fb7d1d4a77623abeefe8f01eb672695861",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:22:07.059Z"
+      },
+      "badge/theme-dark-compact__light__desktop": {
+        "sha256": "ec00f0bce07e39a1d2a33b94db7f33a7d50400e0314b6865adeaa6a297480edf",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+        "dirty": false,
+        "capturedAt": "2026-10-28T13:22:09.194Z"
+      }
+    }
+  },
+  "avatar": {
+    "compared": 48,
+    "byteIdentical": 45,
+    "reviewedUpdates": [
+      {
+        "id": "avatar/badge__light__mobile",
+        "changedPixels": 26,
+        "bounds": {
+          "minX": 45,
+          "minY": 11,
+          "maxX": 49,
+          "maxY": 19
+        },
+        "reason": "Readable count foreground; other Avatar/dot pixels unchanged",
+        "candidate": {
+          "sha256": "bd98d1f0ea5b08f6e4a32edf81e54e7c3c10a6efdb3a739dafd7784c1b336a12",
+          "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+          "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+          "dirty": false,
+          "capturedAt": "2026-10-28T13:22:50.669Z"
+        }
+      },
+      {
+        "id": "avatar/badge__light__tablet",
+        "changedPixels": 26,
+        "bounds": {
+          "minX": 45,
+          "minY": 11,
+          "maxX": 49,
+          "maxY": 19
+        },
+        "reason": "Readable count foreground; other Avatar/dot pixels unchanged",
+        "candidate": {
+          "sha256": "7589e8ef3c11b6489a2f58ca8aca198683ee819af7fa19b0d71b30d633c66a4a",
+          "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+          "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+          "dirty": false,
+          "capturedAt": "2026-10-28T13:22:52.602Z"
+        }
+      },
+      {
+        "id": "avatar/badge__light__desktop",
+        "changedPixels": 26,
+        "bounds": {
+          "minX": 45,
+          "minY": 11,
+          "maxX": 49,
+          "maxY": 19
+        },
+        "reason": "Readable count foreground; other Avatar/dot pixels unchanged",
+        "candidate": {
+          "sha256": "eae240070559f7dfcf7fe3033242d9f30b36bbf4999b63cb23ac31b4debf6369",
+          "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+          "sourceCommit": "df5e0436100443685747ec3b35bec38742728b9f",
+          "dirty": false,
+          "capturedAt": "2026-10-28T13:22:54.827Z"
+        }
+      }
+    ]
+  }
+}

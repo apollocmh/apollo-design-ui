@@ -88,10 +88,11 @@ const card = () =>
   h(
     'div',
     {
+      'data-badge-business': '',
       style: {
         width: '160px',
-        height: '64px',
-        padding: '16px',
+        height: '80px',
+        padding: '36px 16px 12px',
         boxSizing: 'border-box',
         background: 'var(--apollo-color-fill-alter)',
       },
@@ -314,7 +315,7 @@ export default {
         section('RTL and native LTR override', [
           wrapped({ status: 'success' }),
           h(Badge, { count: 5, dir: 'ltr' }, () => anchor('LTR')),
-          h(Badge, { count: 5, dir: 'auto' }, () => h('span', 'עברית')),
+          h(Badge, { count: 5, dir: 'auto' }, () => anchor('עברית')),
         ]),
       ),
     ]),
