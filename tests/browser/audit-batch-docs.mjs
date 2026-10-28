@@ -7,7 +7,7 @@ import { launchBrowser } from '../visual/stabilize.mjs';
 
 const base = (process.env.DOCS_URL ?? 'http://127.0.0.1:4480/apollo-design-ui').replace(/\/$/, '');
 const expectedStatus = Number(process.env.DOCS_DEMO_STATUS ?? 200);
-const expectedAcceptedUnits = Number(process.env.DOCS_ACCEPTED_UNITS ?? 17);
+const expectedAcceptedUnits = Number(process.env.DOCS_ACCEPTED_UNITS ?? 21);
 const expectedPlannedVisuals = Number(
   process.env.DOCS_PLANNED_VISUALS ?? buildCases({ apollo: true }).length,
 );
@@ -17,6 +17,10 @@ const units = [
   { name: 'timeline', count: 15, demos: ['horizontal-debug', 'native-slots'] },
   { name: 'grid', count: 13, demos: ['responsive', 'playground'] },
   { name: 'space', count: 15, demos: ['compact', 'compact-button-vertical'] },
+  { name: 'flex', count: 6, demos: ['gap', 'combination'] },
+  { name: 'alert', count: 15, demos: ['smooth-closed', 'error-boundary'] },
+  { name: 'layout', count: 11, demos: ['responsive', 'custom-trigger'] },
+  { name: 'input', count: 24, demos: ['component-token', 'autosize-textarea'] },
   { name: 'menu', demos: ['native-actions'] },
 ];
 const results = [],
@@ -131,6 +135,70 @@ try {
       true,
     );
   });
+  await check('Flex public medium preset and custom zero gap reach actual geometry', async () => {
+    await visit('flex', 'gap');
+    await page.getByRole('radio', { name: 'medium', exact: true }).check();
+    const row = page.locator('.standalone-body .apollo-flex').last();
+    assert.equal(await row.evaluate((node) => getComputedStyle(node).columnGap), '16px');
+    await page.getByRole('radio', { name: 'customize', exact: true }).check();
+    assert.equal(await row.evaluate((node) => getComputedStyle(node).columnGap), '0px');
+    assert.equal(await row.getByRole('button').count(), 4);
+  });
+  await check('Alert closes after its real transition and can mount again', async () => {
+    await visit('alert', 'smooth-closed');
+    const body = page.locator('.standalone-body');
+    await body.getByRole('button', { name: 'Close', exact: true }).click();
+    await body.locator('.apollo-alert').waitFor({ state: 'detached' });
+    await body.getByRole('button', { name: 'Show alert again', exact: true }).click();
+    await body.locator('.apollo-alert').waitFor({ state: 'visible' });
+    assert.equal(await body.getByRole('button', { name: 'Close', exact: true }).count(), 1);
+  });
+  await check(
+    'Layout external Vue control updates collapsed state without replacing its sidebar',
+    async () => {
+      await visit('layout', 'custom-trigger');
+      const body = page.locator('.standalone-body');
+      const sidebar = body.locator('.apollo-layout-sider');
+      const original = await sidebar.elementHandle();
+      await body.getByRole('button', { name: 'Collapse navigation', exact: true }).click();
+      assert.match(await sidebar.getAttribute('class'), /apollo-layout-sider-collapsed/);
+      await body.getByRole('button', { name: 'Expand navigation', exact: true }).click();
+      assert.doesNotMatch(await sidebar.getAttribute('class'), /apollo-layout-sider-collapsed/);
+      assert.equal(await sidebar.evaluate((node, before) => node === before, original), true);
+    },
+  );
+  await check(
+    'Input current theme preserves the draft and ancestor typography remeasures autoSize',
+    async () => {
+      await visit('input', 'component-token');
+      const input = page.getByRole('textbox', { name: '令牌示例输入框', exact: true });
+      const original = await input.elementHandle();
+      await input.fill('Published Input draft');
+      await page.getByRole('button', { name: '紧凑主题', exact: true }).click();
+      await page.waitForFunction(() => {
+        const node = document.querySelector('input[aria-label="令牌示例输入框"]');
+        return node && getComputedStyle(node).fontSize === '12px';
+      });
+      assert.equal(
+        await input.evaluate(
+          (node, before) => node === before && node.value === 'Published Input draft',
+          original,
+        ),
+        true,
+      );
+      const textarea = page.getByRole('textbox', { name: '主题自适应文本域', exact: true });
+      const before = await textarea.evaluate((node) => node.getBoundingClientRect().height);
+      await page.getByRole('button', { name: '祖先样式切换', exact: true }).click();
+      await page.waitForFunction((before) => {
+        const node = document.querySelector('textarea[aria-label="主题自适应文本域"]');
+        return (
+          node &&
+          node.getBoundingClientRect().height > before &&
+          node.scrollHeight <= node.clientHeight + 1
+        );
+      }, before);
+    },
+  );
   for (const locale of ['zh-CN', 'en-US'])
     await check(`progress/${locale}`, async () => {
       await page.evaluate((value) => localStorage.setItem('apollo-site-locale', value), locale);
