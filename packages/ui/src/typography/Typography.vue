@@ -33,9 +33,11 @@ import { computed, ref } from 'vue';
 
 import { useTypographySemantic } from './hooks/use-typography-semantic';
 import InternalTypography from './InternalTypography.vue';
-import type { TypographyProps } from './interface';
+import type { TypographyProps, TypographySlots } from './interface';
 
 defineOptions({ name: 'ATypography', inheritAttrs: false });
+
+defineSlots<TypographySlots>();
 
 const props = withDefaults(defineProps<TypographyProps>(), {
   prefixCls: undefined,
@@ -45,7 +47,7 @@ const props = withDefaults(defineProps<TypographyProps>(), {
   component: undefined,
 });
 
-const { classNames, styles, prefixCls, direction } = useTypographySemantic(
+const { classNames, styles, prefixCls, direction, tokenStyle } = useTypographySemantic(
   props,
   () => props.prefixCls,
   () => props.classNames,
@@ -76,6 +78,7 @@ defineExpose({ nativeElement: computed(() => rootRef.value?.nativeElement ?? nul
     :direction="direction"
     :class-names="classNames"
     :styles="styles"
+    :token-style="tokenStyle"
     v-bind="$attrs"
   >
     <slot />

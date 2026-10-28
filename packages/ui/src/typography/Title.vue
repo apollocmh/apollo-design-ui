@@ -26,7 +26,7 @@ import { omit, useDevWarning } from '@apollo-design/utils';
 import { computed, ref, useAttrs, watchEffect } from 'vue';
 
 import Base from './Base';
-import type { TitleProps } from './interface';
+import type { TitleProps, TypographySlots } from './interface';
 
 const TITLE_ELE_LIST = [1, 2, 3, 4, 5] as const;
 
@@ -34,6 +34,8 @@ defineOptions({ name: 'ATitle', inheritAttrs: false });
 
 // ⚠️ `level` 必须有默认值：`defineProps<TitleProps>()` 不带默认时它是 `undefined`，
 //    而 `TITLE_ELE_LIST.includes(undefined)` 为假 ⇒ 每次渲染都会误告警。
+defineSlots<TypographySlots>();
+
 const props = withDefaults(defineProps<TitleProps>(), { level: 1 });
 const attrs = useAttrs();
 
@@ -60,7 +62,7 @@ defineExpose({ nativeElement: computed(() => baseRef.value?.nativeElement ?? nul
 
 const mergedProps = computed(() => ({
   ...attrs,
-  ...omit(props, ['component', 'level']),
+  ...omit(props, ['level']),
   component: component.value,
 }));
 </script>

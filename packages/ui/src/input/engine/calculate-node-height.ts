@@ -49,8 +49,8 @@ const SIZING_STYLE = [
 
 export interface AutoSizeStyle {
   height: number;
-  overflowY?: string;
-  resize: string;
+  overflowY?: 'hidden';
+  resize: 'none';
   minHeight?: number;
   maxHeight?: number;
 }
@@ -118,7 +118,7 @@ export function calculateAutoSizeStyle(
 
   let minHeight: number | undefined;
   let maxHeight: number | undefined;
-  let overflowY: string | undefined;
+  let overflowY: 'hidden' | undefined;
 
   if (minRows !== null || maxRows !== null) {
     hidden.value = ' ';

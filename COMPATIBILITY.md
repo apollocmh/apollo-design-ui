@@ -21,6 +21,8 @@ Apollo 对自身公开 API、文档化行为、类型、语义样式接口和实
 
 Vue 公共语义与 React 回调/DOM 冲突的直接修正规则见 [ADR 0007](docs/adr/0007-vue-public-contracts-over-react-shapes.md)。已批准的模板扩展迁移见 [ADR 0006](docs/adr/0006-development-template-slots.md)，Transfer 首批变化见 [迁移记录](docs/migrations/transfer-slots.md)。Alert / Collapse 已有内容插槽的优先级调整另见 [行为迁移记录](docs/migrations/content-slot-precedence.md)。List 的 `renderItem` → 泛型 `#item`、内容插槽及废弃告警调整见 [List 迁移记录](docs/migrations/list-slots.md)。其他待评估事项见 [独立化记录](docs/migrations/independence.md)，未裁决事项不算已批准。
 
+Typography 的固定标签类型、Link 原生操作树、编辑/复制/测量、有效 Token 和关联 Table 主题变量修正见 [Typography 契约迁移](docs/migrations/typography-contracts.md)。
+
 ## 上游参考与历史回归
 
 List 当前配置、稳定内容结构、嵌套样式与分页修正，以及共享 `RenderEmptyHandler` 类型收窄，集中见 [List 契约迁移](docs/migrations/list-contracts.md)。
@@ -52,3 +54,7 @@ Empty 的完整 image/description/footer 内容、当前 Provider/语言、自�
 Tag / CheckableTag / CheckableTagGroup 的完整内容、所属原生关闭按钮/链接、Vue 事件和强类型模型、当前 Provider/三个 Token 与两套真实语义，集中见 [Tag 契约迁移](docs/migrations/tag-contracts.md)；原始参考矩阵保留，开发期直接修正错误 DOM/回调形态。
 
 Avatar / AvatarGroup 的原生事件与同步取消钩子、完整内容槽、当前尺寸/Token、业务key和溢出按钮，集中见 [Avatar契约迁移](docs/migrations/avatar-contracts.md)；直接移除四个分组旧别名，保留原始参考证据。
+
+### D-typography-native-controls
+
+开发阶段按 ADR0007 直接修正 Link 的 span/a 所属结构、text 编辑键盘入口与原生按钮内装饰图标语义。原 76 场景、参考 HTML 与参考 PNG 不变；19 个场景的精确差异存于 Typography contract-differences.ts，任何额外差异继续失败。详情与迁移见 Typography 契约迁移。

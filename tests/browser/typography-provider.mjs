@@ -231,9 +231,9 @@ try {
   const originalDemoInput = await demoInput.elementHandle();
   const originalDemoEditor = await demoEditor.elementHandle();
   const actionColors = [
-    'var(--apollo-color-primary)',
-    'var(--apollo-color-success)',
-    'var(--apollo-color-warning)',
+    'var(--apollo-color-text)',
+    'var(--apollo-color-text-secondary)',
+    'var(--apollo-color-text)',
     '',
   ];
   const fontSizes = [

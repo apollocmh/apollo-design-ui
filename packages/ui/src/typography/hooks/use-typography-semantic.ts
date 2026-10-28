@@ -44,7 +44,13 @@
  *     都由 Vue 追踪。方向继续使用 useDirection 的响应式注入。
  */
 
-import { type ComputedRef, computed, type MaybeRefOrGetter, toValue } from 'vue';
+import {
+  type ComputedRef,
+  type CSSProperties,
+  computed,
+  type MaybeRefOrGetter,
+  toValue,
+} from 'vue';
 
 import { semanticRootStyle, useMergeSemantic } from '../../_internal/use-merge-semantic';
 import {
@@ -59,12 +65,14 @@ import type {
   TypographySemanticStyles,
   TypographySemanticValue,
 } from '../interface';
+import { useTypographyTheme } from '../use-typography-theme';
 
 export interface UseTypographySemanticResult {
   classNames: ComputedRef<TypographySemanticClassNames>;
   styles: ComputedRef<TypographySemanticStyles>;
   prefixCls: ComputedRef<string>;
   direction: ComputedRef<DirectionType | undefined>;
+  tokenStyle: ComputedRef<CSSProperties>;
 }
 
 /**
@@ -124,5 +132,6 @@ export function useTypographySemantic<P extends BaseTypographyProps>(
     styles: mergedStyles,
     prefixCls,
     direction,
+    tokenStyle: useTypographyTheme(() => prefixCls.value),
   };
 }

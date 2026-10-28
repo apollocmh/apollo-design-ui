@@ -1,57 +1,28 @@
-/**
- * `Base` 家族的小工具。
- *
- * 契约来源：antd 6.6.4 的 `es/typography/Base/util.js`（**逐条对齐**）。
- * 三个函数各被两处以上消费：`toCopyConfigList` / `getNode` 服务于 `CopyBtn` 的
- * 「图标与提示都可以是 `[未复制, 已复制]` 二元组」，`isEleEllipsis` 服务于
- * 「原生 CSS 省略号是否真的截断了」的测量。
- */
-
-import { toList } from '@apollo-design/utils';
+/** Configuration-node helpers originally referenced antd6.6.4 Base/util. */
 import type { VNodeChild } from 'vue';
 
-/**
- * `copyable.icon` / `copyable.tooltips` 的取值。
- *
- * ⚠️ `false` 是**独立分支**：antd 的 `toCopyConfigList` 先判 `val === false` 再走
- *    `toList`。少了这一步，`false` 会被包成 `[false]`，`[1]` 位置变成 `undefined`，
- *    而 `getNode(undefined, default, true)` 会退回默认图标 —— 也就是说
- *    `icon: false` 的「显式不渲染」语义会**静默失效**。
- */
 export type CopyConfigListNode = VNodeChild | [VNodeChild, VNodeChild];
-
-/** 与 antd 的 `toCopyConfigList` 逐字对应。 */
-export function toCopyConfigList(val: CopyConfigListNode | undefined): [VNodeChild, VNodeChild] {
-  if (val === false) {
-    return [false, false];
-  }
-  const list = toList(val as VNodeChild);
-  return [list[0], list[1]];
+/** Exactly two entries select the two states; other arrays are complete VNode content. */
+export function toCopyConfigList(value: CopyConfigListNode | undefined): [VNodeChild, VNodeChild] {
+  if (value === false) return [false, false];
+  if (Array.isArray(value) && value.length === 2) return [value[0], value[1]];
+  return [value, undefined];
 }
-
-/**
- * 与 antd 的 `getNode` 逐字对应：
- *
- * ```
- * dom === true || dom === undefined → defaultNode
- * 否则                              → dom || (needDom && defaultNode)
- * ```
- *
- * ⚠️ 两个必须保留的细节：
- *   1. **`undefined` 走默认分支，`false` / `null` 不走**。`needDom` 为假时
- *      `icon: false` 渲染出 `false`（即「什么都不画」），而不是默认图标。
- *   2. 返回值可能是 `false` / `''` / `0` —— 它们是合法的 `VNodeChild`，
- *      调用方不能再做一次真值判断，否则「显式关闭」与「未传」又混在一起了。
- */
 export function getNode(
-  dom: VNodeChild | boolean | undefined,
-  defaultNode: VNodeChild,
-  needDom?: boolean,
+  value: VNodeChild | undefined,
+  fallback: VNodeChild,
+  required?: boolean,
 ): VNodeChild {
-  if (dom === true || dom === undefined) {
-    return defaultNode;
-  }
-  return dom || (needDom && defaultNode);
+  if (value === true || value === undefined) return fallback;
+  if (
+    required &&
+    (value === null ||
+      value === false ||
+      value === '' ||
+      (Array.isArray(value) && value.length === 0))
+  )
+    return fallback;
+  return value;
 }
 
 /**

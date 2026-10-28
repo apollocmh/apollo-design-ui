@@ -25,9 +25,11 @@ import { isPlainObject, omit, useDevWarning } from '@apollo-design/utils';
 import { computed, ref, useAttrs } from 'vue';
 
 import Base from './Base';
-import type { LinkProps } from './interface';
+import type { LinkProps, TypographySlots } from './interface';
 
 defineOptions({ name: 'ALink', inheritAttrs: false });
+
+defineSlots<TypographySlots>();
 
 const props = defineProps<LinkProps>();
 const attrs = useAttrs();
@@ -35,7 +37,7 @@ const attrs = useAttrs();
 /**
  * 转发 `Base` 的 `nativeElement`。
  *
- * ⚠️ 必须转发：antd 的 `Link` 是 `forwardRef`，`ref` 落在根 DOM 元素（`<a>`）上。
+ * ⚠️ 必须转发：antd 的 `Link` 是 `forwardRef`，nativeElement 跟随当前实际根（显示态为包含 a 的 span）。
  *    理由与判据见 `Text.vue` 里同名字段的说明。
  */
 const baseRef = ref<{ nativeElement: HTMLElement | null } | null>(null);
@@ -53,7 +55,7 @@ const mergedRel = computed(() =>
 const mergedProps = computed(() => ({
   // ⚠️ `navigate` 必须剥掉（见文件头第 3 条）
   ...omit(attrs as Record<string, unknown>, ['navigate']),
-  ...omit(props, ['component', 'ellipsis']),
+  ...omit(props, ['ellipsis']),
   component: 'a',
   ellipsis: !!props.ellipsis,
   rel: mergedRel.value,

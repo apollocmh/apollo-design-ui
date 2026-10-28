@@ -40,7 +40,7 @@
  * ── 这个测试没有证明什么 ─────────────────────────────────────────────────────
  *   - 没证明**像素**一致（那是 L6，见 `tests/visual`）
  *   - 没证明 `ellipsis` 的真实排版结果（jsdom 无布局引擎）
- *   - 没证明 `Tooltip` 的浮层 —— Tooltip 组件未落地，缺口登记在 README §7
+ *   - 浮层、焦点和交互由真实浏览器及关联 Tooltip 测试验证。
  */
 
 import { IconProvider } from '@apollo-design/icons';
@@ -53,6 +53,7 @@ import {
   DEFAULT_CONFIG_CONTEXT,
 } from '../../config-provider/context';
 import { Link, Paragraph, Text, Title, Typography } from '../index';
+import { TYPOGRAPHY_NATIVE_DIFFERENCES } from './contract-differences';
 
 /** 两侧共用的前缀。与 `tests/compat/baseline/typography.mjs` 里的 `PREFIX` 必须一致。 */
 const PREFIX = 'apollo';
@@ -378,7 +379,7 @@ const CASES: Record<string, () => DomRenderResult> = {
  * 这是 `domContractTest` 的 `allow` 契约：`expect(actualDiff).toEqual(allowed)`。
  * 所以「这是唯一差异」本身是可证伪的 —— 任何**额外**的漂移都会让用例红。
  */
-const ALLOW = {} as const;
+const ALLOW = TYPOGRAPHY_NATIVE_DIFFERENCES;
 
 domContractTest('Typography', {
   baseline,

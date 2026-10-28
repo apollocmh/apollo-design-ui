@@ -108,8 +108,9 @@ describe('Typography · 语义标签', () => {
       props: { href: 'https://example.com' },
       slots: { default: () => 'L' },
     });
-    expect(w.element.tagName).toBe('A');
-    expect(w.attributes('href')).toBe('https://example.com');
+    expect(w.element.tagName).toBe('SPAN');
+    expect(w.get('a').element.tagName).toBe('A');
+    expect(w.get('a').attributes('href')).toBe('https://example.com');
   });
 
   it('`target="_blank"` 时补 `rel`，避免 `window.opener` 劫持', () => {
@@ -117,7 +118,7 @@ describe('Typography · 语义标签', () => {
       props: { href: 'https://example.com', target: '_blank' },
       slots: { default: () => 'L' },
     });
-    expect(w.attributes('rel')).toBe('noopener noreferrer');
+    expect(w.get('a').attributes('rel')).toBe('noopener noreferrer');
   });
 
   it('★ 用户显式传 `rel=""` 时不补 —— 这是**允许**的（用户自己承担风险）', () => {
@@ -126,7 +127,7 @@ describe('Typography · 语义标签', () => {
       props: { href: 'https://example.com', target: '_blank', rel: '' },
       slots: { default: () => 'L' },
     });
-    expect(w.attributes('rel')).toBe('');
+    expect(w.get('a').attributes('rel')).toBe('');
   });
 });
 

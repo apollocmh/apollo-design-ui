@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link, Paragraph, Text, Title } from '../../index';
+import { Link, Paragraph, Text, Title } from '@apollo-design/ui';
 </script>
 
 <template>

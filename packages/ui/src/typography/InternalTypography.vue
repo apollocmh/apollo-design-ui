@@ -66,6 +66,7 @@ const props = withDefaults(
      *    ⇒ 仍然覆盖 `styles.root`（与 antd 的合并顺序一致）。
      */
     style?: import('vue').CSSProperties;
+    tokenStyle?: import('vue').CSSProperties;
   }>(),
   {
     component: 'article',
@@ -93,7 +94,9 @@ const rootClass = computed(() => [
  *    会让 SSR 渲染出 `style=""`，而 antd 在样式为空时**不输出该属性**。
  *    详见 `_internal/use-merge-semantic.ts` 的 `styleAttrs`。
  */
-const rootStyleAttrs = computed(() => styleAttrs({ ...props.styles?.root, ...props.style }));
+const rootStyleAttrs = computed(() =>
+  styleAttrs({ ...props.tokenStyle, ...props.styles?.root, ...props.style }),
+);
 
 /**
  * 根元素的属性对象。

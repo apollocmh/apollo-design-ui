@@ -10,13 +10,14 @@
  *    用户自己写的 `<p>` 内容 —— 两者不是一回事。
  */
 
-import { omit } from '@apollo-design/utils';
 import { computed, ref, useAttrs } from 'vue';
 
 import Base from './Base';
-import type { ParagraphProps } from './interface';
+import type { ParagraphProps, TypographySlots } from './interface';
 
 defineOptions({ name: 'AParagraph', inheritAttrs: false });
+
+defineSlots<TypographySlots>();
 
 const props = defineProps<ParagraphProps>();
 const attrs = useAttrs();
@@ -33,7 +34,7 @@ defineExpose({ nativeElement: computed(() => baseRef.value?.nativeElement ?? nul
 
 const mergedProps = computed(() => ({
   ...attrs,
-  ...omit(props, ['component']),
+  ...props,
   component: 'div',
 }));
 </script>

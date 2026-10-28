@@ -31,9 +31,11 @@ import { isPlainObject, omit, useDevWarning } from '@apollo-design/utils';
 import { computed, ref, useAttrs } from 'vue';
 
 import Base from './Base';
-import type { EllipsisConfig, TextProps } from './interface';
+import type { EllipsisConfig, TextProps, TypographySlots } from './interface';
 
 defineOptions({ name: 'AText', inheritAttrs: false });
+
+defineSlots<TypographySlots>();
 
 const props = defineProps<TextProps>();
 const attrs = useAttrs();
@@ -71,7 +73,7 @@ warning(
 
 const mergedProps = computed(() => ({
   ...attrs,
-  ...omit(props, ['component']),
+  ...props,
   component: 'span',
   ellipsis: mergedEllipsis.value,
 }));

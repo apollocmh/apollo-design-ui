@@ -14,7 +14,14 @@ try {
     'Build UI first',
   );
   assert.equal(fs.existsSync(path.join(root, 'packages/ui/dist/typography/__tests__')), false);
-  fs.symlinkSync(path.join(root, 'node_modules'), path.join(temp, 'node_modules'), 'dir');
+  fs.mkdirSync(path.join(temp, 'node_modules/@apollo-design'), { recursive: true });
+  fs.symlinkSync(path.join(root, 'node_modules/vue'), path.join(temp, 'node_modules/vue'), 'dir');
+  for (const name of ['ui', 'theme', 'icons'])
+    fs.symlinkSync(
+      path.join(root, `packages/${name}`),
+      path.join(temp, `node_modules/@apollo-design/${name}`),
+      'dir',
+    );
   fs.copyFileSync(
     path.join(root, 'packages/ui/src/typography/demo/editable.vue'),
     path.join(temp, 'EditableDemo.vue'),
@@ -63,6 +70,11 @@ const show = ref(true);
   <output>{{ paragraph?.nativeElement?.tagName }}</output>
 </template>`,
   );
+  const demos = path.join(root, 'packages/ui/src/typography/demo');
+  const demoFiles = fs.readdirSync(demos).filter((name) => name.endsWith('.vue'));
+  assert.equal(demoFiles.length, 14);
+  for (const file of demoFiles)
+    fs.copyFileSync(path.join(demos, file), path.join(temp, `Demo-${file}`));
   fs.writeFileSync(
     path.join(temp, 'tsconfig.json'),
     JSON.stringify(
@@ -94,7 +106,7 @@ const show = ref(true);
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published Typography: five entry templates, conditional slots, current copy/edit/ellipsis, native StyleValue/provider bindings and nativeElement refs; no source aliases or test declarations shipped',
+    'PASS published Typography: five entry templates, all 14 demos, conditional slots, current copy/edit/ellipsis, native StyleValue/provider bindings and nativeElement refs; no source aliases or test declarations shipped',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

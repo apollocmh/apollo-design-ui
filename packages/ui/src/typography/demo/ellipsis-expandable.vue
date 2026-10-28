@@ -32,6 +32,6 @@ const collapsibleConfig: EllipsisConfig = {
   >
     <Paragraph :ellipsis="basicConfig">{{ longText }}</Paragraph>
     <Paragraph :ellipsis="collapsibleConfig">{{ longText }}</Paragraph>
-    <div style="font-size: 12px; color: #999">最近一次操作：{{ lastAction || '-' }}</div>
+    <div style="font-size: 12px; color: var(--apollo-color-text)">最近一次操作：{{ lastAction || '-' }}</div>
   </div>
 </template>

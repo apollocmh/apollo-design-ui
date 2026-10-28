@@ -4,227 +4,117 @@ title: Typography
 subtitle: 排版
 ---
 
-文本的基本格式。
-
-## 何时使用
-
-- 当需要展示标题、段落、列表内容时使用。
-- 当需要展示带语义色（次要 / 成功 / 警告 / 危险）、禁用态、装饰（加粗 / 下划线 / 删除线 /
-  行内代码 / 标记 / 键盘按键 / 斜体）的文本时使用。
-- 当需要对长文本做**省略**（单行 / 多行 / 可展开）、**复制**、**行内编辑**时使用。
+标题、段落、行内文本和链接，支持复制、编辑及省略。
 
 ## 代码演示
 
-见 [`demo/`](./demo)（14 个，覆盖 antd 的主要用户场景）。
-
-| demo | 内容 |
-|---|---|
-| `basic` | 基础：`Title` / `Paragraph` / `Text` / `Link` 四件套 |
-| `title` | 标题：`level` 1~5（⚠️ 非法值退回 `h1` 并告警） |
-| `text` | 文本与七个装饰（⚠️ 嵌套顺序是契约） |
-| `ellipsis` | 省略号：CSS 路径与 JS 二分裁剪路径 |
-| `copyable` | 可复制：`text` / `icon` / `tooltips` / `format` |
-| `editable` | 可编辑：`triggerType`、Enter 保存 / Esc 取消 / 失焦保存 |
-| `semantic` | 语义化 `classNames` / `styles`（对象式与函数式） |
+14 个示例覆盖基础排版、五级标题、语义色、复制、编辑、受控省略、中间省略、后缀、组件 Token、语义样式和 Table 消费场景。
 
 ## API
 
-### 组件
-
 ```ts
-import { Typography } from '@apollo-design/ui';
-
-const { Text, Title, Paragraph, Link } = Typography;   // 与 antd 同形
+import { Typography, Text, Title, Paragraph, Link } from '@apollo-design/ui';
+import '@apollo-design/ui/style.css';
 ```
 
-`Typography.Text` 与具名导出 `Text` 指向**同一个对象**。
+具名组件与 `Typography.Text / Title / Paragraph / Link` 是同一组件。按需样式入口为 `@apollo-design/ui/typography/style.css`；应用仍需加载主题及基础样式。
 
-⚠️ `Typography` 本体**不支持** `type` / `disabled` / `ellipsis` / `copyable` / `editable`
-与七个装饰 —— 传了它们只会作为未知属性落到根元素上，**不产生类名**（antd 亦如此）。
+### 组件与内容
 
-### 公共 Props（5 个组件都有）
-
-| 参数 | 说明 | 类型 | 默认值 |
-|---|---|---|---|
-| prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo` |
-| class / style | **根元素原生 attrs**（不是 Props）；`style` 覆盖 `styles.root` | `string \| array \| object` / `CSSProperties` | — |
-| classNames | 语义化类名（对象或函数） | `TypographySemanticValue<TypographySemanticClassNames>` | — |
-| styles | 语义化样式（对象或函数） | `TypographySemanticValue<TypographySemanticStyles>` | — |
-| direction | 文字方向 | `'ltr' \| 'rtl'` | 从 ConfigProvider 取 |
-| component | 渲染的标签（`@internal`） | `string` | 各组件自己的默认值 |
-
-### 子组件专有 Props（`Text` / `Title` / `Paragraph` / `Link`）
-
-| 参数 | 说明 | 类型 | 默认值 |
-|---|---|---|---|
-| type | 语义色 | `'secondary' \| 'success' \| 'warning' \| 'danger'` | — |
-| disabled | 禁用态。⚠️ 只加类名，**不**加 `aria-disabled`（与 antd 一致） | `boolean` | `false` |
-| ellipsis | 省略能力。`Text` / `Link` 的类型更窄（见下） | `boolean \| EllipsisConfig` | — |
-| copyable | 复制能力 | `boolean \| CopyConfig` | — |
-| editable | 编辑能力 | `boolean \| EditConfig` | — |
-| strong / underline / delete / code / mark / keyboard / italic | 七个装饰开关 | `boolean` | `false` |
-| actions | 操作区位置（自 6.4.0） | `{ placement?: 'start' \| 'end' }` | `'end'` |
-| title | 原生 `title`。也是省略号悬浮提示的**候选文案** | `string` | — |
-| level | **仅 `Title`**：标题级别，映射到 `h1`~`h5` | `1 \| 2 \| 3 \| 4 \| 5` | `1` |
-| rel / target | **仅 `Link`** | `string` | — |
-
-⚠️ `Title` 的 `strong` 被 `Omit` 掉（标题本身就是加粗的）；`Text` 的 `ellipsis` 不支持
-`expandable` / `rows` / `onExpand`（行内文本没有多行概念）；`Link` 的 `ellipsis` **仅布尔**。
-这三条在类型面表达，且运行时传了会告警。
-
-### `ellipsis` 配置
-
-| 参数 | 说明 | 类型 | 默认值 |
-|---|---|---|---|
-| rows | 显示的行数 | `number` | `1` |
-| expandable | 是否可展开。`'collapsible'` 时展开后仍可收起 | `boolean \| 'collapsible'` | `false` |
-| suffix | 省略号之后的追加文本 | `string` | — |
-| symbol | 展开/收起按钮的内容（函数式收到 `expanded`） | `VNodeChild \| ((expanded: boolean) => VNodeChild)` | — |
-| defaultExpanded | 非受控的初始展开态 | `boolean` | `false` |
-| expanded | 受控的展开态 | `boolean` | — |
-| onExpand | 展开/收起时触发 | `(e, { expanded }) => void` | — |
-| onEllipsis | 省略状态**变化**时触发（同一结果重测不重复上报） | `(ellipsis: boolean) => void` | — |
-| tooltip | 省略时的悬浮提示。`true` 表示用 `editable.text ?? children` | `VNodeChild \| { title?: VNodeChild }` | — |
-
-### `copyable` / `editable` 配置
-
-| `copyable` | 说明 | 类型 | 默认值 |
-|---|---|---|---|
-| text | 复制的文本。函数形式支持异步（返回 `Promise<string>`） | `string \| (() => string \| Promise<string>)` | children |
-| onCopy | 复制完成后的回调 | `(event?) => void` | — |
-| icon | 图标。数组形式是 `[未复制, 已复制]` | `VNodeChild \| [VNodeChild, VNodeChild]` | — |
-| tooltips | 悬浮提示。数组形式是 `[未复制, 已复制]`。`false` 表示不提示 | `VNodeChild \| [VNodeChild, VNodeChild]` | — |
-| format | 剪贴板格式 | `'text/plain' \| 'text/html'` | — |
-| tabIndex | 按钮的 tabIndex | `number` | — |
-
-| `editable` | 说明 | 类型 | 默认值 |
-|---|---|---|---|
-| text | 编辑初值。不传时取 children（仅当它是字符串） | `string` | — |
-| editing | 受控的编辑态 | `boolean` | — |
-| icon | 编辑图标 | `VNodeChild` | 铅笔图标 |
-| tooltip | 编辑图标的悬浮提示。`false` 表示不提示 | `VNodeChild \| false` | — |
-| onStart / onChange / onCancel / onEnd | 进入编辑态 / 保存 / 取消 / Enter 保存后触发 | `() => void` / `(value: string) => void` / … | — |
-| maxLength | 输入框最大长度 | `number` | — |
-| autoSize | 输入框自动撑高 | `boolean \| AutoSizeType` | `true` |
-| triggerType | 触发编辑的方式 | `('icon' \| 'text')[]` | `['icon']` |
-| enterIcon | 确认图标。传 `null` 时不渲染 | `VNodeChild` | — |
-| tabIndex | 编辑图标的 tabIndex | `number` | — |
-
-### 插槽
-
-| 名称 | 说明 |
-|---|---|
-| default | 文本内容。⚠️ 它同时是 `copyable` / `editable` / `ellipsis` 的文案来源 |
-
-### 语义化槽位
-
-`classNames` / `styles` 各有四个槽位：`root`（根元素）/ `actions`（操作区 `span`）/
-`action`（每个操作按钮）/ `textarea`（**仅编辑态**的输入框）。
-
-`classNames` 是**拼接**，`styles` 是**覆盖**，且 `style` prop 排在 `styles.root` **之后**
-（所以 `style` 覆盖 `styles.root`）。
-
-### Ref
-
-| 名称 | 类型 | 说明 |
+| 组件 | 根元素 | 能力 |
 |---|---|---|
-| nativeElement | `HTMLElement \| null` | 根元素。首次渲染前是 `null`（antd 的类型没体现这一点） |
+| Typography | `article`；可用 `component` 指定标签 | 排版容器、语义样式 |
+| Text | `span` | 装饰、复制、编辑、单行省略 |
+| Title | `h1`…`h5` | 装饰、复制、编辑、省略；`level` 默认 1 |
+| Paragraph | `div` | 装饰、复制、编辑、多行省略 |
+| Link | `span` 外壳，内含原生 `a` | 原生链接及装饰、复制、编辑、布尔省略 |
 
-## 设计说明
+五个组件均使用默认插槽，可传文本、Fragment、条件节点、原生元素和 Vue 组件。四个固定语义组件不接受 `component`；需要自定义容器标签使用 Typography。Title 不接受 `strong`。
 
-### 装饰的嵌套顺序是契约
+Link 的复制/编辑按钮是原生链接的兄弟节点，避免交互控件嵌套。`href`、`target`、`rel`、链接 ARIA、`tabindex` 和原生事件作用于 `a`；`id`、`class`、`style` 和 expose 作用于外壳。`target="_blank"` 且未指定 `rel` 时补 `noopener noreferrer`。禁用链接设置 `aria-disabled`、退出 Tab 顺序并阻止激活。
 
-七个装饰由内到外依次是：
+### 公共 Props 与原生 attrs
 
-```
-strong → u → del → code → mark → kbd → i
-```
-
-顺序反了**屏幕上看不出差别**，但它决定了 `mark` 里的 `code` 到底有没有底色。
-唯一的观察点是 L4 的逐节点比对（交换任意两行立刻报 `标签不同`）。
-
-### `-link` 的判据是 `component === 'a'`
-
-不是「有没有 `type`」。所以 `<Link type="danger">` 同时有 `-danger` 与 `-link`；
-而 `<Text component="a">` 仍然是 `span`（`Text` 显式覆盖 `component`）⇒ **没有** `-link`。
-
-### 省略号的两条路径
-
-| 条件 | 走哪条 | 省略号长什么样 |
+| 参数 | 类型 / 默认值 | 说明 |
 |---|---|---|
-| `rows` 且**没有** `suffix` / `expandable` / `onEllipsis` / `copyable` / `editable` | CSS（`text-overflow` 或 `-webkit-line-clamp`） | 浏览器画的 |
-| 上面任一存在 | **JS 二分裁剪**（隐藏容器逐字测量） | 组件插入的 `<span aria-hidden>` |
+| prefixCls | `string` | 当前 ConfigProvider 前缀，默认 `apollo-typography` |
+| direction | `'ltr' \| 'rtl'` | 默认使用当前 Provider |
+| classNames | 对象或 `({ props }) => 对象` | `root / actions / action / textarea` 类名 |
+| styles | 对象或 `({ props }) => 对象` | 同名语义节点的 Vue CSSProperties |
+| component | `string`，默认 `article` | 仅 Typography |
 
-⚠️ 走 JS 路径时，根元素会挂 `aria-label`（**完整**文本），可见内容被一层
-`aria-hidden` 包住 —— 屏幕阅读器读完整文本，而不是被截断的那段。
-走 CSS 路径时**没有** `aria-label`（可访问名由浏览器按截断后的文本决定，上游行为）。
+根 `class` / `style` / `id` / `data-*` 使用 Vue 原生 attrs；支持动态替换及移除。类名合并，原生 style 覆盖 `styles.root`。语义函数的 `props` 为 `BaseTypographyProps`。ConfigProvider 的 `components.typography` 可提供类名、样式及语义配置；配置替换、函数式配置及移除不重建业务插槽或正在编辑的输入框。
 
-### `editable` 的三道按键门槛
+### Text / Title / Paragraph / Link
 
-少任何一条，中文用户或 `Ctrl+Enter` 用户都会误提交：
+| 参数 | 类型 / 默认值 | 说明 |
+|---|---|---|
+| type | `'secondary' \| 'success' \| 'warning' \| 'danger'` | 语义文字色 |
+| disabled | `boolean`，false | 禁用样式；Link 同时阻止导航 |
+| copyable | `boolean \| CopyConfig` | 复制 |
+| editable | `boolean \| EditConfig` | 编辑 |
+| ellipsis | `boolean \| EllipsisConfig` | Text 排除 rows / expandable / onExpand；Link 仅布尔 |
+| strong / underline / delete / code / mark / keyboard / italic | `boolean`，false | 七种文本装饰；Title 排除 strong |
+| actions | `{ placement?: 'start' \| 'end' }` | 操作区位置，默认 end |
+| title | `string` | 原生标题及省略提示候选 |
+| level | `1 \| 2 \| 3 \| 4 \| 5`，1 | 仅 Title |
+| target / rel | `string` | 仅 Link；href 使用原生 attrs |
 
-1. `confirmChange` 会 **`trim()`**，而 `onChange` 不会（上游的既定行为）。
-2. **IME 组合中不提交**。
-3. **带修饰键的 Enter 不提交**（`Ctrl+Enter` 是换行意图）。
+### CopyConfig
 
-另外「退出编辑态后焦点还给编辑图标」是**必须**的 —— 少了它，键盘用户退出编辑后
-焦点会掉回 `body`。
+| 字段 | 类型 / 默认值 | 行为 |
+|---|---|---|
+| text | `string \| (() => string \| Promise<string>)` | 未提供时读取内容文本；空字符串会复制空文本 |
+| onCopy | `(event?: MouseEvent) => void` | 实际写入成功后调用 |
+| icon / tooltips | `VNodeChild \| [VNodeChild, VNodeChild]` | 长度为 2 的数组表示未复制/已复制；其他长度保留为完整节点内容 |
+| format | `'text/plain' \| 'text/html'` | 剪贴板格式 |
+| tabIndex | `number` | 复制按钮 Tab 顺序 |
+
+`tooltips: false` 关闭提示。默认提示读取当前语言。一次异步复制未完成时拒绝重复请求；失败不显示复制成功，卸载后不更新状态或发送完成回调。自定义图标仍保留原生按钮和可访问名称。
+
+### EditConfig
+
+| 字段 | 类型 / 默认值 | 行为 |
+|---|---|---|
+| text | `string` | 编辑初值；未提供时使用可识别的纯文本内容 |
+| editing | `boolean` | 受控编辑态；省略时为非受控 |
+| onStart / onCancel / onEnd | `() => void` | 进入、取消、Enter 保存完成 |
+| onChange | `(value: string) => void` | Enter 或失焦保存；首尾空白被移除，内部换行保留 |
+| icon / tooltip / enterIcon | `VNodeChild` | 编辑图标、完整提示内容、确认图标；tooltip false 关闭提示，enterIcon null 隐藏 |
+| triggerType | `('icon' \| 'text')[]`，`['icon']` | text 模式仍提供可聚焦的原生编辑按钮 |
+| autoSize | `boolean \| { minRows?: number; maxRows?: number }`，true | 原生 textarea 高度随内容、宽度和当前配置变化 |
+| maxLength / tabIndex | `number` | 编辑框长度限制 / 编辑按钮 Tab 顺序 |
+
+Enter 保存，Escape 取消；带修饰键的 Enter 保留原生换行，IME 组合期间不提交。受控模式中回调仅通知请求，父组件决定是否关闭。键盘完成后恢复所属编辑按钮焦点；失焦至外部控件时保留外部焦点。
+
+`aria-label` / `aria-labelledby` / `aria-describedby` 传给实际 textarea。未提供名称时使用纯文本内容或当前语言的编辑文案。编辑态保留根 attrs 和实际根 expose。
+
+### EllipsisConfig
+
+| 字段 | 类型 / 默认值 | 行为 |
+|---|---|---|
+| rows | `number`，1 | 正有限值向下取整，非法值回退 1 |
+| expandable | `boolean \| 'collapsible'`，false | 可展开；collapsible 支持再次收起 |
+| suffix | `string` | 省略后的后缀 |
+| symbol | `VNodeChild \| ((expanded: boolean) => VNodeChild)` | 展开/收起按钮内容 |
+| expanded / defaultExpanded | `boolean` | 受控值 / 非受控初值 |
+| onExpand | `(event: MouseEvent, info: { expanded: boolean }) => void` | 展开请求 |
+| onEllipsis | `(ellipsis: boolean) => void` | 实际省略状态变化时调用 |
+| tooltip | `VNodeChild \| { title?: VNodeChild }` | true 使用原内容；false 关闭 |
+
+简单情况使用 CSS；需要操作区、后缀或展开时按实际宽度测量。隐藏测量区使用已挂载内容的原生 DOM 投影，不再次挂载业务组件。动态宽度、行数、内容和字体变化会重新测量，过期测量及卸载任务取消。
+
+### Slots / Emits / v-model / Expose
+
+唯一公共插槽是 `default`。没有组件 emits 或 v-model；编辑和展开通过各自配置的受控值与回调表达。`TypographyRef.nativeElement` 是只读的当前实际根元素或 null，包含编辑态；Link 返回外壳。
 
 ### 组件 Token
 
-| Token | 默认值 | 说明 |
+通过 `ConfigProvider :theme="{ components: { Typography: { titleMarginTop: 0, titleMarginBottom: '0.8em' } } }"` 设置。数字按 px 处理，支持 0、配置替换和移除。
+
+| Token | 默认值 | 消费位置 |
 |---|---|---|
-| `titleMarginTop` | `'1.2em'` | 标题上间距 |
-| `titleMarginBottom` | `'0.5em'` | 标题下间距 |
+| titleMarginTop | `1.2em` | 内容后标题的上间距 |
+| titleMarginBottom | `0.5em` | 标题下间距 |
 
-⚠️ **缺口**：antd 可以通过 `theme.components.Typography` 覆盖这两个 Token；本仓库目前
-**两个都覆盖不了** —— 它们都是**字面量** Token，在零运行时管线里被内联成常量、没有对应的
-CSS 变量，因为 `packages/theme` 的 `tokens.css` 只声明 Alias 层变量。
-这是全库的管线缺口（divider / spin 同源），详见 [`README.md`](./README.md) §5.5 与 §7.3。
-
-等价的临时手段：用 `styles.root` 覆盖 margin 的效果。
-
-### 样式引入
-
-```ts
-import '@apollo-design/theme/tokens.css';      // 主题变量，必须先引
-import '@apollo-design/ui/style.css';          // 汇总样式（含 typography）
-```
-
-⚠️ **按组件引入目前只有 `@apollo-design/ui/empty/style.css` 在 `exports` 里注册过**。
-`@apollo-design/ui/typography/style.css` 会抛 `ERR_PACKAGE_PATH_NOT_EXPORTED`
-（实测）—— 构建产物 `dist/typography/style.css` 存在，但 `packages/ui/package.json`
-的 `exports` 没登记这个子路径。`divider` / `spin` 同样如此，是全库一致的缺口；
-本组件的文件域不含 `packages/ui/package.json`，留给该文件的 owner 补齐。
-
-自定义 `prefixCls`（如 `my-app`）时**没有**公开的产出入口：包根导出的是
-`genComponentStyleSheet('typography')`（按**组件名**取，内部用固定的
-`apollo` / `ant` 两套前缀）。`genTypographyStyle(prefixCls)` 存在于
-`packages/ui/src/typography/style/index.ts`，但**未**从包根再导出 —— 想用自定义前缀
-需要直接引源码路径。这是一条已知的 API 面缺口，登记在
-[`README.md`](./README.md) §7.3。
-
-## 已知缺口
-
-1. **悬浮提示**（`copyable.tooltips` / `ellipsis.tooltip` / `editable.tooltip` 的气泡）
-   不可见 —— `Tooltip` 组件尚未落地。未展开时 DOM 与 antd 逐字一致，缺的是悬浮后那一半。
-2. **`editable` 的 `autoSize` 不生效**、输入框上没有 `apollo-input*` 类名 ——
-   用的是原生 `<textarea>`（`Input` 组件尚未落地）。
-3. **`ellipsis.tooltip` 的类型**只声明了 `title`（`Tooltip` 落地后补全）。
-4. **图标基础样式未接线** —— `@apollo-design/icons` 的 `getIconStyle` 导出了但没有消费者，
-   导致复制 / 编辑 / 展开按钮里的图标与 antd 有**亚像素级**差异。
-   这是 L6 视觉回归里 `copyable` 三组未达 `exact` 的根因，登记在
-   [`README.md`](./README.md) §7.3（G7）。
-5. 其余缺口（`h1~h6`/`p` 的 margin reset、表单控件字体 reset、dark/compact 未做视觉比对等）
-   逐条登记在 [`README.md`](./README.md) §7.3。
-
-
-### 默认插槽与编辑名称
-
-默认插槽支持条件出现、替换和移除，正文同步当前父组件渲染结果；纯文本的复制回退、编辑初值和省略内容同步当前正文。同一正文模式中稳定的富节点会保留输入值与焦点。原生 `aria-label` 在进入编辑态后传给 textarea，名称的更新或移除不重置编辑草稿。未配置编辑文本时仍只把纯文本正文作为编辑初值。
-
-
-原生 `class` / `style` 应用于实际外层根（包括编辑态）。`style` 支持动态字符串、对象和混合数组，覆盖同名 `styles.root`，移除后恢复语义根样式；编辑文本框的内部样式使用 `styles.textarea`。样式更新保留稳定输入节点的草稿和焦点。
-
-
-`ConfigProvider.components.typography` 的 `className`、`style`、`classNames`、`styles` 支持整体对象替换、语义函数替换及移除。类名按来源拼接；样式覆盖顺序为全局 `styles` → 全局 `style` → 组件 `styles` → 原生 `style`。函数配置使用当前解析后的 `props.prefixCls` / `props.direction`。更新配置保留稳定输入和编辑草稿、焦点。
+默认语义文字和操作文字随当前主题保持可读对比。原生 style 是用户显式覆盖；使用自定义前景色时需与背景配对。

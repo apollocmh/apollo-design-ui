@@ -7,6 +7,18 @@ order: 0
 
 ## zh-CN
 
+## 2026-10-28：Typography 功能整改已实现，正在统一验收
+
+五个公开入口的复制、编辑、省略、当前语言与两个标题 Token 已成组修复。Link 的原生链接与操作按钮独立，编辑支持真实多行和自动高度，测量保留业务组件、草稿及焦点。关联 Table 的派生颜色跟随当前主题。
+
+已通过 1178 项相关四层检查、110 项类型、15 项生产浏览器契约、56 组实际 Demo 主题和20组实际交互、12 项 SSR/水合，以及14个Demo的发布声明消费。自有视觉、文档站发布和最终清单仍在验收，不据功能阶段宣称全库完成。
+
+- [Typography 当前 API 和全部示例](/components/typography)
+- [切换标题 Token](/components/typography/demo/component-token)
+- [多行编辑与真实高度](/components/typography/demo/editable-custom)
+- [展开与再次收起](/components/typography/demo/ellipsis-expandable)
+- [完整清单和证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-typography-contract-audit.md)
+
 ## 2026-10-27：这一轮已经交付什么
 
 当前为开发阶段快照。全库审计仍在进行，这里按已验收的单元记录进展。

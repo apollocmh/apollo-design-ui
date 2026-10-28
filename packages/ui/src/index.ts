@@ -660,6 +660,7 @@ export type {
   TypographySemanticType,
   TypographySemanticValue,
   TypographySlot,
+  TypographySlots,
   TypographyTooltipProps,
 } from './typography';
 // ---------------------------------------------------------------------------

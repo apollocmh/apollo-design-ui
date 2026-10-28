@@ -8,19 +8,19 @@
   ],
   "summary": {
     "interfaceFiles": 73,
-    "rows": 546,
+    "rows": 547,
     "byCategory": {
       "data": 121,
       "component-content-candidate": 155,
       "deprecated": 53,
-      "internal": 139,
+      "internal": 140,
       "render-function-candidate": 66,
       "configuration": 12
     },
     "byDecision": {
       "keep-data": 133,
       "review": 199,
-      "skip": 192,
+      "skip": 193,
       "implemented-verified": 22
     }
   },
@@ -12286,7 +12286,8 @@
         "files": [
           "packages/ui/src/table/__tests__/a11y.test.ts",
           "packages/ui/src/table/__tests__/index.test.ts",
-          "packages/ui/src/table/__tests__/s17-issue17.test.ts"
+          "packages/ui/src/table/__tests__/s17-issue17.test.ts",
+          "packages/ui/src/table/__tests__/theme-current.test.ts"
         ]
       },
       "decision": "keep-data",
@@ -12395,6 +12396,7 @@
           "packages/ui/src/table/__tests__/a11y.test.ts",
           "packages/ui/src/table/__tests__/index.test.ts",
           "packages/ui/src/table/__tests__/s17-issue17.test.ts",
+          "packages/ui/src/table/__tests__/theme-current.test.ts",
           "packages/ui/src/table/__tests__/virtual.test.ts"
         ]
       },
@@ -12503,6 +12505,7 @@
           "packages/ui/src/table/__tests__/a11y.test.ts",
           "packages/ui/src/table/__tests__/index.test.ts",
           "packages/ui/src/table/__tests__/s17-issue17.test.ts",
+          "packages/ui/src/table/__tests__/theme-current.test.ts",
           "packages/ui/src/table/__tests__/virtual.test.ts"
         ]
       },
@@ -12532,7 +12535,8 @@
         "files": [
           "packages/ui/src/table/__tests__/a11y.test.ts",
           "packages/ui/src/table/__tests__/index.test.ts",
-          "packages/ui/src/table/__tests__/s17-issue17.test.ts"
+          "packages/ui/src/table/__tests__/s17-issue17.test.ts",
+          "packages/ui/src/table/__tests__/theme-current.test.ts"
         ]
       },
       "decision": "keep-data",
@@ -13021,6 +13025,7 @@
           "packages/ui/src/table/__tests__/a11y.test.ts",
           "packages/ui/src/table/__tests__/index.test.ts",
           "packages/ui/src/table/__tests__/s17-issue17.test.ts",
+          "packages/ui/src/table/__tests__/theme-current.test.ts",
           "packages/ui/src/table/__tests__/virtual.test.ts"
         ]
       },
@@ -16180,7 +16185,7 @@
       "owner": "CopyConfig",
       "prop": "icon",
       "category": "data",
-      "source": "packages/ui/src/typography/interface.ts:71",
+      "source": "packages/ui/src/typography/interface.ts:48",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -16196,6 +16201,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/typography/__tests__/contract-audit.test.ts",
           "packages/ui/src/typography/__tests__/index.test.ts",
           "packages/ui/src/typography/__tests__/semantic.test.ts"
         ]
@@ -16208,7 +16214,7 @@
       "owner": "CopyConfig",
       "prop": "tooltips",
       "category": "data",
-      "source": "packages/ui/src/typography/interface.ts:73",
+      "source": "packages/ui/src/typography/interface.ts:50",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -16224,6 +16230,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/typography/__tests__/contract-audit.test.ts",
           "packages/ui/src/typography/__tests__/index.test.ts",
           "packages/ui/src/typography/__tests__/semantic.test.ts"
         ]
@@ -16236,7 +16243,7 @@
       "owner": "EditConfig",
       "prop": "enterIcon",
       "category": "data",
-      "source": "packages/ui/src/typography/interface.ts:120",
+      "source": "packages/ui/src/typography/interface.ts:97",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -16263,7 +16270,7 @@
       "owner": "EditConfig",
       "prop": "icon",
       "category": "data",
-      "source": "packages/ui/src/typography/interface.ts:96",
+      "source": "packages/ui/src/typography/interface.ts:73",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -16279,6 +16286,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/typography/__tests__/contract-audit.test.ts",
           "packages/ui/src/typography/__tests__/index.test.ts",
           "packages/ui/src/typography/__tests__/semantic.test.ts"
         ]
@@ -16291,7 +16299,7 @@
       "owner": "EditConfig",
       "prop": "tooltip",
       "category": "data",
-      "source": "packages/ui/src/typography/interface.ts:98",
+      "source": "packages/ui/src/typography/interface.ts:75",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -16307,6 +16315,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/typography/__tests__/contract-audit.test.ts",
           "packages/ui/src/typography/__tests__/index.test.ts",
           "packages/ui/src/typography/__tests__/semantic.test.ts"
         ]
@@ -16319,7 +16328,7 @@
       "owner": "EllipsisConfig",
       "prop": "symbol",
       "category": "data",
-      "source": "packages/ui/src/typography/interface.ts:140",
+      "source": "packages/ui/src/typography/interface.ts:117",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -16344,7 +16353,7 @@
       "owner": "EllipsisConfig",
       "prop": "tooltip",
       "category": "data",
-      "source": "packages/ui/src/typography/interface.ts:153",
+      "source": "packages/ui/src/typography/interface.ts:130",
       "slotRuntime": {
         "status": "not-run",
         "files": []
@@ -16360,6 +16369,7 @@
       "slotTest": {
         "status": "source-reference",
         "files": [
+          "packages/ui/src/typography/__tests__/contract-audit.test.ts",
           "packages/ui/src/typography/__tests__/index.test.ts",
           "packages/ui/src/typography/__tests__/semantic.test.ts"
         ]
@@ -16369,10 +16379,52 @@
     },
     {
       "component": "typography",
+      "owner": "TypographySlots",
+      "prop": "default",
+      "category": "internal",
+      "source": "packages/ui/src/typography/interface.ts:330",
+      "slotRuntime": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/typography/Base.ts",
+          "packages/ui/src/typography/Ellipsis.ts",
+          "packages/ui/src/typography/EllipsisTooltip.ts"
+        ]
+      },
+      "slotType": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/typography/interface.ts"
+        ]
+      },
+      "slotDemo": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/typography/demo/editable.vue"
+        ]
+      },
+      "slotTest": {
+        "status": "source-reference",
+        "files": [
+          "packages/ui/src/typography/__tests__/a11y.test.ts",
+          "packages/ui/src/typography/__tests__/contract-audit.test.ts",
+          "packages/ui/src/typography/__tests__/index.test.ts",
+          "packages/ui/src/typography/__tests__/native-slots.test.ts",
+          "packages/ui/src/typography/__tests__/native-styles.test.ts",
+          "packages/ui/src/typography/__tests__/provider-reactivity.test.ts",
+          "packages/ui/src/typography/__tests__/semantic.test.ts",
+          "packages/ui/src/typography/__tests__/theme.test.ts"
+        ]
+      },
+      "decision": "skip",
+      "reason": "内部/插槽协议，不作为公共内容 prop 缺口。"
+    },
+    {
+      "component": "typography",
       "owner": "TypographyTooltipProps",
       "prop": "title",
       "category": "component-content-candidate",
-      "source": "packages/ui/src/typography/interface.ts:57",
+      "source": "packages/ui/src/typography/interface.ts:34",
       "slotRuntime": {
         "status": "not-run",
         "files": []

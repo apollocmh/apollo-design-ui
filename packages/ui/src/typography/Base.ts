@@ -1,88 +1,25 @@
-/**
- * `Base` —— `Text` / `Title` / `Paragraph` / `Link` 的共同底座。
- *
- * 契约来源：antd 6.6.4 的 `es/typography/Base/index.js`（**逐条对齐**）。
- * 它承担 Typography 家族**全部**的复杂度：语义色、禁用、七个装饰开关、
- * `ellipsis` / `copyable` / `editable`、操作区、以及省略号的四种测量状态。
- *
- * ── 渲染树（无省略号时的主干）────────────────────────────────────────────────────
- *
- * ```
- * InternalTypography（根元素，类名 = 语义色/禁用/省略/链接 + className）
- *   └─ Ellipsis（渲染属性：把 nodes + canEllipsis 交回给本组件）
- *        └─ wrapperDecorations(...)     ← strong→u→del→code→mark→kbd→i 逐层包裹
- *             ├─ [placement=start] 操作区
- *             ├─ 内容（有 aria-label 时再包一层 aria-hidden 的 span）
- *             ├─ 省略号 + suffix
- *             └─ [placement=end]   操作区
- * ```
- *
- * ── 五条必须保留的判据 ────────────────────────────────────────────────────────
- *
- *   1. **装饰的嵌套顺序是 `strong → u → del → code → mark → kbd → i`**，
- *      即最终 DOM 是 `<i><kbd><mark><code><del><u><strong>x</strong></u></del></code></mark></kbd></i>`。
- *      顺序反了「看起来一样」但 DOM 契约会红。
- *   2. **`-link` 类名的判据是 `component === 'a'`**，不是「有没有 `type`」。
- *      所以 `<Link type="danger">` 同时有 `-danger` 与 `-link`。
- *   3. **`topAriaLabel` 只在「有省略号且走 JS 测量」时才算**（`!enableEllipsis || cssEllipsis`
- *      ⇒ `undefined`）。它的候选顺序是 `[editConfig.text, children, title, tooltipProps.title]`，
- *      取**第一个字符串或数字**。
- *   4. **`<span aria-hidden>` 只包「内容」**，且只在
- *      `node.length > 0 && canEllipsis && !expanded && topAriaLabel` 四个条件同时成立时。
- *      它的用途是「可访问名走根元素的 `aria-label`，屏幕阅读器别把截断后的文字再读一遍」。
- *   5. **操作区在 `placement === 'start'` 时渲染在内容之前**（`-actions-start` 类名同理）。
- *      两个位置都调用同一个 `renderOperations(canEllipsis)`。
- *
- * ── 与 antd 的差异 ────────────────────────────────────────────────────────────
- *
- *   - **D5**：无 CSS-in-JS 的 `hashId` / `cssVarCls` 类名。
- *   - ~~D-typography-8~~：2026-10-04 起 Tooltip 已落地，编辑按钮 / 复制按钮 / 省略号
- *     提示均已接线（关闭态 DOM 与基线一致，见 EllipsisTooltip / CopyBtn）。
- *     DOM 上等价（rc-tooltip 未展开时只渲染 children），`tooltipProps.title` 仍完整
- *     参与 `topAriaLabel` 的计算。
- *   - **D-typography-11（PLATFORM）**：`ellipsis` 的测量时序。见 `Ellipsis.ts` 文件头。
- *   - **D-typography-12（PLATFORM）**：`usePrevious` 不需要单独实现 —— Vue 的
- *     `watch(cb)` 回调直接给 `oldValue`，等价于「上一轮的 editing」。
- *   - **D-typography-13（PLATFORM）**：`children` 必须**归一化**才能与 antd 的
- *     `children` 对齐。React 的 `children` 是「字符串 / 元素 / 数组」，Vue 的插槽
- *     返回的却总是 **vnode 数组**（纯文字被包成 `Text` vnode、单子节点还可能被包成
- *     `Fragment`）。见 `nodeList` / `childrenText` / `hasContent` 三处的说明。
- *   - **D-typography-14（PLATFORM）**：`Ellipsis` 的测量依赖必须**显式下传**
- *     （`miscDeps`）。antd 的 `useLayoutEffect` 可以依赖「渲染出来的内容」，Vue 的
- *     `watch` 不行 —— 它在 `setup()` 里就求值 getter 来收集依赖，而「在渲染函数之外
- *     调用插槽」会触发 Vue 的 dev 告警。见 `measureMiscDeps` 与 `Ellipsis.ts`。
- *   - **D-typography-15**：`isReactRenderable(children)` → `hasContent`（`nodeList`
- *     非空）。唯一差别：`children === ''` 时 antd 判 `false`、这里判 `true`
- *     （只影响 `-copy-icon-only` 这一个类名，且空字符串本身没有任何可渲染内容）。
- *
- * ── 为什么是 `.ts` 渲染函数而不是 `.vue` ────────────────────────────────────────
- *
- * 渲染树是**数据驱动的动态嵌套**：装饰层数取决于 7 个开关、操作区位置取决于
- * `placement`、内容要不要包 `aria-hidden` 取决于 4 个条件的与、省略号要拿到
- * 测量后的节点列表。模板表达不了这种条件包裹（COMPONENT-RULES.md §2 第 2 条）。
- * 先例：`config-provider/ConfigProvider.ts`。
- *
- * ── 这个组件没有证明什么 ──────────────────────────────────────────────────────
- *   - 没证明真实排版下的省略号像素结果（jsdom 的 `clientHeight` 恒为 0），见 L6。
- *   - 没证明 `Tooltip` 的交互 —— Tooltip 未落地。
+/** Native content, decorations and copy/edit/ellipsis operations for the four semantic entries.
+ * Algorithm reference: antd6.6.4 typography. Apollo's Vue slot, native action tree,
+ * current configuration, focus and measurement contracts are defined in the public docs.
  */
 
 import { EditOutlined } from '@apollo-design/icons';
-import { useLocale } from '@apollo-design/locale';
+import { useLocaleReactive } from '@apollo-design/locale';
 import {
   isStyleSupport,
-  toList,
   useControlledValue,
   useDelayState,
   useResizeObserver,
 } from '@apollo-design/utils';
 import {
-  type Component,
   type CSSProperties,
   computed,
   defineComponent,
   type ExtractPropTypes,
   h,
+  mergeProps,
+  normalizeClass,
+  normalizeStyle,
   onUpdated,
   type PropType,
   ref,
@@ -93,12 +30,13 @@ import type { DirectionType } from '../config-provider/context';
 import Tooltip from '../tooltip/Tooltip';
 import {
   isValidText,
+  plainText,
   type RenderableChild,
   renderNodes,
   type TypographyNode,
   toNodeList,
 } from './_util/nodes';
-import { isEleEllipsis } from './_util/util';
+import { getNode, isEleEllipsis } from './_util/util';
 import { CopyBtn } from './CopyBtn';
 import { Editable } from './Editable';
 import { Ellipsis, type EllipsisSlotProps } from './Ellipsis';
@@ -119,27 +57,10 @@ import type {
 
 const ELLIPSIS_STR = '...';
 
-/**
- * `InternalTypography` 的「宽松」视图。
- *
- * ⚠️ `h()` 的类型重载要求 props **精确匹配**组件的 props 类型
- *    （`RawProps & P`，见 `@vue/runtime-core` 的 `h` 声明）。而 `Base` 必须把用户的
- *    `$attrs` 一起并进去 —— 合并后的对象类型退化成 `Record<string, unknown>`，
- *    于是任何重载都过不了。
- *
- *    Vue 没有为「透传 attrs」提供类型友好的重载（模板里的 fallthrough attrs 是
- *    编译器做的，不经 `h()`）。所以这里把组件断言成 `Component`，`P` 退化为 `any`。
- *    **代价只有这一处的 prop 检查**：`InternalTypography` 自己的 props 声明、
- *    以及 `__tests__/` 里对它的直接断言都还在。
- */
-const LooseInternalTypography = InternalTypography as Component;
-
-/**
- * `Ellipsis` 的「宽松」视图。理由同 `LooseInternalTypography` ——
- * `h()` 推断不出 `Ellipsis` 的 props 类型（它把 `P` 推断成了**公共实例**类型），
- * 于是任何 props 都过不了。见 `LooseInternalTypography` 的说明。
- */
-const LooseEllipsis = Ellipsis as Component;
+function nativeStyle(value: unknown): CSSProperties | undefined {
+  const style = normalizeStyle([value]);
+  return style && typeof style === 'object' ? style : undefined;
+}
 
 /**
  * 把可能是数组 / `null` / `undefined` / `false` 的孩子拍平，并剔掉「什么都不画」的项。
@@ -274,7 +195,7 @@ const BaseContent = defineComponent({
   setup(content, { attrs, expose }) {
     // 公开 props 对象由外层 setup 持有，身份稳定，值始终保持 Vue 响应性。
     const props = content.contentProps;
-    const [textLocale] = useLocale('Text');
+    const [textLocale] = useLocaleReactive('Text');
 
     const typographyRef = ref<{ nativeElement: HTMLElement | null } | null>(null);
     const editIconRef = ref<HTMLButtonElement | null>(null);
@@ -284,6 +205,7 @@ const BaseContent = defineComponent({
       styles: mergedStyles,
       prefixCls,
       direction,
+      tokenStyle,
     } = useTypographySemantic(
       props as BlockProps,
       () => props.prefixCls,
@@ -328,23 +250,42 @@ const BaseContent = defineComponent({
       setEditing(edit);
     };
 
-    // 退出编辑态后把焦点还给编辑图标。
-    //
-    // ⚠️ `flush: 'post'` **不是**可省的：默认的 `flush: 'pre'` 会在**组件重渲染之前**跑，
-    //    而那一刻编辑图标还没被 patch 出来（`editIconRef.value` 仍是进入编辑态时被置的
-    //    `null`）—— `focus()` 静默落空，可访问性回归（键盘用户退出编辑后焦点掉回 body）。
-    //    antd 的 `useLayoutEffect` 是 commit 之后跑的，`flush: 'post'` 才是它的等价物。
+    // Capture ownership before Vue removes the editor, then restore after the
+    // replacement button exists. A blur to an external control keeps its focus.
+    let restoreEditFocus = false;
+    let editDocument: Document | undefined;
+    watch(editing, (value, oldValue) => {
+      restoreEditFocus = false;
+      const root = typographyRef.value?.nativeElement;
+      if (value || !oldValue || !root) return;
+      editDocument = root.ownerDocument;
+      const scope = root.getRootNode();
+      const active =
+        typeof ShadowRoot !== 'undefined' && scope instanceof ShadowRoot
+          ? scope.activeElement
+          : editDocument.activeElement;
+      restoreEditFocus = !!active && root.contains(active);
+    });
     watch(
       editing,
       (value, oldValue) => {
-        if (!value && oldValue) {
-          editIconRef.value?.focus();
+        if (!value && oldValue && restoreEditFocus && editDocument) {
+          const active = editDocument.activeElement;
+          if (!active || active === editDocument.body) editIconRef.value?.focus();
         }
+        restoreEditFocus = false;
       },
       { flush: 'post' },
     );
 
     const onEditClick = (e?: MouseEvent): void => {
+      const target = e?.target;
+      if (target && 'closest' in target && typeof target.closest === 'function') {
+        const control: unknown = target.closest(
+          'button,a,input,textarea,select,[contenteditable=true]',
+        );
+        if (control && control !== e?.currentTarget) return;
+      }
       e?.preventDefault();
       triggerEdit(true);
     };
@@ -391,7 +332,8 @@ const BaseContent = defineComponent({
       () => ({
         expandable: false as const,
         // antd 的默认 symbol 是语言包里的「展开 / 收起」
-        symbol: (isExpanded: boolean) => (isExpanded ? textLocale?.collapse : textLocale?.expand),
+        symbol: (isExpanded: boolean) =>
+          isExpanded ? textLocale.value.collapse : textLocale.value.expand,
       }),
     );
 
@@ -407,7 +349,12 @@ const BaseContent = defineComponent({
     );
 
     /** 共享给下游的 `rows`（antd 的注释：`Shared prop to reduce bundle size`）。 */
-    const rows = computed(() => ellipsisConfig.value.rows ?? 1);
+    const rows = computed(() => {
+      const value = ellipsisConfig.value.rows;
+      return typeof value === 'number' && Number.isFinite(value) && value > 0
+        ? Math.floor(value)
+        : 1;
+    });
 
     const needMeasureEllipsis = computed(
       () =>
@@ -494,14 +441,19 @@ const BaseContent = defineComponent({
      * ⚠️ 用 `computed` 而不是每次渲染新建数组：`computed` 只在依赖真的变了才产生
      *    新数组，`Ellipsis` 的 `watch` 因此不会因为「引用变了但内容没变」而空转。
      */
+    const measureRevision = ref(0);
     const measureMiscDeps = computed<unknown[]>(() => [
+      measureRevision.value,
+      tokenStyle.value,
+      mergedStyles.value,
+      ellipsisConfig.value,
       copied.value,
       expanded.value,
       copyLoading.value,
       enableEdit.value,
       enableCopy.value,
       placement.value,
-      textLocale,
+      textLocale.value,
       ...DECORATION_PROPS.map((key) => props[key]),
     ]);
 
@@ -529,10 +481,31 @@ const BaseContent = defineComponent({
      */
     expose({ nativeElement: typographyEl });
 
+    let fontSignature = '';
+    const refreshMetrics = () => {
+      const root = typographyEl.value;
+      if (!root || !mergedEnableEllipsis.value) return;
+      const style = root.ownerDocument.defaultView?.getComputedStyle(root);
+      if (!style) return;
+      const signature = [
+        style.fontFamily,
+        style.fontSize,
+        style.fontWeight,
+        style.lineHeight,
+        style.letterSpacing,
+        style.paddingInlineStart,
+        style.paddingInlineEnd,
+      ].join('|');
+      if (signature !== fontSignature) {
+        fontSignature = signature;
+        measureRevision.value++;
+      }
+    };
     useResizeObserver({
       target: () => typographyEl.value,
       onResize: (size) => {
         ellipsisWidth.value = size.offsetWidth;
+        refreshMetrics();
       },
       disabled: () => !mergedEnableEllipsis.value,
     });
@@ -585,7 +558,10 @@ const BaseContent = defineComponent({
     };
 
     watch([isNativeVisible, ellipsisWidth], remeasureWhileHovering, { flush: 'post' });
-    onUpdated(remeasureWhileHovering);
+    onUpdated(() => {
+      remeasureWhileHovering();
+      refreshMetrics();
+    });
 
     // https://github.com/ant-design/ant-design/issues/36786
     // 用 IntersectionObserver 判断元素是否不可见
@@ -654,12 +630,12 @@ const BaseContent = defineComponent({
     const handleMouseEnter = (e: MouseEvent): void => {
       isHoveringTypography = true;
       measureNativeEllipsis();
-      props.onMouseenter?.(e);
+      if (props.component !== 'a') props.onMouseenter?.(e);
     };
 
     const handleMouseLeave = (e: MouseEvent): void => {
       isHoveringTypography = false;
-      props.onMouseleave?.(e);
+      if (props.component !== 'a') props.onMouseleave?.(e);
     };
 
     const renderExpand = (): RenderableChild => {
@@ -668,6 +644,7 @@ const BaseContent = defineComponent({
       // ⚠️ 用 `typeof` 而不是 `isFunction`：工具里的类型守卫把结果收窄成
       //    `(...args: never[]) => unknown`，调用处拿不到参数类型。
       const symbolNode = typeof symbol === 'function' ? symbol(expanded.value) : symbol;
+      const symbolText = plainText(toNodeList(symbolNode)).trim();
       return h(
         'button',
         {
@@ -678,7 +655,8 @@ const BaseContent = defineComponent({
           ],
           style: mergedStyles.value.action,
           onClick: (e: MouseEvent) => onExpandClick(e, { expanded: !expanded.value }),
-          'aria-label': expanded.value ? textLocale?.collapse : textLocale?.expand,
+          'aria-label':
+            symbolText || (expanded.value ? textLocale.value.collapse : textLocale.value.expand),
         },
         [symbolNode],
       );
@@ -688,8 +666,13 @@ const BaseContent = defineComponent({
       if (!enableEdit.value) return null;
 
       const { icon, tooltip, tabIndex } = editConfig.value;
-      const editTitle = toList(tooltip)[0] || textLocale?.edit;
-      const ariaLabel = typeof editTitle === 'string' ? editTitle : '';
+      const editTitle = tooltip === undefined || tooltip === true ? textLocale.value.edit : tooltip;
+      const ariaLabel =
+        typeof editTitle === 'string' && editTitle
+          ? editTitle
+          : plainText(toNodeList(textLocale.value.edit)) || 'Edit';
+      const textOnly = !triggerType.value.includes('icon') && triggerType.value.includes('text');
+      if (!triggerType.value.includes('icon') && !textOnly) return null;
 
       // ⚠️ `triggerType` 不含 `icon` 时**不渲染按钮**（antd 的行为：`text` 触发靠根元素
       //    的 onClick，没有图标可点）。
@@ -698,21 +681,32 @@ const BaseContent = defineComponent({
         {
           type: 'button',
           ref: editIconRef,
-          class: [`${prefixCls.value}-edit`, mergedClassNames.value.action],
+          class: [
+            `${prefixCls.value}-edit`,
+            textOnly && `${prefixCls.value}-edit-keyboard`,
+            mergedClassNames.value.action,
+          ],
           style: mergedStyles.value.action,
-          onClick: onEditClick,
+          onClick: (event: MouseEvent) => {
+            event.stopPropagation();
+            onEditClick(event);
+          },
           'aria-label': ariaLabel,
           tabIndex,
         },
-        [icon || h(EditOutlined, { role: 'button' })],
+        [getNode(icon, h(EditOutlined, { 'aria-hidden': true }), true)],
       );
       // antd 逐字：`<Tooltip key="edit" title={tooltip === false ? '' : editTitle}>{button}</Tooltip>`
       // —— `tooltip: false` 是「不弹」而不是「不包」（关闭态 DOM 等价，只 cloneVNode）。
-      return triggerType.value.includes('icon')
-        ? h(Tooltip, { title: tooltip === false ? '' : editTitle } as never, {
-            default: () => editButton,
-          })
-        : null;
+      return textOnly
+        ? editButton
+        : h(
+            Tooltip,
+            { title: tooltip === false ? '' : editTitle },
+            {
+              default: () => editButton,
+            },
+          );
     };
 
     const renderCopy = (): RenderableChild => {
@@ -726,7 +720,7 @@ const BaseContent = defineComponent({
         tabIndex: copyConfig.value.tabIndex,
         prefixCls: prefixCls.value,
         copied: copied.value,
-        locale: textLocale,
+        locale: textLocale.value,
         onCopy: onCopyClick,
         loading: copyLoading.value,
         iconOnly: !hasContent.value,
@@ -776,18 +770,45 @@ const BaseContent = defineComponent({
       // 根 `class` / `style` 是 Vue 原生 attrs：从 `attrs` 里摘出来单独合并，
       // 其余属性仍按 antd 的 `{...rest}` 原样透传（放在对象末尾 ⇒ 优先级最高）。
       const { class: attrClass, style: attrStyle, ...restAttrs } = attrs as Record<string, unknown>;
+      const isLink = props.component === 'a';
+      const linkAttrs: Record<string, unknown> = {};
+      const rootAttrs: Record<string, unknown> = {};
+      for (const [key, value] of Object.entries(restAttrs)) {
+        const linkOwned =
+          isLink &&
+          (key.startsWith('on') ||
+            key.startsWith('aria-') ||
+            [
+              'href',
+              'target',
+              'rel',
+              'download',
+              'hreflang',
+              'ping',
+              'referrerpolicy',
+              'role',
+              'tabindex',
+              'tabIndex',
+            ].includes(key));
+        (linkOwned ? linkAttrs : rootAttrs)[key] = value;
+      }
 
       // >>>>>>>>>>> 编辑态
       if (editing.value) {
         return h(Editable, {
+          ...restAttrs,
+          ref: typographyRef,
           value: editConfig.value.text ?? childrenText.value ?? '',
-          ariaLabel: typeof attrs['aria-label'] === 'string' ? attrs['aria-label'] : undefined,
+          ariaLabel:
+            typeof attrs['aria-label'] === 'string'
+              ? attrs['aria-label']
+              : plainText(toNodeList(textLocale.value.edit)) || 'Edit',
           onSave: onEditChange,
           onCancel: onEditCancel,
           onEnd: editConfig.value.onEnd,
           prefixCls: prefixCls.value,
-          className: attrs.class as string | undefined,
-          style: attrs.style as CSSProperties | undefined,
+          className: normalizeClass(attrClass),
+          style: nativeStyle(attrStyle),
           direction: direction.value,
           component: props.component,
           maxLength: editConfig.value.maxLength,
@@ -795,11 +816,11 @@ const BaseContent = defineComponent({
           enterIcon: editConfig.value.enterIcon,
           classNames: mergedClassNames.value,
           styles: mergedStyles.value,
+          tokenStyle: tokenStyle.value,
         });
       }
 
-      // ⚠️ `EllipsisTooltip` 目前是**直通**的（Tooltip 未落地，见其文件头）。
-      //    这里保留完整的四元判定链，是为了让 Tooltip 落地时**只改那一个文件**。
+      // Tooltip owns the real native trigger; operation hover suppresses the content popup.
       return h(
         EllipsisTooltip,
         {
@@ -808,34 +829,37 @@ const BaseContent = defineComponent({
           disabled: isHoveringOperations.value,
           tooltipProps: tooltipProps.value,
         },
-        // ⚠️ 用 `LooseInternalTypography`（见其声明处的说明）。
-        //    插槽也用**函数**而不是 `{ default: ... }` 对象 —— 后者的重载同样要求
-        //    props 精确匹配。本仓库的 `ConfigProvider.ts` 也是传函数。
+        // Forward current native root attrs and a Vue content slot.
         () =>
           h(
-            LooseInternalTypography,
+            InternalTypography,
             {
               ref: typographyRef,
               prefixCls: prefixCls.value,
               classNames: mergedClassNames.value,
               styles: mergedStyles.value,
-              component: props.component,
-              direction: direction.value,
+              tokenStyle: tokenStyle.value,
+              component: isLink ? 'span' : (props.component ?? 'article'),
+              ...(direction.value === undefined ? {} : { direction: direction.value }),
               // ⚠️ `class` / `style` **必须**在这里显式合并，且**不能**留在末尾的
               //    `...restAttrs` 里 —— 对象展开是后者胜，`attrs.style` 会把
               //    `WebkitLineClamp` 整段顶掉（L4 的 `style:with-line-clamp` 抓到过）。
-              className: [rootClassNames.value, attrClass],
-              style: { ...rootStyle.value, ...((attrStyle as CSSProperties) ?? {}) },
-              onClick: triggerType.value.includes('text') ? onEditClick : undefined,
+              className: normalizeClass([rootClassNames.value, attrClass]),
+              style: { ...rootStyle.value, ...nativeStyle(attrStyle) },
               'aria-label': topAriaLabel.value?.toString(),
               title: props.title,
               onMouseenter: handleMouseEnter,
               onMouseleave: handleMouseLeave,
-              ...restAttrs,
+              ...mergeProps(rootAttrs, {
+                onClick:
+                  !isLink && enableEdit.value && triggerType.value.includes('text')
+                    ? onEditClick
+                    : undefined,
+              }),
             },
             () =>
               h(
-                LooseEllipsis,
+                Ellipsis,
                 {
                   enableMeasure: mergedEnableEllipsis.value && !cssEllipsis.value,
                   text: nodeList.value,
@@ -851,6 +875,43 @@ const BaseContent = defineComponent({
                 {
                   default: ({ nodes, canEllipsis }: EllipsisSlotProps) => {
                     const content: RenderableChild[] = [];
+                    if (isLink) {
+                      const link = h(
+                        'a',
+                        mergeProps(
+                          {
+                            class: `${prefixCls.value}-link-content`,
+                            onClick: (event: MouseEvent) => {
+                              if (props.disabled) {
+                                event.preventDefault();
+                                event.stopImmediatePropagation();
+                                return;
+                              }
+                              if (enableEdit.value && triggerType.value.includes('text'))
+                                onEditClick(event);
+                            },
+                            onMouseenter: props.onMouseenter,
+                            onMouseleave: props.onMouseleave,
+                          },
+                          linkAttrs,
+                          {
+                            'aria-label': linkAttrs['aria-label'] ?? topAriaLabel.value?.toString(),
+                            'aria-disabled': props.disabled || linkAttrs['aria-disabled'],
+                            tabIndex: props.disabled
+                              ? -1
+                              : (linkAttrs.tabIndex ?? linkAttrs.tabindex),
+                          },
+                        ),
+                        [
+                          wrapperDecorations(
+                            props as BlockProps,
+                            flattenChildren([renderNodes(nodes), ...renderEllipsis(canEllipsis)]),
+                          ),
+                        ],
+                      );
+                      const operations = renderOperations(canEllipsis);
+                      return placement.value === 'start' ? [operations, link] : [link, operations];
+                    }
 
                     if (placement.value === 'start') {
                       content.push(renderOperations(canEllipsis));

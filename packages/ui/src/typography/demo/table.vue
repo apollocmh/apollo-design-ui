@@ -57,7 +57,7 @@ const data: Record<string, unknown>[] = [
 
 <template>
   <div style="width: 720px">
-    <Title :level="4" style="margin-bottom: 4px">项目成员</Title>
+    <Title :level="2" style="margin-bottom: 4px">项目成员</Title>
     <Paragraph type="secondary" style="margin-bottom: 16px">
       单元格中的名称、角色、状态与说明分别使用 Text / Paragraph 渲染。
     </Paragraph>

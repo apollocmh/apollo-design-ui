@@ -17,7 +17,7 @@ const classNamesObject: TypographyProps['classNames'] = {
 };
 
 const stylesObject: TypographyProps['styles'] = {
-  root: { backgroundColor: '#fafafa' },
+  root: { backgroundColor: 'var(--apollo-color-fill-alter)' },
   actions: { marginInlineStart: '8px' },
 };
 
@@ -41,10 +41,10 @@ const nativeClass = computed(() =>
 );
 const nativeStyle = computed<StyleValue>(() => {
   if (phase.value === 0)
-    return 'color:var(--apollo-color-primary);padding-inline-start:var(--apollo-padding-xs);--native-demo-phase:string';
+    return 'color:var(--apollo-color-text);padding-inline-start:var(--apollo-padding-xs);--native-demo-phase:string';
   if (phase.value === 1)
     return [
-      'color:var(--apollo-color-success);--native-demo-phase:array',
+      'color:var(--apollo-color-text-secondary);--native-demo-phase:array',
       {
         paddingInlineStart: 'var(--apollo-padding-sm)',
         paddingInlineEnd: 'var(--apollo-padding-xs)',
@@ -52,7 +52,7 @@ const nativeStyle = computed<StyleValue>(() => {
     ];
   if (phase.value === 2)
     return {
-      color: 'var(--apollo-color-warning)',
+      color: 'var(--apollo-color-text)',
       paddingInlineStart: 'var(--apollo-padding-md)',
       '--native-demo-phase': 'object',
     };
@@ -88,10 +88,10 @@ const makeProviderConfig = (phase: number): TypographyConfig => {
     action: {
       color:
         phase === 0
-          ? 'var(--apollo-color-primary)'
+          ? 'var(--apollo-color-text)'
           : phase === 1
-            ? 'var(--apollo-color-success)'
-            : 'var(--apollo-color-warning)',
+            ? 'var(--apollo-color-text-secondary)'
+            : 'var(--apollo-color-text)',
     },
     textarea: {
       fontSize:
@@ -105,7 +105,7 @@ const makeProviderConfig = (phase: number): TypographyConfig => {
   return {
     className: `demo-provider-class-${marker}`,
     style: {
-      color: 'var(--apollo-color-primary)',
+      color: 'var(--apollo-color-text)',
       paddingBlockStart:
         phase === 0
           ? 'var(--apollo-padding-xs)'

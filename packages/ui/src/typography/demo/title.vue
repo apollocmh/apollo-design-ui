@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Title } from '../../index';
+import { Title } from '@apollo-design/ui';
 </script>
 
 <template>

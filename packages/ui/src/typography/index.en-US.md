@@ -4,240 +4,117 @@ title: Typography
 subtitle: Typography
 ---
 
-Basic text formatting.
-
-## When To Use
-
-- When you need to display titles, paragraphs, or list content.
-- When you need text with a semantic color (`secondary` / `success` / `warning` / `danger`),
-  a disabled state, or decorations (`strong` / `underline` / `delete` / `code` / `mark` /
-  `keyboard` / `italic`).
-- When you need to **ellipsize** long text (single line / multiple lines / expandable),
-  **copy** it, or **edit it inline**.
+Titles, paragraphs, inline text and links with copy, edit and ellipsis controls.
 
 ## Examples
 
-See [`demo/`](./demo) (14 demos, covering the main antd scenarios.
-
-| demo | What it shows |
-|---|---|
-| `basic` | Basic: the `Title` / `Paragraph` / `Text` / `Link` quartet |
-| `title` | Titles: `level` 1~5 (⚠️ an invalid value falls back to `h1` **and warns**) |
-| `text` | Text and the seven decorations (⚠️ the nesting order is a contract) |
-| `ellipsis` | Ellipsis: the CSS path and the JS binary-search path |
-| `copyable` | Copyable: `text` / `icon` / `tooltips` / `format` |
-| `editable` | Editable: `triggerType`, Enter to save / Esc to cancel / blur to save |
-| `semantic` | Semantic `classNames` / `styles` (object and function forms) |
+The 14 demos cover formatting, five heading levels, semantic colours, copying, editing, controlled expansion, middle ellipsis, suffixes, component tokens, semantic styling and a Table consumer.
 
 ## API
 
-### Components
-
 ```ts
-import { Typography } from '@apollo-design/ui';
-
-const { Text, Title, Paragraph, Link } = Typography;   // same shape as antd
+import { Typography, Text, Title, Paragraph, Link } from '@apollo-design/ui';
+import '@apollo-design/ui/style.css';
 ```
 
-`Typography.Text` and the named export `Text` point to the **same object**.
+Named exports are identical to `Typography.Text / Title / Paragraph / Link`. The component stylesheet is `@apollo-design/ui/typography/style.css`; applications also need theme and base styles.
 
-⚠️ The `Typography` root itself does **not** support `type` / `disabled` / `ellipsis` /
-`copyable` / `editable` or the seven decorations — passing them only leaks unknown attributes
-onto the root element and produces **no class names** (antd behaves the same way).
+### Components and content
 
-### Shared Props (all 5 components)
-
-| Property | Description | Type | Default |
-|---|---|---|---|
-| prefixCls | Class name prefix | `string` | From ConfigProvider, falling back to `apollo` |
-| class / style | **Native root attrs** (not Props); `style` overrides `styles.root` | `string \| array \| object` / `CSSProperties` | — |
-| classNames | Semantic class names (object or function) | `TypographySemanticValue<TypographySemanticClassNames>` | — |
-| styles | Semantic styles (object or function) | `TypographySemanticValue<TypographySemanticStyles>` | — |
-| direction | Text direction | `'ltr' \| 'rtl'` | From ConfigProvider |
-| component | Tag to render (`@internal`) | `string` | Each component's own default |
-
-### Component-specific Props (`Text` / `Title` / `Paragraph` / `Link`)
-
-| Property | Description | Type | Default |
-|---|---|---|---|
-| type | Semantic color | `'secondary' \| 'success' \| 'warning' \| 'danger'` | — |
-| disabled | Disabled state. ⚠️ Only adds a class name, **no** `aria-disabled` (same as antd) | `boolean` | `false` |
-| ellipsis | Ellipsis capability. `Text` / `Link` narrow the type (see below) | `boolean \| EllipsisConfig` | — |
-| copyable | Copy capability | `boolean \| CopyConfig` | — |
-| editable | Edit capability | `boolean \| EditConfig` | — |
-| strong / underline / delete / code / mark / keyboard / italic | The seven decoration switches | `boolean` | `false` |
-| actions | Position of the action area (since 6.4.0) | `{ placement?: 'start' \| 'end' }` | `'end'` |
-| title | Native `title`. Also a **candidate** for the ellipsis tooltip text | `string` | — |
-| level | **`Title` only**: heading level, mapped to `h1`~`h5` | `1 \| 2 \| 3 \| 4 \| 5` | `1` |
-| rel / target | **`Link` only** | `string` | — |
-
-⚠️ `Title` omits `strong` (a heading is already bold); `Text`'s `ellipsis` does not support
-`expandable` / `rows` / `onExpand` (inline text has no notion of multiple lines); `Link`'s
-`ellipsis` is **boolean only**. All three are expressed in the type surface, and passing them
-at runtime emits a development warning.
-
-### `ellipsis` config
-
-| Property | Description | Type | Default |
-|---|---|---|---|
-| rows | Number of rows to display | `number` | `1` |
-| expandable | Whether it can be expanded. `'collapsible'` keeps it collapsible afterwards | `boolean \| 'collapsible'` | `false` |
-| suffix | Text appended after the ellipsis | `string` | — |
-| symbol | Content of the expand/collapse button (the function form receives `expanded`) | `VNodeChild \| ((expanded: boolean) => VNodeChild)` | — |
-| defaultExpanded | Uncontrolled initial expanded state | `boolean` | `false` |
-| expanded | Controlled expanded state | `boolean` | — |
-| onExpand | Fired when expanding/collapsing | `(e, { expanded }) => void` | — |
-| onEllipsis | Fired when the ellipsis state **changes** (a repeated identical result is not re-reported) | `(ellipsis: boolean) => void` | — |
-| tooltip | Tooltip when ellipsized. `true` means `editable.text ?? children` | `VNodeChild \| { title?: VNodeChild }` | — |
-
-### `copyable` / `editable` config
-
-| `copyable` | Description | Type | Default |
-|---|---|---|---|
-| text | Text to copy. The function form may be async (returns `Promise<string>`) | `string \| (() => string \| Promise<string>)` | children |
-| onCopy | Fired after a successful copy | `(event?) => void` | — |
-| icon | Icon. The array form is `[notCopied, copied]` | `VNodeChild \| [VNodeChild, VNodeChild]` | — |
-| tooltips | Tooltip. The array form is `[notCopied, copied]`. `false` disables it | `VNodeChild \| [VNodeChild, VNodeChild]` | — |
-| format | Clipboard format | `'text/plain' \| 'text/html'` | — |
-| tabIndex | `tabIndex` of the button | `number` | — |
-
-| `editable` | Description | Type | Default |
-|---|---|---|---|
-| text | Initial value. Falls back to children (only when it is a string) | `string` | — |
-| editing | Controlled editing state | `boolean` | — |
-| icon | Edit icon | `VNodeChild` | Pencil icon |
-| tooltip | Tooltip of the edit icon. `false` disables it | `VNodeChild \| false` | — |
-| onStart / onChange / onCancel / onEnd | Fired on entering edit mode / save / cancel / after Enter saves | `() => void` / `(value: string) => void` / … | — |
-| maxLength | Maximum length of the input | `number` | — |
-| autoSize | Auto-resize the input | `boolean \| AutoSizeType` | `true` |
-| triggerType | How edit mode is triggered | `('icon' \| 'text')[]` | `['icon']` |
-| enterIcon | Confirm icon. `null` means do not render it | `VNodeChild` | — |
-| tabIndex | `tabIndex` of the edit icon | `number` | — |
-
-### Slots
-
-| Name | Description |
-|---|---|
-| default | The text content. ⚠️ It is also the text source for `copyable` / `editable` / `ellipsis` |
-
-### Semantic slots
-
-`classNames` / `styles` each have four slots: `root` (root element) / `actions` (the action-area
-`span`) / `action` (each action button) / `textarea` (the input, **edit mode only**).
-
-`classNames` are **concatenated**, `styles` are **overridden**, and the `style` prop comes
-**after** `styles.root` (so `style` overrides `styles.root`).
-
-### Ref
-
-| Name | Type | Description |
+| Component | Native root | Features |
 |---|---|---|
-| nativeElement | `HTMLElement \| null` | The root element. `null` before the first render (antd's type does not reflect this) |
+| Typography | article; component selects another tag | Container and semantic styling |
+| Text | span | Decorations, copy, edit, single-line ellipsis |
+| Title | h1…h5; level defaults to 1 | Decorations, copy, edit, ellipsis |
+| Paragraph | div | Decorations, copy, edit, multiline ellipsis |
+| Link | span containing a native anchor | Link, decorations, copy, edit, boolean ellipsis |
 
-## Design notes
+All five accept a default slot containing text, Fragments, conditional nodes, elements and Vue components. The four fixed semantic components exclude component; use Typography for a custom container tag. Title excludes strong.
 
-### The decoration nesting order is a contract
+Link places copy/edit buttons beside its anchor. href, target, rel, link ARIA, tabindex and native events reach the anchor; id, class, style and expose belong to the outer root. A blank target supplies noopener noreferrer unless rel is explicitly provided. Disabled links expose aria-disabled, leave the Tab order and block activation.
 
-From innermost to outermost:
+### Shared props and native attrs
 
-```
-strong → u → del → code → mark → kbd → i
-```
-
-Getting the order wrong **looks identical on screen**, but it decides whether a `code` inside
-a `mark` keeps its own background. The only observation point is L4's node-by-node comparison
-(swapping any two lines immediately reports a tag mismatch).
-
-### The `-link` criterion is `component === 'a'`
-
-Not "has a `type`". So `<Link type="danger">` carries both `-danger` and `-link`, while
-`<Text component="a">` still renders a `span` (`Text` explicitly overrides `component`) and
-therefore gets **no** `-link`.
-
-### The two ellipsis paths
-
-| Condition | Which path | What the ellipsis looks like |
+| Prop | Type / default | Meaning |
 |---|---|---|
-| `rows` and **no** `suffix` / `expandable` / `onEllipsis` / `copyable` / `editable` | CSS (`text-overflow` or `-webkit-line-clamp`) | Drawn by the browser |
-| Any of the above present | **JS binary search** (hidden containers measure character by character) | A `<span aria-hidden>` inserted by the component |
+| prefixCls | string | Current ConfigProvider prefix; apollo-typography by default |
+| direction | 'ltr' \| 'rtl' | Current Provider direction |
+| classNames | object or ({ props }) => object | root / actions / action / textarea classes |
+| styles | object or ({ props }) => object | CSSProperties for the same semantic nodes |
+| component | string; article | Typography only |
 
-⚠️ On the JS path the root element gets an `aria-label` (the **full** text) and the visible
-content is wrapped in an `aria-hidden` layer — so a screen reader reads the whole text rather
-than the truncated fragment. On the CSS path there is **no** `aria-label` (the accessible name
-is derived by the browser from the truncated text — upstream behaviour).
+Root class, style, id and data attributes use native Vue attrs, including replacement and removal. Classes merge; native style overrides styles.root. Semantic callbacks receive BaseTypographyProps. ConfigProvider components.typography supports class, style and semantic configuration; replacing or removing it preserves business slot and editor identity.
 
-### The three key-handling gates of `editable`
+### Text / Title / Paragraph / Link props
 
-Missing any one of them makes Chinese users or `Ctrl+Enter` users submit by accident:
-
-1. `confirmChange` **trims**, while `onChange` does not (upstream behaviour).
-2. **No submit while an IME composition is in progress.**
-3. **No submit for Enter with a modifier key** (`Ctrl+Enter` means "insert a newline").
-
-In addition, "returning focus to the edit icon after leaving edit mode" is **mandatory** —
-without it a keyboard user's focus falls back to `body`.
-
-### Component Tokens
-
-| Token | Default | Description |
+| Prop | Type / default | Meaning |
 |---|---|---|
-| `titleMarginTop` | `'1.2em'` | Margin top of title |
-| `titleMarginBottom` | `'0.5em'` | Margin bottom of title |
+| type | 'secondary' \| 'success' \| 'warning' \| 'danger' | Semantic text colour |
+| disabled | boolean; false | Disabled styling; Link also blocks activation |
+| copyable | boolean \| CopyConfig | Copy control |
+| editable | boolean \| EditConfig | Inline editor |
+| ellipsis | boolean \| EllipsisConfig | Text excludes rows / expandable / onExpand; Link accepts only boolean |
+| strong / underline / delete / code / mark / keyboard / italic | boolean; false | Decorations; Title excludes strong |
+| actions | { placement?: 'start' \| 'end' } | Operation placement; end by default |
+| title | string | Native title and ellipsis title candidate |
+| level | 1 \| 2 \| 3 \| 4 \| 5; 1 | Title only |
+| target / rel | string | Link only; href is a native attr |
 
-⚠️ **Known gap**: antd lets you override these two tokens through
-`theme.components.Typography`; this repository currently lets you override **neither** — both are
-**literal** tokens that the zero-runtime pipeline inlines as constants with no corresponding CSS
-variable, because `packages/theme`'s `tokens.css` only declares Alias-layer variables.
-This is a repository-wide pipeline gap (divider and spin share it); see
-[`README.md`](./README.md) §5.5 and §7.3.
+### CopyConfig
 
-Equivalent stopgap: use `styles.root` to override the margin effect.
+| Field | Type / default | Behaviour |
+|---|---|---|
+| text | string \| (() => string \| Promise<string>) | Content text when absent; an empty string copies empty text |
+| onCopy | (event?: MouseEvent) => void | Called only after a successful write |
+| icon / tooltips | VNodeChild \| [VNodeChild, VNodeChild] | Exactly two array entries are a before/after pair; other lengths remain complete content |
+| format | 'text/plain' \| 'text/html' | Clipboard format |
+| tabIndex | number | Copy button Tab order |
 
-### Importing styles
+False tooltips disable the popup. Defaults use the current locale. Pending requests reject duplicate activation. Failures do not report success, and unmount prevents late state updates and callbacks. Custom icons keep a native button and accessible name.
 
-```ts
-import '@apollo-design/theme/tokens.css';      // theme variables, must come first
-import '@apollo-design/ui/style.css';          // aggregate styles (includes typography)
-```
+### EditConfig
 
-⚠️ **Only `@apollo-design/ui/empty/style.css` is currently registered in `exports` for
-per-component imports.** `@apollo-design/ui/typography/style.css` throws
-`ERR_PACKAGE_PATH_NOT_EXPORTED` (measured) — the build artifact `dist/typography/style.css`
-exists, but `packages/ui/package.json`'s `exports` does not register that subpath.
-`divider` and `spin` are in the same situation; it is a repository-wide gap, and this
-component's file domain does not include `packages/ui/package.json`, so it is left to that
-file's owner.
+| Field | Type / default | Behaviour |
+|---|---|---|
+| text | string | Initial editor text; otherwise recognisable plain content |
+| editing | boolean | Controlled editing state; omit for uncontrolled use |
+| onStart / onCancel / onEnd | () => void | Enter editing, cancel, Enter-save completion |
+| onChange | (value: string) => void | Save on Enter or blur; trim outer whitespace, preserve internal newlines |
+| icon / tooltip / enterIcon | VNodeChild | Edit icon, full tooltip content and confirm icon; false tooltip disables it, null enterIcon hides it |
+| triggerType | ('icon' \| 'text')[]; ['icon'] | Text-only mode retains a native keyboard entry |
+| autoSize | boolean \| { minRows?: number; maxRows?: number }; true | Resize for content, width and current configuration |
+| maxLength / tabIndex | number | Editor limit / edit button Tab order |
 
-With a custom `prefixCls` (e.g. `my-app`) there is **no** public entry point to produce the CSS:
-the package root exports `genComponentStyleSheet('typography')` (looked up by **component name**,
-using the fixed `apollo` / `ant` prefixes internally). `genTypographyStyle(prefixCls)` exists in
-`packages/ui/src/typography/style/index.ts` but is **not** re-exported from the package root —
-using a custom prefix requires importing the source path directly. This is a known API-surface
-gap, registered in [`README.md`](./README.md) §7.3.
+Enter saves and Escape cancels. Modified Enter retains native multiline behaviour; IME composition never submits. Controlled callbacks request a transition; the parent decides whether to close. Accepted keyboard completion restores edit-button focus; blur to another control preserves that destination.
 
-## Known gaps
+aria-label, aria-labelledby and aria-describedby reach the textarea. Without a supplied name, plain content or the current locale supplies one. Root attrs and expose remain available while editing.
 
-1. **Floating tooltips** (the bubble for `copyable.tooltips` / `ellipsis.tooltip` /
-   `editable.tooltip`) are not visible — the `Tooltip` component has not landed yet. When not
-   hovering, the DOM matches antd character by character; only the hover half is missing.
-2. **`editable`'s `autoSize` has no effect** and the input carries no `apollo-input*` class
-   names — it is a native `<textarea>` (the `Input` component has not landed yet).
-3. **The type of `ellipsis.tooltip`** only declares `title` (to be completed once `Tooltip`
-   lands).
-4. **Icon base styles are not wired up** — `@apollo-design/icons`' `getIconStyle` is exported
-   but has no consumer, so the icons inside the copy / edit / expand buttons differ from antd
-   at a **sub-pixel** level. This is the root cause of the three `copyable` cases that are not
-   `exact` in L6 visual regression; registered in [`README.md`](./README.md) §7.3 (G7).
-5. The remaining gaps (`h1~h6`/`p` margin reset, form-control font reset, no dark/compact
-   visual comparison, …) are registered one by one in [`README.md`](./README.md) §7.3.
+### EllipsisConfig
 
+| Field | Type / default | Behaviour |
+|---|---|---|
+| rows | number; 1 | Floor positive finite values; otherwise use 1 |
+| expandable | boolean \| 'collapsible'; false | Enable expansion; collapsible also allows collapse |
+| suffix | string | Content after ellipsis |
+| symbol | VNodeChild \| ((expanded: boolean) => VNodeChild) | Expand/collapse label |
+| expanded / defaultExpanded | boolean | Controlled state / uncontrolled initial state |
+| onExpand | (event: MouseEvent, info: { expanded: boolean }) => void | Expansion request |
+| onEllipsis | (ellipsis: boolean) => void | Actual ellipsis-state changes |
+| tooltip | VNodeChild \| { title?: VNodeChild } | True uses original content; false disables it |
 
-### Default slot and editor name
+Simple cases use CSS. Operations, suffixes and expansion use actual width measurement. Hidden probes project mounted native content without mounting business Vue components again. Width, rows, content and font changes remeasure; obsolete and unmounted work is cancelled.
 
-The default slot supports conditional presence, replacement and removal and follows the current parent render. Plain-text copy fallbacks, edit defaults and ellipsis content use the current body. Stable rich nodes preserve input values and focus within the same display mode. Native `aria-label` reaches the editing textarea; updating or removing the name preserves the draft. Without explicit edit text, only a plain-text body supplies the edit default.
+### Slots, events, models and expose
 
+The only slot is default. There are no component emits or v-model bindings; edit and expansion use their configuration values and callbacks. The readonly TypographyRef.nativeElement exposes the actual current root or null, including editing; Link exposes its outer root.
 
-Native `class` and `style` apply to the actual outer root, including edit mode. Style supports dynamic strings, objects and mixed arrays, overrides matching `styles.root` values and restores semantic root styles when removed. Editing textarea styles use `styles.textarea`. Style updates preserve drafts and focus in stable input nodes.
+### Component tokens
 
+Set theme.components.Typography on ConfigProvider. Numbers become px; zero, replacement and removal work.
 
-`ConfigProvider.components.typography` supports replacing or removing `className`, `style`, `classNames` and `styles`, including semantic function replacement. Classes merge by source; style precedence is global `styles`, global `style`, component `styles`, then native `style`. Function configs receive the current resolved `props.prefixCls` and `props.direction`. Updates preserve drafts and focus in stable input/editor nodes.
+| Token | Default | Consumer |
+|---|---|---|
+| titleMarginTop | 1.2em | Top margin of headings following content |
+| titleMarginBottom | 0.5em | Heading bottom margin |
+
+Default semantic and operation text follows the current colour scheme with readable contrast. Native style is an explicit override; custom foregrounds require an appropriate background.

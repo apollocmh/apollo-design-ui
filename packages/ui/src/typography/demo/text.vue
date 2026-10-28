@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Text } from '../../index';
+import { Text } from '@apollo-design/ui';
 </script>
 
 <template>

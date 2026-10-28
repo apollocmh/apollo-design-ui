@@ -1,0 +1,1235 @@
+{
+  "baseCommit": "dd3dff76",
+  "recordedAt": "2026-10-28T08:16:01.762957+00:00",
+  "phase": "functional implementation, not complete unit acceptance",
+  "verifiedTreeSha256": {
+    "packages/ui/src/table/__tests__/fixtures/theme-defaults.json": "27ad165df96b095538c3925db82b8f13e341a069a40c2dbd3c5acb3532f968bc",
+    "packages/ui/src/table/__tests__/theme-current.test.ts": "4544d167e9028e713a4484c7a913a64671e9d096e8a248495e5af33903dc06d0",
+    "packages/ui/src/table/use-table-theme.ts": "34ae3e3b3594d6eeb4ad9c7f73a1c58163e1a73ddb174c5277edfd9db8db52cd",
+    "packages/ui/src/typography/__tests__/contract-audit.test.ts": "2d1aa6f807c7595f7c0647e4b267210b8806a97d676952a1c0ca6d58fee15ba0",
+    "packages/ui/src/typography/__tests__/contract-differences.ts": "41ec6a7a76adc7d94664ae89000e7e4a05e4939aebbe3c398b979c093bd9f156",
+    "packages/ui/src/typography/_util/measure-nodes.ts": "154548a0916443d311512db8bf5086d59b627843c52217b621b7f5b3366397f3",
+    "packages/ui/src/typography/use-typography-theme.ts": "efc449b80f5c5948d304f6519a983bbc6ea9a2498f70de11591e85624aba5337",
+    "tests/browser/fixtures/TypographyContracts.vue": "c3308b075432e0f58c3ceb8e999c887f5d00e22f9a5a081b3b80e955c2bc154f",
+    "tests/browser/fixtures/TypographyDemoThemes.mjs": "c57db1ada90638d1a89dbafb0641b54ad511157726e10307877afce3ac1b229f",
+    "tests/browser/fixtures/TypographyHydration.mjs": "dc0898493a1e4deb03a194e94483970620573214b435f696776d3035dcd6f53a",
+    "tests/browser/fixtures/typography-contracts.html": "b716dfed741f5b0a6fe5b0edf5293aef67f336fac0519d0530974978345afa41",
+    "tests/browser/fixtures/typography-demo-themes.html": "168248be8739e6776bdebaa0848cb6d53c8e8b33d9a920a8ef8bc85d73daaf35",
+    "tests/browser/fixtures/typography-hydration.html": "6fa0c7f71d41024270184d2df9fc1374319993107376058c9fa1bf5dbb7c0d47",
+    "tests/browser/typography-contracts.mjs": "0e8317d73c26053c9275e437dcad05f32510b7449fa1b346bc986ba27242c667",
+    "tests/browser/typography-demo-themes.mjs": "f0fac0932ca1a68b32c58171474219abed4fae036a1d88ad937f0d390086186d",
+    "tests/browser/typography-hydration.mjs": "dfb9c5aa6b909c786f74a0754061ca81b896c792f780ec158f59a877c01bbd28",
+    "packages/ui/src/input/engine/calculate-node-height.ts": "2fb6a25362363faa0e319b661888208710e17fad38512a5433e462c7aed85c7d",
+    "packages/ui/src/table/Table.ts": "39363c1441352405b78e5d838775d71cfaecdb83370f0aa89d4a904b11ebbc0b",
+    "packages/ui/src/table/hooks/use-filter.ts": "770f50847d6f23c5f9bc828036c9bf89cbc1097bc1d6316fdd4d47519bb77ea2",
+    "packages/ui/src/table/index.en-US.md": "8fbc22cf1d3e3ff7a8f8cd3f6a3b85d089c8c77006ee71db5bb0e129f4c8d082",
+    "packages/ui/src/table/index.zh-CN.md": "accfce3860be69a93fd9763283acf5a5b0489dda3689de119b009847393e7ac6",
+    "packages/ui/src/table/style/index.ts": "5425406e6c4e5e6487fd8c41d82b9cbd2f74e106aa0434ae21fd5f8d645cdbc2",
+    "packages/ui/src/typography/Base.ts": "c735ca79ec0c2535ce14a53ff988742655ca9c0069d0aeeb112f1f8fb9fd9dc1",
+    "packages/ui/src/typography/CopyBtn.ts": "15bdd772d3e5c3b129844d618e7a577fec7b3c7531fd0e212ef4c35e9a53723b",
+    "packages/ui/src/typography/Editable.ts": "38319d0c73fb7f4beb630e02f0757a1cd578abb3e4e982741dc80a8f33d61d06",
+    "packages/ui/src/typography/Ellipsis.ts": "eb17f380fac9d8bbda6daeebc748adbdd504c320fddfa14575945b5331e55c65",
+    "packages/ui/src/typography/EllipsisTooltip.ts": "868d91903dd052e86b619d7d9ed5d518ff965a9a29dfd41763a177603b279aaa",
+    "packages/ui/src/typography/InternalTypography.vue": "57b71bef3ef7385a7cfa315c74a2c8eb838e1fee5729a0e94773dc41c599b0c7",
+    "packages/ui/src/typography/Link.vue": "3f6c1847dd39df866794319c14a0687590c2d55c74d51381a08da20f82970027",
+    "packages/ui/src/typography/Paragraph.vue": "01e07f03b5e8e116e92d3699d54c482fc93205f658d2236f8d46d05d6f600cdf",
+    "packages/ui/src/typography/README.md": "dffcd7fe019d4d7701e34fb4ef051cde7f3be9cda8df7611faf39d82a4ff39c9",
+    "packages/ui/src/typography/Text.vue": "f659aa774b62fdd22778cfb637050cec0074e76f28538c2b2a9e2b4a79d3a0a8",
+    "packages/ui/src/typography/Title.vue": "e2e4cdc296c2a26e6120daefde9c75c115c30b6024b867c755032cad34fd518b",
+    "packages/ui/src/typography/Typography.vue": "7e134316aa8e463b176aee663a677330500fbc90f9403daaaea2566cb30c501f",
+    "packages/ui/src/typography/__tests__/a11y.test.ts": "3c86a240666a1942c1310c1c75bfccc884a18056de59a2378f66fdb7a50f31aa",
+    "packages/ui/src/typography/__tests__/index.test.ts": "f954cb8ef7654ad5c5afbf301d7f122f91bd48bd8e04f9f4a14f468b861eca22",
+    "packages/ui/src/typography/__tests__/native-slots.test.ts": "e754ef6f823b6da2931da31b2d2d2fd0b28b0a8f87795e26ecb6b66a242e51dd",
+    "packages/ui/src/typography/__tests__/semantic.test.ts": "fd42fea82615569f51b44bf14390a3d7daa145842c358dca630d9bb1b74deaa6",
+    "packages/ui/src/typography/__tests__/theme.test.ts": "8e75c0d48dd35611a04865b002d18942258336a842bf7149e4afb9545d967c82",
+    "packages/ui/src/typography/__tests__/type.test-d.ts": "2fe5133f50d2504df1f018f2c6ef5b640244c502e6a890ad63c8a354512a9633",
+    "packages/ui/src/typography/_util/nodes.ts": "c78ff606176735aa97413044518d0d9c5037bc63d3ef45233a82b5060c705c04",
+    "packages/ui/src/typography/_util/util.ts": "3e2b55fed8ffa3de0fe64f7c4b662a06f708df1bfe351140b14111d734dea226",
+    "packages/ui/src/typography/demo/basic.vue": "60155a7d43f64214acffdbc1dfc37c3b52c92bd56584f965715358f79c09ecfb",
+    "packages/ui/src/typography/demo/component-token.md": "990aff948fb403a7299b7425f2e374e392877d45683a14b0adc4c5af23cb870f",
+    "packages/ui/src/typography/demo/component-token.vue": "9c855d257e6630754ae30956de3e078331254401f7b163e8a68e924376ea8a56",
+    "packages/ui/src/typography/demo/copyable.vue": "b4c599abbd32450a00b5769ab78b0c9b46dc83b20b9fc945969f4b389ee11d1a",
+    "packages/ui/src/typography/demo/editable-custom.vue": "762af75fa19187b346e65def7442c044a51d7a7c9927325ba6a9a14609afa0f5",
+    "packages/ui/src/typography/demo/ellipsis-controlled.vue": "5e89a598dcab5377569492786702f03fb18b28e287fec9c93a9ed16905c818b8",
+    "packages/ui/src/typography/demo/ellipsis-expandable.vue": "64fddcefa61529273fef0a2123677b90ebb8087906fde64cb897ee8283814487",
+    "packages/ui/src/typography/demo/ellipsis-middle.vue": "71b03f89a0166af3d47ac23f65754611e51ec06c69b77cd9e19ac7130524dec5",
+    "packages/ui/src/typography/demo/ellipsis.vue": "39d79a33b368979342a2391bd41c8fab122e30535707654a31dc8698c0ca58d9",
+    "packages/ui/src/typography/demo/semantic.vue": "3ebeb8b210159c46012eed87abe5e5c51cae1bc23b8ba6f84e0f8ac07f2afc64",
+    "packages/ui/src/typography/demo/suffix.vue": "5a7927ffc63703dde491bab0c2136820426073b7659dec82e624909b563cba5f",
+    "packages/ui/src/typography/demo/table.vue": "d69ddd9c53bd546ac8cf48568ad0cb9dd7f182e2491c74362cb2259c89e84c2e",
+    "packages/ui/src/typography/demo/text.vue": "d106ed0f7aee20ae8008ebf7c929c1e5bde00bf7ff0cd3df00d420b47a383c1e",
+    "packages/ui/src/typography/demo/title.vue": "18e09a1bcf867a6f9d1c6979ea36890d1741366fb62d3307878bf0bac88bde99",
+    "packages/ui/src/typography/hooks/use-copy-click.ts": "03f7b63ad73796aefd2d68edb86b80327c89ae6d9dd0024e5d9550cbfa9ea00b",
+    "packages/ui/src/typography/hooks/use-tooltip-props.ts": "f97b0758e95bdd7fdd8086b8929dd3745034c1a67d71d872236ae7e9487ae045",
+    "packages/ui/src/typography/hooks/use-typography-semantic.ts": "23eab6a56146c3aa8fc1984260b331e15f1b8b47eb55455c5884cedeee1709ff",
+    "packages/ui/src/typography/index.en-US.md": "8aafd5b3b9cee6e402b8a66f18d54f13b5b8ca5e96737b48edf6f5b331898407",
+    "packages/ui/src/typography/index.ts": "96175906f3a65619e15e6c7bac0ecc2ed26a855932f2cada15d75623b642d737",
+    "packages/ui/src/typography/index.zh-CN.md": "55bbe08fa65c17a3c94caf5c098283e057744b05035ad5b464c0b81e4c0e1b85",
+    "packages/ui/src/typography/interface.ts": "6856b7fc83f16c3d0d7faeb68266e113bf79569d7911461b89153d154633a3ef",
+    "packages/ui/src/typography/style/index.ts": "086cededc7883bd8ea68f77e3bdae699774267943d521c687dee71e7150d9259",
+    "packages/ui/src/typography/style/token.ts": "5691927e57ed91f4f55a09ad98314048c7c8c330c05fbe74118131ceddc6d2b9",
+    "tests/browser/typography-provider.mjs": "db30734b67333a9044e46bc29e32b58a389c361516a1c9c536f175784fde09e0",
+    "tests/consumer/typography-slots-types.mjs": "ea23afc29eb663d86e1ff66f2acbfdf2391f9fe209a90d8a124498260a23c9ab"
+  },
+  "results": {
+    "relatedRuntime": {
+      "passed": 1178,
+      "failed": 0,
+      "pending": 0,
+      "files": 61,
+      "suites": [
+        {
+          "file": "packages/ui/src/_internal/__tests__/button-consumer-updates.test.ts",
+          "passed": 6,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/_internal/__tests__/button-content-reference.test.ts",
+          "passed": 5,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/_internal/__tests__/color-composite.test.ts",
+          "passed": 6,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/_internal/__tests__/overflow.test.ts",
+          "passed": 11,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/_internal/__tests__/popup-prefix.test.ts",
+          "passed": 2,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/_internal/__tests__/trigger-theme.test.ts",
+          "passed": 4,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/_internal/__tests__/trigger.test.ts",
+          "passed": 13,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/_internal/__tests__/use-merge-semantic.test.ts",
+          "passed": 12,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/config-provider/__tests__/demo.test.ts",
+          "passed": 10,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/config-provider/__tests__/index.test.ts",
+          "passed": 61,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/config-provider/__tests__/s39-issue39.test.ts",
+          "passed": 6,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/config-provider/__tests__/s48-issue48.test.ts",
+          "passed": 3,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/config-provider/__tests__/theme-state.test.ts",
+          "passed": 3,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input-number/__tests__/demo.test.ts",
+          "passed": 22,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input-number/__tests__/engine.test.ts",
+          "passed": 13,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input-number/__tests__/index.test.ts",
+          "passed": 19,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input-number/__tests__/s7-issue7.test.ts",
+          "passed": 13,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input-number/__tests__/slots.test.ts",
+          "passed": 5,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input/__tests__/demo.test.ts",
+          "passed": 26,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input/__tests__/index.test.ts",
+          "passed": 31,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input/__tests__/search-otp.test.ts",
+          "passed": 13,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/popover/__tests__/demo.test.ts",
+          "passed": 14,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/popover/__tests__/index.test.ts",
+          "passed": 10,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/popover/__tests__/native-attrs.test.ts",
+          "passed": 16,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/popover/__tests__/s25-issue25.test.ts",
+          "passed": 11,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/table/__tests__/demo.test.ts",
+          "passed": 46,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/table/__tests__/index.test.ts",
+          "passed": 41,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/table/__tests__/s17-issue17.test.ts",
+          "passed": 8,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/table/__tests__/theme-current.test.ts",
+          "passed": 4,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/table/__tests__/util.test.ts",
+          "passed": 29,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/table/__tests__/virtual.test.ts",
+          "passed": 9,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/tooltip/__tests__/content-slots.test.ts",
+          "passed": 13,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/tooltip/__tests__/dbg.test.ts",
+          "passed": 1,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/tooltip/__tests__/demo.test.ts",
+          "passed": 17,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/tooltip/__tests__/index.test.ts",
+          "passed": 11,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/tooltip/__tests__/s24-issue24.test.ts",
+          "passed": 12,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/contract-audit.test.ts",
+          "passed": 37,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/demo.test.ts",
+          "passed": 16,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/index.test.ts",
+          "passed": 107,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/native-slots.test.ts",
+          "passed": 15,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/native-styles.test.ts",
+          "passed": 21,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/provider-reactivity.test.ts",
+          "passed": 32,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/config-provider/__tests__/semantic.test.ts",
+          "passed": 12,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input-number/__tests__/semantic.test.ts",
+          "passed": 24,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input/__tests__/semantic.test.ts",
+          "passed": 40,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/popover/__tests__/semantic.test.ts",
+          "passed": 13,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/tooltip/__tests__/semantic.test.ts",
+          "passed": 9,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/semantic.test.ts",
+          "passed": 77,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/config-provider/__tests__/a11y.test.ts",
+          "passed": 12,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input-number/__tests__/a11y.test.ts",
+          "passed": 14,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input/__tests__/a11y.test.ts",
+          "passed": 25,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/popover/__tests__/a11y.test.ts",
+          "passed": 14,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/table/__tests__/a11y.test.ts",
+          "passed": 50,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/tooltip/__tests__/a11y.test.ts",
+          "passed": 18,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/a11y.test.ts",
+          "passed": 26,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/config-provider/__tests__/theme.test.ts",
+          "passed": 8,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input/__tests__/theme.test.ts",
+          "passed": 16,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input-number/__tests__/theme.test.ts",
+          "passed": 17,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/popover/__tests__/theme.test.ts",
+          "passed": 14,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/tooltip/__tests__/theme.test.ts",
+          "passed": 14,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/theme.test.ts",
+          "passed": 21,
+          "failed": 0
+        }
+      ]
+    },
+    "typographyAfterSymbolLabel": {
+      "passed": 305,
+      "failed": 0,
+      "pending": 0,
+      "files": 7,
+      "suites": [
+        {
+          "file": "packages/ui/src/typography/__tests__/contract-audit.test.ts",
+          "passed": 37,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/demo.test.ts",
+          "passed": 16,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/index.test.ts",
+          "passed": 107,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/native-slots.test.ts",
+          "passed": 15,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/native-styles.test.ts",
+          "passed": 21,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/provider-reactivity.test.ts",
+          "passed": 32,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/semantic.test.ts",
+          "passed": 77,
+          "failed": 0
+        }
+      ]
+    },
+    "types": {
+      "passed": 110,
+      "failed": 0,
+      "pending": 0,
+      "files": 8,
+      "suites": [
+        {
+          "file": "packages/ui/src/input-number/__tests__/type.test-d.ts",
+          "passed": 9,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input/__tests__/search-otp.test-d.ts",
+          "passed": 3,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input/__tests__/type.test-d.ts",
+          "passed": 13,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/type.test-d.ts",
+          "passed": 30,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input-number/__tests__/type.test-d.ts",
+          "passed": 9,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input/__tests__/search-otp.test-d.ts",
+          "passed": 3,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/input/__tests__/type.test-d.ts",
+          "passed": 13,
+          "failed": 0
+        },
+        {
+          "file": "packages/ui/src/typography/__tests__/type.test-d.ts",
+          "passed": 30,
+          "failed": 0
+        }
+      ]
+    },
+    "browser": {
+      "results": [
+        {
+          "name": "default: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 28.8,
+              "bottom": 12,
+              "size": 24
+            },
+            "changed": {
+              "top": 48,
+              "bottom": 19.2,
+              "size": 24
+            }
+          }
+        },
+        {
+          "name": "dark: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 28.8,
+              "bottom": 12,
+              "size": 24
+            },
+            "changed": {
+              "top": 48,
+              "bottom": 19.2,
+              "size": 24
+            }
+          }
+        },
+        {
+          "name": "compact: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 24,
+              "bottom": 10,
+              "size": 20
+            },
+            "changed": {
+              "top": 40,
+              "bottom": 16,
+              "size": 20
+            }
+          }
+        },
+        {
+          "name": "both: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 24,
+              "bottom": 10,
+              "size": 20
+            },
+            "changed": {
+              "top": 40,
+              "bottom": 16,
+              "size": 20
+            }
+          }
+        },
+        {
+          "name": "all Link semantic tones match text and native anchor focus consumes current decoration",
+          "passed": true
+        },
+        {
+          "name": "editor autoSize consumes min/max rows and keeps a draft during dynamic configuration",
+          "passed": true,
+          "actual": {
+            "before": {
+              "height": 92,
+              "line": 22,
+              "scroll": 994
+            },
+            "after": {
+              "height": 70,
+              "line": 22
+            }
+          }
+        },
+        {
+          "name": "editing exposes its actual native root and preserves the root id",
+          "passed": true
+        },
+        {
+          "name": "modifier/newline editing preserves actual multiline content",
+          "passed": true
+        },
+        {
+          "name": "owned copy controls are siblings of the native anchor",
+          "passed": true
+        },
+        {
+          "name": "blur saves once without stealing the external destination focus",
+          "passed": true
+        },
+        {
+          "name": "controlled refusal keeps the same editor and Enter requests remain usable",
+          "passed": true
+        },
+        {
+          "name": "IME Enter does not submit and accepted Escape returns owned focus",
+          "passed": true
+        },
+        {
+          "name": "disabled Link blocks navigation and exposes its disabled state",
+          "passed": true
+        },
+        {
+          "name": "text-only editing has a native keyboard entry",
+          "passed": true
+        },
+        {
+          "name": "JS measurement retains one visible business input, its draft and focus",
+          "passed": true,
+          "actual": {
+            "inputCount": 1
+          }
+        }
+      ],
+      "errors": []
+    },
+    "actualDemos": {
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "demo": "basic",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "copyable",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "copyable",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "copyable",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "copyable",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "suffix",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "suffix",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "suffix",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "suffix",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "table",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "table",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "table",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "table",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "text",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "text",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "text",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "text",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "title",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "title",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "title",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "title",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "interaction": "default: title token control applies, zeroes and restores real margins",
+          "passed": true
+        },
+        {
+          "interaction": "default: actual copy Demo writes current and configured clipboard text",
+          "passed": true
+        },
+        {
+          "interaction": "default: actual editing Demo saves and sizes multiline drafts",
+          "passed": true
+        },
+        {
+          "interaction": "default: actual ellipsis Demos expand, collapse and accept controlled updates",
+          "passed": true
+        },
+        {
+          "interaction": "default: actual Provider Demo preserves the focused business draft",
+          "passed": true
+        },
+        {
+          "interaction": "dark: title token control applies, zeroes and restores real margins",
+          "passed": true
+        },
+        {
+          "interaction": "dark: actual copy Demo writes current and configured clipboard text",
+          "passed": true
+        },
+        {
+          "interaction": "dark: actual editing Demo saves and sizes multiline drafts",
+          "passed": true
+        },
+        {
+          "interaction": "dark: actual ellipsis Demos expand, collapse and accept controlled updates",
+          "passed": true
+        },
+        {
+          "interaction": "dark: actual Provider Demo preserves the focused business draft",
+          "passed": true
+        },
+        {
+          "interaction": "compact: title token control applies, zeroes and restores real margins",
+          "passed": true
+        },
+        {
+          "interaction": "compact: actual copy Demo writes current and configured clipboard text",
+          "passed": true
+        },
+        {
+          "interaction": "compact: actual editing Demo saves and sizes multiline drafts",
+          "passed": true
+        },
+        {
+          "interaction": "compact: actual ellipsis Demos expand, collapse and accept controlled updates",
+          "passed": true
+        },
+        {
+          "interaction": "compact: actual Provider Demo preserves the focused business draft",
+          "passed": true
+        },
+        {
+          "interaction": "both: title token control applies, zeroes and restores real margins",
+          "passed": true
+        },
+        {
+          "interaction": "both: actual copy Demo writes current and configured clipboard text",
+          "passed": true
+        },
+        {
+          "interaction": "both: actual editing Demo saves and sizes multiline drafts",
+          "passed": true
+        },
+        {
+          "interaction": "both: actual ellipsis Demos expand, collapse and accept controlled updates",
+          "passed": true
+        },
+        {
+          "interaction": "both: actual Provider Demo preserves the focused business draft",
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "hydration": {
+      "checks": [
+        "SSR complete content: container",
+        "SSR complete content: text",
+        "SSR complete content: title",
+        "SSR complete content: paragraph",
+        "SSR complete content: link",
+        "SSR editor root, name and multiline text",
+        "five server roots retained by hydration",
+        "pre-hydration draft, focus and selection retained during measurement",
+        "current theme/provider stage 1, stable roots and business lifecycle",
+        "current theme/provider stage 0, stable roots and business lifecycle",
+        "current theme/provider stage 1, stable roots and business lifecycle",
+        "unmount/remount cleans measurements and owns one business instance"
+      ],
+      "errors": []
+    },
+    "before-tooltip-array": {
+      "failed": 1,
+      "pending": 33,
+      "failures": [
+        {
+          "test": "passes a complete ellipsis tooltip node array to the actual Tooltip",
+          "messages": [
+            "InvalidCharacterError: \"0\" did not match the Name production"
+          ]
+        }
+      ]
+    },
+    "before-tooltip-zero": {
+      "failed": 1,
+      "pending": 34,
+      "failures": [
+        {
+          "test": "retains numeric zero as ellipsis tooltip content",
+          "messages": [
+            "AssertionError: expected [] to have a length of 1 but got +0\n    at Proxy.<anonymous> (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/index.m3L2HgmY.js:2137:20)\n    at Proxy.<anonymous> (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/index.m3L2HgmY.js:1934:14)\n    at Proxy.methodWrapper (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/chai@6.2.2/node_modules/chai/index.js:1700:25)\n    at /Users/nanren/Code/apollo-design-ui/packages/ui/src/typography/__tests__/contract-audit.test.ts:371:20\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:1628:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:26\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3319:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3314:10)\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:3299:20"
+          ]
+        }
+      ]
+    },
+    "before-tone": {
+      "results": [
+        {
+          "name": "default: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 28.8,
+              "bottom": 12,
+              "size": 24
+            },
+            "changed": {
+              "top": 48,
+              "bottom": 19.2,
+              "size": 24
+            }
+          }
+        },
+        {
+          "name": "dark: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 28.8,
+              "bottom": 12,
+              "size": 24
+            },
+            "changed": {
+              "top": 48,
+              "bottom": 19.2,
+              "size": 24
+            }
+          }
+        },
+        {
+          "name": "compact: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 24,
+              "bottom": 10,
+              "size": 20
+            },
+            "changed": {
+              "top": 40,
+              "bottom": 16,
+              "size": 20
+            }
+          }
+        },
+        {
+          "name": "both: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 24,
+              "bottom": 10,
+              "size": 20
+            },
+            "changed": {
+              "top": 40,
+              "bottom": 16,
+              "size": 20
+            }
+          }
+        },
+        {
+          "name": "all Link semantic tones match text and native anchor focus consumes current decoration",
+          "passed": false,
+          "error": "default/secondary\n+ actual - expected\n\n+ 'oklab(0.49369 -0.0405939 -0.209037)'\n- 'rgba(0, 0, 0, 0.65)'\n"
+        },
+        {
+          "name": "editor autoSize consumes min/max rows and keeps a draft during dynamic configuration",
+          "passed": true,
+          "actual": {
+            "before": {
+              "height": 92,
+              "line": 22,
+              "scroll": 994
+            },
+            "after": {
+              "height": 70,
+              "line": 22
+            }
+          }
+        },
+        {
+          "name": "editing exposes its actual native root and preserves the root id",
+          "passed": true
+        },
+        {
+          "name": "modifier/newline editing preserves actual multiline content",
+          "passed": true
+        },
+        {
+          "name": "owned copy controls are siblings of the native anchor",
+          "passed": true
+        },
+        {
+          "name": "blur saves once without stealing the external destination focus",
+          "passed": true
+        },
+        {
+          "name": "controlled refusal keeps the same editor and Enter requests remain usable",
+          "passed": true
+        },
+        {
+          "name": "IME Enter does not submit and accepted Escape returns owned focus",
+          "passed": true
+        },
+        {
+          "name": "disabled Link blocks navigation and exposes its disabled state",
+          "passed": true
+        },
+        {
+          "name": "text-only editing has a native keyboard entry",
+          "passed": true
+        },
+        {
+          "name": "JS measurement retains one visible business input, its draft and focus",
+          "passed": true,
+          "actual": {
+            "inputCount": 1
+          }
+        }
+      ],
+      "errors": []
+    }
+  },
+  "gates": {
+    "uiBuild": "passed",
+    "uiL7": "11 checks; 0 failures; 0 pending; --no-build after explicit UI build",
+    "rootStrict": "passed",
+    "publishedTemplates": "five entries and all 14 actual demos passed",
+    "registry": "19 checks passed; 0 warnings",
+    "contentSlotInventory": "547 rows; only source references and new default-slot protocol row changed",
+    "format": "0 errors; existing 37 warnings and 5 infos"
+  },
+  "remaining": [
+    "clean-commit Apollo visual capture, individual review and comparison",
+    "Docs local build/browser and publication receipt",
+    "final full-unit checklist and registry acceptance"
+  ],
+  "boundaries": [
+    "Table scope is only its forty current-theme CSS variables and two actual hosts, not full Table acceptance",
+    "whole-library final gates remain required after all units finish",
+    "earlier 2026-10-27 temporary raw logs were cleaned by the host; baseline counts remain recorded separately from retained fresh evidence"
+  ],
+  "commands": [
+    "pnpm exec vitest run --project unit --project theme --project a11y --project dom-contract packages/ui/src/typography packages/ui/src/table packages/ui/src/input packages/ui/src/tooltip packages/ui/src/popover packages/ui/src/config-provider packages/ui/src/_internal --maxWorkers=2",
+    "pnpm exec vitest run --project unit --project dom-contract packages/ui/src/typography --maxWorkers=2",
+    "pnpm exec vitest run --project types packages/ui/src/typography packages/ui/src/table packages/ui/src/input --maxWorkers=2",
+    "pnpm run lint:types",
+    "pnpm run build:ui",
+    "node tests/build/run.mjs --package ui --no-build --strict",
+    "node tests/consumer/typography-slots-types.mjs",
+    "node tests/browser/typography-contracts.mjs",
+    "node tests/browser/typography-demo-themes.mjs",
+    "node tests/browser/typography-hydration.mjs"
+  ],
+  "associatedTableCommit": "230892d9",
+  "legacyBrowserRegression": [
+    "typography-provider.mjs: passed Chrome150, real semantic Demo included",
+    "typography-slots.mjs: passed Chrome150, real clipboard/conditional slots included",
+    "typography-styles.mjs: passed Chrome150, real semantic Demo included"
+  ]
+}

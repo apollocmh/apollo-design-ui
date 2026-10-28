@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-27T10:42:45.052Z",
+  "generatedAt": "2026-10-28T08:18:25.222Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -1523,7 +1523,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-27完整单元盘点：五入口/全部配置、14原Demo、两个Token及复制/编辑/省略链已核对。原23 Provider单测失败确认Teleport默认替身所致，真实Chrome及保持断言的原生Teleport32/32通过，未改生产Provider。既有autoSize、Token/语言、attrs与关键交互正成组复现；未宣称本单元完成。",
+      "why": "2026-10-28完整盘点后功能阶段：1178相关四层、110类型、15生产浏览器、76实际Demo主题/交互和12 SSR/水合、发布声明及UI严格L7通过。复制/编辑/测量、原生Link、当前语言与两Token、配置节点已成组修复；关联Table仅四十变量当前主题。自有视觉、Docs和最终清单尚未收口。见 docs/audit/2026-10-27-typography-contract-audit.md。",
       "doneWhen": [],
       "group": "通用",
       "priority": "P0",

@@ -36,7 +36,7 @@ const ellipsisConfig = computed<EllipsisConfig>(() => ({
     <Paragraph :ellipsis="ellipsisConfig">{{ longText }}</Paragraph>
     <div>
       <Button size="small" @click="toggle">切换 expanded</Button>
-      <span style="margin-left: 8px; color: #999; font-size: 12px">
+      <span style="margin-left: 8px; color: var(--apollo-color-text); font-size: 12px">
         当前：{{ expanded ? '展开' : '收起' }}
       </span>
     </div>

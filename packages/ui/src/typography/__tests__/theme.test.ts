@@ -92,15 +92,18 @@ describe('Typography · 主题无关性', () => {
       ),
     ].sort();
 
+    // 0.39/0.82 bound native OKLCH text lightness, matching the accepted Tag tone policy.
     expect(literals).toEqual([
       '#ffe58f',
       '-50%',
       '0.15em',
       '0.1em',
       '0.2em',
+      '0.39',
       '0.4em',
       '0.5em',
       '0.6em',
+      '0.82',
       '0.85',
       '1.2em',
       '1.6em',
@@ -177,17 +180,12 @@ describe('Typography · Component Token', () => {
     });
   });
 
-  it('★ Component Token 是**内联**的，不是 `var(--apollo-typography-*)`（零运行时管线的缺口）', () => {
-    // antd 的 cssVar 产物会多一条
-    //   `.css-var-_R_0_.apollo-typography{--apollo-typography-title-margin-top:1.2em;…}`
-    // 然后组件 CSS 引用那个变量。我们的管线**没有**「Component Token → CSS 变量」这一段
-    // （见 `style/token.ts` 文件头 §1），所以直接内联。
-    // ⚠️ 代价：用户**无法**用 `theme.components.Typography` 覆盖这两个 token ——
-    //    缺口登记在 README §7。
+  it('declares and consumes both existing component CSS variables', () => {
     const css = genTypographyStyle('apollo');
-    expect(css).toContain('margin-bottom:0.5em');
-    expect(css).toContain('margin-top:1.2em');
-    expect(css).not.toContain('var(--apollo-typography-title-margin');
+    expect(css).toContain('--apollo-typography-title-margin-top:1.2em');
+    expect(css).toContain('--apollo-typography-title-margin-bottom:0.5em');
+    expect(css).toContain('margin-top:var(--apollo-typography-title-margin-top)');
+    expect(css).toContain('margin-bottom:var(--apollo-typography-title-margin-bottom)');
   });
 
   it('别名派生的部分走 `var(--apollo-*)`（随主题自适应）', () => {

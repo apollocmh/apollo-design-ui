@@ -149,7 +149,7 @@ describe('F11 Typography current native default slots', () => {
     label.value = undefined;
     await flushRender();
     expect(wrapper.get('textarea').element).toBe(editor);
-    expect(editor.hasAttribute('aria-label')).toBe(false);
+    expect(editor.getAttribute('aria-label')).toBe('Edit');
     expect(editor.value).toBe('User draft remains');
     expect(document.activeElement).toBe(editor);
     wrapper.unmount();

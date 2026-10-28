@@ -87,8 +87,14 @@ export const CopyBtn = defineComponent({
       const ariaLabel = typeof copyTitle === 'string' ? copyTitle : systemStr;
 
       const iconNode: VNodeChild = props.copied
-        ? getNode(iconNodes[1], h(CheckOutlined), true)
-        : getNode(iconNodes[0], props.loading ? h(LoadingOutlined) : h(CopyOutlined), true);
+        ? getNode(iconNodes[1], h(CheckOutlined, { 'aria-hidden': true }), true)
+        : getNode(
+            iconNodes[0],
+            props.loading
+              ? h(LoadingOutlined, { 'aria-hidden': true })
+              : h(CopyOutlined, { 'aria-hidden': true }),
+            true,
+          );
 
       const buttonNode = h(
         'button',
@@ -104,6 +110,8 @@ export const CopyBtn = defineComponent({
           ],
           style: props.style,
           onClick: props.onCopy,
+          'aria-busy': props.loading || undefined,
+          'aria-disabled': props.loading || undefined,
           'aria-label': ariaLabel,
           tabIndex: props.tabIndex,
         },
@@ -111,7 +119,7 @@ export const CopyBtn = defineComponent({
       );
       // antd 逐字：`<Tooltip title={copyTitle}>{button}</Tooltip>` —— title 可能是
       // `false`（`tooltips: false` ⇒ 气泡不弹，aria-label 走语言包兜底），照传。
-      return h(Tooltip, { title: copyTitle } as never, { default: () => buttonNode });
+      return h(Tooltip, { title: copyTitle }, { default: () => buttonNode });
     };
   },
 });

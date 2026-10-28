@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Paragraph, Text } from '../../index';
+import { Paragraph, Text } from '@apollo-design/ui';
 
 const longText =
   'Ant Design, a design language for background applications, is refined by Ant UED Team. ' +

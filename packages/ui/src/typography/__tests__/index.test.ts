@@ -26,7 +26,7 @@
 
 import { flushAll, mountTest, resetWarned } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type Component, h, nextTick } from 'vue';
 
 import { configContextKey, DEFAULT_CONFIG_CONTEXT } from '../../config-provider/context';
@@ -352,7 +352,8 @@ describe('Paragraph', () => {
 describe('Link · rel 兜底与属性', () => {
   it('渲染 `<a>` 且带 `-link` 类名', () => {
     const w = mount(Link, { props: { href: '#x' }, slots: { default: () => 'L' } });
-    expect(w.element.tagName).toBe('A');
+    expect(w.element.tagName).toBe('SPAN');
+    expect(w.get('a').element.tagName).toBe('A');
     expect(w.classes()).toContain(`${P}-link`);
   });
 
@@ -361,7 +362,7 @@ describe('Link · rel 兜底与属性', () => {
       props: { href: '#x', target: '_blank' },
       slots: { default: () => 'L' },
     });
-    expect(w.attributes('rel')).toBe('noopener noreferrer');
+    expect(w.get('a').attributes('rel')).toBe('noopener noreferrer');
   });
 
   it('★ 显式传 `rel=""` 时**不**补（判据是 `=== undefined`，不是真值）', () => {
@@ -369,7 +370,7 @@ describe('Link · rel 兜底与属性', () => {
       props: { href: '#x', target: '_blank', rel: '' },
       slots: { default: () => 'L' },
     });
-    expect(w.attributes('rel')).toBe('');
+    expect(w.get('a').attributes('rel')).toBe('');
   });
 
   it('`target` 不是 `_blank` 时不补 `rel`', () => {
@@ -377,7 +378,7 @@ describe('Link · rel 兜底与属性', () => {
       props: { href: '#x', target: '_self' },
       slots: { default: () => 'L' },
     });
-    expect(w.attributes('rel')).toBeUndefined();
+    expect(w.get('a').attributes('rel')).toBeUndefined();
   });
 
   it('★ `navigate` 被剥掉（react-router 复制粘贴的常见残留）', () => {
@@ -420,6 +421,19 @@ describe('Link · rel 兜底与属性', () => {
 // ===========================================================================
 
 describe('Typography · copyable', () => {
+  let clipboardDescriptor: PropertyDescriptor | undefined;
+  beforeEach(() => {
+    clipboardDescriptor = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: vi.fn<(text: string) => Promise<void>>().mockResolvedValue(undefined) },
+    });
+  });
+  afterEach(() => {
+    if (clipboardDescriptor) Object.defineProperty(navigator, 'clipboard', clipboardDescriptor);
+    else Reflect.deleteProperty(navigator, 'clipboard');
+  });
+
   it('渲染操作区 + 一个复制按钮，带 `-copy` 类名与 `aria-label`', () => {
     const w = mountText({ copyable: true }, 'copy me');
     const actions = w.find(`.${P}-actions`);
@@ -641,18 +655,18 @@ describe('Typography · editable', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  it('★ 换行符被剥掉（单行编辑：Enter 是保存，不是换行）', async () => {
+  it('keeps native multiline input while plain Enter still saves', async () => {
     const w = mountText({ editable: true }, 'Click to edit');
     await w.find(`.${P}-edit`).trigger('click');
     await flushAll();
     const textarea = w.find('textarea');
     await textarea.setValue('a\nb\rc');
-    expect((textarea.element as HTMLTextAreaElement).value).toBe('abc');
+    expect((textarea.element as HTMLTextAreaElement).value).toBe('a\nb\nc');
   });
 
   it('`triggerType: ["icon"]` 时不渲染按钮；`["text"]` 时点击文字进入编辑态', async () => {
     const iconOnly = mountText({ editable: { triggerType: ['text'] } }, 'Click me');
-    expect(iconOnly.find(`.${P}-edit`).exists()).toBe(false);
+    expect(iconOnly.get(`.${P}-edit`).classes()).toContain(`${P}-edit-keyboard`);
     await iconOnly.trigger('click');
     await flushAll();
     expect(iconOnly.find('textarea').exists()).toBe(true);

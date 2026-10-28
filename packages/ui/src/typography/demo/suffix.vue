@@ -15,7 +15,7 @@ const longText =
     <Text :ellipsis="{ suffix: '… 更多' }" :style="{ display: 'block', width: '260px' }">
       {{ longText }}
     </Text>
-    <p style="margin: 0; color: #999; font-size: 12px">
+    <p style="margin: 0; color: var(--apollo-color-text); font-size: 12px">
       suffix 会触发 JS 裁剪：省略号后还能继续放置内容。
     </p>
   </div>

@@ -1,53 +1,7 @@
-/**
- * Typography 的 Component Token。
- *
- * 契约来源：antd 6.6.4 的 `es/typography/style/index.js` 的 `ComponentToken` 接口与
- * `prepareComponentToken`。**名称、数量、默认值计算方式逐条对齐**（规则 R7）。
- *
- * ── 两类值，两种落地形态 ──────────────────────────────────────────────────────
- *
- * | 类别 | 例子 | 落地 |
- * |---|---|---|
- * | **Component Token** | `titleMarginTop` / `titleMarginBottom` | 本文件导出常量，`style/index.ts` 内联 |
- * | **上游硬编码字面量** | `code` 的 `rgba(150,150,150,0.1)` 等 | 同上（见 §2） |
- * | 别名派生的值 | `colorText` / `fontSizeHeading1` / `marginXXS` … | `var(--apollo-*)` |
- *
- * ── §1 为什么 Component Token 是「内联」而不是 CSS 变量 ────────────────────────
- *
- * 与 Divider 完全同源：零运行时管线目前**没有**「Component Token → CSS 变量」这一段，
- * 而 `tests/build/run.mjs` 的 B7 要求 ui 的 CSS 里每个 `var(--apollo-*)` 都必须在
- * theme 的 `tokens.css` 里有声明。所以字面量 token 由本模块给出唯一真源、
- * 由 `style/index.ts` 内联消费。「字面量出现在 CSS 里」不等于 H9 的硬编码 ——
- * 它的来源是本文件的定义，且与 antd 的 `prepareComponentToken` 逐字相同。
- *
- * ⚠️ 已知缺口（登记在 `README.md` §7）：没有 ConfigProvider 时，用户**无法**通过
- *    `theme.components.Typography` 覆盖这两个 token。落点是「Component Token →
- *    CSS 变量」那段管线。
- *
- * ── §2 为什么「上游硬编码字面量」也放在本文件 ──────────────────────────────────
- *
- * antd 的 `getResetStyles`（`style/mixins.ts:89-242`）里有一批**它自己也没做成 token**
- * 的字面量：`code`/`kbd`/`pre` 的半透明灰底与灰边、`mark` 的 `gold[2]`、三处
- * `borderRadius: 3`。它们**没有**对应的 Alias token：
- *
- *   - `rgba(150,150,150,0.1)` —— 最接近的 `--apollo-color-fill-quaternary` 是
- *     `rgba(0,0,0,0.02)`，**值不同**；换成它会让视觉偏离 antd。
- *   - `gold[2]` = `#ffe58f` —— theme 只暴露 Seed 层的 `--apollo-gold`（`#fadb14`）
- *     与 `--apollo-gold-hover/-active`，**没有** `gold-2` 这一档。
- *     `--apollo-color-warning-border` 默认值恰好也是 `#ffe58f`，但它在 dark 算法下会变，
- *     而 antd 的 `mark` 在 dark 下**不变** —— 用变量反而更不忠实。
- *   - `borderRadius: 3` —— `--apollo-border-radius-sm` 是 `4`、`xs` 是 `2`，都不等于 3。
- *
- * ⇒ 它们是「与 antd 逐字相同的上游字面量」，不是我们发明的视觉值。
- *   按 `COMPONENT-RULES.md` §5.2 的同一逻辑（Token 默认值本来就是字面量），
- *   把唯一真源收在本文件，`style/index.ts` 只消费常量 —— 于是 E10 的
- *   「已实现组件的样式中无硬编码视觉值」这条判据仍然成立，且**每个字面量都有出处**。
- *   `__tests__/theme.test.ts` 用 `toEqual` 断言「恰好是这几个」来钉住这件事。
- *
- * ── 这个模块没有证明什么 ──────────────────────────────────────────────────────
- *   - 没证明**视觉**正确（那是 L6 的逐像素比对）。
- *   - 没证明这些 token 与 antd 的**运行时**取值一致：字面量是静态可比的，
- *     别名派生的值由 B7 保证变量存在、由 L6 保证视觉一致。
+/** Typography defaults and retained decoration constants.
+ * Existing title margins are CSS variables consumed by static rules and updated by
+ * useTypographyTheme. Decoration constants originated in antd6.6.4 style/mixins;
+ * their historical values are retained and checked explicitly in theme tests.
  */
 
 import type { AliasToken } from '@apollo-design/theme';
@@ -97,7 +51,7 @@ export interface ComponentToken {
  *    所以这里也不声明参数 —— 这是忠实的签名，不是省事。
  *
  * ⚠️ 它**不是**死代码：`registry/tokens.json` 的 `typography` 清单、文档的
- *    Design Token 表、以及将来「Component Token → CSS 变量」管线的入口都以它为准。
+ *    Design Token 表、当前 CSS 变量默认声明及 Provider 覆盖的入口都以它为准。
  */
 export const prepareComponentToken = (): Partial<ComponentToken> => ({
   titleMarginTop: TITLE_MARGIN_TOP,

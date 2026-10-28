@@ -33,7 +33,7 @@
     "total": 72,
     "byStatus": {
       "completed": 71,
-      "analyzing": 1
+      "testing": 1
     },
     "byPriority": {
       "P0": 8,
@@ -604,7 +604,7 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "M",
-      "status": "analyzing",
+      "status": "testing",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -631,19 +631,20 @@
       "interactionStatus": "done",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-27完整单元盘点：五入口/全部配置、14原Demo、两个Token及复制/编辑/省略链已核对。原23 Provider单测失败确认Teleport默认替身所致，真实Chrome及保持断言的原生Teleport32/32通过，未改生产Provider。既有autoSize、Token/语言、attrs与关键交互正成组复现；未宣称本单元完成。",
+      "visualStatus": "in-progress",
+      "docsStatus": "in-progress",
+      "notes": "2026-10-28完整盘点后功能阶段：1178相关四层、110类型、15生产浏览器、76实际Demo主题/交互和12 SSR/水合、发布声明及UI严格L7通过。复制/编辑/测量、原生Link、当前语言与两Token、配置节点已成组修复；关联Table仅四十变量当前主题。自有视觉、Docs和最终清单尚未收口。见 docs/audit/2026-10-27-typography-contract-audit.md。",
       "layerNotes": {
-        "unit": "L1：5 个组件的标签/类名、七个装饰的嵌套顺序、四种语义 type、disabled、`component` 覆盖语义、style/classNames/styles 的合并优先级、四个子组件的 nativeElement 暴露、开发期告警（含 prefixCls 与 `in` 判据）。⚠️ 它**没有**证明与 antd 的 DOM 结构一致（那是 L4），也**没有**证明像素一致（那是 L6）。",
-        "interaction": "L2：1) `copyable` 的 copied 状态机（`vi.useFakeTimers` 钉住 3s 回落）与 `icon`/`tooltips` 的二元组；2) `editable` 的三道按键门槛（`trim()` / IME 组合中不提交 / 带修饰键的 Enter 不提交）与「退出编辑态后焦点还给编辑图标」（`flush: post` 是必需的，`pre` 会让 focus 静默落空）；3) `ellipsis` 的 expand/collapse（`expandable: true` 展开后按钮消失，`collapsible` 保留）与受控 `expanded`；4) `onEllipsis` 只在**变化时**上报（Vue 的 ref 立刻更新，照抄 antd 的「先 setState 再比较闭包旧值」会变成恒等 —— 必须先比较后赋值）；5) JS 二分裁剪路径由**打桩布局**驱动（jsdom 没有布局引擎），桩里含一条真实浏览器行为「`display:inline` 的元素 `clientHeight` 恒为 0」。⚠️ 桩只能证明「二分在桩的规则下找到了最大的 n」，真实排版只由 L6 证明。",
-        "type": "两个层都要跑，缺一不可：`type.test-d.ts`（`vitest --project types`，29 条，含 `@ts-expect-error` 负例）只覆盖我们自己的类型断言；`vue-tsc --noEmit`（全仓）才能发现**测试代码与 demo 自己**的类型错误 —— 收口时实测到 21 处，全部在 typography 的测试文件与 `demo/semantic.vue` 里（helper 的泛型收窄过头、故意传非法值的用例、`info.props` 是 `BaseTypographyProps` 不含 `disabled`），已全部修掉。⚠️ `pnpm run test:types`（全仓）会因 `TypeCheckError: Cannot find module './Divider.vue'` 这类`.vue` 解析失败而 exit 1 —— 报错文件包含 Divider/Empty/Spin/Form，**与 typography 无关**，是仓库级工具链缺口；按组件路径过滤时全绿。",
-        "a11y": "L5：axe 自动扫描 0 violation + 键盘可达性（`Link` 无 `href` 时不在 Tab 序列里、两个操作按钮有非空 `aria-label`、展开按钮是真 `<button type=\"button\">`）+ JS 省略号路径下根元素的 `aria-label`（完整文本）与 `aria-hidden` 内容包裹。⚠️ 两条**跟随上游**的可改进项（不是我们的差异）：`disabled` 只加类名、不加 `aria-disabled`；`Typography` 本体不产生 landmark。",
-        "compat": "L4：`tests/compat/baselines/typography.dom.json` 有 76 条用例，由 `tests/compat/baseline/typography.mjs` 用 antd 6.6.4 的 `renderToStaticMarkup` 生成（机械 oracle，禁止手改）。允许差异全部归并到 D5（无 hashId/cssVarCls）/ D6（前缀 `apollo`）/ D-typography-13（children 归一化）三条；`domContractTest` 的语义是 `expect(actualDiff).toEqual([...allowed])` —— 允许项必须**恰好**出现。compat fixture 在 `tests/compat/fixtures/typography/`（3 个：basic / decorations / ellipsis，schema 通过）。⚠️ 基线走 SSR（无 effect），所以**不含** JS 二分裁剪路径的用例 —— 那一路径的类名在 SSR 与挂载后不同，写进基线只会得到一条永远需要豁免的噪音；它由 L1/L2 与 L6 覆盖。",
-        "visual": "L6：`tests/visual/run.mjs --component typography --mode compare`，8 variant × 3 viewport = 24 组。**21 组 0.000% exact**（text / title / paragraph / decorations / link / ellipsis / semantic 七个 variant 全绿）。剩 3 组是 `copyable__light__{mobile,tablet,desktop}`，判为 `block-diff`（差异率 0.3211% / 0.1568% / 0.0836%，散点占比 1.7% —— 差异**成块**而非抗锯齿散点）。diff 图显示红色区域**只落在复制图标**上，文字部分逐像素一致。根因在**组件之外**：`@apollo-design/icons` 的 `getIconStyle(iconPrefixCls)` 导出了但**没有任何消费者**（D15 规定「只导出、不注入」），于是 `.apollo-icon` 没有 `display:inline-flex` / `vertical-align:-0.125em`，SVG 退化成 `display:inline`。修法是在全局 `BASE_CSS` 接上 `getIconStyle` —— 那会改变**所有**渲染图标的组件（spin 的 `LoadingOutlined` 等）的像素输出，属 foundation 层接线，超出本组件的改动面。已按 TESTING.md §4.3 分类并三处登记：`packages/ui/src/typography/README.md` §7.3（G7）、`tests/visual/matrix.mjs` 的 LIMITATIONS（`typography·visual-residual`）、本字段。⚠️ `compare.mjs` 的判据（差异率 ≤ 0.1% **且**散点占比 ≥ 90%）**一行未改** —— 没有降低阈值、没有跳过用例。基线 PNG 已 `git add` 入库（`tests/visual/baselines/react/typography/`，24 张）。",
-        "token": "antd 的 Typography 只有 2 个 Component Token：`titleMarginTop`（`'1.2em'`）/ `titleMarginBottom`（`'0.5em'`）。两者都是**字面量**，且上游的 `prepareComponentToken` **不接收 token**（零参）—— 我们逐字对齐（含零参签名，`theme.test.ts` 有一条 `prepareComponentToken.length === 0` 的断言防止后人「顺手」加参数去派生别名）。⚠️ 缺口（全库，与 divider/spin 同源）：这两个 Token **无法**通过 `theme.components.Typography` 在运行时覆盖 —— 零运行时管线里 `tokens.css` 只声明 Alias 层，没有「Component Token → CSS 变量」这一段。落点在 `packages/theme` 的 `tokens.css` 生成处。临时手段：`styles.root`。另有一批**上游自己也没做成 token** 的字面量（`code`/`kbd`/`pre` 的半透明灰底与灰边、`mark` 的金色底、圆角 3px）—— 没有等值的 Alias token（`borderRadiusSM`=4、`XS`=2），换最近似的变量会让视觉偏离 antd，所以唯一真源收在 `style/token.ts` 并逐条标注出处；`theme.test.ts` 用 `toEqual` 断言产物里的字面值**恰好**是这几个。⚠️ `validate-registry` 的 E10 是**文本级**扫描，只豁免 `var(` 与 `${v(`，而 `token.ts` 是唯一整文件豁免的真源处 —— 圆角以 `RESET_BORDER_RADIUS_DECL`（连属性名一起）的形式放在 `token.ts`，判据未被放松。",
-        "style": "零运行时静态 CSS + CSS 变量（D5/D7），产物 `dist/typography/style.css`。收口期由 L6 抓到并修掉**三个真实缺陷**，jsdom 层一个都抓不到：1) **选择器特异性** —— cssinjs 的 `&` 是**复合**不是后代，省掉第二个分支的 `&` 会让 `.apollo-typography-link.apollo-typography-secondary` 从 0,3,0 掉到 0,2,0，与 `getLinkStyles` 的规则打平后因文档顺序落败 ⇒ `<Link type=\"secondary\">` 算出链接蓝而非次要灰；2) **`a,b:hover` 陷阱** —— 伪类只作用于逗号列表的**最后一个**选择器，直接拼 `${sel}:hover` 会让前三个操作按钮**无条件**拿到 hover/focus/active 声明（按钮永远显示 active 色 + 一圈焦点环）；3) **测量容器缺 `MeasureText` 的 6 条基础样式** —— 少了 `display:block` 会让二分中点的 `clientHeight` 恒为 0（`display:inline` 没有块级高度），二分收敛到 maxIndex ⇒ **完全不裁剪**。另有两段**零运行时补偿**（`BASE_CSS` 的缺口）：`getHeadingMarginReset`（`h1~h5`/`p` 的 UA `margin-block-start`）与 `getActionButtonFontReset`（UA 的 `button{font:400 13.3333px Arial}` **shorthand** 会把 `line-height` 重置成 `normal`）。⚠️ 后者不只是外观：`symbolRowEllipsisRef` 在测量容器里渲染按钮，字体变了 ⇒ 测量到的 `ellipsisHeight` 变了 ⇒ 二分裁剪**差一个字符**（56 vs 57）。所以「按钮字体」在这条链上是一个**功能参数**。",
-        "docs": "`README.md`（九节：职责 / 文件布局 / 公共 API / 八条易错判据 / 样式 / 七层测试与 8 条变异验证 / 差异与缺口 / 给后续组件的话 / 缺口汇总）+ `index.zh-CN.md` + `index.en-US.md`；7 个 demo（basic / title / text / ellipsis / copyable / editable / semantic，各含 .vue + .md）。⚠️ 文档里的「样式引入」按**实测**写：`@apollo-design/ui/typography/style.css` 会抛 `ERR_PACKAGE_PATH_NOT_EXPORTED`（产物存在但 `packages/ui/package.json` 的 `exports` 没登记），只能用汇总的 `@apollo-design/ui/style.css`；`genTypographyStyle` 也未从包根再导出。该缺口登记在 README §7.3 的 G11（`packages/ui/package.json` 不在本组件文件域内）。"
+        "currentAudit": "docs/audit/2026-10-27-typography-contract-audit.md；typography-functional-stage-2026-10-28.json 与 docs/migrations/typography-contracts.md。",
+        "api": "五入口、完整default槽、原生attrs及当前实际nativeElement；固定标签排除无效component；无新增emits或v-model。",
+        "token": "两既有标题Token实际消费，0/替换/移除及四算法；当前源与显式原生样式覆盖。",
+        "unit": "相关61文件1178四层通过；最后符号名称修正后Typography7文件305项通过。",
+        "interaction": "原生Link/所属按钮、成功复制/失败/并发/卸载、多行/autoSize、受控拒绝/IME与焦点、Provider/业务VNode身份。",
+        "type": "相关8文件110类型、根严格与全部14Demo发布声明通过。",
+        "a11y": "当前文字对比、链接下划线、禁用导航、text编辑键盘入口、可见符号名称、装饰图标与焦点所有权。",
+        "compat": "76原场景不变，19个有限原生差异附原因与迁移；其余精确对拍。",
+        "visual": "自有候选/审阅/复比待完成，原参考图保留。",
+        "docs": "实现/类型/14原Demo/双语API/迁移同步；Docs门禁/页面/发布回执待验收。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -4607,7 +4608,9 @@
       "visualStatus": "done",
       "docsStatus": "done",
       "notes": "最复杂组件：固定列/表头、虚拟滚动、展开行、排序过滤、行列合并。泛型签名是 AR6（Vue 泛型组件表达力）的验证点。\n2026-10-24 H03：原生行/列拖放消费示例、键盘等效移动、重置与单元格对应关系已浏览器验证，Demo/axe 96 条通过；见 docs/audit/2026-10-24-demo-capabilities.md。仅补能力证据，不宣称 Table 完整重新验收。\n2026-10-24 F11/F10/ADR0006/0007：Pagination三个渲染函数入口已直接迁为原生单对象槽；List/Table转发item/total/size内容，Table分页VNode在render创建；原生attrs/style与配置业务回调类型修复。21文件692条runtime及产物/浏览器/类型证据见 docs/audit/2026-10-24-pagination-slots-remediation.md。保留历史状态，不宣称Apollo新视觉验收。",
-      "layerNotes": null,
+      "layerNotes": {
+        "typographyThemeConsumer": "2026-10-28仅关联四十变量当前主题、既有覆盖、原生优先级和筛选Portal验证，不代表Table完整契约重验收。见Typography清单。"
+      },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",

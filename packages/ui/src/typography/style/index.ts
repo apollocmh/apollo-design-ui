@@ -1,99 +1,6 @@
-/**
- * Typography 的样式生成。
- *
- * 契约来源：antd 6.6.4 的 `es/typography/style/index.js`（`genTypographyStyle`）与
- * `es/typography/style/mixins.js`（`getTitleStyles` / `getLinkStyles` / `getResetStyles` /
- * `getEditableStyles` / `getCopyableStyles` / `getEllipsisStyles`），加上
- * `components/style/index.tsx` 的 `operationUnit` / `genFocusOutline`。
- *
- * ── 选择器结构来自 antd 的**真实产物**，不是推演的 ──────────────────────────────
- *
- * 用 `@ant-design/cssinjs` 的 `extractStyle` 渲染 antd 6.6.4 的
- * `Typography / Text / Title / Paragraph / Link`（`prefixCls: 'apollo'`、`hashed: false`、
- * `theme.cssVar` 默认开启）并提取 CSS，得到的就是下面这份。本文件逐条对齐它。
- *
- * 产物里有三处**容易写错**的地方，都是实测出来的，不是风格问题：
- *
- * 1. `div&, p` 里的 `p` 是**普通键**（后代），不是 `&` 复合：
- *    ```css
- *    div.apollo-typography,.apollo-typography p{margin-bottom:1em;}
- *    ```
- *    写成 `p.apollo-typography` 会让 `<p class="apollo-typography">`（`Paragraph`
- *    传 `component="p"`）命中，而 antd 那里**不命中** —— 这是选择器语义差异。
- * 2. 标题的 `h1&` 是复合、`h1` 是后代、`div&-h1` 又是复合：
- *    ```css
- *    h1.apollo-typography,div.apollo-typography-h1,div.apollo-typography-h1>textarea,.apollo-typography h1
- *    ```
- *    四条选择器各自负责一种渲染路径（原生 `h1` 根 / `div` 根 + `-h1` 类 / 该 `div`
- *    里的编辑态 `textarea` / 内容里裸写的 `h1`）。少写一条就少一条路径的样式。
- * 3. `&${componentCls}-link${componentCls}-secondary` 展开成
- *    `.apollo-typography.apollo-typography-link.apollo-typography-secondary`
- *    —— `link` 与 `secondary` 是**同一个元素上的两个类**，不是后代。
- *
- * ── 与 antd 产物的四处**有意**差异 ──────────────────────────────────────────────
- *
- * 1. **没有 CSS-in-JS 的 hash 包裹层**（`.css-var-_R_0_` / `:where(.css-dev-only-...)`），
- *    差异 D5。
- * 2. **Component Token 内联**：antd 的产物在末尾多一条
- *    `.css-var-_R_0_.apollo-typography{--apollo-typography-title-margin-top:1.2em;
- *    --apollo-typography-title-margin-bottom:0.5em;}`，组件 CSS 引用
- *    `var(--apollo-typography-title-margin-bottom)`。我们的零运行时管线**没有**
- *    「Component Token → CSS 变量」这一段（见 `style/token.ts` 的说明），
- *    所以直接内联 `0.5em` / `1.2em`。渲染结果相同，差异 D7 家族。
- * 3. **没有 `genCommonStyle` 与 `getResetStyles` 那两段**（见下面 §「跳过了什么」）。
- * 4. **多两段零运行时补偿**：标题/段落上边距归零（`getHeadingMarginReset`）与
- *    操作按钮的字体继承（`getActionButtonFontReset`）—— 都是为了补 `BASE_CSS`
- *    尚未覆盖的 antd 全局 reset。两段都只命中组件自己的类名，不外溢。
- *
- * ── 跳过了什么，为什么 ────────────────────────────────────────────────────────
- *
- * `genStyleHooks` 除了组件自己的样式，还会注入三段**与组件无关的公共样式**：
- *
- * | 段 | antd 产物 | 处置 |
- * |---|---|---|
- * | `genCommonStyle` 的 `box-sizing` 部分 | `.apollo-typography::before,::after` 与 2 条 `[class^=]` 后代规则 | **跳过** |
- * | `genCommonStyle` 的字体部分 | `.apollo-typography{font-family;font-size}` | **保留** |
- * | `getResetStyles` 的 `genLinkStyle` | 7 条**全局** `a{...}` 规则（出现两次） | **跳过** |
- *
- * ⚠️ 这里**没有**「`getResetStyles` 的 `genIconStyle`」这一行 —— 早期版本写过，
- *    是**错的**：antd 6.6.4 的 `es/typography/style/mixins.js` 的 `getResetStyles`
- *    里没有任何图标相关规则（grep `anticon` 在 `es/typography/` 下零命中）。
- *    `.anticon` 的基础样式来自**两个别处**：
- *      1. `@ant-design/icons` 的 `useInsertStyles`（图标挂载时运行时注入 `<style>`）；
- *      2. `antd/es/theme/util/useResetIconStyle`（`ConfigProvider` 调 `genIconStyle`）。
- *    我们的对应物是 `@apollo-design/icons` 的 `getIconStyle(iconPrefixCls)`（D15：
- *    只导出、不注入），**而它目前没有任何地方消费** ⇒ 图标没有基础样式
- *    （`display:inline` 而非 `inline-flex`、没有 `vertical-align:-0.125em`）。
- *    首个暴露它的组件就是 Typography 的 `copyable`：复制按钮比 antd 矮 1px、
- *    图标下移。缺口登记在 README §7（属于 foundation 层的接线缺口，不在本组件文件内）。
- *
- * 为什么字体那一条**保留**（与 `divider` / `empty` / `spin` 的做法不同）：
- *
- *   Typography 是**字体驱动**的组件 —— 它的全部视觉就是文字的字体、字号、行高。
- *   antd 把 `font-family` / `font-size` 显式写在 `.ant-typography` 根上；
- *   我们的 `BASE_CSS` 只在 `html` / `body` 上声明，组件靠**继承**拿到同一个值。
- *   两者的**计算值**相同，但「继承」意味着一旦组件被放进任何改了字体/字号的上下文
- *   （`<h1>` 里的 `Text`、`font-size:12px` 的卡片里），两侧就会分叉。
- *   Divider / Empty / Spin 的文字都只是零星标签，风险可忽略；Typography 不行。
- *
- *   所以这里逐字保留 antd 的 `.apollo-typography{font-family;font-size}`。
- *   `box-sizing` 那三条仍然跳过：`BASE_CSS` 的 `*{box-sizing:border-box}` 是它们的超集。
- *   （`divider` / `empty` / `spin` 连字体那一条也跳过了 —— 那是它们的既有取舍，
- *   不是本组件要跟随的约定。）
- *
- * 全局 `a{...}` 跳过的理由：
- *
- *   antd 是「每个组件都往全局注入一份 `a` 样式」，我们按需引入单组件
- *   CSS 的模型下这是**意外的全局副作用**。`Link` 自己的
- *   `.apollo-typography.apollo-typography-link{...}`（特异性 0,2,0）本来就压过
- *   `a{...}`（0,0,1），所以 `Link` 的渲染不受影响。差异登记在 README §7。
- *
- * ── 这个函数没有证明什么 ──────────────────────────────────────────────────────
- *   - 没证明**视觉**正确（L6 的逐像素比对负责）。
- *   - 没证明变量名存在。`var(--apollo-*)` 写错不会报错、只会静默失效 ——
- *     由 `tests/build/run.mjs` 的 B7 校验。
- *   - 没证明与 antd 的**选择器文本**逐字相同（例如 cssinjs 会把 `.apollo-typography div +h1`
- *     里的空格规范化）。证明的是**同一条规则命中的元素集合与声明相同**。
+/** Static Typography CSS with current component variables and native light/dark text tones.
+ * Mechanical reference: antd6.6.4 typography styles. Apollo adds independent native
+ * link/actions, keyboard editing and readable semantic colours; no CSS-in-JS runtime.
  */
 
 import { token2CSSVar } from '@apollo-design/theme';
@@ -129,7 +36,7 @@ function getTitleStyles(cls: string): string[] {
         // ⚠️ 四条选择器，顺序与 antd 产物一致（见文件头第 2 条）
         `h${level}${cls},div${cls}-h${level},div${cls}-h${level}>textarea,${cls} h${level}`,
         `${[
-          `margin-bottom:${TITLE_MARGIN_BOTTOM}`,
+          `margin-bottom:var(--${cls.slice(1)}-title-margin-bottom)`,
           `color:${v('colorTextHeading')}`,
           `font-weight:${v('fontWeightStrong')}`,
           `font-size:${v(`fontSizeHeading${level}`)}`,
@@ -323,19 +230,25 @@ function getLinkStyles(cls: string): string[] {
     rule(sel, operationUnit('text')),
     ...operationUnitStates(sel),
     rule(
+      sel,
+      `text-decoration:var(--${cls.slice(1)}-link-decoration,underline);text-underline-offset:0.15em;`,
+    ),
+    rule(
+      `${sel}:hover,${sel}:active`,
+      `text-decoration:var(--${cls.slice(1)}-link-hover-decoration,underline);`,
+    ),
+    rule(
+      `${sel}:has(> ${cls}-link-content:focus)`,
+      `text-decoration:var(--${cls.slice(1)}-link-focus-decoration,underline);`,
+    ),
+    rule(
       `${sel}[disabled],${sel}.${cls.slice(1)}-disabled`,
-      `color:${v('colorTextDisabled')};cursor:not-allowed;`,
+      `color:${v('colorTextSecondary')};cursor:not-allowed;`,
     ),
     rule(
       `${sel}[disabled]:active,${sel}.${cls.slice(1)}-disabled:active,` +
         `${sel}[disabled]:hover,${sel}.${cls.slice(1)}-disabled:hover`,
-      `color:${v('colorTextDisabled')};`,
-    ),
-    rule(`${sel}[disabled]:active,${sel}.${cls.slice(1)}-disabled:active`, 'pointer-events:none;'),
-    rule(
-      `${sel}[disabled]:active .${cls.slice(1)}-actions,` +
-        `${sel}.${cls.slice(1)}-disabled:active .${cls.slice(1)}-actions`,
-      'pointer-events:auto;',
+      `color:${v('colorTextSecondary')};`,
     ),
   ];
 }
@@ -539,7 +452,20 @@ export function genTypographyStyle(prefixCls: string): string {
     // ---- genCommonStyle 的字体部分（见文件头「跳过了什么」）------------------
     // antd 这一段是 `[rootPrefixSelector]: {...resetFontStyle, ...resetStyle}`，
     // 我们只取 `resetFontStyle`（`box-sizing` 由 `BASE_CSS` 的 `*` 规则覆盖）。
+    rule(
+      c(''),
+      `--${prefixCls}-typography-title-margin-top:${TITLE_MARGIN_TOP};--${prefixCls}-typography-title-margin-bottom:${TITLE_MARGIN_BOTTOM};`,
+    ),
     rule(c(''), `font-family:${v('fontFamily')};font-size:${v('fontSize')};`),
+    rule(c(''), `color-scheme:var(--${prefixCls}-typography-color-scheme,light);`),
+    rule(
+      `[data-apollo-theme="dark"] ${cls},[data-apollo-theme="dark-compact"] ${cls}`,
+      `--${prefixCls}-typography-color-scheme:dark;`,
+    ),
+    rule(
+      `[data-apollo-theme="light"] ${cls},[data-apollo-theme="compact"] ${cls}`,
+      `--${prefixCls}-typography-color-scheme:light;`,
+    ),
 
     // ---- 根与语义色 -------------------------------------------------------
     rule(c(''), `color:${v('colorText')};word-break:break-word;line-height:${v('lineHeight')};`),
@@ -554,7 +480,7 @@ export function genTypographyStyle(prefixCls: string): string {
     //    修复后逐像素一致。别「顺手简化」成 `${c('-link')}...`。
     rule(
       `${c('')}${c('-secondary')},${c('')}${c('-link')}${c('-secondary')}`,
-      `color:${v('colorTextDescription')};`,
+      `color:${v('colorTextSecondary')};`,
     ),
     rule(
       `${c('')}${c('-success')},${c('')}${c('-link')}${c('-success')}`,
@@ -583,7 +509,7 @@ export function genTypographyStyle(prefixCls: string): string {
         `${c('')}${c('-link')}${c('-danger')}${c('-link')}:hover`,
       `color:${v('colorErrorTextHover')};`,
     ),
-    rule(c('-disabled'), `color:${v('colorTextDisabled')};cursor:not-allowed;user-select:none;`),
+    rule(c('-disabled'), `color:${v('colorTextSecondary')};cursor:not-allowed;user-select:none;`),
     // `div&` 是复合、`p` 是后代 —— 见文件头第 1 条。
     rule(`div${c('')},${cls} p`, 'margin-bottom:1em;'),
 
@@ -592,14 +518,14 @@ export function genTypographyStyle(prefixCls: string): string {
     // 紧跟在 Typography 之后的标题（同级兄弟）也要有上间距
     rule(
       [1, 2, 3, 4, 5].map((level) => `${c('')}+h${level}${c('')}`).join(','),
-      `margin-top:${TITLE_MARGIN_TOP};`,
+      `margin-top:var(--${prefixCls}-typography-title-margin-top);`,
     ),
     // 块级元素后面紧跟标题：cssinjs 的嵌套键产生 10 × 5 = 50 条选择器
     rule(
       ['div', 'ul', 'li', 'p', 'h1', 'h2', 'h3', 'h4', 'h5']
         .flatMap((outer) => [1, 2, 3, 4, 5].map((level) => `${cls} ${outer} +h${level}`))
         .join(','),
-      `margin-top:${TITLE_MARGIN_TOP};`,
+      `margin-top:var(--${prefixCls}-typography-title-margin-top);`,
     ),
 
     // ---- 内容里的原生标签 --------------------------------------------------
@@ -622,14 +548,65 @@ export function genTypographyStyle(prefixCls: string): string {
     ),
 
     // ---- 编辑态 / 复制态 / 省略态 / RTL ------------------------------------
+    rule(`${cls} > ${cls}-link-content`, 'color:inherit;text-decoration:inherit;'),
+    rule(`${cls} > ${cls}-link-content:focus-visible`, focusOutline()),
+    rule(
+      `${cls}-edit-keyboard:not(:focus-visible)`,
+      'position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;',
+    ),
     ...getEditableStyles(cls),
     ...getCopyableStyles(cls),
     ...getEllipsisStyles(cls),
     rule(c('-rtl'), 'direction:rtl;'),
+
+    ...getReadableToneStyles(cls, actionList),
 
     // ---- 零运行时补偿（见 getHeadingMarginReset / getActionButtonFontReset）--
     ...getHeadingMarginReset(cls),
     ...getActionButtonFontReset(actionList),
     '',
   ].join('\n');
+}
+
+/** Keep the selected hue while supplying readable text in the current colour scheme.
+ * Native relative colours preserve caller CSS variables; the feature guard also keeps
+ * CSS optimisers from lowering light-dark() into static helper variables.
+ */
+function getReadableToneStyles(cls: string, actions: string): string[] {
+  const tone = (name: string) =>
+    `light-dark(oklch(from ${v(name)} min(l,0.39) c h / 1),oklch(from ${v(name)} max(l,0.82) c h / 1))`;
+  const link = `${cls}${cls}-link:not(${cls}-disabled)`;
+  const state = (selector: string, pseudo: string) =>
+    selector
+      .split(',')
+      .map((one) => `${one}${pseudo}`)
+      .join(',');
+  const adaptive = [
+    rule(`${link},${actions}`, `color:${tone('colorLink')};`),
+    rule(
+      `${state(link, ':hover')},${state(actions, ':hover')},${state(link, `:has(> ${cls}-link-content:focus)`)},${state(actions, ':focus')}`,
+      `color:${tone('colorLinkHover')};`,
+    ),
+    rule(
+      `${state(link, ':active')},${state(actions, ':active')}`,
+      `color:${tone('colorLinkActive')};`,
+    ),
+    ...(
+      [
+        ['success', 'colorSuccessText'],
+        ['warning', 'colorWarningText'],
+        ['danger', 'colorErrorText'],
+      ] as const
+    ).map(([kind, name]) =>
+      rule(`${cls}${cls}-${kind},${link}${cls}-${kind}`, `color:${tone(name)};`),
+    ),
+    rule(`${link}${cls}-secondary`, `color:${v('colorTextSecondary')};`),
+    rule(`${link}${cls}-danger:hover`, `color:${tone('colorErrorTextHover')};`),
+    rule(
+      `${link}${cls}-danger:active,${link}${cls}-danger:has(> ${cls}-link-content:focus)`,
+      `color:${tone('colorErrorTextActive')};`,
+    ),
+    rule(`${cls}-copy-success`, `color:${tone('colorSuccess')};`),
+  ];
+  return [`@supports (color:light-dark(black,white)){${adaptive.join('\n')}}`];
 }

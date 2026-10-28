@@ -1,23 +1,6 @@
-/**
- * Typography 的类型面。
- *
- * 契约来源：antd 6.6.4 的 `es/typography/{Typography,Text,Title,Paragraph,Link}.d.ts`
- * 与 `es/typography/Base/index.d.ts`。**逐字段对齐**，包括可选性、`@internal` 标记与
- * 默认值。有意差异见 `packages/ui/src/typography/README.md` 与 `COMPATIBILITY.md` §9。
- *
- * ── 与 antd 类型面的**有据可查**的差异 ─────────────────────────────────────────
- *
- * 1. `children` 不在 Props 里（规则 C19）—— antd 的 `children?: React.ReactNode`
- *    在 Vue 侧是默认插槽。
- * 2. `EditConfig` / `AutoSizeType` 在 antd 里是**非导出**的 interface（`Base/index.d.ts`
- *    里没有 `export`）。我们**导出**它们 —— 否则 Vue 使用者无法引用 `editable` 的配置类型。
- *    登记为 D-typography-1（INTENDED）。
- * 3. `React.CSSProperties` → Vue 的 `CSSProperties`；`React.ReactNode` → `VNodeChild`
- *    （规则 C16 / C18）。
- * 4. `component?: keyof JSX.IntrinsicElements` → `component?: string`（Vue 没有
- *    `JSX.IntrinsicElements`）。登记为 D-typography-6（PLATFORM）。
- * 5. `EllipsisConfig.tooltip` 的 `TooltipProps` 分支收窄为 `TypographyTooltipProps`
- *    （只有 `title`）—— Tooltip 尚未落地，等它收口后再补全（见 README §7）。
+/** Public Vue typography contracts. Historical type reference: antd6.6.4 typography.
+ * Default content uses slots; fixed semantic entries exclude component. Scoped operation
+ * configuration retains VNode data and callbacks. Tooltip configuration exposes title only.
  */
 
 import type { CSSProperties, VNodeChild } from 'vue';
@@ -46,13 +29,7 @@ export interface AutoSizeType {
   maxRows?: number;
 }
 
-/**
- * `EllipsisConfig.tooltip` 的对象形态。
- *
- * ⚠️ antd 这里是 `TooltipProps`（几十个字段）。Tooltip 组件尚未落地，我们只声明
- *    实际会被消费的 `title`；运行时其余字段会被原样展开（见 `useTooltipProps`）。
- *    这是**已知缺口**，登记在 README §7，Tooltip 收口后补齐。
- */
+/** Object form of ellipsis tooltip data. Only title is a public field. */
 export interface TypographyTooltipProps {
   title?: VNodeChild;
 }
@@ -230,7 +207,6 @@ export interface BaseTypographyProps {
   direction?: DirectionType;
   /**
    * 渲染的标签。
-   * @internal
    */
   component?: string;
 }
@@ -289,7 +265,7 @@ export interface BlockProps extends TypographyProps {
  * ⚠️ `ellipsis` **不支持** `expandable` / `rows` / `onExpand`（antd 用 `Omit` 表达，
  *    并在运行时对传了这两个键的情况告警）。
  */
-export interface TextProps extends BlockProps {
+export interface TextProps extends Omit<BlockProps, 'component'> {
   ellipsis?: boolean | Omit<EllipsisConfig, 'expandable' | 'rows' | 'onExpand'>;
 }
 
@@ -298,7 +274,7 @@ export interface TextProps extends BlockProps {
  *
  * ⚠️ `strong` 被 `Omit` 掉 —— 标题本身就是加粗的，`strong` 无意义（antd 的行为）。
  */
-export interface TitleProps extends Omit<BlockProps, 'strong'> {
+export interface TitleProps extends Omit<BlockProps, 'strong' | 'component'> {
   /**
    * 标题级别（映射到 `h1`…`h5`）。
    * @default 1
@@ -307,10 +283,10 @@ export interface TitleProps extends Omit<BlockProps, 'strong'> {
 }
 
 /** `Paragraph` 的 props。与 antd 的 `ParagraphProps` 一致。 */
-export interface ParagraphProps extends BlockProps {}
+export interface ParagraphProps extends Omit<BlockProps, 'component'> {}
 
 /** `Link` 的 props。与 antd 的 `LinkProps` 一致（`ellipsis` **仅布尔**）。 */
-export interface LinkProps extends Omit<BlockProps, 'ellipsis'> {
+export interface LinkProps extends Omit<BlockProps, 'ellipsis' | 'component'> {
   ellipsis?: boolean;
   /** `target="_blank"` 且未传 `rel` 时自动补 `noopener noreferrer`。 */
   rel?: string;
@@ -329,7 +305,7 @@ export interface LinkProps extends Omit<BlockProps, 'ellipsis'> {
  *    （与 `EmptyRef` / `DividerRef` 同一条理由）。
  */
 export interface TypographyRef {
-  nativeElement: HTMLElement | null;
+  readonly nativeElement: HTMLElement | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -349,3 +325,7 @@ export type TypographyConfig = ComponentStyleConfig &
 
 /** 默认插槽的签名。antd 的 `children` 在 Vue 侧即此插槽。 */
 export type TypographySlot = () => VNodeChild;
+
+export interface TypographySlots {
+  default?: TypographySlot;
+}

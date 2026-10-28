@@ -114,6 +114,25 @@ export function toNodeList(value: VNodeChild): TypographyNode[] {
 }
 
 /** 节点数组的总长度。与 antd 的 `getNodesLen` 逐字对应。 */
+/** Plain native text and mounted component bodies, never VNode object strings. */
+export function plainText(nodes: readonly TypographyNode[]): string {
+  const text = (value: unknown): string => {
+    if (isValidText(value)) return String(value);
+    if (Array.isArray(value)) return value.map(text).join('');
+    if (!isVNode(value) || value.type === Comment) return '';
+    if (typeof value.type === 'string' || value.type === Text || value.type === Fragment)
+      return text(value.children);
+    const element: unknown = value.el;
+    return element &&
+      typeof element === 'object' &&
+      'textContent' in element &&
+      typeof element.textContent === 'string'
+      ? element.textContent
+      : '';
+  };
+  return nodes.map(text).join('');
+}
+
 export function getNodesLen(nodeList: readonly TypographyNode[]): number {
   let total = 0;
   for (const node of nodeList) {
@@ -157,17 +176,11 @@ export function sliceNodes(nodeList: readonly TypographyNode[], len: number): Ty
   return nodeList as TypographyNode[];
 }
 
-/**
- * 节点数组 → 可直接放进渲染树的孩子。
- *
- * ⚠️ **VNode 必须克隆**。Vue 的 VNode 是可变对象（patch 时会写 `el` / `component`），
- * 与 React 元素（不可变描述符）不同。ellipsis 的测量路径会把**同一份内容**同时渲染到
- * 「最终内容」与最多 4 个测量容器里；不克隆的话，第二个位置会把第一个位置的 DOM
- * **搬走**（Vue 的 `mountElement` 把同一个 `el` insert 到新容器），而不是复制一份。
- * 这是 `packages/ui/src/empty/components/NodeRenderer.ts` 里记的同一个坑。
+/** Keep visible VNode identity so mounted content can be read for copying and projection.
+ * Hidden measurement receives native projections, never another mounted business VNode.
  */
 export function renderNodes(nodeList: readonly TypographyNode[]): RenderableChild[] {
-  return cloneNodes(nodeList);
+  return [...nodeList];
 }
 
 /**

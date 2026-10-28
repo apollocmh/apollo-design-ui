@@ -14,7 +14,7 @@ const suffix = text.slice(-suffixCount).trim();
     <Text :style="{ maxWidth: '260px' }" :ellipsis="{ suffix, tooltip: text }">
       {{ start }}
     </Text>
-    <div style="font-size: 12px; color: #999">
+    <div style="font-size: 12px; color: var(--apollo-color-text)">
       尾部固定保留「{{ suffix }}」，悬浮可查看完整文本
     </div>
   </div>

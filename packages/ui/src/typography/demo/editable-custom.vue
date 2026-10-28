@@ -36,7 +36,7 @@ const paragraphConfig = computed<EditConfig>(() => ({
     <div>
       <Text :editable="editableConfig">{{ text }}</Text>
     </div>
-    <div style="font-size: 12px; color: #999">保存后的值：{{ saved }}</div>
+    <div style="font-size: 12px; color: var(--apollo-color-text)">保存后的值：{{ saved }}</div>
     <Paragraph :editable="paragraphConfig" :style="{ width: '320px' }">
       {{ paragraph }}
     </Paragraph>

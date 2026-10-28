@@ -67,11 +67,9 @@ describe('Typography · 基础枚举与配置对象', () => {
     expectTypeOf<AutoSizeType>().toEqualTypeOf<{ minRows?: number; maxRows?: number }>();
   });
 
-  it('`TypographyTooltipProps` 目前**只声明 `title`**（Tooltip 未落地的缺口，README §7）', () => {
+  it('Typography tooltip configuration exposes its documented title data only', () => {
     expectTypeOf<TypographyTooltipProps>().toHaveProperty('title');
     expectTypeOf<TypographyTooltipProps['title']>().toEqualTypeOf<VNodeChild | undefined>();
-    // ⚠️ 这条断言是**故意的**：antd 那里是完整的 `TooltipProps`（几十个字段）。
-    //    一旦 Tooltip 落地，这里会红 —— 提醒把缺口补齐。
     expectTypeOf<keyof TypographyTooltipProps>().toEqualTypeOf<'title'>();
   });
 
@@ -157,8 +155,8 @@ describe('Typography · Props 的三层结构', () => {
     expectTypeOf<TitleProps['level']>().toEqualTypeOf<1 | 2 | 3 | 4 | 5 | undefined>();
   });
 
-  it('`ParagraphProps` 就是 `BlockProps`（没有增删）', () => {
-    expectTypeOf<ParagraphProps>().toEqualTypeOf<BlockProps>();
+  it('Paragraph keeps Block props except the private fixed-tag component field', () => {
+    expectTypeOf<ParagraphProps>().toEqualTypeOf<Omit<BlockProps, 'component'>>();
   });
 
   it('★ `LinkProps.ellipsis` **只能是布尔**（antd 的 `Omit<BlockProps,"ellipsis"> & {ellipsis?: boolean}`）', () => {
@@ -353,5 +351,18 @@ describe('Typography · 负例（应当报错）', () => {
       ];
     };
     expectTypeOf(negatives).toBeFunction();
+  });
+});
+
+describe('native public slot and fixed tags', () => {
+  it('fixed-tag children do not declare an ineffective component prop', () => {
+    expectTypeOf<TextProps>().not.toHaveProperty('component');
+    expectTypeOf<TitleProps>().not.toHaveProperty('component');
+    expectTypeOf<ParagraphProps>().not.toHaveProperty('component');
+    expectTypeOf<LinkProps>().not.toHaveProperty('component');
+    expectTypeOf<TypographyProps>().toHaveProperty('component');
+    // @ts-expect-error Text owns its native span; dynamic tags belong to Typography.
+    const invalid: TextProps = { component: 'button' };
+    void invalid;
   });
 });
