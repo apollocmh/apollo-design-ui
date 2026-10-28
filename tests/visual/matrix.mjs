@@ -388,6 +388,22 @@ export const COMPONENTS = {
     ],
   },
   typography: {
+    apolloVariants: [
+      'text',
+      'title',
+      'decorations',
+      'link',
+      'ellipsis',
+      'complete-content',
+      'copy-feedback',
+      'native-editing',
+      'native-focus',
+      'semantic-tokens',
+      'current-provider',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+    ],
     // 8 个 variant × 3 个 viewport = 24 张
     variants: [
       'text', // Text：基础 + 四种语义 type + disabled

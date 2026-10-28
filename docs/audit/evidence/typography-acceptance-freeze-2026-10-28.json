@@ -1,0 +1,701 @@
+{
+  "implementationBase": "c4883402",
+  "phase": "final native ownership fix and frozen acceptance fixtures; visual approval pending",
+  "sourceDigests": {
+    "packages/ui/src/typography/Base.ts": "9ad3254a4196da9b7b39559b71b9a5f63eb15a31513a5500363e699701164003",
+    "packages/ui/src/typography/__tests__/contract-audit.test.ts": "d46fecc33bfe955b75b48e9f5e3bd1bc44f3693cdef1f7c5f22fc8a587e0053a"
+  },
+  "before": {
+    "command": "vitest --project unit -t editing native ownership",
+    "passed": 3,
+    "failed": 1,
+    "failures": [
+      "Link editing native ownership keeps its actual editor root and names while respecting anchor-only listeners"
+    ],
+    "browser": {
+      "validFailure": "actual Link textarea click activated the anchor listener: expected 0, got 1",
+      "subsequentDisabledFailure": "fixture state was not reset after the first assertion; not a product defect; cleanup now uses finally"
+    }
+  },
+  "after": {
+    "relatedRuntime": {
+      "files": 61,
+      "passed": 1182,
+      "failed": 0
+    },
+    "publishedBrowser": {
+      "results": [
+        {
+          "name": "default: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 28.8,
+              "bottom": 12,
+              "size": 24
+            },
+            "changed": {
+              "top": 48,
+              "bottom": 19.2,
+              "size": 24
+            }
+          }
+        },
+        {
+          "name": "dark: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 28.8,
+              "bottom": 12,
+              "size": 24
+            },
+            "changed": {
+              "top": 48,
+              "bottom": 19.2,
+              "size": 24
+            }
+          }
+        },
+        {
+          "name": "compact: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 24,
+              "bottom": 10,
+              "size": 20
+            },
+            "changed": {
+              "top": 40,
+              "bottom": 16,
+              "size": 20
+            }
+          }
+        },
+        {
+          "name": "both: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 24,
+              "bottom": 10,
+              "size": 20
+            },
+            "changed": {
+              "top": 40,
+              "bottom": 16,
+              "size": 20
+            }
+          }
+        },
+        {
+          "name": "all Link semantic tones match text and native anchor focus consumes current decoration",
+          "passed": true
+        },
+        {
+          "name": "editor autoSize consumes min/max rows and keeps a draft during dynamic configuration",
+          "passed": true,
+          "actual": {
+            "before": {
+              "height": 92,
+              "line": 22,
+              "scroll": 994
+            },
+            "after": {
+              "height": 70,
+              "line": 22
+            }
+          }
+        },
+        {
+          "name": "editing exposes its actual native root and preserves the root id",
+          "passed": true
+        },
+        {
+          "name": "modifier/newline editing preserves actual multiline content",
+          "passed": true
+        },
+        {
+          "name": "owned copy controls are siblings of the native anchor",
+          "passed": true
+        },
+        {
+          "name": "blur saves once without stealing the external destination focus",
+          "passed": true
+        },
+        {
+          "name": "controlled refusal keeps the same editor and Enter requests remain usable",
+          "passed": true
+        },
+        {
+          "name": "IME Enter does not submit and accepted Escape returns owned focus",
+          "passed": true
+        },
+        {
+          "name": "Link editor clicks preserve textbox semantics without activating anchor listeners",
+          "passed": true
+        },
+        {
+          "name": "disabled Link blocks navigation and exposes its disabled state",
+          "passed": true
+        },
+        {
+          "name": "text-only editing has a native keyboard entry",
+          "passed": true
+        },
+        {
+          "name": "JS measurement retains one visible business input, its draft and focus",
+          "passed": true,
+          "actual": {
+            "inputCount": 1
+          }
+        }
+      ],
+      "errors": []
+    },
+    "rootStrict": "passed",
+    "publishedTemplates": "passed; five entries and all 14 demos",
+    "uiBuild": "passed",
+    "uiL7": "11 checks; 0 failures; 0 pending; --no-build after explicit build",
+    "hydration": {
+      "checks": [
+        "SSR complete content: container",
+        "SSR complete content: text",
+        "SSR complete content: title",
+        "SSR complete content: paragraph",
+        "SSR complete content: link",
+        "SSR editor root, name and multiline text",
+        "five server roots retained by hydration",
+        "pre-hydration draft, focus and selection retained during measurement",
+        "current theme/provider stage 1, stable roots and business lifecycle",
+        "current theme/provider stage 0, stable roots and business lifecycle",
+        "current theme/provider stage 1, stable roots and business lifecycle",
+        "unmount/remount cleans measurements and owns one business instance"
+      ],
+      "errors": []
+    }
+  },
+  "docsLocal": {
+    "testFiles": 15,
+    "tests": 161,
+    "typecheck": "passed",
+    "contentCheck": "passed",
+    "build": "85 routes passed",
+    "browser": {
+      "results": [
+        {
+          "demo": "basic",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "basic",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "component-token",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "component-token",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "copyable",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "copyable",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "editable",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "editable",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "semantic",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "semantic",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "suffix",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "suffix",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "table",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "table",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "text",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "text",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "title",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "title",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "name": "published title token custom/zero controls",
+          "passed": true
+        },
+        {
+          "name": "published clipboard control",
+          "passed": true
+        },
+        {
+          "name": "published multiline editing, save and autoSize controls",
+          "passed": true
+        },
+        {
+          "name": "published expand/collapse labels and controls",
+          "passed": true
+        },
+        {
+          "name": "published Provider replacement/removal and business focus",
+          "passed": true
+        },
+        {
+          "name": "physical API page and all 14 actual cards",
+          "passed": true
+        },
+        {
+          "name": "physical progress page with current stage",
+          "passed": true
+        }
+      ],
+      "errors": [],
+      "fallbackDocuments": []
+    }
+  },
+  "docsPublished": {
+    "sourceCommit": "c4883402296355d1eb76a59726f1b1c1487bf173",
+    "workflowRunId": 40657341285,
+    "workflowUrl": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40657341285",
+    "buildJobId": 122711482088,
+    "pagesJobId": 122713595884,
+    "jobs": "both succeeded",
+    "topologicalL7": {
+      "checks": 151,
+      "failed": 0,
+      "pending": 0,
+      "notApplicable": 67
+    },
+    "browser": {
+      "results": [
+        {
+          "demo": "basic",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "basic",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "component-token",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "component-token",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "copyable",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "copyable",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "editable",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "editable",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "semantic",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "semantic",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "suffix",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "suffix",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "table",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "table",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "text",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "text",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "title",
+          "theme": "light",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "title",
+          "theme": "dark",
+          "httpStatus": 404,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "name": "published title token custom/zero controls",
+          "passed": true
+        },
+        {
+          "name": "published clipboard control",
+          "passed": true
+        },
+        {
+          "name": "published multiline editing, save and autoSize controls",
+          "passed": true
+        },
+        {
+          "name": "published expand/collapse labels and controls",
+          "passed": true
+        },
+        {
+          "name": "published Provider replacement/removal and business focus",
+          "passed": true
+        },
+        {
+          "name": "physical API page and all 14 actual cards",
+          "passed": true
+        },
+        {
+          "name": "physical progress page with current stage",
+          "passed": true
+        }
+      ],
+      "errors": [],
+      "fallbackDocuments": [
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/basic?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/basic?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/component-token?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/component-token?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/copyable?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/copyable?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/editable?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/editable?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/editable-custom?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/editable-custom?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis-controlled?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis-controlled?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis-expandable?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis-expandable?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis-middle?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis-middle?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/semantic?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/semantic?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/suffix?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/suffix?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/table?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/table?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/text?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/text?theme=dark",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/title?theme=light",
+        "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/title?theme=dark"
+      ]
+    },
+    "delta": "New Link editor ownership fix is not in this deployment; it will be included in final publication."
+  },
+  "visualPlan": {
+    "states": 14,
+    "viewports": 3,
+    "planned": 42,
+    "approval": "pending; prototype captures are not approved"
+  },
+  "remaining": [
+    "clean-source capture/review/compare",
+    "final Docs/Registry unit acceptance and final publication",
+    "library-wide audit and final same-commit full gates remain open"
+  ]
+}

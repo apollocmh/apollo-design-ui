@@ -313,9 +313,7 @@ const BaseContent = defineComponent({
       onClick: onCopyClick,
     } = useCopyClick({
       copyConfig: () => copyConfig.value,
-      // antd 的兜底文案是 `toList(children, { skipEmpty: true }).join('')`。
-      // 这里把**归一化后的节点数组**交给同一个实现，语义逐字对应：
-      // 字符串节点原样拼接，元素节点得到 `'[object Object]'`（上游的真实行为）。
+      // Read current mounted content at activation; never stringify VNode descriptors.
       children: () => nodeList.value,
     });
 
@@ -796,7 +794,13 @@ const BaseContent = defineComponent({
       // >>>>>>>>>>> 编辑态
       if (editing.value) {
         return h(Editable, {
-          ...restAttrs,
+          ...(isLink
+            ? {
+                ...rootAttrs,
+                'aria-labelledby': linkAttrs['aria-labelledby'],
+                'aria-describedby': linkAttrs['aria-describedby'],
+              }
+            : restAttrs),
           ref: typographyRef,
           value: editConfig.value.text ?? childrenText.value ?? '',
           ariaLabel:

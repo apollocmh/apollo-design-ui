@@ -26,6 +26,7 @@ import { prepareSkeletonVisual } from './skeleton-state.mjs';
 import { prepareSpinVisual } from './spin-state.mjs';
 import { prepareStatisticVisual } from './statistic-state.mjs';
 import { prepareTagVisual } from './tag-state.mjs';
+import { prepareTypographyVisual } from './typography-state.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '../..');
@@ -214,6 +215,7 @@ async function main() {
               'empty',
               'tag',
               'avatar',
+              'typography',
             ].includes(item.component) && item.variant === 'native-focus',
         });
         const state =
@@ -239,7 +241,9 @@ async function main() {
                               ? await prepareTagVisual(page, item.variant)
                               : item.component === 'avatar'
                                 ? await prepareAvatarVisual(page, item.variant)
-                                : undefined;
+                                : item.component === 'typography'
+                                  ? await prepareTypographyVisual(page, item.variant)
+                                  : undefined;
         fs.mkdirSync(path.dirname(output), { recursive: true });
         await screenshotElement(page, '#stage', output);
         if (errors.length) throw new Error(errors.join(' | '));

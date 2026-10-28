@@ -238,6 +238,23 @@ try {
       true,
     );
   });
+  await check(
+    'Link editor clicks preserve textbox semantics without activating anchor listeners',
+    async () => {
+      const before = (await page.evaluate(() => window.typographyAudit.snapshot())).linkClicks;
+      await set({ linkEditing: true });
+      try {
+        const editor = page.locator('#owned-link textarea');
+        await editor.click();
+        assert.equal(
+          (await page.evaluate(() => window.typographyAudit.snapshot())).linkClicks,
+          before,
+        );
+      } finally {
+        await set({ linkEditing: false });
+      }
+    },
+  );
   await set({ disabled: true });
   await check('disabled Link blocks navigation and exposes its disabled state', async () => {
     await page.locator('#owned-link a').focus();

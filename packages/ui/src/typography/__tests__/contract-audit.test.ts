@@ -434,3 +434,39 @@ it('isolates pending copy requests across instances', async () => {
   expect(write.mock.calls.map(([text]) => text)).toEqual(['Second', 'First']);
   expect(first.classList.contains('apollo-typography-copy-success')).toBe(true);
 });
+
+describe.each(entries.filter((entry) => entry.name !== 'Typography'))(
+  '$name editing native ownership',
+  ({ name, component }) => {
+    it('keeps its actual editor root and names while respecting anchor-only listeners', async () => {
+      const instance = ref<TypographyRef | null>(null),
+        clicked = vi.fn();
+      mounted(
+        defineComponent(
+          () => () =>
+            h(
+              component,
+              {
+                ref: instance,
+                id: 'editing-owner',
+                'aria-label': 'Owned editor',
+                'aria-describedby': 'editor-help',
+                editable: { editing: true, text: 'Draft' },
+                onClick: clicked,
+              },
+              () => 'Body',
+            ),
+        ),
+      );
+      await nextTick();
+      const root = document.getElementById('editing-owner');
+      const input = root?.querySelector('textarea');
+      if (!(input instanceof HTMLTextAreaElement)) throw Error('Missing actual editor');
+      expect(instance.value?.nativeElement).toBe(root);
+      expect(input.getAttribute('aria-label')).toBe('Owned editor');
+      expect(input.getAttribute('aria-describedby')).toBe('editor-help');
+      input.click();
+      expect(clicked).toHaveBeenCalledTimes(name === 'Link' ? 0 : 1);
+    });
+  },
+);

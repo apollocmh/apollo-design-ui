@@ -26,6 +26,8 @@ const state = reactive({
   saved: '',
   saves: 0,
   disabled: false,
+  linkEditing: false,
+  linkClicks: 0,
   textOnly: false,
   width: 300,
   rows: 2,
@@ -106,7 +108,7 @@ const semanticTypes = ['secondary', 'success', 'warning', 'danger'] as const;
       <Text ref="editRef" id="edit-identity" aria-label="Contract editor" :editable="editable" :style="{ width: '240px', display: 'block' }">Display text</Text>
     </section>
     <section id="semantic-links"><template v-for="kind in semanticTypes" :key="kind"><Text :data-tone-text="kind" :type="kind">Semantic {{ kind }}</Text><Link :data-tone-link="kind" :type="kind" href="#owned-target">Semantic {{ kind }}</Link></template><Link data-focus-link href="#owned-target">Focus link</Link></section>
-    <section id="owned-link"><Link href="#owned-target" :disabled="state.disabled" copyable><span data-link-body>Owned link</span></Link></section>
+    <section id="owned-link"><Link href="#owned-target" :disabled="state.disabled" :editable="{ editing: state.linkEditing, text: 'Link draft' }" @click="state.linkClicks++" copyable><span data-link-body>Owned link</span></Link></section>
     <span id="owned-target">Link destination</span>
     <section id="text-only"><button id="before-text" type="button">Before edit text</button><Text aria-label="Text edit control" :editable="{ triggerType: ['text'] }">Keyboard editable text</Text><button id="after-text" type="button">After edit text</button></section>
     <section id="measure">
