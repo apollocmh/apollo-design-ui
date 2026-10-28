@@ -4,12 +4,12 @@
 
 | 范围 | 数量 | 状态 |
 | --- | --- | --- |
-| 已完整验收并交付的组件 | 13 | 下表列明；保留各自提交、运行和发布证据 |
-| Descriptions / Breadcrumb / Timeline / Space / Grid | 5 | 全部源码里程碑已提交，发布JS/CSS/声明、正式视觉与Docs统一验收中 |
+| 已完整验收并交付的组件 | 17 | 下表列明；保留各自提交、运行和发布证据 |
+| Space / Input关联链 | 1 | Addon底线已源/发布验证，Input当前主题尺寸与autoSize整改中；最终75张视觉继续 |
 | 其余组件 | 54 | 尚未按本轮完整清单收口，既有局部修复保留 |
 | 基础包 | 13 | 已有实现和共享链路专项证据；本轮逐包复核另列，不将旧完成状态当作当前全包验收 |
 
-总组件72=13已交付+5统一验收中+54其他待审。用户已取消日期约束，按实际验收更新；数量不折算工时百分比。
+总组件72=17已交付+1统一验收中+54其他待审。用户已取消日期约束，按实际验收更新；数量不折算工时百分比。
 
 ## 当前组件单元
 
@@ -24,7 +24,7 @@
 | BackTop | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Badge | 已完整验收并交付 | [2026-10-28-badge-contract-audit.md](2026-10-28-badge-contract-audit.md) |
 | BorderBeam | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
-| Breadcrumb | 源码实现已提交；统一验收中 | 完整清单与红灯证据随所属单元提交交付 |
+| Breadcrumb | 已完整验收并交付 | [四单元最终验收](evidence/four-unit-final-acceptance.json) |
 | Button | 已完整验收并交付 | [2026-10-27-button-contract-audit.md](2026-10-27-button-contract-audit.md) |
 | Calendar | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Card | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
@@ -35,7 +35,7 @@
 | ColorPicker | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | ConfigProvider | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | DatePicker | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
-| Descriptions | 源码实现已提交；统一验收中 | 完整清单与红灯证据随所属单元提交交付 |
+| Descriptions | 已完整验收并交付 | [四单元最终验收](evidence/four-unit-final-acceptance.json) |
 | Divider | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Drawer | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Dropdown | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
@@ -43,7 +43,7 @@
 | Flex | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | FloatButton | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Form | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
-| Grid | 源码实现已提交；统一验收中 | [完整清单](2026-10-28-grid-contract-audit.md) |
+| Grid | 已完整验收并交付 | [四单元最终验收](evidence/four-unit-final-acceptance.json) |
 | Image | 已完整验收并交付 | [2026-10-25-image-contract-audit.md](2026-10-25-image-contract-audit.md) |
 | Input | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | InputNumber | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
@@ -78,7 +78,7 @@
 | Tabs | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Tag | 已完整验收并交付 | [2026-10-27-tag-contract-audit.md](2026-10-27-tag-contract-audit.md) |
 | TimePicker | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
-| Timeline | 源码实现已提交；统一验收中 | 完整清单与红灯证据随所属单元提交交付 |
+| Timeline | 已完整验收并交付 | [四单元最终验收](evidence/four-unit-final-acceptance.json) |
 | Tooltip | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Tour | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Transfer | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
@@ -123,3 +123,5 @@ Badge最终交付：47b98296 / Docs部署40701370080，线上32通过；此后�
 公共样式已完成全72组件/69入口盘点并实施3214ee10/76eb766a；发布69份输出一致、严格UI L7 11项零失败、24对独立CSS真实浏览器几何/paint/rawRGBA全一致。Upload六字段窄整改2ef32069的发布两种CSS各75通过，体积为所需Progress组合成本，预算a47d96ec单独记录。整单元计数保持13；独立a47d96ec正在复核四组件222张及原537张。Space交叉审图重开Input当前主题尺寸与Addon下划线两项真实缺陷，不以原82/160绿灯宣布通过。
 
 四组件正式视觉已批准222张：Descriptions51/Breadcrumb51/Timeline78/Grid42，清洁a47d96ec；逐图实际审阅及171张rawRGBA完全一致的继承关系见evidence/four-unit-native-visual-acceptance.json。原1692份PNG和537条既存批准记录保持，当前批准759/1602、待验收843；原537真实回归仍在运行，Docs验收继续，不提前增加13个已完整交付的计数。
+
+当前交付里程碑：Descriptions/Breadcrumb/Timeline/Grid四单元已统一验收，交付数17/72；52个发布Demo模板、222张批准后的真实重渲染raw精确、既有537回归、当前CSS/L7与Docs161+32均有独立证据，根严格检查也在冻结2f47f423通过。原1692份PNG未改。Space关联链、其他54单元与13基础包继续。证据four-unit-final-acceptance.json；新进展页部署回执另记。

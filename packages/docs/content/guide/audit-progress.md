@@ -11,19 +11,19 @@ order: 0
 
 | 范围 | 当前结果 |
 | --- | --- |
-| 72个组件主单元 | 13个已完整验收并交付；Badge部署40701370080，线上32项通过 |
-| 当前并行 | Descriptions、Breadcrumb、Timeline、Space、Grid五路；源码已提交，统一验收发布产物和正式视觉 |
+| 72个组件主单元 | 17个已完整验收；Descriptions / Breadcrumb / Timeline / Grid 本批通过 |
+| 当前并行 | Space关联Input继续；下一组Flex、Alert、Layout先完整盘点 |
 | 其余组件 | 54个尚待按本轮完整标准收口；已有局部修复继续保留 |
 | 13个基础包 | 已有共享链路专项证据；逐包当前复核继续，不能把消费场景通过当作整包完成 |
 | 最终验收 | 所有整改单元结束后，对最终同一提交执行全量门禁 |
 
 [完整72项工作清单、证据与剩余边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md)。组件复杂度不同，上述数量不代表工时百分比。
 
-## 2026-10-29：五路修复已提交，正在验收发布产物
+## 2026-10-29：四个组件已统一验收，Space关联链继续
 
 Descriptions 的键盘帮助、Breadcrumb 的真实菜单导航、Timeline 横向长文与连线、Grid 响应式配置、Space/Compact 的动态内容与实际子组件已成组修复。共享 Menu 原生操作、断点观察器和 Select 紧凑尺寸分别提交，迁移说明与 Demo 同步；不保留错误的 React 回调用法。
 
-五组发布 JS、声明、实际 Demo 和 SSR/水合已有分别通过的记录。公共样式已盘清72组件/69入口，补齐内部CSS依赖和共享链接归属；69份发布样式、严格UI L7及24对独立/全量CSS浏览器几何、绘制与原始像素对照通过。Upload六个既有进度配置也已修复，发布两种CSS各75条断言通过。四组件222张正式视觉已经逐图审阅批准，原1692份PNG（含原537张Apollo）未改；原537张行为回归继续运行。Space审图发现Input紧凑主题尺寸、Addon下划线两项实际缺陷，继续修复后重验。完整交付仍13/72，已批准759/1602、843待验收；局部绿灯不代表整单元或全库完成。
+Descriptions、Breadcrumb、Timeline、Grid 已按完整清单统一验收：52个发布Demo模板、根严格/UI L7、222张新视觉批准后的重渲染，以及Docs161条测试/32项真实页面交互通过。原537张浏览器回归也全部通过，原1692份PNG保留。公共样式已盘清72组件/69入口，补齐组合依赖与共享链接，24对按需/全量CSS的几何、绘制与原始像素一致。Space的Addon底线已修复并通过发布验证；Input当前主题尺寸、19个既有Token、覆盖优先级和autoSize关联链继续统一验收。完整交付17/72，视觉批准759/1602、843待验收；最终全库门禁仍待全部单元完成。
 
 - [Descriptions 当前用法与示例](/components/descriptions)
 - [Breadcrumb 原生内容与菜单](/components/breadcrumb)
@@ -179,19 +179,19 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 
 | Scope | Current evidence |
 | --- | --- |
-|72 component units|13 fully accepted and delivered;Badge deployment40701370080 has32 live-browser checks passing|
-|Parallel work|Descriptions,Breadcrumb,Timeline,Space andGrid have committed source milestones;published artifacts and reviewed visuals are being accepted|
+|72 component units|17 fully accepted; Descriptions, Breadcrumb, Timeline and Grid pass this batch|
+|Parallel work|Space and Input continue; Flex, Alert and Layout enter full inventory next|
 |Other components|54 still await complete current-source acceptance;earlier partial fixes remain valid|
 |13 foundation packages|Existing shared-chain evidence remains;current per-package review continues|
 |Final gate|Run whole-library gates on the same final commit after all units close|
 
 [All72 units, evidence and remaining boundaries](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md). These counts are not weighted work percentages.
 
-## Five source milestones committed; published acceptance in progress
+## Four units accepted; the Space and Input chain continues
 
 Grouped fixes cover keyboard help in Descriptions, native Breadcrumb navigation, horizontal Timeline content and rail alignment, responsive Grid configuration, and current Space/Compact content and real consumers. Menu native actions, Provider breakpoint ownership and Select compact sizing have separate commits, with migration notes and demos.
 
-Published JS, declarations, real demos and SSR/hydration have separate passing records. All72 components and69 stylesheet entries have been inventoried; internal CSS dependencies and shared link ownership are corrected. The69 published styles, strict UI L7 and24 individual/aggregate browser comparisons pass with matching geometry, paint and raw pixels. All six existing Upload progress options are also corrected, with75 published browser checks passing for each CSS mode. All222 clean-source visuals for four components have now been reviewed and approved; all1692 existing PNG files, including the original537 Apollo images, remain unchanged. The original537 browser regressions are still running. Space has two confirmed defects in the current scope: compact Input sizing and the Addon underline. Complete delivery remains13 of72 while Docs acceptance continues;759 of1602 visuals are approved and843 remain pending.
+Descriptions, Breadcrumb, Timeline and Grid have passed their full current-source checklists:52 published demo templates, strict compilation/UI L7,222 post-approval visual rerenders, and Docs161 tests/32 real page checks. All537 existing browser regressions also pass; the original1692 PNG files remain unchanged. The72 components and69 stylesheet entries have been inventoried, and24 individual/aggregate CSS comparisons match in geometry, paint and raw pixels. Space remains open for Input theme/sizing, all19 existing tokens, override precedence and autoSize; the Addon underline passes published verification. Complete delivery is17 of72, with759 of1602 visuals approved and843 pending. Final whole-library gates follow after all units close.
 
 ## Badge / Ribbon implementation, styles and42 Apollo visuals accepted
 

@@ -681,3 +681,7 @@ Descriptions5ab9b3c4、Breadcrumb40ec3962、Timeline3ce8d1d2、Grid04be6282与Sp
 正式交叉审图另确认Space紧凑主题的Input字号/padding仍取默认Token，Addon underlined与borderless同绘制；两项纳入本轮必修，旧160绘制矩阵不足以证明底线语义。当前Source里程碑保留，整单元仍开放。四个其他组件222张新候选与原537张回归在清洁独立快照验收中，完整交付仍13/72、已批准视觉仍537/1602。
 
 四组件正式视觉里程碑：清洁a47d96ec的Descriptions51、Breadcrumb51、Timeline78、Grid42共222张已逐图审阅批准；其中171张通过相同尺寸/rawRGBA继承此前实际审图，Breadcrumb新51张逐张查看。原1692份PNG和537条批准记录全部未改，当前759/1602批准、843待验收。批准完整性222项检查通过；整单元Docs验收仍待对应阶段，交付计数暂保持13。[逐图证据](audit/evidence/four-unit-native-visual-acceptance.json)。
+
+### 2026-10-29 · 四组件统一验收完成
+
+Descriptions、Breadcrumb、Timeline、Grid的完整清单已核对并统一验收。52个发布Demo模板、222张正式审阅批准及批准后清洁重渲染raw精确、既存537回归、69样式产物与真实CSS消费者、根严格/UI L7及Docs161+32分别通过，原1692份PNG保持。完整交付计数由13升17/72，759/1602视觉批准。Addon下划线2f47f423已单独源/发布验收，Space仍待Input当前主题/autoSize/覆盖链与最终75图，不提前标全完。[最终范围与证据](audit/evidence/four-unit-final-acceptance.json)。

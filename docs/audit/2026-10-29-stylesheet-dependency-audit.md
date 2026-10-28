@@ -33,3 +33,11 @@
 原命令重跑12状态×2视口、10个隔离打包与48次实际渲染，24/24几何、paint、原始RGBA完全一致；原6个Breadcrumb链接差异全部消失、18个正常对照保留。全部模块无实现源码别名、零浏览器/Vue错误、产物指纹未变、读者已退出。逐状态红绿及artifact/L7见[浏览器证据](evidence/component-style-entries-published.json)和[发布产物证据](evidence/stylesheet-dependency-published-stage.json)。
 
 当前自有视觉继续由独立物理dist快照复核：Descriptions/Breadcrumb/Timeline/Grid共222张，以及既有537张；Space另有Input当前主题尺寸和Addon underlined缺陷正在成组修复，未批准75张。按需对照24对的通过不表示上述组件整单元或全库验收结束。
+
+## 当前共享CSS整改单元验收
+
+已盘清72个组件/69入口并完成依赖闭包、Tabs阶段片段与基础链接归属修复；50条组合/前缀、69份构建输出一致性、严格UI L7 11项均通过。24对当前组件按需/全量CSS的geometry/paint/rawRGBA全一致；另外Typography复制/编辑/省略3链、Controls21页73观察/56精确对照、Data五组件15主场景及实际弹层/宿主、Form/Card/Tabs12状态20检查均使用隔离发布JS/CSS通过，具体范围和初版夹具纠正保留。没有宣称34个父组件所有API/条件都逐一跑过浏览器。
+
+原537张已批准状态重渲染全部PASS，534张对批准图rawRGBA精确；另外3张List.loading是57ab2894已接受的Spin定位差异（112/104/104像素），已用原生定位反事实逐视口归因。全部537对3214阶段截图rawRGBA完全一致，因此共享链接移位新增像素变化为0，未改原有基线。四新组件222张批准后从清洁ad850a47再渲染，也全部PASS且rawRGBA完全一致。759张是分两批真实执行，不能伪称一个全库最终运行；还有843张未验收。
+
+本CSS依赖整改单元范围内已实现、已验证并收口；证据分别为stylesheet-typography-published、stylesheet-controls-published、stylesheet-data-published、stylesheet-form-card-tabs-published、stylesheet-existing537-regression与four-unit-approved222-regression JSON。其它组件整单元、Input当前主题/autoSize整改、Space最终验收及最终同一提交全库门禁继续，不被这些局部证据替代。

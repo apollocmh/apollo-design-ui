@@ -1,0 +1,900 @@
+{
+  "sourceCommit": "ad850a47",
+  "approvedAt": "a47d96ec",
+  "passed": 222,
+  "rawExact": 222,
+  "rows": [
+    {
+      "id": "descriptions/basic__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/basic__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/basic__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/bordered__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/bordered__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/bordered__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/vertical__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/vertical__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/vertical__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/vertical-bordered__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/vertical-bordered__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/vertical-bordered__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/sizes__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/sizes__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/sizes__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/filled__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/filled__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/filled__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/complete-content__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/complete-content__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/complete-content__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/empty-slots__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/empty-slots__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/empty-slots__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/current-geometry__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/current-geometry__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/current-geometry__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/current-provider__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/current-provider__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/current-provider__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/semantic-tokens__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/semantic-tokens__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/semantic-tokens__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/nested__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/nested__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/nested__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/native-focus__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/native-focus__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/native-focus__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/rtl__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/rtl__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/rtl__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/theme-dark__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/theme-dark__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/theme-dark__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/theme-compact__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/theme-compact__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/theme-compact__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/theme-dark-compact__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/theme-dark-compact__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "descriptions/theme-dark-compact__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/basic__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/basic__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/basic__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/with-icon__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/with-icon__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/with-icon__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/separator__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/separator__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/separator__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/separator-item__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/separator-item__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/separator-item__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/with-params__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/with-params__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/with-params__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/overlay__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/overlay__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/overlay__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/semantic__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/semantic__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/semantic__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/rtl__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/rtl__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/rtl__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/complete-content__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/complete-content__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/complete-content__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/no-title-menu__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/no-title-menu__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/no-title-menu__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/conditional-content__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/conditional-content__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/conditional-content__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/current-provider__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/current-provider__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/current-provider__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/keyboard-menu__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/keyboard-menu__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/keyboard-menu__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/native-focus__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/native-focus__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/native-focus__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/theme-dark__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/theme-dark__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/theme-dark__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/theme-compact__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/theme-compact__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/theme-compact__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/theme-dark-compact__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/theme-dark-compact__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "breadcrumb/theme-dark-compact__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/basic__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/basic__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/basic__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/verticalSingle__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/verticalSingle__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/verticalSingle__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/alternate__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/alternate__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/alternate__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/horizontal__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/horizontal__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/horizontal__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/horizontal-end__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/horizontal-end__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/horizontal-end__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/titleSpanNumber__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/titleSpanNumber__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/titleSpanNumber__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/titleSpanString__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/titleSpanString__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/titleSpanString__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/colors__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/colors__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/colors__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/loading__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/loading__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/loading__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/pending__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/pending__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/pending__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/reverse__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/reverse__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/reverse__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/variantFilled__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/variantFilled__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/variantFilled__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/rtl__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/rtl__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/rtl__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/complete-content__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/complete-content__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/complete-content__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/scalar-content__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/scalar-content__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/scalar-content__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/long-horizontal__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/long-horizontal__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/long-horizontal__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/token-overrides__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/token-overrides__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/token-overrides__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/semantic__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/semantic__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/semantic__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/conditional-slots__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/conditional-slots__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/conditional-slots__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/current-provider__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/current-provider__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/current-provider__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/reverse-edit__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/reverse-edit__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/reverse-edit__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/pending-zero__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/pending-zero__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/pending-zero__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/native-focus__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/native-focus__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/native-focus__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/theme-dark__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/theme-dark__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/theme-dark__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/theme-compact__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/theme-compact__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/theme-compact__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/theme-dark-compact__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/theme-dark-compact__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "timeline/theme-dark-compact__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/basic__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/basic__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/basic__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/gutter__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/gutter__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/gutter__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/responsive__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/responsive__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/responsive__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/offset-sort__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/offset-sort__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/offset-sort__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/flex__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/flex__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/flex__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/justify-align__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/justify-align__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/justify-align__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/responsive-fields__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/responsive-fields__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/responsive-fields__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/nested-rtl__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/nested-rtl__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/nested-rtl__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/complete-content__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/complete-content__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/complete-content__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/current-provider__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/current-provider__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/current-provider__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/native-focus__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/native-focus__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/native-focus__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/theme-dark__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/theme-dark__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/theme-dark__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/theme-compact__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/theme-compact__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/theme-compact__light__desktop",
+      "rawExact": true
+    },
+    {
+      "id": "grid/theme-dark-compact__light__mobile",
+      "rawExact": true
+    },
+    {
+      "id": "grid/theme-dark-compact__light__tablet",
+      "rawExact": true
+    },
+    {
+      "id": "grid/theme-dark-compact__light__desktop",
+      "rawExact": true
+    }
+  ],
+  "command": "node tests/visual/apollo.mjs --component descriptions --component breadcrumb --component timeline --component grid --no-build --report-file /tmp/apollo-four-native-a47d96ec/approved222-regression.json",
+  "exitCode": 0,
+  "worktree": "/tmp/apollo-visual-ad850a47",
+  "productionSourceUnchangedSinceBuild": "350f4cb2"
+}

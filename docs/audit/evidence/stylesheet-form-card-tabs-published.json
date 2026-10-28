@@ -1,0 +1,197 @@
+{
+  "command": "node /tmp/apollo-css-dependency-audit/forms-a47d96ec-verified/forms-browser-a47d96ec.mjs",
+  "cwd": "/tmp/apollo-css-visual-a47d96ec",
+  "exitCode": 0,
+  "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+  "endCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+  "worktreeCleanBeforeAndAfter": true,
+  "runLog": "/tmp/apollo-css-dependency-audit/forms-a47d96ec-verified/forms-browser.log",
+  "evidence": "/tmp/apollo-css-dependency-audit/forms-a47d96ec-verified/forms-browser.json",
+  "probes": {
+    "passed": 12,
+    "total": 12
+  },
+  "checks": {
+    "passed": 20,
+    "total": 20
+  },
+  "runtimeErrors": [],
+  "runtimeSourceModules": [],
+  "nonFrozenApolloModules": [],
+  "publishedModuleCount": 1829,
+  "oldRedEvidenceRetained": {
+    "path": "/tmp/apollo-css-dependency-audit/forms-browser.json",
+    "sha256": "1707a9e3df8084d4c051dd92639125066a27e3e093923f27c7906e35a0772775",
+    "conclusions": {
+      "tabs": {
+        "motionGapConfirmed": true,
+        "singleMs": 0,
+        "allMs": 200,
+        "singleAnimation": false,
+        "allAnimation": true
+      },
+      "form": {
+        "gridGapConfirmed": true,
+        "tooltipGapConfirmed": true
+      },
+      "cardLoading": {
+        "skeletonGapConfirmed": true
+      },
+      "cardTabs": {
+        "tabsGapConfirmed": true
+      }
+    }
+  },
+  "publishedDistFingerprintBeforeAndAfter": {
+    "packageRoots": [
+      "a11y",
+      "form-core",
+      "icons",
+      "locale",
+      "motion",
+      "overlay",
+      "picker",
+      "portal",
+      "position",
+      "test-utils",
+      "theme",
+      "ui",
+      "utils",
+      "virtual-list"
+    ],
+    "fileCount": 3679,
+    "sha256": "80943e355651586c6eea938be6d83ab63de50477800e0bcfc753748ead0ff76c"
+  },
+  "browserAndPreviewClosed": true,
+  "temporaryFixtureRemoved": true,
+  "closeEvidence": "Node process exited0 after finally awaited browser.close(), preview.close() and removed temp; no probe process remains.",
+  "singleStylesheets": {
+    "tabs": [
+      "tokens.css",
+      "tabs.css"
+    ],
+    "form": [
+      "tokens.css",
+      "form.css"
+    ],
+    "card-loading": [
+      "tokens.css",
+      "card.css"
+    ],
+    "card-tabs": [
+      "tokens.css",
+      "card.css"
+    ]
+  },
+  "strictOldAllGeometryPaintRetained": true,
+  "tabsMotion": {
+    "single": {
+      "duration": "0.2s",
+      "playState": "running",
+      "animation": "apollo-slide-up-in",
+      "cssAnimation": {
+        "name": "apollo-slide-up-in",
+        "playState": "running",
+        "duration": 200,
+        "currentTime": 0
+      },
+      "popup": {
+        "className": "apollo-tabs-dropdown apollo-tabs-dropdown-placement-bottomLeft",
+        "menuItems": 15,
+        "rect": {
+          "width": 120,
+          "height": 200
+        }
+      },
+      "selectedTab": "Tab 18",
+      "selectedPanel": "Panel 17",
+      "panelSemantics": {
+        "labelledby": "probe-tabs-tab-17",
+        "hidden": "false",
+        "tabindex": "0"
+      }
+    },
+    "deps": {
+      "duration": "0.2s",
+      "playState": "running",
+      "animation": "apollo-slide-up-in",
+      "cssAnimation": {
+        "name": "apollo-slide-up-in",
+        "playState": "running",
+        "duration": 200,
+        "currentTime": 0
+      },
+      "popup": {
+        "className": "apollo-tabs-dropdown apollo-tabs-dropdown-placement-bottomLeft",
+        "menuItems": 15,
+        "rect": {
+          "width": 120,
+          "height": 200
+        }
+      },
+      "selectedTab": "Tab 18",
+      "selectedPanel": "Panel 17",
+      "panelSemantics": {
+        "labelledby": "probe-tabs-tab-17",
+        "hidden": "false",
+        "tabindex": "0"
+      }
+    },
+    "all": {
+      "duration": "0.2s",
+      "playState": "running",
+      "animation": "apollo-slide-up-in",
+      "cssAnimation": {
+        "name": "apollo-slide-up-in",
+        "playState": "running",
+        "duration": 200,
+        "currentTime": 0
+      },
+      "popup": {
+        "className": "apollo-tabs-dropdown apollo-tabs-dropdown-placement-bottomLeft",
+        "menuItems": 15,
+        "rect": {
+          "width": 120,
+          "height": 200
+        }
+      },
+      "selectedTab": "Tab 18",
+      "selectedPanel": "Panel 17",
+      "panelSemantics": {
+        "labelledby": "probe-tabs-tab-17",
+        "hidden": "false",
+        "tabindex": "0"
+      }
+    }
+  },
+  "screenshotCount": 12,
+  "screenshotsActuallyViewed": [
+    "tabs/single",
+    "form/single",
+    "card-loading/single",
+    "card-tabs/single"
+  ],
+  "harnessCorrection": {
+    "previousEvidence": "/tmp/apollo-css-dependency-audit/forms-a47d96ec/forms-browser.json",
+    "reason": "New extra interaction used an incorrect internal tabpane-active selector. Actual component emits role=tabpanel, aria-labelledby, aria-hidden and content-active (TabPane.ts:47). The corrected extra check uses accessible roles and verifies aria linkage/visibility/tabindex. Original geometry, paint and motion assertions are unchanged."
+  },
+  "limits": "One desktop1000x850 probe per unit/mode; no full API, theme matrix or baseline acceptance claimed.",
+  "visualBaselineAcceptance": false,
+  "artifactSha256": {
+    "forms-browser-a47d96ec.mjs": "a8e4f016f64e0c0de283fa3e4f02a4e6160614aa3e738fab29572be2d9cc5b9e",
+    "forms-browser.json": "4f799d347ac06a7252f37312dd77c171b0f4ff508259489661e71231dcdd21ed",
+    "forms-browser.log": "48e90fa9b882164c255376744f9707b7b69b7506e110b8ddf603bcad7ebddc66",
+    "forms-card-loading-all.png": "af90ebf3d5fc4aba2f6feac3692da6c461d01dfe8bade611eca8e483644b24ff",
+    "forms-card-loading-deps.png": "c73df34d709f064a401842894f2f152d69b3ef39ab35e36bb4bfec8bda830c41",
+    "forms-card-loading-single.png": "64eb6eac0b78de030465d1f7142aa6490e890661fc579b9962f64e3828a32441",
+    "forms-card-tabs-all.png": "661ed24f13cc7e97762f166167755c29fbd22d8747779feeb1f6777c8c2cb13a",
+    "forms-card-tabs-deps.png": "f7d5652b592b8015415608420e2298fcd03467e835a62173b8d82e7443636acd",
+    "forms-card-tabs-single.png": "282c9c3da0a20bcdf3f428c14838d56e0061a9472611c0106bbd4adfa98e3d60",
+    "forms-form-all.png": "49abd8e9dae1fae3c53230f26e32a466b2454ce05263805dd330bbf89444e547",
+    "forms-form-deps.png": "0fdf93caceef0366f018255449dcac13d0f25b44ae308426eb57f72f3578701c",
+    "forms-form-single.png": "62de0ce8129f198172ce7993f43af330bf86638fed12a4a6cf95e8bd834d63f8",
+    "forms-tabs-all.png": "d538b5fa305730bcae1acb4d8dbeaad0c2a693f720a1122181ef406200805d69",
+    "forms-tabs-deps.png": "de3426b17a1110bf0d7f5fef515a5e66ee7228511cfe9386b2e08cb919dac84a",
+    "forms-tabs-single.png": "047ff01ad02193c0e7babcaeaf075f9307cb7babe9b7e0d4b492548a93be505a"
+  }
+}

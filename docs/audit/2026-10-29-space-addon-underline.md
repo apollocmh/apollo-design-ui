@@ -105,3 +105,9 @@
 ## 主线程保存点
 
 上述12个所属文件已逐项与冻结SHA一致后集成，生产仅Space静态样式。源码矩阵4608/4608、相关runtime445、真实browser83（15 Demo×四主题axe）、公开类型44与15 Demo源码消费分别通过，日志和范围见[结构化源码证据](evidence/space-addon-underline-source.json)。没有修改Input、共享上下文/Registry或dist；此保存点不冒称发布产物和Space整单元完成。下一阶段实际UI构建与发布消费后另记。
+
+## 实际发布产物验收
+
+保存点 `2f47f423` 的独立工作树实际unbuild退出0，严格UI L7 11项零失败/待定。公开发布JS/d.ts/space与汇总CSS来自同一新dist；原83条浏览器（含四主题160绘制组合、动态/原生变量/编辑器身份和SSR水合）及全部15真实Demo的发布声明消费通过，零浏览器/Vue错误。7个关键产物正式before/after指纹一致，所有读者已退出，未改主350f4cb2 dist。来源、命令和SHA见[发布验收证据](evidence/space-addon-underline-published.json)。
+
+Addon已有variant的底线窄修正已实现并分别通过源码/发布验收；Space仍需Input当前主题尺寸链修复后重拍75张，不以本窄单元通过宣称Space全部完成。

@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-29",
+  "status": "Four units accepted in current scope; whole-library audit remains open",
+  "implementedAt": {
+    "descriptions": "5ab9b3c4",
+    "breadcrumb": "40ec3962",
+    "timeline": "3ce8d1d2",
+    "grid": "04be6282"
+  },
+  "publishedBehaviorCheckpoint": "e0062edd",
+  "nativeSourceFreeze": "a47d96ec",
+  "approvedVisualCommit": "ad850a47",
+  "postApprovalRerenderCommit": "ad850a47",
+  "docsAndAddonBuildCommit": "2f47f423",
+  "sourceUnchangedForFourUnitsBetweenBehaviorCheckpointAndNativeFreeze": true,
+  "relatedRuntimeByUnit": {
+    "descriptions": 119,
+    "breadcrumb": 114,
+    "timeline": 249,
+    "grid": 104
+  },
+  "runtimeCountsMayOverlap": true,
+  "publishedBehaviorEvidence": "five-unit-published-checkpoint-2026-10-29.json",
+  "currentDeclarations": "four-unit-published-types-350f4cb2.json",
+  "currentCssEvidence": "component-style-entries-published.json",
+  "uiStrictL7": {
+    "checks": 11,
+    "failed": 0,
+    "pending": 0,
+    "evidence": "space-addon-underline-published.json"
+  },
+  "nativeVisuals": {
+    "newReviewedAndApproved": 222,
+    "newPostApprovalRerenderPass": 222,
+    "newRawExact": 222,
+    "existingRerenderPass": 537,
+    "existingRawExactToPreLinkMove": 537,
+    "existingRawExactToApproved": 534,
+    "preExistingListSpinDifferences": 3,
+    "existingOriginalPngFilesUnchanged": 1692,
+    "evidence": [
+      "four-unit-native-visual-acceptance.json",
+      "four-unit-approved222-regression.json",
+      "stylesheet-existing537-regression.json"
+    ]
+  },
+  "docs": {
+    "content": "72 components / 1008 demos / 8 guides",
+    "strictTypes": "passed",
+    "tests": 161,
+    "build": "passed",
+    "realBrowser": 32,
+    "realBrowserErrors": 0,
+    "evidence": "four-unit-docs-local-acceptance.json",
+    "updatedLivePublication": "Pending next deployment; implementation and API demos already live at b485d136"
+  },
+  "deliveryCount": {
+    "before": 13,
+    "after": 17,
+    "spaceStillOpen": 1,
+    "otherUnitsAwaitingCurrentFullAudit": 54,
+    "total": 72
+  },
+  "visualCoverage": {
+    "approved": 759,
+    "planned": 1602,
+    "pending": 843
+  },
+  "remainingBoundaries": [
+    "Space Input current theme/size/override and autoSize remediation, then final75 visuals",
+    "Other54 component units and thirteen foundation packages",
+    "Existing custom-prefix automatic styling D04 and other explicitly separate decisions",
+    "Final whole-library gates after every scoped unit is complete; these checks are not that gate"
+  ],
+  "rootStrict": {
+    "sourceCommit": "2f47f423",
+    "command": "node node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p tsconfig.json",
+    "worktree": "/tmp/apollo-addon-2f47f423",
+    "exitCode": 0,
+    "diagnostics": 0
+  }
+}

@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T18:48:05.326Z",
+  "generatedAt": "2026-10-28T19:28:07.552Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,9 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 86,
-      "ready": 6
+      "done": 89,
+      "ready": 2,
+      "blocked": 1
     },
     "byKind": {
       "foundation": 13,
@@ -35,16 +36,12 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 6,
+    "readyCount": 2,
     "cannotFinishCount": 0,
-    "currentBatchSize": 6,
+    "currentBatchSize": 2,
     "currentBatchIds": [
-      "COMP:descriptions",
       "X:docs-site",
-      "COMP:space",
-      "COMP:grid",
-      "COMP:breadcrumb",
-      "COMP:timeline"
+      "COMP:space"
     ],
     "hardBlockingDecisionCount": 0,
     "parallelismNote": "currentBatchSize 是「同一时刻可开工数」的下界估计（贪心）。真实并行度还取决于执行者数量。"
@@ -309,8 +306,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 6,
-      "doneCount": 4,
-      "readyCount": 2,
+      "doneCount": 5,
+      "readyCount": 1,
       "itemIds": [
         "COMP:divider",
         "COMP:flex",
@@ -329,8 +326,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 8,
-      "doneCount": 7,
-      "readyCount": 1,
+      "doneCount": 8,
+      "readyCount": 0,
       "itemIds": [
         "COMP:affix",
         "COMP:anchor",
@@ -351,7 +348,7 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 18,
-      "doneCount": 18,
+      "doneCount": 17,
       "readyCount": 0,
       "itemIds": [
         "COMP:auto-complete",
@@ -383,8 +380,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 22,
-      "doneCount": 20,
-      "readyCount": 2,
+      "doneCount": 22,
+      "readyCount": 0,
       "itemIds": [
         "COMP:avatar",
         "COMP:badge",
@@ -612,11 +609,11 @@
         "流水线被证明可重复（不再需要为每个组件重新设计流程）"
       ],
       "itemCount": 19,
-      "doneCount": 18,
-      "readyCount": 1,
+      "doneCount": 19,
+      "readyCount": 0,
       "blockedCount": 0,
       "waitingCount": 0,
-      "complete": false,
+      "complete": true,
       "itemIds": [
         "COMP:affix",
         "COMP:alert",
@@ -687,8 +684,8 @@
         "25 个组件 11 维度 completed"
       ],
       "itemCount": 26,
-      "doneCount": 22,
-      "readyCount": 4,
+      "doneCount": 24,
+      "readyCount": 2,
       "blockedCount": 0,
       "waitingCount": 0,
       "complete": false,
@@ -741,11 +738,11 @@
         "17 个组件 11 维度 completed"
       ],
       "itemCount": 17,
-      "doneCount": 17,
+      "doneCount": 16,
       "readyCount": 0,
-      "blockedCount": 0,
+      "blockedCount": 1,
       "waitingCount": 0,
-      "complete": true,
+      "complete": false,
       "itemIds": [
         "COMP:auto-complete",
         "COMP:calendar",
@@ -784,11 +781,11 @@
         "72/72 组件收口"
       ],
       "itemCount": 9,
-      "doneCount": 8,
-      "readyCount": 1,
+      "doneCount": 9,
+      "readyCount": 0,
       "blockedCount": 0,
       "waitingCount": 0,
-      "complete": false,
+      "complete": true,
       "itemIds": [
         "COMP:avatar",
         "COMP:color-picker",
@@ -1476,18 +1473,16 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "ready",
+      "status": "done",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 1,
-      "why": "2026-10-28完整盘点与成组源码修复04be6282、共享observer1588dd11：104运行时、41浏览器、14Demo检查、42原生状态预检、10类型通过；实际共享消费者717与Form/List/Listy256通过（集合有交集，不相加）。发布JS/CSS/声明、正式视觉/Docs待验收，见grid-contract-audit。\n2026-10-29正式原生视觉42张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。",
+      "why": "2026-10-28完整盘点与成组源码修复04be6282、共享observer1588dd11：104运行时、41浏览器、14Demo检查、42原生状态预检、10类型通过；实际共享消费者717与Form/List/Listy256通过（集合有交集，不相加）。发布JS/CSS/声明、正式视觉/Docs待验收，见grid-contract-audit。\n2026-10-29正式原生视觉42张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。\n2026-10-29当前整改单元统一验收完成：当前发布声明/实际Demo、组合CSS/根严格/UI L7、222张新视觉批准后重渲染raw精确（四组总量），既有537回归与Docs161+32通过。完整交付17/72，证据four-unit-final-acceptance.json；更新进展页部署另记。其它组件/最终全库门禁不在此标完成。",
       "doneWhen": [],
       "group": "布局",
       "priority": "P0",
       "dagLevel": 2,
-      "blockers": [],
-      "softBlockers": [],
-      "cannotFinish": false
+      "blockers": []
     },
     {
       "id": "COMP:divider",
@@ -1917,16 +1912,24 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "blocked",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "含 Input / TextArea / Search / Password / OTP 子组件。必须保留输入法组合态（IME）处理能力，不可简化。",
+      "why": "含 Input / TextArea / Search / Password / OTP 子组件。必须保留输入法组合态（IME）处理能力，不可简化。\n2026-10-29当前主题尺寸/覆盖链窄整改：已有19个Input ComponentToken配置未消费、InputAffixPadding声明缺失、Provider style/Group/OTP尺寸及autoSize重测问题已成组复现并修复验收中；Registry原tokenCount0登记缺口由主线程待冻结同步。不是完整Input全API验收，旧completed不能代表本轮通过。",
       "doneWhen": [],
       "group": "数据录入",
       "priority": "P2",
       "dagLevel": 3,
-      "blockers": []
+      "blockers": [
+        {
+          "type": "dep",
+          "id": "COMP:space",
+          "status": "ready"
+        }
+      ],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:input-number",
@@ -2113,18 +2116,16 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "ready",
+      "status": "done",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-28源码接续5ab9b3c4：119运行时、62浏览器、10SSR/水合、84真实Demo主题/交互与51原生状态预检通过；custom-label键盘帮助已修。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见对应contract-audit和descriptions-acceptance-source.json。\n2026-10-29正式原生视觉51张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。",
+      "why": "2026-10-28源码接续5ab9b3c4：119运行时、62浏览器、10SSR/水合、84真实Demo主题/交互与51原生状态预检通过；custom-label键盘帮助已修。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见对应contract-audit和descriptions-acceptance-source.json。\n2026-10-29正式原生视觉51张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。\n2026-10-29当前整改单元统一验收完成：当前发布声明/实际Demo、组合CSS/根严格/UI L7、222张新视觉批准后重渲染raw精确（四组总量），既有537回归与Docs161+32通过。完整交付17/72，证据four-unit-final-acceptance.json；更新进展页部署另记。其它组件/最终全库门禁不在此标完成。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P2",
       "dagLevel": 0,
-      "blockers": [],
-      "softBlockers": [],
-      "cannotFinish": false
+      "blockers": []
     },
     {
       "id": "COMP:tooltip",
@@ -2810,18 +2811,16 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "ready",
+      "status": "done",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-28源码接续40ec3962及Menu e000152f：原生Enter导航红灯已修；114运行时、14浏览器、60真实Demo主题/交互和51原生状态预检通过。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见对应contract-audit。\n2026-10-29正式原生视觉51张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。",
+      "why": "2026-10-28源码接续40ec3962及Menu e000152f：原生Enter导航红灯已修；114运行时、14浏览器、60真实Demo主题/交互和51原生状态预检通过。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见对应contract-audit。\n2026-10-29正式原生视觉51张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。\n2026-10-29当前整改单元统一验收完成：当前发布声明/实际Demo、组合CSS/根严格/UI L7、222张新视觉批准后重渲染raw精确（四组总量），既有537回归与Docs161+32通过。完整交付17/72，证据four-unit-final-acceptance.json；更新进展页部署另记。其它组件/最终全库门禁不在此标完成。",
       "doneWhen": [],
       "group": "导航",
       "priority": "P5",
       "dagLevel": 2,
-      "blockers": [],
-      "softBlockers": [],
-      "cannotFinish": false
+      "blockers": []
     },
     {
       "id": "COMP:tabs",
@@ -2886,18 +2885,16 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "ready",
+      "status": "done",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-28源码接续3ce8d1d2：249相关运行时、17浏览器、180真实Demo主题/宽度组合与78原生状态预检通过；横向长文布局与圆点/连线对齐、Demo对比度/标题修复。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见timeline-contract-audit。\n2026-10-29正式原生视觉78张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。",
+      "why": "2026-10-28源码接续3ce8d1d2：249相关运行时、17浏览器、180真实Demo主题/宽度组合与78原生状态预检通过；横向长文布局与圆点/连线对齐、Demo对比度/标题修复。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见timeline-contract-audit。\n2026-10-29正式原生视觉78张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。\n2026-10-29当前整改单元统一验收完成：当前发布声明/实际Demo、组合CSS/根严格/UI L7、222张新视觉批准后重渲染raw精确（四组总量），既有537回归与Docs161+32通过。完整交付17/72，证据four-unit-final-acceptance.json；更新进展页部署另记。其它组件/最终全库门禁不在此标完成。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P5",
       "dagLevel": 4,
-      "blockers": [],
-      "softBlockers": [],
-      "cannotFinish": false
+      "blockers": []
     },
     {
       "id": "COMP:masonry",
@@ -2954,7 +2951,6 @@
       "workstream": "WS-5",
       "wave": "W8",
       "dependsOn": [
-        "COMP:grid",
         "FND:locale",
         "FND:theme",
         "FND:utils",
@@ -3377,11 +3373,7 @@
     }
   ],
   "currentBatch": [
-    "COMP:descriptions",
     "X:docs-site",
-    "COMP:space",
-    "COMP:grid",
-    "COMP:breadcrumb",
-    "COMP:timeline"
+    "COMP:space"
   ]
 }

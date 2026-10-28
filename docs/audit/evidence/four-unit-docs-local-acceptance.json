@@ -1,0 +1,168 @@
+{
+  "sourceCommit": "2f47f423",
+  "worktree": "/tmp/apollo-addon-2f47f423",
+  "scope": "Four component units plus the published Addon narrow fix; Input sizing stays open and is excluded from this frozen source",
+  "content": {
+    "command": "node tooling/content/build-manifest.mjs",
+    "exitCode": 0,
+    "components": 72,
+    "demos": 1008,
+    "guides": 8
+  },
+  "types": {
+    "command": "node node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p tsconfig.json",
+    "cwd": "packages/docs",
+    "exitCode": 0
+  },
+  "tests": {
+    "command": "node node_modules/vitest/vitest.mjs run --config vitest.config.ts",
+    "cwd": "packages/docs",
+    "exitCode": 0,
+    "files": 15,
+    "passed": 161
+  },
+  "build": {
+    "command": "node node_modules/vite-ssg/bin/vite-ssg.js build",
+    "cwd": "packages/docs",
+    "exitCode": 0
+  },
+  "browser": {
+    "base": "http://127.0.0.1:4482/apollo-design-ui",
+    "expectedDemoStatus": 200,
+    "results": [
+      {
+        "name": "descriptions: API and all 13 demo cards",
+        "passed": true
+      },
+      {
+        "name": "descriptions/basic/light",
+        "passed": true
+      },
+      {
+        "name": "descriptions/basic/dark",
+        "passed": true
+      },
+      {
+        "name": "descriptions/custom-label/light",
+        "passed": true
+      },
+      {
+        "name": "descriptions/custom-label/dark",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb: API and all 11 demo cards",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/native/light",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/native/dark",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/overlay/light",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/overlay/dark",
+        "passed": true
+      },
+      {
+        "name": "timeline: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "timeline/horizontal-debug/light",
+        "passed": true
+      },
+      {
+        "name": "timeline/horizontal-debug/dark",
+        "passed": true
+      },
+      {
+        "name": "timeline/native-slots/light",
+        "passed": true
+      },
+      {
+        "name": "timeline/native-slots/dark",
+        "passed": true
+      },
+      {
+        "name": "grid: API and all 13 demo cards",
+        "passed": true
+      },
+      {
+        "name": "grid/responsive/light",
+        "passed": true
+      },
+      {
+        "name": "grid/responsive/dark",
+        "passed": true
+      },
+      {
+        "name": "grid/playground/light",
+        "passed": true
+      },
+      {
+        "name": "grid/playground/dark",
+        "passed": true
+      },
+      {
+        "name": "space: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "space/compact/light",
+        "passed": true
+      },
+      {
+        "name": "space/compact/dark",
+        "passed": true
+      },
+      {
+        "name": "space/compact-button-vertical/light",
+        "passed": true
+      },
+      {
+        "name": "space/compact-button-vertical/dark",
+        "passed": true
+      },
+      {
+        "name": "menu/native-actions/light",
+        "passed": true
+      },
+      {
+        "name": "menu/native-actions/dark",
+        "passed": true
+      },
+      {
+        "name": "Menu native button executes once through container Enter",
+        "passed": true
+      },
+      {
+        "name": "Descriptions label help is reachable by keyboard",
+        "passed": true
+      },
+      {
+        "name": "Timeline slot reversal preserves the actual editor and draft",
+        "passed": true
+      },
+      {
+        "name": "progress/zh-CN",
+        "passed": true
+      },
+      {
+        "name": "progress/en-US",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": []
+  },
+  "browserCommand": "DOCS_URL=http://127.0.0.1:4482/apollo-design-ui node tests/browser/audit-batch-docs.mjs",
+  "browserExitCode": 0,
+  "remaining": "Deploy updated progress metadata and record the live receipt; not a whole-library final gate"
+}

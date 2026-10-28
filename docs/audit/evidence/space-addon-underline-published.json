@@ -1,0 +1,472 @@
+{
+  "wt": "/tmp/apollo-addon-2f47f423",
+  "sourceCommit": "2f47f423a8c229a4f763593c4cda0f401ed06731",
+  "sourceFilesMatched": 12,
+  "styleSourceSha256": "84a52abb820eb409ef1862bb54cd10af5fb1ce75aff8001e397c37a614137ce9",
+  "sourceAliasCount": 0,
+  "sourceCssInjectionCount": 0,
+  "publishedBrowser": {
+    "command": "SPACE_SOURCE=0 SPACE_EVIDENCE=/tmp/apollo-addon-underline/published-browser.json node tests/browser/space-contracts.mjs",
+    "exitCode": 0,
+    "total": 83,
+    "passed": 83,
+    "failed": 0,
+    "pageConsoleErrors": 0,
+    "report": "/tmp/apollo-addon-underline/published-browser.json",
+    "sha256": "b10313b9f5457f7f1925a56e5ae57c06ee5a79d6d94516da02f0986646261a67"
+  },
+  "publishedConsumer": {
+    "command": "SPACE_SOURCE=0 node tests/consumer/space-types.mjs",
+    "exitCode": 0,
+    "publicTypes": true,
+    "realDemos": 15,
+    "log": "/tmp/apollo-addon-underline/published-consumer.log",
+    "sha256": "81e5d62401d440fdfe7c4363e1f5756a20a7647b9aaf715f2ce9b6940cb02c5f"
+  },
+  "uiEntryResolvesToIsolatedDist": true,
+  "resolutions": {
+    "@apollo-design/ui": {
+      "file": "/private/tmp/apollo-addon-2f47f423/packages/ui/dist/index.mjs",
+      "realpath": "/private/tmp/apollo-addon-2f47f423/packages/ui/dist/index.mjs",
+      "sha256": "1cdc056a3c74d15a0a76e9de29ce5645032e6ff8a9a903faaadd71e88bcfbf0d"
+    },
+    "@apollo-design/ui/style.css": {
+      "file": "/private/tmp/apollo-addon-2f47f423/packages/ui/dist/index.css",
+      "realpath": "/private/tmp/apollo-addon-2f47f423/packages/ui/dist/index.css",
+      "sha256": "b79f2887c3bf79076f6d57db97e7acf905c4b15b158e50b55318fc3ab1f614f3"
+    },
+    "@apollo-design/ui/space/style.css": {
+      "file": "/private/tmp/apollo-addon-2f47f423/packages/ui/dist/space/style.css",
+      "realpath": "/private/tmp/apollo-addon-2f47f423/packages/ui/dist/space/style.css",
+      "sha256": "b47b864bf347b0f7d2ecec74abb5e7df2eb1013184ed011e8656aedf63555fc0"
+    },
+    "@apollo-design/theme/tokens.css": {
+      "file": "/private/tmp/apollo-addon-2f47f423/packages/theme/dist/tokens.css",
+      "realpath": "/private/tmp/apollo-addon-2f47f423/packages/theme/dist/tokens.css",
+      "sha256": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab"
+    }
+  },
+  "relevantDistFilesBeforeAfterIdentical": [
+    {
+      "file": "index.mjs",
+      "sha256": "1cdc056a3c74d15a0a76e9de29ce5645032e6ff8a9a903faaadd71e88bcfbf0d"
+    },
+    {
+      "file": "index.d.ts",
+      "sha256": "718ee155b723fb85a442900bfe3e1e0aab7784e4945f5154ecaa52b604fa2f17"
+    },
+    {
+      "file": "index.css",
+      "sha256": "b79f2887c3bf79076f6d57db97e7acf905c4b15b158e50b55318fc3ab1f614f3"
+    },
+    {
+      "file": "space/index.mjs",
+      "sha256": "3fe3317ba6da49df506ca62ebb2c9d5c211b490f802c62071d59c6d986c10ded"
+    },
+    {
+      "file": "space/index.d.ts",
+      "sha256": "d8d1556b65d2925e191cc117ae22f600e80ce16fd93d5406efee070101e6db75"
+    },
+    {
+      "file": "space/style.css",
+      "sha256": "b47b864bf347b0f7d2ecec74abb5e7df2eb1013184ed011e8656aedf63555fc0"
+    },
+    {
+      "file": "space/style/index.mjs",
+      "sha256": "cf41201a436caba9525d12e4b5da26903549243d470ad7d64de4b19a4bca677a"
+    }
+  ],
+  "mainFrozenDistUnchanged": {
+    "file": "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/space/style.css",
+    "sha256": "d6cd31a6ee11df42a3bad854a87cfc7fee9bcbd8e39e3f1f806b13d383bcbed9"
+  },
+  "wtGitStatusAfter": "",
+  "packageBuilds": false,
+  "temporaryFixtureBundleOnly": true,
+  "sourceEdits": false,
+  "distWrites": false,
+  "baselineWrites": false,
+  "readersExited": true,
+  "publishedChecks": [
+    {
+      "name": "default: ThemeProvider aliases reach preset gaps and Addon paint",
+      "passed": true,
+      "actual": {
+        "gap": [
+          "19px",
+          "23px",
+          "29px"
+        ],
+        "color": "rgb(32, 48, 64)",
+        "border": "rgb(52, 86, 120)",
+        "background": "rgb(222, 232, 242)",
+        "selector": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "name": "dark: ThemeProvider aliases reach preset gaps and Addon paint",
+      "passed": true,
+      "actual": {
+        "gap": [
+          "19px",
+          "23px",
+          "29px"
+        ],
+        "color": "rgb(32, 48, 64)",
+        "border": "rgb(52, 86, 120)",
+        "background": "rgb(222, 232, 242)",
+        "selector": "rgb(20, 20, 20)"
+      }
+    },
+    {
+      "name": "compact: ThemeProvider aliases reach preset gaps and Addon paint",
+      "passed": true,
+      "actual": {
+        "gap": [
+          "19px",
+          "23px",
+          "29px"
+        ],
+        "color": "rgb(32, 48, 64)",
+        "border": "rgb(52, 86, 120)",
+        "background": "rgb(222, 232, 242)",
+        "selector": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "name": "both: ThemeProvider aliases reach preset gaps and Addon paint",
+      "passed": true,
+      "actual": {
+        "gap": [
+          "19px",
+          "23px",
+          "29px"
+        ],
+        "color": "rgb(32, 48, 64)",
+        "border": "rgb(52, 86, 120)",
+        "background": "rgb(222, 232, 242)",
+        "selector": "rgb(20, 20, 20)"
+      }
+    },
+    {
+      "name": "default: Addon status and disabled precedence in all forty combinations",
+      "passed": true,
+      "actual": {
+        "combinations": 40
+      }
+    },
+    {
+      "name": "dark: Addon status and disabled precedence in all forty combinations",
+      "passed": true,
+      "actual": {
+        "combinations": 40
+      }
+    },
+    {
+      "name": "compact: Addon status and disabled precedence in all forty combinations",
+      "passed": true,
+      "actual": {
+        "combinations": 40
+      }
+    },
+    {
+      "name": "both: Addon status and disabled precedence in all forty combinations",
+      "passed": true,
+      "actual": {
+        "combinations": 40
+      }
+    },
+    {
+      "name": "Addon chain horizontal ltr joins edges and retains outer corners",
+      "passed": true,
+      "actual": [
+        {
+          "top": 323.1875,
+          "bottom": 357.1875,
+          "left": 16,
+          "right": 70.265625,
+          "radius": [
+            "6px",
+            "0px",
+            "6px",
+            "0px"
+          ],
+          "marginEnd": "-1px"
+        },
+        {
+          "top": 323.1875,
+          "bottom": 357.1875,
+          "left": 69.265625,
+          "right": 138.796875,
+          "radius": [
+            "0px",
+            "0px",
+            "0px",
+            "0px"
+          ],
+          "marginEnd": "-1px"
+        },
+        {
+          "top": 323.1875,
+          "bottom": 357.1875,
+          "left": 137.796875,
+          "right": 191.21875,
+          "radius": [
+            "0px",
+            "6px",
+            "0px",
+            "6px"
+          ],
+          "marginEnd": "0px"
+        }
+      ]
+    },
+    {
+      "name": "Addon chain horizontal rtl joins edges and retains outer corners",
+      "passed": true,
+      "actual": [
+        {
+          "top": 323.1875,
+          "bottom": 357.1875,
+          "left": 136.953125,
+          "right": 191.21875,
+          "radius": [
+            "6px",
+            "0px",
+            "6px",
+            "0px"
+          ],
+          "marginEnd": "-1px"
+        },
+        {
+          "top": 323.1875,
+          "bottom": 357.1875,
+          "left": 68.421875,
+          "right": 137.953125,
+          "radius": [
+            "0px",
+            "0px",
+            "0px",
+            "0px"
+          ],
+          "marginEnd": "-1px"
+        },
+        {
+          "top": 323.1875,
+          "bottom": 357.1875,
+          "left": 16,
+          "right": 69.421875,
+          "radius": [
+            "0px",
+            "6px",
+            "0px",
+            "6px"
+          ],
+          "marginEnd": "0px"
+        }
+      ]
+    },
+    {
+      "name": "Addon chain vertical ltr joins edges and retains outer corners",
+      "passed": true,
+      "actual": [
+        {
+          "top": 323.1875,
+          "bottom": 357.1875,
+          "left": 16,
+          "right": 85.53125,
+          "radius": [
+            "6px",
+            "6px",
+            "0px",
+            "0px"
+          ],
+          "marginEnd": "0px"
+        },
+        {
+          "top": 356.1875,
+          "bottom": 390.1875,
+          "left": 16,
+          "right": 85.53125,
+          "radius": [
+            "0px",
+            "0px",
+            "0px",
+            "0px"
+          ],
+          "marginEnd": "0px"
+        },
+        {
+          "top": 389.1875,
+          "bottom": 423.1875,
+          "left": 16,
+          "right": 85.53125,
+          "radius": [
+            "0px",
+            "0px",
+            "6px",
+            "6px"
+          ],
+          "marginEnd": "0px"
+        }
+      ]
+    },
+    {
+      "name": "Addon chain vertical rtl joins edges and retains outer corners",
+      "passed": true,
+      "actual": [
+        {
+          "top": 323.1875,
+          "bottom": 357.1875,
+          "left": 16,
+          "right": 85.53125,
+          "radius": [
+            "6px",
+            "6px",
+            "0px",
+            "0px"
+          ],
+          "marginEnd": "0px"
+        },
+        {
+          "top": 356.1875,
+          "bottom": 390.1875,
+          "left": 16,
+          "right": 85.53125,
+          "radius": [
+            "0px",
+            "0px",
+            "0px",
+            "0px"
+          ],
+          "marginEnd": "0px"
+        },
+        {
+          "top": 389.1875,
+          "bottom": 423.1875,
+          "left": 16,
+          "right": 85.53125,
+          "radius": [
+            "0px",
+            "0px",
+            "6px",
+            "6px"
+          ],
+          "marginEnd": "0px"
+        }
+      ]
+    },
+    {
+      "name": "Addon variants retain editor identity and decorative disabled semantics across current config",
+      "passed": true,
+      "actual": {
+        "transitions": 7,
+        "retainedEditor": true
+      }
+    },
+    {
+      "name": "real controls retain draft, DOM, focus and native selection across theme and direction changes",
+      "passed": true
+    },
+    {
+      "name": "default: SSR/hydration keeps themed DOM and current controls",
+      "passed": true
+    },
+    {
+      "name": "dark: SSR/hydration keeps themed DOM and current controls",
+      "passed": true
+    },
+    {
+      "name": "compact: SSR/hydration keeps themed DOM and current controls",
+      "passed": true
+    },
+    {
+      "name": "both: SSR/hydration keeps themed DOM and current controls",
+      "passed": true
+    }
+  ],
+  "provenanceBefore": "/tmp/apollo-addon-underline/published-provenance-before.json",
+  "provenanceAfter": "/tmp/apollo-addon-underline/published-provenance-after.json",
+  "remaining": [
+    "Formal Space visual capture and review",
+    "Main-thread final gates at the eventual final commit"
+  ],
+  "uiBuildCommit": "2f47f423",
+  "uiBuildCommand": "node /Users/nanren/Code/apollo-design-ui/node_modules/unbuild/dist/cli.mjs",
+  "uiBuildCwd": "/tmp/apollo-addon-2f47f423/packages/ui",
+  "uiBuildExitCode": 0,
+  "strictL7": {
+    "results": [
+      {
+        "pkg": "-",
+        "id": "B9",
+        "status": "PASS",
+        "detail": "Node 22.22.2（要求 >= 22.12）"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B1",
+        "status": "SKIP",
+        "detail": "--no-build，复用现有 dist"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B2",
+        "status": "PASS",
+        "detail": "exports 全部可解析（含「产出即有声明」反查）"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B3",
+        "status": "PASS",
+        "detail": "产物无 React 说明符"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B4",
+        "status": "PASS",
+        "detail": "产物无 CSS-in-JS 运行时"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B10",
+        "status": "PASS",
+        "detail": "产物无 @rc-component / rc-*"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B5",
+        "status": "PASS",
+        "detail": "70 份 CSS 产物且非空"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B7",
+        "status": "PASS",
+        "detail": "50203 处 var(--apollo-*) 引用全部在 theme 的 tokens.css 里有声明"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B11",
+        "status": "PASS",
+        "detail": "70 份 CSS 产物无 NaN / undefined / 未展开占位 / 嵌套 var 包装"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B6",
+        "status": "PASS",
+        "detail": "73 个组件全部在预算内（全量 2099.8 KB；最重 table 343.5 KB = 16.4%）"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B8",
+        "status": "PASS",
+        "detail": "69 个组件在无 DOM 环境下渲染出非空内容"
+      }
+    ],
+    "failed": 0,
+    "pending": 0,
+    "na": 0
+  },
+  "strictL7ExitCode": 0
+}

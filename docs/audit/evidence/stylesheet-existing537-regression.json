@@ -1,0 +1,4283 @@
+{
+  "sourceCommit": "a47d96ec",
+  "browserPass": 537,
+  "rawExactToPrevious3214": 537,
+  "rawExactToApproved": 534,
+  "preExistingDifferences": [
+    {
+      "id": "list/loading__light__mobile",
+      "rawRgbaSha256": "60ad62909716df47d19b7db9371b253844d6f33bcfad503d4630e099997c160b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 112
+    },
+    {
+      "id": "list/loading__light__tablet",
+      "rawRgbaSha256": "0980db4233bc0298741f227cd16bb5ba3d11c4693ffcb476460755bfe0e43963",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 104
+    },
+    {
+      "id": "list/loading__light__desktop",
+      "rawRgbaSha256": "266b502dec24d5920c402fa2c4190c6c8bae98d72752efc80bd1000a99c6956c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 104
+    }
+  ],
+  "globalLinkMoveNewVisualChanges": 0,
+  "rows": [
+    {
+      "id": "button/type__light__mobile",
+      "rawRgbaSha256": "c460678b12754c263e27763d198b4cf92d247dcb7b08744aeed092d731d9aee2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/type__light__tablet",
+      "rawRgbaSha256": "565b5fc5012ce8e7c2de139169b79d6df5e76aff9181aac353e5d8c56950cb3b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/type__light__desktop",
+      "rawRgbaSha256": "1c52cdb43e80c6664bfc6660b50fb07956da114aa490febc64c0afdea5015023",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/complete-content__light__mobile",
+      "rawRgbaSha256": "7297ebcb7c804346131d8c16ec1602a79e2113f429157ede7c4335710d27e58b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/complete-content__light__tablet",
+      "rawRgbaSha256": "1519e30a2f110f77f7a61b1d3c9861bc68e676ef6b2e1083b3b1a9eb9a7f72c1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/complete-content__light__desktop",
+      "rawRgbaSha256": "e4deaf9b96be0a37ddbdb84bebbf4a209dcae8caafea65f204ff1a01837001fa",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/loading-states__light__mobile",
+      "rawRgbaSha256": "2b0a75feb7d3cfb182bdf0ad54e80e64e97c275bc7ac4cddb6e52d1aa80b28dd",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/loading-states__light__tablet",
+      "rawRgbaSha256": "c7cf1f33cbbdbec5b6e3556205ee73701d275c823d3477148b1888f6f83f4362",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/loading-states__light__desktop",
+      "rawRgbaSha256": "f8fe622c4287ccd899bc47ba9c01577556bb581b013671db383afc92047750d3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/native-disabled__light__mobile",
+      "rawRgbaSha256": "5e06154ab21335062fae1cb9d1f73338138ba187815a0a84ab4b26ecd23c0d2e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/native-disabled__light__tablet",
+      "rawRgbaSha256": "3d96afd43e721df5b8cb8d35655c035c4cb565c4e564ef7d189259c25f5c4a69",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/native-disabled__light__desktop",
+      "rawRgbaSha256": "f0ba4b1f67a1d0500c7d636a01f5a496dfca271b56e5604028a4b41a57f8d4d0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/shapes__light__mobile",
+      "rawRgbaSha256": "37718d7a2d841eb4af743fb4dcf328f0bd439e02c291192e72f47a2c36c06a90",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/shapes__light__tablet",
+      "rawRgbaSha256": "ae674419d6917052daf980c5fa506e7ebc2a40b473c9089890235dab211b1ea2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/shapes__light__desktop",
+      "rawRgbaSha256": "63053bcae7515fd88b985749439244b1b207a48afccff0803ffef1c865f4c840",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/semantic-tokens__light__mobile",
+      "rawRgbaSha256": "8383ec0c693d459a60e01a69fbdc8daf4a7f1e2e809205120aa792e5e9846c14",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/semantic-tokens__light__tablet",
+      "rawRgbaSha256": "6a74f4fe93a9c637403806bd0152e44bf01cc0f52e65f97c9042c4383ab95996",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/semantic-tokens__light__desktop",
+      "rawRgbaSha256": "d1ae70d18727de8623ea71f3e9de06b6d5231efded54f3e567f905f66d0cf243",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/current-provider__light__mobile",
+      "rawRgbaSha256": "7b00fb700d40fe4b5e61d79cec892d2c04394a138d57baad9d01e35de119d142",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/current-provider__light__tablet",
+      "rawRgbaSha256": "31113c099f67c67ba971b9a000c362727b137079005dde2400f0c116fd11cc6a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/current-provider__light__desktop",
+      "rawRgbaSha256": "e0bc465437fe21d57e1b3cb8148eeb32bf46eb3c9d26e444e417ecccd810635f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/compact-layout__light__mobile",
+      "rawRgbaSha256": "4aa71a04b8de2d2bba8b60223f67c5ce87d06504565141ee5e4e2ea63d5f020f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/compact-layout__light__tablet",
+      "rawRgbaSha256": "5608cca210f73d77767d498a93957c274728a21038e539d18ea67d3eb150c7ae",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/compact-layout__light__desktop",
+      "rawRgbaSha256": "604a6d9d41589e004abeb1417a6357a32aabf358b0eb7fc35daaf4bb65d7f752",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/rtl__light__mobile",
+      "rawRgbaSha256": "4660a9e73a9be1214206cecb4db52c7a966c35f511cb2619604b7941e34b927b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/rtl__light__tablet",
+      "rawRgbaSha256": "7dbe297136ea2ce39c6d17627f34b8e721c883edb8e7524142d7edcd8f76fb37",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/rtl__light__desktop",
+      "rawRgbaSha256": "fd28ae4eecf6616418785cfd7670afb417a11b50e2620fd1e7277361a4fb870c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/theme-dark__light__mobile",
+      "rawRgbaSha256": "84ff912c8f1f5fa3b267302f88a69af8ed927555a527e98fe86ae9c04741d861",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/theme-dark__light__tablet",
+      "rawRgbaSha256": "824d9f24d0b5365f53c38a54dae9f546e21c11453a1ef5869f7a8add06ec34ac",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/theme-dark__light__desktop",
+      "rawRgbaSha256": "37c7e1ac0f32d5a38263d0043df5e3040b014bef46e837da0926261384af0af6",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/theme-compact__light__mobile",
+      "rawRgbaSha256": "1acd2d9bc702bc9a0b4be24a3bd8888bf9c5d1ac447d9cbee745d33c68fec7f4",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/theme-compact__light__tablet",
+      "rawRgbaSha256": "caef867bd0e937511768050fcd8b09ff473d4090955ea9b60465e2f33f9b4e29",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/theme-compact__light__desktop",
+      "rawRgbaSha256": "5de5a83bf5bb0bab7d1c52645c2a83b5d9d2ca101364bc6571b26d551a715658",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/theme-dark-compact__light__mobile",
+      "rawRgbaSha256": "12766e4c057f92cee9d5e21edd764de9a175d6ca90e73536fefa6510b7ba71ae",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/theme-dark-compact__light__tablet",
+      "rawRgbaSha256": "f974e6759f7735f781bfcee9c017a42e1d3fdee6fc140b1c9d12886e32a44631",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/theme-dark-compact__light__desktop",
+      "rawRgbaSha256": "ae593ba03cf794a1d8daa8fd0b4fb3effa235ba1b828816540f3bc5640ec5f26",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/native-focus__light__mobile",
+      "rawRgbaSha256": "aae19999897324b90a83eb96b381173515f0e63113e1dec52e2cb4fd2b4f6526",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/native-focus__light__tablet",
+      "rawRgbaSha256": "3ab088db393c50edf549c65d668cb4b51ad1c912f1a9f7c4a6a685a5872ad390",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "button/native-focus__light__desktop",
+      "rawRgbaSha256": "6cee4e6f6e6ddb579f04e354ac1412a251bf5b1b4a744e76b8911c26c60dd1e6",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/default__light__mobile",
+      "rawRgbaSha256": "d8fa2b60195f87bd2675f1a09a6bf3eeb2e033aec234f8de21740fd865015e02",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/default__light__tablet",
+      "rawRgbaSha256": "97bdfc70a31a59ca1602559453d2d20fdfedb012ae97dd70d2a8b122b736c8e6",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/default__light__desktop",
+      "rawRgbaSha256": "a2708071955857cecd1dda4bf87af6b02c18fdcbe6fd2c7bd1c86df5f0a80660",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/simple__light__mobile",
+      "rawRgbaSha256": "5c34865d36814acb2ade70103b269163410645527dc294d175b6c95a5526a2a7",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/simple__light__tablet",
+      "rawRgbaSha256": "13aff9762cbc1b8457804c2790d600668abeb213fe549af2a0822d654028f699",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/simple__light__desktop",
+      "rawRgbaSha256": "b97ac80e8c67be1c08fa7022123e374e64a444661cdd5a406451465fb4d23b4d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/no-description__light__mobile",
+      "rawRgbaSha256": "de286c2e950217b162d82a1198b23ee85c1ae9bf9b1693ca5275b7e9631ef4c4",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/no-description__light__tablet",
+      "rawRgbaSha256": "5e3ef1a4d0f06470ffb8877051bd1a3dcc990b3852e3e56d1d8ee85db74ea4e1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/no-description__light__desktop",
+      "rawRgbaSha256": "ec5f459de905238a00254a9303d636a8c27155c4265549ff2e5c59ec4524642b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/custom-description__light__mobile",
+      "rawRgbaSha256": "81220ade396971b2c855515d0be2d4d8cd2ec2a6decbc5f7b6d4feb6f085fe57",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/custom-description__light__tablet",
+      "rawRgbaSha256": "d16f0081d8c1470d056c8e7eed666209cc80468f7164d627fb84af065ab54cde",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/custom-description__light__desktop",
+      "rawRgbaSha256": "cd79dfb2646d15980b62909d7c28f9db095d421a839756a60fd07f1f51f078d3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/custom-image__light__mobile",
+      "rawRgbaSha256": "86064449f80c8389eaee7e99a551ced6533bb2dfdfbabd935aab3db8935fe3cb",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/custom-image__light__tablet",
+      "rawRgbaSha256": "023dccf3f19f2f9982db5f19128734de27d124f6dd56e900680966753d6dd951",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/custom-image__light__desktop",
+      "rawRgbaSha256": "822f44bc409d37ce46e68851cf59b85667221354b5fbbe22011905ae06fda778",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/with-footer__light__mobile",
+      "rawRgbaSha256": "85c96f12595f3781cc1f90e8bcf22817cb3a90a062fa427482065009b57296b3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/with-footer__light__tablet",
+      "rawRgbaSha256": "ca155e71af17de3c7f5e0ace56cf51ac89dcf70951901db67a8c17728cc7adf7",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/with-footer__light__desktop",
+      "rawRgbaSha256": "5b25fc8c81acba2d1e7cfdfccace5b854dc51b01368d8cbaeeec74690f264a4d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/semantic__light__mobile",
+      "rawRgbaSha256": "b83c43c4bffa8eb70ace22813eb94de59a41989bf547ca66d541491b005af023",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/semantic__light__tablet",
+      "rawRgbaSha256": "38eca9450efc00feec617eddface6e4dea6de899d2859dc6cf60159c94d2503f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/semantic__light__desktop",
+      "rawRgbaSha256": "015724f0ef6e69a0903a7cef8361917aaf8443d9464a4502a2a54ae4abb1df6f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/complete-content__light__mobile",
+      "rawRgbaSha256": "c0287b10babeea29549bcf73bce9274c50f3e13f93ac4253d330b2c8d2e12fa2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/complete-content__light__tablet",
+      "rawRgbaSha256": "ce64e770b52db2d5f58258f31ecd3cef81204a0e1023889111de48c13cae66e8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/complete-content__light__desktop",
+      "rawRgbaSha256": "2f44b73efb77102e9d1c394bd8aaadbec4be1ce9cd39f3a614782b08603b41a0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/empty-slots__light__mobile",
+      "rawRgbaSha256": "b6dde95d4a9aa9d88db6c8d05daeb40e652f793a5a375c3267090ac16394f8ac",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/empty-slots__light__tablet",
+      "rawRgbaSha256": "7ef56131aad39ea13e84c1f19f168a49291a81952260877e5e01e9f17ee8019b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/empty-slots__light__desktop",
+      "rawRgbaSha256": "6c089a0c87ce8c5424784f338cc1779ada3c7918b0159ff78626be7672daece1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/config-current__light__mobile",
+      "rawRgbaSha256": "eeeb05d6c690ba38e173ed8829f506471910048e64e6989026ba1bb60f48225a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/config-current__light__tablet",
+      "rawRgbaSha256": "5e85a9ed25e1efc51358291d84974a04003f62faf46c735b21622ad5fef94f0e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/config-current__light__desktop",
+      "rawRgbaSha256": "9e1cb3039def67927adbcb75ef0031be4df45ce7e88df0de9fc3ad9b220ca7e5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/rtl__light__mobile",
+      "rawRgbaSha256": "7626336477a0ef5f6ad083f171cfe27edec4b06403a9006400eecd83bd2f0a79",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/rtl__light__tablet",
+      "rawRgbaSha256": "9e1d0c2a331f6073d56661c97dc2ea068208ee007b5a4dd1b9b22bba72b1b44b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/rtl__light__desktop",
+      "rawRgbaSha256": "5ceaa3878d38b76f2b2e81cce84fe84788c3272e5304e1b13dc9e95efea55ac9",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/theme-dark__light__mobile",
+      "rawRgbaSha256": "352dd0422491d4590ec2ac3719551b1c4af88865c12d02cdc8179a89249722bd",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/theme-dark__light__tablet",
+      "rawRgbaSha256": "387696b2e2177029eee3cf10518ba97ee3d3ca5877c4ca1f319fd45091ba0df1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/theme-dark__light__desktop",
+      "rawRgbaSha256": "8a6633319eb86b7ec00b357a904d0ebb83af0a9b501eb04cc029957f29e42607",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/theme-compact__light__mobile",
+      "rawRgbaSha256": "b34d5500872dcbbabb5b7a89ea3dd2040b9ddf1c80fb3d6650928053949abfdb",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/theme-compact__light__tablet",
+      "rawRgbaSha256": "4a2cb18dc3b320175330893ef8254babeb7f3721ecba6643dda67d1963901877",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/theme-compact__light__desktop",
+      "rawRgbaSha256": "d02f74c2e3f9cb8a565891a0b9728fc1ea870cf1be965a941e8a976d38aea1e2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/theme-dark-compact__light__mobile",
+      "rawRgbaSha256": "2bee5cb24c1265c7b0faa4ebcbcb374322285d05eb1fa723c3f3088b723ca90f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/theme-dark-compact__light__tablet",
+      "rawRgbaSha256": "b4311a02548812673a8d3141e65dab8eabcc254a68389a57844e81d2b37f3473",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/theme-dark-compact__light__desktop",
+      "rawRgbaSha256": "6910317ae3fd8e75caf034436ec323f8d227599b7f52de3ee8bfe7932225aa31",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/native-focus__light__mobile",
+      "rawRgbaSha256": "1aa7d93c6fb6cf4f38ef5d1691310a73944da09bb659a9028d211bc0d9d56bf3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/native-focus__light__tablet",
+      "rawRgbaSha256": "494400e79e828c72cee4806a3533ac992a77904773f5fff197cc9e20ec40b8b5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "empty/native-focus__light__desktop",
+      "rawRgbaSha256": "4ae164fe8d0955ce02e8bba558413c7236e22a007ada6391288b9365d0c8b5fc",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/basic__light__mobile",
+      "rawRgbaSha256": "11ce5128073b79551d1f4af25d6fb38755124f7f9191b2b5f58ebf1683e884c1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/basic__light__tablet",
+      "rawRgbaSha256": "37ece738c5a7deb08b178a619b7efd2af3c58b51bbff2a3daa5c4d073b096724",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/basic__light__desktop",
+      "rawRgbaSha256": "b4841d8e6880f1026d548f03b21a8eaa38893a2f7604f765957df690e2edd46f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/status__light__mobile",
+      "rawRgbaSha256": "f40452c5ab514c2064f747886a26fc12d87b435040dac95880827ddefc8a693a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/status__light__tablet",
+      "rawRgbaSha256": "e5f3e09909294dc5a18c82461283901aaab1addff0feef81a4b043580443f7bf",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/status__light__desktop",
+      "rawRgbaSha256": "74f968dc19dedabe498d101a97dbf53646b90eef9838670ce93380e8b58679e1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/colorful__light__mobile",
+      "rawRgbaSha256": "54165e8c5e9b81186a25437fd5ba4eb5916a2b1981c65ae51d163faabce204a1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/colorful__light__tablet",
+      "rawRgbaSha256": "af1e788a930f5b887ec58dde088be5b738c6fcae6ded6a093d1a4209366f68eb",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/colorful__light__desktop",
+      "rawRgbaSha256": "c8df2376e7b7ddf7ee998f470f51218c6f128cb5bbe945ce34d5990c9b733fd5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/dot__light__mobile",
+      "rawRgbaSha256": "09ca8808fa8d5b255fd22ab03fee98fea91be439070ed4a0b8f4da5839e8135e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/dot__light__tablet",
+      "rawRgbaSha256": "0381d52d3dbeba9e89efdbee370683486bae41a4f874a9abca9ac82c808af535",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/dot__light__desktop",
+      "rawRgbaSha256": "76a90c9b85dcb06a793ef191bdf024992ef4cb1073c4c412ccab1a9fca1cd628",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/ribbon__light__mobile",
+      "rawRgbaSha256": "9c64f80e08168d74218460e70225f33a578112bd24192bcadd5e7403dfb38629",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/ribbon__light__tablet",
+      "rawRgbaSha256": "aa94eb04a5229273195d84ba22643401bdcb71a823b27d7311acbbd5f9696db4",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/ribbon__light__desktop",
+      "rawRgbaSha256": "0514f08de92db63c98541678c96b507004bc766e91706636422946ab574e8a15",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/offset-size__light__mobile",
+      "rawRgbaSha256": "481514a22319c0416c7f2ad4dbeb86294a0dc8acfa64b22d1fc3b4b2bb1434f8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/offset-size__light__tablet",
+      "rawRgbaSha256": "902149da19bc9763f07dd6e3976bd5654c3cc0ec156d3eeea4eca57fea8fb11f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/offset-size__light__desktop",
+      "rawRgbaSha256": "9985409bad11c8fe65164e4d3810940b738059e5e5336001a6b06812c18325f0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/complete-content__light__mobile",
+      "rawRgbaSha256": "aa8a69e902d2f2afc1021c5951e02738e519287e321c71dac4552d942443d891",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/complete-content__light__tablet",
+      "rawRgbaSha256": "1425526cf6cbd5cbb7ccc0d9e4142b04c154b9f99acb9ed9269534ae0378d5dc",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/complete-content__light__desktop",
+      "rawRgbaSha256": "0fd7fcec1ca44ed6b6bc2ea017cc47a9a8110df441e37651d14bfc97b1081e12",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/status-placement__light__mobile",
+      "rawRgbaSha256": "767802ce2f7ff3e8a56828ed1fdb203ee3ab514e4a9a7447155f55e02fad49eb",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/status-placement__light__tablet",
+      "rawRgbaSha256": "17ebb3980698915291ff843747b4ada263b2d5688c6ca51fd82b249063ca6f1e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/status-placement__light__desktop",
+      "rawRgbaSha256": "ea11dd0faffcc4502ea0085cf4113f3439cb0f7cbe94df6838bb50c79f415c5c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/semantic-tokens__light__mobile",
+      "rawRgbaSha256": "ff27a2d4189ee67d3fbc465619e3ecdf6e9d2d9002e8050fa156fc2a12e64972",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/semantic-tokens__light__tablet",
+      "rawRgbaSha256": "5d6a70112febc638b04196dc241aec6c71e5ef718cbea7e5c6f7df768179678d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/semantic-tokens__light__desktop",
+      "rawRgbaSha256": "de08736e3c5d7fcf81496820cfc43c90a87c62d04367f985bc8cb5465d400c29",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/current-provider__light__mobile",
+      "rawRgbaSha256": "aab7d2af427df437c9be8453ae9c1fe330a5417aaaa812173134187bc357909c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/current-provider__light__tablet",
+      "rawRgbaSha256": "fa2a59985aba39f52c344274265da0d0236c704320a38edde86cc90f3eb26a76",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/current-provider__light__desktop",
+      "rawRgbaSha256": "35af9e3ddf44a8a89c82a8b9cd6e0fd91a62830b4c6c3891c6100ee9e780dc23",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/native-focus__light__mobile",
+      "rawRgbaSha256": "9870c7b698d28afc923c50c0cc73c53f05aca4c1b9db96d4d2716faa84a0ec0c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/native-focus__light__tablet",
+      "rawRgbaSha256": "9175d84a1560f6b61608f15bee74290e7531d198595ba07441cfec25b20bdea8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/native-focus__light__desktop",
+      "rawRgbaSha256": "43d1fe2a34df58d9d3e77ba71e0160f4d6f07e2f3d90031bb0595328045e9a54",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/theme-dark__light__mobile",
+      "rawRgbaSha256": "e8461477b335db3059c044750faf75377f817cbdfab0965f69cd570cd5c929b5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/theme-dark__light__tablet",
+      "rawRgbaSha256": "9a55d7563c494ea43117b489ffbb9d1967e38c18550ccadace51be39bd398c0b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/theme-dark__light__desktop",
+      "rawRgbaSha256": "57be05587a19f61415b85a6dc098625e1db70c9e85f83585b732d8ba24ece0d3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/theme-compact__light__mobile",
+      "rawRgbaSha256": "156c75aa04e2a17cbe584e6b0dc9d6c1a79c9c8561a36fdb1d40de0f0f19df8c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/theme-compact__light__tablet",
+      "rawRgbaSha256": "ad5b7c409f554e6d45bb2101f75472e3b47c919f0c6b1ddae8836e94c2b848fb",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/theme-compact__light__desktop",
+      "rawRgbaSha256": "0971c330ed37d6ef026d17e0da7659fb3d0ccbffec31afc7c38017f075909f9c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/theme-dark-compact__light__mobile",
+      "rawRgbaSha256": "6d4e172f3803ef6d2d036b350a0f0397522bcb732ed3c66c6d2d957718ea54b6",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/theme-dark-compact__light__tablet",
+      "rawRgbaSha256": "5711a4067c4f924d89e6167067f5dde2f895ef0aa644ac725c235e24d010405c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "badge/theme-dark-compact__light__desktop",
+      "rawRgbaSha256": "347b382eb662e4ba64aca551467c73ee5f101df4e225950f00b958e19d3328a3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/info-success__light__mobile",
+      "rawRgbaSha256": "26723dc3c3afe72f35b24f64b02c051f7857f6c7cf536346d60b22bdca0e43f2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/info-success__light__tablet",
+      "rawRgbaSha256": "51095cc0339a52897b2697e36e74af8254754a59aa1718b098be89d5cfeb92bf",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/info-success__light__desktop",
+      "rawRgbaSha256": "3b6f6b34662e096363145ad97007cf41afe57b88612ffcbb6e61a06a81f76b20",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/warning-error__light__mobile",
+      "rawRgbaSha256": "212ab056da2775c6997cb78e1e2eb15c2b7e77900b40373bf8e835e7805aff9b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/warning-error__light__tablet",
+      "rawRgbaSha256": "8480d89e1f71a26de054ed664682dbfe6e597302b3163136c387d53005e1c934",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/warning-error__light__desktop",
+      "rawRgbaSha256": "bc85512c47da83c97375e10e77654335f1a5cf0eb66fc0969ff9e80578a5a9d9",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/exception-403__light__mobile",
+      "rawRgbaSha256": "7c43d6b3e624121eca99a6b197a9691f67218316d7312e467654027aee540f19",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/exception-403__light__tablet",
+      "rawRgbaSha256": "3487df93d2deddfc978de25c6eacbb77f8b26d7a428d4beca1aa915c50bd0498",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/exception-403__light__desktop",
+      "rawRgbaSha256": "30b9ae81a1830b8f3c58c320342012d20b3d6275d34de010530c90df4a14d56a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/exception-404__light__mobile",
+      "rawRgbaSha256": "6923eaad9e48c5ce99c43fb11b3943d936e81589bdb5569462218a3856b9b523",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/exception-404__light__tablet",
+      "rawRgbaSha256": "dd9d38b804087d2df16e090644aa2d859692164f10afe0bdcf2564b396eee672",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/exception-404__light__desktop",
+      "rawRgbaSha256": "c7e6cf1b908eec6b3bf9ec90cb872f0af80e0133e89a617d557e4f83a14c4228",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/exception-500__light__mobile",
+      "rawRgbaSha256": "b4ca29916e200188e08ba999065eaf2f753272992fe40430f28a8aec0a000ee6",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/exception-500__light__tablet",
+      "rawRgbaSha256": "fbd24005fc9e27ed38997c9a2d1cb3129d9bab40991533cf21a7fc6e105395b7",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/exception-500__light__desktop",
+      "rawRgbaSha256": "6aa7e7fd0f3c730f83467fcedbb04ed2224c7d2b77cb54e54792eb78af541181",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/complete-content__light__mobile",
+      "rawRgbaSha256": "fb932f88d205dccc388a0300c6fff426e794720f10c8f0f5f27f48c73d39de90",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/complete-content__light__tablet",
+      "rawRgbaSha256": "ede8f7a663fc886d3e45ae74ed23b39a6d22fe15b3fbe07da7d945fd3862ae2b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/complete-content__light__desktop",
+      "rawRgbaSha256": "d35538240d70d4559806547ac427d1cc693d5fe9a360c8643093b77c8dd97c34",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/empty-slots__light__mobile",
+      "rawRgbaSha256": "ebde7c6a4c7e8fa8a6310ba4d46582dc306d658d31ccf55b26386d00ca8994cf",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/empty-slots__light__tablet",
+      "rawRgbaSha256": "2e805448c79514fc9ee77d16347cbc73b5a49648d2b26ed83bbfb3fe774cc844",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/empty-slots__light__desktop",
+      "rawRgbaSha256": "7d50a644923bd710116ea4c52f29c2400be79935fa64c982ead22d6c4696e74a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/tokens__light__mobile",
+      "rawRgbaSha256": "12237bda6a0d763d9d5dfc8a14e56ae6ddf08a4c7e867d5d863ee69898791ec3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/tokens__light__tablet",
+      "rawRgbaSha256": "3e93fb7cb007c5b13eecfac9331fc8391f307ca2963a147d9cd5d8ee57d3dbe5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/tokens__light__desktop",
+      "rawRgbaSha256": "dc91c7061c642e8d353c3a374d511069f6bf2e889dde23eb452081d62a11aecc",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/rtl__light__mobile",
+      "rawRgbaSha256": "c66f1498e094e5a23a0eab67466c76b1f0b1489ef8c4ed216c0d0efe3dbd3b1a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/rtl__light__tablet",
+      "rawRgbaSha256": "d2d5b19b37b26a7f4f622c49faac8cb4de663063340d62efaa32f05fc9f2c116",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/rtl__light__desktop",
+      "rawRgbaSha256": "5f2656d44494ff913a82fd0370395af571b71842e65e1fdc431fd6bab38778fa",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/theme-dark__light__mobile",
+      "rawRgbaSha256": "de5082311790db23f330c8a9cadf61cace70166fd1ba42185e2a019d3a590ece",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/theme-dark__light__tablet",
+      "rawRgbaSha256": "4fe697b91a7ebbbb065045b997abc3661864b0a4c3d3e7f6ac634fab295d0923",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/theme-dark__light__desktop",
+      "rawRgbaSha256": "44a19d0d6bcd7deaf6bfb48024e52271efeb4f551c0579930e0d9b9e0b053199",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/theme-compact__light__mobile",
+      "rawRgbaSha256": "74e3d1f09c28d12d92d65c559f39feec20cfe19c1d968c51edaa3dc90425fbd3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/theme-compact__light__tablet",
+      "rawRgbaSha256": "5b7edcf2cc59740a59da9b4d7afac35cc3b3cdf26d8b518a9b478282ce6d8898",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/theme-compact__light__desktop",
+      "rawRgbaSha256": "aec12fa3cd511da82005c939c198573c33d2ac6a36ad9bfc1532d749b88b4204",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/theme-dark-compact__light__mobile",
+      "rawRgbaSha256": "307f7de46827ee8f707f5e34ba79822af4662825f1f99cb2f56a12c4e941e2b7",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/theme-dark-compact__light__tablet",
+      "rawRgbaSha256": "785092f5bb7054206bca018d3053c9f88742c2b8eb2471844203c9213cf38235",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/theme-dark-compact__light__desktop",
+      "rawRgbaSha256": "c12f517b9d35348adc003906159bd104cfd26b47a8842c511e2eab7fe0b50895",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/native-focus__light__mobile",
+      "rawRgbaSha256": "8c02d5a8f1b25ee1940dac3dbdb6f82ba78d99b275edc3795627dcfa6f113315",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/native-focus__light__tablet",
+      "rawRgbaSha256": "ade1e525d3effd485cf2d89294265e9841a5c7b082a04e852cd390e5a8571947",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "result/native-focus__light__desktop",
+      "rawRgbaSha256": "0b1ab71b7729d89cfc986931c11dd625269f0bafb8a225f02292ca0d696239a1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/basic__light__mobile",
+      "rawRgbaSha256": "50213d9a9569f695ca077cd5e783f72e7950f9573f9e8faec72acae4fed30dae",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/basic__light__tablet",
+      "rawRgbaSha256": "992f3d7adc8096b51ccbd78d1442785e1d35db8dc3d3d703bfdc8410bce45f56",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/basic__light__desktop",
+      "rawRgbaSha256": "f11ae5311e6da14f5bd8c518eb80b9fcec6a34fdd51a6c89664ed824c9d4440c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/colors__light__mobile",
+      "rawRgbaSha256": "4179316fb1ba5bd021f237e9f18485aa9966a0ce7d992bf5575b718fe1fb02fb",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/colors__light__tablet",
+      "rawRgbaSha256": "46bd156a754c564ec4ab90ca8302330722d49446e043f70e557d27327008d1f6",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/colors__light__desktop",
+      "rawRgbaSha256": "83e06246a30a67eb9b8e93420b48dcb5190fb82e18de9bf60f45bcff99498e97",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/complete-content__light__mobile",
+      "rawRgbaSha256": "070fc4ce34e51e790f72549cc08630e1d0dbffaf17f5deda3dfe6cf84de534a3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/complete-content__light__tablet",
+      "rawRgbaSha256": "9b1a861d935199bb4e65f95def6bc9061ef4489029f6260bb97aa7fa5e27c322",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/complete-content__light__desktop",
+      "rawRgbaSha256": "f362aa60b2f72185bf904f5e26215c8f9c9373cfd3c4f59775eaa6de1f4b1042",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/close-action__light__mobile",
+      "rawRgbaSha256": "9b6da6a7a7c965874415acc173fd37da849a53bda1981f6873986375574dd28e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/close-action__light__tablet",
+      "rawRgbaSha256": "d4ccbe4d00b4a14cab1d97127cc8d23212c6baa17ad8427495a696800d821339",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/close-action__light__desktop",
+      "rawRgbaSha256": "f16042fd39644c07adb3e91ecc32db3f8fc27d27e6f435cbbae8880e4cfd8335",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/close-canceled__light__mobile",
+      "rawRgbaSha256": "fd790706e94cef138c1c98b00650aee410eb5779ca2690b0ad20ad421e50f818",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/close-canceled__light__tablet",
+      "rawRgbaSha256": "e204ab210884f78e3cc72a61e054f51e213ea38f14178d1f1e015183865611a1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/close-canceled__light__desktop",
+      "rawRgbaSha256": "4d9d9477eb22134d2313c684b29e621c90814706c54e91809e533f5505ee0704",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/checkable__light__mobile",
+      "rawRgbaSha256": "f146add65d1e741e071532a0e4e1becd7975e7fa72d8a7f033ba556e8436bb8c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/checkable__light__tablet",
+      "rawRgbaSha256": "73fd24e43c320ac61e80658b39230ed41e5b497be198d86a13282d36ccf06597",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/checkable__light__desktop",
+      "rawRgbaSha256": "4c0033f0c96199dfe707a95592e2f432d8ddbb9f666ae68f6dbd651637e8f06e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/group-models__light__mobile",
+      "rawRgbaSha256": "e363a246fd980d39fd8f0d5ca50d2eb72543d152cd798e88429510302c9d8e5a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/group-models__light__tablet",
+      "rawRgbaSha256": "fb064dbc2abbeb334c8e3b74ddbdda229a54f965ccb04fb09d802dfa3440148f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/group-models__light__desktop",
+      "rawRgbaSha256": "4eee28bf4b9e71a94c396c7a610df05d18dfd7baa3f8f5825b7d2c07b205db9c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/disabled__light__mobile",
+      "rawRgbaSha256": "2633f90a3be6eb9b00f6477fa8a8b7adaeba91fe16b9b3a6ee9bfbb5b3481052",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/disabled__light__tablet",
+      "rawRgbaSha256": "7ec6c59702670af75ec1c89f921150cbb1a71a0742c57930bd50e71c43d6cd4a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/disabled__light__desktop",
+      "rawRgbaSha256": "948560f958d502aa66ddf656560d8845f4c27167aad6df308707cc84c8596f7c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/semantic__light__mobile",
+      "rawRgbaSha256": "4c1a954295aa64a24f563dd8cd1547053e032e5c620264cd194a312d5bb94848",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/semantic__light__tablet",
+      "rawRgbaSha256": "c8f82842b0a6dbaa66ec56e535937214112bfea498aedcb565e9d2cba5de1acd",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/semantic__light__desktop",
+      "rawRgbaSha256": "f27150b400210380f1054a0c467587788a893915145e4ffd7715ddd989dbfa46",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/current-provider__light__mobile",
+      "rawRgbaSha256": "0f68b2943f14d8392c612065cef3f573e56fbedf05765e8d28fa809aecbb5de5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/current-provider__light__tablet",
+      "rawRgbaSha256": "c2fef80d7a7f3bd14e0c237f23c66a0d6bc0e82d0ad516f21709c900aaadb7b8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/current-provider__light__desktop",
+      "rawRgbaSha256": "b38ade7c156b7e67e7f0133c4ec8b7b53ed53ddb150db9b20a2d9056b539081f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/rtl__light__mobile",
+      "rawRgbaSha256": "57ffe7661884ce8cafecdb9e3092622a8d7127d8fca8981c14505b1258413fc9",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/rtl__light__tablet",
+      "rawRgbaSha256": "b5bedce68c32678d8fa965612b532f60c9233a5e52ba7844a5398fa50f6bac5a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/rtl__light__desktop",
+      "rawRgbaSha256": "1d24f1a9e6a043fc935424f1b517f5cd6c1d3b584ee78ace035831619c78e8a2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/theme-dark__light__mobile",
+      "rawRgbaSha256": "b4abc98ca460b14b6d2b7b4810830744708c083238ddd16a6a4bc2ab88ae9f5e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/theme-dark__light__tablet",
+      "rawRgbaSha256": "638cbb61b4a31fa4e81a161bf5efbd47b07fab32d555d758a9aef7aacd7a657a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/theme-dark__light__desktop",
+      "rawRgbaSha256": "215136d534a16931a6db6bd439fa1bff206199185cf32db5ffed20b14d96bc91",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/theme-compact__light__mobile",
+      "rawRgbaSha256": "3bac4e9e0300afa75c2eab03c81feb44c57d6d6125735d8b923d89285b2d450d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/theme-compact__light__tablet",
+      "rawRgbaSha256": "1bea7bd943cc52b18867441cc6ac9ab4dd430cd964c5c4df71b7a15a6b7959f8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/theme-compact__light__desktop",
+      "rawRgbaSha256": "f574fd952c87557b771ac9252b787326c7562451f0020af4ef81eee0a8b39587",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/theme-dark-compact__light__mobile",
+      "rawRgbaSha256": "c638175b0b48774ea9e7d101c75f4bd290aa1d9edbb4c4827f2045c79a90e5d8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/theme-dark-compact__light__tablet",
+      "rawRgbaSha256": "860c59c4feaf9de512d64de1e2da48e6ad555efacc35d45351b3cf5ef5de0615",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/theme-dark-compact__light__desktop",
+      "rawRgbaSha256": "7cb5290fde32238db420534e191aec652c22a8e9f4562f59e9186c0557cee461",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/native-focus__light__mobile",
+      "rawRgbaSha256": "7e0a3c054690b002c1a65746676fca8642e192a2832387bece567f04d3e517e6",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/native-focus__light__tablet",
+      "rawRgbaSha256": "b0ba6bee1c8a2b95c5205d918ff95b9e8f1533dfe61cadf2b8d0a1484758995f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "tag/native-focus__light__desktop",
+      "rawRgbaSha256": "abe47aefa00c2cf3c06936c7a0d08bb20465d77b4a29c3a5062d9f4ca3535704",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/basic__light__mobile",
+      "rawRgbaSha256": "1a6016c9596531d86c1014fd9451a8f3f3be629c64c082b4836200d001f1543d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/basic__light__tablet",
+      "rawRgbaSha256": "1fedf93d4d3b14fcd2e4268c4a0620ecec1bf04873b46f83967d4df7b36e3702",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/basic__light__desktop",
+      "rawRgbaSha256": "dccc22393f488c6c7f9cf42653adc5392c3a2ea688c8254cd2bbb1395e87d966",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/avatar__light__mobile",
+      "rawRgbaSha256": "2b18168e3de835ac882315d5f715056205f115a03c279b9d5944f57fca840a2f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/avatar__light__tablet",
+      "rawRgbaSha256": "16e3db0badd09f9d76e86a04f397434870c1fbb6d0e2af49737fe6fd5f6844cf",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/avatar__light__desktop",
+      "rawRgbaSha256": "8e104331c2871b7fcb91809852530dc4a3e56b2497b700e97467e45bff08acce",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/paragraph__light__mobile",
+      "rawRgbaSha256": "e2e0c0c3f6c0a6a5ca3e453456ffc80ee559758171243e689f8e82f990773c30",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/paragraph__light__tablet",
+      "rawRgbaSha256": "ed91119b73390aacc6ca657779bebf9fd83bb0ccbbbf5feb1fdde55d2a240fe5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/paragraph__light__desktop",
+      "rawRgbaSha256": "5beb82e52feaf0601bc6b5816dfc9b8d278921e95fb0a8e5f4a4f023032c7d46",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/loaded-content__light__mobile",
+      "rawRgbaSha256": "27351f8ee0f2cc39c89d21002cbe1d8adf2acde7d3bb8d13f65091e5b2c5a7cc",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/loaded-content__light__tablet",
+      "rawRgbaSha256": "3fbd1d41278bb41fffb12adb6cd68054d20381be7b36790ba46ae95c41850b12",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/loaded-content__light__desktop",
+      "rawRgbaSha256": "dff377c84b9557885d17c1bfe0ebd989c94a4e226625003f72b16fbeba8f018f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/elements__light__mobile",
+      "rawRgbaSha256": "37b395e19f1358b1e69e5df0d3de52e0c6ee498bdcc1b132e4883b1c337e0b0d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/elements__light__tablet",
+      "rawRgbaSha256": "1fd8809e11b69be28954e16b1a57982bd772411749f6be2e51c79d098697432c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/elements__light__desktop",
+      "rawRgbaSha256": "2ed67edbae24315017191a7e15515d39411b2132f074b794ffbfbfece645ac33",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/image-content__light__mobile",
+      "rawRgbaSha256": "ee0c14c9c3aebeb9d40336998d7e95603bc46d91a44c7928803acecbe498fe8b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/image-content__light__tablet",
+      "rawRgbaSha256": "37594f204dae88457e9288a012954c45c03c56554e40856a5b7f1f63b821e9bd",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/image-content__light__desktop",
+      "rawRgbaSha256": "9805297cdfa3a70136c1e7bb747599a0ddeb4c8030f2e8af14eab07e9d36e725",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/node-content__light__mobile",
+      "rawRgbaSha256": "e2ad45c8b431bf0d9dc35895b79bf7d7d7ca3fb56ddbcf7207846d758dfa92bb",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/node-content__light__tablet",
+      "rawRgbaSha256": "1ae998c289736bf27dca91371261d550dc69efed0f0e61be956e26079963d8b1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/node-content__light__desktop",
+      "rawRgbaSha256": "192d0e80f2068ec7058957c0164795ba946ba9820446d08e9d049752d2dd6bd0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/tokens__light__mobile",
+      "rawRgbaSha256": "a6e99ad5ac2ace18490746e829733fecdb0e7b59f064371806b6b04d927e12c6",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/tokens__light__tablet",
+      "rawRgbaSha256": "ca269cf5ac388c52b08eae8459d0482cf6d20a84cccd1ae4848d4d4cccd814a7",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/tokens__light__desktop",
+      "rawRgbaSha256": "880396f2ac423c7dc534e43ef2faa9b136eb1a2c47a7ad94c421b450c71209b5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/rtl__light__mobile",
+      "rawRgbaSha256": "e59d48cbd246bb753ebe8179df1d5026193effa0250af80b24829822a2972c68",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/rtl__light__tablet",
+      "rawRgbaSha256": "2201af221e31155a7de68f439e50b767ca53ba794b7ddb65c490e7ead774bc89",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/rtl__light__desktop",
+      "rawRgbaSha256": "9a73ec0437363d741fd227848ca0e40dc45e3198893658b08bf830c6c53fc1f3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/theme-dark__light__mobile",
+      "rawRgbaSha256": "1f7e46a31333d59bd87718aaaf2252cf841568f9c7bca5a120b9fb22354f0371",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/theme-dark__light__tablet",
+      "rawRgbaSha256": "308c7481010aff1c1741a8f1c89bcae21683d6d73d41073853afa6b3a6f4f432",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/theme-dark__light__desktop",
+      "rawRgbaSha256": "93004439ecd3b27c0b1a7f472839bffa0a92f389ed99b2c81ba875b7cd88efd2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/theme-compact__light__mobile",
+      "rawRgbaSha256": "ef89600ffb831b31a44ac7bc28779ba9346f40d9ca04d320ad3fe6b02669e1b1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/theme-compact__light__tablet",
+      "rawRgbaSha256": "54e7c289b9efbc134f60fa85fec92a3ce04689d3d04ec1740f0e02350d3a5553",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/theme-compact__light__desktop",
+      "rawRgbaSha256": "9b3b6e7cfbc9c9817d6ccd0f6a7d66d0f7360595c296fcfc3484e0286ab3cfa7",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/theme-dark-compact__light__mobile",
+      "rawRgbaSha256": "f140ad229399fd83c0147be553defc2562d7ba7b5547f0209acf39ccfbf1b15c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/theme-dark-compact__light__tablet",
+      "rawRgbaSha256": "8a3ce1d79836ce0e608d34eb59e84a01bbd701058f5d57c7b9dc12da3643f9c0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/theme-dark-compact__light__desktop",
+      "rawRgbaSha256": "df4fb6292c10c865ba021addc96ebd6c40f65e5b1b86eb2e640ff1b98ea1278d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/native-focus__light__mobile",
+      "rawRgbaSha256": "465083f01dcd1f990921800235d0b481740f8f21c684bc03fccf03ac42b6b45b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/native-focus__light__tablet",
+      "rawRgbaSha256": "891c35f00cbee5e30b93a11dfab54c3992db86032eb53cfcaa1ca868bb1fe390",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "skeleton/native-focus__light__desktop",
+      "rawRgbaSha256": "27a3639605c2914bf3a1b1f3ad86d0634334727547402cfc2dfcd73ca3ca62d4",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/basic__light__mobile",
+      "rawRgbaSha256": "795233612886596700fe5e9082477fefc7fa7705891405564d06371ec42234df",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/basic__light__tablet",
+      "rawRgbaSha256": "146ff710a8c0055b6c769726f1960ad88a4448ce168b25e3f4f0118e4f1a9881",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/basic__light__desktop",
+      "rawRgbaSha256": "c5b537c6369815d80106e73eea94f98cff7eb40f87f79d0b2a18230812fa5b7a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/units__light__mobile",
+      "rawRgbaSha256": "df8de2c2d1a451c17ce098cf70f90f3d557e3fa2989ad7cae034274dc8681141",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/units__light__tablet",
+      "rawRgbaSha256": "03121e6ba22784f3f09c4dc35b70454ecf1f5a5f3d584fe47113489798a81629",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/units__light__desktop",
+      "rawRgbaSha256": "607231c0edb573a792fee7556ecd5365ee48b28249f1c291093ca7bf5d91ef99",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/loading__light__mobile",
+      "rawRgbaSha256": "563f89c9dcbea41068781d46a893193df05bee901a44fff42f7dd5857558a25d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/loading__light__tablet",
+      "rawRgbaSha256": "f3e6b280eba63f30eed4cb583fb8e5b16b5ffa12d2d39334e8bef79c4ec79211",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/loading__light__desktop",
+      "rawRgbaSha256": "f5fee1044d576759497b254afdb7ab5ded5ad224c1b9bfc3306b141f86e239c2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/value-content__light__mobile",
+      "rawRgbaSha256": "520da278678af72b15741f4e12a12d1d9631e07077831ac14d478488b8e0320e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/value-content__light__tablet",
+      "rawRgbaSha256": "19e50889758bace3502145741cd4c9085a0ffb2a7e83b43d5e864c6a85ba5935",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/value-content__light__desktop",
+      "rawRgbaSha256": "be46288fed963366c8aba662d63c4a60cf27ba8d81ec96c86e052f04ea6fa620",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/empty-slot__light__mobile",
+      "rawRgbaSha256": "c9a98c9f35e5a69143d5fbc1bfae2caba591646c12a525b22b8430f0ef384d9b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/empty-slot__light__tablet",
+      "rawRgbaSha256": "e936b3ddbec5e6eb49d186434b81ca23a29e0d7a6b463d21ea88f278fb209956",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/empty-slot__light__desktop",
+      "rawRgbaSha256": "ad5a9454386bfee04e572c0b648a7866a7ef2cf829b97a25e216a15f88e19cc5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/timer-countdown__light__mobile",
+      "rawRgbaSha256": "34fc1e24be4b9711b06e7c221ccddc455be3a0a9978d87d85c5742b89c569102",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/timer-countdown__light__tablet",
+      "rawRgbaSha256": "958de830c62afcb23f12adfbaa2da04fe36971ff452a38c5a25cbf79e0519cb6",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/timer-countdown__light__desktop",
+      "rawRgbaSha256": "adb23a4db37cd261928a9f9581222c34739ad8764d89dbd67db3bbfae4e55329",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/timer-countup__light__mobile",
+      "rawRgbaSha256": "b28eb0004f6bf2351f1c257f174d1734865d84f00e9a20c9623ad016142d2beb",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/timer-countup__light__tablet",
+      "rawRgbaSha256": "482c1f6e837b42c49f8f379949acbafdd162c0d2019e4db89a90803d7a5d52e0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/timer-countup__light__desktop",
+      "rawRgbaSha256": "bfc690ab30c43bf32b0af1421ede2dad48e3ed8185b8bc626f490272113ceb72",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/tokens__light__mobile",
+      "rawRgbaSha256": "350a904d305bbb9fdccb0c4e78a792e92350edabb2bbf03caea6c7efd8c9c2c7",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/tokens__light__tablet",
+      "rawRgbaSha256": "9a483a33e1d04068e4bd3b74b1e28d831a47be1cd7fcdc1af8a67be8b213d9dc",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/tokens__light__desktop",
+      "rawRgbaSha256": "9746e26fbcb66af5dbf69baab189b95081203e73a7f436d6e00542363591f9b5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/theme-dark__light__mobile",
+      "rawRgbaSha256": "376c5e4f898689d89629ba7818579b671259dec47c41e6272bf3643f6d4bf948",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/theme-dark__light__tablet",
+      "rawRgbaSha256": "6fb7266c5470397d66c69985f3383b3e6682d99f6c573007097d5edd984b3a3d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/theme-dark__light__desktop",
+      "rawRgbaSha256": "57be32433760c2872934499207eea8afe2f43f247e7e41505a25caaee4e0308d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/theme-compact__light__mobile",
+      "rawRgbaSha256": "e41fee15d874de060de867e62edbd07717b0cd72fa9b411a095f837e7ef3e111",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/theme-compact__light__tablet",
+      "rawRgbaSha256": "672363fd85346139ba0527015a029cf9ad94176172cf99a1e9c492d5190d8188",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/theme-compact__light__desktop",
+      "rawRgbaSha256": "aa8b40d30e3d0748396382e2390b647ea4219ef3d7aac0f528e769fbad54560e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/theme-dark-compact__light__mobile",
+      "rawRgbaSha256": "74eca1e6d504d7252b274ffa289f88ce5e8277275b0d3d64b1d9204ef1a6643d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/theme-dark-compact__light__tablet",
+      "rawRgbaSha256": "5f1ca90a1e7120efab32e5e53ecb6e14f0754a3ad505d33e62701f54ec5f7bd9",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/theme-dark-compact__light__desktop",
+      "rawRgbaSha256": "604aa4dea63a480b0a497561648516a653426af3cd4d1f9178ba7e1f9bfd2242",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/native-focus__light__mobile",
+      "rawRgbaSha256": "8f14dd0f39b96f2825cb37e9d2ebf6f68afcb1f86305af4bcfd156d9a77dab86",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/native-focus__light__tablet",
+      "rawRgbaSha256": "9a3d4a204dec45c2486f57fb2cdc3010f1d98f56495761b1447e783333abb4c2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "statistic/native-focus__light__desktop",
+      "rawRgbaSha256": "19daf9fa77c8a75b0703e13cacccb8604084e1df184394b653d3a21dea616b2a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/basic__light__mobile",
+      "rawRgbaSha256": "429a0f0358f5aae5c1a80cc519dd5bf627e2739c10fd869ccc620d3818c88ca7",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/basic__light__tablet",
+      "rawRgbaSha256": "f146dc4ee06ce8dcf6c71484ced483539a51fbb80002d6d941ad7569a7fbc950",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/basic__light__desktop",
+      "rawRgbaSha256": "b7c68948a4e66ddb729a020a4f5696c02d1e727fa56b55a99f46228699faad3f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/size__light__mobile",
+      "rawRgbaSha256": "f8e3de6c753c64b53e7fc740893bfad3eb52fd53ab5826697c5fe0003839459f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/size__light__tablet",
+      "rawRgbaSha256": "263fb254209e2a18e99b3f0ec52bafc00417806d4e8818fa2a41ad1fb365615d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/size__light__desktop",
+      "rawRgbaSha256": "8899c93e478c34643f326c7267f2d50d2a1628c8a368cf6c3acc774653ea8683",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/nested__light__mobile",
+      "rawRgbaSha256": "eaeb84ab9da28af3841cd83aca823c15317b6ae294da039540bb0e6ce0d1bede",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/nested__light__tablet",
+      "rawRgbaSha256": "c1d1bf2efc4930b619b8d29585e994fcab6abb368330d8bbe6ff117ff14279d1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/nested__light__desktop",
+      "rawRgbaSha256": "7b7a75658f340b2f6fc7774edc0184c0608ea9b03259ba67ef5a784c41de4af1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/empty-body__light__mobile",
+      "rawRgbaSha256": "e5af73399decc948174b9221915fcaa6765a24dbd97d38b062f5415250288960",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/empty-body__light__tablet",
+      "rawRgbaSha256": "7f156c03fab60f6ac9482e26d1555103d96a455a6349538431a1a81ce8465e7b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/empty-body__light__desktop",
+      "rawRgbaSha256": "8a25109ef60b7edf7cb1a7f1e07e66de370ae647cf32e1ef471d2b03d2bbcf11",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/custom-indicator__light__mobile",
+      "rawRgbaSha256": "04536424a4f31225b1dd461d37e0842a1d8820d314f6a932c1d9c76a8529869b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/custom-indicator__light__tablet",
+      "rawRgbaSha256": "af4424cefdf7e91bd7398f812eeb6f9a7a0c2d4387a5ad0bd389851e2aaa8e2a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/custom-indicator__light__desktop",
+      "rawRgbaSha256": "abf3e6dfafc249b9876b98bfc4781824c91c05bb2ce74226d8e3a4a9e3e67ac2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/percent__light__mobile",
+      "rawRgbaSha256": "71178cf42dbf04a7df8d016583a43a4cc0ee08107b94d58588413a9c74ed2561",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/percent__light__tablet",
+      "rawRgbaSha256": "1976b35290ebf775545a315a94004a88e029655559bc53cd7613419fb72efa71",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/percent__light__desktop",
+      "rawRgbaSha256": "f7bf555df4daf3abfff7dae869eebf305a07121f6cdba85183aba88ec0a983d2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/fullscreen__light__mobile",
+      "rawRgbaSha256": "a7a1732f4663cf15c5bcad0eacc587833629f7bd70b859ba383b0d12827a3aeb",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/fullscreen__light__tablet",
+      "rawRgbaSha256": "ab8ac8814f70debbbeab7a06bf434d0a2a8b4c962d9fdcf7fca0910f7a8e95e1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/fullscreen__light__desktop",
+      "rawRgbaSha256": "e645b8a360ef12b7b9e75e7a521a357170256dffc6a9dc3176f64830104d0740",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/fullscreen-idle__light__mobile",
+      "rawRgbaSha256": "e3ecc29c4ad98e026eeeb214b95e1b328032409aa43fe7a898a87d93d14e4648",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/fullscreen-idle__light__tablet",
+      "rawRgbaSha256": "60f7320631d1b869d42a782cf4526fc8baba8d9c45417a331eb664c2c9a64325",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/fullscreen-idle__light__desktop",
+      "rawRgbaSha256": "b6a3f66fff3219e0e1eddca546f9b05fb31a1603431146d1d2b88597483bdce2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/semantic__light__mobile",
+      "rawRgbaSha256": "2bacd064c6cd17dc2c027a3ae5af5a88eebf91884f65a2363d3ead51b55ec269",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/semantic__light__tablet",
+      "rawRgbaSha256": "02bd4b5bd9262e1dfdb7b7431ac2b199de0e62d1a16446303924b5d67a547bc0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/semantic__light__desktop",
+      "rawRgbaSha256": "f3cabef5e7ee3a518d514cabc3eb91d5918511d6387e04238757b693313dca92",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/tokens__light__mobile",
+      "rawRgbaSha256": "d8c9519cb366758b1ace98b57f02cb31c2b5126b10ef1d64418d4035f062694f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/tokens__light__tablet",
+      "rawRgbaSha256": "ab3e79fc429c955652ac52c46caa7eb4ac31fb32f01bf9682a8f423a82456efe",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/tokens__light__desktop",
+      "rawRgbaSha256": "717cec9632d2dada6f3cd58c3f0dde6f3d23d40339c9b39f0015879b30947817",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/rtl__light__mobile",
+      "rawRgbaSha256": "aaacd15d20d0e1904e3a27b049422a2628622724182a653aaea5a2cb04d7af6c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/rtl__light__tablet",
+      "rawRgbaSha256": "1ccac230c0cde2c9e41a7ab77e8ca318b1c48de9d779c594c660f45c79cd8bd9",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/rtl__light__desktop",
+      "rawRgbaSha256": "3da5749dc1ff625f1bddf3394393dd723aa9b8f5155edaf7518ac0e988467855",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/theme-dark__light__mobile",
+      "rawRgbaSha256": "9a81bef063a59808c27069a6a70353217e19b44bcc6bc642e6ec7977086c2869",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/theme-dark__light__tablet",
+      "rawRgbaSha256": "f68d3699fe42110d9680304277fcfc30baca62eed1a3219ab9c7631996f55ee8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/theme-dark__light__desktop",
+      "rawRgbaSha256": "63b79880084d16047e63ea2500ffe85828e672117a3919d2e2722986f19cf10b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/theme-compact__light__mobile",
+      "rawRgbaSha256": "78c3840808a0ddf768ee8460acb0e1b3bd989dc2e88700adef820d1739b06dfa",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/theme-compact__light__tablet",
+      "rawRgbaSha256": "0cb8a720c820f6582fe6c8392ea0f6bb09203e61858b3476f18ad9d6c45b1923",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/theme-compact__light__desktop",
+      "rawRgbaSha256": "1ea11e6dad8fb5a1f9601d9f3fc5e98c3cc554711d79250bc7ee3bd669b89141",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/theme-dark-compact__light__mobile",
+      "rawRgbaSha256": "331cd3d42ef645b5ada0e03418b05660afa8888136c13fd6b7458a32b36b61b0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/theme-dark-compact__light__tablet",
+      "rawRgbaSha256": "7e45ba88b9e841702f3f55613feaea55b8e563c34469a73bb7eaa36f9d91b11e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/theme-dark-compact__light__desktop",
+      "rawRgbaSha256": "bf329b450e27d6d031850f97ef4ed854911c7659961757dd0ea3e4cc61efafd9",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/native-focus__light__mobile",
+      "rawRgbaSha256": "ae8645a9e2e66aee5aa23ce1aa3f0ae2022bb7cffd40684ca479975903f7a0d9",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/native-focus__light__tablet",
+      "rawRgbaSha256": "2bf77fb7fbc2aed4dcf5f4d407f181fe39c7f284e8a283184493fc74c537fe8f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "spin/native-focus__light__desktop",
+      "rawRgbaSha256": "071ffbd19e4fa1f813a64b020613e2cee36e354fa5024418b3e964e9942f620e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/text__light__mobile",
+      "rawRgbaSha256": "cba87c0d4f4c3bd79875f0460be76a4bb1a95e063fdf86e9f079f2feeb6dc300",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/text__light__tablet",
+      "rawRgbaSha256": "9f0cd08a915a3a2514f87e1eb0584b0f1b2d6ada33d9ba7b628bd4481b6db617",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/text__light__desktop",
+      "rawRgbaSha256": "a504ecd1d909a3c740e67c49bcb73f44eb4472272d1e13ba3efe2ef629253d85",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/title__light__mobile",
+      "rawRgbaSha256": "6020f8374995e85ad021fcf21cc33ea135a390c2cef5a136d278c75a6e029244",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/title__light__tablet",
+      "rawRgbaSha256": "d16fe16683ec3717fe560021579519737ba4745a378c7ee3a49292844f56875b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/title__light__desktop",
+      "rawRgbaSha256": "68a414bdba3c43ce0912de5e074930e39f5248727501b2b44c02e8ddcbe9d093",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/decorations__light__mobile",
+      "rawRgbaSha256": "1c1f10ac7c205355cb605d6a3af5c8948d09c1257f2979e94b1db1ab09246f2a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/decorations__light__tablet",
+      "rawRgbaSha256": "8dd4f563a58f81c14f908ae4ce0abf8d25881e1c21abac90efd34d0599f691cc",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/decorations__light__desktop",
+      "rawRgbaSha256": "35e9d50620d29134e96276282a7759bdcb8ff95bcd4afb332946e32949fad7b9",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/link__light__mobile",
+      "rawRgbaSha256": "61946d332bacbf67abd94afd3a7795ca4ea7465811bda024e0e133f8fde96b54",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/link__light__tablet",
+      "rawRgbaSha256": "c7026098bcb6bfebf3b81d1f59b6da03d6cee56c5e26e0a9b464df0565d5b171",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/link__light__desktop",
+      "rawRgbaSha256": "aa6ed9dce021fe4e7672d41de315fbdbb5f80054c10b80bbd4188133f26c839c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/ellipsis__light__mobile",
+      "rawRgbaSha256": "6786e4b43c0836c13c11888ee90ef78f7d9efb587a8f523efc9c989ddf6064d8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/ellipsis__light__tablet",
+      "rawRgbaSha256": "4b4f2e4c3351c48ceeff280c2e9956b4dc096b58e907d91e958a1e1459a273b3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/ellipsis__light__desktop",
+      "rawRgbaSha256": "169db7b90b0a49a2ca6bb2613788b84537e694e5e33c9ee7540b025f6a7cc024",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/complete-content__light__mobile",
+      "rawRgbaSha256": "f9708fde7297ab692392aaf53268a297b693c4952b3ef30069905d4b6f6dfe82",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/complete-content__light__tablet",
+      "rawRgbaSha256": "8c67207e027ef9f2be21cbb8a47aa95071b2be76fafdd41fd76ecf34ab05c865",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/complete-content__light__desktop",
+      "rawRgbaSha256": "15d566a4ca194eb8c1fffcb1f160bcd09744fcf59d79ea8844fbbc626c8a4967",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/copy-feedback__light__mobile",
+      "rawRgbaSha256": "6b87477636f26c72f7d006e297716d5227281a257e3469820d2af45413e7561b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/copy-feedback__light__tablet",
+      "rawRgbaSha256": "3eef1372049535a3bfb6b3c2ac4f8e33d6919c4ffbee0853038d2bdbb19b2e40",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/copy-feedback__light__desktop",
+      "rawRgbaSha256": "8db6f39e525b6660a5bd7d9036df06caa72039726d2862aa273cc417804bc562",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/native-editing__light__mobile",
+      "rawRgbaSha256": "35487deaff5e516ad514ae3fcfc92ebe63b3a7e424234b7798a19604900eee81",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/native-editing__light__tablet",
+      "rawRgbaSha256": "f02d9d51ac4b8f15a0122dfed96faf60a1c4867aa932d8a2d5e61abf60ff6f7c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/native-editing__light__desktop",
+      "rawRgbaSha256": "9b24408095be911ca02747ebd53b8d37150d5cced4cf52625adff242f309ef03",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/native-focus__light__mobile",
+      "rawRgbaSha256": "487e77e8642408bec76f3455d0412406cb18f4f8e20d95f34022d72a47b5623e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/native-focus__light__tablet",
+      "rawRgbaSha256": "17106f28a4be350769c3a427553ac3c6be61b31483ce0d37f70957bec012d909",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/native-focus__light__desktop",
+      "rawRgbaSha256": "598298ea80c78b4e398d74213a996d2bd927ec521e0c87c8d14c63cb0a29bcfa",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/semantic-tokens__light__mobile",
+      "rawRgbaSha256": "9cfc1282e3c388ab687aaeb1a21a3201a6885303a8eae089ec977f32eb343256",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/semantic-tokens__light__tablet",
+      "rawRgbaSha256": "d863d9c0d02932dfea3c74fce3443594ab6bd29277ecb0c4893a920625b3bd70",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/semantic-tokens__light__desktop",
+      "rawRgbaSha256": "4cb93ea15637cfed27f34f275db98ebf6c6508643860612f268e938869604911",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/current-provider__light__mobile",
+      "rawRgbaSha256": "793cc0d655c0e422c7ed3d490c0c9314ac8db49401d1872d69d8e9e10adef339",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/current-provider__light__tablet",
+      "rawRgbaSha256": "617683d0db83ea2c72ab36dcd6f6da6920ebd6350493af6e36f74a9201f545ed",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/current-provider__light__desktop",
+      "rawRgbaSha256": "01d57dfdcf9b74985a99981d857724ff6379b7aed1ad304ef7593c6876000474",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/theme-dark__light__mobile",
+      "rawRgbaSha256": "1101131456ad348b0c63e856169cee415e29f26e0bdc33cb41a047890788629e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/theme-dark__light__tablet",
+      "rawRgbaSha256": "8f35d77040a3da73ee25469fb881884d8adde4ca6efdb76673cb3ba4e9924c45",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/theme-dark__light__desktop",
+      "rawRgbaSha256": "67cc51c3dee62f9e6e0c8b881c6560927ea879c4091cb6d7b1fd80308fa14f12",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/theme-compact__light__mobile",
+      "rawRgbaSha256": "dff2ad13c6b2a2706845bb5ac24649346e2873d91191a8989c63363e4fcf4d81",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/theme-compact__light__tablet",
+      "rawRgbaSha256": "41a164d23ba1d06a82c14d278d866f52dccef2d70f64a3dbe76acca87dc20922",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/theme-compact__light__desktop",
+      "rawRgbaSha256": "4876639c9993b74d2cdf78eab28fe728891415dc348711658f7b094fbfe6650a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/theme-dark-compact__light__mobile",
+      "rawRgbaSha256": "061f7613aa6ae77860c9d4d93fcbfb982719cf3342c74b59f320889a6c2d6f51",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/theme-dark-compact__light__tablet",
+      "rawRgbaSha256": "09aa2ce1c96db6dcd178d288995307f44ea1ec0b8cab098e3ceaaf6ae77b26c2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "typography/theme-dark-compact__light__desktop",
+      "rawRgbaSha256": "011a851c45cce9b61fd950e51624c3e36c99e6bf7f5469435d4f2852edf91e48",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/basic__light__mobile",
+      "rawRgbaSha256": "2e11525c2528ff768465f8e22d11d1d4c893be40c4c2fd59dbe7f1f4fb0593ef",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/basic__light__tablet",
+      "rawRgbaSha256": "8ebc0054e71e4b5a92d7e81e690bd111a769bd1a1142a86f000bea7b08e930a4",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/basic__light__desktop",
+      "rawRgbaSha256": "f7f722ed6061aadb80ef282647b60ea5a49dbfdd75b4b5abec7924008cc7c51e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/svg__light__mobile",
+      "rawRgbaSha256": "33a14e2868ce4e02ab638308de22cc432424ca1a3326039692887433984db505",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/svg__light__tablet",
+      "rawRgbaSha256": "aa3731caba77232e89396a707be577c074e5fa42362647736d00525a2958d55d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/svg__light__desktop",
+      "rawRgbaSha256": "ca9751adc5fb13925ccf8aec20929a8d2404b8d2e6a7fec7d86d948f61b37062",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/icon__light__mobile",
+      "rawRgbaSha256": "56434e4b1868d0c337c93a70b8130333fe2a1a917fb366ab9c85e42cea03e817",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/icon__light__tablet",
+      "rawRgbaSha256": "45dcd768dd6122cace4f4094fe59299ac90931db5919b83084e6bd5905ce55cd",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/icon__light__desktop",
+      "rawRgbaSha256": "60c26de28551e36ed92c40c30613b9d56bed06da0f4b9d9097b00bf31aac5156",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/expired__light__mobile",
+      "rawRgbaSha256": "ab526def69875e944d56817c0b2444de88520acee8cad5654a9957b7101fdba5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/expired__light__tablet",
+      "rawRgbaSha256": "10e34652192e0630f9066bcacc1e6baa480d82c1500ddf304e64d7e254b1d8dc",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/expired__light__desktop",
+      "rawRgbaSha256": "aae46ceb33f71863084404f3d5bafea3c1b547190b4d7dc5b2769b37e2541500",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/loading__light__mobile",
+      "rawRgbaSha256": "3003e67dea6054e7e6dc15c3b0463b8a98a5a2b6a652432c7b78aaf4808cdf35",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/loading__light__tablet",
+      "rawRgbaSha256": "1e41c40b50a279c332687dc97433176fd783bf8fc6f4647a6f7500f2c2897ec7",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/loading__light__desktop",
+      "rawRgbaSha256": "a8e2dc104a57be839cec5d4d505d88f6fe14d6f876f17e374a526612a5acc73b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/scanned__light__mobile",
+      "rawRgbaSha256": "4805bf27e67ba4d9d5a809df664c6de0d83c73677125f687b969c29797a1a04d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/scanned__light__tablet",
+      "rawRgbaSha256": "9e75aa38469b16572227c2eb2bde066434697f72a11d76cc643696488684576f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/scanned__light__desktop",
+      "rawRgbaSha256": "1c3f7b3c6e2315b7a3c981714c4ed29a3f94b747cc1b586e66d0164b6285e00b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/custom-status__light__mobile",
+      "rawRgbaSha256": "20114f808b83274b60d3e72a8b800e7ae90e062f5e5cb7cef3ed00473a71101a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/custom-status__light__tablet",
+      "rawRgbaSha256": "ff06b99ab3812fd38760b24114d1e24a1acd07465be0fa753f39ae3d819ce59d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/custom-status__light__desktop",
+      "rawRgbaSha256": "fbe6f09c997f9a71b30bce8b6428d615fdf271f8a5a0867c0fd249e423b02578",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/tokens__light__mobile",
+      "rawRgbaSha256": "1df84ca3434f2dcd67d49e02c6781dc63be6b5db1fb53d6831220acd0a9668be",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/tokens__light__tablet",
+      "rawRgbaSha256": "0d3a03dd1366d6d0987bc0b71638daa31a8378b7344e3b88753e590ba750272c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/tokens__light__desktop",
+      "rawRgbaSha256": "74dd8b84847b747afb62d5d51d72915b10a0c33b1fec86f725fe72ae5cb947bb",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/theme-dark__light__mobile",
+      "rawRgbaSha256": "fcf19934cd3fd05633fc53e9d71d4202460fc2d4cd51073b511534f932108a8c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/theme-dark__light__tablet",
+      "rawRgbaSha256": "420140a4d81634158e3082366ea2849acc8cd1d99798e77c34355035642159db",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/theme-dark__light__desktop",
+      "rawRgbaSha256": "06839437392666a6acdcd2423065228e55fb03a733bec45c6873c49fa2472f2d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/theme-compact__light__mobile",
+      "rawRgbaSha256": "4f9865e1ba090d833a96209bcc7729663abb605ce7e5f0df8249bd277e511828",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/theme-compact__light__tablet",
+      "rawRgbaSha256": "57c466f50ed34fa1bc90000534191a16292ba687c556692ca5ca2c909d9c07bd",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/theme-compact__light__desktop",
+      "rawRgbaSha256": "e07e78d010020850ccdeac6528a672217acf95e6ef172a40b86df2fbf30fe408",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/theme-dark-compact__light__mobile",
+      "rawRgbaSha256": "28df1ebb18a008da7fe1f42b0c7ec8ad2fd87426ed506489fdb6f80dafeb9160",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/theme-dark-compact__light__tablet",
+      "rawRgbaSha256": "be8fd1ab3c571500f9f18495056c70e0203cbb1b972b488ea85e0486e51890e8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/theme-dark-compact__light__desktop",
+      "rawRgbaSha256": "7bd8d40e8ff986ff24238f8051e815d111d38c5099cf487441b602225893db8f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/native-focus__light__mobile",
+      "rawRgbaSha256": "f795103da52d7e905d20778ee8695bce27e3f531b2692c0431007db00da65092",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/native-focus__light__tablet",
+      "rawRgbaSha256": "8a537f251bfd1e186cbd6389f022995f852fe1077bad0dbc650619919840bc7d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "qr-code/native-focus__light__desktop",
+      "rawRgbaSha256": "373eb081632f621de0bb151791f16e828408754e0ebe0c89960de49f69358c3b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/basic__light__mobile",
+      "rawRgbaSha256": "ec4482130f4517355b40a5aa6cbaeb10324b9955d41370b68203540a5fe867d0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/basic__light__tablet",
+      "rawRgbaSha256": "0b0e18ada64c2771eaf2b145ad4a8aa8d708a1b11e66de1fadac63e4a3bd5813",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/basic__light__desktop",
+      "rawRgbaSha256": "128b6f58eab699b02604dbacef98ec1ee704feccddd1bc6e91666b612f968a3b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/meta__light__mobile",
+      "rawRgbaSha256": "175b5348af6ceb7270b29c616f30c974798755d78aaac6ce0ac49eb7021640c5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/meta__light__tablet",
+      "rawRgbaSha256": "1221d23684ee43bb61137f74d10afc141a068f8c0009f7e95372e6f4289b02db",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/meta__light__desktop",
+      "rawRgbaSha256": "c88fd90b6257e10adf36ad865849e914bf13c18d53fcf11b25e36f32ca08b1f7",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/actions__light__mobile",
+      "rawRgbaSha256": "20ec81e5751b01dca3a64a7cc76b96d29324c836bb9a0932542a7e070fdeddbf",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/actions__light__tablet",
+      "rawRgbaSha256": "2db1a6b51e055913d0e7d1b866ea8f496fe65ffd91fff15b93f22495d8355ea2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/actions__light__desktop",
+      "rawRgbaSha256": "083b31d4b29c0ac8128279be943a07535a75eddf9c80e438f6edcd682a77474b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/bordered__light__mobile",
+      "rawRgbaSha256": "dc427dbdbd84a89085adde60e9a66920d6bfd9045b48bd362135b97b56977238",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/bordered__light__tablet",
+      "rawRgbaSha256": "298a5512d11a50a69574ea1c7bd6c554fb3f34e0378d8db23dca899476e60ab0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/bordered__light__desktop",
+      "rawRgbaSha256": "3de4286ef15a747d6e0a3fc67e581d45c956beb270d664cdff27e76615338c84",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/vertical__light__mobile",
+      "rawRgbaSha256": "8896ff7c70c1c7db5bc18b7eb6fa6fcd40846d2741feb7a9c5044edbb8bc3939",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/vertical__light__tablet",
+      "rawRgbaSha256": "40159cf77dadeae0ba14232779a3de9a0aee182ff5422941b29076049407dc99",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/vertical__light__desktop",
+      "rawRgbaSha256": "d506b6cfd5da5558310029853bb63da95690060bde67fe7b7f61de0b7a096e9d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/grid__light__mobile",
+      "rawRgbaSha256": "f01066e926a549c3dc2a1cf03f2258db28e8123cd88a9fc9c5a41abfda2e929b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/grid__light__tablet",
+      "rawRgbaSha256": "6dec66656da3cd2a97e4876166b103ef6016828c275c000521ad827ef9355aae",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/grid__light__desktop",
+      "rawRgbaSha256": "915178a47c1de1ab3451613f2fdd762ab61c081b92febcc8e5bfdbebe896397d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/pagination__light__mobile",
+      "rawRgbaSha256": "df4f712d6e4457e88abec4787927175aad08889a16354590e453d4a1987cc881",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/pagination__light__tablet",
+      "rawRgbaSha256": "8c4914d1d5fe0e85b797f08e31d34bc1ca79cdeef1b4b2581f90a3174a686ba1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/pagination__light__desktop",
+      "rawRgbaSha256": "87183a2f1250d56cd7f16cc36aaf4599b7926590c87d49460b5f3f1e83772143",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/loading__light__mobile",
+      "rawRgbaSha256": "60ad62909716df47d19b7db9371b253844d6f33bcfad503d4630e099997c160b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 112
+    },
+    {
+      "id": "list/loading__light__tablet",
+      "rawRgbaSha256": "0980db4233bc0298741f227cd16bb5ba3d11c4693ffcb476460755bfe0e43963",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 104
+    },
+    {
+      "id": "list/loading__light__desktop",
+      "rawRgbaSha256": "266b502dec24d5920c402fa2c4190c6c8bae98d72752efc80bd1000a99c6956c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 104
+    },
+    {
+      "id": "list/loading-fullscreen__light__mobile",
+      "rawRgbaSha256": "827ccfe01d4c6176333f5b5f08a27d356c9fbf28e6f49d351c62fd1c1c117e27",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/loading-fullscreen__light__tablet",
+      "rawRgbaSha256": "d0b02bda6b859c68cc344ed437f64657bc39e15d5a03f679f4916beac2e83ee3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/loading-fullscreen__light__desktop",
+      "rawRgbaSha256": "bcf664e2595d7aefa4e32a19def0bd72d416e3411bd7b35d68eff2b7cea387af",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/empty__light__mobile",
+      "rawRgbaSha256": "dfc7e6fb7be7e821727cddfb7c7d60bb9e75a3196724b79a2ef9b401b96a0a27",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/empty__light__tablet",
+      "rawRgbaSha256": "e959eddbed3440ebd512a8b02225c16f923654739aa849cee4116669e1dd5441",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/empty__light__desktop",
+      "rawRgbaSha256": "579044b6ea8cd95643c53abf574bad30e6a557edbfa3d213773c4064d760d9de",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/size__light__mobile",
+      "rawRgbaSha256": "81141459ea5611b4f4834fd210b2fbacd4ce75725314fe9cd6d54b16a3a5fa96",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/size__light__tablet",
+      "rawRgbaSha256": "564321a3c7151efbb9ab3edeabea1f1b0d9d38f693e1442744f7efe47d604451",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/size__light__desktop",
+      "rawRgbaSha256": "6e37e19620e8588b831bb6dd1ea68cce0f6e7c3b753845c59bf00537ffd7b9a0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/rtl__light__mobile",
+      "rawRgbaSha256": "61f56865a1e5bf461c43563f51fe3526568248f5afed1379803ef42807ced012",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/rtl__light__tablet",
+      "rawRgbaSha256": "33f8808c217c11c5e7fffe5674bac06339b4eae48f1e582f16f0500e5d11afd0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/rtl__light__desktop",
+      "rawRgbaSha256": "541a566aecfb4117c9a22666e5830d791738ef78f176576570fc5174efd80e1e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/extra__light__mobile",
+      "rawRgbaSha256": "92a63603c87cb38c1c829642dedbb825078581d7176cd37ec642e54621c68ecf",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/extra__light__tablet",
+      "rawRgbaSha256": "5ffe5febf1854a96d2c401049737bb57791451b61694faf8069c1f48a066b3fe",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/extra__light__desktop",
+      "rawRgbaSha256": "fbfdb1c7b4a806a6dead7cc93c7b62deb0a17f90b82cbcb0140d1621c147c7d8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/nested__light__mobile",
+      "rawRgbaSha256": "a1cf524ea4509fff44bf9895624d8d36f3fa4ec153e821911d35b6e53b905f9a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/nested__light__tablet",
+      "rawRgbaSha256": "53a7be45b404f7e8ffeed7feaf926b00b9260c94a7afe0f9ad7247848e3d3c14",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/nested__light__desktop",
+      "rawRgbaSha256": "0d24638c42c1d463a4e3cba2b805f2d396e1f3f67a4d468cf2083b085111c9ca",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/tokens__light__mobile",
+      "rawRgbaSha256": "5ead4dbddb88a4eea8f816fa4f3921be25543202be739a0151bb36ec214f6afa",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/tokens__light__tablet",
+      "rawRgbaSha256": "ebe2db2128ed65d0c430f06644ea840c3d21219ac09c06357961a32e2e9ef7ff",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/tokens__light__desktop",
+      "rawRgbaSha256": "bfb5819de23c5a8c411abc8c1055aff006d3d760715b808abb9771da3fbc09ba",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/theme-dark__light__mobile",
+      "rawRgbaSha256": "69d3077db1953ab3ae3d645d8b1e0af5f2833998700a3486f2aa7dbe04ed3943",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/theme-dark__light__tablet",
+      "rawRgbaSha256": "f8fd6cf4507f62a01d3424566767b6e94716e44b4e6dd12ed8310918e2dc26ac",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/theme-dark__light__desktop",
+      "rawRgbaSha256": "74a3c7f6a99cfce770c8f622a5a71f4830bf2120df311620df596f5de407313a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/theme-compact__light__mobile",
+      "rawRgbaSha256": "1cfcb7b2f8abdec700ac8c67a77fc359e468f21f2ee7c2a25b4edc5455c07a91",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/theme-compact__light__tablet",
+      "rawRgbaSha256": "8f640b7bb30e1acc0f20f3d8407ca4f0172c0f37da40f54718c24fd75a1a7df8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/theme-compact__light__desktop",
+      "rawRgbaSha256": "b49098744ff82677c9c1f4a9eff4f96bfa971279ec561afac0dcdc229de79307",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/theme-dark-compact__light__mobile",
+      "rawRgbaSha256": "f53527bddd9f5984ad682caa425bcf777962fb01053cab9b9f38614bbf624d10",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/theme-dark-compact__light__tablet",
+      "rawRgbaSha256": "626fc6817ddac4a41520a66eb287d70041fc82a62a4d70ae91491283893db81e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/theme-dark-compact__light__desktop",
+      "rawRgbaSha256": "79fd265ebc8bfca1b5771cfd8f15a550fba9d69b851bf3067592926d8db50614",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/native-focus__light__mobile",
+      "rawRgbaSha256": "378367c870d0ce44f2fd9317ed9b5f263da04b3b4223cfbe1b7b3a26aba3cad0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/native-focus__light__tablet",
+      "rawRgbaSha256": "38669d45628203eec3d25833284101ecb59fa9e6e47e618e30df983015c5bf82",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "list/native-focus__light__desktop",
+      "rawRgbaSha256": "77860d04cd0fc3c3dab1fa277aab6ae382f3ab514e0bfe512684f2a9a977854a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/basic__light__mobile",
+      "rawRgbaSha256": "a50c7629b17c83f4d98c128ea721b815e171cbf6724f9b7c67f8fd2dcfdf2132",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/basic__light__tablet",
+      "rawRgbaSha256": "50399d4eaa7e9598952cf3a645d85e3766f03fbfd146ed84de93fcbb650b7076",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/basic__light__desktop",
+      "rawRgbaSha256": "fa2f61fef4a4159070e2ed76a92c2c65ad406af15ee34305fea6566898efd471",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/cover__light__mobile",
+      "rawRgbaSha256": "ebc14602ee04e212f7812d46560c376cd3c9589272aa4e7c5d4db4695aebad2c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/cover__light__tablet",
+      "rawRgbaSha256": "74aecbd597fd4e42b802d4486c29ee67ba532526ab12d2e9745d3458b270cdcf",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/cover__light__desktop",
+      "rawRgbaSha256": "6c2c09bc549b2c080789f8d4d4ea45ca9e1595e1a9e94116c1df6bbcd90f6a2b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/preview__light__mobile",
+      "rawRgbaSha256": "4083e913eabe587bdd443a288f321192b8737e44ca530bebd9deec547b227c51",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/preview__light__tablet",
+      "rawRgbaSha256": "929c0f71a48e18706de61bb26a8aab9d8763a4d91ef457b2c2ddbc804f58a77c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/preview__light__desktop",
+      "rawRgbaSha256": "bdf3859b76b1f9bef875cca619ef5d9c3afbf17bebd4f7d8f3d0ea17ea5cfd50",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/rich__light__mobile",
+      "rawRgbaSha256": "cf25a56a4a5a1b402803791880867709d99063ff0dd3f48fc55d1e98ce0b6f3d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/rich__light__tablet",
+      "rawRgbaSha256": "6b8b52c8b640a985302ee1a546c2315a88f74bcac48ac37660da41a5ed675e3b",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/rich__light__desktop",
+      "rawRgbaSha256": "190eb36515f02d1c5f5daba12642ad80fe8e7fe197f2090f8aa04bceefc36bea",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/progress__light__mobile",
+      "rawRgbaSha256": "331830235efe85a898bf11cd408938d40671135124794d38f529d14bf982a6c2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/progress__light__tablet",
+      "rawRgbaSha256": "1ca7dd27edea675657c3a93d41ba4de0d2adc63b30b28fe50147f81d8dfaa24f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/progress__light__desktop",
+      "rawRgbaSha256": "03fc7758857c0c9ad7f7ac383e298bc5e7ccd975f093a0727f72aeea1cf51ee0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/group__light__mobile",
+      "rawRgbaSha256": "0aaeccabc1c3c56889fab2dbe7333c8322f48b0c1435f3ed2643729d3483f599",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/group__light__tablet",
+      "rawRgbaSha256": "95c899677bf26f5cabc250fd08066d6db19ff2c1f0325217a1697dc5721e9b70",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/group__light__desktop",
+      "rawRgbaSha256": "57b2e8b67be386bd180d60f360629979ff07e6fd3a906b0500289025f5a17db8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/theme-dark__light__mobile",
+      "rawRgbaSha256": "61da186660329e32ce2954aaa32cf4983925299245d609fa85599127a071b185",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/theme-dark__light__tablet",
+      "rawRgbaSha256": "11ec6bd292df4fdd7ae0ea0b3e78818e86c305e245c29529d871dd5cdcc63a80",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/theme-dark__light__desktop",
+      "rawRgbaSha256": "d8bd53b08422ab4b3a27a788e93007ddd0aa834b36028a1dd0680e6bb40f4f80",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/theme-compact__light__mobile",
+      "rawRgbaSha256": "40e2924537d47abb993d47f264e8958efd7539143201e2fc6d3bccd4e63549ab",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/theme-compact__light__tablet",
+      "rawRgbaSha256": "45141faa78e08546fe65ed1750831d1ab0c4d1e4baabf8de05846fbbd1f33dd6",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "image/theme-compact__light__desktop",
+      "rawRgbaSha256": "5aa6764568c5ad472a0b4f0ea2d5a3c4ba05c7e9258008c68569081ab8eff92c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/basic__light__mobile",
+      "rawRgbaSha256": "47130535b7c41850221297c3d679fbe4542ce4cc84857e9bb0c1167d313a01f8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/basic__light__tablet",
+      "rawRgbaSha256": "dd3ab89229d177474e2814ae4e58f14a70d409cac1976e3549f46f2f6173bc23",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/basic__light__desktop",
+      "rawRgbaSha256": "9543094b52c32567cc7ce6dd880c0fc77cf80109cce190feb329d0ef514321a7",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/square__light__mobile",
+      "rawRgbaSha256": "d91702df37d049bff1b5367b9eeccaf5207a3e70ca07da5a1826c278b8cd25fa",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/square__light__tablet",
+      "rawRgbaSha256": "ff93a826d890f75bf49d6361413a16048c63cb04da70a4596592356fb79efad1",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/square__light__desktop",
+      "rawRgbaSha256": "a2f940b99db8559c3fb8d5872e11209cc3b22b827898345138b7cfc5bc780b7d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/text__light__mobile",
+      "rawRgbaSha256": "c1245c3ca93a6f555b2b460e76d91336f16e3cc92f71f39fe4954e5213aab271",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/text__light__tablet",
+      "rawRgbaSha256": "2efd0d6fc0800ce6b147d1d42f7b26f8954c1f0b33fef5ed90026efa67fc86a6",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/text__light__desktop",
+      "rawRgbaSha256": "e8e3fc9b2a32ce218f8974bc10de83b117d29c05e70914077a1d20c34b24893f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/overflow__light__mobile",
+      "rawRgbaSha256": "548bbb22d9ef725ee4bca86fe1ab87064bddab3ff243cc19a199e800a801d48c",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/overflow__light__tablet",
+      "rawRgbaSha256": "624faca0671907349d4305d074cdba37429c7116c1450a278f76360d81b2073f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/overflow__light__desktop",
+      "rawRgbaSha256": "9cf15cc77f92f303bee85b1e8107fc78958f48675851fdfffa5f53227140202a",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/icon__light__mobile",
+      "rawRgbaSha256": "2c00a3781d5e235e3b7b6d3c1cc77c254f8fa303634d8659dd1f79b5dab87bc8",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/icon__light__tablet",
+      "rawRgbaSha256": "bda9dcd5534950383bdefa3795ca4203c88a21dc338ea9c360dff6574fd8d947",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/icon__light__desktop",
+      "rawRgbaSha256": "fb3a71ae4b4b2923f6b81627a0524bbc7dd51ed63daf2b7ad7ce99f42b2a7dc9",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/src__light__mobile",
+      "rawRgbaSha256": "41eac55aefbca2c9b73273e865551302c4aa8fc01f148b77be89712a60c137d9",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/src__light__tablet",
+      "rawRgbaSha256": "4f7862c0056a076a50506bdbcb7cc05deb9e30a52bae0018a81a2a27979bddc6",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/src__light__desktop",
+      "rawRgbaSha256": "b2b8c8f235ff8f8c9b48f509433fbe374769b9388a0e72c7dfbcacb3fb8da7c0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/numeric__light__mobile",
+      "rawRgbaSha256": "d6a611f8369fd8f6dea742b26c61c3474e9e15ca54093d4beab32abdaa1f8e57",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/numeric__light__tablet",
+      "rawRgbaSha256": "d15cc7341cbe6a390a5336880a64e16ac8bded58027f331382e7a01a18a1a6c2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/numeric__light__desktop",
+      "rawRgbaSha256": "cd095ff5fb5e67789a149735887a9b2c87c4cfeec6c23904755ce553e75d13b2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/badge__light__mobile",
+      "rawRgbaSha256": "54af1fe28dba130cbf68c6e9ec31c3fc51d981fe6ad05c1ac9c6ff1853d637b0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/badge__light__tablet",
+      "rawRgbaSha256": "e64a09ad5dee0b9ed0041ec5aecbd6c732f1f8bce71c56db8b2767989472034e",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/badge__light__desktop",
+      "rawRgbaSha256": "9821d250689abbfbad9efa822d8a6d1c9a86b19c683b2e55c5bf5ec6e06a68a3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/group__light__mobile",
+      "rawRgbaSha256": "5f6ced50dbc5bd95f1e5cf30f4aad027c5f57135198ef1a0e73ba41593558d47",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/group__light__tablet",
+      "rawRgbaSha256": "c9fa761340aac274f6d24aca902b67419c30c9d6499f0cf7e338bef3f92e54be",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/group__light__desktop",
+      "rawRgbaSha256": "23f8cdbec2690a08243e54d1fe1fc90bb8c11f7d149ee750f74158095932ee88",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/group-max__light__mobile",
+      "rawRgbaSha256": "7a4441d2a0cd8028b4886b165a6ca6a7ea206952495fd605ea21c053c51334a3",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/group-max__light__tablet",
+      "rawRgbaSha256": "46cf9606e7c2b70d320de79b565d3e1d705033d006a117a95986bcf2ddf18be2",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/group-max__light__desktop",
+      "rawRgbaSha256": "d93914b2d55010d1e846ba57f83450690bf95bb7df24223461c65f7ca6041546",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/responsive__light__mobile",
+      "rawRgbaSha256": "de111f828000a0670b041542c304f1fa675b93cd388215efe5a03f4db8e5a397",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/responsive__light__tablet",
+      "rawRgbaSha256": "ff92fb8c473df3b86577cfe79b34535132fa38dacd2cf4b9bf5ef4f698ae6dee",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/responsive__light__desktop",
+      "rawRgbaSha256": "050fe4dde0a9a01c54d60b8cd0548c65c1f32de539f9376a653072ce566dfc55",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/rtl__light__mobile",
+      "rawRgbaSha256": "2b72ab8bdccaf750cfd420604e99b5fd8c4409763ebaa3e157f25aaf99cc9bcd",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/rtl__light__tablet",
+      "rawRgbaSha256": "ea86c779ebbe056e418c913eee1db58a47aaa62958b5b40964451a63401fb557",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/rtl__light__desktop",
+      "rawRgbaSha256": "c2b6f272ba33a0e419f2016668d5fffce63c4b6bba30d847ae99ba03252ba54f",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/theme-dark__light__mobile",
+      "rawRgbaSha256": "be6294a179d1b6a666b23cee9359e70be9dd3e8c2992d60733e236ac4313d102",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/theme-dark__light__tablet",
+      "rawRgbaSha256": "5f2aae8720c3abdcee0ee80b30e9d3dd05422e3a1143f827303740447bef9226",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/theme-dark__light__desktop",
+      "rawRgbaSha256": "5c359ea0751d9104aaba3f47375d8c8cd94f052eceda39c725e411621245fc55",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/theme-compact__light__mobile",
+      "rawRgbaSha256": "5e7b1cdb4bb62d1354995c86ab48ed45d3bfac717dce59aef79089cf4f31f48d",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/theme-compact__light__tablet",
+      "rawRgbaSha256": "360384f58e5157a420c8984f12cd822fccec8bf13d9e445b3eae6b9bf298cca5",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/theme-compact__light__desktop",
+      "rawRgbaSha256": "2b674d525f9e293ac4445cff40d9e7994985d45b54883fa336d780168e1bc028",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/theme-dark-compact__light__mobile",
+      "rawRgbaSha256": "7bc427e262bea0a4b350fa07e6b6ae605f0116548890c017c79a1f03ca0fc791",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/theme-dark-compact__light__tablet",
+      "rawRgbaSha256": "9dfedeaa19e274b42a90dfab2423986fdf58d470b9c12a6c897deaa8ead9c4f0",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/theme-dark-compact__light__desktop",
+      "rawRgbaSha256": "492ca08805edc4ff1e1fa31529f2ada40c49085db3d39156ea026ae7664bbee7",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/native-focus__light__mobile",
+      "rawRgbaSha256": "2f8b35aaca079cf3026b071e5eb8e90406c1487b50168ad265aafd8bcfba31bb",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/native-focus__light__tablet",
+      "rawRgbaSha256": "0dba5c63a7ef426fca36f7076c53e5e25732a79556e1a545f226a052c6c12307",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    },
+    {
+      "id": "avatar/native-focus__light__desktop",
+      "rawRgbaSha256": "7ca0a71f4196ebe282b16ac04877c567c3448c7e4f2d9a7809485cb823cafa10",
+      "unchangedFrom3214": true,
+      "approvedRawChangedPixels": 0
+    }
+  ],
+  "scope": "Previously approved 537 cases rerendered from clean a47d96ec; no new global-link-move pixel changes",
+  "command": "node tests/visual/apollo.mjs --approved-only --no-build --report-file /tmp/apollo-four-native-a47d96ec/previous537-report.json",
+  "exitCode": 0,
+  "knownListRootCause": {
+    "kind": "read-only causal review of three List loading raw-RGBA differences",
+    "status": "complete",
+    "scope": {
+      "frozenRoot": "/tmp/apollo-css-visual-3214ee10",
+      "frozenCommit": "3214ee105bd45a9a684c9170f8e3457da162fcc7",
+      "input": "/tmp/apollo-five-native-3214ee10/previous537-raw-rgba.json",
+      "expectedImages": 3,
+      "actualImagesReviewed": 3,
+      "inventory": [
+        "mobile loading 112 changed RGBA pixels",
+        "tablet loading 104 changed RGBA pixels",
+        "desktop loading 104 changed RGBA pixels"
+      ],
+      "acceptanceCriteria": [
+        "定位全部差异像素并实际查看原/现PNG及细节",
+        "验证真实CSS/动画状态和重复采样",
+        "三视口只在浏览器恢复旧定位的反事实可逐RGBA复现原图",
+        "追溯既有已接受Spin提交与3214聚合CSS闭包的归属",
+        "保持生产、测试、基线、dist和输入PNG不变"
+      ]
+    },
+    "conclusion": {
+      "classification": "existing accepted Spin layout/paint change; not sampling timing and not introduced by 3214 CSS composition",
+      "rootCause": "旧Spin嵌套section以absolute top/left:50%与translate(-50%,-50%)居中；57ab2894改为原生grid区域中的relative section、flex居中与稳定indicator拥有节点。当前指示器x比旧路径增加1/128 CSS px，产生局部静态边缘栅格化差异。三视口恢复旧section定位即可完全恢复批准PNG，重复当前采样始终复现当前PNG。",
+      "observedDefect": false,
+      "productionFixRequired": false,
+      "baselineUpdateRequired": false,
+      "restoreLegacyPositioning": false,
+      "reason": "当前圆点、内容和布局未见缺陷；此差异在既有Spin改造中已存在并通过原门禁，不应恢复旧布局或为这三张图改写基线。"
+    },
+    "attribution": {
+      "originalListBaselineCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+      "spinImplementationCommit": "57ab2894ee40d64f933a5efddc7b2279c7767180",
+      "spinImplementationTitle": "fix(spin): honor native content, progress and current themes",
+      "spinImplementationDate": "2026-10-26T18:57:38+08:00",
+      "spinAcceptanceCommit": "afaea91633c133882abea20b6b232ec72ed4f546",
+      "spinAcceptanceTitle": "fix(spin): finish reduced motion and add native acceptance matrix",
+      "spinAcceptanceDate": "2026-10-26T19:20:23+08:00",
+      "spinAcceptanceStatus": "unit-closed",
+      "spinAcceptanceDocument": "/tmp/apollo-css-visual-3214ee10/docs/audit/2026-10-26-spin-contract-audit.md",
+      "spinAcceptanceEvidence": "/tmp/apollo-css-visual-3214ee10/docs/audit/evidence/spin-acceptance.json",
+      "historicalRelatedList": {
+        "expected": 57,
+        "actual": 57,
+        "pass": 57,
+        "loadingResults": [
+          {
+            "id": "list/loading__light__mobile",
+            "verdict": "PASS",
+            "reason": "exact",
+            "diffPixels": 0
+          },
+          {
+            "id": "list/loading__light__tablet",
+            "verdict": "PASS",
+            "reason": "exact",
+            "diffPixels": 0
+          },
+          {
+            "id": "list/loading__light__desktop",
+            "verdict": "PASS",
+            "reason": "exact",
+            "diffPixels": 0
+          }
+        ],
+        "verification": "只读历史证据，未重跑历史提交"
+      },
+      "sourceChain": [
+        {
+          "path": "tests/visual/render/cases/apollo/list.js",
+          "baselineCommitSHA256": "f7b4c97b221e22aaac941728793d0d15a57bb8990f8e6757e9e8ddd41c4f4c45",
+          "frozenCommitSHA256": "f7b4c97b221e22aaac941728793d0d15a57bb8990f8e6757e9e8ddd41c4f4c45",
+          "currentFileSHA256": "f7b4c97b221e22aaac941728793d0d15a57bb8990f8e6757e9e8ddd41c4f4c45",
+          "currentMatchesFrozen": true,
+          "unchangedSinceBaseline": true
+        },
+        {
+          "path": "tests/visual/list-state.mjs",
+          "baselineCommitSHA256": "25c717d211671f80b319563611ca0f5a93b6bd9bbd5836abefdd7ab95f8d725e",
+          "frozenCommitSHA256": "25c717d211671f80b319563611ca0f5a93b6bd9bbd5836abefdd7ab95f8d725e",
+          "currentFileSHA256": "25c717d211671f80b319563611ca0f5a93b6bd9bbd5836abefdd7ab95f8d725e",
+          "currentMatchesFrozen": true,
+          "unchangedSinceBaseline": true
+        },
+        {
+          "path": "tests/visual/stabilize.mjs",
+          "baselineCommitSHA256": "4e7a6401aa9f1a67c23ff53816bb233126b42dcb69bd91a00f92634f679d9328",
+          "frozenCommitSHA256": "4e7a6401aa9f1a67c23ff53816bb233126b42dcb69bd91a00f92634f679d9328",
+          "currentFileSHA256": "4e7a6401aa9f1a67c23ff53816bb233126b42dcb69bd91a00f92634f679d9328",
+          "currentMatchesFrozen": true,
+          "unchangedSinceBaseline": true
+        },
+        {
+          "path": "packages/ui/src/list/List.vue",
+          "baselineCommitSHA256": "3b57c989745bf1ce6716104382a005dc2f910abcf686115f9ffd9e814864557b",
+          "frozenCommitSHA256": "3b57c989745bf1ce6716104382a005dc2f910abcf686115f9ffd9e814864557b",
+          "currentFileSHA256": "3b57c989745bf1ce6716104382a005dc2f910abcf686115f9ffd9e814864557b",
+          "currentMatchesFrozen": true,
+          "unchangedSinceBaseline": true
+        },
+        {
+          "path": "packages/ui/src/list/style/index.ts",
+          "baselineCommitSHA256": "c1ce2d96526d7c10893da79f2df84b45479f9f1bb32bd3843e06f4c28a11562f",
+          "frozenCommitSHA256": "c1ce2d96526d7c10893da79f2df84b45479f9f1bb32bd3843e06f4c28a11562f",
+          "currentFileSHA256": "c1ce2d96526d7c10893da79f2df84b45479f9f1bb32bd3843e06f4c28a11562f",
+          "currentMatchesFrozen": true,
+          "unchangedSinceBaseline": true
+        },
+        {
+          "path": "packages/ui/src/spin/Spin.vue",
+          "baselineCommitSHA256": "48f420dd7ee5493a80b091772786e480c0c7316edfd12908b1590b82920f787c",
+          "frozenCommitSHA256": "54420169cb3a156ede40b14734a3912faf6dc0f74c5fb273859cf78ec99d554c",
+          "currentFileSHA256": "54420169cb3a156ede40b14734a3912faf6dc0f74c5fb273859cf78ec99d554c",
+          "currentMatchesFrozen": true,
+          "unchangedSinceBaseline": false
+        },
+        {
+          "path": "packages/ui/src/spin/components/Indicator.ts",
+          "baselineCommitSHA256": "5102d84d9d0ce81bda1cf2bfadfac2332b271aa9f69fc54a9c35c6bd539b1c2f",
+          "frozenCommitSHA256": "83812497590957d2f6dd18000d29c8c6835c6334550e95a85dc831b801a69809",
+          "currentFileSHA256": "83812497590957d2f6dd18000d29c8c6835c6334550e95a85dc831b801a69809",
+          "currentMatchesFrozen": true,
+          "unchangedSinceBaseline": false
+        },
+        {
+          "path": "packages/ui/src/spin/components/Looper.ts",
+          "baselineCommitSHA256": "79cc1cdce7060c04b8f0fee24743b22e85b3065e43663b5ed10bb0552db2d3cf",
+          "frozenCommitSHA256": "b4f6cb5400da168082100a6200f1e1fb2c631b0d0ce0b3cb4090d87c85ef1147",
+          "currentFileSHA256": "b4f6cb5400da168082100a6200f1e1fb2c631b0d0ce0b3cb4090d87c85ef1147",
+          "currentMatchesFrozen": true,
+          "unchangedSinceBaseline": false
+        },
+        {
+          "path": "packages/ui/src/spin/style/index.ts",
+          "baselineCommitSHA256": "b2e0a4e55664432e18014fc80bb3f10224a5c69a78940d37681bc2a6259eae09",
+          "frozenCommitSHA256": "0e505d63fcec6e6a8e0ddb99d9623d9fe2c3f1bae1e83cabd638a10c89d9d7c1",
+          "currentFileSHA256": "0e505d63fcec6e6a8e0ddb99d9623d9fe2c3f1bae1e83cabd638a10c89d9d7c1",
+          "currentMatchesFrozen": true,
+          "unchangedSinceBaseline": false
+        }
+      ],
+      "acceptedSpinSourceToFrozen": [
+        {
+          "file": "packages/ui/src/spin/Spin.vue",
+          "unchangedSinceSpinAcceptance": true
+        },
+        {
+          "file": "packages/ui/src/spin/components/Indicator.ts",
+          "unchangedSinceSpinAcceptance": true
+        },
+        {
+          "file": "packages/ui/src/spin/components/Looper.ts",
+          "unchangedSinceSpinAcceptance": true
+        },
+        {
+          "file": "packages/ui/src/spin/style/index.ts",
+          "unchangedSinceSpinAcceptance": true
+        }
+      ],
+      "aggregateCSS": {
+        "path": "/tmp/apollo-css-visual-3214ee10/packages/ui/dist/index.css",
+        "bytes": 1320672,
+        "sha256": "36c7e73f74139332ac9f79d6f9bc4369548e75f8796eb5e55ff3f61cdc86e310",
+        "matchesDocumentedPreClosureHash": true
+      },
+      "closureCommit": "3214ee105bd45a9a684c9170f8e3457da162fcc7",
+      "closureTitle": "fix(styles): compose owned CSS dependencies without changing aggregate output",
+      "closureDocument": "/tmp/apollo-css-visual-3214ee10/docs/audit/2026-10-29-stylesheet-dependency-audit.md",
+      "proof": "git -G定位grid变更至57ab2894；afaea916至3214四个Spin核心文件逐字相同；List fixture、prepare helper、stabilize helper及List实现/CSS自5336ff77以来逐字相同。3214聚合CSS实际1320672字节/SHA与闭包修复前记录一致。"
+    },
+    "gateFacts": {
+      "previous537": {
+        "path": "/tmp/apollo-five-native-3214ee10/previous537-report.json",
+        "expected": 537,
+        "resultCount": 537,
+        "pass": 537,
+        "fail": 0,
+        "execution": "本次读取已有报告，未重跑537张"
+      },
+      "freshThree": {
+        "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/official-compare-three.json",
+        "actual": 3,
+        "pass": 3,
+        "execution": "本次使用原comparePair和未修改阈值对新冻结截图真实复比"
+      },
+      "interpretation": "comparePair使用pixelmatch threshold=0.1；这三图返回diffPixels=0 / reason=exact，但112/104/104个原始RGBA像素仍不同。门禁通过属实，不能称原始像素逐字节相同。差异集中圆点边缘，本文通过源码/测量/反事实分类，不用阈值通过代替审图。"
+    },
+    "entries": [
+      {
+        "id": "list/loading__light__mobile",
+        "size": {
+          "width": 375,
+          "height": 282
+        },
+        "baseline": {
+          "path": "/tmp/apollo-css-visual-3214ee10/tests/visual/baselines/apollo/list/loading__light__mobile.png",
+          "sha256": "8a5bcb104355ff36af137a3c8e7f13477f7d730fed1688672577c50485ab77b4",
+          "metadata": {
+            "sha256": "8a5bcb104355ff36af137a3c8e7f13477f7d730fed1688672577c50485ab77b4",
+            "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+            "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+            "dirty": false,
+            "capturedAt": "2026-10-26T08:15:34.271Z",
+            "reviewedAt": "2026-10-26T08:19:19.446Z",
+            "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+          }
+        },
+        "current": {
+          "path": "/tmp/apollo-css-visual-3214ee10/tests/visual/snapshots/apollo/list/loading__light__mobile.png",
+          "sha256": "9bc67d477afb281c9541d218400ab6a54b61979bdb2f32ac8463798efd22e0e6",
+          "frozenCommit": "3214ee105bd45a9a684c9170f8e3457da162fcc7"
+        },
+        "rawComparison": {
+          "changedPixels": 112,
+          "totalPixels": 105750,
+          "changedRatio": 0.0010591016548463358,
+          "bbox": {
+            "left": 176,
+            "top": 158,
+            "width": 24,
+            "height": 24
+          },
+          "maxChannelDelta": 40,
+          "outsideBBoxChangedPixels": 0,
+          "fullPixelAnalysis": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/pixel-analysis.json"
+        },
+        "actualVisualReview": {
+          "baselineSeen": true,
+          "currentSeen": true,
+          "zoomSeen": true,
+          "legacyCounterfactualSeen": true,
+          "zoom": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/mobile-zoom-old-new-diff.png",
+          "observation": "Workspace / Review queue / Records、Alpha/Beta/Gamma、Updating queue 完整；原图与当前图的文字、分隔线、淡化正文、留白及加载层位置无可见异常。8倍最近邻图显示差异仅在四个浅蓝圆点的抗锯齿外缘，圆点数量、颜色核心与形状保持。未发现裁切、重叠或缺失。"
+        },
+        "measuredGeometry": {
+          "currentIndicator": {
+            "x": 177.5,
+            "y": 160.484375,
+            "width": 20,
+            "height": 20
+          },
+          "legacyCounterfactualIndicator": {
+            "x": 177.4921875,
+            "y": 160.484375,
+            "width": 20,
+            "height": 20
+          },
+          "currentMinusLegacyCSSPixels": {
+            "x": 0.0078125,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "interpretation": "新居中路径使指示器盒子横向坐标增加1/128 CSS px；纵坐标及20×20尺寸不变。这是亚像素坐标/paint路径变化，没有整像素位移。不要仅凭该微小坐标差断言所有边缘差异都由平移单独造成。"
+        },
+        "timingEvidence": {
+          "reducedMotion": true,
+          "firstAndLaterRawIdentical": true,
+          "additionalWaitMs": 1500,
+          "officialScreenshotWaitPerSampleMs": 1100,
+          "activeAnimationsEverySample": [
+            {
+              "name": "current-first",
+              "count": 0
+            },
+            {
+              "name": "current-later",
+              "count": 0
+            },
+            {
+              "name": "counterfactual-identity-section-transform",
+              "count": 0
+            },
+            {
+              "name": "counterfactual-legacy-section-positioning",
+              "count": 0
+            },
+            {
+              "name": "counterfactual-legacy-section-unwrapped-indicator",
+              "count": 0
+            }
+          ],
+          "dotCSS": {
+            "display": "block",
+            "position": "absolute",
+            "top": "0px",
+            "left": "0px",
+            "width": "9px",
+            "height": "9px",
+            "transform": "matrix(0.75, 0, 0, 0.75, 0, 0)",
+            "transformOrigin": "4.5px 4.5px",
+            "opacity": "0.3",
+            "color": "rgb(22, 119, 255)",
+            "backgroundColor": "rgb(22, 119, 255)",
+            "fontSize": "20px",
+            "lineHeight": "20px",
+            "animationName": "none",
+            "animationDuration": "0s",
+            "animationPlayState": "running",
+            "transitionProperty": "none",
+            "willChange": "auto",
+            "filter": "none",
+            "isolation": "auto",
+            "zIndex": "auto"
+          },
+          "dotHolderCSS": {
+            "display": "inline-block",
+            "position": "relative",
+            "top": "0px",
+            "left": "0px",
+            "width": "20px",
+            "height": "20px",
+            "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, 0, 0)",
+            "transformOrigin": "10px 10px",
+            "opacity": "1",
+            "color": "rgb(22, 119, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "20px",
+            "lineHeight": "20px",
+            "animationName": "none",
+            "animationDuration": "0s",
+            "animationPlayState": "running",
+            "transitionProperty": "none",
+            "willChange": "auto",
+            "filter": "none",
+            "isolation": "auto",
+            "zIndex": "auto"
+          },
+          "note": "稳定化CSS为animation:none !important、transition:none !important；四点均animationName=none，旋转固定45deg，点缩放固定0.75且opacity=0.3。animationPlayState字段可为running，但animationName=none且document.getAnimations()为空，不代表实际动画在运行。"
+        },
+        "counterfactual": {
+          "scope": "只在诊断浏览器页面插入CSS/移除包装；未写回源码，所有context已关闭。",
+          "legacySectionCSS": ".apollo-spin-nested > .apollo-spin-section{position:absolute !important;top:50% !important;left:50% !important;width:max-content !important;height:auto !important;transform:translate(-50%,-50%) !important}",
+          "samples": [
+            {
+              "name": "current-first",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/mobile-current-first.png",
+              "sha256": "9bc67d477afb281c9541d218400ab6a54b61979bdb2f32ac8463798efd22e0e6",
+              "decodedRGBAHash": "60ad62909716df47d19b7db9371b253844d6f33bcfad503d4630e099997c160b",
+              "againstApproved": {
+                "changedPixels": 112,
+                "bbox": {
+                  "left": 176,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              },
+              "againstPrevious537": {
+                "changedPixels": 0,
+                "bbox": null
+              }
+            },
+            {
+              "name": "current-later",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/mobile-current-later.png",
+              "sha256": "9bc67d477afb281c9541d218400ab6a54b61979bdb2f32ac8463798efd22e0e6",
+              "decodedRGBAHash": "60ad62909716df47d19b7db9371b253844d6f33bcfad503d4630e099997c160b",
+              "againstApproved": {
+                "changedPixels": 112,
+                "bbox": {
+                  "left": 176,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              },
+              "againstPrevious537": {
+                "changedPixels": 0,
+                "bbox": null
+              }
+            },
+            {
+              "name": "counterfactual-identity-section-transform",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/mobile-counterfactual-identity-section-transform.png",
+              "sha256": "9bc67d477afb281c9541d218400ab6a54b61979bdb2f32ac8463798efd22e0e6",
+              "decodedRGBAHash": "60ad62909716df47d19b7db9371b253844d6f33bcfad503d4630e099997c160b",
+              "againstApproved": {
+                "changedPixels": 112,
+                "bbox": {
+                  "left": 176,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              },
+              "againstPrevious537": {
+                "changedPixels": 0,
+                "bbox": null
+              }
+            },
+            {
+              "name": "counterfactual-legacy-section-positioning",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/mobile-counterfactual-legacy-section-positioning.png",
+              "sha256": "8a5bcb104355ff36af137a3c8e7f13477f7d730fed1688672577c50485ab77b4",
+              "decodedRGBAHash": "367b6e4c44e2bfbb9bdeeb0be33ff04205bd03aa5a78071dd1e04af5d9109b7d",
+              "againstApproved": {
+                "changedPixels": 0,
+                "bbox": null
+              },
+              "againstPrevious537": {
+                "changedPixels": 112,
+                "bbox": {
+                  "left": 176,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              }
+            },
+            {
+              "name": "counterfactual-legacy-section-unwrapped-indicator",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/mobile-counterfactual-legacy-section-unwrapped-indicator.png",
+              "sha256": "8a5bcb104355ff36af137a3c8e7f13477f7d730fed1688672577c50485ab77b4",
+              "decodedRGBAHash": "367b6e4c44e2bfbb9bdeeb0be33ff04205bd03aa5a78071dd1e04af5d9109b7d",
+              "againstApproved": {
+                "changedPixels": 0,
+                "bbox": null
+              },
+              "againstPrevious537": {
+                "changedPixels": 112,
+                "bbox": {
+                  "left": 176,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              }
+            }
+          ],
+          "conclusion": "保持当前生产bundle和组件节点，仅恢复旧section定位就逐RGBA恢复原批准图；再移除新indicator包装仍零差异。单加identity transform不改变当前像素。定位与绘制路径已足够解释差异，加载时序不能解释稳定的旧/新像素切换。"
+        },
+        "originalGateRecheck": {
+          "id": "list/loading__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 282
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 282
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 105750,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/mobile-official-gate-diff.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。"
+        },
+        "verdict": "existing-intended-static-render-difference-no-new-visual-defect",
+        "baselineAction": "retain-existing-approved-png; no accept or rewrite",
+        "approvedNewBaseline": false
+      },
+      {
+        "id": "list/loading__light__tablet",
+        "size": {
+          "width": 768,
+          "height": 282
+        },
+        "baseline": {
+          "path": "/tmp/apollo-css-visual-3214ee10/tests/visual/baselines/apollo/list/loading__light__tablet.png",
+          "sha256": "ab5000ef948d7ae2aaa50680975b7197228c4af56839b2fd69c90f4a8c0898ba",
+          "metadata": {
+            "sha256": "ab5000ef948d7ae2aaa50680975b7197228c4af56839b2fd69c90f4a8c0898ba",
+            "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+            "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+            "dirty": false,
+            "capturedAt": "2026-10-26T08:15:36.235Z",
+            "reviewedAt": "2026-10-26T08:19:19.446Z",
+            "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+          }
+        },
+        "current": {
+          "path": "/tmp/apollo-css-visual-3214ee10/tests/visual/snapshots/apollo/list/loading__light__tablet.png",
+          "sha256": "5385dcd94667a06b0efde36ca635fa78dc6d2d0d12daa958e924d7581ec42420",
+          "frozenCommit": "3214ee105bd45a9a684c9170f8e3457da162fcc7"
+        },
+        "rawComparison": {
+          "changedPixels": 104,
+          "totalPixels": 216576,
+          "changedRatio": 0.00048020094562647753,
+          "bbox": {
+            "left": 372,
+            "top": 158,
+            "width": 24,
+            "height": 24
+          },
+          "maxChannelDelta": 30,
+          "outsideBBoxChangedPixels": 0,
+          "fullPixelAnalysis": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/pixel-analysis.json"
+        },
+        "actualVisualReview": {
+          "baselineSeen": true,
+          "currentSeen": true,
+          "zoomSeen": true,
+          "legacyCounterfactualSeen": true,
+          "zoom": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/tablet-zoom-old-new-diff.png",
+          "observation": "Workspace / Review queue / Records、Alpha/Beta/Gamma、Updating queue 完整；原图与当前图的文字、分隔线、淡化正文、留白及加载层位置无可见异常。8倍最近邻图显示差异仅在四个浅蓝圆点的抗锯齿外缘，圆点数量、颜色核心与形状保持。未发现裁切、重叠或缺失。"
+        },
+        "measuredGeometry": {
+          "currentIndicator": {
+            "x": 374,
+            "y": 160.484375,
+            "width": 20,
+            "height": 20
+          },
+          "legacyCounterfactualIndicator": {
+            "x": 373.9921875,
+            "y": 160.484375,
+            "width": 20,
+            "height": 20
+          },
+          "currentMinusLegacyCSSPixels": {
+            "x": 0.0078125,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "interpretation": "新居中路径使指示器盒子横向坐标增加1/128 CSS px；纵坐标及20×20尺寸不变。这是亚像素坐标/paint路径变化，没有整像素位移。不要仅凭该微小坐标差断言所有边缘差异都由平移单独造成。"
+        },
+        "timingEvidence": {
+          "reducedMotion": true,
+          "firstAndLaterRawIdentical": true,
+          "additionalWaitMs": 1500,
+          "officialScreenshotWaitPerSampleMs": 1100,
+          "activeAnimationsEverySample": [
+            {
+              "name": "current-first",
+              "count": 0
+            },
+            {
+              "name": "current-later",
+              "count": 0
+            },
+            {
+              "name": "counterfactual-identity-section-transform",
+              "count": 0
+            },
+            {
+              "name": "counterfactual-legacy-section-positioning",
+              "count": 0
+            },
+            {
+              "name": "counterfactual-legacy-section-unwrapped-indicator",
+              "count": 0
+            }
+          ],
+          "dotCSS": {
+            "display": "block",
+            "position": "absolute",
+            "top": "0px",
+            "left": "0px",
+            "width": "9px",
+            "height": "9px",
+            "transform": "matrix(0.75, 0, 0, 0.75, 0, 0)",
+            "transformOrigin": "4.5px 4.5px",
+            "opacity": "0.3",
+            "color": "rgb(22, 119, 255)",
+            "backgroundColor": "rgb(22, 119, 255)",
+            "fontSize": "20px",
+            "lineHeight": "20px",
+            "animationName": "none",
+            "animationDuration": "0s",
+            "animationPlayState": "running",
+            "transitionProperty": "none",
+            "willChange": "auto",
+            "filter": "none",
+            "isolation": "auto",
+            "zIndex": "auto"
+          },
+          "dotHolderCSS": {
+            "display": "inline-block",
+            "position": "relative",
+            "top": "0px",
+            "left": "0px",
+            "width": "20px",
+            "height": "20px",
+            "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, 0, 0)",
+            "transformOrigin": "10px 10px",
+            "opacity": "1",
+            "color": "rgb(22, 119, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "20px",
+            "lineHeight": "20px",
+            "animationName": "none",
+            "animationDuration": "0s",
+            "animationPlayState": "running",
+            "transitionProperty": "none",
+            "willChange": "auto",
+            "filter": "none",
+            "isolation": "auto",
+            "zIndex": "auto"
+          },
+          "note": "稳定化CSS为animation:none !important、transition:none !important；四点均animationName=none，旋转固定45deg，点缩放固定0.75且opacity=0.3。animationPlayState字段可为running，但animationName=none且document.getAnimations()为空，不代表实际动画在运行。"
+        },
+        "counterfactual": {
+          "scope": "只在诊断浏览器页面插入CSS/移除包装；未写回源码，所有context已关闭。",
+          "legacySectionCSS": ".apollo-spin-nested > .apollo-spin-section{position:absolute !important;top:50% !important;left:50% !important;width:max-content !important;height:auto !important;transform:translate(-50%,-50%) !important}",
+          "samples": [
+            {
+              "name": "current-first",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/tablet-current-first.png",
+              "sha256": "5385dcd94667a06b0efde36ca635fa78dc6d2d0d12daa958e924d7581ec42420",
+              "decodedRGBAHash": "0980db4233bc0298741f227cd16bb5ba3d11c4693ffcb476460755bfe0e43963",
+              "againstApproved": {
+                "changedPixels": 104,
+                "bbox": {
+                  "left": 372,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              },
+              "againstPrevious537": {
+                "changedPixels": 0,
+                "bbox": null
+              }
+            },
+            {
+              "name": "current-later",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/tablet-current-later.png",
+              "sha256": "5385dcd94667a06b0efde36ca635fa78dc6d2d0d12daa958e924d7581ec42420",
+              "decodedRGBAHash": "0980db4233bc0298741f227cd16bb5ba3d11c4693ffcb476460755bfe0e43963",
+              "againstApproved": {
+                "changedPixels": 104,
+                "bbox": {
+                  "left": 372,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              },
+              "againstPrevious537": {
+                "changedPixels": 0,
+                "bbox": null
+              }
+            },
+            {
+              "name": "counterfactual-identity-section-transform",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/tablet-counterfactual-identity-section-transform.png",
+              "sha256": "5385dcd94667a06b0efde36ca635fa78dc6d2d0d12daa958e924d7581ec42420",
+              "decodedRGBAHash": "0980db4233bc0298741f227cd16bb5ba3d11c4693ffcb476460755bfe0e43963",
+              "againstApproved": {
+                "changedPixels": 104,
+                "bbox": {
+                  "left": 372,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              },
+              "againstPrevious537": {
+                "changedPixels": 0,
+                "bbox": null
+              }
+            },
+            {
+              "name": "counterfactual-legacy-section-positioning",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/tablet-counterfactual-legacy-section-positioning.png",
+              "sha256": "ab5000ef948d7ae2aaa50680975b7197228c4af56839b2fd69c90f4a8c0898ba",
+              "decodedRGBAHash": "57b503650374f0610b5ea3f0be7760de0814d4251a82283326b50eeb7a801893",
+              "againstApproved": {
+                "changedPixels": 0,
+                "bbox": null
+              },
+              "againstPrevious537": {
+                "changedPixels": 104,
+                "bbox": {
+                  "left": 372,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              }
+            },
+            {
+              "name": "counterfactual-legacy-section-unwrapped-indicator",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/tablet-counterfactual-legacy-section-unwrapped-indicator.png",
+              "sha256": "ab5000ef948d7ae2aaa50680975b7197228c4af56839b2fd69c90f4a8c0898ba",
+              "decodedRGBAHash": "57b503650374f0610b5ea3f0be7760de0814d4251a82283326b50eeb7a801893",
+              "againstApproved": {
+                "changedPixels": 0,
+                "bbox": null
+              },
+              "againstPrevious537": {
+                "changedPixels": 104,
+                "bbox": {
+                  "left": 372,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              }
+            }
+          ],
+          "conclusion": "保持当前生产bundle和组件节点，仅恢复旧section定位就逐RGBA恢复原批准图；再移除新indicator包装仍零差异。单加identity transform不改变当前像素。定位与绘制路径已足够解释差异，加载时序不能解释稳定的旧/新像素切换。"
+        },
+        "originalGateRecheck": {
+          "id": "list/loading__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 282
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 282
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 216576,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/tablet-official-gate-diff.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。"
+        },
+        "verdict": "existing-intended-static-render-difference-no-new-visual-defect",
+        "baselineAction": "retain-existing-approved-png; no accept or rewrite",
+        "approvedNewBaseline": false
+      },
+      {
+        "id": "list/loading__light__desktop",
+        "size": {
+          "width": 1440,
+          "height": 282
+        },
+        "baseline": {
+          "path": "/tmp/apollo-css-visual-3214ee10/tests/visual/baselines/apollo/list/loading__light__desktop.png",
+          "sha256": "addb8c41734b5c05f54be19b033e230df120ae8a53ebd6559c7078a09b54eaeb",
+          "metadata": {
+            "sha256": "addb8c41734b5c05f54be19b033e230df120ae8a53ebd6559c7078a09b54eaeb",
+            "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+            "sourceCommit": "5336ff77fa753085955425c48d3b286f17722e0e",
+            "dirty": false,
+            "capturedAt": "2026-10-26T08:15:38.222Z",
+            "reviewedAt": "2026-10-26T08:19:19.447Z",
+            "reviewNote": "Reviewed all 57 Apollo List images individually across mobile/tablet/desktop: content and action layout, current tokens, isolated nested lists, empty and pagination states, actual loading, scoped dark/compact/combined themes, visible native Tab focus and corrected fullscreen document flow. Rejected the prior 3 fullscreen overlap images. Clean 5336ff77 recapture matches every reviewed SHA-256. Actual state, geometry and full axe checks passed; Chrome 150 darwin/x64. This approves this matrix only."
+          }
+        },
+        "current": {
+          "path": "/tmp/apollo-css-visual-3214ee10/tests/visual/snapshots/apollo/list/loading__light__desktop.png",
+          "sha256": "d046afa1ef52196aa5d9c578fe54c6d0a304daa8f4ae0ae02fb085b66b25a0f0",
+          "frozenCommit": "3214ee105bd45a9a684c9170f8e3457da162fcc7"
+        },
+        "rawComparison": {
+          "changedPixels": 104,
+          "totalPixels": 406080,
+          "changedRatio": 0.000256107171000788,
+          "bbox": {
+            "left": 708,
+            "top": 158,
+            "width": 24,
+            "height": 24
+          },
+          "maxChannelDelta": 30,
+          "outsideBBoxChangedPixels": 0,
+          "fullPixelAnalysis": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/pixel-analysis.json"
+        },
+        "actualVisualReview": {
+          "baselineSeen": true,
+          "currentSeen": true,
+          "zoomSeen": true,
+          "legacyCounterfactualSeen": true,
+          "zoom": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/desktop-zoom-old-new-diff.png",
+          "observation": "Workspace / Review queue / Records、Alpha/Beta/Gamma、Updating queue 完整；原图与当前图的文字、分隔线、淡化正文、留白及加载层位置无可见异常。8倍最近邻图显示差异仅在四个浅蓝圆点的抗锯齿外缘，圆点数量、颜色核心与形状保持。未发现裁切、重叠或缺失。"
+        },
+        "measuredGeometry": {
+          "currentIndicator": {
+            "x": 710,
+            "y": 160.484375,
+            "width": 20,
+            "height": 20
+          },
+          "legacyCounterfactualIndicator": {
+            "x": 709.9921875,
+            "y": 160.484375,
+            "width": 20,
+            "height": 20
+          },
+          "currentMinusLegacyCSSPixels": {
+            "x": 0.0078125,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "interpretation": "新居中路径使指示器盒子横向坐标增加1/128 CSS px；纵坐标及20×20尺寸不变。这是亚像素坐标/paint路径变化，没有整像素位移。不要仅凭该微小坐标差断言所有边缘差异都由平移单独造成。"
+        },
+        "timingEvidence": {
+          "reducedMotion": true,
+          "firstAndLaterRawIdentical": true,
+          "additionalWaitMs": 1500,
+          "officialScreenshotWaitPerSampleMs": 1100,
+          "activeAnimationsEverySample": [
+            {
+              "name": "current-first",
+              "count": 0
+            },
+            {
+              "name": "current-later",
+              "count": 0
+            },
+            {
+              "name": "counterfactual-identity-section-transform",
+              "count": 0
+            },
+            {
+              "name": "counterfactual-legacy-section-positioning",
+              "count": 0
+            },
+            {
+              "name": "counterfactual-legacy-section-unwrapped-indicator",
+              "count": 0
+            }
+          ],
+          "dotCSS": {
+            "display": "block",
+            "position": "absolute",
+            "top": "0px",
+            "left": "0px",
+            "width": "9px",
+            "height": "9px",
+            "transform": "matrix(0.75, 0, 0, 0.75, 0, 0)",
+            "transformOrigin": "4.5px 4.5px",
+            "opacity": "0.3",
+            "color": "rgb(22, 119, 255)",
+            "backgroundColor": "rgb(22, 119, 255)",
+            "fontSize": "20px",
+            "lineHeight": "20px",
+            "animationName": "none",
+            "animationDuration": "0s",
+            "animationPlayState": "running",
+            "transitionProperty": "none",
+            "willChange": "auto",
+            "filter": "none",
+            "isolation": "auto",
+            "zIndex": "auto"
+          },
+          "dotHolderCSS": {
+            "display": "inline-block",
+            "position": "relative",
+            "top": "0px",
+            "left": "0px",
+            "width": "20px",
+            "height": "20px",
+            "transform": "matrix(0.707107, 0.707107, -0.707107, 0.707107, 0, 0)",
+            "transformOrigin": "10px 10px",
+            "opacity": "1",
+            "color": "rgb(22, 119, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "20px",
+            "lineHeight": "20px",
+            "animationName": "none",
+            "animationDuration": "0s",
+            "animationPlayState": "running",
+            "transitionProperty": "none",
+            "willChange": "auto",
+            "filter": "none",
+            "isolation": "auto",
+            "zIndex": "auto"
+          },
+          "note": "稳定化CSS为animation:none !important、transition:none !important；四点均animationName=none，旋转固定45deg，点缩放固定0.75且opacity=0.3。animationPlayState字段可为running，但animationName=none且document.getAnimations()为空，不代表实际动画在运行。"
+        },
+        "counterfactual": {
+          "scope": "只在诊断浏览器页面插入CSS/移除包装；未写回源码，所有context已关闭。",
+          "legacySectionCSS": ".apollo-spin-nested > .apollo-spin-section{position:absolute !important;top:50% !important;left:50% !important;width:max-content !important;height:auto !important;transform:translate(-50%,-50%) !important}",
+          "samples": [
+            {
+              "name": "current-first",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/desktop-current-first.png",
+              "sha256": "d046afa1ef52196aa5d9c578fe54c6d0a304daa8f4ae0ae02fb085b66b25a0f0",
+              "decodedRGBAHash": "266b502dec24d5920c402fa2c4190c6c8bae98d72752efc80bd1000a99c6956c",
+              "againstApproved": {
+                "changedPixels": 104,
+                "bbox": {
+                  "left": 708,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              },
+              "againstPrevious537": {
+                "changedPixels": 0,
+                "bbox": null
+              }
+            },
+            {
+              "name": "current-later",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/desktop-current-later.png",
+              "sha256": "d046afa1ef52196aa5d9c578fe54c6d0a304daa8f4ae0ae02fb085b66b25a0f0",
+              "decodedRGBAHash": "266b502dec24d5920c402fa2c4190c6c8bae98d72752efc80bd1000a99c6956c",
+              "againstApproved": {
+                "changedPixels": 104,
+                "bbox": {
+                  "left": 708,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              },
+              "againstPrevious537": {
+                "changedPixels": 0,
+                "bbox": null
+              }
+            },
+            {
+              "name": "counterfactual-identity-section-transform",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/desktop-counterfactual-identity-section-transform.png",
+              "sha256": "d046afa1ef52196aa5d9c578fe54c6d0a304daa8f4ae0ae02fb085b66b25a0f0",
+              "decodedRGBAHash": "266b502dec24d5920c402fa2c4190c6c8bae98d72752efc80bd1000a99c6956c",
+              "againstApproved": {
+                "changedPixels": 104,
+                "bbox": {
+                  "left": 708,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              },
+              "againstPrevious537": {
+                "changedPixels": 0,
+                "bbox": null
+              }
+            },
+            {
+              "name": "counterfactual-legacy-section-positioning",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/desktop-counterfactual-legacy-section-positioning.png",
+              "sha256": "addb8c41734b5c05f54be19b033e230df120ae8a53ebd6559c7078a09b54eaeb",
+              "decodedRGBAHash": "63abd9d8a76231e664a8d91cb25e0bdd3c4881266cfca6cedd5edb5ad180052e",
+              "againstApproved": {
+                "changedPixels": 0,
+                "bbox": null
+              },
+              "againstPrevious537": {
+                "changedPixels": 104,
+                "bbox": {
+                  "left": 708,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              }
+            },
+            {
+              "name": "counterfactual-legacy-section-unwrapped-indicator",
+              "path": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/desktop-counterfactual-legacy-section-unwrapped-indicator.png",
+              "sha256": "addb8c41734b5c05f54be19b033e230df120ae8a53ebd6559c7078a09b54eaeb",
+              "decodedRGBAHash": "63abd9d8a76231e664a8d91cb25e0bdd3c4881266cfca6cedd5edb5ad180052e",
+              "againstApproved": {
+                "changedPixels": 0,
+                "bbox": null
+              },
+              "againstPrevious537": {
+                "changedPixels": 104,
+                "bbox": {
+                  "left": 708,
+                  "top": 158,
+                  "width": 24,
+                  "height": 24
+                }
+              }
+            }
+          ],
+          "conclusion": "保持当前生产bundle和组件节点，仅恢复旧section定位就逐RGBA恢复原批准图；再移除新indicator包装仍零差异。单加identity transform不改变当前像素。定位与绘制路径已足够解释差异，加载时序不能解释稳定的旧/新像素切换。"
+        },
+        "originalGateRecheck": {
+          "id": "list/loading__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 282
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 282
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 406080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/desktop-official-gate-diff.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。"
+        },
+        "verdict": "existing-intended-static-render-difference-no-new-visual-defect",
+        "baselineAction": "retain-existing-approved-png; no accept or rewrite",
+        "approvedNewBaseline": false
+      }
+    ],
+    "evidence": {
+      "directory": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence",
+      "runtimeProbe": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/runtime-probe.json",
+      "probeScript": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/probe.mjs",
+      "probeLog": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/probe.log",
+      "pixelAnalysis": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/pixel-analysis.json",
+      "sourceChain": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/source-chain.json",
+      "spinStyleDiff": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/spin-style-since-approved.diff",
+      "closureAttribution": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/closure-attribution.json",
+      "initialDiagnosticError": {
+        "log": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence/probe-initial-measurement-error.log",
+        "description": "首轮临时probe在主动移除indicator包装后的测量未处理不存在节点而停止；已在/tmp probe处理null后完整重跑，最终15样本、3浏览器context均完成。此为诊断脚本错误，不是组件错误。"
+      }
+    },
+    "validation": {
+      "runtimeViewports": 3,
+      "samples": 15,
+      "browserErrors": [],
+      "allOriginalInputHashesUnchanged": true,
+      "frozenWorkingTreeClean": true,
+      "productionWrites": false,
+      "testWrites": false,
+      "baselineWrites": false,
+      "distWrites": false,
+      "packageBuilds": 0,
+      "changesOnlyUnder": "/tmp/apollo-five-native-3214ee10",
+      "browserAndServerClosed": true,
+      "artifactSubdirectory": "/tmp/apollo-five-native-3214ee10/list-loading-diff-evidence"
+    },
+    "limits": [
+      "范围只涵盖所指定三张List loading差异，不声称本次运行全库门禁。",
+      "旧定位仅用于浏览器反事实证明，未作为实现方案；无需新增批准或基线接受。",
+      "环境限定darwin/x64 Chrome150，同库稳定化设置；未验证其他浏览器/操作系统。"
+    ]
+  }
+}

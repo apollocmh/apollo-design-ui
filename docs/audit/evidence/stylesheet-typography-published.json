@@ -1,0 +1,99 @@
+{
+  "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+  "scope": "Typography 拥有的复制、编辑、省略 Tooltip 公开 CSS 路径",
+  "command": "node /tmp/apollo-typography-css-a47d96ec/run.mjs > /tmp/apollo-typography-css-a47d96ec/run.log 2>&1",
+  "executed": {
+    "browserCases": 6,
+    "passed": 6,
+    "failed": 0,
+    "geometryAndPaintPairsEqual": 3,
+    "rawRgbaPairsEqual": 3,
+    "errors": 0,
+    "screenshotsActuallyViewed": 6
+  },
+  "commonFoundationCss": "@apollo-design/theme/tokens.css",
+  "componentCssModes": {
+    "full": [
+      "@apollo-design/ui/style.css"
+    ],
+    "only": [
+      "@apollo-design/ui/typography/style.css"
+    ]
+  },
+  "publicTypographyEntryCarriesTooltip": true,
+  "explicitTooltipCssImport": false,
+  "sourceAliases": 0,
+  "sourceCssInjection": false,
+  "callerButtonComponentsRendered": 0,
+  "artifactsChecked": 17,
+  "artifactFingerprintSha256": "08ac65473b54eaf17c050389bc0c6b715dad1915099f915d5fb6e23fb7127f82",
+  "artifactsUnchanged": true,
+  "oldRedEvidencePreserved": true,
+  "oldStandaloneFailures": 3,
+  "snapshotStatusAfter": "",
+  "packageBuilds": false,
+  "snapshotEdits": false,
+  "baselineEdits": false,
+  "readersExited": true,
+  "readerExitEvidence": {
+    "terminalLogFinalLine": "All browser/server readers exited",
+    "probeNodeProcessPresent": false,
+    "previewPort": 50971,
+    "previewListenerClosed": true
+  },
+  "visualReview": [
+    {
+      "file": "full-copy.png",
+      "sha256": "31582109453408755b6abf96b52dbed47b9ca57a85ce179d6beb5f4a584c83da",
+      "actuallyViewed": true,
+      "observation": "全量和按需两张图均实际查看：复制图标旁的提示具有深色底、白字和指向触发器的箭头；无可见差异。",
+      "visibleDefect": false,
+      "approved": false
+    },
+    {
+      "file": "only-copy.png",
+      "sha256": "31582109453408755b6abf96b52dbed47b9ca57a85ce179d6beb5f4a584c83da",
+      "actuallyViewed": true,
+      "observation": "全量和按需两张图均实际查看：复制图标旁的提示具有深色底、白字和指向触发器的箭头；无可见差异。",
+      "visibleDefect": false,
+      "approved": false
+    },
+    {
+      "file": "full-edit.png",
+      "sha256": "456068f3ce36aa74e75956a36e850507d5aa7b8aa1e79cd9e00f134453753f88",
+      "actuallyViewed": true,
+      "observation": "全量和按需两张图均实际查看：编辑提示在文本上方，背景、字形与箭头一致；无可见差异。",
+      "visibleDefect": false,
+      "approved": false
+    },
+    {
+      "file": "only-edit.png",
+      "sha256": "456068f3ce36aa74e75956a36e850507d5aa7b8aa1e79cd9e00f134453753f88",
+      "actuallyViewed": true,
+      "observation": "全量和按需两张图均实际查看：编辑提示在文本上方，背景、字形与箭头一致；无可见差异。",
+      "visibleDefect": false,
+      "approved": false
+    },
+    {
+      "file": "full-ellipsis.png",
+      "sha256": "41b9c8d402c2ed41f6d49530a53c7f78ef1d68faa5c09807b9459b342fba5420",
+      "actuallyViewed": true,
+      "observation": "全量和按需两张图均实际查看：单行文本已截断，完整提示绘制清晰并指向文本；无可见差异。",
+      "visibleDefect": false,
+      "approved": false
+    },
+    {
+      "file": "only-ellipsis.png",
+      "sha256": "41b9c8d402c2ed41f6d49530a53c7f78ef1d68faa5c09807b9459b342fba5420",
+      "actuallyViewed": true,
+      "observation": "全量和按需两张图均实际查看：单行文本已截断，完整提示绘制清晰并指向文本；无可见差异。",
+      "visibleDefect": false,
+      "approved": false
+    }
+  ],
+  "resultsSha256": "0c8385989f425e4d17d2610357473a560a22a817ada314d073fbffc0c811eb74",
+  "unverified": [
+    "This verifies only Typography-owned copy/edit/ellipsis Tooltip paths; it does not certify the entire layout group or library.",
+    "No additional theme/browser matrix, SSR/hydration, Docs or formal baseline acceptance is claimed."
+  ]
+}

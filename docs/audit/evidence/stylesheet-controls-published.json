@@ -1,0 +1,255 @@
+{
+  "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+  "scope": "Controls shared public CSS dependency closure: Statistic, Input.Search/Input.Group, InputNumber, QRCode and Upload.",
+  "command": "node /tmp/apollo-controls-css-a47d96ec-verified/run.mjs > /tmp/apollo-controls-css-a47d96ec-verified/run.log 2>&1",
+  "finalRunExitCode": 0,
+  "counts": {
+    "units": 5,
+    "scenes": 17,
+    "pages": 21,
+    "actualSceneObservations": 73,
+    "sceneContractChecks": 73,
+    "geometryPaintComparisons": 56,
+    "parentVsAllComparisons": 17,
+    "explicitVsAllComparisons": 17,
+    "failedChecks": 0
+  },
+  "errors": 0,
+  "warnings": 0,
+  "pixelComparisons": {
+    "captured": 21,
+    "pairs": 16,
+    "rgbaIdentical": 16
+  },
+  "runs": {
+    "first": {
+      "directory": "/tmp/apollo-controls-css-a47d96ec",
+      "exitCode": 1,
+      "pages": 21,
+      "sceneObservations": 73,
+      "harnessExpectationFailures": 20,
+      "geometryPaintFailures": 0,
+      "retained": true
+    },
+    "verified": {
+      "directory": "/tmp/apollo-controls-css-a47d96ec-verified",
+      "exitCode": 0,
+      "pages": 21,
+      "sceneObservations": 73,
+      "failedChecks": 0
+    },
+    "actualExecutedTotals": {
+      "pages": 42,
+      "sceneObservations": 146
+    }
+  },
+  "harnessCorrection": "harness-correction.json explains and preserves the initial expectation mistakes and replacement assertions; no product changes.",
+  "conditions": {
+    "statistic": [
+      "loading skeleton geometry and paint",
+      "Timer loading",
+      "normal value"
+    ],
+    "input": [
+      "text Search action with Compact row",
+      "default icon Search",
+      "Input.Group",
+      "plain input"
+    ],
+    "input-number": [
+      "before/after addons",
+      "disabled addons",
+      "plain value"
+    ],
+    "qr-code": [
+      "real loading Spin",
+      "expired refresh Button",
+      "scanned",
+      "custom status slot"
+    ],
+    "upload": [
+      "hovered generated download/remove actions",
+      "default real Progress 2px",
+      "explicit length real Progress 4px",
+      "55% track geometry and aria-valuenow"
+    ]
+  },
+  "uploadProgress": [
+    {
+      "mode": "parent",
+      "scene": "upload-progress-default",
+      "progressClass": "apollo-progress apollo-progress-status-normal apollo-progress-line apollo-progress-line-align-end apollo-progress-line-position-outer",
+      "role": "progressbar",
+      "ariaValueNow": "55",
+      "railHeight": 2,
+      "trackHeight": 2,
+      "railWidth": 418,
+      "trackWidth": 229.890625,
+      "railPaint": {
+        "background": "rgba(0, 0, 0, 0.06)",
+        "radius": "100px"
+      }
+    },
+    {
+      "mode": "parent",
+      "scene": "upload-progress-css-length",
+      "progressClass": "apollo-progress apollo-progress-status-normal apollo-progress-line apollo-progress-line-align-end apollo-progress-line-position-outer",
+      "role": "progressbar",
+      "ariaValueNow": "55",
+      "railHeight": 4,
+      "trackHeight": 4,
+      "railWidth": 418,
+      "trackWidth": 229.890625,
+      "railPaint": {
+        "background": "rgba(0, 0, 0, 0.06)",
+        "radius": "100px"
+      }
+    },
+    {
+      "mode": "button-only",
+      "scene": "upload-progress-default",
+      "progressClass": "apollo-progress apollo-progress-status-normal apollo-progress-line apollo-progress-line-align-end apollo-progress-line-position-outer",
+      "role": "progressbar",
+      "ariaValueNow": "55",
+      "railHeight": 2,
+      "trackHeight": 2,
+      "railWidth": 418,
+      "trackWidth": 229.890625,
+      "railPaint": {
+        "background": "rgba(0, 0, 0, 0.06)",
+        "radius": "100px"
+      }
+    },
+    {
+      "mode": "button-only",
+      "scene": "upload-progress-css-length",
+      "progressClass": "apollo-progress apollo-progress-status-normal apollo-progress-line apollo-progress-line-align-end apollo-progress-line-position-outer",
+      "role": "progressbar",
+      "ariaValueNow": "55",
+      "railHeight": 4,
+      "trackHeight": 4,
+      "railWidth": 418,
+      "trackWidth": 229.890625,
+      "railPaint": {
+        "background": "rgba(0, 0, 0, 0.06)",
+        "radius": "100px"
+      }
+    },
+    {
+      "mode": "progress-only",
+      "scene": "upload-progress-default",
+      "progressClass": "apollo-progress apollo-progress-status-normal apollo-progress-line apollo-progress-line-align-end apollo-progress-line-position-outer",
+      "role": "progressbar",
+      "ariaValueNow": "55",
+      "railHeight": 2,
+      "trackHeight": 2,
+      "railWidth": 418,
+      "trackWidth": 229.890625,
+      "railPaint": {
+        "background": "rgba(0, 0, 0, 0.06)",
+        "radius": "100px"
+      }
+    },
+    {
+      "mode": "progress-only",
+      "scene": "upload-progress-css-length",
+      "progressClass": "apollo-progress apollo-progress-status-normal apollo-progress-line apollo-progress-line-align-end apollo-progress-line-position-outer",
+      "role": "progressbar",
+      "ariaValueNow": "55",
+      "railHeight": 4,
+      "trackHeight": 4,
+      "railWidth": 418,
+      "trackWidth": 229.890625,
+      "railPaint": {
+        "background": "rgba(0, 0, 0, 0.06)",
+        "radius": "100px"
+      }
+    },
+    {
+      "mode": "explicit",
+      "scene": "upload-progress-default",
+      "progressClass": "apollo-progress apollo-progress-status-normal apollo-progress-line apollo-progress-line-align-end apollo-progress-line-position-outer",
+      "role": "progressbar",
+      "ariaValueNow": "55",
+      "railHeight": 2,
+      "trackHeight": 2,
+      "railWidth": 418,
+      "trackWidth": 229.890625,
+      "railPaint": {
+        "background": "rgba(0, 0, 0, 0.06)",
+        "radius": "100px"
+      }
+    },
+    {
+      "mode": "explicit",
+      "scene": "upload-progress-css-length",
+      "progressClass": "apollo-progress apollo-progress-status-normal apollo-progress-line apollo-progress-line-align-end apollo-progress-line-position-outer",
+      "role": "progressbar",
+      "ariaValueNow": "55",
+      "railHeight": 4,
+      "trackHeight": 4,
+      "railWidth": 418,
+      "trackWidth": 229.890625,
+      "railPaint": {
+        "background": "rgba(0, 0, 0, 0.06)",
+        "radius": "100px"
+      }
+    },
+    {
+      "mode": "all",
+      "scene": "upload-progress-default",
+      "progressClass": "apollo-progress apollo-progress-status-normal apollo-progress-line apollo-progress-line-align-end apollo-progress-line-position-outer",
+      "role": "progressbar",
+      "ariaValueNow": "55",
+      "railHeight": 2,
+      "trackHeight": 2,
+      "railWidth": 418,
+      "trackWidth": 229.890625,
+      "railPaint": {
+        "background": "rgba(0, 0, 0, 0.06)",
+        "radius": "100px"
+      }
+    },
+    {
+      "mode": "all",
+      "scene": "upload-progress-css-length",
+      "progressClass": "apollo-progress apollo-progress-status-normal apollo-progress-line apollo-progress-line-align-end apollo-progress-line-position-outer",
+      "role": "progressbar",
+      "ariaValueNow": "55",
+      "railHeight": 4,
+      "trackHeight": 4,
+      "railWidth": 418,
+      "trackWidth": 229.890625,
+      "railPaint": {
+        "background": "rgba(0, 0, 0, 0.06)",
+        "radius": "100px"
+      }
+    }
+  ],
+  "sourceAliases": 0,
+  "sourceCssInjection": false,
+  "styleTagsAcrossAllPages": 0,
+  "packageModuleRealRoot": "/private/tmp/apollo-css-visual-a47d96ec",
+  "parsedFrozenDistModuleCount": 1841,
+  "artifactsChecked": 3664,
+  "artifactFingerprintSha256": "2c498a5ecfecef161b4ff73609d3763109fa57d3b582e06c47ba3e2f311f5b61",
+  "artifactsUnchanged": true,
+  "oldEvidenceFilesChecked": 49,
+  "oldEvidencePreserved": true,
+  "snapshotStatusAfter": "",
+  "packageBuilds": false,
+  "snapshotEdits": false,
+  "baselineEdits": false,
+  "readersExited": true,
+  "readerExitEvidence": {
+    "finalLogLine": "All browser/server readers exited",
+    "probeNodeProcesses": [],
+    "previewPort": 55605,
+    "previewListenerClosed": true
+  },
+  "resultsSha256": "891e1e6d423d7b12ccb40809b9792697a7f13d62bdfdef34ffc3b9ed806ee8d6",
+  "unverified": [
+    "Full component APIs, additional themes/viewports/browsers, SSR/hydration, docs and formal visual baseline acceptance",
+    "Other shared CSS groups are outside this probe receipt"
+  ]
+}
