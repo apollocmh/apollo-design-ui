@@ -43,6 +43,16 @@ See [`demo/`](./demo) (17 demos, one-to-one with the antd user-visible demos).
 
 `root` / `body` / `rail` / `track` / `indicator` (object and function variants).
 
+For lines, numeric widths in scalar, tuple and object size values use px, with the
+corresponding rail height; nonpositive width fills the available space. Information can make the body
+taller than the rail, so size height describes the rail.
+
+The actual progressbar uses success.percent when provided, otherwise percent, for
+`aria-valuenow`. Finite fractions are preserved and clamped to 0–100; non-finite
+values become 0. Internal accessibility values take precedence over same-name native
+attrs. Supply the accessible name through aria-label / aria-labelledby. Existing
+integer-based status derivation and explicit normal status retain their behavior.
+
 ## Design notes
 
 - **Self-built SVG circle core** (H5, no `@rc-component/progress`): dasharray/dashoffset

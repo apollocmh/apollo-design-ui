@@ -53,13 +53,33 @@ subtitle: 上传
 | openFileDialogOnClick | 点击触发区是否打开文件框 | `boolean` | `true` |
 | pastable | 支持从剪贴板粘贴上传（`document` 级 paste 监听） | `boolean` | — |
 | previewFile | 生成 picture 族缩略图的自定义实现 | `(file: File \| Blob) => PromiseLike<string>` | canvas 200×200 居中裁剪 |
-| progress | 进度条配置（透传给 Progress / 内联 MiniProgress） | `UploadListProgressProps` | `{ size: [-1, 2], showInfo: false }` |
+| progress | 上传列表的进度展示配置，字段见下表 | `UploadListProgressProps` | 满宽 2px，隐藏信息 |
 | showUploadList | 是否展示列表，或 `{ showPreviewIcon, showRemoveIcon, showDownloadIcon }` | `boolean \| ShowUploadListInterface` | `true` |
 | type | 上传形态。`'drag'` 等价于使用 `UploadDragger` | `'select' \| 'drag'` | `'select'` |
 | withCredentials | 跨域请求是否携带 cookie | `boolean` | `false` |
 | class / style | **根元素原生 attrs**（不是 Props）；`style` 经语义 root 通道的 `trigger` 槽下发 | — | — |
 | hasControlInside | 触发区内是否已有可聚焦控件（决定引擎根是否带 `role="button"` / `tabIndex`） | `boolean` | `true` |
 | locale | 覆盖内置文案 | `{ uploading, removeFile, downloadFile, previewFile }` | 从 `LocaleProvider` 取 |
+
+### 进度配置
+
+| 字段 | 说明 | 类型 | 默认值 |
+|---|---|---|---|
+| strokeColor | 纯色、`{ from, to }` 或百分比色标渐变；渐变方向跟随 RTL | `string \| Record<string, string>` | 主题进度色 |
+| strokeWidth | 轨道厚度；数字按 px，字符串使用合法 CSS 长度 | `number \| string` | `2` |
+| showInfo | 显示当前百分比信息 | `boolean` | `false` |
+| size | 数字为宽高，数组为 `[宽, 高]`；宽度非正时自适应，预设 small/default 的厚度为 6/8px | `number \| [number, number] \| 'small' \| 'default'` | `[-1, 2]` |
+| aria-label | 实际进度条的可访问名称；覆盖文件值，未提供时使用文件名 | `string` | 文件名称 |
+| aria-labelledby | 实际进度条所关联的标签 ID；覆盖文件值 | `string` | — |
+
+数字或数组 size 决定宽高；其余情况下显式 strokeWidth 优先于预设与默认厚度。
+部分 progress 对象也保留满宽 2px 的默认值。当前 Provider 的
+`components.upload.progress` 与局部配置浅合并，局部字段优先，动态替换或移除立即生效。
+
+进度值来自 `UploadFile.percent`，保留有限小数并限制在 0–100，非有限输入按 0。
+文件没有 percent 字段时不显示进度，显式 undefined 或 0 表示零进度。
+列表项首次挂载后等待 300ms，随后仅在 uploading 状态显示；达到 100% 仍等待上传成功事件。
+整行 itemRender 插槽负责其自身内容。该配置不包含 Progress 的 percent/type/status 等其他字段。
 
 ### 事件
 

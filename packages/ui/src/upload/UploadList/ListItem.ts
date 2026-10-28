@@ -30,7 +30,7 @@ import type {
   UploadLocale,
   VNodeChild,
 } from '../interface';
-import { MiniProgress } from './MiniProgress';
+import { UploadProgress } from './UploadProgress';
 
 type CSSStyleLike = Record<string, string | number>;
 
@@ -356,12 +356,12 @@ export const ListItem = defineComponent({
                   // show loading icon if upload progress listener is disabled
                   const loadingProgress =
                     'percent' in props.file
-                      ? h(MiniProgress, {
-                          percent: props.file.percent,
-                          'aria-label': props.file['aria-label'],
+                      ? h(UploadProgress, {
+                          'aria-label': props.file['aria-label'] ?? props.file.name,
                           'aria-labelledby': props.file['aria-labelledby'],
                           ...props.progress,
-                        } as never)
+                          percent: props.file.percent,
+                        })
                       : null;
                   return h(
                     'div',

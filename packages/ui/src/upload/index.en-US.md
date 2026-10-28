@@ -55,13 +55,36 @@ validation, drag / picture wall, manual upload and custom request paths are cove
 | openFileDialogOnClick | Whether clicking the trigger opens the file dialog | `boolean` | `true` |
 | pastable | Paste from clipboard (document-level listener) | `boolean` | — |
 | previewFile | Custom thumbnail generator for the picture family | `(file: File \| Blob) => PromiseLike<string>` | canvas 200×200 center crop |
-| progress | Progress config (passed to Progress / inline MiniProgress) | `UploadListProgressProps` | `{ size: [-1, 2], showInfo: false }` |
+| progress | Upload-list progress presentation options, detailed below | `UploadListProgressProps` | Full width, 2px, no information |
 | showUploadList | Show the list, or configure it: `{ showPreviewIcon, showRemoveIcon, showDownloadIcon }` | `boolean \| ShowUploadListInterface` | `true` |
 | type | `'drag'` is equivalent to using `UploadDragger` | `'select' \| 'drag'` | `'select'` |
 | withCredentials | Whether to send cookies on cross-origin requests | `boolean` | `false` |
 | class / style | **Native root attrs** (not Props); `style` flows through the semantic root channel's `trigger` slot | — | — |
 | hasControlInside | Whether the trigger already contains a focusable control (drives `role="button"` / `tabIndex` on the engine root) | `boolean` | `true` |
 | locale | Override built-in text | `{ uploading, removeFile, downloadFile, previewFile }` | from `LocaleProvider` |
+
+### Progress options
+
+| Field | Description | Type | Default |
+|---|---|---|---|
+| strokeColor | Solid color, `{ from, to }`, or percentage gradient stops; gradient direction follows RTL | `string \| Record<string, string>` | Theme progress color |
+| strokeWidth | Rail thickness; numbers use px, strings use valid CSS lengths | `number \| string` | `2` |
+| showInfo | Show the current percentage | `boolean` | `false` |
+| size | A number sets width and height; a tuple sets `[width, height]`. Nonpositive width fills the available space. small/default use 6/8px thickness | `number \| [number, number] \| 'small' \| 'default'` | `[-1, 2]` |
+| aria-label | Accessible name on the actual bar; overrides the file value and falls back to the file name | `string` | File name |
+| aria-labelledby | Label element IDs on the actual bar; overrides the file value | `string` | — |
+
+A numeric or tuple size determines dimensions. Otherwise, explicit strokeWidth takes
+precedence over presets and the default thickness. Partial progress objects retain
+the full-width 2px default. Current `components.upload.progress` Provider options are
+shallow-merged with local options; local fields win, including reactive replacement and removal.
+
+The value comes from `UploadFile.percent`: finite fractions are preserved and clamped
+to 0–100; non-finite values become 0. An absent percent field omits the bar, while
+explicit undefined or 0 means zero progress. After a 300ms delay from the list item's
+initial mount, the bar is shown only while uploading. Reaching 100% still waits for
+the upload success event. A whole-row itemRender slot owns its content. This subset
+does not expose other Progress fields such as percent/type/status.
 
 ### Events
 
@@ -110,8 +133,8 @@ validation, drag / picture wall, manual upload and custom request paths are cove
   XHR + FormData.
 - **List motion**: non-picture styles expand/collapse by height, picture styles fade;
   `motionName = {p}-animate[-inline]` with a 2000ms fallback.
-- **Progress and errors**: a lightweight inline progress bar, with native `title`
-  tooltips for error messages.
+- **Progress**: upload-specific presentation options compose the shared Progress component.
+  Error messages use native `title` tooltips.
 - **No global base styles**: for a bare `<a>` name or a native `<button>` trigger, the
   link color and form-control normalization come from your own global CSS.
   Pair the library with any CSS reset, or use the bundled `Button` / `Link`.

@@ -67,7 +67,7 @@
       "status": "completed",
       "derived": {
         "dagLevel": 0,
-        "unblocks": 51,
+        "unblocks": 52,
         "tokenCount": 0,
         "tokenGroup": "Empty"
       },
@@ -138,7 +138,7 @@
       "status": "completed",
       "derived": {
         "dagLevel": 1,
-        "unblocks": 50,
+        "unblocks": 51,
         "tokenCount": 0,
         "tokenGroup": null
       },
@@ -2032,16 +2032,16 @@
       "complexity": "L",
       "status": "completed",
       "derived": {
-        "dagLevel": 0,
+        "dagLevel": 4,
         "unblocks": 0,
         "tokenCount": 2,
         "tokenGroup": "Upload"
       },
       "dependencies": {
-        "components": [],
-        "typeOnly": [
+        "components": [
           "progress"
         ],
+        "typeOnly": [],
         "foundation": [
           "@apollo-design/a11y",
           "@apollo-design/icons",
@@ -2062,7 +2062,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-27 Button关联Demo修复：basic/default-file-list的change监听统一使用Vue @change；原生删除removed提示已验证，保留全部23 Demo。此项不是Upload全部API重新验收。",
+      "notes": "2026-10-27 Button关联Demo修复：basic/default-file-list的change监听统一使用Vue @change；原生删除removed提示已验证，保留全部23 Demo。此项不是Upload全部API重新验收。\n2026-10-29进度窄单元：内部UploadProgress组合实际Progress，六配置字段、默认/动态尺寸、渐变/信息/ARIA与现有生命周期已修。258相关运行时、48类型、40Demo源码严格及全量/单独CSS各75浏览器通过；发布重建和Docs验收待执行，不宣称完整Upload审计。见2026-10-29-upload-progress-audit.md。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -2351,7 +2351,7 @@
       "status": "completed",
       "derived": {
         "dagLevel": 2,
-        "unblocks": 15,
+        "unblocks": 16,
         "tokenCount": 2,
         "tokenGroup": "Tooltip"
       },
@@ -3975,7 +3975,7 @@
       "status": "completed",
       "derived": {
         "dagLevel": 3,
-        "unblocks": 0,
+        "unblocks": 1,
         "tokenCount": 6,
         "tokenGroup": "Progress"
       },
@@ -4004,7 +4004,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": null,
+      "notes": "\n2026-10-29 Upload关联窄修：Line数字宽度正确输出px，ARIA保留有限小数并限制0–100，status整数推导保留。源码及关联浏览器验证见upload-progress-source-freeze.json；完整Progress本轮审计仍未完成。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",

@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T15:59:49.548Z",
+  "generatedAt": "2026-10-28T18:10:52.500Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -611,8 +611,8 @@
         "L6 视觉回归对这批组件建立首批基线",
         "流水线被证明可重复（不再需要为每个组件重新设计流程）"
       ],
-      "itemCount": 20,
-      "doneCount": 19,
+      "itemCount": 19,
+      "doneCount": 18,
       "readyCount": 1,
       "blockedCount": 0,
       "waitingCount": 0,
@@ -635,7 +635,6 @@
         "COMP:splitter",
         "COMP:switch",
         "COMP:typography",
-        "COMP:upload",
         "COMP:watermark",
         "X:visual-infra"
       ],
@@ -784,8 +783,8 @@
         "8 个组件 11 维度 completed",
         "72/72 组件收口"
       ],
-      "itemCount": 8,
-      "doneCount": 7,
+      "itemCount": 9,
+      "doneCount": 8,
       "readyCount": 1,
       "blockedCount": 0,
       "waitingCount": 0,
@@ -798,7 +797,8 @@
         "COMP:popconfirm",
         "COMP:table",
         "COMP:timeline",
-        "COMP:transfer"
+        "COMP:transfer",
+        "COMP:upload"
       ],
       "workstreams": [
         "WS-3",
@@ -1355,7 +1355,7 @@
       "status": "done",
       "decidedBy": [],
       "complexity": "S",
-      "unblocks": 51,
+      "unblocks": 52,
       "why": "2026-10-27 Empty完整清单已统一验收，实现193cc3bb+12cf9fee：六Props/三完整槽/四语义、当前Provider/方向/语言/源Alias、合法image及自然布局/对比度、透明合成、六原Demo同步修复。关联Trigger/Portal主题桥接4条红绿复现；最终2856相关四层/434类型、54生产浏览器/40实际popup/18消费者、24 Demo主题/17实际Docs、8 SSR/6组水合、严格类型/发布消费/UI严格L7通过。45张自有视觉逐张审阅批准，连同List57张共102张全部0像素差异；原315记录及PNG不变。全库审计仍继续，验收230fe3cf已发布，工作流40448643538/Pages7350216642及线上17项验证成功。",
       "doneWhen": [],
       "group": "数据展示",
@@ -1381,7 +1381,7 @@
       "status": "done",
       "decidedBy": [],
       "complexity": "L",
-      "unblocks": 50,
+      "unblocks": 51,
       "why": "Token / 主题 / locale / size / disabled / prefixCls 的统一入口，是全部组件的运行时网关。它是零运行时 CSS 变量方案（ARCHITECTURE.md §4.3）的落地点。\n2026-10-26 Image单元源主题/Token组：源上下文跨Portal、7个Token、ThemeProvider继承与Provider主题移除/恢复状态已修；可选作用域用原生Teleport保留同一插槽子树，SSR内联后水合不替换原节点，当前CSS变量前缀清理。56文件1059运行/DOM/a11y/theme串行通过（未改阈值），严格/构建/生产模板消费/L7/Docs通过；23场景生产Chrome及独立SSR水合通过。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image滚动锁/富缩略图/motion/最终视觉仍开放，不据此升级整组件维度。",
       "doneWhen": [],
       "group": "其他",
@@ -2008,7 +2008,7 @@
       "ref": "upload",
       "title": "Upload（upload）",
       "workstream": "WS-4",
-      "wave": "W4",
+      "wave": "W8",
       "dependsOn": [
         "FND:a11y",
         "FND:icons",
@@ -2022,11 +2022,11 @@
       "decidedBy": [],
       "complexity": "L",
       "unblocks": 0,
-      "why": "2026-10-27 Button关联Demo修复：basic/default-file-list的change监听统一使用Vue @change；原生删除removed提示已验证，保留全部23 Demo。此项不是Upload全部API重新验收。",
+      "why": "2026-10-27 Button关联Demo修复：basic/default-file-list的change监听统一使用Vue @change；原生删除removed提示已验证，保留全部23 Demo。此项不是Upload全部API重新验收。\n2026-10-29进度窄单元：内部UploadProgress组合实际Progress，六配置字段、默认/动态尺寸、渐变/信息/ARIA与现有生命周期已修。258相关运行时、48类型、40Demo源码严格及全量/单独CSS各75浏览器通过；发布重建和Docs验收待执行，不宣称完整Upload审计。见2026-10-29-upload-progress-audit.md。",
       "doneWhen": [],
       "group": "数据录入",
       "priority": "P2",
-      "dagLevel": 0,
+      "dagLevel": 4,
       "blockers": []
     },
     {
@@ -2145,7 +2145,7 @@
       "status": "done",
       "decidedBy": [],
       "complexity": "L",
-      "unblocks": 15,
+      "unblocks": 16,
       "why": "【trigger 的第一个消费者】用于验证 ARCHITECTURE.md AR1（浮层定位像素级一致性）。必须先通过 PoC 验证再继续。\n2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。\n2026-10-25 F10：五个相关浮层/静态入口按Vue规则合并原生style，修复字符串挂载/SSR异常与面板语义转发。PurePanel原生style仅落根，container独立使用styles.container，按ADR0007直接迁移；证据及范围见 docs/audit/2026-10-25-overlay-native-styles-remediation.md，不表示全组件新增视觉验收。",
       "doneWhen": [],
       "group": "数据展示",
@@ -2762,8 +2762,8 @@
       "status": "done",
       "decidedBy": [],
       "complexity": "M",
-      "unblocks": 0,
-      "why": "",
+      "unblocks": 1,
+      "why": "\n2026-10-29 Upload关联窄修：Line数字宽度正确输出px，ARIA保留有限小数并限制0–100，status整数推导保留。源码及关联浏览器验证见upload-progress-source-freeze.json；完整Progress本轮审计仍未完成。",
       "doneWhen": [],
       "group": "反馈",
       "priority": "P4",

@@ -5,4 +5,6 @@ title:
   en-US: Customize Progress Bar
 ---
 
-`progress` 支持 `strokeColor`、`strokeWidth`、`showInfo` 等展示配置。示例的初始文件会由本地定时器从 30% 推进到 100%，新选择的文件同样通过 mock `customRequest` 反馈进度。
+`progress` 支持渐变 `strokeColor`、数字或 CSS 长度 `strokeWidth`、`showInfo` 与 ARIA 名称。
+本例显示 4px 渐变进度和当前百分比。初始文件从 30% 推进到 100%，新选择的文件通过
+mock `customRequest` 反馈进度；成功事件后收起进度条。

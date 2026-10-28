@@ -4,8 +4,8 @@
   "generatedAt": "2026-10-15T14:42:57.861Z",
   "summary": {
     "apolloPackages": 12,
-    "componentEdgesRuntime": 82,
-    "componentEdgesTypeOnly": 71,
+    "componentEdgesRuntime": 83,
+    "componentEdgesTypeOnly": 70,
     "maxDagLevel": 5
   },
   "strategyLegend": {
@@ -1027,7 +1027,7 @@
         "dependedBy": [
           "config-provider"
         ],
-        "unblocks": 51
+        "unblocks": 52
       },
       "config-provider": {
         "priority": "P0",
@@ -1076,7 +1076,7 @@
           "mentions",
           "avatar"
         ],
-        "unblocks": 50
+        "unblocks": 51
       },
       "button": {
         "priority": "P0",
@@ -1316,8 +1316,10 @@
       },
       "upload": {
         "priority": "P2",
-        "dagLevel": 0,
-        "dependsOn": [],
+        "dagLevel": 4,
+        "dependsOn": [
+          "progress"
+        ],
         "dependedBy": [],
         "unblocks": 0
       },
@@ -1368,7 +1370,7 @@
           "steps",
           "progress"
         ],
-        "unblocks": 15
+        "unblocks": 16
       },
       "popover": {
         "priority": "P3",
@@ -1598,8 +1600,10 @@
         "dependsOn": [
           "tooltip"
         ],
-        "dependedBy": [],
-        "unblocks": 0
+        "dependedBy": [
+          "upload"
+        ],
+        "unblocks": 1
       },
       "pagination": {
         "priority": "P5",
@@ -2143,7 +2147,7 @@
       {
         "from": "progress",
         "to": "upload",
-        "kind": "type-only"
+        "kind": "runtime"
       },
       {
         "from": "config-provider",
@@ -2544,7 +2548,6 @@
         "affix",
         "switch",
         "listy",
-        "upload",
         "splitter",
         "carousel",
         "descriptions",
@@ -2605,6 +2608,7 @@
         "calendar"
       ],
       "4": [
+        "upload",
         "dropdown",
         "popconfirm",
         "timeline",

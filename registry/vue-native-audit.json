@@ -1216,7 +1216,7 @@
         "packages/ui/src/upload/style/token.ts",
         "packages/ui/src/upload/Upload.ts",
         "packages/ui/src/upload/UploadList/ListItem.ts",
-        "packages/ui/src/upload/UploadList/MiniProgress.ts",
+        "packages/ui/src/upload/UploadList/UploadProgress.ts",
         "packages/ui/src/upload/UploadList.ts",
         "packages/ui/src/upload/utils.ts"
       ],
@@ -1233,7 +1233,7 @@
         "packages/ui/src/upload/style/token.ts",
         "packages/ui/src/upload/Upload.ts",
         "packages/ui/src/upload/UploadList/ListItem.ts",
-        "packages/ui/src/upload/UploadList/MiniProgress.ts",
+        "packages/ui/src/upload/UploadList/UploadProgress.ts",
         "packages/ui/src/upload/UploadList.ts",
         "packages/ui/src/upload/utils.ts"
       ],

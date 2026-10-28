@@ -40,8 +40,9 @@ progress/
 2. **circle 段序**：percent 列表 [success%, percent−success%]，**逆序渲染**（主段在前）。
 3. **gradient circle**：mask 包 path（stroke=#FFF、linecap 强制 butt）+ foreignObject
    叠 linear+conic 双层渐变；body 加 `-circle-gradient`。
-4. **aria**：role=progressbar + valuenow（parseInt(success?.percent ?? percent)）；
-   aria-label/labelledby 走 attrs 透传（Vue 不把 aria-* 识别为 prop）。
+4. **aria**：role=progressbar，valuenow 取 success?.percent 或 percent 的有限原始值，
+   保留小数并限制到 0–100，非有限值为 0；原 status 的整数推导保持。
+   aria-label/labelledby 走 attrs 透传。
 5. **linecap square/butt** ⇒ track/rail 圆角 0；`--progress-line-stroke-color` 无前缀
    （产物逐字）。
 6. **H5 替代**：FastColor.isLight → 自研亮度判定（ITU-R 601，threshold 128）。
@@ -66,6 +67,10 @@ circleTextFontSize(1em) / circleIconFontSize(fontSize/fontSizeSM em)。
 | P2 | demo dashboard/circle-steps 用 InputNumber 替换 Segmented/Slider | 依赖组件落地后换回 |
 
 ## 5. 收口证据（G13）
+
+当前 Upload 组合、线性数字宽度和公共 ARIA 修正见
+[2026-10-29 审计](../../../../docs/audit/2026-10-29-upload-progress-audit.md)与
+[迁移说明](../../../../docs/migrations/upload-progress-contracts.md)。以下保留历史参考结果。
 
 - 四层：L1/L2 30 + demo 18 / L3 类型 6 / L5 a11y 18（aria-progressbar-name 豁免同
   antd disabledRules）/ **L4 DOM 契约 21（零 ALLOW 全 exact）**

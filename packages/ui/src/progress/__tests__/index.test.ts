@@ -24,7 +24,7 @@ const mountP = (props: Record<string, unknown> = {}) =>
   });
 
 describe('Progress · 结构契约（line）', () => {
-  it('role=progressbar + aria-valuenow（parseInt）', () => {
+  it('role=progressbar + aria-valuenow/min/max（整数输入）', () => {
     const w = mountP({ percent: 30 });
     const root = w.find(`.${P}`);
     expect(root.attributes('role')).toBe('progressbar');

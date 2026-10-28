@@ -1971,8 +1971,7 @@ export { SHOW_ALL, SHOW_CHILD, SHOW_PARENT, TreeSelect } from './tree-select';
 //
 // ⚠️ 样式已注册进 COMPONENT_STYLES；Component Token 2 个（actions-color /
 //    picture-card-size）。v-model:fileList 与 onChange 双通道（C11）；
-//    Progress/Tooltip 未落地 —— ListItem 内联 MiniProgress（P1）+ 原生 title
-//    （P2），progress/tooltip 落地后替换（D 登记）。
+//    进度由内部 UploadProgress 组合实际 Progress；文件名保留原生 title。
 // ---------------------------------------------------------------------------
 export type {
   HttpRequestHeader,

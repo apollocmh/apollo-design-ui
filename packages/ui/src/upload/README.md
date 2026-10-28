@@ -28,7 +28,7 @@ upload/
 ├── UploadList.ts            # 列表容器（MotionList 四态 diff + appendAction fade）
 ├── UploadList/
 │   ├── ListItem.ts          # 单项（图标/名称/操作/进度/error title）
-│   └── MiniProgress.ts      # 内联进度条（Progress 未落地，见 §6 P1）
+│   └── UploadProgress.ts    # 上传展示配置归一化，组合公共 Progress
 ├── Dragger.ts               # type='drag' + DraggerProps（HTML 属性透传）
 ├── engine/
 │   ├── AjaxUploader.ts      # 隐藏 input + 点击/键盘/拖拽/粘贴入口
@@ -63,17 +63,17 @@ antd 的条件渲染结构。全仓无 `.tsx`（H3）。
 ## 5. 与 antd 的行为差异
 
 同步登记在 [`COMPATIBILITY.md` §9.2](../../../../COMPATIBILITY.md)：**D71~D76**
-（drop 事件通道 / 内联 MiniProgress / 原生 title / flushSync 无对应物 /
+（drop 事件通道 / 历史进度替身 / 原生 title / flushSync 无对应物 /
 不注入全局基础样式 / collapse handler 走 `hooks` 对象）。
-本组件没有 BUG 或 DEFECT 类差异。
+2026-10-29 的进度整改和剩余验收边界见[本轮审计](../../../../docs/audit/2026-10-29-upload-progress-audit.md)。
 
-L6 视觉：9 张（3 variant × 3 viewport）**全部 0.000% exact**。
+历史 React 参考视觉：9 张（3 variant × 3 viewport）全部 0.000% exact；这不是当前 Apollo 基线验收。
 
 ## 6. 已知缺口
 
 | # | 缺口 | 落点 | 状态 |
 |---|---|---|---|
-| P1 | **进度条**：`Progress` 未落地 ⇒ 内联 `MiniProgress` 复刻 line-small 的 DOM 与类名 | `UploadList/MiniProgress.ts` → 换成 `<Progress type="line" size="small" :showInfo="false" />` | INTENDED（D72） |
+| P1 | **进度条**：共享 Progress 组合，六字段、动态清除与 ARIA/尺寸成组修复 | `UploadList/UploadProgress.ts`；[迁移说明](../../../../docs/migrations/upload-progress-contracts.md) | 源码验收见本轮审计 |
 | P2 | **错误提示**：`Tooltip` 未落地 ⇒ 用原生 `title` 承载错误文本（**交互不等价**：延迟 ~1s、不可定制） | `ListItem.ts` 的 `dom` computed → 用 `<Tooltip title={file.error?.message}>` 包住 | INTENDED（D73） |
 | P3 | **`Wave` 波纹**：点击触发区无波纹（基建未落地） | 与 button / checkbox / radio / switch 同判 | PLATFORM |
 | P4 | **`v-model:fileList` 与 `change` 双通道已实现**（C11）；但全仓其余 20 个已收口组件的 `update:*` 仍缺（PITFALLS 162） | — | 本组件**不缺** |

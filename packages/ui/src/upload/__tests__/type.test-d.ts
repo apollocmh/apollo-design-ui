@@ -30,11 +30,47 @@ import type {
   UploadChangeParam,
   UploadFile,
   UploadFileStatus,
+  UploadListProgressProps,
   UploadListType,
   UploadProps,
   UploadSemanticType,
   UploadType,
 } from '../interface';
+
+describe('Upload · progress 的公开边界', () => {
+  it('完整保留六字段、CSS 字符串厚度和数值/tuple 尺寸', () => {
+    expectTypeOf<keyof UploadListProgressProps>().toEqualTypeOf<
+      'strokeColor' | 'strokeWidth' | 'showInfo' | 'size' | 'aria-label' | 'aria-labelledby'
+    >();
+    expectTypeOf<UploadProps['progress']>().toEqualTypeOf<UploadListProgressProps | undefined>();
+    expectTypeOf<UploadListProgressProps['strokeWidth']>().toEqualTypeOf<
+      number | string | undefined
+    >();
+    const options: UploadListProgressProps[] = [
+      { strokeWidth: '0.25rem', showInfo: true },
+      { strokeWidth: 4, size: 'small', 'aria-label': 'Upload progress' },
+      { size: [180, 5], strokeColor: { '0%': '#108ee9', '100%': '#87d068' } },
+      { size: 24, strokeColor: { from: '#108ee9', to: '#87d068' }, 'aria-labelledby': 'title' },
+      { size: 'default' },
+    ];
+    expectTypeOf(options).toEqualTypeOf<UploadListProgressProps[]>();
+  });
+
+  it('percent/type 归文件和内部列表所有，不扩大成全部 Progress API', () => {
+    const negative = () => {
+      // @ts-expect-error percent 只能由 UploadFile.percent 提供
+      const percent: UploadListProgressProps = { percent: 30 };
+      // @ts-expect-error 内置列表进度固定为 line
+      const type: UploadListProgressProps = { type: 'circle' };
+      // @ts-expect-error 既有公开 strokeColor 不接受 Progress 的数组分段颜色
+      const colors: UploadListProgressProps = { strokeColor: ['red', 'blue'] };
+      // @ts-expect-error Upload 的 size 不包含 Progress 的对象形态
+      const size: UploadListProgressProps = { size: { width: 100, height: 4 } };
+      return [percent, type, colors, size];
+    };
+    void negative;
+  });
+});
 
 describe('Upload · 枚举取值面', () => {
   it('`UploadType` / `UploadListType` / `UploadFileStatus` 与 antd 一致', () => {

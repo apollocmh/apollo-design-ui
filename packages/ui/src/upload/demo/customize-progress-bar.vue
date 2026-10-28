@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 自定义进度条：通过 progress 属性调整颜色、宽度与信息展示
+// 自定义进度条：渐变、线宽、百分比信息与可访问名称
 import { UploadOutlined } from '@apollo-design/icons';
 import { Button, Upload, type UploadFile, type UploadProps } from '@apollo-design/ui';
 import { onMounted, onUnmounted, ref } from 'vue';
@@ -54,7 +54,12 @@ onUnmounted(() => {
       v-model:file-list="fileList"
       action="/upload.do"
       :custom-request="customRequest"
-      :progress="{ strokeWidth: 4, showInfo: true, strokeColor: '#722ed1' }"
+      :progress="{
+        strokeWidth: 4,
+        showInfo: true,
+        strokeColor: { '0%': '#108ee9', '100%': '#87d068' },
+        'aria-label': '文件上传进度',
+      }"
     >
       <Button>
         <template #icon><UploadOutlined /></template>
@@ -62,7 +67,7 @@ onUnmounted(() => {
       </Button>
     </Upload>
     <p style="margin: 0; color: #999; font-size: 12px">
-      进度条颜色与线宽来自 progress 属性；初始文件会自动从 30% 演示到 100%。
+      渐变进度条显示当前百分比，线宽为 4px；初始文件会自动从 30% 演示到 100%。
     </p>
   </div>
 </template>

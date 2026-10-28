@@ -125,7 +125,7 @@ export default defineComponent({
           class: clsx(`${prefixCls}-body`, classNames.body, {
             [`${prefixCls}-body-layout-bottom`]: infoAlign === 'center' && infoPosition === 'outer',
           }),
-          style: { width: width > 0 ? width : '100%', ...styles.body },
+          style: { width: width > 0 ? px(width) : '100%', ...styles.body },
         },
         [
           h(

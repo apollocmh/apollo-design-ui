@@ -2,10 +2,9 @@
  * Upload 的类型定义（G2 产物）。
  *
  * 从 antd 6.6.4 的 `es/upload/interface.d.ts` **重新定义**（H2，不复制）：
- * React 类型（ReactNode / CSSProperties / ImgHTMLAttributes）按 D42/C19 映射为
- * Vue-native（VNodeChild / Record<string, string|number>）；Progress 的
- * ProgressAriaProps / ProgressProps 子集内联（P1：progress 未落地，见 analysis
- * §4 —— progress 落地后改回 import）。
+ * 内容与样式使用 Vue 原生类型。Upload 进度刻意保留六字段的展示配置面，
+ * 由内部 UploadProgress 组合公共 Progress；保留 CSS 字符串 strokeWidth，
+ * 不自动扩大成 Progress 的全部 API。
  */
 
 import type { AcceptConfigLike, RcFile } from './engine/AjaxUploader';
@@ -19,7 +18,7 @@ export interface ProgressAriaProps {
   'aria-labelledby'?: string;
 }
 
-/** UploadListProgressProps = Omit<ProgressProps, 'percent' | 'type'> 的实际消费面。 */
+/** 上传列表的进度展示配置；percent 由文件提供，类型与状态由列表管理。 */
 export interface UploadListProgressProps extends ProgressAriaProps {
   strokeColor?: string | Record<string, string>;
   strokeWidth?: number | string;

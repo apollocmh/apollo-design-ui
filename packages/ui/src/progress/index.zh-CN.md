@@ -47,6 +47,14 @@ subtitle: 进度条
 
 `root` / `body` / `rail` / `track` / `indicator`（对象式与函数式 `({ props }) => …`）。
 
+线形 size 中的数值宽度按 px 输出，数值、数值 tuple 或对象可设置对应宽度和轨道高度；非正宽度自适应。
+`showInfo` 显示的指示文本可以使 body 高于轨道，size 的高度约束轨道。
+
+实际 progressbar 的 `aria-valuenow` 优先读取 success.percent，否则读取 percent；
+保留有限小数，限制到 0–100，非有限输入按 0。内部无障碍值保持权威，
+原生 attrs 的同名值不会覆盖它。可访问名称通过 aria-label / aria-labelledby 提供。
+status 的既有整数推导与显式 normal 状态保持原规则。
+
 ## 设计说明
 
 - **SVG 圆环内核自研**（H5：不依赖 `@rc-component/progress`）：dasharray/dashoffset

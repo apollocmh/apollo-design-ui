@@ -11,7 +11,7 @@
  * 1. 无 hash / css-var 包裹类（D5）；全部 `--ant-*` 换成 `--apollo-*`
  *    （alias）与 `--apollo-upload-*`（组件 token：actions-color /
  *    picture-card-size，见 token.ts）。
- * 2. MiniProgress 的轨道色内联（P1，见 UploadList/MiniProgress.ts）。
+ * 2. UploadProgress 组合实际 Progress；其基础规则由样式依赖闭包提供。
  * 3. rootPrefixCls 仅支持默认 'apollo'（静态移植，参数为 API 对齐保留）。
  *
  * ── 提取期的两处修正（L6 视觉层抓出，见 COMPONENT-CHECKLIST §六） ──────────

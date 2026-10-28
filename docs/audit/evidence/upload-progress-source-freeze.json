@@ -1,0 +1,1305 @@
+{
+  "unit": "UPLOAD-PROGRESS-20261029",
+  "frozenAt": "2026-10-28T17:48:35.544Z",
+  "baseCommit": "3214ee105bd45a9a684c9170f8e3457da162fcc7",
+  "uncommittedUnitChanges": true,
+  "unitDigest": "6d2617e884596af586b3bedf04210b2e28e3080e0d34271076307a6ea75b7ef6",
+  "productionDigest": "6644e82dbec64b280a318535c8260b9ab0c9915afa58c685a515a9e91198d402",
+  "production": [
+    {
+      "file": "packages/ui/src/progress/Progress.ts",
+      "sha256": "c09555c33baba5f33379e62378dc2b16e92dd9f8628380c2de0665525aad44a5",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/progress/engine/Line.ts",
+      "sha256": "7213c18969036649bbe45935512b12b4c7129a9e67159f4b9b83cacf6ed8e51d",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/UploadList/ListItem.ts",
+      "sha256": "5624fd7ffb95f2f12ebe35390aa5dcf365ac5c65d191c4d4bf705a94e0197d08",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/UploadList/MiniProgress.ts",
+      "sha256": null,
+      "state": "deleted"
+    },
+    {
+      "file": "packages/ui/src/upload/UploadList/UploadProgress.ts",
+      "sha256": "6ed89212b5ca30c2f0412759d76dd592255f47b99d6a8c4860357484fdd31e22",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/interface.ts",
+      "sha256": "99da9a5892ccc3eb2064376418346b2207e3db06a524646c06e9f5ff722126e4",
+      "state": "present"
+    }
+  ],
+  "files": [
+    {
+      "file": "docs/audit/2026-10-29-upload-progress-audit.md",
+      "sha256": "c660bb5b026b8be33e2f82766439b6e03389bc9497d8969fbd9f420e89db51b5",
+      "state": "present"
+    },
+    {
+      "file": "docs/migrations/upload-progress-contracts.md",
+      "sha256": "7c9d5afe97f3d9b99f9dc6d2423aea6f8a3cf35ce6f5e5fbcffe41d825c6f9c4",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/progress/Progress.ts",
+      "sha256": "c09555c33baba5f33379e62378dc2b16e92dd9f8628380c2de0665525aad44a5",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/progress/README.md",
+      "sha256": "d8bd316f0773274ed3e034d3cd907c9154b44815c0ae1033bbcdd113492918eb",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/progress/__tests__/index.test.ts",
+      "sha256": "64e16ca9ccc82693be8cd889344a3c58659bc0fbd703c34f4191061bdae7cf71",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/progress/__tests__/upload-integration.test.ts",
+      "sha256": "b5a45af40a876620dc7a73dfacc3cd7b7e69d91daa42eadbc11ed8c53524a1a9",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/progress/engine/Line.ts",
+      "sha256": "7213c18969036649bbe45935512b12b4c7129a9e67159f4b9b83cacf6ed8e51d",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/progress/index.en-US.md",
+      "sha256": "2bfda02a317336f4ff29f60919180c346002fde0a14a3871213a5ce1138bdea9",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/progress/index.zh-CN.md",
+      "sha256": "6380d5bf060e150ab5a95437513df177b6c377b48717227d133dfe270cd51d23",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/README.md",
+      "sha256": "d77bc4cb047b8fbfb798dc6c65f7aa0b3066ee55b002110d1832b8751bce07ad",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/UploadList/ListItem.ts",
+      "sha256": "5624fd7ffb95f2f12ebe35390aa5dcf365ac5c65d191c4d4bf705a94e0197d08",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/UploadList/MiniProgress.ts",
+      "sha256": null,
+      "state": "deleted"
+    },
+    {
+      "file": "packages/ui/src/upload/UploadList/UploadProgress.ts",
+      "sha256": "6ed89212b5ca30c2f0412759d76dd592255f47b99d6a8c4860357484fdd31e22",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/__tests__/progress.test.ts",
+      "sha256": "f64a372e3f1a1b13ccd6863353cecca6f9fcc5ca2332748de94525544b46a075",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/__tests__/type.test-d.ts",
+      "sha256": "dd38ed930c82b142bf41d6aa9f86ee222e92197bc997787bee3534d1b32368ab",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/demo/customize-progress-bar.md",
+      "sha256": "38ccfcb932a971bab76360234e2a388c66d2d2daac3a3e1269c37ad20591dbb6",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/demo/customize-progress-bar.vue",
+      "sha256": "b766aa4c7639a20216a07110d5cac54a0f8d377508f8ac645769b183e1d694ac",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/index.en-US.md",
+      "sha256": "822f8021ce8768b3f8be016e2061e4079750d05c0f808c9d1d1f8970a522281a",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/index.zh-CN.md",
+      "sha256": "85f909bcc9eb828185d1d71371c5b6051bdb208853d80f95ec65f45dbd23ab41",
+      "state": "present"
+    },
+    {
+      "file": "packages/ui/src/upload/interface.ts",
+      "sha256": "99da9a5892ccc3eb2064376418346b2207e3db06a524646c06e9f5ff722126e4",
+      "state": "present"
+    },
+    {
+      "file": "tests/browser/fixtures/UploadProgressContracts.mjs",
+      "sha256": "92d510fe0b1490750308f2c54b743b14dcb7cbbe33bb892026bccd7453760e53",
+      "state": "present"
+    },
+    {
+      "file": "tests/browser/upload-progress.mjs",
+      "sha256": "bf77c76678153f2d0cbf5e807395687e9511186e237a7ef5203689b8ea436835",
+      "state": "present"
+    }
+  ],
+  "checks": {
+    "sourceFourProjects": {
+      "files": 12,
+      "tests": 258,
+      "exitCode": 0,
+      "log": "/tmp/apollo-css-dependency-audit/upload-progress-source-gates-final.log"
+    },
+    "typesProject": {
+      "projectFiles": 4,
+      "sourceFiles": 2,
+      "runtimeAndTypeTests": 48,
+      "typeErrors": 0,
+      "exitCode": 0,
+      "log": "/tmp/apollo-css-dependency-audit/upload-progress-type-gates.log"
+    },
+    "strictTypes": {
+      "diagnostics": 0,
+      "afterOldFileDeletion": true,
+      "exitCode": 0,
+      "log": "/tmp/apollo-css-dependency-audit/upload-progress-types-frozen.log"
+    },
+    "format": {
+      "files": 12,
+      "diagnostics": 0,
+      "exitCode": 0,
+      "log": "/tmp/apollo-css-dependency-audit/upload-progress-format-frozen.log"
+    },
+    "preRemediation": {
+      "repo": {
+        "tests": 49,
+        "failed": 42,
+        "passed": 7,
+        "exitCode": 1,
+        "log": "/tmp/apollo-css-dependency-audit/upload-progress-repo-red-authorized.log"
+      },
+      "browser": {
+        "checks": 72,
+        "failed": 32,
+        "passed": 40,
+        "exitCode": 1,
+        "log": "/tmp/apollo-css-dependency-audit/upload-progress-browser-source-red.log"
+      }
+    }
+  },
+  "browser": {
+    "all": {
+      "sourceJs": true,
+      "stylesheet": "@apollo-design/ui/style.css",
+      "staticCases": 45,
+      "dynamicStages": 20,
+      "checks": [
+        {
+          "name": "Provider updates preserve the actual trigger",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "Provider updates preserve trigger focus",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "upload-default actual rail height",
+          "actual": 2,
+          "expected": 2,
+          "passed": true
+        },
+        {
+          "name": "upload-empty-config actual rail height",
+          "actual": 2,
+          "expected": 2,
+          "passed": true
+        },
+        {
+          "name": "upload-stroke-number actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "upload-stroke-string actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "upload-stroke-rem actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "upload-size-small actual rail height",
+          "actual": 6,
+          "expected": 6,
+          "passed": true
+        },
+        {
+          "name": "upload-size-default actual rail height",
+          "actual": 8,
+          "expected": 8,
+          "passed": true
+        },
+        {
+          "name": "upload-size-number actual dimensions",
+          "actual": {
+            "width": 24,
+            "height": 24
+          },
+          "expected": {
+            "width": 24,
+            "height": 24
+          },
+          "passed": true
+        },
+        {
+          "name": "upload-size-tuple actual dimensions",
+          "actual": {
+            "width": 180,
+            "height": 5
+          },
+          "expected": {
+            "width": 180,
+            "height": 5
+          },
+          "passed": true
+        },
+        {
+          "name": "upload-size-priority actual dimensions",
+          "actual": {
+            "width": 180,
+            "height": 5
+          },
+          "expected": {
+            "width": 180,
+            "height": 5
+          },
+          "passed": true
+        },
+        {
+          "name": "progress-size-number actual dimensions",
+          "actual": {
+            "width": 24,
+            "height": 24
+          },
+          "expected": {
+            "width": 24,
+            "height": 24
+          },
+          "passed": true
+        },
+        {
+          "name": "progress-size-tuple actual dimensions",
+          "actual": {
+            "width": 180,
+            "height": 5
+          },
+          "expected": {
+            "width": 180,
+            "height": 5
+          },
+          "passed": true
+        },
+        {
+          "name": "upload-gradient-stops real gradient",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "upload-gradient-from-to real gradient",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "progress-gradient-stops real gradient",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "showInfo displays current fractional progress",
+          "actual": "55.5%",
+          "expected": "55.5%",
+          "passed": true
+        },
+        {
+          "name": "default hides information",
+          "actual": null,
+          "expected": null,
+          "passed": true
+        },
+        {
+          "name": "file accessible name",
+          "actual": "File default",
+          "expected": "File default",
+          "passed": true
+        },
+        {
+          "name": "configuration accessible name wins",
+          "actual": "Config progress",
+          "expected": "Config progress",
+          "passed": true
+        },
+        {
+          "name": "configuration labelledby wins",
+          "actual": "config-heading",
+          "expected": "config-heading",
+          "passed": true
+        },
+        {
+          "name": "Progress fraction",
+          "actual": "55.5",
+          "expected": "55.5",
+          "passed": true
+        },
+        {
+          "name": "Upload overflow ARIA",
+          "actual": "100",
+          "expected": "100",
+          "passed": true
+        },
+        {
+          "name": "Upload overflow track stays within rail",
+          "actual": 418,
+          "expected": 418,
+          "passed": true
+        },
+        {
+          "name": "Upload negative ARIA",
+          "actual": "0",
+          "expected": "0",
+          "passed": true
+        },
+        {
+          "name": "Upload zero track",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "explicit undefined percent means zero",
+          "actual": "0",
+          "expected": "0",
+          "passed": true
+        },
+        {
+          "name": "upload-percent-absent omits built-in bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "upload-status-done omits built-in bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "upload-status-error omits built-in bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "upload-hidden-list omits built-in bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "upload-item-slot omits built-in bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "picture one actual bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "upload-picture actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "picture-card one actual bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "upload-picture-card actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "picture-circle one actual bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "upload-picture-circle actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "dragger one actual bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "upload-dragger actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "custom prefix follows Provider",
+          "actual": "custom-progress",
+          "expected": "custom-progress",
+          "passed": true
+        },
+        {
+          "name": "dynamic numeric size updates body width",
+          "actual": 180,
+          "expected": 180,
+          "passed": true
+        },
+        {
+          "name": "dynamic numeric size clears old CSS string height",
+          "actual": 5,
+          "expected": 5,
+          "passed": true
+        },
+        {
+          "name": "dynamic gradient clears old solid paint",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "dynamic fractional value",
+          "actual": "72.25",
+          "expected": "72.25",
+          "passed": true
+        },
+        {
+          "name": "removed config aria falls back to file",
+          "actual": "Dynamic file",
+          "expected": "Dynamic file",
+          "passed": true
+        },
+        {
+          "name": "dynamic info uses current value",
+          "actual": "72.25%",
+          "expected": "72.25%",
+          "passed": true
+        },
+        {
+          "name": "CSS string overrides small preset",
+          "actual": 8,
+          "expected": 8,
+          "passed": true
+        },
+        {
+          "name": "removed config clears previous CSS string",
+          "actual": 2,
+          "expected": 2,
+          "passed": true
+        },
+        {
+          "name": "Provider replacement updates dimensions",
+          "actual": 160,
+          "expected": 160,
+          "passed": true
+        },
+        {
+          "name": "Provider replacement updates thickness",
+          "actual": 3,
+          "expected": 3,
+          "passed": true
+        },
+        {
+          "name": "RTL gradient direction",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "local ARIA still overrides new Provider",
+          "actual": "Local progress",
+          "expected": "Local progress",
+          "passed": true
+        },
+        {
+          "name": "removed Provider restores default",
+          "actual": 2,
+          "expected": 2,
+          "passed": true
+        },
+        {
+          "name": "dynamic-done removes owned bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "dynamic-hide-0 removes owned bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "dynamic-unmount-0 removes owned bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "dynamic-hide-1 removes owned bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "dynamic-unmount-1 removes owned bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "dynamic-percent-absent removes owned bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "dynamic-reupload restores one owned bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "dynamic-show-0 restores one owned bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "dynamic-remount-0 restores one owned bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "dynamic-show-1 restores one owned bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "dynamic-remount-1 restores one owned bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "dynamic-percent-return restores one owned bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "uncontrolled request progresses",
+          "actual": "63.5",
+          "expected": "63.5",
+          "passed": true
+        },
+        {
+          "name": "uncontrolled completion hides bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "request events preserve existing payloads",
+          "actual": [
+            {
+              "status": "uploading",
+              "percent": 0
+            },
+            {
+              "status": "uploading",
+              "percent": 63.5
+            },
+            {
+              "status": "done",
+              "percent": 100
+            }
+          ],
+          "expected": [
+            {
+              "status": "uploading",
+              "percent": 0
+            },
+            {
+              "status": "uploading",
+              "percent": 63.5
+            },
+            {
+              "status": "done",
+              "percent": 100
+            }
+          ],
+          "passed": true
+        },
+        {
+          "name": "100% uploading stays normal",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "100% uploading shows numeric info",
+          "actual": "100%",
+          "expected": "100%",
+          "passed": true
+        },
+        {
+          "name": "no runtime errors",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "no browser warnings",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "published artifacts unchanged while read",
+          "actual": {
+            "packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+            "packages/ui/dist/index.mjs": "1cdc056a3c74d15a0a76e9de29ce5645032e6ff8a9a903faaadd71e88bcfbf0d",
+            "packages/ui/dist/index.css": "36c7e73f74139332ac9f79d6f9bc4369548e75f8796eb5e55ff3f61cdc86e310",
+            "packages/ui/dist/upload/style.css": "79b8192222cead194a1cb7714324ca15b0ce6010bcbc6096b7472b9644146055",
+            "packages/ui/dist/progress/style.css": "28b25c90e12b1826d7aa76f2cffbf67d43d4fa74e6400303cf59df23be186c7b",
+            "packages/ui/dist/button/style.css": "907b91ebdbac5a8308207776b2c81c9c5ea3cf363ec523071be6156ee38f2170"
+          },
+          "expected": {
+            "packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+            "packages/ui/dist/index.mjs": "1cdc056a3c74d15a0a76e9de29ce5645032e6ff8a9a903faaadd71e88bcfbf0d",
+            "packages/ui/dist/index.css": "36c7e73f74139332ac9f79d6f9bc4369548e75f8796eb5e55ff3f61cdc86e310",
+            "packages/ui/dist/upload/style.css": "79b8192222cead194a1cb7714324ca15b0ce6010bcbc6096b7472b9644146055",
+            "packages/ui/dist/progress/style.css": "28b25c90e12b1826d7aa76f2cffbf67d43d4fa74e6400303cf59df23be186c7b",
+            "packages/ui/dist/button/style.css": "907b91ebdbac5a8308207776b2c81c9c5ea3cf363ec523071be6156ee38f2170"
+          },
+          "passed": true
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "readersExited": true,
+      "artifactBefore": {
+        "packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+        "packages/ui/dist/index.mjs": "1cdc056a3c74d15a0a76e9de29ce5645032e6ff8a9a903faaadd71e88bcfbf0d",
+        "packages/ui/dist/index.css": "36c7e73f74139332ac9f79d6f9bc4369548e75f8796eb5e55ff3f61cdc86e310",
+        "packages/ui/dist/upload/style.css": "79b8192222cead194a1cb7714324ca15b0ce6010bcbc6096b7472b9644146055",
+        "packages/ui/dist/progress/style.css": "28b25c90e12b1826d7aa76f2cffbf67d43d4fa74e6400303cf59df23be186c7b",
+        "packages/ui/dist/button/style.css": "907b91ebdbac5a8308207776b2c81c9c5ea3cf363ec523071be6156ee38f2170"
+      },
+      "artifactAfter": {
+        "packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+        "packages/ui/dist/index.mjs": "1cdc056a3c74d15a0a76e9de29ce5645032e6ff8a9a903faaadd71e88bcfbf0d",
+        "packages/ui/dist/index.css": "36c7e73f74139332ac9f79d6f9bc4369548e75f8796eb5e55ff3f61cdc86e310",
+        "packages/ui/dist/upload/style.css": "79b8192222cead194a1cb7714324ca15b0ce6010bcbc6096b7472b9644146055",
+        "packages/ui/dist/progress/style.css": "28b25c90e12b1826d7aa76f2cffbf67d43d4fa74e6400303cf59df23be186c7b",
+        "packages/ui/dist/button/style.css": "907b91ebdbac5a8308207776b2c81c9c5ea3cf363ec523071be6156ee38f2170"
+      }
+    },
+    "component": {
+      "sourceJs": true,
+      "stylesheet": "@apollo-design/ui/upload/style.css",
+      "staticCases": 45,
+      "dynamicStages": 20,
+      "checks": [
+        {
+          "name": "Provider updates preserve the actual trigger",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "Provider updates preserve trigger focus",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "upload-default actual rail height",
+          "actual": 2,
+          "expected": 2,
+          "passed": true
+        },
+        {
+          "name": "upload-empty-config actual rail height",
+          "actual": 2,
+          "expected": 2,
+          "passed": true
+        },
+        {
+          "name": "upload-stroke-number actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "upload-stroke-string actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "upload-stroke-rem actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "upload-size-small actual rail height",
+          "actual": 6,
+          "expected": 6,
+          "passed": true
+        },
+        {
+          "name": "upload-size-default actual rail height",
+          "actual": 8,
+          "expected": 8,
+          "passed": true
+        },
+        {
+          "name": "upload-size-number actual dimensions",
+          "actual": {
+            "width": 24,
+            "height": 24
+          },
+          "expected": {
+            "width": 24,
+            "height": 24
+          },
+          "passed": true
+        },
+        {
+          "name": "upload-size-tuple actual dimensions",
+          "actual": {
+            "width": 180,
+            "height": 5
+          },
+          "expected": {
+            "width": 180,
+            "height": 5
+          },
+          "passed": true
+        },
+        {
+          "name": "upload-size-priority actual dimensions",
+          "actual": {
+            "width": 180,
+            "height": 5
+          },
+          "expected": {
+            "width": 180,
+            "height": 5
+          },
+          "passed": true
+        },
+        {
+          "name": "progress-size-number actual dimensions",
+          "actual": {
+            "width": 24,
+            "height": 24
+          },
+          "expected": {
+            "width": 24,
+            "height": 24
+          },
+          "passed": true
+        },
+        {
+          "name": "progress-size-tuple actual dimensions",
+          "actual": {
+            "width": 180,
+            "height": 5
+          },
+          "expected": {
+            "width": 180,
+            "height": 5
+          },
+          "passed": true
+        },
+        {
+          "name": "upload-gradient-stops real gradient",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "upload-gradient-from-to real gradient",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "progress-gradient-stops real gradient",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "showInfo displays current fractional progress",
+          "actual": "55.5%",
+          "expected": "55.5%",
+          "passed": true
+        },
+        {
+          "name": "default hides information",
+          "actual": null,
+          "expected": null,
+          "passed": true
+        },
+        {
+          "name": "file accessible name",
+          "actual": "File default",
+          "expected": "File default",
+          "passed": true
+        },
+        {
+          "name": "configuration accessible name wins",
+          "actual": "Config progress",
+          "expected": "Config progress",
+          "passed": true
+        },
+        {
+          "name": "configuration labelledby wins",
+          "actual": "config-heading",
+          "expected": "config-heading",
+          "passed": true
+        },
+        {
+          "name": "Progress fraction",
+          "actual": "55.5",
+          "expected": "55.5",
+          "passed": true
+        },
+        {
+          "name": "Upload overflow ARIA",
+          "actual": "100",
+          "expected": "100",
+          "passed": true
+        },
+        {
+          "name": "Upload overflow track stays within rail",
+          "actual": 418,
+          "expected": 418,
+          "passed": true
+        },
+        {
+          "name": "Upload negative ARIA",
+          "actual": "0",
+          "expected": "0",
+          "passed": true
+        },
+        {
+          "name": "Upload zero track",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "explicit undefined percent means zero",
+          "actual": "0",
+          "expected": "0",
+          "passed": true
+        },
+        {
+          "name": "upload-percent-absent omits built-in bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "upload-status-done omits built-in bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "upload-status-error omits built-in bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "upload-hidden-list omits built-in bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "upload-item-slot omits built-in bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "picture one actual bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "upload-picture actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "picture-card one actual bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "upload-picture-card actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "picture-circle one actual bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "upload-picture-circle actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "dragger one actual bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "upload-dragger actual rail height",
+          "actual": 4,
+          "expected": 4,
+          "passed": true
+        },
+        {
+          "name": "custom prefix follows Provider",
+          "actual": "custom-progress",
+          "expected": "custom-progress",
+          "passed": true
+        },
+        {
+          "name": "dynamic numeric size updates body width",
+          "actual": 180,
+          "expected": 180,
+          "passed": true
+        },
+        {
+          "name": "dynamic numeric size clears old CSS string height",
+          "actual": 5,
+          "expected": 5,
+          "passed": true
+        },
+        {
+          "name": "dynamic gradient clears old solid paint",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "dynamic fractional value",
+          "actual": "72.25",
+          "expected": "72.25",
+          "passed": true
+        },
+        {
+          "name": "removed config aria falls back to file",
+          "actual": "Dynamic file",
+          "expected": "Dynamic file",
+          "passed": true
+        },
+        {
+          "name": "dynamic info uses current value",
+          "actual": "72.25%",
+          "expected": "72.25%",
+          "passed": true
+        },
+        {
+          "name": "CSS string overrides small preset",
+          "actual": 8,
+          "expected": 8,
+          "passed": true
+        },
+        {
+          "name": "removed config clears previous CSS string",
+          "actual": 2,
+          "expected": 2,
+          "passed": true
+        },
+        {
+          "name": "Provider replacement updates dimensions",
+          "actual": 160,
+          "expected": 160,
+          "passed": true
+        },
+        {
+          "name": "Provider replacement updates thickness",
+          "actual": 3,
+          "expected": 3,
+          "passed": true
+        },
+        {
+          "name": "RTL gradient direction",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "local ARIA still overrides new Provider",
+          "actual": "Local progress",
+          "expected": "Local progress",
+          "passed": true
+        },
+        {
+          "name": "removed Provider restores default",
+          "actual": 2,
+          "expected": 2,
+          "passed": true
+        },
+        {
+          "name": "dynamic-done removes owned bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "dynamic-hide-0 removes owned bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "dynamic-unmount-0 removes owned bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "dynamic-hide-1 removes owned bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "dynamic-unmount-1 removes owned bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "dynamic-percent-absent removes owned bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "dynamic-reupload restores one owned bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "dynamic-show-0 restores one owned bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "dynamic-remount-0 restores one owned bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "dynamic-show-1 restores one owned bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "dynamic-remount-1 restores one owned bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "dynamic-percent-return restores one owned bar",
+          "actual": 1,
+          "expected": 1,
+          "passed": true
+        },
+        {
+          "name": "uncontrolled request progresses",
+          "actual": "63.5",
+          "expected": "63.5",
+          "passed": true
+        },
+        {
+          "name": "uncontrolled completion hides bar",
+          "actual": 0,
+          "expected": 0,
+          "passed": true
+        },
+        {
+          "name": "request events preserve existing payloads",
+          "actual": [
+            {
+              "status": "uploading",
+              "percent": 0
+            },
+            {
+              "status": "uploading",
+              "percent": 63.5
+            },
+            {
+              "status": "done",
+              "percent": 100
+            }
+          ],
+          "expected": [
+            {
+              "status": "uploading",
+              "percent": 0
+            },
+            {
+              "status": "uploading",
+              "percent": 63.5
+            },
+            {
+              "status": "done",
+              "percent": 100
+            }
+          ],
+          "passed": true
+        },
+        {
+          "name": "100% uploading stays normal",
+          "actual": true,
+          "expected": true,
+          "passed": true
+        },
+        {
+          "name": "100% uploading shows numeric info",
+          "actual": "100%",
+          "expected": "100%",
+          "passed": true
+        },
+        {
+          "name": "no runtime errors",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "no browser warnings",
+          "actual": [],
+          "expected": [],
+          "passed": true
+        },
+        {
+          "name": "published artifacts unchanged while read",
+          "actual": {
+            "packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+            "packages/ui/dist/index.mjs": "1cdc056a3c74d15a0a76e9de29ce5645032e6ff8a9a903faaadd71e88bcfbf0d",
+            "packages/ui/dist/index.css": "36c7e73f74139332ac9f79d6f9bc4369548e75f8796eb5e55ff3f61cdc86e310",
+            "packages/ui/dist/upload/style.css": "79b8192222cead194a1cb7714324ca15b0ce6010bcbc6096b7472b9644146055",
+            "packages/ui/dist/progress/style.css": "28b25c90e12b1826d7aa76f2cffbf67d43d4fa74e6400303cf59df23be186c7b",
+            "packages/ui/dist/button/style.css": "907b91ebdbac5a8308207776b2c81c9c5ea3cf363ec523071be6156ee38f2170"
+          },
+          "expected": {
+            "packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+            "packages/ui/dist/index.mjs": "1cdc056a3c74d15a0a76e9de29ce5645032e6ff8a9a903faaadd71e88bcfbf0d",
+            "packages/ui/dist/index.css": "36c7e73f74139332ac9f79d6f9bc4369548e75f8796eb5e55ff3f61cdc86e310",
+            "packages/ui/dist/upload/style.css": "79b8192222cead194a1cb7714324ca15b0ce6010bcbc6096b7472b9644146055",
+            "packages/ui/dist/progress/style.css": "28b25c90e12b1826d7aa76f2cffbf67d43d4fa74e6400303cf59df23be186c7b",
+            "packages/ui/dist/button/style.css": "907b91ebdbac5a8308207776b2c81c9c5ea3cf363ec523071be6156ee38f2170"
+          },
+          "passed": true
+        }
+      ],
+      "errors": [],
+      "warnings": [],
+      "readersExited": true,
+      "artifactBefore": {
+        "packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+        "packages/ui/dist/index.mjs": "1cdc056a3c74d15a0a76e9de29ce5645032e6ff8a9a903faaadd71e88bcfbf0d",
+        "packages/ui/dist/index.css": "36c7e73f74139332ac9f79d6f9bc4369548e75f8796eb5e55ff3f61cdc86e310",
+        "packages/ui/dist/upload/style.css": "79b8192222cead194a1cb7714324ca15b0ce6010bcbc6096b7472b9644146055",
+        "packages/ui/dist/progress/style.css": "28b25c90e12b1826d7aa76f2cffbf67d43d4fa74e6400303cf59df23be186c7b",
+        "packages/ui/dist/button/style.css": "907b91ebdbac5a8308207776b2c81c9c5ea3cf363ec523071be6156ee38f2170"
+      },
+      "artifactAfter": {
+        "packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+        "packages/ui/dist/index.mjs": "1cdc056a3c74d15a0a76e9de29ce5645032e6ff8a9a903faaadd71e88bcfbf0d",
+        "packages/ui/dist/index.css": "36c7e73f74139332ac9f79d6f9bc4369548e75f8796eb5e55ff3f61cdc86e310",
+        "packages/ui/dist/upload/style.css": "79b8192222cead194a1cb7714324ca15b0ce6010bcbc6096b7472b9644146055",
+        "packages/ui/dist/progress/style.css": "28b25c90e12b1826d7aa76f2cffbf67d43d4fa74e6400303cf59df23be186c7b",
+        "packages/ui/dist/button/style.css": "907b91ebdbac5a8308207776b2c81c9c5ea3cf363ec523071be6156ee38f2170"
+      }
+    }
+  },
+  "oldRuntimeReferences": 0,
+  "oldFileRemoved": true,
+  "packageBuildRun": false,
+  "distWritten": false,
+  "visualBaselineUpdated": false,
+  "sharedMetadataOwnedByParent": true,
+  "pending": [
+    "Published JS/declarations/exports verification after coordinated package build",
+    "Formal Apollo visual acceptance",
+    "Docs build and browser acceptance",
+    "Full repository gates on final integration commit"
+  ],
+  "manifestDoesNotHashItself": true
+}

@@ -4,7 +4,7 @@
  * ## 文件头判据
  *
  * 1. **三形态分发**：line（纯线）/ line+steps / circle|dashboard（SVG 内核自研）。
- * 2. **role="progressbar"** + aria-valuenow（parseInt(success?.percent ?? percent)）。
+ * 2. **role="progressbar"** + 有限的 aria-valuenow（保留小数，限制到 0–100）。
  * 3. **status 推导**：非法 status 且 percent>=100 ⇒ success；否则 status||normal。
  * 4. **indicator**：format || `${n}%`；exception/success ⇒ 图标（line 用 Filled 系列）；
  *    `-indicator-bright`（strokeColor 亮色且 inner，isLight 自研）。
@@ -151,6 +151,12 @@ const ProgressComponent = defineComponent({
         String(successPercent !== undefined ? (successPercent ?? 0) : (percent.value ?? 0)),
         10,
       );
+    });
+
+    const accessiblePercent = computed(() => {
+      const successPercent = getSuccessPercent({ success: props.success });
+      const value = successPercent !== undefined ? successPercent : percent.value;
+      return typeof value === 'number' && Number.isFinite(value) ? validProgress(value) : 0;
     });
 
     const progressStatus = computed<ProgressStatus>(() => {
@@ -349,7 +355,7 @@ const ProgressComponent = defineComponent({
           },
           class: classString,
           role: 'progressbar',
-          'aria-valuenow': percentNumber.value,
+          'aria-valuenow': accessiblePercent.value,
           'aria-valuemin': 0,
           'aria-valuemax': 100,
           // aria-label / aria-labelledby（antd AriaProps）走 attrs 透传 —— Vue 不把
