@@ -1,8 +1,9 @@
-import { createThemeContext, ThemeProvider, useTheme } from '@apollo-design/theme';
+import { createThemeContext, getDesignToken, ThemeProvider, useTheme } from '@apollo-design/theme';
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
 import ConfigProvider from '../ConfigProvider';
+import { useThemeConfig } from '../context';
 
 const wrappers: Array<{ unmount(): void }> = [];
 afterEach(() => {
@@ -21,6 +22,12 @@ const Probe = defineComponent({
       });
   },
 });
+const ConfigProbe = defineComponent({
+  setup() {
+    const theme = useThemeConfig();
+    return () => h('span', { 'data-config-font': String(getDesignToken(theme.value).fontSize) });
+  },
+});
 function render(render: () => ReturnType<typeof h>) {
   const wrapper = mount(defineComponent({ render }), {
     attachTo: document.body,
@@ -31,6 +38,22 @@ function render(render: () => ReturnType<typeof h>) {
 }
 
 describe('Theme source identity and nearest Vue provider', () => {
+  it.each([undefined, 18])(
+    'reads the nearest ThemeProvider config for data consumers (%s)',
+    async (fontSize) => {
+      const wrapper = render(() =>
+        h(ConfigProvider, { theme: { token: { fontSize: 12 } } }, () =>
+          h(ThemeProvider, { theme: fontSize === undefined ? {} : { token: { fontSize } } }, () =>
+            h(ConfigProbe),
+          ),
+        ),
+      );
+      await nextTick();
+      expect(wrapper.get('[data-config-font]').attributes('data-config-font')).toBe(
+        String(fontSize ?? 14),
+      );
+    },
+  );
   it('marks an explicit empty factory context as an active source', () => {
     const theme = createThemeContext({});
     expect(theme.sourceActive?.value).toBe(true);

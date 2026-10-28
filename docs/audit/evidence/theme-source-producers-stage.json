@@ -23,5 +23,24 @@
     "Published theme+UI build",
     "Complete related consumer regression",
     "Final whole-library gates"
-  ]
+  ],
+  "readerStage": {
+    "scope": "useThemeConfig data readers select the nearest active ThemeContext, including explicit empty ThemeProvider",
+    "red": {
+      "total": 10,
+      "passed": 8,
+      "failed": 2
+    },
+    "green": {
+      "total": 100,
+      "passed": 100,
+      "failed": 0
+    },
+    "command": "pnpm exec vitest run --project unit packages/ui/src/config-provider/__tests__ packages/theme/src/__tests__/vue.test.ts --reporter=json --outputFile=/tmp/apollo-theme-source-producer-reader-green.json",
+    "exitCode": 0,
+    "sourceFiles": {
+      "packages/ui/src/config-provider/context.ts": "255d5b50fcd59baecc97ef4267ebb75db808f5e77c49398ae4e0599cd6d559fe",
+      "packages/ui/src/config-provider/__tests__/theme-source-presence.test.ts": "753ecb6781a8d42dbaa10395bc7f89e18f148ea2f5af4d2a505466567b25add6"
+    }
+  }
 }

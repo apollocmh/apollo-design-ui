@@ -11,7 +11,7 @@
  * `empty`，若类型反向依赖它就会形成 `empty → context → defaultRenderEmpty → empty` 的环。
  */
 
-import type { ThemeConfig } from '@apollo-design/theme';
+import { type ThemeConfig, ThemeContextKey } from '@apollo-design/theme';
 import {
   type ComputedRef,
   type CSSProperties,
@@ -220,7 +220,10 @@ export function useDirection(): ComputedRef<DirectionType | undefined> {
  */
 export function useThemeConfig(): ComputedRef<ThemeConfig | undefined> {
   const context = useConfigContext();
-  return computed(() => context.theme);
+  const theme = inject(ThemeContextKey, undefined);
+  return computed(() =>
+    theme && theme.sourceActive?.value !== false ? theme.config.value : context.theme,
+  );
 }
 
 /**
