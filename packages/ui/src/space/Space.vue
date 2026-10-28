@@ -85,7 +85,7 @@ export default defineComponent({
     );
     const theme = useTheme();
     const themeStyle = computed(() =>
-      Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : {},
+      theme.sourceActive?.value !== false ? transformToken(theme.token.value).vars : {},
     );
     const rootRef = ref<HTMLDivElement | null>(null);
     useSpaceFocus(rootRef);

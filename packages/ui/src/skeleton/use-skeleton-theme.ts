@@ -11,7 +11,7 @@ const dimension = (value: unknown, fallback: number): number =>
 export function useSkeletonTheme(getPrefix: () => string) {
   const theme = useTheme();
   const styles = computed<Record<string, string>>(() => {
-    if (!Object.keys(theme.config.value).length) return {};
+    if (theme.sourceActive?.value === false) return {};
     const custom = theme.config.value.components?.Skeleton ?? {};
     const base = prepareComponentToken(theme.token.value);
     const from = color(custom.gradientFromColor) ?? color(custom.color) ?? base.gradientFromColor;

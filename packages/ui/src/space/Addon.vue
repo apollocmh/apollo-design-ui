@@ -62,7 +62,7 @@ const direction = useDirection();
 const prefixCls = computed(() => config.getPrefixCls('space-addon', props.prefixCls));
 const theme = useTheme();
 const themeStyle = computed(() =>
-  Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : {},
+  theme.sourceActive?.value !== false ? transformToken(theme.token.value).vars : {},
 );
 
 /**

@@ -39,7 +39,7 @@ export function useListTheme(getPrefixCls: () => string, isBordered: () => boole
     };
   });
   const styles = computed<Record<string, string>>(() => {
-    if (!Object.keys(theme.config.value).length) return {};
+    if (theme.sourceActive?.value === false) return {};
     const p = getPrefixCls();
     const t = token.value;
     return {

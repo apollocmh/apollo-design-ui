@@ -41,7 +41,7 @@ export function useButtonTheme(prefix: () => string) {
   let source = sources.get(theme);
   if (!source) {
     source = computed(() => {
-      if (!Object.keys(theme.config.value).length) return undefined;
+      if (theme.sourceActive?.value === false) return undefined;
       const custom = theme.config.value.components?.Button ?? {};
       const token = theme.token.value;
       const base = prepareComponentToken({

@@ -50,7 +50,7 @@ export default defineComponent({
     useSpaceFocus(rootRef);
     const theme = useTheme();
     const themeStyle = computed(() =>
-      Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : {},
+      theme.sourceActive?.value !== false ? transformToken(theme.token.value).vars : {},
     );
 
     const warning = useDevWarning('Space.Compact');

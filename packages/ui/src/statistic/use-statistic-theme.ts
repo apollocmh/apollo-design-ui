@@ -5,7 +5,7 @@ import { prepareComponentToken } from './style/token';
 export function useStatisticTheme(getPrefix: () => string) {
   const theme = useTheme();
   const styles = computed<Record<string, string>>(() => {
-    if (!Object.keys(theme.config.value).length) return {};
+    if (theme.sourceActive?.value === false) return {};
     const base = prepareComponentToken(theme.token.value);
     const custom = theme.config.value.components?.Statistic;
     const length = (value: unknown, fallback: number) =>

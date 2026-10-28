@@ -19,7 +19,7 @@ function color(value: unknown, fallback: string | undefined): string | undefined
 export function useTimelineTheme(prefix: () => string) {
   const theme = useTheme();
   return computed<Record<string, string>>(() => {
-    if (!Object.keys(theme.config.value).length) return {};
+    if (theme.sourceActive?.value === false) return {};
     const base = prepareComponentToken(theme.token.value);
     const custom = theme.config.value.components?.Timeline ?? {};
     const style: Record<string, string> = { ...transformToken(theme.token.value).vars };

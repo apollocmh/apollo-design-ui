@@ -1,0 +1,77 @@
+{
+  "scope": "All 21 stable Alias consumers, with Input/Alert/Layout handled in their own source commits; published acceptance remains open",
+  "sourceBaseAtCapture": "627d8a09c9290a53da91f6cc58410a58f654f23a",
+  "producerCommit": "5c527297",
+  "dataReaderCommit": "134ddbf7",
+  "layoutFallbackCommit": "627d8a09",
+  "inputCommit": "9ff107ec",
+  "red": {
+    "stableWriters": {
+      "total": 86,
+      "passed": 31,
+      "failed": 55
+    },
+    "familyFallbackAfterLayoutFix": {
+      "total": 6,
+      "passed": 5,
+      "failed": 1
+    }
+  },
+  "green": {
+    "writerAndFallbackUnit": {
+      "files": 2,
+      "total": 118,
+      "passed": 118,
+      "failed": 0,
+      "exitCode": 0,
+      "command": "pnpm exec vitest run --project unit packages/ui/src/_internal/__tests__/theme-default-source.test.ts packages/ui/src/_internal/__tests__/theme-source-writers.test.ts --maxWorkers=2"
+    },
+    "previousIntegrationBeforeFinalFallbackFixes": {
+      "files": 72,
+      "total": 1966,
+      "passed": 1966,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "spaceContractCorrection": {
+      "total": 28,
+      "passed": 28,
+      "failed": 0,
+      "exitCode": 0
+    }
+  },
+  "sourceFiles": {
+    "packages/ui/src/_internal/trigger.ts": "119fdf0545da83cb67114c042072df95f33a6e8cf0b5ac03d126758ac66572d8",
+    "packages/ui/src/result/Result.vue": "d86da5e04f19a0281f5ac28126ac6cccb83455c199c21879c7be055c02dc50b0",
+    "packages/ui/src/skeleton/use-skeleton-theme.ts": "cdbaf3c34a6629310a65a120bd452cf7d1548fcf91e0d22471a16e1863872672",
+    "packages/ui/src/descriptions/use-descriptions-theme.ts": "7fda34e310ee304c6ff34c172760d6b5dfa2f81f75cd47416c9ab2804f4aa8f1",
+    "packages/ui/src/spin/use-spin-theme.ts": "60623c25c8fbf08e4beed1a0923911544ad646cf2b16714ccf45976305500b43",
+    "packages/ui/src/qr-code/use-qrcode-theme.ts": "8582351130f3232267dce72e5149103be150a48c71439bce3853ffa67dac9775",
+    "packages/ui/src/button/use-button-theme.ts": "b837b5235d75d50d1363333f0c2158747159ced93705330a40dc343080354dbe",
+    "packages/ui/src/table/use-table-theme.ts": "c2d0ecc76f0479f1b3d666e9345a08cc835bfe2814966196ee83a30d335ca764",
+    "packages/ui/src/list/use-list-theme.ts": "a8b9814150c77eb6ac91c6e70ba4365e24fc0f51f38f6ef18a1a2eac465c9064",
+    "packages/ui/src/avatar/use-avatar-theme.ts": "171383af8dd36138a511f5e1232f61ff83cf72f53a7eab6dbc8e8f346f7fdfde",
+    "packages/ui/src/typography/use-typography-theme.ts": "437e9535d98c7837ebd0e70942a2af1f8b520dd4c22b17cfb7b5df84b1599f19",
+    "packages/ui/src/statistic/use-statistic-theme.ts": "6486598aa4e01c0e3ef56d09ff6e3986dcfdcd15a7b82813c7cf1ddda6b6906d",
+    "packages/ui/src/breadcrumb/use-breadcrumb-theme.ts": "8f16f75776a57ad8e1acbacbe3e48074e680983e6e6cf5755af6d273993a0750",
+    "packages/ui/src/space/Space.vue": "dcc67d75d0ae9fd375300de4e5d054b993a34bf5362a37045b9cfae238371994",
+    "packages/ui/src/space/Addon.vue": "db6b9589f4543def15c74e29d6d2c0769c217b8a20a2f3ad0efbc73da27a4045",
+    "packages/ui/src/space/Compact.vue": "705be3bfd93876d1fb229dbd18fdabe36dffe14ed9173bf898938048d9639100",
+    "packages/ui/src/timeline/use-theme.ts": "a3b1e99d9e86d485c547c50fe81e1926cbcd1f769db0a56225edf4e56825a180",
+    "packages/ui/src/badge/use-badge-theme.ts": "a5e0c81e5b9437c4a7c7227c4a4253eb93207e79cda2264beedacbf9d62c3fff",
+    "packages/ui/src/image/hooks/useImageTheme.ts": "2e2d5ca38053e1cd68f8c1c224984df07b5dca97bfb7f2835a8807ed504fe882",
+    "packages/ui/src/tag/hooks/use-theme.ts": "8e9af160a946de7dc1514d8d6ec7a88b2bd8becb53523c7ae44aa2adaec9cc12",
+    "packages/ui/src/flex/Flex.vue": "c714153e349c6c7b814bdb663eca80956adfacb8a485802c85fd37d99572190c"
+  },
+  "testFiles": {
+    "packages/ui/src/_internal/__tests__/theme-default-source.test.ts": "785bf373aec2e287393dc9b9f8019faa21cccffffe4e44fc6aa338681da1c614",
+    "packages/ui/src/_internal/__tests__/theme-source-writers.test.ts": "66701d7e79c499f397cf73657a1ca8d78084ca82060b5ec0a28a582305c4e863",
+    "packages/ui/src/space/__tests__/contracts.test.ts": "769a3f2a53a29a070ca27dfca7a287f92dfd4b47b6f3e132e41b024707ea541c"
+  },
+  "remaining": [
+    "Final browser harness/SSR provenance",
+    "Fresh published Theme and UI builds",
+    "Complete published consumer and native visual acceptance",
+    "Docs and final whole-library gates"
+  ]
+}

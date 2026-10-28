@@ -222,7 +222,7 @@ export const Trigger = defineComponent({
     // Native Portal keeps injection, but leaves the Provider's DOM/CSS scope.
     // Apply the current source aliases to the popup itself; local popup styles still win.
     const popupThemeStyle = computed(() =>
-      Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : undefined,
+      theme.sourceActive?.value !== false ? transformToken(theme.token.value).vars : undefined,
     );
     // ============================ Overlay ============================
     // 开合 / 事件 / 延迟 / Esc / 外部点击 —— 全部委托 overlay。

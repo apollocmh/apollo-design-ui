@@ -16,7 +16,7 @@ export function useTagTheme(prefix: () => string) {
   let cached = sources.get(theme);
   if (!cached) {
     cached = computed(() => {
-      if (!Object.keys(theme.config.value).length) return undefined;
+      if (theme.sourceActive?.value === false) return undefined;
       const aliases: Record<string, string> = {},
         variables = transformToken(theme.token.value).vars;
       for (const key of tagAliasVariables)

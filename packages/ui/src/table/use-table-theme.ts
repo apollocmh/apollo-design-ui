@@ -74,7 +74,7 @@ export function useTableTheme(prefix: () => string) {
   let source = sources.get(theme);
   if (!source) {
     source = computed(() => {
-      if (!Object.keys(theme.config.value).length) return undefined;
+      if (theme.sourceActive?.value === false) return undefined;
       const variables = transformToken(theme.token.value).vars,
         selected: Record<string, string> = {};
       for (const key of aliases) {

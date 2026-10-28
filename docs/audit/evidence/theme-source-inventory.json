@@ -1,0 +1,3542 @@
+{
+  "scope": "Complete current-unit inventory, collected before the grouped source-presence changes; this is not a final source freeze or a full Theme package acceptance",
+  "snapshotAcquiredAt": "2026-10-28T20:36:16.034692+00:00",
+  "notARepositoryFreeze": true,
+  "scanAtCollection": {
+    "scannedFiles": 844,
+    "runtimeImportFiles": 102,
+    "namespaceImports": 0,
+    "runtimeReexports": 0,
+    "counts": {
+      "context-data-consumer": 6,
+      "component-alias-writer": 24,
+      "css-variable-name-consumer": 32,
+      "style-or-default-token-function": 33,
+      "pure-token-math": 1,
+      "provider-and-dom-writer": 1,
+      "component-token-calculation": 5
+    },
+    "at": "2026-10-28T21:19:55.210Z",
+    "currentSourceChangedSinceSnapshot": [
+      "packages/ui/src/alert/style/token.ts",
+      "packages/ui/src/alert/use-alert-theme.ts",
+      "packages/ui/src/config-provider/ConfigProvider.ts",
+      "packages/ui/src/layout/style/defaults.ts",
+      "packages/ui/src/layout/style/index.ts",
+      "packages/ui/src/layout/style/sider.ts",
+      "packages/ui/src/layout/use-layout-theme.ts"
+    ]
+  },
+  "runtimeThemeImportsAtCollection": [
+    {
+      "file": "packages/ui/src/_internal/responsive-observer.ts",
+      "imports": [
+        {
+          "imported": "useToken",
+          "local": "useToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 142,
+          "expression": "useToken()"
+        }
+      ],
+      "sha256": "a421465f147e806060c452f4162882c7b9c7e6a7219e573e541d94f2bb4932e0",
+      "currentSourceSHA": "a421465f147e806060c452f4162882c7b9c7e6a7219e573e541d94f2bb4932e0",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "context-data-consumer",
+      "role": "useToken → validateBreakpoints → matchMedia订阅；默认Token始终可用，不按sourceActive停用JS。"
+    },
+    {
+      "file": "packages/ui/src/_internal/trigger.ts",
+      "imports": [
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 221,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 225,
+          "expression": "transformToken(theme.token.value)"
+        }
+      ],
+      "sha256": "c04805dd517ca9cdef55814c50a86d0d5048198d56d670c4dca44e6816127b35",
+      "currentSourceSHA": "c04805dd517ca9cdef55814c50a86d0d5048198d56d670c4dca44e6816127b35",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : undefined,",
+      "guardKind": "config-empty-only",
+      "guardLine": 225,
+      "directRuntimeConsumers": [
+        "packages/ui/src/date-picker/DatePicker.vue",
+        "packages/ui/src/date-picker/RangePicker.vue",
+        "packages/ui/src/dropdown/Dropdown.ts",
+        "packages/ui/src/mentions/engine/KeywordTrigger.ts",
+        "packages/ui/src/menu/SubMenu.ts",
+        "packages/ui/src/select/engine/BaseSelect.ts",
+        "packages/ui/src/tooltip/Tooltip.ts",
+        "packages/ui/src/tour/Tour.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/alert/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 18,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "3ca83de5b1ff9c6503c561d40ca9181f70c46d1c2275e8018ff2389388584092",
+      "currentSourceSHA": "3ca83de5b1ff9c6503c561d40ca9181f70c46d1c2275e8018ff2389388584092",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/alert/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 27,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "96e6eb034eba8492cf03757a67082de58648fac3df66e55e377ebf40f84a7ef0",
+      "currentSourceSHA": "766f9f8bc4fdb38d5fb0914b9eb39e0337e741c1ab9fe68f91d98d18445a8cf3",
+      "currentSourceStillMatchesSnapshot": false,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/alert/use-alert-theme.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        },
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 45,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 48,
+          "expression": "transformToken(theme.token.value)"
+        },
+        {
+          "kind": "call",
+          "line": 51,
+          "expression": "token2CSSVar(alias)"
+        },
+        {
+          "kind": "call",
+          "line": 63,
+          "expression": "token2CSSVar(key, prefix())"
+        }
+      ],
+      "sha256": "9aaaad8112e80f908a76867bd4568da59523d336ff43805a8d536de777162602",
+      "currentSourceSHA": "72850e946b77ad5df2cb1e7782bdab6c890952e0b9a0531cf5d64347aa16ecbe",
+      "currentSourceStillMatchesSnapshot": false,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "guardKind": "config-empty-only",
+      "guardLine": 47,
+      "directRuntimeConsumers": [
+        "packages/ui/src/alert/Alert.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/anchor/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 48,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 58,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "b3d00d1e55e94c482fab29a7231880ca669b56b5447ddf41539588c3059f956f",
+      "currentSourceSHA": "b3d00d1e55e94c482fab29a7231880ca669b56b5447ddf41539588c3059f956f",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/avatar/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 8,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 14,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "6dc709b4d5aeaca0e216f948af3d3f0724b231a83b5c7e37aea2332261d33ea4",
+      "currentSourceSHA": "6dc709b4d5aeaca0e216f948af3d3f0724b231a83b5c7e37aea2332261d33ea4",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/avatar/use-avatar-theme.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        },
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 25,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 30,
+          "expression": "transformToken(theme.token.value)"
+        },
+        {
+          "kind": "call",
+          "line": 33,
+          "expression": "token2CSSVar(key)"
+        },
+        {
+          "kind": "call",
+          "line": 60,
+          "expression": "token2CSSVar(key, prefix())"
+        }
+      ],
+      "sha256": "fed74b13da713cddde36e9f3e265971ec32b55854a634cdfe2919374b0ad5ab8",
+      "currentSourceSHA": "fed74b13da713cddde36e9f3e265971ec32b55854a634cdfe2919374b0ad5ab8",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "guardKind": "config-empty-only",
+      "guardLine": 29,
+      "directRuntimeConsumers": [
+        "packages/ui/src/avatar/Avatar.vue",
+        "packages/ui/src/avatar/AvatarGroup.vue"
+      ]
+    },
+    {
+      "file": "packages/ui/src/back-top/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 19,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "865db6567eaf2570fbbdf624701e9669977c9bfbc3aa75c645e03eaf04bcf743",
+      "currentSourceSHA": "865db6567eaf2570fbbdf624701e9669977c9bfbc3aa75c645e03eaf04bcf743",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/badge/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 37,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "04cba45694a4de7463e2920ad043849962b6426ea0969e39f541df3ad730ba9c",
+      "currentSourceSHA": "04cba45694a4de7463e2920ad043849962b6426ea0969e39f541df3ad730ba9c",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/badge/use-badge-theme.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        },
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 39,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 44,
+          "expression": "transformToken(theme.token.value)"
+        },
+        {
+          "kind": "call",
+          "line": 47,
+          "expression": "token2CSSVar(key)"
+        },
+        {
+          "kind": "call",
+          "line": 77,
+          "expression": "token2CSSVar(key, prefix())"
+        }
+      ],
+      "sha256": "34c01397cba874634281a16ebe9790f485af5c33b4f414d73a3e21d20808fee6",
+      "currentSourceSHA": "34c01397cba874634281a16ebe9790f485af5c33b4f414d73a3e21d20808fee6",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "guardKind": "config-empty-only",
+      "guardLine": 43,
+      "directRuntimeConsumers": [
+        "packages/ui/src/badge/BadgeIndicator.vue",
+        "packages/ui/src/badge/Ribbon.vue"
+      ]
+    },
+    {
+      "file": "packages/ui/src/border-beam/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 20,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "debcfc5ae51ec18339a76531a14c5c7ddbc9e64842b8acf77a9ad0e26e108ebc",
+      "currentSourceSHA": "debcfc5ae51ec18339a76531a14c5c7ddbc9e64842b8acf77a9ad0e26e108ebc",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/breadcrumb/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 9,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 15,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "60816bc065ca29785ab7e482c7cfb1e9ec01a7679b62d1e4f84278ad9e3ddeec",
+      "currentSourceSHA": "60816bc065ca29785ab7e482c7cfb1e9ec01a7679b62d1e4f84278ad9e3ddeec",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/breadcrumb/use-breadcrumb-theme.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        },
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 27,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 32,
+          "expression": "transformToken(theme.token.value)"
+        },
+        {
+          "kind": "call",
+          "line": 35,
+          "expression": "token2CSSVar(key)"
+        },
+        {
+          "kind": "call",
+          "line": 58,
+          "expression": "token2CSSVar(key, prefix())"
+        }
+      ],
+      "sha256": "13d7a390060f445f0078fbc533952cfd2586506348f94f36cdea19751cff3dd2",
+      "currentSourceSHA": "13d7a390060f445f0078fbc533952cfd2586506348f94f36cdea19751cff3dd2",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "guardKind": "config-empty-only",
+      "guardLine": 31,
+      "directRuntimeConsumers": [
+        "packages/ui/src/breadcrumb/Breadcrumb.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/button/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "PresetColors",
+          "local": "PresetColors"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 9,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 11,
+          "expression": "token2CSSVar(token, 'apollo-btn')"
+        },
+        {
+          "kind": "call",
+          "line": 15,
+          "expression": "token2CSSVar(token, '')"
+        },
+        {
+          "kind": "call",
+          "line": 25,
+          "expression": "getDesignToken()"
+        },
+        {
+          "kind": "call",
+          "line": 214,
+          "expression": "getDesignToken()"
+        },
+        {
+          "kind": "call",
+          "line": 217,
+          "expression": "token2CSSVar(name, 'apollo-btn')"
+        },
+        {
+          "kind": "call",
+          "line": 608,
+          "expression": "token2CSSVar(`tone-${token2CSSVar(token, '').slice(2)}`, 'apollo-btn')"
+        },
+        {
+          "kind": "call",
+          "line": 608,
+          "expression": "token2CSSVar(token, '')"
+        }
+      ],
+      "sha256": "0a76cd9f327b442b14fb4a24b5c2d73b059a7154d0771edb879f4a0740226e1f",
+      "currentSourceSHA": "0a76cd9f327b442b14fb4a24b5c2d73b059a7154d0771edb879f4a0740226e1f",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/button/style/token.ts",
+      "imports": [
+        {
+          "imported": "getAlphaColor",
+          "local": "getAlphaColor"
+        },
+        {
+          "imported": "getLineHeight",
+          "local": "getLineHeight"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 153,
+          "expression": "getLineHeight(size)"
+        },
+        {
+          "kind": "call",
+          "line": 159,
+          "expression": "getAlphaColor(token[`${color}1`], token.colorBgContainer)"
+        }
+      ],
+      "sha256": "c26d59ea1b6931ef0176c2779a939f0092b06aa5aa49ba58a710385a1e3b219a",
+      "currentSourceSHA": "c26d59ea1b6931ef0176c2779a939f0092b06aa5aa49ba58a710385a1e3b219a",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "pure-token-math",
+      "role": "getAlphaColor/getLineHeight → Button组件Token派生；无Context、无Alias复制。"
+    },
+    {
+      "file": "packages/ui/src/button/use-button-theme.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        },
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 40,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 60,
+          "expression": "transformToken(token)"
+        },
+        {
+          "kind": "call",
+          "line": 62,
+          "expression": "token2CSSVar(name)"
+        },
+        {
+          "kind": "call",
+          "line": 96,
+          "expression": "token2CSSVar(name, prefix())"
+        }
+      ],
+      "sha256": "67fa694e4d7c73e037482ef36ecb15f2a766cfab8bf28ed22a01448c5fb564e8",
+      "currentSourceSHA": "67fa694e4d7c73e037482ef36ecb15f2a766cfab8bf28ed22a01448c5fb564e8",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "guardKind": "config-empty-only",
+      "guardLine": 44,
+      "directRuntimeConsumers": [
+        "packages/ui/src/button/Button.vue"
+      ]
+    },
+    {
+      "file": "packages/ui/src/calendar/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 69,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 165,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "55ffc62ee9dba362d676eb54c16237253e2438d1492ce7be46966fbbe074cbfa",
+      "currentSourceSHA": "55ffc62ee9dba362d676eb54c16237253e2438d1492ce7be46966fbbe074cbfa",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/card/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 49,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 55,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "80c3da32044eddab6ee5bdd81682c40f4e86c56ef2078758edad7750053745b0",
+      "currentSourceSHA": "80c3da32044eddab6ee5bdd81682c40f4e86c56ef2078758edad7750053745b0",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/carousel/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 31,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 41,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "6d044c846c81181e00c8fa0fcb7c4f838468816eec14f16ce072af7b7bc5ad40",
+      "currentSourceSHA": "6d044c846c81181e00c8fa0fcb7c4f838468816eec14f16ce072af7b7bc5ad40",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/cascader/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 27,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "61647b3cbc2ff1ea65702bd84072c8c71825c1470813ff72039d41b513b6154c",
+      "currentSourceSHA": "61647b3cbc2ff1ea65702bd84072c8c71825c1470813ff72039d41b513b6154c",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/checkbox/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 22,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "224e171afecf0f748b4cab2f036d2dd769df939a3db85ce49539e35a9de6b03a",
+      "currentSourceSHA": "224e171afecf0f748b4cab2f036d2dd769df939a3db85ce49539e35a9de6b03a",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/collapse/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 22,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 74,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "8fb08b1a984eefa0fdc95db20fe2c210ed54ce9e9dd8c0d7773db2bc5e5b9ac2",
+      "currentSourceSHA": "8fb08b1a984eefa0fdc95db20fe2c210ed54ce9e9dd8c0d7773db2bc5e5b9ac2",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/color-picker/components/ColorPresets.vue",
+      "imports": [
+        {
+          "imported": "useToken",
+          "local": "useToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 48,
+          "expression": "useToken()"
+        }
+      ],
+      "sha256": "e9b6b52c20a25c33b282de07678e296d2450f94cc111a20c14bc2fe1bab1e693",
+      "currentSourceSHA": "e9b6b52c20a25c33b282de07678e296d2450f94cc111a20c14bc2fe1bab1e693",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "context-data-consumer",
+      "role": "useToken → colorBgContainer合成/亮度判别 → 预设色样式类；不是Alias复制。"
+    },
+    {
+      "file": "packages/ui/src/color-picker/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 52,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "7559bb92632c13bc29e377352d6b592be4e2fbf9d005b0fcc017aa7e77e404d7",
+      "currentSourceSHA": "7559bb92632c13bc29e377352d6b592be4e2fbf9d005b0fcc017aa7e77e404d7",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/color-picker/style/token.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 53,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "9ec7317a7a24c780f6fbaa0a20f5def5ecf8e891fc52387e3f9cd3a8e67638b4",
+      "currentSourceSHA": "9ec7317a7a24c780f6fbaa0a20f5def5ecf8e891fc52387e3f9cd3a8e67638b4",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/config-provider/ConfigProvider.ts",
+      "imports": [
+        {
+          "imported": "createCSSVarScope",
+          "local": "createCSSVarScope"
+        },
+        {
+          "imported": "DEFAULT_CSS_VAR_PREFIX",
+          "local": "DEFAULT_CSS_VAR_PREFIX"
+        },
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "ThemeContextKey",
+          "local": "ThemeContextKey"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "injection",
+          "line": 136,
+          "expression": "inject(ThemeContextKey, undefined)"
+        },
+        {
+          "kind": "call",
+          "line": 284,
+          "expression": "getDesignToken({\n          token: mergedTheme.value?.token,\n          algorithm: mergedTheme.value?.algorithm,\n        })"
+        },
+        {
+          "kind": "injection",
+          "line": 290,
+          "expression": "provide(ThemeContextKey, themeContext)"
+        },
+        {
+          "kind": "call",
+          "line": 413,
+          "expression": "getDesignToken({\n        token: mergedTheme.value?.token,\n        algorithm: mergedTheme.value?.algorithm,\n      })"
+        },
+        {
+          "kind": "call",
+          "line": 421,
+          "expression": "createCSSVarScope(el, prefix)"
+        }
+      ],
+      "sha256": "546a15ea1de804691d94a23566bbc798eed93c420ce5618b349e033d06252cb7",
+      "currentSourceSHA": "6bf8a1262ca7295cc14714d52866b0e7a3e29f8dc320bf78ede880c178daa17f",
+      "currentSourceStillMatchesSnapshot": false,
+      "category": "provider-and-dom-writer",
+      "role": "合并ThemeConfig → 无条件provide ThemeContext；仅本地theme prop存在时createCSSVarScope → display:contents元素，另保留Portal桥接。"
+    },
+    {
+      "file": "packages/ui/src/date-picker/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 100,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 513,
+          "expression": "getDesignToken()"
+        },
+        {
+          "kind": "call",
+          "line": 522,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "5233cfc257a4bef9606bb950b6b118ce75ebbe209bc11c018b6f41223882b57f",
+      "currentSourceSHA": "5233cfc257a4bef9606bb950b6b118ce75ebbe209bc11c018b6f41223882b57f",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/descriptions/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 4,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "6cc09c8b91f5e1b482f462997440d1a6b48b5daa7a9980b07b8215eb0a42a923",
+      "currentSourceSHA": "6cc09c8b91f5e1b482f462997440d1a6b48b5daa7a9980b07b8215eb0a42a923",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/descriptions/use-descriptions-theme.ts",
+      "imports": [
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 14,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 19,
+          "expression": "transformToken(theme.token.value)"
+        }
+      ],
+      "sha256": "3d2a98918d704bd236989041a72d93465f82ee282a9a44b6c7314ca891e15fe7",
+      "currentSourceSHA": "3d2a98918d704bd236989041a72d93465f82ee282a9a44b6c7314ca891e15fe7",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "guardKind": "config-empty-only",
+      "guardLine": 16,
+      "directRuntimeConsumers": [
+        "packages/ui/src/descriptions/Descriptions.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/divider/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 42,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "bfe7819cfa828e80d9631c4a3020050b0ca61927c22f3864213d2e8cde30cec3",
+      "currentSourceSHA": "bfe7819cfa828e80d9631c4a3020050b0ca61927c22f3864213d2e8cde30cec3",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/empty/components/Images.ts",
+      "imports": [
+        {
+          "imported": "useToken",
+          "local": "useToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 54,
+          "expression": "useToken()"
+        },
+        {
+          "kind": "call",
+          "line": 66,
+          "expression": "useToken()"
+        }
+      ],
+      "sha256": "33edb00a0f4a00d7b3aa3ff6db89e50f620599c8ea0464fbe17f9204f3ae57fa",
+      "currentSourceSHA": "33edb00a0f4a00d7b3aa3ff6db89e50f620599c8ea0464fbe17f9204f3ae57fa",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "context-data-consumer",
+      "role": "两处useToken → onBackground颜色合成 → SVG图形颜色；不是Alias复制。"
+    },
+    {
+      "file": "packages/ui/src/empty/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 3,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "0a2357d59b1df3a1fc306ecd4c3393f5f800a76f900ab56c024c7ddc5d19039e",
+      "currentSourceSHA": "0a2357d59b1df3a1fc306ecd4c3393f5f800a76f900ab56c024c7ddc5d19039e",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/flex/Flex.vue",
+      "imports": [
+        {
+          "imported": "ThemeContextKey",
+          "local": "ThemeContextKey"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "injection",
+          "line": 30,
+          "expression": "inject(ThemeContextKey, undefined)"
+        }
+      ],
+      "sha256": "86e4fed5d5199b4798934ea3a7b01541337eceea10fcd8e3219335a7bb400985",
+      "currentSourceSHA": "86e4fed5d5199b4798934ea3a7b01541337eceea10fcd8e3219335a7bb400985",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "直接inject ThemeContext → 有context即写paddingXS/padding/paddingLG三个Alias → themeStyle低优先级合并 → 三档gap静态CSS消费。",
+      "directRuntimeConsumers": [
+        "packages/ui/src/flex/index.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/flex/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 9,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "979248a688a28aaa11f7724bed2eba3d2f75c0fbc686ce3a7c42f6d90061bc40",
+      "currentSourceSHA": "979248a688a28aaa11f7724bed2eba3d2f75c0fbc686ce3a7c42f6d90061bc40",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/form/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 40,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "e8f4b9b894aefec20061255394616b68453de5e4858c170e9949288e261fbdd8",
+      "currentSourceSHA": "e8f4b9b894aefec20061255394616b68453de5e4858c170e9949288e261fbdd8",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/form/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 32,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "a50c30d1e6139c1ef4ea7090385a5854ef273ecd1b60fd6fcfece4df916dbedb",
+      "currentSourceSHA": "a50c30d1e6139c1ef4ea7090385a5854ef273ecd1b60fd6fcfece4df916dbedb",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/image/hooks/useImageMotion.ts",
+      "imports": [
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 6,
+          "expression": "useTheme()"
+        }
+      ],
+      "sha256": "f1b694529803e2464f39e2c3fdabd338d48cfa66789b156005c172175ad7cb29",
+      "currentSourceSHA": "f1b694529803e2464f39e2c3fdabd338d48cfa66789b156005c172175ad7cb29",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "context-data-consumer",
+      "role": "useTheme.token → motion及motionDurationSlow → motion开关；独立于CSS Alias复制。"
+    },
+    {
+      "file": "packages/ui/src/image/hooks/useImageTheme.ts",
+      "imports": [
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 14,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 43,
+          "expression": "transformToken(theme.token.value)"
+        }
+      ],
+      "sha256": "c60fe253a9c5c58f18b639acfef7486dcfb982cbd6addf70030caed26a375cfa",
+      "currentSourceSHA": "c60fe253a9c5c58f18b639acfef7486dcfb982cbd6addf70030caed26a375cfa",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "guardKind": "config-empty-only",
+      "guardLine": 40,
+      "directRuntimeConsumers": [
+        "packages/ui/src/image/Image.ts",
+        "packages/ui/src/image/Preview.ts",
+        "packages/ui/src/image/PreviewGroup.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/input/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 13,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "a9b2671778a38b82fc47b7d4334f3b6a2c8395da0ed352c126c6d37338a8a33c",
+      "currentSourceSHA": "a9b2671778a38b82fc47b7d4334f3b6a2c8395da0ed352c126c6d37338a8a33c",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/input/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 10,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 120,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "f20ab59e8064dc648ae2773fb5dc53137da3c7fd48ed3e6ee949b7a2dcf0ef46",
+      "currentSourceSHA": "f20ab59e8064dc648ae2773fb5dc53137da3c7fd48ed3e6ee949b7a2dcf0ef46",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/input/use-input-theme.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        },
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 43,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 47,
+          "expression": "transformToken(token)"
+        },
+        {
+          "kind": "call",
+          "line": 50,
+          "expression": "token2CSSVar(name)"
+        },
+        {
+          "kind": "call",
+          "line": 61,
+          "expression": "token2CSSVar(name, prefix())"
+        },
+        {
+          "kind": "call",
+          "line": 65,
+          "expression": "token2CSSVar('lineWidthFocus', prefix())"
+        }
+      ],
+      "sha256": "361ab8cbdf69ac7dc61a112c8c3a2d5571c6911675644b00a550f347f2134e64",
+      "currentSourceSHA": "361ab8cbdf69ac7dc61a112c8c3a2d5571c6911675644b00a550f347f2134e64",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "guardKind": "config-empty-only",
+      "guardLine": 45,
+      "directRuntimeConsumers": [
+        "packages/ui/src/input/Input.ts",
+        "packages/ui/src/input/TextArea.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/input-number/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 27,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "b57d625c2c2fe9ff6c7968d6d785b6988503d9ecd5345fd097aa80204ae9a61e",
+      "currentSourceSHA": "b57d625c2c2fe9ff6c7968d6d785b6988503d9ecd5345fd097aa80204ae9a61e",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/input-number/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 25,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 154,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "331c0aeb9b5d686d3ad2c633fb682b4e29f7acfe9a29445a275bc2e6d60f0698",
+      "currentSourceSHA": "331c0aeb9b5d686d3ad2c633fb682b4e29f7acfe9a29445a275bc2e6d60f0698",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/layout/style/defaults.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 4,
+          "expression": "token2CSSVar(name)"
+        }
+      ],
+      "sha256": "b87ac9e9c9e14bd095303035aeee373ebcf309e8025dc530d842443129d78d2a",
+      "currentSourceSHA": "8b72a67bf2f5afd12f73928d60bc950791da322b8b3e32946ad0284ca9841e96",
+      "currentSourceStillMatchesSnapshot": false,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/layout/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 22,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "425182592d4f3fd4f247b12065f01955c7f6bcd893ead7bf2341d2f293967fc9",
+      "currentSourceSHA": "e3738bd6092c1ef2590e9a19f674bb6a64d46675605411877c823fd7ddd69513",
+      "currentSourceStillMatchesSnapshot": false,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/layout/style/sider.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 18,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "f429a0d8621a6a3441c1b05315826243d47256c28b479aa644dc13d676174812",
+      "currentSourceSHA": "416c9da18b383927b59165232a44e32368f4f5537d1f5dc28127f17dfe7731de",
+      "currentSourceStillMatchesSnapshot": false,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/layout/use-layout-theme.ts",
+      "imports": [
+        {
+          "imported": "ThemeContextKey",
+          "local": "ThemeContextKey"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        },
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 19,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "injection",
+          "line": 20,
+          "expression": "inject(ThemeContextKey, undefined)"
+        },
+        {
+          "kind": "call",
+          "line": 25,
+          "expression": "transformToken(theme.token.value)"
+        },
+        {
+          "kind": "call",
+          "line": 41,
+          "expression": "token2CSSVar(key, getPrefix() + '-source')"
+        }
+      ],
+      "sha256": "aa5f54fbb43c0159094d812cbcaa17d6e582aa1daf1d7f0b577d866731af5bd3",
+      "currentSourceSHA": "bf3e1dc67b8dd03c0e1ce8e9ebec940917748069e101eb5cb53a9b0647031948",
+      "currentSourceStillMatchesSnapshot": false,
+      "category": "component-alias-writer",
+      "role": "useTheme + inject存在性 → transformToken(Alias)及Layout派生变量 → 根style。",
+      "guard": "if (!provided && !Object.keys(theme.config.value).length) return {};",
+      "guardKind": "injected-presence-or-config",
+      "guardLine": 24,
+      "directRuntimeConsumers": [
+        "packages/ui/src/layout/Layout.ts",
+        "packages/ui/src/layout/Sider.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/list/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 11,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 17,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "c1ce2d96526d7c10893da79f2df84b45479f9f1bb32bd3843e06f4c28a11562f",
+      "currentSourceSHA": "c1ce2d96526d7c10893da79f2df84b45479f9f1bb32bd3843e06f4c28a11562f",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/list/use-list-theme.ts",
+      "imports": [
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 16,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 46,
+          "expression": "transformToken(theme.token.value)"
+        }
+      ],
+      "sha256": "582d0fc251ccf103c364dc2b58a8837c4122dcb8a7b324d151d6338eb83ca1de",
+      "currentSourceSHA": "582d0fc251ccf103c364dc2b58a8837c4122dcb8a7b324d151d6338eb83ca1de",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "guardKind": "config-empty-only",
+      "guardLine": 42,
+      "directRuntimeConsumers": [
+        "packages/ui/src/list/List.vue"
+      ]
+    },
+    {
+      "file": "packages/ui/src/listy/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 19,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 109,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "3e0f5f1e3c780cbdce4670bbf7fa934325b8ba845b520b191288bfec3d2c44b9",
+      "currentSourceSHA": "3e0f5f1e3c780cbdce4670bbf7fa934325b8ba845b520b191288bfec3d2c44b9",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "itemHeightOf(optional token) → token ?? getDesignToken() → fontHeight + paddingSM*2；Listy.ts:67在模块级调用为DEFAULT_ITEM_HEIGHT。"
+    },
+    {
+      "file": "packages/ui/src/masonry/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 42,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "04189d0dd5b634bf8973417828b0752a7202d9f76db86d413b220af59e1945c8",
+      "currentSourceSHA": "04189d0dd5b634bf8973417828b0752a7202d9f76db86d413b220af59e1945c8",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/mentions/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 46,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 163,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "8b5a0d62640dfb81191378a4de53ab46310fd65f54c490fb40fa5cf4d1690f06",
+      "currentSourceSHA": "8b5a0d62640dfb81191378a4de53ab46310fd65f54c490fb40fa5cf4d1690f06",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/menu/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 72,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "ae5a638329ada2b987e58749184c3753fd649735e2a5152a93e61f9347f72944",
+      "currentSourceSHA": "ae5a638329ada2b987e58749184c3753fd649735e2a5152a93e61f9347f72944",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/modal/ConfirmDialog.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 242,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "dcccb02c02deb355294f66a0fac23e53b169ee327b98c3ce0b17ec9345a21e55",
+      "currentSourceSHA": "dcccb02c02deb355294f66a0fac23e53b169ee327b98c3ce0b17ec9345a21e55",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-token-calculation",
+      "role": "confirmMaxZIndex() → 默认zIndexPopupBase + CONTAINER_MAX_OFFSET → props.zIndex未提供时的弹层层级；computed调用，使用默认主题纯函数。"
+    },
+    {
+      "file": "packages/ui/src/modal/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 170,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "0b350070c50d2afbb767a3f63d578bc05ed741b23a69ea837fe3bf3e187852d2",
+      "currentSourceSHA": "0b350070c50d2afbb767a3f63d578bc05ed741b23a69ea837fe3bf3e187852d2",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/pagination/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 42,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 210,
+          "expression": "getDesignToken()"
+        },
+        {
+          "kind": "call",
+          "line": 218,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "e1a4ba48b7adaa1ffb7ca2d52c002b9e4fba4629206a5b5cfb3f4b400244949b",
+      "currentSourceSHA": "e1a4ba48b7adaa1ffb7ca2d52c002b9e4fba4629206a5b5cfb3f4b400244949b",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/popconfirm/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 20,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "04035e0f1c0ad3e9466a9d425ebed8f6173e4ca423c844fad0e12e04c4669ecd",
+      "currentSourceSHA": "04035e0f1c0ad3e9466a9d425ebed8f6173e4ca423c844fad0e12e04c4669ecd",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/popover/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 78,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "e1b2e2dc13fa3c66c5b3d098ff191b82bffabbb003eb27073dca310d2911a16f",
+      "currentSourceSHA": "e1b2e2dc13fa3c66c5b3d098ff191b82bffabbb003eb27073dca310d2911a16f",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/qr-code/QrCode.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 49,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "65ea905c91f0957e4242c10265a998ff80179c812f0134ac06b97b95c4a900ab",
+      "currentSourceSHA": "65ea905c91f0957e4242c10265a998ff80179c812f0134ac06b97b95c4a900ab",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-token-calculation",
+      "role": "模块级DEFAULT_FG_COLOR = getDesignToken().colorText → props.color ?? DEFAULT_FG_COLOR → 二维码图像前景色。"
+    },
+    {
+      "file": "packages/ui/src/qr-code/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 16,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "f11380540abb50ac7981d785b783f129b5119b5b16a44411d1f79b8baeeffb04",
+      "currentSourceSHA": "f11380540abb50ac7981d785b783f129b5119b5b16a44411d1f79b8baeeffb04",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/qr-code/use-qrcode-theme.ts",
+      "imports": [
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 7,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 12,
+          "expression": "transformToken(theme.token.value)"
+        }
+      ],
+      "sha256": "70a891eb5705407cd1491acf8f81e4d70d968c0199ad52301ad23c6547624f2a",
+      "currentSourceSHA": "70a891eb5705407cd1491acf8f81e4d70d968c0199ad52301ad23c6547624f2a",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "guardKind": "config-empty-only",
+      "guardLine": 9,
+      "directRuntimeConsumers": [
+        "packages/ui/src/qr-code/QrCode.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/radio/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 35,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "7f15a54cadb4b109912ce28a7dd662e03d626094e5d27da4e00d8b0e2774856c",
+      "currentSourceSHA": "7f15a54cadb4b109912ce28a7dd662e03d626094e5d27da4e00d8b0e2774856c",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/rate/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 27,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "4e4e624f3b1dbe0b1fc8dbc212a38f322ed6250835930907749bff11ca07e62f",
+      "currentSourceSHA": "4e4e624f3b1dbe0b1fc8dbc212a38f322ed6250835930907749bff11ca07e62f",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/result/Result.vue",
+      "imports": [
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 77,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 84,
+          "expression": "transformToken(theme.token.value)"
+        }
+      ],
+      "sha256": "0f0207e5c635166fcb4bbc18247c7b9c1f513b4ed5c2f651c6c0dea7ecf9d3f1",
+      "currentSourceSHA": "0f0207e5c635166fcb4bbc18247c7b9c1f513b4ed5c2f651c6c0dea7ecf9d3f1",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "guardKind": "config-empty-only",
+      "guardLine": 79,
+      "directRuntimeConsumers": [
+        "packages/ui/src/result/index.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/result/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 6,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "65ba23038806cef3981e72609fbcbfeeb748cc650fb871eab5abe18ff2af732b",
+      "currentSourceSHA": "65ba23038806cef3981e72609fbcbfeeb748cc650fb871eab5abe18ff2af732b",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/segmented/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 22,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "124c3c520f6cecd28724a58111ee07bf89b135ac5bd41218ead884c1eb0b262b",
+      "currentSourceSHA": "124c3c520f6cecd28724a58111ee07bf89b135ac5bd41218ead884c1eb0b262b",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/select/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 24,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 157,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "3854de39414020a7d2aff84b7b61694bca73eba6a5a99a1542142b15d0de7a63",
+      "currentSourceSHA": "3854de39414020a7d2aff84b7b61694bca73eba6a5a99a1542142b15d0de7a63",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/skeleton/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 19,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "2baa01f9254acd217435cac72704823c2de437cf07f9294c6b719aa75a6ea538",
+      "currentSourceSHA": "2baa01f9254acd217435cac72704823c2de437cf07f9294c6b719aa75a6ea538",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/skeleton/use-skeleton-theme.ts",
+      "imports": [
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 12,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 26,
+          "expression": "transformToken(theme.token.value)"
+        }
+      ],
+      "sha256": "fc5905b30925d4a22a373e69abfcdedf634c29effa04cd5c5610c2d4ac6f33a7",
+      "currentSourceSHA": "fc5905b30925d4a22a373e69abfcdedf634c29effa04cd5c5610c2d4ac6f33a7",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "guardKind": "config-empty-only",
+      "guardLine": 14,
+      "directRuntimeConsumers": [
+        "packages/ui/src/skeleton/Skeleton.vue",
+        "packages/ui/src/skeleton/use-skeleton-root.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/slider/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 146,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "5a5d7d1a30f11e9fd22459c007174307cba20cc4500ae416469c57b78bcd02f2",
+      "currentSourceSHA": "5a5d7d1a30f11e9fd22459c007174307cba20cc4500ae416469c57b78bcd02f2",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/space/Addon.vue",
+      "imports": [
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 63,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 65,
+          "expression": "transformToken(theme.token.value)"
+        }
+      ],
+      "sha256": "b069275ed14e97d7ed7c3920ab4bd9c5edc16c7c358d7b795c94e41627639aa7",
+      "currentSourceSHA": "b069275ed14e97d7ed7c3920ab4bd9c5edc16c7c358d7b795c94e41627639aa7",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : {},",
+      "guardKind": "config-empty-only",
+      "guardLine": 65,
+      "directRuntimeConsumers": [
+        "packages/ui/src/space/index.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/space/Compact.vue",
+      "imports": [
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 51,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 53,
+          "expression": "transformToken(theme.token.value)"
+        }
+      ],
+      "sha256": "0c38113bacf2219a7017c17bed8c8508015aeecb034921d6b5967d7e94385cde",
+      "currentSourceSHA": "0c38113bacf2219a7017c17bed8c8508015aeecb034921d6b5967d7e94385cde",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : {},",
+      "guardKind": "config-empty-only",
+      "guardLine": 53,
+      "directRuntimeConsumers": [
+        "packages/ui/src/space/index.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/space/Space.vue",
+      "imports": [
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 86,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 88,
+          "expression": "transformToken(theme.token.value)"
+        }
+      ],
+      "sha256": "73d982889394a634f2aabef130641bc417a2a31dae980ab7b70d2888b2ce5fc0",
+      "currentSourceSHA": "73d982889394a634f2aabef130641bc417a2a31dae980ab7b70d2888b2ce5fc0",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : {},",
+      "guardKind": "config-empty-only",
+      "guardLine": 88,
+      "directRuntimeConsumers": [
+        "packages/ui/src/space/index.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/space/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 16,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "84a52abb820eb409ef1862bb54cd10af5fb1ce75aff8001e397c37a614137ce9",
+      "currentSourceSHA": "84a52abb820eb409ef1862bb54cd10af5fb1ce75aff8001e397c37a614137ce9",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/spin/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 5,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "0e505d63fcec6e6a8e0ddb99d9623d9fe2c3f1bae1e83cabd638a10c89d9d7c1",
+      "currentSourceSHA": "0e505d63fcec6e6a8e0ddb99d9623d9fe2c3f1bae1e83cabd638a10c89d9d7c1",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/spin/use-spin-theme.ts",
+      "imports": [
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 11,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 29,
+          "expression": "transformToken(theme.token.value)"
+        }
+      ],
+      "sha256": "bd83a37b29656c39be8134ffd0ae57119731a7502b513fe7041048f09b196b37",
+      "currentSourceSHA": "bd83a37b29656c39be8134ffd0ae57119731a7502b513fe7041048f09b196b37",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "guardKind": "config-empty-only",
+      "guardLine": 26,
+      "directRuntimeConsumers": [
+        "packages/ui/src/spin/Spin.vue"
+      ]
+    },
+    {
+      "file": "packages/ui/src/splitter/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 24,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 34,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "a31c2385b6b666d6ce6e0fad4763e01c3c410e6d3e09eb1ec098f9648c7e011b",
+      "currentSourceSHA": "a31c2385b6b666d6ce6e0fad4763e01c3c410e6d3e09eb1ec098f9648c7e011b",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/statistic/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 19,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "4ed26f116a9053fc7af55e43fb7fae6b3a3cec441415a048a92a84d432cf8fbf",
+      "currentSourceSHA": "4ed26f116a9053fc7af55e43fb7fae6b3a3cec441415a048a92a84d432cf8fbf",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/statistic/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 20,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "18099f76b0655b4cfd30a90ef439699d1b4f070dc289bd4d9616814c0055fd8b",
+      "currentSourceSHA": "18099f76b0655b4cfd30a90ef439699d1b4f070dc289bd4d9616814c0055fd8b",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/statistic/use-statistic-theme.ts",
+      "imports": [
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 6,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 14,
+          "expression": "transformToken(theme.token.value)"
+        }
+      ],
+      "sha256": "2b35d7ceb84c5c93c6cabcd04dac5cdae0fbc4463a0bed047d19f9819949e423",
+      "currentSourceSHA": "2b35d7ceb84c5c93c6cabcd04dac5cdae0fbc4463a0bed047d19f9819949e423",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "guardKind": "config-empty-only",
+      "guardLine": 8,
+      "directRuntimeConsumers": [
+        "packages/ui/src/statistic/Statistic.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/switch/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 38,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 49,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "326ff3eb00f9890c6ef1dc88fc0c634b8c996db9b9065c5ecfcdfc6da84ab84a",
+      "currentSourceSHA": "326ff3eb00f9890c6ef1dc88fc0c634b8c996db9b9065c5ecfcdfc6da84ab84a",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/table/Table.ts",
+      "imports": [
+        {
+          "imported": "useToken",
+          "local": "useToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 364,
+          "expression": "useToken()"
+        }
+      ],
+      "sha256": "39363c1441352405b78e5d838775d71cfaecdb83370f0aa89d4a904b11ebbc0b",
+      "currentSourceSHA": "39363c1441352405b78e5d838775d71cfaecdb83370f0aa89d4a904b11ebbc0b",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "context-data-consumer",
+      "role": "useToken → fontHeight/padding/lineWidth及size → 虚拟列表listItemHeight；不是Alias复制。"
+    },
+    {
+      "file": "packages/ui/src/table/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 11,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 15,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "5425406e6c4e5e6487fd8c41d82b9cbd2f74e106aa0434ae21fd5f8d645cdbc2",
+      "currentSourceSHA": "5425406e6c4e5e6487fd8c41d82b9cbd2f74e106aa0434ae21fd5f8d645cdbc2",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/table/use-table-theme.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        },
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 73,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 78,
+          "expression": "transformToken(theme.token.value)"
+        },
+        {
+          "kind": "call",
+          "line": 81,
+          "expression": "token2CSSVar(key)"
+        },
+        {
+          "kind": "call",
+          "line": 86,
+          "expression": "token2CSSVar(key, '')"
+        }
+      ],
+      "sha256": "34ae3e3b3594d6eeb4ad9c7f73a1c58163e1a73ddb174c5277edfd9db8db52cd",
+      "currentSourceSHA": "34ae3e3b3594d6eeb4ad9c7f73a1c58163e1a73ddb174c5277edfd9db8db52cd",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "guardKind": "config-empty-only",
+      "guardLine": 77,
+      "directRuntimeConsumers": [
+        "packages/ui/src/table/Table.ts",
+        "packages/ui/src/table/hooks/use-filter.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/tabs/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 296,
+          "expression": "getDesignToken()"
+        },
+        {
+          "kind": "call",
+          "line": 304,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "9136d59b57745961fc514b98e17e1c9a85a82890d7965b6f9476292f87c9071b",
+      "currentSourceSHA": "9136d59b57745961fc514b98e17e1c9a85a82890d7965b6f9476292f87c9071b",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/tag/hooks/use-theme.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        },
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 15,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 21,
+          "expression": "transformToken(theme.token.value)"
+        },
+        {
+          "kind": "call",
+          "line": 47,
+          "expression": "token2CSSVar(name, prefix())"
+        }
+      ],
+      "sha256": "1ff4f01e24239bf3081f7e87de2bbc55fd3d91914662648eb88ec87e0b276a51",
+      "currentSourceSHA": "1ff4f01e24239bf3081f7e87de2bbc55fd3d91914662648eb88ec87e0b276a51",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "guardKind": "config-empty-only",
+      "guardLine": 19,
+      "directRuntimeConsumers": [
+        "packages/ui/src/tag/CheckableTag.ts",
+        "packages/ui/src/tag/CheckableTagGroup.vue",
+        "packages/ui/src/tag/Tag.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/tag/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 4,
+          "expression": "token2CSSVar(name)"
+        }
+      ],
+      "sha256": "979dd00ae2e5b5de03dbde8c41fcc4b9139a4842d4da3379765d26ecd1b0ff8f",
+      "currentSourceSHA": "979dd00ae2e5b5de03dbde8c41fcc4b9139a4842d4da3379765d26ecd1b0ff8f",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/tag/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 11,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "f25ee6bf05eec8b5199932ee6788a090fb49d97bfc5d70ad4318c034ae41f603",
+      "currentSourceSHA": "f25ee6bf05eec8b5199932ee6788a090fb49d97bfc5d70ad4318c034ae41f603",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/timeline/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 60,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 66,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "52816695f1a0725f4e7b4d381ecd862b0650dacdc04225a38aa5307e062b326f",
+      "currentSourceSHA": "52816695f1a0725f4e7b4d381ecd862b0650dacdc04225a38aa5307e062b326f",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/timeline/use-theme.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        },
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 20,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 25,
+          "expression": "transformToken(theme.token.value)"
+        },
+        {
+          "kind": "call",
+          "line": 38,
+          "expression": "token2CSSVar(name, prefix())"
+        }
+      ],
+      "sha256": "8772e4b3f88ab9d65ed7ef377edc5b7f498786f2411211444f33f80d84dcafd8",
+      "currentSourceSHA": "8772e4b3f88ab9d65ed7ef377edc5b7f498786f2411211444f33f80d84dcafd8",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "guardKind": "config-empty-only",
+      "guardLine": 22,
+      "directRuntimeConsumers": [
+        "packages/ui/src/timeline/Timeline.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/tooltip/Tooltip.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 257,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "49cd17acf1f2411fcc476321f17e6fcdc825a2164152a61b6a26bc19f96af0e3",
+      "currentSourceSHA": "49cd17acf1f2411fcc476321f17e6fcdc825a2164152a61b6a26bc19f96af0e3",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-token-calculation",
+      "role": "setup时getDesignToken() → sizePopupArrow/borderRadius/marginXXS → computed getPlacements；builtinPlacements可显式覆盖，arrow显隐等重新计算，但seed不是动态主题。"
+    },
+    {
+      "file": "packages/ui/src/tooltip/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 109,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "61f0165f01109bec064cd37c10cf0e643d0e2095ffab4436a34cc9c70d8cefef",
+      "currentSourceSHA": "61f0165f01109bec064cd37c10cf0e643d0e2095ffab4436a34cc9c70d8cefef",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/tour/Tour.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 487,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "f3291fc0587f763ad92734817d86af3125465f672a0cae7396ea2097a8e5eac1",
+      "currentSourceSHA": "f3291fc0587f763ad92734817d86af3125465f672a0cae7396ea2097a8e5eac1",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-token-calculation",
+      "role": "setup时getDesignToken() → marginXXS/sizePopupArrow/borderRadius → mergedBuiltinPlacements；builtinPlacements优先，arrowPointAtCenter仍响应式。"
+    },
+    {
+      "file": "packages/ui/src/transfer/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 78,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "e48df5b3531fc7b2ca6d7f4ee7d70ef7bb986f1f85b3d94d3c417be7885b7819",
+      "currentSourceSHA": "e48df5b3531fc7b2ca6d7f4ee7d70ef7bb986f1f85b3d94d3c417be7885b7819",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/tree/Tree.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 215,
+          "expression": "getDesignToken(themeConfig.value)"
+        }
+      ],
+      "sha256": "248a732013478b2d130fd2afc3766299f370b21480777e2d952a21577ff84285",
+      "currentSourceSHA": "248a732013478b2d130fd2afc3766299f370b21480777e2d952a21577ff84285",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-token-calculation",
+      "role": "useThemeConfig()只读ConfigContext.theme → getDesignToken(themeConfig.value) → paddingXS/2 + (Tree.titleHeight ?? controlHeightSM) → 虚拟树估算行高。"
+    },
+    {
+      "file": "packages/ui/src/tree/style/index.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 24,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "8adc8c559b69495e8f1ea7a8beca0963fd75ef586349f9bbbde8b646984ef234",
+      "currentSourceSHA": "8adc8c559b69495e8f1ea7a8beca0963fd75ef586349f9bbbde8b646984ef234",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/tree-select/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 21,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "cc642bfb4886624e4da4340ef28245c18e25e121e04e9156ac34915660dee253",
+      "currentSourceSHA": "cc642bfb4886624e4da4340ef28245c18e25e121e04e9156ac34915660dee253",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/typography/style/index.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 19,
+          "expression": "token2CSSVar(token)"
+        }
+      ],
+      "sha256": "09bc1a5973e43682e19ca829223d46972bdb86665662732b4697d07d3a478f34",
+      "currentSourceSHA": "09bc1a5973e43682e19ca829223d46972bdb86665662732b4697d07d3a478f34",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "css-variable-name-consumer",
+      "role": "token2CSSVar仅生成变量名/var()引用或组件CSS声明；无Context、无当前Token来源判断。"
+    },
+    {
+      "file": "packages/ui/src/typography/use-typography-theme.ts",
+      "imports": [
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        },
+        {
+          "imported": "transformToken",
+          "local": "transformToken"
+        },
+        {
+          "imported": "useTheme",
+          "local": "useTheme"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 68,
+          "expression": "useTheme()"
+        },
+        {
+          "kind": "call",
+          "line": 73,
+          "expression": "transformToken(theme.token.value)"
+        },
+        {
+          "kind": "call",
+          "line": 76,
+          "expression": "token2CSSVar(key)"
+        },
+        {
+          "kind": "call",
+          "line": 109,
+          "expression": "token2CSSVar(key, prefix())"
+        }
+      ],
+      "sha256": "d2e2a9d1b56ce2586427a5d8b224c8ac5076fedda998df8aeb655d73bfa97953",
+      "currentSourceSHA": "d2e2a9d1b56ce2586427a5d8b224c8ac5076fedda998df8aeb655d73bfa97953",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "component-alias-writer",
+      "role": "useTheme → 空config跳过 → transformToken(Alias)及各组件派生变量 → 根或popup style。",
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "guardKind": "config-empty-only",
+      "guardLine": 72,
+      "directRuntimeConsumers": [
+        "packages/ui/src/typography/hooks/use-typography-semantic.ts"
+      ]
+    },
+    {
+      "file": "packages/ui/src/upload/style/token.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "token2CSSVar",
+          "local": "token2CSSVar"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 15,
+          "expression": "token2CSSVar(token)"
+        },
+        {
+          "kind": "call",
+          "line": 59,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "4a9607d54e6f6db3f1e0cc6955a07a5a3f92e1214e168b978d8bc4e8692ddf40",
+      "currentSourceSHA": "4a9607d54e6f6db3f1e0cc6955a07a5a3f92e1214e168b978d8bc4e8692ddf40",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "style-or-default-token-function",
+      "role": "默认Token/组件Token纯函数、缓存或静态CSS生成路径；部分prepare函数也由运行时writer调用，调用者负责提供当前Token。没有独立ThemeContext来源判断。"
+    },
+    {
+      "file": "packages/ui/src/watermark/Watermark.ts",
+      "imports": [
+        {
+          "imported": "getDesignToken",
+          "local": "getDesignToken"
+        },
+        {
+          "imported": "useToken",
+          "local": "useToken"
+        }
+      ],
+      "namespaceImports": [],
+      "reexports": [],
+      "references": [
+        {
+          "kind": "call",
+          "line": 81,
+          "expression": "useToken()"
+        },
+        {
+          "kind": "call",
+          "line": 92,
+          "expression": "getDesignToken()"
+        }
+      ],
+      "sha256": "f5a62fbeb7d741d944065e0a5a5ca4df9a865395bb607c9eb15a431a3630abbc",
+      "currentSourceSHA": "f5a62fbeb7d741d944065e0a5a5ca4df9a865395bb607c9eb15a431a3630abbc",
+      "currentSourceStillMatchesSnapshot": true,
+      "category": "context-data-consumer",
+      "role": "useToken（含getDesignToken兜底）→ 字体/颜色/zIndex → canvas水印；不是Alias复制。"
+    }
+  ],
+  "writersAtPlanTime": [
+    {
+      "file": "packages/ui/src/_internal/trigger.ts",
+      "owner": "_internal",
+      "editable": true,
+      "guard": "Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : undefined,",
+      "inactiveReturn": "undefined",
+      "shape": "popup direct computed",
+      "consumers": [
+        "packages/ui/src/date-picker/DatePicker.vue",
+        "packages/ui/src/date-picker/RangePicker.vue",
+        "packages/ui/src/dropdown/Dropdown.ts",
+        "packages/ui/src/mentions/engine/KeywordTrigger.ts",
+        "packages/ui/src/menu/SubMenu.ts",
+        "packages/ui/src/select/engine/BaseSelect.ts",
+        "packages/ui/src/tooltip/Tooltip.ts",
+        "packages/ui/src/tour/Tour.ts"
+      ],
+      "currentSha256": "c04805dd517ca9cdef55814c50a86d0d5048198d56d670c4dca44e6816127b35"
+    },
+    {
+      "file": "packages/ui/src/result/Result.vue",
+      "owner": "result",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/result/index.ts"
+      ],
+      "currentSha256": "0f0207e5c635166fcb4bbc18247c7b9c1f513b4ed5c2f651c6c0dea7ecf9d3f1"
+    },
+    {
+      "file": "packages/ui/src/input/use-input-theme.ts",
+      "owner": "input",
+      "editable": false,
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "inactiveReturn": "undefined",
+      "shape": "cached prepared source -> final {}",
+      "consumers": [
+        "packages/ui/src/input/Input.ts",
+        "packages/ui/src/input/TextArea.ts"
+      ],
+      "currentSha256": "361ab8cbdf69ac7dc61a112c8c3a2d5571c6911675644b00a550f347f2134e64"
+    },
+    {
+      "file": "packages/ui/src/alert/use-alert-theme.ts",
+      "owner": "alert",
+      "editable": false,
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/alert/Alert.ts"
+      ],
+      "currentSha256": "72850e946b77ad5df2cb1e7782bdab6c890952e0b9a0531cf5d64347aa16ecbe"
+    },
+    {
+      "file": "packages/ui/src/skeleton/use-skeleton-theme.ts",
+      "owner": "skeleton",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/skeleton/Skeleton.vue",
+        "packages/ui/src/skeleton/use-skeleton-root.ts"
+      ],
+      "currentSha256": "fc5905b30925d4a22a373e69abfcdedf634c29effa04cd5c5610c2d4ac6f33a7"
+    },
+    {
+      "file": "packages/ui/src/layout/use-layout-theme.ts",
+      "owner": "layout",
+      "editable": false,
+      "guard": "if (!provided && !Object.keys(theme.config.value).length) return {};",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/layout/Layout.ts",
+        "packages/ui/src/layout/Sider.ts"
+      ],
+      "currentSha256": "d28cf806c630fe7dd7492f6ba3be836ddc6d8e39a14b911377fe17af7d84c780"
+    },
+    {
+      "file": "packages/ui/src/descriptions/use-descriptions-theme.ts",
+      "owner": "descriptions",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/descriptions/Descriptions.ts"
+      ],
+      "currentSha256": "3d2a98918d704bd236989041a72d93465f82ee282a9a44b6c7314ca891e15fe7"
+    },
+    {
+      "file": "packages/ui/src/spin/use-spin-theme.ts",
+      "owner": "spin",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/spin/Spin.vue"
+      ],
+      "currentSha256": "bd83a37b29656c39be8134ffd0ae57119731a7502b513fe7041048f09b196b37"
+    },
+    {
+      "file": "packages/ui/src/qr-code/use-qrcode-theme.ts",
+      "owner": "qr-code",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/qr-code/QrCode.ts"
+      ],
+      "currentSha256": "70a891eb5705407cd1491acf8f81e4d70d968c0199ad52301ad23c6547624f2a"
+    },
+    {
+      "file": "packages/ui/src/button/use-button-theme.ts",
+      "owner": "button",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "inactiveReturn": "undefined",
+      "shape": "cached prepared source -> final {}",
+      "consumers": [
+        "packages/ui/src/button/Button.vue"
+      ],
+      "currentSha256": "67fa694e4d7c73e037482ef36ecb15f2a766cfab8bf28ed22a01448c5fb564e8"
+    },
+    {
+      "file": "packages/ui/src/table/use-table-theme.ts",
+      "owner": "table",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "inactiveReturn": "undefined",
+      "shape": "cached prepared source -> final {}",
+      "consumers": [
+        "packages/ui/src/table/Table.ts",
+        "packages/ui/src/table/hooks/use-filter.ts"
+      ],
+      "currentSha256": "34ae3e3b3594d6eeb4ad9c7f73a1c58163e1a73ddb174c5277edfd9db8db52cd"
+    },
+    {
+      "file": "packages/ui/src/list/use-list-theme.ts",
+      "owner": "list",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/list/List.vue"
+      ],
+      "currentSha256": "582d0fc251ccf103c364dc2b58a8837c4122dcb8a7b324d151d6338eb83ca1de"
+    },
+    {
+      "file": "packages/ui/src/avatar/use-avatar-theme.ts",
+      "owner": "avatar",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "inactiveReturn": "undefined",
+      "shape": "cached prepared source -> final {}",
+      "consumers": [
+        "packages/ui/src/avatar/Avatar.vue",
+        "packages/ui/src/avatar/AvatarGroup.vue"
+      ],
+      "currentSha256": "fed74b13da713cddde36e9f3e265971ec32b55854a634cdfe2919374b0ad5ab8"
+    },
+    {
+      "file": "packages/ui/src/typography/use-typography-theme.ts",
+      "owner": "typography",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "inactiveReturn": "undefined",
+      "shape": "cached prepared source -> final {}",
+      "consumers": [
+        "packages/ui/src/typography/hooks/use-typography-semantic.ts"
+      ],
+      "currentSha256": "d2e2a9d1b56ce2586427a5d8b224c8ac5076fedda998df8aeb655d73bfa97953"
+    },
+    {
+      "file": "packages/ui/src/statistic/use-statistic-theme.ts",
+      "owner": "statistic",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/statistic/Statistic.ts"
+      ],
+      "currentSha256": "2b35d7ceb84c5c93c6cabcd04dac5cdae0fbc4463a0bed047d19f9819949e423"
+    },
+    {
+      "file": "packages/ui/src/breadcrumb/use-breadcrumb-theme.ts",
+      "owner": "breadcrumb",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "inactiveReturn": "undefined",
+      "shape": "cached prepared source -> final {}",
+      "consumers": [
+        "packages/ui/src/breadcrumb/Breadcrumb.ts"
+      ],
+      "currentSha256": "13d7a390060f445f0078fbc533952cfd2586506348f94f36cdea19751cff3dd2"
+    },
+    {
+      "file": "packages/ui/src/space/Space.vue",
+      "owner": "space",
+      "editable": true,
+      "guard": "Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : {},",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/space/index.ts"
+      ],
+      "currentSha256": "73d982889394a634f2aabef130641bc417a2a31dae980ab7b70d2888b2ce5fc0"
+    },
+    {
+      "file": "packages/ui/src/space/Addon.vue",
+      "owner": "space",
+      "editable": true,
+      "guard": "Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : {},",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/space/index.ts"
+      ],
+      "currentSha256": "b069275ed14e97d7ed7c3920ab4bd9c5edc16c7c358d7b795c94e41627639aa7"
+    },
+    {
+      "file": "packages/ui/src/space/Compact.vue",
+      "owner": "space",
+      "editable": true,
+      "guard": "Object.keys(theme.config.value).length ? transformToken(theme.token.value).vars : {},",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/space/index.ts"
+      ],
+      "currentSha256": "0c38113bacf2219a7017c17bed8c8508015aeecb034921d6b5967d7e94385cde"
+    },
+    {
+      "file": "packages/ui/src/timeline/use-theme.ts",
+      "owner": "timeline",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/timeline/Timeline.ts"
+      ],
+      "currentSha256": "8772e4b3f88ab9d65ed7ef377edc5b7f498786f2411211444f33f80d84dcafd8"
+    },
+    {
+      "file": "packages/ui/src/badge/use-badge-theme.ts",
+      "owner": "badge",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "inactiveReturn": "undefined",
+      "shape": "cached prepared source -> final {}",
+      "consumers": [
+        "packages/ui/src/badge/BadgeIndicator.vue",
+        "packages/ui/src/badge/Ribbon.vue"
+      ],
+      "currentSha256": "34c01397cba874634281a16ebe9790f485af5c33b4f414d73a3e21d20808fee6"
+    },
+    {
+      "file": "packages/ui/src/image/hooks/useImageTheme.ts",
+      "owner": "image",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return {};",
+      "inactiveReturn": "{}",
+      "shape": "root alias record",
+      "consumers": [
+        "packages/ui/src/image/Image.ts",
+        "packages/ui/src/image/Preview.ts",
+        "packages/ui/src/image/PreviewGroup.ts"
+      ],
+      "currentSha256": "c60fe253a9c5c58f18b639acfef7486dcfb982cbd6addf70030caed26a375cfa"
+    },
+    {
+      "file": "packages/ui/src/tag/hooks/use-theme.ts",
+      "owner": "tag",
+      "editable": true,
+      "guard": "if (!Object.keys(theme.config.value).length) return undefined;",
+      "inactiveReturn": "undefined",
+      "shape": "cached prepared source -> final {}",
+      "consumers": [
+        "packages/ui/src/tag/CheckableTag.ts",
+        "packages/ui/src/tag/CheckableTagGroup.vue",
+        "packages/ui/src/tag/Tag.ts"
+      ],
+      "currentSha256": "1ff4f01e24239bf3081f7e87de2bbc55fd3d91914662648eb88ec87e0b276a51"
+    },
+    {
+      "file": "packages/ui/src/flex/Flex.vue",
+      "owner": "flex",
+      "editable": true,
+      "guard": "theme ? { three gap aliases } : {}",
+      "inactiveReturn": "{}",
+      "shape": "direct inject ThemeContextKey; retain context existence AND sourceActive !== false",
+      "consumers": [
+        "packages/ui/src/flex/index.ts"
+      ],
+      "currentSha256": "86e4fed5d5199b4798934ea3a7b01541337eceea10fcd8e3219335a7bb400985"
+    }
+  ],
+  "writerCounts": {
+    "allUiSourceAliasWriters": 24,
+    "stableEditable": 21,
+    "authorOwnedExcluded": 3,
+    "stableUndefinedBranches": 8,
+    "stableEmptyObjectBranches": 13,
+    "standaloneComposables": 15,
+    "inlineUiOrSharedPopup": 6
+  },
+  "nonWritersReviewed": {
+    "Image useImageMotion": "reads motion token; does not write aliases",
+    "Tree useThemeConfig/getDesignToken": "virtual item-height measurement; not Alias writer",
+    "Watermark/useToken": "canvas token drawing; not Alias writer",
+    "Empty Images/useToken": "SVG color derivation; not Alias writer",
+    "ColorPresets/useToken": "data/render token consumption; not Alias writer",
+    "Table useToken": "virtual row-height calculation; the actual Alias writer is use-table-theme",
+    "style/* getDesignToken calls": "static CSS/default token generation, not source presence writer"
+  },
+  "separateFoundationMandatoryReview": [
+    {
+      "item": "ThemeProvider injectCssVar false→true / true→false",
+      "basis": "快照setup只在初值true时创建scope，后续没有监听该prop。",
+      "status": "本轮基础包必修待审；本窄presence复核未运行生命周期复现。"
+    },
+    {
+      "item": "ThemeProvider target变更",
+      "basis": "快照target只在setup读一次；需要旧target清理、新target应用及卸载归属验证。",
+      "status": "本轮基础包必修待审；不夹带进sourceActive实现。"
+    },
+    {
+      "item": "ThemeProvider theme.cssVarPrefix变更",
+      "basis": "快照scope前缀在setup固定；需旧前缀清理与新前缀应用验证。",
+      "status": "本轮基础包必修待审；不据Token重算声称前缀生命周期正常。"
+    },
+    {
+      "item": "ThemeProvider injectCssVar=true 的SSR",
+      "basis": "快照setup在未给target时直接读document.documentElement；需无document环境复现。",
+      "status": "本轮基础包必修待审；不能用默认injectCssVar=false的SSR覆盖替代。"
+    }
+  ],
+  "postImplementationStaticReview": {
+    "result": "Exactly two remaining provider-presence truncations were identified: Flex and Layout fallback activation. Layout was corrected in 627d8a09; Flex now uses useTheme. The grouped 118-test consumer/fallback run passes. No third truncation was found in the other 22 paths.",
+    "weakMaps": "Seven existing Context-keyed ComputedRef caches preserve flag.value reactivity and instance prefix mapping.",
+    "returns": "Existing eight undefined and thirteen empty-object branches are preserved in the stable 21 writers.",
+    "publishedStatus": "Not verified by the read-only source inventory."
+  }
+}

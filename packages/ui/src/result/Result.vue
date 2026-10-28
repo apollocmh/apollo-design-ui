@@ -76,7 +76,7 @@ export default defineComponent({
     const prefix = computed(() => context.getPrefixCls('result', props.prefixCls));
     const theme = useTheme();
     const themeStyle = computed<Record<string, string>>(() => {
-      if (!Object.keys(theme.config.value).length) return {};
+      if (theme.sourceActive?.value === false) return {};
       const base = prepareResultComponentToken(theme.token.value);
       const custom = theme.config.value.components?.Result ?? {};
       const cls = prefix.value;

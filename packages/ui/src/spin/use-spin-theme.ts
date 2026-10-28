@@ -23,7 +23,7 @@ export function useSpinTheme(getPrefixCls: () => string) {
     };
   });
   const styles = computed<Record<string, string>>(() => {
-    if (!Object.keys(theme.config.value).length) return {};
+    if (theme.sourceActive?.value === false) return {};
     const p = getPrefixCls();
     return {
       ...transformToken(theme.token.value).vars,

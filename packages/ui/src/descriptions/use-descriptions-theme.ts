@@ -13,7 +13,7 @@ const lengths = [
 export function useDescriptionsTheme(getPrefix: () => string) {
   const theme = useTheme();
   return computed<Record<string, string>>(() => {
-    if (!Object.keys(theme.config.value).length) return {};
+    if (theme.sourceActive?.value === false) return {};
     const token = prepareComponentToken(theme.token.value);
     const custom = theme.config.value.components?.Descriptions;
     const vars: Record<string, string> = { ...transformToken(theme.token.value).vars };

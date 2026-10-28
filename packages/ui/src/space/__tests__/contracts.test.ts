@@ -1,4 +1,9 @@
-import { compactAlgorithm, darkAlgorithm, ThemeProvider } from '@apollo-design/theme';
+import {
+  compactAlgorithm,
+  darkAlgorithm,
+  getDesignToken,
+  ThemeProvider,
+} from '@apollo-design/theme';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import {
@@ -327,9 +332,34 @@ describe('Space family · scoped aliases and real consumers (SPACE-04/05)', () =
     }
     mode.value = false;
     await nextTick();
-    expect(
-      host.get<HTMLElement>('.apollo-space').element.style.getPropertyValue('--apollo-padding-xs'),
-    ).toBe('');
+    // A mounted ThemeProvider remains an explicit source when its config becomes empty.
+    const defaults = getDesignToken();
+    for (const selector of ['.apollo-space', '.apollo-space-addon']) {
+      const node = host.get<HTMLElement>(selector).element;
+      expect(node.style.getPropertyValue('--apollo-padding-xs')).toBe(`${defaults.paddingXS}px`);
+      expect(node.style.getPropertyValue('--apollo-color-border')).toBe(defaults.colorBorder);
+    }
+    mode.value = true;
+    await nextTick();
+    for (const selector of ['.apollo-space', '.apollo-space-addon']) {
+      const node = host.get<HTMLElement>(selector).element;
+      expect(node.style.getPropertyValue('--apollo-padding-xs')).toBe('17px');
+      expect(node.style.getPropertyValue('--apollo-color-border')).toBe('#345678');
+    }
+    host.unmount();
+  });
+
+  it('keeps Space and Addon free of projected aliases under a ConfigProvider without a theme', () => {
+    const host = mount(ConfigProvider, {
+      slots: {
+        default: () => [h(Space, null, () => ['a', 'b']), h(SpaceAddon, null, () => 'Addon')],
+      },
+    });
+    for (const selector of ['.apollo-space', '.apollo-space-addon']) {
+      const node = host.get<HTMLElement>(selector).element;
+      expect(node.style.getPropertyValue('--apollo-padding-xs')).toBe('');
+      expect(node.style.getPropertyValue('--apollo-color-border')).toBe('');
+    }
     host.unmount();
   });
 

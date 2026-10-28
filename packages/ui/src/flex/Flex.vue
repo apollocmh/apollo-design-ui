@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ThemeContextKey } from '@apollo-design/theme';
+import { useTheme } from '@apollo-design/theme';
 import {
   type ComponentPublicInstance,
   type CSSProperties,
   computed,
-  inject,
   mergeProps,
   normalizeStyle,
   shallowRef,
@@ -27,7 +26,7 @@ defineSlots<{ default?: FlexSlot }>();
 
 const config = useComponentConfig<FlexConfig>('flex');
 const attrs = useAttrs();
-const theme = inject(ThemeContextKey, undefined);
+const theme = useTheme();
 const prefix = computed(() => config.getPrefixCls('flex', props.prefixCls));
 const orientation = useOrientation(
   () => props.orientation,
@@ -38,7 +37,7 @@ const orientation = useOrientation(
 // ThemeProvider can supply tokens without writing document-level variables.
 // Scope only the three aliases Flex consumes; nested default themes reset them too.
 const themeStyle = computed<CSSProperties>(() =>
-  theme
+  theme.sourceActive?.value !== false
     ? {
         '--apollo-padding-xs': `${theme.token.value.paddingXS}px`,
         '--apollo-padding': `${theme.token.value.padding}px`,

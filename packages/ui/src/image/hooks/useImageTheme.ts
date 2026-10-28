@@ -35,9 +35,9 @@ export function useImageTheme() {
     };
   });
   const styles = computed<Record<string, string>>(() => {
-    // Leave static/global CSS in charge when there is no configured source
+    // Leave static/global CSS in charge when there is no active source
     // theme, so defaults do not become unsolicited inline overrides.
-    if (!Object.keys(theme.config.value).length) return {};
+    if (theme.sourceActive?.value === false) return {};
     const token = component.value;
     return {
       ...transformToken(theme.token.value).vars,

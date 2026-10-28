@@ -6,7 +6,7 @@ import { prepareComponentToken } from './style';
 export function useQRCodeTheme(getPrefix: () => string) {
   const theme = useTheme();
   const styles = computed<Record<string, string>>(() => {
-    if (!Object.keys(theme.config.value).length) return {};
+    if (theme.sourceActive?.value === false) return {};
     const token = theme.config.value.components?.QRCode?.QRCodeCoverBackgroundColor;
     return {
       ...transformToken(theme.token.value).vars,
