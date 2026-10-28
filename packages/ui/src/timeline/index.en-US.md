@@ -4,116 +4,77 @@ title: Timeline
 subtitle: Timeline
 ---
 
-Vertical display timeline.
-
-## When To Use
-
-- When a series of information needs to be ordered by time;
-- When you need to attach states and descriptions to a time series.
-
-> ⚠️ **This component has no DOM of its own** (antd 6.6.4): it is a thin shell over
-> [`Steps`](./steps) — it renders **`<ol>` + `<li>`** (list semantics come from the native
-> elements) and its look comes from "Steps' DOM + Timeline's own style overrides".
-> That is also why it accepts Steps props such as `variant`.
+Display ordered events, their status and rich descriptions in a vertical or horizontal timeline. The root is a native `<ol>` and each item is an `<li>`. Timeline composes the internal Steps renderer; it has no selection state or business events.
 
 ## Examples
 
-See [`demo/`](./demo) (**15**, including native Vue item slots).
-
-| demo | Description |
-|---|---|
-| `basic` | `content` only (no `title` ⇒ vertical, **not** alternate) |
-| `variant` | `variant="filled"` vs the default `"outlined"` |
-| `end` | `mode="end"` with a custom `icon` / `color` node |
-| `title-span` | `titleSpan` as a number (24-grid) vs a string (CSS length) |
-| `horizontal` | `orientation="horizontal"` (a separate absolute-positioning layout) |
-| `alternate` | `mode="alternate"` — content alternates left/right |
-| `pending` | `reverse` + a `loading: true` "in progress" item |
-| `pending-legacy` | ⚠️ **deprecated** `pending` / `pendingDot` |
-| `custom` | custom `icon` node (set your own background when customizing `fontSize`) |
-| `horizontal-debug` | horizontal + long text + a `styles.item` debug outline |
-| `title` | items with `title` ⇒ vertical **auto-alternates** |
-| `style-class` | the **function form** of `styles` + `classNames.root` |
-| `semantic` | **item-level** semantic slots (`items[i].styles`) |
-| `native-slots` | Native title/content/icon slots, conditional/empty content, reverse and input state |
-
-⚠️ **1 antd demo is not ported** (see `README.md` §5): `component-token`
-(zero-runtime: tokens are build-time artifacts).
+The fifteen paired examples in `demo/` cover basic content, variants, end placement, title columns, horizontal and alternating layouts, loading, legacy pending data, custom icons, long text, titles, semantic styles, native slots and live component tokens.
 
 ## API
 
 ### Timeline
 
 | Property | Description | Type | Default |
-|---|---|---|---|
-| items | Item data; use the scoped slots below for rich content | `TimelineItemType[]` | — |
-| mode | Mode. `'left'` / `'right'` are **deprecated** ⇒ normalized to `'start'` / `'end'` | `'left' \| 'right' \| 'start' \| 'end' \| 'alternate'` | `'start'` |
-| orientation | Direction. `'horizontal'` adds `-horizontal` | `'horizontal' \| 'vertical'` | `'vertical'` |
-| titleSpan | Title column ratio: a **number** is in 24-grid units, a **string** is a CSS length | `number \| string` | — |
-| variant | Variant (forwarded to the inner `Steps`) | `'filled' \| 'outlined'` | `'outlined'` |
-| reverse | Reverses the item order (⚠️ the rail status follows the current item too) | `boolean` | `false` |
-| pending | ⚠️ **deprecated** — add an item in `items` instead | `VNodeChild` | — |
-| pendingDot | ⚠️ **deprecated** — add an item in `items` instead | `VNodeChild` | — |
-| classNames / styles | Semantic slots (**the ten `Steps` slots minus `itemSubtitle`**; the **function form** is supported) | | — |
-| prefixCls | Class name prefix | | — |
-| class / style | **Native root attrs** (not Props); `style` goes through the `styles.root` semantic slot | | — |
+| --- | --- | --- | --- |
+| items | Ordered item data; use native item slots for template content | `TimelineItemType[]` | — |
+| mode | Item placement; legacy left/right normalize to start/end | `'start' \| 'end' \| 'alternate' \| 'left' \| 'right'` | `'start'` |
+| orientation | Explicit direction at every viewport width | `'horizontal' \| 'vertical'` | `'vertical'` |
+| titleSpan | Title column: numbers use 24-grid units; strings use CSS lengths/percentages | `number \| string` | — |
+| variant | Node variant | `'filled' \| 'outlined'` | `'outlined'` |
+| reverse | Reverse display order; rail status follows the current item | `boolean` | `false` |
+| pending | Deprecated: append a loading item in items instead. false/null/undefined disable it; 0 and an empty string still create a pending item; true shows only its indicator | `VNodeChild` | — |
+| pendingDot | Deprecated: custom icon for the synthetic pending item; use items[].icon instead | `VNodeChild` | — |
+| classNames | Semantic class names, or a function of current `{ props }` | `TimelineSemanticValue<TimelineSemanticClassNames>` | — |
+| styles | Semantic styles, or a function of current `{ props }` | `TimelineSemanticValue<TimelineSemanticStyles>` | — |
+| prefixCls | DOM class prefix; arbitrary prefixes require matching static CSS | `string` | `apollo-timeline` |
 
-> 🚨 **`layoutAlternate` rule**: `mode === 'alternate'` **or** (vertical **and** any item
-> has a `title`). ⇒ With a vertical timeline, a single item with `title` puts the whole
-> timeline into the **alternating** layout.
-> ⚠️ `titleSpan` has **no effect** when `mode === 'alternate'` (same as upstream).
+Vertical timelines use the two-column layout when any current title is nonempty. Explicit mode="alternate" also enables this layout and assigns sides by source-item parity. Reversing changes display order and slot indices while preserving each source item's side. titleSpan is ignored in explicit alternate mode.
 
-### items[i] (`TimelineItemType`)
+### Item data
 
 | Field | Description | Type |
-|---|---|---|
-| content | Content | `VNodeChild` |
-| title | Title (having one ⇒ vertical alternates) | `VNodeChild` |
-| icon | Custom node icon | `VNodeChild` |
-| color | A preset (`blue` / `red` / `green` / `gray`) adds a class; **any other color** goes into an inline CSS variable | `'blue' \| 'red' \| 'green' \| 'gray' \| string` |
-| loading | Loading ⇒ `status: 'process'` + the default loading icon | `boolean` |
-| placement | Placement side. Derived from `mode` when omitted (alternating by **parity** for `alternate`) | `'start' \| 'end'` |
-| key | Row key | `string \| number` |
-| className / style / classNames / styles | Item-level targets (`styles` supports item-level slots like `root` / `rail` / `content`) | |
-| label / children / dot / position | ⚠️ **all deprecated** ⇒ use `title` / `content` / `icon` / `placement` | |
+| --- | --- | --- |
+| key | Stable item identity across replacement/reordering | `string \| number` |
+| title / content / icon | Complete Vue content, including 0, fragments and components; explicit false/empty icon suppresses the loading fallback | `VNodeChild` |
+| color | blue/red/green/gray use preset classes; other colors use the item's dot-color CSS variable | `string` |
+| loading | Process status; absent/null icon and dot use the loading indicator | `boolean` |
+| placement | Side; omitted values follow mode | `'start' \| 'end'` |
+| className / style | Item root class and inline styles | `string` / `CSSProperties` |
+| classNames / styles | Item targets: root, wrapper, header, title, section, content, icon and rail | Semantic objects |
+| label / children / dot | Deprecated data aliases for title/content/icon, used only when the matching current field is nullish | `VNodeChild` |
+| position | Deprecated placement alias; left/right normalize to start/end; explicit placement wins | `'left' \| 'right' \| 'start' \| 'end'` |
 
-### Instance (ref)
-
-Exposes `{ nativeElement }` — ⚠️ it is the **inner `Steps` root element**
-(`HTMLDivElement` or `HTMLOListElement`), because `Timeline` has no root DOM of its own.
-
-Item classNames/styles are preserved for root, title, icon, content, rail and other semantic targets, including with native content slots. Root styles merge in this order: component styles.item → item styles.root → item.style; content merges component styles.itemContent → item styles.content. Updating item semantics preserves same-key content nodes.
+Item root styles merge in this order: component styles.item → item styles.root → item.style. Other regions merge the component target first, then the corresponding item target. There is no subtitle region. Native slots share these same hosts and styling targets.
 
 ### Content slots
 
-| Name | Parameters | Description |
-|---|---|---|
+| Name | Scope | Description |
+| --- | --- | --- |
 | itemTitle | `{ item, index }: TimelineItemSlotProps` | Item title |
 | itemContent | `{ item, index }: TimelineItemSlotProps` | Item body |
 | itemIcon | `{ item, index }: TimelineItemSlotProps` | Item icon |
 
-Item is the current original source item; index is its display index after reverse, including any legacy pending position. A present slot overrides matching data and alias fallback, even when empty; removing it restores data content. Slots also render during SSR. The synthetic legacy pending entry has no item scope. The empty Timeline.Item / TimelineItemComponent and unused TimelineSlot type have been removed directly; see the [migration guide](../../../../docs/migrations/timeline-item-slots.md).
+item is the current original source item. index is its display index after reverse, including any legacy pending position. A present slot overrides its matching data and aliases, including when intentionally empty; removal restores the data. Slots render during SSR and hydration. The synthetic pending item has no source-item scope. The default slot does not register items; Timeline.Item and TimelineItemComponent were removed in the development version. See the [slot migration](../../../../docs/migrations/timeline-item-slots.md).
+
+### Native attrs, events and ref
+
+Native class/style, id, tabindex, ARIA attributes and DOM listeners target the ordered-list root. Native root styles override matching semantic root styles. class supports Vue strings/arrays/objects; style supports strings/arrays/objects. Native @change receives the bubbling DOM Event; it does not enable selectable items. @click and event modifiers use normal Vue DOM semantics. Timeline has no emits or v-model.
+
+A ref exposes `{ nativeElement: HTMLElement | null }`, the current `<ol>` after mounting. The element remains stable through data, layout and Provider updates; unmounting clears the parent ref. Give items explicit keys to retain their input nodes and values when replacing/reordering data.
 
 ## Theme
 
-### Component Token (6)
+ConfigProvider components.timeline supplies current className/style/classNames/styles defaults. Current direction, theme algorithms and nested component-token overrides are reactive and isolated between instances. Root style priority is current theme → Provider/component semantic root styles → native style.
 
-| Token | Description | Default |
-|---|---|---|
-| `tailColor` | Line color | `colorSplit` |
-| `tailWidth` | Line width | `lineWidthBold` |
-| `dotBorderWidth` | Border width of node | `lineWidthBold` |
-| `itemPaddingBottom` | Bottom padding of item | `padding * 1.25` |
-| `dotSize` | Node size | ⚠️ **`undefined`** (intentionally undeclared, see below) |
-| `dotBg` | Node background | ⚠️ **`undefined`** (same) |
+| Component Token | Description | Default |
+| --- | --- | --- |
+| tailColor | Rail color | colorSplit |
+| tailWidth | Rail width | lineWidthBold |
+| dotBorderWidth | Node border width | lineWidthBold |
+| itemPaddingBottom | Item bottom spacing | padding * 1.25 |
+| dotSize | Custom node size | undefined; keep the internal Steps size fallback |
+| dotBg | Custom node background | undefined; keep the internal Steps background fallback |
 
-🚨 **`dotSize` / `dotBg` default to `undefined` and are intentionally left undeclared** in
-the artifact — they rely on a **two-hop `var(custom, origin)` fallback chain**: when unset
-they fall back to `Steps`' own size/background, and only take effect once set.
-**This is a rule, not an omission** (declaring them would break the fallback chain).
+Set tokens with `:theme="{ components: { Timeline: { dotSize: 14, tailWidth: 3 } } }"` on ConfigProvider, or with root CSS variables such as `--apollo-timeline-dot-size: 14px`. Sizes accept finite nonnegative numbers (converted to px); the width/size tokens also accept CSS length strings. Clearing an optional dot token restores its fallback. Theme updates do not generate runtime stylesheets.
 
-Tune at runtime via CSS variables: `--apollo-timeline-tail-color`, `--apollo-timeline-dot-size`, …
-
-## Reactivity
-
-Changes to items, reverse, mode, orientation, titleSpan, prefixCls and ConfigProvider defaults update the current render. Same-key replacements and reordering preserve input nodes and values. Native class/style are read during render; Vue string/object/array styles are supported and override matching Timeline semantic root styles. Reactive prefixes do not imply static CSS for arbitrary custom prefixes.
+The native event, item-side, zero-content, ref and token corrections are described in the [current contract migration](../../../../docs/migrations/timeline-contracts.md).

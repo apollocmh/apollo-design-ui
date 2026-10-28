@@ -19,6 +19,7 @@ import {
   defineComponent,
   h,
   inject,
+  mergeProps,
   normalizeClass,
   normalizeStyle,
   type PropType,
@@ -460,11 +461,13 @@ export const Steps = defineComponent({
       // ⚠️ 根标签可由内部上下文覆盖（Timeline 传 `'ol'`）；缺省仍是 `'div'`
       return h(
         internalContext?.rootComponent ?? 'div',
-        {
+        // Outer native attrs are merged at the actual DOM boundary, so native
+        // change listeners never enter Steps.onChange. Keep internal root
+        // class/style last; mergeProps composes listeners without dropping them.
+        mergeProps(restAttrs, internalContext?.rootAttrs ?? {}, {
           class: stepsClassName(),
           style: rootStyle(),
-          ...restAttrs,
-        },
+        }),
         nodes,
       );
     };

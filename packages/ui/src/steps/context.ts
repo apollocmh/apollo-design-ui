@@ -36,6 +36,12 @@ export interface StepsInternalContextValue {
   rootComponent?: string;
   /** 项元素标签。上游 `Timeline` 传 `'li'`；缺省时 `Step` 用 `'div'`。 */
   itemComponent?: string;
+  /**
+   * Native root attrs owned by an outer component, read during render. This
+   * channel avoids interpreting native listeners as public Steps props.
+   * The owner routes class/style through the existing semantic inputs instead.
+   */
+  rootAttrs?: Record<string, unknown>;
 }
 
 /** `UnstableContext` 的值。与 rc-steps 同形（目前只有一个键）。 */

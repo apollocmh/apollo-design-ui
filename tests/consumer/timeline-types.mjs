@@ -27,6 +27,21 @@ try {
     path.join(root, 'packages/ui/src/timeline/demo/native-slots.vue'),
     path.join(temp, 'Slots.vue'),
   );
+  fs.copyFileSync(
+    path.join(root, 'tests/browser/fixtures/TimelineContracts.vue'),
+    path.join(temp, 'Contracts.vue'),
+  );
+  fs.writeFileSync(
+    path.join(temp, 'Contracts.ts'),
+    `import type { TimelineItemType, TimelineProps, TimelineRef } from '@apollo-design/ui';
+const item: TimelineItemType = { key: 0, title: 0, content: false, icon: '', position: 'right', classNames: { root: 'row', rail: 'rail' } };
+const props: TimelineProps = { pending: 0, pendingDot: false, items: [item] };
+const useRef = (api: TimelineRef) => api.nativeElement?.focus();
+// @ts-expect-error Timeline has no rendered subtitle semantic region
+const invalidItem: TimelineItemType = { styles: { subtitle: { color: 'red' } } };
+void [props, useRef, invalidItem];
+`,
+  );
   const exactSlots = fs.readFileSync(
     path.join(root, 'packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue'),
     'utf8',
@@ -51,7 +66,7 @@ try {
           baseUrl: temp,
           paths: {},
         },
-        include: ['*.vue'],
+        include: ['*.vue', '*.ts'],
       },
       null,
       2,

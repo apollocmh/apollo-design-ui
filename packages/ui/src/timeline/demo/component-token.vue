@@ -1,7 +1,9 @@
 <script setup lang="ts">
-// 对齐 antd 的 component-token demo：覆盖轨迹与节点的尺寸、颜色。
 import type { TimelineItemType } from '@apollo-design/ui';
-import { Timeline } from '@apollo-design/ui';
+import { Button, ConfigProvider, Timeline } from '@apollo-design/ui';
+import { ref } from 'vue';
+
+const custom = ref(true);
 
 const items: TimelineItemType[] = [
   { content: 'Create a services site 2015-09-01' },
@@ -12,18 +14,11 @@ const items: TimelineItemType[] = [
 </script>
 
 <template>
-  <div class="demo-timeline-token">
+  <Button style="margin-bottom: 16px" @click="custom = !custom">Toggle component tokens</Button>
+  <ConfigProvider :theme="{ components: { Timeline: custom ? {
+    tailColor: '#91caff', tailWidth: 3, dotSize: 14, dotBg: '#e6f4ff',
+    dotBorderWidth: 3, itemPaddingBottom: 28,
+  } : {} } }">
     <Timeline :items="items" />
-  </div>
+  </ConfigProvider>
 </template>
-
-<style>
-.demo-timeline-token .apollo-timeline {
-  --apollo-timeline-tail-color: #91caff;
-  --apollo-timeline-tail-width: 3px;
-  --apollo-timeline-dot-size: 14px;
-  --apollo-timeline-dot-bg: #e6f4ff;
-  --apollo-timeline-dot-border-width: 3px;
-  --apollo-timeline-item-padding-bottom: 28px;
-}
-</style>

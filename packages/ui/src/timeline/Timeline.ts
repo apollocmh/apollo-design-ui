@@ -13,6 +13,7 @@ import {
   type SlotsType,
   shallowRef,
   type VNodeChild,
+  watchEffect,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
@@ -28,9 +29,7 @@ import type {
   TimelineSlots,
 } from './interface';
 import { useItems } from './use-items';
-
-/** 两个内部的 Steps Context 值（与上游逐字一致）。 */
-const STEP_INTERNAL_CONTEXT = { rootComponent: 'ol', itemComponent: 'li' };
+import { useTimelineTheme } from './use-theme';
 
 /** `classNames` 的八键 → `timeline` 前缀（判据 5）。 */
 const stepsClassNamesOf = (prefixCls: string): Record<string, string> => ({
@@ -50,6 +49,10 @@ function mergeMode(mode?: TimelineMode): TimelineMode {
   if (mode === 'right') return 'end';
   return mode === 'alternate' || mode === 'start' || mode === 'end' ? mode : 'start';
 }
+
+/** Steps treats truthy icon data as custom; retain explicit scalar Vue content. */
+const completeIcon = (icon: VNodeChild): VNodeChild =>
+  icon === 0 || icon === false || icon === '' ? [icon] : icon;
 
 const Timeline = defineComponent({
   name: 'ATimeline',
@@ -76,8 +79,7 @@ const Timeline = defineComponent({
       default: undefined,
     },
     items: { type: Array as PropType<TimelineItemType[]>, default: undefined },
-    // ⚠️ `pending` / `pendingDot` 是**上游的废弃 prop**（VNodeChild）—— 保留 prop 形态
-    //    （与 card 的 `title` / `extra` 同判；它们不是插槽语义，是「内容」）
+    // Legacy content data remains valid; richer content uses native item slots.
     pending: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     pendingDot: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     reverse: { type: Boolean, default: false },
@@ -90,6 +92,7 @@ const Timeline = defineComponent({
     const mergedMode = computed(() => mergeMode(props.mode));
     const prefixCls = computed(() => config.getPrefixCls('timeline', props.prefixCls));
     const rootPrefixCls = computed(() => config.getPrefixCls());
+    const themeStyle = useTimelineTheme(() => prefixCls.value);
     const rawItems = computed(() =>
       useItems(
         { rootPrefixCls: rootPrefixCls.value, prefixCls: prefixCls.value, mode: mergedMode.value },
@@ -108,28 +111,27 @@ const Timeline = defineComponent({
       const pendingMessage = 'You can create a `item` as pending node directly.';
       // ⚠️ 本仓的 `deprecated` 是四参 `(valid, oldProp, newProp, message?)`；
       //    上游的三参 `(valid, 'deprecated', message)` 形态由它承载。
-      warning.deprecated(!props.pending, 'pending', 'items', pendingMessage);
-      warning.deprecated(!props.pendingDot, 'pendingDot', 'items', pendingMessage);
-      warning.deprecated(
-        props.mode !== 'left' && props.mode !== 'right',
-        'mode=left|right',
-        'mode=start|end',
-      );
-      // 🚨 逐项四项：判据是 `items.every(item => !item[oldProp])` ——
-      //    **只要有一项**用了旧 prop 就**不**告警。
-      const warnItems = props.items ?? [];
-      for (const [oldProp, newProp] of [
-        ['label', 'title'],
-        ['children', 'content'],
-        ['dot', 'icon'],
-        ['position', 'placement'],
-      ] as const) {
+      watchEffect(() => {
+        warning.deprecated(props.pending === undefined, 'pending', 'items', pendingMessage);
+        warning.deprecated(props.pendingDot === undefined, 'pendingDot', 'items', pendingMessage);
         warning.deprecated(
-          warnItems.every((item) => !item[oldProp]),
-          `items.${oldProp}`,
-          `items.${newProp}`,
+          props.mode !== 'left' && props.mode !== 'right',
+          'mode=left|right',
+          'mode=start|end',
         );
-      }
+        for (const [oldProp, newProp] of [
+          ['label', 'title'],
+          ['children', 'content'],
+          ['dot', 'icon'],
+          ['position', 'placement'],
+        ] as const) {
+          warning.deprecated(
+            (props.items ?? []).every((item) => item[oldProp] === undefined),
+            `items.${oldProp}`,
+            `items.${newProp}`,
+          );
+        }
+      });
     }
 
     // ---- 判据 6：titleSpan → 内联 CSS 变量 ----
@@ -142,7 +144,14 @@ const Timeline = defineComponent({
       return style;
     });
 
-    provide(stepsInternalContextKey, STEP_INTERNAL_CONTEXT);
+    provide(stepsInternalContextKey, {
+      rootComponent: 'ol',
+      itemComponent: 'li',
+      get rootAttrs() {
+        const { class: _class, style: _style, ...nativeAttrs } = attrs;
+        return nativeAttrs;
+      },
+    });
     provide(stepsUnstableContextKey, {
       get railFollowPrevStatus() {
         return props.reverse;
@@ -176,7 +185,8 @@ const Timeline = defineComponent({
     const stepsRef = shallowRef<{ $el?: unknown } | null>(null);
     expose({
       nativeElement: computed(() => {
-        const el = getElement(stepsRef.value);
+        // Steps has a numeric `current` prop; resolve its actual root directly.
+        const el = getElement(stepsRef.value?.$el);
         return typeof HTMLElement !== 'undefined' && el instanceof HTMLElement ? el : null;
       }),
     });
@@ -187,19 +197,23 @@ const Timeline = defineComponent({
         const sourceIndex = props.reverse ? mergedItems.value.length - 1 - index : index;
         const item = props.items?.[sourceIndex];
         // The synthetic legacy pending entry has no source item or item-slot scope.
-        if (!item) return entry;
+        if (!item) return { ...entry, icon: completeIcon(entry.icon) };
         const scope = { item, index };
         return {
           ...entry,
           title: slots.itemTitle ? slots.itemTitle(scope) : entry.title,
           content: slots.itemContent ? slots.itemContent(scope) : entry.content,
-          icon: slots.itemIcon ? slots.itemIcon(scope) : entry.icon,
+          icon: completeIcon(slots.itemIcon ? slots.itemIcon(scope) : entry.icon),
         };
       });
       const alternate =
         mergedMode.value === 'alternate' ||
         (orientation.value === 'vertical' && items.some((item) => !isEmptyVNode(item.title)));
-      const nativeRootStyle = normalizeStyle([mergedStyles.value.root, attrs.style]);
+      const nativeRootStyle = normalizeStyle([
+        themeStyle.value,
+        mergedStyles.value.root,
+        attrs.style,
+      ]);
       const styles: TimelineSemanticStyles = {
         ...mergedStyles.value,
         ...(typeof nativeRootStyle === 'object' ? { root: nativeRootStyle } : {}),
@@ -207,7 +221,6 @@ const Timeline = defineComponent({
       // ⚠️ `Steps` 是**组件** ⇒ children 走插槽路径；但这里不传 children
       //    （`Timeline` 的内容全在 `items` 里）。
       return h(Steps, {
-        ...attrs,
         ref: stepsRef,
         // 判据 8：restProps 透传（`attrs` 承载未声明的 prop）
         //
@@ -223,6 +236,8 @@ const Timeline = defineComponent({
         styles,
         variant: props.variant,
         orientation: orientation.value,
+        // Timeline owns its explicit orientation at every viewport width.
+        responsive: false,
         // 判据 3 / 4
         type: 'dot',
         items,

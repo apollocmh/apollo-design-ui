@@ -2,6 +2,8 @@
 
 # Timeline 实现说明
 
+2026-10-28 当前契约：原生 `<ol>` 根监听器、真实 nativeElement、显式方向、数据侧别名/零与空图标/pending、六个当前主题 Token 已成组核对，见[本轮盘点与证据](../../../../docs/audit/2026-10-28-timeline-contract-audit.md)和[迁移](../../../../docs/migrations/timeline-contracts.md)。下面带上游版本与旧 Gate 的表格仅为历史参考，不代表当前全量或 Apollo 视觉通过。
+
 > 规则 R1：本文件记录「仓库文档里没有的」—— 差异、选型理由、Token 落点、已知缺口。
 
 ## 1. 对应 antd 组件
@@ -102,18 +104,14 @@ node tests/visual/debug/extract-timeline-css.mjs > /tmp/timeline-antd.css   # 44
 
 <!-- 未支持的能力 + 落点（范本见 divider/README.md §7） -->
 
-1. **1 个 antd demo 未移植**（`demo.test.ts` 的 `expectCount: 13` 钉住的是**已落地**的那批）：
-   - `component-token`（`theme.components.Timeline` 调试）—— 零运行时架构下 token 是构建期
-     产物，已由 `theme.test.ts` 覆盖。**全仓 10+ 组件同判**。
-   - （`_semantic` / `_semantic_items` 是上游的**内部**演示件，不在用户文档侧栏。）
-2. **`children` 形态不支持**（见 §2 第 1 条）—— 只支持 `items`。
+1. **十五对原生 Demo 已在仓库**，含 `component-token` 的当前 ConfigProvider 覆盖/恢复和 `native-slots` 的条件内容及输入状态；以实际 Demo 冒烟和本轮浏览器证据为准。
+2. 条目由 `items` 提供，模板富内容使用三个原生作用域槽；默认槽不注册条目，不保留 React children 解析或空壳 Item。
 3. **`ConfigProvider` 的 `TimelineConfig` 类型未提升**：上游走 (B) 通道
    （`components?: Record<string, ComponentConfigLike>`）—— **运行时可用，只是类型宽**。
    ⚠️ 与 anchor / masonry / card / avatar / list 一致。
-4. **`Timeline` 没有自己的根 DOM** ⇒ `ref.nativeElement` 取的是 `Steps` 的根
-   （见 §2 第 2 条）。若将来 Steps 换了根标签，这里会跟着变。
+4. Timeline 通过 Steps 内部协议固定原生 `ol`/`li`；nativeElement 直接解析当前根 DOM，公开契约不会因内部 Steps 默认标签改变。
 5. **样式表与 `Steps` 的内部变量强耦合**（`--apollo-cmp-steps-*`，见 §2 第 3 条）——
-   `Steps` 改了那些变量的语义，Timeline 的观感会跟着变（**这是上游的架构，不是本仓的选择**）。
+   `Steps` 改了那些变量的语义，Timeline 的观感会跟着变（本库选择复用的内部协议，变更时须联动验证）。
 6. **`COMPATIBILITY.md` §9.2 的双轨漂移**：最近收口的 8 个组件
    （card / masonry / anchor / breadcrumb / date-picker / avatar / list / timeline）的差异
    都只写在各自的 `README §2`，未登记进 §9.2（最后一号停在 **D118**）。

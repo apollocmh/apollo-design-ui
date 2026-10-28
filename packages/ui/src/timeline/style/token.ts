@@ -83,7 +83,10 @@ export interface ComponentToken {
  * 它们必须不出现在 css-var 声明块里，否则 `var(custom, origin)` 的回退链会失效
  * （`-custom` 变成有效值，直接盖掉 Steps 的 origin）。
  */
-export const prepareComponentToken = (token: AliasToken): Partial<ComponentToken> => ({
+type DefaultComponentToken = Required<Omit<ComponentToken, 'dotBg' | 'dotSize'>> &
+  Pick<ComponentToken, 'dotBg' | 'dotSize'>;
+
+export const prepareComponentToken = (token: AliasToken): DefaultComponentToken => ({
   tailColor: token.colorSplit,
   tailWidth: token.lineWidthBold,
   dotBorderWidth: token.lineWidthBold,

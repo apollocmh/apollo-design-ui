@@ -119,6 +119,8 @@ describe('Timeline · Props 类型', () => {
     >();
     expectTypeOf<NonNullable<TimelineSlots['itemTitle']>>().returns.toEqualTypeOf<VNodeChild>();
     expectTypeOf<NonNullable<TimelineSlots['itemIcon']>>().returns.toEqualTypeOf<VNodeChild>();
+    expectTypeOf<NonNullable<TimelineItemType['classNames']>>().not.toHaveProperty('subtitle');
+    expectTypeOf<NonNullable<TimelineItemType['styles']>>().not.toHaveProperty('subtitle');
   });
 });
 
@@ -154,7 +156,11 @@ describe('Timeline · 负例（永不调用的闭包内）', () => {
     const _never = () => {
       // @ts-expect-error `Timeline` 没有副标题槽
       const badSlot: TimelineProps = { classNames: { itemSubtitle: 'x' } };
-      void badSlot;
+      // @ts-expect-error Timeline has no rendered item subtitle region
+      const badItemClass: TimelineItemType = { classNames: { subtitle: 'x' } };
+      // @ts-expect-error Timeline has no rendered item subtitle region
+      const badItemStyle: TimelineItemType = { styles: { subtitle: { color: 'red' } } };
+      void [badSlot, badItemClass, badItemStyle];
     };
     expectTypeOf(_never).toBeFunction();
   });

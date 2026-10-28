@@ -4,113 +4,77 @@ title: Timeline
 subtitle: 时间轴
 ---
 
-垂直展示的时间流信息。
-
-## 何时使用
-
-- 当有一系列信息需按时间排列时；
-- 需要给一个时间序列加上状态与描述时。
-
-> ⚠️ **本组件在 antd 6.6.4 里没有自己的 DOM** —— 它是 [`Steps`](./steps) 的薄壳：
-> 渲染成 **`<ol>` + `<li>`**（列表语义由原生元素承担），外观由「Steps 的 DOM +
-> Timeline 自己的样式覆盖」共同决定。这也是为什么它支持 `variant` 等 Steps 的 props。
+按顺序展示事件、状态和完整说明，支持纵向与横向。根是原生 `<ol>`，每项是 `<li>`。Timeline 组合内部 Steps 渲染器；组件没有选中状态或业务事件。
 
 ## 代码演示
 
-见 [`demo/`](./demo)（**15 个**，覆盖 antd 的主要用户场景）。
-
-| demo | 内容 |
-|---|---|
-| `basic` | 只给 `content`（无 `title` ⇒ 纵向**不**交错） |
-| `variant` | `variant="filled"` 与默认 `"outlined"` |
-| `end` | `mode="end"` + `icon` / `color` 自定义节点 |
-| `title-span` | `titleSpan` 的数字（24 栅格）/ 字符串（CSS 长度）两条分支 |
-| `horizontal` | `orientation="horizontal"`（另一套绝对定位布局） |
-| `alternate` | `mode="alternate"` 左右交替 |
-| `pending` | `reverse` 反转 + `loading: true` 的「进行中」项 |
-| `pending-legacy` | ⚠️ **已废弃**的 `pending` / `pendingDot` |
-| `custom` | `icon` 自定义节点（自定义 `fontSize` 时需自己给背景色） |
-| `horizontal-debug` | 水平 + 长文本 + `styles.item` 调试描边 |
-| `title` | 带 `title` 的项 ⇒ 纵向**自动交错** |
-| `style-class` | `styles` 的**函数形态** + `classNames.root` |
-| `semantic` | **项级**语义化槽（`items[i].styles`） |
-| `native-slots` | 原生标题/正文/图标槽，动态/空内容、反转与输入状态 |
-
-⚠️ 与 antd 的 **1 个 demo 未移植**（缺口见 `README.md` §5）：`component-token`
-（零运行时架构下 token 是构建期产物）。
+`demo/` 中十五对示例覆盖基础内容、变体、末端排布、标题栏、横向和交错布局、加载、旧 pending 数据、自定义图标、长文本、标题、语义样式、原生插槽及动态组件 Token。
 
 ## API
 
 ### Timeline
 
 | 参数 | 说明 | 类型 | 默认值 |
-|---|---|---|---|
-| items | 条目数据；富内容使用下列作用域槽 | `TimelineItemType[]` | — |
-| mode | 模式。`'left'` / `'right'` **已废弃** ⇒ 归一为 `'start'` / `'end'` | `'left' \| 'right' \| 'start' \| 'end' \| 'alternate'` | `'start'` |
-| orientation | 方向。`'horizontal'` 落 `-horizontal` 类 | `'horizontal' \| 'vertical'` | `'vertical'` |
-| titleSpan | 标题栏占比：**数字**按 24 栅格、**字符串**按 CSS 长度 | `number \| string` | — |
-| variant | 变体（透传给内部的 `Steps`） | `'filled' \| 'outlined'` | `'outlined'` |
-| reverse | 反转项顺序（⚠️ 连线的状态也随之改跟当前项） | `boolean` | `false` |
-| pending | ⚠️ **已废弃** —— 直接在 `items` 里加一项 | `VNodeChild` | — |
-| pendingDot | ⚠️ **已废弃** —— 直接在 `items` 里加一项 | `VNodeChild` | — |
-| classNames / styles | 语义化槽（**十槽去掉 `itemSubtitle`**；支持**函数形态**） | | — |
-| prefixCls | 类名前缀 | | — |
-| class / style | **根元素原生 attrs**（不是 Props）；`style` 走 `styles.root` 语义槽 | | — |
+| --- | --- | --- | --- |
+| items | 有序条目数据；模板富内容使用原生条目槽 | `TimelineItemType[]` | — |
+| mode | 条目排布；旧 left/right 归一为 start/end | `'start' \| 'end' \| 'alternate' \| 'left' \| 'right'` | `'start'` |
+| orientation | 显式方向，在所有视口宽度下保持 | `'horizontal' \| 'vertical'` | `'vertical'` |
+| titleSpan | 标题栏：数字按 24 栅格，字符串为 CSS 长度/百分比 | `number \| string` | — |
+| variant | 节点变体 | `'filled' \| 'outlined'` | `'outlined'` |
+| reverse | 反转显示顺序；连线状态改跟当前条目 | `boolean` | `false` |
+| pending | 已废弃，改在 items 中追加加载项。false/null/undefined 关闭；0/空字符串仍创建 pending 项；true 只显示指示器 | `VNodeChild` | — |
+| pendingDot | 已废弃，旧 pending 合成项的自定义图标；改用 items[].icon | `VNodeChild` | — |
+| classNames | 语义类名对象，或读取当前 `{ props }` 的函数 | `TimelineSemanticValue<TimelineSemanticClassNames>` | — |
+| styles | 语义样式对象，或读取当前 `{ props }` 的函数 | `TimelineSemanticValue<TimelineSemanticStyles>` | — |
+| prefixCls | DOM 类名前缀；任意前缀需配套静态 CSS | `string` | `apollo-timeline` |
 
-> 🚨 **`layoutAlternate` 的判据**：`mode === 'alternate'` **或**（纵向 **且** 任一项带 `title`）。
-> ⇒ 纵向只要有一项带 `title`，整个时间轴就进入**左右交错**布局。
-> ⚠️ `titleSpan` 在 `mode === 'alternate'` 时**不生效**（上游同判）。
+纵向中任一当前标题非空时启用两栏布局。显式 mode="alternate" 也启用该布局，并按源条目奇偶分配排布侧。反转改变显示顺序和槽索引，保留每个源条目的排布侧。显式 alternate 模式忽略 titleSpan。
 
-### items[i]（`TimelineItemType`）
+### 条目数据
 
 | 字段 | 说明 | 类型 |
-|---|---|---|
-| content | 内容 | `VNodeChild` |
-| title | 标题（有 `title` ⇒ 纵向交错） | `VNodeChild` |
-| icon | 自定义节点图标 | `VNodeChild` |
-| color | 预设色（`blue` / `red` / `green` / `gray`）落类；**其余任意色值**落内联 CSS 变量 | `'blue' \| 'red' \| 'green' \| 'gray' \| string` |
-| loading | 加载中 ⇒ `status: 'process'` + 默认加载图标 | `boolean` |
-| placement | 排布侧。不传时按 `mode` 推导（`alternate` 时按**奇偶**交替） | `'start' \| 'end'` |
-| key | 行 key | `string \| number` |
-| className / style / classNames / styles | 项级落点（`styles` 支持 `root` / `rail` / `content` 等项级槽） | |
-| label / children / dot / position | ⚠️ **都已废弃** ⇒ 用 `title` / `content` / `icon` / `placement` | |
+| --- | --- | --- |
+| key | 替换/重排时的稳定条目标识 | `string \| number` |
+| title / content / icon | 完整 Vue 内容，支持 0、Fragment 和组件；显式 false/空图标覆盖默认加载图标 | `VNodeChild` |
+| color | blue/red/green/gray 使用预设类；其他颜色写入本项 dot-color CSS 变量 | `string` |
+| loading | process 状态；icon 和 dot 均 absent/null 时使用默认加载图标 | `boolean` |
+| placement | 排布侧；未给出时从 mode 推导 | `'start' \| 'end'` |
+| className / style | 项根类名与内联样式 | `string` / `CSSProperties` |
+| classNames / styles | 项级区域：root、wrapper、header、title、section、content、icon、rail | 语义对象 |
+| label / children / dot | 已废弃的 title/content/icon 数据别名；仅在对应新字段 nullish 时回退 | `VNodeChild` |
+| position | 已废弃的 placement 别名；left/right 归一为 start/end，显式 placement 优先 | `'left' \| 'right' \| 'start' \| 'end'` |
 
-项级 classNames/styles 会保留并传入条目，作用于 root、title、icon、content、rail 等语义位置，也可与原生内容槽共用。root 样式按组件 styles.item → 项 styles.root → 项 style 合并；正文按组件 styles.itemContent → 项 styles.content 合并。更新项级语义值会保留同 key 内容节点。
-
-### 实例方法（ref）
-
-暴露 `{ nativeElement }` —— ⚠️ 取的是**内部 `Steps` 的根元素**（`HTMLDivElement` 或
-`HTMLOListElement`），因为 `Timeline` 没有自己的根 DOM。
+项根样式按组件 styles.item → 项 styles.root → 项 style 合并。其余区域先合并组件语义样式，再合并本项语义样式。没有 subtitle 区域。原生条目槽使用同一内容宿主和样式落点。
 
 ### 内容插槽
 
-| 名称 | 参数 | 说明 |
-|---|---|---|
+| 名称 | 作用域 | 说明 |
+| --- | --- | --- |
 | itemTitle | `{ item, index }: TimelineItemSlotProps` | 条目标题 |
 | itemContent | `{ item, index }: TimelineItemSlotProps` | 条目正文 |
 | itemIcon | `{ item, index }: TimelineItemSlotProps` | 条目图标 |
 
-item 是当前原始数据项，index 是反转后的显示索引（含旧 pending 节点占位）。存在的槽覆盖对应 title/content/icon 数据及别名回退，空槽同样覆盖；移除槽恢复数据内容。SSR也调用这些槽。旧 pending 合成节点不提供item作用域。空壳 Timeline.Item / TimelineItemComponent 和无运行落点的 TimelineSlot 类型已直接移除，见[迁移说明](../../../../docs/migrations/timeline-item-slots.md)。
+item 是当前原始数据项；index 是反转后的显示索引，含旧 pending 节点占位。槽存在就覆盖对应数据及别名，有意为空也覆盖；移除槽恢复数据。SSR 和水合中同样渲染。pending 合成项没有源数据作用域。默认槽不注册条目；开发版已移除 Timeline.Item / TimelineItemComponent，见[插槽迁移](../../../../docs/migrations/timeline-item-slots.md)。
 
-## Theme
+### 原生 attrs、事件与 ref
 
-### Component Token（6 个）
+原生 class/style、id、tabindex、ARIA 属性和 DOM 监听器落到有序列表根。原生根 style 覆盖同名语义 root 样式；class 支持 Vue 字符串/数组/对象，style 支持字符串/数组/对象。原生 @change 接收冒泡的 DOM Event，不会启用可选中的条目。@click 和事件修饰符遵循 Vue DOM 语义。Timeline 没有 emits 或 v-model。
 
-| token | 说明 | 默认值 |
-|---|---|---|
-| `tailColor` | 轨迹颜色 | `colorSplit` |
-| `tailWidth` | 轨迹宽度 | `lineWidthBold` |
-| `dotBorderWidth` | 节点边框宽度 | `lineWidthBold` |
-| `itemPaddingBottom` | 时间项下间距 | `padding * 1.25` |
-| `dotSize` | 节点大小 | ⚠️ **`undefined`**（刻意不声明，见下） |
-| `dotBg` | 节点背景色 | ⚠️ **`undefined`**（同上） |
+ref 暴露 `{ nativeElement: HTMLElement | null }`，挂载后为当前 `<ol>`。数据、布局和 Provider 更新保持元素身份；卸载后父级 ref 清空。替换或重排数据时为条目提供显式 key，以保留输入节点和值。
 
-🚨 **`dotSize` / `dotBg` 默认是 `undefined`、产物里也刻意不声明** —— 它们靠
-`var(custom, origin)` 的**两层回退链**：未设置时回退到 `Steps` 的原生尺寸/背景色，
-设置后才生效。**这不是遗漏，是判据**（补一条声明会让回退链失效）。
+## 主题
 
-运行时调参用 CSS 变量：`--apollo-timeline-tail-color` / `--apollo-timeline-dot-size` 等。
+ConfigProvider 的 components.timeline 提供当前 className/style/classNames/styles 默认值。direction、主题算法和嵌套组件 Token 均响应式更新，多实例作用域隔离。根样式优先级为当前主题 → Provider/组件语义 root 样式 → 原生 style。
 
-## 响应性
+| 组件 Token | 说明 | 默认值 |
+| --- | --- | --- |
+| tailColor | 连线颜色 | colorSplit |
+| tailWidth | 连线宽度 | lineWidthBold |
+| dotBorderWidth | 节点边框宽度 | lineWidthBold |
+| itemPaddingBottom | 条目底部间距 | padding * 1.25 |
+| dotSize | 自定义节点大小 | undefined；保留内部 Steps 大小回退 |
+| dotBg | 自定义节点背景 | undefined；保留内部 Steps 背景回退 |
 
-items、reverse、mode、orientation、titleSpan、prefixCls 和 ConfigProvider 默认值更新后即时重新派生。相同 key 的数据替换/重排保留条目中的输入节点和值。class/style 在当前 render 中读取；字符串、对象、数组 style 按 Vue 规则处理，原生根样式覆盖同名 Timeline 语义 root 样式。前缀响应性不代表任意自定义前缀已有配套静态 CSS。
+在 ConfigProvider 设置 `:theme="{ components: { Timeline: { dotSize: 14, tailWidth: 3 } } }"`，也可用根 CSS 变量，如 `--apollo-timeline-dot-size: 14px`。尺寸接受有限非负数字并转为 px，宽度/大小 Token 还可接受 CSS 长度字符串。移除可选 dot Token 后恢复回退值。主题更新不生成运行时样式表。
+
+原生事件、排布侧、零内容、ref 与 Token 修正见[当前契约迁移](../../../../docs/migrations/timeline-contracts.md)。

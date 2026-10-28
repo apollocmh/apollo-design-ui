@@ -51,16 +51,16 @@
 import { getDesignToken, token2CSSVar } from '@apollo-design/theme';
 import type { TimelineStyleContext } from './context';
 import { genHorizontalStyle } from './horizontal';
-import { type ComponentToken, prepareComponentToken } from './token';
+import { prepareComponentToken } from './token';
 
 /** token 名 → `var(--apollo-*)`。变量名由 theme 包的命名函数给出，不手写字面量。 */
 const v = (token: string): string => `var(${token2CSSVar(token)})`;
 
-let tokenCache: ComponentToken | null = null;
+let tokenCache: ReturnType<typeof prepareComponentToken> | null = null;
 
-function timelineTokenValues(): ComponentToken {
+function timelineTokenValues(): ReturnType<typeof prepareComponentToken> {
   if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken()) as ComponentToken;
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }
@@ -81,9 +81,9 @@ export function genTokenDecls(rootPrefixCls: string): string[] {
   const t = timelineTokenValues();
   return [
     `  --${p}-timeline-tail-color:${t.tailColor};`,
-    `  --${p}-timeline-tail-width:${unit(t.tailWidth as number | string)};`,
-    `  --${p}-timeline-dot-border-width:${unit(t.dotBorderWidth as number | string)};`,
-    `  --${p}-timeline-item-padding-bottom:${unit(t.itemPaddingBottom as number)};`,
+    `  --${p}-timeline-tail-width:${unit(t.tailWidth)};`,
+    `  --${p}-timeline-dot-border-width:${unit(t.dotBorderWidth)};`,
+    `  --${p}-timeline-item-padding-bottom:${unit(t.itemPaddingBottom)};`,
   ];
 }
 
@@ -135,8 +135,11 @@ export function genTimelineStyle(rootPrefixCls: string): string {
     `  --${p}-cmp-steps-item-icon-dot-bg-color-custom:${tv('dot-bg')};`,
     `  --${p}-cmp-steps-icon-size:var(--${p}-cmp-steps-icon-dot-size-custom, var(--${p}-cmp-steps-icon-dot-size-origin));`,
     `}`,
-    `${cls} ${item} ${item}-icon{`,
+    // Match the active Steps icon specificity so optional dotSize wins there too.
+    `${cls} ${item}${item} ${item}-icon{`,
     `  --${p}-cmp-steps-dot-icon-border-width:${tv('dot-border-width')};`,
+    `  --${p}-cmp-steps-icon-border-width:${tv('dot-border-width')};`,
+    `  --${p}-cmp-steps-icon-size:var(--${p}-cmp-steps-icon-dot-size-custom, var(--${p}-cmp-steps-icon-dot-size-origin));`,
     `  --${p}-cmp-steps-dot-icon-size:var(--${p}-cmp-steps-icon-size);`,
     `  --${p}-cmp-steps-item-icon-dot-bg-color:var(--${p}-cmp-steps-item-icon-dot-bg-color-custom, var(--${p}-cmp-steps-item-icon-dot-bg-color-origin));`,
     `}`,
@@ -179,11 +182,15 @@ export function genTimelineStyle(rootPrefixCls: string): string {
     `  --${p}-timeline-head-span-ptg:calc(var(--${p}-timeline-head-span) / 24 * 100%);`,
     `}`,
 
+    // All vertical items consume Timeline spacing, including content-only lists.
+    `${cls}:not(${cls}-horizontal) ${item}{`,
+    `  min-height:auto;`,
+    `  padding-bottom:${tv('item-padding-bottom')};`,
+    `}`,
+
     // ---- 17-22 纵向 + 交错：左右分栏 ----
     `${cls}:not(${cls}-horizontal)${cls}-layout-alternate ${item}{`,
     `  --${p}-timeline-alternate-gap:calc(${v('margin')} * 2 + ${sv('dot-icon-size')});`,
-    `  min-height:auto;`,
-    `  padding-bottom:${tv('item-padding-bottom')};`,
     `}`,
     `${cls}:not(${cls}-horizontal)${cls}-layout-alternate ${item} ${item}-icon,${cls}:not(${cls}-horizontal)${cls}-layout-alternate ${item} ${item}-rail{`,
     `  position:absolute;`,

@@ -30,10 +30,8 @@ export type TimelineColor = 'blue' | 'red' | 'green' | 'gray';
 // ---------------------------------------------------------------------------
 
 /**
- * `Timeline` 的一项。逐字段对齐上游 `TimelineItemType`。
- *
- * ⚠️ `classNames` / `styles` 复用 **Steps 的项级语义槽**
- * （上游是 `GetProp<StepsProps, 'items'>[number]['classNames']`）。
+ * Timeline item data. Semantic targets match the rendered item regions;
+ * Timeline has no subtitle region.
  */
 export interface TimelineItemType {
   /** 预设色（`blue` / `red` / `green` / `gray`）落类；**其余任意色值**落内联 CSS 变量。 */
@@ -43,15 +41,15 @@ export interface TimelineItemType {
   /** 项元素的内联样式。 */
   style?: CSSProperties;
   /** 项级语义化类名（复用 Steps 的槽名）。 */
-  classNames?: StepItem['classNames'];
+  classNames?: Omit<NonNullable<StepItem['classNames']>, 'subtitle'>;
   /** 项级语义化样式（复用 Steps 的槽名）。 */
-  styles?: StepItem['styles'];
+  styles?: Omit<NonNullable<StepItem['styles']>, 'subtitle'>;
 
   /** 排布侧。不传时按 `mode` 推导（`alternate` 时按奇偶）。 */
   placement?: ItemPlacement;
-  /** @deprecated 请用 `placement`。 */
+  /** @deprecated 请用 `placement`。left/right 分别归一为 start/end。 */
   position?: ItemPosition;
-  /** 加载中。⇒ `status: 'process'` + 默认 `LoadingOutlined` 图标。 */
+  /** 加载中；未提供 icon/dot 时使用默认 LoadingOutlined 图标。 */
   loading?: boolean;
 
   /** 行 key。 */
@@ -124,7 +122,7 @@ export interface TimelineProps {
   /** Item data; customize content with native scoped item slots. */
   items?: TimelineItemType[];
 
-  /** @deprecated 请直接在 `items` 里加一项 pending 节点。 */
+  /** @deprecated 请改用 items。false/null/undefined 关闭；0/空字符串仍创建条目。 */
   pending?: VNodeChild;
   /** @deprecated 请直接在 `items` 里加一项 pending 节点。 */
   pendingDot?: VNodeChild;
@@ -135,8 +133,7 @@ export interface TimelineProps {
 /**
  * `Timeline` 暴露的实例。
  *
- * ⚠️ 上游**没有** ref（`Timeline` 没有自己的根 DOM）。本仓按「可观测的根元素」定义：
- * 取 **`Steps` 的根元素**（`ol` 或 `div`）。
+ * The native ordered-list root, or null before mount/after unmount.
  */
 export interface TimelineRef {
   nativeElement: HTMLElement | null;
@@ -169,4 +166,9 @@ export interface TimelineSlots {
  * 与 anchor / masonry / card / avatar / list 一致：走 (B) 通道，**类型未提升**
  * （运行时可用，只是 `components` 的类型宽）。
  */
-export type TimelineConfig = ComponentStyleConfig & Pick<TimelineProps, 'classNames' | 'styles'>;
+export type TimelineConfig = {
+  className?: ComponentStyleConfig['className'];
+  style?: ComponentStyleConfig['style'];
+  classNames?: TimelineProps['classNames'];
+  styles?: TimelineProps['styles'];
+};

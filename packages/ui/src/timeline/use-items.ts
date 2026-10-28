@@ -36,6 +36,12 @@ const PRESET_COLORS = ['blue', 'red', 'green', 'gray'];
 const clsx = (...values: unknown[]): string =>
   values.filter((value) => typeof value === 'string' && value !== '').join(' ');
 
+/** Legacy positions name the same two sides; CSS consumes only start/end. */
+function placementOf(position: TimelineMode | undefined, index: number): ItemPlacement {
+  if (position === 'end' || position === 'right') return 'end';
+  return position === 'alternate' && index % 2 === 1 ? 'end' : 'start';
+}
+
 export interface UseItemsContext {
   /** ConfigProvider 的根前缀（`apollo`）。 */
   rootPrefixCls: string;
@@ -93,16 +99,13 @@ export function useItems(
     }
 
     // 判据 2：placement 的推导链
-    const mergedPlacement: ItemPlacement =
-      placement ??
-      (position as ItemPlacement | undefined) ??
-      (mode === 'alternate' ? (index % 2 === 0 ? 'start' : 'end') : (mode as ItemPlacement));
+    const mergedPlacement = placement ?? placementOf(position ?? mode, index);
 
     mergedClassName = clsx(mergedClassName, `${itemCls}-placement-${mergedPlacement}`);
 
     // 判据 6：loading 且无 icon/dot ⇒ 默认加载图标
     let mergedIcon = icon ?? dot;
-    if (!mergedIcon && loading) {
+    if (mergedIcon == null && loading) {
       mergedIcon = h(LoadingOutlined);
     }
 
@@ -121,8 +124,13 @@ export function useItems(
   });
 
   // 废弃的 `pending` ⇒ 追加一项（⚠️ 这一项**没有** className / placement）
-  if (pending) {
+  if (pending !== undefined && pending !== null && pending !== false) {
+    // Keep the synthetic entry distinct from numeric fallback and user keys.
+    const keys = new Set(mergedItems.map((item) => item.key));
+    let key = 'apollo-timeline-pending';
+    while (keys.has(key)) key += '-pending';
     mergedItems.push({
+      key,
       icon: pendingDot ?? h(LoadingOutlined),
       content: pending,
       status: 'process',

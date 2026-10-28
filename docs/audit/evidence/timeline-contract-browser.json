@@ -1,0 +1,100 @@
+{
+  "source": true,
+  "browser": "150.0.7871.125",
+  "viewport": {
+    "width": 1200,
+    "height": 1000
+  },
+  "results": [
+    {
+      "name": "SSR hydration preserves the server root and exposes the native ol",
+      "passed": true
+    },
+    {
+      "name": "legacy item sides normalize to current CSS placements",
+      "passed": true
+    },
+    {
+      "name": "native keyboard order reaches the input without adding list-item tab stops",
+      "passed": true
+    },
+    {
+      "name": "native change listener replacement/removal/once and passive li",
+      "passed": true
+    },
+    {
+      "name": "same-key data, layout, Provider, pending and reverse preserve value, focus and root",
+      "passed": true
+    },
+    {
+      "name": "explicit horizontal orientation stays horizontal below the Steps breakpoint",
+      "passed": true
+    },
+    {
+      "name": "default: six actual CSS tokens update, accept zero, reject invalid sizes, and restore",
+      "passed": true
+    },
+    {
+      "name": "dark: six actual CSS tokens update, accept zero, reject invalid sizes, and restore",
+      "passed": true
+    },
+    {
+      "name": "compact: six actual CSS tokens update, accept zero, reject invalid sizes, and restore",
+      "passed": true
+    },
+    {
+      "name": "both: six actual CSS tokens update, accept zero, reject invalid sizes, and restore",
+      "passed": true
+    },
+    {
+      "name": "default: real-browser axe and native list semantics",
+      "passed": true
+    },
+    {
+      "name": "dark: real-browser axe and native list semantics",
+      "passed": true
+    },
+    {
+      "name": "compact: real-browser axe and native list semantics",
+      "passed": true
+    },
+    {
+      "name": "both: real-browser axe and native list semantics",
+      "passed": true
+    },
+    {
+      "name": "conditional empty slots override loading/data and removing them restores scalar icons",
+      "passed": true
+    },
+    {
+      "name": "unmount clears the native ref and remount produces a fresh independent root",
+      "passed": true
+    },
+    {
+      "name": "zero browser, Vue and hydration errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "legacyWarnings": [
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `pending` is deprecated. Please use `items` instead. You can create a `item` as pending node directly.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `pending` is deprecated. Please use `items` instead. You can create a `item` as pending node directly.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead.",
+    "Warning: [apollo: Timeline] `items.position` is deprecated. Please use `items.placement` instead."
+  ],
+  "passed": true
+}
