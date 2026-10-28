@@ -1,0 +1,580 @@
+{
+  "productionCommit": "e0062edd",
+  "scope": "Published JS + aggregate/public CSS behavioral/type/SSR validation; standalone CSS incomplete and formal visual acceptance pending.",
+  "units": {
+    "descriptions": {
+      "sourceCommit": "e0062eddac9284d0ac4ce7199e91e6fc900a8773",
+      "finalHead": "73595a03c0cac486c17d667867af268864658872",
+      "allPassed": true,
+      "distWrites": false,
+      "repositoryEdits": false,
+      "packageBuilds": false,
+      "artifactsVerifiedUnchanged": 33,
+      "results": [
+        {
+          "name": "browser",
+          "command": "DESCRIPTIONS_SOURCE=0 DESCRIPTIONS_BROWSER_EVIDENCE=/tmp/apollo-descriptions-e0062edd-published-20261029/browser.json node tests/browser/descriptions-contracts.mjs",
+          "exitCode": 0,
+          "checks": 62,
+          "passed": true,
+          "errors": [],
+          "evidence": "/tmp/apollo-descriptions-e0062edd-published-20261029/browser.json",
+          "log": "/tmp/apollo-descriptions-e0062edd-published-20261029/browser.log",
+          "browser": "150.0.7871.125",
+          "assets": {
+            "mode": "published",
+            "javascript": "packages/*/dist",
+            "css": [
+              "packages/theme/dist/tokens.css",
+              "packages/ui/dist/index.css"
+            ],
+            "sourceStyleInjection": false,
+            "modules": 1829,
+            "implementationSource": []
+          }
+        },
+        {
+          "name": "hydration",
+          "command": "DESCRIPTIONS_SOURCE=0 DESCRIPTIONS_HYDRATION_EVIDENCE=/tmp/apollo-descriptions-e0062edd-published-20261029/hydration.json node tests/browser/descriptions-hydration.mjs",
+          "exitCode": 0,
+          "checks": 10,
+          "passed": true,
+          "errors": [],
+          "evidence": "/tmp/apollo-descriptions-e0062edd-published-20261029/hydration.json",
+          "log": "/tmp/apollo-descriptions-e0062edd-published-20261029/hydration.log",
+          "browser": "150.0.7871.125",
+          "assets": {
+            "mode": "published",
+            "javascript": "packages/*/dist",
+            "css": [
+              "packages/theme/dist/tokens.css",
+              "packages/ui/dist/index.css"
+            ],
+            "sourceStyleInjection": false,
+            "modules": 1829,
+            "implementationSource": []
+          }
+        },
+        {
+          "name": "demo-themes",
+          "command": "DESCRIPTIONS_SOURCE=0 DESCRIPTIONS_DEMOS_EVIDENCE=/tmp/apollo-descriptions-e0062edd-published-20261029/demo-themes.json node tests/browser/descriptions-demo-themes.mjs",
+          "exitCode": 0,
+          "checks": 84,
+          "demos": 13,
+          "passed": true,
+          "errors": [],
+          "evidence": "/tmp/apollo-descriptions-e0062edd-published-20261029/demo-themes.json",
+          "log": "/tmp/apollo-descriptions-e0062edd-published-20261029/demo-themes.log",
+          "browser": "150.0.7871.125",
+          "assets": {
+            "mode": "published",
+            "javascript": "packages/*/dist",
+            "css": [
+              "packages/theme/dist/tokens.css",
+              "packages/ui/dist/index.css",
+              "packages/ui/src/descriptions/demo/component-token.vue?vue&type=style&index=0&scoped=1ba8c1fe&lang.css",
+              "packages/ui/src/descriptions/demo/vertical-border.vue?vue&type=style&index=0&lang.css"
+            ],
+            "sourceStyleInjection": false,
+            "modules": 1857,
+            "implementationSource": []
+          }
+        },
+        {
+          "name": "visual-preflight",
+          "command": "DESCRIPTIONS_SOURCE=0 DESCRIPTIONS_VISUAL_EVIDENCE=/tmp/apollo-descriptions-e0062edd-published-20261029/visual-preflight.json node tests/browser/descriptions-visual.mjs",
+          "exitCode": 0,
+          "checks": 51,
+          "passed": true,
+          "errors": [],
+          "evidence": "/tmp/apollo-descriptions-e0062edd-published-20261029/visual-preflight.json",
+          "log": "/tmp/apollo-descriptions-e0062edd-published-20261029/visual-preflight.log",
+          "browser": "150.0.7871.125",
+          "assets": {
+            "mode": "published",
+            "javascript": "packages/*/dist",
+            "css": [
+              "packages/theme/dist/tokens.css",
+              "packages/ui/dist/index.css"
+            ],
+            "sourceStyleInjection": false,
+            "modules": 1829,
+            "implementationSource": []
+          }
+        },
+        {
+          "name": "types",
+          "command": "DESCRIPTIONS_SOURCE=0 DESCRIPTIONS_TYPES_EVIDENCE=/tmp/apollo-descriptions-e0062edd-published-20261029/types.json node tests/consumer/descriptions-types.mjs",
+          "exitCode": 0,
+          "demos": 13,
+          "passed": true,
+          "errors": [],
+          "evidence": "/tmp/apollo-descriptions-e0062edd-published-20261029/types.json",
+          "log": "/tmp/apollo-descriptions-e0062edd-published-20261029/types.log"
+        },
+        {
+          "name": "ssr",
+          "command": "DESCRIPTIONS_SOURCE=0 DESCRIPTIONS_SSR_EVIDENCE=/tmp/apollo-descriptions-e0062edd-published-20261029/ssr.json node tests/consumer/descriptions-ssr.mjs",
+          "exitCode": 0,
+          "checks": 4,
+          "passed": true,
+          "errors": [],
+          "evidence": "/tmp/apollo-descriptions-e0062edd-published-20261029/ssr.json",
+          "log": "/tmp/apollo-descriptions-e0062edd-published-20261029/ssr.log"
+        }
+      ],
+      "formalVisualBaselineAcceptance": false,
+      "remaining": [
+        "Main clean-commit formal Apollo capture/review/approval",
+        "Docs and final unified same-commit library gates"
+      ],
+      "reviewedPublishedPreflightImages": [
+        "current-geometry-768.png",
+        "theme-dark-768.png",
+        "semantic-tokens-768.png",
+        "empty-slots-768.png"
+      ],
+      "distReadersFinished": true
+    },
+    "breadcrumb": {
+      "productionCommit": "e0062eddac9284d0ac4ce7199e91e6fc900a8773",
+      "originalRepositoryCommandsOnly": true,
+      "repositoryEditedByThisThread": false,
+      "distEditedByThisThread": false,
+      "distFingerprintsUnchanged": true,
+      "sourceFallbackUsed": false,
+      "runtimeBrowserChecks": 125,
+      "runtimeBrowserPassed": 125,
+      "browserOrVueErrors": 0,
+      "commands": [
+        {
+          "script": "tests/browser/breadcrumb-contracts.mjs",
+          "evidence": "contracts-original-replay.json",
+          "log": "contracts-original-replay.log",
+          "exitCode": 0,
+          "expectedChecks": 14,
+          "command": "BREADCRUMB_SOURCE=0 node tests/browser/breadcrumb-contracts.mjs",
+          "checks": 14,
+          "passed": 14,
+          "failed": 0,
+          "browser": "150.0.7871.125",
+          "source": false,
+          "runtimeSources": [],
+          "publishedCSS": [
+            "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+            "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/index.css"
+          ]
+        },
+        {
+          "script": "tests/browser/breadcrumb-demo-themes.mjs",
+          "evidence": "demos-original-replay.json",
+          "log": "demos-original-replay.log",
+          "exitCode": 0,
+          "expectedChecks": 60,
+          "command": "BREADCRUMB_SOURCE=0 node tests/browser/breadcrumb-demo-themes.mjs",
+          "checks": 60,
+          "passed": 60,
+          "failed": 0,
+          "browser": "150.0.7871.125",
+          "source": false,
+          "runtimeSources": [],
+          "publishedCSS": [
+            "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+            "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/index.css"
+          ]
+        },
+        {
+          "script": "tests/browser/breadcrumb-visual-states.mjs",
+          "evidence": "visual-states-original-green.json",
+          "log": "visual-states-original-green.log",
+          "exitCode": 0,
+          "expectedChecks": 51,
+          "command": "BREADCRUMB_SOURCE=0 node tests/browser/breadcrumb-visual-states.mjs",
+          "checks": 51,
+          "passed": 51,
+          "failed": 0,
+          "browser": "150.0.7871.125",
+          "source": false,
+          "runtimeSources": [],
+          "publishedCSS": [
+            "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+            "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/index.css"
+          ]
+        },
+        {
+          "script": "tests/consumer/breadcrumb-types.mjs",
+          "command": "BREADCRUMB_SOURCE=0 node tests/consumer/breadcrumb-types.mjs",
+          "log": "types-original-replay.log",
+          "exitCode": 0,
+          "originalDemos": 11,
+          "positiveAndNegativeContracts": true
+        }
+      ],
+      "formalVisualApproval": "Separate main-thread candidate capture/review; these 51 checks are published native-state preflight.",
+      "prerequisiteFixtureCorrectionsByMain": [
+        "Require actual ui/style.css export target dist/index.css in CSS provenance guard",
+        "Consumer temporary dependency layout includes published icons alongside ui/theme/vue",
+        "Published-only icons module resolves to packages/icons/dist/index.mjs"
+      ],
+      "excludedEvidence": "Temporary runner results were for diagnosis only and are not used for acceptance."
+    },
+    "timeline": {
+      "productionCommit": "e0062eddac9284d0ac4ce7199e91e6fc900a8773",
+      "headAfter": "73595a03c0cac486c17d667867af268864658872",
+      "browser": "150.0.7871.125",
+      "checks": [
+        {
+          "command": "TIMELINE_SOURCE=0 TIMELINE_EVIDENCE=<dir>/contracts.json node tests/browser/timeline-contracts.mjs",
+          "exitCode": 0,
+          "passed": 17,
+          "total": 17,
+          "SSRHydration": {
+            "name": "SSR hydration preserves the server root and exposes the native ol",
+            "passed": true
+          },
+          "stylesheets": [
+            "packages/theme/dist/tokens.css",
+            "packages/ui/dist/index.css",
+            "tests/browser/fixtures/TimelineContracts.vue?vue&type=style&index=0&lang.css"
+          ]
+        },
+        {
+          "command": "TIMELINE_SOURCE=0 TIMELINE_DEMOS_EVIDENCE=<dir>/demos.json node tests/browser/timeline-demos.mjs",
+          "exitCode": 0,
+          "passed": 180,
+          "total": 180,
+          "stylesheets": [
+            "packages/theme/dist/tokens.css",
+            "packages/ui/dist/index.css"
+          ]
+        },
+        {
+          "command": "TIMELINE_SOURCE=0 TIMELINE_VISUAL_EVIDENCE=<dir>/native-states.json node tests/browser/timeline-visual.mjs",
+          "exitCode": 0,
+          "passed": 78,
+          "total": 78,
+          "note": "Native case/helper validation only; no shared baseline or screenshot acceptance."
+        },
+        {
+          "command": "node tests/browser/timeline-native.mjs",
+          "exitCode": 0,
+          "log": "legacy-native.log"
+        },
+        {
+          "command": "node tests/browser/timeline-slots.mjs",
+          "exitCode": 0,
+          "log": "legacy-slots.log"
+        },
+        {
+          "command": "node tests/consumer/timeline-types.mjs",
+          "exitCode": 1,
+          "diagnostic": "TS2307 icons missing from temporary consumer node_modules for three original demo direct imports; root node_modules does not declare icons.",
+          "log": "types.log"
+        },
+        {
+          "command": "node <dir>/timeline-types-with-consumer-deps.mjs",
+          "exitCode": 0,
+          "note": "Identical declarations/15Demo/assertions; isolated temporary node_modules explicitly links ui/icons/theme/vue. Repository script unchanged.",
+          "log": "types-with-consumer-deps.log"
+        },
+        {
+          "command": "node tests/consumer/timeline-types.mjs",
+          "exitCode": 0,
+          "log": "types-repo-fixed.log",
+          "note": "Original repository command after main persisted isolated public ui/icons/theme/vue consumer dependencies; all15demos and original assertions retained."
+        },
+        {
+          "command": "node <dir>/css-entries.mjs",
+          "exitCode": 1,
+          "log": "css-entries.log",
+          "evidence": "css-entries.json",
+          "note": "New actual published public on-demand Timeline CSS entry misses internal Steps styles. timeline-only: block/800x0dot/0pxrail; timeline+steps and aggregate: flex column/10x10dot/2pxrail. No repository/dist edits."
+        }
+      ],
+      "errors": {
+        "contracts": [],
+        "demos": [],
+        "native": []
+      },
+      "unchanged": {
+        "sourceFilesChecked": 69,
+        "changedSource": [],
+        "artifacts": {
+          "packages/ui/dist": "73375f64ae541e586f6ea97d5d8a6da59f111d202beedc8abbcf3e1f16347500",
+          "packages/overlay/dist": "89e2944790152bf8e30b528a44e6a114469b2465af27b72afac3da6c73f53412"
+        },
+        "artifactChanges": []
+      },
+      "repositoryWrites": false,
+      "distWrites": false,
+      "packageBuilds": false,
+      "remaining": "Main to resolve/document on-demand CSS dependency red, collect evidence and execute formal clean-commit visual/Docs/gates. Original consumer command now passes; temporary-copy results remain diagnostic only.",
+      "consumerRepositoryScriptSha256": "c6fda020002d9f15bf5e380621b677e6b269e51c706fa222646b749f264f72e8"
+    },
+    "grid": {
+      "productionSourceFreeze": "e0062eddac9284d0ac4ce7199e91e6fc900a8773",
+      "headAfter": "e0062eddac9284d0ac4ce7199e91e6fc900a8773",
+      "mode": "published JS and public Grid CSS, GRID_SOURCE=0",
+      "allRunsExitZero": true,
+      "runs": [
+        {
+          "name": "types",
+          "command": "GRID_SOURCE=0 GRID_TYPES_EVIDENCE=/tmp/apollo-grid-published-20261029-types.json node tests/consumer/grid-types.mjs",
+          "exitCode": 0,
+          "evidence": "/tmp/apollo-grid-published-20261029-types.json",
+          "log": "/tmp/apollo-grid-published-20261029-types.log",
+          "checks": null,
+          "passedChecks": null,
+          "failed": [],
+          "errors": [],
+          "warnings": [],
+          "sourceAliases": false,
+          "source": null,
+          "mode": null,
+          "demoCount": 13
+        },
+        {
+          "name": "ssr",
+          "command": "GRID_SOURCE=0 GRID_SSR_EVIDENCE=/tmp/apollo-grid-published-20261029-ssr.json node tests/consumer/grid-ssr.mjs",
+          "exitCode": 0,
+          "evidence": "/tmp/apollo-grid-published-20261029-ssr.json",
+          "log": "/tmp/apollo-grid-published-20261029-ssr.log",
+          "checks": 6,
+          "passedChecks": 6,
+          "failed": [],
+          "errors": [],
+          "warnings": [],
+          "sourceAliases": false,
+          "source": null,
+          "mode": null,
+          "demoCount": null
+        },
+        {
+          "name": "contracts",
+          "command": "GRID_SOURCE=0 GRID_BROWSER_EVIDENCE=/tmp/apollo-grid-published-20261029-contracts.json node tests/browser/grid-contracts.mjs",
+          "exitCode": 0,
+          "evidence": "/tmp/apollo-grid-published-20261029-contracts.json",
+          "log": "/tmp/apollo-grid-published-20261029-contracts.log",
+          "checks": 41,
+          "passedChecks": 41,
+          "failed": [],
+          "errors": [],
+          "warnings": [],
+          "sourceAliases": null,
+          "source": null,
+          "mode": "published JS + published Grid CSS",
+          "demoCount": null
+        },
+        {
+          "name": "demos",
+          "command": "GRID_SOURCE=0 GRID_DEMO_EVIDENCE=/tmp/apollo-grid-published-20261029-demos.json node tests/browser/grid-demos.mjs",
+          "exitCode": 0,
+          "evidence": "/tmp/apollo-grid-published-20261029-demos.json",
+          "log": "/tmp/apollo-grid-published-20261029-demos.log",
+          "checks": 14,
+          "passedChecks": 14,
+          "failed": [],
+          "errors": [],
+          "warnings": [],
+          "sourceAliases": null,
+          "source": false,
+          "mode": null,
+          "demoCount": 13
+        },
+        {
+          "name": "visual-states",
+          "command": "GRID_SOURCE=0 GRID_VISUAL_EVIDENCE=/tmp/apollo-grid-published-20261029-visual-states.json node tests/browser/grid-visual.mjs",
+          "exitCode": 0,
+          "evidence": "/tmp/apollo-grid-published-20261029-visual-states.json",
+          "log": "/tmp/apollo-grid-published-20261029-visual-states.log",
+          "checks": 42,
+          "passedChecks": 42,
+          "failed": [],
+          "errors": [],
+          "warnings": [],
+          "sourceAliases": null,
+          "source": false,
+          "mode": null,
+          "demoCount": null
+        }
+      ],
+      "sourceStyleGuard": "All 3 browser scripts assert zero style[data-grid-source-styles] in published mode; no UI source aliases enabled. Existing fixture/demo business styles retained.",
+      "artifactFingerprintsUnchanged": true,
+      "changedArtifacts": [],
+      "artifactBefore": "/tmp/apollo-grid-published-20261029-artifact-before.json",
+      "artifactAfter": "/tmp/apollo-grid-published-20261029-artifact-after.json",
+      "repoFilesEdited": false,
+      "packageBuildsRun": false,
+      "distWrites": false,
+      "visualBaselineProducedOrAccepted": false,
+      "notes": [
+        "Concurrent Vite middleware SSR service reported HMR port 24678 in use; actual Node SSR, browser hydration and all 41 contract checks completed with exit 0 and zero browser/runtime/hydration errors."
+      ]
+    },
+    "space": {
+      "productionCommit": "e0062edd",
+      "sharedSelectCommit": "356161b4",
+      "editingStopped": true,
+      "artifactBuildOrDistWritesByThisTask": false,
+      "sourceFinalFocused": {
+        "tests": 441,
+        "passed": 441,
+        "failed": 0
+      },
+      "sourceTypes": {
+        "tests": 44,
+        "passed": 44,
+        "failed": 0
+      },
+      "publishedContracts": {
+        "command": "SPACE_SOURCE=0 SPACE_EVIDENCE=/tmp/apollo-space-published-contracts-e0062edd.json node tests/browser/space-contracts.mjs",
+        "tests": 82,
+        "passed": 82,
+        "failed": 0,
+        "pageErrors": []
+      },
+      "publishedVisualPreflight": {
+        "command": "node /tmp/apollo-space-published-visual-e0062edd.mjs",
+        "variants": 25,
+        "tests": 75,
+        "passed": 75,
+        "failed": 0,
+        "pageErrors": [],
+        "sourceAliases": false,
+        "sourceGeneratedCSS": false,
+        "note": "Disposable harness imports final repository visual module and prepareSpaceVisual helper directly. This does not generate or approve PNG baselines."
+      },
+      "publishedTypeCommand": "SPACE_SOURCE=0 node tests/consumer/space-types.mjs",
+      "logWarning": "SSR dev-server dependency pre-scan also scans unrelated fixtures and reported unresolved icons/locale; actual requested contracts/SSR and page error guards all passed. No warning suppressed.",
+      "pending": [
+        "Formal PNG review/acceptance and exact comparison",
+        "Docs release/online receipt",
+        "Final same-commit full-repository gates"
+      ],
+      "files": [
+        "/tmp/apollo-space-published-contracts-e0062edd.json",
+        "/tmp/apollo-space-published-contracts-e0062edd.log",
+        "/tmp/apollo-space-published-types-final-e0062edd.log",
+        "/tmp/apollo-space-published-visual-e0062edd.json",
+        "/tmp/apollo-space-published-visual-e0062edd.log",
+        "/tmp/apollo-space-visual-red-e0062edd.json"
+      ],
+      "consumerScriptSHA256": "af16818c43e2183e0b656200930dee37074e6719ca00bed981c957d0264f2a50",
+      "publishedTypeResult": "PASS Space published public Vue contracts and all 15 real demos",
+      "publishedTypeExitCode": 0
+    }
+  },
+  "menu": {
+    "source": false,
+    "results": [
+      {
+        "name": "container Enter follows its owned href once",
+        "passed": true
+      },
+      {
+        "name": "focused link Enter uses one browser click",
+        "passed": true
+      },
+      {
+        "name": "container Enter runs once",
+        "passed": true
+      },
+      {
+        "name": "container Space runs once",
+        "passed": true
+      },
+      {
+        "name": "native button Enter runs once",
+        "passed": true
+      },
+      {
+        "name": "native button Space runs once",
+        "passed": true
+      },
+      {
+        "name": "preventDefault cancels real link navigation",
+        "passed": true
+      },
+      {
+        "name": "disabled item blocks real pointer navigation",
+        "passed": true
+      },
+      {
+        "name": "global disabled also blocks its owned link",
+        "passed": true
+      },
+      {
+        "name": "plain Space selects once and does not scroll",
+        "passed": true
+      },
+      {
+        "name": "roving arrows reach the button item and Enter activates it",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "standaloneCssRegression": {
+    "source": false,
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "timeline-only",
+        "geometry": {
+          "root": "OL",
+          "display": "block",
+          "direction": "row",
+          "height": 126,
+          "dotWidth": "800px",
+          "dotHeight": "0px",
+          "railWidth": "0px"
+        }
+      },
+      {
+        "name": "timeline-and-steps",
+        "geometry": {
+          "root": "OL",
+          "display": "flex",
+          "direction": "column",
+          "height": 129,
+          "dotWidth": "10px",
+          "dotHeight": "10px",
+          "railWidth": "2px"
+        }
+      },
+      {
+        "name": "aggregate",
+        "geometry": {
+          "root": "OL",
+          "display": "flex",
+          "direction": "column",
+          "height": 129,
+          "dotWidth": "10px",
+          "dotHeight": "10px",
+          "railWidth": "2px"
+        }
+      }
+    ],
+    "errors": [],
+    "expectation": "Public per-component style entry is documented as complete; Timeline composes internal Steps, so its supported on-demand CSS must include those base styles or document the required companion import."
+  },
+  "gate": {
+    "ui": {
+      "checks": 11,
+      "fail": 0,
+      "pending": 0
+    },
+    "overlay": {
+      "checks": 11,
+      "fail": 0,
+      "pending": 0,
+      "notApplicable": 5
+    }
+  },
+  "remaining": [
+    "Standalone CSS grouped audit/repair",
+    "Clean native visual capture, review and acceptance",
+    "Docs integration and publication",
+    "Final whole-library same-commit gates"
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "productionSourceCommit": "e0062edd",
+  "stage": "Five published source milestones visible on Docs; standalone CSS and formal visuals still open",
+  "docsTests": {
+    "files": 15,
+    "passed": 161,
+    "failed": 0,
+    "log": "/tmp/apollo-five-docs-tests-final-green.log"
+  },
+  "docsTypecheck": {
+    "exitCode": 0,
+    "log": "/tmp/apollo-five-docs-types.log"
+  },
+  "docsBuild": {
+    "exitCode": 0,
+    "log": "/tmp/apollo-five-docs-build.log"
+  },
+  "browser": {
+    "base": "http://127.0.0.1:4480/apollo-design-ui",
+    "expectedDemoStatus": 200,
+    "results": [
+      {
+        "name": "descriptions: API and all 13 demo cards",
+        "passed": true
+      },
+      {
+        "name": "descriptions/basic/light",
+        "passed": true
+      },
+      {
+        "name": "descriptions/basic/dark",
+        "passed": true
+      },
+      {
+        "name": "descriptions/custom-label/light",
+        "passed": true
+      },
+      {
+        "name": "descriptions/custom-label/dark",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb: API and all 11 demo cards",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/native/light",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/native/dark",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/overlay/light",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/overlay/dark",
+        "passed": true
+      },
+      {
+        "name": "timeline: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "timeline/horizontal-debug/light",
+        "passed": true
+      },
+      {
+        "name": "timeline/horizontal-debug/dark",
+        "passed": true
+      },
+      {
+        "name": "timeline/native-slots/light",
+        "passed": true
+      },
+      {
+        "name": "timeline/native-slots/dark",
+        "passed": true
+      },
+      {
+        "name": "grid: API and all 13 demo cards",
+        "passed": true
+      },
+      {
+        "name": "grid/responsive/light",
+        "passed": true
+      },
+      {
+        "name": "grid/responsive/dark",
+        "passed": true
+      },
+      {
+        "name": "grid/playground/light",
+        "passed": true
+      },
+      {
+        "name": "grid/playground/dark",
+        "passed": true
+      },
+      {
+        "name": "space: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "space/compact/light",
+        "passed": true
+      },
+      {
+        "name": "space/compact/dark",
+        "passed": true
+      },
+      {
+        "name": "space/compact-button-vertical/light",
+        "passed": true
+      },
+      {
+        "name": "space/compact-button-vertical/dark",
+        "passed": true
+      },
+      {
+        "name": "menu/native-actions/light",
+        "passed": true
+      },
+      {
+        "name": "menu/native-actions/dark",
+        "passed": true
+      },
+      {
+        "name": "Menu native button executes once through container Enter",
+        "passed": true
+      },
+      {
+        "name": "Descriptions label help is reachable by keyboard",
+        "passed": true
+      },
+      {
+        "name": "Timeline slot reversal preserves the actual editor and draft",
+        "passed": true
+      },
+      {
+        "name": "progress/zh-CN",
+        "passed": true
+      },
+      {
+        "name": "progress/en-US",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": []
+  },
+  "corrections": [
+    "Two newly added real demos make the full count1008; preserve earlier Avatar/Skeleton inventories and additionally assert the two new IDs in both metadata tests.",
+    "The new demo-audit ID assertion initially used the wrong wrapper shape, then was corrected to its actual component/demo structure. Original assertions remain.",
+    "First content/test reads overlapped generation; final checks use the completed generated output."
+  ],
+  "sourceHashes": {
+    "packages/docs/content/guide/audit-progress.md": "8bcb7a201eec73e3a3e470741623eba7335a1c320496cb268388427b2bec9624",
+    "packages/ui/src/menu/index.zh-CN.md": "9918f3d04db75050fbfceb6e71a434c30472428eb35a17d6e24c79a94085f316"
+  },
+  "remaining": [
+    "69-entry on-demand CSS grouped remediation",
+    "297 formal native visual candidates/review/acceptance",
+    "Post-deployment live checks",
+    "Whole-library final same-commit gates"
+  ]
+}

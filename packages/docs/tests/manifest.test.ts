@@ -159,8 +159,11 @@ describe('组件页数据', () => {
 });
 
 describe('demo 元数据', () => {
-  it('demo 全量可枚举（1006 个，含Avatar组件Token示例）', () => {
-    expect(allDemos.length).toBe(1006);
+  it('demo 全量可枚举（1008 个，含原生Breadcrumb/Menu示例）', () => {
+    expect(allDemos.length).toBe(1008);
+    expect(allDemos.map((demo) => demo.id)).toEqual(
+      expect.arrayContaining(['breadcrumb-demo-native', 'menu-demo-native-actions']),
+    );
     expect(
       allDemos
         .map((demo) => demo.id)

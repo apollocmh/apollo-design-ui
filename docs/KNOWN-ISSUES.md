@@ -667,3 +667,5 @@ Descriptions cabc97c8、Timeline/Steps 48ca2313、Breadcrumb adec7ade 已按各�
 Descriptions5ab9b3c4、Breadcrumb40ec3962、Timeline3ce8d1d2、Grid04be6282与Spacee0062edd已分别提交。修复覆盖当前原生内容/身份、Provider/Token、真实Demo与对比度、横向Timeline自然布局、Grid响应式字段和Space紧凑上下文。共享Menu原生操作e000152f已修复原Enter导航红灯（576相关运行时、11真实浏览器）；响应式观察器1588dd11隔离当前Provider断点并清理订阅（717相关消费回归），Select356161b4接入当前Compact尺寸与背景。各单元的完整清单、红绿证据与迁移说明分别保留；不同测试集合有交集，不累计为全库门禁。
 
 根严格检查及冻结e0062edd的UI/Overlay构建通过。五路发布JS/公开CSS、声明消费、真实Demo和SSR/水合验证并行执行中；正式原生视觉297张待审，原有537张批准不变，当前计划1602张、1065待验收。完整交付仍为13/72，五组未计入完成。Docs与最终同提交全库门禁尚待对应阶段执行；[实时完整清单](audit/2026-10-28-global-audit-status.md)持续记录边界。
+
+公开按需CSS新增真实红灯：Timeline单独样式缺Steps基础布局，完整69入口/72组件正分五组追踪实际内部消费与已嵌入规则；全量CSS通过不代表按需入口通过。范围与验收见[共享CSS清单](audit/2026-10-29-stylesheet-dependency-audit.md)。
