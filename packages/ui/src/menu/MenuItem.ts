@@ -7,11 +7,21 @@
  */
 
 import { isEmptyVNode } from '@apollo-design/utils';
-import { computed, defineComponent, h, isVNode, type PropType, Text, type VNodeChild } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  isVNode,
+  mergeProps,
+  type PropType,
+  Text,
+  type VNodeChild,
+} from 'vue';
 
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import Tooltip from '../tooltip';
 import { useFullPath, useMeasure, useMenuContext, usePathRegister } from './context';
+import { ownedMenuActions } from './engine/native-actions';
 import { getEventKeyCode, getMenuId, KeyCode } from './engine/use-accessibility';
 import type { MenuClickEventHandler, MenuHoverEventHandler, RenderIconType } from './interface';
 
@@ -118,12 +128,37 @@ const MenuItem = defineComponent({
         props.onClick?.(info as never);
         ctx.onItemClick(info);
       };
-      const onInternalKeyDown = (e: KeyboardEvent): void => {
-        if (getEventKeyCode(e) === KeyCode.ENTER && !mergedDisabled.value) {
-          const info = getEventInfo(e);
-          props.onClick?.(info as never);
-          ctx.onItemClick(info);
+      const onClickCapture = (e: MouseEvent): void => {
+        if (mergedDisabled.value) {
+          e.preventDefault();
+          e.stopPropagation();
         }
+      };
+      const onInternalKeyDown = (e: KeyboardEvent): void => {
+        const code = getEventKeyCode(e);
+        if (
+          e.defaultPrevented ||
+          mergedDisabled.value ||
+          (code !== KeyCode.ENTER && code !== KeyCode.SPACE) ||
+          e.target !== e.currentTarget ||
+          !(e.currentTarget instanceof HTMLElement)
+        )
+          return;
+        e.preventDefault();
+        const controls = ownedMenuActions(e.currentTarget);
+        if (controls.length === 1) {
+          const control = controls[0];
+          if (
+            control &&
+            !control.matches(':disabled') &&
+            control.getAttribute('aria-disabled') !== 'true'
+          )
+            control.click();
+          return;
+        }
+        const info = getEventInfo(e);
+        props.onClick?.(info as never);
+        ctx.onItemClick(info);
       };
       const onInternalFocus = (): void => {
         ctx.onActive(eventKey);
@@ -156,7 +191,9 @@ const MenuItem = defineComponent({
       const node = h(
         'li',
         {
-          ...restAttrs,
+          ...mergeProps(restAttrs, {
+            onClickCapture: mergedDisabled.value ? onClickCapture : undefined,
+          }),
           role: itemRole,
           ...(itemRole === 'option' ? { 'aria-selected': isSelected.value } : {}),
           // rc：tabIndex disabled? null : -1（roving tabindex 的 -1 基线）
@@ -165,7 +202,7 @@ const MenuItem = defineComponent({
             (props.overflowDisabled ?? ctx.overflowDisabled)
               ? undefined
               : getMenuId(ctx.menuId, eventKey),
-          'aria-disabled': props.disabled ? true : undefined,
+          'aria-disabled': mergedDisabled.value ? true : undefined,
           class: [
             itemCls,
             isActive.value ? `${itemCls}-active` : undefined,
@@ -189,6 +226,7 @@ const MenuItem = defineComponent({
           onClick: onInternalClick,
           onKeydown: onInternalKeyDown,
           onFocus: onInternalFocus,
+          onFocusin: onInternalFocus,
           onMouseenter: onInternalMouseEnter,
           onMouseleave: onInternalMouseLeave,
         },

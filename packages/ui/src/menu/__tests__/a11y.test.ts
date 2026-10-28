@@ -13,7 +13,7 @@ import Menu from '../Menu';
 
 a11yDemoTest('Menu', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
-  expectCount: 14,
+  expectCount: 15,
   global: { stubs: { teleport: false } },
 });
 

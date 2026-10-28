@@ -8,7 +8,8 @@
  * - raf 用 requestAnimationFrame（取消用 cancelAnimationFrame）；
  * - activeKey 经 ref 读写（rc 用 useRef + forceUpdate，Vue 响应式即等价）。
  */
-import { type Ref, ref } from 'vue';
+import { onScopeDispose, type Ref, ref } from 'vue';
+import { isEditableMenuTarget } from './native-actions';
 
 // rc-util 的 KeyCode 子集（menu 用到的）
 export const KeyCode = {
@@ -24,6 +25,17 @@ export const KeyCode = {
 };
 
 const ARROW_KEYS = [KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT];
+const NATIVE_KEY_CODES: Record<string, number> = {
+  ArrowLeft: KeyCode.LEFT,
+  ArrowUp: KeyCode.UP,
+  ArrowRight: KeyCode.RIGHT,
+  ArrowDown: KeyCode.DOWN,
+  Enter: KeyCode.ENTER,
+  Escape: KeyCode.ESC,
+  Home: KeyCode.HOME,
+  End: KeyCode.END,
+  ' ': KeyCode.SPACE,
+};
 
 /**
  * rc 读 `event.which`（React 合成事件把 `keyCode` 规范化进 `which`）。原生
@@ -31,7 +43,7 @@ const ARROW_KEYS = [KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT];
  * jsdom 下等价于全失效、也就无从回归。浏览器两者都有值 ⇒ 兜底不改变真实行为。
  */
 export function getEventKeyCode(event: KeyboardEvent): number {
-  return event.which || event.keyCode || 0;
+  return event.which || event.keyCode || NATIVE_KEY_CODES[event.key] || 0;
 }
 
 type OffsetOp = { offset: number; sibling: boolean } | { inlineTrigger: true } | null;
@@ -242,6 +254,7 @@ export function useAccessibility(options: UseAccessibilityOptions) {
     if (rafRef.value !== undefined) cancelAnimationFrame(rafRef.value);
     rafRef.value = undefined;
   };
+  onScopeDispose(cleanRaf);
 
   const tryFocus = (
     menuElement: Element | null | undefined,
@@ -270,6 +283,10 @@ export function useAccessibility(options: UseAccessibilityOptions) {
   };
 
   return (e: KeyboardEvent): void => {
+    if (e.defaultPrevented || isEditableMenuTarget(e.target)) {
+      options.originOnKeyDown?.(e);
+      return;
+    }
     const which = getEventKeyCode(e);
     activeRef.value = options.activeKey.value;
     if ([...ARROW_KEYS, KeyCode.ENTER, KeyCode.ESC, KeyCode.HOME, KeyCode.END].includes(which)) {
@@ -329,6 +346,11 @@ export function useAccessibility(options: UseAccessibilityOptions) {
         options.triggerOpen(focusMenuKey);
       } else if (offsetObj && 'offset' in offsetObj && offsetObj.offset > 0) {
         // =========================== Level ===========================
+        const popup = focusMenuElement?.getAttribute('aria-haspopup');
+        if (popup !== 'true' && popup !== 'menu') {
+          options.originOnKeyDown?.(e);
+          return;
+        }
         options.triggerOpen(focusMenuKey, true);
         cleanRaf();
         rafRef.value = requestAnimationFrame(() => {

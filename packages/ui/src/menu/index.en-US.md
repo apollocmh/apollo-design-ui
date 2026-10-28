@@ -61,3 +61,7 @@ Static sub-components `AMenuItem` / `AMenu.SubMenu` use slots for rich content (
 - **rc-menu 内核自建**：items 解析 / key↔path 登记 / 键盘导航三件 engine，
   Overflow 溢出折叠为新基建（`_internal/overflow.ts`）。
 - 与 antd 的已知差异见组件 README。
+
+## Keyboard and native actions
+
+When the item itself has focus, Enter or Space activates its single native link or button. Plain items emit one action. Focused child controls retain browser activation without an extra keydown click. Disabled items block native navigation, and domEvent.preventDefault() can cancel link navigation. Editors retain their own keys. For multiple actions, focus the intended control directly; the item does not guess.

@@ -66,3 +66,7 @@ subtitle: 导航菜单
 - **rc-menu 内核自建**：items 解析 / key↔path 登记 / 键盘导航三件 engine，
   Overflow 溢出折叠为新基建（`_internal/overflow.ts`）。
 - 与 antd 的已知差异见组件 README。
+
+## 键盘与原生操作
+
+菜单项自身获得焦点时，Enter 或 Space 激活其中唯一的原生链接或按钮；普通条目单次触发点击/选择。直接聚焦子控件时保留浏览器的激活语义，不在 keydown 再手动补发点击。disabled 条目阻止原生导航，domEvent.preventDefault() 可取消链接默认行为；输入与可编辑内容保留自己的按键。菜单项中有多个操作时，应直接聚焦所需控件，容器不会猜测要激活哪一个。

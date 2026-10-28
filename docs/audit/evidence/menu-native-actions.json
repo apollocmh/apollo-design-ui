@@ -1,0 +1,85 @@
+{
+  "scope": "MenuItem native action ownership; not a complete Menu re-audit",
+  "baselineCommit": "1b361487",
+  "red": {
+    "total": 15,
+    "passed": 1,
+    "failed": 14
+  },
+  "verified": {
+    "relatedFiles": 39,
+    "relatedRuntime": 576,
+    "failed": 0,
+    "nativeCases": 18,
+    "browser": {
+      "source": true,
+      "results": [
+        {
+          "name": "container Enter follows its owned href once",
+          "passed": true
+        },
+        {
+          "name": "focused link Enter uses one browser click",
+          "passed": true
+        },
+        {
+          "name": "container Enter runs once",
+          "passed": true
+        },
+        {
+          "name": "container Space runs once",
+          "passed": true
+        },
+        {
+          "name": "native button Enter runs once",
+          "passed": true
+        },
+        {
+          "name": "native button Space runs once",
+          "passed": true
+        },
+        {
+          "name": "preventDefault cancels real link navigation",
+          "passed": true
+        },
+        {
+          "name": "disabled item blocks real pointer navigation",
+          "passed": true
+        },
+        {
+          "name": "global disabled also blocks its owned link",
+          "passed": true
+        },
+        {
+          "name": "plain Space selects once and does not scroll",
+          "passed": true
+        },
+        {
+          "name": "roving arrows reach the button item and Enter activates it",
+          "passed": true
+        }
+      ],
+      "errors": []
+    }
+  },
+  "implementation": [
+    "Container Enter/Space delegates to one owned native click; direct controls keep browser activation",
+    "Disabled-only capture blocks default navigation, global disabled ARIA follows merged state",
+    "Default-prevented/editor events retain ownership; descendants activate their current item",
+    "Leaf entries do not invent submenu openKeys; key-only events and scope-owned focus-frame cleanup"
+  ],
+  "fixtureCorrections": [
+    "Only disabled items install capture; a no-op capture on enabled items exposed Vue event timestamp suppression under the fake clock",
+    "Browser URL fragment waits match actual .html# paths; roving button entries retain their existing li focus target and then activate the native button",
+    "New native-actions Demo increases pair count14→15, original14 preserved"
+  ],
+  "commands": [
+    "pnpm exec vitest run --project unit packages/ui/src/menu/__tests__/native-actions.test.ts --maxWorkers=1",
+    "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/menu packages/ui/src/dropdown packages/ui/src/breadcrumb packages/ui/src/tabs packages/ui/src/_internal --maxWorkers=2",
+    "MENU_NATIVE_SOURCE=1 node tests/browser/menu-native-actions.mjs"
+  ],
+  "boundaries": [
+    "Current source validation only; published artifacts and L7 await the unified build",
+    "Remaining complete Menu audit/visual baseline and final whole-library gates remain open"
+  ]
+}
