@@ -83,3 +83,7 @@
 同一共享工作树重放 `BREADCRUMB_SOURCE=1 node tests/browser/breadcrumb-contracts.mjs` 为14/14通过，`BREADCRUMB_SOURCE=1 node tests/browser/breadcrumb-demo-themes.mjs` 为60/60通过；均正常exit0、零页面/Vue错误。之前原glob诊断两次运行保留结果后在清理阶段停留，已定向结束其进程；最终修正后的两次正式源码重放正常结束，不以诊断运行替代最终结果。证据见 [breadcrumb-menu-ready-source.json](evidence/breadcrumb-menu-ready-source.json)。F11原脚本亦已通过，Chrome150.0.7871.125，零页面/Vue错误。
 
 本单元源码及fixture再次冻结，全部编辑停止；发布JS+CSS、正式Apollo图像批准、Docs和最终同一提交全量门禁仍等主线程统一验收，未把源码浏览器通过宣称为单元完整交付。
+
+## 正式原生视觉阶段
+
+清洁冻结 `a47d96ec` 的51张正式候选已完成实际逐图审阅并批准；Descriptions/Timeline/Grid通过逐张尺寸与rawRGBA完全相同继承此前已实际看过的审图，Breadcrumb新51张逐张查看。相应当前生产源码自e0062edd未变，最新发布声明/实际Demo模板消费和公共CSS对照另有记录。原1692份PNG与537条已有批准记录全部保留；全局现759/1602批准。逐图观察、SHA、继承关系及边界见[四单元视觉证据](evidence/four-unit-native-visual-acceptance.json)。批准完整性检查通过；Docs与最终全库门禁仍独立记录，不将视觉绿灯视为全库完成。

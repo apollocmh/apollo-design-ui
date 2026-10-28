@@ -1,0 +1,2361 @@
+{
+  "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+  "accepted": 222,
+  "approvedBefore": 537,
+  "approvedAfter": 759,
+  "planned": 1602,
+  "pendingAfter": 843,
+  "actualNewImagesViewed": 51,
+  "priorActualReviewsInheritedByExactPixels": 171,
+  "existing537ManifestEntriesUnchanged": true,
+  "scope": "Visual acceptance for these four units only. Docs and final whole-library acceptance remain separate.",
+  "units": [
+    {
+      "component": "descriptions",
+      "count": 51,
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "sourceUnchangedSincePublishedBehaviorChecks": "e0062edd",
+      "candidateManifestSha256": "a6beef50d313a2c088f866bdd2079924424102f2b9853a8266ce5681f4354ff5",
+      "reviewSha256": "5ed927f7c0ac4c56fdff278dd928019370e25d5b5f97087c1bde228ee2b8681e",
+      "method": "Prior actual per-image review inherited only after exact raw RGBA and dimensions",
+      "nonBlockingObservations": [],
+      "entries": [
+        {
+          "id": "descriptions/basic__light__mobile",
+          "sha256": "3919aedd3365f4d2a5767ff58d2c8f101e9dcecf071f82194b72eac63d9ec632",
+          "rgbaSha256": "74c41eca63575f696271ac4f043860739fda10f4163c246d60aa714e742f8421",
+          "width": 375,
+          "height": 359,
+          "observations": "Responsive plain labels and values remain readable and aligned.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/basic__light__tablet",
+          "sha256": "4237c708c429c57d735e473f30de7f6cbb9b51268824062563cbb75deca2cb3c",
+          "rgbaSha256": "13d9b8db9afd315d1591aa6616d9ecf5ccc06c2d2979dff96d95b46528fbaa06",
+          "width": 768,
+          "height": 352,
+          "observations": "Responsive plain labels and values remain readable and aligned.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/basic__light__desktop",
+          "sha256": "128f294fcdbef78148e3347dbdf21be0c0f5ab9ed9af77fc695f458ef13495bc",
+          "rgbaSha256": "a72f11af1509d91f64d9c3705bf370cc7c0d99d30e62e0a9b674b5cac74ac5e8",
+          "width": 1440,
+          "height": 352,
+          "observations": "Responsive plain labels and values remain readable and aligned.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/bordered__light__mobile",
+          "sha256": "4956750c14d89390f47145cdfb0c2038129f2c990c3053a2ec7fe719948d2d20",
+          "rgbaSha256": "8fc1761a50f7ab6fd83f442840da083f91a3916352d7983bf2bce39724695ffe",
+          "width": 375,
+          "height": 478,
+          "observations": "Bordered cells, outer corners and filled rows align without clipping.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/bordered__light__tablet",
+          "sha256": "ea32d960eb9c5fd50d94711ea6fd25da847b31cb3d7f313d637b7dfcab20dbc5",
+          "rgbaSha256": "91eda365983d25b89482badd1ed554706d06825f27dfe02e073f4b37493b6423",
+          "width": 768,
+          "height": 352,
+          "observations": "Bordered cells, outer corners and filled rows align without clipping.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/bordered__light__desktop",
+          "sha256": "ca2989a6d1c3a0b0ff08de19663d78280e5422237f37df9a586547e388d16e7e",
+          "rgbaSha256": "b740cca82f405b8ee0896bcaaf1fa0f4ff709b88802a7c60ad81d13ddcaa8797",
+          "width": 1440,
+          "height": 352,
+          "observations": "Bordered cells, outer corners and filled rows align without clipping.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/vertical__light__mobile",
+          "sha256": "d4acb0fa0f9a147b4efb271e9c534c38caf31ff792789f16f12930caea918231",
+          "rgbaSha256": "34b780d642392db8c9ad22f797615bc754e09cf5cf62640e200672c2773c2813",
+          "width": 375,
+          "height": 587,
+          "observations": "Labels sit above values with consistent spacing.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/vertical__light__tablet",
+          "sha256": "31999d173c96a5a135cc4ff21d8ed64fce5bbd8b18bc74825bae63cad9441004",
+          "rgbaSha256": "a2c5c17192a31cef0b72b5c131f58ac4dd3721f61cf8c12c40a657741c68fcc6",
+          "width": 768,
+          "height": 352,
+          "observations": "Labels sit above values with consistent spacing.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/vertical__light__desktop",
+          "sha256": "c10bbf49c26cd3e35ef4b18a1ea310f3c32d64deeff08439b45cd9c01681ad78",
+          "rgbaSha256": "f3df35e3fa7a4f369f8197e8b622238418ba529b72b619f26c84f132a48634fb",
+          "width": 1440,
+          "height": 352,
+          "observations": "Labels sit above values with consistent spacing.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/vertical-bordered__light__mobile",
+          "sha256": "d14a701446c4e25cba3818166edaf38ab64772839f2f18aa9a5b3fe693e73007",
+          "rgbaSha256": "1cc606455a67168c5c18ae1d9e6f8972aad548de80f7c838f169338d80dd83bd",
+          "width": 375,
+          "height": 808,
+          "observations": "Vertical bordered labels, content rows and column separators align.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/vertical-bordered__light__tablet",
+          "sha256": "320c4cff7d9ec1f9ee7ed3da177f93eed70f6fb7fc815d91ed6ba4e298b50918",
+          "rgbaSha256": "f9b54867722a1d114355da5198b9065991f6f590e1b3939454ad48cf6e68f3d8",
+          "width": 768,
+          "height": 368,
+          "observations": "Vertical bordered labels, content rows and column separators align.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/vertical-bordered__light__desktop",
+          "sha256": "5cff268eb2f45d5950c22ea6b3f70ec3ff97ead751a1a75aa11bc1dd5aaa146d",
+          "rgbaSha256": "9b6d190de1354b45b825c46e30fb8f719fcd9892f080c857b134619b968f1d18",
+          "width": 1440,
+          "height": 368,
+          "observations": "Vertical bordered labels, content rows and column separators align.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/sizes__light__mobile",
+          "sha256": "4f2678d437e039d217822872b40015dba8f4c9ec334da1f1530aa1684f4b5594",
+          "rgbaSha256": "f85dcadac31ca5f9e3c7875d983cd3c160b4aa6a9a0487a1d3636395091c4609",
+          "width": 375,
+          "height": 712,
+          "observations": "All three sizes have distinct natural spacing; explicitly fixed two columns wrap mobile text within cells.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/sizes__light__tablet",
+          "sha256": "b6ff73777564a88411be2fdc5da96e0a326114de97bfa6e9d7cf9573832ff5df",
+          "rgbaSha256": "becc4a220a94ccd8cbed9478a48b379b4ece4007d308ca7c5609477c64cc483c",
+          "width": 768,
+          "height": 580,
+          "observations": "All three sizes have distinct natural spacing; explicitly fixed two columns wrap mobile text within cells.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/sizes__light__desktop",
+          "sha256": "af20056eb0ce72f81f0394608fdb523436428a6b3f7e0c9607f7d4bdcc024eac",
+          "rgbaSha256": "066b28b2ee38039a4d81b91b40092e2c1014d3908216961efdc989e2cbf6a445",
+          "width": 1440,
+          "height": 580,
+          "observations": "All three sizes have distinct natural spacing; explicitly fixed two columns wrap mobile text within cells.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/filled__light__mobile",
+          "sha256": "1f340f302ac9962831d579f8fcb9b4f2ff4c41e40787747cf6f801f382a93dc4",
+          "rgbaSha256": "fbdc0d26c3eb4055f1bb31cd078c6d6bdff351f24a17a6ab5f64dd4b6530ce1c",
+          "width": 375,
+          "height": 368,
+          "observations": "Responsive spans and filled remaining columns preserve content and borders.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/filled__light__tablet",
+          "sha256": "fa07f850e29fe0e22ab5400a493a520ccd58af541496c5d39bbf1fb845a8eeb8",
+          "rgbaSha256": "be9b086cae25a2742c3e4546a9496fbfd6ad8cf777e9645d718cc31e07ba2aef",
+          "width": 768,
+          "height": 352,
+          "observations": "Responsive spans and filled remaining columns preserve content and borders.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/filled__light__desktop",
+          "sha256": "371b5db5dca278afa98f8a086689be9487ba1b7fae82d56f35e05032bfacd14f",
+          "rgbaSha256": "e0b6333b6023e0fbb0a8815a814dab4cbbe85b2368411c6392a7846629f528f3",
+          "width": 1440,
+          "height": 352,
+          "observations": "Responsive spans and filled remaining columns preserve content and borders.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/complete-content__light__mobile",
+          "sha256": "2fe4beaa4b5cdf96d88a9be20aec2a1377deb8fc7abc4225523a2024088d0539",
+          "rgbaSha256": "6fe73411cb6be3bf53c546a0e3cab8dd7a85fc01b6511463cbaffac4fef6ad98",
+          "width": 375,
+          "height": 352,
+          "observations": "Rich title/content/scalar tails and native input are rendered; explicit two-column mobile layout wraps long content without overflow.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/complete-content__light__tablet",
+          "sha256": "7629e6e55385ca783cac8b33448faed49d4e80675fe5eb051752f2aa97fe87be",
+          "rgbaSha256": "193f6f01389f1c8a8652ea3ab610dc880c8065a3954dbe84f9c911aa7f5b4af5",
+          "width": 768,
+          "height": 352,
+          "observations": "Rich title/content/scalar tails and native input are rendered; explicit two-column mobile layout wraps long content without overflow.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/complete-content__light__desktop",
+          "sha256": "2b47de372ff6b10aad57c1a6f94e4ef63f50ebe549de45f9b4c65eae65968266",
+          "rgbaSha256": "e6e9aab55aee89c3f4f5a747d45e7f3990d3feda187850f4c1fc21c637809835",
+          "width": 1440,
+          "height": 352,
+          "observations": "Rich title/content/scalar tails and native input are rendered; explicit two-column mobile layout wraps long content without overflow.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/empty-slots__light__mobile",
+          "sha256": "47d331f4ee9c858819e856000c70771018c676845c46c63c955578035d4c7622",
+          "rgbaSha256": "d52b53854839ccfc4186059f731e8302523da8b9813c1750cd00299da1c4b988",
+          "width": 375,
+          "height": 352,
+          "observations": "Empty title/extra/label slots suppress fallbacks; zero content remains visible.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/empty-slots__light__tablet",
+          "sha256": "7f92d0f452e0a794ccf27a5d64faa5751fd3eac356a086a83ed0d721270feee2",
+          "rgbaSha256": "f64ec411d4b8c012c9c619985514eddd7eda26586788b4b31efdb51785ca98c0",
+          "width": 768,
+          "height": 352,
+          "observations": "Empty title/extra/label slots suppress fallbacks; zero content remains visible.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/empty-slots__light__desktop",
+          "sha256": "f975e74113922d65e608aeef40d1a1147e03fdf0aec9fc46b8cfd3d31b87a3f5",
+          "rgbaSha256": "740cf3bd53240107b0d055f5df9d217724cc6d195800e4fc5dc1cd6cf90dfe5a",
+          "width": 1440,
+          "height": 352,
+          "observations": "Empty title/extra/label slots suppress fallbacks; zero content remains visible.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/current-geometry__light__mobile",
+          "sha256": "4fadc66d29d9ffcdd44f48081ddab9bf5e743e010465f6d9f93f52f9e9ce0507",
+          "rgbaSha256": "4f02cb3fd5534f3b07d1958663c3e1ce4e0eb78bd76bd1f7079bf675c0c5fecb",
+          "width": 375,
+          "height": 374,
+          "observations": "Changed vertical geometry retains saved draft and visible native text selection.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/current-geometry__light__tablet",
+          "sha256": "7012a8ccedff13af5e160638cf36e9149b55e498c4948b49b6d813881a9ed236",
+          "rgbaSha256": "6f738c9d94290ed16ccf0441bc1a84dd7d16bb645994976a7cacd45736fd7a4f",
+          "width": 768,
+          "height": 374,
+          "observations": "Changed vertical geometry retains saved draft and visible native text selection.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/current-geometry__light__desktop",
+          "sha256": "0fa8970d7facf5e7bd3a52e32ec1c1870d0ebf07be4f5cbedea0cb5c4c3fabbb",
+          "rgbaSha256": "ac340c04f3bb6d158d590661a07915a6a108ee2d7d212cd7a0bd7ac3ddd46b0d",
+          "width": 1440,
+          "height": 374,
+          "observations": "Changed vertical geometry retains saved draft and visible native text selection.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/current-provider__light__mobile",
+          "sha256": "68c8b5ba2bc5be78a585652c7999b0f1c8ded90d14e51ec99b3059836199ac65",
+          "rgbaSha256": "538f709f823f9d1fbf7c580b238fdc1c6c3605d696236cf2d2009342c3c81202",
+          "width": 375,
+          "height": 352,
+          "observations": "Current provider applies RTL/semantic palette and root outline; saved draft is preserved.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/current-provider__light__tablet",
+          "sha256": "6b2113799e6bd8031ebf0c5aac684d95d971d99ec22b43b8abafcbc433d18426",
+          "rgbaSha256": "1c53b8c1f10b6b051a2a921338406e7b47aa5e807ac1cd0bd5e7af32a0c3b381",
+          "width": 768,
+          "height": 352,
+          "observations": "Current provider applies RTL/semantic palette and root outline; saved draft is preserved.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/current-provider__light__desktop",
+          "sha256": "b9c00dd0a851362951638e033887b4edafea0d2829c1f32bff734b80caa5b44a",
+          "rgbaSha256": "d28217490af214dec11d1ab1c5b6b53103403f6ebd777ad28aae8b942af852ad",
+          "width": 1440,
+          "height": 352,
+          "observations": "Current provider applies RTL/semantic palette and root outline; saved draft is preserved.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/semantic-tokens__light__mobile",
+          "sha256": "7e6bc515728c3134e598d45fd39a46fa3cb5b953742965e27789b21f258671e9",
+          "rgbaSha256": "892ba76e725868957302d219833273c63b933f1e88543b5127fe9ab9a3fedd13",
+          "width": 375,
+          "height": 480,
+          "observations": "Custom token colors, padding and native root style are visibly applied; mobile values wrap within cells.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/semantic-tokens__light__tablet",
+          "sha256": "f845efa52f4fe6a8fa22370823b31a14f536ab7a517322c46911346cbf1b4876",
+          "rgbaSha256": "ffacf697d0828114f2af2dd4e1a5fcd2fdc497059f65a1b7db1fb5445171365b",
+          "width": 768,
+          "height": 414,
+          "observations": "Custom token colors, padding and native root style are visibly applied; mobile values wrap within cells.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/semantic-tokens__light__desktop",
+          "sha256": "750ea189ab47bfddb356b84e4fdc8e17b4d3c43b90cc922ce0e735f6ef463016",
+          "rgbaSha256": "0c42c5a1454227b406de6dcf012895d68e960d08bd77ea641987368940e7e3b8",
+          "width": 1440,
+          "height": 414,
+          "observations": "Custom token colors, padding and native root style are visibly applied; mobile values wrap within cells.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/nested__light__mobile",
+          "sha256": "6f26bce20a523827a060b8fea799c85de680b003323c7e94c9d4cfeaf5c1196b",
+          "rgbaSha256": "075db06d2fb1e67d862d98a8e0bc958065450932f6ce62823ea77a739f6394e0",
+          "width": 375,
+          "height": 352,
+          "observations": "Nested description keeps its own labelled fields and aligned bordered rows.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/nested__light__tablet",
+          "sha256": "0b4fce93cacecb8acfa2aeb8f65f76d08b3d35c83e25634fb1d8f77862513bd6",
+          "rgbaSha256": "866766c65ae57cfc3a93cbc0360ec1d188dc1d9992997e01d6d51f32a23d4287",
+          "width": 768,
+          "height": 352,
+          "observations": "Nested description keeps its own labelled fields and aligned bordered rows.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/nested__light__desktop",
+          "sha256": "f21fdd8e12a0ebcc860777aafa39c455787bc27e7c29a13036d6204b48274aa2",
+          "rgbaSha256": "afd6d191f83bf497f4eb9842eed193e8ac7739fded71f542c7ec86ac31d01cbb",
+          "width": 1440,
+          "height": 352,
+          "observations": "Nested description keeps its own labelled fields and aligned bordered rows.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/native-focus__light__mobile",
+          "sha256": "5bb53df3b8d745db26b27fd0c16b6d17216a7dcae2ec5e4aa013296f715c7cb3",
+          "rgbaSha256": "cb319c21d2ab7f59eb7fad688d5fc348aa76c7e4f97e03c4370dcc89d94dc68b",
+          "width": 375,
+          "height": 352,
+          "observations": "Native input has a visible focus ring and selected initial draft at all widths.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/native-focus__light__tablet",
+          "sha256": "781ec86befc34c553afa5b07e12fe9060cbb08fbcd1c754a0fd1ae7014c3bc3b",
+          "rgbaSha256": "079a1ff5e764fcf17affd0d5746d8643799b5f38efda791fbf77c67ed81e3e2f",
+          "width": 768,
+          "height": 352,
+          "observations": "Native input has a visible focus ring and selected initial draft at all widths.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/native-focus__light__desktop",
+          "sha256": "c8d84b7d7635ca873fb82f87a909b9b583f8205015957853ac971e2bba6ee5e2",
+          "rgbaSha256": "1d3db8a6227bcd9f4bb26481edfe7aa36020e01946ea0e91e311d75ef35f160a",
+          "width": 1440,
+          "height": 352,
+          "observations": "Native input has a visible focus ring and selected initial draft at all widths.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/rtl__light__mobile",
+          "sha256": "5821c5a7f71b1dc95de1244fccb05470a1cd049f98548bee48a8ce24dc974c9e",
+          "rgbaSha256": "d9e9dcd9fbdbb10f34faae4431c5b5f023b0d43ad9fd08c66e1c6de7257ec046",
+          "width": 375,
+          "height": 352,
+          "observations": "RTL labels and values flow from right to left with intact rounded borders.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/rtl__light__tablet",
+          "sha256": "848579d3e56c46e8570b8872c2492bc477ad1531da1200fb11333bc4f984e258",
+          "rgbaSha256": "c0c77761bca17d5735486de0db77a9a40802fb9c22c5cac1fe22fdcd5153bd56",
+          "width": 768,
+          "height": 352,
+          "observations": "RTL labels and values flow from right to left with intact rounded borders.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/rtl__light__desktop",
+          "sha256": "b7a9d685943efbef708a75c376c5019ddf14b73cc281be77668b8f164febb898",
+          "rgbaSha256": "c33523e94d847580503e9e873fde2f9fd9dd009f606d529e5d39426bda576530",
+          "width": 1440,
+          "height": 352,
+          "observations": "RTL labels and values flow from right to left with intact rounded borders.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/theme-dark__light__mobile",
+          "sha256": "457ba20d1e67bca4cd5ea32277c8895371e9c0903e5412aa5aad92eb4f7631d7",
+          "rgbaSha256": "2de2ae7ebf6311469a0440773db85dcf2101f228163558f1456c0e9726c2aa88",
+          "width": 375,
+          "height": 758,
+          "observations": "Dark current palette supplies readable labels/content and distinct borders.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/theme-dark__light__tablet",
+          "sha256": "b89a7bafeaf91f9f6848644f7c48e5d3fa85fc4ef640078f80601511017789a5",
+          "rgbaSha256": "b3437f609062c6b10a2ba5ff8f4ccc1106c079094c6feddc8abb5e95ea64a4a1",
+          "width": 768,
+          "height": 386,
+          "observations": "Dark current palette supplies readable labels/content and distinct borders.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/theme-dark__light__desktop",
+          "sha256": "197b03d95b300222ae87a242a0a410801d796d1ee98ecaebbd5a02cde88e6a88",
+          "rgbaSha256": "d07df83340c835bbea71cb4e89e7467e8a08463e2d772851d59d5a2b73a6ad72",
+          "width": 1440,
+          "height": 386,
+          "observations": "Dark current palette supplies readable labels/content and distinct borders.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/theme-compact__light__mobile",
+          "sha256": "b86680bfec2915c30f679a9d26c2b78d6d8b33da7405aac408283f1866a60815",
+          "rgbaSha256": "e809f78a014e6e15048a983789e25c98ba23def242e8a734ebd6b1e55ea0d714",
+          "width": 375,
+          "height": 590,
+          "observations": "Compact natural spacing and font sizes apply with responsive columns.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/theme-compact__light__tablet",
+          "sha256": "a348ad29bfe3f8aba8d65e6e2be42005a13855f342cd8f8d2c1e5ee06e9620e1",
+          "rgbaSha256": "27b7093c978e37343b2b43a63f5fc6120a81ae1d07924f8fa524b367989a3a57",
+          "width": 768,
+          "height": 352,
+          "observations": "Compact natural spacing and font sizes apply with responsive columns.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/theme-compact__light__desktop",
+          "sha256": "98a21a6f4197ec6ce47452f8879e0b098e8675924e742a49a6e2a320d9727528",
+          "rgbaSha256": "084953daa8f2de4fd30b5cde40da5bf4686eb8cae8f2ef24467e55986c70641b",
+          "width": 1440,
+          "height": 352,
+          "observations": "Compact natural spacing and font sizes apply with responsive columns.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/theme-dark-compact__light__mobile",
+          "sha256": "672bef76b85eb27abc1b400b6578e50f75649fa26e5ffcb5c0e8e47791c7489f",
+          "rgbaSha256": "811b87de3d51801df41e2e73b948f4c91806178aaa9f86e001e793204dd21e3a",
+          "width": 375,
+          "height": 613,
+          "observations": "Combined compact/dark appearance preserves content, border separation and mobile heading wrapping.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/theme-dark-compact__light__tablet",
+          "sha256": "9fd3731730866140614ccb4f95cfa345f6ff47384ceb5bcff4ec1aa31df43615",
+          "rgbaSha256": "6cfadf0194211c9ebde74c612113981581d44036302db80c676becd266cde835",
+          "width": 768,
+          "height": 352,
+          "observations": "Combined compact/dark appearance preserves content, border separation and mobile heading wrapping.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "descriptions/theme-dark-compact__light__desktop",
+          "sha256": "de6e9923be06982dd017eb1e305894bcf97b89cc3b0873ed5c5d08215316014f",
+          "rgbaSha256": "af59d7c260dcdee3d60ffdd899fc6385567d4c0e2f722e964867f0dbfe79829a",
+          "width": 1440,
+          "height": 352,
+          "observations": "Combined compact/dark appearance preserves content, border separation and mobile heading wrapping.",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        }
+      ]
+    },
+    {
+      "component": "breadcrumb",
+      "count": 51,
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "sourceUnchangedSincePublishedBehaviorChecks": "e0062edd",
+      "candidateManifestSha256": "e50463c827362397850cc5fa6d48edee464e2296b2fde88caa953e0c4d18e106",
+      "reviewSha256": "0b9d9bd9909ca3d3bace10a38264a79db0a4035f27600b075d1ae9166ff2bd23",
+      "method": "Each new original PNG actually viewed",
+      "nonBlockingObservations": [],
+      "entries": [
+        {
+          "id": "breadcrumb/basic__light__mobile",
+          "sha256": "c67960f81b2cf6f72ea50cff4e9e52c5e861a903d805fa075db10801cd4ef590",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "Home / Components / Breadcrumb 三项、分隔符和基线对齐；当前项层级清楚，三视口均无裁切或重叠。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/basic__light__tablet",
+          "sha256": "6d97fcccf2cce2b903e7de98693d1cc3576621e623c952897f8d0367ac2f812a",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "Home / Components / Breadcrumb 三项、分隔符和基线对齐；当前项层级清楚，三视口均无裁切或重叠。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/basic__light__desktop",
+          "sha256": "202368988a8280ddbac80f8375a36e6035b2d38e462fc65ec5461ae717bafe4a",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "Home / Components / Breadcrumb 三项、分隔符和基线对齐；当前项层级清楚，三视口均无裁切或重叠。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/with-icon__light__mobile",
+          "sha256": "966038af8948b82474e6d863070397fee7fc7fb43003c8e2d0fa9cde13e7e503",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "Home/User 图标轮廓、文本与斜线分隔符清楚；图标和文字基线协调，三个视口均无缺字或裁切。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/with-icon__light__tablet",
+          "sha256": "0cb3260ce361b261f41e71d3a4d98528fa7b2620ebdb4b21bdaf6d75af3f1934",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "Home/User 图标轮廓、文本与斜线分隔符清楚；图标和文字基线协调，三个视口均无缺字或裁切。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/with-icon__light__desktop",
+          "sha256": "f0671962b70aa5bb779e74766da7ab2e42e3e3bd328ca652909dfa02fa5248bb",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "Home/User 图标轮廓、文本与斜线分隔符清楚；图标和文字基线协调，三个视口均无缺字或裁切。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/separator__light__mobile",
+          "sha256": "7cefff0c1043b140afdcf95fe371c5b5c63164aed9b920794ab7a2f38e0f9005",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "自定义 › 分隔符实际可见，间距一致；三个视口的链接与当前项均完整，无相互覆盖。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/separator__light__tablet",
+          "sha256": "ca629090436a10719fb7c0085031fec970571fc42ca6ccbb281ec4e6b7d9c9c7",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "自定义 › 分隔符实际可见，间距一致；三个视口的链接与当前项均完整，无相互覆盖。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/separator__light__desktop",
+          "sha256": "6925864d477fdb1e4bf8fa43a9a12782bb4a0717002a023c6f96a4437fb60509",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "自定义 › 分隔符实际可见，间距一致；三个视口的链接与当前项均完整，无相互覆盖。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/separator-item__light__mobile",
+          "sha256": "8d749eeb5ce44aae2925c1e382592fce4b82c8173aec20e32cda674f0474d770",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "显式冒号和斜线按顺序出现，无重复自动分隔符或末尾分隔符；三视口文字与间距完整。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/separator-item__light__tablet",
+          "sha256": "908fdd72597e6d73a3ad106e825e9a223b2404e73ceb3158e249c73732ffc333",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "显式冒号和斜线按顺序出现，无重复自动分隔符或末尾分隔符；三视口文字与间距完整。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/separator-item__light__desktop",
+          "sha256": "32c451afa8e6ed4189b36f946eacb7061c1c17225c8a1b530f793a8683f07e56",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "显式冒号和斜线按顺序出现，无重复自动分隔符或末尾分隔符；三视口文字与间距完整。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/with-params__light__mobile",
+          "sha256": "84c7ad7b37e4dff6859ca2c4104820ad21f2ee750b5160bb51dc25faa1326088",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "Users / User 0 / Record 42 完整可见，数字 0 未丢失且无残留参数占位；三视口无溢出或裁切。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/with-params__light__tablet",
+          "sha256": "cb8d6b7fe06f4e3056aa386bae367d522dea4f59965dec056478dbf96c0ee6dc",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "Users / User 0 / Record 42 完整可见，数字 0 未丢失且无残留参数占位；三视口无溢出或裁切。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/with-params__light__desktop",
+          "sha256": "c4b7b36a5e9873f7f1097f3cdc608f124b8854926a4bc65cd5976573a589bb03",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "Users / User 0 / Record 42 完整可见，数字 0 未丢失且无残留参数占位；三视口无溢出或裁切。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/overlay__light__mobile",
+          "sha256": "907897d14a5791ce3630fd3a614427676133860d1b2a66641227952ed8e98d73",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "关闭态独立箭头按钮与 Products 链接分离，箭头、斜线和末项基线协调；三视口无文字覆盖或溢出。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/overlay__light__tablet",
+          "sha256": "d3afa404d72d37f58171b5c4c0da5755576eb2cee4464caa08c4b0c9a8c1de5b",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "关闭态独立箭头按钮与 Products 链接分离，箭头、斜线和末项基线协调；三视口无文字覆盖或溢出。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/overlay__light__desktop",
+          "sha256": "b74b5a7234c2910d5a24d1ea1bec55b329261b461d5fb315570ec0b6643e35c7",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "关闭态独立箭头按钮与 Products 链接分离，箭头、斜线和末项基线协调；三视口无文字覆盖或溢出。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/semantic__light__mobile",
+          "sha256": "679c69fc5bf8b5944869cecd91540338468174b6c6791c7c899824c80ac09011",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "语义样式的边框、圆角、内边距和加粗内容均实际出现；窄屏仍保留完整文字及左右留白，宽屏边框自然铺满可用宽度。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/semantic__light__tablet",
+          "sha256": "23d443a93190bed8614b89dfb16eeeb53c9d86c0c958648381363cba5b7bbc88",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "语义样式的边框、圆角、内边距和加粗内容均实际出现；窄屏仍保留完整文字及左右留白，宽屏边框自然铺满可用宽度。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/semantic__light__desktop",
+          "sha256": "42c206e419f19388f443b0df5a6856e504fdba9dfd0c55b00b2c941922742d00",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "语义样式的边框、圆角、内边距和加粗内容均实际出现；窄屏仍保留完整文字及左右留白，宽屏边框自然铺满可用宽度。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/rtl__light__mobile",
+          "sha256": "db9134a3d50e6f1ad81d0c4603be2f783421c414805a575c38dee17529467ee1",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "导航在右侧按 Home→Products→Current page 的 RTL 顺序排列，箭头及分隔符未与文字相碰；三视口均完整。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/rtl__light__tablet",
+          "sha256": "42d5e6e574dc7c472482715d000955080938611b1b5ccdf72f2ad5eea0449766",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "导航在右侧按 Home→Products→Current page 的 RTL 顺序排列，箭头及分隔符未与文字相碰；三视口均完整。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/rtl__light__desktop",
+          "sha256": "db7e1e0bdd4d2fe6f8b91a4d3f9f2a73ed7a537149e97cf058c3ea3273af1ba2",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "导航在右侧按 Home→Products→Current page 的 RTL 顺序排列，箭头及分隔符未与文字相碰；三视口均完整。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/complete-content__light__mobile",
+          "sha256": "19ab365246d867069e2e9eeef3ac4a02137b0517b43b374edd6cd7d998372b9b",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "数组/Fragment/多根内容和数字 0 全部保留；第一行在窄屏自然换成两行，无裁切。原生组合第二行的默认 / 与显式 · 按夹具并存。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/complete-content__light__tablet",
+          "sha256": "51c57fbc3c6e1fd9e1e68ee5bc04d06f2988fea66e4898ebdc747d75ac904ad6",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "数组/Fragment/多根内容、Text node 和数字 0 全部保留；上方内容单行，下方原生组合及显式 · 完整，无覆盖。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/complete-content__light__desktop",
+          "sha256": "5166172196a34cb834cfe14f28b36270798f6329cc58490ddc68d46f13659388",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "数组/Fragment/多根内容、Text node 和数字 0 全部保留；上方内容单行，下方原生组合及显式 · 完整，无覆盖。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/no-title-menu__light__mobile",
+          "sha256": "abe316be4345db73e689ce059c8c9e27f31fc1e44d01a73eec511dbd60148610",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "无标题项仍显示独立箭头；菜单实际展开并有三行内容，首项蓝色焦点轮廓、禁用末项灰态清楚。菜单和阴影保持在三视口图幅内，无空白弹层。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/no-title-menu__light__tablet",
+          "sha256": "9daf63a6ad7b9bbf7382f515fb0cb63f2defd2c53c4e71dbe7de4a920cfa749f",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "无标题项仍显示独立箭头；菜单实际展开并有三行内容，首项蓝色焦点轮廓、禁用末项灰态清楚。菜单和阴影保持在三视口图幅内，无空白弹层。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/no-title-menu__light__desktop",
+          "sha256": "247b22292ffb0598b2a6b1b083b55212c844a8920769694d3c785fbf1f76122a",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "无标题项仍显示独立箭头；菜单实际展开并有三行内容，首项蓝色焦点轮廓、禁用末项灰态清楚。菜单和阴影保持在三视口图幅内，无空白弹层。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/conditional-content__light__mobile",
+          "sha256": "d00d477ec4c132437091e487d470b93a7f5d59338089e77fe87076d889163639",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "Saved draft 草稿与蓝色输入焦点轮廓可见，默认箭头和 / 已恢复；输入、按钮及 Current page 在手机宽度亦未碰撞或裁切。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/conditional-content__light__tablet",
+          "sha256": "6228a6922a8f869afa50654d5ffcb3c581934a93aadabe9f8fb3de85473a5573",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "Saved draft 草稿与蓝色输入焦点轮廓可见，默认箭头和 / 已恢复；输入、按钮及 Current page 在手机宽度亦未碰撞或裁切。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/conditional-content__light__desktop",
+          "sha256": "81f91a9bb618515c8fcd6b10faad23dd7771965dc67db6556402a495272d235d",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "Saved draft 草稿与蓝色输入焦点轮廓可见，默认箭头和 / 已恢复；输入、按钮及 Current page 在手机宽度亦未碰撞或裁切。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/current-provider__light__mobile",
+          "sha256": "8ac67c5bb5a766c0396145c343d5be5c4870ed21fbcb608c2c9dd8bebcedae2c",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "当前 Provider 的绿色大图标/链接、棕色末项与分隔符、蓝色自定义箭头及 RTL 均清楚。Saved draft 与输入焦点保留；原生组合窄屏自然换行，当前项/分隔符完整且无重叠或越界。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/current-provider__light__tablet",
+          "sha256": "1c5b25d63ce8fdbd89528e6c9ab118d476e4d6082eafb206ee53a825dc789fee",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "当前 Provider 的大图标、绿/棕/蓝三类取色、RTL 和加大间距可见；Saved draft 输入焦点保留，两个导航区内容均完整。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/current-provider__light__desktop",
+          "sha256": "3989c71e67cde5a1096942feb51714a09720f9eb562c3b77f9ab04c0287c3a29",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "当前 Provider 的大图标、绿/棕/蓝三类取色、RTL 和加大间距可见；Saved draft 输入焦点保留，两个导航区内容均完整。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/keyboard-menu__light__mobile",
+          "sha256": "f5b03fda5268a9900139159ef2011e666a256a450313d00113353c34cfe6823c",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "键盘菜单实际展开且三行均可读，首项有明确蓝色焦点轮廓、末项为禁用灰态；菜单与阴影未裁切，无暂停首帧或空白弹层。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/keyboard-menu__light__tablet",
+          "sha256": "f1fa4f72373289195e76737399807c22d60fb16795cd79a6369fcc38c56648ae",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "键盘菜单实际展开且三行均可读，首项有明确蓝色焦点轮廓、末项为禁用灰态；菜单与阴影未裁切，无暂停首帧或空白弹层。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/keyboard-menu__light__desktop",
+          "sha256": "34013f7f89041824fc89c10b17d714fcd91d1ea51f7bb48c6907f8eca4868ede",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "键盘菜单实际展开且三行均可读，首项有明确蓝色焦点轮廓、末项为禁用灰态；菜单与阴影未裁切，无暂停首帧或空白弹层。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/native-focus__light__mobile",
+          "sha256": "07f3695bf93c6a235903bb86af266e9e92718941f106378d70fe6c7453968ac0",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "Home 链接的蓝色键盘焦点轮廓完整可见，未被截图边界裁掉；Before breadcrumb 原生按钮和后续导航均未重叠。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/native-focus__light__tablet",
+          "sha256": "5549d8f77e183154445e13aeb91b8be602bc8df30922250403b326cf5d872600",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "Home 链接的蓝色键盘焦点轮廓完整可见，未被截图边界裁掉；Before breadcrumb 原生按钮和后续导航均未重叠。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/native-focus__light__desktop",
+          "sha256": "59b9843166666ef7a286e2ad3f05d20f6d89ffeb46b05602b4a29403d88edc88",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "Home 链接的蓝色键盘焦点轮廓完整可见，未被截图边界裁掉；Before breadcrumb 原生按钮和后续导航均未重叠。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/theme-dark__light__mobile",
+          "sha256": "68b8c6544721917cfee66214f455eee089fe7e42c216b874adaf2279f7405055",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "深色作用域背景稳定；标题、图标、链接及当前项层级可读，菜单箭头可见，两行导航在手机宽度仍完整。外层白色留白为截图宿主，未侵入主题内容。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/theme-dark__light__tablet",
+          "sha256": "a492452d372cfe2c7253a98cfc9601e3ae3233c1e107d0dfcdbde40d05f78ec7",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "深色作用域背景稳定；标题、图标、链接及当前项层级可读，菜单箭头可见，两行导航在手机宽度仍完整。外层白色留白为截图宿主，未侵入主题内容。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/theme-dark__light__desktop",
+          "sha256": "16fac2b850ab1a6ffd54b618eded0d6e7829e169bc61275fd3b66682d0880641",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "深色作用域背景稳定；标题、图标、链接及当前项层级可读，菜单箭头可见，两行导航在手机宽度仍完整。外层白色留白为截图宿主，未侵入主题内容。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/theme-compact__light__mobile",
+          "sha256": "b45a192caf2c14482d7e11529eaa4ae6d9d96b34ac0a315ce09c7dc36b8ae2fb",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "紧凑主题的小字号与收紧间距实际可见，图标、斜线、箭头及两组文字均完整；手机视口未出现挤压、裁切或覆盖。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/theme-compact__light__tablet",
+          "sha256": "1963d0dbf9ede395a25c2bf69f617a7870f0606227a768277dd852980bcf092d",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "紧凑主题的小字号与收紧间距实际可见，图标、斜线、箭头及两组文字均完整；手机视口未出现挤压、裁切或覆盖。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/theme-compact__light__desktop",
+          "sha256": "2ad5494a31715d854a2d4b75f9125c90969eb3b45c4a9b713710513270940cc9",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "紧凑主题的小字号与收紧间距实际可见，图标、斜线、箭头及两组文字均完整；手机视口未出现挤压、裁切或覆盖。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/theme-dark-compact__light__mobile",
+          "sha256": "9c82c77669ed6b0db09b62fe8a58898d7d6f2cac1e2f02da701a910ea12d36b0",
+          "width": 375,
+          "height": 372,
+          "observations": [
+            "暗色紧凑主题的标题、细线图标、分隔符、菜单箭头及两组文字仍可辨识；手机标题完整，三个视口均无裁切或相互覆盖。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/theme-dark-compact__light__tablet",
+          "sha256": "36cf48ca3decfaa78dfc300fdf001a20aaaa3c599146a741ffcb6ee8ca2cafd8",
+          "width": 768,
+          "height": 372,
+          "observations": [
+            "暗色紧凑主题的标题、细线图标、分隔符、菜单箭头及两组文字仍可辨识；手机标题完整，三个视口均无裁切或相互覆盖。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        },
+        {
+          "id": "breadcrumb/theme-dark-compact__light__desktop",
+          "sha256": "174e356750a950367f7eaba31ae24e2367f3c0ce54bb0742b24215252b30004a",
+          "width": 1440,
+          "height": 372,
+          "observations": [
+            "暗色紧凑主题的标题、细线图标、分隔符、菜单箭头及两组文字仍可辨识；手机标题完整，三个视口均无裁切或相互覆盖。"
+          ],
+          "actualReviewInherited": false,
+          "visibleDefects": []
+        }
+      ]
+    },
+    {
+      "component": "timeline",
+      "count": 78,
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "sourceUnchangedSincePublishedBehaviorChecks": "e0062edd",
+      "candidateManifestSha256": "78bc69891a7a8ea64f0a04705378cbb133380b370f3cc26bf446744cc3d030d3",
+      "reviewSha256": "ccf71ab641ed0c0b6f5d86fa21abd6d1527cfb27e758aadc0660651cd3d9d2f6",
+      "method": "Prior actual per-image review inherited only after exact raw RGBA and dimensions",
+      "nonBlockingObservations": [
+        {
+          "ids": [
+            "timeline/current-provider__light__desktop",
+            "timeline/reverse-edit__light__desktop",
+            "timeline/pending-zero__light__desktop",
+            "timeline/native-focus__light__desktop"
+          ],
+          "detail": "The native input and rich business text share one inline line and touch at the boundary at desktop width. All glyphs and field borders remain visible; mobile/tablet naturally wrap the field onto its own line. Recorded as visible slot layout rather than a confirmed component defect."
+        },
+        {
+          "ids": [
+            "timeline/loading__light__mobile"
+          ],
+          "detail": "A 4x nearest-neighbor detail view confirms the visible loading mark is a small blue arc, with no text obstruction. The marker differs from a normal hollow dot as expected for loading; no animation claim is made from a static PNG."
+        }
+      ],
+      "entries": [
+        {
+          "id": "timeline/basic__light__mobile",
+          "sha256": "98de9e75d3d40642ead5710faefd963d829963a0da6ca1be24f1ed97335e6d0d",
+          "rgbaSha256": "99e0694daa91095b95217b9d0a4179c154cb8ebca859119f456aed554e2822db",
+          "width": 375,
+          "height": 312,
+          "observations": "09:10、10:05、11:30 三个时间位于中轴左侧；创建/网络设置/测试文字在右侧完整换行，蓝绿蓝空心节点和连接线对齐，末项无尾线，无裁切或碰撞。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/basic__light__tablet",
+          "sha256": "c37841a6a177db7f22ae9d5b4b0364fb427844954ff049c1c677a75624a2f862",
+          "rgbaSha256": "d01b4694fe3f875149e1a6dd7d4bcba7c0a2fc13a06737544f312e958dc2ecf7",
+          "width": 768,
+          "height": 312,
+          "observations": "三时间与右侧三段业务文字均单行可读，中轴居中，蓝绿蓝节点/竖线连续；标题与正文间距正常，无重叠。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/basic__light__desktop",
+          "sha256": "78215f34f85bbcea589012228f7e250cb89daae4da5a25c4376413dcbb6b9c5f",
+          "rgbaSha256": "a143a1ed4b4aea977d53959856cf6f7bca99a24c837f2f1483ad248189adf1b7",
+          "width": 1440,
+          "height": 312,
+          "observations": "中轴位于宽画布中央，时间左对齐区域和三段业务文字在轴两侧清晰分离；三项齐全、末端收束，宽屏无内容挤压或异常裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/verticalSingle__light__mobile",
+          "sha256": "94ef6a3c5894dc48758c8a1e5f4dc0afd5d3453da8455201205a9b59be1770b8",
+          "rgbaSha256": "23616f87d1d1fd78a058ee1c2a34dde24e46d22dccac2d76f175c0953b02e44d",
+          "width": 375,
+          "height": 312,
+          "observations": "无时间标题的单侧竖轴贴左，三段业务内容完整单行显示，蓝绿蓝节点与每行首行对齐；竖向间距一致。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/verticalSingle__light__tablet",
+          "sha256": "5b7ac2e920745f9b8ceab067978269d0512bfecea7394cc4730a7495c8390ce4",
+          "rgbaSha256": "5940304f52aac5841c208fa0888edc4c4d2973a1ae38c5defd7c2f14cef09ef9",
+          "width": 768,
+          "height": 312,
+          "observations": "单侧左轴与三条业务文字均清晰，节点/连接线和首行文字对齐；无空标题占位或被裁切内容。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/verticalSingle__light__desktop",
+          "sha256": "e0e30403f178f7c317ab9d4480d68ae871f57304aeebf482844ec74dcf7fc25b",
+          "rgbaSha256": "4ee1a789d01ce97143903a69b5817cab4b393276c1cd8a62e4d1bc78f82a0495",
+          "width": 1440,
+          "height": 312,
+          "observations": "宽屏仍为左侧单轴，三条业务记录完整；节点间距和正文缩进一致，没有自动居中或方向错乱。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/alternate__light__mobile",
+          "sha256": "4bb8d311adb716ab762cb015906347584de0ddc16ca1dbdd7c8044dd193bf945",
+          "rgbaSha256": "d0eab356c23d12c74eebe65092f81ec899f9be9b6c57fc3068779c86a2b1f888",
+          "width": 375,
+          "height": 312,
+          "observations": "首尾项时间左/内容右，中间网络设置文字左/10:05右；两侧文字换行后均未越过中轴，蓝绿蓝节点清楚。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/alternate__light__tablet",
+          "sha256": "14a277e2dcc645513b793bc55319633346edcb7d6d0af6dacacc226866cdd8e0",
+          "rgbaSha256": "ab866cc351c8f2b073f8fd469454144adbf1c479a64f827a0da06c2b3328aafd",
+          "width": 768,
+          "height": 312,
+          "observations": "三项沿中轴左右交替，第二项网络设置在左、10:05在右；均单行清晰，无节点/文字重叠。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/alternate__light__desktop",
+          "sha256": "ed9018dd759104c9b2eae5ad5e1446b3cfaa7810325955b5eef4956243983c7a",
+          "rgbaSha256": "b7613cc2828114c1af8806e0bf17409270bbc8ee274251f564a980f7c7fe2093",
+          "width": 1440,
+          "height": 312,
+          "observations": "中央竖轴两侧交替关系保持，三时间与业务内容齐全，横向分隔与逐项竖距一致，末端无多余连线。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/horizontal__light__mobile",
+          "sha256": "1baf7ebcd893e88d9af4ed804e78e7cd0c1198a279ee827c30f3f13f51070549",
+          "rgbaSha256": "23a3cf2b7a75777daa6df6c36e3d4db3eafdf0af561d7b9ff9930ebc5d6ef5be",
+          "width": 375,
+          "height": 312,
+          "observations": "三个水平节点下方文字完整换行，首项两行、中后项三行；蓝绿蓝节点同高，连接线未穿过文字，未裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/horizontal__light__tablet",
+          "sha256": "434041752c82c12b48fa004ea4318941370329a65ca85427bac08c2158755a7d",
+          "rgbaSha256": "f1b9d62d65b764d2affb593001a9096dcc93b2ef7351b240317db45132f688c0",
+          "width": 768,
+          "height": 312,
+          "observations": "三个水平节点等距同高，三条业务描述各自居中单行，线只连接节点区域；标题与轴间距正常。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/horizontal__light__desktop",
+          "sha256": "807b2e2d72dea838b2b620b3e504e14cd81ca160850823b6ac0fa2a62890fdce",
+          "rgbaSha256": "8ae723aaadde23561e624212e7c33155b6c17a081e1c6ce6d8a4de3f4a9753f0",
+          "width": 1440,
+          "height": 312,
+          "observations": "宽屏水平连接线横跨三节点，三条完整单行描述居中在节点下方；左右留白均衡，末端无延伸尾线。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/horizontal-end__light__mobile",
+          "sha256": "267841dba8c81c5574386aeee052e52498707a0349be9f41e87f727029e56311",
+          "rgbaSha256": "b3a7de4296f9e323e52e4d2c5b90a63f0c12d10e081e4ec8790eb780abbbbf96",
+          "width": 375,
+          "height": 312,
+          "observations": "三段业务描述位于水平轴上方并在窄屏完整换行；文字底边与节点有明确间隔，三个节点同高，未与标题或连接线重叠。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/horizontal-end__light__tablet",
+          "sha256": "cbcabde6a9988b6dfbb9d826f90433437da52efb83bfcd9f55d78ca9b286ba1c",
+          "rgbaSha256": "59bc1df9ca1c5cacd3dc526e97f9b70ff185f6c55c87fed2c16c9b9f704ee189",
+          "width": 768,
+          "height": 312,
+          "observations": "三条业务文字位于轴线上方单行居中；蓝绿蓝节点及连接线同高，end 方向与普通 horizontal 相反且清楚。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/horizontal-end__light__desktop",
+          "sha256": "fcc42ae1dfb3afbedf72bb79f4bb63935c65ac94f95464845ea6fa814ab454c6",
+          "rgbaSha256": "c22baf377e1255e7d28edcf1928ee7491f75e4e056bf797eba64c82b535781c6",
+          "width": 1440,
+          "height": 312,
+          "observations": "宽屏三节点等距，业务描述在节点上方，底边/节点间距一致；无文字裁切或轴线穿字。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/titleSpanNumber__light__mobile",
+          "sha256": "b6f30394ef07188ee0d38c1be73af27c6a9ecd54d6b63fe64da7b0c30cabf07f",
+          "rgbaSha256": "6d8a8278214e79ce393e5e3274d0e26282b407770c97069c208226f8c77b0bad",
+          "width": 375,
+          "height": 312,
+          "observations": "数字标题跨度使轴位于画布左侧约三分之一；三时间列与三段业务描述均完整单行，节点和文本首行对齐。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/titleSpanNumber__light__tablet",
+          "sha256": "f2dd3450d07637e75f74b2ddbf5a72d7fcfb2b8866e49a191296cc1c95f1384b",
+          "rgbaSha256": "8795a12a21c70af9f63913300513e1169442f90283e3c3dde2c26388a5d4651a",
+          "width": 768,
+          "height": 312,
+          "observations": "标题列比基本形态更窄，三时间和内容清晰分列、单行，轴线保持连续，间距均匀。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/titleSpanNumber__light__desktop",
+          "sha256": "278be685e5fbaff06ee049ea522c12472f8ca9c4b97a94f3d2a6b0016e697d80",
+          "rgbaSha256": "740ff5e95066f768080eddd58c0d14d90d5e8b2f2fff48b8e0afd1727219342c",
+          "width": 1440,
+          "height": 312,
+          "observations": "数值跨度下竖轴明显位于基本形态中轴左侧，三组时间/内容齐全，列对齐稳定，无重叠。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/titleSpanString__light__mobile",
+          "sha256": "2a10b06d73626fd31a0f29ef8d4a63ce99bd62160aea488f090672776ceb0f41",
+          "rgbaSha256": "970086750a0fff7ca31e54f81ae36c112eb2b01dcdd0beb0b48a2aa6615e58fc",
+          "width": 375,
+          "height": 312,
+          "observations": "固定/字符串标题跨度使轴偏左；09:10、10:05、11:30 完整，网络设置和测试说明自然换行，节点均对齐首行。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/titleSpanString__light__tablet",
+          "sha256": "1a621374f1363efdbff93f15518e3aa34c392f0d0b14e86fadf59cb0f358bb42",
+          "rgbaSha256": "74e2d0a07f8025ccb51176be7d7041dde8313a8843fdc0f6ed665c98db668673",
+          "width": 768,
+          "height": 312,
+          "observations": "字符串跨度的时间列比数值跨度更宽，三段说明恢复单行，文字两侧间距清楚。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/titleSpanString__light__desktop",
+          "sha256": "de8115835bc5783d42fd8d3fb53025f4e9ab4604df67031cef5eee9c8d2f1c67",
+          "rgbaSha256": "3964c04c903dd850f720292472541dc098c0fb539f4bbc504c0ab5cfefebdf67",
+          "width": 1440,
+          "height": 312,
+          "observations": "宽屏时间列/竖轴保持约定比例，三时间和三段说明完整单行，节点间距一致且无额外尾线。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/colors__light__mobile",
+          "sha256": "fcdff3bda4b72b3cb3fdfdc667147403d1cf97c026db2a624ed04dcf7a91fc0c",
+          "rgbaSha256": "00ff1f6440f0813cc3aa01969f767c2ed9ebd6a5a87a18abf6e2786fa7af35ec",
+          "width": 375,
+          "height": 323,
+          "observations": "blue、red、green、gray、#5267a8 五行各自对应蓝红绿灰及自定义蓝紫节点；Current record 文本齐全，五节点沿同一直线。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/colors__light__tablet",
+          "sha256": "2f22f21e905333ee700b7644517df377f32c90a281a3f79b48445947c7507d86",
+          "rgbaSha256": "879385c7608cce6b3e9ebfa9ce289b52ac7b78fe7bef65a070c3ae657db03768",
+          "width": 768,
+          "height": 323,
+          "observations": "五种颜色/五条 Current record 均可见，颜色标签与对应节点逐行对齐，灰色空心节点可辨。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/colors__light__desktop",
+          "sha256": "26e6340fa9fd4ca1b63ed56fe53ba30ad217d39690529214623d8846cc90df4d",
+          "rgbaSha256": "83ba46b59b93ec88deb0698f731e40c03945dd6532864c04c65d15d232709791",
+          "width": 1440,
+          "height": 323,
+          "observations": "宽屏五行颜色标签和内容齐全，节点颜色顺序正确，连接线居中且末端不溢出，无裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/loading__light__mobile",
+          "sha256": "cd7a19b0a7c84ad83a206ec29c45449509f90a6c83977602c6d275a259e65706",
+          "rgbaSha256": "68596fab35be354d221d99031e73304aa3f351f06da5645888fd087e13fdbf3b",
+          "width": 375,
+          "height": 312,
+          "observations": "已完成记录与 Recording a new result... 两条内容清晰，第二节点显示蓝色弧形 loading 标记，竖轴后段为虚线，标记与首行对齐、未侵入文字。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/loading__light__tablet",
+          "sha256": "7baab913b08b42916ea85ff6518ad0b2577c359df43f339b279d6930bf58845f",
+          "rgbaSha256": "a73284468450f5cc21b15e0266bdd6d5a1e93e39f32b7f516c11158a018f5a94",
+          "width": 768,
+          "height": 312,
+          "observations": "两条记录均单行，第一蓝色空心点、第二蓝色加载弧线可见；虚线连接和正文缩进一致，无被遮挡文字。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/loading__light__desktop",
+          "sha256": "4b3eebe9c144368dd3a149155c43ee3d6d84a750acbf1c6e2cc43daeae9d4b9f",
+          "rgbaSha256": "60dfd19bb97c0484bd390eb0f650584eeebe0a575c31078153403c5c70a88f0d",
+          "width": 1440,
+          "height": 312,
+          "observations": "左侧两节点加载场景完整显示，Recording a new result... 省略号是文案一部分；弧形指示与连接线留出间隔，正文无裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/pending__light__mobile",
+          "sha256": "77f2b5a35baf587d780b8941b16a836af56b6fef150695d0f5e86bb85ad7428d",
+          "rgbaSha256": "febe3527d23ec8b1d55c3c3d3c082c99ea223c876a6b0f74a45b6e22aab65aac",
+          "width": 375,
+          "height": 312,
+          "observations": "三条已完成记录后追加 Recording...；末项蓝色弧形标记与虚线连接清楚，四行内容齐全且末端未多出尾线。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/pending__light__tablet",
+          "sha256": "eef46b74ee711aaf64ebf5fb99938f8a3cf24c8b139ea35faf594ac6720fbd60",
+          "rgbaSha256": "d40d0473bff1f99c6dc9e03f77a428e024d678deb6616a6955a1d68c61e644ca",
+          "width": 768,
+          "height": 312,
+          "observations": "三段业务记录和第四待处理 Recording... 文案清晰；待处理节点与上方虚线、首行文字对齐，没有重叠。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/pending__light__desktop",
+          "sha256": "c99149f24f1444dff5bdf94ca24170b18a96f3b3da9104b7b5bf38462e1541ef",
+          "rgbaSha256": "9d5d12cb5ab3364f0cb7d560676521f85ddaf7dc2cab25049a83d2ce2b3f9814",
+          "width": 1440,
+          "height": 312,
+          "observations": "宽屏四项完整，pending 文案/弧形状态与前三项区分明确，竖向步距一致并保留足够底部留白。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/reverse__light__mobile",
+          "sha256": "0911311bb9fa26b8ca3acca93e3974ded5fe2512800267901ac833feb635a97c",
+          "rgbaSha256": "fee5731b9206e84dc3bb3c542c427a70eed7226a8b4301175510f38314fa5d5c",
+          "width": 375,
+          "height": 312,
+          "observations": "顺序为11:30测试、10:05网络、09:10创建；两行正文自然换行且时间未裁切，节点/竖轴保持中置对齐。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/reverse__light__tablet",
+          "sha256": "f66807e8c14063b4cd6539f159659f18e8ed4bc6da76cb990c500d8542980fda",
+          "rgbaSha256": "32b2693aed395728ab9bad7aced52369b991c56ecafc47c0026bb5c3fe24ec0b",
+          "width": 768,
+          "height": 312,
+          "observations": "三业务项按时间倒序，蓝绿蓝节点与对应文字一一对齐；均单行无碰撞，末项创建无尾线。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/reverse__light__desktop",
+          "sha256": "727fcf308ae5c07e67f15c69afa096054119ab9e5be8eafb4c196727f30e1dc6",
+          "rgbaSha256": "b14fbee47160ab9a12d8408fe3ca31c8222492d67bcb14202a8f9523663ca009",
+          "width": 1440,
+          "height": 312,
+          "observations": "倒序三时间与描述全部可见，中轴和行距稳定，未出现仅文案反转但节点错位的可见问题。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/variantFilled__light__mobile",
+          "sha256": "e2dc9f8cc1c644039e7c7cc6f5df91d8c4aee7a1e53e7fffe9b2b1cabfe7ece4",
+          "rgbaSha256": "580ba477c4b50008aa6cb7f5ccea5833b6ba73d331248af312a3a57fa3a22b32",
+          "width": 375,
+          "height": 312,
+          "observations": "左侧三颗实心蓝色节点与三条完整业务记录对齐；节点填充清楚、连接线连续、无文本裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/variantFilled__light__tablet",
+          "sha256": "44922ed6c4c60050db47c1930e1c8d686b7d0f3390c6310caf5948047f098c7b",
+          "rgbaSha256": "8a144403c484914e6132be33e380a76c5ff593e9f4ab0335f63a1f23039ee7e0",
+          "width": 768,
+          "height": 312,
+          "observations": "三颗实心蓝点相同大小，正文单行与首行基线邻接，三项竖向间隔一致。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/variantFilled__light__desktop",
+          "sha256": "e3acbe67643d4ab0114af415c0aa5d7f23b57ce568728bf6a53584bc2a5ad92d",
+          "rgbaSha256": "216e69056fbdf450e59c4c878bd72e45cc9a87a9966f9859be35eac2115afcee",
+          "width": 1440,
+          "height": 312,
+          "observations": "宽屏保持左侧单轴和实心节点，三业务记录完整，没有空心/实心样式混杂或异常尾线。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/rtl__light__mobile",
+          "sha256": "0f8dec593f802dea730cbb613799109c5b5b01fdfd3f11d62d70d7f77900bf5a",
+          "rgbaSha256": "f7a9bf1c3d225472ef97a43fa45f08b328f22c2931ac7b33b5facd0f545a17a2",
+          "width": 375,
+          "height": 312,
+          "observations": "三段英文业务描述位于中轴左侧并向轴对齐，时间09:10/10:05/11:30在右侧；窄屏换行完整，镜像方向清楚、节点未穿字。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/rtl__light__tablet",
+          "sha256": "a312d7adc0131157a87c3a3d7f7ee79c504222dd446628acf087727c3a36f81c",
+          "rgbaSha256": "bcd3b992c99f39b5c0ce2f61e97e0194a82a4710af887a5e8e6f3624d4ef5ca5",
+          "width": 768,
+          "height": 312,
+          "observations": "时间列在右、完整单行业务内容在左，蓝绿蓝节点及竖轴居中；RTL 镜像与基本 LTR 场景相反且布局平衡。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/rtl__light__desktop",
+          "sha256": "2d293631bd3542e9c63937c6218711c846fd5a695ef76f35ad8abb5e641e221e",
+          "rgbaSha256": "036a1f304c0bf48452b0133136ed0e525762bf9d3c14e03d1ecbf35dbd46f9dd",
+          "width": 1440,
+          "height": 312,
+          "observations": "宽屏同样为内容左/时间右的镜像布局，三行齐全，连接线和两侧间距无方向错乱。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/complete-content__light__mobile",
+          "sha256": "5ebe02df1dbeeb1f8f121fa5502fe9e0b4e79c1ed28ab3ec098f91fbb3e940c9",
+          "rgbaSha256": "ed213fcced0d2b049b5bac853414af334c089ac1d2f9a734d51296ae4a8a19be",
+          "width": 375,
+          "height": 312,
+          "observations": "左侧 Title tail0、右侧 Record tail0 的粗体/斜体/标量尾部均可见；第二项 Complete / First and last 清晰，第一自定义文本标记与第二蓝点未覆盖正文。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/complete-content__light__tablet",
+          "sha256": "f88b6ec4f6c2f1dc8a493c5189ddfc8c6adb8816a58f0ae56e191e81f92cb88f",
+          "rgbaSha256": "c354c0361abaef6ff4559e8c2a4fee72829aee81ba767c204694901a780f97cf",
+          "width": 768,
+          "height": 312,
+          "observations": "富标题 Title tail0、富内容 Record tail0 及小型自定义文本节点齐全，第二项业务记录完整；粗体/斜体区别可辨。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/complete-content__light__desktop",
+          "sha256": "665f665da40321b227b992027cc4e54bc1b7739f6e1efcfd8415e1d436f0294f",
+          "rgbaSha256": "52eb1cb3233392b54dfb650331ecb8d00da226c6a4e83f3e46689b40da59f8c8",
+          "width": 1440,
+          "height": 312,
+          "observations": "两侧富内容及末尾0均保留；第二行 Complete / First and last 和蓝色节点正常，整体无空壳或丢失内容的可见现象。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/scalar-content__light__mobile",
+          "sha256": "c2c77bde90c5db2f8f50d3a9ee5e5a54571becd6f0d4d0ef639819ad8b5e108f",
+          "rgbaSha256": "689ff1ca7542a2760af5a54259867fb2851316f97802e575652c32669c50689c",
+          "width": 375,
+          "height": 312,
+          "observations": "首行标题0、自定义蓝色0标记及内容0均可见；Explicit false icon / No spinner 和 Explicit empty icon / No fallback 后两项不出现后备图标。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/scalar-content__light__tablet",
+          "sha256": "0ec26a25886b0ed2b8801af8f08c1fa59c39eebdf3ec36fba0740f4bced43e43",
+          "rgbaSha256": "e92f54abaf46fe2c17383ee3055d47a68a548ed40fd6ceba97af26d005cf7331",
+          "width": 768,
+          "height": 312,
+          "observations": "三个独立0与两条显式空/false图标文案完整，后两行节点区保持空白，文字未被虚线遮挡。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/scalar-content__light__desktop",
+          "sha256": "e4739c3f6fd0c01fe83cb5f9308e18e8cb2d8cedcd5c90983238cefeec85b2ad",
+          "rgbaSha256": "4c8f540433dc8398444bf91dfe11e7d50f660c53396527739edb48d27cbaafb3",
+          "width": 1440,
+          "height": 312,
+          "observations": "宽屏首行0/蓝0/0依然齐全，后两项 No spinner/No fallback 与空图标相符，列间距和行高稳定。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/long-horizontal__light__mobile",
+          "sha256": "eb1843e847e4562075a12f6e75cf75de812b9a5e2203a1697152f6be9061e374",
+          "rgbaSha256": "843de9d44bacadc6801e835d1bb1374e9c9f3c6f39fac37668dbce4924114a61",
+          "width": 375,
+          "height": 371,
+          "observations": "三个水平节点同高，左右 Long Text 各五行、短标题在末行底对齐；左下三次 Complete record details 全部换行，右下无空格长标识符拆为三行，内容未越界或裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/long-horizontal__light__tablet",
+          "sha256": "0490ed38f9057e7aeb39da8bb87523770f2c990325bef726f120942e6e402896",
+          "rgbaSha256": "0e6f062bab4f88b9df0d2b9a04a8b512b013653dbceb1a87e67f03aaa2df8e50",
+          "width": 768,
+          "height": 312,
+          "observations": "左右长标题各两行，短标题底对齐；左下重复详情三行，右下长标识符两行，三节点与连接线无重叠。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/long-horizontal__light__desktop",
+          "sha256": "10fe8bed50b268bb5c921eda4f74aba43be41d5a207ae4a0787304ed81163271",
+          "rgbaSha256": "8f799f970f77cee64f50cc6f729829facc15413e2e56a9b293dcf389a36bc22a",
+          "width": 1440,
+          "height": 312,
+          "observations": "左右长标题单行，短标题同高，左下重复详情两行、右下长标识符单行；三节点等距、文本均在各自列内。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/token-overrides__light__mobile",
+          "sha256": "be4a6a58aab32c2302b8fe403c8ed83211e19e0bf3d075150bb326724b7b42c4",
+          "rgbaSha256": "a9ab69d190002a8fd2dc57fdb65ff351051e703ad4c2e5e98184f32773fb222c",
+          "width": 375,
+          "height": 573,
+          "observations": "上下两个区块分别为无标题与带时间记录；六个大圆节点、淡蓝填充/绿色第二节点和加粗紫色竖线清楚，所有末节点完整；下区文字换行未越界。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/token-overrides__light__tablet",
+          "sha256": "9786c96c98f07e1cc00e47dce638f172eeeb890c2971d180437819517cfabe66",
+          "rgbaSha256": "2fac8f6d2c9633c656fb8d68a2c2beabd0bd57e3746bf8fb65eb2bef801f13c8",
+          "width": 768,
+          "height": 513,
+          "observations": "两组各三条业务记录完整，节点尺寸/填色和粗紫线一致；下组时间和正文各单行，组间距足够，未碰撞。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/token-overrides__light__desktop",
+          "sha256": "7be79d5461b2e838c326da094e8faf26c39d227556b5cd8477a6f62de4014cbc",
+          "rgbaSha256": "bf3bbdf0b3626ee5da5e65ba98fedd878b120d911c53bd3a73b983038c7d03bf",
+          "width": 1440,
+          "height": 513,
+          "observations": "无标题组在左、时间组中轴布局均清楚；粗连接线收束在末节点，不穿文字，三个末端大圆保留可见填充。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/semantic__light__mobile",
+          "sha256": "77c1a3ab5e77d345608253948c8f96a19e55caa79d5ab15681cea2720b2615ba",
+          "rgbaSha256": "707c3f95acb299bb83c7b10e6ce1b041ebe99e571c1737c14b3085575200017d",
+          "width": 375,
+          "height": 337,
+          "observations": "细灰框内三时间加粗、正文双行，空心蓝绿蓝节点与虚线轴清楚；四周边框未裁切文本，行距允许换行。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/semantic__light__tablet",
+          "sha256": "8157400edf64c6c37d8e68f3f4114e9cd28c64bb5c05e61817815630d4c3b474",
+          "rgbaSha256": "752cee7628c0605ce57fc556c6f7d0219af8c8b85224a10eee23260acc1fcc6c",
+          "width": 768,
+          "height": 312,
+          "observations": "灰框内三时间粗体、三业务说明单行，居中虚线轴与节点对齐，框内上下留白正常。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/semantic__light__desktop",
+          "sha256": "1f7837f8a2ec092e1a522781722b79c057079bf79f582823d10e9af99593ca38",
+          "rgbaSha256": "ee8143efb66c4c5c35727dfdf58c9ab40a90b09e922e801bb3dfe104708ceec2",
+          "width": 1440,
+          "height": 312,
+          "observations": "宽灰框完整包围三项，粗体时间与正文分列居中，虚线轴无文字覆盖，内容没有出框。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/conditional-slots__light__mobile",
+          "sha256": "dc61b1ba569c0f370cf0c98396bfe526941f4748a56ce69ae0475a510459d5e9",
+          "rgbaSha256": "f546afa565981d049e02fc893040cee5197b614c919ef6af6d406ce2ce5b71b0",
+          "width": 375,
+          "height": 312,
+          "observations": "标题 Timeline conditional-slots 下只有两段浅色左竖线；条目标题、正文、图标及输入均为空，无后备内容泄漏。主线程确认这是三个内容槽各返回[]后的刻意空槽状态；保留两段rail符合契约。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/conditional-slots__light__tablet",
+          "sha256": "733f83dd8702fc96b18fe7e763c74de7d616aa528d1b42eea9a059d037091542",
+          "rgbaSha256": "02e89fede24e0d50f7e2fa3ed3c27635975d77347ed74e09708f69602d2b909b",
+          "width": 768,
+          "height": 312,
+          "observations": "平板候选保留两段浅色左竖线，无条目标题/正文/图标或草稿输入。冻结fixture及helper确认捕获刻意空槽抑制fallback阶段；无可见后备内容泄漏、裁切或重叠。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/conditional-slots__light__desktop",
+          "sha256": "8be8c1e9b64fe470a30b5df4dc20a62d8b31820975d74d968f360cb867f1fb72",
+          "rgbaSha256": "806cf6ef963906f6a89df59804596ac2f37608eebb565ef0c27ae4fe2424681d",
+          "width": 1440,
+          "height": 312,
+          "observations": "桌面宽屏同样只保留两段浅竖线，三类条目内容/图标均刻意为空。已依据主线程对冻结fixture及helper39-41行的确认，判定为空槽优先契约的正常结果。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/current-provider__light__mobile",
+          "sha256": "ac28d8e30a9a9bc414d8d93a1c27213b075514381cddabad22883dd1a23e7f01",
+          "rgbaSha256": "dca83f584422454830e04a89202e1cb5f1343108504921a9c270f3995c421970",
+          "width": 375,
+          "height": 415,
+          "observations": "灰框中三条业务标题在左侧加粗换行并有序号/斜体tail0，右侧record·时间完整；1/2/3淡色圆标及粗紫轴清楚，Saved native draft输入位于首标题下方，未出框。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/current-provider__light__tablet",
+          "sha256": "7ac9cd129b62cf8a14875cca529220ff7b6d6bcc67f742257ceee74b7bb11786",
+          "rgbaSha256": "8da21bf608ff263b1afaf176ef5daef17a3f8dfac865fe14ff1d023945d5717a",
+          "width": 768,
+          "height": 312,
+          "observations": "当前配置灰框中三条加粗富标题、record·时间与数字圆标均完整；Saved native draft在首标题下方，粗竖轴和文字保持间隔。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/current-provider__light__desktop",
+          "sha256": "dc5c1bd1a68dcfce3a4a29e49b0b890ff5480a5930c9a34499c1a75c0f19c43d",
+          "rgbaSha256": "eaf55fa04d5eec2e0374ad12021e9fed3e1fdc4fa48d273f67dc7e8ad65fa52a",
+          "width": 1440,
+          "height": 312,
+          "observations": "三条加粗富标题及record·时间齐全，数字节点1/2/3与紫色粗线对齐；Saved native draft输入在首行标题左侧贴邻排列，未遮盖标题或越界，但记录其零间距的可见布局。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/reverse-edit__light__mobile",
+          "sha256": "a8b84bc39cae3e78bebc35eb1921940faea6fbe00c5ca4079baf65038e9ab117",
+          "rgbaSha256": "66cf31c9cf931251c22170f3b91e534b77611974b90462401a7504c635c1d373",
+          "width": 375,
+          "height": 323,
+          "observations": "三项按11:30、10:05、09:10倒序，数字节点1/2/3及富标题粗体/序号/tail0均完整；Saved native draft输入位于移到末行的创建记录下方，无裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/reverse-edit__light__tablet",
+          "sha256": "2e51d1dea579371126d75f5b8918db567477f66aa07f6d58d575214edcb654e2",
+          "rgbaSha256": "0089d1927c3cad2ddefd13ac627c06a7d1580148e25b668776653fc4ff31fa14",
+          "width": 768,
+          "height": 312,
+          "observations": "倒序三组记录清楚，输入随创建记录位于第三项下一行，文字/标记列对齐且互不遮挡。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/reverse-edit__light__desktop",
+          "sha256": "e778fbed71e31fd034c3d3032a3896bf370cf0392a524f08db7d0e6332fdea41",
+          "rgbaSha256": "48c5f0ba91cdbb258a65985e7a96b4ff895a4fb5131d3f936ad3da3152c26e5d",
+          "width": 1440,
+          "height": 312,
+          "observations": "倒序三项和数字节点齐全，末行创建记录的输入与富标题同排贴邻、无覆盖或越界；draft内容完整可读。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/pending-zero__light__mobile",
+          "sha256": "55875c01234d27406149268355db4c6d1d05db0c6be6c8f9d7525409bde96157",
+          "rgbaSha256": "66ebe250da99b873b3082d7bda719396b5e1563008bcbdea277ac24136c5b776",
+          "width": 375,
+          "height": 366,
+          "observations": "前三条富业务记录及首条输入完整，最后追加待处理弧形标记和独立0文字，0没有被当空值丢失；虚线段清楚，底部未裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/pending-zero__light__tablet",
+          "sha256": "cfbc21ac4a824fb38064afd78e0618022b43b451b65f17ccdc4a1cb66e94c916",
+          "rgbaSha256": "6f30a72d984ad2422e9ba382ffcea8b82c8ac58db33838efb58d8604ddbeac98",
+          "width": 768,
+          "height": 312,
+          "observations": "三条记录及Saved native draft输入齐全，第四条待处理内容为0；最后加载弧形标记与0文字分离，行距正常。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/pending-zero__light__desktop",
+          "sha256": "26210b878428efee5c3b4eaaaa79f45e8d230ef3cb39604d99dc16c96c854ecf",
+          "rgbaSha256": "e232e22b8d8132c6a7a83ff3a9a21335c0bea4bf10b959262a1dcc83048e5cd8",
+          "width": 1440,
+          "height": 312,
+          "observations": "宽屏首项标题旁输入完整，尾部待处理蓝色弧形状态与0同时可见；无遗漏尾项、重叠或多余延伸线。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/native-focus__light__mobile",
+          "sha256": "5eab42b4199bf4e9a36d58024694e97b46967704687ca21f3398795cde4c6345",
+          "rgbaSha256": "8aea271f5ee86b2e352a8bae5a09e35fc7fe6e671c946ef69f924eee887d990c",
+          "width": 375,
+          "height": 346,
+          "observations": "Before history按钮、三条业务记录、1/2/3标记齐全；首项下方Saved native draft输入有完整清晰蓝色焦点外框与选中文本，未被边界截断。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/native-focus__light__tablet",
+          "sha256": "1e01b24126c0f111670dbbd53a8644beb252af636cf0380fa537b7dd4f9b33ca",
+          "rgbaSha256": "713bac751d53bcb8d6bcfcfb6b1f02f6504084c6380c3224091d676b64b255fe",
+          "width": 768,
+          "height": 312,
+          "observations": "Before history按钮位于上方，首记录下方输入的蓝色焦点环四边完整，文本选区可见；其余记录无位移/重叠。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/native-focus__light__desktop",
+          "sha256": "a8ace32b7a830c746f3e929e075f21c5a794a15254d8911b5a22b07983eff3d2",
+          "rgbaSha256": "6ed22c0026ac3fd8ce98f6de42ac136a7ea5abd6478cf05ddfb6dcee4b73d71e",
+          "width": 1440,
+          "height": 312,
+          "observations": "输入与首项富标题同排，蓝色焦点环完整而未遮盖邻接标题；Saved native draft选中区域清楚，三项内容及节点齐全。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/theme-dark__light__mobile",
+          "sha256": "235ef1a883c6aafd66096d2167a14e3248bec63e53a3da4c15c3a6cbc8ce4370",
+          "rgbaSha256": "93a70da68baee9c61099d0dc34e0bad06ba7ac460e308d46e8243403580380a2",
+          "width": 375,
+          "height": 715,
+          "observations": "深色背景中无标题、带时间、水平三组记录均完整；浅色正文/时间可读，蓝绿节点可辨；水平中间说明在轴上、10:05在轴下，长文自然换行，无出框。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/theme-dark__light__tablet",
+          "sha256": "a859bc595a050ca98639ba88e5d1d0680b3f48fb7562d1b5877b486d52312356",
+          "rgbaSha256": "1693cd878bf01c239009016c7f1d7f0c51816c639e9c9a383461d529decb9b55",
+          "width": 768,
+          "height": 567,
+          "observations": "深色三组共九条记录及三个时间齐全，竖轴/水平轴可见且不穿文字；带时间组单行，水平交替上下内容分离。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/theme-dark__light__desktop",
+          "sha256": "4a91f65286e5ab6cedefe954df30f10f7638741a628daabfd9e50cd2b0336253",
+          "rgbaSha256": "e1776b63d7f03a594390fbf68233ffc1491cf33a7e0d913e9de70adedc6cec87",
+          "width": 1440,
+          "height": 567,
+          "observations": "宽深色面板内三组布局完整，蓝绿节点与浅字对比清楚；水平首末时间在上、内容在下，中间相反，等距对齐且无裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/theme-compact__light__mobile",
+          "sha256": "6860df929942e11e1346b3da45c390dcba8f81c24745381ae3041573ecadf655",
+          "rgbaSha256": "c9748b7a13692ab361abf1a7d4c0046595ca174a122bf29c399a1ebaef7fca91",
+          "width": 375,
+          "height": 559,
+          "observations": "紧凑主题三组记录齐全，字号与行距比常规暗色更小；带时间第二/三项及水平长文换行，节点未压到正文，水平轴两侧文字完整。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/theme-compact__light__tablet",
+          "sha256": "b94b860e2c078c396242f28a5dee56c6acc3505a785fcb89e3b98c5def98df07",
+          "rgbaSha256": "bc82fc10ae6b436d38439956aba0c8bd0ebbaf98174a71d34fc32271388fd0ed",
+          "width": 768,
+          "height": 483,
+          "observations": "紧凑三组记录单行/上下交替布局清楚，时间/节点首行对齐；三组间距收紧但不碰撞，末节点保留。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/theme-compact__light__desktop",
+          "sha256": "300b2685a100f4bd0ee38eb5b9008509c222b6dbe8698c06a9b60d74a5f2cfc7",
+          "rgbaSha256": "31221e7d3200bf242e5e81e0ceceba5640e3318f3d84602706dffc980a6b989e",
+          "width": 1440,
+          "height": 483,
+          "observations": "宽屏紧凑字号、步距与水平轴间距一致，九条业务内容和时间齐全，各组标题/内容分隔正常。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/theme-dark-compact__light__mobile",
+          "sha256": "f0fba01b0f49e3b982b8e26cacceeb9b984ee9770f70b91d04065b40b77ad831",
+          "rgbaSha256": "5fe33117a7b3f72b5b24658b18f6925b02494550876d431a08bf54e826e1f742",
+          "width": 375,
+          "height": 559,
+          "observations": "深色紧凑面板三组内容完整，缩小字号仍可读；蓝绿节点与暗色连接线可辨，时间/描述窄屏换行后无重叠或裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/theme-dark-compact__light__tablet",
+          "sha256": "fa7e06336d810814cc35430dbea927691dc309ac96bbb84d19fd51df055987db",
+          "rgbaSha256": "823e62908f9269b79fe89edb518778d4094a138a5653c7202003ca95a0487ba3",
+          "width": 768,
+          "height": 483,
+          "observations": "深色紧凑三组记录、时间和上下交替水平内容清楚；对齐/行距与浅色紧凑一致，颜色未串成浅色背景。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "timeline/theme-dark-compact__light__desktop",
+          "sha256": "9eb8b295310f1f29b9af07b14e1f6a8bac1e5016e995ffd5b7e08d3201d63be4",
+          "rgbaSha256": "e7eefea3a4f2eb3cec4c26f14a1a28f9d22dc4a4a8d1af393e6313f465c7fc66",
+          "width": 1440,
+          "height": 483,
+          "observations": "暗色紧凑宽屏保留全部三组记录与时间，节点/连线对齐、字色清晰；布局紧凑但没有标题/节点/正文碰撞。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        }
+      ]
+    },
+    {
+      "component": "grid",
+      "count": 42,
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "sourceUnchangedSincePublishedBehaviorChecks": "e0062edd",
+      "candidateManifestSha256": "1cc42e2ec5dde4cc30d8f664c2987e7cdff5ed33679f28f4151dedc187b37baf",
+      "reviewSha256": "4e8c7067e339447f13472716a5c9957e8ec019f51162ea0cf8aaf3181c0ef430",
+      "method": "Prior actual per-image review inherited only after exact raw RGBA and dimensions",
+      "nonBlockingObservations": [
+        {
+          "ids": [
+            "grid/justify-align__light__mobile",
+            "grid/justify-align__light__tablet",
+            "grid/justify-align__light__desktop"
+          ],
+          "detail": "The stretch row visibly contains a short colored child box and a Tall child box aligned at their tops, with different painted heights. PNGs do not expose the otherwise unpainted Col root boxes; this review therefore does not claim that equal child heights prove root stretch. No visible clipping/overlap was found, and this is recorded as a limit of the static fixture rather than an asserted component defect."
+        }
+      ],
+      "entries": [
+        {
+          "id": "grid/basic__light__mobile",
+          "sha256": "963271a1ba3e9931fe1a168781d5bb4835e24bde3919619be2f1991f4cbfd502",
+          "rgbaSha256": "98948f5b7caba494b3eab0d1bbcdeb43b432a28785d71a55894c0dc8db04f28f",
+          "width": 375,
+          "height": 408,
+          "observations": "Span24单列、Span12两列、Span8三列、Span6四列均完整显示；浅蓝列宽分别铺满对应整行，窄屏文字未裁切，分隔边界齐整。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/basic__light__tablet",
+          "sha256": "aa496270cb5c5b1ddd47a82019a5619d102afd5190e2c9a533973eb1f7b16405",
+          "rgbaSha256": "8ffec5d6a9045b701d1812378a96a370fa8c20770bfe54fa73cb1b81123abf53",
+          "width": 768,
+          "height": 408,
+          "observations": "四组24/12/8/6列网格分别呈1/2/3/4等分，行标题与列标签齐全，左右边缘一致且无溢出。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/basic__light__desktop",
+          "sha256": "917d6da85c60d94f653a3b253c08a616ee378755d693fe08ce6ecc031a469a80",
+          "rgbaSha256": "8d95417e9825a5b7de367856829ff77a5fdc5492f5a0388f3a1565ce4dc3461f",
+          "width": 1440,
+          "height": 408,
+          "observations": "宽屏四种等分布局铺满可用行宽，24/12/8/6列标签齐全，列边界与首尾对齐，没有重叠或异常空列。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/gutter__light__mobile",
+          "sha256": "7b942f6af8ab2bcde1bb877f690a6afa4d4e7b46e278ea9c0aef0cc9412761f7",
+          "rgbaSha256": "463f1d8157ce482844a2962bb4c6c08c32ec8f9cbc42bd40dc5997272aa54cb3",
+          "width": 375,
+          "height": 555,
+          "observations": "0间距、[10.5,7.5]、[1rem,0.5rem]及响应式对象四组均显示三块col-12且第三块换行；0组相接、其余组横纵留缝清楚，JSON标签与内容未裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/gutter__light__tablet",
+          "sha256": "ac74bee527187825621ab570924c706190d675bbb833c765bdc564713a79c1df",
+          "rgbaSha256": "b6888a5db32771bddce34d53ac1ad8fcd8dc4c340654fe980cedf6df97305f1f",
+          "width": 768,
+          "height": 563,
+          "observations": "四组间距示例各保留两列加下一行首列；小数/rem间距和响应式md更大间距可辨，列块左右收束一致。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/gutter__light__desktop",
+          "sha256": "d634ffd929f62d28962889bd58b743c71246dcae22856c8011543f5e9b983a1d",
+          "rgbaSha256": "02858bb1b95c108c04df314605416ac9f24457fb33c75f3d644a82723b9c8850",
+          "width": 1440,
+          "height": 563,
+          "observations": "宽屏四组三块col-12布局完整，0组无空缝，小数/rem及md配置横纵缝明显；末行首块宽度与上方同列匹配，无出框。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/responsive__light__mobile",
+          "sha256": "361c340a6a8d123a7f821e37c0b05909bf2b81a92e111d8f2156e0fc110aaaf5",
+          "rgbaSha256": "fd31370c4f73015ecbe36d5e4f48ce277f2cb40a8adadc321334ba054f9fa8db",
+          "width": 375,
+          "height": 332,
+          "observations": "Active: xs 清楚；A/B/C/D四块按满宽单列垂直排列，内容全部可见，宽度与行边界一致。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/responsive__light__tablet",
+          "sha256": "a1386bca1b259f8bb74f81e1d30861884267d0f490ed93294ffbb40fce6a1246",
+          "rgbaSha256": "3a8438cbf9e3f9d180d23e3f918684dd1fdcf674c450b6464a8805bd0ef1bd1c",
+          "width": 768,
+          "height": 332,
+          "observations": "Active: md, sm；A/B/C首行三列，D在次行首列，响应式换行完整、列宽一致，未重叠。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/responsive__light__desktop",
+          "sha256": "5634086d8b1b3a143343714cfc7d82cf901b15eaf95454ab57e06ed8be3d67ab",
+          "rgbaSha256": "8c685d96f193f9096a6525ace9314273a4ec537ba67c7d1a9408b7f54edfc992",
+          "width": 1440,
+          "height": 332,
+          "observations": "Active: xl, lg, md, sm；A/B/C/D在一行连续四块，各自标签完整，右侧留白符合当前列跨度，没有强行拉伸或越界。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/offset-sort__light__mobile",
+          "sha256": "a91abfa761bf39a0b83522343c5102d7de83ede55ffd23bd52cd75d0dbd8f3ac",
+          "rgbaSha256": "c3e5f58529d506e4c0c33b1fc3f2b1b541dd8998ac7597dab0e819b7a0cf0537",
+          "width": 375,
+          "height": 332,
+          "observations": "Logical offset两块offset6位于间隔列，Push/pull视觉为pull18在左、push6在右；Visual order按1/2/3排列，所有窄列标签完整。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/offset-sort__light__tablet",
+          "sha256": "088d4698ee684bccb340e5389f52f90ecd89a36f913cbec487201b514a28bd25",
+          "rgbaSha256": "1e24130afac67efc4da812b913ac8d3e1e578486e6e197a5e34667aa9d2f1aec",
+          "width": 768,
+          "height": 332,
+          "observations": "两块offset6的空列偏移清楚；pull18窄列/ push6宽列互换后拼合整行，排序1/2/3三等分无碰撞。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/offset-sort__light__desktop",
+          "sha256": "4724bc1ec1db91127c701d744f1fdab15f622276c7ff4c255824312093c71783",
+          "rgbaSha256": "7af375c442e62c0d3634511ba99d3d095a63c53e5be246f4c4c8ed7b0855b952",
+          "width": 1440,
+          "height": 332,
+          "observations": "宽屏offset6保留四分之一间隔，push/pull位置与移动/平板一致；排序三块从1到3，左右边界及列宽齐整。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/flex__light__mobile",
+          "sha256": "851d323924cfd8e783952ac883254c658a8b7d2790e91b468093b7023fa9bdd9",
+          "rgbaSha256": "8ca067ceb2aff5bc38544c34dfdf6381b11cf58df01d3a44e9f83084987fc500",
+          "width": 375,
+          "height": 332,
+          "observations": "Fixed and growing行的80px固定区、1.5与auto增长区齐全，窄屏保持同一行且标签完整；响应式nowrap行A/B两块并排，无横向裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/flex__light__tablet",
+          "sha256": "33c84951e9c031d055ca00c2f8bcb14e899e0850170aa8c54bf863dfecbc548c",
+          "rgbaSha256": "8cb6d48a0f1089b1143d9aba837711bffad1dece9715a84ec048fb602a760787",
+          "width": 768,
+          "height": 332,
+          "observations": "80px固定区宽度与移动相同，其余1.5/auto区随可用宽度增大；第二组A/B仍并排，内容齐全、间距清楚。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/flex__light__desktop",
+          "sha256": "0f4db99fbfd8979c262e0163df065df2a5c6a6a148ccc6d562c83b4bf0a8f61c",
+          "rgbaSha256": "d85b7b7d24d3e006d3a9d0b49b4b6470cf95685295005fbfb1e85a11810ba318",
+          "width": 1440,
+          "height": 332,
+          "observations": "固定首块未随宽屏拉大，1.5和auto两块分配剩余空间；响应式nowrap两块保留既定较窄跨度，均无重叠或出画布。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/justify-align__light__mobile",
+          "sha256": "a979a98bfacac417722067da8e2de72ef4509b166f2b595e71efc4a99ffb1be0",
+          "rgbaSha256": "8908b98d217253e4cb49f56a4157c59ffe81c29314a46b4275f8708762081fff",
+          "width": 375,
+          "height": 768,
+          "observations": "六种主轴分布呈左/中/右聚合以及三种留白分布，三块col4均清楚；交叉轴top/middle/bottom分别顶部/中部/底部对齐，stretch行可见子块仍高矮不同但同顶，无裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/justify-align__light__tablet",
+          "sha256": "17da2aea33a2a710c0943e41be91bb794c0e5568ce81003efff57c26a063442f",
+          "rgbaSha256": "ee5eb3f45b4091ba5f4d8ab0173a174d75a03488e1f1c614ca57d15e5a6d63c7",
+          "width": 768,
+          "height": 768,
+          "observations": "六行主轴分布与移动一致，列间留白随宽度增大；top/middle/bottom两种高度色块的相应对齐清楚，stretch行子色块顶对齐，无重叠。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/justify-align__light__desktop",
+          "sha256": "823c73fc0a83f7c24e69f87a05dd32dc4c5251048e47f2212b0a575ddc962124",
+          "rgbaSha256": "bfc9217a3f54986723251d95c92001e3f7fdf0764e4b7273a2c2350f4c69dcf7",
+          "width": 1440,
+          "height": 768,
+          "observations": "宽屏六种主轴分布边缘与间隔清晰，交叉轴四行完整；top/middle/bottom位置区分明显，stretch行短子块与Tall同顶但保持各自可见高度。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/responsive-fields__light__mobile",
+          "sha256": "d1f6fdea7fa5b3d94eb66ea583dd83523046d33db1277d8162f450684eeaddbf",
+          "rgbaSha256": "c126552a62bad0734ad393484f6e7f3a72e4273eb5569775f595f1739f181e60",
+          "width": 375,
+          "height": 332,
+          "observations": "All object fields and zero reset标题下，Sibling窄块在左、Current object较宽块在右，中间有偏移留白；两标签均完整，未被画布裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/responsive-fields__light__tablet",
+          "sha256": "f992a4ce59a88eb82531f60459b5a97a801010f0facf7db21781c85d712fc807",
+          "rgbaSha256": "70a954c2a42d7cea5331311bf2c9506e11894b4fb3582085989a52f1ca15c963",
+          "width": 768,
+          "height": 332,
+          "observations": "Current object在左约三分之一，Sibling在右较宽区，两块紧邻拼成整行；说明及标签清晰，无移动状态残留偏移的可见异常。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/responsive-fields__light__desktop",
+          "sha256": "b562ac0af0d7994b172ff7bd3eb381375006c35a81a3f1dd3aab9ead148b1d40",
+          "rgbaSha256": "4c2cf9100f7e5e0757a6cc4de55709751299bef7a1d961863b068cdb752504a8",
+          "width": 1440,
+          "height": 332,
+          "observations": "Current object与Sibling按一比二宽度同排拼合，当前对象在左；边界与行首尾齐整，空白重置后的布局没有重叠。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/nested-rtl__light__mobile",
+          "sha256": "8e02b171b6c227b4de179c9f6c87cfc2fafc9b51cf3535960c355cf3d7865e5e",
+          "rgbaSha256": "ae255684ca920920fb69ebf285bfe526430ae65222cfa7eac625351dfdae3cc5",
+          "width": 375,
+          "height": 332,
+          "observations": "RTL组中嵌套两列位于右侧、RTL sibling在左，组内标签右对齐，外层/内层留缝可辨；下方Nested LTR恢复左对齐，两col12完整。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/nested-rtl__light__tablet",
+          "sha256": "fce7e6ddf17e362973b377b12e2a78ad8167c16b0bca090965761f8becfa5a40",
+          "rgbaSha256": "415e36318da120c957763eff10b8a370b7d7e23b2fbdbf60e0e546f5e4aa2e96",
+          "width": 768,
+          "height": 332,
+          "observations": "RTL sibling及右侧嵌套col12组内容完整，内外gutter明显不同；Nested LTR两个等宽块从左向右显示，无方向串扰。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/nested-rtl__light__desktop",
+          "sha256": "f1431c12ab0304018892cfe46a9f50735ef492b79a75affcee346c189d6463b6",
+          "rgbaSha256": "9209981ff4b2504cc68bbec529d80ea304d9bf58a733e7a6fb5e7b0da34177cf",
+          "width": 1440,
+          "height": 332,
+          "observations": "宽屏RTL组标签靠右，嵌套两列由自身较小间距分开，外层间距更大；独立LTR组左对齐且两等分，方向与边界均清楚。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/complete-content__light__mobile",
+          "sha256": "68f3d772d333f9e3d4aaafb78252458966916ef27cfee7243342a573ae5b4111",
+          "rgbaSha256": "19c83ceb165eaf1387a88f87a7f3d11206cfa18daca5a36e318ae4a66f88c467",
+          "width": 375,
+          "height": 332,
+          "observations": "Native粗体、text普通字、标量0、fragment斜体与tail尾部在同一行全部可见，没有丢失或被裁切的节点内容。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/complete-content__light__tablet",
+          "sha256": "94e4a8afbfa5cca888955c32be33152f8afce0adb0ee0cd934a2151fa83006e3",
+          "rgbaSha256": "19786f83edcf7bca70e248e1a116eadbf697f6120980e0184d8314eec0f99b67",
+          "width": 768,
+          "height": 332,
+          "observations": "完整富内容Native text 0 fragment tail保持同排，粗体/斜体区别与0清晰，未额外插入空块或遗漏尾部。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/complete-content__light__desktop",
+          "sha256": "5f9883c5967b5d483ebbd95b02317098a7ebb4eb5b173ddd0ea3950afc25cd55",
+          "rgbaSha256": "4e4f9b93335e099bd7c19fac2e50ac4d52f228abbbaf2d6b16d6546e4a0b3a9f",
+          "width": 1440,
+          "height": 332,
+          "observations": "宽屏同样完整显示Native、text、0、斜体fragment和tail，文本从行首正常开始，没有异常拉伸或遮挡。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/current-provider__light__mobile",
+          "sha256": "5c588905bf5278f1cf65bbf36d23abc523502bc27f3561d8de198427571a9229",
+          "rgbaSha256": "1d2e2f9347f251b6aa54972bf4578a215fe2e0a1b7029144e4ad25d71e41d96e",
+          "width": 375,
+          "height": 332,
+          "observations": "当前配置为右对齐内容：Current direction and gutter在左块分两行，右块Grid draft及Preserved draft输入完整，内外边框/间距清楚、无横向裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/current-provider__light__tablet",
+          "sha256": "9287627a74fe980a3026f07e8de6312cfd51d1046ce389e6538a46ef383316ce",
+          "rgbaSha256": "65113c52371029b70a40e8adcfc7e1b51e076698259651b6b85183ef9cf88431",
+          "width": 768,
+          "height": 332,
+          "observations": "两块并排等宽，左标签和右Grid draft均向右对齐；Preserved draft输入填入右块，四周边界完整、未盖住标签。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/current-provider__light__desktop",
+          "sha256": "33a01bd2201b083dee3452686570a15dda615b944d443a806643a0290a0738c1",
+          "rgbaSha256": "3aa81a2bcb1aef56eadb7fdbc33430da699999287b9440af74be03f475f4bd6b",
+          "width": 1440,
+          "height": 332,
+          "observations": "两块随宽屏增宽，右对齐标签和Preserved draft字段齐全；横向间距及框线清楚，配置区域上下边界未裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/native-focus__light__mobile",
+          "sha256": "2a7963ac1861eed8f139f7aa482771d158262403a336be3f75cf6891388689cb",
+          "rgbaSha256": "d4700c7dcd28d24830717330f8b2c66b375a37c8f4e3f0b543edcddc4bb17152",
+          "width": 375,
+          "height": 332,
+          "observations": "Before grid原生按钮下方是空输入框，蓝色焦点环四边完整、宽度适合窄屏，轮廓未被列或画布剪切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/native-focus__light__tablet",
+          "sha256": "5aef919e7246f50a94dc7ed160e1df20f454345a6caab7e54dd185e3992dad6e",
+          "rgbaSha256": "bbf0d0e2725e000eb8c57e37d87d2d24a5ac50e74e3d4e61d244b7bb306472fe",
+          "width": 768,
+          "height": 332,
+          "observations": "按钮和空输入框均可见，输入蓝色焦点边框完整且与按钮有间距，无其他内容遮挡。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/native-focus__light__desktop",
+          "sha256": "68b6500354771f3561c126a655d4d67dc04608cb36fc7cedf40052fc7ee0ec40",
+          "rgbaSha256": "2b516c9b0b44f00720ccf65c1e878977b3c772ca0c889ec6698aa0d1fcc6ad14",
+          "width": 1440,
+          "height": 332,
+          "observations": "宽屏焦点输入仍保持固定可读大小，蓝环清楚，按钮/字段纵向分离；没有因拉宽Grid导致轮廓被裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/theme-dark__light__mobile",
+          "sha256": "dfeaa075eb1e0204b42622d3f0aa6f4792a0a3eb305943d650702cf795215a1b",
+          "rgbaSha256": "026bae0b258d0413dd4fd012d21f542bfc70d931b29ab0a86fae609b2eb2ad29",
+          "width": 375,
+          "height": 467,
+          "observations": "暗色面板中三col8等宽、三col12双轴间距及A/B/C/D单列响应式三组齐全；深蓝色块与浅色标签可读，边界和换行未被裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/theme-dark__light__tablet",
+          "sha256": "00dc333d67c7411b8410c6f11dce10c9b52fbb49ffb51580c5d0510bcb1bbcbb",
+          "rgbaSha256": "3708daa48e92b11654094d21c4210a7a8b837e2a1ccd449221dea9b5ab1b0a01",
+          "width": 768,
+          "height": 371,
+          "observations": "深色三等分及三块col12两行布局完整，A/B/C/D响应式组改为四等分单行；横纵gutter清楚、文字无遮盖。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/theme-dark__light__desktop",
+          "sha256": "a58bdf9d0bf1c7edee31deb706726acea6a6df53c0b2e4e6d9d17edcac096214",
+          "rgbaSha256": "56b9adcf307d4815454c458618b796b36dfcacf27a2854cf4b34c3784fecdcc3",
+          "width": 1440,
+          "height": 371,
+          "observations": "宽暗色面板三等分、两列加换行、四等分响应式均齐整；深蓝底与浅字对比清楚，左右收束一致。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/theme-compact__light__mobile",
+          "sha256": "7b1450137fd12dae337a23a8948a3cccacbce792ed3a531ade084414dd79178f",
+          "rgbaSha256": "758390a3c8d2ee8f916e8d35965f11cbc980328ee66f9d1f90c2074fed08728c",
+          "width": 375,
+          "height": 467,
+          "observations": "浅色紧凑面板三组记录完整，标签字号缩小而蓝色块几何/间距仍清楚；A/B/C/D单列堆叠全部可见，没有裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/theme-compact__light__tablet",
+          "sha256": "78456aea80d4ed94bfeaa0f3628b55ca3aeac20966e4237aa26a1d5757ccdb57",
+          "rgbaSha256": "3edb58185d85885c4d9954640cb3547505f7ebf3df04aec35e1abb26795e27cb",
+          "width": 768,
+          "height": 371,
+          "observations": "紧凑标签清晰，三等分与col12双轴间距布局完整；响应式四块同排等宽，组标题与内容不碰撞。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/theme-compact__light__desktop",
+          "sha256": "8370f715d0e6cea91553b40569c9568d4c6dba1abbc83be3e7325d620355d2c3",
+          "rgbaSha256": "6fa1e55aade1309f6ee005ec56be5eda48905b7f54ae64ce8f008cb910076560",
+          "width": 1440,
+          "height": 371,
+          "observations": "宽屏浅色紧凑三组网格都完整，三分/二分和四分布局边界齐整；小字号文字仍可读，固定示例色块高度未错位。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/theme-dark-compact__light__mobile",
+          "sha256": "9984a73a3616cf9db4fd50d16e0cde78f5b67edcb9e3f6b779677799a8d35a35",
+          "rgbaSha256": "234bcd38214711503c8cfe1cee45452bd2161827e6b6af29333854ea559401cd",
+          "width": 375,
+          "height": 467,
+          "observations": "深色紧凑三组网格齐全，深蓝块内小号浅字可读；A/B/C/D单列显示，组间留白与gutter清楚，未出框。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/theme-dark-compact__light__tablet",
+          "sha256": "ead69e77e56ce945854fd7b351b9d542f286a0756683905583a18ddea03208ed",
+          "rgbaSha256": "91b11504923fce49cbfc8ba7b657e99182583d1833b381ccb187d0102a6de709",
+          "width": 768,
+          "height": 371,
+          "observations": "暗色紧凑下三等分、col12折行与响应式四等分均清晰；字体/边框/色块未串成浅色模式，无重叠。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        },
+        {
+          "id": "grid/theme-dark-compact__light__desktop",
+          "sha256": "6918d91f92470533afa51b72d6828b9ac14d14bd50ca5d42e0059dce5e060750",
+          "rgbaSha256": "2b85a249bf4f6c4f4e2f5926c8b010770e7cb4fdb289c1c06b122277a4136540",
+          "width": 1440,
+          "height": 371,
+          "observations": "宽屏暗色紧凑面板内三组布局首尾齐整，浅字与深蓝背景分离，四块响应式列等宽，内容和边框无裁切。",
+          "actualReviewInherited": true,
+          "visibleDefects": []
+        }
+      ]
+    }
+  ],
+  "existing1692PngFilesUnchanged": true,
+  "approvedIntegrityCommand": "node tests/visual/apollo.mjs --component descriptions --component breadcrumb --component timeline --component grid --check",
+  "approvedIntegrityExitCode": 0
+}

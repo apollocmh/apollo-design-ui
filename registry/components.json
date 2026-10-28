@@ -504,16 +504,16 @@
       "interactionStatus": "in-progress",
       "typeStatus": "in-progress",
       "a11yStatus": "in-progress",
-      "visualStatus": "in-progress",
+      "visualStatus": "done",
       "docsStatus": "in-progress",
-      "notes": "2026-10-28完整盘点与成组源码修复04be6282、共享observer1588dd11：104运行时、41浏览器、14Demo检查、42原生状态预检、10类型通过；实际共享消费者717与Form/List/Listy256通过（集合有交集，不相加）。发布JS/CSS/声明、正式视觉/Docs待验收，见grid-contract-audit。",
+      "notes": "2026-10-28完整盘点与成组源码修复04be6282、共享observer1588dd11：104运行时、41浏览器、14Demo检查、42原生状态预检、10类型通过；实际共享消费者717与Form/List/Listy256通过（集合有交集，不相加）。发布JS/CSS/声明、正式视觉/Docs待验收，见grid-contract-audit。\n2026-10-29正式原生视觉42张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。",
       "layerNotes": {
         "interaction": "Row/Col 无事件/受控/焦点/禁用；L2 适用面是 props 更新→DOM 更新（setProps wrap 切换）与断点变化→类名更新（matchMedia mock 驱动的响应式 justify/gutter 用例）。",
         "type": "8 例（正例 + 3 负例 @ts-expect-error 永不调用闭包）。justify/align/gutter 的响应式对象类型精确断言（toEqualTypeOf）。",
         "a11y": "Grid 纯布局容器，不输出 ARIA（上游语义）。axe 扫 13 demo 0 violation + 显式断言无 role/aria-* + 自身不可聚焦。",
         "token": "Row/Col Component Token 各 0 个（prepare*ComponentToken = () => ({}) 逐字一致）。media query 断点取 theme 默认 seed 的 screen*Min；主题覆盖 screen 断点不改变已生成的 media query（antd 会重算），登记为已知边界。",
         "compat": "24 条机械基线（tests/compat/baseline/grid.mjs）。24/24 过，4 条豁免：D6×2（row/col 默认前缀）、D6 连带（响应式 flex 变量名 --apollo-col-* vs --ant-col-*）、PLATFORM×2（CSSOM 化简 calc 与 min-width:0→0px）。keepStyle 钉死 gutter margin/padding、flex、minWidth hack。响应式 gutter 对象刻意不进基线（React SSR screens=null vs 我们 jsdom screens=全 false，语义不同非实现差异），由 L1 mock 驱动覆盖。",
-        "visual": "18/18 全 exact（playwright 1.58）。收口前抓出并修复 Row style prop 未合并进根样式的真 BUG（L4 比不到 style prop 合并顺序，只有 L6 能抓）。"
+        "visual": "2026-10-29 clean a47d96ec 的42张Apollo原生视觉逐图审阅批准，逐图SHA/观察/相同rawRGBA继承关系见four-unit-native-visual-acceptance.json。原537条批准记录及1692份原PNG未改；全库759/1602已批准。此为该视觉维度，Docs与整单元统一验收仍独立开放。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -2312,10 +2312,10 @@
       "interactionStatus": "in-progress",
       "typeStatus": "in-progress",
       "a11yStatus": "in-progress",
-      "visualStatus": "in-progress",
+      "visualStatus": "done",
       "docsStatus": "in-progress",
-      "notes": "2026-10-28源码接续5ab9b3c4：119运行时、62浏览器、10SSR/水合、84真实Demo主题/交互与51原生状态预检通过；custom-label键盘帮助已修。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见对应contract-audit和descriptions-acceptance-source.json。",
-      "layerNotes": "L4: baselines/descriptions.dom.json 18 用例，keepStyle。L6: 4 variant × 3 viewport = 12 张（bordered 的色差由像素比对揪出）。",
+      "notes": "2026-10-28源码接续5ab9b3c4：119运行时、62浏览器、10SSR/水合、84真实Demo主题/交互与51原生状态预检通过；custom-label键盘帮助已修。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见对应contract-audit和descriptions-acceptance-source.json。\n2026-10-29正式原生视觉51张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。",
+      "layerNotes": "L4: baselines/descriptions.dom.json 18 用例，keepStyle。L6: 4 variant × 3 viewport = 12 张（bordered 的色差由像素比对揪出）。\n2026-10-29 clean a47d96ec 的51张Apollo原生视觉逐图审阅批准，逐图SHA/观察/相同rawRGBA继承关系见four-unit-native-visual-acceptance.json。原537条批准记录及1692份原PNG未改；全库759/1602已批准。此为该视觉维度，Docs与整单元统一验收仍独立开放。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4140,10 +4140,10 @@
       "interactionStatus": "in-progress",
       "typeStatus": "in-progress",
       "a11yStatus": "in-progress",
-      "visualStatus": "in-progress",
+      "visualStatus": "done",
       "docsStatus": "in-progress",
-      "notes": "2026-10-28源码接续40ec3962及Menu e000152f：原生Enter导航红灯已修；114运行时、14浏览器、60真实Demo主题/交互和51原生状态预检通过。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见对应contract-audit。",
-      "layerNotes": " 2026-10-24 F11/ADR0006/0007：itemRender函数已移除，改为具名对象槽，保留逐项paths/href；默认子组件按Vue渲染/key更新且无整组件弃用告警。6文件94条runtime通过、10个Demo；当前类型/浏览器/产物证据见 docs/audit/2026-10-24-breadcrumb-slots-remediation.md，Apollo24张批准基线缺失，不升级历史视觉状态。",
+      "notes": "2026-10-28源码接续40ec3962及Menu e000152f：原生Enter导航红灯已修；114运行时、14浏览器、60真实Demo主题/交互和51原生状态预检通过。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见对应contract-audit。\n2026-10-29正式原生视觉51张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。",
+      "layerNotes": " 2026-10-24 F11/ADR0006/0007：itemRender函数已移除，改为具名对象槽，保留逐项paths/href；默认子组件按Vue渲染/key更新且无整组件弃用告警。6文件94条runtime通过、10个Demo；当前类型/浏览器/产物证据见 docs/audit/2026-10-24-breadcrumb-slots-remediation.md，Apollo24张批准基线缺失，不升级历史视觉状态。\n2026-10-29 clean a47d96ec 的51张Apollo原生视觉逐图审阅批准，逐图SHA/观察/相同rawRGBA继承关系见four-unit-native-visual-acceptance.json。原537条批准记录及1692份原PNG未改；全库759/1602已批准。此为该视觉维度，Docs与整单元统一验收仍独立开放。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4339,10 +4339,12 @@
       "interactionStatus": "in-progress",
       "typeStatus": "in-progress",
       "a11yStatus": "in-progress",
-      "visualStatus": "in-progress",
+      "visualStatus": "done",
       "docsStatus": "in-progress",
-      "notes": "2026-10-28源码接续3ce8d1d2：249相关运行时、17浏览器、180真实Demo主题/宽度组合与78原生状态预检通过；横向长文布局与圆点/连线对齐、Demo对比度/标题修复。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见timeline-contract-audit。",
-      "layerNotes": null,
+      "notes": "2026-10-28源码接续3ce8d1d2：249相关运行时、17浏览器、180真实Demo主题/宽度组合与78原生状态预检通过；横向长文布局与圆点/连线对齐、Demo对比度/标题修复。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见timeline-contract-audit。\n2026-10-29正式原生视觉78张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。",
+      "layerNotes": {
+        "visual": "2026-10-29 clean a47d96ec 的78张Apollo原生视觉逐图审阅批准，逐图SHA/观察/相同rawRGBA继承关系见four-unit-native-visual-acceptance.json。原537条批准记录及1692份原PNG未改；全库759/1602已批准。此为该视觉维度，Docs与整单元统一验收仍独立开放。"
+      },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",

@@ -679,3 +679,5 @@ Descriptions5ab9b3c4、Breadcrumb40ec3962、Timeline3ce8d1d2、Grid04be6282与Sp
 `2ef32069`将Upload无效进度替身改为实际Progress，六个现有字段、动态清除、受控/非受控与ARIA均补齐；源码258运行时/48类型，发布全量与按需CSS各75浏览器断言通过。当前Upload137.736KB与旧Upload+Progress137.763KB相当，`a47d96ec`仅按真实功能成本修正Upload预算，其他预算与比例约束保留。[窄单元报告](audit/2026-10-29-upload-progress-audit.md)，不宣称完整Upload/Progress收口。
 
 正式交叉审图另确认Space紧凑主题的Input字号/padding仍取默认Token，Addon underlined与borderless同绘制；两项纳入本轮必修，旧160绘制矩阵不足以证明底线语义。当前Source里程碑保留，整单元仍开放。四个其他组件222张新候选与原537张回归在清洁独立快照验收中，完整交付仍13/72、已批准视觉仍537/1602。
+
+四组件正式视觉里程碑：清洁a47d96ec的Descriptions51、Breadcrumb51、Timeline78、Grid42共222张已逐图审阅批准；其中171张通过相同尺寸/rawRGBA继承此前实际审图，Breadcrumb新51张逐张查看。原1692份PNG和537条批准记录全部未改，当前759/1602批准、843待验收。批准完整性222项检查通过；整单元Docs验收仍待对应阶段，交付计数暂保持13。[逐图证据](audit/evidence/four-unit-native-visual-acceptance.json)。

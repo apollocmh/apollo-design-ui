@@ -81,3 +81,7 @@
 正式发布、Docs 和 Apollo 视觉验收均未执行，等待主线程 dist-ready；不得将以上源码统计记作发布通过。发布消费者与真实浏览器入口已准备：`tests/consumer/grid-types.mjs`、`grid-ssr.mjs`、`GRID_SOURCE=0 node tests/browser/grid-contracts.mjs`、`grid-demos.mjs`、`grid-visual.mjs`，发布分支同时使用发布 JS 与发布 Grid CSS，且断言没有 source style 注入。
 
 独立视觉模块为 `tests/visual/render/cases/apollo/grid.js`，helper 为 `prepareGridVisual`（`tests/visual/grid-state.mjs`）。14 变体：basic、gutter、responsive、offset-sort、flex、justify-align、responsive-fields、nested-rtl、complete-content、current-provider、native-focus、theme-dark、theme-compact、theme-dark-compact。主线程负责整合共享 matrix/runner/manifest、清洁提交候选、逐张审阅、批准/复比、完整 Docs、Registry/KNOWN-ISSUES/COMPATIBILITY 入口及最终同一提交全量门禁。本任务未构建/修改 dist，未提交或推送。
+
+## 正式原生视觉阶段
+
+清洁冻结 `a47d96ec` 的42张正式候选已完成实际逐图审阅并批准；Descriptions/Timeline/Grid通过逐张尺寸与rawRGBA完全相同继承此前已实际看过的审图，Breadcrumb新51张逐张查看。相应当前生产源码自e0062edd未变，最新发布声明/实际Demo模板消费和公共CSS对照另有记录。原1692份PNG与537条已有批准记录全部保留；全局现759/1602批准。逐图观察、SHA、继承关系及边界见[四单元视觉证据](evidence/four-unit-native-visual-acceptance.json)。批准完整性检查通过；Docs与最终全库门禁仍独立记录，不将视觉绿灯视为全库完成。

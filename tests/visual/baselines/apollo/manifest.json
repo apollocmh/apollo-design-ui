@@ -4832,6 +4832,2004 @@
       "capturedAt": "2026-10-28T13:27:29.510Z",
       "reviewedAt": "2026-10-28T13:35:36.296Z",
       "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "descriptions/basic__light__mobile": {
+      "sha256": "3919aedd3365f4d2a5767ff58d2c8f101e9dcecf071f82194b72eac63d9ec632",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:28:58.089Z",
+      "reviewedAt": "2026-10-28T18:43:33.973Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/basic__light__tablet": {
+      "sha256": "4237c708c429c57d735e473f30de7f6cbb9b51268824062563cbb75deca2cb3c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:00.226Z",
+      "reviewedAt": "2026-10-28T18:43:33.975Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/basic__light__desktop": {
+      "sha256": "128f294fcdbef78148e3347dbdf21be0c0f5ab9ed9af77fc695f458ef13495bc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:02.369Z",
+      "reviewedAt": "2026-10-28T18:43:33.975Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/bordered__light__mobile": {
+      "sha256": "4956750c14d89390f47145cdfb0c2038129f2c990c3053a2ec7fe719948d2d20",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:04.524Z",
+      "reviewedAt": "2026-10-28T18:43:33.976Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/bordered__light__tablet": {
+      "sha256": "ea32d960eb9c5fd50d94711ea6fd25da847b31cb3d7f313d637b7dfcab20dbc5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:06.668Z",
+      "reviewedAt": "2026-10-28T18:43:33.976Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/bordered__light__desktop": {
+      "sha256": "ca2989a6d1c3a0b0ff08de19663d78280e5422237f37df9a586547e388d16e7e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:08.883Z",
+      "reviewedAt": "2026-10-28T18:43:33.976Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/vertical__light__mobile": {
+      "sha256": "d4acb0fa0f9a147b4efb271e9c534c38caf31ff792789f16f12930caea918231",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:11.652Z",
+      "reviewedAt": "2026-10-28T18:43:33.977Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/vertical__light__tablet": {
+      "sha256": "31999d173c96a5a135cc4ff21d8ed64fce5bbd8b18bc74825bae63cad9441004",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:14.020Z",
+      "reviewedAt": "2026-10-28T18:43:33.977Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/vertical__light__desktop": {
+      "sha256": "c10bbf49c26cd3e35ef4b18a1ea310f3c32d64deeff08439b45cd9c01681ad78",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:16.537Z",
+      "reviewedAt": "2026-10-28T18:43:33.977Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/vertical-bordered__light__mobile": {
+      "sha256": "d14a701446c4e25cba3818166edaf38ab64772839f2f18aa9a5b3fe693e73007",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:19.131Z",
+      "reviewedAt": "2026-10-28T18:43:33.978Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/vertical-bordered__light__tablet": {
+      "sha256": "320c4cff7d9ec1f9ee7ed3da177f93eed70f6fb7fc815d91ed6ba4e298b50918",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:21.823Z",
+      "reviewedAt": "2026-10-28T18:43:33.978Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/vertical-bordered__light__desktop": {
+      "sha256": "5cff268eb2f45d5950c22ea6b3f70ec3ff97ead751a1a75aa11bc1dd5aaa146d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:24.412Z",
+      "reviewedAt": "2026-10-28T18:43:33.978Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/sizes__light__mobile": {
+      "sha256": "4f2678d437e039d217822872b40015dba8f4c9ec334da1f1530aa1684f4b5594",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:27.049Z",
+      "reviewedAt": "2026-10-28T18:43:33.979Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/sizes__light__tablet": {
+      "sha256": "b6ff73777564a88411be2fdc5da96e0a326114de97bfa6e9d7cf9573832ff5df",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:29.915Z",
+      "reviewedAt": "2026-10-28T18:43:33.979Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/sizes__light__desktop": {
+      "sha256": "af20056eb0ce72f81f0394608fdb523436428a6b3f7e0c9607f7d4bdcc024eac",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:32.606Z",
+      "reviewedAt": "2026-10-28T18:43:33.980Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/filled__light__mobile": {
+      "sha256": "1f340f302ac9962831d579f8fcb9b4f2ff4c41e40787747cf6f801f382a93dc4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:35.132Z",
+      "reviewedAt": "2026-10-28T18:43:33.980Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/filled__light__tablet": {
+      "sha256": "fa07f850e29fe0e22ab5400a493a520ccd58af541496c5d39bbf1fb845a8eeb8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:37.844Z",
+      "reviewedAt": "2026-10-28T18:43:33.980Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/filled__light__desktop": {
+      "sha256": "371b5db5dca278afa98f8a086689be9487ba1b7fae82d56f35e05032bfacd14f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:40.676Z",
+      "reviewedAt": "2026-10-28T18:43:33.981Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/complete-content__light__mobile": {
+      "sha256": "2fe4beaa4b5cdf96d88a9be20aec2a1377deb8fc7abc4225523a2024088d0539",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:43.449Z",
+      "reviewedAt": "2026-10-28T18:43:33.981Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/complete-content__light__tablet": {
+      "sha256": "7629e6e55385ca783cac8b33448faed49d4e80675fe5eb051752f2aa97fe87be",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:46.010Z",
+      "reviewedAt": "2026-10-28T18:43:33.981Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/complete-content__light__desktop": {
+      "sha256": "2b47de372ff6b10aad57c1a6f94e4ef63f50ebe549de45f9b4c65eae65968266",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:48.680Z",
+      "reviewedAt": "2026-10-28T18:43:33.982Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/empty-slots__light__mobile": {
+      "sha256": "47d331f4ee9c858819e856000c70771018c676845c46c63c955578035d4c7622",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:51.123Z",
+      "reviewedAt": "2026-10-28T18:43:33.982Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/empty-slots__light__tablet": {
+      "sha256": "7f92d0f452e0a794ccf27a5d64faa5751fd3eac356a086a83ed0d721270feee2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:53.832Z",
+      "reviewedAt": "2026-10-28T18:43:33.982Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/empty-slots__light__desktop": {
+      "sha256": "f975e74113922d65e608aeef40d1a1147e03fdf0aec9fc46b8cfd3d31b87a3f5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:56.448Z",
+      "reviewedAt": "2026-10-28T18:43:33.983Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/current-geometry__light__mobile": {
+      "sha256": "4fadc66d29d9ffcdd44f48081ddab9bf5e743e010465f6d9f93f52f9e9ce0507",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:59.207Z",
+      "reviewedAt": "2026-10-28T18:43:33.983Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/current-geometry__light__tablet": {
+      "sha256": "7012a8ccedff13af5e160638cf36e9149b55e498c4948b49b6d813881a9ed236",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:01.999Z",
+      "reviewedAt": "2026-10-28T18:43:33.984Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/current-geometry__light__desktop": {
+      "sha256": "0fa8970d7facf5e7bd3a52e32ec1c1870d0ebf07be4f5cbedea0cb5c4c3fabbb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:04.681Z",
+      "reviewedAt": "2026-10-28T18:43:33.984Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/current-provider__light__mobile": {
+      "sha256": "68c8b5ba2bc5be78a585652c7999b0f1c8ded90d14e51ec99b3059836199ac65",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:07.416Z",
+      "reviewedAt": "2026-10-28T18:43:33.984Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/current-provider__light__tablet": {
+      "sha256": "6b2113799e6bd8031ebf0c5aac684d95d971d99ec22b43b8abafcbc433d18426",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:10.116Z",
+      "reviewedAt": "2026-10-28T18:43:33.985Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/current-provider__light__desktop": {
+      "sha256": "b9c00dd0a851362951638e033887b4edafea0d2829c1f32bff734b80caa5b44a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:12.782Z",
+      "reviewedAt": "2026-10-28T18:43:33.985Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/semantic-tokens__light__mobile": {
+      "sha256": "7e6bc515728c3134e598d45fd39a46fa3cb5b953742965e27789b21f258671e9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:15.303Z",
+      "reviewedAt": "2026-10-28T18:43:33.985Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/semantic-tokens__light__tablet": {
+      "sha256": "f845efa52f4fe6a8fa22370823b31a14f536ab7a517322c46911346cbf1b4876",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:17.846Z",
+      "reviewedAt": "2026-10-28T18:43:33.986Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/semantic-tokens__light__desktop": {
+      "sha256": "750ea189ab47bfddb356b84e4fdc8e17b4d3c43b90cc922ce0e735f6ef463016",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:21.400Z",
+      "reviewedAt": "2026-10-28T18:43:33.986Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/nested__light__mobile": {
+      "sha256": "6f26bce20a523827a060b8fea799c85de680b003323c7e94c9d4cfeaf5c1196b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:24.482Z",
+      "reviewedAt": "2026-10-28T18:43:33.987Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/nested__light__tablet": {
+      "sha256": "0b4fce93cacecb8acfa2aeb8f65f76d08b3d35c83e25634fb1d8f77862513bd6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:27.728Z",
+      "reviewedAt": "2026-10-28T18:43:33.987Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/nested__light__desktop": {
+      "sha256": "f21fdd8e12a0ebcc860777aafa39c455787bc27e7c29a13036d6204b48274aa2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:30.251Z",
+      "reviewedAt": "2026-10-28T18:43:33.987Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/native-focus__light__mobile": {
+      "sha256": "5bb53df3b8d745db26b27fd0c16b6d17216a7dcae2ec5e4aa013296f715c7cb3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:33.065Z",
+      "reviewedAt": "2026-10-28T18:43:33.988Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/native-focus__light__tablet": {
+      "sha256": "781ec86befc34c553afa5b07e12fe9060cbb08fbcd1c754a0fd1ae7014c3bc3b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:36.036Z",
+      "reviewedAt": "2026-10-28T18:43:33.988Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/native-focus__light__desktop": {
+      "sha256": "c8d84b7d7635ca873fb82f87a909b9b583f8205015957853ac971e2bba6ee5e2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:39.050Z",
+      "reviewedAt": "2026-10-28T18:43:33.988Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/rtl__light__mobile": {
+      "sha256": "5821c5a7f71b1dc95de1244fccb05470a1cd049f98548bee48a8ce24dc974c9e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:41.788Z",
+      "reviewedAt": "2026-10-28T18:43:33.989Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/rtl__light__tablet": {
+      "sha256": "848579d3e56c46e8570b8872c2492bc477ad1531da1200fb11333bc4f984e258",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:44.607Z",
+      "reviewedAt": "2026-10-28T18:43:33.989Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/rtl__light__desktop": {
+      "sha256": "b7a9d685943efbef708a75c376c5019ddf14b73cc281be77668b8f164febb898",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:47.362Z",
+      "reviewedAt": "2026-10-28T18:43:33.989Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/theme-dark__light__mobile": {
+      "sha256": "457ba20d1e67bca4cd5ea32277c8895371e9c0903e5412aa5aad92eb4f7631d7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:50.286Z",
+      "reviewedAt": "2026-10-28T18:43:33.990Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/theme-dark__light__tablet": {
+      "sha256": "b89a7bafeaf91f9f6848644f7c48e5d3fa85fc4ef640078f80601511017789a5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:53.115Z",
+      "reviewedAt": "2026-10-28T18:43:33.990Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/theme-dark__light__desktop": {
+      "sha256": "197b03d95b300222ae87a242a0a410801d796d1ee98ecaebbd5a02cde88e6a88",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:55.936Z",
+      "reviewedAt": "2026-10-28T18:43:33.990Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/theme-compact__light__mobile": {
+      "sha256": "b86680bfec2915c30f679a9d26c2b78d6d8b33da7405aac408283f1866a60815",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:58.329Z",
+      "reviewedAt": "2026-10-28T18:43:33.991Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/theme-compact__light__tablet": {
+      "sha256": "a348ad29bfe3f8aba8d65e6e2be42005a13855f342cd8f8d2c1e5ee06e9620e1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:00.697Z",
+      "reviewedAt": "2026-10-28T18:43:33.991Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/theme-compact__light__desktop": {
+      "sha256": "98a21a6f4197ec6ce47452f8879e0b098e8675924e742a49a6e2a320d9727528",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:03.178Z",
+      "reviewedAt": "2026-10-28T18:43:33.991Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/theme-dark-compact__light__mobile": {
+      "sha256": "672bef76b85eb27abc1b400b6578e50f75649fa26e5ffcb5c0e8e47791c7489f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:05.532Z",
+      "reviewedAt": "2026-10-28T18:43:33.992Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/theme-dark-compact__light__tablet": {
+      "sha256": "9fd3731730866140614ccb4f95cfa345f6ff47384ceb5bcff4ec1aa31df43615",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:08.599Z",
+      "reviewedAt": "2026-10-28T18:43:33.992Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "descriptions/theme-dark-compact__light__desktop": {
+      "sha256": "de6e9923be06982dd017eb1e305894bcf97b89cc3b0873ed5c5d08215316014f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:12.144Z",
+      "reviewedAt": "2026-10-28T18:43:33.993Z",
+      "reviewNote": "Reviewed 51 descriptions native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/basic__light__mobile": {
+      "sha256": "c67960f81b2cf6f72ea50cff4e9e52c5e861a903d805fa075db10801cd4ef590",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:11.529Z",
+      "reviewedAt": "2026-10-28T18:43:34.251Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/basic__light__tablet": {
+      "sha256": "6d97fcccf2cce2b903e7de98693d1cc3576621e623c952897f8d0367ac2f812a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:13.935Z",
+      "reviewedAt": "2026-10-28T18:43:34.252Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/basic__light__desktop": {
+      "sha256": "202368988a8280ddbac80f8375a36e6035b2d38e462fc65ec5461ae717bafe4a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:16.428Z",
+      "reviewedAt": "2026-10-28T18:43:34.253Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/with-icon__light__mobile": {
+      "sha256": "966038af8948b82474e6d863070397fee7fc7fb43003c8e2d0fa9cde13e7e503",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:18.982Z",
+      "reviewedAt": "2026-10-28T18:43:34.253Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/with-icon__light__tablet": {
+      "sha256": "0cb3260ce361b261f41e71d3a4d98528fa7b2620ebdb4b21bdaf6d75af3f1934",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:21.644Z",
+      "reviewedAt": "2026-10-28T18:43:34.253Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/with-icon__light__desktop": {
+      "sha256": "f0671962b70aa5bb779e74766da7ab2e42e3e3bd328ca652909dfa02fa5248bb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:24.286Z",
+      "reviewedAt": "2026-10-28T18:43:34.254Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/separator__light__mobile": {
+      "sha256": "7cefff0c1043b140afdcf95fe371c5b5c63164aed9b920794ab7a2f38e0f9005",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:26.859Z",
+      "reviewedAt": "2026-10-28T18:43:34.254Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/separator__light__tablet": {
+      "sha256": "ca629090436a10719fb7c0085031fec970571fc42ca6ccbb281ec4e6b7d9c9c7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:29.785Z",
+      "reviewedAt": "2026-10-28T18:43:34.254Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/separator__light__desktop": {
+      "sha256": "6925864d477fdb1e4bf8fa43a9a12782bb4a0717002a023c6f96a4437fb60509",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:32.482Z",
+      "reviewedAt": "2026-10-28T18:43:34.255Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/separator-item__light__mobile": {
+      "sha256": "8d749eeb5ce44aae2925c1e382592fce4b82c8173aec20e32cda674f0474d770",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:35.068Z",
+      "reviewedAt": "2026-10-28T18:43:34.255Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/separator-item__light__tablet": {
+      "sha256": "908fdd72597e6d73a3ad106e825e9a223b2404e73ceb3158e249c73732ffc333",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:37.685Z",
+      "reviewedAt": "2026-10-28T18:43:34.255Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/separator-item__light__desktop": {
+      "sha256": "32c451afa8e6ed4189b36f946eacb7061c1c17225c8a1b530f793a8683f07e56",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:40.573Z",
+      "reviewedAt": "2026-10-28T18:43:34.256Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/with-params__light__mobile": {
+      "sha256": "84c7ad7b37e4dff6859ca2c4104820ad21f2ee750b5160bb51dc25faa1326088",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:43.151Z",
+      "reviewedAt": "2026-10-28T18:43:34.256Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/with-params__light__tablet": {
+      "sha256": "cb8d6b7fe06f4e3056aa386bae367d522dea4f59965dec056478dbf96c0ee6dc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:45.761Z",
+      "reviewedAt": "2026-10-28T18:43:34.256Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/with-params__light__desktop": {
+      "sha256": "c4b7b36a5e9873f7f1097f3cdc608f124b8854926a4bc65cd5976573a589bb03",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:48.438Z",
+      "reviewedAt": "2026-10-28T18:43:34.257Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/overlay__light__mobile": {
+      "sha256": "907897d14a5791ce3630fd3a614427676133860d1b2a66641227952ed8e98d73",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:50.986Z",
+      "reviewedAt": "2026-10-28T18:43:34.257Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/overlay__light__tablet": {
+      "sha256": "d3afa404d72d37f58171b5c4c0da5755576eb2cee4464caa08c4b0c9a8c1de5b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:53.766Z",
+      "reviewedAt": "2026-10-28T18:43:34.257Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/overlay__light__desktop": {
+      "sha256": "b74b5a7234c2910d5a24d1ea1bec55b329261b461d5fb315570ec0b6643e35c7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:56.425Z",
+      "reviewedAt": "2026-10-28T18:43:34.258Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/semantic__light__mobile": {
+      "sha256": "679c69fc5bf8b5944869cecd91540338468174b6c6791c7c899824c80ac09011",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:59.165Z",
+      "reviewedAt": "2026-10-28T18:43:34.258Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/semantic__light__tablet": {
+      "sha256": "23d443a93190bed8614b89dfb16eeeb53c9d86c0c958648381363cba5b7bbc88",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:01.923Z",
+      "reviewedAt": "2026-10-28T18:43:34.258Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/semantic__light__desktop": {
+      "sha256": "42c206e419f19388f443b0df5a6856e504fdba9dfd0c55b00b2c941922742d00",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:04.538Z",
+      "reviewedAt": "2026-10-28T18:43:34.258Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/rtl__light__mobile": {
+      "sha256": "db9134a3d50e6f1ad81d0c4603be2f783421c414805a575c38dee17529467ee1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:07.195Z",
+      "reviewedAt": "2026-10-28T18:43:34.259Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/rtl__light__tablet": {
+      "sha256": "42d5e6e574dc7c472482715d000955080938611b1b5ccdf72f2ad5eea0449766",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:09.802Z",
+      "reviewedAt": "2026-10-28T18:43:34.259Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/rtl__light__desktop": {
+      "sha256": "db7e1e0bdd4d2fe6f8b91a4d3f9f2a73ed7a537149e97cf058c3ea3273af1ba2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:12.495Z",
+      "reviewedAt": "2026-10-28T18:43:34.259Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/complete-content__light__mobile": {
+      "sha256": "19ab365246d867069e2e9eeef3ac4a02137b0517b43b374edd6cd7d998372b9b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:15.167Z",
+      "reviewedAt": "2026-10-28T18:43:34.260Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/complete-content__light__tablet": {
+      "sha256": "51c57fbc3c6e1fd9e1e68ee5bc04d06f2988fea66e4898ebdc747d75ac904ad6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:17.857Z",
+      "reviewedAt": "2026-10-28T18:43:34.260Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/complete-content__light__desktop": {
+      "sha256": "5166172196a34cb834cfe14f28b36270798f6329cc58490ddc68d46f13659388",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:21.366Z",
+      "reviewedAt": "2026-10-28T18:43:34.261Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/no-title-menu__light__mobile": {
+      "sha256": "abe316be4345db73e689ce059c8c9e27f31fc1e44d01a73eec511dbd60148610",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:26.072Z",
+      "reviewedAt": "2026-10-28T18:43:34.261Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/no-title-menu__light__tablet": {
+      "sha256": "9daf63a6ad7b9bbf7382f515fb0cb63f2defd2c53c4e71dbe7de4a920cfa749f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:29.890Z",
+      "reviewedAt": "2026-10-28T18:43:34.261Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/no-title-menu__light__desktop": {
+      "sha256": "247b22292ffb0598b2a6b1b083b55212c844a8920769694d3c785fbf1f76122a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:34.040Z",
+      "reviewedAt": "2026-10-28T18:43:34.262Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/conditional-content__light__mobile": {
+      "sha256": "d00d477ec4c132437091e487d470b93a7f5d59338089e77fe87076d889163639",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:36.339Z",
+      "reviewedAt": "2026-10-28T18:43:34.262Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/conditional-content__light__tablet": {
+      "sha256": "6228a6922a8f869afa50654d5ffcb3c581934a93aadabe9f8fb3de85473a5573",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:39.075Z",
+      "reviewedAt": "2026-10-28T18:43:34.263Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/conditional-content__light__desktop": {
+      "sha256": "81f91a9bb618515c8fcd6b10faad23dd7771965dc67db6556402a495272d235d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:41.847Z",
+      "reviewedAt": "2026-10-28T18:43:34.263Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/current-provider__light__mobile": {
+      "sha256": "8ac67c5bb5a766c0396145c343d5be5c4870ed21fbcb608c2c9dd8bebcedae2c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:44.696Z",
+      "reviewedAt": "2026-10-28T18:43:34.263Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/current-provider__light__tablet": {
+      "sha256": "1c5b25d63ce8fdbd89528e6c9ab118d476e4d6082eafb206ee53a825dc789fee",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:47.650Z",
+      "reviewedAt": "2026-10-28T18:43:34.264Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/current-provider__light__desktop": {
+      "sha256": "3989c71e67cde5a1096942feb51714a09720f9eb562c3b77f9ab04c0287c3a29",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:50.459Z",
+      "reviewedAt": "2026-10-28T18:43:34.264Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/keyboard-menu__light__mobile": {
+      "sha256": "f5b03fda5268a9900139159ef2011e666a256a450313d00113353c34cfe6823c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:54.149Z",
+      "reviewedAt": "2026-10-28T18:43:34.264Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/keyboard-menu__light__tablet": {
+      "sha256": "f1fa4f72373289195e76737399807c22d60fb16795cd79a6369fcc38c56648ae",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:57.771Z",
+      "reviewedAt": "2026-10-28T18:43:34.265Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/keyboard-menu__light__desktop": {
+      "sha256": "34013f7f89041824fc89c10b17d714fcd91d1ea51f7bb48c6907f8eca4868ede",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:01.684Z",
+      "reviewedAt": "2026-10-28T18:43:34.265Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/native-focus__light__mobile": {
+      "sha256": "07f3695bf93c6a235903bb86af266e9e92718941f106378d70fe6c7453968ac0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:03.773Z",
+      "reviewedAt": "2026-10-28T18:43:34.265Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/native-focus__light__tablet": {
+      "sha256": "5549d8f77e183154445e13aeb91b8be602bc8df30922250403b326cf5d872600",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:05.906Z",
+      "reviewedAt": "2026-10-28T18:43:34.266Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/native-focus__light__desktop": {
+      "sha256": "59b9843166666ef7a286e2ad3f05d20f6d89ffeb46b05602b4a29403d88edc88",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:08.652Z",
+      "reviewedAt": "2026-10-28T18:43:34.266Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/theme-dark__light__mobile": {
+      "sha256": "68b8c6544721917cfee66214f455eee089fe7e42c216b874adaf2279f7405055",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:12.137Z",
+      "reviewedAt": "2026-10-28T18:43:34.266Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/theme-dark__light__tablet": {
+      "sha256": "a492452d372cfe2c7253a98cfc9601e3ae3233c1e107d0dfcdbde40d05f78ec7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:15.172Z",
+      "reviewedAt": "2026-10-28T18:43:34.267Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/theme-dark__light__desktop": {
+      "sha256": "16fac2b850ab1a6ffd54b618eded0d6e7829e169bc61275fd3b66682d0880641",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:17.786Z",
+      "reviewedAt": "2026-10-28T18:43:34.267Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/theme-compact__light__mobile": {
+      "sha256": "b45a192caf2c14482d7e11529eaa4ae6d9d96b34ac0a315ce09c7dc36b8ae2fb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:20.072Z",
+      "reviewedAt": "2026-10-28T18:43:34.267Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/theme-compact__light__tablet": {
+      "sha256": "1963d0dbf9ede395a25c2bf69f617a7870f0606227a768277dd852980bcf092d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:22.485Z",
+      "reviewedAt": "2026-10-28T18:43:34.268Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/theme-compact__light__desktop": {
+      "sha256": "2ad5494a31715d854a2d4b75f9125c90969eb3b45c4a9b713710513270940cc9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:24.882Z",
+      "reviewedAt": "2026-10-28T18:43:34.268Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/theme-dark-compact__light__mobile": {
+      "sha256": "9c82c77669ed6b0db09b62fe8a58898d7d6f2cac1e2f02da701a910ea12d36b0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:27.263Z",
+      "reviewedAt": "2026-10-28T18:43:34.269Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/theme-dark-compact__light__tablet": {
+      "sha256": "36cf48ca3decfaa78dfc300fdf001a20aaaa3c599146a741ffcb6ee8ca2cafd8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:29.646Z",
+      "reviewedAt": "2026-10-28T18:43:34.269Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "breadcrumb/theme-dark-compact__light__desktop": {
+      "sha256": "174e356750a950367f7eaba31ae24e2367f3c0ce54bb0742b24215252b30004a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:32.032Z",
+      "reviewedAt": "2026-10-28T18:43:34.269Z",
+      "reviewNote": "Reviewed 51 breadcrumb native Vue states from clean a47d96ec. Each new original PNG actually viewed. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/basic__light__mobile": {
+      "sha256": "98de9e75d3d40642ead5710faefd963d829963a0da6ca1be24f1ed97335e6d0d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:12.690Z",
+      "reviewedAt": "2026-10-28T18:43:34.512Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/basic__light__tablet": {
+      "sha256": "c37841a6a177db7f22ae9d5b4b0364fb427844954ff049c1c677a75624a2f862",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:14.743Z",
+      "reviewedAt": "2026-10-28T18:43:34.514Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/basic__light__desktop": {
+      "sha256": "78215f34f85bbcea589012228f7e250cb89daae4da5a25c4376413dcbb6b9c5f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:16.869Z",
+      "reviewedAt": "2026-10-28T18:43:34.515Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/verticalSingle__light__mobile": {
+      "sha256": "94ef6a3c5894dc48758c8a1e5f4dc0afd5d3453da8455201205a9b59be1770b8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:19.279Z",
+      "reviewedAt": "2026-10-28T18:43:34.515Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/verticalSingle__light__tablet": {
+      "sha256": "5b7ac2e920745f9b8ceab067978269d0512bfecea7394cc4730a7495c8390ce4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:21.760Z",
+      "reviewedAt": "2026-10-28T18:43:34.516Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/verticalSingle__light__desktop": {
+      "sha256": "e0e30403f178f7c317ab9d4480d68ae871f57304aeebf482844ec74dcf7fc25b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:24.348Z",
+      "reviewedAt": "2026-10-28T18:43:34.516Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/alternate__light__mobile": {
+      "sha256": "4bb8d311adb716ab762cb015906347584de0ddc16ca1dbdd7c8044dd193bf945",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:26.993Z",
+      "reviewedAt": "2026-10-28T18:43:34.516Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/alternate__light__tablet": {
+      "sha256": "14a277e2dcc645513b793bc55319633346edcb7d6d0af6dacacc226866cdd8e0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:29.847Z",
+      "reviewedAt": "2026-10-28T18:43:34.517Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/alternate__light__desktop": {
+      "sha256": "ed9018dd759104c9b2eae5ad5e1446b3cfaa7810325955b5eef4956243983c7a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:32.514Z",
+      "reviewedAt": "2026-10-28T18:43:34.517Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/horizontal__light__mobile": {
+      "sha256": "1baf7ebcd893e88d9af4ed804e78e7cd0c1198a279ee827c30f3f13f51070549",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:35.105Z",
+      "reviewedAt": "2026-10-28T18:43:34.518Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/horizontal__light__tablet": {
+      "sha256": "434041752c82c12b48fa004ea4318941370329a65ca85427bac08c2158755a7d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:37.664Z",
+      "reviewedAt": "2026-10-28T18:43:34.518Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/horizontal__light__desktop": {
+      "sha256": "807b2e2d72dea838b2b620b3e504e14cd81ca160850823b6ac0fa2a62890fdce",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:40.572Z",
+      "reviewedAt": "2026-10-28T18:43:34.519Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/horizontal-end__light__mobile": {
+      "sha256": "267841dba8c81c5574386aeee052e52498707a0349be9f41e87f727029e56311",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:43.190Z",
+      "reviewedAt": "2026-10-28T18:43:34.520Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/horizontal-end__light__tablet": {
+      "sha256": "cbcabde6a9988b6dfbb9d826f90433437da52efb83bfcd9f55d78ca9b286ba1c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:45.761Z",
+      "reviewedAt": "2026-10-28T18:43:34.520Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/horizontal-end__light__desktop": {
+      "sha256": "fcc42ae1dfb3afbedf72bb79f4bb63935c65ac94f95464845ea6fa814ab454c6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:48.436Z",
+      "reviewedAt": "2026-10-28T18:43:34.521Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/titleSpanNumber__light__mobile": {
+      "sha256": "b6f30394ef07188ee0d38c1be73af27c6a9ecd54d6b63fe64da7b0c30cabf07f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:51.123Z",
+      "reviewedAt": "2026-10-28T18:43:34.522Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/titleSpanNumber__light__tablet": {
+      "sha256": "f2dd3450d07637e75f74b2ddbf5a72d7fcfb2b8866e49a191296cc1c95f1384b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:53.850Z",
+      "reviewedAt": "2026-10-28T18:43:34.522Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/titleSpanNumber__light__desktop": {
+      "sha256": "278be685e5fbaff06ee049ea522c12472f8ca9c4b97a94f3d2a6b0016e697d80",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:56.443Z",
+      "reviewedAt": "2026-10-28T18:43:34.523Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/titleSpanString__light__mobile": {
+      "sha256": "2a10b06d73626fd31a0f29ef8d4a63ce99bd62160aea488f090672776ceb0f41",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:29:59.138Z",
+      "reviewedAt": "2026-10-28T18:43:34.524Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/titleSpanString__light__tablet": {
+      "sha256": "1a621374f1363efdbff93f15518e3aa34c392f0d0b14e86fadf59cb0f358bb42",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:01.850Z",
+      "reviewedAt": "2026-10-28T18:43:34.524Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/titleSpanString__light__desktop": {
+      "sha256": "de8115835bc5783d42fd8d3fb53025f4e9ab4604df67031cef5eee9c8d2f1c67",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:04.470Z",
+      "reviewedAt": "2026-10-28T18:43:34.525Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/colors__light__mobile": {
+      "sha256": "fcdff3bda4b72b3cb3fdfdc667147403d1cf97c026db2a624ed04dcf7a91fc0c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:07.203Z",
+      "reviewedAt": "2026-10-28T18:43:34.525Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/colors__light__tablet": {
+      "sha256": "2f22f21e905333ee700b7644517df377f32c90a281a3f79b48445947c7507d86",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:09.810Z",
+      "reviewedAt": "2026-10-28T18:43:34.525Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/colors__light__desktop": {
+      "sha256": "26e6340fa9fd4ca1b63ed56fe53ba30ad217d39690529214623d8846cc90df4d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:12.474Z",
+      "reviewedAt": "2026-10-28T18:43:34.526Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/loading__light__mobile": {
+      "sha256": "cd7a19b0a7c84ad83a206ec29c45449509f90a6c83977602c6d275a259e65706",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:15.084Z",
+      "reviewedAt": "2026-10-28T18:43:34.526Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/loading__light__tablet": {
+      "sha256": "7baab913b08b42916ea85ff6518ad0b2577c359df43f339b279d6930bf58845f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:17.752Z",
+      "reviewedAt": "2026-10-28T18:43:34.526Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/loading__light__desktop": {
+      "sha256": "4b3eebe9c144368dd3a149155c43ee3d6d84a750acbf1c6e2cc43daeae9d4b9f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:21.103Z",
+      "reviewedAt": "2026-10-28T18:43:34.527Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/pending__light__mobile": {
+      "sha256": "77f2b5a35baf587d780b8941b16a836af56b6fef150695d0f5e86bb85ad7428d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:24.370Z",
+      "reviewedAt": "2026-10-28T18:43:34.527Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/pending__light__tablet": {
+      "sha256": "eef46b74ee711aaf64ebf5fb99938f8a3cf24c8b139ea35faf594ac6720fbd60",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:27.601Z",
+      "reviewedAt": "2026-10-28T18:43:34.527Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/pending__light__desktop": {
+      "sha256": "c99149f24f1444dff5bdf94ca24170b18a96f3b3da9104b7b5bf38462e1541ef",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:30.203Z",
+      "reviewedAt": "2026-10-28T18:43:34.528Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/reverse__light__mobile": {
+      "sha256": "0911311bb9fa26b8ca3acca93e3974ded5fe2512800267901ac833feb635a97c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:33.043Z",
+      "reviewedAt": "2026-10-28T18:43:34.528Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/reverse__light__tablet": {
+      "sha256": "f66807e8c14063b4cd6539f159659f18e8ed4bc6da76cb990c500d8542980fda",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:35.811Z",
+      "reviewedAt": "2026-10-28T18:43:34.528Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/reverse__light__desktop": {
+      "sha256": "727fcf308ae5c07e67f15c69afa096054119ab9e5be8eafb4c196727f30e1dc6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:38.862Z",
+      "reviewedAt": "2026-10-28T18:43:34.529Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/variantFilled__light__mobile": {
+      "sha256": "e2dc9f8cc1c644039e7c7cc6f5df91d8c4aee7a1e53e7fffe9b2b1cabfe7ece4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:41.709Z",
+      "reviewedAt": "2026-10-28T18:43:34.529Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/variantFilled__light__tablet": {
+      "sha256": "44922ed6c4c60050db47c1930e1c8d686b7d0f3390c6310caf5948047f098c7b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:44.535Z",
+      "reviewedAt": "2026-10-28T18:43:34.529Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/variantFilled__light__desktop": {
+      "sha256": "e3acbe67643d4ab0114af415c0aa5d7f23b57ce568728bf6a53584bc2a5ad92d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:47.322Z",
+      "reviewedAt": "2026-10-28T18:43:34.530Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/rtl__light__mobile": {
+      "sha256": "0f8dec593f802dea730cbb613799109c5b5b01fdfd3f11d62d70d7f77900bf5a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:50.146Z",
+      "reviewedAt": "2026-10-28T18:43:34.530Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/rtl__light__tablet": {
+      "sha256": "a312d7adc0131157a87c3a3d7f7ee79c504222dd446628acf087727c3a36f81c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:53.021Z",
+      "reviewedAt": "2026-10-28T18:43:34.531Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/rtl__light__desktop": {
+      "sha256": "2d293631bd3542e9c63937c6218711c846fd5a695ef76f35ad8abb5e641e221e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:55.651Z",
+      "reviewedAt": "2026-10-28T18:43:34.531Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/complete-content__light__mobile": {
+      "sha256": "5ebe02df1dbeeb1f8f121fa5502fe9e0b4e79c1ed28ab3ec098f91fbb3e940c9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:30:58.001Z",
+      "reviewedAt": "2026-10-28T18:43:34.531Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/complete-content__light__tablet": {
+      "sha256": "f88b6ec4f6c2f1dc8a493c5189ddfc8c6adb8816a58f0ae56e191e81f92cb88f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:00.479Z",
+      "reviewedAt": "2026-10-28T18:43:34.532Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/complete-content__light__desktop": {
+      "sha256": "665f665da40321b227b992027cc4e54bc1b7739f6e1efcfd8415e1d436f0294f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:02.659Z",
+      "reviewedAt": "2026-10-28T18:43:34.532Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/scalar-content__light__mobile": {
+      "sha256": "c2c77bde90c5db2f8f50d3a9ee5e5a54571becd6f0d4d0ef639819ad8b5e108f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:04.996Z",
+      "reviewedAt": "2026-10-28T18:43:34.532Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/scalar-content__light__tablet": {
+      "sha256": "0ec26a25886b0ed2b8801af8f08c1fa59c39eebdf3ec36fba0740f4bced43e43",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:07.801Z",
+      "reviewedAt": "2026-10-28T18:43:34.533Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/scalar-content__light__desktop": {
+      "sha256": "e4739c3f6fd0c01fe83cb5f9308e18e8cb2d8cedcd5c90983238cefeec85b2ad",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:11.257Z",
+      "reviewedAt": "2026-10-28T18:43:34.533Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/long-horizontal__light__mobile": {
+      "sha256": "eb1843e847e4562075a12f6e75cf75de812b9a5e2203a1697152f6be9061e374",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:14.572Z",
+      "reviewedAt": "2026-10-28T18:43:34.533Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/long-horizontal__light__tablet": {
+      "sha256": "0490ed38f9057e7aeb39da8bb87523770f2c990325bef726f120942e6e402896",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:17.590Z",
+      "reviewedAt": "2026-10-28T18:43:34.534Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/long-horizontal__light__desktop": {
+      "sha256": "10fe8bed50b268bb5c921eda4f74aba43be41d5a207ae4a0787304ed81163271",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:19.930Z",
+      "reviewedAt": "2026-10-28T18:43:34.534Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/token-overrides__light__mobile": {
+      "sha256": "be4a6a58aab32c2302b8fe403c8ed83211e19e0bf3d075150bb326724b7b42c4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:22.359Z",
+      "reviewedAt": "2026-10-28T18:43:34.535Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/token-overrides__light__tablet": {
+      "sha256": "9786c96c98f07e1cc00e47dce638f172eeeb890c2971d180437819517cfabe66",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:24.787Z",
+      "reviewedAt": "2026-10-28T18:43:34.535Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/token-overrides__light__desktop": {
+      "sha256": "7be79d5461b2e838c326da094e8faf26c39d227556b5cd8477a6f62de4014cbc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:27.285Z",
+      "reviewedAt": "2026-10-28T18:43:34.535Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/semantic__light__mobile": {
+      "sha256": "77c1a3ab5e77d345608253948c8f96a19e55caa79d5ab15681cea2720b2615ba",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:29.598Z",
+      "reviewedAt": "2026-10-28T18:43:34.536Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/semantic__light__tablet": {
+      "sha256": "8157400edf64c6c37d8e68f3f4114e9cd28c64bb5c05e61817815630d4c3b474",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:31.954Z",
+      "reviewedAt": "2026-10-28T18:43:34.536Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/semantic__light__desktop": {
+      "sha256": "1f7837f8a2ec092e1a522781722b79c057079bf79f582823d10e9af99593ca38",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:34.156Z",
+      "reviewedAt": "2026-10-28T18:43:34.536Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/conditional-slots__light__mobile": {
+      "sha256": "dc61b1ba569c0f370cf0c98396bfe526941f4748a56ce69ae0475a510459d5e9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:36.243Z",
+      "reviewedAt": "2026-10-28T18:43:34.537Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/conditional-slots__light__tablet": {
+      "sha256": "733f83dd8702fc96b18fe7e763c74de7d616aa528d1b42eea9a059d037091542",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:38.385Z",
+      "reviewedAt": "2026-10-28T18:43:34.537Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/conditional-slots__light__desktop": {
+      "sha256": "8be8c1e9b64fe470a30b5df4dc20a62d8b31820975d74d968f360cb867f1fb72",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:40.518Z",
+      "reviewedAt": "2026-10-28T18:43:34.537Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/current-provider__light__mobile": {
+      "sha256": "ac28d8e30a9a9bc414d8d93a1c27213b075514381cddabad22883dd1a23e7f01",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:42.763Z",
+      "reviewedAt": "2026-10-28T18:43:34.538Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/current-provider__light__tablet": {
+      "sha256": "7ac9cd129b62cf8a14875cca529220ff7b6d6bcc67f742257ceee74b7bb11786",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:45.051Z",
+      "reviewedAt": "2026-10-28T18:43:34.538Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/current-provider__light__desktop": {
+      "sha256": "dc5c1bd1a68dcfce3a4a29e49b0b890ff5480a5930c9a34499c1a75c0f19c43d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:47.229Z",
+      "reviewedAt": "2026-10-28T18:43:34.539Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/reverse-edit__light__mobile": {
+      "sha256": "a8b84bc39cae3e78bebc35eb1921940faea6fbe00c5ca4079baf65038e9ab117",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:49.328Z",
+      "reviewedAt": "2026-10-28T18:43:34.539Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/reverse-edit__light__tablet": {
+      "sha256": "2e51d1dea579371126d75f5b8918db567477f66aa07f6d58d575214edcb654e2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:51.447Z",
+      "reviewedAt": "2026-10-28T18:43:34.539Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/reverse-edit__light__desktop": {
+      "sha256": "e778fbed71e31fd034c3d3032a3896bf370cf0392a524f08db7d0e6332fdea41",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:53.607Z",
+      "reviewedAt": "2026-10-28T18:43:34.540Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/pending-zero__light__mobile": {
+      "sha256": "55875c01234d27406149268355db4c6d1d05db0c6be6c8f9d7525409bde96157",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:55.743Z",
+      "reviewedAt": "2026-10-28T18:43:34.540Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/pending-zero__light__tablet": {
+      "sha256": "cfbc21ac4a824fb38064afd78e0618022b43b451b65f17ccdc4a1cb66e94c916",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:31:57.915Z",
+      "reviewedAt": "2026-10-28T18:43:34.540Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/pending-zero__light__desktop": {
+      "sha256": "26210b878428efee5c3b4eaaaa79f45e8d230ef3cb39604d99dc16c96c854ecf",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:00.032Z",
+      "reviewedAt": "2026-10-28T18:43:34.541Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/native-focus__light__mobile": {
+      "sha256": "5eab42b4199bf4e9a36d58024694e97b46967704687ca21f3398795cde4c6345",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:02.195Z",
+      "reviewedAt": "2026-10-28T18:43:34.541Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/native-focus__light__tablet": {
+      "sha256": "1e01b24126c0f111670dbbd53a8644beb252af636cf0380fa537b7dd4f9b33ca",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:04.283Z",
+      "reviewedAt": "2026-10-28T18:43:34.542Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/native-focus__light__desktop": {
+      "sha256": "a8ace32b7a830c746f3e929e075f21c5a794a15254d8911b5a22b07983eff3d2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:06.372Z",
+      "reviewedAt": "2026-10-28T18:43:34.542Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/theme-dark__light__mobile": {
+      "sha256": "235ef1a883c6aafd66096d2167a14e3248bec63e53a3da4c15c3a6cbc8ce4370",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:08.438Z",
+      "reviewedAt": "2026-10-28T18:43:34.543Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/theme-dark__light__tablet": {
+      "sha256": "a859bc595a050ca98639ba88e5d1d0680b3f48fb7562d1b5877b486d52312356",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:10.519Z",
+      "reviewedAt": "2026-10-28T18:43:34.543Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/theme-dark__light__desktop": {
+      "sha256": "4a91f65286e5ab6cedefe954df30f10f7638741a628daabfd9e50cd2b0336253",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:12.658Z",
+      "reviewedAt": "2026-10-28T18:43:34.544Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/theme-compact__light__mobile": {
+      "sha256": "6860df929942e11e1346b3da45c390dcba8f81c24745381ae3041573ecadf655",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:14.767Z",
+      "reviewedAt": "2026-10-28T18:43:34.544Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/theme-compact__light__tablet": {
+      "sha256": "b94b860e2c078c396242f28a5dee56c6acc3505a785fcb89e3b98c5def98df07",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:16.844Z",
+      "reviewedAt": "2026-10-28T18:43:34.545Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/theme-compact__light__desktop": {
+      "sha256": "300b2685a100f4bd0ee38eb5b9008509c222b6dbe8698c06a9b60d74a5f2cfc7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:18.947Z",
+      "reviewedAt": "2026-10-28T18:43:34.545Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/theme-dark-compact__light__mobile": {
+      "sha256": "f0fba01b0f49e3b982b8e26cacceeb9b984ee9770f70b91d04065b40b77ad831",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:21.037Z",
+      "reviewedAt": "2026-10-28T18:43:34.545Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/theme-dark-compact__light__tablet": {
+      "sha256": "fa7e06336d810814cc35430dbea927691dc309ac96bbb84d19fd51df055987db",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:23.111Z",
+      "reviewedAt": "2026-10-28T18:43:34.546Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "timeline/theme-dark-compact__light__desktop": {
+      "sha256": "9eb8b295310f1f29b9af07b14e1f6a8bac1e5016e995ffd5b7e08d3201d63be4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:25.340Z",
+      "reviewedAt": "2026-10-28T18:43:34.546Z",
+      "reviewNote": "Reviewed 78 timeline native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/basic__light__mobile": {
+      "sha256": "963271a1ba3e9931fe1a168781d5bb4835e24bde3919619be2f1991f4cbfd502",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:50.641Z",
+      "reviewedAt": "2026-10-28T18:43:34.888Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/basic__light__tablet": {
+      "sha256": "aa496270cb5c5b1ddd47a82019a5619d102afd5190e2c9a533973eb1f7b16405",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:52.716Z",
+      "reviewedAt": "2026-10-28T18:43:34.890Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/basic__light__desktop": {
+      "sha256": "917d6da85c60d94f653a3b253c08a616ee378755d693fe08ce6ecc031a469a80",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:54.789Z",
+      "reviewedAt": "2026-10-28T18:43:34.890Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/gutter__light__mobile": {
+      "sha256": "7b942f6af8ab2bcde1bb877f690a6afa4d4e7b46e278ea9c0aef0cc9412761f7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:56.884Z",
+      "reviewedAt": "2026-10-28T18:43:34.891Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/gutter__light__tablet": {
+      "sha256": "ac74bee527187825621ab570924c706190d675bbb833c765bdc564713a79c1df",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:32:59.056Z",
+      "reviewedAt": "2026-10-28T18:43:34.891Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/gutter__light__desktop": {
+      "sha256": "d634ffd929f62d28962889bd58b743c71246dcae22856c8011543f5e9b983a1d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:01.199Z",
+      "reviewedAt": "2026-10-28T18:43:34.891Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/responsive__light__mobile": {
+      "sha256": "361c340a6a8d123a7f821e37c0b05909bf2b81a92e111d8f2156e0fc110aaaf5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:03.330Z",
+      "reviewedAt": "2026-10-28T18:43:34.891Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/responsive__light__tablet": {
+      "sha256": "a1386bca1b259f8bb74f81e1d30861884267d0f490ed93294ffbb40fce6a1246",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:05.361Z",
+      "reviewedAt": "2026-10-28T18:43:34.892Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/responsive__light__desktop": {
+      "sha256": "5634086d8b1b3a143343714cfc7d82cf901b15eaf95454ab57e06ed8be3d67ab",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:07.439Z",
+      "reviewedAt": "2026-10-28T18:43:34.892Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/offset-sort__light__mobile": {
+      "sha256": "a91abfa761bf39a0b83522343c5102d7de83ede55ffd23bd52cd75d0dbd8f3ac",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:09.509Z",
+      "reviewedAt": "2026-10-28T18:43:34.893Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/offset-sort__light__tablet": {
+      "sha256": "088d4698ee684bccb340e5389f52f90ecd89a36f913cbec487201b514a28bd25",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:11.600Z",
+      "reviewedAt": "2026-10-28T18:43:34.893Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/offset-sort__light__desktop": {
+      "sha256": "4724bc1ec1db91127c701d744f1fdab15f622276c7ff4c255824312093c71783",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:13.612Z",
+      "reviewedAt": "2026-10-28T18:43:34.893Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/flex__light__mobile": {
+      "sha256": "851d323924cfd8e783952ac883254c658a8b7d2790e91b468093b7023fa9bdd9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:15.634Z",
+      "reviewedAt": "2026-10-28T18:43:34.894Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/flex__light__tablet": {
+      "sha256": "33c84951e9c031d055ca00c2f8bcb14e899e0850170aa8c54bf863dfecbc548c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:17.643Z",
+      "reviewedAt": "2026-10-28T18:43:34.894Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/flex__light__desktop": {
+      "sha256": "0f4db99fbfd8979c262e0163df065df2a5c6a6a148ccc6d562c83b4bf0a8f61c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:19.641Z",
+      "reviewedAt": "2026-10-28T18:43:34.894Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/justify-align__light__mobile": {
+      "sha256": "a979a98bfacac417722067da8e2de72ef4509b166f2b595e71efc4a99ffb1be0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:21.674Z",
+      "reviewedAt": "2026-10-28T18:43:34.895Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/justify-align__light__tablet": {
+      "sha256": "17da2aea33a2a710c0943e41be91bb794c0e5568ce81003efff57c26a063442f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:23.717Z",
+      "reviewedAt": "2026-10-28T18:43:34.895Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/justify-align__light__desktop": {
+      "sha256": "823c73fc0a83f7c24e69f87a05dd32dc4c5251048e47f2212b0a575ddc962124",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:25.759Z",
+      "reviewedAt": "2026-10-28T18:43:34.895Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/responsive-fields__light__mobile": {
+      "sha256": "d1f6fdea7fa5b3d94eb66ea583dd83523046d33db1277d8162f450684eeaddbf",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:27.736Z",
+      "reviewedAt": "2026-10-28T18:43:34.896Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/responsive-fields__light__tablet": {
+      "sha256": "f992a4ce59a88eb82531f60459b5a97a801010f0facf7db21781c85d712fc807",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:29.711Z",
+      "reviewedAt": "2026-10-28T18:43:34.896Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/responsive-fields__light__desktop": {
+      "sha256": "b562ac0af0d7994b172ff7bd3eb381375006c35a81a3f1dd3aab9ead148b1d40",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:31.686Z",
+      "reviewedAt": "2026-10-28T18:43:34.896Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/nested-rtl__light__mobile": {
+      "sha256": "8e02b171b6c227b4de179c9f6c87cfc2fafc9b51cf3535960c355cf3d7865e5e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:33.695Z",
+      "reviewedAt": "2026-10-28T18:43:34.897Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/nested-rtl__light__tablet": {
+      "sha256": "fce7e6ddf17e362973b377b12e2a78ad8167c16b0bca090965761f8becfa5a40",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:35.688Z",
+      "reviewedAt": "2026-10-28T18:43:34.897Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/nested-rtl__light__desktop": {
+      "sha256": "f1431c12ab0304018892cfe46a9f50735ef492b79a75affcee346c189d6463b6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:37.683Z",
+      "reviewedAt": "2026-10-28T18:43:34.897Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/complete-content__light__mobile": {
+      "sha256": "68f3d772d333f9e3d4aaafb78252458966916ef27cfee7243342a573ae5b4111",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:39.661Z",
+      "reviewedAt": "2026-10-28T18:43:34.898Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/complete-content__light__tablet": {
+      "sha256": "94e4a8afbfa5cca888955c32be33152f8afce0adb0ee0cd934a2151fa83006e3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:41.646Z",
+      "reviewedAt": "2026-10-28T18:43:34.898Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/complete-content__light__desktop": {
+      "sha256": "5f9883c5967b5d483ebbd95b02317098a7ebb4eb5b173ddd0ea3950afc25cd55",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:43.642Z",
+      "reviewedAt": "2026-10-28T18:43:34.898Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/current-provider__light__mobile": {
+      "sha256": "5c588905bf5278f1cf65bbf36d23abc523502bc27f3561d8de198427571a9229",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:45.703Z",
+      "reviewedAt": "2026-10-28T18:43:34.898Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/current-provider__light__tablet": {
+      "sha256": "9287627a74fe980a3026f07e8de6312cfd51d1046ce389e6538a46ef383316ce",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:47.756Z",
+      "reviewedAt": "2026-10-28T18:43:34.899Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/current-provider__light__desktop": {
+      "sha256": "33a01bd2201b083dee3452686570a15dda615b944d443a806643a0290a0738c1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:49.825Z",
+      "reviewedAt": "2026-10-28T18:43:34.899Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/native-focus__light__mobile": {
+      "sha256": "2a7963ac1861eed8f139f7aa482771d158262403a336be3f75cf6891388689cb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:51.819Z",
+      "reviewedAt": "2026-10-28T18:43:34.899Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/native-focus__light__tablet": {
+      "sha256": "5aef919e7246f50a94dc7ed160e1df20f454345a6caab7e54dd185e3992dad6e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:53.833Z",
+      "reviewedAt": "2026-10-28T18:43:34.900Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/native-focus__light__desktop": {
+      "sha256": "68b6500354771f3561c126a655d4d67dc04608cb36fc7cedf40052fc7ee0ec40",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:55.850Z",
+      "reviewedAt": "2026-10-28T18:43:34.900Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/theme-dark__light__mobile": {
+      "sha256": "dfeaa075eb1e0204b42622d3f0aa6f4792a0a3eb305943d650702cf795215a1b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:57.916Z",
+      "reviewedAt": "2026-10-28T18:43:34.900Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/theme-dark__light__tablet": {
+      "sha256": "00dc333d67c7411b8410c6f11dce10c9b52fbb49ffb51580c5d0510bcb1bbcbb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:33:59.953Z",
+      "reviewedAt": "2026-10-28T18:43:34.901Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/theme-dark__light__desktop": {
+      "sha256": "a58bdf9d0bf1c7edee31deb706726acea6a6df53c0b2e4e6d9d17edcac096214",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:34:02.033Z",
+      "reviewedAt": "2026-10-28T18:43:34.901Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/theme-compact__light__mobile": {
+      "sha256": "7b1450137fd12dae337a23a8948a3cccacbce792ed3a531ade084414dd79178f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:34:04.159Z",
+      "reviewedAt": "2026-10-28T18:43:34.901Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/theme-compact__light__tablet": {
+      "sha256": "78456aea80d4ed94bfeaa0f3628b55ca3aeac20966e4237aa26a1d5757ccdb57",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:34:06.232Z",
+      "reviewedAt": "2026-10-28T18:43:34.902Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/theme-compact__light__desktop": {
+      "sha256": "8370f715d0e6cea91553b40569c9568d4c6dba1abbc83be3e7325d620355d2c3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:34:08.301Z",
+      "reviewedAt": "2026-10-28T18:43:34.902Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/theme-dark-compact__light__mobile": {
+      "sha256": "9984a73a3616cf9db4fd50d16e0cde78f5b67edcb9e3f6b779677799a8d35a35",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:34:10.346Z",
+      "reviewedAt": "2026-10-28T18:43:34.902Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/theme-dark-compact__light__tablet": {
+      "sha256": "ead69e77e56ce945854fd7b351b9d542f286a0756683905583a18ddea03208ed",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:34:12.431Z",
+      "reviewedAt": "2026-10-28T18:43:34.903Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
+    },
+    "grid/theme-dark-compact__light__desktop": {
+      "sha256": "6918d91f92470533afa51b72d6828b9ac14d14bd50ca5d42e0059dce5e060750",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+      "dirty": false,
+      "capturedAt": "2026-10-28T18:34:14.494Z",
+      "reviewedAt": "2026-10-28T18:43:34.903Z",
+      "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
     }
   }
 }

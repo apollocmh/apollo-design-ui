@@ -89,3 +89,7 @@
 - 所属 JS/MJS 文件 `node --check`、Biome、`git diff --check` 通过。
 
 源码模块/夹具、当前结果、红绿边界与 hash 汇总见 `evidence/descriptions-acceptance-source.json`。未构建或改动任何 dist，未提交、推送或发布；未修改共享文件。最终集成 commit、产物结果、正式视觉与 Docs 后续单列，不覆盖本报告原始保存点证据。
+
+## 正式原生视觉阶段
+
+清洁冻结 `a47d96ec` 的51张正式候选已完成实际逐图审阅并批准；Descriptions/Timeline/Grid通过逐张尺寸与rawRGBA完全相同继承此前已实际看过的审图，Breadcrumb新51张逐张查看。相应当前生产源码自e0062edd未变，最新发布声明/实际Demo模板消费和公共CSS对照另有记录。原1692份PNG与537条已有批准记录全部保留；全局现759/1602批准。逐图观察、SHA、继承关系及边界见[四单元视觉证据](evidence/four-unit-native-visual-acceptance.json)。批准完整性检查通过；Docs与最终全库门禁仍独立记录，不将视觉绿灯视为全库完成。

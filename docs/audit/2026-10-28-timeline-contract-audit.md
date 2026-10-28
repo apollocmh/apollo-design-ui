@@ -112,3 +112,7 @@
 相同中心断言还复现了原单侧end横向连线的1px偏移：bottom已包含半线宽，额外translateY(50%)再次移动了半线宽。保留[24个实际Demo红灯](evidence/timeline-end-rails-source-red.json)，移除错误transform，不放宽小于1px标准，并新增horizontal-end原生视觉场景。
 
 **最终源码冻结**：全部15 Demo ×4主题×3宽度 **180/180 exit0**，私有26变体×3宽度 **78/78 exit0**（逐态真实axe/原生状态/焦点与ref/圆点和连线中心；[证据](evidence/timeline-visual-state-source.json)），最终相关主题 **21/21 exit0**。`biome check`和scoped `git diff --check`通过。源码/fixtures/consumer/visual case与helper的全部编辑停止；仅允许后续记录主线程dist-ready后的发布验证结果。Source截图仅在/tmp供诊断审阅，不是已批准基线；正式Apollo捕获、逐张审图、批准复比仍待主线程。
+
+## 正式原生视觉阶段
+
+清洁冻结 `a47d96ec` 的78张正式候选已完成实际逐图审阅并批准；Descriptions/Timeline/Grid通过逐张尺寸与rawRGBA完全相同继承此前已实际看过的审图，Breadcrumb新51张逐张查看。相应当前生产源码自e0062edd未变，最新发布声明/实际Demo模板消费和公共CSS对照另有记录。原1692份PNG与537条已有批准记录全部保留；全局现759/1602批准。逐图观察、SHA、继承关系及边界见[四单元视觉证据](evidence/four-unit-native-visual-acceptance.json)。批准完整性检查通过；Docs与最终全库门禁仍独立记录，不将视觉绿灯视为全库完成。
