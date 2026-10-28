@@ -1,0 +1,211 @@
+{
+  "sourceCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+  "sourceCommitAfter": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+  "worktree": "/tmp/apollo-theme-ui-3f68bd2d",
+  "command": "node tests/visual/apollo.mjs --approved-only --no-build --report-file /tmp/apollo-3f68-approved759-regression.json",
+  "runnerExit": 0,
+  "expected": 759,
+  "resultCount": 759,
+  "passed": 759,
+  "failed": 0,
+  "renderErrors": 0,
+  "pendingUnapproved": 945,
+  "perComponent": {
+    "button": {
+      "total": 39,
+      "passed": 39,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "empty": {
+      "total": 45,
+      "passed": 45,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "grid": {
+      "total": 42,
+      "passed": 42,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "badge": {
+      "total": 42,
+      "passed": 42,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "result": {
+      "total": 39,
+      "passed": 39,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "tag": {
+      "total": 45,
+      "passed": 45,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "skeleton": {
+      "total": 39,
+      "passed": 39,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "statistic": {
+      "total": 36,
+      "passed": 36,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "spin": {
+      "total": 45,
+      "passed": 45,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "typography": {
+      "total": 42,
+      "passed": 42,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "qr-code": {
+      "total": 36,
+      "passed": 36,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "list": {
+      "total": 57,
+      "passed": 57,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "descriptions": {
+      "total": 51,
+      "passed": 51,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "image": {
+      "total": 24,
+      "passed": 24,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "timeline": {
+      "total": 78,
+      "passed": 78,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "breadcrumb": {
+      "total": 51,
+      "passed": 51,
+      "failed": 0,
+      "renderErrors": 0
+    },
+    "avatar": {
+      "total": 48,
+      "passed": 48,
+      "failed": 0,
+      "renderErrors": 0
+    }
+  },
+  "rawRGBA": {
+    "partial": false,
+    "at": "2026-10-28T22:32:30.813Z",
+    "sourceCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+    "reportFile": "/tmp/apollo-3f68-approved759-regression.json",
+    "expected": 759,
+    "resultCount": 759,
+    "pendingUnapproved": 945,
+    "compared": 759,
+    "notCompared": 0,
+    "strictRawEqual": 756,
+    "strictRawDifferent": 3,
+    "changedRgbaPixels": 320,
+    "changedRgbaChannels": 641,
+    "sizeMismatches": 0,
+    "renderErrors": 0,
+    "pixelmatchFailures": 0,
+    "pixelmatchNonzeroCases": 0,
+    "pngDifferentCases": 3,
+    "rgbaDefinition": "sharp.ensureAlpha().raw(), exact 8-bit channel equality; differing sizes separately fail, white alignment only counts changed pixels",
+    "differentIDs": [
+      "list/loading__light__mobile",
+      "list/loading__light__tablet",
+      "list/loading__light__desktop"
+    ]
+  },
+  "rawClassification": {
+    "strictExactToApproved": 756,
+    "existingDifferencesToApproved": 3,
+    "newRawDifferentIDs": [],
+    "newRawDifferenceCount": 0,
+    "historicalThreeComparison": {
+      "at": "2026-10-28T22:25:35.168Z",
+      "sourceCommits": {
+        "previous3214": "3214ee105bd45a9a684c9170f8e3457da162fcc7",
+        "previousA47": "a47d96ec00506fae67c3b8c6b0c77b2f2b054217",
+        "current": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b"
+      },
+      "historicalEvidenceFile": "/tmp/apollo-theme-ui-3f68bd2d/docs/audit/evidence/stylesheet-existing537-regression.json",
+      "historicalEvidenceSHA256": "a261134406cc78f7d6d1925516def26655e8677ab1b9d3bf8b77acd7bced57a9",
+      "compared": 3,
+      "currentExactTo3214": 3,
+      "currentExactToA47": 3,
+      "currentMatchesHistoricalEvidence": 3,
+      "newRawChangesAgainstPreviousFreezes": 0,
+      "baselineUpdated": false
+    }
+  },
+  "fingerprints": {
+    "allUnchanged": true,
+    "sourceCommitUnchanged": true,
+    "gitStatusBefore": "",
+    "gitStatusAfter": "",
+    "groups": {
+      "themeDist": {
+        "count": 21,
+        "before": "7be5402b225d860f6e16356647d9c85458c4a76d3be4a53f120ee6ba8c05961d",
+        "after": "7be5402b225d860f6e16356647d9c85458c4a76d3be4a53f120ee6ba8c05961d",
+        "changed": []
+      },
+      "uiDist": {
+        "count": 2565,
+        "before": "d4ccd2ab465781304834acadd446002e4652edb6451b7db1a1a8b8fa5f4a8329",
+        "after": "d4ccd2ab465781304834acadd446002e4652edb6451b7db1a1a8b8fa5f4a8329",
+        "changed": []
+      },
+      "nativeVue": {
+        "count": 3,
+        "before": "43f506dea0b9e6ba9474b2d500842417b09fae449016323a3380277a56274e88",
+        "after": "43f506dea0b9e6ba9474b2d500842417b09fae449016323a3380277a56274e88",
+        "changed": []
+      },
+      "approvedBaseline": {
+        "count": 760,
+        "before": "996135c25a95288dfe889312cb07791750c1865862451283768c5d29529100a9",
+        "after": "996135c25a95288dfe889312cb07791750c1865862451283768c5d29529100a9",
+        "changed": []
+      }
+    }
+  },
+  "artifactSHA": {
+    "/tmp/apollo-3f68-approved759/pre-existing-list-loading.json": "539a7a3bc44b46567937beee0078e14cf1706355ab632cc7ecaf1fc6c5720cec",
+    "/tmp/apollo-3f68-approved759-regression.json": "74cd5acc3262db541edfba3fff159ad7d4851843c779e2d116ca88bf81f80fb5",
+    "/tmp/apollo-3f68-approved759-regression.log": "4dcedaaaeb5985a9ea7af687f6bacd07fda02e28d3f7638fde04848562e38024",
+    "/tmp/apollo-3f68-approved759/raw-rgba.json": "4d832bcc5a2c8b4279921aafdad8668ad4afee057ff961b781d4c883132468f4",
+    "/tmp/apollo-3f68-approved759/fingerprint-before.json": "c2d7dd87b7e73e96142479cbb8e8112999e8cf8f519201e579f989b9cd394e00",
+    "/tmp/apollo-3f68-approved759/fingerprint-after.json": "8ca76b417ef59e5ae2c769a4095f0f68c03b86e4612fc2ba82cc286e5b9d23e3",
+    "/tmp/apollo-3f68-approved759/fingerprint-comparison.json": "f0ddffd4845d1503a1beebbeed0d424baf03dbaac912073e7744b1b088f33e0f",
+    "/tmp/apollo-3f68-approved759/runner-exit.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "baselineUpdated": false,
+  "packageBuildRun": false,
+  "nativeHarnessBuildRun": false,
+  "readersExited": true
+}

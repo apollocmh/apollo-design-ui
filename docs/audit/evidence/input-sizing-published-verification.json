@@ -1,0 +1,135 @@
+{
+  "passed": true,
+  "verificationCommit": "b9e5c13b3a68b0ffea7385a914cfbc9739373939",
+  "runtimeBuildCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+  "sourceCollectionHash": "f5c8e35479f5a94119a4e930edb1005a2f4142a33720d8c1bbd5c3d3df7c7883",
+  "sourceFiles": 17,
+  "distFiles": 4,
+  "sourceUnchanged": true,
+  "distUnchanged": true,
+  "worktreeClean": true,
+  "packageBuildRun": false,
+  "distWritten": false,
+  "harness": {
+    "tests/consumer/input-types.mjs": {
+      "sha256": "57b9613fadbae75df19efaacf89d84dc6ab1f28a44afe16c2b58340d1095d9a4",
+      "matchesMainHead": false,
+      "mainHead": "b9e5c13b3a68b0ffea7385a914cfbc9739373939",
+      "loadedFrom": "/Users/nanren/Code/apollo-design-ui"
+    },
+    "tests/browser/input-sizing-contracts.mjs": {
+      "sha256": "937b2d0e1f6b32d89cf6bf04d17473c88fbe68ea7eefddc13244da9cd7f48932",
+      "matchesMainHead": false,
+      "mainHead": "b9e5c13b3a68b0ffea7385a914cfbc9739373939",
+      "loadedFrom": "/Users/nanren/Code/apollo-design-ui"
+    }
+  },
+  "consumer": {
+    "evidence": "/tmp/apollo-input-published-b9e5c13b/input-types-static-members.json",
+    "exit": 0,
+    "positiveExit": 0,
+    "expectedNegativeExit": 2,
+    "demos": 24,
+    "positivePublicSfcFiles": 2,
+    "staticNamespaceSfcUsages": 5,
+    "typescriptExpectedErrors": 3,
+    "negativeSfcCases": 9,
+    "sourceAliases": false,
+    "sourceFallback": false,
+    "copiedDeclarations": 866,
+    "resolvedFirstPartyDeclarations": 383,
+    "inputFingerprints": 903,
+    "allInputsUnchanged": true
+  },
+  "browsers": {
+    "all": {
+      "evidence": "/tmp/apollo-input-published-b9e5c13b/browser-all/published-all-summary.json",
+      "exit": 0,
+      "steps": 169,
+      "total": 1075,
+      "passed": 1075,
+      "failed": 0,
+      "errors": [],
+      "warnings": [],
+      "sourceFallback": false,
+      "resolvedDemoModules": [
+        "/private/tmp/apollo-theme-ui-0676826d/packages/ui/src/input/demo/component-token.vue",
+        "/private/tmp/apollo-theme-ui-0676826d/packages/ui/src/input/demo/component-token.vue?vue&type=script&setup=true&lang.ts",
+        "/private/tmp/apollo-theme-ui-0676826d/packages/ui/src/input/demo/component-token.vue?vue&type=style&index=0&lang.css"
+      ],
+      "readersExited": true
+    },
+    "entry": {
+      "evidence": "/tmp/apollo-input-published-b9e5c13b/browser-entry/published-entry-summary.json",
+      "exit": 0,
+      "steps": 169,
+      "total": 1075,
+      "passed": 1075,
+      "failed": 0,
+      "errors": [],
+      "warnings": [],
+      "sourceFallback": false,
+      "resolvedDemoModules": [
+        "/private/tmp/apollo-theme-ui-0676826d/packages/ui/src/input/demo/component-token.vue",
+        "/private/tmp/apollo-theme-ui-0676826d/packages/ui/src/input/demo/component-token.vue?vue&type=script&setup=true&lang.ts",
+        "/private/tmp/apollo-theme-ui-0676826d/packages/ui/src/input/demo/component-token.vue?vue&type=style&index=0&lang.css"
+      ],
+      "readersExited": true
+    }
+  },
+  "commands": [
+    {
+      "command": "INPUT_TYPES_REPO=/tmp/apollo-theme-ui-0676826d INPUT_TYPES_EVIDENCE=/tmp/apollo-input-published-b9e5c13b/input-types-static-members.json node tests/consumer/input-types.mjs",
+      "exit": 0
+    },
+    {
+      "command": "INPUT_SIZING_REPO=/tmp/apollo-theme-ui-0676826d INPUT_SIZING_MODE=published INPUT_SIZING_CSS=all INPUT_SIZING_EVIDENCE_DIR=/tmp/apollo-input-published-b9e5c13b/browser-all node tests/browser/input-sizing-contracts.mjs",
+      "exit": 0
+    },
+    {
+      "command": "INPUT_SIZING_REPO=/tmp/apollo-theme-ui-0676826d INPUT_SIZING_MODE=published INPUT_SIZING_CSS=entry INPUT_SIZING_EVIDENCE_DIR=/tmp/apollo-input-published-b9e5c13b/browser-entry node tests/browser/input-sizing-contracts.mjs",
+      "exit": 0
+    }
+  ],
+  "historicalHarnessFailures": [
+    {
+      "evidence": "/tmp/apollo-input-published-b9e5c13b/input-types.json",
+      "log": "/tmp/apollo-input-published-b9e5c13b/input-types.log",
+      "scriptExit": 1,
+      "reason": "macOS temp expected path was not canonicalized; entry-presence assertion stopped compilation."
+    },
+    {
+      "evidence": "/tmp/apollo-input-published-b9e5c13b/input-types-realpath.json",
+      "log": "/tmp/apollo-input-published-b9e5c13b/input-types-realpath.log",
+      "scriptExit": 1,
+      "compilerExit": 2,
+      "reason": "Test-only tuple required static components to carry standalone withInstall; replaced by actual renderable compatibility and added all five namespace SFC usages."
+    }
+  ],
+  "sourceHashes": {
+    "packages/ui/src/input/Input.ts": "9f9ad663eefdb4f6adf35cba5b5b711e84691100c0d12fcd07216a95b9e35c76",
+    "packages/ui/src/input/TextArea.ts": "bf7832b71a5867a32cb07691f6425619cdce1ed24f38949d9e93011ab7461ebe",
+    "packages/ui/src/input/Password.ts": "fa8f85c287c48e57c741f1889ee2fd9096564a1692ad7903fddbe77496131a22",
+    "packages/ui/src/input/Search.ts": "d91cf44c2c5923c47997cdef97d495e85c9d7ac1aa3c4a573d8c708114d7c439",
+    "packages/ui/src/input/Group.ts": "5d846eabae10a1d18266c2ee1700438d61b00291fcfc028bdb03673396cbd2c2",
+    "packages/ui/src/input/OTP.ts": "c306c9712506e2985655c0e3eb20d15c1868c1174916434f1868d2d0be162519",
+    "packages/ui/src/input/use-input-theme.ts": "39ec8ecc8ed022ef4598189fa5f52400bf6b49ce8bec854de27555fc35c0b8f2",
+    "packages/ui/src/input/style/index.ts": "a9b2671778a38b82fc47b7d4334f3b6a2c8395da0ed352c126c6d37338a8a33c",
+    "packages/ui/src/input/style/token.ts": "f20ab59e8064dc648ae2773fb5dc53137da3c7fd48ed3e6ee949b7a2dcf0ef46",
+    "packages/ui/src/input/style/alias-tokens.ts": "fe69d2397bb6e3e1cbaafb2f02ae3b8a5c6d98ebdf2c056a47c77cab7831adb2",
+    "packages/ui/src/input/engine/Input.ts": "6e32279b60579b2d2c5d504f75abb0d1c29b384bf79f2a6d5b8f223dc2cbaa9f",
+    "packages/ui/src/input/engine/BaseInput.ts": "0b6ccff5f0072aaa88277d898b3e349533121f46f66cadd852fdaf3174c7c8f8",
+    "packages/ui/src/input/engine/TextArea.ts": "9e410d60c3bae7b493f327c0885a4820c09fd3db851e095639385f5fd0d184d8",
+    "packages/ui/src/input/engine/calculate-node-height.ts": "57079eac4889682059632f189622c97e8cb2f43e5edc6cc137ece88e04a60380",
+    "packages/ui/src/input/demo/component-token.vue": "a3f679c732a0a6e3f96dfacb5a2d3810077dc4ed17b3ad69f0880e217a2dee8a",
+    "packages/theme/src/vue.ts": "ed43e5231e8ef63d61ded4b767f7c12ac2c0325d0fb6f1690042467acd5858f5",
+    "packages/ui/src/config-provider/ConfigProvider.ts": "6bf8a1262ca7295cc14714d52866b0e7a3e29f8dc320bf78ede880c178daa17f"
+  },
+  "distHashes": {
+    "packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+    "packages/ui/dist/index.css": "e04056fefaa24d9968ea493c4ffe779bd998e056e18519b97b12d6b83dbd7b75",
+    "packages/ui/dist/input/Input.mjs": "06cd77f28211a9b802bbfff39b0f13ab89b5c1264ef0a0380676dc85abdb5723",
+    "packages/ui/dist/input/style/index.mjs": "0135febf208fd8e7d2dce99fdca6dde03fc9c21149772d049e3d152aac557718"
+  },
+  "limitation": "Input public-consumer acceptance only; no claim that full-library final gates have passed."
+}

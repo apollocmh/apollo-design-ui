@@ -18,3 +18,11 @@
 随后全24路径只读复核发现Flex直接inject与Layout额外provided判据会截断无Provider fallback由空→非空→空的已接受来源状态；已在同组补失败复现并整改。此前1966不覆盖这两处后续源码，必须以补修后的专项及发布验证收口，不能冒称最终全库门禁。ThemeProvider注入开关、target、prefix动态生命周期与injectCssVar=true SSR列为基础包本轮必修待审，未用本窄单元替它们销账。
 
 消费实现里程碑：21条稳定writer已按同一来源规则修正，保留8处undefined/13处空对象返回。Flex统一读取useTheme；Layout的额外presence截断已在627d8a09修复。专项writer112项与六家族fallback启用/更新/清除6项合计118/118、exit 0。生产与测试逐项SHA见 [消费端阶段证据](evidence/theme-source-consumers-stage.json)。浏览器harness与最终发布验收仍开放；主工作树dist没有重建，接下来只在独立工作树构建Theme及UI。
+
+## 窄单元统一验收收口
+
+提供链、最近数据来源及24条UI Alias消费路径已完成本单元验收。最终ad70dd7c的73文件1978回归、118来源/fallback专项、196发布浏览器、42真实Node SSR、根严格零诊断及UI严格L7 11项通过。根严格检查先因缺Docs生成清单未完成；按正常内容管线生成后原命令exit 0，没有忽略诊断。新鲜Theme→UI构建3f68bd2d与发布验证工作树的实际发布输入一致，14产物树在读取前后保持。
+
+既有759视觉原比较门禁全部PASS，756张与批准图raw精确；3张List/loading只含此前112/104/104个圆点像素差异，均与3214ee10/a47d96ec历史实物及既存证据raw精确，本次新增视觉变化为0，未改批准基线。核心提交、真实命令及边界见 [统一验收证据](evidence/theme-source-presence-acceptance.json)，发布浏览器与Node回执另存theme-source-flex-published.json。
+
+本结论只关闭来源窄单元。完整Theme基础包、ConfigProvider组件及4类注入生命周期/上下文可写性仍待本轮相应完整单元核对；Space/Flex/Alert/Layout的正式原生视觉与Docs交付继续，不以本报告提前增加17/72计数。全库最终同一提交门禁仍未执行。

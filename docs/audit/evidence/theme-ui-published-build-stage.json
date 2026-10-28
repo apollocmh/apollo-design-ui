@@ -1,0 +1,85 @@
+{
+  "runtimeBuildCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+  "verificationCommit": "b9e5c13b3a68b0ffea7385a914cfbc9739373939",
+  "allTrackedPackageFilesIdenticalBetweenCommits": true,
+  "themeBuildExitCode": 0,
+  "uiBuildExitCode": 0,
+  "nativeBundleBuildExitCode": 0,
+  "distDonor": "/tmp/apollo-theme-ui-3f68bd2d",
+  "verificationWorktree": "/tmp/apollo-theme-ui-0676826d",
+  "all14DistTreesByteIdentical": true,
+  "dist": {
+    "a11y": {
+      "files": 10,
+      "bytes": 55908,
+      "sha256": "1dee729ae718539c33e09af42fe55371a91044c6ba37fdc7881ad7f1d71e1b80"
+    },
+    "form-core": {
+      "files": 25,
+      "bytes": 300259,
+      "sha256": "8d793ac52111b0152a06f14877b729efa8cfe5e5b62405e822cfe9a0e5774434"
+    },
+    "icons": {
+      "files": 859,
+      "bytes": 2903858,
+      "sha256": "f915527f41a123f1b5955b7f23537eb5a22bef580ec00676f44b446de8b18d3d"
+    },
+    "locale": {
+      "files": 80,
+      "bytes": 885506,
+      "sha256": "0fd0115339a984df13af6ee1759cdef55e21cd99d290a10a15dd300e442e5ed8"
+    },
+    "motion": {
+      "files": 12,
+      "bytes": 101505,
+      "sha256": "a96d89086e7ac46b235336e62b5bfe7990800332db2a605b24b3c099f4927bfa"
+    },
+    "overlay": {
+      "files": 7,
+      "bytes": 41852,
+      "sha256": "e20ac718d26d1989c41589c393e82d8e046474970a345cc8785f0e10d48195f6"
+    },
+    "picker": {
+      "files": 26,
+      "bytes": 489873,
+      "sha256": "5c6a1f693032c6b7f4e07ba9802a8cb75a7c118a603e3864d26568fb12f894a0"
+    },
+    "portal": {
+      "files": 11,
+      "bytes": 51605,
+      "sha256": "bd89fad890914b979bc3158654611628ac736c59fa38cdd34882a0f49566f17e"
+    },
+    "position": {
+      "files": 9,
+      "bytes": 66549,
+      "sha256": "8331d124e57e7e15abdd61e285366061e034ae6db3f32064eb0ccb1bff0176df"
+    },
+    "test-utils": {
+      "files": 15,
+      "bytes": 154682,
+      "sha256": "997f04ec744627aa099ce1f6aedccafd48b8131f3aff1f1dadda9a2e31d634b0"
+    },
+    "theme": {
+      "files": 21,
+      "bytes": 146459,
+      "sha256": "e52a637c6bfefd84ddf1c84dbf6d7667d42445c8ae7f96b0030b9040d7e665e3"
+    },
+    "ui": {
+      "files": 2565,
+      "bytes": 15587215,
+      "sha256": "f03b10da162df752c00b69c56a14fff9a5a4af681fd52351c3e63811d70a0442"
+    },
+    "utils": {
+      "files": 43,
+      "bytes": 230497,
+      "sha256": "2f7efe5b6f57d2b981d3fdefba5165d0a4155a6cbd97b9a996c4965f0b5e1389"
+    },
+    "virtual-list": {
+      "files": 11,
+      "bytes": 81898,
+      "sha256": "55f8e884fe8257d2af67417d75a1b26c8817eda776fa41bfcbfc86e67f66d03a"
+    }
+  },
+  "verificationStarted": true,
+  "note": "Prepared worktree advanced from 0676826d to b9e5c13b before any verification readers. All packages files and all14 frozen dist trees remain identical to runtime build 3f68bd2d."
+}

@@ -1,0 +1,213 @@
+{
+  "worktree": "/private/tmp/apollo-theme-ui-0676826d",
+  "verificationCommit": "b9e5c13b3a68b0ffea7385a914cfbc9739373939",
+  "runtimeBuildCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+  "buildProvenance": "/tmp/apollo-067-published-provenance.json",
+  "allTrackedPackagesIdenticalToRuntimeBuild": true,
+  "sourceFreeze": "/tmp/apollo-layout-fallback-source-freeze.json",
+  "sourceFreezeDifferences": {},
+  "results": {
+    "types": {
+      "passed": true,
+      "exitCode": 0,
+      "evidence": "/tmp/apollo-layout-b9e5-published-types.json",
+      "evidenceSHA256": "e71a68db7bdf377d0a2da55eeade1a9d5bdc973f1e5e118ba7838dc8493580e6",
+      "checks": null,
+      "source": false,
+      "readersExited": true,
+      "command": "LAYOUT_SOURCE=0 LAYOUT_TYPES_EVIDENCE=/tmp/apollo-layout-b9e5-published-types.json node tests/consumer/layout-types.mjs"
+    },
+    "contracts": {
+      "passed": true,
+      "exitCode": 0,
+      "evidence": "/tmp/apollo-layout-b9e5-published-contracts.json",
+      "evidenceSHA256": "c98268da9cec7c1204d2fcbac37016a639de9ad76caa4a822895522d6ca310ed",
+      "checks": 35,
+      "source": false,
+      "readersExited": true,
+      "command": "LAYOUT_SOURCE=0 LAYOUT_EVIDENCE=/tmp/apollo-layout-b9e5-published-contracts.json node tests/browser/layout-contracts.mjs"
+    },
+    "demos": {
+      "passed": true,
+      "exitCode": 0,
+      "evidence": "/tmp/apollo-layout-b9e5-published-demos.json",
+      "evidenceSHA256": "f63c5ce836d4d138827d5eba6de4df24aa301926b2ff2a613894e0449ad5d9b4",
+      "checks": 47,
+      "source": false,
+      "readersExited": true,
+      "command": "LAYOUT_SOURCE=0 LAYOUT_DEMOS_EVIDENCE=/tmp/apollo-layout-b9e5-published-demos.json node tests/browser/layout-demos.mjs"
+    },
+    "visual-states": {
+      "passed": true,
+      "exitCode": 0,
+      "evidence": "/tmp/apollo-layout-b9e5-published-visual-states.json",
+      "evidenceSHA256": "d9c2167e5830b67476cd3280a341409cd690b8024982fa65495f4f93872c0c77",
+      "checks": 51,
+      "source": false,
+      "readersExited": true,
+      "command": "LAYOUT_SOURCE=0 LAYOUT_VISUAL_EVIDENCE=/tmp/apollo-layout-b9e5-published-visual-states.json node tests/browser/layout-visual-states.mjs"
+    }
+  },
+  "allPassed": true,
+  "runtimeSourceImports": [],
+  "allRuntimePackageModulesFromVerificationWT": true,
+  "beforeEvidence": "/tmp/apollo-layout-b9e5-published-before.json",
+  "distBefore": {
+    "a11y": {
+      "files": 10,
+      "bytes": 55908,
+      "sha256": "9cba759e431634c70f595167088f6d978519363c1933ecb96c5c6eb3d8070f46"
+    },
+    "form-core": {
+      "files": 25,
+      "bytes": 300259,
+      "sha256": "90cae6da7c37b72c567375098f3c37194641dbbe11817cb50babac83ba19d9d2"
+    },
+    "icons": {
+      "files": 859,
+      "bytes": 2903858,
+      "sha256": "d1ecb8f0edfe7b07c893561eac51fbc472f6fd164e2f123937d77ad121b6d221"
+    },
+    "locale": {
+      "files": 80,
+      "bytes": 885506,
+      "sha256": "33c92d87987d71838d7fc5ac5bf2eded75e5f69e9e888ea0b96435b03ebf87d2"
+    },
+    "motion": {
+      "files": 12,
+      "bytes": 101505,
+      "sha256": "cf65491657541a94055fe7e4f0dd8c457210458c7a4ac2d2974f4cf204ab6b3f"
+    },
+    "overlay": {
+      "files": 7,
+      "bytes": 41852,
+      "sha256": "dce6d9ff90fa5e3a73c337fb60bfeea433dbd9661e79b793deea3afbb0b35a80"
+    },
+    "picker": {
+      "files": 26,
+      "bytes": 489873,
+      "sha256": "c00378856f9aead082461e09fc513e173e2448d4addd6841c53375104df9183c"
+    },
+    "portal": {
+      "files": 11,
+      "bytes": 51605,
+      "sha256": "ca9b32c650a3086f56c7c16048d6c16ccf436a168d8158c963fe080caf9cf620"
+    },
+    "position": {
+      "files": 9,
+      "bytes": 66549,
+      "sha256": "41fa3eef66481878e99e2d4c9d9b6f036d6c8c845249cdc092aba9229340ac50"
+    },
+    "test-utils": {
+      "files": 15,
+      "bytes": 154682,
+      "sha256": "ecfe6f0b56b0f6a9dcc6d41a428073ddb024ac232045e5186cf6b1f8df7c14d2"
+    },
+    "theme": {
+      "files": 21,
+      "bytes": 146459,
+      "sha256": "61ba72f14c91a486ff3d25fe0de548b2b16de6cc51bb1dbf9b5a106f8efb99c2"
+    },
+    "ui": {
+      "files": 2565,
+      "bytes": 15587215,
+      "sha256": "402437bdda6c34c8fbf662ee56b990037ebc9c844ac133ebb871049871720017"
+    },
+    "utils": {
+      "files": 43,
+      "bytes": 230497,
+      "sha256": "a504d5b20122732fc88b17d36a1dbc86daa00a3409f525b2012fde2a0813f079"
+    },
+    "virtual-list": {
+      "files": 11,
+      "bytes": 81898,
+      "sha256": "071741459fb9cf80ceba2fe76be17f240cc9605ae9a1c53010bc0b1d0ef8dc88"
+    }
+  },
+  "distAfter": {
+    "a11y": {
+      "files": 10,
+      "bytes": 55908,
+      "sha256": "9cba759e431634c70f595167088f6d978519363c1933ecb96c5c6eb3d8070f46"
+    },
+    "form-core": {
+      "files": 25,
+      "bytes": 300259,
+      "sha256": "90cae6da7c37b72c567375098f3c37194641dbbe11817cb50babac83ba19d9d2"
+    },
+    "icons": {
+      "files": 859,
+      "bytes": 2903858,
+      "sha256": "d1ecb8f0edfe7b07c893561eac51fbc472f6fd164e2f123937d77ad121b6d221"
+    },
+    "locale": {
+      "files": 80,
+      "bytes": 885506,
+      "sha256": "33c92d87987d71838d7fc5ac5bf2eded75e5f69e9e888ea0b96435b03ebf87d2"
+    },
+    "motion": {
+      "files": 12,
+      "bytes": 101505,
+      "sha256": "cf65491657541a94055fe7e4f0dd8c457210458c7a4ac2d2974f4cf204ab6b3f"
+    },
+    "overlay": {
+      "files": 7,
+      "bytes": 41852,
+      "sha256": "dce6d9ff90fa5e3a73c337fb60bfeea433dbd9661e79b793deea3afbb0b35a80"
+    },
+    "picker": {
+      "files": 26,
+      "bytes": 489873,
+      "sha256": "c00378856f9aead082461e09fc513e173e2448d4addd6841c53375104df9183c"
+    },
+    "portal": {
+      "files": 11,
+      "bytes": 51605,
+      "sha256": "ca9b32c650a3086f56c7c16048d6c16ccf436a168d8158c963fe080caf9cf620"
+    },
+    "position": {
+      "files": 9,
+      "bytes": 66549,
+      "sha256": "41fa3eef66481878e99e2d4c9d9b6f036d6c8c845249cdc092aba9229340ac50"
+    },
+    "test-utils": {
+      "files": 15,
+      "bytes": 154682,
+      "sha256": "ecfe6f0b56b0f6a9dcc6d41a428073ddb024ac232045e5186cf6b1f8df7c14d2"
+    },
+    "theme": {
+      "files": 21,
+      "bytes": 146459,
+      "sha256": "61ba72f14c91a486ff3d25fe0de548b2b16de6cc51bb1dbf9b5a106f8efb99c2"
+    },
+    "ui": {
+      "files": 2565,
+      "bytes": 15587215,
+      "sha256": "402437bdda6c34c8fbf662ee56b990037ebc9c844ac133ebb871049871720017"
+    },
+    "utils": {
+      "files": 43,
+      "bytes": 230497,
+      "sha256": "a504d5b20122732fc88b17d36a1dbc86daa00a3409f525b2012fde2a0813f079"
+    },
+    "virtual-list": {
+      "files": 11,
+      "bytes": 81898,
+      "sha256": "071741459fb9cf80ceba2fe76be17f240cc9605ae9a1c53010bc0b1d0ef8dc88"
+    }
+  },
+  "all14DistTreesUnchanged": true,
+  "distFiles": 3694,
+  "all14ByteIdenticalToBuildDonorBeforeReaders": true,
+  "trackedFilesUnchanged": true,
+  "gitStatusAfter": "",
+  "readersExited": true,
+  "packageBuilds": false,
+  "sourceEdits": false,
+  "distEdits": false,
+  "registryEdits": false,
+  "formalVisualCapture": "Root runs separately from byte-identical C0 worktree; no baseline accepted here",
+  "node": "v22.22.2",
+  "browser": "150.0.7871.125",
+  "scope": "Layout / Header / Footer / Content / Sider; frozen published JS/declarations/CSS"
+}

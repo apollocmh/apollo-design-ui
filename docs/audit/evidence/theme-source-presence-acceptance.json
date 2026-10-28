@@ -1,0 +1,77 @@
+{
+  "scope": "Theme source identity, nearest Provider/config inheritance and all24 UI Alias consumption paths only",
+  "status": "accepted-scoped-unit",
+  "runtimeBuildCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+  "sourceAndRuntimeVerificationCommits": [
+    "5c527297",
+    "134ddbf7",
+    "627d8a09",
+    "3f68bd2d",
+    "b9e5c13b",
+    "ad70dd7c"
+  ],
+  "inventory": "theme-source-inventory.json",
+  "verification": {
+    "finalRelated": {
+      "commit": "ad70dd7c",
+      "files": 73,
+      "passed": 1978,
+      "failed": 0,
+      "exitCode": 0,
+      "log": "/tmp/apollo-ad70-related-green.log",
+      "json": "/tmp/apollo-ad70-related-green.json"
+    },
+    "consumerFallbackUnit": {
+      "passed": 118,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "publishedWritersBrowser": {
+      "passed": 196,
+      "failed": 0,
+      "packageSourceModules": 0,
+      "exitCode": 0
+    },
+    "publishedNodeSSR": {
+      "passed": 42,
+      "failed": 0,
+      "browserGlobals": false,
+      "exitCode": 0
+    },
+    "rootStrict": {
+      "commit": "ad70dd7c",
+      "exitCode": 0,
+      "diagnostics": 0,
+      "prerequisite": "Docs content manifest generated first",
+      "log": "/tmp/apollo-ad70-root-strict-ready.log"
+    },
+    "strictUIL7": {
+      "commit": "b9e5c13b",
+      "passed": 11,
+      "failed": 0,
+      "pending": 0,
+      "exitCode": 0
+    },
+    "approvedVisualRegression": {
+      "passed": 759,
+      "renderErrors": 0,
+      "rawExactToApproved": 756,
+      "preExistingListLoadingCases": 3,
+      "newVisualChanges": 0,
+      "exitCode": 0
+    }
+  },
+  "notClaimed": [
+    "Complete Theme foundation package audit",
+    "Complete ConfigProvider component audit",
+    "New Space/Flex/Alert/Layout native baseline acceptance or final Docs delivery",
+    "Final whole-library same-commit gates"
+  ],
+  "remainingMandatoryFoundationReview": [
+    "ThemeProvider injectCssVar enable/disable lifecycle",
+    "Dynamic CSS variable target ownership and cleanup",
+    "Dynamic cssVarPrefix cleanup and update",
+    "injectCssVar=true without a DOM during SSR",
+    "ThemeContext config writability across provider-created contexts: reproduce current public contract before choosing the foundation fix"
+  ]
+}

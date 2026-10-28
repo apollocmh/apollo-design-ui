@@ -1,0 +1,69 @@
+{
+  "worktree": "/tmp/apollo-theme-ui-0676826d",
+  "head": "b9e5c13b3a68b0ffea7385a914cfbc9739373939",
+  "runtimeBuildCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+  "provenance": "/tmp/apollo-067-published-provenance.json",
+  "runtimeSourceMatchesBuild": true,
+  "runs": [
+    {
+      "name": "theme-writers-published-browser",
+      "command": "THEME_WRITERS_MODE=published THEME_WRITERS_REPO=/tmp/apollo-theme-ui-0676826d THEME_WRITERS_EVIDENCE=/tmp/apollo-b9e5-theme-writers-published-browser.json node tests/browser/theme-source-writers.mjs",
+      "exitCode": 0,
+      "evidence": "/tmp/apollo-b9e5-theme-writers-published-browser.json",
+      "evidenceSha256": "732b6b0a401e6260da5de599073ae907c42d56dbc9bcf900949c25802bec1b56",
+      "total": 196,
+      "passed": 196,
+      "readersExited": true
+    },
+    {
+      "name": "theme-writers-published-ssr",
+      "command": "THEME_WRITERS_MODE=published THEME_WRITERS_REPO=/tmp/apollo-theme-ui-0676826d THEME_WRITERS_SSR_EVIDENCE=/tmp/apollo-b9e5-theme-writers-published-ssr.json node tests/browser/theme-source-writers-ssr.mjs",
+      "exitCode": 0,
+      "evidence": "/tmp/apollo-b9e5-theme-writers-published-ssr.json",
+      "evidenceSha256": "23fd5d1a7c2d108c12669289bcddfd4f70b78296f788a4029a9eb4e672941d3a",
+      "total": 42,
+      "passed": 42,
+      "readersExited": true
+    },
+    {
+      "name": "flex-published-types",
+      "command": "FLEX_TYPES_EVIDENCE=/tmp/apollo-b9e5-flex-published-types.json node tests/consumer/flex-types.mjs",
+      "exitCode": 0,
+      "evidence": "/tmp/apollo-b9e5-flex-published-types.json",
+      "evidenceSha256": "9b76c40472f5fc42d69f1488b3e1abc3c1324911b0f750dec73c234e0f39386c",
+      "total": null,
+      "passed": true,
+      "readersExited": true
+    },
+    {
+      "name": "flex-published-browser",
+      "command": "FLEX_EVIDENCE=/tmp/apollo-b9e5-flex-published-browser.json node tests/browser/flex-contracts.mjs",
+      "exitCode": 0,
+      "evidence": "/tmp/apollo-b9e5-flex-published-browser.json",
+      "evidenceSha256": "17e8c572a821d5f91a698ef1a758531cec2e5b421498d9e165c0e4ad67bfb87c",
+      "total": 60,
+      "passed": 60,
+      "readersExited": true
+    },
+    {
+      "name": "flex-published-ssr",
+      "command": "FLEX_SSR_EVIDENCE=/tmp/apollo-b9e5-flex-published-ssr.json node tests/consumer/flex-ssr.mjs",
+      "exitCode": 0,
+      "evidence": "/tmp/apollo-b9e5-flex-published-ssr.json",
+      "evidenceSha256": "24eb8ad0bca10b981f2720b0b9ef9d3321d3eeba9c5d22412089f5036aeb6502",
+      "total": 4,
+      "passed": 4,
+      "readersExited": true
+    }
+  ],
+  "distPackages": 14,
+  "distFiles": 3694,
+  "distBeforeSha256": "34805ff9c3792eb4383e1dd2e57ae8eb269ea4790a804bb2a54fd7b59d4cea56",
+  "distAfterSha256": "34805ff9c3792eb4383e1dd2e57ae8eb269ea4790a804bb2a54fd7b59d4cea56",
+  "distUnchanged": true,
+  "sourceHarnessShaUnchanged": true,
+  "gitStatusAfter": "",
+  "packageBuilds": false,
+  "productionEdits": false,
+  "readersExited": true
+}
