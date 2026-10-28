@@ -18,7 +18,14 @@ try {
     false,
     'Test fixtures must not enter published declarations',
   );
-  fs.symlinkSync(path.join(root, 'node_modules'), path.join(temp, 'node_modules'), 'dir');
+  fs.mkdirSync(path.join(temp, 'node_modules/@apollo-design'), { recursive: true });
+  fs.symlinkSync(path.join(root, 'node_modules/vue'), path.join(temp, 'node_modules/vue'), 'dir');
+  for (const name of ['ui', 'theme', 'icons'])
+    fs.symlinkSync(
+      path.join(root, `packages/${name}`),
+      path.join(temp, `node_modules/@apollo-design/${name}`),
+      'dir',
+    );
   fs.copyFileSync(
     path.join(root, 'tests/browser/fixtures/TimelineNative.vue'),
     path.join(temp, 'Consumer.vue'),

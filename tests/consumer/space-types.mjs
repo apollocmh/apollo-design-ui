@@ -15,7 +15,14 @@ try {
       fs.existsSync(path.join(root, 'packages/ui/dist/space/index.d.ts')),
       'Build UI before checking published declarations',
     );
-  fs.symlinkSync(path.join(root, 'node_modules'), path.join(temp, 'node_modules'), 'dir');
+  fs.mkdirSync(path.join(temp, 'node_modules/@apollo-design'), { recursive: true });
+  fs.symlinkSync(path.join(root, 'node_modules/vue'), path.join(temp, 'node_modules/vue'), 'dir');
+  for (const name of ['ui', 'theme', 'icons'])
+    fs.symlinkSync(
+      path.join(root, `packages/${name}`),
+      path.join(temp, `node_modules/@apollo-design/${name}`),
+      'dir',
+    );
   const demos = path.join(root, 'packages/ui/src/space/demo');
   for (const name of fs.readdirSync(demos).filter((name) => name.endsWith('.vue'))) {
     const content = fs.readFileSync(path.join(demos, name), 'utf8');

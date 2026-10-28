@@ -22,7 +22,12 @@ export function breadcrumbAliases(repo, source) {
         find: new RegExp(`^@apollo-design/${name}$`),
         replacement: path.join(repo, `packages/${name}/src/index.ts`),
       }))
-    : [];
+    : [
+        {
+          find: /^@apollo-design\/icons$/,
+          replacement: path.join(repo, 'packages/icons/dist/index.mjs'),
+        },
+      ];
 }
 
 export function breadcrumbStyleMode(source) {
@@ -44,7 +49,7 @@ export function breadcrumbStyleMode(source) {
         .filter((entry) => entry.type === 'asset' && entry.fileName.endsWith('.css'))
         .map((entry) => entry.fileName);
       evidence.publishedCSS = modules.filter((id) =>
-        /\/packages\/(theme\/dist\/tokens|ui\/dist\/style)\.css(?:$|\?)/.test(id),
+        /\/packages\/(theme\/dist\/tokens|ui\/dist\/index)\.css(?:$|\?)/.test(id),
       );
       evidence.runtimeSources = modules.filter(
         (id) => /\/packages\/[^/]+\/src\//.test(id) && !/\/breadcrumb\/demo\//.test(id),
