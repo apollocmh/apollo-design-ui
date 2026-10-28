@@ -11,14 +11,25 @@ order: 0
 
 | 范围 | 当前结果 |
 | --- | --- |
-| 72个组件主单元 | 12个已完整验收并交付；Badge第13个已完成本地统一验收，发布回执随交付追记 |
-| 当前并行 | Descriptions、Breadcrumb、Timeline，分别盘点、成组复现和修复 |
-| 接续队列 | Space/Compact、Grid/Row/Col；空位释放后接续 |
+| 72个组件主单元 | 13个已完整验收并交付；Badge部署40701370080，线上32项通过 |
+| 当前并行 | Descriptions、Breadcrumb、Timeline、Space、Grid五路；源码已提交，统一验收发布产物和正式视觉 |
 | 其余组件 | 54个尚待按本轮完整标准收口；已有局部修复继续保留 |
 | 13个基础包 | 已有共享链路专项证据；逐包当前复核继续，不能把消费场景通过当作整包完成 |
 | 最终验收 | 所有整改单元结束后，对最终同一提交执行全量门禁 |
 
 [完整72项工作清单、证据与剩余边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md)。组件复杂度不同，上述数量不代表工时百分比。
+
+## 2026-10-29：五路修复已提交，正在验收发布产物
+
+Descriptions 的键盘帮助、Breadcrumb 的真实菜单导航、Timeline 横向长文与连线、Grid 响应式配置、Space/Compact 的动态内容与实际子组件已成组修复。共享 Menu 原生操作、断点观察器和 Select 紧凑尺寸分别提交，迁移说明与 Demo 同步；不保留错误的 React 回调用法。
+
+当前五路正验证冻结版本的发布 JS、公开 CSS、声明、实际 Demo 和 SSR/水合。原生视觉新增297张待审，当前537/1602张已批准、1065张待验收；五组仍处于统一验收阶段，完整交付计数保持13/72。各自运行结果和剩余边界随验收补记。
+
+- [Descriptions 当前用法与示例](/components/descriptions)
+- [Breadcrumb 原生内容与菜单](/components/breadcrumb)
+- [Timeline 横向与长内容](/components/timeline)
+- [Grid 当前配置与响应式布局](/components/grid)
+- [Space / Compact / Addon 真实组合](/components/space)
 
 ## 2026-10-28：Badge / Ribbon 当前实现、样式与42张视觉已统一验收
 
@@ -168,14 +179,19 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 
 | Scope | Current evidence |
 | --- | --- |
-|72 component units|12 fully accepted and delivered;Badge is the13th locally accepted unit, with publication receipts recorded at delivery|
-|Parallel work|Descriptions,Breadcrumb andTimeline have independent inventories, grouped reproductions and fixes|
-|Queued|Space/Compact andGrid/Row/Col continue when a slot is available|
+|72 component units|13 fully accepted and delivered;Badge deployment40701370080 has32 live-browser checks passing|
+|Parallel work|Descriptions,Breadcrumb,Timeline,Space andGrid have committed source milestones;published artifacts and reviewed visuals are being accepted|
 |Other components|54 still await complete current-source acceptance;earlier partial fixes remain valid|
 |13 foundation packages|Existing shared-chain evidence remains;current per-package review continues|
 |Final gate|Run whole-library gates on the same final commit after all units close|
 
 [All72 units, evidence and remaining boundaries](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md). These counts are not weighted work percentages.
+
+## Five source milestones committed; published acceptance in progress
+
+Grouped fixes cover keyboard help in Descriptions, native Breadcrumb navigation, horizontal Timeline content and rail alignment, responsive Grid configuration, and current Space/Compact content and real consumers. Menu native actions, Provider breakpoint ownership and Select compact sizing have separate commits, with migration notes and demos.
+
+Five tasks now verify the frozen published JS, public CSS, declarations, real demos and SSR/hydration. Another297 native visual cases await review:537 of1602 are currently approved, with1065 pending. Complete delivery remains13 of72 units until unified acceptance closes.
 
 ## Badge / Ribbon implementation, styles and42 Apollo visuals accepted
 

@@ -661,3 +661,9 @@ Typography最终验收提交22186737已上线；workflow40670124684构建/Pages�
 Descriptions cabc97c8、Timeline/Steps 48ca2313、Breadcrumb adec7ade 已按各自完整清单成组实施；Overlay延迟失效89afa186同步修复。合并源码73文件964运行时、10文件122类型、根严格、Descriptions源码消费类型通过。Descriptions真实Chrome62与水合10通过；Timeline源码浏览器17通过；Breadcrumb14项13通过/1失败，零浏览器错误。唯一真实红灯是共享Menu聚焦href项后Enter只关闭、不导航，属于本轮必修，保留复现，不归后续优化。
 
 三单元发布UI/声明消费、完整Demo主题矩阵、Docs/正式Apollo视觉及全库最终同提交门禁尚未执行；不能按源码绿灯标为全部完成。源码类型的两处集成红灯已修正，合并122类型通过。接续见[重启保存点](audit/2026-10-28-restart-handoff.md)与[结构化证据](audit/evidence/parallel-source-checkpoint.json)。
+
+### 2026-10-29 · 五组源码里程碑与发布产物验收
+
+Descriptions5ab9b3c4、Breadcrumb40ec3962、Timeline3ce8d1d2、Grid04be6282与Spacee0062edd已分别提交。修复覆盖当前原生内容/身份、Provider/Token、真实Demo与对比度、横向Timeline自然布局、Grid响应式字段和Space紧凑上下文。共享Menu原生操作e000152f已修复原Enter导航红灯（576相关运行时、11真实浏览器）；响应式观察器1588dd11隔离当前Provider断点并清理订阅（717相关消费回归），Select356161b4接入当前Compact尺寸与背景。各单元的完整清单、红绿证据与迁移说明分别保留；不同测试集合有交集，不累计为全库门禁。
+
+根严格检查及冻结e0062edd的UI/Overlay构建通过。五路发布JS/公开CSS、声明消费、真实Demo和SSR/水合验证并行执行中；正式原生视觉297张待审，原有537张批准不变，当前计划1602张、1065待验收。完整交付仍为13/72，五组未计入完成。Docs与最终同提交全库门禁尚待对应阶段执行；[实时完整清单](audit/2026-10-28-global-audit-status.md)持续记录边界。

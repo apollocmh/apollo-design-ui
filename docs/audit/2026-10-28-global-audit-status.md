@@ -1,16 +1,15 @@
 # 全库当前审计交付清单
 
-2026-10-28快照。按当前源码完整盘点、成组修复和统一验收记录；Registry历史completed、局部绿灯及视觉图片数量均不代替本轮完整收口。组件主单元按registry/components.json的72项计，关联子组件随所属单元验收。
+2026-10-29当前状态。按当前源码完整盘点、成组修复和统一验收记录；Registry历史completed、局部绿灯及视觉图片数量均不代替本轮完整收口。组件主单元按registry/components.json的72项计，关联子组件随所属单元验收。
 
 | 范围 | 数量 | 状态 |
 | --- | --- | --- |
 | 已完整验收并交付的组件 | 13 | 下表列明；保留各自提交、运行和发布证据 |
-| Descriptions / Breadcrumb / Timeline | 3 | 三路源码里程碑已提交；完整单元统一验收继续 |
-| Space/Compact、Grid/Row/Col | 2 | 已排队，空位自动接续 |
+| Descriptions / Breadcrumb / Timeline / Space / Grid | 5 | 全部源码里程碑已提交，发布JS/CSS/声明、正式视觉与Docs统一验收中 |
 | 其余组件 | 54 | 尚未按本轮完整清单收口，既有局部修复保留 |
 | 基础包 | 13 | 已有实现和共享链路专项证据；本轮逐包复核另列，不将旧完成状态当作当前全包验收 |
 
-总组件72=13已交付+3并行+2排队+54其他待审。用户已取消日期约束，按实际验收更新；数量不折算工时百分比。
+总组件72=13已交付+5统一验收中+54其他待审。用户已取消日期约束，按实际验收更新；数量不折算工时百分比。
 
 ## 当前组件单元
 
@@ -44,7 +43,7 @@
 | Flex | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | FloatButton | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Form | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
-| Grid | 排队 | 既有局部整改保留；本轮完整证据待补 |
+| Grid | 源码实现已提交；统一验收中 | [完整清单](2026-10-28-grid-contract-audit.md) |
 | Image | 已完整验收并交付 | [2026-10-25-image-contract-audit.md](2026-10-25-image-contract-audit.md) |
 | Input | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | InputNumber | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
@@ -69,7 +68,7 @@
 | Select | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Skeleton | 已完整验收并交付 | [2026-10-27-skeleton-contract-audit.md](2026-10-27-skeleton-contract-audit.md) |
 | Slider | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
-| Space | 排队 | 既有局部整改保留；本轮完整证据待补 |
+| Space | 源码实现已提交；统一验收中 | [完整清单](2026-10-28-space-contract-audit.md) |
 | Spin | 已完整验收并交付 | [2026-10-26-spin-contract-audit.md](2026-10-26-spin-contract-audit.md) |
 | Splitter | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Statistic | 已完整验收并交付 | [2026-10-27-statistic-contract-audit.md](2026-10-27-statistic-contract-audit.md) |
@@ -115,4 +114,6 @@
 
 Badge最终交付：47b98296 / Docs部署40701370080，线上32通过；此后完整交付组件数为13。
 
-三路源码保存点：Descriptions cabc97c8、Timeline 48ca2313、Breadcrumb adec7ade；全局合并964运行时/122类型/严格通过。Menu Enter导航仍红，产物/Docs/自有视觉待验收，已交付完整单元仍为13。接续见2026-10-28-restart-handoff.md。
+早期三路源码保存点与重启交接保留于2026-10-28-restart-handoff.md。后续里程碑：Menu e000152f（原生Enter导航已修，576相关运行时/11源码浏览器）、共享响应式观察器1588dd11（717相关消费者）、Select窄修356161b4（Compact尺寸与背景），Descriptions5ab9b3c4、Breadcrumb40ec3962、Timeline3ce8d1d2、Grid04be6282、Spacee0062edd。每组完整清单记录自己的红绿证据与未验证边界，相关测试存在交集，不相加冒充全库数量。
+
+冻结e0062edd的UI与Overlay构建已通过，五组正在并行验证真实发布JS、公开CSS、声明、Demo与SSR/水合；正式原生视觉矩阵新增297张待审，当前537/1602已批准、1065待验收。根严格检查通过。尚未将五个源码单元计入完整交付；Docs与最终全库门禁待相应阶段执行。

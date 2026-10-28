@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T14:37:59.751Z",
+  "generatedAt": "2026-10-28T15:59:49.548Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 88,
-      "ready": 4
+      "done": 86,
+      "ready": 6
     },
     "byKind": {
       "foundation": 13,
@@ -35,12 +35,14 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 4,
+    "readyCount": 6,
     "cannotFinishCount": 0,
-    "currentBatchSize": 4,
+    "currentBatchSize": 6,
     "currentBatchIds": [
       "COMP:descriptions",
       "X:docs-site",
+      "COMP:space",
+      "COMP:grid",
       "COMP:breadcrumb",
       "COMP:timeline"
     ],
@@ -307,8 +309,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 6,
-      "doneCount": 6,
-      "readyCount": 0,
+      "doneCount": 4,
+      "readyCount": 2,
       "itemIds": [
         "COMP:divider",
         "COMP:flex",
@@ -686,8 +688,8 @@
         "25 个组件 11 维度 completed"
       ],
       "itemCount": 26,
-      "doneCount": 24,
-      "readyCount": 2,
+      "doneCount": 22,
+      "readyCount": 4,
       "blockedCount": 0,
       "waitingCount": 0,
       "complete": false,
@@ -1426,16 +1428,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 4,
-      "why": "button 的阻塞性依赖；同时是 Compact 间距语义的承载者，被大量表单组件复用。\n2026-10-27 Button关联修复：Compact默认槽从computed缓存改为当前render求值，保留六Props、Provider/首末项/原生attrs/nativeElement。真实Search loading、条件子级与Button焦点/身份复现已验证；关联四层统一运行中，未把历史视觉或全组件状态升级为本轮验收。见 docs/audit/2026-10-27-button-contract-audit.md。 当前最终Space/关联回归336项及实际实例44项类型通过，未提升历史全组件视觉状态。",
+      "why": "2026-10-28完整盘点与成组源码修复e0062edd、Select关联356161b4：当前槽/Provider、key身份/焦点、完整separator数据、Compact实际消费者与Addon主题/纵向连接已修。源码834相关运行时、82浏览器通过；发布JS/CSS/声明、正式视觉/Docs待验收，见space-contract-audit。",
       "doneWhen": [],
       "group": "布局",
       "priority": "P0",
       "dagLevel": 2,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:flex",
@@ -1472,16 +1476,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 1,
-      "why": "包含 Row / Col 子组件与 useBreakpoint 响应式断点能力，是布局体系的基础。\n2026-10-25：断点getter重新启用立即发布当前快照；Steps响应性开关不固定setup初值，Avatar/List动态转响应式复用同一修复。证据见 docs/audit/2026-10-25-breakpoint-reactivity-remediation.md；保留历史验收状态，未宣称新视觉验收。",
+      "why": "2026-10-28完整盘点与成组源码修复04be6282、共享observer1588dd11：104运行时、41浏览器、14Demo检查、42原生状态预检、10类型通过；实际共享消费者717与Form/List/Listy256通过（集合有交集，不相加）。发布JS/CSS/声明、正式视觉/Docs待验收，见grid-contract-audit。",
       "doneWhen": [],
       "group": "布局",
       "priority": "P0",
       "dagLevel": 2,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:divider",
@@ -1902,6 +1908,7 @@
       "workstream": "WS-4",
       "wave": "W7",
       "dependsOn": [
+        "COMP:space",
         "FND:a11y",
         "FND:form-core",
         "FND:icons",
@@ -2110,7 +2117,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-28并行源码保存点：cabc97c8；源码119四层、62Chrome/10水合，13Demo源码消费类型通过。集成964运行时/122类型/根严格通过；发布产物、完整Demo/Docs/正式视觉统一验收未完成，见对应contract-audit及parallel-source-checkpoint证据。",
+      "why": "2026-10-28源码接续5ab9b3c4：119运行时、62浏览器、10SSR/水合、84真实Demo主题/交互与51原生状态预检通过；custom-label键盘帮助已修。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见对应contract-audit和descriptions-acceptance-source.json。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P2",
@@ -2191,7 +2198,7 @@
       "decidedBy": [],
       "complexity": "L",
       "unblocks": 2,
-      "why": "",
+      "why": "2026-10-28共享原生操作窄修e000152f：18成组用例及39文件576相关四层、Chrome11通过；范围仅MenuItem键盘/原生点击所属与焦点清理，不宣称Menu整组件本轮完成。见menu-native-actions-audit。",
       "doneWhen": [],
       "group": "导航",
       "priority": "P3",
@@ -2206,6 +2213,7 @@
       "workstream": "WS-3",
       "wave": "W8",
       "dependsOn": [
+        "COMP:space",
         "FND:a11y",
         "FND:icons",
         "FND:overlay",
@@ -2407,7 +2415,7 @@
       "decidedBy": [],
       "complexity": "L",
       "unblocks": 6,
-      "why": "【trigger + virtual-list 的第一个消费者】。含 Select / Option / OptGroup 及 AutoComplete 复用的下拉渲染能力。\n2026-10-23 F02/F04/F08 修复与回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。",
+      "why": "【trigger + virtual-list 的第一个消费者】。含 Select / Option / OptGroup 及 AutoComplete 复用的下拉渲染能力。\n2026-10-23 F02/F04/F08 修复与回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。\n2026-10-28 Space关联窄修356161b4：Select接入当前compactSize并用现有colorBgContainer回退；完整本轮Select审计尚未进行，见space-select-source.json。",
       "doneWhen": [],
       "group": "数据录入",
       "priority": "P4",
@@ -2591,6 +2599,7 @@
       "workstream": "WS-7",
       "wave": "W7",
       "dependsOn": [
+        "COMP:space",
         "FND:icons",
         "FND:motion",
         "FND:theme",
@@ -2805,7 +2814,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-28并行源码保存点：adec7ade；当前源码实现/110相关四层通过，真实浏览器13/14，Menu Enter href导航仍为本轮必修红灯。集成964运行时/122类型/根严格通过；发布产物、完整Demo/Docs/正式视觉统一验收未完成，见对应contract-audit及parallel-source-checkpoint证据。",
+      "why": "2026-10-28源码接续40ec3962及Menu e000152f：原生Enter导航红灯已修；114运行时、14浏览器、60真实Demo主题/交互和51原生状态预检通过。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见对应contract-audit。",
       "doneWhen": [],
       "group": "导航",
       "priority": "P5",
@@ -2881,7 +2890,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-28并行源码保存点：48ca2313；Timeline/Steps249四层、17源码浏览器通过，原生事件/实际ref/六Token修复。集成964运行时/122类型/根严格通过；发布产物、完整Demo/Docs/正式视觉统一验收未完成，见对应contract-audit及parallel-source-checkpoint证据。",
+      "why": "2026-10-28源码接续3ce8d1d2：249相关运行时、17浏览器、180真实Demo主题/宽度组合与78原生状态预检通过；横向长文布局与圆点/连线对齐、Demo对比度/标题修复。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见timeline-contract-audit。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P5",
@@ -2945,6 +2954,7 @@
       "workstream": "WS-5",
       "wave": "W8",
       "dependsOn": [
+        "COMP:grid",
         "FND:locale",
         "FND:theme",
         "FND:utils",
@@ -3369,6 +3379,8 @@
   "currentBatch": [
     "COMP:descriptions",
     "X:docs-site",
+    "COMP:space",
+    "COMP:grid",
     "COMP:breadcrumb",
     "COMP:timeline"
   ]

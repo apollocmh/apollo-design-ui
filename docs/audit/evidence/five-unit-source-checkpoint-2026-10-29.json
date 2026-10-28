@@ -1,0 +1,58 @@
+{
+  "productionCommit": "e0062edd",
+  "sourceMilestones": {
+    "menu": "e000152f",
+    "responsiveObserver": "1588dd11",
+    "select": "356161b4",
+    "descriptions": "5ab9b3c4",
+    "breadcrumb": "40ec3962",
+    "timeline": "3ce8d1d2",
+    "grid": "04be6282",
+    "space": "e0062edd"
+  },
+  "sourceChecks": {
+    "strictTypes": {
+      "command": "pnpm lint:types",
+      "exitCode": 0,
+      "log": "/tmp/apollo-resumed-source-strict-final.log"
+    },
+    "format": {
+      "command": "pnpm lint:format",
+      "exitCode": 0,
+      "log": "/tmp/apollo-five-final-source-format.log"
+    }
+  },
+  "artifacts": {
+    "uiBuild": {
+      "command": "pnpm --filter @apollo-design/ui run build",
+      "exitCode": 0
+    },
+    "overlayBuild": {
+      "command": "pnpm --filter @apollo-design/overlay run build",
+      "exitCode": 0
+    },
+    "initialUiL7": {
+      "failures": [
+        "B7: two actual Descriptions runtime grid variables not registered",
+        "B6: Space31.5KB above historical25KB budget"
+      ]
+    },
+    "finalUiL7": {
+      "command": "node tests/build/run.mjs --package ui --no-build --strict",
+      "checks": 11,
+      "failed": 0,
+      "pending": 0,
+      "exitCode": 0,
+      "buildStep": "B1 skipped explicitly; separate UI build above passed",
+      "log": "/tmp/apollo-five-ui-l7-final.log"
+    }
+  },
+  "formalVisualPlan": {
+    "existingApproved": 537,
+    "planned": 1602,
+    "newFiveUnitCases": 297,
+    "pending": 1065,
+    "acceptedNewCases": 0
+  },
+  "boundary": "Source milestones and built artifact gate only; published behavioral/type/SSR checks, formal visual review and Docs still recorded separately; not whole-library acceptance."
+}
