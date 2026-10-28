@@ -1,0 +1,795 @@
+{
+  "mode": "source",
+  "results": [
+    {
+      "name": "default: ThemeProvider aliases reach preset gaps and Addon paint",
+      "passed": true,
+      "actual": {
+        "gap": [
+          "19px",
+          "23px",
+          "29px"
+        ],
+        "color": "rgb(32, 48, 64)",
+        "border": "rgb(52, 86, 120)",
+        "background": "rgb(222, 232, 242)",
+        "selector": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "name": "dark: ThemeProvider aliases reach preset gaps and Addon paint",
+      "passed": true,
+      "actual": {
+        "gap": [
+          "19px",
+          "23px",
+          "29px"
+        ],
+        "color": "rgb(32, 48, 64)",
+        "border": "rgb(52, 86, 120)",
+        "background": "rgb(222, 232, 242)",
+        "selector": "rgb(20, 20, 20)"
+      }
+    },
+    {
+      "name": "compact: ThemeProvider aliases reach preset gaps and Addon paint",
+      "passed": true,
+      "actual": {
+        "gap": [
+          "19px",
+          "23px",
+          "29px"
+        ],
+        "color": "rgb(32, 48, 64)",
+        "border": "rgb(52, 86, 120)",
+        "background": "rgb(222, 232, 242)",
+        "selector": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "name": "both: ThemeProvider aliases reach preset gaps and Addon paint",
+      "passed": true,
+      "actual": {
+        "gap": [
+          "19px",
+          "23px",
+          "29px"
+        ],
+        "color": "rgb(32, 48, 64)",
+        "border": "rgb(52, 86, 120)",
+        "background": "rgb(222, 232, 242)",
+        "selector": "rgb(20, 20, 20)"
+      }
+    },
+    {
+      "name": "default: Addon status and disabled precedence in all forty combinations",
+      "passed": true,
+      "actual": {
+        "combinations": 40
+      }
+    },
+    {
+      "name": "dark: Addon status and disabled precedence in all forty combinations",
+      "passed": true,
+      "actual": {
+        "combinations": 40
+      }
+    },
+    {
+      "name": "compact: Addon status and disabled precedence in all forty combinations",
+      "passed": true,
+      "actual": {
+        "combinations": 40
+      }
+    },
+    {
+      "name": "both: Addon status and disabled precedence in all forty combinations",
+      "passed": true,
+      "actual": {
+        "combinations": 40
+      }
+    },
+    {
+      "name": "Addon chain horizontal ltr joins edges and retains outer corners",
+      "passed": true,
+      "actual": [
+        {
+          "top": 321.1875,
+          "bottom": 355.1875,
+          "left": 16,
+          "right": 70.265625,
+          "radius": [
+            "6px",
+            "0px",
+            "6px",
+            "0px"
+          ],
+          "marginEnd": "-1px"
+        },
+        {
+          "top": 321.1875,
+          "bottom": 355.1875,
+          "left": 69.265625,
+          "right": 138.796875,
+          "radius": [
+            "0px",
+            "0px",
+            "0px",
+            "0px"
+          ],
+          "marginEnd": "-1px"
+        },
+        {
+          "top": 321.1875,
+          "bottom": 355.1875,
+          "left": 137.796875,
+          "right": 191.21875,
+          "radius": [
+            "0px",
+            "6px",
+            "0px",
+            "6px"
+          ],
+          "marginEnd": "0px"
+        }
+      ]
+    },
+    {
+      "name": "Addon chain horizontal rtl joins edges and retains outer corners",
+      "passed": true,
+      "actual": [
+        {
+          "top": 321.1875,
+          "bottom": 355.1875,
+          "left": 136.953125,
+          "right": 191.21875,
+          "radius": [
+            "6px",
+            "0px",
+            "6px",
+            "0px"
+          ],
+          "marginEnd": "-1px"
+        },
+        {
+          "top": 321.1875,
+          "bottom": 355.1875,
+          "left": 68.421875,
+          "right": 137.953125,
+          "radius": [
+            "0px",
+            "0px",
+            "0px",
+            "0px"
+          ],
+          "marginEnd": "-1px"
+        },
+        {
+          "top": 321.1875,
+          "bottom": 355.1875,
+          "left": 16,
+          "right": 69.421875,
+          "radius": [
+            "0px",
+            "6px",
+            "0px",
+            "6px"
+          ],
+          "marginEnd": "0px"
+        }
+      ]
+    },
+    {
+      "name": "Addon chain vertical ltr joins edges and retains outer corners",
+      "passed": true,
+      "actual": [
+        {
+          "top": 321.1875,
+          "bottom": 355.1875,
+          "left": 16,
+          "right": 85.53125,
+          "radius": [
+            "6px",
+            "6px",
+            "0px",
+            "0px"
+          ],
+          "marginEnd": "0px"
+        },
+        {
+          "top": 354.1875,
+          "bottom": 388.1875,
+          "left": 16,
+          "right": 85.53125,
+          "radius": [
+            "0px",
+            "0px",
+            "0px",
+            "0px"
+          ],
+          "marginEnd": "0px"
+        },
+        {
+          "top": 387.1875,
+          "bottom": 421.1875,
+          "left": 16,
+          "right": 85.53125,
+          "radius": [
+            "0px",
+            "0px",
+            "6px",
+            "6px"
+          ],
+          "marginEnd": "0px"
+        }
+      ]
+    },
+    {
+      "name": "Addon chain vertical rtl joins edges and retains outer corners",
+      "passed": true,
+      "actual": [
+        {
+          "top": 321.1875,
+          "bottom": 355.1875,
+          "left": 16,
+          "right": 85.53125,
+          "radius": [
+            "6px",
+            "6px",
+            "0px",
+            "0px"
+          ],
+          "marginEnd": "0px"
+        },
+        {
+          "top": 354.1875,
+          "bottom": 388.1875,
+          "left": 16,
+          "right": 85.53125,
+          "radius": [
+            "0px",
+            "0px",
+            "0px",
+            "0px"
+          ],
+          "marginEnd": "0px"
+        },
+        {
+          "top": 387.1875,
+          "bottom": 421.1875,
+          "left": 16,
+          "right": 85.53125,
+          "radius": [
+            "0px",
+            "0px",
+            "6px",
+            "6px"
+          ],
+          "marginEnd": "0px"
+        }
+      ]
+    },
+    {
+      "name": "real controls retain draft, DOM, focus and native selection across theme and direction changes",
+      "passed": true
+    },
+    {
+      "name": "Space: focused keyed Fragment editors survive reorder and appearance changes",
+      "passed": true
+    },
+    {
+      "name": "Compact: focused keyed Fragment editors survive reorder and appearance changes",
+      "passed": true
+    },
+    {
+      "name": "align/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "align",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "align/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "align",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "align/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "align",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "align/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "align",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "base/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "base",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "base/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "base",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "base/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "base",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "base/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "base",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "compact-button-vertical/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-button-vertical",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "compact-button-vertical/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-button-vertical",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "compact-button-vertical/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-button-vertical",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "compact-button-vertical/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-button-vertical",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "compact-buttons/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-buttons",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "compact-buttons/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-buttons",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "compact-buttons/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-buttons",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "compact-buttons/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-buttons",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "compact-debug/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-debug",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "compact-debug/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-debug",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "compact-debug/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-debug",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "compact-debug/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-debug",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "compact-nested/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-nested",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "compact-nested/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-nested",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "compact-nested/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-nested",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "compact-nested/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact-nested",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "compact/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "compact/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "compact/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "compact/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "compact",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "component-token/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "component-token",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "component-token/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "component-token",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "component-token/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "component-token",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "component-token/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "component-token",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "debug/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "debug",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "debug/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "debug",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "debug/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "debug",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "debug/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "debug",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "gap-in-line/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "gap-in-line",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "gap-in-line/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "gap-in-line",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "gap-in-line/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "gap-in-line",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "gap-in-line/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "gap-in-line",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "separator/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "separator",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "separator/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "separator",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "separator/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "separator",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "separator/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "separator",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "size/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "size",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "size/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "size",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "size/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "size",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "size/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "size",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "style-class/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "style-class",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "style-class/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "style-class",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "style-class/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "style-class",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "style-class/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "style-class",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "vertical/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "vertical",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "vertical/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "vertical",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "vertical/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "vertical",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "vertical/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "vertical",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "wrap/default: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "wrap",
+        "mode": "default"
+      }
+    },
+    {
+      "name": "wrap/dark: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "wrap",
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "wrap/compact: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "wrap",
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "wrap/both: real demo render and axe",
+      "passed": true,
+      "actual": {
+        "demo": "wrap",
+        "mode": "both"
+      }
+    },
+    {
+      "name": "real compact demo keyboard and input are functional",
+      "passed": true
+    },
+    {
+      "name": "size demo responds to preset and custom-zero controls",
+      "passed": true
+    },
+    {
+      "name": "default: SSR/hydration keeps themed DOM and current controls",
+      "passed": true
+    },
+    {
+      "name": "dark: SSR/hydration keeps themed DOM and current controls",
+      "passed": true
+    },
+    {
+      "name": "compact: SSR/hydration keeps themed DOM and current controls",
+      "passed": true
+    },
+    {
+      "name": "both: SSR/hydration keeps themed DOM and current controls",
+      "passed": true
+    },
+    {
+      "name": "fixture reports page and Vue errors separately",
+      "passed": true,
+      "actual": []
+    }
+  ],
+  "errors": []
+}

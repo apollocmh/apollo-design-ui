@@ -1,0 +1,115 @@
+{
+  "mode": "source-only",
+  "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/space packages/ui/src/select packages/ui/src/button/__tests__/index.test.ts packages/ui/src/input/__tests__/index.test.ts packages/ui/src/input-number/__tests__/index.test.ts packages/ui/src/cascader/__tests__/compact.test.ts packages/ui/src/tree-select/__tests__/compact.test.ts packages/ui/src/color-picker/__tests__/index.test.ts packages/ui/src/date-picker/__tests__/index.test.ts packages/ui/src/float-button/__tests__/index.test.ts --maxWorkers=1",
+  "total": 834,
+  "passed": 834,
+  "failed": 0,
+  "suites": [
+    {
+      "file": "packages/ui/src/button/__tests__/index.test.ts",
+      "passed": 109,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/color-picker/__tests__/index.test.ts",
+      "passed": 20,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/date-picker/__tests__/index.test.ts",
+      "passed": 33,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/cascader/__tests__/compact.test.ts",
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/float-button/__tests__/index.test.ts",
+      "passed": 23,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/input/__tests__/index.test.ts",
+      "passed": 31,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/input-number/__tests__/index.test.ts",
+      "passed": 19,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/select/__tests__/demo.test.ts",
+      "passed": 38,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/select/__tests__/dynamic-options.test.ts",
+      "passed": 7,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/select/__tests__/index.test.ts",
+      "passed": 47,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/select/__tests__/space-compact.test.ts",
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/space/__tests__/contracts.test.ts",
+      "passed": 27,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/space/__tests__/demo.test.ts",
+      "passed": 17,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/space/__tests__/index.test.ts",
+      "passed": 131,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/tree-select/__tests__/compact.test.ts",
+      "passed": 2,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/select/__tests__/semantic.test.ts",
+      "passed": 10,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/space/__tests__/semantic.test.ts",
+      "passed": 127,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/select/__tests__/a11y.test.ts",
+      "passed": 38,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/space/__tests__/a11y.test.ts",
+      "passed": 28,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/select/__tests__/theme.test.ts",
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/space/__tests__/theme.test.ts",
+      "passed": 111,
+      "failed": 0
+    }
+  ],
+  "note": "Final production difference after this sweep is the status text CSS blend; current 82-case browser and 75-case visual smoke exercise that exact blend. Runtime assertions are unaffected; style regression rerun separately."
+}

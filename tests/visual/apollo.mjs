@@ -16,23 +16,48 @@ import {
   imagePath,
   readManifest,
 } from './baseline-store.mjs';
+import { prepareBreadcrumbVisual } from './breadcrumb-state.mjs';
 import { prepareButtonVisual } from './button-state.mjs';
+import { prepareDescriptionsVisual } from './descriptions-state.mjs';
 import { prepareEmptyVisual } from './empty-state.mjs';
+import { prepareGridVisual } from './grid-state.mjs';
 import { prepareImageVisual } from './image-state.mjs';
 import { prepareListVisual } from './list-state.mjs';
 import { buildCases, COMPONENTS } from './matrix.mjs';
 import { prepareQRCodeVisual } from './qrcode-state.mjs';
 import { prepareResultVisual } from './result-state.mjs';
 import { prepareSkeletonVisual } from './skeleton-state.mjs';
+import { prepareSpaceVisual } from './space-state.mjs';
 import { prepareSpinVisual } from './spin-state.mjs';
 import { prepareStatisticVisual } from './statistic-state.mjs';
 import { prepareTagVisual } from './tag-state.mjs';
+import { prepareTimelineVisual } from './timeline-state.mjs';
 import { prepareTypographyVisual } from './typography-state.mjs';
+
+const visualPreparers = {
+  avatar: prepareAvatarVisual,
+  badge: prepareBadgeVisual,
+  breadcrumb: prepareBreadcrumbVisual,
+  button: prepareButtonVisual,
+  descriptions: prepareDescriptionsVisual,
+  empty: prepareEmptyVisual,
+  grid: prepareGridVisual,
+  image: prepareImageVisual,
+  list: prepareListVisual,
+  'qr-code': prepareQRCodeVisual,
+  result: prepareResultVisual,
+  skeleton: prepareSkeletonVisual,
+  space: prepareSpaceVisual,
+  spin: prepareSpinVisual,
+  statistic: prepareStatisticVisual,
+  tag: prepareTagVisual,
+  timeline: prepareTimelineVisual,
+  typography: prepareTypographyVisual,
+};
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '../..');
 const BASELINES = path.join(HERE, 'baselines/apollo');
-const CANDIDATES = path.join(HERE, 'candidates/apollo');
 const ARTIFACTS = path.join(HERE, '.artifacts');
 const { values } = parseArgs({
   args: process.argv.slice(2).filter((arg) => arg !== '--'),
@@ -41,6 +66,8 @@ const { values } = parseArgs({
     variant: { type: 'string' },
     viewport: { type: 'string' },
     candidate: { type: 'boolean' },
+    'candidate-dir': { type: 'string' },
+    'report-file': { type: 'string' },
     accept: { type: 'boolean' },
     check: { type: 'boolean' },
     'approved-only': { type: 'boolean' },
@@ -49,6 +76,8 @@ const { values } = parseArgs({
     help: { type: 'boolean' },
   },
 });
+const CANDIDATES = path.resolve(values['candidate-dir'] ?? path.join(HERE, 'candidates/apollo'));
+const REPORT = path.resolve(values['report-file'] ?? path.join(HERE, 'report-apollo.json'));
 if ([values.candidate, values.accept, values.check].filter(Boolean).length > 1) {
   throw new Error('Choose only one of --candidate, --accept or --check');
 }
@@ -57,6 +86,8 @@ if (values.help) {
   --component NAME --variant NAME --viewport mobile|tablet|desktop
   Repeat --component to capture related components from one frozen source.
   --candidate             Render Vue candidates; never changes approved images
+  --candidate-dir PATH    Isolate a parallel candidate shard and its manifest
+  --report-file PATH      Keep parallel result reports separate
   --accept --review-note  Accept selected candidates after visual review
   --check                 Check selected baseline images and review records without a browser
   --approved-only         Transitional subset; prints the unreviewed count (never full coverage)
@@ -205,7 +236,8 @@ async function main() {
         });
         await stabilizePage(page, {
           preserveFocus:
-            [
+            item.component === 'breadcrumb' ||
+            ([
               'list',
               'spin',
               'qr-code',
@@ -218,36 +250,14 @@ async function main() {
               'avatar',
               'typography',
               'badge',
-            ].includes(item.component) && item.variant === 'native-focus',
+              'descriptions',
+              'timeline',
+              'grid',
+              'space',
+            ].includes(item.component) &&
+              item.variant === 'native-focus'),
         });
-        const state =
-          item.component === 'image'
-            ? await prepareImageVisual(page, item.variant)
-            : item.component === 'list'
-              ? await prepareListVisual(page, item.variant)
-              : item.component === 'spin'
-                ? await prepareSpinVisual(page, item.variant)
-                : item.component === 'qr-code'
-                  ? await prepareQRCodeVisual(page, item.variant)
-                  : item.component === 'statistic'
-                    ? await prepareStatisticVisual(page, item.variant)
-                    : item.component === 'skeleton'
-                      ? await prepareSkeletonVisual(page, item.variant)
-                      : item.component === 'result'
-                        ? await prepareResultVisual(page, item.variant)
-                        : item.component === 'button'
-                          ? await prepareButtonVisual(page, item.variant)
-                          : item.component === 'empty'
-                            ? await prepareEmptyVisual(page, item.variant)
-                            : item.component === 'tag'
-                              ? await prepareTagVisual(page, item.variant)
-                              : item.component === 'avatar'
-                                ? await prepareAvatarVisual(page, item.variant)
-                                : item.component === 'typography'
-                                  ? await prepareTypographyVisual(page, item.variant)
-                                  : item.component === 'badge'
-                                    ? await prepareBadgeVisual(page, item.variant)
-                                    : undefined;
+        const state = await visualPreparers[item.component]?.(page, item.variant);
         fs.mkdirSync(path.dirname(output), { recursive: true });
         await screenshotElement(page, '#stage', output);
         if (errors.length) throw new Error(errors.join(' | '));
@@ -292,7 +302,7 @@ async function main() {
     );
   }
   fs.writeFileSync(
-    path.join(HERE, 'report-apollo.json'),
+    REPORT,
     `${JSON.stringify({ expected: cases.length, pending, results }, null, 2)}\n`,
   );
   for (const result of results)

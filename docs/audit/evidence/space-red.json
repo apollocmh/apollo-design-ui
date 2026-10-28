@@ -1,0 +1,236 @@
+{
+  "mode": "source-only",
+  "initial": {
+    "total": 24,
+    "passed": 12,
+    "failed": 12,
+    "suites": [
+      {
+        "file": "packages/ui/src/space/__tests__/contracts.test.ts",
+        "passed": 12,
+        "failed": 12
+      }
+    ]
+  },
+  "failures": [
+    {
+      "name": "Space contracts · current render and Provider (SPACE-01/02) adds, replaces and removes the default slot after an empty first render",
+      "message": "AssertionError: expected false to be true // Object.is equality"
+    },
+    {
+      "name": "Space contracts · current render and Provider (SPACE-01/02) reads conditional separator slots during render, including intentionally empty slots",
+      "message": "AssertionError: expected 'fallback' to be 'rich0' // Object.is equality"
+    },
+    {
+      "name": "Space contracts · current render and Provider (SPACE-01/02) retains valid VNode separator/split data and numeric zero without evaluating callbacks",
+      "message": "AssertionError: expected [] to have a length of 2 but got +0"
+    },
+    {
+      "name": "Space contracts · current render and Provider (SPACE-01/02) replaces/removes all configured root and semantic fields without recreating business inputs",
+      "message": "AssertionError: expected [ Array(5) ] to not include 'provider-new'"
+    },
+    {
+      "name": "Space and Compact · stable identity (SPACE-03) ASpace: appearance changes preserve an unkeyed editor",
+      "message": "AssertionError: expected <input aria-label=\"Editor\"></input> to be <input aria-label=\"Editor\"></input> // Object.is equality\n\nIf it should pass with deep equality, replace \"toBe\" with \"toStrictEqual\"\n\nExpected: <input aria-label=\"Editor\"></input>\nReceived: serializes to the same string\n"
+    },
+    {
+      "name": "Space and Compact · stable identity (SPACE-03) ASpace: Symbol keys preserve editors through reorder",
+      "message": "AssertionError: expected <input aria-label=\"Draft 0\"></input> to be <input aria-label=\"Draft 0\"></input> // Object.is equality\n\nIf it should pass with deep equality, replace \"toBe\" with \"toStrictEqual\"\n\nExpected: <input aria-label=\"Draft 0\"></input>\nReceived: serializes to the same string\n"
+    },
+    {
+      "name": "Space and Compact · stable identity (SPACE-03) ASpaceCompact: appearance changes preserve an unkeyed editor",
+      "message": "AssertionError: expected <input aria-label=\"Editor\"></input> to be <input aria-label=\"Editor\"></input> // Object.is equality\n\nIf it should pass with deep equality, replace \"toBe\" with \"toStrictEqual\"\n\nExpected: <input aria-label=\"Editor\"></input>\nReceived: serializes to the same string\n"
+    },
+    {
+      "name": "Space and Compact · stable identity (SPACE-03) ASpaceCompact: Symbol keys preserve editors through reorder",
+      "message": "AssertionError: expected <input aria-label=\"Draft 0\"></input> to be <input aria-label=\"Draft 0\"></input> // Object.is equality\n\nIf it should pass with deep equality, replace \"toBe\" with \"toStrictEqual\"\n\nExpected: <input aria-label=\"Draft 0\"></input>\nReceived: serializes to the same string\n"
+    },
+    {
+      "name": "Space family · scoped aliases and real consumers (SPACE-04/05) writes current scoped alias values to Space and Addon and removes stale overrides",
+      "message": "AssertionError: expected '' to be '17px' // Object.is equality"
+    },
+    {
+      "name": "Space family · scoped aliases and real consumers (SPACE-04/05) Select consumes current compact sizes without remounting",
+      "message": "AssertionError: expected [ 'apollo-select', …(8) ] to include 'apollo-select-sm'"
+    },
+    {
+      "name": "Space family · scoped aliases and real consumers (SPACE-04/05) Cascader consumes current compact sizes without remounting",
+      "message": "Error: Unable to get .apollo-select within: <div class=\"apollo-space-compact\">\n  <!---->\n  <div class=\"apollo-cascader apollo-cascader-single apollo-cascader-show-arrow apollo-cascader-sm apollo-cascader-compact-item apollo-cascader-compact-first-item apollo-cascader-compact-last-item apollo-cascader-outlined\">\n    <!---->\n    <div class=\"apollo-cascader-content\">\n      <div class=\"apollo-cascader-placeholder\">\n        <!---->\n      </div><input id=\"v-0\" type=\"text\" class=\"apollo-cascader-input\" readonly=\"\" autocomplete=\"new-password\" role=\"combobox\" aria-expanded=\"false\" aria-haspopup=\"listbox\" aria-autocomplete=\"list\" value=\"\">\n    </div>\n    <div class=\"apollo-cascader-suffix\"><span role=\"img\" aria-label=\"down\" class=\"apollo-icon apollo-icon-down\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"down\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z\"></path></svg></span></div>\n    <!---->\n  </div>\n  <!---->\n</div>"
+    },
+    {
+      "name": "Space family · scoped aliases and real consumers (SPACE-04/05) TreeSelect consumes current compact sizes without remounting",
+      "message": "Error: Unable to get .apollo-select within: <div class=\"apollo-space-compact\">\n  <!---->\n  <div class=\"apollo-tree-select apollo-tree-select-single apollo-tree-select-show-arrow apollo-tree-select apollo-tree-select-sm apollo-tree-select-outlined apollo-tree-select-compact-item apollo-tree-select-compact-first-item apollo-tree-select-compact-last-item\">\n    <!---->\n    <div class=\"apollo-tree-select-content\">\n      <div class=\"apollo-tree-select-placeholder\">\n        <!---->\n      </div><input id=\"v-0\" type=\"text\" class=\"apollo-tree-select-input\" readonly=\"\" autocomplete=\"new-password\" role=\"combobox\" aria-expanded=\"false\" aria-haspopup=\"listbox\" aria-autocomplete=\"list\" value=\"\">\n    </div>\n    <div class=\"apollo-tree-select-suffix\"><span role=\"img\" aria-label=\"down\" class=\"apollo-icon apollo-icon-down\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"down\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z\"></path></svg></span></div>\n    <!---->\n  </div>\n  <!---->\n</div>"
+    }
+  ],
+  "testCorrections": [
+    "Two initial Cascader/TreeSelect failures used incorrect apollo-select prefixes; corrected to their actual independent prefixes before implementation claims.",
+    "Provider/input identity regression uses real Teleport; global test stub remounts content and is not product evidence.",
+    "The first inline alias check was supplemented by actual ThemeProvider browser paint failures."
+  ],
+  "fragmentAndEmptyText": {
+    "summary": {
+      "total": 27,
+      "passed": 0,
+      "failed": 3,
+      "suites": [
+        {
+          "file": "packages/ui/src/space/__tests__/contracts.test.ts",
+          "passed": 0,
+          "failed": 3
+        }
+      ]
+    },
+    "failures": [
+      {
+        "name": "Space and Compact · stable identity (SPACE-03) ASpace: keyed Fragment scopes preserve nested editors through reorder",
+        "message": "AssertionError: expected <input aria-label=\"Group 0\"></input> to be <input aria-label=\"Group 1\"></input> // Object.is equality"
+      },
+      {
+        "name": "Space and Compact · stable identity (SPACE-03) ASpaceCompact: keyed Fragment scopes preserve nested editors through reorder",
+        "message": "AssertionError: expected <input aria-label=\"Group 0\"></input> to be <input aria-label=\"Group 1\"></input> // Object.is equality"
+      },
+      {
+        "name": "Space and Compact · stable identity (SPACE-03) Compact ignores empty text when assigning real control edge classes",
+        "message": "AssertionError: expected [ 'apollo-input', …(2) ] to include 'apollo-input-compact-first-item'"
+      }
+    ]
+  },
+  "browserPaint": {
+    "mode": "source",
+    "results": [
+      {
+        "name": "default: ThemeProvider aliases reach preset gaps and Addon paint",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   background: 'rgba(0, 0, 0, 0.04)',\n+   border: 'rgb(217, 217, 217)',\n+   color: 'rgba(0, 0, 0, 0.88)',\n-   background: 'rgb(222, 232, 242)',\n-   border: 'rgb(52, 86, 120)',\n-   color: 'rgb(32, 48, 64)',\n    gap: [\n+     '8px',\n+     '16px',\n+     '24px'\n-     '19px',\n-     '23px',\n-     '29px'\n    ]\n  }\n"
+      },
+      {
+        "name": "dark: ThemeProvider aliases reach preset gaps and Addon paint",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   background: 'rgba(0, 0, 0, 0.04)',\n+   border: 'rgb(217, 217, 217)',\n+   color: 'rgba(0, 0, 0, 0.88)',\n-   background: 'rgb(222, 232, 242)',\n-   border: 'rgb(52, 86, 120)',\n-   color: 'rgb(32, 48, 64)',\n    gap: [\n+     '8px',\n+     '16px',\n+     '24px'\n-     '19px',\n-     '23px',\n-     '29px'\n    ]\n  }\n"
+      },
+      {
+        "name": "compact: ThemeProvider aliases reach preset gaps and Addon paint",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   background: 'rgba(0, 0, 0, 0.04)',\n+   border: 'rgb(217, 217, 217)',\n+   color: 'rgba(0, 0, 0, 0.88)',\n-   background: 'rgb(222, 232, 242)',\n-   border: 'rgb(52, 86, 120)',\n-   color: 'rgb(32, 48, 64)',\n    gap: [\n+     '8px',\n+     '16px',\n+     '24px'\n-     '19px',\n-     '23px',\n-     '29px'\n    ]\n  }\n"
+      },
+      {
+        "name": "both: ThemeProvider aliases reach preset gaps and Addon paint",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   background: 'rgba(0, 0, 0, 0.04)',\n+   border: 'rgb(217, 217, 217)',\n+   color: 'rgba(0, 0, 0, 0.88)',\n-   background: 'rgb(222, 232, 242)',\n-   border: 'rgb(52, 86, 120)',\n-   color: 'rgb(32, 48, 64)',\n    gap: [\n+     '8px',\n+     '16px',\n+     '24px'\n-     '19px',\n-     '23px',\n-     '29px'\n    ]\n  }\n"
+      },
+      {
+        "name": "Addon status and disabled precedence in all forty combinations",
+        "passed": true,
+        "actual": {
+          "combinations": 40
+        }
+      },
+      {
+        "name": "Addon chain horizontal ltr joins edges and retains outer corners",
+        "passed": true,
+        "actual": [
+          {
+            "top": 321.1875,
+            "bottom": 355.1875,
+            "left": 16,
+            "right": 69.265625,
+            "radius": [
+              "6px",
+              "0px",
+              "6px",
+              "0px"
+            ],
+            "marginEnd": "-1px"
+          },
+          {
+            "top": 321.1875,
+            "bottom": 355.1875,
+            "left": 68.265625,
+            "right": 135.796875,
+            "radius": [
+              "0px",
+              "0px",
+              "0px",
+              "0px"
+            ],
+            "marginEnd": "-1px"
+          },
+          {
+            "top": 321.1875,
+            "bottom": 355.1875,
+            "left": 134.796875,
+            "right": 187.21875,
+            "radius": [
+              "0px",
+              "6px",
+              "0px",
+              "6px"
+            ],
+            "marginEnd": "0px"
+          }
+        ]
+      },
+      {
+        "name": "Addon chain horizontal rtl joins edges and retains outer corners",
+        "passed": true,
+        "actual": [
+          {
+            "top": 321.1875,
+            "bottom": 355.1875,
+            "left": 133.953125,
+            "right": 187.21875,
+            "radius": [
+              "6px",
+              "0px",
+              "6px",
+              "0px"
+            ],
+            "marginEnd": "-1px"
+          },
+          {
+            "top": 321.1875,
+            "bottom": 355.1875,
+            "left": 67.421875,
+            "right": 134.953125,
+            "radius": [
+              "0px",
+              "0px",
+              "0px",
+              "0px"
+            ],
+            "marginEnd": "-1px"
+          },
+          {
+            "top": 321.1875,
+            "bottom": 355.1875,
+            "left": 16,
+            "right": 68.421875,
+            "radius": [
+              "0px",
+              "6px",
+              "0px",
+              "6px"
+            ],
+            "marginEnd": "0px"
+          }
+        ]
+      },
+      {
+        "name": "Addon chain vertical ltr joins edges and retains outer corners",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   '6px',\n+   '6px',\n+   '6px',\n+   '6px'\n-   '0px',\n-   '0px',\n-   '0px',\n-   '0px'\n  ]\n"
+      },
+      {
+        "name": "Addon chain vertical rtl joins edges and retains outer corners",
+        "passed": false,
+        "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   '6px',\n+   '6px',\n+   '6px',\n+   '6px'\n-   '0px',\n-   '0px',\n-   '0px',\n-   '0px'\n  ]\n"
+      },
+      {
+        "name": "source fixture reports page errors separately",
+        "passed": true,
+        "actual": []
+      }
+    ],
+    "errors": []
+  }
+}

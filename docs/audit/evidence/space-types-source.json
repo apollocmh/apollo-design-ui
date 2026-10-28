@@ -1,0 +1,10 @@
+{
+  "mode": "source-only",
+  "command": "pnpm exec vitest run --project types packages/ui/src/space/__tests__/type.test-d.ts --maxWorkers=1",
+  "tests": 44,
+  "passed": 44,
+  "failed": 0,
+  "publicConsumerCommand": "SPACE_SOURCE=1 node tests/consumer/space-types.mjs",
+  "publicConsumerResult": "PASS Space source public Vue contracts and all 15 real demos",
+  "publishedDeclarationsVerified": false
+}

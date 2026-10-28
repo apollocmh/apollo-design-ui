@@ -142,6 +142,22 @@ export const COMPONENTS = {
     ],
   },
   grid: {
+    apolloVariants: [
+      'basic',
+      'gutter',
+      'responsive',
+      'offset-sort',
+      'flex',
+      'justify-align',
+      'responsive-fields',
+      'nested-rtl',
+      'complete-content',
+      'current-provider',
+      'native-focus',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+    ],
     // 6 个 variant × 3 个 viewport = 18 张
     variants: [
       'basic', // span 24/12/8/6 阶梯
@@ -360,6 +376,33 @@ export const COMPONENTS = {
     ],
   },
   space: {
+    apolloVariants: [
+      'default',
+      'vertical',
+      'size-presets',
+      'wrap',
+      'align-start',
+      'align-end',
+      'align-center',
+      'align-baseline',
+      'separator-data',
+      'separator-slot',
+      'empty-slot',
+      'semantic',
+      'compact',
+      'compact-vertical',
+      'compact-nested',
+      'addon-variants',
+      'addon-single',
+      'rtl',
+      'current-provider',
+      'keyed-fragments',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+      'theme-alias',
+      'native-focus',
+    ],
     // 9 个 variant × 3 个 viewport = 27 张
     variants: [
       'basic', // 默认：水平 + 默认 size（small）+ 默认 align（center）
@@ -577,6 +620,25 @@ export const COMPONENTS = {
     ],
   },
   descriptions: {
+    apolloVariants: [
+      'basic',
+      'bordered',
+      'vertical',
+      'vertical-bordered',
+      'sizes',
+      'filled',
+      'complete-content',
+      'empty-slots',
+      'current-geometry',
+      'current-provider',
+      'semantic-tokens',
+      'nested',
+      'native-focus',
+      'rtl',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+    ],
     // 4 个 variant × 3 个 viewport = 12 张
     variants: [
       'basic', // 默认 3 列 + 行尾补齐（colSpan=3）
@@ -897,6 +959,34 @@ export const COMPONENTS = {
     ],
   },
   timeline: {
+    apolloVariants: [
+      'basic',
+      'verticalSingle',
+      'alternate',
+      'horizontal',
+      'horizontal-end',
+      'titleSpanNumber',
+      'titleSpanString',
+      'colors',
+      'loading',
+      'pending',
+      'reverse',
+      'variantFilled',
+      'rtl',
+      'complete-content',
+      'scalar-content',
+      'long-horizontal',
+      'token-overrides',
+      'semantic',
+      'conditional-slots',
+      'current-provider',
+      'reverse-edit',
+      'pending-zero',
+      'native-focus',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+    ],
     // 12 个 variant × 3 个 viewport = 36 张
     //
     // ⚠️ Timeline **没有浮层** ⇒ 不需要 `getPopupContainer`。
@@ -1052,6 +1142,25 @@ export const COMPONENTS = {
     ],
   },
   breadcrumb: {
+    apolloVariants: [
+      'basic',
+      'with-icon',
+      'separator',
+      'separator-item',
+      'with-params',
+      'overlay',
+      'semantic',
+      'rtl',
+      'complete-content',
+      'no-title-menu',
+      'conditional-content',
+      'current-provider',
+      'keyboard-menu',
+      'native-focus',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+    ],
     // 8 个 variant × 3 个 viewport = 24 张
     //
     // ⚠️ Breadcrumb **没有浮层**（`menu` 项虽然用 Dropdown，但静态帧里浮层不展开、
