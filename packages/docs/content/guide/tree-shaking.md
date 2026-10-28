@@ -10,17 +10,27 @@ order: 3
 `@apollo-design/ui` 以 **ESM + preserveModules** 构建：产物保留模块结构，打包器可以按命名导入做 tree-shaking，不会把整个组件库打进产物。
 
 ```ts
-// 只会打包你用到的组件
+// 打包这些组件及其实际 JS 依赖
 import { Button, Space, Table } from '@apollo-design/ui';
 ```
 
 ### 样式怎么办
 
-组件样式**不是** CSS-in-JS，也不需要每个组件单独引一份 CSS：各组件在运行时通过内部的样式注册表（`COMPONENT_STYLES`）挂载自己的样式规则，随组件模块一起被 tree-shaking —— 用到哪个组件，哪个组件的样式才会进入产物。
+组件样式是独立的静态 CSS，需要显式引入。JS 的 tree-shaking 与 CSS 的选择分别控制；组件挂载不会通过注册表注入样式。
+
+```ts
+import '@apollo-design/theme/tokens.css';
+import '@apollo-design/ui/button/style.css';
+import '@apollo-design/ui/space/style.css';
+import '@apollo-design/ui/table/style.css';
+```
+
+每个样式入口在构建时组合实现内部所需的依赖，并保持全量 CSS 中的相对层叠顺序。用户插槽中的自选组件仍需自行引入样式。`COMPONENT_STYLES` 是构建期清单，生成样式文件；它不会在组件运行时挂载 CSS。
 
 如果你的场景是「全部组件都用」（如中后台整体接入），直接全量引入更简单：
 
 ```ts
+import '@apollo-design/theme/tokens.css';
 import '@apollo-design/ui/style.css';
 ```
 
@@ -30,4 +40,6 @@ import '@apollo-design/ui/style.css';
 
 ## en-US
 
-`@apollo-design/ui` is built with **ESM + preserveModules**: bundlers can tree-shake via named imports. Component styles are registered at runtime by an internal style registry and are tree-shaken together with the component modules. For full-app usage, import `@apollo-design/ui/style.css` once instead.
+`@apollo-design/ui` uses **ESM + preserveModules**, so named imports can be tree-shaken with their actual JS dependencies. CSS is separate: import `theme/tokens.css` followed by `ui/<component>/style.css`, or use the aggregate `ui/style.css`.
+
+Individual stylesheets include implementation-owned dependencies in aggregate cascade order. Components supplied through your slots still need their own CSS. `COMPONENT_STYLES` generates files at build time; mounting a component does not inject styles at runtime.

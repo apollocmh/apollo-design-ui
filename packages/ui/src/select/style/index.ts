@@ -15,9 +15,11 @@
  *      丢掉了盒子样式）。
  *   4. 动画名稳定化：`…-antSlideUpIn` → `apollo-slide-up-in`（keyframes 内联；
  *      Move 系与 `.anticon-spin` 无引用 —— 均删，dropdown 同判）。
- *      裸 `.ant-slide-up-*` motion 基线段单独成 MOTION_BASE。
+ *      裸 slide-up/down 基线段由纯静态 genSlideMotionStyle 复用。
  *   5. at-rule（`@media`）按**块体**判据保留（modal 期教训）。
  */
+
+import { genSlideMotionStyle } from '../../style/slide';
 
 /** 组件变量声明（对拍 antd 的 `.css-var-…ant-select-css-var` 块，原序字面量）。 */
 export function genSelectTokenDecls(): string {
@@ -32,23 +34,6 @@ const KEYFRAMES = `
 @keyframes apollo-slide-down-in{0%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}100%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}}
 @keyframes apollo-slide-up-out{0%{transform:scaleY(1);transform-origin:0% 0%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:0% 0%;opacity:0;}}
 @keyframes apollo-slide-down-out{0%{transform:scaleY(1);transform-origin:100% 100%;opacity:1;}100%{transform:scaleY(0.8);transform-origin:100% 100%;opacity:0;}}`;
-
-/** antd `_util/motion` 的共享基线段（裸 slide-up/down 规则，原序）。 */
-const MOTION_BASE = `
-.apollo-slide-up-enter,.apollo-slide-up-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-up-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-up-enter.apollo-slide-up-enter-active,.apollo-slide-up-appear.apollo-slide-up-appear-active{animation-name:apollo-slide-up-in;animation-play-state:running;}
-.apollo-slide-up-leave.apollo-slide-up-leave-active{animation-name:apollo-slide-up-out;animation-play-state:running;pointer-events:none;}
-.apollo-slide-up-enter,.apollo-slide-up-appear{transform:scale(0);transform-origin:0% 0%;opacity:0;animation-timing-function:var(--apollo-motion-ease-out-quint);}
-.apollo-slide-up-enter-prepare,.apollo-slide-up-appear-prepare{transform:scale(1);}
-.apollo-slide-up-leave{animation-timing-function:var(--apollo-motion-ease-in-quint);}
-.apollo-slide-down-enter,.apollo-slide-down-appear{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-down-leave{animation-duration:var(--apollo-motion-duration-mid);animation-fill-mode:both;animation-play-state:paused;}
-.apollo-slide-down-enter.apollo-slide-down-enter-active,.apollo-slide-down-appear.apollo-slide-down-appear-active{animation-name:apollo-slide-down-in;animation-play-state:running;}
-.apollo-slide-down-leave.apollo-slide-down-leave-active{animation-name:apollo-slide-down-out;animation-play-state:running;pointer-events:none;}
-.apollo-slide-down-enter,.apollo-slide-down-appear{transform:scale(0);transform-origin:0% 0%;opacity:0;animation-timing-function:var(--apollo-motion-ease-out-quint);}
-.apollo-slide-down-enter-prepare,.apollo-slide-down-appear-prepare{transform:scale(1);}
-.apollo-slide-down-leave{animation-timing-function:var(--apollo-motion-ease-in-quint);}`;
 
 /** antd 产物机械转换段（原序）。 */
 const RULES = `
@@ -277,7 +262,7 @@ export function genSelectStyle(prefixCls: string = 'apollo', targetPrefixCls?: s
       ? `.apollo-select,.apollo-select-css-var{${DECLS}}`
       : `.${target},.${target}-css-var{${DECLS}}`;
   return `${KEYFRAMES}
-${MOTION_BASE}
+${genSlideMotionStyle()}
 ${decls}
 ${rename(RULES)}`;
 }

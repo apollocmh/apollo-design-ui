@@ -108,6 +108,7 @@ import { genTreeStyle } from '../tree/style';
 import { genTreeSelectStyle } from '../tree-select/style';
 import { genTypographyStyle } from '../typography/style';
 import { genUploadStyle } from '../upload/style';
+import { genSlideMotionStyle } from './slide';
 
 /**
  * 静态 CSS 覆盖的前缀。
@@ -141,6 +142,8 @@ export interface ComponentStyleEntry {
   name: string;
   /** 纯函数：类名前缀 → CSS 文本。 */
   gen: (prefixCls: string) => string;
+  /** CSS required by implementation-owned descendants; caller-provided slots are excluded. */
+  dependencies?: readonly string[];
 }
 
 /**
@@ -153,92 +156,166 @@ export const COMPONENT_STYLES: readonly ComponentStyleEntry[] = [
   { name: 'affix', gen: genAffixStyle },
   { name: 'layout', gen: genLayoutStyle },
   { name: 'layout-sider', gen: genSiderStyle },
-  { name: 'rate', gen: genRateStyle },
+  { name: 'rate', dependencies: ['tooltip'], gen: genRateStyle },
   { name: 'radio', gen: genRadioStyle },
   { name: 'alert', gen: genAlertStyle },
   { name: 'button', gen: genButtonStyle },
   { name: 'collapse', gen: genCollapseStyle },
-  { name: 'date-picker', gen: genDatePickerStyle },
-  { name: 'calendar', gen: genCalendarStyle },
+  { name: 'date-picker', dependencies: ['button'], gen: genDatePickerStyle },
+  { name: 'calendar', dependencies: ['select', 'radio'], gen: genCalendarStyle },
   { name: 'carousel', gen: genCarouselStyle },
   { name: 'checkbox', gen: genCheckboxStyle },
   { name: 'descriptions', gen: genDescriptionsStyle },
-  { name: 'list', gen: genListStyle },
+  { name: 'list', dependencies: ['spin', 'pagination', 'grid', 'empty'], gen: genListStyle },
   { name: 'listy', gen: genListyStyle },
-  { name: 'qr-code', gen: genQrCodeStyle },
+  { name: 'qr-code', dependencies: ['spin', 'button'], gen: genQrCodeStyle },
   { name: 'splitter', gen: genSplitterStyle },
-  { name: 'table', gen: genTableStyle },
+  {
+    name: 'table',
+    dependencies: [
+      'spin',
+      'pagination',
+      'empty',
+      'tooltip',
+      'dropdown',
+      'checkbox',
+      'radio',
+      'tree',
+      'button',
+    ],
+    gen: genTableStyle,
+  },
   { name: 'divider', gen: genDividerStyle },
   { name: 'empty', gen: genEmptyStyle },
   { name: 'flex', gen: genFlexStyle },
-  { name: 'float-button', gen: genFloatButtonStyle },
-  { name: 'progress', gen: genProgressStyle },
+  {
+    name: 'float-button',
+    dependencies: ['button', 'badge', 'tooltip', 'flex', 'space'],
+    gen: genFloatButtonStyle,
+  },
+  { name: 'progress', dependencies: ['tooltip'], gen: genProgressStyle },
   { name: 'badge', gen: genBadgeStyle },
   { name: 'back-top', gen: genBackTopStyle },
   { name: 'border-beam', gen: genBorderBeamStyle },
   { name: 'tabs', gen: genTabsStyle },
   { name: 'tag', gen: genTagStyle },
   { name: 'result', gen: genResultStyle },
-  { name: 'statistic', gen: genStatisticStyle },
+  { name: 'statistic', dependencies: ['skeleton'], gen: genStatisticStyle },
   { name: 'grid', gen: genGridStyle },
   { name: 'skeleton', gen: genSkeletonStyle },
   { name: 'space', gen: genSpaceStyle },
   { name: 'spin', gen: genSpinStyle },
   { name: 'switch', gen: genSwitchStyle },
-  { name: 'typography', gen: genTypographyStyle },
-  { name: 'input-number', gen: genInputNumberStyle },
-  { name: 'input', gen: genInputStyle },
-  { name: 'upload', gen: genUploadStyle },
+  { name: 'typography', dependencies: ['tooltip'], gen: genTypographyStyle },
+  { name: 'input-number', dependencies: ['space'], gen: genInputNumberStyle },
+  { name: 'input', dependencies: ['button', 'space'], gen: genInputStyle },
+  { name: 'upload', dependencies: ['button', 'progress'], gen: genUploadStyle },
   { name: 'tooltip', gen: genTooltipStyle },
   { name: 'popover', gen: genPopoverStyle },
-  { name: 'menu', gen: genMenuStyle },
-  { name: 'mentions', gen: genMentionsStyle },
-  { name: 'dropdown', gen: genDropdownStyle },
-  { name: 'drawer', gen: genDrawerStyle },
-  { name: 'app', gen: genAppStyle },
+  { name: 'menu', dependencies: ['tooltip'], gen: genMenuStyle },
+  { name: 'mentions', dependencies: ['spin', 'empty'], gen: genMentionsStyle },
+  { name: 'dropdown', dependencies: ['button', 'tooltip'], gen: genDropdownStyle },
+  { name: 'drawer', dependencies: ['skeleton'], gen: genDrawerStyle },
+  { name: 'app', dependencies: ['message', 'notification', 'modal'], gen: genAppStyle },
   { name: 'image', gen: genImageStyle },
   { name: 'message', gen: genMessageStyle },
   { name: 'notification', gen: genNotificationStyle },
-  { name: 'modal', gen: genModalStyle },
-  { name: 'select', gen: genSelectStyle },
-  { name: 'steps', gen: genStepsStyle },
+  { name: 'modal', dependencies: ['button', 'skeleton'], gen: genModalStyle },
+  { name: 'select', dependencies: ['empty'], gen: genSelectStyle },
+  { name: 'steps', dependencies: ['tooltip'], gen: genStepsStyle },
   // 🚨 **必须排在 `steps` 之后** —— Timeline 是 Steps 的薄壳，它的样式大量**覆盖**
   //    Steps 的声明（如 `-horizontal` 的 `align-items:stretch` 要压过
   //    `.apollo-steps{align-items:flex-start}`）。两者**特异性相同**（都是 0,1,0）
   //    ⇒ **靠 CSS 顺序决胜**。排在前面会让 Steps 赢 ⇒ 横向时间轴的高度差 4px
   //    （L6 实测：React 94 vs Vue 98；探针定位到根 `ol` 的 `align-items`）。
-  { name: 'timeline', gen: genTimelineStyle },
-  { name: 'segmented', gen: genSegmentedStyle },
-  { name: 'popconfirm', gen: genPopconfirmStyle },
+  { name: 'timeline', dependencies: ['steps'], gen: genTimelineStyle },
+  { name: 'segmented', dependencies: ['tooltip'], gen: genSegmentedStyle },
+  { name: 'popconfirm', dependencies: ['popover', 'button'], gen: genPopconfirmStyle },
   { name: 'cascader', gen: genCascaderStyle },
-  { name: 'tour', gen: genTourStyle },
+  { name: 'tour', dependencies: ['button'], gen: genTourStyle },
   { name: 'tree', gen: genTreeStyle },
   { name: 'tree-select', gen: genTreeSelectStyle },
-  { name: 'form', gen: genFormStyle },
-  { name: 'pagination', gen: genPaginationStyle },
-  { name: 'transfer', gen: genTransferStyle },
-  { name: 'slider', gen: genSliderStyle },
+  { name: 'form', dependencies: ['grid', 'tooltip'], gen: genFormStyle },
+  { name: 'pagination', dependencies: ['select'], gen: genPaginationStyle },
+  {
+    name: 'transfer',
+    dependencies: ['button', 'checkbox', 'input', 'pagination', 'dropdown', 'empty'],
+    gen: genTransferStyle,
+  },
+  { name: 'slider', dependencies: ['tooltip'], gen: genSliderStyle },
   { name: 'masonry', gen: genMasonryStyle },
-  { name: 'anchor', gen: genAnchorStyle },
-  { name: 'breadcrumb', gen: genBreadcrumbStyle },
-  { name: 'card', gen: genCardStyle },
-  { name: 'avatar', gen: genAvatarStyle },
+  { name: 'anchor', dependencies: ['affix'], gen: genAnchorStyle },
+  { name: 'breadcrumb', dependencies: ['dropdown'], gen: genBreadcrumbStyle },
+  { name: 'card', dependencies: ['tabs', 'skeleton'], gen: genCardStyle },
+  { name: 'avatar', dependencies: ['popover'], gen: genAvatarStyle },
   // ⚠️ **必须排在 `slider` / `input-number` / `select` / `input` / `collapse` 之后** ——
   //    color-picker 的规则要**覆盖**这些被复用组件的同特异性声明
   //    （如 `.apollo-color-picker-slider{height:8px}` 压过 `.apollo-slider`，
   //    两者特异性同为 0,1,0 ⇒ 靠 CSS 顺序决胜，同 PITFALLS 313）。
-  { name: 'color-picker', gen: genColorPickerStyle },
+  {
+    name: 'color-picker',
+    dependencies: [
+      'popover',
+      'slider',
+      'select',
+      'input',
+      'input-number',
+      'collapse',
+      'divider',
+      'segmented',
+    ],
+    gen: genColorPickerStyle,
+  },
 ];
 
-/** 生成单个组件在**指定前缀**下的 CSS。自定义 prefixCls 的用户用这个。 */
+/** Resolve the owned style closure in the same cascade order as aggregate CSS. */
+function componentStyleEntries(name: string): ComponentStyleEntry[] {
+  const included = new Set<string>();
+  const visiting = new Set<string>();
+  const visit = (current: string): void => {
+    if (included.has(current)) return;
+    if (visiting.has(current)) {
+      throw new Error(`[apollo: style] 循环样式依赖: ${[...visiting, current].join(' → ')}`);
+    }
+    const entry = COMPONENT_STYLES.find((item) => item.name === current);
+    if (!entry) {
+      throw new Error(
+        `[apollo: style] 未知组件 "${current}"。已知：${COMPONENT_STYLES.map((i) => i.name).join(', ')}`,
+      );
+    }
+    visiting.add(current);
+    for (const dependency of entry.dependencies ?? []) visit(dependency);
+    visiting.delete(current);
+    included.add(current);
+  };
+  visit(name);
+  return COMPONENT_STYLES.filter((entry) => included.has(entry.name));
+}
+
+// Tabs owns its popup/menu paint and keyframes. It also needs the shared phase
+// rules already emitted by Select, rather than an unrelated Dropdown stylesheet.
+const SHARED_STYLE_PARTS = [{ consumer: 'tabs', includedBy: 'select', gen: genSlideMotionStyle }];
+
+function componentCss(entries: readonly ComponentStyleEntry[], prefixCls: string): string {
+  const included = new Set(entries.map((entry) => entry.name));
+  const emitted = new Set<() => string>();
+  return entries
+    .flatMap((entry) => {
+      const parts = SHARED_STYLE_PARTS.filter(
+        (part) =>
+          part.consumer === entry.name && !included.has(part.includedBy) && !emitted.has(part.gen),
+      ).map((part) => {
+        emitted.add(part.gen);
+        return part.gen();
+      });
+      return [...parts, entry.gen(prefixCls)];
+    })
+    .join('\n');
+}
+
+/** 生成组件及其内部依赖在指定前缀下的 CSS；不携带全局 reset。 */
 export function genComponentCss(name: string, prefixCls: string): string {
-  const entry = COMPONENT_STYLES.find((item) => item.name === name);
-  if (!entry) {
-    throw new Error(
-      `[apollo: style] 未知组件 "${name}"。已知：${COMPONENT_STYLES.map((i) => i.name).join(', ')}`,
-    );
-  }
-  return entry.gen(prefixCls);
+  return componentCss(componentStyleEntries(name), prefixCls);
 }
 
 /**
@@ -358,19 +435,14 @@ export const BASE_CSS = [
 
 /** 生成单个组件在**全部静态前缀**下的 CSS（`dist/<name>/style.css` 的内容）。 */
 export function genComponentStyleSheet(name: string): string {
-  const entry = COMPONENT_STYLES.find((item) => item.name === name);
-  if (!entry) {
-    throw new Error(
-      `[apollo: style] 未知组件 "${name}"。已知：${COMPONENT_STYLES.map((i) => i.name).join(', ')}`,
-    );
-  }
+  const entries = componentStyleEntries(name);
   return [
     `/*! @apollo-design/ui — ${name} 组件样式（自动生成，勿手改） */`,
     `/*! 前缀：${STATIC_PREFIX_CLS.join(' / ')} ｜ 生成方式：packages/ui/build.config.ts */`,
     '',
     BASE_CSS,
     '',
-    ...STATIC_PREFIX_CLS.map((prefix) => entry.gen(prefix)),
+    ...STATIC_PREFIX_CLS.map((prefix) => componentCss(entries, prefix)),
   ].join('\n');
 }
 

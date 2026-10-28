@@ -1,0 +1,1278 @@
+{
+  "productionBaseline": "e0062edd",
+  "inventory": "stylesheet-dependency-inventory.json",
+  "red": {
+    "total": 38,
+    "passed": 3,
+    "failed": 35,
+    "cases": [
+      {
+        "name": "Public component styles include implementation-owned descendants timeline supplies .apollo-steps rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants typography supplies .apollo-tooltip rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants statistic supplies .apollo-skeleton rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants input supplies .apollo-btn rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants input-number supplies .apollo-space-addon rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants qr-code supplies .apollo-spin rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants upload supplies .apollo-progress rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants menu supplies .apollo-tooltip rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants dropdown supplies .apollo-btn rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants modal supplies .apollo-skeleton rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants drawer supplies .apollo-skeleton rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants app supplies .apollo-message rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants select supplies .apollo-empty rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants popconfirm supplies .apollo-popover rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants tour supplies .apollo-btn rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants float-button supplies .apollo-space-compact rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants form supplies .apollo-row rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants slider supplies .apollo-tooltip rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants rate supplies .apollo-tooltip rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants segmented supplies .apollo-tooltip rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants steps supplies .apollo-tooltip rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants progress supplies .apollo-tooltip rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants pagination supplies .apollo-select rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants breadcrumb supplies .apollo-dropdown rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants card supplies .apollo-skeleton rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants anchor supplies .apollo-affix rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants list supplies .apollo-pagination rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants table supplies .apollo-empty rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants transfer supplies .apollo-checkbox rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants mentions supplies .apollo-empty rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants color-picker supplies .apollo-input-number rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants date-picker supplies .apollo-btn rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants calendar supplies .apollo-radio rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants avatar supplies .apollo-popover rules through both public generators",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants keeps inherited Steps layout before Timeline overrides",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants emits one native reset in every existing stylesheet, despite shared descendant paths",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants does not pull consumer-provided controls into layout and content containers",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants preserves diagnostics for unknown public stylesheet names",
+        "status": "passed"
+      }
+    ]
+  },
+  "tabsAfterDependencyRepair": {
+    "total": 39,
+    "passed": 38,
+    "failed": 1,
+    "cases": [
+      {
+        "name": "Public component styles include implementation-owned descendants timeline supplies .apollo-steps rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants typography supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants statistic supplies .apollo-skeleton rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants input supplies .apollo-btn rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants input-number supplies .apollo-space-addon rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants qr-code supplies .apollo-spin rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants upload supplies .apollo-progress rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants menu supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants dropdown supplies .apollo-btn rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants modal supplies .apollo-skeleton rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants drawer supplies .apollo-skeleton rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants app supplies .apollo-message rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants select supplies .apollo-empty rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants popconfirm supplies .apollo-popover rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants tour supplies .apollo-btn rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants float-button supplies .apollo-space-compact rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants form supplies .apollo-row rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants slider supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants rate supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants segmented supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants steps supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants progress supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants pagination supplies .apollo-select rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants breadcrumb supplies .apollo-dropdown rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants card supplies .apollo-skeleton rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants anchor supplies .apollo-affix rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants list supplies .apollo-pagination rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants table supplies .apollo-empty rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants transfer supplies .apollo-checkbox rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants mentions supplies .apollo-empty rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants color-picker supplies .apollo-input-number rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants date-picker supplies .apollo-btn rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants calendar supplies .apollo-radio-group rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants avatar supplies .apollo-popover rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants keeps inherited Steps layout before Timeline overrides",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants supplies Tabs popup motion without importing an unrelated dropdown menu",
+        "status": "failed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants emits one native reset in every existing stylesheet, despite shared descendant paths",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants does not pull consumer-provided controls into layout and content containers",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants preserves diagnostics for unknown public stylesheet names",
+        "status": "passed"
+      }
+    ]
+  },
+  "green": {
+    "total": 48,
+    "passed": 48,
+    "failed": 0,
+    "cases": [
+      {
+        "name": "Public component styles include implementation-owned descendants timeline supplies .apollo-steps rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants typography supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants statistic supplies .apollo-skeleton rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants input supplies .apollo-btn rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants input-number supplies .apollo-space-addon rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants qr-code supplies .apollo-spin rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants upload supplies .apollo-progress rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants menu supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants dropdown supplies .apollo-btn rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants modal supplies .apollo-skeleton rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants drawer supplies .apollo-skeleton rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants app supplies .apollo-message rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants select supplies .apollo-empty rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants popconfirm supplies .apollo-popover rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants tour supplies .apollo-btn rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants float-button supplies .apollo-space-compact rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants form supplies .apollo-row rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants slider supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants rate supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants segmented supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants steps supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants progress supplies .apollo-tooltip rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants pagination supplies .apollo-select rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants breadcrumb supplies .apollo-dropdown rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants card supplies .apollo-skeleton rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants anchor supplies .apollo-affix rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants list supplies .apollo-pagination rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants table supplies .apollo-empty rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants transfer supplies .apollo-checkbox rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants mentions supplies .apollo-empty rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants color-picker supplies .apollo-input-number rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants date-picker supplies .apollo-btn rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants calendar supplies .apollo-radio-group rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants avatar supplies .apollo-popover rules through both public generators",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants keeps inherited Steps layout before Timeline overrides",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants supplies Tabs popup motion without importing an unrelated dropdown menu",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants emits one native reset in every existing stylesheet, despite shared descendant paths",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants does not pull consumer-provided controls into layout and content containers",
+        "status": "passed"
+      },
+      {
+        "name": "Public component styles include implementation-owned descendants preserves diagnostics for unknown public stylesheet names",
+        "status": "passed"
+      },
+      {
+        "name": "样式前缀守恒（`gen(p)` 必须对入参前缀产出对应选择器） 静态前缀只有 `apollo`（裁决 `css-ant-prefix-cost` = B 砍掉 ant）",
+        "status": "passed"
+      },
+      {
+        "name": "样式前缀守恒（`gen(p)` 必须对入参前缀产出对应选择器） 探针前缀不在 `STATIC_PREFIX_CLS` 里（否则本测试会退化成空转）",
+        "status": "passed"
+      },
+      {
+        "name": "样式前缀守恒（`gen(p)` 必须对入参前缀产出对应选择器） 实际不一致的组件集合 == `KNOWN_GAPS` 的键集合（双向）",
+        "status": "passed"
+      },
+      {
+        "name": "样式前缀守恒（`gen(p)` 必须对入参前缀产出对应选择器） 🚨 已修的组件不在清单里：`date-picker` / `calendar`",
+        "status": "passed"
+      },
+      {
+        "name": "样式前缀守恒（`gen(p)` 必须对入参前缀产出对应选择器） 换前缀后必须**零** `.apollo-` 残留（这两个组件）",
+        "status": "passed"
+      },
+      {
+        "name": "样式前缀守恒（`gen(p)` 必须对入参前缀产出对应选择器） 换前缀后必须**保留**全局别名变量（`tokens.css` 只声明 `--apollo-*`）",
+        "status": "passed"
+      },
+      {
+        "name": "样式前缀守恒（`gen(p)` 必须对入参前缀产出对应选择器） 缺口清单的规模被钉住（24 个，修一个删一条）",
+        "status": "passed"
+      },
+      {
+        "name": "样式前缀守恒（`gen(p)` 必须对入参前缀产出对应选择器） `apollo` 版里不得硬编码 `.ant-` 选择器（清单当前为空，防回归）",
+        "status": "passed"
+      },
+      {
+        "name": "样式前缀守恒（`gen(p)` 必须对入参前缀产出对应选择器） 全组件 CSS 不得引用 cssinjs 开发态占位动画名（U-KEYFRAMES，2026-10-08）",
+        "status": "passed"
+      }
+    ]
+  },
+  "strict": {
+    "command": "pnpm lint:types",
+    "exitCode": 0,
+    "log": "/tmp/apollo-css-dependency-audit/source-strict.log"
+  },
+  "build": {
+    "command": "pnpm --filter @apollo-design/ui run build",
+    "exitCode": 0,
+    "log": "/tmp/apollo-css-dependency-audit/ui-build.log"
+  },
+  "artifactComparison": {
+    "entries": [
+      {
+        "name": "affix",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 3326,
+        "composedBytes": 3326
+      },
+      {
+        "name": "layout",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 5710,
+        "composedBytes": 5710
+      },
+      {
+        "name": "layout-sider",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 7299,
+        "composedBytes": 7299
+      },
+      {
+        "name": "rate",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 6095,
+        "composedBytes": 18940
+      },
+      {
+        "name": "radio",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 23112,
+        "composedBytes": 23112
+      },
+      {
+        "name": "alert",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 7980,
+        "composedBytes": 7980
+      },
+      {
+        "name": "button",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 193230,
+        "composedBytes": 193230
+      },
+      {
+        "name": "collapse",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 11076,
+        "composedBytes": 11076
+      },
+      {
+        "name": "date-picker",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 59950,
+        "composedBytes": 249903
+      },
+      {
+        "name": "calendar",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 28838,
+        "composedBytes": 90634
+      },
+      {
+        "name": "carousel",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 11759,
+        "composedBytes": 11759
+      },
+      {
+        "name": "checkbox",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 8565,
+        "composedBytes": 8565
+      },
+      {
+        "name": "descriptions",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 11839,
+        "composedBytes": 11839
+      },
+      {
+        "name": "list",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 11379,
+        "composedBytes": 164675
+      },
+      {
+        "name": "listy",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 5000,
+        "composedBytes": 5000
+      },
+      {
+        "name": "qr-code",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 4886,
+        "composedBytes": 201135
+      },
+      {
+        "name": "splitter",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 11462,
+        "composedBytes": 11462
+      },
+      {
+        "name": "table",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 54752,
+        "composedBytes": 403137
+      },
+      {
+        "name": "divider",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 7857,
+        "composedBytes": 7857
+      },
+      {
+        "name": "empty",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 4374,
+        "composedBytes": 4374
+      },
+      {
+        "name": "flex",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 5061,
+        "composedBytes": 5061
+      },
+      {
+        "name": "float-button",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 11613,
+        "composedBytes": 242026
+      },
+      {
+        "name": "progress",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 9442,
+        "composedBytes": 22287
+      },
+      {
+        "name": "badge",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 22533,
+        "composedBytes": 22533
+      },
+      {
+        "name": "back-top",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 4746,
+        "composedBytes": 4746
+      },
+      {
+        "name": "border-beam",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 4949,
+        "composedBytes": 4949
+      },
+      {
+        "name": "tabs",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 33555,
+        "composedBytes": 35444
+      },
+      {
+        "name": "tag",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 24225,
+        "composedBytes": 24225
+      },
+      {
+        "name": "result",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 5323,
+        "composedBytes": 5323
+      },
+      {
+        "name": "statistic",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 4690,
+        "composedBytes": 15231
+      },
+      {
+        "name": "grid",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 81911,
+        "composedBytes": 81911
+      },
+      {
+        "name": "skeleton",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 13820,
+        "composedBytes": 13820
+      },
+      {
+        "name": "space",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 9848,
+        "composedBytes": 9848
+      },
+      {
+        "name": "spin",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 9571,
+        "composedBytes": 9571
+      },
+      {
+        "name": "switch",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 13781,
+        "composedBytes": 13781
+      },
+      {
+        "name": "typography",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 21890,
+        "composedBytes": 34735
+      },
+      {
+        "name": "input-number",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 29913,
+        "composedBytes": 36485
+      },
+      {
+        "name": "input",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 46062,
+        "composedBytes": 242587
+      },
+      {
+        "name": "upload",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 40038,
+        "composedBytes": 248999
+      },
+      {
+        "name": "tooltip",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 16123,
+        "composedBytes": 16123
+      },
+      {
+        "name": "popover",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 14252,
+        "composedBytes": 14252
+      },
+      {
+        "name": "menu",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 64926,
+        "composedBytes": 77771
+      },
+      {
+        "name": "mentions",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 27097,
+        "composedBytes": 34491
+      },
+      {
+        "name": "dropdown",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 31487,
+        "composedBytes": 234285
+      },
+      {
+        "name": "drawer",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 15372,
+        "composedBytes": 25913
+      },
+      {
+        "name": "app",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 3472,
+        "composedBytes": 267490
+      },
+      {
+        "name": "image",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 18707,
+        "composedBytes": 18707
+      },
+      {
+        "name": "message",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 25856,
+        "composedBytes": 25856
+      },
+      {
+        "name": "notification",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 31994,
+        "composedBytes": 31994
+      },
+      {
+        "name": "modal",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 15511,
+        "composedBytes": 216005
+      },
+      {
+        "name": "select",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 44139,
+        "composedBytes": 45237
+      },
+      {
+        "name": "steps",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 39852,
+        "composedBytes": 52697
+      },
+      {
+        "name": "timeline",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 12814,
+        "composedBytes": 62235
+      },
+      {
+        "name": "segmented",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 9925,
+        "composedBytes": 22770
+      },
+      {
+        "name": "popconfirm",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 4349,
+        "composedBytes": 205276
+      },
+      {
+        "name": "cascader",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 54498,
+        "composedBytes": 54498
+      },
+      {
+        "name": "tour",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 14236,
+        "composedBytes": 204189
+      },
+      {
+        "name": "tree",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 20872,
+        "composedBytes": 20872
+      },
+      {
+        "name": "tree-select",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 67068,
+        "composedBytes": 67068
+      },
+      {
+        "name": "form",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 18681,
+        "composedBytes": 110162
+      },
+      {
+        "name": "pagination",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 29685,
+        "composedBytes": 71645
+      },
+      {
+        "name": "transfer",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 12702,
+        "composedBytes": 366716
+      },
+      {
+        "name": "slider",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 15056,
+        "composedBytes": 27901
+      },
+      {
+        "name": "masonry",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": false,
+        "originalBytes": 4263,
+        "composedBytes": 4263
+      },
+      {
+        "name": "anchor",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 6347,
+        "composedBytes": 6397
+      },
+      {
+        "name": "breadcrumb",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 7032,
+        "composedBytes": 238038
+      },
+      {
+        "name": "card",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 12197,
+        "composedBytes": 54907
+      },
+      {
+        "name": "avatar",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 8073,
+        "composedBytes": 19047
+      },
+      {
+        "name": "color-picker",
+        "originalHashMatches": true,
+        "outputMatchesGenerator": true,
+        "changed": true,
+        "originalBytes": 25380,
+        "composedBytes": 387900
+      }
+    ],
+    "all69OriginalHashesReproduced": true,
+    "all69NewOutputsMatchPublishedGenerator": true,
+    "changed": 35,
+    "aggregateHash": "36c7e73f74139332ac9f79d6f9bc4369548e75f8796eb5e55ff3f61cdc86e310",
+    "aggregateGeneratorMatches": true,
+    "aggregateBytesUnchanged": true
+  },
+  "slideExtraction": {
+    "files": {
+      "select": {
+        "path": "/Users/nanren/Code/apollo-design-ui/packages/ui/src/select/style/index.ts",
+        "sha256": "7da45c847c64d63eb439cc47223fdd7d93a4909ea5ab2e4b4e98b5afdcda3f5c"
+      },
+      "slide": {
+        "path": "/Users/nanren/Code/apollo-design-ui/packages/ui/src/style/slide.ts",
+        "sha256": "2b2aa71bdc04663f5d66c262267d5c5fcdf8ce259127e2c6892198a60dd34c21"
+      },
+      "beforeSource": {
+        "path": "/tmp/apollo-css-dependency-audit/select-style-before.ts",
+        "sha256": "1d262415e821640b31a172a9dc6c24401efedbccbaa2485083c59a0fd831213f"
+      },
+      "previousPublished": {
+        "path": "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/select/style/index.mjs",
+        "sha256": "984199a710f5e2153c99a1f5f1257e48fe2a978c872265ddc70494ffd2e2c8d3"
+      }
+    },
+    "fragment": {
+      "rules": 14,
+      "bytes": 1888,
+      "sha256": "89d788c8bf2a91dabf2656409c4fa23b9a161e860f3ac9f1c047bdc6e1a6884d",
+      "exactPriorLiteral": true,
+      "containsNoKeyframes": true,
+      "containsNoComponentLayout": true
+    },
+    "results": [
+      {
+        "args": [],
+        "bytes": 40861,
+        "sha256": "cbdc04b336f297d11a54793ef7b036990a14ad2b84417a978238a73323d16e4f",
+        "sourceBeforeAfterExact": true,
+        "previousPublishedExact": true
+      },
+      {
+        "args": [
+          "apollo"
+        ],
+        "bytes": 40861,
+        "sha256": "cbdc04b336f297d11a54793ef7b036990a14ad2b84417a978238a73323d16e4f",
+        "sourceBeforeAfterExact": true,
+        "previousPublishedExact": true
+      },
+      {
+        "args": [
+          "apollo",
+          "apollo-select"
+        ],
+        "bytes": 40861,
+        "sha256": "cbdc04b336f297d11a54793ef7b036990a14ad2b84417a978238a73323d16e4f",
+        "sourceBeforeAfterExact": true,
+        "previousPublishedExact": true
+      },
+      {
+        "args": [
+          "apollo",
+          "apollo-cascader"
+        ],
+        "bytes": 41931,
+        "sha256": "ddd8eaa5d896d2be4b468704b27c42aad6183c1611b4f3a2c3d3ff8c857935be",
+        "sourceBeforeAfterExact": true,
+        "previousPublishedExact": true
+      },
+      {
+        "args": [
+          "apollo",
+          "apollo-tree-select"
+        ],
+        "bytes": 43536,
+        "sha256": "3351a6195ce969135b42b8ca731cf9e9a604a02a9f275c1ef04f0d95313b3bb0",
+        "sourceBeforeAfterExact": true,
+        "previousPublishedExact": true
+      },
+      {
+        "args": [
+          "ant"
+        ],
+        "bytes": 39256,
+        "sha256": "a248215054192754bb99e39302c7fb22ccd451c1df20670999a55caa13dc6d7a",
+        "sourceBeforeAfterExact": true,
+        "previousPublishedExact": true
+      },
+      {
+        "args": [
+          "ant",
+          "ant-select"
+        ],
+        "bytes": 39256,
+        "sha256": "a248215054192754bb99e39302c7fb22ccd451c1df20670999a55caa13dc6d7a",
+        "sourceBeforeAfterExact": true,
+        "previousPublishedExact": true
+      },
+      {
+        "args": [
+          "brand"
+        ],
+        "bytes": 40326,
+        "sha256": "16ad2c8070097e51facd4d8d6ecf434c33a7a22bd277d4c5d6799e0efc7e8595",
+        "sourceBeforeAfterExact": true,
+        "previousPublishedExact": true
+      },
+      {
+        "args": [
+          "brand",
+          "brand-widget"
+        ],
+        "bytes": 40326,
+        "sha256": "138b7ce281a2436f8b27cb503bba68a60f4554aa82e987bcb899f99d40f450d3",
+        "sourceBeforeAfterExact": true,
+        "previousPublishedExact": true
+      },
+      {
+        "args": [
+          "apollo",
+          "apollo"
+        ],
+        "bytes": 40861,
+        "sha256": "cbdc04b336f297d11a54793ef7b036990a14ad2b84417a978238a73323d16e4f",
+        "sourceBeforeAfterExact": true,
+        "previousPublishedExact": true
+      },
+      {
+        "args": [
+          "ant",
+          "ant"
+        ],
+        "bytes": 40861,
+        "sha256": "cbdc04b336f297d11a54793ef7b036990a14ad2b84417a978238a73323d16e4f",
+        "sourceBeforeAfterExact": true,
+        "previousPublishedExact": true
+      },
+      {
+        "args": [
+          "",
+          ""
+        ],
+        "bytes": 40861,
+        "sha256": "cbdc04b336f297d11a54793ef7b036990a14ad2b84417a978238a73323d16e4f",
+        "sourceBeforeAfterExact": true,
+        "previousPublishedExact": true
+      }
+    ],
+    "moduleLevelGenerationCalls": [],
+    "treeShake": {
+      "temporaryInMemoryViteFixtureOnly": true,
+      "write": false,
+      "bytes": 1697,
+      "sha256": "980cddece34646759e537d725ec6e977bac0068ef28736ec82f2495fa4da13eb",
+      "unusedSlideRulesAbsent": true,
+      "unusedSelectRulesAbsent": true
+    },
+    "packageBuilds": false,
+    "distWrites": false,
+    "finished": true
+  },
+  "fixtureCorrections": [
+    "Root-selector probes replace substring probes, which could mistake parent override selectors for complete descendant styles.",
+    "Calendar uses the actual RadioGroup root rather than its internal radio span; the old standalone stylesheet lacks its base rule too."
+  ],
+  "browserBeforeFix": {
+    "layout": "/tmp/apollo-css-dependency-audit/layout-browser/results.json",
+    "controls": "/tmp/apollo-css-dependency-audit/controls-browser-summary.json",
+    "forms": "/tmp/apollo-css-dependency-audit/forms-browser.json",
+    "data": "/tmp/apollo-css-dependency-audit/data-browser/summary.json"
+  },
+  "remaining": [
+    "Rebuilt standalone-vs-aggregate published browser acceptance",
+    "297 clean-source native visual captures/review/acceptance",
+    "Upload progress scoped defects being fixed separately",
+    "Whole-library final same-commit gates"
+  ],
+  "uiL7": {
+    "command": "node tests/build/run.mjs --package ui --no-build --strict",
+    "exitCode": 0,
+    "checks": 11,
+    "failed": 0,
+    "pending": 0,
+    "log": "/tmp/apollo-css-dependency-audit/ui-l7.log",
+    "buildStep": "B1 explicitly skipped; separate actual UI build passed"
+  }
+}
