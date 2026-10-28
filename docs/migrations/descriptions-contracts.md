@@ -53,3 +53,7 @@ const classNames: DescriptionsProps['classNames'] = ({ props }) => ({
 失败证据 `/tmp/apollo-descriptions-red.log`（新增 7 组全部红灯）先于实现。当前复验命令与结果见 [整改报告](../audit/2026-10-28-descriptions-contract-audit.md)。F08、#31 和全部 18 个参考场景保留；参考 DOM/HTML/PNG 未修改，精确差异在 `packages/ui/src/descriptions/__tests__/contract-differences.ts`，另有每个场景的原生成对语义断言和真实 Chrome 焦点/选区/主题/axe 覆盖。
 
 发布产物、消费端类型/SSR、Docs 与 Apollo 自有视觉候选由主线程在集成后的同一提交统一验证；本单元不写 dist，不把源码通过宣称为全库或已发布产物通过。
+
+接续验收保留全部 13 个原 Demo；custom-label 的问号改为有名称的原生按钮，hover 和键盘聚焦都能打开同一 Tooltip，图标为装饰。它不改变 Descriptions 公共 API。原 Demo 的四主题与实际交互见 `tests/browser/descriptions-demo-themes.mjs`。
+
+源码检查默认采用源码 JS/CSS；主线程构建就绪后，将 `DESCRIPTIONS_SOURCE=0` 同时用于 `tests/browser/descriptions-contracts.mjs`、`descriptions-hydration.mjs`、`descriptions-demo-themes.mjs` 和 `descriptions-visual.mjs`。发布模式加载公开的 theme/tokens.css、ui/style.css 和 dist JS，构建时拒绝组件/样式源码，浏览器断言不存在源码 CSS 注入。`descriptions-visual.mjs` 是 17 状态三宽度的功能预检；正式 Apollo 候选与批准仍走共享视觉流程。

@@ -7,7 +7,24 @@ import { h } from 'vue';
 const label = (text: string, tip: string) =>
   h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: '4px' } }, [
     text,
-    h(Tooltip, { title: tip }, () => h(QuestionCircleOutlined, { style: { color: '#1677ff' } })),
+    h(Tooltip, { title: tip, trigger: ['hover', 'focus'] }, () =>
+      h(
+        'button',
+        {
+          type: 'button',
+          'aria-label': `${text}说明`,
+          style: {
+            display: 'inline-flex',
+            padding: '2px',
+            border: 0,
+            background: 'transparent',
+            color: 'var(--apollo-color-primary)',
+            cursor: 'help',
+          },
+        },
+        h(QuestionCircleOutlined, { 'aria-hidden': 'true' }),
+      ),
+    ),
   ]);
 
 const items = [
@@ -20,5 +37,5 @@ const items = [
 
 <template>
   <Descriptions bordered :items="items" />
-  <p>将鼠标悬浮在问号图标上查看标签说明。</p>
+  <p>悬浮或使用 Tab 聚焦问号按钮，查看标签说明。</p>
 </template>

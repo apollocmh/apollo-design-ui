@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { copyFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -7,36 +7,16 @@ import { fileURLToPath } from 'node:url';
 import vue from '@vitejs/plugin-vue';
 import { build, preview } from 'vite';
 import { launchBrowser } from '../visual/stabilize.mjs';
+import { descriptionsAssets } from './descriptions-assets.mjs';
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const temp = mkdtempSync(path.join(tmpdir(), 'apollo-descriptions-browser-'));
-const alias = Object.fromEntries(
-  [
-    'utils',
-    'theme',
-    'icons',
-    'ui',
-    'motion',
-    'portal',
-    'position',
-    'overlay',
-    'a11y',
-    'virtual-list',
-    'form-core',
-    'picker',
-    'locale',
-  ].map((name) => [`@apollo-design/${name}`, path.join(repo, 'packages', name, 'src/index.ts')]),
-);
-alias.vue = createRequire(import.meta.url).resolve('vue/dist/vue.runtime.esm-bundler.js');
-mkdirSync(path.join(temp, 'public'));
-copyFileSync(
-  path.join(repo, 'packages/theme/dist/tokens.css'),
-  path.join(temp, 'public/tokens.css'),
-);
+symlinkSync(path.join(repo, 'node_modules'), path.join(temp, 'node_modules'), 'dir');
+const assets = descriptionsAssets();
 const entry = path.join(temp, 'index.html');
 writeFileSync(
   entry,
-  `<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="icon" href="data:,"><title>Descriptions contracts</title><link rel="stylesheet" href="/tokens.css"></head><body style="margin:0"><div id="app"></div><script type="module">import {createApp} from 'vue';import Fixture from '${path.join(repo, 'tests/browser/fixtures/DescriptionsContractAudit.vue')}';createApp(Fixture).mount('#app');</script></body></html>`,
+  `<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="icon" href="data:,"><title>Descriptions contracts</title></head><body style="margin:0"><div id="app"></div><script type="module">${assets.entry}import {createApp} from 'vue';import Fixture from '${path.join(repo, 'tests/browser/fixtures/DescriptionsContractAudit.vue')}';createApp(Fixture).mount('#app');</script></body></html>`,
 );
 const results = [],
   errors = [];
@@ -56,8 +36,8 @@ try {
     root: temp,
     configFile: false,
     logLevel: 'warn',
-    plugins: [vue()],
-    resolve: { alias },
+    plugins: [vue(), assets.plugin],
+    resolve: { alias: [...assets.alias, { find: 'vue', replacement: assets.vue }] },
     build: { outDir: path.join(temp, 'out'), rollupOptions: { input: entry } },
   });
   server = await preview({
@@ -75,6 +55,10 @@ try {
   });
   await page.goto(server.resolvedUrls.local[0], { waitUntil: 'networkidle' });
   await page.waitForFunction(() => Boolean(window.descriptionsAudit));
+  assert.equal(
+    await page.locator('style[data-descriptions-source-styles]').count(),
+    assets.source ? 1 : 0,
+  );
   await page.addScriptTag({ path: createRequire(import.meta.url).resolve('axe-core/axe.min.js') });
   const main = page.locator('[data-descriptions-main]'),
     editor = page.getByRole('textbox', { name: 'Persistent field draft' });
@@ -306,8 +290,9 @@ try {
   check('remount starts fresh uncontrolled content', await editor.inputValue(), 'Original draft');
   check('zero runtime and Vue errors', errors, []);
   writeFileSync(
-    process.env.DESCRIPTIONS_BROWSER_EVIDENCE ?? '/tmp/apollo-descriptions-browser.json',
-    `${JSON.stringify({ browser: browser.version(), results, errors }, null, 2)}\n`,
+    process.env.DESCRIPTIONS_BROWSER_EVIDENCE ??
+      `/tmp/apollo-descriptions-${assets.source ? 'source' : 'published'}-browser.json`,
+    `${JSON.stringify({ browser: browser.version(), assets: assets.evidence(), results, errors }, null, 2)}\n`,
   );
   console.log(`Descriptions browser: ${results.filter((r) => r.passed).length}/${results.length}`);
   assert.ok(results.every((r) => r.passed));

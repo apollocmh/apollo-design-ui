@@ -2,11 +2,7 @@
 import { compactAlgorithm, darkAlgorithm } from '@apollo-design/theme';
 import { ConfigProvider, Descriptions, DescriptionsItem } from '@apollo-design/ui';
 import { computed, nextTick, onMounted, ref, type StyleValue, shallowRef } from 'vue';
-import { genDescriptionsStyle } from '../../../packages/ui/src/descriptions/style';
 
-const styleSheet = document.createElement('style');
-styleSheet.textContent = genDescriptionsStyle('apollo');
-document.head.append(styleSheet);
 const column = ref<number | { xs: number; md: number }>(3),
   bordered = ref(false),
   vertical = ref(false);

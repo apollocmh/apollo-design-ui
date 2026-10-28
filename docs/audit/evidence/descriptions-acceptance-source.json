@@ -1,0 +1,2467 @@
+{
+  "date": "2026-10-28",
+  "sourceCommit": "1b361487904626f0ddf2c0c4803c87b3a0cb6454",
+  "stage": "source frozen; published artifacts/formal visual/Docs await main",
+  "preserved": {
+    "runtime": 119,
+    "sourceBrowser": 62,
+    "sourceHydration": 10,
+    "originalDemos": 13
+  },
+  "checklist": "docs/audit/2026-10-28-descriptions-contract-audit.md",
+  "changes": [
+    "Give the actual custom-label Demo named native help buttons with hover/focus Tooltips",
+    "Separate source JS/CSS from pure published JS/CSS; reject implementation/style source in published mode",
+    "Keep all original real Demos and add four-theme/interaction acceptance plus seventeen native visual states"
+  ],
+  "runtime": {
+    "files": 8,
+    "passed": 119,
+    "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/descriptions --maxWorkers=1",
+    "log": "/tmp/apollo-descriptions-layers-20261028.log"
+  },
+  "browser": {
+    "browser": "150.0.7871.125",
+    "assets": {
+      "mode": "source",
+      "javascript": "packages/*/src",
+      "css": "source generators",
+      "sourceStyleInjection": true,
+      "modules": 1903,
+      "distModules": 0
+    },
+    "results": [
+      {
+        "name": "native paired description tree",
+        "actual": 3,
+        "expected": 3,
+        "passed": true
+      },
+      {
+        "name": "item label slot keeps complete content",
+        "actual": "Native label",
+        "expected": "Native label",
+        "passed": true
+      },
+      {
+        "name": "root native id and tabindex",
+        "actual": [
+          "native-descriptions",
+          "0"
+        ],
+        "expected": [
+          "native-descriptions",
+          "0"
+        ],
+        "passed": true
+      },
+      {
+        "name": "Item native class",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "Item classes consumed",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "geometry {\"column\":1} retains editor/value/focus/selection",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "geometry {\"column\":2,\"bordered\":true} retains editor/value/focus/selection",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "geometry {\"vertical\":true} retains editor/value/focus/selection",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "geometry {\"bordered\":false} retains editor/value/focus/selection",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "geometry {\"vertical\":false,\"column\":3} retains editor/value/focus/selection",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "geometry {\"filled\":true} retains editor/value/focus/selection",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "keyed reorder keeps native identity and draft",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "keyed reorder retains owned focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "complete current title slot",
+        "actual": "Native title",
+        "expected": "Native title",
+        "passed": true
+      },
+      {
+        "name": "Provider class and style",
+        "actual": [
+          true,
+          "8px"
+        ],
+        "expected": [
+          true,
+          "8px"
+        ],
+        "passed": true
+      },
+      {
+        "name": "Provider semantic style",
+        "actual": "1px",
+        "expected": "1px",
+        "passed": true
+      },
+      {
+        "name": "current label/color token",
+        "actual": "rgb(18, 52, 86)",
+        "expected": "rgb(18, 52, 86)",
+        "passed": true
+      },
+      {
+        "name": "current title/color token",
+        "actual": "rgb(35, 69, 103)",
+        "expected": "rgb(35, 69, 103)",
+        "passed": true
+      },
+      {
+        "name": "current title margin token",
+        "actual": "31px",
+        "expected": "31px",
+        "passed": true
+      },
+      {
+        "name": "current content/color token",
+        "actual": "rgb(52, 86, 120)",
+        "expected": "rgb(52, 86, 120)",
+        "passed": true
+      },
+      {
+        "name": "current extra/color token",
+        "actual": "rgb(69, 103, 137)",
+        "expected": "rgb(69, 103, 137)",
+        "passed": true
+      },
+      {
+        "name": "current colon spacing tokens",
+        "actual": [
+          "2px",
+          "3px"
+        ],
+        "expected": [
+          "2px",
+          "3px"
+        ],
+        "passed": true
+      },
+      {
+        "name": "bordered label/background token",
+        "actual": "rgb(229, 240, 255)",
+        "expected": "rgb(229, 240, 255)",
+        "passed": true
+      },
+      {
+        "name": "bordered padding tokens",
+        "actual": [
+          "7px",
+          "9px"
+        ],
+        "expected": [
+          "7px",
+          "9px"
+        ],
+        "passed": true
+      },
+      {
+        "name": "RTL is current",
+        "actual": "rtl",
+        "expected": "rtl",
+        "passed": true
+      },
+      {
+        "name": "configuration edits retain native node",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "intentional empty title suppresses prop fallback",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "Provider removal clears class and style",
+        "actual": [
+          false,
+          "0px"
+        ],
+        "expected": [
+          false,
+          "0px"
+        ],
+        "passed": true
+      },
+      {
+        "name": "native style 641px",
+        "actual": "641px",
+        "expected": "641px",
+        "passed": true
+      },
+      {
+        "name": "native style 651px",
+        "actual": "651px",
+        "expected": "651px",
+        "passed": true
+      },
+      {
+        "name": "native style 661px",
+        "actual": "661px",
+        "expected": "661px",
+        "passed": true
+      },
+      {
+        "name": "light/false/false has no horizontal overflow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "light/false/false accessible content",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "light/false/true has no horizontal overflow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "light/false/true accessible content",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "light/true/false has no horizontal overflow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "light/true/false accessible content",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "light/true/true has no horizontal overflow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "light/true/true accessible content",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "dark/false/false has no horizontal overflow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "dark/false/false accessible content",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "dark/false/true has no horizontal overflow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "dark/false/true accessible content",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "dark/true/false has no horizontal overflow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "dark/true/false accessible content",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "dark/true/true has no horizontal overflow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "dark/true/true accessible content",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "compact/false/false has no horizontal overflow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "compact/false/false accessible content",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "compact/false/true has no horizontal overflow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "compact/false/true accessible content",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "compact/true/false has no horizontal overflow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "compact/true/false accessible content",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "compact/true/true has no horizontal overflow",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "compact/true/true accessible content",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "responsive columns retain native editor and focus",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "responsive mobile layout fits",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "nested label styles stay on owner",
+        "actual": "rgba(0, 0, 0, 0.65)",
+        "expected": "rgba(0, 0, 0, 0.65)",
+        "passed": true
+      },
+      {
+        "name": "native button fires once",
+        "actual": {
+          "clicks": 1
+        },
+        "expected": {
+          "clicks": 1
+        },
+        "passed": true
+      },
+      {
+        "name": "unmount removes main only",
+        "actual": [
+          0,
+          1
+        ],
+        "expected": [
+          0,
+          1
+        ],
+        "passed": true
+      },
+      {
+        "name": "remount starts fresh uncontrolled content",
+        "actual": "Original draft",
+        "expected": "Original draft",
+        "passed": true
+      },
+      {
+        "name": "zero runtime and Vue errors",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "hydration": {
+    "browser": "150.0.7871.125",
+    "assets": {
+      "mode": "source",
+      "javascript": "packages/*/src",
+      "css": "source generators",
+      "sourceStyleInjection": true,
+      "modules": 1903,
+      "distModules": 0
+    },
+    "results": [
+      {
+        "name": "source SSR has native paired descriptions",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "source SSR keeps complete named and default slots",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "source SSR consumes current Token",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "real hydration retains SSR list",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "real hydration retains SSR editor",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "post-hydration regrouping keeps node, focus, draft and selection",
+        "actual": true,
+        "expected": true,
+        "passed": true
+      },
+      {
+        "name": "post-hydration title Token is effective",
+        "actual": "29px",
+        "expected": "29px",
+        "passed": true
+      },
+      {
+        "name": "hydrated native semantics pass axe",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      },
+      {
+        "name": "hydrated app cleans up",
+        "actual": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "zero SSR hydration or Vue errors",
+        "actual": [],
+        "expected": [],
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "demos": {
+    "browser": "150.0.7871.125",
+    "assets": {
+      "mode": "source",
+      "javascript": "packages/*/src",
+      "css": "source generators",
+      "sourceStyleInjection": true,
+      "modules": 1931,
+      "distModules": 0
+    },
+    "results": [
+      {
+        "name": "basic/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "bordered/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "column/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 6,
+          "labels": 6,
+          "values": 6,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "component-token/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "items": 8,
+          "labels": 8,
+          "values": 8,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "custom-item/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 3,
+          "labels": 3,
+          "values": 3,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "custom-label/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "extra/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 3,
+          "labels": 3,
+          "values": 3,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "extra-button/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "padding/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "responsive/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 6,
+          "labels": 6,
+          "values": 6,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "size/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 3,
+          "items": 9,
+          "labels": 9,
+          "values": 9,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "vertical/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 3,
+          "labels": 3,
+          "values": 3,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "vertical-border/default: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 6,
+          "labels": 6,
+          "values": 6,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "default: column Demo uses its actual Select keyboard controls",
+        "passed": true
+      },
+      {
+        "name": "default: padding Demo applies and removes current semantic padding",
+        "passed": true
+      },
+      {
+        "name": "default: custom Item keeps the actual draft through four layout toggles",
+        "passed": true
+      },
+      {
+        "name": "default: extra-button Demo fires each native action once",
+        "passed": true
+      },
+      {
+        "name": "default: vertical-border Demo preserves native pairs while toggling borders",
+        "passed": true
+      },
+      {
+        "name": "default: custom-label help is keyboard reachable and opens the actual Tooltip",
+        "passed": true
+      },
+      {
+        "name": "default: all ten component-token Demo variables produce actual CSS",
+        "passed": true,
+        "state": [
+          {
+            "label": "rgb(29, 57, 196)",
+            "title": "rgb(16, 35, 158)",
+            "content": "rgb(16, 35, 158)",
+            "extra": "rgb(29, 57, 196)",
+            "margin": "24px",
+            "left": "6px",
+            "right": "10px",
+            "padding": "0px 24px 12px 0px",
+            "background": "rgba(0, 0, 0, 0)"
+          },
+          {
+            "label": "rgb(29, 57, 196)",
+            "title": "rgb(16, 35, 158)",
+            "content": "rgb(16, 35, 158)",
+            "extra": "rgb(29, 57, 196)",
+            "margin": "24px",
+            "left": "6px",
+            "right": "10px",
+            "padding": "12px 24px",
+            "background": "rgb(240, 245, 255)"
+          }
+        ]
+      },
+      {
+        "name": "default: responsive Demo follows real 420/700/1100px viewports",
+        "passed": true
+      },
+      {
+        "name": "basic/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "bordered/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "column/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 6,
+          "labels": 6,
+          "values": 6,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "component-token/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "items": 8,
+          "labels": 8,
+          "values": 8,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "custom-item/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 3,
+          "labels": 3,
+          "values": 3,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "custom-label/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "extra/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 3,
+          "labels": 3,
+          "values": 3,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "extra-button/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "padding/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "responsive/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 6,
+          "labels": 6,
+          "values": 6,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "size/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 3,
+          "items": 9,
+          "labels": 9,
+          "values": 9,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "vertical/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 3,
+          "labels": 3,
+          "values": 3,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "vertical-border/dark: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 6,
+          "labels": 6,
+          "values": 6,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "dark: column Demo uses its actual Select keyboard controls",
+        "passed": true
+      },
+      {
+        "name": "dark: padding Demo applies and removes current semantic padding",
+        "passed": true
+      },
+      {
+        "name": "dark: custom Item keeps the actual draft through four layout toggles",
+        "passed": true
+      },
+      {
+        "name": "dark: extra-button Demo fires each native action once",
+        "passed": true
+      },
+      {
+        "name": "dark: vertical-border Demo preserves native pairs while toggling borders",
+        "passed": true
+      },
+      {
+        "name": "dark: custom-label help is keyboard reachable and opens the actual Tooltip",
+        "passed": true
+      },
+      {
+        "name": "dark: all ten component-token Demo variables produce actual CSS",
+        "passed": true,
+        "state": [
+          {
+            "label": "rgb(29, 57, 196)",
+            "title": "rgb(16, 35, 158)",
+            "content": "rgb(16, 35, 158)",
+            "extra": "rgb(29, 57, 196)",
+            "margin": "24px",
+            "left": "6px",
+            "right": "10px",
+            "padding": "0px 24px 12px 0px",
+            "background": "rgba(0, 0, 0, 0)"
+          },
+          {
+            "label": "rgb(29, 57, 196)",
+            "title": "rgb(16, 35, 158)",
+            "content": "rgb(16, 35, 158)",
+            "extra": "rgb(29, 57, 196)",
+            "margin": "24px",
+            "left": "6px",
+            "right": "10px",
+            "padding": "12px 24px",
+            "background": "rgb(240, 245, 255)"
+          }
+        ]
+      },
+      {
+        "name": "dark: responsive Demo follows real 420/700/1100px viewports",
+        "passed": true
+      },
+      {
+        "name": "basic/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "bordered/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "column/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 6,
+          "labels": 6,
+          "values": 6,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "component-token/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "items": 8,
+          "labels": 8,
+          "values": 8,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "custom-item/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 3,
+          "labels": 3,
+          "values": 3,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "custom-label/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "extra/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 3,
+          "labels": 3,
+          "values": 3,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "extra-button/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "padding/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "responsive/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 6,
+          "labels": 6,
+          "values": 6,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "size/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 3,
+          "items": 9,
+          "labels": 9,
+          "values": 9,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "vertical/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 3,
+          "labels": 3,
+          "values": 3,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "vertical-border/compact: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 6,
+          "labels": 6,
+          "values": 6,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(255, 255, 255)"
+        }
+      },
+      {
+        "name": "compact: column Demo uses its actual Select keyboard controls",
+        "passed": true
+      },
+      {
+        "name": "compact: padding Demo applies and removes current semantic padding",
+        "passed": true
+      },
+      {
+        "name": "compact: custom Item keeps the actual draft through four layout toggles",
+        "passed": true
+      },
+      {
+        "name": "compact: extra-button Demo fires each native action once",
+        "passed": true
+      },
+      {
+        "name": "compact: vertical-border Demo preserves native pairs while toggling borders",
+        "passed": true
+      },
+      {
+        "name": "compact: custom-label help is keyboard reachable and opens the actual Tooltip",
+        "passed": true
+      },
+      {
+        "name": "compact: all ten component-token Demo variables produce actual CSS",
+        "passed": true,
+        "state": [
+          {
+            "label": "rgb(29, 57, 196)",
+            "title": "rgb(16, 35, 158)",
+            "content": "rgb(16, 35, 158)",
+            "extra": "rgb(29, 57, 196)",
+            "margin": "24px",
+            "left": "6px",
+            "right": "10px",
+            "padding": "0px 24px 12px 0px",
+            "background": "rgba(0, 0, 0, 0)"
+          },
+          {
+            "label": "rgb(29, 57, 196)",
+            "title": "rgb(16, 35, 158)",
+            "content": "rgb(16, 35, 158)",
+            "extra": "rgb(29, 57, 196)",
+            "margin": "24px",
+            "left": "6px",
+            "right": "10px",
+            "padding": "12px 24px",
+            "background": "rgb(240, 245, 255)"
+          }
+        ]
+      },
+      {
+        "name": "compact: responsive Demo follows real 420/700/1100px viewports",
+        "passed": true
+      },
+      {
+        "name": "basic/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "bordered/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "column/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 6,
+          "labels": 6,
+          "values": 6,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "component-token/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "items": 8,
+          "labels": 8,
+          "values": 8,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "custom-item/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 3,
+          "labels": 3,
+          "values": 3,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "custom-label/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "extra/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 3,
+          "labels": 3,
+          "values": 3,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "extra-button/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "padding/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 4,
+          "labels": 4,
+          "values": 4,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "responsive/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 6,
+          "labels": 6,
+          "values": 6,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "size/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 3,
+          "items": 9,
+          "labels": 9,
+          "values": 9,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "vertical/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 3,
+          "labels": 3,
+          "values": 3,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "vertical-border/both: real Demo, native description pairs, geometry and axe",
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "items": 6,
+          "labels": 6,
+          "values": 6,
+          "overflow": false,
+          "invalidText": false,
+          "background": "rgb(20, 20, 20)"
+        }
+      },
+      {
+        "name": "both: column Demo uses its actual Select keyboard controls",
+        "passed": true
+      },
+      {
+        "name": "both: padding Demo applies and removes current semantic padding",
+        "passed": true
+      },
+      {
+        "name": "both: custom Item keeps the actual draft through four layout toggles",
+        "passed": true
+      },
+      {
+        "name": "both: extra-button Demo fires each native action once",
+        "passed": true
+      },
+      {
+        "name": "both: vertical-border Demo preserves native pairs while toggling borders",
+        "passed": true
+      },
+      {
+        "name": "both: custom-label help is keyboard reachable and opens the actual Tooltip",
+        "passed": true
+      },
+      {
+        "name": "both: all ten component-token Demo variables produce actual CSS",
+        "passed": true,
+        "state": [
+          {
+            "label": "rgb(29, 57, 196)",
+            "title": "rgb(16, 35, 158)",
+            "content": "rgb(16, 35, 158)",
+            "extra": "rgb(29, 57, 196)",
+            "margin": "24px",
+            "left": "6px",
+            "right": "10px",
+            "padding": "0px 24px 12px 0px",
+            "background": "rgba(0, 0, 0, 0)"
+          },
+          {
+            "label": "rgb(29, 57, 196)",
+            "title": "rgb(16, 35, 158)",
+            "content": "rgb(16, 35, 158)",
+            "extra": "rgb(29, 57, 196)",
+            "margin": "24px",
+            "left": "6px",
+            "right": "10px",
+            "padding": "12px 24px",
+            "background": "rgb(240, 245, 255)"
+          }
+        ]
+      },
+      {
+        "name": "both: responsive Demo follows real 420/700/1100px viewports",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "visual": {
+    "status": "passed",
+    "browser": "150.0.7871.125",
+    "variants": 17,
+    "widths": [
+      375,
+      768,
+      1280
+    ],
+    "results": [
+      {
+        "variant": "basic",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 6,
+          "labels": 6,
+          "contents": 6,
+          "text": "Descriptions basicOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 1,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "bordered",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 6,
+          "labels": 6,
+          "contents": 6,
+          "text": "Descriptions borderedOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 1,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "vertical",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 6,
+          "labels": 6,
+          "contents": 6,
+          "text": "Descriptions verticalOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 1,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "vertical-bordered",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 6,
+          "labels": 6,
+          "contents": 6,
+          "text": "Descriptions vertical-borderedOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 1,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "sizes",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 3,
+          "lists": 3,
+          "items": 9,
+          "labels": 9,
+          "contents": 9,
+          "text": "Descriptions sizessmall description fieldsProductCloud DatabaseBillingPrepaidStatusRunningmiddle description fieldsProductCloud DatabaseBillingPrepaidStatusRunninglarge description fieldsProductCloud DatabaseBillingPrepaidStatusRunning",
+          "headers": 3,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "filled",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 4,
+          "labels": 4,
+          "contents": 4,
+          "text": "Descriptions filledResponsive spans and filled remainderProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31",
+          "headers": 1,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "complete-content",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 3,
+          "labels": 3,
+          "contents": 3,
+          "text": "Descriptions complete-contentNative title0Refresh Extra tailDraft labelValueComplete content0FilledRemaining columns",
+          "headers": 1,
+          "inputs": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "empty-slots",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 2,
+          "labels": 2,
+          "contents": 2,
+          "text": "Descriptions empty-slotsUnlabelled value0Zero0",
+          "headers": 0,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "current-geometry",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 3,
+          "labels": 3,
+          "contents": 3,
+          "text": "Descriptions current-geometryPreserved business draftCurrent geometryStatusRunningDraft labelAccountApollo",
+          "headers": 1,
+          "inputs": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "current-provider",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 3,
+          "labels": 3,
+          "contents": 3,
+          "text": "Descriptions current-providerNative title0Refresh Extra tailDraft labelValueComplete content0FilledRemaining columns",
+          "headers": 1,
+          "inputs": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "semantic-tokens",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 9,
+          "labels": 9,
+          "contents": 9,
+          "text": "Descriptions semantic-tokensAll ten current tokensCurrent extraProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1Colon and native root styleProductCloud DatabaseBillingPrepaidStatusRunning",
+          "headers": 2,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "nested",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 3,
+          "labels": 3,
+          "contents": 3,
+          "text": "Descriptions nestedNested description ownersOuter labelIndependent inner fieldsProductCloud DatabaseBillingPrepaid",
+          "headers": 2,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "native-focus",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 1,
+          "labels": 1,
+          "contents": 1,
+          "text": "Descriptions native-focusBefore fieldsNative field keyboard focusDraft label",
+          "headers": 1,
+          "inputs": 1,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "rtl",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 2,
+          "labels": 2,
+          "contents": 2,
+          "text": "Descriptions rtlتفاصيل الطلبالحسابApolloالحالةنشط",
+          "headers": 1,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "theme-dark",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 12,
+          "labels": 12,
+          "contents": 12,
+          "text": "Descriptions theme-darkOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1Plain current paletteProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 2,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(20, 20, 20)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "theme-compact",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 12,
+          "labels": 12,
+          "contents": 12,
+          "text": "Descriptions theme-compactOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1Plain current paletteProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 2,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "theme-dark-compact",
+        "width": 375,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 12,
+          "labels": 12,
+          "contents": 12,
+          "text": "Descriptions theme-dark-compactOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1Plain current paletteProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 2,
+          "inputs": 0,
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(20, 20, 20)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "basic",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 6,
+          "labels": 6,
+          "contents": 6,
+          "text": "Descriptions basicOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 1,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "bordered",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 6,
+          "labels": 6,
+          "contents": 6,
+          "text": "Descriptions borderedOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 1,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "vertical",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 6,
+          "labels": 6,
+          "contents": 6,
+          "text": "Descriptions verticalOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 1,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "vertical-bordered",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 6,
+          "labels": 6,
+          "contents": 6,
+          "text": "Descriptions vertical-borderedOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 1,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "sizes",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 3,
+          "lists": 3,
+          "items": 9,
+          "labels": 9,
+          "contents": 9,
+          "text": "Descriptions sizessmall description fieldsProductCloud DatabaseBillingPrepaidStatusRunningmiddle description fieldsProductCloud DatabaseBillingPrepaidStatusRunninglarge description fieldsProductCloud DatabaseBillingPrepaidStatusRunning",
+          "headers": 3,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "filled",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 4,
+          "labels": 4,
+          "contents": 4,
+          "text": "Descriptions filledResponsive spans and filled remainderProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31",
+          "headers": 1,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "complete-content",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 3,
+          "labels": 3,
+          "contents": 3,
+          "text": "Descriptions complete-contentNative title0Refresh Extra tailDraft labelValueComplete content0FilledRemaining columns",
+          "headers": 1,
+          "inputs": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "empty-slots",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 2,
+          "labels": 2,
+          "contents": 2,
+          "text": "Descriptions empty-slotsUnlabelled value0Zero0",
+          "headers": 0,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "current-geometry",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 3,
+          "labels": 3,
+          "contents": 3,
+          "text": "Descriptions current-geometryPreserved business draftCurrent geometryStatusRunningDraft labelAccountApollo",
+          "headers": 1,
+          "inputs": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "current-provider",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 3,
+          "labels": 3,
+          "contents": 3,
+          "text": "Descriptions current-providerNative title0Refresh Extra tailDraft labelValueComplete content0FilledRemaining columns",
+          "headers": 1,
+          "inputs": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "semantic-tokens",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 9,
+          "labels": 9,
+          "contents": 9,
+          "text": "Descriptions semantic-tokensAll ten current tokensCurrent extraProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1Colon and native root styleProductCloud DatabaseBillingPrepaidStatusRunning",
+          "headers": 2,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "nested",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 3,
+          "labels": 3,
+          "contents": 3,
+          "text": "Descriptions nestedNested description ownersOuter labelIndependent inner fieldsProductCloud DatabaseBillingPrepaid",
+          "headers": 2,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "native-focus",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 1,
+          "labels": 1,
+          "contents": 1,
+          "text": "Descriptions native-focusBefore fieldsNative field keyboard focusDraft label",
+          "headers": 1,
+          "inputs": 1,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "rtl",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 2,
+          "labels": 2,
+          "contents": 2,
+          "text": "Descriptions rtlتفاصيل الطلبالحسابApolloالحالةنشط",
+          "headers": 1,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "theme-dark",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 12,
+          "labels": 12,
+          "contents": 12,
+          "text": "Descriptions theme-darkOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1Plain current paletteProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 2,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(20, 20, 20)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "theme-compact",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 12,
+          "labels": 12,
+          "contents": 12,
+          "text": "Descriptions theme-compactOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1Plain current paletteProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 2,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "theme-dark-compact",
+        "width": 768,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 12,
+          "labels": 12,
+          "contents": 12,
+          "text": "Descriptions theme-dark-compactOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1Plain current paletteProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 2,
+          "inputs": 0,
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(20, 20, 20)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "basic",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 6,
+          "labels": 6,
+          "contents": 6,
+          "text": "Descriptions basicOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 1,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "bordered",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 6,
+          "labels": 6,
+          "contents": 6,
+          "text": "Descriptions borderedOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 1,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "vertical",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 6,
+          "labels": 6,
+          "contents": 6,
+          "text": "Descriptions verticalOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 1,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "vertical-bordered",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 6,
+          "labels": 6,
+          "contents": 6,
+          "text": "Descriptions vertical-borderedOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 1,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "sizes",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 3,
+          "lists": 3,
+          "items": 9,
+          "labels": 9,
+          "contents": 9,
+          "text": "Descriptions sizessmall description fieldsProductCloud DatabaseBillingPrepaidStatusRunningmiddle description fieldsProductCloud DatabaseBillingPrepaidStatusRunninglarge description fieldsProductCloud DatabaseBillingPrepaidStatusRunning",
+          "headers": 3,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "filled",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 4,
+          "labels": 4,
+          "contents": 4,
+          "text": "Descriptions filledResponsive spans and filled remainderProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31",
+          "headers": 1,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "complete-content",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 3,
+          "labels": 3,
+          "contents": 3,
+          "text": "Descriptions complete-contentNative title0Refresh Extra tailDraft labelValueComplete content0FilledRemaining columns",
+          "headers": 1,
+          "inputs": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "empty-slots",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 2,
+          "labels": 2,
+          "contents": 2,
+          "text": "Descriptions empty-slotsUnlabelled value0Zero0",
+          "headers": 0,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "current-geometry",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 3,
+          "labels": 3,
+          "contents": 3,
+          "text": "Descriptions current-geometryPreserved business draftCurrent geometryStatusRunningDraft labelAccountApollo",
+          "headers": 1,
+          "inputs": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "current-provider",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 3,
+          "labels": 3,
+          "contents": 3,
+          "text": "Descriptions current-providerNative title0Refresh Extra tailDraft labelValueComplete content0FilledRemaining columns",
+          "headers": 1,
+          "inputs": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "semantic-tokens",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 9,
+          "labels": 9,
+          "contents": 9,
+          "text": "Descriptions semantic-tokensAll ten current tokensCurrent extraProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1Colon and native root styleProductCloud DatabaseBillingPrepaidStatusRunning",
+          "headers": 2,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "nested",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 3,
+          "labels": 3,
+          "contents": 3,
+          "text": "Descriptions nestedNested description ownersOuter labelIndependent inner fieldsProductCloud DatabaseBillingPrepaid",
+          "headers": 2,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "native-focus",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 1,
+          "labels": 1,
+          "contents": 1,
+          "text": "Descriptions native-focusBefore fieldsNative field keyboard focusDraft label",
+          "headers": 1,
+          "inputs": 1,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "rtl",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 1,
+          "lists": 1,
+          "items": 2,
+          "labels": 2,
+          "contents": 2,
+          "text": "Descriptions rtlتفاصيل الطلبالحسابApolloالحالةنشط",
+          "headers": 1,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "theme-dark",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 12,
+          "labels": 12,
+          "contents": 12,
+          "text": "Descriptions theme-darkOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1Plain current paletteProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 2,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(20, 20, 20)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "theme-compact",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 12,
+          "labels": 12,
+          "contents": 12,
+          "text": "Descriptions theme-compactOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1Plain current paletteProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 2,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(255, 255, 255)",
+          "itemOverflow": 0
+        }
+      },
+      {
+        "variant": "theme-dark-compact",
+        "width": 1280,
+        "passed": true,
+        "state": {
+          "roots": 2,
+          "lists": 2,
+          "items": 12,
+          "labels": 12,
+          "contents": 12,
+          "text": "Descriptions theme-dark-compactOrder detailsProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1Plain current paletteProductCloud DatabaseBillingPrepaidStatusRunningExpires2026-12-31Amount$80.00RegionEast 1",
+          "headers": 2,
+          "inputs": 0,
+          "width": 1280,
+          "scrollWidth": 1280,
+          "background": "rgb(20, 20, 20)",
+          "itemOverflow": 0
+        }
+      }
+    ],
+    "errors": [],
+    "formalBaselineAcceptance": false,
+    "reviewedSourceImages": [
+      "current-geometry",
+      "empty-slots",
+      "theme-dark",
+      "semantic-tokens"
+    ],
+    "command": "node tests/browser/descriptions-visual.mjs",
+    "log": "/tmp/apollo-descriptions-source-visual-final.log"
+  },
+  "types": {
+    "status": "passed",
+    "initialBlockers": [
+      "Grid Col.vue:160 and Row.vue:97 current style parameter diagnostics; no Descriptions diagnostic"
+    ],
+    "log": "/tmp/apollo-descriptions-focused-types-20261028-final.log",
+    "exitCode": 0,
+    "command": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/DescriptionsSourceTypes.json"
+  },
+  "redEvidence": {
+    "customLabelHelp": {
+      "log": "/tmp/apollo-descriptions-source-demos-red.log",
+      "themes": 4,
+      "reason": "No keyboard-focusable named help control; locator.focus timed out before source fix"
+    },
+    "fixtureCorrections": [
+      "Use the existing Select Space/ArrowDown/Enter contract rather than assuming Home/End",
+      "Separate bordered padding from plain row padding",
+      "Use readable colorText rather than insufficient primary text color in a new nested visual fixture"
+    ]
+  },
+  "sha256": {
+    "packages/ui/src/descriptions/demo/custom-label.vue": "d784fc7ce916a02e04316a57cf7ad7f28e3dc2234107d220570b09950498183f",
+    "packages/ui/src/descriptions/demo/custom-label.md": "700d05795e4e3ed1c4aec3c7aaeade77c200e410c92ed7496716b10ab4b9b581",
+    "tests/browser/descriptions-assets.mjs": "0e7c2eb2f4ff81d6050e81a5facc935d110b93ddb0b8a8544d5e816eb09ef225",
+    "tests/browser/descriptions-contracts.mjs": "be7a0f97dc963e3f27b5851e8c0b3d0088d13abd9584dc0d378560bd279101a3",
+    "tests/browser/descriptions-hydration.mjs": "0fa6376f6e764f7b5a694161db2dc26050b42fbaa154979d988eae775fd3f325",
+    "tests/browser/descriptions-demo-themes.mjs": "d8baee78a769d9b5d3ff8203a9544e5e6ba375f70d4eaac96ec7d773423c3b5d",
+    "tests/browser/descriptions-visual.mjs": "91f7b5e163b9d8bc549aa592309627c843607cb2867471d604d906b101ed24df",
+    "tests/browser/fixtures/DescriptionsContractAudit.vue": "8a508ae1ad03220e27623608c65da1066a557a08e5e78ce983544c5d145ccd5f",
+    "tests/browser/fixtures/DescriptionsDemoThemes.mjs": "cea44ad136d3219f455e3003c58ca1fc424285a19de108847f2460de48d33a41",
+    "tests/visual/render/cases/apollo/descriptions.js": "9713cc0d2b3032e2ce1884a370f29ff9f2fd86988528dd171efb66c2fabcda17",
+    "tests/visual/descriptions-state.mjs": "a6019a92c73ce4e4851d38e68dc31888b70e976b0aa3f00cc13f733246d5915f"
+  },
+  "unverified": [
+    "Published browser JS+CSS, published Node SSR/hydration, published declarations",
+    "Clean committed native visual candidates/review/approved baselines",
+    "Docs and final same-commit full repository gates"
+  ]
+}

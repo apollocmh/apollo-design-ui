@@ -61,3 +61,31 @@
 ## 主线程集成保存点
 
 五个根类型出口已同步；当时Vitest类型被TimelineConfig源码诊断阻断的记录保留。该共享诊断修正后，合并73文件964运行时、10文件122类型、根严格和DescriptionsSourceTypes源码消费均exit0，详见parallel-source-checkpoint.json。最终产物/正式视觉/Docs门禁继续开放。
+
+## 统一验收接续：原 Demo、产物来源与原生视觉
+
+从 `cabc97c8` 和 `1b361487` 保存点继续；重新按本报告完整清单核对当前 Props、Slots、无业务 Emits/model、nativeElement、Item 与行计算、attrs、Provider、十 Token 和全部 13 对 Demo。既有实现与原 119/62/10、18 个参考场景、13 个 Demo 不删减。本轮新增验收范围和分类：
+
+| 当前链路 | 分类与结果 | 验收标准 |
+| --- | --- | --- |
+| Descriptions / Item 内容、身份、配置、类型与样式 | 当前实现继续保留，119 四层、62 Chrome、10 SSR/水合重新通过；未发现需改动组件实现的新缺陷 | 保留旧断言，当前 source 模式也不读取 dist |
+| 真实 Demo → 实际控件 → 可见行为 | 必修：custom-label 问号只有不可聚焦图标，键盘用户不能获得说明；四主题真实失败后修为有名称原生 button，Tooltip 同时接受 hover/focus | 13 Demo × default/dark/compact/dark+compact 的真实 DOM、几何、axe；每主题原 Demo 的八组实际交互 |
+| 源码/发布 JS 与 CSS 来源 | 必修验收夹具：此前无条件注入源码 Descriptions CSS，且 source 模式读取 theme/dist CSS | 统一 `descriptions-assets.mjs`；source 模式只用源码与源码样式生成器；`DESCRIPTIONS_SOURCE=0` 同时使用 packages/*/dist JS、公开 tokens.css 与 ui/style.css，并拒绝组件/样式源码模块和源码 CSS 注入 |
+| 原生 Apollo 视觉 | 本轮必备：独立 17 状态模块与状态准备助手；不修改共享 matrix、manifest、基线或原参考图 | 375/768/1280 三宽度的 51 状态先验证实际内容、dt/dd、焦点/草稿/选区、Token、溢出、主题和 axe；正式候选/逐张审阅/批准由主线程清洁提交执行 |
+| 发布声明、Node SSR、真实水合与 Docs | 仍待主线程明确 dist-ready 后执行；不将 source 通过记为产物通过 | 两个原消费脚本保留；contracts/hydration/demo-themes/visual 均支持 source 与纯发布模式。Docs 与全量门禁由主线程负责 |
+
+真实 Demo 的八组交互是：列数 Select 的 Space/ArrowDown/Enter、padding Select 的应用/移除、自定义 Item 四次布局切换保留原生输入和草稿、extra-button 原生 Enter/click 每次计数一次、vertical-border 四次开关保留 dt、custom-label Tab 可达并打开真实 Tooltip、十个组件变量的 computed style、420/700/1100px 真实响应式。合计 **84/84**，Chrome **150.0.7871.125**，零 Vue/页面错误。第一次选择控件夹具误假设 Home/End 支持，已按 Select 当前明确的 Space/ArrowDown/Enter 链路修正，保留选择首末选项和实际几何断言；bordered padding 预期按公开双轴 padding 区分，不放宽阈值。
+
+17 个视觉状态：basic、bordered、vertical、vertical-bordered、sizes、filled、complete-content、empty-slots、current-geometry、current-provider、semantic-tokens、nested、native-focus、rtl、theme-dark、theme-compact、theme-dark-compact。`current-geometry` 真正跨列、跨 span、布局/边框与 key 排序更新；`current-provider` 真正替换当前配置，二者都断言相同原生节点、草稿、焦点、选区和公开 ref。视觉预检只提供功能证据，不等于正式基线验收。
+
+本次命令与状态：
+
+- `node tests/browser/descriptions-contracts.mjs`：62/62 通过；来源记录为全 source，1903 个 packages 模块中 0 个 dist。
+- `node tests/browser/descriptions-hydration.mjs`：10/10 通过；Node SSR 无浏览器全局、真实水合与更新保留节点。
+- `node tests/browser/descriptions-demo-themes.mjs`：84/84 通过，52 主题/Demo 组合及 32 交互组。
+- `pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/descriptions --maxWorkers=1`：8 文件、原 119 条通过。jsdom 的既有 canvas getContext 提示保留；真实 Chrome axe 单独通过。
+- `node tests/browser/descriptions-visual.mjs`：51/51，17 状态 × 375/768/1280px，零页面/Vue/axe 错误。已查看 current-geometry、empty-slots、theme-dark、semantic-tokens 的 768px 图，仅作功能审阅。首次夹具 nested 使用低对比度 primary 文本的三红已修为 colorText；一次重跑恰遇并行 Space 尚未写齐 SpaceItems 导出，等待共享源恢复后按原命令通过，不绕过该导出或放宽断言。
+- `pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/DescriptionsSourceTypes.json`：最终 exit 0，包括全部源码、13 Demo 和消费 fixture；初次接续被并行 Grid 的临时 Row/Col 样式参数诊断阻断的记录保留。
+- 所属 JS/MJS 文件 `node --check`、Biome、`git diff --check` 通过。
+
+源码模块/夹具、当前结果、红绿边界与 hash 汇总见 `evidence/descriptions-acceptance-source.json`。未构建或改动任何 dist，未提交、推送或发布；未修改共享文件。最终集成 commit、产物结果、正式视觉与 Docs 后续单列，不覆盖本报告原始保存点证据。
