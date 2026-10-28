@@ -6,3 +6,5 @@ title:
 ---
 
 **项级**语义化槽（`styles.root` / `rail` / `content`）—— 注意它在 `items[i].styles` 上，不是根上的。
+
+淡化正文仍保持默认与暗色主题下的文字对比度。

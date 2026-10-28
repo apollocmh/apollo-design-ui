@@ -1,0 +1,561 @@
+{
+  "source": true,
+  "browser": "150.0.7871.125",
+  "passed": 156,
+  "total": 180,
+  "failures": [
+    {
+      "demo": "horizontal",
+      "theme": "default",
+      "viewport": "mobile",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "default",
+      "viewport": "mobile",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal",
+      "theme": "dark",
+      "viewport": "mobile",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "dark",
+      "viewport": "mobile",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal",
+      "theme": "compact",
+      "viewport": "mobile",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "compact",
+      "viewport": "mobile",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal",
+      "theme": "both",
+      "viewport": "mobile",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "both",
+      "viewport": "mobile",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal",
+      "theme": "default",
+      "viewport": "tablet",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "default",
+      "viewport": "tablet",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal",
+      "theme": "dark",
+      "viewport": "tablet",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "dark",
+      "viewport": "tablet",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal",
+      "theme": "compact",
+      "viewport": "tablet",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "compact",
+      "viewport": "tablet",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal",
+      "theme": "both",
+      "viewport": "tablet",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "both",
+      "viewport": "tablet",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal",
+      "theme": "default",
+      "viewport": "desktop",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "default",
+      "viewport": "desktop",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal",
+      "theme": "dark",
+      "viewport": "desktop",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "dark",
+      "viewport": "desktop",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal",
+      "theme": "compact",
+      "viewport": "desktop",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "compact",
+      "viewport": "desktop",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal",
+      "theme": "both",
+      "viewport": "desktop",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "both",
+      "viewport": "desktop",
+      "offsets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "error": "horizontal rails connect actual dot centers"
+    }
+  ],
+  "note": "Existing single-end horizontal translateY(50%) displaced the line center1px; fixed by removing transform without widening tolerance."
+}

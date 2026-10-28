@@ -67,7 +67,6 @@ const INLINE_INTERNAL_VARS = [
   '--apollo-timeline-head-span-ptg',
   '--apollo-timeline-alternate-gap',
   '--apollo-timeline-content-height',
-  '--apollo-timeline-alternate-content-offset',
 ];
 
 const token = getDesignToken();
@@ -217,7 +216,8 @@ describe('Timeline · 声明 ↔ 引用（双向）', () => {
     );
     expect(unresolved).toEqual([]);
 
-    // 反空转：声明的 4 条与内联的 5 条**真的都被引用**（否则 `declared` 里的豁免是白写的）
+    // Every current declaration must be used; intrinsic grid tracks replaced
+    // the removed absolute alternate-content-offset variable.
     for (const name of [...declared]) {
       expect(referenced).toContain(name);
     }

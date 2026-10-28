@@ -1,15 +1,11 @@
 /**
  * demo 冒烟测试：每个 demo 都能渲染、更新、卸载。
  *
- * `expectCount` 与 antd 6.6.4 的 `components/timeline/demo/` 的**用户可见** demo
- * 一一对应中本仓**已落地**的那批：basic / variant / end / title-span / horizontal /
+ * Current original SFCs: basic / variant / end / title-span / horizontal /
  * alternate / pending / pending-legacy / custom / horizontal-debug / title /
- * style-class / semantic，共 **13** 个。
- *
- * ⚠️ 与 antd 的**差距**（缺口登记在 `README.md` §5）：
- * - `component-token`（`theme.components.Timeline` 调试）—— 零运行时架构下 token 是构建期
- *   产物，已由 `theme.test.ts` 覆盖。**全仓 10+ 组件同判**。
- * - `_semantic` / `_semantic_items` —— 上游的**内部**演示件（不在用户文档侧栏）。
+ * style-class / semantic / component-token / native-slots, 15 in total.
+ * Browser four-theme/three-viewport and controller checks live in
+ * tests/browser/timeline-demos.mjs.
  *
  * ⚠️ **本组件的废弃告警有 7 条**（仅使用旧数据别名时触发）⇒ 必须豁免。
  */

@@ -15,6 +15,8 @@ const repository = path.resolve(root, '../../..');
 const outDir = mkdtempSync(path.join(tmpdir(), 'apollo-timeline-contracts-'));
 const evidencePath = process.env.TIMELINE_EVIDENCE ?? '/tmp/apollo-timeline-browser.json';
 const source = process.env.TIMELINE_SOURCE !== '0';
+const stylesheets = [];
+const publishedSources = [];
 const alias = source
   ? [
       {
@@ -56,6 +58,25 @@ try {
     plugins: [
       vue(),
       {
+        name: 'timeline-published-boundary',
+        transform(_code, id) {
+          if (id.endsWith('.css')) stylesheets.push(path.relative(repository, id));
+        },
+        generateBundle(_options, bundle) {
+          if (source) return;
+          for (const output of Object.values(bundle)) {
+            if (output.type !== 'chunk') continue;
+            for (const id of Object.keys(output.modules)) {
+              if (id.includes('/packages/ui/src/'))
+                publishedSources.push(path.relative(repository, id));
+            }
+          }
+          assert.deepEqual(publishedSources, [], 'published mode must contain no UI source');
+          assert.ok(stylesheets.includes('packages/ui/dist/index.css'));
+          assert.ok(stylesheets.includes('packages/theme/dist/tokens.css'));
+        },
+      },
+      {
         name: 'timeline-ssr-fixture',
         transformIndexHtml(html) {
           return html.replace('<!--TIMELINE_SSR-->', ssrHTML);
@@ -94,6 +115,7 @@ try {
   const set = (patch) => page.evaluate((patch) => window.timelineAudit.set(patch), patch);
   const snapshot = () => page.evaluate(() => window.timelineAudit.snapshot());
   const host = page.locator('#timeline-audit');
+  assert.equal(await page.locator('style[data-timeline-source-css]').count(), source ? 1 : 0);
   const css = (selector, field) =>
     page
       .locator(selector)
@@ -324,6 +346,9 @@ try {
   await check('zero browser, Vue and hydration errors', async () => assert.deepEqual(errors, []));
   const evidence = {
     source,
+    implementation: source ? 'source JS + source CSS' : 'published JS + published CSS',
+    stylesheets,
+    publishedSources,
     browser: await browser.version(),
     viewport: page.viewportSize(),
     results,

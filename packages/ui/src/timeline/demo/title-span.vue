@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd 的 `title-span` demo。
-import { Flex, Timeline, Title } from '@apollo-design/ui';
+import { Flex, Text, Timeline } from '@apollo-design/ui';
 
 const items = [
   { title: '05:10', content: 'Create a services' },
@@ -12,11 +12,11 @@ const items = [
 
 <template>
   <Flex vertical :gap="16">
-    <Title :level="5" :style="{ margin: 0 }">titleSpan = 100px</Title>
+    <Text strong :style="{ fontSize: 'var(--apollo-font-size-lg)' }">titleSpan = 100px</Text>
     <Timeline :items="items" title-span="100px" />
-    <Title :level="5" :style="{ margin: 0 }">titleSpan = 25%</Title>
+    <Text strong :style="{ fontSize: 'var(--apollo-font-size-lg)' }">titleSpan = 25%</Text>
     <Timeline :items="items" title-span="25%" />
-    <Title :level="5" :style="{ margin: 0 }">titleSpan = 18, mode = end</Title>
+    <Text strong :style="{ fontSize: 'var(--apollo-font-size-lg)' }">titleSpan = 18, mode = end</Text>
     <Timeline :items="items" :title-span="18" mode="end" />
   </Flex>
 </template>

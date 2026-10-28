@@ -75,3 +75,40 @@
 ## 主线程集成保存点
 
 17源码浏览器与249相关四层已通过；新模板暴露的TimelineConfig→ComponentConfigLike类型红灯，已用四个精确字段对象type修正，未添加索引签名或断言。fixture用明确Record中间值表达不同Token集合；原数字/非法值/零值断言保留。集成73文件964运行时、122类型、根严格及源码消费类型均通过，证据parallel-source-checkpoint.json。最终dist/声明消费/Docs及Apollo视觉仍待统一验收，不能宣称本单元完成。
+
+## 重启后统一验收清单
+
+2026-10-28 从 `1b361487` 继续；上表全部公开入口再次对照当前源码，未发现需要新增 API 或再次迁移的依据。本阶段仍覆盖完整 Timeline 整改单元，Steps 私有协议只读，由主线程管理共享变更。
+
+| 分类 | 当前核对与本阶段验收 |
+| --- | --- |
+| 已验证正常 | 原249条相关运行时、17条源码浏览器、精确 TimelineConfig 与模板类型集成证据保留；没有源码变化时不把重复绿灯当新增功能 |
+| 本轮必修 | 真实十五 Demo 的 default/dark/compact/dark+compact、mobile/tablet/desktop 与实际控制器交互矩阵；来源必须是原 `.vue`，不能用重写的简例替代 |
+| 本轮必修 | 发布模式同时消费发布 JS 与发布 CSS，禁止源码样式生成注入；保留原17条，输出区分 source/published 的结构化证据 |
+| 本轮必修 | 公开声明消费扩到全部十五 Demo及精确槽、Config、负例；SSR/水合仍断言服务端根复用和 nativeElement |
+| 本轮必修 | 私有 Apollo 视觉模块及状态 helper，包括无标题自然间距、末项 dotSize/border、原生焦点、动态 Provider/条件槽/反转/pending、完整内容、四主题和RTL；主线程集成、清洁提交捕获及批准 |
+| 需要审阅 | 无标题纵向默认20px与紧凑主题派生间距，必须明确审图；不修改原参考图或假称已批准 |
+| 另案处理 | 任意自定义前缀静态 CSS（D04）和无关新能力；不恢复 Item/React兼容入口 |
+
+本阶段完成须分别记录实现、源码验证、发布验证与主线程待验收项；收到主线程 dist-ready 前不读取旧产物、不构建 UI、不修改 dist、Registry或共享视觉文件。
+
+### 重启后成组修复与源码冻结
+
+真实 Demo 首轮128/180；修正测试对紧凑间距的错误预期后134/180，保留[首轮诊断](evidence/timeline-demo-source-red.json)。实际缺陷是 horizontal-debug 交错长文的 nowrap/绝对定位导致视口外溢及文本重叠、semantic 正文对比度2.81（默认）/3.61（暗色）、title-span 说明的 h5 跳级。普通末端纵向列表 scrollWidth 比盒子宽11px来自装饰 dot 的伪元素，截图与文本区域几何均正常，因此改以真实文字边界和视口外溢验收，不据此改生产样式。
+
+横向交错改为共享自然高度行与嵌套 subgrid，按栏换行并保留 wrapper/section/header 的真实语义样式盒子。删除已不参与布局的私有 absolute offset 变量，同步变量引用测试；其他 Token/类型与原参考用例/图片保留。Demo 正文透明度0.7通过四主题axe；宽度说明改强调文本并保留字号。API、成对 Demo 文档与迁移记录同步。
+
+| 本阶段实际命令 | 结果 / 边界 |
+| --- | --- |
+| `TIMELINE_SOURCE=1 node tests/browser/timeline-demos.mjs` | **180/180**；15原始SFC × default/dark/compact/dark+compact × mobile375/tablet768/desktop1200。实际Token开关、Radio切换、pending反转、槽更新/空槽/移除/恢复、同key输入值和身份；横轴对齐、文字不重叠/不外溢、自然高度，逐态真实axe，零浏览器/Vue错误。[源码证据](evidence/timeline-demo-source.json) |
+| `pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/timeline packages/ui/src/steps --maxWorkers=1` | **16文件249条通过，exit0**；原相关回归保留，包含私有内部协议消费方Steps |
+| `TIMELINE_SOURCE=1 node tests/browser/timeline-contracts.mjs` | **17/17，exit0**；原SSR根复用、nativeElement、原生Event/once、焦点/key/方向/六Token与axe全保留。[独立源码证据](evidence/timeline-contract-browser-source.json) |
+| `pnpm exec vue-tsc --noEmit -p /tmp/apollo-timeline-restart-types/tsconfig.json` | **exit0**；全部Timeline源码/原Demo及Contracts/Demos浏览器SFC。真实复现了computed泛型仍导致对象联合optional undefined；改明确返回类型与独立return分支，未用断言、索引放宽或忽略诊断 |
+
+生产源码与上述Demo/fixtures/consumer已冻结；私有Apollo视觉模块/状态helper正在独立源码自检。发布JS+CSS、全部15Demo公开声明、发布180态、发布17契约、正式清洁提交Apollo候选审图/批准复比、Docs与发布由主线程统一；未收到dist-ready前未读取旧UI产物。局部通过不代表单元/全库完成。
+
+私有25变体×3宽度首轮helper75/75后实际审图发现：新共享行的rail仍按整项50%绝对定位，长文下穿过正文。已主动撤回源码冻结，在修改前新增[圆点/连线中心红灯](evidence/timeline-rails-source-red.json)，mobile/tablet/desktop分别偏离70/37/26px。rail改为在中间共享行正常布局，实测三个宽度均小于1px，并实际查看修后移动截图；[局部绿灯](evidence/timeline-rails-source-green.json)。完整Demo矩阵与所有私有视觉态均加入该中心断言，再次执行；75态通过本身不等于正式审图批准。
+
+相同中心断言还复现了原单侧end横向连线的1px偏移：bottom已包含半线宽，额外translateY(50%)再次移动了半线宽。保留[24个实际Demo红灯](evidence/timeline-end-rails-source-red.json)，移除错误transform，不放宽小于1px标准，并新增horizontal-end原生视觉场景。
+
+**最终源码冻结**：全部15 Demo ×4主题×3宽度 **180/180 exit0**，私有26变体×3宽度 **78/78 exit0**（逐态真实axe/原生状态/焦点与ref/圆点和连线中心；[证据](evidence/timeline-visual-state-source.json)），最终相关主题 **21/21 exit0**。`biome check`和scoped `git diff --check`通过。源码/fixtures/consumer/visual case与helper的全部编辑停止；仅允许后续记录主线程dist-ready后的发布验证结果。Source截图仅在/tmp供诊断审阅，不是已批准基线；正式Apollo捕获、逐张审图、批准复比仍待主线程。

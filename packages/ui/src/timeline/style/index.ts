@@ -1,5 +1,8 @@
 /**
  * Timeline 的样式生成（G4 产物）。
+ * 2026-10-28: the counts/positioning below describe the original reference.
+ * Current horizontal alternate tracks grow intrinsically (horizontal.ts);
+ * titleless spacing and all six effective tokens follow Apollo contracts.
  *
  * 契约来源：antd 6.6.4 的 `es/timeline/style/index.ts`（275 行）+ `style/horizontal.ts`（120 行）。
  * 选择器结构**从真实产物提取**，不是推演 —— 可复现命令：

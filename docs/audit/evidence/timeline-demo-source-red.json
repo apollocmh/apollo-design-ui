@@ -1,0 +1,1383 @@
+{
+  "source": true,
+  "browser": "150.0.7871.125",
+  "base": "1b361487",
+  "total": 180,
+  "passed": 134,
+  "errors": [],
+  "groups": {
+    "end": [
+      {
+        "demo": "end",
+        "theme": "default",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 172,
+              "right": 359,
+              "scrollWidth": 354,
+              "clientWidth": 343,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "all actual lists have visible unclipped content"
+      },
+      {
+        "demo": "end",
+        "theme": "dark",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 172,
+              "right": 359,
+              "scrollWidth": 354,
+              "clientWidth": 343,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "all actual lists have visible unclipped content"
+      },
+      {
+        "demo": "end",
+        "theme": "compact",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 124,
+              "right": 359,
+              "scrollWidth": 354,
+              "clientWidth": 343,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "all actual lists have visible unclipped content"
+      },
+      {
+        "demo": "end",
+        "theme": "both",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 124,
+              "right": 359,
+              "scrollWidth": 354,
+              "clientWidth": 343,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "all actual lists have visible unclipped content"
+      },
+      {
+        "demo": "end",
+        "theme": "default",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 172,
+              "right": 752,
+              "scrollWidth": 747,
+              "clientWidth": 736,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "all actual lists have visible unclipped content"
+      },
+      {
+        "demo": "end",
+        "theme": "dark",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 172,
+              "right": 752,
+              "scrollWidth": 747,
+              "clientWidth": 736,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "all actual lists have visible unclipped content"
+      },
+      {
+        "demo": "end",
+        "theme": "compact",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 124,
+              "right": 752,
+              "scrollWidth": 747,
+              "clientWidth": 736,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "all actual lists have visible unclipped content"
+      },
+      {
+        "demo": "end",
+        "theme": "both",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 124,
+              "right": 752,
+              "scrollWidth": 747,
+              "clientWidth": 736,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "all actual lists have visible unclipped content"
+      },
+      {
+        "demo": "end",
+        "theme": "default",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1200,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 172,
+              "right": 1184,
+              "scrollWidth": 1179,
+              "clientWidth": 1168,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "all actual lists have visible unclipped content"
+      },
+      {
+        "demo": "end",
+        "theme": "dark",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1200,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 172,
+              "right": 1184,
+              "scrollWidth": 1179,
+              "clientWidth": 1168,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "all actual lists have visible unclipped content"
+      },
+      {
+        "demo": "end",
+        "theme": "compact",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1200,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 124,
+              "right": 1184,
+              "scrollWidth": 1179,
+              "clientWidth": 1168,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "all actual lists have visible unclipped content"
+      },
+      {
+        "demo": "end",
+        "theme": "both",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1200,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 124,
+              "right": 1184,
+              "scrollWidth": 1179,
+              "clientWidth": 1168,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "all actual lists have visible unclipped content"
+      }
+    ],
+    "horizontal-debug": [
+      {
+        "demo": "horizontal-debug",
+        "theme": "default",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 481,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 238,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "row"
+            },
+            {
+              "width": 343,
+              "height": 238,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "row"
+            },
+            {
+              "width": 343,
+              "height": 70,
+              "right": 359,
+              "scrollWidth": 465,
+              "clientWidth": 343,
+              "orientation": "row"
+            }
+          ]
+        },
+        "error": "actual demo fits viewport"
+      },
+      {
+        "demo": "horizontal-debug",
+        "theme": "dark",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 481,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 238,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "row"
+            },
+            {
+              "width": 343,
+              "height": 238,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "row"
+            },
+            {
+              "width": 343,
+              "height": 70,
+              "right": 359,
+              "scrollWidth": 465,
+              "clientWidth": 343,
+              "orientation": "row"
+            }
+          ]
+        },
+        "error": "actual demo fits viewport"
+      },
+      {
+        "demo": "horizontal-debug",
+        "theme": "compact",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 460,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 214,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "row"
+            },
+            {
+              "width": 343,
+              "height": 214,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "row"
+            },
+            {
+              "width": 343,
+              "height": 58,
+              "right": 359,
+              "scrollWidth": 444,
+              "clientWidth": 343,
+              "orientation": "row"
+            }
+          ]
+        },
+        "error": "actual demo fits viewport"
+      },
+      {
+        "demo": "horizontal-debug",
+        "theme": "both",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 460,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 214,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "row"
+            },
+            {
+              "width": 343,
+              "height": 214,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "row"
+            },
+            {
+              "width": 343,
+              "height": 58,
+              "right": 359,
+              "scrollWidth": 444,
+              "clientWidth": 343,
+              "orientation": "row"
+            }
+          ]
+        },
+        "error": "actual demo fits viewport"
+      },
+      {
+        "demo": "horizontal-debug",
+        "theme": "default",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 825,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 106,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "row"
+            },
+            {
+              "width": 736,
+              "height": 106,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "row"
+            },
+            {
+              "width": 736,
+              "height": 70,
+              "right": 752,
+              "scrollWidth": 809,
+              "clientWidth": 736,
+              "orientation": "row"
+            }
+          ]
+        },
+        "error": "actual demo fits viewport"
+      },
+      {
+        "demo": "horizontal-debug",
+        "theme": "dark",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 825,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 106,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "row"
+            },
+            {
+              "width": 736,
+              "height": 106,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "row"
+            },
+            {
+              "width": 736,
+              "height": 70,
+              "right": 752,
+              "scrollWidth": 809,
+              "clientWidth": 736,
+              "orientation": "row"
+            }
+          ]
+        },
+        "error": "actual demo fits viewport"
+      },
+      {
+        "demo": "horizontal-debug",
+        "theme": "compact",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 804,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 94,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "row"
+            },
+            {
+              "width": 736,
+              "height": 94,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "row"
+            },
+            {
+              "width": 736,
+              "height": 58,
+              "right": 752,
+              "scrollWidth": 788,
+              "clientWidth": 736,
+              "orientation": "row"
+            }
+          ]
+        },
+        "error": "actual demo fits viewport"
+      },
+      {
+        "demo": "horizontal-debug",
+        "theme": "both",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 804,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 94,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "row"
+            },
+            {
+              "width": 736,
+              "height": 94,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "row"
+            },
+            {
+              "width": 736,
+              "height": 58,
+              "right": 752,
+              "scrollWidth": 788,
+              "clientWidth": 736,
+              "orientation": "row"
+            }
+          ]
+        },
+        "error": "actual demo fits viewport"
+      },
+      {
+        "demo": "horizontal-debug",
+        "theme": "default",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1203,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 106,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "row"
+            },
+            {
+              "width": 1168,
+              "height": 106,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "row"
+            },
+            {
+              "width": 1168,
+              "height": 70,
+              "right": 1184,
+              "scrollWidth": 1187,
+              "clientWidth": 1168,
+              "orientation": "row"
+            }
+          ]
+        },
+        "error": "actual demo fits viewport"
+      },
+      {
+        "demo": "horizontal-debug",
+        "theme": "dark",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1203,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 106,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "row"
+            },
+            {
+              "width": 1168,
+              "height": 106,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "row"
+            },
+            {
+              "width": 1168,
+              "height": 70,
+              "right": 1184,
+              "scrollWidth": 1187,
+              "clientWidth": 1168,
+              "orientation": "row"
+            }
+          ]
+        },
+        "error": "actual demo fits viewport"
+      }
+    ],
+    "semantic": [
+      {
+        "demo": "semantic",
+        "theme": "default",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 329,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element has insufficient color contrast of 2.81 (foreground color: #9a9a9a, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "semantic",
+        "theme": "dark",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 329,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element has insufficient color contrast of 3.61 (foreground color: #6e6e6e, background color: #141414, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "semantic",
+        "theme": "compact",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 293,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element has insufficient color contrast of 2.81 (foreground color: #9a9a9a, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "semantic",
+        "theme": "both",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 293,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element has insufficient color contrast of 3.61 (foreground color: #6e6e6e, background color: #141414, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "semantic",
+        "theme": "default",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 329,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element has insufficient color contrast of 2.81 (foreground color: #9a9a9a, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "semantic",
+        "theme": "dark",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 329,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element has insufficient color contrast of 3.61 (foreground color: #6e6e6e, background color: #141414, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "semantic",
+        "theme": "compact",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 293,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element has insufficient color contrast of 2.81 (foreground color: #9a9a9a, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "semantic",
+        "theme": "both",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 293,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element has insufficient color contrast of 3.61 (foreground color: #6e6e6e, background color: #141414, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "semantic",
+        "theme": "default",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1200,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 329,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element has insufficient color contrast of 2.81 (foreground color: #9a9a9a, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "semantic",
+        "theme": "dark",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1200,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 329,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element has insufficient color contrast of 3.61 (foreground color: #6e6e6e, background color: #141414, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "semantic",
+        "theme": "compact",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1200,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 293,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element has insufficient color contrast of 2.81 (foreground color: #9a9a9a, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "semantic",
+        "theme": "both",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1200,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 293,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     nodes: [\n+       'Fix any of the following:\\n' +\n+         '  Element has insufficient color contrast of 3.61 (foreground color: #6e6e6e, background color: #141414, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1'\n+     ]\n+   }\n+ ]\n- []\n"
+      }
+    ],
+    "title-span": [
+      {
+        "demo": "title-span",
+        "theme": "default",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 175,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            },
+            {
+              "width": 343,
+              "height": 175,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            },
+            {
+              "width": 343,
+              "height": 345,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'heading-order',\n+     nodes: [\n+       'Fix any of the following:\\n  Heading order invalid'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "title-span",
+        "theme": "dark",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 175,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            },
+            {
+              "width": 343,
+              "height": 175,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            },
+            {
+              "width": 343,
+              "height": 345,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'heading-order',\n+     nodes: [\n+       'Fix any of the following:\\n  Heading order invalid'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "title-span",
+        "theme": "compact",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 127,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            },
+            {
+              "width": 343,
+              "height": 127,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            },
+            {
+              "width": 343,
+              "height": 241,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'heading-order',\n+     nodes: [\n+       'Fix any of the following:\\n  Heading order invalid'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "title-span",
+        "theme": "both",
+        "viewport": "mobile",
+        "passed": false,
+        "geometry": {
+          "width": 375,
+          "scrollWidth": 375,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 343,
+              "height": 127,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            },
+            {
+              "width": 343,
+              "height": 127,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            },
+            {
+              "width": 343,
+              "height": 241,
+              "right": 359,
+              "scrollWidth": 343,
+              "clientWidth": 343,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'heading-order',\n+     nodes: [\n+       'Fix any of the following:\\n  Heading order invalid'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "title-span",
+        "theme": "default",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 175,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            },
+            {
+              "width": 736,
+              "height": 175,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            },
+            {
+              "width": 736,
+              "height": 215,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'heading-order',\n+     nodes: [\n+       'Fix any of the following:\\n  Heading order invalid'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "title-span",
+        "theme": "dark",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 175,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            },
+            {
+              "width": 736,
+              "height": 175,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            },
+            {
+              "width": 736,
+              "height": 215,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'heading-order',\n+     nodes: [\n+       'Fix any of the following:\\n  Heading order invalid'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "title-span",
+        "theme": "compact",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 127,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            },
+            {
+              "width": 736,
+              "height": 127,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            },
+            {
+              "width": 736,
+              "height": 145,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'heading-order',\n+     nodes: [\n+       'Fix any of the following:\\n  Heading order invalid'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "title-span",
+        "theme": "both",
+        "viewport": "tablet",
+        "passed": false,
+        "geometry": {
+          "width": 768,
+          "scrollWidth": 768,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 736,
+              "height": 127,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            },
+            {
+              "width": 736,
+              "height": 127,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            },
+            {
+              "width": 736,
+              "height": 145,
+              "right": 752,
+              "scrollWidth": 736,
+              "clientWidth": 736,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'heading-order',\n+     nodes: [\n+       'Fix any of the following:\\n  Heading order invalid'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "title-span",
+        "theme": "default",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1200,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 175,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            },
+            {
+              "width": 1168,
+              "height": 175,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            },
+            {
+              "width": 1168,
+              "height": 175,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'heading-order',\n+     nodes: [\n+       'Fix any of the following:\\n  Heading order invalid'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "title-span",
+        "theme": "dark",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1200,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 175,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            },
+            {
+              "width": 1168,
+              "height": 175,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            },
+            {
+              "width": 1168,
+              "height": 175,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'heading-order',\n+     nodes: [\n+       'Fix any of the following:\\n  Heading order invalid'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "title-span",
+        "theme": "compact",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1200,
+          "background": "rgb(255, 255, 255)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 127,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            },
+            {
+              "width": 1168,
+              "height": 127,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            },
+            {
+              "width": 1168,
+              "height": 127,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'heading-order',\n+     nodes: [\n+       'Fix any of the following:\\n  Heading order invalid'\n+     ]\n+   }\n+ ]\n- []\n"
+      },
+      {
+        "demo": "title-span",
+        "theme": "both",
+        "viewport": "desktop",
+        "passed": false,
+        "geometry": {
+          "width": 1200,
+          "scrollWidth": 1200,
+          "background": "rgb(20, 20, 20)",
+          "timelines": [
+            {
+              "width": 1168,
+              "height": 127,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            },
+            {
+              "width": 1168,
+              "height": 127,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            },
+            {
+              "width": 1168,
+              "height": 127,
+              "right": 1184,
+              "scrollWidth": 1168,
+              "clientWidth": 1168,
+              "orientation": "column"
+            }
+          ]
+        },
+        "error": "actual demo state passes axe\n+ actual - expected\n\n+ [\n+   {\n+     id: 'heading-order',\n+     nodes: [\n+       'Fix any of the following:\\n  Heading order invalid'\n+     ]\n+   }\n+ ]\n- []\n"
+      }
+    ]
+  },
+  "note": "End scrollWidth includes decorative Steps dot hit area; visible text fits. Compact expectation corrected from15px to10px (theme.padding8). Actual horizontal-debug overlap/overflow, semantic contrast and skipped heading levels require fixes."
+}

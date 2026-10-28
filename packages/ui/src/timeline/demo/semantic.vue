@@ -11,7 +11,7 @@ const items = [
   },
   {
     content: '...for a long time...',
-    styles: { root: { height: '100px' }, rail: dashed, content: { opacity: 0.45 } },
+    styles: { root: { height: '100px' }, rail: dashed, content: { opacity: 0.7 } },
   },
   { content: 'Technical testing 2015-09-01' },
   { content: 'Network problems being solved 2015-09-01' },

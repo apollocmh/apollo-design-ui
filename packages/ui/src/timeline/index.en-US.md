@@ -30,6 +30,8 @@ The fifteen paired examples in `demo/` cover basic content, variants, end placem
 
 Vertical timelines use the two-column layout when any current title is nonempty. Explicit mode="alternate" also enables this layout and assigns sides by source-item parity. Reversing changes display order and slot indices while preserving each source item's side. titleSpan is ignored in explicit alternate mode.
 
+Horizontal alternating timelines wrap long titles and descriptions within each column. Shared intrinsic rows keep one aligned axis and grow with content; the semantic wrapper, section and header remain real styling boxes. Content-only vertical timelines use itemPaddingBottom (20px by default, 10px with the compact algorithm).
+
 ### Item data
 
 | Field | Description | Type |

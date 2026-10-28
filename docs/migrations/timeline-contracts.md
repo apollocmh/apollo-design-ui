@@ -2,6 +2,12 @@
 
 适用：未发布开发版 `0.0.0`，2026-10-28。本轮保留 Timeline、ATimeline 注册名、items、三个原生条目槽、合理数据别名和六 Token。错误原生事件/DOM 按 ADR0007 直接修正，无兼容层、无弃用期；不恢复已移除的 Timeline.Item 或 React 内容函数通道。
 
+## 真实 Demo 的横向长文与可读性
+
+横向 `mode="alternate"` 以前固定单行、绝对居中定位标题和正文，真实 horizontal-debug 在移动宽度下出现多栏重叠与视口外溢。现在各栏换行，使用共享自然高度行保持同一横轴，内容可增加上下行高度；原 wrapper/section/header DOM 和语义样式盒子保留。旧内部 absolute offset 变量不再参与布局，未新增公共 prop/Token，不需要调用方迁移，也不保留有缺陷的布局分支。
+
+semantic Demo 的正文透明度从0.45调整为0.7，默认/暗色及紧凑组合均通过真实浏览器对比度检查；title-span 的宽度说明改为强调文本，保留字号，避免跳级标题。原参考用例和图片未修改。验证来自全部十五原始 SFC × 四主题 × 三视口，并实际操作反转、Radio 模式、条件槽与动态 Token；见本轮审计证据。
+
 ## 原生事件、方向与 ref
 
 以前 `@change` 经 attrs 传给 Steps 后，被其业务 `onChange(index)` 吞并；条目因而带 button 角色和 tabindex，输入冒泡 change 无法到达原生根监听器。现在 attrs 经私有 `rootAttrs` 通道直达 `<ol>`，`@change` 得到 DOM Event，`@click`、动态监听器替换/移除和 `.once` 遵循 Vue DOM 规则。Timeline 仍为被动列表，无 emits/v-model；公开 Steps 的 `onChange(current)` 不变。

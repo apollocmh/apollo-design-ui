@@ -1,0 +1,7167 @@
+{
+  "source": true,
+  "implementation": "source JS + source CSS",
+  "stylesheets": [],
+  "publishedSources": [],
+  "browser": "150.0.7871.125",
+  "demos": 15,
+  "themes": 4,
+  "viewports": 3,
+  "results": [
+    {
+      "demo": "alternate",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 500,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              32.5,
+              32.5,
+              76.5,
+              43.5,
+              32.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "basic",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 172,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "component-token",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 204,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              25.5,
+              25.5,
+              25.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "custom",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 172,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "end",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 172,
+            "right": 359,
+            "scrollWidth": 354,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 40,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 40,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 70,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 238,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 238,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 246,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "native-slots",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 140,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              35
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 299.828125,
+            "height": 172,
+            "right": 315.828125,
+            "scrollWidth": 300,
+            "clientWidth": 300,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending-legacy",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 245.734375,
+            "height": 86,
+            "right": 261.734375,
+            "scrollWidth": 246,
+            "clientWidth": 246,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 245.734375,
+            "height": 86,
+            "right": 261.734375,
+            "scrollWidth": 246,
+            "clientWidth": 246,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "semantic",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 329,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              50,
+              50,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "style-class",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 128,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 173,
+            "right": 359,
+            "scrollWidth": 341,
+            "clientWidth": 341,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              32
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 215,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              32,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title-span",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 175,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 175,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 345,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              32,
+              54,
+              32.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "variant",
+      "theme": "default",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 172,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "alternate",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 500,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              32.5,
+              32.5,
+              76.5,
+              43.5,
+              32.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "basic",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 172,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "component-token",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 204,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              25.5,
+              25.5,
+              25.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "custom",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 172,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "end",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 172,
+            "right": 359,
+            "scrollWidth": 354,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 40,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 40,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 70,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 238,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 238,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 246,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "native-slots",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 140,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              35
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 299.828125,
+            "height": 172,
+            "right": 315.828125,
+            "scrollWidth": 300,
+            "clientWidth": 300,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending-legacy",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 245.734375,
+            "height": 86,
+            "right": 261.734375,
+            "scrollWidth": 246,
+            "clientWidth": 246,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 245.734375,
+            "height": 86,
+            "right": 261.734375,
+            "scrollWidth": 246,
+            "clientWidth": 246,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "semantic",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 329,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              50,
+              50,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "style-class",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 128,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 173,
+            "right": 359,
+            "scrollWidth": 341,
+            "clientWidth": 341,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              32
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 215,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              32,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title-span",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 175,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 175,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 345,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              32,
+              54,
+              32.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "variant",
+      "theme": "dark",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 172,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "alternate",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 346,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              25.5,
+              25.5,
+              45.5,
+              25.5,
+              25.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "basic",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 124,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "component-token",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 196,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              24.5,
+              24.5,
+              24.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "custom",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 124,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "end",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 124,
+            "right": 359,
+            "scrollWidth": 354,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 34,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 34,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 58,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 214,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 214,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 218,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "native-slots",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 112,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              28
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 257.984375,
+            "height": 124,
+            "right": 273.984375,
+            "scrollWidth": 258,
+            "clientWidth": 258,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending-legacy",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 210.609375,
+            "height": 62,
+            "right": 226.609375,
+            "scrollWidth": 211,
+            "clientWidth": 211,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 210.609375,
+            "height": 62,
+            "right": 226.609375,
+            "scrollWidth": 211,
+            "clientWidth": 211,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "semantic",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 293,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              50,
+              50,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "style-class",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 94,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 135,
+            "right": 359,
+            "scrollWidth": 341,
+            "clientWidth": 341,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              25
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 163,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              25,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title-span",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 127,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 127,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 241,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              25,
+              35,
+              25.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "variant",
+      "theme": "compact",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 124,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "alternate",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 346,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              25.5,
+              25.5,
+              45.5,
+              25.5,
+              25.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "basic",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 124,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "component-token",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 196,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              24.5,
+              24.5,
+              24.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "custom",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 124,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "end",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 124,
+            "right": 359,
+            "scrollWidth": 354,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 34,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 34,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 58,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 214,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 214,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 218,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "native-slots",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 112,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              28
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 257.984375,
+            "height": 124,
+            "right": 273.984375,
+            "scrollWidth": 258,
+            "clientWidth": 258,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending-legacy",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 210.609375,
+            "height": 62,
+            "right": 226.609375,
+            "scrollWidth": 211,
+            "clientWidth": 211,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 210.609375,
+            "height": 62,
+            "right": 226.609375,
+            "scrollWidth": 211,
+            "clientWidth": 211,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "semantic",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 293,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              50,
+              50,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "style-class",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 94,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 135,
+            "right": 359,
+            "scrollWidth": 341,
+            "clientWidth": 341,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              25
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 163,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              25,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title-span",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 127,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 127,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 343,
+            "height": 241,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              25,
+              35,
+              25.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "variant",
+      "theme": "both",
+      "viewport": "mobile",
+      "passed": true,
+      "geometry": {
+        "width": 375,
+        "scrollWidth": 375,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 343,
+            "height": 124,
+            "right": 359,
+            "scrollWidth": 343,
+            "clientWidth": 343,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "alternate",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 280,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              32.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "basic",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 172,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "component-token",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 204,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              25.5,
+              25.5,
+              25.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "custom",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 172,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "end",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 172,
+            "right": 752,
+            "scrollWidth": 747,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 40,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 40,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 70,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 106,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 106,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 114,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "native-slots",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 96,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              24
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 299.828125,
+            "height": 172,
+            "right": 315.828125,
+            "scrollWidth": 300,
+            "clientWidth": 300,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending-legacy",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 245.734375,
+            "height": 86,
+            "right": 261.734375,
+            "scrollWidth": 246,
+            "clientWidth": 246,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 245.734375,
+            "height": 86,
+            "right": 261.734375,
+            "scrollWidth": 246,
+            "clientWidth": 246,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "semantic",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 329,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              50,
+              50,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "style-class",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 62,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 153,
+            "right": 752,
+            "scrollWidth": 734,
+            "clientWidth": 734,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 175,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title-span",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 175,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 175,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 215,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              32,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "variant",
+      "theme": "default",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 172,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "alternate",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 280,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              32.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "basic",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 172,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "component-token",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 204,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              25.5,
+              25.5,
+              25.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "custom",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 172,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "end",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 172,
+            "right": 752,
+            "scrollWidth": 747,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 40,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 40,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 70,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 106,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 106,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 114,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "native-slots",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 96,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              24
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 299.828125,
+            "height": 172,
+            "right": 315.828125,
+            "scrollWidth": 300,
+            "clientWidth": 300,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending-legacy",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 245.734375,
+            "height": 86,
+            "right": 261.734375,
+            "scrollWidth": 246,
+            "clientWidth": 246,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 245.734375,
+            "height": 86,
+            "right": 261.734375,
+            "scrollWidth": 246,
+            "clientWidth": 246,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "semantic",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 329,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              50,
+              50,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "style-class",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 62,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 153,
+            "right": 752,
+            "scrollWidth": 734,
+            "clientWidth": 734,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 175,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title-span",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 175,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 175,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 215,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              32,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "variant",
+      "theme": "dark",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 172,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "alternate",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 206,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              25.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "basic",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 124,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "component-token",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 196,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              24.5,
+              24.5,
+              24.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "custom",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 124,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "end",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 124,
+            "right": 752,
+            "scrollWidth": 747,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 34,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 34,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 58,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 94,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 94,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 98,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "native-slots",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 72,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              18
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 257.984375,
+            "height": 124,
+            "right": 273.984375,
+            "scrollWidth": 258,
+            "clientWidth": 258,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending-legacy",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 210.609375,
+            "height": 62,
+            "right": 226.609375,
+            "scrollWidth": 211,
+            "clientWidth": 211,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 210.609375,
+            "height": 62,
+            "right": 226.609375,
+            "scrollWidth": 211,
+            "clientWidth": 211,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "semantic",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 293,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              50,
+              50,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "style-class",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 54,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 117,
+            "right": 752,
+            "scrollWidth": 734,
+            "clientWidth": 734,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 127,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title-span",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 127,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 127,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 145,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "variant",
+      "theme": "compact",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 124,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "alternate",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 206,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              25.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "basic",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 124,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "component-token",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 196,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              24.5,
+              24.5,
+              24.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "custom",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 124,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "end",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 124,
+            "right": 752,
+            "scrollWidth": 747,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 34,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 34,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 58,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 94,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 94,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 98,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "native-slots",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 72,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              18
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 257.984375,
+            "height": 124,
+            "right": 273.984375,
+            "scrollWidth": 258,
+            "clientWidth": 258,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending-legacy",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 210.609375,
+            "height": 62,
+            "right": 226.609375,
+            "scrollWidth": 211,
+            "clientWidth": 211,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 210.609375,
+            "height": 62,
+            "right": 226.609375,
+            "scrollWidth": 211,
+            "clientWidth": 211,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "semantic",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 293,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              50,
+              50,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "style-class",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 54,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 117,
+            "right": 752,
+            "scrollWidth": 734,
+            "clientWidth": 734,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 127,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title-span",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 127,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 127,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 736,
+            "height": 145,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "variant",
+      "theme": "both",
+      "viewport": "tablet",
+      "passed": true,
+      "geometry": {
+        "width": 768,
+        "scrollWidth": 768,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 736,
+            "height": 124,
+            "right": 752,
+            "scrollWidth": 736,
+            "clientWidth": 736,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "alternate",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 280,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              32.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "basic",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 172,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "component-token",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 204,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              25.5,
+              25.5,
+              25.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "custom",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 172,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "end",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 172,
+            "right": 1184,
+            "scrollWidth": 1179,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 40,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 40,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 70,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 106,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 106,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 114,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "native-slots",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 96,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              24
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 299.828125,
+            "height": 172,
+            "right": 315.828125,
+            "scrollWidth": 300,
+            "clientWidth": 300,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending-legacy",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 245.734375,
+            "height": 86,
+            "right": 261.734375,
+            "scrollWidth": 246,
+            "clientWidth": 246,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 245.734375,
+            "height": 86,
+            "right": 261.734375,
+            "scrollWidth": 246,
+            "clientWidth": 246,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "semantic",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 329,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              50,
+              50,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "style-class",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 62,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 153,
+            "right": 1184,
+            "scrollWidth": 1166,
+            "clientWidth": 1166,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 175,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title-span",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 175,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 175,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 175,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "variant",
+      "theme": "default",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 172,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "alternate",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 280,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              32.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "basic",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 172,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "component-token",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 204,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              25.5,
+              25.5,
+              25.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "custom",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 172,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "end",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 172,
+            "right": 1184,
+            "scrollWidth": 1179,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 40,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 40,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 70,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 106,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 106,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 114,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "native-slots",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 96,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              24
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 299.828125,
+            "height": 172,
+            "right": 315.828125,
+            "scrollWidth": 300,
+            "clientWidth": 300,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending-legacy",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 245.734375,
+            "height": 86,
+            "right": 261.734375,
+            "scrollWidth": 246,
+            "clientWidth": 246,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 245.734375,
+            "height": 86,
+            "right": 261.734375,
+            "scrollWidth": 246,
+            "clientWidth": 246,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "semantic",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 329,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              50,
+              50,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "style-class",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 62,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 153,
+            "right": 1184,
+            "scrollWidth": 1166,
+            "clientWidth": 1166,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 175,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title-span",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 175,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 175,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 175,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              22,
+              22,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "variant",
+      "theme": "dark",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 172,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              21.5,
+              21.5,
+              21.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "alternate",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 186,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "basic",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 124,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "component-token",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 196,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              24.5,
+              24.5,
+              24.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "custom",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 124,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "end",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 124,
+            "right": 1184,
+            "scrollWidth": 1179,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 34,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 34,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 58,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 54,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 54,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 98,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "native-slots",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 72,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              18
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 257.984375,
+            "height": 124,
+            "right": 273.984375,
+            "scrollWidth": 258,
+            "clientWidth": 258,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending-legacy",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 210.609375,
+            "height": 62,
+            "right": 226.609375,
+            "scrollWidth": 211,
+            "clientWidth": 211,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 210.609375,
+            "height": 62,
+            "right": 226.609375,
+            "scrollWidth": 211,
+            "clientWidth": 211,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "semantic",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 293,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              50,
+              50,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "style-class",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 54,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 117,
+            "right": 1184,
+            "scrollWidth": 1166,
+            "clientWidth": 1166,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 127,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title-span",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 127,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 127,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 127,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "variant",
+      "theme": "compact",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(255, 255, 255)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 124,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "alternate",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 186,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "basic",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 124,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "component-token",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 196,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              24.5,
+              24.5,
+              24.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "custom",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 124,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "end",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 124,
+            "right": 1184,
+            "scrollWidth": 1179,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 34,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 34,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 58,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "horizontal-debug",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 54,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 54,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 98,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "native-slots",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 72,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              18
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 257.984375,
+            "height": 124,
+            "right": 273.984375,
+            "scrollWidth": 258,
+            "clientWidth": 258,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "pending-legacy",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 210.609375,
+            "height": 62,
+            "right": 226.609375,
+            "scrollWidth": 211,
+            "clientWidth": 211,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 210.609375,
+            "height": 62,
+            "right": 226.609375,
+            "scrollWidth": 211,
+            "clientWidth": 211,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "semantic",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 293,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              50,
+              50,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "style-class",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 54,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "row",
+            "horizontal": true,
+            "railOffsets": [
+              0,
+              0
+            ],
+            "axisAligned": true,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 117,
+            "right": 1184,
+            "scrollWidth": 1166,
+            "clientWidth": 1166,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 127,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "title-span",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 127,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 127,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          },
+          {
+            "width": 1168,
+            "height": 127,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              16,
+              16,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    },
+    {
+      "demo": "variant",
+      "theme": "both",
+      "viewport": "desktop",
+      "passed": true,
+      "geometry": {
+        "width": 1200,
+        "scrollWidth": 1200,
+        "outside": [],
+        "background": "rgb(20, 20, 20)",
+        "timelines": [
+          {
+            "width": 1168,
+            "height": 124,
+            "right": 1184,
+            "scrollWidth": 1168,
+            "clientWidth": 1168,
+            "orientation": "column",
+            "horizontal": false,
+            "railOffsets": [
+              15.5,
+              15.5,
+              15.5
+            ],
+            "axisAligned": false,
+            "overlapping": false,
+            "verticallyContained": true
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "legacyWarnings": [],
+  "passed": true
+}

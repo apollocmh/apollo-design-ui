@@ -64,28 +64,28 @@ const algorithms = {
   compact: compactAlgorithm,
   both: [darkAlgorithm, compactAlgorithm],
 };
-const componentTokens = computed<Record<string, string | number>>(() =>
-  state.tokens === 'custom'
-    ? {
-        tailColor: '#123456',
-        tailWidth: 7,
-        dotBorderWidth: 3,
-        dotSize: 18,
-        dotBg: '#abcdef',
-        itemPaddingBottom: 31,
-      }
-    : state.tokens === 'zero'
-      ? { tailWidth: 0, dotBorderWidth: 0, dotSize: 0, itemPaddingBottom: 0 }
-      : state.tokens === 'invalid'
-        ? {
-            tailWidth: -7,
-            dotBorderWidth: Number.NaN,
-            dotSize: Number.POSITIVE_INFINITY,
-            dotBg: '',
-            itemPaddingBottom: -3,
-          }
-        : {},
-);
+const componentTokens = computed((): Record<string, string | number> => {
+  if (state.tokens === 'custom')
+    return {
+      tailColor: '#123456',
+      tailWidth: 7,
+      dotBorderWidth: 3,
+      dotSize: 18,
+      dotBg: '#abcdef',
+      itemPaddingBottom: 31,
+    };
+  if (state.tokens === 'zero')
+    return { tailWidth: 0, dotBorderWidth: 0, dotSize: 0, itemPaddingBottom: 0 };
+  if (state.tokens === 'invalid')
+    return {
+      tailWidth: -7,
+      dotBorderWidth: Number.NaN,
+      dotSize: Number.POSITIVE_INFINITY,
+      dotBg: '',
+      itemPaddingBottom: -3,
+    };
+  return {};
+});
 const theme = computed<ThemeConfig>(() => ({
   algorithm: algorithms[state.theme],
   token: {},

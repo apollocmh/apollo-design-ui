@@ -31,6 +31,15 @@ try {
     path.join(root, 'tests/browser/fixtures/TimelineContracts.vue'),
     path.join(temp, 'Contracts.vue'),
   );
+  const demos = fs
+    .readdirSync(path.join(root, 'packages/ui/src/timeline/demo'))
+    .filter((file) => file.endsWith('.vue'));
+  assert.equal(demos.length, 15, 'all original Timeline demos must consume published declarations');
+  for (const demo of demos)
+    fs.copyFileSync(
+      path.join(root, 'packages/ui/src/timeline/demo', demo),
+      path.join(temp, `Demo-${demo}`),
+    );
   fs.writeFileSync(
     path.join(temp, 'Contracts.ts'),
     `import type { TimelineItemType, TimelineProps, TimelineRef } from '@apollo-design/ui';
@@ -82,7 +91,7 @@ void [props, useRef, invalidItem];
     { stdio: 'inherit' },
   );
   console.log(
-    'PASS published Timeline declarations: current Timeline/Steps props, typed semantic functions and all three native item slots; no test fixtures shipped',
+    'PASS published Timeline declarations: all 15 original demos, current Timeline/Steps props, typed semantic functions and all three native item slots; no test fixtures shipped',
   );
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

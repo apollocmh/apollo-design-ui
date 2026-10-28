@@ -1,23 +1,6 @@
-/**
- * Timeline 的**横向**样式（对应上游 `es/timeline/style/horizontal.ts`，120 行）。
- *
- * 产物交叉验证：`extract-timeline-css.mjs` 的 **29-42** 号规则（14 条）。
- *
- * ── 这个文件为什么单独存在（与上游一致）─────────────────────────────────────
- *
- * 横向模式是一整套**独立的定位体系**（`position:absolute` + `left:50%` +
- * `translateX(-50%)` + `-alternate-content-offset`），与纵向的「按 `head-span` 分栏」
- * 完全不同 —— 上游把它拆成独立文件，本仓照做（便于与产物逐段对拍）。
- *
- * ── 三处**非显然**结构 ───────────────────────────────────────────────────────
- *
- * 1. **`-horizontal` 会覆盖 Steps 的 `title-vertical-row-gap`**
- *    （`--{p}-cmp-steps-title-vertical-row-gap: var(--apollo-padding-xs)`）——
- *    横向时间轴把标题的纵向间距当成「一行内容的高度」来用。
- * 2. **`-layout-alternate` 与 `:not(-layout-alternate)` 是两套完全不同的布局**
- *    （前者上下交错、后者单侧靠齐），且选择器用 `:not()` 而不是叠加类。
- * 3. **`-item-wrapper` 的高度是算出来的**（`calc(content-height * 2 + row-gap * 2 + icon-size-max)`）
- *    ⇒ 横向交错布局要求两侧内容区等高。
+/** Horizontal alternate rows share intrinsic title/content tracks. Subgrids keep
+ * the existing semantic element boxes, one aligned axis and natural long text.
+ * The original absolute/nowrap layout overlapped real horizontal-debug content.
  */
 
 import type { TimelineStyleContext } from './context';
@@ -30,9 +13,10 @@ export function genHorizontalStyle(ctx: TimelineStyleContext): string[] {
   const icon = `${item}-icon`;
   const rail = `${item}-rail`;
   const title = `${item}-title`;
-  const subtitle = `${item}-subtitle`;
   const content = `${item}-content`;
   const wrapper = `${item}-wrapper`;
+  const section = `${item}-section`;
+  const header = `${item}-header`;
 
   /** `-horizontal` 的两套布局前缀。 */
   const alt = `${cls}-horizontal${cls}-layout-alternate`;
@@ -47,53 +31,55 @@ export function genHorizontalStyle(ctx: TimelineStyleContext): string[] {
     `  align-items:stretch;`,
     `}`,
 
-    // ---- 30 wrapper：交错布局的等高 + 偏移量 ----
-    `${alt} ${item} ${wrapper}{`,
-    `  --${ctx.p}-timeline-alternate-content-offset:calc(var(--${ctx.p}-timeline-content-height) + ${sv('title-vertical-row-gap')} * 2 + ${sv('icon-size-max')});`,
-    `  height:calc(var(--${ctx.p}-timeline-content-height) * 2 + ${sv('title-vertical-row-gap')} * 2 + ${sv('icon-size-max')});`,
+    `${alt}{`,
+    `  display:grid;`,
+    `  grid-auto-flow:column;`,
+    `  grid-auto-columns:minmax(0, 1fr);`,
+    `  grid-template-rows:minmax(var(--${ctx.p}-timeline-content-height), auto) ${sv('icon-size-max')} minmax(var(--${ctx.p}-timeline-content-height), auto);`,
+    `  row-gap:${sv('title-vertical-row-gap')};`,
     `}`,
-
-    // ---- 31-32 icon / rail 的绝对定位 ----
+    `${alt} ${item},${alt} ${item} ${wrapper},${alt} ${item} ${section},${alt} ${item} ${header}{`,
+    `  display:grid;`,
+    `  grid-template-rows:subgrid;`,
+    `  grid-template-columns:minmax(0, 1fr);`,
+    `  grid-row:1 / 4;`,
+    `  min-width:0;`,
+    `  row-gap:inherit;`,
+    `  align-self:stretch;`,
+    `}`,
+    `${alt} ${item} ${wrapper},${alt} ${item} ${section},${alt} ${item} ${header}{`,
+    `  grid-column:1;`,
+    `}`,
     `${alt} ${item} ${icon}{`,
-    `  position:absolute;`,
+    `  grid-row:2;`,
+    `  grid-column:1;`,
+    `  margin:0;`,
+    `  justify-self:center;`,
     `}`,
-    `${alt} ${item} ${icon},${alt} ${item} ${rail}{`,
-    `  position:absolute;`,
-    `  top:50%;`,
-    `  transform:translateY(-50%);`,
+    `${alt} ${item} ${rail}{`,
+    `  grid-row:2;`,
+    `  grid-column:1;`,
+    `  position:relative;`,
+    `  top:auto;`,
+    `  height:0;`,
+    `  align-self:center;`,
+    `  transform:none;`,
     `  margin:0;`,
     `}`,
-
-    // ---- 33 三个文本槽都不换行 ----
-    `${alt} ${item} ${title},${alt} ${item} ${subtitle},${alt} ${item} ${content}{`,
-    `  white-space:nowrap;`,
-    `  max-width:unset;`,
+    `${alt} ${item} ${title},${alt} ${item} ${content}{`,
+    `  grid-column:1;`,
+    `  min-width:0;`,
+    `  padding-inline:${v('paddingXXS')};`,
+    `  white-space:normal;`,
+    `  overflow-wrap:anywhere;`,
     `}`,
-
-    // ---- 34-35 title / content 水平居中 ----
-    `${alt} ${item} ${title}{`,
-    `  position:absolute;`,
-    `  left:50%;`,
-    `  transform:translateX(-50%);`,
+    `${alt} ${item}-placement-start ${title},${alt} ${item}-placement-end ${content}{`,
+    `  grid-row:1;`,
+    `  align-self:end;`,
     `}`,
-    `${alt} ${item} ${content}{`,
-    `  position:absolute;`,
-    `  left:50%;`,
-    `  transform:translateX(-50%);`,
-    `}`,
-
-    // ---- 36-39 placement 决定 title / content 在轴的哪一侧 ----
-    `${alt} ${item}-placement-start ${title}{`,
-    `  bottom:var(--${ctx.p}-timeline-alternate-content-offset);`,
-    `}`,
-    `${alt} ${item}-placement-start ${content}{`,
-    `  top:var(--${ctx.p}-timeline-alternate-content-offset);`,
-    `}`,
-    `${alt} ${item}-placement-end ${title}{`,
-    `  top:var(--${ctx.p}-timeline-alternate-content-offset);`,
-    `}`,
-    `${alt} ${item}-placement-end ${content}{`,
-    `  bottom:var(--${ctx.p}-timeline-alternate-content-offset);`,
+    `${alt} ${item}-placement-start ${content},${alt} ${item}-placement-end ${title}{`,
+    `  grid-row:3;`,
+    `  align-self:start;`,
     `}`,
 
     // ---- 40-42 非交错的横向：单侧靠齐 + rail 翻转 ----
@@ -108,7 +94,7 @@ export function genHorizontalStyle(ctx: TimelineStyleContext): string[] {
     `${single} ${item}-placement-end ${rail}{`,
     `  top:auto;`,
     `  bottom:${sv('horizontal-rail-margin')};`,
-    `  transform:translateY(50%);`,
+    `  transform:none;`,
     `}`,
   ];
 }

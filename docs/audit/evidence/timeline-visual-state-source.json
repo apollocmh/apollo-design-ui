@@ -1,0 +1,1105 @@
+{
+  "source": true,
+  "browser": "150.0.7871.125",
+  "variants": [
+    "basic",
+    "verticalSingle",
+    "alternate",
+    "horizontal",
+    "horizontal-end",
+    "titleSpanNumber",
+    "titleSpanString",
+    "colors",
+    "loading",
+    "pending",
+    "reverse",
+    "variantFilled",
+    "rtl",
+    "complete-content",
+    "scalar-content",
+    "long-horizontal",
+    "token-overrides",
+    "semantic",
+    "conditional-slots",
+    "current-provider",
+    "reverse-edit",
+    "pending-zero",
+    "native-focus",
+    "theme-dark",
+    "theme-compact",
+    "theme-dark-compact"
+  ],
+  "results": [
+    {
+      "variant": "basic",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "verticalSingle",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "alternate",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "horizontal",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "horizontal-end",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "titleSpanNumber",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "titleSpanString",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "colors",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "loading",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "pending",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "reverse",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "variantFilled",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "rtl",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "complete-content",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "scalar-content",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "long-horizontal",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "token-overrides",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 2,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "semantic",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "conditional-slots",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "current-provider",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "reverse-edit",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "pending-zero",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "native-focus",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "theme-dark",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 3,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(20, 20, 20)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "theme-compact",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 3,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "theme-dark-compact",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 3,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(20, 20, 20)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "basic",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "verticalSingle",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "alternate",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "horizontal",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "horizontal-end",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "titleSpanNumber",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "titleSpanString",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "colors",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "loading",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "pending",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "reverse",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "variantFilled",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "rtl",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "complete-content",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "scalar-content",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "long-horizontal",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "token-overrides",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 2,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "semantic",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "conditional-slots",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "current-provider",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "reverse-edit",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "pending-zero",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "native-focus",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "theme-dark",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 3,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(20, 20, 20)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "theme-compact",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 3,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "theme-dark-compact",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 3,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(20, 20, 20)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "basic",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "verticalSingle",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "alternate",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "horizontal",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "horizontal-end",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "titleSpanNumber",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "titleSpanString",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "colors",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "loading",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "pending",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "reverse",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "variantFilled",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "rtl",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "complete-content",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "scalar-content",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "long-horizontal",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "token-overrides",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 2,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "semantic",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "conditional-slots",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "current-provider",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "reverse-edit",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "pending-zero",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "native-focus",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "theme-dark",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 3,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(20, 20, 20)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "theme-compact",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 3,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "theme-dark-compact",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 3,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(20, 20, 20)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "note": "Native case/helper validation only; no shared baseline or screenshot acceptance."
+}

@@ -1,0 +1,60 @@
+{
+  "source": true,
+  "browser": "150.0.7871.125",
+  "variants": [
+    "long-horizontal"
+  ],
+  "results": [
+    {
+      "variant": "long-horizontal",
+      "viewport": "mobile",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 375,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "long-horizontal",
+      "viewport": "tablet",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 768,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    },
+    {
+      "variant": "long-horizontal",
+      "viewport": "desktop",
+      "passed": true,
+      "state": {
+        "roots": 1,
+        "passive": 0,
+        "width": 1200,
+        "background": "rgb(255, 255, 255)",
+        "railOffsets": [
+          0,
+          0
+        ],
+        "overflow": []
+      }
+    }
+  ],
+  "errors": [],
+  "passed": true,
+  "note": "Native case/helper validation only; no shared baseline or screenshot acceptance."
+}
