@@ -86,3 +86,21 @@
 新 visual case 是 `tests/visual/render/cases/apollo/layout.js`，没有修改 Vue/React 原参考 case；helper 为 `tests/visual/layout-state.mjs` 的 prepareLayoutVisual。17 variants：basic、side、side-light、collapsible、collapsed、zero-width、standalone、responsive、rtl、current-provider、conditional-trigger、keyboard-trigger、native-focus、native-styles、theme-dark、theme-compact、theme-dark-compact。正式 runner 应导入该 helper，移除 Layout 旧 side/collapsible 的重复截图豁免，完整捕获固定在视口底部的内置按钮。
 
 需共享根导出的类型是 LayoutSlots、SiderSlots as LayoutSiderSlots、SiderEmits as LayoutSiderEmits。任意自定义前缀的 CSS、opaque SSR 包装自动穿透、独立 Menu 整改均不在本轮新增能力内；文档给出预生成样式、显式 hasSider 及外部按钮组合方式。没有尚待用户裁决的阻塞项。
+
+## 共享 fallback 来源补充复核
+
+据主线程报告，前阶段 1966 项共享回归通过后，复核发现同一来源判定遗漏，现单独重开此项；前述冻结与绿色结果保留为前阶段证据。范围仅为 useLayoutTheme 对已存在共享 sourceActive 语义的消费，不增加公共 API，也不修改 producer、共享导出、Registry、视觉矩阵或 dist。
+
+补充清单与验收：Layout/Header/Footer/Content/Sider 在无 Provider 时使用同一 fallback；空配置保持 inactive 且不覆盖 CSS-only，写入非空配置后 active 并消费 Alias/既有 Layout 字段，清空后移除投影恢复继承。当前存在性截断会阻断中间 active 状态，先为五个家族组件建立可失败复现，再仅移除该截断；保留 parentScope 继承和 sourceActive=false 的既有路径。随后执行所属单元回归、严格消费者/类型编译诊断与完整 35 项真实浏览器契约，更新独立补充 freeze；新鲜发布及最终同提交全量门禁仍交主线程。
+
+补充执行结果：
+
+- 红灯：五个家族组件在 sourceActive=true 时均未投影 Alias，5/5 失败，`/tmp/apollo-layout-fallback-red.log`；按名称筛选仅用于这次红灯复现，后续完整回归没有跳过用例。
+- 修复：移除 ThemeContextKey 存在性判断及 if(!provided) 截断。sourceActive=false 返回空数据、显式来源元数据缺省的兼容语义、WeakMap 当前数据与 parentScope 继承原样保留；没有引入新字段或全局样式注入。
+- `pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/layout --maxWorkers=1 --reporter=json --outputFile=/tmp/apollo-layout-fallback-four-projects.json`：7 文件 203/203，contracts 46 项，新增五项均覆盖空 → 非空 → 清空，并恢复原共享配置；其他 157 项及原时间预算保留。进程 exit 0，日志同名 .log。
+- `LAYOUT_SOURCE=1 LAYOUT_EVIDENCE=/tmp/apollo-layout-fallback-browser.json node tests/browser/layout-contracts.mjs`：35/35，包含 CSS-only、父 Layout Alias 继承、空 ThemeProvider 经无配置 ConfigProvider 隔离等原边界；0 运行时错误，readersExited=true，四个发布产物指纹不变，exit 0。
+- `LAYOUT_SOURCE=1 LAYOUT_TYPES_EVIDENCE=/tmp/apollo-layout-fallback-consumer.json node tests/consumer/layout-types.mjs`：根/子路径公共正负例与全部 11 Demo 严格编译通过，exit 0。
+- `pnpm exec vue-tsc --project /tmp/apollo-layout-fallback-types/tsconfig.json --noEmit`：exit 0、0 诊断；独立临时配置 extends 当前根 tsconfig，保留 strict/noUncheckedIndexedAccess，入口仅为完整 contracts.test.ts 与原 type.test-d.ts，编译其实际导入源码。没有并发占用 Vitest 共享临时配置、忽略源错误或放宽选项。配置及空诊断日志 `/tmp/apollo-layout-fallback-types.log` 保留。
+- 所属两源码/测试文件 Biome check --write exit 0，`/tmp/apollo-layout-fallback-biome.log`；后续只读 check 和 git diff --check 同样通过。
+
+补充冻结四个变更文件：use-layout-theme.ts、contracts.test.ts、本审计与所属 migration。新清单及全部 53 文件的当前 SHA-256 为 `/tmp/apollo-layout-fallback-source-freeze.json`；旧 `/tmp/apollo-layout-source-freeze.json` 原样保留，49 个文件无变化。所有本次 reader 已正常退出；没有包构建、dist 写入、提交或推送。Demo/视觉状态准备器的前阶段 47/47、51/51 未在此窄修复重复运行，也未冒充本次发布验证；主线程应在新鲜 Theme → UI 构建后统一发布和最终同提交门禁。

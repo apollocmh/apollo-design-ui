@@ -1,4 +1,4 @@
-import { compactAlgorithm, type ThemeConfig, ThemeProvider } from '@apollo-design/theme';
+import { compactAlgorithm, type ThemeConfig, ThemeProvider, useTheme } from '@apollo-design/theme';
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createSSRApp, defineComponent, Fragment, h, nextTick, ref, type VNodeChild } from 'vue';
@@ -323,6 +323,45 @@ describe('LAYOUT-03 media lifecycle and SSR structure', () => {
 });
 
 describe('LAYOUT-04 all current theme fields', () => {
+  it.each([Layout, Header, Footer, Content, Sider])(
+    '$name activates and clears shared fallback data without a Provider',
+    async (component) => {
+      const captured: { context?: ReturnType<typeof useTheme> } = {};
+      const Probe = defineComponent({
+        setup() {
+          captured.context = useTheme();
+          return () => h(component, { 'data-fallback-layout': '' });
+        },
+      });
+      const wrapper = host(() => h(Probe));
+      const source = captured.context;
+      if (!source) throw new Error('The mounted probe must capture its fallback context');
+      const previous = source.config.value;
+      cleanup.push(() => {
+        source.config.value = previous;
+      });
+      const root = wrapper.get<HTMLElement>('[data-fallback-layout]').element;
+      source.config.value = {};
+      await nextTick();
+      expect(source.sourceActive?.value).toBe(false);
+      expect(root.style.getPropertyValue('--apollo-font-size')).toBe('');
+      expect(root.style.getPropertyValue('--apollo-layout-source-header-height')).toBe('');
+      source.config.value = {
+        token: { fontSize: 18 },
+        components: { Layout: { headerHeight: 77 } },
+      };
+      await nextTick();
+      expect(source.sourceActive?.value).toBe(true);
+      expect(root.style.getPropertyValue('--apollo-font-size')).toBe('18px');
+      expect(root.style.getPropertyValue('--apollo-layout-source-header-height')).toBe('77px');
+      source.config.value = {};
+      await nextTick();
+      expect(source.sourceActive?.value).toBe(false);
+      expect(root.style.getPropertyValue('--apollo-font-size')).toBe('');
+      expect(root.style.getPropertyValue('--apollo-layout-source-header-height')).toBe('');
+    },
+  );
+
   it('preserves CSS-only data through an unconfigured Provider and clears removed themes', async () => {
     const config = ref<ThemeConfig>();
     const wrapper = host(() =>

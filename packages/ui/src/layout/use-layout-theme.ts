@@ -1,4 +1,4 @@
-import { ThemeContextKey, token2CSSVar, transformToken, useTheme } from '@apollo-design/theme';
+import { token2CSSVar, transformToken, useTheme } from '@apollo-design/theme';
 import { type ComputedRef, computed, type InjectionKey, inject, provide } from 'vue';
 import type { ComponentToken } from './style/token';
 
@@ -41,7 +41,6 @@ const layoutThemeScopeKey: InjectionKey<LayoutThemeScope> = Symbol('apollo-layou
 /** Current data only; static property fallbacks retain stylesheet/native overrides. */
 export function useLayoutTheme(getPrefix: () => string) {
   const theme = useTheme();
-  const provided = inject(ThemeContextKey, undefined) !== undefined;
   const parent = inject(layoutThemeScopeKey, undefined);
   provide(layoutThemeScopeKey, { theme, prefix: getPrefix });
   let source = sources.get(theme);
@@ -69,7 +68,6 @@ export function useLayoutTheme(getPrefix: () => string) {
   }
   const current = source;
   return computed(() => {
-    if (!provided) return {};
     return Object.fromEntries(
       Object.entries(current.value)
         .filter(([key]) => {

@@ -33,6 +33,8 @@ trigger/slot 现在明确是内置按钮的内容。需要自有交互按钮时�
 
 同一主题和命名空间内的家族后代继承外层 Layout 的数据，不重复投影 Alias 或已有字段；因此外层原生 --apollo-font-size 等覆盖可到达 Header/Content/Sider。显式新主题作用域仍隔离远层主题，含空 ThemeProvider。仅有无 theme 的 ConfigProvider 时遵循共享 sourceActive 元数据，不把默认主题写到节点上覆盖 CSS-only 配置；空 ThemeProvider 下再套无配置 ConfigProvider 仍使用最近显式主题。
 
+无 Provider 的共享 fallback 同样按 sourceActive 消费：空配置不投影，配置写入非空值后消费当前 Alias/已有字段，清空后移除数据投影。是否有 Provider 本身不作为额外截断条件。
+
 独立 Header/Footer/Content 使用 layout/style.css，独立 Sider 使用 layout-sider/style.css；两者也可与全量入口互换。不要仅为插槽中的真实 Menu/Breadcrumb 推导成 Layout 自身 CSS 依赖。
 
 ## 回归与验证边界
