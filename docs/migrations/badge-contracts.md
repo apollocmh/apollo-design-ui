@@ -34,6 +34,10 @@ Badge 补齐已声明的只读 `nativeElement`，指向实际根 span；状态�
 
 offset 保留小数及 CSS 长度：数字按 px，数字字符串按 px，带单位/百分比/表达式的 x 用 CSS calc 取负，y 保留原长度。逻辑方向随当前 direction 更新。小尺寸轨道使用实际小尺寸高度；匹配系统 reduced-motion 时停止波纹/滚动过渡并关闭出入场动画。
 
+包裹态 status 现在渲染真正的状态点，与独立状态共用 statusSize 和 indicatorZIndex。富内容计数消费既有 paddingInline，避免字形贴在裁切边缘。独立 dot 的视觉边界与自身根一致；FloatButton 同步把角部位移交给 Badge 根，保持原有圆形/方形、亮暗和 RTL 的实际圆点位置。
+
+原生 dir 覆盖当前 Provider 默认值；dir=auto 使用 DOM 的实际方向，方向变化保留内容。styles.indicator 是原生 CSS：不再把 borderColor 强行转成 boxShadow。需描边可写 border，需阴影可写 boxShadow；显式 none 和作者提供的阴影均保持权威。
+
 九个已有 Token 从当前 Alias 派生并消费 `theme.components.Badge`，接受适用的 0，覆盖替换和移除立即生效，显式根 CSS 变量仍优先。预设背景不为整改任意改色；普通实色 count / Ribbon 前景按背景的线性 sRGB 亮度选择可读的黑/白，显式 indicator/content color 仍优先。自定义渐变、透明背景和完整样式覆盖由作者配对前景，不能据默认配色验收声称任意作者样式都满足对比度。
 
 原二十六机械场景继续运行；仅两个自定义色场景新增私有背景变量以推导前景，精确差异登记在 semantic.test.ts。原始 HTML、参考渲染器与十八张参考 PNG 不改，未放宽比较阈值。

@@ -84,9 +84,18 @@ describe('Badge · 判据链（Badge.js 逐条）', () => {
     expect(style).toContain('margin-top: 10px');
   });
 
-  it('borderColor 旧用法 → box-shadow inset', () => {
+  it('native indicator CSS keeps the authored border and inset shadow', () => {
     const w = mount(Badge, {
-      props: { count: 5, styles: { indicator: { borderColor: '#d9d9d9', background: '#fff' } } },
+      props: {
+        count: 5,
+        styles: {
+          indicator: {
+            borderColor: '#d9d9d9',
+            background: '#fff',
+            boxShadow: '0 0 0 1px #d9d9d9 inset',
+          },
+        },
+      },
       slots: { default: box },
     });
     const style = w.find('.apollo-scroll-number').attributes('style') ?? '';

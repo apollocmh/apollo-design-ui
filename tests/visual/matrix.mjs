@@ -153,6 +153,22 @@ export const COMPONENTS = {
     ],
   },
   badge: {
+    apolloVariants: [
+      'basic',
+      'status',
+      'colorful',
+      'dot',
+      'ribbon',
+      'offset-size',
+      'complete-content',
+      'status-placement',
+      'semantic-tokens',
+      'current-provider',
+      'native-focus',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+    ],
     // 6 个 variant × 3 个 viewport = 18 张
     variants: [
       'basic', // count wrapper 形态（5 / 99+ / 0+showZero）

@@ -50,16 +50,6 @@ export default defineComponent({
   setup(props) {
     const prefixCls = computed(() => props.prefixCls ?? 'apollo-scroll-number');
 
-    const mergedStyle = computed<CSSProperties>(() => {
-      const style = props.style;
-      // allow specify the border（antd 原注释）
-      const borderColor = style?.borderColor;
-      if (style && borderColor) {
-        return { ...style, boxShadow: `0 0 0 1px ${String(borderColor)} inset` };
-      }
-      return style ?? {};
-    });
-
     /** 仅整数拆位（antd：`count && Number(count) % 1 === 0`）。 */
     const isInteger = computed(() => {
       const c = props.count;
@@ -92,7 +82,7 @@ export default defineComponent({
         {
           'data-show': props.show,
           class: cls,
-          style: mergedStyle.value,
+          style: props.style,
           title: props.title,
         },
         [numberNodes],

@@ -61,7 +61,6 @@ const ribbonClass = computed(() => {
     cls,
     `${cls}-placement-${props.placement}`,
     {
-      [`${cls}-rtl`]: context.direction === 'rtl',
       [`${cls}-color-${props.color}`]: colorInPreset.value,
     },
     props.className,
@@ -69,6 +68,7 @@ const ribbonClass = computed(() => {
     mergedClassNames.value.indicator,
   ];
 });
+const isRtl = () => (attrs.dir ?? context.direction) === 'rtl';
 
 const colorStyle = computed(() => {
   const style: CSSProperties = {
@@ -105,7 +105,7 @@ defineExpose({
 <template>
   <div ref="rootRef" :class="rootClass" v-bind="rootAttrs()">
     <slot />
-    <div :class="ribbonClass" v-bind="styleAttrs(colorStyle)">
+    <div :class="[ribbonClass, { [`${prefixCls}-rtl`]: isRtl() }]" v-bind="styleAttrs(colorStyle)">
       <span :class="[`${prefixCls}-content`, mergedClassNames.content]" v-bind="styleAttrs(mergedStyles.content)">
         <NodeRenderer :node="$slots.text ? $slots.text() : text" />
       </span>

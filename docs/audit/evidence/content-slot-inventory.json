@@ -719,7 +719,8 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/badge/demo/content-slots.vue"
+          "packages/ui/src/badge/demo/content-slots.vue",
+          "packages/ui/src/badge/demo/style-class.vue"
         ]
       },
       "slotTest": {
@@ -728,6 +729,7 @@
           "packages/ui/src/badge/__tests__/a11y.test.ts",
           "packages/ui/src/badge/__tests__/contract-audit.test.ts",
           "packages/ui/src/badge/__tests__/index.test.ts",
+          "packages/ui/src/badge/__tests__/indicator-style.test.ts",
           "packages/ui/src/badge/__tests__/semantic.test.ts",
           "packages/ui/src/badge/__tests__/slots.test.ts",
           "packages/ui/src/badge/__tests__/theme.test.ts"
@@ -765,6 +767,7 @@
           "packages/ui/src/badge/__tests__/a11y.test.ts",
           "packages/ui/src/badge/__tests__/contract-audit.test.ts",
           "packages/ui/src/badge/__tests__/index.test.ts",
+          "packages/ui/src/badge/__tests__/indicator-style.test.ts",
           "packages/ui/src/badge/__tests__/semantic.test.ts",
           "packages/ui/src/badge/__tests__/slots.test.ts"
         ]
@@ -791,7 +794,8 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/badge/demo/content-slots.vue"
+          "packages/ui/src/badge/demo/content-slots.vue",
+          "packages/ui/src/badge/demo/style-class.vue"
         ]
       },
       "slotTest": {
@@ -800,6 +804,7 @@
           "packages/ui/src/badge/__tests__/a11y.test.ts",
           "packages/ui/src/badge/__tests__/contract-audit.test.ts",
           "packages/ui/src/badge/__tests__/index.test.ts",
+          "packages/ui/src/badge/__tests__/indicator-style.test.ts",
           "packages/ui/src/badge/__tests__/semantic.test.ts",
           "packages/ui/src/badge/__tests__/slots.test.ts",
           "packages/ui/src/badge/__tests__/theme.test.ts"
@@ -837,6 +842,7 @@
           "packages/ui/src/badge/__tests__/a11y.test.ts",
           "packages/ui/src/badge/__tests__/contract-audit.test.ts",
           "packages/ui/src/badge/__tests__/index.test.ts",
+          "packages/ui/src/badge/__tests__/indicator-style.test.ts",
           "packages/ui/src/badge/__tests__/slots.test.ts",
           "packages/ui/src/badge/__tests__/theme.test.ts"
         ]
@@ -872,6 +878,7 @@
           "packages/ui/src/badge/__tests__/a11y.test.ts",
           "packages/ui/src/badge/__tests__/contract-audit.test.ts",
           "packages/ui/src/badge/__tests__/index.test.ts",
+          "packages/ui/src/badge/__tests__/indicator-style.test.ts",
           "packages/ui/src/badge/__tests__/semantic.test.ts",
           "packages/ui/src/badge/__tests__/slots.test.ts"
         ]
@@ -907,6 +914,7 @@
           "packages/ui/src/badge/__tests__/a11y.test.ts",
           "packages/ui/src/badge/__tests__/contract-audit.test.ts",
           "packages/ui/src/badge/__tests__/index.test.ts",
+          "packages/ui/src/badge/__tests__/indicator-style.test.ts",
           "packages/ui/src/badge/__tests__/semantic.test.ts",
           "packages/ui/src/badge/__tests__/slots.test.ts"
         ]
@@ -943,6 +951,7 @@
           "packages/ui/src/badge/__tests__/a11y.test.ts",
           "packages/ui/src/badge/__tests__/contract-audit.test.ts",
           "packages/ui/src/badge/__tests__/index.test.ts",
+          "packages/ui/src/badge/__tests__/indicator-style.test.ts",
           "packages/ui/src/badge/__tests__/slots.test.ts",
           "packages/ui/src/badge/__tests__/theme.test.ts"
         ]
@@ -978,6 +987,7 @@
           "packages/ui/src/badge/__tests__/a11y.test.ts",
           "packages/ui/src/badge/__tests__/contract-audit.test.ts",
           "packages/ui/src/badge/__tests__/index.test.ts",
+          "packages/ui/src/badge/__tests__/indicator-style.test.ts",
           "packages/ui/src/badge/__tests__/semantic.test.ts",
           "packages/ui/src/badge/__tests__/slots.test.ts"
         ]
@@ -1004,7 +1014,8 @@
       "slotDemo": {
         "status": "source-reference",
         "files": [
-          "packages/ui/src/badge/demo/content-slots.vue"
+          "packages/ui/src/badge/demo/content-slots.vue",
+          "packages/ui/src/badge/demo/style-class.vue"
         ]
       },
       "slotTest": {
@@ -1013,6 +1024,7 @@
           "packages/ui/src/badge/__tests__/a11y.test.ts",
           "packages/ui/src/badge/__tests__/contract-audit.test.ts",
           "packages/ui/src/badge/__tests__/index.test.ts",
+          "packages/ui/src/badge/__tests__/indicator-style.test.ts",
           "packages/ui/src/badge/__tests__/semantic.test.ts",
           "packages/ui/src/badge/__tests__/slots.test.ts",
           "packages/ui/src/badge/__tests__/theme.test.ts"

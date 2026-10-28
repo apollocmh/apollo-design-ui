@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { compactAlgorithm, darkAlgorithm, type ThemeConfig } from '@apollo-design/theme';
-import { Badge, type BadgeRef, ConfigProvider, Ribbon } from '@apollo-design/ui';
+import { Badge, type BadgeRef, ConfigProvider, FloatButton, Ribbon } from '@apollo-design/ui';
 import {
   computed,
   createTextVNode,
@@ -158,6 +158,9 @@ Object.assign(window, {
         <Badge id="token-small" :count="15" size="small" />
         <Badge id="token-dot" dot />
         <Badge id="token-status" status="processing" text="Processing" />
+        <Badge id="token-wrapped-status" status="success"><i style="display: inline-block; width: 60px; height: 40px">Anchor</i></Badge>
+        <Badge id="token-rich"><template #count><strong>Words</strong></template></Badge>
+        <Badge id="shadow-count" :count="5" :styles="{ indicator: { borderColor: 'red', boxShadow: 'none' } }" />
       </section>
       <Ribbon id="owned-ribbon" text="Fallback" :style="'padding: 11px'">
         <template v-if="state.custom" #text><strong v-if="!state.empty">First</strong><em v-if="!state.empty">Second</em></template>
@@ -181,6 +184,16 @@ Object.assign(window, {
         <Badge id="changing-status" :count="state.status ? null : 8" status="success" />
       </section>
       <Badge id="conditional-count" :count="conditionalCount" />
+      <ConfigProvider direction="rtl">
+        <Badge id="native-dir-badge" dir="ltr" :count="5"><span>Native direction</span></Badge>
+        <Badge id="auto-dir-badge" dir="auto" :count="5"><span>עברית</span></Badge>
+        <Badge dir="rtl" :count="8"><Badge id="nested-ltr-badge" dir="ltr" :count="5"><span>Nested LTR</span></Badge></Badge>
+        <Ribbon id="native-dir-ribbon" dir="ltr" text="Native direction"><div>Body</div></Ribbon>
+      </ConfigProvider>
+      <div style="display: flex; gap: 32px; padding-block: 32px">
+        <FloatButton v-for="shape in (['circle', 'square'] as const)" :key="shape" :id="`dot-float-${shape}`"
+          :shape="shape" :badge="{ dot: true }" aria-label="Floating dot action" style="position: relative; inset: auto" />
+      </div>
       <button id="outside" type="button">Outside</button>
     </main>
   </ConfigProvider>

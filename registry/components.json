@@ -33,7 +33,7 @@
     "total": 72,
     "byStatus": {
       "completed": 71,
-      "testing": 1
+      "visual-review": 1
     },
     "byPriority": {
       "P0": 8,
@@ -826,7 +826,7 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "testing",
+      "status": "visual-review",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -846,8 +846,8 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "in-progress",
-      "tokenStatus": "in-progress",
+      "apiStatus": "done",
+      "tokenStatus": "done",
       "styleStatus": "in-progress",
       "unitStatus": "done",
       "interactionStatus": "done",
@@ -855,16 +855,17 @@
       "a11yStatus": "done",
       "visualStatus": "in-progress",
       "docsStatus": "in-progress",
-      "notes": "2026-10-28完整当前清单已盘点并成组修复。修前32行为8通过/24失败、146浏览器42通过/104失败；当前相关1250、类型104、根严格、157发布浏览器、64 Demo主题/交互、12 SSR水合、16实际消费渲染、13Demo发布声明与严格UI L7通过。自有视觉与Docs统一验收仍进行中；见本轮清单与functional-stage证据，不宣称全库完成。 同一范围的包裹态状态点、富内容padding、显式阴影及原生方向覆盖矩阵仍待统一核验，缺陷在本单元修复。",
+      "notes": "2026-10-28完整清单及成组实现/样式修复通过：相关1257、104类型、根严格、172发布浏览器、64 Demo、12水合、16消费、13Demo发布模板及UI L7。核心d3794769 Docs已发布/线上32通过；42自有视觉与最终Docs验收进行中，不宣称全库完成。",
       "layerNotes": {
-        "interaction": "原生根attrs/style/ref及稳定模式切换；完整内容、空槽优先、当前Provider与业务身份；负号/数字可访问文本、偏移、reduced-motion。157发布浏览器及64实际Demo主题/交互通过。 完整VNode计数共用实际宿主；九种空计数、独立文字与状态title分离，条件组件保留一次挂载。",
+        "interaction": "原生根attrs/style/ref及稳定模式切换；完整内容、空槽优先、当前Provider与业务身份；负号/数字可访问文本、偏移、reduced-motion。172发布浏览器及64实际Demo主题/交互通过。 完整VNode计数共用实际宿主；九种空计数、独立文字与状态title分离，条件组件保留一次挂载。 原生dir覆盖/继承、状态点与FloatButton圆点实际几何通过。",
         "type": "相关10文件104类型、根严格通过；发布Badge/Ribbon/Badge.Ribbon精确Props/Slots/readonlyRef、StyleValue及13真实Demo通过，无源别名。",
-        "a11y": "真实Chrome157契约/颜色和13 Demo四算法axe通过；动画轨道仅当前数字参与朗读，不自动创建live region；作者自定义样式/透明渐变需配对前景。",
+        "a11y": "真实Chrome172契约/颜色和13 Demo四算法axe通过；动画轨道仅当前数字参与朗读，不自动创建live region；作者自定义样式/透明渐变需配对前景。",
         "token": "九个既有Token从当前Alias派生，消费theme.components.Badge；适用零值/替换/移除及原生CSS变量优先，四算法实际浏览器验证。",
         "compat": "原26机械场景保留；仅两个自定义色场景精确追加前景推导私有背景变量，原HTML/参考PNG不改，未放宽阈值。",
         "visual": "历史18张参考图仍保留；本轮Apollo自有视觉候选、审阅及复比尚待完成，不能把原上游参考标作新验收。",
         "currentAudit": "docs/audit/2026-10-28-badge-contract-audit.md；baseline及functional-stage证据；迁移docs/migrations/badge-contracts.md。",
-        "docs": "实现、类型、13原Demo及双语API/迁移同步；Docs全量门禁和最终发布/线上回执仍待验收。"
+        "docs": "核心发布40684613745成功：CI161/拓扑L7 151，线上32通过；当前样式及42视觉的最终发布待验收。",
+        "style": "包裹状态点/当前statusSize与z-index、完整内容paddingInline、原生boxShadow优先级、独立圆点和调用者定位已验证；静态@scope保留dir=auto及嵌套LTR。最终视觉审阅待完成。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",

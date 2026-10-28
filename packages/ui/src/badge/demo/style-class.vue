@@ -5,6 +5,7 @@ import {
   ConfigProvider,
   type ConfigProviderThemeConfig,
   Flex,
+  Ribbon,
 } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
@@ -45,7 +46,7 @@ const theme = computed<ConfigProviderThemeConfig>(() => {
     <Badge
     :count="5"
     :class-names="{ indicator: 'demo-indicator-cls' }"
-    :styles="{ indicator: { backgroundColor: '#52c41a' } }"
+    :styles="{ indicator: { backgroundColor: '#52c41a', borderColor: 'transparent', boxShadow: 'none' } }"
   >
     <div style="width: 40px; height: 40px; background: var(--apollo-color-fill-alter); border-radius: 4px; display: inline-flex; align-items: center; justify-content: center" />
     </Badge>
@@ -63,6 +64,9 @@ const theme = computed<ConfigProviderThemeConfig>(() => {
         <Badge dot />
         <Badge status="processing" text="Processing" />
         <Badge :count="5"><input aria-label="Token and direction draft" placeholder="Draft" style="width: 100px" /></Badge>
+        <Badge><template #count><strong>Rich padding</strong></template></Badge>
+        <Badge dir="ltr" :count="5"><span>Native LTR</span></Badge>
+        <Ribbon dir="ltr" text="Native LTR"><span>Root direction</span></Ribbon>
       </Flex>
     </ConfigProvider>
   </Flex>

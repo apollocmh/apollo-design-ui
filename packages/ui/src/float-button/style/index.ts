@@ -78,8 +78,8 @@ const RULES = `
 .apollo-float-btn.apollo-float-btn-icon-only .apollo-icon{font-size:calc(var(--apollo-font-size-icon) * 1.5);}
 .apollo-float-btn .apollo-float-btn-content{font-size:var(--apollo-font-size-sm);}
 .apollo-float-btn .apollo-float-btn-badge{position:absolute;top:0;inset-inline-end:0;}
-.apollo-float-btn .apollo-float-btn-badge:not(.apollo-float-btn-badge-dot){transform:translate(50%, -50%);}
-.apollo-float-btn-rtl .apollo-float-btn-badge:not(.apollo-float-btn-badge-dot){transform:translate(-50%, -50%);}
+.apollo-float-btn .apollo-float-btn-badge{transform:translate(50%, -50%);}
+.apollo-float-btn-rtl .apollo-float-btn-badge{transform:translate(-50%, -50%);}
 .apollo-float-btn-square .apollo-float-btn-badge-dot{margin-top:calc(var(--apollo-border-radius) * 0.29289321881345254);margin-inline-end:calc(var(--apollo-border-radius) * 0.29289321881345254);}
 .apollo-float-btn-circle .apollo-float-btn-badge{margin-top:calc(var(--apollo-control-height) / 2 * 0.29289321881345254);margin-inline-end:calc(var(--apollo-control-height) / 2 * 0.29289321881345254);}
 .apollo-float-btn-group{--apollo-float-btn-list-transform-start:translate(0,var(--apollo-control-height-lg));--apollo-float-btn-list-trigger-offset:calc(var(--apollo-control-height-lg) + var(--apollo-padding));box-sizing:border-box;margin:0;padding:0;color:var(--apollo-color-text);font-size:var(--apollo-font-size);line-height:var(--apollo-line-height);list-style:none;font-family:var(--apollo-font-family);position:fixed;z-index:var(--apollo-z-index-popup-base);inset-inline-end:var(--apollo-margin-lg);bottom:var(--apollo-margin-xxl);gap:var(--apollo-padding);}

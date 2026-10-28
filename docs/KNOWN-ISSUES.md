@@ -649,3 +649,5 @@ Typography最终验收提交22186737已上线；workflow40670124684构建/Pages�
 当前清单盘清后建立32项8通过/24失败及146真实浏览器42通过/104失败，集中修正原生根style/ref、完整内容/类型、当前Provider/九Token、数字/偏移/reduced-motion与实色前景。相关1250四层、104类型、根严格、157发布浏览器、64实际Demo主题/交互、12 SSR水合、16消费渲染、13Demo发布声明与严格UI L7通过；原26规格/HTML与18参考图保留，仅两项自定义色有限差异。产物预算按功能成本仅Badge37→47KB。自有视觉和Docs最终发布仍待验收，不宣布整单元或全库完成。见[完整清单](audit/2026-10-28-badge-contract-audit.md)、[阶段证据](audit/evidence/badge-functional-stage-2026-10-28.json)和[迁移](migrations/badge-contracts.md)。
 
 完整VNode计数的15项形态/空内容/标题复现与两个发布浏览器红灯已纳入本单元，统一以原生宿主和Vue空内容判定修复；条件业务组件不重挂载，旧节点属性断言保留。最终157浏览器与相关1250继续通过，细节见同一清单及指示器宿主复现证据。
+
+样式矩阵已集中收口：7 条复现修前 6 失败，172 发布浏览器修前 14 失败，修后全部通过；相关1257、类型104、64 Demo、12水合、16消费及UI L7通过。静态 @scope 保留消费构建后的原生方向，FloatButton 点定位同步；核心 Docs 已发布并线上32通过。当前冻结42张自有视觉并复核关联Avatar图片，最终发布仍待验收，见 badge-indicator-style-stage.json 与 badge-core-docs-publication.json。

@@ -302,6 +302,135 @@ try {
       }
     },
   );
+  for (const mode of ['default', 'dark', 'compact', 'both']) {
+    await set({ mode, tokenStage: 1 });
+    await check(`${mode}: standalone dots stay within their own root geometry`, async () => {
+      const delta = await page.locator('#token-dot').evaluate((n) => {
+        const r = n.getBoundingClientRect(),
+          d = n.querySelector('.apollo-badge-dot').getBoundingClientRect();
+        return { dx: d.x - r.x, dy: d.y - r.y };
+      });
+      assert.ok(Math.abs(delta.dx) < 0.1 && Math.abs(delta.dy) < 0.1, JSON.stringify(delta));
+    });
+    await check(
+      `${mode}: wrapped status consumes status size/z-index at the root corner`,
+      async () => {
+        const root = page.locator('#token-wrapped-status');
+        assert.equal(await root.locator('.apollo-badge-status-dot').count(), 1);
+        const actual = await root.evaluate((n) => {
+          const dot = n.querySelector('.apollo-badge-status-dot'),
+            s = getComputedStyle(dot);
+          const r = n.getBoundingClientRect(),
+            d = dot.getBoundingClientRect();
+          return {
+            width: s.width,
+            height: s.height,
+            z: s.zIndex,
+            position: s.position,
+            dx: d.x + d.width / 2 - r.right,
+            dy: d.y + d.height / 2 - r.y,
+          };
+        });
+        assert.equal(actual.width, '9px');
+        assert.equal(actual.height, '9px');
+        assert.equal(actual.z, '13');
+        assert.equal(actual.position, 'absolute');
+        assert.ok(Math.abs(actual.dx) < 0.1 && Math.abs(actual.dy) < 0.1, JSON.stringify(actual));
+      },
+    );
+    await check(
+      `${mode}: rich counts consume current padding and zero without author styles`,
+      async () => {
+        const indicator = page.locator('#token-rich .apollo-badge-count');
+        assert.equal(
+          await indicator.evaluate((n) => getComputedStyle(n).paddingInlineStart),
+          '13px',
+        );
+        await set({ tokenStage: 2 });
+        assert.equal(
+          await indicator.evaluate((n) => getComputedStyle(n).paddingInlineStart),
+          '0px',
+        );
+      },
+    );
+    await set({ tokenStage: 0 });
+  }
+  await check('authored shadow remains authoritative with an explicit border color', async () => {
+    assert.equal(
+      await page
+        .locator('#shadow-count .apollo-badge-count')
+        .evaluate((n) => getComputedStyle(n).boxShadow),
+      'none',
+    );
+  });
+  await check(
+    'native ltr and auto direction override Provider defaults using actual geometry',
+    async () => {
+      assert.equal(
+        await page.locator('#native-dir-badge').evaluate((n) => getComputedStyle(n).direction),
+        'ltr',
+      );
+      assert.equal(
+        await page
+          .locator('#native-dir-ribbon .apollo-ribbon')
+          .evaluate((n) => getComputedStyle(n).direction),
+        'ltr',
+      );
+      const auto = await page.locator('#auto-dir-badge .apollo-badge-count').evaluate((n) => ({
+        direction: getComputedStyle(n).direction,
+        transform: new DOMMatrixReadOnly(getComputedStyle(n).transform).m41,
+        width: n.getBoundingClientRect().width,
+      }));
+      assert.equal(auto.direction, 'rtl');
+      assert.ok(Math.abs(auto.transform + auto.width / 2) < 0.1, JSON.stringify(auto));
+      const nested = await page.locator('#nested-ltr-badge').evaluate((n) => {
+        const root = n.getBoundingClientRect(),
+          dot = n.querySelector('.apollo-badge-count').getBoundingClientRect();
+        return { dx: dot.x + dot.width / 2 - root.right, dy: dot.y + dot.height / 2 - root.y };
+      });
+      assert.ok(Math.abs(nested.dx) < 0.1 && Math.abs(nested.dy) < 0.1, JSON.stringify(nested));
+    },
+  );
+  await check(
+    'actual floating-button dots retain their corner inset in both shapes and directions',
+    async () => {
+      for (const rtl of [false, true]) {
+        await set({ rtl });
+        for (const shape of ['circle', 'square']) {
+          const delta = await page.locator(`#dot-float-${shape}`).evaluate((n, rtl) => {
+            const badge = n.querySelector('.apollo-badge'),
+              dot = n.querySelector('.apollo-badge-dot');
+            const root = n.getBoundingClientRect(),
+              point = dot.getBoundingClientRect(),
+              s = getComputedStyle(badge);
+            const margin = parseFloat(s.marginInlineEnd),
+              top = parseFloat(s.marginTop);
+            const parentStyle = getComputedStyle(n),
+              borderEnd = parseFloat(
+                rtl ? parentStyle.borderLeftWidth : parentStyle.borderRightWidth,
+              );
+            return {
+              dx:
+                point.x +
+                point.width / 2 -
+                (rtl ? root.left + borderEnd + margin : root.right - borderEnd - margin),
+              dy:
+                point.y +
+                point.height / 2 -
+                root.top -
+                parseFloat(parentStyle.borderTopWidth) -
+                top,
+            };
+          }, rtl);
+          assert.ok(
+            Math.abs(delta.dx) < 0.1 && Math.abs(delta.dy) < 0.1,
+            `${shape}/${rtl}: ${JSON.stringify(delta)}`,
+          );
+        }
+      }
+      await set({ rtl: false });
+    },
+  );
   const contrast = async (node) =>
     node.evaluate((n) => {
       const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });

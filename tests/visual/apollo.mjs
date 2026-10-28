@@ -7,6 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { prepareAvatarVisual } from './avatar-state.mjs';
+import { prepareBadgeVisual } from './badge-state.mjs';
 import {
   acceptCandidates,
   checkEntry,
@@ -216,6 +217,7 @@ async function main() {
               'tag',
               'avatar',
               'typography',
+              'badge',
             ].includes(item.component) && item.variant === 'native-focus',
         });
         const state =
@@ -243,7 +245,9 @@ async function main() {
                                 ? await prepareAvatarVisual(page, item.variant)
                                 : item.component === 'typography'
                                   ? await prepareTypographyVisual(page, item.variant)
-                                  : undefined;
+                                  : item.component === 'badge'
+                                    ? await prepareBadgeVisual(page, item.variant)
+                                    : undefined;
         fs.mkdirSync(path.dirname(output), { recursive: true });
         await screenshotElement(page, '#stage', output);
         if (errors.length) throw new Error(errors.join(' | '));

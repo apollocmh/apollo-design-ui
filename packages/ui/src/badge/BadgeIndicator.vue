@@ -104,14 +104,10 @@ const hasStatus = computed(
   () => (isNonNullable(props.status) || isNonNullable(props.color)) && ignoreCount.value,
 );
 const hasStatusValue = computed(() => isNonNullable(props.status) || !isZero.value);
-const isStatusBadge = computed(
-  () =>
-    !!(
-      !props.hasWrapper &&
-      hasStatus.value &&
-      (showStatusTextNode.value || hasStatusValue.value || !ignoreCount.value)
-    ),
+const showStatus = computed(
+  () => hasStatus.value && (showStatusTextNode.value || hasStatusValue.value),
 );
+const isStatusBadge = computed(() => !props.hasWrapper && showStatus.value);
 
 // ---------------------------------------------------------------------------
 // offset 样式（数字补 px —— Vue patchStyle 不转换）
@@ -153,7 +149,7 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
 // 隐藏与三组缓存
 // ---------------------------------------------------------------------------
 
-const showAsDot = computed(() => props.dot);
+const showAsDot = computed(() => props.dot || showStatus.value);
 const mergedCount = computed(() => (showAsDot.value ? '' : numberedDisplayCount.value));
 
 const isHidden = computed(
@@ -232,12 +228,12 @@ const badgeClassName = computed(() => {
     {
       [`${cls}-status`]: hasStatus.value,
       [`${cls}-not-a-wrapper`]: !props.hasWrapper,
-      [`${cls}-rtl`]: context.direction === 'rtl',
     },
     context.className,
     mergedClassNames.value.root,
   ];
 });
+const isRtl = () => (attrs.dir ?? context.direction) === 'rtl';
 
 // 根 `class` / `style` 是 Vue 原生 attrs（`class` 经此透传到根 span）。
 function rootAttrs() {
@@ -256,7 +252,7 @@ function rootAttrs() {
 </script>
 
 <template>
-  <span ref="rootRef" v-bind="rootAttrs()" :class="badgeClassName">
+  <span ref="rootRef" v-bind="rootAttrs()" :class="[badgeClassName, { [`${prefixCls}-rtl`]: isRtl() }]">
     <template v-if="isStatusBadge">
     <span
       :class="[mergedClassNames.indicator, indicatorExtraClass]"
@@ -278,7 +274,7 @@ function rootAttrs() {
         <sup
           v-if="customCountCache"
           :data-show="!isHidden"
-          :class="[scrollNumberPrefixCls, `${scrollNumberPrefixCls}-custom-component`, mergedClassNames.indicator, indicatorExtraClass, `${prefixCls}-count`, { [`${prefixCls}-count-sm`]: size === 'small' }, motionClassName]"
+          :class="[scrollNumberPrefixCls, `${scrollNumberPrefixCls}-custom-component`, mergedClassNames.indicator, indicatorExtraClass, `${prefixCls}-count`, `${prefixCls}-multiple-words`, { [`${prefixCls}-count-sm`]: size === 'small' }, motionClassName]"
           :title="titleNode"
           :style="indicatorStyle"
         ><NodeRenderer :node="displayCount" /></sup>

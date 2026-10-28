@@ -7,11 +7,11 @@ order: 0
 
 ## zh-CN
 
-## 2026-10-28：Badge / Ribbon 核心内容与配置已验证，统一验收中
+## 2026-10-28：Badge / Ribbon 当前实现与样式已验证，视觉验收中
 
 按完整源码清单成组修正原生根 style/ref、完整内容、当前 Provider 和九个已有 Token。数字保留负号，动画只朗读当前值；零值计数和文字互不误伤，位移保留 CSS 长度，实色前景与 reduced-motion 已验证。Badge.Ribbon 发布类型保持精确，13 个原 Demo 全部保留并同步。
 
-61 文件 1250 项相关四层、104 项类型、根严格、157 项发布浏览器、52 组原 Demo 主题与 12 项实际交互、12 项 SSR/水合、四个实际消费示例的 16 次渲染，以及发布声明与严格 UI L7 已通过。包裹态状态点、富内容间距、显式阴影/方向覆盖，以及自有视觉和最终 Docs 发布回执尚待统一验收，本单元不标记全部完成；全库当前仍为 495/1398 张批准、903 张待验收。
+62 文件 1257 项相关四层、104 项类型、根严格、172 项发布浏览器、52 组原 Demo 主题与 12 项实际交互、12 项 SSR/水合、四个实际消费示例的 16 次渲染，以及发布声明与严格 UI L7 已通过。包裹态状态点、富内容间距、显式阴影/原生方向覆盖也已通过。核心版本已上线；42 张自有视觉和最终 Docs 发布回执尚待统一验收，本单元不标记全部完成；全库当前仍为 495/1398 张批准、903 张待验收。
 
 - [Badge 当前 API 与 13 个示例](/components/badge)
 - [完整内容、条件空槽与两个草稿](/components/badge/demo/content-slots)
@@ -151,11 +151,11 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 
 ## en-US
 
-## Badge / Ribbon core content and configuration verified; unified acceptance in progress
+## Badge / Ribbon implementation and styles verified; visual acceptance in progress
 
 Native root style/refs, complete content, current Provider/nine tokens, negative counts, accessible digit motion, zero independence, CSS offsets, readable opaque colors and reduced-motion have been corrected as one unit. Badge.Ribbon retains exact public types. All thirteen original demos remain.
 
-61 related files/1250 runtime checks,104 type checks, strict compilation,157 published-browser checks,52 demo/theme renders and12 real interactions,12 SSR/hydration checks,16 actual consumer renders, published declarations and strict UI L7 pass. Apollo visual review and final documentation publication remain pending. The library-wide visual inventory remains495/1398 approved,903 pending; this stage does not complete the library audit.
+62 related files/1257 runtime checks,104 type checks, strict compilation,172 published-browser checks,52 demo/theme renders and12 real interactions,12 SSR/hydration checks,16 actual consumer renders, published declarations and strict UI L7 pass. Wrapped status, rich-content padding, explicit shadows and native direction also pass. The core Docs version is live;42 Apollo visuals and final documentation publication remain pending. The library-wide visual inventory remains495/1398 approved,903 pending; this stage does not complete the library audit.
 
 - [Current Badge API and examples](/components/badge)
 - [Complete content and conditional slots](/components/badge/demo/content-slots)

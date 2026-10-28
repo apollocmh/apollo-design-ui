@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T11:57:13.267Z",
+  "generatedAt": "2026-10-28T13:18:45.237Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -1595,7 +1595,7 @@
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 1,
-      "why": "2026-10-28完整当前清单已盘点并成组修复。修前32行为8通过/24失败、146浏览器42通过/104失败；当前相关1250、类型104、根严格、157发布浏览器、64 Demo主题/交互、12 SSR水合、16实际消费渲染、13Demo发布声明与严格UI L7通过。自有视觉与Docs统一验收仍进行中；见本轮清单与functional-stage证据，不宣称全库完成。 同一范围的包裹态状态点、富内容padding、显式阴影及原生方向覆盖矩阵仍待统一核验，缺陷在本单元修复。",
+      "why": "2026-10-28完整清单及成组实现/样式修复通过：相关1257、104类型、根严格、172发布浏览器、64 Demo、12水合、16消费、13Demo发布模板及UI L7。核心d3794769 Docs已发布/线上32通过；42自有视觉与最终Docs验收进行中，不宣称全库完成。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P1",

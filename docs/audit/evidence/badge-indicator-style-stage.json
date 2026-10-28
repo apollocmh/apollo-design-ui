@@ -1,0 +1,2623 @@
+{
+  "scope": "docs/audit/2026-10-28-badge-contract-audit.md",
+  "publishedConsumption": {
+    "status": "passed",
+    "demos": 13,
+    "entryPoints": [
+      "Badge",
+      "Ribbon",
+      "Badge.Ribbon"
+    ],
+    "sourceAliases": false,
+    "readonlyRefs": true,
+    "exactCompoundProps": true
+  },
+  "uiL7": {
+    "checks": 11,
+    "failed": 0,
+    "pending": 0
+  },
+  "budget": {
+    "entry": "badge",
+    "previousKb": 37,
+    "budgetKb": 47,
+    "authority": "User accepts functional size costs; only this entry changed, all other budgets and total cap retained",
+    "initialFunctionalMeasurementKb": 45.4,
+    "finalGate": "Passed within47KB on consolidated implementation"
+  },
+  "commands": [
+    "pnpm exec vitest run --project unit --project theme --project dom-contract --project a11y packages/ui/src/badge packages/ui/src/avatar packages/ui/src/float-button packages/ui/src/calendar packages/ui/src/radio packages/ui/src/space packages/ui/src/config-provider packages/ui/src/_internal packages/motion/src --maxWorkers=2",
+    "pnpm exec vitest run --project types packages/ui/src/badge packages/ui/src/float-button packages/ui/src/avatar packages/ui/src/calendar packages/ui/src/radio --maxWorkers=2",
+    "pnpm lint:types",
+    "pnpm --filter @apollo-design/ui run build",
+    "node tests/build/run.mjs --package ui --no-build --strict",
+    "node tests/consumer/badge-slots-types.mjs",
+    "node tests/browser/badge-contracts.mjs",
+    "node tests/browser/badge-demo-themes.mjs",
+    "node tests/browser/badge-hydration.mjs",
+    "node tests/browser/badge-consumers.mjs"
+  ],
+  "baselineCommit": "d37947698047048946ab59c5228dc62bdeec3f6f",
+  "stage": "All current implementation and indicator-style checks pass; clean visual and final Docs acceptance pending",
+  "sourceDigests": {
+    "packages/ui/src/badge/Badge.vue": "7d6024cfeb036c047a3921a4fdebe7c09a5219fb900a90868960743358930ebd",
+    "packages/ui/src/badge/BadgeIndicator.vue": "c9ddaff9fab7be8ccbfec4cd44644facb4983d5d2a006a6984f8ecd5e84c07ed",
+    "packages/ui/src/badge/Ribbon.vue": "564a8497f0c67d9fdb506c1fa9451f6a611589873c59b4757cfe8b04599aeb08",
+    "packages/ui/src/badge/ScrollNumber.ts": "f1939077fab4a951eb2feeb317086671e3aae8ad873cdeef33ac0d20273d4fff",
+    "packages/ui/src/badge/SingleNumber.vue": "5d8c4744eca2342b779b5e579581ff90c1d1153ab440a68ac9743f5eef83c894",
+    "packages/ui/src/badge/interface.ts": "c60b072a8f757636e8f09a913bb920251740b0be88746b38cd39c3afe7b189d0",
+    "packages/ui/src/badge/index.ts": "2e22e72a1d3e8ebd11108c29b793f23211406d8bc7ebff24769f5b5b708f2257",
+    "packages/ui/src/badge/style/index.ts": "04cba45694a4de7463e2920ad043849962b6426ea0969e39f541df3ad730ba9c",
+    "packages/ui/src/badge/style/token.ts": "1e7c1c4687b7bd820711cb2a1b52c7553af2da3d26b2779176de6be3e0b2bae5",
+    "packages/ui/src/badge/use-badge-theme.ts": "34c01397cba874634281a16ebe9790f485af5c33b4f414d73a3e21d20808fee6",
+    "packages/ui/src/float-button/style/index.ts": "dc6ce2980788c0c73804df58e341a0947ae57ecabe275a15dc2baaea7c24d6ea"
+  },
+  "runtime": {
+    "files": 62,
+    "total": 1257,
+    "passed": 1257,
+    "failed": 0
+  },
+  "types": {
+    "files": 10,
+    "total": 104,
+    "passed": 104,
+    "failed": 0
+  },
+  "browser": {
+    "browser": "150.0.7871.125",
+    "source": false,
+    "results": [
+      {
+        "name": "default: nine tokens replace, accept zero, and restore",
+        "passed": true,
+        "actual": {
+          "z": "auto",
+          "height": "20px",
+          "smallHeight": "14px",
+          "dot": "6px",
+          "size": "12px",
+          "smallSize": "12px",
+          "weight": "400",
+          "status": "6px",
+          "padding": "8px"
+        }
+      },
+      {
+        "name": "dark: nine tokens replace, accept zero, and restore",
+        "passed": true,
+        "actual": {
+          "z": "auto",
+          "height": "20px",
+          "smallHeight": "14px",
+          "dot": "6px",
+          "size": "12px",
+          "smallSize": "12px",
+          "weight": "400",
+          "status": "6px",
+          "padding": "8px"
+        }
+      },
+      {
+        "name": "compact: nine tokens replace, accept zero, and restore",
+        "passed": true,
+        "actual": {
+          "z": "auto",
+          "height": "18px",
+          "smallHeight": "12px",
+          "dot": "5px",
+          "size": "10px",
+          "smallSize": "10px",
+          "weight": "400",
+          "status": "5px",
+          "padding": "4px"
+        }
+      },
+      {
+        "name": "both: nine tokens replace, accept zero, and restore",
+        "passed": true,
+        "actual": {
+          "z": "auto",
+          "height": "18px",
+          "smallHeight": "12px",
+          "dot": "5px",
+          "size": "10px",
+          "smallSize": "10px",
+          "weight": "400",
+          "status": "5px",
+          "padding": "4px"
+        }
+      },
+      {
+        "name": "current Provider and native attrs retain both business drafts and focus",
+        "passed": true
+      },
+      {
+        "name": "Ribbon complete native text slot honors empty precedence and restoration",
+        "passed": true
+      },
+      {
+        "name": "fractional and CSS offsets retain logical geometry",
+        "passed": true
+      },
+      {
+        "name": "rolling digits have one current accessible value and correct small track height",
+        "passed": true
+      },
+      {
+        "name": "reduced motion stops status ripple and digit transitions",
+        "passed": true
+      },
+      {
+        "name": "all five complete VNode count shapes use the same owned native indicator",
+        "passed": true
+      },
+      {
+        "name": "all empty count forms keep captions without empty indicators or stale status titles",
+        "passed": true
+      },
+      {
+        "name": "a conditional count component owns one business instance and hides its empty host",
+        "passed": true
+      },
+      {
+        "name": "default: standalone dots stay within their own root geometry",
+        "passed": true
+      },
+      {
+        "name": "default: wrapped status consumes status size/z-index at the root corner",
+        "passed": true
+      },
+      {
+        "name": "default: rich counts consume current padding and zero without author styles",
+        "passed": true
+      },
+      {
+        "name": "dark: standalone dots stay within their own root geometry",
+        "passed": true
+      },
+      {
+        "name": "dark: wrapped status consumes status size/z-index at the root corner",
+        "passed": true
+      },
+      {
+        "name": "dark: rich counts consume current padding and zero without author styles",
+        "passed": true
+      },
+      {
+        "name": "compact: standalone dots stay within their own root geometry",
+        "passed": true
+      },
+      {
+        "name": "compact: wrapped status consumes status size/z-index at the root corner",
+        "passed": true
+      },
+      {
+        "name": "compact: rich counts consume current padding and zero without author styles",
+        "passed": true
+      },
+      {
+        "name": "both: standalone dots stay within their own root geometry",
+        "passed": true
+      },
+      {
+        "name": "both: wrapped status consumes status size/z-index at the root corner",
+        "passed": true
+      },
+      {
+        "name": "both: rich counts consume current padding and zero without author styles",
+        "passed": true
+      },
+      {
+        "name": "authored shadow remains authoritative with an explicit border color",
+        "passed": true
+      },
+      {
+        "name": "native ltr and auto direction override Provider defaults using actual geometry",
+        "passed": true
+      },
+      {
+        "name": "actual floating-button dots retain their corner inset in both shapes and directions",
+        "passed": true
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 0",
+        "passed": true,
+        "actual": {
+          "ratio": 6.4264535191963486,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            255,
+            77,
+            79
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 1",
+        "passed": true,
+        "actual": {
+          "ratio": 5.379441266633982,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 2",
+        "passed": true,
+        "actual": {
+          "ratio": 5.149198772142031,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            245,
+            34,
+            45
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 3",
+        "passed": true,
+        "actual": {
+          "ratio": 15.207507225897064,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            219,
+            20
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 4",
+        "passed": true,
+        "actual": {
+          "ratio": 8.827617593991635,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            140,
+            22
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 5",
+        "passed": true,
+        "actual": {
+          "ratio": 9.523412403012774,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            19,
+            194,
+            194
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 6",
+        "passed": true,
+        "actual": {
+          "ratio": 9.26965500316815,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            82,
+            196,
+            26
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 7",
+        "passed": true,
+        "actual": {
+          "ratio": 5.116844937908165,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            22,
+            119,
+            255
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 6.937632053032151,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            114,
+            46,
+            209
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 5.851817390466204,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            47,
+            84,
+            235
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 10",
+        "passed": true,
+        "actual": {
+          "ratio": 5.379441266633982,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 11",
+        "passed": true,
+        "actual": {
+          "ratio": 6.349696286287211,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            84,
+            28
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 12",
+        "passed": true,
+        "actual": {
+          "ratio": 11.052328123738135,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            173,
+            20
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 13",
+        "passed": true,
+        "actual": {
+          "ratio": 12.427952472101842,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            160,
+            217,
+            17
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 14",
+        "passed": true,
+        "actual": {
+          "ratio": 9.203486649587727,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 15",
+        "passed": true,
+        "actual": {
+          "ratio": 21,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "default: [data-color] .apollo-badge-count color 17",
+        "passed": true,
+        "actual": {
+          "ratio": 4.607518093747377,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            117,
+            117,
+            117
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 0",
+        "passed": true,
+        "actual": {
+          "ratio": 5.116844937908165,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            22,
+            119,
+            255
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 1",
+        "passed": true,
+        "actual": {
+          "ratio": 5.379441266633982,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 2",
+        "passed": true,
+        "actual": {
+          "ratio": 5.149198772142031,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            245,
+            34,
+            45
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 3",
+        "passed": true,
+        "actual": {
+          "ratio": 15.207507225897064,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            219,
+            20
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 4",
+        "passed": true,
+        "actual": {
+          "ratio": 8.827617593991635,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            140,
+            22
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 5",
+        "passed": true,
+        "actual": {
+          "ratio": 9.523412403012774,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            19,
+            194,
+            194
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 6",
+        "passed": true,
+        "actual": {
+          "ratio": 9.26965500316815,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            82,
+            196,
+            26
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 7",
+        "passed": true,
+        "actual": {
+          "ratio": 5.116844937908165,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            22,
+            119,
+            255
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 6.937632053032151,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            114,
+            46,
+            209
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 5.851817390466204,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            47,
+            84,
+            235
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 10",
+        "passed": true,
+        "actual": {
+          "ratio": 5.379441266633982,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 11",
+        "passed": true,
+        "actual": {
+          "ratio": 6.349696286287211,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            84,
+            28
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 12",
+        "passed": true,
+        "actual": {
+          "ratio": 11.052328123738135,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            173,
+            20
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 13",
+        "passed": true,
+        "actual": {
+          "ratio": 12.427952472101842,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            160,
+            217,
+            17
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 14",
+        "passed": true,
+        "actual": {
+          "ratio": 9.203486649587727,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 15",
+        "passed": true,
+        "actual": {
+          "ratio": 21,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "default: [data-ribbon-color] .apollo-ribbon-content color 17",
+        "passed": true,
+        "actual": {
+          "ratio": 4.607518093747377,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            117,
+            117,
+            117
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 0",
+        "passed": true,
+        "actual": {
+          "ratio": 4.958416939917037,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            220,
+            68,
+            70
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 1",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 2",
+        "passed": true,
+        "actual": {
+          "ratio": 5.238997321413601,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            211,
+            32,
+            41
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 3",
+        "passed": true,
+        "actual": {
+          "ratio": 11.208925734294336,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            189,
+            20
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 4",
+        "passed": true,
+        "actual": {
+          "ratio": 6.715184885782149,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            122,
+            22
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 5",
+        "passed": true,
+        "actual": {
+          "ratio": 7.194172789652753,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            19,
+            168,
+            168
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 6",
+        "passed": true,
+        "actual": {
+          "ratio": 7.047221091643474,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            73,
+            170,
+            25
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 7",
+        "passed": true,
+        "actual": {
+          "ratio": 5.188129156755824,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            22,
+            104,
+            220
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 8.266772839294436,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            100,
+            42,
+            181
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 7.131724431212165,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            43,
+            74,
+            203
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 10",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 11",
+        "passed": true,
+        "actual": {
+          "ratio": 4.915124065674622,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            74,
+            27
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 12",
+        "passed": true,
+        "actual": {
+          "ratio": 8.292425861241016,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            150,
+            20
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 13",
+        "passed": true,
+        "actual": {
+          "ratio": 9.214017237478663,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            139,
+            187,
+            17
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 14",
+        "passed": true,
+        "actual": {
+          "ratio": 9.203486649587727,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 15",
+        "passed": true,
+        "actual": {
+          "ratio": 21,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-color] .apollo-badge-count color 17",
+        "passed": true,
+        "actual": {
+          "ratio": 4.607518093747377,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            117,
+            117,
+            117
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 0",
+        "passed": true,
+        "actual": {
+          "ratio": 5.188129156755824,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            22,
+            104,
+            220
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 1",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 2",
+        "passed": true,
+        "actual": {
+          "ratio": 5.238997321413601,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            211,
+            32,
+            41
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 3",
+        "passed": true,
+        "actual": {
+          "ratio": 11.208925734294336,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            189,
+            20
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 4",
+        "passed": true,
+        "actual": {
+          "ratio": 6.715184885782149,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            122,
+            22
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 5",
+        "passed": true,
+        "actual": {
+          "ratio": 7.194172789652753,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            19,
+            168,
+            168
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 6",
+        "passed": true,
+        "actual": {
+          "ratio": 7.047221091643474,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            73,
+            170,
+            25
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 7",
+        "passed": true,
+        "actual": {
+          "ratio": 5.188129156755824,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            22,
+            104,
+            220
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 8.266772839294436,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            100,
+            42,
+            181
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 7.131724431212165,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            43,
+            74,
+            203
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 10",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 11",
+        "passed": true,
+        "actual": {
+          "ratio": 4.915124065674622,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            74,
+            27
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 12",
+        "passed": true,
+        "actual": {
+          "ratio": 8.292425861241016,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            150,
+            20
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 13",
+        "passed": true,
+        "actual": {
+          "ratio": 9.214017237478663,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            139,
+            187,
+            17
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 14",
+        "passed": true,
+        "actual": {
+          "ratio": 9.203486649587727,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 15",
+        "passed": true,
+        "actual": {
+          "ratio": 21,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "dark: [data-ribbon-color] .apollo-ribbon-content color 17",
+        "passed": true,
+        "actual": {
+          "ratio": 4.607518093747377,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            117,
+            117,
+            117
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 0",
+        "passed": true,
+        "actual": {
+          "ratio": 6.4264535191963486,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            255,
+            77,
+            79
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 1",
+        "passed": true,
+        "actual": {
+          "ratio": 5.379441266633982,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 2",
+        "passed": true,
+        "actual": {
+          "ratio": 5.149198772142031,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            245,
+            34,
+            45
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 3",
+        "passed": true,
+        "actual": {
+          "ratio": 15.207507225897064,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            219,
+            20
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 4",
+        "passed": true,
+        "actual": {
+          "ratio": 8.827617593991635,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            140,
+            22
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 5",
+        "passed": true,
+        "actual": {
+          "ratio": 9.523412403012774,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            19,
+            194,
+            194
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 6",
+        "passed": true,
+        "actual": {
+          "ratio": 9.26965500316815,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            82,
+            196,
+            26
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 7",
+        "passed": true,
+        "actual": {
+          "ratio": 5.116844937908165,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            22,
+            119,
+            255
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 6.937632053032151,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            114,
+            46,
+            209
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 5.851817390466204,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            47,
+            84,
+            235
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 10",
+        "passed": true,
+        "actual": {
+          "ratio": 5.379441266633982,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 11",
+        "passed": true,
+        "actual": {
+          "ratio": 6.349696286287211,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            84,
+            28
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 12",
+        "passed": true,
+        "actual": {
+          "ratio": 11.052328123738135,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            173,
+            20
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 13",
+        "passed": true,
+        "actual": {
+          "ratio": 12.427952472101842,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            160,
+            217,
+            17
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 14",
+        "passed": true,
+        "actual": {
+          "ratio": 9.203486649587727,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 15",
+        "passed": true,
+        "actual": {
+          "ratio": 21,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-color] .apollo-badge-count color 17",
+        "passed": true,
+        "actual": {
+          "ratio": 4.607518093747377,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            117,
+            117,
+            117
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 0",
+        "passed": true,
+        "actual": {
+          "ratio": 5.116844937908165,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            22,
+            119,
+            255
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 1",
+        "passed": true,
+        "actual": {
+          "ratio": 5.379441266633982,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 2",
+        "passed": true,
+        "actual": {
+          "ratio": 5.149198772142031,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            245,
+            34,
+            45
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 3",
+        "passed": true,
+        "actual": {
+          "ratio": 15.207507225897064,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            219,
+            20
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 4",
+        "passed": true,
+        "actual": {
+          "ratio": 8.827617593991635,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            140,
+            22
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 5",
+        "passed": true,
+        "actual": {
+          "ratio": 9.523412403012774,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            19,
+            194,
+            194
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 6",
+        "passed": true,
+        "actual": {
+          "ratio": 9.26965500316815,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            82,
+            196,
+            26
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 7",
+        "passed": true,
+        "actual": {
+          "ratio": 5.116844937908165,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            22,
+            119,
+            255
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 6.937632053032151,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            114,
+            46,
+            209
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 5.851817390466204,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            47,
+            84,
+            235
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 10",
+        "passed": true,
+        "actual": {
+          "ratio": 5.379441266633982,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            235,
+            47,
+            150
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 11",
+        "passed": true,
+        "actual": {
+          "ratio": 6.349696286287211,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            84,
+            28
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 12",
+        "passed": true,
+        "actual": {
+          "ratio": 11.052328123738135,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            250,
+            173,
+            20
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 13",
+        "passed": true,
+        "actual": {
+          "ratio": 12.427952472101842,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            160,
+            217,
+            17
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 14",
+        "passed": true,
+        "actual": {
+          "ratio": 9.203486649587727,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 15",
+        "passed": true,
+        "actual": {
+          "ratio": 21,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "compact: [data-ribbon-color] .apollo-ribbon-content color 17",
+        "passed": true,
+        "actual": {
+          "ratio": 4.607518093747377,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            117,
+            117,
+            117
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 0",
+        "passed": true,
+        "actual": {
+          "ratio": 4.958416939917037,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            220,
+            68,
+            70
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 1",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 2",
+        "passed": true,
+        "actual": {
+          "ratio": 5.238997321413601,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            211,
+            32,
+            41
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 3",
+        "passed": true,
+        "actual": {
+          "ratio": 11.208925734294336,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            189,
+            20
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 4",
+        "passed": true,
+        "actual": {
+          "ratio": 6.715184885782149,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            122,
+            22
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 5",
+        "passed": true,
+        "actual": {
+          "ratio": 7.194172789652753,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            19,
+            168,
+            168
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 6",
+        "passed": true,
+        "actual": {
+          "ratio": 7.047221091643474,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            73,
+            170,
+            25
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 7",
+        "passed": true,
+        "actual": {
+          "ratio": 5.188129156755824,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            22,
+            104,
+            220
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 8.266772839294436,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            100,
+            42,
+            181
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 7.131724431212165,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            43,
+            74,
+            203
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 10",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 11",
+        "passed": true,
+        "actual": {
+          "ratio": 4.915124065674622,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            74,
+            27
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 12",
+        "passed": true,
+        "actual": {
+          "ratio": 8.292425861241016,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            150,
+            20
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 13",
+        "passed": true,
+        "actual": {
+          "ratio": 9.214017237478663,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            139,
+            187,
+            17
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 14",
+        "passed": true,
+        "actual": {
+          "ratio": 9.203486649587727,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 15",
+        "passed": true,
+        "actual": {
+          "ratio": 21,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "both: [data-color] .apollo-badge-count color 17",
+        "passed": true,
+        "actual": {
+          "ratio": 4.607518093747377,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            117,
+            117,
+            117
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 0",
+        "passed": true,
+        "actual": {
+          "ratio": 5.188129156755824,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            22,
+            104,
+            220
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 1",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 2",
+        "passed": true,
+        "actual": {
+          "ratio": 5.238997321413601,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            211,
+            32,
+            41
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 3",
+        "passed": true,
+        "actual": {
+          "ratio": 11.208925734294336,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            189,
+            20
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 4",
+        "passed": true,
+        "actual": {
+          "ratio": 6.715184885782149,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            122,
+            22
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 5",
+        "passed": true,
+        "actual": {
+          "ratio": 7.194172789652753,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            19,
+            168,
+            168
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 6",
+        "passed": true,
+        "actual": {
+          "ratio": 7.047221091643474,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            73,
+            170,
+            25
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 7",
+        "passed": true,
+        "actual": {
+          "ratio": 5.188129156755824,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            22,
+            104,
+            220
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 8",
+        "passed": true,
+        "actual": {
+          "ratio": 8.266772839294436,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            100,
+            42,
+            181
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 9",
+        "passed": true,
+        "actual": {
+          "ratio": 7.131724431212165,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            43,
+            74,
+            203
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 10",
+        "passed": true,
+        "actual": {
+          "ratio": 4.985054924012129,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            203,
+            43,
+            131
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 11",
+        "passed": true,
+        "actual": {
+          "ratio": 4.915124065674622,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            74,
+            27
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 12",
+        "passed": true,
+        "actual": {
+          "ratio": 8.292425861241016,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            216,
+            150,
+            20
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 13",
+        "passed": true,
+        "actual": {
+          "ratio": 9.214017237478663,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            139,
+            187,
+            17
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 14",
+        "passed": true,
+        "actual": {
+          "ratio": 9.203486649587727,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            45,
+            183,
+            245
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 15",
+        "passed": true,
+        "actual": {
+          "ratio": 21,
+          "color": "color(srgb-linear 0 0 0)",
+          "background": [
+            255,
+            255,
+            255
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 16",
+        "passed": true,
+        "actual": {
+          "ratio": 18.883060964594996,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            17,
+            17,
+            17
+          ]
+        }
+      },
+      {
+        "name": "both: [data-ribbon-color] .apollo-ribbon-content color 17",
+        "passed": true,
+        "actual": {
+          "ratio": 4.607518093747377,
+          "color": "color(srgb-linear 1 1 1)",
+          "background": [
+            117,
+            117,
+            117
+          ]
+        }
+      },
+      {
+        "name": "real browser axe has no violations",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "demos": {
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "basic",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "basic",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "basic",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "change",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "change",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "change",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "change",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "colorful",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "colorful",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "colorful",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "colorful",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "content-slots",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "content-slots",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "content-slots",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "content-slots",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "dot",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "dot",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "dot",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "dot",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "link",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "link",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "link",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "link",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "no-wrapper",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "no-wrapper",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "no-wrapper",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "no-wrapper",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "offset",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "offset",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "offset",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "offset",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "overflow",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "overflow",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "overflow",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "overflow",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "ribbon",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "ribbon",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "ribbon",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "ribbon",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "size",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "size",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "size",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "size",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "status",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "status",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "status",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "status",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "style-class",
+        "mode": "default",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "style-class",
+        "mode": "dark",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "style-class",
+        "mode": "compact",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "demo": "style-class",
+        "mode": "both",
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "default: real count controls preserve negative signs and current accessible values",
+        "passed": true
+      },
+      {
+        "name": "default: actual content controls keep both drafts through empty, prop and slot states",
+        "passed": true
+      },
+      {
+        "name": "default: nine real token controls, zero, restore and current direction",
+        "passed": true
+      },
+      {
+        "name": "dark: real count controls preserve negative signs and current accessible values",
+        "passed": true
+      },
+      {
+        "name": "dark: actual content controls keep both drafts through empty, prop and slot states",
+        "passed": true
+      },
+      {
+        "name": "dark: nine real token controls, zero, restore and current direction",
+        "passed": true
+      },
+      {
+        "name": "compact: real count controls preserve negative signs and current accessible values",
+        "passed": true
+      },
+      {
+        "name": "compact: actual content controls keep both drafts through empty, prop and slot states",
+        "passed": true
+      },
+      {
+        "name": "compact: nine real token controls, zero, restore and current direction",
+        "passed": true
+      },
+      {
+        "name": "both: real count controls preserve negative signs and current accessible values",
+        "passed": true
+      },
+      {
+        "name": "both: actual content controls keep both drafts through empty, prop and slot states",
+        "passed": true
+      },
+      {
+        "name": "both: nine real token controls, zero, restore and current direction",
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "consumers": {
+    "results": [
+      {
+        "file": "packages/ui/src/avatar/demo/badge.vue",
+        "mode": "default",
+        "roots": 2,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/avatar/demo/badge.vue",
+        "mode": "dark",
+        "roots": 2,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/avatar/demo/badge.vue",
+        "mode": "compact",
+        "roots": 2,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/avatar/demo/badge.vue",
+        "mode": "both",
+        "roots": 2,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/calendar/demo/notice-calendar.vue",
+        "mode": "default",
+        "roots": 11,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/calendar/demo/notice-calendar.vue",
+        "mode": "dark",
+        "roots": 11,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/calendar/demo/notice-calendar.vue",
+        "mode": "compact",
+        "roots": 11,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/calendar/demo/notice-calendar.vue",
+        "mode": "both",
+        "roots": 11,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/float-button/demo/badge.vue",
+        "mode": "default",
+        "roots": 5,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/float-button/demo/badge.vue",
+        "mode": "dark",
+        "roots": 5,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/float-button/demo/badge.vue",
+        "mode": "compact",
+        "roots": 5,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/float-button/demo/badge.vue",
+        "mode": "both",
+        "roots": 5,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/radio/demo/badge.vue",
+        "mode": "default",
+        "roots": 5,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/radio/demo/badge.vue",
+        "mode": "dark",
+        "roots": 5,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/radio/demo/badge.vue",
+        "mode": "compact",
+        "roots": 5,
+        "passed": true
+      },
+      {
+        "file": "packages/ui/src/radio/demo/badge.vue",
+        "mode": "both",
+        "roots": 5,
+        "passed": true
+      }
+    ],
+    "errors": []
+  },
+  "ssr": {
+    "checks": [
+      "SSR complete negative",
+      "SSR complete zero",
+      "SSR complete overflow",
+      "SSR complete rich-count",
+      "SSR complete status",
+      "SSR complete ribbon-array",
+      "both server roots retained by hydration",
+      "pre-hydration business draft, focus and selection retained",
+      "current theme/provider 1 with stable business instances and references",
+      "current theme/provider 0 with stable business instances and references",
+      "current theme/provider 1 with stable business instances and references",
+      "unmount/remount owns one fresh instance per root"
+    ],
+    "errors": []
+  },
+  "uiBuild": "passed",
+  "strictTypes": "passed",
+  "styleReproduction": "docs/audit/evidence/badge-indicator-style-reproduction.json",
+  "rootCausesFixed": [
+    "Wrapped status presence and current statusSize/z-index",
+    "Owned rich-count host consumes paddingInline",
+    "Explicit native boxShadow remains authoritative with borderColor",
+    "Native dir overrides Provider; nested LTR isolation and inherited auto direction survive consumer CSS lowering",
+    "Standalone dot has no floating transform; FloatButton caller owns its corner translation"
+  ],
+  "testCorrection": "Hydration retains exact height assertions after finite enter animations finish; previously an intermediate rounded size was sampled.",
+  "coreDocsPublication": "docs/audit/evidence/badge-core-docs-publication.json",
+  "remainingInScope": [
+    "42 planned clean Badge Apollo visuals and affected existing Avatar baseline review",
+    "Final local Docs content/type/test/build, browser and deployment/live receipt"
+  ],
+  "boundaries": [
+    "Chrome150/macOS only; Firefox/Safari independently unverified",
+    "Author alpha/gradient/complete color overrides must pair foreground",
+    "Consumer rendering is not full acceptance of those components",
+    "D04 arbitrary-prefix CSS and library final same-commit full gates remain open"
+  ],
+  "metadataChecks": {
+    "registry": "passed",
+    "contentSlots": 549,
+    "docsManifest": {
+      "components": 72,
+      "demos": 1006,
+      "guides": 8
+    },
+    "toolingTests": 18,
+    "format": {
+      "errors": 0,
+      "existingWarnings": 37,
+      "existingInfos": 5
+    }
+  }
+}

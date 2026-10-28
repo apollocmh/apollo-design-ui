@@ -94,6 +94,16 @@ try {
   checks.push('pre-hydration business draft, focus and selection retained');
   for (const stage of [1, 0, 1]) {
     await page.evaluate((stage) => window.badgeHydration.set({ stage }), stage);
+    // Theme changes can coincide with the initial count enter animation. Measure
+    // after finite animations settle, rather than sampling a rounded intermediate size.
+    await page.evaluate(async () => {
+      await Promise.all(
+        document
+          .getAnimations()
+          .filter((animation) => Number.isFinite(animation.effect?.getComputedTiming().endTime))
+          .map((animation) => animation.finished.catch(() => {})),
+      );
+    });
     await page.waitForFunction(
       (height) =>
         getComputedStyle(document.querySelector('#hydrated-badge .apollo-badge-count')).height ===
