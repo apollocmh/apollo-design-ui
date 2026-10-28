@@ -653,3 +653,5 @@ Typography最终验收提交22186737已上线；workflow40670124684构建/Pages�
 样式矩阵已集中收口：7 条复现修前 6 失败，172 发布浏览器修前 14 失败，修后全部通过；相关1257、类型104、64 Demo、12水合、16消费及UI L7通过。静态 @scope 保留消费构建后的原生方向，FloatButton 点定位同步；核心 Docs 已发布并线上32通过。当前冻结42张自有视觉并复核关联Avatar图片，最终发布仍待验收，见 badge-indicator-style-stage.json 与 badge-core-docs-publication.json。
 
 2026-10-28 Badge本地完整清单已统一验收：冻结d0bf2cef视觉42/42原始RGBA exact，Avatar48/48 exact；原495项492完全不变，三张已审前景更新各26像素。1257/104/172/64/12SSR/16消费/13Demo发布模板/UI L7及Docs161+32通过。最终Docs发布与线上回执待收口，详见[最终验收](audit/evidence/badge-final-acceptance.json)。当前537/1422视觉批准、885待验收，全库其他整改单元继续。
+
+2026-10-28 Badge最终回执：验收47b98296、部署40701370080成功；CI Docs161/拓扑L7 151零失败零待定，线上32零错误/26既有SPA回退。完整单元已收口，其他审计继续。详见badge-docs-publication.json。

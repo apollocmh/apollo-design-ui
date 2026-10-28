@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T13:48:16.564Z",
+  "generatedAt": "2026-10-28T14:13:08.631Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 87,
-      "ready": 5
+      "done": 88,
+      "ready": 4
     },
     "byKind": {
       "foundation": 13,
@@ -35,13 +35,12 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 5,
+    "readyCount": 4,
     "cannotFinishCount": 0,
-    "currentBatchSize": 5,
+    "currentBatchSize": 4,
     "currentBatchIds": [
       "COMP:descriptions",
       "X:docs-site",
-      "COMP:badge",
       "COMP:breadcrumb",
       "COMP:timeline"
     ],
@@ -382,8 +381,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 22,
-      "doneCount": 19,
-      "readyCount": 3,
+      "doneCount": 20,
+      "readyCount": 2,
       "itemIds": [
         "COMP:avatar",
         "COMP:badge",
@@ -687,8 +686,8 @@
         "25 个组件 11 维度 completed"
       ],
       "itemCount": 26,
-      "doneCount": 23,
-      "readyCount": 3,
+      "doneCount": 24,
+      "readyCount": 2,
       "blockedCount": 0,
       "waitingCount": 0,
       "complete": false,
@@ -1594,18 +1593,16 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "ready",
+      "status": "done",
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 1,
-      "why": "2026-10-28本地完整清单统一验收：1257相关、104类型、172发布浏览器、64 Demo、12水合、16消费、13Demo发布模板、严格UI L7、Docs161+32；清洁d0bf2cef视觉42原始RGBA exact及Avatar48 exact。最终Docs发布/线上回执待收口；见badge-final-acceptance.json。",
+      "why": "2026-10-28本地完整清单统一验收：1257相关、104类型、172发布浏览器、64 Demo、12水合、16消费、13Demo发布模板、严格UI L7、Docs161+32；清洁d0bf2cef视觉42原始RGBA exact及Avatar48 exact。验收47b98296已发布40701370080，线上32零错误；见badge-final-acceptance.json。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P1",
       "dagLevel": 2,
-      "blockers": [],
-      "softBlockers": [],
-      "cannotFinish": false
+      "blockers": []
     },
     {
       "id": "COMP:alert",
@@ -2594,7 +2591,6 @@
       "workstream": "WS-7",
       "wave": "W7",
       "dependsOn": [
-        "COMP:badge",
         "FND:icons",
         "FND:motion",
         "FND:theme",
@@ -3373,7 +3369,6 @@
   "currentBatch": [
     "COMP:descriptions",
     "X:docs-site",
-    "COMP:badge",
     "COMP:breadcrumb",
     "COMP:timeline"
   ]

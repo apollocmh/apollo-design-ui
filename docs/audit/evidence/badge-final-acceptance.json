@@ -5,7 +5,7 @@
     "df5e0436"
   ],
   "visualFixtureCommit": "d0bf2cef",
-  "stage": "Local implementation, types, tests, browsers, consumers, visuals and Docs passed; final publication/live receipt pending",
+  "stage": "Complete Badge / Ribbon unit accepted and published; other library audit units remain open",
   "evidence": {
     "inventory": "docs/audit/2026-10-28-badge-contract-audit.md",
     "functional": "docs/audit/evidence/badge-functional-stage-2026-10-28.json",
@@ -297,8 +297,15 @@
   },
   "docs": {
     "finalPublication": {
-      "status": "pending",
-      "scope": "Final current styles and approved visuals/progress publication; core version already live"
+      "status": "completed",
+      "sourceCommit": "47b98296bbd22cfb90cac70842e105a746633c5d",
+      "evidence": "docs/audit/evidence/badge-docs-publication.json",
+      "workflowRunId": 40701370080,
+      "ciDocsTests": 161,
+      "ciTopologicalL7": 151,
+      "liveChecks": 32,
+      "consoleErrors": 0,
+      "existingSpaFallbackNavigations": 26
     }
   },
   "boundaries": [

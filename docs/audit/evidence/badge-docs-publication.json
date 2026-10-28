@@ -1,0 +1,276 @@
+{
+  "sourceCommit": "47b98296bbd22cfb90cac70842e105a746633c5d",
+  "workflowRunId": 40701370080,
+  "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40701370080",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 122861785552,
+      "name": "构建文档站",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 122865122760,
+      "name": "发布到 GitHub Pages",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "ciEvidence": {
+    "testFiles": 15,
+    "tests": 161,
+    "topologicalL7": {
+      "checks": 151,
+      "failed": 0,
+      "pending": 0,
+      "notApplicable": 67
+    },
+    "logLines": [
+      "2026-10-28T14:00:17.9294154Z       Tests  161 passed (161)",
+      "2026-10-28T14:04:07.8649594Z   检查项 151  |  FAIL 0  |  PENDING 0  |  n/a 67"
+    ]
+  },
+  "liveDocs": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "demo": "basic",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "basic",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "change",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "change",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "colorful",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "colorful",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "content-slots",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "content-slots",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "dot",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "dot",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "link",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "link",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "no-wrapper",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "no-wrapper",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "offset",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "offset",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "overflow",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "overflow",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "ribbon",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "ribbon",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "size",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "size",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "status",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "status",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "style-class",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "style-class",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "name": "published positive/negative count controls and accessible digits",
+        "passed": true
+      },
+      {
+        "name": "published complete content, empty precedence and both business drafts",
+        "passed": true
+      },
+      {
+        "name": "published nine tokens, applicable zeros, restoration and current direction",
+        "passed": true
+      },
+      {
+        "name": "physical API page with all thirteen actual lazy demo cards",
+        "passed": true
+      },
+      {
+        "name": "physical progress page with the current verified stage",
+        "passed": true
+      },
+      {
+        "name": "English API contains current contracts",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": [
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/basic?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/basic?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/change?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/change?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/colorful?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/colorful?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/content-slots?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/content-slots?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/dot?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/dot?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/link?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/link?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/no-wrapper?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/no-wrapper?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/offset?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/offset?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/overflow?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/overflow?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/ribbon?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/ribbon?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/size?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/size?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/status?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/status?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/style-class?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/badge/demo/style-class?theme=dark"
+    ]
+  }
+}
