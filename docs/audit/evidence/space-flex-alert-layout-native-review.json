@@ -1,5 +1,5 @@
 {
-  "status": "approved-post-approval-rerender-pending",
+  "status": "approved-and-rerender-verified",
   "captureCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
   "runtimeBuildCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
   "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
@@ -27,8 +27,7 @@
   "oldApprovedCount": 759,
   "oldApprovedRecordsModified": false,
   "remaining": [
-    "Post-approval fresh rerender comparison",
-    "Docs candidate56 page checks and delivery evidence"
+    "Docs56 page checks and final delivery evidence"
   ],
   "images": [
     {
@@ -8377,5 +8376,13 @@
   ],
   "libraryImplementationSourceFallback": false,
   "realDemoSfcInputs": "Original demo SFCs are explicit test inputs, not library implementation fallbacks.",
-  "approvedCountAfter": 987
+  "approvedCountAfter": 987,
+  "postApproval": {
+    "commit": "3d05710f",
+    "passed": 228,
+    "rawRgbaExact": 228,
+    "failed": 0,
+    "exitCode": 0,
+    "evidence": "space-flex-alert-layout-postapproval.json"
+  }
 }

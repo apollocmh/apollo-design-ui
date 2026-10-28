@@ -32,8 +32,8 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 67,
-      "testing": 5
+      "completed": 71,
+      "testing": 1
     },
     "byPriority": {
       "P0": 8,
@@ -52,8 +52,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 67,
-    "remainingCount": 5
+    "completedCount": 71,
+    "remainingCount": 1
   },
   "milestones": [],
   "components": [
@@ -351,7 +351,7 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "S",
-      "status": "testing",
+      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 4,
@@ -370,20 +370,21 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "in-progress",
+      "apiStatus": "done",
       "tokenStatus": "n/a",
-      "styleStatus": "in-progress",
+      "styleStatus": "done",
       "unitStatus": "done",
       "interactionStatus": "n/a",
-      "typeStatus": "in-progress",
-      "a11yStatus": "in-progress",
-      "visualStatus": "in-progress",
-      "docsStatus": "in-progress",
-      "notes": "2026-10-28完整盘点与成组源码修复e0062edd、Select关联356161b4：当前槽/Provider、key身份/焦点、完整separator数据、Compact实际消费者与Addon主题/纵向连接已修。源码834相关运行时、82浏览器通过；发布JS/CSS/声明、正式视觉/Docs待验收，见space-contract-audit。\n2026-10-29交叉审图确认Input紧凑主题字体/padding和Addon underlined缺底线两项实际缺陷，分别成组整改；原160绘制矩阵将underlined与borderless合并，不能证明底线语义。状态保持testing，75张原生候选未批准，不能据此前源码/发布绿灯标整单元完成。",
+      "typeStatus": "done",
+      "a11yStatus": "done",
+      "visualStatus": "done",
+      "docsStatus": "done",
+      "notes": "2026-10-28完整盘点与成组源码修复e0062edd、Select关联356161b4：当前槽/Provider、key身份/焦点、完整separator数据、Compact实际消费者与Addon主题/纵向连接已修。源码834相关运行时、82浏览器通过；发布JS/CSS/声明、正式视觉/Docs待验收，见space-contract-audit。\n2026-10-29交叉审图确认Input紧凑主题字体/padding和Addon underlined缺底线两项实际缺陷，分别成组整改；原160绘制矩阵将underlined与borderless合并，不能证明底线语义。状态保持testing，75张原生候选未批准，不能据此前源码/发布绿灯标整单元完成。\n2026-10-29最终完整单元验收：发布87/87、严格15个真实Demo；Addon下划线与当前Input关联链已验收；Apollo75张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
       "layerNotes": {
         "token": "当前Space/Compact/Addon公开ComponentToken为空，无新增组件Token；gap消费paddingXS/padding/paddingLG三类Alias，根作用域接当前Theme变量。Addon外观直接消费当前Alias，原生变量优先。tokenStatus=n/a只表示没有独立ComponentToken，不表示不消费主题。旧D38展开记录保留于带日期历史证据，不作为underlined应等同borderless的规格。",
         "interaction": "布局容器没有业务v-model或组件级选择/开关事件，interactionStatus=n/a；仍必须验证当前默认/分隔槽、Provider替换、key/Fragment重排的子项实例、输入草稿/选择与焦点，以及横纵/RTL紧凑上下文和隔离。Addon.disabled是装饰状态，不禁用插槽内原生控件。已有对应源码/发布浏览器证据；Input尺寸和Addon底线新缺陷按本轮补验，不以无业务状态跳过这些边界。",
-        "style": "当前Alias、横纵/RTL紧凑连接已有源码和发布证据；正式审图重开underlined底线与关联Input尺寸，修复及最终75张视觉仍待统一验收。"
+        "style": "当前Alias、横纵/RTL紧凑连接已有源码和发布证据；正式审图重开underlined底线与关联Input尺寸，修复及最终75张视觉仍待统一验收。",
+        "currentAcceptance": "2026-10-29最终完整单元验收：发布87/87、严格15个真实Demo；Addon下划线与当前Input关联链已验收；Apollo75张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json；其他层说明保留为此前阶段证据。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -406,7 +407,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "flex",
@@ -415,7 +416,7 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "S",
-      "status": "testing",
+      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -434,22 +435,23 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "in-progress",
+      "apiStatus": "done",
       "tokenStatus": "n/a",
-      "styleStatus": "in-progress",
+      "styleStatus": "done",
       "unitStatus": "done",
-      "interactionStatus": "in-progress",
-      "typeStatus": "in-progress",
-      "a11yStatus": "in-progress",
-      "visualStatus": "in-progress",
-      "docsStatus": "in-progress",
-      "notes": "2026-10-29本轮状态：13ba8d0d源码120回归、60浏览器、6个Demo严格消费；新来源统一整改中。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。",
+      "interactionStatus": "done",
+      "typeStatus": "done",
+      "a11yStatus": "done",
+      "visualStatus": "done",
+      "docsStatus": "done",
+      "notes": "2026-10-29本轮状态：13ba8d0d源码120回归、60浏览器、6个Demo严格消费；新来源统一整改中。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。\n2026-10-29最终完整单元验收：发布60/60、Node SSR4/4、严格6个真实Demo；medium/middle与实际布局均保留；Apollo42张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
       "layerNotes": {
         "interaction": "Flex 是纯布局容器，无事件/受控/焦点/禁用；L2 唯一适用类是「props 更新 → DOM 更新」，由 L1 的响应式用例（setProps vertical 切换）承担。其余五类 n/a。",
         "type": "8 例（6 正例 + 3 负例，负例 @ts-expect-error 包在永不调用的闭包里）。gap 类型刻意不用 LiteralUnion —— (string & {}) 会让 SFC 编译器把运行时 prop 推成 String|Object，挂 Number 触发开发期告警。",
         "a11y": "Flex 无 ARIA 输出是上游语义（布局容器不承载可访问性信息）。axe 扫 6 个 demo 0 violation + 显式断言「无 role/aria-*」+ 键盘路径架构上不适用。",
         "token": "无ComponentToken；gap使用当前Alias。源码120回归及独立消费端通过，sourceActive共享来源边界与发布验收继续。",
-        "compat": "39 条机械基线（tests/compat/baseline/flex.mjs，renderToStaticMarkup 产出）。39/39 过，3 条豁免：D6（默认前缀）、flex:number 与 gap:zero（PLATFORM：SSR 字符串 vs 真实 DOM CSSOM 的序列化规范化，语义等价）。keepStyle: true 钉死 ctx style → prop style 的覆盖顺序。"
+        "compat": "39 条机械基线（tests/compat/baseline/flex.mjs，renderToStaticMarkup 产出）。39/39 过，3 条豁免：D6（默认前缀）、flex:number 与 gap:zero（PLATFORM：SSR 字符串 vs 真实 DOM CSSOM 的序列化规范化，语义等价）。keepStyle: true 钉死 ctx style → prop style 的覆盖顺序。",
+        "currentAcceptance": "2026-10-29最终完整单元验收：发布60/60、Node SSR4/4、严格6个真实Demo；medium/middle与实际布局均保留；Apollo42张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json；其他层说明保留为此前阶段证据。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -469,7 +471,7 @@
           "leafModules": []
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "grid",
@@ -682,7 +684,7 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "M",
-      "status": "testing",
+      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -702,23 +704,24 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "in-progress",
-      "tokenStatus": "in-progress",
-      "styleStatus": "in-progress",
+      "apiStatus": "done",
+      "tokenStatus": "done",
+      "styleStatus": "done",
       "unitStatus": "done",
-      "interactionStatus": "in-progress",
-      "typeStatus": "in-progress",
-      "a11yStatus": "in-progress",
-      "visualStatus": "in-progress",
-      "docsStatus": "in-progress",
-      "notes": "2026-10-29本轮状态：e1ff1b47完整源码清单198回归、35浏览器、11Demo主题/交互47项、51视觉准备、20类型及独立严格消费通过。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。",
+      "interactionStatus": "done",
+      "typeStatus": "done",
+      "a11yStatus": "done",
+      "visualStatus": "done",
+      "docsStatus": "done",
+      "notes": "2026-10-29本轮状态：e1ff1b47完整源码清单198回归、35浏览器、11Demo主题/交互47项、51视觉准备、20类型及独立严格消费通过。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。\n2026-10-29最终完整单元验收：发布95/95 Demo、51/51原生状态及严格11个Demo；35/35普通契约按实现未变继承；Apollo51张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
       "layerNotes": {
         "interaction": "L2：trigger click 折叠（受控/非受控）、零宽触发器 click、多 Sider 逐个移除后 -has-sider 消失、响应式 onBreakpoint 挂载即触发一次。",
         "type": "18 例（正例 + 4 负例）。SiderProps 联合、语义槽 {root,body} 对象/函数两态、CollapseType 二元、LayoutProps 无语义槽。",
         "a11y": "原生地标元素（header/footer/main/aside）；axe 扫 11 demo 0 violation。",
         "token": "19 个 Component Token：三个字面常量（#001529 / #002140）antd 硬编码；其余 calc/var 派生（headerHeight=controlHeight*2 等）。",
         "compat": "32 条机械基线（SSR：四组件 tagName 与类名合成、has-sider 直系检测、Sider 各态与语义化）。32/32，keepStyle。嵌套检测/响应式由 L1 覆盖。",
-        "visual": "18/18 全 exact（6 variant × 3 viewport）。补 resetComponent 后字体对齐。"
+        "visual": "18/18 全 exact（6 variant × 3 viewport）。补 resetComponent 后字体对齐。",
+        "currentAcceptance": "2026-10-29最终完整单元验收：发布95/95 Demo、51/51原生状态及严格11个Demo；35/35普通契约按实现未变继承；Apollo51张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json；其他层说明保留为此前阶段证据。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -743,7 +746,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "tag",
@@ -900,7 +903,7 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "M",
-      "status": "testing",
+      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -919,23 +922,24 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "in-progress",
-      "tokenStatus": "in-progress",
-      "styleStatus": "in-progress",
+      "apiStatus": "done",
+      "tokenStatus": "done",
+      "styleStatus": "done",
       "unitStatus": "done",
-      "interactionStatus": "in-progress",
-      "typeStatus": "in-progress",
-      "a11yStatus": "in-progress",
-      "visualStatus": "in-progress",
-      "docsStatus": "in-progress",
-      "notes": "2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。\n2026-10-29本轮状态：29cba1e0完整源码清单142回归、29浏览器、15Demo共180场景、60视觉准备、18类型及公开严格消费通过。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。",
+      "interactionStatus": "done",
+      "typeStatus": "done",
+      "a11yStatus": "done",
+      "visualStatus": "done",
+      "docsStatus": "done",
+      "notes": "2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。\n2026-10-29本轮状态：29cba1e0完整源码清单142回归、29浏览器、15Demo共180场景、60视觉准备、18类型及公开严格消费通过。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。\n2026-10-29最终完整单元验收：发布29/29、15个Demo共180/180、60/60原生状态及严格消费；Apollo60张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
       "layerNotes": {
         "interaction": "L2：关闭按钮 click（onClose / closable.onClose 优先级）、afterClose 经 transitionend 驱动 leave 结束、根元素 mouseenter/leave/click、错误边界切换。",
         "type": "9 例（正例 + 4 负例）。AlertType/AlertVariant 联合、语义七槽、AlertClosable 三字段、Ref nativeElement 可空。",
         "a11y": "role=alert 默认可被用户 role 覆盖（L4 钉）；关闭按钮 aria-* 由 closable 对象透传；axe 扫 13 demo 0 violation。",
         "token": "4 个 Component Token：borderRadius/withDescriptionIconSize 别名派生 var()；defaultPadding/withDescriptionPadding 字符串常量（antd cssVar 产物同为实串 8px 12px / 20px 24px）。",
         "compat": "28 条机械基线（closable 各态、banner、aria/data、role 覆盖、语义化、rtl）。28/28，keepStyle。ErrorBoundary 不进基线（SSR 恒渲染 children）。",
-        "visual": "18/18 全 exact（6 variant × 3 viewport）。closable 用例以 closable.closeIcon 替代 closeText（废弃告警会被视觉 runner 记 render-error）。"
+        "visual": "18/18 全 exact（6 variant × 3 viewport）。closable 用例以 closable.closeIcon 替代 closeText（废弃告警会被视觉 runner 记 render-error）。",
+        "currentAcceptance": "2026-10-29最终完整单元验收：发布29/29、15个Demo共180/180、60/60原生状态及严格消费；Apollo60张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json；其他层说明保留为此前阶段证据。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -961,7 +965,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "skeleton",
@@ -1769,9 +1773,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "space"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "in-progress",
       "tokenStatus": "in-progress",
@@ -2580,9 +2582,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "space"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -3583,10 +3583,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "flex",
-        "space"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",

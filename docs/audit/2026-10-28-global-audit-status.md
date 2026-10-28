@@ -4,19 +4,18 @@
 
 | 范围 | 数量 | 状态 |
 | --- | --- | --- |
-| 已完整验收并交付的组件 | 17 | 下表列明；保留各自提交、运行和发布证据 |
-| 当前完整整改单元 | 4 | Space关联Input、Flex、Alert/ErrorBoundary、Layout家族；分别完成源码后统一验证发布、视觉和Docs |
+| 已完整验收并交付的组件 | 21 | 下表列明；保留各自提交、运行和发布证据 |
 | 其余组件 | 51 | 尚未按本轮完整清单收口（含Input完整API）；既有局部修复保留 |
 | 基础包 | 13 | 已有实现和共享链路专项证据；本轮逐包复核另列，不将旧完成状态当作当前全包验收 |
 
-总组件72=17已交付+4当前完整单元+51其他待审。Input当前主题/尺寸窄单元属于Space关联链，不冒充完整Input验收。用户已取消日期约束，按实际验收更新；数量不折算工时百分比。
+总组件72=21已交付+51其他待审。Space关联Input当前主题/尺寸窄链已验收，Input完整API仍开放，不计入新增完整单元。用户已取消日期约束，按实际验收更新；数量不折算工时百分比。
 
 ## 当前组件单元
 
 | 组件 | 本轮状态 | 证据/说明 |
 | --- | --- | --- |
 | Affix | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
-| Alert | 源码实现已提交；统一验收中 | [完整清单](2026-10-29-alert-contract-audit.md) |
+| Alert | 已完整验收并交付 | [最终验收](evidence/space-flex-alert-layout-final-acceptance.json) · [完整清单](2026-10-29-alert-contract-audit.md) |
 | Anchor | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | App | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | AutoComplete | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
@@ -40,14 +39,14 @@
 | Drawer | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Dropdown | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Empty | 已完整验收并交付 | [2026-10-27-empty-contract-audit.md](2026-10-27-empty-contract-audit.md) |
-| Flex | 源码实现已提交；统一验收中 | [完整清单](2026-10-29-flex-contract-audit.md) |
+| Flex | 已完整验收并交付 | [最终验收](evidence/space-flex-alert-layout-final-acceptance.json) · [完整清单](2026-10-29-flex-contract-audit.md) |
 | FloatButton | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Form | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Grid | 已完整验收并交付 | [四单元最终验收](evidence/four-unit-final-acceptance.json) |
 | Image | 已完整验收并交付 | [2026-10-25-image-contract-audit.md](2026-10-25-image-contract-audit.md) |
-| Input | 主题/尺寸窄单元验收中；完整API仍待审 | [关联窄单元](2026-10-29-input-sizing-audit.md) |
+| Input | 主题/尺寸关联窄单元已验收；完整API仍待审 | [关联窄单元](2026-10-29-input-sizing-audit.md) |
 | InputNumber | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
-| Layout | 源码实现已提交；统一验收中 | [完整清单](2026-10-29-layout-contract-audit.md) |
+| Layout | 已完整验收并交付 | [最终验收](evidence/space-flex-alert-layout-final-acceptance.json) · [完整清单](2026-10-29-layout-contract-audit.md) |
 | List | 已完整验收并交付 | [2026-10-26-list-contract-audit.md](2026-10-26-list-contract-audit.md) |
 | Listy | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Masonry | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
@@ -68,7 +67,7 @@
 | Select | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Skeleton | 已完整验收并交付 | [2026-10-27-skeleton-contract-audit.md](2026-10-27-skeleton-contract-audit.md) |
 | Slider | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
-| Space | 源码实现已提交；统一验收中 | [完整清单](2026-10-28-space-contract-audit.md) |
+| Space | 已完整验收并交付 | [最终验收](evidence/space-flex-alert-layout-final-acceptance.json) · [完整清单](2026-10-28-space-contract-audit.md) |
 | Spin | 已完整验收并交付 | [2026-10-26-spin-contract-audit.md](2026-10-26-spin-contract-audit.md) |
 | Splitter | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Statistic | 已完整验收并交付 | [2026-10-27-statistic-contract-audit.md](2026-10-27-statistic-contract-audit.md) |
@@ -124,6 +123,8 @@ Badge最终交付：47b98296 / Docs部署40701370080，线上32通过；此后�
 
 四组件正式视觉已批准222张：Descriptions51/Breadcrumb51/Timeline78/Grid42，清洁a47d96ec；逐图实际审阅及171张rawRGBA完全一致的继承关系见evidence/four-unit-native-visual-acceptance.json。原1692份PNG和537条既存批准记录保持，当前批准759/1602、待验收843；原537真实回归仍在运行，Docs验收继续，不提前增加13个已完整交付的计数。
 
-当前交付里程碑：Descriptions/Breadcrumb/Timeline/Grid四单元已统一验收，交付数17/72；52个发布Demo模板、222张批准后的真实重渲染raw精确、既有537回归、当前CSS/L7与Docs161+32均有独立证据，根严格检查也在冻结2f47f423通过。原1692份PNG未改。Space关联链、其他54单元与13基础包继续。证据four-unit-final-acceptance.json；新进展页部署回执另记。
+此前四单元交付里程碑：Descriptions/Breadcrumb/Timeline/Grid四单元已统一验收，交付数17/72；52个发布Demo模板、222张批准后的真实重渲染raw精确、既有537回归、当前CSS/L7与Docs161+32均有独立证据，根严格检查也在冻结2f47f423通过。原1692份PNG未改。Space关联链、其他54单元与13基础包继续。证据four-unit-final-acceptance.json；新进展页部署回执另记。
 
 最新线上回执：faa80fed / 部署40755814408成功，CI Docs161与全部包/L7 151检查零失败，真实线上32通过；中英文标题与17单元计数已用修正后的locale驱动明确验证。新脚本保留所有原检查，修正旧导航重置中文导致的英文覆盖缺口。证据evidence/four-unit-docs-publication.json。
+
+本批最终里程碑：Space/Flex/Alert/Layout四个完整单元统一验收，当前21/72、其余51开放。关联1978/118、各发布门禁、228张新批准及批准后严格rawRGBA精确、旧759回归与记录/PNG保留、14dist/1982实际发布输入、Docs161+56分别有证据。当前987/1704图批准、717待验收；全库最终同提交门禁和Input完整API仍开放。详见[evidence/space-flex-alert-layout-final-acceptance.json](evidence/space-flex-alert-layout-final-acceptance.json)，本地Docs通过不冒充最终线上发布。

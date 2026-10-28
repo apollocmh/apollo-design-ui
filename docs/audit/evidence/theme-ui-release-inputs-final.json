@@ -1,0 +1,253 @@
+{
+  "at": "2026-10-28T23:06:56.868Z",
+  "baseCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+  "targetCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+  "targetMode": "commit",
+  "headAtFinish": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+  "sourceSetAggregate": {
+    "recipe": "sha256(JSON.stringify(sorted [file, sha256] pairs))",
+    "base": "10f7ab62a404f031f79669593e3c887bb24847d05cde302a4ea91ff5988cb3db",
+    "target": "10f7ab62a404f031f79669593e3c887bb24847d05cde302a4ea91ff5988cb3db"
+  },
+  "pass": true,
+  "comparisonCount": 1982,
+  "perRole": {
+    "build-resolution-and-toolchain-metadata": {
+      "files": 33,
+      "changed": 0
+    },
+    "css-generator-module-closure": {
+      "files": 1031,
+      "changed": 0
+    },
+    "declaration-import-closure": {
+      "files": 1949,
+      "changed": 0
+    },
+    "runtime-entry-module-closure": {
+      "files": 773,
+      "changed": 0
+    },
+    "ui-vue-tsc-emit-root": {
+      "files": 843,
+      "changed": 0
+    },
+    "workspace-runtime-dependency-source": {
+      "files": 1077,
+      "changed": 0
+    }
+  },
+  "inputChanges": [],
+  "issues": [],
+  "excludedChanges": [
+    {
+      "file": "docs/audit/2026-10-29-layout-contract-audit.md",
+      "reason": "Not an emitter extension and not imported from release graph",
+      "baseSHA256": "45e830983ae806a0fbdf9b451ba7e9bbc89aa9d79425e4ecab867e81ef233b14",
+      "targetSHA256": "647c0b16f6747a7d8287cdb5c2fd52a79b326a87e2a62aab67b0c72dbb3b6ac8"
+    },
+    {
+      "file": "docs/audit/2026-10-29-theme-source-presence-audit.md",
+      "reason": "Not an emitter extension and not imported from release graph",
+      "baseSHA256": "42822b3c9f663787966224f64a1d364ee7640dfff95a66c48529addc5692ff3c",
+      "targetSHA256": "6253fc12895c4718da0fee30a0c57e06178c71c4870cbc0af6226c66c54a90f1"
+    },
+    {
+      "file": "docs/audit/evidence/alert-published-verification.json",
+      "reason": "Outside resolved release source/config sets",
+      "baseSHA256": null,
+      "targetSHA256": "6fa75df3174fb9d39c170d0deb810554d22182888b8c5bffbafbf77284d35587"
+    },
+    {
+      "file": "docs/audit/evidence/input-sizing-published-verification.json",
+      "reason": "Outside resolved release source/config sets",
+      "baseSHA256": null,
+      "targetSHA256": "aea3e2cfd1473ab44458119b5a60a38342109ba0473df48fa185f13d428acbd7"
+    },
+    {
+      "file": "docs/audit/evidence/input-sizing-source-freeze.json",
+      "reason": "Outside resolved release source/config sets",
+      "baseSHA256": "98cc01dde6dfbeec87e4e521c03882158442b43d28eabf06ec34131c5e5b05ae",
+      "targetSHA256": "7284d70258f25eb131d1dbbb80089fe0bc95cfa4ec84a9a9e91b7bc414e8b32d"
+    },
+    {
+      "file": "docs/audit/evidence/layout-occlusion-source-freeze.json",
+      "reason": "Outside resolved release source/config sets",
+      "baseSHA256": null,
+      "targetSHA256": "fd49b927c459b6ad5b5d53f250f06280ef455068a4df53a4858bbe9943af863b"
+    },
+    {
+      "file": "docs/audit/evidence/layout-published-verification.json",
+      "reason": "Outside resolved release source/config sets",
+      "baseSHA256": null,
+      "targetSHA256": "dec4673b0b1167d0a503be06ca7c20f02b633dd1eacde6f94cc5eb9bd46efc4d"
+    },
+    {
+      "file": "docs/audit/evidence/theme-input-build-costs.json",
+      "reason": "Outside resolved release source/config sets",
+      "baseSHA256": null,
+      "targetSHA256": "64fdae6ceda4dc88e44c61bf841b755cf273ff611f0a502d7984157ca13e4acf"
+    },
+    {
+      "file": "docs/audit/evidence/theme-source-approved759-regression.json",
+      "reason": "Outside resolved release source/config sets",
+      "baseSHA256": null,
+      "targetSHA256": "ad81962474c7afd33bba8a02452870ae44ba2e320522e52c0a9fa1a7ddb86139"
+    },
+    {
+      "file": "docs/audit/evidence/theme-source-browser-harness-freeze.json",
+      "reason": "Outside resolved release source/config sets",
+      "baseSHA256": null,
+      "targetSHA256": "0eed234f3d83a57410ee9fa67c4237694ee0d58088ff40ccef219fbabaf9dda7"
+    },
+    {
+      "file": "docs/audit/evidence/theme-source-flex-published.json",
+      "reason": "Outside resolved release source/config sets",
+      "baseSHA256": null,
+      "targetSHA256": "369dfe76906e1a99be35864e1b9aa4c27e79d094e99760c8f20b85cac36560f3"
+    },
+    {
+      "file": "docs/audit/evidence/theme-source-presence-acceptance.json",
+      "reason": "Outside resolved release source/config sets",
+      "baseSHA256": null,
+      "targetSHA256": "15758f0f90d497c7af72ae7bd48aff5937e5c3b2835650e07ee82b5ba9ecb501"
+    },
+    {
+      "file": "docs/audit/evidence/theme-ui-published-build-stage.json",
+      "reason": "Outside resolved release source/config sets",
+      "baseSHA256": null,
+      "targetSHA256": "1807e487367ae42a577929d224a82863de21bf4bd3eff5c67b111f9adcb6def2"
+    },
+    {
+      "file": "packages/ui/src/layout/demo/collapsible-overlay.md",
+      "reason": "Not reachable from entry/CSS graphs; UI vue-tsc excludes **/demo/**",
+      "baseSHA256": "9fa38e74d24d99080573ff47981c9d51b3f740635389830185495a0458c9870f",
+      "targetSHA256": "b538c281eef9f91c41162cc41dcee9daa7652e91fec311efe34db58c3ad4dbab"
+    },
+    {
+      "file": "packages/ui/src/layout/demo/collapsible-overlay.vue",
+      "reason": "Not reachable from entry/CSS graphs; UI vue-tsc excludes **/demo/**",
+      "baseSHA256": "56242b253434abe64136f634a441f78103456e7d99f093cdf20d74737dfc70b4",
+      "targetSHA256": "05766206e607bf5ddfc94239bb0f116e53662f0869edc8e872f4368bba7de6d5"
+    },
+    {
+      "file": "packages/ui/src/layout/demo/responsive.md",
+      "reason": "Not reachable from entry/CSS graphs; UI vue-tsc excludes **/demo/**",
+      "baseSHA256": "a6884b08cb6664e7fcfd2180244416f2d475c0d3f443aa3aea8ee14b9be87c87",
+      "targetSHA256": "4eee1dcc26ad7cc86029696ceb5b58a7a5f0fac07508ea9d79a537b25952b036"
+    },
+    {
+      "file": "packages/ui/src/layout/demo/responsive.vue",
+      "reason": "Not reachable from entry/CSS graphs; UI vue-tsc excludes **/demo/**",
+      "baseSHA256": "31c591148fd48d2e43840b6ee0d2e690c7f6fcc6e1dadcf6ac5c778d62512107",
+      "targetSHA256": "e9e1b234296f91bd7340f21d54877dff9f593b5c723b670d27db2f1aabae7464"
+    },
+    {
+      "file": "packages/ui/src/space/demo/compact.md",
+      "reason": "Not reachable from entry/CSS graphs; UI vue-tsc excludes **/demo/**",
+      "baseSHA256": "3b56f0f137354830b124516f2e790a450f4e909671b1ab70762b1e888100968c",
+      "targetSHA256": "9f3e0c93cc3751e9c17b54ab1cc0afd72c1466229d32e2b05bce181007f6536a"
+    },
+    {
+      "file": "packages/ui/src/space/demo/compact.vue",
+      "reason": "Not reachable from entry/CSS graphs; UI vue-tsc excludes **/demo/**",
+      "baseSHA256": "2a0b7345d1929fae7b2c8bdb38f6c335a3a0bcfb6c383423a09a82e858d4decc",
+      "targetSHA256": "7da7f2b4defa026d3a6b81c228f320a7efa085fe0365d4f8d7aad3e75107f56e"
+    },
+    {
+      "file": "tests/browser/fixtures/AlertContracts.mjs",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": "6e62cc7237acf6f750b0cba8c8d68828e6470b0c534e8f5828520ffec4f13567",
+      "targetSHA256": "4ac65f65f42110e8cd6d37a980a1a2d432310a4dd3e33bc5bd2ecdb1d42c75d8"
+    },
+    {
+      "file": "tests/browser/fixtures/LayoutDemos.mjs",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": "08dd48ed34ee97b8d68f768f66ee4f3e56486934410cf8be8746a6423ceeb307",
+      "targetSHA256": "f8a83a849cb22e27435cfd8aa5eb56f005a354695b27f8b4e9d4da600f9ab148"
+    },
+    {
+      "file": "tests/browser/fixtures/ThemeSourceWriters.mjs",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": null,
+      "targetSHA256": "4fc5c40b7d60cfed2260fce83c214183f8d0d658aecf5f6efbdcc0bb4101af3d"
+    },
+    {
+      "file": "tests/browser/input-sizing-contracts.mjs",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": "df94de96ce9f354601d95bed2b689625f45567f8c2bffadf4da079a4ad53e4f7",
+      "targetSHA256": "937b2d0e1f6b32d89cf6bf04d17473c88fbe68ea7eefddc13244da9cd7f48932"
+    },
+    {
+      "file": "tests/browser/layout-demos.mjs",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": "746809e564fa0e302f9680676d4ae215ec3e4a514f8bd049b74e21f1d3965db0",
+      "targetSHA256": "73802bfdb7d076821b580ec5c5014ce0d53cfa6fb41a08352e5de4227cc40216"
+    },
+    {
+      "file": "tests/browser/layout-visual-states.mjs",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": "d1cdc5e22e3961edc000ab552ae2cb9b0b905af534f34f1764092b251d9d7d9c",
+      "targetSHA256": "7d51afb3d2dda3afe8ec7e272d5a2280ad9242e32f166b8790f4043004110b1e"
+    },
+    {
+      "file": "tests/browser/space-contracts.mjs",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": "072fa122263f0e1d7b1d98f7da72675642daa5df7da65d15b25a7c70656fdc31",
+      "targetSHA256": "c821c17155a35f93bb336c4c8bbbfb010ceaac1d28ac8d3a090e34ed5eadfc92"
+    },
+    {
+      "file": "tests/browser/theme-source-writers-ssr.mjs",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": null,
+      "targetSHA256": "716bac6ae89733339861d5209b120f6286fae6121eab066ef3a19a4c3b72ad4d"
+    },
+    {
+      "file": "tests/browser/theme-source-writers.mjs",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": null,
+      "targetSHA256": "b89f2e41586cc388b67ca74df7a6824e95b7f5bbd64a4ce0f271f15be48b515a"
+    },
+    {
+      "file": "tests/build/budget.json",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": "8f11d4f4b6047f12e8f485e5de2586e688373096c7b2014528cf01cbfc5780c1",
+      "targetSHA256": "b51f8f1e7ca0d93912f0c70f50161fb587cef73e43dcb0c5531142519e7c3571"
+    },
+    {
+      "file": "tests/consumer/input-types.mjs",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": null,
+      "targetSHA256": "57b9613fadbae75df19efaacf89d84dc6ab1f28a44afe16c2b58340d1095d9a4"
+    },
+    {
+      "file": "tests/visual/flex-state.mjs",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": "b2babdc412d4bb44bc7518a00fce9ef7723d1828f6f0385d5bd346ca45b1bd9c",
+      "targetSHA256": "cf3fcac3793daf74fd7b2704573880fc6bd19355f6285c8c90915bc6ce03e4ae"
+    },
+    {
+      "file": "tests/visual/layout-state.mjs",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": "53b20d7e28f1b464a4fda08f9255f33b0afc37b26938ca056c5755891e6b27f5",
+      "targetSHA256": "da927cffe86ef48c9a457ec8617cf585a43bce57f1943793e64d0157ac8d5f80"
+    },
+    {
+      "file": "tests/visual/render/cases/apollo/flex.js",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": "72edc61d194eb1565069d6d2cecd4dcd80da47668dcfd68409472e77e915b56a",
+      "targetSHA256": "8b2656f971532556e47c6bc8dbc54411d9ac5bafd6f696fa6cba6e3ea494636c"
+    },
+    {
+      "file": "tests/visual/render/cases/apollo/layout.js",
+      "reason": "Not a package source entry and not in UI declaration include",
+      "baseSHA256": "8776b25f54ddec453093cc2900b88e19e7ac8b829dea83e46b12c9b2beb57f9f",
+      "targetSHA256": "03e56e68f0f8805ad4530f124350f8f218f5d0051277d743c8cf37a8a74950aa"
+    }
+  ],
+  "fullEvidence": {
+    "file": "/tmp/apollo-release-provenance-3f68/48d90b43/release-inputs.json",
+    "sha256": "88978a30a3be51c20b5d5d74a47715cfc08463012211383006af7426f461e91d"
+  },
+  "inputScope": "UI/Theme release runtime, declaration and CSS generator graphs plus relevant workspace/toolchain metadata; excluded demos/tests have entry and tsconfig evidence in the full report."
+}

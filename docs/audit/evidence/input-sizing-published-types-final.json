@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "verificationCommit": "957759fb369b35cbbda96f07a18a234a55f7ac17",
+  "runtimeBuildCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+  "repo": "/private/tmp/apollo-theme-ui-ad70dd7c",
+  "harness": {
+    "file": "/Users/nanren/Code/apollo-design-ui/tests/consumer/input-types.mjs",
+    "sha256": "57b9613fadbae75df19efaacf89d84dc6ab1f28a44afe16c2b58340d1095d9a4"
+  },
+  "sourceCollectionHash": "f5c8e35479f5a94119a4e930edb1005a2f4142a33720d8c1bbd5c3d3df7c7883",
+  "newSixDemoDocHashesMatched": true,
+  "consumer": {
+    "exit": 0,
+    "positiveExit": 0,
+    "expectedNegativeExit": 2,
+    "originalDemos": 24,
+    "positivePublicSfcFiles": 2,
+    "staticNamespaceSfcUsages": 5,
+    "typescriptExpectedErrors": 3,
+    "negativeSfcCases": [
+      "value-number",
+      "entry-size",
+      "numeric-model",
+      "textarea-rows",
+      "textarea-autoSize",
+      "password-action",
+      "search-value",
+      "otp-input",
+      "group-size"
+    ],
+    "rootAndInputSubpath": true,
+    "existingComponentFields": 19,
+    "sourceAliases": false,
+    "sourceFallback": false,
+    "sourceLeaks": [],
+    "copiedDeclarations": 866,
+    "resolvedFirstPartyDeclarations": 383,
+    "fingerprintedInputs": 903,
+    "allInputsUnchanged": true,
+    "evidence": "/tmp/apollo-input-published-957759fb/input-types.json",
+    "log": "/tmp/apollo-input-published-957759fb/input-types.log"
+  },
+  "locks": {
+    "input17SourcesUnchanged": true,
+    "dist4Unchanged": true,
+    "sourceAndDistAndNewDemoDocInputs": 27,
+    "allUnchanged": true,
+    "changedFiles": [],
+    "evidence": "/tmp/apollo-input-published-957759fb/locked-inputs.json"
+  },
+  "allowedPrivateDocsCandidate": "packages/docs/content/guide/audit-progress.md",
+  "statusBefore": " M packages/docs/content/guide/audit-progress.md\n",
+  "statusAfter": " M packages/docs/content/guide/audit-progress.md\n",
+  "onlyExpectedPrivateDocsCandidateDirty": true,
+  "packageBuildRun": false,
+  "distWritten": false,
+  "libraryEdited": false,
+  "command": {
+    "cwd": "/Users/nanren/Code/apollo-design-ui",
+    "text": "INPUT_TYPES_REPO=/tmp/apollo-theme-ui-ad70dd7c INPUT_TYPES_EVIDENCE=/tmp/apollo-input-published-957759fb/input-types.json node tests/consumer/input-types.mjs",
+    "exit": 0
+  },
+  "limitation": "Public Input declarations and all24 real Demo SFCs only; Root owns refreshed Docs browser56 acceptance."
+}

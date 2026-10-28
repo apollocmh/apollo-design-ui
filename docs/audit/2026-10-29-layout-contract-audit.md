@@ -144,3 +144,9 @@
 - 所属 Biome check 与 git diff --check 通过。相对本轮 HEAD，Layout/Sider 实现、公开类型/导出、库 style、旧 Vue/React Layout case 无改动；全部改动是 10 个演示/测试/本审计文件。完整 53 文件的新指纹在 `/tmp/apollo-layout-occlusion-source-freeze.json`，前阶段 manifest 保留。
 
 当前属于源码/演示与定向浏览器验证完成，正式 228 张新 bundle 候选复捕、审阅、Registry/Docs 和最终同提交全量门禁仍归主线程执行。没有包构建、提交、推送或 dist 写入。
+
+## 2026-10-29 · 本轮最终验收
+
+上文保留各阶段红绿及当时的待验收边界；本节记录统一收口。Layout完整清单已验收：发布95/95 Demo、51/51原生状态及严格11个Demo；35/35普通契约按实现未变继承；正式Apollo 51张已审阅批准，批准后严格rawRGBA精确。
+
+[本批最终验收](evidence/space-flex-alert-layout-final-acceptance.json)汇总1978/118关联专项、[本单元发布门禁](evidence/layout-published-verification-final.json)、[正式视觉审阅](evidence/space-flex-alert-layout-native-review.json)、[批准后回执](evidence/space-flex-alert-layout-postapproval.json)及[Docs161+56](evidence/space-flex-alert-layout-docs-local.json)。原759视觉记录和PNG保留，当前完整交付21/72；Input完整API、其他51组件、13基础包逐包审计与全库最终同提交门禁仍开放。Docs为本地真实构建验收，最终部署/线上回执由主线程另记。

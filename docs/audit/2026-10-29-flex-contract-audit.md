@@ -101,3 +101,9 @@ source consumer 初试误将整个源码 UI barrel 带入一个缺少仓库环�
 源码完成后以独立证据与文件 SHA 冻结交付；后续若有新实际缺陷再解冻，不继续扩展其他组件 API。
 
 完整机器证据见 [flex-source-contracts.json](evidence/flex-source-contracts.json)。此证据区分原始红灯、探针纠正、已通过的 Flex 独立验证和当前未通过的共享类型门禁；本单元源码冻结清单与 SHA 写入 `/tmp/apollo-flex-source-freeze.json` 供主线程整合核对。
+
+## 2026-10-29 · 本轮最终验收
+
+上文保留各阶段红绿及当时的待验收边界；本节记录统一收口。Flex完整清单已验收：发布60/60、Node SSR4/4、严格6个真实Demo；medium/middle与实际布局均保留；正式Apollo 42张已审阅批准，批准后严格rawRGBA精确。
+
+[本批最终验收](evidence/space-flex-alert-layout-final-acceptance.json)汇总1978/118关联专项、[本单元发布门禁](evidence/theme-source-flex-published.json)、[正式视觉审阅](evidence/space-flex-alert-layout-native-review.json)、[批准后回执](evidence/space-flex-alert-layout-postapproval.json)及[Docs161+56](evidence/space-flex-alert-layout-docs-local.json)。原759视觉记录和PNG保留，当前完整交付21/72；Input完整API、其他51组件、13基础包逐包审计与全库最终同提交门禁仍开放。Docs为本地真实构建验收，最终部署/线上回执由主线程另记。

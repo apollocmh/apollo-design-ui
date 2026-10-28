@@ -1,0 +1,77 @@
+{
+  "head": "3d05710f3b1954c320c05a01f58cce994ca2176c",
+  "worktree": "/tmp/apollo-final-48d90b43",
+  "command": "node tests/visual/apollo.mjs --component space --component flex --component alert --component layout --no-build --report-file /tmp/apollo-3d-postapproval228.json",
+  "standardRunnerExitCode": 0,
+  "expected": 228,
+  "passed": 228,
+  "pending": 0,
+  "allExact": true,
+  "components": {
+    "space": 75,
+    "flex": 42,
+    "alert": 60,
+    "layout": 51
+  },
+  "rgbaCommand": "node /tmp/apollo-3d-postapproval-rgba.mjs",
+  "rgbaExitCode": 0,
+  "rgbaTotal": 228,
+  "rgbaPassed": 228,
+  "rgbaComparison": "Strict equality of all decoded RGBA bytes, dimensions and four channels; no pixel tolerance",
+  "flexActualGapMetrics": {
+    "flex/gap__light__mobile": {
+      "small": 8,
+      "medium": 16,
+      "middle": 16,
+      "large": 24,
+      "16px": 16
+    },
+    "flex/gap__light__tablet": {
+      "small": 8,
+      "medium": 16,
+      "middle": 16,
+      "large": 24,
+      "16px": 16
+    },
+    "flex/gap__light__desktop": {
+      "small": 8,
+      "medium": 16,
+      "middle": 16,
+      "large": 24,
+      "16px": 16
+    }
+  },
+  "evidence": {
+    "/tmp/apollo-3d-postapproval228.json": "9c6327362b58346c52d0984c778047e898cb8a0f3c452c43cdcca7891f6c00c0",
+    "/tmp/apollo-3d-postapproval228-rgba.json": "38635da1764329a54b3d0192581f966454f0915cf4bfd88ac58a3bd21822fc4d",
+    "/tmp/apollo-3d-postapproval228.log": "0d78e627dc5c4b8995e9eee843307696a8d7e403bcfb3462ce5d52a799b3eada",
+    "/tmp/apollo-3d-postapproval228-rgba.log": "8850e8aab901a8f5a56478a4891682be5a68443d1df84d1c48ca1918c90eb59d"
+  },
+  "locks": {
+    "head": "3d05710f3b1954c320c05a01f58cce994ca2176c",
+    "counts": {
+      "dist": 3694,
+      "baselines": 2143,
+      "assets": 3
+    },
+    "aggregates": {
+      "dist": "34805ff9c3792eb4383e1dd2e57ae8eb269ea4790a804bb2a54fd7b59d4cea56",
+      "baselines": "6aff63ff71ca348d6324f7eef88f5245b95f073e06dc010ea28e635c44e603b9",
+      "assets": "bd6a2a909862c45cb0eed470913a307f9dd404545039bfd2338da62c19f5bb76"
+    },
+    "allLocksUnchanged": true,
+    "gitStatus": ""
+  },
+  "old759": {
+    "previousCommit": "fc395a13d4c99d59aadda930290fce2833c52ef1",
+    "oldEntries": 759,
+    "currentEntries": 987,
+    "oldRecordsIdentical": true,
+    "oldPngGitBlobsIdentical": true,
+    "newEntries": 228
+  },
+  "buildsPerformed": false,
+  "acceptOrUpdatePerformed": false,
+  "productionEdits": false,
+  "readersExited": true
+}

@@ -1,0 +1,289 @@
+{
+  "sourceCommit": "957759fb",
+  "candidateWorktree": "/tmp/apollo-theme-ui-ad70dd7c",
+  "candidateGuideSha256": "9fece07444a0adb7d0930115d5f1ac568f5d3633fcece4d7755b3b6278349425",
+  "candidateGuideDiff": "Only the prospective21-unit progress guide differs from that commit; copied to the delivery tree after verification.",
+  "runtimeBuildCommit": "3f68bd2d",
+  "commands": [
+    {
+      "command": "node tooling/content/build-manifest.mjs",
+      "cwd": "packages/docs",
+      "exitCode": 0,
+      "result": "72 components /1008 demos /8 guides"
+    },
+    {
+      "command": "vue-tsc --noEmit -p tsconfig.json",
+      "cwd": "packages/docs",
+      "exitCode": 0,
+      "diagnostics": 0
+    },
+    {
+      "command": "vitest run --config vitest.config.ts",
+      "cwd": "packages/docs",
+      "exitCode": 0,
+      "files": 15,
+      "passed": 161
+    },
+    {
+      "command": "node node_modules/vite-ssg/bin/vite-ssg.js build",
+      "cwd": "packages/docs",
+      "exitCode": 0
+    },
+    {
+      "command": "DOCS_URL=http://127.0.0.1:4490/apollo-design-ui DOCS_ACCEPTED_UNITS=21 DOCS_PLANNED_VISUALS=1704 node tests/browser/audit-batch-docs.mjs",
+      "exitCode": 0,
+      "passed": 56,
+      "failed": 0,
+      "errors": []
+    }
+  ],
+  "browserEvidence": {
+    "base": "http://127.0.0.1:4490/apollo-design-ui",
+    "expectedDemoStatus": 200,
+    "expectedAcceptedUnits": 21,
+    "localeChecks": [
+      {
+        "locale": "zh-CN",
+        "heading": "全库进度：按完整单元计，不按测试数量计",
+        "delivered": "21个已完整验收；本批新增Space / Flex / Alert / Layout"
+      },
+      {
+        "locale": "en-US",
+        "heading": "Library-wide progress by complete audit unit",
+        "delivered": "21 fully accepted; Space, Flex, Alert and Layout pass this batch"
+      }
+    ],
+    "results": [
+      {
+        "name": "descriptions: API and all 13 demo cards",
+        "passed": true
+      },
+      {
+        "name": "descriptions/basic/light",
+        "passed": true
+      },
+      {
+        "name": "descriptions/basic/dark",
+        "passed": true
+      },
+      {
+        "name": "descriptions/custom-label/light",
+        "passed": true
+      },
+      {
+        "name": "descriptions/custom-label/dark",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb: API and all 11 demo cards",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/native/light",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/native/dark",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/overlay/light",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/overlay/dark",
+        "passed": true
+      },
+      {
+        "name": "timeline: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "timeline/horizontal-debug/light",
+        "passed": true
+      },
+      {
+        "name": "timeline/horizontal-debug/dark",
+        "passed": true
+      },
+      {
+        "name": "timeline/native-slots/light",
+        "passed": true
+      },
+      {
+        "name": "timeline/native-slots/dark",
+        "passed": true
+      },
+      {
+        "name": "grid: API and all 13 demo cards",
+        "passed": true
+      },
+      {
+        "name": "grid/responsive/light",
+        "passed": true
+      },
+      {
+        "name": "grid/responsive/dark",
+        "passed": true
+      },
+      {
+        "name": "grid/playground/light",
+        "passed": true
+      },
+      {
+        "name": "grid/playground/dark",
+        "passed": true
+      },
+      {
+        "name": "space: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "space/compact/light",
+        "passed": true
+      },
+      {
+        "name": "space/compact/dark",
+        "passed": true
+      },
+      {
+        "name": "space/compact-button-vertical/light",
+        "passed": true
+      },
+      {
+        "name": "space/compact-button-vertical/dark",
+        "passed": true
+      },
+      {
+        "name": "flex: API and all 6 demo cards",
+        "passed": true
+      },
+      {
+        "name": "flex/gap/light",
+        "passed": true
+      },
+      {
+        "name": "flex/gap/dark",
+        "passed": true
+      },
+      {
+        "name": "flex/combination/light",
+        "passed": true
+      },
+      {
+        "name": "flex/combination/dark",
+        "passed": true
+      },
+      {
+        "name": "alert: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "alert/smooth-closed/light",
+        "passed": true
+      },
+      {
+        "name": "alert/smooth-closed/dark",
+        "passed": true
+      },
+      {
+        "name": "alert/error-boundary/light",
+        "passed": true
+      },
+      {
+        "name": "alert/error-boundary/dark",
+        "passed": true
+      },
+      {
+        "name": "layout: API and all 11 demo cards",
+        "passed": true
+      },
+      {
+        "name": "layout/responsive/light",
+        "passed": true
+      },
+      {
+        "name": "layout/responsive/dark",
+        "passed": true
+      },
+      {
+        "name": "layout/custom-trigger/light",
+        "passed": true
+      },
+      {
+        "name": "layout/custom-trigger/dark",
+        "passed": true
+      },
+      {
+        "name": "input: API and all 24 demo cards",
+        "passed": true
+      },
+      {
+        "name": "input/component-token/light",
+        "passed": true
+      },
+      {
+        "name": "input/component-token/dark",
+        "passed": true
+      },
+      {
+        "name": "input/autosize-textarea/light",
+        "passed": true
+      },
+      {
+        "name": "input/autosize-textarea/dark",
+        "passed": true
+      },
+      {
+        "name": "menu/native-actions/light",
+        "passed": true
+      },
+      {
+        "name": "menu/native-actions/dark",
+        "passed": true
+      },
+      {
+        "name": "Menu native button executes once through container Enter",
+        "passed": true
+      },
+      {
+        "name": "Descriptions label help is reachable by keyboard",
+        "passed": true
+      },
+      {
+        "name": "Timeline slot reversal preserves the actual editor and draft",
+        "passed": true
+      },
+      {
+        "name": "Flex public medium preset and custom zero gap reach actual geometry",
+        "passed": true
+      },
+      {
+        "name": "Alert closes after its real transition and can mount again",
+        "passed": true
+      },
+      {
+        "name": "Layout external Vue control updates collapsed state without replacing its sidebar",
+        "passed": true
+      },
+      {
+        "name": "Input current theme preserves the draft and ancestor typography remeasures autoSize",
+        "passed": true
+      },
+      {
+        "name": "progress/zh-CN",
+        "passed": true
+      },
+      {
+        "name": "progress/en-US",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": []
+  },
+  "livePublication": "pending; this receipt only verifies the local built candidate",
+  "unexecuted": [
+    "Final whole-library same-commit gates"
+  ]
+}

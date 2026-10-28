@@ -1,0 +1,241 @@
+{
+  "scope": "Layout affected demos and native cases after floating-control spacing fix",
+  "worktree": "/private/tmp/apollo-final-48d90b43",
+  "verificationCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+  "runtimeBuildCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+  "releaseInputProvenance": "/tmp/apollo-release-provenance-3f68/48d90b43/release-inputs.json",
+  "releaseInputProvenanceSHA256": "88978a30a3be51c20b5d5d74a47715cfc08463012211383006af7426f461e91d",
+  "all1982ReleaseInputFilesLocallyVerifiedBeforeAndAfter": true,
+  "packageRuntimeLinks": {
+    "a11y -> @apollo-design/utils": "/private/tmp/apollo-final-48d90b43/packages/utils",
+    "form-core -> @apollo-design/utils": "/private/tmp/apollo-final-48d90b43/packages/utils",
+    "icons -> @apollo-design/utils": "/private/tmp/apollo-final-48d90b43/packages/utils",
+    "motion -> @apollo-design/utils": "/private/tmp/apollo-final-48d90b43/packages/utils",
+    "overlay -> @apollo-design/utils": "/private/tmp/apollo-final-48d90b43/packages/utils",
+    "overlay -> @apollo-design/portal": "/private/tmp/apollo-final-48d90b43/packages/portal",
+    "overlay -> @apollo-design/position": "/private/tmp/apollo-final-48d90b43/packages/position",
+    "overlay -> @apollo-design/a11y": "/private/tmp/apollo-final-48d90b43/packages/a11y",
+    "picker -> @apollo-design/utils": "/private/tmp/apollo-final-48d90b43/packages/utils",
+    "portal -> @apollo-design/utils": "/private/tmp/apollo-final-48d90b43/packages/utils",
+    "position -> @apollo-design/utils": "/private/tmp/apollo-final-48d90b43/packages/utils",
+    "test-utils -> @apollo-design/theme": "/private/tmp/apollo-final-48d90b43/packages/theme",
+    "test-utils -> @apollo-design/utils": "/private/tmp/apollo-final-48d90b43/packages/utils",
+    "theme -> @apollo-design/utils": "/private/tmp/apollo-final-48d90b43/packages/utils",
+    "ui -> @apollo-design/utils": "/private/tmp/apollo-final-48d90b43/packages/utils",
+    "ui -> @apollo-design/theme": "/private/tmp/apollo-final-48d90b43/packages/theme",
+    "ui -> @apollo-design/icons": "/private/tmp/apollo-final-48d90b43/packages/icons",
+    "ui -> @apollo-design/motion": "/private/tmp/apollo-final-48d90b43/packages/motion",
+    "ui -> @apollo-design/portal": "/private/tmp/apollo-final-48d90b43/packages/portal",
+    "ui -> @apollo-design/position": "/private/tmp/apollo-final-48d90b43/packages/position",
+    "ui -> @apollo-design/overlay": "/private/tmp/apollo-final-48d90b43/packages/overlay",
+    "ui -> @apollo-design/a11y": "/private/tmp/apollo-final-48d90b43/packages/a11y",
+    "ui -> @apollo-design/virtual-list": "/private/tmp/apollo-final-48d90b43/packages/virtual-list",
+    "ui -> @apollo-design/form-core": "/private/tmp/apollo-final-48d90b43/packages/form-core",
+    "ui -> @apollo-design/picker": "/private/tmp/apollo-final-48d90b43/packages/picker",
+    "ui -> @apollo-design/locale": "/private/tmp/apollo-final-48d90b43/packages/locale",
+    "virtual-list -> @apollo-design/utils": "/private/tmp/apollo-final-48d90b43/packages/utils"
+  },
+  "results": {
+    "types": {
+      "passed": true,
+      "exitCode": 0,
+      "source": false,
+      "checks": null,
+      "readersExited": true,
+      "evidence": "/tmp/apollo-layout-48d9-published-types.json",
+      "evidenceSHA256": "e71a68db7bdf377d0a2da55eeade1a9d5bdc973f1e5e118ba7838dc8493580e6",
+      "command": "LAYOUT_SOURCE=0 LAYOUT_TYPES_EVIDENCE=/tmp/apollo-layout-48d9-published-types.json node tests/consumer/layout-types.mjs"
+    },
+    "demos": {
+      "passed": true,
+      "exitCode": 0,
+      "source": false,
+      "checks": 95,
+      "readersExited": true,
+      "evidence": "/tmp/apollo-layout-48d9-published-demos.json",
+      "evidenceSHA256": "45d383f739de353c24f04676f7befbdf875c86bc4f994f0f0d6a7851d2d215d8",
+      "command": "LAYOUT_SOURCE=0 LAYOUT_DEMOS_EVIDENCE=/tmp/apollo-layout-48d9-published-demos.json node tests/browser/layout-demos.mjs"
+    },
+    "native": {
+      "passed": true,
+      "exitCode": 0,
+      "source": false,
+      "checks": 51,
+      "readersExited": true,
+      "evidence": "/tmp/apollo-layout-48d9-published-native.json",
+      "evidenceSHA256": "3c5499726433ed588dcd9625a3e0a4b3d783d3ee653960fe8c4c92be452025d3",
+      "command": "LAYOUT_SOURCE=0 LAYOUT_VISUAL_EVIDENCE=/tmp/apollo-layout-48d9-published-native.json node tests/browser/layout-visual-states.mjs"
+    }
+  },
+  "allAffectedRerunsPassed": true,
+  "floatingDemoScenarios": 48,
+  "floatingDemoBboxPhasesVerified": 128,
+  "nativeBboxStatesVerified": 51,
+  "inheritedContracts": {
+    "rerun": false,
+    "checks": "35/35",
+    "evidence": "/tmp/apollo-layout-b9e5-published-contracts.json",
+    "verificationCommit": "b9e5c13b3a68b0ffea7385a914cfbc9739373939",
+    "runtimeBuildCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+    "basis": "Explicit parent instruction: implementation/CSS/API unchanged; resolved release inputs verified identical to the build"
+  },
+  "distBefore": {
+    "a11y": {
+      "files": 10,
+      "bytes": 55908,
+      "sha256": "9cba759e431634c70f595167088f6d978519363c1933ecb96c5c6eb3d8070f46"
+    },
+    "form-core": {
+      "files": 25,
+      "bytes": 300259,
+      "sha256": "90cae6da7c37b72c567375098f3c37194641dbbe11817cb50babac83ba19d9d2"
+    },
+    "icons": {
+      "files": 859,
+      "bytes": 2903858,
+      "sha256": "d1ecb8f0edfe7b07c893561eac51fbc472f6fd164e2f123937d77ad121b6d221"
+    },
+    "locale": {
+      "files": 80,
+      "bytes": 885506,
+      "sha256": "33c92d87987d71838d7fc5ac5bf2eded75e5f69e9e888ea0b96435b03ebf87d2"
+    },
+    "motion": {
+      "files": 12,
+      "bytes": 101505,
+      "sha256": "cf65491657541a94055fe7e4f0dd8c457210458c7a4ac2d2974f4cf204ab6b3f"
+    },
+    "overlay": {
+      "files": 7,
+      "bytes": 41852,
+      "sha256": "dce6d9ff90fa5e3a73c337fb60bfeea433dbd9661e79b793deea3afbb0b35a80"
+    },
+    "picker": {
+      "files": 26,
+      "bytes": 489873,
+      "sha256": "c00378856f9aead082461e09fc513e173e2448d4addd6841c53375104df9183c"
+    },
+    "portal": {
+      "files": 11,
+      "bytes": 51605,
+      "sha256": "ca9b32c650a3086f56c7c16048d6c16ccf436a168d8158c963fe080caf9cf620"
+    },
+    "position": {
+      "files": 9,
+      "bytes": 66549,
+      "sha256": "41fa3eef66481878e99e2d4c9d9b6f036d6c8c845249cdc092aba9229340ac50"
+    },
+    "test-utils": {
+      "files": 15,
+      "bytes": 154682,
+      "sha256": "ecfe6f0b56b0f6a9dcc6d41a428073ddb024ac232045e5186cf6b1f8df7c14d2"
+    },
+    "theme": {
+      "files": 21,
+      "bytes": 146459,
+      "sha256": "61ba72f14c91a486ff3d25fe0de548b2b16de6cc51bb1dbf9b5a106f8efb99c2"
+    },
+    "ui": {
+      "files": 2565,
+      "bytes": 15587215,
+      "sha256": "402437bdda6c34c8fbf662ee56b990037ebc9c844ac133ebb871049871720017"
+    },
+    "utils": {
+      "files": 43,
+      "bytes": 230497,
+      "sha256": "a504d5b20122732fc88b17d36a1dbc86daa00a3409f525b2012fde2a0813f079"
+    },
+    "virtual-list": {
+      "files": 11,
+      "bytes": 81898,
+      "sha256": "071741459fb9cf80ceba2fe76be17f240cc9605ae9a1c53010bc0b1d0ef8dc88"
+    }
+  },
+  "distAfter": {
+    "a11y": {
+      "files": 10,
+      "bytes": 55908,
+      "sha256": "9cba759e431634c70f595167088f6d978519363c1933ecb96c5c6eb3d8070f46"
+    },
+    "form-core": {
+      "files": 25,
+      "bytes": 300259,
+      "sha256": "90cae6da7c37b72c567375098f3c37194641dbbe11817cb50babac83ba19d9d2"
+    },
+    "icons": {
+      "files": 859,
+      "bytes": 2903858,
+      "sha256": "d1ecb8f0edfe7b07c893561eac51fbc472f6fd164e2f123937d77ad121b6d221"
+    },
+    "locale": {
+      "files": 80,
+      "bytes": 885506,
+      "sha256": "33c92d87987d71838d7fc5ac5bf2eded75e5f69e9e888ea0b96435b03ebf87d2"
+    },
+    "motion": {
+      "files": 12,
+      "bytes": 101505,
+      "sha256": "cf65491657541a94055fe7e4f0dd8c457210458c7a4ac2d2974f4cf204ab6b3f"
+    },
+    "overlay": {
+      "files": 7,
+      "bytes": 41852,
+      "sha256": "dce6d9ff90fa5e3a73c337fb60bfeea433dbd9661e79b793deea3afbb0b35a80"
+    },
+    "picker": {
+      "files": 26,
+      "bytes": 489873,
+      "sha256": "c00378856f9aead082461e09fc513e173e2448d4addd6841c53375104df9183c"
+    },
+    "portal": {
+      "files": 11,
+      "bytes": 51605,
+      "sha256": "ca9b32c650a3086f56c7c16048d6c16ccf436a168d8158c963fe080caf9cf620"
+    },
+    "position": {
+      "files": 9,
+      "bytes": 66549,
+      "sha256": "41fa3eef66481878e99e2d4c9d9b6f036d6c8c845249cdc092aba9229340ac50"
+    },
+    "test-utils": {
+      "files": 15,
+      "bytes": 154682,
+      "sha256": "ecfe6f0b56b0f6a9dcc6d41a428073ddb024ac232045e5186cf6b1f8df7c14d2"
+    },
+    "theme": {
+      "files": 21,
+      "bytes": 146459,
+      "sha256": "61ba72f14c91a486ff3d25fe0de548b2b16de6cc51bb1dbf9b5a106f8efb99c2"
+    },
+    "ui": {
+      "files": 2565,
+      "bytes": 15587215,
+      "sha256": "402437bdda6c34c8fbf662ee56b990037ebc9c844ac133ebb871049871720017"
+    },
+    "utils": {
+      "files": 43,
+      "bytes": 230497,
+      "sha256": "a504d5b20122732fc88b17d36a1dbc86daa00a3409f525b2012fde2a0813f079"
+    },
+    "virtual-list": {
+      "files": 11,
+      "bytes": 81898,
+      "sha256": "071741459fb9cf80ceba2fe76be17f240cc9605ae9a1c53010bc0b1d0ef8dc88"
+    }
+  },
+  "all14DistTreesUnchanged": true,
+  "distFiles": 3694,
+  "all14ByteIdenticalToBuildDonorBeforeReaders": true,
+  "sourceFreeze": "/tmp/apollo-layout-occlusion-source-freeze.json",
+  "all53FrozenFilesUnchanged": true,
+  "trackedFilesUnchanged": true,
+  "gitStatusAfter": "",
+  "readersExited": true,
+  "packageBuilds": false,
+  "sourceEdits": false,
+  "distEdits": false,
+  "registryEdits": false,
+  "formalVisual": "Root captures and reviews 228 candidates separately in this WT; no baseline accepted by these gates",
+  "node": "v22.22.2",
+  "browser": "150.0.7871.125"
+}

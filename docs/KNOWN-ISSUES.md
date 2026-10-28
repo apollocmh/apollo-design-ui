@@ -695,3 +695,9 @@ Descriptions、Breadcrumb、Timeline、Grid的完整清单已核对并统一验�
 共享主题来源已完整补盘844个UI运行文件中的102个主题导入，确认24条Alias writer及关联数据/Portal消费链。`5c527297`补明确来源元数据及最近Provider继承，`134ddbf7`修正数据消费者越过最近ThemeProvider；producer/reader相关100项通过。显式空ThemeProvider仍是默认主题来源，不能等同无来源；无theme的ConfigProvider也不能覆盖CSS-only作用域。消费端按同一根因成组整改中，Input主题/19既有字段/尺寸与autoSize关联链继续；完整Input公开API及Theme基础包其它生命周期能力没有据此关闭。范围见[主题来源清单](audit/2026-10-29-theme-source-presence-audit.md)。
 
 本组原生视觉计划Flex42、Alert60、Layout51共153项，全部51个历史参考场景保持。当前计划1704张、批准仍759张、945待验收，完整交付仍17/72。Registry将三组件改为testing，Input登记原有19字段而非新增能力。当前源码/发布/视觉/线上证据严格分阶段，不把本次局部门禁称为最终同一提交全库门禁。
+
+### 2026-10-29 · Space / Flex / Alert / Layout本批完整收口
+
+四个完整单元已按各自清单统一验收：关联1978/118、Space发布87及15 Demo严格消费、Flex发布60/SSR4/6 Demo、Alert发布29/180 Demo/60状态、Layout发布95 Demo/51状态/11 Demo严格消费通过；Layout普通35契约按实现未变继承，不冒充重跑。228张自有视觉已批准且批准后严格rawRGBA精确；旧759回归通过，756严格精确及3个既有List loading差异如实保留，原记录/PNG不变。14dist/1982实际发布输入与Docs161+56分别通过。
+
+当前完整交付21/72、其余51组件仍开放；987/1704视觉批准、717待验收。Space关联Input当前主题/尺寸/style/autoSize窄链完成，Input完整公开API仍open；Theme来源专项不代表13基础包逐包完成，全库最终同一提交门禁仍待执行。本地Docs通过不等同已经部署，最终线上回执另记。详见[本批最终范围与证据](audit/evidence/space-flex-alert-layout-final-acceptance.json)。

@@ -11,13 +11,25 @@ order: 0
 
 | 范围 | 当前结果 |
 | --- | --- |
-| 72个组件主单元 | 17个已完整验收；Descriptions / Breadcrumb / Timeline / Grid 本批通过 |
-| 当前并行 | Space关联Input、Flex、Alert/ErrorBoundary、Layout家族；按完整清单验收 |
+| 72个组件主单元 | 21个已完整验收；本批新增Space / Flex / Alert / Layout |
+| 当前并行 | 主题来源专项已收口；后续组件与基础包按完整清单继续 |
 | 其余组件 | 51个尚待按本轮完整标准收口（含Input完整API）；已有局部修复继续保留 |
 | 13个基础包 | 已有共享链路专项证据；逐包当前复核继续，不能把消费场景通过当作整包完成 |
 | 最终验收 | 所有整改单元结束后，对最终同一提交执行全量门禁 |
 
 [完整72项工作清单、证据与剩余边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md)。组件复杂度不同，上述数量不代表工时百分比。
+
+## 2026-10-29：Space、Flex、Alert、Layout 本批验收
+
+Space/Compact 的真实子组件、Input 当前主题尺寸和 autoSize、Flex 的原生根与间距、Alert/ErrorBoundary 的关闭及错误恢复、Layout 家族的折叠模型与键盘控件已按完整清单验收。小号紧凑示例为相邻操作保留24px点击区域；零宽悬浮控件已避开正文。
+
+本批新增228张原生视觉基线，现987/1704张批准、717张待验收。已有759张回归通过；其中三张List加载圆点保留此前已记录的像素差异，本轮无新增变化。1978项关联回归、发布JS/CSS/类型、真实Demo和严格UI构建门禁通过。完整交付21/72；Input完整API与13个基础包仍继续审计，全库最终同一提交门禁尚未执行。
+
+- [Space紧凑组合](/components/space)
+- [Flex当前预设与自定义间距](/components/flex/demo/gap)
+- [Alert关闭后再次显示](/components/alert/demo/smooth-closed)
+- [Layout响应式及零宽控件](/components/layout/demo/responsive)
+- [Input主题、间距和自适应高度](/components/input/demo/component-token)
 
 ## 2026-10-29：下一组源码里程碑，发布验收进行中
 
@@ -190,13 +202,25 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 
 | Scope | Current evidence |
 | --- | --- |
-|72 component units|17 fully accepted; Descriptions, Breadcrumb, Timeline and Grid pass this batch|
-|Parallel work|Space with Input, Flex, Alert/ErrorBoundary and the Layout family follow complete checklists|
+|72 component units|21 fully accepted; Space, Flex, Alert and Layout pass this batch|
+|Parallel work|Theme-source presence accepted; subsequent component and foundation audits continue|
 |Other components|51 await full acceptance, including the complete Input API; earlier partial fixes remain valid|
 |13 foundation packages|Existing shared-chain evidence remains;current per-package review continues|
 |Final gate|Run whole-library gates on the same final commit after all units close|
 
 [All72 units, evidence and remaining boundaries](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md). These counts are not weighted work percentages.
+
+## Space, Flex, Alert and Layout accepted in this batch
+
+The complete checklists cover real Space/Compact consumers, Input theme sizing and autoSize, native Flex roots and gaps, Alert/ErrorBoundary close and recovery flows, and Layout collapse models and keyboard controls. Small compact demo controls retain24px pointer targets; zero-width floating controls have dedicated room above content.
+
+This batch adds228 reviewed native visuals:987 of1704 are approved and717 remain pending. All759 existing visual regressions pass; three List loading-dot differences match their previously recorded pixels, with no new changes. The1978 related checks, published JS/CSS/types, real demos and strict UI build gates pass. Complete delivery is21 of72. The full Input API,13 foundation packages and the final whole-library same-commit gates remain open.
+
+- [Space compact composition](/components/space)
+- [Flex presets and custom gaps](/components/flex/demo/gap)
+- [Close and mount Alert again](/components/alert/demo/smooth-closed)
+- [Responsive Layout and zero-width controls](/components/layout/demo/responsive)
+- [Input themes, spacing and autoSize](/components/input/demo/component-token)
 
 ## Next source milestone; published acceptance continues
 

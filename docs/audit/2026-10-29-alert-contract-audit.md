@@ -113,3 +113,9 @@
 未执行：包 build、发布声明消费、发布模式29/180/60、全量覆盖率、正式共享视觉matrix/runner基线审批、文档站生成/构建、Registry收口和最终同一提交全量门禁。主线程已接入20个原生视觉variants计划，正式审批未执行。共享sourceActive producer整体及其他组件迁移由主线程验收。不存在等待用户裁决的本轮缺陷；新受控关闭、取消钩子、任意前缀自动 CSS和新Boundary恢复方法仍为另案能力。
 
 完整冻结文件、实现与证据SHA256、命令及真实退出码见 `docs/audit/evidence/alert-contract-source-freeze.json`。冻结仅涵盖本单元所属文件；根导出、共享来源实现及其他并行单元仅记录为依赖观察，不由本执行者冻结或提交。所有独立浏览器/fixture server已退出，包产物、旧机械基线和PNG均未修改。
+
+## 2026-10-29 · 本轮最终验收
+
+上文保留各阶段红绿及当时的待验收边界；本节记录统一收口。Alert完整清单已验收：发布29/29、15个Demo共180/180、60/60原生状态及严格消费；正式Apollo 60张已审阅批准，批准后严格rawRGBA精确。
+
+[本批最终验收](evidence/space-flex-alert-layout-final-acceptance.json)汇总1978/118关联专项、[本单元发布门禁](evidence/alert-published-verification.json)、[正式视觉审阅](evidence/space-flex-alert-layout-native-review.json)、[批准后回执](evidence/space-flex-alert-layout-postapproval.json)及[Docs161+56](evidence/space-flex-alert-layout-docs-local.json)。原759视觉记录和PNG保留，当前完整交付21/72；Input完整API、其他51组件、13基础包逐包审计与全库最终同提交门禁仍开放。Docs为本地真实构建验收，最终部署/线上回执由主线程另记。

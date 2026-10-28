@@ -1,0 +1,131 @@
+{
+  "status": "accepted-scoped-batch",
+  "date": "2026-10-29",
+  "units": [
+    "space",
+    "flex",
+    "alert",
+    "layout"
+  ],
+  "metadataSourceHead": "957759fb369b35cbbda96f07a18a234a55f7ac17",
+  "runtimeBuildCommit": "3f68bd2d98d7b714d6e0af4a9260d57706cee07b",
+  "publicVerificationCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+  "postApprovalCommit": "3d05710f3b1954c320c05a01f58cce994ca2176c",
+  "currentAudit": {
+    "accepted": 21,
+    "otherComponentsOpen": 51,
+    "total": 72,
+    "fullLibraryComplete": false,
+    "fullInputAPI": "open",
+    "foundationPackagesStillRequireFullAudit": 13
+  },
+  "sourceRegression": {
+    "related": {
+      "commit": "ad70dd7c",
+      "files": 73,
+      "passed": 1978,
+      "failed": 0,
+      "exitCode": 0,
+      "log": "/tmp/apollo-ad70-related-green.log",
+      "json": "/tmp/apollo-ad70-related-green.json"
+    },
+    "fallbackUnit": {
+      "passed": 118,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "evidence": "theme-source-presence-acceptance.json",
+    "countsOverlapAndMustNotBeSummed": true
+  },
+  "published": {
+    "space": {
+      "browser": 87,
+      "strictRealDemos": 15,
+      "evidence": "space-input-published-verification-final.json"
+    },
+    "flex": {
+      "browser": 60,
+      "nodeSSR": 4,
+      "strictRealDemos": 6,
+      "evidence": "theme-source-flex-published.json"
+    },
+    "alert": {
+      "browser": 29,
+      "demoScenarios": 180,
+      "nativeStates": 60,
+      "strictRealDemos": 15,
+      "evidence": "alert-published-verification.json"
+    },
+    "layout": {
+      "browserInherited": 35,
+      "demoScenarios": 95,
+      "nativeStates": 51,
+      "strictRealDemos": 11,
+      "evidence": "layout-published-verification-final.json",
+      "inheritedContractsAreNotClaimedAsRerun": true
+    },
+    "inputLinkedScope": {
+      "completeAPI": false,
+      "evidence": "input-sizing-published-verification.json",
+      "scope": "Current theme/size/style/autoSize only",
+      "latestPublicTypesEvidence": "input-sizing-published-types-final.json"
+    }
+  },
+  "release": {
+    "actualInputComparisons": 1982,
+    "distPackages": 14,
+    "distFiles": 3694,
+    "distUnchanged": true,
+    "runtimeBuildReused": true,
+    "evidence": "layout-published-verification-final.json",
+    "graphScopeDoesNotClaimAllPackageFilesOrReproducibleBuild": true,
+    "sourceProvenanceEvidence": "theme-ui-release-inputs-final.json"
+  },
+  "visual": {
+    "newApproved": 228,
+    "byComponent": {
+      "space": 75,
+      "flex": 42,
+      "alert": 60,
+      "layout": 51
+    },
+    "postApprovalPassed": 228,
+    "postApprovalRawRGBAExact": 228,
+    "oldApprovedRegression": 759,
+    "oldRawExact": 756,
+    "existingListLoadingDifferences": 3,
+    "newOldSetDifferences": 0,
+    "oldRecordsAndPngBlobsUnchanged": true,
+    "approvedTotal": 987,
+    "plannedTotal": 1704,
+    "pending": 717,
+    "review": "space-flex-alert-layout-native-review.json",
+    "postApproval": "space-flex-alert-layout-postapproval.json",
+    "oldRegression": "theme-source-approved759-regression.json"
+  },
+  "docs": {
+    "contentBuild": true,
+    "strictTypes": true,
+    "ssgBuild": true,
+    "tests": 161,
+    "realPageChecks": 56,
+    "errors": 0,
+    "locales": [
+      "zh-CN",
+      "en-US"
+    ],
+    "testedGuideSHA256": "9fece07444a0adb7d0930115d5f1ac568f5d3633fcece4d7755b3b6278349425",
+    "evidence": "space-flex-alert-layout-docs-local.json",
+    "onlineDeploymentNotClaimed": true
+  },
+  "requiredApplyReceipts": {
+    "/tmp/apollo-docs-21-final-browser.json": "047c7f3c54fc0f9a530ba1969bf001271ff373d5c70801a11e27d041e0964b04",
+    "/tmp/apollo-3d-postapproval-receipt.json": "06ca3d45d6ec669eb41465fb352f9c8ca15e6138909c615db763d927923a819f"
+  },
+  "boundaries": [
+    "本批四个完整单元已验收；其余51个组件继续，Input完整公开API仍开放。",
+    "1978/118是有交集的关联专项，不代表全库最终同一提交门禁完成。",
+    "Theme/ConfigProvider来源专项不代表Theme等13基础包已逐包验收。",
+    "Docs161+56是本地真实构建验收，最终部署及线上回执由Root另行执行。"
+  ]
+}

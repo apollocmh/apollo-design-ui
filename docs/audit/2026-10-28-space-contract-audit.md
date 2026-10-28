@@ -100,3 +100,9 @@
 生产实现已提交e0062edd，Select关联356161b4。冻结生产源码的UI/Overlay构建通过；UI严格L7在登记Descriptions两个真实运行时几何变量、按当前Alias作用域与稳定身份/焦点的31.5KB功能成本仅调整Space预算25→33KB后，11项零失败/零待定。其余72条预算、历史13.1KB测量和全量占比门禁保留。源码/发布行为与正式视觉、Docs、全库最终门禁分开记录，不将构建通过当作整改单元完成。
 
 Addon下划线源码缺陷已成组修复并验证，底边/状态/禁用/横纵/RTL/独项完整矩阵4608/4608；既有borderless/filled/outlined保留对照。runtime445、browser83与十五Demo四主题axe、type44和源码消费通过。生产仅改Space静态样式，未通过ARIA豁免隐藏Demo对比度；disabled示例采用真实禁用Button。详细红绿和完整范围见[Addon窄单元](2026-10-29-space-addon-underline.md)。Input当前主题尺寸仍开放；发布重建/75张最终视觉另记。
+
+## 2026-10-29 · 本轮最终验收
+
+上文保留各阶段红绿及当时的待验收边界；本节记录统一收口。Space完整清单已验收：发布87/87、严格15个真实Demo；Addon下划线与当前Input关联链已验收；正式Apollo 75张已审阅批准，批准后严格rawRGBA精确。
+
+[本批最终验收](evidence/space-flex-alert-layout-final-acceptance.json)汇总1978/118关联专项、[本单元发布门禁](evidence/space-input-published-verification-final.json)、[正式视觉审阅](evidence/space-flex-alert-layout-native-review.json)、[批准后回执](evidence/space-flex-alert-layout-postapproval.json)及[Docs161+56](evidence/space-flex-alert-layout-docs-local.json)。原759视觉记录和PNG保留，当前完整交付21/72；Input完整API、其他51组件、13基础包逐包审计与全库最终同提交门禁仍开放。Docs为本地真实构建验收，最终部署/线上回执由主线程另记。
