@@ -1,0 +1,13 @@
+# 主题来源与空作用域统一整改
+
+范围：ThemeContext 的来源识别、ThemeProvider / ConfigProvider 提供链、UI 实际 Alias 下传路径，以及关联 Portal/样式消费。完整 UI API、主题色板算法、config 可写性及可选 document CSS 注入生命周期不在本窄单元宣称完成；发现的独立缺陷仍登记为本轮基础包必修。
+
+先盘点再修改：只读来源报告及32项真实源码复现见 `/tmp/apollo-theme-source-presence-review.md` / `.json`。初始22个空配置判据与1个Layout presence变体已逐项跟踪；还必须补入Flex的直接inject ternary及其它实际写Alias的路径，不能只据字符串命中修改。只读快照保留26个核心/guard文件SHA与1084加载源模块，不冒称并行主树冻结。
+
+本轮必修：显式空ThemeProvider的数据已恢复默认值，CSS仍继承外层主题；只按context存在判断又会覆盖没有theme的ConfigProvider内合法stylesheet；更近空ThemeProvider被较远ConfigContext.theme越过。普通ConfigProvider theme={}继续按已有inherit语义继承，不以修复改变该行为。无来源CSS-only作用域必须继续有效。
+
+统一方案：ThemeContext增加可选只读来源标识sourceActive（不是ComponentToken或业务Prop）。显式factory/ThemeProvider为活跃来源；无Provider的默认context只在真实配置被赋值时活跃；ConfigProvider根据有效mergedTheme而动态变化。自定义提供且未带标识的上下文属于显式来源。消费者据来源状态下传，不能用config键数或仅context是否存在推断。ConfigProvider选择最近活跃ThemeContext，再使用原合并规则，避免较远ConfigContext覆盖中间作用域。不改变config的可写性、现有组件事件或业务API。
+
+验收：先成组建立红灯，覆盖无来源/显式空/非空/移除/嵌套/ConfigProvider inherit与inherit=false、CSS-only包无theme Provider、自定义context、SSR/多实例/Portal。逐项核对实际Alias与对应字号/间距/颜色/几何，不以变量存在或类型通过替代；全部写入路径及共享消费者适用回归后统一构建验证。17/72及现有759视觉是已接受阶段，不能据此假称新来源边界已通过。全库最终同提交门禁继续独立开放。
+
+当前状态：producer已实现；8条新增unit修前0通过/8失败，修后连同原Vue绑定共15/15通过。完整Alias writer补盘与消费端迁移正在并行，尚未统一验收，不据producer绿灯宣称共享单元完成。

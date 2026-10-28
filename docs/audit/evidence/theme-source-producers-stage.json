@@ -1,0 +1,27 @@
+{
+  "scope": "ThemeContext source identity and ConfigProvider nearest active inheritance only; UI writers not yet accepted",
+  "red": {
+    "total": 8,
+    "passed": 0,
+    "failed": 8
+  },
+  "green": {
+    "total": 15,
+    "passed": 15,
+    "failed": 0
+  },
+  "command": "pnpm exec vitest run --project unit packages/ui/src/config-provider/__tests__/theme-source-presence.test.ts packages/theme/src/__tests__/vue.test.ts",
+  "exitCode": 0,
+  "sourceActive": "Optional readonly Ref<boolean>; custom injected contexts without metadata remain explicit sources",
+  "sourceFiles": {
+    "packages/theme/src/vue.ts": "ed43e5231e8ef63d61ded4b767f7c12ac2c0325d0fb6f1690042467acd5858f5",
+    "packages/ui/src/config-provider/ConfigProvider.ts": "6bf8a1262ca7295cc14714d52866b0e7a3e29f8dc320bf78ede880c178daa17f",
+    "packages/ui/src/config-provider/__tests__/theme-source-presence.test.ts": "758fb99926bd455898e8ec0be1c9f8acccf05afe30120160399d0d6d5d2102e1"
+  },
+  "unverified": [
+    "All UI writers migrated and exercised",
+    "Published theme+UI build",
+    "Complete related consumer regression",
+    "Final whole-library gates"
+  ]
+}

@@ -37,6 +37,8 @@ export interface ThemeContext {
   config: Ref<ThemeConfig>;
   /** 完整 token（随 config 变化重算） */
   token: ComputedRef<AliasToken>;
+  /** Internal source identity. Missing metadata denotes an explicitly provided context. */
+  readonly sourceActive?: Readonly<Ref<boolean>>;
 }
 
 export const ThemeContextKey: InjectionKey<ThemeContext> = Symbol('apollo-theme');
@@ -47,10 +49,15 @@ export const ThemeContextKey: InjectionKey<ThemeContext> = Symbol('apollo-theme'
  * token 用 `computed` 而不是每次渲染重算：`getDesignToken` 要跑三套色板生成，
  * 每个组件都算一遍会明显掉帧。
  */
-export function createThemeContext(config: ThemeConfig): ThemeContext {
+function createContext(config: ThemeConfig, fallback = false): ThemeContext {
   const cfg = shallowRef<ThemeConfig>(config);
   const token = computed<AliasToken>(() => getDesignToken(cfg.value));
-  return { config: cfg, token };
+  const sourceActive = computed(() => !fallback || Object.keys(cfg.value).length > 0);
+  return { config: cfg, token, sourceActive };
+}
+
+export function createThemeContext(config: ThemeConfig): ThemeContext {
+  return createContext(config);
 }
 
 /**
@@ -59,7 +66,7 @@ export function createThemeContext(config: ThemeConfig): ThemeContext {
  */
 let defaultContext: ThemeContext | null = null;
 function getDefaultContext(): ThemeContext {
-  defaultContext ??= createThemeContext({});
+  defaultContext ??= createContext({}, true);
   return defaultContext;
 }
 

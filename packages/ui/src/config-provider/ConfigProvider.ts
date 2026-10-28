@@ -183,9 +183,15 @@ export const ConfigProvider = defineComponent({
     // -----------------------------------------------------------------------
     // 3. theme（`hooks/useTheme.ts`，见 hooks/use-theme.ts 的三条合并语义）
     // -----------------------------------------------------------------------
-    const mergedTheme = computed<ConfigProviderThemeConfig | undefined>(() =>
-      useTheme(props.theme, parentContext.theme ?? parentThemeContext?.config.value),
-    );
+    const mergedTheme = computed<ConfigProviderThemeConfig | undefined>(() => {
+      // A ThemeProvider can sit between two ConfigProviders. Its nearest Vue
+      // context remains authoritative even when its explicit theme is empty.
+      const parentTheme =
+        parentThemeContext && parentThemeContext.sourceActive?.value !== false
+          ? parentThemeContext.config.value
+          : parentContext.theme;
+      return useTheme(props.theme, parentTheme);
+    });
 
     // -----------------------------------------------------------------------
     // 4. components —— ⭐ 逐组件名合并（判据 1）
@@ -280,6 +286,7 @@ export const ConfigProvider = defineComponent({
     // -----------------------------------------------------------------------
     const themeContext: ThemeContext = {
       config: computed(() => mergedTheme.value ?? {}),
+      sourceActive: computed(() => mergedTheme.value !== undefined),
       token: computed(() =>
         getDesignToken({
           token: mergedTheme.value?.token,
