@@ -1,0 +1,107 @@
+{
+  "sourceHeadAtFreeze": "e2084ff6d1ef10128ef85b1e37837ce4f15eb8d8",
+  "scope": "SpaceAddon underlined source remediation",
+  "productionFilesChanged": [
+    "packages/ui/src/space/style/index.ts"
+  ],
+  "ownedFilesFrozen": [
+    {
+      "file": "packages/ui/src/space/style/index.ts",
+      "sha256": "84a52abb820eb409ef1862bb54cd10af5fb1ce75aff8001e397c37a614137ce9"
+    },
+    {
+      "file": "packages/ui/src/space/__tests__/theme.test.ts",
+      "sha256": "c8a5921cfa350c9d763626183c20063dd9e9b60a07f0fde4b55910db208fc0fe"
+    },
+    {
+      "file": "packages/ui/src/space/demo/compact-debug.vue",
+      "sha256": "c720ad925f95718b49adce6c760966bc4b05c4a0111ebfdf5591317c59643c7a"
+    },
+    {
+      "file": "packages/ui/src/space/demo/compact-debug.md",
+      "sha256": "ce3a2d856729b75a3eed97cbe5d9f1db956bdb0fb65ed697396d683c00b365f7"
+    },
+    {
+      "file": "packages/ui/src/space/README.md",
+      "sha256": "c18b2de9f9af4c9998509f264f115418649bcabe64586d12bef6b85bd5428f89"
+    },
+    {
+      "file": "packages/ui/src/space/index.zh-CN.md",
+      "sha256": "839188c384982ecd9ed2a3d3a7c7f66b44bd517c1cca46ff8c3f7c82d07ec002"
+    },
+    {
+      "file": "packages/ui/src/space/index.en-US.md",
+      "sha256": "736764d9819bc541fd39732382c9adb6b21a96165d005864346c896824063967"
+    },
+    {
+      "file": "docs/migrations/space-contracts.md",
+      "sha256": "aaf30b8872733eb859a469915ae269b80f389b1066076481cebb01fa0568f20d"
+    },
+    {
+      "file": "tests/browser/space-contracts.mjs",
+      "sha256": "072fa122263f0e1d7b1d98f7da72675642daa5df7da65d15b25a7c70656fdc31"
+    },
+    {
+      "file": "tests/browser/fixtures/SpaceContracts.mjs",
+      "sha256": "5a42a112d35154d7c4ff06fb6c6f352e308e2a9c224ca462f3b602a326ca48c3"
+    },
+    {
+      "file": "tests/browser/space-addon-underline.mjs",
+      "sha256": "f6be3df35c391d5cf8e4237820c27d4a2ef78f6184a97704928a2d402e44d247"
+    },
+    {
+      "file": "tests/consumer/space-types.mjs",
+      "sha256": "28342476526e106aa03194300a8929a9ae06ce239c6931a1842bc7b8b7ae9a30"
+    }
+  ],
+  "ruleCounts": {
+    "space": 16,
+    "compact": 4,
+    "addon": 31
+  },
+  "acceptance": {
+    "red": {
+      "matrixFailed": 1152,
+      "matrixControlsPassed": 3456,
+      "unitFailed": 3,
+      "unitControlPassed": 1,
+      "pageErrors": 0,
+      "distReads": 0
+    },
+    "green": {
+      "matrixCells": 4608,
+      "matrixPassed": 4608,
+      "spaceRuntimePassed": 445,
+      "sourceBrowserPassed": 83,
+      "sourceTypeProjectPassed": 44,
+      "sourceDemoConsumerPassed": 15,
+      "sourceBrowserErrors": 0,
+      "pairedDemoExact": true,
+      "lint": true,
+      "diffCheck": true
+    }
+  },
+  "disabledDemo": "Actual public disabled Button content; Addon disabled contract and Alias unchanged; all original axe assertions retained",
+  "sourceConsumerFixture": "Link node and vite types only in source mode; published dependency isolation unchanged",
+  "noPackageBuilds": true,
+  "noDistWrites": true,
+  "noInputEdits": true,
+  "noRegistryEdits": true,
+  "evidence": {
+    "plan": "/tmp/apollo-addon-underline-plan.md",
+    "redMatrix": "/tmp/apollo-addon-underline/red-summary.json",
+    "redUnit": "/tmp/apollo-addon-underline/red-unit.log",
+    "matrix": "/tmp/apollo-addon-underline/persistent-green/source-summary.json",
+    "browser": "/tmp/apollo-addon-underline/space-browser-source-v2.json",
+    "runtime": "/tmp/apollo-addon-underline/space-source-runtime-final.log",
+    "types": "/tmp/apollo-addon-underline/space-type-project.log",
+    "consumer": "/tmp/apollo-addon-underline/space-consumer-types-final.log",
+    "lint": "/tmp/apollo-addon-underline/lint-final.log"
+  },
+  "remaining": [
+    "Main-thread published rebuild and fresh published JS/CSS browser and consumer validation",
+    "New formal Space visual capture and review, including changed underlined paint",
+    "Main-thread final gates on one final commit"
+  ],
+  "stage": "Source implemented and verified; published consumer/new native visual acceptance pending"
+}

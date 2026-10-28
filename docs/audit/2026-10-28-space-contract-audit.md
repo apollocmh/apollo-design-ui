@@ -98,3 +98,5 @@
 ## 主线程集成保存点
 
 生产实现已提交e0062edd，Select关联356161b4。冻结生产源码的UI/Overlay构建通过；UI严格L7在登记Descriptions两个真实运行时几何变量、按当前Alias作用域与稳定身份/焦点的31.5KB功能成本仅调整Space预算25→33KB后，11项零失败/零待定。其余72条预算、历史13.1KB测量和全量占比门禁保留。源码/发布行为与正式视觉、Docs、全库最终门禁分开记录，不将构建通过当作整改单元完成。
+
+Addon下划线源码缺陷已成组修复并验证，底边/状态/禁用/横纵/RTL/独项完整矩阵4608/4608；既有borderless/filled/outlined保留对照。runtime445、browser83与十五Demo四主题axe、type44和源码消费通过。生产仅改Space静态样式，未通过ARIA豁免隐藏Demo对比度；disabled示例采用真实禁用Button。详细红绿和完整范围见[Addon窄单元](2026-10-29-space-addon-underline.md)。Input当前主题尺寸仍开放；发布重建/75张最终视觉另记。

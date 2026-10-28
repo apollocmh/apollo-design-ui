@@ -63,7 +63,7 @@ The default slot contains real compact controls; no child DOM wrapper is added. 
 | disabled | Decorative disabled cell state; child controls manage their own disabled state | `boolean` | `false` |
 | status | Validation appearance | `'error' \| 'warning' \| 'success' \| 'validating' \| ''` | — |
 
-The default slot accepts complete Vue content. Current compact size and boundaries control the cell. Horizontal/vertical/RTL groups retain outer corners; a singleton retains all four corners. Error/warning text equally blends the existing colorErrorText/colorWarningText and current colorText Alias while borders retain status colors. Disabled text overrides status text, and filled + disabled restores the disabled background. Success/validating retain status classes without adding paint changes.
+The default slot accepts complete Vue content. Current compact size and boundaries control the cell. Outlined/filled horizontal/vertical/RTL groups retain outer corners; a singleton retains all four corners. Underlined has a transparent background, zero radius and only a bottom border using the current lineWidth/lineType. Borderless has no border. Error/warning text equally blends the existing colorErrorText/colorWarningText and current colorText Alias; outlined borders and underlined bottom borders retain status colors. Disabled text overrides status text while retaining the bottom border and status border color; filled + disabled restores the disabled background. Success/validating retain status classes without adding paint changes.
 
 ### Native attrs, refs and configuration
 

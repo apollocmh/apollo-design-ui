@@ -144,6 +144,14 @@ try {
                 color: style.color,
                 borderColor: style.borderColor,
                 borderStyle: style.borderStyle,
+                borderSides: ['Top', 'Right', 'Bottom', 'Left'].map((side) => ({
+                  style: style[`border${side}Style`],
+                  width: style[`border${side}Width`],
+                  color: style[`border${side}Color`],
+                })),
+                lineWidth: style.getPropertyValue('--apollo-line-width').trim(),
+                lineType: style.getPropertyValue('--apollo-line-type').trim(),
+                radius: style.borderRadius,
                 background: style.backgroundColor,
                 baseColor: style.getPropertyValue('--apollo-color-text').trim(),
                 baseBorder: style.getPropertyValue('--apollo-color-border').trim(),
@@ -170,8 +178,8 @@ try {
                 ? `color-mix(in srgb,${item.warningText} 50%,${item.baseColor})`
                 : item.baseColor;
           const filled = item.id.startsWith('addon-filled');
-          const borderless =
-            item.id.startsWith('addon-borderless') || item.id.startsWith('addon-underlined');
+          const borderless = item.id.startsWith('addon-borderless');
+          const underlined = item.id.startsWith('addon-underlined');
           const border = filled
             ? disabled
               ? item.baseBorder
@@ -181,13 +189,14 @@ try {
               : item.id.includes('-warning-')
                 ? item.warningColor
                 : item.baseBorder;
-          const background = borderless
-            ? 'transparent'
-            : filled && !disabled && item.id.includes('-error-')
-              ? item.errorBackground
-              : filled && !disabled && item.id.includes('-warning-')
-                ? item.warningBackground
-                : item.baseBackground;
+          const background =
+            borderless || underlined
+              ? 'transparent'
+              : filled && !disabled && item.id.includes('-error-')
+                ? item.errorBackground
+                : filled && !disabled && item.id.includes('-warning-')
+                  ? item.warningBackground
+                  : item.baseBackground;
           const normalized = await page.evaluate(
             (values) =>
               values.map((value) => {
@@ -202,8 +211,27 @@ try {
           );
           assert.equal(item.color, normalized[0], item.id);
           assert.equal(item.background, normalized[2], item.id);
-          if (borderless) assert.equal(item.borderStyle, 'none');
-          else assert.equal(item.borderColor, normalized[1], item.id);
+          if (borderless) {
+            assert.equal(item.borderStyle, 'none', item.id);
+            assert.deepEqual(
+              item.borderSides.map((side) => side.width),
+              ['0px', '0px', '0px', '0px'],
+              item.id,
+            );
+          } else if (underlined) {
+            assert.deepEqual(
+              item.borderSides.map((side) => side.style),
+              ['none', 'none', item.lineType, 'none'],
+              item.id,
+            );
+            assert.deepEqual(
+              item.borderSides.map((side) => side.width),
+              ['0px', '0px', item.lineWidth, '0px'],
+              item.id,
+            );
+            assert.equal(item.borderSides[2].color, normalized[1], item.id);
+            assert.equal(item.radius, '0px', item.id);
+          } else assert.equal(item.borderColor, normalized[1], item.id);
         }
         return { combinations: actual.length };
       },
@@ -270,6 +298,141 @@ try {
         },
       );
     }
+  await check(
+    'Addon variants retain editor identity and decorative disabled semantics across current config',
+    async () => {
+      const input = page.locator('#addon-native-draft');
+      await input.fill('Saved addon draft');
+      await input.focus();
+      const original = await input.elementHandle();
+      const patches = [
+        {
+          addonVariant: 'underlined',
+          addonStatus: '',
+          addonDisabled: false,
+          addonSize: 'middle',
+          theme: 'default',
+          vertical: false,
+          rtl: false,
+          addonAlias: true,
+        },
+        {
+          addonVariant: 'underlined',
+          addonStatus: 'error',
+          addonDisabled: true,
+          addonSize: 'small',
+          theme: 'dark',
+          vertical: true,
+          rtl: true,
+          addonAlias: false,
+        },
+        {
+          addonVariant: 'borderless',
+          addonStatus: 'warning',
+          addonDisabled: true,
+          addonSize: 'large',
+          theme: 'compact',
+          vertical: false,
+          rtl: true,
+        },
+        {
+          addonVariant: 'filled',
+          addonStatus: 'error',
+          addonDisabled: true,
+          addonSize: 'small',
+          theme: 'both',
+          vertical: true,
+          rtl: false,
+        },
+        {
+          addonVariant: 'outlined',
+          addonStatus: 'warning',
+          addonDisabled: false,
+          addonSize: 'middle',
+          theme: 'default',
+          vertical: false,
+          rtl: false,
+        },
+        {
+          addonVariant: 'underlined',
+          addonStatus: 'warning',
+          addonDisabled: false,
+          addonSize: 'large',
+          theme: 'both',
+          vertical: true,
+          rtl: true,
+        },
+        {
+          addonVariant: 'underlined',
+          addonStatus: '',
+          addonDisabled: false,
+          addonSize: 'middle',
+          theme: 'default',
+          vertical: false,
+          rtl: false,
+        },
+      ];
+      for (const patch of patches) {
+        await set(patch);
+        assert.equal(
+          await input.evaluate(
+            (node, before) => node === before && node === document.activeElement,
+            original,
+          ),
+          true,
+        );
+        assert.equal(await input.inputValue(), 'Saved addon draft');
+        assert.equal(
+          await input.isEnabled(),
+          true,
+          'Addon disabled is decorative; the native editor stays enabled',
+        );
+        const actual = await page.locator('#addon-editor').evaluate((node) => {
+          const style = getComputedStyle(node);
+          const token = (name) => style.getPropertyValue(`--apollo-${name}`).trim();
+          const status = node.classList.contains('apollo-space-addon-status-error')
+            ? 'error'
+            : node.classList.contains('apollo-space-addon-status-warning')
+              ? 'warning'
+              : 'border';
+          const probe = document.createElement('span');
+          probe.style.color = token(status === 'border' ? 'color-border' : `color-${status}`);
+          document.body.append(probe);
+          const expectedColor = getComputedStyle(probe).color;
+          probe.remove();
+          return {
+            styles: ['Top', 'Right', 'Bottom', 'Left'].map((side) => style[`border${side}Style`]),
+            bottomWidth: style.borderBottomWidth,
+            bottomColor: style.borderBottomColor,
+            lineWidth: token('line-width'),
+            lineType: token('line-type'),
+            expectedColor,
+            invalid: node.getAttribute('aria-invalid'),
+            disabled: node.hasAttribute('disabled'),
+          };
+        });
+        assert.equal(actual.invalid, null);
+        assert.equal(actual.disabled, false);
+        if (patch.addonVariant === 'underlined') {
+          assert.deepEqual(actual.styles, ['none', 'none', actual.lineType, 'none']);
+          assert.equal(actual.bottomWidth, patch.addonAlias ? '3px' : actual.lineWidth);
+          assert.equal(actual.bottomColor, actual.expectedColor);
+        } else if (patch.addonVariant === 'borderless')
+          assert.deepEqual(actual.styles, ['none', 'none', 'none', 'none']);
+      }
+      await set({
+        addonVariant: 'outlined',
+        addonStatus: '',
+        addonDisabled: false,
+        addonSize: 'middle',
+        addonAlias: false,
+        theme: 'default',
+        vertical: false,
+        rtl: false,
+      });
+      return { transitions: patches.length, retainedEditor: true };
+    },
+  );
   await check(
     'real controls retain draft, DOM, focus and native selection across theme and direction changes',
     async () => {

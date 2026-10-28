@@ -63,7 +63,7 @@ Fragment/数组会展平，保留 keyed Fragment 的 key 作用域。合法字�
 | disabled | 单元格的装饰禁用态，子控件仍自行控制 disabled | `boolean` | `false` |
 | status | 校验外观 | `'error' \| 'warning' \| 'success' \| 'validating' \| ''` | — |
 
-默认槽接收完整 Vue 内容。Addon 使用当前 Compact 尺寸和首尾边界；横向、纵向、RTL 连接保留外侧圆角，单项保留四角。error/warning 文字由现有 colorErrorText/colorWarningText 与 colorText 等量混合派生，边框保留状态色。disabled 文字色优先于状态文字色；filled + disabled 恢复禁用背景。success/validating 保留状态类，不额外改变颜色。
+默认槽接收完整 Vue 内容。Addon 使用当前 Compact 尺寸和首尾边界；outlined/filled 的横向、纵向、RTL 连接保留外侧圆角，单项保留四角。underlined 为透明背景、零圆角的单独底线，使用当前 lineWidth/lineType；borderless 无边框。error/warning 文字由现有 colorErrorText/colorWarningText 与 colorText 等量混合派生，outlined 边框及 underlined 底线保留状态色。disabled 文字色优先于状态文字色，不移除底线或状态边框色；filled + disabled 恢复禁用背景。success/validating 保留状态类，不额外改变颜色。
 
 ### 原生 attrs、ref 与配置
 

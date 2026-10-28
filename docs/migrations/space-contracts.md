@@ -32,7 +32,13 @@ Compact 的空文本现与 null/注释一样不占首尾位置；数字 0 保留
 
 Space、Compact、Addon 在自身作用域消费当前 Alias，覆盖 ThemeProvider 不注入 CSS、SSR 和嵌套主题场景；原生 style 变量最后胜出。预设 gap 仍为 paddingXS / padding / paddingLG；ComponentToken 仍为空。
 
-Addon 横/纵紧凑边界由上下文控制，保留独项四角及外侧圆角；去掉旧的 :first-child/:last-child 边框删除规则，避免没有实际共享边框。已有 outlined/filled/borderless/underlined 和 status/disabled 绘制优先级保留。error/warning 的文字由现有 colorErrorText/colorWarningText 与当前 colorText 等量混合派生，替代对比度不足的装饰色；边框仍使用原状态色，filled 背景与禁用优先级保留。disabled 只描述单元格外观，不会自动禁用槽中的真实控件。
+Addon 横/纵紧凑边界由上下文控制，outlined/filled 保留独项四角及外侧圆角；去掉旧的 :first-child/:last-child 边框删除规则，避免没有实际共享边框。error/warning 的文字由现有 colorErrorText/colorWarningText 与当前 colorText 等量混合派生，替代对比度不足的装饰色；边框仍使用原状态色，filled 背景与禁用优先级保留。disabled 只描述单元格外观，不会自动禁用槽中的真实控件。
+
+### underlined 底线修复（0.0.0 开发阶段）
+
+旧 underlined 错误地与 borderless 一样没有边框。现在 underlined 仅绘制直的底线、背景透明、圆角为零；normal/success/validating 使用 colorBorder，error/warning 使用各自状态边框色，线宽和线型随当前 Alias。disabled 保留装饰禁用文字色及底线/状态边框色。横向、纵向、RTL、独项和三种 Compact 尺寸均使用相同底线规则；此修复可能增加独立单元格一个 lineWidth 的边框高度。
+
+已有 `variant="underlined"` 会得到有效底线；需要原无边框外观时改为 `variant="borderless"`。公开 props、默认槽、ref、事件和导出均不变，不新增兼容开关或弃用期。原先将两种 variant 合并为 border:none 的测试预期按这项明确契约修正；四边、状态/禁用、四主题和紧凑边界由实际浏览器矩阵覆盖。
 
 关联 Select 的局部修正独立交付：尺寸按本地 size → 当前 compactSize → Provider size；原生 NoCompactStyle 回落与节点/焦点保持有专门回归。selector 背景的静态默认值由固定白色改为现有 colorBgContainer Alias，保留原生内联组件变量优先级。此改动不代表 Select 全部主题 Token 或 API 已审计完成。
 
@@ -46,6 +52,7 @@ Addon 横/纵紧凑边界由上下文控制，保留独项四角及外侧圆角�
 pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/space --maxWorkers=1
 SPACE_SOURCE=1 node tests/consumer/space-types.mjs
 SPACE_SOURCE=1 node tests/browser/space-contracts.mjs
+node tests/browser/space-addon-underline.mjs
 ```
 
 发布 JS/CSS 验证需在主线程统一构建并通知 dist-ready 后运行不带 SPACE_SOURCE 的消费/浏览器脚本；不得混入源码 CSS。正式 Apollo 视觉与最终同提交全库门禁单列，完整红灯、修复与剩余边界见 [审计记录](../audit/2026-10-28-space-contract-audit.md)。

@@ -34,8 +34,19 @@ export const Audit = defineComponent({
       reversed: false,
       customPrefix: false,
       nativeSelector: false,
+      addonVariant: 'outlined',
+      addonStatus: '',
+      addonDisabled: false,
+      addonSize: 'middle',
+      addonAlias: false,
     });
     const editorKeys = [Symbol('group-a'), Symbol('group-b')];
+    const addonProps = (props = {}) => ({
+      variant: state.addonVariant,
+      status: state.addonStatus,
+      disabled: state.addonDisabled,
+      ...props,
+    });
     const editors = (layout) => {
       const groups = editorKeys.map((key, index) =>
         h(Fragment, { key }, [
@@ -109,21 +120,53 @@ export const Audit = defineComponent({
             ]),
             h(
               SpaceCompact,
-              { id: 'addon-chain', orientation: state.vertical ? 'vertical' : 'horizontal' },
+              {
+                id: 'addon-chain',
+                size: state.addonSize,
+                orientation: state.vertical ? 'vertical' : 'horizontal',
+              },
               () => [
-                h(SpaceAddon, { id: 'addon-first', style: { paddingBlock: '5px' } }, () => 'First'),
                 h(
                   SpaceAddon,
-                  { id: 'addon-middle', style: { paddingBlock: '5px' } },
+                  addonProps({ id: 'addon-first', style: { paddingBlock: '5px' } }),
+                  () => 'First',
+                ),
+                h(
+                  SpaceAddon,
+                  addonProps({ id: 'addon-middle', style: { paddingBlock: '5px' } }),
                   () => 'Middle',
                 ),
-                h(SpaceAddon, { id: 'addon-last', style: { paddingBlock: '5px' } }, () => 'Last'),
+                h(
+                  SpaceAddon,
+                  addonProps({ id: 'addon-last', style: { paddingBlock: '5px' } }),
+                  () => 'Last',
+                ),
               ],
             ),
             h(
               SpaceCompact,
-              { id: 'addon-single', orientation: state.vertical ? 'vertical' : 'horizontal' },
-              () => h(SpaceAddon, null, () => 'Single'),
+              {
+                id: 'addon-single',
+                size: state.addonSize,
+                orientation: state.vertical ? 'vertical' : 'horizontal',
+              },
+              () => h(SpaceAddon, addonProps(), () => 'Single'),
+            ),
+            h(
+              SpaceCompact,
+              { size: state.addonSize, orientation: state.vertical ? 'vertical' : 'horizontal' },
+              () =>
+                h(
+                  SpaceAddon,
+                  addonProps({
+                    id: 'addon-editor',
+                    style: state.addonAlias
+                      ? { '--apollo-line-width': '3px', '--apollo-color-border': '#123456' }
+                      : undefined,
+                  }),
+                  () =>
+                    h('input', { id: 'addon-native-draft', 'aria-label': 'Addon business draft' }),
+                ),
             ),
             h(
               SpaceCompact,

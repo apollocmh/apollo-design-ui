@@ -7,7 +7,7 @@
 - Compact 为每个实际非空子节点提供当前 size/direction/first/last，无额外控件宿主；NoCompactStyle 提供 null 隔离子树。
 - use-focus.ts 仅在原生 keyed DOM 移动导致仍所属的聚焦元素退到 body 时恢复焦点，不抢占外部焦点。
 - 三组件在有主题上下文时把当前 Alias 写到自身作用域，原生 style 最后合并。ComponentToken 为空，prepareComponentToken 返回 {}；预设 gap 仍来自 paddingXS/padding/paddingLG。
-- Addon 四变体和状态/禁用优先级保留；边界依赖上下文，支持横/纵、RTL、独项与嵌套。状态不会给布局单元格添加表单语义。
+- Addon 的 underlined 绘制零圆角的单独底线，borderless 无边框；error/warning 消费状态边框色，disabled 文字优先级保留。边界依赖上下文，支持横/纵、RTL、独项与嵌套。状态不会给布局单元格添加表单语义。
 - 十五个 Demo 使用实际 Apollo 控件和公开包入口；旧替身 helper 已无引用并移除。
 
 源码回归覆盖实际 Button、Input、TextArea、Search、InputNumber、Select、Cascader、TreeSelect、DatePicker、RangePicker、ColorPicker、Addon。InputGroup、legacy addon InputNumber 和 FloatButtonGroup 的实际组合链亦被盘点；本轮不等于这些消费组件的全契约验收。

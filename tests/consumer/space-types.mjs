@@ -17,6 +17,19 @@ try {
     );
   fs.mkdirSync(path.join(temp, 'node_modules/@apollo-design'), { recursive: true });
   fs.symlinkSync(path.join(root, 'node_modules/vue'), path.join(temp, 'node_modules/vue'), 'dir');
+  if (source) {
+    fs.mkdirSync(path.join(temp, 'node_modules/@types'), { recursive: true });
+    fs.symlinkSync(
+      path.join(root, 'node_modules/@types/node'),
+      path.join(temp, 'node_modules/@types/node'),
+      'dir',
+    );
+    fs.symlinkSync(
+      path.join(root, 'node_modules/vite'),
+      path.join(temp, 'node_modules/vite'),
+      'dir',
+    );
+  }
   for (const name of ['ui', 'theme', 'icons'])
     fs.symlinkSync(
       path.join(root, `packages/${name}`),

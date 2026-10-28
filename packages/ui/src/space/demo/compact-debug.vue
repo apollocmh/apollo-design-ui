@@ -15,6 +15,7 @@ const options = [
   { value: 'signup', label: 'Sign Up' },
   { value: 'signin', label: 'Sign In' },
 ];
+const addonSizes = ['small', 'middle', 'large'] as const;
 </script>
 <template>
   <Space orientation="vertical" style="display: flex">
@@ -32,5 +33,7 @@ const options = [
     <SpaceCompact orientation="vertical" size="small"><Button>Vertical single button</Button></SpaceCompact>
     <SpaceCompact orientation="vertical"><SpaceAddon>Vertical first</SpaceAddon><SpaceAddon>Vertical middle</SpaceAddon><SpaceAddon>Vertical last</SpaceAddon></SpaceCompact>
     <SpaceCompact><SpaceAddon>Single addon</SpaceAddon></SpaceCompact>
+    <SpaceCompact v-for="size in addonSizes" :key="size" :size="size"><SpaceAddon variant="underlined">Underlined {{ size }}</SpaceAddon><SpaceAddon variant="underlined" status="error">Error</SpaceAddon><SpaceAddon variant="underlined" status="warning">Warning</SpaceAddon><SpaceAddon variant="underlined" disabled><Button type="text" disabled>Disabled</Button></SpaceAddon></SpaceCompact>
+    <SpaceCompact><SpaceAddon variant="borderless">Borderless</SpaceAddon><SpaceAddon variant="borderless" status="error">Error</SpaceAddon><SpaceAddon variant="borderless" status="warning">Warning</SpaceAddon><SpaceAddon variant="borderless" disabled><Button type="text" disabled>Disabled</Button></SpaceAddon></SpaceCompact>
   </Space>
 </template>

@@ -4,6 +4,7 @@
  * Current rules: Space 16, Compact 4, Addon 31. The 2026-10-28 audit replaces
  * five positional/duplicate edge rules with context-based horizontal/vertical
  * joining, retaining all singleton corners and the actual shared border.
+ * Underlined draws a straight bottom border; other variants retain their paint.
  * Variant/status/disabled selector order preserves the established paint cascade.
  * Browser evidence verifies actual theme colors and geometry; rule counts alone do not.
  */
@@ -121,7 +122,7 @@ export function genSpaceStyle(prefixCls: string): string {
     `}`,
     '',
     // =======================================================================
-    // Addon（antd `style/addon.ts`，34 条）
+    // Addon（历史来源为 antd `style/addon.ts`，当前 31 条）
     // =======================================================================
     // ---- resetComponent(token) 的前半段（antd `components/style/index.tsx`）----
     `${addonCls}{`,
@@ -192,6 +193,8 @@ export function genSpaceStyle(prefixCls: string): string {
     `}`,
     `${addonCls}-variant-underlined{`,
     `  border:none;`,
+    `  border-bottom:${lineWidth} ${v('lineType')} ${v('colorBorder')};`,
+    `  border-radius:0;`,
     `  background:transparent;`,
     `}`,
     '',
@@ -205,10 +208,10 @@ export function genSpaceStyle(prefixCls: string): string {
     `${addonCls}-status-warning{`,
     `  color:color-mix(in srgb,${v('colorWarningText')} 50%,${v('colorText')});`,
     `}`,
-    `${addonCls}-status-error${addonCls}-variant-outlined{`,
+    `${addonCls}-status-error${addonCls}-variant-outlined,${addonCls}-status-error${addonCls}-variant-underlined{`,
     `  border-color:${v('colorError')};`,
     `}`,
-    `${addonCls}-status-warning${addonCls}-variant-outlined{`,
+    `${addonCls}-status-warning${addonCls}-variant-outlined,${addonCls}-status-warning${addonCls}-variant-underlined{`,
     `  border-color:${v('colorWarning')};`,
     `}`,
     `${addonCls}-status-error${addonCls}-variant-filled{`,

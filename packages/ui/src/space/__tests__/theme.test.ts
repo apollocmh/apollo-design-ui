@@ -66,6 +66,38 @@ function groupBySource(css: string) {
   return { all, addon, compact, space };
 }
 
+describe('SpaceAddon underlined contract', () => {
+  const css = genSpaceStyle('apollo');
+  const declarations = (selector: string): string => {
+    for (const match of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+      if (match[1]?.split(',').some((part) => part.trim() === selector)) return match[2] ?? '';
+    }
+    return '';
+  };
+
+  it('underlined paints only the bottom line with current Alias tokens', () => {
+    const body = declarations(`.${PA}-variant-underlined`);
+    expect(body).toContain('border:none;');
+    expect(body).toContain(
+      'border-bottom:var(--apollo-line-width) var(--apollo-line-type) var(--apollo-color-border);',
+    );
+    expect(body).toContain('border-radius:0;');
+    expect(body).toContain('background:transparent;');
+  });
+
+  it.each(['error', 'warning'])('underlined consumes the %s border Alias', (status) => {
+    const body = declarations(`.${PA}-status-${status}.${PA}-variant-underlined`);
+    expect(body).toContain(`border-color:var(--apollo-color-${status});`);
+  });
+
+  it('borderless retains no border and a transparent background', () => {
+    const body = declarations(`.${PA}-variant-borderless`);
+    expect(body).toContain('border:none;');
+    expect(body).not.toContain('border-bottom:');
+    expect(body).toContain('background:transparent;');
+  });
+});
+
 describe('Space · 主题无关性', () => {
   it('四态下的 DOM 完全相同（差异全在 CSS 变量里）', () => {
     const html = mount(Space, { slots: { default: () => ['a', 'b'] } }).html();
@@ -157,20 +189,18 @@ describe('Space · 样式产物的规则条数（文件头声称的数目必须�
     expect(groups.addon).toHaveLength(31);
   });
 
-  it('★ +4 的来源逐条列出（不是「多抄了 4 条」）', () => {
+  it('status border groups cover outlined/underlined while filled keeps its background rules', () => {
     const expansion = [
-      `.${PA}-status-error.${PA}-variant-outlined`,
-      `.${PA}-status-warning.${PA}-variant-outlined`,
+      `.${PA}-status-error.${PA}-variant-outlined,.${PA}-status-error.${PA}-variant-underlined`,
+      `.${PA}-status-warning.${PA}-variant-outlined,.${PA}-status-warning.${PA}-variant-underlined`,
       `.${PA}-status-error.${PA}-variant-filled`,
       `.${PA}-status-warning.${PA}-variant-filled`,
     ];
     for (const selector of expansion) {
       expect(groups.addon, selector).toContain(selector);
     }
-    // 4 = 2 个 status × 2 个「消费被 status 改写的那个变量的 variant」。
-    // outlined 消费 `--addon-border-color-outlined`，filled 消费 `--addon-background-filled`
-    // （见 antd `style/addon.ts` 的 Variants / Status 两段）。borderless / underlined
-    // 直接写 `border:none;background:transparent`，**不**消费中间变量 ⇒ 不参与展开。
+    // Each status has one border rule for outlined/underlined and one filled background rule.
+    // Borderless remains outside the border groups and retains no visible border.
     expect(expansion).toHaveLength(4);
   });
 
@@ -255,8 +285,8 @@ describe('Space · Addon 的「顺序即契约」（变异验证逼出来的用�
       `.${PA}-variant-underlined`,
       `.${PA}-status-error`,
       `.${PA}-status-warning`,
-      `.${PA}-status-error.${PA}-variant-outlined`,
-      `.${PA}-status-warning.${PA}-variant-outlined`,
+      `.${PA}-status-error.${PA}-variant-outlined,.${PA}-status-error.${PA}-variant-underlined`,
+      `.${PA}-status-warning.${PA}-variant-outlined,.${PA}-status-warning.${PA}-variant-underlined`,
       `.${PA}-status-error.${PA}-variant-filled`,
       `.${PA}-status-warning.${PA}-variant-filled`,
       `.${PA}-variant-filled.${PA}-disabled`,
