@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-28",
+  "baselineCommit": "1b361487",
+  "phase": "before Grid implementation",
+  "kind": "observer",
+  "passed": 1,
+  "failed": 2,
+  "tests": [
+    {
+      "name": "distinct Provider breakpoint maps publish their own current viewport",
+      "status": "failed",
+      "failure": [
+        "AssertionError: expected 'true' to be 'false' // Object.is equality"
+      ]
+    },
+    {
+      "name": "last unsubscriber removes the active media map even when Providers differ",
+      "status": "failed",
+      "failure": [
+        "AssertionError: expected 1 to be +0 // Object.is equality"
+      ]
+    },
+    {
+      "name": "current Provider breakpoint replacement re-observes without a resize",
+      "status": "passed",
+      "failure": []
+    }
+  ]
+}

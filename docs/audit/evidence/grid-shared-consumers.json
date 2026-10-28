@@ -1,0 +1,195 @@
+{
+  "date": "2026-10-28",
+  "kind": "source unit",
+  "command": "pnpm exec vitest run --project unit packages/ui/src/grid packages/ui/src/descriptions packages/ui/src/steps packages/ui/src/avatar packages/ui/src/list packages/ui/src/pagination packages/ui/src/masonry --maxWorkers=1",
+  "files": 37,
+  "passed": 717,
+  "failed": 0,
+  "tests": [
+    {
+      "file": "packages/ui/src/avatar/__tests__/contract-audit.test.ts",
+      "passed": 29,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/avatar/__tests__/demo.test.ts",
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/avatar/__tests__/index.test.ts",
+      "passed": 36,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/avatar/__tests__/s29-issue29.test.ts",
+      "passed": 4,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/descriptions/__tests__/contracts.test.ts",
+      "passed": 12,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/descriptions/__tests__/demo.test.ts",
+      "passed": 15,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/descriptions/__tests__/index.test.ts",
+      "passed": 19,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/descriptions/__tests__/render-rows.test.ts",
+      "passed": 4,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/descriptions/__tests__/s31-issue31.test.ts",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/grid/__tests__/breakpoint-reactivity.test.ts",
+      "passed": 7,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/grid/__tests__/contracts.test.ts",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/grid/__tests__/demo.test.ts",
+      "passed": 15,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/grid/__tests__/index.test.ts",
+      "passed": 21,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/grid/__tests__/responsive-observer-contracts.test.ts",
+      "passed": 5,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/listy/__tests__/demo.test.ts",
+      "passed": 10,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/listy/__tests__/index.test.ts",
+      "passed": 19,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/listy/__tests__/s38-issue38.test.ts",
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/list/__tests__/contract-audit.test.ts",
+      "passed": 22,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/list/__tests__/demo.test.ts",
+      "passed": 14,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/list/__tests__/index.test.ts",
+      "passed": 33,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/list/__tests__/item-slots.test.ts",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/list/__tests__/slots.test.ts",
+      "passed": 9,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/masonry/__tests__/demo.test.ts",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/masonry/__tests__/index.test.ts",
+      "passed": 22,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/masonry/__tests__/item-slots.test.ts",
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/masonry/__tests__/native-attrs.test.ts",
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/masonry/__tests__/s52-issue52.test.ts",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/masonry/__tests__/ssr-content.test.ts",
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/pagination/__tests__/demo.test.ts",
+      "passed": 17,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/pagination/__tests__/index.test.ts",
+      "passed": 47,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/pagination/__tests__/pagers.test.ts",
+      "passed": 227,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/pagination/__tests__/s18-issue18.test.ts",
+      "passed": 4,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/pagination/__tests__/vue-slots.test.ts",
+      "passed": 6,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/steps/__tests__/demo.test.ts",
+      "passed": 23,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/steps/__tests__/index.test.ts",
+      "passed": 20,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/steps/__tests__/inline-slot.test.ts",
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "file": "packages/ui/src/steps/__tests__/native-reactivity.test.ts",
+      "passed": 4,
+      "failed": 0
+    }
+  ]
+}

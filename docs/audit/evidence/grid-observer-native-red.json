@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-28",
+  "phase": "before shared observer implementation",
+  "derivedFrom": "grid-native-observer-red.json",
+  "note": "Native Teleport and stable output identity; original VTU-stub 2-red/1-green record is preserved separately",
+  "tests": [
+    {
+      "file": "/Users/nanren/Code/apollo-design-ui/packages/ui/src/grid/__tests__/responsive-observer-contracts.test.ts",
+      "tests": [
+        {
+          "name": "distinct Provider breakpoint maps publish their own current viewport",
+          "status": "failed",
+          "failure": [
+            "AssertionError: expected 'true' to be 'false' // Object.is equality"
+          ]
+        },
+        {
+          "name": "last unsubscriber removes the active media map even when Providers differ",
+          "status": "failed",
+          "failure": [
+            "AssertionError: expected 1 to be +0 // Object.is equality"
+          ]
+        },
+        {
+          "name": "current Provider breakpoint replacement re-observes without a resize",
+          "status": "failed",
+          "failure": [
+            "AssertionError: expected 'true' to be 'false' // Object.is equality"
+          ]
+        }
+      ]
+    }
+  ]
+}

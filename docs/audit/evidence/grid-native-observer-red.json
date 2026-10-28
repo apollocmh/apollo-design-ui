@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-28",
+  "note": "Native Teleport preserves Probe identity; original VTU-stub 2-red/1-green remains in grid-observer-red.json",
+  "tests": [
+    {
+      "file": "/Users/nanren/Code/apollo-design-ui/packages/ui/src/grid/__tests__/contracts.test.ts",
+      "tests": [
+        {
+          "name": "Grid current native contracts ARow: native string/array/object style and attrs-only replacement/removal",
+          "status": "passed",
+          "failure": []
+        },
+        {
+          "name": "Grid current native contracts ACol: native string/array/object style and attrs-only replacement/removal",
+          "status": "passed",
+          "failure": []
+        },
+        {
+          "name": "Grid current native contracts current Row/Col Provider configuration, direction and prefix propagate and clear",
+          "status": "passed",
+          "failure": []
+        },
+        {
+          "name": "Grid current native contracts native dir takes precedence over the Provider direction on each root",
+          "status": "passed",
+          "failure": []
+        },
+        {
+          "name": "Grid current native contracts nested gutter and nowrap updates preserve complete slot content, native refs and drafts",
+          "status": "passed",
+          "failure": []
+        },
+        {
+          "name": "Grid current native contracts nowrap also shrinks responsive flex content and removes its variables when replaced",
+          "status": "passed",
+          "failure": []
+        },
+        {
+          "name": "Grid current native contracts align stretch is an explicit effective style",
+          "status": "passed",
+          "failure": []
+        },
+        {
+          "name": "Grid current native contracts SSR renders complete slots and native styles without browser media or empty style attrs",
+          "status": "passed",
+          "failure": []
+        }
+      ]
+    },
+    {
+      "file": "/Users/nanren/Code/apollo-design-ui/packages/ui/src/grid/__tests__/responsive-observer-contracts.test.ts",
+      "tests": [
+        {
+          "name": "distinct Provider breakpoint maps publish their own current viewport",
+          "status": "failed",
+          "failure": [
+            "AssertionError: expected 'true' to be 'false' // Object.is equality"
+          ]
+        },
+        {
+          "name": "last unsubscriber removes the active media map even when Providers differ",
+          "status": "failed",
+          "failure": [
+            "AssertionError: expected 1 to be +0 // Object.is equality"
+          ]
+        },
+        {
+          "name": "current Provider breakpoint replacement re-observes without a resize",
+          "status": "failed",
+          "failure": [
+            "AssertionError: expected 'true' to be 'false' // Object.is equality"
+          ]
+        }
+      ]
+    }
+  ]
+}
