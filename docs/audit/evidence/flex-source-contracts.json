@@ -1,0 +1,683 @@
+{
+  "sourceBaseCommit": "d8f63a8ff35ae67d3a047584f8ca619911f91517",
+  "workingTreeVerification": true,
+  "scope": "Flex complete current contract source remediation; published/Docs/final same-commit acceptance pending main integration",
+  "runtime": {
+    "exitCode": 0,
+    "passed": 120,
+    "failed": 0,
+    "unit": 64,
+    "domContract": 39,
+    "a11y": 9,
+    "theme": 8,
+    "suites": [
+      {
+        "file": "contracts.test.ts",
+        "passed": 23
+      },
+      {
+        "file": "demo.test.ts",
+        "passed": 8
+      },
+      {
+        "file": "index.test.ts",
+        "passed": 33
+      },
+      {
+        "file": "semantic.test.ts",
+        "passed": 39
+      },
+      {
+        "file": "a11y.test.ts",
+        "passed": 9
+      },
+      {
+        "file": "theme.test.ts",
+        "passed": 8
+      }
+    ]
+  },
+  "browser": {
+    "exitCode": 0,
+    "passed": 60,
+    "failed": 0,
+    "errors": [],
+    "readersExited": true,
+    "hydration": true,
+    "actualDemos": 6,
+    "demoThemeWidthObservations": 72,
+    "results": [
+      {
+        "name": "SSR hydrates complete content and exposes only its actual native host",
+        "passed": true
+      },
+      {
+        "name": "current Provider replacement and removal preserve native draft/focus",
+        "passed": true
+      },
+      {
+        "name": "native attrs and listeners update/remove once with original native events",
+        "passed": true
+      },
+      {
+        "name": "native dir overrides Provider and its removal restores current Provider",
+        "passed": true
+      },
+      {
+        "name": "default row starts at top while vertical and explicit stretch consume cross-axis space",
+        "passed": true
+      },
+      {
+        "name": "align=center reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "align=start reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "align=end reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "align=flex-start reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "align=flex-end reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "align=self-start reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "align=self-end reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "align=baseline reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "align=normal reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "align=stretch reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "justify=flex-start reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "justify=flex-end reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "justify=start reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "justify=end reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "justify=center reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "justify=space-between reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "justify=space-around reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "justify=space-evenly reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "justify=stretch reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "justify=normal reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "justify=left reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "justify=right reaches real computed layout",
+        "passed": true
+      },
+      {
+        "name": "wrap/nowrap/reverse affect actual line geometry",
+        "passed": true
+      },
+      {
+        "name": "gap=0 consumes actual CSS length",
+        "passed": true
+      },
+      {
+        "name": "gap=10.5 consumes actual CSS length",
+        "passed": true
+      },
+      {
+        "name": "gap=2rem consumes actual CSS length",
+        "passed": true
+      },
+      {
+        "name": "gap=small consumes actual CSS length",
+        "passed": true
+      },
+      {
+        "name": "gap=middle consumes actual CSS length",
+        "passed": true
+      },
+      {
+        "name": "gap=medium consumes actual CSS length",
+        "passed": true
+      },
+      {
+        "name": "gap=large consumes actual CSS length",
+        "passed": true
+      },
+      {
+        "name": "unitless flex values allocate real free space and update",
+        "passed": true
+      },
+      {
+        "name": "light: current ThemeProvider controls all preset gaps without global injection",
+        "passed": true
+      },
+      {
+        "name": "dark: current ThemeProvider controls all preset gaps without global injection",
+        "passed": true
+      },
+      {
+        "name": "compact: current ThemeProvider controls all preset gaps without global injection",
+        "passed": true
+      },
+      {
+        "name": "both: current ThemeProvider controls all preset gaps without global injection",
+        "passed": true
+      },
+      {
+        "name": "nested default theme resets only its own gap scope",
+        "passed": true
+      },
+      {
+        "name": "Vue custom root exposes its actual section and forwards complete content/attrs",
+        "passed": true
+      },
+      {
+        "name": "empty native hosts remain visible and keyboard-operable",
+        "passed": true
+      },
+      {
+        "name": "conditional default content and unmount/remount retain correct ref ownership",
+        "passed": true
+      },
+      {
+        "name": "independent explicit orientation remains isolated",
+        "passed": true
+      },
+      {
+        "name": "all six real demos light/400: layout, labels and paint",
+        "passed": true,
+        "actual": {
+          "demos": 6,
+          "mode": "light",
+          "width": 400
+        }
+      },
+      {
+        "name": "all six real demos light/800: layout, labels and paint",
+        "passed": true,
+        "actual": {
+          "demos": 6,
+          "mode": "light",
+          "width": 800
+        }
+      },
+      {
+        "name": "all six real demos light/1200: layout, labels and paint",
+        "passed": true,
+        "actual": {
+          "demos": 6,
+          "mode": "light",
+          "width": 1200
+        }
+      },
+      {
+        "name": "all six real demos dark/400: layout, labels and paint",
+        "passed": true,
+        "actual": {
+          "demos": 6,
+          "mode": "dark",
+          "width": 400
+        }
+      },
+      {
+        "name": "all six real demos dark/800: layout, labels and paint",
+        "passed": true,
+        "actual": {
+          "demos": 6,
+          "mode": "dark",
+          "width": 800
+        }
+      },
+      {
+        "name": "all six real demos dark/1200: layout, labels and paint",
+        "passed": true,
+        "actual": {
+          "demos": 6,
+          "mode": "dark",
+          "width": 1200
+        }
+      },
+      {
+        "name": "all six real demos compact/400: layout, labels and paint",
+        "passed": true,
+        "actual": {
+          "demos": 6,
+          "mode": "compact",
+          "width": 400
+        }
+      },
+      {
+        "name": "all six real demos compact/800: layout, labels and paint",
+        "passed": true,
+        "actual": {
+          "demos": 6,
+          "mode": "compact",
+          "width": 800
+        }
+      },
+      {
+        "name": "all six real demos compact/1200: layout, labels and paint",
+        "passed": true,
+        "actual": {
+          "demos": 6,
+          "mode": "compact",
+          "width": 1200
+        }
+      },
+      {
+        "name": "all six real demos both/400: layout, labels and paint",
+        "passed": true,
+        "actual": {
+          "demos": 6,
+          "mode": "both",
+          "width": 400
+        }
+      },
+      {
+        "name": "all six real demos both/800: layout, labels and paint",
+        "passed": true,
+        "actual": {
+          "demos": 6,
+          "mode": "both",
+          "width": 800
+        }
+      },
+      {
+        "name": "all six real demos both/1200: layout, labels and paint",
+        "passed": true,
+        "actual": {
+          "demos": 6,
+          "mode": "both",
+          "width": 1200
+        }
+      },
+      {
+        "name": "basic native radio keyboard changes direction",
+        "passed": true
+      },
+      {
+        "name": "conditional gap range has its own label and native keyboard updates real gap",
+        "passed": true
+      },
+      {
+        "name": "align native selects update actual two-axis alignment",
+        "passed": true
+      }
+    ],
+    "evidence": "/tmp/apollo-flex-browser-final2.json"
+  },
+  "visual": {
+    "source": true,
+    "exitCode": 0,
+    "passed": 42,
+    "failed": 0,
+    "variants": 14,
+    "widths": [
+      400,
+      800,
+      1200
+    ],
+    "candidates": 42,
+    "actuallyViewed": 7,
+    "baselineAccepted": false,
+    "evidence": "/tmp/apollo-flex-visual-final.json",
+    "images": [
+      {
+        "name": "basic-1200.png",
+        "sha256": "84814f9c462c781ac8e463a79095edadb75239c63b263bc9b060890d80342ef1",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "basic-400.png",
+        "sha256": "4aa55a36da1178eb68c900a0d32182feb22d24ca825a92cb324737035f32491c",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "basic-800.png",
+        "sha256": "1f68af13e59e4f20280eb763e819f54574a10780e3bf6ff0477fe719395c2fce",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "complete-content-1200.png",
+        "sha256": "35dab00308795d6d7020a778ddbd7d78fae7ac5eeeab1e2c888ad6cf2adb8bde",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "complete-content-400.png",
+        "sha256": "0a6d7af96d3c58f4a313a971d9b6c8ceba800b14ad65a9d3e6a33a3644b964e8",
+        "actuallyViewed": true,
+        "approved": false
+      },
+      {
+        "name": "complete-content-800.png",
+        "sha256": "2918d62d3989852eb0b45c85da7ccf8f6be3d9fdd97df26500fcf47cebfa76c2",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "current-provider-1200.png",
+        "sha256": "850c12ad3bf1b5fd23a19f6101919aab6e215720378c8c17ba5bf94c9e663395",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "current-provider-400.png",
+        "sha256": "1a425c671e5ec2f2a4d59152063b558403ba2ee5797bad9130595ae3b649bd1d",
+        "actuallyViewed": true,
+        "approved": false
+      },
+      {
+        "name": "current-provider-800.png",
+        "sha256": "5e7d39aee130d3988799e11f6545203f761d276495722b538189de23c5b81ae0",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "custom-component-1200.png",
+        "sha256": "2d0b0bfe12a0e56754fd28b8c9093e238463be392e99fc8d18bf16074b5f21dc",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "custom-component-400.png",
+        "sha256": "9364106f06c9adf07aabe76aed4dcf2e272debeb77d015066e62625f0b13517c",
+        "actuallyViewed": true,
+        "approved": false
+      },
+      {
+        "name": "custom-component-800.png",
+        "sha256": "b76d9ee931aff7ded5cf3c79ff9c517d08e15b3ee1223f21fc849ce21c7b6dcc",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "default-and-stretch-1200.png",
+        "sha256": "e00c30c9713d60b50d3c512cd7c6247a21bc7c6f6c4719cda773e9ab3ba3f099",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "default-and-stretch-400.png",
+        "sha256": "e4ce9549d18e209e2d4f5448037b6bfe55716acfceb241df0dd8698c3d617296",
+        "actuallyViewed": true,
+        "approved": false
+      },
+      {
+        "name": "default-and-stretch-800.png",
+        "sha256": "a72aa1bb8c7d4f2687fd4b344bb412104791ca5314b35a2f82496d88f6aa039c",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "empty-host-1200.png",
+        "sha256": "e452078c02d552831f087863e22afd00a8ca075f37ee3e4903991cfe0053f9da",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "empty-host-400.png",
+        "sha256": "72c600d6dbe23b85a396172cf8162abaf5560be0d9ead6cc9808b614c021806b",
+        "actuallyViewed": true,
+        "approved": false
+      },
+      {
+        "name": "empty-host-800.png",
+        "sha256": "5bb260718a6a222d6f76bf96ab9af7a99771d92697784886230539ddd62c2b11",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "gap-1200.png",
+        "sha256": "0cf0c19962fecb299186cf8998abeaf665f85e412e3c64ec345edfa214fba45c",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "gap-400.png",
+        "sha256": "39fb4b8f763bf61c9c96c50302c1196371f8899a479aa6df765f3815402ded62",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "gap-800.png",
+        "sha256": "81236ff48b50a4419050270eff8bb6aba44d551dc5707b9abd7b5f5d2e17f951",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "justify-align-1200.png",
+        "sha256": "9fb923d871fbd4430bc5840b204082a98cdf72b2cab3b8e9c3e9e057fbdb8af6",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "justify-align-400.png",
+        "sha256": "01ca318263cdb3bb5b960b2081b998a213f2742ea2f992f531b43cca801b9360",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "justify-align-800.png",
+        "sha256": "09d02624f9cbf546f2921f287c8f28f286383eb6fe436d8b8e5209a5df5649fc",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "native-focus-1200.png",
+        "sha256": "d2f42bb9c6021aec793e0c1035bcdfc5ad242b118846c89381f90b486b837bc5",
+        "actuallyViewed": true,
+        "approved": false
+      },
+      {
+        "name": "native-focus-400.png",
+        "sha256": "1163a0a315a5d27482b381b92723a43d0c4014d302265407b28d9394fdc4dd03",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "native-focus-800.png",
+        "sha256": "dc4bd427cde663f132be00a212f6f304c30deeeae8466facd150db831d75dd2e",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "theme-compact-1200.png",
+        "sha256": "34caf3aaf8aba37ac5f398b80bbbf29169600b1aeec6cf9561f6f4518d9b71c1",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "theme-compact-400.png",
+        "sha256": "d78dce4f81d2567081ad1eaa340a4b9bc8fb3b12fe45e47f71ab4f3d3da8cb4f",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "theme-compact-800.png",
+        "sha256": "92f7a7363012626d1e44312e0bd00c6c994b920ec667494383934b72b08d7f35",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "theme-dark-1200.png",
+        "sha256": "06f45dec721f263e06c8916ab22b13ecf0efd4b288ba845951d318deea3acc43",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "theme-dark-400.png",
+        "sha256": "ab28d374004f6a0adbe4e75c477df7a63b4899023ced6993a81d7e41c19c7d36",
+        "actuallyViewed": true,
+        "approved": false
+      },
+      {
+        "name": "theme-dark-800.png",
+        "sha256": "f32ce42e330106406adf1d7b6a4e7cdf8dfcfca1319217159a318f95d239f453",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "theme-dark-compact-1200.png",
+        "sha256": "77663b0a554fecaca6c704da3dfc8f2f2ba798506f6da85d99c70ad9413916f0",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "theme-dark-compact-400.png",
+        "sha256": "2f4702aa022131122f19f1f95a0d8582ee731bf7569093fdd11e7025aba54607",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "theme-dark-compact-800.png",
+        "sha256": "cb27ccc6590323512818f52210e7f8a76a7d45d961907b7def1fc87b20a30f13",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "vertical-1200.png",
+        "sha256": "c7d989a024b465221cc3bdd5272443f8fca9b2f3c7064dd1a9060a2a4bfd835b",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "vertical-400.png",
+        "sha256": "a8cbd63558c387f14c2e661301245d71347e09c28d5f6dc58515bc3aac696d2c",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "vertical-800.png",
+        "sha256": "f724ee289c55bbebcb65595661688029c701ce1a5db94ba7103c66a5a424b114",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "wrap-1200.png",
+        "sha256": "59947a5747be9316dd19e42be0dfa8ab72677ce3771e6907719131fc4e10d0ae",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "wrap-400.png",
+        "sha256": "157f920ab2d1235d5c331e20e445b7bca005f5a5887c36a326a4602e3241d127",
+        "actuallyViewed": false,
+        "approved": false
+      },
+      {
+        "name": "wrap-800.png",
+        "sha256": "d9ddca885a9785c48fa398f5d26d9694baace787b79023e6288510c3d0551f75",
+        "actuallyViewed": false,
+        "approved": false
+      }
+    ]
+  },
+  "isolatedSourceConsumer": {
+    "passed": true,
+    "sourceAliases": true,
+    "demos": [
+      "align.vue",
+      "basic.vue",
+      "combination.vue",
+      "debug.vue",
+      "gap.vue",
+      "wrap.vue"
+    ],
+    "rootAndSubpath": false,
+    "isolatedSourceFlexEntry": true,
+    "negatives": [
+      "plain object slot",
+      "string Provider style"
+    ]
+  },
+  "sharedTypeGate": {
+    "exitCode": 1,
+    "reportedAssertionPasses": 12,
+    "reportedAssertionFailures": 0,
+    "overallPassed": false,
+    "rootVueTscExitCode": 2,
+    "sourceDiagnostics": "/tmp/apollo-flex-lint-types.log",
+    "sourceErrorOwners": [
+      "parallel Alert",
+      "parallel Layout"
+    ],
+    "flexSourceDiagnostics": 0,
+    "requiresIntegratedRerun": true
+  },
+  "red": {
+    "unit": {
+      "passed": 14,
+      "failed": 8,
+      "file": "/tmp/apollo-flex-unit-red.json"
+    },
+    "browser": {
+      "passed": 34,
+      "failed": 26,
+      "file": "/tmp/apollo-flex-browser-red.json"
+    },
+    "qualification": "Raw red counts include explicitly documented fixture corrections (wrapper host, Provider channel, reactive probe width); they are not counts of independent product defects. No thresholds were lowered.",
+    "oldPublishedVisual": {
+      "passed": 33,
+      "failed": 9,
+      "file": "/tmp/apollo-flex-visual-states.json",
+      "note": "Initial independent runner retained GRID_SOURCE and read old published artifacts. It did not verify source."
+    }
+  },
+  "packageBuilds": false,
+  "baselineEdits": false,
+  "commitsOrPushes": false,
+  "unverified": [
+    "Published root/subpath types and Node SSR on the new integrated dist",
+    "Published JS+own CSS browser contracts without source aliases/injection",
+    "Formal 375/768/1440 visual capture/review/acceptance",
+    "Docs integration and final same-commit full gates; current shared type gate is blocked by parallel source changes"
+  ]
+}

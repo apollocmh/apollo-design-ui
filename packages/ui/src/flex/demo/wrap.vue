@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// 对齐 antd 的 wrap demo
 import { Flex } from '@apollo-design/ui';
 </script>
 

@@ -1,29 +1,4 @@
-/**
- * L1 · 单元测试 + L2 · 交互测试
- *
- * ── L2 为什么只覆盖挂载与 prop 响应 ─────────────────────────────────────────
- *
- * Flex 是**纯布局容器**：没有事件、没有受控/非受控语义、没有焦点管理、没有禁用态。
- * `TESTING.md` 的 L2 六类（鼠标 / 键盘 / 焦点 / 受控 / 禁用）里唯一适用的是
- * 「props 更新 → DOM 更新」—— 用 L1 的响应式用例承担。其余判 `n/a`
- * （依据写进 `registry/components.json` 的 layerNotes），不写凑数用例（反模式 A1）。
- *
- * ── 本文件的四个重心 ─────────────────────────────────────────────────────────
- *
- * 1. **方向合并表** —— orientation > vertical > context.vertical > 'horizontal'，
- *    与 L4 的 `orientation:*` 用例互补：L4 钉 SSR 的 DOM，这里钉**响应式更新**。
- * 2. **context.vertical 回落**（D21 的 Flex 版）：`vertical` 未传必须保持
- *    `undefined` —— `<ConfigProvider flex={{vertical:true}}>` 才能生效；
- *    显式 `vertical:false` 则压过 context（typeof === 'boolean' 判据）。
- * 3. **gap / flex 的内联样式**：数字补 px（gap）、unitless（flex）、0 的边界。
- *    jsdom 不做布局，所以断言的是**内联样式真的出现**，不是布局效果。
- * 4. **ConfigProvider 合并**：className 拼接、style 前后顺序、rtl。
- *
- * ── 这个文件没有证明什么 ──────────────────────────────────────────────────────
- *   - 没证明与 antd 的 DOM 一致（那是 L4，semantic.test.ts）
- *   - 没证明像素一致（L6）
- *   - 没证明 CSS 类真的有样式（B7 + L6 的职责）
- */
+/** Existing default-layout and prop regression cases. Current Provider, complete slots, actual host refs and owned native interaction are additionally covered in contracts.test.ts and tests/browser/flex-contracts.mjs. */
 
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';

@@ -5,23 +5,48 @@ title:
   en-US: Align
 ---
 
-`justify` 控制主轴对齐、`align` 控制交叉轴对齐（Segmented 用原生 select 等价替换）。
+使用原生下拉控件改变主轴与交叉轴对齐。横向默认顶部对齐，纵向默认拉伸。
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Flex } from '@apollo-design/ui';
 import type { FlexAlign, FlexJustify } from '@apollo-design/ui';
+import { Flex } from '@apollo-design/ui';
+import { ref } from 'vue';
 
+const justifyOptions = [
+  'flex-start',
+  'center',
+  'flex-end',
+  'space-between',
+  'space-around',
+  'space-evenly',
+];
+const alignOptions = ['flex-start', 'center', 'flex-end'];
 const justify = ref<FlexJustify>('flex-start');
 const align = ref<FlexAlign>('flex-start');
+const boxStyle = {
+  width: '100%',
+  height: '120px',
+  borderRadius: 'var(--apollo-border-radius)',
+  border: '1px solid var(--apollo-color-border)',
+};
 </script>
 
 <template>
   <Flex gap="medium" align="start" vertical>
-    <Flex :justify="justify" :align="align" style="width: 100%; height: 120px; border: 1px solid #40a9ff">
-      <button type="button">Primary</button>
-      <button type="button">Primary</button>
+    <p>Select justify :</p>
+    <select v-model="justify" aria-label="Select justify">
+      <option v-for="o in justifyOptions" :key="o" :value="o">{{ o }}</option>
+    </select>
+    <p>Select align :</p>
+    <select v-model="align" aria-label="Select align">
+      <option v-for="o in alignOptions" :key="o" :value="o">{{ o }}</option>
+    </select>
+    <Flex :style="boxStyle" :justify="justify" :align="align">
+      <button type="button">Task</button>
+      <button type="button">Task</button>
+      <button type="button">Task</button>
+      <button type="button">Task</button>
     </Flex>
   </Flex>
 </template>

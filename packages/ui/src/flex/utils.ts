@@ -1,19 +1,6 @@
-/**
- * Flex 的语义类名生成。
- *
- * 契约来源：antd 6.6.4 的 `es/flex/utils.js`（逐字对齐：三个枚举数组、
- * 三个 `genCls*` 的判据、`clsx` 的键值语义）。
- *
- * ⚠️ 类名生成吃的是 **mergedVertical**（antd 在 index.js 里传
- * `{...props, vertical: mergedVertical}`），不是裸 `props.vertical` ——
- * 这决定 `-align-stretch` 是否出现。调用方（`Flex.vue`）负责先合并方向。
- *
- * ⚠️ antd 用 `clsx` 处理 `{...genClsWrap(...), ...}` 的对象键值语义
- * （值为真 → 类名出现，按插入序拼接）。本仓库不为此引入新依赖
- * （PITFALLS #6：漏声明依赖会让 unbuild 报隐式依赖），
- * `joinTruthyKeys` 是该语义在「单对象入参」场景下的等价实现：
- * `Object.entries` 保序、过滤真值、空格拼接 —— 与 clsx 的输出逐字节一致。
- */
+// Initial class/rule reference: Ant Design 6.6.4 (MIT); docs/analysis/flex.md.
+// Current behavior is defined by Apollo public contracts.
+/** Semantic classes for the current resolved Flex direction and public CSS values. */
 
 import type { FlexAlign, FlexJustify, FlexProps, FlexWrap } from './interface';
 
@@ -66,7 +53,7 @@ const genClsAlign = (prefixCls: string, props: FlexProps) => {
   alignItemsValues.forEach((cssKey) => {
     alignCls[`${prefixCls}-align-${cssKey}`] = props.align === cssKey;
   });
-  alignCls[`${prefixCls}-align-stretch`] = !props.align && !!props.vertical;
+  if (!props.align && props.vertical) alignCls[`${prefixCls}-align-stretch`] = true;
   return alignCls;
 };
 

@@ -6,13 +6,16 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
+import { h, type VNodeChild } from 'vue';
 import type { Flex } from '../index';
 import type {
   FlexAlign,
   FlexComponent,
+  FlexConfig,
   FlexJustify,
   FlexProps,
   FlexRef,
+  FlexSlot,
   FlexWrap,
 } from '../interface';
 
@@ -71,5 +74,23 @@ describe('Flex · 负例（永不调用的闭包内）', () => {
 
   it('Ref 暴露面', () => {
     expectTypeOf<FlexRef>().toMatchTypeOf<{ nativeElement: HTMLElement | null }>();
+  });
+});
+
+describe('Flex complete Vue content and current config types', () => {
+  it('accepts complete VNodeChild slots and rejects arbitrary objects/config strings', () => {
+    expectTypeOf<ReturnType<FlexSlot>>().toEqualTypeOf<VNodeChild>();
+    const complete: FlexSlot = () => [0, 'text', false, h('strong', 'Complete')];
+    const config: FlexConfig = { vertical: false, className: 'current', style: { padding: '3px' } };
+    expectTypeOf(complete).toMatchTypeOf<FlexSlot>();
+    expectTypeOf(config).toMatchTypeOf<FlexConfig>();
+    const neverRun = () => {
+      // @ts-expect-error Arbitrary objects are not Vue content.
+      const invalid: FlexSlot = () => ({ invalid: true });
+      // @ts-expect-error Provider style is an object; native Flex style attrs accept strings.
+      const invalidConfig: FlexConfig = { style: 'padding: 3px' };
+      return [invalid, invalidConfig];
+    };
+    void neverRun;
   });
 });

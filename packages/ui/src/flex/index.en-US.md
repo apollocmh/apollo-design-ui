@@ -4,73 +4,42 @@ title: Flex
 subtitle: Flexbox Layout
 ---
 
-A flexbox layout container for alignment and spacing.
-
-## When To Use
-
-- Good for setting spacing between elements.
-- Good for setting horizontal / vertical alignment.
-
-### Difference with Space component
-
-- Space adds wrapper elements for inline alignment — best for equidistant inline arrangements.
-- Flex works on block-level children directly, without wrappers, and offers more control.
+Flex aligns and spaces complete Vue content directly, without adding a wrapper around every child. Use Space when each inline item needs its own spacing wrapper.
 
 ## Examples
 
-See [`demo/`](./demo) (6 demos, covering the main antd scenarios.
+The six paired demos show direction, alignment, gaps, wrapping, a responsive project summary and layout blocks. Their native controls have labels and retain normal keyboard behavior.
 
 ## API
 
-> Available since antd@5.10.0. Flex aligns to flex-start by default in horizontal mode, and stretch in vertical mode.
+| Prop | Description | Type | Default |
+|---|---|---|---|
+| prefixCls | Complete class prefix; custom prefixes require matching consumer CSS | `string` | Current ConfigProvider, then `apollo-flex` |
+| vertical | Vertical direction; omission permits current `flex.vertical` config | `boolean` | `undefined` |
+| orientation | Takes precedence over `vertical` and Provider | `'horizontal' \| 'vertical'` | Resolved direction defaults to horizontal |
+| wrap | Multiple lines; true means wrap | `boolean \| 'wrap' \| 'nowrap' \| 'wrap-reverse'` | Single line |
+| justify | Main-axis CSS alignment | `FlexJustify` | Native flex-start behavior |
+| align | Cross-axis CSS alignment | `FlexAlign` | Horizontal: flex-start; vertical: stretch |
+| flex | CSS shorthand; numbers are unitless | `string \| number` | — |
+| gap | Pixel number, CSS length or preset | `'small' \| 'medium' \| 'middle' \| 'large' \| string \| number` | — |
+| component | Native tag or Vue component forwarding attrs/default slot to its host | `Component \| string` | `'div'` |
 
-### Props
+Direction priority is `orientation` → explicit `vertical` → current ConfigProvider `flex.vertical` → horizontal. ConfigProvider `flex.className`, `flex.style`, vertical, direction and prefix updates are read at render time. Explicit native `dir` wins over Provider direction.
 
-| Prop | Description | Type | Default | Global Config |
-|---|---|---|---|---|
-| vertical | Flex direction is vertical (`flex-direction: column`) | `boolean` | `false` | ✅ (`flex.vertical`) |
-| orientation | Direction type. Takes priority over `vertical` | `'horizontal' \| 'vertical'` | `'horizontal'` | × |
-| wrap | Single line or multiple lines | `flex-wrap \| boolean` | — | × |
-| justify | Justify content on the main axis | `justify-content` | — | × |
-| align | Align items on the cross axis | `align-items` | — | × |
-| flex | Flex CSS shorthand (numbers are unitless) | `flex` | — | × |
-| gap | Gap between items. Presets go to class names, others inline | `'small' \| 'medium' \| 'large' \| string \| number` | — | × |
-| component | Custom root element | `Component \| string` | `'div'` | × |
-| prefixCls | Class name prefix | `string` | from ConfigProvider, fallback `apollo-flex` | × |
+### Slots, events and state
 
-> **Native root attributes**: the root's `class` / `style` are **Vue-native attrs** (not Props) —
-> `<Flex class="..." :style="..." />`. Merge order (low → high):
-> ConfigProvider `flex.style` → caller native `style` → inline style derived from `flex` / `gap`.
+`#default` accepts complete Vue content, including zero, text, multiple VNodes and Fragments. Flex has no business emits or v-model. Native root listeners receive their original DOM events once. Caller-owned inputs, links and buttons keep their own semantics, focus and keyboard behavior.
+
+Root `class`, `style`, id, data/ARIA attributes, tabindex and native listeners use Vue attrs. Styles accept Vue strings, objects and arrays. Priority is current theme aliases → Provider `flex.style` → native `style` → derived `flex`/non-preset `gap`. Changing appearance keeps the host and keyed children; changing `component` replaces its owned host normally. Empty roots stay mounted and retain their layout and native semantics.
 
 ### Ref
 
 | Name | Type | Description |
 |---|---|---|
-| nativeElement | `HTMLElement \| null` | Root element (antd's forwardRef ref) |
+| nativeElement | `HTMLElement \| null` | Actual single HTML host, including a Vue component's root; null before mount, after unmount or when no single HTML host exists |
 
-### Slots
-
-| Name | Description |
-|---|---|
-| default | Children. antd's `children` |
+Custom components own their slot/attrs forwarding. Flex exposes their actual HTML host rather than their component instance; Fragment, text-only and non-HTML roots have no `nativeElement`.
 
 ## Theme
 
-### Component Token
-
-Flex has **no Component Tokens** (identical to antd: `prepareComponentToken = () => ({})`).
-
-The three gap tiers come from alias token derivation (antd's `flexToken`):
-
-| Derived token | Source | CSS |
-|---|---|---|
-| flexGapSM | `paddingXS` | `var(--apollo-padding-xs)` |
-| flexGap | `padding` | `var(--apollo-padding)` |
-| flexGapLG | `paddingLG` | `var(--apollo-padding-lg)` |
-
-## Design Notes
-
-- `justify` / `wrap` / `align` only produce class names and are **never passed to the DOM** (same as antd's `omit`).
-- `gap: 0` still writes inline `style.gap` (`isNonNullable` predicate) — aligned verbatim with upstream.
-- `flex` is unitless: the number `1` serializes as `'1'`, not `'1px'`.
-- antd's `resetStyle: false`: Flex does not consume the resetComponent font styles (upstream issue 46403); neither do we.
+Flex has no component tokens. Gap presets consume current `paddingXS` (small), `padding` (medium/middle) and `paddingLG` (large). The three alias variables are scoped on Flex when a ThemeContext is supplied, so ThemeProvider works without global CSS injection and nested default themes reset their own gaps. Native custom properties can override these aliases locally. Zero and fractional pixel gaps are supported.

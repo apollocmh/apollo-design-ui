@@ -1,16 +1,4 @@
-/**
- * L1/L2 的主题矩阵：light / dark / compact / token-override 四态。
- *
- * ⚠️ 当前**只做到「四态下都能渲染」**，没做到「四态下视觉正确」。
- *
- * 原因与 divider 相同：Flex 的样式里没有**任何字面视觉值** —— 唯一的「取值」
- * 是 gap 三档，全部是别名 token 派生（`var(--apollo-padding-*)`，见 `style/index.ts`）。
- * 主题切换改变的是**变量值**，不是我们的 CSS。
- *
- * 「变量真的存在」由 `tests/build/run.mjs` 的 B7 校验 —— 那是这个风险的正解。
- * Flex 没有 Component Token（`prepareComponentToken = () => ({})`，与 antd 逐字一致），
- * 所以这里没有 divider 那条「字面量 token 白名单」断言。
- */
+/** Render-level theme regression. Actual alias consumption, scoped/nested resets and four-theme geometry are checked in the Flex contracts and browser fixture. Flex retains zero component tokens. */
 
 import { themeTest } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';

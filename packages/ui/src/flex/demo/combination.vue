@@ -1,24 +1,21 @@
 <script setup lang="ts">
-// 对齐 antd 的 combination demo（Card / Typography / Button 未落地，用原生元素等价替换，缺口见 README §7）
 import { Flex } from '@apollo-design/ui';
+import { ref } from 'vue';
 
-const cardStyle = { width: '620px' };
-const imgStyle = { display: 'block', width: '273px' };
+const expanded = ref(false);
 </script>
 
 <template>
-  <div :style="{ ...cardStyle, border: '1px solid #f0f0f0', borderRadius: '8px', overflow: 'hidden' }">
-    <Flex justify="space-between">
-      <img
-        draggable="false"
-        alt="avatar"
-        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        :style="imgStyle"
-      />
-      <Flex vertical align="flex-end" justify="space-between" style="padding: 32px">
-        <h3 style="margin: 0">“antd is an enterprise-class UI design language and React UI library.”</h3>
-        <button type="button">Get Started</button>
-      </Flex>
+  <Flex wrap gap="middle" align="stretch" style="max-width: 620px; width: 100%; border: 1px solid var(--apollo-color-border); border-radius: var(--apollo-border-radius); overflow: hidden; box-sizing: border-box">
+    <Flex vertical justify="center" flex="1 1 180px" style="min-width: 0; padding: 24px; box-sizing: border-box; background: var(--apollo-color-fill-alter)">
+      <strong>Project Apollo</strong>
+      <span>Shared workspace</span>
     </Flex>
-  </div>
+    <Flex vertical align="flex-start" justify="space-between" gap="small" flex="1 1 240px" style="min-width: 0; padding: 24px; box-sizing: border-box">
+      <h3 style="margin: 0">Keep the team in sync</h3>
+      <p style="margin: 0">Use nested Flex layouts for a responsive project summary.</p>
+      <button type="button" :aria-expanded="expanded" @click="expanded = !expanded">{{ expanded ? 'Hide details' : 'Show details' }}</button>
+      <p v-if="expanded" style="margin: 0">Three milestones are ready for review.</p>
+    </Flex>
+  </Flex>
 </template>

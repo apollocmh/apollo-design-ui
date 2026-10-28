@@ -1,178 +1,97 @@
 <script setup lang="ts">
-/**
- * Flex —— 弹性布局容器。
- *
- * 契约来源：antd 6.6.4 的 `es/flex/index.js`。DOM 结构、类名、分支判据逐条对齐，
- * 有意差异登记在 `packages/ui/src/flex/README.md` 与 `COMPATIBILITY.md` §9。
- *
- * ── 五条最容易写错、且已被分析钉住的判据（docs/analysis/flex.md §2）────────────
- *
- *   1. **方向合并**：`orientation` > `vertical` > context.vertical > `'horizontal'`；
- *      `vertical` 的判据是 `typeof vertical === 'boolean'` —— 未传必须保持 `undefined`
- *      （D21，见 `withDefaults` 注释）。
- *   2. **语义类名吃 mergedVertical**：`-align-stretch` 看的是合并后的方向，
- *      不是裸 prop（antd 传 `{...props, vertical: mergedVertical}`）。
- *   3. **`isNonNullable` 判据**：`flex` / `gap` 用「非 null/undefined」判断 ——
- *      `gap: 0` **会**写内联 `gap`（与 Space 的 `isValidGapNumber` 不同！）。
- *   4. **gap 数字必须补 px**：Vue 的 `patchStyle` 不做数字→px 转换（PITFALLS 32），
- *      裸数字会被静默丢弃。`0` 输出 `'0'`（React 对 0 不补单位）。
- *   5. **`justify` / `wrap` / `align` 不透传 DOM**：antd 用 `omit`；
- *      Vue 侧它们是**声明过的 props**，天然不进 `attrs` —— 同一语义。
- */
-
-import { isNonNullable } from '@apollo-design/utils';
-import { type CSSProperties, computed, mergeProps, ref, useAttrs } from 'vue';
+import { ThemeContextKey } from '@apollo-design/theme';
+import {
+  type ComponentPublicInstance,
+  type CSSProperties,
+  computed,
+  inject,
+  mergeProps,
+  normalizeStyle,
+  shallowRef,
+  useAttrs,
+} from 'vue';
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import { useOrientation } from '../_internal/use-orientation';
 import { useComponentConfig } from '../config-provider/context';
 import { isPresetSize } from '../space/gapSize';
-import type { FlexConfig, FlexProps } from './interface';
+import type { FlexConfig, FlexProps, FlexSlot } from './interface';
 import createFlexClassNames from './utils';
 
 defineOptions({ name: 'AFlex', inheritAttrs: false });
-
-/**
- * ⚠️⚠️ `vertical` 的 `undefined` 默认值**不是冗余的**（D21 / PITFALLS 46）。
- *
- * Vue 的 Boolean prop 转换会把未传的布尔 prop 赋成 `false`，而 `useOrientation`
- * 的第二级判据是 `typeof vertical === 'boolean'` —— 它把「未传」与「显式 false」
- * 当作两条不同的分支：
- *
- * ```
- * orientation 合法              → 用它
- * 否则 vertical 是布尔           → vertical ? 'vertical' : 'horizontal'
- * 否则 context.vertical 是布尔   → 同上（ConfigProvider 的 flex.vertical 全局配置）
- * 否则                           → 'horizontal'
- * ```
- *
- * 若 `vertical` 被转成 `false`，`<ConfigProvider><Flex /></ConfigProvider>` 的
- * **全局配置回落会静默失效**（context.vertical 被「显式 false」短路）。
- * 声明 default（哪怕值是 `undefined`）会让 Vue 走 `hasDefault` 分支、跳过转换。
- */
 const props = withDefaults(defineProps<FlexProps>(), {
-  prefixCls: undefined,
+  // An omitted boolean must permit the current Provider default.
   vertical: undefined,
-  orientation: undefined,
   wrap: undefined,
-  justify: undefined,
-  align: undefined,
-  flex: undefined,
-  gap: undefined,
-  component: undefined,
 });
+defineSlots<{ default?: FlexSlot }>();
 
-// context 的组件配置（antd 的 ctxFlex）。direction 的响应式边界见 D27 ——
-// 与 divider 同一取舍（快照），登记在 README.md §7。
-const {
-  getPrefixCls,
-  direction,
-  className: contextClassName,
-  style: contextStyle,
-  vertical: contextVertical,
-} = useComponentConfig<FlexConfig>('flex');
-
+const config = useComponentConfig<FlexConfig>('flex');
 const attrs = useAttrs();
-
-const prefixCls = computed(() => getPrefixCls('flex', props.prefixCls));
-
-// ---------------------------------------------------------------------------
-// 方向：orientation > vertical > context.vertical（复用三方共享的合并器）
-// ---------------------------------------------------------------------------
-
-const mergedOrientation = useOrientation(
+const theme = inject(ThemeContextKey, undefined);
+const prefix = computed(() => config.getPrefixCls('flex', props.prefixCls));
+const orientation = useOrientation(
   () => props.orientation,
-  () => props.vertical ?? contextVertical,
+  () => props.vertical ?? config.vertical,
   () => undefined,
 );
-const mergedVertical = computed(() => mergedOrientation.value[1]);
 
-// ---------------------------------------------------------------------------
-// 类名
-//
-// 顺序逐字来自 antd：ctxFlex.className → prefixCls → 语义类（吃 mergedVertical）
-// → gap / vertical / rtl。调用方 `class` 是 Vue 原生 attrs，由 `rootAttrs` 的
-// `mergeProps` 并进同一绑定（Vue 会合并 class），与 divider 同构。
-// ---------------------------------------------------------------------------
-
-const rootClass = computed(() => {
-  const cls = prefixCls.value;
-  return [
-    contextClassName,
-    cls,
-    createFlexClassNames(cls, { ...props, vertical: mergedVertical.value }),
-    {
-      [`${cls}-gap-${props.gap}`]: isPresetSize(props.gap),
-      [`${cls}-vertical`]: mergedVertical.value,
-      [`${cls}-rtl`]: direction === 'rtl',
-    },
-  ];
-});
-
-// ---------------------------------------------------------------------------
-// 样式
-//
-// 合并顺序逐字来自 antd：`{ ...ctxFlex?.style, ...style }`，然后：
-//   - isNonNullable(flex)                    → style.flex
-//   - isNonNullable(gap) && !isPresetSize(gap) → style.gap（**0 也算**）
-//
-// ⚠️ gap 数字必须转 px 字符串（Vue patchStyle 不做转换，PITFALLS 32）；
-//    `0` 输出 `'0'`（React dangerousStyleValue 对 0 不补单位）。
-// ---------------------------------------------------------------------------
-
-/** 数字 → CSS 长度。与 divider 的 `toCssLength` 同一判据（0 → '0'）。 */
-const toCssLength = (value: string | number): string =>
-  typeof value === 'number' ? (value === 0 ? '0' : `${value}px`) : value;
-
-/** ConfigProvider 的 `flex.style` —— 最低优先级。（`contextStyle` 是普通值，不是 ref。） */
-const providerStyleAttrs = computed(() => styleAttrs(contextStyle));
-
-/**
- * 由 `flex` / `gap` prop 派生的内联样式 —— **最高**优先级。
- *
- * ⚠️ antd 的顺序是 `{...ctxFlex.style, ...style, flex, gap}`：派生的 `flex` / `gap`
- *    排在调用方 `style` **之后** ⇒ 同名键由 prop 胜出。这里用 `mergeProps` 的
- *    「后者胜」保持同一顺序（调用方 `style` 现在是 Vue 原生 attrs）。
- * ⚠️ `flex` 是 **unitless** 属性（React 的 unitlessNumbers 含 flex）：
- *    `flex: 1` → `'1'`，不是 `'1px'`。基线用例 `flex:number` 钉死这一条。
- */
-const derivedStyleAttrs = computed(() => {
-  const style: CSSProperties = {};
-  if (isNonNullable(props.flex)) {
-    const flex = props.flex;
-    style.flex = typeof flex === 'number' ? String(flex) : flex;
-  }
-  if (isNonNullable(props.gap) && !isPresetSize(props.gap)) {
-    const gap = props.gap;
-    style.gap = typeof gap === 'number' ? toCssLength(gap) : gap;
-  }
-  return styleAttrs(style);
-});
-
-/**
- * 根元素的属性对象。
- *
- * ⚠️ `justify` / `wrap` / `align` 已声明为 props、天然不进 attrs，
- * 与 antd 的 `omit(othersProps, ['justify','wrap','align'])` 同一语义。
- * ⚠️ 根 `class` / `style` 是 **Vue 原生 attrs**；`mergeProps` 的顺序即合并优先级：
- *    Provider style < 调用方 attrs（含 class / style） < 派生 flex / gap。
- */
-const rootAttrs = computed(() =>
-  mergeProps({ class: rootClass.value }, providerStyleAttrs.value, attrs, derivedStyleAttrs.value),
+// ThemeProvider can supply tokens without writing document-level variables.
+// Scope only the three aliases Flex consumes; nested default themes reset them too.
+const themeStyle = computed<CSSProperties>(() =>
+  theme
+    ? {
+        '--apollo-padding-xs': `${theme.token.value.paddingXS}px`,
+        '--apollo-padding': `${theme.token.value.padding}px`,
+        '--apollo-padding-lg': `${theme.token.value.paddingLG}px`,
+      }
+    : {},
 );
+const derivedStyle = computed<CSSProperties>(() => {
+  const style: CSSProperties = {};
+  if (props.flex !== undefined && props.flex !== null) style.flex = String(props.flex);
+  if (props.gap !== undefined && props.gap !== null && !isPresetSize(props.gap)) {
+    style.gap = typeof props.gap === 'number' ? `${props.gap}px` : props.gap;
+  }
+  return style;
+});
 
-// ---------------------------------------------------------------------------
-// 暴露：与 antd 的 `RefAttributes<HTMLElement>` 对应
-// ---------------------------------------------------------------------------
+// Read current attrs/config in render. Native styles retain all Vue forms.
+const rootAttrs = () => {
+  const { style: nativeStyle, dir: nativeDir, ...rest } = attrs;
+  const direction =
+    typeof nativeDir === 'string' ? nativeDir : nativeDir === null ? undefined : config.direction;
+  const cls = prefix.value;
+  const style = normalizeStyle([themeStyle.value, config.style, nativeStyle, derivedStyle.value]);
+  return mergeProps(
+    {
+      class: [
+        config.className,
+        cls,
+        createFlexClassNames(cls, { ...props, vertical: orientation.value[1] }),
+        {
+          [`${cls}-gap-${props.gap}`]: isPresetSize(props.gap),
+          [`${cls}-vertical`]: orientation.value[1],
+          [`${cls}-rtl`]: direction === 'rtl',
+        },
+      ],
+    },
+    rest,
+    { dir: direction, ...styleAttrs(typeof style === 'object' ? style : undefined) },
+  );
+};
 
-const rootRef = ref<HTMLElement | null>(null);
-defineExpose({ nativeElement: rootRef });
-
-/** 根元素标签。antd 的 `component ?? 'div'`。 */
+const rootRef = shallowRef<Element | ComponentPublicInstance | null>(null);
+const nativeElement = computed<HTMLElement | null>(() => {
+  const value = rootRef.value;
+  const element: unknown = value && '$el' in value ? value.$el : value;
+  return typeof HTMLElement !== 'undefined' && element instanceof HTMLElement ? element : null;
+});
+defineExpose({ nativeElement });
 const rootTag = computed(() => props.component ?? 'div');
 </script>
 
 <template>
-  <component :is="rootTag" ref="rootRef" v-bind="rootAttrs">
+  <component :is="rootTag" ref="rootRef" v-bind="rootAttrs()">
     <slot />
   </component>
 </template>

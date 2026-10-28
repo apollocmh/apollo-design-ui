@@ -1,11 +1,11 @@
 ---
 order: 5
 title:
-  zh-CN: 调试专用
-  en-US: Debug
+  zh-CN: 布局块
+  en-US: Layout blocks
 ---
 
-垂直 / 水平两种形态的空隙基线（antd 标记为 `debug` 的调试 demo）。
+观察纵向和横向不同高度的装饰块；不为每个子项增加包裹元素。
 
 ```vue
 <script setup lang="ts">
@@ -14,7 +14,14 @@ import { Flex } from '@apollo-design/ui';
 
 <template>
   <Flex vertical>
-    <div v-for="i in 4" :key="i" :style="{ height: '60px' }" />
+    <div v-for="i in 4" :key="i" :style="{ height: '60px', backgroundColor: i % 2 ? 'var(--apollo-color-primary)' : 'var(--apollo-color-primary-bg-hover)' }" />
+  </Flex>
+  <Flex style="margin-top: 20px">
+    <div
+      v-for="i in 4"
+      :key="i"
+      :style="{ width: '25%', height: i % 2 ? '60px' : '40px', backgroundColor: i % 2 ? 'var(--apollo-color-primary)' : 'var(--apollo-color-primary-bg-hover)' }"
+    />
   </Flex>
 </template>
 ```

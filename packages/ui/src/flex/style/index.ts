@@ -1,36 +1,6 @@
-/**
- * Flex 的样式生成。
- *
- * 契约来源：antd 6.6.4 的 `es/flex/style/index.js`（genFlexStyle + genFlexGapStyle +
- * genFlexWrapStyle + genAlignItemsStyle + genJustifyContentStyle）。
- * 选择器结构、属性、取值来源**逐条对齐** —— 从 antd 的真实产物（cssinjs extractStyle）
- * 提取，不是推演：
- *
- * ```css
- * .apollo-flex{display:flex;margin:0;padding:0;}
- * .apollo-flex-vertical{flex-direction:column;}        ← & 复合
- * .apollo-flex-rtl{direction:rtl;}                     ← & 复合
- * .apollo-flex:empty{display:none;}                    ← & 复合（伪类）
- * .apollo-flex-gap-small{gap:...;}
- * .apollo-flex-gap-medium,.apollo-flex-gap-middle{gap:...;}   ← antd 的 &-gap-medium, &-gap-middle
- * .apollo-flex-gap-large{gap:...;}
- * .apollo-flex-wrap-wrap{flex-wrap:wrap;}              ← 枚举展开（3 个）
- * .apollo-flex-align-center{align-items:center;}       ← 枚举展开（10 个）
- * .apollo-flex-justify-flex-start{justify-content:flex-start;} ← 枚举展开（12 个）
- * ```
- *
- * ── 与 antd 的两处**有意**差异 ────────────────────────────────────────────────
- *
- * 1. 没有 CSS-in-JS 的 `:where(.css-dev-only-...)` hash 包裹（差异 D5）。
- * 2. gap 三档输出 `var(--apollo-padding-xs)` 等，而 antd 在 cssVar 模式下输出
- *    解析后的定值。这是零运行时的必然结果（D7 家族）：变量随主题自适应。
- *
- * ── 这个函数没有证明什么 ──────────────────────────────────────────────────────
- *   - 没证明**视觉**正确（L6 的逐像素比对负责）。
- *   - 没证明变量名存在（B7 校验）。
- *   - antd 的 `resetStyle: false`：Flex **不吃** resetComponent 的字体样式
- *     （上游 issue 46403）—— 所以这里没有 color / font-size / line-height。
- */
+// Initial class/rule reference: Ant Design 6.6.4 (MIT); docs/analysis/flex.md.
+// Current behavior is defined by Apollo public contracts.
+/** Static Flex CSS. Visual gaps consume the current scoped alias variables. */
 
 import { token2CSSVar } from '@apollo-design/theme';
 import { alignItemsValues, flexWrapValues, justifyContentValues } from '../utils';
@@ -59,17 +29,16 @@ export function genFlexStyle(prefixCls: string): string {
     // ---- genFlexStyle ------------------------------------------------------
     `${cls}{`,
     `  display:flex;`,
+    `  align-items:flex-start;`,
     `  margin:0;`,
     `  padding:0;`,
     `}`,
     `${cls}-vertical{`,
     `  flex-direction:column;`,
+    `  align-items:stretch;`,
     `}`,
     `${cls}-rtl{`,
     `  direction:rtl;`,
-    `}`,
-    `${cls}:empty{`,
-    `  display:none;`,
     `}`,
     '',
     // ---- genFlexGapStyle ---------------------------------------------------

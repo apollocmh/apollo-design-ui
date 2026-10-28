@@ -5,7 +5,7 @@ title:
   en-US: Wrap
 ---
 
-`wrap` 使元素多行显示（`flex-wrap: wrap`）。
+真实按钮按可用宽度自动换行，保留原生 Tab 顺序。
 
 ```vue
 <script setup lang="ts">

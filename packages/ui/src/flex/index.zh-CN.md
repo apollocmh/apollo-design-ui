@@ -4,82 +4,42 @@ title: Flex
 subtitle: 弹性布局
 ---
 
-用于对齐的弹性布局容器。
-
-## 何时使用
-
-- 适合设置元素之间的间距。
-- 适合设置各种水平、垂直对齐方式。
-
-### 与 Space 组件的区别
-
-- Space 为内联元素提供间距，其本身会为每一个子元素添加包裹元素用于内联对齐。适用于行、列中多个子元素的等距排列。
-- Flex 为块级元素提供间距，其本身不会添加包裹元素。适用于垂直或水平方向上的子元素布局，并提供了更多的灵活性和控制能力。
+Flex 直接对完整 Vue 内容进行排列和对齐，不为每个子项增加包裹元素。需要为内联子项分别提供间距宿主时可使用 Space。
 
 ## 代码演示
 
-见 [`demo/`](./demo)（6 个，覆盖 antd 的主要用户场景，含 `debug` 调试 demo）。
-
-| demo | 内容 |
-|---|---|
-| `basic` | 基本布局（`vertical` 切换主轴方向） |
-| `align` | `justify` / `align` 对齐方式 |
-| `gap` | 预设间隙三档与自定义数字间隙 |
-| `wrap` | 自动换行（`wrap`） |
-| `combination` | 嵌套组合使用 |
-| `debug` | 调试专用（垂直 / 水平空隙基线） |
+六组成对 Demo 展示方向、对齐、间距、换行、响应式项目摘要和布局块。演示中的原生控件具有独立名称，保留正常键盘操作。
 
 ## API
 
-> 自 antd@5.10.0 起提供。Flex 默认行为在水平模式下为向上对齐，在垂直模式下为拉伸对齐。
+| 参数 | 说明 | 类型 | 默认值 |
+|---|---|---|---|
+| prefixCls | 完整类名前缀；自定义前缀由调用方提供对应静态 CSS | `string` | 当前 ConfigProvider，兜底 `apollo-flex` |
+| vertical | 主轴是否垂直；未传时读取当前 `flex.vertical` | `boolean` | `undefined` |
+| orientation | 优先于 vertical 和 Provider 的方向 | `'horizontal' \| 'vertical'` | 最终兜底 horizontal |
+| wrap | 多行排列；true 等于 wrap | `boolean \| 'wrap' \| 'nowrap' \| 'wrap-reverse'` | 单行 |
+| justify | 主轴 CSS 对齐方式 | `FlexJustify` | 原生 flex-start 行为 |
+| align | 交叉轴 CSS 对齐方式 | `FlexAlign` | 横向 flex-start；纵向 stretch |
+| flex | CSS 简写，数字无单位 | `string \| number` | — |
+| gap | 像素数字、CSS 长度或预设 | `'small' \| 'medium' \| 'middle' \| 'large' \| string \| number` | — |
+| component | 原生标签，或将 attrs/default slot 转发到所属宿主的 Vue 组件 | `Component \| string` | `'div'` |
 
-### Props
+方向优先级为 `orientation` → 显式 `vertical` → 当前 ConfigProvider `flex.vertical` → horizontal。Provider 的 `flex.className`、`flex.style`、vertical、direction 和前缀均响应当前配置。显式原生 `dir` 优先于 Provider 方向。
 
-| 参数 | 说明 | 类型 | 默认值 | 全局配置 |
-|---|---|---|---|---|
-| vertical | flex 主轴的方向是否垂直（`flex-direction: column`） | `boolean` | `false` | ✅（`flex.vertical`） |
-| orientation | 主轴的方向类型。优先级高于 `vertical` | `'horizontal' \| 'vertical'` | `'horizontal'` | × |
-| wrap | 设置元素单行显示还是多行显示 | `flex-wrap \| boolean` | — | × |
-| justify | 设置元素在主轴方向上的对齐方式 | `justify-content` | — | × |
-| align | 设置元素在交叉轴方向上的对齐方式 | `align-items` | — | × |
-| flex | flex CSS 简写属性（数字按 unitless 处理） | `flex` | — | × |
-| gap | 设置网格之间的间隙。预设串走类名，其它值内联 | `'small' \| 'medium' \| 'large' \| string \| number` | — | × |
-| component | 自定义元素类型 | `Component \| string` | `'div'` | × |
-| prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-flex` | × |
+### 插槽、事件与状态
 
-> **根节点原生属性**：根元素的 `class` / `style` 是 **Vue 原生 attrs**（不是 Props）——
-> `<Flex class="..." :style="..." />`。合并优先级（低 → 高）：
-> ConfigProvider `flex.style` → 调用方原生 `style` → 由 `flex` / `gap` prop 派生的内联样式。
+仅提供 `#default`，支持零、文本、多个 VNode 与 Fragment 等完整 Vue 内容。没有业务 emits 或 v-model。根原生监听器接收原始 DOM 事件且只触发一次；调用方的输入、链接、按钮拥有其原生语义、焦点和键盘行为。
+
+根 `class`、`style`、id、data/ARIA、tabindex 和监听器走 Vue attrs。style 接受字符串、对象和数组。优先级为当前主题别名 → Provider `flex.style` → 原生 `style` → `flex`/非预设 `gap` 派生值。外观更新保留宿主与业务 key 的子项；修改 `component` 按 Vue 正常替换其所属宿主。空根仍挂载，保留布局与原生语义。
 
 ### Ref
 
 | 名称 | 类型 | 说明 |
 |---|---|---|
-| nativeElement | `HTMLElement \| null` | 根元素（对应 antd 的 forwardRef ref） |
+| nativeElement | `HTMLElement \| null` | 当前唯一 HTML 宿主，含 Vue 根组件的真实元素；挂载前、卸载后或没有唯一 HTML 宿主时为 null |
 
-### Slots
-
-| 名称 | 说明 |
-|---|---|
-| default（默认） | 子元素。对应 antd 的 `children` |
+自定义 Vue 组件负责自己的 attrs/slot 转发；Flex 暴露实际 HTML 宿主，不暴露组件实例。Fragment、纯文本和非 HTML 根不提供 `nativeElement`。
 
 ## Theme
 
-### Component Token
-
-Flex **没有 Component Token**（与 antd 逐字一致：`prepareComponentToken = () => ({})`）。
-
-gap 三档来自别名 token 派生（antd 的 `flexToken`，**用户不可通过 `theme.components.Flex` 覆盖**）：
-
-| 派生 token | 来源 | CSS 落地 |
-|---|---|---|
-| flexGapSM | `paddingXS` | `var(--apollo-padding-xs)` |
-| flexGap | `padding` | `var(--apollo-padding)` |
-| flexGapLG | `paddingLG` | `var(--apollo-padding-lg)` |
-
-## 设计说明
-
-- `justify` / `wrap` / `align` 只产生类名，**不透传到 DOM**（与 antd 的 `omit` 语义一致）。
-- `gap: 0` 会写内联 `style.gap`（`isNonNullable` 判据）—— 与 Space 的 `size: 0`（不产生任何间距节点）行为不同，这是上游的原始语义，逐字对齐。
-- `flex` 是 unitless 属性：数字 `1` 输出 `'1'`（不是 `'1px'`）。
-- antd 的 `resetStyle: false`：Flex 不吃 resetComponent 的字体样式（上游 issue 46403），我们同样不输出。
+Flex 没有组件 Token。small 消费当前 `paddingXS`，medium/middle 消费 `padding`，large 消费 `paddingLG`。存在 ThemeContext 时在 Flex 根作用域写入这三个别名变量，支持不全局注入的 ThemeProvider 及嵌套默认主题复位。原生 style 的自定义属性可局部覆盖别名。数字 gap 支持零与小数。

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-// 对齐 antd 的 align demo（Segmented 用原生 select 等价替换，缺口见 README §7）
-
 import type { FlexAlign, FlexJustify } from '@apollo-design/ui';
 import { Flex } from '@apollo-design/ui';
 import { ref } from 'vue';
@@ -19,8 +17,8 @@ const align = ref<FlexAlign>('flex-start');
 const boxStyle = {
   width: '100%',
   height: '120px',
-  borderRadius: '6px',
-  border: '1px solid #40a9ff',
+  borderRadius: 'var(--apollo-border-radius)',
+  border: '1px solid var(--apollo-color-border)',
 };
 </script>
 
@@ -35,10 +33,10 @@ const boxStyle = {
       <option v-for="o in alignOptions" :key="o" :value="o">{{ o }}</option>
     </select>
     <Flex :style="boxStyle" :justify="justify" :align="align">
-      <button type="button">Primary</button>
-      <button type="button">Primary</button>
-      <button type="button">Primary</button>
-      <button type="button">Primary</button>
+      <button type="button">Task</button>
+      <button type="button">Task</button>
+      <button type="button">Task</button>
+      <button type="button">Task</button>
     </Flex>
   </Flex>
 </template>

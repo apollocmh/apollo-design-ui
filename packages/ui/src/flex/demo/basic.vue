@@ -1,21 +1,22 @@
 <script setup lang="ts">
-// 对齐 antd 的 basic demo（Radio.Group 用原生 radio 等价替换，缺口见 README §7）
-
 import { Flex } from '@apollo-design/ui';
-import { ref } from 'vue';
+import { ref, useId } from 'vue';
 
 const value = ref<'horizontal' | 'vertical'>('horizontal');
+const directionName = useId();
 const baseStyle = { width: '25%', height: '54px' };
 </script>
 
 <template>
-  <Flex gap="medium" vertical>
-    <label style="display: flex; gap: 12px">
-      <input v-model="value" type="radio" value="horizontal" /> horizontal
-      <input v-model="value" type="radio" value="vertical" /> vertical
-    </label>
+  <Flex gap="middle" vertical>
+    <fieldset style="margin: 0; padding: 0; border: 0; min-width: 0">
+      <legend>Direction</legend>
+      <label v-for="direction in ['horizontal', 'vertical']" :key="direction" style="margin-inline-end: 12px">
+        <input v-model="value" type="radio" :name="directionName" :value="direction" /> {{ direction }}
+      </label>
+    </fieldset>
     <Flex :vertical="value === 'vertical'">
-      <div v-for="i in 4" :key="i" :style="{ ...baseStyle, backgroundColor: i % 2 ? '#1677ff' : '#1677ffbf' }" />
+      <div v-for="i in 4" :key="i" :style="{ ...baseStyle, background: i % 2 ? 'var(--apollo-color-primary)' : 'var(--apollo-color-primary-bg-hover)' }" />
     </Flex>
   </Flex>
 </template>

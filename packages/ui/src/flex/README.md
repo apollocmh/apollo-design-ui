@@ -1,51 +1,11 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
-
 # Flex 实现说明
 
-## 1. 对应 antd 组件
+现行契约见双语 API 与仓库规范。Flex 使用 Vue SFC、当前 ConfigProvider/ThemeContext 和原生 default slot；根 attrs 在 render 中读取，不按子项包装或模拟 React 生命周期。
 
-- antd 6.6.4 · `es/flex/`（只读参照，H2）
-- 分析产物：`docs/analysis/flex.md`（G1，先于实现存在）
+公开 props 共九个；无业务 emits、v-model 或组件 Token。保留 Flex/default/AFlex、现有类型与样式工具导出。语义类覆盖全部 CSS 值；横向默认顶部、纵向默认拉伸。空宿主保留布局。`nativeElement` 是实际单一 HTMLElement 或 null，自定义根的组件实例不外泄。
 
-## 2. 与 antd 的行为差异清单
+Preset gap 从当前主题读取 paddingXS/padding/paddingLG 并仅在所属根写三项 alias；CSS 仍静态生成。Provider 默认样式在前，原生样式在后，flex/gap 派生 prop 优先级保持公开约定。
 
-（同步到 `COMPATIBILITY.md` §9；分类依据 AGENTS.md §4.3）
+全部六组成对 Demo 使用本地内容与有名称的原生控件。整改清单、红灯和验收边界见 [2026-10-29 审计](../../../../docs/audit/2026-10-29-flex-contract-audit.md)，开发期行为修正见 [迁移记录](../../../../docs/migrations/flex-contracts.md)。
 
-| # | 差异 | 分类 | 证据 |
-|---|---|---|---|
-| D6 | 默认前缀 `apollo-flex` vs antd 的 `ant-flex` | INTENDED（裁决 `prefix-cls-default` = A） | L4 `prefix-cls:no-props` |
-| D5 | 无 CSS-in-JS hash 包裹类名 | INTENDED（零运行时管线的必然结果） | L4 全部用例 |
-| — | `flex` / `gap` 数值的序列化差异（SSR 字符串 vs 真实 DOM CSSOM：`flex:1` → `flex: 1 1 0%`、`gap:0` → `gap: 0px`） | PLATFORM（CSSOM 规范化，语义等价；L4 allow 登记） | L4 `flex:number` / `gap:zero` |
-
-无 BUG 类差异。
-
-## 3. .vue / .tsx 选择
-
-- 使用 **`.vue` SFC**。Flex 是简单布局容器，模板表达能力足够（COMPONENT-RULES.md §2）。
-- 语义类名生成独立为 `utils.ts`（纯函数，对齐 antd 的 `es/flex/utils.js`，可被 L1 直接测试）。
-
-## 4. Component Token 清单
-
-- **0 个**（与 antd 逐字一致：`prepareComponentToken = () => ({})`）。
-- gap 三档来自别名 token 派生（antd `flexToken`：`flexGapSM=paddingXS`、`flexGap=padding`、
-  `flexGapLG=paddingLG`），以 `var(--apollo-padding-*)` 消费，B7 校验变量存在。
-
-## 5. 共享层影响
-
-- `useOrientation` 的第三个消费者 → 按 `space/useOrientation.ts` 的预定计划提升到
-  `_internal/use-orientation.ts`（三次法则）；space 侧留 re-export 垫片，divider 的
-  内联实现留待其自己的维护流处理。
-- 复用 `space/gapSize.ts` 的 `isPresetSize`（antd 侧两者同源 `_util/gapSize.js`）。
-
-## 6. 类型面的登记偏离
-
-- `gap` 刻意不用 `LiteralUnion`：`(string & {})` 交叉类型会让 SFC 编译器把运行时
-  prop 推成 `String | Object`，挂 Number 触发开发期告警。拍平为 `SizeType | string | number`。
-
-## 7. 已知缺口
-
-- antd 的 demo 依赖 `Radio.Group` / `Segmented` / `Card` / `Typography` / `Slider`，
-  这些组件尚未落地。我们的 demo 用原生元素等价替换（保留被演示的 Flex 行为）；
-  等对应组件落地后可回补 antd 同款交互控件。
-- `direction` 的响应式边界：与 divider 同一取舍（快照读取，D27）；
-  Flex 的 rtl 场景极少在运行中切换方向，登记不修。
+历史参考仍保留 `docs/analysis/flex.md`、39 个 DOM 场景与 15 个 React 视觉输入。它们不定义本轮规格；DOM 差异须逐项说明，不更新原始参考快照。任意自定义 prefixCls 仍须由消费者加载对应 CSS。
