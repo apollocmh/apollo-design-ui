@@ -125,3 +125,5 @@ Badge最终交付：47b98296 / Docs部署40701370080，线上32通过；此后�
 四组件正式视觉已批准222张：Descriptions51/Breadcrumb51/Timeline78/Grid42，清洁a47d96ec；逐图实际审阅及171张rawRGBA完全一致的继承关系见evidence/four-unit-native-visual-acceptance.json。原1692份PNG和537条既存批准记录保持，当前批准759/1602、待验收843；原537真实回归仍在运行，Docs验收继续，不提前增加13个已完整交付的计数。
 
 当前交付里程碑：Descriptions/Breadcrumb/Timeline/Grid四单元已统一验收，交付数17/72；52个发布Demo模板、222张批准后的真实重渲染raw精确、既有537回归、当前CSS/L7与Docs161+32均有独立证据，根严格检查也在冻结2f47f423通过。原1692份PNG未改。Space关联链、其他54单元与13基础包继续。证据four-unit-final-acceptance.json；新进展页部署回执另记。
+
+最新线上回执：faa80fed / 部署40755814408成功，CI Docs161与全部包/L7 151检查零失败，真实线上32通过；中英文标题与17单元计数已用修正后的locale驱动明确验证。新脚本保留所有原检查，修正旧导航重置中文导致的英文覆盖缺口。证据evidence/four-unit-docs-publication.json。

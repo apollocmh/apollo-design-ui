@@ -685,3 +685,5 @@ Descriptions5ab9b3c4、Breadcrumb40ec3962、Timeline3ce8d1d2、Grid04be6282与Sp
 ### 2026-10-29 · 四组件统一验收完成
 
 Descriptions、Breadcrumb、Timeline、Grid的完整清单已核对并统一验收。52个发布Demo模板、222张正式审阅批准及批准后清洁重渲染raw精确、既存537回归、69样式产物与真实CSS消费者、根严格/UI L7及Docs161+32分别通过，原1692份PNG保持。完整交付计数由13升17/72，759/1602视觉批准。Addon下划线2f47f423已单独源/发布验收，Space仍待Input当前主题/autoSize/覆盖链与最终75图，不提前标全完。[最终范围与证据](audit/evidence/four-unit-final-acceptance.json)。
+
+四单元进展已实际发布：faa80fed / [部署40755814408](https://github.com/apollocmh/apollo-design-ui/actions/runs/40755814408)成功；CI全部包构建、L7 151项零失败/待定（67不适用）、Docs161通过。线上原32条通过且零页面/Vue错误；验收脚本修正每次导航强制中文的问题后，新增可见中英文标题与17单元计数断言，两个实际语言都通过。原断言保留，22个Demo深链404为既有SPA回退。[线上回执](audit/evidence/four-unit-docs-publication.json)。

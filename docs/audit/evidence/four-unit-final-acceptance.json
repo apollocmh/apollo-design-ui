@@ -52,7 +52,14 @@
     "realBrowser": 32,
     "realBrowserErrors": 0,
     "evidence": "four-unit-docs-local-acceptance.json",
-    "updatedLivePublication": "Pending next deployment; implementation and API demos already live at b485d136"
+    "updatedLivePublication": {
+      "sourceCommit": "faa80fed",
+      "workflowRunId": 40755814408,
+      "liveChecks": 32,
+      "errors": 0,
+      "bothDistinctLocalesAnd17CountVerified": true,
+      "evidence": "four-unit-docs-publication.json"
+    }
   },
   "deliveryCount": {
     "before": 13,

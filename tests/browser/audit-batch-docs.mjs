@@ -6,6 +6,7 @@ import { launchBrowser } from '../visual/stabilize.mjs';
 
 const base = (process.env.DOCS_URL ?? 'http://127.0.0.1:4480/apollo-design-ui').replace(/\/$/, '');
 const expectedStatus = Number(process.env.DOCS_DEMO_STATUS ?? 200);
+const expectedAcceptedUnits = Number(process.env.DOCS_ACCEPTED_UNITS ?? 17);
 const units = [
   { name: 'descriptions', count: 13, demos: ['basic', 'custom-label'] },
   { name: 'breadcrumb', count: 11, demos: ['native', 'overlay'] },
@@ -16,6 +17,7 @@ const units = [
 ];
 const results = [],
   errors = [],
+  localeChecks = [],
   fallbackDocuments = new Set();
 const { browser } = await launchBrowser();
 try {
@@ -23,7 +25,8 @@ try {
   page.setDefaultTimeout(15000);
   await page.addInitScript(() => {
     localStorage.setItem('apollo-site-theme', 'light');
-    localStorage.setItem('apollo-site-locale', 'zh-CN');
+    if (!localStorage.getItem('apollo-site-locale'))
+      localStorage.setItem('apollo-site-locale', 'zh-CN');
   });
   page.on('pageerror', (error) => errors.push(error.message));
   page.on('response', (response) => {
@@ -130,8 +133,30 @@ try {
       const response = await page.goto(`${base}/guide/audit-progress`);
       assert.equal(response.status(), 200);
       const main = page.locator('main');
+      const titles = {
+        'zh-CN': '全库进度：按完整单元计，不按测试数量计',
+        'en-US': 'Library-wide progress by complete audit unit',
+      };
+      await main.getByRole('heading', { name: titles[locale], exact: true }).waitFor();
+      const opposite = locale === 'zh-CN' ? 'en-US' : 'zh-CN';
+      assert.equal(
+        await main.getByRole('heading', { name: titles[opposite], exact: true }).count(),
+        0,
+      );
+      const delivered = (
+        await main
+          .locator('table')
+          .first()
+          .getByRole('row')
+          .nth(1)
+          .getByRole('cell')
+          .last()
+          .innerText()
+      ).trim();
+      assert.match(delivered, new RegExp(`^${expectedAcceptedUnits}(?:个|\\s)`));
       await main.getByText('1602', { exact: false }).first().waitFor();
       assert.ok((await main.textContent()).includes('69'));
+      localeChecks.push({ locale, heading: titles[locale], delivered });
     });
   assert.deepEqual(errors, []);
   assert.ok(
@@ -145,6 +170,8 @@ try {
       {
         base,
         expectedDemoStatus: expectedStatus,
+        expectedAcceptedUnits,
+        localeChecks,
         results,
         errors,
         fallbackDocuments: [...fallbackDocuments],

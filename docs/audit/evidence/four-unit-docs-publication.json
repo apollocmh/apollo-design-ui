@@ -1,0 +1,201 @@
+{
+  "sourceCommit": "faa80fed84fb3ece2dc2ce93d42e2919156fb57e",
+  "workflowRunId": 40755814408,
+  "workflowUrl": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40755814408",
+  "liveUrl": "https://apollocmh.github.io/apollo-design-ui/guide/audit-progress",
+  "conclusion": "success",
+  "jobs": {
+    "build": 123054299310,
+    "deploy": 123056191547
+  },
+  "ci": {
+    "components": 72,
+    "demos": 1008,
+    "guides": 8,
+    "docsTests": 161,
+    "allPackageBuilds": "passed",
+    "L7": {
+      "checks": 151,
+      "failed": 0,
+      "pending": 0,
+      "notApplicable": 67
+    }
+  },
+  "live": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "expectedDemoStatus": 404,
+    "expectedAcceptedUnits": 17,
+    "localeChecks": [
+      {
+        "locale": "zh-CN",
+        "heading": "全库进度：按完整单元计，不按测试数量计",
+        "delivered": "17个已完整验收；Descriptions / Breadcrumb / Timeline / Grid 本批通过"
+      },
+      {
+        "locale": "en-US",
+        "heading": "Library-wide progress by complete audit unit",
+        "delivered": "17 fully accepted; Descriptions, Breadcrumb, Timeline and Grid pass this batch"
+      }
+    ],
+    "results": [
+      {
+        "name": "descriptions: API and all 13 demo cards",
+        "passed": true
+      },
+      {
+        "name": "descriptions/basic/light",
+        "passed": true
+      },
+      {
+        "name": "descriptions/basic/dark",
+        "passed": true
+      },
+      {
+        "name": "descriptions/custom-label/light",
+        "passed": true
+      },
+      {
+        "name": "descriptions/custom-label/dark",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb: API and all 11 demo cards",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/native/light",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/native/dark",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/overlay/light",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/overlay/dark",
+        "passed": true
+      },
+      {
+        "name": "timeline: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "timeline/horizontal-debug/light",
+        "passed": true
+      },
+      {
+        "name": "timeline/horizontal-debug/dark",
+        "passed": true
+      },
+      {
+        "name": "timeline/native-slots/light",
+        "passed": true
+      },
+      {
+        "name": "timeline/native-slots/dark",
+        "passed": true
+      },
+      {
+        "name": "grid: API and all 13 demo cards",
+        "passed": true
+      },
+      {
+        "name": "grid/responsive/light",
+        "passed": true
+      },
+      {
+        "name": "grid/responsive/dark",
+        "passed": true
+      },
+      {
+        "name": "grid/playground/light",
+        "passed": true
+      },
+      {
+        "name": "grid/playground/dark",
+        "passed": true
+      },
+      {
+        "name": "space: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "space/compact/light",
+        "passed": true
+      },
+      {
+        "name": "space/compact/dark",
+        "passed": true
+      },
+      {
+        "name": "space/compact-button-vertical/light",
+        "passed": true
+      },
+      {
+        "name": "space/compact-button-vertical/dark",
+        "passed": true
+      },
+      {
+        "name": "menu/native-actions/light",
+        "passed": true
+      },
+      {
+        "name": "menu/native-actions/dark",
+        "passed": true
+      },
+      {
+        "name": "Menu native button executes once through container Enter",
+        "passed": true
+      },
+      {
+        "name": "Descriptions label help is reachable by keyboard",
+        "passed": true
+      },
+      {
+        "name": "Timeline slot reversal preserves the actual editor and draft",
+        "passed": true
+      },
+      {
+        "name": "progress/zh-CN",
+        "passed": true
+      },
+      {
+        "name": "progress/en-US",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": [
+      "https://apollocmh.github.io/apollo-design-ui/components/descriptions/demo/basic?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/descriptions/demo/basic?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/descriptions/demo/custom-label?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/descriptions/demo/custom-label?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/breadcrumb/demo/native?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/breadcrumb/demo/native?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/breadcrumb/demo/overlay?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/breadcrumb/demo/overlay?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/timeline/demo/horizontal-debug?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/timeline/demo/horizontal-debug?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/timeline/demo/native-slots?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/timeline/demo/native-slots?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/grid/demo/responsive?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/grid/demo/responsive?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/grid/demo/playground?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/grid/demo/playground?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/space/demo/compact?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/space/demo/compact?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/space/demo/compact-button-vertical?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/space/demo/compact-button-vertical?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/menu/demo/native-actions?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/menu/demo/native-actions?theme=dark"
+    ]
+  },
+  "command": "DOCS_URL=https://apollocmh.github.io/apollo-design-ui DOCS_DEMO_STATUS=404 AUDIT_DOCS_EVIDENCE=/tmp/apollo-docs-faa80fed-live-verified.json node tests/browser/audit-batch-docs.mjs",
+  "exitCode": 0,
+  "verificationScriptSha256": "8b8288b651d07c6b4cda9c777a057ed83399b8da0a19cef1b73dd1159d8bbbad",
+  "driverCorrection": "Prior driver reset locale to zh-CN on every navigation, so its en-US label alone did not verify English. Initialization now preserves the explicitly selected locale; both distinct visible headings and exact 17-unit table values are asserted. All original checks remain.",
+  "scope": "Live publication of four complete units (17/72),759/1602 approved visuals and ongoing Input/Space scope. Not the final whole-library unit/type/visual gate."
+}
