@@ -1,7 +1,6 @@
 import { compactAlgorithm, darkAlgorithm } from '@apollo-design/theme';
 import { ConfigProvider, Flex } from '@apollo-design/ui';
 import { defineComponent, Fragment, h, nextTick, onMounted, ref } from 'vue';
-import original from '../vue/flex.js';
 
 const frame = (name, children) =>
   h(
@@ -33,6 +32,23 @@ const tile = (text, style = {}) =>
     },
     text,
   );
+const boxes = (count, width = '80px') =>
+  Array.from({ length: count }, (_, index) =>
+    h('div', {
+      'aria-hidden': 'true',
+      style: {
+        width,
+        height: '54px',
+        flex: 'none',
+        backgroundColor: index % 2 ? '#1677ffbf' : '#1677ff',
+      },
+    }),
+  );
+const specimen = (name, label, props, children = () => boxes(3)) =>
+  h('section', { style: { marginBlockEnd: '24px' } }, [
+    h('h2', { style: { margin: '0 0 8px', fontSize: '16px' } }, label),
+    h(Flex, { ...props, 'data-flex-specimen': name }, children),
+  ]);
 const NativeHost = defineComponent({
   inheritAttrs: false,
   setup(_, { attrs, slots }) {
@@ -127,9 +143,76 @@ const themed = (name, algorithm) =>
       ),
   );
 export default {
-  ...Object.fromEntries(
-    Object.entries(original).map(([name, render]) => [name, () => frame(name, [render()])]),
-  ),
+  basic: () =>
+    frame('basic', [
+      specimen('basic-vertical', 'Vertical · middle gap', { vertical: true, gap: 'middle' }, () =>
+        boxes(4, '56px'),
+      ),
+      specimen('basic-horizontal', 'Horizontal · middle gap', { gap: 'middle' }, () =>
+        boxes(4, '56px'),
+      ),
+    ]),
+  vertical: () =>
+    frame('vertical', [
+      specimen('vertical-prop', 'vertical=true', { vertical: true, gap: 'small' }),
+      specimen('orientation-vertical', 'orientation=vertical', {
+        orientation: 'vertical',
+        gap: 'small',
+      }),
+      specimen('orientation-wins', 'orientation=horizontal · vertical=true', {
+        orientation: 'horizontal',
+        vertical: true,
+        gap: 'small',
+      }),
+    ]),
+  gap: () =>
+    frame(
+      'gap',
+      ['small', 'middle', 'large', '16px'].map((gap) =>
+        specimen(`gap-${gap}`, `${gap} gap`, { gap }),
+      ),
+    ),
+  wrap: () =>
+    frame('wrap', [
+      specimen('wrap', 'Twelve items · small gap', { wrap: true, gap: 'small' }, () =>
+        boxes(12, '120px'),
+      ),
+    ]),
+  'justify-align': () =>
+    frame('justify-align', [
+      specimen(
+        'justify-between',
+        'Horizontal · space-between · center',
+        {
+          justify: 'space-between',
+          align: 'center',
+          style: { height: '120px', border: '1px solid var(--apollo-color-border)' },
+        },
+        () => boxes(3, '60px'),
+      ),
+      specimen(
+        'justify-center',
+        'Horizontal · center · flex-end',
+        {
+          justify: 'center',
+          align: 'flex-end',
+          gap: 'small',
+          style: { height: '120px', border: '1px solid var(--apollo-color-border)' },
+        },
+        () => boxes(3, '60px'),
+      ),
+      specimen(
+        'justify-around',
+        'Vertical · space-around · center',
+        {
+          vertical: true,
+          justify: 'space-around',
+          align: 'center',
+          style: { height: '240px', border: '1px solid var(--apollo-color-border)' },
+        },
+        () => boxes(3, '40px'),
+      ),
+    ]),
   'default-and-stretch': () =>
     frame(
       'default-and-stretch',
