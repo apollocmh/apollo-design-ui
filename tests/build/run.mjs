@@ -542,6 +542,9 @@ async function checkDefaultThemeCss(dir, name) {
  * 扫描看不到 JS。⚠️ 登记时必须写清赋值点，否则这条会变成「万能后门」。
  */
 const RUNTIME_ASSIGNED_VARS = {
+  // Native Descriptions grid geometry is assigned to the owning dl/item during render.
+  '--apollo-descriptions-columns': 'descriptions/Descriptions.ts（list style, column.value）',
+  '--apollo-descriptions-span': 'descriptions/Descriptions.ts（item style, item.span）',
   // notification 内核的列表内容：测量结果（最新一条的实测宽高）由 NoticeListContent
   // 的内联 style 写入，供堆叠折叠的占位条计算。⚠️ 上游拼写就是 `notificiation`（少一个 t）。
   '--top-notificiation-height': 'notification/engine/NoticeListContent.ts',

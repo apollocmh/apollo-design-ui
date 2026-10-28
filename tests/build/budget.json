@@ -392,8 +392,9 @@
       "id": "space",
       "pkg": "@apollo-design/ui",
       "imports": ["Space"],
-      "budgetKb": 25,
-      "measuredKb": 13.1
+      "budgetKb": 33,
+      "measuredKb": 13.1,
+      "_note": "2026-10-29: e0062edd connects current scoped Alias tokens in Space/Compact/Addon and stable keyed-fragment ownership/native focus restoration, with real compact consumers. Isolated published Space now measures 31.5KB. Accept this documented functional cost under the user's development-stage size decision; only Space's old 25KB cap becomes 33KB. Historical measurement, other 72 caps and the full-library ratio guard remain unchanged. See docs/audit/2026-10-28-space-contract-audit.md."
     },
     {
       "id": "spin",
