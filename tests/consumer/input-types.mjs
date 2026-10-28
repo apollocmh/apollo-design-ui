@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 const toolsRepo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const repo = path.resolve(process.env.INPUT_TYPES_REPO ?? toolsRepo);
 const evidence = process.env.INPUT_TYPES_EVIDENCE ?? '/tmp/apollo-input-published-types.json';
-const temp = mkdtempSync(path.join(tmpdir(), 'apollo-input-published-types-'));
+const temp = realpathSync(mkdtempSync(path.join(tmpdir(), 'apollo-input-published-types-')));
 const compiler = path.join(toolsRepo, 'node_modules/vue-tsc/bin/vue-tsc.js');
 const hash = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
 const inputs = new Map();
@@ -134,7 +134,8 @@ const value=ref('entry');const owner=ref<InputRef|null>(null),area=ref<TextAreaR
 const props:InputProps={size:'middle',status:'warning'};
 const text:TextAreaProps={autoSize:true,rows:2};const password:InputPasswordProps={allowClear:true,action:'click'};
 const search:InputSearchProps={enterButton:true,loading:false};const code:OTPProps={length:4,mask:'*'};const group:InputGroupProps={size:'small',compact:true};
-const aliases:[typeof TextArea,typeof InputPassword,typeof InputSearch,typeof InputOTP,typeof InputGroup]=[Input.TextArea,Input.Password,Input.Search,Input.OTP,Input.Group];void aliases;
+// Standalone exports add install; static members retain the renderable component contract.
+const aliases:[typeof Input.TextArea,typeof Input.Password,typeof Input.Search,typeof Input.OTP,typeof Input.Group]=[TextArea,InputPassword,InputSearch,InputOTP,InputGroup];void aliases;
 </script>
 <template>
   <Input ref="owner" v-model:value="value" v-bind="props"><template #prefix><span>Entry</span></template><template #suffix>{{0}}</template></Input>
@@ -144,6 +145,11 @@ const aliases:[typeof TextArea,typeof InputPassword,typeof InputSearch,typeof In
   <InputSearch v-model:value="value" v-bind="search" />
   <InputOTP ref="otp" v-model:value="value" v-bind="code" />
   <InputGroup v-bind="group"><Input /></InputGroup>
+  <Input.TextArea v-model:value="value" v-bind="text" />
+  <Input.Password v-model:value="value" v-bind="password" />
+  <Input.Search v-model:value="value" v-bind="search" />
+  <Input.OTP v-model:value="value" v-bind="code" />
+  <Input.Group v-bind="group"><Input /></Input.Group>
 </template>
 `;
 
@@ -235,10 +241,16 @@ try {
       loaded.includes(path.join(temp, 'node_modules/@apollo-design/ui', relative)),
       `Public ${relative} was not consumed`,
     );
-  execFileSync(process.execPath, [compiler, '-p', positiveConfig, '--pretty', 'false'], {
-    stdio: 'inherit',
-  });
-  report.positiveExit = 0;
+  const accepted = spawnSync(
+    process.execPath,
+    [compiler, '-p', positiveConfig, '--pretty', 'false'],
+    {
+      stdio: 'inherit',
+    },
+  );
+  assert.ifError(accepted.error);
+  report.positiveExit = accepted.status;
+  assert.equal(accepted.status, 0, 'Public SFCs, TS contracts and all original demos must compile');
   report.resolvedFirstPartyDeclarations = loaded.filter((file) =>
     file.startsWith(path.join(temp, 'node_modules/@apollo-design/')),
   ).length;

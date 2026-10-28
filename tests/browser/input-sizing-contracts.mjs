@@ -7,6 +7,7 @@ import {
   mkdtempSync,
   readdirSync,
   readFileSync,
+  realpathSync,
   symlinkSync,
   writeFileSync,
 } from 'node:fs';
@@ -16,7 +17,12 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { launchBrowser } from '../visual/stabilize.mjs';
 
-const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const repo = realpathSync(
+  path.resolve(
+    process.env.INPUT_SIZING_REPO ??
+      path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..'),
+  ),
+);
 const root =
   process.env.INPUT_SIZING_EVIDENCE_DIR ?? mkdtempSync(path.join(tmpdir(), 'apollo-input-sizing-'));
 mkdirSync(root, { recursive: true });
@@ -99,6 +105,7 @@ const errors = [],
   steps = [],
   checks = [],
   resolvedSources = new Set(),
+  resolvedDemos = new Set(),
   forbidden = [];
 const check = (name, actual, expected) => {
   let passed = true;
@@ -119,7 +126,7 @@ try {
     define: { 'process.env.NODE_ENV': JSON.stringify('production') },
     plugins: [
       {
-        name: 'input-source-only-guard',
+        name: 'input-package-boundary-guard',
         enforce: 'pre',
         load(id) {
           if (id.startsWith(path.join(repo, 'packages') + path.sep)) {
@@ -127,6 +134,20 @@ try {
             if (phase === 'source' && id.includes('/dist/')) {
               forbidden.push(id);
               throw new Error(`Published artifact forbidden: ${id}`);
+            }
+          }
+          if (
+            phase === 'published' &&
+            /\/(?:packages|node_modules\/@apollo-design)\/[^/]+\/src\//.test(id)
+          ) {
+            if (
+              id.startsWith(path.join(repo, 'packages/ui/src/input/demo') + path.sep) &&
+              /\.vue(?:\?|$)/.test(id)
+            ) {
+              resolvedDemos.add(id);
+            } else {
+              forbidden.push(id);
+              throw new Error(`Library source forbidden in published consumer: ${id}`);
             }
           }
           return null;
@@ -1108,6 +1129,8 @@ try {
     distWritten: false,
     readersExited: true,
     forbidden,
+    sourceFallback: phase === 'published' ? forbidden.length > 0 : undefined,
+    resolvedDemoModules: [...resolvedDemos].sort(),
     resolvedModuleCount: resolvedSources.size,
   };
   writeFileSync(
