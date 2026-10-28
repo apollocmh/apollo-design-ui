@@ -1,0 +1,166 @@
+{
+  "date": "2026-10-29",
+  "stage": "source-implemented-and-verified; published comparison pending",
+  "priorPublishedCommit": "3214ee105bd45a9a684c9170f8e3457da162fcc7",
+  "scope": "Global native link rules across 69 stylesheet generators, no new API",
+  "decision": "Existing seven themed native link rules belong to the shared base and must not depend on importing Select. Duplicated Select rules removed.",
+  "globalElementInventory": [
+    {
+      "selector": "[data-apollo-theme=\"dark\"]",
+      "declarations": "--apollo-btn-color-scheme:dark",
+      "owners": [
+        "button"
+      ]
+    },
+    {
+      "selector": "[data-apollo-theme=\"dark-compact\"]",
+      "declarations": "--apollo-btn-color-scheme:dark",
+      "owners": [
+        "button"
+      ]
+    },
+    {
+      "selector": "[data-apollo-theme=\"light\"]",
+      "declarations": "--apollo-btn-color-scheme:light",
+      "owners": [
+        "button"
+      ]
+    },
+    {
+      "selector": "[data-apollo-theme=\"compact\"]",
+      "declarations": "--apollo-btn-color-scheme:light",
+      "owners": [
+        "button"
+      ]
+    },
+    {
+      "selector": "a",
+      "declarations": "color:var(--apollo-color-link);text-decoration:var(--apollo-link-decoration);background-color:transparent;outline:none;cursor:pointer;transition:color var(--apollo-motion-duration-slow);-webkit-text-decoration-skip:objects",
+      "owners": [
+        "select",
+        "cascader",
+        "tree-select"
+      ]
+    },
+    {
+      "selector": "a:hover",
+      "declarations": "color:var(--apollo-color-link-hover)",
+      "owners": [
+        "select",
+        "cascader",
+        "tree-select"
+      ]
+    },
+    {
+      "selector": "a:active",
+      "declarations": "color:var(--apollo-color-link-active)",
+      "owners": [
+        "select",
+        "cascader",
+        "tree-select"
+      ]
+    },
+    {
+      "selector": "a:active",
+      "declarations": "text-decoration:var(--apollo-link-hover-decoration);outline:0",
+      "owners": [
+        "select",
+        "cascader",
+        "tree-select"
+      ]
+    },
+    {
+      "selector": "a:hover",
+      "declarations": "text-decoration:var(--apollo-link-hover-decoration);outline:0",
+      "owners": [
+        "select",
+        "cascader",
+        "tree-select"
+      ]
+    },
+    {
+      "selector": "a:focus",
+      "declarations": "text-decoration:var(--apollo-link-focus-decoration);outline:0",
+      "owners": [
+        "select",
+        "cascader",
+        "tree-select"
+      ]
+    },
+    {
+      "selector": "a:focus-visible",
+      "declarations": "outline:var(--apollo-line-width-focus) solid var(--apollo-color-primary-border);outline-offset:1px;transition:outline-offset 0s,outline 0s",
+      "owners": [
+        "select",
+        "cascader",
+        "tree-select"
+      ]
+    },
+    {
+      "selector": "a[disabled]",
+      "declarations": "color:var(--apollo-color-text-disabled);cursor:not-allowed",
+      "owners": [
+        "select",
+        "cascader",
+        "tree-select"
+      ]
+    }
+  ],
+  "reproduction": {
+    "pairs": 24,
+    "identical": 18,
+    "breadcrumbDifferences": 6,
+    "difference": "text-decoration-line: underline versus none",
+    "rawReport": "/tmp/apollo-component-style-entries-3214ee1-settled/grouped-summary.json",
+    "noBaselineTreatedAsSpecification": true
+  },
+  "red": {
+    "rawReport": "/tmp/apollo-css-dependency-audit/global-links-red.json",
+    "sha256": "ae411c13fa733bfa75459d264b99cfb1100c37f9cd06a27837caa60b0b1bb6f8",
+    "numTotalTests": 41,
+    "numPassedTests": 39,
+    "numFailedTests": 2,
+    "numPendingTests": 0,
+    "success": false,
+    "files": [
+      "packages/ui/src/__tests__/style-composition.test.ts"
+    ]
+  },
+  "green": {
+    "rawReport": "/tmp/apollo-css-dependency-audit/global-links-final-source.json",
+    "sha256": "b9107d55e09e19f12201b5ff1f90e7f10abc80b6b608ff39f4ad2ad421918282",
+    "numTotalTests": 50,
+    "numPassedTests": 50,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "success": true,
+    "files": [
+      "packages/ui/src/__tests__/style-composition.test.ts",
+      "packages/ui/src/__tests__/style-prefix.test.ts"
+    ]
+  },
+  "commands": [
+    {
+      "command": "pnpm exec vitest run --project unit packages/ui/src/__tests__/style-composition.test.ts packages/ui/src/__tests__/style-prefix.test.ts --reporter=json --outputFile=/tmp/apollo-css-dependency-audit/global-links-final-source.json",
+      "exitCode": 0
+    },
+    {
+      "command": "pnpm lint:types",
+      "exitCode": 0,
+      "log": "/tmp/apollo-css-dependency-audit/current-strict.log"
+    }
+  ],
+  "sourceFiles": {
+    "packages/ui/src/style/links.ts": "a1088ab49aa8ee5a26dc9834d1dac44048b2120fa8e725e28c29e8de29552a59",
+    "packages/ui/src/style/index.ts": "b576c320900a545974e487b0a22b0883331b1e1bfe4075a28cd717449050ec67",
+    "packages/ui/src/select/style/index.ts": "2a693a79faf93e7bf7b33e7bee8d50791960b0640f75a12cb3e1d83e02f8e923",
+    "packages/ui/src/__tests__/style-composition.test.ts": "1eed8b2325545fd93cd4f2caa279cfa6481f12d23756806a70378fb5d2671d8a",
+    "packages/docs/content/guide/styles.md": "cbf5a1f983e7b42f591deaf4c6c6abbe97540c47effce48f5c4b7e196202fe8c"
+  },
+  "unverified": [
+    "Rebuilt published CSS equivalence",
+    "Affected existing visual pixels",
+    "Final five-unit acceptance"
+  ],
+  "approvedBaselines": 0
+}

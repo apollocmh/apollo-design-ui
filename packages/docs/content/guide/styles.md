@@ -65,6 +65,10 @@ import '@apollo-design/ui/input/style.css';
 
 站点（本文档站）自己另有一套 `--site-*` 令牌用于官网视觉，**不复用、也不污染** `--apollo-*`。组件示例永远渲染在组件库自己的令牌作用域内。
 
+### 默认链接样式
+
+共享基础层为原生链接提供当前主题的颜色、装饰与可见键盘焦点；这些默认值不依赖是否使用 Select。可以用原生 `style` 或自己的 CSS 覆盖。
+
 ### 原生表单控件
 
 共享样式保留原生控件的浏览器前景、背景和禁用颜色。Apollo 组件使用各自的主题色；自行给原生控件设置颜色时，请同时配置背景。例如 `style="color: inherit; background: transparent"` 可让原生按钮使用父级颜色，避免暗色作用域中的浅色文字落在浏览器浅色背景上。
@@ -92,6 +96,10 @@ AutoComplete uses `select/style.css`; TimePicker and TimeRangePicker use `date-p
 ### Dark & compact mode
 
 Toggle the scope via an attribute on `<html>`: `<html data-apollo-theme="dark">`.
+
+### Default link styles
+
+The shared base applies themed link colors, decoration and a visible keyboard focus indicator, independently of Select. Native inline styles or application CSS can override these defaults.
 
 ### Native form controls
 

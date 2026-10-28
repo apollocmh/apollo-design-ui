@@ -37,20 +37,6 @@ const KEYFRAMES = `
 
 /** antd 产物机械转换段（原序）。 */
 const RULES = `
-a{color:var(--apollo-color-link);text-decoration:var(--apollo-link-decoration);background-color:transparent;outline:none;cursor:pointer;transition:color var(--apollo-motion-duration-slow);-webkit-text-decoration-skip:objects;}
-a:hover{color:var(--apollo-color-link-hover);}
-a:active{color:var(--apollo-color-link-active);}
-a:active,a:hover{text-decoration:var(--apollo-link-hover-decoration);outline:0;}
-a:focus{text-decoration:var(--apollo-link-focus-decoration);outline:0;}
-a:focus-visible{outline:var(--apollo-line-width-focus) solid var(--apollo-color-primary-border);outline-offset:1px;transition:outline-offset 0s,outline 0s;}
-a[disabled]{color:var(--apollo-color-text-disabled);cursor:not-allowed;}
-a{color:var(--apollo-color-link);text-decoration:var(--apollo-link-decoration);background-color:transparent;outline:none;cursor:pointer;transition:color var(--apollo-motion-duration-slow);-webkit-text-decoration-skip:objects;}
-a:hover{color:var(--apollo-color-link-hover);}
-a:active{color:var(--apollo-color-link-active);}
-a:active, a:hover{text-decoration:var(--apollo-link-hover-decoration);outline:0;}
-a:focus{text-decoration:var(--apollo-link-focus-decoration);outline:0;}
-a:focus-visible{outline:var(--apollo-line-width-focus) solid var(--apollo-color-primary-border);outline-offset:1px;transition:outline-offset 0s,outline 0s;}
-a[disabled]{color:var(--apollo-color-text-disabled);cursor:not-allowed;}
 .apollo-icon{display:inline-flex;align-items:center;color:inherit;font-style:normal;line-height:0;text-align:center;text-transform:none;vertical-align:-0.125em;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
 .apollo-icon >*{line-height:1;}
 .apollo-icon svg{display:inline-block;vertical-align:inherit;}

@@ -108,6 +108,7 @@ import { genTreeStyle } from '../tree/style';
 import { genTreeSelectStyle } from '../tree-select/style';
 import { genTypographyStyle } from '../typography/style';
 import { genUploadStyle } from '../upload/style';
+import { genLinkReset } from './links';
 import { genSlideMotionStyle } from './slide';
 
 /**
@@ -428,6 +429,8 @@ export const BASE_CSS = [
   "input[type='text'],input[type='password'],input[type='number'],textarea{-webkit-appearance:none}",
   'textarea{overflow:auto;resize:vertical}',
   'input::-ms-clear,input::-ms-reveal{display:none}',
+  // Shared link defaults must not depend on importing Select.
+  genLinkReset(),
   // ---- 触摸与焦点 ----
   "a,area,button,[role='button'],input:not([type='range']),label,select,summary,textarea{touch-action:manipulation}",
   "[tabindex='-1']:focus{outline:none}",

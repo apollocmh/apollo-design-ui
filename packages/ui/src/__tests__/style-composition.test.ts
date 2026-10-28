@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { BASE_CSS, genComponentCss, genComponentStyleMap, genComponentStyleSheet } from '../style';
+import {
+  BASE_CSS,
+  COMPONENT_STYLES,
+  genComponentCss,
+  genComponentStyleMap,
+  genComponentStyleSheet,
+} from '../style';
 
 /** Actual descendants from the audited render chains, independent of dependency metadata. */
 const ownedRules = [
@@ -83,6 +89,20 @@ describe('Public component styles include implementation-owned descendants', () 
       expect(css).not.toContain('.apollo-select');
       expect(css).not.toContain('.apollo-btn');
     }
+  });
+
+  it('supplies the shared native link reset through every stylesheet entry', () => {
+    for (const [name, css] of Object.entries(genComponentStyleMap())) {
+      expect(hasRootRule(css, 'a'), name).toBe(true);
+      expect(hasRootRule(css, 'a:focus-visible'), name).toBe(true);
+    }
+  });
+
+  it('keeps global native link rules out of component-owned generators', () => {
+    const leaking = COMPONENT_STYLES.filter((entry) => hasRootRule(entry.gen('apollo'), 'a')).map(
+      (entry) => entry.name,
+    );
+    expect(leaking).toEqual([]);
   });
 
   it('preserves diagnostics for unknown public stylesheet names', () => {
