@@ -1,0 +1,14 @@
+{
+  "scope": "Accurate type annotation for an existing provider consumer, no runtime or public API change",
+  "problem": "Record<string, never> claimed className/style impossible while the implementation consumes them. Strict isolated consumers without noUncheckedIndexedAccess report TS2698 on the style spread.",
+  "change": "Use the existing ComponentStyleConfig interface. No assertion, any or suppressed diagnostic.",
+  "reproductionLog": "/tmp/apollo-layout-source-types-second.log",
+  "verification": {
+    "command": "pnpm exec vue-tsc --noEmit -p /tmp/apollo-border-beam-provider-types.json",
+    "exitCode": 0,
+    "noUncheckedIndexedAccess": false,
+    "sourceEntry": "packages/ui/src/border-beam/BorderBeam.ts"
+  },
+  "runtimeChanged": false,
+  "completeBorderBeamAudit": false
+}

@@ -39,7 +39,7 @@ import {
   Teleport,
   type VNode,
 } from 'vue';
-import { useComponentConfig } from '../config-provider/context';
+import { type ComponentStyleConfig, useComponentConfig } from '../config-provider/context';
 import { subscribeBorderSample } from './border-sampler';
 import type { BorderBeamColor, BorderBeamProps } from './interface';
 import { DEFAULT_BORDER_BEAM_DURATION, getBorderBeamGradient, isSameBorderWidth } from './util';
@@ -140,7 +140,7 @@ export default defineComponent({
       getPrefixCls,
       className: contextClassName,
       style: contextStyle,
-    } = useComponentConfig<Record<string, never>>('borderBeam');
+    } = useComponentConfig<ComponentStyleConfig>('borderBeam');
 
     const prefixCls = computed(() => getPrefixCls('border-beam', props.prefixCls));
     const rootPrefix = computed(() => getPrefixCls());
