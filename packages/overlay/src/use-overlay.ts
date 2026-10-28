@@ -197,6 +197,10 @@ export function useOverlay(options: UseOverlayOptions = {}): UseOverlayReturn {
   const disabled = computed(() => toValue(options.disabled) ?? false);
   const open = computed(() => rawOpenRef.value && !disabled.value);
 
+  // Accepted state changes supersede older delayed trigger requests, including
+  // a controlled close/reopen within the same render tick.
+  watch(rawOpenRef, () => delayInvoker.clear(), { flush: 'sync' });
+
   let returningFocus = false;
   // Only actual accepted hiding returns focus. Refused controlled requests and
   // focus already moved outside this popup retain their current owner.

@@ -89,3 +89,7 @@ pnpm --filter @apollo-design/overlay lint
 
 测试要求见 [`TESTING.md`](../../TESTING.md)。
 覆盖率下限为 语句 95% / 分支 90% / 函数 95%（L2 档位，见 `vitest.config.ts` 的 `coverage.thresholds`）。
+
+## 当前受控值与待执行延迟
+
+外部受控显隐值实际变化时，本实例先前排定的触发延迟失效；同一渲染tick内关闭后再打开，也不会被旧hide回调关闭。未受控延迟、显式setOpen、disabled压制、拒绝关闭时的焦点规则保持原契约。2026-10-28复现与相关482条回归见[专项证据](../../docs/audit/2026-10-28-overlay-controlled-delay-audit.md)。
