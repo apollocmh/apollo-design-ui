@@ -1,0 +1,1116 @@
+{
+  "command": "COMPONENT_STYLE_ENTRIES_OUTPUT=/tmp/apollo-component-style-entries-3214ee1-settled COMPONENT_STYLE_ENTRIES_EVIDENCE=/tmp/apollo-component-style-entries-3214ee1-settled/evidence.json node tests/browser/component-style-entries.mjs",
+  "exitCode": 1,
+  "sourceStartCommit": "3214ee105bd45a9a684c9170f8e3457da162fcc7",
+  "sourceEndCommit": "3214ee105bd45a9a684c9170f8e3457da162fcc7",
+  "expectedPairs": 24,
+  "completedPairs": 24,
+  "passedPairs": 18,
+  "groups": {
+    "timeline": {
+      "pairs": 6,
+      "passed": 6,
+      "failed": 0
+    },
+    "breadcrumb": {
+      "pairs": 6,
+      "passed": 0,
+      "failed": 6
+    },
+    "descriptions": {
+      "pairs": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "grid": {
+      "pairs": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "space": {
+      "pairs": 4,
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "browserOrVueErrors": [],
+  "distUnchanged": true,
+  "onlyDifferingField": "paint.text-decoration-line",
+  "standaloneValue": "underline",
+  "fullValue": "none",
+  "adjudication": "No mode is treated as the accepted specification; main decides global element rule ownership.",
+  "sourceHarnessCorrections": "Real popup motion is allowed to complete and verified without stripping classes; Addon natural height is retained and large font/border/direction checked.",
+  "failures": [
+    {
+      "component": "breadcrumb",
+      "state": "keyboard-menu",
+      "viewport": "mobile",
+      "changedPixels": 280,
+      "elements": {
+        "initial": [
+          {
+            "index": 7,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": "Home",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 11,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": "Products",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          }
+        ],
+        "final": [
+          {
+            "index": 7,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": "Home",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 11,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": "Products",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 26,
+            "tag": "A",
+            "id": null,
+            "className": null,
+            "text": "New product",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 29,
+            "tag": "A",
+            "id": null,
+            "className": null,
+            "text": "Product archive",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-keyboard-menu-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-keyboard-menu-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-keyboard-menu-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-keyboard-menu-mobile-full.json"
+      },
+      "diff": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-keyboard-menu-mobile-diff.png"
+    },
+    {
+      "component": "breadcrumb",
+      "state": "keyboard-menu",
+      "viewport": "desktop",
+      "changedPixels": 280,
+      "elements": {
+        "initial": [
+          {
+            "index": 7,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": "Home",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 11,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": "Products",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          }
+        ],
+        "final": [
+          {
+            "index": 7,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": "Home",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 11,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": "Products",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 26,
+            "tag": "A",
+            "id": null,
+            "className": null,
+            "text": "New product",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 29,
+            "tag": "A",
+            "id": null,
+            "className": null,
+            "text": "Product archive",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-keyboard-menu-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-keyboard-menu-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-keyboard-menu-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-keyboard-menu-desktop-full.json"
+      },
+      "diff": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-keyboard-menu-desktop-diff.png"
+    },
+    {
+      "component": "breadcrumb",
+      "state": "no-title-menu",
+      "viewport": "mobile",
+      "changedPixels": 221,
+      "elements": {
+        "initial": [
+          {
+            "index": 7,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": "Home",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          }
+        ],
+        "final": [
+          {
+            "index": 7,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": "Home",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 25,
+            "tag": "A",
+            "id": null,
+            "className": null,
+            "text": "New product",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 28,
+            "tag": "A",
+            "id": null,
+            "className": null,
+            "text": "Product archive",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-no-title-menu-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-no-title-menu-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-no-title-menu-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-no-title-menu-mobile-full.json"
+      },
+      "diff": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-no-title-menu-mobile-diff.png"
+    },
+    {
+      "component": "breadcrumb",
+      "state": "no-title-menu",
+      "viewport": "desktop",
+      "changedPixels": 221,
+      "elements": {
+        "initial": [
+          {
+            "index": 7,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": "Home",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          }
+        ],
+        "final": [
+          {
+            "index": 7,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": "Home",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 25,
+            "tag": "A",
+            "id": null,
+            "className": null,
+            "text": "New product",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 28,
+            "tag": "A",
+            "id": null,
+            "className": null,
+            "text": "Product archive",
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-no-title-menu-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-no-title-menu-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-no-title-menu-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-no-title-menu-desktop-full.json"
+      },
+      "diff": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-no-title-menu-desktop-diff.png"
+    },
+    {
+      "component": "breadcrumb",
+      "state": "current-provider",
+      "viewport": "mobile",
+      "changedPixels": 38,
+      "elements": {
+        "initial": [
+          {
+            "index": 8,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": null,
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 15,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": null,
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          }
+        ],
+        "final": [
+          {
+            "index": 8,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": null,
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 15,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": null,
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-current-provider-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-current-provider-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-current-provider-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-current-provider-mobile-full.json"
+      },
+      "diff": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-current-provider-mobile-diff.png"
+    },
+    {
+      "component": "breadcrumb",
+      "state": "current-provider",
+      "viewport": "desktop",
+      "changedPixels": 38,
+      "elements": {
+        "initial": [
+          {
+            "index": 8,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": null,
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 15,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": null,
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          }
+        ],
+        "final": [
+          {
+            "index": 8,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": null,
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          },
+          {
+            "index": 15,
+            "tag": "A",
+            "id": null,
+            "className": "apollo-breadcrumb-link",
+            "text": null,
+            "changes": [
+              {
+                "field": "paint.text-decoration-line",
+                "standalone": "underline",
+                "full": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-current-provider-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-current-provider-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-current-provider-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-current-provider-desktop-full.json"
+      },
+      "diff": "/tmp/apollo-component-style-entries-3214ee1-settled/breadcrumb-current-provider-desktop-diff.png"
+    }
+  ],
+  "unaffectedControls": [
+    {
+      "component": "timeline",
+      "variant": "basic",
+      "viewport": "mobile",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-basic-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-basic-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-basic-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-basic-mobile-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "a5ca08b5f96e569a7e510cb4bece2e3376d8070d172c1bbe2d0290ac937e1ba9",
+      "nodes": 27
+    },
+    {
+      "component": "timeline",
+      "variant": "basic",
+      "viewport": "desktop",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-basic-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-basic-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-basic-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-basic-desktop-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "e6050b0110a245795b1b31f0f03b0700d4ee4982b46a33f092e79230fd0fb307",
+      "nodes": 27
+    },
+    {
+      "component": "timeline",
+      "variant": "horizontal",
+      "viewport": "mobile",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-horizontal-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-horizontal-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-horizontal-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-horizontal-mobile-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "2ece63c852c49dbd28269af9b1eef02bb615fa81f3bd1a18a8b1f35838808ae9",
+      "nodes": 24
+    },
+    {
+      "component": "timeline",
+      "variant": "horizontal",
+      "viewport": "desktop",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-horizontal-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-horizontal-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-horizontal-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-horizontal-desktop-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "9581b4de4aefe81dbab1ad23f1538e66d8ab82f16cad1f7a9d1747845ba833bf",
+      "nodes": 24
+    },
+    {
+      "component": "timeline",
+      "variant": "current-provider",
+      "viewport": "mobile",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-current-provider-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-current-provider-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-current-provider-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-current-provider-mobile-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "94b3df5718971dd614e84bcb3d1fe099ee0e638245a4de2269248170d7ed2c58",
+      "nodes": 44
+    },
+    {
+      "component": "timeline",
+      "variant": "current-provider",
+      "viewport": "desktop",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-current-provider-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-current-provider-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-current-provider-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/timeline-current-provider-desktop-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "3fde7649e1cd2cadd0679aadb34e9a7920ee7a135247c270ff9887a9f2ab63f9",
+      "nodes": 44
+    },
+    {
+      "component": "descriptions",
+      "variant": "vertical-bordered",
+      "viewport": "mobile",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-vertical-bordered-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-vertical-bordered-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-vertical-bordered-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-vertical-bordered-mobile-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "d8fa67b77e677672793c6b322f8bf2077f287b83c7c06ddac1611c14e13a1733",
+      "nodes": 26
+    },
+    {
+      "component": "descriptions",
+      "variant": "vertical-bordered",
+      "viewport": "desktop",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-vertical-bordered-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-vertical-bordered-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-vertical-bordered-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-vertical-bordered-desktop-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "2d50074318979ea8a3d869eae246252df3c45bcd8f5680f868e429d297e06e5b",
+      "nodes": 26
+    },
+    {
+      "component": "descriptions",
+      "variant": "current-geometry",
+      "viewport": "mobile",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-current-geometry-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-current-geometry-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-current-geometry-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-current-geometry-mobile-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "2481249f29f3d0f8f9bea5c7f76d91c2947d7ffb173fb5794aac8d7c553e63e8",
+      "nodes": 21
+    },
+    {
+      "component": "descriptions",
+      "variant": "current-geometry",
+      "viewport": "desktop",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-current-geometry-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-current-geometry-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-current-geometry-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/descriptions-current-geometry-desktop-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "7832b42e8eb3be0ead286c412070eef0bc9885008bf82033c315a9e3b10c82f7",
+      "nodes": 21
+    },
+    {
+      "component": "grid",
+      "variant": "responsive",
+      "viewport": "mobile",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-responsive-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-responsive-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-responsive-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-responsive-mobile-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "b8a7e46014074b72d636be9caddb1f91c1191dd41e19c9843f0f0a0421e4cf59",
+      "nodes": 13
+    },
+    {
+      "component": "grid",
+      "variant": "responsive",
+      "viewport": "desktop",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-responsive-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-responsive-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-responsive-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-responsive-desktop-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "a2e951de4675b1da0df87b8de3ed8dc39290d3b17f8b1c5703a739de400838ae",
+      "nodes": 13
+    },
+    {
+      "component": "grid",
+      "variant": "current-provider",
+      "viewport": "mobile",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-current-provider-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-current-provider-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-current-provider-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-current-provider-mobile-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "3ec39df67bf4af9941fc67e9b825f8c71b1c0d74a37fba1edf0a9352cc9d66da",
+      "nodes": 12
+    },
+    {
+      "component": "grid",
+      "variant": "current-provider",
+      "viewport": "desktop",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-current-provider-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-current-provider-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-current-provider-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/grid-current-provider-desktop-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "854c017226b139a01d30fe35ba94481a41072bcbb401e595d58e64ad99fc1151",
+      "nodes": 12
+    },
+    {
+      "component": "space",
+      "variant": "native-spacing",
+      "viewport": "mobile",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/space-native-spacing-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/space-native-spacing-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/space-native-spacing-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/space-native-spacing-mobile-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "0389eb5cbd5effd51fef158caa7324d081264f3c7ff0cb45badc3c021bed26a3",
+      "nodes": 12
+    },
+    {
+      "component": "space",
+      "variant": "native-spacing",
+      "viewport": "desktop",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/space-native-spacing-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/space-native-spacing-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/space-native-spacing-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/space-native-spacing-desktop-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "4ab7d89550dab78807612e6f6d1c88f6242d6d0dfceecbe18c9b400e4eb635c8",
+      "nodes": 12
+    },
+    {
+      "component": "space",
+      "variant": "addon-compact",
+      "viewport": "mobile",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/space-addon-compact-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/space-addon-compact-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/space-addon-compact-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/space-addon-compact-mobile-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "5d7bf4a3970a9c7b39c3107c21b03458501c736782bb528304c81f870e4fe7a1",
+      "nodes": 8
+    },
+    {
+      "component": "space",
+      "variant": "addon-compact",
+      "viewport": "desktop",
+      "passed": true,
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/space-addon-compact-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/space-addon-compact-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-3214ee1-settled/space-addon-compact-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-3214ee1-settled/space-addon-compact-desktop-full.json"
+      },
+      "initialEqual": true,
+      "helperEqual": true,
+      "finalEqual": true,
+      "differences": {
+        "initial": [],
+        "final": []
+      },
+      "rgbaSha256": "7b4596cac333f26ff26802ef483b02cf7dd44b315db8083a686afec9134f917d",
+      "nodes": 8
+    }
+  ],
+  "buildGuards": [
+    {
+      "component": "timeline",
+      "mode": "standalone",
+      "publicCSS": [
+        "@apollo-design/theme/tokens.css",
+        "@apollo-design/ui/timeline/style.css"
+      ],
+      "runtimeSources": [],
+      "cssModules": [
+        "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+        "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/timeline/style.css"
+      ]
+    },
+    {
+      "component": "timeline",
+      "mode": "full",
+      "publicCSS": [
+        "@apollo-design/theme/tokens.css",
+        "@apollo-design/ui/style.css"
+      ],
+      "runtimeSources": [],
+      "cssModules": [
+        "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+        "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/index.css"
+      ]
+    },
+    {
+      "component": "breadcrumb",
+      "mode": "standalone",
+      "publicCSS": [
+        "@apollo-design/theme/tokens.css",
+        "@apollo-design/ui/breadcrumb/style.css"
+      ],
+      "runtimeSources": [],
+      "cssModules": [
+        "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+        "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/breadcrumb/style.css"
+      ]
+    },
+    {
+      "component": "breadcrumb",
+      "mode": "full",
+      "publicCSS": [
+        "@apollo-design/theme/tokens.css",
+        "@apollo-design/ui/style.css"
+      ],
+      "runtimeSources": [],
+      "cssModules": [
+        "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+        "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/index.css"
+      ]
+    },
+    {
+      "component": "descriptions",
+      "mode": "standalone",
+      "publicCSS": [
+        "@apollo-design/theme/tokens.css",
+        "@apollo-design/ui/descriptions/style.css"
+      ],
+      "runtimeSources": [],
+      "cssModules": [
+        "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+        "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/descriptions/style.css"
+      ]
+    },
+    {
+      "component": "descriptions",
+      "mode": "full",
+      "publicCSS": [
+        "@apollo-design/theme/tokens.css",
+        "@apollo-design/ui/style.css"
+      ],
+      "runtimeSources": [],
+      "cssModules": [
+        "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+        "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/index.css"
+      ]
+    },
+    {
+      "component": "grid",
+      "mode": "standalone",
+      "publicCSS": [
+        "@apollo-design/theme/tokens.css",
+        "@apollo-design/ui/grid/style.css"
+      ],
+      "runtimeSources": [],
+      "cssModules": [
+        "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+        "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/grid/style.css"
+      ]
+    },
+    {
+      "component": "grid",
+      "mode": "full",
+      "publicCSS": [
+        "@apollo-design/theme/tokens.css",
+        "@apollo-design/ui/style.css"
+      ],
+      "runtimeSources": [],
+      "cssModules": [
+        "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+        "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/index.css"
+      ]
+    },
+    {
+      "component": "space",
+      "mode": "standalone",
+      "publicCSS": [
+        "@apollo-design/theme/tokens.css",
+        "@apollo-design/ui/space/style.css"
+      ],
+      "runtimeSources": [],
+      "cssModules": [
+        "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+        "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/space/style.css"
+      ]
+    },
+    {
+      "component": "space",
+      "mode": "full",
+      "publicCSS": [
+        "@apollo-design/theme/tokens.css",
+        "@apollo-design/ui/style.css"
+      ],
+      "runtimeSources": [],
+      "cssModules": [
+        "/Users/nanren/Code/apollo-design-ui/packages/theme/dist/tokens.css",
+        "/Users/nanren/Code/apollo-design-ui/packages/ui/dist/index.css"
+      ]
+    }
+  ],
+  "stage": "Pre-fix published regression evidence; six failures retained, final rebuilt verification pending",
+  "harnessFiles": {
+    "tests/browser/component-style-entries.mjs": "2f9656bf7f939a0daab51bb9d196d6af0779e39eee226a14fac0e1244f202336",
+    "tests/browser/fixtures/ComponentStyleEntriesSpace.mjs": "b2d953047aead710ebb77d40565ba0a41cbcd5ac6b71f1eaef61bcad324122ed"
+  }
+}

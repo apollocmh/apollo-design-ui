@@ -94,6 +94,47 @@ export async function prepareBreadcrumbVisual(page, variant) {
     await trigger.press('ArrowDown');
     const menu = frame.getByRole('menu');
     await menu.waitFor({ state: 'visible' });
+    // Prepare can have size before the start phase collapses the popup. Global
+    // animation:none also leaves getAnimations() empty while motion is active.
+    // Wait for native phase completion and visible bounds across adjacent frames.
+    const observation = await menu.evaluateHandle((node) => ({ node, previous: null }));
+    try {
+      await page.waitForFunction((sample) => {
+        const measure = () => {
+          const node = sample.node;
+          if (!node?.isConnected) return null;
+          const popup = node.closest('.apollo-dropdown');
+          if (!popup) return null;
+          if (
+            [...popup.classList].some((name) =>
+              /-(appear|enter|leave)(-(prepare|start|active|end))?$/.test(name),
+            )
+          )
+            return null;
+          const bounds = node.getBoundingClientRect();
+          const style = getComputedStyle(popup);
+          if (
+            bounds.width <= 0 ||
+            bounds.height <= 0 ||
+            style.display === 'none' ||
+            style.visibility !== 'visible' ||
+            style.opacity !== '1'
+          )
+            return null;
+          return [bounds.x, bounds.y, bounds.width, bounds.height];
+        };
+        const before = sample.previous;
+        const after = measure();
+        sample.previous = after;
+        return (
+          before !== null &&
+          after !== null &&
+          before.every((value, index) => value === after[index])
+        );
+      }, observation);
+    } finally {
+      await observation.dispose();
+    }
     await page.waitForFunction(() => document.activeElement?.getAttribute('role') === 'menuitem');
     assert.equal(await page.evaluate(() => document.activeElement.matches(':focus-visible')), true);
     assert.equal(

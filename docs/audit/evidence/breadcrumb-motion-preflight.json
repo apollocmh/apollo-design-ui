@@ -1,0 +1,29 @@
+{
+  "file": "/tmp/apollo-breadcrumb-stability-3214ee10/preflight-51.json",
+  "expected": 51,
+  "passed": 51,
+  "failures": 0,
+  "uniqueCases": 51,
+  "variants": 17,
+  "viewports": [
+    "mobile",
+    "tablet",
+    "desktop"
+  ],
+  "allImageHashesMatch": true,
+  "pageErrors": 0,
+  "consoleErrors": 0,
+  "allNavigationUnchanged": true,
+  "visibleOpenMenus": 6,
+  "closedMenus": 45,
+  "helperFile": "/Users/nanren/Code/apollo-design-ui/tests/visual/breadcrumb-state.mjs",
+  "helperSha256": "2514a0dbadc99730bf84eb0632be53d607832ff4dd89b06fa51e12612a5137fe",
+  "reportSha256": "9c82f5abe1e24a0bbe1191cff4e196239e411bd3cc76e5c375bf17436f752bae",
+  "frozenSnapshotUnchanged": true,
+  "phaseClassStripping": false,
+  "forcedOpen": false,
+  "formalCapture": false,
+  "stage": "51-case preflight; not formal visual approval",
+  "scope": "Native menu motion settled before screenshot assertions; all original actions and assertions retained",
+  "remaining": "Recapture all 51 cases from a clean commit, review actual pixels, then consider acceptance"
+}
