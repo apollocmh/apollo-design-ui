@@ -1,0 +1,645 @@
+{
+  "artifactBuildCommit": "350f4cb2",
+  "freezeCommit": "a47d96ec",
+  "existingStylesheetEntries": 69,
+  "allMatchGenerator": true,
+  "aggregate": {
+    "bytes": 1317138,
+    "sha256": "b02c526e0b6e9796294d5ec60186eee68079b242aa6941473553336bcb94bf3a"
+  },
+  "rows": [
+    {
+      "name": "affix",
+      "file": "packages/ui/dist/affix/style.css",
+      "bytes": 4031,
+      "sha256": "5ea2c93e1e181713710bebc15d9558ec2408a790d5800fd4481994375316b3b8",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "layout",
+      "file": "packages/ui/dist/layout/style.css",
+      "bytes": 6415,
+      "sha256": "05f42d3aed552827b3bc0de2c1882dc5c6d478c6be832f2b4dc66952cc7ac80c",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "layout-sider",
+      "file": "packages/ui/dist/layout-sider/style.css",
+      "bytes": 8004,
+      "sha256": "f7fb37cb4a29cbec3e49bd22d6d756a419e54953d32742eb45bc72539acb3f59",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "rate",
+      "file": "packages/ui/dist/rate/style.css",
+      "bytes": 19645,
+      "sha256": "2859bce6bbee6d56fc81594ecf1d328a51ffe74dbb7a1e5569ade0162f620f31",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "radio",
+      "file": "packages/ui/dist/radio/style.css",
+      "bytes": 23817,
+      "sha256": "74930c5013eaab7875c2deaa7e504812e3a38d39e204b5fe305f22ca3981d5a1",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "alert",
+      "file": "packages/ui/dist/alert/style.css",
+      "bytes": 8685,
+      "sha256": "29fc93881e9abb0779af8d33199ef4900a84794c454c3998fa6190502c15b4da",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "button",
+      "file": "packages/ui/dist/button/style.css",
+      "bytes": 193935,
+      "sha256": "3309c74ee142b71d6aa13be3fba46ce62d0e66d200d0829e479834ca85902ebc",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "collapse",
+      "file": "packages/ui/dist/collapse/style.css",
+      "bytes": 11781,
+      "sha256": "670926fed78f5f79cb44a27aa19b59b8397afdd214c3d608fc26998e092caa75",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "date-picker",
+      "file": "packages/ui/dist/date-picker/style.css",
+      "bytes": 250608,
+      "sha256": "f9a8c8b5b44bcd5ccbb4246c45a773583fee75a0b69002cf5a22868fe1ba4ba7",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "calendar",
+      "file": "packages/ui/dist/calendar/style.css",
+      "bytes": 89926,
+      "sha256": "3875541980b0f3eb71c78c5dbf48ae989699947648c830e1695e0597965fe2f4",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "carousel",
+      "file": "packages/ui/dist/carousel/style.css",
+      "bytes": 12464,
+      "sha256": "8cd423d7001d0093ef51b926268c8d9ddee9ae3edf978a74798c839990c8fdd9",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "checkbox",
+      "file": "packages/ui/dist/checkbox/style.css",
+      "bytes": 9270,
+      "sha256": "d6ee8be97235b730e9f49ab78a66ab916d738626c6a6648245ab349d53ee2d19",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "descriptions",
+      "file": "packages/ui/dist/descriptions/style.css",
+      "bytes": 12544,
+      "sha256": "2c2da34d41d1150e8061d75d6bb62b4d38e21376c929695e5d55f22d2fb07e04",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "list",
+      "file": "packages/ui/dist/list/style.css",
+      "bytes": 163967,
+      "sha256": "b39e02c5979460f352293937baa26402be81d5ed0cc1395f8886d46e6b834113",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "listy",
+      "file": "packages/ui/dist/listy/style.css",
+      "bytes": 5705,
+      "sha256": "3695a58191dcccd604f47e04d5883e3b9ceb7920c6d5865ccf25fb823f69b105",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "qr-code",
+      "file": "packages/ui/dist/qr-code/style.css",
+      "bytes": 201840,
+      "sha256": "000585800dc624ad3075c6974add866e868d59cdbbb554a9dcc8f706e35d66ef",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "splitter",
+      "file": "packages/ui/dist/splitter/style.css",
+      "bytes": 12167,
+      "sha256": "bc5ca64813b5ce42b9fb0a0446b64fdc567e75ccc150759e544bd80a8e9abcd3",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "table",
+      "file": "packages/ui/dist/table/style.css",
+      "bytes": 402429,
+      "sha256": "fa446fbaf9ffbbbe6d470e0ee1a5b1486a8536e39e8b883229bc4a5ecd05abdd",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "divider",
+      "file": "packages/ui/dist/divider/style.css",
+      "bytes": 8562,
+      "sha256": "967b1232bcc3be609e061dcfcd39f34630be0ea524361363d29763a3c8c04a37",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "empty",
+      "file": "packages/ui/dist/empty/style.css",
+      "bytes": 5079,
+      "sha256": "7f0cd8231ad39428c0bc5c0ba0b8d776577f8cc9303bac62601b7cd1f657b048",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "flex",
+      "file": "packages/ui/dist/flex/style.css",
+      "bytes": 5766,
+      "sha256": "b34e41953bc3c17391a3595c057f1ec7656d67fe065a770ffc37dd2ae21fdcfc",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "float-button",
+      "file": "packages/ui/dist/float-button/style.css",
+      "bytes": 242731,
+      "sha256": "79acfe9c28a2981bc52695d209311ba16f94fedc63e5da00e5ed2f8f4eba3577",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "progress",
+      "file": "packages/ui/dist/progress/style.css",
+      "bytes": 22992,
+      "sha256": "91d84514076ecde8123ddfa912ee859a31f385f3b6d857535ddd2548afea2323",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "badge",
+      "file": "packages/ui/dist/badge/style.css",
+      "bytes": 23238,
+      "sha256": "08e36f7dce0e534c685a22284391157656702bc988b35acfc46428735d895de5",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "back-top",
+      "file": "packages/ui/dist/back-top/style.css",
+      "bytes": 5451,
+      "sha256": "414de8b2736d801e4084fd58d6cf9212ad9cf246c8f9e99a0fdcb6fac81d847a",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "border-beam",
+      "file": "packages/ui/dist/border-beam/style.css",
+      "bytes": 5654,
+      "sha256": "d3ed4e975e12eee729ce6a676a381e59a7513c04f9702205c18de69cea0fc4f5",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "tabs",
+      "file": "packages/ui/dist/tabs/style.css",
+      "bytes": 36149,
+      "sha256": "7617c1cafc33ff402dbb97a1d24bb38c0767b0fa03148b6a33844b3019332b5e",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "tag",
+      "file": "packages/ui/dist/tag/style.css",
+      "bytes": 24930,
+      "sha256": "2d4b905e7dc85f2c23dbac35630aa67d28f895822a8451c35a178731b0c0a4a8",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "result",
+      "file": "packages/ui/dist/result/style.css",
+      "bytes": 6028,
+      "sha256": "04507a57f35d0a2e5218ef880b19d14b7cb031126b194d2b4dfcecca63948249",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "statistic",
+      "file": "packages/ui/dist/statistic/style.css",
+      "bytes": 15936,
+      "sha256": "7386f9e206cf933e8c302a63d1db8491718f452e5a69726b1a6704ac875a7221",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "grid",
+      "file": "packages/ui/dist/grid/style.css",
+      "bytes": 82616,
+      "sha256": "471f29634170b26758dbc4be128fd4f921f4f134b5674f2288ec9dace5c48cb4",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "skeleton",
+      "file": "packages/ui/dist/skeleton/style.css",
+      "bytes": 14525,
+      "sha256": "cb225622b2d73ea7280dc89a69bd3d2ec4e6238d847d67445d67beef18b046f1",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "space",
+      "file": "packages/ui/dist/space/style.css",
+      "bytes": 10553,
+      "sha256": "d6cd31a6ee11df42a3bad854a87cfc7fee9bcbd8e39e3f1f806b13d383bcbed9",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "spin",
+      "file": "packages/ui/dist/spin/style.css",
+      "bytes": 10276,
+      "sha256": "bea09aa86c31c2898987fce585e6d631d2a05c767adbfb5bdaca41feb8ca39c4",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "switch",
+      "file": "packages/ui/dist/switch/style.css",
+      "bytes": 14486,
+      "sha256": "e7de697b861510344e44ebb9d9701eb35a184e92c5264de178a9ba6e8e01003b",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "typography",
+      "file": "packages/ui/dist/typography/style.css",
+      "bytes": 35440,
+      "sha256": "4242bbfd5313e187691f04118d7dcca8ca8531f2a5bdedd59963ba13112529e6",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "input-number",
+      "file": "packages/ui/dist/input-number/style.css",
+      "bytes": 37190,
+      "sha256": "85aed538eff1ec3726a6095e07d01b8722ac9051cb1a6c264974693796d25b3f",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "input",
+      "file": "packages/ui/dist/input/style.css",
+      "bytes": 243292,
+      "sha256": "ff9f8de3aaa1e6399c82c354571872d59cb7a5fec70b2613640c67fa7b1bc564",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "upload",
+      "file": "packages/ui/dist/upload/style.css",
+      "bytes": 249704,
+      "sha256": "e4ab3eed0050031709066c2b25a78b9c2dda450e5be108e18a40de098ffdaa7f",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "tooltip",
+      "file": "packages/ui/dist/tooltip/style.css",
+      "bytes": 16828,
+      "sha256": "fa259aeaaaea6c3965e281d14996d362106c7dc52202e2d33cd3e59bc71ef5e7",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "popover",
+      "file": "packages/ui/dist/popover/style.css",
+      "bytes": 14957,
+      "sha256": "300eba59472d81e4b42de452da0019715d5b61efbc325d5aa12963fefcd44446",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "menu",
+      "file": "packages/ui/dist/menu/style.css",
+      "bytes": 78476,
+      "sha256": "bd3dc674522dbd810c3c99e214ba0b48c8f59a464302ffac01885fa245640350",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "mentions",
+      "file": "packages/ui/dist/mentions/style.css",
+      "bytes": 35196,
+      "sha256": "e091f4f55e11a4201aba2bfb485e3033aacb4aa41eb5701ca08df19ed0709207",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "dropdown",
+      "file": "packages/ui/dist/dropdown/style.css",
+      "bytes": 234990,
+      "sha256": "b021dfbb6cc3484aaf74bc4225fc402af6fe9dc994a455455eedb9c5bbce1298",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "drawer",
+      "file": "packages/ui/dist/drawer/style.css",
+      "bytes": 26618,
+      "sha256": "3d3e01855c53fe1603591ae47aba2b16489dd7f9d2cedbb14628115572a6f2c7",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "app",
+      "file": "packages/ui/dist/app/style.css",
+      "bytes": 268195,
+      "sha256": "4765e7161276e7c35cde40d74839cd9d1f2997d0dc73e6bb1ba4b6e0902a0c5f",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "image",
+      "file": "packages/ui/dist/image/style.css",
+      "bytes": 19412,
+      "sha256": "bd3480144eb2bb3f6bdc7d0dbc28ad4fb5ec80bb7d8271f5cc2c27f49d7221ff",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "message",
+      "file": "packages/ui/dist/message/style.css",
+      "bytes": 26561,
+      "sha256": "cc6d8cb7d74549c124b1bd20770c60c0a118721cd3c1a084874806a7b0c5bb48",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "notification",
+      "file": "packages/ui/dist/notification/style.css",
+      "bytes": 32699,
+      "sha256": "e1429b1ab1ca14b4d69bdfbfd50709209e887fccdf68d1acc9730b192f3db235",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "modal",
+      "file": "packages/ui/dist/modal/style.css",
+      "bytes": 216710,
+      "sha256": "3bce4c0269400c319bce86c4182dae4bba0275f4f32319cf8745ce7bbb55f4c9",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "select",
+      "file": "packages/ui/dist/select/style.css",
+      "bytes": 44529,
+      "sha256": "17d363e4a2a0897bc2e4187b030628ce8ec14490686932d93713cf716cb0b987",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "steps",
+      "file": "packages/ui/dist/steps/style.css",
+      "bytes": 53402,
+      "sha256": "5a9f7556306d9da8fbf3a64fd7ec9b234096608315efe4287674c7dd45f32805",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "timeline",
+      "file": "packages/ui/dist/timeline/style.css",
+      "bytes": 62940,
+      "sha256": "1bda74c4bbad66209d5b822ec3ae3db7705958bcb2593283e39d39924e91371b",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "segmented",
+      "file": "packages/ui/dist/segmented/style.css",
+      "bytes": 23475,
+      "sha256": "4305a6384d0228921d5a37dd45a57ee5cee5e04b9d18ab0aa8d838e5c68f581b",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "popconfirm",
+      "file": "packages/ui/dist/popconfirm/style.css",
+      "bytes": 205981,
+      "sha256": "803da8793c202337274ff9fb764353d07db56331f3ea093795282c638c0eb08d",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "cascader",
+      "file": "packages/ui/dist/cascader/style.css",
+      "bytes": 53790,
+      "sha256": "7eda03f00ed389821ac58aa97c39f7453e68ab16d09914939927d8bbd6c00a92",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "tour",
+      "file": "packages/ui/dist/tour/style.css",
+      "bytes": 204894,
+      "sha256": "27afc61ede76514b361ee8c2a6525c9b75de660540eb0b1707111c1f1cc717e5",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "tree",
+      "file": "packages/ui/dist/tree/style.css",
+      "bytes": 21577,
+      "sha256": "fe954a498e440f2ec1c3c842d3d185a5305c5c54e917f5bad4291342cd7f88db",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "tree-select",
+      "file": "packages/ui/dist/tree-select/style.css",
+      "bytes": 66360,
+      "sha256": "c2b03ca958e748dd848b23c11af3fe14e0c3606c9f6fc56f630b91ea5ba6c3f6",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "form",
+      "file": "packages/ui/dist/form/style.css",
+      "bytes": 110867,
+      "sha256": "e35cc5c611565f2d4872ab6d48d13ea486279ff5040f1404afec319edd86474d",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "pagination",
+      "file": "packages/ui/dist/pagination/style.css",
+      "bytes": 70937,
+      "sha256": "cd2c1060460a9180c34cd423dcc0558853d582a451efbf0eca8577a510f31b9e",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "transfer",
+      "file": "packages/ui/dist/transfer/style.css",
+      "bytes": 366008,
+      "sha256": "51d470a468cb8381402e192a2710860614441cbc191fcd833c8a443aadcda988",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "slider",
+      "file": "packages/ui/dist/slider/style.css",
+      "bytes": 28606,
+      "sha256": "815c21072fd2405c41227fc45cf62ddee6ad68c3bc109df48ffb70cccbcdd4eb",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "masonry",
+      "file": "packages/ui/dist/masonry/style.css",
+      "bytes": 4968,
+      "sha256": "2227e69d24bc398b39982033498e8cfc79e4914bbbb7bdaf4c3911b6606f65fb",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "anchor",
+      "file": "packages/ui/dist/anchor/style.css",
+      "bytes": 7102,
+      "sha256": "ae9d17272bac2865cb9ea8d12533b524c9963d1a261917b5c00b4a891e7bf373",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "breadcrumb",
+      "file": "packages/ui/dist/breadcrumb/style.css",
+      "bytes": 238743,
+      "sha256": "94a2199620b33b7d15c46cc6b70b02c4cd41ce99a4e259e307cd533eabf7690a",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "card",
+      "file": "packages/ui/dist/card/style.css",
+      "bytes": 55612,
+      "sha256": "5f72b89ba2ca2c81f94be346e84d72a8bf81d2e2898fa97507bb88967bf7d42c",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "avatar",
+      "file": "packages/ui/dist/avatar/style.css",
+      "bytes": 19752,
+      "sha256": "93f087c24675c390a9ac49859d2c56cb8ca9d805f0e8db60559fd17dabd065c5",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    },
+    {
+      "name": "color-picker",
+      "file": "packages/ui/dist/color-picker/style.css",
+      "bytes": 387192,
+      "sha256": "4cc8931dd627e87a4bc67cb29a77ac5ed84d80c609b99284af3fad916eaec47f",
+      "sharedBaseOnce": true,
+      "nativeLinkResetCount": 1
+    }
+  ],
+  "strictL7": {
+    "results": [
+      {
+        "pkg": "-",
+        "id": "B9",
+        "status": "PASS",
+        "detail": "Node 22.22.2（要求 >= 22.12）"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B1",
+        "status": "SKIP",
+        "detail": "--no-build，复用现有 dist"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B2",
+        "status": "PASS",
+        "detail": "exports 全部可解析（含「产出即有声明」反查）"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B3",
+        "status": "PASS",
+        "detail": "产物无 React 说明符"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B4",
+        "status": "PASS",
+        "detail": "产物无 CSS-in-JS 运行时"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B10",
+        "status": "PASS",
+        "detail": "产物无 @rc-component / rc-*"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B5",
+        "status": "PASS",
+        "detail": "70 份 CSS 产物且非空"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B7",
+        "status": "PASS",
+        "detail": "50182 处 var(--apollo-*) 引用全部在 theme 的 tokens.css 里有声明"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B11",
+        "status": "PASS",
+        "detail": "70 份 CSS 产物无 NaN / undefined / 未展开占位 / 嵌套 var 包装"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B6",
+        "status": "PASS",
+        "detail": "73 个组件全部在预算内（全量 2099.7 KB；最重 table 343.5 KB = 16.4%）"
+      },
+      {
+        "pkg": "@apollo-design/ui",
+        "id": "B8",
+        "status": "PASS",
+        "detail": "69 个组件在无 DOM 环境下渲染出非空内容"
+      }
+    ],
+    "failed": 0,
+    "pending": 0,
+    "na": 0
+  },
+  "strictL7Command": "node tests/build/run.mjs --package ui --no-build --strict --json",
+  "strictL7ExitCode": 0,
+  "sourceTests": {
+    "passed": 50,
+    "failed": 0,
+    "report": "stylesheet-global-links-source-stage.json"
+  },
+  "nativeVisuals": "In progress from clean a47d96ec. No new baselines accepted."
+}

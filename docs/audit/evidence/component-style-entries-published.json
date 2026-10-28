@@ -1,0 +1,495 @@
+{
+  "command": "COMPONENT_STYLE_ENTRIES_OUTPUT=/tmp/apollo-component-style-entries-350f4cb2 COMPONENT_STYLE_ENTRIES_EVIDENCE=/tmp/apollo-component-style-entries-350f4cb2/evidence.json node tests/browser/component-style-entries.mjs",
+  "exitCode": 0,
+  "sourceCommit": "350f4cb2e97e0ea535415ff5a94871de663d58f4",
+  "units": [
+    {
+      "component": "timeline",
+      "variants": [
+        "basic",
+        "horizontal",
+        "current-provider"
+      ]
+    },
+    {
+      "component": "breadcrumb",
+      "variants": [
+        "keyboard-menu",
+        "no-title-menu",
+        "current-provider"
+      ]
+    },
+    {
+      "component": "descriptions",
+      "variants": [
+        "vertical-bordered",
+        "current-geometry"
+      ]
+    },
+    {
+      "component": "grid",
+      "variants": [
+        "responsive",
+        "current-provider"
+      ]
+    },
+    {
+      "component": "space",
+      "variants": [
+        "native-spacing",
+        "addon-compact"
+      ]
+    }
+  ],
+  "pairs": 24,
+  "passed": 24,
+  "independentBundles": 10,
+  "realRenders": 48,
+  "browserOrVueErrors": [],
+  "distFingerprintsUnchanged": true,
+  "runtimeImplementationSourceModules": 0,
+  "redEvidence": "/tmp/apollo-component-style-entries-3214ee1-settled/evidence.json",
+  "greenEvidence": "/tmp/apollo-component-style-entries-350f4cb2/evidence.json",
+  "priorFixtureEvidenceIndex": "/tmp/apollo-component-style-entries-3214ee1-settled/red-to-steady-evidence.json",
+  "stateTransitions": [
+    {
+      "component": "timeline",
+      "state": "basic",
+      "viewport": "mobile",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "a5ca08b5f96e569a7e510cb4bece2e3376d8070d172c1bbe2d0290ac937e1ba9",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/timeline-basic-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/timeline-basic-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/timeline-basic-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/timeline-basic-mobile-full.json"
+      }
+    },
+    {
+      "component": "timeline",
+      "state": "basic",
+      "viewport": "desktop",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "e6050b0110a245795b1b31f0f03b0700d4ee4982b46a33f092e79230fd0fb307",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/timeline-basic-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/timeline-basic-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/timeline-basic-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/timeline-basic-desktop-full.json"
+      }
+    },
+    {
+      "component": "timeline",
+      "state": "horizontal",
+      "viewport": "mobile",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "2ece63c852c49dbd28269af9b1eef02bb615fa81f3bd1a18a8b1f35838808ae9",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/timeline-horizontal-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/timeline-horizontal-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/timeline-horizontal-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/timeline-horizontal-mobile-full.json"
+      }
+    },
+    {
+      "component": "timeline",
+      "state": "horizontal",
+      "viewport": "desktop",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "9581b4de4aefe81dbab1ad23f1538e66d8ab82f16cad1f7a9d1747845ba833bf",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/timeline-horizontal-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/timeline-horizontal-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/timeline-horizontal-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/timeline-horizontal-desktop-full.json"
+      }
+    },
+    {
+      "component": "timeline",
+      "state": "current-provider",
+      "viewport": "mobile",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "94b3df5718971dd614e84bcb3d1fe099ee0e638245a4de2269248170d7ed2c58",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/timeline-current-provider-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/timeline-current-provider-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/timeline-current-provider-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/timeline-current-provider-mobile-full.json"
+      }
+    },
+    {
+      "component": "timeline",
+      "state": "current-provider",
+      "viewport": "desktop",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "3fde7649e1cd2cadd0679aadb34e9a7920ee7a135247c270ff9887a9f2ab63f9",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/timeline-current-provider-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/timeline-current-provider-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/timeline-current-provider-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/timeline-current-provider-desktop-full.json"
+      }
+    },
+    {
+      "component": "breadcrumb",
+      "state": "keyboard-menu",
+      "viewport": "mobile",
+      "redStagePassed": false,
+      "redStageChangedPixels": 280,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "292d59207b0f51e4e67395c82488321da909a2990d20106a928e719136759a6a",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-keyboard-menu-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-keyboard-menu-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-keyboard-menu-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-keyboard-menu-mobile-full.json"
+      }
+    },
+    {
+      "component": "breadcrumb",
+      "state": "keyboard-menu",
+      "viewport": "desktop",
+      "redStagePassed": false,
+      "redStageChangedPixels": 280,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "38345c8c5293807a21fb9d7dcd2cb1a0cc4a3f69234f183dc8baa409f9756178",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-keyboard-menu-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-keyboard-menu-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-keyboard-menu-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-keyboard-menu-desktop-full.json"
+      }
+    },
+    {
+      "component": "breadcrumb",
+      "state": "no-title-menu",
+      "viewport": "mobile",
+      "redStagePassed": false,
+      "redStageChangedPixels": 221,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "0b11bbf4d6130d9a4f396383f72e86711339f37475a35440ed8e23fb9f42bba2",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-no-title-menu-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-no-title-menu-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-no-title-menu-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-no-title-menu-mobile-full.json"
+      }
+    },
+    {
+      "component": "breadcrumb",
+      "state": "no-title-menu",
+      "viewport": "desktop",
+      "redStagePassed": false,
+      "redStageChangedPixels": 221,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "1cd98b918217f5771f4324eae4a78cb3ec93fc61ea238c337bae75883fbb3565",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-no-title-menu-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-no-title-menu-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-no-title-menu-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-no-title-menu-desktop-full.json"
+      }
+    },
+    {
+      "component": "breadcrumb",
+      "state": "current-provider",
+      "viewport": "mobile",
+      "redStagePassed": false,
+      "redStageChangedPixels": 38,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "727a665cc406fcac680e4b970e062cf8e9cb92bd68297197d59fcbb0e3825739",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-current-provider-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-current-provider-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-current-provider-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-current-provider-mobile-full.json"
+      }
+    },
+    {
+      "component": "breadcrumb",
+      "state": "current-provider",
+      "viewport": "desktop",
+      "redStagePassed": false,
+      "redStageChangedPixels": 38,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "327bc2d29da39ad684b234d26d5e0eaec31d50271018a9f2ef59b0fa48341add",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-current-provider-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-current-provider-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-current-provider-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/breadcrumb-current-provider-desktop-full.json"
+      }
+    },
+    {
+      "component": "descriptions",
+      "state": "vertical-bordered",
+      "viewport": "mobile",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "d8fa67b77e677672793c6b322f8bf2077f287b83c7c06ddac1611c14e13a1733",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-vertical-bordered-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-vertical-bordered-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-vertical-bordered-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-vertical-bordered-mobile-full.json"
+      }
+    },
+    {
+      "component": "descriptions",
+      "state": "vertical-bordered",
+      "viewport": "desktop",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "2d50074318979ea8a3d869eae246252df3c45bcd8f5680f868e429d297e06e5b",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-vertical-bordered-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-vertical-bordered-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-vertical-bordered-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-vertical-bordered-desktop-full.json"
+      }
+    },
+    {
+      "component": "descriptions",
+      "state": "current-geometry",
+      "viewport": "mobile",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "2481249f29f3d0f8f9bea5c7f76d91c2947d7ffb173fb5794aac8d7c553e63e8",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-current-geometry-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-current-geometry-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-current-geometry-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-current-geometry-mobile-full.json"
+      }
+    },
+    {
+      "component": "descriptions",
+      "state": "current-geometry",
+      "viewport": "desktop",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "7832b42e8eb3be0ead286c412070eef0bc9885008bf82033c315a9e3b10c82f7",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-current-geometry-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-current-geometry-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-current-geometry-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/descriptions-current-geometry-desktop-full.json"
+      }
+    },
+    {
+      "component": "grid",
+      "state": "responsive",
+      "viewport": "mobile",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "b8a7e46014074b72d636be9caddb1f91c1191dd41e19c9843f0f0a0421e4cf59",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/grid-responsive-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/grid-responsive-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/grid-responsive-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/grid-responsive-mobile-full.json"
+      }
+    },
+    {
+      "component": "grid",
+      "state": "responsive",
+      "viewport": "desktop",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "a2e951de4675b1da0df87b8de3ed8dc39290d3b17f8b1c5703a739de400838ae",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/grid-responsive-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/grid-responsive-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/grid-responsive-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/grid-responsive-desktop-full.json"
+      }
+    },
+    {
+      "component": "grid",
+      "state": "current-provider",
+      "viewport": "mobile",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "3ec39df67bf4af9941fc67e9b825f8c71b1c0d74a37fba1edf0a9352cc9d66da",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/grid-current-provider-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/grid-current-provider-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/grid-current-provider-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/grid-current-provider-mobile-full.json"
+      }
+    },
+    {
+      "component": "grid",
+      "state": "current-provider",
+      "viewport": "desktop",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "854c017226b139a01d30fe35ba94481a41072bcbb401e595d58e64ad99fc1151",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/grid-current-provider-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/grid-current-provider-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/grid-current-provider-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/grid-current-provider-desktop-full.json"
+      }
+    },
+    {
+      "component": "space",
+      "state": "native-spacing",
+      "viewport": "mobile",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "0389eb5cbd5effd51fef158caa7324d081264f3c7ff0cb45badc3c021bed26a3",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/space-native-spacing-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/space-native-spacing-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/space-native-spacing-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/space-native-spacing-mobile-full.json"
+      }
+    },
+    {
+      "component": "space",
+      "state": "native-spacing",
+      "viewport": "desktop",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "4ab7d89550dab78807612e6f6d1c88f6242d6d0dfceecbe18c9b400e4eb635c8",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/space-native-spacing-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/space-native-spacing-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/space-native-spacing-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/space-native-spacing-desktop-full.json"
+      }
+    },
+    {
+      "component": "space",
+      "state": "addon-compact",
+      "viewport": "mobile",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "5d7bf4a3970a9c7b39c3107c21b03458501c736782bb528304c81f870e4fe7a1",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/space-addon-compact-mobile-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/space-addon-compact-mobile-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/space-addon-compact-mobile-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/space-addon-compact-mobile-full.json"
+      }
+    },
+    {
+      "component": "space",
+      "state": "addon-compact",
+      "viewport": "desktop",
+      "redStagePassed": true,
+      "redStageChangedPixels": 0,
+      "greenStagePassed": true,
+      "greenStageChangedPixels": 0,
+      "rawRGBASha256": "7b4596cac333f26ff26802ef483b02cf7dd44b315db8083a686afec9134f917d",
+      "screenshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/space-addon-compact-desktop-standalone.png",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/space-addon-compact-desktop-full.png"
+      },
+      "snapshots": {
+        "standalone": "/tmp/apollo-component-style-entries-350f4cb2/space-addon-compact-desktop-standalone.json",
+        "full": "/tmp/apollo-component-style-entries-350f4cb2/space-addon-compact-desktop-full.json"
+      }
+    }
+  ],
+  "readersExited": true,
+  "newBuildsRun": "Only isolated Vite consumer fixtures in /tmp; no UI build or dist mutation.",
+  "repositoryFilesEditedDuringReplay": false,
+  "specificationNote": "Both public CSS modes agree after main ownership fix. This does not replace main native visual baseline review or final full-repository gate.",
+  "sameCommitDuringRun": true,
+  "sourceWorkingTreeNote": "Other source-only remediation may proceed independently; no implementation source entered these bundles. Commit equality is not asserted to prove a clean working tree.",
+  "stage": "Published per-component versus aggregate CSS accepted for these 24 state/viewport pairs; final native visual acceptance remains separate"
+}

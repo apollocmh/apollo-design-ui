@@ -227,7 +227,7 @@
       "notes": "Token / 主题 / locale / size / disabled / prefixCls 的统一入口，是全部组件的运行时网关。它是零运行时 CSS 变量方案（ARCHITECTURE.md §4.3）的落地点。\n2026-10-26 Image单元源主题/Token组：源上下文跨Portal、7个Token、ThemeProvider继承与Provider主题移除/恢复状态已修；可选作用域用原生Teleport保留同一插槽子树，SSR内联后水合不替换原节点，当前CSS变量前缀清理。56文件1059运行/DOM/a11y/theme串行通过（未改阈值），严格/构建/生产模板消费/L7/Docs通过；23场景生产Chrome及独立SSR水合通过。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image滚动锁/富缩略图/motion/最终视觉仍开放，不据此升级整组件维度。",
       "layerNotes": {
         "token": "ConfigProvider 本身没有 ComponentToken —— 它是消费 token 的入口，不是 token 的定义者。`theme.components` 字段把每个组件的 ComponentToken 透传给对应组件去用，token 落点仍由各组件的 style/token.ts 决定。",
-        "style": "ConfigProvider 不产 CSS 样式文件（`packages/ui/src/config-provider/` 下没有 style/ 子目录）。它的样式副作用有两个：① `theme` 给出时渲染一个 `display: contents` 的作用域元素，由 `createCSSVarScope` 把派生 token 写成 `--apollo-*` 变量；② 不持有任何 className —— 组件级样式照旧由各组件的 style/index.ts 注入。",
+        "style": "ConfigProvider没有自有CSS入口。本层给theme时创建display:contents作用域，经createCSSVarScope写入当前派生CSS变量，移除/前缀切换时清理；主题配置同时通过Vue上下文传给消费者。组件静态CSS需显式导入公开style.css或各组件入口，style/index.ts用于构建期生成，不在组件渲染时注入。2026-10-29公共样式69入口与24对真实按需/全量消费证据见stylesheet-dependency-published-stage.json；不是ConfigProvider整单元重新验收。",
         "interaction": "本体无事件、无状态、无受控语义 —— `n/a` 不是测试跳过，是「没有交互面」。同理 a11y：本体无可聚焦/可交互元素，只对 demo 跑 axe 校验 0 violation。",
         "unit": "L1 共 68 条用例（含 4 条被变异验证逼出来的缺口用例，commit 6869c5d）。三条最容易写错的判据各自有专属用例钉在文件头。",
         "visual": "L6 三用例：locale 3/3 exact；theme-token 3/3 size-mismatch 1px（D32，display:contents 在 Chromium #stage 容器留 1px 假盒子，INTENDED 不修）；theme-dark 3/3 block-diff 但 diff 只落在 Empty 的 SVG 插画（不跟 darkAlgorithm 走）—— ConfigProvider 的暗色管道**正常**（文字色两侧一致），diff 是 Empty 流的遗留（D33，EMPTY-LIMIT）。详见 docs/analysis/config-provider.md §9 与 tests/visual/matrix.mjs LIMITATIONS。",
@@ -379,10 +379,11 @@
       "a11yStatus": "in-progress",
       "visualStatus": "in-progress",
       "docsStatus": "in-progress",
-      "notes": "2026-10-28完整盘点与成组源码修复e0062edd、Select关联356161b4：当前槽/Provider、key身份/焦点、完整separator数据、Compact实际消费者与Addon主题/纵向连接已修。源码834相关运行时、82浏览器通过；发布JS/CSS/声明、正式视觉/Docs待验收，见space-contract-audit。",
+      "notes": "2026-10-28完整盘点与成组源码修复e0062edd、Select关联356161b4：当前槽/Provider、key身份/焦点、完整separator数据、Compact实际消费者与Addon主题/纵向连接已修。源码834相关运行时、82浏览器通过；发布JS/CSS/声明、正式视觉/Docs待验收，见space-contract-audit。\n2026-10-29交叉审图确认Input紧凑主题字体/padding和Addon underlined缺底线两项实际缺陷，分别成组整改；原160绘制矩阵将underlined与borderless合并，不能证明底线语义。状态保持testing，75张原生候选未批准，不能据此前源码/发布绿灯标整单元完成。",
       "layerNotes": {
-        "token": "antd 的 Space / Compact / Addon **都没有**用户可覆盖的 Component Token —— 三个 `ComponentToken` 都是空接口、`prepareComponentToken` 都返回 `{}`（`components/space/style/index.ts:7-8` 明确注释 `ComponentToken need to be empty by default`）。所以 `derived.tokenCount` 是 0、`registry/tokens.json` 里**不**加条目，本维度记 n/a 而不是 done（「登记 0 个 token 并声称完成」与「确认它确实没有 token」是两件事）。`style/token.ts` 用 `prepareComponentToken` 返回 `{}` 把「空」写成代码，`theme.test.ts` 断言它的键集为空。另有三个**内部** gap token（`spaceGapSmallSize` / `spaceGapMiddleSize` / `spaceGapLargeSize`，由 `mergeToken` 从 `paddingXS` / `padding` / `paddingLG` 派生）—— 它们不在 ComponentToken 里、用户覆盖不了，但六条 `-gap-*` 规则的取值全部来自它们（落成 `var(--apollo-padding-xs)` 这类变量引用，随主题自适应；唯一真源是 `SPACE_GAP_ALIASES`）。⚠️ 有一处**实现形态**差异（D38）：antd 用组件级 CSS 自定义属性（`--ant-space-addon-*`）做中间变量、status 段只改写变量；我们零运行时没有这个可覆盖点，改成内联为 `border-color` / `background` 并把 status×variant **展开成复合选择器** —— Addon 因此是 33 条规则而不是 29 条，且展开后特异性拉平（0,2,0），必须**重排选择器顺序**才能保持层叠等价（顺序契约由 theme.test.ts 显式断言）。",
-        "interaction": "Space / Space.Compact / Space.Addon 都是**纯布局容器**：无事件、无状态、无受控/非受控语义、无键盘交互、无禁用态（`Addon` 的 `disabled` 只影响颜色，不设 `disabled` 属性、不拦截交互）。TESTING.md 的 L2 要求覆盖「鼠标 / 键盘 / 焦点 / 受控 / 禁用」六类，这里一类都不适用；写几个 `expect(exists()).toBe(true)` 把格子填上属于反模式 A1。⚠️ 一处**看起来像交互**、实际不在本层的东西：`Space.Compact` 会通过 `genCompactItemStyle` 改变子元素的 hover 层级（`-compact-item:hover` 的 `z-index: 4`、`[disabled]` 的 `z-index: 0`），但那些规则作用在**子组件自己的类名**上、且 L6 的截图是静态的（不触发 hover）⇒ 视觉层也观测不到。它的语义由 `theme.test.ts` 钉住**选择器与顺序**（可判定），层叠结果等真实 Button / Input 落地后再补。"
+        "token": "当前Space/Compact/Addon公开ComponentToken为空，无新增组件Token；gap消费paddingXS/padding/paddingLG三类Alias，根作用域接当前Theme变量。Addon外观直接消费当前Alias，原生变量优先。tokenStatus=n/a只表示没有独立ComponentToken，不表示不消费主题。旧D38展开记录保留于带日期历史证据，不作为underlined应等同borderless的规格。",
+        "interaction": "布局容器没有业务v-model或组件级选择/开关事件，interactionStatus=n/a；仍必须验证当前默认/分隔槽、Provider替换、key/Fragment重排的子项实例、输入草稿/选择与焦点，以及横纵/RTL紧凑上下文和隔离。Addon.disabled是装饰状态，不禁用插槽内原生控件。已有对应源码/发布浏览器证据；Input尺寸和Addon底线新缺陷按本轮补验，不以无业务状态跳过这些边界。",
+        "style": "当前Alias、横纵/RTL紧凑连接已有源码和发布证据；正式审图重开underlined底线与关联Input尺寸，修复及最终75张视觉仍待统一验收。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",

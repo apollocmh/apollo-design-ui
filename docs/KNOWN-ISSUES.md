@@ -671,3 +671,11 @@ Descriptions5ab9b3c4、Breadcrumb40ec3962、Timeline3ce8d1d2、Grid04be6282与Sp
 公开按需CSS新增真实红灯：Timeline单独样式缺Steps基础布局，完整69入口/72组件正分五组追踪实际内部消费与已嵌入规则；全量CSS通过不代表按需入口通过。范围与验收见[共享CSS清单](audit/2026-10-29-stylesheet-dependency-audit.md)。
 
 五组源码阶段Docs已发布：b485d136 / 部署40726245692成功，线上32/32零页面/Vue错误（22个既有Demo深链SPA回退）；首次单资源503已恢复，原命令重跑通过。按需CSS和正式视觉仍开放，见five-unit-docs-publication.json。
+
+### 2026-10-29 · 公共按需样式与Upload进度发布验证
+
+完整盘点72组件/69样式入口后，`3214ee10`补齐34组件的73条实际内部CSS依赖及Tabs共享动画片段；`76eb766a`将七条全局链接规则由Select移入基础层，消除按需/全量外观依赖。发布UI构建、严格L7 11项及69份实际CSS一致性通过；独立JS/CSS的24对真实浏览器几何/paint/rawRGBA全一致，原6个Breadcrumb差异归零。源码50条组合/前缀回归通过。证据与清单见[共享CSS报告](audit/2026-10-29-stylesheet-dependency-audit.md)。
+
+`2ef32069`将Upload无效进度替身改为实际Progress，六个现有字段、动态清除、受控/非受控与ARIA均补齐；源码258运行时/48类型，发布全量与按需CSS各75浏览器断言通过。当前Upload137.736KB与旧Upload+Progress137.763KB相当，`a47d96ec`仅按真实功能成本修正Upload预算，其他预算与比例约束保留。[窄单元报告](audit/2026-10-29-upload-progress-audit.md)，不宣称完整Upload/Progress收口。
+
+正式交叉审图另确认Space紧凑主题的Input字号/padding仍取默认Token，Addon underlined与borderless同绘制；两项纳入本轮必修，旧160绘制矩阵不足以证明底线语义。当前Source里程碑保留，整单元仍开放。四个其他组件222张新候选与原537张回归在清洁独立快照验收中，完整交付仍13/72、已批准视觉仍537/1602。

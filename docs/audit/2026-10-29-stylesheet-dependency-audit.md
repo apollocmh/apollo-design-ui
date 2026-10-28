@@ -25,3 +25,11 @@
 重建后的12状态×2视口独立CSS/全量CSS对照中，18对完全相同，Breadcrumb六对仅链接装饰不同；最终稳态采样已排除动画/几何残差，分别38/221/280像素。全量不能自动当作正确规格。再次完整盘点全部69个原始生成器的全局元素规则，确认通用链接七条规则在Select内重复两遍，并随Cascader/TreeSelect嵌入；其他仅Button主题属性选择器，不存在第二组全局元素规则。
 
 这些链接颜色、装饰、hover/active/keyboard focus均消费既有全局Alias，归属共享BASE_CSS；统一移出Select及其嵌入链，在每份公开样式的基础层只保留一次。不让Breadcrumb依赖Select，不新增运行时样式或兼容选择器。两个新增归属测试修前均失败，成组修后与原组合/前缀共50条通过。3214ee10阶段的汇总字节不变证据保留；本阶段会因移位和去重改变汇总文本，须分别复比真实几何/paint/RGBA，不能沿用原SHA冒称新产物完全不变。
+
+## 公共链接阶段的实际发布验证
+
+实现提交 `3214ee10` / `76eb766a`，浏览器工具 `350f4cb2`；UI实际构建成功，预算按真实Progress组合记录后清洁冻结为 `a47d96ec`。严格UI L7实际11项、零失败/待定；69份既有按需入口逐份与当前已构建生成器完全一致，每份共享基础和原生链接规则均仅一次。新汇总CSS为1,317,138字节、SHA256 `b02c526e0b6e9796294d5ec60186eee68079b242aa6941473553336bcb94bf3a`，因已说明的移位/去重改变文本；不是沿用前阶段的字节不变结论。
+
+原命令重跑12状态×2视口、10个隔离打包与48次实际渲染，24/24几何、paint、原始RGBA完全一致；原6个Breadcrumb链接差异全部消失、18个正常对照保留。全部模块无实现源码别名、零浏览器/Vue错误、产物指纹未变、读者已退出。逐状态红绿及artifact/L7见[浏览器证据](evidence/component-style-entries-published.json)和[发布产物证据](evidence/stylesheet-dependency-published-stage.json)。
+
+当前自有视觉继续由独立物理dist快照复核：Descriptions/Breadcrumb/Timeline/Grid共222张，以及既有537张；Space另有Input当前主题尺寸和Addon underlined缺陷正在成组修复，未批准75张。按需对照24对的通过不表示上述组件整单元或全库验收结束。

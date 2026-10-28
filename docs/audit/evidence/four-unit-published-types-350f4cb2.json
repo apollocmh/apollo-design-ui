@@ -1,0 +1,49 @@
+{
+  "publishedBuildCommit": "350f4cb2",
+  "freezeCommit": "a47d96ec",
+  "allFourPassed": true,
+  "realDemoTemplates": 52,
+  "checks": [
+    {
+      "component": "descriptions",
+      "command": "node tests/consumer/descriptions-types.mjs",
+      "exitCode": 0,
+      "realDemos": 13,
+      "noSourceAliases": true,
+      "result": "PASS published Descriptions/Item: five precise public types, typed slots, native StyleValue, semantic scope negatives and all 13 demos",
+      "logSha256": "05b56ed6f2f74146bc3e6e9aa3be4be73c60226d9565fcf2ce790dd7f7e19c01",
+      "publishedDeclarationSha256": "35d7009cfeced331fa954c2f6c469ce7d832b7b9616855e3153ecc4907684378"
+    },
+    {
+      "component": "breadcrumb",
+      "command": "node tests/consumer/breadcrumb-types.mjs",
+      "exitCode": 0,
+      "realDemos": 11,
+      "noSourceAliases": true,
+      "result": "PASS published Breadcrumb declarations: all11 original demos, named content slots, route/path/href inference, native attrs and menu callback negative cases; no test fixtures shipped",
+      "logSha256": "d243661ea247f3b62d5929a214c99629d445a3294586423bdbfa7bfeb3e48982",
+      "publishedDeclarationSha256": "7413dcf25408ce444284cf9f3b7d473ac8b95a48580bf810c0979634b72b87b8"
+    },
+    {
+      "component": "timeline",
+      "command": "node tests/consumer/timeline-types.mjs",
+      "exitCode": 0,
+      "realDemos": 15,
+      "noSourceAliases": true,
+      "result": "PASS published Timeline declarations: all 15 original demos, current Timeline/Steps props, typed semantic functions and all three native item slots; no test fixtures shipped",
+      "logSha256": "aa12ff9cf6a247959b9202fad44422c48058021f52e3867d2d5530cdd9e28d6e",
+      "publishedDeclarationSha256": "abc4f139f6acb77661f9cb5d14c7e4e7a16953202dccc13c7e410123d686acf8"
+    },
+    {
+      "component": "grid",
+      "command": "node tests/consumer/grid-types.mjs",
+      "exitCode": 0,
+      "realDemos": 13,
+      "noSourceAliases": true,
+      "result": "PASS published Grid root/subpath types, complete slots/refs/native styles, two-axis responsive gutters and all 13 demos",
+      "logSha256": "e8099cbb490b3b03fdc7218238c567f616440fadbb4bb7de5c6e7969b3793439",
+      "publishedDeclarationSha256": "a154c135612a2856d64b634cf11099ca6f2f8a0a0c5049995e54a4ca291cb592"
+    }
+  ],
+  "scope": "Published declarations and strict Vue templates, not runtime/native visual/whole-library acceptance"
+}

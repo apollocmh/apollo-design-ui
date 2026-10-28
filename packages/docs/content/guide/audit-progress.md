@@ -23,7 +23,7 @@ order: 0
 
 Descriptions 的键盘帮助、Breadcrumb 的真实菜单导航、Timeline 横向长文与连线、Grid 响应式配置、Space/Compact 的动态内容与实际子组件已成组修复。共享 Menu 原生操作、断点观察器和 Select 紧凑尺寸分别提交，迁移说明与 Demo 同步；不保留错误的 React 回调用法。
 
-当前五路正验证冻结版本的发布 JS、公开 CSS、声明、实际 Demo 和 SSR/水合。原生视觉新增297张待审，当前537/1602张已批准、1065张待验收；五组仍处于统一验收阶段，完整交付计数保持13/72。各自运行结果和剩余边界随验收补记。验收另复现了按需CSS缺少内部组合样式的问题，正在完整核对69个入口并集中修复；文档站使用全量CSS，不能据此宣称按需入口通过。
+五组发布 JS、声明、实际 Demo 和 SSR/水合已有分别通过的记录。公共样式已盘清72组件/69入口，补齐内部CSS依赖和共享链接归属；69份发布样式、严格UI L7及24对独立/全量CSS浏览器几何、绘制与原始像素对照通过。Upload六个既有进度配置也已修复，发布两种CSS各75条断言通过。四组件222张正式视觉和原537张回归正在清洁快照复核；Space审图发现Input紧凑主题尺寸、Addon下划线两项实际缺陷，继续修复后重验。完整交付仍13/72，已批准537/1602、1065待验收；局部绿灯不代表整单元或全库完成。
 
 - [Descriptions 当前用法与示例](/components/descriptions)
 - [Breadcrumb 原生内容与菜单](/components/breadcrumb)
@@ -191,7 +191,7 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 
 Grouped fixes cover keyboard help in Descriptions, native Breadcrumb navigation, horizontal Timeline content and rail alignment, responsive Grid configuration, and current Space/Compact content and real consumers. Menu native actions, Provider breakpoint ownership and Select compact sizing have separate commits, with migration notes and demos.
 
-Five tasks now verify the frozen published JS, public CSS, declarations, real demos and SSR/hydration. Another297 native visual cases await review:537 of1602 are currently approved, with1065 pending. Complete delivery remains13 of72 units until unified acceptance closes. A separate published reproduction found missing internal dependencies in individual CSS entries; all69 existing entries are being checked together. The documentation site uses aggregate CSS, which cannot prove individual entry coverage.
+Published JS, declarations, real demos and SSR/hydration have separate passing records. All72 components and69 stylesheet entries have been inventoried; internal CSS dependencies and shared link ownership are corrected. The69 published styles, strict UI L7 and24 individual/aggregate browser comparisons pass with matching geometry, paint and raw pixels. All six existing Upload progress options are also corrected, with75 published browser checks passing for each CSS mode. Another222 visuals for four components and the existing537 regressions are being checked from a clean snapshot. Space still has two confirmed defects: compact Input sizing and the Addon underline; these remain in the current scope. Complete delivery remains13 of72, with537 of1602 visuals approved and1065 pending.
 
 ## Badge / Ribbon implementation, styles and42 Apollo visuals accepted
 

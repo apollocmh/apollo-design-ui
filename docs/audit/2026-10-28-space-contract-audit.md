@@ -2,6 +2,12 @@
 
 状态（2026-10-29）：源码/fixture/自有视觉模块与 helper 全部冻结。Space 生产与 fixture 由主线程提交为 `e0062edd`，关联 Select 窄修正为 `356161b4`。起点为 `1b361487`；本任务没有构建 UI/root/package dist、修改共享 Registry/导出或提交推送。源码验证不构成发布产物、正式视觉或全库验收。
 
+## 2026-10-29 交叉审图重新确认的必修边界
+
+正式75张候选经逐图查看，紧凑/暗色紧凑主题的Input与Button实际高度不齐；独立Input复现，根因为当前Alias与默认私有字号/padding混用。Addon underlined底边为0，逐项paint与borderless相同；原160矩阵将二者合并要求none，不能循环证明underlined有效。现明确underlined应仅画当前主题底线、保留状态/禁用优先级，borderless仍无边框。两项均本轮必修，分别在Input关联链和Addon完整变体矩阵成组修正。
+
+本报告下方“收口”“正常”是相应源码阶段的既有测试结论，不覆盖此次已复现的尺寸和底线缺口。整单元继续testing，75张未批准；当前四主题/三size/多视口与逐项paint证据见 `/tmp/apollo-space-addon-review/report.md`，修复/最终重验另记。
+
 ## 范围与验收标准（先于实现）
 
 整改单元包括 `packages/ui/src/space/**`、所属源码/消费类型/SSR/浏览器测试、十五个 Demo、双语 API、迁移说明及独立 Apollo 视觉模块。共享紧凑消费者只读取和测试，缺陷交主线程协调。保留现有有效公开 Props、别名、VNode 数据、原生 attrs / 事件、样式入口及参考证据；不增加 React 内容函数通道、不为数量新增 ComponentToken。

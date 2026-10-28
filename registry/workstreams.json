@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T18:10:52.500Z",
+  "generatedAt": "2026-10-28T18:39:14.816Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -1432,7 +1432,7 @@
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 4,
-      "why": "2026-10-28完整盘点与成组源码修复e0062edd、Select关联356161b4：当前槽/Provider、key身份/焦点、完整separator数据、Compact实际消费者与Addon主题/纵向连接已修。源码834相关运行时、82浏览器通过；发布JS/CSS/声明、正式视觉/Docs待验收，见space-contract-audit。",
+      "why": "2026-10-28完整盘点与成组源码修复e0062edd、Select关联356161b4：当前槽/Provider、key身份/焦点、完整separator数据、Compact实际消费者与Addon主题/纵向连接已修。源码834相关运行时、82浏览器通过；发布JS/CSS/声明、正式视觉/Docs待验收，见space-contract-audit。\n2026-10-29交叉审图确认Input紧凑主题字体/padding和Addon underlined缺底线两项实际缺陷，分别成组整改；原160绘制矩阵将underlined与borderless合并，不能证明底线语义。状态保持testing，75张原生候选未批准，不能据此前源码/发布绿灯标整单元完成。",
       "doneWhen": [],
       "group": "布局",
       "priority": "P0",
