@@ -510,6 +510,44 @@ try {
         assert.deepEqual(violations, []);
         return { demo, mode };
       });
+  for (const mode of ['default', 'dark', 'compact', 'both'])
+    await check(
+      `${mode}: small compact demo keeps joined 24px targets and theme fonts`,
+      async () => {
+        await set({ demo: 'compact', theme: mode, rtl: false, vertical: false });
+        const frame = page.locator('#demo');
+        const measure = (target) =>
+          target.evaluate((node) => {
+            const style = getComputedStyle(node),
+              rect = node.getBoundingClientRect();
+            return {
+              height: rect.height,
+              width: rect.width,
+              top: rect.top,
+              bottom: rect.bottom,
+              font: style.fontSize,
+              minHeight: style.minHeight,
+              small: node.classList.contains(
+                node.tagName === 'INPUT' ? 'apollo-input-sm' : 'apollo-btn-sm',
+              ),
+            };
+          });
+        const [input, button] = await Promise.all([
+          measure(frame.getByRole('textbox', { name: 'Site URL', exact: true })),
+          measure(frame.getByRole('button', { name: 'Submit', exact: true })),
+        ]);
+        for (const [name, target] of Object.entries({ input, button })) {
+          assert.ok(target.width >= 24 && target.height >= 24, `${name} needs a 24px target`);
+          assert.equal(target.minHeight, '24px', `${name} retains its native minimum height`);
+          assert.equal(target.small, true, `${name} retains inherited small sizing`);
+          assert.equal(target.font, mode === 'compact' || mode === 'both' ? '12px' : '14px');
+        }
+        assert.equal(input.height, button.height, 'Joined controls have equal heights');
+        assert.equal(input.top, button.top, 'Joined controls align at the top');
+        assert.equal(input.bottom, button.bottom, 'Joined controls align at the bottom');
+        return { input, button };
+      },
+    );
   await check('real compact demo keyboard and input are functional', async () => {
     await set({ demo: 'compact', theme: 'default' });
     const phone = page.locator('#demo').getByRole('textbox', { name: 'Phone', exact: true });

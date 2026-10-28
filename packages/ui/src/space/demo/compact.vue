@@ -22,7 +22,7 @@ const actions = [
 <template>
   <Space orientation="vertical" style="display: flex">
     <SpaceCompact block><Input aria-label="Area code" default-value="0571" style="width: 20%" /><Input aria-label="Phone" default-value="26888888" style="width: 80%" /></SpaceCompact>
-    <SpaceCompact block size="small"><Input aria-label="Site URL" default-value="https://example.com" /><Button type="primary">Submit</Button></SpaceCompact>
+    <SpaceCompact block size="small"><Input aria-label="Site URL" default-value="https://example.com" style="min-height: 24px" /><Button type="primary" style="min-height: 24px">Submit</Button></SpaceCompact>
     <SpaceCompact block><Input aria-label="Git URL" default-value="git@example.com:project/repository.git" /><Button>Copy</Button></SpaceCompact>
     <SpaceCompact block><Select aria-label="Province" :options="provinces" default-value="zhejiang" style="width: 140px" /><Input aria-label="District" default-value="Xihu District, Hangzhou" /></SpaceCompact>
     <SpaceCompact block><Select aria-label="Multiple provinces" :options="provinces" mode="multiple" :default-value="['zhejiang']" style="width: 50%" /><Input aria-label="Second district" default-value="Xihu District, Hangzhou" style="width: 50%" /></SpaceCompact>
