@@ -1,0 +1,310 @@
+{
+  "scope": "Badge / Ribbon complete contract unit; whole-library audit remains open",
+  "implementationCommits": [
+    "d3794769",
+    "df5e0436"
+  ],
+  "visualFixtureCommit": "d0bf2cef",
+  "stage": "Local implementation, types, tests, browsers, consumers, visuals and Docs passed; final publication/live receipt pending",
+  "evidence": {
+    "inventory": "docs/audit/2026-10-28-badge-contract-audit.md",
+    "functional": "docs/audit/evidence/badge-functional-stage-2026-10-28.json",
+    "styles": "docs/audit/evidence/badge-indicator-style-stage.json",
+    "visuals": "docs/audit/evidence/badge-visual-review.json",
+    "corePublication": "docs/audit/evidence/badge-core-docs-publication.json"
+  },
+  "sourceDigests": {
+    "packages/ui/src/badge/Badge.vue": "7d6024cfeb036c047a3921a4fdebe7c09a5219fb900a90868960743358930ebd",
+    "packages/ui/src/badge/BadgeIndicator.vue": "c9ddaff9fab7be8ccbfec4cd44644facb4983d5d2a006a6984f8ecd5e84c07ed",
+    "packages/ui/src/badge/Ribbon.vue": "564a8497f0c67d9fdb506c1fa9451f6a611589873c59b4757cfe8b04599aeb08",
+    "packages/ui/src/badge/ScrollNumber.ts": "f1939077fab4a951eb2feeb317086671e3aae8ad873cdeef33ac0d20273d4fff",
+    "packages/ui/src/badge/SingleNumber.vue": "5d8c4744eca2342b779b5e579581ff90c1d1153ab440a68ac9743f5eef83c894",
+    "packages/ui/src/badge/interface.ts": "c60b072a8f757636e8f09a913bb920251740b0be88746b38cd39c3afe7b189d0",
+    "packages/ui/src/badge/index.ts": "2e22e72a1d3e8ebd11108c29b793f23211406d8bc7ebff24769f5b5b708f2257",
+    "packages/ui/src/badge/style/index.ts": "04cba45694a4de7463e2920ad043849962b6426ea0969e39f541df3ad730ba9c",
+    "packages/ui/src/badge/style/token.ts": "1e7c1c4687b7bd820711cb2a1b52c7553af2da3d26b2779176de6be3e0b2bae5",
+    "packages/ui/src/badge/use-badge-theme.ts": "34c01397cba874634281a16ebe9790f485af5c33b4f414d73a3e21d20808fee6",
+    "packages/ui/src/float-button/style/index.ts": "dc6ce2980788c0c73804df58e341a0947ae57ecabe275a15dc2baaea7c24d6ea"
+  },
+  "verified": {
+    "runtime": {
+      "files": 62,
+      "total": 1257,
+      "passed": 1257,
+      "failed": 0
+    },
+    "types": {
+      "files": 10,
+      "total": 104,
+      "passed": 104,
+      "failed": 0
+    },
+    "strictTypes": "passed",
+    "publishedBrowser": 172,
+    "demoThemesAndInteractions": 64,
+    "ssrHydration": 12,
+    "consumerRenders": 16,
+    "publishedDemos": 13,
+    "uiBuild": "passed",
+    "uiL7": {
+      "checks": 11,
+      "failed": 0,
+      "pending": 0
+    },
+    "visuals": {
+      "reviewed": 42,
+      "rawRgbaExact": 42,
+      "avatarExact": 48
+    },
+    "docs": {
+      "content": "passed",
+      "types": "passed",
+      "tests": 161,
+      "localBrowser": {
+        "base": "http://127.0.0.1:4478/apollo-design-ui",
+        "browser": "150.0.7871.125",
+        "results": [
+          {
+            "demo": "basic",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "basic",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "change",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "change",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "colorful",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "colorful",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "content-slots",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "content-slots",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "dot",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "dot",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "link",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "link",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "no-wrapper",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "no-wrapper",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "offset",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "offset",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "overflow",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "overflow",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "ribbon",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "ribbon",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "size",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "size",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "status",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "status",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "style-class",
+            "theme": "light",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "demo": "style-class",
+            "theme": "dark",
+            "httpStatus": 200,
+            "axe": [],
+            "passed": true
+          },
+          {
+            "name": "published positive/negative count controls and accessible digits",
+            "passed": true
+          },
+          {
+            "name": "published complete content, empty precedence and both business drafts",
+            "passed": true
+          },
+          {
+            "name": "published nine tokens, applicable zeros, restoration and current direction",
+            "passed": true
+          },
+          {
+            "name": "physical API page with all thirteen actual lazy demo cards",
+            "passed": true
+          },
+          {
+            "name": "physical progress page with the current verified stage",
+            "passed": true
+          },
+          {
+            "name": "English API contains current contracts",
+            "passed": true
+          }
+        ],
+        "errors": [],
+        "fallbackDocuments": []
+      },
+      "finalMetadataBuild": {
+        "status": "passed",
+        "isolatedWorktreeBase": "d0bf2cef",
+        "htmlFilesIncluding404": 86,
+        "contentComponents": 72,
+        "demos": 1006,
+        "guides": 8,
+        "metadataChecks": [
+          "registry",
+          "content-slot inventory549",
+          "format0errors/37existingWarnings/5existingInfos"
+        ]
+      },
+      "commands": [
+        "node tooling/content/build-manifest.mjs --check",
+        "node tooling/content/build-manifest.mjs",
+        "vite-ssg build",
+        "DOCS_URL=http://127.0.0.1:4478/apollo-design-ui node tests/browser/badge-docs.mjs"
+      ]
+    }
+  },
+  "docs": {
+    "finalPublication": {
+      "status": "pending",
+      "scope": "Final current styles and approved visuals/progress publication; core version already live"
+    }
+  },
+  "boundaries": [
+    "Chrome150/macOS only; Firefox/Safari independently unverified",
+    "Author alpha/gradient/complete color overrides must pair foreground",
+    "Consumer rendering is not full acceptance of those components",
+    "D04 arbitrary-prefix CSS and library final same-commit full gates remain open"
+  ]
+}

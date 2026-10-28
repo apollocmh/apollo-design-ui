@@ -4454,6 +4454,384 @@
       "capturedAt": "2026-10-28T09:50:26.701Z",
       "reviewedAt": "2026-10-28T09:54:48.978Z",
       "reviewNote": "2026-10-28：逐张审阅清洁68547d9a的14类场景×3视口共42张。确认四入口与固定单行编辑器填满宿主、字体和确认图标对齐，文本/装饰/下划线及成功反馈清晰，完整节点与草稿保留，标题Token零值及Provider样式正确，原生键盘焦点可见，暗色/紧凑与组合主题布局和文字正常。原C753编辑几何批次拒收；此批含五控制几何及axe断言，不改参考图或阈值。"
+    },
+    "badge/basic__light__mobile": {
+      "sha256": "f617f353762466bec2fba9cd27c608c414395731575149790cb2075c3a9d05b1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:05.456Z",
+      "reviewedAt": "2026-10-28T13:35:36.279Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/basic__light__tablet": {
+      "sha256": "b4bb1c3ba3c5f02981304f8d74e072e4d0aeaf563b17b03b1a3015d1d4dfaddc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:07.560Z",
+      "reviewedAt": "2026-10-28T13:35:36.280Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/basic__light__desktop": {
+      "sha256": "17a0cb932af3285592f81f7c74512efaa8c98954d6dedc7db4862fb30a09345e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:09.665Z",
+      "reviewedAt": "2026-10-28T13:35:36.281Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/status__light__mobile": {
+      "sha256": "5a58e6e62e6af3f6bbcf90a29ce61a8c14897f83228022ba4887e8a706b0ee48",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:11.725Z",
+      "reviewedAt": "2026-10-28T13:35:36.281Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/status__light__tablet": {
+      "sha256": "706a81979852a9d3d7f478f02085fdb3ffce3585f3a91cad478e642ee2f726aa",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:13.831Z",
+      "reviewedAt": "2026-10-28T13:35:36.281Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/status__light__desktop": {
+      "sha256": "932ad452e11ecf439b39061afd9577e2b3ef74f5653f9857b7912a9648e08a1b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:15.928Z",
+      "reviewedAt": "2026-10-28T13:35:36.282Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/colorful__light__mobile": {
+      "sha256": "d0ac6f7e5f006b48da47ba7d7db42358493125e0bed597b3bcb87054fba7f650",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:18.116Z",
+      "reviewedAt": "2026-10-28T13:35:36.282Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/colorful__light__tablet": {
+      "sha256": "f2ed7a2d1cf4c893a37b15cfd919b12cac1e713063b19dc7887f78394ac85982",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:20.319Z",
+      "reviewedAt": "2026-10-28T13:35:36.283Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/colorful__light__desktop": {
+      "sha256": "7a656cd473c0d3df3269f59ec408f47816fd2812de6c713251580f231c0513a9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:22.550Z",
+      "reviewedAt": "2026-10-28T13:35:36.283Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/dot__light__mobile": {
+      "sha256": "e11ec549b39961d026f5f44255da8940260fb02b69b45736d6fa1ed6126d3f81",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:24.524Z",
+      "reviewedAt": "2026-10-28T13:35:36.283Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/dot__light__tablet": {
+      "sha256": "81fe904a2f1fec316c60ebe1e336f9ae4a5be7c5663ea3a72bc7cf1337eac3a9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:26.491Z",
+      "reviewedAt": "2026-10-28T13:35:36.284Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/dot__light__desktop": {
+      "sha256": "b1fe72f3bd69ddaa9b3dea60dc94047b527b06ecd80510125735ee69cf8f674a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:28.487Z",
+      "reviewedAt": "2026-10-28T13:35:36.284Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/ribbon__light__mobile": {
+      "sha256": "35f164c52daba5c53b656a913c399bb06fa380efc066d07f19a22c478feb3369",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:30.441Z",
+      "reviewedAt": "2026-10-28T13:35:36.284Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/ribbon__light__tablet": {
+      "sha256": "de4a0a5c5fd1188c8b1dba63bb35cd4248d62b825b561682b1cce2d698d1e6f0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:32.392Z",
+      "reviewedAt": "2026-10-28T13:35:36.285Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/ribbon__light__desktop": {
+      "sha256": "e8e15936224946a1fff225a3fdf6a090523a4746d2cf4b40605be766272265f0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:34.348Z",
+      "reviewedAt": "2026-10-28T13:35:36.285Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/offset-size__light__mobile": {
+      "sha256": "aef15edc4c821c8dbbae29035bc8d479fcb227aa20d6c93d42fa1eb7b89c060f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:36.349Z",
+      "reviewedAt": "2026-10-28T13:35:36.286Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/offset-size__light__tablet": {
+      "sha256": "56811985dad7277dc130ab0e113d7753acf244dcd1998bfd8404dcf9ae492b12",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:38.334Z",
+      "reviewedAt": "2026-10-28T13:35:36.286Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/offset-size__light__desktop": {
+      "sha256": "504a4de56c675274a9a5d43fbde213f58a679d34943004c548dc6c7df0b04103",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:40.341Z",
+      "reviewedAt": "2026-10-28T13:35:36.286Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/complete-content__light__mobile": {
+      "sha256": "db3608d31c6ae063e37004788625e27d922c2033d5bb3ff59558a40e60cd45dd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:42.395Z",
+      "reviewedAt": "2026-10-28T13:35:36.287Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/complete-content__light__tablet": {
+      "sha256": "b8c14abee57d71f007afa18f912797bcbd90fe4e1770aacf03a814d9f3b2d0b0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:44.414Z",
+      "reviewedAt": "2026-10-28T13:35:36.287Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/complete-content__light__desktop": {
+      "sha256": "2aeffe2959345d01a82c9df55eca154511b8beb2a6e11878d310fdb639b1ba7e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:46.453Z",
+      "reviewedAt": "2026-10-28T13:35:36.287Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/status-placement__light__mobile": {
+      "sha256": "e6f572bac5bc358d1a2d51f243622fe417116fb7cb387e4dcad58a87c3cb6395",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:48.488Z",
+      "reviewedAt": "2026-10-28T13:35:36.288Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/status-placement__light__tablet": {
+      "sha256": "2950e189195a6e569020f03e02f9f9ec87833123871b55ed5d2e86acfccc07cd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:50.522Z",
+      "reviewedAt": "2026-10-28T13:35:36.288Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/status-placement__light__desktop": {
+      "sha256": "9a77c1029a40bea7a0b38777a8f321f2c34a4644662a61367d490dec1db3039e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:52.566Z",
+      "reviewedAt": "2026-10-28T13:35:36.289Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/semantic-tokens__light__mobile": {
+      "sha256": "08d427509f107723e8eec3461c59071690762aebd571d90f0aa66cb76484c1cc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:54.635Z",
+      "reviewedAt": "2026-10-28T13:35:36.290Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/semantic-tokens__light__tablet": {
+      "sha256": "652bc89eacdacf2738365e1426df97ba4109461a419c47f258b63737b876fbe8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:56.673Z",
+      "reviewedAt": "2026-10-28T13:35:36.290Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/semantic-tokens__light__desktop": {
+      "sha256": "0d1acaed29227fa0c9c5f130abde04badcb3f5344bf2ec7d6f452af355305ea6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:26:58.708Z",
+      "reviewedAt": "2026-10-28T13:35:36.290Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/current-provider__light__mobile": {
+      "sha256": "085ff68df5bf5cadb609863455fcb96a05f11d60c5fad11bddaafccf81abf840",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:00.825Z",
+      "reviewedAt": "2026-10-28T13:35:36.291Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/current-provider__light__tablet": {
+      "sha256": "6a56f999cf2d0b407d5fd060d5336819120654d696662a1b7b2b07e111498e36",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:02.951Z",
+      "reviewedAt": "2026-10-28T13:35:36.291Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/current-provider__light__desktop": {
+      "sha256": "19872c240ca6ad5667a09813155ada9dc828ef16e6ec7b8a95ef723c66fae7af",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:05.049Z",
+      "reviewedAt": "2026-10-28T13:35:36.291Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/native-focus__light__mobile": {
+      "sha256": "38a59445a77a3acb055ef54607482e1920b9853065cef90ba1063f7d7adf6f6d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:07.017Z",
+      "reviewedAt": "2026-10-28T13:35:36.292Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/native-focus__light__tablet": {
+      "sha256": "76ae3747d63e0525fd3c1882610c8185755f4bfa9b68f18e99b11bb94e5c09be",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:08.967Z",
+      "reviewedAt": "2026-10-28T13:35:36.292Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/native-focus__light__desktop": {
+      "sha256": "b97784458d41c9c07664f4de27a0cb1dada5769bc268b230276a6f12526a8c0d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:10.939Z",
+      "reviewedAt": "2026-10-28T13:35:36.292Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/theme-dark__light__mobile": {
+      "sha256": "93fb9eac76e81d87fe5112a03deebed32a21a086b07dc0d6272d0fe270c163be",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:13.014Z",
+      "reviewedAt": "2026-10-28T13:35:36.293Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/theme-dark__light__tablet": {
+      "sha256": "db49670b8e64499842b5b585d0ea78d4c9577554a45985c4c2365b86985ecfe8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:15.070Z",
+      "reviewedAt": "2026-10-28T13:35:36.293Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/theme-dark__light__desktop": {
+      "sha256": "d729b32a26055328f31c336fe55d4bc6596840d5cf2d0588e3998f43b4d463aa",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:17.134Z",
+      "reviewedAt": "2026-10-28T13:35:36.293Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/theme-compact__light__mobile": {
+      "sha256": "a8415f9de0635fcbdc127991ea6c48004c57dc107e699dffce7c7190e787b9e1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:19.202Z",
+      "reviewedAt": "2026-10-28T13:35:36.294Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/theme-compact__light__tablet": {
+      "sha256": "2d13e8b3f0c69d0f4dbbbd296b1625f27906198a324316e247495697d9f7fb1d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:21.240Z",
+      "reviewedAt": "2026-10-28T13:35:36.294Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/theme-compact__light__desktop": {
+      "sha256": "24bc7ed761688abddf86d5e0e7c0600c512667a572bfbfe0c529e6b8e400ae60",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:23.283Z",
+      "reviewedAt": "2026-10-28T13:35:36.295Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/theme-dark-compact__light__mobile": {
+      "sha256": "6407508f435d19073f722e698d6189439a49bd0e10784ff88ac0de4855b7b94a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:25.357Z",
+      "reviewedAt": "2026-10-28T13:35:36.295Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/theme-dark-compact__light__tablet": {
+      "sha256": "a8f26e60903071fa40514612ff08ab64b310cdc25174b61c2d38a9e1a7e44f76",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:27.429Z",
+      "reviewedAt": "2026-10-28T13:35:36.295Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
+    },
+    "badge/theme-dark-compact__light__desktop": {
+      "sha256": "1dcf4b1c8c3a06f792f44d9cfda6b80c3a6876afcf2b07d83201450e26cf9250",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "d0bf2cefe3c0a22db52738570be13de320ef5824",
+      "dirty": false,
+      "capturedAt": "2026-10-28T13:27:29.510Z",
+      "reviewedAt": "2026-10-28T13:35:36.296Z",
+      "reviewNote": "Reviewed all42 d0bf2cef clean-source images across14 states/3 viewports: counts/full content/status/dots/ribbons/offsets/nine tokens/current Provider/RTL/native focus/dark/compact. Rejected df5e0436 fixture-overlap batch;21 identical reviewed images retained and21 corrected images re-reviewed with no-overlap assertion. Layout, text clipping, focus and readable foregrounds checked."
     }
   }
 }

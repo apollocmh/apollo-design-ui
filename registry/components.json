@@ -32,8 +32,9 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 71,
-      "visual-review": 1
+      "completed": 68,
+      "testing": 1,
+      "analyzing": 3
     },
     "byPriority": {
       "P0": 8,
@@ -52,8 +53,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 71,
-    "remainingCount": 1
+    "completedCount": 68,
+    "remainingCount": 4
   },
   "milestones": [],
   "components": [
@@ -826,7 +827,7 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "visual-review",
+      "status": "testing",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -848,24 +849,24 @@
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
-      "styleStatus": "in-progress",
+      "styleStatus": "done",
       "unitStatus": "done",
       "interactionStatus": "done",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "in-progress",
-      "docsStatus": "in-progress",
-      "notes": "2026-10-28完整清单及成组实现/样式修复通过：相关1257、104类型、根严格、172发布浏览器、64 Demo、12水合、16消费、13Demo发布模板及UI L7。核心d3794769 Docs已发布/线上32通过；42自有视觉与最终Docs验收进行中，不宣称全库完成。",
+      "visualStatus": "done",
+      "docsStatus": "done",
+      "notes": "2026-10-28本地完整清单统一验收：1257相关、104类型、172发布浏览器、64 Demo、12水合、16消费、13Demo发布模板、严格UI L7、Docs161+32；清洁d0bf2cef视觉42原始RGBA exact及Avatar48 exact。最终Docs发布/线上回执待收口；见badge-final-acceptance.json。",
       "layerNotes": {
         "interaction": "原生根attrs/style/ref及稳定模式切换；完整内容、空槽优先、当前Provider与业务身份；负号/数字可访问文本、偏移、reduced-motion。172发布浏览器及64实际Demo主题/交互通过。 完整VNode计数共用实际宿主；九种空计数、独立文字与状态title分离，条件组件保留一次挂载。 原生dir覆盖/继承、状态点与FloatButton圆点实际几何通过。",
         "type": "相关10文件104类型、根严格通过；发布Badge/Ribbon/Badge.Ribbon精确Props/Slots/readonlyRef、StyleValue及13真实Demo通过，无源别名。",
         "a11y": "真实Chrome172契约/颜色和13 Demo四算法axe通过；动画轨道仅当前数字参与朗读，不自动创建live region；作者自定义样式/透明渐变需配对前景。",
         "token": "九个既有Token从当前Alias派生，消费theme.components.Badge；适用零值/替换/移除及原生CSS变量优先，四算法实际浏览器验证。",
         "compat": "原26机械场景保留；仅两个自定义色场景精确追加前景推导私有背景变量，原HTML/参考PNG不改，未放宽阈值。",
-        "visual": "历史18张参考图仍保留；本轮Apollo自有视觉候选、审阅及复比尚待完成，不能把原上游参考标作新验收。",
+        "visual": "14类场景×3视口42图逐张批准并原始RGBA exact；df5e0436首批因测试画布文字重叠拒收，d0bf2cef修正并新增几何断言。Avatar三图仅26像素可读前景更新，其余492旧记录/PNG不变。",
         "currentAudit": "docs/audit/2026-10-28-badge-contract-audit.md；baseline及functional-stage证据；迁移docs/migrations/badge-contracts.md。",
-        "docs": "核心发布40684613745成功：CI161/拓扑L7 151，线上32通过；当前样式及42视觉的最终发布待验收。",
-        "style": "包裹状态点/当前statusSize与z-index、完整内容paddingInline、原生boxShadow优先级、独立圆点和调用者定位已验证；静态@scope保留dir=auto及嵌套LTR。最终视觉审阅待完成。"
+        "docs": "13原Demo/双语API/集中迁移同步；本地内容/类型/161测试/SSG及32真实页面通过，核心已发布，最终回执待收口。",
+        "style": "包裹状态点/当前statusSize与z-index、完整内容paddingInline、原生boxShadow优先级、独立圆点和调用者定位已验证；静态@scope保留dir=auto及嵌套LTR。42视觉与48关联Avatar复比均通过。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -890,7 +891,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "alert",
@@ -2285,7 +2286,7 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "completed",
+      "status": "analyzing",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -2302,16 +2303,16 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-23 F02/F04/F08 修复与回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。",
+      "apiStatus": "in-progress",
+      "tokenStatus": "in-progress",
+      "styleStatus": "in-progress",
+      "unitStatus": "in-progress",
+      "interactionStatus": "in-progress",
+      "typeStatus": "in-progress",
+      "a11yStatus": "in-progress",
+      "visualStatus": "in-progress",
+      "docsStatus": "in-progress",
+      "notes": "2026-10-28当前完整契约并行审计中；历史completed及已有局部修复不等于本轮验收。完整清单/红灯见对应本轮contract-audit，统一验收后更新。",
       "layerNotes": "L4: baselines/descriptions.dom.json 18 用例，keepStyle。L6: 4 variant × 3 viewport = 12 张（bordered 的色差由像素比对揪出）。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -4106,7 +4107,7 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "M",
-      "status": "completed",
+      "status": "analyzing",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -4128,16 +4129,16 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
+      "apiStatus": "in-progress",
+      "tokenStatus": "in-progress",
+      "styleStatus": "in-progress",
+      "unitStatus": "in-progress",
+      "interactionStatus": "in-progress",
+      "typeStatus": "in-progress",
+      "a11yStatus": "in-progress",
+      "visualStatus": "in-progress",
+      "docsStatus": "in-progress",
+      "notes": "2026-10-28当前完整契约并行审计中；历史completed及已有局部修复不等于本轮验收。完整清单/红灯见对应本轮contract-audit，统一验收后更新。",
       "layerNotes": " 2026-10-24 F11/ADR0006/0007：itemRender函数已移除，改为具名对象槽，保留逐项paths/href；默认子组件按Vue渲染/key更新且无整组件弃用告警。6文件94条runtime通过、10个Demo；当前类型/浏览器/产物证据见 docs/audit/2026-10-24-breadcrumb-slots-remediation.md，Apollo24张批准基线缺失，不升级历史视觉状态。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -4307,7 +4308,7 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "M",
-      "status": "completed",
+      "status": "analyzing",
       "derived": {
         "dagLevel": 4,
         "unblocks": 0,
@@ -4327,16 +4328,16 @@
       },
       "blockedBy": [],
       "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-25：修复Timeline/Steps当前数据、布局/折叠索引、原生attrs、配置默认值与语义函数响应性；证据见 docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md。保留历史验收状态，Apollo视觉仍待基线；Timeline富内容模板事项另行推进。\n2026-10-25 F11/ADR0006/0007：原生itemTitle/itemContent/itemIcon单对象作用域槽，当前/空/移除/SSR与keyed输入保持；直接移除Timeline.Item/TimelineItemComponent/TimelineSlot空壳面及普通items误告警。迁移与证据见 docs/audit/2026-10-25-timeline-slots-remediation.md；新增原生Demo为15个，36张Apollo基线仍缺失。\n2026-10-25：useItems补齐已声明的项级classNames/styles转发，移除两处StepItem强制断言；纯转换/当前DOM与原生槽/SSR三条修前失败，证据见 docs/audit/2026-10-25-timeline-item-semantics-remediation.md。保留历史状态，36张Apollo基线仍缺失。",
+      "apiStatus": "in-progress",
+      "tokenStatus": "in-progress",
+      "styleStatus": "in-progress",
+      "unitStatus": "in-progress",
+      "interactionStatus": "in-progress",
+      "typeStatus": "in-progress",
+      "a11yStatus": "in-progress",
+      "visualStatus": "in-progress",
+      "docsStatus": "in-progress",
+      "notes": "2026-10-28当前完整契约并行审计中；历史completed及已有局部修复不等于本轮验收。完整清单/红灯见对应本轮contract-audit，统一验收后更新。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",

@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T13:18:45.237Z",
+  "generatedAt": "2026-10-28T13:48:16.564Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 90,
-      "ready": 2
+      "done": 87,
+      "ready": 5
     },
     "byKind": {
       "foundation": 13,
@@ -35,12 +35,15 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 2,
+    "readyCount": 5,
     "cannotFinishCount": 0,
-    "currentBatchSize": 2,
+    "currentBatchSize": 5,
     "currentBatchIds": [
+      "COMP:descriptions",
       "X:docs-site",
-      "COMP:badge"
+      "COMP:badge",
+      "COMP:breadcrumb",
+      "COMP:timeline"
     ],
     "hardBlockingDecisionCount": 0,
     "parallelismNote": "currentBatchSize 是「同一时刻可开工数」的下界估计（贪心）。真实并行度还取决于执行者数量。"
@@ -325,8 +328,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 8,
-      "doneCount": 8,
-      "readyCount": 0,
+      "doneCount": 7,
+      "readyCount": 1,
       "itemIds": [
         "COMP:affix",
         "COMP:anchor",
@@ -379,8 +382,8 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 22,
-      "doneCount": 21,
-      "readyCount": 1,
+      "doneCount": 19,
+      "readyCount": 3,
       "itemIds": [
         "COMP:avatar",
         "COMP:badge",
@@ -608,11 +611,11 @@
         "流水线被证明可重复（不再需要为每个组件重新设计流程）"
       ],
       "itemCount": 20,
-      "doneCount": 20,
-      "readyCount": 0,
+      "doneCount": 19,
+      "readyCount": 1,
       "blockedCount": 0,
       "waitingCount": 0,
-      "complete": true,
+      "complete": false,
       "itemIds": [
         "COMP:affix",
         "COMP:alert",
@@ -684,8 +687,8 @@
         "25 个组件 11 维度 completed"
       ],
       "itemCount": 26,
-      "doneCount": 24,
-      "readyCount": 2,
+      "doneCount": 23,
+      "readyCount": 3,
       "blockedCount": 0,
       "waitingCount": 0,
       "complete": false,
@@ -781,11 +784,11 @@
         "72/72 组件收口"
       ],
       "itemCount": 8,
-      "doneCount": 8,
-      "readyCount": 0,
+      "doneCount": 7,
+      "readyCount": 1,
       "blockedCount": 0,
       "waitingCount": 0,
-      "complete": true,
+      "complete": false,
       "itemIds": [
         "COMP:avatar",
         "COMP:color-picker",
@@ -1595,7 +1598,7 @@
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 1,
-      "why": "2026-10-28完整清单及成组实现/样式修复通过：相关1257、104类型、根严格、172发布浏览器、64 Demo、12水合、16消费、13Demo发布模板及UI L7。核心d3794769 Docs已发布/线上32通过；42自有视觉与最终Docs验收进行中，不宣称全库完成。",
+      "why": "2026-10-28本地完整清单统一验收：1257相关、104类型、172发布浏览器、64 Demo、12水合、16消费、13Demo发布模板、严格UI L7、Docs161+32；清洁d0bf2cef视觉42原始RGBA exact及Avatar48 exact。最终Docs发布/线上回执待收口；见badge-final-acceptance.json。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P1",
@@ -2106,16 +2109,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "\n2026-10-23 F02/F04/F08 修复与回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。",
+      "why": "2026-10-28当前完整契约并行审计中；历史completed及已有局部修复不等于本轮验收。完整清单/红灯见对应本轮contract-audit，统一验收后更新。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P2",
       "dagLevel": 0,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:tooltip",
@@ -2800,16 +2805,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "",
+      "why": "2026-10-28当前完整契约并行审计中；历史completed及已有局部修复不等于本轮验收。完整清单/红灯见对应本轮contract-audit，统一验收后更新。",
       "doneWhen": [],
       "group": "导航",
       "priority": "P5",
       "dagLevel": 2,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:tabs",
@@ -2874,16 +2881,18 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "\n2026-10-25：修复Timeline/Steps当前数据、布局/折叠索引、原生attrs、配置默认值与语义函数响应性；证据见 docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md。保留历史验收状态，Apollo视觉仍待基线；Timeline富内容模板事项另行推进。\n2026-10-25 F11/ADR0006/0007：原生itemTitle/itemContent/itemIcon单对象作用域槽，当前/空/移除/SSR与keyed输入保持；直接移除Timeline.Item/TimelineItemComponent/TimelineSlot空壳面及普通items误告警。迁移与证据见 docs/audit/2026-10-25-timeline-slots-remediation.md；新增原生Demo为15个，36张Apollo基线仍缺失。\n2026-10-25：useItems补齐已声明的项级classNames/styles转发，移除两处StepItem强制断言；纯转换/当前DOM与原生槽/SSR三条修前失败，证据见 docs/audit/2026-10-25-timeline-item-semantics-remediation.md。保留历史状态，36张Apollo基线仍缺失。",
+      "why": "2026-10-28当前完整契约并行审计中；历史completed及已有局部修复不等于本轮验收。完整清单/红灯见对应本轮contract-audit，统一验收后更新。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P5",
       "dagLevel": 4,
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:masonry",
@@ -3362,7 +3371,10 @@
     }
   ],
   "currentBatch": [
+    "COMP:descriptions",
     "X:docs-site",
-    "COMP:badge"
+    "COMP:badge",
+    "COMP:breadcrumb",
+    "COMP:timeline"
   ]
 }

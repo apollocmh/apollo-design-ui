@@ -7,11 +7,24 @@ order: 0
 
 ## zh-CN
 
-## 2026-10-28：Badge / Ribbon 当前实现与样式已验证，视觉验收中
+## 全库进度：按完整单元计，不按测试数量计
+
+| 范围 | 当前结果 |
+| --- | --- |
+| 72个组件主单元 | 12个已完整验收并交付；Badge第13个已完成本地统一验收，发布回执随交付追记 |
+| 当前并行 | Descriptions、Breadcrumb、Timeline，分别盘点、成组复现和修复 |
+| 接续队列 | Space/Compact、Grid/Row/Col；空位释放后接续 |
+| 其余组件 | 54个尚待按本轮完整标准收口；已有局部修复继续保留 |
+| 13个基础包 | 已有共享链路专项证据；逐包当前复核继续，不能把消费场景通过当作整包完成 |
+| 最终验收 | 所有整改单元结束后，对最终同一提交执行全量门禁 |
+
+[完整72项工作清单、证据与剩余边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md)。组件复杂度不同，上述数量不代表工时百分比。
+
+## 2026-10-28：Badge / Ribbon 当前实现、样式与42张视觉已统一验收
 
 按完整源码清单成组修正原生根 style/ref、完整内容、当前 Provider 和九个已有 Token。数字保留负号，动画只朗读当前值；零值计数和文字互不误伤，位移保留 CSS 长度，实色前景与 reduced-motion 已验证。Badge.Ribbon 发布类型保持精确，13 个原 Demo 全部保留并同步。
 
-62 文件 1257 项相关四层、104 项类型、根严格、172 项发布浏览器、52 组原 Demo 主题与 12 项实际交互、12 项 SSR/水合、四个实际消费示例的 16 次渲染，以及发布声明与严格 UI L7 已通过。包裹态状态点、富内容间距、显式阴影/原生方向覆盖也已通过。核心版本已上线；42 张自有视觉和最终 Docs 发布回执尚待统一验收，本单元不标记全部完成；全库当前仍为 495/1398 张批准、903 张待验收。
+62 文件 1257 项相关四层、104 项类型、根严格、172 项发布浏览器、52 组原 Demo 主题与 12 项实际交互、12 项 SSR/水合、四个实际消费示例的 16 次渲染，以及发布声明与严格 UI L7 已通过。包裹态状态点、富内容间距、显式阴影/原生方向覆盖也已通过。清洁 d0bf2cef 的42张自有视觉已逐张批准且原始RGBA完全一致，关联Avatar48张也一致。本地Docs161项测试和32项真实页面/交互通过；最终发布回执随交付提交追记。全库当前537/1422张批准、885张待验收。
 
 - [Badge 当前 API 与 13 个示例](/components/badge)
 - [完整内容、条件空槽与两个草稿](/components/badge/demo/content-slots)
@@ -151,11 +164,24 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 
 ## en-US
 
-## Badge / Ribbon implementation and styles verified; visual acceptance in progress
+## Library-wide progress by complete audit unit
+
+| Scope | Current evidence |
+| --- | --- |
+|72 component units|12 fully accepted and delivered;Badge is the13th locally accepted unit, with publication receipts recorded at delivery|
+|Parallel work|Descriptions,Breadcrumb andTimeline have independent inventories, grouped reproductions and fixes|
+|Queued|Space/Compact andGrid/Row/Col continue when a slot is available|
+|Other components|54 still await complete current-source acceptance;earlier partial fixes remain valid|
+|13 foundation packages|Existing shared-chain evidence remains;current per-package review continues|
+|Final gate|Run whole-library gates on the same final commit after all units close|
+
+[All72 units, evidence and remaining boundaries](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md). These counts are not weighted work percentages.
+
+## Badge / Ribbon implementation, styles and42 Apollo visuals accepted
 
 Native root style/refs, complete content, current Provider/nine tokens, negative counts, accessible digit motion, zero independence, CSS offsets, readable opaque colors and reduced-motion have been corrected as one unit. Badge.Ribbon retains exact public types. All thirteen original demos remain.
 
-62 related files/1257 runtime checks,104 type checks, strict compilation,172 published-browser checks,52 demo/theme renders and12 real interactions,12 SSR/hydration checks,16 actual consumer renders, published declarations and strict UI L7 pass. Wrapped status, rich-content padding, explicit shadows and native direction also pass. The core Docs version is live;42 Apollo visuals and final documentation publication remain pending. The library-wide visual inventory remains495/1398 approved,903 pending; this stage does not complete the library audit.
+62 related files/1257 runtime checks,104 type checks, strict compilation,172 published-browser checks,52 demo/theme renders and12 real interactions,12 SSR/hydration checks,16 actual consumer renders, published declarations and strict UI L7 pass. Wrapped status, rich-content padding, explicit shadows and native direction also pass. All42 clean-source Apollo visuals are reviewed and raw-RGBA exact, with48 Avatar comparisons exact. Local Docs161 tests and32 real page/interaction checks pass; publication receipts are recorded with delivery commits. Library-wide approval is537/1422, with885 still pending; the library audit remains open.
 
 - [Current Badge API and examples](/components/badge)
 - [Complete content and conditional slots](/components/badge/demo/content-slots)
