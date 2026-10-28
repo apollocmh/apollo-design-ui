@@ -149,14 +149,6 @@
     "previousManifest": "/tmp/apollo-input-sizing-review/source-freeze-before-peer.json",
     "sha256": "cb42e4e43de8d7c14bf71774fa12900d4e692a448a7951083d379b02d02be115"
   },
-  "peerReview": {
-    "artifact": "/tmp/apollo-input-sizing-peer/reproduce.json",
-    "sha256": "7f135c7200c3c5186028c7ba68c849bfde896e6af5f776f617cb57ff56b56352",
-    "passed": 10,
-    "failed": 10,
-    "errors": [],
-    "readersExited": true
-  },
   "supplementalRed": {
     "repository": {
       "files": 1,
@@ -1030,5 +1022,13 @@
   "fixtureSourceHashes": {
     "tests/browser/fixtures/InputSizingContracts.mjs": "c18b3ac040779c630efe9c0ae60986b4243c3bc73ee366afc5f68f61e879447a",
     "tests/browser/input-sizing-contracts.mjs": "df94de96ce9f354601d95bed2b689625f45567f8c2bffadf4da079a4ad53e4f7"
+  },
+  "initialPeerReview": {
+    "artifact": "/tmp/apollo-input-sizing-peer/reproduce.json",
+    "sha256": "7f135c7200c3c5186028c7ba68c849bfde896e6af5f776f617cb57ff56b56352",
+    "passed": 10,
+    "failed": 10,
+    "errors": [],
+    "readersExited": true
   }
 }

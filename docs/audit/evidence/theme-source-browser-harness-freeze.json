@@ -1,0 +1,10 @@
+{
+  "files": {
+    "tests/browser/fixtures/ThemeSourceWriters.mjs": "4fc5c40b7d60cfed2260fce83c214183f8d0d658aecf5f6efbdcc0bb4101af3d",
+    "tests/browser/theme-source-writers.mjs": "b89f2e41586cc388b67ca74df7a6824e95b7f5bbd64a4ce0f271f15be48b515a",
+    "tests/browser/theme-source-writers-ssr.mjs": "716bac6ae89733339861d5209b120f6286fae6121eab066ef3a19a4c3b72ad4d"
+  },
+  "aggregateSha256": "96b3622d46d3e0ef9afce0ddf00f1d1fe7767b798690d5c0de834563ccff194c",
+  "productionCommit": "3f68bd2d",
+  "testOnly": true
+}
