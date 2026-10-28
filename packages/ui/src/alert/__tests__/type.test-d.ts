@@ -4,7 +4,7 @@
 
 import { describe, expectTypeOf, it } from 'vitest';
 import type { VNodeChild } from 'vue';
-import type { Alert } from '../index';
+import type { Alert, AlertErrorBoundary } from '../index';
 import type {
   AlertClosable,
   AlertConfig,
@@ -12,11 +12,34 @@ import type {
   AlertRef,
   AlertSemanticClassNames,
   AlertSemanticStyles,
+  AlertSlots,
   AlertType,
   AlertVariant,
+  ErrorBoundarySlots,
 } from '../interface';
 
 describe('Alert · Props 类型', () => {
+  it('static ErrorBoundary and all declared Vue slots remain strongly typed', () => {
+    expectTypeOf<typeof Alert.ErrorBoundary>().toEqualTypeOf<typeof AlertErrorBoundary>();
+    expectTypeOf<keyof AlertSlots>().toEqualTypeOf<
+      'title' | 'description' | 'icon' | 'action' | 'closeIcon'
+    >();
+    expectTypeOf<keyof ErrorBoundarySlots>().toEqualTypeOf<'default'>();
+    type PublicProps = InstanceType<typeof Alert>['$props'];
+    const events: PublicProps = {
+      onClose: (event) => event.preventDefault(),
+      onAfterClose: () => {},
+    };
+    expectTypeOf(events).toMatchTypeOf<PublicProps>();
+    const negative = () => {
+      // @ts-expect-error Alert content is named; no implicit default-to-title API exists.
+      const slots: AlertSlots = { default: () => 'Title' };
+      // @ts-expect-error Closing is a native click MouseEvent, not a keyboard keydown payload.
+      const props: PublicProps = { onClose: (event: KeyboardEvent) => event.key };
+      return [slots, props];
+    };
+    void negative;
+  });
   it('type 是四值联合、variant 是两值联合', () => {
     expectTypeOf<AlertType>().toEqualTypeOf<'success' | 'info' | 'warning' | 'error'>();
     expectTypeOf<AlertVariant>().toEqualTypeOf<'outlined' | 'filled'>();

@@ -36,4 +36,7 @@ import { Alert } from '@apollo-design/ui';
     transform: translateX(-50%);
   }
 }
+@media (prefers-reduced-motion: reduce) {
+  .demo-alert-marquee-inner { animation: none; }
+}
 </style>

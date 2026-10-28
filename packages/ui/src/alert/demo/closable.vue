@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// 对齐 antd 的 closable demo
 import { Alert } from '@apollo-design/ui';
 
 const onClose = (e: MouseEvent) => {
@@ -12,25 +11,29 @@ const onClose = (e: MouseEvent) => {
     <Alert
       title="Warning Title"
       type="warning"
-      :closable="{ closeIcon: true, onClose, 'aria-label': 'close' }"
+      :closable="{ closeIcon: true, 'aria-label': 'close' }"
+      @close="onClose"
     />
     <br />
     <Alert
       title="Success Title"
       type="success"
-      :closable="{ closeIcon: true, onClose, 'aria-label': 'close' }"
+      :closable="{ closeIcon: true, 'aria-label': 'close' }"
+      @close="onClose"
     />
     <br />
     <Alert
       title="Info Title"
       type="info"
-      :closable="{ closeIcon: true, onClose, 'aria-label': 'close' }"
+      :closable="{ closeIcon: true, 'aria-label': 'close' }"
+      @close="onClose"
     />
     <br />
     <Alert
       title="Error Title"
       type="error"
-      :closable="{ closeIcon: true, onClose, 'aria-label': 'close' }"
+      :closable="{ closeIcon: true, 'aria-label': 'close' }"
+      @close="onClose"
     />
   </div>
 </template>

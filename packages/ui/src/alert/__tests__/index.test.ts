@@ -92,12 +92,10 @@ describe('Alert · 结构', () => {
   });
 
   it('aria/data 透传根元素；role 可覆盖默认 alert', () => {
-    const w = mount(() =>
-      h(Alert, { 'data-test': 'test-id', 'aria-describedby': 'some-label' } as never),
-    );
+    const w = mount(() => h(Alert, { 'data-test': 'test-id', 'aria-describedby': 'some-label' }));
     expect(w.find('.apollo-alert').attributes('data-test')).toBe('test-id');
     expect(w.find('.apollo-alert').attributes('aria-describedby')).toBe('some-label');
-    const w2 = mount(() => h(Alert, { role: 'status' } as never));
+    const w2 = mount(() => h(Alert, { role: 'status' }));
     expect(w2.find('.apollo-alert').attributes('role')).toBe('status');
   });
 
@@ -146,7 +144,7 @@ describe('Alert · closable / 关闭', () => {
     ).toBe(true);
   });
 
-  it('closable.onClose 优先于 onClose prop（后者不触发）', async () => {
+  it('Vue close 事件和 closable.onClose 业务通知分别触发一次', async () => {
     const onClose = vi.fn();
     const handleClosableClose = vi.fn();
     const w = mount(() =>
@@ -157,7 +155,8 @@ describe('Alert · closable / 关闭', () => {
       }),
     );
     await w.find('button.apollo-alert-close-icon').trigger('click');
-    expect(onClose).toHaveBeenCalledTimes(0);
+    // ADR0007: a configuration callback must not suppress a Vue template event.
+    expect(onClose).toHaveBeenCalledTimes(1);
     expect(handleClosableClose).toHaveBeenCalledTimes(1);
   });
 

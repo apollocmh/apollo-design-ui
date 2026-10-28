@@ -19,8 +19,12 @@ describe('Alert · 主题无关性', () => {
     expect(css).toContain(
       '--apollo-alert-with-description-icon-size:var(--apollo-font-size-heading-3)',
     );
-    expect(css).toContain('--apollo-alert-default-padding:8px 12px');
-    expect(css).toContain('--apollo-alert-with-description-padding:20px 24px');
+    expect(css).toContain(
+      '--apollo-alert-default-padding:var(--apollo-padding-content-vertical-sm) 12px',
+    );
+    expect(css).toContain(
+      '--apollo-alert-with-description-padding:var(--apollo-padding-md) var(--apollo-padding-content-horizontal-lg)',
+    );
   });
 
   it('四 type 的边框 + 背景 + 图标色', () => {

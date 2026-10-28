@@ -1,24 +1,4 @@
-/**
- * Alert 的类型定义（G2 产物）。
- *
- * 契约来源：antd 6.6.4 的 `es/alert/{Alert,ErrorBoundary}.d.ts`。
- * **逐字段对齐**（名称、可选性、默认值、`@deprecated` 标记）。
- *
- * ── 与 antd 类型面的**有据可查**的差异 ────────────────────────────────────────
- *
- * 1. `React.CSSProperties` → Vue 的 `CSSProperties`，`React.ReactNode` → `VNodeChild`
- *    （规则 C16 / C18）。
- * 2. `ClosableType`（antd `_util/hooks`）：对象形态在 Vue 侧声明为
- *    `AlertClosable = { closeIcon?; onClose?; afterClose? } & Record<string, unknown>`
- *    —— antd 的对象形态会透传任意 aria-* / data-* 到关闭按钮（`pickAttrs` 过滤），
- *    `Record<string, unknown>` 表达这个开放集合。
- * 3. `AlertSemanticAllType` 是**手写**接口（empty / divider / skeleton 同条）。
- * 4. `onMouseEnter/onMouseLeave/onClick` 是 antd 的显式 props（Vue 侧以
- *    `onMouseenter` / `onMouseleave` / `onClick` 触发）。
- * 5. ErrorBoundary：React class 组件 → Vue `onErrorCaptured`；`children` 是默认
- *    插槽（C19）；`ErrorBoundaryProps` 增加 `class`（透传包装）不需要 —— 仅保留
- *    antd 声明的五个字段。
- */
+/** Current Apollo Alert data, Vue events, complete content slots and configuration. */
 
 import type { CSSProperties, VNodeChild } from 'vue';
 
@@ -127,12 +107,12 @@ export interface AlertProps {
   message?: string;
   /** 辅助描述（有值 ⇒ `-with-description`；prop 收窄 string，或 `#description` 插槽）。 */
   description?: string;
-  /**
-   * @deprecated 请用 `closable.onClose`。
-   */
+  /** Vue close 事件监听器；载荷为实际关闭按钮产生的 MouseEvent。 */
   onClose?: (e: MouseEvent) => void;
+  /** Vue after-close 事件：内部关闭完成并移除后触发。 */
+  onAfterClose?: () => void;
   /**
-   * @deprecated 请用 `closable.afterClose`。
+   * @deprecated 请用 Vue `@after-close`；配置对象仍可携带业务 afterClose。
    */
   afterClose?: () => void;
   /** 是否显示图标（banner 且未传 ⇒ true）。 */
@@ -146,7 +126,7 @@ export interface AlertProps {
   /**
    * @deprecated 请用 `closable.closeIcon`。`null` / `false` ⇒ **不可关**。
    */
-  closeIcon?: string | boolean | null;
+  closeIcon?: string | number | boolean | null;
   /** 根元素 id。 */
   id?: string;
   /** 根元素 mouseenter。 */
@@ -172,19 +152,33 @@ export interface AlertRef {
   nativeElement: HTMLDivElement | null;
 }
 
+/** Full native Vue content; present empty slots suppress their fallback. */
+export interface AlertSlots {
+  title?: () => VNodeChild;
+  description?: () => VNodeChild;
+  icon?: () => VNodeChild;
+  action?: () => VNodeChild;
+  closeIcon?: () => VNodeChild;
+}
+
+/** Healthy boundary content remains a fragment without an extra DOM wrapper. */
+export interface ErrorBoundarySlots {
+  default?: () => VNodeChild;
+}
+
 // ---------------------------------------------------------------------------
 // ErrorBoundary
 // ---------------------------------------------------------------------------
 
-/** `Alert.ErrorBoundary` 的 props。与 antd 的 `ErrorBoundaryProps` 一致（children → 插槽）。 */
+/** ErrorBoundary 的 VNode 数据；健康内容通过默认 slot 传入。 */
 export interface ErrorBoundaryProps {
-  /** 错误告警的标题（缺省用 `error.toString()`）。 */
+  /** 错误告警的标题（缺省用 `String(error)`，包括任意抛出值）。 */
   title?: VNodeChild;
   /**
    * @deprecated 请用 `title`。
    */
   message?: VNodeChild;
-  /** 错误描述（缺省用组件栈，渲染在 `<pre>` 里）。 */
+  /** 错误描述（缺省以可聚焦 `<pre>` 展示 Vue 错误阶段信息）。 */
   description?: VNodeChild;
   /** 透传给 Alert 的 id。 */
   id?: string;
@@ -195,7 +189,7 @@ export interface ErrorBoundaryProps {
 // ---------------------------------------------------------------------------
 
 /**
- * `ConfigProvider` 的 `alert` 配置。与 antd 的
+ * `ConfigProvider.components.alert` 配置。历史参考为 antd 的
  * `AlertConfig = ComponentStyleConfig & Pick<AlertProps,'variant'|'closable'|'closeIcon'|'classNames'|'styles'>`
  * 加四种类型图标覆盖一致。
  */

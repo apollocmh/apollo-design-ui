@@ -1,8 +1,5 @@
 /**
- * Alert 的公共导出（Alert / Alert.ErrorBoundary）。
- *
- * 与 antd 的 `es/alert/index.js` 对齐的对外面：antd 用
- * `Object.assign(Alert, { ErrorBoundary })` 挂静态子组件（skeleton 范式）。
+ * Alert 的公共导出与有类型的静态 ErrorBoundary 子组件。
  */
 
 import { withInstall } from '../_internal/with-install';
@@ -10,13 +7,13 @@ import AlertComponent from './Alert';
 import ErrorBoundaryComponent from './ErrorBoundary';
 
 /** Alert 组件。注册名 `AAlert`（COMPONENT-RULES.md 规则 R2）。 */
-export const Alert = withInstall(AlertComponent);
+const InstalledAlert = withInstall(AlertComponent);
 
 /** `Alert.ErrorBoundary`（onErrorCaptured 实现的错误边界）。 */
 export const AlertErrorBoundary = withInstall(ErrorBoundaryComponent);
 
-/** antd 的静态属性形态（`Alert.ErrorBoundary`）逐字保留 —— 两处引用同一定义。 */
-Object.assign(Alert, { ErrorBoundary: AlertErrorBoundary });
+/** 静态入口和具名入口引用同一组件定义，并保留完整公开类型。 */
+export const Alert = Object.assign(InstalledAlert, { ErrorBoundary: AlertErrorBoundary });
 
 export default Alert;
 
@@ -29,9 +26,11 @@ export type {
   AlertSemanticClassNames,
   AlertSemanticStyles,
   AlertSemanticValue,
+  AlertSlots,
   AlertType,
   AlertVariant,
   ErrorBoundaryProps,
+  ErrorBoundarySlots,
 } from './interface';
 export { genAlertStyle } from './style';
 export type { ComponentToken as AlertComponentToken } from './style/token';

@@ -1,37 +1,4 @@
-/**
- * Alert —— 警告提示。
- *
- * 契约来源：antd 6.6.4 的 `es/alert/Alert.js`（判据逐条对齐，G1 分析 §2）。
- *
- * ── 为什么是 render 函数 ─────────────────────────────────────────────────────
- *
- * CSSMotion 的函数插槽要求根 div 在 slot 内部产出（motion 类与 data-show 落根
- * 元素），且 IconNode / CloseIconNode 是带判据的子结构（back-top/badge 同范式）。
- *
- * ── 八条最容易写错的判据 ─────────────────────────────────────────────────────
- *
- * 1. **isClosable 判据链**：closable 对象 ⇒ true；`closeText` 真值 ⇒ true；
- *    boolean ⇒ 原值；**`closeIcon !== false && isNonNullable(closeIcon)` ⇒ true**
- *    （`0` / `''` 也算可关）；否则 `!!contextClosable`。
- * 2. **关闭即收起动画**：`closed=true` → CSSMotion visible=false →
- *    `-motion-leave`（onLeaveStart 回填 maxHeight = 当前高度）→
- *    `-motion-leave-active`（收拢到 0）→ leave 结束卸载 → afterClose。
- * 3. **mergedCloseIcon 优先级**：closable.closeIcon → closeText →
- *    closeIcon（!== undefined）→ contextClosable.closeIcon → contextCloseIcon；
- *    CloseIconNode 内 `true || undefined` ⇒ 默认 CloseOutlined 图标。
- * 4. **type 未传**：`banner ? 'warning' : 'info'`；banner 且未传 showIcon ⇒
- *    **恒显图标**。
- * 5. **role**：根 div 先写 `role="alert"`，再 spread pickAttrs({aria,data}) ⇒
- *    用户 role 覆盖默认；data-show = `!closed`。
- * 6. **可渲染判据 = isRenderable**：`title={0} / description={0} / action={0}`
- *    都渲染（测试钉住）；description 可渲染 ⇒ `-with-description`。
- * 7. **closable 对象的 aria/data**：`pickAttrs(closableObj, {aria,data})` 落在
- *    关闭 button 上（不是根元素）。
- * 8. **类名顺序**：prefixCls → `-type` → `-variant` → {with-description, no-icon,
- *    banner, rtl} → contextClassName → className → rootClassName → 语义化 root
- *    （motion 类再拼在最外层 clsx）。
- */
-
+/** Native alert content, current configuration and one owned close lifecycle. */
 import {
   CheckCircleFilled,
   CloseCircleFilled,
@@ -40,25 +7,27 @@ import {
   InfoCircleFilled,
 } from '@apollo-design/icons';
 import { CSSMotion, type MotionHooks } from '@apollo-design/motion';
+import { isEmptyVNode, mergeDomAttrs, pickAttrs, useDevWarning } from '@apollo-design/utils';
 import {
-  isEmptyVNode,
-  isPlainObject,
-  isRenderable,
-  pickAttrs,
-  useDevWarning,
-} from '@apollo-design/utils';
-import {
-  computed,
   defineComponent,
+  getCurrentInstance,
   h,
-  mergeProps,
+  onBeforeUnmount,
+  onMounted,
   type PropType,
   ref,
+  type SlotsType,
   shallowRef,
   type VNodeChild,
   watchEffect,
 } from 'vue';
-import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
+import {
+  mergeClassNames,
+  mergeStyles,
+  resolveSemantic,
+  semanticRootStyle,
+  styleAttrs,
+} from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import type {
   AlertClosable,
@@ -66,245 +35,207 @@ import type {
   AlertProps,
   AlertSemanticClassNames,
   AlertSemanticStyles,
+  AlertSlots,
   AlertType,
   AlertVariant,
 } from './interface';
+import { useAlertTheme } from './use-alert-theme';
+
+const closeOptions = (value: AlertProps['closable']): AlertClosable | undefined =>
+  typeof value === 'object' && value !== null ? value : undefined;
 
 export default defineComponent({
   name: 'AAlert',
   inheritAttrs: false,
+  slots: Object as SlotsType<AlertSlots>,
   props: {
     type: { type: String as PropType<AlertType>, default: undefined },
     variant: { type: String as PropType<AlertVariant>, default: undefined },
-    closable: {
-      type: [Boolean, Object] as PropType<AlertProps['closable']>,
-      default: undefined,
-    },
-    // 文本主导 prop（规则 #1）：收窄 string + 同名 slot 优先
+    closable: { type: [Boolean, Object] as PropType<AlertProps['closable']>, default: undefined },
     closeText: { type: String, default: undefined },
     title: { type: String, default: undefined },
     message: { type: String, default: undefined },
     description: { type: String, default: undefined },
-    onClose: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
+    onClose: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
+    onAfterClose: { type: Function as PropType<() => void>, default: undefined },
     afterClose: { type: Function as PropType<() => void>, default: undefined },
     showIcon: { type: Boolean, default: undefined },
-    // ⚠️ role 不声明为 prop：antd 把 role 留在 rest 里经 pickAttrs 覆盖默认
-    //    `role="alert"` —— Vue 侧同理，role 落 attrs 再被挑出（不是漏了）。
     prefixCls: { type: String, default: undefined },
-    banner: { type: Boolean, default: undefined },
-    // ⚠️ icon / action 是 VNode 主导 prop（规则 #2/#3）：彻底删除 prop，改同名 slot
-    //    （#icon / #action）。icon 不再接受 VNode prop，自定义图标走 `#icon` slot。
+    role: { type: String, default: 'alert' },
+    banner: { type: Boolean, default: false },
     closeIcon: {
       type: [String, Boolean, Number] as PropType<AlertProps['closeIcon']>,
       default: undefined,
     },
     id: { type: String, default: undefined },
-    onMouseenter: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
-    onMouseleave: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
-    onClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
-    // 语义化输入是「对象 | 函数」两态 —— Vue prop 校验需显式放行 Function
+    onMouseenter: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
+    onMouseleave: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
+    onClick: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<AlertProps['classNames']>,
       default: undefined,
     },
-    styles: {
-      type: [Object, Function] as PropType<AlertProps['styles']>,
-      default: undefined,
-    },
+    styles: { type: [Object, Function] as PropType<AlertProps['styles']>, default: undefined },
   },
-  setup(props, { attrs, expose, slots }) {
-    const context = useComponentConfig<AlertConfig>('alert');
-    const { getPrefixCls } = context;
-    const contextVariant = context.variant;
-    const contextClosable = context.closable;
-    const contextCloseIcon = context.closeIcon;
-    const contextClassName = context.className;
-    const contextStyle = context.style;
-    const contextClassNames = context.classNames;
-    const contextStyles = context.styles;
+  emits: {
+    close: (_event: MouseEvent) => true,
+    afterClose: () => true,
+  },
+  setup(props, { attrs, expose, slots, emit }) {
+    const instance = getCurrentInstance();
+    const config = useComponentConfig<AlertConfig>('alert');
     const direction = useDirection();
-
+    const prefix = () => config.getPrefixCls('alert', props.prefixCls);
+    const theme = useAlertTheme(prefix);
     const rootRef = shallowRef<HTMLDivElement | null>(null);
+    const closed = ref(false);
+    const reducedMotion = ref(false);
+    let media: MediaQueryList | undefined;
+    const onPreference = (event: MediaQueryListEvent) => {
+      reducedMotion.value = event.matches;
+    };
+    onMounted(() => {
+      if (typeof window.matchMedia !== 'function') return;
+      media = window.matchMedia('(prefers-reduced-motion: reduce)');
+      reducedMotion.value = media.matches;
+      media.addEventListener('change', onPreference);
+    });
+    let active = true;
+    onBeforeUnmount(() => {
+      active = false;
+      media?.removeEventListener('change', onPreference);
+    });
     expose({
       get nativeElement() {
         return rootRef.value;
       },
     });
 
-    // ============================= Warning ==============================
     const warning = useDevWarning('Alert');
-    warning.deprecated(props.closeText === undefined, 'closeText', 'closable.closeIcon');
-    warning.deprecated(props.message === undefined, 'message', 'title');
-
-    const prefixCls = computed(() => getPrefixCls('alert', props.prefixCls));
-
-    // ============================= Closed ===============================
-    const closed = ref(false);
-
-    const handleClose = (e: MouseEvent) => {
+    watchEffect(() => {
+      warning.deprecated(props.closeText === undefined, 'closeText', 'closable.closeIcon');
+      warning.deprecated(props.message === undefined, 'message', 'title');
+    });
+    const options = () => closeOptions(props.closable ?? config.closable);
+    const isEventListener = (name: string, notify: unknown) =>
+      [instance?.vnode.props?.[name], instance?.vnode.props?.[`${name}Once`]].some(
+        (listener) => listener === notify || (Array.isArray(listener) && listener.includes(notify)),
+      );
+    const handleClose = (event: MouseEvent) => {
+      if (closed.value) return;
       closed.value = true;
-      const closableOnClose = isPlainObject(props.closable)
-        ? (props.closable as AlertClosable).onClose
-        : undefined;
-      (closableOnClose ?? props.onClose)?.(e);
+      const notify = options()?.onClose;
+      emit('close', event);
+      if (typeof notify === 'function' && !isEventListener('onClose', notify)) notify(event);
+    };
+    let completed = false;
+    const onVisibleChanged = (visible: boolean) => {
+      if (!active || visible || !closed.value || completed) return;
+      completed = true;
+      const notify = options()?.afterClose ?? props.afterClose;
+      emit('afterClose');
+      if (typeof notify === 'function' && !isEventListener('onAfterClose', notify)) notify();
+    };
+    const hooks: MotionHooks = {
+      onLeaveStart: (element) => ({
+        maxHeight: `${element?.getBoundingClientRect().height ?? 0}px`,
+      }),
     };
 
-    // ============================== Type ================================
-    const type = computed<AlertType>(() => {
-      if (props.type !== undefined) {
-        return props.type;
-      }
-      // banner mode defaults to 'warning'
-      return props.banner ? 'warning' : 'info';
-    });
-
-    const mergedVariant = computed<AlertVariant>(
-      () => props.variant ?? contextVariant ?? 'outlined',
-    );
-
-    // ============================ Closable ==============================
-    // #closeIcon 插槽（C8-R2）：空渲染归一为 undefined ⇒ 回落后续链（closable 对象
-    // 子字段 / closeText / prop / ConfigProvider / 默认图标）。
-    const closeIconSlot = computed<VNodeChild | undefined>(() => {
-      const fn = slots.closeIcon;
-      if (typeof fn !== 'function') return undefined;
-      const nodes = fn();
-      if (nodes === undefined) return undefined;
-      return isEmptyVNode(nodes) ? undefined : nodes;
-    });
-    const isClosable = computed<boolean>(() => {
-      if (isPlainObject(props.closable)) {
-        return true;
-      }
-      if (props.closeText) {
-        return true;
-      }
-      if (typeof props.closable === 'boolean') {
-        return props.closable;
-      }
-      // should be true when closeIcon is 0 or ''
-      if (props.closeIcon !== false && props.closeIcon != null) {
-        return true;
-      }
-      // C8-R2：#closeIcon 插槽非空 ⇒ 可关（与 prop 语义一致）
-      if (closeIconSlot.value !== undefined) {
-        return true;
-      }
-      return !!contextClosable;
-    });
-
-    // banner mode defaults to Icon
-    const isShowIcon = computed<boolean | undefined>(() =>
-      props.banner && props.showIcon === undefined ? true : props.showIcon,
-    );
-
-    // =========== Merged Props for Semantic ===========
-    // antd：{...props, prefixCls, variant, type, showIcon, closable} ——
-    // 普通对象 + watchEffect 同步（skeleton 同条）。
-    const semanticProps: AlertProps = { ...props };
-    watchEffect(() => {
-      Object.assign(semanticProps, props);
-      semanticProps.variant = mergedVariant.value;
-      semanticProps.type = type.value;
-      semanticProps.showIcon = isShowIcon.value;
-      semanticProps.closable = isClosable.value;
-    });
-
-    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
-      AlertProps,
-      AlertSemanticClassNames,
-      AlertSemanticStyles
-    >(
-      [() => contextClassNames, () => props.classNames],
-      [
-        () => contextStyles as AlertSemanticStyles | undefined,
-        () => semanticRootStyle(contextStyle),
-        () => props.styles,
-      ],
-      semanticProps,
-    );
-
-    // ========================== Close Icon ==============================
-    const mergedCloseIcon = computed<VNodeChild>(() => {
-      if (closeIconSlot.value !== undefined) return closeIconSlot.value;
-      if (isPlainObject(props.closable) && (props.closable as AlertClosable).closeIcon) {
-        return (props.closable as AlertClosable).closeIcon;
-      }
-      if (props.closeText) {
-        return props.closeText;
-      }
-      if (props.closeIcon !== undefined) {
-        return props.closeIcon;
-      }
-      if (isPlainObject(contextClosable) && contextClosable.closeIcon) {
-        return contextClosable.closeIcon;
-      }
-      return contextCloseIcon;
-    });
-
-    const mergedAriaProps = computed<Record<string, unknown>>(() => {
-      const merged = props.closable ?? contextClosable;
-      if (isPlainObject(merged)) {
-        return pickAttrs(merged, { data: true, aria: true });
-      }
-      return {};
-    });
-
-    // ============================== Render ==============================
     return () => {
-      const cls = prefixCls.value;
-      // Presence determines precedence; an explicitly empty slot suppresses its prop.
-      const titleSlot = slots.title?.();
-      const descriptionSlot = slots.description?.();
-      const mergedTitle: VNodeChild = slots.title
-        ? isEmptyVNode(titleSlot)
-          ? undefined
-          : titleSlot
-        : (props.title ?? props.message);
-      const descriptionValue: VNodeChild = slots.description
-        ? isEmptyVNode(descriptionSlot)
-          ? undefined
-          : descriptionSlot
-        : props.description;
-      // action 已改为 slot（规则 #3）：内容一律走 `#action` slot。
-      const actionValue: VNodeChild = slots.action?.();
-
-      const alertCls = [
-        cls,
-        `${cls}-${type.value}`,
-        `${cls}-${mergedVariant.value}`,
+      const cls = prefix();
+      const type = props.type ?? (props.banner ? 'warning' : 'info');
+      const variant = props.variant ?? config.variant ?? 'outlined';
+      const title = slots.title ? slots.title() : (props.title ?? props.message);
+      const description = slots.description ? slots.description() : props.description;
+      const action = slots.action?.();
+      const hasTitle = !isEmptyVNode(title);
+      const hasDescription = !isEmptyVNode(description);
+      const hasAction = !isEmptyVNode(action);
+      const configuredIcons: Record<AlertType, VNodeChild> = {
+        success: config.successIcon ?? h(CheckCircleFilled),
+        info: config.infoIcon ?? h(InfoCircleFilled),
+        warning: config.warningIcon ?? h(ExclamationCircleFilled),
+        error: config.errorIcon ?? h(CloseCircleFilled),
+      };
+      const icon = slots.icon ? slots.icon() : configuredIcons[type];
+      const wantsIcon = props.showIcon ?? props.banner;
+      const hasIcon = wantsIcon && !isEmptyVNode(icon);
+      const localOptions = closeOptions(props.closable);
+      const providerOptions = closeOptions(config.closable);
+      const slotCloseIcon = slots.closeIcon?.();
+      const closable = localOptions
+        ? true
+        : props.closeText
+          ? true
+          : typeof props.closable === 'boolean'
+            ? props.closable
+            : props.closeIcon !== undefined
+              ? props.closeIcon !== false && props.closeIcon !== null
+              : slots.closeIcon && !isEmptyVNode(slotCloseIcon)
+                ? true
+                : Boolean(config.closable);
+      const closeIcon = slots.closeIcon
+        ? slotCloseIcon
+        : localOptions?.closeIcon !== undefined
+          ? localOptions.closeIcon
+          : props.closeText
+            ? props.closeText
+            : props.closeIcon !== undefined
+              ? props.closeIcon
+              : providerOptions?.closeIcon !== undefined
+                ? providerOptions.closeIcon
+                : config.closeIcon;
+      const semanticProps: AlertProps = {
+        ...props,
+        type,
+        variant,
+        prefixCls: cls,
+        role: props.role,
+        showIcon: hasIcon,
+        closable,
+      };
+      const info = { props: semanticProps };
+      // Resolve during the Vue render: slot presence and attrs-only updates are not refs.
+      const classNames = mergeClassNames<AlertSemanticClassNames>(
+        resolveSemantic(config.classNames, info),
+        resolveSemantic(props.classNames, info),
+      );
+      const styles = mergeStyles<AlertSemanticStyles>(
+        resolveSemantic(config.styles, info),
+        semanticRootStyle(config.style),
+        resolveSemantic(props.styles, info),
+      );
+      const attributeOptions = props.closable === undefined ? providerOptions : localOptions;
+      const closeAttrs = attributeOptions
+        ? pickAttrs(attributeOptions, { aria: true, data: true })
+        : {};
+      const alertAttrs = mergeDomAttrs(
         {
-          [`${cls}-with-description`]: isRenderable(descriptionValue),
-          [`${cls}-no-icon`]: !isShowIcon.value,
-          [`${cls}-banner`]: !!props.banner,
-          [`${cls}-rtl`]: direction.value === 'rtl',
+          id: props.id,
+          role: props.role,
+          class: [
+            cls,
+            `${cls}-${type}`,
+            `${cls}-${variant}`,
+            {
+              [`${cls}-with-description`]: hasDescription,
+              [`${cls}-no-icon`]: !hasIcon,
+              [`${cls}-banner`]: props.banner,
+              [`${cls}-rtl`]: direction.value === 'rtl',
+            },
+            config.className,
+            classNames.root,
+          ],
+          ...styleAttrs({ ...theme.styles.value, ...styles.root }),
+          onClick: props.onClick,
+          onMouseenter: props.onMouseenter,
+          onMouseleave: props.onMouseleave,
         },
-        contextClassName,
-        mergedClassNames.value.root,
-      ];
-
-      const restProps = pickAttrs(attrs, { aria: true, data: true });
-
-      // 图标：icon 覆盖默认类型图标；ConfigProvider 四类图标可换（antd 的 iconMapFilled）
-      const iconMapFilled: Record<AlertType, VNodeChild> = {
-        success: context.successIcon ?? h(CheckCircleFilled),
-        info: context.infoIcon ?? h(InfoCircleFilled),
-        error: context.errorIcon ?? h(CloseCircleFilled),
-        warning: context.warningIcon ?? h(ExclamationCircleFilled),
-      };
-
-      const hooks: MotionHooks = {
-        onLeaveStart: (element) => ({
-          maxHeight: (element as HTMLElement | null)?.offsetHeight ?? 0,
-        }),
-        onLeaveEnd: () => {
-          const closableAfterClose = isPlainObject(props.closable)
-            ? (props.closable as AlertClosable).afterClose
-            : undefined;
-          (closableAfterClose ?? props.afterClose)?.();
-        },
-      };
-
+        attrs,
+      );
+      alertAttrs.ref = rootRef;
+      alertAttrs['data-show'] = !closed.value;
       return h(
         CSSMotion,
         {
@@ -312,106 +243,84 @@ export default defineComponent({
           motionName: `${cls}-motion`,
           motionAppear: false,
           motionEnter: false,
+          supportMotion: theme.motion.value && !reducedMotion.value ? undefined : false,
           hooks,
+          onVisibleChanged,
         },
         {
           default: ({
-            className: motionClassName,
-            style: motionStyle,
+            className,
+            style,
           }: {
             className: string;
             style: Record<string, string | number> | null;
           }) =>
-            h(
-              'div',
-              mergeProps(
-                {
-                  id: props.id,
-                  ref: rootRef,
-                  'data-show': !closed.value,
-                  class: [alertCls, motionClassName],
-                  style: {
-                    ...(mergedStyles.value.root as Record<string, string | number | undefined>),
-                    ...(motionStyle ?? {}),
-                  },
-                  onMouseenter: props.onMouseenter,
-                  onMouseleave: props.onMouseleave,
-                  onClick: props.onClick,
-                  role: 'alert',
-                },
-                restProps,
-                // 根 `class` / `style` 是 Vue 原生 attrs：调用方值在最后，同名样式优先。
-                { class: attrs.class, style: attrs.style },
+            h('div', mergeDomAttrs(alertAttrs, { class: className, ...(style ? { style } : {}) }), [
+              hasIcon
+                ? h(
+                    'span',
+                    {
+                      class: [`${cls}-icon`, classNames.icon],
+                      ...styleAttrs(styles.icon),
+                      ...(!slots.icon && config[`${type}Icon`] == null
+                        ? { 'aria-hidden': true }
+                        : {}),
+                    },
+                    [icon],
+                  )
+                : null,
+              h(
+                'div',
+                { class: [`${cls}-section`, classNames.section], ...styleAttrs(styles.section) },
+                [
+                  hasTitle
+                    ? h(
+                        'div',
+                        { class: [`${cls}-title`, classNames.title], ...styleAttrs(styles.title) },
+                        [title],
+                      )
+                    : null,
+                  hasDescription
+                    ? h(
+                        'div',
+                        {
+                          class: [`${cls}-description`, classNames.description],
+                          ...styleAttrs(styles.description),
+                        },
+                        [description],
+                      )
+                    : null,
+                ],
               ),
-              [
-                isShowIcon.value
-                  ? h(
-                      'span',
-                      {
-                        class: [`${cls}-icon`, mergedClassNames.value.icon],
-                        style: mergedStyles.value.icon as never,
-                      },
-                      [slots.icon?.() ?? iconMapFilled[type.value]],
-                    )
-                  : null,
-                h(
-                  'div',
-                  {
-                    class: [`${cls}-section`, mergedClassNames.value.section],
-                    style: mergedStyles.value.section as never,
-                  },
-                  [
-                    isRenderable(mergedTitle)
-                      ? h(
-                          'div',
-                          {
-                            class: [`${cls}-title`, mergedClassNames.value.title],
-                            style: mergedStyles.value.title as never,
-                          },
-                          [mergedTitle as VNodeChild],
-                        )
-                      : null,
-                    isRenderable(descriptionValue)
-                      ? h(
-                          'div',
-                          {
-                            class: [`${cls}-description`, mergedClassNames.value.description],
-                            style: mergedStyles.value.description as never,
-                          },
-                          [descriptionValue as VNodeChild],
-                        )
-                      : null,
-                  ],
-                ),
-                isRenderable(actionValue)
-                  ? h(
-                      'div',
-                      {
-                        class: [`${cls}-actions`, mergedClassNames.value.actions],
-                        style: mergedStyles.value.actions as never,
-                      },
-                      [actionValue as VNodeChild],
-                    )
-                  : null,
-                isClosable.value
-                  ? h(
-                      'button',
-                      {
-                        type: 'button',
-                        onClick: handleClose,
-                        class: [`${cls}-close-icon`, mergedClassNames.value.close],
-                        tabIndex: 0,
-                        style: mergedStyles.value.close as never,
-                        ...mergedAriaProps.value,
-                      },
-                      // antd：closeIcon === true || undefined ⇒ 默认 CloseOutlined
-                      mergedCloseIcon.value === true || mergedCloseIcon.value === undefined
-                        ? h(CloseOutlined)
-                        : [mergedCloseIcon.value as VNodeChild],
-                    )
-                  : null,
-              ],
-            ),
+              hasAction
+                ? h(
+                    'div',
+                    {
+                      class: [`${cls}-actions`, classNames.actions],
+                      ...styleAttrs(styles.actions),
+                    },
+                    [action],
+                  )
+                : null,
+              closable
+                ? h(
+                    'button',
+                    {
+                      type: 'button',
+                      tabindex: 0,
+                      disabled: closed.value,
+                      onClick: handleClose,
+                      class: [`${cls}-close-icon`, classNames.close],
+                      ...styleAttrs(styles.close),
+                      'aria-label': 'Close',
+                      ...closeAttrs,
+                    },
+                    closeIcon === true || closeIcon === undefined
+                      ? h(CloseOutlined, { 'aria-hidden': true })
+                      : [closeIcon],
+                  )
+                : null,
+            ]),
         },
       );
     };

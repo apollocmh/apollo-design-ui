@@ -4,79 +4,85 @@ title: Alert
 subtitle: 警告提示
 ---
 
-警告提示，展现需要关注的信息。
+在页面中展示需要关注的信息；支持完整 Vue 内容插槽和原生关闭按钮。全部15个实际示例见 [`demo/`](./demo)。
 
-## 何时使用
-
-- 当某个页面需要向用户显示警告的信息时使用。
-- 非浮层的静态告诫，用户可点击关闭。
-
-## 代码演示
-
-见 [`demo/`](./demo)（14 个，覆盖 antd 的主要用户场景）。
-
-| demo | 内容 |
-|---|---|
-| `basic` | 基本 |
-| `description` | 四种样式 + 辅助文字 |
-| `closable` | 可关闭（closable 对象 + aria-label） |
-| `icon` / `custom-icon` | 图标 / 自定义图标 |
-| `banner` | 顶部公告 |
-| `action` | 自定义操作项 |
-| `filled` | 填充态（variant） |
-| `smooth-closed` | 平滑卸载（afterClose） |
-| `style-class` | 语义化 classNames / styles |
-| `custom-title-alignment` | 标题换行对齐（styles 微调） |
-| `loop-banner` | 轮播公告（CSS 跑马灯等价实现） |
-| `error-boundary` | 错误边界（onErrorCaptured） |
-
-## API
-
-F07 开发版行为调整：`#title/#description` 存在时覆盖 prop；没有标题 slot 时才按 `title → message` 兜底。移除条件 slot 后恢复 prop。旧版 prop 优先的迁移说明见 `docs/migrations/content-slot-precedence.md`。
+## Props
 
 | 参数 | 说明 | 类型 | 默认值 |
-|---|---|---|---|
-| type | 提示类型 | `'success' \| 'info' \| 'warning' \| 'error'` | `banner ? 'warning' : 'info'` |
-| variant | 形态（6.4.0+） | `'outlined' \| 'filled'` | `'outlined'` |
-| title | 标题（prop / `#title` 插槽，slot 存在则优先，空 slot 不回退） | `string` | — |
-| message | **@deprecated** 请用 `title` | `string` | — |
-| description | 辅助描述（prop / `#description` 插槽，slot 存在则优先，空 slot 不回退） | `string` | — |
-| showIcon | 是否显示图标（banner 且未传 ⇒ true） | `boolean` | — |
-| banner | 顶部通告形态 | `boolean` | `false` |
-| closable | 可关闭（对象形态恒可关，可带 closeIcon/onClose/afterClose 与任意 aria-*/data-*） | `boolean \| AlertClosable` | ConfigProvider |
-| closeIcon | **@deprecated** 请用 `closable.closeIcon`（`null/false` ⇒ 不可关） | `string \| boolean \| null` | — |
-| closeText | **@deprecated** 请用 `closable.closeIcon` | `string` | — |
-| onClose | **@deprecated** 请用 `closable.onClose` | `(e: MouseEvent) => void` | — |
-| afterClose | **@deprecated** 请用 `closable.afterClose` | `() => void` | — |
-| id / role | 根元素属性（role 默认 `'alert'`，可覆盖） | `string` | — |
-| classNames / styles | 语义槽位（root / icon / section / title / description / actions / close），对象或函数 | — | — |
-| onMouseenter / onMouseleave / onClick | 根元素事件 | `(e: MouseEvent) => void` | — |
+| --- | --- | --- | --- |
+| type | 提示类型 | `'success' \| 'info' \| 'warning' \| 'error'` | banner 时 warning，否则 info |
+| variant | 显式值优先于当前 `components.alert.variant` | `'outlined' \| 'filled'` | outlined |
+| title | 标题文本；富内容走 #title | `string` | — |
+| message | 废弃标题别名，title 未传时使用 | `string` | — |
+| description | 描述文本；富内容走 #description | `string` | — |
+| showIcon | 是否显示图标；显式 false 抑制 banner 默认图标 | `boolean` | banner 时 true，否则 false |
+| banner | 顶部通告形态 | `boolean` | false |
+| closable | boolean 或关闭配置；对象恒可关，当前 Provider 可给默认值 | `boolean \| AlertClosable` | false |
+| closeIcon | 遗留标量图标，推荐 #closeIcon 或 closable.closeIcon | `string \| number \| boolean \| null` | — |
+| closeText | 废弃关闭文案，推荐 #closeIcon | `string` | — |
+| afterClose | 遗留完成回调，推荐 @after-close | `() => void` | — |
+| prefixCls | DOM 类名前缀；自定义前缀需预载对应静态 CSS | `string` | apollo-alert |
+| id / role | 实际根 div 的属性 | `string` | role=alert |
+| classNames / styles | root/icon/section/title/description/actions/close；对象或读取当前合并 props 的函数 | `AlertSemanticValue<…>` | — |
 
-### 插槽（Slots）
+`class`、`style`、tabindex、ARIA/data、普通原生监听器和 once 等修饰符落在实际根 div；`nativeElement` 指向该节点。`title` 已是内容 prop，不另作同名原生提示属性。原生根事件使用 DOM Event；onClick/onMouseenter/onMouseleave 为对应监听器写法。
+
+语义函数的 `props` 包括当前解析后的 type、variant、prefixCls、role、图标显示和关闭开关；role 默认 alert，显式值优先。
+
+Provider 四类图标的 null/undefined 沿用默认图标回退，默认图标按装饰内容处理；自定义图标语义由内容负责。
+
+## Slots
 
 | 插槽 | 说明 |
-|---|---|
-| `#title` | 标题富内容（slot 存在则优先，空 slot 不回退）。 |
-| `#description` | 辅助描述富内容（slot 存在则优先，空 slot 不回退）。 |
-| `#icon` | 自定义图标，**覆盖**默认类型图标（原 `icon` prop，已移除）。 |
-| `#action` | 操作区内容（原 `action` prop，已移除）。 |
+| --- | --- |
+| #title | 完整标题内容，存在则覆盖 title/message，包括有意为空。 |
+| #description | 完整描述；空内容不回退，且不保留 with-description 布局。 |
+| #icon | 完整类型图标内容；空槽抑制默认图标，showIcon=false 仍优先。 |
+| #action | 完整操作内容，支持多个原生操作节点。 |
+| #closeIcon | 关闭按钮内的文本/图标；存在则覆盖所有图标配置，空槽不回退。 |
 
-### Alert.ErrorBoundary
+五个槽均在当前 render 读取，支持条件添加/移除、Fragment 与0。没有 default→title 的隐式通道。关闭内容优先级为 #closeIcon、closable.closeIcon、closeText、遗留 closeIcon、Provider对象图标、Provider closeIcon、默认图标；配置值按是否提供判定，0/false/null/空串不被默认图标覆盖。
 
-错误边界包裹组件（Vue 由 `onErrorCaptured` 实现）：捕获后代渲染错误后渲染
-`type="error"` 的 Alert（title 缺省用 `error.toString()`，描述缺省用组件栈 `<pre>`）。
+## Events 与关闭状态
+
+| 事件 | 载荷与时机 |
+| --- | --- |
+| close | 实际关闭按钮 click 的 MouseEvent，包含原生 Enter/Space 激活；每实例接受一次关闭请求。 |
+| after-close | 内部关闭完成并移除后通知一次；禁动效和减少动画也完成。 |
+
+onClose/onAfterClose 是事件监听器的程序化写法。`closable.onClose/afterClose` 保留业务配置能力，不能抑制 Vue 事件；同一函数同时作为配置与监听器时不重复调用。配置 afterClose 优先于遗留 plain afterClose。关闭按钮默认可访问名称为 Close，可用 closable 的 aria-label/aria-labelledby 定义业务名称；其 aria/data 落在关闭按钮，根 ARIA 仍属根。
+
+关闭是内部一次性状态，没有 open/visible/v-model 或取消钩子。父级通过 v-if/key 控制挂载和重新显示；更改 closable 不重新打开已关闭实例。父级在 @close 中直接卸载时，不会冒充内部关闭完成事件。保留遗留 closeText 真值触发可关闭的既有优先级；显式 closable boolean 决定通常关闭开关。
 
 ## Ref
 
-| 名称 | 类型 |
-|---|---|
-| nativeElement | `HTMLDivElement \| null` |
+`AlertRef.nativeElement: HTMLDivElement | null`，关闭完成或卸载后为 null。
 
-## Theme（Component Token）
+## ErrorBoundary
 
-| token | 说明 | 默认值 |
-|---|---|---|
-| borderRadius | 圆角 | `borderRadiusLG`（8） |
-| withDescriptionIconSize | 带描述时图标字号 | `fontSizeHeading3`（30） |
-| defaultPadding | 无描述内边距 | `8px 12px` |
-| withDescriptionPadding | 带描述内边距 | `20px 24px` |
+`Alert.ErrorBoundary` 与 `AlertErrorBoundary` 为同一有类型的组件。完整默认 slot 是健康内容，不额外包装 DOM；无 v-model、reset 方法或公开 expose。通过父级 key 重挂可恢复。
+
+| 参数 | 说明 | 类型 |
+| --- | --- | --- |
+| title / message | 错误标题数据，缺省使用 String(error)；message 为旧别名 | `VNodeChild` |
+| description | 错误描述数据，缺省以 pre 展示 Vue 错误阶段信息 | `VNodeChild` |
+| id | 错误回退 Alert 的 id | `string` |
+
+Vue onErrorCaptured 捕获实际后代的 setup/渲染/生命周期及所属事件错误并阻断上抛，包括抛出0/false/null/undefined。边界自身或脱离 Vue 调用链的错误不属于此边界。class/style/ARIA/native attrs 的原生落点是错误回退 Alert，健康 Fragment 不分配这些 attrs 到任意业务子节点。
+
+默认错误详情为名为 Error details 的可聚焦 region；窄视口下支持原生键盘横向滚动。提供自定义 description 数据时，其交互与语义由该内容负责。
+
+## Theme
+
+| Token | 作用 | 默认来源 |
+| --- | --- | --- |
+| borderRadius | 圆角 | borderRadiusLG |
+| withDescriptionIconSize | 带描述图标尺寸 | fontSizeHeading3 |
+| defaultPadding | 普通内边距 | paddingContentVerticalSM + 横向12px |
+| withDescriptionPadding | 描述内边距 | paddingMD / paddingContentHorizontalLG |
+
+最近 `theme.components.Alert` 的四字段与当前 Alias 实时消费，移除覆盖恢复当前主题。原生根 `--apollo-alert-*` 变量优先，默认/暗色/紧凑/组合保持作用域；关闭遵循 theme.token.motion 和 prefers-reduced-motion。
+
+显式空 ThemeProvider 仍是最近的主题来源，恢复默认 Alias 和四个 Token；其下未配置主题的 ConfigProvider 延续该来源。没有主题来源的 ConfigProvider 不写组件主题变量，页面 CSS 的暗色/紧凑作用域继续生效。
+
+迁移与验证范围见 `docs/migrations/alert-contracts.md`、`docs/audit/2026-10-29-alert-contract-audit.md`。

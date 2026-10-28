@@ -13,11 +13,13 @@
  */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import { expect, it } from 'vitest';
 import { defineComponent, h, provide, type VNodeChild } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/alert.dom.json';
 import type { ConfigContextValue } from '../../config-provider/context';
 import { configContextKey, DEFAULT_CONFIG_CONTEXT } from '../../config-provider/context';
 import { Alert } from '../index';
+import { alertContractDifferences } from './contract-differences';
 
 /**
  * 在指定的 ConfigProvider 上下文下渲染（button/semantic 同范式）。
@@ -86,9 +88,9 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
       ),
   },
   'alert:aria-data': {
-    render: () => h(Alert, { 'data-test': 'test-id', 'aria-describedby': 'some-label' } as never),
+    render: () => h(Alert, { 'data-test': 'test-id', 'aria-describedby': 'some-label' }),
   },
-  'alert:role-override': { render: () => h(Alert, { role: 'status' } as never) },
+  'alert:role-override': { render: () => h(Alert, { role: 'status' }) },
   'alert:id': { render: () => h(Alert, { id: 'test-id' }) },
   'alert:semantic': {
     render: () =>
@@ -130,10 +132,27 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
 domContractTest('Alert', {
   baseline,
   keepStyle: true,
-  allow: {},
+  allow: alertContractDifferences,
   render: (id) => {
     const spec = specs[id];
     if (!spec) throw new Error(`[Alert L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
     return spec.render();
   },
+});
+
+it('keeps complete reference coverage and finite native ARIA differences', () => {
+  const ids = baseline.cases.map(({ id }) => id).sort();
+  expect(ids).toHaveLength(28);
+  expect(Object.keys(specs).sort()).toEqual(ids);
+  expect(Object.keys(alertContractDifferences)).toHaveLength(10);
+  const differences = Object.values(alertContractDifferences).flatMap(({ diff }) => diff);
+  expect(differences).toHaveLength(13);
+  for (const [id, allowance] of Object.entries(alertContractDifferences)) {
+    expect(ids).toContain(id);
+    expect(allowance.deviationId).toBe('alert-native-close-accessibility');
+    for (const difference of allowance.diff)
+      expect(difference).toMatch(
+        /^\$\/div\[0\]\/(?:span\[0\]: 我们多出属性 aria-hidden="true"|button\[(?:1|3)\]: 我们多出属性 aria-label="Close"|button\[(?:1|3)\]\/span\[0\]: 我们多出属性 aria-hidden="true")$/,
+      );
+  }
 });

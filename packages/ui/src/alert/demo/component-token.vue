@@ -1,42 +1,30 @@
 <script setup lang="ts">
-// 组件 Token：直接覆写根元素上的 `--apollo-alert-*` 变量。
-// `ConfigProvider theme.components` 目前只参与主题合并、尚未产出 CSS 变量，
-// 因此这里用与 layout/component-token 相同的做法：在根元素覆写变量。
-import { Alert } from '@apollo-design/ui';
+import { Alert, Button, ConfigProvider } from '@apollo-design/ui';
+import { ref } from 'vue';
 
-const defaultTokenStyle = {
-  '--apollo-alert-border-radius': '16px',
-  '--apollo-alert-default-padding': '12px 20px',
-};
-
-const descriptionTokenStyle = {
-  '--apollo-alert-with-description-padding': '16px 20px',
-  '--apollo-alert-with-description-icon-size': '28px',
-};
+const custom = ref(true);
+const draft = ref('Saved business draft');
 </script>
 
 <template>
   <div class="alert-component-token-demo">
-    <Alert
-      show-icon
-      type="success"
-      title="Custom border radius and padding"
-      :style="defaultTokenStyle"
-    />
-    <Alert
-      show-icon
-      type="info"
-      title="Custom description spacing"
-      description="The icon size and padding follow the alert component tokens."
-      :style="descriptionTokenStyle"
-    />
+    <Button @click="custom = !custom">{{ custom ? 'Use defaults' : 'Use custom tokens' }}</Button>
+    <ConfigProvider :theme="custom ? { components: { Alert: {
+      borderRadius: 16,
+      defaultPadding: '12px 20px',
+      withDescriptionPadding: '16px 20px',
+      withDescriptionIconSize: 28,
+    } } } : undefined">
+      <Alert show-icon type="success" title="Current border radius and padding" />
+      <Alert show-icon type="info" title="Current description spacing">
+        <template #description>
+          <label>Business draft <input v-model="draft" aria-label="Alert theme draft" /></label>
+        </template>
+      </Alert>
+    </ConfigProvider>
   </div>
 </template>
 
 <style scoped>
-.alert-component-token-demo {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+.alert-component-token-demo { display: flex; flex-direction: column; gap: 16px; }
 </style>

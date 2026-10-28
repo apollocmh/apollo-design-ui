@@ -1,0 +1,1146 @@
+{
+  "task": "ALERT-CONTRACT-20261029",
+  "date": "2026-10-29",
+  "frozenAtUTC": "2026-10-28T21:41:38.098Z",
+  "baseCommit": "2f47f423a8c229a4f763593c4cda0f401ed06731",
+  "observedHead": "e1ff1b474ae545a384e5d7b90e41de940786f1df",
+  "commitStatus": "Owned changes remain uncommitted by this task; parent owns commits and final same-commit gates.",
+  "scope": "Complete Alert and ErrorBoundary contract unit: props, five named slots, Vue close/afterClose, native attrs/ref/keyboard, current Provider/semantic/theme/four tokens, all15 real demos, source and public consumer evidence.",
+  "freezeStatus": "Frozen after same-group null-icon closure; this receipt supersedes all prior source freeze fingerprints.",
+  "readiness": {
+    "implemented": true,
+    "sourceRuntimeVerified": true,
+    "publicRootAndChildSourceConsumerVerified": true,
+    "strictWholeSourceTypesPassed": true,
+    "defaultVitestTypeGatePassed": true,
+    "publishedVerified": false,
+    "formalVisualApproved": false,
+    "docsSiteVerified": false,
+    "finalRepositorySameCommitGatesVerified": false
+  },
+  "runtimeSourceFiles": [
+    {
+      "file": "packages/ui/src/alert/Alert.ts",
+      "sha256": "43ae091c59e931f8f2efa51bf967b8ab69b039e360c9e3c0c2da77ba8b78e6c4"
+    },
+    {
+      "file": "packages/ui/src/alert/ErrorBoundary.ts",
+      "sha256": "58a03f9dcaad2297005a8cc583c011857aacf1afa1c29615303e3e585c930fe2"
+    },
+    {
+      "file": "packages/ui/src/alert/index.ts",
+      "sha256": "eeffffe45ee9e977350b7ed3920858cae452994acffa969430785b2a8af89b04"
+    },
+    {
+      "file": "packages/ui/src/alert/interface.ts",
+      "sha256": "c58d9e9a3fdf11f64786a47ef48e3bb87fc5a967ccb76950cef0193077329a1c"
+    },
+    {
+      "file": "packages/ui/src/alert/style/index.ts",
+      "sha256": "3ca83de5b1ff9c6503c561d40ca9181f70c46d1c2275e8018ff2389388584092"
+    },
+    {
+      "file": "packages/ui/src/alert/style/token.ts",
+      "sha256": "766f9f8bc4fdb38d5fb0914b9eb39e0337e741c1ab9fe68f91d98d18445a8cf3"
+    },
+    {
+      "file": "packages/ui/src/alert/use-alert-theme.ts",
+      "sha256": "72850e946b77ad5df2cb1e7782bdab6c890952e0b9a0531cf5d64347aa16ecbe"
+    }
+  ],
+  "runtimeSourceSha256": "daa819c2f444a6056e2ba98f41d9178fed0e751cb566e93fdcdea93db8b0e12f",
+  "ownedFiles": [
+    {
+      "file": "docs/audit/2026-10-29-alert-contract-audit.md",
+      "sha256": "ae94ad7e505efbec72e42890e5932a1dd22f07b4357f8836c72ff3e06c798e61"
+    },
+    {
+      "file": "docs/migrations/alert-contracts.md",
+      "sha256": "bb05a151d411b695b75316bd27b0311f0df5f9e1f399615812b6673b081189f9"
+    },
+    {
+      "file": "packages/ui/src/alert/Alert.ts",
+      "sha256": "43ae091c59e931f8f2efa51bf967b8ab69b039e360c9e3c0c2da77ba8b78e6c4"
+    },
+    {
+      "file": "packages/ui/src/alert/ErrorBoundary.ts",
+      "sha256": "58a03f9dcaad2297005a8cc583c011857aacf1afa1c29615303e3e585c930fe2"
+    },
+    {
+      "file": "packages/ui/src/alert/PLAN.md",
+      "sha256": "06d4e1a9ffb5f5ac2967d241e25b443d610740e9caf249f237de1cff2bfe380f"
+    },
+    {
+      "file": "packages/ui/src/alert/README.md",
+      "sha256": "1b4aeaa8a24a2664f98c19b63452d06759d3f3c5d518f510a2311b0cdb81d6a0"
+    },
+    {
+      "file": "packages/ui/src/alert/__tests__/a11y.test.ts",
+      "sha256": "c80cada6d181a553f444f5623f23eaecf91161ec6eac2de62f01d64cd9c0c2c7"
+    },
+    {
+      "file": "packages/ui/src/alert/__tests__/contract-audit.test.ts",
+      "sha256": "17d3c55c2cdde665bd5f8f5b96d046901d0c30e518d9cd8824833b333b264a1e"
+    },
+    {
+      "file": "packages/ui/src/alert/__tests__/contract-differences.ts",
+      "sha256": "63f9c6a0d22cd17954b1667d573f2b1687436c539d912e367eb02ade14ce92bf"
+    },
+    {
+      "file": "packages/ui/src/alert/__tests__/demo.test.ts",
+      "sha256": "83312466c2330e56343aa28e184c5a0be30ad070d9dbcbd2359e5812fcaadc43"
+    },
+    {
+      "file": "packages/ui/src/alert/__tests__/index.test.ts",
+      "sha256": "30ef4c9bf100ca5514a8514d0bbcba9107ae64215024fabf680b4af5ae0b8777"
+    },
+    {
+      "file": "packages/ui/src/alert/__tests__/semantic.test.ts",
+      "sha256": "4c1424e311e12e882d24d93da9d3b5bdb341f49795f6f492aeb3b553541ff574"
+    },
+    {
+      "file": "packages/ui/src/alert/__tests__/slot-priority.test.ts",
+      "sha256": "4b487a5b4ce01f6094294eb97812e8ecae1579a1183dd3c95d46e65c52182b07"
+    },
+    {
+      "file": "packages/ui/src/alert/__tests__/theme.test.ts",
+      "sha256": "b5af7d8c083c05e87e2022cd599e61da058d913fbd31bcf80713633b6d668a3b"
+    },
+    {
+      "file": "packages/ui/src/alert/__tests__/type.test-d.ts",
+      "sha256": "dd186d55ab00d09816ef15f7e5b2a38f16779c5c26424051a87a3ce92ae65500"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/action.md",
+      "sha256": "055bad1aabb96c1f0d32b752def80e1928c2fdf9dc0f171eaa9979b170e81933"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/action.vue",
+      "sha256": "1acb314efbacea094ddf40573cf1d00769689e578f26c151314295dd6bbdbb7d"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/banner.md",
+      "sha256": "b21a1b4523406035965e49ca727c19dc9e8dd3b9d39185e6cbe47fe799a4214f"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/banner.vue",
+      "sha256": "bc8036ac9e523f091f8673077c1857e5ec59a8b82bf07c7d77f31ab3f7584c27"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/basic.md",
+      "sha256": "99895e8adf1d6fa92c4ed07d478feacddee0451dbd3271e0bc6cf12327601579"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/basic.vue",
+      "sha256": "f6dec6476fde057cca95399ebb946f898cc8bf2efba53a02caf49b2c735b656a"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/closable.md",
+      "sha256": "1559a3508c48464f2cbbb33a9f5f29b42c9fea155a83f2f94143ffd1ec3b662a"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/closable.vue",
+      "sha256": "29cc656a2b3855080a5baa6e5390b9855bc8759ecef7fd49e18161c87771fa00"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/component-token.md",
+      "sha256": "cfffa671c92fa05257d2136bd459c1618392085c50dc252d00824977bd2ae930"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/component-token.vue",
+      "sha256": "c0ae90a001ee300239d93c7a56cc5fdba69b1497e9863f9445b3926ef8f9a09a"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/content-slots.md",
+      "sha256": "8ac929fee9791963079441496187c8be390bf7afcae461198d816e2495275767"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/content-slots.vue",
+      "sha256": "63bd5922483c406cff96968091beb248fa93f4ae529af189f4e129fd3bb8e2e2"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/custom-icon.md",
+      "sha256": "1881325f6031841048b04ace60b290cbc0d388124f0da13b2735f66474b41e56"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/custom-icon.vue",
+      "sha256": "8d0cebe82e0b9df0f5b1c5fd623ad4c35197bc64a285af23899e5164dc060bf5"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/custom-title-alignment.md",
+      "sha256": "2510f577f025b11d18e751c747a47dd217ce0cfe4b0a39750c82e79024ec7e5d"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/custom-title-alignment.vue",
+      "sha256": "f607b92197a18dbaef004c2516e91eb0273a8423d4d33019315c076823c1b191"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/description.md",
+      "sha256": "991661c011df8d3e9cf2a01e97d091fd3540b5e2df034fdc1544c5da345305c6"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/description.vue",
+      "sha256": "73f415a738d222a4caf4c4bdd79206e5176e37b61b065cb408d67c805482be65"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/error-boundary.md",
+      "sha256": "30c5388c5fe10c430c459b9563d85086c6837b764800b8290f322c86e2f730d9"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/error-boundary.vue",
+      "sha256": "b197adf48ad8aab687d13a5cf61a49ca6435d2c3c16a8fdade8236f87c268ed2"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/filled.md",
+      "sha256": "757c45117c6f49a21a33f072f85c1061b35621687ebaee0b8c2c20bf3068bd16"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/filled.vue",
+      "sha256": "8a4d4a83fc5c204934990d01bf644afcc7d2d358cfee9ab3f82fa332e1c7f998"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/icon.md",
+      "sha256": "14621ed4ebe11603c6b3b7ee1c9831d1321ef51c8dc6e865655171827a16ab31"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/icon.vue",
+      "sha256": "5310320765cad5618ef1bae1fdd0d720602cca6c4575723be43cdb6eda3f84f0"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/loop-banner.md",
+      "sha256": "2e0ada6779332b3a856126433e5b50bbf80edb0f9ec33a4c055e05e0b99637c9"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/loop-banner.vue",
+      "sha256": "b11a651a7f41bfce0bb281c30094a2edf3c5210e7beafaca6dca957d9c5987fc"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/smooth-closed.md",
+      "sha256": "e894c8130dd3c89114d3e47213ba80125260d2edba85359485518ea6b84e3997"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/smooth-closed.vue",
+      "sha256": "4bf328cd24c84ff81fa4d6c72a1393ced20a38c3491f4c5feb994582e9426ca2"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/style-class.md",
+      "sha256": "3906450b97409f111acd31bb48e260c8e38d211f7a2f2530c6b075d3738ff009"
+    },
+    {
+      "file": "packages/ui/src/alert/demo/style-class.vue",
+      "sha256": "4abead40e56aa02cf3d773f41e7a30593c273b594036a873b42b47cbf94e0d61"
+    },
+    {
+      "file": "packages/ui/src/alert/index.en-US.md",
+      "sha256": "a1be5d298c949a0b42c506bf019329ccd8d81f71a3875df678f8394137e3f0e9"
+    },
+    {
+      "file": "packages/ui/src/alert/index.ts",
+      "sha256": "eeffffe45ee9e977350b7ed3920858cae452994acffa969430785b2a8af89b04"
+    },
+    {
+      "file": "packages/ui/src/alert/index.zh-CN.md",
+      "sha256": "6d5c70239d1b0b912d49ac748bb4183b111214879841b2007644b1a9480e5298"
+    },
+    {
+      "file": "packages/ui/src/alert/interface.ts",
+      "sha256": "c58d9e9a3fdf11f64786a47ef48e3bb87fc5a967ccb76950cef0193077329a1c"
+    },
+    {
+      "file": "packages/ui/src/alert/style/index.ts",
+      "sha256": "3ca83de5b1ff9c6503c561d40ca9181f70c46d1c2275e8018ff2389388584092"
+    },
+    {
+      "file": "packages/ui/src/alert/style/token.ts",
+      "sha256": "766f9f8bc4fdb38d5fb0914b9eb39e0337e741c1ab9fe68f91d98d18445a8cf3"
+    },
+    {
+      "file": "packages/ui/src/alert/use-alert-theme.ts",
+      "sha256": "72850e946b77ad5df2cb1e7782bdab6c890952e0b9a0531cf5d64347aa16ecbe"
+    },
+    {
+      "file": "tests/browser/alert-contracts.mjs",
+      "sha256": "c4f8149ac8d71d468cbd829e01ae728da03ffa9ee93f91594dd37e03ed21cc59"
+    },
+    {
+      "file": "tests/browser/alert-demos.mjs",
+      "sha256": "0f7a326718ab062519912dacabc6d53e66a550a05209a94935bae03c279c2644"
+    },
+    {
+      "file": "tests/browser/alert-visual.mjs",
+      "sha256": "80fbcef3f8397fc7a0413333703a899567ed2d4b929f11aeedd260587d18af71"
+    },
+    {
+      "file": "tests/browser/fixtures/AlertContracts.html",
+      "sha256": "98f519e8c0f37f5f919aa4854bc9e54fc5e53fd1f7550a86fd030b6d5728b36b"
+    },
+    {
+      "file": "tests/browser/fixtures/AlertContracts.mjs",
+      "sha256": "6e62cc7237acf6f750b0cba8c8d68828e6470b0c534e8f5828520ffec4f13567"
+    },
+    {
+      "file": "tests/browser/fixtures/AlertContracts.vue",
+      "sha256": "ec9ea08b12fca5fac405e7040887b517449523bbea814c735b8c8fdfd8ce372b"
+    },
+    {
+      "file": "tests/browser/fixtures/AlertContractsSourceStyles.mjs",
+      "sha256": "fa0abdf963debcb20a60b2d7ac410d3515031e9f032a727745eaafcf2abbe8e4"
+    },
+    {
+      "file": "tests/browser/fixtures/AlertDemos.html",
+      "sha256": "2533c28080020fe11aab8943b96079c4b9f20153152b499e2e30163f7d5f8a25"
+    },
+    {
+      "file": "tests/browser/fixtures/AlertDemos.mjs",
+      "sha256": "1ed362b4ad2244078b9e880927a5a192e58ec4b8994562029667a4e133b1011c"
+    },
+    {
+      "file": "tests/consumer/alert-types.mjs",
+      "sha256": "85c2b2a6cec3c930b5303b341c581c72c2cf4c789c1c060a5984365ac43479d9"
+    },
+    {
+      "file": "tests/visual/alert-state.mjs",
+      "sha256": "05b1f0dd4f40b1cd0ada229448ea0fe6c619131e14b6c9e7536c7f0db4409ee4"
+    },
+    {
+      "file": "tests/visual/render/cases/apollo/alert.js",
+      "sha256": "52e3e9524195b1d1e249b40190f3cc381c424e58c206bc2efd0b56df38a51f04"
+    }
+  ],
+  "ownedFilesSha256": "9edddce93aa9dfb50926d4c890983c0b6bc491d512f7f27dd820488a5990d2a8",
+  "ownedChangedFiles": [
+    "docs/audit/2026-10-29-alert-contract-audit.md",
+    "docs/audit/evidence/alert-contract-source-freeze.json",
+    "docs/migrations/alert-contracts.md",
+    "packages/ui/src/alert/Alert.ts",
+    "packages/ui/src/alert/ErrorBoundary.ts",
+    "packages/ui/src/alert/README.md",
+    "packages/ui/src/alert/__tests__/contract-audit.test.ts",
+    "packages/ui/src/alert/__tests__/contract-differences.ts",
+    "packages/ui/src/alert/__tests__/index.test.ts",
+    "packages/ui/src/alert/__tests__/semantic.test.ts",
+    "packages/ui/src/alert/__tests__/theme.test.ts",
+    "packages/ui/src/alert/__tests__/type.test-d.ts",
+    "packages/ui/src/alert/demo/closable.md",
+    "packages/ui/src/alert/demo/closable.vue",
+    "packages/ui/src/alert/demo/component-token.md",
+    "packages/ui/src/alert/demo/component-token.vue",
+    "packages/ui/src/alert/demo/content-slots.md",
+    "packages/ui/src/alert/demo/content-slots.vue",
+    "packages/ui/src/alert/demo/custom-title-alignment.vue",
+    "packages/ui/src/alert/demo/error-boundary.md",
+    "packages/ui/src/alert/demo/error-boundary.vue",
+    "packages/ui/src/alert/demo/loop-banner.vue",
+    "packages/ui/src/alert/demo/smooth-closed.md",
+    "packages/ui/src/alert/demo/smooth-closed.vue",
+    "packages/ui/src/alert/index.en-US.md",
+    "packages/ui/src/alert/index.ts",
+    "packages/ui/src/alert/index.zh-CN.md",
+    "packages/ui/src/alert/interface.ts",
+    "packages/ui/src/alert/style/index.ts",
+    "packages/ui/src/alert/style/token.ts",
+    "packages/ui/src/alert/use-alert-theme.ts",
+    "tests/browser/alert-contracts.mjs",
+    "tests/browser/alert-demos.mjs",
+    "tests/browser/alert-visual.mjs",
+    "tests/browser/fixtures/AlertContracts.html",
+    "tests/browser/fixtures/AlertContracts.mjs",
+    "tests/browser/fixtures/AlertContracts.vue",
+    "tests/browser/fixtures/AlertContractsSourceStyles.mjs",
+    "tests/browser/fixtures/AlertDemos.html",
+    "tests/browser/fixtures/AlertDemos.mjs",
+    "tests/consumer/alert-types.mjs",
+    "tests/visual/alert-state.mjs",
+    "tests/visual/render/cases/apollo/alert.js"
+  ],
+  "observedDependencyFiles": [
+    {
+      "file": "packages/theme/src/vue.ts",
+      "sha256": "ed43e5231e8ef63d61ded4b767f7c12ac2c0325d0fb6f1690042467acd5858f5"
+    },
+    {
+      "file": "packages/ui/src/config-provider/ConfigProvider.ts",
+      "sha256": "6bf8a1262ca7295cc14714d52866b0e7a3e29f8dc320bf78ede880c178daa17f"
+    },
+    {
+      "file": "packages/ui/src/index.ts",
+      "sha256": "4c32897ac8983266df5a643d8e9ee6336a32e8e2c43bcb7b8e4bb6dc408ebd01"
+    }
+  ],
+  "dependencyNote": "Informational observations only. Parent owns sourceActive producer, root exports and other component migrations; these files are not part of this freeze.",
+  "originalProductionBefore": [
+    {
+      "file": "packages/ui/src/alert/Alert.ts",
+      "sha256": "19964bfbef04e1661203bfb67970387af7f3da60b398fd0001b500f918d15987"
+    },
+    {
+      "file": "packages/ui/src/alert/ErrorBoundary.ts",
+      "sha256": "f3efeec5b7d3407a93d2e77b9c7eeb7a184a8772ac44baf33ed643890357eefb"
+    },
+    {
+      "file": "packages/ui/src/alert/interface.ts",
+      "sha256": "743c602b8c3044ec3f1e389c034bb0bc0cac362cc3dd78d73b43f1b9d3490ede"
+    },
+    {
+      "file": "packages/ui/src/alert/index.ts",
+      "sha256": "22692c98967803c5c54f3f135f131defa20ef051bc4fdaf092a6bd2af2430a02"
+    },
+    {
+      "file": "packages/ui/src/alert/style/index.ts",
+      "sha256": "7f1b000b1b5bd815bcc8a136b8c635369e1e256439a628deb053bdfae533f4b0"
+    },
+    {
+      "file": "packages/ui/src/alert/style/token.ts",
+      "sha256": "54bfc862c76ff2f29aa331dc9b8acdf3e03b8cc5e64a9b1e0d11308db7b6026d"
+    }
+  ],
+  "reproduction": {
+    "baseline": {
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/baseline.json",
+        "sha256": "a674d032fd8fc4c1876877472370001579bce745a245b2ea16bfb279e3431359"
+      },
+      "passed": 102,
+      "failed": 0,
+      "exitCode": 0
+    },
+    "groupedRed": {
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/red.json",
+        "sha256": "8be32ca54d0d1d636741b0c01514e25311075101931bd8df9c626044ee4d41d3"
+      },
+      "passed": 4,
+      "failed": 23,
+      "exitCode": 1
+    },
+    "mergedSemanticRed": {
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/semantic-red.json",
+        "sha256": "08776ac8d07b090245b00695a098b218b0bc68ce6f1ab9485ccd1d723ab2d069"
+      },
+      "passed": 0,
+      "failed": 2,
+      "exitCode": 1
+    },
+    "themeSourceRed": {
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/theme-source-red-corrected.json",
+        "sha256": "414ef9d8f1816c249829306f168e098deb1c272cde90f94aa3f5d2a723b22297"
+      },
+      "passed": 1,
+      "failed": 2,
+      "exitCode": 1
+    },
+    "originalDemoRed": {
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/demos-first.json",
+        "sha256": "79c4bbb77a99cf5b83c3fb932c13306ec0f798bf91e5b1df7e500150c28fd5d8"
+      },
+      "passed": 175,
+      "failed": 5,
+      "exitCode": 1
+    },
+    "originalNativeRed": {
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/native-first.json",
+        "sha256": "ecd2c72ca297ff9a5f58a2437fb27e6fe9cf529b29fdbbca76a3c260513961fa"
+      },
+      "passed": 59,
+      "failed": 1,
+      "exitCode": 1
+    },
+    "note": "Initial invalid Provider/VTU/native fixtures and one parse error remain as raw history. They are excluded from valid defect counts; see audit.",
+    "nullDefaultIconRed": {
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/null-icon-red.json",
+        "sha256": "e96743ff8d8b8c743360a93e3c2f5bc611f2f178f7f9442cef3906ecb35a922d"
+      },
+      "passed": 0,
+      "failed": 4,
+      "exitCode": 1
+    }
+  },
+  "checks": {
+    "runtime": {
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/alert --maxWorkers=2 --reporter=json --outputFile=/tmp/apollo-alert-audit-20261029/regression-closure.json",
+      "exitCode": 0,
+      "passed": 142,
+      "failed": 0,
+      "originalReferenceCases": 28,
+      "newContractCases": 39,
+      "referenceGuardCases": 1,
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/regression-closure.json",
+        "sha256": "74224a39bb197129f8148cf96898a39ece2023cc26c369d225037d47c781bcc6"
+      }
+    },
+    "types": {
+      "command": "pnpm exec vitest run --project types packages/ui/src/alert --maxWorkers=1 --reporter=verbose",
+      "exitCode": 0,
+      "passed": 18,
+      "typeErrors": 0,
+      "note": "First JSON report had success=true but CLI exit1; only final verbose CLI exit0 counts as passed.",
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/type-tests-closure.log",
+        "sha256": "1ff7628b4fac6b70a34b10c704d7839ffb0eb58db6f325f15da83742565c1d37"
+      }
+    },
+    "strictWholeSource": {
+      "command": "pnpm exec vue-tsc --noEmit -p tsconfig.json",
+      "exitCode": 0,
+      "diagnostics": 0,
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/types-closure.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "consumer": {
+      "command": "ALERT_SOURCE=1 node tests/consumer/alert-types.mjs",
+      "exitCode": 0,
+      "rootEntry": "@apollo-design/ui",
+      "childEntry": "@apollo-design/ui/alert",
+      "originalSFCs": 15,
+      "actualBrowserFixture": true,
+      "positiveAndNegative": true,
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/consumer-source-closure.log",
+        "sha256": "a294318b08b084e17ae0303914f4240386eb34bb12d0260a908fcaec92144ffc"
+      }
+    },
+    "browser": {
+      "command": "ALERT_EVIDENCE=/tmp/apollo-alert-audit-20261029/browser-closure.json node tests/browser/alert-contracts.mjs",
+      "exitCode": 0,
+      "passed": 29,
+      "failed": 0,
+      "errors": 0,
+      "browser": "150.0.7871.125",
+      "viewport": {
+        "width": 1200,
+        "height": 1000
+      },
+      "actualThemes": [
+        {
+          "theme": "default",
+          "padding": "20px 24px",
+          "background": "rgb(230, 244, 255)",
+          "size": "14px"
+        },
+        {
+          "theme": "dark",
+          "padding": "20px 24px",
+          "background": "rgb(17, 26, 44)",
+          "size": "14px"
+        },
+        {
+          "theme": "compact",
+          "padding": "16px",
+          "background": "rgb(230, 244, 255)",
+          "size": "12px"
+        },
+        {
+          "theme": "both",
+          "padding": "16px",
+          "background": "rgb(17, 26, 44)",
+          "size": "12px"
+        }
+      ],
+      "actualNativeMotion": {
+        "heights": [
+          "",
+          "103.141px",
+          ""
+        ],
+        "ends": [
+          {
+            "property": "margin-bottom",
+            "elapsed": 0.3,
+            "native": true
+          },
+          {
+            "property": "max-height",
+            "elapsed": 0.3,
+            "native": true
+          },
+          {
+            "property": "opacity",
+            "elapsed": 0.3,
+            "native": true
+          }
+        ]
+      },
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/browser-closure.json",
+        "sha256": "ad6de10c007207d6bd7429aa5a7fd721c690153dc71145a5c66b576cde7def8b"
+      }
+    },
+    "demos": {
+      "command": "ALERT_DEMOS_EVIDENCE=/tmp/apollo-alert-audit-20261029/demos-closure.json node tests/browser/alert-demos.mjs",
+      "exitCode": 0,
+      "passed": 180,
+      "failed": 0,
+      "errors": 0,
+      "originalDemoModules": [
+        "packages/ui/src/alert/demo/action.vue",
+        "packages/ui/src/alert/demo/banner.vue",
+        "packages/ui/src/alert/demo/basic.vue",
+        "packages/ui/src/alert/demo/closable.vue",
+        "packages/ui/src/alert/demo/component-token.vue",
+        "packages/ui/src/alert/demo/content-slots.vue",
+        "packages/ui/src/alert/demo/custom-icon.vue",
+        "packages/ui/src/alert/demo/custom-title-alignment.vue",
+        "packages/ui/src/alert/demo/description.vue",
+        "packages/ui/src/alert/demo/error-boundary.vue",
+        "packages/ui/src/alert/demo/filled.vue",
+        "packages/ui/src/alert/demo/icon.vue",
+        "packages/ui/src/alert/demo/loop-banner.vue",
+        "packages/ui/src/alert/demo/smooth-closed.vue",
+        "packages/ui/src/alert/demo/style-class.vue"
+      ],
+      "themes": [
+        "default",
+        "dark",
+        "compact",
+        "both"
+      ],
+      "widths": [
+        375,
+        768,
+        1440
+      ],
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/demos-closure.json",
+        "sha256": "faf8fd42470410d14e5cbc030eb84d96b2d0ded584ff6de4260aaf593f65490c"
+      }
+    },
+    "native": {
+      "command": "ALERT_VISUAL_EVIDENCE=/tmp/apollo-alert-audit-20261029/native-closure.json ALERT_VISUAL_SCREENSHOTS=/tmp/apollo-alert-audit-20261029/native-closure node tests/browser/alert-visual.mjs",
+      "exitCode": 0,
+      "passed": 60,
+      "failed": 0,
+      "errors": 0,
+      "variants": [
+        "basic",
+        "types",
+        "description",
+        "icons",
+        "custom-icon",
+        "actions",
+        "banner",
+        "filled",
+        "semantic",
+        "empty-slots",
+        "close-content",
+        "provider-current",
+        "tokens",
+        "rtl",
+        "theme-dark",
+        "theme-compact",
+        "theme-dark-compact",
+        "native-focus",
+        "error-boundary",
+        "closed"
+      ],
+      "widths": [
+        375,
+        768,
+        1440
+      ],
+      "screenshotAcceptance": false,
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/native-closure.json",
+        "sha256": "609a415e7d97a3ac4547695784bdd3439afd61cc6c0ed59d50a1339f73269679"
+      }
+    },
+    "format": {
+      "command": "pnpm exec biome check [owned Alert TS/JS/MJS files]",
+      "exitCode": 0,
+      "note": "Final consumer supplement separately formatted with biome; no ignored diagnostics.",
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/format-closure-check.log",
+        "sha256": "069b2826c963dba1e50c44b2323ff84ffaf3805e4e9f862c5d93853789c3bde0"
+      }
+    },
+    "consumerFormat": {
+      "command": "pnpm exec biome check --write tests/consumer/alert-types.mjs",
+      "exitCode": 0,
+      "artifact": {
+        "file": "/tmp/apollo-alert-audit-20261029/format-consumer-final.log",
+        "sha256": "b6705256aa13385be4f8dc22311bebc6c9b2640fed9b51a5d8d517912a35959c"
+      }
+    }
+  },
+  "sourceExecution": {
+    "uiAndTheme": "current source aliases",
+    "otherFoundationPackages": "existing published modules",
+    "packageBuilds": false,
+    "browserReadersExited": true,
+    "fixtureServersExited": true,
+    "globalAndScopedTypeReadersExited": true,
+    "publishedModesExecuted": false
+  },
+  "currentThemeBoundaries": [
+    "four algorithms",
+    "all four component tokens and current aliases",
+    "explicit empty ThemeProvider reset through unconfigured ConfigProvider",
+    "CSS-only dark/compact retained through absent-source ConfigProvider",
+    "custom context missing source metadata treated as explicit",
+    "native root variables win"
+  ],
+  "referenceBaselineUnchanged": [
+    {
+      "file": "tests/compat/baselines/alert.dom.json",
+      "sha256": "2f1e5b24b6e7d5f05d55d364df2abdd2b1b8310512a5b357ef889d607427ec22",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/banner__light__desktop.png",
+      "sha256": "9f44e5c5b3bfba40015c33faaff262a3bf4234c7f93d9648bd0632045d39eaa3",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/banner__light__mobile.png",
+      "sha256": "f3682e45f35f9c65795a31c54c01c3b1e1bf9bb3f9ff3e78936f3bde467f7649",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/banner__light__tablet.png",
+      "sha256": "8143ba9e005e167b760cf51ab926fab474754458b74d6a8588a79e02022168ec",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/basic__light__desktop.png",
+      "sha256": "aa46814f28cafe95b8f314928ea5ea757b2c58df511de3f8967034f6b2937ca1",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/basic__light__mobile.png",
+      "sha256": "038256b5c2bee7420be113e8b9040412b756a65c83c0336bc20aea580228c44c",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/basic__light__tablet.png",
+      "sha256": "009867f256de1630558b63bf261c33d13e577ef7c7e8671dd68cd5614e43eabe",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/closable__light__desktop.png",
+      "sha256": "de41eb8f32c6778802558fcb5fbbaebeb67e70aca3191df5dbd14ee60bbe2325",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/closable__light__mobile.png",
+      "sha256": "786ab3da65e2f1818f7e02cb19eaad36524ae1cca742de11916d22a6bdd0caf4",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/closable__light__tablet.png",
+      "sha256": "484b017180c46d431657872e703466547e41207de1ed9295c9ed23054c4be245",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/filled__light__desktop.png",
+      "sha256": "9bb962b6a866042c3e30df38142b66c38a427b2c6e9adc414b459e7341b3b08d",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/filled__light__mobile.png",
+      "sha256": "3b23eede7278ea9cae71b1731301172d152abb39c9f72684537ad9b1bcb72638",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/filled__light__tablet.png",
+      "sha256": "87140bc3cde6f7b19bcde696714d8059303b28375a628d400902259d20f95e9b",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/icon__light__desktop.png",
+      "sha256": "41c297f3df944ecd69303bd8a69dfd6abfbb4303d71f901738b40d02caa7e36f",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/icon__light__mobile.png",
+      "sha256": "f53ee9a5f6e977f580c727f49aeeef4bbe072c66e6b122b193717e044960cc1c",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/icon__light__tablet.png",
+      "sha256": "4ad3b5540232afdb05a62faeba47ee720ac5c895016a3c42091e063f263b72c3",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/semantic__light__desktop.png",
+      "sha256": "c19c530dc544211c849bdfddc2a2f11e90ff2fa2ad4b3f0527d6c0a0d75a2878",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/semantic__light__mobile.png",
+      "sha256": "d9233d240782ba74054ccea6de086737513b691f8616816666b063b0e23632b7",
+      "unchangedFromBase": true
+    },
+    {
+      "file": "tests/visual/baselines/react/alert/semantic__light__tablet.png",
+      "sha256": "62b1594005b7760873829d02fbb9f5c72de23b74ba9b4d1947ed05c5e19a671f",
+      "unchangedFromBase": true
+    }
+  ],
+  "finiteReferenceDifferences": {
+    "cases": 10,
+    "exactARIAAdditions": 13,
+    "sharedNormalizationChanged": false,
+    "path": "packages/ui/src/alert/__tests__/contract-differences.ts"
+  },
+  "nativeScreenshots": [
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/actions-desktop.png",
+      "sha256": "4c69b6280186029d2774d6812cafaa1859d1669d971fb79cfdf656ee3476133c",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/actions-mobile.png",
+      "sha256": "6afdf68d1552fbe06ca8dd72514b2e30694e63b1b119f9f4e32d7eaa2b0dced2",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/actions-tablet.png",
+      "sha256": "70590890d89f04998cf8030c254a028029f1ebc6507c1bad1bb2b69f84021772",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/banner-desktop.png",
+      "sha256": "840c5869233d3cab7e7ce29e2531cd0b5a8ef9436428c4d7ab528405fd93b11c",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/banner-mobile.png",
+      "sha256": "95a8f39243a7a2dd59a768603baa81dde16ec975094e29e4d5f5180c1ce83bb5",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/banner-tablet.png",
+      "sha256": "0e83ff049ce5bf404b1c2df75c08243d0cd0947cfed64c28cb346f12181a9708",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/basic-desktop.png",
+      "sha256": "29097128ff4227f3ec6033ada7d583641dd6680c14c8c2a9f34584aa32256fdf",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/basic-mobile.png",
+      "sha256": "f34127d7e4068c84158bca24b1e207f3a7145ef42e8afc78511f021fc9e38079",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/basic-tablet.png",
+      "sha256": "ae00ef0b5d2f8433f99ec7cd22b331d3e39be5d0b4e91c2b829703e95c6d533a",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/close-content-desktop.png",
+      "sha256": "124af042457d5fae8428ac76e011bfacbab04375ada6f2698814f85cad83df5d",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/close-content-mobile.png",
+      "sha256": "56877833dd02804b8f3b076215d075881484a9e2c61176e3ac736b09b28e2a21",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/close-content-tablet.png",
+      "sha256": "7ff9b6a9c845048a77afff957d3601da08fe6da9cb08fa168954232b52afe0aa",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/closed-desktop.png",
+      "sha256": "fa7e9629a6d8e2113c5db175f23d48e519310918279da7b32748b426d3309409",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/closed-mobile.png",
+      "sha256": "b3f25c96edcc765d082f71c3637a998790886446d19916cb1a78ef7f75cc3c72",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/closed-tablet.png",
+      "sha256": "915cfabbfe14021931a68041f1d99c555685e4730c6c2d19c862d51d1f4eadbe",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/custom-icon-desktop.png",
+      "sha256": "249faf873d6c6c1a45e853f1e886e73b0652976fce6ab03e1326beeed5e8b32a",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/custom-icon-mobile.png",
+      "sha256": "e601b3185e8ed4117e437228b65a7d3e1adc004ef3e1baed24122bb87b41fabe",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/custom-icon-tablet.png",
+      "sha256": "c623e27490d6f8dc5feb4cf51606b5d570b9c753cb092761cb160735e8a919bf",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/description-desktop.png",
+      "sha256": "7adda4b11adb2b4204141bd9ebeba39970bc91aaf072dd53244a95df78deb22c",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/description-mobile.png",
+      "sha256": "03ffc509fe8b1b42a4f67bbaebdc739304b2b1db0703cdb3976438e42fea5e5c",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/description-tablet.png",
+      "sha256": "eb58062f6cab73ce52052c2461a5932892fe44338bd55e94e2f8f1823bcc145d",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/empty-slots-desktop.png",
+      "sha256": "3bb1cd06a1153fed205230e2c79fdce03522241bfedac70c70491314c4fe2a74",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/empty-slots-mobile.png",
+      "sha256": "d5df39418f2dda96a85eff035c338ee91cad74cded78d4555cbe9add9b4e7363",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/empty-slots-tablet.png",
+      "sha256": "f1e93df9654182a561a802fb437fbbe4bc0859d0edafe07475f851baf217e5b8",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/error-boundary-desktop.png",
+      "sha256": "b50d19b337e5006f4a58963b2eacf0daab088ec005e3bec448419127867f7f40",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/error-boundary-mobile.png",
+      "sha256": "befc54e0047c06f830f17b26d15ec9e300885c57b1c02b5f095fb7b03b3b6d6f",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/error-boundary-tablet.png",
+      "sha256": "023cb7f6069b48ef1ee67340015a948ce21454f2e6b6ccd57d4da088538704ba",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/filled-desktop.png",
+      "sha256": "e4cca888d8b0e14b796297033a45c9dc5f6668579d24da077b549d361580212d",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/filled-mobile.png",
+      "sha256": "faf5aa00d7368106ffc58fec11aea05acc2d527e77fff07043fae656685b932a",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/filled-tablet.png",
+      "sha256": "14681136aba4124d0cd9f7cb14a66db12008c2c0759f4b2cb67eba796ff91e74",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/icons-desktop.png",
+      "sha256": "4da1f62c57ff60096bbd694cd5943dc35c72a742ed0fc1b6f3a0b34d82de25c4",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/icons-mobile.png",
+      "sha256": "6de4625fab10af438bcc756e30f1124765d979423fc098196bc65907dd0c7a1e",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/icons-tablet.png",
+      "sha256": "0f19b6131b4a47b0c00fd9268fb2f83b4c5cc0659db530da16584e23fe19a76c",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/native-focus-desktop.png",
+      "sha256": "f26c6e3fbbe41f7e3baa060b517168202d5b47c64fa94e9315d2629f6fe15cfe",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/native-focus-mobile.png",
+      "sha256": "297859bbc8fd528eb6126aa12ebdc2a2af8d09bf8a69873f26ed61fd6e8a412d",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/native-focus-tablet.png",
+      "sha256": "7219e43d2a3818764b682b690a8edccd7a4ed707cb6e10c888d1bc9047a57c67",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/provider-current-desktop.png",
+      "sha256": "347f5e5577644510faa7509c0808c2798557a92eb29f198426d3c9868f50d4dd",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/provider-current-mobile.png",
+      "sha256": "7a30bb97b70932b4a23bc4fe2b638317d2293a2d40e20d8e37fee39049928346",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/provider-current-tablet.png",
+      "sha256": "8c40d454e1b8e869f31fc2a069283fa034ebf5a8f5f8b1073d26aa3b79a0a70b",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/rtl-desktop.png",
+      "sha256": "2c7df576445240b6b9fb0e443a1971424bd428acfa7b9114e26c6eaa791be1cb",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/rtl-mobile.png",
+      "sha256": "8208f8fc45da42e04244ee90e42ca8bce48f9b99efa7f02034c5b1b7a5e30a70",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/rtl-tablet.png",
+      "sha256": "8f773648d240988e3d1450dbafcd12d5ca6b666ea47dc8fcb0a48cf593fbd093",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/semantic-desktop.png",
+      "sha256": "b720a69d5707af1f081dc667cceb1ee2e2cbc1e7ae4e1f29f4f7b69948372897",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/semantic-mobile.png",
+      "sha256": "1f1f2b3f9cd6f3e14fea85ac5be4996f0ab2fa1daf1bc509db0e0ab849fbd4eb",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/semantic-tablet.png",
+      "sha256": "d28bcdacb5b4e751caac6abec5f4f3224ed7320bbd421383fe5ab3481a5c993b",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/theme-compact-desktop.png",
+      "sha256": "95a347b7cedfdd713ed4d1458a5be87d7392e5c1c73eca5fc6fbbf00a5fc4904",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/theme-compact-mobile.png",
+      "sha256": "1eba7d2e7ae9156ed989056c37f87d8182abee9c1279a94e1f17577380f05023",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/theme-compact-tablet.png",
+      "sha256": "b72fc6aae14f5ae47db5111070ef6fb0124562761c349a6c5b06a52eee8b10aa",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/theme-dark-compact-desktop.png",
+      "sha256": "b8793bccae8a00706235ddd17394d063fd8dc5b0e76dafdb46c370198757aef6",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/theme-dark-compact-mobile.png",
+      "sha256": "ba9320394f362dd00a0528cff91fe351d501ebba3856d55f97335a98737df082",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/theme-dark-compact-tablet.png",
+      "sha256": "169273c368d108db616032735d73b5a209f165d077fd8244a0667f0a029e8782",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/theme-dark-desktop.png",
+      "sha256": "05801e587e909deafd92125c42a5431de9d6ea293b6d7fb26e6691887b239482",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/theme-dark-mobile.png",
+      "sha256": "e503471e829bb4214b47d3426ec0d903b9ba16de64d6e48ec7e5ab7fd640f3f9",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/theme-dark-tablet.png",
+      "sha256": "6b6f0dfcdc9b799b7f50fb7a3959b2b325dfc5ebbeb2c7cdff47d1afd43a4b68",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/tokens-desktop.png",
+      "sha256": "0627f4eb3012b2068d31bb434da8d4c34a9b65c8e1a01379e9532b1fc02eb468",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/tokens-mobile.png",
+      "sha256": "b3cb3b02f7d6139fb0ded02c3b27e25bf055c7440f8836c64c7c17cf5fe5cea9",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/tokens-tablet.png",
+      "sha256": "7fbefaf7fff065f1e1fe3280b5f9bae7e7e76453958a74f98c1ff9c341ae3db9",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/types-desktop.png",
+      "sha256": "e3695e522317e4ba66cfd49ab0ccf3438ebf936b4f91f657ccf6e29f38a85863",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/types-mobile.png",
+      "sha256": "fed302ea4e5cfad0f15481a33595de68576056960a9af2e305ff97d3da53826e",
+      "byteIdenticalToThird": true
+    },
+    {
+      "file": "/tmp/apollo-alert-audit-20261029/native-closure/types-tablet.png",
+      "sha256": "b28ba33d0c8c751d3a47d08ed7b4da0f2b711265c9a418bd98b0b921e192dd46",
+      "byteIdenticalToThird": true
+    }
+  ],
+  "nativeManualReview": {
+    "viewedThirdRound": [
+      "actions-mobile",
+      "theme-dark-compact-mobile",
+      "error-boundary-mobile",
+      "close-content-mobile",
+      "tokens-tablet",
+      "native-focus-mobile",
+      "provider-current-desktop"
+    ],
+    "finalByteIdenticalToThird": 60,
+    "formalApproval": false
+  },
+  "rootIntegration": {
+    "slotsRootExports": "Observed integrated by parent",
+    "nativeCase": "tests/visual/render/cases/apollo/alert.js",
+    "nativeHelper": "tests/visual/alert-state.mjs#prepareAlertVisual",
+    "nativeVariants": [
+      "basic",
+      "types",
+      "description",
+      "icons",
+      "custom-icon",
+      "actions",
+      "banner",
+      "filled",
+      "semantic",
+      "empty-slots",
+      "close-content",
+      "provider-current",
+      "tokens",
+      "rtl",
+      "theme-dark",
+      "theme-compact",
+      "theme-dark-compact",
+      "native-focus",
+      "error-boundary",
+      "closed"
+    ],
+    "matrixAndRunnerEditedByThisTask": false,
+    "matrixPlan": "Parent reports20 Alert native variants configured; formal capture/review remains pending."
+  },
+  "remaining": [
+    "ordered package builds and published L7",
+    "published root/child declarations via ALERT_SOURCE=0",
+    "published browser29/demo180/native60 with source-fallback guards",
+    "parent native matrix/runner registration and formal screenshot review",
+    "docs site/content checks",
+    "affected Registry and migration integration",
+    "full coverage and final same-commit repository gates"
+  ],
+  "originalReferenceFilesVerifiedAtClosure": true
+}

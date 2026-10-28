@@ -684,9 +684,11 @@ export type {
   AlertSemanticClassNames,
   AlertSemanticStyles,
   AlertSemanticValue,
+  AlertSlots,
   AlertType,
   AlertVariant,
   ErrorBoundaryProps,
+  ErrorBoundarySlots,
 } from './alert';
 export { Alert, AlertErrorBoundary } from './alert';
 export { genAlertStyle } from './alert/style';

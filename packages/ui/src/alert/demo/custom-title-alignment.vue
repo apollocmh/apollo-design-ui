@@ -18,7 +18,7 @@ const firstLineStyles = {
 
 <template>
   <Alert
-    style="width: 360px"
+    style="width: 360px; max-width: 100%"
     title="Long alert title wraps to multiple lines when the alert container is narrow enough."
     type="info"
     show-icon

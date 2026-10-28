@@ -1,23 +1,14 @@
 <script setup lang="ts">
-// 对齐 antd 的 smooth-closed demo
-import { Alert } from '@apollo-design/ui';
+import { Alert, Button } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const visible = ref(true);
-
-const handleClose = () => {
-  visible.value = false;
-};
 </script>
 
 <template>
   <div>
-    <Alert
-      v-if="visible"
-      title="Alert Message Text"
-      type="success"
-      :closable="{ closeIcon: true, afterClose: handleClose }"
-    />
-    <p>click the close button to see the effect</p>
+    <Alert v-if="visible" title="Alert Message Text" type="success" closable @after-close="visible = false" />
+    <p>The after-close event runs after the owned alert finishes closing.</p>
+    <Button v-if="!visible" @click="visible = true">Show alert again</Button>
   </div>
 </template>
