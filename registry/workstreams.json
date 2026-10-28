@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T08:18:25.222Z",
+  "generatedAt": "2026-10-28T10:09:15.891Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,8 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 90,
-      "ready": 2
+      "done": 91,
+      "ready": 1
     },
     "byKind": {
       "foundation": 13,
@@ -35,11 +35,10 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 2,
+    "readyCount": 1,
     "cannotFinishCount": 0,
-    "currentBatchSize": 2,
+    "currentBatchSize": 1,
     "currentBatchIds": [
-      "COMP:typography",
       "X:docs-site"
     ],
     "hardBlockingDecisionCount": 0,
@@ -288,8 +287,8 @@
       ],
       "maxParallel": 3,
       "itemCount": 3,
-      "doneCount": 2,
-      "readyCount": 1,
+      "doneCount": 3,
+      "readyCount": 0,
       "itemIds": [
         "COMP:border-beam",
         "COMP:button",
@@ -608,11 +607,11 @@
         "流水线被证明可重复（不再需要为每个组件重新设计流程）"
       ],
       "itemCount": 20,
-      "doneCount": 19,
-      "readyCount": 1,
+      "doneCount": 20,
+      "readyCount": 0,
       "blockedCount": 0,
       "waitingCount": 0,
-      "complete": false,
+      "complete": true,
       "itemIds": [
         "COMP:affix",
         "COMP:alert",
@@ -1519,18 +1518,16 @@
       "conflicts": [
         "CF-STYLE-GLOBAL"
       ],
-      "status": "ready",
+      "status": "done",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-28完整盘点后功能阶段：1178相关四层、110类型、15生产浏览器、76实际Demo主题/交互和12 SSR/水合、发布声明及UI严格L7通过。复制/编辑/测量、原生Link、当前语言与两Token、配置节点已成组修复；关联Table仅四十变量当前主题。自有视觉、Docs和最终清单尚未收口。见 docs/audit/2026-10-27-typography-contract-audit.md。",
+      "why": "2026-10-28完整清单收口，生产实现c4883402+c75395fc+68547d9a，关联Table230892d9。1186相关四层、110类型、17生产浏览器、76实际Demo主题/交互、12 SSR/水合、23消费示例46渲染、14Demo发布声明、根严格/UI L7通过。42张清洁自有视觉逐张审阅批准；原453记录/PNG及机械/参考证据不变。Docs161及35本地/线上已验证；最终发布回执见本轮审计。全库其余单元继续。",
       "doneWhen": [],
       "group": "通用",
       "priority": "P0",
       "dagLevel": 0,
-      "blockers": [],
-      "softBlockers": [],
-      "cannotFinish": false
+      "blockers": []
     },
     {
       "id": "COMP:layout",
@@ -3361,7 +3358,6 @@
     }
   ],
   "currentBatch": [
-    "COMP:typography",
     "X:docs-site"
   ]
 }

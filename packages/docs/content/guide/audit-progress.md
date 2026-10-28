@@ -7,11 +7,13 @@ order: 0
 
 ## zh-CN
 
-## 2026-10-28：Typography 功能整改已实现，正在统一验收
+## 2026-10-28：Typography 功能整改完成，完整清单已统一验收
 
-五个公开入口的复制、编辑、省略、当前语言与两个标题 Token 已成组修复。Link 的原生链接与操作按钮独立，编辑支持真实多行和自动高度，测量保留业务组件、草稿及焦点。关联 Table 的派生颜色跟随当前主题。
+Typography / Text / Title / Paragraph / Link 的复制、编辑、省略、当前语言、两个标题 Token、原生 attrs/ref 和键盘焦点已按完整清单验收。Link 的导航和自有按钮独立，编辑器不会误触发链接监听；四种编辑入口的原生尺寸、单行与自动高度已修正。关联 Table 的四十个派生变量跟随当前主题。
 
-已通过 1178 项相关四层检查、110 项类型、15 项生产浏览器契约、56 组实际 Demo 主题和20组实际交互、12 项 SSR/水合，以及14个Demo的发布声明消费。自有视觉、文档站发布和最终清单仍在验收，不据功能阶段宣称全库完成。
+实现提交：`230892d9`、`c4883402`、`c75395fc`、`68547d9a`。61 文件 1186 项相关四层检查、110 项类型、17 项生产浏览器契约、56 组实际 Demo 主题与20组交互、12 项 SSR/水合、23 个消费示例亮暗46次渲染，以及全部14个Demo的发布声明消费均通过。文档站161项测试通过。
+
+清洁 `68547d9a` 的14类场景×3视口共42张自有视觉已逐张审阅批准。先前存在编辑几何问题的批次被拒收；原453项批准记录/PNG、76个机械场景及参考图片保持不变。全库目前495/1398项视觉已批准，903项仍待审阅；其他组件和基础包的完整审计继续进行。
 
 - [Typography 当前 API 和全部示例](/components/typography)
 - [切换标题 Token](/components/typography/demo/component-token)
@@ -136,6 +138,19 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 阶段结果会同步记录在本页、更新日志和对应验收清单中。
 
 ## en-US
+
+## Typography complete contract audit accepted
+
+Typography, Text, Title, Paragraph and Link now provide native editing/copy/ellipsis, current locale/two title tokens, complete node data, owned attrs/refs and keyboard focus. The native anchor and its actions are independent; editor clicks do not activate link listeners. The editor fills its host and retains a complete fixed row. Related Table variables follow their current theme.
+
+Implementations `230892d9`, `c4883402`, `c75395fc` and `68547d9a`:1186 related runtime/DOM/a11y/theme tests,110 type checks,17 production browser contracts,76 actual demo/theme interactions,12 SSR/hydration checks,46 renders of23 actual consumer demos and all14 demos against published declarations pass. Docs161 tests pass.
+
+All42 clean-source visuals across14 states and3 viewports were reviewed individually. The earlier editor-geometry batch was rejected. All453 prior approvals/PNGs and the76 mechanical cases/reference images are preserved. Library-wide approval is495/1398, with903 cases still pending; other component and foundation audits continue.
+
+- [Working typography editor](/components/typography/demo/editable-custom)
+- [Current title tokens](/components/typography/demo/component-token)
+- [Complete inventory and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-typography-contract-audit.md)
+
 
 ## Delivered on 2026-10-27
 

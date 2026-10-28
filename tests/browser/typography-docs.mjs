@@ -170,6 +170,11 @@ try {
   );
   assert.ok((await page.locator('main').textContent()).includes('Typography 功能整改'));
   results.push({ name: 'physical progress page with current stage', passed: true });
+  await page.goto(`${base}/components/typography?lang=en-US`);
+  await page
+    .getByRole('heading', { name: 'Slots, events, models and expose', exact: true })
+    .waitFor({ state: 'visible' });
+  results.push({ name: 'English API uses the current contracts', passed: true });
   assert.deepEqual(errors, []);
   assert.ok(results.every((r) => r.passed));
   console.log(

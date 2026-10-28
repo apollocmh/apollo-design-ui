@@ -1,0 +1,1987 @@
+{
+  "implementationCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+  "relatedCommits": [
+    "230892d9",
+    "c4883402",
+    "c75395fc"
+  ],
+  "scope": "Typography complete unit; Table only current-theme variables and filter host",
+  "sourceDigests": {
+    "packages/ui/src/typography/Base.ts": "9ad3254a4196da9b7b39559b71b9a5f63eb15a31513a5500363e699701164003",
+    "packages/ui/src/typography/CopyBtn.ts": "15bdd772d3e5c3b129844d618e7a577fec7b3c7531fd0e212ef4c35e9a53723b",
+    "packages/ui/src/typography/Editable.ts": "38319d0c73fb7f4beb630e02f0757a1cd578abb3e4e982741dc80a8f33d61d06",
+    "packages/ui/src/typography/Ellipsis.ts": "eb17f380fac9d8bbda6daeebc748adbdd504c320fddfa14575945b5331e55c65",
+    "packages/ui/src/typography/EllipsisTooltip.ts": "868d91903dd052e86b619d7d9ed5d518ff965a9a29dfd41763a177603b279aaa",
+    "packages/ui/src/typography/InternalTypography.vue": "57b71bef3ef7385a7cfa315c74a2c8eb838e1fee5729a0e94773dc41c599b0c7",
+    "packages/ui/src/typography/Link.vue": "3f6c1847dd39df866794319c14a0687590c2d55c74d51381a08da20f82970027",
+    "packages/ui/src/typography/Paragraph.vue": "01e07f03b5e8e116e92d3699d54c482fc93205f658d2236f8d46d05d6f600cdf",
+    "packages/ui/src/typography/Text.vue": "f659aa774b62fdd22778cfb637050cec0074e76f28538c2b2a9e2b4a79d3a0a8",
+    "packages/ui/src/typography/Title.vue": "e2e4cdc296c2a26e6120daefde9c75c115c30b6024b867c755032cad34fd518b",
+    "packages/ui/src/typography/Typography.vue": "7e134316aa8e463b176aee663a677330500fbc90f9403daaaea2566cb30c501f",
+    "packages/ui/src/typography/_util/copy.ts": "1fd365a896a5343699a72f6fc5dd0c922b7e184874bb825554393ac02b8c0805",
+    "packages/ui/src/typography/_util/measure-nodes.ts": "154548a0916443d311512db8bf5086d59b627843c52217b621b7f5b3366397f3",
+    "packages/ui/src/typography/_util/nodes.ts": "c78ff606176735aa97413044518d0d9c5037bc63d3ef45233a82b5060c705c04",
+    "packages/ui/src/typography/_util/util.ts": "3e2b55fed8ffa3de0fe64f7c4b662a06f708df1bfe351140b14111d734dea226",
+    "packages/ui/src/typography/hooks/use-copy-click.ts": "03f7b63ad73796aefd2d68edb86b80327c89ae6d9dd0024e5d9550cbfa9ea00b",
+    "packages/ui/src/typography/hooks/use-merged-config.ts": "4a4e3c9bb5d664bee560dd5c32b694b9121591b75782cb1db0a881896591896f",
+    "packages/ui/src/typography/hooks/use-tooltip-props.ts": "f97b0758e95bdd7fdd8086b8929dd3745034c1a67d71d872236ae7e9487ae045",
+    "packages/ui/src/typography/hooks/use-typography-semantic.ts": "23eab6a56146c3aa8fc1984260b331e15f1b8b47eb55455c5884cedeee1709ff",
+    "packages/ui/src/typography/index.ts": "96175906f3a65619e15e6c7bac0ecc2ed26a855932f2cada15d75623b642d737",
+    "packages/ui/src/typography/interface.ts": "6856b7fc83f16c3d0d7faeb68266e113bf79569d7911461b89153d154633a3ef",
+    "packages/ui/src/typography/style/index.ts": "09bc1a5973e43682e19ca829223d46972bdb86665662732b4697d07d3a478f34",
+    "packages/ui/src/typography/style/token.ts": "5691927e57ed91f4f55a09ad98314048c7c8c330c05fbe74118131ceddc6d2b9",
+    "packages/ui/src/typography/use-typography-theme.ts": "d2e2a9d1b56ce2586427a5d8b224c8ac5076fedda998df8aeb655d73bfa97953"
+  },
+  "runtime": {
+    "files": 61,
+    "passed": 1186,
+    "failed": 0
+  },
+  "types": {
+    "files": 8,
+    "passed": 110,
+    "failed": 0
+  },
+  "browserContracts": {
+    "results": [
+      {
+        "name": "default: two existing title tokens follow replacement and removal",
+        "passed": true,
+        "actual": {
+          "initial": {
+            "top": 28.8,
+            "bottom": 12,
+            "size": 24
+          },
+          "changed": {
+            "top": 48,
+            "bottom": 19.2,
+            "size": 24
+          }
+        }
+      },
+      {
+        "name": "dark: two existing title tokens follow replacement and removal",
+        "passed": true,
+        "actual": {
+          "initial": {
+            "top": 28.8,
+            "bottom": 12,
+            "size": 24
+          },
+          "changed": {
+            "top": 48,
+            "bottom": 19.2,
+            "size": 24
+          }
+        }
+      },
+      {
+        "name": "compact: two existing title tokens follow replacement and removal",
+        "passed": true,
+        "actual": {
+          "initial": {
+            "top": 24,
+            "bottom": 10,
+            "size": 20
+          },
+          "changed": {
+            "top": 40,
+            "bottom": 16,
+            "size": 20
+          }
+        }
+      },
+      {
+        "name": "both: two existing title tokens follow replacement and removal",
+        "passed": true,
+        "actual": {
+          "initial": {
+            "top": 24,
+            "bottom": 10,
+            "size": 20
+          },
+          "changed": {
+            "top": 40,
+            "bottom": 16,
+            "size": 20
+          }
+        }
+      },
+      {
+        "name": "all Link semantic tones match text and native anchor focus consumes current decoration",
+        "passed": true
+      },
+      {
+        "name": "editor autoSize consumes min/max rows and keeps a draft during dynamic configuration",
+        "passed": true,
+        "actual": {
+          "before": {
+            "height": 96,
+            "line": 22,
+            "scroll": 778
+          },
+          "after": {
+            "height": 74,
+            "line": 22
+          }
+        }
+      },
+      {
+        "name": "native editor fills a dynamic host, preserves its draft and keeps a complete fixed row",
+        "passed": true
+      },
+      {
+        "name": "editing exposes its actual native root and preserves the root id",
+        "passed": true
+      },
+      {
+        "name": "modifier/newline editing preserves actual multiline content",
+        "passed": true
+      },
+      {
+        "name": "owned copy controls are siblings of the native anchor",
+        "passed": true
+      },
+      {
+        "name": "blur saves once without stealing the external destination focus",
+        "passed": true
+      },
+      {
+        "name": "controlled refusal keeps the same editor and Enter requests remain usable",
+        "passed": true
+      },
+      {
+        "name": "IME Enter does not submit and accepted Escape returns owned focus",
+        "passed": true
+      },
+      {
+        "name": "Link editor clicks preserve textbox semantics without activating anchor listeners",
+        "passed": true
+      },
+      {
+        "name": "disabled Link blocks navigation and exposes its disabled state",
+        "passed": true
+      },
+      {
+        "name": "text-only editing has a native keyboard entry",
+        "passed": true
+      },
+      {
+        "name": "JS measurement retains one visible business input, its draft and focus",
+        "passed": true,
+        "actual": {
+          "inputCount": 1
+        }
+      }
+    ],
+    "errors": []
+  },
+  "actualDemos": {
+    "themeCombinations": 56,
+    "interactions": 20,
+    "errors": []
+  },
+  "consumers": {
+    "sourceFilesScanned": 2995,
+    "demos": 23,
+    "lightDarkRenders": 46,
+    "errors": [],
+    "scope": "rendering/actual Typography roots, not full acceptance of all consumer widgets"
+  },
+  "ssrHydration": {
+    "checks": [
+      "SSR complete content: container",
+      "SSR complete content: text",
+      "SSR complete content: title",
+      "SSR complete content: paragraph",
+      "SSR complete content: link",
+      "SSR editor root, name and multiline text",
+      "five server roots retained by hydration",
+      "pre-hydration draft, focus and selection retained during measurement",
+      "current theme/provider stage 1, stable roots and business lifecycle",
+      "current theme/provider stage 0, stable roots and business lifecycle",
+      "current theme/provider stage 1, stable roots and business lifecycle",
+      "unmount/remount cleans measurements and owns one business instance"
+    ],
+    "errors": []
+  },
+  "visual": {
+    "reviewed": [
+      {
+        "id": "typography/text__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "0b4493bdc26215082a172e483a2e3bc710729b938e91d42a1d06ca8c7aae672d",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "语义色与disabled文字可读；移动端自然换行，无截断。",
+        "accepted": true
+      },
+      {
+        "id": "typography/text__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "fde188d39090a14701a5267b079e71afc0bd8856d07e3cb7a391f527b7fcc685",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "语义色与disabled文字可读；移动端自然换行，无截断。",
+        "accepted": true
+      },
+      {
+        "id": "typography/text__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "3d5c5c33fb8f799239626dd6b8bd5e9a6e3a45c6ba792091428eb958869338c9",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "语义色与disabled文字可读；移动端自然换行，无截断。",
+        "accepted": true
+      },
+      {
+        "id": "typography/title__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "ccde4ea4130e1197e6a327a86b9ad9d7da74156535e541cb3ebdb99797a7f1f0",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "五级字号/字重与标题间距清楚，无裁切。",
+        "accepted": true
+      },
+      {
+        "id": "typography/title__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "056e06aa50c76dcbb6aa238ec4f64304772cca75b6a7ecc81481245e017ea107",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "五级字号/字重与标题间距清楚，无裁切。",
+        "accepted": true
+      },
+      {
+        "id": "typography/title__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "9764d04cb7e3d03662c5bb35128652d3a5d83ef9f3bb388eef5761dd6bed865d",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "五级字号/字重与标题间距清楚，无裁切。",
+        "accepted": true
+      },
+      {
+        "id": "typography/decorations__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "ed29fee3cf21a0eb29130b0fd65a6c227d3c379f479138948691ad48aa847439",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "七装饰及组合嵌套完整，code/kbd/mark可辨。",
+        "accepted": true
+      },
+      {
+        "id": "typography/decorations__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "e8c22ed8b31fd69bea08987bf667de3236f18b0904a9d9bece2fc70d5bc793e0",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "七装饰及组合嵌套完整，code/kbd/mark可辨。",
+        "accepted": true
+      },
+      {
+        "id": "typography/decorations__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "b2645fd6492285c53b4d98888d52b20fe873d7dfe4806ede2f98753c7134b7da",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "七装饰及组合嵌套完整，code/kbd/mark可辨。",
+        "accepted": true
+      },
+      {
+        "id": "typography/link__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "acaeffec2240deda6471b7224b949dc52484e134315467ef91622c1eb3153200",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "默认下划线、次要与危险语义正确，禁用样式可辨。",
+        "accepted": true
+      },
+      {
+        "id": "typography/link__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "efcb036e83b427665e25f21f602f42eaf25a25d6f9965636ac5ec9ff45061842",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "默认下划线、次要与危险语义正确，禁用样式可辨。",
+        "accepted": true
+      },
+      {
+        "id": "typography/link__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "fcc8bd3fde1210ecd132fccd21026ea60e6f4cd6359bb3d6c7ca804099eba2ca",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "默认下划线、次要与危险语义正确，禁用样式可辨。",
+        "accepted": true
+      },
+      {
+        "id": "typography/ellipsis__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "b3ffa8d6f73618a73a79111a420ea412e177bac84df705d3a6de676e5962974f",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "单/多行和展开操作对齐，无测量区泄露或溢出。",
+        "accepted": true
+      },
+      {
+        "id": "typography/ellipsis__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "605f0218e3ed810614648f5012d2f3ef4c28ab7d97b98ea62194ea3969bfec04",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "单/多行和展开操作对齐，无测量区泄露或溢出。",
+        "accepted": true
+      },
+      {
+        "id": "typography/ellipsis__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "dc5921734918772334c15cfaef33bcd374f19213a8f89d3706aca0f8c9c0e61a",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "单/多行和展开操作对齐，无测量区泄露或溢出。",
+        "accepted": true
+      },
+      {
+        "id": "typography/complete-content__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "d602a9148b4a1c7383b8b2767f2f80ba0efde777a59b7c0ee62cba8a6818133a",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "多节点/0/Fragment/原生输入完整，无VNode对象串。",
+        "accepted": true
+      },
+      {
+        "id": "typography/complete-content__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "73fd96c0dbe493cbdf6b656ded4330b2f44830879e95ef23b03134939d7277bb",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "多节点/0/Fragment/原生输入完整，无VNode对象串。",
+        "accepted": true
+      },
+      {
+        "id": "typography/complete-content__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "86baa129d99f070263bb6d34770b6c1fc2120d2ff765d1e35ebf561d2f9a9019",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "多节点/0/Fragment/原生输入完整，无VNode对象串。",
+        "accepted": true
+      },
+      {
+        "id": "typography/copy-feedback__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "c6de5f8fe8ccca9184fc8204efecaeeeef4a6a8d5a4f8de89ac2c7c3cac8cc34",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "成功检查图形及0图标可见，完整三节点提示在准备阶段实际核对。",
+        "accepted": true
+      },
+      {
+        "id": "typography/copy-feedback__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "3443962bda7af79a591daf0fb16fb301d33d77026dbd024eec06239261a9475b",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "成功检查图形及0图标可见，完整三节点提示在准备阶段实际核对。",
+        "accepted": true
+      },
+      {
+        "id": "typography/copy-feedback__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "b4e863c2d17f26c27c4a5ba03e5647f320000ad17f775f022afc5dfd2be50aff",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "成功检查图形及0图标可见，完整三节点提示在准备阶段实际核对。",
+        "accepted": true
+      },
+      {
+        "id": "typography/native-editing__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "6223e0b2e01a671f1a12573c948c5275ced93b55ae1d316f733bcda24e792adc",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "四入口与固定单行五控制填满宿主；字体、行高、padding、确认图标及无图标配置正确。",
+        "accepted": true
+      },
+      {
+        "id": "typography/native-editing__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "7bbf8d7cf6038203b951784adb45657c0f377296470b9f54289ffa5b0f80ee78",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "四入口与固定单行五控制填满宿主；字体、行高、padding、确认图标及无图标配置正确。",
+        "accepted": true
+      },
+      {
+        "id": "typography/native-editing__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "a6534f702289776b7557b3b6902bad70e4aaf64ca96b59fc33004a792663f96e",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "四入口与固定单行五控制填满宿主；字体、行高、padding、确认图标及无图标配置正确。",
+        "accepted": true
+      },
+      {
+        "id": "typography/native-focus__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "25a7f4e343d6f1e3513403c6c1dd171404182da5bf2f8d4941b7b763d8ec2ff1",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "原生Tab入口/可见编辑图形和焦点轮廓正确。",
+        "accepted": true
+      },
+      {
+        "id": "typography/native-focus__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "a43f854c57b7c03973878f6c91d05052efe7f52576288ab2416d83fd28c2b9a7",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "原生Tab入口/可见编辑图形和焦点轮廓正确。",
+        "accepted": true
+      },
+      {
+        "id": "typography/native-focus__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "5a7cf42a141769ddca51e6ab34423347d054ace935406c8c3ece4874cd67debe",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "原生Tab入口/可见编辑图形和焦点轮廓正确。",
+        "accepted": true
+      },
+      {
+        "id": "typography/semantic-tokens__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "847e893615dcb0a5012cfc2c39b8bd24e7f05012482e850e921bf4ad92d4726f",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "自定义与零值标题间距、原生语义根样式明确。",
+        "accepted": true
+      },
+      {
+        "id": "typography/semantic-tokens__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "a296354cf0e0eca2036cffe698eb7a8b45f83a3111bd8eab9ea3e3952eedbb38",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "自定义与零值标题间距、原生语义根样式明确。",
+        "accepted": true
+      },
+      {
+        "id": "typography/semantic-tokens__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "ea9cae6c08dd502e7d8a7cf17329f9ac99d1ec18a6aeec318247c1567c59242e",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "自定义与零值标题间距、原生语义根样式明确。",
+        "accepted": true
+      },
+      {
+        "id": "typography/current-provider__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "d508d67d721fc32d9e10a63eac472b483b4148406eb5ead11b4f46c35e5f8868",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "当前stage1类名/边框生效；原生草稿和焦点保留。",
+        "accepted": true
+      },
+      {
+        "id": "typography/current-provider__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "d3634e48faa6d05295b63d4e17cffb45637bd6153aca6aa3eac3080df11ec0c5",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "当前stage1类名/边框生效；原生草稿和焦点保留。",
+        "accepted": true
+      },
+      {
+        "id": "typography/current-provider__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "7d8309118c7bbafdda45954e45bbaf8e12dc6ccd6bd9f74f04af0f86580b9b6a",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "当前stage1类名/边框生效；原生草稿和焦点保留。",
+        "accepted": true
+      },
+      {
+        "id": "typography/theme-dark__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "75933b1e7b154534615562ac780c9cebe114dfe4030ab42fa3fbef10846b9bb3",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "暗色文字/语义链接/编辑器/操作和省略布局可读。",
+        "accepted": true
+      },
+      {
+        "id": "typography/theme-dark__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "755d564f9ccfc8e0b5d1943cac075113835ae0702e177da7ac6261ffaf69f727",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "暗色文字/语义链接/编辑器/操作和省略布局可读。",
+        "accepted": true
+      },
+      {
+        "id": "typography/theme-dark__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "e4683ee6b4b2e9613617b290d85582db836875404c822076965d7639713cd309",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "暗色文字/语义链接/编辑器/操作和省略布局可读。",
+        "accepted": true
+      },
+      {
+        "id": "typography/theme-compact__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "9988757e8ffa7daa95cbd346d664df4652e9e34f9dfc9f50e47e03dc894a3ac0",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "紧凑字号/间距/编辑器与操作区正常。",
+        "accepted": true
+      },
+      {
+        "id": "typography/theme-compact__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "91a47cad073822e28e6ea972582d834c555300f580edb0d5ee30e3ad77256ad3",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "紧凑字号/间距/编辑器与操作区正常。",
+        "accepted": true
+      },
+      {
+        "id": "typography/theme-compact__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "9c4c68d36aa9983639cd65fe23eca0929c6510cbde7ba932a7ab2040bd37e139",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "紧凑字号/间距/编辑器与操作区正常。",
+        "accepted": true
+      },
+      {
+        "id": "typography/theme-dark-compact__light__mobile",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "7a9604f687de8bce42b751b766b18b504b48502ddf034838213ee20062e0e0cf",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "组合暗紧凑的文字/原生编辑框及展开控件正常。",
+        "accepted": true
+      },
+      {
+        "id": "typography/theme-dark-compact__light__tablet",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "ce0a4315c2fe22fddf3cf29f4ecefa15a75f2f287edac9fbc13b7be0aa377db9",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "组合暗紧凑的文字/原生编辑框及展开控件正常。",
+        "accepted": true
+      },
+      {
+        "id": "typography/theme-dark-compact__light__desktop",
+        "sourceCommit": "68547d9a9d8d295e808f83ceee486365e1e94af4",
+        "dirty": false,
+        "sha256": "93058cd93ade42e50f90f7a2e6b191287acc17666f70415f3fced908464c8451",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "review": "组合暗紧凑的文字/原生编辑框及展开控件正常。",
+        "accepted": true
+      }
+    ],
+    "comparison": {
+      "expected": 42,
+      "pending": 0,
+      "results": [
+        {
+          "id": "typography/text__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/text__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 7,
+            "editors": 0,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/text__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/text__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 7,
+            "editors": 0,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/text__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/text__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 7,
+            "editors": 0,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/title__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 387
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 387
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 145125,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/title__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 5,
+            "editors": 0,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/title__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 387
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 387
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 297216,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/title__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 5,
+            "editors": 0,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/title__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 387
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 387
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 557280,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/title__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 5,
+            "editors": 0,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/decorations__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/decorations__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 8,
+            "editors": 0,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/decorations__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/decorations__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 8,
+            "editors": 0,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/decorations__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/decorations__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 8,
+            "editors": 0,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/link__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/link__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 5,
+            "editors": 0,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/link__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/link__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 5,
+            "editors": 0,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/link__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/link__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 5,
+            "editors": 0,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/ellipsis__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/ellipsis__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 3,
+            "editors": 0,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/ellipsis__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/ellipsis__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 3,
+            "editors": 0,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/ellipsis__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/ellipsis__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 3,
+            "editors": 0,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/complete-content__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/complete-content__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 5,
+            "editors": 0,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/complete-content__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/complete-content__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 5,
+            "editors": 0,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/complete-content__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/complete-content__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 5,
+            "editors": 0,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/copy-feedback__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/copy-feedback__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 2,
+            "editors": 0,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/copy-feedback__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/copy-feedback__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 2,
+            "editors": 0,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/copy-feedback__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/copy-feedback__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 2,
+            "editors": 0,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/native-editing__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 374
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 374
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 140250,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/native-editing__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 5,
+            "editors": 5,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/native-editing__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 374
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 374
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 287232,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/native-editing__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 5,
+            "editors": 5,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/native-editing__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 374
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 374
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 538560,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/native-editing__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 5,
+            "editors": 5,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/native-focus__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/native-focus__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "editors": 0,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/native-focus__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/native-focus__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "editors": 0,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/native-focus__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/native-focus__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 1,
+            "editors": 0,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/semantic-tokens__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 391
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 391
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 146625,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/semantic-tokens__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 8,
+            "editors": 0,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/semantic-tokens__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 391
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 391
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 300288,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/semantic-tokens__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 8,
+            "editors": 0,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/semantic-tokens__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 391
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 391
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 563040,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/semantic-tokens__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 8,
+            "editors": 0,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/current-provider__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 124500,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/current-provider__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 3,
+            "editors": 0,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/current-provider__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 254976,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/current-provider__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 3,
+            "editors": 0,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/current-provider__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 332
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 478080,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/current-provider__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 3,
+            "editors": 0,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/theme-dark__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 505
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 505
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 189375,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/theme-dark__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 13,
+            "editors": 1,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/theme-dark__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 483
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 483
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 370944,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/theme-dark__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 13,
+            "editors": 1,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/theme-dark__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 483
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 483
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 695520,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/theme-dark__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 13,
+            "editors": 1,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/theme-compact__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 465
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 465
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 174375,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/theme-compact__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 13,
+            "editors": 1,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/theme-compact__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 445
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 445
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 341760,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/theme-compact__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 13,
+            "editors": 1,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/theme-compact__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 445
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 445
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 640800,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/theme-compact__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 13,
+            "editors": 1,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        },
+        {
+          "id": "typography/theme-dark-compact__light__mobile",
+          "reactSize": {
+            "width": 375,
+            "height": 465
+          },
+          "vueSize": {
+            "width": 375,
+            "height": 465
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 174375,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/theme-dark-compact__light__mobile.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 13,
+            "editors": 1,
+            "width": 375,
+            "scrollWidth": 375
+          }
+        },
+        {
+          "id": "typography/theme-dark-compact__light__tablet",
+          "reactSize": {
+            "width": 768,
+            "height": 445
+          },
+          "vueSize": {
+            "width": 768,
+            "height": 445
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 341760,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/theme-dark-compact__light__tablet.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 13,
+            "editors": 1,
+            "width": 768,
+            "scrollWidth": 768
+          }
+        },
+        {
+          "id": "typography/theme-dark-compact__light__desktop",
+          "reactSize": {
+            "width": 1440,
+            "height": 445
+          },
+          "vueSize": {
+            "width": 1440,
+            "height": 445
+          },
+          "sizeMismatch": false,
+          "diffPixels": 0,
+          "totalPixels": 640800,
+          "diffRatio": 0,
+          "isolatedRatio": 1,
+          "diffPath": "/Users/nanren/Code/apollo-design-ui/tests/visual/diff/apollo/typography/theme-dark-compact__light__desktop.png",
+          "verdict": "PASS",
+          "reason": "exact",
+          "message": "逐像素完全一致。",
+          "state": {
+            "roots": 13,
+            "editors": 1,
+            "width": 1440,
+            "scrollWidth": 1440
+          }
+        }
+      ],
+      "rawRGBAExact": 42
+    },
+    "integrity": {
+      "preservedRecordsAndPNGs": 453,
+      "newTypography": 42,
+      "approved": 495,
+      "planned": 1398,
+      "reference": "unchanged",
+      "missing": 903
+    },
+    "fixtureNote": "Copy feedback cleanup moves focus to an explicit outside heading; blur-to-body has no relatedTarget and was nondeterministic. Expected pixels remain unchanged.",
+    "originalRejectedSource": "c75395fc",
+    "originalRejectedReason": "native textarea geometry and incomplete fixed row"
+  },
+  "build": "UI declarations and CSS passed",
+  "strictTypes": "passed",
+  "publishedConsumption": "5 entries and all14 actual demos passed",
+  "uiL7": "11 checks; 0 failed; 0 pending; explicit build then --no-build",
+  "docs": {
+    "localContent": "passed",
+    "localTypes": "passed",
+    "localTests": 161,
+    "routes": 85,
+    "finalLocalBrowser": {
+      "results": [
+        {
+          "demo": "basic",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "basic",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "component-token",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "component-token",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "copyable",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "copyable",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "editable",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "editable",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "semantic",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "semantic",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "suffix",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "suffix",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "table",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "table",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "text",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "text",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "title",
+          "theme": "light",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "demo": "title",
+          "theme": "dark",
+          "httpStatus": 200,
+          "axe": [],
+          "passed": true
+        },
+        {
+          "name": "published title token custom/zero controls",
+          "passed": true
+        },
+        {
+          "name": "published clipboard control",
+          "passed": true
+        },
+        {
+          "name": "published multiline editing, save and autoSize controls",
+          "passed": true
+        },
+        {
+          "name": "published expand/collapse labels and controls",
+          "passed": true
+        },
+        {
+          "name": "published Provider replacement/removal and business focus",
+          "passed": true
+        },
+        {
+          "name": "physical API page and all 14 actual cards",
+          "passed": true
+        },
+        {
+          "name": "physical progress page with current stage",
+          "passed": true
+        },
+        {
+          "name": "English API uses the current contracts",
+          "passed": true
+        }
+      ],
+      "errors": [],
+      "fallbackDocuments": []
+    },
+    "publishedFunctionalSource": "c4883402",
+    "publishedFunctionalWorkflow": 40657341285,
+    "publishedFunctionalBrowser": 35,
+    "finalPublication": "pending"
+  },
+  "remainingLibrary": {
+    "approvedVisual": 495,
+    "plannedVisual": 1398,
+    "missingVisual": 903,
+    "wholeLibraryAudit": "continues; final full gates required when all units finish"
+  },
+  "boundaries": [
+    "Chrome150/darwin-x64 fixed font/browser environment; no independent Safari/Firefox run",
+    "D04 arbitrary-prefix styling is separate",
+    "Table full API and all other consumer widget contracts are not accepted here",
+    "network WebFont loading and custom-element resource lifecycle were not independently exercised"
+  ],
+  "commands": [
+    "pnpm exec vitest run --project unit --project theme --project a11y --project dom-contract packages/ui/src/typography packages/ui/src/table packages/ui/src/input packages/ui/src/tooltip packages/ui/src/popover packages/ui/src/config-provider packages/ui/src/_internal --maxWorkers=2",
+    "pnpm exec vitest run --project types packages/ui/src/typography packages/ui/src/table packages/ui/src/input --maxWorkers=2",
+    "pnpm run lint:types",
+    "node tests/consumer/typography-slots-types.mjs",
+    "pnpm run build:ui",
+    "node tests/build/run.mjs --package ui --no-build --strict",
+    "node tests/browser/typography-contracts.mjs",
+    "node tests/browser/typography-demo-themes.mjs",
+    "node tests/browser/typography-hydration.mjs",
+    "node tests/browser/typography-consumers.mjs",
+    "node tests/visual/apollo.mjs --candidate --component typography",
+    "node tests/visual/apollo.mjs --accept --component typography --review-note <recorded individual review>",
+    "node tests/visual/apollo.mjs --component typography --no-build",
+    "pnpm --filter @apollo-design/docs run content:check / content:build / typecheck / test / build",
+    "node tests/browser/typography-docs.mjs",
+    "pnpm registry:check",
+    "pnpm audit:content-slots:check",
+    "pnpm lint:format"
+  ],
+  "metadataGates": {
+    "registry": "19 checks passed; 0 warnings",
+    "contentSlots": "547 current source rows checked",
+    "format": "0 errors; existing37 warnings/5 infos",
+    "tooling": "18 tests passed"
+  }
+}

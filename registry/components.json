@@ -32,8 +32,7 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 71,
-      "testing": 1
+      "completed": 72
     },
     "byPriority": {
       "P0": 8,
@@ -52,8 +51,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 71,
-    "remainingCount": 1
+    "completedCount": 72,
+    "remainingCount": 0
   },
   "milestones": [],
   "components": [
@@ -604,7 +603,7 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "M",
-      "status": "testing",
+      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -631,20 +630,20 @@
       "interactionStatus": "done",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "in-progress",
-      "docsStatus": "in-progress",
-      "notes": "2026-10-28完整盘点后功能阶段：1178相关四层、110类型、15生产浏览器、76实际Demo主题/交互和12 SSR/水合、发布声明及UI严格L7通过。复制/编辑/测量、原生Link、当前语言与两Token、配置节点已成组修复；关联Table仅四十变量当前主题。自有视觉、Docs和最终清单尚未收口。见 docs/audit/2026-10-27-typography-contract-audit.md。",
+      "visualStatus": "done",
+      "docsStatus": "done",
+      "notes": "2026-10-28完整清单收口，生产实现c4883402+c75395fc+68547d9a，关联Table230892d9。1186相关四层、110类型、17生产浏览器、76实际Demo主题/交互、12 SSR/水合、23消费示例46渲染、14Demo发布声明、根严格/UI L7通过。42张清洁自有视觉逐张审阅批准；原453记录/PNG及机械/参考证据不变。Docs161及35本地/线上已验证；最终发布回执见本轮审计。全库其余单元继续。",
       "layerNotes": {
-        "currentAudit": "docs/audit/2026-10-27-typography-contract-audit.md；typography-functional-stage-2026-10-28.json 与 docs/migrations/typography-contracts.md。",
-        "api": "五入口、完整default槽、原生attrs及当前实际nativeElement；固定标签排除无效component；无新增emits或v-model。",
-        "token": "两既有标题Token实际消费，0/替换/移除及四算法；当前源与显式原生样式覆盖。",
-        "unit": "相关61文件1178四层通过；最后符号名称修正后Typography7文件305项通过。",
-        "interaction": "原生Link/所属按钮、成功复制/失败/并发/卸载、多行/autoSize、受控拒绝/IME与焦点、Provider/业务VNode身份。",
-        "type": "相关8文件110类型、根严格与全部14Demo发布声明通过。",
-        "a11y": "当前文字对比、链接下划线、禁用导航、text编辑键盘入口、可见符号名称、装饰图标与焦点所有权。",
-        "compat": "76原场景不变，19个有限原生差异附原因与迁移；其余精确对拍。",
-        "visual": "自有候选/审阅/复比待完成，原参考图保留。",
-        "docs": "实现/类型/14原Demo/双语API/迁移同步；Docs门禁/页面/发布回执待验收。"
+        "currentAudit": "docs/audit/2026-10-27-typography-contract-audit.md；functional-stage、acceptance-freeze、editor-geometry及final-acceptance证据；迁移 docs/migrations/typography-contracts.md。",
+        "api": "五入口、唯一default槽、原生class/style/attrs/当前nativeElement；固定标签排除无效component；配置回调保留职责，无新emits/model。",
+        "token": "两个既有标题Token真实消费；0/替换/移除、当前别名与四算法、原生样式优先级。",
+        "unit": "61文件1186项相关四层和8文件110类型通过；76原机械场景保留，仅19个有限原生差异。",
+        "interaction": "成功复制/失败/空串/富内容/并发/卸载、原生多行/IME/受控拒绝/动态高度、四入口编辑所有权、当前Provider与VNode身份。",
+        "type": "根严格与5入口/14实际Demo的发布声明消费通过；只读nativeElement及完整默认槽类型。",
+        "a11y": "可读默认语义色、链接标识/禁用导航、原生键盘入口、可见符号名称、装饰图标、所属焦点与编辑完整行；Chrome150验证。",
+        "visual": "清洁68547d9a的14类×3视口42张逐张审阅，旧编辑几何批次拒收；原453批准记录/PNG和所有参考证据不变。",
+        "docs": "实现、类型、14原Demo、双语API及迁移同步；Docs161/85页与实际页面35检查通过。c488功能快照workflow40657341285已发布，最终回执另记。",
+        "boundaries": "仅Typography整单元；Table仅四十主题变量与两个宿主。任意prefix样式D04及全库剩余审计另案；当前浏览器验收为Chrome150固定环境。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -672,7 +671,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "layout",
@@ -5132,7 +5131,7 @@
       "docsStatus": "done",
       "notes": "2026-10-27 Avatar完整单元收口：实现9af2a24f，共享ef832304；本组件143通过，相关4484条4461通过/23为独立db24a00c同名Typography基线失败（后续证明Teleport桩所致，原生32/32），未假报全绿。72类型、42浏览器、46Demo、17 SSR水合、16消费、Docs161/27本地与线上通过；48清洁自有图审查及原始RGBA一致、相关105视觉通过。全库其余单元/最终门禁继续。",
       "layerNotes": {
-        "currentAudit": "docs/audit/2026-10-27-avatar-contract-audit.md；avatar-contract.json、avatar-visual-browser.json、avatar-docs-publication.json和迁移。完整清单收口，仅Avatar；Typography基线23条另案优先整改。",
+        "currentAudit": "docs/audit/2026-10-27-avatar-contract-audit.md；avatar-contract.json、avatar-visual-browser.json、avatar-docs-publication.json和迁移。完整清单收口，仅Avatar；Typography23条已确认测试替身问题；后续完整单元见2026-10-27-typography-contract-audit.md（2026-10-28收口）。",
         "api": "click/error原生Vue事件，同步beforeFallback取消；image/icon完整槽和VNode数据；max单一配置，静态子组件/ref保持。",
         "token": "12既有Token实际消费，当前源/替换/移除和四算法；Group/Popover所属宿主私有计算值保持原生变量优先级，不增加公开Token。",
         "interaction": "初始19契约18失败；当前业务key/草稿/焦点、尺寸测量、原生溢出键盘、受控接受/拒绝和三次重挂验证通过。",

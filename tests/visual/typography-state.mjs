@@ -24,7 +24,14 @@ export async function prepareTypographyVisual(page, variant) {
       Boolean(document.querySelector('.apollo-typography-copy-success')),
     );
     assert.equal(await page.evaluate(() => window.typographyVisualCopied), 'Clipboard payload');
-    await copy.evaluate((n) => n.blur());
+    // Move focus to a concrete external target; blur-to-body has no relatedTarget.
+    await stage
+      .locator('h1')
+      .first()
+      .evaluate((n) => {
+        n.tabIndex = -1;
+        n.focus();
+      });
     await page.mouse.move(0, 0);
     await tooltip.waitFor({ state: 'hidden' });
   }
