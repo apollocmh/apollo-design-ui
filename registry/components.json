@@ -632,7 +632,7 @@
       "a11yStatus": "done",
       "visualStatus": "done",
       "docsStatus": "done",
-      "notes": "2026-10-28完整清单收口，生产实现c4883402+c75395fc+68547d9a，关联Table230892d9。1186相关四层、110类型、17生产浏览器、76实际Demo主题/交互、12 SSR/水合、23消费示例46渲染、14Demo发布声明、根严格/UI L7通过。42张清洁自有视觉逐张审阅批准；原453记录/PNG及机械/参考证据不变。Docs161及35本地/线上已验证；最终发布回执见本轮审计。全库其余单元继续。",
+      "notes": "2026-10-28完整清单收口，生产实现c4883402+c75395fc+68547d9a，关联Table230892d9。1186相关四层、110类型、17生产浏览器、76实际Demo主题/交互、12 SSR/水合、23消费示例46渲染、14Demo发布声明、根严格/UI L7通过。42张清洁自有视觉逐张审阅批准；原453记录/PNG及机械/参考证据不变。Docs161及36本地/线上已验证；最终22186737已发布，workflow40670124684成功，回执入仓。全库其余单元继续。",
       "layerNotes": {
         "currentAudit": "docs/audit/2026-10-27-typography-contract-audit.md；functional-stage、acceptance-freeze、editor-geometry及final-acceptance证据；迁移 docs/migrations/typography-contracts.md。",
         "api": "五入口、唯一default槽、原生class/style/attrs/当前nativeElement；固定标签排除无效component；配置回调保留职责，无新emits/model。",
@@ -642,7 +642,7 @@
         "type": "根严格与5入口/14实际Demo的发布声明消费通过；只读nativeElement及完整默认槽类型。",
         "a11y": "可读默认语义色、链接标识/禁用导航、原生键盘入口、可见符号名称、装饰图标、所属焦点与编辑完整行；Chrome150验证。",
         "visual": "清洁68547d9a的14类×3视口42张逐张审阅，旧编辑几何批次拒收；原453批准记录/PNG和所有参考证据不变。",
-        "docs": "实现、类型、14原Demo、双语API及迁移同步；Docs161/85页与实际页面35检查通过。c488功能快照workflow40657341285已发布，最终回执另记。",
+        "docs": "实现、类型、14原Demo、双语API及迁移同步；Docs161/85页、本地与线上36检查通过。最终22186737的workflow40670124684构建/Pages成功；见typography-docs-publication.json，28 Demo深链既有404 SPA边界保留。",
         "boundaries": "仅Typography整单元；Table仅四十主题变量与两个宿主。任意prefix样式D04及全库剩余审计另案；当前浏览器验收为Chrome150固定环境。"
       },
       "referenceEvidence": {

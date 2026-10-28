@@ -1944,7 +1944,16 @@
     "publishedFunctionalSource": "c4883402",
     "publishedFunctionalWorkflow": 40657341285,
     "publishedFunctionalBrowser": 35,
-    "finalPublication": "pending"
+    "finalPublication": {
+      "sourceCommit": "2218673790c1d26c6512a522632af7f1c64d11c4",
+      "workflowRunId": 40670124684,
+      "status": "completed",
+      "conclusion": "success",
+      "liveBrowserChecks": 36,
+      "pageErrors": 0,
+      "fallbackDocuments": 28,
+      "receipt": "docs/audit/evidence/typography-docs-publication.json"
+    }
   },
   "remainingLibrary": {
     "approvedVisual": 495,

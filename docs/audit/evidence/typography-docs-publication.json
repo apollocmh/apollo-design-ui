@@ -1,0 +1,301 @@
+{
+  "sourceCommit": "2218673790c1d26c6512a522632af7f1c64d11c4",
+  "workflowRunId": 40670124684,
+  "url": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40670124684",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 122754470114,
+      "name": "构建文档站",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 122757154529,
+      "name": "发布到 GitHub Pages",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "ciEvidence": {
+    "testFiles": 15,
+    "tests": 161,
+    "topologicalL7": {
+      "checks": 151,
+      "failed": 0,
+      "pending": 0,
+      "notApplicable": 67
+    },
+    "logLines": [
+      "2026-10-28T10:13:20.3770146Z Tests 161 passed (161)",
+      "2026-10-28T10:17:13.6970911Z 检查项 151 | FAIL 0 | PENDING 0 | n/a 67"
+    ],
+    "deploySuccess": "2026-10-28T10:17:51.4598472Z Reported success!"
+  },
+  "liveDocs": {
+    "results": [
+      {
+        "demo": "basic",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "basic",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "component-token",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "component-token",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "copyable",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "copyable",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "editable",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "editable",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "editable-custom",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "editable-custom",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "ellipsis",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "ellipsis",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "ellipsis-controlled",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "ellipsis-controlled",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "ellipsis-expandable",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "ellipsis-expandable",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "ellipsis-middle",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "ellipsis-middle",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "semantic",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "semantic",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "suffix",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "suffix",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "table",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "table",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "text",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "text",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "title",
+        "theme": "light",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "demo": "title",
+        "theme": "dark",
+        "httpStatus": 404,
+        "axe": [],
+        "passed": true
+      },
+      {
+        "name": "published title token custom/zero controls",
+        "passed": true
+      },
+      {
+        "name": "published clipboard control",
+        "passed": true
+      },
+      {
+        "name": "published multiline editing, save and autoSize controls",
+        "passed": true
+      },
+      {
+        "name": "published expand/collapse labels and controls",
+        "passed": true
+      },
+      {
+        "name": "published Provider replacement/removal and business focus",
+        "passed": true
+      },
+      {
+        "name": "physical API page and all 14 actual cards",
+        "passed": true
+      },
+      {
+        "name": "physical progress page with current stage",
+        "passed": true
+      },
+      {
+        "name": "English API uses the current contracts",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": [
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/basic?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/basic?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/component-token?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/component-token?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/copyable?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/copyable?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/editable?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/editable?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/editable-custom?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/editable-custom?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis-controlled?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis-controlled?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis-expandable?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis-expandable?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis-middle?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/ellipsis-middle?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/semantic?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/semantic?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/suffix?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/suffix?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/table?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/table?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/text?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/text?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/title?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/typography/demo/title?theme=dark"
+    ]
+  },
+  "verifiedAt": "2026-10-28T10:22:05.605Z",
+  "boundary": "28 Demo deep links use the existing GitHub Pages 404 SPA fallback; actual rendering and interactions pass. Physical API and progress pages return 200. This receipt covers the final Typography documentation deployment, not the remaining library audit."
+}

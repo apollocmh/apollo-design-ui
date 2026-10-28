@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T10:09:15.891Z",
+  "generatedAt": "2026-10-28T10:22:18.499Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -1522,7 +1522,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "2026-10-28完整清单收口，生产实现c4883402+c75395fc+68547d9a，关联Table230892d9。1186相关四层、110类型、17生产浏览器、76实际Demo主题/交互、12 SSR/水合、23消费示例46渲染、14Demo发布声明、根严格/UI L7通过。42张清洁自有视觉逐张审阅批准；原453记录/PNG及机械/参考证据不变。Docs161及35本地/线上已验证；最终发布回执见本轮审计。全库其余单元继续。",
+      "why": "2026-10-28完整清单收口，生产实现c4883402+c75395fc+68547d9a，关联Table230892d9。1186相关四层、110类型、17生产浏览器、76实际Demo主题/交互、12 SSR/水合、23消费示例46渲染、14Demo发布声明、根严格/UI L7通过。42张清洁自有视觉逐张审阅批准；原453记录/PNG及机械/参考证据不变。Docs161及36本地/线上已验证；最终22186737已发布，workflow40670124684成功，回执入仓。全库其余单元继续。",
       "doneWhen": [],
       "group": "通用",
       "priority": "P0",

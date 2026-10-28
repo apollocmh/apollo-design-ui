@@ -639,3 +639,6 @@ Tag验收提交db24a00c已上线；工作流40461805810与Pages7352080560成功�
 **2026-10-28 Typography功能阶段**：完整盘点后，复制/编辑/测量/原生链接与可访问性、当前语言与两Token、完整配置节点、关联Table当前主题变量已成组实现。1178相关四层、110类型、15生产契约、76实际Demo主题/交互及12 SSR/水合通过，发布声明与严格UI L7通过；自有视觉和Docs统一验收仍进行中。见 [完整清单](audit/2026-10-27-typography-contract-audit.md) 和功能阶段证据；不标记全库收口。
 
 **2026-10-28 Typography完整清单收口**：冻结68547d9a（含c4883402/c75395fc及关联Table230892d9）。1186相关四层、110类型、17生产契约、76 Demo主题/交互、46消费渲染、12 SSR/水合、发布模板/根严格/UI L7通过；重拍42张逐张批准并全部原始RGBA exact，原453记录/PNG及所有参考证据不变。全库495/1398图批准、903待验收，其他审计继续；具体边界与最终Docs回执见完整清单及 typography-final-acceptance.json。
+
+
+Typography最终验收提交22186737已上线；workflow40670124684构建/Pages成功，CI文档161测试及全包L7 151项0失败0待定，线上36项真实页面/交互通过。28条Demo深链既有404 SPA回退明确保留，物理API/进展页200；回执见[typography-docs-publication.json](audit/evidence/typography-docs-publication.json)。本单元交付完成，全库其他组件与最终统一门禁继续。
