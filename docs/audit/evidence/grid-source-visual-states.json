@@ -1,0 +1,512 @@
+{
+  "source": true,
+  "browser": "150.0.7871.125",
+  "baselineProduced": false,
+  "results": [
+    {
+      "width": 400,
+      "variant": "basic",
+      "state": {
+        "rows": 4,
+        "cols": 10,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "gutter",
+      "state": {
+        "rows": 4,
+        "cols": 12,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "responsive",
+      "state": {
+        "rows": 1,
+        "cols": 4,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "offset-sort",
+      "state": {
+        "rows": 3,
+        "cols": 7,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "flex",
+      "state": {
+        "rows": 2,
+        "cols": 5,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "justify-align",
+      "state": {
+        "rows": 10,
+        "cols": 26,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "responsive-fields",
+      "state": {
+        "rows": 1,
+        "cols": 2,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "nested-rtl",
+      "state": {
+        "rows": 3,
+        "cols": 6,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "complete-content",
+      "state": {
+        "rows": 1,
+        "cols": 1,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "current-provider",
+      "state": {
+        "rows": 1,
+        "cols": 2,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "native-focus",
+      "state": {
+        "rows": 1,
+        "cols": 1,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "theme-dark",
+      "state": {
+        "rows": 3,
+        "cols": 10,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "theme-compact",
+      "state": {
+        "rows": 3,
+        "cols": 10,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 400,
+      "variant": "theme-dark-compact",
+      "state": {
+        "rows": 3,
+        "cols": 10,
+        "width": 400,
+        "scrollWidth": 400,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "basic",
+      "state": {
+        "rows": 4,
+        "cols": 10,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "gutter",
+      "state": {
+        "rows": 4,
+        "cols": 12,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "responsive",
+      "state": {
+        "rows": 1,
+        "cols": 4,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "offset-sort",
+      "state": {
+        "rows": 3,
+        "cols": 7,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "flex",
+      "state": {
+        "rows": 2,
+        "cols": 5,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "justify-align",
+      "state": {
+        "rows": 10,
+        "cols": 26,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "responsive-fields",
+      "state": {
+        "rows": 1,
+        "cols": 2,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "nested-rtl",
+      "state": {
+        "rows": 3,
+        "cols": 6,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "complete-content",
+      "state": {
+        "rows": 1,
+        "cols": 1,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "current-provider",
+      "state": {
+        "rows": 1,
+        "cols": 2,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "native-focus",
+      "state": {
+        "rows": 1,
+        "cols": 1,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "theme-dark",
+      "state": {
+        "rows": 3,
+        "cols": 10,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "theme-compact",
+      "state": {
+        "rows": 3,
+        "cols": 10,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 800,
+      "variant": "theme-dark-compact",
+      "state": {
+        "rows": 3,
+        "cols": 10,
+        "width": 800,
+        "scrollWidth": 800,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "basic",
+      "state": {
+        "rows": 4,
+        "cols": 10,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "gutter",
+      "state": {
+        "rows": 4,
+        "cols": 12,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "responsive",
+      "state": {
+        "rows": 1,
+        "cols": 4,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "offset-sort",
+      "state": {
+        "rows": 3,
+        "cols": 7,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "flex",
+      "state": {
+        "rows": 2,
+        "cols": 5,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "justify-align",
+      "state": {
+        "rows": 10,
+        "cols": 26,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "responsive-fields",
+      "state": {
+        "rows": 1,
+        "cols": 2,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "nested-rtl",
+      "state": {
+        "rows": 3,
+        "cols": 6,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "complete-content",
+      "state": {
+        "rows": 1,
+        "cols": 1,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "current-provider",
+      "state": {
+        "rows": 1,
+        "cols": 2,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "native-focus",
+      "state": {
+        "rows": 1,
+        "cols": 1,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "theme-dark",
+      "state": {
+        "rows": 3,
+        "cols": 10,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "theme-compact",
+      "state": {
+        "rows": 3,
+        "cols": 10,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    },
+    {
+      "width": 1200,
+      "variant": "theme-dark-compact",
+      "state": {
+        "rows": 3,
+        "cols": 10,
+        "width": 1200,
+        "scrollWidth": 1200,
+        "invalidText": false
+      },
+      "passed": true
+    }
+  ],
+  "errors": []
+}

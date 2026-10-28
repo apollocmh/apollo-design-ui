@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-28",
+  "baselineCommit": "1b361487",
+  "phase": "before Grid implementation",
+  "kind": "native",
+  "passed": 2,
+  "failed": 6,
+  "tests": [
+    {
+      "name": "Grid current native contracts ARow: native string/array/object style and attrs-only replacement/removal",
+      "status": "failed",
+      "failure": [
+        "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      ]
+    },
+    {
+      "name": "Grid current native contracts ACol: native string/array/object style and attrs-only replacement/removal",
+      "status": "failed",
+      "failure": [
+        "TypeError: 'set' on proxy: trap returned falsish for property '0'"
+      ]
+    },
+    {
+      "name": "Grid current native contracts current Row/Col Provider configuration, direction and prefix propagate and clear",
+      "status": "failed",
+      "failure": [
+        "AssertionError: expected false to be true // Object.is equality"
+      ]
+    },
+    {
+      "name": "Grid current native contracts native dir takes precedence over the Provider direction on each root",
+      "status": "passed",
+      "failure": []
+    },
+    {
+      "name": "Grid current native contracts nested gutter and nowrap updates preserve complete slot content, native refs and drafts",
+      "status": "passed",
+      "failure": []
+    },
+    {
+      "name": "Grid current native contracts nowrap also shrinks responsive flex content and removes its variables when replaced",
+      "status": "failed",
+      "failure": [
+        "AssertionError: expected '' to be '0px' // Object.is equality"
+      ]
+    },
+    {
+      "name": "Grid current native contracts align stretch is an explicit effective style",
+      "status": "failed",
+      "failure": [
+        "AssertionError: expected '.apollo-col{\\n  --apollo-col--flex:in…' to contain '.apollo-row-stretch{\\n  align-items:s…'"
+      ]
+    },
+    {
+      "name": "Grid current native contracts SSR renders complete slots and native styles without browser media or empty style attrs",
+      "status": "failed",
+      "failure": [
+        "AssertionError: expected '<div class=\"apollo-row\" style=\"0:w;1:…' to contain 'width:300px'"
+      ]
+    }
+  ]
+}

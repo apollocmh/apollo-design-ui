@@ -1,0 +1,12 @@
+{
+  "passed": 0,
+  "failed": 1,
+  "tests": [
+    {
+      "name": "Grid current native contracts nowrap also shrinks responsive flex content and removes its variables when replaced",
+      "failure": [
+        "AssertionError: expected '0px' to be '' // Object.is equality"
+      ]
+    }
+  ]
+}

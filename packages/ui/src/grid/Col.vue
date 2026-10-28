@@ -20,11 +20,11 @@
  */
 
 import { isNonNullable } from '@apollo-design/utils';
-import { type CSSProperties, computed, ref, useAttrs } from 'vue';
+import { type CSSProperties, computed, normalizeStyle, ref, useAttrs } from 'vue';
 import { responsiveArrayReversed } from '../_internal/responsive-observer';
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
-import type { ColConfig, ColProps, ColSize } from './interface';
+import type { ColConfig, ColProps, ColSize, GridSlot } from './interface';
 import { useRowContext } from './RowContext';
 import { parseFlex } from './utils';
 
@@ -49,11 +49,12 @@ const props = withDefaults(defineProps<ColProps>(), {
 
 const attrs = useAttrs();
 
-const { getPrefixCls, direction } = useComponentConfig<ColConfig>('col');
+defineSlots<{ default?: GridSlot }>();
+const config = useComponentConfig<ColConfig>('col');
 const { gutter, wrap } = useRowContext();
 
-const prefixCls = computed(() => getPrefixCls('col', props.prefixCls));
-const rootPrefixCls = computed(() => getPrefixCls());
+const prefixCls = computed(() => config.getPrefixCls('col', props.prefixCls));
+const rootPrefixCls = computed(() => config.getPrefixCls());
 
 // ---------------------------------------------------------------------------
 // 响应式 size（xs…xxxl）
@@ -82,7 +83,7 @@ const sizeClasses = computed(() => {
       [`${cls}-${size}-push-${sizeProps.push}`]: !!sizeProps.push || sizeProps.push === 0,
       [`${cls}-${size}-pull-${sizeProps.pull}`]: !!sizeProps.pull || sizeProps.pull === 0,
       [`${cls}-${size}-flex`]: !!(sizeProps.flex || sizeProps.flex === 0),
-      [`${cls}-rtl`]: direction === 'rtl',
+      [`${cls}-rtl`]: config.direction === 'rtl',
     };
   });
   return obj;
@@ -139,25 +140,29 @@ const mergedStyle = computed<CSSProperties>(() => {
   const flex = props.flex;
   if (flex || flex === 0) {
     style.flex = parseFlex(flex);
-    // Hack for Firefox to avoid size issue
-    // https://github.com/ant-design/ant-design/pull/20023#issuecomment-564389553
-    if (wrap?.value === false && !style.minWidth) {
-      style.minWidth = 0;
-    }
+  }
+  // Both base and responsive flex content must be allowed to shrink in nowrap rows.
+  const hasResponsiveFlex = responsiveArrayReversed.some((size) => {
+    const value = props[size];
+    return typeof value === 'object' && value !== null && !!(value.flex || value.flex === 0);
+  });
+  if (wrap.value === false && (flex || flex === 0 || hasResponsiveFlex)) {
+    style.minWidth = 0;
   }
   return style;
 });
 
 // 根 `style` 是 Vue 原生 attrs（不再是 prop），合并位置与原先的 `props.style` 一致：
 // mergedStyle → 调用方 style → sizeStyle（响应式 sizeStyle 仍然最后胜出）。
-const rootAttrs = computed(() => ({
-  ...attrs,
-  ...styleAttrs({
-    ...mergedStyle.value,
-    ...((attrs.style as CSSProperties | undefined) ?? {}),
-    ...sizeStyle.value,
-  }),
-}));
+const rootAttrs = () => {
+  const { style: nativeStyle, ...rest } = attrs;
+  const style = normalizeStyle([mergedStyle.value, config.style, nativeStyle, sizeStyle.value]);
+  return {
+    ...rest,
+    dir: typeof rest.dir === 'string' ? rest.dir : rest.dir === null ? undefined : config.direction,
+    ...styleAttrs(typeof style === 'object' ? style : undefined),
+  };
+};
 
 // ---------------------------------------------------------------------------
 // 暴露
@@ -168,7 +173,7 @@ defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div ref="rootRef" :class="rootClass" v-bind="rootAttrs">
+  <div ref="rootRef" :class="[rootClass, config.className]" v-bind="rootAttrs()">
     <slot />
   </div>
 </template>

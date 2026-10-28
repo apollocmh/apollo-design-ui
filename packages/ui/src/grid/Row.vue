@@ -17,12 +17,12 @@
  */
 
 import { isNumber } from '@apollo-design/utils';
-import { type CSSProperties, computed, ref, useAttrs } from 'vue';
+import { type CSSProperties, computed, normalizeStyle, ref, useAttrs } from 'vue';
 import { styleAttrs } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import useBreakpoint from './hooks/use-breakpoint';
 import useGutter from './hooks/use-gutter';
-import type { RowConfig, RowProps } from './interface';
+import type { GridSlot, RowConfig, RowProps } from './interface';
 import { provideRowContext } from './RowContext';
 import { getMergedPropByScreen } from './utils';
 
@@ -36,12 +36,12 @@ const props = withDefaults(defineProps<RowProps>(), {
   wrap: undefined,
 });
 
-// antd 的 Row 只读 getPrefixCls / direction（ConfigContext 直取，无组件级 className/style）
-const { getPrefixCls, direction } = useComponentConfig<RowConfig>('row');
+defineSlots<{ default?: GridSlot }>();
+const config = useComponentConfig<RowConfig>('row');
 
 const attrs = useAttrs();
 
-const prefixCls = computed(() => getPrefixCls('row', props.prefixCls));
+const prefixCls = computed(() => config.getPrefixCls('row', props.prefixCls));
 
 // antd: useBreakpoint(true, null) —— subscribe 会立即回调写入初值，
 // ref 的 null 初始值只存在于「subscribe 前」的同步瞬间。
@@ -62,7 +62,7 @@ const rootClass = computed(() => {
       [`${cls}-no-wrap`]: props.wrap === false,
       [`${cls}-${mergedJustify.value}`]: mergedJustify.value,
       [`${cls}-${mergedAlign.value}`]: mergedAlign.value,
-      [`${cls}-rtl`]: direction === 'rtl',
+      [`${cls}-rtl`]: config.direction === 'rtl',
     },
   ];
 });
@@ -86,21 +86,20 @@ const rowStyle = computed<CSSProperties>(() => {
     style.marginInline = isNumber(gutterH) ? `${gutterH / -2}px` : `calc(${gutterH} / -2)`;
   }
   style.rowGap = typeof gutterV === 'number' ? (gutterV === 0 ? '0' : `${gutterV}px`) : gutterV;
-  // antd: style: { ...rowStyle, ...style } —— 调用方 style 在最后，覆盖 gutter 值。
-  // 根 `style` 是 Vue 原生 attrs（不再是 prop），位置保持不变。
-  return { ...style, ...((attrs.style as CSSProperties | undefined) ?? {}) };
+  return style;
 });
 
-const rootStyleAttrs = computed(() => styleAttrs(rowStyle.value));
-
-/**
- * 根元素属性。`style`/`className` 已声明为 props；`attrs`（id / data-* /
- * `class` —— Vue 会与 `:class` 合并）原样透传（antd 的 `...others`）。
- */
-const rootAttrs = computed(() => ({
-  ...attrs,
-  ...rootStyleAttrs.value,
-}));
+// Read attrs during render: useAttrs is current but not a computed dependency.
+// Vue normalizes string/array/object styles; local native styles win over config.
+const rootAttrs = () => {
+  const { style: nativeStyle, ...rest } = attrs;
+  const style = normalizeStyle([rowStyle.value, config.style, nativeStyle]);
+  return {
+    ...rest,
+    dir: typeof rest.dir === 'string' ? rest.dir : rest.dir === null ? undefined : config.direction,
+    ...styleAttrs(typeof style === 'object' ? style : undefined),
+  };
+};
 
 // provide 的值通过 computed 派生，
 // gutter/wrap 变化时 Col 侧在 computed 里读 inject 值能重算。
@@ -118,7 +117,7 @@ defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div ref="rootRef" :class="rootClass" v-bind="rootAttrs">
+  <div ref="rootRef" :class="[rootClass, config.className]" v-bind="rootAttrs()">
     <slot />
   </div>
 </template>

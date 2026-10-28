@@ -5,7 +5,9 @@ title:
   en-US: Grid Gutter
 ---
 
-栅格常常需要和间隔进行配合，你可以使用 `Row` 的 `gutter` 属性，我们推荐使用 `(16 + 8n)px` 作为栅格间隔。
+`gutter` 支持零、分数、CSS 长度和 `[水平, 纵向]`。两个轴都可以独立配置断点。示例色块使用主题背景和文字变量，保持明暗主题中的可读性。
+
+Both axes accept responsive maps, including zero and fractional spacing.
 
 ```vue
 <script setup lang="ts">
@@ -13,7 +15,7 @@ import { Col, Row } from '@apollo-design/ui';
 </script>
 
 <template>
-  <Row :gutter="16">
+  <Row :gutter="[{ xs: 8, md: 24 }, { xs: 8, md: 16 }]">
     <Col :span="6"><div class="demo">col-6</div></Col>
   </Row>
 </template>

@@ -3,8 +3,11 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
+import type { VNodeChild } from 'vue';
 import type {
   ColProps,
+  GridRef,
+  GridSlot,
   Gutter,
   GutterValue,
   ResponsiveValue,
@@ -21,7 +24,9 @@ describe('Grid · Props 类型', () => {
 
   it('gutter 三形态', () => {
     expectTypeOf<RowProps['gutter']>().toEqualTypeOf<Gutter | undefined>();
-    expectTypeOf<readonly [Gutter, GutterValue]>().toMatchTypeOf<NonNullable<Gutter>>();
+    expectTypeOf<
+      readonly [ResponsiveValue<GutterValue>, ResponsiveValue<GutterValue>]
+    >().toMatchTypeOf<Gutter>();
   });
 
   it('Col 响应式 prop 接受数字简写与对象', () => {
@@ -39,6 +44,11 @@ describe('Grid · Props 类型', () => {
     >();
   });
 
+  it('默认槽接受完整 Vue 内容，ref 只开放实际元素', () => {
+    expectTypeOf<ReturnType<GridSlot>>().toEqualTypeOf<VNodeChild>();
+    expectTypeOf<GridRef['nativeElement']>().toEqualTypeOf<HTMLElement | null>();
+  });
+
   it('★ 负例（永不调用的闭包内）', () => {
     const _never = () => {
       // @ts-expect-error gutter 不接受布尔
@@ -47,7 +57,9 @@ describe('Grid · Props 类型', () => {
       const badSpan: ColProps = { span: '8' };
       // @ts-expect-error justify 不接受任意字符串
       const badJustify: RowProps = { justify: 'middle-ish' };
-      return [badGutter, badSpan, badJustify];
+      // @ts-expect-error gutter 每个轴是单值或断点对象，不是递归元组
+      const badNestedGutter: RowProps = { gutter: [[8, 16], 24] };
+      return [badGutter, badSpan, badJustify, badNestedGutter];
     };
     void _never;
   });

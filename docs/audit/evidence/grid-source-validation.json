@@ -1,0 +1,167 @@
+{
+  "stage": "source frozen; production, fixtures, tests, visual modules stopped editing",
+  "baseCommit": "1b361487904626f0ddf2c0c4803c87b3a0cb6454",
+  "artifactMode": "not executed; awaiting main dist-ready",
+  "sharedUnitEvidence": "grid-shared-consumers.json",
+  "gridFourLayers": {
+    "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/grid --maxWorkers=1",
+    "exitCode": 0,
+    "files": 8,
+    "passed": 104,
+    "failed": 0,
+    "suites": [
+      {
+        "file": "packages/ui/src/grid/__tests__/breakpoint-reactivity.test.ts",
+        "passed": 7
+      },
+      {
+        "file": "packages/ui/src/grid/__tests__/contracts.test.ts",
+        "passed": 8
+      },
+      {
+        "file": "packages/ui/src/grid/__tests__/demo.test.ts",
+        "passed": 15
+      },
+      {
+        "file": "packages/ui/src/grid/__tests__/index.test.ts",
+        "passed": 21
+      },
+      {
+        "file": "packages/ui/src/grid/__tests__/responsive-observer-contracts.test.ts",
+        "passed": 5
+      },
+      {
+        "file": "packages/ui/src/grid/__tests__/semantic.test.ts",
+        "passed": 24
+      },
+      {
+        "file": "packages/ui/src/grid/__tests__/a11y.test.ts",
+        "passed": 16
+      },
+      {
+        "file": "packages/ui/src/grid/__tests__/theme.test.ts",
+        "passed": 8
+      }
+    ]
+  },
+  "types": {
+    "command": "pnpm exec vitest run --project types packages/ui/src/grid/__tests__/type.test-d.ts --maxWorkers=1 --reporter=verbose",
+    "exitCode": 0,
+    "tests": 10,
+    "uniqueContracts": 5,
+    "sourceErrors": 0
+  },
+  "sourceConsumerTypes": {
+    "command": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/GridTypes.tsconfig.json",
+    "exitCode": 0,
+    "demos": 13,
+    "diagnostics": 0
+  },
+  "format": {
+    "command": "pnpm exec biome check <owned Grid paths + authorized responsive-observer.ts>",
+    "exitCode": 0,
+    "files": 44,
+    "errors": 0
+  },
+  "browser": {
+    "evidence": "grid-source-browser.json",
+    "checks": 41,
+    "passed": 41,
+    "errors": 0,
+    "ssrHydration": true
+  },
+  "actualDemos": {
+    "evidence": "grid-source-demos.json",
+    "checks": 14,
+    "passed": 14,
+    "demos": 13,
+    "themeViewportCombinations": 12,
+    "errors": 0
+  },
+  "visualStates": {
+    "evidence": "grid-source-visual-states.json",
+    "checks": 42,
+    "passed": 42,
+    "baselinesProduced": false,
+    "errors": 0
+  },
+  "rootIndexExportsRequired": [],
+  "remaining": [
+    "Published JS + published CSS consumer/browser verification",
+    "Formal Apollo candidate review/approval and clean recapture",
+    "Docs acceptance and Registry/compatibility entry integration by main",
+    "Final same-commit full repository gates"
+  ],
+  "sha256": {
+    "packages/ui/src/_internal/responsive-observer.ts": "a421465f147e806060c452f4162882c7b9c7e6a7219e573e541d94f2bb4932e0",
+    "packages/ui/src/grid/Col.vue": "75cb325b48009c4a97e185ca5b778d7901708e78829565f7479e37fe583d67d5",
+    "packages/ui/src/grid/PLAN.md": "6ab6fbb964b18bd0996979507d5bb8868baa9e0b7a9734e35f5b121b64881931",
+    "packages/ui/src/grid/README.md": "a43eb00d4813bfc152a302c19f6110d10bda3d114b19bd60d277622616aeff88",
+    "packages/ui/src/grid/Row.vue": "1fc42af0dbac2c0ecdc41e66926206996239ff0ff120c47162ac2143633f62d9",
+    "packages/ui/src/grid/RowContext.ts": "073c7b00b82d54a2c7e51a71597f7597dae9bdb71b115eeeb77422097baa61e0",
+    "packages/ui/src/grid/__tests__/a11y.test.ts": "615ae9e6ae55611a5177a700755395ffab00ecea4a656d3e6ab990096f6bca34",
+    "packages/ui/src/grid/__tests__/breakpoint-reactivity.test.ts": "326a7ed5a411f50ec2d83436c09e5e26ddaa6ae6faa9b44c9d0e66a60e22d391",
+    "packages/ui/src/grid/__tests__/contracts.test.ts": "7d6d3259b8bad452abb4eabac84cc8d81f6de14b9f46ef606fdc92cf8c7e83c8",
+    "packages/ui/src/grid/__tests__/demo.test.ts": "5e67a9f185d2810d09f592153dc6da11c1d535fd186caf4733d0ae27090ddf10",
+    "packages/ui/src/grid/__tests__/index.test.ts": "7279a4f5e4711d92132aaaf1da187e7690407cd8751f35444d444912d587b3bc",
+    "packages/ui/src/grid/__tests__/responsive-observer-contracts.test.ts": "28d10f5a2d042502e4877e9ff43d2988b9ee7492333a9ca71a2e00b09c522a5e",
+    "packages/ui/src/grid/__tests__/semantic.test.ts": "04aa76f2ea3d3de832f77d3867fc4820e4efa7501f8c8b7de36df86c5e630814",
+    "packages/ui/src/grid/__tests__/theme.test.ts": "65a4af9453d4df277197f4dc3df91e8f8f03dfa500d434029e5af5e9cea9cfd5",
+    "packages/ui/src/grid/__tests__/type.test-d.ts": "bf409b1305e26fdc082de3c3ea339cd78639ccae3114fb1740079080370787ea",
+    "packages/ui/src/grid/demo/basic.md": "760209bcdf01508d508178c76d26013ea8ce94d9f0d3b75befed9639e09dc542",
+    "packages/ui/src/grid/demo/basic.vue": "c3111fd4f1e9fb0499b847d640ae79e5a1791f4d3e0988f4a1307996b2f06502",
+    "packages/ui/src/grid/demo/flex-align.md": "15c7b7539ff28fd316ad5b4e4037f63c6ede350ebd6ef014fa19dba3d803729f",
+    "packages/ui/src/grid/demo/flex-align.vue": "a285ec66dd626e8039021627acc5297ca3feadb1fa7018f04f4996a3eb3a0aa5",
+    "packages/ui/src/grid/demo/flex-order.md": "1502b4f5359d724d443e80ec3f5f719e453c55af5a96dff01ba5a4bbf4de1f82",
+    "packages/ui/src/grid/demo/flex-order.vue": "9897e55677dd7417be718435ae503e05eacc092bd3643acdb64f5cc31c0e2231",
+    "packages/ui/src/grid/demo/flex-stretch.md": "d438fb6c3be9dc0c9887f4784502581a94a71675763883ab4cbf910a197f6f17",
+    "packages/ui/src/grid/demo/flex-stretch.vue": "56ee5d05237f333b91a62c79834b955ca7959f3ba40c90c694b937793ca13be2",
+    "packages/ui/src/grid/demo/flex.md": "123fff913a960b89f2cbca40499ac4b56d1de87c75feb6e273b65f1b27983c5d",
+    "packages/ui/src/grid/demo/flex.vue": "ca100591cda17ab6ca6e4baead6546bb6106d18de2f949a3bc8087cde272015c",
+    "packages/ui/src/grid/demo/gutter.md": "cef77d71b7ff06287d005ab0cb33f11974ddb485a91440e71179ac5b5ce32bd1",
+    "packages/ui/src/grid/demo/gutter.vue": "14f294266e5526abae67bf80887efaa6d436393d1903976663b17d52a2ee4aef",
+    "packages/ui/src/grid/demo/offset.md": "9aacba2a9eea2b6383e1aa3987b7fb9532ab364369204a96d512f5dcc840c4f7",
+    "packages/ui/src/grid/demo/offset.vue": "4373dc933bbdaeb9089868f0c610f7864f809a8230ab307810213eea384e54e1",
+    "packages/ui/src/grid/demo/playground.md": "a035637a6d60425f84d93f910fb1d488b7905f1ab2bba2d57882335cf8a29b9b",
+    "packages/ui/src/grid/demo/playground.vue": "8b85d8c0054042c107a32923facf994107762b749f16ed5d8dd09bf32d666576",
+    "packages/ui/src/grid/demo/responsive-flex.md": "d8dac235d1d484ba65d4061d5fdfd8c59d58925ae9cc730197a80df0be7beb46",
+    "packages/ui/src/grid/demo/responsive-flex.vue": "5d73d63c8ae629d0145d810a6adff74d898cd68862b0bf0e3c1af68d20a70e97",
+    "packages/ui/src/grid/demo/responsive-more.md": "a01fba5591680f3dcf633c3a3e88fa41c947c69a908192b42e622a97b98884aa",
+    "packages/ui/src/grid/demo/responsive-more.vue": "0c4a4316760ee67b40b7f959d22bedeaf29444abce72067906e8b53cafe21289",
+    "packages/ui/src/grid/demo/responsive.md": "a0d33d2bbf855ec707cebfea09abe484f7da37ecd25fb88107ea1e6491506571",
+    "packages/ui/src/grid/demo/responsive.vue": "4997a8ee71dde23d11da1e9f0d0b32ecc6179878e4d4b6712bf512c6a239b212",
+    "packages/ui/src/grid/demo/sort.md": "1042875106c69bdd85014bcee6e50c8bd2af2ade95cab993e2f15e51b20bbee1",
+    "packages/ui/src/grid/demo/sort.vue": "3b0ae247a7ecd4d937ee2c307985df3b3eaebe5b1ba648b7299004e59cbac3f6",
+    "packages/ui/src/grid/demo/useBreakpoint.md": "65783d0253153a02803991cf397bc23f0fef776eb3087f7ee12832c45e203d52",
+    "packages/ui/src/grid/demo/useBreakpoint.vue": "f5f37a50df8f91d36b5138afa75a0c4e19b464367ec128d5a16c2fb942f694c9",
+    "packages/ui/src/grid/hooks/use-breakpoint.ts": "1c01fe9194660d8ade3fc0d60351250e7f08614770c2924a610a3b8b89f9a7a1",
+    "packages/ui/src/grid/hooks/use-gutter.ts": "2633e5bd9c4a79f9eac8deb4532f10cc62f05e6a8dc4911e60e131de1ef28d29",
+    "packages/ui/src/grid/index.en-US.md": "097ebaa05bc9dd860712503d3b422b93a91189e5aea6354777669fbde79e5d39",
+    "packages/ui/src/grid/index.ts": "cb7c63046a5ebf0f1298d0e0a00d7ae91191321e2205dd438931319dbf1270a0",
+    "packages/ui/src/grid/index.zh-CN.md": "2ad1d8dd2e631df408c395466f5d710831fb23f24d8ea2f8d639e66df3fcb6d6",
+    "packages/ui/src/grid/interface.ts": "0e53ec99e36e655b4f71559d547c8a20e0533ba930f5901601074d637497ec03",
+    "packages/ui/src/grid/style/index.ts": "fe77592c17781ddf41e0e0ae19e95f32d3e4ebb751a44975a1a353e0ef7abd44",
+    "packages/ui/src/grid/style/token.ts": "3efb857db38b0679391b3b935b50cc9613f0c997bfa2dfba72fd7deabcd380f0",
+    "packages/ui/src/grid/utils.ts": "08569b8cd37256b8687f10efcc1ad036c2d96882694eb3e9d5625a3476dbd745",
+    "tests/browser/fixtures/GridContracts.vue": "f8f1b3bc77dcde4658d859aa1653179265eb8fd3521669a4a9f6af84e2b40f05",
+    "tests/browser/fixtures/GridDemos.mjs": "b8e64d7b1f5cc72e997e5d94be8578188f0f73f1cdad0aff6f03fc7b7e4900be",
+    "tests/browser/fixtures/GridPublicContracts.vue": "553a90db8a7a2985a28d430a3e27c3818a23d2eac435d3804e3af54099819e36",
+    "tests/browser/fixtures/GridTypes.tsconfig.json": "ff55715e496832d40798fce193ec86e2c33558c9e7069d458ee01e4ae0b7f482",
+    "tests/browser/grid-contracts.mjs": "e99fc405585c2e0d9fffaf907244e53398431e77342faa3ef8bc355ddf7beedf",
+    "tests/browser/grid-demos.mjs": "674339100b87ff2fd7d6229107b9105cbb6ebd712380a28d8f4d12ac77aa4024",
+    "tests/browser/grid-visual.mjs": "fb88476824038420aea5a0176251ff3ab6f71cbde2f3b081a65ff2f73892ad61",
+    "tests/consumer/grid-ssr.mjs": "2b5eeec103d6ff0d59f83c728673b60e448779491e2f3bd62b4848ad7e0719c6",
+    "tests/consumer/grid-types.mjs": "0d5447cb51e2d90460f107872f60edb996d27a1b132dc3654fac7bc5fd3e1481",
+    "tests/visual/grid-state.mjs": "b8f2969dc2f0cb706e3946cd7ba7d56ae8e7c9fd08be55fc657d16f7e7a79541",
+    "tests/visual/render/cases/apollo/grid.js": "3f03a3d9f8e1fbfdec1dde9084b43caacf0649d4d09ab84821b099ecf48dc3d7"
+  },
+  "formListConsumers": {
+    "evidence": "grid-form-list.json",
+    "command": "pnpm exec vitest run --project unit --project dom-contract packages/ui/src/form packages/ui/src/list --maxWorkers=1",
+    "exitCode": 0,
+    "files": 15,
+    "passed": 256,
+    "failed": 0,
+    "note": "Path prefix also includes Listy; overlaps shared consumer checks and is not an additive repository total."
+  }
+}

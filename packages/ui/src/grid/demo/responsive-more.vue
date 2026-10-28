@@ -5,14 +5,14 @@ import { Col, Row } from '@apollo-design/ui';
 
 <template>
   <Row>
-    <Col :xs="{ span: 20, offset: 2 }" :lg="{ span: 8, offset: 4 }"><div style="height: 30px; background: #0092ff; border-radius: 4px; line-height: 30px; text-align: center; color: #fff">Col</div></Col>
-    <Col :xs="{ span: 2, offset: 0 }" :lg="{ span: 6, offset: 2 }"><div style="height: 30px; background: #0092ff; border-radius: 4px; line-height: 30px; text-align: center; color: #fff">Col</div></Col>
+    <Col :xs="{ span: 20, offset: 2 }" :lg="{ span: 8, offset: 4 }"><div style="height: 30px; background: var(--apollo-color-primary-bg); border-radius: 4px; line-height: 30px; text-align: center; color: var(--apollo-color-text)">Col</div></Col>
+    <Col :xs="{ span: 2, offset: 0 }" :lg="{ span: 6, offset: 2 }"><div style="height: 30px; background: var(--apollo-color-primary-bg); border-radius: 4px; line-height: 30px; text-align: center; color: var(--apollo-color-text)">Col</div></Col>
   </Row>
   <Row>
-    <Col :xs="{ span: 22, offset: 1 }" :lg="{ span: 10, offset: 2 }"><div style="height: 30px; background: #0092ff; border-radius: 4px; line-height: 30px; text-align: center; color: #fff">Col</div></Col>
+    <Col :xs="{ span: 22, offset: 1 }" :lg="{ span: 10, offset: 2 }"><div style="height: 30px; background: var(--apollo-color-primary-bg); border-radius: 4px; line-height: 30px; text-align: center; color: var(--apollo-color-text)">Col</div></Col>
   </Row>
   <Row>
-    <Col :xs="{ span: 10, offset: 1 }" :lg="{ span: 8, offset: 4 }"><div style="height: 30px; background: #0092ff; border-radius: 4px; line-height: 30px; text-align: center; color: #fff">Col</div></Col>
-    <Col :xs="{ span: 10, offset: 2 }" :lg="{ span: 8, offset: 2 }"><div style="height: 30px; background: #0092ff; border-radius: 4px; line-height: 30px; text-align: center; color: #fff">Col</div></Col>
+    <Col :xs="{ span: 10, offset: 1 }" :lg="{ span: 8, offset: 4 }"><div style="height: 30px; background: var(--apollo-color-primary-bg); border-radius: 4px; line-height: 30px; text-align: center; color: var(--apollo-color-text)">Col</div></Col>
+    <Col :xs="{ span: 10, offset: 2 }" :lg="{ span: 8, offset: 2 }"><div style="height: 30px; background: var(--apollo-color-primary-bg); border-radius: 4px; line-height: 30px; text-align: center; color: var(--apollo-color-text)">Col</div></Col>
   </Row>
 </template>

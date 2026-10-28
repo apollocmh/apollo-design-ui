@@ -1,16 +1,11 @@
 /**
  * Grid 的类型面（Row + Col）。
  *
- * 契约来源：antd 6.6.4 的 `es/grid/row.d.ts` / `col.d.ts` / `hooks/useGutter.d.ts`。
- * **逐字段对齐**。有意差异见 `packages/ui/src/grid/README.md`。
- *
- * ── 与 antd 类型面的差异 ─────────────────────────────────────────────────────
- *
- * 1. `children` 不在 Props 里（规则 C19）—— Vue 侧是默认插槽。
- * 2. `React.CSSProperties` → Vue 的 `CSSProperties`（规则 C16）。
+ * 参考来源：antd 6.6.4 的 grid 类型。当前公开契约见双语 API 文档。
+ * 内容使用 Vue 默认插槽，根 class/style 使用原生 attrs。
  */
 
-import type { ComputedRef, CSSProperties } from 'vue';
+import type { ComputedRef, CSSProperties, VNodeChild } from 'vue';
 import type { Breakpoint } from '../_internal/responsive-observer';
 
 export type { Breakpoint };
@@ -21,8 +16,10 @@ export type ResponsiveValue<T> = T | Partial<Record<Breakpoint, T>>;
 /** gutter 的单值。数字按 px、字符串原样（`calc()` / 百分比均可）。 */
 export type GutterValue = number | string;
 
-/** 水平 + 纵向。与 antd 的 `Gutter` 一致。 */
-export type Gutter = GutterValue | ResponsiveValue<GutterValue> | readonly [Gutter, GutterValue];
+/** 单轴间距，或水平/纵向二元组；两个轴均支持断点对象。 */
+export type Gutter =
+  | ResponsiveValue<GutterValue>
+  | readonly [ResponsiveValue<GutterValue>, ResponsiveValue<GutterValue>];
 
 export type RowJustify =
   | 'start'
@@ -78,7 +75,7 @@ export interface ColProps {
   pull?: number;
   /** flex 布局填充。`'auto'` / 数字 / 长度串 / 原样。 */
   flex?: string | number;
-  /** ≥<576px 响应式栅格。 */
+  /** 基础响应式栅格，较大断点未覆盖时继续生效。 */
   xs?: number | ColSize;
   /** ≥576px 响应式栅格。 */
   sm?: number | ColSize;
@@ -123,5 +120,5 @@ export interface GridRef {
   nativeElement: HTMLElement | null;
 }
 
-/** 默认插槽。 */
-export type GridSlot = () => unknown;
+/** 完整 Vue 默认内容，无作用域参数。 */
+export type GridSlot = () => VNodeChild;

@@ -1,50 +1,19 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
+# Grid / Row / Col 实现说明
 
-# Grid 实现说明（Row + Col）
+当前契约见 [中文 API](index.zh-CN.md) / [English API](index.en-US.md)。完整源码审计见 [2026-10-28 报告](../../../../docs/audit/2026-10-28-grid-contract-audit.md)，行为与类型修正见 [迁移说明](../../../../docs/migrations/grid-contracts.md)。
 
-## 1. 对应 antd 组件
+## 当前结构
 
-- antd 6.6.4 · `es/grid/`（只读参照，H2）
-- 分析产物：`docs/analysis/grid.md`（G1，先于实现存在）
+- Row/Col 是两个 Vue SFC，原生默认槽与稳定 div 根；attrs 每次 render 现读，通过 Vue normalizeStyle 合并字符串、对象和数组。
+- Row 通过 typed provide/inject 的 computed gutter/wrap 给后代 Col；最近的 Row 隔离嵌套几何。
+- ConfigProvider row/col 的 className/style、direction 和前缀动态消费。原生 dir/style 可覆盖当前默认值。
+- useBreakpoint 在挂载后观察，SSR 保留默认值。共享 observer 按当前查询集合隔离，scope 清理与显式释放均幂等；useGutter 和 parseFlex 保持可独立验证的几何逻辑。
+- 静态 CSS 提供 24 栏、六种主轴对齐、四种交叉轴对齐、逻辑偏移、响应式 flex 变量和 Form 的 `--apollo-grid-display` 覆盖钩子。
+- Row/Col 无组件 Token，字体消费全局主题变量。Col media query 固定默认阈值；运行时 screen Token 不重写静态 CSS。自定义类前缀需要相应静态样式。
+- 13 个实际 Demo 使用主题可读配色，playground 使用原生 range；全部 Demo 保留成对 `.vue` / `.md`。
 
-## 2. 与 antd 的行为差异清单
+## 历史参考
 
-（同步到 `COMPATIBILITY.md` §9；分类依据 AGENTS.md §4.3）
+最初实现参考 antd 6.6.4 的 grid 目录，来源与早期差分说明保留在 `docs/analysis/grid.md`、本目录 PLAN 和既有 DOM/视觉参考证据。旧“逐字同构”“无 BUG”或“Form 尚未接线”等描述不作为当前规范；Form display 钩子已经接线。原 React fixture/PNG 没有变更，也没有复制为 Apollo 已验收基线。
 
-| # | 差异 | 分类 | 证据 |
-|---|---|---|---|
-| D6 | 前缀 `apollo-row`/`apollo-col` vs `ant-row`/`ant-col` | INTENDED（裁决 `prefix-cls-default` = A） | L4 `*:prefix-cls:no-props` |
-| D5 | 无 CSS-in-JS hash 包裹类 | INTENDED（D5） | L4 全部用例 |
-| D6-连带 | 响应式 flex 的 CSS 变量名 `--apollo-col-*` vs `--ant-col-*` | INTENDED（变量名含根前缀） | L4 `col:responsive-flex` |
-| — | `calc(1rem / -2)` → CSSOM 化简 `calc(-0.5rem)`、`min-width:0` → `0px` | PLATFORM（序列化路径，语义等价；L4 allow） | L4 `row:gutter-string` 等 |
-| — | Form 覆盖 Col `display` 的 CSS 变量机制缺失（antd 自身也无生产者，计算结果恒为 `display:block`） | 已知缺口（Form 落地时补） | docs/analysis/grid.md §3 |
-
-无 BUG 类差异（L6 曾抓出 Row `style` prop 未合并的 BUG，已于收口前修复）。
-
-## 3. .vue / .tsx 选择
-
-- **`.vue` SFC ×2**（Row.vue / Col.vue）。布局容器，模板表达充分（COMPONENT-RULES.md §2）。
-- `parseFlex` / `getMergedPropByScreen` 抽到 `utils.ts`（纯函数，L1 直测）。
-
-## 4. Component Token 清单
-
-- Row 与 Col 各 **0 个**（`prepareRowComponentToken` / `prepareColComponentToken` = `() => ({})`，与 antd 逐字一致）。
-- 栅格常量 `gridColumns = 24` 非 token；media query 断点值取自 theme 默认 seed 的
-  `screen*Min`（480/576/768/992/1200/1600/1920）——**主题覆盖 screen 断点不会改变
-  已生成的 media query**（antd 的 cssinjs 会重算），登记为已知边界（analysis §5）。
-
-## 5. 共享层
-
-- 新增 `_internal/responsive-observer.ts`：responsiveArray / matchScreen /
-  useResponsiveObserver（模块级单例 + matchMedia 订阅；测试重置导出
-  `resetResponsiveObserverForTests`）。后续 Descriptions / Form 等复用。
-- 复用 `@apollo-design/theme` 的 `useToken()`（断点值来源）。
-
-## 6. 已知缺口
-
-- antd demo 的 `Slider` / `Statistic`（playground）未落地：playground 用原生
-  `<input type="range">` 等价替换。
-- 响应式 gutter 的 L4 覆盖：React SSR（screens=null，兜底全命中）与我们 jsdom
-  （真实挂载，screens=全 false）两条渲染路径语义不同，无法对称比对 —— 由 L1 的
-  matchMedia mock 驱动用例覆盖（semantic.test.ts 文件头有完整说明）。
-- `direction` 响应式边界：与 divider 同一取舍（快照，D27）。
+源码、发布产物、Docs 和正式 Apollo 视觉分别验收；以审计报告的已验证/未验证边界为准。

@@ -1,0 +1,125 @@
+{
+  "source": true,
+  "browser": "150.0.7871.125",
+  "demos": 13,
+  "themeViewportCombinations": 12,
+  "results": [
+    {
+      "name": "13 real demos light/400px layout and contrast",
+      "passed": true,
+      "actual": {
+        "demos": 13,
+        "width": 400,
+        "mode": "light"
+      }
+    },
+    {
+      "name": "13 real demos light/800px layout and contrast",
+      "passed": true,
+      "actual": {
+        "demos": 13,
+        "width": 800,
+        "mode": "light"
+      }
+    },
+    {
+      "name": "13 real demos light/1200px layout and contrast",
+      "passed": true,
+      "actual": {
+        "demos": 13,
+        "width": 1200,
+        "mode": "light"
+      }
+    },
+    {
+      "name": "13 real demos dark/400px layout and contrast",
+      "passed": true,
+      "actual": {
+        "demos": 13,
+        "width": 400,
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "13 real demos dark/800px layout and contrast",
+      "passed": true,
+      "actual": {
+        "demos": 13,
+        "width": 800,
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "13 real demos dark/1200px layout and contrast",
+      "passed": true,
+      "actual": {
+        "demos": 13,
+        "width": 1200,
+        "mode": "dark"
+      }
+    },
+    {
+      "name": "13 real demos compact/400px layout and contrast",
+      "passed": true,
+      "actual": {
+        "demos": 13,
+        "width": 400,
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "13 real demos compact/800px layout and contrast",
+      "passed": true,
+      "actual": {
+        "demos": 13,
+        "width": 800,
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "13 real demos compact/1200px layout and contrast",
+      "passed": true,
+      "actual": {
+        "demos": 13,
+        "width": 1200,
+        "mode": "compact"
+      }
+    },
+    {
+      "name": "13 real demos both/400px layout and contrast",
+      "passed": true,
+      "actual": {
+        "demos": 13,
+        "width": 400,
+        "mode": "both"
+      }
+    },
+    {
+      "name": "13 real demos both/800px layout and contrast",
+      "passed": true,
+      "actual": {
+        "demos": 13,
+        "width": 800,
+        "mode": "both"
+      }
+    },
+    {
+      "name": "13 real demos both/1200px layout and contrast",
+      "passed": true,
+      "actual": {
+        "demos": 13,
+        "width": 1200,
+        "mode": "both"
+      }
+    },
+    {
+      "name": "playground native ranges update zero/fractional gutters and column count",
+      "passed": true
+    },
+    {
+      "name": "zero real Demo runtime errors",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

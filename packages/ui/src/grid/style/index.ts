@@ -76,7 +76,9 @@ function genGridRowStyle(cls: string): string[] {
     `${cls}-bottom{`,
     `  align-items:flex-end;`,
     `}`,
-    // ⚠️ antd 6.6.4 没有 `-stretch` 规则（align 枚举里有 stretch，但样式表无对应类）—— 逐字对齐。
+    `${cls}-stretch{`,
+    `  align-items:stretch;`,
+    `}`,
   ];
 }
 

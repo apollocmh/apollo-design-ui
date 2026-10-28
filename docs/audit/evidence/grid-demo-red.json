@@ -1,0 +1,78 @@
+{
+  "source": true,
+  "browser": "150.0.7871.125",
+  "demos": 13,
+  "themeViewportCombinations": 12,
+  "results": [
+    {
+      "name": "13 real demos light/400px layout and contrast",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     demos: [\n+       'basic',\n+       'flex-align',\n+       'flex-order',\n+       'flex',\n+       'gutter',\n+       'offset',\n+       'playground',\n+       'responsive-flex',\n+       'responsive-more',\n+       'responsive',\n+       'sort'\n+     ],\n+     id: 'color-contrast'\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "13 real demos light/800px layout and contrast",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     demos: [\n+       'basic',\n+       'flex-align',\n+       'flex-order',\n+       'flex',\n+       'gutter',\n+       'offset',\n+       'playground',\n+       'responsive-flex',\n+       'responsive-more',\n+       'responsive',\n+       'sort'\n+     ],\n+     id: 'color-contrast'\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "13 real demos light/1200px layout and contrast",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     demos: [\n+       'basic',\n+       'flex-align',\n+       'flex-order',\n+       'flex',\n+       'gutter',\n+       'offset',\n+       'playground',\n+       'responsive-flex',\n+       'responsive-more',\n+       'responsive',\n+       'sort'\n+     ],\n+     id: 'color-contrast'\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "13 real demos dark/400px layout and contrast",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     demos: [\n+       'basic',\n+       'flex-align',\n+       'flex-order',\n+       'flex',\n+       'gutter',\n+       'offset',\n+       'playground',\n+       'responsive-flex',\n+       'responsive-more',\n+       'responsive',\n+       'sort'\n+     ],\n+     id: 'color-contrast'\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "13 real demos dark/800px layout and contrast",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     demos: [\n+       'basic',\n+       'flex-align',\n+       'flex-order',\n+       'flex',\n+       'gutter',\n+       'offset',\n+       'playground',\n+       'responsive-flex',\n+       'responsive-more',\n+       'responsive',\n+       'sort'\n+     ],\n+     id: 'color-contrast'\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "13 real demos dark/1200px layout and contrast",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     demos: [\n+       'basic',\n+       'flex-align',\n+       'flex-order',\n+       'flex',\n+       'gutter',\n+       'offset',\n+       'playground',\n+       'responsive-flex',\n+       'responsive-more',\n+       'responsive',\n+       'sort'\n+     ],\n+     id: 'color-contrast'\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "13 real demos compact/400px layout and contrast",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     demos: [\n+       'basic',\n+       'flex-align',\n+       'flex-order',\n+       'flex',\n+       'gutter',\n+       'offset',\n+       'playground',\n+       'responsive-flex',\n+       'responsive-more',\n+       'responsive',\n+       'sort'\n+     ],\n+     id: 'color-contrast'\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "13 real demos compact/800px layout and contrast",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     demos: [\n+       'basic',\n+       'flex-align',\n+       'flex-order',\n+       'flex',\n+       'gutter',\n+       'offset',\n+       'playground',\n+       'responsive-flex',\n+       'responsive-more',\n+       'responsive',\n+       'sort'\n+     ],\n+     id: 'color-contrast'\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "13 real demos compact/1200px layout and contrast",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     demos: [\n+       'basic',\n+       'flex-align',\n+       'flex-order',\n+       'flex',\n+       'gutter',\n+       'offset',\n+       'playground',\n+       'responsive-flex',\n+       'responsive-more',\n+       'responsive',\n+       'sort'\n+     ],\n+     id: 'color-contrast'\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "13 real demos both/400px layout and contrast",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     demos: [\n+       'basic',\n+       'flex-align',\n+       'flex-order',\n+       'flex',\n+       'gutter',\n+       'offset',\n+       'playground',\n+       'responsive-flex',\n+       'responsive-more',\n+       'responsive',\n+       'sort'\n+     ],\n+     id: 'color-contrast'\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "13 real demos both/800px layout and contrast",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     demos: [\n+       'basic',\n+       'flex-align',\n+       'flex-order',\n+       'flex',\n+       'gutter',\n+       'offset',\n+       'playground',\n+       'responsive-flex',\n+       'responsive-more',\n+       'responsive',\n+       'sort'\n+     ],\n+     id: 'color-contrast'\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "13 real demos both/1200px layout and contrast",
+      "passed": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     demos: [\n+       'basic',\n+       'flex-align',\n+       'flex-order',\n+       'flex',\n+       'gutter',\n+       'offset',\n+       'playground',\n+       'responsive-flex',\n+       'responsive-more',\n+       'responsive',\n+       'sort'\n+     ],\n+     id: 'color-contrast'\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "playground native ranges update zero/fractional gutters and column count",
+      "passed": false,
+      "error": "Expected values to be strictly equal:\n\n'8px' !== '0px'\n"
+    },
+    {
+      "name": "zero real Demo runtime errors",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

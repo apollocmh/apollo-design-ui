@@ -5,7 +5,9 @@ title:
   en-US: Alignment
 ---
 
-子元素垂直对齐方式：`align` 取 `top` / `middle` / `bottom`。
+子元素垂直对齐方式：`align` 取 `top` / `middle` / `bottom` / `stretch`。`stretch` 拉伸列的交叉轴尺寸；列内具有固定高度的内容仍保留自己的高度。
+
+`stretch` explicitly stretches the column box, while fixed-height children keep their own size.
 
 ```vue
 <script setup lang="ts">

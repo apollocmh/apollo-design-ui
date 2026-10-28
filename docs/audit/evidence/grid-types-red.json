@@ -1,0 +1,62 @@
+{
+  "passed": 6,
+  "failed": 2,
+  "tests": [
+    {
+      "file": "/Users/nanren/Code/apollo-design-ui/packages/ui/src/grid/__tests__/type.test-d.ts",
+      "errors": "",
+      "tests": [
+        {
+          "name": "Grid · Props 类型 Row 的 justify/align 支持响应式对象",
+          "status": "passed",
+          "failure": []
+        },
+        {
+          "name": "Grid · Props 类型 gutter 三形态",
+          "status": "passed",
+          "failure": []
+        },
+        {
+          "name": "Grid · Props 类型 Col 响应式 prop 接受数字简写与对象",
+          "status": "passed",
+          "failure": []
+        },
+        {
+          "name": "Grid · Props 类型 ★ 负例（永不调用的闭包内）",
+          "status": "passed",
+          "failure": []
+        }
+      ]
+    },
+    {
+      "file": "/Users/nanren/Code/apollo-design-ui/packages/ui/src/grid/__tests__/type.test-d.ts",
+      "errors": "",
+      "tests": [
+        {
+          "name": "packages/ui/src/grid/__tests__/type.test-d.ts Grid · Props 类型 Row 的 justify/align 支持响应式对象",
+          "status": "passed",
+          "failure": []
+        },
+        {
+          "name": "packages/ui/src/grid/__tests__/type.test-d.ts Grid · Props 类型 gutter 三形态",
+          "status": "failed",
+          "failure": [
+            "Type 'Gutter' does not satisfy the constraint '{ [x number] \"Expected never, Actual string\" | \"Expected never, Actual number\" | \"Expected never, Actual ...\"; [iterator] \"Expected never, Actual function\"; ... 83 more ...; valueOf never; }'.\n  Type 'string' is not assignable to type '{ [x number] \"Expected never, Actual string\" | \"Expected never, Actual number\" | \"Expected never, Actual ...\"; [iterator] \"Expected never, Actual function\"; ... 83 more ...; valueOf never; }'."
+          ]
+        },
+        {
+          "name": "packages/ui/src/grid/__tests__/type.test-d.ts Grid · Props 类型 Col 响应式 prop 接受数字简写与对象",
+          "status": "passed",
+          "failure": []
+        },
+        {
+          "name": "packages/ui/src/grid/__tests__/type.test-d.ts Grid · Props 类型 ★ 负例（永不调用的闭包内）",
+          "status": "failed",
+          "failure": [
+            "Unused '@ts-expect-error' directive."
+          ]
+        }
+      ]
+    }
+  ]
+}

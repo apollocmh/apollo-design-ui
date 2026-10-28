@@ -12,7 +12,7 @@ const contents = [
 <template>
   <Row style="height: 120px">
     <Col v-for="c in contents" :key="c.key" :span="8" :style="{ display: 'flex', flexDirection: 'column' }">
-      <div :style="{ background: '#0092ff', borderRadius: '4px', color: '#fff', textAlign: 'center', height: c.percent }">
+      <div :style="{ background: 'var(--apollo-color-primary-bg)', borderRadius: '4px', color: 'var(--apollo-color-text)', textAlign: 'center', height: c.percent }">
         {{ c.percent }}
       </div>
     </Col>

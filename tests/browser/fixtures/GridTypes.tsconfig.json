@@ -1,0 +1,9 @@
+{
+  "extends": "../../../tsconfig.json",
+  "include": [
+    "GridPublicContracts.vue",
+    "GridContracts.vue",
+    "../../../packages/ui/src/grid/demo/*.vue"
+  ],
+  "exclude": ["**/node_modules", "**/dist"]
+}

@@ -1,0 +1,41 @@
+{
+  "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/grid --maxWorkers=1",
+  "exitCode": 0,
+  "files": 8,
+  "passed": 104,
+  "failed": 0,
+  "suites": [
+    {
+      "file": "packages/ui/src/grid/__tests__/breakpoint-reactivity.test.ts",
+      "passed": 7
+    },
+    {
+      "file": "packages/ui/src/grid/__tests__/contracts.test.ts",
+      "passed": 8
+    },
+    {
+      "file": "packages/ui/src/grid/__tests__/demo.test.ts",
+      "passed": 15
+    },
+    {
+      "file": "packages/ui/src/grid/__tests__/index.test.ts",
+      "passed": 21
+    },
+    {
+      "file": "packages/ui/src/grid/__tests__/responsive-observer-contracts.test.ts",
+      "passed": 5
+    },
+    {
+      "file": "packages/ui/src/grid/__tests__/semantic.test.ts",
+      "passed": 24
+    },
+    {
+      "file": "packages/ui/src/grid/__tests__/a11y.test.ts",
+      "passed": 16
+    },
+    {
+      "file": "packages/ui/src/grid/__tests__/theme.test.ts",
+      "passed": 8
+    }
+  ]
+}

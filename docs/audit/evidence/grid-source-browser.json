@@ -1,0 +1,257 @@
+{
+  "mode": "source JS + source generated Grid CSS",
+  "browser": "150.0.7871.125",
+  "ssrHydration": true,
+  "results": [
+    {
+      "name": "SSR hydration, complete content and actual native refs",
+      "passed": true
+    },
+    {
+      "name": "gutter [0,0] actual two-axis geometry",
+      "passed": true,
+      "actual": {
+        "row": 720,
+        "col": 360,
+        "gap": 0
+      }
+    },
+    {
+      "name": "gutter [10.5,7.5] actual two-axis geometry",
+      "passed": true,
+      "actual": {
+        "row": 730.5,
+        "col": 365.25,
+        "gap": 10.5
+      }
+    },
+    {
+      "name": "gutter [\"2rem\",\"1rem\"] actual two-axis geometry",
+      "passed": true,
+      "actual": {
+        "row": 752,
+        "col": 376,
+        "gap": 32
+      }
+    },
+    {
+      "name": "gutter [{\"xs\":4,\"lg\":20},{\"xs\":3,\"lg\":9}] actual two-axis geometry",
+      "passed": true,
+      "actual": {
+        "row": 740,
+        "col": 370,
+        "gap": 20
+      }
+    },
+    {
+      "name": "gutter removal clears owner geometry without affecting nested/independent rows",
+      "passed": true
+    },
+    {
+      "name": "native style 611px replacement",
+      "passed": true
+    },
+    {
+      "name": "native style 621px replacement",
+      "passed": true
+    },
+    {
+      "name": "native style 631px replacement",
+      "passed": true
+    },
+    {
+      "name": "attrs-only removal and native style priority over current Provider defaults",
+      "passed": true
+    },
+    {
+      "name": "viewport 400px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 352,
+        "col": 352,
+        "gap": -352
+      }
+    },
+    {
+      "name": "viewport 575px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 527,
+        "col": 527,
+        "gap": -527
+      }
+    },
+    {
+      "name": "viewport 576px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 536,
+        "col": 268,
+        "gap": 8
+      }
+    },
+    {
+      "name": "viewport 767px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 727,
+        "col": 363.5,
+        "gap": 8
+      }
+    },
+    {
+      "name": "viewport 768px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 730.5,
+        "col": 243.5,
+        "gap": 10.5
+      }
+    },
+    {
+      "name": "viewport 991px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 730.5,
+        "col": 243.5,
+        "gap": 10.5
+      }
+    },
+    {
+      "name": "viewport 992px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 736,
+        "col": 184,
+        "gap": 16
+      }
+    },
+    {
+      "name": "viewport 1199px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 736,
+        "col": 184,
+        "gap": 16
+      }
+    },
+    {
+      "name": "viewport 1200px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 740,
+        "col": 123.328125,
+        "gap": 102.234375
+      }
+    },
+    {
+      "name": "viewport 1599px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 740,
+        "col": 123.328125,
+        "gap": 102.234375
+      }
+    },
+    {
+      "name": "viewport 1600px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 744,
+        "col": 93,
+        "gap": 148
+      }
+    },
+    {
+      "name": "viewport 1919px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 744,
+        "col": 93,
+        "gap": 148
+      }
+    },
+    {
+      "name": "viewport 1920px resolves actual responsive column/Row/hook",
+      "passed": true,
+      "actual": {
+        "row": 752,
+        "col": 62.65625,
+        "gap": 199.125
+      }
+    },
+    {
+      "name": "all six main-axis alignments consume actual free space",
+      "passed": true
+    },
+    {
+      "name": "top/middle/bottom resolve actual cross-axis geometry",
+      "passed": true
+    },
+    {
+      "name": "base logical offsets/push/pull and visual order work in LTR/RTL",
+      "passed": true
+    },
+    {
+      "name": "all responsive Col fields and explicit zero resets",
+      "passed": true
+    },
+    {
+      "name": "base flex 0 and nowrap shrink",
+      "passed": true
+    },
+    {
+      "name": "base flex 1.5 and nowrap shrink",
+      "passed": true
+    },
+    {
+      "name": "base flex auto and nowrap shrink",
+      "passed": true
+    },
+    {
+      "name": "base flex 120px and nowrap shrink",
+      "passed": true
+    },
+    {
+      "name": "responsive flex and wrap removal clear stale variables/min-width",
+      "passed": true
+    },
+    {
+      "name": "align stretch consumes its explicit rule and real cross-axis height",
+      "passed": true
+    },
+    {
+      "name": "current RTL, explicit native direction and independent LTR geometry",
+      "passed": true
+    },
+    {
+      "name": "light theme keeps identity/focus, fits and has zero axe violations",
+      "passed": true
+    },
+    {
+      "name": "dark theme keeps identity/focus, fits and has zero axe violations",
+      "passed": true
+    },
+    {
+      "name": "compact theme keeps identity/focus, fits and has zero axe violations",
+      "passed": true
+    },
+    {
+      "name": "both theme keeps identity/focus, fits and has zero axe violations",
+      "passed": true
+    },
+    {
+      "name": "current global font tokens and native events fire once",
+      "passed": true
+    },
+    {
+      "name": "unmount/remount is isolated and starts fresh native content",
+      "passed": true
+    },
+    {
+      "name": "zero browser/runtime/hydration errors",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

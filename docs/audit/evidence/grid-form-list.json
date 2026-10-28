@@ -1,0 +1,99 @@
+{
+  "command": "pnpm exec vitest run --project unit --project dom-contract packages/ui/src/form packages/ui/src/list --maxWorkers=1",
+  "files": 15,
+  "passed": 256,
+  "failed": 0,
+  "failures": [],
+  "suites": [
+    {
+      "file": "packages/ui/src/form/__tests__/demo.test.ts",
+      "status": "passed",
+      "tests": 37,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/form/__tests__/form.test.ts",
+      "status": "passed",
+      "tests": 15,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/form/__tests__/prefix-reactivity.test.ts",
+      "status": "passed",
+      "tests": 8,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/form/__tests__/s8-issue8.test.ts",
+      "status": "passed",
+      "tests": 12,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/listy/__tests__/demo.test.ts",
+      "status": "passed",
+      "tests": 10,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/listy/__tests__/index.test.ts",
+      "status": "passed",
+      "tests": 19,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/listy/__tests__/s38-issue38.test.ts",
+      "status": "passed",
+      "tests": 6,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/list/__tests__/contract-audit.test.ts",
+      "status": "passed",
+      "tests": 22,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/list/__tests__/demo.test.ts",
+      "status": "passed",
+      "tests": 14,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/list/__tests__/index.test.ts",
+      "status": "passed",
+      "tests": 33,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/list/__tests__/item-slots.test.ts",
+      "status": "passed",
+      "tests": 8,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/list/__tests__/slots.test.ts",
+      "status": "passed",
+      "tests": 9,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/form/__tests__/semantic.test.ts",
+      "status": "passed",
+      "tests": 21,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/list/__tests__/semantic.test.ts",
+      "status": "passed",
+      "tests": 35,
+      "message": ""
+    },
+    {
+      "file": "packages/ui/src/listy/__tests__/semantic.test.ts",
+      "status": "passed",
+      "tests": 7,
+      "message": ""
+    }
+  ]
+}
