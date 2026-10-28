@@ -1,6 +1,6 @@
 /**
- * L7 主题 —— Input 的 18 个 Component Token 以 CSS 变量声明在组件根；
- * 别名色消费 var(--apollo-*)；padding/shadow 算式为构建期解析值。
+ * Input 的 19 个既有 Component Token 在逻辑根声明；默认几何消费当前 Alias。
+ * 数值 prepare 契约单独保留，真实字号、padding 和 focus 绘制由浏览器回归覆盖。
  */
 
 import { themeTest } from '@apollo-design/test-utils';
@@ -16,34 +16,47 @@ describe('Input · token 契约', () => {
   const css = genInputStyle('apollo');
   const decls = genTokenDecls('apollo');
 
-  it('18 个 Component Token 全部声明（--apollo-input-*）', () => {
-    expect(decls.length).toBe(18);
-    expect(css).toContain('--apollo-input-padding-block:4px;');
-    expect(css).toContain('--apollo-input-padding-block-sm:0px;');
-    expect(css).toContain('--apollo-input-padding-block-lg:7px;');
-    expect(css).toContain('--apollo-input-padding-inline:11px;');
-    expect(css).toContain('--apollo-input-padding-inline-sm:7px;');
-    expect(css).toContain('--apollo-input-padding-inline-lg:11px;');
-    expect(css).toContain('--apollo-input-line-width-focus:1px;');
+  it('19 个既有字段全部声明，默认几何随当前 Alias 与组件字体派生', () => {
+    expect(decls.length).toBe(19);
+    expect(css).toContain(
+      '--apollo-input-padding-block:max(0px,calc((var(--apollo-control-height) - var(--apollo-input-input-font-size) * var(--apollo-line-height)) / 2 - var(--apollo-line-width)));',
+    );
+    expect(css).toContain(
+      '--apollo-input-padding-block-sm:max(0px,calc((var(--apollo-control-height-sm) - var(--apollo-input-input-font-size-sm) * var(--apollo-line-height)) / 2 - var(--apollo-line-width)));',
+    );
+    expect(css).toContain(
+      '--apollo-input-padding-block-lg:max(0px,calc((var(--apollo-control-height-lg) - var(--apollo-input-input-font-size-lg) * var(--apollo-line-height-lg)) / 2 - var(--apollo-line-width)));',
+    );
+    expect(css).toContain(
+      '--apollo-input-padding-inline:max(0px,calc(var(--apollo-padding-sm) - var(--apollo-line-width)));',
+    );
+    expect(css).toContain(
+      '--apollo-input-padding-inline-sm:max(0px,calc(var(--apollo-control-padding-horizontal-sm) - var(--apollo-line-width)));',
+    );
+    expect(css).toContain(
+      '--apollo-input-padding-inline-lg:max(0px,calc(var(--apollo-control-padding-horizontal) - var(--apollo-line-width)));',
+    );
+    expect(css).toContain('--apollo-input-line-width-focus:var(--apollo-line-width);');
     expect(css).toContain('--apollo-input-addon-bg:var(--apollo-color-fill-alter);');
     expect(css).toContain('--apollo-input-active-border-color:var(--apollo-color-primary);');
     expect(css).toContain('--apollo-input-hover-border-color:var(--apollo-color-primary-hover);');
     expect(css).toContain('--apollo-input-hover-bg:var(--apollo-color-bg-container);');
     expect(css).toContain('--apollo-input-active-bg:var(--apollo-color-bg-container);');
-    expect(css).toContain('--apollo-input-input-font-size:14px;');
-    expect(css).toContain('--apollo-input-input-font-size-lg:16px;');
-    expect(css).toContain('--apollo-input-input-font-size-sm:14px;');
+    expect(css).toContain('--apollo-input-input-font-size:var(--apollo-font-size);');
+    expect(css).toContain('--apollo-input-input-font-size-lg:var(--apollo-font-size-lg);');
+    expect(css).toContain('--apollo-input-input-font-size-sm:var(--apollo-font-size);');
+    expect(css).toContain('--apollo-input-input-affix-padding:var(--apollo-padding-xxs);');
   });
 
-  it('activeShadow 组合串（构建期模板 + var() 色引用）', () => {
+  it('activeShadow 消费已有单位的当前 outline 长度与颜色', () => {
     expect(css).toContain(
-      '--apollo-input-active-shadow:0 0 0 var(--apollo-control-outline-width)px var(--apollo-control-outline);',
+      '--apollo-input-active-shadow:0 0 0 var(--apollo-control-outline-width) var(--apollo-control-outline);',
     );
     expect(css).toContain(
-      '--apollo-input-error-active-shadow:0 0 0 var(--apollo-control-outline-width)px var(--apollo-color-error-outline);',
+      '--apollo-input-error-active-shadow:0 0 0 var(--apollo-control-outline-width) var(--apollo-color-error-outline);',
     );
     expect(css).toContain(
-      '--apollo-input-warning-active-shadow:0 0 0 var(--apollo-control-outline-width)px var(--apollo-color-warning-outline);',
+      '--apollo-input-warning-active-shadow:0 0 0 var(--apollo-control-outline-width) var(--apollo-color-warning-outline);',
     );
   });
 

@@ -41,6 +41,7 @@ export const BaseInput = defineComponent({
     addonAfter: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     className: { type: [String, Array, Object] as PropType<unknown>, default: undefined },
     style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
+    themeStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
     disabled: { type: Boolean, default: undefined },
     readOnly: { type: Boolean, default: undefined },
     focused: { type: Boolean, default: undefined },
@@ -180,6 +181,7 @@ export const BaseInput = defineComponent({
               hasAffix || hasGroup
                 ? (inner.props as { style?: unknown })?.style
                 : {
+                    ...props.themeStyle,
                     ...((inner.props as { style?: Record<string, unknown> })?.style ?? {}),
                     ...rootExtras.style,
                   },
@@ -221,7 +223,7 @@ export const BaseInput = defineComponent({
             class: [affixWrapperCls, ...(hasGroup ? [] : [rootExtras.class])],
             style: hasGroup
               ? (props.styles?.affixWrapper ?? {})
-              : { ...(props.styles?.affixWrapper ?? {}), ...rootExtras.style },
+              : { ...props.themeStyle, ...(props.styles?.affixWrapper ?? {}), ...rootExtras.style },
             onClick: onInputClick,
             ...(props.dataAttrs?.affixWrapper ?? {}),
             ref: containerRef,
@@ -257,7 +259,7 @@ export const BaseInput = defineComponent({
               props.classNames?.groupWrapper,
               rootExtras.class,
             ],
-            style: rootExtras.style,
+            style: { ...props.themeStyle, ...rootExtras.style },
             ref: groupRef,
             hidden: rootExtras.hidden,
           },

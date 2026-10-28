@@ -30,6 +30,7 @@ import { useComponentConfig, useDirection } from '../config-provider/context';
 import { type SizeType, useSize } from '../config-provider/size-context';
 import { formItemInputContextKey, getMergedStatus, useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
+import { useCompactItemContext } from '../space';
 import { InputComponent } from './Input';
 import type {
   InputRef,
@@ -85,7 +86,11 @@ export const OTPComponent = defineComponent({
     const { getPrefixCls } = context;
     const direction = useDirection();
     const prefixCls = computed(() => getPrefixCls('otp', props.prefixCls));
-    const mergedSize = useSize((ctx) => props.size ?? ctx);
+    const { compactSize } = useCompactItemContext(
+      () => prefixCls.value,
+      () => direction.value,
+    );
+    const mergedSize = useSize((ctx) => props.size ?? compactSize.value ?? ctx);
     const { variant } = useVariant({
       component: 'otp',
       variant: () => props.variant,

@@ -47,6 +47,16 @@ const SIZING_STYLE = [
   'white-space',
 ];
 
+/** Actual layout inputs, excluding the measured height written back by autoSize. */
+export function getTextAreaSizingSignature(textarea: HTMLTextAreaElement): string {
+  const style = window.getComputedStyle(textarea);
+  return JSON.stringify([
+    ...SIZING_STYLE.map((name) => style.getPropertyValue(name)),
+    textarea.getAttribute('wrap'),
+    textarea.value || textarea.placeholder || '',
+  ]);
+}
+
 export interface AutoSizeStyle {
   height: number;
   overflowY?: 'hidden';

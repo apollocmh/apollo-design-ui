@@ -101,6 +101,16 @@ Password 的语义槽重新声明）⇒ `allowClear` / `readOnly` / `maxLength` 
 
 Ref：`focus()`、`blur()`、`nativeElement`。
 
+## 主题、尺寸与样式
+
+默认字号、非负内边距及聚焦阴影消费当前主题。`theme.components.Input` 支持既有的 19 个字段：`lineWidthFocus`、`paddingBlock/SM/LG`、`paddingInline/SM/LG`、`addonBg`、`activeBorderColor`、`hoverBorderColor`、`activeShadow`、`errorActiveShadow`、`warningActiveShadow`、`hoverBg`、`activeBg`、`inputFontSize/SM/LG`、`inputAffixPadding`。长度字段可用数字（px）或 CSS 长度字符串，`0` 有效；移除配置后恢复当前主题默认值。`inputAffixPadding` 控制前后缀间距。公开 `prepareInputComponentToken` 继续返回指定数值快照的准备结果。
+
+尺寸优先级为组件显式 `size` → 最近的 `Space.Compact` / `Input.Group` → `ConfigProvider.componentSize`。Group 的尺寸向子组件提供默认值，子组件显式尺寸优先。Input 保留自然行盒，不压缩显式字体、行高或 padding：默认主题 small/middle/large 为 24/32/40px，compact 为 22/28/35px；small 的自然下限可高于主题目标 `controlHeightSM`。不同类型控件没有外框高度恒等承诺。Search 默认按钮随输入自然伸展，不注入自有最小高度；调用方的 `height` / `min-height` 按其 CSS 生效。TextArea 继续按 rows、已有最小高度及 autoSize 约束排版；autoSize 在主题、尺寸、控件及祖先 class/style、宽度变化和排版过渡结束后，根据实际量测签名重测。无关样式变化不重复量测，禁用和卸载会清理观察与事件。
+
+组件主题数据先于显式语义样式和原生 `style` 合并。`components.input/textArea/inputPassword` 的 `style` 作用于组件逻辑根；`styles.input` / `styles.textarea` 作用于实际控制节点。Search、OTP 的原生根样式作用于容器，格子或输入节点请使用 `styles.input`。既有 stylesheet 的 `--apollo-input-*` 覆盖继续有效；theme 中显式组件字段以逻辑根内联变量提供。
+
+显式空的 `ThemeProvider :theme="{}"`（或 `createThemeContext({})`）仍是默认主题来源，可在外部 CSS 主题作用域内重置默认值。没有有效主题来源时，Input 保留 CSS-only 变量继承；无 theme 的 ConfigProvider 继续读取最近有效来源，不凭空覆盖 CSS 作用域。
+
 ## 注意事项
 
 - 输入法组合期间不做计数裁剪，`compositionend` 后才统一裁剪并触发一次 `change`。

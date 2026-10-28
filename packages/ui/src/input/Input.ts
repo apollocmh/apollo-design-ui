@@ -28,7 +28,11 @@ import {
 } from 'vue';
 import { useAllowClear } from '../_internal/use-allow-clear';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig, useDirection } from '../config-provider/context';
+import {
+  type ComponentStyleConfig,
+  useComponentConfig,
+  useDirection,
+} from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { type SizeType, useSize } from '../config-provider/size-context';
 import { getMergedStatus, useFormItemInputContext } from '../form/context';
@@ -43,6 +47,7 @@ import type {
   InputSemanticClassNames,
   InputSemanticStyles,
 } from './interface';
+import { useInputTheme } from './use-input-theme';
 
 /** D42：组件对象 → VNode（Button 同款归一化）。 */
 function asNode(value: VNodeChild | Component | null | undefined): VNodeChild | undefined {
@@ -93,7 +98,7 @@ export const InputComponent = defineComponent({
   emits: ['update:value'],
   setup(props, { attrs, emit, expose, slots }) {
     const devWarning = useDevWarning('Input');
-    const context = useComponentConfig('input');
+    const context = useComponentConfig<ComponentStyleConfig & Record<string, unknown>>('input');
     const { getPrefixCls } = context;
     const direction = useDirection();
     const contextDisabled = useDisabled();
@@ -107,6 +112,7 @@ export const InputComponent = defineComponent({
 
     // ============================= Prefix ==============================
     const prefixCls = computed(() => getPrefixCls('input', props.prefixCls));
+    const themeStyle = useInputTheme(() => prefixCls.value);
 
     // ============================= Compact =============================
     const { compactSize, compactItemClassnames } = useCompactItemContext(
@@ -150,7 +156,7 @@ export const InputComponent = defineComponent({
       [() => context.classNames as InputSemanticClassNames | undefined, () => props.classNames],
       [
         () => context.styles as InputSemanticStyles | undefined,
-        () => semanticRootStyle(undefined),
+        () => semanticRootStyle(context.style),
         () => props.styles,
         // 根 style 是 Vue 原生 attrs，但仍经语义 root 通道下发（与上游落点一致）
         () => semanticRootStyle(attrs.style as CSSProperties),
@@ -268,6 +274,7 @@ export const InputComponent = defineComponent({
         count: props.count,
         className: rootClass,
         style: mergedStyles.value.root,
+        themeStyle: themeStyle.value,
         styles: mergedStyles.value as never,
         classNames: {
           ...mergedClassNames.value,

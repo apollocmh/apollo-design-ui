@@ -1,0 +1,1034 @@
+{
+  "task": "INPUT-SIZING-20261029",
+  "date": "2026-10-29",
+  "baseCommit": "5fab4846d098f6d9020c2bbfc1c5c9a146dfdd09",
+  "commitStatus": "Final Input source handoff; Root owns commits/push and unified Theme-to-UI published acceptance.",
+  "scope": "Current theme/fonts/padding, 19 existing Input fields, explicit styles, Group/OTP size ownership, TextArea autoSize, affected Demo/API/migration. No complete Input audit claim.",
+  "readiness": {
+    "implemented": true,
+    "sourceImplementationFrozen": true,
+    "sourceRuntimeVerified": true,
+    "inputStrictAndTypeSourceCompilationVerified": true,
+    "defaultVitestTypesGatePassed": true,
+    "rootRelatedGatePassed": true,
+    "publishedVerified": false,
+    "formalVisualApproved": false,
+    "docsVerified": false,
+    "finalRepositoryGatesVerified": false
+  },
+  "freezeStatus": "17 implementation/Demo/readonly producer files and immutable browser bundles verified; default type and Root related gates passed. Published gates remain with Root.",
+  "fields": [
+    "lineWidthFocus",
+    "paddingBlock",
+    "paddingBlockSM",
+    "paddingBlockLG",
+    "paddingInline",
+    "paddingInlineSM",
+    "paddingInlineLG",
+    "addonBg",
+    "activeBorderColor",
+    "hoverBorderColor",
+    "activeShadow",
+    "errorActiveShadow",
+    "warningActiveShadow",
+    "hoverBg",
+    "activeBg",
+    "inputFontSize",
+    "inputFontSizeLG",
+    "inputFontSizeSM",
+    "inputAffixPadding"
+  ],
+  "existingFields": 19,
+  "oldCssDeclarations": 18,
+  "currentCssDeclarations": 19,
+  "newPublicFields": 0,
+  "originalRed": {
+    "browser": {
+      "checks": 163,
+      "failed": 98,
+      "normal": 65,
+      "stages": 32,
+      "errors": [],
+      "warnings": [],
+      "readersExited": true,
+      "sourceUnchanged": true,
+      "artifact": "/tmp/apollo-input-sizing-review/red-evidence.json",
+      "sha256": "5d18bece71389f93a35f8efcdc38af4fa0058270432a0aaf31fa120b284a1c18",
+      "failureExamples": [
+        {
+          "name": "compact small plain current font",
+          "actual": "14px",
+          "expected": "12px",
+          "passed": false
+        },
+        {
+          "name": "compact small affix current font",
+          "actual": "14px",
+          "expected": "12px",
+          "passed": false
+        },
+        {
+          "name": "compact small password current font",
+          "actual": "14px",
+          "expected": "12px",
+          "passed": false
+        },
+        {
+          "name": "compact small search current font",
+          "actual": "14px",
+          "expected": "12px",
+          "passed": false
+        },
+        {
+          "name": "compact small textarea current font",
+          "actual": "14px",
+          "expected": "12px",
+          "passed": false
+        },
+        {
+          "name": "compact small textarea-affix current font",
+          "actual": "14px",
+          "expected": "12px",
+          "passed": false
+        },
+        {
+          "name": "compact small autosize current font",
+          "actual": "14px",
+          "expected": "12px",
+          "passed": false
+        },
+        {
+          "name": "compact small legacy-addons current font",
+          "actual": "14px",
+          "expected": "12px",
+          "passed": false
+        },
+        {
+          "name": "compact small otp current font",
+          "actual": "14px",
+          "expected": "12px",
+          "passed": false
+        },
+        {
+          "name": "compact middle plain current font",
+          "actual": "14px",
+          "expected": "12px",
+          "passed": false
+        },
+        {
+          "name": "compact middle affix current font",
+          "actual": "14px",
+          "expected": "12px",
+          "passed": false
+        },
+        {
+          "name": "compact middle password current font",
+          "actual": "14px",
+          "expected": "12px",
+          "passed": false
+        }
+      ]
+    },
+    "repository": {
+      "files": 1,
+      "tests": 16,
+      "failed": 15,
+      "normal": 1,
+      "log": "/tmp/apollo-input-sizing-review/repo-red.log",
+      "sha256": "e3d34b5fcc0bd59630b72c0a3ac568c638ea3c586a403b0d753760ef0b16716f"
+    }
+  },
+  "previousPhase": {
+    "browserPerMode": 933,
+    "relatedFourProjects": {
+      "files": 32,
+      "passed": 1128
+    },
+    "freezeRevoked": true,
+    "reason": "Peer found untested ancestor-style autoSize clipping and explicit smaller Search height clamping.",
+    "previousManifest": "/tmp/apollo-input-sizing-review/source-freeze-before-peer.json",
+    "sha256": "cb42e4e43de8d7c14bf71774fa12900d4e692a448a7951083d379b02d02be115"
+  },
+  "peerReview": {
+    "artifact": "/tmp/apollo-input-sizing-peer/reproduce.json",
+    "sha256": "7f135c7200c3c5186028c7ba68c849bfde896e6af5f776f617cb57ff56b56352",
+    "passed": 10,
+    "failed": 10,
+    "errors": [],
+    "readersExited": true
+  },
+  "supplementalRed": {
+    "repository": {
+      "files": 1,
+      "tests": 4,
+      "failed": 3,
+      "normal": 1,
+      "log": "/tmp/apollo-input-sizing-review/peer-repo-red.log"
+    },
+    "browser": {
+      "total": 969,
+      "failed": 14,
+      "normal": 955,
+      "artifact": "/tmp/apollo-input-sizing-peer-red-valid/source-all-evidence.json",
+      "sha256": "2fa8541325c641817fec79497341395f3ee6dc44d24037240b546e86f69c56f1",
+      "readersExited": true,
+      "errors": [],
+      "warnings": [],
+      "failures": [
+        {
+          "name": "caller height/min-height consume small false none",
+          "actual": 21,
+          "expected": 18,
+          "passed": false
+        },
+        {
+          "name": "caller height/min-height consume small true none",
+          "actual": 21,
+          "expected": 18,
+          "passed": false
+        },
+        {
+          "name": "caller height/min-height consume middle false none",
+          "actual": 28,
+          "expected": 18,
+          "passed": false
+        },
+        {
+          "name": "caller height/min-height consume middle true none",
+          "actual": 28,
+          "expected": 18,
+          "passed": false
+        },
+        {
+          "name": "caller height/min-height consume large false none",
+          "actual": 35,
+          "expected": 18,
+          "passed": false
+        },
+        {
+          "name": "caller height/min-height consume large true none",
+          "actual": 35,
+          "expected": 18,
+          "passed": false
+        },
+        {
+          "name": "native ancestor sizing-native-font remeasures without clipping",
+          "actual": false,
+          "expected": true,
+          "passed": false
+        },
+        {
+          "name": "native ancestor sizing-native-roomy remeasures without clipping",
+          "actual": false,
+          "expected": true,
+          "passed": false
+        },
+        {
+          "name": "native ancestor inline variables remeasure at the same width",
+          "actual": [
+            true,
+            false,
+            false
+          ],
+          "expected": [
+            true,
+            true,
+            true
+          ],
+          "passed": false
+        },
+        {
+          "name": "native reparent applies its actual sizing without clipping",
+          "actual": false,
+          "expected": true,
+          "passed": false
+        },
+        {
+          "name": "new ancestor remains observed after reparent",
+          "actual": [
+            "28px",
+            false,
+            false
+          ],
+          "expected": [
+            "28px",
+            true,
+            true
+          ],
+          "passed": false
+        },
+        {
+          "name": "surviving instance still observes its own style",
+          "actual": [
+            false,
+            false,
+            "Independent\nDraft"
+          ],
+          "expected": [
+            true,
+            true,
+            "Independent\nDraft"
+          ],
+          "passed": false
+        },
+        {
+          "name": "remounted instance observes native ancestor 0",
+          "actual": [
+            "24px",
+            false
+          ],
+          "expected": [
+            "24px",
+            true
+          ],
+          "passed": false
+        },
+        {
+          "name": "remounted instance observes native ancestor 1",
+          "actual": [
+            "24px",
+            false
+          ],
+          "expected": [
+            "24px",
+            true
+          ],
+          "passed": false
+        }
+      ]
+    },
+    "transitionRepository": {
+      "files": 1,
+      "tests": 6,
+      "failed": 2,
+      "normal": 4,
+      "log": "/tmp/apollo-input-sizing-review/peer-transition-repo-red.log"
+    },
+    "transitionBrowser": {
+      "total": 1024,
+      "failed": 1,
+      "normal": 1023,
+      "artifact": "/tmp/apollo-input-sizing-peer-partial/source-all-evidence.json",
+      "sha256": "a1a3a68042b37e2a6718a65a5f1791131f842be328f8b62743c0f0aeb4e34182",
+      "failures": [
+        {
+          "name": "native animated sizing settles without clipping",
+          "actual": [
+            "24px",
+            false
+          ],
+          "expected": [
+            "24px",
+            true
+          ],
+          "passed": false
+        }
+      ]
+    }
+  },
+  "verified": {
+    "sizingAutoSizeAndSelectUnit": {
+      "files": 6,
+      "passed": 124,
+      "failed": 0,
+      "sizingTests": 24,
+      "ancestorStyleTests": 6,
+      "exit": 0,
+      "log": "/tmp/apollo-input-sizing-review/sourceactive-select.log",
+      "sha256": "ce2a1b368c9183f0cb4d6d41cd3d0a54bfe3633a757887c549bcdeb7d7ac400b"
+    },
+    "strict": {
+      "inputSourcesAndTests": true,
+      "allExistingInputDemos": 24,
+      "diagnostics": 0,
+      "config": "/tmp/apollo-input-sizing-review/tsconfig.strict.json",
+      "log": "/tmp/apollo-input-sizing-review/sourceactive-strict.log",
+      "exit": 0
+    },
+    "inputTypeSourceCompilation": {
+      "sourceFiles": 2,
+      "diagnostics": 0,
+      "config": "/tmp/apollo-input-sizing-review/tsconfig.types.json",
+      "log": "/tmp/apollo-input-sizing-review/sourceactive-type-compiler.log",
+      "exit": 0
+    },
+    "biome": {
+      "files": 19,
+      "diagnostics": 0,
+      "log": "/tmp/apollo-input-sizing-review/sourceactive-biome.log",
+      "exit": 0
+    },
+    "browser": {
+      "all": {
+        "phase": "source",
+        "cssMode": "all",
+        "steps": 169,
+        "total": 1075,
+        "passed": 1075,
+        "failed": 0,
+        "errors": [],
+        "warnings": [],
+        "sourceUnchanged": true,
+        "packageBuildRun": false,
+        "fixtureBundleRun": true,
+        "distWritten": false,
+        "readersExited": true,
+        "forbidden": [],
+        "resolvedModuleCount": 1916,
+        "exit": 0,
+        "artifact": "/tmp/apollo-input-sizing-sourceactive-final-all/source-all-evidence.json",
+        "sha256": "2678be61735e88100c151d0fdd1ff23c90e53e8bb45891e43de3029605dd2833"
+      },
+      "entry": {
+        "phase": "source",
+        "cssMode": "entry",
+        "steps": 169,
+        "total": 1075,
+        "passed": 1075,
+        "failed": 0,
+        "errors": [],
+        "warnings": [],
+        "sourceUnchanged": true,
+        "packageBuildRun": false,
+        "fixtureBundleRun": true,
+        "distWritten": false,
+        "readersExited": true,
+        "forbidden": [],
+        "resolvedModuleCount": 1916,
+        "exit": 0,
+        "artifact": "/tmp/apollo-input-sizing-sourceactive-final-entry/source-entry-evidence.json",
+        "sha256": "55fdff1995628736333d169d958907d9e8272dbae621917e9db0770cf83284d2"
+      }
+    },
+    "relatedFourProjectsHistorical": {
+      "files": 33,
+      "passed": 1134,
+      "failed": 0,
+      "log": "/tmp/apollo-input-sizing-review/peer-source-suites-freeze.log",
+      "sha256": "a9428ef1ce70af26c6b92d6ebe2e27a7684f3df5b30520b7c6568f5b2e8b017e"
+    },
+    "rootRelatedGate": {
+      "performedBy": "Root",
+      "exit": 0,
+      "jsonSuccess": true,
+      "fileExecutions": 72,
+      "passed": 1966,
+      "failed": 0,
+      "inputSpaceButtonMentionsSubset": {
+        "fileExecutions": 33,
+        "assertions": 1139,
+        "allPassed": true
+      },
+      "artifact": "/tmp/apollo-theme-input-related-green.json",
+      "sha256": "a90625e7eeab26624165789b7050b101ad6fa54ad8bf754c018160432b92230e",
+      "log": "/tmp/apollo-theme-input-related-green.log",
+      "note": "Includes Root-corrected Space default-alias contract and source restoration/absence coverage. Do not add overlapping matrices."
+    },
+    "relatedLocalTrials": [
+      {
+        "log": "/tmp/apollo-input-sizing-review/sourceactive-suites-final.log",
+        "assertions": 1138,
+        "failed": 11,
+        "reason": "5000ms theme timeouts while heavy type jobs overlapped; thresholds unchanged."
+      },
+      {
+        "log": "/tmp/apollo-input-sizing-review/sourceactive-suites-serial.log",
+        "assertions": 1138,
+        "passed": 1137,
+        "failed": 1,
+        "reason": "Space obsolete empty-theme alias assertion; Root corrected it and broader final gate passed."
+      }
+    ]
+  },
+  "smallDecision": {
+    "defaultAndDark": [
+      24,
+      32,
+      40
+    ],
+    "compactAndBoth": [
+      22,
+      28,
+      35
+    ],
+    "fixedInputHeight": false,
+    "negativePaddingOrCompressedTypography": false,
+    "crossControlHeightEqualityPromised": false,
+    "searchOwnButtonStretches": true,
+    "textAreaRowsAndExistingMinHeightPreserved": true,
+    "searchOwnMinimumHeight": false,
+    "explicitButtonHeightAndMinHeightPreserved": true
+  },
+  "autoSizeObservation": {
+    "actualSizingSignature": true,
+    "nativeControlAndAncestorAttributes": true,
+    "rebindAfterReparenting": true,
+    "transitionAndAnimationSettlement": true,
+    "unrelatedChangesSkipShadowMeasurement": true,
+    "nativeObserverAndEventCleanup": true,
+    "polling": false,
+    "fixedInputHeight": false
+  },
+  "browserSourceAndDistFingerprints": {
+    "packages/ui/src/input/Input.ts": "9f9ad663eefdb4f6adf35cba5b5b711e84691100c0d12fcd07216a95b9e35c76",
+    "packages/ui/src/input/TextArea.ts": "bf7832b71a5867a32cb07691f6425619cdce1ed24f38949d9e93011ab7461ebe",
+    "packages/ui/src/input/Password.ts": "fa8f85c287c48e57c741f1889ee2fd9096564a1692ad7903fddbe77496131a22",
+    "packages/ui/src/input/Search.ts": "d91cf44c2c5923c47997cdef97d495e85c9d7ac1aa3c4a573d8c708114d7c439",
+    "packages/ui/src/input/Group.ts": "5d846eabae10a1d18266c2ee1700438d61b00291fcfc028bdb03673396cbd2c2",
+    "packages/ui/src/input/OTP.ts": "c306c9712506e2985655c0e3eb20d15c1868c1174916434f1868d2d0be162519",
+    "packages/ui/src/input/use-input-theme.ts": "39ec8ecc8ed022ef4598189fa5f52400bf6b49ce8bec854de27555fc35c0b8f2",
+    "packages/ui/src/input/style/index.ts": "a9b2671778a38b82fc47b7d4334f3b6a2c8395da0ed352c126c6d37338a8a33c",
+    "packages/ui/src/input/style/token.ts": "f20ab59e8064dc648ae2773fb5dc53137da3c7fd48ed3e6ee949b7a2dcf0ef46",
+    "packages/ui/src/input/style/alias-tokens.ts": "fe69d2397bb6e3e1cbaafb2f02ae3b8a5c6d98ebdf2c056a47c77cab7831adb2",
+    "packages/ui/src/input/engine/Input.ts": "6e32279b60579b2d2c5d504f75abb0d1c29b384bf79f2a6d5b8f223dc2cbaa9f",
+    "packages/ui/src/input/engine/BaseInput.ts": "0b6ccff5f0072aaa88277d898b3e349533121f46f66cadd852fdaf3174c7c8f8",
+    "packages/ui/src/input/engine/TextArea.ts": "9e410d60c3bae7b493f327c0885a4820c09fd3db851e095639385f5fd0d184d8",
+    "packages/ui/src/input/engine/calculate-node-height.ts": "57079eac4889682059632f189622c97e8cb2f43e5edc6cc137ece88e04a60380",
+    "packages/ui/src/input/demo/component-token.vue": "a3f679c732a0a6e3f96dfacb5a2d3810077dc4ed17b3ad69f0880e217a2dee8a",
+    "packages/theme/src/vue.ts": "ed43e5231e8ef63d61ded4b767f7c12ac2c0325d0fb6f1690042467acd5858f5",
+    "packages/ui/src/config-provider/ConfigProvider.ts": "6bf8a1262ca7295cc14714d52866b0e7a3e29f8dc320bf78ede880c178daa17f",
+    "packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+    "packages/ui/dist/index.css": "b02c526e0b6e9796294d5ec60186eee68079b242aa6941473553336bcb94bf3a",
+    "packages/ui/dist/input/Input.mjs": "818a6b0b81ebf6cba8146ce3f8d0320a4716b55b7507ee2557755d3b08b4cf6d",
+    "packages/ui/dist/input/style/index.mjs": "d048eebfe95de97de90fa9c1c6a604978509f2d8df72bd631d43613c54d0e11f"
+  },
+  "ownedFiles": [
+    "packages/ui/src/input/Group.ts",
+    "packages/ui/src/input/Input.ts",
+    "packages/ui/src/input/OTP.ts",
+    "packages/ui/src/input/Password.ts",
+    "packages/ui/src/input/TextArea.ts",
+    "packages/ui/src/input/engine/BaseInput.ts",
+    "packages/ui/src/input/engine/Input.ts",
+    "packages/ui/src/input/engine/TextArea.ts",
+    "packages/ui/src/input/style/index.ts",
+    "packages/ui/src/input/style/token.ts",
+    "packages/ui/src/input/style/alias-tokens.ts",
+    "packages/ui/src/input/use-input-theme.ts",
+    "packages/ui/src/input/__tests__/sizing.test.ts",
+    "packages/ui/src/input/__tests__/theme.test.ts",
+    "packages/ui/src/input/demo/component-token.vue",
+    "packages/ui/src/input/demo/component-token.md",
+    "packages/ui/src/input/index.zh-CN.md",
+    "packages/ui/src/input/index.en-US.md",
+    "tests/browser/input-sizing-contracts.mjs",
+    "tests/browser/fixtures/InputSizingContracts.mjs",
+    "docs/migrations/input-sizing-contracts.md",
+    "docs/audit/2026-10-29-input-sizing-audit.md",
+    "packages/ui/src/input/engine/calculate-node-height.ts",
+    "packages/ui/src/input/__tests__/autosize-style.test.ts",
+    "docs/audit/evidence/input-sizing-source-freeze.json"
+  ],
+  "ownedFileHashes": {
+    "packages/ui/src/input/Group.ts": "5d846eabae10a1d18266c2ee1700438d61b00291fcfc028bdb03673396cbd2c2",
+    "packages/ui/src/input/Input.ts": "9f9ad663eefdb4f6adf35cba5b5b711e84691100c0d12fcd07216a95b9e35c76",
+    "packages/ui/src/input/OTP.ts": "c306c9712506e2985655c0e3eb20d15c1868c1174916434f1868d2d0be162519",
+    "packages/ui/src/input/Password.ts": "fa8f85c287c48e57c741f1889ee2fd9096564a1692ad7903fddbe77496131a22",
+    "packages/ui/src/input/TextArea.ts": "bf7832b71a5867a32cb07691f6425619cdce1ed24f38949d9e93011ab7461ebe",
+    "packages/ui/src/input/engine/BaseInput.ts": "0b6ccff5f0072aaa88277d898b3e349533121f46f66cadd852fdaf3174c7c8f8",
+    "packages/ui/src/input/engine/Input.ts": "6e32279b60579b2d2c5d504f75abb0d1c29b384bf79f2a6d5b8f223dc2cbaa9f",
+    "packages/ui/src/input/engine/TextArea.ts": "9e410d60c3bae7b493f327c0885a4820c09fd3db851e095639385f5fd0d184d8",
+    "packages/ui/src/input/style/index.ts": "a9b2671778a38b82fc47b7d4334f3b6a2c8395da0ed352c126c6d37338a8a33c",
+    "packages/ui/src/input/style/token.ts": "f20ab59e8064dc648ae2773fb5dc53137da3c7fd48ed3e6ee949b7a2dcf0ef46",
+    "packages/ui/src/input/style/alias-tokens.ts": "fe69d2397bb6e3e1cbaafb2f02ae3b8a5c6d98ebdf2c056a47c77cab7831adb2",
+    "packages/ui/src/input/use-input-theme.ts": "39ec8ecc8ed022ef4598189fa5f52400bf6b49ce8bec854de27555fc35c0b8f2",
+    "packages/ui/src/input/__tests__/sizing.test.ts": "890670020a4798e540d235812d4a5a25cbf8a56564a968a4ddc5bf3abbc44b81",
+    "packages/ui/src/input/__tests__/theme.test.ts": "7b7d33def7483e0dfd49db60eab0c9d4bfb9a8876f926acc6840bc3b386b5b4b",
+    "packages/ui/src/input/demo/component-token.vue": "a3f679c732a0a6e3f96dfacb5a2d3810077dc4ed17b3ad69f0880e217a2dee8a",
+    "packages/ui/src/input/demo/component-token.md": "704eb4480197002a0fe410baadeadc83c5087f96568b24b8ba47bb972c57cb86",
+    "packages/ui/src/input/index.zh-CN.md": "2b9e3349a19db4cafddf696777cc87ddcf6bd8a29abe4ccee3316130aa5127b3",
+    "packages/ui/src/input/index.en-US.md": "76c437fdcae8ff6b8c5adab7eeec035583bd10ef8c894e11f257d983e1ea25aa",
+    "tests/browser/input-sizing-contracts.mjs": "df94de96ce9f354601d95bed2b689625f45567f8c2bffadf4da079a4ad53e4f7",
+    "tests/browser/fixtures/InputSizingContracts.mjs": "c18b3ac040779c630efe9c0ae60986b4243c3bc73ee366afc5f68f61e879447a",
+    "docs/migrations/input-sizing-contracts.md": "ed14f2b42f2279d43dec8dca7ef6bbe352f954dc75a475e3ca28297cb5855796",
+    "docs/audit/2026-10-29-input-sizing-audit.md": "669a590a2266518b57f77fb18f81dda1cdf62c334febdab0baac0457c3d3586f",
+    "packages/ui/src/input/engine/calculate-node-height.ts": "57079eac4889682059632f189622c97e8cb2f43e5edc6cc137ece88e04a60380",
+    "packages/ui/src/input/__tests__/autosize-style.test.ts": "741596886f02c1bf5e00b2feba1481dcaabf54cca11bf80533c3b605de8fcbee"
+  },
+  "packageBuildRun": false,
+  "distWritten": false,
+  "registryEdited": false,
+  "sharedSpaceButtonThemeOrSemanticEdited": false,
+  "pendingParent": [
+    "Commit/push authorized scope and build Theme then UI in isolated published checkout.",
+    "Run published browser, declarations/L7, formal visual, Docs and final repository-wide same-commit gates."
+  ],
+  "nativeGeometryExamples": [
+    {
+      "stage": "1280-default-small",
+      "family": "plain",
+      "font": "14px",
+      "lineHeight": "22px",
+      "paddingTop": "0px",
+      "rootHeight": 24,
+      "searchButtonHeight": null
+    },
+    {
+      "stage": "1280-default-small",
+      "family": "search",
+      "font": "14px",
+      "lineHeight": "22px",
+      "paddingTop": "0px",
+      "rootHeight": 24,
+      "searchButtonHeight": 24
+    },
+    {
+      "stage": "1280-default-middle",
+      "family": "plain",
+      "font": "14px",
+      "lineHeight": "22px",
+      "paddingTop": "4px",
+      "rootHeight": 32,
+      "searchButtonHeight": null
+    },
+    {
+      "stage": "1280-default-middle",
+      "family": "search",
+      "font": "14px",
+      "lineHeight": "22px",
+      "paddingTop": "4px",
+      "rootHeight": 32,
+      "searchButtonHeight": 32
+    },
+    {
+      "stage": "1280-default-large",
+      "family": "plain",
+      "font": "16px",
+      "lineHeight": "24px",
+      "paddingTop": "7px",
+      "rootHeight": 40,
+      "searchButtonHeight": null
+    },
+    {
+      "stage": "1280-default-large",
+      "family": "search",
+      "font": "16px",
+      "lineHeight": "24px",
+      "paddingTop": "7px",
+      "rootHeight": 40,
+      "searchButtonHeight": 40
+    },
+    {
+      "stage": "1280-compact-small",
+      "family": "plain",
+      "font": "12px",
+      "lineHeight": "20px",
+      "paddingTop": "0px",
+      "rootHeight": 22,
+      "searchButtonHeight": null
+    },
+    {
+      "stage": "1280-compact-small",
+      "family": "search",
+      "font": "12px",
+      "lineHeight": "20px",
+      "paddingTop": "0px",
+      "rootHeight": 22,
+      "searchButtonHeight": 22
+    },
+    {
+      "stage": "1280-compact-middle",
+      "family": "plain",
+      "font": "12px",
+      "lineHeight": "20px",
+      "paddingTop": "3px",
+      "rootHeight": 28,
+      "searchButtonHeight": null
+    },
+    {
+      "stage": "1280-compact-middle",
+      "family": "search",
+      "font": "12px",
+      "lineHeight": "20px",
+      "paddingTop": "3px",
+      "rootHeight": 28,
+      "searchButtonHeight": 28
+    },
+    {
+      "stage": "1280-compact-large",
+      "family": "plain",
+      "font": "14px",
+      "lineHeight": "22px",
+      "paddingTop": "5.5px",
+      "rootHeight": 35,
+      "searchButtonHeight": null
+    },
+    {
+      "stage": "1280-compact-large",
+      "family": "search",
+      "font": "14px",
+      "lineHeight": "22px",
+      "paddingTop": "5.5px",
+      "rootHeight": 35,
+      "searchButtonHeight": 35
+    }
+  ],
+  "newBoundaryResults": [
+    {
+      "name": "native ancestor sizing-native-font changes font",
+      "actual": "24px",
+      "expected": "24px",
+      "passed": true
+    },
+    {
+      "name": "native ancestor sizing-native-font keeps width",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "native ancestor sizing-native-font remeasures without clipping",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "native ancestor sizing-native-font preserves draft/focus/selection",
+      "actual": [
+        "First line\nSecond line",
+        true,
+        [
+          2,
+          7
+        ]
+      ],
+      "expected": [
+        "First line\nSecond line",
+        true,
+        [
+          2,
+          7
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "name": "native ancestor sizing-native-roomy changes font",
+      "actual": "24px",
+      "expected": "24px",
+      "passed": true
+    },
+    {
+      "name": "native ancestor sizing-native-roomy keeps width",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "native ancestor sizing-native-roomy remeasures without clipping",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "native ancestor sizing-native-roomy preserves draft/focus/selection",
+      "actual": [
+        "First line\nSecond line",
+        true,
+        [
+          2,
+          7
+        ]
+      ],
+      "expected": [
+        "First line\nSecond line",
+        true,
+        [
+          2,
+          7
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "name": "native ancestor inline variables remeasure at the same width",
+      "actual": [
+        true,
+        true,
+        true
+      ],
+      "expected": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "name": "unrelated ancestor mutations do not emit another resize",
+      "actual": 86,
+      "expected": 86,
+      "passed": true
+    },
+    {
+      "name": "native reparent applies its actual sizing without clipping",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "new ancestor remains observed after reparent",
+      "actual": [
+        "28px",
+        true,
+        true
+      ],
+      "expected": [
+        "28px",
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "name": "native ancestor change keeps the other instance independent",
+      "actual": {
+        "height": 54,
+        "client": 52,
+        "scroll": 52,
+        "value": "Independent\nDraft",
+        "events": 1
+      },
+      "expected": {
+        "height": 54,
+        "client": 52,
+        "scroll": 52,
+        "value": "Independent\nDraft",
+        "events": 1
+      },
+      "passed": true
+    },
+    {
+      "name": "conditional primary unmount keeps the peer",
+      "actual": 1,
+      "expected": 1,
+      "passed": true
+    },
+    {
+      "name": "surviving instance still observes its own style",
+      "actual": [
+        true,
+        true,
+        "Independent\nDraft"
+      ],
+      "expected": [
+        true,
+        true,
+        "Independent\nDraft"
+      ],
+      "passed": true
+    },
+    {
+      "name": "remounted instance observes native ancestor 0",
+      "actual": [
+        "24px",
+        true
+      ],
+      "expected": [
+        "24px",
+        true
+      ],
+      "passed": true
+    },
+    {
+      "name": "remounted instance observes native ancestor 1",
+      "actual": [
+        "24px",
+        true
+      ],
+      "expected": [
+        "24px",
+        true
+      ],
+      "passed": true
+    },
+    {
+      "name": "real Demo ancestor class changes actual textarea font",
+      "actual": "20px",
+      "expected": "20px",
+      "passed": true
+    },
+    {
+      "name": "real Demo ancestor class changes actual textarea padding",
+      "actual": "10px",
+      "expected": "10px",
+      "passed": true
+    },
+    {
+      "name": "real Demo ancestor class remeasures without clipping",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "real Demo ancestor class keeps edited content",
+      "actual": "业务草稿保留，改变当前主题和内边距。",
+      "expected": "业务草稿保留，改变当前主题和内边距。",
+      "passed": true
+    }
+  ],
+  "sourceCollectionHash": "f5c8e35479f5a94119a4e930edb1005a2f4142a33720d8c1bbd5c3d3df7c7883",
+  "sourceCollectionRecipe": "sha256(JSON.stringify(Object.entries(sourceHashes).sort())) with compact UTF-8 JSON",
+  "sourceFreezeDescriptor": {
+    "path": "/tmp/apollo-input-sizing-sourceactive-freeze/freeze-priority.json",
+    "sha256": "34ee5c6c0eb6d8a23ae00e457cf1a4bb94151c413690d07f1b6bb3a8239e11b6"
+  },
+  "sourceActiveRevision": {
+    "previousPhaseBrowserPerMode": 1028,
+    "previousManifest": "/tmp/apollo-input-sizing-review/source-freeze-before-sourceactive.json",
+    "previousManifestSHA": "bea1bf7da2ce2316de4d6eb24cc8d46e6314580df8dad8dfbc3101dbce3ef95e",
+    "consumerCondition": "Exit only when theme.sourceActive?.value === false.",
+    "producerFilesReadOnly": [
+      "packages/theme/src/vue.ts",
+      "packages/ui/src/config-provider/ConfigProvider.ts"
+    ],
+    "newPublicFields": 0,
+    "existingInputFields": 19,
+    "repositoryRed": {
+      "tests": 24,
+      "failed": 5,
+      "normal": 19,
+      "log": "/tmp/apollo-input-sizing-review/sourceactive-repo-red.log"
+    },
+    "browserRed": {
+      "total": 1069,
+      "failed": 30,
+      "normal": 1039,
+      "artifact": "/tmp/apollo-input-sizing-sourceactive-red/source-all-evidence.json",
+      "sha256": "45efb0efc314b7734111d12625acfc797e038b76f290e15d4d838da114fa7569",
+      "readersExited": true,
+      "errors": [],
+      "warnings": []
+    },
+    "sourceBoundaries": [
+      "Explicit empty ThemeProvider/factory/legacy provided contexts reset defaults.",
+      "No-theme ConfigProvider without a source preserves CSS-only aliases.",
+      "Nearest active empty context passes through ConfigProvider.",
+      "Outer compact ConfigProvider -> empty ThemeProvider -> no-theme ConfigProvider resolves default Input/TextArea.",
+      "Activating/removing CP source preserves native node, draft, focus and selection."
+    ]
+  },
+  "historicalDefaultTypeGate": {
+    "passed": false,
+    "inputFileExecutions": 4,
+    "inputAssertionsPassed": 32,
+    "inputTypeErrors": 0,
+    "unhandledSourceErrors": 2,
+    "log": "/tmp/apollo-input-sizing-review/peer-types-final.log",
+    "sha256": "da6205fdbb389245c4a59e926bbd716de2b686acbd22f4fd1499fe4817b86fa6",
+    "diagnostics": [
+      {
+        "file": "packages/ui/src/alert/__tests__/contract-audit.test.ts",
+        "line": 44,
+        "message": "Type instantiation is excessively deep and possibly infinite."
+      },
+      {
+        "file": "packages/ui/src/layout/__tests__/contracts.test.ts",
+        "line": 76,
+        "message": "Property exists does not exist on Omit<DOMWrapper<Element>, exists>."
+      }
+    ],
+    "attemptedScopedVitestLog": "/tmp/apollo-input-sizing-review/peer-types-scoped.log",
+    "attemptedScopedVitestPassed": false,
+    "sourceErrorsIgnored": false,
+    "otherOwnerFilesEdited": false
+  },
+  "defaultTypeGate": {
+    "passed": true,
+    "exit": 0,
+    "inputFileExecutions": 4,
+    "inputAssertionsPassed": 32,
+    "inputTypeErrors": 0,
+    "unhandledSourceErrors": 0,
+    "log": "/tmp/apollo-input-sizing-review/sourceactive-types.log",
+    "sha256": "cc7844c79e5c88267de4c4337573120481f7a9075598592c2c4e5a3a5a1a1c76",
+    "sourceErrorsIgnored": false
+  },
+  "independentFinalReview": {
+    "owner": "Read-only peer",
+    "handoff": "/tmp/apollo-input-sizing-peer-final/handoff.json",
+    "sha256": "241627dc379ddb5fedc458f9410ad66720393d5696d33589fb0edf1f66c4a313",
+    "report": "/tmp/apollo-input-sizing-peer-final/review.md",
+    "reportSHA256": "fdd03eaf240080a92e77f79566af5e5e9470f02125a981628680ed6a0fba4131",
+    "results": {
+      "reproduce": {
+        "total": 20,
+        "passed": 20,
+        "failed": 0,
+        "errors": [],
+        "warnings": [],
+        "readersExited": true
+      },
+      "font-only-expanded": {
+        "total": 22,
+        "passed": 22,
+        "failed": 0,
+        "errors": [],
+        "warnings": [],
+        "readersExited": true
+      },
+      "boundaries": {
+        "total": 144,
+        "passed": 144,
+        "failed": 0,
+        "errors": [],
+        "warnings": [],
+        "readersExited": true
+      },
+      "source-chain": {
+        "total": 80,
+        "passed": 80,
+        "failed": 0,
+        "errors": [],
+        "warnings": [],
+        "readersExited": true
+      }
+    },
+    "commands": [
+      {
+        "cmd": "node /tmp/apollo-input-sizing-peer-final/reproduce.mjs",
+        "exit": 0,
+        "checks": "20/20"
+      },
+      {
+        "cmd": "node /tmp/apollo-input-sizing-peer-final/font-only-expanded.mjs",
+        "exit": 0,
+        "checks": "22/22"
+      },
+      {
+        "cmd": "node /tmp/apollo-input-sizing-peer-final/boundaries.mjs",
+        "exit": 0,
+        "checks": "144/144"
+      },
+      {
+        "cmd": "node /tmp/apollo-input-sizing-peer-final/source-chain.mjs",
+        "exit": 0,
+        "checks": "80/80"
+      },
+      {
+        "cmd": "node /tmp/apollo-input-sizing-peer-final/verify-current.mjs",
+        "exit": 0,
+        "purpose": "All JSON predicates + source/bundle/dist fingerprints"
+      }
+    ],
+    "sourceCollectionHash": "f5c8e35479f5a94119a4e930edb1005a2f4142a33720d8c1bbd5c3d3df7c7883",
+    "sourceAndBundlesUnchanged": true,
+    "readersExited": true,
+    "overlappingSetsNotAdded": true
+  },
+  "registryRegistration": {
+    "performedByThisTask": false,
+    "owner": "Root",
+    "existingInputFields": 19,
+    "newInputFields": 0,
+    "reportedRegistryCounts": {
+      "tokens": 551,
+      "groups": 56
+    },
+    "reportedValidation": "All registry checks passed."
+  },
+  "fixtureSourceHashes": {
+    "tests/browser/fixtures/InputSizingContracts.mjs": "c18b3ac040779c630efe9c0ae60986b4243c3bc73ee366afc5f68f61e879447a",
+    "tests/browser/input-sizing-contracts.mjs": "df94de96ce9f354601d95bed2b689625f45567f8c2bffadf4da079a4ad53e4f7"
+  }
+}

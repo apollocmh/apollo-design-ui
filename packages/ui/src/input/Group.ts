@@ -10,8 +10,9 @@
 import { useDevWarning } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, provide } from 'vue';
 import { useComponentConfig, useDirection } from '../config-provider/context';
+import { useSize } from '../config-provider/size-context';
 import { formItemInputContextKey, useFormItemInputContext } from '../form/context';
-import { SpaceCompact } from '../space';
+import { SpaceCompact, useCompactItemContext } from '../space';
 import type { InputGroupProps } from './interface';
 
 export const GroupComponent = defineComponent({
@@ -31,6 +32,8 @@ export const GroupComponent = defineComponent({
     const formItemContext = useFormItemInputContext();
 
     const prefixCls = computed(() => getPrefixCls('input-group', props.prefixCls));
+    const { compactSize } = useCompactItemContext(prefixCls, () => direction.value);
+    const size = useSize((provider) => props.size ?? compactSize.value ?? provider);
 
     /**
      * Form.Item 上下文要**降级**：group 内 `isFormItemInput = false`。
@@ -71,6 +74,7 @@ export const GroupComponent = defineComponent({
         SpaceCompact,
         {
           class: cls.value,
+          size: size.value,
           style: attrs.style,
           ...restAttrs,
         } as never,

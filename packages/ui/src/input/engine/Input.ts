@@ -42,6 +42,7 @@ export const RcInput = defineComponent({
     count: { type: Object as PropType<InputCountProp>, default: undefined },
     className: { type: [String, Array, Object] as PropType<unknown>, default: undefined },
     style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
+    themeStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
     classNames: {
       type: Object as PropType<Record<string, string | undefined>>,
       default: undefined,
@@ -273,6 +274,7 @@ export const RcInput = defineComponent({
           addonAfter: props.addonAfter,
           className: [props.className, outOfRangeCls],
           style: props.style,
+          themeStyle: props.themeStyle,
           disabled: props.disabled,
           readOnly: props.readOnly,
           focused: focused.value,

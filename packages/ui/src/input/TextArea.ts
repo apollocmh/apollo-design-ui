@@ -27,7 +27,11 @@ import {
 } from 'vue';
 import { useAllowClear } from '../_internal/use-allow-clear';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig, useDirection } from '../config-provider/context';
+import {
+  type ComponentStyleConfig,
+  useComponentConfig,
+  useDirection,
+} from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { type SizeType, useSize } from '../config-provider/size-context';
 import { getMergedStatus, useFormItemInputContext } from '../form/context';
@@ -41,6 +45,7 @@ import type {
   TextAreaSemanticClassNames,
   TextAreaSemanticStyles,
 } from './interface';
+import { useInputTheme } from './use-input-theme';
 
 function asNode(value: VNodeChild | Component | null | undefined): VNodeChild | undefined {
   if (value === null || value === undefined) return undefined;
@@ -93,13 +98,14 @@ export const TextAreaComponent = defineComponent({
     const devWarning = useDevWarning('TextArea');
     devWarning.deprecated(props.bordered === undefined, 'bordered', 'variant');
 
-    const context = useComponentConfig('textArea');
+    const context = useComponentConfig<ComponentStyleConfig & Record<string, unknown>>('textArea');
     const { getPrefixCls } = context;
     const direction = useDirection();
     const contextDisabled = useDisabled();
     const formItemContext = useFormItemInputContext();
 
     const prefixCls = computed(() => getPrefixCls('input', props.prefixCls));
+    const themeStyle = useInputTheme(() => prefixCls.value);
     const { compactSize, compactItemClassnames } = useCompactItemContext(
       prefixCls,
       () => direction.value,
@@ -127,7 +133,7 @@ export const TextAreaComponent = defineComponent({
       [() => context.classNames as TextAreaSemanticClassNames | undefined, () => props.classNames],
       [
         () => context.styles as TextAreaSemanticStyles | undefined,
-        () => semanticRootStyle(undefined),
+        () => semanticRootStyle(context.style),
         () => props.styles,
         () => semanticRootStyle(attrs.style as CSSProperties),
       ],
@@ -223,6 +229,7 @@ export const TextAreaComponent = defineComponent({
           { [`${p}-textarea-affix-wrapper-resize-dirty`]: resizeDirty.value },
         ],
         style: mergedStyles.value.root,
+        themeStyle: themeStyle.value,
         styles: mergedStyles.value as never,
         classNames: {
           ...mergedClassNames.value,

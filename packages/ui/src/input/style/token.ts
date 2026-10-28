@@ -1,23 +1,7 @@
 /**
- * Input 的 Component Token（G3 产物）。
- *
- * 契约来源：antd 6.6.4 的 `es/input/style/token.js`（`initInputToken` +
- * `initComponentToken`）。registry 数据：input 组 token 数 = 0（gen-registry
- * 未展开继承面；实际 antd ComponentToken 为 17 项 + initInputToken 的
- * inputAffixPadding）。
- *
- * ── 双轨制（divider / collapse / input-number 范本）──────────────────────────
- *
- * - **别名派生**（addonBg / activeBorderColor / hoverBorderColor / hoverBg /
- *   activeBg）：声明落 `var(--apollo-*)`，随主题自适应（B7 可校验）。
- * - **构建期解析值**（padding 系算式、activeShadow 的模板串、lineWidthFocus 的
- *   条件式）：静态 CSS 没有运行时 cssinjs 的 mergeToken，构建期算成常量
- *   （collapse D46/D50 同判）。
- *
- * 注：input 族基础算式（paddingBlock 系 / paddingInline 系 / inputFontSize 系）
- * 与 `input-number/style/token.ts` 的同名实现同式 —— antd 上游就是每个组件
- * 各自调 `initComponentToken`（token.js 共享但产物逐组件展开），本仓按组件
- * 隔离同构复刻，不做跨组件 import（H11）。
+ * Input 的 19 个既有 Component Token 与公开数值准备函数。
+ * 数值公式保留历史兼容；实际静态 CSS 由当前 Alias 派生，theme.components.Input
+ * 的显式值由所属 composable 传给逻辑根。最初参考 antd 6.6.4 的准备算法。
  */
 
 import { getDesignToken, token2CSSVar } from '@apollo-design/theme';
@@ -87,7 +71,7 @@ export interface InputSeedToken {
   colorWarningOutline: string;
 }
 
-/** 构建期算好全部值（对拍 antd `initInputToken` + `initComponentToken`）。 */
+/** 根据调用方数值快照准备字段；不决定组件当前 CSS 的主题默认值。 */
 export function prepareComponentToken(token: InputSeedToken): ComponentToken {
   const inputFontSize = token.fontSize;
   const inputFontSizeSM = inputFontSize;
@@ -133,7 +117,7 @@ let tokenCache: ComponentToken | null = null;
 /** 构建期 token 值（缓存；首次调用时读主题默认 seed）。 */
 export function inputTokenValues(): ComponentToken {
   if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken() as unknown as InputSeedToken);
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }

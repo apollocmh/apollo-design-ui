@@ -1,64 +1,51 @@
 /**
- * Input 的样式生成（G4 产物）。
- *
- * 契约来源：antd 6.6.4 的 es/input/style（index.js + variants.js + textarea.js），
- * **逐条对拍 extractStyle 真实产物**（kept.length 条规则，覆盖 Input / TextArea /
- * Password / Group 家族；Search / OTP 的规则不在本轮 DOM 范围内），
- * 不是照源码推演（CHECKLIST #2）。
- *
- * ── 与 antd 产物的结构性差异 ──────────────────────────────────────────────
- *
- * 1. 无 hash / css-var 包裹类（D5）：antd 产物里 `.ant-input-css-var` 与
- *    `.ant-input` 双轨重复段只保留普通轨；Component Token 声明块（antd 挂在
- *    `.css-var-root.ant-input`）改挂在 `.apollo-input` 根规则。
- * 2. 全部 `--ant-*` 换成 `--apollo-*`（全局 alias，随主题自适应）与
- *    `--apollo-input-*`（组件 token，见 genTokenDecls）。构建期算式值
- *    （activeShadow 组合串、padding 算式）落常量（collapse D46/D50 同判）。
- * 3. 规则体由产物机械转换（184 条保持原序），手写段只有根规则的 token 声明。
- *    选择器形态（复合 vs 后代）与产物逐字节一致 —— CHECKLIST #71/#75 的
- *    教训：形态错一条，浏览器整条静默丢弃。
+ * Input 家族的静态样式。规则最初参考 antd 6.6.4 的样式产物，当前行为以
+ * Apollo 的公开契约和回归为准。组件变量只在逻辑根声明，内部控制节点继承；
+ * 默认字号和 padding 消费当前 Alias，显式组件变量仍可覆盖默认派生。
  *
  * ⚠️ rootPrefixCls 仅支持默认 'apollo'：规则体是静态移植（var 名已含根前缀），
  *    参数为 API 对齐保留（input-number 同构）。
  */
 
 import { token2CSSVar } from '@apollo-design/theme';
-import { inputTokenValues } from './token';
 
 /** token 名 → `var(--apollo-*)`。 */
 const v = (token: string): string => `var(${token2CSSVar(token)})`;
 
 /**
- * Component Token 声明块（对拍 antd 6.6.4 的 `.css-var-root.ant-input` 块：
- * padding-block 4px / 0px / 7px，padding-inline 11px / 7px / 11px）。
+ * 当前 Alias 与私有字号共同派生非负 padding；不把自然行盒压成固定高度。
+ * 默认主题仍得 4/0/7px，当前主题和显式字体则按实际行盒重新计算。
  */
 export function genTokenDecls(rootPrefixCls: string): string[] {
-  const t = inputTokenValues();
+  const input = (name: string) => `var(--${rootPrefixCls}-input-${name})`;
+  const block = (height: string, font: string, line = 'lineHeight') =>
+    `max(0px,calc((${v(height)} - ${input(font)} * ${v(line)}) / 2 - ${v('lineWidth')}))`;
   return [
-    `  --${rootPrefixCls}-input-line-width-focus:${t.lineWidthFocus};`,
-    `  --${rootPrefixCls}-input-padding-block:${t.paddingBlock};`,
-    `  --${rootPrefixCls}-input-padding-block-sm:${t.paddingBlockSM};`,
-    `  --${rootPrefixCls}-input-padding-block-lg:${t.paddingBlockLG};`,
-    `  --${rootPrefixCls}-input-padding-inline:${t.paddingInline};`,
-    `  --${rootPrefixCls}-input-padding-inline-sm:${t.paddingInlineSM};`,
-    `  --${rootPrefixCls}-input-padding-inline-lg:${t.paddingInlineLG};`,
+    `  --${rootPrefixCls}-input-line-width-focus:${v('lineWidth')};`,
+    `  --${rootPrefixCls}-input-padding-block:${block('controlHeight', 'input-font-size')};`,
+    `  --${rootPrefixCls}-input-padding-block-sm:${block('controlHeightSM', 'input-font-size-sm')};`,
+    `  --${rootPrefixCls}-input-padding-block-lg:${block('controlHeightLG', 'input-font-size-lg', 'lineHeightLG')};`,
+    `  --${rootPrefixCls}-input-padding-inline:max(0px,calc(${v('paddingSM')} - ${v('lineWidth')}));`,
+    `  --${rootPrefixCls}-input-padding-inline-sm:max(0px,calc(${v('controlPaddingHorizontalSM')} - ${v('lineWidth')}));`,
+    `  --${rootPrefixCls}-input-padding-inline-lg:max(0px,calc(${v('controlPaddingHorizontal')} - ${v('lineWidth')}));`,
     `  --${rootPrefixCls}-input-addon-bg:${v('colorFillAlter')};`,
     `  --${rootPrefixCls}-input-active-border-color:${v('colorPrimary')};`,
     `  --${rootPrefixCls}-input-hover-border-color:${v('colorPrimaryHover')};`,
-    `  --${rootPrefixCls}-input-active-shadow:0 0 0 ${v('controlOutlineWidth')}px ${v('controlOutline')};`,
-    `  --${rootPrefixCls}-input-error-active-shadow:0 0 0 ${v('controlOutlineWidth')}px ${v('colorErrorOutline')};`,
-    `  --${rootPrefixCls}-input-warning-active-shadow:0 0 0 ${v('controlOutlineWidth')}px ${v('colorWarningOutline')};`,
+    `  --${rootPrefixCls}-input-active-shadow:0 0 0 ${v('controlOutlineWidth')} ${v('controlOutline')};`,
+    `  --${rootPrefixCls}-input-error-active-shadow:0 0 0 ${v('controlOutlineWidth')} ${v('colorErrorOutline')};`,
+    `  --${rootPrefixCls}-input-warning-active-shadow:0 0 0 ${v('controlOutlineWidth')} ${v('colorWarningOutline')};`,
     `  --${rootPrefixCls}-input-hover-bg:${v('colorBgContainer')};`,
     `  --${rootPrefixCls}-input-active-bg:${v('colorBgContainer')};`,
-    `  --${rootPrefixCls}-input-input-font-size:${t.inputFontSize};`,
-    `  --${rootPrefixCls}-input-input-font-size-lg:${t.inputFontSizeLG};`,
-    `  --${rootPrefixCls}-input-input-font-size-sm:${t.inputFontSizeSM};`,
+    `  --${rootPrefixCls}-input-input-font-size:${v('fontSize')};`,
+    `  --${rootPrefixCls}-input-input-font-size-lg:${v('fontSizeLG')};`,
+    `  --${rootPrefixCls}-input-input-font-size-sm:${v('fontSize')};`,
+    `  --${rootPrefixCls}-input-input-affix-padding:${v('paddingXXS')};`,
   ];
 }
 
 /** antd 产物机械转换段（201 条，原序、sel+body 去重；同选择器多条合法 —— antd 分段发规则）。 */
 const RULES = String.raw`
-textarea.apollo-input{max-width:100%;height:auto;min-height:var(--apollo-control-height);line-height:var(--apollo-line-height);vertical-align:bottom;transition:all var(--apollo-motion-duration-slow);resize:vertical;}
+textarea.apollo-input{max-width:100%;height:auto;min-height:var(--apollo-control-height);vertical-align:bottom;transition:all var(--apollo-motion-duration-slow);resize:vertical;}
 
 textarea.apollo-input.apollo-input-mouse-active{transition:all var(--apollo-motion-duration-slow),height 0s,width 0s;}
 
@@ -274,9 +261,9 @@ input.apollo-input-filled.apollo-input-status-warning:not(.apollo-input-disabled
 
 .apollo-input-affix-wrapper .apollo-input-show-count-has-suffix{margin-inline-end:var(--apollo-padding-xxs);}
 
-.apollo-input-affix-wrapper .apollo-input-prefix{margin-inline-end:var(--apollo-padding-xxs);}
+.apollo-input-affix-wrapper .apollo-input-prefix{margin-inline-end:var(--apollo-input-input-affix-padding);}
 
-.apollo-input-affix-wrapper .apollo-input-suffix{margin-inline-start:var(--apollo-padding-xxs);}
+.apollo-input-affix-wrapper .apollo-input-suffix{margin-inline-start:var(--apollo-input-input-affix-padding);}
 
 .apollo-input-affix-wrapper .apollo-input-password-icon{display:inline-flex;color:var(--apollo-color-icon);cursor:pointer;transition:all var(--apollo-motion-duration-slow);}
 
@@ -306,13 +293,9 @@ input.apollo-input-filled.apollo-input-status-warning:not(.apollo-input-disabled
 
 .apollo-input-group[class*='col-']:last-child{padding-inline-end:0;}
 
-.apollo-input-group-lg .apollo-input,.apollo-input-group-lg>.apollo-input-group-addon{padding:var(--apollo-input-padding-block-lg) var(--apollo-input-padding-inline-lg);font-size:var(--apollo-input-input-font-size-lg);line-height:var(--apollo-line-height-lg);border-radius:var(--apollo-border-radius-lg);}
+.apollo-input-group-lg>.apollo-input-group-addon{padding:var(--apollo-input-padding-block-lg) var(--apollo-input-padding-inline-lg);font-size:var(--apollo-input-input-font-size-lg);line-height:var(--apollo-line-height-lg);border-radius:var(--apollo-border-radius-lg);}
 
-.apollo-input-group-sm .apollo-input,.apollo-input-group-sm>.apollo-input-group-addon{padding:var(--apollo-input-padding-block-sm) var(--apollo-input-padding-inline-sm);font-size:var(--apollo-input-input-font-size-sm);border-radius:var(--apollo-border-radius-sm);}
-
-.apollo-input-group-lg .apollo-select-single{height:var(--apollo-control-height-lg);}
-
-.apollo-input-group-sm .apollo-select-single{height:var(--apollo-control-height-sm);}
+.apollo-input-group-sm>.apollo-input-group-addon{padding:var(--apollo-input-padding-block-sm) var(--apollo-input-padding-inline-sm);font-size:var(--apollo-input-input-font-size-sm);border-radius:var(--apollo-border-radius-sm);}
 
 .apollo-input-group >.apollo-input{display:table-cell;}
 
@@ -471,7 +454,7 @@ function genSearchOTPStyles(rootPrefixCls: string): string {
   const p = rootPrefixCls;
   return `.${p}-input-search{width:100%;font-size:var(--apollo-font-size);font-family:var(--apollo-font-family);}
 
-.${p}-input-search .${p}-input-search-btn{height:var(--apollo-control-height);}
+.${p}-input-search .${p}-input-search-btn{height:auto;align-self:stretch;}
 
 .${p}-input-search.${p}-input-search-with-button .${p}-input-search-btn.${p}-btn-icon-only{padding-inline:calc(var(--apollo-padding-content-horizontal) - var(--apollo-line-width));width:auto;}
 
@@ -485,11 +468,11 @@ function genSearchOTPStyles(rootPrefixCls: string): string {
 
 .${p}-input-search .${p}-input-search-btn-filled:not(:disabled):active{background:var(--apollo-color-fill);}
 
-.${p}-input-search.${p}-input-search-large .${p}-input-search-btn{height:var(--apollo-control-height-lg);}
+.${p}-input-search.${p}-input-search-large .${p}-input-search-btn{height:auto;}
 
 .${p}-input-search.${p}-input-search-large .${p}-input-search-btn.${p}-btn-icon-only{width:var(--apollo-control-height-lg);}
 
-.${p}-input-search.${p}-input-search-small .${p}-input-search-btn{height:var(--apollo-control-height-sm);min-height:var(--apollo-control-height-sm);}
+.${p}-input-search.${p}-input-search-small .${p}-input-search-btn{height:auto;}
 
 .${p}-input-search.${p}-input-search-small .${p}-input-search-btn.${p}-btn-icon-only{width:var(--apollo-control-height-sm);min-width:var(--apollo-control-height-sm);}
 
@@ -518,14 +501,12 @@ function genSearchOTPStyles(rootPrefixCls: string): string {
 
 /** Input 家族样式（Input / TextArea / Password / Group / Search / OTP）。 */
 export function genInputStyle(rootPrefixCls: string = 'apollo'): string {
-  // ⚠️ antd 把组件变量声明在每个 css-var 根上（useCSSVarCls：裸 input / affix
-  // wrapper / group wrapper 都带 -css-var 类）—— 本仓无 -css-var 类，等价做法是
-  // 声明块覆盖全部三种根形态（L6 实测：只挂 .{p}-input 时 wrapper 根的
-  // padding:var(...) 整体失效回退 0、字号回落继承 16px —— CHECKLIST #77）。
+  // 只排除本组件直接内部结构；嵌套独立 Input 仍有自己的默认值。
+  // :where 保持默认规则的一类选择器权重，既有用户 stylesheet 覆盖仍有效。
   const d = genTokenDecls(rootPrefixCls).join('');
   const decls = [
-    `.${rootPrefixCls}-input{${d}}`,
-    `.${rootPrefixCls}-input-affix-wrapper{${d}}`,
+    `.${rootPrefixCls}-input:where(:not(.${rootPrefixCls}-input-affix-wrapper > .${rootPrefixCls}-input):not(.${rootPrefixCls}-input-group-wrapper > .${rootPrefixCls}-input-wrapper > .${rootPrefixCls}-input)){${d}}`,
+    `.${rootPrefixCls}-input-affix-wrapper:where(:not(.${rootPrefixCls}-input-group-wrapper > .${rootPrefixCls}-input-wrapper > .${rootPrefixCls}-input-affix-wrapper)){${d}}`,
     `.${rootPrefixCls}-input-group-wrapper{${d}}`,
   ].join('\n\n');
   return `${decls}

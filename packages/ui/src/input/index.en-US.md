@@ -101,6 +101,16 @@ Semantic slots: `{ root, input, prefix, suffix, clear, count, button }`.
 
 Ref: `focus()`, `blur()`, `nativeElement`.
 
+## Theme, sizing and styles
+
+Default fonts, nonnegative padding and focus shadows consume the current theme. `theme.components.Input` supports the existing 19 fields: `lineWidthFocus`, `paddingBlock/SM/LG`, `paddingInline/SM/LG`, `addonBg`, `activeBorderColor`, `hoverBorderColor`, `activeShadow`, `errorActiveShadow`, `warningActiveShadow`, `hoverBg`, `activeBg`, `inputFontSize/SM/LG`, and `inputAffixPadding`. Lengths accept numbers (px) or CSS length strings, including zero. Removing an override restores the current theme default. `inputAffixPadding` controls affix spacing. The public `prepareInputComponentToken` still prepares the supplied numeric snapshot.
+
+Size priority is explicit component `size` → nearest `Space.Compact` / `Input.Group` → `ConfigProvider.componentSize`. Group supplies a default; an explicit child size wins. Input keeps its natural line box and preserves explicit fonts, line heights and padding. Default small/middle/large heights are 24/32/40px; compact heights are 22/28/35px. A natural small line box can exceed `controlHeightSM`. Different control types do not promise identical outer heights. Search's default button stretches naturally without a Search-owned minimum height; caller `height` / `min-height` follows their CSS. TextArea retains rows, its existing minimum height and autoSize constraints. autoSize compares actual sizing inputs after theme, size, control/ancestor class or style, width and completed layout transitions change. Unrelated styles skip measurement; disabling or unmounting cleans up observation and events.
+
+Component theme data is merged before explicit semantic styles and native `style`. Provider `components.input/textArea/inputPassword.style` targets the logical component root; `styles.input` / `styles.textarea` targets the native control. Search and OTP root styles target their container; use `styles.input` for their actual input nodes. Existing stylesheet `--apollo-input-*` overrides remain effective. Explicit component theme fields are supplied as inline variables on the logical root.
+
+An explicit empty `ThemeProvider :theme="{}"` (or `createThemeContext({})`) remains a default theme source and resets defaults within an outer CSS theme scope. Without an active source, Input preserves CSS-only variable inheritance. A ConfigProvider without a theme continues to consume the nearest active source and does not overwrite a CSS-only scope with default data.
+
 ## Notes
 
 - No trimming happens during IME composition; one `change` is emitted on `compositionend`.

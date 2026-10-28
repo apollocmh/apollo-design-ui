@@ -31,7 +31,7 @@ import {
   watch,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig } from '../config-provider/context';
+import { type ComponentStyleConfig, useComponentConfig } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useVariant } from '../form/hooks/useVariants';
 import { useRemovePasswordTimeout } from './hooks/use-remove-password-timeout';
@@ -99,7 +99,9 @@ export const PasswordComponent = defineComponent({
   },
   emits: ['update:value'],
   setup(props, { attrs, emit, expose }) {
-    const context = useComponentConfig('inputPassword');
+    const context = useComponentConfig<ComponentStyleConfig & Record<string, unknown>>(
+      'inputPassword',
+    );
     const { getPrefixCls } = context;
     const contextDisabled = useDisabled();
     const [globalLocale] = useLocale('global');
@@ -122,7 +124,7 @@ export const PasswordComponent = defineComponent({
       [() => context.classNames as PasswordSemanticClassNames | undefined, () => props.classNames],
       [
         () => context.styles as InputSemanticStyles | undefined,
-        () => semanticRootStyle(undefined),
+        () => semanticRootStyle(context.style),
         () => props.styles as InputSemanticStyles | undefined,
         () => semanticRootStyle(attrs.style as CSSProperties),
       ],

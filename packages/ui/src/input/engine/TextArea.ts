@@ -8,12 +8,13 @@
  *  2. `-out-of-range`、`data-count`（字符串形态时挂在 affixWrapper 上）。
  */
 
-import { useControlledValue } from '@apollo-design/utils';
+import { useControlledValue, useResizeObserver } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
   h,
   nextTick,
+  onBeforeUnmount,
   onMounted,
   type PropType,
   ref,
@@ -22,7 +23,11 @@ import {
   watch,
 } from 'vue';
 import { BaseInput, type ClearConfig } from './BaseInput';
-import { calculateAutoSizeStyle, resolveAutoSize } from './calculate-node-height';
+import {
+  calculateAutoSizeStyle,
+  getTextAreaSizingSignature,
+  resolveAutoSize,
+} from './calculate-node-height';
 import { resolveOnChange } from './common-utils';
 import { type InputCountProp, useCount, useCountDisplay, useCountExceed } from './use-count';
 
@@ -49,6 +54,7 @@ export const RcTextArea = defineComponent({
     },
     className: { type: [String, Array, Object] as PropType<unknown>, default: undefined },
     style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
+    themeStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
     classNames: {
       type: Object as PropType<Record<string, string | undefined>>,
       default: undefined,
@@ -118,12 +124,29 @@ export const RcTextArea = defineComponent({
 
     const sizeInfo = computed(() => resolveAutoSize(props.autoSize));
 
+    let disposed = false;
+    let pendingMeasure = false;
+    let measuredWidth: number | undefined;
+    let measuredSignature: string | undefined;
+    let lastResize: { width: number; height: number } | undefined;
+    onBeforeUnmount(() => {
+      disposed = true;
+    });
+
     function syncAutoSize(): void {
       const el = textareaRef.value;
       if (!el || !sizeInfo.value.enabled) {
         autoSizeStyle.value = null;
+        measuredSignature = undefined;
         return;
       }
+      const signature = JSON.stringify([
+        getTextAreaSizingSignature(el),
+        sizeInfo.value.minRows,
+        sizeInfo.value.maxRows,
+      ]);
+      if (signature === measuredSignature) return;
+      measuredSignature = signature;
       const next = calculateAutoSizeStyle(el, sizeInfo.value.minRows, sizeInfo.value.maxRows);
       autoSizeStyle.value = {
         height: `${next.height}px`,
@@ -132,14 +155,97 @@ export const RcTextArea = defineComponent({
         ...(next.maxHeight !== undefined ? { maxHeight: `${next.maxHeight}px` } : {}),
         resize: next.resize,
       };
-      props.onResize?.({ width: el.offsetWidth, height: next.height });
+      const current = { width: el.offsetWidth, height: next.height };
+      if (
+        !lastResize ||
+        lastResize.width !== current.width ||
+        lastResize.height !== current.height
+      ) {
+        lastResize = current;
+        props.onResize?.(current);
+      }
     }
 
-    onMounted(() => {
-      nextTick(syncAutoSize);
-    });
-    watch([formatValue, () => props.autoSize], () => {
-      nextTick(syncAutoSize);
+    function queueMeasure(): void {
+      if (disposed || pendingMeasure) return;
+      pendingMeasure = true;
+      nextTick(() => {
+        pendingMeasure = false;
+        if (!disposed) syncAutoSize();
+      });
+    }
+    onMounted(queueMeasure);
+    watch(
+      [textareaRef, () => sizeInfo.value.enabled],
+      ([el, enabled], _previous, onCleanup) => {
+        measuredSignature = undefined;
+        if (!el || !enabled) return;
+        let ancestors: Element[] = [];
+        const NativeObserver = el.ownerDocument.defaultView?.MutationObserver;
+        const bindAncestors = () => {
+          const next: Element[] = [];
+          for (let node: Element | null = el; node; node = node.parentElement) next.push(node);
+          if (
+            next.length === ancestors.length &&
+            next.every((node, index) => node === ancestors[index])
+          )
+            return;
+          if (ancestors.length) observer?.disconnect();
+          ancestors = next;
+          for (const node of ancestors)
+            observer?.observe(node, { attributes: true, childList: true });
+        };
+        const observer = NativeObserver
+          ? new NativeObserver(() => {
+              if (disposed) return;
+              // Teleport or native moves can change which ancestor supplies a style.
+              bindAncestors();
+              queueMeasure();
+            })
+          : undefined;
+        bindAncestors();
+        // Mutation delivery observes a transition's start; measure its final typography too.
+        const settledEvents = [
+          'transitionend',
+          'transitioncancel',
+          'animationend',
+          'animationcancel',
+        ] as const;
+        const onStyleSettled = (event: Event) => {
+          if (ancestors.some((node) => node === event.target)) queueMeasure();
+        };
+        const doc = el.ownerDocument;
+        for (const name of settledEvents) doc.addEventListener(name, onStyleSettled, true);
+        onCleanup(() => {
+          observer?.disconnect();
+          for (const name of settledEvents) doc.removeEventListener(name, onStyleSettled, true);
+        });
+        queueMeasure();
+      },
+      { flush: 'post' },
+    );
+    watch(
+      [
+        formatValue,
+        () => props.autoSize,
+        () => props.className,
+        () => props.classNames,
+        () => props.styles,
+        () => props.style,
+        () => props.themeStyle,
+      ],
+      queueMeasure,
+      { deep: true, flush: 'post' },
+    );
+    useResizeObserver({
+      target: textareaRef,
+      disabled: () => !sizeInfo.value.enabled,
+      onResize: ({ width }) => {
+        if (width !== measuredWidth) {
+          measuredWidth = width;
+          queueMeasure();
+        }
+      },
     });
 
     function triggerChange(
@@ -276,6 +382,7 @@ export const RcTextArea = defineComponent({
             display.value.isOutOfRange ? `${props.prefixCls}-out-of-range` : undefined,
           ],
           style: props.style,
+          themeStyle: props.themeStyle,
           disabled: props.disabled,
           readOnly: props.readOnly,
           focused: focused.value,
