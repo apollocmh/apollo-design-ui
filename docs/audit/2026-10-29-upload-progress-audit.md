@@ -98,3 +98,9 @@ Registry路径后，本工作树 `packages/ui/src` 与当前Registry也没有旧
 没有生成、接受或替换视觉基线，未执行全库最终门禁或文档站构建。
 根入口与静态样式文件的历史注释、Registry、KNOWN-ISSUES和全库最终提交门禁由主任务协调。
 正式发布包、正式Apollo视觉、Docs和全库结论仍须据实际命令另记，不能据本轮局部结果宣称通过。
+
+## 已构建发布包验证
+
+实现提交 `2ef32069`，统一构建起点 `350f4cb2`。UI 实际构建退出0。以真实发布 JS/声明和公开 CSS 运行 `tests/browser/upload-progress.mjs`，全量 CSS 与 Upload 按需 CSS 各75/75通过，均0错误/警告、全部读者退出、六个产物指纹前后不变。它补齐上述源码阶段的发布浏览器缺口，不代表完整 Upload/Progress 或全库通过。命令与SHA见[发布证据](evidence/upload-progress-published.json)。
+
+首次严格 L7 唯一失败为 Upload 体积137.7KB超过旧106KB预算。实际对照：旧冻结 Upload 为87.238KB、旧 Upload+Progress 为137.763KB，新组合 Upload 为137.736KB（更小27字节）；因此增长来自既有六字段所需的真实 Progress 组合，没有额外摇树泄漏。按用户接受开发阶段合理体积增长的要求，仅将 Upload 上限改为141KB；保留66.8KB历史记录、其他72条预算和全量30%比例约束。严格 L7 重跑结果另记，不以改配置冒充执行。

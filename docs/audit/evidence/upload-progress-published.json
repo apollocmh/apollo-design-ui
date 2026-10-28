@@ -1,0 +1,105 @@
+{
+  "date": "2026-10-29",
+  "implementationCommit": "2ef32069",
+  "publishedBuildCommit": "350f4cb2",
+  "scope": "Existing Upload progress configuration and shared Progress numeric width/ARIA only; not a complete Upload/Progress audit",
+  "packageBuild": {
+    "command": "pnpm --filter @apollo-design/ui run build",
+    "exitCode": 0,
+    "log": "/tmp/apollo-css-dependency-audit/build-350f4cb2.log"
+  },
+  "browser": {
+    "full": {
+      "command": "UPLOAD_PROGRESS_SOURCE=0 UPLOAD_PROGRESS_EVIDENCE=/tmp/apollo-upload-progress-350f4cb2-full.json node tests/browser/upload-progress.mjs",
+      "exitCode": 0,
+      "rawReportSha256": "bc6654dd7b79e77e9c7cd3c63ea49d59e35e27f6aa42acf393054f0a85879cd5",
+      "checksPassed": 75,
+      "checksFailed": 0,
+      "warnings": [],
+      "errors": [],
+      "artifactFingerprints": {
+        "packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+        "packages/ui/dist/index.mjs": "1cdc056a3c74d15a0a76e9de29ce5645032e6ff8a9a903faaadd71e88bcfbf0d",
+        "packages/ui/dist/index.css": "b02c526e0b6e9796294d5ec60186eee68079b242aa6941473553336bcb94bf3a",
+        "packages/ui/dist/upload/style.css": "e4ab3eed0050031709066c2b25a78b9c2dda450e5be108e18a40de098ffdaa7f",
+        "packages/ui/dist/progress/style.css": "91d84514076ecde8123ddfa912ee859a31f385f3b6d857535ddd2548afea2323",
+        "packages/ui/dist/button/style.css": "3309c74ee142b71d6aa13be3fba46ce62d0e66d200d0829e479834ca85902ebc"
+      },
+      "readersExited": true
+    },
+    "component": {
+      "command": "UPLOAD_PROGRESS_SOURCE=0 UPLOAD_PROGRESS_CSS=component UPLOAD_PROGRESS_EVIDENCE=/tmp/apollo-upload-progress-350f4cb2-component.json node tests/browser/upload-progress.mjs",
+      "exitCode": 0,
+      "rawReportSha256": "d7c8750e33a42db29b7586f67baa585e3f69f0f37c5ae25a1a629d61199d49db",
+      "checksPassed": 75,
+      "checksFailed": 0,
+      "warnings": [],
+      "errors": [],
+      "artifactFingerprints": {
+        "packages/theme/dist/tokens.css": "8e0ce8f550b3460e2e967205e7059502d75f98eadc05a4309c916f81de9b4fab",
+        "packages/ui/dist/index.mjs": "1cdc056a3c74d15a0a76e9de29ce5645032e6ff8a9a903faaadd71e88bcfbf0d",
+        "packages/ui/dist/index.css": "b02c526e0b6e9796294d5ec60186eee68079b242aa6941473553336bcb94bf3a",
+        "packages/ui/dist/upload/style.css": "e4ab3eed0050031709066c2b25a78b9c2dda450e5be108e18a40de098ffdaa7f",
+        "packages/ui/dist/progress/style.css": "91d84514076ecde8123ddfa912ee859a31f385f3b6d857535ddd2548afea2323",
+        "packages/ui/dist/button/style.css": "3309c74ee142b71d6aa13be3fba46ce62d0e66d200d0829e479834ca85902ebc"
+      },
+      "readersExited": true
+    }
+  },
+  "sizeMeasurements": [
+    {
+      "name": "old-upload",
+      "imports": [
+        "Upload"
+      ],
+      "bytes": 89332,
+      "kb": 87.23828125
+    },
+    {
+      "name": "old-upload-and-progress",
+      "imports": [
+        "Upload",
+        "Progress"
+      ],
+      "bytes": 141069,
+      "kb": 137.7626953125
+    },
+    {
+      "name": "current-upload",
+      "imports": [
+        "Upload"
+      ],
+      "bytes": 141042,
+      "kb": 137.736328125
+    },
+    {
+      "name": "current-progress",
+      "imports": [
+        "Progress"
+      ],
+      "bytes": 88021,
+      "kb": 85.9580078125
+    }
+  ],
+  "initialL7": {
+    "exitCode": 1,
+    "checks": 11,
+    "failures": 1,
+    "failure": "Only B6 Upload 137.7KB exceeded the obsolete 106KB cap; no ratio failure",
+    "log": "/tmp/apollo-css-dependency-audit/l7-350f4cb2.log"
+  },
+  "budgetDecision": {
+    "oldUploadCapKb": 106,
+    "newUploadCapKb": 141,
+    "reason": "Required public Progress composition; current Upload is 27 bytes smaller than prior Upload plus Progress. User accepts justified development-stage component size growth.",
+    "unchanged": [
+      "Other 72 budgets",
+      "Historical measurements",
+      "30% ratio guard"
+    ]
+  },
+  "remaining": [
+    "L7 rerun after targeted budget update",
+    "Final formal visual and Docs/full-library acceptance are separate"
+  ]
+}

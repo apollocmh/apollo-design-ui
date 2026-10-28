@@ -514,8 +514,9 @@
       "id": "upload",
       "pkg": "@apollo-design/ui",
       "imports": ["Upload"],
-      "budgetKb": 106,
-      "measuredKb": 66.8
+      "budgetKb": 141,
+      "measuredKb": 66.8,
+      "_note": "2026-10-29: 2ef32069 replaces the ineffective fixed Upload progress DOM with the real public Progress component, enabling all six existing progress fields. Published Upload measures 137.736KB; the prior frozen Upload plus Progress measures 137.763KB, proving the added graph is the required component composition, not a tree-shaking leak. Accept this documented functional cost under the user's development-stage size decision; only Upload's cap changes from 106KB to 141KB. Preserve historical measuredKb=66.8, all other caps and the 30% full-library ratio guard. See docs/audit/2026-10-29-upload-progress-audit.md."
     },
     {
       "id": "watermark",
