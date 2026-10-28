@@ -19,3 +19,5 @@ Applies to the unpublished 0.0.0 development branch. This follows ADR0007 and th
 Typography has one default slot, no component emits and no v-model. Existing configuration callbacks remain scoped configuration operations. Root Vue class/style attrs and Provider replacements preserve their current content and editor instances. Refer to the dated audit for actual verification and unresolved boundaries; this migration record is not an acceptance certificate.
 
 Expansion labels use their displayed symbol text where available, with the current locale as a fallback. This keeps custom Demo labels usable by speech input and accessible role/name queries.
+
+Native editor geometry: the textarea now fills the owned root, uses its current background/border/focus aliases and reserves confirm-icon space. Disabling autoSize retains a full native row. This removes the inactive assumption that an Input wrapper would supply its base styles; no Input engine or compatibility wrapper is introduced.

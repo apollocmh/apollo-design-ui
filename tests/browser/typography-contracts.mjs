@@ -152,6 +152,40 @@ try {
       return { before, after };
     },
   );
+  await check(
+    'native editor fills a dynamic host, preserves its draft and keeps a complete fixed row',
+    async () => {
+      const editor = page.locator('#editable textarea');
+      const old = await editor.elementHandle();
+      const draft = 'A native draft wraps differently as its container changes. '.repeat(3);
+      await editor.fill(draft);
+      const heights = [];
+      try {
+        await set({ minRows: 1, maxRows: 10 });
+        for (const width of [360, 180]) {
+          await set({ editorWidth: width });
+          const size = await editor.evaluate((n) => ({
+            width: n.getBoundingClientRect().width,
+            root: n.parentElement.getBoundingClientRect().width,
+            height: n.clientHeight,
+          }));
+          assert.ok(Math.abs(size.width - size.root) < 1, JSON.stringify(size));
+          assert.equal(await editor.evaluate((n, old) => n === old, old), true);
+          assert.equal(await editor.inputValue(), draft);
+          heights.push(size.height);
+        }
+        assert.ok(heights[1] > heights[0], JSON.stringify(heights));
+        await set({ autoSize: false });
+        const row = await editor.evaluate((n) => ({
+          height: n.clientHeight,
+          line: parseFloat(getComputedStyle(n).lineHeight),
+        }));
+        assert.ok(row.height >= row.line, JSON.stringify(row));
+      } finally {
+        await set({ editorWidth: 240, autoSize: true, minRows: 2, maxRows: 4 });
+      }
+    },
+  );
   await check('editing exposes its actual native root and preserves the root id', async () => {
     assert.equal(
       (await page.evaluate(() => window.typographyAudit.snapshot())).refIsEditRoot,

@@ -164,6 +164,15 @@ export default {
   'native-editing': () =>
     frame('native-editing', [
       h(
+        Text,
+        {
+          'aria-label': 'Fixed-row editor',
+          editable: { editing: true, text: 'One native row', autoSize: false },
+          style: { display: 'block', maxWidth: '280px' },
+        },
+        () => 'Body',
+      ),
+      h(
         Title,
         {
           level: 2,

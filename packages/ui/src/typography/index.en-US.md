@@ -85,6 +85,8 @@ False tooltips disable the popup. Defaults use the current locale. Pending reque
 | autoSize | boolean \| { minRows?: number; maxRows?: number }; true | Resize for content, width and current configuration |
 | maxLength / tabIndex | number | Editor limit / edit button Tab order |
 
+The editor fills its host and reserves space for the confirm icon. With autoSize false it still displays a complete native row. Border, background and focus follow the current theme; styles.textarea can explicitly override native styling.
+
 Enter saves and Escape cancels. Modified Enter retains native multiline behaviour; IME composition never submits. Controlled callbacks request a transition; the parent decides whether to close. Accepted keyboard completion restores edit-button focus; blur to another control preserves that destination.
 
 aria-label, aria-labelledby and aria-describedby reach the textarea. Without a supplied name, plain content or the current locale supplies one. Root attrs and expose remain available while editing.

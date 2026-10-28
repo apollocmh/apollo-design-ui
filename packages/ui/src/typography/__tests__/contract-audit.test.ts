@@ -470,3 +470,33 @@ describe.each(entries.filter((entry) => entry.name !== 'Typography'))(
     });
   },
 );
+
+describe.each(entries.filter((entry) => entry.name !== 'Typography'))(
+  '$name text edit activation',
+  ({ component }) => {
+    it('composes the native click and one text editing request', async () => {
+      const clicked = vi.fn(),
+        started = vi.fn();
+      const wrapper = mounted(
+        defineComponent(
+          () => () =>
+            h(
+              component,
+              {
+                'data-edit-activation': '',
+                href: '#edit-target',
+                onClick: clicked,
+                editable: { triggerType: ['text'], onStart: started },
+              },
+              () => 'Click to edit',
+            ),
+        ),
+      );
+      const anchor = wrapper.find('a');
+      await (anchor.exists() ? anchor : wrapper.get('[data-edit-activation]')).trigger('click');
+      expect(started).toHaveBeenCalledOnce();
+      expect(clicked).toHaveBeenCalledOnce();
+      expect(wrapper.find('textarea').exists()).toBe(true);
+    });
+  },
+);

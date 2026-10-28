@@ -51,6 +51,24 @@ export async function prepareTypographyVisual(page, variant) {
       true,
     );
   }
+  if (variant === 'native-editing') {
+    const geometry = await stage.locator('textarea').evaluateAll((nodes) =>
+      nodes.map((n) => ({
+        name: n.getAttribute('aria-label'),
+        width: n.getBoundingClientRect().width,
+        rootWidth: n.parentElement.getBoundingClientRect().width,
+        clientHeight: n.clientHeight,
+        lineHeight: parseFloat(getComputedStyle(n).lineHeight),
+      })),
+    );
+    assert.equal(geometry.length, 5);
+    assert.deepEqual(
+      geometry.filter(
+        (n) => Math.abs(n.width - n.rootWidth) > 1 || n.clientHeight + 1 < n.lineHeight,
+      ),
+      [],
+    );
+  }
   await page.addScriptTag({ path: createRequire(import.meta.url).resolve('axe-core/axe.min.js') });
   const violations = await stage.evaluate(async (n) =>
     (await window.axe.run(n)).violations.map((v) => ({

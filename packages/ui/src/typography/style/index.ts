@@ -273,6 +273,21 @@ function getEditableStyles(cls: string): string[] {
   return [
     rule(content, 'position:relative;'),
     rule(
+      `${content} textarea`,
+      `display:block;box-sizing:border-box;width:100%;max-width:100%;min-width:0;resize:vertical;` +
+        `padding-block:calc(${v('paddingSM')} / 2 - 2px);` +
+        `padding-inline-start:calc(${v('paddingSM')} - 1px);` +
+        `padding-inline-end:calc(${v('marginXS')} + ${v('fontSize')} + 2px);` +
+        `color:inherit;background:${v('colorBgContainer')};` +
+        `border:${v('lineWidth')} ${v('lineType')} ${v('colorTextDescription')};border-radius:${v('borderRadius')};` +
+        `outline:none;transition:border-color ${v('motionDurationMid')},box-shadow ${v('motionDurationMid')};`,
+    ),
+    rule(`${content} textarea:hover`, `border-color:${v('colorPrimaryHover')};`),
+    rule(
+      `${content} textarea:focus`,
+      `border-color:${v('colorPrimary')};box-shadow:0 0 0 ${v('controlOutlineWidth')} ${v('controlOutline')};`,
+    ),
+    rule(
       `div${content}`,
       `inset-inline-start:calc(${v('paddingSM')} * -1);` +
         `inset-block-start:calc(${v('paddingSM')} / -2 + 1px);` +
@@ -291,7 +306,7 @@ function getEditableStyles(cls: string): string[] {
     rule(
       `${content}.${content.slice(1)} textarea`,
       'margin:0!important;font-size:inherit;line-height:inherit;font-family:inherit;' +
-        'font-weight:inherit;-moz-transition:none;height:1em;',
+        'font-weight:inherit;-moz-transition:none;height:auto;',
     ),
   ];
 }

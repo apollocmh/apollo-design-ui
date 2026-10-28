@@ -1,0 +1,1060 @@
+{
+  "sourceBase": "c75395fc",
+  "cause": "Editable rendered a native textarea while historical styles assumed Input geometry; fixed row height 1em clipped content.",
+  "rejectedCapture": {
+    "source": "c75395fc",
+    "rendered": 42,
+    "approved": 0,
+    "reason": "Native editor leaf widths did not match their host; fixed-row client height was shorter than one line."
+  },
+  "beforeGeometry": {
+    "expected": 1,
+    "pending": 1,
+    "results": [
+      {
+        "id": "typography/native-editing__light__desktop",
+        "verdict": "FAIL",
+        "reason": "render-error",
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     clientHeight: 12,\n+     lineHeight: 22,\n+     name: 'Fixed-row editor',\n+     rootWidth: 280,\n+     width: 169\n+   },\n+   {\n+     clientHeight: 42,\n+     lineHeight: 38,\n+     name: 'Title editor',\n+     rootWidth: 280,\n+     width: 327\n+   },\n+   {\n+     clientHeight: 26,\n+     lineHeight: 22,\n+     name: 'Link editor',\n+     rootWidth: 280,\n+     width: 169\n+   },\n+   {\n+     clientHeight: 48,\n+     lineHeight: 22,\n+     name: 'Native editor',\n+     rootWidth: 280,\n+     width: 153\n+   },\n+   {\n+     clientHeight: 79,\n+     lineHeight: 25.1429,\n+     name: 'Configured editor',\n+     rootWidth: 280,\n+     width: 174\n+   }\n+ ]\n- []\n"
+      }
+    ]
+  },
+  "sourceDigests": {
+    "packages/ui/src/typography/style/index.ts": "09bc1a5973e43682e19ca829223d46972bdb86665662732b4697d07d3a478f34",
+    "packages/ui/src/typography/use-typography-theme.ts": "d2e2a9d1b56ce2586427a5d8b224c8ac5076fedda998df8aeb655d73bfa97953"
+  },
+  "verification": {
+    "runtime": {
+      "files": 61,
+      "passed": 1186,
+      "failed": 0
+    },
+    "types": {
+      "files": 8,
+      "passed": 110,
+      "failed": 0
+    },
+    "browser": {
+      "results": [
+        {
+          "name": "default: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 28.8,
+              "bottom": 12,
+              "size": 24
+            },
+            "changed": {
+              "top": 48,
+              "bottom": 19.2,
+              "size": 24
+            }
+          }
+        },
+        {
+          "name": "dark: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 28.8,
+              "bottom": 12,
+              "size": 24
+            },
+            "changed": {
+              "top": 48,
+              "bottom": 19.2,
+              "size": 24
+            }
+          }
+        },
+        {
+          "name": "compact: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 24,
+              "bottom": 10,
+              "size": 20
+            },
+            "changed": {
+              "top": 40,
+              "bottom": 16,
+              "size": 20
+            }
+          }
+        },
+        {
+          "name": "both: two existing title tokens follow replacement and removal",
+          "passed": true,
+          "actual": {
+            "initial": {
+              "top": 24,
+              "bottom": 10,
+              "size": 20
+            },
+            "changed": {
+              "top": 40,
+              "bottom": 16,
+              "size": 20
+            }
+          }
+        },
+        {
+          "name": "all Link semantic tones match text and native anchor focus consumes current decoration",
+          "passed": true
+        },
+        {
+          "name": "editor autoSize consumes min/max rows and keeps a draft during dynamic configuration",
+          "passed": true,
+          "actual": {
+            "before": {
+              "height": 96,
+              "line": 22,
+              "scroll": 778
+            },
+            "after": {
+              "height": 74,
+              "line": 22
+            }
+          }
+        },
+        {
+          "name": "native editor fills a dynamic host, preserves its draft and keeps a complete fixed row",
+          "passed": true
+        },
+        {
+          "name": "editing exposes its actual native root and preserves the root id",
+          "passed": true
+        },
+        {
+          "name": "modifier/newline editing preserves actual multiline content",
+          "passed": true
+        },
+        {
+          "name": "owned copy controls are siblings of the native anchor",
+          "passed": true
+        },
+        {
+          "name": "blur saves once without stealing the external destination focus",
+          "passed": true
+        },
+        {
+          "name": "controlled refusal keeps the same editor and Enter requests remain usable",
+          "passed": true
+        },
+        {
+          "name": "IME Enter does not submit and accepted Escape returns owned focus",
+          "passed": true
+        },
+        {
+          "name": "Link editor clicks preserve textbox semantics without activating anchor listeners",
+          "passed": true
+        },
+        {
+          "name": "disabled Link blocks navigation and exposes its disabled state",
+          "passed": true
+        },
+        {
+          "name": "text-only editing has a native keyboard entry",
+          "passed": true
+        },
+        {
+          "name": "JS measurement retains one visible business input, its draft and focus",
+          "passed": true,
+          "actual": {
+            "inputCount": 1
+          }
+        }
+      ],
+      "errors": []
+    },
+    "actualDemos": {
+      "browser": "150.0.7871.125",
+      "results": [
+        {
+          "demo": "basic",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "basic",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "component-token",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "copyable",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "copyable",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "copyable",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "copyable",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "editable-custom",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-controlled",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-expandable",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "ellipsis-middle",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "semantic",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "suffix",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "suffix",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "suffix",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "suffix",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "table",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "table",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "table",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "table",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "text",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "text",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "text",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "text",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "title",
+          "theme": "default",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "title",
+          "theme": "dark",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "title",
+          "theme": "compact",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "demo": "title",
+          "theme": "both",
+          "passed": true,
+          "violations": []
+        },
+        {
+          "interaction": "default: title token control applies, zeroes and restores real margins",
+          "passed": true
+        },
+        {
+          "interaction": "default: actual copy Demo writes current and configured clipboard text",
+          "passed": true
+        },
+        {
+          "interaction": "default: actual editing Demo saves and sizes multiline drafts",
+          "passed": true
+        },
+        {
+          "interaction": "default: actual ellipsis Demos expand, collapse and accept controlled updates",
+          "passed": true
+        },
+        {
+          "interaction": "default: actual Provider Demo preserves the focused business draft",
+          "passed": true
+        },
+        {
+          "interaction": "dark: title token control applies, zeroes and restores real margins",
+          "passed": true
+        },
+        {
+          "interaction": "dark: actual copy Demo writes current and configured clipboard text",
+          "passed": true
+        },
+        {
+          "interaction": "dark: actual editing Demo saves and sizes multiline drafts",
+          "passed": true
+        },
+        {
+          "interaction": "dark: actual ellipsis Demos expand, collapse and accept controlled updates",
+          "passed": true
+        },
+        {
+          "interaction": "dark: actual Provider Demo preserves the focused business draft",
+          "passed": true
+        },
+        {
+          "interaction": "compact: title token control applies, zeroes and restores real margins",
+          "passed": true
+        },
+        {
+          "interaction": "compact: actual copy Demo writes current and configured clipboard text",
+          "passed": true
+        },
+        {
+          "interaction": "compact: actual editing Demo saves and sizes multiline drafts",
+          "passed": true
+        },
+        {
+          "interaction": "compact: actual ellipsis Demos expand, collapse and accept controlled updates",
+          "passed": true
+        },
+        {
+          "interaction": "compact: actual Provider Demo preserves the focused business draft",
+          "passed": true
+        },
+        {
+          "interaction": "both: title token control applies, zeroes and restores real margins",
+          "passed": true
+        },
+        {
+          "interaction": "both: actual copy Demo writes current and configured clipboard text",
+          "passed": true
+        },
+        {
+          "interaction": "both: actual editing Demo saves and sizes multiline drafts",
+          "passed": true
+        },
+        {
+          "interaction": "both: actual ellipsis Demos expand, collapse and accept controlled updates",
+          "passed": true
+        },
+        {
+          "interaction": "both: actual Provider Demo preserves the focused business draft",
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "hydration": {
+      "checks": [
+        "SSR complete content: container",
+        "SSR complete content: text",
+        "SSR complete content: title",
+        "SSR complete content: paragraph",
+        "SSR complete content: link",
+        "SSR editor root, name and multiline text",
+        "five server roots retained by hydration",
+        "pre-hydration draft, focus and selection retained during measurement",
+        "current theme/provider stage 1, stable roots and business lifecycle",
+        "current theme/provider stage 0, stable roots and business lifecycle",
+        "current theme/provider stage 1, stable roots and business lifecycle",
+        "unmount/remount cleans measurements and owns one business instance"
+      ],
+      "errors": []
+    },
+    "consumerInventory": {
+      "scannedFiles": 2995,
+      "positiveControl": {
+        "file": "packages/ui/src/typography/demo/basic.vue",
+        "imports": [
+          "Link",
+          "Paragraph",
+          "Text",
+          "Title"
+        ]
+      },
+      "consumers": [
+        {
+          "file": "packages/ui/src/auto-complete/demo/custom.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/auto-complete/demo/customize-clear.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/auto-complete/demo/disabled-in-form.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/auto-complete/demo/render-panel.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/carousel/demo/dot-duration.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/carousel/demo/placement.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/float-button/demo/back-top.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/list/demo/empty.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/list/demo/item-extra.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/list/demo/pagination-simple.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/list/demo/simple.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/listy/demo/group-header.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/listy/demo/item-render.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/listy/demo/rich.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/listy/demo/style-class.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/time-picker/demo/12hours.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/time-picker/demo/interval-options.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/timeline/demo/title-span.vue",
+          "imports": [
+            "Title"
+          ]
+        },
+        {
+          "file": "packages/ui/src/tour/demo/gap.vue",
+          "imports": [
+            "Typography"
+          ]
+        },
+        {
+          "file": "packages/ui/src/transfer/demo/actions.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/transfer/demo/large-data.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/tree/demo/block-node.vue",
+          "imports": [
+            "Text"
+          ]
+        },
+        {
+          "file": "packages/ui/src/watermark/demo/custom.vue",
+          "imports": [
+            "Typography"
+          ]
+        }
+      ]
+    },
+    "consumerBrowser": {
+      "results": [
+        {
+          "file": "packages/ui/src/auto-complete/demo/custom.vue",
+          "theme": "light",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/auto-complete/demo/custom.vue",
+          "theme": "dark",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/auto-complete/demo/customize-clear.vue",
+          "theme": "light",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/auto-complete/demo/customize-clear.vue",
+          "theme": "dark",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/auto-complete/demo/disabled-in-form.vue",
+          "theme": "light",
+          "roots": 2,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/auto-complete/demo/disabled-in-form.vue",
+          "theme": "dark",
+          "roots": 2,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/auto-complete/demo/render-panel.vue",
+          "theme": "light",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/auto-complete/demo/render-panel.vue",
+          "theme": "dark",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/carousel/demo/dot-duration.vue",
+          "theme": "light",
+          "roots": 3,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/carousel/demo/dot-duration.vue",
+          "theme": "dark",
+          "roots": 3,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/carousel/demo/placement.vue",
+          "theme": "light",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/carousel/demo/placement.vue",
+          "theme": "dark",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/float-button/demo/back-top.vue",
+          "theme": "light",
+          "roots": 2,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/float-button/demo/back-top.vue",
+          "theme": "dark",
+          "roots": 2,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/list/demo/empty.vue",
+          "theme": "light",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/list/demo/empty.vue",
+          "theme": "dark",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/list/demo/item-extra.vue",
+          "theme": "light",
+          "roots": 2,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/list/demo/item-extra.vue",
+          "theme": "dark",
+          "roots": 2,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/list/demo/pagination-simple.vue",
+          "theme": "light",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/list/demo/pagination-simple.vue",
+          "theme": "dark",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/list/demo/simple.vue",
+          "theme": "light",
+          "roots": 5,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/list/demo/simple.vue",
+          "theme": "dark",
+          "roots": 5,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/listy/demo/group-header.vue",
+          "theme": "light",
+          "roots": 2,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/listy/demo/group-header.vue",
+          "theme": "dark",
+          "roots": 2,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/listy/demo/item-render.vue",
+          "theme": "light",
+          "roots": 7,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/listy/demo/item-render.vue",
+          "theme": "dark",
+          "roots": 7,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/listy/demo/rich.vue",
+          "theme": "light",
+          "roots": 8,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/listy/demo/rich.vue",
+          "theme": "dark",
+          "roots": 8,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/listy/demo/style-class.vue",
+          "theme": "light",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/listy/demo/style-class.vue",
+          "theme": "dark",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/time-picker/demo/12hours.vue",
+          "theme": "light",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/time-picker/demo/12hours.vue",
+          "theme": "dark",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/time-picker/demo/interval-options.vue",
+          "theme": "light",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/time-picker/demo/interval-options.vue",
+          "theme": "dark",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/timeline/demo/title-span.vue",
+          "theme": "light",
+          "roots": 3,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/timeline/demo/title-span.vue",
+          "theme": "dark",
+          "roots": 3,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/tour/demo/gap.vue",
+          "theme": "light",
+          "roots": 4,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/tour/demo/gap.vue",
+          "theme": "dark",
+          "roots": 4,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/transfer/demo/actions.vue",
+          "theme": "light",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/transfer/demo/actions.vue",
+          "theme": "dark",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/transfer/demo/large-data.vue",
+          "theme": "light",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/transfer/demo/large-data.vue",
+          "theme": "dark",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/tree/demo/block-node.vue",
+          "theme": "light",
+          "roots": 2,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/tree/demo/block-node.vue",
+          "theme": "dark",
+          "roots": 2,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/watermark/demo/custom.vue",
+          "theme": "light",
+          "roots": 1,
+          "passed": true
+        },
+        {
+          "file": "packages/ui/src/watermark/demo/custom.vue",
+          "theme": "dark",
+          "roots": 1,
+          "passed": true
+        }
+      ],
+      "errors": []
+    },
+    "strict": "passed",
+    "publishedTemplates": "all 14 demos passed",
+    "uiBuild": "passed",
+    "uiL7": "11 checks; 0 failures; 0 pending; --no-build after explicit build"
+  },
+  "scope": [
+    "native width/box model, complete fixed row, current background/border/focus and confirm-icon space",
+    "four existing text-activation behaviours were already normal; four controls added without production changes",
+    "23 actual consumer demos identified through AST imports, including namespace use; not string hits",
+    "consumer checks verify actual rendering and Typography roots; they do not accept the full API/a11y contract of those other components"
+  ],
+  "pending": [
+    "fresh clean-source 42-image capture, individual review and comparison",
+    "final Docs, Registry acceptance and publication",
+    "library-wide audit and final full gates"
+  ]
+}

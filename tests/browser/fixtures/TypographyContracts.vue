@@ -20,6 +20,7 @@ const state = reactive({
   refuse: false,
   editText:
     'An editor with enough words to wrap onto several lines in its narrow container. '.repeat(4),
+  editorWidth: 240,
   minRows: 2,
   maxRows: 4,
   autoSize: true,
@@ -105,7 +106,7 @@ const semanticTypes = ['secondary', 'success', 'warning', 'danger'] as const;
   <ConfigProvider :theme="theme">
     <Typography id="tokens"><Title :level="3">First title</Title><Paragraph>Body between titles.</Paragraph><Title :level="3" data-second-title>Second title</Title></Typography>
     <section id="editable">
-      <Text ref="editRef" id="edit-identity" aria-label="Contract editor" :editable="editable" :style="{ width: '240px', display: 'block' }">Display text</Text>
+      <Text ref="editRef" id="edit-identity" aria-label="Contract editor" :editable="editable" :style="{ width: `${state.editorWidth}px`, display: 'block' }">Display text</Text>
     </section>
     <section id="semantic-links"><template v-for="kind in semanticTypes" :key="kind"><Text :data-tone-text="kind" :type="kind">Semantic {{ kind }}</Text><Link :data-tone-link="kind" :type="kind" href="#owned-target">Semantic {{ kind }}</Link></template><Link data-focus-link href="#owned-target">Focus link</Link></section>
     <section id="owned-link"><Link href="#owned-target" :disabled="state.disabled" :editable="{ editing: state.linkEditing, text: 'Link draft' }" @click="state.linkClicks++" copyable><span data-link-body>Owned link</span></Link></section>

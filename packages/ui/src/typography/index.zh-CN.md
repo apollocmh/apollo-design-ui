@@ -85,6 +85,8 @@ Link 的复制/编辑按钮是原生链接的兄弟节点，避免交互控件�
 | autoSize | `boolean \| { minRows?: number; maxRows?: number }`，true | 原生 textarea 高度随内容、宽度和当前配置变化 |
 | maxLength / tabIndex | `number` | 编辑框长度限制 / 编辑按钮 Tab 顺序 |
 
+编辑框填满其宿主宽度，并保留确认图标所需空间；`autoSize: false` 仍显示完整的一行。边框、背景及焦点读取当前主题，`styles.textarea` 可显式覆盖原生样式。
+
 Enter 保存，Escape 取消；带修饰键的 Enter 保留原生换行，IME 组合期间不提交。受控模式中回调仅通知请求，父组件决定是否关闭。键盘完成后恢复所属编辑按钮焦点；失焦至外部控件时保留外部焦点。
 
 `aria-label` / `aria-labelledby` / `aria-describedby` 传给实际 textarea。未提供名称时使用纯文本内容或当前语言的编辑文案。编辑态保留根 attrs 和实际根 expose。

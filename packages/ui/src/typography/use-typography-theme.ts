@@ -4,6 +4,7 @@ import { type ComputedRef, computed } from 'vue';
 import { prepareComponentToken } from './style/token';
 
 const aliases = [
+  'borderRadius',
   'borderRadiusLG',
   'colorBgContainer',
   'colorErrorText',
@@ -14,15 +15,20 @@ const aliases = [
   'colorLink',
   'colorLinkActive',
   'colorLinkHover',
+  'colorPrimary',
   'colorPrimaryBorder',
+  'colorPrimaryHover',
   'colorSplit',
   'colorSuccess',
   'colorSuccessText',
   'colorText',
+  'colorTextDescription',
   'colorTextSecondary',
   'colorTextDisabled',
   'colorTextHeading',
   'colorWarningText',
+  'controlOutline',
+  'controlOutlineWidth',
   'fontFamily',
   'fontFamilyCode',
   'fontSize',
