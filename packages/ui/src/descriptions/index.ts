@@ -23,13 +23,18 @@ export default Descriptions;
 
 export type {
   DescriptionsColumn,
+  DescriptionsConfig,
+  DescriptionsItemProps,
+  DescriptionsItemSlots,
   DescriptionsItemSpan,
   DescriptionsItemType,
   DescriptionsProps,
   DescriptionsRef,
   DescriptionsRowItem,
   DescriptionsSemanticClassNames,
+  DescriptionsSemanticInfo,
   DescriptionsSemanticStyles,
+  DescriptionsSlots,
 } from './interface';
 export { genDescriptionsStyle, genTokenDecls as genDescriptionsTokenDecls } from './style';
 export type { ComponentToken as DescriptionsComponentToken } from './style/token';

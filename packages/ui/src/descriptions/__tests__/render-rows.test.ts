@@ -16,7 +16,7 @@ it('F08: the items channel, including [], does not evaluate ignored option child
   expect(w.text()).not.toContain('Ignored');
   expect(children).not.toHaveBeenCalled();
   await w.setProps({ items: [] });
-  expect(w.find('td').exists()).toBe(false);
+  expect(w.find('.apollo-descriptions-item').exists()).toBe(false);
   expect(children).not.toHaveBeenCalled();
   await w.setProps({ items: undefined });
   expect(w.text()).toContain('Ignored content');
@@ -49,7 +49,8 @@ it('F08: slot row insertion/removal, filled spans and unrelated attrs update onc
         ),
     }),
   );
-  const cells = () => w.findAll('td').map((cell) => cell.attributes('colspan'));
+  const cells = () =>
+    w.findAll('.apollo-descriptions-item').map((cell) => cell.attributes('data-span'));
   expect(cells()).toEqual(['3']);
   count.value = 4;
   await nextTick();
@@ -72,19 +73,23 @@ it('F08: data rows remain reactive for merged cells and layout changes', async (
     { key: 'b', label: 'B', children: 'Beta' },
   ];
   const w = mount(Descriptions, { props: { items, column: 3, bordered: true } });
-  expect(w.findAll('td').map((cell) => cell.attributes('colspan'))).toEqual(['5', '5']);
+  expect(
+    w.findAll('.apollo-descriptions-item').map((cell) => cell.attributes('data-span')),
+  ).toEqual(['3', '3']);
   await w.setProps({
     items: [{ key: 'c', label: 'C', children: 'Gamma' }],
     column: 2,
     layout: 'vertical',
   });
-  expect(w.findAll('td').map((cell) => cell.attributes('colspan'))).toEqual(['2']);
+  expect(
+    w.findAll('.apollo-descriptions-item').map((cell) => cell.attributes('data-span')),
+  ).toEqual(['2']);
   expect(w.text()).toContain('Gamma');
   expect(w.text()).not.toContain('Alpha');
   w.unmount();
 });
 
-it('F08: slot rows hydrate without mismatch or replacing the table', async () => {
+it('F08: slot rows hydrate without mismatch or replacing the description list', async () => {
   const render = () =>
     h(
       Descriptions,
@@ -94,14 +99,14 @@ it('F08: slot rows hydrate without mismatch or replacing the table', async () =>
   const container = document.createElement('div');
   container.innerHTML = await renderToString(createSSRApp({ render }));
   document.body.append(container);
-  const table = container.querySelector('table');
+  const table = container.querySelector('dl');
   const warn = vi.spyOn(console, 'warn');
   const error = vi.spyOn(console, 'error');
   const app = createSSRApp({ render });
   try {
     app.mount(container);
     await nextTick();
-    expect(container.querySelector('table')).toBe(table);
+    expect(container.querySelector('dl')).toBe(table);
     expect(container.querySelector('strong')?.textContent).toBe('Content');
     expect(warn.mock.calls.flat().join(' ')).not.toMatch(/hydration|recursive/i);
     expect(error.mock.calls.flat().join(' ')).not.toMatch(/hydration|recursive/i);

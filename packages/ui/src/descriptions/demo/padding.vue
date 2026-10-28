@@ -32,7 +32,7 @@ const items = [
 ];
 
 const onPaddingChange = (value: unknown) => {
-  padding.value = value as PaddingMode;
+  if (value === 'default' || value === 'compact' || value === 'loose') padding.value = value;
 };
 </script>
 

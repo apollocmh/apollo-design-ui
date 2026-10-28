@@ -10,24 +10,26 @@ const items: DescriptionsItemType[] = [
   { key: '4', label: 'Amount', children: '$80.00' },
 ];
 
-const plainTokenStyle = {
-  '--apollo-descriptions-label-color': '#1d39c4',
-  '--apollo-descriptions-content-color': '#10239e',
-  '--apollo-descriptions-item-padding-bottom': '16px',
-  '--apollo-descriptions-item-padding-end': '24px',
-};
-
-const borderedTokenStyle = {
+const tokenStyle = {
+  backgroundColor: '#fff',
+  padding: '12px',
   '--apollo-descriptions-label-bg': '#f0f5ff',
-  '--apollo-descriptions-item-padding-bottom': '16px',
+  '--apollo-descriptions-label-color': '#1d39c4',
+  '--apollo-descriptions-title-color': '#10239e',
+  '--apollo-descriptions-title-margin-bottom': '24px',
+  '--apollo-descriptions-content-color': '#10239e',
+  '--apollo-descriptions-extra-color': '#1d39c4',
+  '--apollo-descriptions-item-padding-bottom': '12px',
   '--apollo-descriptions-item-padding-end': '24px',
+  '--apollo-descriptions-colon-margin-left': '6px',
+  '--apollo-descriptions-colon-margin-right': '10px',
 };
 </script>
 
 <template>
   <div class="descriptions-component-token-demo">
-    <Descriptions :column="2" :items="items" :style="plainTokenStyle" />
-    <Descriptions bordered :column="2" :items="items" :style="borderedTokenStyle" />
+    <Descriptions title="Plain palette" :column="2" :items="items" :style="tokenStyle"><template #extra>Custom palette</template></Descriptions>
+    <Descriptions title="Bordered palette" bordered :column="2" :items="items" :style="tokenStyle"><template #extra>Custom palette</template></Descriptions>
   </div>
 </template>
 

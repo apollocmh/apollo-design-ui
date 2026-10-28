@@ -56,3 +56,65 @@ describe('Descriptions · 复合组件', () => {
     expectTypeOf(Descriptions).toHaveProperty('Item');
   });
 });
+
+import { h } from 'vue';
+import type {
+  DescriptionsConfig,
+  DescriptionsItemProps,
+  DescriptionsItemSlots,
+  DescriptionsSemanticInfo,
+  DescriptionsSlots,
+} from '../interface';
+
+it('native slots, StyleValue data and named semantic context stay precise', () => {
+  const semantic: DescriptionsProps['classNames'] = ({ props }) => ({
+    label: props.size === 'small' ? 'small-label' : 'label',
+  });
+  const provider: DescriptionsConfig = { classNames: semantic, style: { padding: '4px' } };
+  const item: DescriptionsItemType = {
+    key: Symbol('field'),
+    label: [h('b', 'Label'), 0],
+    children: h('input'),
+    style: ['padding: 4px', { width: '100%' }],
+  };
+  const itemProps: DescriptionsItemProps = {
+    label: 'Text',
+    span: 'filled',
+    styles: { label: { '--label-color': 'red' } },
+  };
+  const slots: DescriptionsSlots = { title: () => [h('b'), 0], extra: () => [], default: () => [] };
+  const itemSlots: DescriptionsItemSlots = {
+    label: () => [h('b', 'Rich'), ' tail'],
+    default: () => h('input'),
+  };
+  expectTypeOf(provider.classNames).toExtend<DescriptionsProps['classNames']>();
+  expectTypeOf(item).toEqualTypeOf<DescriptionsItemType>();
+  expectTypeOf(itemProps).toEqualTypeOf<DescriptionsItemProps>();
+  expectTypeOf(slots).toEqualTypeOf<DescriptionsSlots>();
+  expectTypeOf(itemSlots).toEqualTypeOf<DescriptionsItemSlots>();
+  expectTypeOf<DescriptionsSemanticInfo['props']>().toEqualTypeOf<DescriptionsProps>();
+});
+
+it('rejects removed content props and incorrect semantic scopes', () => {
+  const invalidExtra: DescriptionsProps = {
+    // @ts-expect-error extra is a named slot, not a content prop.
+    extra: 'Action',
+  };
+  const invalidChildren: DescriptionsProps = {
+    // @ts-expect-error template children are the default slot, not a root prop.
+    children: 'Value',
+  };
+  const invalidLabel: DescriptionsItemProps = {
+    // @ts-expect-error rich template labels use #label rather than a function prop.
+    label: () => h('b'),
+  };
+  const invalidSemantic: DescriptionsProps['styles'] = (info) => {
+    // @ts-expect-error semantic callbacks receive the named { props } scope.
+    const column = info.column;
+    return { root: { width: column } };
+  };
+  expectTypeOf(invalidExtra).toEqualTypeOf<DescriptionsProps>();
+  expectTypeOf(invalidChildren).toEqualTypeOf<DescriptionsProps>();
+  expectTypeOf(invalidLabel).toEqualTypeOf<DescriptionsItemProps>();
+  expectTypeOf(invalidSemantic).toExtend<DescriptionsProps['styles']>();
+});

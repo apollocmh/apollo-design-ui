@@ -1048,13 +1048,18 @@ export { prepareComponentToken as prepareDatePickerComponentToken } from './date
 // ---------------------------------------------------------------------------
 export type {
   DescriptionsColumn,
+  DescriptionsConfig,
+  DescriptionsItemProps,
+  DescriptionsItemSlots,
   DescriptionsItemSpan,
   DescriptionsItemType,
   DescriptionsProps,
   DescriptionsRef,
   DescriptionsRowItem,
   DescriptionsSemanticClassNames,
+  DescriptionsSemanticInfo,
   DescriptionsSemanticStyles,
+  DescriptionsSlots,
 } from './descriptions';
 export { Descriptions, DescriptionsItem } from './descriptions';
 export {

@@ -1,0 +1,66 @@
+{
+  "browser": "150.0.7871.125",
+  "results": [
+    {
+      "name": "source SSR has native paired descriptions",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "source SSR keeps complete named and default slots",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "source SSR consumes current Token",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "real hydration retains SSR list",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "real hydration retains SSR editor",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "post-hydration regrouping keeps node, focus, draft and selection",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "post-hydration title Token is effective",
+      "actual": "29px",
+      "expected": "29px",
+      "passed": true
+    },
+    {
+      "name": "hydrated native semantics pass axe",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "hydrated app cleans up",
+      "actual": 0,
+      "expected": 0,
+      "passed": true
+    },
+    {
+      "name": "zero SSR hydration or Vue errors",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    }
+  ],
+  "errors": []
+}

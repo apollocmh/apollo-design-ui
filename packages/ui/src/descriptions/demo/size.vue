@@ -11,6 +11,6 @@ const items = [
 
 <template>
   <Descriptions size="small" title="Small" :items="items" style="margin-bottom: 24px" />
-  <Descriptions size="medium" title="Medium（默认）" :items="items" style="margin-bottom: 24px" />
-  <Descriptions title="Large" :items="items" />
+  <Descriptions size="medium" title="Medium" :items="items" style="margin-bottom: 24px" />
+  <Descriptions title="Large（默认）" :items="items" />
 </template>

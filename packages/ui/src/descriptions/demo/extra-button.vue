@@ -22,7 +22,7 @@ const onEdit = () => {
     <template #title>
       <Space size="small">
         <span>订单详情</span>
-        <span style="color: #999">#20261021</span>
+        <span style="color: var(--apollo-color-text-secondary)">#20261021</span>
       </Space>
     </template>
     <template #extra>

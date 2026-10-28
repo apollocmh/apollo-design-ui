@@ -1,5 +1,5 @@
 /**
- * demo 冒烟测试：6 个 demo（basic / bordered / vertical / size / extra / custom-item）。
+ * demo 冒烟测试：全部 13 个配对 demo。
  */
 
 import { demoTest } from '@apollo-design/test-utils';

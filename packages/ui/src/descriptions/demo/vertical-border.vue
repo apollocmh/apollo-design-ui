@@ -17,8 +17,8 @@ const items: DescriptionsItemType[] = [
 
 const classNames = { label: 'demo-descriptions-vertical-label' };
 const styles = {
-  label: { color: '#0958d9', fontWeight: 600 },
-  content: { color: 'rgba(0, 0, 0, 0.88)' },
+  label: { color: 'var(--apollo-color-text)', fontWeight: 600 },
+  content: { color: 'var(--apollo-color-text)' },
 };
 </script>
 

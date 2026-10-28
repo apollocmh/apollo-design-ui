@@ -1,0 +1,418 @@
+{
+  "browser": "150.0.7871.125",
+  "results": [
+    {
+      "name": "native paired description tree",
+      "actual": 3,
+      "expected": 3,
+      "passed": true
+    },
+    {
+      "name": "item label slot keeps complete content",
+      "actual": "Native label",
+      "expected": "Native label",
+      "passed": true
+    },
+    {
+      "name": "root native id and tabindex",
+      "actual": [
+        "native-descriptions",
+        "0"
+      ],
+      "expected": [
+        "native-descriptions",
+        "0"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Item native class",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "Item classes consumed",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "geometry {\"column\":1} retains editor/value/focus/selection",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "geometry {\"column\":2,\"bordered\":true} retains editor/value/focus/selection",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "geometry {\"vertical\":true} retains editor/value/focus/selection",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "geometry {\"bordered\":false} retains editor/value/focus/selection",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "geometry {\"vertical\":false,\"column\":3} retains editor/value/focus/selection",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "geometry {\"filled\":true} retains editor/value/focus/selection",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "keyed reorder keeps native identity and draft",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "keyed reorder retains owned focus",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "complete current title slot",
+      "actual": "Native title",
+      "expected": "Native title",
+      "passed": true
+    },
+    {
+      "name": "Provider class and style",
+      "actual": [
+        true,
+        "8px"
+      ],
+      "expected": [
+        true,
+        "8px"
+      ],
+      "passed": true
+    },
+    {
+      "name": "Provider semantic style",
+      "actual": "1px",
+      "expected": "1px",
+      "passed": true
+    },
+    {
+      "name": "current label/color token",
+      "actual": "rgb(18, 52, 86)",
+      "expected": "rgb(18, 52, 86)",
+      "passed": true
+    },
+    {
+      "name": "current title/color token",
+      "actual": "rgb(35, 69, 103)",
+      "expected": "rgb(35, 69, 103)",
+      "passed": true
+    },
+    {
+      "name": "current title margin token",
+      "actual": "31px",
+      "expected": "31px",
+      "passed": true
+    },
+    {
+      "name": "current content/color token",
+      "actual": "rgb(52, 86, 120)",
+      "expected": "rgb(52, 86, 120)",
+      "passed": true
+    },
+    {
+      "name": "current extra/color token",
+      "actual": "rgb(69, 103, 137)",
+      "expected": "rgb(69, 103, 137)",
+      "passed": true
+    },
+    {
+      "name": "current colon spacing tokens",
+      "actual": [
+        "2px",
+        "3px"
+      ],
+      "expected": [
+        "2px",
+        "3px"
+      ],
+      "passed": true
+    },
+    {
+      "name": "bordered label/background token",
+      "actual": "rgb(229, 240, 255)",
+      "expected": "rgb(229, 240, 255)",
+      "passed": true
+    },
+    {
+      "name": "bordered padding tokens",
+      "actual": [
+        "7px",
+        "9px"
+      ],
+      "expected": [
+        "7px",
+        "9px"
+      ],
+      "passed": true
+    },
+    {
+      "name": "RTL is current",
+      "actual": "rtl",
+      "expected": "rtl",
+      "passed": true
+    },
+    {
+      "name": "configuration edits retain native node",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "intentional empty title suppresses prop fallback",
+      "actual": 0,
+      "expected": 0,
+      "passed": true
+    },
+    {
+      "name": "Provider removal clears class and style",
+      "actual": [
+        false,
+        "0px"
+      ],
+      "expected": [
+        false,
+        "0px"
+      ],
+      "passed": true
+    },
+    {
+      "name": "native style 641px",
+      "actual": "641px",
+      "expected": "641px",
+      "passed": true
+    },
+    {
+      "name": "native style 651px",
+      "actual": "651px",
+      "expected": "651px",
+      "passed": true
+    },
+    {
+      "name": "native style 661px",
+      "actual": "661px",
+      "expected": "661px",
+      "passed": true
+    },
+    {
+      "name": "light/false/false has no horizontal overflow",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "light/false/false accessible content",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "light/false/true has no horizontal overflow",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "light/false/true accessible content",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "light/true/false has no horizontal overflow",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "light/true/false accessible content",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "light/true/true has no horizontal overflow",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "light/true/true accessible content",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "dark/false/false has no horizontal overflow",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "dark/false/false accessible content",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "dark/false/true has no horizontal overflow",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "dark/false/true accessible content",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "dark/true/false has no horizontal overflow",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "dark/true/false accessible content",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "dark/true/true has no horizontal overflow",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "dark/true/true accessible content",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "compact/false/false has no horizontal overflow",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "compact/false/false accessible content",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "compact/false/true has no horizontal overflow",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "compact/false/true accessible content",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "compact/true/false has no horizontal overflow",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "compact/true/false accessible content",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "compact/true/true has no horizontal overflow",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "compact/true/true accessible content",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    },
+    {
+      "name": "responsive columns retain native editor and focus",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "responsive mobile layout fits",
+      "actual": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "name": "nested label styles stay on owner",
+      "actual": "rgba(0, 0, 0, 0.65)",
+      "expected": "rgba(0, 0, 0, 0.65)",
+      "passed": true
+    },
+    {
+      "name": "native button fires once",
+      "actual": {
+        "clicks": 1
+      },
+      "expected": {
+        "clicks": 1
+      },
+      "passed": true
+    },
+    {
+      "name": "unmount removes main only",
+      "actual": [
+        0,
+        1
+      ],
+      "expected": [
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "name": "remount starts fresh uncontrolled content",
+      "actual": "Original draft",
+      "expected": "Original draft",
+      "passed": true
+    },
+    {
+      "name": "zero runtime and Vue errors",
+      "actual": [],
+      "expected": [],
+      "passed": true
+    }
+  ],
+  "errors": []
+}

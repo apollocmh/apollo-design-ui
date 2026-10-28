@@ -1,251 +1,73 @@
-/**
- * Descriptions 的样式生成（genDescriptionsStyle）。
- *
- * 契约来源：antd 6.6.4 的 `es/descriptions/style/index.js`（`genDescriptionStyles` +
- * `genBorderedStyle` + `prepareComponentToken`；`textEllipsis` 是 antd 共享样式
- * `{overflow:hidden; white-space:nowrap; text-overflow:ellipsis}`，就地内联）。
- *
- * ── 与 antd 产物的有意差异 ────────────────────────────────────────────────────
- *
- * 1. 无 hash / css-var 包裹类（D5）；10 个 Component Token 声明直接落在
- *    `.{prefix}-descriptions` 上（radio 的 D46 同判：别名派生走 `var(--apollo-*)`
- *    随主题自适应；`titleMarginBottom` 的乘法派生走构建期 JS 解析值防亚像素）。
- * 2. `resetComponent` 全套落在根上（genStyleHooks 自动带）。
- * 3. cssinjs 的嵌套 `&` 已手工展开为扁平选择器 —— 展开规则：`&` 指代整个父链；
- *    `[cmp-row]` 无组合符 = 后代；`> th` = 直接子级。
- */
+/** Static layout for stable native dl/div/dt/dd description items. */
+import { token2CSSVar } from '@apollo-design/theme';
 
-import { getDesignToken, token2CSSVar } from '@apollo-design/theme';
-import { type ComponentToken, prepareComponentToken } from './token';
+const v = (token: string) => `var(${token2CSSVar(token)})`;
+const sv = (prefix: string, token: string) => `var(--${prefix}-descriptions-${token})`;
 
-/** token 名 → `var(--apollo-*)`。 */
-const v = (token: string): string => `var(${token2CSSVar(token)})`;
-
-/** Component Token 的 CSS 变量名（组件内消费用）。 */
-const sv = (rootPrefixCls: string, name: string): string =>
-  `var(--${rootPrefixCls}-descriptions-${name})`;
-
-let tokenCache: ComponentToken | null = null;
-
-function descriptionsTokenValues(): ComponentToken {
-  if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken());
-  }
-  return tokenCache;
-}
-
-const px = (value: number | string): string => (typeof value === 'number' ? `${value}px` : value);
-
-/** 10 个 Component Token 声明（radio D46 同判：别名派生走 var()，乘法派生走解析值）。 */
-export function genTokenDecls(rootPrefixCls: string): string[] {
-  const t = descriptionsTokenValues();
+export function genTokenDecls(p: string): string[] {
   return [
-    `  --${rootPrefixCls}-descriptions-label-bg:${v('colorFillAlter')};`,
-    `  --${rootPrefixCls}-descriptions-label-color:${v('colorTextTertiary')};`,
-    `  --${rootPrefixCls}-descriptions-title-color:${v('colorText')};`,
-    `  --${rootPrefixCls}-descriptions-title-margin-bottom:${px(t.titleMarginBottom)};`,
-    `  --${rootPrefixCls}-descriptions-item-padding-bottom:${v('padding')};`,
-    `  --${rootPrefixCls}-descriptions-item-padding-end:${v('padding')};`,
-    `  --${rootPrefixCls}-descriptions-colon-margin-right:${v('marginXS')};`,
-    `  --${rootPrefixCls}-descriptions-colon-margin-left:calc(${v('marginXXS')} / 2);`,
-    `  --${rootPrefixCls}-descriptions-content-color:${v('colorText')};`,
-    `  --${rootPrefixCls}-descriptions-extra-color:${v('colorText')};`,
+    `  --${p}-descriptions-label-bg:${v('colorFillAlter')};`,
+    `  --${p}-descriptions-label-color:${v('colorTextSecondary')};`,
+    `  --${p}-descriptions-title-color:${v('colorText')};`,
+    `  --${p}-descriptions-title-margin-bottom:calc(${v('fontSizeSM')} * ${v('lineHeightSM')});`,
+    `  --${p}-descriptions-item-padding-bottom:${v('padding')};`,
+    `  --${p}-descriptions-item-padding-end:${v('padding')};`,
+    `  --${p}-descriptions-colon-margin-right:${v('marginXS')};`,
+    `  --${p}-descriptions-colon-margin-left:calc(${v('marginXXS')} / 2);`,
+    `  --${p}-descriptions-content-color:${v('colorText')};`,
+    `  --${p}-descriptions-extra-color:${v('colorText')};`,
   ];
 }
-
-/**
- * bordered 段 —— antd 的 `genBorderedStyle`（`&{cmp}-bordered` = 交集选择器
- * `.{p}-descriptions.{p}-descriptions-bordered`；medium/small 嵌在 bordered 里，
- * `&{cmp}-medium` = `.{p}-descriptions-bordered.{p}-descriptions-medium`）。
- */
-function genBorderedStyle(p: string): string[] {
-  const D = `.${p}-descriptions`;
-  const B = `${D}${D}-bordered`;
-  const lineWidth = v('lineWidth');
-  const lineType = v('lineType');
-  const colorSplit = v('colorSplit');
-
-  return [
-    // &{cmp}-bordered > {cmp}-view
-    `${B} > ${D}-view{`,
-    `  border:${lineWidth} ${lineType} ${colorSplit};`,
-    `}`,
-    `${B} > ${D}-view > table{`,
-    `  table-layout:auto;`,
-    `}`,
-    `${B} > ${D}-view ${D}-row{`,
-    `  border-bottom:${lineWidth} ${lineType} ${colorSplit};`,
-    `}`,
-    `${B} > ${D}-view ${D}-row:first-child > th:first-child,${B} > ${D}-view ${D}-row:first-child > td:first-child{`,
-    `  border-start-start-radius:${v('borderRadiusLG')};`,
-    `}`,
-    `${B} > ${D}-view ${D}-row:last-child{`,
-    `  border-bottom:none;`,
-    `}`,
-    `${B} > ${D}-view ${D}-row:last-child > th:first-child,${B} > ${D}-view ${D}-row:last-child > td:first-child{`,
-    `  border-end-start-radius:${v('borderRadiusLG')};`,
-    `}`,
-    `${B} > ${D}-view ${D}-row > ${D}-item-label,${B} > ${D}-view ${D}-row > ${D}-item-content{`,
-    `  padding:${v('padding')} ${v('paddingLG')};`,
-    `  border-inline-end:${lineWidth} ${lineType} ${colorSplit};`,
-    `}`,
-    `${B} > ${D}-view ${D}-row > ${D}-item-label:last-child,${B} > ${D}-view ${D}-row > ${D}-item-content:last-child{`,
-    `  border-inline-end:none;`,
-    `}`,
-    `${B} > ${D}-view ${D}-row > ${D}-item-label{`,
-    // ⚠️ 判据修正：antd 实际渲染产物是 `var(--ant-color-text-secondary)`（实测 0.65），
-    //    不是缓存 es 源码里的 `token.labelColor`（0.45）—— 产物优先于源码（§5 优先级）。
-    `  color:${v('colorTextSecondary')};`,
-    `  background-color:${sv(p, 'label-bg')};`,
-    `}`,
-    `${B} > ${D}-view ${D}-row > ${D}-item-label::after{`,
-    `  display:none;`,
-    `}`,
-    // &{cmp}-medium / &{cmp}-small（嵌在 bordered 内）
-    `${B}${D}-medium ${D}-row > ${D}-item-label,${B}${D}-medium ${D}-row > ${D}-item-content{`,
-    `  padding:${v('paddingSM')} ${v('paddingLG')};`,
-    `}`,
-    `${B}${D}-small ${D}-row > ${D}-item-label,${B}${D}-small ${D}-row > ${D}-item-content{`,
-    `  padding:${v('paddingXS')} ${v('padding')};`,
-    `}`,
-  ];
-}
-
-/** 主段 —— antd 的 `genDescriptionStyles`。 */
-function genDescriptionStyle(p: string): string[] {
-  const D = `.${p}-descriptions`;
-
+export function genDescriptionsStyle(p: string): string {
+  const D = `.${p}-descriptions`,
+    view = `${D} > ${D}-view`,
+    list = `${view} > ${D}-list`;
+  const item = `${list} > ${D}-item`,
+    label = `${item} > ${D}-item-label`,
+    content = `${item} > ${D}-item-content`;
+  const B = `${D}${D}-bordered`,
+    V = `${D}${D}-vertical`;
+  const bItem = `${B} > ${D}-view > ${D}-list > ${D}-item`;
+  const verticalItem = `${V} > ${D}-view > ${D}-list > ${D}-item`;
+  const split = `${v('lineWidth')} ${v('lineType')} ${v('colorSplit')}`;
   return [
     `${D}{`,
     ...genTokenDecls(p),
-    // resetComponent 全套
-    `  box-sizing:border-box;`,
-    `  margin:0;`,
-    `  padding:0;`,
-    `  color:${v('colorText')};`,
-    `  font-size:${v('fontSize')};`,
-    `  line-height:${v('lineHeight')};`,
-    `  list-style:none;`,
-    `  font-family:${v('fontFamily')};`,
+    `  box-sizing:border-box;margin:0;padding:0;color:${v('colorText')};font-size:${v('fontSize')};line-height:${v('lineHeight')};font-family:${v('fontFamily')};`,
     `}`,
-    // &-rtl
-    `${D}-rtl{`,
-    `  direction:rtl;`,
-    `}`,
-    // genBorderedStyle
-    ...genBorderedStyle(p),
-    // {cmp}-header
-    `${D} ${D}-header{`,
-    `  display:flex;`,
-    `  align-items:center;`,
-    `  margin-bottom:${sv(p, 'title-margin-bottom')};`,
-    `}`,
-    // {cmp}-title（textEllipsis 内联）
-    `${D} ${D}-title{`,
-    `  overflow:hidden;`,
-    `  white-space:nowrap;`,
-    `  text-overflow:ellipsis;`,
-    `  flex:auto;`,
-    `  color:${sv(p, 'title-color')};`,
-    `  font-weight:${v('fontWeightStrong')};`,
-    `  font-size:${v('fontSizeLG')};`,
-    `  line-height:${v('lineHeightLG')};`,
-    `}`,
-    // {cmp}-extra
-    `${D} ${D}-extra{`,
-    `  margin-inline-start:auto;`,
-    `  color:${sv(p, 'extra-color')};`,
-    `  font-size:${v('fontSize')};`,
-    `}`,
-    // {cmp}-view
-    `${D} ${D}-view{`,
-    `  width:100%;`,
-    `  border-radius:${v('borderRadiusLG')};`,
-    `}`,
-    `${D} ${D}-view table{`,
-    `  min-width:100%;`,
-    `  table-layout:fixed;`,
-    `  border-collapse:collapse;`,
-    `}`,
-    // {cmp}-row
-    `${D} ${D}-row > th,${D} ${D}-row > td{`,
-    `  padding-bottom:${sv(p, 'item-padding-bottom')};`,
-    `  padding-inline-end:${sv(p, 'item-padding-end')};`,
-    `}`,
-    `${D} ${D}-row > th:last-child,${D} ${D}-row > td:last-child{`,
-    `  padding-inline-end:0;`,
-    `}`,
-    `${D} ${D}-row:last-child{`,
-    `  border-bottom:none;`,
-    `}`,
-    `${D} ${D}-row:last-child > th,${D} ${D}-row:last-child > td{`,
-    `  padding-bottom:0;`,
-    `}`,
-    // {cmp}-item-label
-    `${D} ${D}-item-label{`,
-    `  color:${sv(p, 'label-color')};`,
-    `  font-weight:normal;`,
-    `  font-size:${v('fontSize')};`,
-    `  line-height:${v('lineHeight')};`,
-    `  text-align:start;`,
-    `}`,
-    `${D} ${D}-item-label::after{`,
-    `  content:":";`,
-    `  position:relative;`,
-    `  top:-0.5px;`, // antd：`top: -0.5`（magic for position）
-    `  margin-inline:${sv(p, 'colon-margin-left')} ${sv(p, 'colon-margin-right')};`,
-    `}`,
-    `${D} ${D}-item-label${D}-item-no-colon::after{`,
-    `  content:"";`,
-    `}`,
-    // {cmp}-item-no-label
-    `${D} ${D}-item-no-label::after{`,
-    `  margin:0;`,
-    `  content:"";`,
-    `}`,
-    // {cmp}-item-content
-    `${D} ${D}-item-content{`,
-    `  display:table-cell;`,
-    `  flex:1;`,
-    `  color:${sv(p, 'content-color')};`,
-    `  font-size:${v('fontSize')};`,
-    `  line-height:${v('lineHeight')};`,
-    `  word-break:break-word;`,
-    `  overflow-wrap:break-word;`,
-    `}`,
-    // {cmp}-item（+ container）
-    `${D} ${D}-item{`,
-    `  padding-bottom:0;`,
-    `  vertical-align:top;`,
-    `}`,
-    `${D} ${D}-item-container{`,
-    `  display:flex;`,
-    `}`,
-    `${D} ${D}-item-container ${D}-item-label{`,
-    `  display:inline-flex;`,
-    `  align-items:baseline;`,
-    `}`,
-    `${D} ${D}-item-container ${D}-item-content{`,
-    `  display:inline-flex;`,
-    `  align-items:baseline;`,
-    `  min-width:1em;`,
-    `}`,
-    // &-medium / &-small（非 bordered 的纵向 padding）
-    `${D}-medium ${D}-row > th,${D}-medium ${D}-row > td{`,
-    `  padding-bottom:${v('paddingSM')};`,
-    `}`,
-    `${D}-small ${D}-row > th,${D}-small ${D}-row > td{`,
-    `  padding-bottom:${v('paddingXS')};`,
-    `}`,
-  ];
-}
-
-/**
- * 生成 Descriptions 的静态 CSS。
- *
- * @param rootPrefixCls 根前缀（`apollo` 或 `ant`）
- */
-export function genDescriptionsStyle(rootPrefixCls: string): string {
-  const p = rootPrefixCls;
-  return [...genDescriptionStyle(p)].join('\n');
+    `${D}-rtl{direction:rtl;}`,
+    `${D}${D}-medium{--${p}-descriptions-item-padding-bottom:${v('paddingSM')};}`,
+    `${D}${D}-small{--${p}-descriptions-item-padding-bottom:${v('paddingXS')};}`,
+    `${D} > ${D}-header{display:flex;align-items:center;margin-bottom:${sv(p, 'title-margin-bottom')};}`,
+    `${D} > ${D}-header > ${D}-title{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:auto;color:${sv(p, 'title-color')};font-weight:${v('fontWeightStrong')};font-size:${v('fontSizeLG')};line-height:${v('lineHeightLG')};}`,
+    `${D} > ${D}-header > ${D}-extra{margin-inline-start:auto;color:${sv(p, 'extra-color')};font-size:${v('fontSize')};}`,
+    `${view}{box-sizing:border-box;width:100%;border-radius:${v('borderRadiusLG')};}`,
+    `${list}{display:grid;grid-template-columns:repeat(var(--apollo-descriptions-columns),minmax(0,1fr));margin:0;}`,
+    `${item}{display:flex;align-items:baseline;min-width:0;grid-column:span var(--apollo-descriptions-span);padding-block-end:${sv(p, 'item-padding-bottom')};padding-inline-end:${sv(p, 'item-padding-end')};}`,
+    `${item}${D}-item-row-end{padding-inline-end:0;}`,
+    `${item}${D}-item-last-row{padding-block-end:0;}`,
+    `${label},${content}{min-width:0;margin:0;font-size:${v('fontSize')};line-height:${v('lineHeight')};text-align:start;overflow-wrap:break-word;}`,
+    `${label}{color:${sv(p, 'label-color')};font-weight:normal;}`,
+    `${label}::after{content:":";position:relative;top:-0.5px;margin-inline:${sv(p, 'colon-margin-left')} ${sv(p, 'colon-margin-right')};}`,
+    `${label}${D}-item-no-colon::after{content:"";}`,
+    `${label}${D}-item-no-label{display:none;}`,
+    `${content}{flex:1;color:${sv(p, 'content-color')};word-break:break-word;}`,
+    `${verticalItem}{display:grid;grid-template-rows:subgrid;grid-row:span 2;align-items:start;}`,
+    `${verticalItem} > ${D}-item-label{grid-row:1;padding-block-end:${sv(p, 'item-padding-bottom')};}`,
+    `${verticalItem} > ${D}-item-content{grid-row:2;}`,
+    `${B} > ${D}-view{border:${split};overflow:hidden;}`,
+    `${B} > ${D}-view > ${D}-list{grid-template-columns:repeat(var(--apollo-descriptions-columns),auto minmax(0,1fr));}`,
+    `${bItem}{display:grid;grid-template-columns:subgrid;grid-column:span calc(var(--apollo-descriptions-span) * 2);padding:0;align-items:stretch;border-block-end:${split};border-inline-end:${split};}`,
+    `${bItem}${D}-item-row-end{border-inline-end:none;}`,
+    `${bItem}${D}-item-last-row{border-block-end:none;}`,
+    `${bItem} > ${D}-item-label,${bItem} > ${D}-item-content{padding:${sv(p, 'item-padding-bottom')} ${sv(p, 'item-padding-end')};}`,
+    `${bItem} > ${D}-item-label{grid-column:1;background-color:${sv(p, 'label-bg')};border-inline-end:${split};}`,
+    `${bItem} > ${D}-item-label::after{display:none;}`,
+    `${bItem} > ${D}-item-content{grid-column:2 / -1;}`,
+    `${bItem}${D}-item-without-label > ${D}-item-content{grid-column:1 / -1;}`,
+    `${B}${D}-vertical > ${D}-view > ${D}-list{grid-template-columns:repeat(var(--apollo-descriptions-columns),minmax(0,1fr));}`,
+    `${B}${D}-vertical > ${D}-view > ${D}-list > ${D}-item{grid-column:span var(--apollo-descriptions-span);grid-template-columns:minmax(0,1fr);}`,
+    `${B}${D}-vertical > ${D}-view > ${D}-list > ${D}-item > ${D}-item-label{grid-column:1;border-inline-end:none;border-block-end:${split};}`,
+    `${B}${D}-vertical > ${D}-view > ${D}-list > ${D}-item > ${D}-item-content{grid-column:1;}`,
+  ].join('\n');
 }

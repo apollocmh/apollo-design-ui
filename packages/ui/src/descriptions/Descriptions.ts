@@ -1,84 +1,43 @@
-/**
- * Descriptions —— 描述列表（渲染函数组件）。
- *
- * 契约来源：antd 6.6.4 的 `es/descriptions/index.js`（141 行）+ `Row.js` / `Cell.js` /
- * `hooks/useItems.js` / `hooks/useRow.js`（判据逐条对齐 G1 分析
- * `docs/analysis/descriptions.md`；SSR 探针钉死 DOM）。
- *
- * ── 八条最容易写错的判据 ─────────────────────────────────────────────────────
- *
- * 1. **三形态渲染分支**（Row.js / Cell.js）：
- *    - horizontal 非 bordered：label/content **同一个 td**（`-item` 类 +
- *      `-item-container` div 包两个 span，colSpan=span）；
- *    - bordered：label=`th.-item-label[colSpan=1]`、content=`td.-item-content[colSpan=span*2-1]`，
- *      内容直接 `<span>`（无 container），labelStyle/contentStyle 落 **cell** 上；
- *    - vertical：label 行 + content 行分开（非 bordered 时 cell 类是 `-item`，
- *      container 里 span 才带 `-item-label/-item-content`；bordered 时走 bordered 结构）。
- * 2. **行尾补齐**：行内 span 总和 < column 时，最后一个 item 的 span 扩成
- *    `column - (sum - lastSpan)`（basic 的 4 items / 3 列 ⇒ 末条 colSpan=3）。
- * 3. **bordered 的 colSpan 语义**：`span*2-1`（content），label 恒 1 —— 不是 span。
- * 4. **column 响应式兜底链**：`matchScreen(screens, column) ?? matchScreen(screens,
- *    DEFAULT_COLUMN_MAP) ?? 3`（用户 map 优先，无激活断点才落默认 map）。
- * 5. **header 恒只有 title||extra 才渲染**；title 与 extra 各自独立判空。
- * 6. **用户 style 走语义槽 root**（`style: mergedStyles.root`），不是单独拼 ——
- *    与 antd 的 `useSemanticRootStyle` 同构。
- * 7. **deprecation 三条**：`size="default"`→large、`labelStyle`→styles.label、
- *    `contentStyle`→styles.content。
- * 8. **size 类名只对 medium/middle 与 small**：`-medium` / `-small`；large/default 无类。
- */
-
-import { isEmptyVNode, useDevWarning } from '@apollo-design/utils';
+/** Stable Vue description items; row calculations affect geometry, not content ownership. */
 import {
-  Comment,
+  containsComposed,
+  getActiveElement,
+  getFocusNodeList,
+  isEmptyVNode,
+  mergeDomAttrs,
+  useDevWarning,
+} from '@apollo-design/utils';
+import {
+  cloneVNode,
   computed,
   defineComponent,
-  Fragment,
   h,
-  mergeProps,
+  onBeforeUpdate,
+  onUpdated,
   type PropType,
+  provide,
+  type SlotsType,
   shallowRef,
-  type VNode,
-  type VNodeChild,
   watchEffect,
 } from 'vue';
-import type { Breakpoint, Screens } from '../_internal/responsive-observer';
+import { normalizeNode } from '../_internal/node-renderer';
 import { matchScreen } from '../_internal/responsive-observer';
-import {
-  mergeClassNames,
-  mergeStyles,
-  resolveSemantic,
-  styleAttrs,
-} from '../_internal/use-merge-semantic';
+import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useSize } from '../config-provider/size-context';
 import { useBreakpoint } from '../grid/hooks/use-breakpoint';
+import { descriptionsContextKey } from './context';
+import { DescriptionsItemComponent } from './DescriptionsItem';
 import type {
-  DescriptionsItemType,
+  DescriptionsConfig,
   DescriptionsProps,
   DescriptionsRef,
-  DescriptionsRowItem,
   DescriptionsSemanticClassNames,
   DescriptionsSemanticStyles,
+  DescriptionsSlots,
 } from './interface';
-import { DEFAULT_COLUMN_MAP, getCalcRows, normalizeItems } from './items';
-
-type CellType = 'label' | 'content' | 'item';
-
-/** renderCells 的环境参数（Row.js 的第二/三参）。 */
-interface CellEnv {
-  colon: boolean;
-  prefixCls: string;
-  bordered?: boolean;
-}
-
-interface CellStyleEnv {
-  rootLabelStyle?: Record<string, string | number>;
-  rootContentStyle?: Record<string, string | number>;
-  styles?: { label?: Record<string, string | number>; content?: Record<string, string | number> };
-  classNames?: { label?: string; content?: string };
-}
-
-const isNumber = (v: unknown): v is number => typeof v === 'number';
+import { DEFAULT_COLUMN_MAP, getCalcRows, normalizeItems, positiveInteger } from './items';
+import { useDescriptionsTheme } from './use-descriptions-theme';
 
 export const DescriptionsComponent = defineComponent({
   name: 'ADescriptions',
@@ -87,28 +46,17 @@ export const DescriptionsComponent = defineComponent({
     prefixCls: { type: String, default: undefined },
     id: { type: String, default: undefined },
     bordered: { type: Boolean, default: undefined },
-    size: { type: String as PropType<NonNullable<DescriptionsProps['size']>>, default: undefined },
-    // ⚠️ C8-R2：原 `extra` 删除改为 `#extra` slot（空 slot 等价隐藏）；`title` 收窄为
-    //    String（富标题走 `#title` slot，slot 优先）。
+    size: { type: String as PropType<DescriptionsProps['size']>, default: undefined },
     title: { type: String, default: undefined },
-    column: {
-      type: [Number, Object] as PropType<DescriptionsProps['column']>,
-      default: undefined,
-    },
-    layout: {
-      type: String as PropType<NonNullable<DescriptionsProps['layout']>>,
-      default: undefined,
-    },
+    column: { type: [Number, Object] as PropType<DescriptionsProps['column']>, default: undefined },
+    layout: { type: String as PropType<DescriptionsProps['layout']>, default: undefined },
     colon: { type: Boolean, default: undefined },
-    labelStyle: {
-      type: Object as PropType<DescriptionsProps['labelStyle']>,
-      default: undefined,
-    },
+    labelStyle: { type: Object as PropType<DescriptionsProps['labelStyle']>, default: undefined },
     contentStyle: {
       type: Object as PropType<DescriptionsProps['contentStyle']>,
       default: undefined,
     },
-    items: { type: Array as PropType<DescriptionsItemType[]>, default: undefined },
+    items: { type: Array as PropType<DescriptionsProps['items']>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<DescriptionsProps['classNames']>,
       default: undefined,
@@ -118,431 +66,188 @@ export const DescriptionsComponent = defineComponent({
       default: undefined,
     },
   },
+  slots: Object as SlotsType<DescriptionsSlots>,
   setup(props, { attrs, slots, expose }) {
-    const context = useComponentConfig('descriptions');
-    const { getPrefixCls } = context;
-    const direction = useDirection();
-    const devWarning = useDevWarning('Descriptions');
-
-    // ============ slot：ReactNode / render prop 的唯一入口（规则 C8-R2）============
-    const readSlot = (name: string): unknown => {
-      const fn = (slots as Record<string, unknown>)[name];
-      if (typeof fn !== 'function') return undefined;
-      const nodes = (fn as (...args: unknown[]) => unknown)();
-      if (nodes === undefined) return undefined;
-      return isEmptyVNode(nodes) ? null : nodes;
-    };
-
-    // ============================== Warning ==============================
+    const context = useComponentConfig<DescriptionsConfig>('descriptions');
+    const direction = useDirection(),
+      screens = useBreakpoint();
+    const warning = useDevWarning('Descriptions');
     watchEffect(() => {
-      // antd：`warning.deprecated(customizeSize !== 'default', 'size="default"', 'size="large"')`
-      devWarning.deprecated(props.size !== 'default', 'size="default"', 'size="large"');
-      devWarning.deprecated(props.labelStyle === undefined, 'labelStyle', 'styles.label');
-      devWarning.deprecated(props.contentStyle === undefined, 'contentStyle', 'styles.content');
+      warning.deprecated(props.size !== 'default', 'size="default"', 'size="large"');
+      warning.deprecated(props.labelStyle === undefined, 'labelStyle', 'styles.label');
+      warning.deprecated(props.contentStyle === undefined, 'contentStyle', 'styles.content');
     });
-
-    const prefixCls = computed(() => getPrefixCls('descriptions', props.prefixCls));
-    const screens = useBreakpoint();
-
-    // ============================ Column ================================
-    // 判据 4：isNumber 短路 → 用户 map → DEFAULT_COLUMN_MAP → 3
-    const mergedColumn = computed<number>(() => {
-      const column = props.column;
-      if (isNumber(column)) {
-        return column;
-      }
-      return (
-        matchScreen(
-          screens.value ?? ({} as Screens),
-          column as Partial<Record<Breakpoint, number>>,
-        ) ??
-        matchScreen(screens.value ?? ({} as Screens), DEFAULT_COLUMN_MAP) ??
-        3
+    const prefix = computed(() => context.getPrefixCls('descriptions', props.prefixCls));
+    const theme = useDescriptionsTheme(() => prefix.value);
+    const column = computed(() =>
+      positiveInteger(
+        typeof props.column === 'number'
+          ? props.column
+          : (matchScreen(screens.value, props.column ?? {}) ??
+              matchScreen(screens.value, DEFAULT_COLUMN_MAP)),
+        3,
+      ),
+    );
+    const size = useSize((current) => props.size ?? current ?? 'large');
+    const mergedProps = computed<DescriptionsProps>(() => ({
+      ...props,
+      column: column.value,
+      size: size.value,
+    }));
+    const semantic = useMergeSemantic<
+      DescriptionsProps,
+      DescriptionsSemanticClassNames,
+      DescriptionsSemanticStyles
+    >(
+      [() => context.classNames, () => props.classNames],
+      [
+        () => context.styles,
+        () => semanticRootStyle(context.style),
+        () => ({ label: props.labelStyle, content: props.contentStyle }),
+        () => props.styles,
+      ],
+      mergedProps,
+    );
+    provide(
+      descriptionsContextKey,
+      computed(() => ({
+        prefixCls: prefix.value,
+        colon: props.colon ?? true,
+        classNames: semantic.classNames.value,
+        styles: semantic.styles.value,
+      })),
+    );
+    const resolveRows = (children: Parameters<typeof normalizeItems>[2]) => {
+      const [rows, exceed] = getCalcRows(
+        normalizeItems(screens.value, props.items, children),
+        column.value,
       );
-    });
-
-    // ============================== Items ===============================
-    const collectChildren = (nodes: VNodeChild[]): VNode[] => {
-      const out: VNode[] = [];
-      const walk = (list: VNodeChild[]) => {
-        for (const node of list) {
-          if (!node || typeof node !== 'object') continue;
-          const v = node as VNode;
-          if (v.type === Comment) continue;
-          if (v.type === Fragment) {
-            walk((v.children as VNodeChild[]) ?? []);
-            continue;
-          }
-          out.push(v);
-        }
-      };
-      walk(nodes);
-      return out;
+      warning(!exceed, 'Sum of column `span` in a line not match `column` of Descriptions.');
+      return rows;
     };
-    // =============================== Size ===============================
-    // ⚠️ 函数形态（PITFALLS 163：useSize(props.size) 非响应式）
-    const mergedSize = useSize((ctxSize) => props.size ?? ctxSize);
-
-    // ============================ Semantic ==============================
-    const mergedProps = computed<DescriptionsProps>(
-      () =>
-        ({
-          ...props,
-          column: mergedColumn.value,
-          items: props.items,
-          size: mergedSize.value,
-        }) as DescriptionsProps,
-    );
-    const info = computed(() => ({ props: mergedProps.value }));
-    const mergedClassNames = computed(() =>
-      mergeClassNames<DescriptionsSemanticClassNames>(
-        resolveSemantic<DescriptionsSemanticClassNames, DescriptionsProps>(
-          props.classNames as never,
-          info.value,
-        ),
-        resolveSemantic<DescriptionsSemanticClassNames, DescriptionsProps>(
-          context.classNames as never,
-          info.value,
-        ),
-      ),
-    );
-    const mergedStyles = computed(() =>
-      mergeStyles<DescriptionsSemanticStyles>(
-        resolveSemantic<DescriptionsSemanticStyles, DescriptionsProps>(
-          props.styles as never,
-          info.value,
-        ),
-        resolveSemantic<DescriptionsSemanticStyles, DescriptionsProps>(
-          context.styles as never,
-          info.value,
-        ),
-      ),
-    );
-
-    // ============================== Rows ================================
-    const resolveRows = (children: VNode[]) => {
-      const items = normalizeItems(screens.value, props.items, children);
-      const [calcRows, exceed] = getCalcRows(items, mergedColumn.value);
-      devWarning(!exceed, 'Sum of column `span` in a line not match `column` of Descriptions.');
-      return calcRows;
-    };
-    // Pure-data inputs can be cached; slot VNodes belong only to the current render.
     const dataRows = computed(() => resolveRows([]));
-
-    // ============================ Ref / Expose ==========================
     const rootRef = shallowRef<HTMLDivElement | null>(null);
+    let focusedBeforeUpdate: ReturnType<typeof getFocusNodeList>[number] | undefined;
+    onBeforeUpdate(() => {
+      const root = rootRef.value;
+      focusedBeforeUpdate = root
+        ? getFocusNodeList(root, true).find((node) => node === getActiveElement(root))
+        : undefined;
+    });
+    onUpdated(() => {
+      const root = rootRef.value,
+        previous = focusedBeforeUpdate;
+      focusedBeforeUpdate = undefined;
+      if (
+        root &&
+        previous?.isConnected &&
+        containsComposed(root, previous) &&
+        getActiveElement(root) === root.ownerDocument.body
+      )
+        previous.focus({ preventScroll: true });
+    });
     expose({
       get nativeElement() {
         return rootRef.value;
       },
     } satisfies DescriptionsRef);
-
-    // ============================ Cell 渲染 =============================
-    const isRenderable = (v: VNodeChild | null | undefined): boolean =>
-      v !== null && v !== undefined;
-
-    /** 4 级合并（Row.js renderCells）：rootLabelStyle → rootStyles.label → item.labelStyle → item.styles.label */
-    const cellStyles = (
-      item: DescriptionsRowItem,
-      rootLabelStyle: Record<string, string | number> | undefined,
-      rootContentStyle: Record<string, string | number> | undefined,
-      rootStyles: DescriptionsSemanticStyles | undefined,
-    ): { label: Record<string, string | number>; content: Record<string, string | number> } => ({
-      label: {
-        ...rootLabelStyle,
-        ...rootStyles?.label,
-        ...item.labelStyle,
-        ...item.styles?.label,
-      },
-      content: {
-        ...rootContentStyle,
-        ...rootStyles?.content,
-        ...item.contentStyle,
-        ...item.styles?.content,
-      },
-    });
-
-    /** 非 bordered cell（component 为 string）：label/content 同 cell + container。 */
-    const renderPlainCell = (
-      item: DescriptionsRowItem,
-      opts: {
-        component: string;
-        type: CellType;
-        showLabel: boolean;
-        showContent: boolean;
-      } & CellEnv &
-        CellStyleEnv,
-    ) => {
-      const { colon, prefixCls: p, showLabel, showContent, component } = opts;
-      const merged = cellStyles(item, opts.rootLabelStyle, opts.rootContentStyle, opts.styles);
-      const rootClassNames = opts.classNames;
-      const cells: VNode[] = [
-        h(
-          opts.component,
-          {
-            key: `${opts.type}-${item.key ?? item.index}`,
-            colSpan: item.span ?? 1,
-            class: [`${p}-item`, item.className],
-            style: item.style,
-          },
-          [
-            h('div', { class: `${p}-item-container` }, [
-              showLabel && isRenderable(item.label)
-                ? h(
-                    'span',
-                    {
-                      style: { ...merged.label },
-                      class: [
-                        `${p}-item-label`,
-                        rootClassNames?.label,
-                        { [`${p}-item-no-colon`]: !colon },
-                      ],
-                    },
-                    [item.label],
-                  )
-                : null,
-              showContent && isRenderable(item.children)
-                ? h(
-                    'span',
-                    {
-                      style: { ...merged.content },
-                      class: [`${p}-item-content`, rootClassNames?.content],
-                    },
-                    [item.children],
-                  )
-                : null,
-            ]),
-          ],
-        ),
-      ];
-      void component;
-      return cells;
-    };
-
-    /** bordered cell：label=th[type 类][colSpan]、content=td[...]，style 落 cell。 */
-    const renderBorderedCell = (
-      item: DescriptionsRowItem,
-      opts: {
-        component: string;
-        type: 'label' | 'content';
-        span: number;
-        showLabel?: boolean;
-        showContent?: boolean;
-      } & CellEnv &
-        CellStyleEnv,
-    ) => {
-      const { component, type, span, prefixCls: p } = opts;
-      const merged = cellStyles(item, opts.rootLabelStyle, opts.rootContentStyle, opts.styles);
-      const typeStyle = type === 'label' ? merged.label : merged.content;
-      const content = type === 'label' ? item.label : item.children;
-      const renderable = type === 'label' ? isRenderable(item.label) : isRenderable(item.children);
-      return h(
-        component,
-        {
-          key: `${type}-${item.key ?? item.index}`,
-          colSpan: span,
-          style: { ...item.style, ...typeStyle },
-          class: [
-            item.className,
-            {
-              [`${p}-item-${type}`]: type === 'label' || type === 'content',
-              [opts.classNames?.label ?? '']: !!opts.classNames?.label && type === 'label',
-              [opts.classNames?.content ?? '']: !!opts.classNames?.content && type === 'content',
-            },
-          ],
-        },
-        renderable ? [h('span', null, [content])] : [],
-      );
-    };
-
-    /** Row 渲染（Row.js）。 */
-    const renderRow = (row: DescriptionsRowItem[], index: number) => {
-      const p = prefixCls.value;
-      const vertical = props.layout === 'vertical';
-      const rootStyles = mergedStyles.value;
-      const rootClassNames = mergedClassNames.value;
-      const env: CellEnv & CellStyleEnv = {
-        colon: props.colon ?? true,
-        prefixCls: p,
-        bordered: props.bordered,
-        rootLabelStyle: props.labelStyle,
-        rootContentStyle: props.contentStyle,
-        styles: { label: rootStyles.label, content: rootStyles.content },
-        classNames: { label: rootClassNames.label, content: rootClassNames.content },
-      };
-
-      if (vertical) {
-        // ⚠️ vertical 的 cell：非 bordered 时 component='th'/'td'（string）→ plain 结构
-        //   （cell 类是 `-item`，container 里 span 才有 item-label）；bordered 时走 bordered。
-        const labelRow = h(
-          'tr',
-          { key: `label-${index}`, class: `${p}-row` },
-          row.flatMap((item) => {
-            if (props.bordered) {
-              return [
-                renderBorderedCell(item, {
-                  ...env,
-                  component: 'th',
-                  type: 'label',
-                  span: item.span ?? 1,
-                }),
-              ];
-            }
-            return renderPlainCell(item, {
-              ...env,
-              component: 'th',
-              type: 'label',
-              showLabel: true,
-              showContent: false,
-            });
-          }),
-        );
-        const contentRow = h(
-          'tr',
-          { key: `content-${index}`, class: `${p}-row` },
-          row.flatMap((item) => {
-            if (props.bordered) {
-              return [
-                renderBorderedCell(item, {
-                  ...env,
-                  component: 'td',
-                  type: 'content',
-                  span: item.span ?? 1,
-                }),
-              ];
-            }
-            return renderPlainCell(item, {
-              ...env,
-              component: 'td',
-              type: 'content',
-              showLabel: false,
-              showContent: true,
-            });
-          }),
-        );
-        return [labelRow, contentRow];
-      }
-
-      return [
-        h(
-          'tr',
-          { key: index, class: `${p}-row` },
-          row.flatMap((item) => {
-            if (props.bordered) {
-              // 判据 3：label colSpan=1、content colSpan=span*2-1
-              return [
-                renderBorderedCell(item, {
-                  ...env,
-                  component: 'th',
-                  type: 'label',
-                  span: 1,
-                  showLabel: true,
-                }),
-                renderBorderedCell(item, {
-                  ...env,
-                  component: 'td',
-                  type: 'content',
-                  span: (item.span ?? 1) * 2 - 1,
-                  showContent: true,
-                }),
-              ];
-            }
-            return renderPlainCell(item, {
-              ...env,
-              component: 'td',
-              type: 'item',
-              showLabel: true,
-              showContent: true,
-            });
-          }),
-        ),
-      ];
-    };
-
-    // ============================== Render ==============================
     return () => {
-      const rows =
-        props.items !== undefined
-          ? dataRows.value
-          : resolveRows(collectChildren(slots.default?.() ?? []));
-      const cls = prefixCls.value;
-      const size = mergedSize.value;
-
-      // 判据 8：medium/middle → -medium；small → -small；large/default 无类
-      const titleSlot = readSlot('title');
-      const mergedTitle: unknown = titleSlot !== undefined ? titleSlot : props.title;
-      const hasTitle = mergedTitle !== null && mergedTitle !== undefined;
-
-      const extraSlot = readSlot('extra');
-      const mergedExtra: unknown = extraSlot;
-      const hasExtra = mergedExtra !== null && mergedExtra !== undefined;
-
-      // 根 `class` / `style` 是 Vue 原生 attrs：内部类 + 语义根样式在前，`attrs` 在后
-      // ⇒ 调用方同名样式优先（与原先 `props.style` 在合并末尾的语义一致）。
+      const p = prefix.value,
+        classes = semantic.classNames.value,
+        styles = semantic.styles.value;
+      const rows = props.items !== undefined ? dataRows.value : resolveRows([slots.default?.()]);
+      const title = slots.title ? slots.title() : props.title,
+        extra = slots.extra?.();
+      const hasTitle = !isEmptyVNode(title),
+        hasExtra = !isEmptyVNode(extra);
       return h(
         'div',
-        mergeProps(
+        mergeDomAttrs(
           {
             ref: rootRef,
             id: props.id,
             class: [
-              cls,
-              context.className as string | undefined,
-              mergedClassNames.value.root,
+              p,
+              context.className,
+              classes.root,
               {
-                [`${cls}-medium`]: size === 'medium' || size === 'middle',
-                [`${cls}-small`]: size === 'small',
-                [`${cls}-bordered`]: !!props.bordered,
-                [`${cls}-rtl`]: direction.value === 'rtl',
+                [`${p}-medium`]: size.value === 'medium' || size.value === 'middle',
+                [`${p}-small`]: size.value === 'small',
+                [`${p}-bordered`]: !!props.bordered,
+                [`${p}-vertical`]: props.layout === 'vertical',
+                [`${p}-rtl`]: direction.value === 'rtl',
               },
             ],
+            style: [theme.value, styles.root],
           },
-          styleAttrs(mergedStyles.value.root),
           attrs,
         ),
         [
-          (hasTitle || hasExtra) &&
+          hasTitle || hasExtra
+            ? h(
+                'div',
+                { key: 'header', class: [`${p}-header`, classes.header], style: styles.header },
+                [
+                  hasTitle
+                    ? h(
+                        'div',
+                        { key: 'title', class: [`${p}-title`, classes.title], style: styles.title },
+                        [title],
+                      )
+                    : null,
+                  hasExtra
+                    ? h(
+                        'div',
+                        { key: 'extra', class: [`${p}-extra`, classes.extra], style: styles.extra },
+                        [extra],
+                      )
+                    : null,
+                ],
+              )
+            : null,
+          h('div', { key: 'view', class: `${p}-view` }, [
             h(
-              'div',
-              {
-                class: [`${cls}-header`, mergedClassNames.value.header],
-                ...styleAttrs(mergedStyles.value.header),
-              },
-              [
-                hasTitle &&
-                  h(
-                    'div',
-                    {
-                      class: [`${cls}-title`, mergedClassNames.value.title],
-                      ...styleAttrs(mergedStyles.value.title),
+              'dl',
+              { class: `${p}-list`, style: { '--apollo-descriptions-columns': column.value } },
+              rows.flatMap((row, rowIndex) =>
+                row.map((item, itemIndex) => {
+                  const geometry = {
+                    key: item.key ?? item.index,
+                    'data-row': rowIndex,
+                    'data-span': item.span,
+                    class: {
+                      [`${p}-item-row-end`]: itemIndex === row.length - 1,
+                      [`${p}-item-last-row`]: rowIndex === rows.length - 1,
                     },
-                    [mergedTitle as VNodeChild],
-                  ),
-                hasExtra &&
-                  h(
-                    'div',
-                    {
-                      class: [`${cls}-extra`, mergedClassNames.value.extra],
-                      ...styleAttrs(mergedStyles.value.extra),
-                    },
-                    [mergedExtra as VNodeChild],
-                  ),
-              ],
-            ),
-          h('div', { class: `${cls}-view` }, [
-            h('table', null, [
-              h(
-                'tbody',
-                null,
-                rows.flatMap((row, index) => renderRow(row, index)),
+                    style: { '--apollo-descriptions-span': item.span },
+                  };
+                  return item.node
+                    ? cloneVNode(item.node, geometry)
+                    : h(
+                        DescriptionsItemComponent,
+                        {
+                          ...geometry,
+                          prefixCls: item.prefixCls,
+                          className: item.className,
+                          style: [item.style, geometry.style],
+                          labelStyle: item.labelStyle,
+                          contentStyle: item.contentStyle,
+                          classNames: item.classNames,
+                          styles: item.styles,
+                        },
+                        {
+                          label: () => normalizeNode(item.label),
+                          default: () => normalizeNode(item.children),
+                        },
+                      );
+                }),
               ),
-            ]),
+            ),
           ]),
         ],
       );
     };
   },
 });
-
 export const DescriptionsComponentWithItem = DescriptionsComponent;
 export default DescriptionsComponent;

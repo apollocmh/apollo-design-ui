@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig.json",
+  "include": [
+    "../../../packages/ui/src/descriptions/**/*.ts",
+    "../../../packages/ui/src/descriptions/**/*.vue",
+    "./DescriptionsPublicContracts.vue",
+    "./DescriptionsContractAudit.vue"
+  ],
+  "exclude": ["../../../node_modules", "../../../packages/*/dist"]
+}

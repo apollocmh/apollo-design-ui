@@ -1,0 +1,114 @@
+{
+  "savedAt": "2026-10-28T14:22:10.772Z",
+  "worktreeBase": "6970bb2dee737580c308c881badf995f765b7d25",
+  "status": "source functionality savepoint; integrated final commit and publication gates pending",
+  "sourceHashes": {
+    "packages/ui/src/descriptions/Descriptions.ts": "52811209da002718b640f3dcc494063769689ad24b8baa6314bf5b94c73c2eea",
+    "packages/ui/src/descriptions/DescriptionsItem.ts": "b459810eb704a0d05ffa9b2f9390a415413a299be198e0016360879c744682a5",
+    "packages/ui/src/descriptions/PLAN.md": "006bc384a296528ffc2b55732c89f22016df80303d41e78cc084971205ace354",
+    "packages/ui/src/descriptions/README.md": "84be52fe651ce8427ebcd9b3c63c0b19253af3eaefb68c634a0bc081ad361201",
+    "packages/ui/src/descriptions/__tests__/a11y.test.ts": "e86bbab00b07d48250d0da406d3c7b79ffb70544290ba3b69df0937aa092a5b8",
+    "packages/ui/src/descriptions/__tests__/contract-differences.ts": "06fbba045d31faa42b1b4d0419880866a8a8ed022ded700f70a9bc93f02e1471",
+    "packages/ui/src/descriptions/__tests__/contracts.test.ts": "6553594e9618a95f7b5fad8e6942f6d65e01409a994975eb382b08e37bae464a",
+    "packages/ui/src/descriptions/__tests__/demo.test.ts": "9b13ca3c35ebcad7bfcad03a6016feb358a8b743d02f97f3bf08537b9ad7a414",
+    "packages/ui/src/descriptions/__tests__/index.test.ts": "cc4b528ac2e0e91ef83f80384e6d734ca44d6439010746afa587aceba034a409",
+    "packages/ui/src/descriptions/__tests__/render-rows.test.ts": "cc0a5f4bf423003ca99cb1333ccd542492818658bcce2514e57eda7a856d0502",
+    "packages/ui/src/descriptions/__tests__/s31-issue31.test.ts": "4106ee5e7c615906681717f14d87651a001b0c9a34016d1ef5bc071c2ec18c88",
+    "packages/ui/src/descriptions/__tests__/semantic.test.ts": "2569ad28c071023600c95e395a5d5db5b0aec9a6d7b3f0ef5fa08f1ae060e8ee",
+    "packages/ui/src/descriptions/__tests__/theme.test.ts": "6d336477ecb2472d7f3f7611fa415c11d0ddf23b0e55ab41fbc46a81b816f6ff",
+    "packages/ui/src/descriptions/__tests__/type.test-d.ts": "bb7f8202d82d62e1bf92411608f8e42759a6380abffd2cc115ceb2e7f7a99550",
+    "packages/ui/src/descriptions/context.ts": "f9957df407049ee30e4bf336127dcfb64c78c783dce402e86bbdba927ef50bcf",
+    "packages/ui/src/descriptions/demo/basic.md": "ba20186ca98aea69bb47f5e6632e5b50d5b423e055b0d10b062ae352e5e35eef",
+    "packages/ui/src/descriptions/demo/basic.vue": "9e56a5df6f095ff29eaaf117573d65ba8b0c699c7416cee9c87981291a27dbc9",
+    "packages/ui/src/descriptions/demo/bordered.md": "8bb5386041fc26a7f57dd80ec080a127166f0e6489f51232098b88619c839f00",
+    "packages/ui/src/descriptions/demo/bordered.vue": "0ec0cf51c4477642ed9d8f8077d5730bb1d41e62f4581a975a0276d908781d35",
+    "packages/ui/src/descriptions/demo/column.md": "381c31ec636386b43f04b56a42e69162359424d0e50808e66937950c088cf791",
+    "packages/ui/src/descriptions/demo/column.vue": "67f3a0a601550471b686aae8aa2998315cdc85115767fbcfd93b9852b59a950e",
+    "packages/ui/src/descriptions/demo/component-token.md": "6e6e939d32c8924cd125ee1f2017ca378cfbf3ec07252eec4959b18b48f4c071",
+    "packages/ui/src/descriptions/demo/component-token.vue": "39dcf9262d385cb53dc914f517307de9199e55564cee609e7e2c913db4c567ed",
+    "packages/ui/src/descriptions/demo/custom-item.md": "93e63687a2f540463a34f19f397b5764b8a8c5fcb20efcf3df1eb48c3e228b81",
+    "packages/ui/src/descriptions/demo/custom-item.vue": "2b5c96e9793a1f35320dfdaf7d09e1f82cdf1acdf317e81f9de9cb4050168a0c",
+    "packages/ui/src/descriptions/demo/custom-label.md": "b5cf57c21d6ccd8d020694a88aebdfdf0a75d5554167e019a032c78123084aec",
+    "packages/ui/src/descriptions/demo/custom-label.vue": "cc2cdf7d03e6ac05440a372bba4871623a99ad8c978c6211b99d5bd64b065e3f",
+    "packages/ui/src/descriptions/demo/extra-button.md": "4496d28634816065ca9d2196d0bc55c6a68f12c5ce8570962ea8674ef84a82b3",
+    "packages/ui/src/descriptions/demo/extra-button.vue": "e028256e3a7bfdd974e590db10db1ac218f321c49cedcf8ed4c32c27a0c34029",
+    "packages/ui/src/descriptions/demo/extra.md": "238ba1d5c694589c4005983eb1ad63a086a84f32aaaa6bba70e17829455daa13",
+    "packages/ui/src/descriptions/demo/extra.vue": "fc2cb1b9aa07e289e116405792a7dd62afdad978f53588dc501e45701b0d3731",
+    "packages/ui/src/descriptions/demo/padding.md": "6b8956c8b52c5f0f9b3d44bd2669e8fa0882c4fd7f099a37c38e1ddf2dc55f43",
+    "packages/ui/src/descriptions/demo/padding.vue": "883254ec89946421a9e2e373cc797d2c871050c80c57b0a35354044a8970716d",
+    "packages/ui/src/descriptions/demo/responsive.md": "3c8e7f574de633ed659311e87208e42a742d6fb774da6aa83dec427df9770ad1",
+    "packages/ui/src/descriptions/demo/responsive.vue": "dbcbe68e0160c27662bf8804afbcb24e0220451110d4375b9f5cdcf0f790a682",
+    "packages/ui/src/descriptions/demo/size.md": "2e54afe9bfbeb2a33c65041aea06d16ef6a0a39673393c22f200a6b243102d8f",
+    "packages/ui/src/descriptions/demo/size.vue": "0d243efb93908e0f7c32fbec34b4dda4a3487b267aa52c7ad75b835b0f523c7d",
+    "packages/ui/src/descriptions/demo/vertical-border.md": "5c15ccebadb054a690082d8e820f53d31eb422254d9750aef12a1d10a4ff1379",
+    "packages/ui/src/descriptions/demo/vertical-border.vue": "d05d0b82227f8948ec55c1950930d98891d42c6e6887eac70a4811516375ce2a",
+    "packages/ui/src/descriptions/demo/vertical.md": "09eb87259746099990fe646b32c50ec336f390c0d9c420529fcff94dec657458",
+    "packages/ui/src/descriptions/demo/vertical.vue": "2948e1c2b6d51eebe250ef15762538ea7f5781136b426ee76104adcc8452269c",
+    "packages/ui/src/descriptions/index.en-US.md": "b6d8eaa09f9e0828d0f6ce371c1465b4322d08d81c33d760f0f8eb0c80a70eda",
+    "packages/ui/src/descriptions/index.ts": "fe8046981229629c3084eaee00e44c50a826aabd0ee7d7186c9bedaacb5e3cfb",
+    "packages/ui/src/descriptions/index.zh-CN.md": "f2737243f8b9b45f3493ea0d4db92bbc718448fc6e7bf0cf6fe200595fd8e06a",
+    "packages/ui/src/descriptions/interface.ts": "9103bb380eafe4e5283a594376c67bf2d709a41018cfd7f2689f182a9c3dd2a4",
+    "packages/ui/src/descriptions/items.ts": "7d06de852ebecd5df952ccadce69759f5390c301828f9e17edcebc8c4d8519cf",
+    "packages/ui/src/descriptions/style/index.ts": "6cc09c8b91f5e1b482f462997440d1a6b48b5daa7a9980b07b8215eb0a42a923",
+    "packages/ui/src/descriptions/style/token.ts": "66626bf09f864ff5974c22ade297e8d371c8ad17c81f398ff233aede051ab1ea",
+    "packages/ui/src/descriptions/use-descriptions-theme.ts": "3d2a98918d704bd236989041a72d93465f82ee282a9a44b6c7314ca891e15fe7",
+    "tests/browser/descriptions-contracts.mjs": "ec833da28d2bf608a6626eeac52cc9df40317be30c9171f661b094c19fd75d95",
+    "tests/browser/descriptions-hydration.mjs": "10fc3285f6cbfa956aa5f8fd9efc4fbf4c6c94002915c9363c828f7a33bc4e7c",
+    "tests/browser/fixtures/DescriptionsContractAudit.vue": "7d80928ae44130fe7839a45daa92de13cd72c5a30ca55e3885aaa1b1ef720a2b",
+    "tests/browser/fixtures/DescriptionsHydration.mjs": "47c25b875e4f1707873d42730dec5088c42e243cc08eba1afe205cbfe796293d",
+    "tests/browser/fixtures/DescriptionsPublicContracts.vue": "c0538f23600beccae6a62339483b93dc1e181773d4df29e6f9efc2756a830cb1",
+    "tests/browser/fixtures/DescriptionsSourceTypes.json": "d3f614f6bce667156b1159a9dc00113decb10233b97405d36e3fa572dec2afe8",
+    "tests/consumer/descriptions-ssr.mjs": "de6ff2f5167ec579b9615127ba77fcb770c305536b7e703174dd9ba40da4fdd9",
+    "tests/consumer/descriptions-types.mjs": "299632b40ffbf40033436abcc1ec403954a47c64446c82ab6fad232cc915dfc1"
+  },
+  "checks": [
+    {
+      "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/descriptions --maxWorkers=1",
+      "exitCode": 0,
+      "files": 8,
+      "tests": 119,
+      "log": "(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:\n  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `\"type\": \"module\"` in the closest package.json\nSet `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.\nTesting types with tsc and vue-tsc is an experimental feature.\nBreaking changes might not follow SemVer, please pin Vitest's version when using it.\n\n RUN  v5.0.1 /Users/nanren/Code/apollo-design-ui\n\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\nNot implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package\n\n Test Files  8 passed (8)\n      Tests  119 passed (119)\n   Start at  22:18:33\n   Duration  32.32s (tests 33%, transform 27%, environment 21%, import 12%, setup 7%)\n\n"
+    },
+    {
+      "command": "pnpm exec vue-tsc --noEmit -p tests/browser/fixtures/DescriptionsSourceTypes.json",
+      "exitCode": 0,
+      "log": "/tmp/apollo-descriptions-focused-types-final.log"
+    },
+    {
+      "command": "pnpm exec vitest run --project types packages/ui/src/descriptions --maxWorkers=1",
+      "exitCode": 1,
+      "ownAssertionsPassed": 16,
+      "ownTypeErrors": 0,
+      "externalBlocker": "TimelineSlots.vue:22 TimelineConfig is not assignable to ComponentConfigLike; handed to integration",
+      "log": "(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:\n  - ESM syntax in a file loaded as CommonJS (vitest.config.ts:1:1). Use a `.mjs` extension or set `\"type\": \"module\"` in the closest package.json\nSet `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.\nTesting types with tsc and vue-tsc is an experimental feature.\nBreaking changes might not follow SemVer, please pin Vitest's version when using it.\n\n RUN  v5.0.1 /Users/nanren/Code/apollo-design-ui\n\n⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯\n\nVitest caught 1 unhandled error during the test run.\nThis might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.\n\n⎯⎯⎯ Unhandled Source Error ⎯⎯⎯\nTypeCheckError: Type 'TimelineConfig' is not assignable to type 'ComponentConfigLike'.\n  Type 'TimelineConfig' is not assignable to type '{ [key string] unknown; }'.\n    Index signature for type 'string' is missing in type 'TimelineConfig'.\n ❯ packages/ui/src/timeline/__tests__/fixtures/TimelineSlots.vue:22:34\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n\n Test Files  2 passed (2)\n      Tests  16 passed (16)\nType Errors  no errors\n     Errors  1 error\n   Start at  22:15:30\n   Duration  81.03s (typecheck 98%, environment 1%)\n\n"
+    },
+    {
+      "command": "node tests/browser/descriptions-contracts.mjs",
+      "exitCode": 0,
+      "assertions": 62,
+      "evidence": "descriptions-browser.json"
+    },
+    {
+      "command": "node tests/browser/descriptions-hydration.mjs",
+      "exitCode": 0,
+      "assertions": 10,
+      "evidence": "descriptions-hydration.json"
+    },
+    {
+      "command": "pnpm exec biome check packages/ui/src/descriptions tests/browser/descriptions*.mjs tests/browser/fixtures/Descriptions* tests/consumer/descriptions*.mjs",
+      "exitCode": 0,
+      "log": "Checked 40 files in 48ms. No fixes applied.\n"
+    },
+    {
+      "command": "node --check tests/browser/descriptions-contracts.mjs; node --check tests/browser/descriptions-hydration.mjs; node --check tests/consumer/descriptions-types.mjs; node --check tests/consumer/descriptions-ssr.mjs",
+      "exitCode": 0
+    }
+  ],
+  "pending": [
+    "Published UI build and both consumer scripts",
+    "Docs content/type/test/build",
+    "Apollo official candidate rendering, review and baseline acceptance",
+    "Full same-commit repository gates, coverage and shared Registry integration"
+  ],
+  "artifactJson": "All four evidence JSON files parse successfully. This repository excludes audit evidence from Biome; source files are checked by the scoped Biome command."
+}

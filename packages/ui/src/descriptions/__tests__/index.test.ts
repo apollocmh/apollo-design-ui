@@ -32,27 +32,23 @@ const ITEMS = [
 const make = (props: Record<string, unknown> = {}, slots?: Record<string, () => unknown>) =>
   mount(Descriptions, slots ? { props, slots } : { props });
 
-const cells = (w: MiniWrapper) => w.findAll('td, th');
+const cells = (w: MiniWrapper) => w.findAll('.apollo-descriptions-item');
 
 describe('Descriptions · 行切分与补齐（getCalcRows 判据）', () => {
-  it('4 items / 3 列：行 1 三格 colSpan=1、行 2 单格 colSpan=3（行尾补齐）', () => {
+  it('4 items / 3 列：逻辑跨度 [1,1,1] / [3]（行尾补齐）', () => {
     const w = make({ items: ITEMS.map((i) => ({ ...i })) });
-    const rows = w.findAll('tr');
-    expect(rows).toHaveLength(2);
-    const r1 = rows[0]!.findAll('td, th');
-    expect(r1.map((c) => c.attributes('colspan'))).toEqual(['1', '1', '1']);
-    const r2 = rows[1]!.findAll('td, th');
-    expect(r2.map((c) => c.attributes('colspan'))).toEqual(['3']);
+    expect(cells(w).map((cell) => cell.attributes('data-row'))).toEqual(['0', '0', '0', '1']);
+    expect(cells(w).map((cell) => cell.attributes('data-span'))).toEqual(['1', '1', '1', '3']);
   });
 
-  it('span=2：colSpan=2 且后续行正常切分（bordered 下 content=span*2-1）', () => {
+  it('span=2：普通和边框布局共用两列跨度与成对字段', () => {
     const w = make({
       items: [
         { key: '1', label: 'L1', children: 'C1', span: 2 },
         { key: '2', label: 'L2', children: 'C2' },
       ],
     });
-    expect(cells(w).map((c) => c.attributes('colspan'))).toEqual(['2', '1']);
+    expect(cells(w).map((c) => c.attributes('data-span'))).toEqual(['2', '1']);
     const wb = make({
       bordered: true,
       items: [
@@ -60,18 +56,20 @@ describe('Descriptions · 行切分与补齐（getCalcRows 判据）', () => {
         { key: '2', label: 'L2', children: 'C2' },
       ],
     });
-    // 判据 3：label colSpan=1、content colSpan=span*2-1=3；L2 补齐：content=2*2-1? → 补齐公式
-    expect(cells(wb).map((c) => c.attributes('colspan'))).toEqual(['1', '3', '1', '1']);
+    // Native dt/dd remain paired; logical spans match the original packing contract.
+    expect(cells(wb).map((c) => c.attributes('data-span'))).toEqual(['2', '1']);
+    expect(wb.findAll('dt')).toHaveLength(2);
+    expect(wb.findAll('dd')).toHaveLength(2);
   });
 
-  it("span:'filled'：独占逻辑行并参与补齐（L1 colSpan=1 + L2 colSpan=2）", () => {
+  it("span:'filled'：填满当前逻辑行余量（L1 span=1 + L2 span=2）", () => {
     const w = make({
       items: [
         { key: '1', label: 'L1', children: 'C1' },
         { key: '2', label: 'L2', children: 'C2', span: 'filled' },
       ],
     });
-    expect(cells(w).map((c) => c.attributes('colspan'))).toEqual(['1', '2']);
+    expect(cells(w).map((c) => c.attributes('data-span'))).toEqual(['1', '2']);
   });
 
   it('span 超出 column：压成 restSpan 并发 dev 告警（⚠️ 通用告警走 console.error）', () => {
@@ -84,7 +82,7 @@ describe('Descriptions · 行切分与补齐（getCalcRows 判据）', () => {
       ],
     });
     // restSpan = 2 - 0 = 2 ⇒ 第一条 colSpan=2
-    expect(cells(w).map((c) => c.attributes('colspan'))).toEqual(['2', '2']);
+    expect(cells(w).map((c) => c.attributes('data-span'))).toEqual(['2', '2']);
     expect(error).toHaveBeenCalled();
     error.mockRestore();
   });
@@ -93,7 +91,7 @@ describe('Descriptions · 行切分与补齐（getCalcRows 判据）', () => {
 describe('Descriptions · column 响应式兜底链', () => {
   it('column 为数字：直接生效', () => {
     const w = make({ column: 2, items: ITEMS.map((i) => ({ ...i })) });
-    expect(w.findAll('tr')).toHaveLength(2);
+    expect(new Set(cells(w).map((cell) => cell.attributes('data-row'))).size).toBe(2);
   });
 
   it('column 为响应式对象但无激活断点：落 DEFAULT_COLUMN_MAP（jsdom 无 matchMedia ⇒ xs=1）', () => {
@@ -103,11 +101,11 @@ describe('Descriptions · column 响应式兜底链', () => {
       items: ITEMS.map((i) => ({ ...i })),
     });
     // 挂载后 jsdom 无 matchMedia ⇒ screens 仍为 {}（无激活）⇒ DEFAULT_COLUMN_MAP 也未激活 ⇒ 3
-    expect(w.findAll('tr').length).toBeGreaterThan(0);
+    expect(cells(w).length).toBeGreaterThan(0);
   });
 });
 
-describe('Descriptions · children 形态（deprecated，Item 语法糖）', () => {
+describe('Descriptions · 模板 Item 形态', () => {
   it('DescriptionsItem 子节点转 items（label/span/styles 读 vnode.props）', () => {
     const Host = defineComponent({
       setup() {
@@ -125,7 +123,7 @@ describe('Descriptions · children 形态（deprecated，Item 语法糖）', () 
       },
     });
     const w = mount(Host);
-    expect(cells(w).map((c) => c.attributes('colspan'))).toEqual(['1', '2']);
+    expect(cells(w).map((c) => c.attributes('data-span'))).toEqual(['1', '2']);
   });
 
   it('items 优先于 children（antd：`items || transChildren2Items`）', () => {
@@ -160,15 +158,15 @@ describe('Descriptions · children 形态（deprecated，Item 语法糖）', () 
     });
     const w = mount(Host);
     // 1 条 ⇒ 补齐 colSpan=3
-    expect(cells(w).map((c) => c.attributes('colspan'))).toEqual(['3']);
+    expect(cells(w).map((c) => c.attributes('data-span'))).toEqual(['3']);
     count.value = 3;
     await w.vm.$nextTick();
-    expect(cells(w).map((c) => c.attributes('colspan'))).toEqual(['1', '1', '1']);
+    expect(cells(w).map((c) => c.attributes('data-span'))).toEqual(['1', '1', '1']);
   });
 });
 
 describe('Descriptions · 语义化与样式合并', () => {
-  it('非 bordered：classNames.label/content 与 styles 落 span；styles.root 落根 style', () => {
+  it('非 bordered：classNames.label/content 与 styles 落 dt/dd；styles.root 落根 style', () => {
     const w = make({
       items: ITEMS.map((i) => ({ ...i })),
       classNames: { root: 'my-root', label: 'my-label', content: 'my-content' },
@@ -181,14 +179,14 @@ describe('Descriptions · 语义化与样式合并', () => {
     expect(label.attributes('style')).toContain('color: red');
   });
 
-  it('bordered：语义 label/content 落 cell（th/td），style 合并到 cell', () => {
+  it('bordered：语义 label/content 落原生 dt/dd', () => {
     const w = make({
       bordered: true,
       items: [{ key: '1', label: 'L1', children: 'C1' }],
       classNames: { label: 'my-label' },
       styles: { label: { padding: '4px' } },
     });
-    const th = w.find('th');
+    const th = w.find('dt');
     expect(th.classes()).toContain('my-label');
     expect(th.attributes('style')).toContain('padding: 4px');
   });
@@ -288,9 +286,9 @@ describe('Descriptions · attrs 透传与 ref', () => {
 
   it('ref 形状：只有 nativeElement（与 antd 一致）', () => {
     const w = make({ items: ITEMS.map((i) => ({ ...i })) });
-    const exposed = w.vm.$.exposed as Record<string, unknown>;
-    expect(exposed.nativeElement).toBeInstanceOf(HTMLElement);
-    expect(Object.keys(exposed)).toEqual(['nativeElement']);
+    const exposed = w.vm.$.exposed;
+    expect(exposed?.nativeElement).toBeInstanceOf(HTMLElement);
+    expect(Object.keys(exposed ?? {})).toEqual(['nativeElement']);
   });
 
   it('header 仅 title||extra 存在时渲染；title-only 无 extra 块', () => {

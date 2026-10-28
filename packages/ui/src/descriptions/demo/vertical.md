@@ -5,4 +5,4 @@ title:
   en-US: Vertical
 ---
 
-`layout="vertical"`：label 行与 content 行分开渲染。
+`layout="vertical"`：视觉上标签在上、内容在下；每项仍使用稳定的 dt/dd，DOM 读取顺序为标签后跟内容。

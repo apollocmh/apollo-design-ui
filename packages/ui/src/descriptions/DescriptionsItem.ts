@@ -1,49 +1,87 @@
-/**
- * DescriptionsItem —— JSX 语法糖（`es/descriptions/Item.js`：`props => props.children`，
- * 永远不会真正渲染）。Vue 侧同样不做渲染工作：默认插槽原样透传；
- * 真正的条目化由 Descriptions 的 `transChildren2Items` 读 vnode.props 完成。
- */
+/** A real Vue item instance keeps its content and attrs while its layout changes. */
+import { isEmptyVNode, mergeDomAttrs } from '@apollo-design/utils';
+import { defineComponent, h, inject, type PropType, type SlotsType } from 'vue';
+import { descriptionsContextKey } from './context';
+import type { DescriptionsItemProps, DescriptionsItemSlots } from './interface';
 
-import { defineComponent, type PropType } from 'vue';
-import type { DescriptionsItemType } from './interface';
-
-/**
- * ⚠️ props 类型用具体类型，**不要** `PropType<unknown>`（PITFALLS 137：vue-tsc
- *    会把消费侧推断成 undefined，demo/测试全线 TS2322）。
- */
 export const DescriptionsItemComponent = defineComponent({
   name: 'ADescriptionsItem',
-  // ⚠️ C8-R2：`label` 收窄为 String（富 label 走 `items` 程序化 API，其 `label` 仍接受 VNodeChild）。
+  inheritAttrs: false,
   props: {
     label: { type: String, default: undefined },
     span: {
-      type: [Number, String, Object] as PropType<DescriptionsItemType['span']>,
+      type: [Number, String, Object] as PropType<DescriptionsItemProps['span']>,
       default: undefined,
     },
     prefixCls: { type: String, default: undefined },
     className: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     labelStyle: {
-      type: Object as PropType<Record<string, string | number>>,
+      type: Object as PropType<DescriptionsItemProps['labelStyle']>,
       default: undefined,
     },
     contentStyle: {
-      type: Object as PropType<Record<string, string | number>>,
+      type: Object as PropType<DescriptionsItemProps['contentStyle']>,
       default: undefined,
     },
-    styles: {
-      type: Object as PropType<DescriptionsItemType['styles']>,
-      default: undefined,
-    },
+    styles: { type: Object as PropType<DescriptionsItemProps['styles']>, default: undefined },
     classNames: {
-      type: Object as PropType<DescriptionsItemType['classNames']>,
+      type: Object as PropType<DescriptionsItemProps['classNames']>,
       default: undefined,
     },
   },
-  setup(_props, { slots }) {
-    return () => slots.default?.() ?? null;
+  slots: Object as SlotsType<DescriptionsItemSlots>,
+  setup(props, { attrs, slots, expose }) {
+    expose({});
+    const context = inject(descriptionsContextKey, undefined);
+    return () => {
+      // Outside Descriptions this component remains a transparent content wrapper.
+      if (!context) return slots.default?.() ?? null;
+      const current = context.value;
+      const p = props.prefixCls ?? current.prefixCls;
+      const label = slots.label ? slots.label() : props.label;
+      return h(
+        'div',
+        mergeDomAttrs(
+          {
+            class: [
+              `${p}-item`,
+              props.className,
+              { [`${p}-item-without-label`]: isEmptyVNode(label) },
+            ],
+          },
+          attrs,
+        ),
+        [
+          h(
+            'dt',
+            {
+              key: 'label',
+              class: [
+                `${p}-item-label`,
+                current.classNames.label,
+                props.classNames?.label,
+                {
+                  [`${p}-item-no-colon`]: !current.colon,
+                  [`${p}-item-no-label`]: isEmptyVNode(label),
+                },
+              ],
+              style: [current.styles.label, props.labelStyle, props.styles?.label],
+            },
+            [label],
+          ),
+          h(
+            'dd',
+            {
+              key: 'content',
+              class: [`${p}-item-content`, current.classNames.content, props.classNames?.content],
+              style: [current.styles.content, props.contentStyle, props.styles?.content],
+            },
+            [slots.default?.()],
+          ),
+        ],
+      );
+    };
   },
 });
-
 export const DescriptionsItem = DescriptionsItemComponent;
 export default DescriptionsItem;

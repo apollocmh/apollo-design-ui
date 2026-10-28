@@ -5,10 +5,13 @@
  * 产出者 `tests/compat/baseline/descriptions.mjs`）。`keepStyle: true`。
  */
 
-import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
-import { h } from 'vue';
+import { domContractTest } from '@apollo-design/test-utils';
+import { mount } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
+import { defineComponent, h, type VNode } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/descriptions.dom.json';
 import { Descriptions } from '../index';
+import { descriptionsContractDifferences } from './contract-differences';
 
 const ITEMS = [
   { key: '1', label: 'Product', children: 'Cloud Database' },
@@ -20,7 +23,7 @@ const items = () => ITEMS.map((i) => ({ ...i }));
 const P = (extra: Record<string, unknown>) => ({ items: items(), ...extra });
 
 /** 用例规格表：id → Vue 侧渲染产物。必须覆盖基线里的每一个用例。 */
-const specs: Record<string, { render: () => DomRenderResult }> = {
+const specs: Record<string, { render: () => VNode }> = {
   'descriptions:basic': { render: () => h(Descriptions, P({})) },
   'descriptions:empty-items': { render: () => h(Descriptions, { items: [] }) },
 
@@ -100,11 +103,48 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
 domContractTest('Descriptions', {
   baseline,
   keepStyle: true,
-  allow: {},
+  allow: descriptionsContractDifferences,
   render: (id) => {
     const spec = specs[id];
     if (!spec)
       throw new Error(`[Descriptions L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
     return spec.render();
   },
+});
+
+// Every original scenario also has a native contract. The reference diff stops at
+// the table/list boundary; these assertions preserve content and region coverage.
+describe('Descriptions native semantics for every reference scenario', () => {
+  for (const entry of baseline.cases) {
+    it(entry.id, () => {
+      const spec = specs[entry.id];
+      if (!spec) throw new Error(`Missing native scenario ${entry.id}`);
+      const w = mount(defineComponent({ render: () => spec.render() }));
+      const reference = new DOMParser().parseFromString(entry.html, 'text/html');
+      // Native reading order is label/value per item, including vertical mode.
+      // Compare every original label/value independently of the old row-first order.
+      expect(w.findAll('dt').map((node) => node.text())).toEqual(
+        [...reference.querySelectorAll('.apollo-descriptions-item-label')].map((node) =>
+          node.textContent?.trim(),
+        ),
+      );
+      expect(w.findAll('dd').map((node) => node.text())).toEqual(
+        [...reference.querySelectorAll('.apollo-descriptions-item-content')].map((node) =>
+          node.textContent?.trim(),
+        ),
+      );
+      for (const region of ['title', 'extra']) {
+        const actual = w.find(`.apollo-descriptions-${region}`);
+        expect(actual.exists() ? actual.text() : '').toBe(
+          reference.querySelector(`.apollo-descriptions-${region}`)?.textContent?.trim() ?? '',
+        );
+      }
+      expect(w.findAll('dl')).toHaveLength(1);
+      const groups = w.findAll('dl > div');
+      expect(w.findAll('dl > div > dt')).toHaveLength(groups.length);
+      expect(w.findAll('dl > div > dd')).toHaveLength(groups.length);
+      expect(w.find('table').exists()).toBe(false);
+      w.unmount();
+    });
+  }
 });

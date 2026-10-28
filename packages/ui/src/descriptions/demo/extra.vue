@@ -10,5 +10,7 @@ const items = [
 </script>
 
 <template>
-  <Descriptions title="Order Detail" extra="操作按钮" :items="items" :colon="false" />
+  <Descriptions title="Order Detail" :items="items" :colon="false">
+    <template #extra><button type="button">操作按钮</button></template>
+  </Descriptions>
 </template>
