@@ -669,3 +669,5 @@ Descriptions5ab9b3c4、Breadcrumb40ec3962、Timeline3ce8d1d2、Grid04be6282与Sp
 根严格检查及冻结e0062edd的UI/Overlay构建通过。五路发布JS/公开CSS、声明消费、真实Demo和SSR/水合验证并行执行中；正式原生视觉297张待审，原有537张批准不变，当前计划1602张、1065待验收。完整交付仍为13/72，五组未计入完成。Docs与最终同提交全库门禁尚待对应阶段执行；[实时完整清单](audit/2026-10-28-global-audit-status.md)持续记录边界。
 
 公开按需CSS新增真实红灯：Timeline单独样式缺Steps基础布局，完整69入口/72组件正分五组追踪实际内部消费与已嵌入规则；全量CSS通过不代表按需入口通过。范围与验收见[共享CSS清单](audit/2026-10-29-stylesheet-dependency-audit.md)。
+
+五组源码阶段Docs已发布：b485d136 / 部署40726245692成功，线上32/32零页面/Vue错误（22个既有Demo深链SPA回退）；首次单资源503已恢复，原命令重跑通过。按需CSS和正式视觉仍开放，见five-unit-docs-publication.json。

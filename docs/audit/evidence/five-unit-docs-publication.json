@@ -1,0 +1,182 @@
+{
+  "sourceCommit": "b485d13654366df8badb140b5ceec6d54567bf75",
+  "productionCommit": "e0062edd",
+  "workflowRunId": 40726245692,
+  "workflowUrl": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40726245692",
+  "site": "https://apollocmh.github.io/apollo-design-ui/",
+  "conclusion": "success",
+  "jobs": {
+    "build": 122950193903,
+    "deploy": 122953802573
+  },
+  "liveDocs": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "expectedDemoStatus": 404,
+    "results": [
+      {
+        "name": "descriptions: API and all 13 demo cards",
+        "passed": true
+      },
+      {
+        "name": "descriptions/basic/light",
+        "passed": true
+      },
+      {
+        "name": "descriptions/basic/dark",
+        "passed": true
+      },
+      {
+        "name": "descriptions/custom-label/light",
+        "passed": true
+      },
+      {
+        "name": "descriptions/custom-label/dark",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb: API and all 11 demo cards",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/native/light",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/native/dark",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/overlay/light",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/overlay/dark",
+        "passed": true
+      },
+      {
+        "name": "timeline: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "timeline/horizontal-debug/light",
+        "passed": true
+      },
+      {
+        "name": "timeline/horizontal-debug/dark",
+        "passed": true
+      },
+      {
+        "name": "timeline/native-slots/light",
+        "passed": true
+      },
+      {
+        "name": "timeline/native-slots/dark",
+        "passed": true
+      },
+      {
+        "name": "grid: API and all 13 demo cards",
+        "passed": true
+      },
+      {
+        "name": "grid/responsive/light",
+        "passed": true
+      },
+      {
+        "name": "grid/responsive/dark",
+        "passed": true
+      },
+      {
+        "name": "grid/playground/light",
+        "passed": true
+      },
+      {
+        "name": "grid/playground/dark",
+        "passed": true
+      },
+      {
+        "name": "space: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "space/compact/light",
+        "passed": true
+      },
+      {
+        "name": "space/compact/dark",
+        "passed": true
+      },
+      {
+        "name": "space/compact-button-vertical/light",
+        "passed": true
+      },
+      {
+        "name": "space/compact-button-vertical/dark",
+        "passed": true
+      },
+      {
+        "name": "menu/native-actions/light",
+        "passed": true
+      },
+      {
+        "name": "menu/native-actions/dark",
+        "passed": true
+      },
+      {
+        "name": "Menu native button executes once through container Enter",
+        "passed": true
+      },
+      {
+        "name": "Descriptions label help is reachable by keyboard",
+        "passed": true
+      },
+      {
+        "name": "Timeline slot reversal preserves the actual editor and draft",
+        "passed": true
+      },
+      {
+        "name": "progress/zh-CN",
+        "passed": true
+      },
+      {
+        "name": "progress/en-US",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": [
+      "https://apollocmh.github.io/apollo-design-ui/components/descriptions/demo/basic?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/descriptions/demo/basic?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/descriptions/demo/custom-label?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/descriptions/demo/custom-label?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/breadcrumb/demo/native?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/breadcrumb/demo/native?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/breadcrumb/demo/overlay?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/breadcrumb/demo/overlay?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/timeline/demo/horizontal-debug?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/timeline/demo/horizontal-debug?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/timeline/demo/native-slots?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/timeline/demo/native-slots?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/grid/demo/responsive?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/grid/demo/responsive?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/grid/demo/playground?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/grid/demo/playground?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/space/demo/compact?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/space/demo/compact?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/space/demo/compact-button-vertical?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/space/demo/compact-button-vertical?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/menu/demo/native-actions?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/menu/demo/native-actions?theme=dark"
+    ]
+  },
+  "initialProbe": {
+    "report": "/tmp/apollo-five-docs-live-b485d136.json",
+    "checksPassed": 32,
+    "consoleErrors": 3,
+    "cause": "One transient HTTP503 for ComponentPage-Dm60fx-V.js; HEAD subsequently200. Repeated the original32 checks without script/assertion changes and got zero errors."
+  },
+  "boundaries": [
+    "Five full-css/source milestones visible, with all69 standalone stylesheet entries openly under remediation",
+    "297 formal native visuals not accepted yet",
+    "Whole-library final same-commit gates pending"
+  ]
+}
