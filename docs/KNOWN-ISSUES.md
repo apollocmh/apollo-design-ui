@@ -701,3 +701,5 @@ Descriptions、Breadcrumb、Timeline、Grid的完整清单已核对并统一验�
 四个完整单元已按各自清单统一验收：关联1978/118、Space发布87及15 Demo严格消费、Flex发布60/SSR4/6 Demo、Alert发布29/180 Demo/60状态、Layout发布95 Demo/51状态/11 Demo严格消费通过；Layout普通35契约按实现未变继承，不冒充重跑。228张自有视觉已批准且批准后严格rawRGBA精确；旧759回归通过，756严格精确及3个既有List loading差异如实保留，原记录/PNG不变。14dist/1982实际发布输入与Docs161+56分别通过。
 
 当前完整交付21/72、其余51组件仍开放；987/1704视觉批准、717待验收。Space关联Input当前主题/尺寸/style/autoSize窄链完成，Input完整公开API仍open；Theme来源专项不代表13基础包逐包完成，全库最终同一提交门禁仍待执行。本地Docs通过不等同已经部署，最终线上回执另记。详见[本批最终范围与证据](audit/evidence/space-flex-alert-layout-final-acceptance.json)。
+
+本批线上交付完成：`ea36bd64` 的Docs部署40790318839成功；CI严格类型/Docs161及全部包/L7通过，真实线上56/56与中英文21/72计数通过，错误零。38个既有Demo深链接404→SPA恢复单独记录，不掩盖其他网络或运行错误。见[正式线上回执](audit/evidence/space-flex-alert-layout-docs-publication.json)。

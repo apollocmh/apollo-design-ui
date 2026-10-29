@@ -1,0 +1,317 @@
+{
+  "sourceCommit": "ea36bd643a94c2fe64c429b99cc26ce328132ccc",
+  "workflowRunId": 40790318839,
+  "workflowUrl": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40790318839",
+  "liveUrl": "https://apollocmh.github.io/apollo-design-ui/guide/audit-progress",
+  "conclusion": "success",
+  "jobs": {
+    "build": 123173646975,
+    "deploy": 123175651546
+  },
+  "ci": {
+    "contentCheck": true,
+    "components": 72,
+    "demos": 1008,
+    "guides": 8,
+    "docsStrictTypes": true,
+    "docsTestFiles": 15,
+    "docsTests": 161,
+    "allPackageBuildAndL7": {
+      "checks": 151,
+      "failed": 0,
+      "pending": 0,
+      "notApplicable": 67
+    },
+    "ssgHtmlFiles": 86
+  },
+  "liveBrowser": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "expectedDemoStatus": 404,
+    "expectedAcceptedUnits": 21,
+    "localeChecks": [
+      {
+        "locale": "zh-CN",
+        "heading": "全库进度：按完整单元计，不按测试数量计",
+        "delivered": "21个已完整验收；本批新增Space / Flex / Alert / Layout"
+      },
+      {
+        "locale": "en-US",
+        "heading": "Library-wide progress by complete audit unit",
+        "delivered": "21 fully accepted; Space, Flex, Alert and Layout pass this batch"
+      }
+    ],
+    "results": [
+      {
+        "name": "descriptions: API and all 13 demo cards",
+        "passed": true
+      },
+      {
+        "name": "descriptions/basic/light",
+        "passed": true
+      },
+      {
+        "name": "descriptions/basic/dark",
+        "passed": true
+      },
+      {
+        "name": "descriptions/custom-label/light",
+        "passed": true
+      },
+      {
+        "name": "descriptions/custom-label/dark",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb: API and all 11 demo cards",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/native/light",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/native/dark",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/overlay/light",
+        "passed": true
+      },
+      {
+        "name": "breadcrumb/overlay/dark",
+        "passed": true
+      },
+      {
+        "name": "timeline: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "timeline/horizontal-debug/light",
+        "passed": true
+      },
+      {
+        "name": "timeline/horizontal-debug/dark",
+        "passed": true
+      },
+      {
+        "name": "timeline/native-slots/light",
+        "passed": true
+      },
+      {
+        "name": "timeline/native-slots/dark",
+        "passed": true
+      },
+      {
+        "name": "grid: API and all 13 demo cards",
+        "passed": true
+      },
+      {
+        "name": "grid/responsive/light",
+        "passed": true
+      },
+      {
+        "name": "grid/responsive/dark",
+        "passed": true
+      },
+      {
+        "name": "grid/playground/light",
+        "passed": true
+      },
+      {
+        "name": "grid/playground/dark",
+        "passed": true
+      },
+      {
+        "name": "space: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "space/compact/light",
+        "passed": true
+      },
+      {
+        "name": "space/compact/dark",
+        "passed": true
+      },
+      {
+        "name": "space/compact-button-vertical/light",
+        "passed": true
+      },
+      {
+        "name": "space/compact-button-vertical/dark",
+        "passed": true
+      },
+      {
+        "name": "flex: API and all 6 demo cards",
+        "passed": true
+      },
+      {
+        "name": "flex/gap/light",
+        "passed": true
+      },
+      {
+        "name": "flex/gap/dark",
+        "passed": true
+      },
+      {
+        "name": "flex/combination/light",
+        "passed": true
+      },
+      {
+        "name": "flex/combination/dark",
+        "passed": true
+      },
+      {
+        "name": "alert: API and all 15 demo cards",
+        "passed": true
+      },
+      {
+        "name": "alert/smooth-closed/light",
+        "passed": true
+      },
+      {
+        "name": "alert/smooth-closed/dark",
+        "passed": true
+      },
+      {
+        "name": "alert/error-boundary/light",
+        "passed": true
+      },
+      {
+        "name": "alert/error-boundary/dark",
+        "passed": true
+      },
+      {
+        "name": "layout: API and all 11 demo cards",
+        "passed": true
+      },
+      {
+        "name": "layout/responsive/light",
+        "passed": true
+      },
+      {
+        "name": "layout/responsive/dark",
+        "passed": true
+      },
+      {
+        "name": "layout/custom-trigger/light",
+        "passed": true
+      },
+      {
+        "name": "layout/custom-trigger/dark",
+        "passed": true
+      },
+      {
+        "name": "input: API and all 24 demo cards",
+        "passed": true
+      },
+      {
+        "name": "input/component-token/light",
+        "passed": true
+      },
+      {
+        "name": "input/component-token/dark",
+        "passed": true
+      },
+      {
+        "name": "input/autosize-textarea/light",
+        "passed": true
+      },
+      {
+        "name": "input/autosize-textarea/dark",
+        "passed": true
+      },
+      {
+        "name": "menu/native-actions/light",
+        "passed": true
+      },
+      {
+        "name": "menu/native-actions/dark",
+        "passed": true
+      },
+      {
+        "name": "Menu native button executes once through container Enter",
+        "passed": true
+      },
+      {
+        "name": "Descriptions label help is reachable by keyboard",
+        "passed": true
+      },
+      {
+        "name": "Timeline slot reversal preserves the actual editor and draft",
+        "passed": true
+      },
+      {
+        "name": "Flex public medium preset and custom zero gap reach actual geometry",
+        "passed": true
+      },
+      {
+        "name": "Alert closes after its real transition and can mount again",
+        "passed": true
+      },
+      {
+        "name": "Layout external Vue control updates collapsed state without replacing its sidebar",
+        "passed": true
+      },
+      {
+        "name": "Input current theme preserves the draft and ancestor typography remeasures autoSize",
+        "passed": true
+      },
+      {
+        "name": "progress/zh-CN",
+        "passed": true
+      },
+      {
+        "name": "progress/en-US",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": [
+      "https://apollocmh.github.io/apollo-design-ui/components/descriptions/demo/basic?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/descriptions/demo/basic?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/descriptions/demo/custom-label?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/descriptions/demo/custom-label?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/breadcrumb/demo/native?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/breadcrumb/demo/native?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/breadcrumb/demo/overlay?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/breadcrumb/demo/overlay?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/timeline/demo/horizontal-debug?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/timeline/demo/horizontal-debug?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/timeline/demo/native-slots?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/timeline/demo/native-slots?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/grid/demo/responsive?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/grid/demo/responsive?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/grid/demo/playground?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/grid/demo/playground?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/space/demo/compact?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/space/demo/compact?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/space/demo/compact-button-vertical?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/space/demo/compact-button-vertical?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/flex/demo/gap?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/flex/demo/gap?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/flex/demo/combination?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/flex/demo/combination?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/alert/demo/smooth-closed?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/alert/demo/smooth-closed?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/alert/demo/error-boundary?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/alert/demo/error-boundary?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/layout/demo/responsive?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/layout/demo/responsive?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/layout/demo/custom-trigger?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/layout/demo/custom-trigger?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/input/demo/component-token?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/input/demo/component-token?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/input/demo/autosize-textarea?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/input/demo/autosize-textarea?theme=dark",
+      "https://apollocmh.github.io/apollo-design-ui/components/menu/demo/native-actions?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/menu/demo/native-actions?theme=dark"
+    ]
+  },
+  "command": "DOCS_URL=https://apollocmh.github.io/apollo-design-ui DOCS_DEMO_STATUS=404 DOCS_ACCEPTED_UNITS=21 DOCS_PLANNED_VISUALS=1704 AUDIT_DOCS_EVIDENCE=/tmp/apollo-docs-ea36bd64-live.json node tests/browser/audit-batch-docs.mjs",
+  "exitCode": 0,
+  "browserEvidenceSha256": "666e0b71ef94acf98f8515f1037d2a99a3b829a47e84b7890e9c39157ff97b06",
+  "verificationScriptSha256": "298169547417b6c95d4e598673177c2cceb197662e57c438ce5ab78972929d93",
+  "scope": "Live21/72 delivery,987/1704 approved visuals; both real locales, ten API/demo units and actual interaction checks. Does not claim the final whole-library unit/type/visual gate.",
+  "fallbackBoundary": "38 documented GitHub Pages demo deep-link404 documents successfully restore the SPA; physical API/guide pages return200. All other network/runtime errors remain failures."
+}

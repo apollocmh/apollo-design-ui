@@ -61,6 +61,8 @@ Avatar / AvatarGroup 的原生事件与同步取消钩子、完整内容槽、�
 
 开发阶段按 ADR0007 直接修正 Link 的 span/a 所属结构、text 编辑键盘入口与原生按钮内装饰图标语义。原 76 场景、参考 HTML 与参考 PNG 不变；19 个场景的精确差异存于 Typography contract-differences.ts，任何额外差异继续失败。详情与迁移见 Typography 契约迁移。
 
-Descriptions 的稳定原生描述项、当前配置/十Token、所属attrs与label槽修正见[Descriptions契约迁移](docs/migrations/descriptions-contracts.md)。Timeline 的原生根事件、实际ref、完整标量内容、当前六Token与显式方向见[Timeline契约迁移](docs/migrations/timeline-contracts.md)。Breadcrumb 的所属内容/菜单按钮、参数、原生attrs、当前七Token与内容槽见[Breadcrumb契约迁移](docs/migrations/breadcrumb-contracts.md)；三单元仍待产物/正式视觉/Docs统一验收；共享Menu Enter导航已在e000152f修复并通过源码浏览器。
+Descriptions 的稳定原生描述项、当前配置/十Token、所属attrs与label槽修正见[Descriptions契约迁移](docs/migrations/descriptions-contracts.md)。Timeline 的原生根事件、实际ref、完整标量内容、当前六Token与显式方向见[Timeline契约迁移](docs/migrations/timeline-contracts.md)。Breadcrumb 的所属内容/菜单按钮、参数、原生attrs、当前七Token与内容槽见[Breadcrumb契约迁移](docs/migrations/breadcrumb-contracts.md)；三单元已完成产物、正式视觉和Docs统一验收，见[四单元验收回执](docs/audit/evidence/four-unit-final-acceptance.json)。共享Menu Enter导航修复证据保留，完整Menu审计另行继续。
 
-Space/Compact/Addon 的当前插槽、稳定内容身份、完整 separator 数据、紧凑上下文与主题作用域见[Space契约迁移](docs/migrations/space-contracts.md)；Grid/Row/Col 的原生样式、当前配置与响应式字段见[Grid契约迁移](docs/migrations/grid-contracts.md)。直接修正开发期错误行为，不新增内容回调兼容层；各自正式发布/视觉/Docs验收继续。
+Space/Compact/Addon 的当前插槽、稳定内容身份、完整 separator 数据、紧凑上下文与主题作用域见[Space契约迁移](docs/migrations/space-contracts.md)；Grid/Row/Col 的原生样式、当前配置与响应式字段见[Grid契约迁移](docs/migrations/grid-contracts.md)。直接修正开发期错误行为，不新增内容回调兼容层；两单元已分别完成发布、视觉和Docs验收，Space关联Input窄链通过不代表完整Input API已验收。
+
+Flex的完整内容、当前gap与原生样式见[Flex契约迁移](docs/migrations/flex-contracts.md)；Alert/ErrorBoundary的内容、关闭流程与Vue错误恢复见[Alert契约迁移](docs/migrations/alert-contracts.md)；Layout家族的原生根、当前配置与Sider受控/响应式链见[Layout契约迁移](docs/migrations/layout-contracts.md)。三者与Space已统一验收，证据及剩余边界见[本批最终回执](docs/audit/evidence/space-flex-alert-layout-final-acceptance.json)。

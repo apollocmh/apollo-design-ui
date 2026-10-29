@@ -125,6 +125,8 @@ Badge最终交付：47b98296 / Docs部署40701370080，线上32通过；此后�
 
 此前四单元交付里程碑：Descriptions/Breadcrumb/Timeline/Grid四单元已统一验收，交付数17/72；52个发布Demo模板、222张批准后的真实重渲染raw精确、既有537回归、当前CSS/L7与Docs161+32均有独立证据，根严格检查也在冻结2f47f423通过。原1692份PNG未改。Space关联链、其他54单元与13基础包继续。证据four-unit-final-acceptance.json；新进展页部署回执另记。
 
-最新线上回执：faa80fed / 部署40755814408成功，CI Docs161与全部包/L7 151检查零失败，真实线上32通过；中英文标题与17单元计数已用修正后的locale驱动明确验证。新脚本保留所有原检查，修正旧导航重置中文导致的英文覆盖缺口。证据evidence/four-unit-docs-publication.json。
+此前线上回执：faa80fed / 部署40755814408成功，CI Docs161与全部包/L7 151检查零失败，真实线上32通过；中英文标题与17单元计数已用修正后的locale驱动明确验证。新脚本保留所有原检查，修正旧导航重置中文导致的英文覆盖缺口。证据evidence/four-unit-docs-publication.json。
 
 本批最终里程碑：Space/Flex/Alert/Layout四个完整单元统一验收，当前21/72、其余51开放。关联1978/118、各发布门禁、228张新批准及批准后严格rawRGBA精确、旧759回归与记录/PNG保留、14dist/1982实际发布输入、Docs161+56分别有证据。当前987/1704图批准、717待验收；全库最终同提交门禁和Input完整API仍开放。详见[evidence/space-flex-alert-layout-final-acceptance.json](evidence/space-flex-alert-layout-final-acceptance.json)，本地Docs通过不冒充最终线上发布。
+
+最新线上回执：`ea36bd64` / 部署[40790318839](https://github.com/apollocmh/apollo-design-ui/actions/runs/40790318839)成功，CI内容/严格类型/Docs161及全部包构建与L7（151检查、零失败/零待定）通过。真实线上56/56、运行错误零，中英文可见标题与21/72计数均验证；38个Demo深链接按既有Pages404→SPA恢复边界记录。详见[线上验收回执](evidence/space-flex-alert-layout-docs-publication.json)。

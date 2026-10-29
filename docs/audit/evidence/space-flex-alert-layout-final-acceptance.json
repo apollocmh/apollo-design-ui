@@ -126,6 +126,14 @@
     "本批四个完整单元已验收；其余51个组件继续，Input完整公开API仍开放。",
     "1978/118是有交集的关联专项，不代表全库最终同一提交门禁完成。",
     "Theme/ConfigProvider来源专项不代表Theme等13基础包已逐包验收。",
-    "Docs161+56是本地真实构建验收，最终部署及线上回执由Root另行执行。"
-  ]
+    "Docs161+56本地构建通过；ea36bd64 CI全部包/L7和Docs通过，正式线上56项及中英文21单元计数均通过，另见publication回执。"
+  ],
+  "publication": {
+    "sourceCommit": "ea36bd643a94c2fe64c429b99cc26ce328132ccc",
+    "workflowRunId": 40790318839,
+    "conclusion": "success",
+    "liveChecksPassed": 56,
+    "errors": 0,
+    "evidence": "space-flex-alert-layout-docs-publication.json"
+  }
 }
