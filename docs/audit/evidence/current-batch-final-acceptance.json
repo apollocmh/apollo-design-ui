@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-29T08:43:19.776182+00:00",
-  "status": "four component units accepted; documentation publication pending; pause after delivery",
+  "date": "2026-10-29T08:59:55.726214+00:00",
+  "status": "four component units accepted and published; current batch paused",
   "scope": [
     "Divider",
     "Collapse/Panel",
@@ -136,7 +136,15 @@
         "en-US"
       ],
       "completeCountShown": 25,
-      "livePublication": "pending",
+      "livePublication": {
+        "workflow": 40844974044,
+        "sourceCommit": "725021777e152f3e80052783de202f48808fc7cd",
+        "checksPassed": 80,
+        "errors": 0,
+        "ciBuildL7": 151,
+        "ciFailures": 0,
+        "receipt": "current-batch-docs-publication.json"
+      },
       "proofCheckout": "/tmp/apollo-batch-docs-final-8ec07b2d",
       "proofMatchesDeliveryInputs": [
         "packages/docs/content/guide/audit-progress.md",
@@ -239,5 +247,13 @@
   "dispatchFurtherUnits": false,
   "treeImplementationStarted": false,
   "noNewTasksAfterBatch": true,
-  "publicationBoundary": "Local types/tests/build and80 browser checks passed; live Pages publication and hosted-browser acceptance are recorded separately after the acceptance commit is pushed."
+  "publicationBoundary": "Live site serves72502177. The follow-up receipt commit changes audit records only; the served guide and production sources remain identical.",
+  "pendingNewUserFeedback": {
+    "component": "Button",
+    "observation": "Light-theme primary text is black; user suspects token mismatch",
+    "verifiedSource": "prepareComponentToken.primaryColor defaults to colorTextLightSolid, but useButtonTheme skips implicit foreground tokens and CSS contrast-color supplies black",
+    "implementationChanged": false,
+    "stage": "awaiting user choice between white text with a slightly deeper local button background and current automatic foreground",
+    "newSubtaskDispatched": false
+  }
 }

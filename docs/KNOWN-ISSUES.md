@@ -724,3 +724,8 @@ Descriptions、Breadcrumb、Timeline、Grid的完整清单已核对并统一验�
 Divider、Collapse/Panel、完整Input六族和ConfigProvider已按当前源码完整清单成组整改并统一验收；包括D03内容渲染入口的原生插槽迁移、F07关联Panel内容身份，以及真实Event/Expose、当前主题/语言/表单/图标/通知消费链。根规范、实现、类型、原Demo和迁移同步，原owner冻结与首轮失败证据保留。冻结生产源码的全库四运行project、2309类型、严格类型/L7、发布消费、1215张已批准图关联回归及最终Docs均记录于[本批验收](audit/evidence/current-batch-final-acceptance.json)。当前完整交付25/72；其他47组件与13基础包完整复核仍开放。
 
 按用户要求，本批交付后暂停，不派发新单元；Tree保持只读清单。既有Button在不支持contrast-color浏览器中的独立fallback对比度缺陷、D04/D05及其他开放项保留原边界。全部整改结束后的最终同提交全量门禁仍待执行。
+
+
+### 2026-10-29 用户新增反馈：Button亮色primary字色（待配色裁决）
+
+用户反馈亮色primary呈黑字。当前源码链路已确认：`prepareComponentToken.primaryColor`默认取`colorTextLightSolid`白色，但`useButtonTheme`把未显式覆盖的前景Token排除，CSS的`--apollo-btn-auto-solid-color: contrast-color(...)`选择黑字。没有改动Button实现或全局主色。恢复默认白字与维持既有可读性标准涉及按钮蓝底配对，已询问“白字且按钮蓝底略深”或“保留当前自动前景”；等待用户选择。该反馈单独保持未修复，不宣称本批已解决，也不自动派发后续组件任务。

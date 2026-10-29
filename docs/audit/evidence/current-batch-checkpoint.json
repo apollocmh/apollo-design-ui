@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-29T08:43:19.395988+00:00",
-  "status": "batch-accepted-paused-after-delivery",
+  "date": "2026-10-29T08:59:55.726214+00:00",
+  "status": "batch-delivered-published-and-paused",
   "committedBase": "8ec07b2dc893476e493469908b3e006c59d017b2",
   "completeComponentUnits": 25,
   "componentUnits": 72,
@@ -138,5 +138,19 @@
     "13 current complete foundation audits",
     "Final same-commit whole-library gates after all audit units close"
   ],
-  "finalAcceptance": "docs/audit/evidence/current-batch-final-acceptance.json"
+  "finalAcceptance": "docs/audit/evidence/current-batch-final-acceptance.json",
+  "livePublication": {
+    "sourceCommit": "725021777e152f3e80052783de202f48808fc7cd",
+    "workflow": 40844974044,
+    "passed": 80,
+    "errors": 0
+  },
+  "pendingNewUserFeedback": {
+    "component": "Button",
+    "observation": "Light-theme primary text is black; user suspects token mismatch",
+    "verifiedSource": "prepareComponentToken.primaryColor defaults to colorTextLightSolid, but useButtonTheme skips implicit foreground tokens and CSS contrast-color supplies black",
+    "implementationChanged": false,
+    "stage": "awaiting user choice between white text with a slightly deeper local button background and current automatic foreground",
+    "newSubtaskDispatched": false
+  }
 }
