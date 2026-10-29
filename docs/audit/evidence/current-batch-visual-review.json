@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-29T05:55:20.328477+00:00",
+  "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+  "sourceDirtyAtCapture": false,
+  "productionDigest": "b3145042f59cdab1b97509a233c6531e1426d9541cbc98fed29b9dd990cec2f2",
+  "approvedNew": 126,
+  "input": 84,
+  "configProvider": 42,
+  "reviewedActualPngs": 126,
+  "reviewMethod": "Seven sheets of the actual PNGs; only empty canvas cropped for legibility. Full unmodified PNGs remain the baseline. Native geometry/keyboard/axe preparers execute before every capture.",
+  "reviewSheets": [
+    {
+      "path": "/tmp/apollo-batch-review-1.png",
+      "sha256": "5d20ba66e553d45ed63302d58ae3b3d66e79adedf02c23bb2cae04277ded529f"
+    },
+    {
+      "path": "/tmp/apollo-batch-review-2.png",
+      "sha256": "19f026f6b7b1611bc1b3fa07a9802a6404dff75c3f02e5c61f3f90b9484ebc42"
+    },
+    {
+      "path": "/tmp/apollo-batch-review-3.png",
+      "sha256": "95218909d609d15b4fa6c2d5eb79a8e0b0a5e26d7f7c4a423e3732a4b84e5858"
+    },
+    {
+      "path": "/tmp/apollo-batch-review-4.png",
+      "sha256": "288634914cec248777902aba5c8a65e529d4bd4ff47e6422121223a409855f2d"
+    },
+    {
+      "path": "/tmp/apollo-batch-review-5.png",
+      "sha256": "ef08fd7ab7d23b6a614132b2416ce487069828467f9ddf2bb0e6e029e1959434"
+    },
+    {
+      "path": "/tmp/apollo-batch-review-6.png",
+      "sha256": "de3bc9c90bf001dd4a88adc654cc53c34795a6b93b2ccfcea2abcda3bd4a1d04"
+    },
+    {
+      "path": "/tmp/apollo-batch-review-7.png",
+      "sha256": "288dce9edaf59a7754cc7049b85b1aeda4c787e9ecdd9c3222fc256e85e29d28"
+    }
+  ],
+  "independentCleanSourceCapture": {
+    "checks": 228,
+    "rawRGBAExact": 228,
+    "failed": 0,
+    "rawReceipt": "/tmp/apollo-batch-source-clean-visual-raw.json"
+  },
+  "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+  "totalApproved": 1215,
+  "totalPlanned": 1875,
+  "pendingOtherVisuals": 660,
+  "postApprovalRegression": "pending; all approved component groups will be checked using disjoint read-only artifact shards",
+  "originalReferences": "Existing 1089 approval entries/images and React references preserved",
+  "scannerCorrection": {
+    "source": "packages/test-utils/src/__tests__/c11-vmodel.test.ts",
+    "reason": "Private Image Preview current is supplied by PreviewGroup; Group owns update:current. The private presenter is not a public exported model. Exact N/A key added under the existing two-way exemption check.",
+    "actualPublicModelAndGuardRerun": 31,
+    "failed": 0,
+    "receipt": "/tmp/apollo-batch-source-vmodel-guard.json",
+    "imageProductionChanged": false
+  },
+  "formTimeout": {
+    "originalTimeoutMs": 5000,
+    "serialUnchangedRerunPassed": 8,
+    "receipt": "/tmp/apollo-batch-source-form-theme-rerun.json"
+  },
+  "fullComponentAcceptancePending": true,
+  "pauseAfterCurrentBatch": true,
+  "dispatchFurtherUnits": false
+}

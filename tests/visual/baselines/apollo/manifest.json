@@ -9800,6 +9800,1140 @@
       "capturedAt": "2026-10-29T02:29:29.026Z",
       "reviewedAt": "2026-10-29T02:34:21.068Z",
       "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "input/basic__light__mobile": {
+      "sha256": "3cca1442abb47f632e561cec968942f8f297161a24b61acca3181c949badb744",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:19.778Z",
+      "reviewedAt": "2026-10-29T05:55:20.201Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/basic__light__tablet": {
+      "sha256": "70bb854790827e3ab83bb2f0901454f33bdf33806d90ac5271a4eb64089ce382",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:22.024Z",
+      "reviewedAt": "2026-10-29T05:55:20.203Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/basic__light__desktop": {
+      "sha256": "d28c6c49f5f36c1894d25288b7aea2c6835180231d0fa777db50b99510d9e8d3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:24.347Z",
+      "reviewedAt": "2026-10-29T05:55:20.203Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/sizes__light__mobile": {
+      "sha256": "53789e4077a5e91720d7e3df35004f19486e431211efeb949ff583f3bad1b99b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:26.699Z",
+      "reviewedAt": "2026-10-29T05:55:20.203Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/sizes__light__tablet": {
+      "sha256": "6b1d3082d5ba42698fa3a45eebd896e2ee6d01bf8e01d7ef5c781be8149a6431",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:28.965Z",
+      "reviewedAt": "2026-10-29T05:55:20.204Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/sizes__light__desktop": {
+      "sha256": "ba3541d4bf4718249c8fd5c3ea69914f2f3e5722b070e185df2690be75d204db",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:31.268Z",
+      "reviewedAt": "2026-10-29T05:55:20.204Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/variants__light__mobile": {
+      "sha256": "a5d7bd24e7299f7b0f187f37976cd7d447eef1bdb3c5e3f9c777add9331e4c4e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:33.711Z",
+      "reviewedAt": "2026-10-29T05:55:20.205Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/variants__light__tablet": {
+      "sha256": "39a771fe44a59d260835b4a8e04e777406af4fa2ea73dd77f8ce6cfc48242cd6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:35.941Z",
+      "reviewedAt": "2026-10-29T05:55:20.205Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/variants__light__desktop": {
+      "sha256": "6332373f67b7ab2a0490daf1158a7fdb073b679af98445d4ee176ce2b4154091",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:38.121Z",
+      "reviewedAt": "2026-10-29T05:55:20.205Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/status__light__mobile": {
+      "sha256": "cad5ac291cb69c292469c1dc6fcb2a9b278e5584ecfd7b8b518079fcbae43958",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:40.427Z",
+      "reviewedAt": "2026-10-29T05:55:20.206Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/status__light__tablet": {
+      "sha256": "1b066f262d0ed147812100cbd59d27ee7f86575dac6319f1a37e5fc95c4d51f2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:42.577Z",
+      "reviewedAt": "2026-10-29T05:55:20.206Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/status__light__desktop": {
+      "sha256": "c08c6f2c5f52e08441215e60d72f44ca8816c37630648bbef2873273fe21e450",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:44.746Z",
+      "reviewedAt": "2026-10-29T05:55:20.206Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/affixes__light__mobile": {
+      "sha256": "f3063b492034484b8a1bbaa5728ccf9ee4d904d2d031f55ad951e7702842c4f1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:46.956Z",
+      "reviewedAt": "2026-10-29T05:55:20.207Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/affixes__light__tablet": {
+      "sha256": "2e565b460c6cbdfeb4dce2d3d351aa0781653c4ff190f26105d49c2d09c44a94",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:49.133Z",
+      "reviewedAt": "2026-10-29T05:55:20.207Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/affixes__light__desktop": {
+      "sha256": "67d4afd77ca9b563f36275fc506d0ee32684a91ee3ad1c80926a8a2ddef8ded0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:51.354Z",
+      "reviewedAt": "2026-10-29T05:55:20.208Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/addons__light__mobile": {
+      "sha256": "786507baae0f9325dad40e82edac4e87d839acebc617ea90089dade1e682f5c8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:53.579Z",
+      "reviewedAt": "2026-10-29T05:55:20.208Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/addons__light__tablet": {
+      "sha256": "ab22e0d3fc6fef4e68d570cd64c78ae922f1388d0ce43a5de8456fceea8cc431",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:55.762Z",
+      "reviewedAt": "2026-10-29T05:55:20.208Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/addons__light__desktop": {
+      "sha256": "6506a9925c2e52bd3a45344eb52adf65586105ebdf7a8e1b7d550635142b85b2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:44:57.962Z",
+      "reviewedAt": "2026-10-29T05:55:20.209Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/clear__light__mobile": {
+      "sha256": "19e289e57505228029bfff82e023bc7a90d2d0515edd0044f398d1949c942030",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:00.410Z",
+      "reviewedAt": "2026-10-29T05:55:20.209Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/clear__light__tablet": {
+      "sha256": "5e13861ba8c7a791ac1fc9a060f0cb7485ab0a05a5ba54e0957e940ae9da079d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:02.905Z",
+      "reviewedAt": "2026-10-29T05:55:20.209Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/clear__light__desktop": {
+      "sha256": "945542fafa3b789aae4ae981d703ec039ac8c80a796ab53f6687beccdc58560c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:05.362Z",
+      "reviewedAt": "2026-10-29T05:55:20.210Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/count__light__mobile": {
+      "sha256": "0807773c18695cbea022045e92cf386e212098075a7f73f13e4b9ade300e2510",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:07.650Z",
+      "reviewedAt": "2026-10-29T05:55:20.210Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/count__light__tablet": {
+      "sha256": "4dda842ad06d19ffee51287b86a5f866aa28681b770a5a887f0cc375fc24e5f6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:09.865Z",
+      "reviewedAt": "2026-10-29T05:55:20.211Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/count__light__desktop": {
+      "sha256": "c6f41f996b3e0570bfede050b101e654b018cc8aed01da4c4320d83946576ebc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:12.019Z",
+      "reviewedAt": "2026-10-29T05:55:20.211Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/disabled-readonly__light__mobile": {
+      "sha256": "e62786abf6fd9f30f070a58af369137c88afaa7bb92754688d0ee9cf1c10b1ce",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:14.213Z",
+      "reviewedAt": "2026-10-29T05:55:20.211Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/disabled-readonly__light__tablet": {
+      "sha256": "37d1fa3e05c299feda9a329679bcdffe42d948f5d17f5fa00a11a1948c5d2134",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:16.342Z",
+      "reviewedAt": "2026-10-29T05:55:20.212Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/disabled-readonly__light__desktop": {
+      "sha256": "d3cb8abaf4561cc7cde6f7de2cb512df528c4ed1952163b2950df87ab4bf13a3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:18.693Z",
+      "reviewedAt": "2026-10-29T05:55:20.212Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/password__light__mobile": {
+      "sha256": "1106a8d581c253b023f5b4ca4f2adc87eeecb15bb567d6e8e7d38bab0fb06696",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:20.941Z",
+      "reviewedAt": "2026-10-29T05:55:20.213Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/password__light__tablet": {
+      "sha256": "bfd91324f6fd5ca8e980a711d6d7a74f204c9938807236b999685566f32f8efa",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:23.190Z",
+      "reviewedAt": "2026-10-29T05:55:20.213Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/password__light__desktop": {
+      "sha256": "3e02ddbdbfa787f864b299a22182c60937a2adecf3ca84bd953626d919ba2828",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:25.546Z",
+      "reviewedAt": "2026-10-29T05:55:20.214Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/password-icon__light__mobile": {
+      "sha256": "5aab78f87b1b628711df9b0d7fcc7e74d2d7240fa4cefa2d22c30368b645ae0a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:27.990Z",
+      "reviewedAt": "2026-10-29T05:55:20.214Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/password-icon__light__tablet": {
+      "sha256": "385a7743db7202b6bc4ad9f550eeb5ef10f5452a2b2d1bd2be8266dbb8e3a35d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:30.193Z",
+      "reviewedAt": "2026-10-29T05:55:20.214Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/password-icon__light__desktop": {
+      "sha256": "a1af6717e4bf744912e00b9cdde913cba79028b2062cdfa537e7f32ca58c2ea3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:32.507Z",
+      "reviewedAt": "2026-10-29T05:55:20.215Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/search__light__mobile": {
+      "sha256": "558c492abba5866a32239ec38e5c4becf59df846757bd6c7c90e4ff28cf4f1dd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:34.792Z",
+      "reviewedAt": "2026-10-29T05:55:20.215Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/search__light__tablet": {
+      "sha256": "e7c4bb4267d3fd266f1cc81020cc124cd521135af42a831056099ba26025634a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:36.943Z",
+      "reviewedAt": "2026-10-29T05:55:20.215Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/search__light__desktop": {
+      "sha256": "992faf1ed24770c09a8b3d9e5d012c5255dbaa559a54fc810c07ae86dab3e04c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:39.136Z",
+      "reviewedAt": "2026-10-29T05:55:20.216Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/search-loading__light__mobile": {
+      "sha256": "d8d50d011c2c8c80ee048881fc3ff8ad69608affc2c3a75ac82957a4e7a740a1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:41.335Z",
+      "reviewedAt": "2026-10-29T05:55:20.216Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/search-loading__light__tablet": {
+      "sha256": "8732a8903c6fbdc0847a332580073e738c4b4abf35aa5c082bceadc503882aab",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:43.606Z",
+      "reviewedAt": "2026-10-29T05:55:20.216Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/search-loading__light__desktop": {
+      "sha256": "1c0d4c02208629fde81d701ebb0acf1f0752dae0d860f9b292e46311ae6fa4fe",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:45.822Z",
+      "reviewedAt": "2026-10-29T05:55:20.217Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/textarea__light__mobile": {
+      "sha256": "aab0018b9d49cb3c3ddc647ddc7eb4bd0c15248b167e58b9fd3ed4e7162331cd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:48.000Z",
+      "reviewedAt": "2026-10-29T05:55:20.217Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/textarea__light__tablet": {
+      "sha256": "17caaff088b13261789d97c3af0a38c4eaf494f32cac3c6f8ade238d853d3b80",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:50.138Z",
+      "reviewedAt": "2026-10-29T05:55:20.217Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/textarea__light__desktop": {
+      "sha256": "1bb295f02d58d8c3b007fe067ae7d896668159bfa309dcff0acc3c0403e6a1db",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:52.180Z",
+      "reviewedAt": "2026-10-29T05:55:20.218Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/textarea-autosize__light__mobile": {
+      "sha256": "6230802027b2b4d50f03c2af4270819b0822960e2ff0dca584be9d5082baf340",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:54.310Z",
+      "reviewedAt": "2026-10-29T05:55:20.218Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/textarea-autosize__light__tablet": {
+      "sha256": "288b13c691cc65da34def2f9e6fc0c8d77fd588f922dbd263a77508335fbc034",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:56.406Z",
+      "reviewedAt": "2026-10-29T05:55:20.218Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/textarea-autosize__light__desktop": {
+      "sha256": "788283deeb36d4e25442aec76d8c21c0e37cc6ad75abb2fc2e26b56e47150f5b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:58.581Z",
+      "reviewedAt": "2026-10-29T05:55:20.219Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/textarea-resize__light__mobile": {
+      "sha256": "ab06d8d32b7ccdff2af5df79bfb9453cf342b9780bef4168f1298b5173884e3a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:00.677Z",
+      "reviewedAt": "2026-10-29T05:55:20.219Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/textarea-resize__light__tablet": {
+      "sha256": "93330d5d614b36819e4907fe842f765ed21bfebc77237e2ff4537709ee315070",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:02.801Z",
+      "reviewedAt": "2026-10-29T05:55:20.219Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/textarea-resize__light__desktop": {
+      "sha256": "bc05f773574c7f0a7146514c978d5e47cc0720a2315e6f239c9a29d216ffa147",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:04.851Z",
+      "reviewedAt": "2026-10-29T05:55:20.220Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/otp__light__mobile": {
+      "sha256": "738c04da60ed2031a9ce6ad7c1bbe346c1f0eecd8a7664bb10188536c82d05da",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:07.131Z",
+      "reviewedAt": "2026-10-29T05:55:20.220Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/otp__light__tablet": {
+      "sha256": "6f61ee4a59ecf556869e3379361b12b6b21b60bddf40651a304bfd44fa5889f1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:09.283Z",
+      "reviewedAt": "2026-10-29T05:55:20.220Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/otp__light__desktop": {
+      "sha256": "966b3c47497b354d5bee750fb803f7d957bebbdcefbd06823b1bc4d5bc212a5b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:11.517Z",
+      "reviewedAt": "2026-10-29T05:55:20.220Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/otp-mask__light__mobile": {
+      "sha256": "1ccea575e5aa89d98a74ee6e9a1d049c8135e0d3d62dcf03078eee008f6b981b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:13.592Z",
+      "reviewedAt": "2026-10-29T05:55:20.221Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/otp-mask__light__tablet": {
+      "sha256": "3848c8ba23ac80c88fb22caf8198bb6983c2b90f1f8f7cbadfb12ee589349f1f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:15.843Z",
+      "reviewedAt": "2026-10-29T05:55:20.221Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/otp-mask__light__desktop": {
+      "sha256": "8ebe99b9eb31f07112827c0e70593e646057930e0ab63bacd377e89a370a6d9c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:17.962Z",
+      "reviewedAt": "2026-10-29T05:55:20.221Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/otp-separator__light__mobile": {
+      "sha256": "f0a1c27dc438c99311e896bb6c9f587953bd02e1374874b8047fc53fb3cbdf2b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:20.061Z",
+      "reviewedAt": "2026-10-29T05:55:20.222Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/otp-separator__light__tablet": {
+      "sha256": "d912621f8cef50ba8a6cf42ec141b6c912fa088f852f312d222d7f5746971962",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:22.222Z",
+      "reviewedAt": "2026-10-29T05:55:20.222Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/otp-separator__light__desktop": {
+      "sha256": "3c67a32144a4d38d04356a51e3ed104d784344a184acd454fffcab528d4cf746",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:24.216Z",
+      "reviewedAt": "2026-10-29T05:55:20.222Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/compact-group__light__mobile": {
+      "sha256": "bf07584125ca45b8e1974b6f585567749bb104a0e978da081a348e41cd0e25e4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:26.238Z",
+      "reviewedAt": "2026-10-29T05:55:20.222Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/compact-group__light__tablet": {
+      "sha256": "57e8018d68cfc13fcbeaf1c7911ba1279fc56716a5e858b8acad23b82280f8ae",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:28.259Z",
+      "reviewedAt": "2026-10-29T05:55:20.223Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/compact-group__light__desktop": {
+      "sha256": "1aed2429f44b690d855e8e8dcb8dda51c5622cefc5ac191d18379f42ac9a6d97",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:30.286Z",
+      "reviewedAt": "2026-10-29T05:55:20.223Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/current-provider__light__mobile": {
+      "sha256": "b5f1f77343f5d870fe224209682daa67764560fd7584ebb4358ff203b59bca31",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:32.373Z",
+      "reviewedAt": "2026-10-29T05:55:20.223Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/current-provider__light__tablet": {
+      "sha256": "291d97dda8acf823b732c39e627e1aa65b2a65fedcf52cca6d3e25230244765b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:34.499Z",
+      "reviewedAt": "2026-10-29T05:55:20.224Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/current-provider__light__desktop": {
+      "sha256": "2582c81071612df1223dc334f51f04d9ef4eafb19e63e1cc8a397668214791f4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:36.609Z",
+      "reviewedAt": "2026-10-29T05:55:20.224Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/controlled-rejected__light__mobile": {
+      "sha256": "9d843a10a3425b8ff87ed591015a314a1d16896719c959b942619bfbfb5c2b42",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:38.665Z",
+      "reviewedAt": "2026-10-29T05:55:20.224Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/controlled-rejected__light__tablet": {
+      "sha256": "4b58f1b4bcd1b41841448a50ebdf32b57850bf99bc4e7dad603c9c8ff3b1d17f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:40.722Z",
+      "reviewedAt": "2026-10-29T05:55:20.225Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/controlled-rejected__light__desktop": {
+      "sha256": "6209281dd074a9c681f8160c61855c4984b7a0882bfa248ca9a26195f1819944",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:42.798Z",
+      "reviewedAt": "2026-10-29T05:55:20.225Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/dynamic-wrappers__light__mobile": {
+      "sha256": "4404e2445a15a74a5830268281dd3443e2a8f4757b8b254d7d2cd321343fddaf",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:44.886Z",
+      "reviewedAt": "2026-10-29T05:55:20.225Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/dynamic-wrappers__light__tablet": {
+      "sha256": "a7e7c5034af8cb6b14c60b6ca65b788a843ec27516a390eaed2c4fce4e7f576b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:46.989Z",
+      "reviewedAt": "2026-10-29T05:55:20.226Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/dynamic-wrappers__light__desktop": {
+      "sha256": "9576b642ff77a678a99e9ba0b2df1cc2cc3af58581983ffbfa82e982b46822c3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:49.084Z",
+      "reviewedAt": "2026-10-29T05:55:20.226Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/native-focus__light__mobile": {
+      "sha256": "85bd920c79ca3baff55a2122c6042ed0698d91d090f253f861855ba6fff01366",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:51.174Z",
+      "reviewedAt": "2026-10-29T05:55:20.226Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/native-focus__light__tablet": {
+      "sha256": "bca4f3c197e8404a26975fa27e015eb424b69a09e10e77764ebcba3c0f522933",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:53.230Z",
+      "reviewedAt": "2026-10-29T05:55:20.227Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/native-focus__light__desktop": {
+      "sha256": "c9807e66f6d34974859e5f85a1a2cbe5308727de1a34e99e6e9ab797abd98e38",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:55.288Z",
+      "reviewedAt": "2026-10-29T05:55:20.227Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/rtl__light__mobile": {
+      "sha256": "7291651c5b22a41785d838e7381bf75ff57c495481785e8ff3ca1c868d54954b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:57.357Z",
+      "reviewedAt": "2026-10-29T05:55:20.227Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/rtl__light__tablet": {
+      "sha256": "0941c8c6b176d8a2fd35c79d28c7b9574870b4c29afc43e04193862c1458005b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:59.431Z",
+      "reviewedAt": "2026-10-29T05:55:20.228Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/rtl__light__desktop": {
+      "sha256": "5622f4df75d56508c5f539d7eda3e86384c142560be3914aff5cf77f1e1f925e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:01.522Z",
+      "reviewedAt": "2026-10-29T05:55:20.228Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/theme-dark__light__mobile": {
+      "sha256": "01e4e21a7f9a40caf8431f275223412afd732e552cc5b54631dcd881c6243a66",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:03.681Z",
+      "reviewedAt": "2026-10-29T05:55:20.228Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/theme-dark__light__tablet": {
+      "sha256": "82a817cc0cff138dce5693441b7a9cc699f040ac065f3982eee697952cfdd1ec",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:05.836Z",
+      "reviewedAt": "2026-10-29T05:55:20.229Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/theme-dark__light__desktop": {
+      "sha256": "c46300e68c846dcad3773fbc32069c43cac5778641d86e436a9ea50d62df8623",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:08.032Z",
+      "reviewedAt": "2026-10-29T05:55:20.229Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/theme-compact__light__mobile": {
+      "sha256": "7dc5803ceb6a51cfd0eb0a53d991300c8cce920120ecf933f77603ea5f9a3798",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:10.175Z",
+      "reviewedAt": "2026-10-29T05:55:20.229Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/theme-compact__light__tablet": {
+      "sha256": "e0e46a33633baa886a9f5a3ed4f92b024123800f6c0c00f42f90ceaa4c16246f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:12.340Z",
+      "reviewedAt": "2026-10-29T05:55:20.230Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/theme-compact__light__desktop": {
+      "sha256": "fc4fe3d62a1f01c00807eae3698b5f8fd38a70a1dd06e30fcfcd5544ef8b44f9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:14.495Z",
+      "reviewedAt": "2026-10-29T05:55:20.230Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/theme-dark-compact__light__mobile": {
+      "sha256": "4f9f7e561b28515855dc4777124fa24c8ba3f828705536fd4108b907512889bc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:16.654Z",
+      "reviewedAt": "2026-10-29T05:55:20.230Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/theme-dark-compact__light__tablet": {
+      "sha256": "a89d8b07948048e12bf227efc46020ec6de645ee38e6734825831991fb7f1fb7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:18.819Z",
+      "reviewedAt": "2026-10-29T05:55:20.231Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/theme-dark-compact__light__desktop": {
+      "sha256": "47363b77757d4dfc8779c653e447037436945b1d8f3f042c6b97907b06c8bde3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:20.991Z",
+      "reviewedAt": "2026-10-29T05:55:20.231Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/locale__light__mobile": {
+      "sha256": "d9981dca74d0b0d438883004a41abbcfca7740737c80988331431ecf67a16e35",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:22.982Z",
+      "reviewedAt": "2026-10-29T05:55:20.232Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/locale__light__tablet": {
+      "sha256": "222822255acd17da20d7f887c81c7d6464ec47f1512d9af2cd9545c804a3508c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:24.979Z",
+      "reviewedAt": "2026-10-29T05:55:20.232Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/locale__light__desktop": {
+      "sha256": "f113f80476532b7afcacdddcdab4a068870a8a428a8c247219da56c42c3c4783",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:26.992Z",
+      "reviewedAt": "2026-10-29T05:55:20.233Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/size-disabled__light__mobile": {
+      "sha256": "bacc3861fbb2df4ada04fac380c244004142ac4f80e6761011037dc21fe4f519",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:29.067Z",
+      "reviewedAt": "2026-10-29T05:55:20.233Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/size-disabled__light__tablet": {
+      "sha256": "6130967485cc1890b920d48075a51773c4f0c402a98e1824f31cf135a8158a71",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:31.155Z",
+      "reviewedAt": "2026-10-29T05:55:20.233Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/size-disabled__light__desktop": {
+      "sha256": "93d43306c87701199172b90b2c907c95a28d3eba04f5af056b538b355c51fc8d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:33.234Z",
+      "reviewedAt": "2026-10-29T05:55:20.234Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/component-defaults__light__mobile": {
+      "sha256": "12db7e553a2e9109cedee610f38815d84c7b10cabb94c6ea487856a958a52a71",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:35.252Z",
+      "reviewedAt": "2026-10-29T05:55:20.234Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/component-defaults__light__tablet": {
+      "sha256": "a005beadcd26c238532e52a85f7d03a34a2e38981063289e7f6992c33e23d015",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:37.296Z",
+      "reviewedAt": "2026-10-29T05:55:20.234Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/component-defaults__light__desktop": {
+      "sha256": "d26ffda64432160487651cd5300972970d58c029ae4b21242805539fe786afe4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:39.342Z",
+      "reviewedAt": "2026-10-29T05:55:20.235Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/current-provider__light__mobile": {
+      "sha256": "48803cc7de02a44e0a49b8cd9b948930f63db7c7edf963adf871208311cf77fb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:41.465Z",
+      "reviewedAt": "2026-10-29T05:55:20.235Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/current-provider__light__tablet": {
+      "sha256": "e5500409e43bb69dc689b1cbbe64920d334ed8a5053212b56e5cd5dce51b286c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:43.589Z",
+      "reviewedAt": "2026-10-29T05:55:20.235Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/current-provider__light__desktop": {
+      "sha256": "61d8e5fb734b4d66b0a55903a22d7b31f0452e2f4781c05a76628226bf78703e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:45.719Z",
+      "reviewedAt": "2026-10-29T05:55:20.236Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/scope-tag__light__mobile": {
+      "sha256": "db9f3315d7acc542c0cace27f28e9bd277952f5ab7a9885a227a53df023c5e9f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:47.772Z",
+      "reviewedAt": "2026-10-29T05:55:20.236Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/scope-tag__light__tablet": {
+      "sha256": "e3dfeefef90f14f9c98c8e75b3a92066a4d7763ba865d0c26c9f8a2f4771d20c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:49.828Z",
+      "reviewedAt": "2026-10-29T05:55:20.236Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/scope-tag__light__desktop": {
+      "sha256": "76587cefea7d21c0176085e164d13becc9d7735d056f9de99b89545204041429",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:51.904Z",
+      "reviewedAt": "2026-10-29T05:55:20.237Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/native-parents__light__mobile": {
+      "sha256": "0ef5c17c015672c611e6d51536f2af9e3e6e308504af42713480e0303245fa98",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:53.907Z",
+      "reviewedAt": "2026-10-29T05:55:20.237Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/native-parents__light__tablet": {
+      "sha256": "056d46ae98258ac901d14efaf49f79c2816120910b5028fc6ea9c823d6dc7fff",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:55.933Z",
+      "reviewedAt": "2026-10-29T05:55:20.237Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/native-parents__light__desktop": {
+      "sha256": "769295538bd3a1fb1cf13550dbf772ee2d859bccfa8808e6189278ba3fb9ccb9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:57.963Z",
+      "reviewedAt": "2026-10-29T05:55:20.238Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/css-only__light__mobile": {
+      "sha256": "e42fbf4383045b0721121cff01095d70215a4a5497914c2b5975f412a5f92306",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:00.015Z",
+      "reviewedAt": "2026-10-29T05:55:20.238Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/css-only__light__tablet": {
+      "sha256": "2fac7754c724981324baf535631ae2f744001ae72da30911340e55043e934737",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:02.060Z",
+      "reviewedAt": "2026-10-29T05:55:20.238Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/css-only__light__desktop": {
+      "sha256": "29d1e85b3c440e9c3dd97133efb2af610320d13f3dda49fdeec00901cd6eed72",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:04.091Z",
+      "reviewedAt": "2026-10-29T05:55:20.239Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/empty-reset__light__mobile": {
+      "sha256": "ca5682d87a883b0f3759cffe83ca157d150db1bfd23284c07472c840a079af44",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:06.201Z",
+      "reviewedAt": "2026-10-29T05:55:20.239Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/empty-reset__light__tablet": {
+      "sha256": "355ffe7160ad130ecf2b11a996748b403052a62dcd19b9d8df4ebeb34fdd8417",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:08.307Z",
+      "reviewedAt": "2026-10-29T05:55:20.239Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/empty-reset__light__desktop": {
+      "sha256": "4a38adec8718fd66b8ee5fc0e52fd456825c54f1d2b813210a6337113f7aea1b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:10.404Z",
+      "reviewedAt": "2026-10-29T05:55:20.240Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/native-focus__light__mobile": {
+      "sha256": "472866b13958cf4b6d745f56b6991073a8b47ca25c8fbcc932ba1076b96bcb13",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:12.477Z",
+      "reviewedAt": "2026-10-29T05:55:20.240Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/native-focus__light__tablet": {
+      "sha256": "f034fd05375eaafb1c20fce21b4768f659e1890ed3a373b434089efd8657613e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:14.558Z",
+      "reviewedAt": "2026-10-29T05:55:20.240Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/native-focus__light__desktop": {
+      "sha256": "bf8347ba707067db12eb967f27c7b85cfc94e789558589b7427936600c98668f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:16.651Z",
+      "reviewedAt": "2026-10-29T05:55:20.241Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/rtl__light__mobile": {
+      "sha256": "2a4195c73c3b7bb8f60252e52bd432eb09abf3c250262e1b7ecab8942bb6d5e6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:18.744Z",
+      "reviewedAt": "2026-10-29T05:55:20.241Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/rtl__light__tablet": {
+      "sha256": "e7bf163e565bb7e2e5c0afe4d272e8fdc8a0c009775e00a4c6bad2a1b01cee91",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:20.824Z",
+      "reviewedAt": "2026-10-29T05:55:20.241Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/rtl__light__desktop": {
+      "sha256": "5a3b455aff57f47c0e51ea080130b82b20c6166e7e3d6349e63712b57b3d4261",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:22.918Z",
+      "reviewedAt": "2026-10-29T05:55:20.242Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/theme-token__light__mobile": {
+      "sha256": "3e175a5cafdcf499d36d7dbcb0bcbc50fca5ccb68b847503adb38635d92ac60d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:25.010Z",
+      "reviewedAt": "2026-10-29T05:55:20.242Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/theme-token__light__tablet": {
+      "sha256": "7e74cdbb802965956176792b59a2a10731aa1332855cee0c116824bea89729ef",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:27.084Z",
+      "reviewedAt": "2026-10-29T05:55:20.242Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/theme-token__light__desktop": {
+      "sha256": "f66885f29697ac285f928eac9cfa5bf884b59dcfbb5432678659e661fabad41f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:29.153Z",
+      "reviewedAt": "2026-10-29T05:55:20.243Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/theme-dark__light__mobile": {
+      "sha256": "1dbbcb5b614e6eb82d8ff60520ae8a6a13792cf763740538c92cf4b34c87be4c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:31.249Z",
+      "reviewedAt": "2026-10-29T05:55:20.243Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/theme-dark__light__tablet": {
+      "sha256": "ca16f04ea007142f42fbeb84ba0c6aaa7c55438a4718ccf65fe394045d7f2272",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:33.347Z",
+      "reviewedAt": "2026-10-29T05:55:20.243Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/theme-dark__light__desktop": {
+      "sha256": "780e6f4280ef8a1f3634dcd3e6d6d1f9e42f1d3c5210e1d15d33e0f4ad06cf82",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:35.448Z",
+      "reviewedAt": "2026-10-29T05:55:20.244Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/theme-compact__light__mobile": {
+      "sha256": "24515b1677851f6d8c9d70cd9488dc5a7fc61357a1a76720cc9d322c7e70ca13",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:37.550Z",
+      "reviewedAt": "2026-10-29T05:55:20.244Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/theme-compact__light__tablet": {
+      "sha256": "6720614e3333735203e11e6b38417ed07e0529f7f23ca9a301d827f0658e6a4f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:39.623Z",
+      "reviewedAt": "2026-10-29T05:55:20.244Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/theme-compact__light__desktop": {
+      "sha256": "434867b5a5bdb23e7ff8612f945109f441752ef61c8bda8b0fef466b9249426b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:41.717Z",
+      "reviewedAt": "2026-10-29T05:55:20.244Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/theme-dark-compact__light__mobile": {
+      "sha256": "c8aea0c8aa71f22a30ac58370b0b806568c4757429fbeb1c75d0f33109c5e97c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:43.811Z",
+      "reviewedAt": "2026-10-29T05:55:20.245Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/theme-dark-compact__light__tablet": {
+      "sha256": "3542ec8112e8e16ac6005eb73cd7e9be15ab3be2b41f19ffdb0dbdba1bc5aab1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:45.903Z",
+      "reviewedAt": "2026-10-29T05:55:20.245Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "config-provider/theme-dark-compact__light__desktop": {
+      "sha256": "bbd7f3e84b239486652e5ae89dfa61cc9873f97c9d4caae04355ecdf86bec618",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:48:47.985Z",
+      "reviewedAt": "2026-10-29T05:55:20.245Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
     }
   }
 }

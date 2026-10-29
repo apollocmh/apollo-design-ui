@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-29T05:38:48.609Z",
+  "generatedAt": "2026-10-29T05:55:20.728Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -1380,7 +1380,7 @@
       "decidedBy": [],
       "complexity": "L",
       "unblocks": 52,
-      "why": "Token / 主题 / locale / size / disabled / prefixCls 的统一入口，是全部组件的运行时网关。它是零运行时 CSS 变量方案（ARCHITECTURE.md §4.3）的落地点。\n2026-10-26 Image单元源主题/Token组：源上下文跨Portal、7个Token、ThemeProvider继承与Provider主题移除/恢复状态已修；可选作用域用原生Teleport保留同一插槽子树，SSR内联后水合不替换原节点，当前CSS变量前缀清理。56文件1059运行/DOM/a11y/theme串行通过（未改阈值），严格/构建/生产模板消费/L7/Docs通过；23场景生产Chrome及独立SSR水合通过。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image滚动锁/富缩略图/motion/最终视觉仍开放，不据此升级整组件维度。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。",
+      "why": "Token / 主题 / locale / size / disabled / prefixCls 的统一入口，是全部组件的运行时网关。它是零运行时 CSS 变量方案（ARCHITECTURE.md §4.3）的落地点。\n2026-10-26 Image单元源主题/Token组：源上下文跨Portal、7个Token、ThemeProvider继承与Provider主题移除/恢复状态已修；可选作用域用原生Teleport保留同一插槽子树，SSR内联后水合不替换原节点，当前CSS变量前缀清理。56文件1059运行/DOM/a11y/theme串行通过（未改阈值），严格/构建/生产模板消费/L7/Docs通过；23场景生产Chrome及独立SSR水合通过。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image滚动锁/富缩略图/motion/最终视觉仍开放，不据此升级整组件维度。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29原生视觉已审阅批准：Input84张、ConfigProvider42张；清洁4637eb45独立捕获与审阅图原始RGBA完全一致。批准后关联回归和统一验收继续，当前仍testing。",
       "doneWhen": [],
       "group": "其他",
       "priority": "P0",
@@ -1948,7 +1948,7 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "含 Input / TextArea / Search / Password / OTP 子组件。必须保留输入法组合态（IME）处理能力，不可简化。\n2026-10-29当前主题尺寸/覆盖链窄整改：已有19个Input ComponentToken配置未消费、InputAffixPadding声明缺失、Provider style/Group/OTP尺寸及autoSize重测问题已成组复现并修复验收中；Registry原tokenCount0登记缺口由主线程待冻结同步。不是完整Input全API验收，旧completed不能代表本轮通过。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。",
+      "why": "含 Input / TextArea / Search / Password / OTP 子组件。必须保留输入法组合态（IME）处理能力，不可简化。\n2026-10-29当前主题尺寸/覆盖链窄整改：已有19个Input ComponentToken配置未消费、InputAffixPadding声明缺失、Provider style/Group/OTP尺寸及autoSize重测问题已成组复现并修复验收中；Registry原tokenCount0登记缺口由主线程待冻结同步。不是完整Input全API验收，旧completed不能代表本轮通过。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29原生视觉已审阅批准：Input84张、ConfigProvider42张；清洁4637eb45独立捕获与审阅图原始RGBA完全一致。批准后关联回归和统一验收继续，当前仍testing。",
       "doneWhen": [],
       "group": "数据录入",
       "priority": "P2",

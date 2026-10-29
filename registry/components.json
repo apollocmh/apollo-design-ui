@@ -224,7 +224,7 @@
       "a11yStatus": "done",
       "visualStatus": "in-progress",
       "docsStatus": "in-progress",
-      "notes": "Token / 主题 / locale / size / disabled / prefixCls 的统一入口，是全部组件的运行时网关。它是零运行时 CSS 变量方案（ARCHITECTURE.md §4.3）的落地点。\n2026-10-26 Image单元源主题/Token组：源上下文跨Portal、7个Token、ThemeProvider继承与Provider主题移除/恢复状态已修；可选作用域用原生Teleport保留同一插槽子树，SSR内联后水合不替换原节点，当前CSS变量前缀清理。56文件1059运行/DOM/a11y/theme串行通过（未改阈值），严格/构建/生产模板消费/L7/Docs通过；23场景生产Chrome及独立SSR水合通过。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image滚动锁/富缩略图/motion/最终视觉仍开放，不据此升级整组件维度。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。",
+      "notes": "Token / 主题 / locale / size / disabled / prefixCls 的统一入口，是全部组件的运行时网关。它是零运行时 CSS 变量方案（ARCHITECTURE.md §4.3）的落地点。\n2026-10-26 Image单元源主题/Token组：源上下文跨Portal、7个Token、ThemeProvider继承与Provider主题移除/恢复状态已修；可选作用域用原生Teleport保留同一插槽子树，SSR内联后水合不替换原节点，当前CSS变量前缀清理。56文件1059运行/DOM/a11y/theme串行通过（未改阈值），严格/构建/生产模板消费/L7/Docs通过；23场景生产Chrome及独立SSR水合通过。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image滚动锁/富缩略图/motion/最终视觉仍开放，不据此升级整组件维度。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29原生视觉已审阅批准：Input84张、ConfigProvider42张；清洁4637eb45独立捕获与审阅图原始RGBA完全一致。批准后关联回归和统一验收继续，当前仍testing。",
       "layerNotes": {
         "token": "ConfigProvider 本身没有 ComponentToken —— 它是消费 token 的入口，不是 token 的定义者。`theme.components` 字段把每个组件的 ComponentToken 透传给对应组件去用，token 落点仍由各组件的 style/token.ts 决定。",
         "style": "ConfigProvider没有自有CSS入口。本层给theme时创建display:contents作用域，经createCSSVarScope写入当前派生CSS变量，移除/前缀切换时清理；主题配置同时通过Vue上下文传给消费者。组件静态CSS需显式导入公开style.css或各组件入口，style/index.ts用于构建期生成，不在组件渲染时注入。2026-10-29公共样式69入口与24对真实按需/全量消费证据见stylesheet-dependency-published-stage.json；不是ConfigProvider整单元重新验收。",
@@ -262,7 +262,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "button",
@@ -1821,7 +1821,7 @@
       "a11yStatus": "done",
       "visualStatus": "in-progress",
       "docsStatus": "in-progress",
-      "notes": "含 Input / TextArea / Search / Password / OTP 子组件。必须保留输入法组合态（IME）处理能力，不可简化。\n2026-10-29当前主题尺寸/覆盖链窄整改：已有19个Input ComponentToken配置未消费、InputAffixPadding声明缺失、Provider style/Group/OTP尺寸及autoSize重测问题已成组复现并修复验收中；Registry原tokenCount0登记缺口由主线程待冻结同步。不是完整Input全API验收，旧completed不能代表本轮通过。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。",
+      "notes": "含 Input / TextArea / Search / Password / OTP 子组件。必须保留输入法组合态（IME）处理能力，不可简化。\n2026-10-29当前主题尺寸/覆盖链窄整改：已有19个Input ComponentToken配置未消费、InputAffixPadding声明缺失、Provider style/Group/OTP尺寸及autoSize重测问题已成组复现并修复验收中；Registry原tokenCount0登记缺口由主线程待冻结同步。不是完整Input全API验收，旧completed不能代表本轮通过。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29原生视觉已审阅批准：Input84张、ConfigProvider42张；清洁4637eb45独立捕获与审阅图原始RGBA完全一致。批准后关联回归和统一验收继续，当前仍testing。",
       "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1854,7 +1854,7 @@
           ]
         }
       },
-      "visualBaseline": "legacy-reference"
+      "visualBaseline": "apollo"
     },
     {
       "name": "input-number",

@@ -1,10 +1,10 @@
 {
-  "date": "2026-10-29T05:38:08.835644+00:00",
-  "status": "source-milestone-delivered-unified-acceptance-pending",
-  "committedBase": "796a193f0c3f656e82c179c1ac298aafe48df465",
+  "date": "2026-10-29T05:55:20.309478+00:00",
+  "status": "source-and-native-visual-milestones-delivered-final-acceptance-pending",
+  "committedBase": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
   "completeComponentUnits": 21,
   "componentUnits": 72,
-  "committedApolloVisuals": 1089,
+  "committedApolloVisuals": 1215,
   "committedVisualPlan": 1875,
   "pauseAfterCurrentBatch": true,
   "dispatchFurtherUnits": false,
@@ -34,14 +34,16 @@
     "publishedBrowser": 249,
     "allOriginalDemoThemeChecks": 96,
     "publishedTypes": "positive and independent negative consumers passed",
-    "formalVisualsPending": 84
+    "formalVisualsApproved": 84,
+    "postApprovalRegression": "pending"
   },
   "configProvider": {
     "stage": "source-and-published-milestone-delivered-final-acceptance-pending",
     "relatedRuntime": 496,
     "publishedNativeSsrHydrationBrowser": 62,
     "originalDemos": 8,
-    "formalVisualsPending": 42
+    "formalVisualsApproved": 42,
+    "postApprovalRegression": "pending"
   },
   "tree": {
     "stage": "read-only-inventory-recorded-implementation-not-started",
@@ -128,9 +130,9 @@
     }
   },
   "remaining": [
-    "Final frozen-source broad runtime regression",
-    "Input/ConfigProvider formal visual review and independent recapture",
+    "Final broad runtime rerun after the documented private-model scanner correction; production source unchanged",
+    "Post-approval regression of all existing Apollo baselines",
     "Final generated Docs and live publication acceptance",
-    "Commit/push results, then pause without further dispatch"
+    "Commit/push acceptance evidence, then pause without dispatch"
   ]
 }

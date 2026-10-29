@@ -13,7 +13,7 @@ order: 0
 | --- | --- |
 | 72个组件主单元 | 21个已完整验收；本批四个新增单元正在统一收口 |
 | 当前批次 | Divider、Collapse、完整Input和ConfigProvider实现已冻结；所有子任务已暂停，主线程完成整合后暂停 |
-| 当前已提交视觉 | 1089/1875已审阅批准；包含本批Divider 48张、Collapse 54张；Input和Provider新场景验收中 |
+| 当前已提交视觉 | 1215/1875已审阅批准；本批228张已审阅，批准后的共享回归继续 |
 | 其余组件 | 51个尚未按本轮完整标准收口；不以源码提交代替完整验收 |
 | 13个基础包 | Theme源码专项已交付；Locale、Icons、Form Core的关联链已修正，完整逐包复核仍开放 |
 | 最终验收 | 全部整改单元结束后，再对最终同一提交执行全量门禁 |
@@ -26,8 +26,8 @@ order: 0
 | --- | --- | --- |
 | Divider | 条件内容、原生语义、当前配置与三个Token；发布浏览器67项、九个Demo和48张正式视觉已通过 | 最终共享源码的统一回归与Docs成品复验 |
 | Collapse / Panel | 原生heading/button/extra、真实Panel、模型与内容身份、十Token；发布浏览器134项和54张正式视觉已通过 | 最终共享源码的统一回归与Docs成品复验 |
-| Input六个组件族 | 原生Event、受控值/IME、稳定宿主、真实Expose、Password/OTP插槽与尺寸；249项发布浏览器、24 Demo四主题96项、发布类型正负例通过 | 新增84张正式视觉批准及最终广关联回归 |
-| ConfigProvider | 当前主题/语言/表单/图标和通知链；496项相关回归、62项发布浏览器/SSR、八Demo和发布类型通过 | 新增42张正式视觉批准及最终广关联回归 |
+| Input六个组件族 | 原生Event、受控值/IME、稳定宿主、真实Expose、Password/OTP插槽与尺寸；249项发布浏览器、24 Demo四主题96项、发布类型正负例通过 | 84张正式视觉已批准，进行批准后复验、最终广关联与Docs验收 |
+| ConfigProvider | 当前主题/语言/表单/图标和通知链；496项相关回归、62项发布浏览器/SSR、八Demo和发布类型通过 | 42张正式视觉已批准，进行批准后复验、最终广关联与Docs验收 |
 | Theme基础包 | 提交617ae554已推送；应用/SSR隔离、可写配置和变量所有权专项已验证 | 完整基础包验收仍开放，不计入组件完成数 |
 
 全仓严格类型、2309项类型测试、UI严格L7及tarball的Vite/Webpack消费已通过；Docs 161项测试和首轮80项实际页面/交互通过。全库运行回归和最终视觉正在对冻结源码执行，不能把上述局部结果写成最终全库绿灯。原预算超出的实际功能成本已记录，未放宽类型、依赖、axe或像素差异判据。
@@ -219,7 +219,7 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 | --- | --- |
 |72 component units|21 fully accepted; four additional units are undergoing unified acceptance|
 |Current batch|Divider, Collapse, complete Input and ConfigProvider sources are frozen; all subagents are paused; finish integration and pause|
-|Committed Apollo visuals|1089/1875 reviewed and approved, including48 Divider and54 Collapse images; Input and Provider review continues|
+|Committed Apollo visuals|1215/1875 reviewed and approved, including228 images in this batch; post-approval shared regressions continue|
 |Other components|51 await complete current acceptance; source delivery does not count as full acceptance|
 |13 foundation packages|Theme source milestone delivered; associated Locale, Icons and Form Core chains corrected; full package reviews remain open|
 |Final gate|Run whole-library gates on the same final commit after all units close|
@@ -232,8 +232,8 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 | --- | --- | --- |
 | Divider | Conditional content, native semantics, current configuration and three tokens;67 published-browser checks, nine demos and48 reviewed visuals pass | Final shared-source runtime and generated Docs checks |
 | Collapse / Panel | Native headings/buttons/extra actions, real Panels, models/content identity and ten tokens;134 published-browser checks and54 reviewed visuals pass | Final shared-source runtime and generated Docs checks |
-| Six Input families | Native Events, controlled values/IME, stable hosts, actual exposes, Password/OTP slots and sizing;249 published-browser checks,96 actual demo/theme checks and published types pass | Approval of84 additional formal visuals and final broad regressions |
-| ConfigProvider | Current theme/locale/form/icon and notice chains;496 related checks,62 published browser/SSR checks, eight demos and published types pass | Approval of42 additional formal visuals and final broad regressions |
+| Six Input families | Native Events, controlled values/IME, stable hosts, actual exposes, Password/OTP slots and sizing;249 published-browser checks,96 actual demo/theme checks and published types pass | 84 formal visuals approved; post-approval regression, final broad runtime and Docs acceptance continue |
+| ConfigProvider | Current theme/locale/form/icon and notice chains;496 related checks,62 published browser/SSR checks, eight demos and published types pass | 42 formal visuals approved; post-approval regression, final broad runtime and Docs acceptance continue |
 | Theme foundation | Commit617ae554 is pushed; app/SSR isolation, writable config and scope ownership verified | Full foundation acceptance stays open and does not increase component counts |
 
 Whole-repository strict types,2309 type tests, strict UI L7 and tarball Vite/Webpack consumption pass. Docs161 tests and the first80 real-page/interaction checks pass. Broad runtime and final visual checks are running on frozen source; partial results are not a final whole-library pass. Actual feature costs above the old size budgets are recorded; type, dependency, axe and pixel checks remain intact.

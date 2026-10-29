@@ -14,6 +14,9 @@
  *   - `menu/Menu.ts` 的 `activeKey`：上游无 v-model:activeKey（通道是 selectedKeys/openKeys）
  *   - `qr-code/QrCode.ts` 的 `value`：编码内容，不是受控状态
  *   - `cascader/OptionList.ts` 的 `checked`：引擎内部态（公开通道在 Cascader 的 update:value）
+ *   - `image/Preview.ts` 的 `current`：未公开导出的私有展示态；导航通过 onActive 交回
+ *     PreviewGroup，公开通道是 Group 的 update:current。preview-state.test.ts 覆盖受控请求、
+ *     数字载荷、事件数组/once和当前监听器；不能给内部展示组件添加第二个模型拥有者。
  */
 
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
@@ -35,6 +38,7 @@ const EXEMPTED = new Set<string>([
   'menu/Menu.ts:activeKey',
   'qr-code/QrCode.ts:value',
   'cascader/OptionList.ts:checked',
+  'image/Preview.ts:current',
 ]);
 
 function mainFiles(componentDir: string): string[] {
