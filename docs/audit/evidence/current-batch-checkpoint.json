@@ -115,6 +115,13 @@
       "evidenceSha256": "7e4dd95f16a3679ae65afae8ecc400f9a74585aaec94c223f576b965b33c0a57"
     },
     "guideSha256": "3a40b27d1795dfdc12983b983063107dd3343140d266e7588429212a39dfa54f",
-    "deployment": "not-yet-dispatched"
+    "deployment": {
+      "sourceCommit": "5513431abed5dde3221656db4850ba809954efe5",
+      "workflowRunId": 40810818065,
+      "conclusion": "success",
+      "liveChecks": 56,
+      "errors": [],
+      "receipt": "docs/audit/evidence/current-batch-docs-publication.json"
+    }
   }
 }
