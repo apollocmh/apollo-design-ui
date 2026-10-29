@@ -57,6 +57,7 @@ export async function buildSide(side, outDir) {
       alias: {
         dayjs: DAYJS_DIR,
         '@apollo-design/icons': path.join(ROOT, 'packages/icons/dist/index.mjs'),
+        '@apollo-design/locale': path.join(ROOT, 'packages/locale/dist/index.mjs'),
       },
     },
     // React 侧用 JSX automatic runtime（React 19 不再需要手写 import React）

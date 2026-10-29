@@ -128,7 +128,9 @@ describe('Button · Component Token', () => {
     expect(keys).toEqual(BUTTON_TOKEN_KEYS);
   });
 
-  it('solidTextColor 准备默认值，自动前景由浏览器按实际实色背景处理', () => {
+  it('primary/danger 准备浅色前景，其他实色保留自动前景默认值', () => {
+    expect(prepareComponentToken(ALIAS).primaryColor).toBe(ALIAS.colorTextLightSolid);
+    expect(prepareComponentToken(ALIAS).dangerColor).toBe(ALIAS.colorTextLightSolid);
     expect(prepareComponentToken(ALIAS).solidTextColor).toBe(ALIAS.colorTextLightSolid);
   });
   it('字号0保留，非有限负值回退且所有派生值有限', () => {

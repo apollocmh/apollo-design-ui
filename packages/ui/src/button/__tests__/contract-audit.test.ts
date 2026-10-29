@@ -480,6 +480,40 @@ describe('Button complete public contracts', () => {
   it('records all 58 existing token fields without dropping legacy or preset fields', () => {
     expect(Object.keys(buttonAuditTokens)).toHaveLength(58);
   });
+  it('consumes the default primary and danger foregrounds and restores them after override removal', async () => {
+    const foreground = ref<string | undefined>();
+    const w = render(() =>
+      h(
+        ConfigProvider,
+        {
+          theme: {
+            components: {
+              Button:
+                foreground.value === undefined
+                  ? {}
+                  : { primaryColor: foreground.value, dangerColor: foreground.value },
+            },
+          },
+        },
+        () => [
+          h(Button, { type: 'primary', class: 'primary' }, () => 'Save'),
+          h(Button, { type: 'primary', danger: true, class: 'danger' }, () => 'Delete'),
+        ],
+      ),
+    );
+    const primary = w.get<HTMLElement>('.primary').element;
+    const danger = w.get<HTMLElement>('.danger').element;
+    primary.focus();
+    for (const value of [undefined, '#112233', undefined, '#334455', undefined]) {
+      foreground.value = value;
+      await nextTick();
+      expect(primary.style.getPropertyValue('--apollo-btn-primary-color')).toBe(value ?? '#fff');
+      expect(danger.style.getPropertyValue('--apollo-btn-danger-color')).toBe(value ?? '#fff');
+      expect(w.get('.primary').element).toBe(primary);
+      expect(w.get('.danger').element).toBe(danger);
+      expect(document.activeElement).toBe(primary);
+    }
+  });
   it.each(Object.entries(buttonAuditTokens))(
     'consumes published component token %s on the owning root',
     (name, value) => {

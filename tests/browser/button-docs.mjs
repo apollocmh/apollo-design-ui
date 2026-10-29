@@ -161,6 +161,12 @@ try {
       .evaluate((n) => n.click());
     await settle();
   };
+  const foreground = () => primary.evaluate((n) => getComputedStyle(n).color);
+  assert.equal(await foreground(), 'rgb(255, 255, 255)');
+  await toggle('自定义主按钮文字');
+  assert.equal(await foreground(), 'rgb(255, 246, 230)');
+  await toggle('自定义主按钮文字');
+  assert.equal(await foreground(), 'rgb(255, 255, 255)');
   await toggle('放大字号');
   assert.equal(
     await primary.evaluate((n) => n.style.getPropertyValue('--apollo-btn-content-font-size')),

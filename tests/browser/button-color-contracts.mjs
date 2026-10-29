@@ -113,8 +113,18 @@ try {
       );
       const active = await cssContrast(button);
       await page.mouse.up();
-      for (const [state, value] of Object.entries({ normal, hover, active }))
-        results.push({ theme, id, state, passed: value.ratio >= 4.5, ...value });
+      for (const [state, value] of Object.entries({ normal, hover, active })) {
+        const needsLightText = id === 'primary-solid' || id === 'danger-solid';
+        const lightText = value.foregroundRGB.every((channel) => channel === 255);
+        results.push({
+          theme,
+          id,
+          state,
+          passed: value.ratio >= 4.5 && (!needsLightText || lightText),
+          expectedForeground: needsLightText ? 'white' : 'readable',
+          ...value,
+        });
+      }
     }
     const violations = await page.locator('main').evaluate(async (n) =>
       (await window.axe.run(n)).violations.map((v) => ({

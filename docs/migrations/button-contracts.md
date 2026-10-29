@@ -10,6 +10,8 @@
 - 现有 45 个显式 Token 及 13 个预设阴影字段接入当前 `theme.components.Button`，根 CSS 变量覆盖仍优先。`solidTextColor` 已有声明补齐准备函数默认值。文档中的 `@apollo-design/ui/button/style/token` 不是包导出；使用现已补齐的根/`button` 入口 `prepareButtonComponentToken` 和 `genButtonStyle`。
 - 默认颜色修正包含各色、变体、交互态与四算法。支持相应原生 CSS 色值函数的浏览器提供自动实色前景与彩色文字明度修正；已有前景 Token/原生样式显式覆盖优先。渐变和透明背景按实际上下文配色。浏览器实测范围、回退边界与视觉证据按审计记录，不把函数支持等同全浏览器验证。
 
+2026-10-29 用户反馈修正：primaryColor/dangerColor 的默认 colorTextLightSolid 必须真正消费，普通/悬停/按下保持白字，不能被自动黑白选择覆盖。默认及预设实心色保留自动前景，solidTextColor 不再作为主/危险按钮的隐式前景。相对线性 sRGB 在按钮局部限制主/危险实色背景过高亮度，维持既有 4.5:1 门禁，全局 Alias 不变。显式组件前景与原生变量优先，自定义配色仍需配对。完整范围、复现与本次证据见[前景回归修复](../audit/2026-10-29-button-foreground.md)。无新增 API 或兼容通道。
+
 保留对象式语义 API、现有全部 Props/类型糖、default/icon 两槽、click MouseEvent 和唯一 nativeElement expose。没有新增函数式语义 API、业务加载服务、Button.Group 或新状态。
 
 当前 Provider 方向通过根原生 dir 落地；原生 dir 覆盖及动态移除恢复当前上下文，未配置方向时继承环境。

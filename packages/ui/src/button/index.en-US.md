@@ -78,11 +78,11 @@ All 45 explicit fields below and the 13 existing preset shadow fields are consum
 | defaultShadow | Shadow |
 | primaryShadow | Shadow |
 | dangerShadow | Shadow |
-| primaryColor | Corresponding color/state foreground, background or border |
+| primaryColor | Primary solid text in all three states; defaults to colorTextLightSolid (white) |
 | defaultColor | Corresponding color/state foreground, background or border |
 | defaultBg | Corresponding color/state foreground, background or border |
 | defaultBorderColor | Corresponding color/state foreground, background or border |
-| dangerColor | Corresponding color/state foreground, background or border |
+| dangerColor | Danger solid text in all three states; defaults to colorTextLightSolid (white) |
 | defaultHoverBg | Corresponding color/state foreground, background or border |
 | defaultHoverColor | Corresponding color/state foreground, background or border |
 | defaultHoverBorderColor | Corresponding color/state foreground, background or border |
@@ -95,7 +95,7 @@ All 45 explicit fields below and the 13 existing preset shadow fields are consum
 | defaultGhostColor | Corresponding color/state foreground, background or border |
 | ghostBg | Corresponding color/state foreground, background or border |
 | defaultGhostBorderColor | Corresponding color/state foreground, background or border |
-| solidTextColor | Corresponding color/state foreground, background or border |
+| solidTextColor | Explicit default/preset solid text; does not override primaryColor/dangerColor |
 | textTextColor | Corresponding color/state foreground, background or border |
 | textTextHoverColor | Corresponding color/state foreground, background or border |
 | textTextActiveColor | Corresponding color/state foreground, background or border |
@@ -127,7 +127,7 @@ Preset shadows: `blueShadowColor`, `purpleShadowColor`, `cyanShadowColor`, `gree
 </ConfigProvider>
 ```
 
-Default solid foreground and colored text use native CSS color functions within @supports; existing foreground tokens and native styles keep explicit control. The original fallback remains for unsupported functions. Transparent/gradient surfaces require paired caller colors. The audit records the actual browser/theme scope; this does not claim every browser has been tested.
+Primary and danger solid buttons use colorTextLightSolid in normal, hover and active states; automatic black/white selection does not replace these foregrounds. Browsers supporting relative colors limit excessive luminance of these solid backgrounds to keep default white text readable without changing global Alias values. Default/preset solid buttons retain automatic foregrounds, and colored text retains native CSS lightness correction. Explicit foreground tokens and native styles win; authors pair custom text, transparent and gradient surfaces with suitable backgrounds. Unsupported functions retain the Alias fallback; actual browser coverage is recorded in the audit.
 
 Button, genButtonStyle and prepareButtonComponentToken are exported from @apollo-design/ui and @apollo-design/ui/button. Types include ButtonProps, ButtonRef, ButtonSlots, ButtonSlot, ButtonConfig, the enums/semantic types above, ButtonComponentToken and ButtonTokenInput. The old documented button/style/token path is not a package export.
 

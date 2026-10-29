@@ -9,6 +9,22 @@ import { prepareComponentToken } from './token';
 const v = (token: string): string => `var(${token2CSSVar(token)})`;
 const component = (token: string, fallback: string): string =>
   `var(${token2CSSVar(token, 'apollo-btn')},${fallback})`;
+const lightForegroundBackgrounds = [
+  'colorPrimary',
+  'colorPrimaryHover',
+  'colorPrimaryActive',
+  'colorError',
+  'colorErrorHover',
+  'colorErrorActive',
+] as const;
+const solidBackgroundName = (token: string): string => `solid-${token2CSSVar(token, '').slice(2)}`;
+const solidBackground = (token: string): string => component(solidBackgroundName(token), v(token));
+/** Cap linear-sRGB luminance at .18: white text retains >4.5:1, with hue and alpha preserved. */
+const lightTextBackground = (background: string): string => {
+  const luminance = 'max(0.00001,calc(r * 0.2126 + g * 0.7152 + b * 0.0722))';
+  const scale = `min(1,calc(0.18 / ${luminance}))`;
+  return `color(from ${background} srgb-linear calc(r * ${scale}) calc(g * ${scale}) calc(b * ${scale}))`;
+};
 const toneTokens = new Set<string>();
 const tone = (token: string): string => {
   toneTokens.add(token);
@@ -62,7 +78,11 @@ function colorSlots(color: ColorKey): ColorSlots {
           'primaryShadow',
           `0 ${v('controlOutlineWidth')} 0 ${v('controlOutline')}`,
         ),
-        solidBg: [v('colorPrimary'), v('colorPrimaryHover'), v('colorPrimaryActive')],
+        solidBg: [
+          solidBackground('colorPrimary'),
+          solidBackground('colorPrimaryHover'),
+          solidBackground('colorPrimaryActive'),
+        ],
       };
     case 'dangerous':
       return {
@@ -73,7 +93,11 @@ function colorSlots(color: ColorKey): ColorSlots {
           'dangerShadow',
           `0 ${v('controlOutlineWidth')} 0 ${v('colorErrorOutline')}`,
         ),
-        solidBg: [v('colorError'), v('colorErrorHover'), v('colorErrorActive')],
+        solidBg: [
+          solidBackground('colorError'),
+          solidBackground('colorErrorHover'),
+          solidBackground('colorErrorActive'),
+        ],
       };
     case 'link':
       return {
@@ -112,9 +136,9 @@ function resolve(color: ColorKey, variant: VariantKey, ghost: boolean): Resolved
       const foreground = component('solidTextColor', automatic);
       const text =
         color === 'primary'
-          ? component('primaryColor', foreground)
+          ? component('primaryColor', v('colorTextLightSolid'))
           : color === 'dangerous'
-            ? component('dangerColor', foreground)
+            ? component('dangerColor', v('colorTextLightSolid'))
             : foreground;
       return {
         border: TRANSPARENT,
@@ -215,6 +239,9 @@ export function genButtonStyle(prefixCls: string): string {
   out.push(
     `${cls}{`,
     ...Object.keys(defaults).map((name) => `  ${token2CSSVar(name, 'apollo-btn')}:initial;`),
+    ...lightForegroundBackgrounds.map(
+      (name) => `  ${token2CSSVar(solidBackgroundName(name), 'apollo-btn')}:initial;`,
+    ),
     `  --apollo-btn-motion:running;`,
     `  --apollo-btn-auto-solid-color:initial;`,
     `  color-scheme:var(--apollo-btn-color-scheme,light);`,
@@ -599,6 +626,16 @@ export function genButtonStyle(prefixCls: string): string {
   out.push('');
   out.push(
     `@supports (color:contrast-color(white)){${cls}{--apollo-btn-auto-solid-color:contrast-color(var(--apollo-btn-bg-color));}}`,
+  );
+  out.push(
+    `@supports (color:color(from white srgb-linear r g b)){`,
+    `${cls}{`,
+    ...lightForegroundBackgrounds.map(
+      (name) =>
+        `  ${token2CSSVar(solidBackgroundName(name), 'apollo-btn')}:${lightTextBackground(v(name))};`,
+    ),
+    `}`,
+    `}`,
   );
   out.push(
     `@supports (color:light-dark(oklch(from white min(l,0.39) c h),white)){`,

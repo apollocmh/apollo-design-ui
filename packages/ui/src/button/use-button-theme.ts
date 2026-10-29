@@ -19,13 +19,7 @@ const lengthTokens = new Set([
   'contentFontSizeLG',
   'contentFontSizeSM',
 ]);
-const automaticForegrounds = new Set([
-  'primaryColor',
-  'dangerColor',
-  'solidTextColor',
-  'defaultHoverColor',
-  'defaultActiveColor',
-]);
+const automaticForegrounds = new Set(['solidTextColor', 'defaultHoverColor', 'defaultActiveColor']);
 
 interface PreparedSource {
   aliases: Record<string, string>;

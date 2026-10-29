@@ -6,12 +6,14 @@ const clicks = ref(0);
 const enabled = ref(true);
 const enlarged = ref(false);
 const native = ref(false);
+const customForeground = ref(false);
 const theme = computed(() =>
   enabled.value
     ? {
         token: { colorPrimary: '#006b45', borderRadius: 16 },
         components: {
           Button: {
+            ...(customForeground.value ? { primaryColor: '#fff6e6' } : {}),
             fontWeight: 600,
             iconGap: 12,
             paddingInline: 24,
@@ -32,6 +34,7 @@ const theme = computed(() =>
       <label><input v-model="enabled" type="checkbox">启用组件 Token</label>
       <label><input v-model="enlarged" type="checkbox">放大字号</label>
       <label><input v-model="native" type="checkbox">原生变量优先</label>
+      <label><input v-model="customForeground" type="checkbox">自定义主按钮文字</label>
     </fieldset>
     <ConfigProvider :theme="theme">
       <Space wrap>

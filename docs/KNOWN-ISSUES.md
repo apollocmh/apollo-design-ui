@@ -726,6 +726,6 @@ Divider、Collapse/Panel、完整Input六族和ConfigProvider已按当前源码�
 按用户要求，本批交付后暂停，不派发新单元；Tree保持只读清单。既有Button在不支持contrast-color浏览器中的独立fallback对比度缺陷、D04/D05及其他开放项保留原边界。全部整改结束后的最终同提交全量门禁仍待执行。
 
 
-### 2026-10-29 用户新增反馈：Button亮色primary字色（待配色裁决）
+### 2026-10-29 用户新增反馈：Button亮色primary字色（已实现，统一验收中）
 
-用户反馈亮色primary呈黑字。当前源码链路已确认：`prepareComponentToken.primaryColor`默认取`colorTextLightSolid`白色，但`useButtonTheme`把未显式覆盖的前景Token排除，CSS的`--apollo-btn-auto-solid-color: contrast-color(...)`选择黑字。没有改动Button实现或全局主色。恢复默认白字与维持既有可读性标准涉及按钮蓝底配对，已询问“白字且按钮蓝底略深”或“保留当前自动前景”；等待用户选择。该反馈单独保持未修复，不宣称本批已解决，也不自动派发后续组件任务。
+用户要求直接核对Ant Design后修正，无需配色裁决。已复现默认primaryColor/dangerColor被主题投射跳过，自动前景使浅色primary变成黑字。现在恢复默认colorTextLightSolid，三态保持白字；默认/预设实心色保留自动前景，显式组件/原生前景优先。按钮局部主/危险实色背景限制过高亮度，维持既有4.5:1门禁，全局Alias不变。可失败复现、完整范围与本次证据见[前景修复](audit/2026-10-29-button-foreground.md)。本条窄修完成后恢复暂停，不派发新单元；不提前宣称全部验收或旧浏览器完整通过。

@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-29",
+  "status": "implementation milestone; final acceptance pending",
+  "scope": "Button primary/danger default foreground chain and affected consumers",
+  "userDecision": "Reference Ant Design directly; no further color preference confirmation",
+  "reference": "https://ant.design/components/button/",
+  "red": {
+    "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+    "passed": 0,
+    "failed": 1,
+    "reason": "default --apollo-btn-primary-color was empty instead of '#fff'",
+    "command": "vitest run packages/ui/src/button/__tests__/contract-audit.test.ts --project unit -t 'consumes the default primary and danger foregrounds'"
+  },
+  "productionFiles": {
+    "packages/ui/src/button/use-button-theme.ts": "b7ec450a9d449d63a90c1d95ef52a8e7e9afa76042fb6126cccf1a9e6f16223e",
+    "packages/ui/src/button/style/index.ts": "94d372a56ea6f3ebb1e41342dc458948a80946ecb8c5ea742429df328af8d69d",
+    "packages/ui/src/button/demo/component-token.vue": "7ef622d06009716eede0944fc08c26b028a3da1225e449bb1bffdcd0fd8786e9"
+  },
+  "verified": {
+    "buttonRuntime": 361,
+    "publishedBrowser": 161,
+    "rootStrictTypeScript": 0,
+    "uiStrictL7": {
+      "passed": 11,
+      "failed": 0,
+      "pending": 0
+    },
+    "docsTests": 161
+  },
+  "pending": [
+    "affected consumer runtime",
+    "fresh published colors and all demos",
+    "native visual review",
+    "final local/live documentation"
+  ],
+  "pauseAfterThisFix": true,
+  "newTasksDispatched": false
+}

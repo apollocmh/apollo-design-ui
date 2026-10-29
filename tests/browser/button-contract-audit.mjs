@@ -250,6 +250,53 @@ try {
     await host.evaluate((n) => !n.classList.contains('apollo-btn-loading')),
   );
   await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const source of [false, true]) {
+    await set({
+      mode: 'default',
+      source,
+      tokens: {},
+      props: { type: 'primary' },
+      style: undefined,
+    });
+    check(
+      `primary light text with ${source ? 'Provider' : 'CSS-only'} defaults`,
+      await css(host, 'color'),
+      'rgb(255, 255, 255)',
+    );
+    await set({ source: true, tokens: { primaryColor: '#112233', solidTextColor: '#334455' } });
+    check(
+      'explicit primary foreground wins over general solid text',
+      await css(host, 'color'),
+      'rgb(17, 34, 51)',
+    );
+    await set({ style: { '--apollo-btn-primary-color': '#778899' } });
+    check(
+      'native primary foreground variable wins',
+      await css(host, 'color'),
+      'rgb(119, 136, 153)',
+    );
+    await set({ source, tokens: {}, style: undefined });
+    check(
+      'removed primary foreground restores white',
+      await css(host, 'color'),
+      'rgb(255, 255, 255)',
+    );
+    await set({ props: { type: 'primary', disabled: true } });
+    check(
+      'disabled primary retains disabled foreground',
+      (await css(host, 'color')) !== 'rgb(255, 255, 255)',
+    );
+    await set({ props: { type: 'primary', ghost: true } });
+    check(
+      'ghost primary keeps transparent surface',
+      await css(host, 'background-color'),
+      'rgba(0, 0, 0, 0)',
+    );
+    check(
+      'ghost primary retains colored text',
+      (await css(host, 'color')) !== 'rgb(255, 255, 255)',
+    );
+  }
   const tokenValues = JSON.parse(
     readFileSync(new URL('./fixtures/button-token-values.json', import.meta.url), 'utf8'),
   );

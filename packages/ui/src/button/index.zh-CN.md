@@ -78,11 +78,11 @@ click 发出一次原生 MouseEvent。disabled 或加载请求阻止激活、默
 | defaultShadow | 阴影 |
 | primaryShadow | 阴影 |
 | dangerShadow | 阴影 |
-| primaryColor | 对应颜色及状态的文字、背景或边框 |
+| primaryColor | 主色实心按钮三态文字色，默认 colorTextLightSolid（白色） |
 | defaultColor | 对应颜色及状态的文字、背景或边框 |
 | defaultBg | 对应颜色及状态的文字、背景或边框 |
 | defaultBorderColor | 对应颜色及状态的文字、背景或边框 |
-| dangerColor | 对应颜色及状态的文字、背景或边框 |
+| dangerColor | 危险实心按钮三态文字色，默认 colorTextLightSolid（白色） |
 | defaultHoverBg | 对应颜色及状态的文字、背景或边框 |
 | defaultHoverColor | 对应颜色及状态的文字、背景或边框 |
 | defaultHoverBorderColor | 对应颜色及状态的文字、背景或边框 |
@@ -95,7 +95,7 @@ click 发出一次原生 MouseEvent。disabled 或加载请求阻止激活、默
 | defaultGhostColor | 对应颜色及状态的文字、背景或边框 |
 | ghostBg | 对应颜色及状态的文字、背景或边框 |
 | defaultGhostBorderColor | 对应颜色及状态的文字、背景或边框 |
-| solidTextColor | 对应颜色及状态的文字、背景或边框 |
+| solidTextColor | 默认及预设实心按钮的显式文字色；不覆盖 primaryColor/dangerColor |
 | textTextColor | 对应颜色及状态的文字、背景或边框 |
 | textTextHoverColor | 对应颜色及状态的文字、背景或边框 |
 | textTextActiveColor | 对应颜色及状态的文字、背景或边框 |
@@ -127,7 +127,7 @@ click 发出一次原生 MouseEvent。disabled 或加载请求阻止激活、默
 </ConfigProvider>
 ```
 
-默认实色前景和彩色文字在 @supports 内使用原生 CSS 颜色能力，已有前景 Token 和原生样式保留显式控制；不支持的色值函数保留回退。透明及渐变表面须按实际背景配对。审计记录实际浏览器和主题范围，不宣称其他浏览器均已实测。
+主色与危险实心按钮默认使用 colorTextLightSolid，普通、悬停、按下均保持浅色文字，不使用自动黑白前景替换。支持相对颜色的浏览器会限制这些实心背景的过高亮度，保证默认白字可读性，保留全局 Alias 原值。默认及预设实心按钮保留自动前景；彩色文字保留原生 CSS 明度修正。显式前景 Token 和原生样式优先；自定义文字、透明及渐变表面须按实际背景配对。不支持的色值函数保留 Alias 回退，实际验证范围见审计记录。
 
 Button、genButtonStyle、prepareButtonComponentToken 从 @apollo-design/ui 和 @apollo-design/ui/button 导出。类型含 ButtonProps、ButtonRef、ButtonSlots、ButtonSlot、ButtonConfig、上述枚举/语义类型、ButtonComponentToken、ButtonTokenInput。旧文档中的 button/style/token 不是包导出路径。
 
