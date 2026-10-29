@@ -7,9 +7,17 @@ import { describe, expect, it } from 'vitest';
 import { genFormStyle, genTokenDecls as genFormTokenDecls } from '../style';
 import { prepareComponentToken } from '../style/token';
 
-themeTest('Form', {
-  demos: import.meta.glob('../demo/*.vue', { eager: true }),
+const demos = import.meta.glob('../demo/*.vue', { eager: true });
+
+it('keeps the complete 35-Demo theme inventory', () => {
+  expect(Object.keys(demos)).toHaveLength(35);
 });
+// Each real Demo still runs in all four themes with the original 5000ms limit.
+// Aggregating all 35 mounts in one test made resource contention look like a
+// component failure and hid the failing Demo from the test name.
+for (const [file, demo] of Object.entries(demos)) {
+  themeTest(`Form (${file})`, { demos: { [file]: demo } });
+}
 
 describe('Form · Component Token 判定值（antd 产物逐字对拍）', () => {
   const t = prepareComponentToken();

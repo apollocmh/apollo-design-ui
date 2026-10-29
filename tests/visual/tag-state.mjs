@@ -9,7 +9,14 @@ export async function prepareTagVisual(page, variant) {
     const old = await editor.elementHandle();
     await page.evaluate(() => window.tagVisual.update());
     assert.equal(
-      await old.evaluate((n) => n === document.getElementById('tag-draft') && n.isConnected),
+      await old.evaluate(
+        (n) =>
+          n === document.getElementById('tag-draft') &&
+          n.isConnected &&
+          n === document.activeElement &&
+          n.selectionStart === n.value.length &&
+          n.selectionEnd === n.value.length,
+      ),
       true,
     );
     assert.equal(await editor.inputValue(), 'Saved draft');

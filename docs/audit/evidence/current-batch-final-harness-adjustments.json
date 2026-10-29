@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-29T08:33:24.446675+00:00",
+  "state": "test-only final harness corrections; production remains frozen",
+  "productionDigest": "b3145042f59cdab1b97509a233c6531e1426d9541cbc98fed29b9dd990cec2f2",
+  "form": {
+    "originalAggregateDemos": 35,
+    "allThemesRetained": 4,
+    "testTimeoutMsUnchanged": 5000,
+    "perDemoPassed": 179,
+    "failed": 0,
+    "inventoryGuard": 35,
+    "reason": "Original tests aggregated all35 real Demo mounts per theme in one5-second case. Serial original durations were4.3–4.9s and full concurrent runs timed out. Each Demo now has all four original theme checks independently; no assertions, scenarios or timeout thresholds are removed.",
+    "receipt": "/tmp/apollo-batch-form-per-demo.json"
+  },
+  "matrixGuard": {
+    "file": "tests/tooling/image-visual.test.mjs",
+    "reason": "The historical Image-only test assumed native Divider would forever equal its reference matrix. Replace that invalid assumption with an isolated Image-only variant mutation: the whole optional reference matrix and the actual unrelated native Divider matrix both remain unchanged. Restore the registry in finally.",
+    "toolingPassed": 20,
+    "toolingFailed": 0,
+    "receipt": "/tmp/apollo-batch-final-tooling-recheck.log"
+  },
+  "copyFeedback": {
+    "productionExpiryMs": 3000,
+    "sharedScreenshotSettlementMs": 1100,
+    "reason": "The actual copied state could expire after preparer validation and before the screenshot. Install Playwright Clock before navigation, preserve all tooltip/clipboard/axe/copied assertions, pause only after validation, then capture. Advance3100ms after capture to assert real dismissal and exactly one clipboard write.",
+    "officialMethodReference": "https://playwright.dev/docs/clock",
+    "passed": 3,
+    "unchangedApprovedPixels": true,
+    "receipt": "/tmp/apollo-batch-typography-copy-clock.json"
+  },
+  "tag": {
+    "reason": "Three differences are confined to the visible text window of a65px native input. The actual Saved draft value, same node, real focus and end selection are retained during current Provider changes. Accept the native editing viewport as intended; do not blur, reset scroll, mask pixels or alter the component. Existing draft/identity checks remain and real focus/end selection are now asserted.",
+    "reviewedActualPngs": 3,
+    "reviewSheet": "/tmp/apollo-batch-tag-focus-review.png",
+    "previousApprovals": {
+      "tag/current-provider__light__mobile": {
+        "sha256": "066a9aa69a02027d7b5e9a80fe8a3d1e0549e6974457b26ed580770352330c7c",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+        "dirty": false,
+        "capturedAt": "2026-10-27T06:06:45.911Z",
+        "reviewedAt": "2026-10-27T06:11:37.805Z",
+        "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+      },
+      "tag/current-provider__light__tablet": {
+        "sha256": "07f8be761cef6ccf63488492addb231a998a5d156dc6a6cb305837fb33f0e1a8",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+        "dirty": false,
+        "capturedAt": "2026-10-27T06:06:48.473Z",
+        "reviewedAt": "2026-10-27T06:11:37.806Z",
+        "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+      },
+      "tag/current-provider__light__desktop": {
+        "sha256": "5ed67e5c5b180a89f61b5310cbd3e60ad3e6905d11ee2e7a0e567fa324ee6a6f",
+        "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+        "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
+        "dirty": false,
+        "capturedAt": "2026-10-27T06:06:50.900Z",
+        "reviewedAt": "2026-10-27T06:11:37.807Z",
+        "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+      }
+    },
+    "previousImageSource": "git show 8ec07b2d:tests/visual/baselines/apollo/<id>.png",
+    "candidate": "/tmp/apollo-batch-tag-focus-candidates",
+    "postApprovalRecheck": {
+      "passed": 3,
+      "failed": 0,
+      "receipt": "/tmp/apollo-batch-tag-focus-final.json"
+    }
+  },
+  "initialGlobalVisual": {
+    "checks": 1215,
+    "passed": 1210,
+    "differences": 5,
+    "receipts": [
+      "/tmp/apollo-batch-approved-visual-shard-1.json",
+      "/tmp/apollo-batch-approved-visual-shard-2.json",
+      "/tmp/apollo-batch-approved-visual-shard-3.json"
+    ]
+  },
+  "finalBroadRuntime": "running with three workers after the Form test granularity correction",
+  "dispatchFurtherUnits": false,
+  "pauseAfterCurrentBatch": true,
+  "cumulativeVisualAcceptance": {
+    "uniqueCases": 1215,
+    "firstPass": 1210,
+    "initialDifferences": 5,
+    "tagRecheckPassed": 3,
+    "copyFeedbackRecheckPassed": 3,
+    "thresholdsUnchanged": true,
+    "approvedImagesRevised": 3
+  }
+}

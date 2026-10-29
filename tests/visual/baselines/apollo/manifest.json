@@ -3484,31 +3484,31 @@
       "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
     },
     "tag/current-provider__light__mobile": {
-      "sha256": "066a9aa69a02027d7b5e9a80fe8a3d1e0549e6974457b26ed580770352330c7c",
+      "sha256": "2a91e5d1bf4a26321da63b5fd728e71dc021442cfad4bb98d7af61c696c73ce9",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
-      "dirty": false,
-      "capturedAt": "2026-10-27T06:06:45.911Z",
-      "reviewedAt": "2026-10-27T06:11:37.805Z",
-      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+      "sourceCommit": "8ec07b2dc893476e493469908b3e006c59d017b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T08:27:27.814Z",
+      "reviewedAt": "2026-10-29T08:33:24.752Z",
+      "reviewNote": "Reviewed all three viewport PNGs. Current Provider updates retain the actual Saved draft editor, real native focus and end selection. The65px native input shows its end editing viewport; differences are limited to that text window. The component and input value are unchanged. Strengthened focus/selection assertions accompany this intended native-state baseline update; prior images/approval metadata are archived in Git8ec07b2d and current-batch-final-harness-adjustments.json."
     },
     "tag/current-provider__light__tablet": {
-      "sha256": "07f8be761cef6ccf63488492addb231a998a5d156dc6a6cb305837fb33f0e1a8",
+      "sha256": "640caf83eb83a2db8188abf21c8cdb5e9ff5dbc811031aa3bab687c9f67de0b6",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
-      "dirty": false,
-      "capturedAt": "2026-10-27T06:06:48.473Z",
-      "reviewedAt": "2026-10-27T06:11:37.806Z",
-      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+      "sourceCommit": "8ec07b2dc893476e493469908b3e006c59d017b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T08:27:30.310Z",
+      "reviewedAt": "2026-10-29T08:33:24.754Z",
+      "reviewNote": "Reviewed all three viewport PNGs. Current Provider updates retain the actual Saved draft editor, real native focus and end selection. The65px native input shows its end editing viewport; differences are limited to that text window. The component and input value are unchanged. Strengthened focus/selection assertions accompany this intended native-state baseline update; prior images/approval metadata are archived in Git8ec07b2d and current-batch-final-harness-adjustments.json."
     },
     "tag/current-provider__light__desktop": {
-      "sha256": "5ed67e5c5b180a89f61b5310cbd3e60ad3e6905d11ee2e7a0e567fa324ee6a6f",
+      "sha256": "4bc834a973b04d6300baabb481d9703dda97fcb8f3c938cb8cc3dd3526dca9c6",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "c49f300be7a686b8165beaf5527cfac0ac9ba061",
-      "dirty": false,
-      "capturedAt": "2026-10-27T06:06:50.900Z",
-      "reviewedAt": "2026-10-27T06:11:37.807Z",
-      "reviewNote": "Individually reviewed all45 Apollo Tag images at mobile/tablet/desktop from clean c49f300b on Chrome150 darwin/x64: complete icon/content/close tails and stable drafts, owned native close/link and cancellation, checked/single/multiple states, disabled controls, four semantic regions, current Provider, RTL, all preset/status/custom colours, dark/compact combinations and real keyboard focus. No clipping or missing business content. Automatic solid foreground and readable tonal ink are intentional accessibility changes; all9 historical reference PNGs and24 raw DOM scenarios are preserved. Related List comparison keeps prior approved records/PNGs unchanged. Three loading candidates have raw SVG antialias differences; unchanged pixelmatch settings report0 differing pixels. This is not a byte-identity claim. Actual compressed colour296, consumer50 and Tag131 checks pass."
+      "sourceCommit": "8ec07b2dc893476e493469908b3e006c59d017b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T08:27:32.547Z",
+      "reviewedAt": "2026-10-29T08:33:24.754Z",
+      "reviewNote": "Reviewed all three viewport PNGs. Current Provider updates retain the actual Saved draft editor, real native focus and end selection. The65px native input shows its end editing viewport; differences are limited to that text window. The component and input value are unchanged. Strengthened focus/selection assertions accompany this intended native-state baseline update; prior images/approval metadata are archived in Git8ec07b2d and current-batch-final-harness-adjustments.json."
     },
     "tag/rtl__light__mobile": {
       "sha256": "1cdd85adbf29d1e68dac7c7ba144a976adccd28aace60f77b12fefa0e7c91c2a",

@@ -10,6 +10,7 @@ export async function prepareTypographyVisual(page, variant) {
         value: {
           writeText: async (text) => {
             window.typographyVisualCopied = text;
+            window.typographyVisualCopyWrites = (window.typographyVisualCopyWrites ?? 0) + 1;
           },
         },
       }),
@@ -93,5 +94,12 @@ export async function prepareTypographyVisual(page, variant) {
     scrollWidth: n.scrollWidth,
   }));
   assert.ok(state.scrollWidth <= state.width + 1, JSON.stringify(state));
+  if (variant === 'copy-feedback') {
+    // The production success state expires after 3000ms. Pause real page timers
+    // after validating it so the shared screenshot settlement cannot erase it.
+    const current = await page.evaluate(() => Date.now());
+    await page.clock.pauseAt(new Date(current + 50));
+    assert.equal(await stage.locator('.apollo-typography-copy-success').count(), 1);
+  }
   return state;
 }

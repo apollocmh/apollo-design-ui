@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { buildCases } from '../visual/matrix.mjs';
+import { buildCases, COMPONENTS } from '../visual/matrix.mjs';
 
 test('Apollo Image registers controls, progress, group and local dark/compact states at all viewports', () => {
   const cases = buildCases({ component: 'image', apollo: true });
@@ -26,8 +26,19 @@ test('Apollo Image registers controls, progress, group and local dark/compact st
 test('Apollo Image additions keep the optional reference matrix and unrelated components stable', () => {
   assert.equal(buildCases({ component: 'image' }).length, 9);
   assert.throws(() => buildCases({ component: 'image', variants: ['rich'] }));
-  assert.deepEqual(
-    buildCases({ component: 'divider', apollo: true }),
-    buildCases({ component: 'divider' }),
-  );
+  const referenceBefore = buildCases();
+  const unrelatedBefore = buildCases({ component: 'divider', apollo: true });
+  const imageVariants = COMPONENTS.image.apolloVariants;
+  try {
+    COMPONENTS.image.apolloVariants = [...imageVariants, 'image-only-contract-probe'];
+    assert.ok(
+      buildCases({ component: 'image', apollo: true }).some(
+        (item) => item.variant === 'image-only-contract-probe',
+      ),
+    );
+    assert.deepEqual(buildCases(), referenceBefore);
+    assert.deepEqual(buildCases({ component: 'divider', apollo: true }), unrelatedBefore);
+  } finally {
+    COMPONENTS.image.apolloVariants = imageVariants;
+  }
 });

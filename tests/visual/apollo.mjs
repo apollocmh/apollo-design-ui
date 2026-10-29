@@ -242,6 +242,9 @@ async function main() {
           variant: item.variant,
           theme: item.theme,
         });
+        const timedCopyFeedback =
+          item.component === 'typography' && item.variant === 'copy-feedback';
+        if (timedCopyFeedback) await page.clock.install({ time: new Date('2026-09-18T00:00:00Z') });
         await page.goto(`http://127.0.0.1:${server.address().port}/vue/vue.html?${query}`, {
           waitUntil: 'load',
         });
@@ -281,6 +284,16 @@ async function main() {
         const state = await visualPreparers[item.component]?.(page, item.variant);
         fs.mkdirSync(path.dirname(output), { recursive: true });
         await screenshotElement(page, '#stage', output);
+        if (timedCopyFeedback) {
+          if ((await page.locator('.apollo-typography-copy-success').count()) !== 1)
+            throw new Error('Copy feedback expired during capture');
+          await page.clock.runFor(3100);
+          await page.waitForFunction(
+            () => !document.querySelector('.apollo-typography-copy-success'),
+          );
+          if ((await page.evaluate(() => window.typographyVisualCopyWrites)) !== 1)
+            throw new Error('One native copy action must write once');
+        }
         if (errors.length) throw new Error(errors.join(' | '));
         if (values.candidate) {
           candidateManifest.entries[item.id] = {
