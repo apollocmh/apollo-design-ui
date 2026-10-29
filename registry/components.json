@@ -32,8 +32,7 @@
   "summary": {
     "total": 72,
     "byStatus": {
-      "completed": 68,
-      "testing": 4
+      "completed": 72
     },
     "byPriority": {
       "P0": 8,
@@ -52,8 +51,8 @@
       "导航": 8,
       "数据录入": 18
     },
-    "completedCount": 68,
-    "remainingCount": 4
+    "completedCount": 72,
+    "remainingCount": 0
   },
   "milestones": [],
   "components": [
@@ -135,7 +134,7 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "L",
-      "status": "testing",
+      "status": "completed",
       "derived": {
         "dagLevel": 1,
         "unblocks": 52,
@@ -218,13 +217,13 @@
       "apiStatus": "done",
       "tokenStatus": "n/a",
       "styleStatus": "done",
-      "unitStatus": "in-progress",
+      "unitStatus": "done",
       "interactionStatus": "n/a",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "in-progress",
-      "docsStatus": "in-progress",
-      "notes": "Token / 主题 / locale / size / disabled / prefixCls 的统一入口，是全部组件的运行时网关。它是零运行时 CSS 变量方案（ARCHITECTURE.md §4.3）的落地点。\n2026-10-26 Image单元源主题/Token组：源上下文跨Portal、7个Token、ThemeProvider继承与Provider主题移除/恢复状态已修；可选作用域用原生Teleport保留同一插槽子树，SSR内联后水合不替换原节点，当前CSS变量前缀清理。56文件1059运行/DOM/a11y/theme串行通过（未改阈值），严格/构建/生产模板消费/L7/Docs通过；23场景生产Chrome及独立SSR水合通过。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image滚动锁/富缩略图/motion/最终视觉仍开放，不据此升级整组件维度。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29原生视觉已审阅批准：Input84张、ConfigProvider42张；清洁4637eb45独立捕获与审阅图原始RGBA完全一致。批准后关联回归和统一验收继续，当前仍testing。",
+      "visualStatus": "done",
+      "docsStatus": "done",
+      "notes": "Token / 主题 / locale / size / disabled / prefixCls 的统一入口，是全部组件的运行时网关。它是零运行时 CSS 变量方案（ARCHITECTURE.md §4.3）的落地点。\n2026-10-26 Image单元源主题/Token组：源上下文跨Portal、7个Token、ThemeProvider继承与Provider主题移除/恢复状态已修；可选作用域用原生Teleport保留同一插槽子树，SSR内联后水合不替换原节点，当前CSS变量前缀清理。56文件1059运行/DOM/a11y/theme串行通过（未改阈值），严格/构建/生产模板消费/L7/Docs通过；23场景生产Chrome及独立SSR水合通过。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image滚动锁/富缩略图/motion/最终视觉仍开放，不据此升级整组件维度。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29原生视觉已审阅批准：Input84张、ConfigProvider42张；清洁4637eb45独立捕获与审阅图原始RGBA完全一致。批准后关联回归和统一验收继续，当前仍testing。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。没有独立ComponentToken；动态主题Alias/作用域/原生根优先级已验收。Provider无业务emits、模型或自有交互控件；实际后代焦点、通知迁移与键盘交互仍验证。",
       "layerNotes": {
         "token": "ConfigProvider 本身没有 ComponentToken —— 它是消费 token 的入口，不是 token 的定义者。`theme.components` 字段把每个组件的 ComponentToken 透传给对应组件去用，token 落点仍由各组件的 style/token.ts 决定。",
         "style": "ConfigProvider没有自有CSS入口。本层给theme时创建display:contents作用域，经createCSSVarScope写入当前派生CSS变量，移除/前缀切换时清理；主题配置同时通过Vue上下文传给消费者。组件静态CSS需显式导入公开style.css或各组件入口，style/index.ts用于构建期生成，不在组件渲染时注入。2026-10-29公共样式69入口与24对真实按需/全量消费证据见stylesheet-dependency-published-stage.json；不是ConfigProvider整单元重新验收。",
@@ -234,7 +233,8 @@
         "docs": "README.md（开发者文档，含契约/判据/差异/变异）+ index.zh-CN.md + index.en-US.md（用户文档，5 个 demo）。",
         "compat": "D25-D33 完整登记在 docs/analysis/config-provider.md §9。D25=渐进类型；D26=display:contents 作用域；D27=解构即快照；D28=废弃判据；D29=不提供 tooltip/popover/popconfirm；D30=不实现 holderRender 等；D31=默认前缀 apollo；D32=1px 假盒子；D33=Empty SVG 非主题化。",
         "leaf-modules": "`form/validateMessagesContext` 由 `@apollo-design/form-core` 的 FormProvider 顶替（form-core 已提供 `formContextKey` 与带默认合并的 `validateMessages` getter），与该 antd 叶子模块行为等价；`tooltip/UniqueProvider` 仍缺失，对应 D29（不提供 tooltip/popover/popconfirm prop）。ConfigProvider 不阻塞这俩落地，组件流恢复时再补回。",
-        "listContractAudit": "2026-10-26 List关联整改：当前Spin Provider/attrs与renderEmpty精确VNode类型已修，相关共享回归通过；不代表本组件所有入口完成当前全局审计。证据 docs/audit/2026-10-26-list-contract-audit.md。"
+        "listContractAudit": "2026-10-26 List关联整改：当前Spin Provider/attrs与renderEmpty精确VNode类型已修，相关共享回归通过；不代表本组件所有入口完成当前全局审计。证据 docs/audit/2026-10-26-list-contract-audit.md。",
+        "currentBatchAcceptance": "2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。没有独立ComponentToken；动态主题Alias/作用域/原生根优先级已验收。Provider无业务emits、模型或自有交互控件；实际后代焦点、通知迁移与键盘交互仍验证。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -290,9 +290,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -370,9 +368,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "n/a",
@@ -437,9 +433,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "n/a",
@@ -503,9 +497,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "n/a",
@@ -554,7 +546,7 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "S",
-      "status": "testing",
+      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -571,9 +563,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -583,9 +573,9 @@
       "typeStatus": "done",
       "a11yStatus": "done",
       "visualStatus": "done",
-      "docsStatus": "in-progress",
-      "notes": "\n2026-10-29完整清单源码冻结并完成发布专项；状态testing，整批ConfigProvider/Input整合与Docs收口继续，完整组件交付数仍21/72。证据 docs/audit/2026-10-29-divider-collapse-published-milestone.md。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。",
-      "layerNotes": "2026-10-29源码与发布专项：十二props、完整当前默认槽、attrs/ref、Provider/RTL/方向、11个Alias与三个Component Token已实现并验证。无自有业务emits/v-model，interactionStatus=n/a；当前内容/配置、真实槽内控件焦点/草稿/选择、条件槽和多实例边界仍执行，不能以纯展示跳过。180源码测试、发布浏览器67/67、真实SSR22/22、48张正式Apollo视觉批准后逐像素零差异。类型消费/Docs/共享层统一收口证据见divider-collapse发布里程碑；当前完整单元仍testing，等待ConfigProvider整合与Docs成品收尾。",
+      "docsStatus": "done",
+      "notes": "\n2026-10-29完整清单源码冻结并完成发布专项；状态testing，整批ConfigProvider/Input整合与Docs收口继续，完整组件交付数仍21/72。证据 docs/audit/2026-10-29-divider-collapse-published-milestone.md。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。纯展示Divider无自有模型/事件/操作控件；标题中原生控件、草稿和焦点仍真实验证。",
+      "layerNotes": "2026-10-29源码与发布专项：十二props、完整当前默认槽、attrs/ref、Provider/RTL/方向、11个Alias与三个Component Token已实现并验证。无自有业务emits/v-model，interactionStatus=n/a；当前内容/配置、真实槽内控件焦点/草稿/选择、条件槽和多实例边界仍执行，不能以纯展示跳过。180源码测试、发布浏览器67/67、真实SSR22/22、48张正式Apollo视觉批准后逐像素零差异。类型消费/Docs/共享层统一收口证据见divider-collapse发布里程碑；当前完整单元仍testing，等待ConfigProvider整合与Docs成品收尾。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。纯展示Divider无自有模型/事件/操作控件；标题中原生控件、草稿和焦点仍真实验证。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -723,9 +713,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -796,9 +784,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -873,9 +859,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -1018,9 +1002,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -1489,9 +1471,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -1563,9 +1543,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -1643,9 +1621,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -1786,7 +1762,7 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "testing",
+      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -1808,21 +1784,19 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
       "styleStatus": "done",
-      "unitStatus": "in-progress",
+      "unitStatus": "done",
       "interactionStatus": "done",
       "typeStatus": "done",
       "a11yStatus": "done",
-      "visualStatus": "in-progress",
-      "docsStatus": "in-progress",
-      "notes": "含 Input / TextArea / Search / Password / OTP 子组件。必须保留输入法组合态（IME）处理能力，不可简化。\n2026-10-29当前主题尺寸/覆盖链窄整改：已有19个Input ComponentToken配置未消费、InputAffixPadding声明缺失、Provider style/Group/OTP尺寸及autoSize重测问题已成组复现并修复验收中；Registry原tokenCount0登记缺口由主线程待冻结同步。不是完整Input全API验收，旧completed不能代表本轮通过。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29原生视觉已审阅批准：Input84张、ConfigProvider42张；清洁4637eb45独立捕获与审阅图原始RGBA完全一致。批准后关联回归和统一验收继续，当前仍testing。",
-      "layerNotes": null,
+      "visualStatus": "done",
+      "docsStatus": "done",
+      "notes": "含 Input / TextArea / Search / Password / OTP 子组件。必须保留输入法组合态（IME）处理能力，不可简化。\n2026-10-29当前主题尺寸/覆盖链窄整改：已有19个Input ComponentToken配置未消费、InputAffixPadding声明缺失、Provider style/Group/OTP尺寸及autoSize重测问题已成组复现并修复验收中；Registry原tokenCount0登记缺口由主线程待冻结同步。不是完整Input全API验收，旧completed不能代表本轮通过。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29原生视觉已审阅批准：Input84张、ConfigProvider42张；清洁4637eb45独立捕获与审阅图原始RGBA完全一致。批准后关联回归和统一验收继续，当前仍testing。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。",
+      "layerNotes": "\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -1883,9 +1857,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -2263,7 +2235,7 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "testing",
+      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -2282,21 +2254,19 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
       "styleStatus": "done",
-      "unitStatus": "in-progress",
+      "unitStatus": "done",
       "interactionStatus": "done",
       "typeStatus": "done",
       "a11yStatus": "done",
       "visualStatus": "done",
-      "docsStatus": "in-progress",
-      "notes": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。\n2026-10-29完整清单源码冻结并完成发布专项；状态testing，整批ConfigProvider/Input整合与Docs收口继续，完整组件交付数仍21/72。证据 docs/audit/2026-10-29-divider-collapse-published-milestone.md。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。",
-      "layerNotes": "2026-10-29源码与发布专项：真实Vue Panel、一次typed事件/模型请求、所属原生heading/button/region、内容保留与destroy/forceRender、键盘/焦点、当前配置和十Token已实现并验证。发布浏览器134/134、公开SFC正负例与54张正式Apollo视觉批准后零差异。隔离旧ConfigProvider的联合667/669仍有两条Provider根身份断言未通过，保留并待共享生产者整合，不削弱断言。Docs成品及整批收口仍进行，不能据局部通过标completed。",
+      "docsStatus": "done",
+      "notes": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。\n2026-10-29完整清单源码冻结并完成发布专项；状态testing，整批ConfigProvider/Input整合与Docs收口继续，完整组件交付数仍21/72。证据 docs/audit/2026-10-29-divider-collapse-published-milestone.md。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。",
+      "layerNotes": "2026-10-29源码与发布专项：真实Vue Panel、一次typed事件/模型请求、所属原生heading/button/region、内容保留与destroy/forceRender、键盘/焦点、当前配置和十Token已实现并验证。发布浏览器134/134、公开SFC正负例与54张正式Apollo视觉批准后零差异。隔离旧ConfigProvider的联合667/669仍有两条Provider根身份断言未通过，保留并待共享生产者整合，不削弱断言。Docs成品及整批收口仍进行，不能据局部通过标completed。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2422,9 +2392,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -2495,9 +2463,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -2562,9 +2528,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -2638,9 +2602,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -2714,9 +2676,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -2787,9 +2747,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -2856,9 +2814,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -2930,9 +2886,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -3129,9 +3083,7 @@
           "@apollo-design/virtual-list"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -3207,9 +3159,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -3276,9 +3226,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -3356,9 +3304,7 @@
           "@apollo-design/virtual-list"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -3431,9 +3377,7 @@
           "@apollo-design/virtual-list"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -3517,9 +3461,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -3589,9 +3531,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -3663,9 +3603,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -3737,9 +3675,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -4213,9 +4149,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -4281,9 +4215,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -4351,9 +4283,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -4552,9 +4482,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -4621,9 +4549,7 @@
           "@apollo-design/virtual-list"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -4700,9 +4626,7 @@
           "@apollo-design/virtual-list"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -4854,9 +4778,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -4932,9 +4854,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "divider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",
@@ -5229,9 +5149,7 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [
-        "config-provider"
-      ],
+      "blockedBy": [],
       "blockers": [],
       "apiStatus": "done",
       "tokenStatus": "done",

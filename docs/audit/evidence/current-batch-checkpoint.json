@@ -1,8 +1,8 @@
 {
-  "date": "2026-10-29T05:55:20.309478+00:00",
-  "status": "source-and-native-visual-milestones-delivered-final-acceptance-pending",
-  "committedBase": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
-  "completeComponentUnits": 21,
+  "date": "2026-10-29T08:43:19.395988+00:00",
+  "status": "batch-accepted-paused-after-delivery",
+  "committedBase": "8ec07b2dc893476e493469908b3e006c59d017b2",
+  "completeComponentUnits": 25,
   "componentUnits": 72,
   "committedApolloVisuals": 1215,
   "committedVisualPlan": 1875,
@@ -14,36 +14,40 @@
     "fullFoundationAcceptance": false
   },
   "divider": {
-    "stage": "source-and-published-milestone-delivered-final-shared-acceptance-pending",
+    "stage": "complete-unit-accepted",
     "publishedBrowser": 67,
     "visuals": 48,
     "rawRGBAExact": 48,
     "sourceAggregate": "7ff813d5f1bab60285b91e2220439365557741144dcc0c82cb19056ff501498b",
-    "committed": true
+    "committed": true,
+    "postApprovalRegression": "passed"
   },
   "collapse": {
-    "stage": "source-and-published-milestone-delivered-final-shared-acceptance-pending",
+    "stage": "complete-unit-accepted",
     "publishedBrowser": 134,
     "visuals": 54,
     "rawRGBAExact": 54,
     "runtimeAggregate": "f2c118c1f503f05146e38b529221e96014afc88794e2f342e3aa0cfe032ed7d5",
-    "committed": true
+    "committed": true,
+    "postApprovalRegression": "passed"
   },
   "input": {
-    "stage": "source-and-published-milestone-delivered-final-acceptance-pending",
+    "stage": "complete-unit-accepted",
     "publishedBrowser": 249,
     "allOriginalDemoThemeChecks": 96,
     "publishedTypes": "positive and independent negative consumers passed",
     "formalVisualsApproved": 84,
-    "postApprovalRegression": "pending"
+    "postApprovalRegression": "passed",
+    "committed": true
   },
   "configProvider": {
-    "stage": "source-and-published-milestone-delivered-final-acceptance-pending",
+    "stage": "complete-unit-accepted",
     "relatedRuntime": 496,
     "publishedNativeSsrHydrationBrowser": 62,
     "originalDemos": 8,
     "formalVisualsApproved": 42,
-    "postApprovalRegression": "pending"
+    "postApprovalRegression": "passed",
+    "committed": true
   },
   "tree": {
     "stage": "read-only-inventory-recorded-implementation-not-started",
@@ -130,9 +134,9 @@
     }
   },
   "remaining": [
-    "Final broad runtime rerun after the documented private-model scanner correction; production source unchanged",
-    "Post-approval regression of all existing Apollo baselines",
-    "Final generated Docs and live publication acceptance",
-    "Commit/push acceptance evidence, then pause without dispatch"
-  ]
+    "47 other component audits",
+    "13 current complete foundation audits",
+    "Final same-commit whole-library gates after all audit units close"
+  ],
+  "finalAcceptance": "docs/audit/evidence/current-batch-final-acceptance.json"
 }

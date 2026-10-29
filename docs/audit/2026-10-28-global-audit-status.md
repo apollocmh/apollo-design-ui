@@ -4,11 +4,11 @@
 
 | 范围 | 数量 | 状态 |
 | --- | --- | --- |
-| 已完整验收并交付的组件 | 21 | 下表列明；保留各自提交、运行和发布证据 |
-| 其余组件 | 51 | 尚未按本轮完整清单收口（含Input完整API）；既有局部修复保留 |
+| 已完整验收并交付的组件 | 25 | 下表列明；保留各自提交、运行和发布证据 |
+| 其余组件 | 47 | 尚未按本轮完整清单收口；既有局部修复保留 |
 | 基础包 | 13 | 已有实现和共享链路专项证据；本轮逐包复核另列，不将旧完成状态当作当前全包验收 |
 
-总组件72=21已交付+51其他待审。Space关联Input当前主题/尺寸窄链已验收，Input完整API仍开放，不计入新增完整单元。用户已取消日期约束，按实际验收更新；数量不折算工时百分比。
+总组件72=25已交付+47其他待审。本批Divider、Collapse/Panel、完整Input和ConfigProvider已按完整清单收口；Theme、Locale、Icons和Form Core保留实际关联专项证据，13基础包完整复核仍开放。本批交付后暂停，不派发新单元。用户已取消日期约束，按实际验收更新；数量不折算工时百分比。
 
 ## 当前组件单元
 
@@ -30,12 +30,12 @@
 | Carousel | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Cascader | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Checkbox | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
-| Collapse | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
+| Collapse | 已完整验收并交付 | [本批最终验收](evidence/current-batch-final-acceptance.json) · [源码里程碑](2026-10-29-current-batch-integration.md) |
 | ColorPicker | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
-| ConfigProvider | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
+| ConfigProvider | 已完整验收并交付 | [本批最终验收](evidence/current-batch-final-acceptance.json) · [源码里程碑](2026-10-29-current-batch-integration.md) |
 | DatePicker | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Descriptions | 已完整验收并交付 | [四单元最终验收](evidence/four-unit-final-acceptance.json) |
-| Divider | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
+| Divider | 已完整验收并交付 | [本批最终验收](evidence/current-batch-final-acceptance.json) · [源码里程碑](2026-10-29-current-batch-integration.md) |
 | Drawer | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Dropdown | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Empty | 已完整验收并交付 | [2026-10-27-empty-contract-audit.md](2026-10-27-empty-contract-audit.md) |
@@ -44,7 +44,7 @@
 | Form | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Grid | 已完整验收并交付 | [四单元最终验收](evidence/four-unit-final-acceptance.json) |
 | Image | 已完整验收并交付 | [2026-10-25-image-contract-audit.md](2026-10-25-image-contract-audit.md) |
-| Input | 主题/尺寸关联窄单元已验收；完整API仍待审 | [关联窄单元](2026-10-29-input-sizing-audit.md) |
+| Input | 已完整验收并交付 | [本批最终验收](evidence/current-batch-final-acceptance.json) · [源码里程碑](2026-10-29-current-batch-integration.md) |
 | InputNumber | 待本轮完整盘点/统一验收 | 既有局部整改保留；本轮完整证据待补 |
 | Layout | 已完整验收并交付 | [最终验收](evidence/space-flex-alert-layout-final-acceptance.json) · [完整清单](2026-10-29-layout-contract-audit.md) |
 | List | 已完整验收并交付 | [2026-10-26-list-contract-audit.md](2026-10-26-list-contract-audit.md) |
@@ -130,3 +130,5 @@ Badge最终交付：47b98296 / Docs部署40701370080，线上32通过；此后�
 本批最终里程碑：Space/Flex/Alert/Layout四个完整单元统一验收，当前21/72、其余51开放。关联1978/118、各发布门禁、228张新批准及批准后严格rawRGBA精确、旧759回归与记录/PNG保留、14dist/1982实际发布输入、Docs161+56分别有证据。当前987/1704图批准、717待验收；全库最终同提交门禁和Input完整API仍开放。详见[evidence/space-flex-alert-layout-final-acceptance.json](evidence/space-flex-alert-layout-final-acceptance.json)，本地Docs通过不冒充最终线上发布。
 
 最新线上回执：`ea36bd64` / 部署[40790318839](https://github.com/apollocmh/apollo-design-ui/actions/runs/40790318839)成功，CI内容/严格类型/Docs161及全部包构建与L7（151检查、零失败/零待定）通过。真实线上56/56、运行错误零，中英文可见标题与21/72计数均验证；38个Demo深链接按既有Pages404→SPA恢复边界记录。详见[线上验收回执](evidence/space-flex-alert-layout-docs-publication.json)。
+
+2026-10-29本批最终交付：Divider、Collapse、完整Input与ConfigProvider四个单元统一验收，当前25/72；其他47组件与13基础包完整复核仍开放。原生视觉1215/1875批准、660待审；本批228张与所有既有批准均执行批准后关联回归。源码4637eb45、视觉及护栏8ec07b2d；最终证据和实际命令见[evidence/current-batch-final-acceptance.json](evidence/current-batch-final-acceptance.json)。Tree仅只读盘点，未开始实现；按用户要求暂停，不派发后续任务。

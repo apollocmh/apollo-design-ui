@@ -1,0 +1,243 @@
+{
+  "date": "2026-10-29T08:43:19.776182+00:00",
+  "status": "four component units accepted; documentation publication pending; pause after delivery",
+  "scope": [
+    "Divider",
+    "Collapse/Panel",
+    "Input/TextArea/Password/Search/OTP/Group",
+    "ConfigProvider and actual Theme/Locale/Icons/Form/notice consumers"
+  ],
+  "milestones": {
+    "theme": "617ae554",
+    "treeReadonly": "a4b1f160",
+    "implementation": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+    "nativeVisualsAndModelGuard": "8ec07b2dc893476e493469908b3e006c59d017b2",
+    "finalTestHarness": "d94a2ceccee1985fe585ae0fe7918c4838efdf57"
+  },
+  "completeComponentUnits": 25,
+  "totalComponentUnits": 72,
+  "foundationCompleteAuditsStillOpen": 13,
+  "productionSourceDigest": "b3145042f59cdab1b97509a233c6531e1426d9541cbc98fed29b9dd990cec2f2",
+  "productionSourceFiles": 2003,
+  "productionUnchangedAcrossAllMilestones": true,
+  "verified": {
+    "runtime": {
+      "passed": 13473,
+      "failed": 0,
+      "skipped": 3,
+      "files": 704,
+      "projects": [
+        "unit",
+        "dom-contract",
+        "a11y",
+        "theme"
+      ],
+      "maxWorkers": 3,
+      "command": "node node_modules/vitest/vitest.mjs run --project unit --project dom-contract --project a11y --project theme --maxWorkers=3 --reporter=json --outputFile=/tmp/apollo-batch-final-runtime-accepted.json",
+      "verifiedTestCommit": "d94a2ceccee1985fe585ae0fe7918c4838efdf57"
+    },
+    "strictRoot": {
+      "exit": 0,
+      "diagnostics": 0
+    },
+    "wholeRepositoryTypeTests": {
+      "passed": 2309,
+      "failed": 0
+    },
+    "uiBuildAndStrictL7": {
+      "exit": 0,
+      "failed": 0,
+      "pending": 0,
+      "sourceFallback": false
+    },
+    "tarballViteWebpack": {
+      "exit": 0,
+      "packages": 13
+    },
+    "publishedBrowser": {
+      "divider": 67,
+      "collapse": 134,
+      "input": 249,
+      "configProviderSsrBrowser": 62,
+      "finalArtifactRerun": {
+        "divider": 67,
+        "collapse": 134,
+        "distStable": true
+      }
+    },
+    "inputDemoThemes": {
+      "originalDemos": 24,
+      "themes": 4,
+      "passed": 96,
+      "failed": 0
+    },
+    "providerRelatedRuntime": {
+      "passed": 496,
+      "failed": 0,
+      "originalGeneratorSkips": 3
+    },
+    "publishedTypes": {
+      "rootAndSubpaths": true,
+      "inputDemos": 24,
+      "providerDemos": 8,
+      "independentNegativeConsumers": true,
+      "sourceFallback": false
+    },
+    "visual": {
+      "sourceCommit": "8ec07b2dc893476e493469908b3e006c59d017b2",
+      "runtimePassed": 13473,
+      "runtimeFailed": 0,
+      "runtimeSkipped": 3,
+      "runtimeFiles": 704,
+      "initialVisualDifferences": [
+        "tag/current-provider__light__mobile",
+        "tag/current-provider__light__tablet",
+        "tag/current-provider__light__desktop",
+        "typography/copy-feedback__light__mobile",
+        "typography/copy-feedback__light__desktop"
+      ],
+      "visualPassed": 1215,
+      "visualNonExact": [],
+      "productionUnchanged": true,
+      "approved": 1215,
+      "planned": 1875,
+      "pending": 660,
+      "firstBroadPassed": 1210,
+      "firstBroadDifferences": 5,
+      "tagNativeViewportRevisions": 3,
+      "tagPostApprovalExact": 3,
+      "copyFeedbackClockExact": 3,
+      "batchInitialRawRGBAExact": 228,
+      "thresholdsChanged": false
+    },
+    "formThemeGranularity": {
+      "originalDemos": 35,
+      "themes": 4,
+      "checksPassed": 179,
+      "timeoutMsUnchanged": 5000,
+      "allOriginalAssertionsAndScenariosRetained": true
+    },
+    "tooling": {
+      "passed": 20,
+      "failed": 0
+    },
+    "format": {
+      "exit": 0,
+      "errors": 0
+    },
+    "docs": {
+      "testsPassed": 161,
+      "typesExit": 0,
+      "ssgBuildExit": 0,
+      "realPagesAndInteractionsPassed": 80,
+      "errors": 0,
+      "locales": [
+        "zh-CN",
+        "en-US"
+      ],
+      "completeCountShown": 25,
+      "livePublication": "pending",
+      "proofCheckout": "/tmp/apollo-batch-docs-final-8ec07b2d",
+      "proofMatchesDeliveryInputs": [
+        "packages/docs/content/guide/audit-progress.md",
+        "registry/components.json",
+        "registry/dependencies.json"
+      ],
+      "guideSha256": "602fefe8f29df7d4162c4318edc2a5ca454d8e79ca12153d90a8d37439d35c13"
+    },
+    "registry": {
+      "checksPassed": 19,
+      "warnings": 0
+    }
+  },
+  "evidence": [
+    {
+      "path": "/tmp/apollo-batch-final-runtime-accepted.json",
+      "sha256": "acfa83f0208660b234ef357c78cdc4fe7683786f809dd7251df2695da306f3a3"
+    },
+    {
+      "path": "/tmp/apollo-batch-final-root-types-accepted.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/apollo-batch-final-tooling-accepted.log",
+      "sha256": "29351a02fc6c1d2129beef8f01daa2ba195a0ad1cd2c0bacade81297f32856e4"
+    },
+    {
+      "path": "/tmp/apollo-batch-final-format-accepted.log",
+      "sha256": "62a146f9e5bb3e99e74c53db046f64d66291cbf07c17e71dead7acb088fa9dd4"
+    },
+    {
+      "path": "/tmp/apollo-batch-final-ui-l7-canonical.json",
+      "sha256": "443408b7b38b9ea367721fa9a7ee7163ff9f7781059a821c80472e8707e41fb3"
+    },
+    {
+      "path": "/tmp/apollo-batch-8ec07b2d-tarball.log",
+      "sha256": "7959ab97805d4ed684d678a48656e40ad985a89ab4aa8b0e4400b7df0ad69e96"
+    },
+    {
+      "path": "/tmp/apollo-batch-docs-final-browser.json",
+      "sha256": "c99da634e2db6dfffcbb8e2113ed705c72244a5c14f3766ec92619d954f72cd8"
+    },
+    {
+      "path": "/tmp/apollo-batch-docs-final-tests.json",
+      "sha256": "c1bf111d632c6ba7f0c47d6fd2717895f2372cff75bd62d7a6cd87da3c64baeb"
+    },
+    {
+      "path": "/tmp/apollo-batch-docs-final-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/tmp/apollo-batch-docs-draft-build-ready.log",
+      "sha256": "e191fed990ee6acec4cff132ba5fd61a338d19edec42172b2d189bb455eaf0ce"
+    },
+    {
+      "path": "/tmp/apollo-batch-source-milestone-input-types.json",
+      "sha256": "094bd22d619dfdaf646a8e74f95330169ae7ca0f91df59a1589cefdfdfb85549"
+    },
+    {
+      "path": "/tmp/apollo-batch-source-milestone-config-types.json",
+      "sha256": "183d0273456b1e8f3fae2d4225b2b963373e628034e221c4d6cc165c869503e7"
+    },
+    {
+      "path": "/tmp/apollo-batch-final-divider-collapse-types.json",
+      "sha256": "ff9fd758986a9f045781cf28fdbc9b7d4051eeaff382d3a1343aa6e34d51f813"
+    },
+    {
+      "path": "/tmp/apollo-batch-tag-focus-final.json",
+      "sha256": "a093e760fd15b2b72349be6348b530dbd4642c5df87910a305245b7a69696e15"
+    },
+    {
+      "path": "/tmp/apollo-batch-typography-copy-clock.json",
+      "sha256": "3340c725d22ca23cdf970b62e48864a0b9b8f02f94b106b862eeb37779451f3a"
+    },
+    {
+      "path": "/tmp/apollo-batch-final-divider-published.json",
+      "sha256": "9f61939ecea2ba4640bce0ff45d7d61304e793048e6695a81389bef22c2c7112"
+    },
+    {
+      "path": "/tmp/apollo-batch-final-collapse-published/receipt.json",
+      "sha256": "b0ff84c7b9314063af74acaf0fbd2d7f52d7c643a4ffc25d081d9c3daa9c6804"
+    }
+  ],
+  "inventoryAndRootDeltas": "current-batch-source-integration.json",
+  "visualAndHarnessClassification": "current-batch-final-harness-adjustments.json",
+  "supersedesPendingBoundaries": [
+    "owner source freezes: integration gates are now closed for the four component units",
+    "divider/collapse old shared producer identity failures: final actual-source runtime passes unchanged assertions",
+    "Input/Form/Mentions associated source gaps: final broad runtime plus published browser/scoped CSS/SSR checks",
+    "ConfigProvider broader source run22 failures: final current producer/consumer runtime covers all source components"
+  ],
+  "unverifiedOrOpen": [
+    "47 other complete component audits",
+    "13 complete current foundation audits; only named associated chains are accepted here",
+    "final whole-library same-commit audit gate after every unit closes",
+    "documented independent Button fallback contrast limitation and D04/D05 decisions"
+  ],
+  "blocked": [],
+  "pauseAfterCurrentBatch": true,
+  "dispatchFurtherUnits": false,
+  "treeImplementationStarted": false,
+  "noNewTasksAfterBatch": true,
+  "publicationBoundary": "Local types/tests/build and80 browser checks passed; live Pages publication and hosted-browser acceptance are recorded separately after the acceptance commit is pushed."
+}
