@@ -313,7 +313,8 @@
         "currentAudit": "2026-10-27完整清单已统一验收；实现7e63e3e1（Result核心ca5d2740），最终相关四层2352/2352、根/SFC严格类型及15组公开类型398/398、114张同次视觉全部0像素差异。按原清单逐项复核，当前范围无代码阻塞；全库审计与最终全量门禁仍继续。见 docs/audit/evidence/button-contract.json。",
         "nativeAudit": "2026-10-27完整清单已统一验收；实现7e63e3e1（Result核心ca5d2740），最终相关四层2352/2352、根/SFC严格类型及15组公开类型398/398、114张同次视觉全部0像素差异。按原清单逐项复核，当前范围无代码阻塞；全库审计与最终全量门禁仍继续。见 docs/audit/evidence/button-contract.json。",
         "visual": "清洁7e63e3e1的39张自有场景已逐张审阅批准；Button/Result/QRCode共114张同次逐像素exact。原参考场景保留，原238批准记录中237项及PNG完全不变；唯一旧Button图经原图/新图明确复核后更新浏览器环境及前景。",
-        "docs": "实际站点43/43（20原Demo×亮暗及3交互）通过；Docs161测试/严格类型/SSG及部署产物探针通过。授权线上更新与回执另记，不把本地通过当已上线。"
+        "docs": "实际站点43/43（20原Demo×亮暗及3交互）通过；Docs161测试/严格类型/SSG及部署产物探针通过。授权线上更新与回执另记，不把本地通过当已上线。",
+        "foregroundCorrection": "2026-10-29用户反馈窄修：00c6ecb6恢复primary/danger默认浅色前景与三态可读背景；六组件1499、发布浏览器161、颜色1168、原Demo80、消费者51、SSR8/水合20、公开类型94通过。318关联视觉中264原RGBA不变、54有意改色已逐张审阅；1215批准总数不变。见docs/audit/evidence/button-foreground-acceptance.json，不据局部通过宣称全库通过。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -384,7 +385,8 @@
         "token": "当前Space/Compact/Addon公开ComponentToken为空，无新增组件Token；gap消费paddingXS/padding/paddingLG三类Alias，根作用域接当前Theme变量。Addon外观直接消费当前Alias，原生变量优先。tokenStatus=n/a只表示没有独立ComponentToken，不表示不消费主题。旧D38展开记录保留于带日期历史证据，不作为underlined应等同borderless的规格。",
         "interaction": "布局容器没有业务v-model或组件级选择/开关事件，interactionStatus=n/a；仍必须验证当前默认/分隔槽、Provider替换、key/Fragment重排的子项实例、输入草稿/选择与焦点，以及横纵/RTL紧凑上下文和隔离。Addon.disabled是装饰状态，不禁用插槽内原生控件。已有对应源码/发布浏览器证据；Input尺寸和Addon底线新缺陷按本轮补验，不以无业务状态跳过这些边界。",
         "style": "当前Alias、横纵/RTL紧凑连接已有源码和发布证据；正式审图重开underlined底线与关联Input尺寸，修复及最终75张视觉仍待统一验收。",
-        "currentAcceptance": "2026-10-29最终完整单元验收：发布87/87、严格15个真实Demo；Addon下划线与当前Input关联链已验收；Apollo75张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json；其他层说明保留为此前阶段证据。"
+        "currentAcceptance": "2026-10-29最终完整单元验收：发布87/87、严格15个真实Demo；Addon下划线与当前Input关联链已验收；Apollo75张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json；其他层说明保留为此前阶段证据。",
+        "buttonForegroundRegression": "2026-10-29关联Button前景修复：Space八场景×三视口24张恢复白字，布局尺寸不变，逐张审阅更新；其他批准记录保持，318关联场景统一验收。见docs/audit/evidence/button-foreground-visual.json。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1796,7 +1798,7 @@
       "visualStatus": "done",
       "docsStatus": "done",
       "notes": "含 Input / TextArea / Search / Password / OTP 子组件。必须保留输入法组合态（IME）处理能力，不可简化。\n2026-10-29当前主题尺寸/覆盖链窄整改：已有19个Input ComponentToken配置未消费、InputAffixPadding声明缺失、Provider style/Group/OTP尺寸及autoSize重测问题已成组复现并修复验收中；Registry原tokenCount0登记缺口由主线程待冻结同步。不是完整Input全API验收，旧completed不能代表本轮通过。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29原生视觉已审阅批准：Input84张、ConfigProvider42张；清洁4637eb45独立捕获与审阅图原始RGBA完全一致。批准后关联回归和统一验收继续，当前仍testing。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。",
-      "layerNotes": "\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。",
+      "layerNotes": "\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。\n2026-10-29 Search消费Button白字窄修及两个原搜索Demo四处监听改为@search：真实Demo红2→绿2，原13消费者场景51/51通过；Search/RTL/compact九张有意改色已审阅。原完整验收保留，见button-search-demo-events.json与button-foreground-visual.json。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",

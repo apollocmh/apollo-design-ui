@@ -1,0 +1,1170 @@
+{
+  "date": "2026-10-29",
+  "implementationCommit": "00c6ecb62cab79e9063caaefc17cad8f5542ed37",
+  "captureBaseCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+  "captureDirty": true,
+  "implementationBytesMatched": true,
+  "candidateCases": 318,
+  "candidateFailed": 0,
+  "unchangedRawRGBA": 264,
+  "reviewedAndUpdated": 54,
+  "approvedManifestVerified": 318,
+  "previousApproved": {
+    "button/compact-layout__light__desktop": {
+      "sha256": "cfcfe8e89a108ea8ce47693846d9ca8dd31dbcbd27d0b742b84d8a6ac082b9b5",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:36.474Z",
+      "reviewedAt": "2026-10-27T01:16:07.296Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/compact-layout__light__mobile": {
+      "sha256": "1909882f1f370b84807de9d31e3ab1e27abcc8234203eaf619152a893329f52f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:32.261Z",
+      "reviewedAt": "2026-10-27T01:16:07.295Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/compact-layout__light__tablet": {
+      "sha256": "9182f5081eff3c8bab6e8e716a284e90fa5a365473f71e5ee2232425703c855f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:34.364Z",
+      "reviewedAt": "2026-10-27T01:16:07.295Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/complete-content__light__desktop": {
+      "sha256": "e2baaa47b88b5e82f6dd6ec9e34d8318da43b047950252505eefd6abd35eaa5c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:09:58.472Z",
+      "reviewedAt": "2026-10-27T01:16:07.289Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/complete-content__light__mobile": {
+      "sha256": "97f5b21a528080611b4203613655fd0916a8a04c269bb85b4b71c5f6ce6ef918",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:09:53.987Z",
+      "reviewedAt": "2026-10-27T01:16:07.288Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/complete-content__light__tablet": {
+      "sha256": "1774cc800a3855dce525d0dc3a027467888a30d62b28073c21b750a75d7d2b60",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:09:56.282Z",
+      "reviewedAt": "2026-10-27T01:16:07.289Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/loading-states__light__desktop": {
+      "sha256": "6fb01e9cdb032e948a167351caa7e1ea8cbf0e2aa675ac56221052814f524a9a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:04.839Z",
+      "reviewedAt": "2026-10-27T01:16:07.290Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/loading-states__light__mobile": {
+      "sha256": "70a81fefd4913d16d964a1e135de7a531a466ec5093baf1ce612ddee4b997762",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:00.561Z",
+      "reviewedAt": "2026-10-27T01:16:07.289Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/loading-states__light__tablet": {
+      "sha256": "966131a4170c106b4792e8d6062a9bea9550242efaa5a5b861921d2359ee118b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:02.777Z",
+      "reviewedAt": "2026-10-27T01:16:07.290Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/native-focus__light__desktop": {
+      "sha256": "120e04e282dcdb33be91d2dcc6cdbd077b5cdcb5dbbd11ea091bd16f5a69f053",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:07.319Z",
+      "reviewedAt": "2026-10-27T01:16:07.301Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/native-focus__light__mobile": {
+      "sha256": "ef4bbe6dcb4f4a4640ac9e260d7a6c7de5669d8972b6dc73c4c40ec184d5fddc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:03.229Z",
+      "reviewedAt": "2026-10-27T01:16:07.300Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/native-focus__light__tablet": {
+      "sha256": "4a5c92d8f8a2a609cdbd42a73356fcc991c426db7d0dd7152b7dd9c79fa9983a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:11:05.280Z",
+      "reviewedAt": "2026-10-27T01:16:07.301Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/rtl__light__desktop": {
+      "sha256": "1222c080717be5c2c38dfdc4c6a0963fb31b474ab06569fb380285942b2c3623",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:42.556Z",
+      "reviewedAt": "2026-10-27T01:16:07.297Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/rtl__light__mobile": {
+      "sha256": "53e6a6953b8b2a33e10801161b4db09c4ef3617a41947a73b6fc0c73d225276c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:38.483Z",
+      "reviewedAt": "2026-10-27T01:16:07.296Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/rtl__light__tablet": {
+      "sha256": "ced5c26363c80ed71cb3432a32d3260b22faa1746d4e42dc18bc13d037fcae71",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:40.519Z",
+      "reviewedAt": "2026-10-27T01:16:07.296Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/theme-compact__light__desktop": {
+      "sha256": "3d76e580b4697d2e3a8636d9455b492720ba41f0aee309dc651bedd98fbd90eb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:54.966Z",
+      "reviewedAt": "2026-10-27T01:16:07.299Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/theme-compact__light__mobile": {
+      "sha256": "941e7544a035da1b42e866061c9dab980f150d35ded993207e49fa49ee153d0d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:50.828Z",
+      "reviewedAt": "2026-10-27T01:16:07.298Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/theme-compact__light__tablet": {
+      "sha256": "3fe8eff9451b142faaecf9742ab16d21e2256e09ea24d47029974044c1e54cf7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:10:52.877Z",
+      "reviewedAt": "2026-10-27T01:16:07.298Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/type__light__desktop": {
+      "sha256": "15c83045432110c0a14d3bb4cff8bdb3889042acaf09f883b82cde640347c31c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:09:51.855Z",
+      "reviewedAt": "2026-10-27T01:16:07.288Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/type__light__mobile": {
+      "sha256": "c6f606fcf5b322ade87f7c4dc548b91b5f99d516aa84a7a7ee1e258a27f6b9e9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:09:47.691Z",
+      "reviewedAt": "2026-10-27T01:16:07.286Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "button/type__light__tablet": {
+      "sha256": "d3f4dbef7c59e3e8859f403ce9a8c620eae4abbfcf7d0abca32414293129def7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
+      "dirty": false,
+      "capturedAt": "2026-10-27T01:09:49.783Z",
+      "reviewedAt": "2026-10-27T01:16:07.287Z",
+      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+    },
+    "input/rtl__light__desktop": {
+      "sha256": "5622f4df75d56508c5f539d7eda3e86384c142560be3914aff5cf77f1e1f925e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:01.522Z",
+      "reviewedAt": "2026-10-29T05:55:20.228Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/rtl__light__mobile": {
+      "sha256": "7291651c5b22a41785d838e7381bf75ff57c495481785e8ff3ca1c868d54954b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:57.357Z",
+      "reviewedAt": "2026-10-29T05:55:20.227Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/rtl__light__tablet": {
+      "sha256": "0941c8c6b176d8a2fd35c79d28c7b9574870b4c29afc43e04193862c1458005b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:46:59.431Z",
+      "reviewedAt": "2026-10-29T05:55:20.228Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/search__light__desktop": {
+      "sha256": "992faf1ed24770c09a8b3d9e5d012c5255dbaa559a54fc810c07ae86dab3e04c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:39.136Z",
+      "reviewedAt": "2026-10-29T05:55:20.216Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/search__light__mobile": {
+      "sha256": "558c492abba5866a32239ec38e5c4becf59df846757bd6c7c90e4ff28cf4f1dd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:34.792Z",
+      "reviewedAt": "2026-10-29T05:55:20.215Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/search__light__tablet": {
+      "sha256": "e7c4bb4267d3fd266f1cc81020cc124cd521135af42a831056099ba26025634a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:45:36.943Z",
+      "reviewedAt": "2026-10-29T05:55:20.215Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/theme-compact__light__desktop": {
+      "sha256": "fc4fe3d62a1f01c00807eae3698b5f8fd38a70a1dd06e30fcfcd5544ef8b44f9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:14.495Z",
+      "reviewedAt": "2026-10-29T05:55:20.230Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/theme-compact__light__mobile": {
+      "sha256": "7dc5803ceb6a51cfd0eb0a53d991300c8cce920120ecf933f77603ea5f9a3798",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:10.175Z",
+      "reviewedAt": "2026-10-29T05:55:20.229Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "input/theme-compact__light__tablet": {
+      "sha256": "e0e46a33633baa886a9f5a3ed4f92b024123800f6c0c00f42f90ceaa4c16246f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
+      "dirty": false,
+      "capturedAt": "2026-10-29T05:47:12.340Z",
+      "reviewedAt": "2026-10-29T05:55:20.230Z",
+      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+    },
+    "space/compact-vertical__light__desktop": {
+      "sha256": "dacd15512709db08dd2ec6c18829f8acca56c8cfdc06270b26e646955b0e4659",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:09:57.962Z",
+      "reviewedAt": "2026-10-28T23:23:02.631Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/compact-vertical__light__mobile": {
+      "sha256": "ec650a4d36d343fc2e47096da7e7672663d2e09677bb76209d9967d20692a945",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:09:53.847Z",
+      "reviewedAt": "2026-10-28T23:23:02.630Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/compact-vertical__light__tablet": {
+      "sha256": "966cba8923b423b57428bc4b61ae333194576802fc4dfa6d3db373db565db25d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:09:55.799Z",
+      "reviewedAt": "2026-10-28T23:23:02.631Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/compact__light__desktop": {
+      "sha256": "23fd8a02650186a8279de4f75ab929a422caefbd016bd6808c37b1ccb2e907db",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:09:51.877Z",
+      "reviewedAt": "2026-10-28T23:23:02.629Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/compact__light__mobile": {
+      "sha256": "290948bf7bb4835256175b63a50125f0bdfb73a5aa2663930c75f5e9e08f3d3f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:09:47.690Z",
+      "reviewedAt": "2026-10-28T23:23:02.629Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/compact__light__tablet": {
+      "sha256": "275c4c3c512bc0c5987e66f47d3cb7901b884b090d4506c034c7102f4b7a7975",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:09:49.760Z",
+      "reviewedAt": "2026-10-28T23:23:02.629Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/default__light__desktop": {
+      "sha256": "8bf14501f3ee14225b07cdf4986110a3aee3bc57b4670ec667df3dd937ced604",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:08:41.280Z",
+      "reviewedAt": "2026-10-28T23:23:02.616Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/default__light__mobile": {
+      "sha256": "98a240aab7ea5b7749770e3c79926f7977e53aff2a7468718902646541e4ce38",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:08:37.356Z",
+      "reviewedAt": "2026-10-28T23:23:02.614Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/default__light__tablet": {
+      "sha256": "6d95c6ac3f026c62a5cab5560e514b95cfba64627d51a33c7976f04a42eb0e15",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:08:39.323Z",
+      "reviewedAt": "2026-10-28T23:23:02.615Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/rtl__light__desktop": {
+      "sha256": "face591c3893b78c50b89ae1c409b7319d93e68d5cdd6aec178ea384ac701141",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:10:24.862Z",
+      "reviewedAt": "2026-10-28T23:23:02.636Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/rtl__light__mobile": {
+      "sha256": "ffbf80de9e219224419b2c7f59c30e7e3fd46185c1613aa87e8b0b53e9f43ba6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:10:20.577Z",
+      "reviewedAt": "2026-10-28T23:23:02.635Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/rtl__light__tablet": {
+      "sha256": "e328037536f04569aeab3b9d9ca263fb38f69907f1521cf32f1e38dbec8f4514",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:10:22.723Z",
+      "reviewedAt": "2026-10-28T23:23:02.636Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/semantic__light__desktop": {
+      "sha256": "658cdbec4aa79866af96461431029e5c13abb5d9e470c66757d3a6301ae78514",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:09:45.671Z",
+      "reviewedAt": "2026-10-28T23:23:02.628Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/semantic__light__mobile": {
+      "sha256": "3f41175a3c26296f4890f500b0c64ffe9fceaefe38bc389899b69e74065ae4f0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:09:41.791Z",
+      "reviewedAt": "2026-10-28T23:23:02.627Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/semantic__light__tablet": {
+      "sha256": "a4c64ff84c4dc8696105a85ee336a14398e96e55a5c0d79be2811a62c2eb4125",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:09:43.730Z",
+      "reviewedAt": "2026-10-28T23:23:02.628Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/theme-alias__light__desktop": {
+      "sha256": "a1b5bf3442ffb5bb0003f6612ef38f3a76dfc4bc26b02caf9d8a297261c53da1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:11:04.009Z",
+      "reviewedAt": "2026-10-28T23:23:02.649Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/theme-alias__light__mobile": {
+      "sha256": "887d01359bf886c1178a3ef57a7a880a9932c8bb2a59e8009142476fbc1005cd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:10:59.767Z",
+      "reviewedAt": "2026-10-28T23:23:02.648Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/theme-alias__light__tablet": {
+      "sha256": "76b62d73199a6390c8645d715381c42a3f9cf5bfb13867f6694cfe82532293bd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:11:01.905Z",
+      "reviewedAt": "2026-10-28T23:23:02.649Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/theme-compact__light__desktop": {
+      "sha256": "989fbbe718d2701b2c2a6914dce3265ff95d290e3aa4613b6405aff81c09bc87",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:10:51.077Z",
+      "reviewedAt": "2026-10-28T23:23:02.647Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/theme-compact__light__mobile": {
+      "sha256": "1301f181e637bd2c8c865ebebf63ed4c318f82903ef7454e1b116db1ab2f62ff",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:10:46.802Z",
+      "reviewedAt": "2026-10-28T23:23:02.646Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/theme-compact__light__tablet": {
+      "sha256": "d69b2e2291ad76a89cdf256b7bac3e16e88765e23bcb55bd3256438a524607bc",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:10:48.898Z",
+      "reviewedAt": "2026-10-28T23:23:02.646Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/vertical__light__desktop": {
+      "sha256": "e38be495fc2db11f9963e88c18326b120be8a7fdd947a911a5dbae188775e1de",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:08:47.107Z",
+      "reviewedAt": "2026-10-28T23:23:02.617Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/vertical__light__mobile": {
+      "sha256": "84c65408caf87c3bae5c4590fa9bbdacdd934f323ff984bcb3602d84de33b301",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:08:43.213Z",
+      "reviewedAt": "2026-10-28T23:23:02.616Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "space/vertical__light__tablet": {
+      "sha256": "870170a48e8fe5f92064e93a0c7979282096d14283b2b35bc1e35b21cc18d825",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
+      "dirty": false,
+      "capturedAt": "2026-10-28T23:08:45.166Z",
+      "reviewedAt": "2026-10-28T23:23:02.617Z",
+      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    }
+  },
+  "changes": [
+    {
+      "id": "button/compact-layout__light__desktop",
+      "pixels": 2459,
+      "bbox": [
+        171,
+        98,
+        248,
+        131
+      ],
+      "width": 1440,
+      "height": 292
+    },
+    {
+      "id": "button/compact-layout__light__mobile",
+      "pixels": 2459,
+      "bbox": [
+        171,
+        98,
+        248,
+        131
+      ],
+      "width": 375,
+      "height": 292
+    },
+    {
+      "id": "button/compact-layout__light__tablet",
+      "pixels": 2459,
+      "bbox": [
+        171,
+        98,
+        248,
+        131
+      ],
+      "width": 768,
+      "height": 292
+    },
+    {
+      "id": "button/complete-content__light__desktop",
+      "pixels": 7948,
+      "bbox": [
+        32,
+        99,
+        281,
+        131
+      ],
+      "width": 1440,
+      "height": 292
+    },
+    {
+      "id": "button/complete-content__light__mobile",
+      "pixels": 7948,
+      "bbox": [
+        32,
+        99,
+        281,
+        131
+      ],
+      "width": 375,
+      "height": 292
+    },
+    {
+      "id": "button/complete-content__light__tablet",
+      "pixels": 7948,
+      "bbox": [
+        32,
+        99,
+        281,
+        131
+      ],
+      "width": 768,
+      "height": 292
+    },
+    {
+      "id": "button/loading-states__light__desktop",
+      "pixels": 4972,
+      "bbox": [
+        32,
+        99,
+        188,
+        131
+      ],
+      "width": 1440,
+      "height": 292
+    },
+    {
+      "id": "button/loading-states__light__mobile",
+      "pixels": 4972,
+      "bbox": [
+        32,
+        99,
+        188,
+        131
+      ],
+      "width": 375,
+      "height": 292
+    },
+    {
+      "id": "button/loading-states__light__tablet",
+      "pixels": 4972,
+      "bbox": [
+        32,
+        99,
+        188,
+        131
+      ],
+      "width": 768,
+      "height": 292
+    },
+    {
+      "id": "button/native-focus__light__desktop",
+      "pixels": 4168,
+      "bbox": [
+        164,
+        99,
+        295,
+        131
+      ],
+      "width": 1440,
+      "height": 292
+    },
+    {
+      "id": "button/native-focus__light__mobile",
+      "pixels": 4168,
+      "bbox": [
+        164,
+        99,
+        295,
+        131
+      ],
+      "width": 375,
+      "height": 292
+    },
+    {
+      "id": "button/native-focus__light__tablet",
+      "pixels": 4168,
+      "bbox": [
+        164,
+        99,
+        295,
+        131
+      ],
+      "width": 768,
+      "height": 292
+    },
+    {
+      "id": "button/rtl__light__desktop",
+      "pixels": 3532,
+      "bbox": [
+        32,
+        99,
+        143,
+        131
+      ],
+      "width": 1440,
+      "height": 292
+    },
+    {
+      "id": "button/rtl__light__mobile",
+      "pixels": 3532,
+      "bbox": [
+        32,
+        99,
+        143,
+        131
+      ],
+      "width": 375,
+      "height": 292
+    },
+    {
+      "id": "button/rtl__light__tablet",
+      "pixels": 3532,
+      "bbox": [
+        32,
+        99,
+        143,
+        131
+      ],
+      "width": 768,
+      "height": 292
+    },
+    {
+      "id": "button/theme-compact__light__desktop",
+      "pixels": 3292,
+      "bbox": [
+        32,
+        99,
+        438,
+        127
+      ],
+      "width": 1440,
+      "height": 292
+    },
+    {
+      "id": "button/theme-compact__light__mobile",
+      "pixels": 3292,
+      "bbox": [
+        32,
+        99,
+        143,
+        167
+      ],
+      "width": 375,
+      "height": 292
+    },
+    {
+      "id": "button/theme-compact__light__tablet",
+      "pixels": 3292,
+      "bbox": [
+        32,
+        99,
+        438,
+        127
+      ],
+      "width": 768,
+      "height": 292
+    },
+    {
+      "id": "button/type__light__desktop",
+      "pixels": 4664,
+      "bbox": [
+        16,
+        16,
+        480,
+        48
+      ],
+      "width": 1440,
+      "height": 64
+    },
+    {
+      "id": "button/type__light__mobile",
+      "pixels": 4632,
+      "bbox": [
+        16,
+        16,
+        147,
+        88
+      ],
+      "width": 375,
+      "height": 104
+    },
+    {
+      "id": "button/type__light__tablet",
+      "pixels": 4664,
+      "bbox": [
+        16,
+        16,
+        480,
+        48
+      ],
+      "width": 768,
+      "height": 64
+    },
+    {
+      "id": "input/rtl__light__desktop",
+      "pixels": 2461,
+      "bbox": [
+        35,
+        175,
+        113,
+        208
+      ],
+      "width": 1440,
+      "height": 312
+    },
+    {
+      "id": "input/rtl__light__mobile",
+      "pixels": 2461,
+      "bbox": [
+        35,
+        175,
+        113,
+        208
+      ],
+      "width": 375,
+      "height": 312
+    },
+    {
+      "id": "input/rtl__light__tablet",
+      "pixels": 2461,
+      "bbox": [
+        35,
+        175,
+        113,
+        208
+      ],
+      "width": 768,
+      "height": 312
+    },
+    {
+      "id": "input/search__light__desktop",
+      "pixels": 3926,
+      "bbox": [
+        239,
+        99,
+        316,
+        208
+      ],
+      "width": 1440,
+      "height": 312
+    },
+    {
+      "id": "input/search__light__mobile",
+      "pixels": 3926,
+      "bbox": [
+        239,
+        99,
+        316,
+        208
+      ],
+      "width": 375,
+      "height": 312
+    },
+    {
+      "id": "input/search__light__tablet",
+      "pixels": 3926,
+      "bbox": [
+        239,
+        99,
+        316,
+        208
+      ],
+      "width": 768,
+      "height": 312
+    },
+    {
+      "id": "input/theme-compact__light__desktop",
+      "pixels": 1759,
+      "bbox": [
+        253,
+        242,
+        316,
+        271
+      ],
+      "width": 1440,
+      "height": 488
+    },
+    {
+      "id": "input/theme-compact__light__mobile",
+      "pixels": 1759,
+      "bbox": [
+        253,
+        242,
+        316,
+        271
+      ],
+      "width": 375,
+      "height": 488
+    },
+    {
+      "id": "input/theme-compact__light__tablet",
+      "pixels": 1759,
+      "bbox": [
+        253,
+        242,
+        316,
+        271
+      ],
+      "width": 768,
+      "height": 488
+    },
+    {
+      "id": "space/compact-vertical__light__desktop",
+      "pixels": 2726,
+      "bbox": [
+        31,
+        184,
+        120,
+        216
+      ],
+      "width": 1440,
+      "height": 312
+    },
+    {
+      "id": "space/compact-vertical__light__mobile",
+      "pixels": 2726,
+      "bbox": [
+        31,
+        184,
+        120,
+        216
+      ],
+      "width": 375,
+      "height": 312
+    },
+    {
+      "id": "space/compact-vertical__light__tablet",
+      "pixels": 2726,
+      "bbox": [
+        31,
+        184,
+        120,
+        216
+      ],
+      "width": 768,
+      "height": 312
+    },
+    {
+      "id": "space/compact__light__desktop",
+      "pixels": 2011,
+      "bbox": [
+        1345,
+        98,
+        1408,
+        131
+      ],
+      "width": 1440,
+      "height": 312
+    },
+    {
+      "id": "space/compact__light__mobile",
+      "pixels": 2010,
+      "bbox": [
+        280,
+        99,
+        343,
+        131
+      ],
+      "width": 375,
+      "height": 312
+    },
+    {
+      "id": "space/compact__light__tablet",
+      "pixels": 2011,
+      "bbox": [
+        673,
+        98,
+        736,
+        131
+      ],
+      "width": 768,
+      "height": 312
+    },
+    {
+      "id": "space/default__light__desktop",
+      "pixels": 1996,
+      "bbox": [
+        32,
+        99,
+        95,
+        131
+      ],
+      "width": 1440,
+      "height": 312
+    },
+    {
+      "id": "space/default__light__mobile",
+      "pixels": 1996,
+      "bbox": [
+        32,
+        99,
+        95,
+        131
+      ],
+      "width": 375,
+      "height": 312
+    },
+    {
+      "id": "space/default__light__tablet",
+      "pixels": 1996,
+      "bbox": [
+        32,
+        99,
+        95,
+        131
+      ],
+      "width": 768,
+      "height": 312
+    },
+    {
+      "id": "space/rtl__light__desktop",
+      "pixels": 4043,
+      "bbox": [
+        31,
+        99,
+        253,
+        179
+      ],
+      "width": 1440,
+      "height": 312
+    },
+    {
+      "id": "space/rtl__light__mobile",
+      "pixels": 4043,
+      "bbox": [
+        31,
+        99,
+        253,
+        179
+      ],
+      "width": 375,
+      "height": 312
+    },
+    {
+      "id": "space/rtl__light__tablet",
+      "pixels": 4043,
+      "bbox": [
+        31,
+        99,
+        253,
+        179
+      ],
+      "width": 768,
+      "height": 312
+    },
+    {
+      "id": "space/semantic__light__desktop",
+      "pixels": 1996,
+      "bbox": [
+        49,
+        116,
+        112,
+        148
+      ],
+      "width": 1440,
+      "height": 312
+    },
+    {
+      "id": "space/semantic__light__mobile",
+      "pixels": 1996,
+      "bbox": [
+        49,
+        116,
+        112,
+        148
+      ],
+      "width": 375,
+      "height": 312
+    },
+    {
+      "id": "space/semantic__light__tablet",
+      "pixels": 1996,
+      "bbox": [
+        49,
+        116,
+        112,
+        148
+      ],
+      "width": 768,
+      "height": 312
+    },
+    {
+      "id": "space/theme-alias__light__desktop",
+      "pixels": 4007,
+      "bbox": [
+        32,
+        99,
+        1408,
+        179
+      ],
+      "width": 1440,
+      "height": 312
+    },
+    {
+      "id": "space/theme-alias__light__mobile",
+      "pixels": 4006,
+      "bbox": [
+        32,
+        99,
+        343,
+        179
+      ],
+      "width": 375,
+      "height": 312
+    },
+    {
+      "id": "space/theme-alias__light__tablet",
+      "pixels": 4007,
+      "bbox": [
+        32,
+        99,
+        736,
+        179
+      ],
+      "width": 768,
+      "height": 312
+    },
+    {
+      "id": "space/theme-compact__light__desktop",
+      "pixels": 2831,
+      "bbox": [
+        32,
+        97,
+        1408,
+        169
+      ],
+      "width": 1440,
+      "height": 312
+    },
+    {
+      "id": "space/theme-compact__light__mobile",
+      "pixels": 2830,
+      "bbox": [
+        32,
+        97,
+        343,
+        169
+      ],
+      "width": 375,
+      "height": 312
+    },
+    {
+      "id": "space/theme-compact__light__tablet",
+      "pixels": 2831,
+      "bbox": [
+        32,
+        97,
+        736,
+        169
+      ],
+      "width": 768,
+      "height": 312
+    },
+    {
+      "id": "space/vertical__light__desktop",
+      "pixels": 1996,
+      "bbox": [
+        32,
+        99,
+        95,
+        131
+      ],
+      "width": 1440,
+      "height": 312
+    },
+    {
+      "id": "space/vertical__light__mobile",
+      "pixels": 1996,
+      "bbox": [
+        32,
+        99,
+        95,
+        131
+      ],
+      "width": 375,
+      "height": 312
+    },
+    {
+      "id": "space/vertical__light__tablet",
+      "pixels": 1996,
+      "bbox": [
+        32,
+        99,
+        95,
+        131
+      ],
+      "width": 768,
+      "height": 312
+    }
+  ],
+  "reviewedSheets": [
+    "/tmp/apollo-button-foreground-review-1.png",
+    "/tmp/apollo-button-foreground-review-2.png",
+    "/tmp/apollo-button-foreground-review-3.png",
+    "/tmp/apollo-button-foreground-review-4.png",
+    "/tmp/apollo-button-foreground-review-5.png",
+    "/tmp/apollo-button-foreground-review-wide-1.png",
+    "/tmp/apollo-button-foreground-review-wide-2.png",
+    "/tmp/apollo-button-foreground-review-wide-3.png",
+    "/tmp/apollo-button-foreground-review-wide-4.png",
+    "/tmp/apollo-button-foreground-review-wide-5.png",
+    "/tmp/apollo-button-foreground-review-wide-6.png",
+    "/tmp/apollo-button-foreground-review-wide-7.png",
+    "/tmp/apollo-button-foreground-review-wide-8.png",
+    "/tmp/apollo-button-foreground-review-wide-9.png"
+  ],
+  "approvedTotalBefore": 1215,
+  "approvedTotalAfter": 1215,
+  "untouchedApprovalRecordsPreserved": true,
+  "boundary": "One full 318-case candidate capture with actual state and axe checks; 54 reviewed updates, 264 prior raw exact. Final hash verification is not a second independent browser capture."
+}

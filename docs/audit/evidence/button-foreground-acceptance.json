@@ -1,0 +1,144 @@
+{
+  "date": "2026-10-29",
+  "status": "scoped implementation and acceptance complete; documentation publication pending",
+  "scope": "Button default primary/danger foreground regression and actual consumers; two original Search demos",
+  "implementationCommits": [
+    "00c6ecb62cab79e9063caaefc17cad8f5542ed37",
+    "96ce538ce029486e53cfe5ac9017d7f1a0880b1b"
+  ],
+  "publicAPIChanged": false,
+  "runtime": {
+    "passed": 1499,
+    "failed": 0,
+    "newDemoTests": {
+      "passed": 2,
+      "failed": 0
+    },
+    "scope": [
+      "button",
+      "input",
+      "dropdown",
+      "float-button",
+      "config-provider",
+      "space"
+    ],
+    "command": "vitest run packages/ui/src/{button,input,dropdown,float-button,config-provider,space} --project unit --project dom-contract --project a11y --project theme --maxWorkers=1",
+    "firstAttempt": {
+      "passed": 1490,
+      "timedOut": 9,
+      "retainedArtifact": "/tmp/apollo-button-foreground-consumer-runtime.json",
+      "resolution": "Same entire test set passes with one worker; no assertions, scenarios or 5000ms limit changed."
+    }
+  },
+  "types": {
+    "rootStrictTypeScriptExitCode": 0,
+    "rootDiagnostics": 0,
+    "publicTestsPassed": 94,
+    "publicTestsFailed": 0,
+    "command": "vue-tsc --noEmit -p tsconfig.json; vitest run packages/ui/src/button packages/ui/src/input --project types"
+  },
+  "publishedBrowser": {
+    "passed": 161,
+    "failed": 0,
+    "errors": [],
+    "artifact": "/tmp/apollo-button-foreground-browser-final.json"
+  },
+  "actualConsumers": {
+    "passed": 51,
+    "failed": 0,
+    "errors": [],
+    "artifact": "/tmp/apollo-button-foreground-consumers-accepted.json"
+  },
+  "colors": {
+    "passed": 1168,
+    "failed": 0,
+    "errors": [],
+    "artifact": "/tmp/apollo-button-foreground-colors-final.json"
+  },
+  "defaultSolidMinimumRatio": 4.551106379245475,
+  "allOriginalDemos": {
+    "passed": 80,
+    "failed": 0,
+    "errors": [],
+    "artifact": "/tmp/apollo-button-foreground-demo-themes-final.json"
+  },
+  "ssr": {
+    "passed": 8,
+    "failed": 0,
+    "errors": [],
+    "artifact": "/tmp/apollo-button-foreground-ssr.json"
+  },
+  "hydration": {
+    "passed": 20,
+    "failed": 0,
+    "errors": [],
+    "artifact": "/tmp/apollo-button-foreground-hydration.json"
+  },
+  "chromium145Targeted": {
+    "passed": 12,
+    "failed": 0,
+    "errors": [],
+    "artifact": "/tmp/apollo-button-foreground-chromium145.json"
+  },
+  "chromium145Capabilities": {
+    "contrastColor": false,
+    "relativeColor": true
+  },
+  "visual": {
+    "capturedAndStateAxePassed": 318,
+    "failed": 0,
+    "unchangedRawRGBA": 264,
+    "reviewedUpdates": 54,
+    "reviewedSheets": 14,
+    "approvedHashChecks": 318,
+    "approvedTotal": 1215,
+    "details": "button-foreground-visual.json",
+    "secondIndependentBrowserCapture": false
+  },
+  "build": {
+    "uiBuildExitCode": 0,
+    "strictL7Passed": 11,
+    "failed": 0,
+    "pending": 0,
+    "budgetChanged": false,
+    "freshSourceMatchedFoundationArtifacts": "/tmp/apollo-button-foreground-foundation-artifacts.json"
+  },
+  "docs": {
+    "testsPassed": 161,
+    "testsFailed": 0,
+    "typecheckExitCode": 0,
+    "ssgExitCode": 0,
+    "localSite": {
+      "passed": 43,
+      "failed": 0,
+      "errors": [],
+      "artifact": "/tmp/apollo-button-foreground-docs-browser.json"
+    },
+    "finalGuideAndSearchDemoBuild": "/tmp/apollo-button-foreground-docs-delivery-build.log"
+  },
+  "tooling": {
+    "passed": 20,
+    "failed": 0
+  },
+  "invalidAttemptsRetained": [
+    "/tmp/apollo-button-foreground-ssr.log",
+    "/tmp/apollo-button-foreground-hydration.log",
+    "/tmp/apollo-button-foreground-docs-build.log"
+  ],
+  "notVerified": [
+    "Full 72-component final same-commit audit",
+    "Full Firefox/Safari/Chromium145 matrix; only 12 primary/danger cases checked on Chromium145"
+  ],
+  "publication": {
+    "status": "pending",
+    "url": "https://apollocmh.github.io/apollo-design-ui/components/button"
+  },
+  "libraryProgress": {
+    "completed": 25,
+    "total": 72,
+    "otherComponentsOpen": 47,
+    "foundationFullAuditsStillOpen": 13
+  },
+  "pauseAfterDelivery": true,
+  "newTasksDispatched": false
+}

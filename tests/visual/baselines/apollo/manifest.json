@@ -1,13 +1,13 @@
 {
   "entries": {
     "button/type__light__desktop": {
-      "sha256": "15c83045432110c0a14d3bb4cff8bdb3889042acaf09f883b82cde640347c31c",
+      "sha256": "48c5bfda5d64117ef3311652460572d5012948398425af0a0bdd3ca982074a0e",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:09:51.855Z",
-      "reviewedAt": "2026-10-27T01:16:07.288Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:14:50.356Z",
+      "reviewedAt": "2026-10-29T09:30:07.953Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "image/basic__light__mobile": {
       "sha256": "133757cb952fbd0082c86028df5de0eaa0278ab2b245a56cbf493902094f01cd",
@@ -2143,76 +2143,76 @@
       "reviewNote": "Individually viewed all 39 clean e6be1625 candidates at mobile/tablet/desktop: default, avatar and per-line geometry, unwrapped loaded content, standalone elements, Image full/empty/fallback slots, native Node content, source tokens, actual RTL, dark/compact/combined themes and keyboard focus. Text and focus outlines remain visible; no clipped inputs, overlapping blocks or horizontal overflow. Original 24 upstream references and all 199 existing approvals retained."
     },
     "button/type__light__mobile": {
-      "sha256": "c6f606fcf5b322ade87f7c4dc548b91b5f99d516aa84a7a7ee1e258a27f6b9e9",
+      "sha256": "b8a2bd14e8773f6b43e0a8cad3ee58e97e82a8da1b06301e6e226167807a938a",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:09:47.691Z",
-      "reviewedAt": "2026-10-27T01:16:07.286Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:14:45.506Z",
+      "reviewedAt": "2026-10-29T09:30:07.953Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/type__light__tablet": {
-      "sha256": "d3f4dbef7c59e3e8859f403ce9a8c620eae4abbfcf7d0abca32414293129def7",
+      "sha256": "9486a32c36b4b5bbaea396c5035fb5df6dc3849233169739ba0c3b31c78b7921",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:09:49.783Z",
-      "reviewedAt": "2026-10-27T01:16:07.287Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:14:48.172Z",
+      "reviewedAt": "2026-10-29T09:30:07.954Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/complete-content__light__mobile": {
-      "sha256": "97f5b21a528080611b4203613655fd0916a8a04c269bb85b4b71c5f6ce6ef918",
+      "sha256": "373f6df270b952b3665c3dab3307ccda430ed90fa53d5b82acf93eb59605cce0",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:09:53.987Z",
-      "reviewedAt": "2026-10-27T01:16:07.288Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:14:52.393Z",
+      "reviewedAt": "2026-10-29T09:30:07.947Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/complete-content__light__tablet": {
-      "sha256": "1774cc800a3855dce525d0dc3a027467888a30d62b28073c21b750a75d7d2b60",
+      "sha256": "2ccc668edd9acfb807b91d917bdc7d0a7ba05785209b79b5a17d449823ef59d9",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:09:56.282Z",
-      "reviewedAt": "2026-10-27T01:16:07.289Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:14:54.426Z",
+      "reviewedAt": "2026-10-29T09:30:07.947Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/complete-content__light__desktop": {
-      "sha256": "e2baaa47b88b5e82f6dd6ec9e34d8318da43b047950252505eefd6abd35eaa5c",
+      "sha256": "d5d430fefe2ca1108866b126b23c007007f57205eb2a74307f17a3694dcf52e9",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:09:58.472Z",
-      "reviewedAt": "2026-10-27T01:16:07.289Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:14:56.482Z",
+      "reviewedAt": "2026-10-29T09:30:07.947Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/loading-states__light__mobile": {
-      "sha256": "70a81fefd4913d16d964a1e135de7a531a466ec5093baf1ce612ddee4b997762",
+      "sha256": "181c84bc17c32f73843acf495c6956f8719aa9187a338a0686a7dcc8b5ed0846",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:10:00.561Z",
-      "reviewedAt": "2026-10-27T01:16:07.289Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:14:58.494Z",
+      "reviewedAt": "2026-10-29T09:30:07.948Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/loading-states__light__tablet": {
-      "sha256": "966131a4170c106b4792e8d6062a9bea9550242efaa5a5b861921d2359ee118b",
+      "sha256": "7e0b41c9c28cfbe15eec6efa470e1fc68a5b42c5cc5322f20a18c256852d286e",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:10:02.777Z",
-      "reviewedAt": "2026-10-27T01:16:07.290Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:15:00.510Z",
+      "reviewedAt": "2026-10-29T09:30:07.948Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/loading-states__light__desktop": {
-      "sha256": "6fb01e9cdb032e948a167351caa7e1ea8cbf0e2aa675ac56221052814f524a9a",
+      "sha256": "1452e56bc673ae35aecba7d883a6b3cc5a1d1de207a6c328dcf1ec806a129ccd",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:10:04.839Z",
-      "reviewedAt": "2026-10-27T01:16:07.290Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:15:02.512Z",
+      "reviewedAt": "2026-10-29T09:30:07.948Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/native-disabled__light__mobile": {
       "sha256": "b27186519e2cc93ce7d26741084216455ef419996d54bd8f1a47dceeb723afdc",
@@ -2323,58 +2323,58 @@
       "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
     },
     "button/compact-layout__light__mobile": {
-      "sha256": "1909882f1f370b84807de9d31e3ab1e27abcc8234203eaf619152a893329f52f",
+      "sha256": "225b8f12361e25b3f0f840103f9f21fc6c9da613a4d023f20ee41da03b703a12",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:10:32.261Z",
-      "reviewedAt": "2026-10-27T01:16:07.295Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:15:29.653Z",
+      "reviewedAt": "2026-10-29T09:30:07.946Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/compact-layout__light__tablet": {
-      "sha256": "9182f5081eff3c8bab6e8e716a284e90fa5a365473f71e5ee2232425703c855f",
+      "sha256": "47065b866a8c92c9ae72461d3ed4bc808ea29995f017a7cc402fb01e3b0efe6e",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:10:34.364Z",
-      "reviewedAt": "2026-10-27T01:16:07.295Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:15:32.099Z",
+      "reviewedAt": "2026-10-29T09:30:07.946Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/compact-layout__light__desktop": {
-      "sha256": "cfcfe8e89a108ea8ce47693846d9ca8dd31dbcbd27d0b742b84d8a6ac082b9b5",
+      "sha256": "bc2ae5d98461ffb61239ac48a74ef10762dc527da0592a6209e648f14c2f45ef",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:10:36.474Z",
-      "reviewedAt": "2026-10-27T01:16:07.296Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:15:34.272Z",
+      "reviewedAt": "2026-10-29T09:30:07.944Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/rtl__light__mobile": {
-      "sha256": "53e6a6953b8b2a33e10801161b4db09c4ef3617a41947a73b6fc0c73d225276c",
+      "sha256": "84fd001bafd68be401ecc565e95ff9ce6f8e21610e1ba61f903ee8b414be6c8b",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:10:38.483Z",
-      "reviewedAt": "2026-10-27T01:16:07.296Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:15:36.386Z",
+      "reviewedAt": "2026-10-29T09:30:07.951Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/rtl__light__tablet": {
-      "sha256": "ced5c26363c80ed71cb3432a32d3260b22faa1746d4e42dc18bc13d037fcae71",
+      "sha256": "2a3c9c6f948330a9a4159ae42ae74fb857905bc535b61ab45883285396afe505",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:10:40.519Z",
-      "reviewedAt": "2026-10-27T01:16:07.296Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:15:38.506Z",
+      "reviewedAt": "2026-10-29T09:30:07.951Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/rtl__light__desktop": {
-      "sha256": "1222c080717be5c2c38dfdc4c6a0963fb31b474ab06569fb380285942b2c3623",
+      "sha256": "bb0afbab26344f04e93e10639f419ae5e8b872f5d3f6102661ad67e903f562c3",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:10:42.556Z",
-      "reviewedAt": "2026-10-27T01:16:07.297Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:15:40.727Z",
+      "reviewedAt": "2026-10-29T09:30:07.950Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/theme-dark__light__mobile": {
       "sha256": "733b812a6425521aebaa8109946c7c96f36d0562d590dd7d1c77a21fd88f2a72",
@@ -2404,31 +2404,31 @@
       "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
     },
     "button/theme-compact__light__mobile": {
-      "sha256": "941e7544a035da1b42e866061c9dab980f150d35ded993207e49fa49ee153d0d",
+      "sha256": "af630d118e46266ece0aa885e09dbb0f2424ee4a23465c879424ebfa3d3127d7",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:10:50.828Z",
-      "reviewedAt": "2026-10-27T01:16:07.298Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:15:49.673Z",
+      "reviewedAt": "2026-10-29T09:30:07.952Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/theme-compact__light__tablet": {
-      "sha256": "3fe8eff9451b142faaecf9742ab16d21e2256e09ea24d47029974044c1e54cf7",
+      "sha256": "fc1613e598ec6816173a43a3fea081f769eeece55d25ed73b09a9b132e296b83",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:10:52.877Z",
-      "reviewedAt": "2026-10-27T01:16:07.298Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:15:51.823Z",
+      "reviewedAt": "2026-10-29T09:30:07.952Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/theme-compact__light__desktop": {
-      "sha256": "3d76e580b4697d2e3a8636d9455b492720ba41f0aee309dc651bedd98fbd90eb",
+      "sha256": "85f14d941a2804368ed3bdb7252a6aa58eb6424b3a77bb7e3ad100366eebcb1e",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:10:54.966Z",
-      "reviewedAt": "2026-10-27T01:16:07.299Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:15:54.142Z",
+      "reviewedAt": "2026-10-29T09:30:07.952Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/theme-dark-compact__light__mobile": {
       "sha256": "ecd8bd014045864ac97a64fde6996c23c6c19ea446a96111128279e318618cc6",
@@ -2458,31 +2458,31 @@
       "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
     },
     "button/native-focus__light__mobile": {
-      "sha256": "ef4bbe6dcb4f4a4640ac9e260d7a6c7de5669d8972b6dc73c4c40ec184d5fddc",
+      "sha256": "63be35ae86c35dc759be44fb1f06f8989996f6f0131eb9ed9722a61f0abe811d",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:11:03.229Z",
-      "reviewedAt": "2026-10-27T01:16:07.300Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:16:03.192Z",
+      "reviewedAt": "2026-10-29T09:30:07.949Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/native-focus__light__tablet": {
-      "sha256": "4a5c92d8f8a2a609cdbd42a73356fcc991c426db7d0dd7152b7dd9c79fa9983a",
+      "sha256": "d2c6965234f6114cfff4340829d23502031e36dcc64d20e3aba7e307a7515ef9",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:11:05.280Z",
-      "reviewedAt": "2026-10-27T01:16:07.301Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:16:05.394Z",
+      "reviewedAt": "2026-10-29T09:30:07.950Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "button/native-focus__light__desktop": {
-      "sha256": "120e04e282dcdb33be91d2dcc6cdbd077b5cdcb5dbbd11ea091bd16f5a69f053",
+      "sha256": "4951c5d45d7d58512a5519db87f2bd817ee09a5d8a8ed97d57c1c63b81d6d0b7",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "7e63e3e1f729f8015ceeef4a9f9445fd33f6356e",
-      "dirty": false,
-      "capturedAt": "2026-10-27T01:11:07.319Z",
-      "reviewedAt": "2026-10-27T01:16:07.301Z",
-      "reviewNote": "Reviewed all39 Apollo Button images individually at mobile, tablet and desktop from clean7e63e3e1 on Chrome150. Complete business content/icon tails, three sizes/shapes, busy/disabled roots, source tokens/native variables, Provider, actual Compact, RTL, dark/compact combinations and keyboard focus remain visible without clipping. Reviewed original approved desktop alongside the candidate: primary/Chinese labels intentionally gain automatic contrasting foreground; the old browser environment differs, so no cross-environment exactness is claimed. All27 historical reference cases remain;147 production browser and1168 colour checks pass."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:16:07.568Z",
+      "reviewedAt": "2026-10-29T09:30:07.949Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "result/info-success__light__mobile": {
       "sha256": "3f58fc6e65f63374265e96877cc464549834990d6d3c64a7be756f9b34fa30b3",
@@ -6832,58 +6832,58 @@
       "reviewNote": "Reviewed 42 grid native Vue states from clean a47d96ec. Prior actual per-image review inherited only after exact raw RGBA and dimensions. Per-image observations and hashes: docs/audit/evidence/four-unit-native-visual-acceptance.json. Published API/Demo/SSR checks, current declarations, composed public CSS and strict UI L7 have separate evidence; no React reference images were replaced."
     },
     "space/default__light__mobile": {
-      "sha256": "98a240aab7ea5b7749770e3c79926f7977e53aff2a7468718902646541e4ce38",
+      "sha256": "fafb91585662ba9e5ca14e6522526fb0d9c9b09867d3bed855ee7d1eb11890fc",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:08:37.356Z",
-      "reviewedAt": "2026-10-28T23:23:02.614Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:21:05.798Z",
+      "reviewedAt": "2026-10-29T09:30:07.962Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/default__light__tablet": {
-      "sha256": "6d95c6ac3f026c62a5cab5560e514b95cfba64627d51a33c7976f04a42eb0e15",
+      "sha256": "a08a3574bb35f48534a2cfca57ab6078c3d674d79e4c7af1248bdbdda5fdac50",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:08:39.323Z",
-      "reviewedAt": "2026-10-28T23:23:02.615Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:21:07.772Z",
+      "reviewedAt": "2026-10-29T09:30:07.963Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/default__light__desktop": {
-      "sha256": "8bf14501f3ee14225b07cdf4986110a3aee3bc57b4670ec667df3dd937ced604",
+      "sha256": "49f159918c6e422374e88326c1aed8e634db3f0f0919e8d210309cf9262407ab",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:08:41.280Z",
-      "reviewedAt": "2026-10-28T23:23:02.616Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:21:09.733Z",
+      "reviewedAt": "2026-10-29T09:30:07.962Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/vertical__light__mobile": {
-      "sha256": "84c65408caf87c3bae5c4590fa9bbdacdd934f323ff984bcb3602d84de33b301",
+      "sha256": "1a0054b120e8bb4daa07f44b40c55f33a9914a51a1b756d023399a7bb0490f43",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:08:43.213Z",
-      "reviewedAt": "2026-10-28T23:23:02.616Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:21:11.685Z",
+      "reviewedAt": "2026-10-29T09:30:07.969Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/vertical__light__tablet": {
-      "sha256": "870170a48e8fe5f92064e93a0c7979282096d14283b2b35bc1e35b21cc18d825",
+      "sha256": "c11899832d4cd25c44d81b64dc0dec0815ee67bf7fbcad84676b47feb3539826",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:08:45.166Z",
-      "reviewedAt": "2026-10-28T23:23:02.617Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:21:13.623Z",
+      "reviewedAt": "2026-10-29T09:30:07.969Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/vertical__light__desktop": {
-      "sha256": "e38be495fc2db11f9963e88c18326b120be8a7fdd947a911a5dbae188775e1de",
+      "sha256": "d584d9f20d3220dc2440e50c48169a2cafc3d74f6fedcd06aea214cc66fea119",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:08:47.107Z",
-      "reviewedAt": "2026-10-28T23:23:02.617Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:21:15.580Z",
+      "reviewedAt": "2026-10-29T09:30:07.968Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/size-presets__light__mobile": {
       "sha256": "5129798f97b5beaabda93161cca1cb8c82f48530144672d07d53aca4e13b7016",
@@ -7129,85 +7129,85 @@
       "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
     },
     "space/semantic__light__mobile": {
-      "sha256": "3f41175a3c26296f4890f500b0c64ffe9fceaefe38bc389899b69e74065ae4f0",
+      "sha256": "63931df1a4da86b64247cfe31e3cd398853a11acfa93dcb7d8ffd9dd8702f4c5",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:09:41.791Z",
-      "reviewedAt": "2026-10-28T23:23:02.627Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:22:12.565Z",
+      "reviewedAt": "2026-10-29T09:30:07.965Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/semantic__light__tablet": {
-      "sha256": "a4c64ff84c4dc8696105a85ee336a14398e96e55a5c0d79be2811a62c2eb4125",
+      "sha256": "12ae99b4faa3c26f754e4296a58fddab2e6e91f8e583952af07db0b6b252b648",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:09:43.730Z",
-      "reviewedAt": "2026-10-28T23:23:02.628Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:22:14.625Z",
+      "reviewedAt": "2026-10-29T09:30:07.966Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/semantic__light__desktop": {
-      "sha256": "658cdbec4aa79866af96461431029e5c13abb5d9e470c66757d3a6301ae78514",
+      "sha256": "9f5f691ae5f13b9404ad002f40475a546ccff6cb4a47a66e2886b8ae45411155",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:09:45.671Z",
-      "reviewedAt": "2026-10-28T23:23:02.628Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:22:16.640Z",
+      "reviewedAt": "2026-10-29T09:30:07.965Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/compact__light__mobile": {
-      "sha256": "290948bf7bb4835256175b63a50125f0bdfb73a5aa2663930c75f5e9e08f3d3f",
+      "sha256": "4c054d8c8a59ba015c2768872c21a26e5a830303a7c1cd90393156a03195f088",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:09:47.690Z",
-      "reviewedAt": "2026-10-28T23:23:02.629Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:22:18.690Z",
+      "reviewedAt": "2026-10-29T09:30:07.961Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/compact__light__tablet": {
-      "sha256": "275c4c3c512bc0c5987e66f47d3cb7901b884b090d4506c034c7102f4b7a7975",
+      "sha256": "dcf1a64c404fe8da1b4ef66656c592c4b67fc51fb325ab0c76a26a0624f42661",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:09:49.760Z",
-      "reviewedAt": "2026-10-28T23:23:02.629Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:22:20.727Z",
+      "reviewedAt": "2026-10-29T09:30:07.961Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/compact__light__desktop": {
-      "sha256": "23fd8a02650186a8279de4f75ab929a422caefbd016bd6808c37b1ccb2e907db",
+      "sha256": "fb1601df4325937b9ca4165d1b77989f7b2e497217b7498debee37f016966b00",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:09:51.877Z",
-      "reviewedAt": "2026-10-28T23:23:02.629Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:22:22.798Z",
+      "reviewedAt": "2026-10-29T09:30:07.960Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/compact-vertical__light__mobile": {
-      "sha256": "ec650a4d36d343fc2e47096da7e7672663d2e09677bb76209d9967d20692a945",
+      "sha256": "383f9ed09a9310a0f7d330634128e2e2b691a9d657ac25d8c1dd3ec48fdd237c",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:09:53.847Z",
-      "reviewedAt": "2026-10-28T23:23:02.630Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:22:24.790Z",
+      "reviewedAt": "2026-10-29T09:30:07.959Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/compact-vertical__light__tablet": {
-      "sha256": "966cba8923b423b57428bc4b61ae333194576802fc4dfa6d3db373db565db25d",
+      "sha256": "3df5c47df484cd110addd555badf5d144bbd83fd82c5bf718cae2e219802cbfe",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:09:55.799Z",
-      "reviewedAt": "2026-10-28T23:23:02.631Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:22:26.770Z",
+      "reviewedAt": "2026-10-29T09:30:07.959Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/compact-vertical__light__desktop": {
-      "sha256": "dacd15512709db08dd2ec6c18829f8acca56c8cfdc06270b26e646955b0e4659",
+      "sha256": "40222d4596471d2a70f144f1ad8aa341e869509e95d730c0ded17066738bc8c6",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:09:57.962Z",
-      "reviewedAt": "2026-10-28T23:23:02.631Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:22:28.767Z",
+      "reviewedAt": "2026-10-29T09:30:07.958Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/compact-nested__light__mobile": {
       "sha256": "665f131c853e7b10f6d2664c0217b99ea02e783b9345a9e3d3de06baaa68e948",
@@ -7291,31 +7291,31 @@
       "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
     },
     "space/rtl__light__mobile": {
-      "sha256": "ffbf80de9e219224419b2c7f59c30e7e3fd46185c1613aa87e8b0b53e9f43ba6",
+      "sha256": "88ed8a6b83482aa45340ea8bccdcc937a2e7824467fa55aa3a36eeba8f62e327",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:10:20.577Z",
-      "reviewedAt": "2026-10-28T23:23:02.635Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:22:49.446Z",
+      "reviewedAt": "2026-10-29T09:30:07.964Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/rtl__light__tablet": {
-      "sha256": "e328037536f04569aeab3b9d9ca263fb38f69907f1521cf32f1e38dbec8f4514",
+      "sha256": "f955f69eb11ed277d2d5dc01dac349d0f7ec5ae0b4466935846cc47bc867561f",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:10:22.723Z",
-      "reviewedAt": "2026-10-28T23:23:02.636Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:22:51.556Z",
+      "reviewedAt": "2026-10-29T09:30:07.964Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/rtl__light__desktop": {
-      "sha256": "face591c3893b78c50b89ae1c409b7319d93e68d5cdd6aec178ea384ac701141",
+      "sha256": "6f145e4cd2a7d54a536f68256c9311ec1f4dc6a088d85759b7a611766b17be24",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:10:24.862Z",
-      "reviewedAt": "2026-10-28T23:23:02.636Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:22:53.652Z",
+      "reviewedAt": "2026-10-29T09:30:07.964Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/current-provider__light__mobile": {
       "sha256": "0de5f77b133839f078b483dfca219787be71bc6727c7bd77263cab171d53630f",
@@ -7399,31 +7399,31 @@
       "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
     },
     "space/theme-compact__light__mobile": {
-      "sha256": "1301f181e637bd2c8c865ebebf63ed4c318f82903ef7454e1b116db1ab2f62ff",
+      "sha256": "9f194d50a6a6634b3d8cefbfb44c3de7d7372285a3ff66e9ff063235b5768574",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:10:46.802Z",
-      "reviewedAt": "2026-10-28T23:23:02.646Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:23:14.663Z",
+      "reviewedAt": "2026-10-29T09:30:07.967Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/theme-compact__light__tablet": {
-      "sha256": "d69b2e2291ad76a89cdf256b7bac3e16e88765e23bcb55bd3256438a524607bc",
+      "sha256": "f623022096df749b4310e4e5c8decef398659cc716a1df0f1679dfe11d48aec0",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:10:48.898Z",
-      "reviewedAt": "2026-10-28T23:23:02.646Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:23:16.789Z",
+      "reviewedAt": "2026-10-29T09:30:07.968Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/theme-compact__light__desktop": {
-      "sha256": "989fbbe718d2701b2c2a6914dce3265ff95d290e3aa4613b6405aff81c09bc87",
+      "sha256": "37d5721285fa08e19591d34d0be7b8d81ed49d90eb8c4ad6bf9bd9a05efe6bba",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:10:51.077Z",
-      "reviewedAt": "2026-10-28T23:23:02.647Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:23:19.062Z",
+      "reviewedAt": "2026-10-29T09:30:07.967Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/theme-dark-compact__light__mobile": {
       "sha256": "9bf47f72e04468f6b79987517fbb5a1f3dc681ea1794adf58ed7c5de6f0b55fa",
@@ -7453,31 +7453,31 @@
       "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
     },
     "space/theme-alias__light__mobile": {
-      "sha256": "887d01359bf886c1178a3ef57a7a880a9932c8bb2a59e8009142476fbc1005cd",
+      "sha256": "150a8e752dcc07daad85cdcf63fc075e84abb4acb6e96f626750aeb2fdf588f8",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:10:59.767Z",
-      "reviewedAt": "2026-10-28T23:23:02.648Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:23:27.575Z",
+      "reviewedAt": "2026-10-29T09:30:07.966Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/theme-alias__light__tablet": {
-      "sha256": "76b62d73199a6390c8645d715381c42a3f9cf5bfb13867f6694cfe82532293bd",
+      "sha256": "21b68585038793a9d03161553f1c6b7c78e28eb2adb368233574478dd0d99ddb",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:11:01.905Z",
-      "reviewedAt": "2026-10-28T23:23:02.649Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:23:29.694Z",
+      "reviewedAt": "2026-10-29T09:30:07.967Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/theme-alias__light__desktop": {
-      "sha256": "a1b5bf3442ffb5bb0003f6612ef38f3a76dfc4bc26b02caf9d8a297261c53da1",
+      "sha256": "c48906f0212f5fc1f1e155e603d8693f8f70f64c9b171479605f427896662abd",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "48d90b43ee3bac1bf29ee7aedaf55c05c0baba8f",
-      "dirty": false,
-      "capturedAt": "2026-10-28T23:11:04.009Z",
-      "reviewedAt": "2026-10-28T23:23:02.649Z",
-      "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:23:31.847Z",
+      "reviewedAt": "2026-10-29T09:30:07.966Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "space/native-focus__light__mobile": {
       "sha256": "0d7bf9c337377d0bb000593fe2bfa87879861cdcad70ab338112ef10c150f89a",
@@ -10099,31 +10099,31 @@
       "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
     },
     "input/search__light__mobile": {
-      "sha256": "558c492abba5866a32239ec38e5c4becf59df846757bd6c7c90e4ff28cf4f1dd",
+      "sha256": "5194b90f963a6a0219aa1b08940d7aecc3bdd2afe360f885f7b4ad3f36539f7d",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
-      "dirty": false,
-      "capturedAt": "2026-10-29T05:45:34.792Z",
-      "reviewedAt": "2026-10-29T05:55:20.215Z",
-      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:17:31.402Z",
+      "reviewedAt": "2026-10-29T09:30:07.956Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "input/search__light__tablet": {
-      "sha256": "e7c4bb4267d3fd266f1cc81020cc124cd521135af42a831056099ba26025634a",
+      "sha256": "818bff0bd57640bd521134b87419cf01506947d8313fe741eee45486fe3179ec",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
-      "dirty": false,
-      "capturedAt": "2026-10-29T05:45:36.943Z",
-      "reviewedAt": "2026-10-29T05:55:20.215Z",
-      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:17:35.284Z",
+      "reviewedAt": "2026-10-29T09:30:07.956Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "input/search__light__desktop": {
-      "sha256": "992faf1ed24770c09a8b3d9e5d012c5255dbaa559a54fc810c07ae86dab3e04c",
+      "sha256": "62afe65b27074a1112e2b42360940ef6006c21aaf304064bf06e7c5153a55b82",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
-      "dirty": false,
-      "capturedAt": "2026-10-29T05:45:39.136Z",
-      "reviewedAt": "2026-10-29T05:55:20.216Z",
-      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:17:38.962Z",
+      "reviewedAt": "2026-10-29T09:30:07.955Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "input/search-loading__light__mobile": {
       "sha256": "d8d50d011c2c8c80ee048881fc3ff8ad69608affc2c3a75ac82957a4e7a740a1",
@@ -10450,31 +10450,31 @@
       "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
     },
     "input/rtl__light__mobile": {
-      "sha256": "7291651c5b22a41785d838e7381bf75ff57c495481785e8ff3ca1c868d54954b",
+      "sha256": "e2a555645bee4e0b53fb1ae4cdbdbc926d6b4259f0523c528930f4ef6b7573a9",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
-      "dirty": false,
-      "capturedAt": "2026-10-29T05:46:57.357Z",
-      "reviewedAt": "2026-10-29T05:55:20.227Z",
-      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:19:09.350Z",
+      "reviewedAt": "2026-10-29T09:30:07.955Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "input/rtl__light__tablet": {
-      "sha256": "0941c8c6b176d8a2fd35c79d28c7b9574870b4c29afc43e04193862c1458005b",
+      "sha256": "d889aa169bc7aa11c213422fe44910e7f42e08ee041ad095b3ed5f214c8f7639",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
-      "dirty": false,
-      "capturedAt": "2026-10-29T05:46:59.431Z",
-      "reviewedAt": "2026-10-29T05:55:20.228Z",
-      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:19:11.519Z",
+      "reviewedAt": "2026-10-29T09:30:07.955Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "input/rtl__light__desktop": {
-      "sha256": "5622f4df75d56508c5f539d7eda3e86384c142560be3914aff5cf77f1e1f925e",
+      "sha256": "7f0f96a481ce7fa86fb153d4d24dcc510a8e9ba570f1b644a30c4a392cf20650",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
-      "dirty": false,
-      "capturedAt": "2026-10-29T05:47:01.522Z",
-      "reviewedAt": "2026-10-29T05:55:20.228Z",
-      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:19:13.714Z",
+      "reviewedAt": "2026-10-29T09:30:07.954Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "input/theme-dark__light__mobile": {
       "sha256": "01e4e21a7f9a40caf8431f275223412afd732e552cc5b54631dcd881c6243a66",
@@ -10504,31 +10504,31 @@
       "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
     },
     "input/theme-compact__light__mobile": {
-      "sha256": "7dc5803ceb6a51cfd0eb0a53d991300c8cce920120ecf933f77603ea5f9a3798",
+      "sha256": "85a8e717f8e445e47bd590b30c6c7611750b0566e0f7672f10e069904711194a",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
-      "dirty": false,
-      "capturedAt": "2026-10-29T05:47:10.175Z",
-      "reviewedAt": "2026-10-29T05:55:20.229Z",
-      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:19:22.718Z",
+      "reviewedAt": "2026-10-29T09:30:07.957Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "input/theme-compact__light__tablet": {
-      "sha256": "e0e46a33633baa886a9f5a3ed4f92b024123800f6c0c00f42f90ceaa4c16246f",
+      "sha256": "01c9756a4dd47056b851bc8896d4c48dab06bea0ea48d23235d250917549bf8c",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
-      "dirty": false,
-      "capturedAt": "2026-10-29T05:47:12.340Z",
-      "reviewedAt": "2026-10-29T05:55:20.230Z",
-      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:19:24.976Z",
+      "reviewedAt": "2026-10-29T09:30:07.957Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "input/theme-compact__light__desktop": {
-      "sha256": "fc4fe3d62a1f01c00807eae3698b5f8fd38a70a1dd06e30fcfcd5544ef8b44f9",
+      "sha256": "d51b73be19a1c03d1db063ff2ae8ae024598ea168b19cf97dc15ceec671d3e6c",
       "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
-      "sourceCommit": "4637eb45c82cb6fa5ca5309a367da21a2e89a2eb",
-      "dirty": false,
-      "capturedAt": "2026-10-29T05:47:14.495Z",
-      "reviewedAt": "2026-10-29T05:55:20.230Z",
-      "reviewNote": "Reviewed all 126 actual PNGs across mobile/tablet/desktop in seven contact sheets: complete content, normal/over-limit readable counts, clear/password/OTP native controls, keyboard focus and retained drafts, current Provider/RTL, CSS-only inheritance, explicit scope/native table-list-SVG parents, empty ThemeProvider reset and dark/compact combinations. Native runtime/axe checks passed. Clean source 4637eb45 recapture is raw-RGBA exact to every reviewed image; existing 102 Divider/Collapse images remain exact. Post-approval full approved-baseline regression follows without changing thresholds."
+      "sourceCommit": "1c65df1d53ef4a2a74f2e8ab0c73a184c27ddfa4",
+      "dirty": true,
+      "capturedAt": "2026-10-29T09:19:27.280Z",
+      "reviewedAt": "2026-10-29T09:30:07.957Z",
+      "reviewNote": "2026-10-29 user-reported primary black text: reviewed all 54 before/after images in 14 contact sheets at mobile/tablet/desktop. Restore white primary/danger foreground semantics with local luminance cap; 1168 color checks retain >=4.5:1. Geometry unchanged; other 264 captures are raw RGBA exact. Captured dirty worktree based on 1c65df1d; production bytes verified identical to implementation 00c6ecb6."
     },
     "input/theme-dark-compact__light__mobile": {
       "sha256": "4f9f7e561b28515855dc4777124fa24c8ba3f828705536fd4108b907512889bc",

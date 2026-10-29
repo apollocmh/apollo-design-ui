@@ -159,6 +159,8 @@ Button 的完整 Vue 内容、当前 Provider、加载生命周期、原生根�
 
 最终相关四层 2352 项、公开类型 398 项、Button 147 项生产浏览器与 51 项真实消费者检查通过；颜色矩阵 1168/1168，原 Demo 四算法分别 80/80 与 40/40，实际站点页面及交互分别 43/43 与 23/23。两组件各 39 张自有视觉已逐张审阅批准，连同 QRCode 共 114 张最终逐像素一致。全库其他审计继续进行。
 
+2026-10-29 用户反馈回归：primary/危险实心按钮恢复默认白字，保留显式 Token 和原生变量覆盖；局部背景亮度配对白字，不改全局主色。1,499 项关联回归、1,168 项颜色检查、80 项原 Demo、51 项真实消费者及 318 个原生视觉场景通过；54 张预期改色经逐张审阅，其余 264 张像素不变。两个 Search 示例的旧监听写法统一改为 `@search`，补充真实回车/加载/卸载回归。本次为已交付组件的窄修，完成后恢复暂停。[本次范围和证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-29-button-foreground.md)。
+
 - [加载请求、延迟指示器与恢复](/components/button/demo/loading)
 - [当前 Button Token、原生变量与保留草稿](/components/button/demo/component-token)
 - [完整自定义结果内容与状态切换](/components/result/demo/custom-icon)
@@ -342,6 +344,8 @@ Use top-level `v-model:open`, group `v-model:current`, named content slots and `
 Button now consumes complete Vue content, current Provider values, native root behavior, loading state and all 58 existing tokens. All 20 original demos remain. Result's five complete slots, six semantic parts, four tokens and three exception illustrations are verified; all 10 original demos remain. Related Compact/Search, FloatButton and async/event demos are repaired.
 
 The final related gate passes 2,352 runtime tests and 398 public type checks. Button passes 147 production browser checks, 51 actual consumer checks and 1,168 colour checks. Original demo theme matrices pass 80/80 and 40/40; actual site pages and interactions pass 43/43 and 23/23. All 39 images per component were individually reviewed and approved; the final 114-image comparison, including QRCode, has zero differing pixels. The wider library audit continues.
+
+2026-10-29 user feedback correction: primary/danger solid buttons restore default white text, retaining explicit token/native overrides and pairing local background luminance without changing global primary colours. The check covers 1,499 related runtime tests, 1,168 colour checks, 80 original demo/theme combinations, 51 actual consumer checks and 318 native visual cases. All 54 intended colour updates were individually reviewed; the other 264 captures are pixel exact. Two Search demos now use `@search`, with real Enter/loading/unmount regression coverage. This is a focused correction of delivered components; work pauses again afterward. [Scope and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-29-button-foreground.md).
 
 - [Loading and recovery](/components/button/demo/loading)
 - [Current tokens and a preserved draft](/components/button/demo/component-token)
