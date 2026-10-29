@@ -3,11 +3,10 @@
  *
  * Token Runtime：Seed → Map → Alias → Component 的完整派生链，以及 Token → CSS 变量的注入。
  *
- * 兼容目标：antd 6.6.4。派生结果与 antd 的 `theme.getDesignToken()` 逐字段一致，
- * 由 `registry/tools/gen-theme-baseline.mjs` 从 antd 真实代码生成的基准保证。
+ * Apollo 的公开类型与文档定义契约；历史 Ant Design 算法对照保留为回归证据。
  *
- * 入口是纯函数（`getDesignToken`），不依赖 Vue、不依赖 DOM ——
- * Vue 绑定与 CSS 变量注入另有入口，见 css-var.ts。
+ * getDesignToken 的源依赖不读取 Vue 或 DOM；公共根入口也导出 Vue 绑定，
+ * Vue 作为 peer dependency。CSS 变量通过静态声明或可清理的运行作用域消费。
  */
 
 export type { DerivativeTokenWithOverride } from './alias';

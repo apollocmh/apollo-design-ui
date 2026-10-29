@@ -1,13 +1,12 @@
 import type { AliasToken } from './types';
 
-/** 默认前缀。已裁决（prefix-cls-default = A）：默认 `apollo`，可覆盖为 `ant`。 */
+/** 共享变量默认前缀；自定义前缀需由对应样式消费。 */
 export const DEFAULT_CSS_VAR_PREFIX = 'apollo';
 
 /**
  * 这些 token 虽然是 number，但**不加 px**。
  *
- * 清单逐字来自 antd 6.6.4 的 `es/theme/useToken.js`。改动它会让 CSS 变量值带上错误的单位，
- * 而且这种错误在视觉上是"看起来差不多"的 —— 所以这里写死，不接受调用方覆盖。
+ * 初始清单参考 antd 6.6.4 的 `es/theme/useToken.js`；单位由当前 Token 契约决定。
  */
 export const UNITLESS: Record<string, true> = {
   lineHeight: true,
@@ -66,7 +65,7 @@ export const PRESERVE: Record<string, true> = {
  *   3. `([a-z])([A-Z0-9])`   → 小写接单个大写或数字     sizeLG → size-LG
  *
  * 结果整体小写。例：`borderRadiusLG` → `--apollo-border-radius-lg`。
- * CSS 变量名是**对外契约**（用户会写 `var(--apollo-*)` 覆盖样式），所以必须与 antd 同构。
+ * CSS 变量名是对外契约，静态 CSS 和运行时注入必须使用同一名称。
  */
 export function token2CSSVar(token: string, prefix = DEFAULT_CSS_VAR_PREFIX): string {
   return `--${prefix ? `${prefix}-` : ''}${token}`
@@ -94,25 +93,27 @@ export interface TransformResult {
  * 因为 CSS 里没有对应的消费方式，且它们只影响派生过程。
  */
 export function transformToken(
-  token: AliasToken,
+  token: Partial<AliasToken>,
   prefix = DEFAULT_CSS_VAR_PREFIX,
 ): TransformResult {
   const vars: Record<string, string> = {};
-  const refs: Record<string, string | number> = {};
+  const refs: Array<[string, string | number]> = [];
 
   for (const [key, value] of Object.entries(token)) {
-    if (PRESERVE[key]) {
-      refs[key] = value as string | number;
+    if (typeof value !== 'string' && typeof value !== 'number') continue;
+    if (Object.hasOwn(PRESERVE, key)) {
+      refs.push([key, value]);
       continue;
     }
-    if ((typeof value === 'string' || typeof value === 'number') && !IGNORE[key]) {
+    if (!Object.hasOwn(IGNORE, key)) {
       const cssVar = token2CSSVar(key, prefix);
-      vars[cssVar] = typeof value === 'number' && !UNITLESS[key] ? `${value}px` : String(value);
-      refs[key] = `var(${cssVar})`;
+      vars[cssVar] =
+        typeof value === 'number' && !Object.hasOwn(UNITLESS, key) ? `${value}px` : String(value);
+      refs.push([key, `var(${cssVar})`]);
     }
   }
 
-  return { vars, refs };
+  return { vars, refs: Object.fromEntries(refs) };
 }
 
 /**
@@ -122,7 +123,7 @@ export function transformToken(
  *     `getCSSVarDeclarations(token, { selector: '[data-apollo-theme=dark]' })` → 作用域覆盖
  */
 export function getCSSVarDeclarations(
-  token: AliasToken,
+  token: Partial<AliasToken>,
   options: { prefix?: string; selector?: string } = {},
 ): string {
   const { vars } = transformToken(token, options.prefix ?? DEFAULT_CSS_VAR_PREFIX);
@@ -144,30 +145,108 @@ export function getCSSVarDeclarations(
  */
 export interface CSSVarScope {
   /** 把 token 写入目标元素（重复调用覆盖同名变量，不残留） */
-  apply: (token: AliasToken) => void;
-  /** 移除本 scope 曾经写入的全部变量 */
+  apply: (token: Partial<AliasToken>) => void;
+  /** 释放本 scope 的变量，恢复仍活跃的 scope 或原有 inline 值 */
   remove: () => void;
   /** 当前已写入的变量名 */
   readonly keys: string[];
 }
 
-export function createCSSVarScope(el: HTMLElement, prefix = DEFAULT_CSS_VAR_PREFIX): CSSVarScope {
+interface InlineValue {
+  value: string;
+  priority: string;
+}
+
+interface OwnedVariable {
+  base: InlineValue;
+  lastWritten: InlineValue;
+  visible: boolean;
+  owners: Map<symbol, string>;
+}
+
+// DOM ownership is weakly held; releasing the last owner also drops its variable entry.
+const ownedVariables = new WeakMap<HTMLElement | SVGElement, Map<string, OwnedVariable>>();
+
+function readInline(el: HTMLElement | SVGElement, name: string): InlineValue {
+  return { value: el.style.getPropertyValue(name), priority: el.style.getPropertyPriority(name) };
+}
+
+function sameInline(first: InlineValue, second: InlineValue): boolean {
+  return first.value === second.value && first.priority === second.priority;
+}
+
+function writeInline(el: HTMLElement | SVGElement, name: string, inline: InlineValue): void {
+  if (inline.value) el.style.setProperty(name, inline.value, inline.priority);
+  else el.style.removeProperty(name);
+}
+
+function claimVariable(
+  el: HTMLElement | SVGElement,
+  name: string,
+  owner: symbol,
+  value: string,
+): void {
+  let variables = ownedVariables.get(el);
+  if (!variables) {
+    variables = new Map();
+    ownedVariables.set(el, variables);
+  }
+  const current = readInline(el, name);
+  let variable = variables.get(name);
+  if (!variable) {
+    variable = { base: current, lastWritten: current, visible: false, owners: new Map() };
+    variables.set(name, variable);
+  } else if (!variable.visible || !sameInline(current, variable.lastWritten)) {
+    // A later external/one-shot write becomes the value restored after all owners leave.
+    variable.base = current;
+  }
+  variable.owners.delete(owner);
+  variable.owners.set(owner, value);
+  writeInline(el, name, { value, priority: '' });
+  variable.lastWritten = readInline(el, name);
+  variable.visible = true;
+}
+
+function releaseVariable(el: HTMLElement | SVGElement, name: string, owner: symbol): void {
+  const variables = ownedVariables.get(el);
+  const variable = variables?.get(name);
+  if (!variables || !variable?.owners.delete(owner)) return;
+
+  const current = readInline(el, name);
+  if (variable.visible && sameInline(current, variable.lastWritten)) {
+    const previous = Array.from(variable.owners.values()).at(-1);
+    const next = previous === undefined ? variable.base : { value: previous, priority: '' };
+    if (!sameInline(current, next)) writeInline(el, name, next);
+    variable.lastWritten = readInline(el, name);
+    variable.visible = variable.owners.size > 0;
+  } else {
+    variable.base = current;
+    variable.visible = false;
+  }
+  if (variable.owners.size === 0) variables.delete(name);
+  if (variables.size === 0) ownedVariables.delete(el);
+}
+
+export function createCSSVarScope(
+  el: HTMLElement | SVGElement,
+  prefix = DEFAULT_CSS_VAR_PREFIX,
+): CSSVarScope {
+  const owner = Symbol('css-variable-scope');
   let written: string[] = [];
 
   return {
-    apply(token: AliasToken): void {
+    apply(token: Partial<AliasToken>): void {
       const { vars } = transformToken(token, prefix);
-      for (const [name, value] of Object.entries(vars)) {
-        el.style.setProperty(name, value);
-      }
-      // 上一次写入、这一次不再出现的变量要清掉（否则切回 default 会残留 dark 的值）
       for (const name of written) {
-        if (!(name in vars)) el.style.removeProperty(name);
+        if (!Object.hasOwn(vars, name)) releaseVariable(el, name, owner);
+      }
+      for (const [name, value] of Object.entries(vars)) {
+        claimVariable(el, name, owner, value);
       }
       written = Object.keys(vars);
     },
     remove(): void {
-      for (const name of written) el.style.removeProperty(name);
+      for (const name of written) releaseVariable(el, name, owner);
       written = [];
     },
     get keys(): string[] {
@@ -178,9 +257,17 @@ export function createCSSVarScope(el: HTMLElement, prefix = DEFAULT_CSS_VAR_PREF
 
 /** 一次性写入（无后续移除需求的场景，如 SSR 后的客户端挂载） */
 export function applyCSSVar(
-  el: HTMLElement,
-  token: AliasToken,
+  el: HTMLElement | SVGElement,
+  token: Partial<AliasToken>,
   prefix = DEFAULT_CSS_VAR_PREFIX,
 ): void {
-  createCSSVarScope(el, prefix).apply(token);
+  for (const [name, value] of Object.entries(transformToken(token, prefix).vars)) {
+    el.style.setProperty(name, value);
+    const variable = ownedVariables.get(el)?.get(name);
+    if (variable) {
+      variable.base = readInline(el, name);
+      variable.lastWritten = variable.base;
+      variable.visible = false;
+    }
+  }
 }

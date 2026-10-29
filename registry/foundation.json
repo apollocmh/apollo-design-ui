@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T23:51:43.324Z",
+  "generatedAt": "2026-10-29T01:42:45.694Z",
   "sourceFacts": "dependencies.json（包定义） + scaffold-packages.mjs（dir/phase2Order/deps/poc/notDo） + components.json（消费者） + packages/*/src（规模度量）",
   "legend": {
     "status": "todo → analyzing → implementing → testing → verifying → completed（blocked 为旁路状态）",
@@ -635,7 +635,8 @@
   "summary": {
     "total": 13,
     "byStatus": {
-      "completed": 13
+      "completed": 12,
+      "testing": 1
     },
     "byLayer": {
       "L0": 3,
@@ -643,10 +644,10 @@
       "L2": 4,
       "测试": 1
     },
-    "completedCount": 13,
-    "remainingCount": 0,
-    "nextPackage": null,
-    "nextImplementable": null,
+    "completedCount": 12,
+    "remainingCount": 1,
+    "nextPackage": "@apollo-design/theme",
+    "nextImplementable": "@apollo-design/theme",
     "verifiedCount": 13,
     "buildPassingCount": 13,
     "openDecisionCount": 0
@@ -817,7 +818,7 @@
       "dependedOnBy": [
         "@apollo-design/test-utils"
       ],
-      "status": "completed",
+      "status": "testing",
       "pocStatus": "todo",
       "pocResult": null,
       "doneWhen": [
@@ -829,7 +830,7 @@
         "包级构建契约与 utils 一致（同属 build-output-contract 决策）"
       ],
       "dimensions": {
-        "api": "done",
+        "api": "in-progress",
         "impl": "done",
         "types": "done",
         "tests": "done",
@@ -848,20 +849,16 @@
       "layerNotes": "L4 n/a：只产出 CSS 变量与 Token，自身不渲染组件 DOM（R3）。L5/L6 n/a：无视觉语义。L2 由 vue.test.ts 与 css-var.test.ts 覆盖（Provider 挂载/卸载、theme 变更、CSS 变量写入与清理），它跑在 unit project 里 —— 分层看的是覆盖的关注点，不是跑在哪个 vitest project。",
       "blockedBy": [],
       "blockers": [],
-      "notes": "派生链与三算法逐字段对齐 antd 6.6.4（基准来自 antd 真实代码，15 个用例 × 536 字段）。CSS 变量命名与 @ant-design/cssinjs 的 token2CSSVar 同构，前缀默认 apollo。零运行时 CSS 产物 dist/tokens.css（4 套主题）+ 运行时注入路径（zero-runtime-mode 裁决 B）。Component Token 只提供类型与合并机制，70 组默认值属 ui 侧。",
+      "notes": "历史记录（截至2026-10-04）：派生链与三算法逐字段对齐 antd 6.6.4（基准来自 antd 真实代码，15 个用例 × 536 字段）。CSS 变量命名与 @ant-design/cssinjs 的 token2CSSVar 同构，前缀默认 apollo。零运行时 CSS 产物 dist/tokens.css（4 套主题）+ 运行时注入路径（zero-runtime-mode 裁决 B）。Component Token 只提供类型与合并机制，70 组默认值属 ui 侧。\n2026-10-29当前源码里程碑：完整包盘点，109运行/16类型场景与11条有原因负例、19真实发布浏览器、196发布消费与48实际Node SSR通过；1978关联源回归/完整根严格类型、Theme/UI新鲜构建及严格L7有独立证据。包自身实现已落地，ConfigProvider可写context/locale大组、Tree完整主题/行高及最终统一验收仍开放；status=testing不代表本轮基础包全部完成。详见docs/audit/evidence/theme-foundation-source-acceptance.json。",
       "verification": {
-        "verifiedAt": "2026-10-04",
+        "verifiedAt": "2026-10-29",
         "unit": {
           "projects": [
-            "unit",
-            "dom-contract",
-            "types",
-            "a11y",
-            "theme"
+            "unit"
           ],
-          "files": 8,
-          "tests": 110,
-          "passed": 110,
+          "files": 9,
+          "tests": 109,
+          "passed": 109,
           "failed": 0
         },
         "typecheck": {
@@ -869,10 +866,10 @@
           "errors": 0
         },
         "coverage": {
-          "statements": 99.15,
-          "branches": 93.28,
-          "functions": 98.04,
-          "lines": 99.56
+          "statements": 98.99,
+          "branches": 95.23,
+          "functions": 98.5,
+          "lines": 99.64
         },
         "thresholds": {
           "statements": 95,
@@ -882,10 +879,60 @@
         },
         "build": {
           "status": "passing",
-          "reason": null,
-          "verifiedAt": "2026-09-19"
+          "reason": "Fresh isolated Theme and UI builds; strict L7 after complete artifacts, public declaration/browser/SSR consumers passed.",
+          "verifiedAt": "2026-10-29"
         },
-        "contract": null
+        "contract": "docs/audit/evidence/theme-foundation-source-acceptance.json",
+        "currentAudit": {
+          "phase": "source-and-published-own-contracts-verified",
+          "packageFullyAccepted": false,
+          "completeInputAPI": false,
+          "componentAcceptedCount": 21,
+          "pending": [
+            "ConfigProvider complete shared group",
+            "Tree complete current-source unit",
+            "Applicable integrated visual/Docs/final whole-library gates"
+          ],
+          "pauseBoundary": "Finish current authorized batch, then pause."
+        },
+        "previousVerification": {
+          "verifiedAt": "2026-10-04",
+          "unit": {
+            "projects": [
+              "unit",
+              "dom-contract",
+              "types",
+              "a11y",
+              "theme"
+            ],
+            "files": 8,
+            "tests": 110,
+            "passed": 110,
+            "failed": 0
+          },
+          "typecheck": {
+            "status": "clean",
+            "errors": 0
+          },
+          "coverage": {
+            "statements": 99.15,
+            "branches": 93.28,
+            "functions": 98.04,
+            "lines": 99.56
+          },
+          "thresholds": {
+            "statements": 95,
+            "branches": 90,
+            "functions": 95,
+            "met": true
+          },
+          "build": {
+            "status": "passing",
+            "reason": null,
+            "verifiedAt": "2026-09-19"
+          },
+          "contract": null
+        }
       },
       "derived": {
         "implOrder": 3,
@@ -903,7 +950,7 @@
           "@apollo-design/ui"
         ],
         "srcFiles": 19,
-        "srcLines": 1980,
+        "srcLines": 2084,
         "exportDeclarations": 69
       }
     },

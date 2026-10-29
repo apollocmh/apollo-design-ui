@@ -1,9 +1,8 @@
 /**
  * @apollo-design/theme — Token 类型
  *
- * 命名与字段集合必须与 antd 6.6.4 完全一致（这是 L1/L2 兼容性契约的一部分）：
- *   Seed(34，不含 13 个预设色) → Map(140) → Alias(82 own) → Component(70 组)
- * 数字来自 registry/tokens.json（由 antd 产物提取），不是估算。
+ * Seed → Map → Alias → Component 的公开类型由 Apollo API 决定。
+ * 历史上游字段与默认值是回归证据，不限制独立发展的字段集合。
  *
  * 类型是「重新定义」而非复制：antd 的类型文件带大量 JSDoc，逐字搬运会让我们
  * 在自己的注释里说别人的话。这里只保留契约本身（名称 + 类型），
@@ -421,14 +420,14 @@ export type ComponentTokenMap = Record<string, Record<string, string | number>>;
 export type MappingAlgorithm = (seed: SeedToken, mapToken?: MapToken) => MapToken;
 
 export interface ThemeConfig {
-  token?: Partial<SeedToken & Record<string, string | number | boolean>>;
+  /** Known Seed/Map/Alias keys retain their value types; undefined is an omission. */
+  token?: Partial<AliasToken & Record<string, string | number | boolean>>;
+  /** Empty arrays use the default algorithm; nonempty arrays run in order. */
   algorithm?: MappingAlgorithm | MappingAlgorithm[];
   /** CSS 变量前缀。默认 `apollo`（已裁决：prefix-cls-default = A）。 */
   cssVarPrefix?: string;
   /** 组件级 token 覆盖，键为组件名 */
   components?: ComponentTokenMap;
-  /** antd 兼容开关：把前缀改回 `ant` */
-  prefixCls?: string;
 }
 
 /** getDesignToken 的完整输出 */

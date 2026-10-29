@@ -66,3 +66,5 @@ Descriptions 的稳定原生描述项、当前配置/十Token、所属attrs与la
 Space/Compact/Addon 的当前插槽、稳定内容身份、完整 separator 数据、紧凑上下文与主题作用域见[Space契约迁移](docs/migrations/space-contracts.md)；Grid/Row/Col 的原生样式、当前配置与响应式字段见[Grid契约迁移](docs/migrations/grid-contracts.md)。直接修正开发期错误行为，不新增内容回调兼容层；两单元已分别完成发布、视觉和Docs验收，Space关联Input窄链通过不代表完整Input API已验收。
 
 Flex的完整内容、当前gap与原生样式见[Flex契约迁移](docs/migrations/flex-contracts.md)；Alert/ErrorBoundary的内容、关闭流程与Vue错误恢复见[Alert契约迁移](docs/migrations/alert-contracts.md)；Layout家族的原生根、当前配置与Sider受控/响应式链见[Layout契约迁移](docs/migrations/layout-contracts.md)。三者与Space已统一验收，证据及剩余边界见[本批最终回执](docs/audit/evidence/space-flex-alert-layout-final-acceptance.json)。
+
+Theme的可写深响应式配置、同应用默认来源共享/跨应用与SSR隔离、mounted变量注入和可释放scope所有权，以及空算法/undefined覆盖、精确Alias类型和原生DOM引用target，集中见[Theme契约迁移](docs/migrations/theme-foundation-contracts.md)。开发期直接移除无消费的ThemeConfig.prefixCls；DOM类名沿用ConfigProvider顶层prefixCls，CSS变量名使用cssVarPrefix，不新增兼容通道。该源码里程碑不代表ConfigProvider/Tree完整单元或全库最终门禁已关闭。

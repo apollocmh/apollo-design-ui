@@ -9,7 +9,7 @@ export type DerivativeTokenWithOverride = MapToken & {
    * 允许 `undefined`：`ThemeConfig.token` 是 `Partial<...>`，
    * 显式的 `{ colorPrimary: undefined }` 是合法输入，语义上等于没传。
    */
-  override?: Record<string, string | number | boolean | undefined>;
+  override?: Partial<AliasToken & Record<string, string | number | boolean>>;
 };
 
 /**
@@ -24,16 +24,12 @@ export type DerivativeTokenWithOverride = MapToken & {
 export default function formatToken(derivativeToken: DerivativeTokenWithOverride): AliasToken {
   const { override, ...restToken } = derivativeToken;
 
-  const overrideTokens: Record<string, string | number | boolean | undefined> = { ...override };
-
-  for (const key of Object.keys(defaultSeedToken)) {
-    delete overrideTokens[key];
-  }
-
-  // 断言成 MapToken：显式传 `{ x: undefined }` 时 antd 的结果里 x 就是 undefined
-  // （已用 antd 真实代码核对 —— 见 purity.test.ts 的同名用例）。
-  // 类型上仍按「非 Seed 键已补齐」处理，否则下游每个字段都要写一次判空。
-  const mergedToken = { ...restToken, ...overrideTokens } as MapToken;
+  const overrideTokens = Object.fromEntries(
+    Object.entries(override ?? {}).filter(
+      ([key, value]) => value !== undefined && !Object.hasOwn(defaultSeedToken, key),
+    ),
+  );
+  const mergedToken: MapToken = { ...restToken, ...overrideTokens };
 
   const shadowBaseColor = new Color(mergedToken.colorShadow);
   const shadowBaseAlpha = shadowBaseColor.a;
@@ -59,7 +55,7 @@ export default function formatToken(derivativeToken: DerivativeTokenWithOverride
     mergedToken.motionDurationSlow = fastDuration;
   }
 
-  const aliasToken = {
+  const aliasToken: AliasToken = {
     ...mergedToken,
 
     // ============== 背景 ==============
@@ -208,5 +204,5 @@ export default function formatToken(derivativeToken: DerivativeTokenWithOverride
     ...overrideTokens,
   };
 
-  return aliasToken as AliasToken;
+  return aliasToken;
 }

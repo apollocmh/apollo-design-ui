@@ -1,0 +1,187 @@
+{
+  "status": "source-and-own-published-checkpoint",
+  "baseCommit": "d87f84c7ab3b6728f0a98b06fad3ec08852b4eea",
+  "scope": "Complete Theme own API/source; minimal CP dead-prefix propagation removal and Root source-writer fixtures. Other in-flight component/locale/CP implementations excluded from this isolated candidate.",
+  "implemented": [
+    "Deep writable config with Provider input isolation",
+    "App-scoped implicit context and SSR isolation",
+    "Mounted reactive injection enable/target/prefix and owned cleanup",
+    "CSS scope ownership/native priority restoration/one-shot interaction",
+    "Empty algorithm default, undefined omission, own prototype keys",
+    "Precise Alias values and default slot; removed dead ThemeConfig.prefixCls",
+    "Native nullable HTML/SVG targets and precisely typed sparse CSS-variable input"
+  ],
+  "verification": {
+    "sourceUnit": {
+      "passed": 109,
+      "files": 9,
+      "exitCode": 0
+    },
+    "sharedSource": {
+      "passed": 1978,
+      "files": 73,
+      "exitCode": 0,
+      "runtimeUnchangedByFinalTypeCorrections": true
+    },
+    "rootStrict": {
+      "exitCode": 0,
+      "diagnostics": 0,
+      "log": "/tmp/apollo-theme-checkpoint-final-strict.log"
+    },
+    "coverage": {
+      "lines": {
+        "total": 282,
+        "covered": 281,
+        "skipped": 0,
+        "pct": 99.64
+      },
+      "statements": {
+        "total": 299,
+        "covered": 296,
+        "skipped": 0,
+        "pct": 98.99
+      },
+      "functions": {
+        "total": 67,
+        "covered": 66,
+        "skipped": 0,
+        "pct": 98.5
+      },
+      "branches": {
+        "total": 168,
+        "covered": 160,
+        "skipped": 0,
+        "pct": 95.23
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "publishedTypes": {
+      "passed": true,
+      "scenarios": 16,
+      "reasonedNegativeDirectives": 11,
+      "nativeSFC": true,
+      "unsupportedNamedSlotRejected": true,
+      "firstPartySourceImports": 0,
+      "exitCode": 0,
+      "evidence": "theme-foundation-published-types.json"
+    },
+    "publishedBrowser": {
+      "passed": 19,
+      "errors": 0,
+      "exitCode": 0,
+      "evidence": "theme-foundation-published-browser.json"
+    },
+    "publishedConsumers": {
+      "passed": 196,
+      "exitCode": 0,
+      "raw": "/tmp/apollo-theme-isolated-published-writers196.json"
+    },
+    "actualNodeSSR": {
+      "source": 48,
+      "published": 48,
+      "exitCode": 0,
+      "browserGlobals": false
+    },
+    "freshBuilds": {
+      "theme": 0,
+      "ui": 0,
+      "primaryDistWritten": false,
+      "themeFinalLog": "/tmp/apollo-theme-checkpoint-final-build.log",
+      "uiLog": "/tmp/apollo-theme-isolated-ui-build.log"
+    },
+    "strictL7": {
+      "themeFailed": 0,
+      "themePending": 0,
+      "uiFailed": 0,
+      "uiPending": 0,
+      "manualBuildsActuallyExecuted": true,
+      "runnerNoBuildIsExplicit": true
+    },
+    "buildCostEvidence": "theme-foundation-build-costs.json"
+  },
+  "runtimeProvenance": {
+    "comparedRuntimeAndCssFiles": 1971,
+    "runtimeAndCssIdenticalToVerified196": true,
+    "declarationChangesAfterThatRun": [
+      "packages/theme/dist/index.d.mts",
+      "packages/theme/dist/index.d.ts"
+    ],
+    "newDeclarationsIndependentlyVerified": true
+  },
+  "rootFinalSourceFingerprints": {
+    "docs/audit/2026-10-29-theme-foundation-contract-audit.md": "aa37d2d303969f9c07bbad2b88cb70e3a336f70142f40070fe14f5b898b9afbd",
+    "docs/migrations/theme-foundation-contracts.md": "f0fd466c670fcbb62794648956a5c170510d6d47f4705431b56d7006e51a5154",
+    "packages/theme/README.md": "ba8dd3329bba8f232da12d10b2982cab64dabde3222489755fa5e8aa7ae3f0bf",
+    "packages/theme/src/__tests__/context-lifecycle.test.ts": "ce6c34798cb7ee19f29c4ec9ad8852337871ab275aed353e15febef62c82465c",
+    "packages/theme/src/__tests__/css-var-ownership.test.ts": "b64736f0db3fbe6ae6728cc47ee6d8efcbce5ac25f48291714b58e9735928273",
+    "packages/theme/src/__tests__/input-contracts.test.ts": "015668341c3744fcaf31416040de25a7b333eb8bcf057254c7964b9732331634",
+    "packages/theme/src/__tests__/purity.test.ts": "14851c3ff0ed73b2be71253210e6799921485c68e88305a8a760261537d9baaa",
+    "packages/theme/src/__tests__/types.test-d.ts": "c47b1cba46cfe98ec329f182e20f93fb502418d959514488a7f48edc05d72cba",
+    "packages/theme/src/alias.ts": "37ee700d450859d5490a31b5807b924525ec52be9cac53a2ff249ab1b74da55b",
+    "packages/theme/src/css-var.ts": "9791217cc19a31f861b0cdb0c0f5c7d907c2d480c3c23f9f2e81e450d33175ed",
+    "packages/theme/src/get-design-token.ts": "153ffde184b9b873ed2d227eb007be912be541e6509f1d0cc30437a883f78cbe",
+    "packages/theme/src/index.ts": "7227f7fd7b15d006763da68c0921699be771b7fe8dcfd558f353084971c36ed6",
+    "packages/theme/src/types.ts": "5878899580401d7f1ab3463e013ba4c228b34a464204042307b552c421507ed1",
+    "packages/theme/src/vue.ts": "13d526128ea11b85bc7528ce34aa76085ee505f9a6c17e7bc84ac455174e7837",
+    "tests/browser/fixtures/ThemeFoundation.mjs": "b35bb9d464606c0d658475c1cd8e0b2f3e0db9d16c5fe6d08a810ee33c477008",
+    "tests/browser/theme-foundation.mjs": "ece03dab300a2a7a3dc0bfefaae1470924c47c5b99972075871845964e372d5f",
+    "packages/ui/src/_internal/__tests__/theme-source-writers.test.ts": "affbd2cc2db26d7f90c3e90f68d113288fbf5899ab64faf4b0a431ff85dbfc20",
+    "tests/browser/theme-source-writers-ssr.mjs": "fe1e557a9b117ff78dc4f319d48ed625992ab3179b6a03d321f564a8ec452f26",
+    "tests/consumer/theme-foundation-types.mjs": "e6b22c8b6113c4e42c73880d86b9d6658f46a0f38364db18ef08af44f7479aa7",
+    "packages/ui/src/config-provider/hooks/use-theme.ts": "13b14e905062f9551585b3794369a25cd3654bdb648cf5893bd00b7f57fdfaaf"
+  },
+  "runtimeSourceFingerprints": {
+    "packages/theme/src/algorithms/compact.ts": "e26047995751be82951edb20fb34722419b0285995dc48bf67c0e2131e8369ff",
+    "packages/theme/src/algorithms/dark.ts": "372e058fdda671c4b9ac37faa5073755ae0679046a5495eefb938e5b52b1b9e1",
+    "packages/theme/src/algorithms/default.ts": "3fc1c699cf81a6013f1c74523630f51dcb218837eee00891b8d9915199aed424",
+    "packages/theme/src/algorithms/palettes.ts": "bd19e64231fda03275e96aec46b2a8b2b259e0925d75d03bc91bf2323d54bfdc",
+    "packages/theme/src/alias.ts": "37ee700d450859d5490a31b5807b924525ec52be9cac53a2ff249ab1b74da55b",
+    "packages/theme/src/css-var.ts": "9791217cc19a31f861b0cdb0c0f5c7d907c2d480c3c23f9f2e81e450d33175ed",
+    "packages/theme/src/get-design-token.ts": "153ffde184b9b873ed2d227eb007be912be541e6509f1d0cc30437a883f78cbe",
+    "packages/theme/src/index.ts": "7227f7fd7b15d006763da68c0921699be771b7fe8dcfd558f353084971c36ed6",
+    "packages/theme/src/seed.ts": "bd070377a92ab750772e291596a969aeb449904178b3d88b5ef60568e7827993",
+    "packages/theme/src/shared/color-map-token.ts": "d87a858c64100c83e2fb9f049888e9c52f7a5980c42fa9df5e09a99e452ff7f8",
+    "packages/theme/src/shared/common-map-token.ts": "b19e5a9a6b9a32af22491179de1d7ba5db1b9fc9fe3d3bd306dcc471d0097142",
+    "packages/theme/src/shared/control-height.ts": "3b6b7bd8bb21de5bc54f228dacfd9bd10896fd0628225cab2eed47a671089fe7",
+    "packages/theme/src/shared/font-map-token.ts": "72d6b53b826777e45426109433dd35f9facfe5b56deac167606ba9009a99d02b",
+    "packages/theme/src/shared/font-sizes.ts": "a30fcf101693285f871ea437b63c2fa02925eec070cafea830ec67b9f5a9770e",
+    "packages/theme/src/shared/get-alpha-color.ts": "5e6141565744a69d72f3f902ea055e69a9bd5abb71e3e864a82ab54f94e44e22",
+    "packages/theme/src/shared/radius.ts": "e1ee59801f552127c9faddb96e7dfc80a83d5f8a98b6cb1ec6c3a89d3c89b67d",
+    "packages/theme/src/shared/size-map-token.ts": "2fc948a9604eb59095f1b4cb1ebf2024393ea2e34a53f5468fa8bf70659f2664",
+    "packages/theme/src/types.ts": "5878899580401d7f1ab3463e013ba4c228b34a464204042307b552c421507ed1",
+    "packages/theme/src/vue.ts": "13d526128ea11b85bc7528ce34aa76085ee505f9a6c17e7bc84ac455174e7837"
+  },
+  "previousOwnerFreeze": {
+    "ownedSha256": "f3b316f881aee9db87fc322edf6b32493a2b6a1ead571bdf2fc9b70aa5823f9b",
+    "runtimeSha256": "a7af02f35dd59fdd38ecb6258b23da1ed89b0437f0cd3ab719e7b790a8a68b13",
+    "supersededOnlyForRootNativeTargetAndSparseInputTypeTests": true
+  },
+  "redEvidence": {
+    "ownerRuntimeFailed": 16,
+    "ownerRuntimePassed": 2,
+    "crossAppSSRFailed": 5,
+    "nativeTemplateRef": "/tmp/apollo-theme-isolated-published-types-red.json",
+    "oldCrossAppFixtureFailureCorrectedBySameAppHosts": "/tmp/apollo-theme-shared-regression/results.json"
+  },
+  "invalidAttempts": [
+    "First published-type harness counted explanatory comments as directives; corrected to actual line directives before product red.",
+    "An early UI L7 reader ran before UI declaration/CSS generation completed; final gates ran after complete build. Its budget failure was real and handled separately.",
+    "The proposed raw-variable method was withdrawn before copying/staging; final API reuses sparse token input and the existing owner implementation."
+  ],
+  "remaining": {
+    "componentAcceptedCount": 21,
+    "packageFullyAccepted": false,
+    "pending": [
+      "ConfigProvider complete writable-context/locale/form/icons/native-scope group",
+      "Tree complete theme/height and remaining API audit",
+      "Other current Divider/Collapse/Input units",
+      "Applicable integrated visual/Docs and final same-commit whole-library gates"
+    ],
+    "pauseBoundary": "Finish current authorized subtasks and checkpoint commits, then pause; no next batch."
+  }
+}

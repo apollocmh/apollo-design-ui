@@ -1,0 +1,397 @@
+{
+  "passed": true,
+  "mode": "published",
+  "builds": false,
+  "results": [
+    {
+      "name": "Node SSR with injection has no DOM globals or mounted side effects",
+      "passed": true
+    },
+    {
+      "name": "hydration applies the current scoped variables and actual computed styles",
+      "passed": true
+    },
+    {
+      "name": "disable restores original inline value and priority while preserving focus",
+      "passed": true
+    },
+    {
+      "name": "reactivation and target replacement release only the previous target",
+      "passed": true
+    },
+    {
+      "name": "nullable native target restores the root scope and retains the business instance",
+      "passed": true
+    },
+    {
+      "name": "native SVG target receives actual painted variables and releases them on replacement",
+      "passed": true
+    },
+    {
+      "name": "context deep writes update CSS and computed typography without mutating props",
+      "passed": true
+    },
+    {
+      "name": "effective config prefix changes remove old variables without child remounts",
+      "passed": true
+    },
+    {
+      "name": "later whole/deep prop updates regain authority over runtime overrides",
+      "passed": true
+    },
+    {
+      "name": "repeated enable/target switches and conditional slots keep one live business instance",
+      "passed": true
+    },
+    {
+      "name": "older owner removal preserves newer",
+      "value": "#aa3300",
+      "expected": "#aa3300",
+      "passed": true
+    },
+    {
+      "name": "last owner restores original inline",
+      "value": "#663399",
+      "expected": "#663399",
+      "passed": true
+    },
+    {
+      "name": "last owner restores important",
+      "value": "important",
+      "expected": "important",
+      "passed": true
+    },
+    {
+      "name": "newer owner removal restores older",
+      "value": "#0055aa",
+      "expected": "#0055aa",
+      "passed": true
+    },
+    {
+      "name": "cleanup retains a later external write",
+      "value": "#228844",
+      "expected": "#228844",
+      "passed": true
+    },
+    {
+      "name": "equal one-shot value survives owner cleanup",
+      "value": "#0055aa",
+      "expected": "#0055aa",
+      "passed": true
+    },
+    {
+      "name": "repeated one-shot writes remain a baseline",
+      "value": "#aa3300",
+      "expected": "#aa3300",
+      "passed": true
+    },
+    {
+      "name": "unmount releases variables and remount creates exactly one fresh child",
+      "passed": true
+    },
+    {
+      "name": "hydration and lifecycle run without browser warnings or errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "failure": null,
+  "unchanged": true,
+  "fingerprints": [
+    {
+      "file": "packages/theme/dist/index.mjs",
+      "before": "1f028a1895431182e14b02c101faf9642a8bc599d9c493e13a33ed946dbc3123",
+      "after": "1f028a1895431182e14b02c101faf9642a8bc599d9c493e13a33ed946dbc3123"
+    },
+    {
+      "file": "packages/theme/dist/alias.mjs",
+      "before": "a227e30d88eee430794c90e7c1d0450e81acb5d633a8abfc48755fc463c43566",
+      "after": "a227e30d88eee430794c90e7c1d0450e81acb5d633a8abfc48755fc463c43566"
+    },
+    {
+      "file": "packages/utils/dist/index.mjs",
+      "before": "f9f2fd61bfec5c7eebceb19016faecc16c66a674fb366673cd1edcb3132d6cd3",
+      "after": "f9f2fd61bfec5c7eebceb19016faecc16c66a674fb366673cd1edcb3132d6cd3"
+    },
+    {
+      "file": "packages/utils/dist/brand.mjs",
+      "before": "c6685f1e345bca05f8c89d67fe2b735598b5fea2c0fae19b07046ff76e73b043",
+      "after": "c6685f1e345bca05f8c89d67fe2b735598b5fea2c0fae19b07046ff76e73b043"
+    },
+    {
+      "file": "packages/utils/dist/children/to-array.mjs",
+      "before": "7458beeb634b4c9ef88198e0f9725c8993e67f6d5ac4711af049c837cbeeb9ff",
+      "after": "7458beeb634b4c9ef88198e0f9725c8993e67f6d5ac4711af049c837cbeeb9ff"
+    },
+    {
+      "file": "packages/utils/dist/dev-warning.mjs",
+      "before": "0eb76c8b0d3930b4e2c9a8cbf0954500cfbb463abb5cb3b68fac7e90c53feec3",
+      "after": "0eb76c8b0d3930b4e2c9a8cbf0954500cfbb463abb5cb3b68fac7e90c53feec3"
+    },
+    {
+      "file": "packages/utils/dist/env.mjs",
+      "before": "1a271d309e00087a5c5d41a0ef67750038038786ee1de06b416e125fc7730d9e",
+      "after": "1a271d309e00087a5c5d41a0ef67750038038786ee1de06b416e125fc7730d9e"
+    },
+    {
+      "file": "packages/utils/dist/warning.mjs",
+      "before": "d88d848452ecbf8e0ee7624994bf5f90c0cb766ef5d7be1e6c95a41461b4f065",
+      "after": "d88d848452ecbf8e0ee7624994bf5f90c0cb766ef5d7be1e6c95a41461b4f065"
+    },
+    {
+      "file": "packages/utils/dist/dom/is-editable-target.mjs",
+      "before": "6bf83908737afd03508420017420891675a846152472caecc50a5783c9b17fa8",
+      "after": "6bf83908737afd03508420017420891675a846152472caecc50a5783c9b17fa8"
+    },
+    {
+      "file": "packages/utils/dist/dom-attrs.mjs",
+      "before": "119f430e6349e32e5a734e98d3b6cfa5f58f0c8d32719cd6211ecb73467a3e69",
+      "after": "119f430e6349e32e5a734e98d3b6cfa5f58f0c8d32719cd6211ecb73467a3e69"
+    },
+    {
+      "file": "packages/utils/dist/event-name.mjs",
+      "before": "fb3695943a5fa2a5faaf089d60052bd86ec09030fd05ec6f89b52f2460d9320d",
+      "after": "fb3695943a5fa2a5faaf089d60052bd86ec09030fd05ec6f89b52f2460d9320d"
+    },
+    {
+      "file": "packages/utils/dist/pick-attrs-allowlist.mjs",
+      "before": "779bacb3fdb89879f54622db877392f04653392137932345448f07c241f40680",
+      "after": "779bacb3fdb89879f54622db877392f04653392137932345448f07c241f40680"
+    },
+    {
+      "file": "packages/utils/dist/is.mjs",
+      "before": "b35b0618c3bacfa560ceb2704af7376c00f7e86c229e8dc3adc45b17a048beb6",
+      "after": "b35b0618c3bacfa560ceb2704af7376c00f7e86c229e8dc3adc45b17a048beb6"
+    },
+    {
+      "file": "packages/utils/dist/is-equal.mjs",
+      "before": "f0c3a7453cf36c7ad2280709e1ad23d81d25d39325ad8688ab965688370220f8",
+      "after": "f0c3a7453cf36c7ad2280709e1ad23d81d25d39325ad8688ab965688370220f8"
+    },
+    {
+      "file": "packages/utils/dist/key-code.mjs",
+      "before": "28e45edf8a66fa6a98d01a1aa587ae2613f390131e06c0538cdc5f405874a5b4",
+      "after": "28e45edf8a66fa6a98d01a1aa587ae2613f390131e06c0538cdc5f405874a5b4"
+    },
+    {
+      "file": "packages/utils/dist/dom/can-use-dom.mjs",
+      "before": "cf77d6f36542e4e4158c066fbe9c04f9ef9c032655f48b8ef5fc7ce7966ad64f",
+      "after": "cf77d6f36542e4e4158c066fbe9c04f9ef9c032655f48b8ef5fc7ce7966ad64f"
+    },
+    {
+      "file": "packages/utils/dist/merge-props.mjs",
+      "before": "20bb2d6732f9d74cca05e7e2fd0437069e2cffd1536c96ac0d501facc54d09ad",
+      "after": "20bb2d6732f9d74cca05e7e2fd0437069e2cffd1536c96ac0d501facc54d09ad"
+    },
+    {
+      "file": "packages/utils/dist/object.mjs",
+      "before": "238a01587ab0fe9403750a047665ec09a3d0b4d70baa558c0c80a3ea347c3846",
+      "after": "238a01587ab0fe9403750a047665ec09a3d0b4d70baa558c0c80a3ea347c3846"
+    },
+    {
+      "file": "packages/utils/dist/omit.mjs",
+      "before": "1676973e873c5fff70d80ad50fa319138ea907b2d15cd53e629e53b015084488",
+      "after": "1676973e873c5fff70d80ad50fa319138ea907b2d15cd53e629e53b015084488"
+    },
+    {
+      "file": "packages/utils/dist/pick-attrs.mjs",
+      "before": "fedcd701f266042de05d7c2e376dc5d1f04249ca49a05b123e700bcb345a4688",
+      "after": "fedcd701f266042de05d7c2e376dc5d1f04249ca49a05b123e700bcb345a4688"
+    },
+    {
+      "file": "packages/utils/dist/raf.mjs",
+      "before": "83c31c5cf67995d4414e2f1bbbacff812f96cc8ba5111405ddb1aa2c0f7403f2",
+      "after": "83c31c5cf67995d4414e2f1bbbacff812f96cc8ba5111405ddb1aa2c0f7403f2"
+    },
+    {
+      "file": "packages/utils/dist/ref.mjs",
+      "before": "c3716084dcdfd810e060e025cde8c4c0d1f89cadd01caadfa046263d1d958443",
+      "after": "c3716084dcdfd810e060e025cde8c4c0d1f89cadd01caadfa046263d1d958443"
+    },
+    {
+      "file": "packages/utils/dist/throttle.mjs",
+      "before": "0028400d301a26b15e28bce0781d606ecd080e4b1edc0713fc92b9eb9cd09fbb",
+      "after": "0028400d301a26b15e28bce0781d606ecd080e4b1edc0713fc92b9eb9cd09fbb"
+    },
+    {
+      "file": "packages/utils/dist/throttle-by-animation-frame.mjs",
+      "before": "0e111cb2337ad244f17579790af53e2b9b5236ef6d5af19c4165640c212212ca",
+      "after": "0e111cb2337ad244f17579790af53e2b9b5236ef6d5af19c4165640c212212ca"
+    },
+    {
+      "file": "packages/utils/dist/to-list.mjs",
+      "before": "055f598b78438003b815a4969a7b3be0be2d43efe4182c52bdbbe333119160fc",
+      "after": "055f598b78438003b815a4969a7b3be0be2d43efe4182c52bdbbe333119160fc"
+    },
+    {
+      "file": "packages/utils/dist/dom/contains.mjs",
+      "before": "8e633ddccf860f443ec78a6ee0fc921a0a0701cd8c70d5c52c1d4d7cb0929006",
+      "after": "8e633ddccf860f443ec78a6ee0fc921a0a0701cd8c70d5c52c1d4d7cb0929006"
+    },
+    {
+      "file": "packages/utils/dist/dom/get-scroll.mjs",
+      "before": "83b2e6cc4ebe81a92e8a7b2fe6c2cfda22ff5456a44c788268bb8bd883038126",
+      "after": "83b2e6cc4ebe81a92e8a7b2fe6c2cfda22ff5456a44c788268bb8bd883038126"
+    },
+    {
+      "file": "packages/utils/dist/dom/is-visible.mjs",
+      "before": "78fb5ad051c3a2e53d4712fe48a795a1176ffa9588ec68daabe8dc5437c8cc45",
+      "after": "78fb5ad051c3a2e53d4712fe48a795a1176ffa9588ec68daabe8dc5437c8cc45"
+    },
+    {
+      "file": "packages/utils/dist/color/color.mjs",
+      "before": "b2a2e23c0504761f63aa66f4c153576954a98b375e4b666a4d7a9374fe1f9248",
+      "after": "b2a2e23c0504761f63aa66f4c153576954a98b375e4b666a4d7a9374fe1f9248"
+    },
+    {
+      "file": "packages/utils/dist/observers/use-mutation-observer.mjs",
+      "before": "811168837f44893f90d6fcf8429182fa2d6d087e062b5964acb99cbd7f4a3af1",
+      "after": "811168837f44893f90d6fcf8429182fa2d6d087e062b5964acb99cbd7f4a3af1"
+    },
+    {
+      "file": "packages/utils/dist/dom/active-element.mjs",
+      "before": "1e3f40ad9884911b8d48a4ece67dd9122f07fb5dd6cfe2ae86939a9dc41e9a95",
+      "after": "1e3f40ad9884911b8d48a4ece67dd9122f07fb5dd6cfe2ae86939a9dc41e9a95"
+    },
+    {
+      "file": "packages/utils/dist/color/generate.mjs",
+      "before": "882c137b2c3e1f5af6ae5208a3a0b125420353275e071f36bc78cb1a2ef502a1",
+      "after": "882c137b2c3e1f5af6ae5208a3a0b125420353275e071f36bc78cb1a2ef502a1"
+    },
+    {
+      "file": "packages/utils/dist/dom/get-element.mjs",
+      "before": "083babbf51b6afe871c0cc1f31ce8acd24da947eb013ef9fcd4a162a1d4cb56d",
+      "after": "083babbf51b6afe871c0cc1f31ce8acd24da947eb013ef9fcd4a162a1d4cb56d"
+    },
+    {
+      "file": "packages/utils/dist/dom/focus.mjs",
+      "before": "246e1d697487fa0d491f86fce70cc0036debb2bec5db133ddee862180e7cdd8b",
+      "after": "246e1d697487fa0d491f86fce70cc0036debb2bec5db133ddee862180e7cdd8b"
+    },
+    {
+      "file": "packages/utils/dist/hooks/use-id.mjs",
+      "before": "285af16c66e1a168913b25c37703e991722cdce42010f30ade4fbea840d4b26f",
+      "after": "285af16c66e1a168913b25c37703e991722cdce42010f30ade4fbea840d4b26f"
+    },
+    {
+      "file": "packages/utils/dist/dom/get-scroll-bar-size.mjs",
+      "before": "91147ab842d85182b1011ed73923f7524b23d0761ee5b30994854d9743648de4",
+      "after": "91147ab842d85182b1011ed73923f7524b23d0761ee5b30994854d9743648de4"
+    },
+    {
+      "file": "packages/utils/dist/dom/style-checker.mjs",
+      "before": "b3c9bbd43874b9377705f10cb5f89f2d39e0c17b76613c9999ff355a8b361c30",
+      "after": "b3c9bbd43874b9377705f10cb5f89f2d39e0c17b76613c9999ff355a8b361c30"
+    },
+    {
+      "file": "packages/utils/dist/observers/use-resize-observer.mjs",
+      "before": "6ce24d5059dc20d332e4d3428a92644c6f63f16bdb375975fcdcdb1852aa435e",
+      "after": "6ce24d5059dc20d332e4d3428a92644c6f63f16bdb375975fcdcdb1852aa435e"
+    },
+    {
+      "file": "packages/utils/dist/dom/update-css.mjs",
+      "before": "ffb90c7a7b69164c14f20677080fafb17ceb1fd22e596167723687e47d6dc982",
+      "after": "ffb90c7a7b69164c14f20677080fafb17ceb1fd22e596167723687e47d6dc982"
+    },
+    {
+      "file": "packages/utils/dist/hooks/use-controlled-value.mjs",
+      "before": "10c8a516bb7e4e2c3e3ce012d892ad4692d210a45eca75fa1dbd40d433023e6f",
+      "after": "10c8a516bb7e4e2c3e3ce012d892ad4692d210a45eca75fa1dbd40d433023e6f"
+    },
+    {
+      "file": "packages/utils/dist/hooks/use-delay-state.mjs",
+      "before": "ed72065239e820be66b04a131f37f06f367eeaa791e528946f66033b6094d6bd",
+      "after": "ed72065239e820be66b04a131f37f06f367eeaa791e528946f66033b6094d6bd"
+    },
+    {
+      "file": "packages/utils/dist/hooks/use-safe-state.mjs",
+      "before": "05ca792a2d20addcf60a0f39574e6476528ac2a942989893467f338d35bfcb68",
+      "after": "05ca792a2d20addcf60a0f39574e6476528ac2a942989893467f338d35bfcb68"
+    },
+    {
+      "file": "packages/utils/dist/hooks/use-update-effect.mjs",
+      "before": "6d8e4634f7fcf06bffb8e072744847df89da100240ace5395c674bc35a3599b8",
+      "after": "6d8e4634f7fcf06bffb8e072744847df89da100240ace5395c674bc35a3599b8"
+    },
+    {
+      "file": "packages/theme/dist/seed.mjs",
+      "before": "0c333b3eb2d9c6808f6d349a3fb18f9416890b8acad241a1e13b66f256790736",
+      "after": "0c333b3eb2d9c6808f6d349a3fb18f9416890b8acad241a1e13b66f256790736"
+    },
+    {
+      "file": "packages/theme/dist/shared/get-alpha-color.mjs",
+      "before": "3ca225a430770f339eecd3aed8f5437474a66884cbab7ec706621d1dcfa7c581",
+      "after": "3ca225a430770f339eecd3aed8f5437474a66884cbab7ec706621d1dcfa7c581"
+    },
+    {
+      "file": "packages/theme/dist/css-var.mjs",
+      "before": "b9fc3793d6889424561b8d8c20bf9db807b6fb56ed4c235b0e406afaee8d8b52",
+      "after": "b9fc3793d6889424561b8d8c20bf9db807b6fb56ed4c235b0e406afaee8d8b52"
+    },
+    {
+      "file": "packages/theme/dist/get-design-token.mjs",
+      "before": "6782de4b81f9eb8ad0c2aa1afd376dcfc81e0cfd728afa8a4271a819baefa281",
+      "after": "6782de4b81f9eb8ad0c2aa1afd376dcfc81e0cfd728afa8a4271a819baefa281"
+    },
+    {
+      "file": "packages/theme/dist/algorithms/compact.mjs",
+      "before": "2045775fb66eda2143b30cd1e7b5747c799a3421e43b2e1b9b21b16c0a2917bf",
+      "after": "2045775fb66eda2143b30cd1e7b5747c799a3421e43b2e1b9b21b16c0a2917bf"
+    },
+    {
+      "file": "packages/theme/dist/shared/control-height.mjs",
+      "before": "e3d97c7b984027e680db498bc777adf006d842b70edd8f1f73d6cf75edd428c2",
+      "after": "e3d97c7b984027e680db498bc777adf006d842b70edd8f1f73d6cf75edd428c2"
+    },
+    {
+      "file": "packages/theme/dist/shared/font-map-token.mjs",
+      "before": "293255f6c33fb707eb0d0611d8ae89b0f4d6de386b2bd66a7f41be083145d114",
+      "after": "293255f6c33fb707eb0d0611d8ae89b0f4d6de386b2bd66a7f41be083145d114"
+    },
+    {
+      "file": "packages/theme/dist/shared/font-sizes.mjs",
+      "before": "8283039c78a0332f1c39a5d4802d879669dbab056f48d2393a52db35e818bb6a",
+      "after": "8283039c78a0332f1c39a5d4802d879669dbab056f48d2393a52db35e818bb6a"
+    },
+    {
+      "file": "packages/theme/dist/shared/size-map-token.mjs",
+      "before": "9e5a6a9ab7be8d7043dd6d799f217b3626935429d185fa805d6e4b7204fa1aa7",
+      "after": "9e5a6a9ab7be8d7043dd6d799f217b3626935429d185fa805d6e4b7204fa1aa7"
+    },
+    {
+      "file": "packages/theme/dist/algorithms/default.mjs",
+      "before": "d4e6cc6655af9d9654ef0bb4030f4d0a4256d6540bab0a3181fb2d65936f9fcb",
+      "after": "d4e6cc6655af9d9654ef0bb4030f4d0a4256d6540bab0a3181fb2d65936f9fcb"
+    },
+    {
+      "file": "packages/theme/dist/shared/color-map-token.mjs",
+      "before": "0563012b35cdaf8a162aecca2e4920b0b3ebaecd19f04f66f8efc83ab6db6baf",
+      "after": "0563012b35cdaf8a162aecca2e4920b0b3ebaecd19f04f66f8efc83ab6db6baf"
+    },
+    {
+      "file": "packages/theme/dist/shared/common-map-token.mjs",
+      "before": "4bcd6e647c21092b100045284c45cdfd850ce02405ec74d508e9eac15cf7e686",
+      "after": "4bcd6e647c21092b100045284c45cdfd850ce02405ec74d508e9eac15cf7e686"
+    },
+    {
+      "file": "packages/theme/dist/shared/radius.mjs",
+      "before": "ca16671bd90ebdf57fe128e9c955e04099db16702371bfe95f428ca5b9017812",
+      "after": "ca16671bd90ebdf57fe128e9c955e04099db16702371bfe95f428ca5b9017812"
+    },
+    {
+      "file": "packages/theme/dist/algorithms/palettes.mjs",
+      "before": "0652d0ca83e846fd10a194d8792381136396d674723986feb485e5c4f095fdb2",
+      "after": "0652d0ca83e846fd10a194d8792381136396d674723986feb485e5c4f095fdb2"
+    },
+    {
+      "file": "packages/theme/dist/algorithms/dark.mjs",
+      "before": "ea61b82e1091ef57827fadb3058251f6202e4db6dd425a35452d38d60a970bec",
+      "after": "ea61b82e1091ef57827fadb3058251f6202e4db6dd425a35452d38d60a970bec"
+    },
+    {
+      "file": "packages/theme/dist/vue.mjs",
+      "before": "fcedd15c531d9c184d9fff100692282c39588e9da0a22556b055915e3979c357",
+      "after": "fcedd15c531d9c184d9fff100692282c39588e9da0a22556b055915e3979c357"
+    }
+  ]
+}

@@ -22,28 +22,25 @@ export const algorithms = {
 /**
  * 计算完整 Token。**纯函数**：同一入参必得同一出参，不读全局状态、不碰 DOM。
  *
- * 与 antd 的 `theme.getDesignToken()` 契约等价。实现上复现了
- * `@ant-design/cssinjs` 的两行胶水（已核对 cssinjs@2.1.2 源码）：
- *
- *   derivativeToken = algorithms.reduce((result, fn) => fn(seed, result), undefined)
- *   token           = formatToken({ ...derivativeToken, override: config.token })
- *
- * 之所以要复现而不是照抄：那两行属于 React 生态包，本项目禁止依赖（AGENTS.md H6）。
- * 复现的依据写在 `registry/tools/gen-theme-baseline.mjs` 的文件头。
+ * 未指定算法或给出空数组时使用默认算法。非空数组把前一项 Map 传给后一项。
+ * undefined 覆盖等同省略，避免合法 Partial 输入破坏完整 AliasToken 返回值。
+ * 历史算法对照仍由 baseline.test.ts 保留，不定义 Apollo 的输入契约。
  */
 export function getDesignToken(config: ThemeConfig = {}): AliasToken {
-  const list: MappingAlgorithm[] = config.algorithm
-    ? Array.isArray(config.algorithm)
-      ? config.algorithm
-      : [config.algorithm]
-    : [defaultAlgorithm];
+  const list: MappingAlgorithm[] = Array.isArray(config.algorithm)
+    ? config.algorithm
+    : [config.algorithm ?? defaultAlgorithm];
+  const [first = defaultAlgorithm, ...following] = list;
 
-  const seed: SeedToken = { ...defaultSeedToken, ...config.token };
+  const overrides = Object.fromEntries(
+    Object.entries(config.token ?? {}).filter(([, value]) => value !== undefined),
+  );
+  const seed: SeedToken = { ...defaultSeedToken, ...overrides };
 
-  const derivativeToken = list.reduce<MapToken | undefined>(
+  const derivativeToken = following.reduce<MapToken>(
     (result, fn) => fn(seed, result),
-    undefined,
-  ) as MapToken;
+    first(seed, undefined),
+  );
 
   return formatToken({ ...derivativeToken, override: config.token });
 }

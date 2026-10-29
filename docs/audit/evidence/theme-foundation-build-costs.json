@@ -1,0 +1,84 @@
+{
+  "sourceBase": "d87f84c7",
+  "runtimeCollectionSha256": "a7af02f35dd59fdd38ecb6258b23da1ed89b0437f0cd3ab719e7b790a8a68b13",
+  "reason": "Writable deep context, per-app/SSR isolation and owned CSS variable lifecycle; user permits measured functional growth, no byte-chasing optimization.",
+  "fullKb": 2110.0029296875,
+  "changed": [
+    {
+      "id": "button",
+      "beforeKb": 41,
+      "afterKb": 42,
+      "actualBytes": 42646,
+      "actualKb": 41.646484375,
+      "ratio": 0.019737642914632356
+    },
+    {
+      "id": "flex",
+      "beforeKb": 24,
+      "afterKb": 25,
+      "actualBytes": 24909,
+      "actualKb": 24.3251953125,
+      "ratio": 0.011528512577043038
+    },
+    {
+      "id": "image",
+      "beforeKb": 80,
+      "afterKb": 81,
+      "actualBytes": 82426,
+      "actualKb": 80.494140625,
+      "ratio": 0.03814882884400616
+    },
+    {
+      "id": "layout",
+      "beforeKb": 34,
+      "afterKb": 35,
+      "actualBytes": 35237,
+      "actualKb": 34.4111328125,
+      "ratio": 0.016308571105916155
+    },
+    {
+      "id": "layout-sider",
+      "beforeKb": 34,
+      "afterKb": 35,
+      "actualBytes": 35237,
+      "actualKb": 34.4111328125,
+      "ratio": 0.016308571105916155
+    },
+    {
+      "id": "skeleton",
+      "beforeKb": 37,
+      "afterKb": 38,
+      "actualBytes": 38444,
+      "actualKb": 37.54296875,
+      "ratio": 0.017792851479860393
+    },
+    {
+      "id": "space",
+      "beforeKb": 33,
+      "afterKb": 34,
+      "actualBytes": 33869,
+      "actualKb": 33.0751953125,
+      "ratio": 0.015675426250426377
+    },
+    {
+      "id": "spin",
+      "beforeKb": 34,
+      "afterKb": 35,
+      "actualBytes": 35296,
+      "actualKb": 34.46875,
+      "ratio": 0.016335877791935086
+    },
+    {
+      "id": "statistic",
+      "beforeKb": 43,
+      "afterKb": 44,
+      "actualBytes": 44973,
+      "actualKb": 43.9189453125,
+      "ratio": 0.020814637124226446
+    }
+  ],
+  "unchangedEntryCount": 64,
+  "allOriginalMeasuredKbPreserved": true,
+  "maxRatioOfFullUnchanged": 0.3,
+  "fullMeasurement": "/tmp/apollo-theme-isolated-budget-before.json"
+}

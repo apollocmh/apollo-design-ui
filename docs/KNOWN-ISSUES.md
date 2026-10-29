@@ -703,3 +703,9 @@ Descriptions、Breadcrumb、Timeline、Grid的完整清单已核对并统一验�
 当前完整交付21/72、其余51组件仍开放；987/1704视觉批准、717待验收。Space关联Input当前主题/尺寸/style/autoSize窄链完成，Input完整公开API仍open；Theme来源专项不代表13基础包逐包完成，全库最终同一提交门禁仍待执行。本地Docs通过不等同已经部署，最终线上回执另记。详见[本批最终范围与证据](audit/evidence/space-flex-alert-layout-final-acceptance.json)。
 
 本批线上交付完成：`ea36bd64` 的Docs部署40790318839成功；CI严格类型/Docs161及全部包/L7通过，真实线上56/56与中英文21/72计数通过，错误零。38个既有Demo深链接404→SPA恢复单独记录，不掩盖其他网络或运行错误。见[正式线上回执](audit/evidence/space-flex-alert-layout-docs-publication.json)。
+
+### 2026-10-29 · Theme完整源码及自身发布消费里程碑
+
+完整盘点19源码/56根导出后，成组修复上下文深写与app/SSR隔离、Provider动态启停/目标/前缀、SSR副作用、多scope所有权、空算法/undefined覆盖和精确类型；直接移除无消费的theme.prefixCls。发布模板复核同时补齐原生DOM ref的null声明，未增加新的运行时行为。109运行、16类型场景/11负例、19真实发布浏览器、196消费与48 Node SSR通过；1978关联源回归、根严格类型及新鲜Theme/UI构建/L7分别有证据。仅9条体积预算各按实测增加1KiB，64条、历史测量与30%全量占比保持。
+
+本条记录源码及包自身消费，不宣称整个Theme/ConfigProvider/Tree整改单元或全库已完成。组件完整交付仍21/72，其余51与13基础包当前完整复核继续；CP/locale/form-core/icons关联链与Divider/Collapse/Input仍实施中。详见[范围、红绿与剩余边界](audit/evidence/theme-foundation-source-acceptance.json)。

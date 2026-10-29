@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, it } from 'vitest';
+import { h } from 'vue';
 import type { AliasToken, MappingAlgorithm, MapToken, SeedToken, ThemeConfig } from '../index';
 import {
   compactAlgorithm,
@@ -6,7 +7,9 @@ import {
   darkAlgorithm,
   defaultAlgorithm,
   defaultSeedToken,
+  formatToken,
   getDesignToken,
+  type ThemeProvider,
   token2CSSVar,
   transformToken,
 } from '../index';
@@ -41,6 +44,65 @@ describe('theme 类型契约', () => {
     >();
   });
 
+  it('Seed、Alias 和未知扩展保留各自的值类型，undefined 表示省略', () => {
+    const config: ThemeConfig = {
+      token: {
+        fontSize: 18,
+        colorPrimaryBg: '#ddeeff',
+        fontHeight: 26,
+        motion: false,
+        customLength: 9,
+        customEnabled: true,
+        colorText: undefined,
+      },
+    };
+    expectTypeOf(getDesignToken(config)).toMatchTypeOf<AliasToken>();
+    expectTypeOf(formatToken(defaultAlgorithm(defaultSeedToken))).toMatchTypeOf<AliasToken>();
+  });
+
+  it('负例：已知 Alias 键不能借扩展索引签名接收错误值', () => {
+    // @ts-expect-error 已知颜色 Alias 是 string；boolean 仅用于布尔 Token 或未知扩展。
+    const badColor: ThemeConfig = { token: { colorPrimaryBg: false } };
+    // @ts-expect-error 已知字号 Alias 是 number，不能当作未知扩展的 string。
+    const badHeight: ThemeConfig = { token: { fontHeight: 'large' } };
+    const badOverride = () => {
+      return formatToken({
+        ...defaultAlgorithm(defaultSeedToken),
+        override: {
+          // @ts-expect-error 直接 Map → Alias 覆盖也必须保持已知颜色字段的类型。
+          colorPrimaryBg: false,
+        },
+      });
+    };
+    void [badColor, badHeight, badOverride];
+  });
+
+  it('负例：DOM 类名前缀不属于纯主题派生配置', () => {
+    // @ts-expect-error 无消费的 theme.prefixCls 已移除；DOM 前缀使用 ConfigProvider 顶层 prefixCls。
+    const bad: ThemeConfig = { prefixCls: 'brand' };
+    const valid: ThemeConfig = { cssVarPrefix: 'brand', token: { colorPrimary: '#123456' } };
+    void [bad, valid];
+  });
+
+  it('ThemeProvider target 接受原生 Vue DOM 引用的空值', () => {
+    type Target = InstanceType<typeof ThemeProvider>['$props']['target'];
+    const initial: Target = null;
+    const mounted: Target = document.createElement('div');
+    const svg: Target = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    createCSSVarScope(svg);
+    // @ts-expect-error target 只能是 HTMLElement、null 或省略，不能传任意布尔值。
+    const invalid: Target = false;
+    void [initial, mounted, svg, invalid];
+  });
+
+  it('ThemeProvider 只公开无业务 scope 的 default 内容槽', () => {
+    type Slots = InstanceType<typeof ThemeProvider>['$slots'];
+    const valid: Slots = { default: () => [h('span'), 'text', 0, false] };
+    // @ts-expect-error header 不是运行时支持的具名槽，不能由宽泛 Slots 接受。
+    const invalid: Slots['header'] = () => [];
+    void [valid, invalid];
+  });
+
   it('token2CSSVar 返回 string', () => {
     expectTypeOf(token2CSSVar('colorPrimary')).toEqualTypeOf<string>();
   });
@@ -53,7 +115,10 @@ describe('theme 类型契约', () => {
 
   it('createCSSVarScope 返回可 apply / remove 的 scope', () => {
     const scope = createCSSVarScope(document.createElement('div'));
-    expectTypeOf(scope.apply).parameter(0).toMatchTypeOf<AliasToken>();
+    expectTypeOf(scope.apply).parameter(0).toMatchTypeOf<Partial<AliasToken>>();
+    scope.apply({ colorPrimary: '#0055aa' });
+    // @ts-expect-error 部分别名仍保持已知颜色类型，不能用布尔值伪装颜色。
+    scope.apply({ colorPrimary: false });
     expectTypeOf(scope.remove).toBeCallableWith();
   });
 

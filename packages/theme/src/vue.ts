@@ -2,21 +2,21 @@ import {
   type ComputedRef,
   computed,
   defineComponent,
+  getCurrentInstance,
   type InjectionKey,
   inject,
+  onMounted,
   onUnmounted,
   type PropType,
   provide,
   type Ref,
-  shallowRef,
+  ref,
+  type SlotsType,
+  type VNodeChild,
+  type WatchStopHandle,
   watch,
 } from 'vue';
-import {
-  applyCSSVar,
-  type CSSVarScope,
-  createCSSVarScope,
-  DEFAULT_CSS_VAR_PREFIX,
-} from './css-var';
+import { applyCSSVar, createCSSVarScope, DEFAULT_CSS_VAR_PREFIX } from './css-var';
 import { getDesignToken } from './get-design-token';
 import type { AliasToken, ThemeConfig } from './types';
 
@@ -26,10 +26,8 @@ import type { AliasToken, ThemeConfig } from './types';
  * 分文件是为了让「纯函数派生」与「Vue 接线」在**源码层**可分辨：
  * `getDesignToken` 及其依赖不 import vue，读代码时能一眼看出派生链是框架无关的。
  *
- * 但产物层做不到隔离：裁决 `build-output-contract = A` 之下本包只有 `dist/` 单文件入口，
- * `vue.ts` 必须从 index 导出，因此 import 本包就会带上 vue。
- * vue 已声明为 peerDependency，对本项目不是问题；
- * 若将来要支持「无 vue 的 Node 侧静态 CSS 生成」，需要重新开一个决策（多入口 vs 拆包）。
+ * 公共根入口同时导出 Vue 绑定，Vue 已声明为 peerDependency。
+ * 发布构建保留模块，不在这里承诺一个未声明的独立纯函数子路径。
  */
 
 export interface ThemeContext {
@@ -50,7 +48,7 @@ export const ThemeContextKey: InjectionKey<ThemeContext> = Symbol('apollo-theme'
  * 每个组件都算一遍会明显掉帧。
  */
 function createContext(config: ThemeConfig, fallback = false): ThemeContext {
-  const cfg = shallowRef<ThemeConfig>(config);
+  const cfg = ref<ThemeConfig>(config);
   const token = computed<AliasToken>(() => getDesignToken(cfg.value));
   const sourceActive = computed(() => !fallback || Object.keys(cfg.value).length > 0);
   return { config: cfg, token, sourceActive };
@@ -61,13 +59,19 @@ export function createThemeContext(config: ThemeConfig): ThemeContext {
 }
 
 /**
- * 无 Provider 时共用的默认 context。
+ * 无 Provider 时同一 Vue app 共用默认 context，不同 app/SSR 请求互相隔离。
  * 惰性创建：模块加载时就跑一遍 getDesignToken 会拖慢首屏，而很多场景根本用不到。
  */
-let defaultContext: ThemeContext | null = null;
+const appContexts = new WeakMap<object, ThemeContext>();
 function getDefaultContext(): ThemeContext {
-  defaultContext ??= createContext({}, true);
-  return defaultContext;
+  const app = getCurrentInstance()?.appContext;
+  if (!app) return createContext({}, true);
+  let context = appContexts.get(app);
+  if (!context) {
+    context = createContext({}, true);
+    appContexts.set(app, context);
+  }
+  return context;
 }
 
 /**
@@ -88,11 +92,26 @@ export function useToken(): ComputedRef<AliasToken> {
 
 /** 一次性把 token 写到某个元素上（无 Provider 的场景，如 SSR 后的客户端补挂） */
 export function injectTokenCssVar(
-  el: HTMLElement,
-  token: AliasToken,
+  el: HTMLElement | SVGElement,
+  token: Partial<AliasToken>,
   prefix = DEFAULT_CSS_VAR_PREFIX,
 ): void {
   applyCSSVar(el, token, prefix);
+}
+
+function copyConfig(config: ThemeConfig): ThemeConfig {
+  return {
+    ...config,
+    ...(config.token ? { token: { ...config.token } } : {}),
+    ...(config.components
+      ? {
+          components: Object.fromEntries(
+            Object.entries(config.components).map(([name, tokens]) => [name, { ...tokens }]),
+          ),
+        }
+      : {}),
+    ...(Array.isArray(config.algorithm) ? { algorithm: [...config.algorithm] } : {}),
+  };
 }
 
 /**
@@ -106,38 +125,45 @@ export function injectTokenCssVar(
  */
 export const ThemeProvider = defineComponent({
   name: 'AThemeProvider',
+  inheritAttrs: false,
   props: {
     theme: { type: Object as PropType<ThemeConfig>, default: (): ThemeConfig => ({}) },
     injectCssVar: { type: Boolean, default: false },
-    target: { type: Object as PropType<HTMLElement>, default: undefined },
+    target: { type: Object as PropType<HTMLElement | SVGElement | null>, default: undefined },
   },
+  slots: Object as SlotsType<{ default?: () => VNodeChild }>,
   setup(props, { slots }) {
-    const ctx = createThemeContext(props.theme);
+    const ctx = createThemeContext(copyConfig(props.theme));
     provide(ThemeContextKey, ctx);
-
-    let scope: CSSVarScope | null = null;
-
-    if (props.injectCssVar) {
-      const el = props.target ?? document.documentElement;
-      if (el) {
-        scope = createCSSVarScope(el, props.theme.cssVarPrefix ?? DEFAULT_CSS_VAR_PREFIX);
-        scope.apply(ctx.token.value);
-      }
-    }
 
     watch(
       () => props.theme,
       (next) => {
-        ctx.config.value = next;
+        ctx.config.value = copyConfig(next);
       },
       { deep: true },
     );
 
-    watch(ctx.token, (token) => {
-      scope?.apply(token);
+    let stopInjection: WatchStopHandle | undefined;
+    onMounted(() => {
+      stopInjection = watch(
+        [
+          () => props.injectCssVar,
+          () => props.target,
+          () => ctx.config.value.cssVarPrefix ?? DEFAULT_CSS_VAR_PREFIX,
+          ctx.token,
+        ],
+        ([enabled, target, prefix, token], _previous, onCleanup) => {
+          if (!enabled) return;
+          const scope = createCSSVarScope(target ?? document.documentElement, prefix);
+          scope.apply(token);
+          onCleanup(() => scope.remove());
+        },
+        { immediate: true, flush: 'post' },
+      );
     });
 
-    onUnmounted(() => scope?.remove());
+    onUnmounted(() => stopInjection?.());
 
     return (): unknown => slots.default?.();
   },

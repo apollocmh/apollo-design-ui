@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "sourceAliases": false,
+  "packageBuilds": false,
+  "runs": [
+    {
+      "name": "public contract assertions and native template ref",
+      "exitCode": 0,
+      "diagnostics": ""
+    },
+    {
+      "name": "unsupported named slot is rejected",
+      "exitCode": 2,
+      "diagnostics": "UnsupportedSlot.vue(4,37): error TS2339: Property 'header' does not exist on type 'Readonly<{ default?: (() => VNodeChild) | undefined; }>'.\n"
+    }
+  ],
+  "contractScenarios": 16,
+  "reasonedNegativeDirectives": 11,
+  "assertionsSourceSHA256": "c47b1cba46cfe98ec329f182e20f93fb502418d959514488a7f48edc05d72cba",
+  "declarationFiles": [
+    {
+      "file": "packages/theme/dist/index.d.ts",
+      "sha256": "f1b0996a463cb470d689be4cdde84a8048f842e86c0a4c97bdf44081f9004045"
+    }
+  ],
+  "firstPartySourceImports": 0
+}

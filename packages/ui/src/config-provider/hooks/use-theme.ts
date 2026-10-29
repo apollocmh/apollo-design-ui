@@ -17,7 +17,7 @@
  *
  *   1. `theme === undefined` ⇒ **直接返回 `parentTheme`**（不新建对象，引用相等）。
  *   2. `inherit === false` 或没有父主题 ⇒ 不继承 `token` / `components`，
- *      但 `cssVarPrefix` / `prefixCls` 仍沿用父级（对应上游保留 `cssVar` / `zeroRuntime`）。
+ *      但 `cssVarPrefix` 仍沿用父级。
  *   3. `token` 浅合并；`components` **逐组件名**浅合并（不是整体替换）。
  */
 
@@ -57,7 +57,6 @@ export function useTheme(
     ? (parentTheme ?? {})
     : {
         cssVarPrefix: parentTheme?.cssVarPrefix,
-        prefixCls: parentTheme?.prefixCls,
       };
 
   const mergedComponents: ComponentTokenMap = { ...(base.components ?? {}) };

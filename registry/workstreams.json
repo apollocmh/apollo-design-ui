@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-28T23:51:43.457Z",
+  "generatedAt": "2026-10-29T01:42:45.808Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,8 +26,9 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 90,
-      "ready": 2
+      "done": 89,
+      "ready": 1,
+      "blocked": 2
     },
     "byKind": {
       "foundation": 13,
@@ -35,12 +36,11 @@
       "component": 72,
       "crosscut": 5
     },
-    "readyCount": 2,
+    "readyCount": 1,
     "cannotFinishCount": 0,
-    "currentBatchSize": 2,
+    "currentBatchSize": 1,
     "currentBatchIds": [
-      "X:docs-site",
-      "COMP:input"
+      "FND:theme"
     ],
     "hardBlockingDecisionCount": 0,
     "parallelismNote": "currentBatchSize 是「同一时刻可开工数」的下界估计（贪心）。真实并行度还取决于执行者数量。"
@@ -175,8 +175,8 @@
       ],
       "maxParallel": 2,
       "itemCount": 2,
-      "doneCount": 2,
-      "readyCount": 0,
+      "doneCount": 1,
+      "readyCount": 1,
       "itemIds": [
         "FND:icons",
         "FND:theme"
@@ -348,7 +348,7 @@
       "maxParallel": 3,
       "itemCount": 18,
       "doneCount": 17,
-      "readyCount": 1,
+      "readyCount": 0,
       "itemIds": [
         "COMP:auto-complete",
         "COMP:cascader",
@@ -469,7 +469,7 @@
       "maxParallel": 2,
       "itemCount": 5,
       "doneCount": 4,
-      "readyCount": 1,
+      "readyCount": 0,
       "itemIds": [
         "X:a11y-pipeline",
         "X:build-output-contract",
@@ -516,11 +516,11 @@
         "motion 的 PoC：确定 CSS transition 与 JS 动画的分工边界"
       ],
       "itemCount": 9,
-      "doneCount": 9,
-      "readyCount": 0,
+      "doneCount": 8,
+      "readyCount": 1,
       "blockedCount": 0,
       "waitingCount": 0,
-      "complete": true,
+      "complete": false,
       "itemIds": [
         "FND:icons",
         "FND:locale",
@@ -684,8 +684,8 @@
       ],
       "itemCount": 26,
       "doneCount": 25,
-      "readyCount": 1,
-      "blockedCount": 0,
+      "readyCount": 0,
+      "blockedCount": 1,
       "waitingCount": 0,
       "complete": false,
       "itemIds": [
@@ -738,8 +738,8 @@
       ],
       "itemCount": 17,
       "doneCount": 16,
-      "readyCount": 1,
-      "blockedCount": 0,
+      "readyCount": 0,
+      "blockedCount": 1,
       "waitingCount": 0,
       "complete": false,
       "itemIds": [
@@ -874,7 +874,7 @@
         "CF-TOKEN-SOURCE",
         "CF-STYLE-GLOBAL"
       ],
-      "status": "done",
+      "status": "ready",
       "decidedBy": [],
       "complexity": "L",
       "unblocks": 72,
@@ -887,16 +887,18 @@
         "L1/L2/L3 三层测试 + 覆盖率达标（语句 95% / 分支 90% / 函数 95%）",
         "包级构建契约与 utils 一致（同属 build-output-contract 决策）"
       ],
-      "registryStatus": "completed",
+      "registryStatus": "testing",
       "dimensions": {
-        "api": "done",
+        "api": "in-progress",
         "impl": "done",
         "types": "done",
         "tests": "done",
         "docs": "done",
         "pkg": "done"
       },
-      "blockers": []
+      "blockers": [],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "FND:icons",
@@ -1908,7 +1910,7 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "ready",
+      "status": "blocked",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
@@ -1917,7 +1919,13 @@
       "group": "数据录入",
       "priority": "P2",
       "dagLevel": 3,
-      "blockers": [],
+      "blockers": [
+        {
+          "type": "dep",
+          "id": "FND:theme",
+          "status": "ready"
+        }
+      ],
       "softBlockers": [],
       "cannotFinish": false
     },
@@ -3303,7 +3311,7 @@
         "CF-ROOT-CONFIG",
         "CF-REGISTRY-TOOLS"
       ],
-      "status": "ready",
+      "status": "blocked",
       "decidedBy": [
         "docs-site-framework"
       ],
@@ -3315,7 +3323,13 @@
         "API 表格由脚本从组件源码生成",
         "demo 支持实时预览与主题切换"
       ],
-      "blockers": [],
+      "blockers": [
+        {
+          "type": "dep",
+          "id": "FND:theme",
+          "status": "ready"
+        }
+      ],
       "softBlockers": [],
       "cannotFinish": false
     },
@@ -3361,7 +3375,6 @@
     }
   ],
   "currentBatch": [
-    "X:docs-site",
-    "COMP:input"
+    "FND:theme"
   ]
 }

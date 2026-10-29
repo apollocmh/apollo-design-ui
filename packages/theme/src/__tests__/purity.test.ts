@@ -122,14 +122,13 @@ describe('Seed 契约', () => {
     expect(t.colorPrimaryBg).not.toBe('#e6f4ff');
   });
 
-  it('★ 显式传 undefined 会真的产出 undefined（对齐 antd，不擅自"修好"）', () => {
-    // antd 实测：`getDesignToken({ token: { colorPrimaryBg: undefined } }).colorPrimaryBg === undefined`。
-    // 我们一度改成"忽略 undefined"，那是与 antd 的偏差 —— 已回退。
-    // 这条用例锁住这个行为：想改它必须先登记兼容性差异，不能悄悄改。
+  it('显式 undefined 等同省略，保持 Apollo AliasToken 的完整返回契约', () => {
+    // 历史上游对照曾保留 undefined，但与当前必填 Alias 类型矛盾。
+    // 迁移依据与 Seed/Alias/扩展键替代覆盖见 theme-foundation-contracts.md/input-contracts.test.ts。
     const bare = getDesignToken();
     expect(bare.colorPrimaryBg).toBe('#e6f4ff');
     const withUndef = getDesignToken({ token: { colorPrimaryBg: undefined } });
-    expect(withUndef.colorPrimaryBg).toBeUndefined();
+    expect(withUndef).toEqual(bare);
   });
 
   it('motion: false 把三档时长全部归零', () => {

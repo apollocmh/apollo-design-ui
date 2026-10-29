@@ -104,9 +104,9 @@
       "imports": [
         "Button"
       ],
-      "budgetKb": 41,
+      "budgetKb": 42,
       "measuredKb": 20.9,
-      "_note": "2026-10-27 Button完整契约技术重定：19 Props/完整Vue槽、SSR安全加载、当前SourceTheme/58既有组件Token及按背景选择前景现已实际接通；按需实测40.0KB，原37KB不足。仅本条调整到41KB，保留历史measuredKb和全量30%约束；不引入React或CSS-in-JS运行时。"
+      "_note": "2026-10-27 Button完整契约技术重定：19 Props/完整Vue槽、SSR安全加载、当前SourceTheme/58既有组件Token及按背景选择前景现已实际接通；按需实测40.0KB，原37KB不足。仅本条调整到41KB，保留历史measuredKb和全量30%约束；不引入React或CSS-in-JS运行时。\n2026-10-29 Theme生命周期整改：深响应式上下文、app/SSR隔离与可释放CSS scope所有权的真实共享成本。仅按本次冻结产物实测上调此项；原始measuredKb、其余预算及30%全量占比保留。"
     },
     {
       "id": "calendar",
@@ -240,9 +240,9 @@
       "imports": [
         "Flex"
       ],
-      "budgetKb": 24,
+      "budgetKb": 25,
       "measuredKb": 3.3,
-      "_note": "2026-10-29：完整Vue根/Provider/attrs/对齐契约及共享默认主题来源读取；useTheme保留可启用fallback所需的既有Token计算链；冻结3f68bd2d实际23297字节/22.751KiB，预算10→24KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。"
+      "_note": "2026-10-29：完整Vue根/Provider/attrs/对齐契约及共享默认主题来源读取；useTheme保留可启用fallback所需的既有Token计算链；冻结3f68bd2d实际23297字节/22.751KiB，预算10→24KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。\n2026-10-29 Theme生命周期整改：深响应式上下文、app/SSR隔离与可释放CSS scope所有权的真实共享成本。仅按本次冻结产物实测上调此项；原始measuredKb、其余预算及30%全量占比保留。"
     },
     {
       "id": "float-button",
@@ -278,8 +278,8 @@
       "imports": [
         "Image"
       ],
-      "budgetKb": 80,
-      "_note": "2026-10-26：新增按Vue注册归属恢复关闭焦点，覆盖打开者删除、嵌套组及Teleport。原77KB预算下功能成本超出217字节，按用户明确要求调为78KB。2026-10-27：Avatar关联Portal/Overlay搬迁、动态销毁与关闭焦点修复后实测78.9KB，沿用用户接受小幅功能成本的裁决，仅本条调为80KB；measuredKb历史基线、其他72条预算和30%全量占比门禁不变。",
+      "budgetKb": 81,
+      "_note": "2026-10-26：新增按Vue注册归属恢复关闭焦点，覆盖打开者删除、嵌套组及Teleport。原77KB预算下功能成本超出217字节，按用户明确要求调为78KB。2026-10-27：Avatar关联Portal/Overlay搬迁、动态销毁与关闭焦点修复后实测78.9KB，沿用用户接受小幅功能成本的裁决，仅本条调为80KB；measuredKb历史基线、其他72条预算和30%全量占比门禁不变。\n2026-10-29 Theme生命周期整改：深响应式上下文、app/SSR隔离与可释放CSS scope所有权的真实共享成本。仅按本次冻结产物实测上调此项；原始measuredKb、其余预算及30%全量占比保留。",
       "measuredKb": 47.5
     },
     {
@@ -307,9 +307,9 @@
       "imports": [
         "Layout"
       ],
-      "budgetKb": 34,
+      "budgetKb": 35,
       "measuredKb": 17.4,
-      "_note": "2026-10-29：Layout家族当前主题/19字段、Vue折叠事件、原生键盘/零宽焦点与响应式生命周期；冻结3f68bd2d实际33636字节/32.848KiB，预算32→34KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。"
+      "_note": "2026-10-29：Layout家族当前主题/19字段、Vue折叠事件、原生键盘/零宽焦点与响应式生命周期；冻结3f68bd2d实际33636字节/32.848KiB，预算32→34KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。\n2026-10-29 Theme生命周期整改：深响应式上下文、app/SSR隔离与可释放CSS scope所有权的真实共享成本。仅按本次冻结产物实测上调此项；原始measuredKb、其余预算及30%全量占比保留。"
     },
     {
       "id": "layout-sider",
@@ -317,9 +317,9 @@
       "imports": [
         "LayoutSider"
       ],
-      "budgetKb": 34,
+      "budgetKb": 35,
       "measuredKb": 17.4,
-      "_note": "2026-10-29：与Layout相同家族导出图：当前主题/19字段、原生键盘/零宽焦点和响应式生命周期；冻结3f68bd2d实际33636字节/32.848KiB，预算32→34KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。"
+      "_note": "2026-10-29：与Layout相同家族导出图：当前主题/19字段、原生键盘/零宽焦点和响应式生命周期；冻结3f68bd2d实际33636字节/32.848KiB，预算32→34KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。\n2026-10-29 Theme生命周期整改：深响应式上下文、app/SSR隔离与可释放CSS scope所有权的真实共享成本。仅按本次冻结产物实测上调此项；原始measuredKb、其余预算及30%全量占比保留。"
     },
     {
       "id": "list",
@@ -490,9 +490,9 @@
       "imports": [
         "Skeleton"
       ],
-      "budgetKb": 37,
+      "budgetKb": 38,
       "measuredKb": 14.5,
-      "_note": "2026-10-27: all six Skeleton forms now resolve current source themes and eight published tokens, route native root attrs/styles, preserve complete slots and own decorative loading semantics. Necessary theme resolution changes the isolated Skeleton import to 35.9KB (full UI 2067.2KB, about 1.74%). Following the user-authorized development-stage allowance for justified growth, only Skeleton cap changes 27→36KB. Historical measuredKb, every other cap and the 30% full-import guard remain unchanged. See docs/audit/2026-10-27-skeleton-contract-audit.md.\n2026-10-29：共享ThemeContext来源识别与默认上下文计算所需成本（本次仅比旧36KiB多26字节）；冻结3f68bd2d实际36890字节/36.025KiB，预算36→37KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。"
+      "_note": "2026-10-27: all six Skeleton forms now resolve current source themes and eight published tokens, route native root attrs/styles, preserve complete slots and own decorative loading semantics. Necessary theme resolution changes the isolated Skeleton import to 35.9KB (full UI 2067.2KB, about 1.74%). Following the user-authorized development-stage allowance for justified growth, only Skeleton cap changes 27→36KB. Historical measuredKb, every other cap and the 30% full-import guard remain unchanged. See docs/audit/2026-10-27-skeleton-contract-audit.md.\n2026-10-29：共享ThemeContext来源识别与默认上下文计算所需成本（本次仅比旧36KiB多26字节）；冻结3f68bd2d实际36890字节/36.025KiB，预算36→37KiB。按用户接受开发阶段实际功能成本的要求调整；历史measuredKb、其他68项预算及全量30%比例不变。完整测量见theme-input-build-costs.json。\n2026-10-29 Theme生命周期整改：深响应式上下文、app/SSR隔离与可释放CSS scope所有权的真实共享成本。仅按本次冻结产物实测上调此项；原始measuredKb、其余预算及30%全量占比保留。"
     },
     {
       "id": "slider",
@@ -509,9 +509,9 @@
       "imports": [
         "Space"
       ],
-      "budgetKb": 33,
+      "budgetKb": 34,
       "measuredKb": 13.1,
-      "_note": "2026-10-29: e0062edd connects current scoped Alias tokens in Space/Compact/Addon and stable keyed-fragment ownership/native focus restoration, with real compact consumers. Isolated published Space now measures 31.5KB. Accept this documented functional cost under the user's development-stage size decision; only Space's old 25KB cap becomes 33KB. Historical measurement, other 72 caps and the full-library ratio guard remain unchanged. See docs/audit/2026-10-28-space-contract-audit.md."
+      "_note": "2026-10-29: e0062edd connects current scoped Alias tokens in Space/Compact/Addon and stable keyed-fragment ownership/native focus restoration, with real compact consumers. Isolated published Space now measures 31.5KB. Accept this documented functional cost under the user's development-stage size decision; only Space's old 25KB cap becomes 33KB. Historical measurement, other 72 caps and the full-library ratio guard remain unchanged. See docs/audit/2026-10-28-space-contract-audit.md.\n2026-10-29 Theme生命周期整改：深响应式上下文、app/SSR隔离与可释放CSS scope所有权的真实共享成本。仅按本次冻结产物实测上调此项；原始measuredKb、其余预算及30%全量占比保留。"
     },
     {
       "id": "spin",
@@ -519,9 +519,9 @@
       "imports": [
         "Spin"
       ],
-      "budgetKb": 34,
+      "budgetKb": 35,
       "measuredKb": 10.9,
-      "_note": "2026-10-26: four published component tokens now consume the current source theme, including alias projection and runtime theme resolution; native slots/SSR progress are complete. Current isolated import measures 32.9KB. With user authorization to accept justified development-stage size growth, only Spin's old 22KB cap becomes 34KB; the historical measurement and all other caps/ratio guards remain unchanged. See docs/audit/2026-10-26-spin-contract-audit.md."
+      "_note": "2026-10-26: four published component tokens now consume the current source theme, including alias projection and runtime theme resolution; native slots/SSR progress are complete. Current isolated import measures 32.9KB. With user authorization to accept justified development-stage size growth, only Spin's old 22KB cap becomes 34KB; the historical measurement and all other caps/ratio guards remain unchanged. See docs/audit/2026-10-26-spin-contract-audit.md.\n2026-10-29 Theme生命周期整改：深响应式上下文、app/SSR隔离与可释放CSS scope所有权的真实共享成本。仅按本次冻结产物实测上调此项；原始measuredKb、其余预算及30%全量占比保留。"
     },
     {
       "id": "splitter",
@@ -538,9 +538,9 @@
       "imports": [
         "Statistic"
       ],
-      "budgetKb": 43,
+      "budgetKb": 44,
       "measuredKb": 23.7,
-      "_note": "2026-10-27: current source-theme resolution for both published font tokens, complete native value slots, reactive clock direction/SSR cleanup and typed compound exports now measure 42.6KB. Following the authorized development-stage allowance for necessary size growth, only the old Statistic 41KB cap becomes 43KB. Historical 23.7KB measurement, all other caps and the 30% full-import guard remain unchanged. Technical cause and failing/passing L7 evidence: docs/audit/2026-10-27-statistic-contract-audit.md."
+      "_note": "2026-10-27: current source-theme resolution for both published font tokens, complete native value slots, reactive clock direction/SSR cleanup and typed compound exports now measure 42.6KB. Following the authorized development-stage allowance for necessary size growth, only the old Statistic 41KB cap becomes 43KB. Historical 23.7KB measurement, all other caps and the 30% full-import guard remain unchanged. Technical cause and failing/passing L7 evidence: docs/audit/2026-10-27-statistic-contract-audit.md.\n2026-10-29 Theme生命周期整改：深响应式上下文、app/SSR隔离与可释放CSS scope所有权的真实共享成本。仅按本次冻结产物实测上调此项；原始measuredKb、其余预算及30%全量占比保留。"
     },
     {
       "id": "steps",
