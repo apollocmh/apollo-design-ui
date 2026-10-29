@@ -1,29 +1,19 @@
-/**
- * BaseInput —— rc-input 的三层包裹（engine 自建）。
- *
- * 判据（rc `BaseInput.js`，逐条对齐）：
- *  1. `hasPrefixSuffix(props)` ⇒ 套 `span.{p}-affix-wrapper`（内含 prefix span、
- *     元素本体、suffix span）；suffix 里先 clear 按钮再 suffix 内容。
- *  2. `hasAddon(props)` ⇒ 再套两层：`span.{p}-group-wrapper` > `span.{p}-wrapper.{p}-group`
- *     （addon 是 `span.{p}-group-addon`）。
- *  3. 根元素**恒**带 `className` / `style`（最后合并到最外层）。
- *  4. clear 按钮：`button[type=button].{p}-clear-icon`，`onMousedown` 里
- *     `preventDefault()`（失焦规避，issue 31200），空值/禁用/只读时挂
- *     `-hidden` 而不是不渲染。
- *  5. affixWrapper 上 `onClick` 只在「点击落在容器内」时把焦点交回 input。
- */
-
+import { defaultLocale, useLocale } from '@apollo-design/locale';
 import {
   type Component,
+  cloneVNode,
   computed,
   defineComponent,
+  getCurrentInstance,
   h,
   isVNode,
+  onBeforeUnmount,
   type PropType,
   ref,
   type VNodeChild,
+  watchPostEffect,
 } from 'vue';
-import { hasAddon, hasPrefixSuffix } from './common-utils';
+import { hasAddon, hasContent, hasPrefixSuffix } from './common-utils';
 
 export interface ClearConfig {
   clearIcon?: VNodeChild | Component;
@@ -64,7 +54,7 @@ export const BaseInput = defineComponent({
     /** 清空回调（rc 的 handleReset）。 */
     onReset: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
     /** 清空后的用户回调（rc 的 onClear）。 */
-    onClear: { type: Function as PropType<() => void>, default: undefined },
+    onClear: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
     /** 焦点交回（rc 的 triggerFocus）。 */
     onTriggerFocus: { type: Function as PropType<() => void>, default: undefined },
     /** nativeElement 暴露（group-wrapper 优先，其次 affix-wrapper）。 */
@@ -74,16 +64,13 @@ export const BaseInput = defineComponent({
     },
   },
   setup(props, { slots }) {
+    const instance = getCurrentInstance();
     const containerRef = ref<HTMLElement | null>(null);
     const groupRef = ref<HTMLElement | null>(null);
-
-    const onInputClick = (e: MouseEvent): void => {
-      if (containerRef.value?.contains(e.target as Node)) {
-        props.onTriggerFocus?.();
-      }
-    };
-
-    const needClear = computed<boolean>(
+    const [globalLocale] = useLocale('global');
+    const hasAffix = computed(() => hasPrefixSuffix(props));
+    const hasGroup = computed(() => hasAddon(props));
+    const needClear = computed(
       () =>
         !!props.allowClear &&
         !props.disabled &&
@@ -92,198 +79,193 @@ export const BaseInput = defineComponent({
         !(typeof props.allowClear === 'object' && props.allowClear.disabled),
     );
 
-    /** D42：clearIcon 可能是字符串 / VNode / **组件对象** —— 组件对象必须 h() 包一层。 */
-    const asClearIcon = (value: VNodeChild | Component | undefined): VNodeChild | undefined => {
-      if (value === null || value === undefined) return undefined;
-      if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean')
+    watchPostEffect(() =>
+      props.onExposeElement?.(
+        hasGroup.value ? groupRef.value : hasAffix.value ? containerRef.value : null,
+      ),
+    );
+    onBeforeUnmount(() => props.onExposeElement?.(null));
+
+    const asClearIcon = (value: VNodeChild | Component | undefined): VNodeChild => {
+      if (
+        value === null ||
+        value === undefined ||
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        typeof value === 'boolean'
+      )
         return value;
       if (isVNode(value) || Array.isArray(value)) return value as VNodeChild;
       return h(value as Component);
     };
-
-    const clearIconNode = computed<VNodeChild | undefined>(() => {
-      if (!props.allowClear) return undefined;
-      const cfg = typeof props.allowClear === 'object' ? props.allowClear : undefined;
-      return asClearIcon(cfg?.clearIcon ?? '✖');
-    });
-
-    const renderClear = () => {
+    function renderClear(): VNodeChild {
       if (!props.allowClear) return null;
-      const clearIconCls = `${props.prefixCls}-clear-icon`;
+      const config = typeof props.allowClear === 'object' ? props.allowClear : undefined;
+      const icon = config?.clearIcon === undefined ? '✖' : config.clearIcon;
       return h(
         'button',
         {
           type: 'button',
           class: [
-            clearIconCls,
+            `${props.prefixCls}-clear-icon`,
             {
-              [`${clearIconCls}-hidden`]: !needClear.value,
-              [`${clearIconCls}-has-suffix`]: !!props.suffix,
+              [`${props.prefixCls}-clear-icon-hidden`]: !needClear.value,
+              [`${props.prefixCls}-clear-icon-has-suffix`]: hasContent(props.suffix),
             },
             props.classNames?.clear,
           ],
           style: props.styles?.clear,
-          onClick: (e: MouseEvent) => {
-            props.onReset?.(e);
-            props.onClear?.();
+          disabled: !needClear.value,
+          'aria-label': globalLocale.value.clear?.trim() || defaultLocale.global?.clear,
+          onMousedown: (event: MouseEvent) => event.preventDefault(),
+          onClick: (event: MouseEvent) => {
+            if (!needClear.value) return;
+            props.onReset?.(event);
+            props.onTriggerFocus?.();
+            props.onClear?.(event);
           },
-          // 点击 clear 不让输入框失焦
-          onMousedown: (e: MouseEvent) => e.preventDefault(),
         },
-        [clearIconNode.value],
+        [asClearIcon(icon)],
       );
-    };
+    }
 
     return () => {
-      const children = slots.default?.() ?? [];
-      const inner = children[0] as ReturnType<typeof h> | undefined;
-      const hasAffix = hasPrefixSuffix(props);
-      const hasGroup = hasAddon(props);
-
-      // 根元素的 class / style / hidden 会落到**最外层**那一层（rc 的 cloneElement）
-      const rootExtras = {
-        class: props.className as string | unknown[] | undefined,
-        style: props.style ?? {},
-        hidden: props.hidden,
-      };
-
-      let element: ReturnType<typeof h> | null = null;
-      if (inner) {
-        // 裸形态：variant 挂在 input 本体上（rc 判据：!hasAffix）
-        //
-        // 🚨 **必须把 `inner.children` 一起带上**（`h` 的第三参）。
-        //    上游是 React 的 `cloneElement(inputElement, {value, className})`，
-        //    它**保留** children；本仓若只重建 props 会**丢掉子节点的插槽**
-        //    ⇒ 子组件（如 mentions 的 `InternalMentions`）拿到的 `slots.default` 为空，
-        //    「`Mentions.Option` 形式的候选项全部消失」且**不报错**。
-        //    （`input` 家族的子节点都是原生 `<input>` / `<textarea>`，没有插槽 ⇒ 此前未暴露。）
-        element = h(
-          inner.type as never,
-          {
-            ...(inner.props ?? {}),
-            class: [
-              (inner.props as { class?: unknown })?.class,
-              !hasAffix ? props.classNames?.variant : undefined,
-              ...(hasAffix || hasGroup ? [] : [rootExtras.class]),
-            ],
-            /**
-             * 🚨 **必须与子节点自己的 `style` 合并**（不是覆盖）。
-             *
-             * 上游是 `cloneElement(inputElement, {value, className})` + 末尾
-             * `cloneElement(element, {style: {...element.props.style, ...style}})` ——
-             * **两次都是合并**。本仓此前写成 `style: {...rootExtras.style}`（覆盖），
-             * 后果是子节点的内联样式被静默清空：
-             *   · `mentions`：`<Mentions :style="{width:'320px'}">` 的宽度**丢失**（L6 实测红）；
-             *   · `input/TextArea`：textarea 自己的 `resize` / `autoSize` 内联样式同样会被清空。
-             * affix / group 形态下子节点的 style **原样保留**（那时外层自己承载 `style`）。
-             */
-            style:
-              hasAffix || hasGroup
-                ? (inner.props as { style?: unknown })?.style
-                : {
-                    ...props.themeStyle,
-                    ...((inner.props as { style?: Record<string, unknown> })?.style ?? {}),
-                    ...rootExtras.style,
-                  },
-            hidden: hasAffix || hasGroup ? undefined : rootExtras.hidden,
-          },
-          inner.children as never,
-        );
+      const inner = slots.default?.()[0];
+      if (!isVNode(inner)) return null;
+      const p = props.prefixCls;
+      const affix = hasAffix.value;
+      const group = hasGroup.value;
+      const bare = !affix && !group;
+      // Vue applies parent scoped IDs to the rendered root. Forward those same IDs
+      // to our logical root, stopping at the first non-root component boundary.
+      const scopeIds = new Set<string>();
+      for (let current = instance; current; current = current.parent) {
+        if (current.vnode.scopeId) scopeIds.add(current.vnode.scopeId);
+        if ('slotScopeIds' in current.vnode && Array.isArray(current.vnode.slotScopeIds)) {
+          for (const id of current.vnode.slotScopeIds) if (typeof id === 'string') scopeIds.add(id);
+        }
+        if (!current.parent || current.parent.subTree !== current.vnode) break;
       }
-
-      if (hasAffix) {
-        const affixWrapperPrefixCls = `${props.prefixCls}-affix-wrapper`;
-        const affixWrapperCls = [
-          affixWrapperPrefixCls,
-          {
-            [`${props.prefixCls}-disabled`]: props.disabled,
-            [`${affixWrapperPrefixCls}-disabled`]: props.disabled,
-            [`${affixWrapperPrefixCls}-focused`]: props.focused,
-            [`${affixWrapperPrefixCls}-readonly`]: props.readOnly,
-            [`${affixWrapperPrefixCls}-input-with-clear-btn`]:
-              props.suffix && props.allowClear && props.value,
+      const scopeAttrs = Object.fromEntries([...scopeIds].map((id) => [id, '']));
+      const input = cloneVNode(inner, {
+        class: [!affix ? props.classNames?.variant : undefined, bare ? props.className : undefined],
+        style: bare
+          ? [
+              props.themeStyle,
+              inner.props?.style,
+              props.style,
+              props.hidden ? { display: 'none' } : undefined,
+            ]
+          : undefined,
+        hidden: bare ? props.hidden : undefined,
+        ...(bare ? scopeAttrs : {}),
+      });
+      // The editor always occupies the same VNode path. Inactive hosts have no layout box.
+      const affixNode = h(
+        'span',
+        {
+          ...(affix && !group ? scopeAttrs : {}),
+          ref: containerRef,
+          'data-apollo-input-host': 'affix',
+          class: affix
+            ? [
+                `${p}-affix-wrapper`,
+                {
+                  [`${p}-disabled`]: props.disabled,
+                  [`${p}-affix-wrapper-disabled`]: props.disabled,
+                  [`${p}-affix-wrapper-focused`]: props.focused,
+                  [`${p}-affix-wrapper-readonly`]: props.readOnly,
+                  [`${p}-affix-wrapper-input-with-clear-btn`]:
+                    hasContent(props.suffix) && !!props.allowClear && !!props.value,
+                },
+                props.classNames?.affixWrapper,
+                props.classNames?.variant,
+                !group ? props.className : undefined,
+              ]
+            : `${p}-affix-host`,
+          style: affix
+            ? [
+                props.themeStyle,
+                props.styles?.affixWrapper,
+                !group ? props.style : undefined,
+                !group && props.hidden ? { display: 'none' } : undefined,
+              ]
+            : { display: 'contents' },
+          hidden: affix && !group ? props.hidden : undefined,
+          ...(affix ? props.dataAttrs?.affixWrapper : {}),
+          onClick: (event: MouseEvent) => {
+            if (!affix || props.disabled || !(event.target instanceof Node)) return;
+            // Interactive suffixes own their activation; focusing them must not be undone.
+            if (event.target instanceof Element && event.target.closest('button,a,[role="button"]'))
+              return;
+            if (containerRef.value?.contains(event.target)) props.onTriggerFocus?.();
           },
-          props.classNames?.affixWrapper,
-          props.classNames?.variant,
-        ];
-        const suffixNode =
-          props.suffix || props.allowClear
+        },
+        [
+          hasContent(props.prefix)
             ? h(
                 'span',
                 {
-                  class: [`${props.prefixCls}-suffix`, props.classNames?.suffix],
+                  key: 'prefix',
+                  class: [`${p}-prefix`, props.classNames?.prefix],
+                  style: props.styles?.prefix,
+                },
+                [props.prefix],
+              )
+            : null,
+          input,
+          hasContent(props.suffix) || props.allowClear
+            ? h(
+                'span',
+                {
+                  key: 'suffix',
+                  class: [`${p}-suffix`, props.classNames?.suffix],
                   style: props.styles?.suffix,
                 },
                 [renderClear(), props.suffix],
               )
-            : null;
-        element = h(
-          'span',
-          {
-            class: [affixWrapperCls, ...(hasGroup ? [] : [rootExtras.class])],
-            style: hasGroup
-              ? (props.styles?.affixWrapper ?? {})
-              : { ...props.themeStyle, ...(props.styles?.affixWrapper ?? {}), ...rootExtras.style },
-            onClick: onInputClick,
-            ...(props.dataAttrs?.affixWrapper ?? {}),
-            ref: containerRef,
-            hidden: hasGroup ? undefined : rootExtras.hidden,
-          },
-          [
-            props.prefix
-              ? h(
-                  'span',
-                  {
-                    class: [`${props.prefixCls}-prefix`, props.classNames?.prefix],
-                    style: props.styles?.prefix,
-                  },
-                  [props.prefix],
-                )
-              : null,
-            element,
-            suffixNode,
-          ],
-        );
-      }
-
-      if (hasGroup) {
-        const wrapperCls = `${props.prefixCls}-group`;
-        const addonCls = `${wrapperCls}-addon`;
-        const groupWrapperCls = `${wrapperCls}-wrapper`;
-        element = h(
-          'span',
-          {
-            class: [
-              groupWrapperCls,
-              { [`${groupWrapperCls}-disabled`]: props.disabled },
-              props.classNames?.groupWrapper,
-              rootExtras.class,
+            : null,
+        ],
+      );
+      return h(
+        'span',
+        {
+          ...(group ? scopeAttrs : {}),
+          ref: groupRef,
+          'data-apollo-input-host': 'group',
+          class: group
+            ? [
+                `${p}-group-wrapper`,
+                { [`${p}-group-wrapper-disabled`]: props.disabled },
+                props.classNames?.groupWrapper,
+                props.className,
+              ]
+            : undefined,
+          style: group
+            ? [props.themeStyle, props.style, props.hidden ? { display: 'none' } : undefined]
+            : { display: 'contents' },
+          hidden: group ? props.hidden : undefined,
+        },
+        [
+          h(
+            'span',
+            {
+              'data-apollo-input-host': 'wrapper',
+              class: group ? [`${p}-wrapper`, `${p}-group`, props.classNames?.wrapper] : undefined,
+              style: group ? props.styles?.wrapper : { display: 'contents' },
+            },
+            [
+              hasContent(props.addonBefore)
+                ? h('span', { key: 'before', class: `${p}-group-addon` }, [props.addonBefore])
+                : null,
+              affixNode,
+              hasContent(props.addonAfter)
+                ? h('span', { key: 'after', class: `${p}-group-addon` }, [props.addonAfter])
+                : null,
             ],
-            style: { ...props.themeStyle, ...rootExtras.style },
-            ref: groupRef,
-            hidden: rootExtras.hidden,
-          },
-          [
-            h(
-              'span',
-              {
-                class: [`${props.prefixCls}-wrapper`, wrapperCls, props.classNames?.wrapper],
-              },
-              [
-                props.addonBefore ? h('span', { class: addonCls }, [props.addonBefore]) : null,
-                element,
-                props.addonAfter ? h('span', { class: addonCls }, [props.addonAfter]) : null,
-              ],
-            ),
-          ],
-        );
-      }
-
-      if (!element) {
-        return null;
-      }
-      props.onExposeElement?.(groupRef.value ?? containerRef.value ?? null);
-      return element;
+          ),
+        ],
+      );
     };
   },
 });

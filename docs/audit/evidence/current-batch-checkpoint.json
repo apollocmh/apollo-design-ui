@@ -1,11 +1,11 @@
 {
-  "date": "2026-10-29T02:58:44.462297+00:00",
-  "status": "current-batch-checkpoint-not-final-acceptance",
-  "committedBase": "a4b1f160b68b94db442ad56e3d48feab4009ce56",
+  "date": "2026-10-29T05:38:08.835644+00:00",
+  "status": "source-milestone-delivered-unified-acceptance-pending",
+  "committedBase": "796a193f0c3f656e82c179c1ac298aafe48df465",
   "completeComponentUnits": 21,
   "componentUnits": 72,
-  "committedApolloVisuals": 987,
-  "committedVisualPlan": 1704,
+  "committedApolloVisuals": 1089,
+  "committedVisualPlan": 1875,
   "pauseAfterCurrentBatch": true,
   "dispatchFurtherUnits": false,
   "theme": {
@@ -14,31 +14,34 @@
     "fullFoundationAcceptance": false
   },
   "divider": {
-    "stage": "source-frozen-isolated-published-and-visual-checks-pass",
+    "stage": "source-and-published-milestone-delivered-final-shared-acceptance-pending",
     "publishedBrowser": 67,
     "visuals": 48,
     "rawRGBAExact": 48,
     "sourceAggregate": "7ff813d5f1bab60285b91e2220439365557741144dcc0c82cb19056ff501498b",
-    "committed": false
+    "committed": true
   },
   "collapse": {
-    "stage": "source-frozen-isolated-published-and-visual-checks-pass",
+    "stage": "source-and-published-milestone-delivered-final-shared-acceptance-pending",
     "publishedBrowser": 134,
     "visuals": 54,
     "rawRGBAExact": 54,
     "runtimeAggregate": "f2c118c1f503f05146e38b529221e96014afc88794e2f342e3aa0cfe032ed7d5",
-    "committed": false
+    "committed": true
   },
   "input": {
-    "stage": "current-source-contracts-and-documentation-finishing",
-    "firstBrowserAssertionsPassed": 223,
-    "relatedUnitAndDomPassed": 376,
-    "remaining": "Final public types/slots, current-source browser and bounded prior regression, API/migration/evidence freeze; related Mentions clear-button styles remain under verification."
+    "stage": "source-and-published-milestone-delivered-final-acceptance-pending",
+    "publishedBrowser": 249,
+    "allOriginalDemoThemeChecks": 96,
+    "publishedTypes": "positive and independent negative consumers passed",
+    "formalVisualsPending": 84
   },
   "configProvider": {
-    "stage": "current-producer-and-consumer-chain-finishing",
-    "priorNativeSsrHydrationBrowserPassed": 23,
-    "remaining": "Existing notice derived configuration, complete declared Tabs defaults, precise native scroll-container types, eight real demos and final freeze."
+    "stage": "source-and-published-milestone-delivered-final-acceptance-pending",
+    "relatedRuntime": 496,
+    "publishedNativeSsrHydrationBrowser": 62,
+    "originalDemos": 8,
+    "formalVisualsPending": 42
   },
   "tree": {
     "stage": "read-only-inventory-recorded-implementation-not-started",
@@ -123,5 +126,11 @@
       "errors": [],
       "receipt": "docs/audit/evidence/current-batch-docs-publication.json"
     }
-  }
+  },
+  "remaining": [
+    "Final frozen-source broad runtime regression",
+    "Input/ConfigProvider formal visual review and independent recapture",
+    "Final generated Docs and live publication acceptance",
+    "Commit/push results, then pause without further dispatch"
+  ]
 }

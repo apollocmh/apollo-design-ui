@@ -90,7 +90,7 @@ const items = computed(() =>
   presetsValue.value.map((preset, index) => ({
     key: genCollapsePanelKey(preset, index),
     // ⚠️ `preset.label` 是 `VNodeChild`（含 `null`）⇒ 包成数组，否则 `h` 的 children 重载不匹配
-    label: h('div', { class: `${colorPresetsPrefixCls.value}-label` }, [preset.label]),
+    label: h('span', { class: `${colorPresetsPrefixCls.value}-label` }, [preset.label]),
     children: h('div', { class: `${colorPresetsPrefixCls.value}-items` }, [
       preset.colors.length > 0
         ? preset.colors.map((presetColor, colorIndex) => {
@@ -114,7 +114,7 @@ const items = computed(() =>
               onClick: () => handleClick(presetColor),
             });
           })
-        : h('span', { class: `${colorPresetsPrefixCls.value}-empty` }, locale.presetEmpty),
+        : h('span', { class: `${colorPresetsPrefixCls.value}-empty` }, locale.value.presetEmpty),
     ]),
   })),
 );

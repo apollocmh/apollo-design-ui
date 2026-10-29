@@ -69,11 +69,9 @@ Button（操作按钮）/ Empty（notFoundContent 走 DefaultRenderEmpty 'Transf
    setup 期一次性解包，Button 的表现为「disabled 一旦为 true 就再也解不锁」（Action 按钮的
    可用态不随勾选更新）。修复：签名改 `MaybeRefOrGetter`（toValue），四个传值调用点
    （Button/TreeSelect/Form/Cascader）改传 getter `() => props.disabled`。
-2. **`cloneEvent` 的 `type` 必须是自有属性**（input/engine/common-utils，本次修复）：
-   `Object.create(event, {...})` 的派生对象在 jsdom 30 下读 `type` 抛
-   `TypeError: 'get type' called on an object that is not a valid instance of Event`
-   —— Transfer.Search 的 `e.type === 'click'`（allowClear 判据）整条 onChange 链会炸。
-   克隆时从真事件取 `type` 落成自有属性。
+2. **Input 事件是原生事件**：Search 读取实际 target.value，原样传递 Event。
+   清除通过 Input 的 clear(MouseEvent) 通道识别；随后同一动作产生的 input/change
+   只消费一次，不再伪造 Event 或根据 type=click 推断清除。
 3. **`-list-` 只是类名前缀**：没有 `.apollo-transfer-list` 元素本体，测试按 section 定位。
 4. **antd 6 无 `render` 时条目 text span 为空**，文本由 `li[title]` 承载（SSR 逐字对拍）——
    别「顺手」把 title 塞进 text span。

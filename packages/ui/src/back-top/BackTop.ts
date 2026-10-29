@@ -62,7 +62,8 @@ export default defineComponent({
     onClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
   },
   setup(props, { slots, attrs, expose }) {
-    const { getPrefixCls, direction } = useComponentConfig('back-top');
+    const config = useComponentConfig('back-top');
+    const { getPrefixCls } = config;
 
     const prefixCls = computed(() => getPrefixCls('back-top', props.prefixCls));
     const rootPrefixCls = computed(() => getPrefixCls());
@@ -179,7 +180,7 @@ export default defineComponent({
       const rootProps = mergeProps(
         {
           ref: rootRef,
-          class: [prefixCls.value, { [`${prefixCls.value}-rtl`]: direction === 'rtl' }],
+          class: [prefixCls.value, { [`${prefixCls.value}-rtl`]: config.direction === 'rtl' }],
         },
         attrs,
         { onClick: scrollToTop },

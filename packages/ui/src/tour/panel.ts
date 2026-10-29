@@ -114,6 +114,8 @@ const TourPanel = defineComponent({
     },
   },
   setup(props) {
+    const [contextLocaleGlobal] = useLocale('global');
+    const [contextLocaleTour] = useLocale('Tour');
     return () => {
       const { stepProps, current, type, classNames, styles, indicatorsRender, actionsRender } =
         props;
@@ -141,9 +143,6 @@ const TourPanel = defineComponent({
       // `pickAttrs(closable ?? {}, true)` —— 只透传 aria-*
       const ariaProps = pickAttrs(closable ?? {}, true);
 
-      const [contextLocaleGlobal] = useLocale('global');
-      const [contextLocaleTour] = useLocale('Tour');
-
       const closeBtnNode = h(
         'button',
         {
@@ -151,7 +150,7 @@ const TourPanel = defineComponent({
           onClick: onClose,
           class: cx(`${prefixCls}-close`, stepClassNames.close, classNames?.close),
           style: { ...stepStyles.close, ...styles?.close } as CSSProperties,
-          'aria-label': contextLocaleGlobal?.close,
+          'aria-label': contextLocaleGlobal.value.close,
           ...ariaProps,
         },
         // `closable?.closeIcon || <CloseOutlined class="{p}-close-icon" />`（上游 `||`）
@@ -252,7 +251,7 @@ const TourPanel = defineComponent({
                 class: [`${prefixCls}-prev-btn`, prevButtonProps?.class],
                 style: prevButtonProps?.style,
               },
-              { default: () => prevButtonProps?.children ?? contextLocaleTour?.Previous },
+              { default: () => prevButtonProps?.children ?? contextLocaleTour.value.Previous },
             )
           : null,
         h(
@@ -267,7 +266,7 @@ const TourPanel = defineComponent({
           {
             default: () =>
               nextButtonProps?.children ??
-              (isLastStep ? contextLocaleTour?.Finish : contextLocaleTour?.Next),
+              (isLastStep ? contextLocaleTour.value.Finish : contextLocaleTour.value.Next),
           },
         ),
       ];

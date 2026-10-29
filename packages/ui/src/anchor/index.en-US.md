@@ -117,8 +117,7 @@ There are **4 more `mergeToken` derived values** (users **cannot** override them
   **largest `top`**. If none matches, the result is an empty string (no highlight).
 - **`getOffsetTop` has three branches**: empty `getClientRects()` ⇒ `0`; non-zero width/height
   ⇒ relative to the container; otherwise `rect.top`.
-- **The scroll listener depends on `JSON.stringify(links)`** and **not** on `getContainer` —
-  changing the container prop does **not** re-attach (upstream behaviour, replicated).
+- **The scroll listener follows link content and the current resolved scroll container**; changing the local or Provider target releases the previous listener and binds the new one.
 - **The highlight is not taken over during a scroll animation**: `handleScroll` returns early
   while animating, and clicking the same link again does not re-emit `onChange`.
 - **`AnchorLink` takes its prefix from the ConfigProvider root prefix**, independent of

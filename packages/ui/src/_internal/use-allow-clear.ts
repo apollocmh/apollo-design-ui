@@ -12,8 +12,15 @@
  */
 
 import { CloseCircleFilled } from '@apollo-design/icons';
-import { isPlainObject, useDevWarning } from '@apollo-design/utils';
-import { type ComputedRef, computed, type MaybeRefOrGetter, toValue, type VNodeChild } from 'vue';
+import { useDevWarning } from '@apollo-design/utils';
+import {
+  type ComputedRef,
+  computed,
+  h,
+  type MaybeRefOrGetter,
+  toValue,
+  type VNodeChild,
+} from 'vue';
 
 export interface AllowClearConfig {
   clearIcon?: VNodeChild;
@@ -38,10 +45,10 @@ export interface UseAllowClearOptions {
   componentName: string;
 }
 
-/** 第一个「非 undefined 非空」的值（antd 的 `fallbackProp`）。 */
+/** 第一个非 undefined 值；null/false/0 都是显式内容。 */
 function fallbackProp<T>(...values: (T | undefined)[]): T | undefined {
   for (const value of values) {
-    if (value !== undefined && value !== null) {
+    if (value !== undefined) {
       return value;
     }
   }
@@ -71,18 +78,18 @@ export function useAllowClear(
     }
     return {
       clearIcon: fallbackProp(
-        isPlainObject(allowClear) ? (allowClear as AllowClearConfig)?.clearIcon : clearIcon,
-        isPlainObject(contextAllowClear)
-          ? (contextAllowClear as AllowClearConfig)?.clearIcon
-          : contextClearIcon,
-        // 默认图标：antd 是 CloseCircleFilled 元素；本仓给组件对象（D42 归一化）
-        // —— 由消费方 `asNode` 包一层。
-        CloseCircleFilled as never,
+        allowClear && typeof allowClear === 'object' ? allowClear.clearIcon : undefined,
+        clearIcon,
+        contextAllowClear && typeof contextAllowClear === 'object'
+          ? contextAllowClear.clearIcon
+          : undefined,
+        contextClearIcon,
+        h(CloseCircleFilled),
       ),
       disabled:
-        (isPlainObject(allowClear) ? (allowClear as AllowClearConfig)?.disabled : undefined) ??
-        (isPlainObject(contextAllowClear)
-          ? (contextAllowClear as AllowClearConfig)?.disabled
+        (allowClear && typeof allowClear === 'object' ? allowClear.disabled : undefined) ??
+        (contextAllowClear && typeof contextAllowClear === 'object'
+          ? contextAllowClear.disabled
           : undefined),
     };
   });

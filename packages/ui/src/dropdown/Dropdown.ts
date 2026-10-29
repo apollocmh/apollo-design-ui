@@ -101,8 +101,8 @@ const Dropdown = defineComponent({
     'update:open': (_open: boolean) => true,
   },
   setup(props, { slots, emit, attrs, expose }) {
-    const { getPrefixCls } = useComponentConfig('dropdown');
-    const prefixCls = props.prefixCls ?? getPrefixCls('dropdown');
+    const config = useComponentConfig('dropdown');
+    const prefixCls = computed(() => props.prefixCls ?? config.getPrefixCls('dropdown'));
     const direction = useDirection();
     const isRtl = computed(() => direction.value === 'rtl');
 
@@ -229,14 +229,14 @@ const Dropdown = defineComponent({
         //    Issue #21.4）。
         const override = computed(() => {
           const arrowIcon = h(isRtl.value ? LeftOutlined : RightOutlined, {
-            class: `${prefixCls}-menu-submenu-arrow-icon`,
+            class: `${prefixCls.value}-menu-submenu-arrow-icon`,
           });
           return {
-            prefixCls: `${prefixCls}-menu`,
+            prefixCls: `${prefixCls.value}-menu`,
             mode: 'vertical' as const,
             selectable: false,
             onClick: onMenuClick,
-            expandIcon: h('span', { class: `${prefixCls}-menu-submenu-arrow` }, [arrowIcon]),
+            expandIcon: h('span', { class: `${prefixCls.value}-menu-submenu-arrow` }, [arrowIcon]),
             validator: ({ mode }: { mode?: string }) => {
               if (mode && mode !== 'vertical') {
                 console.error(
@@ -250,7 +250,7 @@ const Dropdown = defineComponent({
           let overlayNode: VNodeChild = props.menu?.items
             ? h(Menu, {
                 ...(props.menu as object),
-                prefixCls: `${prefixCls}-menu`,
+                prefixCls: `${prefixCls.value}-menu`,
               } as never)
             : null;
           if (overlaySlots.popupRender) {
@@ -291,23 +291,23 @@ const Dropdown = defineComponent({
       }
 
       // rc popupTrigger 的 -open 类（openClassName 可覆盖）
-      const openCls = mergedOpen.value ? (props.openClassName ?? `${prefixCls}-open`) : '';
+      const openCls = mergedOpen.value ? (props.openClassName ?? `${prefixCls.value}-open`) : '';
 
       // rc popupTrigger：child 上注入 -trigger/-open 类与 disabled 透传
       const childProps = (isVNode(child) ? ((child as VNodeLike).props ?? {}) : {}) as {
         disabled?: boolean;
       };
       // antd 逐字（dropdown.js:140）：触发器类名带 `-rtl`（direction === 'rtl'）
-      const rtlCls = isRtl.value ? `${prefixCls}-rtl` : undefined;
+      const rtlCls = isRtl.value ? `${prefixCls.value}-rtl` : undefined;
       const triggerNode = isVNode(child)
         ? cloneVNode(
             child as VNodeLike,
             {
-              class: [`${prefixCls}-trigger`, rtlCls, openCls || undefined],
+              class: [`${prefixCls.value}-trigger`, rtlCls, openCls || undefined],
               disabled: childProps.disabled ?? props.disabled,
             } as never,
           )
-        : h('span', { class: [`${prefixCls}-trigger`, rtlCls] }, [child as VNodeChild]);
+        : h('span', { class: [`${prefixCls.value}-trigger`, rtlCls] }, [child as VNodeChild]);
 
       const rootCls = [
         props.overlayClassName,
@@ -331,7 +331,7 @@ const Dropdown = defineComponent({
         Trigger,
         {
           ref: triggerRef as never,
-          prefixCls,
+          prefixCls: prefixCls.value,
           popup,
           action: triggerActions.value as never,
           open: mergedOpen.value,
@@ -346,7 +346,7 @@ const Dropdown = defineComponent({
           mouseLeaveDelay: props.mouseLeaveDelay ?? 0.1,
           placement: memoPlacement.value,
           builtinPlacements: builtinPlacements.value,
-          getPopupContainer: props.getPopupContainer,
+          getPopupContainer: props.getPopupContainer ?? config.getPopupContainer,
           motion: {
             motionName: memoTransitionName.value,
             motionDeadline: 1000,
@@ -354,7 +354,7 @@ const Dropdown = defineComponent({
           destroyOnHidden: props.destroyOnHidden ?? props.destroyPopupOnHide,
           forceRender: props.forceRender,
           arrow: props.arrow
-            ? { content: h('span', { class: `${prefixCls}-arrow-content` }) }
+            ? { content: h('span', { class: `${prefixCls.value}-arrow-content` }) }
             : undefined,
           zIndex: zIndex.value,
           popupClassName: undefined,

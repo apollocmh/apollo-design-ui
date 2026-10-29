@@ -74,8 +74,8 @@ export default function useModeColor(
       }
     };
 
-    pushOption('single', locale.singleColor);
-    pushOption('gradient', locale.gradientColor);
+    pushOption('single', locale.value.singleColor);
+    pushOption('gradient', locale.value.gradientColor);
 
     return { optionList, modes };
   });

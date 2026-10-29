@@ -142,3 +142,6 @@ No — both are normalized to `false` (never auto close).
 **What happens when the same key is opened twice?**
 
 The notice is reused and its content updated (see the `update` demo); no new notice is added.
+
+
+Hook holders keep existing notices in place when Provider defaults change. Type/icon/close classes follow the current prefix, the default accessible close label follows the current locale, and an explicit closable aria-label takes priority. Content and user styles remain keyed. closable.disabled disables the native close button.

@@ -4,8 +4,7 @@
  * 与 antd 的 `es/input/index.js` 对齐：`Input` 默认导出 + 静态属性
  * `Input.Group` / `Input.TextArea` / `Input.Password` / `Input.Search` / `Input.OTP`；
  * 另有具名别名 `InputGroup` / `TextArea` / `InputPassword` / `InputSearch` / `InputOTP`
- * （Vue 模板里没有 `Input.Password` 这种写法，具名导出是模板唯一可用形态 ——
- * 与 Radio/Form 同判）。
+ * （Vue SFC 同时支持具名导出与 `Input.Password` 等静态成员）。
  */
 
 import { withInstall } from '../_internal/with-install';
@@ -46,6 +45,7 @@ export type {
   InputFocusOptions,
   InputGroupProps,
   InputPasswordProps,
+  InputPasswordSlots,
   InputProps,
   InputRef,
   InputSearchProps,
@@ -55,12 +55,15 @@ export type {
   InputSemanticClassNames,
   InputSemanticContext,
   InputSemanticStyles,
+  InputSlots,
   OTPProps,
   OTPRef,
   OTPSemanticClassNames,
   OTPSemanticContext,
   OTPSemanticStyles,
+  OTPSlots,
   PasswordSemanticClassNames,
+  PasswordSemanticContext,
   ShowCountProp,
   TextAreaProps,
   TextAreaRef,

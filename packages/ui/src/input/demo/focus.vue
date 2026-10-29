@@ -31,6 +31,6 @@ function blurInput(): void {
       <Button @click="selectAll">全选</Button>
       <Button @click="blurInput">失焦</Button>
     </Space>
-    <div style="font-size: 12px; color: #999">状态：{{ status }}</div>
+    <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">状态：{{ status }}</div>
   </div>
 </template>

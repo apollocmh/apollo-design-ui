@@ -4,7 +4,7 @@
   "generatedAt": "2026-10-15T14:42:57.861Z",
   "summary": {
     "apolloPackages": 12,
-    "componentEdgesRuntime": 83,
+    "componentEdgesRuntime": 84,
     "componentEdgesTypeOnly": 70,
     "maxDagLevel": 5
   },
@@ -1027,7 +1027,7 @@
         "dependedBy": [
           "config-provider"
         ],
-        "unblocks": 52
+        "unblocks": 53
       },
       "config-provider": {
         "priority": "P0",
@@ -1040,6 +1040,7 @@
           "space",
           "flex",
           "grid",
+          "divider",
           "layout",
           "tag",
           "badge",
@@ -1076,7 +1077,7 @@
           "mentions",
           "avatar"
         ],
-        "unblocks": 51
+        "unblocks": 52
       },
       "button": {
         "priority": "P0",
@@ -1126,8 +1127,10 @@
       },
       "divider": {
         "priority": "P0",
-        "dagLevel": 0,
-        "dependsOn": [],
+        "dagLevel": 2,
+        "dependsOn": [
+          "config-provider"
+        ],
         "dependedBy": [
           "color-picker"
         ],
@@ -2081,6 +2084,11 @@
       },
       {
         "from": "config-provider",
+        "to": "divider",
+        "kind": "runtime"
+      },
+      {
+        "from": "config-provider",
         "to": "typography",
         "kind": "type-only"
       },
@@ -2538,7 +2546,6 @@
     "layers": {
       "0": [
         "empty",
-        "divider",
         "typography",
         "alert",
         "spin",
@@ -2566,6 +2573,7 @@
         "space",
         "flex",
         "grid",
+        "divider",
         "layout",
         "tag",
         "badge",

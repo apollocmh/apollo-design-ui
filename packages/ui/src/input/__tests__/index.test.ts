@@ -63,7 +63,7 @@ describe('Input · L1 渲染', () => {
     expect(wrapper.find('input').attributes('type')).toBe('password');
     const icon = wrapper.find('.apollo-input-password-icon');
     expect(icon.exists()).toBe(true);
-    expect(icon.attributes('role')).toBe('button');
+    expect(icon.element.tagName).toBe('BUTTON');
     expect(icon.attributes('aria-pressed')).toBe('false');
   });
 
@@ -113,14 +113,8 @@ describe('Input · 值同步语义（React onChange = 原生 input，§1.12）',
 });
 
 describe('Input · IME 与计数（registry 备注：不可简化）', () => {
-  // ⚠️ 本用例在修 §1.12 之前断言「组合态期间 onChange **不**触发」——
-  // 那条断言编码的是 **Vue 的事件名巧合**（`onChange` 落在原生元素上 = 原生
-  // `change`，而本用例派发的是 `input` ⇒ 根本没有 handler 被调用），
-  // **不是** React/antd 的语义。判据 `@rc-component/input/es/Input.js`：
-  // `React.createElement('input', { onChange: onInternalChange, … })` —— React 的
-  // `onChange` 在文本控件上就是**原生 input**，组合态期间照常触发，
-  // 只是 `getExceedValue(currentValue, compositionRef.current)` 让裁剪让路。
-  it('组合态期间不裁剪（但照常触发 change）、组合结束时裁剪并再触发一次', async () => {
+  // Apollo's Vue contract keeps the native draft during composition and emits one settled change.
+  it('组合态保留草稿，结束时裁剪并仅发一次语义 change', async () => {
     const onChange = vi.fn();
     const wrapper = mount(Input, {
       props: {
@@ -137,15 +131,14 @@ describe('Input · IME 与计数（registry 备注：不可简化）', () => {
     await input.trigger('compositionstart');
     el.value = '12345678';
     await input.trigger('input');
-    // React 语义：组合中的每次 input 都会触发 onChange，且**不裁剪**
-    expect(onChange).toHaveBeenCalledTimes(1);
-    const composingEvent = onChange.mock.calls[0]?.[0] as { target: { value: string } };
-    expect(composingEvent.target.value).toBe('12345678');
+    expect(onChange).not.toHaveBeenCalled();
+    expect(el.value).toBe('12345678');
 
     await input.trigger('compositionend');
-    // compositionend：裁剪到 5 并再触发一次（currentValue !== cutValue ⇒ 不去重）
-    expect(onChange).toHaveBeenCalledTimes(2);
-    const endEvent = onChange.mock.calls[1]?.[0] as { target: { value: string } };
+    // The following native input must not emit the settled value a second time.
+    await input.trigger('input');
+    expect(onChange).toHaveBeenCalledTimes(1);
+    const endEvent = onChange.mock.calls[0]?.[0] as { target: { value: string } };
     expect(endEvent.target.value).toBe('12345');
   });
 
@@ -357,16 +350,20 @@ describe('Input.Password · 顶层 `action`（Issue #3.3）', () => {
     expect(typeOf(w)).toBe('text');
   });
 
-  it('★ 顶层 `action="hover"`：mouseover 切换、click **不**切换', async () => {
+  it('★ 顶层 `action="hover"`：mouseenter 切换，子节点 mouseover 不反复切换', async () => {
     const w = mount(InputPassword, { props: { action: 'hover', defaultValue: 'pw' } });
     expect(typeOf(w)).toBe('password');
 
-    await iconOf(w).trigger('click');
+    iconOf(w).element.dispatchEvent(new MouseEvent('click', { detail: 1, bubbles: true }));
+    await nextTick();
     expect(typeOf(w), 'hover 模式下 click 不应切换').toBe('password');
 
-    await iconOf(w).trigger('mouseover');
+    await iconOf(w).trigger('mouseenter');
     expect(typeOf(w)).toBe('text');
-    await iconOf(w).trigger('mouseover');
+    await iconOf(w).find('svg').trigger('mouseover');
+    expect(typeOf(w)).toBe('text');
+    await iconOf(w).trigger('mouseleave');
+    await iconOf(w).trigger('mouseenter');
     expect(typeOf(w)).toBe('password');
   });
 
@@ -374,9 +371,10 @@ describe('Input.Password · 顶层 `action`（Issue #3.3）', () => {
     const w = mount(InputPassword, {
       props: { visibilityToggle: { action: 'hover' }, defaultValue: 'pw' },
     });
-    await iconOf(w).trigger('click');
+    iconOf(w).element.dispatchEvent(new MouseEvent('click', { detail: 1, bubbles: true }));
+    await nextTick();
     expect(typeOf(w)).toBe('password');
-    await iconOf(w).trigger('mouseover');
+    await iconOf(w).trigger('mouseenter');
     expect(typeOf(w)).toBe('text');
   });
 
@@ -384,7 +382,7 @@ describe('Input.Password · 顶层 `action`（Issue #3.3）', () => {
     const w = mount(InputPassword, {
       props: { action: 'click', visibilityToggle: { action: 'hover' }, defaultValue: 'pw' },
     });
-    await iconOf(w).trigger('mouseover');
+    await iconOf(w).trigger('mouseenter');
     expect(typeOf(w), '顶层 click 应压过 visibilityToggle.action=hover').toBe('password');
     await iconOf(w).trigger('click');
     expect(typeOf(w)).toBe('text');

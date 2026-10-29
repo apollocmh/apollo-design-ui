@@ -1,0 +1,771 @@
+{
+  "schemaVersion": 1,
+  "unit": "ConfigProvider and authorized consumption chains",
+  "date": "2026-10-29",
+  "baseCommit": "796a193f0c3f656e82c179c1ac298aafe48df465",
+  "state": "owner sources frozen; integration gates pending",
+  "sourceState": "uncommitted working tree; not a published or final same-commit full-library result",
+  "ownerFileCount": 132,
+  "ownerFilesDigest": "796765685463debca266e1732d660d82cc0b5af348179249f835a0d7b31413e0",
+  "files": [
+    {
+      "path": "docs/analysis/config-provider.md",
+      "sha256": "52203b55c3e94fd40a9a2a29fdf374ebbd2faebb7d2b5a99a67cadd24cb96da7"
+    },
+    {
+      "path": "docs/audit/2026-10-29-config-provider-contract-audit.md",
+      "sha256": "043f4736acffc3ba4b9e89b02b6a55a1f3442ca5fc0fa2dc939a197fe5b721f6"
+    },
+    {
+      "path": "docs/audit/evidence/config-provider-button-contrast-control.json",
+      "sha256": "d002414d6eb029ac72baaa74d78f646d03cbd238520838bbaf842485fe82cca4"
+    },
+    {
+      "path": "docs/foundation/icons-contract.md",
+      "sha256": "32f1bfa380c9c33a35a7abb1ba5b3e36e53ca5c07197b39f07099b165f295aea"
+    },
+    {
+      "path": "docs/foundation/locale-contract.md",
+      "sha256": "dabb416839f6313261dd93c8a3498ec38820e285029c8069f8da310b24592a45"
+    },
+    {
+      "path": "docs/migrations/config-provider-contracts.md",
+      "sha256": "7b6f9f746942afe6c13e40c95121c136c58909059963c9196bb85896b85b7f40"
+    },
+    {
+      "path": "packages/form-core/README.md",
+      "sha256": "7c463015e7764ab53d0daf7aa95d05a0a05bd63ff81c726739dc025dcc914f11"
+    },
+    {
+      "path": "packages/form-core/src/form.ts",
+      "sha256": "a0a81391a5dd4d7898aae4b11337128e6d6f1e6a35cbcb268673a0d9b12f6109"
+    },
+    {
+      "path": "packages/icons/README.md",
+      "sha256": "e2bef40d7827ec4e95bcf4ed88ba52710ec8b0a4952cdf7c10bb67c76125bbba"
+    },
+    {
+      "path": "packages/icons/src/__tests__/api.test-d.ts",
+      "sha256": "9129bf787e4a0145a8de74717b9068286a1401ad7a35bdb91b87dc93e747bd2a"
+    },
+    {
+      "path": "packages/icons/src/context.ts",
+      "sha256": "affd0df4d3787d599188b4fb3506da24d36448b28399d2e677ea7cc4e4eff1d3"
+    },
+    {
+      "path": "packages/locale/README.md",
+      "sha256": "e23407f6e5e128727dcc8ded200027aef276fc2d06d54e39eac0595be4e0ba9a"
+    },
+    {
+      "path": "packages/locale/src/__tests__/locale-provider.test.ts",
+      "sha256": "655be4f42ad6397cf86b1c1a81c8c50a12d546b784f434931eb7c2120b875787"
+    },
+    {
+      "path": "packages/locale/src/__tests__/locale.test-d.ts",
+      "sha256": "87e18a626f2dc3c3d9bc978a227cb0e2a9ede3688595a4bfcd67fa5bdade74bb"
+    },
+    {
+      "path": "packages/locale/src/__tests__/locales.test.ts",
+      "sha256": "3e9bcd3af9c50652024bc04685664ef486a9f633bd3d14abea5c1b6718e65245"
+    },
+    {
+      "path": "packages/locale/src/__tests__/use-locale.test.ts",
+      "sha256": "c94f2465c0ced940e21a249d26bd6d80244bf60802d3a0c6d8097f928a744ca8"
+    },
+    {
+      "path": "packages/locale/src/context.ts",
+      "sha256": "560c6639c69a02f52f62492a28cad5850d475eef512ba5be0b5aaed9183c0e8c"
+    },
+    {
+      "path": "packages/locale/src/index.ts",
+      "sha256": "ab28cadf428925b4bebce657aeeabdf6016fcd84806ffdd401a4b5344e7a17e8"
+    },
+    {
+      "path": "packages/locale/src/locale-provider.ts",
+      "sha256": "c0bb55eaedb372fa0f8d406580679a7b6256f222a4becd10c33c2d0a6c30df64"
+    },
+    {
+      "path": "packages/locale/src/locales/en_US.ts",
+      "sha256": "a514eddc582b4cf066412b63cb8b9135795ced44d1913930d27755fab454d4d7"
+    },
+    {
+      "path": "packages/locale/src/locales/zh_CN.ts",
+      "sha256": "a3402e645c3c008cdf1ed546e0d490625c89a1054b633a17e0dbecd387c06ca9"
+    },
+    {
+      "path": "packages/locale/src/types.ts",
+      "sha256": "a2e2bbdb7e5645d8c632a6caac1341a9539e606d9d83c8f8a8f995f349c5b900"
+    },
+    {
+      "path": "packages/locale/src/use-locale.ts",
+      "sha256": "28578143ee7957d61310542b68388f7b965874e4a150fea8ad46a74c02c99271"
+    },
+    {
+      "path": "packages/ui/src/affix/Affix.vue",
+      "sha256": "9b7155faaa4d0934253244775708003602fecd81582a841a50c48c3895fe72d4"
+    },
+    {
+      "path": "packages/ui/src/affix/README.md",
+      "sha256": "b231eef177e69c507ded6b2786fa7d5d6a881ed0118607bfc5be361ce3f1725a"
+    },
+    {
+      "path": "packages/ui/src/affix/__tests__/s54-issue54.test.ts",
+      "sha256": "40b34a990c01a16bd5589bfecda09d951667ec8f9f82d29c6e786dcc6fa185b7"
+    },
+    {
+      "path": "packages/ui/src/affix/__tests__/type.test-d.ts",
+      "sha256": "26d267c11449a7764d848432a798fc9f7fea031b78259a76bf104aaae7a0469b"
+    },
+    {
+      "path": "packages/ui/src/anchor/Anchor.ts",
+      "sha256": "1b8429179fe103b5d5cf61062c8329f79926a0a98060ca44a0d68dcbcd316c4f"
+    },
+    {
+      "path": "packages/ui/src/anchor/README.md",
+      "sha256": "b1a2db7daa919faf22e5e1481c3a5cff7c98472f08f5c397c1c396a921e0ceb8"
+    },
+    {
+      "path": "packages/ui/src/anchor/index.en-US.md",
+      "sha256": "b58cef79f835b7ad9f030fac89903967af937ea3efe5607d2d90a0f627e5f2cf"
+    },
+    {
+      "path": "packages/ui/src/anchor/index.zh-CN.md",
+      "sha256": "f6301439e010d234480d76a22d9559e4252116cb64f220ea11fad97ef604637f"
+    },
+    {
+      "path": "packages/ui/src/app/App.ts",
+      "sha256": "0795817b6a47d6a30bd6e666caa9862dcbe01395ef4de6a6e20e96dd1388fd74"
+    },
+    {
+      "path": "packages/ui/src/back-top/BackTop.ts",
+      "sha256": "838e3121eb5fc287edad3699a3d9006ee2a9a770d05cb3f00e0fc7d6aff67531"
+    },
+    {
+      "path": "packages/ui/src/border-beam/BorderBeam.ts",
+      "sha256": "fc2053ff4d6515fabcf5a7fb79c6e2d4f011c450f8be64eac4b22dd38976e330"
+    },
+    {
+      "path": "packages/ui/src/calendar/Calendar.vue",
+      "sha256": "78d6abdad2ab9dac68fbe4263c9f053c738a6e4fa8f773d692fc7cfb7b5b0be8"
+    },
+    {
+      "path": "packages/ui/src/card/Card.vue",
+      "sha256": "02d21a536823c77635450ef908ea6342c8523c6709f54049cdd7e5e2fba03cb5"
+    },
+    {
+      "path": "packages/ui/src/card/CardMeta.vue",
+      "sha256": "cd8d87f9ae3f6329c59e0f7c3be9061b764a1c4011bf7016bdd7e12bb9ee5ccc"
+    },
+    {
+      "path": "packages/ui/src/carousel/Carousel.ts",
+      "sha256": "e02248dc76f538d8645e7c1c7d28bb61c26c958503d1fc7aff4ec1f4b809c9dd"
+    },
+    {
+      "path": "packages/ui/src/cascader/Cascader.ts",
+      "sha256": "496406fc50a37f8fec4b9903a8e62754744a0dadbe1bda7ccfd7fb6853c97d12"
+    },
+    {
+      "path": "packages/ui/src/checkbox/Checkbox.ts",
+      "sha256": "b5f2accd53f08351bf80a43d2f517be8cacfa5ded1bcec96dd8c38603fa5dfff"
+    },
+    {
+      "path": "packages/ui/src/checkbox/Group.ts",
+      "sha256": "be9aa66962cdfa4de173af95ea820a1b851f6e4b47c7b47d683e6b6fdcf6d34a"
+    },
+    {
+      "path": "packages/ui/src/color-picker/components/ColorPresets.vue",
+      "sha256": "c71ec45a9dcae76f35fb591201b6da5ac987bd6e35003649b7baad2b6b28ea48"
+    },
+    {
+      "path": "packages/ui/src/color-picker/components/ColorTrigger.vue",
+      "sha256": "b64f2eb1f6c12eb65cf528aa46322fd3136e9114d7db172073472d324ae14049"
+    },
+    {
+      "path": "packages/ui/src/color-picker/hooks/use-mode-color.ts",
+      "sha256": "68a5baff2eb342d90e843bfe7e710835be74c0055709e7d0f7d93a0598a8c382"
+    },
+    {
+      "path": "packages/ui/src/config-provider/ConfigProvider.ts",
+      "sha256": "880a02270b183db316df06030bad04f36615e767ef89840a8dfbb4ef5a6d0428"
+    },
+    {
+      "path": "packages/ui/src/config-provider/README.md",
+      "sha256": "fb89f37d517b408786c28f12210c487af4cb9670c6f58515dd71176da8ca7a87"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/browser-fixture.mjs",
+      "sha256": "a24924280ad2f800d6c45c5d64912e89291cf7023e3002d566a2210d861d49bd"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/browser.mjs",
+      "sha256": "c5d035b61ab50ad60062f1391519031f932ee191d44f5382a0c2794a0a6a7abd"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/consumers.test.ts",
+      "sha256": "871d689dfbc6a62df533808fe998c5007c262f290c25b57d6659e81e4e658b3f"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/contracts.test.ts",
+      "sha256": "b80f61604dccbd81d996afa02e462aba1abae2d759d551e58e0bc9728c245b26"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/demo.test.ts",
+      "sha256": "78a07e772119d530ee4cf71d9cbbb5b919b7b7ec33a9b783b81546d3403b4894"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/index.test.ts",
+      "sha256": "33c9b352198042558fd95be1983a42b4f8ca342be743c1935e685e0db267bec0"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/notices.test.ts",
+      "sha256": "c9ab5da6f218410e8b13411ad142d774cbb94e264e5c980d388fc4a9eb58ec33"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/probe.ts",
+      "sha256": "ed5b259a407014e91172da2e593460f3f8820b65de5eab7168a17dbc032f4be1"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/semantic.test.ts",
+      "sha256": "fd78f9a80c5b61204551711321d032f720aa66e3c3851703a6af24199e601f4c"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/targets.test.ts",
+      "sha256": "81f4b54e42c2df0322d9c0a47d85c9f7ef2b871f0d7d35252b1318c8902468cf"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/theme-state.test.ts",
+      "sha256": "bf38e22aad0747c82aae3072b7f16e4250a0d40c5d461aadbf7bac7ebfc29f9d"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/theme.test.ts",
+      "sha256": "d18a095e75e14b62a02fd3d185441f0b6d35de832117663da07033c9f3bff564"
+    },
+    {
+      "path": "packages/ui/src/config-provider/__tests__/type.test-d.ts",
+      "sha256": "9e5fac9a9395c425d6502970d685608762a786eacdfbbd09dc1252469b0e7c8d"
+    },
+    {
+      "path": "packages/ui/src/config-provider/context.ts",
+      "sha256": "0927c693129d61ba70f7416863108fd324c84e1f6ffd521a936afa09ca25fe4a"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/component-config.md",
+      "sha256": "07598b4fcabb7b84c5a35aa89c74839d7e0f1827f20160c2defc79f99969f0f5"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/component-config.vue",
+      "sha256": "6aa67be6713065d7854967d3437b2a79fb1fb47621f3a460efd994844cfa3c97"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/component-size.vue",
+      "sha256": "100c4f1f909523587e30121671a358c4d9f0d9c3a0db9e118003a5d89c8e67b7"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/direction.vue",
+      "sha256": "200ee4d5e8e883f87521b706198f6433b9f8fc45a18cb5b2c3a35565278ab98a"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/locale.md",
+      "sha256": "0686624a1da82278ddd4ca69d7f9a159549c3027131f97386aebdd0f358107d9"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/locale.vue",
+      "sha256": "2a1887b922d8c49b3dc7ff5e7fdd6d58f85eb3ab4d72f24e3ef7ac4a2a543429"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/prefix-cls.css",
+      "sha256": "32bb92641af718e7e37781b7df80bd89f99645f30abfcfcd6d16cd9ed377b917"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/prefix-cls.md",
+      "sha256": "a84f8a7d54690dd81bfb1077ee80cd2fbe78b03dacdfbd4c32031ad4104b7148"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/prefix-cls.vue",
+      "sha256": "faf1c53d1d654d832b5de03ffff2c0e8c9b99acaab3af6f282a15cf5ab1c3448"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/size-disabled.vue",
+      "sha256": "9cca4dcba627db736c475ef44a2d1c43c3e9754867395426a655372a1495b7a7"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/theme.md",
+      "sha256": "582c20af9b4ce1fa437fdceea1418e16b730a2015eed40d697e00f670fc64682"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/theme.vue",
+      "sha256": "5adbc151e96223f5ea4cd540999dd6f767dfa8b435ca720642100972138d2d82"
+    },
+    {
+      "path": "packages/ui/src/config-provider/demo/use-config.vue",
+      "sha256": "360c72090bcc603ce92a9f6711e272718f3356b99daffc07e4ca313f825b01e1"
+    },
+    {
+      "path": "packages/ui/src/config-provider/hooks/use-theme.ts",
+      "sha256": "3aac5e31fcd01860e17c83027cb86f1f60cb937d58335ee56b7019853420adf5"
+    },
+    {
+      "path": "packages/ui/src/config-provider/index.en-US.md",
+      "sha256": "aa6e3771eb0b5918aefeb4053f546b7b0f4ef0caf21c6327b4461f930c35553c"
+    },
+    {
+      "path": "packages/ui/src/config-provider/index.ts",
+      "sha256": "54d9d9a9613f709b2d872c6e53a00586a749f2a110169ea9bf6f4a4947efc7e7"
+    },
+    {
+      "path": "packages/ui/src/config-provider/index.zh-CN.md",
+      "sha256": "f9fafb5ccf98660066a86b4e4837a6e97fe607b591ec5d3827ac48fc0f570d11"
+    },
+    {
+      "path": "packages/ui/src/config-provider/interface.ts",
+      "sha256": "b42cfde59efa54337ebe7a2f3261d8dad89accd1ab0e502e7046b4ac5629f2eb"
+    },
+    {
+      "path": "packages/ui/src/config-provider/use-theme-scope.ts",
+      "sha256": "7b410b6b7772055a3ef1a7e180db9cb59086ed32ec2fd0d272ab573e8d2b10b6"
+    },
+    {
+      "path": "packages/ui/src/date-picker/DatePicker.vue",
+      "sha256": "9c877f89786e3cc87243ec70dd8342d2becd0a87c245867f3011bcdfa64c4b85"
+    },
+    {
+      "path": "packages/ui/src/date-picker/RangePicker.vue",
+      "sha256": "d4c44f34571ea5c56b3d94b48f22b98fb373990cf89b75370c227e4847ba9d34"
+    },
+    {
+      "path": "packages/ui/src/drawer/Drawer.ts",
+      "sha256": "36824bf9832c6be0e9e148b4047ba174586a466c389d7039e48739eabe7f0989"
+    },
+    {
+      "path": "packages/ui/src/dropdown/Dropdown.ts",
+      "sha256": "25e8de1795285fe66518165cddd2d38f224bfd72c7cd6157cd5175bedd68c6b8"
+    },
+    {
+      "path": "packages/ui/src/empty/Empty.vue",
+      "sha256": "ba07c44964c543480d7fea347ee445a7bad92a3871238f27c787a08c61853475"
+    },
+    {
+      "path": "packages/ui/src/empty/components/Images.ts",
+      "sha256": "4c937c247f6bfb9460ace5a2d5fe481eb7622479b9e1c1a81835db937805474b"
+    },
+    {
+      "path": "packages/ui/src/form/FormItemLabel.ts",
+      "sha256": "59a12466017647b5ed24e7521c6a145bb0688285d9496ce2f7383947e57bf218"
+    },
+    {
+      "path": "packages/ui/src/mentions/Mentions.ts",
+      "sha256": "bbbef3e51fb085becd519b1ec1b6143f0980ec6134cf7c8e47547ad392f902a2"
+    },
+    {
+      "path": "packages/ui/src/message/icon.ts",
+      "sha256": "bc8d93d26f668767b429430433f8747bdaa1998c826f4924a5a07f9b0e4976c2"
+    },
+    {
+      "path": "packages/ui/src/message/index.en-US.md",
+      "sha256": "5c50b8d15bb9022b1a1ce90b88c6b7cdae047c627249f09aa2dc635363cf658e"
+    },
+    {
+      "path": "packages/ui/src/message/index.zh-CN.md",
+      "sha256": "83e934f7d4d45ea2b337389d3d96a2345a7ba87c2e4eef0db8c23caf26125d73"
+    },
+    {
+      "path": "packages/ui/src/message/useMessage.ts",
+      "sha256": "337feb4b47453dea2b93e9058d9215c75d24102fc916a30a52031411126b712f"
+    },
+    {
+      "path": "packages/ui/src/modal/ConfirmDialog.ts",
+      "sha256": "067667a49a62f7da4cfe7c04fbad1b8a41cb1d11c104717f2c63050a41180ed2"
+    },
+    {
+      "path": "packages/ui/src/modal/Modal.ts",
+      "sha256": "7549d75ac54c2c19df0b57091e548f825723fddf708c9d2cf7dc696c8bfe4bc9"
+    },
+    {
+      "path": "packages/ui/src/modal/ModalPanel.ts",
+      "sha256": "2693986ec31830676b951640545f9703567921774cd794e005ddda1ca33cb642"
+    },
+    {
+      "path": "packages/ui/src/modal/useModal.ts",
+      "sha256": "012addd2b4442f133de11010b49c966196596e9d4e5b9238dd64f329b130677a"
+    },
+    {
+      "path": "packages/ui/src/notification/__tests__/s47-issue47.test.ts",
+      "sha256": "f46ea81e1d16fffc20ce838c88afab29bb61279512bce95687aeae4bd8346a05"
+    },
+    {
+      "path": "packages/ui/src/notification/engine/Notice.ts",
+      "sha256": "152ff7ab904853132f28ac54e27cc092eff0b9c6e547a3175da0cad2d8e9b3c7"
+    },
+    {
+      "path": "packages/ui/src/notification/engine/NoticeList.ts",
+      "sha256": "fb00f26e5f7008e29b9f75471c2b39c1bc17e186942240c476ebcba2594e5983"
+    },
+    {
+      "path": "packages/ui/src/notification/engine/interface.ts",
+      "sha256": "239a7ba47344de8638ef2691166822dd7d067f4b1aa7d1acc27f45cc5b83af0e"
+    },
+    {
+      "path": "packages/ui/src/notification/engine/useNotification.ts",
+      "sha256": "1cb91457d2dd44bba846028676c271d181f1cd329fa966493fe38c58a546290e"
+    },
+    {
+      "path": "packages/ui/src/notification/index.en-US.md",
+      "sha256": "b914ff5b851d5caa603682d335e47ad178a296a2d75d6429da0e65fe8f0465b9"
+    },
+    {
+      "path": "packages/ui/src/notification/index.zh-CN.md",
+      "sha256": "e9bfd6143151f4931030feea930b2fc51a3621bb988638280f21acfaa0eb12ad"
+    },
+    {
+      "path": "packages/ui/src/notification/useNotification.ts",
+      "sha256": "091b371e45fc026deeeee8fc6a9db877d705764a889539b92b4b8fff13245cef"
+    },
+    {
+      "path": "packages/ui/src/pagination/Pagination.vue",
+      "sha256": "4b08c33516c833f68a662511cea3513f86ec0f4e1bb221d1a2597b8d5381d831"
+    },
+    {
+      "path": "packages/ui/src/popconfirm/PurePanel.ts",
+      "sha256": "c577361d00f6197a770a039928b7910f17c092663f77108a0e997cb05dfe74e9"
+    },
+    {
+      "path": "packages/ui/src/qr-code/QrCode.ts",
+      "sha256": "fbeed19d3c8b52e74b959460d54709569b252143822527478a26ab1255822cf3"
+    },
+    {
+      "path": "packages/ui/src/radio/Group.ts",
+      "sha256": "53f32ba0a3c07b9b9199a4c2feeb2f3c11f428850fd7a44d2421d749b3011947"
+    },
+    {
+      "path": "packages/ui/src/radio/Radio.ts",
+      "sha256": "c13eb32e1f15b7a048b9aed30e3e9b3248dfc366454a24d58f426b28a34c4855"
+    },
+    {
+      "path": "packages/ui/src/select/Select.ts",
+      "sha256": "7e0ced7f1b509cfd1610b4b2075bee5ee751afe2f8712774a2e2e203fb61c9e5"
+    },
+    {
+      "path": "packages/ui/src/switch/Switch.ts",
+      "sha256": "a6449819e90d5b6c328f5dada44e624d967de333ae6070514c9db3029c4d253b"
+    },
+    {
+      "path": "packages/ui/src/table/Table.ts",
+      "sha256": "41a388f8a9369e2938c50edad0ecefc002b68c2a39d59086d111d0ab85ee632f"
+    },
+    {
+      "path": "packages/ui/src/table/hooks/use-filter.ts",
+      "sha256": "bac22b992c090f2ce92d256d67db8caa84830f4a46ce4855f701903e1db6be6d"
+    },
+    {
+      "path": "packages/ui/src/table/hooks/use-sorter.ts",
+      "sha256": "98f7a3983c36f0a888ebe7bdb38c987a95c48f30cb6bae577bd1557d0858f903"
+    },
+    {
+      "path": "packages/ui/src/table/hooks/use-table-data.ts",
+      "sha256": "b538e3d4587bccd55b899775f029116bc520d039d95788f9a5819fedf2be20e0"
+    },
+    {
+      "path": "packages/ui/src/tabs/Tabs.vue",
+      "sha256": "13dd3bb9dec5b7192995340d4376d461b52ccefda170783e4ddbc270e609fe71"
+    },
+    {
+      "path": "packages/ui/src/tabs/index.en-US.md",
+      "sha256": "6ae192b188733709bc486c9f920fe4339c8df7553b208183ba8567862969869f"
+    },
+    {
+      "path": "packages/ui/src/tabs/index.zh-CN.md",
+      "sha256": "9683f1ea5e41fad6162057644587f3c81813be3998619f9dbfeb5fdb1f4bdcd3"
+    },
+    {
+      "path": "packages/ui/src/tag/Tag.ts",
+      "sha256": "8571fd759abc2ca800565442d87634281c09bbeedfcf425e5d89d1ddbaa21902"
+    },
+    {
+      "path": "packages/ui/src/tour/PurePanel.ts",
+      "sha256": "10b7ba27fd8655fd22fa2c9df1b74eead402b2baa7a84f03f1678ec08498379d"
+    },
+    {
+      "path": "packages/ui/src/tour/panel.ts",
+      "sha256": "345b638872ffe65861c032063fe5fd51f0281de1f0f9f8f9f76506cf6d92ac64"
+    },
+    {
+      "path": "packages/ui/src/transfer/ListItem.ts",
+      "sha256": "2427d297c9cd068c3fd13cfff2952b9101b1607c332695a082d26c0f1a79cbdc"
+    },
+    {
+      "path": "packages/ui/src/transfer/README.md",
+      "sha256": "a547cd660226f40ccb08f123c9841fe3e6a55f3fea9c5556b99354763f64140c"
+    },
+    {
+      "path": "packages/ui/src/transfer/Search.ts",
+      "sha256": "6fe2f5801e82eaef5c6543aaaf636d898d82b4271b8ed81764085b335ea25bf7"
+    },
+    {
+      "path": "packages/ui/src/transfer/Section.ts",
+      "sha256": "8ffd91f0e89db523b41212eaa35788954df0dfbfdfb351295e5277fef7e5563f"
+    },
+    {
+      "path": "packages/ui/src/transfer/Transfer.ts",
+      "sha256": "52e26fdaa6cd9804cf5f0fe114a4eff56956ea8a662289780338a7a6647ab5b0"
+    },
+    {
+      "path": "packages/ui/src/transfer/__tests__/search-events.test.ts",
+      "sha256": "92811cab76ba283b54279e5925c90927c4d49f6ae894138d9ab74ed514d57ee0"
+    },
+    {
+      "path": "packages/ui/src/tree-select/TreeSelect.ts",
+      "sha256": "4ec9457324a79f4b3b3896dacd1cc2f47dddf8025af44cb06fc41ef9213a50d0"
+    },
+    {
+      "path": "packages/ui/src/typography/Base.ts",
+      "sha256": "082d45d7fba53b3bbda5a9da3df250f86942645fb887cf803a4ae6a44e824652"
+    },
+    {
+      "path": "packages/ui/src/upload/Upload.ts",
+      "sha256": "ccd41530f1ef1fffff5c35743e297eeb976b03ae47ec5b6dc73bd48789bace31"
+    },
+    {
+      "path": "packages/ui/src/watermark/Watermark.ts",
+      "sha256": "3b2f9daba03cac9998ed5622e901e44ffd10dc5228e52d56bf69d22641ae6c09"
+    },
+    {
+      "path": "registry/source/locale-apollo-overrides.json",
+      "sha256": "cc0f1a906fff4b32b0eec4bd5cf50e2977023d74099bb977b215f2371acf0a49"
+    },
+    {
+      "path": "registry/tools/gen-locale.mjs",
+      "sha256": "f655920c5bffcc7ed469f8ad865455b2aa7684ea87e21d8b3520b198c89897ed"
+    }
+  ],
+  "readerInputCount": 105,
+  "readerInputsChanged": [],
+  "sharedDependencyReferenceAtHandoff": [
+    {
+      "path": "packages/theme/src/algorithms/compact.ts",
+      "sha256": "e26047995751be82951edb20fb34722419b0285995dc48bf67c0e2131e8369ff",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/algorithms/dark.ts",
+      "sha256": "372e058fdda671c4b9ac37faa5073755ae0679046a5495eefb938e5b52b1b9e1",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/algorithms/default.ts",
+      "sha256": "3fc1c699cf81a6013f1c74523630f51dcb218837eee00891b8d9915199aed424",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/algorithms/palettes.ts",
+      "sha256": "bd19e64231fda03275e96aec46b2a8b2b259e0925d75d03bc91bf2323d54bfdc",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/alias.ts",
+      "sha256": "37ee700d450859d5490a31b5807b924525ec52be9cac53a2ff249ab1b74da55b",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/css-var.ts",
+      "sha256": "9791217cc19a31f861b0cdb0c0f5c7d907c2d480c3c23f9f2e81e450d33175ed",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/get-design-token.ts",
+      "sha256": "153ffde184b9b873ed2d227eb007be912be541e6509f1d0cc30437a883f78cbe",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/index.ts",
+      "sha256": "7227f7fd7b15d006763da68c0921699be771b7fe8dcfd558f353084971c36ed6",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/seed.ts",
+      "sha256": "bd070377a92ab750772e291596a969aeb449904178b3d88b5ef60568e7827993",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/shared/color-map-token.ts",
+      "sha256": "d87a858c64100c83e2fb9f049888e9c52f7a5980c42fa9df5e09a99e452ff7f8",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/shared/common-map-token.ts",
+      "sha256": "b19e5a9a6b9a32af22491179de1d7ba5db1b9fc9fe3d3bd306dcc471d0097142",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/shared/control-height.ts",
+      "sha256": "3b6b7bd8bb21de5bc54f228dacfd9bd10896fd0628225cab2eed47a671089fe7",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/shared/font-map-token.ts",
+      "sha256": "72d6b53b826777e45426109433dd35f9facfe5b56deac167606ba9009a99d02b",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/shared/font-sizes.ts",
+      "sha256": "a30fcf101693285f871ea437b63c2fa02925eec070cafea830ec67b9f5a9770e",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/shared/get-alpha-color.ts",
+      "sha256": "5e6141565744a69d72f3f902ea055e69a9bd5abb71e3e864a82ab54f94e44e22",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/shared/radius.ts",
+      "sha256": "e1ee59801f552127c9faddb96e7dfc80a83d5f8a98b6cb1ec6c3a89d3c89b67d",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/shared/size-map-token.ts",
+      "sha256": "2fc948a9604eb59095f1b4cb1ebf2024393ea2e34a53f5468fa8bf70659f2664",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/types.ts",
+      "sha256": "5878899580401d7f1ab3463e013ba4c228b34a464204042307b552c421507ed1",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/theme/src/vue.ts",
+      "sha256": "13d526128ea11b85bc7528ce34aa76085ee505f9a6c17e7bc84ac455174e7837",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/ui/src/form/FormItem.vue",
+      "sha256": "0a5a2c7e9ec18bd30e4c1692bbff3b8902052a84d41b38fbb169ba19ce0198ab",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/ui/src/index.ts",
+      "sha256": "49896f35823b4ce1a9d94b9aa8b8c7f479697dc7514ac972c8a9e64555660672",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/ui/src/input/Input.ts",
+      "sha256": "d233c3b8debc8fab9c4136e2fb3dbbc0af7199c9f8893595296cb066894e13f2",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/ui/src/input/Password.ts",
+      "sha256": "2447b9fca5f0aa65b21f20d9af8086e7ff2ea09aebadf075d792712fa5575ca7",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/ui/src/input/engine/BaseInput.ts",
+      "sha256": "c966b55000e22cb5490d24ec213bfbce1bd0ca7a1c4cabfbbfab363d617ce027",
+      "ownership": "integration or peer"
+    },
+    {
+      "path": "packages/ui/src/input/engine/Input.ts",
+      "sha256": "fd7ecba10e8ab0d5b7cf369ab4ec068749685942591d24a3ca8a7487df52adb8",
+      "ownership": "integration or peer"
+    }
+  ],
+  "commands": [
+    {
+      "name": "types",
+      "command": "export PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH\npnpm exec vue-tsc --noEmit -p /tmp/apollo-config-provider-audit/tsconfig.json > /tmp/apollo-config-provider-audit/types-freeze.log 2>&1"
+    },
+    {
+      "name": "runtime",
+      "command": "export PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH\npnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/config-provider packages/locale/src packages/ui/src/message packages/ui/src/notification --maxWorkers=1 --reporter=json --outputFile=/tmp/apollo-config-provider-audit/runtime-freeze.json > /tmp/apollo-config-provider-audit/runtime-freeze.log 2>&1"
+    },
+    {
+      "name": "browser",
+      "command": "export PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH\nCP_BROWSER_EVIDENCE=/tmp/apollo-config-provider-audit/browser-freeze.json node packages/ui/src/config-provider/__tests__/browser.mjs > /tmp/apollo-config-provider-audit/browser-freeze.log 2>&1"
+    },
+    {
+      "name": "generator",
+      "command": "export PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH\nnode registry/tools/gen-locale.mjs --check > /tmp/apollo-config-provider-audit/generator-freeze.log 2>&1"
+    },
+    {
+      "name": "probes",
+      "command": "export PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH\npnpm exec vitest run --config /tmp/apollo-config-provider-audit/vitest.config.mjs --reporter=json --outputFile=/tmp/apollo-config-provider-audit/probes-final.json > /tmp/apollo-config-provider-audit/probes-final.log 2>&1"
+    }
+  ],
+  "checks": {
+    "runtime": {
+      "exitCode": 0,
+      "passed": 495,
+      "failed": 0,
+      "skipped": 3,
+      "artifact": "/tmp/apollo-config-provider-audit/runtime-freeze.json",
+      "projects": [
+        "unit",
+        "dom-contract",
+        "a11y",
+        "theme"
+      ],
+      "scope": [
+        "config-provider",
+        "locale",
+        "message",
+        "notification"
+      ]
+    },
+    "probes": {
+      "exitCode": 0,
+      "passed": 66,
+      "failed": 0,
+      "artifact": "/tmp/apollo-config-provider-audit/probes-final.json"
+    },
+    "browser": {
+      "exitCode": 0,
+      "passed": 62,
+      "failed": 0,
+      "artifact": "/tmp/apollo-config-provider-audit/browser-freeze.json",
+      "covers": [
+        "Node SSR and hydration native HTML/SVG contexts",
+        "native variable priority and scope ownership",
+        "dynamic opaque roots and Portal relocation",
+        "message/notification existing content, current classes/labels, same-key updates, HTMLElement and ShadowRoot migration, close behavior",
+        "all eight Demos in default/dark/compact/both with actual interactions and axe",
+        "Button same-browser committed-source foreground parity"
+      ]
+    },
+    "strictTypes": {
+      "exitCode": 0,
+      "diagnostics": 0,
+      "artifact": "/tmp/apollo-config-provider-audit/types-freeze.log",
+      "config": "/tmp/apollo-config-provider-audit/tsconfig.json"
+    },
+    "localeGenerator": {
+      "exitCode": 0,
+      "languages": 73,
+      "artifact": "/tmp/apollo-config-provider-audit/generator-freeze.log"
+    },
+    "format": {
+      "exitCode": 0,
+      "artifact": "/tmp/apollo-config-provider-audit/biome-last.log"
+    },
+    "diffWhitespace": {
+      "exitCode": 0
+    }
+  },
+  "broaderAssociationRun": {
+    "artifact": "/tmp/apollo-config-provider-audit/associated-final.json",
+    "passed": 5579,
+    "failed": 22,
+    "skipped": 3,
+    "meaning": "intermediate run; null case subsequently fixed, 20 Form semantic + 1 Mentions theme handed to Input owner; not a green final integration gate"
+  },
+  "remaining": [
+    "Input owner FormItem ref preservation and associated Form/Mentions exact DOM/style evidence; integration owner reruns final shared gates",
+    "three original locale-generator fixture skips retained; independent 73-language CLI check passed",
+    "Root owns Registry, shared norms, root exports, final same-commit full gates, published consumers and authorized external actions",
+    "confirmed independent Button fallback accessibility defect in Chromium without contrast-color; no Button implementation changes"
+  ],
+  "controls": {
+    "packageBuilds": false,
+    "distWrites": false,
+    "pngWrites": false,
+    "stagingOrCommits": false,
+    "pushes": false,
+    "nextUnitStarted": false
+  }
+}

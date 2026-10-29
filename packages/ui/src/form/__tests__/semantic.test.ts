@@ -13,13 +13,14 @@
  *    （value / id / aria-* / 事件合成）只有真实控件才看得到。
  */
 
-import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import type { DomRenderResult } from '@apollo-design/test-utils';
 import { describe, expect, it } from 'vitest';
 import { h } from 'vue';
-
 import baseline from '../../../../../tests/compat/baselines/form.dom.json';
 import Input from '../../input';
+import { inputContractReference } from '../../input/__tests__/contract-reference';
 import { Form, FormItem } from '../index';
+import inputReference from './input-contract-reference.json';
 
 const BP = { prefixCls: 'apollo-form' };
 
@@ -131,21 +132,25 @@ const CASES: Record<string, () => DomRenderResult> = {
     form({ name: 'login' }, item({ label: 'User', name: 'user', prefixCls: BP.prefixCls })),
 };
 
-domContractTest('Form', {
-  baseline,
-  keepStyle: false,
-  allow: {},
-  render: (id) => {
-    const build = CASES[id];
-    if (!build) {
-      throw new Error(
-        `[Form semantic.test] 基线里有用例 "${id}"，但 CASES 里没有对应构造。基线用例：` +
-          baseline.cases.map((c) => c.id).join(', '),
-      );
-    }
-    return build();
+inputContractReference(
+  'Form',
+  {
+    baseline,
+    keepStyle: false,
+    allow: {},
+    render: (id) => {
+      const build = CASES[id];
+      if (!build) {
+        throw new Error(
+          `[Form semantic.test] 基线里有用例 "${id}"，但 CASES 里没有对应构造。基线用例：` +
+            baseline.cases.map((c) => c.id).join(', '),
+        );
+      }
+      return build();
+    },
   },
-});
+  inputReference,
+);
 
 describe('Form · 用例覆盖', () => {
   it('CASES 与基线一一对应（不多不少）', () => {

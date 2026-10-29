@@ -5,4 +5,4 @@ title:
   en-US: Component Token
 ---
 
-在 Collapse 根节点覆盖 `--apollo-collapse-header-bg`、`--apollo-collapse-content-bg` 与内边距变量，切换预设即可实时更换主题配色。
+通过当前 `ConfigProvider theme.components.Collapse` 实时配置全部十个组件 Token，并保持颜色与当前主题一致。展示普通和无边框内容，切换宽松间距可比较默认及 small 的内边距。

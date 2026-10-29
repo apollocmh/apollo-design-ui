@@ -83,7 +83,7 @@ const desc = computed<VNodeChild>(() => {
   }
 
   if (props.color.cleared) {
-    return locale.transparent;
+    return locale.value.transparent;
   }
 
   if (props.color.isGradient()) {

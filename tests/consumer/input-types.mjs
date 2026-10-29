@@ -1,4 +1,4 @@
-/** Published root/input declarations, 24 unchanged demos and public SFC contracts. Never builds. */
+/** Published root/input declarations, 24 current demos and public SFC contracts. Never builds. */
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -117,9 +117,9 @@ void focus;
   <ConfigProvider :theme="{components:{Input:{paddingBlock:8,inputAffixPadding:'0.5rem'}}}">
     <Input ref="input" v-model:value="value" v-bind="field" aria-label="Public input" :style="['color:inherit',{'--apollo-input-padding-inline':'16px'}]"><template #prefix><strong>@</strong>{{0}}</template><template #suffix><span>kg</span></template></Input>
     <TextArea ref="textarea" v-model:value="value" v-bind="area" :styles="{textarea:{fontSize:'18px'}}" />
-    <InputPassword v-model:value="value" action="hover" :visibility-toggle="{visible:false,onVisibleChange:visible=>{const state:boolean=visible;void state;}}" />
+    <InputPassword v-model:value="value" action="hover" :visibility-toggle="{visible:false,onVisibleChange:visible=>{const state:boolean=visible;void state;}}"><template #icon="{ visible }"><span>{{ visible ? 'Hide' : 'Show' }}</span></template></InputPassword>
     <InputSearch v-model:value="value" enter-button="Search" :on-search="search" :styles="{button:{root:{height:'18px',minHeight:'0px'}}}" />
-    <InputOTP ref="otp" v-model:value="value" :length="4" :on-input="changed" :separator="index=>index===1?'-':null" />
+    <InputOTP ref="otp" v-model:value="value" :length="4" :on-input="changed"><template #separator="{ index }">{{ index===1 ? '-' : '' }}</template></InputOTP>
     <InputGroup size="large" compact><Input size="small" /><Input /></InputGroup>
   </ConfigProvider>
 </template>
@@ -128,7 +128,7 @@ void focus;
 const entrySfc = `<script setup lang="ts">
 import Input, { Input as NamedInput, TextArea, InputPassword, InputSearch, InputOTP, InputGroup,
   type InputProps, type TextAreaProps, type InputPasswordProps, type InputSearchProps, type OTPProps,
-  type InputGroupProps, type InputRef, type TextAreaRef, type OTPRef } from '@apollo-design/ui/input';
+  type InputGroupProps, type InputRef, type TextAreaRef, type OTPRef, type InputSlots, type InputPasswordSlots, type OTPSlots } from '@apollo-design/ui/input';
 import {ref} from 'vue';
 const value=ref('entry');const owner=ref<InputRef|null>(null),area=ref<TextAreaRef|null>(null),otp=ref<OTPRef|null>(null);
 const props:InputProps={size:'middle',status:'warning'};
@@ -154,7 +154,7 @@ const aliases:[typeof Input.TextArea,typeof Input.Password,typeof Input.Search,t
 `;
 
 const api = `import {Input,type InputProps,type InputComponentToken,type InputAllowClearProp,prepareInputComponentToken,genInputStyle,genInputTokenDecls} from '@apollo-design/ui';
-import Child,{type InputProps as ChildProps,type AllowClearProp,type InputRef} from '@apollo-design/ui/input';
+import Child,{type InputProps as ChildProps,type AllowClearProp,type InputRef,type InputPasswordProps,type OTPProps} from '@apollo-design/ui/input';
 import {getDesignToken} from '@apollo-design/theme';
 const root:typeof Input=Child;const entry:typeof Child=Input;
 const props:InputProps={value:'value',allowClear:{disabled:false},styles:{input:{fontSize:'18px'}}};const child:ChildProps=props;
@@ -169,7 +169,13 @@ api.focus({cursor:'middle'});
 const wrongRegion:InputProps={styles:{button:{color:'red'}}};
 // @ts-expect-error The prepared token surface contains CSS strings; numeric theme overrides are separate.
 const wrongPrepared:InputComponentToken={...tokens,inputAffixPadding:12};
-void [wrongRegion,wrongPrepared];}
+// @ts-expect-error Password owns its native password/text type.
+const wrongPasswordType:InputPasswordProps={type:'email'};
+// @ts-expect-error Password icon rendering uses its scoped slot.
+const oldIconRender:InputPasswordProps={iconRender:()=>null};
+// @ts-expect-error OTP separator renderer functions use the separator scoped slot.
+const oldSeparator:OTPProps={separator:(index:number)=>String(index)};
+void [wrongRegion,wrongPrepared,wrongPasswordType,oldIconRender,oldSeparator];}
 void [root,entry,child,childClear,gap,fields,css,declarations,negative];
 `;
 
@@ -186,6 +192,19 @@ const negativeCases = [
   ['search-value', '<InputSearch :on-search="badSearch" data-negative="search-value" />'],
   ['otp-input', '<InputOTP :on-input="badOTP" data-negative="otp-input" />'],
   ['group-size', '<InputGroup size="huge" data-negative="group-size" />'],
+  [
+    'password-icon-scope',
+    '<InputPassword data-negative="password-icon-scope"><template #icon="{ visible }">{{visible.toFixed(2)}}</template></InputPassword>',
+  ],
+  [
+    'otp-separator-scope',
+    '<InputOTP data-negative="otp-separator-scope"><template #separator="{ index }">{{index.trim()}}</template></InputOTP>',
+  ],
+  [
+    'otp-separator-renderer',
+    '<InputOTP :separator="()=>\'-\'" data-negative="otp-separator-renderer" />',
+  ],
+  ['native-change-event', '<Input :on-change="badNative" data-negative="native-change-event" />'],
 ];
 
 try {
@@ -261,7 +280,7 @@ try {
     '<script setup lang="ts">',
     "import {Input,TextArea,InputPassword,InputSearch,InputOTP,InputGroup} from '@apollo-design/ui';",
     "import Child from '@apollo-design/ui/input';import {ref} from 'vue';",
-    'const numeric=ref(1);const badSearch=(value:number)=>{};const badOTP=(value:number[])=>{};',
+    'const numeric=ref(1);const badSearch=(value:number)=>{};const badOTP=(value:number[])=>{};const badNative=(value:string)=>{};',
     '</script>',
     '<template>',
     ...negativeCases.map(([, node]) => `  ${node}`),

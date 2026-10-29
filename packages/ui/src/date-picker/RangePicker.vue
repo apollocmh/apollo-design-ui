@@ -268,7 +268,7 @@ const hasCustomSeparator = computed(
  * 🚨 **`'Calendar'`**（不是 `'DatePicker'`）—— 上游 `generateRangePicker.js:155`。
  */
 const [contextLocale] = useLocale('Calendar');
-const mergedLocale = computed(() => mergePickerLocale(contextLocale, props.locale));
+const mergedLocale = computed(() => mergePickerLocale(contextLocale.value, props.locale));
 
 const { compactSize, compactItemClassnames } = useCompactItemContext(prefixCls, direction);
 const mergedSize = useSize((ctx) => props.size ?? compactSize.value ?? ctx);

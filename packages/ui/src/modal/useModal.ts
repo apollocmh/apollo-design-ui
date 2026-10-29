@@ -165,9 +165,12 @@ const HookModal = defineComponent({
       //    在深联合上做泛型实例化并报 `TS2589: excessively deep`（见 `util.ts` 的说明）
       const okTextNode = fallbackNode(
         innerConfig.value.okText,
-        mergedOkCancel ? contextLocale.okText : contextLocale.justOkText,
+        mergedOkCancel ? contextLocale.value.okText : contextLocale.value.justOkText,
       );
-      const cancelTextNode = fallbackNode(innerConfig.value.cancelText, contextLocale.cancelText);
+      const cancelTextNode = fallbackNode(
+        innerConfig.value.cancelText,
+        contextLocale.value.cancelText,
+      );
 
       return h(ConfirmDialog, {
         ...(innerConfig.value as unknown as Record<string, unknown>),

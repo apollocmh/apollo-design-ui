@@ -17,7 +17,7 @@
  *
  * | 上游（渲染体里每次跑） | 我们 | 理由 |
  * |---|---|---|
- * | `setValidateMessages(...)` | `setup()` 里调一次 | 合并源是 `props.validateMessages` 与**注入的** `formContext`（普通对象，非响应式）⇒ 一次即可 |
+ * | `setValidateMessages(...)` | `watchEffect` 跟踪全部合并源 | 父级消息 getter、props 替换及深更新都需要同步到同一表单 store |
  * | `setCallbacks({...})` | `setup()` 里一次 + 四个回调的 `watch` | 回调 prop 是父组件可能换掉的闭包 ⇒ 必须 watch |
  * | `setPreserve(preserve)` | `setup()` 里一次 + `watch` | 同上（表单级 `preserve` 影响字段注销行为） |
  * | `setInitialValues(v, !mountRef)` | `setup()` 里 `init=true` 一次 + `watch` 补 `init=false` | 上游有 `mountRef` 判「是否首次渲染」 |
@@ -42,6 +42,7 @@ import {
   provide,
   shallowRef,
   watch,
+  watchEffect,
 } from 'vue';
 
 import {
@@ -163,7 +164,6 @@ export const Form = defineComponent({
       });
     };
 
-    hooks.setValidateMessages({ ...formContext.validateMessages, ...props.validateMessages });
     syncCallbacks();
     hooks.setPreserve(props.preserve);
 
@@ -175,11 +175,9 @@ export const Form = defineComponent({
       () => props.preserve,
       (preserve) => hooks.setPreserve(preserve),
     );
-    watch(
-      () => props.validateMessages,
-      () =>
-        hooks.setValidateMessages({ ...formContext.validateMessages, ...props.validateMessages }),
-    );
+    watchEffect(() => {
+      hooks.setValidateMessages({ ...formContext.validateMessages, ...props.validateMessages });
+    });
 
     // ── 初值（上游 `Form.js:79-83` 的 `mountRef`）──────────────────────────────
     // 首次 `init = true`（把初值灌进 store）；之后 `init = false`（只换 `initialValues`）。

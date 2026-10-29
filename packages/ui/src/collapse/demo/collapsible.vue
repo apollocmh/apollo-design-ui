@@ -16,17 +16,17 @@ const items: CollapseItemType[] = [
   {
     key: '1',
     label: '面板一：点击区域由 collapsible 决定',
-    children: '当前模式为 header 时，点击整行标题即可展开或收起。',
+    children: 'header 模式点击标题按钮；icon 模式只激活图标按钮。两者均支持 Enter 与 Space。',
   },
   {
     key: '2',
     label: '面板二：切换模式后再试试',
-    children: '选择 icon 后只有右侧箭头可点击；选择 disabled 后面板保持展开且无法收起。',
+    children: '选择 icon 后只有箭头按钮可操作；选择 disabled 后保留当前展开状态，且不能切换。',
   },
 ];
 
 function onCollapsibleChange(value: unknown): void {
-  collapsible.value = value as CollapsibleType;
+  if (value === 'header' || value === 'icon' || value === 'disabled') collapsible.value = value;
 }
 </script>
 

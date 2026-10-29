@@ -31,6 +31,6 @@ function submit(): void {
       <Input aria-label="另一种紧凑组合" style="width: 300px" placeholder="另一种紧凑组合" />
       <Button>查询</Button>
     </SpaceCompact>
-    <div style="font-size: 12px; color: #999">{{ message }}</div>
+    <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">{{ message }}</div>
   </div>
 </template>

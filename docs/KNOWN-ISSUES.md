@@ -709,3 +709,11 @@ Descriptions、Breadcrumb、Timeline、Grid的完整清单已核对并统一验�
 完整盘点19源码/56根导出后，成组修复上下文深写与app/SSR隔离、Provider动态启停/目标/前缀、SSR副作用、多scope所有权、空算法/undefined覆盖和精确类型；直接移除无消费的theme.prefixCls。发布模板复核同时补齐原生DOM ref的null声明，未增加新的运行时行为。109运行、16类型场景/11负例、19真实发布浏览器、196消费与48 Node SSR通过；1978关联源回归、根严格类型及新鲜Theme/UI构建/L7分别有证据。仅9条体积预算各按实测增加1KiB，64条、历史测量与30%全量占比保持。
 
 本条记录源码及包自身消费，不宣称整个Theme/ConfigProvider/Tree整改单元或全库已完成。组件完整交付仍21/72，其余51与13基础包当前完整复核继续；CP/locale/form-core/icons关联链与Divider/Collapse/Input仍实施中。详见[范围、红绿与剩余边界](audit/evidence/theme-foundation-source-acceptance.json)。
+
+
+### 2026-10-29 · 本批隔离验证的新线索与暂停边界
+
+- **FIX，另案已验证缺陷：不支持contrast-color的Button回退**。Chromium145的四组控制（无Provider、ThemeProvider{}、继承ConfigProvider、显式空theme）均为白字/默认蓝背景、4.1对比度；Button与样式入口源码逐字等于已提交版本，非当前ConfigProvider投射回归。既有正式视觉环境为系统Chrome150，不能据此声明旧浏览器通过。保留[同环境颜色/能力及源码控制证据](audit/evidence/button-contrast-fallback-observation.json)；不称优化，不在当前CP结尾展开完整Button或派发新任务。
+- **VERIFY，额外全源码strictTemplates线索**。隔离617ae554加Divider/Collapse的额外检查在BadgeIndicator(data-show)、ColorHexInput/PanelPicker(onChange)、CheckableTagGroup(aria-label)出现四条内部模板诊断。原完整根strict TypeScript通过；本两单元源码SFC按真实根导出限域、发布完整入口SFC也通过。没有忽略诊断或降低既有门禁，不能宣称全库strictTemplates通过；当前并行Source变化后须重新判别，不能当最终当前缺陷数。见[本批里程碑证据](audit/evidence/divider-collapse-published-milestone.json)。
+
+用户要求仅收尾当前批次，统一交付后暂停；上述另案不产生下一批自动派发。完整交付数仍21/72，最终同提交全库门禁依旧开放。

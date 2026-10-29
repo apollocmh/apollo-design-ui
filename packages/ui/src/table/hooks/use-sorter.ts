@@ -398,7 +398,6 @@ export function useSorter<RecordType>(params: UseSorterParams<RecordType>): {
   getSorters: () => SorterResult<RecordType> | SorterResult<RecordType>[];
 } {
   const {
-    prefixCls,
     mergedColumns,
     baseColumns,
     sortDirections,
@@ -503,7 +502,7 @@ export function useSorter<RecordType>(params: UseSorterParams<RecordType>): {
 
   const transformColumns = (innerColumns: ColumnsType<RecordType>): ColumnsType<RecordType> =>
     injectSorter(
-      prefixCls,
+      params.prefixCls,
       innerColumns,
       mergedSorterStates.value,
       triggerSorter,
@@ -511,7 +510,7 @@ export function useSorter<RecordType>(params: UseSorterParams<RecordType>): {
       toValue(tableLocale),
       toValue(showSorterTooltip),
       undefined,
-      globalLocale as { sortable?: string } | undefined,
+      globalLocale.value,
     );
 
   const getSorters = () => generateSorterInfo(mergedSorterStates.value);

@@ -1,22 +1,5 @@
-/**
- * Input.Password —— antd 6.6.4 `components/input/Password.tsx` 的 Vue 实现。
- *
- * 判据（es/input/Password.js 145 行）：
- *  1. 内层仍是 Input（prefixCls=`input`），外层 prefixCls 是 `input-password`；
- *     图标节点是 `span.{input-password}-icon`，带 `role=button`、
- *     `aria-pressed={visible}`、`aria-label={visible ? locale.hide : locale.show}`、
- *     `tabIndex`（禁用时 -1）。
- *  2. 触发方式由 `visibilityToggle.action`（click/hover/…）决定（默认 click）；
- *     `onMousedown`/`onMouseup` 都 `preventDefault`（失焦/光标位置规避，
- *     issue 15173 / 23524）；Enter 或空格键切换（且不重复触发）。
- *  3. `visible` 可被 `visibilityToggle={{ visible }}` 受控（controlled 时不改内部态）。
- *  4. `type` 在 visible 时是 `text`，否则 `password`；切换时走
- *     `useRemovePasswordTimeout`（Chrome 自动填充规避）。
- */
-
 import { EyeInvisibleOutlined, EyeOutlined } from '@apollo-design/icons';
-import { useLocale } from '@apollo-design/locale';
-import { isPlainObject } from '@apollo-design/utils';
+import { defaultLocale, useLocale } from '@apollo-design/locale';
 import {
   type Component,
   type CSSProperties,
@@ -26,18 +9,28 @@ import {
   isVNode,
   type PropType,
   ref,
+  type SlotsType,
   shallowRef,
   type VNodeChild,
   watch,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
-import { type ComponentStyleConfig, useComponentConfig } from '../config-provider/context';
+import {
+  type ComponentStyleConfig,
+  useComponentConfig,
+  useDirection,
+} from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
+import { useSize } from '../config-provider/size-context';
+import { getMergedStatus, useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
+import { useCompactItemContext } from '../space/Compact';
 import { useRemovePasswordTimeout } from './hooks/use-remove-password-timeout';
-import { InputComponent } from './Input';
+import { InputComponent, inputProps } from './Input';
+import { inputEmits } from './input-emits';
 import type {
   InputPasswordProps,
+  InputPasswordSlots,
   InputRef,
   InputSemanticStyles,
   PasswordSemanticClassNames,
@@ -52,17 +45,14 @@ function asNode(value: VNodeChild | Component | null | undefined): VNodeChild | 
   return h(value as Component);
 }
 
-/** antd 的 actionMap：hover ⇒ onMouseOver，其余 click ⇒ onClick。 */
-const ACTION_MAP: Record<string, string> = {
-  click: 'onClick',
-  hover: 'onMouseover',
-};
+const { type: _passwordType, ...passwordInputProps } = inputProps;
 
 export const PasswordComponent = defineComponent({
   name: 'AInputPassword',
   inheritAttrs: false,
+  slots: Object as SlotsType<InputPasswordSlots>,
   props: {
-    prefixCls: { type: String, default: undefined },
+    ...passwordInputProps,
     inputPrefixCls: { type: String, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<InputPasswordProps['classNames']>,
@@ -72,51 +62,41 @@ export const PasswordComponent = defineComponent({
       type: [Object, Function] as PropType<InputPasswordProps['styles']>,
       default: undefined,
     },
-    disabled: { type: Boolean, default: undefined },
-    bordered: { type: Boolean, default: undefined },
-    variant: { type: String as PropType<InputPasswordProps['variant']>, default: undefined },
-    /**
-     * 显隐触发方式。**antd 6.6.4 的顶层 API**（`Password.d.ts`：`action?: 'click' | 'hover'`，
-     * 默认 `'click'`）。此前本仓只认 `visibilityToggle.action`（上游 6.6.4 的
-     * `VisibilityToggle` 里**没有**这个字段）⇒ 按 antd 文档传顶层 `action` 静默无效
-     * （Issue #3.3）。两者都给时**顶层优先**，`visibilityToggle.action` 作为本仓扩展保留。
-     */
     action: { type: String as PropType<'click' | 'hover'>, default: undefined },
-    suffix: { type: null as unknown as PropType<VNodeChild | Component>, default: undefined },
-    // ⚠️ antd 的默认值是 true（不是 undefined）—— 且 Boolean 类型 prop 未传时
-    //    Vue 会转成 false，这里必须显式给 default: true（CHECKLIST #3）
     visibilityToggle: {
       type: [Boolean, Object] as PropType<InputPasswordProps['visibilityToggle']>,
       default: true,
     },
-    iconRender: {
-      type: Function as PropType<(visible: boolean) => VNodeChild>,
-      default: undefined,
-    },
-    size: { type: String as PropType<'large' | 'middle' | 'medium' | 'small'>, default: undefined },
-    value: { type: String, default: undefined },
-    defaultValue: { type: String, default: undefined },
   },
-  emits: ['update:value'],
-  setup(props, { attrs, emit, expose }) {
+  emits: inputEmits,
+  setup(props, { attrs, emit, expose, slots }) {
     const context = useComponentConfig<ComponentStyleConfig & Record<string, unknown>>(
       'inputPassword',
     );
-    const { getPrefixCls } = context;
-    const contextDisabled = useDisabled();
+    const prefixCls = computed(() => context.getPrefixCls('input-password', props.prefixCls));
+    const inputPrefixCls = computed(() => context.getPrefixCls('input', props.inputPrefixCls));
     const [globalLocale] = useLocale('global');
-
-    const mergedDisabled = computed(() => props.disabled ?? contextDisabled.value);
+    const disabled = useDisabled();
+    const direction = useDirection();
+    const { compactSize } = useCompactItemContext(inputPrefixCls, () => direction.value);
+    const size = useSize((provider) => props.size ?? compactSize.value ?? provider);
+    const mergedDisabled = computed(() => props.disabled ?? disabled.value);
+    const form = useFormItemInputContext();
+    const status = computed(() => getMergedStatus(form.value.status, props.status));
     const { variant } = useVariant({
       component: 'inputPassword',
       variant: () => props.variant,
       legacyBordered: () => props.bordered,
     });
-
-    const mergedProps = computed(
-      () => ({ ...props, disabled: mergedDisabled.value, variant: variant.value }) as never,
-    );
-    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
+    const mergedProps = computed<InputPasswordProps>(() => ({
+      ...attrs,
+      ...props,
+      size: size.value,
+      disabled: mergedDisabled.value,
+      status: status.value,
+      variant: variant.value,
+    }));
+    const { classNames, styles } = useMergeSemantic<
       InputPasswordProps,
       PasswordSemanticClassNames,
       InputSemanticStyles
@@ -125,88 +105,42 @@ export const PasswordComponent = defineComponent({
       [
         () => context.styles as InputSemanticStyles | undefined,
         () => semanticRootStyle(context.style),
-        () => props.styles as InputSemanticStyles | undefined,
+        () => props.styles,
         () => semanticRootStyle(attrs.style as CSSProperties),
       ],
-      // ⚠️ 传 getter（Issue #3.2）—— 见 Input.ts 同处注释。
       () => mergedProps.value,
     );
-
-    const toggle = computed(() => {
-      const raw = props.visibilityToggle ?? true;
-      return raw === false
-        ? false
-        : (raw as
-            | true
-            | {
-                visible?: boolean;
-                onVisibleChange?: (v: boolean) => void;
-                tabIndex?: number;
-                action?: string;
-              });
-    });
-    const visibilityControlled = computed(
-      () =>
-        isPlainObject(toggle.value) &&
-        (toggle.value as { visible?: boolean }).visible !== undefined,
+    const toggle = computed(() => props.visibilityToggle ?? true);
+    const controlled = computed(
+      () => typeof toggle.value === 'object' && toggle.value.visible !== undefined,
     );
-    const visible = ref<boolean>(
-      visibilityControlled.value ? !!(toggle.value as { visible: boolean }).visible : false,
+    const innerVisible = ref(false);
+    const visible = computed(() =>
+      typeof toggle.value === 'object' && toggle.value.visible !== undefined
+        ? toggle.value.visible
+        : innerVisible.value,
     );
     watch(
-      () =>
-        isPlainObject(toggle.value) ? (toggle.value as { visible?: boolean }).visible : undefined,
+      () => (typeof toggle.value === 'object' ? toggle.value.visible : undefined),
       (next) => {
-        if (visibilityControlled.value) {
-          visible.value = !!next;
-        }
+        if (next !== undefined) innerVisible.value = next;
       },
     );
-
     const inputRef = shallowRef<InputRef | null>(null);
     const removePasswordTimeout = useRemovePasswordTimeout(() => inputRef.value, true);
-
-    const onVisibleChange = (): void => {
-      if (mergedDisabled.value) {
-        return;
-      }
-      if (visible.value) {
-        removePasswordTimeout();
-      }
-      const nextVisible = !visible.value;
-      if (!visibilityControlled.value) {
-        visible.value = nextVisible;
-      }
-      if (isPlainObject(toggle.value)) {
-        (toggle.value as { onVisibleChange?: (v: boolean) => void }).onVisibleChange?.(nextVisible);
-      }
-    };
-
-    const defaultIconRender = (isVisible: boolean): VNodeChild =>
-      isVisible ? h(EyeOutlined) : h(EyeInvisibleOutlined);
-    const iconRender = computed(
-      () =>
-        props.iconRender ??
-        (context as { iconRender?: (v: boolean) => VNodeChild }).iconRender ??
-        defaultIconRender,
-    );
-
-    const prefixCls = computed(() => getPrefixCls('input-password', props.prefixCls));
-    const inputPrefixCls = computed(() => getPrefixCls('input', props.inputPrefixCls));
-
+    function onVisibleChange(): void {
+      if (mergedDisabled.value) return;
+      if (visible.value) removePasswordTimeout();
+      const next = !visible.value;
+      if (!controlled.value) innerVisible.value = next;
+      if (typeof toggle.value === 'object') toggle.value.onVisibleChange?.(next);
+    }
     expose({
-      focus: (option?: { preventScroll?: boolean; cursor?: 'start' | 'end' | 'all' }) => {
-        inputRef.value?.focus(option);
-      },
-      blur: () => {
-        inputRef.value?.blur();
-      },
-      setSelectionRange: (start: number, end: number, d?: 'forward' | 'backward' | 'none') => {
-        inputRef.value?.setSelectionRange(start, end, d);
-      },
-      select: () => {
-        inputRef.value?.select();
-      },
+      focus: (option) => inputRef.value?.focus(option),
+      blur: () => inputRef.value?.blur(),
+      setSelectionRange: (start, end, direction) =>
+        inputRef.value?.setSelectionRange(start, end, direction),
+      select: () => inputRef.value?.select(),
       get input() {
         return inputRef.value?.input ?? null;
       },
@@ -214,71 +148,81 @@ export const PasswordComponent = defineComponent({
         return inputRef.value?.nativeElement ?? null;
       },
     } satisfies InputRef);
-
     return () => {
-      const p = prefixCls.value;
-      // 触发方式：**顶层 `action` 优先**（antd 6.6.4 的公开 API），
-      // 其次 `visibilityToggle.action`（本仓扩展），最后默认 `'click'`（上游默认值）。
+      const {
+        inputPrefixCls: _inputPrefix,
+        prefixCls: _prefix,
+        action: _action,
+        visibilityToggle: _toggle,
+        classNames: _classNames,
+        styles: _styles,
+        suffix: _suffix,
+        ...inputProps
+      } = props;
+      const { type: _type, ...inputAttrs } = attrs;
       const action =
         props.action ??
-        (isPlainObject(toggle.value) ? (toggle.value as { action?: string }).action : undefined) ??
+        (typeof toggle.value === 'object' ? toggle.value.action : undefined) ??
         'click';
-      const iconTrigger = ACTION_MAP[action] ?? 'onClick';
-
-      const iconNode =
+      const icon =
         toggle.value === false
           ? null
           : h(
-              'span',
+              'button',
               {
-                key: 'passwordIcon',
-                role: 'button',
+                type: 'button',
+                class: [`${prefixCls.value}-icon`, classNames.value.icon],
+                disabled: mergedDisabled.value,
                 tabIndex: mergedDisabled.value
                   ? -1
-                  : ((isPlainObject(toggle.value)
-                      ? (toggle.value as { tabIndex?: number }).tabIndex
-                      : undefined) ?? 0),
-                class: `${p}-icon`,
-                'aria-disabled': mergedDisabled.value,
+                  : typeof toggle.value === 'object'
+                    ? (toggle.value.tabIndex ?? 0)
+                    : 0,
                 'aria-pressed': visible.value,
-                'aria-label': visible.value ? globalLocale.hide : globalLocale.show,
-                onMousedown: (e: MouseEvent) => e.preventDefault(),
-                onMouseup: (e: MouseEvent) => e.preventDefault(),
-                onKeydown: (e: KeyboardEvent) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    if (!e.repeat) {
-                      onVisibleChange();
-                    }
-                  }
+                'aria-label': visible.value
+                  ? globalLocale.value.hide?.trim() || defaultLocale.global?.hide
+                  : globalLocale.value.show?.trim() || defaultLocale.global?.show,
+                onMousedown: (event: MouseEvent) => event.preventDefault(),
+                onMouseup: (event: MouseEvent) => event.preventDefault(),
+                onMouseenter: () => {
+                  if (action === 'hover') onVisibleChange();
                 },
-                [iconTrigger]: onVisibleChange,
+                onClick: (event: MouseEvent) => {
+                  if (action === 'click' || event.detail === 0) onVisibleChange();
+                },
               },
-              [iconRender.value(visible.value)],
+              [
+                slots.icon
+                  ? slots.icon({ visible: visible.value })
+                  : visible.value
+                    ? h(EyeOutlined)
+                    : h(EyeInvisibleOutlined),
+              ],
             );
-
-      return h(InputComponent, {
-        ...attrs,
-        ref: inputRef as never,
-        prefixCls: inputPrefixCls.value,
-        type: visible.value ? 'text' : 'password',
-        disabled: mergedDisabled.value,
-        size: props.size,
-        value: props.value,
-        defaultValue: props.defaultValue,
-        variant: variant.value,
-        suffix: [iconNode, asNode(props.suffix)],
-        // Input 已迁移到原生 attrs ⇒ 用 `class`（不再有 rootClassName）
-        class: [
-          p,
-          (context as { className?: string }).className,
-          attrs.class,
-          { [`${p}-${props.size}`]: !!props.size },
-        ],
-        classNames: mergedClassNames.value as never,
-        styles: mergedStyles.value as never,
-        'onUpdate:value': (v: string | undefined) => emit('update:value', v),
-      } as never);
+      return h(
+        InputComponent,
+        {
+          ...inputAttrs,
+          ...inputProps,
+          ref: inputRef,
+          prefixCls: inputPrefixCls.value,
+          type: visible.value ? 'text' : 'password',
+          disabled: mergedDisabled.value,
+          size: size.value,
+          variant: variant.value,
+          class: [prefixCls.value, context.className, attrs.class],
+          classNames: classNames.value,
+          styles: styles.value,
+          'onUpdate:value': (value) => emit('update:value', value),
+          onChange: (event) => emit('change', event),
+          onClear: (event) => emit('clear', event),
+          onPressEnter: (event) => emit('pressEnter', event),
+        },
+        {
+          prefix: () => (slots.prefix ? slots.prefix() : asNode(props.prefix)),
+          suffix: () => [icon, slots.suffix ? slots.suffix() : asNode(props.suffix)],
+        },
+      );
     };
   },
 });

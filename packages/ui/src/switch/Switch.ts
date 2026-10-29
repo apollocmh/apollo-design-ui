@@ -76,7 +76,7 @@ export const SwitchComponent = defineComponent({
   },
   setup(props, { attrs, emit, expose, slots }) {
     const context = useComponentConfig('switch');
-    const { getPrefixCls, direction } = context;
+    const { getPrefixCls } = context;
     const contextDisabled = useDisabled();
     const devWarning = useDevWarning('Switch');
 
@@ -175,7 +175,7 @@ export const SwitchComponent = defineComponent({
         {
           [`${cls}-small`]: mergedSize.value === 'small',
           [`${cls}-loading`]: props.loading,
-          [`${cls}-rtl`]: direction === 'rtl',
+          [`${cls}-rtl`]: context.direction === 'rtl',
         },
         // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
         attrs.class,

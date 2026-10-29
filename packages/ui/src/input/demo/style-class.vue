@@ -20,7 +20,7 @@ const textAreaClassNames: TextAreaProps['classNames'] = {
 };
 
 const textAreaStyles: TextAreaProps['styles'] = {
-  textarea: { color: '#08979c' },
+  textarea: { color: 'var(--apollo-color-text-secondary)' },
 };
 </script>
 
@@ -40,7 +40,7 @@ const textAreaStyles: TextAreaProps['styles'] = {
       default-value="语义化槽位可以让类名与样式精确落在 input / textarea 上。"
       aria-label="语义化文本域"
     />
-    <p style="margin: 0; color: #999; font-size: 12px">
+    <p style="margin: 0; color: var(--apollo-color-text-secondary); font-size: 12px">
       input 与 affixWrapper 槽位分别命中输入框和前缀包裹层。
     </p>
   </div>

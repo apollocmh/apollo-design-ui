@@ -114,7 +114,7 @@ export const ConfirmContent = defineComponent({
     }>('modal');
 
     const [locale] = useLocale('Modal');
-    const mergedLocale = computed(() => props.locale ?? locale);
+    const mergedLocale = computed(() => props.locale ?? locale.value);
 
     /** `okCancel ?? type === 'confirm'`。 */
     const mergedOkCancel = computed(() => props.okCancel ?? props.type === 'confirm');

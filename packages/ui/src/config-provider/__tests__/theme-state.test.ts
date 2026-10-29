@@ -6,7 +6,10 @@ import type { ConfigProviderThemeConfig } from '../hooks/use-theme';
 
 it('replaces a current CSS variable prefix and removes variables from its previous prefix', async () => {
   const wrapper = mount(ConfigProvider, {
-    props: { theme: { cssVarPrefix: 'first', token: { colorPrimary: '#123456' } } },
+    props: {
+      scopeTag: 'div',
+      theme: { cssVarPrefix: 'first', token: { colorPrimary: '#123456' } },
+    },
     slots: { default: () => h('span', 'Current theme') },
     attachTo: document.body,
     global: { stubs: { teleport: false } },

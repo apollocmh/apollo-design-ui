@@ -1,5 +1,7 @@
 > 证据范围：本文保留初期分析与回归来源。上游对齐、版本和阶段要求不是当前项目规范；现行规则见根目录 AGENTS.md 与 ADR 0005。有效的组件场景、算法契约及缺陷证据继续保留。
 
+> 2026-10-29 当前上下文契约：IconProvider.value / IconContextProps 只保留实际消费的 prefixCls、rootClassName；csp / layer / zeroRuntime 已移除。详见[集中迁移](../migrations/config-provider-contracts.md)，本轮仅更新 ConfigProvider 关联链，不代表 Icons 全包重新验收。
+
 # `@ant-design/icons` 契约提取（`@apollo-design/icons` 的实现依据）
 
 > **状态**：Phase 2 / foundation `@apollo-design/icons`（`implOrder=3`）的前置产物

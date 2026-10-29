@@ -23,6 +23,7 @@
  */
 import { isPlainObject } from '@apollo-design/utils';
 import {
+  computed,
   defineComponent,
   h,
   type MaybeRefOrGetter,
@@ -83,7 +84,7 @@ const Holder = defineComponent({
   },
   setup(props, { expose }) {
     const config = useComponentConfig('message');
-    const prefixCls = props.prefixCls || config.getPrefixCls('message');
+    const prefixCls = computed(() => props.prefixCls || config.getPrefixCls('message'));
 
     const stackConfig = useStackConfig(
       () => props.stack,
@@ -91,21 +92,18 @@ const Holder = defineComponent({
     );
 
     const { api, holder } = useNotification({
-      prefixCls,
+      prefixCls: () => prefixCls.value,
       style: () => getPlacementOffsetStyle(props.top ?? DEFAULT_OFFSET),
       className: () =>
-        clsx((props.rtl ?? config.direction === 'rtl') ? `${prefixCls}-rtl` : undefined),
-      motion: () => getMotion(prefixCls, props.transitionName),
+        clsx((props.rtl ?? config.direction === 'rtl') ? `${prefixCls.value}-rtl` : undefined),
+      motion: () => getMotion(prefixCls.value, props.transitionName),
       closable: false,
       // ⚠️ 这几个必须是 **getter**（Issue #45）：`useNotification` 在 setup 期把
       //    根配置解构成常量 ⇒ 传裸值会被钉死，「holder 建好之后再改配置」
       //    （`message.config({ maxCount })` 等）就传不进内核。
       //    `style` / `className` / `motion` / `getContainer` 本来就是 getter，同判。
       duration: () => props.duration,
-      getContainer: () =>
-        props.getContainer?.() ??
-        (config.getPopupContainer as (() => HTMLElement) | undefined)?.() ??
-        document.body,
+      getContainer: () => props.getContainer?.() ?? config.getPopupContainer?.() ?? document.body,
       maxCount: () => props.maxCount,
       onAllRemoved: props.onAllRemoved,
       classNames: props.classNames as never,
@@ -114,7 +112,12 @@ const Holder = defineComponent({
       stack: () => stackConfig.value,
     });
 
-    expose({ ...api, prefixCls });
+    expose({
+      ...api,
+      get prefixCls() {
+        return prefixCls.value;
+      },
+    });
 
     return () => holder();
   },
@@ -146,8 +149,8 @@ export function useInternalMessage(
       return fakeResult;
     }
 
-    const { prefixCls = 'apollo-message' } = instance;
-    const noticePrefixCls = `${prefixCls}-notice`;
+    const prefixCls = () => instance.prefixCls ?? 'apollo-message';
+    const noticePrefixCls = () => `${prefixCls()}-notice`;
 
     const {
       content,
@@ -169,7 +172,6 @@ export function useInternalMessage(
     }
 
     const iconNode = getMessageIcon(type, icon);
-    const typeIconCls = type ? `${noticePrefixCls}-icon-${type}` : undefined;
 
     return wrapPromiseFn((resolve) => {
       instance.open({
@@ -179,12 +181,19 @@ export function useInternalMessage(
         title: content,
         classNames: {
           ...configClassNames,
-          wrapper: clsx(type ? `${prefixCls}-${type}` : undefined, configClassNames.wrapper),
-          icon: clsx(typeIconCls, configClassNames.icon),
+          get wrapper() {
+            return clsx(type ? `${prefixCls()}-${type}` : undefined, configClassNames.wrapper);
+          },
+          get icon() {
+            return clsx(
+              type ? `${noticePrefixCls()}-icon-${type}` : undefined,
+              configClassNames.icon,
+            );
+          },
         } as never,
         styles: styles as never,
         placement: 'top',
-        className: clsx(type ? `${noticePrefixCls}-${type}` : undefined, className),
+        className: () => clsx(type ? `${noticePrefixCls()}-${type}` : undefined, className),
         style,
         onClose: () => {
           onClose?.();

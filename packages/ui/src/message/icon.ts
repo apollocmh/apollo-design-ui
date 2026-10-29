@@ -27,7 +27,7 @@ export const TypeIcon: Record<NoticeType, Component> = {
 
 /** 图标取值优先级：显式 `icon` → 类型图标 → 无（`null`）。 */
 export function getMessageIcon(type?: NoticeType, icon?: VNodeChild): VNodeChild {
-  if (icon) return icon;
+  if (icon !== undefined) return icon;
   if (type) return h(TypeIcon[type]);
   return null;
 }

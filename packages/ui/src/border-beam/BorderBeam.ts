@@ -136,11 +136,8 @@ export default defineComponent({
     size: { type: [Number, String] as PropType<number | string>, default: undefined },
   },
   setup(props, { attrs, slots }) {
-    const {
-      getPrefixCls,
-      className: contextClassName,
-      style: contextStyle,
-    } = useComponentConfig<ComponentStyleConfig>('borderBeam');
+    const config = useComponentConfig<ComponentStyleConfig>('borderBeam');
+    const { getPrefixCls } = config;
 
     const prefixCls = computed(() => getPrefixCls('border-beam', props.prefixCls));
     const rootPrefix = computed(() => getPrefixCls());
@@ -175,7 +172,7 @@ export default defineComponent({
       // 变量名与 style/index.ts 的 cssVar() 配对：`--{root}-border-beam-{name}`
       const v = (name: string): string => `--${rootPrefix.value}-border-beam-${name}`;
       return {
-        ...(contextStyle ?? {}),
+        ...(config.style ?? {}),
         // 语义槽在前、deprecated 的 React 名在后（后者覆盖前者，旧代码行为不变）
         ...((props.styles?.effect as Record<string, string | number> | undefined) ?? {}),
         ...(props.style ?? {}),
@@ -202,7 +199,7 @@ export default defineComponent({
         return first ?? null;
       }
 
-      const cls = [prefixCls.value, contextClassName, props.classNames?.effect, props.className];
+      const cls = [prefixCls.value, config.className, props.classNames?.effect, props.className];
       const effects = Array.from({ length: mergedCount.value }, (_, index) =>
         h('div', {
           key: index,

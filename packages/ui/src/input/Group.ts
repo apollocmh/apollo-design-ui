@@ -75,7 +75,12 @@ export const GroupComponent = defineComponent({
         {
           class: cls.value,
           size: size.value,
-          style: attrs.style,
+          style: [
+            attrs.style,
+            attrs.hidden !== undefined && attrs.hidden !== false && attrs.hidden !== null
+              ? { display: 'none' }
+              : undefined,
+          ],
           ...restAttrs,
         } as never,
         { default: () => slots.default?.() },

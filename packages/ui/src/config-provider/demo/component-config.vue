@@ -1,13 +1,13 @@
 <script setup lang="ts">
 /**
- * 组件级配置 —— 渐进式类型形态（D25）。
+ * Direct aliases and the open component configuration map share one consumer path.
  *
- * `empty` / `divider` / `spin` / `form` 是**已落地组件**的精确 prop（有完整类型提示）；
- * 其余组件走 `components` 这个弱类型逃生口，等它们落地后再提升为精确 prop。
+ * `empty` / `divider` / `spin` / `form` have precise aliases. Other component defaults
+ * use the keys documented by their consumer, such as components.button.shape.
  *
  * 合并规则：组件自己的 prop **优先于** ConfigProvider 的配置。
  */
-import { ConfigProvider, Divider, Empty } from '../../index';
+import { Button, ConfigProvider, Divider, Empty } from '../../index';
 </script>
 
 <template>
@@ -18,8 +18,10 @@ import { ConfigProvider, Divider, Empty } from '../../index';
       styles: { image: { opacity: 0.6 } },
     }"
     :divider="{ className: 'cp-divider' }"
+    :components="{ button: { shape: 'round' } }"
   >
-    <Empty description="插画与描述都来自 ConfigProvider" />
+    <Empty description="Provider 配置了插画与描述的样式" />
     <Divider />
+    <Button>圆角默认配置</Button>
   </ConfigProvider>
 </template>

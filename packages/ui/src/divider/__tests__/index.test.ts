@@ -1,41 +1,4 @@
-/**
- * L1 · 单元测试 + L2 的适用性说明
- *
- * ── 为什么没有 L2（交互）────────────────────────────────────────────────────
- *
- * Divider 是**纯展示组件**：没有事件、没有状态、没有受控/非受控语义、没有键盘交互、
- * 没有禁用态。`TESTING.md` 的 L2 要求覆盖「鼠标 / 键盘 / 焦点 / 受控 / 禁用」六类 ——
- * 这里一类都不适用。所以 L2 判 `n/a`（依据写进 `registry/components.json` 的
- * `layerNotes`），而不是「写几个 `expect(exists()).toBe(true)` 把格子填上」（反模式 A1）。
- *
- * ── 前缀约定（本文件所有断言的前提）──────────────────────────────────────────
- *
- * `prefixCls` 是**完整前缀**，不是后缀：`getPrefixCls('divider', 'apollo')` 直接返回
- * `'apollo'`，于是根类名是 `apollo`、子结构是 `apollo-rail`（**没有** `divider` 这一段）。
- * 所以本文件默认**不传** `prefixCls`，走兜底值 `apollo-divider` —— 这也是用户最常看到的形态。
- * 需要显式前缀的用例单独写在 `prefixCls 贯穿` 一节里。
- *
- * ── 本文件的三个重心 ─────────────────────────────────────────────────────────
- *
- * 1. **方向合并表**（`describe('方向合并')`）—— 逐条镜像 antd 自己的
- *    `components/divider/__tests__/index.test.tsx` 里的 `testCases` 表。
- *    它是上游对「orientation > vertical > type」这条优先级的**可执行规格**。
- *
- * 2. **`vertical` 未传 ≠ `false`** —— PITFALLS 第 46 条 / D21：Vue 的 Boolean prop
- *    转换会把未传的 `vertical` 变成 `false`，而 `useOrientation()` 的判据是
- *    `typeof vertical === 'boolean'`。少了 `withDefaults` 里的 `vertical: undefined`，
- *    `type="vertical"` 会**静默失效**。
- *
- * 3. **`orientationMargin` 的 px 补全**（PITFALLS 第 32 条）—— Vue 运行时的
- *    `setStyle` 不像 React 的 `dangerousStyleValue` 那样补单位，裸数字会被
- *    jsdom 与浏览器**静默丢弃**。这里用「内联样式真的出现了」把它钉住。
- *
- * ── 这个文件没有证明什么 ──────────────────────────────────────────────────────
- *   - 没证明与 antd 的 DOM 一致（那是 L4，见 `semantic.test.ts`）
- *   - 没证明像素一致（那是 L6，见 `tests/visual`）
- *   - 没证明 `size` 会读 ConfigProvider 的 `componentSize`（ConfigProvider 组件未落地，
- *     缺口登记在 `README.md` §7）
- */
+/** Existing Divider branch and lifecycle regressions. Current slots/config/attrs and source changes are additionally tested in contracts.test.ts and source-theme.test.ts. */
 
 import { mountTest, resetWarned } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';

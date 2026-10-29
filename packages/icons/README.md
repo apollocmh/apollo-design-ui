@@ -20,7 +20,7 @@ Vue 图标组件集。以 @ant-design/icons-svg 为数据源生成，保证与 a
 ## 公开 API
 
 - 全部图标组件（PascalCase 命名，与 @ant-design/icons 一致）
-- 基础组件：Icon / createIcon / IconProvider
+- 基础组件：Icon / createIcon / IconProvider；IconProvider.value 只接受实际消费的 `prefixCls`、`rootClassName`。
 - 工具：setTwoToneColor / getTwoToneColor / createFromIconfontCN
 - 样式：getIconStyle(iconPrefixCls) —— 供 ui 的静态样式层消费
 
@@ -86,3 +86,6 @@ pnpm --filter @apollo-design/icons lint
 测试要求见 [`TESTING.md`](../../TESTING.md)。
 **覆盖率豁免**：本包是**生成物**（848 个图标来自 `@ant-design/icons-svg`），对生成代码要求行覆盖率没有意义 —— `vitest.config.ts` 的 `coverage.thresholds` 档位里**不含** `icons`（与 `locale` 同规，依据 `ARCHITECTURE.md` §7）。
 行为测试的落点在 9 个手写文件（`render` / `create-icon` / `icon` / `icon-font` / `two-tone-color` / `context` / `class-names` / `style` / `index`）上。
+
+
+2026-10-29 ConfigProvider 关联修复移除了无消费者的 IconContextProps.csp / layer / zeroRuntime；它们没有静态 SVG 行为。value 的组件 props 与导出类型使用同一精确接口，前缀变化保持响应式。见[迁移记录](../../docs/migrations/config-provider-contracts.md)。本轮范围限于上下文链，不声明全部 Icons 重新验收。

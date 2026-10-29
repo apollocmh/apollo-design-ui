@@ -5,9 +5,7 @@ title:
   en-US: Size
 ---
 
-`size` 控制水平分割线的纵向间距（`margin-block`），**只对水平布局有效**。
-
-`middle` 是 `medium` 的旧写法（antd 已废弃 `middle`），两者落到同一个类名。
+`size` 调整水平分割线的纵向间距，vertical 不使用它。small 使用 marginXS，medium / middle 使用 margin；large 保留基础间距（普通线 marginLG，带标题 margin）。也可继承当前 ConfigProvider.componentSize。
 
 ```vue
 <script setup lang="ts">

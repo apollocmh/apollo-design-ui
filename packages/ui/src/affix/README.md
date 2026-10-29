@@ -130,8 +130,7 @@ Affix 把测量结果转换成 `"64px"` 写入 Vue 的 inline style；位置未�
 ### 7.4 其它缺口
 
 - `onTestUpdatePosition` 的等价物未提供（Vue 侧调试用 `ref.updatePosition()`）。
-- `AffixTarget` 的返回类型比 ConfigProvider 的 `getTargetContainer` 窄
-  （后者还允许 `ShadowRoot`）—— `Affix.vue` 的 `targetFunc` 已收窄并注释原因。
+- `AffixTarget` 允许目标暂未就绪时返回 null；ConfigProvider.getTargetContainer 返回 HTMLElement | Window，不再接受没有布局/滚动接口的 ShadowRoot。监听解析后的当前目标，测量时仍重新调用 resolver 以支持延迟就绪。
 
 ## 8. 给后续组件的话
 

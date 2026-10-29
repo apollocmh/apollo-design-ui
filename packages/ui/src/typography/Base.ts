@@ -4,7 +4,7 @@
  */
 
 import { EditOutlined } from '@apollo-design/icons';
-import { useLocaleReactive } from '@apollo-design/locale';
+import { useLocale } from '@apollo-design/locale';
 import {
   isStyleSupport,
   useControlledValue,
@@ -195,7 +195,7 @@ const BaseContent = defineComponent({
   setup(content, { attrs, expose }) {
     // 公开 props 对象由外层 setup 持有，身份稳定，值始终保持 Vue 响应性。
     const props = content.contentProps;
-    const [textLocale] = useLocaleReactive('Text');
+    const [textLocale] = useLocale('Text');
 
     const typographyRef = ref<{ nativeElement: HTMLElement | null } | null>(null);
     const editIconRef = ref<HTMLButtonElement | null>(null);

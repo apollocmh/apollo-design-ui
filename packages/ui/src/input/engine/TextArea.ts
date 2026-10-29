@@ -1,18 +1,9 @@
-/**
- * rc-input 的 `TextArea` 行为等价物（engine 自建）。
- *
- * 与 Input 的同源部分：受控值、组合态裁剪、计数、清空（resolveOnChange）。
- * TextArea 独有的两条：
- *  1. **autoSize**：mount / 值变化时用隐藏影子节点量测并写内联
- *     `height` / `overflowY` / `resize`（见 calculate-node-height 的算法注释）。
- *  2. `-out-of-range`、`data-count`（字符串形态时挂在 affixWrapper 上）。
- */
-
-import { useControlledValue, useResizeObserver } from '@apollo-design/utils';
+import { useResizeObserver } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
   h,
+  mergeProps,
   nextTick,
   onBeforeUnmount,
   onMounted,
@@ -22,13 +13,14 @@ import {
   type VNodeChild,
   watch,
 } from 'vue';
+import { useInputValue } from '../hooks/use-input-value';
 import { BaseInput, type ClearConfig } from './BaseInput';
 import {
   calculateAutoSizeStyle,
   getTextAreaSizingSignature,
   resolveAutoSize,
 } from './calculate-node-height';
-import { resolveOnChange } from './common-utils';
+import { nativeInputAttrs } from './common-utils';
 import { type InputCountProp, useCount, useCountDisplay, useCountExceed } from './use-count';
 
 export const RcTextArea = defineComponent({
@@ -63,30 +55,10 @@ export const RcTextArea = defineComponent({
       type: Object as PropType<Record<string, Record<string, string | number> | undefined>>,
       default: undefined,
     },
-    onChange: { type: Function as PropType<(e: unknown) => void>, default: undefined },
+    onValueChange: { type: Function as PropType<(value: string) => void>, default: undefined },
+    onChange: { type: Function as PropType<(e: Event) => void>, default: undefined },
     onPressEnter: { type: Function as PropType<(e: KeyboardEvent) => void>, default: undefined },
-    onFocus: { type: Function as PropType<(e: FocusEvent) => void>, default: undefined },
-    onBlur: { type: Function as PropType<(e: FocusEvent) => void>, default: undefined },
-    onKeyDown: { type: Function as PropType<(e: KeyboardEvent) => void>, default: undefined },
-    /**
-     * 🚨 `onKeyUp` 必须**声明成 prop**。
-     *
-     * 若不声明：Vue 会把它放进 `attrs`，而 `attrs` 被摊到 `<textarea>` 上
-     * ⇒ `parseName('onKeyUp')` → `hyphenate('KeyUp')` → 监听 **`key-up`**
-     * ⇒ 一个永不触发的事件（实测见 `docs/analysis/mentions.md` §4.3）。
-     * rc-input 的 `TextArea` 靠 `...rest` 摊给 `<textarea>`（React 的 `onKeyUp` 是合法 DOM 属性）
-     * ⇒ 本仓必须显式声明，语义才等价。
-     */
-    onKeyUp: { type: Function as PropType<(e: KeyboardEvent) => void>, default: undefined },
-    onCompositionStart: {
-      type: Function as PropType<(e: CompositionEvent) => void>,
-      default: undefined,
-    },
-    onCompositionEnd: {
-      type: Function as PropType<(e: CompositionEvent) => void>,
-      default: undefined,
-    },
-    onClear: { type: Function as PropType<() => void>, default: undefined },
+    onClear: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
     onResize: {
       type: Function as PropType<(size: { width: number; height: number }) => void>,
       default: undefined,
@@ -96,18 +68,12 @@ export const RcTextArea = defineComponent({
     const textareaRef = shallowRef<HTMLTextAreaElement | null>(null);
     const holderEl = shallowRef<HTMLElement | null>(null);
 
-    const composition = ref(false);
     const focused = ref(false);
     const autoSizeStyle = ref<Record<string, string | number> | null>(null);
-
-    const [innerValue, setInnerValue] = useControlledValue<string | undefined>({
-      defaultValue: () => props.defaultValue,
-      getValue: () => props.value,
-      onChange: undefined,
-    });
-    const formatValue = computed<string>(() =>
-      innerValue.value === undefined || innerValue.value === null ? '' : String(innerValue.value),
+    const valueState = useInputValue(props, textareaRef, (value, composing) =>
+      getExceedValue(value, composing),
     );
+    const { formatValue } = valueState;
 
     const countConfig = computed(() => useCount(props.count, props.showCount as never));
     const display = computed(() =>
@@ -239,8 +205,20 @@ export const RcTextArea = defineComponent({
     );
     useResizeObserver({
       target: textareaRef,
-      disabled: () => !sizeInfo.value.enabled,
+      disabled: () => !sizeInfo.value.enabled && !props.onResize,
       onResize: ({ width }) => {
+        const el = textareaRef.value;
+        if (!sizeInfo.value.enabled && el) {
+          const current = { width: el.offsetWidth, height: el.offsetHeight };
+          if (
+            !lastResize ||
+            lastResize.width !== current.width ||
+            lastResize.height !== current.height
+          ) {
+            lastResize = current;
+            props.onResize?.(current);
+          }
+        }
         if (width !== measuredWidth) {
           measuredWidth = width;
           queueMeasure();
@@ -248,46 +226,14 @@ export const RcTextArea = defineComponent({
       },
     });
 
-    function triggerChange(
-      e: Event,
-      currentValue: string,
-      source: 'change' | 'compositionEnd',
-    ): void {
-      const cutValue = getExceedValue(currentValue, composition.value);
-      if (source === 'compositionEnd' && currentValue === cutValue) {
-        return;
-      }
-      setInnerValue(cutValue);
-      const target = textareaRef.value;
-      if (target) {
-        resolveOnChange(target, e as never, props.onChange, cutValue);
-      }
-    }
-
-    const onInternalChange = (e: Event): void => {
-      triggerChange(e, (e.target as HTMLTextAreaElement).value, 'change');
-    };
-    const onInternalCompositionEnd = (e: CompositionEvent): void => {
-      composition.value = false;
-      triggerChange(e, (e.currentTarget as HTMLTextAreaElement).value, 'compositionEnd');
-      props.onCompositionEnd?.(e);
-    };
-    const handleKeyDown = (e: KeyboardEvent): void => {
+    const handleKeyDown = (event: KeyboardEvent): void => {
       if (
-        e.key === 'Enter' &&
-        props.onPressEnter &&
-        !(e as never as { isComposing?: boolean }).isComposing
+        event.key === 'Enter' &&
+        !event.repeat &&
+        !event.isComposing &&
+        !valueState.composing.value
       ) {
-        props.onPressEnter(e);
-      }
-      props.onKeyDown?.(e);
-    };
-    const handleReset = (e: MouseEvent): void => {
-      setInnerValue('');
-      textareaRef.value?.focus();
-      const el = textareaRef.value;
-      if (el) {
-        resolveOnChange(el, e as never, props.onChange);
+        props.onPressEnter?.(event);
       }
     };
 
@@ -326,51 +272,46 @@ export const RcTextArea = defineComponent({
     });
 
     return () => {
-      const textareaElement = h('textarea', {
-        ...attrs,
-        ref: textareaRef,
-        autoComplete: props.autoComplete,
-        rows: props.rows,
-        // rc ResizableTextArea：textarea 恒带 `${prefixCls}` 基类 + 禁用类
-        // （variant/status 在裸态由 BaseInput 的 variant 键追加，affix 态落 wrapper）
-        // 🚨 `${prefixCls}-disabled` 是 `ResizableTextArea.js` 的产物，此前漏了
-        //    （`input.dom.json` 里没有 disabled 的 textarea 用例 ⇒ 一直没被发现；
-        //     由 mentions 的 disabled 形态首次踩到，见 PITFALLS）。
-        class: [
-          props.prefixCls,
-          { [`${props.prefixCls}-disabled`]: props.disabled },
-          props.classNames?.textarea,
-        ],
-        style: {
-          resize: (props.style as { resize?: string } | undefined)?.resize,
-          ...(props.styles?.textarea ?? {}),
-          ...(autoSizeStyle.value ?? {}),
-        },
-        disabled: props.disabled,
-        readOnly: props.readOnly,
-        value: formatValue.value,
-        // ⚠️ 同 `engine/Input.ts`：Vue 的原生 `onChange` = 原生 change（失焦才触发），
-        //    React 的 = 原生 input。这里必须绑 `onInput`（KNOWN-ISSUES §1.12）。
-        onInput: (e: Event): void => {
-          (attrs as { onInput?: (e: Event) => void }).onInput?.(e);
-          onInternalChange(e);
-        },
-        onFocus: (e: FocusEvent) => {
-          focused.value = true;
-          props.onFocus?.(e);
-        },
-        onBlur: (e: FocusEvent) => {
-          focused.value = false;
-          props.onBlur?.(e);
-        },
-        onKeydown: handleKeyDown,
-        onKeyup: (e: KeyboardEvent) => props.onKeyUp?.(e),
-        onCompositionstart: (e: CompositionEvent) => {
-          composition.value = true;
-          props.onCompositionStart?.(e);
-        },
-        onCompositionend: onInternalCompositionEnd,
-      });
+      const textareaElement = h(
+        'textarea',
+        mergeProps(
+          {
+            ref: textareaRef,
+            autoComplete: props.autoComplete,
+            rows: props.rows,
+            maxLength: props.maxLength,
+            // rc ResizableTextArea：textarea 恒带 `${prefixCls}` 基类 + 禁用类
+            // （variant/status 在裸态由 BaseInput 的 variant 键追加，affix 态落 wrapper）
+            // 🚨 `${prefixCls}-disabled` 是 `ResizableTextArea.js` 的产物，此前漏了
+            //    （`input.dom.json` 里没有 disabled 的 textarea 用例 ⇒ 一直没被发现；
+            //     由 mentions 的 disabled 形态首次踩到，见 PITFALLS）。
+            class: [
+              props.prefixCls,
+              { [`${props.prefixCls}-disabled`]: props.disabled },
+              props.classNames?.textarea,
+            ],
+            style: {
+              resize: (props.style as { resize?: string } | undefined)?.resize,
+              ...(props.styles?.textarea ?? {}),
+              ...(autoSizeStyle.value ?? {}),
+            },
+            disabled: props.disabled,
+            readOnly: props.readOnly,
+            value: formatValue.value,
+            onInput: valueState.onInput,
+            onFocus: () => {
+              focused.value = true;
+            },
+            onBlur: () => {
+              focused.value = false;
+            },
+            onKeydown: handleKeyDown,
+            onCompositionstart: valueState.onCompositionstart,
+            onCompositionend: valueState.onCompositionend,
+          },
+          nativeInputAttrs(attrs),
+        ),
+      );
 
       return h(
         BaseInput,
@@ -406,8 +347,7 @@ export const RcTextArea = defineComponent({
             typeof display.value.dataCount === 'string'
               ? { affixWrapper: { 'data-count': display.value.dataCount } }
               : undefined,
-          onReset: handleReset,
-          onClear: props.onClear,
+          onReset: valueState.clear,
           onTriggerFocus: () => {
             textareaRef.value?.focus();
           },

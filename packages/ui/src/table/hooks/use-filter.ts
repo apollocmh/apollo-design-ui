@@ -752,8 +752,6 @@ export function useFilter<RecordType>(params: UseFilterParams<RecordType>): {
   filters: ComputedRef<Record<string, FilterValue | null>>;
 } {
   const {
-    prefixCls,
-    dropdownPrefixCls,
     baseColumns,
     onFilterChange,
     getPopupContainer,
@@ -819,8 +817,8 @@ export function useFilter<RecordType>(params: UseFilterParams<RecordType>): {
 
   const transformColumns = (innerColumns: ColumnsType<RecordType>): ColumnsType<RecordType> =>
     injectFilter(
-      prefixCls,
-      dropdownPrefixCls,
+      params.prefixCls,
+      params.dropdownPrefixCls,
       innerColumns,
       mergedFilterStates.value,
       toValue(tableLocale),

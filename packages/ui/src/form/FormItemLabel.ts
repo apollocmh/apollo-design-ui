@@ -145,7 +145,7 @@ const FormItemLabel = defineComponent({
       } else if (isOptionalMark && !props.required) {
         labelChildren = [
           labelChildren,
-          h('span', { class: `${props.prefixCls}-item-optional` }, formLocale?.optional),
+          h('span', { class: `${props.prefixCls}-item-optional` }, formLocale.value.optional),
         ];
       }
 

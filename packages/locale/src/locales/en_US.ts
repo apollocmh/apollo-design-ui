@@ -121,6 +121,7 @@ const localeValues: Locale = {
     sortable: 'sortable',
     show: 'Show',
     hide: 'Hide',
+    clear: 'Clear input',
   },
   Table: {
     filterTitle: 'Filter menu',

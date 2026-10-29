@@ -584,11 +584,15 @@ export const InternalMentions = defineComponent({
      * Vue 的等价物就是「显式读 `attrs.class` 并挂到根上」。
      */
     const rootExtraClass = computed(() => (attrs as { class?: unknown }).class);
+    const rootScopeAttrs = computed(() =>
+      Object.fromEntries(Object.entries(attrs).filter(([key]) => key.startsWith('data-v-'))),
+    );
 
     /** 转发给 `<textarea>` 的 attrs —— **剥掉 `class`**（它归根元素，不能落到 textarea 上）。 */
     const textareaAttrs = computed<Record<string, unknown>>(() => {
       const rest: Record<string, unknown> = { ...(attrs as Record<string, unknown>) };
       delete rest.class;
+      for (const key of Object.keys(rootScopeAttrs.value)) delete rest[key];
       return rest;
     });
 
@@ -650,18 +654,17 @@ export const InternalMentions = defineComponent({
 
       const mentionNode = [textareaNode, measureNode];
 
-      if (!props.hasWrapper) {
-        return h(
-          'div',
-          {
-            class: [p, props.className, rootExtraClass.value],
-            style: props.style,
-            ref: containerRef,
-          },
-          mentionNode,
-        );
-      }
-      return mentionNode;
+      return h(
+        'div',
+        {
+          ...(!props.hasWrapper ? rootScopeAttrs.value : {}),
+          'data-apollo-mentions-host': 'editor',
+          class: !props.hasWrapper ? [p, props.className, rootExtraClass.value] : undefined,
+          style: props.hasWrapper ? { display: 'contents' } : props.style,
+          ref: containerRef,
+        },
+        mentionNode,
+      );
     };
   },
 });
@@ -766,6 +769,7 @@ export const RcMentions = defineComponent({
           classNames: props.classNames,
           disabled: props.disabled,
           onReset: handleReset,
+          onTriggerFocus: () => innerRef.value?.focus?.(),
           onClear: props.onClear,
           onExposeElement: (el: HTMLElement | null) => {
             holderEl.value = el;

@@ -131,7 +131,7 @@ export const RadioComponent = defineComponent({
     >;
 
     const context = useComponentConfig('radio');
-    const { getPrefixCls, direction } = context;
+    const { getPrefixCls } = context;
     const groupContext = useRadioGroup();
     const optionTypeContext = useRadioOptionType();
     const contextDisabled = useDisabled();
@@ -278,7 +278,7 @@ export const RadioComponent = defineComponent({
         {
           [`${cls}-wrapper-checked`]: mergedChecked.value,
           [`${cls}-wrapper-disabled`]: mergedDisabled.value,
-          [`${cls}-wrapper-rtl`]: direction === 'rtl',
+          [`${cls}-wrapper-rtl`]: context.direction === 'rtl',
           // 上游 `radio.js:92`：Form.Item 内加这个类（纯 DOM 契约，无样式规则）
           [`${cls}-wrapper-in-form-item`]: formItemInputContext.value.isFormItemInput,
           [`${cls}-wrapper-block`]: !!groupContext?.block,

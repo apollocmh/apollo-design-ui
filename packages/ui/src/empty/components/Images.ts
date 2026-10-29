@@ -21,7 +21,7 @@
  * 的 L6 视觉比对实测抓出。生成器只负责把渲染产物的 hex 反查成 token 槽位。
  */
 
-import { useLocaleReactive } from '@apollo-design/locale';
+import { useLocale } from '@apollo-design/locale';
 import { useToken } from '@apollo-design/theme';
 import { Color } from '@apollo-design/utils';
 import { computed, defineComponent, markRaw } from 'vue';
@@ -78,7 +78,7 @@ function useSimpleArtworkColors() {
  * 字符串 `'Empty'`」。这是插画**唯一**的可访问名来源（见 L5 测试）。
  */
 function useArtworkTitle() {
-  const [locale] = useLocaleReactive('Empty');
+  const [locale] = useLocale('Empty');
   return computed(() => locale.value.description || 'Empty');
 }
 

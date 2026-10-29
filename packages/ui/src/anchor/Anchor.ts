@@ -14,8 +14,7 @@
  *
  * ── 六条必须复刻的上游行为 ───────────────────────────────────────────────────
  *
- * 1. 🚨 **滚动监听的依赖是 `JSON.stringify(links)`**（不是 `links` 身份），
- *    且**不含 `getContainer`** ⇒ 容器 prop 变了**不会重挂**（UPSTREAM，不擅自改）。
+ * 1. 滚动监听随链接内容和当前解析出的容器同步，切换容器时释放旧监听。
  * 2. 🚨 **`onChange` 收到的是原始 `link`**（不是 `getCurrentAnchor` 改写后的 `newLink`）；
  *    且 `forceTriggerChange` 为真时**即使与当前值相同也会发**。
  * 3. **`animating` 期间 `handleScroll` 直接 return**（动画中不抢高亮）。
@@ -166,16 +165,10 @@ export const Anchor = defineComponent({
 
     /**
      * 解析顺序：`props.getContainer` ?? `ConfigProvider.getTargetContainer` ?? `window`（上游 `:194`）。
-     *
-     * ⚠️ `GetTargetContainer` 的返回类型比 `AnchorContainer` **宽**（还允许 `ShadowRoot`），
-     * 而 antd 的 `AnchorContainer` 就是 `HTMLElement | Window` ⇒ 在边界收窄。
-     * `affix/Affix.vue:110-114` 是**同一处理**（那里的注释写明了理由：上游自己的类型就是窄的，
-     * `ShadowRoot` 走进 `getOffsetTop` 会因没有 `getBoundingClientRect` 而失败 —— 上游既有缺口）。
      */
     const getCurrentContainer = (): AnchorContainer => {
       const resolve = props.getContainer ?? configContext.getTargetContainer ?? getDefaultContainer;
-      // ⚠️ 收窄见上面的说明（`GetTargetContainer` 的返回类型含 `ShadowRoot`）
-      return resolve() as AnchorContainer;
+      return resolve();
     };
 
     // ======================= State =======================
@@ -465,9 +458,9 @@ export const Anchor = defineComponent({
       syncScrollListener();
     });
     watch(
-      linksDependency,
-      (next) => {
-        if (next === lastLinksDependency) {
+      [linksDependency, () => (typeof window === 'undefined' ? undefined : getCurrentContainer())],
+      ([next, container]) => {
+        if (next === lastLinksDependency && container === attachedContainer) {
           return;
         }
         lastLinksDependency = next;

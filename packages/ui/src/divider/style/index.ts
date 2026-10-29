@@ -1,42 +1,6 @@
-/**
- * Divider 的样式生成。
- *
- * 契约来源：antd 6.6.4 的 `es/divider/style/index.js`（`genSharedDividerStyle` +
- * `genSizeDividerStyle`）。选择器结构、属性、取值来源**逐条对齐**。
- *
- * ── 选择器结构是从 antd 的**真实产物**提取的，不是推演的 ─────────────────────────
- *
- * 用 `@ant-design/cssinjs` 的 `extractStyle` 渲染 antd 6.6.4 的 Divider 并提取 CSS，
- * 得到的就是下面这份（去掉 CSS-in-JS 的 hash 包裹层后）：
- *
- * ```css
- * .apollo-divider{...border-block-start:1px solid ...}
- * .apollo-divider .apollo-divider-rail{...}                 ← 后代，不是顶级
- * .apollo-divider-vertical{...}                             ← & 复合
- * .apollo-divider-horizontal.apollo-divider-with-text .apollo-divider-rail-start,...
- * .apollo-divider-dashed .apollo-divider-rail{...}          ← 后代
- * ```
- *
- * ⚠️ 这里最容易写错的是**嵌套层级**：`.apollo-divider-dashed .apollo-divider-rail`
- *    必须是**后代**选择器。若图省事写成顶级的 `.apollo-divider-rail{...dashed...}`，
- *    虚线的 rail 样式会作用到**所有** divider 上（顶级选择器无法区分 dashed）。
- *    这是 cssinjs 的嵌套语义（`&` 是复合、普通键是后代），不是风格问题。
- *
- * ── 与 antd 产物的两处**有意**差异 ──────────────────────────────────────────────
- *
- * 1. 没有 CSS-in-JS 的 `:where(.css-dev-only-...)` hash 包裹（差异 D5）。
- * 2. `verticalMarginInline` 输出 `var(--apollo-margin-xs)`，而 antd 在 cssVar 模式下
- *    输出解析后的 `8px`。这是零运行时的必然结果（D7 家族）：变量随主题自适应，
- *    而 antd 的组件 token 是运行时算出的定值。
- *
- * ── 这个函数没有证明什么 ──────────────────────────────────────────────────────
- *   - 没证明**视觉**正确（L6 的逐像素比对负责）。
- *   - 没证明变量名存在。`var(--apollo-*)` 写错不会报错、只会静默失效 ——
- *     由 `tests/build/run.mjs` 的 B7 校验。
- */
-
+/** Static Divider CSS; local component variables keep defaults and current scoped overrides. */
 import { token2CSSVar } from '@apollo-design/theme';
-import { ORIENTATION_MARGIN, TEXT_PADDING_INLINE } from './token';
+import { ORIENTATION_MARGIN, TEXT_PADDING_INLINE, TITLE_FONT_WEIGHT } from './token';
 
 /** token 名 → `var(--apollo-*)`。变量名由 theme 包的命名函数给出，不手写字面量。 */
 const v = (token: string): string => `var(${token2CSSVar(token)})`;
@@ -44,23 +8,25 @@ const v = (token: string): string => `var(${token2CSSVar(token)})`;
 /**
  * 生成 Divider 的静态 CSS。
  *
- * @param prefixCls 类名前缀（`apollo` 或 `ant`）
+ * @param prefixCls CSS namespace, e.g. apollo or my-app (DOM prefix my-app-divider).
  */
 export function genDividerStyle(prefixCls: string): string {
   // ⚠️ 带 `-divider` 后缀：`getPrefixCls('divider')` 在**不传** customizePrefixCls 时
   // 返回 `${defaultPrefixCls}-divider`（即 `apollo-divider`）。传了 customizePrefixCls
-  // 时它**直接返回**该值（不加后缀）—— 那种情况的 CSS 请用 `genComponentCss('divider', 自定义值)`。
+  // 时它直接返回完整组件前缀；例如 my-app-divider 对应本函数的 my-app。
   const cls = `.${prefixCls}-divider`;
+  const variable = (name: string) => token2CSSVar(name, `${prefixCls}-divider`);
+  const component = (name: string) => `var(${variable(name)})`;
   const rail = `${cls}-rail`;
   const innerText = `${cls}-inner-text`;
   const horizontalWithText = `${cls}-horizontal${cls}-with-text`;
 
   // 组件级 token 的取值来源（见 style/token.ts）：
-  //   - 字面量走常量（唯一真源在 token.ts，与 antd 的 prepareComponentToken 逐字相同）
-  //   - 别名派生的走 var(--apollo-*)，随主题自适应
-  const textPaddingInline = TEXT_PADDING_INLINE;
-  const orientationMargin = ORIENTATION_MARGIN;
-  const verticalMarginInline = v('marginXS');
+  //   - defaults are declared on the root
+  //   - current ThemeContext values are assigned inline by useDividerTheme
+  const textPaddingInline = component('textPaddingInline');
+  const orientationMargin = component('orientationMargin');
+  const verticalMarginInline = component('verticalMarginInline');
 
   const line = v('lineWidth');
   const split = v('colorSplit');
@@ -70,6 +36,9 @@ export function genDividerStyle(prefixCls: string): string {
     // resetComponent(token) 的展开（antd `components/style/index.tsx`）：
     // box-sizing / margin / padding / color / font-size / line-height / list-style / font-family
     `${cls}{`,
+    `  ${variable('textPaddingInline')}:${TEXT_PADDING_INLINE};`,
+    `  ${variable('orientationMargin')}:${ORIENTATION_MARGIN};`,
+    `  ${variable('verticalMarginInline')}:${v('marginXS')};`,
     `  box-sizing:border-box;`,
     `  margin:0;`,
     `  padding:0;`,
@@ -112,7 +81,7 @@ export function genDividerStyle(prefixCls: string): string {
     `  align-items:center;`,
     `  margin:${v('margin')} 0;`,
     `  color:${v('colorTextHeading')};`,
-    `  font-weight:500;`,
+    `  font-weight:${TITLE_FONT_WEIGHT};`,
     `  font-size:${v('fontSizeLG')};`,
     `  white-space:nowrap;`,
     `  text-align:center;`,
@@ -173,9 +142,8 @@ export function genDividerStyle(prefixCls: string): string {
     `${cls}-dotted ${rail}{`,
     `  border-block-start:${line} dotted ${split};`,
     `}`,
-    // antd 用 `&::before, &::after`（伪元素）而不是 rail 子元素 —— 逐字保留，
-    // 这是上游的写法差异（dashed 用 rail、dotted 用伪元素），不是笔误。
-    `${horizontalWithText}${cls}-dotted::before,${horizontalWithText}${cls}-dotted::after{`,
+    // The real titled rails use dotted even when the legacy dashed flag is also set.
+    `${horizontalWithText}${cls}-dotted ${rail}-start,${horizontalWithText}${cls}-dotted ${rail}-end{`,
     `  border-style:dotted none none;`,
     `}`,
     `${cls}-vertical${cls}-dotted{`,

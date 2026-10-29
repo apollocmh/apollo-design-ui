@@ -24,6 +24,7 @@ import {
   onMounted,
   type PropType,
   ref,
+  toValue,
   watch,
 } from 'vue';
 import { clsx } from '../../_internal/clsx';
@@ -268,7 +269,8 @@ export default defineComponent({
         //    时先 null 后 element，把 sizeMap 清掉再测，布局瞬态归零。
         ref: getNoticeRef(key),
         prefixCls: props.prefixCls,
-        className: clsx(contextNotice, config.className, motionClassName),
+        className: clsx(contextNotice, toValue(config.className), motionClassName),
+        closable: toValue(config.closable),
         style: { ...(motionStyle ?? {}), ...(config.style ?? {}) },
         classNames: merged.classNames,
         styles: merged.styles,

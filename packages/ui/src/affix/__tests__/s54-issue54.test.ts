@@ -22,7 +22,7 @@
  * 1. **`addListeners` 幂等短路**：目标未变 + listener 未变 ⇒ 直接 return。
  *    （`lazyUpdatePosition` 是 `throttleByAnimationFrame` 的产物，**引用稳定** ⇒
  *    这个判据可靠；也是它让「每次重绑」在功能上完全多余。）
- * 2. **依赖收窄**为 `[() => props.target]`（+ `flush: 'post'` 对齐 `useEffect`）。
+ * 2. **依赖收窄**为解析出的当前 target（含 Provider 配置，flush:'post'）；位置和固钉状态不触发重绑。
  * 3. **`prepareMeasure` 收尾补挂**：上游靠「`affixStyle` 每次变都重绑」**无意中**
  *    获得了「target 未就绪 ⇒ 后续重试」的能力。收窄依赖后必须显式保留它，
  *    否则「首次绑定时 target 还没出现」就再也没有重绑时机了。

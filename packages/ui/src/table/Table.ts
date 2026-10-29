@@ -6,6 +6,7 @@
  *   columnTitle → pagination → selection → expandable 归并 → 引擎 Table。
  */
 
+import { useLocale } from '@apollo-design/locale';
 import { useToken } from '@apollo-design/theme';
 import { isFunction, isNumber } from '@apollo-design/utils';
 import {
@@ -149,31 +150,21 @@ const Table = defineComponent({
   // ⚠️ 不解构 `attrs` —— Table **没关** `inheritAttrs`（见下方 class/style 的说明），
   //    attrs 由 Vue 自动落根，这里读了也不用。
   setup(props, { attrs, expose, slots }) {
-    const {
-      getPrefixCls,
-      direction: contextDirection,
-      table: tableConfig,
-      renderEmpty: contextRenderEmpty,
-    } = useComponentConfig('table') as {
-      getPrefixCls: (suffix: string, custom?: string) => string;
-      direction?: 'ltr' | 'rtl';
-      renderEmpty?: (name: string) => unknown;
-      table?: {
-        rowKey?: string;
-        scroll?: TableProps['scroll'];
-        expandable?: { expandIcon?: unknown };
-      };
-    };
+    const tableConfig = useComponentConfig<{
+      rowKey?: string;
+      scroll?: TableProps['scroll'];
+      expandable?: { expandIcon?: unknown };
+    }>('table');
+    const { getPrefixCls } = tableConfig;
     const directionCtx = useDirection();
     const direction = computed<'ltr' | 'rtl' | undefined>(
-      () => props.direction ?? contextDirection ?? directionCtx.value,
+      () => props.direction ?? directionCtx.value,
     );
     const mergedSize = useSize<string | undefined>((ctx) =>
       props.size === 'middle' ? 'medium' : (props.size ?? ctx),
     );
-    const rootPrefix = getPrefixCls('table', props.prefixCls);
-    const prefixCls = rootPrefix;
-    const sourceStyle = useTableTheme(() => prefixCls);
+    const prefixCls = computed(() => getPrefixCls('table', props.prefixCls));
+    const sourceStyle = useTableTheme(() => prefixCls.value);
     const tableVariables = computed(() => {
       const style = { ...sourceStyle.value };
       const native = normalizeStyle([attrs.style]);
@@ -187,7 +178,7 @@ const Table = defineComponent({
       return style;
     });
 
-    const dropdownPrefixCls = getPrefixCls('dropdown', props.dropdownPrefixCls);
+    const dropdownPrefixCls = computed(() => getPrefixCls('dropdown', props.dropdownPrefixCls));
     const hashId = '';
 
     // ============ 语义槽（schema 第四参：pagination/header/body 嵌套组） ============
@@ -209,8 +200,10 @@ const Table = defineComponent({
           : props.classNames?.body,
     }));
 
+    const [contextLocale] = useLocale('Table');
     const tableLocale = computed<TableLocale>(() => ({
       ...DEFAULT_TABLE_LOCALE,
+      ...contextLocale.value,
       ...props.locale,
     }));
 
@@ -316,7 +309,9 @@ const Table = defineComponent({
       triggerOnChange({ sorter, sorterStates }, 'sort', false);
     };
     const sorterResult = useSorter<Record<string, unknown>>({
-      prefixCls,
+      get prefixCls() {
+        return prefixCls.value;
+      },
       mergedColumns: mergedColumns as never,
       baseColumns: computed(() => baseColumns.value as never),
       onSorterChange: onSorterChange as never,
@@ -350,8 +345,12 @@ const Table = defineComponent({
       triggerOnChange({ filters, filterStates }, 'filter', true);
     };
     const filterResult = useFilter<Record<string, unknown>>({
-      prefixCls,
-      dropdownPrefixCls,
+      get prefixCls() {
+        return prefixCls.value;
+      },
+      get dropdownPrefixCls() {
+        return dropdownPrefixCls.value;
+      },
       mergedColumns: mergedColumns as never,
       baseColumns: computed(() => baseColumns.value as never),
       onFilterChange: onFilterChange as never,
@@ -461,7 +460,9 @@ const Table = defineComponent({
     // ========================== Selections ==========================
     const selectionResult = useSelection<Record<string, unknown>>(
       {
-        prefixCls,
+        get prefixCls() {
+          return prefixCls.value;
+        },
         data: mergedData,
         pageData,
         getRecordByKey: getRecordByKey as never,
@@ -480,7 +481,7 @@ const Table = defineComponent({
     const internalRowClassName = (record: Record<string, unknown>, index: number, indent: number) =>
       clsx(
         {
-          [`${prefixCls}-row-selected`]: selectionResult.derivedSelectedKeySet.value.has(
+          [`${prefixCls.value}-row-selected`]: selectionResult.derivedSelectedKeySet.value.has(
             (getRowKey.value as (r: Record<string, unknown>, i?: number) => TableKey)(
               record,
               index,
@@ -528,7 +529,11 @@ const Table = defineComponent({
             Pagination,
             {
               ...pgRest,
-              class: clsx(`${prefixCls}-pagination`, `${prefixCls}-pagination-${p}`, pgClassName),
+              class: clsx(
+                `${prefixCls.value}-pagination`,
+                `${prefixCls.value}-pagination-${p}`,
+                pgClassName,
+              ),
               size: paginationSize,
             } as never,
             {
@@ -575,7 +580,11 @@ const Table = defineComponent({
             Pagination,
             {
               ...pgRest,
-              class: clsx(`${prefixCls}-pagination`, `${prefixCls}-pagination-${p}`, pgClassName),
+              class: clsx(
+                `${prefixCls.value}-pagination`,
+                `${prefixCls.value}-pagination-${p}`,
+                pgClassName,
+              ),
               size: paginationSize,
             } as never,
             {
@@ -620,7 +629,9 @@ const Table = defineComponent({
       //    的 renderEmpty 通道）——不是 locale 的 'No data' 字符串（那是 emptyText
       //    prop 的值，上面分支已处理）。此前漏接 ⇒ 空表格只渲染文字、缺 Empty
       //    简单插图（L6 差 112px）。
-      return contextRenderEmpty?.('Table') ?? defaultRenderEmpty('Table');
+      return tableConfig.renderEmpty
+        ? tableConfig.renderEmpty('Table')
+        : defaultRenderEmpty('Table');
     });
 
     const getContainerWidth = useContainerWidth(prefixCls);
@@ -628,11 +639,11 @@ const Table = defineComponent({
     const tableClass = computed(() =>
       clsx(
         {
-          [`${prefixCls}-medium`]: mergedSize.value === 'medium',
-          [`${prefixCls}-small`]: mergedSize.value === 'small',
-          [`${prefixCls}-bordered`]: props.bordered,
-          [`${prefixCls}-empty`]: rawData.value.length === 0,
-          [`${prefixCls}-no-header`]: !props.title && props.showHeader === false,
+          [`${prefixCls.value}-medium`]: mergedSize.value === 'medium',
+          [`${prefixCls.value}-small`]: mergedSize.value === 'small',
+          [`${prefixCls.value}-bordered`]: props.bordered,
+          [`${prefixCls.value}-empty`]: rawData.value.length === 0,
+          [`${prefixCls.value}-no-header`]: !props.title && props.showHeader === false,
         },
         hashId,
       ),
@@ -640,9 +651,9 @@ const Table = defineComponent({
 
     const wrappercls = computed(() =>
       clsx(
-        `${prefixCls}-wrapper`,
+        `${prefixCls.value}-wrapper`,
         {
-          [`${prefixCls}-wrapper-rtl`]: direction.value === 'rtl',
+          [`${prefixCls.value}-wrapper-rtl`]: direction.value === 'rtl',
         },
         // ⚠️ 调用方原生 class/style **不在这里加** —— Table 没关 inheritAttrs，
         //    Vue 会自动合并到根 div（加一遍会重复）。
@@ -699,7 +710,7 @@ const Table = defineComponent({
             default: () => [
               topPaginationNode(),
               h(EngineTable, {
-                prefixCls,
+                prefixCls: prefixCls.value,
                 class: tableClass.value,
                 columns: mergedColumns.value as never,
                 data: pageData.value as never,

@@ -1,0 +1,944 @@
+{
+  "sourceState": "frozen Input source with root final contrast correction; Demo colors before correction",
+  "sourceBuild": "actual published UI artifacts, no source runtime fallback",
+  "checks": 96,
+  "passed": 72,
+  "failed": 24,
+  "failures": [
+    {
+      "name": "addon.vue",
+      "mode": "default",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"addon.vue\"] > div > div:nth-child(3)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#8c8c8c",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 3.36,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "align.vue",
+      "mode": "default",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"align.vue\"] > div > div"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compact-style.vue",
+      "mode": "default",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "p[aria-live=\"polite\"]"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "focus.vue",
+      "mode": "default",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"focus.vue\"] > div > div:nth-child(3)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "group.vue",
+      "mode": "default",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"group.vue\"] > div > div:nth-child(3)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "presuffix.vue",
+      "mode": "default",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "span[data-apollo-input-host=\"group\"]:nth-child(3) > span[data-apollo-input-host=\"wrapper\"] > .apollo-input-affix-wrapper.apollo-input-outlined[data-apollo-input-host=\"affix\"] > .apollo-input-suffix > span"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "search-input-loading.vue",
+      "mode": "default",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"search-input-loading.vue\"] > div > div:nth-child(2)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "search.vue",
+      "mode": "default",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"search.vue\"] > div > div:nth-child(4)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "style-class.vue",
+      "mode": "default",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                ".demo-input-style__textarea"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#08979c",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 3.54,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                "section[data-demo=\"style-class.vue\"] > div > p"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tooltip.vue",
+      "mode": "default",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"tooltip.vue\"] > div > p"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "advance-count.vue",
+      "mode": "dark",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"advance-count.vue\"] > div > div:nth-child(1) > div"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#666666",
+                    "bgColor": "#141414",
+                    "contrastRatio": 3.2,
+                    "fontSize": "9.8pt (13px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                "section[data-demo=\"advance-count.vue\"] > div > div:nth-child(2) > div"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#666666",
+                    "bgColor": "#141414",
+                    "contrastRatio": 3.2,
+                    "fontSize": "9.8pt (13px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                "section[data-demo=\"advance-count.vue\"] > div > div:nth-child(3) > div"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#666666",
+                    "bgColor": "#141414",
+                    "contrastRatio": 3.2,
+                    "fontSize": "9.8pt (13px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "status.vue",
+      "mode": "dark",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"status.vue\"] > div > div:nth-child(1) > span:nth-child(1)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#595959",
+                    "bgColor": "#141414",
+                    "contrastRatio": 2.63,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                "section[data-demo=\"status.vue\"] > div > div:nth-child(2) > span:nth-child(1)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#595959",
+                    "bgColor": "#141414",
+                    "contrastRatio": 2.63,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                "section[data-demo=\"status.vue\"] > div > div:nth-child(3) > span:nth-child(1)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#595959",
+                    "bgColor": "#141414",
+                    "contrastRatio": 2.63,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "addon.vue",
+      "mode": "compact",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"addon.vue\"] > div > div:nth-child(3)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#8c8c8c",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 3.36,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "align.vue",
+      "mode": "compact",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"align.vue\"] > div > div"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compact-style.vue",
+      "mode": "compact",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "p[aria-live=\"polite\"]"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "focus.vue",
+      "mode": "compact",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"focus.vue\"] > div > div:nth-child(3)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "group.vue",
+      "mode": "compact",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"group.vue\"] > div > div:nth-child(3)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "presuffix.vue",
+      "mode": "compact",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "span[data-apollo-input-host=\"group\"]:nth-child(3) > span[data-apollo-input-host=\"wrapper\"] > .apollo-input-affix-wrapper.apollo-input-outlined[data-apollo-input-host=\"affix\"] > .apollo-input-suffix > span"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "search-input-loading.vue",
+      "mode": "compact",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"search-input-loading.vue\"] > div > div:nth-child(2)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "search.vue",
+      "mode": "compact",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"search.vue\"] > div > div:nth-child(4)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "style-class.vue",
+      "mode": "compact",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                ".demo-input-style__textarea"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#08979c",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 3.54,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                "section[data-demo=\"style-class.vue\"] > div > p"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tooltip.vue",
+      "mode": "compact",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"tooltip.vue\"] > div > p"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#999999",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 2.84,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "advance-count.vue",
+      "mode": "both",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"advance-count.vue\"] > div > div:nth-child(1) > div"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#666666",
+                    "bgColor": "#141414",
+                    "contrastRatio": 3.2,
+                    "fontSize": "9.8pt (13px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                "section[data-demo=\"advance-count.vue\"] > div > div:nth-child(2) > div"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#666666",
+                    "bgColor": "#141414",
+                    "contrastRatio": 3.2,
+                    "fontSize": "9.8pt (13px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                "section[data-demo=\"advance-count.vue\"] > div > div:nth-child(3) > div"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#666666",
+                    "bgColor": "#141414",
+                    "contrastRatio": 3.2,
+                    "fontSize": "9.8pt (13px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "status.vue",
+      "mode": "both",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "section[data-demo=\"status.vue\"] > div > div:nth-child(1) > span:nth-child(1)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#595959",
+                    "bgColor": "#141414",
+                    "contrastRatio": 2.63,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                "section[data-demo=\"status.vue\"] > div > div:nth-child(2) > span:nth-child(1)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#595959",
+                    "bgColor": "#141414",
+                    "contrastRatio": 2.63,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                "section[data-demo=\"status.vue\"] > div > div:nth-child(3) > span:nth-child(1)"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#595959",
+                    "bgColor": "#141414",
+                    "contrastRatio": 2.63,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "remediation": "Twelve current Demos: explanatory labels use current colorTextSecondary and the explicit TextArea semantic color uses current colorInfoText; no axe exceptions or threshold changes"
+}

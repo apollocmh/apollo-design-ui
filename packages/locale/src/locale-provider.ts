@@ -8,7 +8,7 @@
  *    自己重新包一层同名组件会触发废弃告警，这是**有意的**。
  */
 
-import { computed, defineComponent, onScopeDispose, type PropType, provide, watch } from 'vue';
+import { computed, defineComponent, onBeforeMount, type PropType, provide, watch } from 'vue';
 import { changeConfirmLocale } from './confirm-locale';
 import { localeContextKey } from './context';
 import type { Locale } from './types';
@@ -61,17 +61,19 @@ export const LocaleProvider = defineComponent({
     provide(localeContextKey, value);
 
     // ---- changeConfirmLocale 的注册与清理 ----
-    // 上游：`useEffect(() => { const clear = changeConfirmLocale(locale?.Modal); return clear; }, [locale])`
-    // ⇒ **locale 变化时会重新注册**（先清理旧的再注册新的）。
-    let clear: (() => void) | undefined;
-    const syncConfirmLocale = (): void => {
-      clear?.();
-      clear = changeConfirmLocale(props.locale?.Modal);
-    };
-    watch(() => props.locale, syncConfirmLocale, { immediate: true });
-    onScopeDispose(() => {
-      clear?.();
-      clear = undefined;
+    // Only client instances register a present Modal slice. Deep updates replace
+    // this instance's registration; withdrawal and unmount release only its own entry.
+    onBeforeMount(() => {
+      watch(
+        () => props.locale?.Modal,
+        (current, _previous, onCleanup) => {
+          if (current) {
+            const clear = changeConfirmLocale(current);
+            if (clear) onCleanup(clear);
+          }
+        },
+        { immediate: true, deep: true },
+      );
     });
 
     return () => slots.default?.();

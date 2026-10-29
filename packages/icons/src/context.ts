@@ -14,21 +14,16 @@ import {
   defineComponent,
   type InjectionKey,
   inject,
+  type PropType,
   provide,
 } from 'vue';
 
-/** 图标上下文的值。字段与 antd 的 `IconContextProps` 一一对应。 */
+/** 图标上下文的有效配置；静态 SVG 渲染只消费前缀和根类名。 */
 export interface IconContextProps {
   /** 图标类名前缀。默认 {@link DEFAULT_ICON_PREFIX_CLS}。 */
   prefixCls?: string;
   /** 附加到根元素的类名。 */
   rootClassName?: string;
-  /** CSP nonce。零运行时路径下不消费，保留字段是为了让迁移代码不必删 prop。 */
-  csp?: { nonce?: string };
-  /** `@layer` 名称。零运行时路径下不消费，理由同上。 */
-  layer?: string;
-  /** 是否零运行时。零运行时路径下不消费，理由同上。 */
-  zeroRuntime?: boolean;
 }
 
 /**
@@ -72,10 +67,10 @@ export function useIconContext(): ComputedRef<IconContextProps> {
 export const IconProvider = defineComponent({
   name: 'AIconProvider',
   props: {
-    value: { type: Object, default: () => ({}) },
+    value: { type: Object as PropType<IconContextProps>, default: () => ({}) },
   },
   setup(props, { slots }) {
-    provide(iconContextKey, () => props.value as IconContextProps);
+    provide(iconContextKey, () => props.value);
     return () => slots.default?.() ?? null;
   },
 });

@@ -1,6 +1,6 @@
 /** Native Vue status content and current configuration over the licensed QR engine. */
 import { ReloadOutlined } from '@apollo-design/icons';
-import { useLocaleReactive } from '@apollo-design/locale';
+import { useLocale } from '@apollo-design/locale';
 import { getDesignToken } from '@apollo-design/theme';
 import { devUseWarning, mergeDomAttrs } from '@apollo-design/utils';
 import {
@@ -103,7 +103,7 @@ export const QrCode = defineComponent({
   slots: Object as SlotsType<QRCodeSlots>,
   setup(props, { expose, emit, attrs, slots }) {
     const context = useComponentConfig<QrCodeComponentConfig>('qrcode');
-    const [locale] = useLocaleReactive('QRCode');
+    const [locale] = useLocale('QRCode');
     const prefixCls = computed(() => context.getPrefixCls('qrcode', props.prefixCls));
     const theme = useQRCodeTheme(() => prefixCls.value);
     const { classNames, styles } = useMergeSemantic<

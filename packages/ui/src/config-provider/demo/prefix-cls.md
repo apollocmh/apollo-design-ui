@@ -5,10 +5,6 @@ title:
   en-US: prefixCls
 ---
 
-`prefixCls` 会传给整棵子树，且**内层没给时继承外层**（与 antd 的 `nest prefixCls` 行为一致）。
+默认类名前缀是 apollo，发布 CSS 仅包含该前缀。设置自定义前缀会更新 DOM 名称；样式需要构建期生成。
 
-默认值是 `apollo`（裁决 `prefix-cls-default` = A）。静态 CSS 同时为 `apollo` 与 `ant`
-两份前缀生成了产物，所以设成 `ant` 可以复用既有样式。
-
-⚠️ 自定义前缀（如 `my-app`）需要自行产出 CSS：
-`genComponentCss('empty', 'my-app')` —— 零运行时的固有代价。
+本示例的 prefix-cls.css 预先由 genComponentCss('empty', 'brand') 生成，作为静态文件引入。运行时只切换类名，不生成样式表。图标前缀独立由 iconPrefixCls 控制。

@@ -1,13 +1,10 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import type { DividerProps } from '../../index';
 import { Divider } from '../../index';
 
-/**
- * 语义化 `classNames` / `styles`：对象式与函数式两种形态。
- *
- * ⚠️ 函数式拿到的 `info.props` 是**合并后**的 props（`titlePlacement` 已折成 start/end、
- *    `size` 已并入 ConfigProvider 的取值），所以可以放心用它做条件分支。
- */
+const size = ref<DividerProps['size']>('small');
+
 const classNamesObject: DividerProps['classNames'] = {
   root: 'demo-divider-root',
   content: 'demo-divider-content',
@@ -27,15 +24,26 @@ const stylesObject: DividerProps['styles'] = {
 
 const stylesFn: DividerProps['styles'] = (info) =>
   info.props.size === 'small'
-    ? { root: { opacity: 0.6, cursor: 'default' } }
-    : { root: { backgroundColor: '#fafafa', borderColor: '#d9d9d9' } };
+    ? { root: { borderColor: 'var(--apollo-color-primary)', paddingBlock: '4px' } }
+    : {
+        root: {
+          backgroundColor: 'var(--apollo-color-fill-alter)',
+          borderColor: 'var(--apollo-color-border)',
+        },
+      };
 </script>
 
 <template>
   <div>
+    <label>Semantic size <select v-model="size" aria-label="Divider semantic size"><option value="small">Small</option><option value="medium">Medium</option><option value="middle">Middle</option><option value="large">Large</option></select></label>
     <Divider :class-names="classNamesObject">classNames Object</Divider>
     <Divider title-placement="start" :class-names="classNamesFn">classNames Function</Divider>
     <Divider :styles="stylesObject">styles Object</Divider>
-    <Divider size="small" :styles="stylesFn">styles Function</Divider>
+    <Divider :size="size" :styles="stylesFn">styles Function</Divider>
   </div>
 </template>
+
+<style scoped>
+.demo-divider-root { border-color: var(--apollo-color-primary); }
+:deep(.demo-divider-content) { letter-spacing: 0.03em; }
+</style>

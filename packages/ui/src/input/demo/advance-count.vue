@@ -35,7 +35,7 @@ function cutAtMax(value: string, info: { max: number }): string {
     style="display: flex; flex-direction: column; gap: 16px; width: 320px; font-family: sans-serif"
   >
     <div>
-      <div style="margin-bottom: 6px; font-size: 13px; color: #666">count.show + max</div>
+      <div style="margin-bottom: 6px; font-size: 13px; color: var(--apollo-color-text-secondary)">count.show + max</div>
       <Input
         v-model:value="basic"
         :count="{ show: true, max: 10 }"
@@ -43,7 +43,7 @@ function cutAtMax(value: string, info: { max: number }): string {
       />
     </div>
     <div>
-      <div style="margin-bottom: 6px; font-size: 13px; color: #666">
+      <div style="margin-bottom: 6px; font-size: 13px; color: var(--apollo-color-text-secondary)">
         自定义 strategy：汉字算 2 个字符
       </div>
       <Input
@@ -53,7 +53,7 @@ function cutAtMax(value: string, info: { max: number }): string {
       />
     </div>
     <div>
-      <div style="margin-bottom: 6px; font-size: 13px; color: #666">TextArea 同样支持 count</div>
+      <div style="margin-bottom: 6px; font-size: 13px; color: var(--apollo-color-text-secondary)">TextArea 同样支持 count</div>
       <TextArea
         v-model:value="note"
         :count="{ show: true, max: 20 }"

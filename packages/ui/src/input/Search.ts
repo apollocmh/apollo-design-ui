@@ -1,32 +1,17 @@
-/**
- * Input.Search —— antd 6.6.4 `components/input/Search.tsx` 的 Vue 实现。
- *
- * 判据（es/input/Search.js，逐条对齐）：
- *  1. 根是 `Space.Compact`（紧凑组），类名 `input-search`；`enterButton` 为真时额外
- *     `-with-button`，尺寸为 `-small` / `-large`，RTL 为 `-rtl`。
- *  2. 内部 Input 的 `type="search"`；`onPressEnter` 受 IME 组合态与 `loading` 闸门，
- *     通过后先调用户 `onPressEnter`，再触发 `onSearch(value, e, { source: 'input' })`。
- *  3. 清空按钮触发 `onChange` 时，事件 `type === 'click'` ⇒ 额外触发
- *     `onSearch(value, e, { source: 'clear' })`。
- *  4. `enterButton`：`false` ⇒ 图标按钮（default）；`true` ⇒ 主按钮 + 搜索图标；
- *     字符串 / 数字 ⇒ 主按钮 + 文本；VNode / 组件 ⇒ 直接渲染并合并点击与禁用。
- *  5. 按钮 `onMousedown` 在输入框已聚焦时 `preventDefault`，避免抢走焦点。
- *  6. 语义合并顺序与 antd 相同：`[contextClassNames, classNames]` /
- *     `[contextStyles, contextStyleRoot, styles, styleRoot]`；`button` 槽用
- *     `_default: 'root'` schema（字符串形态落到 `button.root`）。
- */
-
 import { SearchOutlined } from '@apollo-design/icons';
 import {
   type Component,
+  type ComponentPublicInstance,
   type CSSProperties,
   cloneVNode,
   computed,
   defineComponent,
   h,
   isVNode,
+  mergeProps,
   type PropType,
   ref,
+  type SlotsType,
   shallowRef,
   type VNodeChild,
 } from 'vue';
@@ -35,14 +20,17 @@ import { Button } from '../button';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { type SizeType, useSize } from '../config-provider/size-context';
+import { getMergedStatus, useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import { SpaceCompact, useCompactItemContext } from '../space';
-import { InputComponent } from './Input';
+import { InputComponent, inputProps } from './Input';
+import { inputEmits } from './input-emits';
 import type {
   InputRef,
   InputSearchProps,
   InputSearchSemanticClassNames,
   InputSearchSemanticStyles,
+  InputSlots,
 } from './interface';
 
 function asNode(value: VNodeChild | Component | null | undefined): VNodeChild | undefined {
@@ -57,7 +45,10 @@ function asNode(value: VNodeChild | Component | null | undefined): VNodeChild | 
 export const SearchComponent = defineComponent({
   name: 'AInputSearch',
   inheritAttrs: false,
+  slots: Object as SlotsType<InputSlots>,
   props: {
+    ...inputProps,
+    type: { type: String, default: 'search' },
     prefixCls: { type: String, default: undefined },
     inputPrefixCls: { type: String, default: undefined },
     classNames: {
@@ -90,29 +81,12 @@ export const SearchComponent = defineComponent({
       default: undefined,
     },
     hidden: { type: Boolean, default: undefined },
-    onSearch: {
-      type: Function as PropType<InputSearchProps['onSearch']>,
-      default: undefined,
-    },
-    onChange: {
-      type: Function as PropType<(e: unknown) => void>,
-      default: undefined,
-    },
-    onPressEnter: {
-      type: Function as PropType<(e: KeyboardEvent) => void>,
-      default: undefined,
-    },
-    onCompositionStart: {
-      type: Function as PropType<(e: CompositionEvent) => void>,
-      default: undefined,
-    },
-    onCompositionEnd: {
-      type: Function as PropType<(e: CompositionEvent) => void>,
-      default: undefined,
-    },
   },
-  emits: ['update:value'],
-  setup(props, { attrs, emit, expose }) {
+  emits: {
+    ...inputEmits,
+    search: (_value: string, _event?: Event, _info?: { source?: 'clear' | 'input' }) => true,
+  },
+  setup(props, { attrs, emit, expose, slots }) {
     const context = useComponentConfig('inputSearch');
     const { getPrefixCls } = context;
     const direction = useDirection();
@@ -131,16 +105,17 @@ export const SearchComponent = defineComponent({
 
     const inputRef = shallowRef<InputRef | null>(null);
     const composed = ref(false);
+    const rootRef = shallowRef<ComponentPublicInstance | null>(null);
+    const form = useFormItemInputContext();
 
-    const mergedProps = computed<InputSearchProps>(
-      () =>
-        ({
-          ...props,
-          size: size.value,
-          disabled: mergedDisabled.value,
-          variant: variant.value,
-        }) as InputSearchProps,
-    );
+    const mergedProps = computed<InputSearchProps>(() => ({
+      ...attrs,
+      ...props,
+      size: size.value,
+      disabled: mergedDisabled.value,
+      variant: variant.value,
+      status: getMergedStatus(form.value.status, props.status),
+    }));
 
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       InputSearchProps,
@@ -168,10 +143,11 @@ export const SearchComponent = defineComponent({
     });
 
     function emitSearch(value: string, e: Event | undefined, source: 'clear' | 'input'): void {
-      props.onSearch?.(value, e, { source });
+      emit('search', value, e, { source });
     }
 
     function onSearch(e?: Event, source: 'clear' | 'input' = 'input'): void {
+      if (mergedDisabled.value || props.loading || composed.value) return;
       emitSearch(inputRef.value?.input?.value ?? '', e, source);
     }
 
@@ -181,30 +157,10 @@ export const SearchComponent = defineComponent({
       }
     }
 
-    function handleChange(e: unknown): void {
-      const event = e as { type?: string; target?: { value?: string } };
-      // antd 用 **事件上的新值**（清空时是 ''），而不是 inputRef 的旧 DOM 值。
-      if (event?.type === 'click' && props.onSearch) {
-        emitSearch(event.target?.value ?? '', e as Event, 'clear');
-      }
-      emit('update:value', event?.target?.value);
-      props.onChange?.(e);
-    }
-
-    function handlePressEnter(e: KeyboardEvent): void {
-      if (composed.value || props.loading) return;
-      props.onPressEnter?.(e);
-      onSearch(e, 'input');
-    }
-
-    function handleCompositionStart(e: CompositionEvent): void {
-      composed.value = true;
-      props.onCompositionStart?.(e);
-    }
-
-    function handleCompositionEnd(e: CompositionEvent): void {
-      composed.value = false;
-      props.onCompositionEnd?.(e);
+    function handlePressEnter(event: KeyboardEvent): void {
+      if (composed.value || props.loading || mergedDisabled.value) return;
+      emit('pressEnter', event);
+      onSearch(event, 'input');
     }
 
     const btnPrefixCls = computed(() => `${prefixCls.value}-btn`);
@@ -212,6 +168,12 @@ export const SearchComponent = defineComponent({
       btnPrefixCls.value,
       { [`${btnPrefixCls.value}-${variant.value}`]: variant.value !== 'outlined' },
     ]);
+    const hasEnterButton = computed(
+      () =>
+        props.enterButton !== false &&
+        props.enterButton !== null &&
+        props.enterButton !== undefined,
+    );
     const btnVariant = computed<'text' | 'solid' | undefined>(() => {
       if (
         variant.value === 'borderless' ||
@@ -220,31 +182,51 @@ export const SearchComponent = defineComponent({
       ) {
         return 'text';
       }
-      return props.enterButton ? 'solid' : undefined;
+      return hasEnterButton.value ? 'solid' : undefined;
     });
 
     function enterButtonNode(): VNodeChild {
       const enterButton = props.enterButton;
       const common = {
-        class: btnClass.value,
+        class: [btnClass.value, mergedClassNames.value.button?.root],
+        style: mergedStyles.value.button?.root,
         size: size.value,
-        disabled: mergedDisabled.value,
+        disabled: mergedDisabled.value || props.loading,
         onMousedown: onMouseDown,
         onClick: (e: MouseEvent) => onSearch(e, 'input'),
       };
 
-      if (enterButton && (isVNode(enterButton) || typeof enterButton === 'object')) {
+      const customVNode =
+        isVNode(enterButton) &&
+        (enterButton.type === 'button' ||
+          enterButton.type === 'a' ||
+          typeof enterButton.type === 'object' ||
+          typeof enterButton.type === 'function');
+      if (
+        customVNode ||
+        (enterButton &&
+          typeof enterButton === 'object' &&
+          !isVNode(enterButton) &&
+          !Array.isArray(enterButton))
+      ) {
         if (isVNode(enterButton)) {
           return cloneVNode(enterButton, {
             ...common,
-            ...(enterButton.type === Button ? { loading: props.loading } : {}),
+            disabled:
+              common.disabled ||
+              enterButton.props?.disabled === '' ||
+              !!enterButton.props?.disabled,
+            ...(typeof enterButton.type !== 'string' ? { loading: props.loading } : {}),
+            ...(enterButton.type === Button
+              ? { classNames: mergedClassNames.value.button, styles: mergedStyles.value.button }
+              : {}),
           } as never);
         }
-        return h(enterButton as Component, common as never);
+        return h(enterButton as Component, { ...common, loading: props.loading });
       }
 
       if (typeof enterButton === 'function') {
-        return h(enterButton as Component, common as never);
+        return h(enterButton as Component, { ...common, loading: props.loading });
       }
 
       const text =
@@ -252,7 +234,12 @@ export const SearchComponent = defineComponent({
           ? String(enterButton)
           : undefined;
 
-      const children = text === undefined ? undefined : () => text;
+      const children =
+        text !== undefined
+          ? () => text
+          : isVNode(enterButton) || Array.isArray(enterButton)
+            ? () => enterButton
+            : undefined;
 
       return h(
         Button,
@@ -260,7 +247,7 @@ export const SearchComponent = defineComponent({
           ...common,
           classNames: mergedClassNames.value.button,
           styles: mergedStyles.value.button,
-          color: enterButton ? 'primary' : 'default',
+          color: hasEnterButton.value ? 'primary' : 'default',
           variant: btnVariant.value,
           loading: props.loading,
           // antd 只在 enterButton 为 boolean 时使用 searchIcon；文本 / 自定义节点
@@ -292,7 +279,8 @@ export const SearchComponent = defineComponent({
         return inputRef.value?.input ?? null;
       },
       get nativeElement() {
-        return inputRef.value?.nativeElement ?? null;
+        const root = rootRef.value?.$el;
+        return root instanceof HTMLElement ? root : null;
       },
     } satisfies InputRef);
 
@@ -304,7 +292,7 @@ export const SearchComponent = defineComponent({
         {
           [`${p}-rtl`]: direction.value === 'rtl',
           [`${p}-${size.value}`]: !!size.value,
-          [`${p}-with-button`]: !!props.enterButton,
+          [`${p}-with-button`]: hasEnterButton.value,
         },
         (context as { className?: string }).className,
         mergedClassNames.value.root,
@@ -325,23 +313,51 @@ export const SearchComponent = defineComponent({
       void _rootStyle;
       void _buttonStyle;
 
-      const inputNode = h(InputComponent, {
-        ...inputAttrs,
-        ref: inputRef as never,
-        prefixCls: inputPrefixCls.value,
-        type: 'search',
-        size: size.value,
-        variant: variant.value,
-        disabled: mergedDisabled.value,
-        value: props.value,
-        defaultValue: props.defaultValue,
-        classNames: inputClassNames,
-        styles: inputStyles,
-        onChange: handleChange,
-        onPressEnter: handlePressEnter,
-        onCompositionStart: handleCompositionStart,
-        onCompositionEnd: handleCompositionEnd,
-      } as never);
+      const {
+        prefixCls: _prefix,
+        inputPrefixCls: _inputPrefix,
+        classNames: _classNames,
+        styles: _styles,
+        enterButton: _enter,
+        searchIcon: _searchIcon,
+        loading: _loading,
+        addonAfter: _addonAfter,
+        hidden: _hidden,
+        ...inputProps
+      } = props;
+      const inputNode = h(
+        InputComponent,
+        mergeProps(
+          {
+            ...inputProps,
+            ref: inputRef as never,
+            prefixCls: inputPrefixCls.value,
+            type: props.type,
+            size: size.value,
+            variant: variant.value,
+            disabled: mergedDisabled.value,
+            value: props.value,
+            defaultValue: props.defaultValue,
+            classNames: inputClassNames,
+            styles: inputStyles,
+            'onUpdate:value': (value: string) => emit('update:value', value),
+            onChange: (event: Event) => emit('change', event),
+            onClear: (event: MouseEvent) => {
+              emit('clear', event);
+              emitSearch('', event, 'clear');
+            },
+            onPressEnter: handlePressEnter,
+            onCompositionstart: () => {
+              composed.value = true;
+            },
+            onCompositionend: () => {
+              composed.value = false;
+            },
+          },
+          inputAttrs,
+        ),
+        slots,
+      );
 
       const children: VNodeChild[] = [inputNode, enterButtonNode()];
       if (props.addonAfter !== undefined) children.push(asNode(props.addonAfter));
@@ -349,8 +365,9 @@ export const SearchComponent = defineComponent({
       return h(
         SpaceCompact,
         {
+          ref: rootRef,
           class: rootClass,
-          style: mergedStyles.value.root,
+          style: [mergedStyles.value.root, props.hidden ? { display: 'none' } : undefined],
           hidden: props.hidden,
           ...rootDataAttrs,
         } as never,

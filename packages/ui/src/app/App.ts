@@ -45,8 +45,8 @@ const App = defineComponent({
     notification: { type: Object as PropType<AppProps['notification']>, default: undefined },
   },
   setup(props, { slots, attrs }) {
-    const { getPrefixCls, direction } = useComponentConfig('app');
-    const prefixCls = props.prefixCls ?? getPrefixCls('app');
+    const config = useComponentConfig('app');
+    const prefixCls = computed(() => props.prefixCls ?? config.getPrefixCls('app'));
 
     // AppConfig 沿树合并（antd 的 useMemo 同款浅合并）
     const parentConfig = injectAppConfig();
@@ -123,7 +123,11 @@ const App = defineComponent({
           props.component as 'div',
           {
             ...attrs,
-            class: [prefixCls, attrs.class, direction === 'rtl' ? `${prefixCls}-rtl` : undefined],
+            class: [
+              prefixCls.value,
+              attrs.class,
+              config.direction === 'rtl' ? `${prefixCls.value}-rtl` : undefined,
+            ],
           },
           children,
         ),

@@ -13,11 +13,9 @@
  * | `globalConfig()` | `globalConfig()` |
  * | `ConfigConsumer` | **不导出**（React 的 render-props 形态，Vue 用 `inject`） |
  *
- * ── ⭐ 渐进式类型形态（D25）──────────────────────────────────────────────────
- *
- * `ConfigProviderProps` 只声明了 4 个精确组件配置 prop（`divider` / `empty` /
- * `spin` / `form`），其余 53 个走 `components` 弱类型逃生口。每落地一个新组件，
- * 就把它提升成精确 prop。详见 `docs/analysis/config-provider.md` §6.1。
+ * `components` is an open map of defaults consumed by each component. The precise
+ * divider / empty / spin / form aliases override their corresponding map entries.
+ * Supported fields are defined by each consumer's current public contract.
  */
 
 import { withInstall } from '../_internal/with-install';
@@ -57,17 +55,14 @@ export type {
   ComponentStyleConfig,
   ConfigContextBase,
   ConfigContextValue,
-  CSPConfig,
   DirectionType,
   GetPopupContainer,
   GetPrefixCls,
   GetTargetContainer,
-  PopupOverflow,
   RenderEmptyComponentName,
   RenderEmptyHandler,
   Variant,
   Variants,
-  WaveConfig,
 } from './context';
 export {
   configContextKey,
@@ -97,6 +92,8 @@ export { useTheme } from './hooks/use-theme';
 export type {
   ComponentConfigLike,
   ConfigProviderProps,
+  ConfigProviderScopeTag,
+  ConfigProviderSlots,
   FormConfig,
   GlobalConfigProps,
   UseConfigResult,

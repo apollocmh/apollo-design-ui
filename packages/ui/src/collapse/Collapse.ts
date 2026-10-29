@@ -1,80 +1,44 @@
-/**
- * Collapse 主组件。
- *
- * 契约来源：antd 6.6.4 `es/collapse/Collapse.js`（90 行薄壳，逐行对拍）+
- * rc `@rc-component/collapse@1.2.0/es/Collapse.js`（activeKey 状态机在
- * `engine/`）。渲染函数选型（无 .vue）：items/children 双形态收集 + expandIcon
- * 回调 + role 条件，分支在渲染函数里最清晰。
- *
- * ── 与 antd 的有意差异 ────────────────────────────────────────────────────────
- *
- * 1. `onChange` ⇒ `change` emit（C19）；deprecated×2（destroyInactivePanel /
- *    expandIconPosition）与 Panel 的 `disabled` 告警逐条保留。
- * 2. `ref` ⇒ `expose({ nativeElement })`。
- * 3. `size` 走 ConfigProvider 的 `useConfigContext().components.collapse.size`？
- *    antd 的 useSize 读 componentSize 上下文 ⇒ 本仓读 `configContext.size`。
- */
-
+/** One Vue-owned state/Provider scope; items and declared Panels share the same renderer. */
 import { RightOutlined } from '@apollo-design/icons';
 import { initCollapseMotion } from '@apollo-design/motion';
-import { devUseWarning, isFunction } from '@apollo-design/utils';
+import { mergeDomAttrs, useDevWarning } from '@apollo-design/utils';
 import {
-  cloneVNode,
   computed,
   defineComponent,
   h,
-  isVNode,
+  inject,
   type PropType,
+  provide,
   ref,
-  type VNode,
-  type VNodeChild,
+  type SlotsType,
+  shallowRef,
   watch,
 } from 'vue';
-import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig, useConfigContext } from '../config-provider/context';
-import { buildPanelInfos, getActiveKeysArray } from './engine';
+import { mergeClassNames, mergeStyles, resolveSemantic } from '../_internal/use-merge-semantic';
+import { withInstall } from '../_internal/with-install';
+import { useComponentConfig, useDirection } from '../config-provider/context';
+import { useSize } from '../config-provider/size-context';
+import { collapseContextKey, isHeadingLevel } from './context';
+import { getActiveKeysArray } from './engine';
 import type {
+  CollapseConfig,
+  CollapseHeadingLevel,
   CollapseItemType,
-  CollapsePanelProps,
   CollapseProps,
   CollapseSemanticClassNames,
   CollapseSemanticStyles,
+  CollapseSize,
+  CollapseSlots,
   CollapsibleType,
+  ExpandIconPlacement,
 } from './interface';
-import { CollapsePanelInner } from './Panel';
+import { CollapsePanel } from './Panel';
+import { useCollapseTheme } from './use-collapse-theme';
 
-/** antd 薄壳从 `useComponentConfig('collapse')` 读取的组件级配置。 */
-interface CollapseComponentConfig {
-  className?: string;
-  style?: Record<string, string | number>;
-  classNames?: CollapseSemanticClassNames;
-  styles?: CollapseSemanticStyles;
-  expandIcon?: CollapseProps['expandIcon'];
-}
-
-/** 收集 slot 里的 CollapsePanel vnode（跳过注释/文本/Fragment 展开）。 */
-const collectChildren = (nodes: VNodeChild[]): VNodeChild[] => {
-  const out: VNodeChild[] = [];
-  const walk = (list: VNodeChild[]): void => {
-    for (const node of list) {
-      if (!node || typeof node !== 'object') continue;
-      const v = node as { type?: unknown; children?: unknown };
-      const typeStr = String((v as { type?: { toString(): string } }).type ?? '');
-      if (typeStr === 'Symbol(v-cmt)') continue;
-      if (typeStr === 'Symbol(v-fgt)') {
-        walk((v.children as VNodeChild[]) ?? []);
-        continue;
-      }
-      out.push(node);
-    }
-  };
-  walk(nodes);
-  return out;
-};
-
-export const Collapse = defineComponent({
+const CollapseComponent = defineComponent({
   name: 'ACollapse',
   inheritAttrs: false,
+  slots: Object as SlotsType<CollapseSlots>,
   props: {
     items: { type: Array as PropType<CollapseItemType[]>, default: undefined },
     activeKey: {
@@ -85,318 +49,214 @@ export const Collapse = defineComponent({
       type: [Array, String, Number] as PropType<CollapseProps['defaultActiveKey']>,
       default: undefined,
     },
-    accordion: { type: Boolean, default: undefined },
+    accordion: { type: Boolean, default: false },
     destroyInactivePanel: { type: Boolean, default: undefined },
     destroyOnHidden: { type: Boolean, default: undefined },
     bordered: { type: Boolean, default: true },
     prefixCls: { type: String, default: undefined },
-    expandIcon: {
-      type: Function as PropType<CollapseProps['expandIcon']>,
+    expandIconPlacement: { type: String as PropType<ExpandIconPlacement>, default: undefined },
+    expandIconPosition: { type: String as PropType<ExpandIconPlacement>, default: undefined },
+    ghost: { type: Boolean, default: false },
+    size: { type: String as PropType<CollapseSize>, default: undefined },
+    collapsible: { type: String as PropType<CollapsibleType>, default: undefined },
+    headingLevel: {
+      type: Number as PropType<CollapseHeadingLevel>,
+      validator: isHeadingLevel,
       default: undefined,
     },
-    expandIconPlacement: {
-      type: String as PropType<'start' | 'end'>,
-      default: undefined,
-    },
-    expandIconPosition: {
-      type: String as PropType<'start' | 'end'>,
-      default: undefined,
-    },
-    ghost: { type: Boolean, default: undefined },
-    size: {
-      type: String as PropType<'large' | 'middle' | 'small'>,
-      default: undefined,
-    },
-    collapsible: {
-      type: String as PropType<'header' | 'icon' | 'disabled'>,
-      default: undefined,
-    },
-    onChange: {
-      type: Function as PropType<(key: string[]) => void>,
-      default: undefined,
-    },
-    classNames: { type: Object as PropType<CollapseSemanticClassNames>, default: undefined },
-    styles: { type: Object as PropType<CollapseSemanticStyles>, default: undefined },
+    classNames: { type: Object as PropType<CollapseProps['classNames']>, default: undefined },
+    styles: { type: Object as PropType<CollapseProps['styles']>, default: undefined },
   },
-  // ⚠️ `update:activeKey`（供 `v-model:activeKey`）与 `change` / `onChange` 同时发出
-  //    （COMPATIBILITY.md 规则 C11；PITFALLS 162 的收尾 —— 全仓 update:* 缺口至此清零）
-  emits: ['change', 'update:activeKey'],
-  setup(props, { slots, emit, expose, attrs }) {
-    const context = useComponentConfig<CollapseComponentConfig>('collapse');
-    const configContext = useConfigContext();
-
-    const rootRef = ref<HTMLDivElement | null>(null);
-    expose({ nativeElement: rootRef });
-
-    const prefixCls = computed(() => context.getPrefixCls('collapse', props.prefixCls));
-
-    // ======================== Direct ========================
-    const mergedSize = computed(() => props.size ?? 'middle');
-    const mergedPlacement = computed(
+  emits: { change: (_keys: string[]) => true, 'update:activeKey': (_keys: string[]) => true },
+  setup(props, { attrs, slots, emit, expose }) {
+    const config = useComponentConfig<CollapseConfig>('collapse');
+    const inheritedDirection = useDirection();
+    const inheritedSize = useSize();
+    const parent = inject(collapseContextKey, undefined);
+    const root = shallowRef<HTMLDivElement | null>(null);
+    expose({
+      get nativeElement() {
+        return root.value;
+      },
+    });
+    const prefixCls = computed(() => config.getPrefixCls('collapse', props.prefixCls));
+    const theme = useCollapseTheme(() => prefixCls.value);
+    const direction = computed<'ltr' | 'rtl'>(() =>
+      inheritedDirection.value === 'rtl' ? 'rtl' : 'ltr',
+    );
+    const size = computed<CollapseSize>(
+      () =>
+        props.size ??
+        (inheritedSize.value === 'small'
+          ? 'small'
+          : inheritedSize.value === 'large'
+            ? 'large'
+            : 'middle'),
+    );
+    const placement = computed(
       () => props.expandIconPlacement ?? props.expandIconPosition ?? 'start',
     );
-    const isRTL = computed(() => configContext.direction === 'rtl');
-
-    // ======================== Semantic ========================
-    const mergedClassNames = computed<CollapseSemanticClassNames>(() => {
-      const { classNames } = useMergeSemantic<
-        CollapseProps,
-        CollapseSemanticClassNames,
-        CollapseSemanticStyles
-      >(
-        [() => context.classNames, () => props.classNames],
-        [
-          () => context.styles,
-          () => semanticRootStyle(context.style as never),
-          () => props.styles,
-          // 根 style 是 Vue 原生 attrs
-          () => semanticRootStyle(attrs.style as never),
-        ],
-        props,
-      );
-      return classNames.value;
+    const headingLevel = computed<CollapseHeadingLevel>(() => {
+      if (isHeadingLevel(props.headingLevel)) return props.headingLevel;
+      const nested = parent ? Math.min(6, parent.headingLevel.value + 1) : 3;
+      return isHeadingLevel(nested) ? nested : 3;
     });
-    const mergedStyles = computed<CollapseSemanticStyles>(() => {
-      const { styles } = useMergeSemantic<
-        CollapseProps,
-        CollapseSemanticClassNames,
-        CollapseSemanticStyles
-      >(
-        [() => context.classNames, () => props.classNames],
-        [
-          () => context.styles,
-          () => semanticRootStyle(context.style as never),
-          () => props.styles,
-          // 根 style 是 Vue 原生 attrs
-          () => semanticRootStyle(attrs.style as never),
-        ],
-        props,
-      );
-      return styles.value;
+    const info = () => ({
+      props: {
+        ...props,
+        prefixCls: prefixCls.value,
+        size: size.value,
+        headingLevel: headingLevel.value,
+      },
     });
-
-    // ======================== Warning ========================
+    const classNames = computed(() =>
+      mergeClassNames<CollapseSemanticClassNames>(
+        resolveSemantic(config.classNames, info()),
+        resolveSemantic(props.classNames, info()),
+      ),
+    );
+    const styles = computed(() =>
+      mergeStyles<CollapseSemanticStyles>(
+        resolveSemantic(config.styles, info()),
+        { root: config.style },
+        resolveSemantic(props.styles, info()),
+      ),
+    );
+    const accepted = ref(
+      getActiveKeysArray(props.activeKey !== undefined ? props.activeKey : props.defaultActiveKey),
+    );
+    watch(
+      () => props.activeKey,
+      (value) => {
+        if (value !== undefined) accepted.value = getActiveKeysArray(value);
+      },
+      { deep: true, flush: 'sync' },
+    );
+    const activeKeys = computed(() =>
+      props.activeKey !== undefined ? getActiveKeysArray(props.activeKey) : accepted.value,
+    );
+    const toggle = (key: string) => {
+      const next = props.accordion
+        ? activeKeys.value[0] === key
+          ? []
+          : [key]
+        : activeKeys.value.includes(key)
+          ? activeKeys.value.filter((value) => value !== key)
+          : [...activeKeys.value, key];
+      if (props.activeKey === undefined) accepted.value = next;
+      emit('update:activeKey', next);
+      emit('change', next);
+    };
+    let nextKey = 0;
+    provide(collapseContextKey, {
+      prefixCls,
+      activeKeys,
+      accordion: computed(() => props.accordion),
+      bordered: computed(() => props.bordered),
+      ghost: computed(() => props.ghost),
+      size,
+      placement,
+      direction,
+      headingLevel,
+      collapsible: computed(() => props.collapsible),
+      destroyOnHidden: computed(() => props.destroyOnHidden ?? props.destroyInactivePanel ?? false),
+      classNames,
+      styles,
+      motion: computed(() => ({
+        ...initCollapseMotion(),
+        motionName: `${prefixCls.value}-motion`,
+      })),
+      supportMotion: theme.supportMotion,
+      allocateKey: () => String(nextKey++),
+      toggle,
+      focusRoot: () => {
+        const element = root.value;
+        if (!element) return;
+        const hasTabIndex = element.hasAttribute('tabindex');
+        if (!hasTabIndex) {
+          element.tabIndex = -1;
+          element.addEventListener(
+            'blur',
+            () => {
+              if (
+                (attrs.tabindex === undefined || attrs.tabindex === null) &&
+                element.getAttribute('tabindex') === '-1'
+              )
+                element.removeAttribute('tabindex');
+            },
+            { once: true },
+          );
+        }
+        element.focus({ preventScroll: true });
+      },
+      icon: (scope) =>
+        slots.expandIcon
+          ? slots.expandIcon(scope)
+          : config.expandIcon
+            ? config.expandIcon(scope)
+            : h(RightOutlined, {
+                rotate: scope.isActive ? 90 : scope.direction === 'rtl' ? 180 : undefined,
+              }),
+    });
+    const warning = useDevWarning('Collapse');
     watch(
       () => [props.destroyInactivePanel, props.expandIconPosition] as const,
-      ([destroyInactivePanel, expandIconPosition]) => {
-        const warning = devUseWarning('Collapse');
-        if (destroyInactivePanel !== undefined) {
-          warning.deprecated(false, 'destroyInactivePanel', 'destroyOnHidden');
-        }
-        if (expandIconPosition !== undefined) {
-          warning.deprecated(false, 'expandIconPosition', 'expandIconPlacement');
-        }
+      ([destroy, position]) => {
+        warning.deprecated(destroy === undefined, 'destroyInactivePanel', 'destroyOnHidden');
+        warning.deprecated(position === undefined, 'expandIconPosition', 'expandIconPlacement');
       },
       { immediate: true },
     );
-
-    // ======================== activeKey 状态机 ========================
-    const internalActiveKey = ref(props.defaultActiveKey);
-    const activeKeys = computed<string[]>(() =>
-      getActiveKeysArray(props.activeKey !== undefined ? props.activeKey : internalActiveKey.value),
-    );
-    const triggerActiveKey = (next: (string | number)[] | string | number | undefined): void => {
-      const nextKeys = getActiveKeysArray(next);
-      internalActiveKey.value = nextKeys;
-      // v-model:activeKey 通道（规则 C11：与语义事件同时发出，载荷同 onChange）
-      emit('update:activeKey', nextKeys);
-      props.onChange?.(nextKeys);
-      emit('change', nextKeys);
-    };
-    const onItemClick = (key: string): void => {
-      if (props.accordion) {
-        triggerActiveKey(activeKeys.value[0] === key ? [] : [key]);
-      } else {
-        triggerActiveKey(
-          activeKeys.value.includes(key)
-            ? activeKeys.value.filter((item) => item !== key)
-            : [...activeKeys.value, key],
-        );
-      }
-    };
-
-    // ======================== expandIcon ========================
-    const mergedExpandIcon = computed(() => props.expandIcon ?? context.expandIcon);
-    const renderExpandIcon = (
-      panelProps: CollapsePanelProps & { isActive?: boolean; collapsible?: CollapsibleType },
-    ): VNodeChild => {
-      const iconIsInteractive =
-        panelProps.collapsible === 'header' || panelProps.collapsible === 'icon';
-      let icon: VNodeChild;
-      if (isFunction(mergedExpandIcon.value)) {
-        icon = mergedExpandIcon.value?.(panelProps);
-      } else {
-        icon = h(RightOutlined, {
-          rotate: panelProps.isActive ? (isRTL.value ? -90 : 90) : undefined,
-          ...(iconIsInteractive
-            ? { 'aria-label': panelProps.isActive ? 'expanded' : 'collapsed' }
-            : { 'aria-hidden': true }),
-        });
-      }
-      // antd 用 cloneElement 给图标追加 `{prefix}-arrow` 类（默认与定制图标都加）
-      if (isVNode(icon)) {
-        const ori = icon as VNode;
-        return cloneVNode(ori, {
-          class: [(ori.props as { class?: unknown } | null)?.class, `${prefixCls.value}-arrow`],
-        });
-      }
-      return icon;
-    };
-
-    // ======================== openMotion ========================
-    const rootPrefixCls = computed(() => context.getPrefixCls());
-    const openMotion = computed(() => ({
-      ...initCollapseMotion(rootPrefixCls.value),
-      motionAppear: false,
-      leavedClassName: `${prefixCls.value}-panel-hidden`,
-    }));
-
-    // ======================== 面板数据（items 优先，children 兜底） ========================
-    const getPanelInfos = (children: VNodeChild[]) => {
-      // items 优先（antd useItems：Array.isArray(items) ⇒ items 路径）
-      if (Array.isArray(props.items)) {
-        return buildPanelInfos(props.items, {
-          accordion: props.accordion,
-          collapsible: props.collapsible,
-          destroyOnHidden: props.destroyOnHidden ?? props.destroyInactivePanel,
-          activeKeys: activeKeys.value,
-          onItemTrigger: onItemClick,
-        });
-      }
-      // children 形态：从 Collapse.Panel vnode 的 props 读（getNewChild 对拍）
-      const items: CollapseItemType[] = children.map((rawChild, index) => {
-        // children 数组元素可能是 string/number/null —— 面板载体只可能是 vnode
-        if (!rawChild || typeof rawChild !== 'object') {
-          return { key: index, props: {}, children: [] } as unknown as CollapseItemType;
-        }
-        const child = rawChild as VNode;
-        const cProps = ((child as { props?: Record<string, unknown> }).props ??
-          {}) as CollapsePanelProps;
-        // F07: read header/extra slots in this render; empty headers remain empty.
-        const childSlots =
-          child.children && typeof child.children === 'object' && !Array.isArray(child.children)
-            ? (child.children as Record<string, (() => VNodeChild) | undefined>)
-            : undefined;
-        const headerSlot = childSlots?.header
-          ? (childSlots.header as () => VNodeChild)()
-          : undefined;
-        const extraSlot = childSlots?.extra ? (childSlots.extra as () => VNodeChild)() : undefined;
-        return {
-          key: (child as { key?: string | number | null }).key ?? cProps.key ?? String(index),
-          header: childSlots?.header ? headerSlot : cProps.header,
-          className: cProps.className,
-          style: cProps.style,
-          showArrow: cProps.showArrow,
-          forceRender: cProps.forceRender,
-          // extra：原 VNode prop 已移除，仅由 `#extra` 插槽提供
-          extra: extraSlot,
-          collapsible: cProps.collapsible,
-          destroyOnHidden: cProps.destroyOnHidden,
-          onItemClick: cProps.onItemClick,
-          headerClass: cProps.headerClass,
-          id: cProps.id,
-        };
-      });
-      return buildPanelInfos(items, {
-        accordion: props.accordion,
-        collapsible: props.collapsible,
-        destroyOnHidden: props.destroyOnHidden ?? props.destroyInactivePanel,
-        activeKeys: activeKeys.value,
-        onItemTrigger: onItemClick,
-      });
-    };
-
-    // Panel vnode 的 children（items 形态取 item.children；children 形态取 vnode children）
-    const childrenOf = (
-      info: ReturnType<typeof buildPanelInfos>[number],
-      raw: VNodeChild | undefined,
-    ): VNodeChild => {
-      if (Array.isArray(props.items)) {
-        return info.item.children;
-      }
-      // `h(Panel, null, () => content)` ⇒ children 是槽函数/槽对象
-      const c = raw
-        ? ((raw as { children?: unknown }).children as
-            | VNodeChild
-            | { default?: () => VNodeChild }
-            | undefined)
-        : undefined;
-      if (typeof c === 'function') {
-        return (c as () => VNodeChild)();
-      }
-      if (
-        c &&
-        typeof c === 'object' &&
-        typeof (c as { default?: unknown }).default === 'function'
-      ) {
-        return (c as { default: () => VNodeChild }).default();
-      }
-      // 面板内容一律走默认插槽；原 `children` prop 已移除
-      return Array.isArray(c) ? (c as VNodeChild) : null;
-    };
-
     return () => {
-      // One render owns one panel tree, shared by title, extra and body parsing.
-      const children = Array.isArray(props.items) ? [] : collectChildren(slots.default?.() ?? []);
-      const panelInfos = getPanelInfos(children);
       const cls = prefixCls.value;
-
-      const rootClassNames = [
-        `${cls}-icon-placement-${mergedPlacement.value}`,
-        { [`${cls}-borderless`]: !props.bordered },
-        { [`${cls}-rtl`]: isRTL.value },
-        { [`${cls}-ghost`]: !!props.ghost },
-        { [`${cls}-large`]: mergedSize.value === 'large' },
-        { [`${cls}-small`]: mergedSize.value === 'small' },
-        context.className,
-        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-        attrs.class,
-        mergedClassNames.value.root,
-      ];
-
-      return h(
-        'div',
+      const { children: _children, expandIcon: _expandIcon, ...nativeAttrs } = attrs;
+      const rootAttrs = mergeDomAttrs(
         {
-          ...attrs,
-          ref: rootRef,
-          class: [cls, ...rootClassNames],
-          style: [mergedStyles.value.root, attrs.style],
-          role: props.accordion ? 'tablist' : undefined,
+          class: [
+            cls,
+            `${cls}-icon-placement-${placement.value}`,
+            {
+              [`${cls}-borderless`]: !props.bordered,
+              [`${cls}-ghost`]: props.ghost,
+              [`${cls}-small`]: size.value === 'small',
+              [`${cls}-large`]: size.value === 'large',
+              [`${cls}-rtl`]: direction.value === 'rtl',
+            },
+            config.className,
+            classNames.value.root,
+          ],
+          style: [theme.styles.value, styles.value.root],
         },
-        panelInfos.map((info, index) => {
-          const item = info.item;
-          return h(CollapsePanelInner, {
-            key: info.key,
-            panelKey: info.key,
-            prefixCls: cls,
-            header: item.label ?? item.header,
-            isActive: info.isActive,
-            accordion: !!props.accordion,
-            openMotion: openMotion.value,
-            // antd 恒传 expandIcon 函数（默认 RightOutlined 在函数内部兜底）
-            expandIcon: (p: CollapsePanelProps & { isActive?: boolean }) => renderExpandIcon(p),
-            children: childrenOf(info, children[index]),
-            onItemClick: info.onItemClick,
-            destroyOnHidden: info.destroyOnHidden,
-            forceRender: item.forceRender,
-            showArrow: item.showArrow,
-            extra: item.extra,
-            headerClass: item.headerClass,
-            collapsible: info.collapsible,
-            className: item.className,
-            style: item.style,
-            id: item.id,
-            classNames: mergedClassNames.value,
-            styles: mergedStyles.value,
-          });
-        }),
+        nativeAttrs,
       );
+      rootAttrs.ref = root;
+      const children = Array.isArray(props.items)
+        ? props.items.map((item, index) =>
+            h(
+              CollapsePanel,
+              {
+                key: String(item.key ?? index),
+                label: item.label ?? item.header,
+                className: item.className,
+                style: item.style,
+                showArrow: item.showArrow,
+                forceRender: item.forceRender,
+                collapsible: item.collapsible,
+                destroyOnHidden: item.destroyOnHidden,
+                onItemClick: item.onItemClick,
+                headerClass: item.headerClass,
+                id: item.id,
+                classNames: item.classNames,
+                styles: item.styles,
+              },
+              { default: () => item.children, extra: () => item.extra },
+            ),
+          )
+        : slots.default?.();
+      return h('div', rootAttrs, [children]);
     };
   },
 });
-
-import { CollapsePanel } from './Panel';
-
-/** 复合组件：`Collapse.Panel`（renderless 承 props，children 收集器读取）。 */
-export const CollapseWithPanel = Object.assign(Collapse, { Panel: CollapsePanel });
-export default CollapseWithPanel;
+export const Collapse = Object.assign(withInstall(CollapseComponent), { Panel: CollapsePanel });
+export const CollapseWithPanel = Collapse;
+export default Collapse;

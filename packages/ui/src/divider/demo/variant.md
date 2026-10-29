@@ -5,9 +5,7 @@ title:
   en-US: Variant
 ---
 
-`variant` 取 `solid`（默认）/ `dashed` / `dotted`。
-
-⚠️ `dashed` 布尔 prop 是 `variant="dashed"` 的旧写法，两者**可以叠加**（不会输出重复类名）。
+线型为 solid / dashed / dotted。dashed 布尔项仍可使用；与 dotted 同时设置时，dotted 控制实际根线和标题两侧的 rail。
 
 ```vue
 <script setup lang="ts">

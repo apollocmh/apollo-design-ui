@@ -9,8 +9,10 @@
  *    未渲染过的收起面板没有 panel 节点（PanelContent 惰性）。
  */
 
-import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
-import { defineComponent, h, provide, type VNodeChild } from 'vue';
+import { domContractTest } from '@apollo-design/test-utils';
+import { mount } from '@vue/test-utils';
+import { expect, it } from 'vitest';
+import { defineComponent, h, provide, type VNode, type VNodeChild } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/collapse.dom.json';
 import {
   type ConfigContextValue,
@@ -18,16 +20,19 @@ import {
   DEFAULT_CONFIG_CONTEXT,
 } from '../../config-provider/context';
 import { Collapse } from '../index';
+import { collapseContractDifferences } from './contract-differences';
 
 /** 在指定 ConfigProvider 上下文下渲染（empty semantic 同范式）。 */
 function withConfig(config: Partial<ConfigContextValue>, children: () => VNodeChild) {
-  return defineComponent({
-    name: 'ACollapseCompatConfigProbe',
-    setup() {
-      provide(configContextKey, { ...DEFAULT_CONFIG_CONTEXT, ...config });
-      return () => children();
-    },
-  });
+  return h(
+    defineComponent({
+      name: 'ACollapseCompatConfigProbe',
+      setup() {
+        provide(configContextKey, { ...DEFAULT_CONFIG_CONTEXT, ...config });
+        return () => children();
+      },
+    }),
+  );
 }
 
 const ITEMS = [
@@ -36,7 +41,7 @@ const ITEMS = [
 ];
 
 /** 用例规格表：id → Vue 侧渲染产物。必须覆盖基线里的每一个用例。 */
-const specs: Record<string, { render: () => DomRenderResult }> = {
+export const specs: Record<string, { render: () => VNode }> = {
   'collapse:basic': { render: () => h(Collapse, { items: ITEMS }) },
 
   'collapse:items-default-active': {
@@ -103,7 +108,7 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
 domContractTest('Collapse', {
   baseline,
   keepStyle: true,
-  allow: {},
+  allow: collapseContractDifferences,
   render: (id) => {
     const spec = specs[id];
     if (!spec)
@@ -111,3 +116,64 @@ domContractTest('Collapse', {
     return spec.render();
   },
 });
+
+it('retains all twelve old reference cases and finite reviewed differences', () => {
+  const ids = baseline.cases.map((item) => item.id).sort();
+  expect(ids).toHaveLength(12);
+  expect(Object.keys(specs).sort()).toEqual(ids);
+  expect(Object.keys(collapseContractDifferences).sort()).toEqual(ids);
+  expect(
+    Object.values(collapseContractDifferences).reduce(
+      (total, entry) => total + entry.diff.length,
+      0,
+    ),
+  ).toBe(67);
+  for (const entry of Object.values(collapseContractDifferences)) {
+    expect(entry.deviationId).toBe('collapse-native-disclosure');
+    expect(entry.diff.length).toBeGreaterThan(0);
+    for (const difference of entry.diff) expect(difference).toMatch(/^\$\/div\[0\]/);
+  }
+});
+
+for (const [id, spec] of Object.entries(specs))
+  it(`${id}: native replacement covers the complete header and hidden region subtrees`, () => {
+    const wrapper = mount(defineComponent({ setup: () => spec.render }));
+    const root = wrapper.get('.apollo-collapse');
+    expect(root.attributes('role')).toBeUndefined();
+    const panels = root.findAll('.apollo-collapse-item');
+    expect(panels).toHaveLength(2);
+    const expectedOpen = [
+      'collapse:items-default-active',
+      'collapse:accordion',
+      'collapse:rtl',
+      'collapse:collapsible-disabled',
+      'collapse:children-deprecated',
+    ].includes(id);
+    for (const [index, panel] of panels.entries()) {
+      const header = panel.get('.apollo-collapse-header');
+      const heading = header.get('h3');
+      const button = heading.get<HTMLButtonElement>('button');
+      expect(heading.element.children).toHaveLength(1);
+      expect(header.attributes('role')).toBeUndefined();
+      expect(button.element.type).toBe('button');
+      expect(button.attributes('aria-expanded')).toBe(String(index === 0 && expectedOpen));
+      expect(button.element.disabled).toBe(id === 'collapse:collapsible-disabled');
+      const title = button.get('.apollo-collapse-title');
+      expect(title.text()).toBe(`Header ${index + 1}`);
+      expect(button.attributes('aria-labelledby')).toBe(title.attributes('id'));
+      const icon = button.get('.apollo-collapse-expand-icon');
+      expect(icon.attributes('aria-hidden')).toBe('true');
+      expect(icon.find('svg').exists()).toBe(true);
+      const region = panel.get('[role=region]');
+      expect(region.attributes('id')).toBe(button.attributes('aria-controls'));
+      expect(region.attributes('aria-labelledby')).toBe(button.attributes('id'));
+      expect(region.attributes('aria-hidden')).toBe(String(!(index === 0 && expectedOpen)));
+      if (index === 0 && expectedOpen)
+        expect(region.get('.apollo-collapse-body').text()).toBe('Content 1');
+      else {
+        expect(region.find('.apollo-collapse-body').exists()).toBe(false);
+        expect(region.attributes('inert')).toBeDefined();
+        expect(region.attributes('hidden')).toBeDefined();
+      }
+    }
+  });

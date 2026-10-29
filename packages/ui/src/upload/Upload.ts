@@ -491,7 +491,7 @@ export const UploadComponent = defineComponent({
         iconRender,
         extra,
         locale: {
-          ...contextLocale,
+          ...contextLocale.value,
           ...props.locale,
         } as UploadLocale,
         isImageUrl: props.isImageUrl,

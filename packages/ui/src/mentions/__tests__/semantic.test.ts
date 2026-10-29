@@ -1,3 +1,5 @@
+import { inputContractReference } from '../../input/__tests__/contract-reference';
+import inputReferences from './input-contract-reference.json';
 /**
  * L4 · DOM 契约（与 antd 6.6.4 的 SSR 产物逐节点比对）—— Mentions
  *
@@ -10,7 +12,7 @@
  * ⚠️ 两侧的 `css-dev-only-*` / `*-css-var` 由 dom-contract 的统一过滤器剥除（D1/D5）。
  */
 
-import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import type { DomRenderResult } from '@apollo-design/test-utils';
 import { defineComponent, h, provide } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/mentions.dom.json';
 import {
@@ -80,27 +82,31 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
   },
 };
 
-domContractTest('Mentions', {
-  baseline,
-  allow: {},
-  render: (id) => {
-    if (id === 'mentions:rtl') {
-      // 方向由 ConfigProvider 注入（input / input-number 同范式）
-      return defineComponent({
-        name: 'AMentionsRtlProbe',
-        setup() {
-          provide(configContextKey, {
-            ...DEFAULT_CONFIG_CONTEXT,
-            direction: 'rtl',
-          } as ConfigContextValue);
-          return () => h(Mentions, { ...BP } as never);
-        },
-      });
-    }
-    const spec = specs[id];
-    if (!spec) {
-      throw new Error(`[Mentions L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
-    }
-    return spec.render();
+inputContractReference(
+  'Mentions',
+  {
+    baseline,
+    allow: {},
+    render: (id) => {
+      if (id === 'mentions:rtl') {
+        // 方向由 ConfigProvider 注入（input / input-number 同范式）
+        return defineComponent({
+          name: 'AMentionsRtlProbe',
+          setup() {
+            provide(configContextKey, {
+              ...DEFAULT_CONFIG_CONTEXT,
+              direction: 'rtl',
+            } as ConfigContextValue);
+            return () => h(Mentions, { ...BP } as never);
+          },
+        });
+      }
+      const spec = specs[id];
+      if (!spec) {
+        throw new Error(`[Mentions L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
+      }
+      return spec.render();
+    },
   },
-});
+  inputReferences,
+);

@@ -508,7 +508,7 @@ export default defineComponent({
     /** locale：与 `ConfigProvider` 的 `locale.Calendar` **深合并**（上游用 `merge`）。 */
     const [contextLocale] = useLocale('Calendar');
     const locale = computed<PickerLocale>(() =>
-      merge<PickerLocale>(contextLocale, (props.locale ?? {}) as PickerLocale),
+      merge<PickerLocale>(contextLocale.value, (props.locale ?? {}) as PickerLocale),
     );
 
     /** 判据 7：按 `info.type` 分派；`month` 那一支**把 `locale` 换成 `locale.lang`**。 */

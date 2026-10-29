@@ -31,7 +31,7 @@ const probe = () => h('span', { class: 'probe' });
 /** 挂载并返回「控制柄」：能读变量、能换 theme、能卸载。 */
 function mountTheme(theme: ConfigProviderThemeConfig) {
   const wrapper = mount(ConfigProvider, {
-    props: { theme },
+    props: { scopeTag: 'div', theme },
     slots: { default: probe },
     attachTo: document.body,
   });
@@ -136,7 +136,7 @@ describe('ConfigProvider · 主题矩阵', () => {
   it('L2 · 从 dark 切回默认算法，dark 特有的变量被清掉（不残留）', async () => {
     const theme = ref<ConfigProviderThemeConfig | undefined>({ algorithm: darkAlgorithm });
     const w = mount(ConfigProvider, {
-      props: { theme: theme.value },
+      props: { scopeTag: 'div', theme: theme.value },
       slots: { default: probe },
       attachTo: host,
     });
@@ -153,7 +153,7 @@ describe('ConfigProvider · 主题矩阵', () => {
 
   it('L2 · theme 变成 undefined 时变量被全部移除', async () => {
     const w = mount(ConfigProvider, {
-      props: { theme: { token: { colorPrimary: '#ff0000' } } },
+      props: { scopeTag: 'div', theme: { token: { colorPrimary: '#ff0000' } } },
       slots: { default: probe },
       attachTo: host,
     });

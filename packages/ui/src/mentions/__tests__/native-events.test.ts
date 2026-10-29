@@ -33,7 +33,7 @@ describe('F09 Mentions native listeners and lifecycle', () => {
       await nextTick();
       expect(focus).toHaveBeenCalledExactlyOnceWith(expect.any(FocusEvent));
       expect(focus.mock.calls[0]?.[0].target).toBe(editor);
-      expect(wrapper.classes()).toContain('apollo-mentions-focused');
+      expect(wrapper.get('.apollo-mentions').classes()).toContain('apollo-mentions-focused');
       editor.value = 'text';
       editor.dispatchEvent(new Event('input', { bubbles: true }));
       await nextTick();
@@ -43,7 +43,7 @@ describe('F09 Mentions native listeners and lifecycle', () => {
       await new Promise((resolve) => setTimeout(resolve, 5));
       await nextTick();
       expect(blur).toHaveBeenCalledExactlyOnceWith(expect.any(FocusEvent));
-      expect(wrapper.classes()).not.toContain('apollo-mentions-focused');
+      expect(wrapper.get('.apollo-mentions').classes()).not.toContain('apollo-mentions-focused');
       const replacement = vi.fn();
       await wrapper.setProps({ onFocus: replacement });
       editor.focus();
@@ -64,7 +64,7 @@ describe('F09 Mentions native listeners and lifecycle', () => {
     editorOf(wrapper).focus();
     await nextTick();
     expect(focus).toHaveBeenCalledTimes(1);
-    expect(wrapper.classes()).toContain('apollo-mentions-focused');
+    expect(wrapper.get('.apollo-mentions').classes()).toContain('apollo-mentions-focused');
     wrapper.unmount();
   });
 

@@ -478,7 +478,7 @@ describe('ConfigProvider · theme', () => {
     });
   });
 
-  it('L2 · 给了 theme 才渲染作用域元素；没给则不产任何包裹 DOM', async () => {
+  it('keeps the default provider renderless while projecting a local theme onto native roots', async () => {
     const plain = mount(ConfigProvider, {
       slots: { default: () => h('span', { class: 'text-probe' }, 'probe') },
       global: { stubs: { teleport: false } },
@@ -493,17 +493,17 @@ describe('ConfigProvider · theme', () => {
       global: { stubs: { teleport: false } },
     });
     // 多了一层 display:contents 的作用域元素（D26），文本探针仍在里面
-    expect(themed.html()).toContain('display: contents');
-    expect(themed.html()).toContain('<span class="text-probe">probe</span>');
     await nextTick();
-    expect(themed.get('div[style*="display: contents"]').get('span.text-probe').text()).toBe(
-      'probe',
+    expect(themed.findAll('div')).toHaveLength(0);
+    expect(themed.get('span.text-probe').text()).toBe('probe');
+    expect(themed.get('span').element.style.getPropertyValue('--apollo-color-primary')).toBe(
+      '#ff0000',
     );
   });
 
   it('L2 · theme 会把 CSS 变量写到作用域元素上（零运行时的落地点）', async () => {
     const wrapper = mount(ConfigProvider, {
-      props: { theme: { token: { colorPrimary: 'rgb(255, 0, 0)' } } },
+      props: { scopeTag: 'div', theme: { token: { colorPrimary: 'rgb(255, 0, 0)' } } },
       slots: { default: () => h('span', { class: 'text-probe' }, 'probe') },
       attachTo: document.body,
     });
@@ -520,7 +520,7 @@ describe('ConfigProvider · theme', () => {
     const host = document.createElement('div');
     document.body.appendChild(host);
     const wrapper = mount(ConfigProvider, {
-      props: { theme: { token: { colorPrimary: '#ff0000' } } },
+      props: { scopeTag: 'div', theme: { token: { colorPrimary: '#ff0000' } } },
       slots: { default: () => h('span', null, 'probe') },
       attachTo: host,
     });
@@ -749,7 +749,7 @@ describe('ConfigProvider · renderEmpty', () => {
 });
 
 describe('ConfigProvider · DOM 包裹', () => {
-  it('本体不产 DOM：只有一个 slot', () => {
+  it('renders the complete default slot without an implicit host', () => {
     const wrapper = mount(ConfigProvider, {
       slots: { default: () => h('span', { class: 'only' }, 'x') },
       global: { stubs: { teleport: false } },

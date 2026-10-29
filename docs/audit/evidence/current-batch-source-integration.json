@@ -1,0 +1,302 @@
+{
+  "date": "2026-10-29T05:40:39.260142+00:00",
+  "state": "source milestone; full unit acceptance pending",
+  "baseCommit": "796a193f0c3f656e82c179c1ac298aafe48df465",
+  "sourceCommit": "the commit containing this milestone; exact production identity is recorded below",
+  "completeComponentUnits": 21,
+  "totalComponentUnits": 72,
+  "pauseAfterCurrentBatch": true,
+  "dispatchFurtherUnits": false,
+  "productionSourceCount": 2003,
+  "productionSourceDigest": "b3145042f59cdab1b97509a233c6531e1426d9541cbc98fed29b9dd990cec2f2",
+  "productionDigestEncoding": "sha256 of UTF-8 sorted compact JSON of path-to-sha256 map; packages/*/src ts/vue/css/json except __tests__, tests and demo",
+  "rawProductionFreeze": "/tmp/apollo-batch-final-production-freeze.json",
+  "ownerFreezeDeltas": [
+    {
+      "unit": "divider",
+      "path": "packages/ui/src/divider/__tests__/browser.mjs",
+      "ownerFrozenSha256": "91f63cfee09d35a8a63095073fa75a1d52b3435ada8678ed5c1a58215e84bbe9",
+      "integratedSha256": "06a83ddcd6c0cf3470e7c2a9741fa10ca9bac6a85fe8e06199168ee9ba59aab9"
+    },
+    {
+      "unit": "collapse",
+      "path": "packages/ui/src/collapse/__tests__/consumer.mjs",
+      "ownerFrozenSha256": "a75aed449ef0479abe9314f2bcfe32375ace05d950e11f804360c250eddf88ca",
+      "integratedSha256": "c18b36345f0eba9e80621e072faf57d70aec2a1e8d76f0e3852ef2fdd95235df"
+    },
+    {
+      "unit": "collapse",
+      "path": "packages/ui/src/collapse/__tests__/contracts.test.ts",
+      "ownerFrozenSha256": "5e0b91d04d629e48f93d644ffc2adb1f38a7647059f07f0d4622a70940bcdb98",
+      "integratedSha256": "3bc70c3f4e47137c7b32cd0442557b1e8980fb8276001fec4748708d29391976"
+    },
+    {
+      "unit": "collapse",
+      "path": "packages/ui/src/collapse/style/index.ts",
+      "ownerFrozenSha256": "91ac8cb6928a96ffb9f02be0bcee8f11c83f7055fbff2a7a0706bea7ffd41422",
+      "integratedSha256": "54d8ce6a326fad3573b0f1536945ee6fe09bf752e643154ef38492a4cffb92be"
+    },
+    {
+      "unit": "input",
+      "path": "docs/migrations/input-contracts.md",
+      "ownerFrozenSha256": "581bea2a00c0fce6dae145f3237a69511e5ef126a1ee18ac484514917a1a2cd3",
+      "integratedSha256": "2e6649da9763560de98185e61c2b1715f9d4caad4e1fb879be73f57af18e231e"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/_internal/__tests__/use-allow-clear.test.ts",
+      "ownerFrozenSha256": "2b57ad7e802487d4ffd4124fc9fa6e4ea0c41494783d7c95fc0dd34aed8726ea",
+      "integratedSha256": "6685ef878d7d52da9cf23ed14424c13233465555fd2915481d8b1e0e609d64f0"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/__tests__/contracts.test.ts",
+      "ownerFrozenSha256": "1a3ea134533bc17468effd6a05d0f1078789398fc8c1e5d739ab6cfceb0a951e",
+      "integratedSha256": "6e09b4f414f4d287df2805ec24ce541f66bd5a28791173bf2ab71e87b1f635c9"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/demo/addon.vue",
+      "ownerFrozenSha256": "902f9cdac6713c9b588cf204d7c84e1c693fcbe4367a8871405a68ea63c759fc",
+      "integratedSha256": "55381c480b624e6c4caacd5873fb5439af978eca526a6fb59bc2a532cef6a084"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/demo/advance-count.vue",
+      "ownerFrozenSha256": "592105e28b668495c81539e2f333bd9aef72499f466ab37a7cfeb0f96e2ac273",
+      "integratedSha256": "80cd9ce89b027872eccbca87d7c35c5ac07a332128574c524d18a425dbafdf62"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/demo/align.vue",
+      "ownerFrozenSha256": "97aa257061394d8f0e1586ba16a02f72cd30524bfa7853094eaddf3c11b56c08",
+      "integratedSha256": "b3f055915bebba035b0d453063cc7d1f0641f41ed7117c84d3a28a3b5182b23a"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/demo/compact-style.vue",
+      "ownerFrozenSha256": "dffd7f36e3513bdbd7f2019880c33b704814adc672b89a5118e9d2e8b286ad3b",
+      "integratedSha256": "f8c24ee104e1b249b22532d7a70f806e3f5a3cf6d47d6e9bbdf827d3e28a50b5"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/demo/focus.vue",
+      "ownerFrozenSha256": "75e78f7c1a406fc1b49e4f618e4c6771fe1275745b413f603e19132632a016dc",
+      "integratedSha256": "f0ca1560b38800f40d37a7d78e89731eef4e38e0337dedeb7badc04de8e00b8b"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/demo/group.vue",
+      "ownerFrozenSha256": "8dbfde92293c2546bf8a8ac56d281701de5f19d22684a32fc61ee2dd289d7f00",
+      "integratedSha256": "15dde28111b1c352e7239a9cd3d604b464f2892565439bc99d96455c455bb28e"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/demo/presuffix.vue",
+      "ownerFrozenSha256": "bab59bbfbb0aa5a9cfacc8bd4e9296123850627805e71c95e3224f53656e2fe7",
+      "integratedSha256": "5825cf4715dc229d0d93e0fdebf11c898e0f979a88c4e50944cf3ce2220fb0ce"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/demo/search-input-loading.vue",
+      "ownerFrozenSha256": "39cd10706253007dd45e006c760e158e1b2f6fdff9e7be8b345217c475e7e887",
+      "integratedSha256": "4814082f4a28cbbbd102335211b231ed5c5b5acf2fd7d17ad7abd941b408e776"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/demo/search.vue",
+      "ownerFrozenSha256": "f79f17cde490447afd68fc66c1f041b96718bc4648706f27abd0a4816fa6a96f",
+      "integratedSha256": "ab6949f40ece5d0744a3f8d3e3f9a837bc7f1f9ea62e0a4cb209df16b6659c54"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/demo/status.vue",
+      "ownerFrozenSha256": "7be286707785acb0bdc1a3c654a61126589dcaf58ad9244f2865498ff539eaa0",
+      "integratedSha256": "dba25e60b785ad1d7020b18447f6a2119247055907de9e0bcfc647056c9fc96d"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/demo/style-class.vue",
+      "ownerFrozenSha256": "a8676cbe34328eda120df2cfaea1233b8c90c902081031925ba86c1ba27d1e06",
+      "integratedSha256": "84d629c68008d85659c9e16c9bffc66d1a86816ee2bbda6c52c22d9bfb39fdd6"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/demo/tooltip.vue",
+      "ownerFrozenSha256": "6253fa23f16a288d45a87e8af57cdeb0cc58469e0fa146c65178ba05fe1d66a1",
+      "integratedSha256": "a6da0b7a29a453322eeaa7fe149d3dfb5f215a117b030701a9173124a1816798"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/input/style/index.ts",
+      "ownerFrozenSha256": "abd5d0acf78df4313fc49255c12b671ff1b22e5397655a3cdd88f6ac3626e9b9",
+      "integratedSha256": "ed279561b914643849e4f43000f96eb67e33babb524a5423a18149ee23cef5f9"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/mentions/__tests__/index.test.ts",
+      "ownerFrozenSha256": "bc753438406b5f2356d27098cc94c8fcaf62677c1619deba75db45df759d842c",
+      "integratedSha256": "155e4d49e9b030c9acff886d5b05449f5585e1a0d533117f06314e4fd575d4e9"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/mentions/__tests__/semantic.test.ts",
+      "ownerFrozenSha256": "b5314eff5b47ce2f25d5f656fa9577b100bfea1121660127916cb3073f8f42b1",
+      "integratedSha256": "ad1c4ac794a7b9fe010ef1383a7378f9b722f3567c472873c973cadf26c6b601"
+    },
+    {
+      "unit": "input",
+      "path": "packages/ui/src/transfer/__tests__/semantic.test.ts",
+      "ownerFrozenSha256": "70c5dfffb53ada9ea5a48b79417be4424f55611f889b358af13b4585c970a825",
+      "integratedSha256": "22aa0de9a25b342c0637cfd0057b57dab0011e630111e9082b6c52d7297e7028"
+    },
+    {
+      "unit": "input",
+      "path": "tests/browser/input-contracts.mjs",
+      "ownerFrozenSha256": "c3e63711685f47aff829285aafdcc9264d1c2fcde8298e767b5105ea71efb31c",
+      "integratedSha256": "6fc664973dd83f1a8ebf426b49ea6b256dd05c4166c6430b59ddb0085847ad1c"
+    },
+    {
+      "unit": "config-provider",
+      "path": "docs/migrations/config-provider-contracts.md",
+      "ownerFrozenSha256": "7b6f9f746942afe6c13e40c95121c136c58909059963c9196bb85896b85b7f40",
+      "integratedSha256": "5d3db131a2f37f861903d4f6e1230715372fd251f8ed7993f06ffe9454558c05"
+    },
+    {
+      "unit": "config-provider",
+      "path": "packages/ui/src/config-provider/ConfigProvider.ts",
+      "ownerFrozenSha256": "880a02270b183db316df06030bad04f36615e767ef89840a8dfbb4ef5a6d0428",
+      "integratedSha256": "45b64f41681814663346982c5442086e05cb2bd800cbaf626b1b780b6f21f772"
+    },
+    {
+      "unit": "config-provider",
+      "path": "packages/ui/src/config-provider/__tests__/browser-fixture.mjs",
+      "ownerFrozenSha256": "a24924280ad2f800d6c45c5d64912e89291cf7023e3002d566a2210d861d49bd",
+      "integratedSha256": "b62f6d4a6f7fb732c218af334c795b82b94c79e1743c8606b1a95b37f273f981"
+    },
+    {
+      "unit": "config-provider",
+      "path": "packages/ui/src/config-provider/__tests__/browser.mjs",
+      "ownerFrozenSha256": "c5d035b61ab50ad60062f1391519031f932ee191d44f5382a0c2794a0a6a7abd",
+      "integratedSha256": "010b2d5af8b146bb453ef9d07f73c3522ddd4ed2ced9f3870af1cf7ad3ef931e"
+    },
+    {
+      "unit": "config-provider",
+      "path": "packages/ui/src/config-provider/__tests__/contracts.test.ts",
+      "ownerFrozenSha256": "b80f61604dccbd81d996afa02e462aba1abae2d759d551e58e0bc9728c245b26",
+      "integratedSha256": "52918bc09ec07ccaa0ccf3ce45892ac6b6fb303f06b0c3606fa5f27793497320"
+    },
+    {
+      "unit": "config-provider",
+      "path": "packages/ui/src/config-provider/demo/theme.vue",
+      "ownerFrozenSha256": "5adbc151e96223f5ea4cd540999dd6f767dfa8b435ca720642100972138d2d82",
+      "integratedSha256": "6f51db73fafad5e25d8d9e75f8dcd9d02e170458e1c39c243a09e97e2f7417f6"
+    },
+    {
+      "unit": "config-provider",
+      "path": "packages/ui/src/config-provider/index.en-US.md",
+      "ownerFrozenSha256": "aa6e3771eb0b5918aefeb4053f546b7b0f4ef0caf21c6327b4461f930c35553c",
+      "integratedSha256": "b5140ae25f25ed6ca171d64be1d57c1394f9eff4f8019cb9a5ba197011933b57"
+    },
+    {
+      "unit": "config-provider",
+      "path": "packages/ui/src/config-provider/index.zh-CN.md",
+      "ownerFrozenSha256": "f9fafb5ccf98660066a86b4e4837a6e97fe607b591ec5d3827ac48fc0f570d11",
+      "integratedSha256": "4ca596dec0dd785214286b0562a4f9dcd5f95b7441b0a16612a37278c011837f"
+    }
+  ],
+  "rootAdditions": [
+    "root public Slots/semantic exports",
+    "published runtime origin guards, SSR consumer fixtures and independent public type consumers",
+    "native formal visual cases and actual keyboard/axe preparers",
+    "documented current feature costs without changing type/axe/pixel thresholds",
+    "Search exposed ref and VNode shallowRef fixture corrections",
+    "source-preserving formatting of associated test fixtures"
+  ],
+  "verified": {
+    "strictRoot": {
+      "exit": 0,
+      "log": "/tmp/apollo-batch-final-root-strict-final.log"
+    },
+    "wholeRepositoryTypeTests": {
+      "passed": 2309,
+      "failed": 0,
+      "receipt": "/tmp/apollo-batch-final-type-tests.json"
+    },
+    "uiBuild": {
+      "exit": 0,
+      "log": "/tmp/apollo-batch-final-ui-canonical-build.log"
+    },
+    "uiL7": {
+      "failed": 0,
+      "pending": 0,
+      "receipt": "/tmp/apollo-batch-final-ui-l7-canonical.json"
+    },
+    "providerRelatedRuntime": {
+      "passed": 496,
+      "failed": 0,
+      "skipped": 3,
+      "receipt": "/tmp/apollo-batch-final-provider-canonical-tests.json"
+    },
+    "inputPublishedBrowser": {
+      "passed": 249,
+      "failed": 0,
+      "distStable": true,
+      "receipt": "/tmp/apollo-batch-source-milestone-input-published/evidence.json"
+    },
+    "providerPublishedBrowserSsr": {
+      "passed": 62,
+      "errors": [],
+      "distStable": true,
+      "receipt": "/tmp/apollo-batch-final-config-published-canonical.json"
+    },
+    "inputOriginalDemoThemes": {
+      "passed": 96,
+      "failed": 0,
+      "receipt": "/tmp/apollo-batch-final-input-demos-final.json"
+    },
+    "publishedTypes": {
+      "input": "/tmp/apollo-batch-source-milestone-input-types.json",
+      "provider": "/tmp/apollo-batch-source-milestone-config-types.json",
+      "dividerCollapse": "/tmp/apollo-batch-final-divider-collapse-types.json"
+    },
+    "dividerPublishedBrowser": {
+      "passed": 67,
+      "receipt": "/tmp/apollo-batch-final-divider-browser.json"
+    },
+    "collapsePublishedBrowser": {
+      "passed": 134,
+      "receipt": "/tmp/apollo-batch-final-collapse-browser/receipt.json"
+    },
+    "existingDividerCollapsePixels": {
+      "passed": 102,
+      "rawRGBAExact": 102,
+      "receipt": "/tmp/apollo-batch-final-divider-collapse-final-pixels.json"
+    },
+    "newFormalVisualCandidate": {
+      "passed": 228,
+      "approvedNewInputProvider": false,
+      "receipt": "/tmp/apollo-batch-final-candidates-final.json"
+    },
+    "tarballViteWebpack": {
+      "exit": 0,
+      "log": "/tmp/apollo-batch-final-tarball-consumer.log"
+    },
+    "docsTests": {
+      "passed": 161,
+      "receipt": "/tmp/apollo-batch-final-docs-tests-final.json"
+    },
+    "priorDocsPreview": {
+      "passed": 80,
+      "receipt": "/tmp/apollo-batch-final-docs-browser-first.json",
+      "finalProducerBuildPending": true
+    }
+  },
+  "remaining": [
+    "Frozen final-source broad runtime is running with two workers; interrupted earlier snapshot is not a pass",
+    "Review Input84/ConfigProvider42 visuals and independently recapture from the source milestone",
+    "Final generated Docs, status update and live publication",
+    "Final delivery commit/push and pause; no next component task",
+    "All72 components/13 foundations final same-commit full-library audit gate remains open"
+  ]
+}

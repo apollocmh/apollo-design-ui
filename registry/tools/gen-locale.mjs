@@ -46,6 +46,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
 const OUT_DIR = path.join(ROOT, 'packages/locale/src/locales');
 const RC_DIR = path.join(ROOT, 'registry/source/locale-rc');
+const APOLLO_OVERRIDES = JSON.parse(
+  fs.readFileSync(path.join(ROOT, 'registry/source/locale-apollo-overrides.json'), 'utf8'),
+);
 /**
  * 测试基线（oracle）。
  *
@@ -432,7 +435,11 @@ async function main() {
       throw new Error(`[locale] ${lang} 没有导出对象`);
     }
     dumped[lang] = mod.default;
-    outputs.set(`${lang}.ts`, generateLocaleFile(lang, mod.default, antdVersion));
+    const override = APOLLO_OVERRIDES[lang];
+    const locale = override
+      ? { ...mod.default, global: { ...mod.default.global, ...override.global } }
+      : mod.default;
+    outputs.set(`${lang}.ts`, generateLocaleFile(lang, locale, antdVersion));
   }
   outputs.set('index.ts', generateIndexFile(languages));
 

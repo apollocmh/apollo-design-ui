@@ -11,28 +11,28 @@ order: 0
 
 | 范围 | 当前结果 |
 | --- | --- |
-| 72个组件主单元 | 21个已完整验收；本批新增Space / Flex / Alert / Layout |
-| 当前批次 | Divider、Collapse、完整Input、ConfigProvider、Theme基础包五路收尾；完成后暂停 |
-| 当前已提交视觉 | 987/1704已审阅批准；本批隔离产物新增102张已复验，待源码整合交付 |
-| 其余组件 | 51个尚待按本轮完整标准收口（含Input完整API）；已有局部修复继续保留 |
-| 13个基础包 | 已有共享链路专项证据；逐包当前复核继续，不能把消费场景通过当作整包完成 |
-| 最终验收 | 所有整改单元结束后，对最终同一提交执行全量门禁 |
+| 72个组件主单元 | 21个已完整验收；本批四个新增单元正在统一收口 |
+| 当前批次 | Divider、Collapse、完整Input和ConfigProvider实现已冻结；所有子任务已暂停，主线程完成整合后暂停 |
+| 当前已提交视觉 | 1089/1875已审阅批准；包含本批Divider 48张、Collapse 54张；Input和Provider新场景验收中 |
+| 其余组件 | 51个尚未按本轮完整标准收口；不以源码提交代替完整验收 |
+| 13个基础包 | Theme源码专项已交付；Locale、Icons、Form Core的关联链已修正，完整逐包复核仍开放 |
+| 最终验收 | 全部整改单元结束后，再对最终同一提交执行全量门禁 |
 
 [完整72项工作清单、证据与剩余边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md)。组件复杂度不同，上述数量不代表工时百分比。
 
-## 当前批次：实现与完整验收分开记录
+## 当前批次：源码里程碑已交付，统一验收继续
 
-| 单元 | 当前阶段 | 本轮范围 |
+| 单元 | 已实现与已验证 | 剩余验收 |
 | --- | --- | --- |
-| Divider | 源码已冻结；发布浏览器67/67与正式视觉48/48通过，整合收口中 | 条件内容、当前配置、原生方向/语义、三个Token与九个Demo |
-| Collapse / Panel | 源码已冻结；发布浏览器134/134与54张正式视觉通过，整合收口中 | Vue事件、展开模型、内容保留、真实Panel、键盘与十个Token |
-| Input六个组件族 | 首轮223项浏览器断言通过；关联布局、最终类型和文档收尾中 | 内容/身份、原生事件、模型、attrs、Password/Search/OTP与生命周期 |
-| ConfigProvider | 23项原生SSR/水合及浏览器检查通过；通知消费链与八个Demo收尾中 | 主题写入、语言、组件配置、尺寸/禁用、原生图标与多实例 |
-| Theme基础包 | 源码/发布专项已验证，提交617ae554已推送；逐包完整验收仍开放 | 合法输入派生、可写响应性、应用/SSR隔离、变量作用域所有权与Provider生命周期 |
+| Divider | 条件内容、原生语义、当前配置与三个Token；发布浏览器67项、九个Demo和48张正式视觉已通过 | 最终共享源码的统一回归与Docs成品复验 |
+| Collapse / Panel | 原生heading/button/extra、真实Panel、模型与内容身份、十Token；发布浏览器134项和54张正式视觉已通过 | 最终共享源码的统一回归与Docs成品复验 |
+| Input六个组件族 | 原生Event、受控值/IME、稳定宿主、真实Expose、Password/OTP插槽与尺寸；249项发布浏览器、24 Demo四主题96项、发布类型正负例通过 | 新增84张正式视觉批准及最终广关联回归 |
+| ConfigProvider | 当前主题/语言/表单/图标和通知链；496项相关回归、62项发布浏览器/SSR、八Demo和发布类型通过 | 新增42张正式视觉批准及最终广关联回归 |
+| Theme基础包 | 提交617ae554已推送；应用/SSR隔离、可写配置和变量所有权专项已验证 | 完整基础包验收仍开放，不计入组件完成数 |
 
-这里记录隔离产物和各子任务的阶段证据，未合并的源码不等于线上代码。五路均须完成源码、类型、发布消费、适用浏览器/视觉和文档验收后才能新增完成数。本批完成后只做交付收尾并暂停，不再派发新单元。当前仍为21/72；上次正式线上交付与56项真实页面检查的证据见[发布回执](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/space-flex-alert-layout-docs-publication.json)。
+全仓严格类型、2309项类型测试、UI严格L7及tarball的Vite/Webpack消费已通过；Docs 161项测试和首轮80项实际页面/交互通过。全库运行回归和最终视觉正在对冻结源码执行，不能把上述局部结果写成最终全库绿灯。原预算超出的实际功能成本已记录，未放宽类型、依赖、axe或像素差异判据。
 
-本批阶段数据见[当前回执](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-checkpoint.json)。
+本批交付后暂停，不再派发任务。Tree只读清单已提交，尚未开始实现。完整完成数保持21/72，待本批统一验收通过后再更新。[当前回执](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-checkpoint.json)。
 
 ## 2026-10-29：Space、Flex、Alert、Layout 本批验收
 
@@ -217,28 +217,28 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 
 | Scope | Current evidence |
 | --- | --- |
-|72 component units|21 fully accepted; Space, Flex, Alert and Layout pass this batch|
-|Current batch|Finish Divider, Collapse, complete Input, ConfigProvider and Theme; then pause|
-|Committed Apollo visuals|987/1704 reviewed and approved;102 additional isolated checks pass and await source integration|
-|Other components|51 await full acceptance, including the complete Input API; earlier partial fixes remain valid|
-|13 foundation packages|Existing shared-chain evidence remains;current per-package review continues|
+|72 component units|21 fully accepted; four additional units are undergoing unified acceptance|
+|Current batch|Divider, Collapse, complete Input and ConfigProvider sources are frozen; all subagents are paused; finish integration and pause|
+|Committed Apollo visuals|1089/1875 reviewed and approved, including48 Divider and54 Collapse images; Input and Provider review continues|
+|Other components|51 await complete current acceptance; source delivery does not count as full acceptance|
+|13 foundation packages|Theme source milestone delivered; associated Locale, Icons and Form Core chains corrected; full package reviews remain open|
 |Final gate|Run whole-library gates on the same final commit after all units close|
 
 [All72 units, evidence and remaining boundaries](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md). These counts are not weighted work percentages.
 
-## Current audit batch: implementation and acceptance are separate
+## Current audit batch: source milestone delivered; unified acceptance continues
 
-| Unit | Current stage | Complete scope |
+| Unit | Implemented and verified | Remaining acceptance |
 | --- | --- | --- |
-| Divider | Source frozen;67/67 published-browser and48/48 formal visual checks pass; integration continues | Conditional content, current configuration, native direction/semantics, three tokens and nine demos |
-| Collapse / Panel | Source frozen;134/134 published-browser checks and54 reviewed formal visuals pass; integration continues | Vue events, expansion model, retained content, real Panels, keyboard and ten tokens |
-| Six Input families | First223 browser assertions pass; related layout, final types and documentation continue | Content/identity, native events, models, attrs, Password/Search/OTP and lifecycle |
-| ConfigProvider |23 native SSR/hydration/browser checks pass; notice consumers and eight demos continue | Writable theme, locale, component configuration, size/disabled, native icons and multiple instances |
-| Theme foundation | Source/published scope verified and617ae554 pushed; complete package acceptance remains open | Valid token inputs, writable reactivity, app/SSR isolation, variable ownership and Provider lifecycle |
+| Divider | Conditional content, native semantics, current configuration and three tokens;67 published-browser checks, nine demos and48 reviewed visuals pass | Final shared-source runtime and generated Docs checks |
+| Collapse / Panel | Native headings/buttons/extra actions, real Panels, models/content identity and ten tokens;134 published-browser checks and54 reviewed visuals pass | Final shared-source runtime and generated Docs checks |
+| Six Input families | Native Events, controlled values/IME, stable hosts, actual exposes, Password/OTP slots and sizing;249 published-browser checks,96 actual demo/theme checks and published types pass | Approval of84 additional formal visuals and final broad regressions |
+| ConfigProvider | Current theme/locale/form/icon and notice chains;496 related checks,62 published browser/SSR checks, eight demos and published types pass | Approval of42 additional formal visuals and final broad regressions |
+| Theme foundation | Commit617ae554 is pushed; app/SSR isolation, writable config and scope ownership verified | Full foundation acceptance stays open and does not increase component counts |
 
-These are staged results from isolated artifacts and active tasks; unmerged source is not live code. These units require source, types, published consumers, applicable browser/visual checks and documentation before the accepted count increases. Finish delivery of this batch, then pause without dispatching further units. Delivery remains21/72. The previous live release and56 real-page checks are recorded in the[publication receipt](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/space-flex-alert-layout-docs-publication.json).
+Whole-repository strict types,2309 type tests, strict UI L7 and tarball Vite/Webpack consumption pass. Docs161 tests and the first80 real-page/interaction checks pass. Broad runtime and final visual checks are running on frozen source; partial results are not a final whole-library pass. Actual feature costs above the old size budgets are recorded; type, dependency, axe and pixel checks remain intact.
 
-See the[current batch receipt](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-checkpoint.json) for scoped results and open gates.
+Finish this batch and pause without dispatching further tasks. Tree has a committed read-only inventory and no implementation work. Delivery remains21/72 until unified acceptance closes.[Current receipt](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-checkpoint.json).
 
 ## Space, Flex, Alert and Layout accepted in this batch
 

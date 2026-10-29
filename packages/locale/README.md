@@ -11,7 +11,7 @@
 
 ## 职责
 
-国际化数据包：73 个语言包 + Locale 类型 + 各组件 locale 分片。**由脚本从 antd 的 locale 源生成**（与 icons 同一套路），不手工维护。
+国际化数据包：73 个语言包 + Locale 类型 + 各组件 locale 分片。**由脚本从 antd 的 locale 源生成**（与 icons 同一套路），不手工维护；Apollo 扩展由 `registry/source/locale-apollo-overrides.json` 合入生成，原始上游快照保持独立。
 
 ## 替代的 Ant Design 依赖
 
@@ -22,20 +22,20 @@
 - Locale 类型（与 antd 的 Locale 结构逐字段一致，含 17 个分片键）
 - 73 个语言包：zh_CN / en_US / ja_JP / ...（导出名保留 antd 的下划线原名，便于只改包名迁移）
 - 各组件 locale 分片：DatePicker / Pagination / Table / Form / Upload / ...
-- useLocale(name, defaultLocale?) —— 取某组件的 locale（**浅合并，context 侧赢**）
+- useLocale(name, defaultLocale?) —— 取某组件的 locale，返回 `[ComputedRef<分片>, ComputedRef<string | undefined>]`（浅合并，context 侧赢）；脚本中读取 `.value`，动态语言同步更新。
 - LocaleProvider（已废弃）+ ANT_MARK —— 上游用它做「官方导出」校验
-- changeConfirmLocale / getConfirmLocale —— Modal confirm 的模块级 locale 栈
+- changeConfirmLocale / getConfirmLocale —— Modal confirm 的模块级 locale 栈；Provider 仅在客户端注册自身的 Modal 分片，深更新与卸载只清理自身来源。
 
 ## 明确不做（边界）
 
-- ❌ 不做运行时语言切换（那是 ConfigProvider 的 locale prop）
+- 不管理应用选择的语言；通过 ConfigProvider / LocaleProvider 接收当前语言并响应更新。
 - ❌ 不含任何组件实现
 - ❌ 不手工编辑生成产物 —— 改源头或改生成脚本
 - ❌ 不做子路径入口（antd 的 `antd/locale/zh_CN`）—— 本仓库裁决 A 是单文件产物，只能具名导入
 
 ## 必须遵守的契约
 
-- Locale 类型的字段名与 antd 完全一致（用户迁移时 locale 对象可直接沿用）
+- Locale 保留已声明的组件分片；Apollo 扩展 `global.clear?: string` 作为输入清除按钮文案。en_US 为 `Clear input`，zh_CN 为 `清空输入`；其他语言缺省时由 useLocale 回退到英文。
 - 生成管线必须可重跑且幂等
 - 至少 zh_CN 与 en_US 必须完整覆盖全部组件分片
 
@@ -79,3 +79,6 @@ pnpm --filter @apollo-design/locale lint
 
 测试要求见 [`TESTING.md`](../../TESTING.md)。
 覆盖率下限为 语句 95% / 分支 90% / 函数 95%（L2 档位，见 `vitest.config.ts` 的 `coverage.thresholds`）。
+
+
+`useLocaleReactive` 已移除，原有调用统一迁移至 `useLocale`。底层 localeContextKey 可接收响应式来源；SSR 不注册请求级 Modal 数据到模块状态。详见[本轮迁移](../../docs/migrations/config-provider-contracts.md)。本轮只验收此消费链，不代表 Locale 全包重新验收。

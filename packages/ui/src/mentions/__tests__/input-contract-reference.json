@@ -1,0 +1,226 @@
+{
+  "mentions:plain": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-outlined apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-outlined] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:value": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-outlined apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"@afc163\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-outlined] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:placeholder": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-outlined apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" placeholder=\"hi\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-outlined] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:disabled": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-disabled apollo-mentions-outlined apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea rc-textarea-disabled\" disabled=\"\" value=\"a\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-disabled apollo-mentions-outlined] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea rc-textarea-disabled] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:readonly": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-outlined apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" readonly=\"\" value=\"a\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-outlined] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:small": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-outlined apollo-mentions apollo-mentions-css-var apollo-mentions-sm\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-outlined apollo-mentions-sm] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:large": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-outlined apollo-mentions apollo-mentions-css-var apollo-mentions-lg\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-lg apollo-mentions-outlined] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:filled": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-filled apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-filled] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:borderless": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-borderless apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-borderless] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:underlined": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-underlined apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-underlined] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:status-error": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-outlined apollo-mentions-status-error apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-outlined apollo-mentions-status-error] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:status-warning": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-outlined apollo-mentions-status-warning apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-outlined apollo-mentions-status-warning] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:allow-clear": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-wrapper apollo-mentions-outlined apollo-mentions apollo-mentions-css-var apollo-mentions-has-suffix\"><!----><div data-apollo-mentions-host=\"editor\" style=\"display: contents;\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"a\"></textarea><!----></span><!----></span></span><!----></div><span class=\"apollo-mentions-suffix\"><button type=\"button\" class=\"apollo-mentions-clear-icon\" aria-label=\"Clear input\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button><!----></span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-mentions apollo-mentions-affix-wrapper apollo-mentions-has-suffix apollo-mentions-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "mentions:allow-clear-disabled": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-wrapper apollo-mentions-disabled apollo-mentions-affix-wrapper-disabled apollo-mentions-outlined apollo-mentions apollo-mentions-css-var apollo-mentions-has-suffix\"><!----><div data-apollo-mentions-host=\"editor\" style=\"display: contents;\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea rc-textarea-disabled\" disabled=\"\" value=\"a\"></textarea><!----></span><!----></span></span><!----></div><span class=\"apollo-mentions-suffix\"><button type=\"button\" class=\"apollo-mentions-clear-icon apollo-mentions-clear-icon-hidden\" disabled=\"\" aria-label=\"Clear input\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button><!----></span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-mentions apollo-mentions-affix-wrapper apollo-mentions-affix-wrapper-disabled apollo-mentions-disabled apollo-mentions-has-suffix apollo-mentions-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "mentions:allow-clear-empty": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-wrapper apollo-mentions-outlined apollo-mentions apollo-mentions-css-var apollo-mentions-has-suffix\"><!----><div data-apollo-mentions-host=\"editor\" style=\"display: contents;\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><span class=\"apollo-mentions-suffix\"><button type=\"button\" class=\"apollo-mentions-clear-icon apollo-mentions-clear-icon-hidden\" disabled=\"\" aria-label=\"Clear input\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button><!----></span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-mentions apollo-mentions-affix-wrapper apollo-mentions-has-suffix apollo-mentions-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "mentions:class-name": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-outlined apollo-mentions extra rootx apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-outlined extra rootx] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:rows": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-outlined apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"3\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-outlined] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:options": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-outlined apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-outlined] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:rtl": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-host\" style=\"display: contents;\"><!----><div data-apollo-mentions-host=\"editor\" class=\"apollo-mentions apollo-mentions-rtl apollo-mentions-outlined apollo-mentions apollo-mentions-css-var\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea\" value=\"\"></textarea><!----></span><!----></span></span><!----></div><!----></span><!----></span></span>",
+    "diff": [
+      "$/div[0]: 标签不同 <div> vs <span>",
+      "$/div[0]: 类名不同 [apollo-mentions apollo-mentions apollo-mentions-outlined apollo-mentions-rtl] vs []",
+      "$/div[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/div[0]/textarea[0]: 类名不同 [rc-textarea] vs []",
+      "$/div[0]/textarea[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/div[0]/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "mentions:semantic": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-mentions-affix-wrapper apollo-mentions-outlined apollo-mentions apollo-mentions-css-var cls-root apollo-mentions-has-suffix\" style=\"width: 120px;\"><!----><div data-apollo-mentions-host=\"editor\" style=\"display: contents;\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"rc-textarea-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"1\" class=\"rc-textarea cls-textarea\" value=\"x\"></textarea><!----></span><!----></span></span><!----></div><span class=\"apollo-mentions-suffix cls-suffix\"><button type=\"button\" class=\"apollo-mentions-clear-icon\" aria-label=\"Clear input\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button><!----></span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-mentions apollo-mentions-affix-wrapper apollo-mentions-has-suffix apollo-mentions-outlined cls-root] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  }
+}

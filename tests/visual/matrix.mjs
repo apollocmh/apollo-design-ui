@@ -83,6 +83,22 @@ export const COMPONENTS = {
     ],
   },
   'config-provider': {
+    apolloVariants: [
+      'locale',
+      'size-disabled',
+      'component-defaults',
+      'current-provider',
+      'scope-tag',
+      'native-parents',
+      'css-only',
+      'empty-reset',
+      'native-focus',
+      'rtl',
+      'theme-token',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+    ],
     // 组件本身不产 DOM，所以这三条比的是「它对下游产生的效果」。
     // 具体下游链路见 `render/cases/shared.mjs` 的 ConfigProvider 段。
     variants: [
@@ -92,6 +108,24 @@ export const COMPONENTS = {
     ],
   },
   divider: {
+    apolloVariants: [
+      'horizontal',
+      'with-text',
+      'vertical',
+      'variant',
+      'size',
+      'plain',
+      'customize-style',
+      'semantic',
+      'complete-content',
+      'current-provider',
+      'semantic-tokens',
+      'rtl',
+      'native-focus',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+    ],
     variants: [
       'horizontal', // 水平（含 dashed）
       'with-text', // 标题 center / start / end + styles.content.margin
@@ -555,6 +589,36 @@ export const COMPONENTS = {
     ],
   },
   input: {
+    apolloVariants: [
+      'basic',
+      'sizes',
+      'variants',
+      'status',
+      'affixes',
+      'addons',
+      'clear',
+      'count',
+      'disabled-readonly',
+      'password',
+      'password-icon',
+      'search',
+      'search-loading',
+      'textarea',
+      'textarea-autosize',
+      'textarea-resize',
+      'otp',
+      'otp-mask',
+      'otp-separator',
+      'compact-group',
+      'current-provider',
+      'controlled-rejected',
+      'dynamic-wrappers',
+      'native-focus',
+      'rtl',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+    ],
     // 5 个 variant × 3 个 viewport = 15 张
     variants: [
       'basic', // 默认 + size 三档
@@ -573,6 +637,26 @@ export const COMPONENTS = {
     ],
   },
   collapse: {
+    apolloVariants: [
+      'basic',
+      'accordion',
+      'borderless',
+      'ghost',
+      'sizes',
+      'declared-panels',
+      'complete-content',
+      'retained-content',
+      'controlled-rejected',
+      'current-provider',
+      'icon-slot',
+      'nested',
+      'semantic-tokens',
+      'rtl',
+      'native-focus',
+      'theme-dark',
+      'theme-compact',
+      'theme-dark-compact',
+    ],
     // ── 视觉变体的**重复豁免**（由 `node tests/visual/run.mjs --check-baselines` 强制）──
     // 每条都必须**恰好命中**一组重复；未命中的豁免会让自检失败（防腐烂）。
     duplicateAllow: [

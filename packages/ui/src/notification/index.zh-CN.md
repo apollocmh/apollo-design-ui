@@ -140,3 +140,6 @@ import '@apollo-design/ui/style.css';               // 汇总
 **同 key 再 open 会怎样？**
 
 复用同一条通知并更新内容（`update` demo），不会新增一条。
+
+
+Hook holder 内已打开通知保留 keyed 正文与用户样式；类型、图标和关闭按钮类跟随当前前缀，默认关闭可访问名跟随当前语言，显式 closable aria-label 优先。closable.disabled 禁用原生关闭按钮。

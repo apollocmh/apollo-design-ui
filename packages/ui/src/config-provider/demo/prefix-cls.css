@@ -1,0 +1,40 @@
+/* Static demo CSS: genComponentCss('empty', 'brand'). */
+.brand-empty {
+  margin-inline: var(--apollo-margin-xs);
+  font-size: var(--apollo-font-size);
+  line-height: var(--apollo-line-height);
+  text-align: center;
+}
+.brand-empty-image {
+  margin-bottom: var(--apollo-margin-xs);
+}
+.brand-empty-image:not(.brand-empty-image-content) {
+  height: calc(var(--apollo-control-height-lg) * 2.5);
+  opacity: var(--apollo-opacity-image);
+}
+.brand-empty-image:not(.brand-empty-image-content) > img,
+.brand-empty-image:not(.brand-empty-image-content) > svg {
+  max-width: 100%;
+  height: 100%;
+  object-fit: contain;
+  margin: auto;
+}
+.brand-empty-description {
+  color: var(--apollo-color-text-secondary);
+  overflow-wrap: anywhere;
+}
+.brand-empty-footer {
+  margin-top: var(--apollo-margin);
+}
+.brand-empty-normal {
+  margin-block: var(--apollo-margin-xl);
+}
+.brand-empty-normal .brand-empty-image:not(.brand-empty-image-content) {
+  height: var(--apollo-control-height-lg);
+}
+.brand-empty-small {
+  margin-block: var(--apollo-margin-xs);
+}
+.brand-empty-small .brand-empty-image:not(.brand-empty-image-content) {
+  height: calc(var(--apollo-control-height-lg) * 0.875);
+}

@@ -174,3 +174,6 @@ import { Tabs } from '@apollo-design/ui';
 
 
 `#popupRender` receives one named object: render the original menu through `originNode`, read current hidden tabs from `restTabs`, and bind a close button to `onClose`. The `more.popupRender` function entry is removed directly without a compatibility layer or deprecation period. `more` declares its supported icon/transitionName fields rather than implying arbitrary popup props are forwarded. Both `#extra` and `#popupRender` support conditional addition/removal after mount and current reactive content; empty slots suppress default content.
+
+
+Existing ConfigProvider.components.tabs defaults for size, type, centered, className and semantic styling are read reactively. Explicit Tabs props take priority, including centered=false.

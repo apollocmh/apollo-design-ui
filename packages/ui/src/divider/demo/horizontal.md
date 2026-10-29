@@ -5,7 +5,7 @@ title:
   en-US: Horizontal
 ---
 
-默认是水平分割线。加 `dashed` 变成虚线。
+水平分割线区隔真实正文；dashed 切换为虚线。默认样式读取当前作用域的主题变量。
 
 ```vue
 <script setup lang="ts">

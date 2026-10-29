@@ -1,6 +1,9 @@
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
-# Input · 开发计划（G0–G14）
+# Input · 历史开发计划（G0–G14）
+
+当前六个系列均由本轮统一整改，Search/OTP 已实现；下述旧阶段记录不再定义任务范围或验收。现状见 [README](./README.md)、[迁移说明](../../../../docs/migrations/input-contracts.md) 与本批审计。
+
 
 > 由 gen-component.mjs 生成。每次开工先过一遍「开工避坑清单」，Gate 完成一个勾一个。
 

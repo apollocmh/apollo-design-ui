@@ -3,14 +3,17 @@
  *
  * 契约来源：antd 6.6.4 `es/transfer/search.js`（**机械移植**）。
  *
- * 就是一层壳：`Input` + `allowClear` + 搜索图标前缀。清除按钮的点击在本仓
- * Input 的 `resolveOnChange` 里同样以 `e.type === 'click'` 的 change 事件冒泡
- * （与上游 useAllowClear 的事件契约逐字一致），据此触发 `handleClear`。
+ * Input's clear event owns the clear action; change forwards its real native Event.
  */
 
 import { SearchOutlined } from '@apollo-design/icons';
 import { defineComponent, h, type PropType } from 'vue';
 import Input from '../input';
+
+export function searchEventValue(event: Event): string | undefined {
+  const target = event.target;
+  return target && 'value' in target && typeof target.value === 'string' ? target.value : undefined;
+}
 
 const Search = defineComponent({
   name: 'ATransferSearch',
@@ -21,18 +24,28 @@ const Search = defineComponent({
     prefixCls: { type: String, required: true },
     disabled: { type: Boolean, default: undefined },
     onChange: {
-      type: Function as PropType<(e: { type: string; target: { value?: string } }) => void>,
+      type: Function as PropType<(event: Event) => void>,
       default: undefined,
     },
     handleClear: { type: Function as PropType<() => void>, default: undefined },
   },
   setup(props) {
-    const handleChange = (e: { type?: string; target?: { value?: string } }) => {
-      if (e.type === 'click') {
-        props.handleClear?.();
+    let clearing = false;
+    let clearVersion = 0;
+    const handleClear = () => {
+      clearing = true;
+      const version = ++clearVersion;
+      queueMicrotask(() => {
+        if (version === clearVersion) clearing = false;
+      });
+      props.handleClear?.();
+    };
+    const handleChange = (event: Event) => {
+      if (clearing) {
+        clearing = false;
         return;
       }
-      props.onChange?.(e as { type: string; target: { value?: string } });
+      props.onChange?.(event);
     };
     return () =>
       h(Input, {
@@ -41,6 +54,7 @@ const Search = defineComponent({
         class: props.prefixCls,
         value: props.value,
         onChange: handleChange,
+        onClear: handleClear,
         disabled: props.disabled,
         allowClear: true,
         prefix: h(SearchOutlined),

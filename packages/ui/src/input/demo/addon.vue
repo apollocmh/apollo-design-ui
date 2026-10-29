@@ -19,7 +19,7 @@ const amount = ref('');
       <Input v-model:value="amount" aria-label="金额" placeholder="金额" />
       <SpaceAddon>RMB</SpaceAddon>
     </SpaceCompact>
-    <div style="font-size: 12px; color: var(--apollo-color-text-tertiary)">
+    <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">
       site：{{ site || '-' }}；amount：{{ amount || '-' }}
     </div>
   </div>

@@ -1,6 +1,18 @@
 <script setup lang="ts">
-import { compactAlgorithm, darkAlgorithm, ThemeProvider, type ThemeConfig } from '@apollo-design/theme';
-import { Alert, AlertErrorBoundary, ConfigProvider, type AlertConfig, type AlertRef, type ConfigProviderProps } from '@apollo-design/ui';
+import {
+  compactAlgorithm,
+  darkAlgorithm,
+  type ThemeConfig,
+  ThemeProvider,
+} from '@apollo-design/theme';
+import {
+  Alert,
+  type AlertConfig,
+  AlertErrorBoundary,
+  type AlertRef,
+  ConfigProvider,
+  type ConfigProviderProps,
+} from '@apollo-design/ui';
 import { computed, defineComponent, h, nextTick, onMounted, reactive, ref, shallowRef } from 'vue';
 
 interface State {
@@ -9,38 +21,105 @@ interface State {
   closeSlot: 'rich' | 'empty' | 'absent';
   listener: 'first' | 'second' | 'none';
   theme: 'default' | 'dark' | 'compact' | 'both';
-  tokens: boolean; alias: boolean; motion: boolean; nativeToken: boolean;
-  mounted: boolean; prefix: 'apollo' | 'audit'; rtl: boolean;
-  failed: boolean; errorKind: 'error' | 'zero' | 'false' | 'null' | 'undefined'; boundaryKey: number;
-  resetTheme: boolean; cssTheme: boolean; iconFallback: boolean;
+  tokens: boolean;
+  alias: boolean;
+  motion: boolean;
+  nativeToken: boolean;
+  mounted: boolean;
+  prefix: 'apollo' | 'audit';
+  rtl: boolean;
+  failed: boolean;
+  errorKind: 'error' | 'zero' | 'false' | 'null' | 'undefined';
+  boundaryKey: number;
+  resetTheme: boolean;
+  cssTheme: boolean;
+  iconFallback: boolean;
 }
-const state = reactive<State>({ provider: 'first', slot: 'rich', closeSlot: 'absent', listener: 'first',
-  theme: 'default', tokens: false, alias: false, motion: true, nativeToken: false,
-  mounted: true, prefix: 'apollo', rtl: false, failed: false, errorKind: 'error', boundaryKey: 0,
-  resetTheme: true, cssTheme: false, iconFallback: false });
+const state = reactive<State>({
+  provider: 'first',
+  slot: 'rich',
+  closeSlot: 'absent',
+  listener: 'first',
+  theme: 'default',
+  tokens: false,
+  alias: false,
+  motion: true,
+  nativeToken: false,
+  mounted: true,
+  prefix: 'apollo',
+  rtl: false,
+  failed: false,
+  errorKind: 'error',
+  boundaryKey: 0,
+  resetTheme: true,
+  cssTheme: false,
+  iconFallback: false,
+});
 const draft = ref('Saved draft');
 const sourceDraft = ref('Source business draft');
 const alert = shallowRef<AlertRef | null>(null);
-const events: { name: string; type?: string; native?: boolean; target?: string; removed?: boolean }[] = [];
+const events: {
+  name: string;
+  type?: string;
+  native?: boolean;
+  target?: string;
+  removed?: boolean;
+}[] = [];
 let nativeOnce = 0;
-const record = (name: string, event?: Event) => events.push({ name, type: event?.type,
-  native: event instanceof Event, target: event?.target instanceof HTMLElement ? event.target.id : undefined });
-const config = computed<AlertConfig | undefined>(() => state.provider === 'none' ? undefined : {
-  variant: state.provider === 'first' ? 'outlined' : 'filled',
-  closable: { closeIcon: true, onClose: (event) => record(`config-${state.provider}`, event),
-    afterClose: () => record(`config-after-${state.provider}`), 'data-close-owner': state.provider },
-  className: `provider-${state.provider}`, style: { '--provider-value': state.provider },
-  classNames: ({ props }) => ({ title: `title-${state.provider}-${props.variant}` }),
-  styles: { title: { fontWeight: state.provider === 'first' ? 400 : 700 } },
-  infoIcon: state.iconFallback ? null : h('span', { style: { color: 'var(--apollo-color-text)' } }, state.provider === 'first' ? 'Info' : 'Current'),
-});
-const algorithms = { default: undefined, dark: darkAlgorithm, compact: compactAlgorithm,
-  both: [darkAlgorithm, compactAlgorithm] };
+const record = (name: string, event?: Event) =>
+  events.push({
+    name,
+    type: event?.type,
+    native: event instanceof Event,
+    target: event?.target instanceof HTMLElement ? event.target.id : undefined,
+  });
+const config = computed<AlertConfig | undefined>(() =>
+  state.provider === 'none'
+    ? undefined
+    : {
+        variant: state.provider === 'first' ? 'outlined' : 'filled',
+        closable: {
+          closeIcon: true,
+          onClose: (event) => record(`config-${state.provider}`, event),
+          afterClose: () => record(`config-after-${state.provider}`),
+          'data-close-owner': state.provider,
+        },
+        className: `provider-${state.provider}`,
+        style: { '--provider-value': state.provider },
+        classNames: ({ props }) => ({ title: `title-${state.provider}-${props.variant}` }),
+        styles: { title: { fontWeight: state.provider === 'first' ? 400 : 700 } },
+        infoIcon: state.iconFallback
+          ? null
+          : h(
+              'span',
+              { style: { color: 'var(--apollo-color-text)' } },
+              state.provider === 'first' ? 'Info' : 'Current',
+            ),
+      },
+);
+const algorithms = {
+  default: undefined,
+  dark: darkAlgorithm,
+  compact: compactAlgorithm,
+  both: [darkAlgorithm, compactAlgorithm],
+};
 const theme = computed<ThemeConfig>(() => {
-  const current: ThemeConfig = { algorithm: algorithms[state.theme],
-    token: { motion: state.motion, ...(state.alias ? { colorInfoBg: '#123456', colorInfoBorder: '#654321' } : {}) } };
-  if (state.tokens) current.components = { Alert: { borderRadius: 19, withDescriptionIconSize: 37,
-    defaultPadding: '7px 13px', withDescriptionPadding: '11px 17px' } };
+  const current: ThemeConfig = {
+    algorithm: algorithms[state.theme],
+    token: {
+      motion: state.motion,
+      ...(state.alias ? { colorInfoBg: '#123456', colorInfoBorder: '#654321' } : {}),
+    },
+  };
+  if (state.tokens)
+    current.components = {
+      Alert: {
+        borderRadius: 19,
+        withDescriptionIconSize: 37,
+        defaultPadding: '7px 13px',
+        withDescriptionPadding: '11px 17px',
+      },
+    };
   return current;
 });
 const components = computed<NonNullable<ConfigProviderProps['components']>>(() => {
@@ -49,13 +128,26 @@ const components = computed<NonNullable<ConfigProviderProps['components']>>(() =
   if (current) result.alert = { ...current };
   return result;
 });
-const attrs = computed(() => ({ tabindex: 0, 'data-owner': state.listener,
+const attrs = computed(() => ({
+  tabindex: 0,
+  'data-owner': state.listener,
   class: ['native-root', { updated: state.listener === 'second' }],
-  style: ['--native-marker:present', state.nativeToken ? { '--apollo-alert-border-radius': '23px' } : {}],
-  ...(state.listener === 'none' ? {} : { onChange: (event: Event) => record(`native-${state.listener}`, event) }),
-  onChangeOnce: () => { nativeOnce += 1; },
+  style: [
+    '--native-marker:present',
+    state.nativeToken ? { '--apollo-alert-border-radius': '23px' } : {},
+  ],
+  ...(state.listener === 'none'
+    ? {}
+    : { onChange: (event: Event) => record(`native-${state.listener}`, event) }),
+  onChangeOnce: () => {
+    nativeOnce += 1;
+  },
 }));
-const after = () => events.push({ name: 'after-close', removed: !document.querySelector('#alert-main') && alert.value?.nativeElement === null });
+const after = () =>
+  events.push({
+    name: 'after-close',
+    removed: !document.querySelector('#alert-main') && alert.value?.nativeElement === null,
+  });
 const Faulty = defineComponent({
   props: { failed: Boolean, kind: String },
   setup(props) {
@@ -67,19 +159,40 @@ const Faulty = defineComponent({
         if (props.kind === 'undefined') throw undefined;
         throw new Error('Descendant render failed');
       }
-      return h('button', { id: 'boundary-event', type: 'button', onClick() { throw new Error('Descendant event failed'); } }, 'Fail descendant event');
+      return h(
+        'button',
+        {
+          id: 'boundary-event',
+          type: 'button',
+          onClick() {
+            throw new Error('Descendant event failed');
+          },
+        },
+        'Fail descendant event',
+      );
     };
   },
 });
-const snapshot = () => ({ events: [...events], nativeOnce,
+const snapshot = () => ({
+  events: [...events],
+  nativeOnce,
   nativeTag: alert.value?.nativeElement?.tagName ?? null,
   staticBoundary: Alert.ErrorBoundary === AlertErrorBoundary,
   serverRootSame: window.alertSSRRoot === document.querySelector('#alert-main'),
   serverDraftSame: window.alertSSRDraft === document.querySelector('#alert-draft'),
 });
-onMounted(() => { window.alertAudit = { set: async (patch) => {
-  Object.assign(state, patch); await nextTick(); await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
-}, snapshot }; });
+onMounted(() => {
+  window.alertAudit = {
+    set: async (patch) => {
+      Object.assign(state, patch);
+      await nextTick();
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      );
+    },
+    snapshot,
+  };
+});
 declare global {
   interface Window {
     alertSSRRoot: Element | null;

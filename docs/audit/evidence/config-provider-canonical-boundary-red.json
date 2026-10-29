@@ -1,0 +1,24 @@
+{
+  "sourceState": "owner-frozen ConfigProvider before canonical projection correction",
+  "rawReport": "/tmp/apollo-batch-final-provider-boundary-red.json",
+  "failed": 1,
+  "failures": [
+    {
+      "ancestorTitles": [
+        "ConfigProvider writable and isolated theme context"
+      ],
+      "fullName": "ConfigProvider writable and isolated theme context projects the nearest explicit ThemeProvider, including an empty reset, without replacing content",
+      "status": "failed",
+      "title": "projects the nearest explicit ThemeProvider, including an empty reset, without replacing content",
+      "duration": 167.70702299999994,
+      "failureMessages": [
+        "AssertionError: expected '29px' to be '19px' // Object.is equality\n    at /private/tmp/apollo-batch-final-796a193f/packages/ui/src/config-provider/__tests__/contracts.test.ts:200:65\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+      ],
+      "meta": {},
+      "tags": [],
+      "benchmarks": []
+    }
+  ],
+  "rootCause": "Theme derivation follows the nearest explicit canonical source but CSS projection was only enabled for a local theme prop or runtime edit; a transparent inner provider retained outer CSS despite its current ThemeProvider context",
+  "remediation": "Enable owned projection for sourceActive; retain inactive CSS-only inheritance and native-priority/scope cleanup rules"
+}

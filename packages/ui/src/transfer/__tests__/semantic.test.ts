@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils';
 import { mergeButtonContentReferenceAllowances } from '../../_internal/__tests__/button-content-reference';
+import { inputContractReference } from '../../input/__tests__/contract-reference';
 import buttonContentDifferences from './button-content-reference-diffs.json';
+import inputReferences from './input-contract-reference.json';
 /**
  * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）—— Transfer
  *
@@ -16,7 +18,7 @@ import buttonContentDifferences from './button-content-reference-diffs.json';
  *    render prop 的 DOM 依赖用户实现，机械对拍无 oracle 价值。
  */
 
-import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import type { DomRenderResult } from '@apollo-design/test-utils';
 import { describe, expect, it } from 'vitest';
 import { defineComponent, h, type SlotsType } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/transfer.dom.json';
@@ -847,22 +849,26 @@ const ALLOW = {
   },
 } as const;
 
-domContractTest('Transfer', {
-  baseline,
-  // `render` 必须覆盖基线里的每一个 id —— 少一条会让测试失败，而不是静默跳过。
-  render: (id) => {
-    const build = CASES[id];
-    if (!build) {
-      throw new Error(
-        `[Transfer semantic.test] 基线里有用例 "${id}"，但 CASES 里没有对应构造。\n` +
-          `  基线里的用例：${baseline.cases.map((c) => c.id).join(', ')}`,
-      );
-    }
-    return build();
+inputContractReference(
+  'Transfer',
+  {
+    baseline,
+    // `render` 必须覆盖基线里的每一个 id —— 少一条会让测试失败，而不是静默跳过。
+    render: (id) => {
+      const build = CASES[id];
+      if (!build) {
+        throw new Error(
+          `[Transfer semantic.test] 基线里有用例 "${id}"，但 CASES 里没有对应构造。\n` +
+            `  基线里的用例：${baseline.cases.map((c) => c.id).join(', ')}`,
+        );
+      }
+      return build();
+    },
+    keepStyle: true,
+    allow: mergeButtonContentReferenceAllowances(buttonContentDifferences, ALLOW),
   },
-  keepStyle: true,
-  allow: mergeButtonContentReferenceAllowances(buttonContentDifferences, ALLOW),
-});
+  inputReferences,
+);
 
 /** CASES 与基线一一对应（不多不少）—— 防「少测一条」。 */
 describe('Transfer · 用例覆盖', () => {

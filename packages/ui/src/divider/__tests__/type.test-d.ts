@@ -1,23 +1,12 @@
 /**
- * L3 · 类型测试（含**负例**）
- *
- * 规则 T7：只有正例的类型测试是没有价值的。下面每个 `describe` 都同时给出
- * 「应当通过」与「应当报错」两侧。
- *
- * ⚠️ 负例必须包在**永不调用**的闭包里 —— 本文件会被 vitest 真的执行
- *    （`--project types` 开了 typecheck，但仍然跑运行时）。裸写一行错误用法会直接崩。
- *
- * `@ts-expect-error` 在本仓库**只允许**出现在这里（`AGENTS.md` H10）：
- * 它的语义是「此处应当报错」，一旦 TS 不再报错，`@ts-expect-error` 本身会变成错误。
- *
- * ── 与 antd 类型面的三处登记差异（见 `interface.ts` 的文件头）──────────────────
- *   1. `children` 不在 Props 里（Vue 侧是默认插槽，规则 C19）
- *   2. `size` 的类型名是 `DividerSize`（antd 叫 `SizeType`，避免与 config-provider 重名）
- *   3. `React.CSSProperties` → Vue `CSSProperties`、`React.ReactNode` → `VNodeChild`
+ * Public Divider types include positive and reasoned negative cases.
+ * Negative usages stay inside uncalled closures because the types project also executes tests.
+ * Each @ts-expect-error must keep rejecting its documented invalid usage.
+ * Vue native attrs and default VNodeChild slots follow the current component contract.
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { CSSProperties } from 'vue';
+import { type CSSProperties, h, type VNodeChild } from 'vue';
 import type {
   DividerComponentToken,
   DividerConfig,
@@ -37,7 +26,7 @@ import type {
 import { Divider } from '../index';
 
 describe('Divider · 基础枚举', () => {
-  it('三个枚举的取值集合与 antd 逐字一致', () => {
+  it('公开的轴、标题位置和线型枚举', () => {
     expectTypeOf<Orientation>().toEqualTypeOf<'horizontal' | 'vertical'>();
     expectTypeOf<TitlePlacement>().toEqualTypeOf<'left' | 'right' | 'center' | 'start' | 'end'>();
     expectTypeOf<DividerVariant>().toEqualTypeOf<'dashed' | 'dotted' | 'solid'>();
@@ -80,7 +69,9 @@ describe('Divider · Props', () => {
       class: ['native-divider', { active: true }],
       style: { color: 'red' },
     };
+    const nativeArray: PublicProps = { style: ['padding:3px', { margin: '4px' }] };
     expectTypeOf(nativeAttrs).toMatchTypeOf<PublicProps>();
+    expectTypeOf(nativeArray).toMatchTypeOf<PublicProps>();
 
     const _never = () => {
       // @ts-expect-error `className` 由 Vue 原生 `class` 取代
@@ -98,6 +89,14 @@ describe('Divider · Props', () => {
 
   it('`variant` 有默认值但类型上仍是可选（默认值在运行时生效）', () => {
     expectTypeOf<DividerProps['variant']>().toEqualTypeOf<DividerVariant | undefined>();
+  });
+
+  it('documented legacy title orientations remain accepted without widening Orientation', () => {
+    expectTypeOf<DividerProps['orientation']>().toEqualTypeOf<
+      Orientation | TitlePlacement | undefined
+    >();
+    const legacy: DividerProps = { orientation: 'center' };
+    expectTypeOf(legacy).toMatchTypeOf<DividerProps>();
   });
 });
 
@@ -165,6 +164,18 @@ describe('Divider · ref / config / slot', () => {
     expectTypeOf<DividerSlot>().toBeFunction();
   });
 
+  it('complete native Vue content is accepted and plain objects are rejected', () => {
+    const slot: DividerSlot = () => [0, 'text', h('strong', 'title'), h('input')];
+    expectTypeOf<ReturnType<DividerSlot>>().toEqualTypeOf<VNodeChild>();
+    expectTypeOf(slot).toBeFunction();
+    const invalid = () => {
+      // @ts-expect-error A plain data object is not Vue content.
+      const value: DividerSlot = () => ({ invalid: true });
+      return value;
+    };
+    void invalid;
+  });
+
   it('组件上的 Component Token 类型可从包入口取到', () => {
     expectTypeOf<DividerComponentToken>().toHaveProperty('textPaddingInline');
     expectTypeOf<DividerComponentToken>().toHaveProperty('orientationMargin');
@@ -184,8 +195,8 @@ describe('Divider · 负例（应当报错）', () => {
       const extraClassKey: DividerProps = { classNames: { body: 'x' } };
       // @ts-expect-error `styles` 只接受 root / rail / content
       const extraStyleKey: DividerProps = { styles: { body: { color: 'red' } } };
-      // @ts-expect-error `orientation` 只有 horizontal / vertical
-      const badOrientation: DividerProps = { orientation: 'center' };
+      // @ts-expect-error Only actual directions and the documented legacy title positions are accepted.
+      const badOrientation: DividerProps = { orientation: 'diagonal' };
       // @ts-expect-error `titlePlacement` 不接受 'top'
       const badPlacement: DividerProps = { titlePlacement: 'top' };
       // @ts-expect-error `variant` 不接受 'solid-dashed'

@@ -11,7 +11,7 @@ const directionOptions = [
 ];
 
 function onDirectionChange(value: unknown): void {
-  direction.value = value as DirectionType;
+  if (value === 'ltr' || value === 'rtl') direction.value = value;
 }
 </script>
 
@@ -33,7 +33,7 @@ function onDirectionChange(value: unknown): void {
       <div class="direction-demo-panel">
         <Space>
           <Input aria-label="姓名" placeholder="请输入姓名" style="width: 180px" />
-          <Button type="primary">提交</Button>
+          <Button>提交</Button>
           <Button>取消</Button>
         </Space>
         <p class="direction-demo-hint">

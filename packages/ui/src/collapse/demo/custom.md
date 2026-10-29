@@ -5,4 +5,4 @@ title:
   en-US: Custom Header and Extra
 ---
 
-使用 `items[].label` 与 `items[].extra` 传入 VNode，在标题中组合 Tag、在操作区放置可点击的 Button 并实时统计通知次数。
+使用真实 `CollapsePanel` 的 `#header`、`#extra` 与根 `#expandIcon` 插槽组合标题、独立通知按钮和展开图标。正文编辑器在默认折叠后保留草稿；`headingLevel` 可指定文档层级。

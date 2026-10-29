@@ -24,6 +24,7 @@
 import { type AliasToken, getDesignToken, useToken } from '@apollo-design/theme';
 import { observeMutation } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -35,7 +36,7 @@ import {
   type VNodeChild,
   watch,
 } from 'vue';
-import { useComponentConfig } from '../config-provider/context';
+import { type ComponentStyleConfig, useComponentConfig } from '../config-provider/context';
 import { useWatermarkContext, type WatermarkContextValue, watermarkContextKey } from './context';
 import type { WatermarkFont, WatermarkProps } from './interface';
 import { FontGap, getClips } from './use-clips';
@@ -49,10 +50,14 @@ const DEFAULT_GAP_Y = 100;
 const WATERMARK_Z_INDEX_OFFSET = 1;
 
 /** 强制不可改的容器样式（防篡改回写的键也来自它）。 */
-const fixedStyle: Record<string, string | number> = {
+const fixedStyle = {
   position: 'relative',
   overflow: 'hidden',
-};
+} satisfies CSSProperties;
+
+function isFixedStyleKey(key: string): key is keyof typeof fixedStyle {
+  return Object.hasOwn(fixedStyle, key);
+}
 
 export default defineComponent({
   name: 'AWatermark',
@@ -74,17 +79,15 @@ export default defineComponent({
     onRemove: { type: Function as PropType<() => void>, default: undefined },
   },
   setup(props, { attrs, expose, slots }) {
-    const context = useComponentConfig('watermark');
-    const contextClassName = context.className;
-    const contextStyle = context.style as Record<string, string | number> | undefined;
+    const context = useComponentConfig<ComponentStyleConfig>('watermark');
 
     const token = useToken();
 
     // ============================ Style ================================
     // 根 `style` 是 Vue 原生 attrs（不再是 prop），在 render 里排在最后 ⇒ 仍覆盖一切。
-    const mergedStyle = computed<Record<string, string | number>>(() => ({
+    const mergedStyle = computed<CSSProperties>(() => ({
       ...fixedStyle,
-      ...contextStyle,
+      ...context.style,
     }));
 
     // 运行时 token：canvas 需要**实值**（CSS 变量进不了 canvas）。
@@ -360,11 +363,10 @@ export default defineComponent({
         } else if (mutation.target === container.value && mutation.attributeName === 'style') {
           // We've only force container not modify.
           // Not consider nest case.
-          const containerStyle = (container.value as HTMLElement).style as unknown as Record<
-            string,
-            string | number | undefined
-          >;
+          const containerStyle = container.value?.style;
+          if (!containerStyle) return;
           for (const key of Object.keys(fixedStyle)) {
+            if (!isFixedStyleKey(key)) continue;
             const oriValue = mergedStyle.value[key];
             const currentValue = containerStyle[key];
             if (oriValue && oriValue !== currentValue) {
@@ -442,7 +444,7 @@ export default defineComponent({
           ref: setContainerRef,
           // 根 `class` / `style` 是 Vue 原生 attrs（位置与原先的
           // props.className/rootClassName/style 一致）。
-          class: [attrs.class, contextClassName],
+          class: [attrs.class, context.className],
           style: {
             ...mergedStyle.value,
             ...((attrs.style as Record<string, string | number>) ?? {}),

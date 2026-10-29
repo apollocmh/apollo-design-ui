@@ -1,233 +1,202 @@
-/**
- * L1/L2 · 单元与交互 —— Collapse
- *
- * 判据：rc `@rc-component/collapse@1.2.0` 的 Collapse 状态机 / useItems /
- * Panel / PanelContent + antd 薄壳的告警与默认值。
- */
-
+/** State and Vue disclosure contracts; native key activation is exercised in browser.mjs. */
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, ref } from 'vue';
 import { getActiveKeysArray } from '../engine';
-import { Collapse } from '../index';
+import {
+  Collapse,
+  type CollapseExpandIconScope,
+  type CollapseProps,
+  type CollapseRef,
+} from '../index';
 
 const ITEMS = [
   { key: '1', label: 'Header 1', children: 'Content 1' },
   { key: '2', label: 'Header 2', children: 'Content 2' },
 ];
-
-const makeCollapse = (props: Record<string, unknown> = {}) =>
+const makeCollapse = (props: CollapseProps = {}) =>
   mount(Collapse, { props: { items: ITEMS, ...props } });
 
-describe('Collapse · engine', () => {
-  it('getActiveKeysArray：数组/单值/undefined 三态（全部 string 化）', () => {
-    expect(getActiveKeysArray(['a', 2])).toEqual(['a', '2']);
+describe('Collapse state and native disclosure', () => {
+  it('normalizes arrays, scalar numbers/strings and undefined without retaining the input array', () => {
+    const keys = ['a', 2];
+    expect(getActiveKeysArray(keys)).toEqual(['a', '2']);
+    expect(getActiveKeysArray(keys)).not.toBe(keys);
     expect(getActiveKeysArray('1')).toEqual(['1']);
     expect(getActiveKeysArray(3)).toEqual(['3']);
     expect(getActiveKeysArray(undefined)).toEqual([]);
   });
-});
-
-describe('Collapse · 状态机', () => {
-  it('非受控：点击 header 切换展开；onChange/change 收到 string[]', async () => {
+  it('uncontrolled activation emits exactly one update and change per request', async () => {
     const onChange = vi.fn();
     const w = makeCollapse({ onChange });
-    const headers = w.findAll('.apollo-collapse-header');
-    await headers[0]?.trigger('click');
-    await nextTick();
-    expect(onChange).toHaveBeenCalledWith(['1']);
+    await w.get('.apollo-collapse-trigger').trigger('click');
+    expect(onChange).toHaveBeenCalledExactlyOnceWith(['1']);
+    expect(w.emitted('update:activeKey')).toEqual([[['1']]]);
     expect(w.findAll('.apollo-collapse-item-active')).toHaveLength(1);
-    // 再点收起
-    await headers[0]?.trigger('click');
-    await nextTick();
-    expect(onChange).toHaveBeenLastCalledWith([]);
+    await w.get('.apollo-collapse-trigger').trigger('click');
+    expect(onChange.mock.calls).toEqual([[['1']], [[]]]);
   });
-
-  /**
-   * ✅ 「`onKeyDown` 大小写 bug」的**回归哨兵**（2026-10-03 补）。
-   *
-   * `Panel.ts` 的 `collapsibleProps` 会被 spread 到**原生 `<div>`**（header / 展开图标）
-   * ⇒ 写成 `onKeyDown` 会被 Vue 归一成 **`key-down`**（**永不触发**）⇒ **Enter 键展开/收起失效**
-   * （**a11y 键盘操作**）。修后必须用 `onKeydown`。见 PITFALLS 323。
-   * 反向验证过：把键名改回 `onKeyDown` 再跑，本条红。
-   */
-  it('键盘：header 上 Enter 切换展开（a11y 键盘操作）', async () => {
+  it('uses a native button in a heading; keyboard generated click has one activation', async () => {
     const onChange = vi.fn();
     const w = makeCollapse({ onChange });
-    const header = w.findAll('.apollo-collapse-header')[0]!;
-
-    await header.trigger('keydown', { key: 'Enter' });
+    const button = w.get('h3 > button');
+    expect(button.attributes('type')).toBe('button');
+    button.element.dispatchEvent(new MouseEvent('click', { detail: 0, bubbles: true }));
     await nextTick();
-    expect(onChange).toHaveBeenCalledWith(['1']);
-    expect(w.findAll('.apollo-collapse-item-active')).toHaveLength(1);
-
-    // 再按一次收起
-    await header.trigger('keydown', { key: 'Enter' });
-    await nextTick();
-    expect(onChange).toHaveBeenLastCalledWith([]);
+    expect(onChange).toHaveBeenCalledExactlyOnceWith(['1']);
   });
-
-  it('键盘：非 Enter 键不切换（对照）', async () => {
+  it('Escape does not activate the native button', async () => {
     const onChange = vi.fn();
     const w = makeCollapse({ onChange });
-    await w.findAll('.apollo-collapse-header')[0]?.trigger('keydown', { key: 'Space' });
-    await nextTick();
+    await w.get('button').trigger('keydown', { key: 'Escape' });
     expect(onChange).not.toHaveBeenCalled();
   });
-
-  it('受控 activeKey：不随点击改变内部展示（受控语义）', async () => {
+  it('controlled requests leave accepted presentation unchanged', async () => {
     const w = makeCollapse({ activeKey: ['2'] });
-    expect(w.findAll('.apollo-collapse-item-active')).toHaveLength(1);
-    await w.findAll('.apollo-collapse-header')[0]?.trigger('click');
-    await nextTick();
-    // 受控：activeKey 未变 ⇒ 仍然是 key 2 展开
-    expect(w.findAll('.apollo-collapse-item-active')).toHaveLength(1);
-    expect(w.text()).toContain('Content 2');
+    await w.get('button').trigger('click');
+    expect(w.findAll('button').map((n) => n.attributes('aria-expanded'))).toEqual([
+      'false',
+      'true',
+    ]);
+    expect(w.emitted('change')).toEqual([[['2', '1']]]);
   });
-
-  it('accordion：同时只展开一个', async () => {
+  it('accordion has one open disclosure without false tab roles', async () => {
     const w = makeCollapse({ accordion: true, defaultActiveKey: '1' });
-    const headers = w.findAll('.apollo-collapse-header');
-    expect(w.findAll('.apollo-collapse-item-active')).toHaveLength(1);
-    await headers[1]?.trigger('click');
-    await nextTick();
-    // ⚠️ motion 离场是异步的 ⇒ 立即断言 aria-expanded 即时态（卸载时间线由 motion 包覆盖）
-    const expanded = w.findAll('.apollo-collapse-header').map((n) => n.attributes('aria-expanded'));
-    expect(expanded).toEqual(['false', 'true']);
+    await w.findAll('button')[1]?.trigger('click');
+    expect(w.findAll('button').map((n) => n.attributes('aria-expanded'))).toEqual([
+      'false',
+      'true',
+    ]);
+    expect(w.find('[role=tablist],[role=tab],[role=tabpanel]').exists()).toBe(false);
   });
-
-  it('key 数字/string 混合（string 化匹配）', () => {
-    const w = mount(Collapse, {
-      props: {
-        items: [
-          { key: 1, label: 'H1', children: 'C1' },
-          { key: 2, label: 'H2', children: 'C2' },
-        ],
-        defaultActiveKey: 1,
-      },
+  it('numeric item keys match numeric model values', () => {
+    const w = makeCollapse({
+      items: [{ key: 1, label: 'H1', children: 'C1' }],
+      defaultActiveKey: 1,
     });
+    expect(w.get('button').attributes('aria-expanded')).toBe('true');
     expect(w.text()).toContain('C1');
   });
-
-  it('collapsible=disabled：点击被吞、aria-disabled、tabindex=-1', async () => {
+  it('disabled native button is excluded from interaction', async () => {
     const onChange = vi.fn();
-    const w = makeCollapse({ collapsible: 'disabled', onChange, defaultActiveKey: '1' });
-    const header = w.findAll('.apollo-collapse-header')[0]!;
-    // antd 语义：aria-disabled = (collapsible==='disabled')，与是否展开无关
-    expect(header.attributes('aria-disabled')).toBe('true');
-    await header.trigger('click');
-    await nextTick();
+    const w = makeCollapse({ collapsible: 'disabled', onChange });
+    expect(w.get<HTMLButtonElement>('button').element.disabled).toBe(true);
+    expect(w.get('button').attributes('aria-disabled')).toBe('true');
+    await w.get('button').trigger('click');
     expect(onChange).not.toHaveBeenCalled();
   });
-
-  it('collapsible=header：可交互 props 落在 title 上', () => {
+  it('header mode places both title and icon in the native button', () => {
     const w = makeCollapse({ collapsible: 'header' });
-    const title = w.find('.apollo-collapse-title');
-    expect(title.attributes('role')).toBe('button');
-    const header = w.find('.apollo-collapse-header');
-    expect(header.attributes('role')).toBeUndefined();
+    expect(w.get('button .apollo-collapse-title').text()).toBe('Header 1');
+    expect(w.find('button .apollo-collapse-expand-icon').exists()).toBe(true);
+    expect(w.get('.apollo-collapse-header').attributes('role')).toBeUndefined();
   });
-
-  it('collapsible=icon：可交互 props 落在 expand-icon 上', () => {
+  it('icon mode keeps title outside the named native button', () => {
     const w = makeCollapse({ collapsible: 'icon' });
-    expect(w.find('.apollo-collapse-expand-icon').attributes('role')).toBe('button');
-    expect(w.find('.apollo-collapse-header').attributes('role')).toBeUndefined();
+    expect(w.find('button .apollo-collapse-title').exists()).toBe(false);
+    expect(w.get('button').attributes('aria-labelledby')).toBe(
+      w.get('.apollo-collapse-title').attributes('id'),
+    );
   });
-
-  it('PanelContent 惰性渲染：展开过就保留（收起后内容仍在 DOM）', async () => {
+  it('default retains opened content after completed close', async () => {
     const w = makeCollapse({ defaultActiveKey: '1' });
-    expect(w.text()).toContain('Content 1');
-    await w.findAll('.apollo-collapse-header')[0]?.trigger('click');
-    await nextTick();
-    // 收起后 forceRender=false 但 rendered 已固化 ⇒ 内容仍渲染（motion 收起）
-    expect(w.text()).toContain('Content 1');
+    const body = w.get('.apollo-collapse-body').element;
+    await w.get('button').trigger('click');
+    await vi.waitFor(() => expect(w.get('[role=region]').attributes('hidden')).toBeDefined());
+    expect(w.get('.apollo-collapse-body').element).toBe(body);
+    expect(w.get('[role=region]').attributes('inert')).toBeDefined();
+    expect(w.get('[role=region]').attributes('hidden')).toBeDefined();
   });
-
-  it('destroyOnHidden ⇒ CSSMotion removeOnLeave（aria 即时态；卸载时序由 motion 包覆盖）', async () => {
+  it('destroyOnHidden removes body after close while keeping the controlled region ID', async () => {
     const w = makeCollapse({ defaultActiveKey: '1', destroyOnHidden: true });
-    await w.findAll('.apollo-collapse-header')[0]?.trigger('click');
-    await nextTick();
-    expect(w.findAll('.apollo-collapse-header')[0]?.attributes('aria-expanded')).toBe('false');
+    const id = w.get('[role=region]').attributes('id');
+    await w.get('button').trigger('click');
+    await vi.waitFor(() => expect(w.find('.apollo-collapse-body').exists()).toBe(false));
+    expect(w.get('[role=region]').attributes('id')).toBe(id);
+    expect(w.get('button').attributes('aria-controls')).toBe(id);
   });
-
-  it('items 覆盖链：item.collapsible 优先于 Collapse.collapsible', () => {
+  it('item collapsible overrides root mode', () => {
     const w = makeCollapse({
       collapsible: 'disabled',
       items: [
-        { key: '1', label: 'H1', children: 'C1', collapsible: 'header' },
-        { key: '2', label: 'H2', children: 'C2' },
+        { key: '1', label: 'H1', collapsible: 'header' },
+        { key: '2', label: 'H2' },
       ],
     });
-    // item1 覆盖为 header ⇒ title 可交互；item2 继承 disabled
-    expect(w.find('.apollo-collapse-title').attributes('role')).toBe('button');
+    expect(w.findAll<HTMLButtonElement>('button').map((n) => n.element.disabled)).toEqual([
+      false,
+      true,
+    ]);
   });
-
-  it('expandIcon 定制：函数回调收到 panelProps', () => {
-    const expandIcon = vi.fn(
-      (_p: { isActive?: boolean; prefixCls?: string; collapsible?: string }) =>
-        h('span', { class: 'my-icon' }, 'ICON'),
+  it('expandIcon slot receives the complete named scope and preserves its VNode', () => {
+    const expandIcon = vi.fn((_scope: CollapseExpandIconScope) =>
+      h('span', { class: 'my-icon' }, 'ICON'),
     );
-    const w = makeCollapse({ expandIcon, defaultActiveKey: '1' });
-    expect(expandIcon).toHaveBeenCalled();
-    expect(expandIcon.mock.calls[0]?.[0]?.isActive).toBe(true);
-    void 0;
-    // -arrow 类由 cloneVNode 追加（antd cloneElement 同义）
-    expect(w.find('.my-icon').classes()).toContain('apollo-collapse-arrow');
+    const w = mount(Collapse, {
+      props: { items: ITEMS, defaultActiveKey: '1' },
+      slots: { expandIcon },
+    });
+    expect(expandIcon).toHaveBeenCalledWith({
+      key: '1',
+      isActive: true,
+      prefixCls: 'apollo-collapse',
+      collapsible: undefined,
+      direction: 'ltr',
+    });
+    expect(w.get('.apollo-collapse-arrow .my-icon').text()).toBe('ICON');
   });
-
-  it('deprecated 告警：destroyInactivePanel / expandIconPosition', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  it('legacy destroy/placement aliases warn and still work', async () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => {});
-    makeCollapse({ destroyInactivePanel: true, expandIconPosition: 'end' });
-    expect(warn.mock.calls.length + error.mock.calls.length).toBeGreaterThan(0);
-    warn.mockRestore();
+    const w = makeCollapse({
+      destroyInactivePanel: true,
+      expandIconPosition: 'end',
+      defaultActiveKey: '1',
+    });
+    expect(error).toHaveBeenCalled();
+    expect(w.classes()).toContain('apollo-collapse-icon-placement-end');
+    await w.get('button').trigger('click');
+    await vi.waitFor(() => expect(w.find('.apollo-collapse-body').exists()).toBe(false));
     error.mockRestore();
   });
-
-  it('attrs 透传（aria/data）到根节点', () => {
+  it('forwards ordinary aria, data and role to the root', () => {
     const w = mount(Collapse, {
       props: { items: ITEMS },
-      attrs: { 'data-x': '1', 'aria-label': 'faq' },
+      attrs: { 'data-x': '1', 'aria-label': 'faq', role: 'group' },
     });
-    const root = w.find('.apollo-collapse');
-    expect(root.attributes('data-x')).toBe('1');
-    expect(root.attributes('aria-label')).toBe('faq');
+    expect(w.attributes()).toMatchObject({ 'data-x': '1', 'aria-label': 'faq', role: 'group' });
   });
-
-  it('ref.nativeElement 指向根元素', () => {
-    const w = makeCollapse();
-    const exposed = (w.vm as unknown as { nativeElement?: HTMLElement | null }).nativeElement;
-    expect(exposed).toBeInstanceOf(HTMLElement);
+  it('exposes the actual root element', () => {
+    const reference = ref<CollapseRef | null>(null);
+    const w = mount(
+      defineComponent({ setup: () => () => h(Collapse, { ref: reference, items: ITEMS }) }),
+    );
+    expect(reference.value?.nativeElement).toBe(w.element);
   });
-
-  it('size 类名映射（small/large）', () => {
-    expect(makeCollapse({ size: 'small' }).find('.apollo-collapse-small').exists()).toBe(true);
-    expect(makeCollapse({ size: 'large' }).find('.apollo-collapse-large').exists()).toBe(true);
+  it('maps local sizes to root and Panel classes', () => {
+    expect(makeCollapse({ size: 'small' }).get('.apollo-collapse-item').classes()).toContain(
+      'apollo-collapse-item-small',
+    );
+    expect(makeCollapse({ size: 'large' }).classes()).toContain('apollo-collapse-large');
   });
-});
-
-describe('Collapse · v-model:activeKey（COMPATIBILITY.md 规则 C11，PITFALLS 162 收尾）', () => {
-  it('点击标题 ⇒ update:activeKey 与 change 同时发出，v-model 写回', async () => {
-    const onChange = vi.fn();
-    const activeKey = ref<(string | number)[]>([]);
-    const App = defineComponent({
-      setup() {
-        return () =>
+  it('v-model writes one string-array value and emits one change', async () => {
+    const onChange = vi.fn(),
+      activeKey = ref<(string | number)[]>([]);
+    const w = mount(
+      defineComponent({
+        setup: () => () =>
           h(Collapse, {
             items: ITEMS,
             activeKey: activeKey.value,
-            'onUpdate:activeKey': (v: (string | number)[]) => {
-              activeKey.value = v;
+            'onUpdate:activeKey': (value) => {
+              activeKey.value = value;
             },
             onChange,
-          } as never);
-      },
-    });
-    const w = mount(App);
-    await w.findAll('.apollo-collapse-header')[0]?.trigger('click');
-    await nextTick();
+          }),
+      }),
+    );
+    await w.get('button').trigger('click');
     expect(activeKey.value).toEqual(['1']);
-    expect(onChange).toHaveBeenCalledWith(['1']);
-    expect(w.find('.apollo-collapse-item-active').exists()).toBe(true);
+    expect(onChange).toHaveBeenCalledExactlyOnceWith(['1']);
+    expect(w.get('button').attributes('aria-expanded')).toBe('true');
   });
 });

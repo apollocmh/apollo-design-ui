@@ -1,36 +1,4 @@
-/**
- * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）
- *
- * ── 基准是什么 ────────────────────────────────────────────────────────────────
- *
- * `tests/compat/baselines/divider.dom.json`，由 `tests/compat/baseline/divider.mjs`
- * **直接调用 `react-dom/server.renderToStaticMarkup` 渲染 antd 的 `Divider`** 产出。
- * 是机械 oracle，不是「我们读了源码之后写下的期望值」—— 后者的差分通过只能说明
- * 两边都想通了，连上游的缺陷都会被一起写进断言。
- *
- * ── 归一化 ───────────────────────────────────────────────────────────────────
- *
- * 两侧都走 `@apollo-design/test-utils` 的 `parse → project` 流水线，且**对称**：
- * 属性按名排序、类名按名排序、`style` 归一化为声明集合、剔除 CSS-in-JS 的
- * `css-dev-only-do-not-override-*` / `css-var-*` 类名（D5）。
- *
- * 这里用 **`keepStyle: true`**。理由：`style` 与 `styles.root` / `styles.rail` 的合并顺序
- * 是本组件最容易写错的地方（无 children 时根元素会额外吃到 `styles.rail`，
- * 且 `style` 覆盖 `styles.root`），只投影 class + aria-* 会让它完全测不到。
- * 这是对 T10 的**加强**，不是放宽。
- *
- * ── 类名不做「事后归一化」──────────────────────────────────────────────────────
- *
- * 两侧传**同一个** `prefixCls`（`apollo`），所以类名可以逐字比对。
- * 这比「渲染成 ant- 再替换成 apollo-」更强 —— 后者会把「我们根本没读 prefixCls」
- * 这个 bug 一起归一化掉。默认前缀单独由 `prefix-cls:no-props` 用例覆盖（见 `allow`）。
- *
- * ── 这个测试没有证明什么 ─────────────────────────────────────────────────────
- *   - 没证明**像素**一致（那是 L6，见 `tests/visual`）
- *   - 没证明告警文案一致（那由 L1 的 `index.test.ts` 钉住）
- *   - 没证明 `size` 会读 ConfigProvider 的 `componentSize`：ConfigProvider 组件尚未落地，
- *     这条缺口登记在 README.md §7
- */
+/** The 53 dated DOM reference scenarios are retained. Apollo contracts and ADR 0007 determine corrections; every allowed difference remains exact, with no additional drift accepted. */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
 import { defineComponent, h, provide, type VNode, type VNodeChild } from 'vue';
@@ -204,7 +172,55 @@ const CASES: Record<string, () => DomRenderResult> = {
  * 这是 `domContractTest` 的 `allow` 契约：`expect(actualDiff).toEqual(allowed)`。
  * 所以「这是唯一差异」本身是可证伪的 —— 任何**额外**漂移都会让用例红。
  */
+const VERTICAL_AXIS = {
+  reason:
+    'DIV-06 / ADR 0007: a vertical separator declares its actual axis. The historical reference is retained; this is the only allowed change for these five cases.',
+  deviationId: 'divider-native-axis',
+  diff: ['$/div[0]: 我们多出属性 aria-orientation="vertical"'],
+} as const;
+const TITLE_SEMANTICS = {
+  reason:
+    'DIV-08 / ADR 0007: complete title content belongs to a group; the empty start rail alone is a separator and the other rail is decoration. Native controls remain accessible. All historical nodes/styles are retained and only these three semantic changes are allowed.',
+  deviationId: 'divider-native-title-semantics',
+  diff: [
+    '$/div[0]: 属性 role 不同 "separator" vs "group"',
+    '$/div[0]/div[0]: 我们多出属性 role="separator"',
+    '$/div[0]/div[2]: 我们多出属性 aria-hidden="true"',
+  ],
+} as const;
+const TITLE_CASES = [
+  'plain:with-text',
+  'orientation:left',
+  'titlePlacement:center',
+  'titlePlacement:start',
+  'titlePlacement:end',
+  'titlePlacement:left',
+  'titlePlacement:right',
+  'orientation-margin:number+start',
+  'orientation-margin:string+end',
+  'orientation-margin:number+center',
+  'orientation-margin:non-numeric+start',
+  'orientation-margin:zero+start',
+  'dashed:with-text',
+  'variant:dotted:with-text',
+  'plain:true',
+  'semantic:classNames-root',
+  'semantic:classNames-all',
+  'semantic:classNames-fn',
+  'semantic:styles-all',
+  'semantic:styles-fn',
+  'style:style-over-root',
+  'config:className',
+  'config:classNames',
+  'direction:rtl+titlePlacement:left',
+] as const;
 const ALLOW = {
+  ...Object.fromEntries(TITLE_CASES.map((id) => [id, TITLE_SEMANTICS])),
+  'orientation:vertical': VERTICAL_AXIS,
+  'vertical:true': VERTICAL_AXIS,
+  'type:vertical': VERTICAL_AXIS,
+  'orientation:vertical+type:horizontal': VERTICAL_AXIS,
+  'vertical:true+with-text': VERTICAL_AXIS,
   'prefix-cls:no-props': {
     reason:
       'antd 的默认 prefixCls 是 `ant`，我们是 `apollo`（裁决 `prefix-cls-default` = A：默认 apollo，允许 ConfigProvider 覆盖为 ant）。' +
@@ -239,7 +255,12 @@ const ALLOW = {
     reason:
       'React 的 `dangerousStyleValue` 对数值 0 不补单位（直出 `0`），Vue 侧内联样式经 jsdom 的 CSSOM 序列化把无单位零规范成 `0px`（cssstyle 行为，实测 jsdom 30）。' +
       '两侧 CSS 等价，差异来自比对夹具的两条通道不对称（React 直出字符串 vs CSSOM 序列化），不是组件行为差异，因此**不登记** COMPATIBILITY.md §9。',
-    diff: ['$/div[0]/span[1]: style 不同 [margin-inline-start:0] vs [margin-inline-start:0px]'],
+    diff: [
+      '$/div[0]: 属性 role 不同 "separator" vs "group"',
+      '$/div[0]/div[0]: 我们多出属性 role="separator"',
+      '$/div[0]/span[1]: style 不同 [margin-inline-start:0] vs [margin-inline-start:0px]',
+      '$/div[0]/div[2]: 我们多出属性 aria-hidden="true"',
+    ],
   },
 } as const;
 

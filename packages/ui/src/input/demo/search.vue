@@ -21,6 +21,6 @@ function onSearch(next: string): void {
     />
     <InputSearch enter-button placeholder="input search text" :on-search="onSearch" />
     <InputSearch enter-button="Search" placeholder="input search text" :on-search="onSearch" />
-    <div style="font-size: 12px; color: #999">last search: {{ lastSearch || '-' }}</div>
+    <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">last search: {{ lastSearch || '-' }}</div>
   </div>
 </template>

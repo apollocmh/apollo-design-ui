@@ -4,28 +4,11 @@ title: Divider
 subtitle: Divider
 ---
 
-A divider line separates different content.
-
-## When To Use
-
-- Divide sections of an article.
-- Divide inline text and links such as the operation column of a table.
+Separate sections or inline actions, with complete Vue title content, horizontal/vertical axes and current themes.
 
 ## Examples
 
-See [`demo/`](./demo) (9 demos, covering the main antd scenarios.
-
-| demo | What it shows |
-|---|---|
-| `horizontal` | Horizontal divider (including `dashed`) |
-| `with-text` | Divider with title: `titlePlacement` + `styles.content.margin` |
-| `size` | Spacing size: `small` / `medium` / `large` |
-| `plain` | Title in plain (body) style |
-| `vertical` | Vertical divider (both `orientation` and `vertical` paths) |
-| `customize-style` | Overriding the border via `style` |
-| `component-token` | Component Token (⚠️ contains a known gap, see "Design notes") |
-| `variant` | Line variant: `solid` / `dashed` / `dotted` |
-| `style-class` | Semantic `classNames` / `styles` |
+Nine paired demos are in [demo](./demo): horizontal, with-text, size, plain, vertical, customize-style, component-token, variant and style-class. The title, component tokens and semantic styles include native controls.
 
 ## API
 
@@ -33,129 +16,64 @@ See [`demo/`](./demo) (9 demos, covering the main antd scenarios.
 
 | Property | Description | Type | Default |
 |---|---|---|---|
-| prefixCls | Class name prefix | `string` | From ConfigProvider, falling back to `apollo-divider` |
-| orientation | Divider direction | `'horizontal' \| 'vertical'` | `'horizontal'` |
-| vertical | Whether it is vertical. `orientation` takes precedence when both are set | `boolean` | `false` |
-| titlePlacement | Position of the title | `'start' \| 'end' \| 'center'` | `'center'` |
-| plain | Whether the title uses body text style | `boolean` | `false` |
-| variant | Line variant | `'dashed' \| 'dotted' \| 'solid'` | `'solid'` |
-| dashed | Whether the line is dashed. Equivalent to `variant="dashed"`, but the two **can be combined** | `boolean` | `false` |
-| size | Spacing size, **only valid for horizontal layout** | `'small' \| 'medium' \| 'middle' \| 'large'` | — |
-| classNames | Semantic class names | `DividerSemanticClassNames \| ((info: { props }) => DividerSemanticClassNames)` | — |
-| styles | Semantic inline styles | `DividerSemanticStyles \| ((info: { props }) => DividerSemanticStyles)` | — |
-| ~~type~~ | ⚠️ Deprecated, use `orientation` | `'horizontal' \| 'vertical'` | — |
-| ~~orientationMargin~~ | ⚠️ Deprecated, use `styles.content.margin`. Distance between the title and its closest border; a unitless numeric string is treated as px | `string \| number` | — |
+| prefixCls | Complete component class prefix | string | Current ConfigProvider; apollo-divider fallback |
+| orientation | Axis; legacy title positions remain accepted with a warning | Orientation \| TitlePlacement | Effective horizontal |
+| vertical | Vertical axis; explicit false overrides type | boolean | undefined when omitted |
+| titlePlacement | Logical start/end, center, or physical left/right | 'start' \| 'end' \| 'center' \| 'left' \| 'right' | center |
+| plain | Body typography for the title | boolean | false |
+| variant | Line style; dotted takes precedence over the dashed boolean | 'solid' \| 'dashed' \| 'dotted' | solid |
+| dashed | Dashed fallback, combinable with variant | boolean | false |
+| size | Horizontal spacing; medium/middle are equivalent; ignored vertically | 'small' \| 'medium' \| 'middle' \| 'large' | Current componentSize |
+| classNames | Semantic classes or a callback | DividerSemanticValue<DividerSemanticClassNames> | — |
+| styles | Semantic styles or a callback | DividerSemanticValue<DividerSemanticStyles> | — |
+| ~~type~~ | Legacy axis; use orientation | Orientation | — |
+| ~~orientationMargin~~ | Length from the closest title edge at start/end; prefer styles.content.margin in new code | string \| number | — |
 
-### Native root attributes
+Orientation is horizontal / vertical; TitlePlacement contains the five title positions. Axis precedence is a valid orientation → explicit vertical → type → horizontal. Legacy orientation title values do not set the axis and emit a migration warning.
 
-The root is a single `<div role="separator">`. Vue-native `class`, `style`, and other `$attrs` fall through to it; `class` supports string, array, and object forms, and caller `style` takes precedence over `styles.root`. These are not Divider-specific Props, so `className`, `rootClassName`, and `style` are not declared.
+Physical left/right follow the current Provider direction or native root ltr/rtl dir; a native dir takes precedence. Small spacing uses marginXS, medium/middle use margin, and large retains standard spacing (marginLG for a plain rail, margin for a titled divider).
+
+orientationMargin converts numbers and decimal numeric strings, including signs/fractions, to px. CSS unit strings and zero remain valid; center ignores this field. This prop is a length; the component token with the same name is a ratio from 0 to 1.
+
+### Native attrs, events and ref
+
+The single root is a div: separator without a title or in vertical mode, and group with a horizontal title. The empty start rail is a separator; the other rail is hidden decoration, so native title controls are not nested inside an interactive role. Vue class/style, id, ARIA and native listeners reach the current root; class accepts strings/arrays/objects and style accepts strings/objects/arrays. Native style has final priority. Vertical roots declare aria-orientation=vertical; horizontal roots use the separator default. Roles follow this actual content structure.
+
+There are no business emits, v-model or internal keyboard commands. Slotted inputs, links and buttons retain native interaction and focus. nativeElement exposes the actual div, null before mount/after unmount.
+
+### Content and semantics
+
+The default slot is `() => VNodeChild`, including text, zero, arrays/Fragments and elements. Conditional slot insertion/removal updates the title immediately; an intentionally empty slot still represents a title. Vertical mode ignores title content with a warning.
+
+Semantic areas are root, rail and content. Rail targets the root without a title and the two rails with a horizontal title. Classes concatenate. Style order is Provider styles → Provider style(root) → local styles → native root style. Callbacks receive `{ props }` with current effective orientation, titlePlacement and size.
+
+ConfigProvider divider / components.divider provides className, style, classNames and styles defaults. Local size wins over current componentSize. Replacing or clearing configuration does not require remounting.
+
+### Component tokens and themes
+
+| Token | Default | Meaning |
+|---|---|---|
+| textPaddingInline | 1em | Horizontal title padding; numeric lengths use px |
+| orientationMargin | 0.05 | Closest rail fraction; finite number from 0 to 1 |
+| verticalMarginInline | Current marginXS | Horizontal margin of a vertical rail; numeric lengths use px |
 
 ```vue
-<Divider class="my-divider" :style="{ borderColor: 'red' }" />
+<ConfigProvider :theme="{ components: { Divider: { textPaddingInline: 12, orientationMargin: 0.2, verticalMarginInline: 16 } } }">
+  <Divider title-placement="start">Section</Divider>
+  <Divider orientation="vertical" />
+</ConfigProvider>
 ```
 
-### Slots
+All three update and reset dynamically. Empty/nonfinite values use their own defaults; padding rejects negative numbers and margin accepts negative lengths. The nearest active ThemeProvider/ConfigProvider is consumed. ThemeProvider works without global CSS injection; an explicit empty ThemeProvider resets defaults. An empty ConfigProvider theme inherits its outer source; use inherit: false to reset it. Without a theme source, consumer CSS inheritance is retained. Default, dark, compact and nested scopes are supported.
 
-| Name | Description |
-|---|---|
-| default | The title in the middle of the divider. ⚠️ **Not rendered** in vertical mode (a dev-time warning is emitted, matching antd) |
+### Exports and styles
 
-### Semantic slots
-
-`classNames` / `styles` each have three slots: `root` / `rail` / `content`.
-
-Merge priority (low → high):
-
-```
-ConfigProvider.divider.classNames/styles
-  → component classNames / styles
-  → native root class / style attrs
-```
-
-The caller's native **`:style` overrides `styles.root`** (preserving precedence while using Vue `$attrs`, not `DividerProps.style`).
-
-⚠️ The `rail` slot lands on the **root element** when there is no default slot, and on the two
-rail child elements when there is — this is upstream behavior, not a typo.
-
-### Type exports
-
-`DividerProps`, `DividerRef`, `DividerConfig`, `DividerSize`, `DividerVariant`,
-`Orientation`, `TitlePlacement`, `DividerSemanticType`, `DividerSemanticAllType`,
-`DividerSemanticClassNames`, `DividerSemanticStyles`, `DividerSemanticValue`,
-`DividerSlot`, `DividerComponentToken`.
-
-### ref
-
-| Name | Description |
-|---|---|
-| nativeElement | The root `div`. `null` before the first render |
-
-### Utility exports
-
-| Name | Description |
-|---|---|
-| `genDividerStyle(prefixCls)` | Generates the CSS text for that prefix (for custom `prefixCls`) |
-| `prepareDividerComponentToken(token)` | Computes the component token defaults (identical to antd's `prepareComponentToken`) |
-
-## Design notes
-
-### Orientation priority
-
-`orientation` > `vertical` > `type`, falling back to `horizontal` when none is given.
-
-⚠️ The check for `vertical` is `typeof vertical === 'boolean'`, **not a truthiness check** —
-so "not passed" and "explicitly `false`" are two different branches: an explicit `false`
-overrides `type`.
-
-Also note that in v6 `orientation` **serves two purposes**: `horizontal` / `vertical` mean the
-direction, while `left` / `right` / `center` / `start` / `end` are treated as the **legacy title
-placement** and emit a warning.
-
-### Title placement
-
-`titlePlacement` wins; when it is not passed, `orientation` is used if it holds a valid placement
-value, otherwise `center`. `left` / `right` are then folded into `start` / `end` according to the
-text direction (swapped under RTL).
-
-### `orientationMargin` and units
-
-`orientationMargin` accepts a number or a string:
-
-| Input | Result |
-|---|---|
-| `20` | `20px` |
-| `'10'` | `10px` (a purely numeric string is treated as a number) |
-| `'2em'` | `2em` (kept as-is) |
-| `0` | `0` (the numeric `0` does **not** get a unit, matching React) |
-
-It only takes effect when `titlePlacement` is `start` / `end`.
-
-### Component tokens
-
-| Token | Default | Description |
-|---|---|---|
-| `verticalMarginInline` | `token.marginXS` | Horizontal margin of the vertical divider |
-| `textPaddingInline` | `'1em'` | Horizontal padding of the text |
-| `orientationMargin` | `0.05` | Distance between the text and the edge, 0 ～ 1 |
-
-⚠️ **Known gap**: antd lets you override these three tokens via `theme.components.Divider`.
-In this repository only `verticalMarginInline` is currently overridable (it derives from an alias
-token and is emitted as `var(--apollo-margin-xs)`). The other two are **literal** tokens that get
-inlined as constants with no corresponding CSS variable, because `packages/theme`'s `tokens.css`
-only declares alias-layer variables. This is a library-wide pipeline gap — see
-[`README.md`](./README.md) §5.3 and §9.
-
-Equivalent workarounds in the meantime: use `styles.content.padding` for the effect of
-`textPaddingInline`, and `styles.content.margin` for the effect of `orientationMargin`.
-
-### Importing styles
+The root exports Divider, DividerProps, DividerRef, DividerConfig, DividerSize, DividerVariant, Orientation, TitlePlacement, semantic types and DividerSlot. `@apollo-design/ui/divider` additionally provides default, DividerComponentToken, genDividerStyle and prepareDividerComponentToken. The installation name is ADivider.
 
 ```ts
-import '@apollo-design/theme/tokens.css';     // theme variables first
-import '@apollo-design/ui/divider/style.css'; // per component
-// or
-import '@apollo-design/ui/style.css';         // all components
+import '@apollo-design/theme/tokens.css';
+import '@apollo-design/ui/divider/style.css';
+// Full stylesheet: @apollo-design/ui/style.css
 ```
 
-For a custom `prefixCls` (e.g. `my-app`), generate the CSS yourself with
-`genDividerStyle('my-app')` — the static output only covers the `apollo` and `ant` prefixes.
+Static CSS covers apollo by default. Pre-generate/load CSS for another namespace: genDividerStyle('my-app') corresponds to ConfigProvider prefixCls=my-app or Divider prefixCls=my-app-divider. The generator takes a namespace, while the component prop takes a complete prefix; selectors are not generated at runtime.

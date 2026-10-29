@@ -103,7 +103,11 @@ export interface NoticeProps {
 }
 
 /** rc `NotificationListConfig`：带 key 的 notice 配置。 */
-export interface NoticeListConfig extends Omit<NoticeProps, 'prefixCls'> {
+export interface NoticeListConfig
+  extends Omit<NoticeProps, 'prefixCls' | 'className' | 'closable'> {
+  /** Derived defaults stay current while this keyed notice remains mounted. */
+  className?: ConfigValue<NoticeProps['className']>;
+  closable?: ConfigValue<NoticeProps['closable']>;
   key: string | number;
   placement?: Placement;
 }
@@ -186,10 +190,11 @@ export interface NotificationsProps {
 }
 
 /** rc `NotificationConfig`：`useNotification` 的根配置。 */
-export interface NotificationConfig extends Omit<NotificationsProps, 'container'> {
+export interface NotificationConfig extends Omit<NotificationsProps, 'container' | 'prefixCls'> {
+  prefixCls?: ConfigValue<string>;
   placement?: Placement;
   getContainer?: () => HTMLElement | ShadowRoot;
-  closable?: NoticeProps['closable'];
+  closable?: ConfigValue<NoticeProps['closable']>;
   duration?: ConfigValue<number | false | null>;
   showProgress?: ConfigValue<boolean>;
 }

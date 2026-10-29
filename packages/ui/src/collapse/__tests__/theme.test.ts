@@ -1,104 +1,213 @@
-/**
- * L7 · 主题与样式 —— Collapse（10 个 Component Token + 五段样式）。
- */
-
 import { themeTest } from '@apollo-design/test-utils';
+import {
+  createThemeContext,
+  getDesignToken,
+  type ThemeConfig,
+  ThemeContextKey,
+  ThemeProvider,
+} from '@apollo-design/theme';
+import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import { genCollapseStyle, genTokenDecls } from '../style';
+import { computed, defineComponent, h, nextTick, provide, ref, shallowRef } from 'vue';
+import { Collapse } from '../index';
+import { genCollapseStyle, genTokenDecls, prepareComponentToken } from '../style';
+import { tokenEntries } from '../style/token';
 
-describe('Collapse · 样式', () => {
-  const css = genCollapseStyle('apollo');
-  const decls = genTokenDecls('apollo');
-
-  it('10 个 Component Token：别名引用 var() + padding 组合构建期解析值', () => {
-    // 别名引用（D46 同判）
-    expect(decls).toContain('  --apollo-collapse-header-bg:var(--apollo-color-fill-alter);');
-    expect(decls).toContain('  --apollo-collapse-content-bg:var(--apollo-color-bg-container);');
-    // padding 组合串（含固定 16px）——构建期解析值（D50 同判）
-    expect(decls).toContain('  --apollo-collapse-header-padding:12px 16px;');
-    expect(decls).toContain('  --apollo-collapse-content-padding:16px 16px;');
-    expect(decls).toContain('  --apollo-collapse-borderless-content-padding:4px 16px 16px;');
-    // mergeToken 派生：borderRadiusLG
-    expect(decls).toContain('  --apollo-collapse-panel-border-radius:8px;');
+const items = [{ key: 'a', label: 'Alpha', children: 'Body' }];
+describe('Collapse current theme and static styles', () => {
+  it('declares every public token and derives padding/radius from live Alias variables', () => {
+    const decls = genTokenDecls('apollo').join('\n');
+    expect(decls.split('\n')).toHaveLength(11);
+    for (const [, suffix] of tokenEntries) expect(decls).toContain(`--apollo-collapse-${suffix}:`);
+    expect(decls).toContain(
+      '--apollo-collapse-header-padding:var(--apollo-padding-sm) var(--apollo-padding);',
+    );
+    expect(decls).toContain('--apollo-collapse-content-padding:var(--apollo-padding) 16px;');
+    expect(decls).toContain(
+      '--apollo-collapse-panel-border-radius:var(--apollo-border-radius-lg);',
+    );
+    const defaults = prepareComponentToken(getDesignToken());
+    expect(defaults).toMatchObject({
+      headerPadding: '12px 16px',
+      contentPadding: '16px 16px',
+      collapsePanelBorderRadius: '8px',
+      borderlessContentBg: 'transparent',
+    });
   });
-
-  it('根段：resetComponent 全套 + headerBg + 边框 + 圆角', () => {
-    expect(css).toContain('.apollo-collapse{');
-    expect(css).toContain('  background-color:var(--apollo-collapse-header-bg);');
-    expect(css).toContain(
-      '  border:var(--apollo-line-width) var(--apollo-line-type) var(--apollo-color-border);',
-    );
-    expect(css).toContain('  border-radius:var(--apollo-collapse-panel-border-radius);');
-  });
-
-  it('header/arrow/title 段（含 focus 环与 svg 对齐）', () => {
-    expect(css).toContain('.apollo-collapse > .apollo-collapse-item > .apollo-collapse-header{');
-    expect(css).toContain('  cursor:pointer;');
-    expect(css).toContain('  margin-inline-end:var(--apollo-margin-sm);');
-    expect(css).toContain(
-      '.apollo-collapse > .apollo-collapse-item > .apollo-collapse-header .apollo-collapse-arrow{',
-    );
-    expect(css).toContain('  transition:transform var(--apollo-motion-duration-mid);');
-    expect(css).toContain(
-      '.apollo-collapse > .apollo-collapse-item > .apollo-collapse-header > .apollo-collapse-title{',
-    );
-    expect(css).toContain('  flex:auto;');
-  });
-
-  it('collapsible 两态的 cursor 规则', () => {
-    expect(css).toContain(
-      '.apollo-collapse > .apollo-collapse-item > .apollo-collapse-collapsible-header{',
-    );
-    expect(css).toContain('  cursor:default;');
-    expect(css).toContain(
-      '.apollo-collapse > .apollo-collapse-item > .apollo-collapse-collapsible-icon{',
-    );
-    expect(css).toContain('  cursor:unset;');
-  });
-
-  it('panel/body 段 + hidden', () => {
-    expect(css).toContain('.apollo-collapse-panel{');
-    expect(css).toContain(
-      '  border-top:var(--apollo-line-width) var(--apollo-line-type) var(--apollo-color-border);',
-    );
-    expect(css).toContain('.apollo-collapse-panel > .apollo-collapse-body{');
-    expect(css).toContain('.apollo-collapse-panel-hidden{');
-    expect(css).toContain('  display:none;');
-  });
-
-  it('small/large 两档 + icon-placement-end + borderless/ghost + rtl 箭头 + motion', () => {
-    expect(css).toContain(
-      '.apollo-collapse-small > .apollo-collapse-item > .apollo-collapse-header{',
-    );
-    expect(css).toContain('.apollo-collapse-large > .apollo-collapse-item{');
-    expect(css).toContain(
-      '.apollo-collapse-icon-placement-end > .apollo-collapse-item > .apollo-collapse-header > .apollo-collapse-expand-icon{',
-    );
-    expect(css).toContain('  order:1;');
-    expect(css).toContain('.apollo-collapse-borderless{');
-    expect(css).toContain('.apollo-collapse-ghost{');
-    expect(css).toContain(
-      '.apollo-collapse-rtl > .apollo-collapse-item > .apollo-collapse-header .apollo-collapse-arrow{',
-    );
-    expect(css).toContain('  transform:rotate(180deg);');
-    expect(css).toContain('.apollo-collapse .apollo-motion-collapse{');
-    // ⚠️ `!important` 只能出现在整条声明的末尾。写成
-    //    `transition:A !important, B !important` 是非法 CSS（浏览器会整条丢弃，
-    //    lightningcss 直接拒绝构建）—— 2026-10-21 审计 A07。
-    expect(css).toContain(
-      '  transition:height var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out), opacity var(--apollo-motion-duration-mid) var(--apollo-motion-ease-in-out) !important;',
-    );
+  it('uses self-contained Panel selectors, native focus, all variants and valid motion CSS', () => {
+    const css = genCollapseStyle('custom');
+    for (const name of [
+      'item',
+      'header',
+      'heading',
+      'trigger',
+      'title',
+      'expand-icon',
+      'arrow',
+      'panel',
+      'body',
+      'item-small',
+      'item-large',
+      'item-header',
+      'item-icon',
+      'item-disabled',
+      'item-end',
+      'item-rtl',
+      'item-borderless',
+      'item-ghost',
+    ])
+      expect(css).toContain(`.custom-collapse-${name}`);
+    expect(css).toContain('.custom-collapse-trigger:focus-visible');
+    expect(css).toContain('font:inherit');
+    expect(css).toContain('background-color:var(--custom-collapse-borderless-content-bg)');
+    expect(css).toContain('.custom-collapse-motion{overflow:hidden;transition:height');
+    expect(css).toContain('@media (prefers-reduced-motion:reduce)');
     expect(css).not.toContain('!important,');
   });
-
-  it('disabled 段', () => {
-    expect(css).toContain(
-      '.apollo-collapse .apollo-collapse-item-disabled > .apollo-collapse-header{',
+  it('consumes all ten current component tokens and removes stale values after replacement', async () => {
+    const custom = {
+      headerPadding: '21px 22px',
+      headerPaddingSM: '11px 12px',
+      headerPaddingLG: '31px 32px',
+      headerBg: 'rgb(1, 2, 3)',
+      contentPadding: '25px 26px',
+      contentPaddingSM: '15px',
+      contentPaddingLG: '35px',
+      contentBg: 'rgb(4, 5, 6)',
+      borderlessContentPadding: '5px 6px 7px',
+      borderlessContentBg: 'rgb(7, 8, 9)',
+    };
+    const config = shallowRef<ThemeConfig>({
+      token: { padding: 19, paddingSM: 13, borderRadiusLG: 17 },
+      components: { Collapse: custom },
+    });
+    const active = ref(true);
+    const w = mount(
+      defineComponent({
+        setup() {
+          provide(ThemeContextKey, {
+            config,
+            token: computed(() => getDesignToken(config.value)),
+            sourceActive: computed(() => active.value),
+          });
+          return () => h(Collapse, { items, defaultActiveKey: 'a' });
+        },
+      }),
     );
-    expect(css).toContain('  cursor:not-allowed;');
+    const root = w.get<HTMLDivElement>('.apollo-collapse').element;
+    for (const [name, suffix] of tokenEntries)
+      expect(root.style.getPropertyValue(`--apollo-collapse-${suffix}`)).toBe(
+        name === 'collapsePanelBorderRadius' ? '17px' : custom[name],
+      );
+    config.value = { token: { padding: 23, paddingSM: 15, borderRadiusLG: 9 } };
+    await nextTick();
+    expect(root.style.getPropertyValue('--apollo-collapse-header-padding')).toBe('15px 23px');
+    expect(root.style.getPropertyValue('--apollo-collapse-borderless-content-bg')).toBe(
+      'transparent',
+    );
+    config.value = {};
+    await nextTick();
+    expect(root.style.getPropertyValue('--apollo-collapse-header-padding')).toBe('12px 16px');
+    active.value = false;
+    await nextTick();
+    expect(root.style.length).toBe(0);
+    expect(w.get('.apollo-collapse').element).toBe(root);
+    active.value = true;
+    await nextTick();
+    expect(root.style.getPropertyValue('--apollo-collapse-panel-border-radius')).toBe('8px');
+  });
+  it('empty explicit ThemeProvider resets inherited source while bare fallback preserves CSS-only variables', () => {
+    const w = mount(ThemeProvider, {
+      props: { theme: { components: { Collapse: { headerPadding: '33px' } } } },
+      slots: {
+        default: () => [
+          h(Collapse, { id: 'outer', items }),
+          h(ThemeProvider, {}, () => h(Collapse, { id: 'reset', items })),
+        ],
+      },
+    });
+    expect(
+      w
+        .get<HTMLElement>('#outer')
+        .element.style.getPropertyValue('--apollo-collapse-header-padding'),
+    ).toBe('33px');
+    expect(
+      w
+        .get<HTMLElement>('#reset')
+        .element.style.getPropertyValue('--apollo-collapse-header-padding'),
+    ).toBe('12px 16px');
+    const bare = mount(Collapse, {
+      props: { items },
+      attrs: {
+        style: { '--apollo-collapse-header-padding': '29px', '--apollo-font-size': '27px' },
+      },
+    });
+    expect(
+      bare
+        .get<HTMLElement>('.apollo-collapse')
+        .element.style.getPropertyValue('--apollo-collapse-header-padding'),
+    ).toBe('29px');
+    expect(bare.get<HTMLElement>('.apollo-collapse').element.style.length).toBe(2);
+  });
+  it('native root style wins theme/semantic styles and custom sources without metadata are explicit', () => {
+    const source = createThemeContext({ components: { Collapse: { headerPadding: '31px' } } });
+    const w = mount(
+      defineComponent({
+        setup() {
+          provide(ThemeContextKey, { config: source.config, token: source.token });
+          return () =>
+            h(Collapse, {
+              items,
+              styles: { root: { '--apollo-collapse-header-padding': '17px' } },
+              style: { '--apollo-collapse-header-padding': '41px' },
+            });
+        },
+      }),
+    );
+    expect(
+      w
+        .get<HTMLElement>('.apollo-collapse')
+        .element.style.getPropertyValue('--apollo-collapse-header-padding'),
+    ).toBe('41px');
+    expect(
+      w.get<HTMLElement>('.apollo-collapse').element.style.getPropertyValue('--apollo-font-size'),
+    ).toBe('14px');
+  });
+  it('uses the current prefix and isolates nested Collapse source scopes', async () => {
+    const config = shallowRef<ThemeConfig>({ components: { Collapse: { headerPadding: '31px' } } }),
+      prefix = ref('first-collapse');
+    const w = mount(
+      defineComponent({
+        setup: () => () =>
+          h(ThemeProvider, { theme: config.value }, () =>
+            h(Collapse, { prefixCls: prefix.value, defaultActiveKey: 'a' }, () =>
+              h(Collapse.Panel, { key: 'a', header: 'Outer' }, () =>
+                h(
+                  ThemeProvider,
+                  { theme: { components: { Collapse: { headerPadding: '9px' } } } },
+                  () => h(Collapse, { items, id: 'inner' }),
+                ),
+              ),
+            ),
+          ),
+      }),
+    );
+    const root = w.get<HTMLElement>('.first-collapse').element;
+    prefix.value = 'second-collapse';
+    await nextTick();
+    expect(root.style.getPropertyValue('--first-collapse-header-padding')).toBe('');
+    expect(root.style.getPropertyValue('--second-collapse-header-padding')).toBe('31px');
+    expect(
+      w
+        .get<HTMLElement>('#inner')
+        .element.style.getPropertyValue('--apollo-collapse-header-padding'),
+    ).toBe('9px');
+    config.value = {};
+    await nextTick();
+    expect(root.style.getPropertyValue('--second-collapse-header-padding')).toBe('12px 16px');
   });
 });
-
 themeTest('Collapse', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
+  expectCount: 9,
 });

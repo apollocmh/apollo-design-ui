@@ -11,7 +11,7 @@ import { Input } from '@apollo-design/ui';
     <Input placeholder="prefix & suffix (slot)">
       <template #prefix><UserOutlined /></template>
       <template #suffix>
-        <span style="color: #999">单位</span>
+        <span style="color: var(--apollo-color-text-secondary)">单位</span>
       </template>
     </Input>
   </div>

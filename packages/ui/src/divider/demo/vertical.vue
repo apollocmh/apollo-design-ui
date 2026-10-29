@@ -9,3 +9,7 @@ import { Divider } from '../../index';
   <Divider vertical />
   <a href="#" aria-label="Apollo Design component examples">Link</a>
 </template>
+
+<style scoped>
+a { color: inherit; text-decoration: underline; }
+</style>

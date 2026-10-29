@@ -30,13 +30,44 @@ const phase = process.env.INPUT_SIZING_MODE ?? 'source',
   cssMode = process.env.INPUT_SIZING_CSS ?? 'all';
 assert.ok(['source', 'published'].includes(phase));
 assert.ok(['all', 'entry'].includes(cssMode));
+const devServer = process.env.INPUT_SIZING_SERVE === 'dev';
+assert.ok(!devServer || phase === 'source', 'The dev server is source-only');
 const require = createRequire(path.join(repo, 'package.json'));
-const { build, preview } = await import(pathToFileURL(require.resolve('vite')).href);
+const { build, preview, createServer } = await import(pathToFileURL(require.resolve('vite')).href);
 const { default: vue } = await import(pathToFileURL(require.resolve('@vitejs/plugin-vue')).href);
 const fixture = path.join(root, `${phase}-${cssMode}-fixture`);
 mkdirSync(fixture, { recursive: true });
-if (!existsSync(path.join(fixture, 'node_modules')))
+const devDependencies = [
+  'vue',
+  'axe-core',
+  'dayjs',
+  'dayjs/plugin/advancedFormat.js',
+  'dayjs/plugin/customParseFormat.js',
+  'dayjs/plugin/localeData.js',
+  'dayjs/plugin/weekOfYear.js',
+  'dayjs/plugin/weekYear.js',
+  'dayjs/plugin/weekday.js',
+  'scroll-into-view-if-needed',
+];
+if (devServer) {
+  mkdirSync(path.join(fixture, 'node_modules'), { recursive: true });
+  const uiRequire = createRequire(path.join(repo, 'packages/ui/package.json'));
+  for (const name of ['vue', 'axe-core', 'dayjs', 'scroll-into-view-if-needed']) {
+    let folder = path.dirname(uiRequire.resolve(name));
+    while (
+      !existsSync(path.join(folder, 'package.json')) ||
+      JSON.parse(readFileSync(path.join(folder, 'package.json'), 'utf8')).name !== name
+    ) {
+      const parent = path.dirname(folder);
+      assert.notEqual(parent, folder, `Cannot locate ${name}`);
+      folder = parent;
+    }
+    const target = path.join(fixture, 'node_modules', name);
+    if (!existsSync(target)) symlinkSync(folder, target, 'dir');
+  }
+} else if (!existsSync(path.join(fixture, 'node_modules'))) {
   symlinkSync(path.join(repo, 'node_modules'), path.join(fixture, 'node_modules'), 'dir');
+}
 const packageNames = readdirSync(path.join(repo, 'packages')).filter((name) =>
   existsSync(path.join(repo, 'packages', name, 'src/index.ts')),
 );
@@ -101,6 +132,8 @@ const fingerprint = () =>
 const before = fingerprint();
 let server, browser;
 const errors = [],
+  expectedDeprecations = [],
+  vueModuleUrls = new Set(),
   warnings = [],
   steps = [],
   checks = [],
@@ -155,26 +188,42 @@ try {
       },
       vue(),
     ],
-    resolve: { alias: aliases },
-    optimizeDeps: { noDiscovery: true, include: ['vue'] },
+    resolve: { alias: aliases, dedupe: ['vue'] },
+    optimizeDeps: { noDiscovery: true, include: devServer ? devDependencies : ['vue'] },
     build: {
       outDir: path.join(root, `${phase}-${cssMode}-bundle`),
       emptyOutDir: false,
       minify: false,
     },
+    server: { host: '127.0.0.1', port: 0, hmr: false, fs: { allow: [repo, root] } },
     preview: { host: '127.0.0.1', port: 0 },
   };
-  await build(viteConfig);
-  server = await preview(viteConfig);
+  if (devServer) {
+    server = await createServer(viteConfig);
+    await server.listen();
+  } else {
+    await build(viteConfig);
+    server = await preview(viteConfig);
+  }
   ({ browser } = await launchBrowser());
   const page = await browser.newPage({
     viewport: { width: 1000, height: 1000 },
     deviceScaleFactor: 1,
   });
   page.setDefaultTimeout(20000);
+  page.on('request', (request) => {
+    if (/\/deps\/vue\.js(?:\?|$)/.test(request.url())) vueModuleUrls.add(request.url());
+  });
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => {
-    if (m.type() === 'error') errors.push(m.text());
+    if (
+      devServer &&
+      /^Warning: \[apollo: (?:Input|Input.Group)\] `(?:addonBefore|addonAfter|Input.Group)` is deprecated\. Please use `Space\.Compact` instead\.$/.test(
+        m.text(),
+      )
+    )
+      expectedDeprecations.push(m.text());
+    else if (m.type() === 'error') errors.push(m.text());
     else if (['warning', 'warn'].includes(m.type()) || m.text().includes('[Vue warn]'))
       warnings.push(m.text());
   });
@@ -1106,12 +1155,16 @@ try {
   assert.deepEqual(errors, []);
   assert.deepEqual(warnings, []);
   assert.deepEqual(forbidden, []);
+  if (devServer) assert.equal(vueModuleUrls.size, 1, 'Source dev must load one Vue runtime');
 } catch (error) {
   console.error(JSON.stringify({ errors, warnings, steps: steps.length }));
   throw error;
 } finally {
   await browser?.close();
-  if (server) await new Promise((resolve) => server.httpServer.close(resolve));
+  if (server) {
+    if (devServer) await server.close();
+    else await new Promise((resolve) => server.httpServer.close(resolve));
+  }
   const summary = {
     phase,
     cssMode,
@@ -1121,11 +1174,15 @@ try {
     failed: checks.filter((c) => !c.passed).length,
     errors,
     warnings,
+    expectedDeprecations,
+    vueModuleUrls: [...vueModuleUrls],
     before,
     after: fingerprint(),
     sourceUnchanged: JSON.stringify(before) === JSON.stringify(fingerprint()),
     packageBuildRun: false,
-    fixtureBundleRun: true,
+    fixtureBundleRun: !devServer,
+    viteBuildRun: !devServer,
+    devServer,
     distWritten: false,
     readersExited: true,
     forbidden,

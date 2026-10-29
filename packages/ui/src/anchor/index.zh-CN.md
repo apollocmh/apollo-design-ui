@@ -114,8 +114,7 @@ subtitle: 锚点
   ⇒ 取其中 **`top` 最大**的那个。一个都没有 ⇒ 空串（无高亮）。
 - **`getOffsetTop` 的三条分支**：`getClientRects()` 为空 ⇒ `0`；宽高非 0 时按容器基准；
   否则直接 `rect.top`。
-- **滚动监听的依赖是 `JSON.stringify(links)`**，且**不含 `getContainer`** ——
-  容器 prop 变了**不会重挂**（上游如此，本仓照抄）。
+- **滚动监听跟随链接内容与当前解析出的目标**；局部或 Provider 容器切换时释放旧监听并绑定新容器。
 - **动画期间不抢高亮**：`handleScroll` 在滚动动画进行中直接 return；
   再次点击同一个链接时也不重复发 `onChange`。
 - **`AnchorLink` 的类名前缀取自 ConfigProvider 的根前缀**，与 `Anchor` 的 `prefixCls` prop **无关**

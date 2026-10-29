@@ -5,8 +5,7 @@ title:
   en-US: Plain
 ---
 
-`plain` 让标题退回正文样式（`colorText` / `fontSize` / `font-weight: normal`），
-而不是默认的标题样式（`colorTextHeading` / `fontSizeLG` / `500`）。
+`plain` 让标题使用正文颜色、字号和字重。文本、具名根样式和当前主题仍正常生效。
 
 ```vue
 <script setup lang="ts">

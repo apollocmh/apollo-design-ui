@@ -22,7 +22,9 @@ const sizeOptions: { value: SizeType; label: string }[] = [
 ];
 
 function onSizeChange(value: unknown): void {
-  componentSize.value = value as SizeType;
+  if (value === 'small' || value === 'medium' || value === 'middle' || value === 'large') {
+    componentSize.value = value;
+  }
 }
 
 /**
@@ -51,7 +53,7 @@ const ConfigProbe = {
             placeholder: '尺寸与禁用状态跟随配置',
             style: { width: '240px' },
           }),
-          h(Button, { type: 'primary' }, () => '提交'),
+          h(Button, null, () => '提交'),
           h(Button, null, () => '取消'),
         ]),
       ]);

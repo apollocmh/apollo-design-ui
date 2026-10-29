@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 对齐 antd 的 basic demo（items 首选形态）
+// 数据驱动面板；标题按钮支持鼠标、Enter 与 Space。
 import { Collapse } from '@apollo-design/ui';
 
 const items = [

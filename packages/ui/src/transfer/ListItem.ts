@@ -73,7 +73,7 @@ const ListItem = defineComponent({
               type: 'button',
               disabled: mergedDisabled.value,
               class: `${p}-content-item-remove`,
-              'aria-label': props.removeLabel ?? contextLocale?.remove,
+              'aria-label': props.removeLabel ?? contextLocale.value.remove,
               onClick: () => props.onRemove?.(props.item),
             },
             h(DeleteOutlined),

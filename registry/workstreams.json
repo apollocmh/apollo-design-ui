@@ -7,7 +7,7 @@
     "sourceFacts": "registry/source/antd-6.6.4.raw.json",
     "scope": "Historical comparison only; not an Apollo compatibility target."
   },
-  "generatedAt": "2026-10-29T01:42:45.808Z",
+  "generatedAt": "2026-10-29T05:38:48.609Z",
   "sourceFacts": "components.json（组件 DAG / 分组 / 状态） + foundation.json（包状态 / 依赖 / 开放决策） + source/workstreams.mjs（泳道 / 冲突集 / 波次 / 横切任务）",
   "legend": {
     "status": {
@@ -26,9 +26,9 @@
   "summary": {
     "totalItems": 92,
     "byStatus": {
-      "done": 89,
+      "done": 86,
       "ready": 1,
-      "blocked": 2
+      "blocked": 5
     },
     "byKind": {
       "foundation": 13,
@@ -305,7 +305,7 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 6,
-      "doneCount": 6,
+      "doneCount": 5,
       "readyCount": 0,
       "itemIds": [
         "COMP:divider",
@@ -379,7 +379,7 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 22,
-      "doneCount": 22,
+      "doneCount": 21,
       "readyCount": 0,
       "itemIds": [
         "COMP:avatar",
@@ -439,7 +439,7 @@
       "shared": [],
       "maxParallel": 3,
       "itemCount": 5,
-      "doneCount": 5,
+      "doneCount": 4,
       "readyCount": 0,
       "itemIds": [
         "COMP:app",
@@ -607,8 +607,8 @@
         "L6 视觉回归对这批组件建立首批基线",
         "流水线被证明可重复（不再需要为每个组件重新设计流程）"
       ],
-      "itemCount": 19,
-      "doneCount": 19,
+      "itemCount": 18,
+      "doneCount": 18,
       "readyCount": 0,
       "blockedCount": 0,
       "waitingCount": 0,
@@ -621,7 +621,6 @@
         "COMP:carousel",
         "COMP:date-picker",
         "COMP:descriptions",
-        "COMP:divider",
         "COMP:empty",
         "COMP:image",
         "COMP:listy",
@@ -655,11 +654,11 @@
         "3 个组件 11 维度 completed"
       ],
       "itemCount": 4,
-      "doneCount": 4,
+      "doneCount": 3,
       "readyCount": 0,
-      "blockedCount": 0,
+      "blockedCount": 1,
       "waitingCount": 0,
-      "complete": true,
+      "complete": false,
       "itemIds": [
         "COMP:config-provider",
         "COMP:qr-code",
@@ -682,10 +681,10 @@
       "exitCriteria": [
         "25 个组件 11 维度 completed"
       ],
-      "itemCount": 26,
-      "doneCount": 25,
+      "itemCount": 27,
+      "doneCount": 24,
       "readyCount": 0,
-      "blockedCount": 1,
+      "blockedCount": 3,
       "waitingCount": 0,
       "complete": false,
       "itemIds": [
@@ -697,6 +696,7 @@
         "COMP:cascader",
         "COMP:checkbox",
         "COMP:collapse",
+        "COMP:divider",
         "COMP:flex",
         "COMP:grid",
         "COMP:input-number",
@@ -1353,7 +1353,7 @@
       "status": "done",
       "decidedBy": [],
       "complexity": "S",
-      "unblocks": 52,
+      "unblocks": 53,
       "why": "2026-10-27 Empty完整清单已统一验收，实现193cc3bb+12cf9fee：六Props/三完整槽/四语义、当前Provider/方向/语言/源Alias、合法image及自然布局/对比度、透明合成、六原Demo同步修复。关联Trigger/Portal主题桥接4条红绿复现；最终2856相关四层/434类型、54生产浏览器/40实际popup/18消费者、24 Demo主题/17实际Docs、8 SSR/6组水合、严格类型/发布消费/UI严格L7通过。45张自有视觉逐张审阅批准，连同List57张共102张全部0像素差异；原315记录及PNG不变。全库审计仍继续，验收230fe3cf已发布，工作流40448643538/Pages7350216642及线上17项验证成功。",
       "doneWhen": [],
       "group": "数据展示",
@@ -1376,16 +1376,24 @@
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "blocked",
       "decidedBy": [],
       "complexity": "L",
-      "unblocks": 51,
-      "why": "Token / 主题 / locale / size / disabled / prefixCls 的统一入口，是全部组件的运行时网关。它是零运行时 CSS 变量方案（ARCHITECTURE.md §4.3）的落地点。\n2026-10-26 Image单元源主题/Token组：源上下文跨Portal、7个Token、ThemeProvider继承与Provider主题移除/恢复状态已修；可选作用域用原生Teleport保留同一插槽子树，SSR内联后水合不替换原节点，当前CSS变量前缀清理。56文件1059运行/DOM/a11y/theme串行通过（未改阈值），严格/构建/生产模板消费/L7/Docs通过；23场景生产Chrome及独立SSR水合通过。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image滚动锁/富缩略图/motion/最终视觉仍开放，不据此升级整组件维度。",
+      "unblocks": 52,
+      "why": "Token / 主题 / locale / size / disabled / prefixCls 的统一入口，是全部组件的运行时网关。它是零运行时 CSS 变量方案（ARCHITECTURE.md §4.3）的落地点。\n2026-10-26 Image单元源主题/Token组：源上下文跨Portal、7个Token、ThemeProvider继承与Provider主题移除/恢复状态已修；可选作用域用原生Teleport保留同一插槽子树，SSR内联后水合不替换原节点，当前CSS变量前缀清理。56文件1059运行/DOM/a11y/theme串行通过（未改阈值），严格/构建/生产模板消费/L7/Docs通过；23场景生产Chrome及独立SSR水合通过。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image滚动锁/富缩略图/motion/最终视觉仍开放，不据此升级整组件维度。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。",
       "doneWhen": [],
       "group": "其他",
       "priority": "P0",
       "dagLevel": 1,
-      "blockers": []
+      "blockers": [
+        {
+          "type": "dep",
+          "id": "FND:theme",
+          "status": "ready"
+        }
+      ],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:button",
@@ -1395,6 +1403,7 @@
       "workstream": "WS-1",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:icons",
         "FND:motion",
         "FND:theme",
@@ -1422,6 +1431,7 @@
       "workstream": "WS-2",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:theme",
         "FND:utils"
       ],
@@ -1445,6 +1455,7 @@
       "workstream": "WS-2",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:theme",
         "FND:utils"
       ],
@@ -1468,6 +1479,7 @@
       "workstream": "WS-2",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:theme",
         "FND:utils"
       ],
@@ -1489,22 +1501,36 @@
       "ref": "divider",
       "title": "Divider（divider）",
       "workstream": "WS-2",
-      "wave": "W4",
+      "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:theme",
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "blocked",
       "decidedBy": [],
       "complexity": "S",
       "unblocks": 1,
-      "why": "",
+      "why": "\n2026-10-29完整清单源码冻结并完成发布专项；状态testing，整批ConfigProvider/Input整合与Docs收口继续，完整组件交付数仍21/72。证据 docs/audit/2026-10-29-divider-collapse-published-milestone.md。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。",
       "doneWhen": [],
       "group": "布局",
       "priority": "P0",
-      "dagLevel": 0,
-      "blockers": []
+      "dagLevel": 2,
+      "blockers": [
+        {
+          "type": "dep",
+          "id": "COMP:config-provider",
+          "status": "blocked"
+        },
+        {
+          "type": "dep",
+          "id": "FND:theme",
+          "status": "ready"
+        }
+      ],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:typography",
@@ -1540,6 +1566,7 @@
       "workstream": "WS-2",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:icons",
         "FND:theme",
         "FND:utils"
@@ -1564,6 +1591,7 @@
       "workstream": "WS-5",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:motion",
         "FND:theme",
         "FND:utils"
@@ -1588,6 +1616,7 @@
       "workstream": "WS-5",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:motion",
         "FND:theme",
         "FND:utils"
@@ -1637,6 +1666,7 @@
       "workstream": "WS-6",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:theme",
         "FND:utils"
       ],
@@ -1802,6 +1832,7 @@
       "workstream": "WS-3",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:icons",
         "FND:motion",
         "FND:theme",
@@ -1827,6 +1858,7 @@
       "workstream": "WS-4",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:form-core",
         "FND:theme",
@@ -1852,6 +1884,7 @@
       "workstream": "WS-4",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:form-core",
         "FND:theme",
@@ -1902,6 +1935,7 @@
       "workstream": "WS-4",
       "wave": "W7",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:form-core",
         "FND:icons",
@@ -1914,12 +1948,17 @@
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "含 Input / TextArea / Search / Password / OTP 子组件。必须保留输入法组合态（IME）处理能力，不可简化。\n2026-10-29当前主题尺寸/覆盖链窄整改：已有19个Input ComponentToken配置未消费、InputAffixPadding声明缺失、Provider style/Group/OTP尺寸及autoSize重测问题已成组复现并修复验收中；Registry原tokenCount0登记缺口由主线程待冻结同步。不是完整Input全API验收，旧completed不能代表本轮通过。",
+      "why": "含 Input / TextArea / Search / Password / OTP 子组件。必须保留输入法组合态（IME）处理能力，不可简化。\n2026-10-29当前主题尺寸/覆盖链窄整改：已有19个Input ComponentToken配置未消费、InputAffixPadding声明缺失、Provider style/Group/OTP尺寸及autoSize重测问题已成组复现并修复验收中；Registry原tokenCount0登记缺口由主线程待冻结同步。不是完整Input全API验收，旧completed不能代表本轮通过。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。",
       "doneWhen": [],
       "group": "数据录入",
       "priority": "P2",
       "dagLevel": 3,
       "blockers": [
+        {
+          "type": "dep",
+          "id": "COMP:config-provider",
+          "status": "blocked"
+        },
         {
           "type": "dep",
           "id": "FND:theme",
@@ -1937,6 +1976,7 @@
       "workstream": "WS-4",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:form-core",
         "FND:icons",
@@ -2085,22 +2125,36 @@
       "workstream": "WS-5",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:icons",
         "FND:motion",
         "FND:theme",
         "FND:utils"
       ],
       "conflicts": [],
-      "status": "done",
+      "status": "blocked",
       "decidedBy": [],
       "complexity": "M",
       "unblocks": 0,
-      "why": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。",
+      "why": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。\n2026-10-29完整清单源码冻结并完成发布专项；状态testing，整批ConfigProvider/Input整合与Docs收口继续，完整组件交付数仍21/72。证据 docs/audit/2026-10-29-divider-collapse-published-milestone.md。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。",
       "doneWhen": [],
       "group": "数据展示",
       "priority": "P2",
       "dagLevel": 2,
-      "blockers": []
+      "blockers": [
+        {
+          "type": "dep",
+          "id": "COMP:config-provider",
+          "status": "blocked"
+        },
+        {
+          "type": "dep",
+          "id": "FND:theme",
+          "status": "ready"
+        }
+      ],
+      "softBlockers": [],
+      "cannotFinish": false
     },
     {
       "id": "COMP:descriptions",
@@ -2133,6 +2187,7 @@
       "workstream": "WS-5",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:motion",
         "FND:overlay",
         "FND:portal",
@@ -2160,6 +2215,7 @@
       "workstream": "WS-5",
       "wave": "W7",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:overlay",
         "FND:portal",
         "FND:position",
@@ -2186,6 +2242,7 @@
       "workstream": "WS-3",
       "wave": "W7",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:icons",
         "FND:motion",
@@ -2212,6 +2269,7 @@
       "workstream": "WS-3",
       "wave": "W8",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:icons",
         "FND:overlay",
@@ -2240,6 +2298,7 @@
       "workstream": "WS-6",
       "wave": "W7",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:icons",
         "FND:locale",
@@ -2268,6 +2327,7 @@
       "workstream": "WS-6",
       "wave": "W7",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:motion",
         "FND:portal",
@@ -2294,6 +2354,7 @@
       "workstream": "WS-6",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:icons",
         "FND:motion",
@@ -2321,6 +2382,7 @@
       "workstream": "WS-6",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:icons",
         "FND:motion",
@@ -2397,6 +2459,7 @@
       "workstream": "WS-4",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:form-core",
         "FND:icons",
@@ -2428,6 +2491,7 @@
       "workstream": "WS-4",
       "wave": "W7",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:overlay",
         "FND:portal",
@@ -2455,6 +2519,7 @@
       "workstream": "WS-4",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:form-core",
         "FND:icons",
@@ -2485,6 +2550,7 @@
       "workstream": "WS-5",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:icons",
         "FND:theme",
@@ -2511,6 +2577,7 @@
       "workstream": "WS-4",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:form-core",
         "FND:locale",
@@ -2541,6 +2608,7 @@
       "workstream": "WS-6",
       "wave": "W8",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:icons",
         "FND:locale",
         "FND:overlay",
@@ -2569,6 +2637,7 @@
       "workstream": "WS-7",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:icons",
         "FND:overlay",
@@ -2597,6 +2666,7 @@
       "workstream": "WS-7",
       "wave": "W7",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:icons",
         "FND:motion",
         "FND:theme",
@@ -2622,6 +2692,7 @@
       "workstream": "WS-4",
       "wave": "W7",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:form-core",
         "FND:icons",
@@ -2802,6 +2873,7 @@
       "workstream": "WS-3",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:icons",
         "FND:theme",
         "FND:utils"
@@ -2826,6 +2898,7 @@
       "workstream": "WS-5",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:icons",
         "FND:motion",
@@ -2852,6 +2925,7 @@
       "workstream": "WS-5",
       "wave": "W7",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:form-core",
         "FND:theme",
         "FND:utils"
@@ -2924,6 +2998,7 @@
       "workstream": "WS-3",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:theme",
         "FND:utils"
       ],
@@ -2947,6 +3022,7 @@
       "workstream": "WS-5",
       "wave": "W8",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:locale",
         "FND:theme",
         "FND:utils",
@@ -2972,6 +3048,7 @@
       "workstream": "WS-5",
       "wave": "W8",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:icons",
         "FND:locale",
@@ -3029,6 +3106,7 @@
       "workstream": "WS-4",
       "wave": "W6",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:a11y",
         "FND:form-core",
         "FND:overlay",
@@ -3057,6 +3135,7 @@
       "workstream": "WS-4",
       "wave": "W8",
       "dependsOn": [
+        "COMP:divider",
         "FND:form-core",
         "FND:overlay",
         "FND:portal",
@@ -3169,6 +3248,7 @@
       "workstream": "WS-5",
       "wave": "W8",
       "dependsOn": [
+        "COMP:config-provider",
         "FND:theme",
         "FND:utils"
       ],

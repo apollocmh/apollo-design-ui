@@ -1,0 +1,121 @@
+{
+  "sourceState": "owner-frozen candidate plus root integration; before final Input foreground correction",
+  "rawReport": "/tmp/apollo-batch-final-visual-candidates-v3.json",
+  "expected": 126,
+  "failed": 18,
+  "failures": [
+    {
+      "id": "input/clear__light__mobile",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Input clear has real accessible native controls\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     targets: [\n+       [\n+         'section:nth-child(4) > span[data-apollo-input-host=\"group\"] > span[data-apollo-input-host=\"wrapper\"] > .apollo-input-affix-wrapper.apollo-input-outlined[data-apollo-input-host=\"affix\"] > .apollo-input-suffix > button > span'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "id": "input/clear__light__tablet",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Input clear has real accessible native controls\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     targets: [\n+       [\n+         'section:nth-child(4) > span[data-apollo-input-host=\"group\"] > span[data-apollo-input-host=\"wrapper\"] > .apollo-input-affix-wrapper.apollo-input-outlined[data-apollo-input-host=\"affix\"] > .apollo-input-suffix > button > span'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "id": "input/clear__light__desktop",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Input clear has real accessible native controls\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     targets: [\n+       [\n+         'section:nth-child(4) > span[data-apollo-input-host=\"group\"] > span[data-apollo-input-host=\"wrapper\"] > .apollo-input-affix-wrapper.apollo-input-outlined[data-apollo-input-host=\"affix\"] > .apollo-input-suffix > button > span'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "id": "input/count__light__mobile",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Input count has real accessible native controls\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     targets: [\n+       [\n+         'section:nth-child(2) > span[data-apollo-input-host=\"group\"] > span[data-apollo-input-host=\"wrapper\"] > .apollo-input-affix-wrapper.apollo-input-outlined[data-apollo-input-host=\"affix\"] > .apollo-input-suffix > .apollo-input-show-count-suffix'\n+       ],\n+       [\n+         'section:nth-child(3) > span[data-apollo-input-host=\"group\"] > span[data-apollo-input-host=\"wrapper\"] > .apollo-input-affix-wrapper.apollo-input-outlined[data-apollo-input-host=\"affix\"] > .apollo-input-suffix > .apollo-input-show-count-suffix'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "id": "input/count__light__tablet",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Input count has real accessible native controls\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     targets: [\n+       [\n+         'section:nth-child(2) > span[data-apollo-input-host=\"group\"] > span[data-apollo-input-host=\"wrapper\"] > .apollo-input-affix-wrapper.apollo-input-outlined[data-apollo-input-host=\"affix\"] > .apollo-input-suffix > .apollo-input-show-count-suffix'\n+       ],\n+       [\n+         'section:nth-child(3) > span[data-apollo-input-host=\"group\"] > span[data-apollo-input-host=\"wrapper\"] > .apollo-input-affix-wrapper.apollo-input-outlined[data-apollo-input-host=\"affix\"] > .apollo-input-suffix > .apollo-input-show-count-suffix'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "id": "input/count__light__desktop",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Input count has real accessible native controls\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     targets: [\n+       [\n+         'section:nth-child(2) > span[data-apollo-input-host=\"group\"] > span[data-apollo-input-host=\"wrapper\"] > .apollo-input-affix-wrapper.apollo-input-outlined[data-apollo-input-host=\"affix\"] > .apollo-input-suffix > .apollo-input-show-count-suffix'\n+       ],\n+       [\n+         'section:nth-child(3) > span[data-apollo-input-host=\"group\"] > span[data-apollo-input-host=\"wrapper\"] > .apollo-input-affix-wrapper.apollo-input-outlined[data-apollo-input-host=\"affix\"] > .apollo-input-suffix > .apollo-input-show-count-suffix'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "id": "input/textarea__light__mobile",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Input textarea has real accessible native controls\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     targets: [\n+       [\n+         '.apollo-input-data-count'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "id": "input/textarea__light__tablet",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Input textarea has real accessible native controls\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     targets: [\n+       [\n+         '.apollo-input-data-count'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "id": "input/textarea__light__desktop",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Input textarea has real accessible native controls\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     targets: [\n+       [\n+         '.apollo-input-data-count'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "id": "input/native-focus__light__mobile",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "The real editor has visible native keyboard focus"
+    },
+    {
+      "id": "input/native-focus__light__tablet",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "The real editor has visible native keyboard focus"
+    },
+    {
+      "id": "input/native-focus__light__desktop",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "The real editor has visible native keyboard focus"
+    },
+    {
+      "id": "input/theme-compact__light__mobile",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Input theme-compact has real accessible native controls\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     targets: [\n+       [\n+         '.apollo-input-data-count'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "id": "input/theme-compact__light__tablet",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Input theme-compact has real accessible native controls\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     targets: [\n+       [\n+         '.apollo-input-data-count'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "id": "input/theme-compact__light__desktop",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Input theme-compact has real accessible native controls\n+ actual - expected\n\n+ [\n+   {\n+     id: 'color-contrast',\n+     targets: [\n+       [\n+         '.apollo-input-data-count'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "id": "config-provider/empty-reset__light__mobile",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'rgb(20, 20, 20)'\n- 'rgb(255, 255, 255)'\n        ^\n"
+    },
+    {
+      "id": "config-provider/empty-reset__light__tablet",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'rgb(20, 20, 20)'\n- 'rgb(255, 255, 255)'\n        ^\n"
+    },
+    {
+      "id": "config-provider/empty-reset__light__desktop",
+      "verdict": "FAIL",
+      "reason": "render-error",
+      "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'rgb(20, 20, 20)'\n- 'rgb(255, 255, 255)'\n        ^\n"
+    }
+  ],
+  "classification": {
+    "input clear/count/textarea/theme-compact": "real default foreground contrast defects, fix required within current Input unit",
+    "input native-focus": "new harness inspected the borderless editor rather than its decorated affix host; keep active-editor and visible-ring assertions on the actual host",
+    "config-provider empty-reset": "new fixture used an unsupported ThemeProvider config prop; actual public theme prop restores the documented reset contract; production unchanged"
+  }
+}

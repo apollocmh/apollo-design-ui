@@ -218,8 +218,9 @@ export const MentionsComponent = defineComponent({
       if (context.notFoundContent !== undefined) {
         return context.notFoundContent;
       }
-      const fromContext = context.renderEmpty?.('Select') as VNodeChild;
-      return fromContext ?? h(DefaultRenderEmpty, { componentName: 'Select' });
+      return context.renderEmpty
+        ? context.renderEmpty('Select')
+        : h(DefaultRenderEmpty, { componentName: 'Select' });
     });
 
     // ============================ Options =============================

@@ -1,0 +1,307 @@
+{
+  "status": "isolated-feature-cost-review",
+  "runtimeBuildBase": "617ae554",
+  "scope": [
+    "divider",
+    "collapse"
+  ],
+  "changes": [
+    {
+      "id": "collapse",
+      "beforeKiB": 50,
+      "afterKiB": 52
+    },
+    {
+      "id": "divider",
+      "beforeKiB": 17,
+      "afterKiB": 30
+    }
+  ],
+  "results": [
+    {
+      "component": "Divider",
+      "bytes": 29796,
+      "actualKiB": 29.09765625,
+      "moduleCount": 31,
+      "uiModules": [
+        "packages/ui/dist/divider/Divider.vue.mjs",
+        "packages/ui/dist/_internal/use-merge-semantic.mjs",
+        "packages/ui/dist/divider/use-divider-theme.mjs",
+        "packages/ui/dist/config-provider/context.mjs",
+        "packages/ui/dist/config-provider/size-context.mjs",
+        "packages/ui/dist/_internal/with-install.mjs",
+        "packages/ui/dist/divider/style/token.mjs",
+        "packages/ui/dist/divider/index.mjs"
+      ],
+      "largestModules": [
+        {
+          "file": "packages/utils/dist/color/color.mjs",
+          "renderedLength": 9206,
+          "renderedExports": [
+            "Color"
+          ]
+        },
+        {
+          "file": "packages/ui/dist/divider/Divider.vue.mjs",
+          "renderedLength": 7213,
+          "renderedExports": [
+            "default"
+          ]
+        },
+        {
+          "file": "packages/theme/dist/alias.mjs",
+          "renderedLength": 5978,
+          "renderedExports": [
+            "default"
+          ]
+        },
+        {
+          "file": "packages/theme/dist/css-var.mjs",
+          "renderedLength": 4313,
+          "renderedExports": [
+            "UNITLESS",
+            "PRESERVE",
+            "DEFAULT_CSS_VAR_PREFIX",
+            "token2CSSVar",
+            "transformToken",
+            "createCSSVarScope",
+            "IGNORE"
+          ]
+        },
+        {
+          "file": "packages/ui/dist/_internal/use-merge-semantic.mjs",
+          "renderedLength": 3504,
+          "renderedExports": [
+            "mergeClassNamesBySchema",
+            "resolveSemantic",
+            "mergeClassNames",
+            "mergeStyles",
+            "fillObjectBySchema",
+            "semanticRootStyle",
+            "styleAttrs",
+            "useMergeSemantic"
+          ]
+        },
+        {
+          "file": "packages/theme/dist/shared/color-map-token.mjs",
+          "renderedLength": 3500,
+          "renderedExports": [
+            "default"
+          ]
+        },
+        {
+          "file": "packages/theme/dist/algorithms/palettes.mjs",
+          "renderedLength": 2273,
+          "renderedExports": [
+            "genPresetColorPalettes",
+            "getAlphaColor",
+            "getSolidColor",
+            "generateNeutralColorPalettes",
+            "generateColorPalettes"
+          ]
+        },
+        {
+          "file": "packages/theme/dist/vue.mjs",
+          "renderedLength": 2218,
+          "renderedExports": [
+            "createThemeContext",
+            "useTheme",
+            "ThemeContextKey"
+          ]
+        },
+        {
+          "file": "packages/utils/dist/color/generate.mjs",
+          "renderedLength": 2081,
+          "renderedExports": [
+            "generatePalette"
+          ]
+        },
+        {
+          "file": "packages/ui/dist/divider/use-divider-theme.mjs",
+          "renderedLength": 2015,
+          "renderedExports": [
+            "useDividerTheme"
+          ]
+        },
+        {
+          "file": "packages/ui/dist/config-provider/context.mjs",
+          "renderedLength": 1823,
+          "renderedExports": [
+            "globalConfigState",
+            "DEFAULT_CONFIG_CONTEXT",
+            "defaultIconPrefixCls",
+            "useComponentConfig",
+            "configContextKey",
+            "defaultGetPrefixCls",
+            "defaultPrefixCls",
+            "useConfigContext"
+          ]
+        },
+        {
+          "file": "packages/theme/dist/seed.mjs",
+          "renderedLength": 1788,
+          "renderedExports": [
+            "defaultPresetColors",
+            "PresetColors",
+            "defaultSeedToken"
+          ]
+        }
+      ]
+    },
+    {
+      "component": "Collapse",
+      "bytes": 52123,
+      "actualKiB": 50.9013671875,
+      "moduleCount": 49,
+      "uiModules": [
+        "packages/ui/dist/collapse/Panel.mjs",
+        "packages/ui/dist/collapse/Collapse.mjs",
+        "packages/ui/dist/config-provider/context.mjs",
+        "packages/ui/dist/collapse/use-collapse-theme.mjs",
+        "packages/ui/dist/_internal/use-merge-semantic.mjs",
+        "packages/ui/dist/collapse/style/token.mjs",
+        "packages/ui/dist/config-provider/size-context.mjs",
+        "packages/ui/dist/_internal/with-install.mjs",
+        "packages/ui/dist/collapse/engine/index.mjs",
+        "packages/ui/dist/collapse/context.mjs"
+      ],
+      "largestModules": [
+        {
+          "file": "packages/utils/dist/color/color.mjs",
+          "renderedLength": 9206,
+          "renderedExports": [
+            "Color"
+          ]
+        },
+        {
+          "file": "packages/ui/dist/collapse/Panel.mjs",
+          "renderedLength": 8613,
+          "renderedExports": [
+            "CollapsePanel"
+          ]
+        },
+        {
+          "file": "packages/motion/dist/driver.mjs",
+          "renderedLength": 6751,
+          "renderedExports": [
+            "defaultDomAdapter",
+            "createMotionDriver",
+            "defaultScheduler"
+          ]
+        },
+        {
+          "file": "packages/ui/dist/collapse/Collapse.mjs",
+          "renderedLength": 6506,
+          "renderedExports": [
+            "Collapse"
+          ]
+        },
+        {
+          "file": "packages/theme/dist/alias.mjs",
+          "renderedLength": 5978,
+          "renderedExports": [
+            "default"
+          ]
+        },
+        {
+          "file": "packages/theme/dist/css-var.mjs",
+          "renderedLength": 4313,
+          "renderedExports": [
+            "UNITLESS",
+            "PRESERVE",
+            "DEFAULT_CSS_VAR_PREFIX",
+            "token2CSSVar",
+            "transformToken",
+            "createCSSVarScope",
+            "IGNORE"
+          ]
+        },
+        {
+          "file": "packages/motion/dist/status.mjs",
+          "renderedLength": 4251,
+          "renderedExports": [
+            "getMotionStyle",
+            "getStatusSuffix",
+            "FULL_STEP_QUEUE",
+            "isActiveStep",
+            "normalizeMotionStyle",
+            "shouldEndMotion",
+            "getMotionClassName",
+            "STATUS_NONE",
+            "STEP_PREPARE",
+            "STEP_NONE",
+            "STATUS_ENTER",
+            "STEP_PREPARED",
+            "STEP_START",
+            "SIMPLE_STEP_QUEUE",
+            "pickStatus",
+            "shouldStartMotion",
+            "nextStepInQueue",
+            "pickRenderMode",
+            "getStyleReady",
+            "STEP_ACTIVE",
+            "STATUS_LEAVE",
+            "STATUS_APPEAR",
+            "getTransitionName"
+          ]
+        },
+        {
+          "file": "packages/theme/dist/shared/color-map-token.mjs",
+          "renderedLength": 3500,
+          "renderedExports": [
+            "default"
+          ]
+        },
+        {
+          "file": "packages/motion/dist/use-motion-status.mjs",
+          "renderedLength": 3412,
+          "renderedExports": [
+            "useMotionStatus"
+          ]
+        },
+        {
+          "file": "packages/utils/dist/pick-attrs-allowlist.mjs",
+          "renderedLength": 3109,
+          "renderedExports": [
+            "PICK_ATTRS_ALL",
+            "PICK_ATTRS_ATTRIBUTES",
+            "PICK_ATTRS_EVENTS"
+          ]
+        },
+        {
+          "file": "packages/icons/dist/create-icon.mjs",
+          "renderedLength": 2355,
+          "renderedExports": [
+            "createIcon"
+          ]
+        },
+        {
+          "file": "packages/theme/dist/algorithms/palettes.mjs",
+          "renderedLength": 2273,
+          "renderedExports": [
+            "genPresetColorPalettes",
+            "getAlphaColor",
+            "getSolidColor",
+            "generateNeutralColorPalettes",
+            "generateColorPalettes"
+          ]
+        }
+      ]
+    }
+  ],
+  "other71CapsUnchanged": true,
+  "all73HistoricalMeasuredKbUnchanged": true,
+  "maxRatioOfFullUnchanged": 0.3,
+  "fullUiKiBApproximate": 2112.5,
+  "rationale": [
+    "Divider now reads the real current Theme source,11 Alias values and all3 Component Tokens; the default derivation and framework-independent color graph become reachable. No other UI component is retained.",
+    "Collapse now owns real Vue Panel lifecycle, native disclosure/focus, retained/destroyed content, motion and10 current Component Tokens."
+  ],
+  "initialL7": "B6 reports two budget overruns; other applicable checks pass.",
+  "finalL7": "Strict UI L7 has0 failed and0 pending. B1 is explicitly SKIP under --no-build; an actual separate UI build exited0.",
+  "sourceInspection": {
+    "path": "/tmp/apollo-divider-collapse-bundle-inspection.json",
+    "sha256": "904ff9d063dec34b9f476cab888e6e51a74b714459f78f52f5129c03f167eabf"
+  },
+  "boundaries": "Input and current ConfigProvider are not yet integrated in these cost measurements; final unified source cost gates remain required."
+}

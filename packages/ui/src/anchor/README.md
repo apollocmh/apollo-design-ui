@@ -22,7 +22,7 @@
 | D4 | 上游 `'items' in props` ⇒ 本仓按**值**判（`props.items !== undefined`） | PLATFORM |
 | D5 | `useEvent` / `useCallback` ⇒ 不需要（`setup` 只跑一次） | PLATFORM |
 | D6 | `getTargetContainer` 的响应式读取（Vue 的 `inject` 是快照） | PLATFORM |
-| D7 | 上游 `useEffect([JSON.stringify(links)])` 不含 `getContainer` ⇒ 容器变更不重挂；本仓**照抄** | UPSTREAM |
+| D7 | 监听链接内容与当前解析的滚动目标；容器切换释放旧监听并绑定新目标 | Apollo 当前契约 |
 | D8 | `children` 在 Vue 侧是**默认插槽**（规则 C19），不是 prop | PLATFORM |
 | D9 | 同一容器**不重复**挂 scroll 监听（上游每次 remove+add，监听器同一个函数 ⇒ 净效果一致） | PLATFORM |
 

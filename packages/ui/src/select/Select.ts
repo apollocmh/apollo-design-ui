@@ -203,7 +203,7 @@ const SelectEngine = defineComponent({
     const { getPrefixCls } = useComponentConfig('select');
     const config = useConfigContext();
     const prefixCls = computed(() => props.prefixCls ?? getPrefixCls('select'));
-    const rootPrefixCls = getPrefixCls();
+    const rootPrefixCls = computed(() => getPrefixCls());
 
     const multiple = computed(() => props.mode === 'multiple' || props.mode === 'tags');
     const mergedId = useId(props.id);
@@ -699,7 +699,7 @@ const SelectEngine = defineComponent({
       const fromSlot = readSlot('notFoundContent');
       if (fromSlot !== undefined) return fromSlot;
       if (props.mode === 'combobox') return null;
-      return config.renderEmpty?.('Select') ?? defaultRenderEmpty('Select');
+      return config.renderEmpty ? config.renderEmpty('Select') : defaultRenderEmpty('Select');
     });
 
     const zIndex = useZIndex('SelectLike', () => {
@@ -904,7 +904,7 @@ const SelectEngine = defineComponent({
           // antd：`getPopupContainer || getContextPopupContainer`（`select/index.js:259`）
           // —— 局部优先、**回退到 ConfigProvider 的全局设置**（Issue #4.7）。
           getPopupContainer: props.getPopupContainer ?? config.getPopupContainer,
-          transitionName: props.transitionName ?? `${rootPrefixCls}-slide-up`,
+          transitionName: props.transitionName ?? `${rootPrefixCls.value}-slide-up`,
           popupClassName: mergedPopupClassName.value,
           popupStyle: {
             ...(mergedStyles.value?.popup?.root ?? {}),

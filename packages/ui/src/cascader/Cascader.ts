@@ -128,7 +128,7 @@ const Cascader = defineComponent({
     popupStyle: { type: Object as PropType<StyleLike>, default: undefined },
     popupMenuColumnStyle: { type: Object as PropType<StyleLike>, default: undefined },
     popupRender: { type: Function as PropType<(menu: unknown) => unknown>, default: undefined },
-    popupMatchSelectWidth: { type: [Boolean, Number], default: false },
+    popupMatchSelectWidth: { type: [Boolean, Number], default: undefined },
     getPopupContainer: {
       type: Function as PropType<(node: HTMLElement) => HTMLElement>,
       default: undefined,
@@ -638,7 +638,8 @@ const Cascader = defineComponent({
           emptyOptions,
           placement: memoPlacement.value,
           direction: mergedDirection.value,
-          popupMatchSelectWidth: props.popupMatchSelectWidth ?? false,
+          popupMatchSelectWidth:
+            props.popupMatchSelectWidth ?? config.popupMatchSelectWidth ?? false,
           // antd：`getPopupContainer || getContextPopupContainer`（`cascader/index.js:309`）
           // —— 局部优先、**回退到 ConfigProvider 的全局设置**（Issue #12.4）。
           getPopupContainer: props.getPopupContainer ?? config.getPopupContainer,

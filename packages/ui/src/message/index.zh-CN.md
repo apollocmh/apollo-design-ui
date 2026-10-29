@@ -146,3 +146,6 @@ message 传的是 `closable: false`（与 antd 一致）—— 消息靠计时�
 
 `top` / `rtl` / `prefixCls` 这类**列表级**配置会影响后续渲染；`maxCount` 只影响下一次 open。
 已经显示出来的单条不会重排（与 antd 同）。
+
+
+Hook holder 内已打开消息的类型与图标类跟随当前 ConfigProvider 前缀，保留 keyed 正文及用户样式。显式 icon（含 null、false、0）优先于类型默认图标。手动 destroy 不触发 onClose，自然关闭保留既有回调契约。

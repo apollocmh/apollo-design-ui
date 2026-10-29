@@ -15,7 +15,17 @@
  *   4. `getContainer` **每次渲染都重新求值**（rc 的 effect 无依赖数组）——
  *      容器可能在运行期被换掉（`config.test` 有对应用例）。
  */
-import { h, nextTick, onMounted, ref, toValue, type VNode, watch } from 'vue';
+import {
+  h,
+  nextTick,
+  onMounted,
+  onUpdated,
+  ref,
+  toValue,
+  type VNode,
+  watch,
+  watchEffect,
+} from 'vue';
 
 import type {
   NoticeListConfig,
@@ -84,7 +94,7 @@ export function useNotification(rootConfig: NotificationConfig = {}): UseNotific
   //    都重新求值，否则「holder 建好之后再改配置」传不进内核
   const shareConfig = () => ({
     placement,
-    closable,
+    closable: toValue(closable),
     duration: toValue(duration) as number | false | null | undefined,
     showProgress: toValue(showProgress) as boolean | undefined,
   });
@@ -101,7 +111,7 @@ export function useNotification(rootConfig: NotificationConfig = {}): UseNotific
     h(Notifications, {
       container: container.value,
       ref: notificationsRef,
-      prefixCls,
+      prefixCls: toValue(prefixCls),
       motion,
       maxCount,
       pauseOnHover,
@@ -157,9 +167,10 @@ export function useNotification(rootConfig: NotificationConfig = {}): UseNotific
   };
 
   onMounted(() => {
-    resolveContainer();
+    watchEffect(resolveContainer, { flush: 'post' });
     nextTick(flush);
   });
+  onUpdated(resolveContainer);
   watch(taskQueue, () => nextTick(flush), { deep: false, flush: 'post' });
   watch(container, () => nextTick(flush), { flush: 'post' });
 

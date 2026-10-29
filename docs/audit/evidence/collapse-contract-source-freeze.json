@@ -1,0 +1,399 @@
+{
+  "schemaVersion": 1,
+  "component": "Collapse / CollapsePanel",
+  "status": "source-runtime-frozen; strict-root-integration-blocked",
+  "createdAt": "2026-10-29T01:40:25.485Z",
+  "repository": "/Users/nanren/Code/apollo-design-ui",
+  "inventoryHead": "3d05710f3b1954c320c05a01f58cce994ca2176c",
+  "observedHeadAtFreeze": "d87f84c7ab3b6728f0a98b06fad3ec08852b4eea",
+  "testedCode": "Uncommitted owned source identified by per-file SHA; shared producers changed after the compiled browser snapshot. This is not a final-commit or published gate.",
+  "runtimeFiles": [
+    {
+      "file": "packages/ui/src/collapse/Collapse.ts",
+      "sha256": "d5d1a7c5ab257f4bb6c2c713ce3bdb7583be8cac76458997472ee4822704ad17"
+    },
+    {
+      "file": "packages/ui/src/collapse/Panel.ts",
+      "sha256": "fb7013938eed6a2f9aa8fb0206ae0cbbe4c05218ac0034b2f55ae2eb9396e235"
+    },
+    {
+      "file": "packages/ui/src/collapse/context.ts",
+      "sha256": "3ab181234ff7cc7e80abd6050ee3cbb9e72497e6f0d982ab042a3d97d85f232a"
+    },
+    {
+      "file": "packages/ui/src/collapse/engine/index.ts",
+      "sha256": "58bf95b6de980731905a5dbd2a261e44151db96c5eaa9d029e8ad3b74abbc5b4"
+    },
+    {
+      "file": "packages/ui/src/collapse/index.ts",
+      "sha256": "752f7372fb0dde4064c5b060df58ad2180ecf6bda75540bca8806854d71d1ef9"
+    },
+    {
+      "file": "packages/ui/src/collapse/interface.ts",
+      "sha256": "a3ab7deabc31286cb80785ae2266a5de6a16a3d544ade55c53c04098f61dbf4c"
+    },
+    {
+      "file": "packages/ui/src/collapse/style/index.ts",
+      "sha256": "91ac8cb6928a96ffb9f02be0bcee8f11c83f7055fbff2a7a0706bea7ffd41422"
+    },
+    {
+      "file": "packages/ui/src/collapse/style/token.ts",
+      "sha256": "98365ea9ab0f68348f74663fb69feb5f07c9ea9b73425e22bf704069bcc5da1e"
+    },
+    {
+      "file": "packages/ui/src/collapse/use-collapse-theme.ts",
+      "sha256": "df15cc21f3ffc37e48723de9dfc427dcf5b8a979228fcb3113758006241bb119"
+    }
+  ],
+  "runtimeDigest": "f2c118c1f503f05146e38b529221e96014afc88794e2f342e3aa0cfe032ed7d5",
+  "sourceFileCount": 42,
+  "sourceFiles": [
+    {
+      "file": "packages/ui/src/collapse/Collapse.ts",
+      "sha256": "d5d1a7c5ab257f4bb6c2c713ce3bdb7583be8cac76458997472ee4822704ad17"
+    },
+    {
+      "file": "packages/ui/src/collapse/PLAN.md",
+      "sha256": "b73efcc4cc710b50525242413a743b2d4b6a4e0b92c41847913f43f81f7e978b"
+    },
+    {
+      "file": "packages/ui/src/collapse/Panel.ts",
+      "sha256": "fb7013938eed6a2f9aa8fb0206ae0cbbe4c05218ac0034b2f55ae2eb9396e235"
+    },
+    {
+      "file": "packages/ui/src/collapse/README.md",
+      "sha256": "84c890bd0cc9eff97e3e2580a6fccfcf35523cce096e108df4f2dc8eda63d44c"
+    },
+    {
+      "file": "packages/ui/src/collapse/__tests__/a11y.test.ts",
+      "sha256": "60fad383901ccaea6d8285b4e4b17dde73de59f713761ce35d8fb11cb889309e"
+    },
+    {
+      "file": "packages/ui/src/collapse/__tests__/browser-fixture.mjs",
+      "sha256": "a0d5c02cf60e3314f255f6a4463b4a44c85cd3e3e8ad01c034c7a440c4cb1574"
+    },
+    {
+      "file": "packages/ui/src/collapse/__tests__/browser.mjs",
+      "sha256": "b1437c7f837a6fbb0154344e43ef66db4ec24c0d6626143875a896ed3547031a"
+    },
+    {
+      "file": "packages/ui/src/collapse/__tests__/consumer.mjs",
+      "sha256": "a75aed449ef0479abe9314f2bcfe32375ace05d950e11f804360c250eddf88ca"
+    },
+    {
+      "file": "packages/ui/src/collapse/__tests__/contract-differences.ts",
+      "sha256": "7b31de01e6676614ff4ea74814510321fd0a9671e52897a62c8ce16264a635d8"
+    },
+    {
+      "file": "packages/ui/src/collapse/__tests__/contracts.test.ts",
+      "sha256": "5e0b91d04d629e48f93d644ffc2adb1f38a7647059f07f0d4622a70940bcdb98"
+    },
+    {
+      "file": "packages/ui/src/collapse/__tests__/demo.test.ts",
+      "sha256": "3e8cc80d2b803a491d30d3b9ac80479eaca5a770e3453cf8c3ec422d5fcab555"
+    },
+    {
+      "file": "packages/ui/src/collapse/__tests__/index.test.ts",
+      "sha256": "085f9b5f11f1a68a3a7ace0bd731c6d32e9bee5d7b7883684241b6f9be310871"
+    },
+    {
+      "file": "packages/ui/src/collapse/__tests__/semantic.test.ts",
+      "sha256": "5a7345385faa668d4a90688e449b4ebafb937c3e9baae1124bd0e51eee422dd0"
+    },
+    {
+      "file": "packages/ui/src/collapse/__tests__/theme.test.ts",
+      "sha256": "9e5d81a63c49ac62a45afcef3905b249f493d5bb0f9e93c5f04322ca706104a1"
+    },
+    {
+      "file": "packages/ui/src/collapse/__tests__/type.test-d.ts",
+      "sha256": "782708ca98d1009a2514efe0d82c2dbfd57bf878e7a13adb988c8bc17230e962"
+    },
+    {
+      "file": "packages/ui/src/collapse/context.ts",
+      "sha256": "3ab181234ff7cc7e80abd6050ee3cbb9e72497e6f0d982ab042a3d97d85f232a"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/accordion.md",
+      "sha256": "b4e2698da32b63feaef2e3cde53b5b660df0f241da36ac804114a5a5dbd5e82c"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/accordion.vue",
+      "sha256": "44922d6f41ae8a003e8fd2157b1225618888f18806bc27f4a0273cb09e9b940b"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/basic.md",
+      "sha256": "73cbea5f746dd8efbaf1baae2358f968a2280bd856b9d6c9c25570f0fd92f56a"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/basic.vue",
+      "sha256": "d64db8793d20554a5c1e2a6de0579ce1cb964078520df2dfd0e51692408be0dc"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/borderless.md",
+      "sha256": "c58db887efa13aaf29e498dc7b83f1f96b5a0352f3cfe094553926eb5252b7e0"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/borderless.vue",
+      "sha256": "ebebe9e152f6931669e386e51d253010a91dca698be2fd9e3ef993166533e89d"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/collapsible.md",
+      "sha256": "00c883bbc78d70d969d41993278f5a2c8d06b0f62fa9b4455a95ecfcdcd7f512"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/collapsible.vue",
+      "sha256": "b8a0c21193da28980b6f3f01ebd2373fb29a1e81ad5693d2e26b5bcb6aa85579"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/component-token.md",
+      "sha256": "36096587c645ec37b2e2d84a6b0666248c766f0a42ca19067abd390910844dcd"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/component-token.vue",
+      "sha256": "cf05ed607a4716961b3628aa85ea6e5689277270acdbce90b7a89850e83315f6"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/custom.md",
+      "sha256": "f78181527f96735e7123a8a0e5ee8139265fa72cf3b6977cd0d26ce69ae64f29"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/custom.vue",
+      "sha256": "49f7bb1a5a0ec84d6ebbc6eaaa2d1fc9cd838cb4e5045123a7efb068c28afb12"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/extra.md",
+      "sha256": "9ac6e7660fed0b8975e1c23dbc2904cd647adf98057a3261fc1b9f350d18ea03"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/extra.vue",
+      "sha256": "d712d5f14d656a863be3637c5992f65ed6bc7ac66003bd773c829cc2143dba65"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/ghost.md",
+      "sha256": "83a23dab8c81d818a69fb438212ca0f9f8ddba6fadac27fa66ed116be1d12987"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/ghost.vue",
+      "sha256": "2a085e8b23e00ab50c7b2b1c555fc725f29ad0ea2edb2102458d75e4650a2f56"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/size.md",
+      "sha256": "d8069a5d80ded65f5ec7703b05745343f856f5eb05ce6765e67a77c56a5c077b"
+    },
+    {
+      "file": "packages/ui/src/collapse/demo/size.vue",
+      "sha256": "5e83c11558bf3156cc96da7087d263139e2a2b86a37efd4fb101acbb231802ab"
+    },
+    {
+      "file": "packages/ui/src/collapse/engine/index.ts",
+      "sha256": "58bf95b6de980731905a5dbd2a261e44151db96c5eaa9d029e8ad3b74abbc5b4"
+    },
+    {
+      "file": "packages/ui/src/collapse/index.en-US.md",
+      "sha256": "0c3451cff8b10ec4a427954311238cbba98bd1ef20fa53af53d2ee2489c4beeb"
+    },
+    {
+      "file": "packages/ui/src/collapse/index.ts",
+      "sha256": "752f7372fb0dde4064c5b060df58ad2180ecf6bda75540bca8806854d71d1ef9"
+    },
+    {
+      "file": "packages/ui/src/collapse/index.zh-CN.md",
+      "sha256": "ab697b52f2f7e762ffa481abd1b66226974c546e1ee3112e33f42c82dc9bdea6"
+    },
+    {
+      "file": "packages/ui/src/collapse/interface.ts",
+      "sha256": "a3ab7deabc31286cb80785ae2266a5de6a16a3d544ade55c53c04098f61dbf4c"
+    },
+    {
+      "file": "packages/ui/src/collapse/style/index.ts",
+      "sha256": "91ac8cb6928a96ffb9f02be0bcee8f11c83f7055fbff2a7a0706bea7ffd41422"
+    },
+    {
+      "file": "packages/ui/src/collapse/style/token.ts",
+      "sha256": "98365ea9ab0f68348f74663fb69feb5f07c9ea9b73425e22bf704069bcc5da1e"
+    },
+    {
+      "file": "packages/ui/src/collapse/use-collapse-theme.ts",
+      "sha256": "df15cc21f3ffc37e48723de9dfc427dcf5b8a979228fcb3113758006241bb119"
+    }
+  ],
+  "documents": [
+    {
+      "file": "docs/audit/2026-10-29-collapse-contract-audit.md",
+      "sha256": "b4069fc1a269438bdfe9aa0522b88b993f18b08cc03261afb2302b15b32ef614"
+    },
+    {
+      "file": "docs/migrations/collapse-contracts.md",
+      "sha256": "1a69da58b5e926857d21f84eaf5fa412dc1a003ff20ac570cac14208479e69cf"
+    }
+  ],
+  "verified": {
+    "collapseRuntimeTests": 101,
+    "combinedRuntimeTests": 387,
+    "runtimeExit": 0,
+    "browserChecks": 134,
+    "browserExit": 0,
+    "browserErrors": 0,
+    "realDemoScenes": 108,
+    "realDemoSFC": 9,
+    "ssrHydration": true,
+    "realColorPickerSelection": true,
+    "frozenAlertConditionalSlots": true,
+    "referencePNGExact": 9,
+    "originalDOMCases": 12,
+    "nativeReplacementSubtrees": 12,
+    "finiteDOMDifferences": 67,
+    "strictChildTypeProbeExit": 0,
+    "permanentTypeLogicalCases": 4,
+    "typeAssertionExecutions": 8,
+    "reasonedTypeNegativeCases": 10,
+    "formatExit": 0,
+    "diffCheckExit": 0
+  },
+  "blocked": {
+    "strictRootConsumer": [
+      {
+        "label": "positive",
+        "exit": 2,
+        "diagnostics": [
+          "../../../../../../../Users/nanren/Code/apollo-design-ui/packages/ui/src/watermark/Watermark.ts(367,30): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'CSSProperties'."
+        ]
+      },
+      {
+        "label": "negative",
+        "exit": 2,
+        "diagnostics": [
+          "../../../../../../../Users/nanren/Code/apollo-design-ui/packages/ui/src/config-provider/ConfigProvider.ts(306,7): error TS1128: Declaration or statement expected.",
+          "../../../../../../../Users/nanren/Code/apollo-design-ui/packages/ui/src/config-provider/ConfigProvider.ts(310,5): error TS1128: Declaration or statement expected.",
+          "../../../../../../../Users/nanren/Code/apollo-design-ui/packages/ui/src/config-provider/ConfigProvider.ts(311,3): error TS1128: Declaration or statement expected.",
+          "../../../../../../../Users/nanren/Code/apollo-design-ui/packages/ui/src/config-provider/ConfigProvider.ts(311,4): error TS1128: Declaration or statement expected.",
+          "../../../../../../../Users/nanren/Code/apollo-design-ui/packages/ui/src/config-provider/ConfigProvider.ts(312,1): error TS1128: Declaration or statement expected.",
+          "../../../../../../../Users/nanren/Code/apollo-design-ui/packages/ui/src/config-provider/ConfigProvider.ts(312,2): error TS1128: Declaration or statement expected."
+        ]
+      }
+    ],
+    "sourceTypeGate": "Last strict source graph attempt exit2: external Watermark.ts:367 TS7053. Later SFC negative attempt encountered ConfigProvider shared-write TS1128; no reader remains running.",
+    "validSFCNegativeAcceptance": false
+  },
+  "unverified": [
+    "Strict root consumer success and four actual SFC negative cases after shared producer freeze",
+    "Root export additions and root comment synchronization",
+    "Registry/native matrix and formal Docs integration",
+    "Published L7/strict consumer/browser mode, with 14 dist package hashes and zero source fallback",
+    "Final full gate on the same committed revision"
+  ],
+  "authorizationBoundary": {
+    "ownsOnlyCollapseAndOwnAuditMigration": true,
+    "packageBuilds": 0,
+    "distWrites": false,
+    "oldBaselineWrites": false,
+    "PNGApprovals": false,
+    "commits": false,
+    "pushes": false,
+    "allCurrentBrowserSSRTypeReadersClosed": true,
+    "nextTaskStarted": false
+  },
+  "commands": {
+    "runtime": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/collapse packages/ui/src/color-picker packages/ui/src/alert --maxWorkers=2 --reporter=json --outputFile=/tmp/apollo-collapse-audit-20261029/final-runtime.json",
+    "browser": "COLLAPSE_BROWSER_EVIDENCE=/tmp/apollo-collapse-audit-20261029/browser-final node packages/ui/src/collapse/__tests__/browser.mjs",
+    "consumer": "node packages/ui/src/collapse/__tests__/consumer.mjs",
+    "childTypes": "node node_modules/vue-tsc/bin/vue-tsc.js -p /tmp/apollo-collapse-audit-20261029/type-probe.json",
+    "strictSourceTypes": "node node_modules/vue-tsc/bin/vue-tsc.js -p /tmp/apollo-collapse-audit-20261029/source-tsconfig.json",
+    "types": "pnpm exec vitest run --project types packages/ui/src/collapse/__tests__/type.test-d.ts --maxWorkers=2",
+    "format": "pnpm exec biome check packages/ui/src/collapse"
+  },
+  "references": [
+    {
+      "file": "tests/compat/baselines/collapse.dom.json",
+      "sha256": "c63c7918163c3807e94567ba9ed15132112bfb14dabb6fc977c4a81ddb6b50f0",
+      "unchangedSinceInventory": true
+    },
+    {
+      "file": "tests/visual/baselines/react/collapse/basic__light__mobile.png",
+      "sha256": "b47983bc8e02e8cdd00b19d5670eff626c637940a851f2376a7c224efc97f70b",
+      "unchangedSinceInventory": true
+    },
+    {
+      "file": "tests/visual/baselines/react/collapse/basic__light__tablet.png",
+      "sha256": "64b70df68d9c9e837073c431f0475e8798edac6674d91c68f0d2711525f8bfbe",
+      "unchangedSinceInventory": true
+    },
+    {
+      "file": "tests/visual/baselines/react/collapse/basic__light__desktop.png",
+      "sha256": "19bf1256353a7a61982c3b77ca801e8c33bd82b439b73567d0009fc5b95e8ada",
+      "unchangedSinceInventory": true
+    },
+    {
+      "file": "tests/visual/baselines/react/collapse/accordion__light__mobile.png",
+      "sha256": "b47983bc8e02e8cdd00b19d5670eff626c637940a851f2376a7c224efc97f70b",
+      "unchangedSinceInventory": true
+    },
+    {
+      "file": "tests/visual/baselines/react/collapse/accordion__light__tablet.png",
+      "sha256": "64b70df68d9c9e837073c431f0475e8798edac6674d91c68f0d2711525f8bfbe",
+      "unchangedSinceInventory": true
+    },
+    {
+      "file": "tests/visual/baselines/react/collapse/accordion__light__desktop.png",
+      "sha256": "19bf1256353a7a61982c3b77ca801e8c33bd82b439b73567d0009fc5b95e8ada",
+      "unchangedSinceInventory": true
+    },
+    {
+      "file": "tests/visual/baselines/react/collapse/borderless__light__mobile.png",
+      "sha256": "4f41be707051353c472aa50127e03546b6f40dfcb5f63428e59bb2bda5d971cb",
+      "unchangedSinceInventory": true
+    },
+    {
+      "file": "tests/visual/baselines/react/collapse/borderless__light__tablet.png",
+      "sha256": "e15081e1eae56e50bf4c90e02437567c075ca0f2026dbf8a7af4038947ec085d",
+      "unchangedSinceInventory": true
+    },
+    {
+      "file": "tests/visual/baselines/react/collapse/borderless__light__desktop.png",
+      "sha256": "eb439dbfaf4644f7fedeb0aa0fa00b4ff0dd04777048b8ad55084784912c3ca5",
+      "unchangedSinceInventory": true
+    }
+  ],
+  "receipts": [
+    {
+      "file": "/tmp/apollo-collapse-audit-20261029/final-runtime.json",
+      "sha256": "24142c1cd708733a10cacc63e9fe3275d4e8f759acbb9f5c4147379375e96c9a"
+    },
+    {
+      "file": "/tmp/apollo-collapse-audit-20261029/browser-final/receipt.json",
+      "sha256": "a3a6cccc65623c617eed70f3326b0cfc3f9b42c283aad62acdca571872939c31"
+    },
+    {
+      "file": "/tmp/apollo-collapse-audit-20261029/consumer.json",
+      "sha256": "ccc637d9d5f375377b7d6d9c9ad6e840556197ee37f138c0df05b36e069df0e5"
+    },
+    {
+      "file": "/tmp/apollo-collapse-audit-20261029/type-probe-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "/tmp/apollo-collapse-audit-20261029/source-types-latest.log",
+      "sha256": "a39b1283d9c235e7fae36d2920055f1922f827b2a5f7afdebc274cf87e43287f"
+    },
+    {
+      "file": "/tmp/apollo-collapse-audit-20261029/closure-types.json",
+      "sha256": "30968855a5fbfff557e24279eeea1ff2625c7e931c43c07c46e5705ba6c8b7e3"
+    },
+    {
+      "file": "/tmp/apollo-collapse-audit-20261029/disabled-focus-red.json",
+      "sha256": "f990c87c30526dcf44fff3bdc428cc430c1a6f092e3d7f9b5e1a6f5881cde022"
+    },
+    {
+      "file": "/tmp/apollo-collapse-audit-20261029/mixed-keys-red.json",
+      "sha256": "e588f4ec57cb3bb2d4849bb64026ecccf46f76569af8e0d5d87e10d47d8ec834"
+    },
+    {
+      "file": "/tmp/apollo-collapse-audit-20261029/probes.json",
+      "sha256": "c3a6e3f7b714b7a534e9f632a62310e54debc3290acec5b76319f28cf75bdc85"
+    },
+    {
+      "file": "/tmp/apollo-collapse-audit-20261029/type-probe.log",
+      "sha256": "1dd1215cb709b644c29b7e08d673b023a7c2ac69f80edccdf7234fdc56ee9934"
+    }
+  ]
+}

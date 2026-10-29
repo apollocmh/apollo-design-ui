@@ -8,8 +8,13 @@
 import { mount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { type ComputedRef, defineComponent, h, nextTick, provide, shallowRef } from 'vue';
-import type { Locale, LocaleComponentName, LocaleContextValue } from '../index';
-import { en_US, localeContextKey, useLocale, useLocaleReactive } from '../index';
+import type {
+  Locale,
+  LocaleComponentName,
+  LocaleContextSource,
+  LocaleContextValue,
+} from '../index';
+import { en_US, localeContextKey, useLocale, zh_CN } from '../index';
 
 /**
  * ⚠️ **必须父提供、子读取** —— `inject` 只沿父链解析，
@@ -19,32 +24,26 @@ import { en_US, localeContextKey, useLocale, useLocaleReactive } from '../index'
 function callUseLocale<C extends LocaleComponentName>(
   componentName: C,
   defaultLocale?: Locale[C] | (() => Locale[C]),
-  provided?: LocaleContextValue | (() => LocaleContextValue),
-): readonly [Record<string, unknown>, string | undefined] {
-  let result: readonly [Record<string, unknown>, string | undefined] | undefined;
-
+  provided?: LocaleContextSource,
+): readonly [NonNullable<Locale[C]>, string | undefined] {
+  let current: ReturnType<typeof useLocale<C>> | undefined;
   const Child = defineComponent({
     setup() {
-      result = useLocale(componentName, defaultLocale as never) as readonly [
-        Record<string, unknown>,
-        string | undefined,
-      ];
+      current = useLocale(componentName, defaultLocale);
       return () => null;
     },
   });
-
   const Parent = defineComponent({
     setup() {
-      if (provided !== undefined) {
-        provide(localeContextKey, provided);
-      }
+      if (provided !== undefined) provide(localeContextKey, provided);
       return () => h(Child);
     },
   });
-
   const wrapper = mount(Parent);
+  if (!current) throw new Error('Expected the mounted locale consumer');
+  const result = [current[0].value, current[1].value] as const;
   wrapper.unmount();
-  return result as readonly [Record<string, unknown>, string | undefined];
+  return result;
 }
 
 describe('useLocale · 没有 Provider 时', () => {
@@ -146,68 +145,44 @@ describe('useLocale · 有 Provider 时', () => {
   });
 });
 
-// ===========================================================================
-// useLocaleReactive —— 响应式变体（2026-10-04 加，empty D24 的落点）
-// ===========================================================================
-
-/**
- * ⚠️ 2026-10-04 补：这个变体**此前一个测试都没有**，而它的 9 条分支全在
- *    `packages/locale/src/use-locale.ts` 里 ⇒ locale 的分支覆盖率从 91.67% 掉到 75%，
- *    低于 foundation 档 95/90/95（`--verify` 刷新数字后 E16 直接红）。
- *
- * 它与 `useLocale` **逐字同语义**（浅合并 / context 侧赢 / `exist` 回退 `'en'`），
- * 差别只在求值时机 —— 所以下面刻意用**同一组输入**再跑一遍，外加一条真正的响应性用例。
- */
-function mountUseLocaleReactive<C extends LocaleComponentName>(
+/** Keep the consumer mounted to assert replacement and current computed refs. */
+function mountUseLocale<C extends LocaleComponentName>(
   componentName: C,
   defaultLocale?: Locale[C] | (() => Locale[C]),
-  // ⚠️ 用**结构类型**而不是 `Ref<LocaleContextValue>`：后者会触发 `UnwrapRef` 的深递归
-  //    （`LocaleContextValue` 是嵌套类型）⇒ `vue-tsc` 报 TS2589「类型实例化过深」。
-  provided?: LocaleContextValue | (() => LocaleContextValue) | { value: LocaleContextValue },
+  provided?: LocaleContextSource,
 ): {
   wrapper: VueWrapper;
-  merged: ComputedRef<Record<string, unknown>>;
+  merged: ComputedRef<NonNullable<Locale[C]>>;
   code: ComputedRef<string | undefined>;
 } {
-  let merged: ComputedRef<Record<string, unknown>> | undefined;
-  let code: ComputedRef<string | undefined> | undefined;
-
+  let current: ReturnType<typeof useLocale<C>> | undefined;
   const Child = defineComponent({
     setup() {
-      const [m, c] = useLocaleReactive(componentName, defaultLocale as never);
-      merged = m as ComputedRef<Record<string, unknown>>;
-      code = c;
+      current = useLocale(componentName, defaultLocale);
       return () => null;
     },
   });
-
   const Parent = defineComponent({
     setup() {
-      if (provided !== undefined) {
-        provide(localeContextKey, provided as never);
-      }
+      if (provided !== undefined) provide(localeContextKey, provided);
       return () => h(Child);
     },
   });
-
   const wrapper = mount(Parent);
-  return {
-    wrapper,
-    merged: merged as ComputedRef<Record<string, unknown>>,
-    code: code as ComputedRef<string | undefined>,
-  };
+  if (!current) throw new Error('Expected the mounted locale consumer');
+  return { wrapper, merged: current[0], code: current[1] };
 }
 
-describe('useLocaleReactive · 与 useLocale 同语义', () => {
+describe('useLocale · computed refs and mounted consumers', () => {
   it('没有 Provider ⇒ 回退 en_US 分片，code 是 undefined', () => {
-    const { merged, code, wrapper } = mountUseLocaleReactive('Modal');
+    const { merged, code, wrapper } = mountUseLocale('Modal');
     expect(merged.value).toEqual(en_US.Modal);
     expect(code.value).toBeUndefined();
     wrapper.unmount();
   });
 
   it('分片不存在 ⇒ 空对象（不是 undefined）', () => {
-    const { merged, code, wrapper } = mountUseLocaleReactive('Select');
+    const { merged, code, wrapper } = mountUseLocale('Select');
     expect(merged.value).toEqual({});
     expect(code.value).toBeUndefined();
     wrapper.unmount();
@@ -215,7 +190,7 @@ describe('useLocaleReactive · 与 useLocale 同语义', () => {
 
   it('defaultLocale 可以是函数（惰性求值）', () => {
     let calls = 0;
-    const { merged, wrapper } = mountUseLocaleReactive('Modal', () => {
+    const { merged, wrapper } = mountUseLocale('Modal', () => {
       calls += 1;
       return { okText: 'F', cancelText: 'F', justOkText: 'F' };
     });
@@ -225,7 +200,7 @@ describe('useLocaleReactive · 与 useLocale 同语义', () => {
   });
 
   it('有 Provider ⇒ context 分片覆盖默认值（浅合并），code 取 locale', () => {
-    const { merged, code, wrapper } = mountUseLocaleReactive('Modal', undefined, {
+    const { merged, code, wrapper } = mountUseLocale('Modal', undefined, {
       locale: 'zh-cn',
       Modal: { okText: '好' },
     } as never);
@@ -235,7 +210,7 @@ describe('useLocaleReactive · 与 useLocale 同语义', () => {
   });
 
   it('context 没给这个分片 ⇒ 用默认值', () => {
-    const { merged, wrapper } = mountUseLocaleReactive('Modal', undefined, {
+    const { merged, wrapper } = mountUseLocale('Modal', undefined, {
       locale: 'zh-cn',
     });
     expect(merged.value).toEqual(en_US.Modal);
@@ -243,13 +218,13 @@ describe('useLocaleReactive · 与 useLocale 同语义', () => {
   });
 
   it('⭐ exist 为真且没有 locale ⇒ code 回退 "en"', () => {
-    const { code, wrapper } = mountUseLocaleReactive('Modal', undefined, { exist: true });
+    const { code, wrapper } = mountUseLocale('Modal', undefined, { exist: true });
     expect(code.value).toBe('en');
     wrapper.unmount();
   });
 
   it('⭐ 没有 exist 且没有 locale ⇒ 仍是 undefined（不是 "en"）', () => {
-    const { code, wrapper } = mountUseLocaleReactive('Modal', undefined, {});
+    const { code, wrapper } = mountUseLocale('Modal', undefined, {});
     expect(code.value).toBeUndefined();
     wrapper.unmount();
   });
@@ -260,7 +235,7 @@ describe('useLocaleReactive · 与 useLocale 同语义', () => {
       locale: 'zh-cn',
       Modal: { okText: '好' },
     } as never);
-    const { merged, code, wrapper } = mountUseLocaleReactive('Modal', undefined, provided);
+    const { merged, code, wrapper } = mountUseLocale('Modal', undefined, provided);
     expect(merged.value.okText).toBe('好');
     expect(code.value).toBe('zh-cn');
 
@@ -270,4 +245,12 @@ describe('useLocaleReactive · 与 useLocale 同语义', () => {
     expect(code.value).toBe('ja-jp');
     wrapper.unmount();
   });
+});
+
+it('global.clear supports zh_CN and en_US, with an English fallback for other fragments', () => {
+  expect(callUseLocale('global', undefined, en_US)[0].clear).toBe('Clear input');
+  expect(callUseLocale('global', undefined, zh_CN)[0].clear).toBe('清空输入');
+  expect(
+    callUseLocale('global', undefined, { locale: 'fr', global: { close: 'Fermer' } })[0],
+  ).toMatchObject({ close: 'Fermer', clear: 'Clear input' });
 });

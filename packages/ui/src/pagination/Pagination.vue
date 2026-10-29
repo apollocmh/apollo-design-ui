@@ -146,7 +146,7 @@ export default defineComponent({
     // ---- locale：rc enUS → ConfigProvider → props.locale（props 最优先）----
     const [contextLocale] = useLocale('Pagination');
     const mergedLocale = computed<PaginationLocale>(() => ({
-      ...contextLocale,
+      ...contextLocale.value,
       ...(props.locale ?? {}),
     }));
 

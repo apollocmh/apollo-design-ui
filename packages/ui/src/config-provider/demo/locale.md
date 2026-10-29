@@ -5,11 +5,6 @@ title:
   en-US: locale
 ---
 
-`locale` 会传导到整棵子树，下游组件用 `useLocale('<ComponentName>')` 读取。
+`locale` 的替换、深更新和撤回保留业务节点。示例在 Empty 与 Pagination 上显示当前语言，同时保留输入草稿。
 
-语言包来自 `@apollo-design/locale`（73 个，从 antd 6.6.4 的 `es/locale/*` 生成）。
-`ComponentName` 与 antd 一致：`Empty` / `Table` / `Form` / `Pagination` …
-
-⚠️ 已知限制：`useLocale` 目前**不是响应式**的（`locale` 包的设计未决项 D24），
-切换 `locale` 后需要让子树重新挂载才能拿到新文案。
-`ConfigProvider` 这一侧的接线是响应式的（context 里的值会立刻变）。
+`useLocale(name)` 返回两个 ComputedRef，脚本用 `.value`。没有 Provider 时语言码为 undefined；分片浅合并，缺失字段回退 en_US。global.clear 在 en_US / zh_CN 有 Apollo 文案，其它语言沿用默认回退。

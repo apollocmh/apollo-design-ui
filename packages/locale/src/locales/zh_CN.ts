@@ -123,6 +123,7 @@ const localeValues: Locale = {
     sortable: '可排序',
     show: '显示',
     hide: '隐藏',
+    clear: '清空输入',
   },
   Table: {
     filterTitle: '筛选',

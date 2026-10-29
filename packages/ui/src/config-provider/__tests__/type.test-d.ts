@@ -23,15 +23,18 @@ import { defaultRenderEmpty } from '../default-render-empty';
 import type {
   ComponentConfigLike,
   ConfigProviderProps,
+  ConfigProviderScopeTag,
+  ConfigProviderSlots,
   ConfigProviderThemeConfig,
   FormConfig,
+  GetPopupContainer,
+  GetTargetContainer,
   GlobalConfigProps,
   RenderEmptyComponentName,
   RenderEmptyHandler,
   SizeType,
   UseConfigResult,
   Variant,
-  WaveConfig,
 } from '../index';
 
 describe('ConfigProvider · 枚举', () => {
@@ -77,10 +80,10 @@ describe('ConfigProvider · 枚举', () => {
     expectTypeOf(names).toEqualTypeOf<RenderEmptyComponentName[]>();
   });
 
-  it('`WaveConfig` 不含 React 专用的 `showEffect`', () => {
-    expectTypeOf<WaveConfig>().toHaveProperty('disabled');
-    expectTypeOf<WaveConfig>().toHaveProperty('triggerType');
-    expectTypeOf<WaveConfig>().not.toHaveProperty('showEffect');
+  it('does not expose unused runtime style and popup controls', () => {
+    expectTypeOf<ConfigProviderProps>().not.toHaveProperty('wave');
+    expectTypeOf<ConfigProviderProps>().not.toHaveProperty('csp');
+    expectTypeOf<ConfigProviderProps>().not.toHaveProperty('popupOverflow');
   });
 });
 
@@ -104,9 +107,13 @@ describe('ConfigProvider · Props', () => {
     expectTypeOf(value).toMatchTypeOf<ComponentConfigLike>();
   });
 
-  it('`form` 只落 `validateMessages`（其余字段等 Form 落地）', () => {
+  it('form defaults cover actual Form consumers', () => {
     expectTypeOf<FormConfig>().toHaveProperty('validateMessages');
     expectTypeOf<FormConfig>().toHaveProperty('className');
+    expectTypeOf<FormConfig>().toHaveProperty('requiredMark');
+    expectTypeOf<FormConfig>().toHaveProperty('colon');
+    expectTypeOf<FormConfig>().toHaveProperty('labelAlign');
+    expectTypeOf<FormConfig>().toHaveProperty('variant');
   });
 
   it('`theme` 是本组件的形态（theme 包的 ThemeConfig + inherit）', () => {
@@ -149,12 +156,9 @@ describe('ConfigProvider · context 与 composable', () => {
     expectTypeOf<ConfigContextValue>().toHaveProperty('renderEmpty');
     expectTypeOf<ConfigContextValue>().toHaveProperty('getPopupContainer');
     expectTypeOf<ConfigContextValue>().toHaveProperty('getTargetContainer');
-    expectTypeOf<ConfigContextValue>().toHaveProperty('csp');
     expectTypeOf<ConfigContextValue>().toHaveProperty('variant');
     expectTypeOf<ConfigContextValue>().toHaveProperty('virtual');
     expectTypeOf<ConfigContextValue>().toHaveProperty('popupMatchSelectWidth');
-    expectTypeOf<ConfigContextValue>().toHaveProperty('popupOverflow');
-    expectTypeOf<ConfigContextValue>().toHaveProperty('wave');
   });
 
   it('★ `useConfig()` 返回的是 ComputedRef（D27：裸值在 Vue 里等于定死）', () => {
@@ -187,7 +191,7 @@ describe('ConfigProvider · 负例（应当报错）', () => {
       const badDividerKey: ConfigProviderProps = { divider: { classNames: 1 } };
       // @ts-expect-error `empty` 是精确类型：`classNames` 不接受 number
       const badEmptyImage: ConfigProviderProps = { empty: { classNames: 1 } };
-      // @ts-expect-error `popupOverflow` 不接受 'auto'
+      // @ts-expect-error popupOverflow had no consumer and has been removed
       const badOverflow: ConfigProviderProps = { popupOverflow: 'auto' };
       // @ts-expect-error `prefixCls` 必须是字符串
       const badPrefixCls: ConfigProviderProps = { prefixCls: 1 };
@@ -199,7 +203,7 @@ describe('ConfigProvider · 负例（应当报错）', () => {
       const badTooltip: ConfigProviderProps = { tooltip: { unique: true } };
       // @ts-expect-error `children` 不是 prop（Vue 侧是默认插槽）
       const badChildren: ConfigProviderProps = { children: 'x' };
-      // @ts-expect-error `button` 尚未落地 ⇒ 不是精确 prop（只能走 components 逃生口）
+      // @ts-expect-error button configuration uses components.button, not a top-level alias
       const badButton: ConfigProviderProps = { button: { autoInsertSpace: false } };
       return [
         badDirection,
@@ -220,4 +224,44 @@ describe('ConfigProvider · 负例（应当报错）', () => {
     };
     expectTypeOf(negatives).toBeFunction();
   });
+});
+
+it('scopeTag and slot types describe native hosts and full Vue children', () => {
+  const html: ConfigProviderScopeTag = 'tbody';
+  const svg: ConfigProviderScopeTag = 'g';
+  const slot: ConfigProviderSlots['default'] = () => [
+    'Text',
+    0,
+    false,
+    null,
+    [h('span', 'Nested')],
+  ];
+  // @ts-expect-error scopeTag is a native tag, not an arbitrary component name
+  const invalid: ConfigProviderScopeTag = 'BusinessComponent';
+  // @ts-expect-error Theme prefixCls was unused; component classes use ConfigProvider.prefixCls
+  const unusedThemePrefix: ConfigProviderThemeConfig = { prefixCls: 'unused' };
+  // @ts-expect-error unused CSP prop has been removed
+  const csp: ConfigProviderProps = { csp: { nonce: 'nonce' } };
+  // @ts-expect-error unused wave prop has been removed
+  const wave: ConfigProviderProps = { wave: { disabled: true } };
+  void html;
+  void svg;
+  void slot;
+  void invalid;
+  void unusedThemePrefix;
+  void csp;
+  void wave;
+});
+
+it('scroll targets require a real scrolling element while popup mounts support ShadowRoot', () => {
+  const element: GetTargetContainer = () => document.createElement('section');
+  const viewport: GetTargetContainer = () => window;
+  const shadow = document.createElement('section').attachShadow({ mode: 'open' });
+  const popup: GetPopupContainer = () => shadow;
+  // @ts-expect-error ShadowRoot has no scroll offset or layout rectangle
+  const unsupported: GetTargetContainer = () => shadow;
+  void element;
+  void viewport;
+  void popup;
+  void unsupported;
 });

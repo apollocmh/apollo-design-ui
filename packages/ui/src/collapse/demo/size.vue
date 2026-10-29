@@ -27,7 +27,7 @@ const items: CollapseItemType[] = [
 ];
 
 function onSizeChange(value: unknown): void {
-  size.value = value as CollapseSize;
+  if (value === 'small' || value === 'middle' || value === 'large') size.value = value;
 }
 </script>
 

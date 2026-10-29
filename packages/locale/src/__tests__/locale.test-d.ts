@@ -162,9 +162,11 @@ describe('useLocale 的签名', () => {
     //    类型断言仍然被 vue-tsc 检查（这正是本文件的目的）。
     neverCalled(() => {
       const result = useLocale('Modal');
-      expectTypeOf(result[0]).toEqualTypeOf<ModalLocale>();
+      expectTypeOf(result[0]).toEqualTypeOf<ComputedRef<ModalLocale>>();
+      // @ts-expect-error canonical locale fragments are readonly computed values
+      result[0].value = { okText: 'x', cancelText: 'x', justOkText: 'x' };
       // ⭐ localeCode 是 string | undefined —— 上游声明成 string，但实际可能是 undefined
-      expectTypeOf(result[1]).toEqualTypeOf<string | undefined>();
+      expectTypeOf(result[1]).toEqualTypeOf<ComputedRef<string | undefined>>();
     });
   });
 
@@ -252,4 +254,8 @@ describe('分片类型的可用性', () => {
   it('ComputedRef 之类的 Vue 类型可用（本包 peer 依赖 vue）', () => {
     expectTypeOf<ComputedRef<string>>().not.toBeAny();
   });
+});
+
+it('global.clear is an optional accessible clear label', () => {
+  expectTypeOf<NonNullable<Locale['global']>['clear']>().toEqualTypeOf<string | undefined>();
 });

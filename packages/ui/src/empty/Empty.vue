@@ -1,5 +1,5 @@
 <script lang="ts">
-import { useLocaleReactive } from '@apollo-design/locale';
+import { useLocale } from '@apollo-design/locale';
 import { isEmptyVNode, useDevWarning } from '@apollo-design/utils';
 import {
   computed,
@@ -51,7 +51,7 @@ export default defineComponent({
     const context = useComponentConfig<EmptyConfig>('empty');
     const direction = useDirection();
     const prefix = computed(() => context.getPrefixCls('empty', props.prefixCls));
-    const [locale] = useLocaleReactive('Empty');
+    const [locale] = useLocale('Empty');
     const warning = useDevWarning('Empty');
     watchEffect(() =>
       warning.deprecated(props.imageStyle === undefined, 'imageStyle', 'styles.image'),

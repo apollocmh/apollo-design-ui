@@ -128,6 +128,7 @@ export default defineComponent({
     const onInternalCloseClick = (e: MouseEvent): void => {
       e.preventDefault();
       e.stopPropagation();
+      if (closableConfig.value.disabled) return;
       onInternalClose();
     };
 
@@ -237,6 +238,7 @@ export default defineComponent({
                   class: [`${noticePrefixCls.value}-close`, cls.close],
                   'aria-label': 'Close',
                   ...ariaProps.value,
+                  disabled: closableConfig.value.disabled,
                   style: sty.close,
                   onClick: onInternalCloseClick,
                 },

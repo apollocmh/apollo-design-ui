@@ -1,5 +1,7 @@
 > 证据范围：本文保留初期分析与回归来源。上游对齐、版本和阶段要求不是当前项目规范；现行规则见根目录 AGENTS.md 与 ADR 0005。有效的组件场景、算法契约及缺陷证据继续保留。
 
+> 2026-10-29 当前契约与验收见[独立整改审计](../audit/2026-10-29-config-provider-contract-audit.md)及[迁移记录](../migrations/config-provider-contracts.md)。下文带日期的提取不再定义 Props。getTargetContainer 现为 HTMLElement | Window；ShadowRoot 仅适用于 getPopupContainer。
+
 # 组件分析：ConfigProvider
 
 | 项 | 值 |

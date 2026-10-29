@@ -187,17 +187,16 @@ export { Button, genButtonStyle, prepareButtonComponentToken } from './button';
 export type {
   ComponentConfigLike,
   ConfigProviderProps,
+  ConfigProviderScopeTag,
+  ConfigProviderSlots,
   ConfigProviderThemeConfig,
-  CSPConfig,
   FormConfig,
   GlobalConfigProps,
-  PopupOverflow,
   RenderEmptyComponentName,
   RenderEmptyHandler,
   SizeType,
   UseConfigResult,
   Variant,
-  WaveConfig,
 } from './config-provider';
 // ---------------------------------------------------------------------------
 // ConfigProvider —— 全库的运行时网关（theme / locale / size / disabled / prefixCls）
@@ -915,12 +914,18 @@ export type { ComponentToken as CheckboxComponentToken } from './checkbox/style/
 //    items 首选 / children deprecated；事件 change（C19）。
 // ---------------------------------------------------------------------------
 export type {
+  CollapseConfig,
+  CollapseExpandIconScope,
+  CollapseHeadingLevel,
   CollapseItemType,
   CollapsePanelProps,
+  CollapsePanelSlots,
   CollapseProps,
   CollapseRef,
   CollapseSemanticClassNames,
   CollapseSemanticStyles,
+  CollapseSize,
+  CollapseSlots,
   CollapsibleType,
   ExpandIconPlacement,
 } from './collapse';
@@ -1203,6 +1208,7 @@ export type {
   InputFocusOptions,
   InputGroupProps,
   InputPasswordProps,
+  InputPasswordSlots,
   InputProps,
   InputRef,
   InputSearchProps,
@@ -1212,12 +1218,15 @@ export type {
   InputSemanticClassNames,
   InputSemanticContext,
   InputSemanticStyles,
+  InputSlots,
   OTPProps,
   OTPRef,
   OTPSemanticClassNames,
   OTPSemanticContext,
   OTPSemanticStyles,
+  OTPSlots,
   PasswordSemanticClassNames,
+  PasswordSemanticContext,
   TextAreaProps,
   TextAreaRef,
   TextAreaSemanticClassNames,

@@ -11,8 +11,7 @@
  *   1. `children` 不在 Props 里（Vue 侧是默认插槽，规则 C19）
  *   2. `onChange` 是 Vue 事件（`emit('change', affixed)`），Props 里没有 `onChange`
  *   3. `AffixTarget` 的返回类型是 `HTMLElement | Window | null` —— antd 亦然；
- *      ConfigProvider 的 `getTargetContainer` 更宽（还允许 `ShadowRoot`），
- *      由 `Affix.vue` 的 `targetFunc` 收窄（见那里的注释）
+ *      ConfigProvider.getTargetContainer 同样只接受实际滚动元素或 Window。
  */
 
 import { describe, expectTypeOf, it } from 'vitest';

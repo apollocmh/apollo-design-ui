@@ -77,7 +77,7 @@ const PurePanel = defineComponent({
           // cloneVNode 的 class 会自动合并 —— 别把旧 class 再塞进去，会翻倍）
           return cloneVNode(icon, {
             class: `${props.prefixCls ?? getPrefixCls('tour')}-close-icon`,
-            'aria-label': contextLocaleGlobal?.close,
+            'aria-label': contextLocaleGlobal.value.close,
           });
         },
       },

@@ -5,9 +5,7 @@ title:
   en-US: Vertical
 ---
 
-`orientation="vertical"` 与 `vertical` 等价，同时配置时以 `orientation` 优先。
-
-⚠️ 垂直模式下**不能带标题**：`children` 会被忽略并输出告警（与 antd 一致）。
+`orientation="vertical"` 与 `vertical` 均支持；同时配置时 orientation 优先。根声明垂直 separator 语义；标题槽在该模式下忽略并告警。两侧链接保留原生键盘与焦点行为。
 
 ```vue
 <script setup lang="ts">
@@ -21,4 +19,8 @@ import { Divider } from '@apollo-design/ui';
   <Divider vertical />
   <a href="#" aria-label="Apollo Design component examples">Link</a>
 </template>
+
+<style scoped>
+a { color: inherit; text-decoration: underline; }
+</style>
 ```

@@ -114,7 +114,7 @@ export default defineComponent({
   },
   setup(props, { attrs, slots }) {
     const config = useComponentConfig('drawer');
-    const prefixCls = props.prefixCls || config.getPrefixCls('drawer');
+    const prefixCls = computed(() => props.prefixCls || config.getPrefixCls('drawer'));
     const id = useId();
 
     // ============ slot：ReactNode / render prop 的唯一入口（规则 C8-R2）============
@@ -160,7 +160,7 @@ export default defineComponent({
     const mask = useMergedMask(
       () => props.mask,
       () => (config as { mask?: MaskType }).mask,
-      () => prefixCls,
+      () => prefixCls.value,
       () => props.maskClosable,
     );
 
@@ -175,9 +175,12 @@ export default defineComponent({
     const focusTrapEnabled = computed(() => getContainer.value !== false && mask.enabled.value);
 
     // =========================== Motion ===========================
-    const maskMotion = { motionName: `${prefixCls}-mask-motion`, ...MOTION_CONFIG };
+    const maskMotion = computed(() => ({
+      motionName: `${prefixCls.value}-mask-motion`,
+      ...MOTION_CONFIG,
+    }));
     const panelMotion = (motionPlacement: string) => ({
-      motionName: `${prefixCls}-panel-motion-${motionPlacement}`,
+      motionName: `${prefixCls.value}-panel-motion-${motionPlacement}`,
       ...MOTION_CONFIG,
     });
 
@@ -210,7 +213,7 @@ export default defineComponent({
 
       const drawerClassName = [
         !mask.enabled.value ? 'no-mask' : undefined,
-        config.direction === 'rtl' ? `${prefixCls}-rtl` : undefined,
+        config.direction === 'rtl' ? `${prefixCls.value}-rtl` : undefined,
       ]
         .filter(Boolean)
         .join(' ');
@@ -232,7 +235,7 @@ export default defineComponent({
         RcDrawer,
         {
           ...restAttrs,
-          prefixCls,
+          prefixCls: prefixCls.value,
           open: props.open,
           placement: props.placement,
           autoFocus: props.autoFocus,
@@ -257,7 +260,7 @@ export default defineComponent({
           // 调用方原生 class / style（位置与原先的 props.className / props.style 一致）
           className: attrs.class,
           style: attrs.style,
-          maskMotion,
+          maskMotion: maskMotion.value,
           motion: panelMotion,
           resizable: props.resizable,
           size: drawerSize.value,
@@ -285,7 +288,7 @@ export default defineComponent({
             h(
               DrawerPanel,
               {
-                prefixCls,
+                prefixCls: prefixCls.value,
                 ariaId,
                 title,
                 footer: mergedFooter() as never,

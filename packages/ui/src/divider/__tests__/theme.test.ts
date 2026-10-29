@@ -1,23 +1,7 @@
-/**
- * L1/L2 的主题矩阵：light / dark / compact / token-override 四态。
- *
- * ⚠️ 当前**只做到「四态下都能渲染」**，没做到「四态下视觉正确」。
- *
- * 原因不是偷懒，而是 Divider 的样式里没有**任何字面视觉值**：颜色/线宽/间距全部是
- * `var(--apollo-*)`（见 `style/index.ts`）。于是：
- *   - 主题切换改变的是**变量值**，不是我们的 CSS；
- *   - 断言「dark 下颜色不同」需要浏览器计算样式（jsdom 不做布局与层叠），那是 L6 的职责。
- *
- * 所以这里断言的是**这条架构性质本身**，外加 Divider 特有的一条：**字面量 token
- * 是唯一被允许出现的字面值**（`1em` / `0.05`），它们来自 `style/token.ts` 的
- * Component Token 定义，不是硬编码的视觉值（H7 允许：它们与 antd 的
- * `prepareComponentToken` 逐字相同）。
- *
- * 「变量真的存在」由 `tests/build/run.mjs` 的 B7 校验（CSS 里引用的每个 `--apollo-*`
- * 都必须在 theme 的 `tokens.css` 里有声明）—— 那才是这个风险的正解。
- */
+/** Static defaults plus current theme behavior; actual root variables are covered in source-theme.test.ts and browser layout checks. */
 
 import { themeTest } from '@apollo-design/test-utils';
+import { getDesignToken } from '@apollo-design/theme';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { Divider } from '../index';
@@ -30,11 +14,10 @@ themeTest('Divider', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
 });
 
-describe('Divider · 主题无关性', () => {
-  it('四态下的 DOM 完全相同（差异全在 CSS 变量里）', () => {
+describe('Divider · 静态默认与变量契约', () => {
+  it('无来源的基本根不添加主题 scope 属性', () => {
     const html = mount(Divider).html();
-    // 组件本身不读任何 token 值，所以同一份 HTML 在四态下都成立。
-    // 这条断言的作用是：一旦有人往组件里塞进「按主题分支」的逻辑，它会红。
+    // A bare root preserves consumer CSS inheritance; active sources are tested separately.
     expect(html).not.toContain('data-apollo-theme');
     expect(html).toContain(`class="${P}`); // 类名以 apollo-divider 开头
   });
@@ -74,7 +57,8 @@ describe('Divider · 主题无关性', () => {
     //   0.06em / 0.9em —— antd `genSharedDividerStyle` 里的字面量（`top` / `height`），
     //                     我们逐字镜像；它们**不是** Component Token，antd 也写死
     expect(css).toContain(`padding-inline:${TEXT_PADDING_INLINE}`);
-    expect(css).toContain(`calc(${ORIENTATION_MARGIN} * 100%)`);
+    expect(css).toContain(`--apollo-divider-orientation-margin:${ORIENTATION_MARGIN};`);
+    expect(css).toContain('calc(var(--apollo-divider-orientation-margin) * 100%)');
     expect(css).toContain('top:-0.06em');
     expect(css).toContain('height:0.9em');
 
@@ -84,19 +68,18 @@ describe('Divider · 主题无关性', () => {
 });
 
 describe('Divider · Component Token', () => {
-  it('★ 三个 token 的名称与默认值与 antd 的 `prepareComponentToken` 逐字一致', () => {
+  it('★ 三个公开 token 保持名称与真实别名派生默认值', () => {
     // antd 6.6.4 `components/divider/style/index.ts`：
     //   prepareComponentToken = (token) => ({
     //     textPaddingInline: '1em',
     //     orientationMargin: 0.05,
     //     verticalMarginInline: token.marginXS,
     //   })
-    const alias = { marginXS: '8px' };
-    const prepared = prepareComponentToken(alias as never);
+    const prepared = prepareComponentToken(getDesignToken({ token: { marginXS: 8 } }));
     expect(prepared).toEqual({
       textPaddingInline: '1em',
       orientationMargin: 0.05,
-      verticalMarginInline: '8px',
+      verticalMarginInline: 8,
     });
     // 数量也是契约：多一个少一个都算漂移
     expect(Object.keys(prepared).sort()).toEqual([
@@ -117,6 +100,11 @@ describe('Divider · Component Token', () => {
   it('别名派生的 `verticalMarginInline` 走 `var(--apollo-margin-xs)`（随主题自适应）', () => {
     // 这是零运行时架构下「组件 token 如何随主题变化」的答案：
     // 派生自 Alias token 的那部分必须是变量引用，不能是运行期算出的定值。
-    expect(genDividerStyle('apollo')).toContain('margin-inline:var(--apollo-margin-xs)');
+    expect(genDividerStyle('apollo')).toContain(
+      '--apollo-divider-vertical-margin-inline:var(--apollo-margin-xs)',
+    );
+    expect(genDividerStyle('apollo')).toContain(
+      'margin-inline:var(--apollo-divider-vertical-margin-inline)',
+    );
   });
 });

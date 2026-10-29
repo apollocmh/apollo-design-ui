@@ -1,0 +1,488 @@
+{
+  "input:basic": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined\" type=\"text\" placeholder=\"basic\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-outlined] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:value": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined\" type=\"text\" value=\"hello\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-outlined] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:disabled": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-disabled apollo-input-outlined\" type=\"text\" disabled=\"\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-disabled apollo-input-outlined] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:readonly": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined\" type=\"text\" readonly=\"\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-outlined] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:small": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-sm apollo-input-outlined\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-input-sm] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:large": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-lg apollo-input-outlined\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-lg apollo-input-outlined] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:filled": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-filled\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-filled] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:borderless": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-borderless\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-borderless] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:underlined": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-underlined\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-underlined] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:bordered-false": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-borderless\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-borderless] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:status-error": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-input-status-error\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-input-status-error] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:status-warning": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-input-status-warning\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-input-status-warning] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:prefix": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-outlined\"><span class=\"apollo-input-prefix\">P</span><input class=\"apollo-input\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input-affix-wrapper apollo-input-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "input:suffix": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-outlined\"><!----><input class=\"apollo-input\" type=\"text\" value=\"\"><span class=\"apollo-input-suffix\"><!----><!---->S</span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input-affix-wrapper apollo-input-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "input:presuffix": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-outlined\"><span class=\"apollo-input-prefix\">¥</span><input class=\"apollo-input\" type=\"text\" value=\"\"><span class=\"apollo-input-suffix\"><!----><!---->RMB</span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input-affix-wrapper apollo-input-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 3 vs 1"
+    ]
+  },
+  "input:allow-clear": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-outlined\"><!----><input class=\"apollo-input\" type=\"text\" value=\"clear me\"><span class=\"apollo-input-suffix\"><button type=\"button\" class=\"apollo-input-clear-icon\" aria-label=\"Clear input\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button><!----></span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input-affix-wrapper apollo-input-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "input:allow-clear-empty": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-outlined\"><!----><input class=\"apollo-input\" type=\"text\" value=\"\"><span class=\"apollo-input-suffix\"><button type=\"button\" class=\"apollo-input-clear-icon apollo-input-clear-icon-hidden\" disabled=\"\" aria-label=\"Clear input\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button><!----></span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input-affix-wrapper apollo-input-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "input:allow-clear-disabled": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-disabled apollo-input-affix-wrapper-disabled apollo-input-outlined\"><!----><input class=\"apollo-input apollo-input-disabled\" type=\"text\" disabled=\"\" value=\"x\"><span class=\"apollo-input-suffix\"><button type=\"button\" class=\"apollo-input-clear-icon apollo-input-clear-icon-hidden\" disabled=\"\" aria-label=\"Clear input\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button><!----></span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input-affix-wrapper apollo-input-affix-wrapper-disabled apollo-input-disabled apollo-input-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "input:addon": {
+    "html": "<span data-apollo-input-host=\"group\" class=\"apollo-input-group-wrapper apollo-input-group-wrapper-outlined\"><span data-apollo-input-host=\"wrapper\" class=\"apollo-input-wrapper apollo-input-group\"><span class=\"apollo-input-group-addon\">http://</span><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined\" type=\"text\" value=\"\"><!----></span><span class=\"apollo-input-group-addon\">.com</span></span></span>",
+    "diff": [
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]/span[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/span[0]/span[0]/input[1]: 标签不同 <input> vs <span>",
+      "$/span[0]/span[0]/input[1]: 类名不同 [apollo-input apollo-input-outlined] vs [apollo-input-affix-host]",
+      "$/span[0]/span[0]/input[1]: 我们多出属性 data-apollo-input-host=\"affix\"",
+      "$/span[0]/span[0]/input[1]: style 不同 [] vs [display:contents]",
+      "$/span[0]/span[0]/input[1]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:addon-before": {
+    "html": "<span data-apollo-input-host=\"group\" class=\"apollo-input-group-wrapper apollo-input-group-wrapper-outlined\"><span data-apollo-input-host=\"wrapper\" class=\"apollo-input-wrapper apollo-input-group\"><span class=\"apollo-input-group-addon\">B</span><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]/span[0]: 我们多出属性 data-apollo-input-host=\"wrapper\"",
+      "$/span[0]/span[0]/input[1]: 标签不同 <input> vs <span>",
+      "$/span[0]/span[0]/input[1]: 类名不同 [apollo-input apollo-input-outlined] vs [apollo-input-affix-host]",
+      "$/span[0]/span[0]/input[1]: 我们多出属性 data-apollo-input-host=\"affix\"",
+      "$/span[0]/span[0]/input[1]: style 不同 [] vs [display:contents]",
+      "$/span[0]/span[0]/input[1]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:show-count": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-outlined\"><!----><input class=\"apollo-input\" type=\"text\" maxlength=\"20\" value=\"abc\"><span class=\"apollo-input-suffix\"><!----><span class=\"apollo-input-show-count-suffix\">3 / 20</span><!----></span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input-affix-wrapper apollo-input-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "input:count-max": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined\" type=\"text\" value=\"abcd\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-outlined] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:textarea": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><textarea class=\"apollo-input apollo-input-outlined\" placeholder=\"ta\" value=\"\"></textarea><!----></span><!----></span></span>",
+    "diff": [
+      "$/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/textarea[0]: 类名不同 [apollo-input apollo-input-outlined] vs []",
+      "$/textarea[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/textarea[0]: style 不同 [] vs [display:contents]",
+      "$/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:textarea-rows": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><textarea rows=\"4\" class=\"apollo-input apollo-input-outlined\" value=\"hello\"></textarea><!----></span><!----></span></span>",
+    "diff": [
+      "$/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/textarea[0]: 类名不同 [apollo-input apollo-input-outlined] vs []",
+      "$/textarea[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/textarea[0]: style 不同 [] vs [display:contents]",
+      "$/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:textarea-show-count": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-textarea-affix-wrapper apollo-input-textarea-show-count apollo-input-show-count apollo-input-outlined\" data-count=\"0 / 50\"><!----><textarea maxlength=\"50\" class=\"apollo-input\" value=\"\"></textarea><span class=\"apollo-input-suffix\"><!----><!----><span class=\"apollo-input-data-count\">0 / 50</span></span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input-affix-wrapper apollo-input-outlined apollo-input-show-count apollo-input-textarea-affix-wrapper apollo-input-textarea-show-count] vs []",
+      "$/span[0]: 我们缺少属性 data-count=\"0 / 50\"",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "input:textarea-allow-clear": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-textarea-affix-wrapper apollo-input-textarea-allow-clear apollo-input-outlined\"><!----><textarea class=\"apollo-input\" value=\"x\"></textarea><span class=\"apollo-input-suffix\"><button type=\"button\" class=\"apollo-input-clear-icon\" aria-label=\"Clear input\"><span role=\"img\" aria-label=\"close-circle\" class=\"apollo-icon apollo-icon-close-circle\"><svg fill-rule=\"evenodd\" viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"close-circle\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z\"></path></svg></span></button><!----></span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input-affix-wrapper apollo-input-outlined apollo-input-textarea-affix-wrapper apollo-input-textarea-allow-clear] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "input:textarea-status": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><textarea class=\"apollo-input apollo-input-outlined apollo-input-status-error\" value=\"\"></textarea><!----></span><!----></span></span>",
+    "diff": [
+      "$/textarea[0]: 标签不同 <textarea> vs <span>",
+      "$/textarea[0]: 类名不同 [apollo-input apollo-input-outlined apollo-input-status-error] vs []",
+      "$/textarea[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/textarea[0]: style 不同 [] vs [display:contents]",
+      "$/textarea[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:password": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-outlined apollo-input\"><!----><input class=\"apollo-input\" type=\"password\" placeholder=\"pw\" value=\"\"><span class=\"apollo-input-suffix\"><!----><!----><button type=\"button\" class=\"apollo-input-icon\" tabindex=\"0\" aria-pressed=\"false\" aria-label=\"Show\"><span role=\"img\" aria-label=\"eye-invisible\" class=\"apollo-icon apollo-icon-eye-invisible\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"eye-invisible\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M942.2 486.2Q889.47 375.11 816.7 305l-50.88 50.88C807.31 395.53 843.45 447.4 874.7 512 791.5 684.2 673.4 766 512 766q-72.67 0-133.87-22.38L323 798.75Q408 838 512 838q288.3 0 430.2-300.3a60.29 60.29 0 000-51.5zm-63.57-320.64L836 122.88a8 8 0 00-11.32 0L715.31 232.2Q624.86 186 512 186q-288.3 0-430.2 300.3a60.3 60.3 0 000 51.5q56.69 119.4 136.5 191.41L112.48 835a8 8 0 000 11.31L155.17 889a8 8 0 0011.31 0l712.15-712.12a8 8 0 000-11.32zM149.3 512C232.6 339.8 350.7 258 512 258c54.54 0 104.13 9.36 149.12 28.39l-70.3 70.3a176 176 0 00-238.13 238.13l-83.42 83.42C223.1 637.49 183.3 582.28 149.3 512zm246.7 0a112.11 112.11 0 01146.2-106.69L401.31 546.2A112 112 0 01396 512z\"></path><path d=\"M508 624c-3.46 0-6.87-.16-10.25-.47l-52.82 52.82a176.09 176.09 0 00227.42-227.42l-52.82 52.82c.31 3.38.47 6.79.47 10.25a111.94 111.94 0 01-112 112z\"></path></svg></span></button><!----></span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input apollo-input-affix-wrapper apollo-input-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "input:password-visible-toggle": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-input\" type=\"password\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input apollo-input-affix-wrapper apollo-input-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "input:password-value": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-outlined apollo-input\"><!----><input class=\"apollo-input\" type=\"password\" value=\"secret\"><span class=\"apollo-input-suffix\"><!----><!----><button type=\"button\" class=\"apollo-input-icon\" tabindex=\"0\" aria-pressed=\"false\" aria-label=\"Show\"><span role=\"img\" aria-label=\"eye-invisible\" class=\"apollo-icon apollo-icon-eye-invisible\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"eye-invisible\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M942.2 486.2Q889.47 375.11 816.7 305l-50.88 50.88C807.31 395.53 843.45 447.4 874.7 512 791.5 684.2 673.4 766 512 766q-72.67 0-133.87-22.38L323 798.75Q408 838 512 838q288.3 0 430.2-300.3a60.29 60.29 0 000-51.5zm-63.57-320.64L836 122.88a8 8 0 00-11.32 0L715.31 232.2Q624.86 186 512 186q-288.3 0-430.2 300.3a60.3 60.3 0 000 51.5q56.69 119.4 136.5 191.41L112.48 835a8 8 0 000 11.31L155.17 889a8 8 0 0011.31 0l712.15-712.12a8 8 0 000-11.32zM149.3 512C232.6 339.8 350.7 258 512 258c54.54 0 104.13 9.36 149.12 28.39l-70.3 70.3a176 176 0 00-238.13 238.13l-83.42 83.42C223.1 637.49 183.3 582.28 149.3 512zm246.7 0a112.11 112.11 0 01146.2-106.69L401.31 546.2A112 112 0 01396 512z\"></path><path d=\"M508 624c-3.46 0-6.87-.16-10.25-.47l-52.82 52.82a176.09 176.09 0 00227.42-227.42l-52.82 52.82c.31 3.38.47 6.79.47 10.25a111.94 111.94 0 01-112 112z\"></path></svg></span></button><!----></span></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input apollo-input-affix-wrapper apollo-input-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "input:group": {
+    "html": "<div class=\"apollo-space-compact apollo-input\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-input-compact-item apollo-input-compact-first-item apollo-input-compact-last-item\" style=\"width: 50%;\" type=\"text\" value=\"\"><!----></span><!----></span></span></div>",
+    "diff": [
+      "$/div[0]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/input[0]: 类名不同 [apollo-input apollo-input-compact-first-item apollo-input-compact-item apollo-input-compact-last-item apollo-input-outlined] vs []",
+      "$/div[0]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/input[0]: style 不同 [width:50%] vs [display:contents]",
+      "$/div[0]/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:search": {
+    "html": "<div class=\"apollo-space-compact apollo-input\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-input-compact-item apollo-input-compact-first-item\" type=\"search\" placeholder=\"search\" value=\"\"><!----></span><!----></span></span><button class=\"apollo-btn apollo-btn-default apollo-btn-color-default apollo-btn-variant-outlined apollo-btn-compact-item apollo-btn-compact-last-item apollo-btn-icon-only apollo-input-btn\" type=\"button\"><span class=\"apollo-btn-icon\"><span role=\"img\" aria-label=\"search\" class=\"apollo-icon apollo-icon-search\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"search\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z\"></path></svg></span></span><!----></button></div>",
+    "diff": [
+      "$/div[0]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/input[0]: 类名不同 [apollo-input apollo-input-compact-first-item apollo-input-compact-item apollo-input-outlined] vs []",
+      "$/div[0]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:search-enter-button": {
+    "html": "<div class=\"apollo-space-compact apollo-input apollo-input-with-button\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-input-compact-item apollo-input-compact-first-item\" type=\"search\" value=\"\"><!----></span><!----></span></span><button class=\"apollo-btn apollo-btn-default apollo-btn-color-primary apollo-btn-variant-solid apollo-btn-compact-item apollo-btn-compact-last-item apollo-btn-icon-only apollo-input-btn\" type=\"button\"><span class=\"apollo-btn-icon\"><span role=\"img\" aria-label=\"search\" class=\"apollo-icon apollo-icon-search\"><svg viewBox=\"64 64 896 896\" focusable=\"false\" data-icon=\"search\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z\"></path></svg></span></span><!----></button></div>",
+    "diff": [
+      "$/div[0]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/input[0]: 类名不同 [apollo-input apollo-input-compact-first-item apollo-input-compact-item apollo-input-outlined] vs []",
+      "$/div[0]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/button[1]: 类名不同 [apollo-btn apollo-btn-color-primary apollo-btn-compact-item apollo-btn-compact-last-item apollo-btn-default apollo-btn-variant-solid apollo-input-btn] vs [apollo-btn apollo-btn-color-primary apollo-btn-compact-item apollo-btn-compact-last-item apollo-btn-default apollo-btn-icon-only apollo-btn-variant-solid apollo-input-btn]"
+    ]
+  },
+  "input:search-enter-button-text": {
+    "html": "<div class=\"apollo-space-compact apollo-input apollo-input-with-button\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-input-compact-item apollo-input-compact-first-item\" type=\"search\" value=\"\"><!----></span><!----></span></span><button class=\"apollo-btn apollo-btn-default apollo-btn-color-primary apollo-btn-variant-solid apollo-btn-compact-item apollo-btn-compact-last-item apollo-input-btn\" type=\"button\"><!----><span class=\"apollo-btn-content\">Go</span></button></div>",
+    "diff": [
+      "$/div[0]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/input[0]: 类名不同 [apollo-input apollo-input-compact-first-item apollo-input-compact-item apollo-input-outlined] vs []",
+      "$/div[0]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/button[1]/span[0]: 类名不同 [] vs [apollo-btn-content]"
+    ]
+  },
+  "input:otp": {
+    "html": "<div class=\"apollo-otp\" role=\"group\"><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input\" size=\"1\" type=\"text\" aria-label=\"OTP Input 1\" value=\"1\"><!----></span><!----></span></span></span><!----><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input\" size=\"1\" type=\"text\" aria-label=\"OTP Input 2\" value=\"2\"><!----></span><!----></span></span></span><!----><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input\" size=\"1\" type=\"text\" aria-label=\"OTP Input 3\" value=\"\"><!----></span><!----></span></span></span><!----><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input\" size=\"1\" type=\"text\" aria-label=\"OTP Input 4\" value=\"\"><!----></span><!----></span></span></span><!----><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input\" size=\"1\" type=\"text\" aria-label=\"OTP Input 5\" value=\"\"><!----></span><!----></span></span></span><!----><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input\" size=\"1\" type=\"text\" aria-label=\"OTP Input 6\" value=\"\"><!----></span><!----></span></span></span></div>",
+    "diff": [
+      "$/div[0]/span[0]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[0]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input] vs []",
+      "$/div[0]/span[0]/input[0]: 我们缺少属性 aria-label=\"OTP Input 1\"",
+      "$/div[0]/span[0]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[0]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[0]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[1]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[1]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input] vs []",
+      "$/div[0]/span[1]/input[0]: 我们缺少属性 aria-label=\"OTP Input 2\"",
+      "$/div[0]/span[1]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[1]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[1]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[2]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[2]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input] vs []",
+      "$/div[0]/span[2]/input[0]: 我们缺少属性 aria-label=\"OTP Input 3\"",
+      "$/div[0]/span[2]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[2]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[2]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[3]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[3]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input] vs []",
+      "$/div[0]/span[3]/input[0]: 我们缺少属性 aria-label=\"OTP Input 4\"",
+      "$/div[0]/span[3]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[3]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[3]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[4]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[4]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input] vs []",
+      "$/div[0]/span[4]/input[0]: 我们缺少属性 aria-label=\"OTP Input 5\"",
+      "$/div[0]/span[4]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[4]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[4]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[5]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[5]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input] vs []",
+      "$/div[0]/span[5]/input[0]: 我们缺少属性 aria-label=\"OTP Input 6\"",
+      "$/div[0]/span[5]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[5]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[5]/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:otp-separator": {
+    "html": "<div class=\"apollo-otp\" role=\"group\"><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input\" size=\"1\" type=\"text\" aria-label=\"OTP Input 1\" value=\"1\"><!----></span><!----></span></span></span><span class=\"apollo-otp-separator\">-</span><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input\" size=\"1\" type=\"text\" aria-label=\"OTP Input 2\" value=\"2\"><!----></span><!----></span></span></span><span class=\"apollo-otp-separator\">-</span><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input\" size=\"1\" type=\"text\" aria-label=\"OTP Input 3\" value=\"\"><!----></span><!----></span></span></span><span class=\"apollo-otp-separator\">-</span><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input\" size=\"1\" type=\"text\" aria-label=\"OTP Input 4\" value=\"\"><!----></span><!----></span></span></span><span class=\"apollo-otp-separator\">-</span><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input\" size=\"1\" type=\"text\" aria-label=\"OTP Input 5\" value=\"\"><!----></span><!----></span></span></span><span class=\"apollo-otp-separator\">-</span><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input\" size=\"1\" type=\"text\" aria-label=\"OTP Input 6\" value=\"\"><!----></span><!----></span></span></span></div>",
+    "diff": [
+      "$/div[0]/span[0]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[0]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input] vs []",
+      "$/div[0]/span[0]/input[0]: 我们缺少属性 aria-label=\"OTP Input 1\"",
+      "$/div[0]/span[0]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[0]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[0]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[2]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[2]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input] vs []",
+      "$/div[0]/span[2]/input[0]: 我们缺少属性 aria-label=\"OTP Input 2\"",
+      "$/div[0]/span[2]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[2]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[2]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[4]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[4]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input] vs []",
+      "$/div[0]/span[4]/input[0]: 我们缺少属性 aria-label=\"OTP Input 3\"",
+      "$/div[0]/span[4]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[4]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[4]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[6]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[6]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input] vs []",
+      "$/div[0]/span[6]/input[0]: 我们缺少属性 aria-label=\"OTP Input 4\"",
+      "$/div[0]/span[6]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[6]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[6]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[8]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[8]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input] vs []",
+      "$/div[0]/span[8]/input[0]: 我们缺少属性 aria-label=\"OTP Input 5\"",
+      "$/div[0]/span[8]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[8]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[8]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[10]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[10]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input] vs []",
+      "$/div[0]/span[10]/input[0]: 我们缺少属性 aria-label=\"OTP Input 6\"",
+      "$/div[0]/span[10]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[10]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[10]/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:otp-mask": {
+    "html": "<div class=\"apollo-otp\" role=\"group\"><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span class=\"apollo-otp-mask-icon\" aria-hidden=\"true\">•</span><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input apollo-otp-mask-input\" size=\"1\" type=\"password\" aria-label=\"OTP Input 1\" value=\"1\"><!----></span><!----></span></span></span><!----><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span class=\"apollo-otp-mask-icon\" aria-hidden=\"true\">•</span><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input apollo-otp-mask-input\" size=\"1\" type=\"password\" aria-label=\"OTP Input 2\" value=\"2\"><!----></span><!----></span></span></span><!----><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input apollo-otp-mask-input\" size=\"1\" type=\"password\" aria-label=\"OTP Input 3\" value=\"\"><!----></span><!----></span></span></span><!----><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input apollo-otp-mask-input\" size=\"1\" type=\"password\" aria-label=\"OTP Input 4\" value=\"\"><!----></span><!----></span></span></span><!----><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input apollo-otp-mask-input\" size=\"1\" type=\"password\" aria-label=\"OTP Input 5\" value=\"\"><!----></span><!----></span></span></span><!----><span class=\"apollo-otp-input-wrapper\" role=\"presentation\"><span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-outlined apollo-otp-input apollo-otp-mask-input\" size=\"1\" type=\"password\" aria-label=\"OTP Input 6\" value=\"\"><!----></span><!----></span></span></span></div>",
+    "diff": [
+      "$/div[0]/span[0]/input[1]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[0]/input[1]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input apollo-otp-mask-input] vs []",
+      "$/div[0]/span[0]/input[1]: 我们缺少属性 aria-label=\"OTP Input 1\"",
+      "$/div[0]/span[0]/input[1]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[0]/input[1]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[0]/input[1]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[1]/input[1]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[1]/input[1]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input apollo-otp-mask-input] vs []",
+      "$/div[0]/span[1]/input[1]: 我们缺少属性 aria-label=\"OTP Input 2\"",
+      "$/div[0]/span[1]/input[1]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[1]/input[1]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[1]/input[1]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[2]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[2]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input apollo-otp-mask-input] vs []",
+      "$/div[0]/span[2]/input[0]: 我们缺少属性 aria-label=\"OTP Input 3\"",
+      "$/div[0]/span[2]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[2]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[2]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[3]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[3]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input apollo-otp-mask-input] vs []",
+      "$/div[0]/span[3]/input[0]: 我们缺少属性 aria-label=\"OTP Input 4\"",
+      "$/div[0]/span[3]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[3]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[3]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[4]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[4]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input apollo-otp-mask-input] vs []",
+      "$/div[0]/span[4]/input[0]: 我们缺少属性 aria-label=\"OTP Input 5\"",
+      "$/div[0]/span[4]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[4]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[4]/input[0]: 子节点数不同 0 vs 1",
+      "$/div[0]/span[5]/input[0]: 标签不同 <input> vs <span>",
+      "$/div[0]/span[5]/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-otp-input apollo-otp-mask-input] vs []",
+      "$/div[0]/span[5]/input[0]: 我们缺少属性 aria-label=\"OTP Input 6\"",
+      "$/div[0]/span[5]/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/div[0]/span[5]/input[0]: style 不同 [] vs [display:contents]",
+      "$/div[0]/span[5]/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:rtl": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-host\" style=\"display: contents;\"><!----><input class=\"apollo-input apollo-input-rtl apollo-input-outlined\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/input[0]: 标签不同 <input> vs <span>",
+      "$/input[0]: 类名不同 [apollo-input apollo-input-outlined apollo-input-rtl] vs []",
+      "$/input[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/input[0]: style 不同 [] vs [display:contents]",
+      "$/input[0]: 子节点数不同 0 vs 1"
+    ]
+  },
+  "input:rtl-affix": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-affix-wrapper-rtl apollo-input-outlined\"><span class=\"apollo-input-prefix\">P</span><input class=\"apollo-input apollo-input-rtl\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input-affix-wrapper apollo-input-affix-wrapper-rtl apollo-input-outlined] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  },
+  "input:semantic": {
+    "html": "<span data-apollo-input-host=\"group\" style=\"display: contents;\"><span data-apollo-input-host=\"wrapper\" style=\"display: contents;\"><!----><span data-apollo-input-host=\"affix\" class=\"apollo-input-affix-wrapper apollo-input-outlined cls-root\" style=\"width: 120px;\"><span class=\"apollo-input-prefix cls-prefix\">P</span><input class=\"apollo-input\" type=\"text\" value=\"\"><!----></span><!----></span></span>",
+    "diff": [
+      "$/span[0]: 类名不同 [apollo-input-affix-wrapper apollo-input-outlined cls-root] vs []",
+      "$/span[0]: 我们多出属性 data-apollo-input-host=\"group\"",
+      "$/span[0]: style 不同 [width:120px] vs [display:contents]",
+      "$/span[0]: 子节点数不同 2 vs 1"
+    ]
+  }
+}

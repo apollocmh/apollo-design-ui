@@ -6,7 +6,8 @@
 
 import { mount } from '@vue/test-utils';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { createSSRApp, defineComponent, h, nextTick, reactive, shallowRef } from 'vue';
+import { renderToString } from 'vue/server-renderer';
 import type { Locale, ModalLocale } from '../index';
 import {
   ANT_MARK,
@@ -44,7 +45,7 @@ function mountWithChild(providerProps: Record<string, unknown>): {
   wrapper: ReturnType<typeof mount>;
   read: () => readonly [unknown, string | undefined];
 } {
-  let result: readonly [unknown, string | undefined] | undefined;
+  let result: ReturnType<typeof useLocale<'Modal'>> | undefined;
   const Child = defineComponent({
     setup() {
       result = useLocale('Modal');
@@ -57,7 +58,13 @@ function mountWithChild(providerProps: Record<string, unknown>): {
     slots: { default: () => h(Child) },
   });
 
-  return { wrapper, read: () => result as readonly [unknown, string | undefined] };
+  return {
+    wrapper,
+    read: () => {
+      if (!result) throw new Error('Expected the mounted locale consumer');
+      return [result[0].value, result[1].value] as const;
+    },
+  };
 }
 
 describe('LocaleProvider · 注入', () => {
@@ -84,7 +91,7 @@ describe('LocaleProvider · 注入', () => {
     const Child = defineComponent({
       setup() {
         // 直接读 context 值来断言 exist
-        seen = useLocale('Modal')[1];
+        seen = useLocale('Modal')[1].value;
         return () => null;
       },
     });
@@ -167,15 +174,16 @@ describe('LocaleProvider · confirm locale 的注册与清理', () => {
     expect(getConfirmLocale()).toEqual(DEFAULT_MODAL);
   });
 
-  it('⭐ 没有 Modal 分片时会**重置**整个栈（上游的 else 分支）', () => {
+  it('a provider without a Modal slice preserves another source registration', () => {
     const clear = changeConfirmLocale({ okText: '别的来源' } as ModalLocale);
     expect(getConfirmLocale().okText).toBe('别的来源');
 
     const { wrapper } = mountWithChild({ _ANT_MARK__: ANT_MARK, locale: { locale: 'en' } });
-    // 被重置了 —— 这正是上游 `changeConfirmLocale(locale?.Modal)` 传 undefined 的后果
-    expect(getConfirmLocale()).toEqual(DEFAULT_MODAL);
+    expect(getConfirmLocale()).toEqual({ ...DEFAULT_MODAL, okText: '别的来源' });
     wrapper.unmount();
+    expect(getConfirmLocale().okText).toBe('别的来源');
     clear?.();
+    expect(getConfirmLocale()).toEqual(DEFAULT_MODAL);
   });
 });
 
@@ -193,5 +201,55 @@ describe('LocaleProvider · 渲染', () => {
     const wrapper = mount(LocaleProvider, { props: { _ANT_MARK__: ANT_MARK } });
     expect(wrapper.html()).toBe('');
     wrapper.unmount();
+  });
+});
+
+describe('LocaleProvider · live ownership and SSR', () => {
+  it('tracks deep Modal updates and withdraws only its own registration', async () => {
+    const other = changeConfirmLocale({ okText: 'Other', cancelText: 'Cancel', justOkText: 'OK' });
+    const locale = shallowRef<Locale>(
+      reactive({
+        locale: 'en',
+        Modal: { okText: 'First', cancelText: 'Cancel', justOkText: 'OK' },
+      }),
+    );
+    const wrapper = mount(
+      defineComponent({
+        setup: () => () => h(LocaleProvider, { locale: locale.value, _ANT_MARK__: ANT_MARK }),
+      }),
+    );
+    expect(getConfirmLocale().okText).toBe('First');
+    if (!locale.value.Modal) throw new Error('Expected a Modal slice');
+    locale.value.Modal.okText = 'Second';
+    await nextTick();
+    expect(getConfirmLocale().okText).toBe('Second');
+    locale.value = { locale: 'fr' };
+    await nextTick();
+    expect(getConfirmLocale().okText).toBe('Other');
+    wrapper.unmount();
+    expect(getConfirmLocale().okText).toBe('Other');
+    other?.();
+  });
+
+  it('does not register request-local Modal data while rendering on the server', async () => {
+    const other = changeConfirmLocale({ okText: 'Other', cancelText: 'Cancel', justOkText: 'OK' });
+    await renderToString(
+      createSSRApp({
+        render: () =>
+          h(
+            LocaleProvider,
+            {
+              _ANT_MARK__: ANT_MARK,
+              locale: {
+                locale: 'ssr',
+                Modal: { okText: 'SSR', cancelText: 'Cancel', justOkText: 'OK' },
+              },
+            },
+            () => h('p', 'Server content'),
+          ),
+      }),
+    );
+    expect(getConfirmLocale().okText).toBe('Other');
+    other?.();
   });
 });

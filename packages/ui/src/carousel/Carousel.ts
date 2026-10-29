@@ -518,11 +518,11 @@ export const CarouselComponent = defineComponent({
         type: 'button',
         'aria-label': isPrev
           ? isRTL.value
-            ? locale.nextSlide
-            : locale.prevSlide
+            ? locale.value.nextSlide
+            : locale.value.prevSlide
           : isRTL.value
-            ? locale.prevSlide
-            : locale.nextSlide,
+            ? locale.value.prevSlide
+            : locale.value.nextSlide,
         ...common,
       });
     };

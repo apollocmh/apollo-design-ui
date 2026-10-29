@@ -1,36 +1,23 @@
-/**
- * Input.OTP —— antd 6.6.4 `components/input/OTP/index.tsx` 的 Vue 实现。
- *
- * 判据（es/input/OTP/index.js + OTPInput.js，逐条对齐）：
- *  1. 根 `div role="group"`；每格一个 Input，外层 `span.{prefix}-input-wrapper`
- *     （`role="presentation"`）；`mask` 时额外渲染 `-mask-icon`（默认 •）。
- *  2. `patchValue(index, txt)`：先补齐前面的空格，再单字符替换或整段粘贴；
- *     截断到 length、去掉尾部空格、最后过一个 `formatter`。
- *  3. `onInput(value[])` 每次变化都发；`onChange(string)` **只在全部填满且值变化**时发。
- *  4. 方向键左右移动焦点；Backspace 在空格子上退到前一格；Ctrl/Cmd+Z 阻止撤销；
- *     聚焦时空格前的第一个空格子会抢焦点；焦点/鼠标按下/抬起后 `select()` 单元格。
- *  5. 语义槽 root / input / separator；Form 状态经代理 context 下发给每格
- *     （`hasFeedback: false`，避免每格都长反馈图标）。
- */
-
-import { raf, useDevWarning } from '@apollo-design/utils';
+import { useControlledValue, useDevWarning } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
   h,
+  nextTick,
   type PropType,
   provide,
-  ref,
+  type SlotsType,
   shallowRef,
   type VNodeChild,
-  watch,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
+import { useDisabled } from '../config-provider/disabled-context';
 import { type SizeType, useSize } from '../config-provider/size-context';
 import { formItemInputContextKey, getMergedStatus, useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import { useCompactItemContext } from '../space';
+import { hasContent } from './engine/common-utils';
 import { InputComponent } from './Input';
 import type {
   InputRef,
@@ -38,15 +25,17 @@ import type {
   OTPRef,
   OTPSemanticClassNames,
   OTPSemanticStyles,
+  OTPSlots,
 } from './interface';
 
 const DEFAULT_MASK_VALUE = '•';
 
-const strToArr = (str: string): string[] => (str || '').split('');
+const strToArr = (str: string): string[] => Array.from(str || '');
 
 export const OTPComponent = defineComponent({
   name: 'AInputOTP',
   inheritAttrs: false,
+  slots: Object as SlotsType<OTPSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
     length: { type: Number, default: 6 },
@@ -54,10 +43,9 @@ export const OTPComponent = defineComponent({
     size: { type: String as PropType<SizeType>, default: undefined },
     defaultValue: { type: String, default: undefined },
     value: { type: String as PropType<string | undefined>, default: undefined },
-    onChange: { type: Function as PropType<(value: string) => void>, default: undefined },
     formatter: { type: Function as PropType<(value: string) => string>, default: undefined },
     separator: {
-      type: [String, Number, Object, Function, Array] as PropType<OTPProps['separator']>,
+      type: [String, Number, Object, Boolean, Array] as PropType<OTPProps['separator']>,
       default: undefined,
     },
     disabled: { type: Boolean, default: undefined },
@@ -67,16 +55,19 @@ export const OTPComponent = defineComponent({
     autoComplete: { type: String, default: undefined },
     autoFocus: { type: Boolean, default: undefined },
     inputMode: { type: String, default: undefined },
-    onInput: { type: Function as PropType<(value: string[]) => void>, default: undefined },
-    onFocus: { type: Function as PropType<(e: FocusEvent) => void>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<OTPProps['classNames']>,
       default: undefined,
     },
     styles: { type: [Object, Function] as PropType<OTPProps['styles']>, default: undefined },
   },
-  emits: ['update:value'],
-  setup(props, { attrs, emit, expose }) {
+  emits: {
+    'update:value': (_value: string) => true,
+    input: (_cells: string[]) => true,
+    change: (_value: string) => true,
+    focus: (_event: FocusEvent) => true,
+  },
+  setup(props, { attrs, emit, expose, slots }) {
     const warning = useDevWarning('Input.OTP');
     if (typeof props.mask === 'string' && props.mask.length > 1) {
       warning(false, '`mask` prop should be a single character.');
@@ -90,6 +81,8 @@ export const OTPComponent = defineComponent({
       () => prefixCls.value,
       () => direction.value,
     );
+    const disabled = useDisabled();
+    const mergedDisabled = computed(() => props.disabled ?? disabled.value);
     const mergedSize = useSize((ctx) => props.size ?? compactSize.value ?? ctx);
     const { variant } = useVariant({
       component: 'otp',
@@ -108,27 +101,29 @@ export const OTPComponent = defineComponent({
       })),
     );
 
-    const length = computed(() => props.length ?? 6);
+    const length = computed(() =>
+      Number.isFinite(props.length) ? Math.max(1, Math.floor(props.length)) : 6,
+    );
     const format = (txt: string): string => (props.formatter ? props.formatter(txt) : txt);
-
-    const valueCells = ref<string[]>(strToArr(format(props.defaultValue || '')));
-    watch(
-      () => props.value,
-      (next) => {
-        if (next !== undefined) valueCells.value = strToArr(next);
-      },
-      { immediate: true },
+    const [value, setValue] = useControlledValue<string | undefined>({
+      defaultValue: () => format(props.defaultValue ?? ''),
+      getValue: () => props.value,
+    });
+    const valueCells = computed(() =>
+      strToArr(value.value ?? '')
+        .slice(0, length.value)
+        .map((char) => (char === ' ' ? '' : char)),
     );
 
-    const mergedProps = computed<OTPProps>(
-      () =>
-        ({
-          ...props,
-          length: length.value,
-          size: mergedSize.value,
-          variant: variant.value,
-        }) as OTPProps,
-    );
+    const mergedProps = computed<OTPProps>(() => ({
+      ...attrs,
+      ...props,
+      length: length.value,
+      size: mergedSize.value,
+      variant: variant.value,
+      status: mergedStatus.value,
+      disabled: mergedDisabled.value,
+    }));
 
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       OTPProps,
@@ -161,34 +156,34 @@ export const OTPComponent = defineComponent({
       } else {
         nextCells = nextCells.slice(0, index).concat(strToArr(txt));
       }
-      nextCells = nextCells.slice(0, length.value);
       for (let i = nextCells.length - 1; i >= 0; i -= 1) {
         if (nextCells[i]) break;
         nextCells.pop();
       }
       const formatted = strToArr(format(nextCells.map((c) => c || ' ').join('')));
-      return formatted.map((c, i) => (c === ' ' && !nextCells[i] ? (nextCells[i] ?? '') : c));
+      return formatted
+        .slice(0, length.value)
+        .map((c, i) => (c === ' ' && !nextCells[i] ? (nextCells[i] ?? '') : c));
     }
 
     function triggerValueCellsChange(nextCells: string[]): void {
       const previous = valueCells.value;
-      valueCells.value = nextCells;
-      props.onInput?.(nextCells);
+      const joined = nextCells.map((char) => char || ' ').join('');
+      setValue(joined);
+      emit('update:value', joined);
+      emit('input', [...nextCells]);
       if (
         nextCells.length === length.value &&
-        nextCells.every((c) => !!c) &&
-        nextCells.some((c, index) => previous[index] !== c)
-      ) {
-        const joined = nextCells.join('');
-        emit('update:value', joined);
-        props.onChange?.(joined);
-      }
+        nextCells.every(Boolean) &&
+        nextCells.some((char, index) => previous[index] !== char)
+      )
+        emit('change', joined);
     }
 
     function syncSelection(index: number): void {
-      raf(() => {
+      void nextTick(() => {
         const input = inputRefs[index]?.input;
-        if (input && document.activeElement === input) input.select();
+        if (input && input.ownerDocument.activeElement === input) input.select();
       });
     }
 
@@ -199,11 +194,10 @@ export const OTPComponent = defineComponent({
 
     function onInputChange(index: number, txt: string): void {
       const nextCells = patchValue(index, txt);
-      const nextIndex = Math.min(index + txt.length, length.value - 1);
-      if (nextIndex !== index && nextCells[index] !== undefined) {
-        focusCell(nextIndex);
-      }
+      const nextIndex = Math.min(index + strToArr(format(txt)).length, length.value - 1);
       triggerValueCellsChange(nextCells);
+      if (nextIndex !== index && nextCells[index] !== undefined)
+        void nextTick(() => focusCell(nextIndex));
     }
 
     function onInputFocus(event: FocusEvent, index: number): void {
@@ -213,15 +207,17 @@ export const OTPComponent = defineComponent({
           break;
         }
       }
-      props.onFocus?.(event);
+      emit('focus', event);
       syncSelection(index);
     }
 
     function onInternalKeyDown(index: number, value: string, event: KeyboardEvent): void {
       const { key, ctrlKey, metaKey } = event;
-      if (key === 'ArrowLeft') focusCell(index - 1);
-      else if (key === 'ArrowRight') focusCell(index + 1);
-      else if (key === 'z' && (ctrlKey || metaKey)) event.preventDefault();
+      if (key === 'ArrowLeft' || key === 'ArrowRight') {
+        event.preventDefault();
+        const step = (key === 'ArrowRight' ? 1 : -1) * (direction.value === 'rtl' ? -1 : 1);
+        focusCell(index + step);
+      } else if (key === 'z' && (ctrlKey || metaKey)) event.preventDefault();
       else if (key === 'Backspace' && !value) focusCell(index - 1);
       syncSelection(index);
     }
@@ -239,7 +235,7 @@ export const OTPComponent = defineComponent({
         },
         value: singleValue,
         size: mergedSize.value,
-        disabled: props.disabled,
+        disabled: mergedDisabled.value,
         status: mergedStatus.value,
         variant: variant.value,
         type: cellType.value,
@@ -254,9 +250,12 @@ export const OTPComponent = defineComponent({
         ],
         styles: { input: mergedStyles.value.input },
         'aria-label': `OTP Input ${index + 1}`,
-        onInput: (e: Event) => onInputChange(index, (e.target as HTMLInputElement).value),
+        onChange: (event: Event) => {
+          const target = event.target;
+          if (target instanceof HTMLInputElement) onInputChange(index, target.value);
+        },
         onFocus: (e: FocusEvent) => onInputFocus(e, index),
-        onKeyDown: (e: KeyboardEvent) => onInternalKeyDown(index, singleValue, e),
+        onKeydown: (e: KeyboardEvent) => onInternalKeyDown(index, singleValue, e),
         onMousedown: () => syncSelection(index),
         onMouseup: () => syncSelection(index),
       } as never);
@@ -281,8 +280,8 @@ export const OTPComponent = defineComponent({
     }
 
     function renderSeparator(index: number): VNodeChild {
-      const node = typeof props.separator === 'function' ? props.separator(index) : props.separator;
-      if (!node) return null;
+      const node = slots.separator ? slots.separator({ index }) : props.separator;
+      if (!hasContent(node)) return null;
       return h(
         'span',
         {
@@ -330,7 +329,12 @@ export const OTPComponent = defineComponent({
             (context as { className?: string }).className,
             mergedClassNames.value.root,
           ],
-          style: mergedStyles.value.root,
+          style: [
+            mergedStyles.value.root,
+            attrs.hidden !== undefined && attrs.hidden !== false && attrs.hidden !== null
+              ? { display: 'none' }
+              : undefined,
+          ],
           role: 'group',
         },
         children,

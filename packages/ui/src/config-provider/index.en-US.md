@@ -4,17 +4,11 @@ title: ConfigProvider
 subtitle: Global Configuration
 ---
 
-Unified runtime configuration for the whole subtree: **theme**, **locale**, **size**, **disabled**, and **prefixCls**.
-
-## When to use
-
-- Wrap once at the app root (or at a major feature boundary) so every descendant component follows.
-- Switching language, dark theme, compact mode, or the global class prefix all starts here.
-- Override defaults for any component (`Empty.description`, `Spin.indicator`, …) via the `components.xxx` field.
+Provide current theme, language, size, disabled state, direction and component defaults to an application or feature subtree.
 
 ## Demos
 
-See [`demo/`](./demo) — 5 demos: prefix-cls / locale / component-config / size-disabled / theme.
+Eight paired examples cover prefixes, language, component defaults, size/disabled, themes, dynamic size, direction and `useConfig`.
 
 ## API
 
@@ -22,50 +16,62 @@ See [`demo/`](./demo) — 5 demos: prefix-cls / locale / component-config / size
 
 | Prop | Description | Type | Default |
 |---|---|---|---|
-| prefixCls | Global class-name prefix | `string` | `'apollo'` |
-| iconPrefixCls | Icon class-name prefix | `string` | `'anticon'` (aligned with antd) |
-| getPopupContainer | Parent for floating UI (popovers, tooltips, …) | `(trigger?: HTMLElement) => HTMLElement \| ShadowRoot` | — |
-| getTargetContainer | Resolver for "screen-aware" containers (notification, message, …) | `() => HTMLElement \| Window \| ShadowRoot` | — |
-| renderEmpty | Custom empty-state renderer. Called by Table / List / Select etc. when there's nothing to show | `(componentName?: 'Table' \| 'Table.filter' \| 'List' \| 'Select' \| 'TreeSelect' \| 'Cascader' \| 'Transfer' \| 'Mentions') => unknown` | `defaultRenderEmpty` |
-| componentSize | Unified size for descendant components | `'small' \| 'medium' \| 'middle' \| 'large'` | — |
-| componentDisabled | Unified disabled flag for descendants | `boolean` | — |
-| direction | Text direction | `'ltr' \| 'rtl'` | — |
-| locale | Language pack | `Locale` (from `@apollo-design/locale`) | — |
-| theme | Theme config | `{ token?: Record<string, any>; components?: Record<string, any>; algorithm?: MappingAlgorithm; cssVarPrefix?: string; prefixCls?: string; inherit?: boolean }` | — |
-| csp | CSP nonce | `{ nonce?: string }` | — |
-| variant | Component variant | `'outlined' \| 'borderless' \| 'filled' \| 'underlined'` | — |
-| virtual | Enable virtual scrolling | `boolean` | `true` |
-| popupMatchSelectWidth | Make dropdown match trigger width | `boolean` | — |
-| popupOverflow | Behavior when popups overflow viewport | `'viewport' \| 'scroll'` | — |
-| wave | Wave (ripple) effect | `{ disabled?: boolean; triggerType?: 'click' \| 'pointerdown' \| ... }` | — |
-| warning | Dev-warning toggle | `{ strict?: boolean; false?: boolean; ... }` | `{}` |
-| form | Form config | `{ validateMessages?: ValidateMessages \| ((values) => ValidateMessages); requiredMark?: boolean; colon?: boolean }` | — |
-| divider | Default props for `Divider` | `Partial<DividerProps>` | — |
-| empty | Default props for `Empty` | `Partial<EmptyProps>` | — |
-| spin | Default props for `Spin` | `Partial<SpinProps>` | — |
-| components | Escape hatch (loosely typed) for the other 53 components' default props | `Record<string, any>` | — |
+| scopeTag | Optional native scope host. Omit to remain renderless; choose a tag valid in its HTML / SVG context | `ConfigProviderScopeTag` | — |
+| prefixCls | Component DOM class prefix; custom prefixes require matching static CSS | `string` | `'apollo'` |
+| iconPrefixCls | Independent icon class prefix | `string` | `'apollo-icon'` |
+| getPopupContainer | Current floating-content container resolver | `(trigger?: HTMLElement) => HTMLElement \| ShadowRoot` | — |
+| getTargetContainer | Scroll-target resolver for consumers such as Affix / Anchor | `() => HTMLElement \| Window` | — |
+| renderEmpty | Empty-content factory; null, undefined, false and empty strings intentionally render nothing | `RenderEmptyHandler`, returning `VNodeChild` | Consumer default |
+| locale | Current language data; replacement, deep edits and withdrawal preserve business content | `Locale` | Inherited; missing fragments fall back to English |
+| componentSize | Control size default; explicit component props win | `'small' \| 'medium' \| 'middle' \| 'large'` | Inherited |
+| componentDisabled | Disabled default; explicit false overrides inherited true | `boolean` | `false` |
+| direction | Layout direction | `'ltr' \| 'rtl'` | Inherited |
+| virtual | Default virtualization flag for supporting consumers | `boolean` | `true` |
+| variant | Default appearance for input, selection and form controls | `'outlined' \| 'borderless' \| 'filled' \| 'underlined'` | Inherited |
+| popupMatchSelectWidth | Popup-width default for Select / TreeSelect / Cascader; local props win | `boolean` | Consumer default |
+| theme | Tokens, component tokens, algorithm(s) and CSS-variable prefix | `ConfigProviderThemeConfig` | Inherited |
+| warning | Development warning behavior; strict=false aggregates deprecated usage | `{ strict?: boolean }` | `{}` |
+| components | Defaults supported by each component contract, keyed by its consumer name; arbitrary props are not applied automatically | `Record<string, ComponentConfigLike>` | — |
+| divider | Precise Divider configuration alias | `DividerConfig` | — |
+| empty | Precise Empty configuration alias | `EmptyConfig` | — |
+| spin | Precise Spin configuration alias | `SpinConfig` | — |
+| form | Consumed Form defaults: validation messages, required marks, colon, labels and semantic styles | `FormConfig` | — |
 
-### Deprecated
+### Inheritance and content
 
-| Old | New |
+Undefined local values inherit, including after withdrawing a previous override. Component names merge across providers; the same component configuration is replaced as a whole. Precise aliases override the corresponding map entry, and explicit component props take precedence.
+
+Theme tokens merge by key; component tokens merge by component name and token key. inherit=false resets inherited tokens and component tokens while retaining the CSS-variable prefix. Validation messages combine defaults, the parent FormProvider, local language and effective form configuration. Map and direct form aliases share the same channel.
+
+The default slot accepts complete Vue content, multiple roots and conditional children. There are no business emits, model or exposed methods. Without scopeTag, provider attrs are ignored. With an explicit scopeTag, attrs land on that native host and native styles win. Choosing another host tag follows Vue's structural root-replacement behavior; theme and language updates preserve the logical content tree.
+
+### Theme, SSR and styles
+
+The default provider stays renderless. Client-side variable projection follows actual native roots, dynamic roots and Portal content. It preserves business nodes, respects native CSS-variable declarations and releases its own writes on withdrawal or unmount.
+
+SSR serializes Alias variables on direct native slot roots. An opaque component that does not forward attrs, or plain text, cannot receive an automatic server-side scope. For a complete first paint, provide a valid native host, such as `<ConfigProvider scope-tag="section" :theme="theme">`. A table can use `<table><ConfigProvider scope-tag="tbody"><tr>…</tr></ConfigProvider></table>`. The default renderless provider also works inside existing tbody, ul, select and SVG contexts. Hydrate with matching configuration and content.
+
+Published CSS includes the apollo prefix. The prefix demo imports separate build-time brand CSS. Custom CSS-variable prefixes likewise require matching consumer styles. Component tokens take effect where the component consumes them. Theme updates change variables; they do not generate selectors at runtime.
+
+### Deprecated aliases
+
+| Old | Replacement |
 |---|---|
-| `autoInsertSpaceInButton` | `components.button.autoInsertSpace` |
-| `dropdownMatchSelectWidth` | `popupMatchSelectWidth` |
+| autoInsertSpaceInButton | components.button.autoInsertSpace |
+| dropdownMatchSelectWidth | popupMatchSelectWidth |
 
-### Static / Named exports
+### Static API and composables
 
-| Name | Description |
+| API | Behavior |
 |---|---|
-| `ConfigProvider.ConfigContext` | `useContext`-shaped context. Prefer `useConfig` in most cases |
-| `ConfigProvider.config` | `getConfig()`: returns the current `ConfigContext` |
-| `ConfigProvider.useConfig` | `useConfig()`: returns `{ componentDisabled, componentSize }` |
+| ConfigProvider.ConfigContext | An InjectionKey; prefer useConfigContext() for its default value |
+| ConfigProvider.config / setGlobalConfig | Module-level setter accepting prefixCls, iconPrefixCls and theme; returns void. Static consumers such as Modal read their supported values; use provider props for reactive application state |
+| ConfigProvider.useConfig / useConfig | Returns componentDisabled and componentSize ComputedRefs |
+| useDirection / useThemeConfig | Current computed direction / theme; absent inactive theme sources yield undefined |
+| useComponentConfig(name) | Lazy current configuration view; read in render/computed rather than destructuring primitive values during setup |
 
-## Differences from antd
+Locale useLocale(name) returns `[ComputedRef<fragment>, ComputedRef<code>]`; read `.value` in script. Theme useTheme().config is a writable instance ref: assignment replaces the effective configuration, deep edits do not mutate props or parents, and external source changes restore external authority.
 
-Full list in [`docs/analysis/config-provider.md` §9](../../../../../../../docs/analysis/config-provider.md). Highlights:
+The current development version removes unused csp, wave, popupOverflow, theme.prefixCls and the useLocaleReactive duplicate API. See the [grouped migration](../../../../docs/migrations/config-provider-contracts.md).
 
-- **`components` is progressive-typed**: precise props for the three landed components (`divider` / `empty` / `spin`); the other 53 go through a loosely-typed `Record<string, any>` escape hatch until they land.
-- **`theme` inserts a `display: contents` scope element to carry the CSS variables**. Zero layout impact, but in Chromium's `#stage` inline container this adds 1px to the stage height (known platform difference; normal layouts are unaffected).
-- **`direction` must be read via `useDirection()`**: `inject` resolves only once during setup; destructuring from `useComponentConfig()` gives you a stale snapshot.
-- **`useComponentConfig()` returns a lazy view**: primitive component-config values (`size` / `shape` …) only track runtime `components.xxx` updates when read inside a `computed` / render. **Destructuring is still a snapshot** (same rule as `direction`).
-- **No** `tooltip` / `popover` / `popconfirm` prop (depends on the unimplemented `UniqueProvider`).
+The nearest explicit `ThemeProvider` is a current theme source, including an empty `{}` reset to defaults. Nested `ConfigProvider` instances project that source onto their native roots. With no explicit source, existing CSS-variable inheritance remains intact.

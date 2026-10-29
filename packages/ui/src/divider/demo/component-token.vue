@@ -1,45 +1,51 @@
 <script setup lang="ts">
-import { Divider } from '../../index';
+import { computed, ref } from 'vue';
+import { ConfigProvider, Divider } from '../../index';
 
-/**
- * 组件 Token 的覆盖 —— 本仓库的零运行时写法。
- *
- * ⚠️ 与 antd 的差异（登记缺口，见 README.md §7）：
- *    antd 用 `<ConfigProvider theme={{ components: { Divider: {...} } }}>` 覆盖三个组件 Token。
- *    本仓库的 Token 最终形态是 CSS 变量，所以「别名派生的」`verticalMarginInline` 可以就地
- *    重声明 `--apollo-margin-xs` 覆盖；而 `textPaddingInline` / `orientationMargin` 是
- *    **字面量** Token，被内联成常量、没有变量可覆盖 —— 这是全库的管线缺口
- *    （`packages/theme` 的 tokens.css 只声明 Alias 层），修复位置不在本组件。
- *    这里用 `styles.content.padding` / `styles.content.margin` 演示等价效果。
- */
-const tokenOverrides = {
-  '--apollo-margin-xs': '24px',
-  '--apollo-margin': '24px',
-  '--apollo-line-width': '5px',
-  '--apollo-color-split': '#1677ff',
-} as const;
+const enabled = ref(true);
+const padding = ref(12);
+const ratio = ref(0.2);
+const margin = ref(16);
+const theme = computed(() =>
+  enabled.value
+    ? {
+        components: {
+          Divider: {
+            textPaddingInline: padding.value,
+            orientationMargin: ratio.value,
+            verticalMarginInline: margin.value,
+          },
+        },
+      }
+    : {},
+);
+function reset() {
+  padding.value = 16;
+  ratio.value = 0.05;
+  margin.value = 8;
+  enabled.value = false;
+}
 </script>
 
 <template>
-  <div :style="tokenOverrides">
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
-      probare, quae sunt a te dicta? Refert tamen, quo modo.
-    </p>
-    <Divider>Text</Divider>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
-      probare, quae sunt a te dicta? Refert tamen, quo modo.
-    </p>
-    <Divider title-placement="start" :styles="{ content: { padding: '0 16px' } }">
-      Left Text
-    </Divider>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
-      probare, quae sunt a te dicta? Refert tamen, quo modo.
-    </p>
-    <Divider title-placement="end" :styles="{ content: { margin: '0 50px' } }">
-      Right Text
-    </Divider>
+  <div class="divider-token-controls">
+    <label><input v-model="enabled" type="checkbox" /> Enable component theme</label>
+    <label>Text padding: {{ padding }}px<input v-model.number="padding" aria-label="Divider text padding" type="range" min="0" max="40" step="2" /></label>
+    <label>Edge ratio: {{ ratio }}<input v-model.number="ratio" aria-label="Divider edge ratio" type="range" min="0" max="1" step="0.05" /></label>
+    <label>Vertical margin: {{ margin }}px<input v-model.number="margin" aria-label="Divider vertical margin" type="range" min="0" max="32" step="2" /></label>
+    <button type="button" @click="reset">Reset Divider theme</button>
   </div>
+  <ConfigProvider :theme="theme">
+    <Divider title-placement="start">Section heading</Divider>
+    <div class="divider-token-inline"><span>First column</span><Divider orientation="vertical" /><span>Second column</span></div>
+  </ConfigProvider>
 </template>
+
+<style scoped>
+.divider-token-controls { display: grid; gap: 12px; }
+.divider-token-controls label { display: grid; gap: 4px; }
+.divider-token-controls label:first-child { display: flex; align-items: center; }
+.divider-token-controls input[type='range'] { width: 100%; }
+.divider-token-controls button { width: fit-content; }
+.divider-token-inline { margin-block: 16px; }
+</style>

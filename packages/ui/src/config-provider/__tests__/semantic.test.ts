@@ -31,7 +31,7 @@ import { ConfigProvider } from '../index';
 const P = 'apollo';
 
 describe('ConfigProvider · DOM 契约（本体）', () => {
-  it('本体不产 DOM：渲染结果就是 slot 本身', () => {
+  it('keeps complete slot content without an implicit host', () => {
     const w = mount(ConfigProvider, {
       slots: { default: () => h('span', { class: 'only' }, 'x') },
       global: { stubs: { teleport: false } },
@@ -45,9 +45,9 @@ describe('ConfigProvider · DOM 契约（本体）', () => {
     expect(span.element.tagName).toBe('SPAN');
   });
 
-  it('theme 作用域元素是 display:contents 的 div（D26）', () => {
+  it('an explicit native scope host defaults to display:contents', () => {
     const w = mount(ConfigProvider, {
-      props: { theme: { token: {} } },
+      props: { scopeTag: 'div', theme: { token: {} } },
       slots: { default: () => h('span', { class: 'only' }, 'x') },
     });
     const scope = w.get('div[style*="display: contents"]');

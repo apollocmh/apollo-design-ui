@@ -5,60 +5,58 @@ title:
   en-US: Component Token
 ---
 
-Divider 有 3 个组件 Token（与 antd 同名同默认值，定义在 `style/token.ts`）：
-
-| Component Token | 默认值 | 我们这边的落点 | 可运行时覆盖 |
-| --- | --- | --- | --- |
-| `verticalMarginInline` | `token.marginXS` | `var(--apollo-margin-xs)` | ✅ 覆盖变量 |
-| `textPaddingInline` | `'1em'` | 常量内联 | ❌ 见下 |
-| `orientationMargin` | `0.05` | 常量内联 | ❌ 见下 |
-
-antd 的写法是 `<ConfigProvider theme={{ components: { Divider: { ... } } }}>`。本仓库是
-**零运行时架构**（ADR 0001）：Token 的最终形态就是 CSS 变量，所以覆盖方式是**就地重声明变量**
-（下面的 `--apollo-*`）。别名派生的那个 Token 因此可以覆盖。
-
-⚠️ **登记缺口**：`textPaddingInline` / `orientationMargin` 是**字面量** Token，在零运行时管线里
-被内联成常量，**没有**对应的 CSS 变量 —— 因为 `packages/theme` 的 `tokens.css` 只声明
-**Alias** 层变量，不声明组件层变量（`getDesignToken()` 的返回类型是 `AliasToken`）。
-所以这两个 Token 目前**不可运行时覆盖**，antd 的 `theme.components.Divider` 覆盖写法对它们无效。
-这不是 Divider 独有的问题，而是**全库的管线缺口**：修复位置在 `packages/theme` 的
-`tokens.css` 生成处（把每个组件的 `prepareComponentToken(...)` 结果也声明成变量），
-属于 foundation 侧的工作，不在本组件的文件域内。详见 `README.md` §7。
-
-等价的临时手段：用 `styles.content.padding` 覆盖 `textPaddingInline` 的效果、
-用 `styles.content.margin` 覆盖 `orientationMargin` 的效果。
+三个组件 Token 都通过 `ConfigProvider.theme.components.Divider` 生效。使用有名称的原生滑块调整文本 padding、标题靠边比例和垂直分割线的 margin；关闭主题或重置后恢复默认值。数字长度按 px 处理，比例保持无单位。
 
 ```vue
 <script setup lang="ts">
-import { Divider } from '@apollo-design/ui';
+import { computed, ref } from 'vue';
+import { ConfigProvider, Divider } from '@apollo-design/ui';
+
+const enabled = ref(true);
+const padding = ref(12);
+const ratio = ref(0.2);
+const margin = ref(16);
+const theme = computed(() =>
+  enabled.value
+    ? {
+        components: {
+          Divider: {
+            textPaddingInline: padding.value,
+            orientationMargin: ratio.value,
+            verticalMarginInline: margin.value,
+          },
+        },
+      }
+    : {},
+);
+function reset() {
+  padding.value = 16;
+  ratio.value = 0.05;
+  margin.value = 8;
+  enabled.value = false;
+}
 </script>
 
 <template>
-  <div
-    :style="{
-      '--apollo-margin-xs': '24px',
-      '--apollo-margin': '24px',
-      '--apollo-line-width': '5px',
-      '--apollo-color-split': '#1677ff',
-    }"
-  >
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
-      probare, quae sunt a te dicta? Refert tamen, quo modo.
-    </p>
-    <Divider>Text</Divider>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
-      probare, quae sunt a te dicta? Refert tamen, quo modo.
-    </p>
-    <Divider title-placement="start" :styles="{ content: { padding: '0 16px' } }">Left Text</Divider>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
-      probare, quae sunt a te dicta? Refert tamen, quo modo.
-    </p>
-    <Divider title-placement="end" :styles="{ content: { margin: '0 50px' } }">
-      Right Text
-    </Divider>
+  <div class="divider-token-controls">
+    <label><input v-model="enabled" type="checkbox" /> Enable component theme</label>
+    <label>Text padding: {{ padding }}px<input v-model.number="padding" aria-label="Divider text padding" type="range" min="0" max="40" step="2" /></label>
+    <label>Edge ratio: {{ ratio }}<input v-model.number="ratio" aria-label="Divider edge ratio" type="range" min="0" max="1" step="0.05" /></label>
+    <label>Vertical margin: {{ margin }}px<input v-model.number="margin" aria-label="Divider vertical margin" type="range" min="0" max="32" step="2" /></label>
+    <button type="button" @click="reset">Reset Divider theme</button>
   </div>
+  <ConfigProvider :theme="theme">
+    <Divider title-placement="start">Section heading</Divider>
+    <div class="divider-token-inline"><span>First column</span><Divider orientation="vertical" /><span>Second column</span></div>
+  </ConfigProvider>
 </template>
+
+<style scoped>
+.divider-token-controls { display: grid; gap: 12px; }
+.divider-token-controls label { display: grid; gap: 4px; }
+.divider-token-controls label:first-child { display: flex; align-items: center; }
+.divider-token-controls input[type='range'] { width: 100%; }
+.divider-token-controls button { width: fit-content; }
+.divider-token-inline { margin-block: 16px; }
+</style>
 ```

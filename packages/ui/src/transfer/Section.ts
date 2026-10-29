@@ -41,7 +41,7 @@ import type {
   TransferSlots,
 } from './interface';
 import ListBody from './ListBody';
-import Search from './Search';
+import Search, { searchEventValue } from './Search';
 
 function getEnabledItemKeys(items: TransferItem[]): TransferKey[] {
   return items.reduce<TransferKey[]>((keys, data) => {
@@ -134,7 +134,7 @@ const Section = defineComponent({
       default: undefined,
     },
     handleFilter: {
-      type: Function as PropType<(e: { target: { value: string } }) => void>,
+      type: Function as PropType<(event: Event) => void>,
       required: true,
     },
     handleClear: { type: Function as PropType<() => void>, required: true },
@@ -156,9 +156,11 @@ const Section = defineComponent({
       () => props.showSearch === true || isPlainObject(props.showSearch),
     );
 
-    const internalHandleFilter = (e: { target: { value: string } }) => {
-      filterValue.value = e.target.value;
-      props.handleFilter(e);
+    const internalHandleFilter = (event: Event) => {
+      const value = searchEventValue(event);
+      if (value === undefined) return;
+      filterValue.value = value;
+      props.handleFilter(event);
     };
     const internalHandleClear = () => {
       filterValue.value = '';

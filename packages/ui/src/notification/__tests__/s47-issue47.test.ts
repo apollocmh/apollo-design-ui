@@ -6,8 +6,8 @@
  * —— **没有依赖数组** ⇒ React 每次 render 都重建 imperative handle ⇒ `closeLabel` 是「活的」。
  * `open()` 每次从 `holderRef.current` 现读 ⇒ **切语言后新开的通知拿新文案**。
  *
- * 本仓的 Holder 在 setup 期写 `const closeLabel = locale?.close ?? 'Close'`
- * （`useLocale` 是**快照**）⇒ 切语言后新开的通知仍拿旧文案。
+ * 历史缺陷是 setup 快照。当前 canonical useLocale 是 ComputedRef；
+ * 已存在通知也按 Apollo 当前裁决更新默认关闭文案。
  *
  * 复现走官方路径：Holder 挂在 `LocaleProvider` 内（hook 形态），
  * 先用 en 开一条，切 zh 后再开一条，断言两条的关闭按钮 `aria-label`。
@@ -60,7 +60,7 @@ function mountHost(localeRef: { value: unknown }) {
         );
     },
   });
-  const wrapper = mount(Host, { attachTo: document.body });
+  const wrapper = mount(Host, { attachTo: document.body, global: { stubs: { teleport: false } } });
   return { wrapper, getApi: () => api! };
 }
 
@@ -103,7 +103,10 @@ describe('Notification · Issue #47 运行时语言切换后的关闭标签', ()
         return () => h('div', [holder()]);
       },
     });
-    const wrapper = mount(Host, { attachTo: document.body });
+    const wrapper = mount(Host, {
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
     await flush();
 
     api!.open({ title: 'solo' });
@@ -113,7 +116,7 @@ describe('Notification · Issue #47 运行时语言切换后的关闭标签', ()
     wrapper.unmount();
   });
 
-  it('[C] 已存在的通知：文案在 open 时即固化，不随语言回改（与 antd 同判，别当缺陷改）', async () => {
+  it('[C] 已存在通知跟随当前关闭文案，保留 notice 身份', async () => {
     const locale = ref(enUS);
     const { wrapper, getApi } = mountHost(locale);
     await flush();
@@ -122,14 +125,14 @@ describe('Notification · Issue #47 运行时语言切换后的关闭标签', ()
     await flush();
     expect(closeLabelOf('old')).toBe('Close');
 
+    const original = noticeByTitle('old');
     locale.value = zhCN;
     await flush();
 
-    // antd 同判：`open()` 把 `ariaProps` **烘进** notice 配置（存在 rc 的 state 里），
-    // 之后 Holder 重渲染不会回头改已存在的 notice ⇒ 旧文案保留。
-    // 上游「每次 open 现读」的语义只体现在**新开**的 notice 上（见用例 [A]）。
-    expect(closeLabelOf('old')).toBe('Close');
-    expect(closeLabelOf('old')).not.toBe('关闭');
+    // 2026-10-29 集中裁决：默认关闭文案是当前 Provider 派生值。
+    // 用户显式 aria-label 优先，正文/notice 不因语言更新重建。
+    expect(closeLabelOf('old')).toBe('关闭');
+    expect(noticeByTitle('old')).toBe(original);
 
     wrapper.unmount();
   });

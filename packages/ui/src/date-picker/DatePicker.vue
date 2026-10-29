@@ -342,7 +342,7 @@ const isInternalElement = (target: EventTarget | null): boolean => {
 
 // ============================== locale / 尺寸 / 变体 / 状态 ==============================
 const [contextLocale] = useLocale('DatePicker');
-const mergedLocale = computed(() => mergePickerLocale(contextLocale, props.locale));
+const mergedLocale = computed(() => mergePickerLocale(contextLocale.value, props.locale));
 
 const { compactSize, compactItemClassnames } = useCompactItemContext(prefixCls, direction);
 const mergedSize = useSize((ctx) => props.size ?? compactSize.value ?? ctx);

@@ -1,4 +1,4 @@
-/** Verify the five audited units through actual generated site pages and demos. */
+/** Verify delivered audit units through actual generated site pages and demos. */
 import assert from 'node:assert/strict';
 import { writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -20,7 +20,10 @@ const units = [
   { name: 'flex', count: 6, demos: ['gap', 'combination'] },
   { name: 'alert', count: 15, demos: ['smooth-closed', 'error-boundary'] },
   { name: 'layout', count: 11, demos: ['responsive', 'custom-trigger'] },
-  { name: 'input', count: 24, demos: ['component-token', 'autosize-textarea'] },
+  { name: 'input', count: 24, demos: ['component-token', 'autosize-textarea', 'password', 'otp'] },
+  { name: 'divider', count: 9, demos: ['with-text', 'component-token'] },
+  { name: 'collapse', count: 9, demos: ['custom', 'component-token'] },
+  { name: 'config-provider', count: 8, demos: ['theme', 'locale'] },
   { name: 'menu', demos: ['native-actions'] },
 ];
 const results = [],
@@ -197,6 +200,103 @@ try {
           node.scrollHeight <= node.clientHeight + 1
         );
       }, before);
+    },
+  );
+  await check('Divider native title control preserves its actual editor and draft', async () => {
+    await visit('divider', 'with-text');
+    const input = page.getByRole('textbox', { name: 'Divider title draft', exact: true });
+    await input.fill('Published divider draft');
+    const original = await input.elementHandle();
+    await page.getByRole('checkbox', { name: 'Plain title', exact: true }).check();
+    assert.equal(
+      await input.evaluate(
+        (node, before) => node === before && node.value === 'Published divider draft',
+        original,
+      ),
+      true,
+    );
+    await page.getByRole('checkbox', { name: 'Show title', exact: true }).uncheck();
+    assert.equal(await input.count(), 0);
+    await page.getByRole('checkbox', { name: 'Show title', exact: true }).check();
+    assert.equal(await input.inputValue(), 'Published divider draft');
+  });
+  await check(
+    'Collapse extra actions are independent and retained panels keep the actual draft',
+    async () => {
+      await visit('collapse', 'custom');
+      const body = page.locator('.standalone-body');
+      const input = body.getByRole('textbox', { name: '部署备注', exact: true });
+      await input.fill('Published deployment draft');
+      const original = await input.elementHandle();
+      await body.getByRole('button', { name: '发送通知', exact: true }).click();
+      assert.match(await body.locator('[aria-live="polite"]').textContent(), /通知次数：1/);
+      assert.equal(await input.isVisible(), true);
+      const header = body.getByRole('button', { name: /生产环境部署/ });
+      await header.click();
+      await input.waitFor({ state: 'hidden' });
+      await header.click();
+      await input.waitFor({ state: 'visible' });
+      assert.equal(
+        await input.evaluate(
+          (node, before) => node === before && node.value === 'Published deployment draft',
+          original,
+        ),
+        true,
+      );
+    },
+  );
+  await check(
+    'Input Password native toggle retains its real editor and business value',
+    async () => {
+      await visit('input', 'password');
+      const input = page.getByPlaceholder('input password', { exact: true });
+      await input.fill('PublishedPassword7');
+      const original = await input.elementHandle();
+      await page.locator('button.apollo-input-password-icon').click();
+      assert.equal(await input.getAttribute('type'), 'text');
+      assert.equal(
+        await input.evaluate(
+          (node, before) => node === before && node.value === 'PublishedPassword7',
+          original,
+        ),
+        true,
+      );
+      await page.locator('button.apollo-input-password-icon').click();
+      assert.equal(await input.getAttribute('type'), 'password');
+    },
+  );
+  await check('Input OTP current Vue model follows all six native cells', async () => {
+    await visit('input', 'otp');
+    const body = page.locator('.standalone-body');
+    const cells = body.locator('.apollo-otp').first().locator('input');
+    assert.equal(await cells.count(), 6);
+    for (let index = 0; index < 6; index++) await cells.nth(index).fill(String(index + 1));
+    assert.match(await body.textContent(), /values:\s*123456\s*\//);
+  });
+  await check(
+    'ConfigProvider Demo runtime theme updates preserve the actual editor and draft',
+    async () => {
+      await visit('config-provider', 'theme');
+      const input = page.getByRole('textbox', { name: '主题切换时保留的草稿', exact: true });
+      await input.fill('Published configuration draft');
+      const original = await input.elementHandle();
+      const font = await input.evaluate((node) => parseFloat(getComputedStyle(node).fontSize));
+      await page.getByRole('button', { name: '运行时字体 +1', exact: true }).click();
+      await page.waitForFunction(
+        (before) =>
+          parseFloat(
+            getComputedStyle(document.querySelector('input[aria-label="主题切换时保留的草稿"]'))
+              .fontSize,
+          ) > before,
+        font,
+      );
+      assert.equal(
+        await input.evaluate(
+          (node, before) => node === before && node.value === 'Published configuration draft',
+          original,
+        ),
+        true,
+      );
     },
   );
   for (const locale of ['zh-CN', 'en-US'])

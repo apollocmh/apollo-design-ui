@@ -6,7 +6,7 @@
  * 「`fullLocale` 是不是 `undefined`」区分「没挂 Provider」与「挂了但没给这个分片」。
  */
 
-import type { ComputedRef, InjectionKey, MaybeRefOrGetter } from 'vue';
+import type { InjectionKey, MaybeRefOrGetter } from 'vue';
 import type { Locale } from './types';
 
 /**
@@ -30,11 +30,7 @@ export type LocaleContextValue = Partial<Locale> & { exist?: boolean };
  *    提供的是 `ComputedRef`（这样 `locale` prop 变化能被追踪），但消费方直接
  *    `provide` 一个普通对象也应当工作。`useLocale` 内部用 `toValue` 归一。
  */
-export type LocaleContextSource =
-  | LocaleContextValue
-  | ComputedRef<LocaleContextValue>
-  | (() => LocaleContextValue)
-  | undefined;
+export type LocaleContextSource = MaybeRefOrGetter<LocaleContextValue | undefined>;
 
-export const localeContextKey: InjectionKey<MaybeRefOrGetter<LocaleContextValue> | undefined> =
+export const localeContextKey: InjectionKey<MaybeRefOrGetter<LocaleContextValue | undefined>> =
   Symbol('apollo-locale-context');

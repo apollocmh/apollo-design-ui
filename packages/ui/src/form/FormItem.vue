@@ -28,11 +28,13 @@ import {
 } from '@apollo-design/form-core';
 import {
   type ComponentPublicInstance,
+  cloneVNode,
   computed,
-  createVNode,
   defineComponent,
   h,
   inject,
+  mergeProps,
+  onBeforeUnmount,
   type PropType,
   reactive,
   shallowRef,
@@ -96,6 +98,11 @@ export default defineComponent({
     const formContext = inject(formContextKey, undefined);
     const notifyParentMetaChange = inject<NoStyleItemNotify | null>(noStyleItemContextKey, null);
     const listContext = inject(listContextKey, null);
+    let disposed = false;
+    let pendingModelChange: { cancelled: boolean } | undefined;
+    onBeforeUnmount(() => {
+      disposed = true;
+    });
 
     const prefixCls = computed(() => getPrefixCls('form', props.prefixCls));
     const hasName = computed(() => props.name !== undefined && props.name !== null);
@@ -341,16 +348,14 @@ export default defineComponent({
                * 里已经被这一行覆盖掉了。
                */
               const originalProps = (child.props ?? {}) as Record<string, unknown>;
-              const makeHandler = (eventName: string, userKey: string) => {
-                const controlHandler = control[eventName] as
-                  | ((...args: unknown[]) => void)
-                  | undefined;
-                const userHandler = originalProps[userKey];
-                return (...args: unknown[]) => {
-                  controlHandler?.(...args);
-                  (userHandler as ((...a: unknown[]) => void) | undefined)?.(...args);
-                };
-              };
+              const makeHandler = (
+                eventName: string,
+                userKey: string,
+                controller = control[eventName],
+              ) =>
+                mergeProps({ [eventName]: controller }, { [eventName]: originalProps[userKey] })[
+                  eventName
+                ];
               triggers.forEach((eventName) => {
                 // 🚨 `triggers` 里的键**已经是 `onXxx` 形态**（`trigger` 的默认就是
                 //    `'onChange'`）⇒ 取用户回调的键就是 `eventName` **本身**。
@@ -358,46 +363,41 @@ export default defineComponent({
                 //    ⇒ `userHandler` 恒 `undefined` ⇒ **用户的 `onChange` 从来没被调过**
                 //    （实测：DOM 上 `change` 触发后 `control` 走了、用户回调 0 次）。
                 childProps[eventName] = makeHandler(eventName, eventName);
-                if (eventName === 'onChange') {
-                  // v-model 桥（INTENDED：Vue 组件的值更新走 update:value）。
-                  // ⚠️ 这里用户的回调是 **`onUpdate:value`**（与 `onChange` 是**两个**
-                  //    不同的函数）⇒ 必须按 `onUpdate:${valuePropName}` 取。
+                const controller = control[eventName];
+                if (eventName === 'onChange' && typeof controller === 'function') {
+                  // A native change following update:value owns this edit. Defer only
+                  // the model-only fallback, keeping real Events for getValueFromEvent
+                  // and validating once when a component emits both notifications.
                   const updateKey = `onUpdate:${valuePropName}`;
-                  childProps[updateKey] = makeHandler(eventName, updateKey);
+                  childProps[eventName] = makeHandler(
+                    eventName,
+                    eventName,
+                    (...args: unknown[]) => {
+                      if (pendingModelChange) pendingModelChange.cancelled = true;
+                      pendingModelChange = undefined;
+                      controller(...args);
+                    },
+                  );
+                  childProps[updateKey] = makeHandler(
+                    updateKey,
+                    updateKey,
+                    (...args: unknown[]) => {
+                      const pending = { cancelled: false };
+                      pendingModelChange = pending;
+                      queueMicrotask(() => {
+                        if (pendingModelChange === pending) pendingModelChange = undefined;
+                        if (!disposed && !pending.cancelled) controller(...args);
+                      });
+                    },
+                  );
                 }
               });
 
-              /**
-               * 🚨 **必须用 `createVNode` 重建，不能用 `cloneVNode`**（Issue #8.3）。
-               *
-               * 上游是 `React.cloneElement(child, childProps)` —— React 的语义是
-               * **替换**：`childProps` 里的键覆盖同名键，其余保留。Vue 的
-               * `cloneVNode(child, extra)` 走的是 `mergeProps(child.props, extra)`，
-               * 而 `mergeProps` 对 `on*` 键是**拼成数组**（不是覆盖）：
-               *
-               * - `childProps` 是由 `{...child.props, ...control}` 造出来的 ⇒ 用户原先的
-               *   `onInput` **同时**出现在 `child.props` 与 `extra` 里 ⇒ 合并成
-               *   `[user, user]` ⇒ **调用两次**（实测 2 次）；
-               * - `onChange` 在两边都存在（原用户回调 vs 我们的合成器）⇒ 合并成
-               *   `[user, composed]` ⇒ Vue 依次调用，而 `composed` **内部又调一次** user
-               *   ⇒ 也是两次；且 `Input` 内部把 `attrs.onChange` 当函数直接调 ⇒
-               *   `TypeError: attrs.onChange is not a function`（实测崩溃）。
-               *
-               * ⇒ 自己构造最终 props 再 `createVNode(child.type, props, child.children)`，
-               *    语义与 `cloneElement` 一致（**替换**）。
-               */
-              childNode = createVNode(
-                child.type,
-                {
-                  ...(childProps as Record<string, unknown>),
-                  // ⚠️ `key` 不是 props 而是 vnode 字段：`createVNode` 从 `props.key` 取，
-                  //    不显式带上会在重渲染时丢掉 diff 稳定性。
-                  ...(child.key === null || child.key === undefined
-                    ? {}
-                    : { key: child.key as string | number }),
-                } as never,
-                child.children as never,
-              );
+              // Preserve Vue's normalized ref owner, directives, key and scope IDs.
+              // An empty extra-props object requests FULL_PROPS for dynamic field attrs;
+              // assigning the final props avoids merging composed listeners a second time.
+              childNode = cloneVNode(child, {});
+              childNode.props = childProps;
             } else {
               childNode = childNodes;
             }

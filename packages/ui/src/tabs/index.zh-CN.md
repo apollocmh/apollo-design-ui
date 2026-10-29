@@ -176,3 +176,6 @@ import { Tabs } from '@apollo-design/ui';
 
 
 `#popupRender` 使用单个具名对象参数，原始菜单通过 `originNode` 渲染；`restTabs` 为当前隐藏页签，`onClose` 可直接绑定关闭按钮。移除 `more.popupRender` 函数入口，不提供兼容层或弃用期。`more` 仅声明实际支持的 icon/transitionName，不再以任意键类型暗示浮层 props 均可透传。`#extra` 和 `#popupRender` 均支持挂载后的条件出现/移除及当前响应式内容；空插槽压住默认内容。
+
+
+ConfigProvider.components.tabs 已声明的 size、type、centered、className 与语义样式均响应当前配置；Tabs 局部 props 优先，包括显式 centered=false。

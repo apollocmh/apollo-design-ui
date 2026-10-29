@@ -232,7 +232,7 @@ const TreeSelect = defineComponent({
     );
     /** ConfigProvider 的全局配置（`getPopupContainer` 等，Issue #13.4）。 */
     const config = useConfigContext();
-    const rootPrefixCls = getPrefixCls();
+    const rootPrefixCls = computed(() => getPrefixCls());
 
     const prefixCls = computed(() => getPrefixCls('tree-select', props.prefixCls));
     // antd 薄壳三前缀：customize 模式下合一；默认模式本仓单前缀直通（见文件头 §判据 6）。
@@ -771,11 +771,14 @@ const TreeSelect = defineComponent({
           placement: memoPlacement.value,
           direction: mergedDirection.value,
           popupMatchSelectWidth:
-            props.popupMatchSelectWidth ?? props.dropdownMatchSelectWidth ?? true,
+            props.popupMatchSelectWidth ??
+            props.dropdownMatchSelectWidth ??
+            config.popupMatchSelectWidth ??
+            true,
           // antd：`getPopupContainer || getContextPopupContainer`
           // —— 局部优先、**回退到 ConfigProvider 的全局设置**（Issue #13.4）。
           getPopupContainer: props.getPopupContainer ?? config.getPopupContainer,
-          transitionName: `${rootPrefixCls}-slide-up`,
+          transitionName: `${rootPrefixCls.value}-slide-up`,
           popupClassName: mergedPopupClassName.value,
           popupStyle: {
             ...((mergedStyles.value as { popup?: { root?: StyleLike } }).popup?.root ?? {}),
@@ -801,12 +804,15 @@ const TreeSelect = defineComponent({
               open: mergedOpen.value,
               notFoundContent: mergedNotFoundContent.value,
               toggleOpen: (next: boolean) => setOpen(next),
-              virtual: props.virtual,
+              virtual: props.virtual ?? config.virtual,
               listHeight: props.listHeight,
               listItemHeight,
               listItemScrollOffset: 0,
               popupMatchSelectWidth:
-                props.popupMatchSelectWidth ?? props.dropdownMatchSelectWidth ?? true,
+                props.popupMatchSelectWidth ??
+                props.dropdownMatchSelectWidth ??
+                config.popupMatchSelectWidth ??
+                true,
               treeData: filteredTreeData.value as never,
               fieldNames: mergedFieldNames.value,
               onSelect: onOptionSelect as never,

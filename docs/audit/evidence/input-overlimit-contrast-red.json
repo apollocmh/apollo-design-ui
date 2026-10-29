@@ -1,0 +1,265 @@
+{
+  "sourceState": "root corrected normal count/clear colors; over-limit foreground still used current raw error token",
+  "passed": 92,
+  "failed": 4,
+  "failures": [
+    {
+      "name": "advance-count.vue",
+      "mode": "default",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "input[placeholder=\"最多 10 个字符\"]"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#ff4d4f",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 3.26,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                ".apollo-input-out-of-range.apollo-input-affix-wrapper.apollo-input-outlined > .apollo-input-suffix > .apollo-input-show-count-suffix"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#ff4d4f",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 3.26,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                "textarea[placeholder=\"最多 20 个字符\"]"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#ee494b",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 3.69,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                ".apollo-input-affix-wrapper-focused > .apollo-input-suffix > .apollo-input-data-count"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#ff4d4f",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 3.26,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "advance-count.vue",
+      "mode": "dark",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                ".apollo-input-out-of-range.apollo-input-affix-wrapper.apollo-input-outlined > .apollo-input-suffix > .apollo-input-show-count-suffix"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#dc4446",
+                    "bgColor": "#141414",
+                    "contrastRatio": 4.34,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                ".apollo-input-affix-wrapper-focused > .apollo-input-suffix > .apollo-input-data-count"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#dc4446",
+                    "bgColor": "#141414",
+                    "contrastRatio": 4.34,
+                    "fontSize": "10.5pt (14px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "advance-count.vue",
+      "mode": "compact",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                "input[placeholder=\"最多 10 个字符\"]"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#ee494b",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 3.69,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                ".apollo-input-out-of-range.apollo-input-affix-wrapper.apollo-input-outlined > .apollo-input-suffix > .apollo-input-show-count-suffix"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#ff4d4f",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 3.26,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                ".apollo-input-affix-wrapper-focused > .apollo-input-suffix > .apollo-input-data-count"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#ff4d4f",
+                    "bgColor": "#ffffff",
+                    "contrastRatio": 3.26,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "advance-count.vue",
+      "mode": "both",
+      "passed": false,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "targets": [
+            {
+              "target": [
+                ".apollo-input-out-of-range.apollo-input-affix-wrapper.apollo-input-outlined > .apollo-input-suffix > .apollo-input-show-count-suffix"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#dc4446",
+                    "bgColor": "#141414",
+                    "contrastRatio": 4.34,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            },
+            {
+              "target": [
+                ".apollo-input-affix-wrapper-focused > .apollo-input-suffix > .apollo-input-data-count"
+              ],
+              "checks": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#dc4446",
+                    "bgColor": "#141414",
+                    "contrastRatio": 4.34,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "normal",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "remediation": "Use current error color mixed with current readable text for over-limit foreground; retain error hue, public current theme and explicit user style priority; actual browser axe remains unchanged"
+}

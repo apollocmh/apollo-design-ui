@@ -47,9 +47,12 @@ describe('语言包清单', () => {
   });
 });
 
-describe('⭐ 每个语言包与 antd 源逐字段一致', () => {
+describe('语言包保留上游字段及明确的 Apollo 差异', () => {
   it.each(EXPECTED_NAMES)('%s', (name) => {
-    expect((locales as Record<string, unknown>)[name]).toEqual(baseline[name]);
+    const source = baseline[name];
+    const clear = name === 'en_US' ? 'Clear input' : name === 'zh_CN' ? '清空输入' : undefined;
+    const expected = clear ? { ...source, global: { ...source?.global, clear } } : source;
+    expect((locales as Record<string, unknown>)[name]).toEqual(expected);
   });
 });
 

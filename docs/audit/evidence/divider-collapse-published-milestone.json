@@ -1,0 +1,293 @@
+{
+  "status": "isolated-published-milestone-not-final-unit-acceptance",
+  "units": [
+    "divider",
+    "collapse"
+  ],
+  "runtimeBuildBase": "617ae554",
+  "metadataBase": "a4b1f160",
+  "acceptedComponentCountUnchanged": 21,
+  "source": {
+    "currentFiles": {
+      "docs/audit/2026-10-29-collapse-contract-audit.md": "b4069fc1a269438bdfe9aa0522b88b993f18b08cc03261afb2302b15b32ef614",
+      "docs/audit/2026-10-29-divider-contract-audit.md": "10d394d28789f784969abb0faf46445f592df641bca86d62e3b636f2a0edc894",
+      "docs/migrations/collapse-contracts.md": "1a69da58b5e926857d21f84eaf5fa412dc1a003ff20ac570cac14208479e69cf",
+      "docs/migrations/divider-contracts.md": "d0659d3158f404f770e779a8b1c56a9769dfa8de5e19806338c0a385b6d61603",
+      "packages/ui/src/collapse/Collapse.ts": "d5d1a7c5ab257f4bb6c2c713ce3bdb7583be8cac76458997472ee4822704ad17",
+      "packages/ui/src/collapse/PLAN.md": "b73efcc4cc710b50525242413a743b2d4b6a4e0b92c41847913f43f81f7e978b",
+      "packages/ui/src/collapse/Panel.ts": "fb7013938eed6a2f9aa8fb0206ae0cbbe4c05218ac0034b2f55ae2eb9396e235",
+      "packages/ui/src/collapse/README.md": "84c890bd0cc9eff97e3e2580a6fccfcf35523cce096e108df4f2dc8eda63d44c",
+      "packages/ui/src/collapse/__tests__/a11y.test.ts": "60fad383901ccaea6d8285b4e4b17dde73de59f713761ce35d8fb11cb889309e",
+      "packages/ui/src/collapse/__tests__/browser-fixture.mjs": "a0d5c02cf60e3314f255f6a4463b4a44c85cd3e3e8ad01c034c7a440c4cb1574",
+      "packages/ui/src/collapse/__tests__/browser.mjs": "b1437c7f837a6fbb0154344e43ef66db4ec24c0d6626143875a896ed3547031a",
+      "packages/ui/src/collapse/__tests__/consumer.mjs": "c18b36345f0eba9e80621e072faf57d70aec2a1e8d76f0e3852ef2fdd95235df",
+      "packages/ui/src/collapse/__tests__/contract-differences.ts": "7b31de01e6676614ff4ea74814510321fd0a9671e52897a62c8ce16264a635d8",
+      "packages/ui/src/collapse/__tests__/contracts.test.ts": "3bc70c3f4e47137c7b32cd0442557b1e8980fb8276001fec4748708d29391976",
+      "packages/ui/src/collapse/__tests__/demo.test.ts": "3e8cc80d2b803a491d30d3b9ac80479eaca5a770e3453cf8c3ec422d5fcab555",
+      "packages/ui/src/collapse/__tests__/index.test.ts": "085f9b5f11f1a68a3a7ace0bd731c6d32e9bee5d7b7883684241b6f9be310871",
+      "packages/ui/src/collapse/__tests__/semantic.test.ts": "5a7345385faa668d4a90688e449b4ebafb937c3e9baae1124bd0e51eee422dd0",
+      "packages/ui/src/collapse/__tests__/theme.test.ts": "9e5d81a63c49ac62a45afcef3905b249f493d5bb0f9e93c5f04322ca706104a1",
+      "packages/ui/src/collapse/__tests__/type.test-d.ts": "782708ca98d1009a2514efe0d82c2dbfd57bf878e7a13adb988c8bc17230e962",
+      "packages/ui/src/collapse/context.ts": "3ab181234ff7cc7e80abd6050ee3cbb9e72497e6f0d982ab042a3d97d85f232a",
+      "packages/ui/src/collapse/demo/accordion.md": "b4e2698da32b63feaef2e3cde53b5b660df0f241da36ac804114a5a5dbd5e82c",
+      "packages/ui/src/collapse/demo/accordion.vue": "44922d6f41ae8a003e8fd2157b1225618888f18806bc27f4a0273cb09e9b940b",
+      "packages/ui/src/collapse/demo/basic.md": "73cbea5f746dd8efbaf1baae2358f968a2280bd856b9d6c9c25570f0fd92f56a",
+      "packages/ui/src/collapse/demo/basic.vue": "d64db8793d20554a5c1e2a6de0579ce1cb964078520df2dfd0e51692408be0dc",
+      "packages/ui/src/collapse/demo/borderless.md": "c58db887efa13aaf29e498dc7b83f1f96b5a0352f3cfe094553926eb5252b7e0",
+      "packages/ui/src/collapse/demo/borderless.vue": "ebebe9e152f6931669e386e51d253010a91dca698be2fd9e3ef993166533e89d",
+      "packages/ui/src/collapse/demo/collapsible.md": "00c883bbc78d70d969d41993278f5a2c8d06b0f62fa9b4455a95ecfcdcd7f512",
+      "packages/ui/src/collapse/demo/collapsible.vue": "b8a0c21193da28980b6f3f01ebd2373fb29a1e81ad5693d2e26b5bcb6aa85579",
+      "packages/ui/src/collapse/demo/component-token.md": "36096587c645ec37b2e2d84a6b0666248c766f0a42ca19067abd390910844dcd",
+      "packages/ui/src/collapse/demo/component-token.vue": "cf05ed607a4716961b3628aa85ea6e5689277270acdbce90b7a89850e83315f6",
+      "packages/ui/src/collapse/demo/custom.md": "f78181527f96735e7123a8a0e5ee8139265fa72cf3b6977cd0d26ce69ae64f29",
+      "packages/ui/src/collapse/demo/custom.vue": "49f7bb1a5a0ec84d6ebbc6eaaa2d1fc9cd838cb4e5045123a7efb068c28afb12",
+      "packages/ui/src/collapse/demo/extra.md": "9ac6e7660fed0b8975e1c23dbc2904cd647adf98057a3261fc1b9f350d18ea03",
+      "packages/ui/src/collapse/demo/extra.vue": "d712d5f14d656a863be3637c5992f65ed6bc7ac66003bd773c829cc2143dba65",
+      "packages/ui/src/collapse/demo/ghost.md": "83a23dab8c81d818a69fb438212ca0f9f8ddba6fadac27fa66ed116be1d12987",
+      "packages/ui/src/collapse/demo/ghost.vue": "2a085e8b23e00ab50c7b2b1c555fc725f29ad0ea2edb2102458d75e4650a2f56",
+      "packages/ui/src/collapse/demo/size.md": "d8069a5d80ded65f5ec7703b05745343f856f5eb05ce6765e67a77c56a5c077b",
+      "packages/ui/src/collapse/demo/size.vue": "5e83c11558bf3156cc96da7087d263139e2a2b86a37efd4fb101acbb231802ab",
+      "packages/ui/src/collapse/engine/index.ts": "58bf95b6de980731905a5dbd2a261e44151db96c5eaa9d029e8ad3b74abbc5b4",
+      "packages/ui/src/collapse/index.en-US.md": "0c3451cff8b10ec4a427954311238cbba98bd1ef20fa53af53d2ee2489c4beeb",
+      "packages/ui/src/collapse/index.ts": "752f7372fb0dde4064c5b060df58ad2180ecf6bda75540bca8806854d71d1ef9",
+      "packages/ui/src/collapse/index.zh-CN.md": "ab697b52f2f7e762ffa481abd1b66226974c546e1ee3112e33f42c82dc9bdea6",
+      "packages/ui/src/collapse/interface.ts": "a3ab7deabc31286cb80785ae2266a5de6a16a3d544ade55c53c04098f61dbf4c",
+      "packages/ui/src/collapse/style/index.ts": "54d8ce6a326fad3573b0f1536945ee6fe09bf752e643154ef38492a4cffb92be",
+      "packages/ui/src/collapse/style/token.ts": "98365ea9ab0f68348f74663fb69feb5f07c9ea9b73425e22bf704069bcc5da1e",
+      "packages/ui/src/collapse/use-collapse-theme.ts": "df15cc21f3ffc37e48723de9dfc427dcf5b8a979228fcb3113758006241bb119",
+      "packages/ui/src/divider/Divider.vue": "d5628727c73466dcc449c312c998b05045a2de7099f73a55c8590b4e8beb1999",
+      "packages/ui/src/divider/README.md": "b8ee5dc97c69f928f86419aa87735dcdb132f816afc7d8fa4036b287c1ad43a8",
+      "packages/ui/src/divider/__tests__/a11y.test.ts": "08aa63d7f01246fef55267f23012bea1ed4d0d22076da15043534e7bc894b764",
+      "packages/ui/src/divider/__tests__/browser-fixture.mjs": "30d19a2dc45db49e44e6c84ff2e85490cedeeed035a8690b40c1f63da3d06119",
+      "packages/ui/src/divider/__tests__/browser.mjs": "06a83ddcd6c0cf3470e7c2a9741fa10ca9bac6a85fe8e06199168ee9ba59aab9",
+      "packages/ui/src/divider/__tests__/contracts.test.ts": "6926280200c446b8840c72a76e63f48d9af0771701a9914a4b127e95a7af7e79",
+      "packages/ui/src/divider/__tests__/demo.test.ts": "963424c477d1c32ee1326d36973d6929777387d68d4a82e5c76f7501dd41e82a",
+      "packages/ui/src/divider/__tests__/hydration-fixture.mjs": "c8521140afb86f8dbb673a278c5c42067ab61f3e63b900eed2a3b7a4f7999758",
+      "packages/ui/src/divider/__tests__/index.test.ts": "6558507ac6c427df692df6c64279b9350755a8e5afce6431694461dc8d96dcf9",
+      "packages/ui/src/divider/__tests__/semantic.test.ts": "e7eee544e8fffd21ae3f489ec45544efe14f5e6de999484049def7ac8a6a323a",
+      "packages/ui/src/divider/__tests__/source-theme.test.ts": "aafc895992f1d622f1bee12ec445fda45b79a77720ba2290ce6cb64cab3f4455",
+      "packages/ui/src/divider/__tests__/ssr-fixture.mjs": "0a7437c903ec571f035a95f63ad50386300d5da15b18878f83e158c9f749b9a4",
+      "packages/ui/src/divider/__tests__/ssr.mjs": "c5ce4ef1dca484fd26f1ce767645eda670ed3e9fae9e16b4accb4bbdfdaa6818",
+      "packages/ui/src/divider/__tests__/theme.test.ts": "b50e27b09979354d2f4ebc6533a13b3c3a9dec22f8d1d37e945348b685f58a70",
+      "packages/ui/src/divider/__tests__/type.test-d.ts": "97d29cd75f913786a865d13dde3ce72f062dcd86b6349a424555815920448771",
+      "packages/ui/src/divider/demo/component-token.md": "551fb0db03d547bcf3bb470aa7820313b3095b9d51556b68f764b57e5fd62e9d",
+      "packages/ui/src/divider/demo/component-token.vue": "b9805855ea0b8cd52157f00729a4cf2c12e4dda64febe80c21b1c8f3020eabb5",
+      "packages/ui/src/divider/demo/customize-style.md": "77c81ddd4bd7285780943ec1a6aaed6c402b60f2426395247d0d1fea0874aa2e",
+      "packages/ui/src/divider/demo/customize-style.vue": "928d956a7004cfd7ee93876312eceaec456ffdf5b4c713ada63f845f09c26500",
+      "packages/ui/src/divider/demo/horizontal.md": "b094fc7531ddf68534ae0069ca7ac9b0b0cd2cdc18bb46d99afa1c4b31f36b95",
+      "packages/ui/src/divider/demo/horizontal.vue": "07e6a59474bab5665ca5f51da3ddb869030980d57d198010745b9ee690b12944",
+      "packages/ui/src/divider/demo/plain.md": "558b134c4a74b0889fab270ea66b5e76f7efe928b9aaac9017e2d2c90c0f4509",
+      "packages/ui/src/divider/demo/plain.vue": "868bf5b6e60de57dede3bad9fbba386e0864d8092f87bce3c79a8b1c2f87931b",
+      "packages/ui/src/divider/demo/size.md": "aeb806cccc30fd60eca5315695bbb9768de594df7252908dbd0ccdda047ca780",
+      "packages/ui/src/divider/demo/size.vue": "b26c7058ca14ca6273af1c9445c84c21d0d537172005289ffa4681317dcebfc5",
+      "packages/ui/src/divider/demo/style-class.md": "4ab0613dbb8cc197e9e3064efcdca740c1a9dc41f76d18c89a9b9a8bb11ee3d0",
+      "packages/ui/src/divider/demo/style-class.vue": "96a2d22e7f43c8ecc68826ce3a1b51c2c7068c01d11ddc853538c4b0e371211f",
+      "packages/ui/src/divider/demo/variant.md": "15d04159670ccb69c7a722017ec5526effb83e73902101150d1159785a2d9b1f",
+      "packages/ui/src/divider/demo/variant.vue": "bb7ae173655e6af0350349456fd69c5c3a3455252a43f4111969a45ba6c94076",
+      "packages/ui/src/divider/demo/vertical.md": "1ee7d5e04670358f445b7781cfd96c9a789898df587b358fc5d03d6b22f93fcf",
+      "packages/ui/src/divider/demo/vertical.vue": "712414bcbcc17db531659230d5f00cabea66822bf7adf7e32519a486239d4683",
+      "packages/ui/src/divider/demo/with-text.md": "a0cc9e77d59630376b4d9fd3b591dd9a8af6dfd395293af26c3e63a6f489ad8c",
+      "packages/ui/src/divider/demo/with-text.vue": "552ba82c70e93a8c46a44394f2650a6c2498af6a74f3030e4541756d465a3db1",
+      "packages/ui/src/divider/index.en-US.md": "81f2081b050adb6ef2306afbd385d7662b118904d1ed272d4c3b16f05d3324ac",
+      "packages/ui/src/divider/index.ts": "d759b1e6f8de4be23e85ef0f86d4199c0466dd6117fe2d4006ebd79b33a7bfdd",
+      "packages/ui/src/divider/index.zh-CN.md": "c3caeac17ccf062a85f53347b4d9c2f8f42bcf06019d7ab1ddb4de9a635565bb",
+      "packages/ui/src/divider/interface.ts": "bec68fa2d2ff34633b4af1a0106413957344f1166fa9c1a3cb456fca64c06866",
+      "packages/ui/src/divider/style/index.ts": "48ed06aa5f8f0b98e65357549cc190ca5c35fbdb8783da21e75a03e8f2d93ef5",
+      "packages/ui/src/divider/style/token.ts": "c5d4eddf00f2dd5f317e7c4cad7d13056de0d81284a55a40048e4e6b325c29fb",
+      "packages/ui/src/divider/use-divider-theme.ts": "37d2dc4b04f7844ee269254f157628d1e4487a402850d6c143c53bd8b595968d"
+    },
+    "rootDeltasFromOwnerFreeze": [
+      {
+        "file": "packages/ui/src/collapse/__tests__/consumer.mjs",
+        "ownerSha256": "a75aed449ef0479abe9314f2bcfe32375ace05d950e11f804360c250eddf88ca",
+        "rootSha256": "c18b36345f0eba9e80621e072faf57d70aec2a1e8d76f0e3852ef2fdd95235df"
+      },
+      {
+        "file": "packages/ui/src/collapse/__tests__/contracts.test.ts",
+        "ownerSha256": "5e0b91d04d629e48f93d644ffc2adb1f38a7647059f07f0d4622a70940bcdb98",
+        "rootSha256": "3bc70c3f4e47137c7b32cd0442557b1e8980fb8276001fec4748708d29391976"
+      },
+      {
+        "file": "packages/ui/src/collapse/style/index.ts",
+        "ownerSha256": "91ac8cb6928a96ffb9f02be0bcee8f11c83f7055fbff2a7a0706bea7ffd41422",
+        "rootSha256": "54d8ce6a326fad3573b0f1536945ee6fe09bf752e643154ef38492a4cffb92be"
+      },
+      {
+        "file": "packages/ui/src/divider/__tests__/browser.mjs",
+        "ownerSha256": "91f63cfee09d35a8a63095073fa75a1d52b3435ada8678ed5c1a58215e84bbe9",
+        "rootSha256": "06a83ddcd6c0cf3470e7c2a9741fa10ca9bac6a85fe8e06199168ee9ba59aab9"
+      }
+    ],
+    "fullRootStrictExit": 0,
+    "relatedTests": {
+      "passed": 667,
+      "total": 669,
+      "failed": [
+        {
+          "file": "/private/tmp/apollo-theme-foundation-integration-d87f84c7/packages/ui/src/collapse/__tests__/contracts.test.ts",
+          "test": "Collapse complete source regressions Provider object replacement/removal updates this same root and Panel",
+          "messages": [
+            "AssertionError: expected <div …(1)>…(2)</div> to be <div …(1)>…(2)</div> // Object.is equality\n    at /private/tmp/apollo-theme-foundation-integration-d87f84c7/packages/ui/src/collapse/__tests__/contracts.test.ts:465:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+          ]
+        },
+        {
+          "file": "/private/tmp/apollo-theme-foundation-integration-d87f84c7/packages/ui/src/collapse/__tests__/contracts.test.ts",
+          "test": "Collapse complete source regressions inherits current global size, direction and prefix while local size wins",
+          "messages": [
+            "AssertionError: expected <div …(2)>…(2)</div> to be <div …(2)>…(2)</div> // Object.is equality\n    at /private/tmp/apollo-theme-foundation-integration-d87f84c7/packages/ui/src/collapse/__tests__/contracts.test.ts:494:35\n    at file:///Users/nanren/Code/apollo-design-ui/node_modules/.pnpm/vitest@5.0.1_@types+node@22.20.2_@vitest+coverage-v8@5.0.1_@vitest+ui@5.0.1_jsdom@30.0._a2b11803e89cad9c23a77712817f3f2d/node_modules/vitest/dist/chunks/run.C5UmxDPh.js:2783:20"
+          ]
+        }
+      ],
+      "context": "Old committed ConfigProvider; current producer pending integration. Keep both identity assertions."
+    }
+  },
+  "published": {
+    "dividerBrowser": 67,
+    "collapseBrowser": 134,
+    "browserErrors": [],
+    "sourceSfc": {
+      "positiveExit": 0,
+      "negativeExit": 2,
+      "diagnostics": 8,
+      "scope": "Exact four real root export statements copied with TypeScript AST; no stub implementations."
+    },
+    "publishedSfc": {
+      "positiveExit": 0,
+      "negativeExit": 2,
+      "diagnostics": 8,
+      "sourceFallback": []
+    },
+    "distFiles": 3706,
+    "distUnchangedInReaders": true
+  },
+  "visual": {
+    "dividerApproved": 48,
+    "collapseApproved": 54,
+    "rawRGBAExact": 102,
+    "candidateApprovedTotal": 1089,
+    "candidatePlannedTotal": 1773,
+    "pending": 684,
+    "review": "All102 candidates actually viewed in seven contact sheets; native keyboard, focus, ARIA, viewport and real content assertions executed before capture.",
+    "oldReactReferencesUnchanged": true
+  },
+  "build": {
+    "actualUiBuildExit": 0,
+    "l7Exit": 0,
+    "failed": 0,
+    "pending": 0,
+    "budgetChanges": {
+      "divider": {
+        "oldKiB": 17,
+        "newKiB": 30,
+        "actualBytes": 29796,
+        "reason": "Current Theme derivation, eleven Alias values and three Component Tokens."
+      },
+      "collapse": {
+        "oldKiB": 50,
+        "newKiB": 52,
+        "actualBytes": 52123,
+        "reason": "Real native Vue Panel lifecycle, retention/focus, motion and ten current tokens."
+      }
+    },
+    "other71CapsAndHistoricalMeasurementsUnchanged": true,
+    "maxRatioOfFullUnchanged": 0.3
+  },
+  "docs": {
+    "contentBuildExit": 0,
+    "strictTypeExit": 0,
+    "tests": 161,
+    "testFiles": 15,
+    "ssgExit": 0,
+    "actualUnitRoutes": "pending"
+  },
+  "rootDeltas": [
+    "Collapse fixture guards both known array elements before constructing the same required two-panel scenario; no assertion or scenario removed.",
+    "Divider published dev harness enables normal Vite dependency discovery for the full public barrel CommonJS dependencies; source mode unchanged.",
+    "Public source SFC checks copy actual two-unit root export declarations and retain full-root strict checking separately; published mode uses the complete root/subpath declarations.",
+    "Explicit Collapse radius var spelling avoids static E10 helper-name false positive; generated CSS is exactly equal for three prefixes. Current dist predates this equivalent source spelling, so final unified rebuild is still required."
+  ],
+  "attempts": [
+    "Initial published Divider reader failed because dayjs CommonJS was not prebundled; corrected consumer harness then67/67 passed.",
+    "New Divider fixture incorrectly bound a controlled constant input value; native defaultValue fixed the fixture and retained identity/value/focus assertions. First Collapse fixture used stale region/body class names; corrected to actual classes, then54/54.",
+    "A new unknown slot-name negative was not diagnosed by the template compiler; actual declared default-slot scope is checked instead and produces two diagnostics, in addition to the original four Collapse and two Divider prop errors. Unknown slot-name rejection is not claimed.",
+    "Extra strictTemplates over all UI source surfaced four unrelated existing internal diagnostics in BadgeIndicator, ColorHexInput, PanelPicker and CheckableTagGroup. Evidence remains /tmp/apollo-divider-collapse-isolated-consumer-source-final.json. They were not ignored or changed; current source SFC scope uses the exact real export blocks of these two units.",
+    "Initial L7 failed only two real feature-cost budgets. Only those caps changed after module graph inspection; no global ratio or prior measurement changed.",
+    "Initial registry E10 rejected a pure helper spelling; no guard change, same generated CSS, final19 checks passed."
+  ],
+  "evidence": {
+    "runtime": {
+      "path": "/tmp/apollo-divider-collapse-integrated-unit.json",
+      "sha256": "2633a2a47a737e005215710f9be27d783706b59f9f1c20c0ef6ab9f01c370713"
+    },
+    "rootStrict": {
+      "path": "/tmp/apollo-divider-collapse-integrated-strict-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "dividerPublished": {
+      "path": "/tmp/apollo-divider-isolated-published-browser-discovery.json",
+      "sha256": "f3aa99c26122a64201804962892bd3a7b4f32f4600826eb144e06b1c4c8f0dcc"
+    },
+    "collapsePublished": {
+      "path": "/tmp/apollo-collapse-isolated-published-browser/receipt.json",
+      "sha256": "932aec0033796e91f4a9830b9b8eba4a1aa8b771bf1f38774a5513def4df6e86"
+    },
+    "sourceSfc": {
+      "path": "/tmp/apollo-divider-collapse-isolated-consumer-source-scoped.json",
+      "sha256": "d9951615cf3795cab1ce7953564add5c08981ddf600455c30c675e84d3d59b61"
+    },
+    "publishedSfc": {
+      "path": "/tmp/apollo-divider-collapse-isolated-consumer-published-final.json",
+      "sha256": "fc1e244fb1042ec8e0d51ad8f609932164135a76ccbc6e03e3faf657b1da9b36"
+    },
+    "dividerVisual": {
+      "path": "/tmp/apollo-divider-visual-postapproval-617.json",
+      "sha256": "1e3f6ae2393cd816b57c5d9f9557c112bdb11236c3ca9a8580ae5ad00f5eda15"
+    },
+    "collapseVisual": {
+      "path": "/tmp/apollo-collapse-visual-postapproval-617.json",
+      "sha256": "30ab0823535a0d5ece94a4e961a5df17c9ef7907dbec29245f9824d692a62284"
+    },
+    "collapseRaw": {
+      "path": "/tmp/apollo-collapse-visual-postapproval-raw617.json",
+      "sha256": "eeb3b905cc8fc30d9ac3e57fc4a3b27d0e8c0f9e4ef29d4719050054c5e4fce9"
+    },
+    "uiBuild": {
+      "path": "/tmp/apollo-divider-collapse-integrated-ui-build.log",
+      "sha256": "b76287ad49d04df4c3cab733630653f2c33e610662797d8c26c42134536440e4"
+    },
+    "l7Initial": {
+      "path": "/tmp/apollo-divider-collapse-integrated-l7.json",
+      "sha256": "f866f95902ca4fa58514fa7fd94ecd55f6474e590c63669a2e27f8d0055cad6d"
+    },
+    "l7Final": {
+      "path": "/tmp/apollo-divider-collapse-integrated-l7-budgeted.json",
+      "sha256": "9ee4d8eeed102447a54a250e9c1ed3ce2dd329bbf16d2ff457963c8383bf7334"
+    },
+    "registry": {
+      "path": "/tmp/apollo-divider-collapse-registry-final-check.log",
+      "sha256": "a8e8b75cea5cfa9ffdd65dfe8a5631e9e6456b88e28a3fae85f9f5493b584580"
+    },
+    "cssEquivalence": {
+      "path": "/tmp/apollo-collapse-style-e10-equivalence.json",
+      "sha256": "fa02d06a8729ce9409b1ba1e36f1eee470f77a101e022c7011e7577ea55e7b18"
+    },
+    "docsTypes": {
+      "path": "/tmp/apollo-divider-collapse-docs-strict.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docsTests": {
+      "path": "/tmp/apollo-divider-collapse-docs-tests.json",
+      "sha256": "a4e4567b2d3b1fd13955fc804df612814ae6be6520636761840fca7cafa4137d"
+    },
+    "docsSsg": {
+      "path": "/tmp/apollo-divider-collapse-docs-ssg.log",
+      "sha256": "a7a83c23100988e50ce678f63e94b562f862dbc80af7d9f896550b2e833cac6b"
+    }
+  },
+  "remaining": [
+    "Current ConfigProvider/Input and shared-package source freeze and integration.",
+    "The two old-producer identity tests remain failed until the actual current producer is verified.",
+    "Final source rebuild and affected published/runtime/type/browser gates, documentation routes and complete batch acceptance.",
+    "No further unit dispatch; pause after delivery of this batch."
+  ]
+}

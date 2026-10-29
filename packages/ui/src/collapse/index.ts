@@ -4,12 +4,18 @@
 
 export { Collapse, CollapseWithPanel as default } from './Collapse';
 export type {
+  CollapseConfig,
+  CollapseExpandIconScope,
+  CollapseHeadingLevel,
   CollapseItemType,
   CollapsePanelProps,
+  CollapsePanelSlots,
   CollapseProps,
   CollapseRef,
   CollapseSemanticClassNames,
   CollapseSemanticStyles,
+  CollapseSize,
+  CollapseSlots,
   CollapsibleType,
   ExpandIconPlacement,
 } from './interface';

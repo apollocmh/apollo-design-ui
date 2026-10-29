@@ -40,7 +40,7 @@ function submit(): void {
       </SpaceCompact>
     </div>
 
-    <p aria-live="polite" style="margin: 0; color: #999; font-size: 12px">
+    <p aria-live="polite" style="margin: 0; color: var(--apollo-color-text-secondary); font-size: 12px">
       提交结果：{{ result }}
     </p>
   </div>

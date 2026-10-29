@@ -1,5 +1,7 @@
 > 证据范围：本文保留初期分析与回归来源。上游对齐、版本和阶段要求不是当前项目规范；现行规则见根目录 AGENTS.md 与 ADR 0005。有效的组件场景、算法契约及缺陷证据继续保留。
 
+> 2026-10-29 当前消费契约：`useLocale` 统一返回只读 ComputedRef 元组，使用 `.value`；删除 `useLocaleReactive` 双通道。`global.clear?: string` 由 Apollo overlay 生成 en_US / zh_CN 文案，其他语言经 canonical hook 回退英文。Provider 仅客户端注册存在的 Modal 分片，深更新与卸载只清理自身来源，SSR 不写模块栈。详见[集中迁移](../migrations/config-provider-contracts.md)；下列上游提取仍作为历史证据。
+
 # `locale` 契约文档
 
 > G1/G2 的分析产物。**步骤 3 的产物必须先于步骤 5 存在**（`AGENTS.md` §2）。
@@ -320,7 +322,7 @@ packages/locale/src/
 | 导出 | 出处 | 说明 |
 |---|---|---|
 | `Locale` / `LocaleComponentName` | `index.d.ts` | 类型；`LocaleComponentName = Exclude<keyof Locale, 'locale'>` |
-| `useLocale(name, defaultLocale?)` | `useLocale.ts` | 返回 `[locale, localeCode]`（都是**值**，不是函数） |
+| `useLocale(name, defaultLocale?)` | `useLocale.ts` | 返回 `[ComputedRef<locale>, ComputedRef<localeCode>]`，脚本读取 `.value` |
 | `LocaleContext` | `context.ts` | Vue 的 `InjectionKey`，默认 `undefined` |
 | `LocaleProvider` | `index.tsx` | 组件；已废弃，`_ANT_MARK__` 必须等于 `ANT_MARK` |
 | `ANT_MARK` | `index.tsx` | `'internalMark'` |

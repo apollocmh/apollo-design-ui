@@ -78,20 +78,17 @@ defineSlots<{ default?: () => VNodeChild }>();
  */
 const attrs = useAttrs();
 
-const {
-  getPrefixCls,
-  className: contextClassName,
-  style: contextStyle,
-} = useComponentConfig<AffixConfig>('affix');
+const config = useComponentConfig<AffixConfig>('affix');
+const { getPrefixCls } = config;
 // ⚠️ `getTargetContainer` 挂在 context **顶层**，不在 `components.affix` 里
 //    （它是全局的浮层容器配置，不是组件配置）—— 所以单独取。
-const { getTargetContainer } = useConfigContext();
+const globalConfig = useConfigContext();
 
 /**
  * Vue-native root attrs: component-level `class` / `style` stay in `$attrs` and are
  * merged with the ConfigProvider defaults using Vue's own class/style merge rules.
  */
-const rootAttrs = () => mergeProps({ class: contextClassName, style: contextStyle }, attrs);
+const rootAttrs = () => mergeProps({ class: config.className, style: config.style }, attrs);
 
 const affixPrefixCls = computed(() => getPrefixCls('affix', props.prefixCls));
 
@@ -115,15 +112,13 @@ const internalOffsetTop = computed<number | undefined>(() =>
 
 /** 解析顺序：props.target ?? ConfigProvider.getTargetContainer ?? window（antd `:36`）。 */
 const targetFunc = computed<AffixTarget>(() => {
-  const fn = (props.target ??
-    getTargetContainer ??
-    (typeof window !== 'undefined' ? () => window : () => null)) as AffixTarget;
-  // ⚠️ `GetTargetContainer` 的返回类型比 `AffixTarget` 宽（还允许 `ShadowRoot`），
-  //    而 antd 的 Affix 自己的类型就是 `HTMLElement | Window`（`ShadowRoot` 没有
-  //    `getBoundingClientRect`，交给判据会拿到全 0 的矩形 ⇒ 走「零矩形跳过」分支，
-  //    行为是安全的）。这里收窄对齐 antd 的类型面。
-  return (): HTMLElement | Window | null => fn() as HTMLElement | Window | null;
+  return (
+    props.target ??
+    globalConfig.getTargetContainer ??
+    (typeof window !== 'undefined' ? () => window : () => null)
+  );
 });
+const currentTarget = computed(() => (typeof window === 'undefined' ? null : targetFunc.value()));
 
 // ---------------------------------------------------------------------------
 // measure（antd `:40-71`）
@@ -238,7 +233,7 @@ const updatePosition = throttleByAnimationFrame((): void => {
 
 /** 懒更新：已固钉且位置没变 ⇒ 不重算（性能契约，antd `:58-70`）。 */
 const lazyUpdatePosition = throttleByAnimationFrame((): void => {
-  if (targetFunc.value && affixStyle.value) {
+  if (affixStyle.value) {
     const targetNode = targetFunc.value();
     if (targetNode && placeholderNode.value) {
       const targetRect = getTargetRect(targetNode);
@@ -326,18 +321,14 @@ onBeforeUnmount(() => {
 /**
  * 依赖变化 ⇒ 重新绑事件。
  *
- * 🚨 依赖**只有** `props.target`（Issue #54）。上游 `antd :168-171` 写的是
- * `[target, affixStyle, lastAffix, offsetTop, offsetBottom]` —— 其中 `affixStyle`
- * / `lastAffix` 是**固钉状态**、`offsetTop` / `offsetBottom` 只参与**位置计算**，
- * 三者都**不影响**「绑到哪个 target、绑哪个 listener」。
- * ⇒ 这是上游依赖数组写宽了：滚动时每次测量都白跑一轮 remove + add（**每帧 14 次
- * DOM 调用**）。本仓收窄依赖，`addListeners` 再加一层幂等短路双重兜底。
+ * 监听解析后的当前目标，包含 props.target、Provider 解析器及其响应式返回值。
+ * 相同 DOM 目标由 addListeners 幂等复用，目标变化时释放旧监听。
  *
  * ⚠️ `flush: 'post'` 对齐上游 `useEffect` 的「commit 之后」（原先是默认的 `'pre'`）。
  * ⚠️ 「target 还没就绪」的补挂由 `prepareMeasure()` 收尾负责 —— 见那里的注释。
  */
 watch(
-  () => props.target,
+  currentTarget,
   () => {
     addListeners();
   },
@@ -345,7 +336,7 @@ watch(
 );
 
 watch(
-  [() => props.target, () => props.offsetTop, () => props.offsetBottom],
+  [currentTarget, () => props.offsetTop, () => props.offsetBottom],
   () => {
     updatePosition();
   },

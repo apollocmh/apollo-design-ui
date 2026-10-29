@@ -11,7 +11,8 @@
  * `empty`，若类型反向依赖它就会形成 `empty → context → defaultRenderEmpty → empty` 的环。
  */
 
-import { type ThemeConfig, ThemeContextKey } from '@apollo-design/theme';
+import { type ThemeConfig, useTheme as useThemeContext } from '@apollo-design/theme';
+import { isPlainObject } from '@apollo-design/utils';
 import {
   type ComputedRef,
   type CSSProperties,
@@ -76,26 +77,10 @@ export interface ComponentStyleConfig {
   style?: CSSProperties;
 }
 
-/** CSP 配置。与 antd 的 `CSPConfig` 一致。 */
-export interface CSPConfig {
-  nonce?: string;
-}
-
 /** 形态变体。与 antd 的 `Variants` / `Variant` 逐字一致。 */
 export const Variants = ['outlined', 'borderless', 'filled', 'underlined'] as const;
 
 export type Variant = (typeof Variants)[number];
-
-/** 浮层溢出策略。与 antd 的 `PopupOverflow` 一致。 */
-export type PopupOverflow = 'viewport' | 'scroll';
-
-/** 水波纹配置。与 antd 的 `WaveConfig` 一致（`showEffect` 是 React 专用，见下）。 */
-export interface WaveConfig {
-  /** @descCN 是否禁用水波纹效果。 @descEN Whether to disable wave effect. @default false */
-  disabled?: boolean;
-  /** @descCN 触发水波纹效果的事件。 @descEN The event that triggers the wave effect. @default 'click' */
-  triggerType?: 'click' | 'pointerdown' | 'pointerup' | 'mousedown' | 'mouseup';
-}
 
 /**
  * `renderEmpty` 的组件名参数。与 antd 的 `defaultRenderEmpty.tsx` 逐字一致。
@@ -149,8 +134,8 @@ export interface ComponentConfigBase {
 /** 浮层容器。与 antd 的 `ConfigConsumerProps['getPopupContainer']` 一致。 */
 export type GetPopupContainer = (triggerNode?: HTMLElement) => HTMLElement | ShadowRoot;
 
-/** 浮层挂载目标。与 antd 的 `ConfigConsumerProps['getTargetContainer']` 一致。 */
-export type GetTargetContainer = () => HTMLElement | Window | ShadowRoot;
+/** Scroll target for Affix and Anchor. Return the actual scrolling element or Window. */
+export type GetTargetContainer = () => HTMLElement | Window;
 
 /**
  * ConfigProvider 注入的完整值。
@@ -169,14 +154,11 @@ export interface ConfigContextValue extends ConfigContextBase {
   renderEmpty?: RenderEmptyHandler;
   getPopupContainer?: GetPopupContainer;
   getTargetContainer?: GetTargetContainer;
-  csp?: CSPConfig;
   /** @deprecated 用 `components.button.autoInsertSpace` */
   autoInsertSpaceInButton?: boolean;
   variant?: Variant;
   virtual?: boolean;
   popupMatchSelectWidth?: boolean;
-  popupOverflow?: PopupOverflow;
-  wave?: WaveConfig;
 }
 
 /**
@@ -187,7 +169,9 @@ export interface ConfigContextValue extends ConfigContextBase {
  */
 export const DEFAULT_CONFIG_CONTEXT: ConfigContextValue = {
   getPrefixCls: defaultGetPrefixCls,
-  iconPrefixCls: defaultIconPrefixCls,
+  get iconPrefixCls() {
+    return globalConfigState.iconPrefixCls || defaultIconPrefixCls;
+  },
 };
 
 /** 注入键。用 Symbol 避免与用户自己的 provide 键冲突。 */
@@ -220,10 +204,8 @@ export function useDirection(): ComputedRef<DirectionType | undefined> {
  */
 export function useThemeConfig(): ComputedRef<ThemeConfig | undefined> {
   const context = useConfigContext();
-  const theme = inject(ThemeContextKey, undefined);
-  return computed(() =>
-    theme && theme.sourceActive?.value !== false ? theme.config.value : context.theme,
-  );
+  const theme = useThemeContext();
+  return computed(() => (theme.sourceActive?.value !== false ? theme.config.value : context.theme));
 }
 
 /**
@@ -300,8 +282,12 @@ export function useComponentConfig<T extends object = Record<string, unknown>>(
   const context = useConfigContext();
 
   /** 组件配置的**当前**值。必须每次现读 —— 见上面的「响应式边界」。 */
-  const readConfig = (): Record<string, unknown> =>
-    (context.components?.[propName] ?? {}) as Record<string, unknown>;
+  const readConfig = (): Record<string, unknown> => {
+    const components = context.components;
+    const value =
+      components && Object.hasOwn(components, propName) ? components[propName] : undefined;
+    return isPlainObject(value) ? value : EMPTY_OBJECT;
+  };
 
   const read = (key: string): unknown => {
     switch (key) {
@@ -327,13 +313,19 @@ export function useComponentConfig<T extends object = Record<string, unknown>>(
     get: (_target, key) => (typeof key === 'string' ? read(key) : undefined),
     has: (_target, key) =>
       typeof key === 'string' &&
-      ((COMPONENT_CONFIG_BASE_KEYS as readonly string[]).includes(key) || key in readConfig()),
+      ((COMPONENT_CONFIG_BASE_KEYS as readonly string[]).includes(key) ||
+        Object.hasOwn(readConfig(), key)),
     ownKeys: () => [...new Set([...Object.keys(readConfig()), ...COMPONENT_CONFIG_BASE_KEYS])],
-    getOwnPropertyDescriptor: (_target, key) => ({
-      value: typeof key === 'string' ? read(key) : undefined,
-      enumerable: true,
-      configurable: true,
-      writable: false,
-    }),
+    getOwnPropertyDescriptor: (_target, key) =>
+      typeof key === 'string' &&
+      ((COMPONENT_CONFIG_BASE_KEYS as readonly string[]).includes(key) ||
+        Object.hasOwn(readConfig(), key))
+        ? {
+            value: read(key),
+            enumerable: true,
+            configurable: true,
+            writable: false,
+          }
+        : undefined,
   });
 }

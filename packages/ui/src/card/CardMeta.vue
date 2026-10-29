@@ -60,13 +60,8 @@ defineSlots<{
   description?: () => VNodeChild;
 }>();
 
-const {
-  getPrefixCls,
-  className: contextClassName,
-  style: contextStyle,
-  classNames: contextClassNames,
-  styles: contextStyles,
-} = useComponentConfig<CardMetaConfig>('cardMeta');
+const config = useComponentConfig<CardMetaConfig>('cardMeta');
+const { getPrefixCls } = config;
 
 const prefixCls = computed(() => getPrefixCls('card', props.prefixCls));
 const metaPrefixCls = computed(() => `${prefixCls.value}-meta`);
@@ -89,8 +84,8 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   CardMetaSemanticClassNames,
   CardMetaSemanticStyles
 >(
-  [() => contextClassNames, () => props.classNames],
-  [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
+  [() => config.classNames, () => props.classNames],
+  [() => config.styles, () => semanticRootStyle(config.style), () => props.styles],
   semanticProps,
 );
 
@@ -100,7 +95,7 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
 
 const rootClassNames = computed(() => [
   metaPrefixCls.value,
-  contextClassName,
+  config.className,
   mergedClassNames.value.root,
 ]);
 

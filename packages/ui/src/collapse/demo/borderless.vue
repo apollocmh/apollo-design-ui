@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 对齐 antd 的 borderless / ghost demo
+// 无边框保留分隔线；ghost 使用透明背景。
 import { Collapse } from '@apollo-design/ui';
 
 const items = [

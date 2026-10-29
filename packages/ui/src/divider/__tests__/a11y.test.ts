@@ -1,28 +1,4 @@
-/**
- * L5 · 无障碍测试
- *
- * ── Divider 的无障碍面很小，但它**不是空的** ─────────────────────────────────
- *
- * antd 给根元素挂了 `role="separator"`，这是 Divider 唯一的显式无障碍语义 ——
- * 它把「一条分隔线」这件事告诉屏幕阅读器，而不是让它读到一个无意义的空 `div`。
- *
- * 所以这一层的落点是：
- *   1. axe 自动扫描（对全部 9 个 demo，0 violation）
- *   2. 断言 `role="separator"` 在**所有形态**下都在（有/无 children、水平/垂直、各种 variant）
- *   3. 断言没有被覆盖成别的 role（antd 的 `{...restProps}` 在 `role="separator"` 之前，
- *      所以用户传的 `role` 会被覆盖 —— 这是上游行为，L1 已单独钉住）
- *
- * ── 一处**上游观察**（不是我们的缺陷，也没有「修」）─────────────────────────────
- *
- * 垂直分割线按 ARIA 规范宜带 `aria-orientation="vertical"`（`separator` 默认是 horizontal）。
- * antd 6.6.4 **没有**输出它，我们**逐字对齐、也不输出** —— 因为 L4 的 DOM 契约是与
- * antd 的机械基线逐字比对，单方面加属性会让契约红。
- * 这条观察登记在 `README.md` §7，属于「上游可改进项」，不是我们的差异。
- * 也正因为它没有输出，axe 才不会报 violation（axe 只检查已有的声明是否自洽）。
- *
- * ⚠️ 这个测试**没有**证明键盘可达性 —— Divider 没有任何可聚焦元素，也就没有键盘路径。
- *    这是「架构上不适用」，不是「没测」。
- */
+/** Separator semantics and all nine real Demo axe scans. A vertical separator declares its actual axis; native slotted controls retain their own keyboard/focus behavior. */
 
 import { a11yDemoTest } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
@@ -36,14 +12,21 @@ a11yDemoTest('Divider', {
 });
 
 describe('Divider · 分隔线语义', () => {
+  it('垂直轴显式声明并在切回水平时移除', async () => {
+    const wrapper = mount(Divider, { props: { orientation: 'vertical' } });
+    expect(wrapper.attributes('aria-orientation')).toBe('vertical');
+    await wrapper.setProps({ orientation: 'horizontal' });
+    expect(wrapper.attributes('aria-orientation')).toBeUndefined();
+  });
   it('默认（无 children）：根元素带 role="separator"', () => {
     expect(mount(Divider).attributes('role')).toBe('separator');
   });
 
-  it('有 children：role 仍在根元素上（不是在 rail / inner-text 上）', () => {
+  it('DIV-08 标题内容留在 group，空 rail 独立承担 separator', () => {
     const w = mount(Divider, { slots: { default: () => 'Text' } });
-    expect(w.attributes('role')).toBe('separator');
-    expect(w.find(`.${P}-rail-start`).attributes('role')).toBeUndefined();
+    expect(w.attributes('role')).toBe('group');
+    expect(w.find(`.${P}-rail-start`).attributes('role')).toBe('separator');
+    expect(w.find(`.${P}-rail-end`).attributes('aria-hidden')).toBe('true');
     expect(w.find(`.${P}-inner-text`).attributes('role')).toBeUndefined();
   });
 

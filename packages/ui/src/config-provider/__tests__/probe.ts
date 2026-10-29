@@ -33,11 +33,8 @@ export interface ProbeCapture {
   emptyDescription: string | undefined;
   localeCode: string | undefined;
   /**
-   * 直接读 `localeContextKey` 的当前值（绕过 `useLocale` 的 setup 期快照）。
-   *
-   * 为什么要两条：`useLocale` 目前**不是响应式**的（memory 的 D24，属于 locale 包
-   * 的未决项），用它断言「切换 locale 后文案变了」永远拿不到新值。
-   * 这条读的是 context 本身 ⇒ 验的是**本组件**的 locale 接线是否正确。
+   * 直接读取 localeContextKey，与 canonical useLocale 的 ComputedRef 结果交叉核对。
+   * 两条路径均应随语言变化同步更新。
    */
   localeContextDescription: string | undefined;
   /** 探针自身的渲染次数 */
@@ -93,8 +90,8 @@ export function createProbe(options: ProbeOptions = {}) {
         captured.direction = direction.value;
         captured.theme = theme.value;
         captured.componentConfig = componentConfig;
-        captured.emptyDescription = emptyLocale.description;
-        captured.localeCode = localeCode;
+        captured.emptyDescription = emptyLocale.value.description;
+        captured.localeCode = localeCode.value;
         captured.localeContextDescription = localeSnapshot.value?.Empty?.description;
         captured.renderCount = renderCount;
         return h('div', { class: 'probe' });

@@ -1,0 +1,121 @@
+{
+  "control": {
+    "supports": false,
+    "styles": [
+      {
+        "name": "committed-button",
+        "foreground": "rgb(255, 255, 255)",
+        "background": "rgb(22, 119, 255)",
+        "autoSolidColor": "",
+        "primaryColor": "",
+        "solidTextColor": "",
+        "buttonBackground": "#1677ff"
+      },
+      {
+        "name": "theme-provider",
+        "foreground": "rgb(255, 255, 255)",
+        "background": "rgb(22, 119, 255)",
+        "autoSolidColor": "",
+        "primaryColor": "",
+        "solidTextColor": "",
+        "buttonBackground": "#1677ff"
+      },
+      {
+        "name": "inherited-config",
+        "foreground": "rgb(255, 255, 255)",
+        "background": "rgb(22, 119, 255)",
+        "autoSolidColor": "",
+        "primaryColor": "",
+        "solidTextColor": "",
+        "buttonBackground": "#1677ff"
+      },
+      {
+        "name": "explicit-config",
+        "foreground": "rgb(255, 255, 255)",
+        "background": "rgb(22, 119, 255)",
+        "autoSolidColor": "",
+        "primaryColor": "",
+        "solidTextColor": "",
+        "buttonBackground": "#1677ff"
+      }
+    ],
+    "violations": [
+      {
+        "id": "color-contrast",
+        "nodes": [
+          {
+            "target": [
+              "section[data-contrast-control=\"committed-button\"] > button > span"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.1 (foreground color: #ffffff, background color: #1677ff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "section[data-contrast-control=\"theme-provider\"] > button > span"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.1 (foreground color: #ffffff, background color: #1677ff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".apollo-btn-lg > span"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.1 (foreground color: #ffffff, background color: #1677ff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "section[data-contrast-control=\"explicit-config\"] > button > span"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.1 (foreground color: #ffffff, background color: #1677ff, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "browser": "145.0.7632.6"
+  },
+  "source": {
+    "head": "796a193f0c3f656e82c179c1ac298aafe48df465",
+    "files": [
+      {
+        "path": "packages/ui/src/button/Button.vue",
+        "sameAsHead": true,
+        "sha256": "41b3e90d10dbe99c0d22bf8386d296dd74da2e5a00a7f88a8a3bfc6f81dd53c3"
+      },
+      {
+        "path": "packages/ui/src/button/use-button-theme.ts",
+        "sameAsHead": true,
+        "sha256": "b837b5235d75d50d1363333f0c2158747159ced93705330a40dc343080354dbe"
+      },
+      {
+        "path": "packages/ui/src/button/style/index.ts",
+        "sameAsHead": true,
+        "sha256": "0a76cd9f327b442b14fb4a24b5c2d73b059a7154d0771edb879f4a0740226e1f"
+      },
+      {
+        "path": "packages/ui/src/button/style/token.ts",
+        "sameAsHead": true,
+        "sha256": "c26d59ea1b6931ef0176c2779a939f0092b06aa5aa49ba58a710385a1e3b219a"
+      },
+      {
+        "path": "packages/ui/src/style/index.ts",
+        "sameAsHead": true,
+        "sha256": "b576c320900a545974e487b0a22b0883331b1e1bfe4075a28cd717449050ec67"
+      }
+    ]
+  },
+  "classification": {
+    "status": "verified-independent-existing-browser-fallback-defect",
+    "introducedByCurrentConfigProvider": false,
+    "scope": "Chromium145 without native contrast-color; no Provider, empty ThemeProvider, inherited ConfigProvider and empty ConfigProvider theme give the same4.1 contrast failure. Existing native visual approvals use system Chrome150.",
+    "action": "Record for the Button/browser-compatibility unit after the requested pause; no new task dispatched.",
+    "sourceEvidence": {
+      "control": {
+        "path": "/tmp/apollo-config-provider-audit/button-primary-control.json",
+        "sha256": "78833f1ac031b67663d66c595c116137f06a0a0d3678f7271179c7c37085c98d"
+      },
+      "source": {
+        "path": "/tmp/apollo-config-provider-audit/button-control-source.json",
+        "sha256": "cf9a1284d1a7ef711df005df3fcc87aa4ee6e70f847e91b89972d35c1befe83d"
+      }
+    }
+  }
+}

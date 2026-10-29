@@ -12,7 +12,9 @@ const sizeOptions: { value: SizeType; label: string }[] = [
 ];
 
 function onSizeChange(value: unknown): void {
-  componentSize.value = value as SizeType;
+  if (value === 'small' || value === 'medium' || value === 'middle' || value === 'large') {
+    componentSize.value = value;
+  }
 }
 </script>
 
@@ -34,7 +36,7 @@ function onSizeChange(value: unknown): void {
       <div class="component-size-demo-panel">
         <Space>
           <Input aria-label="组件尺寸输入框" placeholder="组件尺寸跟随配置" style="width: 220px" />
-          <Button type="primary">主要按钮</Button>
+          <Button>操作按钮</Button>
           <Button>次要按钮</Button>
         </Space>
         <p class="component-size-demo-hint">

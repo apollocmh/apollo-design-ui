@@ -78,3 +78,6 @@ pnpm --filter @apollo-design/form-core lint
 
 测试要求见 [`TESTING.md`](../../TESTING.md)。
 覆盖率下限为 语句 95% / 分支 90% / 函数 95%（L2 档位，见 `vitest.config.ts` 的 `coverage.thresholds`）。
+
+
+2026-10-29 ConfigProvider 关联修复：已挂载 Form 的校验消息读取当前 FormProvider.validateMessages 与自身 validateMessages，依次覆盖；Provider 替换、语言变化和深层消息修改会同步到 store。参见[关联迁移与边界](../../docs/migrations/config-provider-contracts.md)，本轮不代表整个 form-core 重新验收。

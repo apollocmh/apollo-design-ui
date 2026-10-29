@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 对齐 antd 的 accordion demo
+// accordion 保留 disclosure 语义，同时仅展开一个面板。
 import { Collapse } from '@apollo-design/ui';
 
 const items = [

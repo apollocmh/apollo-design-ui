@@ -15,9 +15,9 @@ import type {
   InputProps,
   InputRef,
   InputSemanticClassNames,
-  InputSemanticContext,
   InputSemanticStyles,
   PasswordSemanticClassNames,
+  PasswordSemanticContext,
   ShowCountProp,
   TextAreaProps,
   TextAreaRef,
@@ -147,12 +147,12 @@ describe('Input.Password · 类型面覆盖 InputProps（Issue #3.4）', () => {
     // Omit 再声明的理由：PasswordSemanticClassNames 与 InputSemanticClassNames 不兼容
     expectTypeOf<InputPasswordProps['classNames']>().toEqualTypeOf<
       | PasswordSemanticClassNames
-      | ((context: InputSemanticContext) => PasswordSemanticClassNames)
+      | ((context: PasswordSemanticContext) => PasswordSemanticClassNames)
       | undefined
     >();
   });
 
-  it('正例：按 antd 文档写的 Password 用法全部通过', () => {
+  it('正例：Password 支持继承的有效输入属性', () => {
     const full: InputPasswordProps = {
       action: 'hover',
       allowClear: true,
@@ -163,13 +163,18 @@ describe('Input.Password · 类型面覆盖 InputProps（Issue #3.4）', () => {
       placeholder: 'pw',
       prefix: 'P',
       visibilityToggle: { visible: false, onVisibleChange: () => {}, tabIndex: 0 },
-      iconRender: () => null,
     };
     expectTypeOf(full).toEqualTypeOf<InputPasswordProps>();
   });
 
   it('负例（永不调用的闭包）', () => {
     const _negatives = () => {
+      // @ts-expect-error Password owns password/text; the ineffective type field was removed.
+      const badType: InputPasswordProps = { type: 'email' };
+      // @ts-expect-error Content renderers use the icon scoped slot.
+      const oldIcon: InputPasswordProps = { iconRender: () => null };
+      void badType;
+      void oldIcon;
       // @ts-expect-error `action` 只接受 click / hover
       const badAction: InputPasswordProps = { action: 'dblclick' };
       void badAction;

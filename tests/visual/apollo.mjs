@@ -19,11 +19,15 @@ import {
 } from './baseline-store.mjs';
 import { prepareBreadcrumbVisual } from './breadcrumb-state.mjs';
 import { prepareButtonVisual } from './button-state.mjs';
+import { prepareCollapseVisual } from './collapse-state.mjs';
+import { prepareConfigProviderVisual } from './config-provider-state.mjs';
 import { prepareDescriptionsVisual } from './descriptions-state.mjs';
+import { prepareDividerVisual } from './divider-state.mjs';
 import { prepareEmptyVisual } from './empty-state.mjs';
 import { prepareFlexVisual } from './flex-state.mjs';
 import { prepareGridVisual } from './grid-state.mjs';
 import { prepareImageVisual } from './image-state.mjs';
+import { prepareInputVisual } from './input-state.mjs';
 import { prepareLayoutVisual } from './layout-state.mjs';
 import { prepareListVisual } from './list-state.mjs';
 import { buildCases, COMPONENTS } from './matrix.mjs';
@@ -45,10 +49,14 @@ const visualPreparers = {
   badge: prepareBadgeVisual,
   breadcrumb: prepareBreadcrumbVisual,
   button: prepareButtonVisual,
+  collapse: prepareCollapseVisual,
+  'config-provider': prepareConfigProviderVisual,
   descriptions: prepareDescriptionsVisual,
+  divider: prepareDividerVisual,
   empty: prepareEmptyVisual,
   grid: prepareGridVisual,
   image: prepareImageVisual,
+  input: prepareInputVisual,
   list: prepareListVisual,
   'qr-code': prepareQRCodeVisual,
   result: prepareResultVisual,
@@ -251,12 +259,16 @@ async function main() {
               'skeleton',
               'result',
               'button',
+              'input',
+              'config-provider',
+              'collapse',
               'empty',
               'tag',
               'avatar',
               'typography',
               'badge',
               'descriptions',
+              'divider',
               'timeline',
               'grid',
               'space',

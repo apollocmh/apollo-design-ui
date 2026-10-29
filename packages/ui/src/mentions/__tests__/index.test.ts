@@ -66,7 +66,7 @@ afterEach(() => {
 describe('Mentions · 挂载与类名（L2 接线）', () => {
   it('裸形态：根 div + textarea.rc-textarea（**textarea 用 rc-input 的默认前缀**）', () => {
     const wrapper = mount(Mentions, { attachTo: document.body });
-    const root = wrapper.element as HTMLElement;
+    const root = wrapper.get('.apollo-mentions').element as HTMLElement;
     expect(root.tagName).toBe('DIV');
     expect(root.className).toContain('apollo-mentions');
     expect(root.className).toContain('apollo-mentions-outlined');
@@ -78,15 +78,25 @@ describe('Mentions · 挂载与类名（L2 接线）', () => {
 
   it('size / status / variant / disabled / rtl 的类名落点', async () => {
     const wrapper = mount(Mentions, { props: { size: 'large', status: 'error' } });
-    expect((wrapper.element as HTMLElement).className).toContain('apollo-mentions-lg');
-    expect((wrapper.element as HTMLElement).className).toContain('apollo-mentions-status-error');
+    expect((wrapper.get('.apollo-mentions').element as HTMLElement).className).toContain(
+      'apollo-mentions-lg',
+    );
+    expect((wrapper.get('.apollo-mentions').element as HTMLElement).className).toContain(
+      'apollo-mentions-status-error',
+    );
 
     await wrapper.setProps({ variant: 'filled' });
-    expect((wrapper.element as HTMLElement).className).toContain('apollo-mentions-filled');
-    expect((wrapper.element as HTMLElement).className).not.toContain('apollo-mentions-outlined');
+    expect((wrapper.get('.apollo-mentions').element as HTMLElement).className).toContain(
+      'apollo-mentions-filled',
+    );
+    expect((wrapper.get('.apollo-mentions').element as HTMLElement).className).not.toContain(
+      'apollo-mentions-outlined',
+    );
 
     await wrapper.setProps({ disabled: true });
-    expect((wrapper.element as HTMLElement).className).toContain('apollo-mentions-disabled');
+    expect((wrapper.get('.apollo-mentions').element as HTMLElement).className).toContain(
+      'apollo-mentions-disabled',
+    );
     expect(wrapper.find('textarea').attributes('class')).toContain('rc-textarea-disabled');
     wrapper.unmount();
   });
@@ -94,7 +104,9 @@ describe('Mentions · 挂载与类名（L2 接线）', () => {
   it('readOnly ⇒ textarea 只读（**无类名**，与实测一致）', () => {
     const wrapper = mount(Mentions, { props: { readOnly: true, defaultValue: 'a' } });
     expect(wrapper.find('textarea').element).toHaveProperty('readOnly', true);
-    expect((wrapper.element as HTMLElement).className).not.toContain('readonly');
+    expect((wrapper.get('.apollo-mentions').element as HTMLElement).className).not.toContain(
+      'readonly',
+    );
     wrapper.unmount();
   });
 
@@ -103,7 +115,7 @@ describe('Mentions · 挂载与类名（L2 接线）', () => {
       props: { allowClear: true, defaultValue: 'a' },
       attachTo: document.body,
     });
-    const root = wrapper.element as HTMLElement;
+    const root = wrapper.get('.apollo-mentions').element as HTMLElement;
     expect(root.tagName).toBe('SPAN');
     expect(root.className).toContain('apollo-mentions-affix-wrapper');
     expect(root.className).toContain('apollo-mentions-has-suffix');
@@ -372,13 +384,17 @@ describe('Mentions · allowClear / focus', () => {
     const wrapper = mount(Mentions, { props: { onFocus, onBlur }, attachTo: document.body });
     const ta = wrapper.find('textarea');
     await ta.trigger('focus');
-    expect((wrapper.element as HTMLElement).className).toContain('apollo-mentions-focused');
+    expect((wrapper.get('.apollo-mentions').element as HTMLElement).className).toContain(
+      'apollo-mentions-focused',
+    );
     expect(onFocus).toHaveBeenCalledTimes(1);
 
     await ta.trigger('blur');
     vi.runAllTimers();
     await nextTick();
-    expect((wrapper.element as HTMLElement).className).not.toContain('apollo-mentions-focused');
+    expect((wrapper.get('.apollo-mentions').element as HTMLElement).className).not.toContain(
+      'apollo-mentions-focused',
+    );
     expect(onBlur).toHaveBeenCalledTimes(1);
     vi.useRealTimers();
     wrapper.unmount();
@@ -470,7 +486,7 @@ describe('Mentions · expose / popupRender / 语义槽', () => {
       styles: { root: { width: '120px' } },
     };
     const wrapper = mount(Mentions, { props, attachTo: document.body });
-    expect((wrapper.element as HTMLElement).className).toContain('c-root');
+    expect((wrapper.get('.apollo-mentions').element as HTMLElement).className).toContain('c-root');
     expect(wrapper.find('textarea').classes()).toContain('c-textarea');
     expect(wrapper.find('.apollo-mentions-suffix').classes()).toContain('c-suffix');
     wrapper.unmount();

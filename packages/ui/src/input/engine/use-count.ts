@@ -43,7 +43,9 @@ export function useCount(
           ? showCount
           : !!showCount;
   }
-  Object.assign(merged, count);
+  for (const [key, value] of Object.entries(count ?? {})) {
+    if (value !== undefined) merged[key] = value;
+  }
   const { show, ...rest } = merged as { show?: unknown } & Partial<CountConfig>;
   return {
     ...rest,
@@ -55,7 +57,7 @@ export function useCount(
 
 /** rc 的 `inCountRange`。 */
 export function inCountRange(value: string, countConfig: CountConfig): boolean {
-  if (!countConfig.max) {
+  if (countConfig.max === undefined) {
     return true;
   }
   return countConfig.strategy(value) <= countConfig.max;
@@ -76,8 +78,8 @@ export function useCountDisplay(info: {
   const { countConfig, value, maxLength } = info;
   const mergedMax = countConfig.max ?? maxLength;
   const valueLength = countConfig.strategy(value);
-  const isOutOfRange = !!mergedMax && valueLength > mergedMax;
-  const hasMaxLength = Number(mergedMax) > 0;
+  const isOutOfRange = mergedMax !== undefined && valueLength > mergedMax;
+  const hasMaxLength = mergedMax !== undefined;
   const dataCount = countConfig.show
     ? countConfig.showFormatter
       ? (countConfig.showFormatter({ value, count: valueLength, maxLength: mergedMax }) as
@@ -104,7 +106,7 @@ export function useCountExceed(
     if (
       !isComposing &&
       config.exceedFormatter &&
-      config.max &&
+      config.max !== undefined &&
       config.strategy(currentValue) > config.max
     ) {
       nextValue = config.exceedFormatter(currentValue, { max: config.max });

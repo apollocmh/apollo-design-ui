@@ -1,109 +1,108 @@
-/**
- * Collapse 的类型契约（从 antd 6.6.4 的 `es/collapse/*.d.ts` **重新定义**，不复制）。
- */
+/** Current Collapse data, native Vue composition and disclosure contracts. */
+import type { CSSProperties, StyleValue, VNodeChild } from 'vue';
 
-import type { VNodeChild } from 'vue';
-
-/** 折叠交互模式。 */
 export type CollapsibleType = 'header' | 'icon' | 'disabled';
-
-/** 箭头位置。 */
 export type ExpandIconPlacement = 'start' | 'end';
-
-/** 面板 props（items 项 / Collapse.Panel 共用）。 */
-export interface CollapsePanelProps {
-  key?: string | number | undefined;
-  /** items 形态的面板标题（children 形态用 `header`）。 */
-  label?: VNodeChild | undefined;
-  /** children 形态的面板标题（prop 收窄 string，富内容走 `#header` 插槽）。 */
-  header?: string | undefined;
-  /** item 级目标（转发给内层面板），不是根别名。 */
-  className?: string | undefined;
-  style?: Record<string, string | number> | undefined;
-  showArrow?: boolean | undefined;
-  forceRender?: boolean | undefined;
-  collapsible?: CollapsibleType | undefined;
-  /** @deprecated 用 `collapsible="disabled"`。 */
-  disabled?: boolean | undefined;
-  destroyOnHidden?: boolean | undefined;
-  onItemClick?: ((key: string) => void) | undefined;
-  headerClass?: string | undefined;
-  id?: string | undefined;
-  classNames?: CollapseSemanticClassNames | undefined;
-  styles?: CollapseSemanticStyles | undefined;
-}
-
+export type CollapseHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+export type CollapseSize = 'large' | 'middle' | 'small';
 export interface CollapseSemanticClassNames {
-  root?: string | undefined;
-  header?: string | undefined;
-  title?: string | undefined;
-  body?: string | undefined;
-  icon?: string | undefined;
+  root?: string;
+  header?: string;
+  title?: string;
+  body?: string;
+  icon?: string;
 }
-
 export interface CollapseSemanticStyles {
-  root?: Record<string, string | number> | undefined;
-  header?: Record<string, string | number> | undefined;
-  title?: Record<string, string | number> | undefined;
-  body?: Record<string, string | number> | undefined;
-  icon?: Record<string, string | number> | undefined;
+  root?: CSSProperties;
+  header?: CSSProperties;
+  title?: CSSProperties;
+  body?: CSSProperties;
+  icon?: CSSProperties;
 }
-
-/** items 项的运行时形状（label/children 双支持）。 */
+export interface CollapseExpandIconScope {
+  key: string;
+  isActive: boolean;
+  prefixCls: string;
+  collapsible: CollapsibleType | undefined;
+  direction: 'ltr' | 'rtl';
+}
+/** Programmatic defaults; the component renderer itself is a named slot. */
+export interface CollapseConfig {
+  className?: string;
+  style?: CSSProperties;
+  classNames?: CollapseSemanticClassNames;
+  styles?: CollapseSemanticStyles;
+  expandIcon?: (scope: CollapseExpandIconScope) => VNodeChild;
+}
+export interface CollapsePanelProps {
+  key?: string | number;
+  header?: string;
+  /** Existing VNode data fallback after header; a present #header has priority. */
+  label?: VNodeChild;
+  /** Existing item target, not a replacement for native class. */
+  className?: string;
+  style?: StyleValue;
+  prefixCls?: string;
+  showArrow?: boolean;
+  forceRender?: boolean;
+  collapsible?: CollapsibleType;
+  /** @deprecated Use collapsible=disabled. */
+  disabled?: boolean;
+  destroyOnHidden?: boolean;
+  onItemClick?: (key: string) => void;
+  headerClass?: string;
+  id?: string;
+  classNames?: CollapseSemanticClassNames;
+  styles?: CollapseSemanticStyles;
+}
 export interface CollapseItemType {
-  key?: string | number | undefined;
-  label?: VNodeChild | undefined;
-  /** children 形态的对齐字段（rc Panel 的 header）。 */
-  header?: VNodeChild | undefined;
-  children?: VNodeChild | undefined;
-  collapsible?: CollapsibleType | undefined;
-  onItemClick?: ((key: string) => void) | undefined;
-  destroyOnHidden?: boolean | undefined;
-  forceRender?: boolean | undefined;
-  showArrow?: boolean | undefined;
-  extra?: VNodeChild | undefined;
-  className?: string | undefined;
-  style?: Record<string, string | number> | undefined;
-  headerClass?: string | undefined;
-  id?: string | undefined;
-  classNames?: CollapseSemanticClassNames | undefined;
-  styles?: CollapseSemanticStyles | undefined;
+  key?: string | number;
+  label?: VNodeChild;
+  header?: VNodeChild;
+  children?: VNodeChild;
+  extra?: VNodeChild;
+  collapsible?: CollapsibleType;
+  onItemClick?: (key: string) => void;
+  destroyOnHidden?: boolean;
+  forceRender?: boolean;
+  showArrow?: boolean;
+  className?: string;
+  style?: StyleValue;
+  headerClass?: string;
+  id?: string;
+  classNames?: CollapseSemanticClassNames;
+  styles?: CollapseSemanticStyles;
 }
-
 export interface CollapseProps {
-  /** 面板列表（首选形态）。 */
-  items?: CollapseItemType[] | undefined;
-  activeKey?: (string | number)[] | string | number | undefined;
-  defaultActiveKey?: (string | number)[] | string | number | undefined;
-  /** 手风琴（同时只展开一个）。 */
-  accordion?: boolean | undefined;
-  /** @deprecated 用 `destroyOnHidden`。 */
-  destroyInactivePanel?: boolean | undefined;
-  destroyOnHidden?: boolean | undefined;
-  bordered?: boolean | undefined;
-  prefixCls?: string | undefined;
-  /** 自定义展开图标（返回 VNodeChild；panelProps 含 isActive/collapsible 等）。 */
-  expandIcon?:
-    | ((panelProps: {
-        isActive?: boolean;
-        prefixCls?: string;
-        collapsible?: CollapsibleType;
-      }) => VNodeChild)
-    | undefined;
-  expandIconPlacement?: ExpandIconPlacement | undefined;
-  /** @deprecated 用 `expandIconPlacement`。 */
-  expandIconPosition?: ExpandIconPlacement | undefined;
-  ghost?: boolean | undefined;
-  size?: 'large' | 'middle' | 'small' | undefined;
-  collapsible?: CollapsibleType | undefined;
-  /** @deprecated 用 `items`。 */
-  children?: VNodeChild | undefined;
-  onChange?: ((key: string[]) => void) | undefined;
-  classNames?: CollapseSemanticClassNames | undefined;
-  styles?: CollapseSemanticStyles | undefined;
+  items?: CollapseItemType[];
+  activeKey?: (string | number)[] | string | number;
+  defaultActiveKey?: (string | number)[] | string | number;
+  accordion?: boolean;
+  /** @deprecated Use destroyOnHidden. */
+  destroyInactivePanel?: boolean;
+  destroyOnHidden?: boolean;
+  bordered?: boolean;
+  prefixCls?: string;
+  expandIconPlacement?: ExpandIconPlacement;
+  /** @deprecated Use expandIconPlacement. */
+  expandIconPosition?: ExpandIconPlacement;
+  ghost?: boolean;
+  size?: CollapseSize;
+  collapsible?: CollapsibleType;
+  headingLevel?: CollapseHeadingLevel;
+  onChange?: (key: string[]) => void;
+  classNames?: CollapseSemanticClassNames;
+  styles?: CollapseSemanticStyles;
 }
-
-/** ref 形状（antd 的 ref 指向根 div）。 */
+export interface CollapseSlots {
+  default?: () => VNodeChild;
+  expandIcon?: (scope: CollapseExpandIconScope) => VNodeChild;
+}
+export interface CollapsePanelSlots {
+  default?: () => VNodeChild;
+  header?: () => VNodeChild;
+  extra?: () => VNodeChild;
+}
 export interface CollapseRef {
   nativeElement: HTMLDivElement | null;
 }

@@ -1,14 +1,20 @@
 <script setup lang="ts">
-// 对齐 antd 的 extra / collapsible demo
-import { Collapse } from '@apollo-design/ui';
+import { Collapse, CollapsePanel } from '@apollo-design/ui';
+import { ref } from 'vue';
 
-const items: import('@apollo-design/ui').CollapseItemType[] = [
-  { key: '1', label: 'This is panel header 1', children: 'Content', extra: 'Extra' },
-  { key: '2', label: 'This is panel header 2', children: 'Content', collapsible: 'header' },
-  { key: '3', label: 'This is panel header 3', children: 'Content', collapsible: 'disabled' },
-];
+const saved = ref(0);
 </script>
 
 <template>
-  <Collapse :items="items" />
+  <div>
+    <p aria-live="polite">已保存 {{ saved }} 次</p>
+    <Collapse>
+      <CollapsePanel key="1" header="带独立操作的面板">
+        <template #extra><button type="button" @click="saved += 1">保存</button></template>
+        extra 的按钮独立响应点击、Enter 和 Space，不改变展开状态。
+      </CollapsePanel>
+      <CollapsePanel key="2" header="仅标题按钮可展开" collapsible="header">Content</CollapsePanel>
+      <CollapsePanel key="3" header="禁止折叠" collapsible="disabled">Content</CollapsePanel>
+    </Collapse>
+  </div>
 </template>

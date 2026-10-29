@@ -128,13 +128,8 @@ defineSlots<{
   cover?: () => VNodeChild;
 }>();
 
-const {
-  getPrefixCls,
-  className: contextClassName,
-  style: contextStyle,
-  classNames: contextClassNames,
-  styles: contextStyles,
-} = useComponentConfig<CardConfig>('card');
+const config = useComponentConfig<CardConfig>('card');
+const { getPrefixCls } = config;
 
 /**
  * ⚠️ **必须** `useDirection()`（D27）：`useComponentConfig()` 的 `direction` 是
@@ -209,8 +204,8 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   CardSemanticClassNames,
   CardSemanticStyles
 >(
-  [() => contextClassNames, () => props.classNames],
-  [() => contextStyles, () => semanticRootStyle(contextStyle), () => props.styles],
+  [() => config.classNames, () => props.classNames],
+  [() => config.styles, () => semanticRootStyle(config.style), () => props.styles],
   semanticProps,
 );
 
@@ -367,7 +362,7 @@ function rootClass(): unknown[] {
   const cls = prefixCls.value;
   return [
     cls,
-    contextClassName,
+    config.className,
     {
       [`${cls}-loading`]: props.loading,
       [`${cls}-bordered`]: variant.value !== 'borderless',

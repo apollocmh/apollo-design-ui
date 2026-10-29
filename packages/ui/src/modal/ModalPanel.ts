@@ -74,8 +74,10 @@ export default defineComponent({
 
     // 上游的 `okType = 'primary'` 默认值
     const mergedOkType = computed<ModalOkType>(() => props.okType ?? 'primary');
-    const okTextLocale = computed(() => fallbackProp(props.okText, locale.okText));
-    const cancelTextLocale = computed(() => fallbackProp(props.cancelText, locale.cancelText));
+    const okTextLocale = computed(() => fallbackProp(props.okText, locale.value.okText));
+    const cancelTextLocale = computed(() =>
+      fallbackProp(props.cancelText, locale.value.cancelText),
+    );
 
     provide(
       modalContextKey,

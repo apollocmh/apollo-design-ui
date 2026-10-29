@@ -5,17 +5,6 @@ title:
   en-US: theme
 ---
 
-`theme` 支持 `token` / `algorithm` / `components` / `cssVarPrefix` / `inherit`，
-合并语义与 antd 的 `useTheme` 一致（嵌套时 `token` 浅合并、`components` 逐组件合并；
-`inherit: false` 时不继承外层）。
+theme 支持 token、algorithm（单个或数组）、components、cssVarPrefix 和 inherit。示例使用显式 section 宿主，让完整内容与 Alias 变量在 SSR 同树；原生宿主 attrs/style 按原生规则合并。
 
-**它是怎么生效的**：`ConfigProvider` 调 `getDesignToken()` 算出完整 token，
-再用 `createCSSVarScope()` 把 `--apollo-*` 写到作用域元素上。
-静态 CSS 只引用 `var(--apollo-*)`，所以主题切换**零样式重算**。
-
-⚠️ 两处已知限制：
-
-1. `theme.components`（Component Token）目前只进 context，**不产出 CSS 变量**
-   —— `tokens.css` 只声明 Alias 层（PITFALLS 92）。
-2. 给了 `theme` 时，为了让 CSS 变量有地方挂，会多渲染一个 `display: contents`
-   的作用域元素（不产生布局盒）。差异登记为 **D26**。
+默认无宿主时客户端向实际原生根投射变量，SSR 直接原生槽根可序列化；opaque 组件或纯文本需要显式宿主才能获得完整服务端 CSS 作用域。算法切换与 useTheme().config 可写 Ref 保留业务草稿，外部主题变更会恢复外部配置。组件令牌由各组件消费者落地，不在运行时生成 CSS 选择器。

@@ -5,11 +5,7 @@ title:
   en-US: Customize Style
 ---
 
-`style` 直接落在根元素上，且会**覆盖** `styles.root`（与 antd 的合并顺序一致）。
-
-⚠️ 注意 `borderWidth: 2` 这类**数值**：Vue 运行时的 `setStyle` 不像 React 的
-`dangerousStyleValue` 那样补单位，裸数字会被静默丢弃。请写 `'2px'` 或 `2` 之外的单位串。
-（组件内部的 `orientationMargin` 已按这条规则处理，见 `README.md` §6。）
+根 `class` / `style` 使用 Vue 原生 attrs；字符串、对象或数组 style 按 Vue 规则合并，优先于 Provider 与 `styles.root`。CSS 长度写完整单位，例如 borderWidth: '2px'。
 
 ```vue
 <script setup lang="ts">
@@ -23,7 +19,14 @@ import { Divider } from '@apollo-design/ui';
   <Divider vertical :style="{ height: '60px', borderColor: '#7cb305' }" />
   <Divider vertical :style="{ height: '60px', borderColor: '#7cb305' }" dashed />
 
-  <div :style="{ display: 'flex', flexDirection: 'column', height: '50px', boxShadow: '0 0 1px red' }">
+  <div
+    :style="{
+      display: 'flex',
+      flexDirection: 'column',
+      height: '50px',
+      boxShadow: '0 0 1px red',
+    }"
+  >
     <Divider :style="{ background: 'rgba(0,255,0,0.05)' }" title-placement="start">Text</Divider>
   </div>
 </template>

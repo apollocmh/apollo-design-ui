@@ -37,6 +37,7 @@ import type {
   TransferProps,
   TransferSlots,
 } from './interface';
+import { searchEventValue } from './Search';
 import Section from './Section';
 import { useData } from './use-data';
 import { useMultipleSelect } from './use-multiple-select';
@@ -90,14 +91,13 @@ const Transfer = defineComponent({
     },
   },
   setup(props, { attrs, expose, slots }) {
-    const config = useComponentConfig('transfer') as unknown as {
-      getPrefixCls: (suffix?: string, custom?: string) => string;
+    const config = useComponentConfig<{
       className?: string;
       style?: Record<string, string>;
       classNames?: TransferProps['classNames'];
       styles?: TransferProps['styles'];
       selectionsIcon?: TransferProps['selectionsIcon'];
-    };
+    }>('transfer');
     const direction = useDirection();
     const contextDisabled = useDisabled();
     const mergedDisabled = computed(() => props.disabled ?? contextDisabled.value);
@@ -230,10 +230,14 @@ const Transfer = defineComponent({
     const onRightItemSelectAll = (keys: TransferKey[], checkAll: boolean | 'replace') =>
       onItemSelectAll('right', keys, checkAll);
 
-    const leftFilter = (e: { target: { value: string } }) =>
-      props.onSearch?.('left', e.target.value);
-    const rightFilter = (e: { target: { value: string } }) =>
-      props.onSearch?.('right', e.target.value);
+    const leftFilter = (event: Event) => {
+      const value = searchEventValue(event);
+      if (value !== undefined) props.onSearch?.('left', value);
+    };
+    const rightFilter = (event: Event) => {
+      const value = searchEventValue(event);
+      if (value !== undefined) props.onSearch?.('right', value);
+    };
     const handleLeftClear = () => props.onSearch?.('left', '');
     const handleRightClear = () => props.onSearch?.('right', '');
 
@@ -379,8 +383,10 @@ const Transfer = defineComponent({
     // Locale
     const [contextLocale] = useLocale('Transfer');
     const listLocale = computed(() => ({
-      ...contextLocale,
-      notFoundContent: h(DefaultRenderEmpty, { componentName: 'Transfer' }),
+      ...contextLocale.value,
+      notFoundContent: config.renderEmpty
+        ? config.renderEmpty('Transfer')
+        : h(DefaultRenderEmpty, { componentName: 'Transfer' }),
       ...(props.locale ?? {}),
     }));
 

@@ -20,12 +20,13 @@
  *    （本仓无 cssinjs 的 hash/`-css-var` 类机制；组件变量由静态 CSS 的声明块提供）。
  */
 
-import { useLocaleReactive } from '@apollo-design/locale';
+import { useLocale } from '@apollo-design/locale';
 import { isNumber, isPlainObject, isRenderable } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
   h,
+  isVNode,
   type MaybeRefOrGetter,
   type PropType,
   shallowRef,
@@ -33,7 +34,7 @@ import {
   type VNode,
 } from 'vue';
 import { clsx } from '../_internal/clsx';
-import { computeClosable, pickClosable } from '../_internal/use-closable';
+import { computeClosable } from '../_internal/use-closable';
 import { useComponentConfig } from '../config-provider/context';
 import { useNotification as useKernelNotification } from './engine';
 import { useStackConfig } from './hooks/useStackConfig';
@@ -92,13 +93,13 @@ const Holder = defineComponent({
   },
   setup(props, { expose }) {
     const config = useComponentConfig('notification');
-    const prefixCls = props.prefixCls || config.getPrefixCls('notification');
+    const prefixCls = computed(() => props.prefixCls || config.getPrefixCls('notification'));
     // ⚠️ 必须用**响应式**变体（Issue #47）：把 `closeLabel` 拍成 setup 期常量的话，
     //    运行时切语言后**新开**的通知仍拿旧文案。上游的 React 版没有这个问题 ——
     //    `useImperativeHandle(ref, () => ({ ..., closeLabel: contextLocale.close }))`
     //    **没有依赖数组** ⇒ 每次 render 重建 imperative handle ⇒ 每次 `open()` 都现读。
     //    本仓的等价物：`closeLabel` 做成 computed + expose 上挂 getter（见下方 `expose`）。
-    const [locale] = useLocaleReactive('global');
+    const [locale] = useLocale('global');
     const closeLabel = computed(() => locale.value?.close ?? 'Close');
 
     const mergedDuration = computed(() =>
@@ -111,21 +112,18 @@ const Holder = defineComponent({
     );
 
     const { api, holder } = useKernelNotification({
-      prefixCls,
+      prefixCls: () => prefixCls.value,
       style: () => getPlacementOffsetStyle(props.top, props.bottom),
       className: () =>
-        clsx((props.rtl ?? config.direction === 'rtl') ? `${prefixCls}-rtl` : undefined),
-      motion: () => getMotion(prefixCls),
-      closable: { closeIcon: getCloseIcon(prefixCls) },
+        clsx((props.rtl ?? config.direction === 'rtl') ? `${prefixCls.value}-rtl` : undefined),
+      motion: () => getMotion(prefixCls.value),
+      closable: () => ({ closeIcon: getCloseIcon(prefixCls.value) }),
       // ⚠️ 这几个必须是 **getter**（Issue #46，与 message #45 同判）：`useNotification`
       //    在 setup 期把根配置解构成常量 ⇒ 传裸值会被钉死，「holder 建好之后再改配置」
       //    （`notification.config({ maxCount })` 等）就传不进内核。
       //    `style` / `className` / `motion` / `getContainer` 本来就是 getter，同判。
       duration: () => mergedDuration.value,
-      getContainer: () =>
-        props.getContainer?.() ??
-        (config.getPopupContainer as (() => HTMLElement) | undefined)?.() ??
-        document.body,
+      getContainer: () => props.getContainer?.() ?? config.getPopupContainer?.() ?? document.body,
       maxCount: () => props.maxCount,
       pauseOnHover: () => props.pauseOnHover,
       showProgress: () => props.showProgress,
@@ -139,7 +137,9 @@ const Holder = defineComponent({
     //    调用时现读 `instance.closeLabel` ⇒ 只有 getter 才能拿到「切语言后」的新文案。
     expose({
       ...api,
-      prefixCls,
+      get prefixCls() {
+        return prefixCls.value;
+      },
       get closeLabel() {
         return closeLabel.value;
       },
@@ -163,8 +163,8 @@ export function useInternalNotification(
     // 与上游同判：在 render 期调用拿不到实例 ⇒ 直接返回（dev 下上游会告警，本仓无该基建）
     if (!instance) return;
 
-    const { prefixCls = 'apollo-notification', closeLabel = 'Close' } = instance;
-    const noticePrefixCls = `${prefixCls}-notice`;
+    const prefixCls = () => instance.prefixCls ?? 'apollo-notification';
+    const noticePrefixCls = () => `${prefixCls()}-notice`;
 
     const {
       title,
@@ -189,32 +189,34 @@ export function useInternalNotification(
     const mergedActions = actions ?? btn;
 
     const configValue = toValue(notificationConfig) ?? {};
-    const realCloseIcon = getCloseIcon(
-      noticePrefixCls,
-      getCloseIconConfig(closeIcon, configValue, undefined),
-    );
-
-    const closableResult = computeClosable(
-      pickClosable({ ...(configValue as Record<string, unknown>), ...config }).value,
-      undefined,
-      {
+    // Keep the notice's explicit options and content, and derive only Provider defaults
+    // at render time. Reopening a key still goes through the normal update/timer path.
+    const mergedClosable = () => {
+      // ArgsProps documents null as an explicit request to hide the close button.
+      if (closable === null) return false;
+      const closeLabel = instance.closeLabel ?? 'Close';
+      const realCloseIcon = getCloseIcon(
+        noticePrefixCls(),
+        getCloseIconConfig(closeIcon, configValue, undefined),
+      );
+      const result = computeClosable({ ...configValue, ...config }, undefined, {
         closable: true,
         closeIcon: realCloseIcon,
         closeIconRender: (node) =>
-          getCloseIconWithLabel(noticePrefixCls, node as never, closeLabel),
+          isVNode(node) ? getCloseIconWithLabel(noticePrefixCls(), node, closeLabel) : node,
         closeLabel,
-      },
-    );
-    const mergedClosable = closableResult.closable
-      ? {
-          onClose: isPlainObject(closable) ? closable.onClose : undefined,
-          closeIcon: closableResult.closeIconNode,
-          ...closableResult.ariaProps,
-        }
-      : false;
+      });
+      return result.closable
+        ? {
+            onClose: isPlainObject(closable) ? closable.onClose : undefined,
+            closeIcon: result.closeIconNode,
+            disabled: result.closeBtnIsDisabled,
+            ...result.ariaProps,
+          }
+        : false;
+    };
 
-    const iconNode = icon || (type ? h(TypeIcon[type]) : null);
-    const typeIconCls = !icon && type ? `${noticePrefixCls}-icon-${type}` : undefined;
+    const iconNode = icon !== undefined ? icon : type ? h(TypeIcon[type]) : null;
 
     instance.open({
       placement: configValue.placement ?? DEFAULT_PLACEMENT,
@@ -226,10 +228,15 @@ export function useInternalNotification(
       role,
       classNames: {
         ...configClassNames,
-        icon: clsx(typeIconCls, configClassNames.icon),
+        get icon() {
+          return clsx(
+            icon === undefined && type ? `${noticePrefixCls()}-icon-${type}` : undefined,
+            configClassNames.icon,
+          );
+        },
       } as never,
       styles: styles as never,
-      className: clsx(type ? `${noticePrefixCls}-${type}` : undefined, className),
+      className: () => clsx(type ? `${noticePrefixCls()}-${type}` : undefined, className),
       style,
       closable: mergedClosable,
     });

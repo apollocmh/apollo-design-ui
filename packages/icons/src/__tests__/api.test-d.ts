@@ -151,15 +151,14 @@ describe('icons 类型契约', () => {
     void bad;
   });
 
-  it('IconContextProps 与 antd 的字段一一对应', () => {
+  it('IconContextProps contains only consumed icon settings', () => {
     expectTypeOf<IconContextProps>().toMatchTypeOf<{
       prefixCls?: string;
       rootClassName?: string;
-      csp?: { nonce?: string };
-      layer?: string;
-      zeroRuntime?: boolean;
     }>();
-    expectTypeOf<IconContextProps['csp']>().toEqualTypeOf<{ nonce?: string } | undefined>();
+    expectTypeOf<IconContextProps>().not.toHaveProperty('csp');
+    expectTypeOf<IconContextProps>().not.toHaveProperty('layer');
+    expectTypeOf<IconContextProps>().not.toHaveProperty('zeroRuntime');
   });
 
   it('双色调色板的读写类型', () => {
@@ -212,4 +211,19 @@ describe('icons 类型契约', () => {
     expectTypeOf<CustomIconComponentProps['viewBox']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<CustomIconComponentProps['color']>().toEqualTypeOf<string | undefined>();
   });
+});
+
+it('IconProvider.value rejects unused runtime-style metadata', () => {
+  type Value = InstanceType<typeof IconProvider>['$props']['value'];
+  const valid: Value = { prefixCls: 'brand-icon', rootClassName: 'custom' };
+  // @ts-expect-error CSP metadata has no consumer in the static SVG renderer
+  const csp: Value = { csp: { nonce: 'nonce' } };
+  // @ts-expect-error runtime layer metadata has no consumer
+  const layer: Value = { layer: true };
+  // @ts-expect-error static SVG rendering has no zeroRuntime option
+  const zeroRuntime: Value = { zeroRuntime: true };
+  void valid;
+  void csp;
+  void layer;
+  void zeroRuntime;
 });

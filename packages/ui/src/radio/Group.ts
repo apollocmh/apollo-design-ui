@@ -95,7 +95,7 @@ export const GroupComponent = defineComponent({
     >;
 
     const context = useComponentConfig('radio');
-    const { getPrefixCls, direction } = context;
+    const { getPrefixCls } = context;
     const rootRef = shallowRef<HTMLDivElement | null>(null);
 
     // ============================== Name ===============================
@@ -217,7 +217,7 @@ export const GroupComponent = defineComponent({
         {
           [`${groupPrefixCls}-large`]: mergedSize.value === 'large',
           [`${groupPrefixCls}-small`]: mergedSize.value === 'small',
-          [`${groupPrefixCls}-rtl`]: direction === 'rtl',
+          [`${groupPrefixCls}-rtl`]: context.direction === 'rtl',
           [`${groupPrefixCls}-block`]: props.block,
         },
         // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）

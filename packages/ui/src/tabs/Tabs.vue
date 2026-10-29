@@ -87,7 +87,7 @@ let uuid = 0;
  */
 export interface TabsConfig {
   className?: string;
-  style?: Record<string, unknown>;
+  style?: CSSProperties;
   classNames?: TabsSemanticClassNames;
   styles?: TabsSemanticStyles;
   type?: TabsType;
@@ -189,16 +189,11 @@ export default defineComponent({
     edit: (_target: TabsEditEvent | string, _action: TabsEditAction) => true,
   },
   setup(props, { slots, emit, attrs, expose }) {
-    const {
-      getPrefixCls,
-      getPopupContainer: contextGetPopupContainer,
-      classNames: contextClassNames,
-      styles: contextStyles,
-      ...configTabs
-    } = useComponentConfig<TabsConfig>('tabs');
+    const configTabs = useComponentConfig<TabsConfig>('tabs');
+    const { getPrefixCls } = configTabs;
 
-    const prefixCls = props.prefixCls ?? getPrefixCls('tabs');
-    const rootPrefixCls = getPrefixCls();
+    const prefixCls = computed(() => props.prefixCls ?? getPrefixCls('tabs'));
+    const rootPrefixCls = computed(() => getPrefixCls());
     const rootRef = ref<HTMLElement | null>(null);
 
     expose({ nativeElement: (): HTMLElement | null => rootRef.value });
@@ -243,8 +238,9 @@ export default defineComponent({
 
     // ======================== size ========================
     // ⚠️ 必须用**函数形态**（PITFALLS 163：`useSize(props.size)` 非响应式）
-    const size = useSize((ctx) => props.size ?? ctx);
-    void configTabs.size;
+    const size = useSize((ctx) => props.size ?? configTabs.size ?? ctx);
+    const mergedType = computed(() => props.type ?? configTabs.type ?? 'line');
+    const mergedCentered = computed(() => props.centered ?? configTabs.centered ?? false);
 
     // ======================== items 归一 ========================
     const mergedItems = computed<TabsItem[]>(() =>
@@ -257,7 +253,7 @@ export default defineComponent({
     );
 
     // ======================== animated / indicator / placement ========================
-    const mergedAnimated = computed(() => getAnimateConfig(prefixCls, props.animated));
+    const mergedAnimated = computed(() => getAnimateConfig(prefixCls.value, props.animated));
 
     const mergedIndicator = computed<TabsIndicator>(() => ({
       align: props.indicator?.align ?? configTabs.indicator?.align,
@@ -298,12 +294,12 @@ export default defineComponent({
       TabsSemanticClassNames,
       TabsSemanticStyles
     >(
-      [contextClassNames as TabsSemanticClassNames, props.classNames as TabsSemanticClassNames],
+      [() => configTabs.classNames, () => props.classNames],
       [
-        contextStyles as TabsSemanticStyles,
-        semanticRootStyle(attrs.style as CSSProperties | undefined) as TabsSemanticStyles,
-        props.styles as TabsSemanticStyles,
-        semanticRootStyle(attrs.style as CSSProperties | undefined) as TabsSemanticStyles,
+        () => configTabs.styles,
+        () => semanticRootStyle(configTabs.style),
+        () => props.styles,
+        () => semanticRootStyle(attrs.style as CSSProperties | undefined),
       ],
       { props: props as unknown as Record<string, unknown> },
       { popup: { _default: 'root' } },
@@ -327,7 +323,7 @@ export default defineComponent({
 
     // ======================== editable ========================
     const editable = computed<TabsEditableConfig | undefined>(() => {
-      if (props.type !== 'editable-card') return undefined;
+      if (mergedType.value !== 'editable-card') return undefined;
       return {
         onEdit: (editType: TabsEditAction, info: { key?: string; event: TabsEditEvent }) => {
           // ⚠️ 载荷改写：**add 传事件、remove 传 key**
@@ -343,7 +339,7 @@ export default defineComponent({
     const mergedMore = computed(() => ({
       icon: configTabs.more?.icon ?? configTabs.moreIcon ?? props.moreIcon ?? h(EllipsisOutlined),
       // Default popup motion uses the root prefix; explicit more.transitionName may override it.
-      transitionName: `${rootPrefixCls}-slide-up`,
+      transitionName: `${rootPrefixCls.value}-slide-up`,
       ...(props.more ?? {}),
     }));
 
@@ -386,7 +382,7 @@ export default defineComponent({
     onMounted(() => {
       if (!props.id) {
         // 上游是 `rc-tabs-${NODE_ENV === 'test' ? 'test' : uuid++}`；本仓前缀随库
-        innerId.value = `${prefixCls}-${uuid}`;
+        innerId.value = `${prefixCls.value}-${uuid}`;
         uuid += 1;
       }
     });
@@ -430,11 +426,11 @@ export default defineComponent({
         emit('tabScroll', info);
       },
       style: props.tabBarStyle,
-      getPopupContainer: props.getPopupContainer ?? contextGetPopupContainer,
+      getPopupContainer: props.getPopupContainer ?? configTabs.getPopupContainer,
       indicator: mergedIndicator.value,
       popupClassName: mergedClassNames.value.popup,
       popupStyle: mergedStyles.value.popup,
-      prefixCls,
+      prefixCls: prefixCls.value,
       tabs: tabs.value,
       classNames: mergedClassNames.value,
       styles: mergedStyles.value,
@@ -445,19 +441,20 @@ export default defineComponent({
       const sizeValue = size.value;
 
       const rootClass = [
-        prefixCls,
-        `${prefixCls}-${mergedPlacementValue}`,
+        prefixCls.value,
+        `${prefixCls.value}-${mergedPlacementValue}`,
         {
-          [`${prefixCls}-large`]: sizeValue === 'large',
-          [`${prefixCls}-small`]: sizeValue === 'small',
-          [`${prefixCls}-card`]: ['card', 'editable-card'].includes(props.type ?? ''),
-          [`${prefixCls}-editable-card`]: props.type === 'editable-card',
-          [`${prefixCls}-centered`]: props.centered,
-          [`${prefixCls}-mobile`]: mobile.value,
-          [`${prefixCls}-editable`]: !!editable.value,
-          [`${prefixCls}-rtl`]: rtl.value,
+          [`${prefixCls.value}-large`]: sizeValue === 'large',
+          [`${prefixCls.value}-small`]: sizeValue === 'small',
+          [`${prefixCls.value}-card`]: ['card', 'editable-card'].includes(mergedType.value),
+          [`${prefixCls.value}-editable-card`]: mergedType.value === 'editable-card',
+          [`${prefixCls.value}-centered`]: mergedCentered.value,
+          [`${prefixCls.value}-mobile`]: mobile.value,
+          [`${prefixCls.value}-editable`]: !!editable.value,
+          [`${prefixCls.value}-rtl`]: rtl.value,
         },
         // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+        configTabs.className,
         attrs.class,
         mergedClassNames.value.root,
       ];
@@ -474,7 +471,7 @@ export default defineComponent({
       const panelNode = h(
         TabPanelList as never,
         {
-          prefixCls,
+          prefixCls: prefixCls.value,
           id: mergedId.value,
           tabs: tabs.value,
           activeKey: mergedActiveKey.value,

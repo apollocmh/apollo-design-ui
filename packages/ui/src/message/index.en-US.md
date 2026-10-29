@@ -148,3 +148,6 @@ message passes `closable: false` (same as antd) — messages dismiss themselves 
 List-level options such as `top` / `rtl` / `prefixCls` affect subsequent renders, and
 `maxCount` only affects the next `open`. Notices already displayed are not re-laid out
 (same as antd).
+
+
+Hook holders read the current ConfigProvider prefix for existing notice type and icon classes, while preserving keyed content and explicit user styles. An explicit icon value, including null, false or 0, overrides the type icon. Manual destroy does not call onClose; automatic closure keeps its existing callback contract.

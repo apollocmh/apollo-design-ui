@@ -13,7 +13,7 @@ import { Input, Tooltip } from '@apollo-design/ui';
       <Input aria-label="邮箱" placeholder="悬停查看提示" />
     </Tooltip>
 
-    <p style="margin: 0; color: #999; font-size: 12px">
+    <p style="margin: 0; color: var(--apollo-color-text-secondary); font-size: 12px">
       第一个输入框使用 focus 触发，键盘用户也能看到提示；第二个使用默认 hover 触发。
     </p>
   </div>

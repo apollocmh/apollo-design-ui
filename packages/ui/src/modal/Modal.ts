@@ -316,7 +316,7 @@ export default defineComponent({
         // ⚠️ antd 的 `useClosable` hook 内部读 locale 的 `global.close` 作为
         //    关闭按钮可访问名（en=`Close` / zh=`关闭`）；`'Close'` 只是纯函数
         //    `computeClosable` 的兜底 —— composable 消费方必须自己接 locale。
-        closeLabel: (globalLocale as { close?: string }).close,
+        closeLabel: globalLocale.value.close,
         // ⚠️ 兜底图标必须是**真的图标**（`CloseOutlined`），不是空 span ——
         //    `renderCloseIcon` 只在**没给** closeIcon 时才补图标，给一个空 span
         //    会得到一个「有按钮、没有 ×」的面板（L6 抓到：desktop 0.008% 全是这个 ×）

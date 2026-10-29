@@ -8882,6 +8882,924 @@
       "capturedAt": "2026-10-28T23:16:18.068Z",
       "reviewedAt": "2026-10-28T23:23:02.736Z",
       "reviewNote": "Reviewed all228 native states.205 raw-identical images inherit the initial montage/full-size review;23 final changes reviewed in full viewport triplets. Actual state/axe/geometry gates pass; medium and middle both retained, floating controls avoid content, focus/drafts and small pointer targets verified. See space-flex-alert-layout-native-review.json."
+    },
+    "divider/horizontal__light__mobile": {
+      "sha256": "34c0a574c26620557963e78d13129f876c1e2a4814f7ceab3d18d5edb07c0e9b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:18:55.867Z",
+      "reviewedAt": "2026-10-29T02:23:29.302Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/horizontal__light__tablet": {
+      "sha256": "bfbb50850aeccd13e2b72b84554732c0f1d12bc4d19113503947335e27bde1e6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:18:58.049Z",
+      "reviewedAt": "2026-10-29T02:23:29.303Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/horizontal__light__desktop": {
+      "sha256": "c728804241dc92099722b2c54f439b2e1a9534ca5a4c7f7d911d030b535680e9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:00.412Z",
+      "reviewedAt": "2026-10-29T02:23:29.304Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/with-text__light__mobile": {
+      "sha256": "1e9dc77b0c2819a6d9f20deb8648f2ea67708c976c289440db48116a257a53f8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:02.505Z",
+      "reviewedAt": "2026-10-29T02:23:29.304Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/with-text__light__tablet": {
+      "sha256": "0943aaa1fbfc71ac6dcb3bdbd7ad459882ac1e8c9dc37e884c82bd0ceb9b8a27",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:04.832Z",
+      "reviewedAt": "2026-10-29T02:23:29.305Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/with-text__light__desktop": {
+      "sha256": "160febdfac91e422eb583aa18bd4e5a63ec8e865dce711424a7662a626e19eb8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:07.359Z",
+      "reviewedAt": "2026-10-29T02:23:29.305Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/vertical__light__mobile": {
+      "sha256": "b869df389677891be158d41c46d697c4a01c93caec97595a77c25b100df270d1",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:09.444Z",
+      "reviewedAt": "2026-10-29T02:23:29.305Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/vertical__light__tablet": {
+      "sha256": "3fafe72f151a361d1482f8c193a76a8f5da589ec71bd11f4df8449fef727d97c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:11.441Z",
+      "reviewedAt": "2026-10-29T02:23:29.306Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/vertical__light__desktop": {
+      "sha256": "47e8267360cda39d27e4a70c6b5ff7c0df6e82c96fbea5f934c5a290a6c5e884",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:13.397Z",
+      "reviewedAt": "2026-10-29T02:23:29.306Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/variant__light__mobile": {
+      "sha256": "ce96b2eb78090ba6dfd62e051709810d0b71a1a74b988180f782577b5636c2c8",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:15.345Z",
+      "reviewedAt": "2026-10-29T02:23:29.306Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/variant__light__tablet": {
+      "sha256": "a4e3895ed13ce4468b09d4b04589644c0a658332caaa4a1b1ba48fe5b9db3be3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:17.284Z",
+      "reviewedAt": "2026-10-29T02:23:29.307Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/variant__light__desktop": {
+      "sha256": "876e7785f2efb46d7d4de06e0c76c003a8741b0c7142f0d9463e204e44167e15",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:19.226Z",
+      "reviewedAt": "2026-10-29T02:23:29.307Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/size__light__mobile": {
+      "sha256": "6f216592bde481c3fb0e0b9ae50d769b2273cb1c776a9a7c1477c239180f3c64",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:21.134Z",
+      "reviewedAt": "2026-10-29T02:23:29.307Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/size__light__tablet": {
+      "sha256": "207b36f6d4a1bfcfd186be8d6afc78efefd751044df4a0aa4788d171c2e33992",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:23.090Z",
+      "reviewedAt": "2026-10-29T02:23:29.307Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/size__light__desktop": {
+      "sha256": "d4fc8d85b0bc51de99238fe27eaca6725d2afee19b8dc131a2ab8949d547bd1e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:25.019Z",
+      "reviewedAt": "2026-10-29T02:23:29.308Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/plain__light__mobile": {
+      "sha256": "cb10d23a25a2fa075788b799c6c6957a13f29688c912eb239daec7282e76a16b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:26.972Z",
+      "reviewedAt": "2026-10-29T02:23:29.308Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/plain__light__tablet": {
+      "sha256": "fca53d9f2c67ebd46d834b8e94f27397ab0bb74ae147f434cf2e3b0bd129549c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:28.873Z",
+      "reviewedAt": "2026-10-29T02:23:29.308Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/plain__light__desktop": {
+      "sha256": "29964b243a00a3f7411934d1497c23cd2669e381261ad2f2daa898b0e737d46a",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:30.787Z",
+      "reviewedAt": "2026-10-29T02:23:29.308Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/customize-style__light__mobile": {
+      "sha256": "d3bef9713532481e9f64f839af3a68f9bc765e0462ce7a42bb1b6bc0ef892e69",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:32.715Z",
+      "reviewedAt": "2026-10-29T02:23:29.309Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/customize-style__light__tablet": {
+      "sha256": "45b1facf82ff9be46d7f2c878db2b0918a569c98423497524e3f8b4d8eaf656d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:34.672Z",
+      "reviewedAt": "2026-10-29T02:23:29.309Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/customize-style__light__desktop": {
+      "sha256": "9edd6bd215aed4b5e132a5ffa22d633367da9c602ae7339034f82b1d1a240220",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:36.635Z",
+      "reviewedAt": "2026-10-29T02:23:29.310Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/semantic__light__mobile": {
+      "sha256": "0402c1f25ff2b6bc85aaf18dcc4105468cf1a7b57888df98bad8e62b5acac496",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:38.523Z",
+      "reviewedAt": "2026-10-29T02:23:29.310Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/semantic__light__tablet": {
+      "sha256": "5e70c2988e5a70129b1dc3f6f0d15768044363553e7b233cdc46ab0b207f8e7b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:40.445Z",
+      "reviewedAt": "2026-10-29T02:23:29.311Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/semantic__light__desktop": {
+      "sha256": "3446dc14222e5a0c67cd9a2977377dec4f27f3a9d3ae443cbace723ef3858454",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:42.368Z",
+      "reviewedAt": "2026-10-29T02:23:29.311Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/complete-content__light__mobile": {
+      "sha256": "7315ac8c278d292e297b1bf1b120a63b8fa02305174627fc5c66cecaec618b95",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:44.345Z",
+      "reviewedAt": "2026-10-29T02:23:29.312Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/complete-content__light__tablet": {
+      "sha256": "abba114c6fd2579e8145b7a79fcf0b97f10c293f0d18de9fd8c92e444e5a04cb",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:46.340Z",
+      "reviewedAt": "2026-10-29T02:23:29.312Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/complete-content__light__desktop": {
+      "sha256": "b1bb5df8f17b83c5f1267eef5be329f60f51fcaad1069810fad8854fb8a0c564",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:48.356Z",
+      "reviewedAt": "2026-10-29T02:23:29.312Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/current-provider__light__mobile": {
+      "sha256": "2ddeb55bb3e1f88b225b556fc5541582d170e4413fcfd0d2c879f6719da479f4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:50.377Z",
+      "reviewedAt": "2026-10-29T02:23:29.313Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/current-provider__light__tablet": {
+      "sha256": "95f30a23e19e5fab5ee8fd0a001a126311f8c01372f9da19b7f4272e8c51acf2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:52.422Z",
+      "reviewedAt": "2026-10-29T02:23:29.313Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/current-provider__light__desktop": {
+      "sha256": "076fbd4398f6479a0eda10482d3dee22b9ee963f7e492bf57a08f43e22f71884",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:54.453Z",
+      "reviewedAt": "2026-10-29T02:23:29.313Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/semantic-tokens__light__mobile": {
+      "sha256": "eb86c1f7a3db9b596a14ca18e7750803c299bddc06c2af231ac227b0d6543c6e",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:56.407Z",
+      "reviewedAt": "2026-10-29T02:23:29.314Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/semantic-tokens__light__tablet": {
+      "sha256": "7a2d951acc24c673e9a779a734140e363d269f28203d799bbd18058fc5180b7f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:19:58.375Z",
+      "reviewedAt": "2026-10-29T02:23:29.314Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/semantic-tokens__light__desktop": {
+      "sha256": "80987297fba4768de06a7678a6e7fc0f3d92345f4c7dba9064454eb37b776958",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:00.331Z",
+      "reviewedAt": "2026-10-29T02:23:29.314Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/rtl__light__mobile": {
+      "sha256": "2d0381cad71fa777091b3257cd58a43b03863a8a5090bc43d27de693da7d19fa",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:02.300Z",
+      "reviewedAt": "2026-10-29T02:23:29.315Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/rtl__light__tablet": {
+      "sha256": "a19030652b23299ebff8e167a7fd9406e038821a9b804ca5e361578c313eae42",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:04.260Z",
+      "reviewedAt": "2026-10-29T02:23:29.315Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/rtl__light__desktop": {
+      "sha256": "e284e64a166284748e6720012db122b999adc63daab46083c7bb2f7c39a33aa9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:06.223Z",
+      "reviewedAt": "2026-10-29T02:23:29.315Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/native-focus__light__mobile": {
+      "sha256": "15af225bdf3d84c827c9f454358fba102456e1dc937b9b03a96ea80a7837e445",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:08.232Z",
+      "reviewedAt": "2026-10-29T02:23:29.316Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/native-focus__light__tablet": {
+      "sha256": "9fda83411e5ccd301fd84553f86136f495f7a9ea2815d6f69572c068ba9616d7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:10.238Z",
+      "reviewedAt": "2026-10-29T02:23:29.316Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/native-focus__light__desktop": {
+      "sha256": "eaf342dbd370eecf59d5e70ab2fdbc6f2b979184cad747e67f0c5b5be06cfcca",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:12.234Z",
+      "reviewedAt": "2026-10-29T02:23:29.317Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/theme-dark__light__mobile": {
+      "sha256": "c664abfe0d585b4d2dfa26cb83751190cf3b2c8e465d1995b03faa22842de6d4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:14.227Z",
+      "reviewedAt": "2026-10-29T02:23:29.317Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/theme-dark__light__tablet": {
+      "sha256": "aa7535818160e6faf6e87bf0e39492209c0ce5f32597425151590ce8ce146004",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:16.219Z",
+      "reviewedAt": "2026-10-29T02:23:29.317Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/theme-dark__light__desktop": {
+      "sha256": "56c34ded61df3198e41398a244359ff11aa2fbb2fae9c5aa5c756a5a6dfd5977",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:18.197Z",
+      "reviewedAt": "2026-10-29T02:23:29.318Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/theme-compact__light__mobile": {
+      "sha256": "0363a674f8e5ea5b64b35ca123d8c7c085e49cb64f142e2b586b520b26088603",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:20.172Z",
+      "reviewedAt": "2026-10-29T02:23:29.318Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/theme-compact__light__tablet": {
+      "sha256": "c7bbaf40d03aeaf603fa5cd1cc7b9570a02d6235a90da0877e15072110f16fa2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:22.132Z",
+      "reviewedAt": "2026-10-29T02:23:29.318Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/theme-compact__light__desktop": {
+      "sha256": "8ed8e937136692a00773818f3b61b8f3e786a896dbea69265d942d7857135b42",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:24.108Z",
+      "reviewedAt": "2026-10-29T02:23:29.319Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/theme-dark-compact__light__mobile": {
+      "sha256": "0da0f238dee15596ec86af5afc336766636931d3a37e819b23e6c5497bd20210",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:26.080Z",
+      "reviewedAt": "2026-10-29T02:23:29.319Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/theme-dark-compact__light__tablet": {
+      "sha256": "8958c103fb7fd60f0514785e645729d89aae059887c6c3f6c991da435804e3cd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:28.055Z",
+      "reviewedAt": "2026-10-29T02:23:29.319Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "divider/theme-dark-compact__light__desktop": {
+      "sha256": "a7d5453ba5b53cdf7fc5eff084449e3bda2f4d6b884dc6d9f96b8173d4dc9c00",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:20:30.038Z",
+      "reviewedAt": "2026-10-29T02:23:29.320Z",
+      "reviewNote": "Codex reviewed all48 native Divider candidates via three contact sheets and real browser geometry, axe and keyboard checks. Three viewports cover title/empty/zero/Fragment content, stable current Provider draft/focus, three component tokens, RTL, default/dark/compact/combined paint and native focus. Runtime:617ae554 Theme plus frozen Divider source7ff813d5; exact build and root harness deltas are recorded separately. No historical React reference image was replaced."
+    },
+    "collapse/basic__light__mobile": {
+      "sha256": "44f2b6b017d3a778b5e8f63eb9fa147c47088f9b3430b486b4b8ceb7d0905731",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:27:43.001Z",
+      "reviewedAt": "2026-10-29T02:34:21.048Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/basic__light__tablet": {
+      "sha256": "db7ad11fe3fd8f83df078ae1c17dd21337ccf772d8f3cd2fc2c696a4152104e7",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:27:45.005Z",
+      "reviewedAt": "2026-10-29T02:34:21.049Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/basic__light__desktop": {
+      "sha256": "93c9cb2b2768c8bec040fc8d3ec4ac73eb2a2f7eece89d893d4cf63613937a4c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:27:46.968Z",
+      "reviewedAt": "2026-10-29T02:34:21.050Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/accordion__light__mobile": {
+      "sha256": "5d572ab3df108296d79098f580dfa713a3925139ef8bb8c04ddcfbecd8fe64a2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:27:48.944Z",
+      "reviewedAt": "2026-10-29T02:34:21.050Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/accordion__light__tablet": {
+      "sha256": "553f38f5ef36ad4c3312afe22f11a90e201553be15fc151f570c4b866144857d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:27:50.923Z",
+      "reviewedAt": "2026-10-29T02:34:21.050Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/accordion__light__desktop": {
+      "sha256": "1c72d4bb3cf1cd7de28b10d2e2f5d9421c6d3bb97ece17cb4ad170a899c8e7c6",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:27:52.919Z",
+      "reviewedAt": "2026-10-29T02:34:21.051Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/borderless__light__mobile": {
+      "sha256": "b8b97c4b9de277ade35c9f0cdf0dc1fccae174cbdd525ac3fc36bf493861ab0c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:27:54.897Z",
+      "reviewedAt": "2026-10-29T02:34:21.051Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/borderless__light__tablet": {
+      "sha256": "2a3e8b08cad98ebb37ae0dda197aec42246077f0c23140f7956c926d9f3cd398",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:27:56.892Z",
+      "reviewedAt": "2026-10-29T02:34:21.052Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/borderless__light__desktop": {
+      "sha256": "57bfeed1c642a53ea40fda419030dd085f38484af0bae68a94124ce7c2b55f63",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:27:58.872Z",
+      "reviewedAt": "2026-10-29T02:34:21.052Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/ghost__light__mobile": {
+      "sha256": "49ac41e5ba81a0b492ea8fbdb2a8245ec225131eba7f078ca0ac45a1b522946d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:00.869Z",
+      "reviewedAt": "2026-10-29T02:34:21.052Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/ghost__light__tablet": {
+      "sha256": "2c13ce65ec568588122481993854836ad5dbb091cf09ba1c47fc0fdc9dce4ebf",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:02.864Z",
+      "reviewedAt": "2026-10-29T02:34:21.053Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/ghost__light__desktop": {
+      "sha256": "a38b1f2db4871a0191945eb805ad3e68e50099e0b4329857257de0f6114a4c2c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:04.870Z",
+      "reviewedAt": "2026-10-29T02:34:21.053Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/sizes__light__mobile": {
+      "sha256": "2b04b27ef441089198e51947bc6ad74f52ff529c362a24341f77b0c9371ca34f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:06.864Z",
+      "reviewedAt": "2026-10-29T02:34:21.054Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/sizes__light__tablet": {
+      "sha256": "cdce69315b85532d7a640cb1b92e9873b063ac935195f0152e9b58b38b99f617",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:08.886Z",
+      "reviewedAt": "2026-10-29T02:34:21.054Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/sizes__light__desktop": {
+      "sha256": "59b6335d028870f743b3677739d6e5715d191f8bf5620477a4031e6dd274995f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:10.895Z",
+      "reviewedAt": "2026-10-29T02:34:21.054Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/declared-panels__light__mobile": {
+      "sha256": "a87ab1673b027e590bcacd4e57fc06762447104114af3fcfb63c032dece94a94",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:12.904Z",
+      "reviewedAt": "2026-10-29T02:34:21.055Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/declared-panels__light__tablet": {
+      "sha256": "976343211bfb57db7138e01521ea935a90372d37ae629a487476d22627a50b94",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:14.916Z",
+      "reviewedAt": "2026-10-29T02:34:21.055Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/declared-panels__light__desktop": {
+      "sha256": "b72f639840956e456a839eb459ef955e4f7b35bf47df609b2d3bc446f6276795",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:16.930Z",
+      "reviewedAt": "2026-10-29T02:34:21.055Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/complete-content__light__mobile": {
+      "sha256": "eb4bc8e4ae1923152f292daef982b628ceacd4dbdf5596b20e56730ba2650ebe",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:18.947Z",
+      "reviewedAt": "2026-10-29T02:34:21.056Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/complete-content__light__tablet": {
+      "sha256": "c8200e5e7507f053df2d1bba3466cc7d08401ca26c5a8b52b144d91369cd8677",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:20.954Z",
+      "reviewedAt": "2026-10-29T02:34:21.056Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/complete-content__light__desktop": {
+      "sha256": "436d722ee1188c9eb6295fb19f808da5e42a897c965b8e90296e0ba041016ff2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:22.994Z",
+      "reviewedAt": "2026-10-29T02:34:21.056Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/retained-content__light__mobile": {
+      "sha256": "abc5522a55032d68cb4a368bd0a9d0071865d5a0b4ad0c743bba85ba11e2d06c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:25.014Z",
+      "reviewedAt": "2026-10-29T02:34:21.057Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/retained-content__light__tablet": {
+      "sha256": "67801c42e0a3790d21d8bc23da482851750645c5a6c76e9ee5137852d2a8909c",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:27.026Z",
+      "reviewedAt": "2026-10-29T02:34:21.057Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/retained-content__light__desktop": {
+      "sha256": "44e424a5a978e8ad07f37b97ea6b5105705afc09f29247b1860984c2978bc9a3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:29.038Z",
+      "reviewedAt": "2026-10-29T02:34:21.057Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/controlled-rejected__light__mobile": {
+      "sha256": "2f62cc6d4d29d603fefbab4ae23d3f76f2690cef11c8f86ec2a8435eba2e1c5f",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:31.119Z",
+      "reviewedAt": "2026-10-29T02:34:21.058Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/controlled-rejected__light__tablet": {
+      "sha256": "dff889412bbe6ebb4b16c77b7ef22d308ac29ae22f7f8946007f00f53fe08c73",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:33.176Z",
+      "reviewedAt": "2026-10-29T02:34:21.058Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/controlled-rejected__light__desktop": {
+      "sha256": "fd2b9b4793cfb10884b9d93dee5e4fdae0650955482c8b969c260af69068bcd2",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:35.244Z",
+      "reviewedAt": "2026-10-29T02:34:21.058Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/current-provider__light__mobile": {
+      "sha256": "bf2fd589fb011de3270b673e0ee7a900a7be98495f057199feb113ecf53c265b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:37.250Z",
+      "reviewedAt": "2026-10-29T02:34:21.059Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/current-provider__light__tablet": {
+      "sha256": "441fb0cb9d1ae79613c5e64272dc8c88a670cb68d191f8489b68c9270d876ddf",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:39.299Z",
+      "reviewedAt": "2026-10-29T02:34:21.059Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/current-provider__light__desktop": {
+      "sha256": "6965504e81ac54cdfa8b68bf1942f2dcced43916e20dc9ed641d5312f33ebbab",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:41.331Z",
+      "reviewedAt": "2026-10-29T02:34:21.060Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/icon-slot__light__mobile": {
+      "sha256": "273d020f345804493e284d727624b2ea946667341e9acc20fb47ade940c67a50",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:43.310Z",
+      "reviewedAt": "2026-10-29T02:34:21.060Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/icon-slot__light__tablet": {
+      "sha256": "1e6f29b855957bb8e239391c64cca334ade6e33fa9bd7db790e7f9943124485d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:45.284Z",
+      "reviewedAt": "2026-10-29T02:34:21.060Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/icon-slot__light__desktop": {
+      "sha256": "5c6c38aaa1d938de900a08e82b91303cc9ddf93ede086d2765a21b1d773fd82d",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:47.283Z",
+      "reviewedAt": "2026-10-29T02:34:21.061Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/nested__light__mobile": {
+      "sha256": "230dfd6dac303ad0ed36045f27b3a781a5e2962c2c091313dc988adea8d6c5e9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:49.227Z",
+      "reviewedAt": "2026-10-29T02:34:21.061Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/nested__light__tablet": {
+      "sha256": "1159c262112637f511fb369cfa776ddb34e8088a2b65a93745e345d004e205aa",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:51.205Z",
+      "reviewedAt": "2026-10-29T02:34:21.061Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/nested__light__desktop": {
+      "sha256": "6323a3080b98b365aed878045b2c6a3362c5bef0d0f1b9f28b97e8d6b27dfdde",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:53.185Z",
+      "reviewedAt": "2026-10-29T02:34:21.062Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/semantic-tokens__light__mobile": {
+      "sha256": "1cb3f11421a40a78c36cef69bb9e5625743bbf699c2b1394b3599715f2dcb3c9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:55.179Z",
+      "reviewedAt": "2026-10-29T02:34:21.062Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/semantic-tokens__light__tablet": {
+      "sha256": "1656875b58fc4535b764692905e881ffaa4c664b799213c19e2d2dd85e521a04",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:57.194Z",
+      "reviewedAt": "2026-10-29T02:34:21.062Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/semantic-tokens__light__desktop": {
+      "sha256": "990a5822bb72054b7096dd4c23897cc694b4f7192b12f911389ced5d62dff985",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:28:59.196Z",
+      "reviewedAt": "2026-10-29T02:34:21.063Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/rtl__light__mobile": {
+      "sha256": "19236ebb40e9d75b2b3782fce05dffca18c2d9510309ee41f34a5529afcedd0b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:01.185Z",
+      "reviewedAt": "2026-10-29T02:34:21.063Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/rtl__light__tablet": {
+      "sha256": "e6b791bd1e21e8795802dd41677cff2311a194d44f0648af78340ffce6cb1ce0",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:03.175Z",
+      "reviewedAt": "2026-10-29T02:34:21.063Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/rtl__light__desktop": {
+      "sha256": "15d378b8c01cea6425287cc3bc86ec6f5b32f0d0ae7eea2c24b7dbedc8621674",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:05.137Z",
+      "reviewedAt": "2026-10-29T02:34:21.064Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/native-focus__light__mobile": {
+      "sha256": "3488e90f980e367ea18294027b53d7af8982d3aadc62476f1eb0ae6e8e392783",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:07.145Z",
+      "reviewedAt": "2026-10-29T02:34:21.064Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/native-focus__light__tablet": {
+      "sha256": "207bf9bca0177dea7dd685f8aaeffbf12fcfeb7b100f223273e6626314e9ee3b",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:09.142Z",
+      "reviewedAt": "2026-10-29T02:34:21.064Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/native-focus__light__desktop": {
+      "sha256": "90d602f5dd8a0192c18c84b8792c0643958062bcb545ceee641142c5fba8dacd",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:11.125Z",
+      "reviewedAt": "2026-10-29T02:34:21.065Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/theme-dark__light__mobile": {
+      "sha256": "15e24a71b1ffa5096b5c2e4ab36f6c59e52d6a89f4b12aee5093d4af81bf30f3",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:13.098Z",
+      "reviewedAt": "2026-10-29T02:34:21.065Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/theme-dark__light__tablet": {
+      "sha256": "71089436397112d39bf06464de95c64cc5c3dffee543d94b3f9b6cc3ecf1ec03",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:15.106Z",
+      "reviewedAt": "2026-10-29T02:34:21.065Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/theme-dark__light__desktop": {
+      "sha256": "9c6ff123de2264d85b3e58e586c99f2e4f6c86afe4fa7d17a6f4a0d467921514",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:17.088Z",
+      "reviewedAt": "2026-10-29T02:34:21.066Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/theme-compact__light__mobile": {
+      "sha256": "d5123c20fae1a5e59b4d035594a325b94f684b0701377626f9027acf34fa54b4",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:19.080Z",
+      "reviewedAt": "2026-10-29T02:34:21.066Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/theme-compact__light__tablet": {
+      "sha256": "119f2076bd1b49ec1b3ecba9c517108b0f4ecea6c7de8c6cea457d1861222dd9",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:21.072Z",
+      "reviewedAt": "2026-10-29T02:34:21.066Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/theme-compact__light__desktop": {
+      "sha256": "aaaa528bd37a982b032bdc927f0901ecbcf5ebebd164e454b2f72d24b55b7a51",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:23.067Z",
+      "reviewedAt": "2026-10-29T02:34:21.067Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/theme-dark-compact__light__mobile": {
+      "sha256": "f34bef622df996a5842a738e085bfd58fc46fad3ede487879cd33075569b7300",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:25.038Z",
+      "reviewedAt": "2026-10-29T02:34:21.067Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/theme-dark-compact__light__tablet": {
+      "sha256": "27763a14112c6a3933ef493babc15fc0ec5235414ac935fcf79453c665681c32",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:27.014Z",
+      "reviewedAt": "2026-10-29T02:34:21.067Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
+    },
+    "collapse/theme-dark-compact__light__desktop": {
+      "sha256": "a1111ac506491766553e910e63ac8296015b57d654dd5984eca7861aef64dafa",
+      "environment": "darwin/x64/150.0.7871.125/系统 Chrome",
+      "sourceCommit": "617ae554c7c67d99c203f0a4a6071c0103dd92b2",
+      "dirty": true,
+      "capturedAt": "2026-10-29T02:29:29.026Z",
+      "reviewedAt": "2026-10-29T02:34:21.068Z",
+      "reviewNote": "Codex reviewed all54 native Collapse candidates in four contact sheets with real browser geometry, native heading/button/region links, axe and keyboard checks. Three viewports cover data and declared Panels, controlled rejection, retained editor close/reopen and focus/selection, current Provider, independent extra controls, nested headings, component tokens, RTL, default/dark/compact/combined paint and visible native focus. Runtime:617ae554 Theme plus frozen Collapse f2c118c1. Historical reference PNGs remain unchanged."
     }
   }
 }

@@ -94,7 +94,7 @@ export const CheckboxComponent = defineComponent({
     >;
 
     const context = useComponentConfig('checkbox');
-    const { getPrefixCls, direction } = context;
+    const { getPrefixCls } = context;
     const checkboxGroup = useCheckboxGroup();
     const contextDisabled = useDisabled();
     const devWarning = useDevWarning('Checkbox');
@@ -252,7 +252,7 @@ export const CheckboxComponent = defineComponent({
       const classString = [
         `${cls}-wrapper`,
         {
-          [`${cls}-rtl`]: direction === 'rtl',
+          [`${cls}-rtl`]: context.direction === 'rtl',
           [`${cls}-wrapper-checked`]: mergedChecked.value,
           [`${cls}-wrapper-disabled`]: mergedDisabled.value,
         },

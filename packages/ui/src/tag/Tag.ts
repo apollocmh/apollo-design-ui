@@ -1,4 +1,4 @@
-import { useLocaleReactive } from '@apollo-design/locale';
+import { useLocale } from '@apollo-design/locale';
 import { isEmptyVNode, pickAttrs, useDevWarning } from '@apollo-design/utils';
 import {
   computed,
@@ -73,7 +73,7 @@ export default defineComponent({
     );
     const root = shallowRef<HTMLSpanElement | null>(null),
       visible = ref(true);
-    const [locale] = useLocaleReactive('global');
+    const [locale] = useLocale('global');
     const warning = useDevWarning('Tag');
     watchEffect(() => {
       warning.deprecated(props.bordered !== false, 'bordered={false}', 'variant="filled"');

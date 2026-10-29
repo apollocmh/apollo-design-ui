@@ -39,10 +39,14 @@ describe('Mentions · token 契约', () => {
   });
 
   it('规则段：根 / textarea / measure / suffix / dropdown', () => {
-    expect(css).toContain('.apollo-mentions >textarea{');
+    expect(css).toContain(
+      ':is(.apollo-mentions[data-apollo-mentions-host="editor"],.apollo-mentions >[data-apollo-mentions-host="editor"]) >[data-apollo-input-host="group"] >[data-apollo-input-host="wrapper"] >[data-apollo-input-host="affix"] >textarea{',
+    );
     expect(css).toContain('.apollo-mentions .apollo-mentions-measure{');
     expect(css).toContain('.apollo-mentions .apollo-mentions-suffix{');
-    expect(css).toContain('.apollo-mentions-has-suffix >textarea{');
+    expect(css).toContain(
+      ':is(.apollo-mentions-has-suffix[data-apollo-mentions-host="editor"],.apollo-mentions-has-suffix >[data-apollo-mentions-host="editor"]) >[data-apollo-input-host="group"] >[data-apollo-input-host="wrapper"] >[data-apollo-input-host="affix"] >textarea{',
+    );
     expect(css).toContain('.apollo-mentions-dropdown{');
     expect(css).toContain('.apollo-mentions-dropdown .apollo-mentions-dropdown-menu-item{');
     expect(css).toContain('.apollo-mentions-dropdown .apollo-mentions-dropdown-menu-item-active{');

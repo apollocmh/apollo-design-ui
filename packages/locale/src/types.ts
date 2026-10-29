@@ -233,6 +233,7 @@ export interface UploadLocale {
 
 /** 所有组件共用的占位/提示文案。 */
 export interface GlobalLocale {
+  clear?: string;
   placeholder?: string;
   close?: string;
   sortable?: string;

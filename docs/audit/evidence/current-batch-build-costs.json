@@ -1,0 +1,568 @@
+{
+  "date": "2026-10-29",
+  "baseCommit": "796a193f0c3f656e82c179c1ac298aafe48df465",
+  "sourceState": "frozen integration candidate, before batch commit",
+  "authorization": "用户明确接受实际功能成本，要求不要纠结几百字节超预算；仍保留摇树与依赖门禁",
+  "fullKb": 2125.95703125,
+  "entriesMeasured": 73,
+  "changedBudgetCount": 10,
+  "unchangedBudgetCount": 63,
+  "maxRatioOfFull": 0.3,
+  "historicalMeasuredKbUnchanged": true,
+  "changes": [
+    {
+      "id": "button",
+      "previousBudgetKb": 42,
+      "actualKb": 43.001953125,
+      "budgetKb": 45,
+      "reason": "共享 Theme/Locale/ConfigProvider 当前配置与 Input/基础控件契约带来的实际发布成本",
+      "ratioOfFull": 0.020227103602237964
+    },
+    {
+      "id": "collapse",
+      "previousBudgetKb": 52,
+      "actualKb": 52.255859375,
+      "budgetKb": 54,
+      "reason": "原生 heading/button/extra、稳定 Panel 身份、当前 Provider/10 Token 与退出动效",
+      "ratioOfFull": 0.024579922645132247
+    },
+    {
+      "id": "config-provider",
+      "previousBudgetKb": 53,
+      "actualKb": 81.0283203125,
+      "budgetKb": 83,
+      "reason": "renderless/scopeTag 主题作用域、SSR/Portal 所有权与原生样式优先级，以及实际 IconProvider/FormProvider 接线；FormProvider 从当前 form-core 产物引入校验模块，模块图已记录",
+      "ratioOfFull": 0.03811380903820889
+    },
+    {
+      "id": "image",
+      "previousBudgetKb": 81,
+      "actualKb": 81.8515625,
+      "budgetKb": 83,
+      "reason": "共享 Theme/Locale/ConfigProvider 当前配置与 Input/基础控件契约带来的实际发布成本",
+      "ratioOfFull": 0.03850104272891804
+    },
+    {
+      "id": "input",
+      "previousBudgetKb": 97,
+      "actualKb": 100.984375,
+      "budgetKb": 102,
+      "reason": "六个 Input 入口的 Vue 原生 Event/IME/受控值、稳定内容宿主、原生 ref/清除/Password 槽和 OTP 分隔槽及 TextArea 实测尺寸",
+      "ratioOfFull": 0.0475006660603221
+    },
+    {
+      "id": "layout",
+      "previousBudgetKb": 35,
+      "actualKb": 35.814453125,
+      "budgetKb": 37,
+      "reason": "共享 Theme/Locale/ConfigProvider 当前配置与 Input/基础控件契约带来的实际发布成本",
+      "ratioOfFull": 0.016846273277659876
+    },
+    {
+      "id": "layout-sider",
+      "previousBudgetKb": 35,
+      "actualKb": 35.814453125,
+      "budgetKb": 37,
+      "reason": "共享 Theme/Locale/ConfigProvider 当前配置与 Input/基础控件契约带来的实际发布成本",
+      "ratioOfFull": 0.016846273277659876
+    },
+    {
+      "id": "modal",
+      "previousBudgetKb": 173,
+      "actualKb": 173.9248046875,
+      "budgetKb": 175,
+      "reason": "共享 Theme/Locale/ConfigProvider 当前配置与 Input/基础控件契约带来的实际发布成本",
+      "ratioOfFull": 0.0818101222794881
+    },
+    {
+      "id": "statistic",
+      "previousBudgetKb": 44,
+      "actualKb": 44.046875,
+      "budgetKb": 46,
+      "reason": "共享 Theme/Locale/ConfigProvider 当前配置与 Input/基础控件契约带来的实际发布成本",
+      "ratioOfFull": 0.02071861018475135
+    },
+    {
+      "id": "upload",
+      "previousBudgetKb": 141,
+      "actualKb": 141.318359375,
+      "budgetKb": 143,
+      "reason": "共享 Theme/Locale/ConfigProvider 当前配置与 Input/基础控件契约带来的实际发布成本",
+      "ratioOfFull": 0.06647282014533895
+    }
+  ],
+  "inspectedModuleGraphs": {
+    "ConfigProvider": {
+      "bytes": 82973,
+      "modules": [
+        {
+          "id": "packages/form-core/dist/index.mjs",
+          "renderedLength": 79517
+        },
+        {
+          "id": "packages/utils/dist/color/color.mjs",
+          "renderedLength": 9206
+        },
+        {
+          "id": "packages/ui/dist/config-provider/use-theme-scope.mjs",
+          "renderedLength": 9199
+        },
+        {
+          "id": "packages/locale/dist/index.mjs",
+          "renderedLength": 7942
+        },
+        {
+          "id": "packages/ui/dist/config-provider/ConfigProvider.mjs",
+          "renderedLength": 7689
+        },
+        {
+          "id": "packages/theme/dist/alias.mjs",
+          "renderedLength": 5978
+        },
+        {
+          "id": "packages/icons/dist/index.mjs",
+          "renderedLength": 4454
+        },
+        {
+          "id": "packages/theme/dist/css-var.mjs",
+          "renderedLength": 4313
+        },
+        {
+          "id": "packages/theme/dist/shared/color-map-token.mjs",
+          "renderedLength": 3500
+        },
+        {
+          "id": "packages/utils/dist/object.mjs",
+          "renderedLength": 2308
+        },
+        {
+          "id": "packages/theme/dist/algorithms/palettes.mjs",
+          "renderedLength": 2273
+        },
+        {
+          "id": "packages/theme/dist/vue.mjs",
+          "renderedLength": 2220
+        },
+        {
+          "id": "packages/utils/dist/color/generate.mjs",
+          "renderedLength": 2087
+        },
+        {
+          "id": "packages/theme/dist/seed.mjs",
+          "renderedLength": 1788
+        },
+        {
+          "id": "packages/utils/dist/dev-warning.mjs",
+          "renderedLength": 1526
+        },
+        {
+          "id": "packages/utils/dist/warning.mjs",
+          "renderedLength": 1177
+        },
+        {
+          "id": "packages/theme/dist/shared/radius.mjs",
+          "renderedLength": 1054
+        },
+        {
+          "id": "packages/theme/dist/shared/font-map-token.mjs",
+          "renderedLength": 998
+        },
+        {
+          "id": "packages/utils/dist/is-equal.mjs",
+          "renderedLength": 930
+        },
+        {
+          "id": "packages/utils/dist/raf.mjs",
+          "renderedLength": 921
+        },
+        {
+          "id": "packages/theme/dist/shared/get-alpha-color.mjs",
+          "renderedLength": 813
+        },
+        {
+          "id": "packages/ui/dist/config-provider/context.mjs",
+          "renderedLength": 687
+        },
+        {
+          "id": "packages/ui/dist/config-provider/hooks/use-theme.mjs",
+          "renderedLength": 672
+        },
+        {
+          "id": "packages/utils/dist/env.mjs",
+          "renderedLength": 666
+        },
+        {
+          "id": "packages/theme/dist/shared/font-sizes.mjs",
+          "renderedLength": 649
+        },
+        {
+          "id": "packages/theme/dist/get-design-token.mjs",
+          "renderedLength": 593
+        },
+        {
+          "id": "packages/theme/dist/shared/size-map-token.mjs",
+          "renderedLength": 478
+        },
+        {
+          "id": "packages/theme/dist/algorithms/default.mjs",
+          "renderedLength": 472
+        },
+        {
+          "id": "packages/ui/dist/config-provider/size-context.mjs",
+          "renderedLength": 460
+        },
+        {
+          "id": "packages/theme/dist/shared/common-map-token.mjs",
+          "renderedLength": 457
+        },
+        {
+          "id": "packages/ui/dist/_internal/with-install.mjs",
+          "renderedLength": 392
+        },
+        {
+          "id": "packages/ui/dist/config-provider/global-config.mjs",
+          "renderedLength": 360
+        },
+        {
+          "id": "packages/ui/dist/config-provider/disabled-context.mjs",
+          "renderedLength": 353
+        },
+        {
+          "id": "packages/theme/dist/shared/control-height.mjs",
+          "renderedLength": 247
+        },
+        {
+          "id": "packages/ui/dist/config-provider/index.mjs",
+          "renderedLength": 209
+        },
+        {
+          "id": "packages/utils/dist/brand.mjs",
+          "renderedLength": 183
+        },
+        {
+          "id": "packages/utils/dist/dom/can-use-dom.mjs",
+          "renderedLength": 183
+        },
+        {
+          "id": "packages/ui/dist/config-provider/use-config.mjs",
+          "renderedLength": 173
+        },
+        {
+          "id": "packages/utils/dist/is.mjs",
+          "renderedLength": 137
+        },
+        {
+          "id": ".treeshake-review-1bv23v/entry.mjs",
+          "renderedLength": 87
+        }
+      ]
+    },
+    "Input": {
+      "bytes": 103408,
+      "modules": [
+        {
+          "id": "packages/icons/dist/index.mjs",
+          "renderedLength": 11941
+        },
+        {
+          "id": "packages/utils/dist/color/color.mjs",
+          "renderedLength": 9206
+        },
+        {
+          "id": "packages/ui/dist/input/Search.mjs",
+          "renderedLength": 8769
+        },
+        {
+          "id": "packages/ui/dist/input/OTP.mjs",
+          "renderedLength": 8672
+        },
+        {
+          "id": "packages/locale/dist/index.mjs",
+          "renderedLength": 8623
+        },
+        {
+          "id": "packages/ui/dist/input/engine/TextArea.mjs",
+          "renderedLength": 8595
+        },
+        {
+          "id": "packages/ui/dist/button/Button.vue.mjs",
+          "renderedLength": 8534
+        },
+        {
+          "id": "packages/ui/dist/input/Input.mjs",
+          "renderedLength": 7081
+        },
+        {
+          "id": "packages/ui/dist/input/engine/BaseInput.mjs",
+          "renderedLength": 7072
+        },
+        {
+          "id": "packages/ui/dist/input/TextArea.mjs",
+          "renderedLength": 6673
+        },
+        {
+          "id": "packages/theme/dist/alias.mjs",
+          "renderedLength": 5978
+        },
+        {
+          "id": "packages/ui/dist/input/engine/Input.mjs",
+          "renderedLength": 5755
+        },
+        {
+          "id": "packages/ui/dist/input/Password.mjs",
+          "renderedLength": 5608
+        },
+        {
+          "id": "packages/theme/dist/css-var.mjs",
+          "renderedLength": 4313
+        },
+        {
+          "id": "packages/ui/dist/input/engine/calculate-node-height.mjs",
+          "renderedLength": 3638
+        },
+        {
+          "id": "packages/ui/dist/space/Space.vue.mjs",
+          "renderedLength": 3530
+        },
+        {
+          "id": "packages/ui/dist/_internal/use-merge-semantic.mjs",
+          "renderedLength": 3504
+        },
+        {
+          "id": "packages/ui/dist/button/style/token.mjs",
+          "renderedLength": 3503
+        },
+        {
+          "id": "packages/theme/dist/shared/color-map-token.mjs",
+          "renderedLength": 3500
+        },
+        {
+          "id": "packages/utils/dist/pick-attrs-allowlist.mjs",
+          "renderedLength": 3109
+        },
+        {
+          "id": "packages/ui/dist/button/use-button-theme.mjs",
+          "renderedLength": 2795
+        },
+        {
+          "id": "packages/ui/dist/input/hooks/use-input-value.mjs",
+          "renderedLength": 2492
+        },
+        {
+          "id": "packages/ui/dist/space/Compact.vue.mjs",
+          "renderedLength": 2302
+        },
+        {
+          "id": "packages/theme/dist/algorithms/palettes.mjs",
+          "renderedLength": 2273
+        },
+        {
+          "id": "packages/ui/dist/config-provider/context.mjs",
+          "renderedLength": 2234
+        },
+        {
+          "id": "packages/theme/dist/vue.mjs",
+          "renderedLength": 2218
+        },
+        {
+          "id": "packages/utils/dist/observers/use-resize-observer.mjs",
+          "renderedLength": 2145
+        },
+        {
+          "id": "packages/ui/dist/button/style/alias-tokens.mjs",
+          "renderedLength": 2137
+        },
+        {
+          "id": "packages/utils/dist/color/generate.mjs",
+          "renderedLength": 2081
+        },
+        {
+          "id": "packages/ui/dist/input/engine/use-count.mjs",
+          "renderedLength": 1977
+        },
+        {
+          "id": "packages/ui/dist/space/Item.mjs",
+          "renderedLength": 1915
+        },
+        {
+          "id": "packages/ui/dist/space/Compact.mjs",
+          "renderedLength": 1861
+        },
+        {
+          "id": "packages/theme/dist/seed.mjs",
+          "renderedLength": 1788
+        },
+        {
+          "id": "packages/ui/dist/space/Addon.vue.mjs",
+          "renderedLength": 1755
+        },
+        {
+          "id": "packages/ui/dist/input/use-input-theme.mjs",
+          "renderedLength": 1679
+        },
+        {
+          "id": "packages/ui/dist/input/Group.mjs",
+          "renderedLength": 1612
+        },
+        {
+          "id": "packages/utils/dist/dev-warning.mjs",
+          "renderedLength": 1526
+        },
+        {
+          "id": "packages/ui/dist/space/children.mjs",
+          "renderedLength": 1329
+        },
+        {
+          "id": "packages/utils/dist/is.mjs",
+          "renderedLength": 1299
+        },
+        {
+          "id": "packages/ui/dist/input/engine/common-utils.mjs",
+          "renderedLength": 1285
+        },
+        {
+          "id": "packages/ui/dist/input/style/alias-tokens.mjs",
+          "renderedLength": 1250
+        },
+        {
+          "id": "packages/utils/dist/warning.mjs",
+          "renderedLength": 1177
+        },
+        {
+          "id": "packages/ui/dist/_internal/use-allow-clear.mjs",
+          "renderedLength": 1160
+        },
+        {
+          "id": "packages/theme/dist/shared/radius.mjs",
+          "renderedLength": 1054
+        },
+        {
+          "id": "packages/theme/dist/shared/font-map-token.mjs",
+          "renderedLength": 998
+        },
+        {
+          "id": "packages/utils/dist/children/to-array.mjs",
+          "renderedLength": 972
+        },
+        {
+          "id": "packages/theme/dist/shared/get-alpha-color.mjs",
+          "renderedLength": 813
+        },
+        {
+          "id": "packages/ui/dist/form/hooks/useVariants.mjs",
+          "renderedLength": 759
+        },
+        {
+          "id": "packages/utils/dist/event-name.mjs",
+          "renderedLength": 744
+        },
+        {
+          "id": "packages/ui/dist/_internal/use-orientation.mjs",
+          "renderedLength": 707
+        },
+        {
+          "id": "packages/utils/dist/dom-attrs.mjs",
+          "renderedLength": 679
+        },
+        {
+          "id": "packages/utils/dist/env.mjs",
+          "renderedLength": 666
+        },
+        {
+          "id": "packages/theme/dist/shared/font-sizes.mjs",
+          "renderedLength": 649
+        },
+        {
+          "id": "packages/utils/dist/hooks/use-controlled-value.mjs",
+          "renderedLength": 630
+        },
+        {
+          "id": "packages/theme/dist/get-design-token.mjs",
+          "renderedLength": 593
+        },
+        {
+          "id": "packages/ui/dist/input/hooks/use-remove-password-timeout.mjs",
+          "renderedLength": 569
+        },
+        {
+          "id": "packages/ui/dist/space/use-focus.mjs",
+          "renderedLength": 549
+        },
+        {
+          "id": "packages/ui/dist/space/statusUtils.mjs",
+          "renderedLength": 512
+        },
+        {
+          "id": "packages/ui/dist/input/index.mjs",
+          "renderedLength": 481
+        },
+        {
+          "id": "packages/theme/dist/shared/size-map-token.mjs",
+          "renderedLength": 478
+        },
+        {
+          "id": "packages/theme/dist/algorithms/default.mjs",
+          "renderedLength": 472
+        },
+        {
+          "id": "packages/ui/dist/config-provider/size-context.mjs",
+          "renderedLength": 460
+        },
+        {
+          "id": "packages/theme/dist/shared/common-map-token.mjs",
+          "renderedLength": 457
+        },
+        {
+          "id": "packages/ui/dist/form/context.mjs",
+          "renderedLength": 429
+        },
+        {
+          "id": "packages/ui/dist/_internal/with-install.mjs",
+          "renderedLength": 392
+        },
+        {
+          "id": "packages/ui/dist/config-provider/disabled-context.mjs",
+          "renderedLength": 353
+        },
+        {
+          "id": "packages/ui/dist/_internal/node-renderer.mjs",
+          "renderedLength": 332
+        },
+        {
+          "id": "packages/ui/dist/space/gapSize.mjs",
+          "renderedLength": 264
+        },
+        {
+          "id": "packages/ui/dist/space/context.mjs",
+          "renderedLength": 263
+        },
+        {
+          "id": "packages/theme/dist/shared/control-height.mjs",
+          "renderedLength": 247
+        },
+        {
+          "id": "packages/ui/dist/space/index.mjs",
+          "renderedLength": 245
+        },
+        {
+          "id": "packages/utils/dist/dom/get-element.mjs",
+          "renderedLength": 229
+        },
+        {
+          "id": "packages/ui/dist/input/input-emits.mjs",
+          "renderedLength": 202
+        },
+        {
+          "id": "packages/utils/dist/brand.mjs",
+          "renderedLength": 183
+        },
+        {
+          "id": ".treeshake-review-fRkALu/entry.mjs",
+          "renderedLength": 78
+        }
+      ]
+    }
+  },
+  "rawMeasurement": "/tmp/apollo-batch-final-all-budgets.json",
+  "verification": "最终 UI L7 尚待执行，不以更新预算本身宣称门禁通过"
+}

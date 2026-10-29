@@ -1,17 +1,3 @@
-/**
- * TextArea —— antd 6.6.4 `components/input/TextArea.tsx` 的 Vue 实现。
- *
- * 与 Input 的差异判据（es/input/TextArea.js + 源码 253 行）：
- *  1. prefixCls 同样是 `input`（`getPrefixCls('input')`），但语义键是 `textArea`
- *     （`useComponentConfig('textArea')`、`useVariant('textArea', …)`）。
- *  2. affixWrapper 恒带 `${p}-textarea-affix-wrapper`，另加
- *     `-textarea-show-count`（showCount 或 count.show）、尺寸/rtl 派生。
- *  3. **resize 脏标记**：鼠标按下期间发生 resize 且 computed `resize === 'both'`
- *     ⇒ 加 `-textarea-affix-wrapper-resize-dirty`（issue 51594）。
- *  4. mousedown 期间给 textarea 加 `${p}-mouse-active`。
- *  5. suffix 仅来自 `hasFeedback`（feedbackIcon），count 节点由引擎渲染。
- */
-
 import { useDevWarning } from '@apollo-design/utils';
 import {
   type Component,
@@ -20,6 +6,8 @@ import {
   defineComponent,
   h,
   isVNode,
+  mergeProps,
+  onBeforeUnmount,
   type PropType,
   ref,
   shallowRef,
@@ -39,6 +27,7 @@ import { useVariant } from '../form/hooks/useVariants';
 import { useCompactItemContext } from '../space/Compact';
 import { getStatusClassNames } from '../space/statusUtils';
 import { RcTextArea } from './engine/TextArea';
+import { inputEmits } from './input-emits';
 import type {
   TextAreaProps,
   TextAreaRef,
@@ -48,7 +37,7 @@ import type {
 import { useInputTheme } from './use-input-theme';
 
 function asNode(value: VNodeChild | Component | null | undefined): VNodeChild | undefined {
-  if (value === null || value === undefined) return undefined;
+  if (value === null || value === undefined) return value;
   if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
     return value;
   }
@@ -92,8 +81,9 @@ export const TextAreaComponent = defineComponent({
     },
     hidden: { type: Boolean, default: undefined },
     autoComplete: { type: String, default: undefined },
+    placeholder: { type: String, default: undefined },
   },
-  emits: ['update:value'],
+  emits: { ...inputEmits, resize: (_size: { width: number; height: number }) => true },
   setup(props, { attrs, emit, expose }) {
     const devWarning = useDevWarning('TextArea');
     devWarning.deprecated(props.bordered === undefined, 'bordered', 'variant');
@@ -122,9 +112,14 @@ export const TextAreaComponent = defineComponent({
       legacyBordered: () => props.bordered,
     });
 
-    const mergedProps = computed<TextAreaProps>(
-      () => ({ ...props, size: mergedSize.value, disabled: mergedDisabled.value }) as TextAreaProps,
-    );
+    const mergedProps = computed<TextAreaProps>(() => ({
+      ...attrs,
+      ...props,
+      size: mergedSize.value,
+      disabled: mergedDisabled.value,
+      status: mergedStatus.value,
+      variant: variant.value,
+    }));
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       TextAreaProps,
       TextAreaSemanticClassNames,
@@ -146,7 +141,7 @@ export const TextAreaComponent = defineComponent({
       allowClear: () => props.allowClear,
       clearIcon: () => asNode(props.clearIcon),
       contextAllowClear: () => (context as { allowClear?: TextAreaProps['allowClear'] }).allowClear,
-      contextClearIcon: () => asNode((context as { clearIcon?: VNodeChild }).clearIcon as never),
+      contextClearIcon: () => (context as { clearIcon?: VNodeChild }).clearIcon,
       componentName: 'TextArea',
     });
 
@@ -154,32 +149,29 @@ export const TextAreaComponent = defineComponent({
     const isMouseDown = ref(false);
     const resizeDirty = ref(false);
 
-    const onInternalMouseDown = (e: MouseEvent): void => {
-      isMouseDown.value = true;
-      (attrs as { onMouseDown?: (e: MouseEvent) => void }).onMouseDown?.(e);
-      const onMouseUp = (): void => {
-        isMouseDown.value = false;
-        document.removeEventListener('mouseup', onMouseUp);
-      };
-      document.addEventListener('mouseup', onMouseUp);
-    };
-    const onInternalResize = (size: { width: number; height: number }): void => {
-      (attrs as { onResize?: (size: { width: number; height: number }) => void }).onResize?.(size);
-      if (isMouseDown.value && typeof getComputedStyle === 'function') {
-        const inner = innerRef.value as unknown as { nativeElement?: HTMLElement | null } | null;
-        const ele = inner?.nativeElement?.querySelector('textarea');
-        if (ele && getComputedStyle(ele).resize === 'both') {
-          resizeDirty.value = true;
-        }
-      }
-    };
-
     const innerRef = shallowRef<TextAreaRef | null>(null);
-
-    const handleChange = (e: unknown): void => {
-      const value = (e as { target?: { value?: string } })?.target?.value;
-      emit('update:value', value);
-      (attrs as { onChange?: (e: unknown) => void }).onChange?.(e);
+    let mouseDocument: Document | undefined;
+    const onMouseUp = (): void => {
+      isMouseDown.value = false;
+      mouseDocument?.removeEventListener('mouseup', onMouseUp);
+      mouseDocument = undefined;
+    };
+    const onInternalMouseDown = (): void => {
+      onMouseUp();
+      isMouseDown.value = true;
+      mouseDocument = innerRef.value?.resizableTextArea?.textArea?.ownerDocument;
+      mouseDocument?.addEventListener('mouseup', onMouseUp);
+    };
+    onBeforeUnmount(onMouseUp);
+    const onInternalResize = (size: { width: number; height: number }): void => {
+      emit('resize', size);
+      const editor = innerRef.value?.resizableTextArea?.textArea;
+      if (
+        isMouseDown.value &&
+        editor &&
+        editor.ownerDocument.defaultView?.getComputedStyle(editor).resize === 'both'
+      )
+        resizeDirty.value = true;
     };
 
     expose({
@@ -199,66 +191,73 @@ export const TextAreaComponent = defineComponent({
 
     return () => {
       const p = prefixCls.value;
-      return h(RcTextArea, {
-        ...attrs,
-        ref: innerRef as never,
-        prefixCls: p,
-        autoComplete: props.autoComplete ?? (context as { autoComplete?: string }).autoComplete,
-        value: props.value,
-        defaultValue: props.defaultValue,
-        disabled: mergedDisabled.value,
-        readOnly: props.readOnly,
-        rows: props.rows,
-        maxLength: props.maxLength,
-        hidden: props.hidden,
-        autoSize: props.autoSize,
-        allowClear: mergedAllowClear.value,
-        showCount: props.showCount,
-        count: props.count,
-        suffix: hasFeedback.value
-          ? h('span', { class: `${p}-textarea-suffix` }, [
-              asNode(formItemContext.value.feedbackIcon as never),
-            ])
-          : undefined,
-        className: [
-          // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-          attrs.class,
-          compactItemClassnames.value,
-          (context as { className?: string }).className,
-          mergedClassNames.value.root,
-          { [`${p}-textarea-affix-wrapper-resize-dirty`]: resizeDirty.value },
-        ],
-        style: mergedStyles.value.root,
-        themeStyle: themeStyle.value,
-        styles: mergedStyles.value as never,
-        classNames: {
-          ...mergedClassNames.value,
-          textarea: [
-            {
-              [`${p}-sm`]: mergedSize.value === 'small',
-              [`${p}-lg`]: mergedSize.value === 'large',
-              [`${p}-mouse-active`]: isMouseDown.value,
-            },
-            mergedClassNames.value.textarea,
+      return h(
+        RcTextArea,
+        mergeProps(attrs, {
+          ref: innerRef as never,
+          prefixCls: p,
+          autoComplete: props.autoComplete ?? (context as { autoComplete?: string }).autoComplete,
+          value: props.value,
+          defaultValue: props.defaultValue,
+          disabled: mergedDisabled.value,
+          readOnly: props.readOnly,
+          rows: props.rows,
+          maxLength: props.maxLength,
+          hidden: props.hidden,
+          placeholder: props.placeholder,
+          autoSize: props.autoSize,
+          allowClear: mergedAllowClear.value,
+          showCount: props.showCount,
+          count: props.count,
+          suffix: hasFeedback.value
+            ? h('span', { class: `${p}-textarea-suffix` }, [
+                asNode(formItemContext.value.feedbackIcon as never),
+              ])
+            : undefined,
+          className: [
+            // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
+            attrs.class,
+            compactItemClassnames.value,
+            (context as { className?: string }).className,
+            mergedClassNames.value.root,
+            { [`${p}-textarea-affix-wrapper-resize-dirty`]: resizeDirty.value },
           ],
-          variant: [
-            { [`${p}-${variant.value}`]: enableVariantCls.value },
-            getStatusClassNames(p, mergedStatus.value),
-          ],
-          affixWrapper: [
-            `${p}-textarea-affix-wrapper`,
-            {
-              [`${p}-affix-wrapper-rtl`]: direction.value === 'rtl',
-              [`${p}-affix-wrapper-sm`]: mergedSize.value === 'small',
-              [`${p}-affix-wrapper-lg`]: mergedSize.value === 'large',
-              [`${p}-textarea-show-count`]: !!(props.showCount || props.count?.show),
-            },
-          ],
-        },
-        onChange: handleChange,
-        onMousedown: onInternalMouseDown,
-        onResize: onInternalResize,
-      } as never);
+          style: mergedStyles.value.root,
+          themeStyle: themeStyle.value,
+          styles: mergedStyles.value as never,
+          classNames: {
+            ...mergedClassNames.value,
+            textarea: [
+              {
+                [`${p}-sm`]: mergedSize.value === 'small',
+                [`${p}-lg`]: mergedSize.value === 'large',
+                [`${p}-mouse-active`]: isMouseDown.value,
+                [`${p}-rtl`]: direction.value === 'rtl',
+              },
+              mergedClassNames.value.textarea,
+            ],
+            variant: [
+              { [`${p}-${variant.value}`]: enableVariantCls.value },
+              getStatusClassNames(p, mergedStatus.value),
+            ],
+            affixWrapper: [
+              `${p}-textarea-affix-wrapper`,
+              {
+                [`${p}-affix-wrapper-rtl`]: direction.value === 'rtl',
+                [`${p}-affix-wrapper-sm`]: mergedSize.value === 'small',
+                [`${p}-affix-wrapper-lg`]: mergedSize.value === 'large',
+                [`${p}-textarea-show-count`]: !!(props.showCount || props.count?.show),
+              },
+            ],
+          },
+          onValueChange: (value: string) => emit('update:value', value),
+          onChange: (event: Event) => emit('change', event),
+          onClear: (event: MouseEvent) => emit('clear', event),
+          onPressEnter: (event: KeyboardEvent) => emit('pressEnter', event),
+          onMousedown: onInternalMouseDown,
+          onResize: onInternalResize,
+        }),
+      );
     };
   },
 });

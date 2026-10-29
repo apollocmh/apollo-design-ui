@@ -92,7 +92,6 @@ export const Overlay = defineComponent({
     styles: { type: Object as PropType<MergedStyles>, default: undefined },
   },
   setup(props, { slots }) {
-    // ⚠️ useLocale 返回的是**普通对象**（不是 ref）—— 别写 `.value`（empty 同判）
     const [contextLocale] = useLocale('Popconfirm');
 
     return () => {
@@ -105,10 +104,10 @@ export const Overlay = defineComponent({
       const title = slots.title ? slots.title() : props.title;
       const description = slots.description ? slots.description() : props.description;
       // 只有未提供槽时才以字符串 prop / locale 兜底；空槽保持为空。
-      const okText = slots.okText ? slots.okText() : props.okText || contextLocale.okText;
+      const okText = slots.okText ? slots.okText() : props.okText || contextLocale.value.okText;
       const cancelText = slots.cancelText
         ? slots.cancelText()
-        : props.cancelText || contextLocale.cancelText;
+        : props.cancelText || contextLocale.value.cancelText;
 
       return h(
         'div',

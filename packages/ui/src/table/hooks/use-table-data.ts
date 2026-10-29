@@ -4,7 +4,16 @@
  */
 
 import { isNonNullable, mergeProps, omit } from '@apollo-design/utils';
-import { type ComputedRef, computed, type Ref, ref, shallowRef, unref } from 'vue';
+import {
+  type ComputedRef,
+  computed,
+  type MaybeRefOrGetter,
+  type Ref,
+  ref,
+  shallowRef,
+  toValue,
+  unref,
+} from 'vue';
 import { EXPAND_COLUMN } from '../engine/constant';
 import type {
   ColumnsType,
@@ -166,9 +175,11 @@ export function usePagination(
 
 // ============================== useContainerWidth ==============================
 
-export function useContainerWidth(prefixCls: string): (ele: HTMLElement, width: number) => number {
+export function useContainerWidth(
+  prefixCls: MaybeRefOrGetter<string>,
+): (ele: HTMLElement, width: number) => number {
   const getContainerWidth = (ele: HTMLElement, width: number): number => {
-    const container = ele.querySelector(`.${prefixCls}-container`);
+    const container = ele.querySelector(`.${toValue(prefixCls)}-container`);
     let returnWidth = width;
     if (container) {
       const style = getComputedStyle(container);

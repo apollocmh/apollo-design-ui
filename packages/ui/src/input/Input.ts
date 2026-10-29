@@ -1,19 +1,3 @@
-/**
- * Input —— antd 6.6.4 `components/input/Input.tsx` 的 Vue 实现。
- *
- * 判据（es/input/Input.js 181 行，逐条对齐）：
- *  1. **类名链**：root = clsx(className, rootClassName, compactItem, contextClassName,
- *     语义 root)；`classNames.input` 承载 -sm/-lg/-rtl；`classNames.variant` 承载
- *     `-{variant}` + 状态类（裸 input 时挂在 input 上）；affixWrapper /
- *     wrapper / groupWrapper 各有自己的尺寸与 rtl 派生。
- *  2. **deprecated ×3**：bordered / addonBefore / addonAfter（判据 `!== undefined`）。
- *  3. **allowClear** 经 `useAllowClear`（默认图标 CloseCircleFilled）。
- *  4. **密码自动填充规避**：focus/blur/change 都先 `removePasswordTimeout()`。
- *  5. **suffix**：`hasFeedback || suffix` ⇒ suffix = [suffix, feedbackIcon]。
- *  6. 语义合并顺序 `[contextClassNames, classNames]` /
- *     `[contextStyles, contextStyleRoot, styles, styleRoot]`（style 覆盖 styles.root）。
- */
-
 import { useDevWarning } from '@apollo-design/utils';
 import {
   type Component,
@@ -22,7 +6,9 @@ import {
   defineComponent,
   h,
   isVNode,
+  mergeProps,
   type PropType,
+  type SlotsType,
   shallowRef,
   type VNodeChild,
 } from 'vue';
@@ -41,17 +27,19 @@ import { useCompactItemContext } from '../space/Compact';
 import { getStatusClassNames } from '../space/statusUtils';
 import { RcInput } from './engine/Input';
 import { useRemovePasswordTimeout } from './hooks/use-remove-password-timeout';
+import { inputEmits } from './input-emits';
 import type {
   InputProps,
   InputRef,
   InputSemanticClassNames,
   InputSemanticStyles,
+  InputSlots,
 } from './interface';
 import { useInputTheme } from './use-input-theme';
 
 /** D42：组件对象 → VNode（Button 同款归一化）。 */
 function asNode(value: VNodeChild | Component | null | undefined): VNodeChild | undefined {
-  if (value === null || value === undefined) return undefined;
+  if (value === null || value === undefined) return value;
   if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
     return value;
   }
@@ -59,43 +47,46 @@ function asNode(value: VNodeChild | Component | null | undefined): VNodeChild | 
   return h(value as Component);
 }
 
+export const inputProps = {
+  prefixCls: { type: String, default: undefined },
+  classNames: {
+    type: [Object, Function] as PropType<InputProps['classNames']>,
+    default: undefined,
+  },
+  styles: { type: [Object, Function] as PropType<InputProps['styles']>, default: undefined },
+  value: { type: String as PropType<string | undefined>, default: undefined },
+  defaultValue: { type: String as PropType<string | undefined>, default: undefined },
+  size: { type: String as PropType<SizeType>, default: undefined },
+  disabled: { type: Boolean, default: undefined },
+  readOnly: { type: Boolean, default: undefined },
+  bordered: { type: Boolean, default: undefined },
+  variant: { type: String as PropType<InputProps['variant']>, default: undefined },
+  status: { type: String as PropType<InputProps['status']>, default: undefined },
+  prefix: { type: null as unknown as PropType<VNodeChild | Component>, default: undefined },
+  suffix: { type: null as unknown as PropType<VNodeChild | Component>, default: undefined },
+  addonBefore: { type: null as unknown as PropType<VNodeChild | Component>, default: undefined },
+  addonAfter: { type: null as unknown as PropType<VNodeChild | Component>, default: undefined },
+  allowClear: {
+    type: [Boolean, Object] as PropType<InputProps['allowClear']>,
+    default: undefined,
+  },
+  clearIcon: { type: null as unknown as PropType<VNodeChild | Component>, default: undefined },
+  showCount: { type: [Boolean, Object] as PropType<InputProps['showCount']>, default: undefined },
+  count: { type: Object as PropType<InputProps['count']>, default: undefined },
+  maxLength: { type: Number, default: undefined },
+  htmlSize: { type: Number, default: undefined },
+  autoComplete: { type: String, default: undefined },
+  placeholder: { type: String, default: undefined },
+  type: { type: String, default: undefined },
+  hidden: { type: Boolean, default: undefined },
+  autoFocus: { type: Boolean, default: undefined },
+};
 export const InputComponent = defineComponent({
   name: 'AInput',
   inheritAttrs: false,
-  props: {
-    prefixCls: { type: String, default: undefined },
-    classNames: {
-      type: [Object, Function] as PropType<InputProps['classNames']>,
-      default: undefined,
-    },
-    styles: { type: [Object, Function] as PropType<InputProps['styles']>, default: undefined },
-    value: { type: String as PropType<string | undefined>, default: undefined },
-    defaultValue: { type: String as PropType<string | undefined>, default: undefined },
-    size: { type: String as PropType<SizeType>, default: undefined },
-    disabled: { type: Boolean, default: undefined },
-    readOnly: { type: Boolean, default: undefined },
-    bordered: { type: Boolean, default: undefined },
-    variant: { type: String as PropType<InputProps['variant']>, default: undefined },
-    status: { type: String as PropType<InputProps['status']>, default: undefined },
-    prefix: { type: null as unknown as PropType<VNodeChild | Component>, default: undefined },
-    suffix: { type: null as unknown as PropType<VNodeChild | Component>, default: undefined },
-    addonBefore: { type: null as unknown as PropType<VNodeChild | Component>, default: undefined },
-    addonAfter: { type: null as unknown as PropType<VNodeChild | Component>, default: undefined },
-    allowClear: {
-      type: [Boolean, Object] as PropType<InputProps['allowClear']>,
-      default: undefined,
-    },
-    clearIcon: { type: null as unknown as PropType<VNodeChild | Component>, default: undefined },
-    showCount: { type: [Boolean, Object] as PropType<InputProps['showCount']>, default: undefined },
-    count: { type: Object as PropType<InputProps['count']>, default: undefined },
-    maxLength: { type: Number, default: undefined },
-    htmlSize: { type: Number, default: undefined },
-    autoComplete: { type: String, default: undefined },
-    type: { type: String, default: undefined },
-    hidden: { type: Boolean, default: undefined },
-    autoFocus: { type: Boolean, default: undefined },
-  },
-  emits: ['update:value'],
+  slots: Object as SlotsType<InputSlots>,
+  props: inputProps,
+  emits: inputEmits,
   setup(props, { attrs, emit, expose, slots }) {
     const devWarning = useDevWarning('Input');
     const context = useComponentConfig<ComponentStyleConfig & Record<string, unknown>>('input');
@@ -140,14 +131,14 @@ export const InputComponent = defineComponent({
     });
 
     // ============================= Semantic ============================
-    const mergedProps = computed<InputProps>(
-      () =>
-        ({
-          ...props,
-          size: mergedSize.value,
-          disabled: mergedDisabled.value,
-        }) as InputProps,
-    );
+    const mergedProps = computed<InputProps>(() => ({
+      ...attrs,
+      ...props,
+      size: mergedSize.value,
+      disabled: mergedDisabled.value,
+      status: mergedStatus.value,
+      variant: variant.value,
+    }));
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       InputProps,
       InputSemanticClassNames,
@@ -174,7 +165,7 @@ export const InputComponent = defineComponent({
       allowClear: () => props.allowClear,
       clearIcon: () => asNode(props.clearIcon),
       contextAllowClear: () => (context as { allowClear?: InputProps['allowClear'] }).allowClear,
-      contextClearIcon: () => asNode((context as { clearIcon?: VNodeChild }).clearIcon as never),
+      contextClearIcon: () => (context as { clearIcon?: VNodeChild }).clearIcon,
       componentName: 'Input',
     });
 
@@ -182,40 +173,10 @@ export const InputComponent = defineComponent({
     const innerRef = shallowRef<InputRef | null>(null);
     const removePasswordTimeout = useRemovePasswordTimeout(() => innerRef.value, true);
 
-    const handleChange = (e: unknown): void => {
+    const handleChange = (event: Event): void => {
       removePasswordTimeout();
-      const value = (e as { target?: { value?: string } })?.target?.value;
-      emit('update:value', value);
-      (attrs as { onChange?: (e: unknown) => void }).onChange?.(e);
+      emit('change', event);
     };
-
-    // prefix/suffix：slot 优先、prop 兜底（antd 两者皆可传；slot 便于传 VNode/组件）
-    const prefixNode = computed<VNodeChild | undefined>(() => {
-      const fromSlot = slots.prefix?.();
-      if (
-        fromSlot !== undefined &&
-        fromSlot !== null &&
-        (!Array.isArray(fromSlot) || fromSlot.length)
-      ) {
-        return fromSlot as VNodeChild;
-      }
-      return asNode(props.prefix);
-    });
-
-    const suffixNode = computed<VNodeChild | undefined>(() => {
-      const fromSlot = slots.suffix?.();
-      const suffix =
-        fromSlot !== undefined && fromSlot !== null && (!Array.isArray(fromSlot) || fromSlot.length)
-          ? (fromSlot as VNodeChild)
-          : asNode(props.suffix);
-      if (!hasFeedback.value && suffix === undefined) {
-        return undefined;
-      }
-      return [
-        suffix,
-        hasFeedback.value ? asNode(formItemContext.value.feedbackIcon as never) : null,
-      ];
-    });
 
     expose({
       focus: (option?: { preventScroll?: boolean; cursor?: 'start' | 'end' | 'all' }) => {
@@ -252,76 +213,81 @@ export const InputComponent = defineComponent({
         mergedClassNames.value.root,
       ];
 
-      return h(RcInput, {
-        ...attrs,
-        ref: innerRef as never,
-        prefixCls: p,
-        autoComplete: props.autoComplete ?? (context as { autoComplete?: string }).autoComplete,
-        value: props.value,
-        defaultValue: props.defaultValue,
-        disabled: mergedDisabled.value,
-        readOnly: props.readOnly,
-        type: props.type ?? 'text',
-        htmlSize: props.htmlSize,
-        maxLength: props.maxLength,
-        hidden: props.hidden,
-        prefix: prefixNode.value,
-        suffix: suffixNode.value,
-        addonBefore: asNode(props.addonBefore),
-        addonAfter: asNode(props.addonAfter),
-        allowClear: mergedAllowClear.value,
-        showCount: props.showCount,
-        count: props.count,
-        className: rootClass,
-        style: mergedStyles.value.root,
-        themeStyle: themeStyle.value,
-        styles: mergedStyles.value as never,
-        classNames: {
-          ...mergedClassNames.value,
-          input: [
-            {
-              [`${p}-sm`]: mergedSize.value === 'small',
-              [`${p}-lg`]: mergedSize.value === 'large',
-              [`${p}-rtl`]: direction.value === 'rtl',
-            },
-            mergedClassNames.value.input,
-          ],
-          variant: [
-            { [`${p}-${variant.value}`]: enableVariantCls.value },
-            getStatusClassNames(p, mergedStatus.value),
-          ],
-          affixWrapper: [
-            {
-              [`${p}-affix-wrapper-sm`]: mergedSize.value === 'small',
-              [`${p}-affix-wrapper-lg`]: mergedSize.value === 'large',
-              [`${p}-affix-wrapper-rtl`]: direction.value === 'rtl',
-            },
-            mergedClassNames.value.affixWrapper,
-          ],
-          wrapper: [
-            { [`${p}-group-rtl`]: direction.value === 'rtl' },
-            mergedClassNames.value.wrapper,
-          ],
-          groupWrapper: [
-            {
-              [`${p}-group-wrapper-${variant.value}`]: enableVariantCls.value,
-              [`${p}-group-wrapper-rtl`]: direction.value === 'rtl',
-              [`${p}-group-wrapper-sm`]: mergedSize.value === 'small',
-              [`${p}-group-wrapper-lg`]: mergedSize.value === 'large',
-            },
-            mergedClassNames.value.groupWrapper,
-          ],
-        },
-        onChange: handleChange,
-        onFocus: (e: FocusEvent) => {
-          removePasswordTimeout();
-          (attrs as { onFocus?: (e: FocusEvent) => void }).onFocus?.(e);
-        },
-        onBlur: (e: FocusEvent) => {
-          removePasswordTimeout();
-          (attrs as { onBlur?: (e: FocusEvent) => void }).onBlur?.(e);
-        },
-      } as never);
+      const prefix = slots.prefix ? slots.prefix() : asNode(props.prefix);
+      const suffix = slots.suffix ? slots.suffix() : asNode(props.suffix);
+      return h(
+        RcInput,
+        mergeProps(attrs, {
+          ref: innerRef as never,
+          prefixCls: p,
+          autoComplete: props.autoComplete ?? (context as { autoComplete?: string }).autoComplete,
+          value: props.value,
+          defaultValue: props.defaultValue,
+          disabled: mergedDisabled.value,
+          readOnly: props.readOnly,
+          type: props.type ?? 'text',
+          htmlSize: props.htmlSize,
+          maxLength: props.maxLength,
+          hidden: props.hidden,
+          autoFocus: props.autoFocus,
+          placeholder: props.placeholder,
+          prefix,
+          suffix: hasFeedback.value
+            ? [suffix, asNode(formItemContext.value.feedbackIcon as never)]
+            : suffix,
+          addonBefore: asNode(props.addonBefore),
+          addonAfter: asNode(props.addonAfter),
+          allowClear: mergedAllowClear.value,
+          showCount: props.showCount,
+          count: props.count,
+          className: rootClass,
+          style: mergedStyles.value.root,
+          themeStyle: themeStyle.value,
+          styles: mergedStyles.value as never,
+          classNames: {
+            ...mergedClassNames.value,
+            input: [
+              {
+                [`${p}-sm`]: mergedSize.value === 'small',
+                [`${p}-lg`]: mergedSize.value === 'large',
+                [`${p}-rtl`]: direction.value === 'rtl',
+              },
+              mergedClassNames.value.input,
+            ],
+            variant: [
+              { [`${p}-${variant.value}`]: enableVariantCls.value },
+              getStatusClassNames(p, mergedStatus.value),
+            ],
+            affixWrapper: [
+              {
+                [`${p}-affix-wrapper-sm`]: mergedSize.value === 'small',
+                [`${p}-affix-wrapper-lg`]: mergedSize.value === 'large',
+                [`${p}-affix-wrapper-rtl`]: direction.value === 'rtl',
+              },
+              mergedClassNames.value.affixWrapper,
+            ],
+            wrapper: [
+              { [`${p}-group-rtl`]: direction.value === 'rtl' },
+              mergedClassNames.value.wrapper,
+            ],
+            groupWrapper: [
+              {
+                [`${p}-group-wrapper-${variant.value}`]: enableVariantCls.value,
+                [`${p}-group-wrapper-rtl`]: direction.value === 'rtl',
+                [`${p}-group-wrapper-sm`]: mergedSize.value === 'small',
+                [`${p}-group-wrapper-lg`]: mergedSize.value === 'large',
+              },
+              mergedClassNames.value.groupWrapper,
+            ],
+          },
+          onValueChange: (value: string) => emit('update:value', value),
+          onChange: handleChange,
+          onClear: (event: MouseEvent) => emit('clear', event),
+          onPressEnter: (event: KeyboardEvent) => emit('pressEnter', event),
+          onFocus: removePasswordTimeout,
+          onBlur: removePasswordTimeout,
+        }),
+      );
     };
   },
 });

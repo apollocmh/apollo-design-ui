@@ -59,11 +59,13 @@ export function useTheme(
         cssVarPrefix: parentTheme?.cssVarPrefix,
       };
 
-  const mergedComponents: ComponentTokenMap = { ...(base.components ?? {}) };
+  const components = new Map(Object.entries(base.components ?? {}));
 
   for (const [name, componentToken] of Object.entries(theme.components ?? {})) {
-    mergedComponents[name] = { ...mergedComponents[name], ...componentToken };
+    components.set(name, { ...components.get(name), ...componentToken });
   }
+
+  const mergedComponents: ComponentTokenMap = Object.fromEntries(components);
 
   return {
     ...base,

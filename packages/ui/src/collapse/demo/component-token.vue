@@ -1,78 +1,47 @@
 <script setup lang="ts">
+import { useTheme } from '@apollo-design/theme';
 import type { CollapseItemType } from '@apollo-design/ui';
-import { Collapse, Select, Space, Tag } from '@apollo-design/ui';
+import { Collapse, ConfigProvider } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
-const presets = [
-  {
-    value: 'blue',
-    label: '海蓝',
-    headerBg: '#e6f4ff',
-    contentBg: '#f0f7ff',
+const source = useTheme();
+const spacious = ref(false);
+const theme = computed(() => ({
+  components: {
+    Collapse: {
+      headerPadding: spacious.value ? '20px 24px' : '12px 16px',
+      headerPaddingSM: spacious.value ? '14px 18px' : '8px 12px',
+      headerPaddingLG: spacious.value ? '24px 28px' : '16px 24px',
+      headerBg: source.token.value.colorFillSecondary,
+      contentPadding: spacious.value ? '24px' : '16px',
+      contentPaddingSM: spacious.value ? '18px' : '12px',
+      contentPaddingLG: spacious.value ? '28px' : '24px',
+      contentBg: source.token.value.colorBgContainer,
+      borderlessContentPadding: spacious.value ? '12px 24px 20px' : '4px 16px 16px',
+      borderlessContentBg: source.token.value.colorFillAlter,
+    },
   },
-  {
-    value: 'purple',
-    label: '紫罗兰',
-    headerBg: '#f9f0ff',
-    contentBg: '#fbf5ff',
-  },
-  {
-    value: 'green',
-    label: '青绿',
-    headerBg: '#f6ffed',
-    contentBg: '#f8fff0',
-  },
-];
-
-type PresetValue = (typeof presets)[number]['value'];
-
-const preset = ref<PresetValue>('blue');
-
-const currentPreset = computed(
-  () =>
-    presets.find((item) => item.value === preset.value) ?? (presets[0] as (typeof presets)[number]),
-);
-
-const tokenStyle = computed(() => ({
-  '--apollo-collapse-header-bg': currentPreset.value.headerBg,
-  '--apollo-collapse-content-bg': currentPreset.value.contentBg,
-  '--apollo-collapse-header-padding': '14px 20px',
-  '--apollo-collapse-content-padding': '16px 20px',
 }));
-
 const items: CollapseItemType[] = [
   {
     key: '1',
-    label: '通过 CSS 变量覆盖组件 Token',
-    children: 'header-bg、content-bg 与内边距都来自 --apollo-collapse-* 变量。',
+    label: '当前 Provider 的组件 Token',
+    children: '切换间距配置会实时更新这十个组件 Token；颜色沿用当前主题。',
   },
   {
     key: '2',
-    label: '切换配色方案',
-    children: '选择不同的预设会实时改写根节点上的组件 Token 变量。',
+    label: '无边框内容背景',
+    children: 'borderlessContentBg 同样由 theme.components.Collapse 消费。',
   },
 ];
-
-function onPresetChange(value: unknown): void {
-  preset.value = value as PresetValue;
-}
 </script>
 
 <template>
   <div>
-    <Space :size="12" wrap style="margin-bottom: 16px">
-      <span>配色</span>
-      <Select
-        aria-label="配色方案"
-        :value="preset"
-        :options="presets"
-        style="width: 140px"
-        @change="onPresetChange"
-      />
-      <Tag color="blue">--apollo-collapse-header-bg: {{ currentPreset.headerBg }}</Tag>
-      <Tag>--apollo-collapse-content-bg: {{ currentPreset.contentBg }}</Tag>
-    </Space>
-
-    <Collapse :items="items" :style="tokenStyle" />
+    <label><input v-model="spacious" type="checkbox" /> 宽松间距</label>
+    <ConfigProvider :theme="theme">
+      <Collapse :items="items" default-active-key="1" style="margin-block: 16px" />
+      <Collapse :items="items" :bordered="false" size="small" default-active-key="2" />
+    </ConfigProvider>
   </div>
 </template>

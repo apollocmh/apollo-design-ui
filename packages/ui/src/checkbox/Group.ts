@@ -69,7 +69,7 @@ export const GroupComponent = defineComponent({
       onChange?: (checkedValue: unknown[]) => void;
     };
     const context = useComponentConfig('checkbox');
-    const { getPrefixCls, direction } = context;
+    const { getPrefixCls } = context;
     const rootRef = shallowRef<HTMLDivElement | null>(null);
 
     // ============================== Value ===============================
@@ -199,7 +199,7 @@ export const GroupComponent = defineComponent({
       const classString = [
         groupPrefixCls,
         {
-          [`${groupPrefixCls}-rtl`]: direction === 'rtl',
+          [`${groupPrefixCls}-rtl`]: context.direction === 'rtl',
         },
         // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
         attrs.class,

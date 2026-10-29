@@ -13,6 +13,6 @@ const right = ref('right aligned');
     <Input v-model:value="left" aria-label="左对齐输入框" style="text-align: left" />
     <Input v-model:value="center" aria-label="居中对齐输入框" style="text-align: center" />
     <Input v-model:value="right" aria-label="右对齐输入框" style="text-align: right" />
-    <div style="font-size: 12px; color: #999">继续输入可查看三种文本对齐效果</div>
+    <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">继续输入可查看三种文本对齐效果</div>
   </div>
 </template>

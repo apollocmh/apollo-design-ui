@@ -7,10 +7,8 @@
  * 差异（`React.*` → Vue，规则 C16 / C18 / D21 / D42）：
  *   - `React.ReactNode` → `VNodeChild`（组件对象按 D42 归一化）
  *   - `React.CSSProperties` → Vue 的 `CSSProperties`
- *   - 事件走 attrs（PITFALLS 35）：`onChange` / `onFocus` / `onBlur` / `onPressEnter` /
- *     `onKeyDown` / `onKeyUp` / `onCompositionStart` / `onCompositionEnd` / `onClear` /
- *     `onResize` **不声明 emits**
- *   - 只声明 `update:value`（C11：v-model 与语义事件同时发出）
+ *   - 语义事件通过 Vue emits 发出；change 保留真实原生事件及实际编辑节点。
+ *   - DOM attrs/listeners 透传到编辑器，内容渲染使用命名/作用域插槽。
  */
 
 import type { Component, CSSProperties, VNodeChild } from 'vue';
@@ -99,6 +97,10 @@ export interface PasswordSemanticClassNames {
   icon?: string;
 }
 
+export interface PasswordSemanticContext {
+  props: InputPasswordProps;
+}
+
 // ============================== Input ==============================
 
 /** antd 5.22+ 的 focus 选项。 */
@@ -119,15 +121,15 @@ export interface InputProps {
   bordered?: boolean;
   variant?: Variant;
   status?: InputStatus;
-  prefix?: VNodeChild;
-  suffix?: VNodeChild;
+  prefix?: VNodeChild | Component;
+  suffix?: VNodeChild | Component;
   /** @deprecated 用 `Space.Compact`。 */
-  addonBefore?: VNodeChild;
+  addonBefore?: VNodeChild | Component;
   /** @deprecated 用 `Space.Compact`。 */
-  addonAfter?: VNodeChild;
+  addonAfter?: VNodeChild | Component;
   allowClear?: AllowClearProp;
   /** @deprecated 用 `allowClear={{ clearIcon }}`。 */
-  clearIcon?: VNodeChild;
+  clearIcon?: VNodeChild | Component;
   showCount?: ShowCountProp;
   count?: InputCountProp;
   maxLength?: number;
@@ -137,10 +139,24 @@ export interface InputProps {
   autoFocus?: boolean;
   hidden?: boolean;
   placeholder?: string;
-  onChange?: (e: unknown) => void;
+  onChange?: (e: Event) => void;
+  onClear?: (e: MouseEvent) => void;
   onPressEnter?: (e: KeyboardEvent) => void;
   classNames?: InputSemanticClassNames | InputSemanticClassNamesFn;
   styles?: InputSemanticStyles | InputSemanticStylesFn;
+}
+
+export interface InputSlots {
+  prefix?: () => VNodeChild;
+  suffix?: () => VNodeChild;
+}
+
+export interface InputPasswordSlots extends InputSlots {
+  icon?: (scope: { visible: boolean }) => VNodeChild;
+}
+
+export interface OTPSlots {
+  separator?: (scope: { index: number }) => VNodeChild;
 }
 
 export interface InputRef {
@@ -171,7 +187,7 @@ export interface TextAreaProps {
   status?: InputStatus;
   allowClear?: AllowClearProp;
   /** @deprecated 用 `allowClear={{ clearIcon }}`。 */
-  clearIcon?: VNodeChild;
+  clearIcon?: VNodeChild | Component;
   showCount?: ShowCountProp;
   count?: InputCountProp;
   maxLength?: number;
@@ -180,7 +196,8 @@ export interface TextAreaProps {
   autoComplete?: string;
   hidden?: boolean;
   placeholder?: string;
-  onChange?: (e: unknown) => void;
+  onChange?: (e: Event) => void;
+  onClear?: (e: MouseEvent) => void;
   onPressEnter?: (e: KeyboardEvent) => void;
   onResize?: (size: { width: number; height: number }) => void;
   classNames?: TextAreaSemanticClassNames | TextAreaSemanticClassNamesFn;
@@ -210,7 +227,7 @@ export interface TextAreaRef {
  * `icon`（少 `affixWrapper` / `wrapper` / `groupWrapper` / `variant`），
  * 直接继承会与基类冲突（属性类型不兼容）。
  */
-export interface InputPasswordProps extends Omit<InputProps, 'classNames' | 'styles'> {
+export interface InputPasswordProps extends Omit<InputProps, 'classNames' | 'styles' | 'type'> {
   inputPrefixCls?: string;
   /**
    * 显隐触发方式（**antd 6.6.4 的顶层 API**，`Password.d.ts:8`）。默认 `'click'`。
@@ -221,7 +238,7 @@ export interface InputPasswordProps extends Omit<InputProps, 'classNames' | 'sty
   /**
    * @since 5.27.0
    */
-  suffix?: VNodeChild;
+  suffix?: VNodeChild | Component;
   visibilityToggle?:
     | boolean
     | {
@@ -234,11 +251,10 @@ export interface InputPasswordProps extends Omit<InputProps, 'classNames' | 'sty
          */
         action?: 'click' | 'hover';
       };
-  iconRender?: (visible: boolean) => VNodeChild;
   classNames?:
     | PasswordSemanticClassNames
-    | ((context: InputSemanticContext) => PasswordSemanticClassNames);
-  styles?: InputSemanticStyles | InputSemanticStylesFn;
+    | ((context: PasswordSemanticContext) => PasswordSemanticClassNames);
+  styles?: InputSemanticStyles | ((context: PasswordSemanticContext) => InputSemanticStyles);
 }
 
 // ============================== Group ==============================
@@ -338,7 +354,7 @@ export interface OTPProps {
   value?: string;
   onChange?: (value: string) => void;
   formatter?: (value: string) => string;
-  separator?: VNodeChild | ((index: number) => VNodeChild);
+  separator?: VNodeChild;
   disabled?: boolean;
   status?: InputStatus;
   mask?: boolean | string;
