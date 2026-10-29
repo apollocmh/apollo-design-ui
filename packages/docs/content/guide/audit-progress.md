@@ -12,12 +12,27 @@ order: 0
 | 范围 | 当前结果 |
 | --- | --- |
 | 72个组件主单元 | 21个已完整验收；本批新增Space / Flex / Alert / Layout |
-| 当前并行 | 主题来源专项已收口；后续组件与基础包按完整清单继续 |
+| 当前批次 | Divider、Collapse、完整Input、ConfigProvider、Theme基础包五路收尾；完成后暂停 |
+| 当前已提交视觉 | 987/1704已审阅批准；本批隔离产物新增102张已复验，待源码整合交付 |
 | 其余组件 | 51个尚待按本轮完整标准收口（含Input完整API）；已有局部修复继续保留 |
 | 13个基础包 | 已有共享链路专项证据；逐包当前复核继续，不能把消费场景通过当作整包完成 |
 | 最终验收 | 所有整改单元结束后，对最终同一提交执行全量门禁 |
 
 [完整72项工作清单、证据与剩余边界](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md)。组件复杂度不同，上述数量不代表工时百分比。
+
+## 当前批次：实现与完整验收分开记录
+
+| 单元 | 当前阶段 | 本轮范围 |
+| --- | --- | --- |
+| Divider | 源码已冻结；发布浏览器67/67与正式视觉48/48通过，整合收口中 | 条件内容、当前配置、原生方向/语义、三个Token与九个Demo |
+| Collapse / Panel | 源码已冻结；发布浏览器134/134与54张正式视觉通过，整合收口中 | Vue事件、展开模型、内容保留、真实Panel、键盘与十个Token |
+| Input六个组件族 | 首轮223项浏览器断言通过；关联布局、最终类型和文档收尾中 | 内容/身份、原生事件、模型、attrs、Password/Search/OTP与生命周期 |
+| ConfigProvider | 23项原生SSR/水合及浏览器检查通过；通知消费链与八个Demo收尾中 | 主题写入、语言、组件配置、尺寸/禁用、原生图标与多实例 |
+| Theme基础包 | 源码/发布专项已验证，提交617ae554已推送；逐包完整验收仍开放 | 合法输入派生、可写响应性、应用/SSR隔离、变量作用域所有权与Provider生命周期 |
+
+这里记录隔离产物和各子任务的阶段证据，未合并的源码不等于线上代码。五路均须完成源码、类型、发布消费、适用浏览器/视觉和文档验收后才能新增完成数。本批完成后只做交付收尾并暂停，不再派发新单元。当前仍为21/72；上次正式线上交付与56项真实页面检查的证据见[发布回执](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/space-flex-alert-layout-docs-publication.json)。
+
+本批阶段数据见[当前回执](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-checkpoint.json)。
 
 ## 2026-10-29：Space、Flex、Alert、Layout 本批验收
 
@@ -31,7 +46,7 @@ Space/Compact 的真实子组件、Input 当前主题尺寸和 autoSize、Flex �
 - [Layout响应式及零宽控件](/components/layout/demo/responsive)
 - [Input主题、间距和自适应高度](/components/input/demo/component-token)
 
-## 2026-10-29：下一组源码里程碑，发布验收进行中
+## 2026-10-29阶段记录：当时的源码里程碑与待验收状态
 
 Flex 的当前根节点、完整内容与对齐契约已提交；Layout 家族的 Vue 折叠模型、原生键盘按钮、零宽焦点、响应式生命周期和 19 个既有 Token 已提交。Alert/ErrorBoundary 的完整源码清单也已提交；Input 关联链正在完成最终复核。主题来源专项已修正提供链和数据读取链：显式空 ThemeProvider 恢复默认主题，无主题来源的 CSS-only 作用域保持生效。
 
@@ -42,7 +57,7 @@ Flex 的当前根节点、完整内容与对齐契约已提交；Layout 家族�
 - [Layout / Sider 与真实导航](/components/layout)
 - [Input 主题与尺寸示例](/components/input/demo/component-token)
 
-## 2026-10-29：四个组件已统一验收，Space关联链继续
+## 2026-10-29阶段记录：此前四组件验收与Space关联链
 
 Descriptions 的键盘帮助、Breadcrumb 的真实菜单导航、Timeline 横向长文与连线、Grid 响应式配置、Space/Compact 的动态内容与实际子组件已成组修复。共享 Menu 原生操作、断点观察器和 Select 紧凑尺寸分别提交，迁移说明与 Demo 同步；不保留错误的 React 回调用法。
 
@@ -185,7 +200,7 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 
 ## 还没有完成什么
 
-全库其他组件与基础包的完整契约审计仍在继续。内容接口来源清单还有199项启发式候选待逐项复核，候选不等于缺陷。当前自有视觉矩阵1380项，已批准453项，其余927项随后续完整整改单元验收。Image已验收不表示其他组件通过；全部整改结束后还需要对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
+当前剩余51个组件完整单元（含正在整改的组件）和13个基础包的逐包复核；已提交的987/1704张自有视觉已批准，717张待验收；本批隔离产物的新增102张另有复验证据，待源码整合后更新总数。启发式内容候选须逐项核查，不能直接当作缺陷。上文带日期的历史阶段数字保留其当时含义，当前总数以页首表格为准。全部整改结束后，对最终同一提交执行全量门禁。触摸双指缩放、其他浏览器和未列出的跨文档组合没有在本轮声明验收。
 
 ## 查看证据与后续进展
 
@@ -203,12 +218,27 @@ Tag / CheckableTag / CheckableTagGroup 的完整内容、当前配置/语言/方
 | Scope | Current evidence |
 | --- | --- |
 |72 component units|21 fully accepted; Space, Flex, Alert and Layout pass this batch|
-|Parallel work|Theme-source presence accepted; subsequent component and foundation audits continue|
+|Current batch|Finish Divider, Collapse, complete Input, ConfigProvider and Theme; then pause|
+|Committed Apollo visuals|987/1704 reviewed and approved;102 additional isolated checks pass and await source integration|
 |Other components|51 await full acceptance, including the complete Input API; earlier partial fixes remain valid|
 |13 foundation packages|Existing shared-chain evidence remains;current per-package review continues|
 |Final gate|Run whole-library gates on the same final commit after all units close|
 
 [All72 units, evidence and remaining boundaries](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-global-audit-status.md). These counts are not weighted work percentages.
+
+## Current audit batch: implementation and acceptance are separate
+
+| Unit | Current stage | Complete scope |
+| --- | --- | --- |
+| Divider | Source frozen;67/67 published-browser and48/48 formal visual checks pass; integration continues | Conditional content, current configuration, native direction/semantics, three tokens and nine demos |
+| Collapse / Panel | Source frozen;134/134 published-browser checks and54 reviewed formal visuals pass; integration continues | Vue events, expansion model, retained content, real Panels, keyboard and ten tokens |
+| Six Input families | First223 browser assertions pass; related layout, final types and documentation continue | Content/identity, native events, models, attrs, Password/Search/OTP and lifecycle |
+| ConfigProvider |23 native SSR/hydration/browser checks pass; notice consumers and eight demos continue | Writable theme, locale, component configuration, size/disabled, native icons and multiple instances |
+| Theme foundation | Source/published scope verified and617ae554 pushed; complete package acceptance remains open | Valid token inputs, writable reactivity, app/SSR isolation, variable ownership and Provider lifecycle |
+
+These are staged results from isolated artifacts and active tasks; unmerged source is not live code. These units require source, types, published consumers, applicable browser/visual checks and documentation before the accepted count increases. Finish delivery of this batch, then pause without dispatching further units. Delivery remains21/72. The previous live release and56 real-page checks are recorded in the[publication receipt](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/space-flex-alert-layout-docs-publication.json).
+
+See the[current batch receipt](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-checkpoint.json) for scoped results and open gates.
 
 ## Space, Flex, Alert and Layout accepted in this batch
 
@@ -222,7 +252,7 @@ This batch adds228 reviewed native visuals:987 of1704 are approved and717 remain
 - [Responsive Layout and zero-width controls](/components/layout/demo/responsive)
 - [Input themes, spacing and autoSize](/components/input/demo/component-token)
 
-## Next source milestone; published acceptance continues
+## Earlier stage snapshot: source milestone before published acceptance
 
 Flex root/content/alignment contracts and the Layout family's Vue collapse model, native keyboard controls, zero-width focus, responsive lifecycle and 19 existing tokens have been committed. Alert/ErrorBoundary's complete source checklist is also committed; Input's related theme/sizing unit is finishing its verification. The shared theme producer and data reader now honor the nearest explicit source, including an empty ThemeProvider, while preserving scopes that only use CSS variables.
 
@@ -233,7 +263,7 @@ The new native matrix contains 42 Flex, 60 Alert and 51 Layout scenarios. All hi
 - [Layout and Sider](/components/layout)
 - [Input theme and sizing](/components/input/demo/component-token)
 
-## Four units accepted; the Space and Input chain continues
+## Earlier stage snapshot: four units accepted before the Space/Input batch
 
 Grouped fixes cover keyboard help in Descriptions, native Breadcrumb navigation, horizontal Timeline content and rail alignment, responsive Grid configuration, and current Space/Compact content and real consumers. Menu native actions, Provider breakpoint ownership and Select compact sizing have separate commits, with migration notes and demos.
 
@@ -321,9 +351,9 @@ The final related gate passes 2,352 runtime tests and 398 public type checks. Bu
 
 ## Remaining work
 
-This snapshot has 453 approved Apollo visual cases out of 1,380; the remaining 927 await review within later audit units.
+Committed approval is987/1704 Apollo visual cases, with717 awaiting review. Another102 isolated visual checks pass and await source integration before the committed total changes. Earlier stage counts above retain their historical meaning; the opening table is the current total.
 
-Other components and foundation packages still require their complete audits. The content inventory has 199 heuristic review candidates; candidates are not confirmed defects. Final whole-library gates remain required after all remediation finishes. Touch pinch, other browsers and unspecified cross-document combinations are outside this unit's verified scope.
+51 component units and13 foundation packages still require complete current acceptance. Heuristic content candidates require individual review and are not confirmed defects. Final whole-library gates remain required after all remediation finishes. Touch pinch, other browsers and unspecified cross-document combinations are outside this unit's verified scope.
 
 [Image audit and evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-25-image-contract-audit.md) · [H05 evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-repository-format-audit.md) · [Ongoing issues](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/KNOWN-ISSUES.md) · [Build-time Git history](/changelog)
 

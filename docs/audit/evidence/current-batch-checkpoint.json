@@ -1,0 +1,120 @@
+{
+  "date": "2026-10-29T02:58:44.462297+00:00",
+  "status": "current-batch-checkpoint-not-final-acceptance",
+  "committedBase": "a4b1f160b68b94db442ad56e3d48feab4009ce56",
+  "completeComponentUnits": 21,
+  "componentUnits": 72,
+  "committedApolloVisuals": 987,
+  "committedVisualPlan": 1704,
+  "pauseAfterCurrentBatch": true,
+  "dispatchFurtherUnits": false,
+  "theme": {
+    "pushedCommit": "617ae554",
+    "stage": "source-and-published-scope-verified",
+    "fullFoundationAcceptance": false
+  },
+  "divider": {
+    "stage": "source-frozen-isolated-published-and-visual-checks-pass",
+    "publishedBrowser": 67,
+    "visuals": 48,
+    "rawRGBAExact": 48,
+    "sourceAggregate": "7ff813d5f1bab60285b91e2220439365557741144dcc0c82cb19056ff501498b",
+    "committed": false
+  },
+  "collapse": {
+    "stage": "source-frozen-isolated-published-and-visual-checks-pass",
+    "publishedBrowser": 134,
+    "visuals": 54,
+    "rawRGBAExact": 54,
+    "runtimeAggregate": "f2c118c1f503f05146e38b529221e96014afc88794e2f342e3aa0cfe032ed7d5",
+    "committed": false
+  },
+  "input": {
+    "stage": "current-source-contracts-and-documentation-finishing",
+    "firstBrowserAssertionsPassed": 223,
+    "relatedUnitAndDomPassed": 376,
+    "remaining": "Final public types/slots, current-source browser and bounded prior regression, API/migration/evidence freeze; related Mentions clear-button styles remain under verification."
+  },
+  "configProvider": {
+    "stage": "current-producer-and-consumer-chain-finishing",
+    "priorNativeSsrHydrationBrowserPassed": 23,
+    "remaining": "Existing notice derived configuration, complete declared Tabs defaults, precise native scroll-container types, eight real demos and final freeze."
+  },
+  "tree": {
+    "stage": "read-only-inventory-recorded-implementation-not-started",
+    "pushedCommit": "a4b1f160",
+    "nextTaskDispatched": false
+  },
+  "rawReceipts": {
+    "dividerBrowser": {
+      "path": "/tmp/apollo-divider-isolated-published-browser-discovery.json",
+      "sha256": "f3aa99c26122a64201804962892bd3a7b4f32f4600826eb144e06b1c4c8f0dcc"
+    },
+    "dividerVisual": {
+      "path": "/tmp/apollo-divider-visual-postapproval-617.json",
+      "sha256": "1e3f6ae2393cd816b57c5d9f9557c112bdb11236c3ca9a8580ae5ad00f5eda15"
+    },
+    "collapseBrowser": {
+      "path": "/tmp/apollo-collapse-isolated-published-browser/receipt.json",
+      "sha256": "932aec0033796e91f4a9830b9b8eba4a1aa8b771bf1f38774a5513def4df6e86"
+    },
+    "collapseVisual": {
+      "path": "/tmp/apollo-collapse-visual-postapproval-617.json",
+      "sha256": "30ab0823535a0d5ece94a4e961a5df17c9ef7907dbec29245f9824d692a62284"
+    },
+    "collapseRawVisual": {
+      "path": "/tmp/apollo-collapse-visual-postapproval-raw617.json",
+      "sha256": "eeb3b905cc8fc30d9ac3e57fc4a3b27d0e8c0f9e4ef29d4719050054c5e4fce9"
+    },
+    "publicTypes": {
+      "path": "/tmp/apollo-divider-collapse-isolated-consumer-published-final.json",
+      "sha256": "fc1e244fb1042ec8e0d51ad8f609932164135a76ccbc6e03e3faf657b1da9b36"
+    },
+    "scopedSourceTypes": {
+      "path": "/tmp/apollo-divider-collapse-isolated-consumer-source-scoped.json",
+      "sha256": "d9951615cf3795cab1ce7953564add5c08981ddf600455c30c675e84d3d59b61"
+    }
+  },
+  "boundaries": [
+    "Counts are scoped results, overlap and must not be summed into a whole-library gate.",
+    "The isolated Divider/Collapse code and new102 visuals are not part of this documentation-only commit or live component implementation.",
+    "The isolated old-ConfigProvider joint unit gate remains667/669; two root-identity assertions await integration with the current provider and remain unchanged.",
+    "Only the two current implementation tasks continue; no further units are dispatched, and delivery closes with a pause."
+  ],
+  "documentationCheckpoint": {
+    "scope": "Guide and evidence only, using committed A4 source and freshly rebuilt UI; unmerged Divider/Collapse/Input/ConfigProvider implementations are excluded.",
+    "uiBuild": {
+      "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/unbuild/dist/cli.mjs",
+      "cwd": "packages/ui",
+      "exitCode": 0
+    },
+    "contentBuildExitCode": 0,
+    "docsStrictTypeExitCode": 0,
+    "docsTests": 161,
+    "docsTestFiles": 15,
+    "ssgBuildExitCode": 0,
+    "htmlFiles": 86,
+    "browser": {
+      "passed": 56,
+      "total": 56,
+      "errors": [],
+      "locales": [
+        {
+          "locale": "zh-CN",
+          "heading": "全库进度：按完整单元计，不按测试数量计",
+          "delivered": "21个已完整验收；本批新增Space / Flex / Alert / Layout"
+        },
+        {
+          "locale": "en-US",
+          "heading": "Library-wide progress by complete audit unit",
+          "delivered": "21 fully accepted; Space, Flex, Alert and Layout pass this batch"
+        }
+      ],
+      "command": "DOCS_URL=http://127.0.0.1:51173/apollo-design-ui DOCS_ACCEPTED_UNITS=21 DOCS_PLANNED_VISUALS=1704 node tests/browser/audit-batch-docs.mjs",
+      "exitCode": 0,
+      "evidenceSha256": "7e4dd95f16a3679ae65afae8ecc400f9a74585aaec94c223f576b965b33c0a57"
+    },
+    "guideSha256": "3a40b27d1795dfdc12983b983063107dd3343140d266e7588429212a39dfa54f",
+    "deployment": "not-yet-dispatched"
+  }
+}
