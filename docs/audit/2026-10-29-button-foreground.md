@@ -33,6 +33,6 @@
 - UI 实际构建及严格 L7 11/11、根严格 TypeScript、Docs 161/161、严格类型及 SSG、本地实际站点 43/43、工具脚本 20/20 通过。最终发布来源、线上结果与公开类型计数见下方机器证据。
 - 验证时发现三个本地基础包旧产物，已按生产源码逐包字节核对，从上批清洁 `72502177` 验证目录恢复 12 个完全同源产物。一次误将 L7 默认重建与产物读取重叠，导致无效构建失败；随后冻结产物再执行浏览器/SSR/水合/视觉，保留首轮日志，不将其算作通过。视觉构建补齐真实 Locale 产物别名，不依赖根目录偶然的 node_modules 链接。
 
-本次范围无实现阻塞；当前只有文档站发布回执待交付。全库完整数仍 25/72；其他 47 组件、13 基础包完整复核与全库最终同提交门禁保持开放。完成本次线上交付后暂停，不派发其他任务。
+本次范围已交付并暂停。7c95389e 的发布40850896942成功，CI Docs161/全包L7 151检查零失败/零待定；线上Button43与Search2全部通过。最终同一7c95389e的1501项相关运行全部通过；5个遗留预览服务已停止，没有新派发。完整发布回执见[evidence/button-foreground-publication.json](evidence/button-foreground-publication.json)。全库完整数仍 25/72；其他 47 组件、13 基础包完整复核与全库最终同提交门禁保持开放。完成本次线上交付后暂停，不派发其他任务。
 
 机器证据：[实现红绿](evidence/button-foreground-milestone.json)、[真实 Search 示例](evidence/button-search-demo-events.json)、[视觉逐项记录](evidence/button-foreground-visual.json)、[统一验收与发布状态](evidence/button-foreground-acceptance.json)。

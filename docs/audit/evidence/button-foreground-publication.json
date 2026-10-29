@@ -1,0 +1,376 @@
+{
+  "date": "2026-10-29",
+  "status": "published, live verified and paused",
+  "sourceCommit": "7c95389ea649312e7c9635edc1970cd71eb1cfdd",
+  "workflowRun": 40850896942,
+  "workflowURL": "https://github.com/apollocmh/apollo-design-ui/actions/runs/40850896942",
+  "buildJob": 123369796914,
+  "deployJob": 123372438531,
+  "buildConclusion": "success",
+  "deployConclusion": "success",
+  "ci": {
+    "sourceCommitMatched": true,
+    "docsTestsPassed": 161,
+    "buildChecks": 151,
+    "failed": 0,
+    "pending": 0,
+    "notApplicable": 67,
+    "htmlPages": 86
+  },
+  "liveButton": {
+    "passed": 43,
+    "failed": 0,
+    "errors": [],
+    "url": "https://apollocmh.github.io/apollo-design-ui/components/button",
+    "results": [
+      {
+        "name": "basic",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "basic",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "block",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "block",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "chinese-chars-loading",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "chinese-chars-loading",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "chinese-space",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "chinese-space",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "color-variant",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "color-variant",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "component-token",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "component-token",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "custom-disabled-bg",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "custom-disabled-bg",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "danger",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "danger",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "disabled",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "disabled",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "ghost",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "ghost",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "href",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "href",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "icon",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "icon",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "icon-placement",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "icon-placement",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "linear-gradient",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "linear-gradient",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "loading",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "loading",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "multiple",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "multiple",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "semantic",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "semantic",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "shape",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "shape",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "size",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "size",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "style-class",
+        "theme": "light",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "style-class",
+        "theme": "dark",
+        "httpStatus": 404,
+        "passed": true,
+        "violations": []
+      },
+      {
+        "name": "loading",
+        "interaction": "immediate guard, delayed indicator, one operation and recovery",
+        "passed": true
+      },
+      {
+        "name": "chinese-chars-loading",
+        "interaction": "real operation and continuous native Chinese text",
+        "passed": true
+      },
+      {
+        "name": "component-token",
+        "interaction": "current tokens, removal, native priority, draft/focus/root identity and real click",
+        "passed": true
+      }
+    ]
+  },
+  "liveSearch": {
+    "base": "https://apollocmh.github.io/apollo-design-ui",
+    "browser": "150.0.7871.125",
+    "results": [
+      {
+        "name": "original Search demo emits through @search on the live site",
+        "passed": true
+      },
+      {
+        "name": "loading Search, repeated Enter guard, result, retained value and white Button on the live site",
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "fallbackDocuments": [
+      "https://apollocmh.github.io/apollo-design-ui/components/input/demo/search?theme=light",
+      "https://apollocmh.github.io/apollo-design-ui/components/input/demo/search-input-loading?theme=light"
+    ]
+  },
+  "finalSameCommitRuntime": {
+    "passed": 1501,
+    "failed": 0,
+    "sourceCommit": "7c95389ea649312e7c9635edc1970cd71eb1cfdd"
+  },
+  "backgroundCleanup": {
+    "stoppedPreviewGroups": [
+      {
+        "pid": 18636,
+        "command": "pnpm --filter @apollo-design/docs run preview --host 127.0.0.1 --port 4477"
+      },
+      {
+        "pid": 28527,
+        "command": "node /Users/nanren/Code/apollo-design-ui/packages/docs/node_modules/.bin/../vite/bin/vite.js preview --host 127.0.0.1 --port 4478 --strictPort"
+      },
+      {
+        "pid": 44359,
+        "command": "pnpm --filter @apollo-design/docs run preview --host 127.0.0.1 --port 4480"
+      },
+      {
+        "pid": 59967,
+        "command": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 4482 --strictPort"
+      },
+      {
+        "pid": 84265,
+        "command": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 4490 --strictPort"
+      }
+    ],
+    "stillRunning": [],
+    "completedAgentsNotRestarted": true,
+    "platformHostUntouched": true
+  },
+  "furtherTasksDispatched": false,
+  "pauseAfterDelivery": true
+}

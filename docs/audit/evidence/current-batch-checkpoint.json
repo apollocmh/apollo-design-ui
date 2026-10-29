@@ -150,10 +150,11 @@
     "observation": "Light-theme primary text is black; user suspects token mismatch",
     "verifiedSource": "prepareComponentToken.primaryColor defaults to colorTextLightSolid, but useButtonTheme skips implicit foreground tokens and CSS contrast-color supplies black",
     "implementationChanged": true,
-    "stage": "resolved by user direction; scoped correction accepted, documentation publication pending",
+    "stage": "resolved: correction published and live verified; paused",
     "newSubtaskDispatched": false,
     "implementationCommit": "00c6ecb62cab79e9063caaefc17cad8f5542ed37",
     "relatedDemoCommit": "96ce538ce029486e53cfe5ac9017d7f1a0880b1b"
   },
-  "buttonFollowUp": "docs/audit/evidence/button-foreground-acceptance.json"
+  "buttonFollowUp": "docs/audit/evidence/button-foreground-acceptance.json",
+  "buttonPublication": "docs/audit/evidence/button-foreground-publication.json"
 }

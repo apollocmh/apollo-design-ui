@@ -726,6 +726,6 @@ Divider、Collapse/Panel、完整Input六族和ConfigProvider已按当前源码�
 按用户要求，本批交付后暂停，不派发新单元；Tree保持只读清单。既有Button在不支持contrast-color浏览器中的独立fallback对比度缺陷、D04/D05及其他开放项保留原边界。全部整改结束后的最终同提交全量门禁仍待执行。
 
 
-### 2026-10-29 用户新增反馈：Button亮色primary字色（统一验收通过，待上线回执）
+### 2026-10-29 用户新增反馈：Button亮色primary字色（已验收、上线并暂停）
 
-用户要求直接核对Ant Design后修正，无需配色裁决。已复现默认primaryColor/dangerColor被主题投射跳过，自动前景使浅色primary变成黑字。现在恢复默认colorTextLightSolid，三态保持白字；默认/预设实心色保留自动前景，显式组件/原生前景优先。按钮局部主/危险实色背景限制过高亮度，维持既有4.5:1门禁，全局Alias不变。可失败复现、完整范围与本次证据见[前景修复](audit/2026-10-29-button-foreground.md)。实现00c6ecb6与两个关联Search Demo修复96ce538c已推送；1499关联运行、161发布浏览器、1168颜色、80原Demo、51真实消费者、SSR8/水合20及318原生视觉通过，54预期改色逐张审阅、264原RGBA不变。Chromium145不支持contrast-color时，实际主/危险×亮暗×三态12/12白字与4.5:1通过，原独立primary回退观察中的对比度失败已修复；不代表旧浏览器完整矩阵。本条窄修交付后恢复暂停，不派发新单元，最终上线回执另记。
+用户要求直接核对Ant Design后修正，无需配色裁决。已复现默认primaryColor/dangerColor被主题投射跳过，自动前景使浅色primary变成黑字。现在恢复默认colorTextLightSolid，三态保持白字；默认/预设实心色保留自动前景，显式组件/原生前景优先。按钮局部主/危险实色背景限制过高亮度，维持既有4.5:1门禁，全局Alias不变。可失败复现、完整范围与本次证据见[前景修复](audit/2026-10-29-button-foreground.md)。实现00c6ecb6与两个关联Search Demo修复96ce538c已推送；1499关联运行、161发布浏览器、1168颜色、80原Demo、51真实消费者、SSR8/水合20及318原生视觉通过，54预期改色逐张审阅、264原RGBA不变。Chromium145不支持contrast-color时，实际主/危险×亮暗×三态12/12白字与4.5:1通过，原独立primary回退观察中的对比度失败已修复；不代表旧浏览器完整矩阵。本条窄修交付后恢复暂停，不派发新单元，线上7c95389e / 发布40850896942成功；Button43与Search2复验全通过，最终同提交1501相关运行通过。见[正式回执](audit/evidence/button-foreground-publication.json)。

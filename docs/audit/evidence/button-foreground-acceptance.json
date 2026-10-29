@@ -1,6 +1,6 @@
 {
   "date": "2026-10-29",
-  "status": "scoped implementation and acceptance complete; documentation publication pending",
+  "status": "accepted, published, live verified and paused",
   "scope": "Button default primary/danger foreground regression and actual consumers; two original Search demos",
   "implementationCommits": [
     "00c6ecb62cab79e9063caaefc17cad8f5542ed37",
@@ -8,7 +8,7 @@
   ],
   "publicAPIChanged": false,
   "runtime": {
-    "passed": 1499,
+    "passed": 1501,
     "failed": 0,
     "newDemoTests": {
       "passed": 2,
@@ -28,7 +28,9 @@
       "timedOut": 9,
       "retainedArtifact": "/tmp/apollo-button-foreground-consumer-runtime.json",
       "resolution": "Same entire test set passes with one worker; no assertions, scenarios or 5000ms limit changed."
-    }
+    },
+    "intermediatePassed": 1499,
+    "finalSameCommit": "7c95389ea649312e7c9635edc1970cd71eb1cfdd"
   },
   "types": {
     "rootStrictTypeScriptExitCode": 0,
@@ -130,8 +132,13 @@
     "Full Firefox/Safari/Chromium145 matrix; only 12 primary/danger cases checked on Chromium145"
   ],
   "publication": {
-    "status": "pending",
-    "url": "https://apollocmh.github.io/apollo-design-ui/components/button"
+    "status": "published and live verified",
+    "sourceCommit": "7c95389ea649312e7c9635edc1970cd71eb1cfdd",
+    "workflowRun": 40850896942,
+    "liveButtonPassed": 43,
+    "liveSearchPassed": 2,
+    "failed": 0,
+    "receipt": "button-foreground-publication.json"
   },
   "libraryProgress": {
     "completed": 25,
