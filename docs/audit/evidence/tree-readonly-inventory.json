@@ -1,0 +1,483 @@
+{
+  "at": "2026-10-29T01:50:30.141Z",
+  "status": "read-only Tree/DirectoryTree audit complete; no implementation authorized; stop after current batch",
+  "sourceHead": "d87f84c7ab3b6728f0a98b06fad3ec08852b4eea",
+  "sourceFileCount": 75,
+  "sourceCollectionSha256": "1b6801bbaab346b9c9c1ddbc7a070e4be1b1100d1cd08a484d5600e4f994b8cf",
+  "sourceFiles": [
+    {
+      "file": "packages/ui/src/_internal/tree/conduct-util.ts",
+      "sha256": "013d2dcbd81af173f65a9b1eb9a78883d830652ae74e753f05633786004f4c0c"
+    },
+    {
+      "file": "packages/ui/src/_internal/tree/key-util.ts",
+      "sha256": "f8f35683a92c4a905906a6c2e0e3ded967eae2d0d1b5dee878a69be72e360bfa"
+    },
+    {
+      "file": "packages/ui/src/_internal/tree/tree-util.ts",
+      "sha256": "9869027abdb5a36e9879915c9b9c12320da8251f4a71fd4357c9465fa789ae71"
+    },
+    {
+      "file": "packages/ui/src/_internal/tree/types.ts",
+      "sha256": "3990e9b16b05f08942107768abff8c9031e75c7659a6007683a4b5694459da63"
+    },
+    {
+      "file": "packages/ui/src/tree/__tests__/a11y.test.ts",
+      "sha256": "9a83a2705e2ad07b3ffc446761b184195e258f28a17b9971b921ca2a1c9ade04"
+    },
+    {
+      "file": "packages/ui/src/tree/__tests__/demo.test.ts",
+      "sha256": "e979187d0d6b4d42a38cdad6176272cfe63d2d6d475c528bdd9147c69bee5b0f"
+    },
+    {
+      "file": "packages/ui/src/tree/__tests__/directory.test.ts",
+      "sha256": "db06232569c8f4f68ebe5e328d0795f136e798b2c17fc0c3ec47be2f827fc4e0"
+    },
+    {
+      "file": "packages/ui/src/tree/__tests__/index.test.ts",
+      "sha256": "8a4887005a3d8c527d936898437ae54e45bdb8bd7dbd46eaca411e8383ee96b2"
+    },
+    {
+      "file": "packages/ui/src/tree/__tests__/keyboard.test.ts",
+      "sha256": "cab9d5bb74cbb80a2d0c525c2e057bf44afffc6d1ac9d7850470dd3259902a3f"
+    },
+    {
+      "file": "packages/ui/src/tree/__tests__/s16-issue16.test.ts",
+      "sha256": "305b3b96d7b0d858dd6c3ffd89b63dc74368ae30bcd623542adf8d89737eee69"
+    },
+    {
+      "file": "packages/ui/src/tree/__tests__/semantic.test.ts",
+      "sha256": "226726cab0f9019e6cde142ed3bbcfbbb8b3d421fbc904fa364ff30e20ccdff7"
+    },
+    {
+      "file": "packages/ui/src/tree/__tests__/theme.test.ts",
+      "sha256": "39ed4672424beaf2d92f3f678ef323934676d449d670c3f507ffd65ad64ea529"
+    },
+    {
+      "file": "packages/ui/src/tree/__tests__/type.test-d.ts",
+      "sha256": "102a4199feeb41f660312efcc1efa00ef318c63731e9ba511e1d67f1f1646b49"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/basic-controlled.md",
+      "sha256": "f73639bb40f2397e7746d96ad9a53081a978408405fea8d3bed66039edbcc417"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/basic-controlled.vue",
+      "sha256": "b4300e86f4fc16b651264455c9f9581bf825777917b3e1e50b7b10abf4608964"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/basic.md",
+      "sha256": "a375da905fb5eb97515449a07439756e73f8d08632e0c6c0573f83cd57685ca0"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/basic.vue",
+      "sha256": "58b15ada6a6253d5aa133d9298b6b1de8f26eaa7520d343e11d89f771537e34c"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/big-data.md",
+      "sha256": "41aeefe656542cf9ad6cb426db9d67711535d99fc97b2476b257c7c288dfb326"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/big-data.vue",
+      "sha256": "62f768cd131817f33f5d93bb006bbecce89bb81d921fa58001d539bb5e8445cd"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/block-node.md",
+      "sha256": "fd7f52a028827267b4ab97baafbf5c219e33241d19a050977a9cc86674200a13"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/block-node.vue",
+      "sha256": "9e2f24b2b1cc71d7e212b429ab02e8028ee33ae345dd7ecceb6bd90c56d53632"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/component-token.md",
+      "sha256": "d86eb36109150f56352a72ee59a6478f5625db1a9d6fbebd6e83722fa5e7772d"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/component-token.vue",
+      "sha256": "1be3d8b9724026657f580b36225f98a238e32d51961e5d5669fb529faa42ce01"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/customized-icon.md",
+      "sha256": "70d896021636ed0bf28b35143db1a0f7ec645b4756a65052f4bd8f10ecbc6f8f"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/customized-icon.vue",
+      "sha256": "83d1123179e8737d4d10e8f0f1d77c2680539f359dcf2b8026554a1cd3149cc5"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/directory-debug.md",
+      "sha256": "0e2d3dbd2a7752d53bbb63f8b8706770aed795bfdf34fcda8013313bd6042fb7"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/directory-debug.vue",
+      "sha256": "9e5c8b2aeea0bcaba37e9f05128ec2fa159c82b03e0d13ec37c155bb1873bfd5"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/directory.md",
+      "sha256": "c5165a3a68e3ef235dbcf61472fe358e2f6691acb1832871c2bbb72b0fa4b9d9"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/directory.vue",
+      "sha256": "14a5110ed5f55c84c7a02be069895af35bce81457ac855d67b8408ad04995c94"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/drag-debug.md",
+      "sha256": "89642fe2b9f2ef0bf45c1c4419d39f9b0918dd560c8f85bcb4d7c9ab8b9e8fba"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/drag-debug.vue",
+      "sha256": "a4adf9cae61128952e8a1dcfa3504f0210c8b0d0c071ed3c207d770a6b561d2c"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/draggable.md",
+      "sha256": "d82b909dd99cb0e6a3a7f738d7adb584e6ad39ac94a2bf3c6661039f6773b63d"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/draggable.vue",
+      "sha256": "dc216fe26045e79fca0f53d648d298314868b5267263ef74cc29b2ebcac76938"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/dynamic.md",
+      "sha256": "b42eeada63b97fb8246ecaa7c627ed6b44feca7c7881e914bf44edb4100f219b"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/dynamic.vue",
+      "sha256": "e31583671f75518a1172fc151e53362c30066b3130aaa696f109b7a11bad156e"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/line-debug.md",
+      "sha256": "6fb897bc76086985af3c86c20ef7023c7cae619626e5af64b0f525682262e3ca"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/line-debug.vue",
+      "sha256": "0875a155e4b1f27159ba9e1ae75fdaeba67f80bbbe3a32cd6846207a723b9f97"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/line.md",
+      "sha256": "1bbd8131986ccdc51b29f801db6acfab63bee20aba07a92dbead5e88e45e81b9"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/line.vue",
+      "sha256": "c31845ac787242c15082d524faad7c50366368ea0165369c4b9780ed4166f2cf"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/multiple-line.md",
+      "sha256": "6c777c035389ab8a0c6abe2d7a6c0204cd5593361c0e8d41309051c64ada179e"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/multiple-line.vue",
+      "sha256": "dec6d38f5cbd5bec9e80cd823beeb0035e57c41c59e40c41a327893a8979e5fa"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/scroll-to.md",
+      "sha256": "66518227eac9c63257b829c696797017d1dd44e3623ab53690b591b749abdb42"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/scroll-to.vue",
+      "sha256": "b0a755967a2f7ae0531227bcbcd8d2132ca16f9e62628a67b7dc44fe3231268e"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/search.md",
+      "sha256": "a1643b94d3d22da2f6368fa2cd4ed517d9d522cf8558ab1460357bda1ff0d5e8"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/search.vue",
+      "sha256": "785bc8fd291a29d17573d1a4cd1b35f103f5f4e871175d84c92bf9e551819ba4"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/style-class.md",
+      "sha256": "8c5f11cb8f799beeb037f77035095b0253e42cc15b9b511ffc8a977845d7a6cc"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/style-class.vue",
+      "sha256": "04c2c34a7e66d56341adbe5338b8b9c796b873d57e10bf0299817579dcd3120a"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/switcher-icon.md",
+      "sha256": "cafdbe008c429f0f30b950fce5966b5686b85b09ed7ec90c46c4a91186456b39"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/switcher-icon.vue",
+      "sha256": "652baa957b5a2d2451232e17f4219c6ec0829d55d4515a6b4b7e23820e978351"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/virtual-scroll.md",
+      "sha256": "3ece86df5d75b81bc66c2c953b669174bfa7c5e57fbb1eca1f231fe39226ec20"
+    },
+    {
+      "file": "packages/ui/src/tree/demo/virtual-scroll.vue",
+      "sha256": "1aaf63d152d74ca698d3beb3050504b8fa583dfe87f78c0f1fc599bbe1c514ff"
+    },
+    {
+      "file": "packages/ui/src/tree/DirectoryTree.ts",
+      "sha256": "2557e71cecc5e50d9a846f16bc5ae9d5a14114907fbf2f6fac88c97b6cd0d4b6"
+    },
+    {
+      "file": "packages/ui/src/tree/DropIndicator.ts",
+      "sha256": "7e6e56acb5612d47d339ee0812573afa81a9974d736e8472a4e5d202ed9131a5"
+    },
+    {
+      "file": "packages/ui/src/tree/Indent.ts",
+      "sha256": "b439462dbd09821091d52c5b5ac17e00eb91dc15efb6f7f92e4e3fa9e3c52e1b"
+    },
+    {
+      "file": "packages/ui/src/tree/index.en-US.md",
+      "sha256": "a1d2d648efe4ab8f74566ef38d732884beb775dad62012f867cc16bed19ca041"
+    },
+    {
+      "file": "packages/ui/src/tree/index.ts",
+      "sha256": "bed6c8e664c87cafe6177e353fbe7b38cbedecaa04d1ba0bd67339f54d57aa64"
+    },
+    {
+      "file": "packages/ui/src/tree/index.zh-CN.md",
+      "sha256": "ea870366fc91ad04a55ac022f85393a9cf5020cfa841c75a9bcd7c05b6782422"
+    },
+    {
+      "file": "packages/ui/src/tree/interface.ts",
+      "sha256": "9947e31daa179d76649cbdf2b2de1a66f1e7673df5454d950ed68d9039238841"
+    },
+    {
+      "file": "packages/ui/src/tree/MotionTreeNode.ts",
+      "sha256": "421640ea1eae5c5303a49b87c6c8ffc0f4aee36392ca00170b72143303215ab7"
+    },
+    {
+      "file": "packages/ui/src/tree/NodeList.ts",
+      "sha256": "de65230f18099187ed4ab717356bf9a7d81e6772fd9a338d6ec8a6ebf14fbd57"
+    },
+    {
+      "file": "packages/ui/src/tree/PLAN.md",
+      "sha256": "5aa568202c09adb4e643bdca7fa91c037233e67c6655ed604d74e66f6369f02c"
+    },
+    {
+      "file": "packages/ui/src/tree/README.md",
+      "sha256": "a901db576c8743baa52509dc46e9656c223cb04da89cbebb88e260b206b592ae"
+    },
+    {
+      "file": "packages/ui/src/tree/style/index.ts",
+      "sha256": "8adc8c559b69495e8f1ea7a8beca0963fd75ef586349f9bbbde8b646984ef234"
+    },
+    {
+      "file": "packages/ui/src/tree/style/token.ts",
+      "sha256": "e2c0ae63501b100d8930dcd6bff48d298e46e6e5152639d50b06240508b2206b"
+    },
+    {
+      "file": "packages/ui/src/tree/Tree.ts",
+      "sha256": "248a732013478b2d130fd2afc3766299f370b21480777e2d952a21577ff84285"
+    },
+    {
+      "file": "packages/ui/src/tree/TreeContext.ts",
+      "sha256": "ec255fa3b7e2440b6362e721f07af750b3f095c1b8988c0578a2f3938964b1b7"
+    },
+    {
+      "file": "packages/ui/src/tree/TreeNode.ts",
+      "sha256": "e05409cc347564e0dbdf4d5acc1a506d8eaa7b7e7475fac2e8eb32ea8ced8840"
+    },
+    {
+      "file": "packages/ui/src/tree/use-tree.ts",
+      "sha256": "af6ed2a59d8a0e416372df45e4cf980593eb020b9e18a8204164be78d14eb078"
+    },
+    {
+      "file": "packages/ui/src/tree/utils/__tests__/drop-position.test.ts",
+      "sha256": "0c6b02334eb6c1c4744029e54c3776bfa10e844f00faa9419cd7f5ec7cce36a2"
+    },
+    {
+      "file": "packages/ui/src/tree/utils/__tests__/tree-util.test.ts",
+      "sha256": "06a2549cb57897f272289dce438f3b77576ab1774b0bfbb6acb9a8a14c1591f4"
+    },
+    {
+      "file": "packages/ui/src/tree/utils/dictUtil.ts",
+      "sha256": "cdc4485124b6a1b6c7843041af3b67b9ff130bf48557e817f0e0b0a6e7738b08"
+    },
+    {
+      "file": "packages/ui/src/tree/utils/diffUtil.ts",
+      "sha256": "338e06582a03905cb365f7ced53d31432ef8c2cac913f0350621fde9a50b2df9"
+    },
+    {
+      "file": "packages/ui/src/tree/utils/iconUtil.ts",
+      "sha256": "3a622cd2d4187f0f743909c60bb2bdfd916531a87b71546dd88b36696caeeb5c"
+    },
+    {
+      "file": "packages/ui/src/tree/utils/index.ts",
+      "sha256": "ce94be185a16c9e36bab47b0ceff318e64c9629d0716c7031a2676b36ef06ed1"
+    },
+    {
+      "file": "packages/ui/src/tree/utils/util.ts",
+      "sha256": "6e8e2496397f9d0e40b10aeea2e55f3ea9e15532b7c5ccbf80bce15a36f90333"
+    }
+  ],
+  "artifactCollectionSha256": "ab607e5821e638d7bed73ec12f6b83645851df1b7aaf3645d93247006e2a9558",
+  "artifacts": [
+    {
+      "file": "/tmp/apollo-tree-contract-audit/scope.md",
+      "sha256": "2727e11ce9af621b30994a15699ad17a347885ff92d37bd27e62ab2d1d9ae931"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/inventory.json",
+      "sha256": "9f49e19888b79f78580356b5d012add1bbe244f8d3579a5e73ea4e427478df9a"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/api-checklist.json",
+      "sha256": "3cb3c0ec11c5423b0bb6ec23fbef83b20e5f189509e5a69d6b089be25ab2077c"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/review.md",
+      "sha256": "be6776c17caa0c771ed513db8fc2eb3dc321265c015b48b635d6c7f95cf87353"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/review.json",
+      "sha256": "ee8815d5fca79773c775cc43350d87ef4f452857923a6d57d75eddc455d30499"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/existing-vitest.json",
+      "sha256": "3fedc0684daa1f2ec7d617d0194e942fdea08c633a86d0810f5d33182435fb42"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/existing.log",
+      "sha256": "c9294f0ac62a0c7584d911001ee406f96a271d31273112124effc999c8141ba7"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/existing-loaded-source.json",
+      "sha256": "f03edd257b2184d3955aa7b0e5a0e561ce188bec3f61907ffc80ea7a40de9e19"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/probe.test.mjs",
+      "sha256": "d63db48077b4257e4d4141bbedf4b6753b5657c1a86f09fb1da339371d8407bd"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/probe-vitest.json",
+      "sha256": "7207662249deab4780045b92bc08a2437a71ce3a7e3f553dbc97a5b01a798182"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/probe-observations.json",
+      "sha256": "1d8494d337942b1b05f34bb2582c818e6815c6faa4f5ea1fb14b7fe5770a1cc2"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/probe-loaded-source.json",
+      "sha256": "ab835c4c96183342c38c5c7c0924826baf50ca1d683a8f381dde0ec80bfadca4"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/probe.log",
+      "sha256": "9ef8710cbba256b2b6f4481d6912fda99b99efffdba48f3a440b338726df5241"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/extension.test.mjs",
+      "sha256": "ec289d1411b78246f4799d7a440f04ad969e44a01664df5eeb77485f3de03711"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/extension-vitest.json",
+      "sha256": "1dc8bacd1304e8f0e3d1e88225366bc03d0e09ada16c34c41f1252941020ff5e"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/extension-observations.json",
+      "sha256": "41718c98880a14d22fab6f82e4be596f3b45d3d57d2c0804317c63e2fe77c7f0"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/extension-loaded-source.json",
+      "sha256": "da3118038c433220adfcf4e5373333d0735d8cc50dfb377c9805423cef5de6f1"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/extension.log",
+      "sha256": "7f3d22275f2b7fa2198acc104a7dff8b5ddcbedc46bb048bb9f547f16e6db05b"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/public-types.ts",
+      "sha256": "d876005c8c177a242700bca3cf91126d7221f0caa7fde2d359897b7451ffc2c7"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/public-types.log",
+      "sha256": "3eefc08480a8afe47f85bcd9d5d871b5bff591801636d00c53fc702376865d20"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/tsconfig.public-types.json",
+      "sha256": "a38f13d1982483c0f2f92a9f7747cb13b59636c130039244570b044b4f9a8c5b"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/browser.mjs",
+      "sha256": "0763938e3e950fed6417ffd4d40615b9d138609c4cddeb2fcce01a13242a2474"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/browser-fixture.mjs",
+      "sha256": "429610fc340f34ff02c1ca2fc1fd02eea32bd4191b13271305b32ac3f535c00a"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/browser-observations.json",
+      "sha256": "4e32245cd8f9258c6f80280c19428089a1ec7404416ac43b4c8ddaafd6969eb0"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/browser.log",
+      "sha256": "156ef3cff1e4873ab427e9d1dd53293400b97ef015adc87fe31bafa04125c960"
+    },
+    {
+      "file": "/tmp/apollo-tree-contract-audit/vitest.config.mjs",
+      "sha256": "9e1722d6f7d5c2154c9de4865f958898e7bf367bdebbc60a2bbbb0834bc5c823"
+    }
+  ],
+  "publicScope": {
+    "props": 41,
+    "exports": 75,
+    "runtimeExports": 31,
+    "typeExports": 44,
+    "runtimeEmits": 21,
+    "emitsInterface": 19,
+    "demos": 19
+  },
+  "groups": 14,
+  "validation": {
+    "existing": {
+      "files": 10,
+      "tests": 155,
+      "passed": 155,
+      "failed": 0,
+      "actualExit": 0
+    },
+    "probes": {
+      "tests": 35,
+      "passed": 6,
+      "failed": 29,
+      "actualExit": 1
+    },
+    "extension": {
+      "tests": 10,
+      "passed": 2,
+      "failed": 8,
+      "actualExit": 1
+    },
+    "types": {
+      "actualExit": 2,
+      "diagnostics": 5,
+      "oldScenarios": 7,
+      "oldNegativeDirectives": 2,
+      "report": "public-types.log"
+    },
+    "browser": {
+      "tests": 64,
+      "passed": 33,
+      "failed": 31,
+      "actualExit": 1,
+      "sourceUnchanged": true,
+      "modules": 963,
+      "changed": [],
+      "consoleErrors": [],
+      "report": "browser-observations.json"
+    }
+  },
+  "implementation": "none",
+  "sourceWrites": false,
+  "distWrites": false,
+  "registryWrites": false,
+  "baselineWrites": false,
+  "builds": false,
+  "commits": false,
+  "pushes": false,
+  "nextAction": "Root receives scope/red evidence, completes already-started batch integration and pauses; do not implement Tree or open another unit",
+  "cpCanonicalHelper": "P01 old red was resolved by CP owner; current same-app probe passes; pending joint acceptance",
+  "remaining": [
+    "本任务无任何Tree/共享core/测试/Demo/仓库文档实现修改；全部整改、迁移及发布/Registry仍未实施。",
+    "正常motion时长下的真实重复展开/收起、快速受控反转/中断、focus/selection、多实例、原生dir与RTL跨层DnD、已完成请求的卸载/重挂/外部数据删除，尚需后续实现验收。",
+    "19Demo已全量源码/文案盘点并执行现有smoke/axe；未把smoke等同19个完整业务流程已逐个交互验收。",
+    "未运行本轮Tree published、全库、最终同一提交全部门禁，未生成/更新视觉PNG或DOM基线。16个参考DOM/三基础视觉场景保留其证据身份。",
+    "TreeSelect完整API与CP/locale/Form大组属于其它owner；当前共享helper修复待Root整合验收。",
+    "用户要求本批启动任务完毕后暂停：报告交接后结束，只读Tree不实施，不启动下一单元。"
+  ]
+}
