@@ -19,4 +19,8 @@
 4. Button 与 Input.Search、Dropdown、FloatButton 等实际消费者相关测试、严格类型、现有生产浏览器/SSR/水合、全部 20 Demo 和原生视觉。
 5. 同步 Demo、双语文档和 Registry，记录命令、结果、源提交与尚未验证边界；提交推送，不派发新整改单元。
 
-当前状态：盘点完成，复现和修复尚未验收。
+## 实际消费者补充
+
+原 Button 消费者脚本完整 51 项复验发现 Input.Search 两项失败：搜索按钮没有进入 loading、异步结果不更新。沿当前 Search 的 emits 与两个原 Demo 核对，源码已经使用 `emit('search', ...)`，模板仍写 `:on-search`，四处监听未进入 Vue 的 search 事件。完整盘点全部 Input Demo 的同类写法，仅 `search.vue`、`search-input-loading.vue` 四处；统一改成 `@search`，不新增回调兼容通道、不改 Search 公共实现。两个真实 Demo 的 Enter/加载/重复请求/值保持/卸载回归先证实 2/2 失败，原 51 项浏览器交互断言全部保留。此为本次实际 Button 消费链发现的既有无效接口用法，纳入修复，非新组件任务。
+
+当前状态：实现已提交推送 `00c6ecb6`；统一验收及两个关联 Demo 的修复继续，尚未宣称全部完成。

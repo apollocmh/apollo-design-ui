@@ -51,7 +51,7 @@ onBeforeUnmount(() => {
       enter-button="搜索"
       :loading="loading"
       placeholder="输入关键词后搜索"
-      :on-search="onSearch"
+      @search="onSearch"
     />
     <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">
       {{ loading ? '搜索中…' : result || '等待搜索' }}

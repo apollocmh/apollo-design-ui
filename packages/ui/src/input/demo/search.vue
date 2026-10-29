@@ -17,10 +17,10 @@ function onSearch(next: string): void {
       v-model:value="value"
       allow-clear
       placeholder="input search text"
-      :on-search="onSearch"
+      @search="onSearch"
     />
-    <InputSearch enter-button placeholder="input search text" :on-search="onSearch" />
-    <InputSearch enter-button="Search" placeholder="input search text" :on-search="onSearch" />
+    <InputSearch enter-button placeholder="input search text" @search="onSearch" />
+    <InputSearch enter-button="Search" placeholder="input search text" @search="onSearch" />
     <div style="font-size: 12px; color: var(--apollo-color-text-secondary)">last search: {{ lastSearch || '-' }}</div>
   </div>
 </template>

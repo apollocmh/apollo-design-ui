@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-29",
+  "status": "verified",
+  "scope": "Two original Input.Search demos; four obsolete template listener bindings",
+  "implementationBase": "00c6ecb62cab79e9063caaefc17cad8f5542ed37",
+  "cause": "Search emits 'search'; :on-search was an attribute, @search creates the Vue event listener",
+  "changes": [
+    "search.vue: three @search bindings",
+    "search-input-loading.vue: one @search binding",
+    "Demo descriptions and real Enter/loading/request cancellation coverage"
+  ],
+  "red": {
+    "passed": 0,
+    "failed": 2,
+    "consumerPassed": 49,
+    "consumerFailed": [
+      {
+        "name": "Input.Search forwards loading to real Button",
+        "actual": null,
+        "expected": "true",
+        "passed": false
+      },
+      {
+        "name": "Input.Search completes once and preserves value",
+        "actual": false,
+        "expected": true,
+        "passed": false
+      }
+    ]
+  },
+  "green": {
+    "passed": 2,
+    "failed": 0,
+    "consumerPassed": 51,
+    "consumerErrors": []
+  },
+  "testCorrection": "Enter simulation includes keyup to release the existing key lock; timer assertions identify the 1200ms business request and its cancellation rather than unrelated Input password cleanup timers. Duplicate-request, result, value and unmount assertions remain.",
+  "commands": [
+    "vitest run packages/ui/src/input/__tests__/search-demo-events.test.ts --project unit",
+    "node tests/browser/button-consumers.mjs"
+  ],
+  "publicAPIChanged": false,
+  "newTasksDispatched": false
+}
