@@ -227,7 +227,7 @@ describe('TimePicker · 顶层时间配置贯通到面板（Issue #6.2）', () =
 // ===========================================================================
 
 describe('TimePicker · `onSelect` / `ok` 的载荷与发出（Issue #6.3）', () => {
-  // 🚨 用 `onSelect` / `onOk` 而不是 `w.emitted('x')`：**薄壳不声明 `defineEmits`**
+  // Consumers can observe the owned select/ok events through native listeners.
   //    （见 TimePicker.vue 文件头第 5 条）⇒ 内层的 emit 走的是转发下去的 `onXxx`，
   //    不会记在外层实例上。
   const hourCell = (w: { element: HTMLElement }, label: string) =>

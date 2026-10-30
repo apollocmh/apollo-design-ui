@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 145,
+  "revision": 151,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -890,7 +890,18 @@
             "durationMs": 37759
           }
         ]
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/time-picker",
+            "packages/ui/src/date-picker/RangePicker.vue",
+            "packages/ui/src/date-picker/hooks/use-picker-semantic.ts"
+          ],
+          "change": "Range reads the actual existing host owner with rangePicker fallback; popupStyle helper accurately accepts Vue CSSProperties.",
+          "verification": "CMP:time-picker core/SFC/Demo and full scoped strict include both TimeRange and ordinary Date Range current ownership/withdrawal. Prior Date full evidence remains historical to its commit."
+        }
+      ]
     },
     {
       "id": "CMP:descriptions",
@@ -2911,21 +2922,20 @@
       "kind": "component",
       "ref": "time-picker",
       "title": "TimePicker",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [
         "FND:picker"
       ],
       "owns": [
         "packages/ui/src/time-picker",
-        "packages/ui/src/date-picker/RangePicker.vue"
+        "packages/ui/src/date-picker/RangePicker.vue",
+        "packages/ui/src/date-picker/hooks/use-picker-semantic.ts"
       ],
-      "assignment": {
-        "owner": "native_picker",
-        "baseRevision": 135,
-        "startedAt": "2026-10-30T13:49:54.227Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -2954,6 +2964,94 @@
           "packages/ui/src/time-picker/README.md",
           "packages/ui/src/time-picker/index.zh-CN.md",
           "docs/audit/2026-10-23-picker-transfer-remediation.md"
+        ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/time-picker",
+          "packages/ui/src/date-picker/RangePicker.vue",
+          "packages/ui/src/date-picker/hooks/use-picker-semantic.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run packages/ui/src/time-picker/__tests__/native-contracts.test.ts packages/ui/src/time-picker/__tests__/index.test.ts packages/ui/src/time-picker/__tests__/s6-issue6.test.ts packages/ui/src/time-picker/__tests__/demo.test.ts --reporter=json --outputFile=/tmp/apollo-time-picker-final-core.json > /tmp/apollo-time-picker-final-core.log 2>&1",
+            "elapsedSource": "Vitest runner",
+            "tests": 68,
+            "result": "/tmp/apollo-time-picker-final-core.json",
+            "log": "/tmp/apollo-time-picker-final-core.log",
+            "note": "Provider ownership/dynamic withdrawal, current applicable slots, attrs/input identity, owned models/events, default time Boolean configuration, existing issue regressions and 16 actual demos. This run precedes the final locale hint amendment below; unchanged paths are reused.",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11637
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run packages/ui/src/time-picker/__tests__/native-contracts.test.ts packages/ui/src/time-picker/__tests__/demo.test.ts --reporter=json --outputFile=/tmp/apollo-time-picker-locale-final.json > /tmp/apollo-time-picker-locale-final.log 2>&1",
+            "elapsedSource": "Vitest runner",
+            "tests": 25,
+            "result": "/tmp/apollo-time-picker-locale-final.json",
+            "log": "/tmp/apollo-time-picker-locale-final.log",
+            "note": "Final runtime amendment: current locale.TimePicker hints, plus all new Time/ordinary DateRange ownership/model/slot/attrs boundaries and 16 actual demos.",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 10538
+          },
+          {
+            "kind": "lint",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec biome check --write packages/ui/src/time-picker > /tmp/apollo-time-picker-format-final.log 2>&1",
+            "files": 30,
+            "log": "/tmp/apollo-time-picker-format-final.log",
+            "note": "One test-only formatting edit; no runtime source change after final locale verification.",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 50
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check -- packages/ui/src/time-picker packages/ui/src/date-picker/RangePicker.vue",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full TimePicker source/type cases/native SFC/Demo and exact Range owner/style-helper consumers; declaration/strict unchanged>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 52595
+          }
+        ],
+        "reusedEvidence": [
+          {
+            "rootMilestone": "CMP:date-picker pushed 8b262e5a with acceptance record 7b2f3e4a",
+            "strict": {
+              "exit": 0,
+              "elapsedMs": 51606
+            },
+            "log": "/tmp/apollo-date-picker-architecture-checks.json",
+            "note": "Accepted models/events, real readonly Date/Time/Range keyboard, current attrs/ref/lifecycle and existing panel algorithms are already delivered; this Time task does not re-audit or relabel that work."
+          },
+          {
+            "log": "/tmp/apollo-date-native-browser-frozen.log",
+            "exit": 0,
+            "elapsedMs": 14497,
+            "diagnostics": 0,
+            "note": "Real Time input/column keyboard and confirmation/ref/teardown remain unchanged. Current local config/class/locale fixes are verified in focused source tests; no redundant full browser run."
+          }
+        ],
+        "boundary": "TimePicker/TimeRangePicker完整薄壳契约已核对：复用Date/Picker原生事件、真实只读键盘、nullable refs、模型/attrs/基础时序成果；本轮修正当前Provider单次语义消费、TimeRange实际配置owner及普通Date Range隔离/撤回、独立TimePicker locale提示优先级。固定时间轴清理无效模式/日期导航与多选标签，七/八个实际槽与value/open/pickerValue模型由真实Ctor/SFC与正负例验证。68项相关core/16Demo及最后25项locale/边界已通过；全部相关源与类型严格检查0。只复用未变的真实Time浏览器键盘/卸载证据，不冒称本轮重跑；CSSProperties helper修正仅擦除型变更，不改实际样式算法。未新增Token/PurePanel/兼容路径；全库、coverage、完整视觉/参考DOM和构建消费者及冻结九维未执行。",
+        "attemptsNotPassed": [
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <TimePicker full scoped source/type/SFC/Demo and Range bridge>",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 32905,
+            "log": "/tmp/apollo-time-picker-final-types.log",
+            "resolution": "The existing popup-style helper used an inaccurate string/number record; both actual public CSSProperties boundaries were corrected without runtime or assertion changes. Final strict exit0."
+          }
         ]
       }
     },
@@ -4545,20 +4643,36 @@
       "kind": "foundation",
       "ref": "test-utils",
       "title": "@apollo-design/test-utils",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/test-utils/src"
+        "packages/test-utils",
+        "docs/foundation/test-utils-contract.md"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_select",
+        "baseRevision": 146,
+        "startedAt": "2026-10-30T14:03:34.290Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
         "docs/foundation/test-utils-contract.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "复用现有 Vue 测试契约，核对 test-utils 共享边界与资源正确性",
+        "remaining": [
+          "当前14模块主体已有Vue实现；剩余真实组为失败/卸载与observer目标身份、focus/rootProps/RTL实际断言、a11y与空执行输入、精确style/DOM归一化及collector恢复，保留所有有效断言与现有配置，不新造测试框架。"
+        ],
+        "effort": "large",
+        "basis": [
+          "docs/foundation/test-utils-contract.md",
+          "packages/test-utils/README.md"
+        ]
+      }
     },
     {
       "id": "FND:theme",

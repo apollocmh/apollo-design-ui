@@ -1,22 +1,4 @@
-/**
- * L3 · 类型测试（含负例）
- *
- * ⚠️ `*.test-d.ts` 会被 vitest **真的执行**：负例必须包在**永不调用的闭包**里，
- *    否则运行时崩溃（TESTING.md / PITFALLS 74）。
- *
- * ── 本文件钉的五类判据 ───────────────────────────────────────────────────────
- *
- * 1. 🚨 **上游 `Omit` 掉的三个键**：`picker`（恒 `'time'`）、`showTime`（时间轴没有
- *    二级面板）、`multiple`（**类型上是 `false`**，`PickerPropsWithMultiple` 的
- *    `IsMultiple` 默认实参）。⚠️ 这三个「不在」本身就是判据 —— 它们正是
- *    PITFALLS 315（薄壳必须显式补回）的**类型侧**成因。
- * 2. **`value` / `defaultValue` 被收窄成单值**（上游经 `PickerPropsWithMultiple` 收窄），
- *    而 `onSelect` 也收成**单参**签名（`GenericTimePickerProps` 重新声明过）。
- * 3. **语义槽是「对象 | 函数」的联合**，且 `popup` 允许 `string` 旧写法。
- * 4. **`TimeRangePickerProps` 与单个的三处差别**：保留 `mode`（但被丢弃）、
- *    `placeholder` 是二元组、`disabled` 收元组。
- * 5. **复合组件**：`TimePicker.RangePicker` 在**类型层**可见（`Object.assign` 的交叉类型）。
- */
+/** Public TimePicker types; negative examples remain inside functions that are never invoked. */
 
 import { describe, expectTypeOf, it } from 'vitest';
 import type { CSSProperties, VNodeChild } from 'vue';
@@ -93,10 +75,12 @@ describe('TimePicker · Props 类型', () => {
 });
 
 describe('TimePicker · RangePicker 的 props', () => {
-  it('判据 4：`picker` / `showTime` 被剔除，但 `mode` **保留**（运行时被丢弃）', () => {
+  it('the fixed time axis excludes calendar mode declarations', () => {
     expectTypeOf<TimeRangePickerProps>().not.toHaveProperty('picker');
     expectTypeOf<TimeRangePickerProps>().not.toHaveProperty('showTime');
-    expectTypeOf<TimeRangePickerProps>().toHaveProperty('mode');
+    expectTypeOf<TimeRangePickerProps>().not.toHaveProperty('mode');
+    expectTypeOf<TimePickerProps>().not.toHaveProperty('mode');
+    expectTypeOf<TimePickerEmits>().not.toHaveProperty('update:mode');
   });
 
   it('判据 4：`placeholder` 是二元组、`disabled` 收元组', () => {
@@ -123,7 +107,7 @@ describe('TimePicker · emits / expose', () => {
     expectTypeOf<TimePickerEmits>().toHaveProperty('openChange');
   });
 
-  it('expose 与 date-picker 同形（⚠️ 运行时尚未 `defineExpose`，见 README §5）', () => {
+  it('expose forwards the actual nullable shared picker handles', () => {
     expectTypeOf<TimePickerExpose['nativeElement']>().toEqualTypeOf<HTMLElement | null>();
     expectTypeOf<TimePickerExpose['focus']>().toEqualTypeOf<(options?: FocusOptions) => void>();
     expectTypeOf<TimeRangePickerExpose['startInput']>().toEqualTypeOf<HTMLInputElement | null>();

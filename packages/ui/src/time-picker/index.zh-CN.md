@@ -1,119 +1,57 @@
-> 2026-10-30 当前 API：动态内容使用 `#cellRender="{ current, info }"`、`#panelRender="{ originPanel }"`、`#extraFooter="{ mode }"`、`#tagRender="scope"`；前缀、后缀、清除、区间分隔与预设分别使用同名具名槽。移除旧函数渲染 props、`addon`、无实际组件的 PurePanel 类型及 notification props；使用 `@select`/其它原生 emits。`@keydown` 只收到原生 KeyboardEvent，可直接 preventDefault()；支持 `v-model:mode`。只读输入按 ArrowDown 进入面板，方向键导航，Enter/Space 选值，Escape 返回。DOM refs 在挂载前/卸载后为 null。
-
 ---
 category: 数据录入
 title: TimePicker
 subtitle: 时间选择框
 ---
 
-输入或选择时间的控件。
+输入或选择单个时间，使用 `TimeRangePicker` 选择时间区间。
 
-## 何时使用
-
-- 当用户需要输入一个时间，可以点击标准输入框，弹出时间面板进行选择；
-- 需要选择一段时间时用 `TimeRangePicker`。
-
-> ⚠️ **本组件是 `DatePicker` 的薄壳** —— 类名前缀与 DOM 全部来自 `date-picker`
-> （`apollo-picker`），本组件**没有自己的样式表**，也没有 Component Token。
-> 它与 `DatePicker` 的唯一区别是**读的是 `ConfigProvider` 的 `timePicker` 配置**
-> （不是 `datePicker`）。
+> 2026-10-30 当前契约：两种入口均固定为时间轴。支持 `v-model:value`、`v-model:open`、`v-model:pickerValue`；移除无效的 `mode/defaultMode/update:mode` 声明。动态内容使用原生具名槽，通知使用 emits，DOM 句柄可为 null。
 
 ## 代码演示
 
-见 [`demo/`](./demo)（**16 个**）。⚠️ 与 antd 的差距见 `README.md` §5
-（`12hours` / `interval-options` / `render-panel` 三个未移植）。
+见 [demo](./demo) 的 16 个实际场景。
 
 ## API
 
-原生属性与 DatePicker 共用契约：`id`、`tabIndex` / `tabindex`、`name`、`required`、`autoComplete`、`autoFocus` 和 `aria-*` 绑定实际输入框；`class/style/data-*` 留在根。范围 `id` 字符串只绑定起点，`{ start, end }` 分别绑定两端；`autoFocus` 聚焦第一个未禁用端。详见 DatePicker「原生属性落点」。
-
-### TimePicker
-
-| 参数 | 说明 | 类型 | 默认值 |
-|---|---|---|---|
-| value | 当前值（`v-model:value`） | `TimePickerValue` | —— |
-| defaultValue | 非受控初值 | `TimePickerValue` | —— |
-| open | 浮层是否打开（`v-model:open`） | `boolean` | —— |
-| defaultOpen | 非受控的初始开合 | `boolean` | —— |
-| format | 展示格式（如 `HH:mm:ss`；`HH:mm` ⇒ 只显示两列） | `DatePickerFormat` | `HH:mm:ss` |
-| needConfirm | 需要点「确定」才提交 | `boolean` | `false` |
-| changeOnScroll | 滚动时间列即改变值 | `boolean` | `false` |
-| disabled | 禁用 | `boolean` | `false` |
-| size | 尺寸 | `'small' \| 'middle' \| 'large'` | —— |
-| status | 校验状态 | `'error' \| 'warning'` | —— |
-| variant | 视觉变体 | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` |
-| allowClear | 是否显示清除按钮 | `boolean \| { clearIcon?: VNodeChild }` | `true` |
-| prefix | 前缀内容 | `VNodeChild` | —— |
-| suffixIcon | 后缀图标（默认时钟；`null` / `false` 不渲染） | `VNodeChild` | —— |
-| placeholder | 输入框占位符 | `string` | `'Select time'` |
-| locale | 语言包（与 `ConfigProvider` 深合并） | `PickerLocale` | —— |
-| classNames | 语义化类名（4 平铺 + `popup` 嵌套；支持**函数形态**） | `TimePickerSemanticValue<…>` | —— |
-| styles | 语义化样式（同上） | `TimePickerSemanticValue<…>` | —— |
-| className / rootClassName / style | 根节点附加类名与样式 | —— | —— |
-| getPopupContainer | 自定义浮层容器 | `(node: HTMLElement) => HTMLElement` | —— |
-
-#### ⚠️ 已废弃
-
-| 参数 | 替代 |
-|---|---|
-| `addon` | `renderExtraFooter`（⚠️ 单个 TimePicker 上**会**发废弃告警） |
-| `popupClassName` | `classNames.popup.root`（⚠️ 单个上**不发**、范围版**发**告警） |
-| `popupStyle` | `styles.popup.root`（同上） |
-| `bordered` | `variant`（⚠️ 单个上**不发**、范围版**发**告警） |
-| `onSelect` | `onCalendarChange`（⚠️ 两处**都发**） |
-| `dropdownClassName` | `classNames.popup.root`（⚠️ 两处**都发**） |
-
-> 🚨 **这张表的「发不发告警」是实测出来的**（`tests/visual/debug/probe-time-picker-antd.mjs`）——
-> 三个 prop 的 `.d.ts` 都标着 `@deprecated`，**从类型完全看不出谁真发**。
-
-### TimeRangePicker
-
-与 `TimePicker` 基本一致，另外：
-
-| 参数 | 说明 | 类型 | 默认值 |
-|---|---|---|---|
-| placeholder | 两端的占位符 | `[string, string]` | —— |
-| separator | 两端之间的分隔符（默认 `SwapRightOutlined`） | `VNodeChild` | —— |
-| disabled | 两端的禁用（单个布尔 = 两端同值） | `boolean \| [boolean, boolean]` | —— |
-| allowEmpty | 是否允许某一端为空 | `boolean \| [boolean, boolean]` | —— |
-
-⚠️ 范围版**没有** `addon`；`picker` / `showTime` 在两侧都被剔除。
-
-### 事件
-
-| 事件 | 说明 | 参数 |
+| 参数 | 说明 | 默认值 |
 |---|---|---|
-| `change` | 值变化 | `(value, dateString)` |
-| `update:value` | `v-model:value` | `(value)` |
-| `calendarChange` | 选中过程中每次变化都发 | `(value, dateString, info)` |
-| `ok` | 点「确定」 | `(value)` |
-| `openChange` / `update:open` | 浮层开合 | `(open, config?)` |
-| `clear` | 点清除按钮 | —— |
-| `focus` / `blur` | 焦点 | `(event, info)` |
-| `panelChange` / `pickerValueChange` | 面板粒度 / 浏览值 | 见 `interface.ts` |
+| value / defaultValue | Dayjs 时间值；单值可为 null，区间是两个端点 | — |
+| open / defaultOpen | 当前开合 / 非受控初始开合 | — |
+| pickerValue / defaultPickerValue | 面板浏览时间 / 初始浏览时间 | — |
+| defaultOpenValue | 空值时的时间面板模板，不直接提交为值 | — |
+| format | 格式串、格式函数或掩码格式；默认显示时、分、秒 | `HH:mm:ss` |
+| use12Hours | 显示上下午列 | `false` |
+| showHour / showMinute / showSecond / showMillisecond | 当前显示的时间列，未指定时结合 format 推导 | — |
+| hourStep / minuteStep / secondStep / millisecondStep | 档位步长 | `1` |
+| disabledTime | 当前时间的禁用档位；范围版另收 range 与 `{ from }` | — |
+| hideDisabledOptions | 隐藏禁用档位 | `false` |
+| needConfirm | 显式确认后提交；false 时离开面板提交 | `true` |
+| changeOnScroll | 滚动停止 300ms 后选中最近的可用档位 | `false` |
+| inputReadOnly | 禁止键入，保留面板鼠标与键盘选择 | `false` |
+| allowClear | 清除按钮，支持 `{ clearIcon }` | `true` |
+| disabled / size / status / variant | 禁用、尺寸、校验状态与变体 | variant 为 `outlined` |
+| classNames / styles | 当前语义类名/样式，支持函数形态 | — |
+| prefix / suffixIcon / clearIcon | 静态装饰内容，也可用同名槽 | 默认后缀为时钟 |
+| placeholder / locale | 提示与当前语言配置 | `Select time` |
+| presets | 预设时间；value 支持按交互时刻懒求值 | — |
 
-### 插槽
+`TimeRangePicker` 另支持 `separator`、`allowEmpty` 与两端的 disabled 配置。它不提供日期导航、多选标签或面板粒度切换。
 
-与 `DatePicker` 同一套（本仓扩展，上游只有函数 prop）：
-`prefix` / `suffixIcon` / `clearIcon` / `separator` / `panelRender` / `extraFooter` /
-`cellRender` / `tagRender` / `presetRender`。
+`id/name/required/autoComplete/autoFocus/tabIndex` 和 `aria-*` 绑定实际输入框；`class/style/data-*` 绑定根。区间 id 字符串只绑定起点，`{ start, end }` 分别绑定两端。实例暴露 `nativeElement/focus/blur`，区间另有 `startInput/endInput`，元素在挂载前和卸载后为 null。
 
-### 静态成员
+## 事件与插槽
 
-- `TimeRangePicker` —— 等价于上游的 `TimePicker.RangePicker`；
-- `TimePickerWithRange` —— `Object.assign` 出来的别名（`TimePicker.RangePicker` 类型可见）。
+`change/update:value`、`openChange/update:open`、`pickerValueChange/update:pickerValue` 同时通知语义变化与模型提案。受控父级拒绝提案后不会写入隐藏值，撤控保留最后接受值。还有 `calendarChange/ok/clear/focus/blur/invalid/panelChange`；单值另有 `select`。`keydown` 只收到一个原生 KeyboardEvent，`preventDefault()` 可取消内部行为。
 
-## 主题
+单值支持 `prefix/suffixIcon/clearIcon/panelRender/extraFooter/cellRender/presetRender` 七个槽，范围版再加 `separator`。其中 cellRender 收 `{ current, info }`，panelRender 收 `{ originPanel }`，extraFooter 收 `{ mode }`；显式空槽保持为空，槽增删即时生效。旧渲染函数 props 和 addon 已移除。
 
-**本组件没有 Component Token**（`es/time-picker/` 里没有一句样式代码）⇒
-所有观感来自 `date-picker` 的 `-picker-*` 样式与全局 Token。
-若要通过 `ConfigProvider` 定制，用 **`timePicker`** 那一份（**不是** `datePicker`）：
+只读输入按 ArrowDown 进入面板，方向键在可用档位间导航，Enter/Space 选值，Escape 返回原输入。默认确认制下可继续到 OK 按钮确认。
 
-```vue
-<ConfigProvider :components="{ timePicker: { classNames: { root: 'my-root' } } }">
-  <TimePicker />
-</ConfigProvider>
-```
+## 配置与样式
 
-> ⚠️ `timePicker` 的语义槽会被**合并两次**（外层一次 + 内层一次）⇒ 类名重复出现。
-> 这是**上游同判**的行为，不是 bug。
+两种 Time 入口都读取当前 `components.timePicker` 的语义配置、root class/style、variant、图标与 separator。输入提示读取当前 `locale.TimePicker`，本地 placeholder 与 locale 中的明确值优先。`datePicker/rangePicker` 配置不会泄漏进来。普通 Date Range 仍读取 `rangePicker` 配置。
+
+TimePicker 复用 DatePicker 的静态 CSS 和主题变量，没有独立 Component Token、样式表或 PurePanel。`popupClassName/popupStyle/bordered/dropdownClassName` 保留已声明的废弃入口，优先使用语义样式与 variant。
+
+`TimePickerWithRange.RangePicker` 与具名 `TimeRangePicker` 指向同一组件。

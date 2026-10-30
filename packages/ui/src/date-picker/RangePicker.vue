@@ -255,7 +255,7 @@ for (const [oldProp, newProp] of Object.entries(DEPRECATED_PROPS)) {
 // ============================== 上下文归一 ==============================
 const context = useComponentConfig<DatePickerComponentConfig>(host.configKey ?? 'datePicker');
 /** 🚨 范围还有一份 `rangePicker` 配置（`className` / `style` / `separator`）。 */
-const rangePickerContext = useComponentConfig<DatePickerComponentConfig>('rangePicker');
+const rangePickerContext = useComponentConfig<DatePickerComponentConfig>(host.configKey ?? 'rangePicker');
 const { getPrefixCls } = context;
 
 interface DatePickerComponentConfig {
@@ -301,7 +301,7 @@ const { compactSize, compactItemClassnames } = useCompactItemContext(prefixCls, 
 const mergedSize = useSize((ctx) => props.size ?? compactSize.value ?? ctx);
 
 const { variant, enableVariantCls } = useVariant({
-  component: 'rangePicker',
+  component: host.configKey ?? 'rangePicker',
   variant: () => props.variant,
   legacyBordered: () => props.bordered,
 });

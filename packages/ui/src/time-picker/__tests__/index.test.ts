@@ -1,24 +1,4 @@
-/**
- * L1 单元 + L2 交互（G5/G6）。
- *
- * 契约来源：antd 6.6.4 的 `components/time-picker/__tests__/`（`index.test.tsx` 250 行 +
- * `legacy.test.tsx` 37 行 + `semantic.test.tsx` 78 行）与 `docs/analysis/time-picker.md`
- * 的两张**实测表**（告警矩阵 §2.4 / 上下文路由 §4.2）。
- *
- * ── 本组件是薄壳，所以本文件的重点不是「行为」而是「接线」────────────────────
- *
- * 值 / 开合 / 面板 / 格式化全部由 `date-picker` 承担（它的 L1/L2 是
- * `date-picker/__tests__/index.test.ts` 的 434 条）。本文件只钉**四件薄壳才有的事**：
- *
- * 1. **`picker='time'` 真的传到了内层** —— 判据是**面板类型**（`.apollo-picker-time-panel`），
- *    不是「props 传过去了」（PITFALLS 300：透传类代码必须断言**效果**）。
- * 2. 🚨 **告警矩阵**（§2.4）：单个 TimePicker **只**对 `addon` / `onSelect` /
- *    `dropdownClassName` 发告警，**不**对 `popupClassName` / `popupStyle` / `bordered` 发；
- *    `TimePicker.RangePicker` 对后三个**也发**（命名空间 `DatePicker.RangePicker`）。
- * 3. 🚨 **上下文路由**（§4.2）：`components.timePicker.*` 生效（且**合并两次** ⇒ 类名重复）、
- *    `components.datePicker.*` **不泄漏**；`<DatePicker picker="time"/>` 则**相反**。
- * 4. **`mode` 被丢弃**、**`renderExtraFooter ?? addon`**、**`variant` 解析链**。
- */
+/** TimePicker thin-shell behavior: fixed time axis, owned events, current config and native slots. */
 
 import { resetWarned } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
@@ -235,10 +215,8 @@ describe('TimePicker · 上下文路由（实测表 §4.2）', () => {
     b.unmount();
   });
 
-  it('🚨 语义槽**合并两次**（外层一次 + 内层一次）⇒ 类名在浮层上重复出现', async () => {
-    // `classNames.root` 那条通道本仓未接（见上），改用**确实接了**的
-    // `classNames.popup.root`（落到 `.apollo-picker-dropdown`）。
-    // 上游的重复来自「外层合并一次、内层再合并一次」，本仓结构同构 ⇒ 应当同样重复。
+  it('🚨 当前 timePicker 语义配置在浮层合并一次', async () => {
+    // The current owner is merged once by the actual shared picker consumer.
     const w = withConfig(
       'timePicker',
       { classNames: { popup: { root: 'ctx-popup' } } },
@@ -248,7 +226,7 @@ describe('TimePicker · 上下文路由（实测表 §4.2）', () => {
     const dropdown = document.querySelector(`.${P}-dropdown`);
     expect(dropdown).not.toBeNull();
     const cls = dropdown?.className ?? '';
-    expect(cls.split(' ').filter((c) => c === 'ctx-popup')).toHaveLength(2);
+    expect(cls.split(' ').filter((c) => c === 'ctx-popup')).toHaveLength(1);
     w.unmount();
   });
 });

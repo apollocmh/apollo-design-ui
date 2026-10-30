@@ -1,3 +1,5 @@
+> 2026-10-30 当前收口：TimePicker/TimeRangePicker 固定时间轴，只提供 value/open/pickerValue 三个真实模型；移除误继承的 mode/defaultMode/update:mode、日期导航与无多选职责的槽声明。当前 attrs/ref/Boolean/原生键盘/owned emits 与原生具名槽已沿用最新共享交付。timePicker 语义配置只合并一次；TimeRange 的 root/style/variant/separator 也读取 timePicker，无 host 的 Date Range 仍读取 rangePicker。无独立 Component Token 或 PurePanel。以下旧阶段、旧告警/未实现说明与结果保留历史原义，当前状态只见 registry。
+
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
 > 历史实施记录：原勾选、当时结果和缺口保留。2026-10-30 起，本文的 G0–G14 / 逐组件 G13 全仓收口与旧 Registry 进度规则由仓库 `WORKFLOW.md`、`TESTING.md` 两阶段流程替代；当前任务状态只读 `registry/vue-native-audit.json`，不据本文重复派发或重跑已有效验证。

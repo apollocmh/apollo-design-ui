@@ -37,7 +37,13 @@
  * 归一是纯函数 ⇒ 可用 `--project unit` 的 node 环境直接测（无需 jsdom）。
  */
 
-import { type ComputedRef, computed, type MaybeRefOrGetter, toValue } from 'vue';
+import {
+  type ComputedRef,
+  type CSSProperties,
+  computed,
+  type MaybeRefOrGetter,
+  toValue,
+} from 'vue';
 import {
   mergeClassNames,
   mergeStyles,
@@ -122,7 +128,7 @@ export function fillPopupClassName(
 /** 把 **deprecated** 的 `popupStyle` 合进 `popup.root`（后者覆盖前者）。 */
 export function fillPopupStyle(
   merged: NormalizedSemanticStyles,
-  popupStyle: Record<string, string | number> | undefined,
+  popupStyle: CSSProperties | undefined,
 ): NormalizedSemanticStyles {
   if (!popupStyle) {
     return merged;
@@ -154,7 +160,7 @@ export interface UseMergedPickerSemanticOptions {
   /** deprecated `popupClassName` / `dropdownClassName`。 */
   popupClassName?: MaybeRefOrGetter<string | undefined>;
   /** deprecated `popupStyle`。 */
-  popupStyle?: MaybeRefOrGetter<Record<string, string | number> | undefined>;
+  popupStyle?: MaybeRefOrGetter<CSSProperties | undefined>;
   /** 传给函数式变体的 `info.props`。 */
   props: PickerCommonProps;
 }

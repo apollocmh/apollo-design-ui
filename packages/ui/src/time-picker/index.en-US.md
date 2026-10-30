@@ -1,124 +1,57 @@
-> Current API (2026-10-30): use named scoped slots for dynamic content (`cellRender`, `panelRender`, `extraFooter`, `tagRender`) and named decoration/preset slots. Legacy render props, `addon`, notification props and unimplemented PurePanel types are removed. Use owned emits, including `@select`; `@keydown` receives one native KeyboardEvent and honors preventDefault(). `v-model:mode` is supported. ArrowDown enters a readonly picker panel; arrows navigate, Enter/Space selects, Escape restores input focus. DOM refs are nullable.
-
 ---
 category: Data Entry
 title: TimePicker
 subtitle: Time Picker
 ---
 
-To select/input a time.
+Choose a single time or use `TimeRangePicker` for a time range.
 
-## When To Use
-
-- When the user needs to input a time, they can click the standard input box and
-  select from the popup panel.
-- Use `TimeRangePicker` to select a time range.
-
-> ⚠️ **This component is a thin shell over `DatePicker`** — its class prefix and DOM all
-> come from `date-picker` (`apollo-picker`). It has **no stylesheet of its own** and no
-> Component Token. The only difference from `DatePicker` is that it reads the
-> **`timePicker`** `ConfigProvider` config (not `datePicker`).
+> Current contract, 2026-10-30: both entries have a fixed time axis. The actual models are `value`, `open` and `pickerValue`. Unsupported `mode/defaultMode/update:mode` declarations are removed. Content uses named slots, notifications use emits, and DOM handles are nullable.
 
 ## Examples
 
-See [`demo/`](./demo) (**16** demos). ⚠️ Differences from antd are listed in
-`README.md` §5 (`12hours` / `interval-options` / `render-panel` are not ported).
+See the 16 implemented [demos](./demo).
 
 ## API
 
-Native attributes share the DatePicker contract: `id`, `tabIndex` / `tabindex`, `name`, `required`, `autoComplete`, `autoFocus` and `aria-*` target the actual inputs; `class/style/data-*` remain on the root. A range string id identifies only the start input; `{ start, end }` identifies both endpoints. `autoFocus` focuses the first enabled endpoint. See DatePicker “Native attribute targets”.
-
-### TimePicker
-
-| Property | Description | Type | Default |
-|---|---|---|---|
-| value | Current value (`v-model:value`) | `TimePickerValue` | — |
-| defaultValue | Initial value (uncontrolled) | `TimePickerValue` | — |
-| open | Whether the popup is open (`v-model:open`) | `boolean` | — |
-| defaultOpen | Initial open state | `boolean` | — |
-| format | Display format (e.g. `HH:mm:ss`; `HH:mm` shows two columns) | `DatePickerFormat` | `HH:mm:ss` |
-| needConfirm | Commit only after clicking OK | `boolean` | `false` |
-| changeOnScroll | Change the value by scrolling | `boolean` | `false` |
-| disabled | Disabled | `boolean` | `false` |
-| size | Size | `'small' \| 'middle' \| 'large'` | — |
-| status | Validation status | `'error' \| 'warning'` | — |
-| variant | Visual variant | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` |
-| allowClear | Show the clear button | `boolean \| { clearIcon?: VNodeChild }` | `true` |
-| prefix | Prefix content | `VNodeChild` | — |
-| suffixIcon | Suffix icon (clock by default; `null` / `false` hides it) | `VNodeChild` | — |
-| placeholder | Input placeholder | `string` | `'Select time'` |
-| locale | Locale (deep-merged with `ConfigProvider`) | `PickerLocale` | — |
-| classNames | Semantic class names (4 flat + nested `popup`; **function form** supported) | `TimePickerSemanticValue<…>` | — |
-| styles | Semantic styles (same) | `TimePickerSemanticValue<…>` | — |
-| className / rootClassName / style | Extra class names and style on the root | — | — |
-| getPopupContainer | Custom popup container | `(node: HTMLElement) => HTMLElement` | — |
-
-#### ⚠️ Deprecated
-
-| Property | Replacement |
-|---|---|
-| `addon` | `renderExtraFooter` (⚠️ **does** warn on the single TimePicker) |
-| `popupClassName` | `classNames.popup.root` (⚠️ does **not** warn on the single one; **does** on the range) |
-| `popupStyle` | `styles.popup.root` (same) |
-| `bordered` | `variant` (⚠️ same asymmetry) |
-| `onSelect` | `onCalendarChange` (⚠️ warns on both) |
-| `dropdownClassName` | `classNames.popup.root` (⚠️ warns on both) |
-
-> 🚨 **This table was measured**, not read off the types — see
-> `tests/visual/debug/probe-time-picker-antd.mjs`. All of these carry `@deprecated` in
-> the `.d.ts`, yet only some actually warn.
-
-### TimeRangePicker
-
-Same as `TimePicker`, plus:
-
-| Property | Description | Type | Default |
-|---|---|---|---|
-| placeholder | Placeholders of both ends | `[string, string]` | — |
-| separator | Separator between the two ends | `VNodeChild` | — |
-| disabled | Disabled state (a single boolean applies to both) | `boolean \| [boolean, boolean]` | — |
-| allowEmpty | Whether either end can be empty | `boolean \| [boolean, boolean]` | — |
-
-⚠️ The range picker has **no** `addon`; `picker` / `showTime` are omitted on both.
-
-### Events
-
-| Event | Description | Arguments |
+| Property | Meaning | Default |
 |---|---|---|
-| `change` | Value changed | `(value, dateString)` |
-| `update:value` | `v-model:value` | `(value)` |
-| `calendarChange` | Fired on every change while selecting | `(value, dateString, info)` |
-| `ok` | OK clicked | `(value)` |
-| `openChange` / `update:open` | Popup open state | `(open, config?)` |
-| `clear` | Clear button clicked | — |
-| `focus` / `blur` | Focus | `(event, info)` |
-| `panelChange` / `pickerValueChange` | Panel mode / view value | see `interface.ts` |
+| value / defaultValue | Dayjs value; a single value may be null, a range has two endpoints | — |
+| open / defaultOpen | Current open state / initial uncontrolled state | — |
+| pickerValue / defaultPickerValue | Browsing time / initial browsing time | — |
+| defaultOpenValue | Empty panel template, without committing a value | — |
+| format | Display/parser format, formatter or mask | `HH:mm:ss` |
+| use12Hours | Show meridiem | `false` |
+| showHour / showMinute / showSecond / showMillisecond | Visible columns, inferred from format when omitted | — |
+| hourStep / minuteStep / secondStep / millisecondStep | Unit steps | `1` |
+| disabledTime | Disabled units; range callbacks also receive range and `{ from }` | — |
+| hideDisabledOptions | Hide disabled units | `false` |
+| needConfirm | Require confirmation; false commits when leaving the panel | `true` |
+| changeOnScroll | Select the nearest enabled unit after scrolling stops for 300ms | `false` |
+| inputReadOnly | Prevent typing while retaining panel selection | `false` |
+| allowClear | Clear button; accepts `{ clearIcon }` | `true` |
+| disabled / size / status / variant | Disabled state, size, validation and variant | variant: `outlined` |
+| classNames / styles | Current semantic classes/styles, including function forms | — |
+| prefix / suffixIcon / clearIcon | Static decoration, also available as named slots | Clock suffix |
+| placeholder / locale | Input hint and language | `Select time` |
+| presets | Preset values, including values evaluated at interaction time | — |
 
-### Slots
+TimeRangePicker additionally supports separator, allowEmpty and per-endpoint disabled states. Calendar navigation, multiple tags and calendar mode switching are not part of the time-axis API.
 
-The same set as `DatePicker` (a repo extension; upstream only has function props):
-`prefix` / `suffixIcon` / `clearIcon` / `separator` / `panelRender` / `extraFooter` /
-`cellRender` / `tagRender` / `presetRender`.
+Native input metadata goes to the actual input; class/style/data attributes go to the root. A range id string identifies the start input; `{ start, end }` identifies both endpoints. Exposed methods are focus and blur, with nullable nativeElement; range refs also expose nullable startInput/endInput.
 
-### Static members
+## Events and slots
 
-- `TimeRangePicker` — equivalent to upstream's `TimePicker.RangePicker`;
-- `TimePickerWithRange` — the `Object.assign` alias (so `TimePicker.RangePicker` is
-  type-visible).
+Semantic change/openChange/pickerValueChange events accompany their update:value/update:open/update:pickerValue proposals. Rejected controlled proposals never become hidden accepted values; releasing control retains the last accepted value. Other events are calendarChange, ok, clear, focus, blur, invalid and panelChange; the single picker also emits select. Keydown receives one native KeyboardEvent and honors preventDefault().
 
-## Theme
+Single-picker slots are prefix, suffixIcon, clearIcon, panelRender, extraFooter, cellRender and presetRender. Range adds separator. CellRender receives `{ current, info }`, panelRender receives `{ originPanel }`, and extraFooter receives `{ mode }`. Explicitly empty slots remain empty and current slot presence is reactive. Legacy render props and addon are removed.
 
-**This component has no Component Token** (there is not a single line of style code in
-`es/time-picker/`) ⇒ all visuals come from `date-picker`'s `-picker-*` styles and the
-global tokens. To customize via `ConfigProvider`, use the **`timePicker`** entry
-(**not** `datePicker`):
+For readonly inputs, ArrowDown enters the panel, arrows navigate enabled units, Enter/Space selects and Escape restores input focus. Use the OK button to confirm under the default confirmation policy.
 
-```vue
-<ConfigProvider :components="{ timePicker: { classNames: { root: 'my-root' } } }">
-  <TimePicker />
-</ConfigProvider>
-```
+## Configuration and styles
 
-> ⚠️ The `timePicker` semantic slots are merged **twice** (once by the outer shell, once
-> by the inner picker) ⇒ the class name appears twice. This matches upstream and is not
-> a bug.
+Both entries read the current components.timePicker configuration, including root classes/styles, semantic configuration, variant, icons and range separator. Input hints follow the current locale.TimePicker fragment, with explicit local placeholder/locale values taking precedence. DatePicker and rangePicker configurations do not leak into Time entries. Ordinary DateRangePicker retains its rangePicker owner.
+
+TimePicker reuses DatePicker static CSS and theme variables. It has no independent Component Token, stylesheet or PurePanel. Existing deprecated popupClassName/popupStyle/bordered/dropdownClassName inputs remain; prefer semantic styles and variant.
+
+TimePickerWithRange.RangePicker and the named TimeRangePicker refer to the same component.

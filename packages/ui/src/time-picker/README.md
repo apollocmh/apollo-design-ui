@@ -1,4 +1,4 @@
-> 2026-10-30 当前架构差额：DatePicker/RangePicker 使用原生具名槽、owned emits 与 value/open/pickerValue/mode 模型；只读输入通过真实面板 focus 进入日期格/时间列，方向键导航、Enter/Space 选值、Escape 返回输入。当前组件主题覆盖同时进入输入与 Portal 浮层。Time 薄壳仅完成本链必要槽/通知桥。以下保留原日期、阶段与历史事实；其中旧 render prop、PurePanel 类型和“键盘与上游一致”描述不再表示当前公开契约。
+> 2026-10-30 当前收口：TimePicker/TimeRangePicker 固定时间轴，只提供 value/open/pickerValue 三个真实模型；移除误继承的 mode/defaultMode/update:mode、日期导航与无多选职责的槽声明。当前 attrs/ref/Boolean/原生键盘/owned emits 与原生具名槽已沿用最新共享交付。timePicker 语义配置只合并一次；TimeRange 的 root/style/variant/separator 也读取 timePicker，无 host 的 Date Range 仍读取 rangePicker。无独立 Component Token 或 PurePanel。以下旧阶段、旧告警/未实现说明与结果保留历史原义，当前状态只见 registry。
 
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 

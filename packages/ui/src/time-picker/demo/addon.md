@@ -5,13 +5,13 @@ title:
   en-US: Addon
 ---
 
-通过 `renderExtraFooter` 在面板底部添加额外内容（`addon` 已废弃）。
+通过原生 `#extraFooter` 插槽在面板底部添加内容；旧 `addon` 与渲染函数 prop 已移除。
 
 ```vue
 <script setup lang="ts">
 // 对齐 antd 的 addon demo。
 //
-// ⚠️ 上游用的是 **已废弃** 的 `addon` prop；本仓照它的**替代品** `renderExtraFooter` 写，
+// ⚠️ 上游用的是 **已废弃** 的 `addon` prop；本仓使用原生 `#extraFooter` 插槽，
 //    并额外演示受控开合（面板底部那个按钮负责关闭）。
 import { Button, TimePicker } from '@apollo-design/ui';
 import { ref } from 'vue';

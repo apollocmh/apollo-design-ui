@@ -194,3 +194,7 @@ Menu 的选择/展开通知统一使用 Vue emits，原生键盘监听使用 onK
 ### D-tree-select-native-tree-owner
 
 TreeSelect 的通知统一为 Vue emits，保留 value/open/searchValue/treeExpandedKeys/treeLoadedKeys 模型，监听 change 不再改变值的形态。顶层标题/标签/浮层与图标内容函数迁为具名槽，数据项 title/icon 与过滤、加载服务保留真实数据职责；旧开关通知别名改为 openChange，nativeElement() 改为实际属性。配置由 TreeSelect 自己拥有，继续共享 Tree/Select Token；修正原始数据服务载荷、异步 children 更新、键盘和实际 tree ARIA 目标，详见[TreeSelect API](packages/ui/src/tree-select/index.zh-CN.md)。
+
+### D-time-picker-native-owner
+
+TimePicker/TimeRangePicker 固定为时间轴，移除从 DatePicker 误继承且无实际行为的 mode/defaultMode/update:mode、日期导航和多选标签声明，保留 value/open/pickerValue 模型与真实七/八个槽。两者读取当前 timePicker 配置并只合并一次语义样式，普通 Date Range 继续读取 rangePicker；独立 TimePicker 语言提示和动态撤回生效。没有新增 TimePicker Token 或内部面板，详见[TimePicker API](packages/ui/src/time-picker/index.zh-CN.md)。
