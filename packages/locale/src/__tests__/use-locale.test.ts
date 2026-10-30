@@ -174,6 +174,34 @@ function mountUseLocale<C extends LocaleComponentName>(
 }
 
 describe('useLocale · computed refs and mounted consumers', () => {
+  it('returns to defaults after a reactive context source is removed', async () => {
+    const provided = shallowRef<LocaleContextValue | undefined>({
+      locale: 'custom',
+      Modal: { okText: 'Custom', cancelText: 'Cancel', justOkText: 'OK' },
+    });
+    const { merged, code, wrapper } = mountUseLocale('Modal', undefined, provided);
+    expect(merged.value.okText).toBe('Custom');
+    provided.value = undefined;
+    await nextTick();
+    expect(merged.value).toEqual(en_US.Modal);
+    expect(code.value).toBeUndefined();
+    provided.value = { exist: true };
+    await nextTick();
+    expect(merged.value).toEqual(en_US.Modal);
+    expect(code.value).toBe('en');
+    wrapper.unmount();
+  });
+
+  it('reads the current reactive default getter when no context overrides it', async () => {
+    const fallback = shallowRef({ okText: 'First', cancelText: 'Cancel', justOkText: 'OK' });
+    const { merged, wrapper } = mountUseLocale('Modal', () => fallback.value);
+    expect(merged.value.okText).toBe('First');
+    fallback.value = { ...fallback.value, okText: 'Second' };
+    await nextTick();
+    expect(merged.value.okText).toBe('Second');
+    wrapper.unmount();
+  });
+
   it('没有 Provider ⇒ 回退 en_US 分片，code 是 undefined', () => {
     const { merged, code, wrapper } = mountUseLocale('Modal');
     expect(merged.value).toEqual(en_US.Modal);

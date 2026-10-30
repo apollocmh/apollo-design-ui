@@ -146,3 +146,7 @@ Select 的通知使用 Vue emits，value/open/searchValue 使用对应 v-model�
 ### D-drawer-native-lifecycle
 
 Drawer 的 close/afterOpenChange/resize/resizeStart/resizeEnd 使用 Vue emits，引用暴露实际 nativeElement 与 focus。resizable 直接使用 boolean，原对象内回调迁为对应 Vue 事件（尺寸载荷为 number）；删除未消费的 panelRef/destroyInactivePanel。修复真实 motion 完成通知、延迟销毁、受控尺寸与拖拽、嵌套推移和焦点资源，详见[Drawer API](packages/ui/src/drawer/index.zh-CN.md)。
+
+### D-locale-provider-order
+
+LocaleProvider 与 ConfigProvider 的静态确认语言来源按挂载顺序固定优先级，内容更新不重新占位；清空来源后旧清理不恢复过期语言。普通 Modal 只读取本应用响应式语言，静态 confirm 仍可显式传 locale；无上下文静态服务的全局来源边界保留。详见[Locale 当前契约](docs/foundation/locale-contract.md)。

@@ -7,7 +7,7 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { ComputedRef, VNodeChild } from 'vue';
+import { type ComputedRef, type MaybeRefOrGetter, shallowRef, type VNodeChild } from 'vue';
 
 import type {
   CarouselLocale,
@@ -41,6 +41,7 @@ import {
   localeContextKey,
   resetConfirmLocale,
   resetLocaleWarned,
+  useConfirmLocale,
   useLocale,
   zh_CN,
 } from '../index';
@@ -203,6 +204,18 @@ describe('其余导出', () => {
     expectTypeOf(getConfirmLocale).toEqualTypeOf<() => ModalLocale>();
   });
 
+  it('useConfirmLocale accepts a current Modal source in component setup', () => {
+    expectTypeOf(useConfirmLocale).toEqualTypeOf<
+      (source: MaybeRefOrGetter<ModalLocale | undefined>) => void
+    >();
+    neverCalled(() => {
+      useConfirmLocale(() => en_US.Modal);
+      useConfirmLocale(shallowRef<ModalLocale | undefined>(undefined));
+      // @ts-expect-error A static service source must contain Modal fields, not a locale code.
+      useConfirmLocale(() => 'en');
+    });
+  });
+
   it('localeContextKey 是个 symbol 键', () => {
     expectTypeOf(localeContextKey).toBeSymbol();
   });
@@ -219,6 +232,24 @@ describe('其余导出', () => {
 
   it('LocaleProvider 是个组件', () => {
     expectTypeOf(LocaleProvider).not.toBeAny();
+  });
+
+  it('LocaleProvider accepts a partial locale and declares its default slot', () => {
+    type ProviderProps = InstanceType<typeof LocaleProvider>['$props'];
+    type ProviderSlots = InstanceType<typeof LocaleProvider>['$slots'];
+    const props: ProviderProps = {
+      locale: { Modal: { okText: 'OK', cancelText: 'Cancel', justOkText: 'OK' } },
+    };
+    expectTypeOf(props.locale).toEqualTypeOf<Partial<Locale> | undefined>();
+    neverCalled(() => {
+      const slots: ProviderSlots = { default: () => [0, 'text'] };
+      slots.default?.();
+      // @ts-expect-error LocaleProvider only declares a default content slot.
+      slots.unknown();
+      // @ts-expect-error LocaleProvider locale is a partial locale object, not a locale code.
+      const invalid: ProviderProps = { locale: 'en' };
+      void invalid;
+    });
   });
 });
 

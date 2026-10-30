@@ -8,8 +8,15 @@
  *    自己重新包一层同名组件会触发废弃告警，这是**有意的**。
  */
 
-import { computed, defineComponent, onBeforeMount, type PropType, provide, watch } from 'vue';
-import { changeConfirmLocale } from './confirm-locale';
+import {
+  computed,
+  defineComponent,
+  type PropType,
+  provide,
+  type SlotsType,
+  type VNodeChild,
+} from 'vue';
+import { useConfirmLocale } from './confirm-locale';
 import { localeContextKey } from './context';
 import type { Locale } from './types';
 
@@ -41,11 +48,13 @@ export function resetLocaleWarned(): void {
 
 export const LocaleProvider = defineComponent({
   name: 'ALocaleProvider',
+  inheritAttrs: false,
   props: {
-    locale: { type: Object as PropType<Locale>, default: () => ({}) },
+    locale: { type: Object as PropType<Partial<Locale>>, default: () => ({}) },
     /** 上游用它判断「是不是官方导出的那个组件」 */
     _ANT_MARK__: { type: String, default: undefined },
   },
+  slots: Object as SlotsType<{ default?: () => VNodeChild }>,
   setup(props, { slots }) {
     // ⚠️ 条件**不能写反**：上游是 `warning(_ANT_MARK__ === ANT_MARK, ...)`，
     //    而 `warning(valid, ...)` 在 `!valid` 时才打印 ——
@@ -60,21 +69,7 @@ export const LocaleProvider = defineComponent({
     const value = computed(() => ({ ...props.locale, exist: true }));
     provide(localeContextKey, value);
 
-    // ---- changeConfirmLocale 的注册与清理 ----
-    // Only client instances register a present Modal slice. Deep updates replace
-    // this instance's registration; withdrawal and unmount release only its own entry.
-    onBeforeMount(() => {
-      watch(
-        () => props.locale?.Modal,
-        (current, _previous, onCleanup) => {
-          if (current) {
-            const clear = changeConfirmLocale(current);
-            if (clear) onCleanup(clear);
-          }
-        },
-        { immediate: true, deep: true },
-      );
-    });
+    useConfirmLocale(() => props.locale?.Modal);
 
     return () => slots.default?.();
   },

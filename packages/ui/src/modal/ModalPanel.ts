@@ -15,7 +15,7 @@
  *      不受全局 `disabled` 影响**（上游的刻意设计）。
  */
 import { CloseOutlined } from '@apollo-design/icons';
-import { getConfirmLocale, useLocale } from '@apollo-design/locale';
+import { useLocale } from '@apollo-design/locale';
 import { isFunction } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, provide, type VNodeChild } from 'vue';
 
@@ -70,7 +70,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const [locale] = useLocale('Modal', getConfirmLocale());
+    const [locale] = useLocale('Modal');
 
     // 上游的 `okType = 'primary'` 默认值
     const mergedOkType = computed<ModalOkType>(() => props.okType ?? 'primary');

@@ -5,8 +5,8 @@
  *   1. **幂等** —— 产物与源一致（`--check` 返回 0）
  *   2. **能发现漂移** —— 有人手改了产物时 `--check` 会失败
  *
- * ⚠️ 这两条都需要 **antd 的 es 目录**在场（`/tmp/antd-src/package/es` 或
- *    `packages/locale/node_modules/antd/es`）。不在场时**整块跳过** ——
+ * ⚠️ 这两条都需要 **antd 的 es 目录**在场（仓库根、包内 node_modules 或
+ *    `/tmp/antd-src/package/es`）。不在场时**整块跳过** ——
  *    跳过是显式的（`describe.skipIf`），不会假装通过。见契约文档 §9 第 2 条。
  */
 
@@ -24,9 +24,16 @@ const RC_DIR = path.join(ROOT, 'registry/source/locale-rc');
 const OUT_DIR = path.join(ROOT, 'packages/locale/src/locales');
 
 function findAntdEs(): string | undefined {
-  return [path.join(ROOT, 'packages/locale/node_modules/antd/es'), '/tmp/antd-src/package/es'].find(
-    (dir) => fs.existsSync(path.join(dir, 'locale')),
-  );
+  return [
+    path.join(ROOT, 'node_modules/antd/es'),
+    path.join(ROOT, 'packages/locale/node_modules/antd/es'),
+    '/tmp/antd-src/package/es',
+  ].find((dir) => {
+    const localeDir = path.join(dir, 'locale');
+    return (
+      fs.existsSync(localeDir) && fs.readdirSync(localeDir).some((name) => name.endsWith('.js'))
+    );
+  });
 }
 
 const antdEs = findAntdEs();

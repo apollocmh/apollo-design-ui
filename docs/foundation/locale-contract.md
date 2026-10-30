@@ -4,6 +4,30 @@
 
 # `locale` 契约文档
 
+## 当前 Apollo 契约 · 2026-10-30
+
+本轮接续 2026-10-29 ConfigProvider 的 Locale 消费链成果，不重译语言数据，也不重做该单元的历史验收。语言数据、Apollo overrides、分片级浅合并与只读 ComputedRef 返回形态保持有效。
+
+| 公开入口 | 当前职责 |
+| --- | --- |
+| `Locale`、分片类型与 73 个具名语言导出 | 保留来源及生成验证；`global.clear` 仍通过 Apollo overrides 合入，未提供文本使用当前默认分片 |
+| `localeContextKey`、`LocaleContextSource`、`LocaleContextValue` | Vue 父链上下文；普通对象、Ref、ComputedRef 或 getter 由 `toValue` 读取。替换、深更新、撤除在计算引用中反映，应用与 SSR 请求不互相读取 |
+| `useLocale(name, defaultLocale?)` | 返回只读 `[ComputedRef<分片>, ComputedRef<语言码>]`；默认分片可为当前 getter，分片内部只做浅合并。没有上下文时语言码为 `undefined`；`exist: true` 且无语言码时为 `en` |
+| `LocaleProvider`、`ANT_MARK` | 兼容现有的已废弃 Provider；`locale?: Partial<Locale>`，默认 `{}` 明确回退英文，不继承父语言；保留开发告警及标记。只有完整内容的默认插槽，无 DOM 宿主，忽略 attrs，无业务 Emits、模型或 Expose 方法 |
+| `useConfirmLocale(source)` | Provider 在 setup 中绑定 Modal 来源，客户端 beforeMount 固定来源位置。替换、深更新、撤除、重新提供只修改自身快照；初始缺片也保留该实例顺序，缺片不覆盖其他来源；scope 释放自身，SSR 不入栈 |
+| `changeConfirmLocale(locale?)`、`getConfirmLocale()` | 显式全局的静态 Modal 服务来源；注册浅复制，后注册来源覆盖同名字段，清理仅删除自身。读取返回当前快照，不带应用身份；无参调用清空全部来源并恢复英文 |
+| `resetConfirmLocale()`、`resetLocaleWarned()` | 保留现有测试辅助入口，分别清理静态服务来源与告警去重表 |
+
+新增 `useConfirmLocale` 复用 LocaleProvider / ConfigProvider 的真实重复生命周期。普通组件使用 `useLocale` 的当前注入；没有 Vue 上下文的静态服务保留函数参数与全局读取职责，不把服务回调机械迁移成组件 Emits。需要应用语言上下文的服务应使用对应的上下文入口，不能把别的应用注册的静态快照当作普通组件默认语言。
+
+本次修复有两条可复现根因：父 Provider 深更新后重新入栈会抢过内层/后挂应用；无参重置只清当前值，会在旧清理执行时复活已清来源。当前实现保持挂载顺序并真正清空来源，旧 cleanup 在 reset 后不再影响新来源。已有 `changeConfirmLocale` / `getConfirmLocale` 的有效注册、读取和清理签名保留；历史 §10.3 的上游 U 项现已修复，不提供旧错误行为的兼容开关。
+
+默认插槽在 render 中读取；语言变化保留正文节点和编辑器身份。Provider 没有可承接 attrs 的宿主，原生 class、style 和监听器放在插槽的实际元素上。ConfigProvider 共用上述 helper，普通 ModalPanel 只读取当前 `useLocale('Modal')`，不再把静态栈当作普通组件默认值；静态 ConfirmContent 的显式 `locale` 与文字覆盖保持有效。实际 Modal 的嵌套优先级、兄弟应用/无 Provider 应用、正文身份、撤除与卸载还原由 `config-provider/__tests__/locale-scope.test.ts` 覆盖。
+
+以下历史章节中的上游栈、旧测试结果和未知项均保留原义；它们不代表本轮重新验证，也不覆盖上表的当前契约。针对性验证由本轮唯一任务状态记录，严格类型由整合负责人合并执行，最终九维仍待统一冻结验收。
+
+## 历史来源与提取
+
 > G1/G2 的分析产物。**步骤 3 的产物必须先于步骤 5 存在**（`AGENTS.md` §2）。
 > 事实来源：**antd 6.6.4 的 ESM 产物**（`/tmp/antd-src/package/es/`）+
 > `@rc-component/pagination@1.4.0` 与 `@rc-component/picker@1.12.2` 的 locale。

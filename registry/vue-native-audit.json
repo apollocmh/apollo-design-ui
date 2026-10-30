@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 77,
+  "revision": 80,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -109,7 +109,10 @@
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/ui/src/auto-complete"
+        "packages/ui/src/auto-complete",
+        "packages/ui/src/select/Select.ts",
+        "packages/ui/src/select/engine/Selector.ts",
+        "packages/ui/src/select/engine/BaseSelect.ts"
       ],
       "assignment": {
         "owner": "native_select",
@@ -126,9 +129,10 @@
       "plan": {
         "goal": "接续已交付Select引擎，收口AutoComplete包装层剩余Vue契约",
         "remaining": [
-          "保留条件选项和本轮searchValue模型桥；核对包装层owned事件声明/转发、动态完整槽、实际ref、当前Provider/Token和所有公开字段消费，按源码确定实施差额。"
+          "保留条件选项和本轮searchValue模型桥；核对包装层owned事件声明/转发、动态完整槽、实际ref、当前Provider/Token和所有公开字段消费，按源码确定实施差额。",
+          "已有backfill公开承诺缺少实际消费，纳入内部combobox的键盘预览/提交/关闭清理链，不扩展Select公共mode。"
         ],
-        "effort": "small",
+        "effort": "medium",
         "basis": [
           "packages/ui/src/auto-complete/AutoComplete.ts",
           "packages/ui/src/auto-complete/interface.ts",
@@ -2815,7 +2819,7 @@
       "kind": "foundation",
       "ref": "locale",
       "title": "@apollo-design/locale",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
@@ -2825,12 +2829,10 @@
         "packages/ui/src/modal/ModalPanel.ts",
         "packages/ui/src/config-provider/__tests__/locale-scope.test.ts"
       ],
-      "assignment": {
-        "owner": "native_locale",
-        "baseRevision": 63,
-        "startedAt": "2026-10-30T10:12:51.881Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
@@ -2850,6 +2852,48 @@
           "docs/audit/2026-10-29-config-provider-contract-audit.md",
           "docs/audit/evidence/current-batch-final-acceptance.json"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/locale",
+          "docs/foundation/locale-contract.md",
+          "packages/ui/src/config-provider/ConfigProvider.ts",
+          "packages/ui/src/modal/ModalPanel.ts",
+          "packages/ui/src/config-provider/__tests__/locale-scope.test.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/locale/src/__tests__/locale-provider.test.ts packages/locale/src/__tests__/confirm-locale.test.ts packages/locale/src/__tests__/use-locale.test.ts",
+            "exitCode": 0,
+            "durationMs": 2764,
+            "result": "59 passed; provider order, reset/stale cleanup, live injection, complete slots, unmount and concurrent SSR requests"
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/locale/src/__tests__/generator.test.ts packages/locale/src/__tests__/locales.test.ts",
+            "exitCode": 0,
+            "durationMs": 3302,
+            "result": "91 passed, no skips; generator --check, rejected output drift and restoration, 73 language source comparisons"
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/config-provider/__tests__/locale-scope.test.ts",
+            "exitCode": 0,
+            "durationMs": 6225,
+            "result": "3 passed; actual Modal nested/live sources, missing-fragment and plain-app isolation, editor identity, static restoration, explicit ConfirmContent locale and text overrides"
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; complete Locale source/type-d and ConfigProvider/ModalPanel/actual consumer test>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 21854
+          }
+        ],
+        "boundary": "保留既有语言数据与Provider交付；固定挂载优先级、深更新/撤除/卸载、重置与迟到清理、SSR隔离及完整默认槽已验证。实际ConfigProvider与普通Modal消费者验证嵌套更新、多应用/无Provider应用隔离、编辑器身份以及静态服务显式locale覆盖。无上下文静态服务仍使用当前最后挂载来源，是已说明的全局边界；未声称每应用隔离。生成器真实执行且语言源无改动。最终冻结九维/发布消费者未执行。"
       }
     },
     {

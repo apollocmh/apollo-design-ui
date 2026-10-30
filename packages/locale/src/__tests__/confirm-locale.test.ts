@@ -1,8 +1,7 @@
 /**
  * L1 —— `changeConfirmLocale` 的**栈**语义。
  *
- * ⚠️ 这是**模块级可变状态** ⇒ 每个用例结束都要 `changeConfirmLocale()`（无参）重置，
- *    否则会串台。
+ * 静态服务显式共享来源；每个用例结束后清空来源以保持隔离。
  */
 
 import { afterEach, describe, expect, it } from 'vitest';
@@ -12,8 +11,6 @@ import { changeConfirmLocale, en_US, getConfirmLocale, resetConfirmLocale } from
 const DEFAULT = en_US.Modal as ModalLocale;
 
 afterEach(() => {
-  // ⚠️ **不能**用 `changeConfirmLocale()`（无参）做隔离 —— 它只重置当前值，
-  //    **不清 localeList**（上游的真实行为，登记为 U 项）。必须用测试专用的重置。
   resetConfirmLocale();
 });
 
@@ -35,17 +32,21 @@ describe('changeConfirmLocale · 基础', () => {
     expect(getConfirmLocale()).toEqual(DEFAULT);
   });
 
-  it('⭐⭐ 跟随的上游缺陷（U 项）：无参调用**不清 localeList**，重置并不彻底', () => {
-    changeConfirmLocale({ okText: '幽灵' } as ModalLocale);
-    changeConfirmLocale(); // 只重置当前值
+  it('does not revive cleared sources after a new registration or an old cleanup', () => {
+    const firstCleanup = changeConfirmLocale({ ...DEFAULT, okText: '幽灵' });
+    const secondCleanup = changeConfirmLocale({ ...DEFAULT, okText: '已清理' });
+    changeConfirmLocale();
+    expect(getConfirmLocale()).toEqual(DEFAULT);
+    secondCleanup?.();
     expect(getConfirmLocale()).toEqual(DEFAULT);
 
-    // 再注册一层 ⇒ generateLocale() 把栈里那条「幽灵」重新叠回来
-    changeConfirmLocale({ cancelText: '新' } as ModalLocale);
-    expect(getConfirmLocale()).toEqual({ ...DEFAULT, okText: '幽灵', cancelText: '新' });
+    changeConfirmLocale({ ...DEFAULT, cancelText: '新' });
+    expect(getConfirmLocale()).toEqual({ ...DEFAULT, cancelText: '新' });
+    firstCleanup?.();
+    expect(getConfirmLocale()).toEqual({ ...DEFAULT, cancelText: '新' });
   });
 
-  it('resetConfirmLocale 才是彻底的（连栈一起清）', () => {
+  it('resetConfirmLocale also clears all sources', () => {
     changeConfirmLocale({ okText: '幽灵' } as ModalLocale);
     changeConfirmLocale();
     resetConfirmLocale();

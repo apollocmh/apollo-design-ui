@@ -202,9 +202,155 @@ describe('LocaleProvider · 渲染', () => {
     expect(wrapper.html()).toBe('');
     wrapper.unmount();
   });
+
+  it('renders current complete slots without applying provider attrs to their DOM', async () => {
+    const locale = shallowRef<Partial<Locale>>({});
+    const showSlot = shallowRef(true);
+    const click = vi.fn();
+    const wrapper = mount(
+      defineComponent({
+        setup: () => () =>
+          h(
+            LocaleProvider,
+            { locale: locale.value, _ANT_MARK__: ANT_MARK, class: 'provider', onClick: click },
+            showSlot.value
+              ? { default: () => [0, ' text ', h('input', { key: 'editor', value: 'draft' })] }
+              : {},
+          ),
+      }),
+    );
+    const input = wrapper.get('input').element;
+    expect(input.parentNode?.textContent).toBe('0 text ');
+    expect(input.className).toBe('');
+    await wrapper.get('input').trigger('click');
+    expect(click).not.toHaveBeenCalled();
+
+    locale.value = { locale: 'replacement' };
+    await nextTick();
+    expect(wrapper.get('input').element).toBe(input);
+    showSlot.value = false;
+    await nextTick();
+    expect(wrapper.html()).toBe('');
+    showSlot.value = true;
+    await nextTick();
+    expect(wrapper.get('input').element.parentNode?.textContent).toBe('0 text ');
+    wrapper.unmount();
+  });
 });
 
 describe('LocaleProvider · live ownership and SSR', () => {
+  it('retains the parent position when its first Modal source arrives after the child mounts', async () => {
+    const outer = shallowRef<Partial<Locale>>({});
+    const inner = { Modal: { okText: 'Inner', cancelText: 'Cancel', justOkText: 'OK' } };
+    const wrapper = mount(
+      defineComponent({
+        setup: () => () =>
+          h(LocaleProvider, { locale: outer.value, _ANT_MARK__: ANT_MARK }, () =>
+            h(LocaleProvider, { locale: inner, _ANT_MARK__: ANT_MARK }),
+          ),
+      }),
+    );
+    expect(getConfirmLocale().okText).toBe('Inner');
+    outer.value = {
+      Modal: { okText: 'Late outer', cancelText: 'Cancel', justOkText: 'OK' },
+    };
+    await nextTick();
+    expect(getConfirmLocale().okText).toBe('Inner');
+    wrapper.unmount();
+    expect(getConfirmLocale()).toEqual(DEFAULT_MODAL);
+    outer.value = {
+      Modal: { okText: 'Unmounted outer', cancelText: 'Cancel', justOkText: 'OK' },
+    };
+    await nextTick();
+    expect(getConfirmLocale()).toEqual(DEFAULT_MODAL);
+  });
+
+  it('preserves the inner source priority when a mounted parent changes or restores Modal', async () => {
+    const outer = shallowRef<Locale>({
+      locale: 'outer',
+      Modal: { okText: 'Outer', cancelText: 'Cancel', justOkText: 'OK' },
+    });
+    const inner: Locale = {
+      locale: 'inner',
+      Modal: { okText: 'Inner', cancelText: 'Cancel', justOkText: 'OK' },
+    };
+    const wrapper = mount(
+      defineComponent({
+        setup: () => () =>
+          h(LocaleProvider, { locale: outer.value, _ANT_MARK__: ANT_MARK }, () =>
+            h(LocaleProvider, { locale: inner, _ANT_MARK__: ANT_MARK }),
+          ),
+      }),
+    );
+    expect(getConfirmLocale().okText).toBe('Inner');
+
+    outer.value = {
+      locale: 'outer-2',
+      Modal: { okText: 'Changed outer', cancelText: 'Cancel', justOkText: 'OK' },
+    };
+    await nextTick();
+    expect(getConfirmLocale().okText).toBe('Inner');
+
+    outer.value = { locale: 'outer-3' };
+    await nextTick();
+    expect(getConfirmLocale().okText).toBe('Inner');
+    outer.value = {
+      locale: 'outer-4',
+      Modal: { okText: 'Restored outer', cancelText: 'Cancel', justOkText: 'OK' },
+    };
+    await nextTick();
+    expect(getConfirmLocale().okText).toBe('Inner');
+    wrapper.unmount();
+    expect(getConfirmLocale()).toEqual(DEFAULT_MODAL);
+  });
+
+  it('keeps two app contexts isolated while static sources retain mount order', async () => {
+    const firstLocale = shallowRef<Locale>({
+      locale: 'first',
+      Modal: { okText: 'First app', cancelText: 'Cancel', justOkText: 'OK' },
+    });
+    const Consumer = defineComponent({
+      setup() {
+        const [locale, code] = useLocale('Modal');
+        return () => h('p', `${code.value}: ${locale.value.okText}`);
+      },
+    });
+    const first = mount(
+      defineComponent({
+        setup: () => () =>
+          h(LocaleProvider, { locale: firstLocale.value, _ANT_MARK__: ANT_MARK }, () =>
+            h(Consumer),
+          ),
+      }),
+    );
+    const second = mount(LocaleProvider, {
+      props: {
+        _ANT_MARK__: ANT_MARK,
+        locale: {
+          locale: 'second',
+          Modal: { okText: 'Second app', cancelText: 'Cancel', justOkText: 'OK' },
+        },
+      },
+      slots: { default: () => h(Consumer) },
+    });
+    expect(first.text()).toBe('first: First app');
+    expect(second.text()).toBe('second: Second app');
+    expect(getConfirmLocale().okText).toBe('Second app');
+
+    firstLocale.value = {
+      locale: 'first-updated',
+      Modal: { okText: 'First updated', cancelText: 'Cancel', justOkText: 'OK' },
+    };
+    await nextTick();
+    expect(first.text()).toBe('first-updated: First updated');
+    expect(second.text()).toBe('second: Second app');
+    expect(getConfirmLocale().okText).toBe('Second app');
+    second.unmount();
+    expect(getConfirmLocale().okText).toBe('First updated');
+    first.unmount();
+    expect(getConfirmLocale()).toEqual(DEFAULT_MODAL);
+  });
+
   it('tracks deep Modal updates and withdraws only its own registration', async () => {
     const other = changeConfirmLocale({ okText: 'Other', cancelText: 'Cancel', justOkText: 'OK' });
     const locale = shallowRef<Locale>(
@@ -250,6 +396,38 @@ describe('LocaleProvider · live ownership and SSR', () => {
       }),
     );
     expect(getConfirmLocale().okText).toBe('Other');
+    other?.();
+  });
+
+  it('renders concurrent SSR requests from their own contexts without changing the static fallback', async () => {
+    const other = changeConfirmLocale({ okText: 'Client', cancelText: 'Cancel', justOkText: 'OK' });
+    const Consumer = defineComponent({
+      setup() {
+        const [locale, code] = useLocale('Modal');
+        return () => h('p', `${code.value}: ${locale.value.okText}`);
+      },
+    });
+    const renderRequest = (code: string) =>
+      renderToString(
+        createSSRApp({
+          render: () =>
+            h(
+              LocaleProvider,
+              {
+                _ANT_MARK__: ANT_MARK,
+                locale: {
+                  locale: code,
+                  Modal: { okText: code, cancelText: 'Cancel', justOkText: 'OK' },
+                },
+              },
+              () => h(Consumer),
+            ),
+        }),
+      );
+    const rendered = await Promise.all([renderRequest('first'), renderRequest('second')]);
+    expect(rendered[0]).toContain('<p>first: first</p>');
+    expect(rendered[1]).toContain('<p>second: second</p>');
+    expect(getConfirmLocale().okText).toBe('Client');
     other?.();
   });
 });

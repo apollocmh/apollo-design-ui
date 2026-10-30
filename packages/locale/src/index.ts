@@ -17,7 +17,12 @@
 // ---------------------------------------------------------------------------
 // Modal confirm 的模块级 locale
 // ---------------------------------------------------------------------------
-export { changeConfirmLocale, getConfirmLocale, resetConfirmLocale } from './confirm-locale';
+export {
+  changeConfirmLocale,
+  getConfirmLocale,
+  resetConfirmLocale,
+  useConfirmLocale,
+} from './confirm-locale';
 export type { LocaleContextSource, LocaleContextValue } from './context';
 
 // ---------------------------------------------------------------------------

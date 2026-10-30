@@ -2,7 +2,7 @@
 import { FormProvider, formContextKey, type ValidateMessages } from '@apollo-design/form-core';
 import { IconProvider, useIconContext } from '@apollo-design/icons';
 import type { Locale, LocaleContextValue } from '@apollo-design/locale';
-import { changeConfirmLocale, defaultLocale, localeContextKey } from '@apollo-design/locale';
+import { defaultLocale, localeContextKey, useConfirmLocale } from '@apollo-design/locale';
 import {
   DEFAULT_CSS_VAR_PREFIX,
   getDesignToken,
@@ -17,7 +17,6 @@ import {
   Fragment,
   h,
   inject,
-  onBeforeMount,
   type PropType,
   provide,
   reactive,
@@ -157,18 +156,7 @@ export const ConfigProvider = defineComponent({
       locale.value ? { ...locale.value, exist: true } : toValue(parentLocale),
     );
     provide(localeContextKey, currentLocale);
-    onBeforeMount(() => {
-      watch(
-        () => locale.value?.Modal,
-        (current, _previous, onCleanup) => {
-          if (current) {
-            const clear = changeConfirmLocale(current);
-            if (clear) onCleanup(clear);
-          }
-        },
-        { immediate: true, deep: true },
-      );
-    });
+    useConfirmLocale(() => locale.value?.Modal);
 
     const mergedTheme = computed(() => {
       const parentTheme =
