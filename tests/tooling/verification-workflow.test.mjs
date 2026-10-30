@@ -126,25 +126,32 @@ test('changes to dedicated test files run their project within the affected sour
   );
 });
 
-test('acceptance infrastructure changes select their layer and share one prerequisite build', (t) => {
+test('acceptance infrastructure gets syntax/tooling feedback without defaulting to full build or visuals', (t) => {
   const f = fixture(t);
-  for (const [file, kind, entry] of [
-    ['tests/build/checks/treeshake.mjs', 'build', 'tests/build/run.mjs'],
-    ['tests/consumer/run.mjs', 'consumer', 'tests/consumer/run.mjs'],
-    ['tests/visual/apollo.mjs', 'visual', 'tests/visual/apollo.mjs'],
-    ['tests/visual/baselines/apollo/button.png', 'visual', 'tests/visual/apollo.mjs'],
-    ['tests/compat/runner/index.mjs', 'compat', 'tests/compat/runner/index.mjs'],
-    ['tests/compat/baselines/button.dom.json', 'compat', 'tests/compat/runner/index.mjs'],
-    ['tests/browser/button-docs.mjs', 'demo', 'scripts/verify-docs-browser.mjs'],
+  for (const file of [
+    'tests/build/checks/treeshake.mjs',
+    'tests/consumer/run.mjs',
+    'tests/visual/apollo.mjs',
+    'tests/compat/runner/index.mjs',
   ]) {
+    f.write(file, 'export const value = 1;');
     const plan = changedPlan(f.root, [file]);
     assert.ok(
-      plan.checks.some((step) => step.kind === kind && step.args.includes(entry)),
+      plan.checks.some((step) => step.kind === 'syntax' && step.args.includes(file)),
+      file,
+    );
+    assert.ok(
+      plan.checks.some((step) => step.args.includes('--test')),
       file,
     );
     assert.deepEqual(plan.scope, [], file);
     assert.equal(
-      plan.checks.some((step) => step.kind === 'coverage'),
+      plan.checks.some((step) => ['build', 'coverage'].includes(step.kind)),
+      false,
+      file,
+    );
+    assert.equal(
+      plan.checks.some((step) => step.kind === 'visual' && !step.args.includes('--check')),
       false,
       file,
     );
@@ -155,17 +162,8 @@ test('acceptance infrastructure changes select their layer and share one prerequ
     'tests/visual/matrix.mjs',
     'packages/docs/src/pages/Component.vue',
   ]);
-  assert.equal(plan.checks.filter((step) => step.kind === 'build').length, 1);
-  assert.ok(plan.checks.find((step) => step.kind === 'build').args.includes('--strict'));
-  for (const kind of ['consumer', 'visual'])
-    assert.ok(
-      plan.checks.findIndex((step) => step.kind === 'build') <
-        plan.checks.findIndex((step) => step.kind === kind),
-    );
-  assert.equal(
-    plan.checks.some((step) => step.args.includes('content:build')),
-    false,
-  );
+  assert.equal(plan.checks.filter((step) => step.kind === 'build').length, 0);
+  assert.ok(plan.checks.some((step) => step.args.includes('content:build')));
   const docs = changedPlan(f.root, [
     'README.md',
     'tests/build/README.md',
@@ -175,6 +173,33 @@ test('acceptance infrastructure changes select their layer and share one prerequ
     'tests/browser/README.md',
   ]);
   assert.deepEqual(docs.checks, []);
+  assert.deepEqual(changedPlan(f.root, ['assets/notes.svg']).checks, []);
+});
+
+test('infrastructure syntax failures are real failures and changed visual/baseline data checks stay scoped', (t) => {
+  const f = fixture(t);
+  const bad = 'tests/build/checks/bad.mjs';
+  f.write(bad, 'export const = ;');
+  const plan = changedPlan(f.root, [bad]);
+  const syntax = plan.checks.filter((step) => step.kind === 'syntax');
+  assert.equal(syntax.length, 1);
+  assert.equal(
+    executePlan({ ...plan, checks: syntax }, { root: f.root, quiet: true }).passed,
+    false,
+  );
+  const visual = changedPlan(f.root, ['tests/visual/baselines/apollo/button/basic-desktop.png']);
+  const check = visual.checks.find((step) => step.kind === 'visual');
+  assert.deepEqual(check.args, ['tests/visual/apollo.mjs', '--check', '--component', 'button']);
+  assert.equal(
+    visual.checks.some((step) => step.kind === 'build'),
+    false,
+  );
+  const compat = changedPlan(f.root, ['tests/compat/baselines/button.dom.json']);
+  assert.deepEqual(compat.checks.find((step) => step.kind === 'compat').args, [
+    'tests/compat/runner/index.mjs',
+    '--component',
+    'button',
+  ]);
 });
 
 test('browser checks select changed scripts and route the progress helper to its actual consumer', (t) => {
@@ -209,6 +234,8 @@ test('a changed standalone consumer fixture is executed, rather than only the ta
   const result = executePlan({ ...plan, checks: [consumer] }, { root: f.root, quiet: true });
   assert.equal(result.passed, false);
   assert.equal(result.checks[0].exitCode, 1);
+  const multiple = changedPlan(f.root, [file, 'tests/browser/button-docs.mjs']);
+  assert.equal(multiple.checks.filter((step) => step.kind === 'build').length, 1);
 });
 
 test('nonzero exits, missing executable, child signals and a green-looking stdout remain failures', (t) => {

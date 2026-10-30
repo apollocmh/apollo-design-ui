@@ -93,7 +93,10 @@ export function changedPlan(root, files) {
     globalTypes = false;
   for (const file of files) {
     const layer = file.match(/^tests\/(build|consumer|visual|compat|browser)\//)?.[1];
-    if (layer && !/\.(?:md|txt)$/.test(file)) acceptanceLayers.add(layer);
+    if (layer && !/\.(?:md|txt)$/.test(file)) {
+      acceptanceLayers.add(layer);
+      workflow = true;
+    }
     if (/^(scripts\/|registry\/|tests\/tooling\/|\.github\/|(?:package|biome)\.json$)/.test(file))
       workflow = true;
     if (
@@ -154,24 +157,65 @@ export function changedPlan(root, files) {
     checks.push(
       node('types', ['node_modules/vue-tsc/bin/vue-tsc.js', '--noEmit', '-p', 'tsconfig.json']),
     );
-  const build = ['build', 'consumer', 'visual', 'browser'].some((layer) =>
-    acceptanceLayers.has(layer),
-  );
-  if (build) checks.push(node('build', ['tests/build/run.mjs', '--strict']));
-  if (acceptanceLayers.has('consumer')) {
-    const fixtures = [...new Set(files)].filter(
-      (file) =>
-        /^tests\/consumer\/[^/]+\.mjs$/.test(file) &&
-        file !== 'tests/consumer/run.mjs' &&
-        fs.existsSync(path.join(root, file)),
-    );
-    if (files.includes('tests/consumer/run.mjs') || !fixtures.length)
-      checks.push(node('consumer', ['tests/consumer/run.mjs']));
-    for (const file of fixtures) checks.push(node('consumer', [file]));
+  for (const file of [...new Set(files)].filter(
+    (file) =>
+      /^tests\/(build|consumer|visual|compat|browser)\//.test(file) &&
+      fs.existsSync(path.join(root, file)),
+  )) {
+    if (/\.[cm]?js$/.test(file)) checks.push(node('syntax', ['--check', file]));
+    else if (file.endsWith('.json'))
+      checks.push(
+        node('syntax', [
+          '--input-type=module',
+          '-e',
+          'import fs from "node:fs"; JSON.parse(fs.readFileSync(process.argv[1], "utf8"));',
+          file,
+        ]),
+      );
   }
-  if (acceptanceLayers.has('visual')) checks.push(node('visual', ['tests/visual/apollo.mjs']));
-  if (acceptanceLayers.has('compat'))
-    checks.push(node('compat', ['tests/compat/runner/index.mjs']));
+  const consumerFixtures = [...new Set(files)].filter(
+    (file) =>
+      /^tests\/consumer\/[^/]+\.mjs$/.test(file) &&
+      file !== 'tests/consumer/run.mjs' &&
+      fs.existsSync(path.join(root, file)),
+  );
+  const build = consumerFixtures.length > 0 || acceptanceLayers.has('browser');
+  if (build) checks.push(node('build', ['tests/build/run.mjs', '--strict']));
+  for (const file of consumerFixtures) checks.push(node('consumer', [file]));
+  const visualComponents = [
+    ...new Set(
+      files.flatMap((file) => {
+        const match = file.match(/^tests\/visual\/baselines\/apollo\/([^/]+)\//);
+        return match ? [match[1]] : [];
+      }),
+    ),
+  ];
+  if (visualComponents.length)
+    checks.push(
+      node('visual', [
+        'tests/visual/apollo.mjs',
+        '--check',
+        ...visualComponents.flatMap((component) => ['--component', component]),
+      ]),
+    );
+  else if (files.some((file) => /^tests\/visual\/baselines\/apollo\/[^/]+\.json$/.test(file))) {
+    // Phase-one metadata integrity is scoped to reviewed entries; final visuals still run all cases.
+    checks.push(node('visual', ['tests/visual/apollo.mjs', '--check', '--approved-only']));
+  }
+  if (acceptanceLayers.has('compat')) {
+    const components = files
+      .filter((file) => /^tests\/compat\//.test(file) && !/\.(?:md|txt)$/.test(file))
+      .map((file) => {
+        const match = file.match(
+          /^tests\/compat\/(?:baseline\/([^/]+)\.mjs|baselines\/([^/]+)\.dom\.json)$/,
+        );
+        return match?.[1] ?? match?.[2] ?? null;
+      });
+    if (components.includes(null)) checks.push(node('compat', ['tests/compat/runner/index.mjs']));
+    else
+      for (const component of new Set(components))
+        checks.push(node('compat', ['tests/compat/runner/index.mjs', '--component', component]));
+  }
   if (acceptanceLayers.has('browser')) {
     const scripts = [...new Set(files)].filter(
       (file) => /^tests\/browser\/.*\.mjs$/.test(file) && fs.existsSync(path.join(root, file)),

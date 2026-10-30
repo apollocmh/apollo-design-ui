@@ -161,6 +161,23 @@
           "description": "Dated complete-delivery evidence remains when current acceptance advances to a final frozen-version pass."
         },
         "issues": { "type": "array", "items": { "$ref": "#/$defs/Issue" } },
+        "plan": {
+          "type": "object",
+          "description": "A concise remaining-work assessment, not a completion or verification result. Missing assessments mean unknown effort.",
+          "additionalProperties": false,
+          "required": ["goal", "remaining", "effort", "basis"],
+          "properties": {
+            "goal": { "type": "string", "minLength": 1 },
+            "remaining": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "effort": { "enum": ["small", "medium", "large", "unknown"] },
+            "basis": { "$ref": "#/$defs/Paths", "minItems": 1 },
+            "decisions": { "$ref": "#/$defs/Paths" }
+          }
+        },
         "verification": {
           "type": "object",
           "required": ["scope", "checks", "passed"],

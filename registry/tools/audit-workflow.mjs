@@ -15,6 +15,7 @@ const sharedPaths = [
 const within = (file, directory) => file === directory || file.startsWith(`${directory}/`);
 const overlaps = (left, right) => within(left, right) || within(right, left);
 const readJson = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
+const effortOrder = { small: 0, medium: 1, unknown: 2, large: 3 };
 
 export function readAudit(root) {
   return readJson(path.join(root, AUDIT_FILE));
@@ -103,10 +104,24 @@ export function validateAudit(doc, root) {
     if (!Array.isArray(task.owns) || !task.owns.length)
       throw new Error(`${task.id}: missing ownership`);
     for (const ownerPath of task.owns) localPath(root, ownerPath);
+    if (task.plan) {
+      if (
+        !task.plan.goal ||
+        !Array.isArray(task.plan.remaining) ||
+        !task.plan.remaining.length ||
+        task.plan.remaining.some((item) => typeof item !== 'string' || !item.trim()) ||
+        !Object.hasOwn(effortOrder, task.plan.effort) ||
+        !Array.isArray(task.plan.basis) ||
+        !task.plan.basis.length
+      )
+        throw new Error(`${task.id}: plan needs a goal, remaining work, effort and evidence basis`);
+    }
     for (const file of [
       ...task.evidence,
       ...task.existingWork,
       ...(task.historicalAcceptance ?? []),
+      ...(task.plan?.basis ?? []),
+      ...(task.plan?.decisions ?? []),
     ]) {
       const relative = localPath(root, file);
       if (!fs.existsSync(path.join(root, relative)))
@@ -207,7 +222,28 @@ export function recommendTasks(doc, limit = doc.dispatch.maxParallel) {
   const byId = new Map(doc.tasks.map((task) => [task.id, task]));
   const selected = [],
     occupied = doc.tasks.filter((task) => task.assignment !== null);
-  for (const task of doc.tasks) {
+  const ranked = doc.tasks
+    .map((task) => ({
+      task,
+      unlocks: doc.tasks.filter(
+        (other) =>
+          ['not_started', 'partial'].includes(other.architectureStatus) &&
+          other.assignment === null &&
+          other.workDependencies.includes(task.id) &&
+          other.workDependencies.every(
+            (id) => id === task.id || byId.get(id).architectureStatus === 'done',
+          ),
+      ).length,
+    }))
+    .sort(
+      (left, right) =>
+        right.unlocks - left.unlocks ||
+        effortOrder[left.task.plan?.effort ?? 'unknown'] -
+          effortOrder[right.task.plan?.effort ?? 'unknown'] ||
+        Number(right.task.architectureStatus === 'partial') -
+          Number(left.task.architectureStatus === 'partial'),
+    );
+  for (const { task } of ranked) {
     if (selected.length >= Math.min(limit, doc.dispatch.maxParallel - occupied.length)) break;
     if (!['not_started', 'partial'].includes(task.architectureStatus) || task.assignment !== null)
       continue;
@@ -221,6 +257,46 @@ export function recommendTasks(doc, limit = doc.dispatch.maxParallel) {
     selected.push(task);
   }
   return selected;
+}
+
+/** A derived task handoff, not another manually maintained status document. */
+export function taskBrief(doc, task) {
+  const done = task.architectureStatus === 'done';
+  return {
+    id: task.id,
+    goal: done
+      ? `${task.title} 架构整改已完成，沿用有效成果`
+      : (task.plan?.goal ?? `完成 ${task.title} 剩余的 Vue 原生契约整改，保留已有成果`),
+    remaining: done
+      ? []
+      : (task.plan?.remaining ?? ['尚未评估剩余范围；先对照已有证据核对差额，不重新扫描全仓']),
+    effort: task.plan?.effort ?? 'unknown',
+    owns: task.owns,
+    owner: task.assignment?.owner ?? null,
+    dependencies: task.workDependencies.map((id) => ({
+      id,
+      status: doc.tasks.find((other) => other.id === id).architectureStatus,
+    })),
+    issues: task.issues.filter((issue) => issue.status !== 'fixed'),
+    decisions: [
+      ...new Set([
+        'ARCHITECTURE.md',
+        'COMPONENT-RULES.md',
+        'COMPATIBILITY.md',
+        ...(task.plan?.decisions ?? []),
+      ]),
+    ],
+    evidence: [...new Set([...(task.plan?.basis ?? []), ...task.evidence, ...task.existingWork])],
+    minimumVerification: done
+      ? ['不重新审计；仅补查明确的新变更影响，最终九维仍在冻结版本统一执行']
+      : [
+          task.kind === 'component'
+            ? `pnpm verify:component ${task.ref}`
+            : 'pnpm verify:changed --base <task-start-commit>',
+          '共享契约变化时：pnpm verify:changed --base <task-start-commit>，及时验证实际消费者',
+          '涉及 Demo/交互时补已有定向浏览器检查；源码、依赖、配置和范围均未变才复用原检查',
+        ],
+  };
 }
 
 /** One short exclusive write; no queue, daemon, retries or secondary status store. */

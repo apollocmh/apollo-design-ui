@@ -11,6 +11,7 @@ import {
   recommendTasks,
   recoverAuditLock,
   summarizeAudit,
+  taskBrief,
   validateAudit,
 } from '../../registry/tools/audit-workflow.mjs';
 
@@ -91,6 +92,89 @@ test('paused state is read-only, keeps an interrupted owner and offers no duplic
   assert.notEqual(f.run('--claim', 'CMP:item-1', '--owner', 'other').status, 0);
   assert.equal(fs.readFileSync(f.file, 'utf8'), before);
   assert.equal(readAudit(f.root).tasks[0].assignment.owner, 'worker');
+});
+
+test('recommendations prefer real dependency unlocks and assessed remaining work, not the partial label alone', (t) => {
+  const f = fixture(t, 7);
+  const plan = (effort) => ({
+    goal: 'Finish the remaining native contract',
+    remaining: ['Only the recorded gap remains'],
+    effort,
+    basis: ['registry/components.json'],
+  });
+  f.doc.tasks[0].plan = plan('small');
+  f.doc.tasks[1].architectureStatus = 'partial';
+  f.doc.tasks[1].plan = plan('large');
+  f.doc.tasks[2].architectureStatus = 'partial';
+  f.doc.tasks[4].workDependencies = ['CMP:item-3'];
+  f.doc.tasks[5].workDependencies = ['CMP:item-3'];
+  f.doc.tasks[6].architectureStatus = 'partial';
+  f.doc.tasks[6].plan = plan('small');
+  const before = JSON.stringify(f.doc);
+  assert.deepEqual(
+    recommendTasks(f.doc).map((task) => task.id),
+    ['CMP:item-3', 'CMP:item-6', 'CMP:item-0', 'CMP:item-2', 'CMP:item-1'],
+  );
+  assert.equal(JSON.stringify(f.doc), before);
+  assert.equal(taskBrief(f.doc, f.doc.tasks[2]).effort, 'unknown');
+});
+
+test('one integrated task immediately frees a slot while four independent tasks retain their owners', (t) => {
+  const f = fixture(t, 8);
+  f.doc.tasks[5].workDependencies = ['CMP:item-0'];
+  f.doc.tasks[7].owns = ['packages/ui/src/item-1/shared'];
+  f.save();
+  for (let index = 0; index < 5; index++)
+    assert.equal(f.run('--claim', `CMP:item-${index}`, '--owner', `worker-${index}`).status, 0);
+  assert.deepEqual(recommendTasks(readAudit(f.root)), []);
+  assert.equal(
+    f.run(
+      '--complete',
+      'CMP:item-0',
+      '--owner',
+      'worker-0',
+      '--report',
+      f.report('packages/ui/src/item-0'),
+    ).status,
+    0,
+  );
+  assert.deepEqual(
+    recommendTasks(readAudit(f.root)).map((task) => task.id),
+    ['CMP:item-5'],
+  );
+  assert.equal(f.run('--claim', 'CMP:item-5', '--owner', 'replacement').status, 0);
+  const doc = readAudit(f.root);
+  assert.equal(summarizeAudit(doc).activeTasks.length, 5);
+  for (let index = 1; index < 5; index++)
+    assert.equal(doc.tasks[index].assignment.owner, `worker-${index}`);
+  assert.equal(doc.finalAcceptance.status, 'not_started');
+});
+
+test('a short task brief derives ownership, evidence, shared decisions and minimum checks without a second handoff record', (t) => {
+  const f = fixture(t);
+  const task = f.doc.tasks[0];
+  task.plan = {
+    goal: 'Finish the remaining slot forwarding',
+    remaining: ['Forward the conditional slot without caching it'],
+    effort: 'small',
+    basis: ['registry/components.json'],
+    decisions: ['registry/foundation.json'],
+  };
+  task.existingWork = ['registry/foundation.json'];
+  const before = JSON.stringify(f.doc);
+  const brief = taskBrief(f.doc, task);
+  assert.equal(brief.goal, task.plan.goal);
+  assert.deepEqual(brief.owns, task.owns);
+  assert.equal(brief.evidence[0], task.plan.basis[0]);
+  assert.ok(brief.decisions.includes('registry/foundation.json'));
+  assert.ok(brief.minimumVerification.some((command) => command.includes('verify:component')));
+  assert.equal(JSON.stringify(f.doc), before);
+  assert.doesNotThrow(() => validateAudit(f.doc, f.root));
+  task.architectureStatus = 'done';
+  assert.deepEqual(taskBrief(f.doc, task).remaining, []);
+  assert.ok(taskBrief(f.doc, task).minimumVerification[0].includes('不重新审计'));
+  task.plan.basis = [];
+  assert.throws(() => validateAudit(f.doc, f.root), /plan.*basis|evidence.*plan/);
 });
 
 test('ownership conflicts and a sixth active task fail without changing another assignment', (t) => {

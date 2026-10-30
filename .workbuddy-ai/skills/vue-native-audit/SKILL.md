@@ -27,6 +27,10 @@ This two-stage workflow, effective 2026-10-30, replaces the earlier fixed batch 
 
 Do not run full-library tests, coverage, the complete visual matrix or published-consumer acceptance separately for every component. Reuse valid results on the same source/scope. Rerun relevant checks after new changes, failures or an unresolved concern; do not repeat checks merely to produce more receipts.
 
+Prefer existing partial work after checking its actual remaining scope. A partial label is not an effort estimate. Read the task's concise `plan` and evidence, keep unknown effort unknown, prioritize explicit dependency unlocks and assessed small work, and schedule complex scopes separately. Use `registry:next --brief` for the derived objective, ownership, known issues, shared decisions and minimum checks; do not create duplicate handoff documents or rescan the repository in every subtask.
+
+Reuse a check only when its source, relevant shared dependencies, compiler/test configuration and affected scope remain valid. An unchanged component file is insufficient after a shared contract changes. Inspect existing source-version evidence and the impact graph; do not build a caching platform.
+
 ## Stage two: frozen-version acceptance
 
 After all architecture work is complete, use one frozen source commit for the library's existing API, Token, style, unit, interaction, type, accessibility, visual and documentation dimensions, plus applicable build and consumer checks. Keep existing thresholds and useful tests.
@@ -66,6 +70,8 @@ Report implemented, verified, unverified, deferred and blocked scope accurately.
 At most five parallel subtasks, each with explicit scope, ownership, dependencies and focused verification. Do not split artificial tasks to fill slots. Static imports determine impact; only explicit work dependencies block progress. Independent tasks can move on after stage-one checks without waiting for another component's final visual acceptance.
 
 The integrator owns shared state, public exports, global configuration and progress views. Claim/release/complete through `registry:vue-native`; complete can consume a temporary `--report` and retain compact results in the task. Conflicts fail visibly, updates use a short exclusive lock and atomic replacement, and interruption preserves the recorded owner and evidence. Recover a writer lock only after its process has exited.
+
+Integrate independently ready work promptly. Complete that task and refill its freed slot while other owners continue; do not introduce a five-task batch barrier or pause unrelated tasks for an individual failure. Keep the existing assignment until integration is complete. Resolve public architecture decisions once through the integrator. Use existing logs and report timestamps for analysis, implementation, verification and integration-wait observations; mark unavailable timings unknown rather than adding telemetry or treating test/commit counts as delivery metrics.
 
 `historicalAcceptance` remains historical evidence; `architectureStatus` and `acceptanceStatus` express different claims. Keep only necessary evidence links and commands/results. Do not maintain current counts in chat, memory, per-batch receipts and progress pages independently; generate the page with `registry:progress`.
 

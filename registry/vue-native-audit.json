@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 0,
+  "revision": 1,
   "dispatch": {
     "status": "paused",
     "maxParallel": 5,
@@ -862,7 +862,17 @@
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-28-menu-native-actions-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "完成 Menu 原生操作专项之外的剩余 Vue 契约整改",
+        "remaining": [
+          "复用原生点击、键盘、焦点与 disabled 专项；先核对尚未覆盖的 items/slots、模型及 Provider 链路，再确定实施差额。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-28-menu-native-actions-audit.md"
+        ]
+      }
     },
     {
       "id": "CMP:message",
@@ -1009,7 +1019,17 @@
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-29-upload-progress-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留 Upload 组合与 ARIA 修复，核对其余 Progress 公开 API",
+        "remaining": [
+          "原专项未声明覆盖其他 Progress API；先核对剩余公开配置、动态更新及消费者范围，不能凭 partial 推定只剩视觉。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-29-upload-progress-audit.md"
+        ]
+      }
     },
     {
       "id": "CMP:qr-code",
@@ -1293,7 +1313,21 @@
         "docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md",
         "docs/audit/2026-10-25-steps-native-slots-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "复用 Steps 原生作用域槽与 inline Tooltip 成果，核对架构阶段的剩余差额",
+        "remaining": [
+          "沿用四槽、真实模板类型和 inline Tooltip 的已有实现及证据；仅补查未覆盖或后续依赖变更影响的契约。",
+          "缺失 Apollo 批准视觉基线属于最终验收边界，不作为继续架构整改的前置条件。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-25-steps-native-slots-remediation.md"
+        ],
+        "decisions": [
+          "docs/migrations/steps-native-slots.md"
+        ]
+      }
     },
     {
       "id": "CMP:switch",
@@ -1518,7 +1552,18 @@
             "docs/audit/2026-10-29-tree-readonly-inventory.md"
           ]
         }
-      ]
+      ],
+      "plan": {
+        "goal": "沿用现有清单和失败复现，分根因修复 Tree 公开契约",
+        "remaining": [
+          "接续标题插槽/Ref、受控模型和响应式配置、键盘/焦点及异步加载等已复现问题；不重复制作只读盘点。",
+          "共享 core 修改先由集成人确认所有权和实际消费者；未修复核心问题不能标记完成。"
+        ],
+        "effort": "large",
+        "basis": [
+          "docs/audit/2026-10-29-tree-readonly-inventory.md"
+        ]
+      }
     },
     {
       "id": "CMP:tree-select",
@@ -1582,7 +1627,17 @@
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-29-upload-progress-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留 progress 六字段交付，核对 Upload 上传引擎的剩余架构范围",
+        "remaining": [
+          "已有进度组合不重做；原报告明确未覆盖其他上传引擎交互，先核对文件状态、受控列表、事件和取消/卸载链路的既有证据。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-29-upload-progress-audit.md"
+        ]
+      }
     },
     {
       "id": "CMP:watermark",
