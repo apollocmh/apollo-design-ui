@@ -1,7 +1,13 @@
 <script setup lang="ts">
-// 组件 Token：覆盖 Upload 根节点上的 --apollo-upload-* 变量
+// 当前 Provider 的 Upload Token 驱动实际卡片尺寸与操作图标颜色
 import { PlusOutlined } from '@apollo-design/icons';
-import { Button, Upload, type UploadFile, type UploadProps } from '@apollo-design/ui';
+import {
+  Button,
+  ConfigProvider,
+  Upload,
+  type UploadFile,
+  type UploadProps,
+} from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const thumbUrl = `data:image/svg+xml;utf8,${encodeURIComponent(
@@ -23,14 +29,23 @@ const customRequest: UploadProps['customRequest'] = ({ onProgress, onSuccess }) 
 
 <template>
   <div class="demo-upload-token">
-    <Upload
-      v-model:file-list="fileList"
-      action="/upload.do"
-      list-type="picture-card"
-      :custom-request="customRequest"
+    <ConfigProvider
+      :theme="{ components: { Upload: { pictureCardSize: 96, actionsColor: '#08979c' } } }"
     >
-      <Button :icon="PlusOutlined" aria-label="上传图片">Upload</Button>
-    </Upload>
+      <Upload
+        v-model:file-list="fileList"
+        action="/upload.do"
+        list-type="picture-card"
+        :custom-request="customRequest"
+      >
+        <Button :icon="PlusOutlined" aria-label="上传图片">Upload</Button>
+      </Upload>
+      <Upload
+        v-model:file-list="fileList"
+        :show-upload-list="{ showDownloadIcon: true }"
+        :custom-request="customRequest"
+      />
+    </ConfigProvider>
     <p class="demo-upload-token__hint">
       卡片尺寸来自 --apollo-upload-picture-card-size，列表操作图标颜色来自
       --apollo-upload-actions-color。
@@ -39,11 +54,6 @@ const customRequest: UploadProps['customRequest'] = ({ onProgress, onSuccess }) 
 </template>
 
 <style>
-.demo-upload-token .apollo-upload-wrapper {
-  --apollo-upload-picture-card-size: 96px;
-  --apollo-upload-actions-color: #08979c;
-}
-
 .demo-upload-token__hint {
   margin: 12px 0 0;
   color: #999;

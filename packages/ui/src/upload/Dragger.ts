@@ -1,17 +1,7 @@
-/**
- * Dragger —— antd `es/upload/Dragger.js` 行为等价物。
- *
- * `type='drag'` 预设：`hasControlInside=false`（根得 role=button/tabIndex）；
- * `height` 并入 style。
- */
+import { defineComponent, h, type PropType, type SlotsType, shallowRef } from 'vue';
+import type { UploadFile, UploadProps, UploadRef, UploadSlots } from './interface';
+import { UploadComponent, uploadEmits, uploadProps } from './Upload';
 
-import { defineComponent, h, type PropType } from 'vue';
-import type { UploadFile, UploadProps } from './interface';
-import { UploadComponent } from './Upload';
-
-type CSSStyleLike = Record<string, string | number>;
-
-/** antd 的 DraggerProps：`Omit<UploadProps, …> & { height?, style?, type? }` 的白名单外键排除。 */
 export interface DraggerProps<T = unknown> extends Omit<UploadProps<T>, 'type'> {
   height?: number | string;
 }
@@ -19,31 +9,81 @@ export interface DraggerProps<T = unknown> extends Omit<UploadProps<T>, 'type'> 
 export const DraggerComponent = defineComponent({
   name: 'AUploadDragger',
   inheritAttrs: false,
+  expose: [
+    'nativeElement',
+    'fileList',
+    'upload',
+    'onBatchStart',
+    'onSuccess',
+    'onProgress',
+    'onError',
+  ],
   props: {
+    ...uploadProps,
     height: { type: [Number, String] as PropType<number | string>, default: undefined },
-    prefixCls: { type: String, default: undefined },
-    disabled: { type: Boolean, default: undefined },
+    hasControlInside: { type: Boolean, default: false },
   },
-  setup(props, { attrs, slots }) {
-    return () => {
-      const { height } = props;
-      const style = (attrs.style ?? undefined) as CSSStyleLike | undefined;
-      const mergedStyle: CSSStyleLike = { ...style, ...(height !== undefined ? { height } : {}) };
-      const rest = { ...attrs } as Record<string, unknown>;
-      delete rest.style;
+  emits: uploadEmits,
+  slots: Object as SlotsType<UploadSlots>,
+  setup(props, { attrs, slots, emit }) {
+    const upload = shallowRef<UploadRef | null>(null);
+    const exposed: UploadRef = {
+      get nativeElement() {
+        return upload.value?.nativeElement ?? null;
+      },
+      get fileList() {
+        return upload.value?.fileList ?? [];
+      },
+      get upload() {
+        return upload.value?.upload ?? null;
+      },
+      onBatchStart: (...args) => upload.value?.onBatchStart(...args),
+      onSuccess: (...args) => upload.value?.onSuccess(...args),
+      onProgress: (...args) => upload.value?.onProgress(...args),
+      onError: (...args) => upload.value?.onError(...args),
+    };
+    const renderDragger = () => {
+      const { height, ...rest } = props;
       return h(
         UploadComponent,
         {
+          ...attrs,
           ...rest,
-          hasControlInside: false,
-          style: mergedStyle,
+          ref: upload,
           type: 'drag',
-        } as never,
-        slots.default ? { default: slots.default } : undefined,
+          style: [
+            attrs.style,
+            height !== undefined
+              ? { height: typeof height === 'number' ? `${height}px` : height }
+              : undefined,
+          ],
+          'onUpdate:fileList': (files: UploadFile[]) => emit('update:fileList', files),
+          onChange: (info) => emit('change', info),
+          onDrop: (event) => emit('drop', event),
+        },
+        slots,
       );
     };
+    return {
+      get nativeElement() {
+        return exposed.nativeElement;
+      },
+      get fileList() {
+        return exposed.fileList;
+      },
+      get upload() {
+        return exposed.upload;
+      },
+      onBatchStart: exposed.onBatchStart,
+      onSuccess: exposed.onSuccess,
+      onProgress: exposed.onProgress,
+      onError: exposed.onError,
+      renderDragger,
+    };
+  },
+  render() {
+    return this.renderDragger();
   },
 });
 
-// 类型重导出（DraggerProps 供文档与消费方使用）
 export type { UploadFile };

@@ -22,7 +22,7 @@ export default function attrAccept(
     return acceptedFilesArray.some((type) => {
       const validType = type.trim();
       // This is something like */*,*  allow all files
-      if (/^\*(\/\*)?$/.test(type)) {
+      if (/^\*(\/\*)?$/.test(validType)) {
         return true;
       }
 

@@ -18,7 +18,17 @@ import {
   PictureOutlined,
 } from '@apollo-design/icons';
 import { CSSMotion, initCollapseMotion, MotionList } from '@apollo-design/motion';
-import { defineComponent, h, type PropType, ref, type VNode as VNodeLike, watch } from 'vue';
+import {
+  cloneVNode,
+  defineComponent,
+  h,
+  isVNode,
+  onBeforeUnmount,
+  onMounted,
+  type PropType,
+  ref,
+  watch,
+} from 'vue';
 import { Button } from '../button';
 import type {
   ItemRender,
@@ -34,9 +44,6 @@ import { isImageUrl as defaultIsImageUrl, previewImage as defaultPreviewImage } 
 
 type CSSStyleLike = Record<string, string | number>;
 
-const isFunction = (value: unknown): value is (...args: unknown[]) => unknown =>
-  typeof value === 'function';
-
 export const UploadList = defineComponent({
   name: 'AUploadList',
   props: {
@@ -48,8 +55,7 @@ export const UploadList = defineComponent({
     onPreview: { type: Function as PropType<(file: UploadFile) => void>, default: undefined },
     onDownload: { type: Function as PropType<(file: UploadFile) => void>, default: undefined },
     onRemove: {
-      // biome-ignore lint/suspicious/noConfusingVoidType: `void | boolean` 是 antd 的公开契约 —— 语句体回调（不写 return）的推断返回类型是 void，换 undefined 会破坏用户代码
-      type: Function as PropType<(file: UploadFile) => void | boolean>,
+      type: Function as PropType<(file: UploadFile) => void | Promise<void>>,
       default: undefined,
     },
     locale: { type: Object as PropType<UploadLocale>, required: true },
@@ -98,7 +104,7 @@ export const UploadList = defineComponent({
     },
     progress: {
       type: Object as PropType<UploadListProgressProps>,
-      default: () => ({ size: [-1, 2], showInfo: false }) as UploadListProgressProps,
+      default: (): UploadListProgressProps => ({ size: [-1, 2], showInfo: false }),
     },
     // 内部：由父组件程序化传递/无模板上下文，VNode prop 合法（#appendAction slot 或默认上传按钮）
     appendAction: { type: null as unknown as PropType<VNodeChild>, default: undefined },
@@ -113,38 +119,63 @@ export const UploadList = defineComponent({
     rootPrefixCls: { type: String, default: 'apollo' },
   },
   setup(props) {
-    // useForceUpdate：thumbUrl 异步生成后强制刷新
-    const forceTick = ref(0);
-    const isPictureCardOrCircle = ref(['picture-card', 'picture-circle'].includes(props.listType));
-    watch(
-      () => props.listType,
-      (listType) => {
-        isPictureCardOrCircle.value = ['picture-card', 'picture-circle'].includes(listType);
-      },
-    );
-
-    // ============================= Effect =============================
-    watch(
-      () => [props.listType, props.items],
-      () => {
-        if (!props.listType.startsWith('picture')) {
-          return;
+    const previewTick = ref(0);
+    type Preview = {
+      origin: File;
+      handler: typeof props.previewFile;
+      controller: AbortController;
+      url?: string;
+    };
+    const previews = new Map<string, Preview>();
+    let mounted = false;
+    const updatePreviews = async (): Promise<void> => {
+      if (!mounted) return;
+      const tasks: Promise<void>[] = [];
+      const current = new Set<string>();
+      if (props.listType.startsWith('picture')) {
+        for (const file of props.items) {
+          const origin = file.originFileObj;
+          if (!origin || file.thumbUrl !== undefined) continue;
+          current.add(file.uid);
+          const previous = previews.get(file.uid);
+          if (previous?.origin === origin && previous.handler === props.previewFile) continue;
+          previous?.controller.abort();
+          const preview: Preview = {
+            origin,
+            handler: props.previewFile,
+            controller: new AbortController(),
+          };
+          previews.set(file.uid, preview);
+          const result = preview.handler
+            ? preview.handler(origin)
+            : defaultPreviewImage(origin, preview.controller.signal);
+          tasks.push(
+            Promise.resolve(result).then((url) => {
+              if (!mounted || previews.get(file.uid) !== preview) return;
+              preview.url = url;
+              previewTick.value += 1;
+            }),
+          );
         }
-        (props.items ?? []).forEach((file) => {
-          const origin = file.originFileObj as File | Blob | undefined;
-          if (!(origin instanceof File || origin instanceof Blob) || file.thumbUrl !== undefined) {
-            return;
-          }
-          file.thumbUrl = '';
-          (props.previewFile ?? defaultPreviewImage)(origin).then((previewDataUrl) => {
-            // Need append '' to avoid dead loop
-            file.thumbUrl = previewDataUrl || '';
-            forceTick.value += 1;
-          });
-        });
-      },
-      { deep: true },
-    );
+      }
+      for (const [key, preview] of previews) {
+        if (!current.has(key)) {
+          previews.delete(key);
+          preview.controller.abort();
+        }
+      }
+      await Promise.all(tasks);
+    };
+    watch(() => [props.listType, props.items, props.previewFile], updatePreviews, { deep: true });
+    onMounted(() => {
+      mounted = true;
+      return updatePreviews();
+    });
+    onBeforeUnmount(() => {
+      mounted = false;
+      for (const preview of previews.values()) preview.controller.abort();
+      previews.clear();
+    });
 
     // ============================= Events =============================
     const onInternalPreview = (file: UploadFile, e?: Event): void => {
@@ -155,15 +186,13 @@ export const UploadList = defineComponent({
       props.onPreview(file);
     };
     const onInternalDownload = (file: UploadFile): void => {
-      if (isFunction(props.onDownload)) {
+      if (props.onDownload) {
         props.onDownload(file);
       } else if (file.url) {
         window.open(file.url, '_blank', 'noopener');
       }
     };
-    const onInternalClose = (file: UploadFile): void => {
-      props.onRemove?.(file);
-    };
+    const onInternalClose = (file: UploadFile): void | Promise<void> => props.onRemove?.(file);
 
     const internalIconRender = (file: UploadFile): VNodeChild => {
       if (props.iconRender) {
@@ -172,9 +201,7 @@ export const UploadList = defineComponent({
       const isLoading = file.status === 'uploading';
       if (props.listType.startsWith('picture')) {
         const loadingIcon =
-          props.listType === 'picture'
-            ? h(LoadingOutlined)
-            : (props.locale.uploading as VNodeChild);
+          props.listType === 'picture' ? h(LoadingOutlined) : props.locale.uploading;
         const fileIcon = (props.isImageUrl ?? defaultIsImageUrl)(file)
           ? h(PictureOutlined)
           : h(FileOutlined);
@@ -185,37 +212,34 @@ export const UploadList = defineComponent({
 
     const actionIconRender = (
       customIcon: VNodeChild,
-      callback: () => void,
+      callback: () => void | Promise<void>,
       prefixCls: string,
       title: string | undefined,
       acceptUploadDisabled: boolean,
-    ): VNodeChild => {
-      const isVNodeIcon = customIcon !== null && typeof customIcon === 'object';
-      return h(
+    ): VNodeChild =>
+      h(
         Button,
         {
           type: 'text',
           size: 'small',
           title,
-          'aria-label': title || undefined,
-          onClick: (e: MouseEvent) => {
-            callback();
-            const node = customIcon as { props?: { onClick?: (ev: MouseEvent) => void } };
-            node?.props?.onClick?.(e);
-          },
+          'aria-label': title,
+          onClick: () => callback(),
           class: `${prefixCls}-list-item-action`,
           disabled: acceptUploadDisabled ? props.disabled : false,
-          // antd：icon 是有效元素时走 icon prop（得到 -icon-only 类 + -btn-icon 包裹），
-          // 否则包 <span> 作 children
-          ...(isVNodeIcon ? { icon: customIcon } : {}),
-        } as never,
-        isVNodeIcon ? undefined : { default: () => [h('span', customIcon as never)] },
+        },
+        { icon: () => customIcon },
       );
-    };
 
     // ============================== Render =============================
     return () => {
-      void forceTick.value; // 依赖收集：thumbUrl 异步生成后重渲染
+      void previewTick.value;
+      const files = props.items.map((file) => {
+        const preview = previews.get(file.uid);
+        return file.thumbUrl === undefined && preview?.url !== undefined
+          ? { ...file, thumbUrl: preview.url }
+          : file;
+      });
       const prefixCls = props.prefixCls ?? 'apollo-upload';
       const rootPrefixCls = props.rootPrefixCls;
       const listClassNames = [
@@ -248,7 +272,7 @@ export const UploadList = defineComponent({
         hooks: listItemMotion,
         motionDeadline: 2000,
         motionName: `${prefixCls}-${isPictureCardOrCirle ? 'animate-inline' : 'animate'}`,
-        keys: (props.items ?? []).map((file) => ({
+        keys: files.map((file) => ({
           key: file.uid,
           file,
         })),
@@ -257,7 +281,7 @@ export const UploadList = defineComponent({
 
       // uid → file 查找表（MotionList 槽只回传 itemKey）
       const fileByUid = new Map<string, UploadFile>();
-      for (const file of props.items ?? []) {
+      for (const file of files) {
         fileByUid.set(file.uid, file);
       }
 
@@ -266,9 +290,9 @@ export const UploadList = defineComponent({
           MotionList,
           {
             ...motionConfig,
-            component: null,
+            component: false,
             supportMotion: true,
-          } as never,
+          },
           {
             default: (slot: { className: string; style: CSSStyleLike | null; itemKey: string }) => {
               const file = fileByUid.get(slot.itemKey);
@@ -283,7 +307,7 @@ export const UploadList = defineComponent({
                 classNames: props.classNames,
                 styles: props.styles,
                 file,
-                items: props.items ?? [],
+                items: files,
                 progress: props.progress,
                 listType: props.listType,
                 isImgUrl: props.isImageUrl ?? defaultIsImageUrl,
@@ -300,11 +324,11 @@ export const UploadList = defineComponent({
                 onPreview: onInternalPreview,
                 onDownload: onInternalDownload,
                 onClose: onInternalClose,
-              } as never);
+              });
             },
           },
         ),
-        props.appendAction
+        props.appendAction !== undefined && props.appendAction !== null
           ? h(
               CSSMotion,
               {
@@ -312,29 +336,20 @@ export const UploadList = defineComponent({
                 visible: props.appendActionVisible,
                 forceRender: true,
                 supportMotion: true,
-              } as never,
+              },
               {
                 default: (motion: { className: string; style: CSSStyleLike | null }) => {
-                  // cloneElement 等价：重建 appendAction vnode，把 motion 类名/样式并进根
-                  const vnode = props.appendAction as VNodeLike;
-                  const originProps = (vnode.props ?? {}) as {
-                    class?: unknown;
-                    style?: CSSStyleLike;
-                  };
-                  return h(
-                    vnode.type as never,
-                    {
-                      ...originProps,
-                      class: [originProps.class, motion.className],
-                      style: {
-                        ...motion.style,
-                        // prevent the element has hover css pseudo-class that may cause animation to end prematurely.
-                        pointerEvents: motion.className ? 'none' : undefined,
-                        ...originProps.style,
-                      },
+                  const action = props.appendAction;
+                  const motionProps = {
+                    class: motion.className,
+                    style: {
+                      ...motion.style,
+                      pointerEvents: motion.className ? 'none' : undefined,
                     },
-                    vnode.children as never,
-                  );
+                  };
+                  return isVNode(action)
+                    ? cloneVNode(action, motionProps)
+                    : h('span', motionProps, [action]);
                 },
               },
             )

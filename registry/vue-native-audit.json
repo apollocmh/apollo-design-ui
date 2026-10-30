@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 57,
+  "revision": 61,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2464,18 +2464,16 @@
       "kind": "component",
       "ref": "upload",
       "title": "Upload",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/upload"
       ],
-      "assignment": {
-        "owner": "native_upload",
-        "baseRevision": 38,
-        "startedAt": "2026-10-30T08:34:41.792Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -2491,6 +2489,51 @@
         "basis": [
           "docs/audit/2026-10-29-upload-progress-audit.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/upload"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project theme --project a11y --project dom-contract packages/ui/src/upload/__tests__ --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 33190
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project theme packages/ui/src/upload/__tests__/native-contracts.test.ts packages/ui/src/upload/__tests__/index.test.ts packages/ui/src/upload/__tests__/theme.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 22060
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/upload/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 5160
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/upload/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 19050
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full Upload/Dragger source/tests/demo/SFC>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 51927
+          }
+        ],
+        "boundary": "保留Progress六字段组合；已验证请求替换/取消/迟到回调、受控列表与异步移除、真实Ctor/slots/refs、PNG/URL资源、Provider/主题及原生样式。浏览器24项通过且dist原SHA不变。后续构造器声明提取已定向25条与完整strict复核。最终冻结版本九维/发布产物未执行。"
       }
     },
     {
@@ -2728,13 +2771,18 @@
       "kind": "foundation",
       "ref": "portal",
       "title": "@apollo-design/portal",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/portal/src"
+        "packages/portal",
+        "docs/foundation/portal-contract.md"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_portal",
+        "baseRevision": 58,
+        "startedAt": "2026-10-30T09:50:58.699Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2784,6 +2832,18 @@
           }
         ],
         "boundary": "仅当前base getter与合法父层0修正。consumer视觉/上下文基准及合法祖先定制的诊断问题仍登记未关闭，Portal整体继续partial。"
+      },
+      "plan": {
+        "goal": "保留当前getter/父层0修复，集中收口Portal容器与层级公开契约",
+        "remaining": [
+          "优先解决已登记的consumer CSS/context错层和合法祖先定制误告警，核对实际UI调用者；再补现有容器/Portal生命周期差额，不重新验收已完成组件。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/foundation/portal-contract.md",
+          "packages/portal/src/__tests__/use-portal.test.ts",
+          "packages/portal/src/__tests__/container.test.ts"
+        ]
       }
     },
     {

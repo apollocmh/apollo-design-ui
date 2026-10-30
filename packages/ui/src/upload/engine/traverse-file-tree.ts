@@ -1,90 +1,41 @@
-/**
- * rc `traverseFileTree.js` 行为等价物 —— directory 模式递归读取。
- *
- * issue 16426：目录内文件的 webkitRelativePath 用 entry.fullPath 回填
- * （去掉前导斜杠）。
- */
+/** Read all browser directory batches, preserving the native relative path. */
+function isFileEntry(entry: FileSystemEntry): entry is FileSystemFileEntry {
+  return entry.isFile;
+}
+function isDirectoryEntry(entry: FileSystemEntry): entry is FileSystemDirectoryEntry {
+  return entry.isDirectory;
+}
 
-type FileSystemEntryLike = {
-  isFile: boolean;
-  isDirectory: boolean;
-  fullPath?: string;
-  file: (cb: (file: File) => void) => void;
-  createReader: () => {
-    readEntries: (cb: (entries: FileSystemEntryLike[]) => void, err?: () => void) => void;
-  };
-};
-
-const traverseFileTree = async (
-  files: DataTransferItem[],
-  isAccepted: (file: File) => boolean,
-): Promise<File[]> => {
-  const flattenFileList: File[] = [];
-  const progressFileList: (FileSystemEntryLike | null)[] = [];
-  for (const file of files) {
-    progressFileList.push(file.webkitGetAsEntry() as unknown as FileSystemEntryLike);
-  }
-
-  async function readDirectory(directory: FileSystemEntryLike): Promise<FileSystemEntryLike[]> {
-    const dirReader = directory.createReader();
-    const entries: FileSystemEntryLike[] = [];
-    for (;;) {
-      const results = await new Promise<FileSystemEntryLike[]>((resolve) => {
-        dirReader.readEntries(resolve, () => resolve([]));
-      });
-      const n = results.length;
-      if (!n) {
-        break;
-      }
-      for (let i = 0; i < n; i++) {
-        entries.push(results[i] as FileSystemEntryLike);
-      }
-    }
-    return entries;
-  }
-
-  async function readFile(item: FileSystemEntryLike): Promise<File | null> {
-    return new Promise((resolve) => {
-      item.file((file) => {
-        if (isAccepted(file)) {
-          // https://github.com/ant-design/ant-design/issues/16426
-          if (item.fullPath && !file.webkitRelativePath) {
-            // webkitRelativePath 在 File 上只读 —— 用 defineProperty 覆写（rc 同法）
-            Object.defineProperty(file, 'webkitRelativePath', {
-              value: item.fullPath.replace(/^\//, ''),
-              writable: true,
-              configurable: true,
-            });
-          }
-          resolve(file);
-        } else {
-          resolve(null);
+export default async function traverseFileTree(
+  items: DataTransferItem[],
+  accepted: (file: File) => boolean,
+): Promise<File[]> {
+  const files: File[] = [];
+  const entries = items.map((item) => item.webkitGetAsEntry());
+  for (let index = 0; index < entries.length; index++) {
+    const entry = entries[index];
+    if (!entry) continue;
+    if (isFileEntry(entry)) {
+      const file = await new Promise<File>((resolve, reject) => entry.file(resolve, reject));
+      if (accepted(file)) {
+        if (entry.fullPath && !file.webkitRelativePath) {
+          Object.defineProperty(file, 'webkitRelativePath', {
+            value: entry.fullPath.replace(/^\//, ''),
+            configurable: true,
+          });
         }
-      });
-    });
-  }
-
-  const traverseItem = async (item: FileSystemEntryLike | null): Promise<void> => {
-    if (!item) {
-      return;
-    }
-    if (item.isFile) {
-      const file = await readFile(item);
-      if (file) {
-        flattenFileList.push(file);
+        files.push(file);
       }
-    } else if (item.isDirectory) {
-      const entries = await readDirectory(item);
-      progressFileList.push(...entries);
+    } else if (isDirectoryEntry(entry)) {
+      const reader = entry.createReader();
+      for (;;) {
+        const batch = await new Promise<FileSystemEntry[]>((resolve, reject) =>
+          reader.readEntries(resolve, reject),
+        );
+        if (batch.length === 0) break;
+        entries.push(...batch);
+      }
     }
-  };
-
-  let wipIndex = 0;
-  while (wipIndex < progressFileList.length) {
-    await traverseItem(progressFileList[wipIndex] ?? null);
-    wipIndex++;
   }
-  return flattenFileList;
-};
-
-export default traverseFileTree;
+  return files;
+}

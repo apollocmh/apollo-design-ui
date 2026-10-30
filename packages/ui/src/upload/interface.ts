@@ -7,7 +7,7 @@
  * 不自动扩大成 Progress 的全部 API。
  */
 
-import type { AcceptConfigLike, RcFile } from './engine/AjaxUploader';
+import type { AcceptConfigLike, AjaxUploaderRef, RcFile } from './engine/AjaxUploader';
 import type { UploadRequestOptionLike, UploadRequestReturnLike } from './engine/request';
 
 export type { AcceptConfigLike, RcFile };
@@ -29,7 +29,7 @@ export interface UploadListProgressProps extends ProgressAriaProps {
 export type UploadFileStatus = 'error' | 'done' | 'uploading' | 'removed';
 
 export interface HttpRequestHeader {
-  [key: string]: string;
+  [key: string]: string | null;
 }
 
 export interface UploadFile<T = unknown> extends ProgressAriaProps {
@@ -49,7 +49,7 @@ export interface UploadFile<T = unknown> extends ProgressAriaProps {
   error?: unknown;
   linkProps?: unknown;
   type?: string;
-  xhr?: T;
+  xhr?: XMLHttpRequest;
   preview?: string;
   [key: string]: unknown;
 }
@@ -131,7 +131,7 @@ export interface UploadProps<T = unknown> {
   directory?: boolean;
   data?:
     | Record<string, unknown>
-    | ((file: UploadFile<T>) => Record<string, unknown> | Promise<Record<string, unknown>>);
+    | ((file: RcFile) => Record<string, unknown> | Promise<Record<string, unknown>>);
   method?: 'POST' | 'PUT' | 'PATCH' | 'post' | 'put' | 'patch';
   headers?: HttpRequestHeader;
   showUploadList?: boolean | ShowUploadListInterface<T>;
@@ -142,6 +142,7 @@ export interface UploadProps<T = unknown> {
     fileList: RcFile[],
   ) => BeforeUploadValueType | Promise<BeforeUploadValueType>;
   onChange?: (info: UploadChangeParam<UploadFile<T>>) => void;
+  'onUpdate:fileList'?: (fileList: UploadFile<T>[]) => void;
   onDrop?: (event: DragEvent) => void;
   listType?: UploadListType;
   classNames?:
@@ -154,7 +155,6 @@ export interface UploadProps<T = unknown> {
   onDownload?: (file: UploadFile<T>) => void;
   // biome-ignore lint/suspicious/noConfusingVoidType: antd 逐字契约 —— 返回 void 视为「不否决」，语句体回调依赖它
   onRemove?: (file: UploadFile<T>) => void | boolean | Promise<void | boolean>;
-  supportServerRender?: boolean;
   disabled?: boolean;
   prefixCls?: string;
   customRequest?: (
@@ -175,8 +175,44 @@ export interface UploadProps<T = unknown> {
   capture?: string | 'user' | 'environment' | boolean | null;
   hasControlInside?: boolean;
   pastable?: boolean;
-  styleAttrs?: Record<string, string | number>;
 }
+
+export interface UploadSlots<T = unknown> {
+  default?: () => VNodeChild;
+  iconRender?: (scope: { file: UploadFile<T>; listType?: UploadListType }) => VNodeChild;
+  itemRender?: (scope: {
+    originNode: VNodeChild;
+    file: UploadFile<T>;
+    fileList: UploadFile<T>[];
+    actions: { download: () => void; preview: () => void; remove: () => void };
+  }) => VNodeChild;
+  removeIcon?: (scope: { file: UploadFile<T> }) => VNodeChild;
+  previewIcon?: (scope: { file: UploadFile<T> }) => VNodeChild;
+  downloadIcon?: (scope: { file: UploadFile<T> }) => VNodeChild;
+  extra?: (scope: { file: UploadFile<T> }) => VNodeChild;
+  appendAction?: () => VNodeChild;
+}
+
+export interface UploadRef {
+  nativeElement: HTMLElement | null;
+  fileList: UploadFile[];
+  upload: AjaxUploaderRef | null;
+  onBatchStart: (files: { file: RcFile; parsedFile: File | null }[]) => void;
+  onSuccess: (response: unknown, file: RcFile, xhr?: XMLHttpRequest) => void;
+  onProgress: (event: { percent?: number }, file: RcFile) => void;
+  onError: (error: unknown, response: unknown, file: RcFile) => void;
+}
+
+type UploadConfigFields = {
+  className?: string;
+  style?: import('vue').CSSProperties;
+  classNames?: UploadProps['classNames'];
+  styles?: UploadProps['styles'];
+  customRequest?: UploadProps['customRequest'];
+  accept?: UploadProps['accept'];
+  progress?: UploadListProgressProps;
+};
+export type UploadConfig = { [Key in keyof UploadConfigFields]: UploadConfigFields[Key] };
 
 export interface UploadListProps<T = unknown> {
   classNames?: UploadSemanticType['classNames'];
@@ -184,12 +220,11 @@ export interface UploadListProps<T = unknown> {
   listType?: UploadListType;
   onPreview?: (file: UploadFile<T>) => void;
   onDownload?: (file: UploadFile<T>) => void;
-  onRemove?: // biome-ignore lint/suspicious/noConfusingVoidType: antd 逐字契约（同 UploadProps.onRemove）
-  (file: UploadFile<T>) => void | boolean;
+  onRemove?: (file: UploadFile<T>) => void | Promise<void>;
   items?: UploadFile<T>[];
   progress?: UploadListProgressProps;
   prefixCls?: string;
-  className?: string;
+  rootPrefixCls?: string;
   showRemoveIcon?: boolean | ((file: UploadFile<T>) => boolean);
   showDownloadIcon?: boolean | ((file: UploadFile<T>) => boolean);
   showPreviewIcon?: boolean | ((file: UploadFile<T>) => boolean);

@@ -332,6 +332,17 @@ describe('Upload · L1 上传流程（customRequest mock）', () => {
     expect(xhr.setRequestHeader).toHaveBeenCalledWith('X-Requested-With', 'XMLHttpRequest');
     instances[0]?.onload?.();
     expect(onSuccess).toHaveBeenCalled();
+    xhr.setRequestHeader.mockClear();
+    request({
+      action: '/upload',
+      method: 'post',
+      file: makeFile(),
+      headers: { 'x-requested-with': 'UploadFixture', 'Content-Type': null },
+    });
+    expect(xhr.setRequestHeader).toHaveBeenCalledExactlyOnceWith(
+      'x-requested-with',
+      'UploadFixture',
+    );
     vi.unstubAllGlobals();
   });
 });
@@ -380,6 +391,7 @@ describe('Upload · utils 行为', () => {
     expect(attrAccept(png, 'image/*')).toBe(true);
     expect(attrAccept(png, 'image/png')).toBe(true);
     expect(attrAccept(png, '*')).toBe(true);
+    expect(attrAccept(makeFile(), 'image/png, *')).toBe(true);
     expect(attrAccept(makeFile('y.txt', 'text/plain'), 'image/*')).toBe(false);
   });
 });

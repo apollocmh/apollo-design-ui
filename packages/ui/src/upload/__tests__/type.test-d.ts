@@ -19,7 +19,7 @@
 
 import { describe, expectTypeOf, it } from 'vitest';
 import type { VNodeChild } from 'vue';
-import { Upload } from '../index';
+import { Upload, type UploadDragger, type UploadRef, type UploadSlots } from '../index';
 import type {
   BeforeUploadValueType,
   HttpRequestHeader,
@@ -162,8 +162,8 @@ describe('Upload · 数据面与语义化', () => {
     >();
   });
 
-  it('`headers` 是字符串字典', () => {
-    expectTypeOf<HttpRequestHeader>().toEqualTypeOf<Record<string, string>>();
+  it('`headers` allows the documented null opt-out', () => {
+    expectTypeOf<HttpRequestHeader>().toEqualTypeOf<Record<string, string | null>>();
   });
 
   it('语义化槽是**四个**（root / list / item / trigger），支持函数形态', () => {
@@ -184,6 +184,34 @@ describe('Upload · 数据面与语义化', () => {
 
   it('★ `Upload` 是可安装的组件（`withInstall` 的产物）', () => {
     expectTypeOf(Upload).toHaveProperty('install');
+  });
+});
+
+describe('Upload inferred Vue contracts', () => {
+  it('actual component instances expose typed DOM, list and engine methods', () => {
+    expectTypeOf<InstanceType<typeof Upload>>().toMatchTypeOf<UploadRef>();
+    expectTypeOf<InstanceType<typeof UploadDragger>>().toMatchTypeOf<UploadRef>();
+    expectTypeOf<
+      InstanceType<typeof Upload>['nativeElement']
+    >().toEqualTypeOf<HTMLElement | null>();
+    expectTypeOf<
+      NonNullable<InstanceType<typeof UploadDragger>['$props']['onChange']>
+    >().parameters.toEqualTypeOf<[info: UploadChangeParam]>();
+    expectTypeOf<Parameters<NonNullable<UploadSlots['extra']>>[0]>().toEqualTypeOf<{
+      file: UploadFile;
+    }>();
+  });
+  it('removed no-op interfaces and callback render props stay rejected', () => {
+    const negative = () => {
+      // @ts-expect-error SSR is supported directly; the old toggle had no consumer.
+      const legacySSR: UploadProps = { supportServerRender: false };
+      // @ts-expect-error Use native style instead of the unused styleAttrs field.
+      const legacyStyle: UploadProps = { styleAttrs: { width: 100 } };
+      // @ts-expect-error Content extensions use the typed iconRender slot.
+      const legacyRenderer: UploadProps = { iconRender: () => null };
+      return [legacySSR, legacyStyle, legacyRenderer];
+    };
+    void negative;
   });
 });
 

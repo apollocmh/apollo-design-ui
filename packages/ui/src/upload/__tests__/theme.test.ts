@@ -4,7 +4,11 @@
  */
 
 import { themeTest } from '@apollo-design/test-utils';
+import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import { defineComponent, h, nextTick, ref } from 'vue';
+import ConfigProvider from '../../config-provider';
+import { Upload } from '../index';
 import { genTokenDecls, genUploadStyle } from '../style';
 import { prepareComponentToken } from '../style/token';
 
@@ -19,13 +23,17 @@ describe('Upload · token 契约', () => {
   it('2 个 Component Token 全部声明（--apollo-upload-*）', () => {
     expect(decls.length).toBe(2);
     expect(css).toContain('--apollo-upload-actions-color:var(--apollo-color-icon);');
-    expect(css).toContain('--apollo-upload-picture-card-size:102px;');
+    expect(css).toContain(
+      '--apollo-upload-picture-card-size:calc(var(--apollo-control-height-lg) * 2.55);',
+    );
   });
 
   it('base 段（wrapper / select / hidden / disabled）', () => {
     expect(css).toContain('.apollo-upload-wrapper .apollo-upload{outline:0;');
     expect(css).toContain('.apollo-upload-wrapper .apollo-upload-select{display:inline-block;}');
     expect(css).toContain('.apollo-upload-wrapper .apollo-upload-hidden{display:none;}');
+    expect(css).toContain('.apollo-upload-wrapper [class^="apollo-upload"]');
+    expect(css).not.toContain('[class^="ant-upload"]');
   });
 
   it('dragger 段（-drag / -drag-hover / -drag-container）', () => {
@@ -65,6 +73,69 @@ describe('Upload · token 契约', () => {
     expect(css).toContain('@keyframes apollo-upload-animate-inline-out');
     expect(css).toContain('animation-name:apollo-fade-in');
     expect(css).toContain('animation-name:apollo-upload-animate-inline-in');
+  });
+});
+
+describe('Upload current theme source', () => {
+  it('projects current component tokens, aliases and native overrides with reversible clearing', async () => {
+    const phase = ref(0);
+    const native = ref(false);
+    const Host = defineComponent({
+      setup: () => () =>
+        h(
+          ConfigProvider,
+          {
+            theme:
+              phase.value === 2
+                ? undefined
+                : {
+                    token: {
+                      colorIcon: phase.value === 0 ? '#112233' : '#445566',
+                      controlHeightLG: phase.value === 0 ? 44 : 48,
+                    },
+                    components:
+                      phase.value === 0
+                        ? { Upload: { pictureCardSize: 140, actionsColor: '#abcdef' } }
+                        : undefined,
+                  },
+          },
+          {
+            default: () =>
+              h(
+                Upload,
+                {
+                  listType: 'picture-card',
+                  style: native.value
+                    ? { '--apollo-upload-picture-card-size': '160px' }
+                    : undefined,
+                },
+                () => '+',
+              ),
+          },
+        ),
+    });
+    const wrapper = mount(Host, { global: { stubs: { teleport: false } } });
+    const root = () => wrapper.get<HTMLElement>('.apollo-upload-wrapper').element;
+    expect(root().style.getPropertyValue('--apollo-upload-picture-card-size')).toBe('140px');
+    expect(root().style.getPropertyValue('--apollo-upload-actions-color')).toBe('#abcdef');
+    phase.value = 1;
+    await nextTick();
+    expect(
+      Number.parseFloat(root().style.getPropertyValue('--apollo-upload-picture-card-size')),
+    ).toBeCloseTo(122.4);
+    expect(root().style.getPropertyValue('--apollo-upload-actions-color')).toBe(
+      'var(--apollo-color-icon)',
+    );
+    expect(root().style.getPropertyValue('--apollo-color-icon')).toBe('#445566');
+    native.value = true;
+    await nextTick();
+    expect(root().style.getPropertyValue('--apollo-upload-picture-card-size')).toBe('160px');
+    native.value = false;
+    phase.value = 2;
+    await nextTick();
+    expect(root().style.getPropertyValue('--apollo-upload-picture-card-size')).toBe('');
+    expect(root().style.getPropertyValue('--apollo-color-icon')).toBe('');
+    wrapper.unmount();
   });
 });
 

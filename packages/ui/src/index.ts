@@ -2010,17 +2010,27 @@ export { SHOW_ALL, SHOW_CHILD, SHOW_PARENT, TreeSelect } from './tree-select';
 //    进度由内部 UploadProgress 组合实际 Progress；文件名保留原生 title。
 // ---------------------------------------------------------------------------
 export type {
+  AcceptConfigLike,
+  BeforeUploadValueType,
+  DraggerProps,
   HttpRequestHeader,
   InternalUploadFile,
   ItemRender,
+  PreviewFileHandler,
+  RcFile,
   ShowUploadListInterface,
   UploadChangeParam,
+  UploadConfig,
   UploadFile,
   UploadFileStatus,
   UploadListProgressProps,
+  UploadListProps,
   UploadListType,
   UploadLocale,
   UploadProps,
+  UploadRef,
+  UploadSemanticType,
+  UploadSlots,
   UploadType,
 } from './upload';
 export { LIST_IGNORE, Upload, UploadDragger } from './upload';

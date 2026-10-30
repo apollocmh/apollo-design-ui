@@ -56,7 +56,7 @@ let tokenCache: UploadDerivedToken | null = null;
 /** 构建期 token 值（缓存；首次调用时读主题默认 seed）。 */
 export function uploadTokenValues(): UploadDerivedToken {
   if (!tokenCache) {
-    const seed = getDesignToken() as unknown as UploadSeedToken;
+    const seed = getDesignToken();
     const base = prepareComponentToken(seed);
     tokenCache = {
       ...base,

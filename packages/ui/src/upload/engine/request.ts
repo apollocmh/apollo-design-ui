@@ -23,10 +23,10 @@ export interface UploadRequestOptionLike {
   onSuccess?: (body: unknown, fileOrXhr?: XMLHttpRequest) => void;
   data?: Record<string, unknown>;
   filename?: string;
-  file: unknown;
+  file: File | Blob | string;
   withCredentials?: boolean;
   action: string;
-  headers?: Record<string, string>;
+  headers?: Record<string, string | null>;
   method: string;
 }
 
@@ -36,7 +36,7 @@ export interface UploadRequestReturnLike {
 
 function getError(option: UploadRequestOptionLike, xhr: XMLHttpRequest): UploadRequestErrorLike {
   const msg = `cannot ${option.method} ${option.action} ${xhr.status}'`;
-  const err = new Error(msg) as UploadRequestErrorLike;
+  const err: UploadRequestErrorLike = new Error(msg);
   err.status = xhr.status;
   err.method = option.method;
   err.url = option.action;
@@ -44,12 +44,12 @@ function getError(option: UploadRequestOptionLike, xhr: XMLHttpRequest): UploadR
 }
 
 function getBody(xhr: XMLHttpRequest): unknown {
-  const text = xhr.responseText || xhr.response;
+  const text: unknown = xhr.responseText || xhr.response;
   if (!text) {
     return text;
   }
   try {
-    return JSON.parse(text);
+    return typeof text === 'string' ? JSON.parse(text) : text;
   } catch {
     return text;
   }
@@ -59,11 +59,9 @@ export default function upload(option: UploadRequestOptionLike): UploadRequestRe
   const xhr = new XMLHttpRequest();
   if (option.onProgress && xhr.upload) {
     xhr.upload.onprogress = function progress(e: ProgressEvent) {
-      const event = e as UploadProgressEventLike;
-      if (e.total > 0) {
-        event.percent = (e.loaded / e.total) * 100;
-      }
-      option.onProgress?.(event);
+      option.onProgress?.(
+        e.total > 0 ? Object.assign(e, { percent: (e.loaded / e.total) * 100 }) : e,
+      );
     };
   }
 
@@ -76,18 +74,22 @@ export default function upload(option: UploadRequestOptionLike): UploadRequestRe
         value.forEach((item) => {
           // { list: [ 11, 22 ] }
           // formData.append('list[]', 11);
-          formData.append(`${key}[]`, item as string | Blob);
+          formData.append(`${key}[]`, item instanceof Blob ? item : String(item));
         });
         return;
       }
-      formData.append(key, value as string | Blob);
+      formData.append(key, value instanceof Blob ? value : String(value));
     });
   }
 
   if (option.file instanceof Blob) {
-    formData.append(option.filename ?? 'file', option.file, (option.file as File).name);
+    formData.append(
+      option.filename ?? 'file',
+      option.file,
+      option.file instanceof File ? option.file.name : 'blob',
+    );
   } else {
-    formData.append(option.filename ?? 'file', option.file as string | Blob);
+    formData.append(option.filename ?? 'file', option.file);
   }
   xhr.onerror = function error(e: ProgressEvent) {
     option.onError?.(e);
@@ -110,12 +112,13 @@ export default function upload(option: UploadRequestOptionLike): UploadRequestRe
 
   // when set headers['X-Requested-With'] = null , can close default XHR header
   // see https://github.com/react-component/upload/issues/33
-  if ((headers as Record<string, string | null>)['X-Requested-With'] !== null) {
+  if (!Object.keys(headers).some((name) => name.toLowerCase() === 'x-requested-with')) {
     xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   }
   Object.keys(headers).forEach((h) => {
-    if ((headers as Record<string, string | null>)[h] !== null) {
-      xhr.setRequestHeader(h, headers[h] as string);
+    const value = headers[h];
+    if (value !== null && value !== undefined) {
+      xhr.setRequestHeader(h, value);
     }
   });
   xhr.send(formData);

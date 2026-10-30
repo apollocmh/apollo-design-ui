@@ -28,12 +28,16 @@ export type { DraggerProps } from './Dragger';
 export type {
   // eslint-disable-next-line @typescript-eslint/no-duplicate-imports -- 分组语义：Dragger 类型独立
 
+  AcceptConfigLike,
+  BeforeUploadValueType,
   HttpRequestHeader,
   InternalUploadFile,
   ItemRender,
   PreviewFileHandler,
+  RcFile,
   ShowUploadListInterface,
   UploadChangeParam,
+  UploadConfig,
   UploadFile,
   UploadFileStatus,
   UploadListProgressProps,
@@ -41,7 +45,9 @@ export type {
   UploadListType,
   UploadLocale,
   UploadProps,
+  UploadRef,
   UploadSemanticType,
+  UploadSlots,
   UploadType,
 } from './interface';
 export { LIST_IGNORE, UploadComponent };

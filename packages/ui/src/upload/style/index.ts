@@ -40,7 +40,7 @@ export function genTokenDecls(rootPrefixCls: string): string[] {
   const t = uploadTokenValues();
   return [
     `  --${rootPrefixCls}-upload-actions-color:${t.actionsColor};`,
-    `  --${rootPrefixCls}-upload-picture-card-size:${t.pictureCardSize};`,
+    `  --${rootPrefixCls}-upload-picture-card-size:calc(var(--${rootPrefixCls}-control-height-lg) * 2.55);`,
   ];
 }
 
@@ -50,9 +50,9 @@ const RULES = `
 
 .apollo-upload-wrapper::before,.apollo-upload-wrapper::after{box-sizing:border-box;}
 
-.apollo-upload-wrapper [class^="ant-upload"],.apollo-upload-wrapper [class*=" ant-upload"]{box-sizing:border-box;}
+.apollo-upload-wrapper [class^="apollo-upload"],.apollo-upload-wrapper [class*=" apollo-upload"]{box-sizing:border-box;}
 
-.apollo-upload-wrapper [class^="ant-upload"]::before,.apollo-upload-wrapper [class*=" ant-upload"]::before,.apollo-upload-wrapper [class^="ant-upload"]::after,.apollo-upload-wrapper [class*=" ant-upload"]::after{box-sizing:border-box;}
+.apollo-upload-wrapper [class^="apollo-upload"]::before,.apollo-upload-wrapper [class*=" apollo-upload"]::before,.apollo-upload-wrapper [class^="apollo-upload"]::after,.apollo-upload-wrapper [class*=" apollo-upload"]::after{box-sizing:border-box;}
 
 .apollo-upload-wrapper{box-sizing:border-box;margin:0;padding:0;color:var(--apollo-color-text);font-size:var(--apollo-font-size);line-height:var(--apollo-line-height);list-style:none;font-family:var(--apollo-font-family);}
 

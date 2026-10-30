@@ -130,3 +130,7 @@ Mentions 保留六组既有整改，补齐当前 Provider/二十一个有效组�
 ### D-tabs-native-contracts
 
 Tabs 保留已交付 popup/extra 槽，修正受控撤除、同 key 面板身份、item 级销毁优先级、SSR 稳定 ARIA id 与真实 ref 属性。导航和溢出选项拥有独立的可访问树，关闭按钮保留键盘入口；当前 Provider 与二十四个有效 Token 实际消费。移除从未实现的顶层 children 与两个空 margin Token，items[].children 和 horizontalItemGutter 保留；开发版 editable 命令类型要求 remove 携带 key。详见[Tabs API](packages/ui/src/tabs/index.zh-CN.md)。
+
+### D-upload-native-contracts
+
+Upload / Dragger 修正文件预处理替换、请求/移除竞态、受控列表与取消、预览资源释放，统一原生 attrs、插槽、真实引用及当前 Provider/Token。beforeUpload=false 的 change 文件统一为 UploadFile，通过 originFileObj 读取原文件；自定义请求收到实际文件与默认请求服务。删除无消费的 supportServerRender/styleAttrs 和 UploadListProps.className；预览、下载、异步移除等有返回值的业务回调保留。原生根样式落 wrapper，详见[Upload API](packages/ui/src/upload/index.zh-CN.md)。
