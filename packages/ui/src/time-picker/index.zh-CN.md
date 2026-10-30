@@ -1,3 +1,5 @@
+> 2026-10-30 当前 API：动态内容使用 `#cellRender="{ current, info }"`、`#panelRender="{ originPanel }"`、`#extraFooter="{ mode }"`、`#tagRender="scope"`；前缀、后缀、清除、区间分隔与预设分别使用同名具名槽。移除旧函数渲染 props、`addon`、无实际组件的 PurePanel 类型及 notification props；使用 `@select`/其它原生 emits。`@keydown` 只收到原生 KeyboardEvent，可直接 preventDefault()；支持 `v-model:mode`。只读输入按 ArrowDown 进入面板，方向键导航，Enter/Space 选值，Escape 返回。DOM refs 在挂载前/卸载后为 null。
+
 ---
 category: 数据录入
 title: TimePicker
@@ -34,7 +36,6 @@ subtitle: 时间选择框
 | open | 浮层是否打开（`v-model:open`） | `boolean` | —— |
 | defaultOpen | 非受控的初始开合 | `boolean` | —— |
 | format | 展示格式（如 `HH:mm:ss`；`HH:mm` ⇒ 只显示两列） | `DatePickerFormat` | `HH:mm:ss` |
-| renderExtraFooter | 面板底部的额外内容 | `() => VNodeChild` | —— |
 | needConfirm | 需要点「确定」才提交 | `boolean` | `false` |
 | changeOnScroll | 滚动时间列即改变值 | `boolean` | `false` |
 | disabled | 禁用 | `boolean` | `false` |

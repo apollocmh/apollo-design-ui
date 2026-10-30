@@ -119,7 +119,7 @@ describe('DatePicker · 掩码模式（S3）', () => {
     w.unmount();
   });
 
-  it('⚠️ 空格键**不被过滤**，且空格会**留在文本里**（`leftPad` 只补零不补空格）', async () => {
+  it('空格不是日期数字输入，不写入掩码草稿', async () => {
     // 判据是 `!isNaN(Number(key))` ⇒ `Number(' ') === 0` 通过；
     // 随后 `leftPad(' ', 4)` 把它补成 `'000 '`（4 字符，**空格在末位**）
     // ⇒ 替换 [0,4) 之后得到 `'000 -MM-DD'`。这是上游形态，**不是** bug。
@@ -128,7 +128,7 @@ describe('DatePicker · 掩码模式（S3）', () => {
 
     await input(w).trigger('keydown', { key: ' ' });
 
-    expect(el(w).value).toBe('000 -MM-DD');
+    expect(el(w).value).toBe('YYYY-MM-DD');
     w.unmount();
   });
 

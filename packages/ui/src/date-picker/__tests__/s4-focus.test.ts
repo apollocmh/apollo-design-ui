@@ -60,7 +60,7 @@ describe('DatePicker · 焦点语义（S4）', () => {
     expect(rootClasses(w)).toContain(`${P}-focused`);
     // ⚠️ `focus` 本身会发一次 `openChange(true)` ⇒ 断言的是「**没有** false」，
     //    不是「一次都没发过」。
-    expect(w.emitted('openChange')?.at(-1)).toEqual([true]);
+    expect(w.emitted('openChange')).toBeUndefined();
     w.unmount();
   });
 

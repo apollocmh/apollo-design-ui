@@ -27,8 +27,8 @@
  *
  * ⚠️ 本组件**不认识日期库**：`value` 原样透传给回调，求值只是「是不是函数」的判定。
  */
-import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
-import { executePresetValue, type MergedPreset } from '../hooks/picker-presets';
+import { defineComponent, h, type PropType, type SlotsType } from 'vue';
+import type { DatePickerSlots, RangeValueDate, ValueDate } from '../interface';
 
 export const PresetPanel = defineComponent({
   name: 'ApolloDatePickerPresetPanel',
@@ -36,18 +36,13 @@ export const PresetPanel = defineComponent({
     prefixCls: { type: String, required: true },
     /** 已归一（`usePresets` 的产物）。 */
     presets: {
-      type: Array as PropType<readonly MergedPreset<unknown>[]>,
+      type: Array as PropType<readonly (ValueDate | RangeValueDate)[]>,
       default: () => [],
     },
-    /** 点一个预设（上游 `onPresetSubmit`）。 */
-    onClick: { type: Function as PropType<(value: unknown) => void>, default: undefined },
-    /** 悬停一个预设 / 离开（`null`）—— 上游用它做「悬停即预览整个区间」。 */
-    onHover: {
-      type: Function as PropType<(value: unknown | null) => void>,
-      default: undefined,
-    },
   },
-  setup(props) {
+  emits: { select: (_value: unknown) => true, hover: (_value: unknown) => true },
+  slots: Object as SlotsType<Pick<DatePickerSlots, 'presetRender'>>,
+  setup(props, { emit, slots }) {
     return () => {
       if (!props.presets.length) {
         return null;
@@ -56,17 +51,33 @@ export const PresetPanel = defineComponent({
         h(
           'ul',
           null,
-          props.presets.map(({ label, value }, index) =>
+          props.presets.map((preset, index) =>
             h(
               'li',
               {
                 key: index,
-                onClick: () => props.onClick?.(executePresetValue(value)),
+                role: 'button',
+                tabindex: 0,
+                onKeydown: (event: KeyboardEvent) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    emit(
+                      'select',
+                      typeof preset.value === 'function' ? preset.value() : preset.value,
+                    );
+                  }
+                },
+                onClick: () =>
+                  emit(
+                    'select',
+                    typeof preset.value === 'function' ? preset.value() : preset.value,
+                  ),
                 // 🚨 全小写（PITFALLS 跨包判据 1）
-                onMouseenter: () => props.onHover?.(executePresetValue(value)),
-                onMouseleave: () => props.onHover?.(null),
+                onMouseenter: () =>
+                  emit('hover', typeof preset.value === 'function' ? preset.value() : preset.value),
+                onMouseleave: () => emit('hover', null),
               },
-              [label as VNodeChild],
+              [slots.presetRender ? slots.presetRender({ preset, index }) : preset.label],
             ),
           ),
         ),

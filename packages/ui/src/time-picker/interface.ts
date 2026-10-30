@@ -38,7 +38,7 @@
  * **不重抄 60 个字段**。派生掉的键与理由逐条写在 `TimePickerProps` 上方。
  */
 
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { CSSProperties } from 'vue';
 import type {
   CellRenderInfo,
   DatePickerDate,
@@ -166,7 +166,6 @@ export interface TimePickerProps
 
   // ============================================================ 已废弃 / 新增
   /** @deprecated 用 `renderExtraFooter`。⚠️ 与 `renderExtraFooter` 同时传时后者优先。 */
-  addon?: () => VNodeChild;
   /** 校验状态（`'error'` / `'warning'`）。⚠️ `PickerCommonProps` 里已有，这里重申语义。 */
   status?: DatePickerStatus;
   /**
@@ -193,7 +192,6 @@ export interface TimePickerProps
    * 上；本组件恒满足该条件 ⇒ 恒定生效。
    * ⚠️ 与 date-picker 的差别：上游这里收**单值**（`GenericTimePickerProps` 重新声明过）。
    */
-  onSelect?: (value: DatePickerDate) => void;
 }
 
 /**

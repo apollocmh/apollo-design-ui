@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 129,
+  "revision": 132,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -777,7 +777,9 @@
         "baseRevision": 115,
         "startedAt": "2026-10-30T12:36:38.934Z"
       },
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -3746,13 +3748,18 @@
       "kind": "foundation",
       "ref": "motion",
       "title": "@apollo-design/motion",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/motion/src"
+        "packages/motion",
+        "docs/foundation/motion-contract.md"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_color_picker",
+        "baseRevision": 130,
+        "startedAt": "2026-10-30T13:39:41.764Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3762,7 +3769,20 @@
         "docs/audit/2026-10-24-motion-hydration-remediation.md",
         "docs/audit/2026-10-25-image-contract-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留既有 driver/首帧/SSR hydration 成果，核对 Motion 组件剩余 Vue 契约差额",
+        "remaining": [
+          "优先复用 002 DOM 提交、动态 support 与 hydration 证据；核对 CSSMotion/CSSMotionList 的当前 props/槽/owned 通知/attrs/ref、动态配置与真实资源清理。",
+          "纯算法与帧队列不为整改而重写；若发现真实共享行为差额，及时验证少量实际 UI 消费者，不重复完整视觉/全库验收。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "docs/foundation/motion-contract.md",
+          "docs/audit/2026-10-22-motion-review-002.md",
+          "docs/audit/2026-10-24-motion-hydration-remediation.md"
+        ]
+      }
     },
     {
       "id": "FND:overlay",

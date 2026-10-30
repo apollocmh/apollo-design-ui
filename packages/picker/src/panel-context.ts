@@ -26,6 +26,7 @@
 import type { Dayjs } from 'dayjs';
 import {
   type ComputedRef,
+  type CSSProperties,
   computed,
   type InjectionKey,
   inject,
@@ -51,13 +52,13 @@ export interface PanelSemanticClassNames {
 
 /** 面板的语义化样式槽。 */
 export interface PanelSemanticStyles {
-  root?: Record<string, string | number>;
-  header?: Record<string, string | number>;
-  body?: Record<string, string | number>;
-  content?: Record<string, string | number>;
-  item?: Record<string, string | number>;
-  footer?: Record<string, string | number>;
-  container?: Record<string, string | number>;
+  root?: CSSProperties;
+  header?: CSSProperties;
+  body?: CSSProperties;
+  content?: CSSProperties;
+  item?: CSSProperties;
+  footer?: CSSProperties;
+  container?: CSSProperties;
 }
 
 /**
@@ -127,6 +128,7 @@ export interface PanelInfo {
   /** 面板当前浏览值 */
   pickerValue: PanelDateType;
   prefixCls: string;
+  direction?: 'ltr' | 'rtl';
   classNames: PanelSemanticClassNames;
   styles: PanelSemanticStyles;
   disabledDate?: DisabledDate<PanelDateType>;

@@ -37,18 +37,23 @@
  *    优先级 `renderExtraFooter ?? addon`（上游 `useMemo` 的两分支）。
  */
 
-import { useDevWarning } from '@apollo-design/utils';
-import { computed, provide, ref, useAttrs, useSlots } from 'vue';
+import { computed, provide, ref, useAttrs } from 'vue';
 import { pickerHostContextKey } from '../_internal/picker-host-context';
 import { useComponentConfig } from '../config-provider/context';
 import DatePicker from '../date-picker/DatePicker.vue';
 import { useMergedPickerSemantic } from '../date-picker/hooks/use-picker-semantic';
 import type {
+  DatePickerDate,
+  DatePickerPanelMode,
   DatePickerSemanticClassNames,
   DatePickerSemanticStyles,
+  OpenConfig,
+  SingleValue,
 } from '../date-picker/interface';
 import { useVariant } from '../form/hooks/useVariants';
-import type { TimePickerProps } from './interface';
+import type { TimePickerProps, TimePickerSlots } from './interface';
+
+const InnerPicker = DatePicker;
 
 defineOptions({ name: 'ATimePicker', inheritAttrs: false });
 
@@ -70,7 +75,6 @@ const props = withDefaults(defineProps<TimePickerProps>(), {
   inputReadOnly: undefined,
   preserveInvalidOnBlur: undefined,
   needConfirm: undefined,
-  changeOnBlur: undefined,
   order: undefined,
   disabled: undefined,
   bordered: undefined,
@@ -103,7 +107,32 @@ const props = withDefaults(defineProps<TimePickerProps>(), {
   previewValue: undefined,
 });
 const attrs = useAttrs();
-const slots = useSlots();
+const slots = defineSlots<TimePickerSlots>();
+const emit = defineEmits<{
+  change: [date: SingleValue, dateString: string | string[] | null];
+  'update:value': [date: SingleValue];
+  calendarChange: [
+    date: SingleValue,
+    dateString: string | string[],
+    info: { range?: 'start' | 'end'; from?: DatePickerDate },
+  ];
+  ok: [date: DatePickerDate | DatePickerDate[]];
+  openChange: [open: boolean, config?: OpenConfig];
+  'update:open': [open: boolean];
+  'update:mode': [mode: DatePickerPanelMode];
+  pickerValueChange: [
+    date: DatePickerDate,
+    info: { source: 'reset' | 'panel'; mode: DatePickerPanelMode },
+  ];
+  'update:pickerValue': [date: DatePickerDate];
+  panelChange: [value: DatePickerDate, mode: DatePickerPanelMode];
+  clear: [];
+  focus: [event: FocusEvent, info: { range?: 'start' | 'end' }];
+  blur: [event: FocusEvent, info: { range?: 'start' | 'end' }];
+  invalid: [invalid: boolean];
+  select: [date: DatePickerDate];
+  keydown: [event: KeyboardEvent];
+}>();
 
 // ============================== 宿主上下文改道 ==============================
 /**
@@ -129,8 +158,6 @@ provide(pickerHostContextKey, { configKey: 'timePicker', warningName: 'TimePicke
  * ⚠️ 判据从 `!addon` 改成 `props.addon === undefined` —— 理由同 `DatePicker.vue`
  * 的 `DEPRECATED_PROPS`：Vue 的 `props` 恒含所有声明过的键（未传是 `undefined`）。
  */
-const devWarning = useDevWarning('TimePicker');
-devWarning.deprecated(props.addon === undefined, 'addon', 'renderExtraFooter');
 
 // ============================== variant ==============================
 /**
@@ -146,10 +173,9 @@ const { variant: mergedVariant } = useVariant({
 
 // ============================== renderExtraFooter ==============================
 /** 上游 `useMemo`：`renderExtraFooter` 优先，其次 `addon`，都没有就是 `undefined`。 */
-const internalRenderExtraFooter = computed(() => props.renderExtraFooter ?? props.addon);
 
 // ============================== 语义槽 ==============================
-const timePickerContext = useComponentConfig('timePicker');
+const timePickerContext = useComponentConfig<TimePickerComponentConfig>('timePicker');
 
 /**
  * `ConfigProvider` 里 `components.timePicker` 的配置。
@@ -163,7 +189,7 @@ interface TimePickerComponentConfig {
   classNames?: DatePickerSemanticClassNames;
   styles?: DatePickerSemanticStyles;
 }
-const pickerContext = timePickerContext as unknown as TimePickerComponentConfig;
+const pickerContext = timePickerContext;
 
 /**
  * 给函数式语义槽的 `info.props`。
@@ -192,7 +218,7 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergedPickerSe
   //    （PITFALLS 137 同族，`DatePicker.vue` 用的是同一个写法）。
   //    这里的具体冲突是 `onSelect`：本组件按上游收窄成单值 `(value: Dayjs) => void`，
   //    而 hook 的 `PickerCommonProps` 是 `(date: Dayjs | Dayjs[]) => void`。
-  props: semanticProps as never,
+  props: semanticProps,
 });
 
 // ============================== 转发给内层 ==============================
@@ -209,10 +235,8 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergedPickerSe
  * ⚠️ `attrs` 放**最后** —— 事件监听（`onChange` / `onOk` / …）与 `class` / `style`
  * 都在里面，后写者胜。
  */
-const forwardProps = computed<Record<string, unknown>>(() => {
+const forwardProps = (): InstanceType<typeof DatePicker>['$props'] => {
   const {
-    addon: _addon,
-    renderExtraFooter: _renderExtraFooter,
     variant: _variant,
     bordered: _bordered,
     classNames: _classNames,
@@ -239,9 +263,25 @@ const forwardProps = computed<Record<string, unknown>>(() => {
     //    而内层 `DatePicker.vue` 的默认是 `'date'` ⇒ 不补这一行，本组件会渲染成
     //    **日期面板**（G5 的 L1 用例抓到的真 bug：`.apollo-picker-time-panel` 不存在）。
     //    ⚠️ 放在**最后**：万一将来 `TimePickerProps` 收回了 `picker`，也不许用户覆盖。
-    picker: 'time',
+    picker: 'time' as const,
+    onChange: (date, text) => emit('change', date, text),
+    'onUpdate:value': (date) => emit('update:value', date),
+    onCalendarChange: (date, text, info) => emit('calendarChange', date, text, info),
+    onOk: (date) => emit('ok', date),
+    onOpenChange: (open, config) => emit('openChange', open, config),
+    'onUpdate:open': (open) => emit('update:open', open),
+    onPickerValueChange: (date, info) => emit('pickerValueChange', date, info),
+    'onUpdate:pickerValue': (date) => emit('update:pickerValue', date),
+    onPanelChange: (date, mode) => emit('panelChange', date, mode),
+    'onUpdate:mode': (mode) => emit('update:mode', mode),
+    onClear: () => emit('clear'),
+    onFocus: (event, info) => emit('focus', event, info),
+    onBlur: (event, info) => emit('blur', event, info),
+    onInvalid: (invalid) => emit('invalid', invalid),
+    onKeydown: (event) => emit('keydown', event),
+    onSelect: (date) => emit('select', date),
   };
-});
+};
 
 /**
  * 插槽转发。
@@ -251,33 +291,6 @@ const forwardProps = computed<Record<string, unknown>>(() => {
  * （见 `DatePickerSlots`）⇒ 显式列出**已知的 9 个**，
  * 不 `v-bind="slots"` —— 那样会把用户误传的 `default` 一并灌进去。
  */
-const FORWARDED_SLOTS = [
-  'panelRender',
-  'extraFooter',
-  'cellRender',
-  'tagRender',
-  'prefix',
-  'suffixIcon',
-  'clearIcon',
-  'separator',
-  'presetRender',
-] as const;
-
-/**
- * 实际提供了的插槽名（用于模板里的动态具名插槽转发）。
- *
- * 🚨 **不能用 `v-slots`** —— 它是 **JSX-only 的指令**，Vue 的模板编译器不认识它，
- * 会把它当成**未知指令**并连发两条告警（实测 demo 冒烟抓到）：
- *
- * ```
- * [Vue warn]: Failed to resolve directive: slots
- * [Vue warn]: Runtime directive used on component with non-element root node.
- * ```
- *
- * ⇒ 模板里改用 `<template v-for #[name]>` 动态具名插槽（Vue 3.3+ 支持）。
- */
-const forwardedSlotNames = computed(() => FORWARDED_SLOTS.filter((name) => Boolean(slots[name])));
-
 // ============================== 命令面转发（Issue #6.1）==============================
 /**
  * 上游 `forwardRef((props, ref) => <InternalTimePicker {...props} ref={ref} />)`
@@ -305,21 +318,15 @@ defineExpose({
 </script>
 
 <template>
-  <DatePicker
-    ref="innerRef"
-    v-bind="forwardProps"
-    :variant="mergedVariant"
-    :class-names="mergedClassNames"
-    :styles="mergedStyles"
-    :render-extra-footer="internalRenderExtraFooter"
-  >
-    <!--
-      🚨 插槽转发**必须**用动态具名插槽（`#[name]`）—— 见 `forwardedSlotNames` 的说明。
-      `<component :is="fn" v-bind="slotProps">` 把「插槽函数」当成**函数式组件**渲染，
-      正好等价于「把内层组件给的 slot props 原样交给用户的插槽」。
-    -->
-    <template v-for="name in forwardedSlotNames" :key="name" #[name]="slotProps">
-      <component :is="slots[name]" v-bind="slotProps ?? {}" />
-    </template>
-  </DatePicker>
+  <InnerPicker ref="innerRef" v-bind="forwardProps()" :variant="mergedVariant" :class-names="mergedClassNames" :styles="mergedStyles">
+    <template v-if="slots.panelRender" #panelRender="scope"><slot name="panelRender" v-bind="scope" /></template>
+    <template v-if="slots.extraFooter" #extraFooter="scope"><slot name="extraFooter" v-bind="scope" /></template>
+    <template v-if="slots.cellRender" #cellRender="scope"><slot name="cellRender" v-bind="scope" /></template>
+    <template v-if="slots.tagRender" #tagRender="scope"><slot name="tagRender" v-bind="scope" /></template>
+    <template v-if="slots.prefix" #prefix><slot name="prefix" /></template>
+    <template v-if="slots.suffixIcon" #suffixIcon><slot name="suffixIcon" /></template>
+    <template v-if="slots.clearIcon" #clearIcon><slot name="clearIcon" /></template>
+    <template v-if="slots.separator" #separator><slot name="separator" /></template>
+    <template v-if="slots.presetRender" #presetRender="scope"><slot name="presetRender" v-bind="scope" /></template>
+  </InnerPicker>
 </template>

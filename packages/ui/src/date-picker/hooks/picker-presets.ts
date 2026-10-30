@@ -21,11 +21,11 @@
  * 算一次会让后续替换失效（React 的 `useMemo` 有依赖数组，语义等价于 `computed`）。
  */
 import { useDevWarning } from '@apollo-design/utils';
-import { type ComputedRef, computed } from 'vue';
+import { type ComputedRef, computed, type VNodeChild } from 'vue';
 
 /** 归一后的预设项（单值与范围共用形状：`label` + `value`）。 */
 export interface MergedPreset<PresetValue> {
-  label: unknown;
+  label: VNodeChild;
   value: PresetValue;
 }
 

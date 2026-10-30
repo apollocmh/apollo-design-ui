@@ -30,12 +30,10 @@ import type { AlignType } from '@apollo-design/position';
  * | `topLeft` | `['bl', 'tl']` | `[0, -4]` | **`adjustX: 0`**, `adjustY: 1` |
  * | `topRight` | `['br', 'tr']` | `[0, -4]` | **`adjustX: 0`**, `adjustY: 1` |
  *
- * ⚠️ 类型刻意写成**四个键的映射**（不是 `Record<string, AlignType>`）——
- * `Record<string, …>` 在 `noUncheckedIndexedAccess` 下索引出来是 `AlignType | undefined`，
- * 调用方每次都得断言；写成具体键集既能表达「恰好四个」，也让 `Trigger` 的
- * `builtinPlacements[placement]` 查表保持可选语义（查不到就是 `undefined`，与上游一致）。
+ * 默认表有四个确定落点；其它字符串键遵循 Trigger 的公开映射类型。
+ * 开启 noUncheckedIndexedAccess 时任意字符串查询仍自然返回 AlignType | undefined。
  */
-export const BUILT_IN_PLACEMENTS: Partial<Record<string, AlignType>> & {
+export const BUILT_IN_PLACEMENTS: Record<string, AlignType> & {
   bottomLeft: AlignType;
   bottomRight: AlignType;
   topLeft: AlignType;

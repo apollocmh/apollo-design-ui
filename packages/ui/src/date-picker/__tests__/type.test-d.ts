@@ -23,7 +23,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
 import type { CSSProperties, VNodeChild } from 'vue';
 import type {
-  CellRender,
   CellRenderInfo,
   CustomFormat,
   CustomTagProps,
@@ -51,7 +50,6 @@ import type {
   OpenConfig,
   PickerCommonProps,
   PickerPopupSemanticClassNames,
-  PurePanelProps,
   RangePickerEmits,
   RangePickerExpose,
   RangePickerProps,
@@ -193,7 +191,7 @@ describe('DatePicker · L3 emits 载荷', () => {
   it('`calendarChange` 是 **3 参**（第三参带 `range` / `from`）', () => {
     expectTypeOf<DatePickerEmits['calendarChange']>().toEqualTypeOf<
       (
-        date: DatePickerDate | DatePickerDate[],
+        date: SingleValue,
         dateString: string | string[],
         info: { range?: 'start' | 'end'; from?: DatePickerDate },
       ) => void
@@ -201,9 +199,7 @@ describe('DatePicker · L3 emits 载荷', () => {
   });
 
   it('🚨 `keydown` 的第二参是 `preventDefault`（上游 `LegacyOnKeyDown` 的签名）', () => {
-    expectTypeOf<DatePickerEmits['keydown']>().toEqualTypeOf<
-      (event: KeyboardEvent, preventDefault: () => void) => void
-    >();
+    expectTypeOf<DatePickerEmits['keydown']>().toEqualTypeOf<(event: KeyboardEvent) => void>();
   });
 
   it('`openChange` 的第二参是 `OpenConfig`', () => {
@@ -234,15 +230,15 @@ describe('DatePicker · L3 emits 载荷', () => {
 describe('DatePicker · L3 expose（单值与范围的 `focus` 签名不同）', () => {
   it('单值 `focus(options?)`', () => {
     expectTypeOf<DatePickerExpose['focus']>().toEqualTypeOf<(options?: FocusOptions) => void>();
-    expectTypeOf<DatePickerExpose['nativeElement']>().toEqualTypeOf<HTMLDivElement>();
+    expectTypeOf<DatePickerExpose['nativeElement']>().toEqualTypeOf<HTMLElement | null>();
   });
 
   it('🚨 范围 `focus(index?)` —— 可指定聚焦哪一端，另有 `startInput` / `endInput`', () => {
     expectTypeOf<RangePickerExpose['focus']>().toEqualTypeOf<
       (index?: number | (FocusOptions & { index?: number })) => void
     >();
-    expectTypeOf<RangePickerExpose['startInput']>().toEqualTypeOf<HTMLInputElement>();
-    expectTypeOf<RangePickerExpose['endInput']>().toEqualTypeOf<HTMLInputElement>();
+    expectTypeOf<RangePickerExpose['startInput']>().toEqualTypeOf<HTMLInputElement | null>();
+    expectTypeOf<RangePickerExpose['endInput']>().toEqualTypeOf<HTMLInputElement | null>();
   });
 });
 
@@ -337,8 +333,11 @@ describe('DatePicker · L3 判定与渲染函数的签名', () => {
   });
 
   it('`CellRender` 的第一参是**联合**（时间列传数字、上下午列传字符串）', () => {
-    expectTypeOf<CellRender>().toEqualTypeOf<
-      (current: DatePickerDate | number | string, info: CellRenderInfo) => VNodeChild
+    expectTypeOf<NonNullable<DatePickerSlots['cellRender']>>().toEqualTypeOf<
+      (scope: {
+        current: DatePickerDate | number | 'am' | 'pm';
+        info: CellRenderInfo;
+      }) => VNodeChild
     >();
   });
 
@@ -360,10 +359,9 @@ describe('DatePicker · L3 slots 与 PurePanel', () => {
     >();
   });
 
-  it('`PurePanelProps` 只出面板（`picker` / `mode` / `value`）', () => {
-    expectTypeOf<PurePanelProps['picker']>().toEqualTypeOf<DatePickerMode | undefined>();
-    expectTypeOf<PurePanelProps['mode']>().toEqualTypeOf<DatePickerPanelMode | undefined>();
-    expectTypeOf<PurePanelProps['value']>().toEqualTypeOf<DatePickerDate | null | undefined>();
+  it('uses native slots and exposes models instead of an unimplemented PurePanel type', () => {
+    expectTypeOf<DatePickerProps['mode']>().toEqualTypeOf<DatePickerPanelMode | undefined>();
+    expectTypeOf<NonNullable<DatePickerSlots['cellRender']>>().toBeFunction();
   });
 });
 

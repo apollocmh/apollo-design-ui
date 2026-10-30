@@ -17,7 +17,7 @@
  *    但**日面板的标题按钮**走的是同一个分支 —— 忘了会得到「Jan 而不是 1月」。
  */
 
-import { defineComponent, h, type PropType, type SlotsType, type VNodeChild } from 'vue';
+import { defineComponent, h, type PropType, ref, type SlotsType, type VNodeChild } from 'vue';
 import { formatValue, getWeekStartDate, isInRange, isSameWeek, WEEK_DAY_COUNT } from './date-util';
 import { getPanelGeometry, getRowStartDate } from './panel';
 import { PanelBody } from './panel-body';
@@ -54,7 +54,9 @@ export const DatePanel = defineComponent({
   props: datePanelProps,
   emits: sharedPanelEmits,
   slots: Object as SlotsType<PanelSlots>,
-  setup(props, { emit, slots }) {
+  setup(props, { emit, slots, expose }) {
+    const bodyRef = ref<{ focus: (date?: PanelDateType) => void } | null>(null);
+    expose({ focus: (date?: PanelDateType) => bodyRef.value?.focus(date) });
     // ⚠️ 用返回值而不是 `usePanelInfo()`：面板自己 provide 的东西自己 inject 不到
     //    （`inject` 读 `parent.provides`）。见 `panel-props.ts` 的说明。
     const info = providePanelInfoFromProps(props, () => props.mode, {
@@ -157,7 +159,6 @@ export const DatePanel = defineComponent({
           'aria-label': locale.yearSelect,
           key: 'year',
           onClick: () => emit('modeChange', 'year', pickerValue),
-          tabIndex: -1,
           class: `${prefixCls}-year-btn`,
         },
         formatWith(g, locale, locale.yearFormat, pickerValue),
@@ -169,7 +170,6 @@ export const DatePanel = defineComponent({
           'aria-label': locale.monthSelect,
           key: 'month',
           onClick: () => emit('modeChange', 'month', pickerValue),
-          tabIndex: -1,
           class: `${prefixCls}-month-btn`,
         },
         locale.monthFormat
@@ -207,6 +207,8 @@ export const DatePanel = defineComponent({
           h(
             PanelBody,
             {
+              ref: bodyRef,
+              onNavigate: (date) => emit('pickerValueChange', date),
               geometry,
               rowClassName: props.rowClassName,
               headerCells,
@@ -235,7 +237,9 @@ export const WeekPanel = defineComponent({
   props: datePanelProps,
   emits: sharedPanelEmits,
   slots: Object as SlotsType<PanelSlots>,
-  setup(props, { emit, slots }) {
+  setup(props, { emit, slots, expose }) {
+    const panelRef = ref<{ focus: (date?: PanelDateType) => void } | null>(null);
+    expose({ focus: (date?: PanelDateType) => panelRef.value?.focus(date) });
     // ⚠️ 周面板**不 provide**（它把一切都透传给 `DatePanel`，由后者持有上下文）
     //    ⇒ 它需要的东西一律从**自己的 props** 取（与上游 `WeekPanel` 一致）。
     return () => {
@@ -278,6 +282,7 @@ export const WeekPanel = defineComponent({
         DatePanel,
         {
           ...props,
+          ref: panelRef,
           mode: 'week' as const,
           panelName: 'week',
           rowClassName,

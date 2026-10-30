@@ -20,7 +20,18 @@
  * 3. **`title` 只在 `titleFormat` 存在时渲染**（不是空串），否则属性整个不出现。
  */
 
-import { defineComponent, h, type PropType, type SlotsType, type VNodeChild } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  nextTick,
+  type PropType,
+  type SlotsType,
+  shallowRef,
+  type VNodeChild,
+  watch,
+} from 'vue';
+import { isSame } from './date-util';
 import { buildPanelCells, type PanelGeometry } from './panel';
 import { type PanelDateType, type PanelSlots, usePanelHack, usePanelInfo } from './panel-context';
 import type { DisabledDate } from './types';
@@ -54,10 +65,111 @@ export const PanelBody = defineComponent({
       default: undefined,
     },
   },
+  emits: { navigate: (_date: PanelDateType) => true },
   slots: Object as SlotsType<PanelBodySlots>,
-  setup(props, { slots }) {
+  setup(props, { slots, expose, emit }) {
     const info = usePanelInfo();
     const hack = usePanelHack();
+    const elements: (HTMLTableCellElement | null)[] = [];
+    const activeDate = shallowRef<PanelDateType>();
+    const rows = computed(() => {
+      const ctx = info.value;
+      return buildPanelCells(props.geometry, {
+        generateConfig: ctx.generateConfig,
+        locale: ctx.locale,
+        mode: ctx.panelType,
+        now: ctx.now,
+        values: ctx.values,
+        hoverValue: ctx.hoverValue,
+        hoverRangeValue: ctx.hoverRangeValue,
+        disabledDate: props.disabledDate ?? ctx.disabledDate,
+      });
+    });
+    const cells = computed(() => rows.value.flat());
+    const same = (left: PanelDateType, right: PanelDateType) => {
+      const ctx = info.value;
+      return isSame(ctx.generateConfig, ctx.locale, left, right, ctx.panelType);
+    };
+    const activeIndex = computed(() => {
+      const target = activeDate.value ?? info.value.pickerValue;
+      const found = cells.value.findIndex((cell) => !cell.disabled && same(cell.date, target));
+      if (found >= 0) return found;
+      const selected = cells.value.findIndex((cell) => !cell.disabled && cell.selected);
+      return selected >= 0
+        ? selected
+        : cells.value.findIndex((cell) => !cell.disabled && cell.inView);
+    });
+    const focusCell = (index: number) => {
+      const cell = cells.value[index];
+      if (!cell || cell.disabled) return;
+      activeDate.value = cell.date;
+      elements[index]?.focus({ preventScroll: true });
+    };
+    expose({
+      focus: (date?: PanelDateType) => {
+        activeDate.value = date;
+        focusCell(activeIndex.value);
+      },
+    });
+    watch(
+      () => info.value.pickerValue,
+      () => {
+        activeDate.value = undefined;
+      },
+    );
+    watch(
+      cells,
+      () => {
+        const focused = elements.findIndex(
+          (element) => element && element.ownerDocument.activeElement === element,
+        );
+        if (focused >= 0 && cells.value[focused]?.disabled) focusCell(activeIndex.value);
+      },
+      { flush: 'post' },
+    );
+    const onKeydown = async (event: KeyboardEvent, index: number) => {
+      if (event.defaultPrevented || event.isComposing) return;
+      const cell = cells.value[index];
+      if (!cell || cell.disabled) return;
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        info.value.onSelect(cell.date);
+        return;
+      }
+      const horizontal = info.value.direction === 'rtl' ? -1 : 1;
+      const offset =
+        event.key === 'ArrowLeft'
+          ? -horizontal
+          : event.key === 'ArrowRight'
+            ? horizontal
+            : event.key === 'ArrowUp'
+              ? -props.geometry.colNum
+              : event.key === 'ArrowDown'
+                ? props.geometry.colNum
+                : 0;
+      if (!offset) return;
+      event.preventDefault();
+      let nextIndex = index + offset;
+      for (let count = 0; count < cells.value.length; count += 1, nextIndex += offset) {
+        const nextCell = cells.value[nextIndex];
+        if (nextCell) {
+          if (!nextCell.disabled) {
+            focusCell(nextIndex);
+            return;
+          }
+        } else {
+          const ctx = info.value;
+          const date = props.geometry.getCellDate(props.geometry.baseDate, nextIndex);
+          if ((props.disabledDate ?? ctx.disabledDate)?.(date, { type: ctx.panelType })) continue;
+          activeDate.value = date;
+          emit('navigate', date);
+          await nextTick();
+          const next = cells.value.findIndex((item) => same(item.date, date));
+          if (next >= 0) focusCell(next);
+          return;
+        }
+      }
+    };
     return () => {
       const ctx = info.value;
       const {
@@ -66,34 +178,33 @@ export const PanelBody = defineComponent({
         styles,
         panelType: type,
         now,
-        generateConfig,
-        values,
         locale,
         onSelect,
         onHover,
       } = ctx;
 
-      const mergedDisabledDate = props.disabledDate ?? ctx.disabledDate;
       const cellPrefixCls = `${prefixCls}-cell`;
 
-      const rows = buildPanelCells(props.geometry, {
-        generateConfig,
-        locale,
-        mode: type,
-        now,
-        values,
-        hoverValue: ctx.hoverValue,
-        hoverRangeValue: ctx.hoverRangeValue,
-        disabledDate: mergedDisabledDate,
-      });
-
-      const renderCell = (cell: (typeof rows)[number][number], col: number): VNodeChild => {
+      const renderCell = (
+        cell: (typeof rows.value)[number][number],
+        col: number,
+        index: number,
+      ): VNodeChild => {
         const inner = h('div', { class: `${cellPrefixCls}-inner` }, [cell.text]);
 
         return h(
           'td',
           {
             key: col,
+            ref: (element) => {
+              elements[index] = element instanceof HTMLTableCellElement ? element : null;
+            },
+            tabindex: !cell.disabled && index === activeIndex.value ? 0 : -1,
+            'aria-disabled': cell.disabled || undefined,
+            onFocus: () => {
+              activeDate.value = cell.date;
+            },
+            onKeydown: (event: KeyboardEvent) => onKeydown(event, index),
             title: cell.title,
             class: [
               cellPrefixCls,
@@ -153,7 +264,7 @@ export const PanelBody = defineComponent({
         );
       };
 
-      const bodyRows = rows.map((rowCells, row) => {
+      const bodyRows = rows.value.map((rowCells, row) => {
         const rowStartDate = props.geometry.getCellDate(
           props.geometry.baseDate,
           row * props.geometry.colNum,
@@ -164,7 +275,7 @@ export const PanelBody = defineComponent({
           tds.push(slots.prefixColumn({ date: rowStartDate }));
         }
         rowCells.forEach((cell, col) => {
-          tds.push(renderCell(cell, col));
+          tds.push(renderCell(cell, col, row * props.geometry.colNum + col));
         });
 
         return h('tr', { key: row, class: props.rowClassName?.(rowStartDate) }, tds);

@@ -32,7 +32,6 @@ export default DatePicker;
 //    含全部 deprecated 字段 —— 类型面不裁剪，裁剪会让迁移时「类型过了但运行时没实现」。
 // ---------------------------------------------------------------------------
 export type {
-  CellRender,
   CellRenderInfo,
   CustomFormat,
   CustomTagProps,
@@ -63,8 +62,6 @@ export type {
   PickerCommonProps,
   PickerPopupSemanticClassNames,
   PickerPopupSemanticStyles,
-  PurePanelProps,
-  PureRangePanelProps,
   RangePickerEmits,
   RangePickerExpose,
   RangePickerProps,

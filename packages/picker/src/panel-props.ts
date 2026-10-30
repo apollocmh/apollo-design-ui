@@ -24,6 +24,7 @@ import type { DisabledDate, GenerateConfig, PanelMode, PickerLocale } from './ty
 /** `sharedPanelProps` 解出来的形状。 */
 export interface SharedPanelProps {
   prefixCls: string;
+  direction?: 'ltr' | 'rtl';
   locale: PickerLocale;
   generateConfig: GenerateConfig<PanelDateType>;
   /** 面板当前浏览值；面板通过 pickerValueChange 提议更新。 */
@@ -58,6 +59,7 @@ export interface SharedPanelProps {
  */
 export const sharedPanelProps = {
   prefixCls: { type: String, default: 'apollo-picker' },
+  direction: { type: String as PropType<'ltr' | 'rtl' | undefined>, default: undefined },
   locale: { type: Object as PropType<PickerLocale>, required: true as const },
   generateConfig: {
     type: Object as PropType<GenerateConfig<PanelDateType>>,
@@ -127,6 +129,7 @@ export function providePanelInfoFromProps(
       classNames: shared.classNames,
       styles: shared.styles,
       disabledDate: props.disabledDate,
+      direction: props.direction,
       minDate: props.minDate,
       maxDate: props.maxDate,
       hoverValue: props.hoverValue,

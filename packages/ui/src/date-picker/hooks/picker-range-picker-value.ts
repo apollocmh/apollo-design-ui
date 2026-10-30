@@ -44,6 +44,7 @@ import {
   offsetPanelDate,
   type PickerMode,
 } from '@apollo-design/picker';
+import { useControlledValue } from '@apollo-design/utils';
 import { type ComputedRef, computed, ref, watch } from 'vue';
 import type { DatePickerDate, DatePickerPanelMode } from '../interface';
 
@@ -109,19 +110,14 @@ export function useRangePickerValue(
     );
   };
 
-  const innerStart = ref<DatePickerDate>(getDefaultPickerValue(0));
-  const innerEnd = ref<DatePickerDate>(getDefaultPickerValue(1));
-
-  /** 受控值（`undefined` ⇒ 非受控）。 */
-  const startControlled = computed(() => options.pickerValue()?.[0]);
-  const endControlled = computed(() => options.pickerValue()?.[1]);
-
-  const mergedStart = computed<DatePickerDate>(
-    () => (startControlled.value as DatePickerDate | null) ?? innerStart.value,
-  );
-  const mergedEnd = computed<DatePickerDate>(
-    () => (endControlled.value as DatePickerDate | null) ?? innerEnd.value,
-  );
+  const [mergedStart, setStart] = useControlledValue<DatePickerDate>({
+    getValue: () => options.pickerValue()?.[0] ?? undefined,
+    defaultValue: () => getDefaultPickerValue(0),
+  });
+  const [mergedEnd, setEnd] = useControlledValue<DatePickerDate>({
+    getValue: () => options.pickerValue()?.[1] ?? undefined,
+    defaultValue: () => getDefaultPickerValue(1),
+  });
 
   // ======================== 当前浏览值 ========================
   const currentPickerValue = computed<DatePickerDate | null>(() => {
@@ -138,24 +134,23 @@ export function useRangePickerValue(
     source: PickerValueSource = 'panel',
   ): void => {
     const index = mergedActiveIndex.value;
+    const previous: [DatePickerDate, DatePickerDate] = [mergedStart.value, mergedEnd.value];
     // 受控 ⇒ 只发事件，不写内部状态（`useControlledState` 的语义）
     if (index === 0) {
-      if (startControlled.value === undefined) {
-        innerStart.value = next;
-      }
-    } else if (endControlled.value === undefined) {
-      innerEnd.value = next;
+      setStart(next);
+    } else {
+      setEnd(next);
     }
 
-    const clone: (DatePickerDate | null)[] = [mergedStart.value, mergedEnd.value];
+    const clone: [DatePickerDate, DatePickerDate] = [...previous];
     clone[index] = next;
 
     const locale = options.locale();
     const pickerMode = (options.pickerMode() ?? 'date') as PickerMode;
     if (
       options.onPickerValueChange &&
-      (!isSame(g, locale, mergedStart.value, clone[0] as DatePickerDate, pickerMode) ||
-        !isSame(g, locale, mergedEnd.value, clone[1] as DatePickerDate, pickerMode))
+      (!isSame(g, locale, previous[0], clone[0], pickerMode) ||
+        !isSame(g, locale, previous[1], clone[1], pickerMode))
     ) {
       options.onPickerValueChange(clone, {
         source,

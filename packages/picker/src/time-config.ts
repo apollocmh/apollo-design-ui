@@ -148,7 +148,10 @@ export interface TimeConfigShowTime<DateType>
  *     已经在 `getTimeProps` 内做完了）。
  */
 export interface TimeConfigSource<DateType>
-  extends Omit<TimePanelConfig<DateType>, 'format' | 'defaultValue' | 'disabledTime'> {
+  extends Omit<
+    TimePanelConfig<DateType>,
+    'format' | 'defaultValue' | 'defaultOpenValue' | 'disabledTime'
+  > {
   picker?: PickerMode;
   /** 🚨 组件层的 `showTime`（含范围的数组默认值与三参 `disabledTime`），见 `TimeConfigShowTime`。 */
   showTime?: boolean | TimeConfigShowTime<DateType>;
@@ -156,6 +159,8 @@ export interface TimeConfigSource<DateType>
   locale?: PickerLocale;
   /** 见上面的第 3 条：结构兼容用，本函数不读它。 */
   defaultValue?: unknown;
+  /** Component source: range inputs provide both endpoint defaults before panel normalization. */
+  defaultOpenValue?: DateType | DateType[];
   /**
    * 🚨 **组件层**的 `disabledTime` —— 与 `TimePanelConfig` 的同名键**不同形**。
    *

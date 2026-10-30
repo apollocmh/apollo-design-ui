@@ -1,9 +1,9 @@
 <script setup lang="ts">
 // 对齐 antd 的 demo/cell-render.tsx：自定义单元格内容
-import { type CellRender, DatePicker } from '@apollo-design/ui';
+import { DatePicker, type DatePickerSlots } from '@apollo-design/ui';
 import { h } from 'vue';
 
-const cellRender: CellRender = (current, info) => {
+const cellRender: NonNullable<DatePickerSlots['cellRender']> = ({ current, info }) => {
   if (info.type !== 'date' || typeof current !== 'object' || current === null) {
     return info.originNode;
   }
@@ -27,5 +27,7 @@ const cellRender: CellRender = (current, info) => {
 </script>
 
 <template>
-  <DatePicker :cell-render="cellRender" placeholder="每 7 天有一个圆点" />
+  <DatePicker placeholder="每 7 天有一个圆点">
+    <template #cellRender="scope"><component :is="() => cellRender(scope)" /></template>
+  </DatePicker>
 </template>

@@ -22,6 +22,7 @@
 
 import { cancelRaf, raf } from '@apollo-design/utils';
 import {
+  computed,
   defineComponent,
   h,
   onBeforeUnmount,
@@ -85,9 +86,54 @@ export const TimeColumn = defineComponent({
     dblClick: () => true,
   },
   slots: Object as SlotsType<PanelSlots>,
-  setup(props, { emit, slots }) {
+  setup(props, { emit, slots, expose }) {
     const info = usePanelInfo();
     const ulRef = ref<HTMLUListElement | null>(null);
+    const elements = new Map<TimeColumnValue, HTMLLIElement>();
+    const activeValue = ref<TimeColumnValue | null>(null);
+    const activeUnit = computed(
+      () =>
+        props.units.find(
+          (unit) =>
+            !unit.disabled &&
+            unit.value === (activeValue.value ?? props.value ?? props.optionalValue),
+        ) ?? props.units.find((unit) => !unit.disabled),
+    );
+    const focusUnit = (unit: ColumnUnit | undefined) => {
+      if (!unit || unit.disabled) return;
+      activeValue.value = unit.value;
+      elements.get(unit.value)?.focus({ preventScroll: true });
+    };
+    expose({
+      focus: () => {
+        activeValue.value = null;
+        focusUnit(activeUnit.value);
+      },
+    });
+    watch(
+      () => flattenUnits(props.units),
+      () => {
+        const element = ulRef.value;
+        if (element?.contains(element.ownerDocument.activeElement)) focusUnit(activeUnit.value);
+      },
+      { flush: 'post' },
+    );
+    const onKeydown = (event: KeyboardEvent, value: TimeColumnValue) => {
+      if (event.defaultPrevented || event.isComposing) return;
+      const unit = props.units.find((item) => item.value === value);
+      if (!unit || unit.disabled) return;
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        emit('change', value);
+        return;
+      }
+      const offset = event.key === 'ArrowUp' ? -1 : event.key === 'ArrowDown' ? 1 : 0;
+      if (!offset) return;
+      event.preventDefault();
+      const enabled = props.units.filter((item) => !item.disabled);
+      const index = enabled.findIndex((item) => item.value === value);
+      focusUnit(enabled[(index + offset + enabled.length) % enabled.length]);
+    };
     let scrollRafId: number | null = null;
     let delayTimer: ReturnType<typeof setTimeout> | undefined;
     let scrolling = false;
@@ -237,6 +283,8 @@ export const TimeColumn = defineComponent({
           class: columnPrefixCls,
           ref: ulRef,
           'data-type': props.type,
+          role: 'listbox',
+          'aria-label': props.type,
           onScroll: onInternalScroll,
         },
         props.units.map(({ label, value: unitValue, disabled }) => {
@@ -245,6 +293,18 @@ export const TimeColumn = defineComponent({
             'li',
             {
               key: unitValue,
+              ref: (element) => {
+                if (element instanceof HTMLLIElement) elements.set(unitValue, element);
+                else elements.delete(unitValue);
+              },
+              tabindex: !disabled && activeUnit.value?.value === unitValue ? 0 : -1,
+              role: 'option',
+              'aria-selected': props.value === unitValue,
+              'aria-disabled': disabled || undefined,
+              onFocus: () => {
+                activeValue.value = unitValue;
+              },
+              onKeydown: (event: KeyboardEvent) => onKeydown(event, unitValue),
               style: styles.item,
               class: [
                 cellPrefixCls,

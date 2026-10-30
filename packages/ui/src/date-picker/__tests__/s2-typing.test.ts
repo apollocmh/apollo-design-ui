@@ -219,7 +219,8 @@ describe('DatePicker · 键入接线（S2 · 键盘）', () => {
     const first = w.emitted('keydown')?.[0];
     expect(first).toBeTruthy();
     // 载荷是 `[event, preventDefault]` —— 第二个必须是**函数**（调用方常写 `(e, pd) => pd()`）
-    expect(typeof first?.[1]).toBe('function');
+    expect(first).toHaveLength(1);
+    expect(first?.[0]).toBeInstanceOf(KeyboardEvent);
     w.unmount();
   });
 });

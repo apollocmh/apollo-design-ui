@@ -22,6 +22,7 @@ import { describe, expectTypeOf, it } from 'vitest';
 import type { CSSProperties, VNodeChild } from 'vue';
 import type {
   DatePickerDate,
+  DatePickerPanelMode,
   DatePickerStatus,
   PickerPopupSemanticClassNames,
 } from '../../date-picker/interface';
@@ -33,6 +34,7 @@ import type {
   TimePickerSemanticClassNames,
   TimePickerSemanticStyles,
   TimePickerSemanticValue,
+  TimePickerSlots,
   TimePickerValue,
   TimeRangePickerExpose,
   TimeRangePickerProps,
@@ -59,16 +61,14 @@ describe('TimePicker · Props 类型', () => {
   });
 
   it('判据 2：`onSelect` 是**单参**签名（date-picker 的是单值或数组）', () => {
-    expectTypeOf<TimePickerProps['onSelect']>().toEqualTypeOf<
-      ((value: DatePickerDate) => void) | undefined
-    >();
+    expectTypeOf<TimePickerEmits['select']>().toEqualTypeOf<(value: DatePickerDate) => void>();
   });
 
   it('继承来的常用 props 形态不变', () => {
     expectTypeOf<TimePickerProps['status']>().toEqualTypeOf<DatePickerStatus | undefined>();
     expectTypeOf<TimePickerProps['popupClassName']>().toEqualTypeOf<string | undefined>();
     expectTypeOf<TimePickerProps['popupStyle']>().toEqualTypeOf<CSSProperties | undefined>();
-    expectTypeOf<TimePickerProps['renderExtraFooter']>().not.toBeNever();
+    expectTypeOf<TimePickerSlots['extraFooter']>().not.toBeNever();
   });
 
   it('判据 3：语义槽是「对象 | 函数」的联合，且 `popup` 允许 string', () => {
@@ -84,8 +84,11 @@ describe('TimePicker · Props 类型', () => {
     >();
   });
 
-  it('`addon` 是**函数 prop**（不是插槽），返回 `VNodeChild`', () => {
-    expectTypeOf<TimePickerProps['addon']>().toEqualTypeOf<(() => VNodeChild) | undefined>();
+  it('extraFooter is a scoped native slot and addon is not a prop', () => {
+    expectTypeOf<NonNullable<TimePickerSlots['extraFooter']>>().toEqualTypeOf<
+      (scope: { mode: DatePickerPanelMode }) => VNodeChild
+    >();
+    expectTypeOf<TimePickerProps>().not.toHaveProperty('addon');
   });
 });
 
@@ -121,9 +124,9 @@ describe('TimePicker · emits / expose', () => {
   });
 
   it('expose 与 date-picker 同形（⚠️ 运行时尚未 `defineExpose`，见 README §5）', () => {
-    expectTypeOf<TimePickerExpose['nativeElement']>().toEqualTypeOf<HTMLDivElement>();
+    expectTypeOf<TimePickerExpose['nativeElement']>().toEqualTypeOf<HTMLElement | null>();
     expectTypeOf<TimePickerExpose['focus']>().toEqualTypeOf<(options?: FocusOptions) => void>();
-    expectTypeOf<TimeRangePickerExpose['startInput']>().toEqualTypeOf<HTMLInputElement>();
+    expectTypeOf<TimeRangePickerExpose['startInput']>().toEqualTypeOf<HTMLInputElement | null>();
   });
 });
 

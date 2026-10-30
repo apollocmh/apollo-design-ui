@@ -182,3 +182,7 @@ Form Core 的通知由 Vue emits 拥有，store/useForm 的业务回调仍保留
 ### D-cascader-native-paths
 
 Cascader/CascaderPanel 的通知使用 Vue emits，选择器提供 value/open/searchValue 三个模型。displayRender、optionRender、popupRender、showSearch.render、函数式标签与图标内容迁为原生槽；popupRender 的 menu 可直接用 `<component :is="menu" />`。移除未消费的 trigger/placeholder2 与重复开关通知，nativeElement 改为实际属性；过滤、排序和异步加载保留函数。修正类型安全的路径身份、当前配置/Token、键盘、异步会话和 raw 浮层传递，详见[Cascader API](packages/ui/src/cascader/index.zh-CN.md)。
+
+### D-date-picker-native-input-and-panels
+
+DatePicker/RangePicker 的内容函数迁为 cellRender/panelRender/extraFooter/tagRender 等具名槽，移除无实际替换链路的 components/inputRender、失效的 changeOnBlur 与无运行时组件的 PurePanel 类型。通知使用 Vue emits，value/open/pickerValue/mode 支持模型请求；keydown 只接收原生 KeyboardEvent，preventDefault() 在内部操作前生效，暴露 DOM 引用准确包含 null。修正输入草稿/IME、受控撤控、范围活动端与禁用时间、只读面板键盘、动态槽与主题及观察器清理；TimePicker 仅同步关联包装桥，详见[DatePicker API](packages/ui/src/date-picker/index.zh-CN.md)。

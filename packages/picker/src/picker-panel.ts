@@ -34,6 +34,7 @@ import {
   computed,
   defineComponent,
   h,
+  nextTick,
   type PropType,
   provide,
   ref,
@@ -112,7 +113,7 @@ function getModeQueue(picker: PickerMode): PanelMode[] {
 
 export const PickerPanel = defineComponent({
   name: 'ApolloPickerPanel',
-  expose: ['nativeElement'],
+  expose: ['nativeElement', 'focus'],
   props: {
     prefixCls: { type: String, default: 'apollo-picker' },
     direction: { type: String as PropType<'ltr' | 'rtl' | undefined>, default: undefined },
@@ -280,6 +281,8 @@ export const PickerPanel = defineComponent({
   slots: Object as SlotsType<PanelSlots>,
   setup(props, { emit, slots }) {
     const rootRef = ref<HTMLElement | null>(null);
+    const panelRef = ref<{ focus?: (date?: PanelDateType) => void } | null>(null);
+    const focus = (date?: PanelDateType) => panelRef.value?.focus?.(date);
 
     // ========================= Time =========================
     // ⚠️ 入参是「组件 props 的超集」，含顶层的时间 props（`hourStep` 等）。
@@ -459,6 +462,14 @@ export const PickerPanel = defineComponent({
       onCellDblClick: () => emit('cellDblClick'),
     });
 
+    watch(internalMode, async () => {
+      const element = rootRef.value;
+      if (element?.contains(element.ownerDocument.activeElement)) {
+        await nextTick();
+        focus();
+      }
+    });
+
     // ========================= Render =========================
     const renderPanel = () => {
       const prefixCls = props.prefixCls;
@@ -488,7 +499,9 @@ export const PickerPanel = defineComponent({
           PanelComponent,
           {
             ...panelProps,
+            ref: panelRef,
             prefixCls,
+            direction: props.direction,
             locale: filledLocale.value,
             generateConfig: props.generateConfig,
             showTime: mergedShowTime.value,
@@ -507,11 +520,11 @@ export const PickerPanel = defineComponent({
         ),
       );
     };
-    return { nativeElement: rootRef, renderPanel };
+    return { nativeElement: rootRef, focus, renderPanel };
   },
   render() {
     return this.renderPanel();
   },
 });
 
-export type PickerPanelRef = Pick<InstanceType<typeof PickerPanel>, 'nativeElement'>;
+export type PickerPanelRef = Pick<InstanceType<typeof PickerPanel>, 'nativeElement' | 'focus'>;

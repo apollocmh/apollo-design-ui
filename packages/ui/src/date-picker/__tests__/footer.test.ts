@@ -25,15 +25,17 @@
 import { mount } from '@vue/test-utils';
 import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
-import { nextTick } from 'vue';
+import { nextTick, type VNodeChild } from 'vue';
 import DatePicker from '../DatePicker.vue';
 
 const P = 'apollo-picker';
 const D = (s: string) => dayjs(s);
 
 /** 浮层只有 `open: true` 时才渲染。 */
-const mountOpen = (props: Record<string, unknown> = {}) =>
-  mount(DatePicker, { props: { open: true, ...props } });
+const mountOpen = (
+  props: Record<string, unknown> = {},
+  slots: { extraFooter?: () => VNodeChild } = {},
+) => mount(DatePicker, { props: { open: true, ...props }, slots });
 
 const footer = (w: ReturnType<typeof mount>) => w.find(`.${P}-footer`);
 const nowBtn = (w: ReturnType<typeof mount>) => w.find(`.${P}-now-btn`);
@@ -133,7 +135,7 @@ describe('DatePicker · 浮层页脚 —— 交互与扩展', () => {
   });
 
   it('`renderExtraFooter` ⇒ 渲染 `-footer-extra`（在 `-ranges` 之前）', async () => {
-    const w = mountOpen({ renderExtraFooter: () => 'EXTRA' });
+    const w = mountOpen({}, { extraFooter: () => 'EXTRA' });
     await nextTick();
     const extra = w.find(`.${P}-footer-extra`);
     expect(extra.exists()).toBe(true);
@@ -144,13 +146,14 @@ describe('DatePicker · 浮层页脚 —— 交互与扩展', () => {
     w.unmount();
   });
 
-  it('🚨 `renderExtraFooter` 返回空串 ⇒ **整个页脚不渲染**（`isRenderable` 判据）', async () => {
+  it('显式空 extraFooter 保持空内容且保留槽容器', async () => {
     // 上游 `isReactRenderable('')` 是 **false**（`@rc-component/util` 的 `es/is.js`）。
     // 若误按 truthy / 「空串算可渲染」实现，这里会渲染出一个空的 `-footer`，
     // 把页脚凭空撑出来（L6 会立刻红）。
-    const w = mountOpen({ showToday: false, renderExtraFooter: () => '' });
+    const w = mountOpen({ showToday: false }, { extraFooter: () => '' });
     await nextTick();
-    expect(footer(w).exists()).toBe(false);
+    expect(footer(w).exists()).toBe(true);
+    expect(w.get(`.${P}-footer-extra`).text()).toBe('');
     w.unmount();
   });
 

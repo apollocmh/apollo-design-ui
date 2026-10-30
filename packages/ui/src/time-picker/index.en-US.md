@@ -1,3 +1,5 @@
+> Current API (2026-10-30): use named scoped slots for dynamic content (`cellRender`, `panelRender`, `extraFooter`, `tagRender`) and named decoration/preset slots. Legacy render props, `addon`, notification props and unimplemented PurePanel types are removed. Use owned emits, including `@select`; `@keydown` receives one native KeyboardEvent and honors preventDefault(). `v-model:mode` is supported. ArrowDown enters a readonly picker panel; arrows navigate, Enter/Space selects, Escape restores input focus. DOM refs are nullable.
+
 ---
 category: Data Entry
 title: TimePicker
@@ -35,7 +37,6 @@ Native attributes share the DatePicker contract: `id`, `tabIndex` / `tabindex`, 
 | open | Whether the popup is open (`v-model:open`) | `boolean` | — |
 | defaultOpen | Initial open state | `boolean` | — |
 | format | Display format (e.g. `HH:mm:ss`; `HH:mm` shows two columns) | `DatePickerFormat` | `HH:mm:ss` |
-| renderExtraFooter | Extra content at the bottom of the panel | `() => VNodeChild` | — |
 | needConfirm | Commit only after clicking OK | `boolean` | `false` |
 | changeOnScroll | Change the value by scrolling | `boolean` | `false` |
 | disabled | Disabled | `boolean` | `false` |

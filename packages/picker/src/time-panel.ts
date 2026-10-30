@@ -17,7 +17,7 @@
  * 所以「先点日期再调时间」时，点日期那一刻继承的是**浏览值**的时刻。
  */
 
-import { defineComponent, h, type PropType, type SlotsType } from 'vue';
+import { defineComponent, h, type PropType, ref, type SlotsType } from 'vue';
 import { DatePanel } from './date-panel';
 import { fillTime } from './date-util';
 import type { PanelDateType, PanelSlots } from './panel-context';
@@ -45,7 +45,9 @@ export const TimePanel = defineComponent({
   props: { ...sharedPanelProps, ...showTimeProp },
   emits: sharedPanelEmits,
   slots: Object as SlotsType<PanelSlots>,
-  setup(props, { emit, slots }) {
+  setup(props, { emit, slots, expose }) {
+    const bodyRef = ref<{ focus: (date?: PanelDateType) => void } | null>(null);
+    expose({ focus: (date?: PanelDateType) => bodyRef.value?.focus(date) });
     // ⚠️ 用返回值而不是 `usePanelInfo()`：面板自己 provide 的东西自己 inject 不到
     //    （`inject` 读 `parent.provides`）。见 `panel-props.ts` 的说明。
     const info = providePanelInfoFromProps(props, 'time', {
@@ -71,6 +73,7 @@ export const TimePanel = defineComponent({
         h(
           TimePanelBody,
           {
+            ref: bodyRef,
             showHour: props.showTime.showHour,
             showMinute: props.showTime.showMinute,
             showSecond: props.showTime.showSecond,
@@ -91,7 +94,9 @@ export const DateTimePanel = defineComponent({
   props: { ...sharedPanelProps, ...showTimeProp },
   emits: sharedPanelEmits,
   slots: Object as SlotsType<PanelSlots>,
-  setup(props, { emit, slots }) {
+  setup(props, { emit, slots, expose }) {
+    const dateRef = ref<{ focus: (date?: PanelDateType) => void } | null>(null);
+    expose({ focus: (date?: PanelDateType) => dateRef.value?.focus(date) });
     // ⚠️ `DateTimePanel` **不 provide** 上下文 —— 它只是把 `DatePanel` 与 `TimePanel`
     //    上下拼起来，而那两个各自 `useInfo(自己的 props)` 并 provide
     //    （上游同样如此）。所以这里需要的一切都从**自己的 props** 取。
@@ -122,6 +127,7 @@ export const DateTimePanel = defineComponent({
           DatePanel,
           {
             ...props,
+            ref: dateRef,
             onSelect: onDateSelect,
             onHover: onDateHover,
             onModeChange: (mode, viewDate) => emit('modeChange', mode, viewDate),

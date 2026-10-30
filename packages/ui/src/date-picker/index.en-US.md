@@ -1,3 +1,5 @@
+> Current API (2026-10-30): use named scoped slots for dynamic content (`cellRender`, `panelRender`, `extraFooter`, `tagRender`) and named decoration/preset slots. Legacy render props, `addon`, notification props and unimplemented PurePanel types are removed. Use owned emits, including `@select`; `@keydown` receives one native KeyboardEvent and honors preventDefault(). `v-model:mode` is supported. ArrowDown enters a readonly picker panel; arrows navigate, Enter/Space selects, Escape restores input focus. DOM refs are nullable.
+
 ---
 title: DatePicker
 subtitle: Date picker
@@ -56,9 +58,6 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | multiple | Multiple selection | `boolean` | `false` |
 | order | Sort by date when `multiple` | `boolean` | `true` |
 | presets | Shortcut options. `value` accepts a **function** (lazy) | `ValueDate[]` | —— |
-| renderExtraFooter | Extra footer of the panel | `(mode) => VNodeChild` | —— |
-| panelRender | Customize the whole panel | `(props: { originPanel }) => VNodeChild` | —— |
-| cellRender | Customize a cell | `(current, info) => VNodeChild` | —— |
 | disabledDate | Disabled dates | `(date, info) => boolean` | —— |
 | minDate / maxDate | Selectable bounds (a plain date, as upstream) | `DatePickerDate` | —— |
 | placeholder | Placeholder | `string` | from locale |
@@ -122,15 +121,15 @@ They apply to both the date and the time panel.
 | `focus` / `blur` | Focus in/out | `(event, info)` |
 | `invalid` | Invalid typed value | `(invalid)` |
 | `submit` | Form submit | `(event)` |
-| `keydown` | Keydown (channel of the deprecated `onKeyDown`) | `(event, preventDefault)` |
+| `keydown` | Keydown (channel of the deprecated `onKeyDown`) | `(event: KeyboardEvent)` |
 
 ### Slots
 
 | Slot | Description | Params |
 | --- | --- | --- |
-| `panelRender` | Replaces the `panelRender` prop | `{ originPanel }` |
-| `extraFooter` | Replaces the `renderExtraFooter` prop | `{ mode }` |
-| `cellRender` | Replaces the `cellRender` prop | `{ current, info }` |
+| `panelRender` | Wraps the original panel | `{ originPanel }` |
+| `extraFooter` | Extra footer content | `{ mode }` |
+| `cellRender` | Cell content | `{ current, info }` |
 
 ### Expose
 

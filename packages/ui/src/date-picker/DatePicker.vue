@@ -63,23 +63,28 @@ import {
   type PanelCellRenderScope,
   type PanelDateType,
   PickerPanel,
+  type PickerPanelRef,
+  type TimePanelConfig,
   toggleDates,
 } from '@apollo-design/picker';
-import { useDevWarning } from '@apollo-design/utils';
+import { useControlledValue, useDevWarning } from '@apollo-design/utils';
 import {
-  type Component,
   type CSSProperties,
   computed,
+  defineComponent,
   h,
   inject,
+  nextTick,
+  normalizeClass,
+  normalizeStyle,
   ref,
   useAttrs,
-  useSlots,
+  useId,
   type VNodeChild,
   watch,
 } from 'vue';
 import { pickerHostContextKey } from '../_internal/picker-host-context';
-import { Trigger, type TriggerAlign } from '../_internal/trigger';
+import { Trigger } from '../_internal/trigger';
 import { useConsumerZIndex } from '../_internal/use-consumer-z-index';
 import { semanticRootStyle } from '../_internal/use-merge-semantic';
 import {
@@ -121,11 +126,12 @@ import type {
   DatePickerProps,
   DatePickerSemanticClassNames,
   DatePickerSemanticStyles,
+  DatePickerSlots,
   LimitDate,
   OpenConfig,
   SingleValue,
 } from './interface';
-import { datePickerTokenValues } from './style/token';
+import { useDatePickerTheme } from './use-date-picker-theme';
 
 defineOptions({ name: 'ADatePicker', inheritAttrs: false });
 
@@ -140,6 +146,25 @@ defineOptions({ name: 'ADatePicker', inheritAttrs: false });
  */
 /** 根 `class` / `style` 走 Vue 原生 attrs（见 `COMPATIBILITY.md` §228/§232）。 */
 const attrs = useAttrs();
+const popupId = `apollo-picker-${useId()}`;
+const panelRef = ref<PickerPanelRef | null>(null);
+let restoringFocus = false;
+const panelFocusPending = ref(false);
+const focusPanel = async () => {
+  panelFocusPending.value = true;
+  onOpenChange(true);
+  await nextTick();
+  if (!mergedOpen.value) panelFocusPending.value = false;
+};
+const onPopupKeydown = (event: KeyboardEvent) => {
+  if (event.key !== 'Escape' || event.defaultPrevented) return;
+  event.preventDefault();
+  valueChange.triggerChange(0, 'esc');
+  onOpenChange(false);
+  restoringFocus = true;
+  selectorRef.value?.focus();
+  restoringFocus = false;
+};
 
 const props = withDefaults(defineProps<DatePickerProps>(), {
   open: undefined,
@@ -151,7 +176,6 @@ const props = withDefaults(defineProps<DatePickerProps>(), {
   inputReadOnly: undefined,
   preserveInvalidOnBlur: undefined,
   needConfirm: undefined,
-  changeOnBlur: undefined,
   order: undefined,
   disabled: undefined,
   bordered: undefined,
@@ -196,13 +220,14 @@ const emit = defineEmits<{
   change: [date: SingleValue, dateString: string | string[] | null];
   'update:value': [date: SingleValue];
   calendarChange: [
-    date: DatePickerDate | DatePickerDate[],
+    date: SingleValue,
     dateString: string | string[],
     info: { range?: 'start' | 'end'; from?: DatePickerDate },
   ];
   ok: [date: DatePickerDate | DatePickerDate[]];
   openChange: [open: boolean, config?: OpenConfig];
   'update:open': [open: boolean];
+  'update:mode': [mode: DatePickerPanelMode];
   pickerValueChange: [
     date: DatePickerDate,
     info: { source: 'reset' | 'panel'; mode: DatePickerPanelMode },
@@ -213,8 +238,8 @@ const emit = defineEmits<{
   focus: [event: FocusEvent, info: { range?: 'start' | 'end' }];
   blur: [event: FocusEvent, info: { range?: 'start' | 'end' }];
   invalid: [invalid: boolean];
-  submit: [event: Event];
-  keydown: [event: KeyboardEvent, preventDefault: () => void];
+  select: [date: DatePickerDate];
+  keydown: [event: KeyboardEvent];
 }>();
 
 // ============================== 宿主上下文（薄壳改道） ==============================
@@ -258,14 +283,13 @@ const DEPRECATED_PROPS: Record<string, string> = {
   popupClassName: 'classNames.popup.root',
   popupStyle: 'styles.popup.root',
   bordered: 'variant',
-  onSelect: 'onCalendarChange',
 };
 for (const [oldProp, newProp] of Object.entries(DEPRECATED_PROPS)) {
   devWarning.deprecated(props[oldProp as keyof DatePickerProps] === undefined, oldProp, newProp);
 }
 
 // ============================== 上下文归一 ==============================
-const context = useComponentConfig(host.configKey ?? 'datePicker');
+const context = useComponentConfig<DatePickerComponentConfig>(host.configKey ?? 'datePicker');
 const { getPrefixCls } = context;
 /**
  * `ConfigProvider` 里 `components.datePicker` 的配置。
@@ -286,8 +310,9 @@ interface DatePickerComponentConfig {
   /** 组件级浮层容器（`components.datePicker.getPopupContainer`）。 */
   getPopupContainer?: GetPopupContainer;
 }
-const pickerContext = context as unknown as DatePickerComponentConfig;
-const direction = useDirection();
+const pickerContext = context;
+const contextDirection = useDirection();
+const direction = computed(() => props.direction ?? contextDirection.value);
 const contextDisabled = useDisabled();
 const formItemContext = useFormItemInputContext();
 
@@ -296,6 +321,7 @@ const prefixCls = computed(() => getPrefixCls('picker', props.prefixCls));
 /** 动效名的前缀是 **rootPrefixCls**（PITFALLS 180 同族：写错会静默失效）。 */
 const rootPrefixCls = computed(() => getPrefixCls());
 const rtl = computed(() => direction.value === 'rtl');
+const pickerTheme = useDatePickerTheme();
 
 /**
  * `Selector` 的命令面（上游 `SinglePicker` 的 `selectorRef`）。
@@ -406,6 +432,19 @@ const filled = useFilledLocale({
   locale: computed(() => mergedLocale.value.lang),
   internalMode,
 });
+const mergedShowTime = computed<TimePanelConfig<DatePickerDate> | undefined>(() => {
+  const time = filled.mergedShowTime.value;
+  if (!time) return undefined;
+  const disabledTime = time.disabledTime;
+  return {
+    ...time,
+    defaultValue: Array.isArray(time.defaultValue) ? time.defaultValue[0] : time.defaultValue,
+    defaultOpenValue: Array.isArray(time.defaultOpenValue)
+      ? time.defaultOpenValue[0]
+      : time.defaultOpenValue,
+    disabledTime: disabledTime ? (date) => disabledTime(date, 'start', {}) : undefined,
+  };
+});
 /** 补齐后的 rc locale —— 下游一律用它，不再直接用 `mergedLocale.value.lang`。 */
 const filledLang = computed(() => filled.filledLocale.value);
 
@@ -493,7 +532,7 @@ const pickerParam = <T>(values: T[] | null): T[] | T | null => {
   if (values === null) {
     return null;
   }
-  return props.multiple ? values : (values[0] as T);
+  return props.multiple ? values : (values[0] ?? null);
 };
 
 /** 把值列表格式化成文本（`dateString`）。上游用 `formatList[0]`。 */
@@ -517,15 +556,16 @@ const inner = useInnerValue({
   defaultValue: toDateArray(props.defaultValue),
   getValue: () => (props.value !== undefined ? toDateArray(props.value) : undefined),
   onCalendarChange: (dates, texts, info) => {
-    emit('calendarChange', dates as never, texts, info);
+    const selected = dates.filter((date): date is DatePickerDate => Boolean(date));
+    emit('calendarChange', pickerParam(selected), pickerParam(texts) ?? '', info);
     // legacy `onSelect`：上游只在 `picker === 'time' && !multiple` 时转发，
     // 🚨 且**载荷是单值** —— `generateSinglePicker.js:124-128` 是 `onSelect(date)`，
     //    而 `date` 就是 rc 的 `onInternalCalendarChange` 收到的**已归一**第一参
     //    （`SinglePicker.js:118`：`onCalendarChange(pickerParam(dates), …)`）。
     //    此前给 `dates.filter(Boolean)` 的数组 ⇒ 与
     //    `TimePickerProps['onSelect'] = (value: Dayjs) => void` 的类型契约相反（Issue #6.3）。
-    if (props.onSelect && mergedPicker.value === 'time' && !props.multiple) {
-      props.onSelect(pickerParam(dates) as never);
+    if (mergedPicker.value === 'time' && !props.multiple && selected[0]) {
+      emit('select', selected[0]);
     }
   },
   /**
@@ -535,7 +575,11 @@ const inner = useInnerValue({
    *    `onInternalOk = dates => onOk?.(pickerParam(dates))`）—— 单值是**单个** Dayjs，
    *    不是数组。此前恒给 `dates.filter(Boolean)` 的数组（Issue #6.3）。
    */
-  onOk: (dates) => emit('ok', pickerParam(dates) as never),
+  onOk: (dates) => {
+    const selected = dates.filter((date): date is DatePickerDate => Boolean(date));
+    if (props.multiple) emit('ok', selected);
+    else if (selected[0]) emit('ok', selected[0]);
+  },
 });
 
 /**
@@ -546,8 +590,7 @@ const inner = useInnerValue({
  * `info.from` 永远 undefined（Issue #5.5）。⇒ `LimitDate` 已收窄成 `DatePickerDate`，
  * 这里只做 `DatePickerDate → PanelDateType` 的等价收窄。
  */
-const resolveLimit = (limit: LimitDate | undefined): PanelDateType | undefined =>
-  limit as PanelDateType | undefined;
+const resolveLimit = (limit: LimitDate | undefined): PanelDateType | undefined => limit;
 
 /**
  * ① 「禁用」的合并判定（上游 `useFilledProps.js:115` 的 `useDisabledBoundary`）。
@@ -586,7 +629,7 @@ const isInvalidateDate = useInvalidate({
   disabledDate: () => props.disabledDate,
   minDate: () => resolveLimit(props.minDate) as DatePickerDate | undefined,
   maxDate: () => resolveLimit(props.maxDate) as DatePickerDate | undefined,
-  showTime: () => props.showTime as unknown as Record<string, unknown> | undefined,
+  showTime: () => filled.mergedShowTime.value,
   boundaryDate: boundaryDisabledDate,
 });
 
@@ -603,18 +646,48 @@ const rangeValue = useRangeValue({
   inner,
   onChange: (dates, texts) => {
     // 🚨 C11：`update:value` 与语义事件 `change` **同时**发。
-    const next = pickerParam(dates);
+    const next = pickerParam(
+      dates?.filter((date): date is DatePickerDate => Boolean(date)) ?? null,
+    );
     // ⚠️ 第二个参数走同一条归一：hook 传上来的 `texts` 是「每个日期一个文本」的
     //    数组（`picker-value.ts` 的 `getDateTexts(clone)`）—— 多选时整组都要，
     //    单选时才是 `[text]` 取首项（Issue #5.1）。
-    emit('change', next as never, pickerParam(texts) as never);
-    emit('update:value', next as never);
+    emit('change', next, pickerParam(texts));
+    emit('update:value', next);
   },
 });
 
+const reconcileModel = async () => {
+  await nextTick();
+  if (props.value !== undefined) {
+    inner.calendarValue.value = [...inner.mergedValue.value];
+    rangeValue.submitValue.value = [...inner.mergedValue.value];
+  }
+};
+
 // ============================== 开合 / 浏览值 ==============================
-const innerOpen = ref(props.defaultOpen === true);
-const mergedOpen = computed(() => props.open ?? innerOpen.value);
+const [mergedOpen, setOpen] = useControlledValue({
+  getValue: () => props.open,
+  defaultValue: props.defaultOpen === true,
+});
+
+watch(
+  [panelRef, mergedOpen, panelFocusPending],
+  async ([panel, open, pending]) => {
+    if (!open) {
+      panelFocusPending.value = false;
+      return;
+    }
+    if (pending && panel) {
+      await nextTick();
+      if (mergedOpen.value && panelFocusPending.value && panelRef.value === panel) {
+        panelFocusPending.value = false;
+        panel.focus();
+      }
+    }
+  },
+  { flush: 'post' },
+);
 
 /**
  * 开合的唯一出口。
@@ -624,9 +697,8 @@ const mergedOpen = computed(() => props.open ?? innerOpen.value);
  * `{ force: true }` 在语义上是**空操作**（已在调用点注明）。
  */
 const onOpenChange = (next: boolean): void => {
-  if (props.open === undefined) {
-    innerOpen.value = next;
-  }
+  if (next === mergedOpen.value || (next && mergedDisabled.value)) return;
+  setOpen(next);
   emit('openChange', next);
   emit('update:open', next);
 };
@@ -727,15 +799,16 @@ const onPresetSubmit = (nextValue: unknown): void => {
         )
       : [target];
   const passed = rangeValue.triggerSubmit(nextValues);
+  void reconcileModel();
   if (passed && props.multiple !== true) {
     onOpenChange(false);
   }
 };
 
-const innerPickerValue = ref<DatePickerDate | null>(props.defaultPickerValue ?? null);
-const mergedPickerValue = computed<DatePickerDate | null>(
-  () => props.pickerValue ?? innerPickerValue.value,
-);
+const [mergedPickerValue, setPickerValue] = useControlledValue<DatePickerDate | null>({
+  getValue: () => props.pickerValue,
+  defaultValue: () => props.defaultPickerValue ?? null,
+});
 /** 未给浏览值时用「第一个有值的槽位」兜底，再不行用今天。 */
 const panelPickerValue = computed<DatePickerDate>(
   () =>
@@ -755,16 +828,13 @@ const panelPickerValue = computed<DatePickerDate>(
  * ⚠️ 反馈是**下一 tick** 生效（我们更新 `innerMode` → `mergedMode` → 面板 prop）。
  * 下钻链（年→月→日）每一步都读面板**当时**的 `mergedMode`，所以链式推进正常。
  */
-const innerMode = ref<DatePickerPanelMode>(props.mode ?? mergedPicker.value);
-watch(
-  () => props.mode,
-  (next) => {
-    if (next !== undefined) {
-      innerMode.value = next;
-    }
-  },
-);
-const mergedMode = computed<DatePickerPanelMode>(() => props.mode ?? innerMode.value);
+const [mergedMode, setMode] = useControlledValue<DatePickerPanelMode>({
+  getValue: () => props.mode,
+  defaultValue: () => mergedPicker.value,
+});
+watch(mergedPicker, (next) => {
+  if (props.mode === undefined) setMode(next);
+});
 
 /**
  * 面板粒度对应的内部模式（上游 `SinglePicker` 的 `internalMode`）。
@@ -813,6 +883,7 @@ const valueChange = useRangeValueChange({
   flushSubmit: (_index, needTriggerChange) => {
     if (needTriggerChange) {
       rangeValue.triggerSubmit(inner.calendarValue.value);
+      void reconcileModel();
       // 上游 `triggerOpen(false, { force: true })` —— `force` 在本仓无对应物
       onOpenChange(false);
     }
@@ -837,7 +908,7 @@ const valueChange = useRangeValueChange({
 watch(mergedOpen, (next) => {
   if (next) {
     if (props.mode === undefined) {
-      innerMode.value = mergedPicker.value;
+      setMode(mergedPicker.value);
     }
     return;
   }
@@ -861,6 +932,9 @@ watch(mergedOpen, (next) => {
  * ⇒ `invalid` 只在「非空且解析不出」时为真。
  */
 const invalid = ref(false);
+watch(inner.mergedValue, () => {
+  invalid.value = false;
+});
 
 /** 解析上下文（`locale` + 已归一的 `formatList` + 日期库适配层）。 */
 const parseContext = computed(() => ({
@@ -888,6 +962,7 @@ const parseContext = computed(() => ({
  * （掩码下原生 `input` 是空实现 —— 上游 `Input.js` 的 `onInternalChange`）。
  */
 const applyInputText = (text: string): void => {
+  if (mergedDisabled.value || props.inputReadOnly) return;
   // ① 上游 `useInputProps.js:115`
   valueChange.triggerChange(0, 'input');
   const parsed = validateFormat(text, parseContext.value);
@@ -919,7 +994,7 @@ const onInput = (_index: number, event: Event): void => {
 const onInputFocus = (_index: number, event: FocusEvent): void => {
   focusedIndex.value = 0;
   valueChange.triggerChange(0, 'field-switch');
-  onOpenChange(true);
+  if (!restoringFocus) onOpenChange(true);
   emit('focus', event, {});
 };
 
@@ -940,6 +1015,7 @@ const onInputFocus = (_index: number, event: FocusEvent): void => {
  * focus 事件（`onPanelFocus`/`onBlur` 挂在浮层容器上），本仓尚未接，见 README §5.5。
  */
 const onInputBlur = (_index: number, event: FocusEvent): void => {
+  if (!props.preserveInvalidOnBlur) invalid.value = false;
   if (!isInternalElement(event.relatedTarget)) {
     focusedIndex.value = null;
     // 上游 `useFocusEvents` 的第四参：`onConfirmedBlur` = `() => triggerOpen(false)`
@@ -968,11 +1044,23 @@ const onInputBlur = (_index: number, event: FocusEvent): void => {
  * ⚠️ 顺序也重要：⓪ 在 ① 之前，所以「Enter 提交」不会被 Tab/Escape 的分支影响。
  */
 const onInputKeydown = (_index: number, event: KeyboardEvent): void => {
+  emit('keydown', event);
+  if (event.defaultPrevented || event.isComposing || mergedDisabled.value) return;
+  if (
+    ((props.inputReadOnly || props.multiple) && ['ArrowDown', 'Enter', ' '].includes(event.key)) ||
+    (!mergedFormat.value.maskFormat && event.key === 'ArrowDown')
+  ) {
+    event.preventDefault();
+    void focusPanel();
+    return;
+  }
   // ⓪ 上游 `Input.js:182-183`
   if (event.key === 'Enter') {
     const text = (event.target as HTMLInputElement).value;
     if (validateFormat(text, parseContext.value)) {
+      event.preventDefault();
       valueChange.triggerChange(0, 'keyboard-submit');
+      return;
     }
   }
 
@@ -985,15 +1073,7 @@ const onInputKeydown = (_index: number, event: KeyboardEvent): void => {
   }
 
   // ② deprecated 的 `onKeyDown` 通道（第二参是 `preventDefault` 的兼容 shim）
-  let prevented = false;
-  emit('keydown', event, () => {
-    prevented = true;
-  });
-
-  // ③ 上游 `useInputProps.js:144-158`
-  if (event.defaultPrevented || prevented) {
-    return;
-  }
+  // ③ 打开尚未打开的选择器。
   switch (event.key) {
     case 'Escape':
       onOpenChange(false);
@@ -1023,6 +1103,7 @@ const onInputKeydown = (_index: number, event: KeyboardEvent): void => {
 const onClear = (): void => {
   valueChange.reset();
   rangeValue.triggerSubmit(null);
+  void reconcileModel();
   onOpenChange(false);
   selectorRef.value?.focus();
   emit('clear');
@@ -1094,7 +1175,6 @@ const rootClass = computed(() =>
     compactItemClassnames: compactItemClassnames.value,
     contextClassName: pickerContext.className,
     // 调用方原生 class（位置与原先的 props.className 一致）
-    className: attrs.class as string | undefined,
     // 🚨 在 `className` 之后、`rootClassName` 之前（上游 `clsx(hashId, cssVarCls, rootCls, rootClassName)`）
     cssVarClassName: cssVarClassName.value,
   }),
@@ -1109,7 +1189,7 @@ const rootClass = computed(() =>
 const zIndex = useConsumerZIndex(
   'DatePicker',
   () => semantic.styles.value.popup?.root?.zIndex,
-  () => datePickerTokenValues().zIndexPopup,
+  () => pickerTheme.zIndexPopup.value,
 );
 
 const popupClassNames = computed(() => [
@@ -1147,6 +1227,7 @@ const transitionName = computed(() => getTransitionName(rootPrefixCls.value, pro
  * 浮层样式与 provide 数值使用同一当前层级；非数值 CSS 表达式保留原值。
  */
 const popupStyle = computed(() => ({
+  ...pickerTheme.style.value,
   ...semantic.styles.value.popup?.root,
   zIndex: zIndex.value ?? semantic.styles.value.popup?.root?.zIndex,
 }));
@@ -1249,7 +1330,7 @@ const footerSubmitValue = computed(() =>
     : panelValueList.value,
 );
 
-const panelProps = computed(() => ({
+const panelProps = computed<InstanceType<typeof PickerPanel>['$props']>(() => ({
   prefixCls: prefixCls.value,
   direction: direction.value,
   // ⚠️ 传**补齐后**的 rc locale。面板自己也会补一次（`||` 判据），
@@ -1265,7 +1346,7 @@ const panelProps = computed(() => ({
    * 全部粒度变化都走 `onPanelChange` 回灌（见 `mergedMode` 的说明）。
    */
   mode: mergedMode.value,
-  value: popupPanelValue.value as never,
+  value: popupPanelValue.value.filter((date): date is DatePickerDate => Boolean(date)),
   multiple: props.multiple,
   /**
    * 悬停预览（上游 `SinglePicker.js:308` 的 `hoverValue: hoverValues` /
@@ -1274,14 +1355,16 @@ const panelProps = computed(() => ({
    * ⚠️ 面板拿的是**已过滤**的列表（`hoverValues`），且单值只保留第一个 ——
    * 面板用它给格子加 `-hover` 类（周面板还会整行高亮）。
    */
-  hoverValue: hoverValues.value as never,
+  hoverValue: hoverValues.value,
   onHover: (date: PanelDateType | null) => {
     onSetHover(date as DatePickerDate | null, 'cell');
   },
-  onSelect: onPanelSelect,
+  onSelect: (date: PanelDateType) => {
+    if (!mergedDisabled.value) onPanelSelect(date);
+  },
   onPickerValueChange: (next: PanelDateType) => {
     if (props.pickerValue === undefined) {
-      innerPickerValue.value = next;
+      setPickerValue(next);
     }
     emit('pickerValueChange', next, { source: 'panel', mode: internalMode.value as never });
     emit('update:pickerValue', next);
@@ -1296,13 +1379,14 @@ const panelProps = computed(() => ({
    */
   onPanelChange: (viewDate: PanelDateType | undefined, mode: DatePickerPanelMode) => {
     if (props.mode === undefined) {
-      innerMode.value = mode;
+      setMode(mode);
     }
-    emit('panelChange', viewDate as never, mode);
+    emit('update:mode', mode);
+    emit('panelChange', viewDate ?? panelPickerValue.value, mode);
   },
   // 🚨 传的是**合并了 min/max 的**判定（上游 `mergedProps.disabledDate = disabledBoundaryDate`，
   //    `useFilledProps.js:125`），不是用户裸的 `props.disabledDate`。
-  disabledDate: boundaryDisabledDate as never,
+  disabledDate: boundaryDisabledDate,
   minDate: resolveLimit(props.minDate),
   maxDate: resolveLimit(props.maxDate),
   /**
@@ -1328,7 +1412,7 @@ const panelProps = computed(() => ({
       valueChange.triggerChange(0, 'confirm');
     }
   },
-  showTime: props.showTime as never,
+  showTime: mergedShowTime.value,
   /**
    * 🚨 **顶层时间配置必须逐键下发给面板**（Issue #6.2）。
    *
@@ -1383,6 +1467,8 @@ const selectorProps = computed(() => ({
   allowClear: allowClearForSelector.value,
   disabled: mergedDisabled.value,
   readOnly: props.inputReadOnly === true,
+  open: mergedOpen.value,
+  popupId,
   rootClass: rootClass.value,
   // 根 style 是 Vue 原生 attrs
   rootStyle: attrs.style as CSSProperties | undefined,
@@ -1392,7 +1478,7 @@ const selectorProps = computed(() => ({
   // ---------------------------------------------------------- 多选（S5）
   multiple: props.multiple === true,
   /** 原始值（标签要拿它去删；`valueTexts` 只有文本）。 */
-  values: inner.calendarValue.value as unknown[],
+  values: panelValueList.value,
   /**
    * 悬停预览的两个标志（上游 `SinglePicker.js:436-437`）。
    *
@@ -1404,7 +1490,6 @@ const selectorProps = computed(() => ({
    */
   activeHelp: internalHoverValue.value !== null,
   allHelp: internalHoverValue.value !== null && hoverSource.value === 'preset',
-  tagRender: (slots.tagRender ? mergedTagRender : props.tagRender) as never,
   maxTagCount: props.maxTagCount,
   /**
    * 标签的删除图标。
@@ -1427,11 +1512,9 @@ const selectorProps = computed(() => ({
    * （`'remove'` 是唯一「即使不允许为空也要提交」的来源）。
    * ⚠️ 判等粒度是 **`internalMode`**（组件粒度），不是面板当前粒度。
    */
-  onMultipleRemove: (value: unknown) => {
+  onMultipleRemove: (value: DatePickerDate) => {
     const nextValues = inner.calendarValue.value.filter(
-      (date) =>
-        date &&
-        !isSame(dayjsConfig, filledLang.value, date, value as DatePickerDate, internalMode.value),
+      (date) => date && !isSame(dayjsConfig, filledLang.value, date, value, internalMode.value),
     );
     valueChange.triggerChange(0, mergedOpen.value ? 'input' : 'remove', nextValues);
   },
@@ -1444,7 +1527,6 @@ const selectorProps = computed(() => ({
   /** 掩码：文本 ≠ 模板且 ≠ 受控值 ⇒ 打开浮层（上游 `onHelp` ⇒ `onOpenChange(true)`）。 */
   onInputHelp: () => onOpenChange(true),
   /** 掩码：`Enter` + 文本合法 ⇒ 提交（上游 `Input.onSharedKeyDown`）。 */
-  onInputSubmit: () => valueChange.triggerChange(0, 'keyboard-submit'),
   /** 掩码：合法文本从 `keydown` 路径进来（原生 `input` 是空实现）。 */
   onInputText: (_index: number, text: string) => applyInputText(text),
   onInput,
@@ -1474,16 +1556,10 @@ const selectorProps = computed(() => ({
  * **运行时从不读取** ⇒ 写了 `#cellRender` 的模板什么也不会发生。
  */
 const mergedCellRender = ({ current, info }: PanelCellRenderScope): VNodeChild =>
-  slots.cellRender
-    ? slots.cellRender({ current, info })
-    : props.cellRender
-      ? props.cellRender(current, info)
-      : info.originNode;
+  slots.cellRender ? slots.cellRender({ current, info }) : info.originNode;
 
 /** `tagRender` 同理（slot 收 `{ label, value, ... }`）。 */
-const mergedTagRender = (tagProps: Record<string, unknown>): unknown =>
-  slots.tagRender ? slots.tagRender(tagProps as never) : props.tagRender?.(tagProps as never);
-const slots = useSlots();
+const slots = defineSlots<DatePickerSlots>();
 
 /**
  * 引擎的最终绑定：调用方 attrs（**除 class/style** —— 它们已归根/走语义通道）在前、
@@ -1505,7 +1581,13 @@ const slots = useSlots();
  */
 const selectorBindings = (): Record<string, unknown> => {
   const { rootAttrs, inputAttrsByIndex } = splitPickerAttrs(attrs, props);
-  return { ...rootAttrs, ...selectorProps.value, inputAttrsByIndex };
+  return {
+    ...rootAttrs,
+    ...selectorProps.value,
+    inputAttrsByIndex,
+    rootClass: normalizeClass([rootClass.value, attrs.class]),
+    rootStyle: [pickerTheme.style.value, normalizeStyle(attrs.style)],
+  };
 };
 
 /** Trigger 的浮层容器：局部优先，回退 ConfigProvider 的全局设置（Issue #5.2）。 */
@@ -1525,8 +1607,12 @@ const dropdownPrefixCls = computed(() => `${prefixCls.value}-dropdown`);
 /** 面板前缀（上游 `PickerInput/Popup` 的 `panelPrefixCls = `${prefixCls}-panel``）。 */
 const panelPrefixCls = computed(() => `${prefixCls.value}-panel`);
 /** 使用当前 props 和作用域槽构造面板；槽内容由面板渲染时调用。 */
-const panelVNode = () =>
-  h(PickerPanel as Component, panelProps.value, { cellRender: mergedCellRender });
+const PopupPanel = defineComponent({
+  name: 'ApolloDatePickerPopupPanel',
+  setup: () => () =>
+    h(PickerPanel, { ...panelProps.value, ref: panelRef }, { cellRender: mergedCellRender }),
+});
+const panelVNode = () => h(PopupPanel);
 
 /**
  * 浮层内容 —— 面板外面**再套两层**（上游 `@rc-component/picker@1.12.2` 的
@@ -1606,16 +1692,15 @@ const disableSubmit = computed(() => {
  * 🚨 它必须与 `PickerPanel` **同层**（上游 `Popup/index.js:127-133` 的那个无类名 `div`），
  * **不是**面板的子节点。
  */
-const footerVNode = computed(() =>
+const footerVNode = () =>
   h(
-    Footer as Component,
+    Footer,
     {
       prefixCls: prefixCls.value,
       /** 面板当前粒度 —— 只用于 `renderExtraFooter(mode)` */
       mode: mergedMode.value,
       /** 组件粒度 —— 决定文案是 `Today` 还是 `Now` */
       internalMode: internalMode.value,
-      renderExtraFooter: props.renderExtraFooter,
       showNow: mergedShowNow.value,
       showTime: props.showTime,
       needConfirm: mergedNeedConfirm.value,
@@ -1653,9 +1738,11 @@ const footerVNode = computed(() =>
         emit('ok', pickerParam(inner.calendarValue.value) as never);
         valueChange.triggerChange(0, 'confirm');
       },
-    } as unknown as Record<string, unknown>,
-  ),
-);
+    },
+    slots.extraFooter
+      ? { default: ({ mode }: { mode: DatePickerPanelMode }) => slots.extraFooter?.({ mode }) }
+      : {},
+  );
 
 /**
  * Trigger 消费当前浮层构造函数。元素 ref 由实际渲染的子组件拥有，
@@ -1664,7 +1751,7 @@ const footerVNode = computed(() =>
 const popupVNode = () => {
   const popupClassNames = semantic.classNames.value.popup;
   const popupStyles = semantic.styles.value.popup;
-  return h(
+  const content = h(
     'div',
     {
       class: [
@@ -1680,6 +1767,13 @@ const popupVNode = () => {
       //    单值选择器恒为 0。
       style: { marginLeft: 0, marginRight: 'auto', ...popupStyles?.container },
       tabIndex: -1,
+      id: popupId,
+      role: 'dialog',
+      'aria-label': placeholder.value || 'Choose date',
+      onKeydown: onPopupKeydown,
+      onFocusout: (event: FocusEvent) => {
+        if (!isInternalElement(event.relatedTarget)) onInputBlur(0, event);
+      },
     },
     h('div', { class: `${panelPrefixCls.value}-layout` }, [
       /**
@@ -1688,21 +1782,23 @@ const popupVNode = () => {
        * ⇒ 连 `-presets` 这个类名都不出现，面板宽度不受影响。
        */
       h(
-        PresetPanel as Component,
+        PresetPanel,
         {
           prefixCls: prefixCls.value,
           presets: presetList.value,
-          onClick: onPresetSubmit,
+          onSelect: onPresetSubmit,
           onHover: onPresetHover,
-        } as unknown as Record<string, unknown>,
+        },
+        slots.presetRender ? { presetRender: slots.presetRender } : {},
       ),
       // 🚨 上游 `Popup/index.js:127-133`：这一层同时装 `PopupPanel` 与 `Footer`
-      h('div', null, [panelVNode(), footerVNode.value]),
+      h('div', null, [panelVNode(), footerVNode()]),
     ]),
   );
+  return slots.panelRender ? slots.panelRender({ originPanel: content }) : content;
 };
-const builtinPlacements = computed(() => BUILT_IN_PLACEMENTS as Record<string, TriggerAlign>);
-const popupAlign = computed(() => props.popupAlign as TriggerAlign | undefined);
+const builtinPlacements = computed(() => props.builtinPlacements ?? BUILT_IN_PLACEMENTS);
+const popupAlign = computed(() => props.popupAlign);
 const popupMotion = computed(() => ({ motionName: transitionName.value, motionDeadline: 1000 }));
 </script>
 
@@ -1730,6 +1826,11 @@ const popupMotion = computed(() => ({ motionName: transitionName.value, motionDe
       :value-texts="valueTexts"
       v-bind="selectorBindings()"
       ref="selectorRef"
-    />
+    >
+      <template v-if="slots.prefix" #prefix><slot name="prefix" /></template>
+      <template v-if="slots.suffixIcon" #suffixIcon><slot name="suffixIcon" /></template>
+      <template v-if="slots.clearIcon" #clearIcon><slot name="clearIcon" /></template>
+      <template v-if="slots.tagRender" #tagRender="scope"><slot name="tagRender" v-bind="scope" /></template>
+    </Selector>
   </Trigger>
 </template>

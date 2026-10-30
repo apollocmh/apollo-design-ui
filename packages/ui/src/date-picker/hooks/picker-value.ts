@@ -50,7 +50,8 @@
  */
 
 import { isSameDates, orderDates, validateRangeSubmit } from '@apollo-design/picker';
-import { type ComputedRef, computed, type Ref, ref, watch } from 'vue';
+import { useControlledValue } from '@apollo-design/utils';
+import { type ComputedRef, type Ref, ref, watch } from 'vue';
 import type { DatePickerDate, DatePickerMode, RangeValue } from '../interface';
 import type { GenerateConfig, RcPickerLocale } from './picker-types';
 
@@ -135,28 +136,14 @@ export function useInnerValue(options: UseInnerValueOptions): InnerValueResult {
 
   // ── ① 根值：受控 `value` / 非受控 `innerValue` ──
   //
-  // 与 `useControlledValue` 同构，但**手写而非复用**，理由有二：
-  //   a. `useControlledValue` 的 `setValue` 会**回调 onChange**，而本组件里
-  //      `onChange` 只在 `triggerSubmit` 校验通过后发（发早了会破坏确认制）；
-  //   b. 受控/非受控的归一（`null` ⇒ `[]`、单值 ⇒ 单元素数组）要发生在 `getValue` 里，
-  //      那是本 hook 的契约而非 `useControlledValue` 的。
-  const inner = ref<ValueSlot[]>([...defaultValue]);
-  const mergedValue = computed<ValueSlot[]>(() => {
-    const controlled = getValue();
-    return controlled !== undefined ? controlled : inner.value;
+  // 仅保存被接受的公开值；提交校验和 change 通知仍由下层拥有。
+  const [mergedValue, setValue] = useControlledValue<ValueSlot[]>({
+    defaultValue: () => [...defaultValue],
+    getValue,
   });
 
-  // 非首次的受控值变化 → 同步回 inner（对齐 `useControlledState` 的
-  // 「control → un-control 时重置为 undefined」行为）
-  watch(
-    () => getValue(),
-    (next) => {
-      inner.value = next as ValueSlot[];
-    },
-  );
-
   const setInnerValue = (next: ValueSlot[]): void => {
-    inner.value = next;
+    setValue([...next]);
   };
 
   // ── ② calendarValue：初始 = mergedValue，随 mergedValue 变化重新同步 ──

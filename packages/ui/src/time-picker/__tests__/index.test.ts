@@ -26,6 +26,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { h } from 'vue';
 import ConfigProvider from '../../config-provider/ConfigProvider';
 import DatePicker from '../../date-picker/DatePicker.vue';
+import type { TimePickerSlots } from '../interface';
 import TimePicker from '../TimePicker.vue';
 import TimeRangePicker from '../TimeRangePicker.vue';
 
@@ -46,8 +47,8 @@ afterEach(() => {
 /** 断言「`console.error` 里出现了某个子串」，并返回全部消息方便调试。 */
 const warnings = (): string[] => errorSpy.mock.calls.map((call) => String(call[0]));
 
-const mountTimePicker = (props: Record<string, unknown> = {}) =>
-  mount(TimePicker, { props, attachTo: document.body });
+const mountTimePicker = (props: Record<string, unknown> = {}, slots: TimePickerSlots = {}) =>
+  mount(TimePicker, { props, slots: { ...slots }, attachTo: document.body });
 
 const mountTimeRangePicker = (props: Record<string, unknown> = {}) =>
   mount(TimeRangePicker, { props, attachTo: document.body });
@@ -94,24 +95,18 @@ describe('TimePicker · 接线（薄壳的四件正事）', () => {
     b.unmount();
   });
 
-  it('`renderExtraFooter ?? addon` —— 两者都渲染到页脚', async () => {
-    const w = mountTimePicker({
-      open: true,
-      renderExtraFooter: () => h('span', { class: 'from-footer' }, 'F'),
-      addon: () => h('span', { class: 'from-addon' }, 'A'),
-    });
+  it('forwards the extraFooter native slot including explicitly empty output', async () => {
+    const w = mountTimePicker(
+      { open: true },
+      { extraFooter: () => h('span', { class: 'from-footer' }, 'F') },
+    );
     await w.vm.$nextTick();
-    // `renderExtraFooter` 优先 ⇒ 只出现它。
     expect(document.querySelector('.from-footer')).not.toBeNull();
     expect(document.querySelector('.from-addon')).toBeNull();
     w.unmount();
-
-    const w2 = mountTimePicker({
-      open: true,
-      addon: () => h('span', { class: 'from-addon' }, 'A'),
-    });
+    const w2 = mountTimePicker({ open: true }, { extraFooter: () => [] });
     await w2.vm.$nextTick();
-    expect(document.querySelector('.from-addon')).not.toBeNull();
+    expect(document.querySelector(`.${P}-footer-extra`)?.textContent).toBe('');
     w2.unmount();
   });
 
@@ -131,22 +126,20 @@ describe('TimePicker · 接线（薄壳的四件正事）', () => {
 });
 
 describe('TimePicker · 告警矩阵（实测表 §2.4）', () => {
-  it('`addon` 发告警，命名空间是 `TimePicker`', () => {
+  it('extraFooter slot is accepted without a legacy addon warning', () => {
     resetWarned();
     errorSpy.mockClear();
-    const w = mountTimePicker({ addon: () => h('span') });
-    expect(warnings().join('\n')).toContain('`addon` is deprecated');
-    expect(warnings().join('\n')).toContain('[apollo: TimePicker]');
+    const w = mountTimePicker({}, { extraFooter: () => h('span') });
+    expect(warnings().join('\n')).not.toContain('`addon` is deprecated');
     w.unmount();
   });
 
-  it('`onSelect` 发告警，命名空间是 `TimePicker`（**不是** `DatePicker`）', () => {
+  it('select is an owned native event without a deprecated prop warning', () => {
     resetWarned();
     errorSpy.mockClear();
     const w = mountTimePicker({ onSelect: () => {} });
     const text = warnings().join('\n');
-    expect(text).toContain('`onSelect` is deprecated');
-    expect(text).toContain('[apollo: TimePicker]');
+    expect(text).not.toContain('`onSelect` is deprecated');
     expect(text).not.toContain('[apollo: DatePicker]');
     w.unmount();
   });
@@ -175,7 +168,7 @@ describe('TimePicker · 告警矩阵（实测表 §2.4）', () => {
   it.each([
     ['bordered', { bordered: false }, '`bordered` is deprecated'],
     ['popupClassName', { popupClassName: 'x' }, '`popupClassName` is deprecated'],
-    ['onSelect', { onSelect: () => {} }, '`onSelect` is deprecated'],
+    ['dropdownClassName', { dropdownClassName: 'x' }, '`dropdownClassName` is deprecated'],
   ])('🚨 范围版 `%s` **发**告警，命名空间是 `DatePicker.RangePicker`', (_label, props, frag) => {
     resetWarned();
     errorSpy.mockClear();

@@ -63,6 +63,7 @@ import type {
 } from '@apollo-design/picker';
 import type { Dayjs } from 'dayjs';
 import type { CSSProperties, VNodeChild } from 'vue';
+import type { TriggerAlign } from '../_internal/trigger';
 import type { SizeType } from '../config-provider';
 
 // ---------------------------------------------------------------------------
@@ -192,10 +193,6 @@ export interface CellRenderInfo {
  * `current` 是上游的 `CurrentType` **联合**（`DateType | number | string`）——
  * 时间列里传数字、上下午列里传 `'am' | 'pm'`。⚠️ 不要收窄成 `DatePickerDate`。
  */
-export type CellRender = (
-  current: DatePickerDate | number | string,
-  info: CellRenderInfo,
-) => VNodeChild;
 
 /** 预设项（`presets`）。 */
 export interface ValueDate {
@@ -391,16 +388,6 @@ export interface PickerCommonProps {
   showNow?: boolean;
   /** @deprecated 用 `showNow`。 */
   showToday?: boolean;
-  /** 自定义面板内容（包裹原始面板）。 */
-  panelRender?: (originPanel: VNodeChild) => VNodeChild;
-  /** 面板底部的额外内容。 */
-  renderExtraFooter?: (mode: DatePickerPanelMode) => VNodeChild;
-  /** 单元格自定义渲染。 */
-  cellRender?: CellRender;
-  /** @deprecated 用 `cellRender`。 */
-  dateRender?: (currentDate: DatePickerDate, today: DatePickerDate) => VNodeChild;
-  /** @deprecated 用 `cellRender`。 */
-  monthCellRender?: (currentDate: DatePickerDate, locale: PickerLocale) => VNodeChild;
 
   // ================================================ 顶层时间配置（Issue #6.2）
   //
@@ -462,8 +449,6 @@ export interface PickerCommonProps {
    * `false` = 关闭面板即提交。
    */
   needConfirm?: boolean;
-  /** @deprecated 已移除、不再生效（用 `needConfirm`）。 */
-  changeOnBlur?: boolean;
   /**
    * 提交时是否对范围值排序。
    * 上游注释：Default will always order of selection after submit。
@@ -523,9 +508,9 @@ export interface PickerCommonProps {
   /** 自定义浮层容器。 */
   getPopupContainer?: (node: HTMLElement) => HTMLElement;
   /** 浮层的对齐微调（透传触发器）。 */
-  popupAlign?: Record<string, unknown>;
+  popupAlign?: TriggerAlign;
   /** 内置落点表（透传触发器）。 */
-  builtinPlacements?: Record<string, unknown>;
+  builtinPlacements?: Record<string, TriggerAlign>;
   /** 自定义前缀类名（默认 = `getPrefixCls('picker')` = `apollo-picker`）。 */
   prefixCls?: string;
   /** 文字方向。 */
@@ -536,10 +521,6 @@ export interface PickerCommonProps {
   popupClassName?: string;
   /** @deprecated 用 `styles.popup.root`。 */
   popupStyle?: CSSProperties;
-  /** 面板内部的组件替换（`button` / `input` / 7 个面板）。 */
-  components?: Record<string, unknown>;
-  /** @deprecated 用 `components.input`。 */
-  inputRender?: (props: Record<string, unknown>) => VNodeChild;
   /** 4 个面板导航图标（上游覆盖成空 span，图形由样式画）。 */
   prevIcon?: VNodeChild;
   nextIcon?: VNodeChild;
@@ -568,25 +549,6 @@ export interface PickerCommonProps {
   name?: string;
   /** 原生 `autoComplete`。⚠️ 实测默认渲染成 `autocomplete="off"`（大写 O 的 React 写法在 DOM 里被规范化）。 */
   autoComplete?: string;
-  /** 表单提交（原生 `submit` 事件）。 */
-  onSubmit?: (event: Event) => void;
-  /** 键入非法值时触发（`input[aria-invalid]` 的同步通道）。 */
-  onInvalid?: (invalid: boolean) => void;
-
-  // ============================================================ legacy / 回调
-  /**
-   * @deprecated 用 `onCalendarChange`。
-   *
-   * ⚠️ 上游只在 **`picker === 'time' && !multiple`** 时把它接到 `onCalendarChange` 上
-   * （`generateSinglePicker.js`：`const hasLegacyOnSelect = onSelect && picker === 'time' && !multiple`）。
-   * 本仓同样只在那一支生效 —— 别无条件转发。
-   */
-  onSelect?: (date: DatePickerDate | DatePickerDate[]) => void;
-  /**
-   * @deprecated 用 `onKeyDown`（原生）。上游的 `LegacyOnKeyDown` 第二参是 `preventDefault`。
-   * 本仓在 emits 里给 `keydown`（载荷 `(event, preventDefault)`）。
-   */
-  onKeyDown?: (event: KeyboardEvent, preventDefault: () => void) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -604,8 +566,6 @@ export interface DatePickerProps extends PickerCommonProps {
   multiple?: boolean;
   /** 仅 `multiple` 生效：最多显示几个标签（`'responsive'` = 按宽度自适应）。 */
   maxTagCount?: number | 'responsive';
-  /** 仅 `multiple` 生效：自定义标签渲染。 */
-  tagRender?: (props: CustomTagProps) => VNodeChild;
   /**
    * 仅 `multiple` 生效：标签的删除图标（rc 的 `BasePickerProps.removeIcon`）。
    *
@@ -640,21 +600,6 @@ export interface DatePickerProps extends PickerCommonProps {
    * （`RangePickerProps` 自己覆盖了它）⇒ 不能在 `PickerCommonProps` 里声明。
    */
   disabled?: boolean;
-
-  // ---------------------------------------------------------------- 回调
-  /** 面板浏览值变化（每次开浮层 / 点面板都会发）。 */
-  onPickerValueChange?: (
-    date: DatePickerDate,
-    info: { source: 'reset' | 'panel'; mode: DatePickerPanelMode },
-  ) => void;
-  /** 面板粒度变化。 */
-  onPanelChange?: (value: DatePickerDate, mode: DatePickerPanelMode) => void;
-  /** 取消 / 选中 / 键入时的中间回调。 */
-  onCalendarChange?: (
-    date: DatePickerDate | DatePickerDate[],
-    dateString: string | string[],
-    info: { range?: 'start' | 'end'; from?: DatePickerDate },
-  ) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -663,10 +608,7 @@ export interface DatePickerProps extends PickerCommonProps {
 
 /** 范围 DatePicker 的 props（与单值的差异集中在「数组化」的那几项）。 */
 export interface RangePickerProps
-  extends Omit<
-    PickerCommonProps,
-    'showTime' | 'mode' | 'onPanelChange' | 'defaultOpenValue' | 'defaultPickerValue' | 'cellRender'
-  > {
+  extends Omit<PickerCommonProps, 'defaultOpenValue' | 'defaultPickerValue' | 'disabledTime'> {
   // ---------------------------------------------------------------- 值
   /** 当前值。 */
   value?: RangeValue | null;
@@ -686,14 +628,14 @@ export interface RangePickerProps
   mode?: [startMode: DatePickerPanelMode, endMode: DatePickerPanelMode];
   /** 时间配置（范围版：`disabledTime` 多两个参数、`defaultOpenValue` 是数组）。 */
   showTime?: boolean | RangeTimeProps;
+  /** 当前端的时间禁用规则，end 的 info.from 是起点。 */
+  disabledTime?: RangeTimeProps['disabledTime'];
   /** 两端的空值模板。 */
   defaultOpenValue?: DatePickerDate[];
   /** 范围预设项。 */
   presets?: RangeValueDate[];
   /** @deprecated 用 `presets`。 */
   ranges?: Record<string, NoUndefinedRangeValue | (() => NoUndefinedRangeValue)>;
-  /** 单元格渲染（范围版的 info 一定带 `range`）。 */
-  cellRender?: CellRender;
 
   // ---------------------------------------------------------------- 装饰
   /** 两端的占位符。 */
@@ -706,27 +648,6 @@ export interface RangePickerProps
   disabled?: boolean | [boolean, boolean];
   /** 是否允许某一端为空。 */
   allowEmpty?: boolean | [boolean, boolean];
-
-  // ---------------------------------------------------------------- 回调
-  /** 两端各自的浏览值变化。 */
-  onPickerValueChange?: (
-    date: [DatePickerDate, DatePickerDate],
-    info: {
-      source: 'reset' | 'panel';
-      mode: [DatePickerPanelMode, DatePickerPanelMode];
-    },
-  ) => void;
-  /** 面板粒度变化。 */
-  onPanelChange?: (
-    values: NoUndefinedRangeValue,
-    modes: [startMode: DatePickerPanelMode, endMode: DatePickerPanelMode],
-  ) => void;
-  /** 中间回调（范围版两端都不允许 `undefined`）。 */
-  onCalendarChange?: (
-    dates: NoUndefinedRangeValue,
-    dateStrings: [string, string],
-    info: { range?: 'start' | 'end'; from?: DatePickerDate },
-  ) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -740,13 +661,15 @@ export interface RangePickerProps
  * （PITFALLS 162），但**新组件一律按 C11 做**（本组件即如此）。
  */
 export interface DatePickerEmits {
+  /** 时间选择的中间日期通知。 */
+  select: (date: DatePickerDate) => void;
   /** 值变化。`dateString` 是按 `format` 格式化后的文本。 */
   change: (date: SingleValue, dateString: string | string[] | null) => void;
   /** `v-model:value`。 */
   'update:value': (date: SingleValue) => void;
   /** 选中过程中每次变化都发（未提交也发）。 */
   calendarChange: (
-    date: DatePickerDate | DatePickerDate[],
+    date: SingleValue,
     dateString: string | string[],
     info: { range?: 'start' | 'end'; from?: DatePickerDate },
   ) => void;
@@ -756,6 +679,7 @@ export interface DatePickerEmits {
   openChange: (open: boolean, config?: OpenConfig) => void;
   /** `v-model:open`。 */
   'update:open': (open: boolean) => void;
+  'update:mode': (mode: DatePickerPanelMode) => void;
   /** 面板浏览值变化。 */
   pickerValueChange: (
     date: DatePickerDate,
@@ -773,19 +697,13 @@ export interface DatePickerEmits {
   blur: (event: FocusEvent, info: { range?: 'start' | 'end' }) => void;
   /** 键入值非法。 */
   invalid: (invalid: boolean) => void;
-  /** 表单提交。 */
-  submit: (event: Event) => void;
-  /**
-   * 按键（deprecated 的 `onKeyDown` 通道）。
-   *
-   * ⚠️ 第二参 `preventDefault` 是上游 `LegacyOnKeyDown` 的签名，**必须给** ——
-   * 调用方常写成 `(e, preventDefault) => preventDefault()`，缺了它会在运行时炸。
-   */
-  keydown: (event: KeyboardEvent, preventDefault: () => void) => void;
+  /** 原生按键；preventDefault() 可取消内部键盘行为。 */
+  keydown: (event: KeyboardEvent) => void;
 }
 
 /** 范围的事件面。 */
 export interface RangePickerEmits {
+  keydown: (event: KeyboardEvent) => void;
   change: (dates: NoUndefinedRangeValue | null, dateStrings: [string, string]) => void;
   'update:value': (dates: RangeValue | null) => void;
   calendarChange: (
@@ -796,6 +714,7 @@ export interface RangePickerEmits {
   ok: (dates: NoUndefinedRangeValue) => void;
   openChange: (open: boolean, config?: OpenConfig) => void;
   'update:open': (open: boolean) => void;
+  'update:mode': (mode: [DatePickerPanelMode, DatePickerPanelMode]) => void;
   pickerValueChange: (
     date: [DatePickerDate, DatePickerDate],
     info: { source: 'reset' | 'panel'; mode: [DatePickerPanelMode, DatePickerPanelMode] },
@@ -818,8 +737,7 @@ export interface RangePickerEmits {
 /**
  * 插槽面。
  *
- * 规则：上游的 **render prop 一律「函数 prop + 同名 scoped slot」双通道**（C8）——
- * 两条路走同一个内部实现，避免出现「只有一种写法能生效」。
+ * 动态内容使用 Vue 具名插槽；显式空槽保持为空，增删插槽在当前渲染生效。
  */
 export interface DatePickerSlots {
   /** `panelRender`（包裹原始面板）。 */
@@ -828,7 +746,7 @@ export interface DatePickerSlots {
   extraFooter?: (props: { mode: DatePickerPanelMode }) => VNodeChild;
   /** `cellRender`。 */
   cellRender?: (props: {
-    current: DatePickerDate | number | string;
+    current: DatePickerDate | number | 'am' | 'pm';
     info: CellRenderInfo;
   }) => VNodeChild;
   /** `tagRender`（仅 `multiple`）。 */
@@ -852,7 +770,7 @@ export interface DatePickerSlots {
 /** 单值的命令面（与上游 `PickerRef` 同形）。 */
 export interface DatePickerExpose {
   /** 根 DOM。 */
-  nativeElement: HTMLDivElement;
+  nativeElement: HTMLElement | null;
   focus: (options?: FocusOptions) => void;
   blur: () => void;
 }
@@ -865,11 +783,11 @@ export interface DatePickerExpose {
  * 两个原生 input（上游 `RangeSelectorRef` 独有）。
  */
 export interface RangePickerExpose {
-  nativeElement: HTMLDivElement;
+  nativeElement: HTMLElement | null;
   focus: (index?: number | (FocusOptions & { index?: number })) => void;
   blur: () => void;
-  startInput: HTMLInputElement;
-  endInput: HTMLInputElement;
+  startInput: HTMLInputElement | null;
+  endInput: HTMLInputElement | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -877,21 +795,3 @@ export interface RangePickerExpose {
 // ---------------------------------------------------------------------------
 
 /** `PurePanel` 的 props（只出面板、不出输入框）。 */
-export interface PurePanelProps {
-  /** 选择粒度。 */
-  picker?: DatePickerMode;
-  /** 面板粒度。 */
-  mode?: DatePickerPanelMode;
-  prefixCls?: string;
-  value?: DatePickerDate | null;
-  showTime?: boolean | SharedTimeProps;
-  cellRender?: CellRender;
-  disabledDate?: DisabledDate;
-  classNames?: DatePickerSemanticClassNames;
-  styles?: DatePickerSemanticStyles;
-}
-
-/** 范围版 `PurePanel`。 */
-export interface PureRangePanelProps extends Omit<PurePanelProps, 'value'> {
-  value?: RangeValue | null;
-}

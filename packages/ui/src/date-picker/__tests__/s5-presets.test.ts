@@ -139,12 +139,19 @@ describe('DatePicker · 悬停即预览（S5）', () => {
   });
 
   it('离开预设 ⇒ 预览清除，文本与类名都回到已选值', async () => {
-    const w = mountOpen({
-      defaultValue: D('2026-09-01'),
-      presets: [{ label: 'A', value: D('2026-09-10') }],
+    const w = mount(DatePicker, {
+      props: {
+        open: true,
+        defaultValue: D('2026-09-01'),
+        presets: [{ label: 'A', value: D('2026-09-10') }],
+      },
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
     });
     await nextTick();
-    const li = presetItems(w)[0]!;
+    const element = document.querySelector<HTMLElement>(`.${P}-presets li`);
+    if (!element) throw new Error('Missing preset');
+    const li = new DOMWrapper(element);
     await li.trigger('mouseenter');
     await li.trigger('mouseleave');
 

@@ -78,11 +78,13 @@ import {
   onScopeDispose,
   type PropType,
   ref,
+  type SlotsType,
+  type StyleValue,
   type VNodeChild,
   watch,
 } from 'vue';
 import Overflow from '../../_internal/overflow';
-import type { CustomTagProps } from '../interface';
+import type { DatePickerDate, DatePickerSlots } from '../interface';
 import type { PickerInputAttrs } from './input-attrs';
 import { useMaskInput } from './mask-input';
 import {
@@ -128,6 +130,8 @@ export const Selector = defineComponent({
     prefixCls: { type: String, required: true },
     /** `true` ⇒ 范围形态。 */
     range: { type: Boolean, default: false },
+    open: { type: Boolean, default: false },
+    popupId: { type: String, default: undefined },
     /** 面板粒度（决定默认 `input[size]`）。 */
     picker: { type: String as PropType<string | undefined>, default: undefined },
     /**
@@ -211,20 +215,8 @@ export const Selector = defineComponent({
       default: undefined,
     },
     /** 掩码模式：文本 ≠ 模板且 ≠ 受控值 ⇒ 通知外层打开浮层（上游 `onHelp`）。 */
-    onInputHelp: {
-      type: Function as PropType<((index: number) => void) | undefined>,
-      default: undefined,
-    },
     /** 掩码模式：`Enter` + 文本合法 ⇒ 提交（上游 `Input.onSharedKeyDown`）。 */
-    onInputSubmit: {
-      type: Function as PropType<((index: number) => void) | undefined>,
-      default: undefined,
-    },
     /** 掩码模式：文本合法时把文本交给外层（上游 `useInputProps` 的 `onChange`）。 */
-    onInputText: {
-      type: Function as PropType<((index: number, text: string) => void) | undefined>,
-      default: undefined,
-    },
     /** 根节点额外类名（尺寸 / 变体 / 状态 / 语义槽由调用方拼好）。 */
     rootClass: { type: [String, Array] as PropType<string | string[]>, default: undefined },
     /**
@@ -234,7 +226,7 @@ export const Selector = defineComponent({
      * 调用方传的是 `props.style`（`CSSProperties`）。用 `Record<…>` 会因索引签名不匹配
      * 而报错（`CSSProperties` 是接口，没有索引签名）。
      */
-    rootStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+    rootStyle: { type: [String, Object, Array] as PropType<StyleValue>, default: undefined },
 
     // ---------------------------------------------------------- 语义槽
     classNames: {
@@ -257,30 +249,12 @@ export const Selector = defineComponent({
      * 本仓传的是**显式字符串** —— Vue 对 `false` 的属性处理与 React 不同，
      * 显式化可以保证输出恒为 `"true"` / `"false"`（S1 已实测空态是 `"false"`）。
      */
-    invalid: { type: Boolean as PropType<boolean | undefined>, default: undefined },
+    invalid: {
+      type: [Boolean, Array] as PropType<boolean | readonly boolean[] | undefined>,
+      default: undefined,
+    },
 
     // ---------------------------------------------------------- 事件
-    onInput: {
-      type: Function as PropType<(index: number, event: Event) => void>,
-      default: undefined,
-    },
-    onInputFocus: {
-      type: Function as PropType<(index: number, event: FocusEvent) => void>,
-      default: undefined,
-    },
-    onInputBlur: {
-      type: Function as PropType<(index: number, event: FocusEvent) => void>,
-      default: undefined,
-    },
-    onInputKeydown: {
-      type: Function as PropType<(index: number, event: KeyboardEvent) => void>,
-      default: undefined,
-    },
-    onClear: { type: Function as PropType<() => void>, default: undefined },
-    onSelectorClick: {
-      type: Function as PropType<((event: MouseEvent) => void) | undefined>,
-      default: undefined,
-    },
     /**
      * 根节点 `mousedown`（上游 `RangeSelector.js:168-176` 的 `onMouseDown`）。
      *
@@ -290,20 +264,12 @@ export const Selector = defineComponent({
      * 上游把这个 `preventDefault` 写死在组件里、只把**回调**透出去
      * （`onMouseDown?.(e)`），本仓照此 —— 不做成「可覆盖的默认行为」。
      */
-    onSelectorMouseDown: {
-      type: Function as PropType<((event: MouseEvent) => void) | undefined>,
-      default: undefined,
-    },
     /**
      * 活动端的几何信息（上游 `RangeSelector.js:139` 的 `onActiveInfo`）。
      *
      * 载荷 `[inputRect.left, inputRect.right, parentRect.width]` —— 浮层用它算
      * `-range-arrow` 的 `left` 与容器偏移（`Popup/index.js:60,78-88`）。
      */
-    onActiveInfo: {
-      type: Function as PropType<((info: [number, number, number]) => void) | undefined>,
-      default: undefined,
-    },
 
     // ---------------------------------------------------- 多选模式（S5）
     /**
@@ -315,12 +281,7 @@ export const Selector = defineComponent({
      */
     multiple: { type: Boolean, default: false },
     /** 原始值（标签要拿它去删；`valueTexts` 只有文本）。仅多选用。 */
-    values: { type: Array as PropType<unknown[]>, default: undefined },
-    /** 自定义标签渲染（上游 `tagRender`）。 */
-    tagRender: {
-      type: Function as PropType<((props: CustomTagProps) => VNodeChild) | undefined>,
-      default: undefined,
-    },
+    values: { type: Array as PropType<DatePickerDate[]>, default: undefined },
     /** 最多显示几个标签（`'responsive'` = 按宽度自适应）。 */
     maxTagCount: {
       type: [Number, String] as PropType<number | 'responsive' | undefined>,
@@ -329,13 +290,32 @@ export const Selector = defineComponent({
     /** 标签的删除图标（默认 `×`，由调用方给已算好的节点）。 */
     removeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     /** 删除一个标签（上游 `onMultipleRemove`；**是否走 `remove` 来源由调用方决定**）。 */
-    onMultipleRemove: {
-      type: Function as PropType<((value: unknown) => void) | undefined>,
-      default: undefined,
-    },
   },
-  setup(props, { attrs, expose }) {
+  emits: {
+    inputHelp: (_index: number) => true,
+    inputText: (_index: number, _text: string) => true,
+    input: (_index: number, _event: Event) => true,
+    inputFocus: (_index: number, _event: FocusEvent) => true,
+    inputBlur: (_index: number, _event: FocusEvent) => true,
+    inputKeydown: (_index: number, _event: KeyboardEvent) => true,
+    clear: () => true,
+    selectorClick: (_event: MouseEvent) => true,
+    selectorMouseDown: (_event: MouseEvent) => true,
+    activeInfo: (_info: [number, number, number]) => true,
+    multipleRemove: (_value: DatePickerDate) => true,
+  },
+  slots: Object as SlotsType<
+    Pick<DatePickerSlots, 'prefix' | 'suffixIcon' | 'clearIcon' | 'separator' | 'tagRender'>
+  >,
+  setup(props, { attrs, expose, slots, emit }) {
     const disabledPair = computed(() => toDisabledPair(props.disabled));
+    const draftTexts = ref([...props.valueTexts]);
+    watch(
+      () => props.valueTexts,
+      (next) => {
+        draftTexts.value = [...next];
+      },
+    );
 
     /**
      * 掩码模式（S3）—— 全部逻辑在 `mask-input.ts`，这里只做**转接**。
@@ -350,12 +330,11 @@ export const Selector = defineComponent({
       active: (index) => props.activeIndex === index,
       preserveInvalidOnBlur: () => props.preserveInvalidOnBlur,
       validateFormat: (text) => props.validateFormat?.(text) ?? false,
-      onChange: (index, text) => props.onInputText?.(index, text),
-      onHelp: (index) => props.onInputHelp?.(index),
-      onSubmit: (index) => props.onInputSubmit?.(index),
-      onKeyDown: (index, event) => props.onInputKeydown?.(index, event),
-      onFocus: (index, event) => props.onInputFocus?.(index, event),
-      onBlur: (index, event) => props.onInputBlur?.(index, event),
+      onChange: (index, text) => emit('inputText', index, text),
+      onHelp: (index) => emit('inputHelp', index),
+      onKeyDown: (index, event) => emit('inputKeydown', index, event),
+      onFocus: (index, event) => emit('inputFocus', index, event),
+      onBlur: (index, event) => emit('inputBlur', index, event),
     });
 
     /** 两个 field 的输入框元素（`expose.focus` 与掩码的选择同步都要它）。 */
@@ -478,7 +457,7 @@ export const Selector = defineComponent({
         width: `${inputRect.width}px`,
         left: `${inputRect.left - parentRect.left}px`,
       };
-      props.onActiveInfo?.([inputRect.left, inputRect.right, parentRect.width]);
+      emit('activeInfo', [inputRect.left, inputRect.right, parentRect.width]);
     };
 
     watch(() => props.activeIndex, syncActiveOffset, { flush: 'post' });
@@ -492,7 +471,9 @@ export const Selector = defineComponent({
      */
     let disposeResize: (() => void) | null = null;
     const rootElRefWithResize = (el: Element | { $el?: Element } | null | undefined): void => {
+      const previous = rootEl;
       rootElRef(el);
+      if (rootEl === previous) return;
       disposeResize?.();
       disposeResize = null;
       if (rootEl) {
@@ -510,21 +491,26 @@ export const Selector = defineComponent({
       (props.valueTexts[1] ?? '').length,
     ]);
 
-    const showClear = computed(() => {
+    const showClear = () => {
       if (props.allowClear === false) {
         return false;
       }
       if (props.range) {
+        if (slots.clearIcon)
+          return valueLengths.value.some(
+            (length, index) => length > 0 && !disabledPair.value[index],
+          );
         return getRangeShowClear(props.clearIcon, valueLengths.value, disabledPair.value);
       }
+      if (slots.clearIcon) return valueLengths.value[0] > 0 && !disabledPair.value[0];
       return getSingleShowClear(props.clearIcon, valueLengths.value[0], disabledPair.value[0]);
-    });
+    };
 
     const inputSize = computed(() => getInputSize(props.picker, props.firstFormatLength ?? 0));
 
     /** `-suffix`：仅当图标可渲染（上游 `Icon.js`）。 */
     const renderSuffix = (): VNodeChild => {
-      if (!isRenderable(props.suffixIcon)) {
+      if (!slots.suffixIcon && !isRenderable(props.suffixIcon)) {
         return null;
       }
       return h(
@@ -533,7 +519,7 @@ export const Selector = defineComponent({
           class: [`${props.prefixCls}-suffix`, props.classNames.suffix],
           style: props.styles.suffix,
         },
-        [props.suffixIcon],
+        [slots.suffixIcon ? slots.suffixIcon() : props.suffixIcon],
       );
     };
 
@@ -546,7 +532,7 @@ export const Selector = defineComponent({
      *   2. 类名里带的是 **`classNames.suffix`**（清除按钮**借 suffix 槽**），style 同。
      */
     const renderClear = (): VNodeChild => {
-      if (!showClear.value) {
+      if (!showClear()) {
         return null;
       }
       return h(
@@ -563,15 +549,15 @@ export const Selector = defineComponent({
           onClick: (e: MouseEvent) => {
             // 上游：`onClick: e => { e.stopPropagation(); onClear(); }`
             e.stopPropagation();
-            props.onClear?.();
+            emit('clear');
           },
         },
-        [props.clearIcon],
+        [slots.clearIcon ? slots.clearIcon() : props.clearIcon],
       );
     };
 
     const renderPrefix = (): VNodeChild => {
-      if (!isRenderable(props.prefix)) {
+      if (!slots.prefix && !isRenderable(props.prefix)) {
         return null;
       }
       return h(
@@ -580,7 +566,7 @@ export const Selector = defineComponent({
           class: [`${props.prefixCls}-prefix`, props.classNames.prefix],
           style: props.styles.prefix,
         },
-        [props.prefix],
+        [slots.prefix ? slots.prefix() : props.prefix],
       );
     };
 
@@ -619,11 +605,16 @@ export const Selector = defineComponent({
             h('span', { class: `${selectionCls}-item-content` }, [content]),
             !disabled && onClose
               ? h(
-                  'span',
+                  'button',
                   {
+                    type: 'button',
+                    'aria-label': `Remove ${String(content)}`,
                     class: `${selectionCls}-item-remove`,
                     onMousedown: (event: MouseEvent) => event.preventDefault(),
-                    onClick: onClose,
+                    onClick: (event: MouseEvent) => {
+                      event.stopPropagation();
+                      onClose();
+                    },
                   },
                   [props.removeIcon ?? '×'],
                 )
@@ -631,25 +622,25 @@ export const Selector = defineComponent({
           ],
         );
 
-      const renderItem = (value: unknown, index: number): VNodeChild => {
+      const items = values.map((value, index): VNodeChild => {
         const label = props.valueTexts[index] ?? '';
         const closable = !disabled;
         const onClose = (): void => {
           if (!disabled) {
-            props.onMultipleRemove?.(value);
+            emit('multipleRemove', value);
           }
         };
-        if (props.tagRender) {
-          return props.tagRender({
+        if (slots.tagRender) {
+          return slots.tagRender({
             label,
-            value: value as never,
+            value,
             disabled: disabled === true,
             closable,
             onClose,
-          } as never);
+          });
         }
         return renderSelectionItem(label, onClose);
-      };
+      });
 
       return h('div', { class: `${props.prefixCls}-selector` }, [
         h(Overflow, {
@@ -657,7 +648,7 @@ export const Selector = defineComponent({
           data: values,
           itemKey: (_item: unknown, index: number) => index,
           maxCount: props.maxTagCount,
-          renderItem: (item: unknown, info: { index: number }) => renderItem(item, info.index),
+          renderItem: (_item: unknown, info: { index: number }) => items[info.index],
           renderRest: (omitted: unknown[]) => `+ ${omitted.length} ...`,
         }),
         values.length === 0
@@ -671,10 +662,14 @@ export const Selector = defineComponent({
       h('input', {
         ...nativeInputAttrs(0),
         ref: inputElRefs[0],
+        role: 'combobox',
+        'aria-haspopup': 'dialog',
+        'aria-expanded': props.open,
+        'aria-controls': props.open ? props.popupId : undefined,
         disabled: disabledPair.value[0] || undefined,
-        onFocus: (e: FocusEvent) => props.onInputFocus?.(0, e),
-        onBlur: (e: FocusEvent) => props.onInputBlur?.(0, e),
-        onKeydown: (e: KeyboardEvent) => props.onInputKeydown?.(0, e),
+        onFocus: (e: FocusEvent) => emit('inputFocus', 0, e),
+        onBlur: (e: FocusEvent) => emit('inputBlur', 0, e),
+        onKeydown: (e: KeyboardEvent) => emit('inputKeydown', 0, e),
         class: `${props.prefixCls}-multiple-input`,
         value: props.valueTexts.join(','),
         readOnly: true,
@@ -695,16 +690,23 @@ export const Selector = defineComponent({
       const helped = props.allHelp || (props.activeHelp && props.activeIndex === index);
 
       /** 掩码模式专属绑定（值 + 六个事件）；非掩码时为 `undefined`。 */
-      const maskBind = maskInput.enabled.value ? maskInput.bind(index) : undefined;
+      const maskBind =
+        maskInput.enabled.value && !props.readOnly ? maskInput.bind(index) : undefined;
 
       const inputNode = h('input', {
         ...nativeInputAttrs(index),
         // `ref`：两个 field 各一个（`expose.focus` 用 `[0]`，掩码的选择同步用各自的）
         ref: inputElRefs[index],
+        role: 'combobox',
+        'aria-haspopup': 'dialog',
+        'aria-expanded': props.open,
+        'aria-controls': props.open ? props.popupId : undefined,
         // 🚨 两个通道别混（见 `invalid` prop 的说明）：
         //   - `props.status`（antd）**不改**这里 —— 实测 `status="error"` 时它仍是 `"false"`；
         //   - `props.invalid`（rc，**键入解析不出日期**）才把它变 `"true"`。
-        'aria-invalid': props.invalid ? 'true' : 'false',
+        'aria-invalid': (Array.isArray(props.invalid) ? props.invalid[index] : props.invalid)
+          ? 'true'
+          : 'false',
         size: inputSize.value,
         ...(isRange ? { 'date-range': index === 0 ? 'start' : 'end' } : {}),
         placeholder: ph,
@@ -713,11 +715,23 @@ export const Selector = defineComponent({
         // 🚨 掩码模式与普通模式**互斥**（上游 `Input.js` 里 `inputProps` 覆盖 `restProps`）：
         //    掩码下原生 `input` 事件是**空实现**，值与四个事件都来自本地状态。
         ...(maskBind ?? {
-          value: props.valueTexts[index] ?? '',
-          onInput: (e: Event) => props.onInput?.(index, e),
-          onFocus: (e: FocusEvent) => props.onInputFocus?.(index, e),
-          onBlur: (e: FocusEvent) => props.onInputBlur?.(index, e),
-          onKeydown: (e: KeyboardEvent) => props.onInputKeydown?.(index, e),
+          value: draftTexts.value[index] ?? '',
+          onInput: (event: Event) => {
+            const input = inputEls[index];
+            if (!input || props.readOnly || disabled) return;
+            draftTexts.value[index] = input.value;
+            if (!(event instanceof InputEvent) || !event.isComposing) emit('input', index, event);
+          },
+          onCompositionend: (event: CompositionEvent) => {
+            if (!props.readOnly && !disabled) emit('input', index, event);
+          },
+          onFocus: (e: FocusEvent) => emit('inputFocus', index, e),
+          onBlur: (event: FocusEvent) => {
+            emit('inputBlur', index, event);
+            if (!props.preserveInvalidOnBlur)
+              draftTexts.value[index] = props.valueTexts[index] ?? '';
+          },
+          onKeydown: (e: KeyboardEvent) => emit('inputKeydown', index, e),
         }),
       });
 
@@ -805,7 +819,7 @@ export const Selector = defineComponent({
             //    `normalizeStyle` 认得数组里的字符串（`parseStringStyle`），
             //    顺序仍是「语义 root 在前、原生 style 在后」（后者胜，同上游）。
             style: [props.styles.root, props.rootStyle],
-            onClick: (event: MouseEvent) => props.onSelectorClick?.(event),
+            onClick: (event: MouseEvent) => emit('selectorClick', event),
           }),
           // 🚨 多选**不渲染 `-input` 包裹层**（上游 `SingleSelector` 的 `selectorNode` 分支）
           props.multiple
@@ -827,7 +841,7 @@ export const Selector = defineComponent({
           // 与单值分支同判：语义 `root` 槽（`classNames.root` / `styles.root`）落根。
           class: [rootClass, props.classNames.root],
           style: [props.styles.root, props.rootStyle],
-          onClick: (event: MouseEvent) => props.onSelectorClick?.(event),
+          onClick: (event: MouseEvent) => emit('selectorClick', event),
           /**
            * 🚨 保焦点（上游 `RangeSelector.js:168-176`）：目标是**两个输入框之外**的
            * 任何地方（面板容器、前缀、后缀、active-bar、分隔条…）时 `preventDefault`。
@@ -843,7 +857,7 @@ export const Selector = defineComponent({
             if (target !== inputEls[0] && target !== inputEls[1]) {
               event.preventDefault();
             }
-            props.onSelectorMouseDown?.(event);
+            emit('selectorMouseDown', event);
           },
         }),
         [
@@ -854,10 +868,10 @@ export const Selector = defineComponent({
               'span',
               {
                 // ⚠️ 自定义 separator ⇒ **去掉** `aria-hidden`（上游两条 a11y 测试）
-                ...(props.customSeparator ? {} : { 'aria-hidden': 'true' }),
+                ...(slots.separator || props.customSeparator ? {} : { 'aria-hidden': 'true' }),
                 class: `${props.prefixCls}-separator`,
               },
-              [props.separator],
+              [slots.separator ? slots.separator() : props.separator],
             ),
           ]),
           renderInput(1),

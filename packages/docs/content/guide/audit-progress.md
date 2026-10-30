@@ -11,7 +11,7 @@ order: 0
 
 ## Vue 原生化：架构整改与最终验收
 
-当前阶段：**第一阶段：Vue 原生架构整改**。任务派发：**进行中**；活动任务 4/5。
+当前阶段：**第一阶段：Vue 原生架构整改**。任务派发：**进行中**；活动任务 5/5。
 
 | 范围 | 架构整改完成 | 历史完整交付 | 本轮冻结验收通过 |
 | --- | --- | --- | --- |
@@ -43,7 +43,7 @@ order: 0
 | Collapse | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-final-acceptance.json) |
 | ColorPicker | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | ConfigProvider | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-final-acceptance.json) |
-| DatePicker | 进行中 | native_picker | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| DatePicker | 进行中 | native_picker | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Descriptions | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/four-unit-final-acceptance.json) |
 | Divider | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-final-acceptance.json) |
 | Drawer | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
@@ -100,7 +100,7 @@ order: 0
 | @apollo-design/form-core | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | @apollo-design/icons | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | @apollo-design/locale | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
-| @apollo-design/motion | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| @apollo-design/motion | 进行中 | native_color_picker | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/overlay | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | @apollo-design/picker | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | @apollo-design/portal | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
@@ -116,7 +116,7 @@ order: 0
 
 ## Vue native architecture and final acceptance
 
-Current stage: **Vue native architecture**. Dispatch: **running**; active tasks 4/5.
+Current stage: **Vue native architecture**. Dispatch: **running**; active tasks 5/5.
 
 | Scope | Architecture complete | Historical deliveries | Passed on the frozen version |
 | --- | --- | --- | --- |
@@ -148,7 +148,7 @@ Final library acceptance: **not_started**. Unknown, untested and deferred checks
 | Collapse | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-final-acceptance.json) |
 | ColorPicker | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | ConfigProvider | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-final-acceptance.json) |
-| DatePicker | In progress | native_picker | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| DatePicker | In progress | native_picker | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Descriptions | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/four-unit-final-acceptance.json) |
 | Divider | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-final-acceptance.json) |
 | Drawer | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
@@ -205,7 +205,7 @@ Final library acceptance: **not_started**. Unknown, untested and deferred checks
 | @apollo-design/form-core | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | @apollo-design/icons | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | @apollo-design/locale | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
-| @apollo-design/motion | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| @apollo-design/motion | In progress | native_color_picker | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/overlay | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | @apollo-design/picker | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | @apollo-design/portal | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |

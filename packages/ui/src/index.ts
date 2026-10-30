@@ -1005,9 +1005,8 @@ export { prepareComponentToken as prepareColorPickerComponentToken } from './col
 //      同时导出会让 `vue-tsc` 报 `TS2300 Duplicate identifier`（2026-10-01 实测）。
 //   2. **与上游一致**：antd 的 `es/date-picker/index.d.ts` **不导出**它
 //      （它只是 rc-picker `SinglePicker.d.ts` 的内部类型）。
-//   消费方要从 `DatePickerProps['tagRender']` 的形参推断，或从 `date-picker` 子模块取。
+//   消费方使用 `DatePickerSlots['tagRender']` 的作用域，或从 `date-picker` 子模块取。
 export type {
-  CellRender,
   CellRenderInfo,
   CustomFormat,
   DatePickerDate,
@@ -1037,8 +1036,6 @@ export type {
   PickerCommonProps,
   PickerPopupSemanticClassNames,
   PickerPopupSemanticStyles,
-  PurePanelProps,
-  PureRangePanelProps,
   RangePickerEmits,
   RangePickerExpose,
   RangePickerProps,

@@ -26,7 +26,7 @@
  *  - decade：起始世纪 **− 10 年**。
  */
 
-import { defineComponent, h, type SlotsType, type VNodeChild } from 'vue';
+import { defineComponent, h, ref, type SlotsType, type VNodeChild } from 'vue';
 import { getPanelGeometry } from './panel';
 import { PanelBody } from './panel-body';
 import type { PanelDateType, PanelSlots } from './panel-context';
@@ -114,8 +114,10 @@ function defineUpperPanel(
     },
     emits: sharedPanelEmits,
     slots: Object as SlotsType<PanelSlots>,
-    setup(props, { emit, slots }) {
+    setup(props, { emit, slots, expose }) {
       // ⚠️ 用返回值（面板自己 provide 的东西自己 inject 不到），见 `panel-props.ts`
+      const bodyRef = ref<{ focus: (date?: PanelDateType) => void } | null>(null);
+      expose({ focus: (date?: PanelDateType) => bodyRef.value?.focus(date) });
       const info = providePanelInfoFromProps(props, mode, {
         onSelect: (date) => emit('select', date),
         onHover: (date) => emit('hover', date),
@@ -149,7 +151,6 @@ function defineUpperPanel(
               key: 'year',
               'aria-label': locale.yearSelect,
               onClick: () => emit('modeChange', 'year'),
-              tabIndex: -1,
               class: `${prefixCls}-year-btn`,
             },
             formatWith(g, locale, locale.yearFormat, pickerValue),
@@ -170,7 +171,6 @@ function defineUpperPanel(
                     key: 'decade',
                     'aria-label': locale.decadeSelect,
                     onClick: () => emit('modeChange', 'decade'),
-                    tabIndex: -1,
                     class: `${prefixCls}-decade-btn`,
                   },
                   [startStr, '-', endStr],
@@ -191,7 +191,16 @@ function defineUpperPanel(
             },
             { default: () => titleNode },
           ),
-          h(PanelBody, { geometry, disabledDate: mergedDisabledDate }, slots),
+          h(
+            PanelBody,
+            {
+              ref: bodyRef,
+              geometry,
+              disabledDate: mergedDisabledDate,
+              onNavigate: (date) => emit('pickerValueChange', date),
+            },
+            slots,
+          ),
         ]);
       };
     },

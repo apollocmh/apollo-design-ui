@@ -47,7 +47,7 @@ import {
   type TimePanelConfig,
 } from '@apollo-design/picker';
 import { isRenderable } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { computed, defineComponent, h, type PropType, type SlotsType, type VNodeChild } from 'vue';
 import Button from '../../button/Button.vue';
 import type { PickerPopupSemanticClassNames, PickerPopupSemanticStyles } from '../interface';
 
@@ -57,7 +57,6 @@ export interface FooterProps {
   mode: PanelMode;
   /** 组件粒度（含 `'datetime'`）—— 决定 `Today` / `Now` 文案 */
   internalMode: PanelMode | 'datetime';
-  renderExtraFooter?: (mode: PanelMode) => VNodeChild;
   showNow?: boolean;
   /** `showTime` 原样（`getTimeInfo` 的入参，用来校验「此刻」是否被禁用时段挡住） */
   showTime?: boolean | TimePanelConfig<PanelDateType>;
@@ -70,8 +69,6 @@ export interface FooterProps {
   locale: PickerLangLocale;
   classNames?: PickerPopupSemanticClassNames;
   styles?: PickerPopupSemanticStyles;
-  onNow: (date: PanelDateType) => void;
-  onSubmit: () => void;
 }
 
 export const Footer = defineComponent({
@@ -82,10 +79,6 @@ export const Footer = defineComponent({
     internalMode: {
       type: String as PropType<FooterProps['internalMode']>,
       required: true as const,
-    },
-    renderExtraFooter: {
-      type: Function as PropType<FooterProps['renderExtraFooter']>,
-      default: undefined,
     },
     // ⚠️ Boolean 必须显式 `undefined` 默认值（PITFALLS 2）：`undefined` = 不渲染
     showNow: { type: Boolean as PropType<boolean | undefined>, default: undefined },
@@ -112,10 +105,10 @@ export const Footer = defineComponent({
       type: Object as PropType<PickerPopupSemanticStyles | undefined>,
       default: undefined,
     },
-    onNow: { type: Function as PropType<FooterProps['onNow']>, required: true as const },
-    onSubmit: { type: Function as PropType<FooterProps['onSubmit']>, required: true as const },
   },
-  setup(props) {
+  emits: { now: (_date: PanelDateType) => true, submit: () => true },
+  slots: Object as SlotsType<{ default?: (scope: { mode: PanelMode }) => VNodeChild }>,
+  setup(props, { emit, slots }) {
     /** 「此刻」是否被 `disabledDate` 挡住（上游 `nowDisabled`）。 */
     const nowDisabled = computed(
       () => props.disabledDate?.(props.generateConfig.getNow(), { type: props.mode }) === true,
@@ -137,14 +130,14 @@ export const Footer = defineComponent({
       //    得到全 `undefined`，等价于不传。直接传 `true` 类型也不对。
       const timeConfig = typeof props.showTime === 'object' ? props.showTime : undefined;
       const { getValidTime } = getTimeInfo(props.generateConfig, timeConfig, now);
-      props.onNow(getValidTime(now));
+      emit('now', getValidTime(now));
     };
 
     return () => {
       const { prefixCls } = props;
 
       // ========================== Extra ==========================
-      const extraNode = props.renderExtraFooter?.(props.mode);
+      const extraNode = slots.default?.({ mode: props.mode });
 
       // ========================= Ranges =========================
       const nowCls = `${prefixCls}-now`;
@@ -155,7 +148,15 @@ export const Footer = defineComponent({
               'a',
               {
                 class: [nowBtnCls, nowDisabled.value ? `${nowBtnCls}-disabled` : undefined],
+                role: 'button',
+                tabindex: nowDisabled.value ? -1 : 0,
                 'aria-disabled': nowDisabled.value,
+                onKeydown: (event: KeyboardEvent) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    onInternalNow();
+                  }
+                },
                 onClick: onInternalNow,
               },
               // 🚨 判据是 `internalMode`（组件粒度），不是面板当前粒度
@@ -168,7 +169,12 @@ export const Footer = defineComponent({
         ? h('li', { class: `${prefixCls}-ok` }, [
             h(
               Button,
-              { size: 'small', type: 'primary', disabled: props.invalid, onClick: props.onSubmit },
+              {
+                size: 'small',
+                type: 'primary',
+                disabled: props.invalid,
+                onClick: () => emit('submit'),
+              },
               () => props.locale.ok,
             ),
           ])
@@ -181,7 +187,7 @@ export const Footer = defineComponent({
 
       // ========================= Render =========================
       // 🚨 两者都不可渲染 ⇒ **返回 null**（不是空 div）—— 见文件头
-      if (!isRenderable(extraNode) && !isRenderable(rangeNode)) {
+      if (!slots.default && !isRenderable(rangeNode)) {
         return null;
       }
 
@@ -192,9 +198,7 @@ export const Footer = defineComponent({
           style: props.styles?.footer,
         },
         [
-          isRenderable(extraNode)
-            ? h('div', { class: `${prefixCls}-footer-extra` }, [extraNode])
-            : null,
+          slots.default ? h('div', { class: `${prefixCls}-footer-extra` }, [extraNode]) : null,
           rangeNode,
         ],
       );

@@ -18,5 +18,7 @@ const panelRender = (originPanel: VNodeChild) =>
 </script>
 
 <template>
-  <DatePicker :panel-render="panelRender" placeholder="自定义面板容器" />
+  <DatePicker placeholder="自定义面板容器">
+    <template #panelRender="{ originPanel }"><component :is="() => panelRender(originPanel)" /></template>
+  </DatePicker>
 </template>

@@ -34,10 +34,19 @@
  * `[antd: DatePicker.RangePicker]`（不是 `[antd: TimePicker]`）。
  */
 
-import { computed, provide, ref, useAttrs, useSlots } from 'vue';
+import { provide, ref, useAttrs } from 'vue';
 import { pickerHostContextKey } from '../_internal/picker-host-context';
+import type {
+  DatePickerDate,
+  DatePickerPanelMode,
+  NoUndefinedRangeValue,
+  OpenConfig,
+  RangeValue,
+} from '../date-picker/interface';
 import RangePicker from '../date-picker/RangePicker.vue';
-import type { TimeRangePickerProps } from './interface';
+import type { TimeRangePickerProps, TimeRangePickerSlots } from './interface';
+
+const InnerPicker = RangePicker;
 
 defineOptions({ name: 'ATimeRangePicker', inheritAttrs: false });
 
@@ -55,7 +64,6 @@ const props = withDefaults(defineProps<TimeRangePickerProps>(), {
   inputReadOnly: undefined,
   preserveInvalidOnBlur: undefined,
   needConfirm: undefined,
-  changeOnBlur: undefined,
   order: undefined,
   disabled: undefined,
   bordered: undefined,
@@ -91,7 +99,31 @@ const props = withDefaults(defineProps<TimeRangePickerProps>(), {
   ranges: undefined,
 });
 const attrs = useAttrs();
-const slots = useSlots();
+const slots = defineSlots<TimeRangePickerSlots>();
+const emit = defineEmits<{
+  change: [dates: NoUndefinedRangeValue | null, dateStrings: [string, string]];
+  'update:value': [dates: RangeValue | null];
+  calendarChange: [
+    dates: NoUndefinedRangeValue,
+    dateStrings: [string, string],
+    info: { range?: 'start' | 'end'; from?: DatePickerDate },
+  ];
+  ok: [dates: NoUndefinedRangeValue];
+  openChange: [open: boolean, config?: OpenConfig];
+  'update:open': [open: boolean];
+  'update:mode': [mode: [DatePickerPanelMode, DatePickerPanelMode]];
+  pickerValueChange: [
+    date: [DatePickerDate, DatePickerDate],
+    info: { source: 'reset' | 'panel'; mode: [DatePickerPanelMode, DatePickerPanelMode] },
+  ];
+  'update:pickerValue': [date: [DatePickerDate, DatePickerDate]];
+  panelChange: [values: NoUndefinedRangeValue, modes: [DatePickerPanelMode, DatePickerPanelMode]];
+  clear: [];
+  focus: [event: FocusEvent, info: { range?: 'start' | 'end' }];
+  blur: [event: FocusEvent, info: { range?: 'start' | 'end' }];
+  invalid: [invalid: boolean];
+  keydown: [event: KeyboardEvent];
+}>();
 
 // ============================== 宿主上下文改道 ==============================
 /** ⚠️ **只改 `configKey`** —— 告警命名空间恒为内层的 `'DatePicker.RangePicker'`（实测）。 */
@@ -106,33 +138,33 @@ provide(pickerHostContextKey, { configKey: 'timePicker' });
  * - `attrs` 在 `picker` **之前** ⇒ 事件监听（`onChange` / `onOk` / …）与
  *   `class` / `style` 原样进去，而 `picker` 不被用户覆盖。
  */
-const forwardProps = computed<Record<string, unknown>>(() => {
+const forwardProps = (): InstanceType<typeof RangePicker>['$props'] => {
   const { mode: _mode, ...rest } = props;
   return {
     ...rest,
     // ⚠️ `attrs` 必须转发（本组件不声明 `defineEmits`，见文件头）——
     //    用户传的 `onChange` / `onOk` / … 全在这里；`picker` 写在**最后**压过它。
     ...attrs,
-    picker: 'time',
+    picker: 'time' as const,
+    onChange: (date, text) => emit('change', date, text),
+    'onUpdate:value': (date) => emit('update:value', date),
+    onCalendarChange: (date, text, info) => emit('calendarChange', date, text, info),
+    onOk: (date) => emit('ok', date),
+    onOpenChange: (open, config) => emit('openChange', open, config),
+    'onUpdate:open': (open) => emit('update:open', open),
+    onPickerValueChange: (date, info) => emit('pickerValueChange', date, info),
+    'onUpdate:pickerValue': (date) => emit('update:pickerValue', date),
+    onPanelChange: (date, mode) => emit('panelChange', date, mode),
+    'onUpdate:mode': (mode) => emit('update:mode', mode),
+    onClear: () => emit('clear'),
+    onFocus: (event, info) => emit('focus', event, info),
+    onBlur: (event, info) => emit('blur', event, info),
+    onInvalid: (invalid) => emit('invalid', invalid),
+    onKeydown: (event) => emit('keydown', event),
   };
-});
+};
 
 /** 插槽转发（与单个 `TimePicker` 同一份清单，见那边的说明）。 */
-const FORWARDED_SLOTS = [
-  'panelRender',
-  'extraFooter',
-  'cellRender',
-  'tagRender',
-  'prefix',
-  'suffixIcon',
-  'clearIcon',
-  'separator',
-  'presetRender',
-] as const;
-
-/** 实际提供了的插槽名（见 `TimePicker.vue` 的同名说明：`v-slots` 是 JSX-only 的）。 */
-const forwardedSlotNames = computed(() => FORWARDED_SLOTS.filter((name) => Boolean(slots[name])));
-
 // ============================== 命令面转发（Issue #6.1）==============================
 /** 上游 `forwardRef((props, ref) => <InternalRangePicker {...props} ref={ref} />)`。 */
 const innerRef = ref<{
@@ -160,9 +192,15 @@ defineExpose({
 </script>
 
 <template>
-  <RangePicker ref="innerRef" v-bind="forwardProps">
-    <template v-for="name in forwardedSlotNames" :key="name" #[name]="slotProps">
-      <component :is="slots[name]" v-bind="slotProps ?? {}" />
-    </template>
-  </RangePicker>
+  <InnerPicker ref="innerRef" v-bind="forwardProps()">
+    <template v-if="slots.panelRender" #panelRender="scope"><slot name="panelRender" v-bind="scope" /></template>
+    <template v-if="slots.extraFooter" #extraFooter="scope"><slot name="extraFooter" v-bind="scope" /></template>
+    <template v-if="slots.cellRender" #cellRender="scope"><slot name="cellRender" v-bind="scope" /></template>
+    <template v-if="slots.tagRender" #tagRender="scope"><slot name="tagRender" v-bind="scope" /></template>
+    <template v-if="slots.prefix" #prefix><slot name="prefix" /></template>
+    <template v-if="slots.suffixIcon" #suffixIcon><slot name="suffixIcon" /></template>
+    <template v-if="slots.clearIcon" #clearIcon><slot name="clearIcon" /></template>
+    <template v-if="slots.separator" #separator><slot name="separator" /></template>
+    <template v-if="slots.presetRender" #presetRender="scope"><slot name="presetRender" v-bind="scope" /></template>
+  </InnerPicker>
 </template>

@@ -45,7 +45,7 @@ import { resetWarned } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import dayjs from 'dayjs';
 import { describe, expect, it, vi } from 'vitest';
-import { defineComponent, h, nextTick } from 'vue';
+import { defineComponent, h, nextTick, ref, type VNodeChild } from 'vue';
 import ConfigProvider from '../../config-provider/ConfigProvider';
 import DatePicker from '../DatePicker.vue';
 import type { SingleValue } from '../interface';
@@ -291,28 +291,35 @@ describe('DatePicker · multiple（上游 testCases）', () => {
     // ⚠️ 上游的 Demo 是个**受控**组件（`onChange` 里 `setValue`）；
     //    本仓用 `value` + `update:value` 复刻同一件事。
     const lockedBefore = dayjs('2016-11-22');
-    let value: dayjs.Dayjs[] = [dayjs('2016-11-20'), dayjs('2016-11-23')];
+    const value = ref([dayjs('2016-11-20'), dayjs('2016-11-23')]);
 
     const Host = defineComponent({
       setup() {
         return () =>
-          h(DatePicker, {
-            multiple: true,
-            value,
-            // ⚠️ `update:value` 的载荷是 `SingleValue`（`Date | Date[] | null`），
-            //    不是 `Date[]` —— 多选下运行时恒为数组，但类型面要按 `SingleValue` 接。
-            'onUpdate:value': (next: SingleValue) => {
-              value = (next as dayjs.Dayjs[] | null) ?? [];
+          h(
+            DatePicker,
+            {
+              multiple: true,
+              value: value.value,
+              // ⚠️ `update:value` 的载荷是 `SingleValue`（`Date | Date[] | null`），
+              //    不是 `Date[]` —— 多选下运行时恒为数组，但类型面要按 `SingleValue` 接。
+              'onUpdate:value': (next: SingleValue) => {
+                value.value = Array.isArray(next) ? next : [];
+              },
             },
-            tagRender: (info: { label: unknown; value: unknown; onClose: () => void }) => {
-              const tagValue = info.value as dayjs.Dayjs;
-              const locked = tagValue.isBefore(lockedBefore, 'day');
-              return h('span', { 'data-testid': `tag-${tagValue.format('YYYY-MM-DD')}` }, [
-                h('span', null, [String(info.label)]),
-                locked ? null : h('button', { type: 'button', onClick: info.onClose }, ['remove']),
-              ]);
+            {
+              tagRender: (info: { label: VNodeChild; value: dayjs.Dayjs; onClose: () => void }) => {
+                const tagValue = info.value;
+                const locked = tagValue.isBefore(lockedBefore, 'day');
+                return h('span', { 'data-testid': `tag-${tagValue.format('YYYY-MM-DD')}` }, [
+                  h('span', null, [String(info.label)]),
+                  locked
+                    ? null
+                    : h('button', { type: 'button', onClick: info.onClose }, ['remove']),
+                ]);
+              },
             },
-          });
+          );
       },
     });
 
@@ -490,13 +497,11 @@ describe('DatePicker · legacy prop 的告警与落点（上游 testCases）', (
     spy.mockRestore();
   });
 
-  it('`onSelect` ⇒ 告警（`onCalendarChange` 取代它）', async () => {
+  it('原生 select 监听器归组件所有且不再当作废弃 prop 告警', async () => {
     const spy = captureWarnings();
     const w = mountPicker({ onSelect: () => {} });
     await nextTick();
-    expect(spy.mock.calls.flat().join(' ')).toContain(
-      '`onSelect` is deprecated. Please use `onCalendarChange` instead.',
-    );
+    expect(spy.mock.calls.flat().join(' ')).not.toContain('`onSelect` is deprecated');
     w.unmount();
     spy.mockRestore();
   });

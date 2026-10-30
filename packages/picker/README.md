@@ -1,3 +1,5 @@
+> 2026-10-30 当前架构差额：DatePicker/RangePicker 使用原生具名槽、owned emits 与 value/open/pickerValue/mode 模型；只读输入通过真实面板 focus 进入日期格/时间列，方向键导航、Enter/Space 选值、Escape 返回输入。当前组件主题覆盖同时进入输入与 Portal 浮层。Time 薄壳仅完成本链必要槽/通知桥。以下保留原日期、阶段与历史事实；其中旧 render prop、PurePanel 类型和“键盘与上游一致”描述不再表示当前公开契约。
+
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
 # @apollo-design/picker

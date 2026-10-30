@@ -31,7 +31,7 @@
  *    `showTime.disabledTime` 那一支（因为原始 picker 就是 `'date'`）。
  */
 
-import { type GenerateConfig, isSame } from '@apollo-design/picker';
+import { type GenerateConfig, isSame, type TimeConfigShowTime } from '@apollo-design/picker';
 import type {
   DatePickerDate,
   DatePickerPanelMode,
@@ -73,7 +73,7 @@ export function useDisabledBoundary(
 ): (date: DatePickerDate, info: InvalidateInfo) => boolean {
   return (date, info) => {
     const disabledDate = options.disabledDate();
-    if (disabledDate?.(date, info as never)) {
+    if (disabledDate?.(date, { type: info.type ?? 'date', from: info.from })) {
       return true;
     }
     const locale = options.locale();
@@ -82,7 +82,7 @@ export function useDisabledBoundary(
     if (
       minDate &&
       options.generateConfig.isAfter(minDate, date) &&
-      !isSame(options.generateConfig, locale, minDate, date, (info.type ?? 'date') as never)
+      !isSame(options.generateConfig, locale, minDate, date, info.type ?? 'date')
     ) {
       return true;
     }
@@ -90,7 +90,7 @@ export function useDisabledBoundary(
     if (
       maxDate &&
       options.generateConfig.isAfter(date, maxDate) &&
-      !isSame(options.generateConfig, locale, maxDate, date, (info.type ?? 'date') as never)
+      !isSame(options.generateConfig, locale, maxDate, date, info.type ?? 'date')
     ) {
       return true;
     }
@@ -109,7 +109,7 @@ export interface UseInvalidateOptions extends UseDisabledBoundaryOptions {
    */
   picker: () => DatePickerPanelMode | undefined;
   /** 合并后的 `showTime`（含 `disabledTime` 与三个 legacy 通道）。 */
-  showTime: () => Record<string, unknown> | undefined;
+  showTime: () => TimeConfigShowTime<DatePickerDate> | null | undefined;
   /** ① 的产物。 */
   boundaryDate: (date: DatePickerDate, info: InvalidateInfo) => boolean;
 }
@@ -155,22 +155,12 @@ export function useInvalidate(
     if ((picker === 'date' || picker === 'time') && showTime) {
       const range: 'start' | 'end' = info.activeIndex === 1 ? 'end' : 'start';
       const from = outsideInfo.from;
-      const timeDisabled = (
-        showTime.disabledTime as
-          | ((d: DatePickerDate, r: 'start' | 'end', i: { from?: DatePickerDate }) => DisabledTimes)
-          | undefined
-      )?.(date, range, { from });
-
-      const mergedDisabledHours =
-        timeDisabled?.disabledHours ?? (showTime.disabledHours as (() => number[]) | undefined);
-      const mergedDisabledMinutes =
-        timeDisabled?.disabledMinutes ??
-        (showTime.disabledMinutes as ((hour: number) => number[]) | undefined);
-      const mergedDisabledSeconds =
-        timeDisabled?.disabledSeconds ??
-        (showTime.disabledSeconds as ((hour: number, minute: number) => number[]) | undefined);
-      // ⚠️ `disabledMilliseconds` **没有** legacy 通道（上游如此）
-      const disabledMilliseconds = timeDisabled?.disabledMilliseconds;
+      const timeDisabled = showTime.disabledTime?.(date, range, { from });
+      const mergedDisabledHours = timeDisabled?.disabledHours ?? showTime.disabledHours;
+      const mergedDisabledMinutes = timeDisabled?.disabledMinutes ?? showTime.disabledMinutes;
+      const mergedDisabledSeconds = timeDisabled?.disabledSeconds ?? showTime.disabledSeconds;
+      const disabledMilliseconds =
+        timeDisabled?.disabledMilliseconds ?? showTime.disabledMilliseconds;
 
       const hour = generateConfig.getHour(date);
       const minute = generateConfig.getMinute(date);

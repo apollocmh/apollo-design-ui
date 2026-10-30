@@ -121,9 +121,8 @@ describe('DatePicker · 多选（S5）', () => {
       props: {
         multiple: true,
         defaultValue: TWO,
-        // ⚠️ `label` 的类型是 `VNodeChild`（不是 `string`）—— 上游 `CustomTagProps`
-        tagRender: (info: CustomTagProps) => `【${String(info.label)}】`,
       },
+      slots: { tagRender: (info: CustomTagProps) => `【${String(info.label)}】` },
     });
 
     // 自定义标签替换掉默认的 `-selection-item`

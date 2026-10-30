@@ -1,3 +1,5 @@
+> 2026-10-30 当前 API：动态内容使用 `#cellRender="{ current, info }"`、`#panelRender="{ originPanel }"`、`#extraFooter="{ mode }"`、`#tagRender="scope"`；前缀、后缀、清除、区间分隔与预设分别使用同名具名槽。移除旧函数渲染 props、`addon`、无实际组件的 PurePanel 类型及 notification props；使用 `@select`/其它原生 emits。`@keydown` 只收到原生 KeyboardEvent，可直接 preventDefault()；支持 `v-model:mode`。只读输入按 ArrowDown 进入面板，方向键导航，Enter/Space 选值，Escape 返回。DOM refs 在挂载前/卸载后为 null。
+
 ---
 category: 数据录入
 title: DatePicker
@@ -54,9 +56,6 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | multiple | 多选 | `boolean` | `false` |
 | order | `multiple` 时按日期排序 | `boolean` | `true` |
 | presets | 快捷选项。`value` 支持**函数**（懒求值） | `ValueDate[]` | —— |
-| renderExtraFooter | 面板底部的附加内容 | `(mode) => VNodeChild` | —— |
-| panelRender | 自定义整个面板 | `(props: { originPanel }) => VNodeChild` | —— |
-| cellRender | 自定义单元格 | `(current, info) => VNodeChild` | —— |
 | disabledDate | 不可选日期 | `(date, info) => boolean` | —— |
 | minDate / maxDate | 可选范围的边界（静态日期，与上游一致） | `DatePickerDate` | —— |
 | placeholder | 占位符 | `string` | 由语言包给出 |
@@ -119,7 +118,7 @@ import { DatePicker, RangePicker } from '@apollo-design/ui';
 | `focus` / `blur` | 焦点进出 | `(event, info)` |
 | `invalid` | 键入值非法 | `(invalid)` |
 | `submit` | 表单提交 | `(event)` |
-| `keydown` | 按键（deprecated `onKeyDown` 的通道） | `(event, preventDefault)` |
+| `keydown` | 按键（deprecated `onKeyDown` 的通道） | `(event: KeyboardEvent)` |
 
 ### Slots
 

@@ -5,7 +5,7 @@
  *
  * ── 三处照抄的细节（上游都是有意的）──────────────────────────────────────────
  *
- * 1. **四个按钮的 `tabIndex` 恒为 `-1`** —— 表头不参与 Tab 序，键盘可达性由输入框的
+ * 1. **四个按钮使用原生 Tab 序** —— 禁用和隐藏状态仍由原生 disabled / visibility 表达；输入框的
  *    mask 字段承担（契约 §3.5）。写 `-1` 而不是省略：省略会让 `<button>` 默认可达。
  * 2. **`hidePrev` / `hideNext` 用 `visibility: hidden`**，不是 `display: none` ——
  *    双面板（RangePicker）时**保留占位**，两张面板的宽度才对得上。
@@ -49,7 +49,6 @@ function renderHeaderButton(
       type: 'button',
       'aria-label': ariaLabel,
       onClick,
-      tabIndex: -1,
       class: [cls, isDisabled ? `${cls}-disabled` : undefined],
       disabled: isDisabled,
       style,

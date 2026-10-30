@@ -31,8 +31,8 @@
  */
 
 import { leftPad, offsetCellValue } from '@apollo-design/picker';
-import { raf } from '@apollo-design/utils';
-import { type ComputedRef, computed, ref, watch } from 'vue';
+import { cancelRaf, raf } from '@apollo-design/utils';
+import { type ComputedRef, computed, onScopeDispose, ref, watch } from 'vue';
 import { createMaskFormat } from './mask-format';
 
 /** 最多两个 field（单值 1 个、范围 2 个）。上游是「每个 `Input` 实例一份状态」。 */
@@ -52,8 +52,6 @@ export interface UseMaskInputOptions {
   onChange: (index: number, text: string) => void;
   /** 上游 `onModify`：文本 ≠ 模板且 ≠ 受控值时通知外层「去打开浮层」。 */
   onHelp: (index: number) => void;
-  /** `Enter` + 文本合法 ⇒ 提交（上游 `Input.onSharedKeyDown`）。 */
-  onSubmit: (index: number) => void;
   /** 共享的 `keydown`（Tab / Escape / 用户的 deprecated `onKeyDown`）。 */
   onKeyDown: (index: number, event: KeyboardEvent) => void;
   onFocus: (index: number, event: FocusEvent) => void;
@@ -96,6 +94,18 @@ export function useMaskInput(options: UseMaskInputOptions): MaskInputApi {
   const focusCellText: string[] = Array.from({ length: MAX_FIELDS }, () => '');
   const mouseDown: boolean[] = Array.from({ length: MAX_FIELDS }, () => false);
   const elements: (HTMLInputElement | null)[] = Array.from({ length: MAX_FIELDS }, () => null);
+  const pendingFrames = new Set<number>();
+  const afterFrame = (effect: () => void): void => {
+    const id = raf(() => {
+      pendingFrames.delete(id);
+      effect();
+    });
+    pendingFrames.add(id);
+  };
+  onScopeDispose(() => {
+    for (const id of pendingFrames) cancelRaf(id);
+    pendingFrames.clear();
+  });
 
   /** 受控值 → 本地文本（上游 `useEffect(() => setInputValue(value), [value])`）。 */
   watch(
@@ -122,7 +132,7 @@ export function useMaskInput(options: UseMaskInputOptions): MaskInputApi {
         if (next) {
           restore();
         } else {
-          raf(restore);
+          afterFrame(restore);
         }
       },
     );
@@ -186,7 +196,9 @@ export function useMaskInput(options: UseMaskInputOptions): MaskInputApi {
         const [start, end] = selectionOf(index);
         el.setSelectionRange(start, end);
         // Chrome 的锚点位置有偏差 ⇒ 下一帧再对一次（上游逐字）
-        raf(() => el.setSelectionRange(start, end));
+        afterFrame(() => {
+          if (elements[index] === el && focused[index]) el.setSelectionRange(start, end);
+        });
       }
     },
     { flush: 'post' },
@@ -201,11 +213,10 @@ export function useMaskInput(options: UseMaskInputOptions): MaskInputApi {
     }
 
     // ① 共享段：Enter + 合法 ⇒ 提交；Tab / Escape；用户的 deprecated onKeyDown
-    if (event.key === 'Enter' && options.validateFormat(internalText.value[index] ?? '')) {
-      options.onSubmit(index);
-    }
     options.onKeyDown(index, event);
+    if (event.defaultPrevented || event.isComposing) return;
 
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
     const { key } = event;
     const [selectionStart, selectionEnd] = selectionOf(index);
     const maskCellLen = selectionEnd - selectionStart;
@@ -244,7 +255,7 @@ export function useMaskInput(options: UseMaskInputOptions): MaskInputApi {
       }
       default:
         // ⚠️ 判据是 `!isNaN(Number(key))` —— 空格（`Number(' ') === 0`）也会命中
-        if (!Number.isNaN(Number(key))) {
+        if (/^[0-9]$/.test(key)) {
           nextCellText = (focusCellText[index] ?? '') + key;
           nextFillText = nextCellText;
         }
@@ -252,6 +263,7 @@ export function useMaskInput(options: UseMaskInputOptions): MaskInputApi {
     }
 
     if (nextCellText !== null) {
+      event.preventDefault();
       focusCellText[index] = nextCellText;
       if (nextCellText.length >= maskCellLen) {
         offsetCellIndex(1);
@@ -312,6 +324,7 @@ export function useMaskInput(options: UseMaskInputOptions): MaskInputApi {
           event.preventDefault();
           return;
         }
+        event.preventDefault();
         const pasteText = event.clipboardData?.getData('text') ?? '';
         if (options.validateFormat(pasteText)) {
           triggerInputChange(index, pasteText);
@@ -323,7 +336,14 @@ export function useMaskInput(options: UseMaskInputOptions): MaskInputApi {
       //    **Vue 没有这个机制** ⇒ 不主动打一拍的话，浏览器在 keydown 之后落进 DOM 的
       //    原生字符会**留在输入框里**（keydown 里的那次 patch 发生在默认动作**之前**）。
       //    分类 **PLATFORM**（框架差异），登记在 `README.md` §2。
-      onInput: () => {
+      onCompositionend: () => {
+        const element = elements[index];
+        if (element && options.validateFormat(element.value))
+          triggerInputChange(index, element.value);
+        syncTick.value += 1;
+      },
+      onInput: (event: InputEvent) => {
+        if (event.isComposing) return;
         syncTick.value += 1;
       },
     };

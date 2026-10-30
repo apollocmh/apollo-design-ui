@@ -19,7 +19,7 @@
  * 但「点完之后其它列的值变得不可用」会发生，由 `getValidTime` 兜住。
  */
 
-import { computed, defineComponent, h, type PropType, type SlotsType } from 'vue';
+import { computed, defineComponent, h, type PropType, ref, type SlotsType } from 'vue';
 import { type PanelDateType, type PanelSlots, usePanelHack, usePanelInfo } from './panel-context';
 import { TimeColumn, type TimeColumnValue } from './time-column';
 import type { TimePanelConfig } from './time-config';
@@ -51,7 +51,9 @@ export const TimePanelBody = defineComponent({
     },
   },
   slots: Object as SlotsType<PanelSlots>,
-  setup(props, { slots }) {
+  setup(props, { slots, expose }) {
+    const columnRefs = Array.from({ length: 5 }, () => ref<{ focus: () => void } | null>(null));
+    expose({ focus: () => columnRefs.find((column) => column.value)?.value?.focus() });
     const info = usePanelInfo();
     const hack = usePanelHack();
     /** 由面板算好的「禁用规则 + 步长」配置（`showXxx` 不是它的成员）。 */
@@ -181,6 +183,7 @@ export const TimePanelBody = defineComponent({
               units: hourUnits,
               value: hour,
               optionalValue: pickerTime?.hour ?? null,
+              ref: columnRefs[0],
               type: 'hour',
               onChange: (value) => changeUnit(value, 'Hour'),
               onHover: (value) => hoverUnit(value, 'Hour'),
@@ -199,6 +202,7 @@ export const TimePanelBody = defineComponent({
               units: minuteUnits,
               value: minute,
               optionalValue: pickerTime?.minute ?? null,
+              ref: columnRefs[1],
               type: 'minute',
               onChange: (value) => changeUnit(value, 'Minute'),
               onHover: (value) => hoverUnit(value, 'Minute'),
@@ -217,6 +221,7 @@ export const TimePanelBody = defineComponent({
               units: secondUnits,
               value: second,
               optionalValue: pickerTime?.second ?? null,
+              ref: columnRefs[2],
               type: 'second',
               onChange: (value) => changeUnit(value, 'Second'),
               onHover: (value) => hoverUnit(value, 'Second'),
@@ -235,6 +240,7 @@ export const TimePanelBody = defineComponent({
               units: millisecondUnits,
               value: millisecond,
               optionalValue: pickerTime?.millisecond ?? null,
+              ref: columnRefs[3],
               type: 'millisecond',
               onChange: (value) => changeUnit(value, 'Millisecond'),
               onHover: (value) => hoverUnit(value, 'Millisecond'),
@@ -255,6 +261,7 @@ export const TimePanelBody = defineComponent({
               units: meridiemUnits,
               value: meridiem,
               optionalValue: null,
+              ref: columnRefs[4],
               type: 'meridiem',
               onChange: onMeridiemChange,
               onHover: onMeridiemHover,
