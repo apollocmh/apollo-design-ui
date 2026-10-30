@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 33,
+  "revision": 36,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -583,9 +583,28 @@
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-24-tabs-popup-remediation.md",
-        "docs/audit/2026-10-28-overlay-controlled-delay-audit.md"
+        "docs/audit/2026-10-28-overlay-controlled-delay-audit.md",
+        "packages/ui/src/dropdown/__tests__/type.test-d.ts"
       ],
-      "issues": []
+      "issues": [],
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/dropdown/interface.ts",
+          "packages/ui/src/_internal/trigger.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated strict config; Dropdown and FloatButton source/tests/demos>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49615
+          }
+        ],
+        "boundary": "仅验证浮层root/overlayStyle经Trigger直接接收Vue CSSProperties的类型链；其余Dropdown整改仍partial，没有新增运行时验收结论。"
+      }
     },
     {
       "id": "CMP:empty",
@@ -1204,13 +1223,17 @@
       "kind": "component",
       "ref": "popover",
       "title": "Popover",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/popover"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_popover",
+        "baseRevision": 34,
+        "startedAt": "2026-10-30T08:23:36.196Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1219,7 +1242,19 @@
         "docs/audit/2026-10-25-overlay-native-styles-remediation.md",
         "docs/audit/2026-10-28-overlay-controlled-delay-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留已有Overlay slots/native-style和Tooltip迁移成果，收口Popover剩余Vue契约",
+        "remaining": [
+          "从当前b891c8de与三份既有报告核对剩余当前Provider/主题组件Token、拥有的事件/受控模型、真实模板ref、PurePanel与实际消费者差额，不重做Tooltip已验证共享层。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-25-overlay-content-slots-remediation.md",
+          "docs/audit/2026-10-25-overlay-native-styles-remediation.md",
+          "docs/audit/2026-10-28-overlay-controlled-delay-audit.md"
+        ]
+      }
     },
     {
       "id": "CMP:progress",

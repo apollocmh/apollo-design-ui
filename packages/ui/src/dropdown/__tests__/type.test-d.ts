@@ -1,8 +1,24 @@
 /** L3 类型（G7）—— 正例 + 负例（负例包在永不调用的闭包里，CHECKLIST §一）。 */
 import { describe, expectTypeOf } from 'vitest';
+import type { CSSProperties } from 'vue';
 import type { DropdownPlacement, DropdownProps } from '../interface';
 
 describe('Dropdown · 类型', () => {
+  it('浮层根直接消费 Vue CSSProperties，无需调用者增加 record 适配', () => {
+    const root: CSSProperties = { marginInlineStart: 8, '--popup-tone': '#123456' };
+    const props: DropdownProps = { styles: { root }, overlayStyle: root };
+    expectTypeOf(props.styles?.root).toEqualTypeOf<CSSProperties | undefined>();
+    const invalid: DropdownProps = {
+      styles: {
+        root: {
+          // @ts-expect-error CSS 颜色不是业务回调。
+          color: () => 'red',
+        },
+      },
+    };
+    void invalid;
+  });
+
   it('placement 是 14 值联合（含 deprecated Center）', () => {
     expectTypeOf<DropdownPlacement>().toEqualTypeOf<
       | 'topLeft'

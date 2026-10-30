@@ -17,6 +17,7 @@ import { useZIndex } from '@apollo-design/portal';
 import { getPlacements } from '@apollo-design/position';
 import { useControlledValue } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   cloneVNode,
   computed,
   defineComponent,
@@ -43,7 +44,7 @@ const DEPRECATIONS: Array<[keyof DropdownProps, string]> = [
   ['overlayStyle', 'styles.root'],
 ];
 
-type StyleLike = Record<string, string | number>;
+type StyleLike = CSSProperties;
 
 /** OverrideProvider 的 Vue 对应物（provide 必须在 setup 顶层 ⇒ 独立组件）。 */
 const OverlayProvider = defineComponent({
@@ -321,7 +322,7 @@ const Dropdown = defineComponent({
           class: [rootCls.length > 0 ? rootCls : undefined],
           style: {
             ...(mergedStyles.value.root ?? {}),
-            ...(props.overlayStyle as StyleLike | undefined),
+            ...props.overlayStyle,
           },
         },
         [h(OverlayRenderer, null, slots.popupRender ? { popupRender: slots.popupRender } : {})],

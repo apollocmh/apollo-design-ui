@@ -45,6 +45,7 @@ import { canUseDom } from '@apollo-design/utils';
 import {
   cloneVNode,
   computed,
+  type CSSProperties,
   defineComponent,
   h,
   onBeforeUnmount,
@@ -211,7 +212,7 @@ export const Trigger = defineComponent({
     arrow: { type: Object as PropType<TriggerArrow>, default: undefined },
     zIndex: { type: Number, default: undefined },
     popupClassName: { type: [String, Array] as PropType<string | string[]>, default: undefined },
-    popupStyle: { type: Object as PropType<Record<string, string | number>>, default: undefined },
+    popupStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     onPopupAlign: {
       type: Function as PropType<(popupEle: HTMLElement, align: TriggerAlign) => void>,
       default: undefined,

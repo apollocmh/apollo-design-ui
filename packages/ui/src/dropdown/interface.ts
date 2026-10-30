@@ -6,7 +6,7 @@
  * （函数式语义槽 PENDING，D36 同判）。
  */
 
-import type { VNodeChild } from 'vue';
+import type { CSSProperties, VNodeChild } from 'vue';
 
 import type { MenuProps } from '../menu/interface';
 
@@ -44,7 +44,7 @@ export interface DropdownSemanticType {
     itemContent?: string;
   };
   styles?: {
-    root?: Record<string, string | number>;
+    root?: CSSProperties;
     item?: Record<string, string | number>;
     itemTitle?: Record<string, string | number>;
     itemIcon?: Record<string, string | number>;
@@ -79,7 +79,7 @@ export interface DropdownProps {
   /** ⚠️ deprecated：用 `classNames.root`。 */
   overlayClassName?: string;
   /** ⚠️ deprecated：用 `styles.root`。 */
-  overlayStyle?: Record<string, string | number>;
+  overlayStyle?: CSSProperties;
   /**
    * 浮层根节点类名。
    *
