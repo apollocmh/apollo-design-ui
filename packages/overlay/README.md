@@ -19,11 +19,13 @@
 
 ## 公开 API
 
-- useOverlay —— 开合状态机（受控 / 非受控双模式）
-- 触发动作：hover / click / focus / contextMenu（与 antd 的 action 语义一致）
+- useOverlay —— Vue composable，返回当前开合状态、元素 Ref、原生事件 props 和显式开关方法
+- 触发动作：hover / click / focus / contextMenu / touch；动作和延迟配置支持 Ref/getter
 - 延迟：mouseEnterDelay / mouseLeaveDelay / focusDelay / blurDelay
 - 关闭：外部点击（clickToHide，含 contextMenu）/ Esc / 失焦，及各自的关闭钩子
-- 层级：只做 Esc 栈（按开启顺序的 LIFO，仅栈顶响应）；z-index 数值归 portal
+- 层级：按实际窗口共享 Esc 栈，同窗口多个 app 按开启顺序仅关闭栈顶；z-index 数值归 portal
+
+`onOpenChange` 是开关请求回调，受控时由父级决定是否接受。返回的 `targetProps` / `popupProps` 绑定 Vue 原生 DOM 事件并传递原始 Event；composable 本身没有组件 emits、插槽或 Provider。完整导出、选项、返回值和资源归属见[当前 API 契约](../../docs/foundation/overlay-contract.md#5-api-设计)。
 
 > ⚠️ 2026-09-18 修正：此处原写「堆叠：与 portal 的 z-index 协调，后开的浮层在上层」，
 > **两处都错**。① z-index 数值由 `portal` 的 `computeZIndex` 负责，本包不做；
@@ -44,10 +46,11 @@
 
 ## 必须遵守的契约
 
-- 四种触发动作的开启/关闭时机必须与 antd 逐项一致（含边界：hover 到浮层上时不清空计时）
-- 受控（open）与非受控（defaultOpen）语义与 antd 一致
-- Esc 关闭必须冒泡到最上层一个浮层，且只关闭它
-- 外部点击判定必须排除浮层自身与其 portal 容器内的节点
+- 受控请求被拒绝时不改变当前状态，撤控保留最后接受值；disabled 仅压制渲染
+- hover 移入 popup 时以新的开启请求替换旧关闭延迟，离场中的 inMotion 可保活
+- Esc 只关闭派发开始时的栈顶，多 app 不共用实例 id；IME 结束后锁定 200ms
+- 外点判定排除 target、popup 与已登记子浮层，支持同源多文档和 ShadowRoot
+- 关闭、配置/元素变化及卸载释放所属窗口监听；卸载同时取消延迟，null 解除子浮层登记
 
 ## 依赖
 
@@ -85,6 +88,7 @@
 ```bash
 pnpm --filter @apollo-design/overlay test
 pnpm --filter @apollo-design/overlay lint
+node packages/overlay/src/__tests__/native-browser.mjs
 ```
 
 测试要求见 [`TESTING.md`](../../TESTING.md)。

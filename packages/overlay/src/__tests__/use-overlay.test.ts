@@ -512,8 +512,7 @@ describe('Esc（层级栈）', () => {
     let a!: UseOverlayReturn;
     let b!: UseOverlayReturn;
 
-    // ⚠️ 两个实例必须在**同一个 app** 里 —— 分开 mount 会得到两个独立 app，
-    // `useId()` 都从 0 开始 ⇒ escId 撞车 ⇒ 栈里只有一个（幂等 push）。
+    // 同一个 app 中的两个实例按开启顺序共享栈；跨 app 场景见 native-lifecycle。
     const Wrapper = defineComponent({
       setup() {
         a = useOverlay({ escStack: stack });

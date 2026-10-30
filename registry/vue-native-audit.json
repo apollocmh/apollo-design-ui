@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 55,
+  "revision": 57,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2628,19 +2628,17 @@
       "kind": "foundation",
       "ref": "overlay",
       "title": "@apollo-design/overlay",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/overlay",
         "docs/foundation/overlay-contract.md"
       ],
-      "assignment": {
-        "owner": "native_overlay",
-        "baseRevision": 51,
-        "startedAt": "2026-10-30T09:10:36.609Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
@@ -2658,6 +2656,50 @@
           "docs/foundation/overlay-contract.md",
           "docs/audit/2026-10-28-overlay-controlled-delay-audit.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/overlay"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/overlay/src/__tests__ --maxWorkers=2",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 5940
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/overlay/src/__tests__/native-lifecycle.test.ts --maxWorkers=2",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 1680
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/_internal/__tests__/trigger.test.ts packages/ui/src/_internal/__tests__/trigger-theme.test.ts packages/ui/src/dropdown/__tests__/index.test.ts packages/ui/src/menu/__tests__/engine.test.ts packages/ui/src/menu/__tests__/index.test.ts packages/ui/src/tour/__tests__/index.test.ts packages/ui/src/date-picker/__tests__/index.test.ts packages/ui/src/mentions/__tests__/native-contracts.test.ts packages/ui/src/tooltip/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/overlay/src/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 2459
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; entire Overlay source/tests>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 51927
+          }
+        ],
+        "boundary": "受控延迟/焦点历史组保留；已验证多app/多文档Esc、外点/hover/IME、回调当前值、触摸复位与关闭/卸载释放；实际UI Trigger消费者149条通过。几何/容器不在本包职责，最终冻结验收未执行。"
       }
     },
     {

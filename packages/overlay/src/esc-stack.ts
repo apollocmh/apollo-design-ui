@@ -69,7 +69,7 @@ export interface EscStack {
   /** 挂/摘全局监听。栈空时才该摘（rc 的 `detachGlobalEventListeners`）。 */
   attach: () => void;
   detach: () => void;
-  /** 清空。测试隔离用 —— 栈是模块级单例，用例之间必须重置。 */
+  /** 清空成员、IME 标记并释放原生监听。 */
   reset: () => void;
   readonly size: number;
   readonly attached: boolean;
@@ -79,21 +79,22 @@ export function createEscStack(options: EscStackOptions = {}): EscStack {
   const { now = () => Date.now(), win = null } = options;
 
   let stack: EscStackEntry[] = [];
-  let lastCompositionEndTime = 0;
+  let lastCompositionEndTime: number | null = null;
   let listening = false;
 
   const handleKeyDown = (event: EscEventLike): void => {
     if (event.key !== 'Escape' || event.isComposing) {
       return;
     }
-    if (now() - lastCompositionEndTime < IME_LOCK_DURATION) {
+    if (lastCompositionEndTime !== null && now() - lastCompositionEndTime < IME_LOCK_DURATION) {
       return;
     }
-    const len = stack.length;
+    const entries = [...stack];
+    const len = entries.length;
     // 从栈顶到栈底，**每个**都通知
     for (let i = len - 1; i >= 0; i -= 1) {
-      const entry = stack[i];
-      if (entry) {
+      const entry = entries[i];
+      if (entry && stack.includes(entry)) {
         entry.onEsc({ top: i === len - 1, event });
       }
     }
@@ -103,9 +104,13 @@ export function createEscStack(options: EscStackOptions = {}): EscStack {
     lastCompositionEndTime = now();
   };
 
-  /** 桥接 `addEventListener`：参数类型从 `Event` 窄化成 Esc 事件。 */
-  const onKeyDown = (rawEvent: Event): void => {
-    handleKeyDown(rawEvent as unknown as EscEventLike);
+  const onKeyDown = (event: KeyboardEvent): void => handleKeyDown(event);
+
+  const detach = (): void => {
+    if (!listening || !win) return;
+    win.removeEventListener('keydown', onKeyDown);
+    win.removeEventListener('compositionend', onCompositionEnd);
+    listening = false;
   };
 
   return {
@@ -132,18 +137,12 @@ export function createEscStack(options: EscStackOptions = {}): EscStack {
       listening = true;
     },
 
-    detach() {
-      if (!listening || !win) {
-        return;
-      }
-      win.removeEventListener('keydown', onKeyDown);
-      win.removeEventListener('compositionend', onCompositionEnd);
-      listening = false;
-    },
+    detach,
 
     reset() {
+      detach();
       stack = [];
-      lastCompositionEndTime = 0;
+      lastCompositionEndTime = null;
     },
 
     get size() {

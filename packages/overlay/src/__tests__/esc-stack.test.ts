@@ -69,6 +69,37 @@ describe('createEscStack · 入栈与出栈', () => {
     stack.reset();
     expect(stack.size).toBe(0);
   });
+
+  it('dispatch keeps its original top when callbacks remove, replace or add entries', () => {
+    const stack = createEscStack();
+    const seen: [string, boolean][] = [];
+    stack.push({ id: 'a', onEsc: ({ top }) => seen.push(['a', top]) });
+    stack.push({
+      id: 'b',
+      onEsc: ({ top }) => {
+        seen.push(['b', top]);
+        stack.remove('a');
+        stack.push({ id: 'c', onEsc: ({ top: nextTop }) => seen.push(['c', nextTop]) });
+      },
+    });
+    stack.dispatch(pressEsc());
+    expect(seen).toEqual([['b', true]]);
+    stack.dispatch(pressEsc());
+    expect(seen).toEqual([
+      ['b', true],
+      ['c', true],
+      ['b', false],
+    ]);
+  });
+
+  it('reset also releases its native event listeners', () => {
+    const stack = createEscStack({ win: window });
+    stack.push({ id: 'a', onEsc: () => {} });
+    stack.attach();
+    stack.reset();
+    expect(stack.size).toBe(0);
+    expect(stack.attached).toBe(false);
+  });
 });
 
 describe('createEscStack · 事件的过滤', () => {
@@ -86,6 +117,14 @@ describe('createEscStack · 事件的过滤', () => {
     stack.push({ id: 'a', onEsc });
     stack.dispatch({ key: 'Escape', isComposing: true });
     expect(onEsc).not.toHaveBeenCalled();
+  });
+
+  it('time zero does not imply an earlier compositionend', () => {
+    const stack = createEscStack({ now: () => 0 });
+    const onEsc = vi.fn();
+    stack.push({ id: 'a', onEsc });
+    stack.dispatch(pressEsc());
+    expect(onEsc).toHaveBeenCalledOnce();
   });
 });
 

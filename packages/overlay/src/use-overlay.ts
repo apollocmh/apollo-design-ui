@@ -9,17 +9,16 @@
  * 与 React 的形态差异（H3：禁止机械翻译）
  * ---------------------------------------------------------------------------
  *
- * rc-trigger 用 `cloneElement(child, cloneProps)` 把事件处理器**注入**子元素。
- * Vue 没有（也不该有）clone 语义。这里改为**返回两个 props 对象**供模板 `v-bind`：
+ * rc-trigger 用 `cloneElement(child, cloneProps)` 把事件处理器注入子元素。
+ * 这里返回两个原生事件 props 对象，供 Vue 宿主明确绑定到实际 DOM：
  *
  * ```vue
  * <button v-bind="targetProps">触发</button>
  * <div v-if="open" ref="popupRef" v-bind="popupProps">浮层</div>
  * ```
  *
- * 这样「事件挂在哪」在模板里一眼可见，也天然满足契约 §3.4 的顺序要求 ——
- * Vue 对「`v-bind` 的 `onClick` + 模板里的 `@click`」会合并成数组并**按此顺序**调用，
- * 正好是 rc 里「先 `triggerOpen`，后 `originChildProps[eventName]`」的次序。
+ * 宿主可通过模板绑定、h() 或 cloneVNode 合并原生事件，顺序取决于绑定/渲染方式。
+ * 本包只提供所属事件动作，不读取、缓存或手动重复调用宿主监听器。
  *
  * ---------------------------------------------------------------------------
  * 不做的事
@@ -31,7 +30,7 @@
  * - 离场动画的**产生** → `motion`（本包只把 `inMotion` 当作入参消费）
  */
 
-import { canUseDom, useControlledValue, useId } from '@apollo-design/utils';
+import { canUseDom, useControlledValue } from '@apollo-design/utils';
 import {
   type ComputedRef,
   computed,
@@ -77,7 +76,7 @@ export interface UseOverlayOptions {
   open?: MaybeRefOrGetter<boolean | undefined>;
   /** 非受控时的初始值。默认 `false`。 */
   defaultOpen?: boolean;
-  /** 受控/非受控变化时回调。**只在真的变了才调用**。 */
+  /** 开关请求回调；请求值与当前 rawOpen 不同时调用。受控时由父级决定是否接受。 */
   onOpenChange?: (open: boolean) => void;
 
   /** 压制渲染但不改变状态（契约 §3.3）。默认 `false`。 */
@@ -100,7 +99,7 @@ export interface UseOverlayOptions {
   /** 离场动画进行中。`motion` 提供，本包只消费（契约 §3.6 第 3 条）。 */
   inMotion?: MaybeRefOrGetter<boolean | undefined>;
 
-  /** Esc 栈注入。测试隔离用，默认用模块级单例。 */
+  /** Esc 栈注入。测试隔离用，默认按浮层所属窗口共享。 */
   escStack?: EscStack;
   /** 延迟器注入。测试用。 */
   delayInvoker?: DelayInvoker;
@@ -114,7 +113,7 @@ export interface UseOverlayReturn {
   open: ComputedRef<boolean>;
   /** 未压制的原始状态。`motion` / 调试用。 */
   rawOpen: ComputedRef<boolean>;
-  /** 显式开合。`delay` 单位秒，`0` 同步、`undefined` 下一宏任务。 */
+  /** 显式开合。`delay` 单位秒，省略、undefined 或 0 均同步执行。 */
   setOpen: (next: boolean, delay?: number) => void;
   /** 绑到触发元素上（`<button ref="targetRef" v-bind="targetProps">`）。 */
   targetRef: Ref<HTMLElement | null>;
@@ -126,7 +125,7 @@ export interface UseOverlayReturn {
   mousePos: Readonly<Ref<MousePosition | null>>;
   /** 子浮层登记（契约 §3.12）。点子浮层也算"在浮层内"。 */
   registerSubPopup: (id: string, element: HTMLElement | null) => void;
-  /** 本浮层在 Esc 栈里的 id。 */
+  /** 本浮层在 Esc 栈里的实例 id；不用于 DOM 或 SSR 水合。 */
   escId: string;
 }
 
@@ -134,7 +133,12 @@ export interface UseOverlayReturn {
 // 内部工具
 // ---------------------------------------------------------------------------
 
-/** `ele === host || host.contains(ele)`。传 `null` 一律 false（rc 的可选链语义）。 */
+/** 不用当前 realm 的 Node 构造器判断 iframe 内的原生节点。 */
+function isNode(target: EventTarget): target is Node {
+  return 'nodeType' in target;
+}
+
+/** `ele === host || host.contains(ele)`。传 `null` 一律 false。 */
 function containsOrIs(host: HTMLElement | null, ele: EventTarget | null): boolean {
   if (!host || !ele) {
     return false;
@@ -142,7 +146,7 @@ function containsOrIs(host: HTMLElement | null, ele: EventTarget | null): boolea
   if (ele === host) {
     return true;
   }
-  return ele instanceof Node ? host.contains(ele) : false;
+  return isNode(ele) ? host.contains(ele) : false;
 }
 
 /** 取元素的 shadow host（没有则 `null`）。对应 rc 的 `getShadowRoot(ele)?.host`。 */
@@ -151,17 +155,24 @@ function getShadowHost(element: HTMLElement | null): Element | null {
     return null;
   }
   const root = element.getRootNode();
-  return root && root !== element && 'host' in root ? (root as ShadowRoot).host : null;
+  return isFocusScope(root) && 'host' in root ? root.host : null;
 }
 
-let globalEscStack: EscStack | null = null;
+const globalEscStacks = new WeakMap<Window, EscStack>();
+let nextEscId = 0;
 
-/** Esc 栈的模块级单例。SSR 下 `win` 为 `null`，`attach()` 是空操作。 */
-export function getGlobalEscStack(): EscStack {
-  if (!globalEscStack) {
-    globalEscStack = createEscStack({ win: canUseDom() ? window : null });
+function getEscStackForWindow(win: Window): EscStack {
+  let stack = globalEscStacks.get(win);
+  if (!stack) {
+    stack = createEscStack({ win });
+    globalEscStacks.set(win, stack);
   }
-  return globalEscStack;
+  return stack;
+}
+
+/** 当前窗口的共享 Esc 栈。SSR 返回独立的无 DOM 栈，不保留请求状态。 */
+export function getGlobalEscStack(): EscStack {
+  return canUseDom() ? getEscStackForWindow(window) : createEscStack();
 }
 
 // ---------------------------------------------------------------------------
@@ -171,27 +182,25 @@ export function getGlobalEscStack(): EscStack {
 export function useOverlay(options: UseOverlayOptions = {}): UseOverlayReturn {
   const {
     defaultOpen = false,
-    onOpenChange,
     escStack: injectedEscStack,
     delayInvoker: injectedDelayInvoker,
   } = options;
 
-  const escStack = injectedEscStack ?? getGlobalEscStack();
   const delayInvoker = injectedDelayInvoker ?? createDelayInvoker();
 
   // ============================ 元素 ============================
   const targetRef = ref<HTMLElement | null>(null);
   const popupRef = ref<HTMLElement | null>(null);
-  const mousePos = ref<MousePosition | null>(null) as Ref<MousePosition | null>;
+  const mousePos = ref<MousePosition | null>(null);
 
   /** 子浮层。非响应式 —— 只在事件回调里读。 */
-  const subPopupElements = new Map<string, HTMLElement | null>();
+  const subPopupElements = new Map<string, HTMLElement>();
 
   // ============================ 开合 ============================
   const [rawOpenRef, setRawOpen] = useControlledValue<boolean>({
     defaultValue: defaultOpen,
     getValue: () => toValue(options.open),
-    onChange: (next) => onOpenChange?.(next),
+    onChange: (next) => options.onOpenChange?.(next),
   });
 
   const disabled = computed(() => toValue(options.disabled) ?? false);
@@ -239,9 +248,6 @@ export function useOverlay(options: UseOverlayOptions = {}): UseOverlayReturn {
   /**
    * 对外入口。`delay` 默认 **0（同步）** —— 与 rc 的
    * `const triggerOpen = (nextOpen, delay = 0) => {`（`index.js:208`）一致。
-   *
-   * 想复刻「上游没给默认值」的 NaN 语义，请显式传 `undefined` 给内部路径，
-   * 或调用 `setOpen(next, undefined)` 之外的写法 —— 这里刻意用默认参数屏蔽它。
    */
   const setOpen = (next: boolean, delay = 0): void => {
     triggerOpen(next, delay);
@@ -267,9 +273,13 @@ export function useOverlay(options: UseOverlayOptions = {}): UseOverlayReturn {
   const touched = ref(false);
 
   const setMousePosByEvent = (event: Event): void => {
-    const mouseEvent = event as MouseEvent;
-    if (typeof mouseEvent.clientX === 'number' && typeof mouseEvent.clientY === 'number') {
-      mousePos.value = [mouseEvent.clientX, mouseEvent.clientY];
+    if (
+      'clientX' in event &&
+      'clientY' in event &&
+      typeof event.clientX === 'number' &&
+      typeof event.clientY === 'number'
+    ) {
+      mousePos.value = [event.clientX, event.clientY];
     }
   };
 
@@ -295,29 +305,27 @@ export function useOverlay(options: UseOverlayOptions = {}): UseOverlayReturn {
       const mask = toValue(options.mask) ?? false;
       const maskClosable = toValue(options.maskClosable) ?? true;
       return {
-        enabled: clickToHide.value && popup !== null && (!mask || maskClosable),
+        enabled: open.value && clickToHide.value && popup !== null && (!mask || maskClosable),
         popup,
+        target: targetRef.value,
       };
     },
     (current, _previous, onCleanup) => {
       if (!current.enabled || !current.popup) {
         return;
       }
-      // 拿不到 ownerDocument.defaultView 时回落到当前 window ——
-      // 不写成 `if (!win) return`，因为那条分支在 jsdom / 浏览器下都不可达，
-      // 会白占一个永远测不到的分支（覆盖率口径下是纯粹的负债）。
-      const win = current.popup.ownerDocument?.defaultView ?? window;
+      const windows = new Set([
+        current.popup.ownerDocument.defaultView,
+        current.target?.ownerDocument.defaultView,
+      ]);
+      popupPointerDown = false;
 
       /** window 的 capture 阶段先置 false —— 顺序在 popup 的 capture 之前。 */
       const onWindowPointerDown = (): void => {
         popupPointerDown = false;
       };
       const onTriggerClose = (event: Event): void => {
-        const composedTarget = (
-          typeof (event as { composedPath?: () => EventTarget[] }).composedPath === 'function'
-            ? (event as { composedPath: () => EventTarget[] }).composedPath()[0]
-            : undefined
-        ) as EventTarget | undefined;
+        const composedTarget = event.composedPath()[0];
         const ele = composedTarget ?? event.target;
         if (open.value && !inPopupOrChild(ele) && !popupPointerDown) {
           // 外部点击**不带延迟**
@@ -325,43 +333,42 @@ export function useOverlay(options: UseOverlayOptions = {}): UseOverlayReturn {
         }
       };
 
-      win.addEventListener('pointerdown', onWindowPointerDown, true);
-      win.addEventListener('mousedown', onTriggerClose, true);
-      win.addEventListener('contextmenu', onTriggerClose, true);
+      for (const win of windows) {
+        win?.addEventListener('pointerdown', onWindowPointerDown, true);
+        win?.addEventListener('mousedown', onTriggerClose, true);
+        win?.addEventListener('contextmenu', onTriggerClose, true);
+      }
 
       onCleanup(() => {
-        win.removeEventListener('pointerdown', onWindowPointerDown, true);
-        win.removeEventListener('mousedown', onTriggerClose, true);
-        win.removeEventListener('contextmenu', onTriggerClose, true);
+        for (const win of windows) {
+          win?.removeEventListener('pointerdown', onWindowPointerDown, true);
+          win?.removeEventListener('mousedown', onTriggerClose, true);
+          win?.removeEventListener('contextmenu', onTriggerClose, true);
+        }
       });
     },
     { flush: 'sync', immediate: true },
   );
 
   // ============================ Esc（契约 §3.11） ============================
-  const escId = useId();
+  const escId = `apollo-overlay-${++nextEscId}`;
 
   watch(
-    () => open.value,
-    (isOpen, _previous, onCleanup) => {
-      // SSR 守卫不在这里 —— `escStack.attach()` 自己对 `win: null` 空操作
-      // （`esc-stack.test.ts` 有专门用例）。在这里再判一次 `canUseDom()` 只是
-      // 多一条不可达分支。
-      if (isOpen) {
-        escStack.push({ id: escId, onEsc: ({ top }) => top && setOpen(false) });
-        escStack.attach();
-        onCleanup(() => {
-          escStack.remove(escId);
-          if (escStack.size === 0) {
-            escStack.detach();
-          }
-        });
-        return;
-      }
-      escStack.remove(escId);
-      if (escStack.size === 0) {
-        escStack.detach();
-      }
+    () => {
+      if (!open.value) return null;
+      if (injectedEscStack) return injectedEscStack;
+      const doc = popupRef.value?.ownerDocument ?? targetRef.value?.ownerDocument;
+      const win = doc ? doc.defaultView : canUseDom() ? window : null;
+      return win ? getEscStackForWindow(win) : null;
+    },
+    (escStack, _previous, onCleanup) => {
+      if (!escStack) return;
+      escStack.push({ id: escId, onEsc: ({ top }) => top && setOpen(false) });
+      escStack.attach();
+      onCleanup(() => {
+        escStack.remove(escId);
+        if (escStack.size === 0) escStack.detach();
+      });
     },
     { flush: 'sync', immediate: true },
   );
@@ -385,7 +392,7 @@ export function useOverlay(options: UseOverlayOptions = {}): UseOverlayReturn {
 
     // -------- Click（§3.5） --------
     const clickToShow = show.has('click');
-    if (clickToShow || clickToHide.value) {
+    if (clickToShow || clickToHide.value || show.has('touch') || hide.has('touch')) {
       props.onClick = (event) => {
         if (open.value && clickToHide.value) {
           setOpen(false);
@@ -459,12 +466,7 @@ export function useOverlay(options: UseOverlayOptions = {}): UseOverlayReturn {
     if (show.has('hover')) {
       props.onMouseenter = (event) => {
         const popup = popupRef.value;
-        if (
-          (open.value || inMotion()) &&
-          popup &&
-          event.target instanceof Node &&
-          popup.contains(event.target)
-        ) {
+        if ((open.value || inMotion()) && popup && containsOrIs(popup, event.target)) {
           triggerOpen(true, mouseEnterDelay());
         }
       };
@@ -489,12 +491,12 @@ export function useOverlay(options: UseOverlayOptions = {}): UseOverlayReturn {
   // ============================ 清理 ============================
   onScopeDispose(() => {
     delayInvoker.clear();
-    escStack.remove(escId);
+    subPopupElements.clear();
   });
 
   return {
     open,
-    rawOpen: rawOpenRef as ComputedRef<boolean>,
+    rawOpen: rawOpenRef,
     setOpen,
     targetRef,
     popupRef,
@@ -502,7 +504,8 @@ export function useOverlay(options: UseOverlayOptions = {}): UseOverlayReturn {
     popupProps,
     mousePos,
     registerSubPopup: (id, element) => {
-      subPopupElements.set(id, element);
+      if (element) subPopupElements.set(id, element);
+      else subPopupElements.delete(id);
     },
     escId,
   };

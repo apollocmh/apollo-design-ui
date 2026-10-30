@@ -414,7 +414,7 @@
           "@apollo-design/ui"
         ],
         "srcFiles": 5,
-        "srcLines": 915,
+        "srcLines": 917,
         "exportDeclarations": 24
       }
     },

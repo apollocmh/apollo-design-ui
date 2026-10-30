@@ -398,36 +398,66 @@ const onScroll = () => { if (openRef.current && alignPoint && clickToHide) trigg
 
 ## 5. API 设计
 
-### 5.1 纯数据侧（可穷举测试）
+本节按 2026-10-30 当前导出更新；§3 的上游源码与初期分析保留其历史来源，不覆盖当前 Apollo 契约。
+
+### 5.1 当前函数与类型边界
 
 | 函数 | 契约来源 |
 |---|---|
-| `resolveActions({ action, showAction, hideAction })` → `{ show: Set, hide: Set }` | §3.1 |
-| `toDelayMs(delay: number \| undefined)` → `number \| 'immediate' \| 'nextTick'` | §3.2 |
-| `shouldCloseOnOutside({ open, target, ele })` | §3.10 第 4 条 |
-| `createEscStack()` → `{ push, remove, dispatch }` | §3.11 |
+| `resolveActions({ action, showAction, hideAction })` → `ResolvedActions` | §3.1；两个 `ReadonlySet<OverlayAction>` |
+| `isClickToHide(hide)` → `boolean` | `click` 或 `contextMenu` 可外点关闭 |
+| `resolveDelay(delay)` → `DelayResolution` | 秒单位；`0` 同步，内部动作传入 `undefined` 时下一宏任务 |
+| `createDelayInvoker(timers?)` → `DelayInvoker` | `invoke` / `clear` / 只读 `pending`；实例所属任务替换与释放 |
+| `createEscStack({ win?, now? })` → `EscStack` | `push` / `remove` / `dispatch` / `attach` / `detach` / `reset`，只读 `size` / `attached` |
+| `getGlobalEscStack()` → `EscStack` | 当前窗口的共享栈；无 DOM 时返回独立的无监听栈 |
+| `useOverlay(options?)` → `UseOverlayReturn` | §5.2；默认导出对象仅含 `useOverlay` |
 
-`isActionEnabled` 系列由 `Set` 直接表达，不额外出函数。
+动作类型为 `hover | click | focus | contextMenu | touch`。初期草案的 `toDelayMs` / `shouldCloseOnOutside` 从未成为导出；外点判定留在实例内，不新增公开辅助层。
 
 ### 5.2 有副作用的一侧
 
 ```ts
-function useOverlay(options: UseOverlayOptions): {
+function useOverlay(options?: UseOverlayOptions): {
   open: ComputedRef<boolean>;         // = mergedOpen（已含 disabled 压制）
   rawOpen: ComputedRef<boolean>;      // 未压制，供 motion / 调试用
   setOpen: (next: boolean, delay?: number) => void;
+  targetRef: Ref<HTMLElement | null>;
+  popupRef: Ref<HTMLElement | null>;
   targetProps: ComputedRef<Record<string, (e: Event) => void>>;   // v-bind 到触发元素
   popupProps: ComputedRef<Record<string, (e: Event) => void>>;    // v-bind 到浮层元素
-  mousePos: Readonly<Ref<[number, number] | null>>;
+  mousePos: Readonly<Ref<readonly [number, number] | null>>;
   registerSubPopup: (id: string, el: HTMLElement | null) => void;
+  escId: string;
 }
 ```
 
-⚠️ 与 React 的**形态差异**：React 用 `cloneElement(child, cloneProps)` 把事件塞进子元素；
-Vue 没有 clone 语义（也不该有）。改为**返回两个 props 对象供 `v-bind`**，这既符合
-Vue 的心智模型（H3：禁止机械翻译），也让「事件到底挂在哪」在模板里一眼可见。
+`useOverlay` 是 composable，没有组件 Props、Slots、Emits、v-model、Expose 或 Provider。宿主显式绑定元素与原生事件，UI 适配组件负责自身 attrs、插槽、emits 和内容；Overlay 不模拟组件生命周期或处理定位、容器、z-index。
 
-事件处理器内部顺序严格照抄 §3.4：**先改状态，再调用用户自己的同名处理器**。
+| Options | 当前消费契约 |
+| --- | --- |
+| `action` / `showAction` / `hideAction` | 支持值、Ref 或 getter；`action` 默认 hover，独立 show/hide 仅在 undefined 时回落，空数组不回落 |
+| `open` / `defaultOpen` | `open` 支持 Ref/getter，undefined 表示撤控；`defaultOpen` 仅初始化。受控提议被拒绝时不改变当前值，撤控保留最后接受值 |
+| `onOpenChange` | composable 的函数回调，参数为 boolean 请求；请求值与当前 rawOpen 不同时调用。读取当前函数，替换或撤除后不调用旧回调 |
+| `disabled` | 响应式压制 open，不修改 rawOpen；不阻止开关请求 |
+| `mouseEnterDelay` / `mouseLeaveDelay` / `focusDelay` / `blurDelay` | 响应式秒值；新请求读取当前值，leave 默认 0.1，其余 undefined。公开 `setOpen` 省略 delay、传 undefined 或 0 均同步 |
+| `mask` / `maskClosable` | 响应式；默认 false / true；决定外点监听是否生效 |
+| `inMotion` | 响应式；允许离场中的 popup hover 请求重新开启 |
+| `alignPoint` | 保留调用者的鼠标定位配置；本包采集 mousePos，定位与滚动关闭由 UI/position 处理 |
+| `escStack` / `delayInvoker` | 初始化时注入实例依赖，供测试或显式编排；不承担动态替换契约 |
+
+`targetProps` / `popupProps` 使用 Vue 原生键（如 `onMouseenter`、`onContextmenu`、`onPointerdownCapture`），接收原始 DOM Event。与宿主监听的合并和顺序由 Vue 的绑定/渲染方式决定，不把函数回调机械改成 emits。
+
+隐式 touch 的 hover 动作也绑定 click 来结束兼容鼠标抑制；该 click 仅复位触屏标记，没有 click 动作时不会再次切换开合，后续鼠标 hover 恢复正常。
+
+### 5.3 当前窗口、栈与资源所有权
+
+- 默认 Esc 栈按实际 popup 的 `ownerDocument.defaultView` 共享，popup 未提供时按 target 或当前窗口选择。同窗口中的多个 app 共同遵循开启顺序，`escId` 在模块内按实例唯一；它不是 DOM id，不要求服务端与客户端序号一致。窗口变化时先从旧栈移除，栈空即摘监听，再加入新栈。
+- 一次 Esc 固定派发开始时的栈顶；回调同步关闭/卸载成员不会重复通知，已移除的成员不再接收，派发途中新开启的成员等下一次 Esc。受控拒绝关闭保留原层级；IME 仅在真实 `compositionend` 后锁定 200ms，`reset` 同时清空并摘监听。
+- 外点监听仅在实际 open、click/contextMenu 可关闭且 mask 允许时存在，同时覆盖 target 与 popup 所属窗口；更换元素、配置、关闭及作用域销毁都释放原监听。没有 defaultView 的 document 不回落监听其他 window。节点包含关系支持同源 iframe 与 ShadowRoot，popup hover 使用同一节点判定。
+- `registerSubPopup(id, null)` 解除登记；作用域销毁清空登记和本实例延迟。外部实际 rawOpen 变化取消旧延迟的 2026-10-28 成果继续有效。SSR 默认不加入浏览器共享栈，不持有跨请求成员。
+- 实际接受关闭且焦点仍属于当前活动文档中的 popup 时归还 target；受控拒绝或外部已拥有焦点时保持原归属。已有焦点回归继续适用。
+
+针对性回归位于 `packages/overlay/src/__tests__`；源码浏览器入口为 `node packages/overlay/src/__tests__/native-browser.mjs`。本轮架构验证不等于冻结版本九维最终验收。
 
 ---
 
