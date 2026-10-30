@@ -9,7 +9,6 @@ import type { ComputedRef, InjectionKey } from 'vue';
 import type {
   DefaultOptionType,
   DisplayValueType,
-  OptionRenderFn,
   RawValueType,
   SelectDirection,
   SelectSemanticClassNames,
@@ -32,7 +31,6 @@ export interface SelectContextValue {
   defaultActiveFirstOption: boolean;
   /** `(value, { selected })`。 */
   onSelect: (value: RawValueType, info: { selected: boolean }) => void;
-  menuItemSelectedIcon?: unknown;
   rawValues: Set<RawValueType>;
   fieldNames: ResolvedFieldNames;
   virtual: boolean;
@@ -41,7 +39,6 @@ export interface SelectContextValue {
   listItemHeight: number;
   childrenAsData: boolean;
   maxCount?: number;
-  optionRender?: OptionRenderFn;
   classNames?: SelectSemanticClassNames;
   styles?: SelectSemanticStyles;
 }

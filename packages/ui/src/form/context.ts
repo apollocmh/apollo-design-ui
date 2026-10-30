@@ -18,14 +18,22 @@
  * 合并逻辑随本叶子先落，Input 落地时再评估是否提升。
  */
 
-import { type ComputedRef, computed, type InjectionKey, inject, type Ref, toValue } from 'vue';
+import {
+  type ComputedRef,
+  computed,
+  type InjectionKey,
+  inject,
+  type Ref,
+  toValue,
+  type VNodeChild,
+} from 'vue';
 import type { InputStatus } from '../space/statusUtils';
 
 /** antd 的 `FormItemInputContext` 值形状（Form.Item 向输入族组件广播的通道）。 */
 export interface FormItemInputContextValue {
   status?: InputStatus;
   hasFeedback?: boolean;
-  feedbackIcon?: unknown;
+  feedbackIcon?: VNodeChild;
   /** 当前字段的错误/警告（StatusProvider 透传，input 族可读）。 */
   errors?: unknown[];
   warnings?: unknown[];

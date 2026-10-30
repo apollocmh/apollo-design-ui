@@ -16,20 +16,24 @@
  */
 
 import { getPlacements } from '@apollo-design/position';
-import { KeyCode } from '@apollo-design/utils';
-import type { ComponentPublicInstance, CSSProperties, PropType } from 'vue';
+import { isEmptyVNode, KeyCode } from '@apollo-design/utils';
+import type { CSSProperties, PropType } from 'vue';
 import {
   cloneVNode,
   computed,
   defineComponent,
   h,
   inject,
+  isVNode,
+  mergeProps,
+  nextTick,
   onBeforeUnmount,
   onMounted,
   provide,
   ref,
+  type StyleValue,
   shallowRef,
-  type VNode,
+  type VNodeChild,
   watch,
 } from 'vue';
 import { Trigger } from '../../_internal/trigger';
@@ -39,10 +43,13 @@ import type {
   InternalSelectMode,
   LabelInValueType,
   RawValueType,
+  ScrollToArg,
   SelectCommonPlacement,
   SelectDirection,
+  SelectProps,
   SelectSemanticClassNames,
   SelectSemanticStyles,
+  SelectSlots,
 } from '../interface';
 import { type BaseSelectContextValue, baseSelectContextKey, selectContextKey } from './context';
 import OptionList from './OptionList';
@@ -71,7 +78,7 @@ export const BaseSelect = defineComponent({
     ariaLabel: { type: String, default: undefined },
     ariaLabelledby: { type: String, default: undefined },
     className: { type: String, default: undefined },
-    style: { type: Object as PropType<CSSProperties>, default: undefined },
+    style: { type: [String, Object, Array] as PropType<StyleValue>, default: undefined },
     mode: { type: String as PropType<InternalSelectMode | undefined>, default: undefined },
     multiple: { type: Boolean, default: false },
     showSearch: { type: Boolean, default: false },
@@ -84,32 +91,39 @@ export const BaseSelect = defineComponent({
     loading: { type: Boolean, default: undefined },
     open: { type: Boolean, default: undefined },
     defaultOpen: { type: Boolean, default: undefined },
-    notFoundContent: { type: null as unknown as PropType<unknown>, default: undefined },
-    placeholder: { type: null as unknown as PropType<unknown>, default: undefined },
+    notFoundContent: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    placeholder: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     maxLength: { type: Number, default: undefined },
     tabIndex: { type: Number, default: undefined },
     /** 挂载后自动聚焦搜索框。Selector → SearchInput 的链路本就有它，缺的是这一跳。 */
     autoFocus: { type: Boolean, default: undefined },
     title: { type: String, default: undefined },
+    role: { type: String, default: undefined },
     allowClear: {
-      type: [Boolean, Object] as PropType<boolean | { clearIcon?: unknown; label?: string }>,
+      type: [Boolean, Object] as PropType<boolean | { clearIcon?: VNodeChild; label?: string }>,
       default: undefined,
     },
-    clearIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    prefix: { type: null as unknown as PropType<unknown>, default: undefined },
-    suffixIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    removeIcon: { type: null as unknown as PropType<unknown>, default: undefined },
+    clearIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    prefix: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    suffixIcon: {
+      type: null as unknown as PropType<VNodeChild | NonNullable<SelectSlots['suffixIcon']>>,
+      default: undefined,
+    },
+    removeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     tokenSeparators: {
       type: [Array, Function] as PropType<string[] | ((input: string) => string[])>,
       default: undefined,
     },
     tagRender: {
-      type: Function as PropType<((props: CustomTagProps) => unknown) | undefined>,
+      type: Function as PropType<((props: CustomTagProps) => VNodeChild) | undefined>,
       default: undefined,
     },
     maxTagCount: { type: Number, default: undefined },
     maxTagTextLength: { type: Number, default: undefined },
-    maxTagPlaceholder: { type: null as unknown as PropType<unknown>, default: undefined },
+    maxTagPlaceholder: {
+      type: null as unknown as PropType<VNodeChild | ((omitted: DisplayValueType[]) => VNodeChild)>,
+      default: undefined,
+    },
     maxCount: { type: Number, default: undefined },
     emptyOptions: { type: Boolean, default: false },
     zIndex: { type: Number, default: undefined },
@@ -117,14 +131,14 @@ export const BaseSelect = defineComponent({
     direction: { type: String as PropType<SelectDirection>, default: 'ltr' },
     popupMatchSelectWidth: { type: [Boolean, Number], default: true },
     getPopupContainer: {
-      type: Function as PropType<(node: HTMLElement) => HTMLElement>,
+      type: Function as PropType<SelectProps['getPopupContainer']>,
       default: undefined,
     },
     transitionName: { type: String, default: undefined },
     popupClassName: { type: String, default: undefined },
     popupStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     popupRender: {
-      type: Function as PropType<((node: unknown) => unknown) | undefined>,
+      type: Function as PropType<((node: VNodeChild) => VNodeChild) | undefined>,
       default: undefined,
     },
     /**
@@ -133,7 +147,7 @@ export const BaseSelect = defineComponent({
      * Cascader 用它注入自己的多列面板。⚠️ 返回值必须是 VNode（不是数组）。
      */
     optionListRenderer: {
-      type: Function as PropType<(() => unknown) | undefined>,
+      type: Function as PropType<(() => VNodeChild) | undefined>,
       default: undefined,
     },
     /**
@@ -142,7 +156,7 @@ export const BaseSelect = defineComponent({
      * React SSR 时 Cascader 只输出裸 children —— DOM 基线依赖此协议。
      */
     getRawInputElement: {
-      type: Function as PropType<(() => unknown) | undefined>,
+      type: Function as PropType<(() => VNodeChild) | undefined>,
       default: undefined,
     },
     classNames: {
@@ -187,22 +201,36 @@ export const BaseSelect = defineComponent({
     onKeyDown: { type: Function as PropType<(event: KeyboardEvent) => void>, default: undefined },
     onKeyUp: { type: Function as PropType<(event: KeyboardEvent) => void>, default: undefined },
   },
-  emits: { 'update:open': (_open: boolean) => true },
-  setup(props, { emit, expose, attrs }) {
+  emits: {
+    'update:open': (_open: boolean) => true,
+    keydown: (_event: KeyboardEvent) => true,
+    keyup: (_event: KeyboardEvent) => true,
+    mousedown: (_event: MouseEvent) => true,
+  },
+  setup(props, { emit, expose, attrs, slots }) {
     const selectCtx = inject(selectContextKey, null);
 
-    const selectorRef = shallowRef<ComponentPublicInstance | null>(null);
-    const optionListRef = shallowRef<{
-      scrollTo: (arg?: number | { index?: number }) => void;
+    const selectorRef = shallowRef<{
+      focus: (options?: FocusOptions) => void;
+      blur: () => void;
+      nativeElement: () => HTMLElement | null;
     } | null>(null);
-    const triggerRef = shallowRef<{ popupElement: () => HTMLElement | null } | null>(null);
+    const optionListRef = shallowRef<{
+      scrollTo: (arg?: ScrollToArg) => void;
+    } | null>(null);
+    const triggerRef = shallowRef<{
+      popupElement: () => HTMLElement | null;
+      nativeElement: () => HTMLElement | null;
+    } | null>(null);
 
     const focused = ref(false);
     const multiple = computed(() => props.multiple);
 
     // ------------------------------ open ------------------------------
     // `notFoundContent` 为空且选项为空 ⇒ 不允许打开（rc 的 emptyListContent）
-    const emptyListContent = computed(() => !props.notFoundContent && props.emptyOptions);
+    const emptyListContent = computed(
+      () => isEmptyVNode(props.notFoundContent) && props.emptyOptions,
+    );
 
     const { rawOpen, mergedOpen, toggleOpen, lock } = useOpen({
       defaultOpen: () => props.defaultOpen,
@@ -255,10 +283,7 @@ export const BaseSelect = defineComponent({
       let ret = true;
       let newSearchText = searchText;
       props.onActiveValueChange?.(null, -1, { source: 'keyboard' });
-      const cap = isValidCount(props.maxCount)
-        ? (props.maxCount as number) - props.displayValues.length
-        : undefined;
-      const patchLabels = isCompositing ? null : splitByTokenSeparators(searchText, cap);
+      const patchLabels = isCompositing ? null : splitByTokenSeparators(searchText);
 
       if (props.mode !== 'combobox' && patchLabels) {
         newSearchText = '';
@@ -302,7 +327,7 @@ export const BaseSelect = defineComponent({
     // ------------------------------ 清除 ------------------------------
     const onClearMouseDown = (): void => {
       props.onClear?.();
-      (selectorRef.value as { focus?: () => void } | null)?.focus?.();
+      selectorRef.value?.focus();
       props.onDisplayValuesChange?.([], { type: 'clear', values: props.displayValues });
       onInternalSearch('', false, false);
     };
@@ -381,7 +406,9 @@ export const BaseSelect = defineComponent({
         );
         if (index !== -1) {
           setActive(index);
-          setTimeout(() => optionListRef.value?.scrollTo(index));
+          void nextTick(() => {
+            if (mergedOpen.value) optionListRef.value?.scrollTo({ index });
+          });
         }
       }
     });
@@ -402,18 +429,18 @@ export const BaseSelect = defineComponent({
     const listKeyDown = (event: KeyboardEvent): void => {
       const code = (event as unknown as { keyCode?: number; which?: number }).keyCode;
       const ctrlKey = event.ctrlKey;
-      const up = code === KeyCode.UP;
-      const down = code === KeyCode.DOWN;
+      const up = event.key === 'ArrowUp' || code === KeyCode.UP;
+      const down = event.key === 'ArrowDown' || code === KeyCode.DOWN;
       const nNext = isMac() && ctrlKey && code === KeyCode.N;
       const pPrev = isMac() && ctrlKey && code === KeyCode.P;
-      const tab = code === KeyCode.TAB;
-      const enter = code === KeyCode.ENTER;
-      const esc = code === KeyCode.ESC;
+      const tab = event.key === 'Tab' || code === KeyCode.TAB;
+      const enter = event.key === 'Enter' || code === KeyCode.ENTER;
+      const esc = event.key === 'Escape' || code === KeyCode.ESC;
 
       if (up || down || nNext || pPrev) {
         const offset = up || pPrev ? -1 : 1;
         const next = getEnabledActiveIndex(activeIndex.value + offset, offset);
-        optionListRef.value?.scrollTo(next);
+        optionListRef.value?.scrollTo({ index: next });
         setActive(next, true);
         return;
       }
@@ -436,11 +463,13 @@ export const BaseSelect = defineComponent({
     };
 
     const onInternalKeyDown = (event: KeyboardEvent): void => {
+      if (props.disabled || event.isComposing) return;
       const clearLock = getClearLock();
       const key = event.key;
       const code = (event as unknown as { keyCode?: number }).keyCode;
       const isEnterKey = key === 'Enter' || code === KeyCode.ENTER;
       const isSpaceKey = key === ' ' || code === KeyCode.SPACE;
+      const wasOpen = mergedOpen.value;
 
       if (isEnterKey || isSpaceKey) {
         const isCombobox = props.mode === 'combobox';
@@ -475,32 +504,35 @@ export const BaseSelect = defineComponent({
         }
       }
 
-      if (mergedOpen.value && (!isEnterKey || !keyLock.value) && !isSpaceKey) {
+      if (wasOpen && (!isEnterKey || !keyLock.value) && !isSpaceKey) {
         if (isEnterKey) keyLock.value = true;
         listKeyDown(event);
       }
       props.onKeyDown?.(event);
+      emit('keydown', event);
     };
 
     const onInternalKeyUp = (event: KeyboardEvent): void => {
       if (event.key === 'Enter') keyLock.value = false;
       props.onKeyUp?.(event);
+      emit('keyup', event);
     };
 
     // --------------------------- 焦点 / 失焦 ---------------------------
     let internalMouseDown = false;
+    let mouseDownTimer: ReturnType<typeof setTimeout> | undefined;
+    onBeforeUnmount(() => clearTimeout(mouseDownTimer));
     const selectorEl = (): HTMLElement | null =>
-      ((
-        selectorRef.value as { nativeElement?: () => HTMLElement | null } | null
-      )?.nativeElement?.() ?? null) as HTMLElement | null;
+      selectorRef.value?.nativeElement() ?? triggerRef.value?.nativeElement() ?? null;
     const getSelectElements = (): (HTMLElement | null)[] => [
       selectorEl(),
       triggerRef.value?.popupElement() ?? null,
     ];
 
     const onInternalFocus = (event: FocusEvent): void => {
+      if (focused.value || props.disabled) return;
       focused.value = true;
-      if (!props.disabled) props.onFocus?.(event);
+      props.onFocus?.(event);
     };
 
     const onRootBlur = (): void => {
@@ -515,6 +547,8 @@ export const BaseSelect = defineComponent({
     };
 
     const onInternalBlur = (event: FocusEvent): void => {
+      if (event.relatedTarget instanceof Node && selectorEl()?.contains(event.relatedTarget))
+        return;
       focused.value = false;
       if (mergedSearchValue.value) {
         if (props.mode === 'tags') {
@@ -545,7 +579,8 @@ export const BaseSelect = defineComponent({
         toggleOpen(true);
       }
       internalMouseDown = true;
-      setTimeout(() => {
+      clearTimeout(mouseDownTimer);
+      mouseDownTimer = setTimeout(() => {
         internalMouseDown = false;
       }, 0);
     };
@@ -601,17 +636,23 @@ export const BaseSelect = defineComponent({
     );
 
     expose({
-      focus: () => (selectorRef.value as { focus?: () => void } | null)?.focus?.(),
-      blur: () => (selectorRef.value as { blur?: () => void } | null)?.blur?.(),
-      scrollTo: (arg?: number | { index?: number }) => optionListRef.value?.scrollTo(arg),
+      focus: (options?: FocusOptions) => {
+        if (selectorRef.value) selectorRef.value.focus(options);
+        else selectorEl()?.focus(options);
+      },
+      blur: () => {
+        if (selectorRef.value) selectorRef.value.blur();
+        else selectorEl()?.blur();
+      },
+      scrollTo: (arg?: ScrollToArg) => optionListRef.value?.scrollTo(arg),
       nativeElement: (): HTMLElement | null => selectorEl(),
     });
 
     // ----------------------------- render -----------------------------
-    const mergedSuffixIcon = computed(() => {
+    const getSuffixIcon = () => {
       const next = props.suffixIcon;
       if (typeof next === 'function') {
-        return (next as (p: Record<string, unknown>) => unknown)({
+        return next({
           searchValue: mergedSearchValue.value,
           open: mergedOpen.value,
           focused: focused.value,
@@ -620,51 +661,51 @@ export const BaseSelect = defineComponent({
         });
       }
       return next;
-    });
+    };
 
     const builtinPlacements = computed(() =>
       getPlacements({ arrowWidth: 0, offset: 4, borderRadius: 6, autoAdjustOverflow: true }),
     );
 
-    const mergedClassName = computed(
-      () =>
-        [
-          props.prefixCls,
-          focused.value ? `${props.prefixCls}-focused` : '',
-          multiple.value ? `${props.prefixCls}-multiple` : `${props.prefixCls}-single`,
-          allowClearResult.value.allowClear ? `${props.prefixCls}-allow-clear` : '',
-          mergedSuffixIcon.value !== undefined && mergedSuffixIcon.value !== null
-            ? `${props.prefixCls}-show-arrow`
-            : '',
-          props.disabled ? `${props.prefixCls}-disabled` : '',
-          props.loading ? `${props.prefixCls}-loading` : '',
-          mergedOpen.value ? `${props.prefixCls}-open` : '',
-          props.showSearch ? `${props.prefixCls}-show-search` : '',
-          props.className,
-          props.classNames?.root,
-        ]
-          .filter(Boolean)
-          .join(' ') || undefined,
-    );
+    const getClassName = (suffixIcon: unknown) =>
+      [
+        props.prefixCls,
+        focused.value ? `${props.prefixCls}-focused` : '',
+        multiple.value ? `${props.prefixCls}-multiple` : `${props.prefixCls}-single`,
+        allowClearResult.value.allowClear ? `${props.prefixCls}-allow-clear` : '',
+        !isEmptyVNode(suffixIcon) ? `${props.prefixCls}-show-arrow` : '',
+        props.disabled ? `${props.prefixCls}-disabled` : '',
+        props.loading ? `${props.prefixCls}-loading` : '',
+        mergedOpen.value ? `${props.prefixCls}-open` : '',
+        props.showSearch ? `${props.prefixCls}-show-search` : '',
+        props.className,
+        props.classNames?.root,
+      ]
+        .filter(Boolean)
+        .join(' ') || undefined;
 
     const popupElement = () => {
       // 调用方注入了列表渲染器 ⇒ 由它接管（Cascader 等「BaseSelect + 自定义列表」形态）
       if (props.optionListRenderer) {
-        return props.optionListRenderer() as unknown;
+        return props.optionListRenderer();
       }
-      return h(OptionList, {
-        ref: optionListRef,
-        activeIndex: activeIndex.value,
-        onActiveIndexChange: setActive,
-        onSelectValue,
-        onPopupScroll: props.onPopupScroll,
-      });
+      return h(
+        OptionList,
+        {
+          ref: optionListRef,
+          activeIndex: activeIndex.value,
+          onActiveIndexChange: setActive,
+          onSelectValue,
+          onPopupScroll: props.onPopupScroll,
+        },
+        { optionRender: slots.optionRender, menuItemSelectedIcon: slots.menuItemSelectedIcon },
+      );
     };
 
     // ====================== raw trigger（getRawInputElement）======================
     // rc 同构：提供时 Selector 不渲染，raw 元素作为 Trigger 的触发器；
     // 事件/aria 经 cloneVNode 注入（React 用 cloneElement）。
-    const rawAriaAttrs = computed<Record<string, unknown>>(() => {
+    const rawAriaAttrs = (): Record<string, unknown> => {
       const out: Record<string, unknown> = {};
       Object.keys(attrs).forEach((key) => {
         if (key.startsWith('aria-') || key.startsWith('data-')) {
@@ -672,36 +713,38 @@ export const BaseSelect = defineComponent({
         }
       });
       return out;
-    });
+    };
     const renderRawTrigger = (): unknown => {
       const raw = props.getRawInputElement?.();
-      if (raw === undefined || raw === null) return null;
-      const node = raw as VNode;
-      return cloneVNode(node, {
-        // raw 触发器没有 Selector 的 mousedown 开合通道，点击由这里负责。
-        onClick: (event: MouseEvent) => {
-          const originOnClick = (node.props as Record<string, unknown> | undefined)?.onClick as
-            | ((e: MouseEvent) => void)
-            | undefined;
-          originOnClick?.(event);
-          if (props.disabled) return;
-          toggleOpen(!mergedOpen.value);
-        },
-        onKeydown: (event: KeyboardEvent) => props.onInputKeyDown?.(event),
-        onFocus: (event: FocusEvent) => props.onFocus?.(event),
-        onBlur: (event: FocusEvent) => props.onBlur?.(event),
-        onMousedown: (event: MouseEvent) => {
-          // 防止 selector 失焦（Selector 内 onInternalMouseDown 的同款判据）
-          event.preventDefault();
-        },
-        tabindex: props.disabled ? undefined : (props.tabIndex ?? 0),
-        ...rawAriaAttrs.value,
-      } as never);
+      if (!isVNode(raw)) return null;
+      const node = raw;
+      return cloneVNode(
+        node,
+        mergeProps(attrs, {
+          // raw 触发器没有 Selector 的 mousedown 开合通道，点击由这里负责。
+          onClick: () => {
+            if (props.disabled) return;
+            toggleOpen(!mergedOpen.value);
+          },
+          onKeydown: (event: KeyboardEvent) => props.onInputKeyDown?.(event),
+          onFocus: onInternalFocus,
+          onBlur: onInternalBlur,
+          onMousedown: (event: MouseEvent) => {
+            onRootMouseDown(event);
+            emit('mousedown', event);
+          },
+          tabindex: props.disabled ? undefined : (props.tabIndex ?? 0),
+          ...rawAriaAttrs(),
+          'aria-label': props.ariaLabel,
+          'aria-labelledby': props.ariaLabelledby,
+        }),
+      );
     };
 
     return () => {
+      const suffixIcon = getSuffixIcon();
       const popupPrefixCls = `${props.prefixCls}-dropdown`;
-      let popupNode: unknown = popupElement();
+      let popupNode = popupElement();
       if (props.popupRender) popupNode = props.popupRender(popupNode);
 
       // ---- raw 模式：Trigger child = 注入后的 raw 元素（无 Selector 结构）----
@@ -754,7 +797,6 @@ export const BaseSelect = defineComponent({
                   motionName: props.transitionName ?? 'apollo-slide-up',
                   motionDeadline: 500,
                 },
-                ...attrs,
               } as never,
               { default: () => rawNode as never },
             ),
@@ -839,11 +881,11 @@ export const BaseSelect = defineComponent({
                 : {}),
               ...(props.zIndex !== undefined ? { zIndex: props.zIndex } : {}),
             } as never,
-            ...attrs,
           },
           {
             default: () =>
               h(Selector, {
+                ...attrs,
                 ref: selectorRef,
                 // 可访问名（转发到 combobox input；见 Select 的 attrs 处理）
                 ariaLabel: props.ariaLabel,
@@ -852,14 +894,14 @@ export const BaseSelect = defineComponent({
                 // 再挂一个 onClick 切换会与 mousedown 的切换互相抵消。
                 prefixCls: props.prefixCls,
                 id: props.id,
-                className: mergedClassName.value,
+                className: getClassName(suffixIcon),
                 // antd：用户 `style` 经 useSemanticRootStyle 并入 styles.root
                 //（本仓在壳层合并：用户 style 优先级低于 styles.root）
-                style: { ...(props.style ?? {}), ...(props.styles?.root ?? {}) },
+                style: [props.styles?.root, props.style],
                 focused: focused.value,
                 multiple: multiple.value,
                 mode: props.mode,
-                displayValues: props.displayValues as unknown as LabelInValueType[],
+                displayValues: props.displayValues,
                 placeholder: props.placeholder,
                 // ⚠️ merged：combobox 的搜索值来自**回填的选中值**（value ⇒ 输入框
                 //    显示 + -content-has-search-value 类，AutoComplete 期抓出）
@@ -867,7 +909,7 @@ export const BaseSelect = defineComponent({
                 activeValue: props.activeValue,
                 activeDescendantId: props.activeDescendantId,
                 prefix: props.prefix,
-                suffix: mergedSuffixIcon.value,
+                suffix: suffixIcon,
                 clearIcon: allowClearResult.value.clearIcon,
                 clearLabel: allowClearResult.value.label,
                 disabled: props.disabled ?? false,
@@ -877,6 +919,7 @@ export const BaseSelect = defineComponent({
                 rawOpen: rawOpen.value,
                 tabIndex: props.tabIndex,
                 title: props.title,
+                role: props.role,
                 autoFocus: props.autoFocus,
                 maxLength: props.maxLength,
                 maxTagCount: props.maxTagCount,
@@ -889,7 +932,10 @@ export const BaseSelect = defineComponent({
                 classNames: props.classNames,
                 styles: props.styles,
                 onToggleOpen: (next?: boolean) => toggleOpen(next),
-                onMousedown: onRootMouseDown,
+                onMousedown: (event: MouseEvent) => {
+                  onRootMouseDown(event);
+                  emit('mousedown', event);
+                },
                 onKeydown: onInternalKeyDown,
                 onKeyup: onInternalKeyUp,
                 onFocus: onInternalFocus,
@@ -908,7 +954,7 @@ export const BaseSelect = defineComponent({
                     props.displayValues.filter((i) => i !== value),
                     { type: 'remove', values: [value] },
                   ),
-              } as never),
+              }),
           },
         ),
       ];

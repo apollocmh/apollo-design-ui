@@ -6,7 +6,7 @@
  * `<span class="{cls}-icon">{children}</span>` 兜底」。
  */
 
-import { defineComponent, h, type PropType } from 'vue';
+import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
 
 export const TransBtn = defineComponent({
   name: 'ASelectTransBtn',
@@ -14,7 +14,12 @@ export const TransBtn = defineComponent({
   props: {
     className: { type: String, required: true },
     style: { type: Object as PropType<Record<string, string>>, default: undefined },
-    customizeIcon: { type: [Object, Function] as PropType<unknown>, default: undefined },
+    customizeIcon: {
+      type: [Object, Function, String, Number, Boolean, Array] as PropType<
+        VNodeChild | ((props: Record<string, unknown>) => VNodeChild)
+      >,
+      default: undefined,
+    },
     customizeIconProps: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     onMousedown: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
     onClick: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
@@ -23,7 +28,7 @@ export const TransBtn = defineComponent({
     return () => {
       const icon =
         typeof props.customizeIcon === 'function'
-          ? (props.customizeIcon as (p: unknown) => unknown)(props.customizeIconProps ?? {})
+          ? props.customizeIcon(props.customizeIconProps ?? {})
           : props.customizeIcon;
 
       return h(

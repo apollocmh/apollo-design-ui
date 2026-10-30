@@ -1,17 +1,6 @@
-/**
- * Select 的类型定义（G2 产物）。
- *
- * 契约来源：antd 6.6.4 `es/select/index.d.ts`（公开面）+ `@rc-component/select@1.10.1`
- * 的 `es/Select.d.ts` / `es/BaseSelect/index.d.ts`（行为面）。
- *
- * ⚠️ 依据 H2：从 antd 的**类型契约**重新定义，不复制实现。
- * ⚠️ 依据 H10：无 `any`（`options` 的开放字段用 `Record<string, unknown>` 索引签名表达，
- *    与 antd 的 `BaseOptionType { [name: string]: any }` 同构但类型安全）。
- *
- * 命名规则：prop 名与 antd 逐字一致（规则 C3）；`children` 形态落 Slots。
- */
+/** Public Vue contracts for Select and its option data. */
 
-import type { CSSProperties } from 'vue';
+import type { CSSProperties, VNodeChild } from 'vue';
 import type { SizeType } from '../config-provider/size-context';
 
 // ---------------------------------------------------------------------------
@@ -21,11 +10,17 @@ import type { SizeType } from '../config-provider/size-context';
 export type RawValueType = string | number;
 
 /** antd 的 `SelectValue`。 */
-export type SelectValue = RawValueType | RawValueType[] | LabeledValue | LabeledValue[] | undefined;
+export type SelectValue =
+  | RawValueType
+  | RawValueType[]
+  | LabeledValue
+  | LabeledValue[]
+  | null
+  | undefined;
 
 /** antd 的 `LabeledValue`（labelInValue 的输出形态）。 */
 export interface LabeledValue {
-  key?: string;
+  key?: RawValueType;
   value: RawValueType;
   label?: unknown;
 }
@@ -105,18 +100,13 @@ export type SelectDirection = 'ltr' | 'rtl';
 export type FilterFunc<OptionType> = (inputValue: string, option?: OptionType) => boolean;
 
 export interface SearchConfig<OptionType = DefaultOptionType> {
-  searchValue?: string;
   autoClearSearchValue?: boolean;
-  onSearch?: (value: string) => void;
   filterOption?: boolean | FilterFunc<OptionType>;
   filterSort?: (optionA: OptionType, optionB: OptionType, info: { searchValue: string }) => number;
   optionFilterProp?: string | string[];
 }
 
-/** antd 的 `showSearch`：`boolean | (SearchConfig & { searchIcon?: VNode })`。 */
-export interface SelectSearchConfig extends SearchConfig<DefaultOptionType> {
-  searchIcon?: unknown;
-}
+export type SelectSearchConfig = SearchConfig<DefaultOptionType>;
 
 // ---------------------------------------------------------------------------
 // 语义槽（classNames / styles）
@@ -166,7 +156,7 @@ export interface FieldNames {
 }
 
 // ---------------------------------------------------------------------------
-// 渲染回调（同时提供同名作用域插槽，prop 优先 —— 规则 C8）
+// Engine content function types; public component content uses slots.
 // ---------------------------------------------------------------------------
 
 /** `FlattenOptionData`（rc `interface.d.ts`）。 */
@@ -203,13 +193,13 @@ export interface CustomTagProps {
 export type OptionRenderFn = (
   option: FlattenOptionData<DefaultOptionType>,
   info: { index: number },
-) => unknown;
+) => VNodeChild;
 
-export type LabelRenderFn = (props: LabelInValueType) => unknown;
+export type LabelRenderFn = (props: LabelInValueType) => VNodeChild;
 
-export type TagRenderFn = (props: CustomTagProps) => unknown;
+export type TagRenderFn = (props: CustomTagProps) => VNodeChild;
 
-export type PopupRenderFn = (menu: unknown) => unknown;
+export type PopupRenderFn = (menu: unknown) => VNodeChild;
 
 export type ScrollToArg =
   | number
@@ -264,7 +254,7 @@ export interface SelectProps<ValueType = SelectValue> {
   defaultActiveFirstOption?: boolean;
   // ---- 搜索 ----
   showSearch?: boolean | SelectSearchConfig;
-  /** @deprecated 用 `showSearch.searchValue` */
+  /** Search text; supports v-model:searchValue. */
   searchValue?: string;
   /** @deprecated 用 `showSearch.autoClearSearchValue` */
   autoClearSearchValue?: boolean;
@@ -286,7 +276,7 @@ export interface SelectProps<ValueType = SelectValue> {
   placeholder?: string;
   /** @deprecated 默认显示箭头，隐藏请用空的 `#suffixIcon` 插槽或 `showArrow: false` */
   showArrow?: boolean;
-  allowClear?: boolean | { clearIcon?: unknown; label?: string };
+  allowClear?: boolean | { clearIcon?: VNodeChild; label?: string };
   maxLength?: number;
 
   // ---- 多选 ----
@@ -301,7 +291,7 @@ export interface SelectProps<ValueType = SelectValue> {
   placement?: SelectCommonPlacement;
   direction?: SelectDirection;
   popupMatchSelectWidth?: boolean | number;
-  getPopupContainer?: (node: HTMLElement) => HTMLElement;
+  getPopupContainer?: (node: HTMLElement) => HTMLElement | ShadowRoot;
   transitionName?: string;
   /** @deprecated 用 `classNames.popup.root` */
   popupClassName?: string;
@@ -327,11 +317,12 @@ export interface SelectProps<ValueType = SelectValue> {
 // ---------------------------------------------------------------------------
 
 export interface SelectEmits<ValueType = SelectValue> {
-  change: [value: ValueType, option: unknown];
+  change: [value: ValueType, option: DefaultOptionType | DefaultOptionType[] | undefined];
   'update:value': [value: ValueType];
-  select: [value: RawValueType, option: DefaultOptionType];
-  deselect: [value: RawValueType, option: DefaultOptionType];
+  select: [value: RawValueType | LabeledValue, option: DefaultOptionType];
+  deselect: [value: RawValueType | LabeledValue, option: DefaultOptionType];
   search: [value: string];
+  'update:searchValue': [value: string];
   openChange: [open: boolean];
   'update:open': [open: boolean];
   focus: [event: FocusEvent];
@@ -347,31 +338,32 @@ export interface SelectEmits<ValueType = SelectValue> {
 // ---------------------------------------------------------------------------
 
 export interface SelectSlots {
-  default?: () => unknown;
-  prefix?: () => unknown;
+  default?: () => VNodeChild;
+  prefix?: () => VNodeChild;
   suffixIcon?: (props: {
     searchValue: string;
     open: boolean;
     focused: boolean;
     showSearch: boolean;
     loading?: boolean;
-  }) => unknown;
-  loadingIcon?: () => unknown;
-  clearIcon?: () => unknown;
-  removeIcon?: () => unknown;
+  }) => VNodeChild;
+  searchIcon?: () => VNodeChild;
+  loadingIcon?: () => VNodeChild;
+  clearIcon?: () => VNodeChild;
+  removeIcon?: () => VNodeChild;
   menuItemSelectedIcon?: (props: {
     value?: unknown;
     disabled?: boolean;
     isSelected?: boolean;
-  }) => unknown;
-  placeholder?: () => unknown;
-  notFoundContent?: () => unknown;
+  }) => VNodeChild;
+  placeholder?: () => VNodeChild;
+  notFoundContent?: () => VNodeChild;
   optionRender?: (props: {
     option: FlattenOptionData<DefaultOptionType>;
     index: number;
-  }) => unknown;
-  tagRender?: (props: CustomTagProps) => unknown;
-  labelRender?: (props: LabelInValueType) => unknown;
-  popupRender?: (props: { menu: unknown }) => unknown;
-  maxTagPlaceholder?: (props: { omittedValues: DisplayValueType[] }) => unknown;
+  }) => VNodeChild;
+  tagRender?: (props: CustomTagProps) => VNodeChild;
+  labelRender?: (props: LabelInValueType) => VNodeChild;
+  popupRender?: (props: { menu: VNodeChild }) => VNodeChild;
+  maxTagPlaceholder?: (props: { omittedValues: DisplayValueType[] }) => VNodeChild;
 }

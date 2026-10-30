@@ -138,3 +138,7 @@ Upload / Dragger 修正文件预处理替换、请求/移除竞态、受控列�
 ### D-popconfirm-native-sessions
 
 Popconfirm 的所属通知使用 Vue emits，确认 Promise 仍是业务回调；当前配置与 Token 由 Popconfirm 拥有，不误用 Popover 配置。异步结果只关闭发起它的已接受会话，卸载后不再触发旧关闭；引用暴露实际实例。详见[Popconfirm API](packages/ui/src/popconfirm/index.zh-CN.md)。
+
+### D-select-native-search-and-events
+
+Select 的通知使用 Vue emits，value/open/searchValue 使用对应 v-model；showSearch 仅承载过滤与排序等搜索算法配置。原 showSearch.searchValue/onSearch/searchIcon 分别迁到顶层模型、search 事件与 #searchIcon，移除 onDropdownVisibleChange。当前配置、有效 Token、实际模板引用和共享引擎消费者同步修正；详见[Select API](packages/ui/src/select/index.zh-CN.md)。AutoComplete 同步转发 searchValue 模型更新。

@@ -6,7 +6,7 @@
  * 每个函数头都标注了对拍的 rc 文件与行号区间。
  */
 
-import type { ComputedRef, Ref } from 'vue';
+import type { ComputedRef, Ref, VNodeChild } from 'vue';
 import { computed, unref } from 'vue';
 import type {
   DefaultOptionType,
@@ -226,41 +226,36 @@ export interface ResolvedSearchConfig {
   searchValue?: string;
   optionFilterProp?: string | string[];
   filterSort?: SearchConfig<DefaultOptionType>['filterSort'];
-  onSearch?: (value: string) => void;
   autoClearSearchValue: boolean;
-  searchIcon?: unknown;
 }
 
 /**
  * `showSearch` 归一。
  *
  * 强制为 true 的三种情况（rc 原文）：`showSearch` 是对象 / combobox / tags /
- * （multiple 且 showSearch 未传）。antd 的对象形态额外带 `searchIcon`。
+ * （multiple 且 showSearch 未传）。内容、状态与通知由 Vue slots/models/emits 负责。
  */
 export function resolveSearchConfig(
-  showSearch: boolean | (SearchConfig<DefaultOptionType> & { searchIcon?: unknown }) | undefined,
+  showSearch: boolean | SearchConfig<DefaultOptionType> | undefined,
   legacy: {
     filterOption?: boolean | FilterFunc<DefaultOptionType>;
     searchValue?: string;
     optionFilterProp?: string | string[];
     filterSort?: SearchConfig<DefaultOptionType>['filterSort'];
-    onSearch?: (value: string) => void;
     autoClearSearchValue?: boolean;
   },
   mode: string | undefined,
 ): [boolean, ResolvedSearchConfig] {
-  const isObject = typeof showSearch === 'object' && showSearch !== null;
+  const search = typeof showSearch === 'object' && showSearch !== null ? showSearch : undefined;
   const config: ResolvedSearchConfig = {
-    filterOption: legacy.filterOption,
+    filterOption: search?.filterOption ?? legacy.filterOption,
     searchValue: legacy.searchValue,
-    optionFilterProp: legacy.optionFilterProp,
-    filterSort: legacy.filterSort,
-    onSearch: legacy.onSearch,
-    autoClearSearchValue: legacy.autoClearSearchValue ?? true,
-    ...(isObject ? (showSearch as SearchConfig<DefaultOptionType>) : {}),
+    optionFilterProp: search?.optionFilterProp ?? legacy.optionFilterProp,
+    filterSort: search?.filterSort ?? legacy.filterSort,
+    autoClearSearchValue: search?.autoClearSearchValue ?? legacy.autoClearSearchValue ?? true,
   };
   const merged =
-    isObject ||
+    search !== undefined ||
     mode === 'combobox' ||
     mode === 'tags' ||
     (mode === 'multiple' && showSearch === undefined)
@@ -275,7 +270,7 @@ export function resolveSearchConfig(
 
 export interface AllowClearResult {
   allowClear: boolean;
-  clearIcon: unknown;
+  clearIcon: VNodeChild;
   label: string;
 }
 
@@ -285,14 +280,17 @@ export interface AllowClearResult {
  */
 export function resolveAllowClear(params: {
   displayValues: LabelInValueType[];
-  allowClear: boolean | { allowClear?: boolean; clearIcon?: unknown; label?: string } | undefined;
-  clearIcon?: unknown;
+  allowClear:
+    | boolean
+    | { allowClear?: boolean; clearIcon?: VNodeChild; label?: string }
+    | undefined;
+  clearIcon?: VNodeChild;
   disabled?: boolean;
   searchValue: string;
   mode?: string;
 }): AllowClearResult {
   const { allowClear, clearIcon, disabled = false, searchValue, mode } = params;
-  const config: { allowClear: boolean; clearIcon?: unknown; label?: string } =
+  const config: { allowClear: boolean; clearIcon?: VNodeChild; label?: string } =
     typeof allowClear === 'boolean'
       ? { allowClear }
       : allowClear && typeof allowClear === 'object'
@@ -307,7 +305,13 @@ export function resolveAllowClear(params: {
 
   return {
     allowClear: merged,
-    clearIcon: merged ? (config.clearIcon ?? clearIcon ?? '×') : null,
+    clearIcon: merged
+      ? 'clearIcon' in config
+        ? config.clearIcon
+        : clearIcon !== undefined
+          ? clearIcon
+          : '×'
+      : null,
     label: merged ? (config.label ?? 'Clear') : '',
   };
 }

@@ -14,7 +14,7 @@ Select component to select a value from options.
 
 ## Examples
 
-See [`demo/`](./demo) (36 native Vue demos, including live conditional options, filtering and keyboard interaction).
+See [`demo/`](./demo) (native Vue demos including the three models, live conditional options, filtering and keyboard interaction).
 
 ## Conditional options
 
@@ -27,9 +27,10 @@ Default-slot `SelectOption` / `SelectOptGroup` nodes are normalized during rende
 | Prop | Description | Type | Default |
 |---|---|---|---|
 | value / defaultValue | Controlled value (`v-model:value`) / initial value | `SelectValue` | — |
+| searchValue | Controlled search text (`v-model:search-value`) | `string` | `''` |
 | mode | Mode | `'multiple' \| 'tags'` | single |
 | options | Option data (nested groups supported) | `DefaultOptionType[]` | — |
-| labelInValue | `onChange` receives `{ label, value }` | `boolean` | `false` |
+| labelInValue | `change/select/deselect` receive `{ label, value }` | `boolean` | `false` |
 | showSearch | Searchable; object form configures filtering | `boolean \| SearchConfig` | `false` |
 | filterOption | Custom filter (⚠️ defaults to matching by `value`, case-insensitive) | `boolean \| fn` | — |
 | optionFilterProp | Filter fields (array for multi-field OR) | `string \| string[]` | `'value'` |
@@ -41,7 +42,7 @@ Default-slot `SelectOption` / `SelectOptGroup` nodes are normalized during rende
 | status | Validation status | `'error' \| 'warning' \| 'success' \| 'validating'` | — |
 | disabled / loading | Disabled / loading | `boolean` | `false` |
 | maxCount | Max selected count (multiple / tags only) | `number` | — |
-| maxTagCount / maxTagTextLength / maxTagPlaceholder | Tag collapsing | `number` etc. | `+ N ...` |
+| maxTagCount / maxTagTextLength | Tag collapsing / text truncation | `number` | — |
 | tokenSeparators | Token separators (array or function) | `string[] \| fn` | — |
 | listHeight / listItemHeight | List max height / estimated item height | `number` | `256 / 32` |
 | popupMatchSelectWidth | Popup width follows the trigger | `boolean \| number` | `true` |
@@ -50,7 +51,11 @@ Default-slot `SelectOption` / `SelectOptGroup` nodes are normalized during rende
 | fieldNames / optionLabelProp | Field mapping / backfill field | — | `label` |
 | virtual | Virtual scrolling | `boolean` | `true` |
 | classNames / styles | Semantic `root/prefix/suffix/input/placeholder/content/item/itemContent/itemRemove/clear/popup.{root,list,listItem}` | — | — |
-| dropdownClassName / dropdownStyle / dropdownRender / dropdownMatchSelectWidth / popupClassName / bordered / showArrow / searchValue etc. | ⚠️ Deprecated | — | — |
+| dropdownClassName / dropdownStyle / dropdownMatchSelectWidth / popupClassName / bordered / showArrow etc. | ⚠️ Deprecated | — | — |
+
+Search configuration contains `filterOption`, `filterSort`, `optionFilterProp` and `autoClearSearchValue`. Use `@search` for notifications and `#searchIcon` for content. Filter, sort, tokenization and popup-container functions retain their business roles. `showSearch.onSearch/searchValue/searchIcon` are no longer configuration channels.
+
+Controlled `value`, `searchValue` and `open` updates are proposals. A rejected proposal keeps the accepted value; releasing control retains the last accepted value. `defaultValue/defaultOpen` initialize local state. With `labelInValue`, single-item events receive `{ value, label }`; otherwise they receive `string | number`.
 
 ### Events
 
@@ -58,15 +63,17 @@ Default-slot `SelectOption` / `SelectOptGroup` nodes are normalized during rende
 |---|---|---|
 | change | Value changed (emitted together with `update:value`) | `(value, option)` |
 | select / deselect | An option selected / deselected | `(value, option)` |
-| search | Search text changed | `(value)` |
-| openChange | Open state changed | `(open)` |
+| search | Search notification from input | `(value: string)` |
+| update:searchValue | Search model proposal, including clearing after selection | `(value: string)` |
+| openChange / update:open | Open notification / model proposal | `(open: boolean)` |
 | focus / blur | Focus | `(event)` |
 | clear | Clear clicked | — |
-| popupScroll | Dropdown scrolled | `(event)` |
+| popupScroll | Dropdown scrolled | `(event: Event)` |
+| inputKeyDown | Search input key | `(event: KeyboardEvent)` |
 
 ### Slots
 
-`prefix` / `suffixIcon` / `loadingIcon` / `clearIcon` / `removeIcon` / `placeholder` /
+`prefix` / `suffixIcon="{ searchValue, open, focused, showSearch, loading }"` / `searchIcon` / `loadingIcon` / `clearIcon` / `removeIcon` / `placeholder` /
 `notFoundContent` / `optionRender="{ option, index }"` / `tagRender` / `labelRender` /
 `popupRender="{ menu }"` / `maxTagPlaceholder="{ omittedValues }"` /
 `menuItemSelectedIcon="{ value, disabled, isSelected }"` /
@@ -76,13 +83,21 @@ Default-slot `SelectOption` / `SelectOptGroup` nodes are normalized during rende
 > `maxTagPlaceholder` etc.) are **scoped slots only** in this library — no same-named
 > props are kept (rule C8-R2).
 
+Slots are read during rendering and update when added, replaced or removed. An empty slot intentionally hides content; numeric `0` remains visible. `#loadingIcon/#searchIcon` take priority in their corresponding state; `#suffixIcon` controls other suffix content and receives actual focus. Labels and icon values inside option/configuration data retain their data role; top-level content functions use slots.
+
+### Attrs, Provider and theme
+
+Native `class/style` target the selector root. `id/tabindex/role/aria-*` target the actual input; `data-*` and remaining native attrs target the root. Native listeners merge with internal interaction. `focus/blur` describe component focus. Style precedence is current theme → Provider `style` → Provider/local `styles.root` → native `style`; semantic classes concatenate.
+
+Current, nested and removed ConfigProvider values update reactively. Select Tokens accompany both the root and teleported popup; virtual row estimates follow `optionHeight`. Set a numeric `listItemHeight` when row heights use complex CSS expressions. `SelectPurePanel` shares Props, Slots, Emits and Ref, rendering its open popup in its own layout container.
+
 ### Methods
 
 | Method | Description | Arguments | Returns |
 |---|---|---|---|
 | focus | Focus | `(options?: FocusOptions)` | — |
 | blur | Blur | — | — |
-| scrollTo | Scroll to an option | `(index \| { index, align, key })` | — |
+| scrollTo | Scroll to a coordinate or option | `(scrollTop \| { index, align, key })` | — |
 | nativeElement | Root element | — | `HTMLElement` |
 
 ## Design notes

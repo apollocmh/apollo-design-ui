@@ -90,3 +90,31 @@ describe('Select · size 类型（Issue #4.3）', () => {
 // @ts-expect-error F02: callers use options or the default slot, not optionChildren.
 const internalOptionChildren: SelectProps = { optionChildren: [] };
 void internalOptionChildren;
+
+import type { SelectPurePanel as PurePanel, Select } from '../index';
+import type { LabeledValue, SelectSlots, SelectValue } from '../interface';
+
+type ActualProps = InstanceType<typeof Select>['$props'];
+type ActualSlots = InstanceType<typeof Select>['$slots'];
+expectTypeOf<InstanceType<typeof Select>>().toExtend<SelectRef>();
+expectTypeOf<InstanceType<typeof PurePanel>>().toExtend<SelectRef>();
+expectTypeOf<Parameters<NonNullable<ActualProps['onChange']>>>().toEqualTypeOf<
+  [value: SelectValue, option: DefaultOptionType | DefaultOptionType[] | undefined]
+>();
+expectTypeOf<Parameters<NonNullable<ActualProps['onSelect']>>>().toEqualTypeOf<
+  [value: string | number | LabeledValue, option: DefaultOptionType]
+>();
+expectTypeOf<Parameters<NonNullable<ActualProps['onUpdate:searchValue']>>>().toEqualTypeOf<
+  [value: string]
+>();
+expectTypeOf<ActualSlots['optionRender']>().toExtend<SelectSlots['optionRender']>();
+const rejectedComponentProps = () => {
+  // @ts-expect-error Public Select does not expose the internal combobox mode.
+  const mode: ActualProps = { mode: 'combobox' };
+  // @ts-expect-error Search notifications use emits; showSearch config contains search algorithms only.
+  const callback: ActualProps = { showSearch: { onSearch: (_value: string) => {} } };
+  // @ts-expect-error Content functions use named slots.
+  const render: ActualProps = { optionRender: () => null };
+  return [mode, callback, render];
+};
+void rejectedComponentProps;

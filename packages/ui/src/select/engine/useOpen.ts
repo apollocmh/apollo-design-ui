@@ -14,20 +14,7 @@
  */
 
 import { useControlledValue } from '@apollo-design/utils';
-import { computed, onMounted, type Ref, ref } from 'vue';
-
-/** rc 的 `internalMacroTask`：MessageChannel 一次宏任务。 */
-function macroTask(fn: () => void, times = 1): void {
-  if (times <= 0 || typeof MessageChannel === 'undefined') {
-    fn();
-    return;
-  }
-  const channel = new MessageChannel();
-  channel.port1.onmessage = () => {
-    macroTask(fn, times - 1);
-  };
-  channel.port2.postMessage(null);
-}
+import { computed, onBeforeUnmount, onMounted, type Ref, ref } from 'vue';
 
 export interface UseOpenOptions {
   defaultOpen: () => boolean | undefined;
@@ -66,17 +53,31 @@ export function useOpen(options: UseOpenOptions): UseOpenReturn {
 
   const lock = ref(false);
   let taskId = 0;
+  let channel: MessageChannel | undefined;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const cancelPending = () => {
+    channel?.port1.close();
+    channel?.port2.close();
+    channel = undefined;
+    clearTimeout(timer);
+  };
+  onBeforeUnmount(() => {
+    taskId += 1;
+    cancelPending();
+  });
 
   const toggleOpen = (next?: boolean, config: { cancelFun?: () => boolean } = {}): void => {
     taskId += 1;
+    cancelPending();
     const id = taskId;
     const nextOpen = typeof next === 'boolean' ? next : !mergedOpen.value;
     lock.value = !nextOpen;
 
     const triggerUpdate = (): void => {
       if (id !== taskId) return;
+      lock.value = false;
       if (config.cancelFun?.()) return;
-      if (mergedOpen.value !== nextOpen) {
+      if (internalOpen.value !== nextOpen) {
         setInternalOpen(nextOpen);
       }
       lock.value = false;
@@ -85,7 +86,15 @@ export function useOpen(options: UseOpenOptions): UseOpenReturn {
     if (nextOpen) {
       triggerUpdate();
     } else {
-      macroTask(triggerUpdate);
+      if (typeof MessageChannel === 'undefined') timer = setTimeout(triggerUpdate, 0);
+      else {
+        channel = new MessageChannel();
+        channel.port1.onmessage = () => {
+          cancelPending();
+          triggerUpdate();
+        };
+        channel.port2.postMessage(null);
+      }
     }
   };
 
@@ -112,5 +121,8 @@ export function useLock(duration = 250): [() => boolean | null, (locked: boolean
     }, duration);
   };
 
+  onBeforeUnmount(() => {
+    if (timer) clearTimeout(timer);
+  });
   return [() => lockRef.value, doLock];
 }

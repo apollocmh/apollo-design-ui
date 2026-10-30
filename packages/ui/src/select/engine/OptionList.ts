@@ -16,11 +16,17 @@
  * 2. **`aria-selected` 在 combobox 模式下是「值等于搜索词」**而不是「已选中」。
  */
 
-import { KeyCode } from '@apollo-design/utils';
+import { isEmptyVNode, KeyCode } from '@apollo-design/utils';
 import { VirtualList, type VirtualListExposed } from '@apollo-design/virtual-list';
-import type { PropType } from 'vue';
+import type { PropType, SlotsType } from 'vue';
 import { defineComponent, h, inject, ref } from 'vue';
-import type { RawValueType, SelectSemanticClassNames, SelectSemanticStyles } from '../interface';
+import type {
+  RawValueType,
+  ScrollToArg,
+  SelectSemanticClassNames,
+  SelectSemanticStyles,
+  SelectSlots,
+} from '../interface';
 import { type BaseSelectContextValue, baseSelectContextKey, selectContextKey } from './context';
 import TransBtn from './TransBtn';
 
@@ -55,14 +61,18 @@ export const OptionList = defineComponent({
     },
     onPopupScroll: { type: Function as PropType<(event: Event) => void>, default: undefined },
   },
-  setup(props, { expose }) {
+  slots: Object as SlotsType<Pick<SelectSlots, 'optionRender' | 'menuItemSelectedIcon'>>,
+  setup(props, { expose, slots }) {
     const listRef = ref<VirtualListExposed | null>(null);
     const selectCtx = inject(selectContextKey, null);
     const baseCtx = inject(baseSelectContextKey, null);
 
     expose({
-      scrollTo: (arg?: number | { index?: number }) => {
-        listRef.value?.scrollTo(typeof arg === 'number' ? { index: arg } : arg);
+      scrollTo: (arg?: ScrollToArg) => {
+        if (typeof arg === 'object') {
+          const { align, ...target } = arg;
+          listRef.value?.scrollTo({ ...target, align: align === 'auto' ? undefined : align });
+        } else listRef.value?.scrollTo(arg);
       },
     });
 
@@ -180,9 +190,11 @@ export const OptionList = defineComponent({
         let optionTitle = isTitleType(content) ? String(content) : undefined;
         if (title !== undefined) optionTitle = title as string;
 
-        const menuItemSelectedIcon = select.menuItemSelectedIcon;
-        const iconVisible =
-          !menuItemSelectedIcon || typeof menuItemSelectedIcon === 'function' || selected;
+        const menuItemSelectedIcon = slots.menuItemSelectedIcon?.({
+          value,
+          disabled: mergedDisabled,
+          isSelected: selected,
+        });
 
         return h(
           'div',
@@ -204,11 +216,11 @@ export const OptionList = defineComponent({
           },
           [
             h('div', { class: `${optionPrefixCls}-content` }, [
-              typeof select.optionRender === 'function'
-                ? (select.optionRender(item, { index: itemIndex }) as never)
+              slots.optionRender
+                ? slots.optionRender({ option: item, index: itemIndex })
                 : (content as never),
             ]),
-            (typeof menuItemSelectedIcon === 'function' || selected) && iconVisible
+            !isEmptyVNode(menuItemSelectedIcon) || (selected && menuItemSelectedIcon === undefined)
               ? h(
                   TransBtn,
                   {

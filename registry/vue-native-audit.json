@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 68,
+  "revision": 70,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -1747,18 +1747,16 @@
       "kind": "component",
       "ref": "select",
       "title": "Select",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/select"
       ],
-      "assignment": {
-        "owner": "native_select",
-        "baseRevision": 44,
-        "startedAt": "2026-10-30T08:58:22.170Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -1776,6 +1774,59 @@
           "docs/audit/2026-10-23-vue-reactivity-remediation.md",
           "docs/audit/2026-10-28-space-contract-audit.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/select",
+          "packages/ui/src/auto-complete",
+          "packages/ui/src/pagination/__tests__/index.test.ts",
+          "packages/ui/src/form/context.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project theme --project dom-contract packages/ui/src/select/__tests__ packages/ui/src/auto-complete/__tests__/semantic.test.ts packages/ui/src/cascader/__tests__/semantic.test.ts packages/ui/src/tree-select/__tests__/semantic.test.ts packages/ui/src/pagination/__tests__/semantic.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 44220
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project theme --project a11y packages/ui/src/select/__tests__/theme.test.ts packages/ui/src/select/__tests__/a11y.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 20520
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/cascader/__tests__/cascader.test.ts packages/ui/src/tree-select/__tests__/tree-select.test.ts packages/ui/src/select/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11180
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/auto-complete/__tests__/index.test.ts packages/ui/src/pagination/__tests__/index.test.ts packages/ui/src/modal/__tests__/index.test.ts --maxWorkers=1 --reporter=json --outputFile=/tmp/apollo-select-action-current-consumers.json",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/select/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full select source/tests/demo/SFC and affected consumers>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53236
+          }
+        ],
+        "boundary": "沿用条件选项既有成果；实际emits/三个model、完整动态槽、焦点/scrollTo/模板Ctor、当前Provider和有效Token、原生attrs及共享引擎消费者已验证。showSearch只保留搜索算法配置，搜索状态/通知/图标迁顶层模型、事件及槽；AutoComplete同步桥接searchValue更新。源码浏览器exit0，保留三条Vite ResizeObserver late notification，未出现持续循环/焦点丢失；该共享Trigger诊断非阻塞延期，不宣称零诊断。未执行最终冻结九维/发布消费者验收。"
       }
     },
     {

@@ -8,17 +8,19 @@
  * antd 已把 `Select.Option` 标为 deprecated（推荐 `options`），但仍导出。
  */
 
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType, type SlotsType, type VNodeChild } from 'vue';
 import { OPTION_MARK } from './engine/valueUtil';
+import type { RawValueType } from './interface';
 
 export const Option = defineComponent({
   name: 'ASelectOption',
   props: {
-    value: { type: [String, Number, null] as never, default: undefined },
+    value: { type: [String, Number, null] as PropType<RawValueType | null>, default: undefined },
     disabled: { type: Boolean, default: undefined },
     title: { type: String, default: undefined },
     className: { type: String, default: undefined },
   },
+  slots: Object as SlotsType<{ default?: () => VNodeChild }>,
   setup() {
     return () => null;
   },

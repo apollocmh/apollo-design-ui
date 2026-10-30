@@ -94,3 +94,111 @@ describe('Select · prepareComponentToken 判据', () => {
     expect(t.lineWidthFocus).toBe('0px');
   });
 });
+
+import type { ThemeConfig } from '@apollo-design/theme';
+import { mount } from '@vue/test-utils';
+import { defineComponent, h, nextTick, ref, type VNodeChild } from 'vue';
+import { ConfigProvider } from '../../config-provider';
+import PurePanel from '../PurePanel';
+import Select from '../Select';
+
+it('uses current and nested Select tokens on the selector, teleported popup and PurePanel', async () => {
+  const theme = ref<ThemeConfig | undefined>({
+    token: { colorText: '#123456', controlHeight: 36 },
+    components: { Select: { optionHeight: 40, optionSelectedBg: '#ffeedd', zIndexPopup: 1500 } },
+  });
+  const wrapper = mount(
+    defineComponent({
+      setup: () => () =>
+        h(ConfigProvider, { theme: theme.value }, () => [
+          h(Select, {
+            classNames: { popup: { root: 'current-popup' } },
+            open: true,
+            options: [{ value: 'a', label: 'Apple' }],
+            'aria-label': 'Themed',
+          }),
+          h(ConfigProvider, { theme: { components: { Select: { optionHeight: 48 } } } }, () =>
+            h(Select, { class: 'nested', 'aria-label': 'Nested' }),
+          ),
+          h(PurePanel, { options: [{ value: 'b', label: 'Banana' }], 'aria-label': 'Panel' }),
+        ]),
+    }),
+    { attachTo: document.body, global: { stubs: { teleport: false } } },
+  );
+  await nextTick();
+  await nextTick();
+  const root = wrapper.get<HTMLElement>('.apollo-select').element;
+  expect(root.style.getPropertyValue('--apollo-select-option-height')).toBe('40px');
+  expect(root.style.getPropertyValue('--apollo-color-text')).toBe('#123456');
+  expect(
+    wrapper
+      .get<HTMLElement>('.nested')
+      .element.style.getPropertyValue('--apollo-select-option-height'),
+  ).toBe('48px');
+  const popup = document.querySelector<HTMLElement>('.current-popup');
+  expect(popup?.style.getPropertyValue('--apollo-select-option-height')).toBe('40px');
+  expect(popup?.style.getPropertyValue('--apollo-select-z-index-popup')).toBe('1500');
+  const panelPopup = wrapper.get<HTMLElement>(
+    '.apollo-select-dropdown-wrapper .apollo-select-dropdown',
+  ).element;
+  expect(panelPopup.style.position).toBe('relative');
+  expect(panelPopup.style.getPropertyValue('--apollo-select-option-height')).toBe('40px');
+  theme.value = { components: { Select: { optionHeight: 52 } } };
+  await nextTick();
+  expect(root.style.getPropertyValue('--apollo-select-option-height')).toBe('52px');
+  expect(popup?.style.getPropertyValue('--apollo-select-option-height')).toBe('52px');
+  theme.value = undefined;
+  await nextTick();
+  expect(root.style.getPropertyValue('--apollo-select-option-height')).toBe('');
+  expect(popup?.style.getPropertyValue('--apollo-select-option-height')).toBe('');
+});
+
+it('provides the current real popup layer to descendants and keeps nested increments and zero overrides', async () => {
+  const theme = ref<ThemeConfig>({ components: { Select: { zIndexPopup: 1500 } } });
+  const explicit = ref<number | undefined>();
+  const wrapper = mount(
+    defineComponent({
+      setup: () => () =>
+        h(ConfigProvider, { theme: theme.value }, () =>
+          h(
+            Select,
+            {
+              options: [{ value: 'a', label: 'Apple' }],
+              open: true,
+              popupStyle: { zIndex: explicit.value },
+              classNames: { popup: { root: 'parent-layer' } },
+              'aria-label': 'Parent layer',
+            },
+            {
+              popupRender: ({ menu }: { menu: VNodeChild }) =>
+                h('div', [
+                  menu,
+                  h(Select, {
+                    options: [{ value: 'b', label: 'Banana' }],
+                    open: true,
+                    classNames: { popup: { root: 'child-layer' } },
+                    'aria-label': 'Child layer',
+                  }),
+                ]),
+            },
+          ),
+        ),
+    }),
+    { attachTo: document.body, global: { stubs: { teleport: false } } },
+  );
+  await nextTick();
+  await nextTick();
+  const parentLayer = () => document.querySelector<HTMLElement>('.parent-layer')?.style.zIndex;
+  const childLayer = () => document.querySelector<HTMLElement>('.child-layer')?.style.zIndex;
+  expect(parentLayer()).toBe('1500');
+  expect(childLayer()).toBe('1550');
+  theme.value = { components: { Select: { zIndexPopup: 1600 } } };
+  await nextTick();
+  expect(parentLayer()).toBe('1600');
+  expect(childLayer()).toBe('1650');
+  explicit.value = 0;
+  await nextTick();
+  expect(parentLayer()).toBe('0');
+  expect(childLayer()).toBe('50');
+  wrapper.unmount();
+});

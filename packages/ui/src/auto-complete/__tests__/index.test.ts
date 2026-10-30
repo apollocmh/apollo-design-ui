@@ -193,9 +193,9 @@ describe('AutoComplete · 插槽与回调', () => {
     w.unmount();
   });
 
-  it('showSearch.onSearch（config 形态）驱动候选', async () => {
+  it('当前 showSearch 配置与顶层 search 监听协同驱动候选', async () => {
     const onSearch = vi.fn();
-    const w = mountAC({ showSearch: { onSearch } });
+    const w = mountAC({ showSearch: { optionFilterProp: 'value' }, onSearch });
     await w.find('input').setValue('b');
     await nextTick();
     expect(onSearch).toHaveBeenCalledWith('b');

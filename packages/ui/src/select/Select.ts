@@ -1,25 +1,7 @@
 /**
- * Select —— antd 6.6.4 `components/select/index.tsx`（518 行）的 Vue 版。
- *
- * ── 分工 ────────────────────────────────────────────────────────────────────
- *
- * 本文件 = **antd 壳 + rc-select 的 `Select.js`（值语义层）**；
- * 交互外壳在 `engine/BaseSelect.ts`，DOM 在 `engine/Selector.ts` / `OptionList.ts`。
- *
- * ── antd 壳在这文件里做的事（对拍 `index.tsx`）───────────────────────────────
- *
- *  1. prefixCls / rootPrefixCls（**动效名是 rootPrefixCls 前缀** ⇒ `apollo-slide-up`）
- *  2. `listHeight = 256` / `listItemHeight = controlHeight`（rc 默认是 200 / 20）
- *  3. size → `-lg` / `-sm`；variant → `-outlined` / `-filled` / …
- *  4. status → `-status-*` / `-in-form-item`
- *  5. disabled（DisabledContext ?? prop）
- *  6. direction → `-rtl`；placement 默认 bottomLeft（rtl ⇒ bottomRight）
- *  7. mode：`'combobox'` 被吞（只有 SECRET 常量才真走 combobox）
- *  8. notFoundContent（combobox ⇒ null；否则 `renderEmpty('Select')`）
- *  9. 图标（down / search / loading / close-circle / check / close）
- * 10. popupClassName 合并顺序 + zIndex
- * 11. `maxCount` / `tagRender` 只在 multiple / tags 下发
- * 12. 7 个 deprecated 告警
+ * Select value semantics and Vue public boundary.
+ * BaseSelect owns interaction, Selector owns the native control DOM, and OptionList
+ * owns option rendering. Option VNodes are normalized only at the render boundary.
  */
 
 import {
@@ -30,10 +12,21 @@ import {
   LoadingOutlined,
   SearchOutlined,
 } from '@apollo-design/icons';
-import { useZIndex } from '@apollo-design/portal';
+import { useZIndex, ZINDEX_KEY } from '@apollo-design/portal';
 import { isEmptyVNode, useControlledValue, useDevWarning, useId } from '@apollo-design/utils';
-import type { CSSProperties, PropType } from 'vue';
-import { computed, defineComponent, h, provide, ref, shallowRef, watch } from 'vue';
+import type { CSSProperties, PropType, SlotsType, VNodeChild } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  inject,
+  normalizeClass,
+  normalizeStyle,
+  provide,
+  ref,
+  shallowRef,
+  watch,
+} from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useConfigContext, useDirection } from '../config-provider/context';
 import { defaultRenderEmpty } from '../config-provider/default-render-empty';
@@ -60,32 +53,31 @@ import type {
   DisplayValueType,
   FilterFunc,
   InternalSelectMode,
+  LabeledValue,
   LabelInValueType,
-  OptionRenderFn,
   RawValueType,
   ScrollToArg,
-  SearchConfig,
   SelectCommonPlacement,
   SelectProps,
   SelectRef,
   SelectSemanticClassNames,
   SelectSemanticStyles,
+  SelectSlots,
   SelectValue,
   SelectVariant,
 } from './interface';
-import { selectTokenValues } from './style/token';
+import { useSelectTheme } from './use-select-theme';
 
-/** antd 的 7 个 deprecated（`index.tsx` 的 `deprecatedProps`）。 */
+/** Existing style aliases retained by the current compatibility policy. */
 const DEPRECATIONS: Array<[string, string]> = [
   ['dropdownMatchSelectWidth', 'popupMatchSelectWidth'],
   ['dropdownStyle', 'styles.popup.root'],
   ['dropdownClassName', 'classNames.popup.root'],
   ['popupClassName', 'classNames.popup.root'],
-  ['onDropdownVisibleChange', 'onOpenChange'],
   ['bordered', 'variant'],
 ];
 
-const selectProps = {
+export const selectProps = {
   id: { type: String, default: undefined },
   prefixCls: { type: String, default: undefined },
   value: { type: null as unknown as PropType<SelectValue>, default: undefined },
@@ -93,13 +85,16 @@ const selectProps = {
   labelInValue: { type: Boolean, default: undefined },
   optionLabelProp: { type: String, default: undefined },
   fieldNames: { type: Object as PropType<SelectProps['fieldNames']>, default: undefined },
-  mode: { type: String as PropType<InternalSelectMode | undefined>, default: undefined },
+  mode: { type: String as PropType<SelectProps['mode']>, default: undefined },
   options: { type: Array as PropType<DefaultOptionType[]>, default: undefined },
   listHeight: { type: Number, default: undefined },
   listItemHeight: { type: Number, default: undefined },
   virtual: { type: Boolean, default: undefined },
   defaultActiveFirstOption: { type: Boolean, default: undefined },
-  showSearch: { type: [Boolean, Object] as PropType<boolean | object>, default: undefined },
+  showSearch: {
+    type: [Boolean, Object] as PropType<SelectProps['showSearch']>,
+    default: undefined,
+  },
   searchValue: { type: String, default: undefined },
   autoClearSearchValue: { type: Boolean, default: undefined },
   filterOption: {
@@ -116,7 +111,10 @@ const selectProps = {
   loading: { type: Boolean, default: undefined },
   placeholder: { type: String, default: undefined },
   showArrow: { type: Boolean, default: undefined },
-  allowClear: { type: [Boolean, Object] as PropType<boolean | object>, default: undefined },
+  allowClear: {
+    type: [Boolean, Object] as PropType<SelectProps['allowClear']>,
+    default: undefined,
+  },
   maxLength: { type: Number, default: undefined },
   maxCount: { type: Number, default: undefined },
   maxTagCount: { type: Number, default: undefined },
@@ -131,7 +129,7 @@ const selectProps = {
   direction: { type: String as PropType<'ltr' | 'rtl'>, default: undefined },
   popupMatchSelectWidth: { type: [Boolean, Number], default: undefined },
   getPopupContainer: {
-    type: Function as PropType<(node: HTMLElement) => HTMLElement>,
+    type: Function as PropType<SelectProps['getPopupContainer']>,
     default: undefined,
   },
   transitionName: { type: String, default: undefined },
@@ -146,33 +144,33 @@ const selectProps = {
   autoFocus: { type: Boolean, default: undefined },
   title: { type: String, default: undefined },
   role: { type: String, default: undefined },
-  // ---- 事件（prop 形态；emits 同名同发）----
-  onChange: {
-    type: Function as PropType<(value: SelectValue, option: unknown) => void>,
-    default: undefined,
-  },
-  onSelect: {
-    type: Function as PropType<(value: RawValueType, option: DefaultOptionType) => void>,
-    default: undefined,
-  },
-  onDeselect: {
-    type: Function as PropType<(value: RawValueType, option: DefaultOptionType) => void>,
-    default: undefined,
-  },
-  onSearch: { type: Function as PropType<(value: string) => void>, default: undefined },
-  onOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
-  onDropdownVisibleChange: {
-    type: Function as PropType<(open: boolean) => void>,
-    default: undefined,
-  },
-  onFocus: { type: Function as PropType<(event: FocusEvent) => void>, default: undefined },
-  onBlur: { type: Function as PropType<(event: FocusEvent) => void>, default: undefined },
-  onClear: { type: Function as PropType<() => void>, default: undefined },
-  onPopupScroll: { type: Function as PropType<(event: Event) => void>, default: undefined },
-  onInputKeyDown: {
-    type: Function as PropType<(event: KeyboardEvent) => void>,
-    default: undefined,
-  },
+};
+
+export const selectEmits = {
+  change: (_value: SelectValue, _option: DefaultOptionType | DefaultOptionType[] | undefined) =>
+    true,
+  'update:value': (_value: SelectValue) => true,
+  select: (_value: RawValueType | LabeledValue, _option: DefaultOptionType) => true,
+  deselect: (_value: RawValueType | LabeledValue, _option: DefaultOptionType) => true,
+  search: (_value: string) => true,
+  'update:searchValue': (_value: string) => true,
+  openChange: (_open: boolean) => true,
+  'update:open': (_open: boolean) => true,
+  focus: (_event: FocusEvent) => true,
+  blur: (_event: FocusEvent) => true,
+  clear: () => true,
+  popupScroll: (_event: Event) => true,
+  inputKeyDown: (_event: KeyboardEvent) => true,
+};
+
+type SelectConfig = Partial<SelectProps> & {
+  className?: string;
+  style?: CSSProperties;
+  suffixIcon?: VNodeChild;
+  loadingIcon?: VNodeChild;
+  clearIcon?: VNodeChild;
+  removeIcon?: VNodeChild;
+  menuItemSelectedIcon?: VNodeChild;
 };
 
 // The public render boundary normalizes option VNodes. Ordinary child props then
@@ -182,15 +180,11 @@ const SelectEngine = defineComponent({
   inheritAttrs: false,
   props: {
     ...selectProps,
+    mode: { type: String as PropType<InternalSelectMode>, default: undefined },
     optionChildren: { type: Array as PropType<DefaultOptionType[]>, default: () => [] },
   },
-  /**
-   * ⚠️ 只声明 `update:*`（供 `v-model:value` / `v-model:open`），**不**声明
-   * `change` / `select` / `search` … —— antd 的这些是 props 形态回调，声明成
-   * emits 会被 Vue 从 attrs 摘掉，且 `emit()` 会自动调用同名 prop ⇒ 双触发
-   * （PITFALLS 35 / CHECKLIST #78）。它们与 v-model **同时**发出（规则 C11）。
-   */
-  emits: ['update:value', 'update:open'],
+  slots: Object as SlotsType<SelectSlots>,
+  emits: selectEmits,
   setup(props, { slots, emit, attrs, expose }) {
     /**
      * ⚠️ **不在 setup 解构 `attrs`**。
@@ -200,13 +194,14 @@ const SelectEngine = defineComponent({
      * 原生监听器时，重渲染读到的还是首帧那一份（Issue #4.2）。
      * 解构移到渲染函数里（见下方 `...restAttrs`）。
      */
-    const { getPrefixCls } = useComponentConfig('select');
+    const componentConfig = useComponentConfig<SelectConfig>('select');
     const config = useConfigContext();
-    const prefixCls = computed(() => props.prefixCls ?? getPrefixCls('select'));
-    const rootPrefixCls = computed(() => getPrefixCls());
+    const prefixCls = computed(() => props.prefixCls ?? componentConfig.getPrefixCls('select'));
+    const rootPrefixCls = computed(() => componentConfig.getPrefixCls());
 
     const multiple = computed(() => props.mode === 'multiple' || props.mode === 'tags');
-    const mergedId = useId(props.id);
+    const defaultId = useId();
+    const mergedId = computed(() => props.id ?? defaultId);
 
     // ------------------------ deprecated 告警 ------------------------
     const warning = useDevWarning('Select');
@@ -248,39 +243,27 @@ const SelectEngine = defineComponent({
       (ctx) => props.size ?? compactSize.value ?? ctx,
     );
 
-    const tokenValues = selectTokenValues();
+    const selectTheme = useSelectTheme();
     const listHeight = computed(() => props.listHeight ?? 256);
-    const listItemHeight = computed(
-      () => props.listItemHeight ?? (Number.parseInt(String(tokenValues.optionHeight), 10) || 32),
-    );
+    const listItemHeight = computed(() => props.listItemHeight ?? selectTheme.optionHeight.value);
 
-    const componentConfig = computed(
-      () => (config.components?.select ?? {}) as Record<string, unknown>,
-    );
-
-    // ---------------- slot：ReactNode / render prop 的唯一入口（规则 C8-R2）----------------
-    /**
-     * 读一个 slot；「提供了但渲染为空」归一为 null（语义：隐藏），「未提供」为
-     * undefined。判空必须走 `isEmptyVNode` —— Vue 会把 slot 返回的 null / 空数组
-     * 归一成 comment vnode，不能比 `null` / `length`（is.ts §空渲染判据）。
-     */
-    const readSlot = (name: string): unknown => {
-      const fn = (slots as Record<string, unknown>)[name];
-      if (typeof fn !== 'function') return undefined;
-      const nodes = (fn as (...args: unknown[]) => unknown)();
-      if (nodes === undefined) return undefined;
+    const readSlot = (
+      name:
+        | 'prefix'
+        | 'loadingIcon'
+        | 'searchIcon'
+        | 'clearIcon'
+        | 'removeIcon'
+        | 'notFoundContent'
+        | 'placeholder',
+    ): VNodeChild => {
+      const nodes = slots[name]?.();
       return isEmptyVNode(nodes) ? null : nodes;
     };
 
     // --------------------------- 搜索配置 ---------------------------
-    // antd：`showSearch ?? contextShowSearch` 之后才交给 rc 做模式推导。
-    const showSearchProp = computed(
-      () =>
-        (props.showSearch ?? componentConfig.value.showSearch) as
-          | boolean
-          | (SearchConfig<DefaultOptionType> & { searchIcon?: unknown })
-          | undefined,
-    );
+    // Search algorithms stay in configuration; state and notifications use Vue models/emits.
+    const showSearchProp = computed(() => props.showSearch ?? componentConfig.showSearch);
     const searchTuple = computed(() =>
       resolveSearchConfig(
         showSearchProp.value,
@@ -289,7 +272,6 @@ const SelectEngine = defineComponent({
           searchValue: props.searchValue,
           optionFilterProp: props.optionFilterProp,
           filterSort: props.filterSort,
-          onSearch: props.onSearch,
           autoClearSearchValue: props.autoClearSearchValue,
         },
         props.mode,
@@ -306,7 +288,7 @@ const SelectEngine = defineComponent({
     const [innerSearch, setSearchValue] = useControlledValue<string>({
       defaultValue: () => searchConfig.value.searchValue ?? '',
       getValue: () => searchConfig.value.searchValue,
-      onChange: () => undefined,
+      onChange: (value) => emit('update:searchValue', value),
     });
     // ⚠️ 非受控时读 `innerSearch`（受控时 `getValue()` 恒有值，与 rc 的
     //    `useControlledState` 同语义）—— 不能写成 `searchConfig.searchValue ?? ''`，
@@ -378,21 +360,18 @@ const SelectEngine = defineComponent({
       computed(() => parsed.value.valueOptions),
     );
 
-    const displayValues = computed<DisplayValueType[]>(() => {
+    const getDisplayValues = (): DisplayValueType[] => {
       if (!props.mode && mergedValues.value.length === 1) {
         const first = mergedValues.value[0];
         if (first?.value === null && (first?.label === null || first?.label === undefined)) {
           return [];
         }
       }
-      const labelRenderFn = slots.labelRender
-        ? (item: DisplayValueType) => (slots.labelRender as (p: DisplayValueType) => unknown)(item)
-        : undefined;
       return mergedValues.value.map((item) => ({
         ...item,
-        label: (labelRenderFn ? labelRenderFn(item) : item.label) ?? item.value,
-      })) as DisplayValueType[];
-    });
+        label: slots.labelRender ? slots.labelRender(item) : (item.label ?? item.value),
+      }));
+    };
 
     const rawValues = computed(
       () =>
@@ -510,7 +489,7 @@ const SelectEngine = defineComponent({
       const outValue = multiple.value ? returnValues : returnValues[0];
       const outOption = multiple.value ? rawOptions : rawOptions[0];
       emit('update:value', outValue as SelectValue);
-      props.onChange?.(outValue as SelectValue, outOption);
+      emit('change', outValue as SelectValue, outOption);
     };
 
     const triggerSelect = (
@@ -523,9 +502,9 @@ const SelectEngine = defineComponent({
         ? { label: option[mergedFieldNames.value.label], value: val }
         : val;
       if (selected) {
-        props.onSelect?.(wrapped as RawValueType, option);
-      } else if (props.onDeselect && type !== 'clear') {
-        props.onDeselect(wrapped as RawValueType, option);
+        emit('select', wrapped, option);
+      } else if (type !== 'clear') {
+        emit('deselect', wrapped, option);
       }
     };
 
@@ -572,7 +551,14 @@ const SelectEngine = defineComponent({
           setSearchValue('');
           return;
         }
-        const newRawValues = Array.from(new Set([...rawValues.value, formatted]));
+        if (
+          rawValues.value.has(formatted) ||
+          (props.maxCount !== undefined && rawValues.value.size >= props.maxCount)
+        ) {
+          setSearchValue('');
+          return;
+        }
+        const newRawValues = [...rawValues.value, formatted];
         triggerChange(newRawValues.map((v) => ({ value: v }) as LabelInValueType));
         triggerSelect(formatted, true);
         setSearchValue('');
@@ -582,10 +568,7 @@ const SelectEngine = defineComponent({
         if (props.mode === 'combobox') {
           triggerChange([{ value: searchText } as LabelInValueType]);
         }
-        // antd：`showSearch.onSearch`（config 形态）与平铺 `onSearch` 是同一条
-        // 搜索事件的两条通道（resolveSearchConfig 已把 config 并入）——
-        // AutoComplete 的候选驱动全走 config 通道（AutoComplete 期抓出）。
-        (props.onSearch ?? searchConfig.value.onSearch)?.(searchText);
+        emit('search', searchText);
       }
     };
 
@@ -596,9 +579,14 @@ const SelectEngine = defineComponent({
           : words
               .map((word) => parsed.value.labelOptions.get(word)?.value as RawValueType | undefined)
               .filter((val): val is RawValueType => val !== undefined);
-      const newRawValues = Array.from(new Set([...rawValues.value, ...patchValues]));
+      const additions = [...new Set(patchValues)].filter((value) => !rawValues.value.has(value));
+      const available =
+        props.maxCount === undefined
+          ? additions
+          : additions.slice(0, Math.max(0, props.maxCount - rawValues.value.size));
+      const newRawValues = [...rawValues.value, ...available];
       triggerChange(newRawValues.map((v) => ({ value: v }) as LabelInValueType));
-      newRawValues.forEach((v) => {
+      available.forEach((v) => {
         triggerSelect(v, true);
       });
     };
@@ -626,9 +614,9 @@ const SelectEngine = defineComponent({
 
     // ---------------------------- 图标（slot 优先） ----------------------------
     const showSuffixIcon = computed(() => (props.showArrow !== undefined ? props.showArrow : true));
-    const getSuffixIconNode = (arrowIcon?: unknown): unknown => {
-      const nodes: unknown[] = [];
-      if (showSuffixIcon.value !== false && arrowIcon !== undefined && arrowIcon !== null) {
+    const getSuffixIconNode = (arrowIcon?: VNodeChild): VNodeChild => {
+      const nodes: VNodeChild[] = [];
+      if (showSuffixIcon.value !== false && !isEmptyVNode(arrowIcon)) {
         nodes.push(arrowIcon);
       }
       if (formItem.value.hasFeedback && formItem.value.feedbackIcon) {
@@ -637,88 +625,63 @@ const SelectEngine = defineComponent({
       return nodes.length ? nodes : null;
     };
 
-    const mergedSuffixIcon = computed<unknown>(() => {
-      if (props.loading) {
-        return getSuffixIconNode(
-          readSlot('loadingIcon') ??
-            componentConfig.value.loadingIcon ??
-            h(LoadingOutlined, { spin: true }),
-        );
-      }
-      return (st: { open?: boolean; showSearch?: boolean }): unknown => {
-        if (st.open && st.showSearch) {
-          return getSuffixIconNode(
-            (props.showSearch as { searchIcon?: unknown } | undefined)?.searchIcon ??
-              (componentConfig.value.showSearch as { searchIcon?: unknown } | undefined)
-                ?.searchIcon ??
-              h(SearchOutlined),
-          );
-        }
-        if (slots.suffixIcon) {
-          // ⚠️ **只调用一次，且必须带作用域参数**（Issue #4.5）。
-          //    此前先 `readSlot('suffixIcon')`（**无参**）探一次、再带参调一次 ——
-          //    对 `#suffixIcon="{ open }"` 这类解构参数的插槽，无参调用会直接抛
-          //    `Cannot destructure property 'open' of undefined`，整个下拉渲染崩掉。
-          //    契约（`SelectSlots['suffixIcon']`）是 `{ open, showSearch, searchValue,
-          //    focused, loading }`，按契约传一次即可；空产物归一为 null（语义：隐藏）。
-          const node = (slots.suffixIcon as (p: Record<string, unknown>) => unknown)({
-            open: Boolean(st.open),
-            showSearch: Boolean(st.showSearch),
-            searchValue: mergedSearchValue.value,
-            focused: false,
-            loading: props.loading,
-          });
-          return getSuffixIconNode(isEmptyVNode(node) ? null : node);
-        }
-        return getSuffixIconNode(componentConfig.value.suffixIcon ?? h(DownOutlined));
-      };
-    });
+    const getSuffixIcon = (
+      state: NonNullable<Parameters<NonNullable<SelectSlots['suffixIcon']>>[0]>,
+    ): VNodeChild => {
+      if (props.loading && slots.loadingIcon) return getSuffixIconNode(readSlot('loadingIcon'));
+      if (!props.loading && state.open && state.showSearch && slots.searchIcon)
+        return getSuffixIconNode(readSlot('searchIcon'));
+      if (slots.suffixIcon) return getSuffixIconNode(slots.suffixIcon(state));
+      if (props.loading)
+        return getSuffixIconNode(componentConfig.loadingIcon ?? h(LoadingOutlined, { spin: true }));
+      if (state.open && state.showSearch) return getSuffixIconNode(h(SearchOutlined));
+      return getSuffixIconNode(componentConfig.suffixIcon ?? h(DownOutlined));
+    };
 
-    const mergedClearIcon = computed<unknown>(
-      () => readSlot('clearIcon') ?? componentConfig.value.clearIcon ?? h(CloseCircleFilled),
-    );
-    const mergedRemoveIcon = computed<unknown>(
-      () => readSlot('removeIcon') ?? componentConfig.value.removeIcon ?? h(CloseOutlined),
-    );
-    const mergedItemIcon = computed<unknown>(() => {
-      if (slots.menuItemSelectedIcon) {
-        return (info: { value?: unknown; disabled?: boolean; isSelected?: boolean }) =>
-          (slots.menuItemSelectedIcon as (p: typeof info) => unknown)(info);
-      }
-      return (
-        componentConfig.value.menuItemSelectedIcon ?? (multiple.value ? h(CheckOutlined) : null)
-      );
-    });
-    const mergedAllowClear = computed(() => {
-      const final = props.allowClear ?? (componentConfig.value.allowClear as boolean | undefined);
-      return final === true ? { clearIcon: mergedClearIcon.value } : final;
-    });
-
-    // ------------------------ notFoundContent ------------------------
-    const mergedNotFound = computed<unknown>(() => {
-      const fromSlot = readSlot('notFoundContent');
-      if (fromSlot !== undefined) return fromSlot;
+    const getClearIcon = () =>
+      slots.clearIcon ? readSlot('clearIcon') : (componentConfig.clearIcon ?? h(CloseCircleFilled));
+    const getRemoveIcon = () =>
+      slots.removeIcon ? readSlot('removeIcon') : (componentConfig.removeIcon ?? h(CloseOutlined));
+    const getAllowClear = () => {
+      const value = props.allowClear ?? componentConfig.allowClear;
+      if (value === true) return { clearIcon: getClearIcon() };
+      if (value && typeof value === 'object' && slots.clearIcon)
+        return { ...value, clearIcon: getClearIcon() };
+      return value;
+    };
+    const getNotFound = () => {
+      if (slots.notFoundContent) return readSlot('notFoundContent');
       if (props.mode === 'combobox') return null;
       return config.renderEmpty ? config.renderEmpty('Select') : defaultRenderEmpty('Select');
-    });
-
-    const zIndex = useZIndex('SelectLike', () => {
-      const custom =
-        (props.popupStyle?.zIndex as number | undefined) ??
-        (props.dropdownStyle?.zIndex as number | undefined) ??
-        (props.styles?.popup?.root?.zIndex as number | undefined);
-      return custom;
-    });
+    };
 
     // --------------------------- 语义槽 ---------------------------
     // ⚠️ antd 第四参 `{ popup: { _default: 'root' } }`（KNOWN-ISSUES §1.7b 已补）：
     //    字符串形态 `classNames.popup = 'x'` 归到 `popup.root`，不再产垃圾键。
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
-      SelectProps,
+      typeof props,
       SelectSemanticClassNames,
       SelectSemanticStyles
-    >([() => props.classNames], [() => props.styles], {} as never, {
-      popup: { _default: 'root' },
+    >(
+      [() => componentConfig.classNames, () => props.classNames],
+      [() => componentConfig.styles, () => props.styles],
+      props,
+      {
+        popup: { _default: 'root' },
+      },
+    );
+
+    const parentZIndex = inject(ZINDEX_KEY, null);
+    const zIndex = useZIndex('SelectLike', () => {
+      const custom =
+        props.popupStyle?.zIndex ??
+        props.dropdownStyle?.zIndex ??
+        mergedStyles.value?.popup?.root?.zIndex;
+      if (custom !== undefined) {
+        const numeric = typeof custom === 'number' ? custom : Number(custom);
+        return Number.isFinite(numeric) ? numeric : undefined;
+      }
+      return parentZIndex?.value === undefined ? selectTheme.zIndexPopup.value : undefined;
     });
 
     const cssVarCls = computed(() => `${prefixCls.value}-css-var`);
@@ -732,7 +695,7 @@ const SelectEngine = defineComponent({
      * （与 Issue #4.2 同一根因，故一并修）。
      */
     const getRootClassName = (): string | undefined =>
-      [
+      normalizeClass([
         mergedSize.value === 'large' ? `${prefixCls.value}-lg` : '',
         mergedSize.value === 'small' ? `${prefixCls.value}-sm` : '',
         mergedDirection.value === 'rtl' ? `${prefixCls.value}-rtl` : '',
@@ -741,14 +704,13 @@ const SelectEngine = defineComponent({
         getStatusClassNames(prefixCls.value, mergedStatus.value, formItem.value.hasFeedback),
         compactItemClassnames.value,
         // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-        attrs.class as string | undefined,
+        componentConfig.className,
+        attrs.class,
         cssVarCls.value,
         'css-var-root',
         // ⚠️ 不含 mergedClassNames.root —— BaseSelect 的根类里已有
         //    props.classNames?.root，这里再拼会双份（AutoComplete 期抓出）
-      ]
-        .filter(Boolean)
-        .join(' ') || undefined;
+      ]) || undefined;
 
     const mergedPopupClassName = computed(
       () =>
@@ -781,13 +743,10 @@ const SelectEngine = defineComponent({
     provide(
       selectContextKey,
       computed<SelectContextValue>(() => ({
-        // `as never`：optionRender 包装器的 slot 签名与 OptionRenderFn 结构兼容但
-        // 字面参数不同（info 由调用方 OptionList 保证），不做无谓的字段重排。
         flattenOptions: displayOptions.value,
         onActiveValue,
         defaultActiveFirstOption: mergedDefaultActiveFirstOption.value,
         onSelect: onInternalSelect,
-        menuItemSelectedIcon: mergedItemIcon.value,
         rawValues: rawValues.value,
         fieldNames: mergedFieldNames.value,
         virtual: virtual.value !== false && popupMatchSelectWidth.value !== false,
@@ -796,19 +755,6 @@ const SelectEngine = defineComponent({
         listItemHeight: listItemHeight.value,
         childrenAsData: childrenAsData.value,
         maxCount: multiple.value ? props.maxCount : undefined,
-        // ⚠️ 内核的 `OptionRenderFn` 是**位置参数** `(option, info)`，而公开的插槽契约
-        //    是**单个对象** `{ option, index }`（`SelectSlots['optionRender']`）。
-        //    此前直接把位置参数 spread 给插槽 ⇒ `#optionRender="{ option }"` 拿到
-        //    `option === undefined`（Issue #4.4）。这里显式转换。
-        optionRender: slots.optionRender
-          ? (option: Parameters<OptionRenderFn>[0], info: Parameters<OptionRenderFn>[1]) =>
-              (
-                slots.optionRender as (p: {
-                  option: Parameters<OptionRenderFn>[0];
-                  index: number;
-                }) => unknown
-              )({ option, index: info.index })
-          : undefined,
         classNames: mergedClassNames.value,
         styles: mergedStyles.value,
       })),
@@ -835,63 +781,70 @@ const SelectEngine = defineComponent({
       //    `aria-label` / `aria-labelledby` 单独走 props（antd 只把它们放在
       //    combobox input 上，不随 attrs 扩散）。
       const {
+        class: _class,
+        style: _style,
+        tabindex: _tabindex,
         'aria-label': _ariaLabel,
         'aria-labelledby': _ariaLabelledby,
         ...restAttrs
       } = attrs as Record<string, unknown>;
+      void _class;
+      void _style;
+      void _tabindex;
       void _ariaLabel;
       void _ariaLabelledby;
       return h(
         BaseSelect,
         {
-          ref: baseSelectRef as never,
+          ...restAttrs,
+          ref: baseSelectRef,
           prefixCls: prefixCls.value,
-          id: mergedId,
+          id: mergedId.value,
           className: getRootClassName(),
           // 根 style 是 Vue 原生 attrs（位置与原先的语义 root 之后：调用方最后胜出）
-          style: {
-            ...(mergedStyles.value?.root ?? {}),
-            ...((attrs.style as CSSProperties | undefined) ?? {}),
-          },
+          style: [
+            selectTheme.style.value,
+            componentConfig.style,
+            mergedStyles.value?.root,
+            normalizeStyle(attrs.style),
+          ],
           mode: props.mode,
           multiple: multiple.value,
           showSearch: mergedShowSearch.value,
           searchValue: mergedSearchValue.value,
           autoClearSearchValue: searchConfig.value.autoClearSearchValue,
-          displayValues: displayValues.value,
+          displayValues: getDisplayValues(),
           activeValue: activeValue.value ?? undefined,
-          activeDescendantId: `${mergedId}_list_${accessibilityIndex.value}`,
+          activeDescendantId: `${mergedId.value}_list_${accessibilityIndex.value}`,
           disabled: mergedDisabled.value,
           loading: props.loading,
           open: props.open,
           defaultOpen: props.defaultOpen,
-          notFoundContent: mergedNotFound.value,
-          placeholder: readSlot('placeholder') ?? props.placeholder,
+          notFoundContent: getNotFound(),
+          placeholder: slots.placeholder ? readSlot('placeholder') : props.placeholder,
           maxLength: props.maxLength,
-          tabIndex: props.tabIndex,
+          tabIndex:
+            props.tabIndex ??
+            (typeof attrs.tabindex === 'string' || typeof attrs.tabindex === 'number'
+              ? Number(attrs.tabindex)
+              : undefined),
           // ⚠️ `autoFocus` 被声明成 prop 之后就不再进 `attrs` ⇒ 必须显式转发，
           //    否则 BaseSelect → Selector → SearchInput 这条链永远收不到（Issue #4.6）。
           autoFocus: props.autoFocus,
           title: props.title,
-          allowClear: mergedAllowClear.value as
-            | boolean
-            | { clearIcon?: unknown; label?: string }
-            | undefined,
-          clearIcon: mergedClearIcon.value,
+          role: props.role,
+          allowClear: getAllowClear(),
+          clearIcon: getClearIcon(),
           prefix: readSlot('prefix'),
-          suffixIcon: mergedSuffixIcon.value,
-          removeIcon: mergedRemoveIcon.value,
+          suffixIcon: getSuffixIcon,
+          removeIcon: getRemoveIcon(),
           tokenSeparators: props.tokenSeparators,
-          tagRender: multiple.value
-            ? slots.tagRender
-              ? (info: never) => (slots.tagRender as (p: never) => unknown)(info)
-              : undefined
-            : undefined,
+          tagRender: multiple.value ? slots.tagRender : undefined,
           maxTagCount: props.maxTagCount,
           maxTagTextLength: props.maxTagTextLength,
           maxTagPlaceholder: slots.maxTagPlaceholder
             ? (omitted: DisplayValueType[]) =>
-                (slots.maxTagPlaceholder as (p: { omittedValues: DisplayValueType[] }) => unknown)({
+                slots.maxTagPlaceholder?.({
                   omittedValues: omitted,
                 })
             : undefined,
@@ -907,11 +860,12 @@ const SelectEngine = defineComponent({
           transitionName: props.transitionName ?? `${rootPrefixCls.value}-slide-up`,
           popupClassName: mergedPopupClassName.value,
           popupStyle: {
+            ...selectTheme.style.value,
             ...(mergedStyles.value?.popup?.root ?? {}),
             ...(props.popupStyle ?? props.dropdownStyle ?? {}),
           },
           popupRender: slots.popupRender
-            ? (menu: unknown) => (slots.popupRender as (p: { menu: unknown }) => unknown)({ menu })
+            ? (menu: VNodeChild) => slots.popupRender?.({ menu })
             : undefined,
           classNames: mergedClassNames.value,
           styles: mergedStyles.value,
@@ -920,24 +874,23 @@ const SelectEngine = defineComponent({
           onDisplayValuesChange: onDisplayValuesChange,
           onActiveValueChange: onActiveValue,
           onOpenChange: (next: boolean) => {
-            props.onOpenChange?.(next);
-            props.onDropdownVisibleChange?.(next);
+            emit('openChange', next);
             emit('update:open', next);
           },
           onFocus: (event: FocusEvent) => {
-            props.onFocus?.(event);
+            emit('focus', event);
           },
           onBlur: (event: FocusEvent) => {
-            props.onBlur?.(event);
+            emit('blur', event);
           },
           onClear: () => {
-            props.onClear?.();
+            emit('clear');
           },
           onPopupScroll: (event: Event) => {
-            props.onPopupScroll?.(event);
+            emit('popupScroll', event);
           },
           onInputKeyDown: (event: KeyboardEvent) => {
-            props.onInputKeyDown?.(event);
+            emit('inputKeyDown', event);
           },
           // ⚠️ 可访问名**不随 attrs 扩散**：antd 只把它放在 combobox input 上
           //    （实测 antd 6.6.4 SSR）。所以这里把它从 attrs 里摘出来单独传，
@@ -946,32 +899,38 @@ const SelectEngine = defineComponent({
           ariaLabelledby: (attrs as Record<string, unknown>)['aria-labelledby'] as
             | string
             | undefined,
-          ...restAttrs,
-        } as never,
-        {},
+        },
+        {
+          optionRender: slots.optionRender,
+          menuItemSelectedIcon: (info: {
+            value?: RawValueType;
+            disabled?: boolean;
+            isSelected?: boolean;
+          }) =>
+            slots.menuItemSelectedIcon
+              ? slots.menuItemSelectedIcon(info)
+              : info.isSelected
+                ? (componentConfig.menuItemSelectedIcon ??
+                  (multiple.value ? h(CheckOutlined) : undefined))
+                : undefined,
+        },
       );
     };
   },
 });
 
-/** Vue render boundary: slot identity and VNodes are consumed on every render. */
+/** Default option VNodes are normalized at this render boundary. */
 export const Select = defineComponent({
   name: 'ASelect',
   inheritAttrs: false,
   props: selectProps,
-  emits: ['update:value', 'update:open'],
-  setup(props, { attrs, slots, emit, expose }) {
+  slots: Object as SlotsType<SelectSlots>,
+  emits: selectEmits,
+  expose: ['focus', 'blur', 'scrollTo', 'nativeElement'],
+  setup(props, { attrs, slots, emit }) {
     const engine = shallowRef<SelectRef | null>(null);
     const noOptionChildren: DefaultOptionType[] = [];
-    expose({
-      focus: (options?: FocusOptions) => engine.value?.focus(options),
-      blur: () => engine.value?.blur(),
-      scrollTo: (arg?: ScrollToArg) => engine.value?.scrollTo(arg),
-      get nativeElement(): HTMLElement | null {
-        return engine.value?.nativeElement ?? null;
-      },
-    });
-    return () =>
+    const renderSelect = () =>
       h(
         SelectEngine,
         {
@@ -982,11 +941,37 @@ export const Select = defineComponent({
             props.options === undefined
               ? convertChildrenToData(slots.default?.())
               : noOptionChildren,
+          onChange: (
+            value: SelectValue,
+            option: DefaultOptionType | DefaultOptionType[] | undefined,
+          ) => emit('change', value, option),
           'onUpdate:value': (value: SelectValue) => emit('update:value', value),
+          onSelect: (value: RawValueType | LabeledValue, option: DefaultOptionType) =>
+            emit('select', value, option),
+          onDeselect: (value: RawValueType | LabeledValue, option: DefaultOptionType) =>
+            emit('deselect', value, option),
+          onSearch: (value: string) => emit('search', value),
+          'onUpdate:searchValue': (value: string) => emit('update:searchValue', value),
+          onOpenChange: (open: boolean) => emit('openChange', open),
           'onUpdate:open': (open: boolean) => emit('update:open', open),
+          onFocus: (event: FocusEvent) => emit('focus', event),
+          onBlur: (event: FocusEvent) => emit('blur', event),
+          onClear: () => emit('clear'),
+          onPopupScroll: (event: Event) => emit('popupScroll', event),
+          onInputKeyDown: (event: KeyboardEvent) => emit('inputKeyDown', event),
         },
         slots,
       );
+    return {
+      focus: (options?: FocusOptions) => engine.value?.focus(options),
+      blur: () => engine.value?.blur(),
+      scrollTo: (arg?: ScrollToArg) => engine.value?.scrollTo(arg),
+      nativeElement: computed(() => engine.value?.nativeElement ?? null),
+      renderSelect,
+    };
+  },
+  render() {
+    return this.renderSelect();
   },
 });
 

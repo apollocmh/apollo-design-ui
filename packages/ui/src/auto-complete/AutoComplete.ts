@@ -154,7 +154,7 @@ const AutoCompleteComponent = defineComponent({
    * ⚠️ 只声明 `update:value`（供 `v-model:value`）——其余回调是 props 形态
    * （PITFALLS 35：声明 emits 会把 onXxx 从 attrs 摘掉，形成双通道）。
    */
-  emits: ['update:value'],
+  emits: ['update:value', 'update:searchValue'],
   setup(props, { slots, emit, expose, attrs }) {
     const devWarning = useDevWarning('AutoComplete');
     const { getPrefixCls } = useConfigContext();
@@ -431,6 +431,7 @@ const AutoCompleteComponent = defineComponent({
           mode: 'combobox' as never,
           // ---- v-model:value 中继（C11：Select 的 update:value → 本组件 emit）----
           'onUpdate:value': (v: unknown) => emit('update:value', v),
+          'onUpdate:searchValue': (value: string) => emit('update:searchValue', value),
           ...attrs,
         } as never,
         selectSlots,

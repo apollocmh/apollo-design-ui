@@ -23,8 +23,9 @@
  * `focusin`/`focusout`；Vue 的 `onFocus` 是原生不冒泡的 `focus`。
  */
 
-import type { ComponentPublicInstance, CSSProperties, PropType } from 'vue';
-import { defineComponent, h, inject, ref, shallowRef } from 'vue';
+import { isEmptyVNode } from '@apollo-design/utils';
+import type { CSSProperties, PropType, StyleValue, VNodeChild } from 'vue';
+import { defineComponent, h, inject, mergeProps, ref, shallowRef } from 'vue';
 import type {
   CustomTagProps,
   DisplayValueType,
@@ -48,18 +49,18 @@ export const Selector = defineComponent({
     prefixCls: { type: String, required: true },
     id: { type: String, default: undefined },
     className: { type: String, default: undefined },
-    style: { type: Object as PropType<CSSProperties>, default: undefined },
+    style: { type: [String, Object, Array] as PropType<StyleValue>, default: undefined },
     focused: { type: Boolean, default: false },
     multiple: { type: Boolean, default: false },
     mode: { type: String, default: undefined },
     displayValues: { type: Array as PropType<DisplayValueType[]>, default: () => [] },
-    placeholder: { type: null as unknown as PropType<unknown>, default: undefined },
+    placeholder: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     searchValue: { type: String, default: '' },
     activeValue: { type: String, default: undefined },
     activeDescendantId: { type: String, default: undefined },
-    prefix: { type: null as unknown as PropType<unknown>, default: undefined },
-    suffix: { type: null as unknown as PropType<unknown>, default: undefined },
-    clearIcon: { type: null as unknown as PropType<unknown>, default: undefined },
+    prefix: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    suffix: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    clearIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     clearLabel: { type: String, default: undefined },
     disabled: { type: Boolean, default: undefined },
     loading: { type: Boolean, default: undefined },
@@ -76,12 +77,15 @@ export const Selector = defineComponent({
     autoFocus: { type: Boolean, default: false },
     maxTagCount: { type: Number, default: undefined },
     maxTagTextLength: { type: Number, default: undefined },
-    maxTagPlaceholder: { type: null as unknown as PropType<unknown>, default: undefined },
-    tagRender: {
-      type: Function as PropType<((props: CustomTagProps) => unknown) | undefined>,
+    maxTagPlaceholder: {
+      type: null as unknown as PropType<VNodeChild | ((omitted: DisplayValueType[]) => VNodeChild)>,
       default: undefined,
     },
-    removeIcon: { type: null as unknown as PropType<unknown>, default: undefined },
+    tagRender: {
+      type: Function as PropType<((props: CustomTagProps) => VNodeChild) | undefined>,
+      default: undefined,
+    },
+    removeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     tokenWithEnter: { type: Boolean, default: false },
     autoClearSearchValue: { type: Boolean, default: undefined },
     classNames: {
@@ -91,12 +95,6 @@ export const Selector = defineComponent({
     styles: { type: Object as PropType<SelectSemanticStyles | undefined>, default: undefined },
     // ---- 事件（纯 prop 回调，见 CHECKLIST #78）----
     onToggleOpen: { type: Function as PropType<(next?: boolean) => void>, default: undefined },
-    onMousedown: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
-    onClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
-    onKeydown: { type: Function as PropType<(event: KeyboardEvent) => void>, default: undefined },
-    onKeyup: { type: Function as PropType<(event: KeyboardEvent) => void>, default: undefined },
-    onFocus: { type: Function as PropType<(event: FocusEvent) => void>, default: undefined },
-    onBlur: { type: Function as PropType<(event: FocusEvent) => void>, default: undefined },
     onSearch: {
       type: Function as PropType<
         (text: string, fromTyping: boolean, isCompositing: boolean) => void
@@ -115,18 +113,32 @@ export const Selector = defineComponent({
       default: undefined,
     },
   },
-  setup(props, { expose, attrs }) {
-    const inputCompRef = shallowRef<ComponentPublicInstance | null>(null);
+  emits: {
+    mousedown: (_event: MouseEvent) => true,
+    click: (_event: MouseEvent) => true,
+    keydown: (_event: KeyboardEvent) => true,
+    keyup: (_event: KeyboardEvent) => true,
+    focus: (_event: FocusEvent) => true,
+    blur: (_event: FocusEvent) => true,
+  },
+  setup(props, { expose, attrs, emit }) {
+    const inputCompRef = shallowRef<InstanceType<typeof SearchInput> | null>(null);
     const rootRef = ref<HTMLElement | null>(null);
     /** rc 的 `event.nativeEvent._select_lazy`：点清除按钮时不要「点开下拉」。 */
     let lazyClick = false;
 
-    const inputEl = (): HTMLInputElement | null =>
-      (inputCompRef.value?.$el as HTMLInputElement | undefined) ?? null;
+    const inputEl = (): HTMLInputElement | null => {
+      const element = inputCompRef.value?.$el;
+      return element instanceof HTMLInputElement ? element : null;
+    };
 
     expose({
-      focus: () => inputEl()?.focus() ?? rootRef.value?.focus(),
-      blur: () => inputEl()?.blur() ?? rootRef.value?.blur(),
+      focus: (options?: FocusOptions) => {
+        (inputEl() ?? rootRef.value)?.focus(options);
+      },
+      blur: () => {
+        (inputEl() ?? rootRef.value)?.blur();
+      },
       nativeElement: () => rootRef.value,
     });
 
@@ -154,7 +166,7 @@ export const Selector = defineComponent({
         }
       }
       lazyClick = false;
-      props.onMousedown?.(event);
+      emit('mousedown', event);
     };
 
     // ---------------------------- 占位符 ----------------------------
@@ -504,22 +516,21 @@ export const Selector = defineComponent({
 
       return h(
         'div',
-        {
+        mergeProps(splitAttrs().rest, {
           // ⚠️ 透传在前、受控在后：内部事件/类名/样式**压过**同名透传，
           //    避免用户 attrs 把内部处理器顶掉（Issue #4.2 的「防止回写覆盖内部事件」）。
-          ...splitAttrs().rest,
           ref: rootRef,
           class: props.className,
           style: props.style,
           onMousedown: onInternalMouseDown,
-          onClick: props.onClick,
-          onKeydown: props.onKeydown,
-          onKeyup: props.onKeyup,
-          onFocusin: props.onFocus,
-          onFocusout: props.onBlur,
-        },
+          onClick: (event: MouseEvent) => emit('click', event),
+          onKeydown: (event: KeyboardEvent) => emit('keydown', event),
+          onKeyup: (event: KeyboardEvent) => emit('keyup', event),
+          onFocusin: (event: FocusEvent) => emit('focus', event),
+          onFocusout: (event: FocusEvent) => emit('blur', event),
+        }),
         [
-          props.prefix
+          !isEmptyVNode(props.prefix)
             ? h(
                 'div',
                 {
@@ -534,7 +545,7 @@ export const Selector = defineComponent({
           props.multiple ? renderMultiple() : renderSingle(),
           // rc：`suffixNode && <div class="-suffix">` —— suffixIcon={null}
           //（AutoComplete）时**不渲染**容器（AutoComplete 期抓出）
-          props.suffix
+          !isEmptyVNode(props.suffix)
             ? h(
                 'div',
                 {
@@ -550,7 +561,7 @@ export const Selector = defineComponent({
                 [props.suffix as never],
               )
             : null,
-          props.clearIcon
+          !isEmptyVNode(props.clearIcon)
             ? h(
                 'button',
                 {

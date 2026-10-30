@@ -427,10 +427,9 @@ describe('Pagination 尺寸切换器（L2）', () => {
   it('切换 pageSize：越界回退 + 三个事件（update:pageSize / showSizeChange / change）', async () => {
     const w = mountPg({ defaultCurrent: 50, showSizeChanger: true });
     // 50 页 × 10 = 500 条；换成 100/页 ⇒ 只有 5 页 ⇒ 当前页回退到 5
-    // ⚠️ 本仓 Select 用 **`onChange` prop**（不是 emits）—— `$emit('change')` 打不到它。
-    //    这里直接调 prop，等价于 Select 内部 commit 时的 `props.onChange(outValue, outOption)`。
+    // 子 Select 发出业务 change，分页拥有尺寸更新与越界投影。
     const select = w.findComponent({ name: 'ASelect' });
-    (select.props('onChange') as (v: number) => void)(100);
+    select.vm.$emit('change', 100, undefined);
     await nextTick();
     expect(w.emitted('update:pageSize')?.[0]).toEqual([100]);
     expect(w.emitted('showSizeChange')?.[0]).toEqual([50, 100]);
@@ -440,7 +439,7 @@ describe('Pagination 尺寸切换器（L2）', () => {
   it('未越界时当前页保持不变', async () => {
     const w = mountPg({ defaultCurrent: 3, showSizeChanger: true });
     const select = w.findComponent({ name: 'ASelect' });
-    (select.props('onChange') as (v: number) => void)(20);
+    select.vm.$emit('change', 20, undefined);
     await nextTick();
     expect(w.emitted('change')?.[0]).toEqual([3, 20]);
   });

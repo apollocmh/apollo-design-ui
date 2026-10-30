@@ -1,7 +1,8 @@
 <script setup lang="ts">
-// 对齐 antd demo/component-token.tsx
 import { ConfigProvider, Select } from '@apollo-design/ui';
+import { ref } from 'vue';
 
+const largeOptions = ref(false);
 const options = [
   { value: 'a1', label: 'Jack' },
   { value: 'b2', label: 'Lucy' },
@@ -9,11 +10,14 @@ const options = [
 </script>
 
 <template>
+  <label style="display: block; margin-bottom: 12px">
+    <input v-model="largeOptions" type="checkbox" /> Taller options
+  </label>
   <ConfigProvider
     :theme="{
-      components: { Select: { optionHeight: 40, selectorBg: '#f6ffed' } },
+      components: { Select: { optionHeight: largeOptions ? 52 : 40, selectorBg: '#f6ffed', optionSelectedBg: '#d9f7be' } },
     }"
   >
-    <Select :options="options" style="width: 200px" />
+    <Select :options="options" default-value="a1" aria-label="Themed choices" style="width: 200px" />
   </ConfigProvider>
 </template>

@@ -14,6 +14,12 @@
 
 F02：公开 render 边界读取默认选项插槽并归一化，结果经普通 Vue props 进入内部计算/缓存链；纯数据 options 不执行默认插槽。Fragment/Comment 按 Vue 控制流处理，input 不重挂载。 验证见 `docs/audit/2026-10-23-vue-reactivity-remediation.md`。
 
+## 2026-10-30 Vue 公共契约整改
+
+公共通知由 typed emits 表达，值、搜索词与开合各有 `v-model`；内容插槽在 render 消费，动态存在性、空内容、数字 0 和实际焦点正确传递。Provider 的当前前缀、类名、原生/语义样式以及主题 Token 同步根和浮层；PurePanel 共用接口并占据布局。实际 Ref 转发 focus options、完整滚动参数；共享引擎清理关闭宏任务和短锁定时器，保留 Cascader/TreeSelect 的内部列表协议。
+
+当前验证和剩余任务读取唯一状态 `registry/vue-native-audit.json`；以下历史验收保留原日期含义，不代表本轮冻结验收。
+
 ## 1. 职责
 
 下拉选择器：值语义（受控/非受控/`labelInValue`）、搜索过滤（`showSearch` 对象形态）、
@@ -80,7 +86,7 @@ registry 数据：token 数 = **16**（`ComponentToken` 自有键；继承 `Mult
 `multipleItemHeight = 24px`（`min(controlHeight-2*paddingXXS, controlHeight-2*lineWidth)`）、
 `showArrowPaddingInlineEnd = 18px`（`ceil(fontSize*1.25)`）、`zIndexPopup = 1050`。
 
-`clearBg` 上游**只声明不引用**（同 modal 的 `--ant-modal-xs-width`），本仓照样声明。
+`clearBg`、多选边框与禁用颜色背景在静态样式中实际消费，当前主题覆盖同步到根与浮层。
 
 ## 5. 已知缺口
 
@@ -88,7 +94,7 @@ registry 数据：token 数 = **16**（`ComponentToken` 自有键；继承 `Mult
 |---|---|---|
 | P1 | `maxTagCount: 'responsive'` | 依赖 Overflow 的 ResizeObserver 折叠；demo 以固定值等价展示（D108） |
 | P2 | combobox 的 `backfill` | 内核模式已实现（AutoComplete 复用），键盘回填未接 |
-| P3 | ConfigProvider 组件级 `classNames`/`styles`/token 覆盖 | staged（同 image/message/notification） |
+| P3 | ConfigProvider 组件级 `classNames`/`styles`/Token 覆盖 | 2026-10-30 已完成当前/嵌套/移除链路，见当前 API 与针对性回归 |
 | P4 | `stretch: 'width'` 的钳制语义 | Trigger 基建未实现（D106） |
 | P5 | `showScrollBar` / 自绘滚动条 | virtual-list 契约 §5.1（D110） |
 

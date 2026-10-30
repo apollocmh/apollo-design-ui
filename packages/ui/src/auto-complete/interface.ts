@@ -11,6 +11,7 @@ import type { CSSProperties } from 'vue';
 import type { SizeType } from '../config-provider/size-context';
 import type {
   DefaultOptionType,
+  SelectProps,
   SelectSemanticClassNames,
   SelectSemanticStyles,
   SelectValue,
@@ -110,7 +111,7 @@ export interface AutoCompleteProps {
     | ((info: { props: AutoCompleteProps }) => AutoCompleteSemanticStyles);
 
   // ---- 搜索 ----
-  showSearch?: boolean | Record<string, unknown>;
+  showSearch?: SelectProps['showSearch'];
   searchValue?: string;
   filterOption?: boolean | ((inputValue: string, option: DefaultOptionType) => boolean);
 

@@ -14,11 +14,10 @@
  *   `showArrowPaddingInlineEnd` 的 `ceil()`）：静态 CSS 没有运行时 cssinjs 的
  *   mergeToken，构建期算成常量（collapse D46 / input 同判）。
  *
- * ⚠️ `clearBg` 上游**只声明不引用**（与 modal 的 `--ant-modal-xs-width` 同判）：
- * 本仓照样声明，保证 ConfigProvider 覆盖面与 antd 一致。
+ * `clearBg`、多选禁用颜色与边框等公开 Token 在当前静态样式中实际消费。
  */
 
-import { getDesignToken, token2CSSVar } from '@apollo-design/theme';
+import { token2CSSVar } from '@apollo-design/theme';
 
 /** token 名 → `var(--apollo-*)`。 */
 const v = (token: string): string => `var(${token2CSSVar(token)})`;
@@ -51,7 +50,7 @@ export interface ComponentToken extends MultipleSelectorToken {
   optionLineHeight: string;
   optionHeight: string;
   selectorBg: string;
-  /** @internal 上游只声明不引用（见文件头）。 */
+  /** Background of the clear button. */
   clearBg: string;
   singleItemHeightLG: string;
   showArrowPaddingInlineEnd: string;
@@ -147,14 +146,4 @@ export function prepareComponentToken(token: SelectSeedToken): ComponentToken {
     inputPaddingHorizontalBase: px(token.paddingSM - token.lineWidth),
     selectHeight: px(token.controlHeight),
   };
-}
-
-let tokenCache: ComponentToken | null = null;
-
-/** 构建期 token 值（缓存；首次调用时读主题默认 seed）。 */
-export function selectTokenValues(): ComponentToken {
-  if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken() as unknown as SelectSeedToken);
-  }
-  return tokenCache;
 }

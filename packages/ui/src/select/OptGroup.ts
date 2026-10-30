@@ -5,16 +5,20 @@
  * `convertChildrenToData` 把它的子项收成 `options`。
  */
 
-import { defineComponent } from 'vue';
+import { defineComponent, type PropType, type SlotsType, type VNodeChild } from 'vue';
 import { OPTGROUP_MARK } from './engine/valueUtil';
 
 export const OptGroup = defineComponent({
   name: 'ASelectOptGroup',
   props: {
-    label: { type: [String, Number] as never, default: undefined },
+    label: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
     disabled: { type: Boolean, default: undefined },
     className: { type: String, default: undefined },
   },
+  slots: Object as SlotsType<{ default?: () => VNodeChild }>,
   setup() {
     return () => null;
   },
