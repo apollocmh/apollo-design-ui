@@ -56,11 +56,15 @@ describe('Steps · 类型', () => {
 
   it('types native change listeners and payloads', () => {
     const listeners: StepsProps = {
+      'onUpdate:current': (current) => current.toFixed(),
       onChange: [(current) => current.toFixed()],
       onChangeOnce: (current) => current.toFixed(),
       style: ['color: red', { '--apollo-steps-icon-size': '40px' }],
     };
     const events = (vm: InstanceType<typeof Steps>) => {
+      vm.$emit('update:current', 1);
+      // @ts-expect-error The current model emits a numeric step index.
+      vm.$emit('update:current', '1');
       vm.$emit('change', 1);
       // @ts-expect-error change emits a step index, never a native DOM event.
       vm.$emit('change', new Event('change'));

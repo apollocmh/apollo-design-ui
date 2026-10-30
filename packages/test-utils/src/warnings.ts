@@ -50,6 +50,23 @@ export interface WarningCapture {
   restore(): void;
 }
 
+type ConsoleWriter = (...args: unknown[]) => void;
+interface CaptureWriter {
+  previous: ConsoleWriter;
+  restored: () => boolean;
+}
+const captureWriters = new WeakMap<ConsoleWriter, CaptureWriter>();
+
+function activeWriter(writer: ConsoleWriter): ConsoleWriter {
+  let current = writer;
+  let capture = captureWriters.get(current);
+  while (capture?.restored()) {
+    current = capture.previous;
+    capture = captureWriters.get(current);
+  }
+  return current;
+}
+
 /** 把 `console` 的实参转成可读文本。 */
 function stringify(value: unknown): string {
   if (typeof value === 'string') return value;
@@ -83,8 +100,11 @@ export function captureWarnings(): WarningCapture {
       records.push({ method, args, text: args.map(stringify).join(' ') });
     };
 
-  console.error = makeSpy('error') as typeof console.error;
-  console.warn = makeSpy('warn') as typeof console.warn;
+  const writers = { error: makeSpy('error'), warn: makeSpy('warn') };
+  for (const method of ['error', 'warn'] as const) {
+    captureWriters.set(writers[method], { previous: origin[method], restored: () => restored });
+    console[method] = writers[method];
+  }
 
   return {
     records,
@@ -92,8 +112,9 @@ export function captureWarnings(): WarningCapture {
     restore: () => {
       if (restored) return;
       restored = true;
-      console.error = origin.error;
-      console.warn = origin.warn;
+      for (const method of ['error', 'warn'] as const) {
+        if (console[method] === writers[method]) console[method] = activeWriter(origin[method]);
+      }
     },
   };
 }
@@ -151,6 +172,11 @@ export function partitionWarnings(
   records: readonly WarningRecord[],
   allowances: readonly WarningAllowance[],
 ): { unexpected: string[]; used: WarningAllowance[] } {
+  for (const allowance of allowances) {
+    if (allowance.match.trim() === '') {
+      throw new Error('[test-utils] WarningAllowance.match 必须是非空文本片段。');
+    }
+  }
   const used = new Set<WarningAllowance>();
   const unexpected: string[] = [];
 

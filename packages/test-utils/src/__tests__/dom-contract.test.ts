@@ -35,7 +35,7 @@ describe('normalizeStyle', () => {
     expect(normalizeStyle(undefined)).toBeUndefined();
   });
 
-  it('拆声明、属性名小写、值去空白、结果排序', () => {
+  it('拆声明、普通属性名小写、清理格式空白、结果排序', () => {
     expect(normalizeStyle('COLOR: red ; background : blue')).toEqual([
       'background:blue',
       'color:red',
@@ -63,10 +63,9 @@ describe('normalizeStyle', () => {
     expect(normalizeStyle('color:red;color:blue')).toEqual(['color:blue']);
   });
 
-  it('属性值内部的空白被全部去掉（`0 1px` → `01px`）', () => {
-    // 说明：这是有意的**过归一化** —— 它牺牲「值可读」换取「两侧序列化差异不干扰比对」。
-    // 若日后需要断言具体值，应当在组件自己的样式测试里做，而不是靠这里的字符串。
-    expect(normalizeStyle('margin: 0 1px')).toEqual(['margin:01px']);
+  it('保留属性值分量间的空白（`0 1px` 与 `01px` 有不同语义）', () => {
+    expect(normalizeStyle('margin: 0   1px')).toEqual(['margin:0 1px']);
+    expect(normalizeStyle('margin: 0 1px')).not.toEqual(normalizeStyle('margin:01px'));
   });
 });
 

@@ -56,7 +56,7 @@ import { mountCase } from './render';
 import type { PropsRenderFactory, WarningAllowance, Wrap } from './types';
 import { assertNoUnexpectedWarnings, captureWarnings } from './warnings';
 
-/** 默认的根类名。必须是**单个**类名 token（会被当成 CSS 类选择器用）。 */
+/** 默认的根类名。必须是**单个**类名 token。 */
 const DEFAULT_ROOT_CLASS = 'TEST_ROOT_CLS';
 
 /** 默认的根内联样式。键为 kebab-case 的 CSS 属性名。 */
@@ -154,7 +154,7 @@ export function collectRootPropFailures(
     }
 
     // 不下渗：根**内部**不应再出现同一个类名。
-    if (root.querySelector(`.${rootClassName}`) !== null) {
+    if (root.getElementsByClassName(rootClassName).length > 0) {
       failures.push(`根[${index}] 的子孙元素上出现了 rootClassName（应当只落在根上）`);
     }
 
@@ -195,9 +195,9 @@ export function rootPropsTest(name: string, options: RootPropsTestOptions): void
   const prefixCls = options.prefixCls === undefined ? DEFAULT_PREFIX_CLS : options.prefixCls;
   const containerId = options.containerId ?? 'holder';
 
-  if (rootClassName.includes(' ')) {
+  if (rootClassName === '' || /\s/.test(rootClassName)) {
     throw new Error(
-      `[test-utils] ${context}：rootClassName 必须是单个类名 token（会作为 CSS 选择器使用），收到 "${rootClassName}"。`,
+      `[test-utils] ${context}：rootClassName 必须是单个类名 token（非空且不能含空白），收到 "${rootClassName}"。`,
     );
   }
 
@@ -213,6 +213,7 @@ export function rootPropsTest(name: string, options: RootPropsTestOptions): void
 
       const capture = captureWarnings();
       let roots: Element[] = [];
+      let failures: string[] = [];
       let host: HTMLElement | null = null;
 
       try {
@@ -236,6 +237,7 @@ export function rootPropsTest(name: string, options: RootPropsTestOptions): void
           // 挂载后钩子可能触发浮层；它拿到的就是承载元素本身。
           await options.afterRender?.(host);
           roots = findRoots(host);
+          failures = collectRootPropFailures(roots, { rootClassName, rootStyle, prefixCls });
         } finally {
           mounted.destroy();
         }
@@ -250,7 +252,7 @@ export function rootPropsTest(name: string, options: RootPropsTestOptions): void
         expect(roots).toHaveLength(options.expectCount);
       }
 
-      expect(collectRootPropFailures(roots, { rootClassName, rootStyle, prefixCls })).toEqual([]);
+      expect(failures).toEqual([]);
     });
   });
 }

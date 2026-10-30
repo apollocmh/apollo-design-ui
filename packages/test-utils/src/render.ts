@@ -7,7 +7,15 @@
  */
 
 import { mount, type VueWrapper } from '@vue/test-utils';
-import { type Component, defineComponent, h, isVNode, ref, type VNodeChild } from 'vue';
+import {
+  type Component,
+  defineComponent,
+  h,
+  isVNode,
+  onErrorCaptured,
+  ref,
+  type VNodeChild,
+} from 'vue';
 import { flushAll } from './timing';
 import type { DemoModules, RenderFactory, RenderSource, Wrap } from './types';
 
@@ -154,6 +162,12 @@ export function collectRenderCases(source: RenderSource, label: string): RenderC
   );
 }
 
+/** A suite must exercise at least one render source, including when a glob is empty. */
+export function assertRenderCases(cases: readonly RenderCase[], label: string): void {
+  if (cases.length === 0)
+    throw new Error(`[test-utils] ${label}：没有渲染用例，至少需要一个用例。`);
+}
+
 /** 挂载一个用例。 */
 export function mountCase(
   render: RenderFactory,
@@ -176,53 +190,91 @@ export function mountCase(
   // 渲染函数读它 → Vue 建立依赖；`update()` bump 它 → 触发重渲染。
   const version = ref(0);
 
+  let capturedErrors: unknown[] | undefined = [];
   const Host = defineComponent({
     name: 'TestUtilsRenderHost',
     setup() {
+      // Mount/unmount must finish disposing the tree before their errors escape.
+      // Update errors retain Vue's normal rejection/warning path.
+      onErrorCaptured((error) => {
+        if (capturedErrors) {
+          capturedErrors.push(error);
+          return false;
+        }
+      });
       return () => {
-        // 显式读取，制造依赖（不读就不会重渲染）。
         void version.value;
-        return wrap(() => render());
+        try {
+          return wrap(() => render());
+        } catch (error) {
+          // This host's own render errors do not reach its onErrorCaptured hook.
+          if (capturedErrors) {
+            capturedErrors.push(error);
+            return null;
+          }
+          throw error;
+        }
       };
     },
   });
 
-  const wrapper = mount(Host, { attachTo: host, ...(global ? { global } : {}) });
-  let destroyed = false;
-
-  // `@vue/test-utils` 的 `mount` 会自建一个容器元素、append 进 host、并把 Vue 应用挂在它上面
-  // （Vue 会给挂载容器打 `data-v-app`）。所以产物在**第二层**：
-  //     host > div[data-v-app] > 产物
-  // 直接读 `host.innerHTML` 会多出一层包装 div，契约比对必然报 `data-v-app` 多出属性。
-  const container = host.firstElementChild;
-  if (!(container instanceof HTMLElement)) {
-    throw new Error(
-      '[test-utils] mountCase：挂载后找不到承载容器，`html()` / `content` 无法工作。\n' +
-        '  这通常意味着 @vue/test-utils 的内部结构变了 —— 请检查它是否仍会创建挂载容器。',
-    );
-  }
-
-  return {
-    wrapper,
-    host,
-    content: container,
-    html: () => container.innerHTML,
-    /**
-     * 强制走一次更新路径：bump `version` → Host 重跑渲染函数 → patch。
-     *
-     * ⚠️ 它**只保证 Host 重跑渲染函数并 patch**。被测组件内部若没有响应式依赖变化，
-     *    Vue 不会重跑它自己的 render —— 这是 Vue 的正常语义，不是本函数的缺陷。
-     *    要驱动组件内部状态变化，请在用例里改它自己的响应式数据或 `setProps`。
-     */
-    update: async () => {
-      version.value += 1;
-      await flushAll();
-    },
-    destroy: () => {
-      if (destroyed) return;
-      destroyed = true;
-      wrapper.unmount();
-      host.remove();
-    },
+  const rethrowErrors = (errors: unknown[], message: string): void => {
+    if (errors.length === 1) throw errors[0];
+    if (errors.length > 1) throw new AggregateError(errors, message);
   };
+  const dispose = (mountedWrapper: VueWrapper | undefined): void => {
+    const errors: unknown[] = [];
+    capturedErrors = errors;
+    try {
+      mountedWrapper?.unmount();
+    } catch (error) {
+      errors.push(error);
+    } finally {
+      capturedErrors = undefined;
+      host.remove();
+    }
+    rethrowErrors(errors, '[test-utils] mountCase encountered errors while unmounting');
+  };
+
+  let wrapper: VueWrapper | undefined;
+  try {
+    wrapper = mount(Host, { attachTo: host, ...(global ? { global } : {}) });
+    const errors = capturedErrors;
+    capturedErrors = undefined;
+    rethrowErrors(errors, '[test-utils] mountCase encountered errors while mounting');
+    const container = host.firstElementChild;
+    if (!(container instanceof HTMLElement)) {
+      throw new Error(
+        '[test-utils] mountCase：挂载后找不到承载容器，`html()` / `content` 无法工作。\n' +
+          '  请检查 @vue/test-utils 是否仍会创建挂载容器。',
+      );
+    }
+    const mountedWrapper = wrapper;
+    let destroyed = false;
+    return {
+      wrapper: mountedWrapper,
+      host,
+      content: container,
+      html: () => container.innerHTML,
+      update: async () => {
+        version.value += 1;
+        await flushAll();
+      },
+      destroy: () => {
+        if (destroyed) return;
+        destroyed = true;
+        dispose(mountedWrapper);
+      },
+    };
+  } catch (error) {
+    try {
+      dispose(wrapper);
+    } catch (cleanupError) {
+      throw new AggregateError(
+        [error, cleanupError],
+        '[test-utils] mountCase failed and cleanup also failed',
+      );
+    }
+    throw error;
+  }
 }

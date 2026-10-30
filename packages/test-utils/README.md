@@ -11,7 +11,7 @@
 
 ## 职责
 
-共享测试契约。复刻 antd 的 tests/shared/ 并新增本项目特有的契约。
+供 Vue 组件与基础包复用的测试契约。历史上游对照保留在契约文档中。
 
 ## 替代的 Ant Design 依赖
 
@@ -22,10 +22,10 @@
 - mountTest —— 渲染/更新/卸载不报错，无内存泄漏警告
 - demoTest —— 遍历组件全部 demo，渲染无报错无 warning
 - a11yDemoTest —— 遍历全部 demo 跑 axe，要求 0 violation
-- focusTest —— 焦点获取/丢失/归还
-- rtlTest —— 镜像布局无异常
+- focusTest —— 原生焦点事件、公开 focus/blur 与实际焦点目标
+- rtlTest —— 当前 RTL 上下文下的标记类（不证明布局）
 - rootPropsTest —— 根 class / style / prefixCls 契约（注入原生 attrs）
-- domContractTest —— 与 React 基线比对结构化 DOM 契约（本项目新增）
+- domContractTest —— 按相同投影规则比对结构化 DOM 契约
 - themeTest —— light/dark/compact/token-override 四态渲染（本项目新增）
 - resetWarned / waitFrames / flushAll
 
@@ -38,6 +38,11 @@
 - domContractTest 的归一化必须对称（见 tests/compat/README.md §4）
 - a11yDemoTest 不允许 disableRules 来通过
 - 所有等待必须是确定性的（禁止真实 sleep）
+- suite 的渲染集合、主题态和 DOM 用例选择不得为空；告警豁免的 reason/match 必须非空
+- 节点身份、焦点和连续浮层交互使用用例内真实 Teleport；不改变环境默认的结构桩
+
+完整输入、资源释放、observer 基线迁移及断言范围见
+[`test-utils-contract.md`](../../docs/foundation/test-utils-contract.md#2026-10-30当前-vue-测试契约)。
 
 ## 依赖
 
@@ -55,7 +60,7 @@
 
 ### 构建期 / 测试依赖（devDependencies，**不会**进入用户的依赖树）
 
-（无）
+| `typescript` | `catalog:` | 仅用于 C11 测试的本地 AST，不创建类型程序或进入 helper 运行时 |
 
 ## 依赖约束（ARCHITECTURE.md §3.1）
 

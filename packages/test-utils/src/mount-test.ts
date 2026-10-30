@@ -74,11 +74,29 @@ export interface MountTestOptions {
   allow?: readonly WarningAllowance[];
 }
 
-interface ObservableObserver {
-  instances?: Set<unknown>;
+function observerInstances(observerType: unknown, label: string): Set<unknown> | undefined {
+  if (
+    (typeof observerType !== 'function' &&
+      (typeof observerType !== 'object' || observerType === null)) ||
+    !('instances' in observerType)
+  )
+    return undefined;
+  if (!(observerType.instances instanceof Set)) {
+    throw new Error(`[test-utils] ${label}.instances 必须是可观测桩的 Set。`);
+  }
+  return observerType.instances;
 }
-interface ObservableResizeObserver {
-  targets?: Set<Element>;
+
+function observedResizeTargets(instance: unknown): ReadonlySet<unknown> {
+  if (
+    typeof instance !== 'object' ||
+    instance === null ||
+    !('targets' in instance) ||
+    !(instance.targets instanceof Set)
+  ) {
+    throw new Error('[test-utils] ResizeObserver 实例必须暴露可观测桩的 targets Set。');
+  }
+  return instance.targets;
 }
 
 /** 取出桩的 `instances`。没有桩（或桩没暴露 `instances`）时返回 null。 */
@@ -86,10 +104,10 @@ function observableInstances(): {
   resize: Set<unknown>;
   mutation: Set<unknown>;
 } | null {
-  const resize = (globalThis as { ResizeObserver?: ObservableObserver }).ResizeObserver;
-  const mutation = (globalThis as { MutationObserver?: ObservableObserver }).MutationObserver;
-  if (!resize?.instances || !mutation?.instances) return null;
-  return { resize: resize.instances, mutation: mutation.instances };
+  const resize = observerInstances(globalThis.ResizeObserver, 'ResizeObserver');
+  const mutation = observerInstances(globalThis.MutationObserver, 'MutationObserver');
+  if (resize === undefined || mutation === undefined) return null;
+  return { resize, mutation };
 }
 
 /**
@@ -122,16 +140,16 @@ function observableInstances(): {
  */
 export interface ObserverBaseline {
   mutation: ReadonlySet<unknown>;
-  resizeTargets: ReadonlyMap<unknown, number>;
+  resizeTargets: ReadonlyMap<unknown, ReadonlySet<unknown>>;
 }
 
 /** 记录当前的观察者状态，供 {@link describeObserverLeaks} 做增量判定。 */
 export function snapshotObservers(): ObserverBaseline | null {
   const instances = observableInstances();
   if (instances === null) return null;
-  const resizeTargets = new Map<unknown, number>();
+  const resizeTargets = new Map<unknown, ReadonlySet<unknown>>();
   for (const instance of instances.resize) {
-    resizeTargets.set(instance, (instance as ObservableResizeObserver).targets?.size ?? 0);
+    resizeTargets.set(instance, new Set(observedResizeTargets(instance)));
   }
   return { mutation: new Set(instances.mutation), resizeTargets };
 }
@@ -163,9 +181,9 @@ export function describeObserverLeaks(baseline?: ObserverBaseline | null): strin
   }
 
   for (const [index, instance] of [...instances.resize].entries()) {
-    const size = (instance as ObservableResizeObserver).targets?.size ?? 0;
-    const before = baseline?.resizeTargets.get(instance) ?? 0;
-    const delta = size - before;
+    const targets = observedResizeTargets(instance);
+    const before = baseline?.resizeTargets.get(instance);
+    const delta = [...targets].filter((target) => !before?.has(target)).length;
     if (delta > 0) {
       leaks.push(`ResizeObserver[${index}] 仍观察着 ${delta} 个元素（未 unobserve）`);
     }

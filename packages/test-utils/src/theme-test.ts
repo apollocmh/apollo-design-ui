@@ -37,7 +37,7 @@ import {
 import { describe, expect, it } from 'vitest';
 import { h } from 'vue';
 import { assertAllowances } from './allowance';
-import { collectCountFailures, collectRenderCases, mountCase } from './render';
+import { assertRenderCases, collectCountFailures, collectRenderCases, mountCase } from './render';
 import type { RenderSource, WarningAllowance } from './types';
 import { assertNoUnexpectedWarnings, captureWarnings } from './warnings';
 
@@ -119,7 +119,9 @@ export function themeFingerprints(
 export function themeTest(name: string, options: ThemeTestOptions): void {
   const context = `themeTest('${name}')`;
   const cases = collectRenderCases(options, context);
+  assertRenderCases(cases, context);
   const variants = options.variants ?? ALL_VARIANTS;
+  if (variants.length === 0) throw new Error(`[test-utils] ${context}：至少需要一个主题态。`);
   const tokenOverride = options.token ?? DEFAULT_TOKEN_OVERRIDE;
   // ⚠️ 与 demoTest / a11yDemoTest / rtlTest 一致：结构错误在**收集阶段**抛出（快速失败）。
   assertAllowances(options.allow ?? [], context);

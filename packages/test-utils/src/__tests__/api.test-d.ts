@@ -9,6 +9,7 @@ import type {
   DomContractOptions,
   DomNode,
   DomRenderResult,
+  ObserverBaseline,
   ProjectionProfile,
   PropsRenderFactory,
   RenderFactory,
@@ -34,6 +35,7 @@ import {
   partitionWarnings,
   rootPropsTest,
   rtlTest,
+  snapshotObservers,
   themeTest,
 } from '../index';
 
@@ -146,6 +148,18 @@ describe('告警相关类型', () => {
 });
 
 describe('RenderSource · 渲染源的形状', () => {
+  it('observer 基线记录目标身份，不能用数量替代', () => {
+    expectTypeOf(snapshotObservers).returns.toEqualTypeOf<ObserverBaseline | null>();
+    expectTypeOf<ObserverBaseline['resizeTargets']>().toEqualTypeOf<
+      ReadonlyMap<unknown, ReadonlySet<unknown>>
+    >();
+    const bad = (): ObserverBaseline => ({
+      mutation: new Set(),
+      // @ts-expect-error 仅有数量不能判断等量目标替换造成的泄漏
+      resizeTargets: new Map<object, number>(),
+    });
+    expectTypeOf(bad).toBeFunction();
+  });
   it('demos 与 render 都是可选的（互斥由运行期校验）', () => {
     expectTypeOf<RenderSource>().toHaveProperty('demos').toEqualTypeOf<DemoModules | undefined>();
     expectTypeOf<RenderSource>()
@@ -209,13 +223,14 @@ describe('L4 · DOM 契约类型', () => {
     //    改用**真实赋值**做断言：三行都能编译过，契约就成立。
     const fromString: DomRenderResult = '<div></div>';
     const fromVNode: DomRenderResult = h('div');
+    const fromChildren: DomRenderResult = [h('b'), 0, false, null, [h('i')]];
     const fromComponent: DomRenderResult = defineComponent({
       name: 'TypeProbe',
       setup: () => () => h('i'),
     });
 
     // 把三个值用掉（同时保证运行期安全 —— 本文件会被实际执行）。
-    expect([fromString, fromVNode, fromComponent]).toHaveLength(3);
+    expect([fromString, fromVNode, fromChildren, fromComponent]).toHaveLength(4);
   });
 
   it('DomBaseline 只锁定 cases，其余字段开放（生成脚本自己决定）', () => {

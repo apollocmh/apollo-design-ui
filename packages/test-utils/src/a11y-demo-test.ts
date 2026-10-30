@@ -49,7 +49,8 @@
 import axe from 'axe-core';
 import { describe, expect, it } from 'vitest';
 import { assertAllowances } from './allowance';
-import { collectCountFailures, collectRenderCases, mountCase } from './render';
+import { assertRenderCases, collectCountFailures, collectRenderCases, mountCase } from './render';
+import { flushAll } from './timing';
 import type { Allowance, RenderSource } from './types';
 
 /** 一条 axe 违规的豁免。 */
@@ -126,6 +127,7 @@ export function collectNodeCountFailures(nodeCount: number, maxNodes: number): s
 export function a11yDemoTest(name: string, options: A11yDemoTestOptions): void {
   const context = `a11yDemoTest('${name}')`;
   const cases = collectRenderCases(options, context);
+  assertRenderCases(cases, context);
   const allowances = options.allow ?? [];
   assertAllowances(allowances, context);
   const maxNodes = options.maxNodes ?? DEFAULT_MAX_NODES;
@@ -151,6 +153,7 @@ export function a11yDemoTest(name: string, options: A11yDemoTestOptions): void {
           });
 
           try {
+            await flushAll();
             // ⚠️ 必须是**已挂载到 document 的**节点：axe 扫描游离节点会得到空结果，
             //    那种「0 violation」是假的（什么都没扫）。`attach: true` 保证这一点。
             //    扫描范围取 `content`（产物本身）而不是 `host` —— 后者多一层

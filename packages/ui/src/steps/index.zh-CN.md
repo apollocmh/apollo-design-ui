@@ -27,7 +27,7 @@ subtitle: 步骤条
 | size | 尺寸（`default` 已废弃 ⇒ `medium`） | `'small' \| 'medium' \| 'middle' \| 'default'` | `'middle'` |
 | orientation | 方向 | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | titlePlacement | 标题位置（dot/vertical 下自动推导） | `'horizontal' \| 'vertical'` | `'horizontal'` |
-| current | 当前步（从 0 计） | `number` | `0` |
+| current | 当前步（从 0 计），支持 `v-model:current` | `number` | `0` |
 | initial | 起始序号 | `number` | `0` |
 | status | 当前步状态覆盖 | `'wait' \| 'process' \| 'finish' \| 'error'` | `'process'` |
 | percent | 当前 process 步的进度环百分比 | `number` | — |
@@ -43,8 +43,9 @@ subtitle: 步骤条
 | 事件 | 说明 | 参数 |
 |---|---|---|
 | change | 请求切换到不同步骤；监听此事件使非禁用步骤可点击并支持 Enter/空格 | `(current: number)` |
+| update:current | `v-model:current` 更新请求，也启用非禁用步骤的点击和键盘操作 | `(current: number)` |
 
-`current` 始终由父级控制，事件只提出请求；父级未更新时当前步骤保持不变。模板使用 `@change`，支持 `.once` 和监听器数组。原生根节点的 `change` 不会触发该业务事件；根 `@click` 仍接收原生 MouseEvent。`items.onClick` 是数据项回调，接收 MouseEvent，禁用项不会调用。
+`current` 始终由父级控制，事件只提出请求；父级未更新时当前步骤保持不变。模板可直接使用 `v-model:current`，或使用 `@change`，支持 `.once` 和监听器数组。原生根节点的 `change` 不会触发该业务事件；根 `@click` 仍接收原生 MouseEvent。`items.onClick` 是数据项回调，接收 MouseEvent，禁用项不会调用。
 
 ### Slots
 

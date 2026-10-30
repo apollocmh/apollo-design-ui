@@ -50,7 +50,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { assertAllowance } from './allowance';
-import { collectCountFailures, collectRenderCases, mountCase } from './render';
+import { assertRenderCases, collectCountFailures, collectRenderCases, mountCase } from './render';
 import type { Allowance, RenderSource, WarningAllowance } from './types';
 import { assertNoUnexpectedWarnings, captureWarnings } from './warnings';
 
@@ -103,6 +103,7 @@ function collectClasses(host: HTMLElement): string[] {
 export function rtlTest(name: string, options: RtlTestOptions): void {
   const context = `rtlTest('${name}')`;
   const cases = collectRenderCases(options, context);
+  assertRenderCases(cases, context);
   assertAllowance(options.allowMissingRtlClass, `${context} → allowMissingRtlClass`);
   const skipRtlClass = options.allowMissingRtlClass !== undefined;
 
@@ -120,10 +121,10 @@ export function rtlTest(name: string, options: RtlTestOptions): void {
         let classes: string[] = [];
 
         try {
-          const mounted = mountCase(
-            testCase.render,
-            options.wrap === undefined ? {} : { wrap: options.wrap },
-          );
+          const mounted = mountCase(testCase.render, {
+            ...(options.wrap === undefined ? {} : { wrap: options.wrap }),
+            ...(options.global === undefined ? {} : { global: options.global }),
+          });
           try {
             await mounted.update();
             classes = collectClasses(mounted.content);

@@ -198,3 +198,7 @@ TreeSelect 的通知统一为 Vue emits，保留 value/open/searchValue/treeExpa
 ### D-time-picker-native-owner
 
 TimePicker/TimeRangePicker 固定为时间轴，移除从 DatePicker 误继承且无实际行为的 mode/defaultMode/update:mode、日期导航和多选标签声明，保留 value/open/pickerValue 模型与真实七/八个槽。两者读取当前 timePicker 配置并只合并一次语义样式，普通 Date Range 继续读取 rangePicker；独立 TimePicker 语言提示和动态撤回生效。没有新增 TimePicker Token 或内部面板，详见[TimePicker API](packages/ui/src/time-picker/index.zh-CN.md)。
+
+### D-test-utils-native-contracts
+
+Test Utils 保留既有 Vue 测试入口，修正真实 VNodeChild、CSS/DOM 精确归一、焦点与原生属性断言、异常卸载/observer目标身份和收集器恢复；空执行范围不能冒称通过。ObserverBaseline.resizeTargets 由数量改为实际目标身份集合，包外没有旧字段消费者。C11 只检查公开组件的真实 runtime props，保留精确非模型数据豁免；Steps 同步补齐 update:current，模板可直接使用 v-model:current，原 change 数字载荷保留。

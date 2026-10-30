@@ -2,9 +2,9 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 151,
+  "revision": 158,
   "dispatch": {
-    "status": "running",
+    "status": "paused",
     "maxParallel": 5,
     "integrator": "root"
   },
@@ -576,19 +576,49 @@
       "kind": "component",
       "ref": "checkbox",
       "title": "Checkbox",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/ui/src/checkbox"
+        "packages/ui/src/checkbox",
+        "packages/ui/src/radio/Radio.ts",
+        "packages/ui/src/radio/Group.ts",
+        "packages/ui/src/radio/context.ts",
+        "packages/ui/src/radio/interface.ts",
+        "packages/ui/src/radio/__tests__/controlled-native.test.ts",
+        "packages/ui/src/transfer/Section.ts"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_picker",
+        "baseRevision": 152,
+        "startedAt": "2026-10-30T14:16:28.942Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [
+        {
+          "id": "NATIVE-CHECKED-REJECTED-MODEL",
+          "status": "open",
+          "blocking": true,
+          "impact": "Table真实受控选择拒绝提议后，原生input.checked与父级accepted值不一致，导致DOM、样式及选择契约失配。",
+          "reason": "在Checkbox原生输入边界修正，并实际核对Radio同类问题；不在Table内部兜底。"
+        }
+      ],
+      "plan": {
+        "goal": "以 Table 实际阻塞为入口，收口 Checkbox/Group 原生契约及必要 Radio 受控 DOM 消费边界",
+        "remaining": [
+          "已有Table反例：父拒绝checked提议时DOM仍勾选，与accepted model及ARIA/样式失配；先本地复现，同根因Radio/Group须定向实际核对，不能在Table私有补DOM。",
+          "盘清整个Checkbox/Group当前Props/Slots/Emits/v-model/ref/attrs/Provider/Token与业务选项路径，成组修真实Vue差额；Radio只处理已证实的共享native checked问题，不自动宣称其全单元完成。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/checkbox/README.md",
+          "packages/ui/src/checkbox/__tests__/index.test.ts"
+        ]
+      }
     },
     {
       "id": "CMP:collapse",
@@ -2638,7 +2668,15 @@
         "docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md",
         "docs/audit/2026-10-25-steps-native-slots-remediation.md"
       ],
-      "issues": [],
+      "issues": [
+        {
+          "id": "STEPS-LISTENER-PRESENCE-ONLY",
+          "status": "deferred",
+          "blocking": false,
+          "impact": "仅修改已声明事件监听器为undefined并保留同一VNode props键时，Vue纯监听器更新优化可能暂留原role/tabindex；通知读取当前监听器且受控值不泄漏。实际条件v-on对象增删已验证。",
+          "reason": "范围为动态监听器可用性呈现边界，无数据/资源错误；不为此追加新的交互配置或渲染强刷。本次补current模型与其正常受控路径；最终统一验收再核对该已记录边界。"
+        }
+      ],
       "plan": {
         "goal": "复用 Steps 原生作用域槽与 inline Tooltip 成果，核对架构阶段的剩余差额",
         "remaining": [
@@ -2689,7 +2727,17 @@
           }
         ],
         "boundary": "九个有效Token和当前事件/内容已实际验证；未进行完整视觉或冻结发布验收。"
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/steps",
+            "packages/test-utils/src/__tests__/c11-vmodel.test.ts"
+          ],
+          "change": "The current model emits the same requested numeric index as change; model-only listeners enable pointer/keyboard actions and the existing clickable Demo uses native v-model.",
+          "verification": "FND:test-utils checks include final current model/core35, AST C11 and full scoped strict; historical full Steps delivery is preserved."
+        }
+      ]
     },
     {
       "id": "CMP:switch",
@@ -4198,7 +4246,9 @@
       "workDependencies": [],
       "owns": [
         "packages/motion",
-        "docs/foundation/motion-contract.md"
+        "docs/foundation/motion-contract.md",
+        "packages/ui/src/masonry/Masonry.vue",
+        "packages/ui/src/masonry/components/MasonryItem.ts"
       ],
       "assignment": {
         "owner": "native_color_picker",
@@ -4643,19 +4693,17 @@
       "kind": "foundation",
       "ref": "test-utils",
       "title": "@apollo-design/test-utils",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/test-utils",
         "docs/foundation/test-utils-contract.md"
       ],
-      "assignment": {
-        "owner": "native_select",
-        "baseRevision": 146,
-        "startedAt": "2026-10-30T14:03:34.290Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
@@ -4672,6 +4720,117 @@
           "docs/foundation/test-utils-contract.md",
           "packages/test-utils/README.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/test-utils",
+          "docs/foundation/test-utils-contract.md",
+          "packages/ui/src/steps"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/test-utils/src --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 23479,
+            "result": "16 files,280 passed; three jsdom canvas not-implemented diagnostics retained."
+          },
+          {
+            "kind": "core",
+            "name": "Final focus/expose receiver regression",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/test-utils/src/__tests__/focus-test.test.ts packages/test-utils/src/__tests__/helper-boundaries.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "result": "2 files, 33 tests passed",
+            "log": "/tmp/apollo-test-utils-focus-final.log",
+            "signal": null,
+            "durationMs": 3260
+          },
+          {
+            "kind": "core",
+            "name": "Final mount error disposal and update behavior",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run --project unit packages/test-utils/src/__tests__/resource-boundaries.test.ts packages/test-utils/src/__tests__/render.test.ts packages/test-utils/src/__tests__/mount-test.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "result": "3 files, 50 tests passed; also included in later complete package run",
+            "log": "/tmp/apollo-test-utils-cleanup-final.log",
+            "signal": null,
+            "durationMs": 4650
+          },
+          {
+            "kind": "core",
+            "name": "Actual theme, style-retaining DOM and axe consumer",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run --project theme --project dom-contract --project a11y packages/ui/src/empty/__tests__/theme.test.ts packages/ui/src/empty/__tests__/semantic.test.ts packages/ui/src/empty/__tests__/a11y.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "result": "3 files, 54 tests passed; Empty DOM retains keepStyle:true",
+            "log": "/tmp/apollo-test-utils-project-consumers.log",
+            "diagnostics": "6 jsdom HTMLCanvasElement.getContext not-implemented diagnostics retained; no console gate/rule weakened.",
+            "signal": null,
+            "durationMs": 15830
+          },
+          {
+            "kind": "core",
+            "name": "Actual Demo consumer and core Vue input checks",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run --project unit packages/test-utils/src/__tests__/render.test.ts packages/test-utils/src/__tests__/root-props.test.ts packages/test-utils/src/__tests__/resource-boundaries.test.ts packages/test-utils/src/__tests__/helper-boundaries.test.ts packages/ui/src/empty/__tests__/demo.test.ts packages/ui/src/empty/__tests__/theme.test.ts packages/ui/src/empty/__tests__/semantic.test.ts packages/ui/src/empty/__tests__/a11y.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "result": "Actual selection: 4 helper files + Empty demo, 73 passed. Theme/DOM/a11y excluded by unit project; verified separately above. Later failure-disposal and focus changes have their affected regressions above.",
+            "log": "/tmp/apollo-test-utils-core-consumers.log",
+            "signal": null,
+            "durationMs": 15760
+          },
+          {
+            "kind": "lint",
+            "name": "Final source formatting and whitespace",
+            "exitCode": 0,
+            "log": "/tmp/apollo-test-utils-final-biome.log",
+            "commands": [
+              "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/test-utils/src/render.ts packages/test-utils/src/warnings.ts packages/test-utils/src/mount-test.ts packages/test-utils/src/focus-test.ts packages/test-utils/src/root-props-test.ts packages/test-utils/src/rtl-test.ts packages/test-utils/src/demo-test.ts packages/test-utils/src/theme-test.ts packages/test-utils/src/a11y-demo-test.ts packages/test-utils/src/dom-contract.ts packages/test-utils/src/types.ts packages/test-utils/src/__tests__/resource-boundaries.test.ts packages/test-utils/src/__tests__/helper-boundaries.test.ts packages/test-utils/src/__tests__/dom-contract.test.ts packages/test-utils/src/__tests__/render.test.ts packages/test-utils/src/__tests__/api.test-d.ts packages/test-utils/src/__tests__/c11-vmodel.test.ts packages/test-utils/package.json > /tmp/apollo-test-utils-final-biome.log 2>&1",
+              "git diff --check -- packages/test-utils docs/foundation/test-utils-contract.md"
+            ],
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; all Test Utils/Steps source/type cases/SFC/Demo and focused Checkbox consumer cohort; declaration/strict unchanged>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53086
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/steps/__tests__/model.test.ts packages/ui/src/steps/__tests__/index.test.ts packages/ui/src/steps/__tests__/native-reactivity.test.ts packages/ui/src/steps/__tests__/contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 10920,
+            "result": "4 files,35 passed; actual model-only interaction, rejected proposals and conditional listener-object withdrawal/return."
+          }
+        ],
+        "attemptsNotPassed": [
+          {
+            "kind": "core",
+            "name": "Complete test-utils unit scope (actual project selection)",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/test-utils/src/__tests__ --exclude '**/c11-vmodel.test.ts' --maxWorkers=1",
+            "exitCode": 1,
+            "result": "278 passed, 1 failed; only steps/Steps.ts:current. CLI exclude did not override project excludes, so C11 actually ran. No passing package-wide claim.",
+            "log": "/tmp/apollo-test-utils-core-final.log",
+            "diagnostics": "3 jsdom HTMLCanvasElement.getContext not-implemented diagnostics retained.",
+            "signal": null,
+            "durationMs": 23720
+          },
+          {
+            "kind": "core",
+            "name": "C11 external shared-support boundary",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/test-utils/src/__tests__/c11-vmodel.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "result": "AST self-proof and allowance/stale checks passed; only Steps.current remains. Root owns the component fix, no exemption added.",
+            "log": "/tmp/apollo-test-utils-c11-steps-boundary.log",
+            "signal": null,
+            "durationMs": 2530
+          }
+        ],
+        "boundary": "14个实现模块及现有公开helper按当前链路核对并修复：全VNodeChild、精确CSS/DOM语义、focus真实实例/receiver/最终焦点、活跃期root采样、RTL global、空执行集合、mount异常资源/孤儿effect、observer目标身份、nested收集器恢复与a11y挂载更新已验证。C11以公开entry与真实props AST判定，精确数据豁免/stale保留，Steps实际current模型补齐；没有豁免真实缺陷。全包unit280在修复后真实exit0，最终完整窄strict0；Empty真实专项54和Demo等消费保留。Canvas未实现诊断未屏蔽，不声称零日志；默认Teleport结构桩保留，实例身份场景仍用真实Teleport。类型工具typescript仅新增开发依赖，未新增发布依赖或通用框架。Steps仍保留同键监听器改undefined的非阻塞交互呈现边界，实际条件v-on增删已覆盖。全库/coverage/完整浏览器视觉矩阵、构建消费者及冻结九维未执行。"
       }
     },
     {

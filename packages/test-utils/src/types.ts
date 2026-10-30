@@ -38,7 +38,7 @@ export interface Allowance {
  */
 export type DemoModules = Record<string, unknown>;
 
-/** 渲染工厂：返回一个 vnode（或 `null`）。 */
+/** 渲染工厂：返回 Vue 原生 VNodeChild（包括多根数组、0、null）。 */
 export type RenderFactory = () => VNodeChild;
 
 /**
@@ -65,9 +65,9 @@ export interface RenderSource {
   wrap?: Wrap;
   /**
    * 透传给 `mount()` 的 global 配置（stubs 等）。
-   * 浮层类组件必须传 `{ stubs: { teleport: false } }` —— VTU 的 teleport-stub
-   * 会在 props 翻转时重建 slot 内容，把 Portal/CSSMotion 的残骸协议全部破坏
-   * （实测：关闭后子树重挂、触发递归更新）。真实 Teleport 无此问题。
+   * 默认沿用环境的结构 Teleport stub。依赖节点身份、焦点或连续开关的用例应传
+   * `{ stubs: { teleport: false } }`，并在真实 Teleport 目标中定位节点；
+   * VTU 结构桩在更新 slot 时可能重挂子树，不能证明这些连续交互契约。
    */
   global?: { stubs?: Record<string, boolean | Component> };
 }
@@ -77,6 +77,6 @@ export type PropsRenderFactory = (props: Record<string, unknown>) => VNodeChild;
 
 /** 一条**告警豁免**：命中 `match` 的告警文本被允许出现。 */
 export interface WarningAllowance extends Allowance {
-  /** 命中的**文本片段**（`String.prototype.includes` 判定，不是正则 —— 避免意外的元字符）。 */
+  /** 非空的**文本片段**（`String.prototype.includes` 判定，不是正则）。 */
   match: string;
 }

@@ -143,14 +143,9 @@ export function findFocusElement(
  *
  * 用 `findComponent(vnode.type)` 精确定位到 `render` 真正返回的那个组件。
  *
- * 注：`render` 会被反复调用（`mountCase.update()` 每次都会调），
- * 所以它本来就必须是**纯工厂**；这里再调一次取 `type` 不引入新的约束。
+ * 使用本次挂载实际返回的 vnode；工厂可以在每次调用时创建不同的组件类型。
  */
-function exposedOf(
-  mounted: MountedCase,
-  vnode: VNodeChild,
-  context: string,
-): Record<string, unknown> {
+function exposedOf(mounted: MountedCase, vnode: VNodeChild, context: string): object {
   const type: unknown = isVNode(vnode) ? vnode.type : vnode;
   if (typeof type !== 'object' || type === null) {
     throw new Error(
@@ -163,7 +158,7 @@ function exposedOf(
   if (!child.exists()) {
     throw new Error(`[test-utils] ${context}：在产物里找不到 render 返回的那个组件。`);
   }
-  return child.vm as unknown as Record<string, unknown>;
+  return child.vm;
 }
 
 /** 派发一个非冒泡的焦点事件（`focus` / `blur` 原生就不冒泡）。 */
@@ -173,11 +168,17 @@ function dispatchFocusEvent(element: HTMLElement, type: 'focus' | 'blur'): void 
 
 export function focusTest(name: string, options: FocusTestOptions): void {
   const context = `focusTest('${name}')`;
-  const mountWith = (props: Record<string, unknown>) =>
-    mountCase(
-      () => options.render(props),
+  const mountWith = (props: Record<string, unknown>) => {
+    let rendered: VNodeChild;
+    const mounted = mountCase(
+      () => {
+        rendered = options.render(props);
+        return rendered;
+      },
       options.wrap === undefined ? {} : { wrap: options.wrap },
     );
+    return { ...mounted, rendered: () => rendered };
+  };
 
   describe(`${name} · focus / blur`, () => {
     it('焦点元素可聚焦（selector 指向正确）', async () => {
@@ -225,13 +226,17 @@ export function focusTest(name: string, options: FocusTestOptions): void {
         const mounted = mountWith({});
         try {
           const element = findFocusElement(mounted.host, options.selector, context);
-          const exposed = exposedOf(mounted, options.render({}), context);
+          const exposed = exposedOf(mounted, mounted.rendered(), context);
+          const focus: unknown = Reflect.get(exposed, 'focus');
           const probe = instrument(element, 'focus');
           try {
-            expect(typeof exposed.focus).toBe('function');
-            (exposed.focus as () => void)();
+            expect(typeof focus).toBe('function');
+            if (typeof focus !== 'function')
+              throw new Error(`[test-utils] ${context}：组件未暴露 focus。`);
+            focus.call(exposed);
             await flushAll();
             expect(probe.calls()).toBe(1);
+            expect(document.activeElement).toBe(element);
           } finally {
             probe.restore();
           }
@@ -244,16 +249,20 @@ export function focusTest(name: string, options: FocusTestOptions): void {
         const mounted = mountWith({});
         try {
           const element = findFocusElement(mounted.host, options.selector, context);
-          const exposed = exposedOf(mounted, options.render({}), context);
+          const exposed = exposedOf(mounted, mounted.rendered(), context);
+          const blur: unknown = Reflect.get(exposed, 'blur');
           element.focus();
           await flushAll();
 
           const probe = instrument(element, 'blur');
           try {
-            expect(typeof exposed.blur).toBe('function');
-            (exposed.blur as () => void)();
+            expect(typeof blur).toBe('function');
+            if (typeof blur !== 'function')
+              throw new Error(`[test-utils] ${context}：组件未暴露 blur。`);
+            blur.call(exposed);
             await flushAll();
             expect(probe.calls()).toBe(1);
+            expect(document.activeElement).not.toBe(element);
           } finally {
             probe.restore();
           }

@@ -10,8 +10,8 @@
  *   3. `update()` 走的是**更新**而不是重新挂载（否则「更新不抛错」这条断言是假的）
  */
 
-import { describe, expect, it } from 'vitest';
-import { defineComponent, h, ref, type VNode } from 'vue';
+import { describe, expect, it, vi } from 'vitest';
+import { defineComponent, h, onScopeDispose, ref, type VNode } from 'vue';
 
 import { collectRenderCases, mountCase } from '../render';
 import { demoKey, demoModules, PlainBox } from './fixture';
@@ -49,7 +49,7 @@ describe('collectRenderCases · demos 分支', () => {
     expect(cases.map((item) => item.id)).toEqual([demoKey('a'), demoKey('b'), demoKey('c')]);
   });
 
-  it('空 demos → 空用例列表（不抛错，由调用方的 expectCount 负责发现）', () => {
+  it('空 demos → 空用例列表（suite 入口另行拒绝空工作）', () => {
     expect(collectRenderCases({ demos: {} }, 'x')).toEqual([]);
   });
 
@@ -127,6 +127,72 @@ describe('resolveRenderable（经 collectRenderCases 间接覆盖）', () => {
 });
 
 describe('mountCase', () => {
+  it('原生 slots、emits、model 和当前 props 经过原实例更新，保留 0 内容', async () => {
+    const value = ref(0);
+    const label = ref('before');
+    const submit = vi.fn();
+    let setups = 0;
+    let disposed = false;
+    const Probe = defineComponent({
+      props: { modelValue: { type: Number, default: 0 } },
+      emits: {
+        'update:modelValue': (_value: number) => true,
+        submit: (_value: number) => true,
+      },
+      setup(props, { emit, slots }) {
+        setups += 1;
+        onScopeDispose(() => {
+          disposed = true;
+        });
+        return () =>
+          h(
+            'button',
+            {
+              'data-value': props.modelValue,
+              onClick: () => {
+                emit('update:modelValue', props.modelValue + 1);
+                emit('submit', props.modelValue);
+              },
+            },
+            slots.default?.(),
+          );
+      },
+    });
+    const mounted = mountCase(() =>
+      h(
+        Probe,
+        {
+          modelValue: value.value,
+          'onUpdate:modelValue': (next) => {
+            value.value = next;
+          },
+          onSubmit: submit,
+        },
+        { default: () => [h('b', label.value), 0] },
+      ),
+    );
+    try {
+      const button = mounted.content.querySelector('button');
+      if (!button) throw new Error('Expected the mounted button');
+      expect(button.textContent).toBe('before0');
+      button.click();
+      await mounted.update();
+      expect(value.value).toBe(1);
+      expect(submit).toHaveBeenCalledExactlyOnceWith(0);
+      expect(button.dataset.value).toBe('1');
+      value.value = 7;
+      label.value = 'after';
+      await mounted.update();
+      expect(mounted.content.querySelector('button')).toBe(button);
+      expect(button.dataset.value).toBe('7');
+      expect(button.textContent).toBe('after0');
+      expect(setups).toBe(1);
+    } finally {
+      mounted.destroy();
+    }
+    expect(disposed).toBe(true);
+  });
+
   it('attach 时把承载元素挂进 document.body', () => {
     const mounted = mountCase(() => h(PlainBox));
     expect(document.body.contains(mounted.host)).toBe(true);

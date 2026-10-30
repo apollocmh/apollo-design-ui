@@ -553,8 +553,8 @@
         "componentConsumersByPriority": {},
         "packageConsumers": [],
         "srcFiles": 14,
-        "srcLines": 2770,
-        "exportDeclarations": 72
+        "srcLines": 2958,
+        "exportDeclarations": 73
       }
     }
   ],

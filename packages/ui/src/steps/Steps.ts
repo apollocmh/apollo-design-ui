@@ -92,8 +92,19 @@ export const Steps = defineComponent({
       type: [Function, Array] as PropType<StepsProps['onChangeOnce']>,
       default: undefined,
     },
+    'onUpdate:current': {
+      type: [Function, Array] as PropType<StepsProps['onUpdate:current']>,
+      default: undefined,
+    },
+    'onUpdate:currentOnce': {
+      type: [Function, Array] as PropType<StepsProps['onUpdate:currentOnce']>,
+      default: undefined,
+    },
   },
-  emits: { change: (_current: number) => true },
+  emits: {
+    'update:current': (_current: number) => true,
+    change: (_current: number) => true,
+  },
   slots: Object as SlotsType<StepsSlots>,
   setup(props, { attrs, emit, slots }) {
     const config = useComponentConfig<{
@@ -294,7 +305,9 @@ export const Steps = defineComponent({
       if (display.value.mappedDisplayCurrent !== displayIndex) {
         const target = display.value.displaySteps[displayIndex];
         if (target && target.originIndex >= 0) {
-          emit('change', (props.initial ?? 0) + target.originIndex);
+          const current = (props.initial ?? 0) + target.originIndex;
+          emit('update:current', current);
+          emit('change', current);
         }
       }
     };
@@ -393,7 +406,13 @@ export const Steps = defineComponent({
             active: stepIndex === display.value.mappedDisplayCurrent,
             index: stepIndex,
             last: displayItemsWithEllipsisIcon.value.length - 1 === index,
-            onClick: props.onChange || props.onChangeOnce ? onStepClick : undefined,
+            onClick:
+              props.onChange ||
+              props.onChangeOnce ||
+              props['onUpdate:current'] ||
+              props['onUpdate:currentOnce']
+                ? onStepClick
+                : undefined,
           },
           {
             icon: () => {

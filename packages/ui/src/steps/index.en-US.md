@@ -27,7 +27,7 @@ See [`demo/`](./demo) (21 demos, including native scoped slots).
 | size | Size (`default` deprecated ⇒ `medium`) | `'small' \| 'medium' \| 'middle' \| 'default'` | `'middle'` |
 | orientation | Orientation | `'horizontal' \| 'vertical'` | `'horizontal'` |
 | titlePlacement | Title placement (auto-derived for dot/vertical) | `'horizontal' \| 'vertical'` | `'horizontal'` |
-| current | Current step (0-based) | `number` | `0` |
+| current | Current step (0-based); supports `v-model:current` | `number` | `0` |
 | initial | Start index | `number` | `0` |
 | status | Override current step status | `'wait' \| 'process' \| 'finish' \| 'error'` | `'process'` |
 | percent | Progress ring percent on the current process step | `number` | — |
@@ -43,8 +43,9 @@ See [`demo/`](./demo) (21 demos, including native scoped slots).
 | Event | Description | Parameters |
 |---|---|---|
 | change | Requests a different step; a listener enables click and Enter/Space actions on enabled items | `(current: number)` |
+| update:current | Model update request; also enables click and keyboard actions on enabled items | `(current: number)` |
 
-The parent controls current; an event only proposes a change. The active step stays unchanged until the parent updates current. Use `@change` in templates, including `.once` or listener arrays. Native root change events do not invoke this business event. Root `@click` and the data-item `items.onClick` callback receive MouseEvent; disabled items do not invoke their callback.
+The parent controls current; an event only proposes a change. The active step stays unchanged until the parent updates current. Use `v-model:current` directly or listen to `@change`, including `.once` or listener arrays. Native root change events do not invoke this business event. Root `@click` and the data-item `items.onClick` callback receive MouseEvent; disabled items do not invoke their callback.
 
 ### Slots
 

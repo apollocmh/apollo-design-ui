@@ -2,6 +2,40 @@
 
 # `tests/shared/*` 契约提取（`@apollo-design/test-utils` 的实现依据）
 
+## 2026-10-30：当前 Vue 测试契约
+
+以下说明当前实现边界；后文的上游分析、初期阶段和原日期证据继续保留。
+
+- `RenderFactory` / `PropsRenderFactory` 返回完整的 Vue `VNodeChild`；工厂在渲染期执行，
+  当前 props、slots 和 Provider 通过 Vue 的原实例更新。`domContractTest` 还接受 HTML
+  字符串及组件本身；demo 模块仍要求组件、VNode 或模块默认导出，非法模块不会变成空渲染。
+- `demoTest`、`rtlTest`、`themeTest`、`a11yDemoTest` 拒绝空 demo 集合；`themeTest` 拒绝
+  空 `variants`，`domContractTest` 拒绝空 `only`。低层 `collectRenderCases` 仍可返回空数组，
+  suite 入口负责阻止空工作通过。
+- 挂载失败会卸载已建立的子树并移除承载元素。卸载生命周期抛错时继续执行 Vue 的子树释放，
+  完成后重新抛出原错误；多个错误通过 `AggregateError` 保留。更新错误仍走 Vue 原有路径。
+  helper 不接管调用方的定时器模式，也不清空调用方的定时器。
+- observer 检查只覆盖环境已声明的可观测桩。没有 `instances` 元数据时不宣称已检查泄漏；
+  声明了元数据却缺少对应 Set 会失败。`ObserverBaseline.resizeTargets` 现在保存目标身份集合，
+  能发现“旧目标释放、新目标泄漏、总数不变”的情况。调用方应使用 `snapshotObservers()`，
+  手写旧计数 Map 需迁移为 `ReadonlyMap<unknown, ReadonlySet<unknown>>`。
+- warning capture 可嵌套，外层先恢复不会关闭仍活动的内层，最后恢复准确的原 console。
+  它不覆盖 capture 之后由其他调用方安装的 console 方法。allowance 仍按原文本片段匹配，
+  `reason` 与 `match` 均须非空，未命中豁免仍失败；空 `match` 不能放行所有告警。
+- `focusTest` 从本次实际渲染的组件实例读取公开 `expose`，不会为取组件类型额外调用工厂。
+  命令式 focus/blur 同时检查目标方法调用与最终 `activeElement`。`rootPropsTest` 在卸载前
+  采样原生 class/style/prefixCls，并按 class token 检查子孙泄漏，合法的冒号等字符不作为选择器解析。
+- RenderSource 的 `global` 按用例传给 VTU，包括 RTL。环境的结构 Teleport stub 默认不变；
+  节点身份、焦点、连续交互使用 `{ stubs: { teleport: false } }` 和真实目标定位。
+- a11y 在 `flushAll()` 后先检查节点预算再执行 axe；扫描范围是挂载 `content` 子树。
+  Teleport 到这个范围之外的内容须由调用方的专项测试覆盖。它不证明布局、颜色对比度或键盘行为。
+- DOM 投影保持双侧同一规则。style 归一保留引号内容、转义、分量间空白及大小写敏感的自定义属性名，
+  按字符串/括号边界拆声明；保留既有 transform 前缀规则。投影仍不比较文本、注释，外部 ID
+  仍映射为 `{ext}`；精确文本、外部 ID 是否存在和布局由专项测试证明。
+
+本轮只验证基础 helper、相关类型和少量真实消费者。包内历史 C11/时间基线护栏不是组件行为证明，
+也不替代同一冻结源码上的最终验收。
+
 > 对应上游：**antd 6.6.4** 的 `tests/shared/` 与 `tests/utils.tsx`（本地缓存
 > `/tmp/antd-repo/ant-design-master/`）。
 >

@@ -173,11 +173,14 @@ export interface StepsProps {
   // Vue listeners also determine whether items offer click/keyboard actions.
   onChange?: StepsChangeListener;
   onChangeOnce?: StepsChangeListener;
+  'onUpdate:current'?: StepsChangeListener;
+  'onUpdate:currentOnce'?: StepsChangeListener;
 }
 
 type StepsChangeListener = ((current: number) => void) | ((current: number) => void)[];
 
 export interface StepsEmits {
+  'update:current': [current: number];
   change: [current: number];
 }
 

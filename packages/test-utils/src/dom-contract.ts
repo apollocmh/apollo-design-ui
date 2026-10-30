@@ -48,7 +48,7 @@
  *     （这正是「对齐上游」的定义；有意不跟的缺陷登记在 `COMPATIBILITY.md` §9）
  */
 
-import { expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import type { Component, VNodeChild } from 'vue';
 import { assertAllowance } from './allowance';
 import { mountCase, resolveRenderable } from './render';
@@ -184,23 +184,90 @@ function createContext(options: ContractOptions | undefined): ProjectionContext 
  * 把 `style` 属性归一化为排序后的 `prop:value` 列表。
  *
  * 三步，都对两侧一视同仁：
- *   1. 拆成声明、属性名小写、值去掉全部空白
+ *   1. 按 CSS 字符串与括号边界拆声明；普通属性名小写，保留值中有意义的空白
  *      （React 写 `-ms-transform:rotate(90deg);transform:rotate(90deg)`，
  *       Vue 写 `transform: rotate(90deg);` —— 只差格式）
  *   2. 若已存在无前缀的 `transform`，剔除厂商前缀版本（D16：我们不输出 `msTransform`）
  *   3. 排序 —— 声明顺序无语义
  */
+function styleDeclarations(raw: string): string[] {
+  const declarations: string[] = [];
+  let start = 0;
+  let quote = '';
+  let escaped = false;
+  let depth = 0;
+  for (let index = 0; index < raw.length; index += 1) {
+    const char = raw[index];
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+    if (char === '\\') {
+      escaped = true;
+      continue;
+    }
+    if (quote) {
+      if (char === quote) quote = '';
+      continue;
+    }
+    if (char === '"' || char === "'") {
+      quote = char;
+      continue;
+    }
+    if (char === '(' || char === '[' || char === '{') depth += 1;
+    if (char === ')' || char === ']' || char === '}') depth -= 1;
+    if (char === ';' && depth === 0) {
+      declarations.push(raw.slice(start, index));
+      start = index + 1;
+    }
+  }
+  declarations.push(raw.slice(start));
+  return declarations;
+}
+
+function normalizeStyleValue(raw: string): string {
+  let value = '';
+  let quote = '';
+  let escaped = false;
+  let whitespace = false;
+  for (const char of raw.trim()) {
+    if (escaped) {
+      value += char;
+      escaped = false;
+      continue;
+    }
+    if (quote) {
+      value += char;
+      if (char === '\\') escaped = true;
+      else if (char === quote) quote = '';
+      continue;
+    }
+    if (/\s/.test(char)) {
+      whitespace = true;
+      continue;
+    }
+    if (whitespace && value !== '' && !/[,(]$/.test(value) && char !== ')' && char !== ',')
+      value += ' ';
+    whitespace = false;
+    value += char;
+    if (char === '"' || char === "'") quote = char;
+    if (char === '\\') escaped = true;
+  }
+  return value;
+}
+
 export function normalizeStyle(raw: string | null | undefined): string[] | undefined {
   if (raw === null || raw === undefined || raw === '') return undefined;
 
   const decls = new Map<string, string>();
-  for (const part of raw.split(';')) {
+  for (const part of styleDeclarations(raw)) {
     const trimmed = part.trim();
     if (trimmed === '') continue;
     const idx = trimmed.indexOf(':');
     if (idx < 0) continue;
-    const prop = trimmed.slice(0, idx).trim().toLowerCase();
-    const value = trimmed.slice(idx + 1).replace(/\s+/g, '');
+    const name = trimmed.slice(0, idx).trim();
+    const prop = name.startsWith('--') ? name : name.toLowerCase();
+    const value = normalizeStyleValue(trimmed.slice(idx + 1));
     if (prop !== '') decls.set(prop, value);
   }
 
@@ -457,13 +524,17 @@ export interface DomContractOptions {
 /**
  * 把 `DomRenderResult` 落成 HTML 字符串。
  *
- * 非字符串的产物必须经 `resolveRenderable` 解析 —— 直接把组件对象交给渲染函数，
+ * 组件对象经 `resolveRenderable` 解析 —— 直接把组件对象交给渲染函数，
  * Vue 不会渲染任何东西（它只认 vnode），结果是「零个根节点」这种极难定位的假失败。
  * 走同一条解析路径也保证了与 `demoTest` 对「什么叫一个可渲染产物」的定义一致（T2）。
  */
 function toHtml(result: DomRenderResult, id: string): string {
   if (typeof result === 'string') return result;
-  const mounted = mountCase(() => resolveRenderable(result, `domContractTest → render("${id}")`));
+  const mounted = mountCase(() =>
+    typeof result === 'number' || typeof result === 'boolean' || Array.isArray(result)
+      ? result
+      : resolveRenderable(result, `domContractTest → render("${id}")`),
+  );
   try {
     return mounted.html();
   } finally {
@@ -488,6 +559,9 @@ export function domContractTest(name: string, options: DomContractOptions): void
 
   const known = new Set(cases.map((item) => item.id));
   const selected = options.only ?? [...known];
+  if (selected.length === 0) {
+    throw new Error(`[test-utils] domContractTest('${name}')：没有选中的用例，至少需要一个用例。`);
+  }
   for (const id of selected) {
     if (!known.has(id)) {
       throw new Error(

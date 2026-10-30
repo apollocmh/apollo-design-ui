@@ -40,7 +40,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { assertAllowances } from './allowance';
-import { collectCountFailures, collectRenderCases, mountCase } from './render';
+import { assertRenderCases, collectCountFailures, collectRenderCases, mountCase } from './render';
 import type { RenderSource, WarningAllowance } from './types';
 import { captureWarnings, partitionWarnings, type WarningRecord } from './warnings';
 
@@ -66,6 +66,7 @@ export function demoTest(name: string, options: DemoTestOptions): void {
   const context = `demoTest('${name}')`;
   // 结构错误（既没 demos 也没 render / 两者都给）在**收集阶段**抛出 —— 快速失败。
   const cases = collectRenderCases(options, context);
+  assertRenderCases(cases, context);
   const allowances = options.allow ?? [];
   assertAllowances(allowances, context);
 
