@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 29,
+  "revision": 30,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2273,9 +2273,33 @@
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
         "docs/foundation/portal-contract.md",
-        "docs/audit/2026-10-25-image-contract-audit.md"
+        "docs/audit/2026-10-25-image-contract-audit.md",
+        "packages/portal/src/__tests__/use-portal.test.ts"
       ],
-      "issues": []
+      "issues": [],
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/portal/src/use-portal.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/portal/src/__tests__/use-portal.test.ts packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated ready-source strict config; Portal source/tests included>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49567
+          }
+        ],
+        "boundary": "仅当前 zIndexPopupBase getter 与嵌套传播；保留其他 Portal partial 工作，不代表基础包整体完成。"
+      }
     },
     {
       "id": "FND:position",

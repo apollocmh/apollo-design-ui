@@ -340,6 +340,29 @@ describe('⭐ 祖先已入 DOM 后才出现的子孙', () => {
 });
 
 describe('zIndexPopupBase 选项', () => {
+  it('读取当前 base getter，并向已挂载子孙传播替换和撤除', async () => {
+    const base = ref<number | undefined>(2000);
+    const Child = defineComponent({
+      setup() {
+        const z = useZIndex('SelectLike');
+        return () => h('span', { 'data-child-z': String(z.value) });
+      },
+    });
+    const { wrapper, z } = mountZIndex('Modal', undefined, Child, {
+      get zIndexPopupBase() {
+        return base.value;
+      },
+    });
+    expect(z()).toBe('none');
+    expect(wrapper.get('[data-child-z]').attributes('data-child-z')).toBe('2150');
+    base.value = 3000;
+    await nextTick();
+    expect(wrapper.get('[data-child-z]').attributes('data-child-z')).toBe('3150');
+    base.value = undefined;
+    await nextTick();
+    expect(wrapper.get('[data-child-z]').attributes('data-child-z')).toBe('1150');
+  });
+
   it('base 变化会同时影响自身与子孙', () => {
     const Child = defineComponent({
       name: 'BaseChild',

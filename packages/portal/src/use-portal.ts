@@ -275,7 +275,7 @@ export function usePortalOrder(): ((appendFn: AppendFn) => void) | null {
 // ---------------------------------------------------------------------------
 
 export interface UseZIndexOptions {
-  /** `token.zIndexPopupBase`。不传用 `DEFAULT_Z_INDEX_POPUP_BASE` */
+  /** `token.zIndexPopupBase`；可用属性 getter 读取当前主题。不传用默认值。 */
   zIndexPopupBase?: number;
 }
 
@@ -291,16 +291,15 @@ export function useZIndex(
   options: UseZIndexOptions = {},
 ): ComputedRef<number | undefined> {
   const parentZIndexRef = inject(ZINDEX_KEY, null);
-  const { zIndexPopupBase } = options;
-
-  const pair = computed(() =>
-    computeZIndex({
+  const pair = computed(() => {
+    const { zIndexPopupBase } = options;
+    return computeZIndex({
       componentType,
       customZIndex: customZIndex?.(),
       parentZIndex: parentZIndexRef?.value,
       ...(zIndexPopupBase !== undefined ? { zIndexPopupBase } : {}),
-    }),
-  );
+    });
+  });
 
   // 把算出来的值 provide 给子孙（对应 `<ZIndexContext.Provider value={contextZIndex}>`）
   provide(
@@ -314,6 +313,7 @@ export function useZIndex(
       pair,
       ([current]) => {
         if (warned.value) return;
+        const { zIndexPopupBase } = options;
         if (
           shouldWarnZIndex({
             customZIndex: customZIndex?.(),
