@@ -20,6 +20,7 @@ import { mount } from '@vue/test-utils';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
 import { Watermark } from '../index';
+import type { WatermarkProps } from '../interface';
 
 const ctxMock = {
   save: vi.fn(),
@@ -96,7 +97,7 @@ const fireLoad = (src: string): void => {
   imgOf(src).onload?.(new Event('load'));
 };
 const fireError = (src: string): void => {
-  imgOf(src).onerror?.(new Event('error') as unknown as never);
+  imgOf(src).onerror?.(new Event('error'));
 };
 
 const flushFrame = async () => {
@@ -117,21 +118,20 @@ const currentMark = (w: ReturnType<typeof mount>): string => {
   return /background-image:\s*url\("?([^")]+)"?\)?/.exec(style)?.[1] ?? '';
 };
 
-const mountWm = (props: Record<string, unknown> = {}) =>
+const mountWm = (props: WatermarkProps = {}) =>
   mount(Watermark, {
-    props: { class: 'wm-probe', content: 'X', ...props } as never,
+    props: { content: 'X', ...props },
+    attrs: { class: 'wm-probe' },
     attachTo: document.body,
   });
 
 describe('Watermark · Issue #42 图片异步回调的竞态守卫', () => {
   it('[A] 乱序：B 先完成、A 后完成 ⇒ 最终水印仍是 B（核心回归）', async () => {
-    // ⚠️ 换图**同时**改几何尺寸：`getClipsCache` 把图片元素归一成空串参与比较
-    //    （`useSingletonCache` 逐字上游），光换图会命中缓存、根本不会重绘 ——
-    //    那样正好掩盖竞态。
+    // 图像与几何一起替换仍必须只接受最新结果；同尺寸替换另有独立回归。
     const w = mountWm({ image: 'A.png', width: 100, height: 30 });
     await flushFrame();
 
-    await w.setProps({ image: 'B.png', width: 160, height: 60 } as never);
+    await w.setProps({ image: 'B.png', width: 160, height: 60 });
     await flushFrame();
 
     // B 先完成
@@ -158,7 +158,7 @@ describe('Watermark · Issue #42 图片异步回调的竞态守卫', () => {
     const afterA = currentMark(w);
     expect(afterA).not.toBe('');
 
-    await w.setProps({ image: 'B.png', width: 160, height: 60 } as never);
+    await w.setProps({ image: 'B.png', width: 160, height: 60 });
     await flushFrame();
     fireLoad('B.png');
     await nextTick();
@@ -184,7 +184,7 @@ describe('Watermark · Issue #42 图片异步回调的竞态守卫', () => {
     const w = mountWm({ image: 'A.png', width: 100, height: 30 });
     await flushFrame();
 
-    await w.setProps({ image: 'B.png', width: 160, height: 60 } as never);
+    await w.setProps({ image: 'B.png', width: 160, height: 60 });
     await flushFrame();
     fireLoad('B.png');
     await nextTick();
@@ -204,6 +204,27 @@ describe('Watermark · Issue #42 图片异步回调的竞态守卫', () => {
     await flushFrame();
     expect(images.length).toBe(0);
     expect(ctxMock.fillText).toHaveBeenCalled();
+    w.unmount();
+  });
+
+  it('同尺寸换图仍重绘；新图待帧期间旧回调也不能提交', async () => {
+    const w = mountWm({ image: 'A.png', width: 100, height: 30 });
+    await flushFrame();
+    const first = imgOf('A.png');
+    const lateLoad = first.onload;
+    fireLoad('A.png');
+    await nextTick();
+    const afterA = currentMark(w);
+    await w.setProps({ image: 'B.png' });
+    const beforeLate = dataUrlSeq;
+    lateLoad?.call(first, new Event('load'));
+    expect(dataUrlSeq).toBe(beforeLate);
+    await flushFrame();
+    fireLoad('B.png');
+    await nextTick();
+    expect(currentMark(w)).not.toBe(afterA);
+    expect(first.onload).toBeNull();
+    expect(imgOf('B.png').onload).toBeNull();
     w.unmount();
   });
 });

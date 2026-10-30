@@ -1,33 +1,18 @@
 /**
  * 单例缓存：只记最近一次的 `cacheParams`，相同则复用旧结果
- * （antd 的 `useSingletonCache.js` 机械移植）。
- *
- * ⚠️ 不可比较的键（HTMLElement / NaN）以空串参与比较 —— antd 逐字保留
- * （图片元素引用每次都变，参与比较会让缓存永远失效）。
+ * 调用者提供实际内容键；DOM 对象保持真实身份，NaN 使用 Object.is 比较。
  */
 
-export function isHTMLElement(item: unknown): item is HTMLElement {
-  return typeof HTMLElement !== 'undefined' && item instanceof HTMLElement;
-}
-
-export function useSingletonCache<K, V>(): (cacheKeys: K[], callback: () => V) => V {
-  let cacheRef: [K[] | null, V | null] = [null, null];
-
-  return (cacheKeys: K[], callback: () => V): V => {
-    const filteredKeys = cacheKeys.map((item) =>
-      isHTMLElement(item) || (typeof item === 'number' && Number.isNaN(item))
-        ? ('' as unknown as K)
-        : item,
-    );
-    if (!isEqualArray(cacheRef[0], filteredKeys)) {
-      cacheRef = [filteredKeys, callback()];
+export function useSingletonCache<K, V>(): (cacheKeys: readonly K[], callback: () => V) => V {
+  let cache: { keys: readonly K[]; value: V } | undefined;
+  return (keys, callback) => {
+    if (!cache || !isEqualArray(cache.keys, keys)) {
+      cache = { keys: [...keys], value: callback() };
     }
-    return cacheRef[1] as V;
+    return cache.value;
   };
 }
 
-function isEqualArray(a: unknown[] | null, b: unknown[]): boolean {
-  if (a === b) return true;
-  if (!a || a.length !== b.length) return false;
-  return a.every((item, i) => item === b[i]);
+function isEqualArray(a: readonly unknown[], b: readonly unknown[]): boolean {
+  return a.length === b.length && a.every((item, i) => Object.is(item, b[i]));
 }

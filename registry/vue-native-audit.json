@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 183,
+  "revision": 185,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -5042,18 +5042,16 @@
       "kind": "component",
       "ref": "watermark",
       "title": "Watermark",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/watermark"
       ],
-      "assignment": {
-        "owner": "native_portal",
-        "baseRevision": 175,
-        "startedAt": "2026-10-30T22:16:23.415Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -5071,6 +5069,165 @@
           "packages/ui/src/watermark/__tests__/s42-issue42.test.ts",
           "packages/ui/src/watermark/__tests__/s49-issue49.test.ts"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/watermark"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit --project dom-contract packages/ui/src/watermark/__tests__ --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 20630,
+            "log": "/tmp/apollo-watermark-core-dom-candidate.log",
+            "result": "6 files, 56 passed; actual current Demos included",
+            "sourceNote": "Full local core and DOM before final typed-union image discrimination delta; affected image regressions and full source browser rerun below."
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/watermark/__tests__/index.test.ts packages/ui/src/watermark/__tests__/s42-issue42.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 5810,
+            "log": "/tmp/apollo-watermark-image-union-final.log",
+            "result": "2 files, 19 passed on final source"
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/watermark/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7183,
+            "log": "/tmp/apollo-watermark-native-browser-frozen.log",
+            "resultFile": "/tmp/apollo-native-watermark-browser-result.json",
+            "functionalResult": "passed",
+            "diagnostics": [],
+            "harnessObservers": [
+              {
+                "createdAt": "Error\n    at new window.MutationObserver (<anonymous>:15:26)\n    at InjectedScript._setupGlobalListenersRemovalDetection (<anonymous>:7715:5)\n    at new InjectedScript (<anonymous>:6720:10)\n    at <anonymous>:8113:16\n    at <anonymous>:8114:11",
+                "targets": [
+                  "#document"
+                ]
+              }
+            ],
+            "sourceNote": "Full source browser passed after final runtime metadata/children and fixture changes. The later PairMetadata Pick/Exclude alias only makes declaration fields nameable; it changes no runtime code or validation."
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/watermark/__tests__/native-contracts.test.ts packages/ui/src/watermark/__tests__/index.test.ts packages/ui/src/watermark/__tests__/s42-issue42.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 6130,
+            "log": "/tmp/apollo-watermark-prop-metadata-final.log",
+            "result": "3 files, 31 passed on final structured-pair metadata, native h children and shallow style replacement source"
+          },
+          {
+            "kind": "types",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/.apollo-batch-last-three-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53261,
+            "log": "/tmp/apollo-batch-last-three-accepted-types.log",
+            "result": "One immutable integration program passed for all current Calendar/Card/Watermark source, native SFC positive/negative cases, tests, Demos, full UI exports and actual Modal consumer; inherited strict and declaration:true unchanged. Only noEmit/incremental/composite overridden.",
+            "sourceViewBase": "7425ca7f059c4e9480676fa908a542648c7e5f21",
+            "scopes": [
+              "packages/ui/src/calendar",
+              "packages/ui/src/watermark",
+              "packages/ui/src/card"
+            ],
+            "config": {
+              "extends": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/tsconfig.json",
+              "compilerOptions": {
+                "noEmit": true,
+                "incremental": false,
+                "composite": false
+              },
+              "include": [
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/calendar/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/calendar/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/watermark/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/watermark/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/card/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/card/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/index.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/modal/engine/Content.ts"
+              ]
+            }
+          },
+          {
+            "kind": "lint",
+            "command": "node node_modules/@biomejs/biome/bin/biome check --assist-enabled=false packages/ui/src/calendar/Calendar.vue packages/ui/src/calendar/__tests__/a11y.test.ts packages/ui/src/calendar/__tests__/demo.test.ts packages/ui/src/calendar/__tests__/fixtures/NativeCalendar.vue packages/ui/src/calendar/__tests__/index.test.ts packages/ui/src/calendar/__tests__/native-browser.mjs packages/ui/src/calendar/__tests__/native-contracts.test.ts packages/ui/src/calendar/__tests__/semantic.test.ts packages/ui/src/calendar/__tests__/theme.test.ts packages/ui/src/calendar/__tests__/type.test-d.ts packages/ui/src/calendar/components/CalendarHeader.ts packages/ui/src/calendar/demo/component-token.vue packages/ui/src/calendar/demo/customize-header.vue packages/ui/src/calendar/demo/event-range.vue packages/ui/src/calendar/demo/notice-calendar.vue packages/ui/src/calendar/demo/style-class.vue packages/ui/src/calendar/index.ts packages/ui/src/calendar/interface.ts packages/ui/src/calendar/style/token.ts packages/ui/src/calendar/use-calendar-theme.ts packages/ui/src/card/Card.vue packages/ui/src/card/CardGrid.vue packages/ui/src/card/CardMeta.vue packages/ui/src/card/__tests__/fixtures/NativeCard.vue packages/ui/src/card/__tests__/index.test.ts packages/ui/src/card/__tests__/native-browser.mjs packages/ui/src/card/__tests__/native-contracts.test.ts packages/ui/src/card/__tests__/semantic.test.ts packages/ui/src/card/__tests__/type.test-d.ts packages/ui/src/card/content.ts packages/ui/src/card/demo/component-token.vue packages/ui/src/card/demo/meta.vue packages/ui/src/card/demo/tabs.vue packages/ui/src/card/index.ts packages/ui/src/card/interface.ts packages/ui/src/card/style/index.ts packages/ui/src/card/style/token.ts packages/ui/src/card/use-card-theme.ts packages/ui/src/watermark/Watermark.ts packages/ui/src/watermark/__tests__/demo.test.ts packages/ui/src/watermark/__tests__/fixtures/NativeWatermark.vue packages/ui/src/watermark/__tests__/fixtures/NativeWatermarkTypes.vue packages/ui/src/watermark/__tests__/index.test.ts packages/ui/src/watermark/__tests__/native-browser.mjs packages/ui/src/watermark/__tests__/native-contracts.test.ts packages/ui/src/watermark/__tests__/s42-issue42.test.ts packages/ui/src/watermark/__tests__/type.test-d.ts packages/ui/src/watermark/context.ts packages/ui/src/watermark/demo/custom.vue packages/ui/src/watermark/demo/portal.vue packages/ui/src/watermark/index.ts packages/ui/src/watermark/interface.ts packages/ui/src/watermark/use-clips.ts packages/ui/src/watermark/use-raf-debounce.ts packages/ui/src/watermark/use-singleton-cache.ts packages/ui/src/watermark/use-watermark.ts packages/ui/src/watermark/utils.ts",
+            "exitCode": 0,
+            "durationMs": 202,
+            "log": "/tmp/apollo-batch-last-three-format.log",
+            "result": "All 57 changed source/test/SFC/browser files across the same three units passed; no fixes applied."
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check HEAD -- packages/ui/src/calendar packages/ui/src/watermark packages/ui/src/card",
+            "exitCode": 0,
+            "result": "No whitespace errors on the three frozen units."
+          }
+        ],
+        "sourceHashes": {
+          "packages/ui/src/watermark/use-singleton-cache.ts": "bf5ecb27f500299a0077e96bd5db07e8116e52839557fc37d13aa41303c28a61",
+          "packages/ui/src/watermark/context.ts": "f688ed8f5336f3309405d45d229382aa795ebcf0c0a7a78136ab49fd6f3c6098",
+          "packages/ui/src/watermark/utils.ts": "d5ac34bc7b9f7a76b156981a5e1d84cbf59dcb9a52abfb2172b951eb5de73789",
+          "packages/ui/src/watermark/interface.ts": "268bc642658942b88a36c9b15af85cf7f70b68a8e69d0df65b54cea10e17976c",
+          "packages/ui/src/watermark/use-watermark.ts": "29a5727df02ade3228a4ed9072605cff20c663b5ab7b2504ce737456d191e170",
+          "packages/ui/src/watermark/use-raf-debounce.ts": "2053fc45c95c95c9c9aa3ac63e964adbe5213ce15e97dd32ad86d5ce5b9a636f",
+          "packages/ui/src/watermark/index.ts": "fb67e28cfbaba7b715777d9eeb955661f85060561099a184a36b8fdea932e027",
+          "packages/ui/src/watermark/Watermark.ts": "ed74621014fbb007f1766505db595ddc87b402a80637efc068c2e38d3a196ef1",
+          "packages/ui/src/watermark/use-clips.ts": "c5d8880178871f45a929f87e989942755c022addc500e803fc36386c3efeef1a",
+          "packages/ui/src/watermark/demo/custom.vue": "5be32f5a676077f2bc86afc402f2a757ff0c2d2d7a3c5d5f8c73f0c77ca43664",
+          "packages/ui/src/watermark/demo/multi-line.vue": "c3bd31c471970a9ec16f4de4439c813004a5f7877119068d11a83e2e96abc88d",
+          "packages/ui/src/watermark/demo/portal.vue": "9e782665402f6551801c891f6e2cef9e775aed58528c498364324ffe8597d2ad",
+          "packages/ui/src/watermark/demo/basic.vue": "e3125ec2b5611511af9f3f7b77409b67d068e909a359e260c77297447346650f",
+          "packages/ui/src/watermark/demo/image.vue": "433361081bedcafee126ff8e3dd49637dd0fe78bb685d97077f9cc8fa83972c1",
+          "packages/ui/src/watermark/__tests__/a11y.test.ts": "34fac3507ef3a4f52a822db7d4fb87e82c80c52bead394f918583ca3aba8d53d",
+          "packages/ui/src/watermark/__tests__/native-contracts.test.ts": "0632ffc05dc9210657a218ef45e31576343d600c10dfe2c14eb4219f805c9754",
+          "packages/ui/src/watermark/__tests__/index.test.ts": "64a59a4ceec796246be07467d132616e3bcff456fc5028e80c5ef573e4c3083c",
+          "packages/ui/src/watermark/__tests__/demo.test.ts": "82e83589f68e8118388a0d04fd535b99e1431fa6fb498de84b1f623295115ccf",
+          "packages/ui/src/watermark/__tests__/type.test-d.ts": "f2c3f6c160a1380df1905977a96cd0b6b4abfcd413392360108f23c8bf76f5dd",
+          "packages/ui/src/watermark/__tests__/s42-issue42.test.ts": "68d87727e3875ed861d756e0227633942f521173c5c64118f93a65db04cd52ec",
+          "packages/ui/src/watermark/__tests__/s49-issue49.test.ts": "ce61790d81fc674e87a5b906a9f075cfe4b581fbace7765326adc4e2eae7e24e",
+          "packages/ui/src/watermark/__tests__/theme.test.ts": "b90538286c8c6ac0eb5394ff720f1bb4b192558e493f4660cb3296d8e763ab5f",
+          "packages/ui/src/watermark/__tests__/semantic.test.ts": "c564def8417624824b8e6bd4477d01b5dd5fefc1f0a0e18961a6fd3e83de05d4",
+          "packages/ui/src/watermark/__tests__/fixtures/NativeWatermark.vue": "fcecff07f1a1f0f87a154a8f69b2a623b35174043b3286669abfa78225ed1647",
+          "packages/ui/src/watermark/__tests__/fixtures/NativeWatermarkTypes.vue": "ca65f565ad648fcbf22eddd843dd62ec49ce8b4c4210869aa80b66e3f026c094"
+        },
+        "implemented": [
+          "Vue owned remove event with current listeners/once and exactly-once restore notification; native attrs, style forms, default slot and real exposed root.",
+          "Image-source-sensitive cache, coalesced latest-state RAF, invalidation before delayed redraw, image callback release and mounted-only drawing/SSR.",
+          "Native canvas font normalization preserves number, numeric strings and legal CSS sizes; no CSS-input parser. Undefined per-line fields inherit effective defaults; invalid native font assignment throws TypeError.",
+          "Current panel roots/selectors and inherit delegation move registrations without slot remount; owned marks and mutation observers are released, including external/teleported hosts."
+        ],
+        "migration": [
+          "onRemove is a Vue remove listener, not a runtime callback prop; templates use @remove, programmatic h onRemove remains valid.",
+          "fontStyle none removed; use normal. WatermarkEmits and WatermarkSlots exported from the component entry for root integration."
+        ],
+        "redEvidence": [
+          {
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/watermark/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "durationMs": 1780,
+            "log": "/tmp/apollo-watermark-native-red.log",
+            "result": "9 failures, 1 pass; attrs/style, SSR/RAF, image identity/cache, per-line font and panel/resource defects."
+          }
+        ],
+        "boundary": "Existing s42/s49 geometry/race/inherit behavior retained. Source browser exercises actual canvas pixels, same-size replacement, late images, text fallback, same-frame updates, numeric/CSS font units and invalid font input, current tokens/zero, attrs/once, actual Modal, repeated panel/inherit/root transitions, unmount/remount, frame and observer cleanup. The one Playwright InjectedScript document observer is snapshotted before app mount and explicitly reported as the harness baseline; every application-created observer target, managed mark and pending frame is zero after unmount. Raw failing browser logs remain, including the initial fixture target/baseline errors and fixture serialization warning; diagnostics were never filtered. External font loading and page font-size changes are not separately observed; relative units reevaluate on redraw. No new Drawer integration, remote CORS-server matrix, full visual/theme/a11y matrix, coverage, dist build or final nine-dimension acceptance claimed.",
+        "pending": [],
+        "sourceFrozen": true,
+        "integrationSnapshot": {
+          "baseCommit": "7425ca7f059c4e9480676fa908a542648c7e5f21",
+          "uiBarrelSha256": "370d37d80ffacc124bfba943153f1352028554336fd86b3febfd3583722d4fa0",
+          "publicExports": "Root integrates each component export in its own commit; full final export surface was included in the passed integration program."
+        },
+        "recordedAt": "2026-10-30T23:32:37.768125+00:00"
       }
     },
     {

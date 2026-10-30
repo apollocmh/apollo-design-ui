@@ -2108,9 +2108,11 @@ export { prepareComponentToken as prepareUploadComponentToken } from './upload/s
 // ---------------------------------------------------------------------------
 export type {
   WatermarkContent,
+  WatermarkEmits,
   WatermarkFont,
   WatermarkProps,
   WatermarkRef,
+  WatermarkSlots,
   WatermarkText,
 } from './watermark';
 export { Watermark } from './watermark';

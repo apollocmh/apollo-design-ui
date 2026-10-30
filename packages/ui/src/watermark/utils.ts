@@ -32,13 +32,32 @@ export function isWatermarkText(
   return isPlainObject(content);
 }
 
-export function getFontSize(font: WatermarkFont, ratio = 1): number {
-  return Number(font.fontSize) * ratio;
-}
-
-export function getCanvasFont(font: WatermarkFont, ratio = 1, lineHeight?: number): string {
-  const mergedLineHeight = lineHeight === undefined ? '' : `/${lineHeight}px`;
-  return `${font.fontStyle} normal ${font.fontWeight} ${getFontSize(font, ratio)}px${mergedLineHeight} ${font.fontFamily}`;
+/** Let canvas parse the input unit, then use its normalized pixels for the existing geometry. */
+export function setCanvasFont(
+  context: CanvasRenderingContext2D,
+  font: WatermarkFont,
+  ratio = 1,
+  lineHeight?: number,
+): number {
+  const size = Number.isFinite(Number(font.fontSize)) ? `${font.fontSize}px` : font.fontSize;
+  const prefix = `${font.fontStyle} normal ${font.fontWeight}`;
+  const requested = `${prefix} ${size} ${font.fontFamily}`;
+  // Invalid assignments are ignored by canvas. Two distinct sentinels distinguish that from a
+  // valid font which happens to equal the previous value, without parsing CSS input ourselves.
+  context.font = '1px sans-serif';
+  context.font = requested;
+  const normalized = context.font;
+  context.font = '2px sans-serif';
+  context.font = requested;
+  if (context.font !== normalized)
+    throw new TypeError(`Invalid Watermark canvas font: ${requested}`);
+  const pixels = /(?:^|\s)(\d+(?:\.\d+)?)px(?=\s|\/|$)/.exec(normalized)?.[1];
+  if (pixels === undefined)
+    throw new TypeError(`Canvas did not normalize a pixel font: ${normalized}`);
+  const fontSize = Number(pixels) * ratio;
+  const height = lineHeight === undefined ? '' : `/${lineHeight}px`;
+  context.font = `${prefix} ${fontSize}px${height} ${font.fontFamily}`;
+  return fontSize;
 }
 
 /**
@@ -60,10 +79,17 @@ export function getContentLines(
       if (isWatermarkText(item)) {
         return {
           text: item.text ?? '',
-          font: { ...font, ...(item.font ?? {}) },
+          font: {
+            color: item.font?.color ?? font.color,
+            fontSize: item.font?.fontSize ?? font.fontSize,
+            fontWeight: item.font?.fontWeight ?? font.fontWeight,
+            fontStyle: item.font?.fontStyle ?? font.fontStyle,
+            fontFamily: item.font?.fontFamily ?? font.fontFamily,
+            textAlign: item.font?.textAlign ?? font.textAlign,
+          },
         };
       }
-      return { text: item as string, font };
+      return { text: item, font };
     });
 }
 

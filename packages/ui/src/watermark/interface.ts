@@ -1,17 +1,11 @@
-/**
- * Watermark 的类型定义（G2 产物）。
- *
- * 契约来源：antd 6.6.4 的 `es/watermark/index.d.ts`。
- * **逐字段对齐**（名称、可选性、默认值）。差异：`React.CSSProperties` → Vue 的
- * `CSSProperties`、`React.ReactNode` → `VNodeChild`（规则 C16 / C18）。
- */
+import type { VNodeChild } from 'vue';
 
 /** 水印字体。与 antd 的 `WatermarkFont` 一致（字段直接喂 canvas）。 */
 export interface WatermarkFont {
   color?: CanvasFillStrokeStyles['fillStyle'];
   fontSize?: number | string;
   fontWeight?: 'normal' | 'lighter' | 'bold' | 'bolder' | number;
-  fontStyle?: 'none' | 'normal' | 'italic' | 'oblique';
+  fontStyle?: 'normal' | 'italic' | 'oblique';
   fontFamily?: string;
   textAlign?: CanvasTextAlign;
 }
@@ -46,12 +40,17 @@ export interface WatermarkProps {
   offset?: [number, number];
   /** 子树是否继承水印。@default true */
   inherit?: boolean;
-  /**
-   * 水印元素被移动/换父时触发（防篡改）。
-   * @since 6.0.0
-   */
-  onRemove?: () => void;
+  /** Vue `remove` 事件监听器；首次绘制和正常卸载不触发。 */
+  onRemove?: WatermarkEmits['remove'];
 }
+
+export interface WatermarkEmits {
+  remove: () => void;
+}
+
+export type WatermarkSlots = {
+  default?: () => VNodeChild;
+};
 
 /**
  * 暴露给父组件的实例。

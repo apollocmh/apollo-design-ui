@@ -7,9 +7,9 @@
  */
 
 import { expectTypeOf, it } from 'vitest';
-import { h } from 'vue';
+import { h, type VNodeChild } from 'vue';
 import { Watermark } from '../index';
-import type { WatermarkProps, WatermarkRef } from '../interface';
+import type { WatermarkEmits, WatermarkProps, WatermarkRef, WatermarkSlots } from '../interface';
 
 it('WatermarkProps 的关键字段类型', () => {
   expectTypeOf<WatermarkProps['content']>().toEqualTypeOf<
@@ -35,8 +35,33 @@ it('Ref：nativeElement 可空（antd 声明为非空，实际未挂载前是 nu
 });
 
 it('组件本身可被 h() 调用', () => {
-  expectTypeOf(h(Watermark, { content: 'x' })).toBeObject();
+  const props: WatermarkProps = {
+    content: 'x',
+    onRemove: () => {},
+    font: { fontSize: '16px' },
+    gap: [0, 20],
+    offset: [0, -10],
+  };
+  const slots: WatermarkSlots = { default: () => [h('input'), 'Text', 0] };
+  expectTypeOf(h(Watermark, props, slots)).toBeObject();
+  expectTypeOf<WatermarkEmits['remove']>().toEqualTypeOf<() => void>();
+  expectTypeOf<WatermarkSlots['default']>().toEqualTypeOf<(() => VNodeChild) | undefined>();
+  expectTypeOf<InstanceType<typeof Watermark>['$slots']['default']>().toEqualTypeOf<
+    WatermarkSlots['default']
+  >();
 });
+
+function actualComponentContracts(instance: InstanceType<typeof Watermark>) {
+  instance.$emit('remove');
+  instance.$slots.default?.();
+  // @ts-expect-error remove is a notification without an event payload
+  instance.$emit('remove', new Event('remove'));
+  // @ts-expect-error the default slot does not have scoped arguments
+  instance.$slots.default?.({ record: 'invalid' });
+  // @ts-expect-error no owned change notification exists
+  instance.$emit('change');
+}
+void actualComponentContracts;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 负例：以下写法必须被类型系统拒绝
@@ -49,6 +74,12 @@ it('负例：gap / offset 必须是二元元组', () => {
   const badOffset: WatermarkProps = { offset: 1 };
   void badGap;
   void badOffset;
+  // @ts-expect-error the actual component rejects a three-item gap
+  h(Watermark, { gap: [1, 2, 3] });
+  // @ts-expect-error the actual component requires two offset coordinates
+  h(Watermark, { offset: [1] });
+  // @ts-expect-error the actual component rejects non-numeric coordinates
+  h(Watermark, { gap: ['1', 2] });
 });
 
 it('负例：rotate / zIndex 不能是字符串', () => {
@@ -70,4 +101,9 @@ it('负例：font 的字号/字重是受限联合', () => {
   // @ts-expect-error fontWeight 不接受任意字符串
   const badWeight: WatermarkProps = { font: { fontWeight: 'heavy' } };
   void badWeight;
+  // @ts-expect-error none is not a canvas font style
+  const badStyle: WatermarkProps = { font: { fontStyle: 'none' } };
+  void badStyle;
+  // @ts-expect-error remove does not supply a native mouse event
+  h(Watermark, { onRemove: (_event: MouseEvent) => {} });
 });

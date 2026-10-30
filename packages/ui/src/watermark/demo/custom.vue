@@ -1,7 +1,5 @@
 <script setup lang="ts">
-// 对齐 antd 的 custom demo（PLATFORM 替换：antd 用 Form + Input + InputNumber +
-// Slider + ColorPicker 搭配置面板，这些组件在本仓尚未落地 ⇒ 用原生控件等价实现，
-// 受控数据流与 watermarkProps 逐字一致。落地后换回组件版。）
+// 用原生控件演示字体、内容和几何参数的响应式配置。
 import { Flex, Typography, Watermark } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 

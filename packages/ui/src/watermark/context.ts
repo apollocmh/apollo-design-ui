@@ -6,13 +6,17 @@
  * antd 用 `panelRef` 回调 + context；Vue 侧同构 —— 回调 ref 函数可直接绑到元素上。
  */
 
+import { getElement, isHTMLElement } from '@apollo-design/utils';
 import {
+  type ComponentPublicInstance,
   type InjectionKey,
   inject,
   type MaybeRefOrGetter,
   onScopeDispose,
+  onUpdated,
   provide,
   toValue,
+  watch,
 } from 'vue';
 
 export interface WatermarkContextValue {
@@ -36,40 +40,37 @@ export function useWatermarkContext(): WatermarkContextValue {
   return inject(watermarkContextKey, DEFAULT_CONTEXT);
 }
 
-type ComponentPublicInstanceLike = { $el?: HTMLElement };
-
-/**
- * 面板元素注册。`panelSelector` 传入时把水印挂到选择器命中的内层元素上
- * （antd 的 Modal 用它挂到 `-body`）。返回值直接绑到元素的 `ref` 上。
- *
- * ⚠️ `panelSelector` 收 `MaybeRefOrGetter`：Modal 的选择器含 `prefixCls`，前缀可运行时变更
- * ⇒ 必须每次 ref 回调现读（传普通字符串 = setup 快照，换前缀后选择器连不上，Issue #19.2）。
- */
+/** Register the current native panel host with the nearest inheriting watermark. */
 export function usePanelRef(
   panelSelector?: MaybeRefOrGetter<string | undefined>,
-): (ele: HTMLElement | ComponentPublicInstanceLike | null) => void {
+): (element: Element | ComponentPublicInstance | null) => void {
   const watermark = useWatermarkContext();
-  let panelEle: HTMLElement | null = null;
+  let current: Element | ComponentPublicInstance | null = null;
+  let panel: HTMLElement | null = null;
 
-  const panelRef = (ele: HTMLElement | ComponentPublicInstanceLike | null) => {
-    if (ele) {
-      const root = ((ele as ComponentPublicInstanceLike).$el ?? ele) as HTMLElement;
-      const selector = toValue(panelSelector);
-      const innerContentEle = selector ? root.querySelector<HTMLElement>(selector) : root;
-      if (innerContentEle) {
-        watermark.add(innerContentEle);
-        panelEle = innerContentEle;
-      }
-    } else {
-      watermark.remove(panelEle);
-    }
+  const sync = () => {
+    const root = getElement(current);
+    const selector = toValue(panelSelector);
+    const next = isHTMLElement(root)
+      ? selector
+        ? root.querySelector<HTMLElement>(selector)
+        : root
+      : null;
+    if (next === panel) return;
+    if (panel) watermark.remove(panel);
+    panel = next;
+    if (panel) watermark.add(panel);
   };
-
+  watch(() => toValue(panelSelector), sync, { flush: 'post' });
+  onUpdated(sync);
   onScopeDispose(() => {
-    watermark.remove(panelEle);
+    current = null;
+    sync();
   });
-
-  return panelRef;
+  return (element) => {
+    current = element;
+    sync();
+  };
 }
 
 /** 供 Watermark 本体 provide。 */

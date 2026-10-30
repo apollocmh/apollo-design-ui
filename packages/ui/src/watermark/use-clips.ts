@@ -6,7 +6,7 @@
  */
 
 import type { WatermarkFont } from './interface';
-import { getCanvasFont, getFontSize } from './utils';
+import { setCanvasFont } from './utils';
 
 export const FontGap = 3;
 
@@ -16,7 +16,8 @@ const prepareCanvas = (
   ratio = 1,
 ): [CanvasRenderingContext2D, HTMLCanvasElement, number, number] => {
   const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Watermark requires a canvas 2D context');
   const realWidth = width * ratio;
   const realHeight = height * ratio;
   canvas.setAttribute('width', `${realWidth}px`);
@@ -51,7 +52,7 @@ export function getClips(
 ): [string, number, number] {
   // ================= Text / Image =================
   const [ctx, canvas, contentWidth, contentHeight] = prepareCanvas(width, height, ratio);
-  if (content instanceof HTMLImageElement) {
+  if (!Array.isArray(content)) {
     // Image
     ctx.drawImage(content, 0, 0, contentWidth, contentHeight);
   } else {
@@ -59,11 +60,11 @@ export function getClips(
     ctx.textBaseline = 'top';
     let top = 0;
     content.forEach(({ text, font }) => {
-      ctx.font = getCanvasFont(font, ratio, height);
-      ctx.fillStyle = font.color as string;
-      ctx.textAlign = font.textAlign as CanvasTextAlign;
+      const fontSize = setCanvasFont(ctx, font, ratio, height);
+      ctx.fillStyle = font.color ?? 'black';
+      ctx.textAlign = font.textAlign ?? 'center';
       ctx.fillText(text, contentWidth / 2, top);
-      top += getFontSize(font, ratio) + FontGap * ratio;
+      top += fontSize + FontGap * ratio;
     });
   }
 

@@ -230,3 +230,7 @@ Segmented 的 change/keydown 由 Vue emits 拥有，value 模型保持；原生 
 ### D-calendar-native-content-and-panels
 
 Calendar 的 headerRender/cellRender/fullCellRender 内容 prop 及四个旧别名统一迁为已有同名具名槽，作用域使用具名对象；移除对应纯回调类型，保留 Header 作用域中的 onChange/onTypeChange 操作服务。value/mode 模型与 change/panelChange/select 顺序保持，Header 使用 RadioGroup 的 update:value。修正条件槽、原生 attrs/真实引用、当前配置/语言/六 Token，并将当前方向传给实际 Picker 面板；复用已交付的面板算法，详见[Calendar API](packages/ui/src/calendar/index.zh-CN.md)。
+
+### D-watermark-native-drawing-lifecycle
+
+Watermark 的 remove 通知改由 Vue emits 拥有，模板使用 @remove，h() 的 onRemove 仍是自然监听器。fontSize 保留 number/string，由浏览器解析合法 CSS 单位；移除无效的 fontStyle="none"。修正实际图片身份缓存、异步图片竞态、当前原生 attrs/样式、继承面板和观察器/帧的释放；保留既有水印几何及防篡改行为，真实 Modal 消费同步验证，详见[Watermark API](packages/ui/src/watermark/index.zh-CN.md)。

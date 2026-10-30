@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 对齐 antd 的 portal demo：水印通过 context 继承到 Teleport 出去的 Modal 面板。
+// 水印通过注册服务继承到实际 Teleport Modal 面板。
 import { Button, Modal, Watermark } from '@apollo-design/ui';
 import { ref } from 'vue';
 
@@ -27,7 +27,7 @@ const open = ref(false);
       @cancel="open = false"
     >
       <p>这个弹窗挂载在 body 上，仍然继承外层 Watermark。</p>
-      <p>调整窗口大小后水印会重新绘制。</p>
+      <p>修改外层水印配置时，面板会同步更新。</p>
     </Modal>
   </Watermark>
 </template>

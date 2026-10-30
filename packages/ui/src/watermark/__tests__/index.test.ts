@@ -151,10 +151,13 @@ describe('Watermark · 结构', () => {
     expect(style).toContain('background-size: 720px;');
   });
 
-  it('每行独立 font：measure 串与绘制串都符合 antd 形态', async () => {
+  it('每行独立 font：测量与绘制都使用有效字体，undefined 继承当前默认', async () => {
     const fonts: string[] = [];
+    let currentFont = '';
+    const spyReadFont = vi.spyOn(ctxMock, 'font', 'get').mockImplementation(() => currentFont);
     const spyFont = vi.spyOn(ctxMock, 'font', 'set').mockImplementation((v: string) => {
       fonts.push(v);
+      currentFont = v;
     });
     const w = mount(() =>
       h(Watermark, {
@@ -172,10 +175,10 @@ describe('Watermark · 结构', () => {
     // 测量（getMarkSize，无行高）与绘制（useClips，带 /行高）都会设置 font
     expect(fonts).toEqual(expect.arrayContaining(['normal normal bold 20px sans-serif']));
     expect(fonts).toEqual(expect.arrayContaining(['italic normal normal 12px serif']));
-    // ⚠️ 第三行 `fontSize: undefined` 会**覆盖**默认 16 ⇒ NaNpx。这是 antd 同判
-    //    （`{...font, ...item.font}` 的 undefined 覆盖），不是我们要改的行为 —— 钉住。
-    expect(fonts).toEqual(expect.arrayContaining(['normal normal normal NaNpx monospace']));
+    expect(fonts).toEqual(expect.arrayContaining(['normal normal normal 16px monospace']));
+    expect(fonts.some((font) => font.includes('NaN'))).toBe(false);
     spyFont.mockRestore();
+    spyReadFont.mockRestore();
     w.unmount();
   });
 
@@ -235,8 +238,9 @@ describe('Watermark · 结构', () => {
     expect(style).toContain('background-position: -250px -250px;');
   });
 
-  it('onRemove：水印被换父时触发一次；卸载不触发', async () => {
+  it('remove：重挂各通知一次，监听器替换立即生效，正常卸载不通知', async () => {
     const onRemove = vi.fn();
+    const replacement = vi.fn();
     const w = mount(Watermark, { props: { content: 'Ant', onRemove } });
     await flushFrame();
     const root = w.element as HTMLElement;
@@ -245,11 +249,20 @@ describe('Watermark · 结构', () => {
     watermarkEle.remove();
     observerOf(root).trigger([record('childList', root, [watermarkEle])]);
     await flushFrame();
-    expect(onRemove).toHaveBeenCalled();
+    expect(onRemove).toHaveBeenCalledTimes(1);
+    expect(w.emitted('remove')).toEqual([[]]);
+    await w.setProps({ onRemove: replacement });
+    watermarkEle.remove();
+    observerOf(root).trigger([record('childList', root, [watermarkEle])]);
+    await flushFrame();
+    expect(onRemove).toHaveBeenCalledTimes(1);
+    expect(replacement).toHaveBeenCalledTimes(1);
+    expect(w.emitted('remove')).toEqual([[], []]);
     const callsAfterReAppend = onRemove.mock.calls.length;
     w.unmount();
     await flushFrame();
     expect(onRemove.mock.calls.length).toBe(callsAfterReAppend);
+    expect(replacement).toHaveBeenCalledTimes(1);
   });
 
   it('inherit=false：不向子树 provide 水印 context', async () => {

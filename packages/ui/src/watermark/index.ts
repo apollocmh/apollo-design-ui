@@ -15,9 +15,11 @@ export default Watermark;
 
 export type {
   WatermarkContent,
+  WatermarkEmits,
   WatermarkFont,
   WatermarkProps,
   WatermarkRef,
+  WatermarkSlots,
   WatermarkText,
 } from './interface';
 export { FontGap } from './use-clips';
