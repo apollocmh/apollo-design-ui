@@ -5,20 +5,21 @@
  * 排序/过滤/选择列注入）通过函数参数在 computed 里调用。
  */
 
-import { type ComputedRef, computed, type Ref, toRaw } from 'vue';
+import { type ComputedRef, computed, h, type Ref, toRaw, type VNodeChild } from 'vue';
+import { getChildren } from '../../data';
 import type { ColumnsType, ColumnType } from '../../interface';
 import { EXPAND_COLUMN, INTERNAL_HOOKS } from '../constant';
 import { INTERNAL_COL_DEFINE } from '../utils/legacyUtil';
 
 /** 引擎层的列定义（antd/用户传入，可能有 children 分组）。 */
-type AnyColumns = ColumnsType;
+type AnyColumns<RecordType> = ColumnsType<RecordType>;
 
 export interface UseColumnsParams<RecordType> {
   prefixCls: string;
-  columns: AnyColumns | undefined;
+  columns: AnyColumns<RecordType> | undefined;
   expandable: boolean;
   expandedKeys: Set<string | number>;
-  columnTitle: unknown;
+  columnTitle: VNodeChild;
   getRowKey: (record: RecordType, index?: number) => string | number;
   onTriggerExpand: (record: RecordType, event?: Event) => void;
   expandIcon: (params: {
@@ -27,14 +28,14 @@ export interface UseColumnsParams<RecordType> {
     expandable: boolean;
     record: RecordType;
     onExpand: (record: RecordType, event?: Event) => void;
-  }) => unknown;
+  }) => VNodeChild;
   rowExpandable?: (record: RecordType) => boolean;
   expandIconColumnIndex?: number;
   expandedRowOffset: number;
   direction?: 'ltr' | 'rtl';
   expandRowByClick?: boolean;
   columnWidth?: number | string;
-  fixed?: string | boolean;
+  fixed?: ColumnType<RecordType>['fixed'];
   scrollWidth: number | null;
   clientWidth: number;
   internalHooks?: string;
@@ -43,14 +44,11 @@ export interface UseColumnsParams<RecordType> {
   childrenColumnName?: string | ComputedRef<string>;
 }
 
-function filterHiddenColumns(columns: AnyColumns): AnyColumns {
+function filterHiddenColumns<RecordType>(columns: AnyColumns<RecordType>): AnyColumns<RecordType> {
   return columns
-    .filter(
-      (column): column is ColumnType =>
-        !!column && typeof column === 'object' && !(column as ColumnType).hidden,
-    )
+    .filter((column) => !column.hidden)
     .map((column) => {
-      const subColumns = (column as ColumnGroupLike).children as AnyColumns | undefined;
+      const subColumns = column.children;
       if (subColumns && subColumns.length > 0) {
         return { ...column, children: filterHiddenColumns(subColumns) };
       }
@@ -58,23 +56,18 @@ function filterHiddenColumns(columns: AnyColumns): AnyColumns {
     });
 }
 
-interface ColumnGroupLike {
-  children?: AnyColumns;
-}
-
-export function flatColumns(columns: AnyColumns, parentKey = 'key'): ColumnType[] {
+export function flatColumns<RecordType>(
+  columns: AnyColumns<RecordType>,
+  parentKey = 'key',
+): ColumnType<RecordType>[] {
   return columns
     .filter((column) => column && typeof column === 'object')
-    .reduce<ColumnType[]>((list, column, index) => {
-      const { fixed } = column as ColumnType;
+    .reduce<ColumnType<RecordType>[]>((list, column, index) => {
+      const { fixed } = column;
       const parsedFixed =
-        fixed === true || fixed === 'left'
-          ? 'start'
-          : fixed === 'right'
-            ? 'end'
-            : (fixed as ColumnType['fixed']);
+        fixed === true || fixed === 'left' ? 'start' : fixed === 'right' ? 'end' : fixed;
       const mergedKey = `${parentKey}-${index}`;
-      const subColumns = (column as ColumnGroupLike).children as AnyColumns | undefined;
+      const subColumns = column.children;
       // ⚠️ 不用 `[...list, …]`（`noAccumulatingSpread`）：每轮复制整个数组。
       //    `list` 是本次 reduce 私有的累加器，原地 push 外部看不到。
       if (subColumns && subColumns.length > 0) {
@@ -86,7 +79,7 @@ export function flatColumns(columns: AnyColumns, parentKey = 'key'): ColumnType[
         );
         return list;
       }
-      list.push({ key: mergedKey, ...(column as ColumnType), fixed: parsedFixed });
+      list.push({ key: mergedKey, ...column, fixed: parsedFixed });
       return list;
     }, []);
 }
@@ -105,11 +98,11 @@ function parseColWidth(totalWidth: number, width: number | string | undefined): 
  * Fill all column with width（rc `useWidthColumns`）。
  * 返回 [填充宽度后的列, 实际总宽]。
  */
-export function useWidthColumns(
-  flattenColumns: ComputedRef<ColumnType[]>,
+export function useWidthColumns<RecordType>(
+  flattenColumns: ComputedRef<ColumnType<RecordType>[]>,
   scrollWidth: ComputedRef<number | null>,
   clientWidth: Ref<number>,
-): ComputedRef<[ColumnType[], number | null]> {
+): ComputedRef<[ColumnType<RecordType>[], number | null]> {
   return computed(() => {
     const cols = flattenColumns.value;
     const sw = scrollWidth.value;
@@ -129,7 +122,7 @@ export function useWidthColumns(
       let restCount = missWidthCount;
       const avgWidth = missWidthCount > 0 ? restWidth / missWidthCount : 0;
       let realTotal = 0;
-      const filledColumns: ColumnType[] = cols.map((col) => {
+      const filledColumns: ColumnType<RecordType>[] = cols.map((col) => {
         const clone = { ...col };
         const colWidth = parseColWidth(sw, clone.width);
         if (colWidth) {
@@ -166,47 +159,47 @@ export function useColumns<RecordType>(
   params: ComputedRef<UseColumnsParams<RecordType>>,
   transformColumns: ((columns: ColumnsType<RecordType>) => ColumnsType<RecordType>) | null,
 ) {
-  const baseColumns = computed<AnyColumns>(() => {
+  const baseColumns = computed<AnyColumns<RecordType>>(() => {
     const cols = params.value.columns || [];
     const filtered = filterHiddenColumns(cols.slice());
     return filtered;
   });
 
   // ========================== Expand ==========================
-  const withExpandColumns = computed<AnyColumns>(() => {
+  const withExpandColumns = computed<AnyColumns<RecordType>>(() => {
     const p = params.value;
     if (p.expandable) {
       let cloneColumns = baseColumns.value.slice();
-      if (!cloneColumns.some((c) => toRaw(c as object) === EXPAND_COLUMN)) {
+      if (!cloneColumns.some((c) => toRaw(c) === EXPAND_COLUMN)) {
         const expandColIndex = p.expandIconColumnIndex || 0;
         const insertIndex =
           expandColIndex === 0 && (p.fixed === 'right' || p.fixed === 'end')
             ? baseColumns.value.length
             : expandColIndex;
         if (insertIndex >= 0) {
-          cloneColumns.splice(insertIndex, 0, EXPAND_COLUMN as never);
+          cloneColumns.splice(insertIndex, 0, EXPAND_COLUMN);
         }
       }
-      const expandColumnIndex = cloneColumns.findIndex((c) => toRaw(c as object) === EXPAND_COLUMN);
+      const expandColumnIndex = cloneColumns.findIndex((c) => toRaw(c) === EXPAND_COLUMN);
       cloneColumns = cloneColumns.filter(
-        (column, index) => toRaw(column as object) !== EXPAND_COLUMN || index === expandColumnIndex,
+        (column, index) => toRaw(column) !== EXPAND_COLUMN || index === expandColumnIndex,
       );
-      const prevColumn = baseColumns.value[expandColumnIndex] as ColumnType | undefined;
+      const prevColumn = baseColumns.value[expandColumnIndex] as ColumnType<RecordType> | undefined;
       // rc：`const fixedColumn = fixed ? nextColumn.fixed : prevColumn?.fixed;`
       //    rc 的 fixed 类型含 true（遗留兼容）—— 归一成严格联合（Vue 侧 ColumnType.fixed 不收 true）
-      let fixedColumn: ColumnType['fixed'];
+      let fixedColumn: ColumnType<RecordType>['fixed'];
       if (p.fixed) {
-        fixedColumn = (p.fixed === true ? 'left' : p.fixed) as ColumnType['fixed'];
+        fixedColumn = p.fixed;
       } else {
         fixedColumn = prevColumn ? prevColumn.fixed : undefined;
       }
-      const expandColumn: ColumnType = {
+      const expandColumn: ColumnType<RecordType> = {
         [INTERNAL_COL_DEFINE]: {
-          className: `${p.prefixCls}-expand-icon-col`,
+          class: `${p.prefixCls}-expand-icon-col`,
           columnType: 'EXPAND_COLUMN',
         },
-        title: p.columnTitle as ColumnType['title'],
-        fixed: fixedColumn as ColumnType['fixed'],
+        title: p.columnTitle,
+        fixed: fixedColumn,
         className: `${p.prefixCls}-row-expand-icon-cell`,
         width: p.columnWidth,
         render: (_: unknown, record: RecordType, index: number) => {
@@ -221,38 +214,36 @@ export function useColumns<RecordType>(
             onExpand: p.onTriggerExpand,
           });
           if (p.expandRowByClick) {
-            return ['span', { onClick: (e: Event) => e.stopPropagation() }, icon];
+            return h('span', { onClick: (e: Event) => e.stopPropagation() }, [icon]);
           }
           return icon;
         },
       };
       return cloneColumns.map((col, index) => {
-        const column = toRaw(col as object) === EXPAND_COLUMN ? expandColumn : (col as ColumnType);
+        const column = toRaw(col) === EXPAND_COLUMN ? expandColumn : col;
         if (index < p.expandedRowOffset) {
           return { ...column, fixed: column.fixed || 'start' };
         }
         return column;
       });
     }
-    return baseColumns.value.filter((col) => toRaw(col as object) !== EXPAND_COLUMN);
+    return baseColumns.value.filter((col) => toRaw(col) !== EXPAND_COLUMN);
   });
 
   // ========================= Transform ========================
-  const mergedColumns = computed<AnyColumns>(() => {
+  const mergedColumns = computed<AnyColumns<RecordType>>(() => {
     let finalColumns = withExpandColumns.value;
     if (transformColumns) {
-      finalColumns = transformColumns(finalColumns as ColumnsType<RecordType>) as AnyColumns;
+      finalColumns = transformColumns(finalColumns);
     }
     if (!finalColumns.length) {
-      finalColumns = [{ render: () => null } as ColumnType];
+      finalColumns = [{ render: () => null }];
     }
     return finalColumns;
   });
 
   // ========================== Flatten =========================
-  const flattenColumns = computed<ColumnType[]>(() =>
-    flatColumns(mergedColumns.value as AnyColumns),
-  );
+  const flattenColumns = computed<ColumnType<RecordType>[]>(() => flatColumns(mergedColumns.value));
 
   // ========================= FillWidth ========================
   const scrollWidthRef = computed(() => params.value.scrollWidth);
@@ -265,16 +256,11 @@ export function useColumns<RecordType>(
 }
 
 /** 引擎参数构造时判断 nest 展开类型（rc useExpand 里的判据搬过来共用）。 */
-export function hasNestChildren<RecordType>(
+export function hasNestChildren<RecordType extends object>(
   data: RecordType[] | undefined,
   childrenColumnName: string,
 ): boolean {
-  return (data ?? []).some(
-    (record) =>
-      record &&
-      typeof record === 'object' &&
-      Boolean((record as Record<string, unknown>)[childrenColumnName]),
-  );
+  return (data ?? []).some((record) => Boolean(getChildren(record, childrenColumnName)?.length));
 }
 
 export { INTERNAL_HOOKS };

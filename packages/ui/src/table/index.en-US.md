@@ -33,17 +33,13 @@ The `drag-reorder` example combines existing onRow/onHeaderCell hooks with nativ
 | caption | Accessible caption of the table (`<caption>`) | VNodeChild | - |
 | columns | Columns description, see below | ColumnsType | - |
 | components | Override default table elements | TableComponents | - |
-| dataSource | Data record array | Record<string, unknown>[] | - |
+| dataSource | Data record array | T[] | - |
 | direction | Text direction | `'ltr' \| 'rtl'` | - |
-| emptyText | Placeholder when there is no data | VNodeChild \| (() => VNodeChild) | - |
 | expandable | Expandable configuration | ExpandableConfig | - |
-| expandIcon | Custom expand icon | RenderExpandIcon | - |
-| footer | Table footer | VNodeChild \| ((currentPageData) => VNodeChild) | - |
-| getPopupContainer | Parent node of dropdowns (filter/select) | (triggerNode) => HTMLElement | - |
-| indentSize | Indent width in pixels of tree data | number | 16 |
+| getPopupContainer | Parent node of dropdowns (filter/select) | (triggerNode) => HTMLElement \| ShadowRoot | - |
+| indentSize | Indent width in pixels of tree data | number | 15 |
 | loading | Whether the table is loading | boolean \| SpinProps | false |
 | locale | Default messages, see below | TableLocale | - |
-| onChange | Callback for pagination, sorter and filter changes | (pagination, filters, sorter, extra) => void | - |
 | pagination | Pagination config; set to false to hide | false \| TablePaginationConfig | - |
 | rowClassName | Row className | string \| (record, index) => string | - |
 | rowKey | Row key field or function | string \| keyof T \| (record) => key | 'key' |
@@ -53,12 +49,43 @@ The `drag-reorder` example combines existing onRow/onHeaderCell hooks with nativ
 | size | Size of the table | `'large' \| 'middle' \| 'small'` | 'large' |
 | sortDirections | Supported sort orders | SortOrder[] | `['ascend', 'descend']` |
 | sticky | Sticky header | boolean \| TableSticky | - |
-| summary | Summary row rendered inside the table | (data) => VNodeChild | - |
 | tableLayout | Table layout algorithm | `'auto' \| 'fixed'` | 'auto' |
-| title | Table title | VNodeChild \| ((currentPageData) => VNodeChild) | - |
 | virtual | Enable virtual scrolling (requires `scroll.x` / `scroll.y`) | boolean | false |
 | onRow | Row event passthrough (click, mouseenter, ...) | (record, index) => Record<string, unknown> | - |
 | onHeaderRow | Header row event passthrough | (columns, index) => Record<string, unknown> | - |
+
+
+### Slots
+
+| Name | Scope | Content |
+| --- | --- | --- |
+| title / footer / summary / caption | `{ data: T[] }` | Current page title, footer, summary and accessible caption |
+| emptyText | `{ data: T[], locale }` | Empty content; a present slot, including an empty result, wins over locale.emptyText |
+| expandedRow | `{ record: T, index, indent, expanded }` | Expanded content |
+| expandIcon | `{ prefixCls, record: T, expanded, expandable, onExpand }` | Call `onExpand(record, event)` to propose a toggle |
+| headerCell | `{ column, title }` | Header content inside the existing sorting/filtering controls |
+| bodyCell | `{ text, record: T, index, column, originNode }` | Cell content; originNode is the data renderer result |
+| paginationItemRender | `{ page, type, element }` | Pagination item |
+| paginationTotal | `{ total, range }` | Pagination total |
+| paginationSizeChanger | PaginationSizeChangerInfo | Page size control |
+
+Per-column render/title/filterDropdown/filterIcon/sortIcon and selection renderCell/columnTitle remain data services. shouldCellUpdate controls the data renderer cache; native slots continue tracking their own Vue dependencies. Replacing the renderer or changing the row index invalidates the cache.
+
+### Emits and accepted state
+
+`@change` receives `(pagination, filters, sorter, { currentDataSource: T[], action })`. `@scroll` receives the real Event from the current body, including virtual bodies. Each pagination, sorting, filtering, selection and expansion state has one accepted source. Notifications describe proposals; rejected controlled proposals do not replace accepted UI state or caches. Removing control resumes the latest accepted value.
+
+### Generics and refs
+
+Templates infer User from `User[]` and `ColumnsType<User>` without an index signature. Programmatic calls use `h(Table<User>, props, slots)` and `TableSlots<User>`. A TableRef exposes nativeElement() and scrollTo({ top, key, index, align, offset }); align supports start/center/end/nearest.
+
+A custom components.body service receives `(data, { scrollbarSize, ref, onScroll })`. Bind ref to an actual HTMLElement and forward native scroll events to onScroll. This explicit service takes precedence over the built-in virtual body. Element components forward native attrs and their default slot. A virtual wrapper requires one HTMLElement root; fragment/text roots have no measurable container and expose null. Root replacements rebind observation and native scroll access.
+
+### Migration
+
+Full-table title/footer/summary/expandedRowRender/expandIcon/emptyText callbacks, including nested expandable content callbacks, move to the named slots above with named scope fields. locale.emptyText keeps static VNodeChild content; dynamic content uses #emptyText. Replace filterDropdownProps.dropdownRender with the column's filterDropdown data renderer. Row/cell services return Vue native attrs such as onKeydown. Subscribe to owned notifications with @change/@scroll.
+
+getCheckboxProps follows the actual selection kind: checkbox change receives `(event: Event, checked: boolean)`; radio keeps RadioChangeEvent. Native class/style target the outer root. Semantic styles use Vue CSSProperties, including undefined and --custom properties.
 
 ### ColumnsType
 
@@ -66,8 +93,8 @@ The `drag-reorder` example combines existing onRow/onHeaderCell hooks with nativ
 | --- | --- | --- | --- |
 | align | Alignment of the column content | `'left' \| 'right' \| 'center'` | - |
 | colSpan | Span of the header column (0 hides the header) | number | - |
-| customCell | Cell event passthrough | (record, rowIndex, column) => Record<string, unknown> | - |
-| customHeaderCell | Header cell event passthrough | (column) => Record<string, unknown> | - |
+| onCell | Cell event passthrough | (record: T, rowIndex) => Record<string, unknown> | - |
+| onHeaderCell | Header cell event passthrough | (column) => Record<string, unknown> | - |
 | defaultSortOrder | Default sort order | `'ascend' \| 'descend'` | - |
 | ellipsis | Ellipsize long content to a single line | boolean \| { showTitle?: boolean } | false |
 | filters | Filter menu items of the header | ColumnFilterItem[] \| boolean | - |
@@ -79,12 +106,12 @@ The `drag-reorder` example combines existing onRow/onHeaderCell hooks with nativ
 | filterMultiple | Whether multiple filters are allowed | boolean | true |
 | filterSearch | Whether the filter menu is searchable | boolean \| (input, record) => boolean | false |
 | fixed | Fixed column | `'left' \| 'right'` | false |
-| responsive | Breakpoints at which the column is hidden | Breakpoint[] | - |
+| responsive | Show the column when any listed breakpoint matches | Breakpoint[] | - |
 | rowSpan | Row span | number | - |
 | render | Renderer of the cell, **positional args** `(value, record, index)` | (value, record, index) => VNodeChild | - |
 | showSorterTooltip | Sorter tooltip of the header | boolean \| SorterTooltipProps | true |
 | sortOrder | Controlled sort order | `'ascend' \| 'descend' \| null` | - |
-| sorter | Sort function; true uses the default sorter | boolean \| CompareFn | false |
+| sorter | Sort function; true delegates ordering to the consumer | boolean \| CompareFn | false |
 | title | Title of the column | VNodeChild \| ColumnTitle | - |
 | width | Column width (required for fixed columns with scroll.x) | number \| string | - |
 | children | Children of a grouped column | ColumnsType | - |
@@ -121,16 +148,18 @@ The `drag-reorder` example combines existing onRow/onHeaderCell hooks with nativ
 | defaultExpandAllRows | Expand all rows initially | boolean | false |
 | defaultExpandedRowKeys | Initially expanded rows | TableKey[] | - |
 | expandedRowClassName | className of the expanded row | string \| (record, index, indent) => string | - |
-| expandedRowRender | Extra content of the expanded row | (record, index, indent, expanded) => VNodeChild | - |
 | expandedRowKeys | Controlled expanded rows | TableKey[] | - |
-| expandFixed | Whether the expand column is fixed | boolean \| `'left' \| 'right'` | - |
-| expandIcon | Custom expand icon | RenderExpandIcon | - |
 | expandIconColumnIndex | Column index of the expand button | number | - |
-| indentSize | Indent width of tree data | number | 16 |
+| indentSize | Indent width of tree data | number | 15 |
 | rowExpandable | Whether the row is expandable | (record) => boolean | - |
 | showExpandColumn | Whether to show the expand column | boolean | true |
 | onExpand | Callback when a row is expanded | (expanded, record) => void | - |
 | onExpandedRowsChange | Callback when expanded rows change | (expandedRows) => void | - |
+
+
+| fixed | Fixed position of the expand column | `'left' \| 'right' \| 'start' \| 'end'` | - |
+
+Put native pager root attrs in pagination.class / pagination.style; replace the old className entry with class.
 
 ### pagination
 

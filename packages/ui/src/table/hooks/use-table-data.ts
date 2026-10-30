@@ -3,14 +3,14 @@
  * useTitleColumns,useColumnTitleProps,useSpinProps}.js` —— Vue 移植（小 hook 合集）。
  */
 
-import { isNonNullable, mergeProps, omit } from '@apollo-design/utils';
+import { isNonNullable, useControlledValue } from '@apollo-design/utils';
 import {
   type ComputedRef,
   computed,
   type MaybeRefOrGetter,
   type Ref,
-  ref,
   shallowRef,
+  toRaw,
   toValue,
   unref,
 } from 'vue';
@@ -19,6 +19,7 @@ import type {
   ColumnsType,
   ColumnTitleProps,
   ColumnType,
+  FilterValue,
   TableKey,
   TablePaginationConfig,
 } from '../interface';
@@ -81,24 +82,19 @@ export function useLazyKVMap<RecordType>(
 // ============================== usePagination ==============================
 
 export function getPaginationParam(
-  mergedPagination: Record<string, unknown>,
+  mergedPagination: TablePaginationConfig,
   pagination: false | TablePaginationConfig,
 ): TablePaginationConfig {
-  const param: Record<string, unknown> = {
+  const param: TablePaginationConfig = {
     current: mergedPagination.current,
     pageSize: mergedPagination.pageSize,
   };
-  const paginationObj = (pagination && typeof pagination === 'object' ? pagination : {}) as Record<
-    string,
-    unknown
-  >;
-  Object.keys(paginationObj).forEach((pageProp) => {
-    const value = mergedPagination[pageProp];
-    if (typeof value !== 'function') {
-      param[pageProp] = value;
+  if (pagination)
+    for (const key of Object.keys(pagination)) {
+      const value: unknown = Reflect.get(mergedPagination, key);
+      if (typeof value !== 'function') Reflect.set(param, key, value);
     }
-  });
-  return param as TablePaginationConfig;
+  return param;
 }
 
 /**
@@ -114,60 +110,54 @@ export function usePagination(
   mergedPagination: ComputedRef<TablePaginationConfig>;
   resetPagination: (current?: number, pageSize?: number) => void;
 } {
-  const initPagination = (): { current: number; pageSize: number } => {
-    const paginationObj = (
-      unref(pagination) && typeof unref(pagination) === 'object' ? unref(pagination) : {}
-    ) as Record<string, unknown>;
-    return {
-      current: 'defaultCurrent' in paginationObj ? (paginationObj.defaultCurrent as number) : 1,
-      pageSize:
-        'defaultPageSize' in paginationObj
-          ? (paginationObj.defaultPageSize as number)
-          : DEFAULT_PAGE_SIZE,
-    };
-  };
-  const innerPagination = ref<{ current: number; pageSize: number }>(initPagination());
-
-  const mergedPagination = computed<TablePaginationConfig>(() => {
-    if (unref(pagination) === false) {
-      return {} as TablePaginationConfig;
-    }
-    const paginationObj = (unref(pagination) as TablePaginationConfig) ?? {};
-    const { total: paginationTotal = 0, ...rest } = paginationObj;
-    const base = mergeProps(
-      { ...innerPagination.value } as Record<string, unknown>,
-      { ...rest } as Record<string, unknown>,
-      { total: paginationTotal > 0 ? paginationTotal : total.value } as Record<string, unknown>,
-    ) as TablePaginationConfig;
-    // 夹取 current（不 mutate 派生对象 —— analysis §4.4 #5）
-    const maxPage = Math.ceil((paginationTotal || total.value) / (base.pageSize as number));
-    if ((base.current as number) > maxPage) {
-      base.current = maxPage || 1;
-    }
-    return base;
+  const [current, setCurrent] = useControlledValue<number>({
+    defaultValue: () => {
+      const p = unref(pagination);
+      return p && p.defaultCurrent !== undefined ? p.defaultCurrent : 1;
+    },
+    getValue: () => {
+      const p = unref(pagination);
+      return p ? p.current : undefined;
+    },
   });
-
-  const refreshPagination = (current?: number, pageSize?: number) => {
-    innerPagination.value = {
-      current: current ?? 1,
-      pageSize: pageSize || (mergedPagination.value.pageSize as number),
-    };
-  };
-
-  const onInternalChange = (current: number, pageSize: number) => {
+  const [pageSize, setPageSize] = useControlledValue<number>({
+    defaultValue: () => {
+      const p = unref(pagination);
+      return p && p.defaultPageSize !== undefined ? p.defaultPageSize : DEFAULT_PAGE_SIZE;
+    },
+    getValue: () => {
+      const p = unref(pagination);
+      return p ? p.pageSize : undefined;
+    },
+  });
+  const mergedPagination = computed<TablePaginationConfig>(() => {
     const p = unref(pagination);
-    if (p && typeof p === 'object') {
-      (p as { onChange?: (c: number, ps: number) => void }).onChange?.(current, pageSize);
-    }
-    refreshPagination(current, pageSize);
-    onChange(current, pageSize || (mergedPagination.value.pageSize as number));
+    if (p === false) return {};
+    const mergedTotal = p.total && p.total > 0 ? p.total : total.value;
+    const maxPage = Math.ceil(mergedTotal / pageSize.value);
+    return {
+      ...p,
+      current: Math.min(current.value, maxPage || 1),
+      pageSize: pageSize.value,
+      total: mergedTotal,
+    };
+  });
+  const refreshPagination = (nextCurrent = 1, nextPageSize = pageSize.value) => {
+    setCurrent(nextCurrent);
+    setPageSize(nextPageSize);
+  };
+  const onInternalChange = (nextCurrent: number, nextPageSize: number) => {
+    const p = unref(pagination);
+    if (p) p.onChange?.(nextCurrent, nextPageSize);
+    refreshPagination(nextCurrent, nextPageSize);
+    onChange(nextCurrent, nextPageSize);
   };
 
   const mergedWithOnChange = computed<TablePaginationConfig>(() => {
     if (unref(pagination) === false) {
-      return {} as TablePaginationConfig;
+      return {};
     }
-    return { ...mergedPagination.value, onChange: onInternalChange } as TablePaginationConfig;
+    return { ...mergedPagination.value, onChange: onInternalChange };
   });
 
   return { mergedPagination: mergedWithOnChange, resetPagination: refreshPagination };
@@ -195,37 +185,22 @@ export function useContainerWidth(
 // ============================== useFilledColumns ==============================
 
 /** antd `useFilledColumns`：`column` prop 全量注入到每列（SELECTION/EXPAND 哨兵跳过）。 */
-export function useFilledColumns(
-  columns: ComputedRef<ColumnsType>,
-  column: Ref<Partial<ColumnType> | undefined>,
-): ComputedRef<ColumnsType> {
-  // ⚠️ 内部 any 化：与本文件 usePagination 同判（TS2589 深度上限）
+export function useFilledColumns<RecordType>(
+  columns: ComputedRef<ColumnsType<RecordType>>,
+  column: Ref<Partial<ColumnType<RecordType>> | undefined>,
+): ComputedRef<ColumnsType<RecordType>> {
   return computed(() => {
-    const cols = columns.value;
-    const col = column.value;
-    if (!col) return cols;
-    // biome-ignore lint/suspicious/noExplicitAny: TS2589（4 层泛型链实例化过深），any 化是本仓已登记的逃生口
-    const fillColumns = (currentColumns: any[]): any[] =>
-      // biome-ignore lint/suspicious/noExplicitAny: TS2589（4 层泛型链实例化过深），any 化是本仓已登记的逃生口
-      currentColumns.map((raw: any) => {
-        const colItem = raw as ColumnType;
-        if (colItem === SELECTION_COLUMN || colItem === (EXPAND_COLUMN as unknown)) {
-          return raw;
-        }
-        if ('children' in colItem && Array.isArray((colItem as { children?: unknown }).children)) {
-          const mergedColumn = { ...col, ...colItem };
-          return {
-            ...mergedColumn,
-            children: fillColumns((colItem as { children: ColumnsType }).children),
-          };
-        }
-        const columnWithoutChildren = omit(col as Record<string, unknown>, ['children']) as Record<
-          string,
-          unknown
-        >;
-        return { ...columnWithoutChildren, ...colItem } as ColumnType;
+    const defaults = column.value;
+    if (!defaults) return columns.value;
+    const { children: _children, ...leafDefaults } = defaults;
+    const fill = (current: ColumnsType<RecordType>): ColumnsType<RecordType> =>
+      current.map((col) => {
+        if (toRaw(col) === SELECTION_COLUMN || toRaw(col) === EXPAND_COLUMN) return col;
+        return col.children
+          ? { ...defaults, ...col, children: fill(col.children) }
+          : { ...leafDefaults, ...col };
       });
-    return fillColumns(cols);
+    return fill(columns.value);
   });
 }
 
@@ -236,19 +211,11 @@ export function useTitleColumns<RecordType>(
   columnTitleProps: ComputedRef<ColumnTitleProps<RecordType>>,
 ): (columns: ColumnsType<RecordType>) => ColumnsType<RecordType> {
   const fillTitle = (columns: ColumnsType<RecordType>): ColumnsType<RecordType> =>
-    columns.map((raw) => {
-      const cloneColumn = { ...(raw as ColumnType<RecordType>) };
-      cloneColumn.title = renderColumnTitle(
-        cloneColumn.title,
-        columnTitleProps.value,
-      ) as ColumnType<RecordType>['title'];
-      if ('children' in cloneColumn) {
-        cloneColumn.children = fillTitle(
-          (cloneColumn as unknown as { children: ColumnsType<RecordType> }).children,
-        );
-      }
-      return cloneColumn as never;
-    });
+    columns.map((column) => ({
+      ...column,
+      title: renderColumnTitle(column.title, columnTitleProps.value),
+      ...(column.children ? { children: fillTitle(column.children) } : {}),
+    }));
   return fillTitle;
 }
 
@@ -256,16 +223,16 @@ export function useTitleColumns<RecordType>(
 
 export function useColumnTitleProps<RecordType>(
   sorterTitleProps: Ref<Partial<ColumnTitleProps<RecordType>>>,
-  filters: ComputedRef<Record<string, unknown>>,
+  filters: ComputedRef<Record<string, FilterValue | null>>,
 ): ComputedRef<ColumnTitleProps<RecordType>> {
   return computed(() => {
-    const mergedFilters: Record<string, unknown> = {};
+    const mergedFilters: Record<string, FilterValue> = {};
     for (const [key, value] of Object.entries(filters.value)) {
       if (isNonNullable(value)) {
         mergedFilters[key] = value;
       }
     }
-    return { ...unref(sorterTitleProps), filters: mergedFilters } as ColumnTitleProps<RecordType>;
+    return { ...unref(sorterTitleProps), filters: mergedFilters };
   });
 }
 
@@ -282,6 +249,6 @@ export function useSpinProps(
     if (value && typeof value === 'object') {
       return { spinning: true, ...value };
     }
-    return {};
+    return { spinning: false };
   });
 }

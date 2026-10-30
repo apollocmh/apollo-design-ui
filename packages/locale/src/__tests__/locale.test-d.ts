@@ -94,6 +94,11 @@ describe('Locale 类型', () => {
       // @ts-expect-error 不是 snake_case
       const bad: TableLocale = { filter_title: 'x' };
       void bad;
+      const callback: TableLocale = {
+        // @ts-expect-error Locale stores static content; dynamic Table content uses #emptyText.
+        emptyText: () => 'No data',
+      };
+      void callback;
     });
   });
 

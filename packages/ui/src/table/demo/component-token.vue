@@ -51,8 +51,7 @@ function onModeChange(value: unknown): void {
       :data-source="data"
       :pagination="false"
       bordered
-      title="用户列表（Component Token）"
-    />
+    ><template #title>用户列表（Component Token）</template></Table>
   </div>
 </template>
 

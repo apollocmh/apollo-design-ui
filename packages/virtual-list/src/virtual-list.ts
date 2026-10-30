@@ -16,8 +16,10 @@
  *      设了 `scrollWidth` 时给 Filler 内层显式 `width`，让溢出交给 holder。
  */
 
-import { devUseWarning, useResizeObserver } from '@apollo-design/utils';
+import { devUseWarning, getElement, isHTMLElement, useResizeObserver } from '@apollo-design/utils';
 import {
+  type Component,
+  type ComponentPublicInstance,
   cloneVNode,
   computed,
   defineComponent,
@@ -27,6 +29,7 @@ import {
   onMounted,
   type PropType,
   ref,
+  toRaw,
   useAttrs,
   type VNode,
   watch,
@@ -95,8 +98,8 @@ export const VirtualList = defineComponent({
     },
     /** 透传到 Filler 内层（消费方用它注入 `aria-*`） */
     innerProps: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    /** holder 的标签名 */
-    component: { type: String, default: 'div' },
+    /** Holder tag or Vue component with one HTMLElement root. */
+    component: { type: [String, Object, Function] as PropType<string | Component>, default: 'div' },
     onScroll: {
       type: Function as PropType<((event: Event) => void) | undefined>,
       default: undefined,
@@ -116,6 +119,23 @@ export const VirtualList = defineComponent({
     const attrs = useAttrs();
     const containerRef = ref<HTMLElement | null>(null);
     const holderRef = ref<HTMLElement | null>(null);
+    let holderInstance: Element | ComponentPublicInstance | null = null;
+    const syncHolder = (): void => {
+      const root: unknown =
+        holderInstance && '$el' in holderInstance ? holderInstance.$el : holderInstance;
+      const element = getElement(root);
+      const next = isHTMLElement(element) ? element : null;
+      if (next === holderRef.value) return;
+      holderRef.value = next;
+      if (next) {
+        next.scrollTop = offsetTop.value;
+        next.scrollLeft = offsetLeft.value;
+      }
+    };
+    const setHolder = (instance: Element | ComponentPublicInstance | null): void => {
+      holderInstance = instance;
+      syncHolder();
+    };
     const fillerRef = ref<FillerExposed | null>(null);
 
     const offsetTop = ref(0);
@@ -473,10 +493,11 @@ export const VirtualList = defineComponent({
             // `key` 会被 Vue 提取为 vnode.key，且 `key` 在 `isReservedProp` 里，
             // 不会写到 DOM 上 —— 所以这样设 key 是安全的。
             key: getKey(item),
-            ref: (el: unknown) => {
-              // 项若是**组件**，ref 拿到的是组件实例代理（没有 offsetParent），
-              // 上游同样量不到 —— 这里统一归成 null，让该项回退到 itemHeight。
-              heightsState.setInstanceRef(item, el instanceof HTMLElement ? el : null);
+            ref: (instance: Element | ComponentPublicInstance | null) => {
+              // Vue components expose their actual single HTMLElement root through $el.
+              const root: unknown = instance && '$el' in instance ? instance.$el : instance;
+              const element = getElement(root);
+              heightsState.setInstanceRef(item, isHTMLElement(element) ? element : null);
             },
           }),
         );
@@ -493,34 +514,38 @@ export const VirtualList = defineComponent({
         getSize: getSize.value,
       };
 
-      const holder = h(
-        props.component,
-        {
-          ref: holderRef,
-          class: `${prefixCls}-holder`,
-          style: holderStyle,
-          onScroll: onFallbackScroll,
-        },
-        [
-          h(
-            Filler,
-            {
-              prefixCls,
-              height: scrollHeight.value,
-              offsetY: fillerOffset.value,
-              rtl: isRTL.value,
-              scrollWidth: props.scrollWidth,
-              innerProps: props.innerProps,
-              ref: fillerRef,
-              onInnerResize: () => heightsState.collectHeight(),
-            },
-            {
-              default: () => items,
-              extra: () => slots.extra?.(extraInfo),
-            },
-          ),
-        ],
-      );
+      const holderProps = {
+        ref: setHolder,
+        onVnodeMounted: syncHolder,
+        onVnodeUpdated: syncHolder,
+        class: `${prefixCls}-holder`,
+        style: holderStyle,
+        onScroll: onFallbackScroll,
+      };
+      const holderChildren = [
+        h(
+          Filler,
+          {
+            prefixCls,
+            height: scrollHeight.value,
+            offsetY: fillerOffset.value,
+            rtl: isRTL.value,
+            scrollWidth: props.scrollWidth,
+            innerProps: props.innerProps,
+            ref: fillerRef,
+            onInnerResize: () => heightsState.collectHeight(),
+          },
+          {
+            default: () => items,
+            extra: () => slots.extra?.(extraInfo),
+          },
+        ),
+      ];
+      const component = toRaw(props.component);
+      const holder =
+        typeof component === 'string'
+          ? h(component, holderProps, holderChildren)
+          : h(component, holderProps, { default: () => holderChildren });
 
       return h(
         'div',

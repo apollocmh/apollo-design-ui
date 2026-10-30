@@ -3,8 +3,7 @@
  * 只渲染「有宽度 / 有附加属性 / 已开始渲染」的 col（尾列省略）。
  */
 
-import { defineComponent, h, type PropType } from 'vue';
-import type { ColumnsType } from '../interface';
+import { defineComponent, h, type PropType, type VNode } from 'vue';
 import { useTableContext } from './context';
 import { INTERNAL_COL_DEFINE } from './utils/legacyUtil';
 
@@ -12,24 +11,33 @@ const ColGroup = defineComponent({
   name: 'TableColGroup',
   props: {
     colWidths: { type: Array as PropType<(number | string | undefined)[]>, required: true },
-    columns: { type: Array as PropType<ColumnsType>, required: true },
+    columns: {
+      type: Array as PropType<
+        {
+          key?: string | number;
+          minWidth?: number | string;
+          [INTERNAL_COL_DEFINE]?: Record<string, unknown>;
+        }[]
+      >,
+      required: true,
+    },
     columCount: { type: Number, default: undefined },
   },
   setup(props) {
     const ctx = useTableContext();
     return () => {
-      const cols: unknown[] = [];
+      const cols: VNode[] = [];
       const len = props.columCount ?? props.columns.length;
       let mustInsert = false;
       for (let i = len - 1; i >= 0; i -= 1) {
         const width = props.colWidths[i];
-        const column = props.columns[i] as Record<string, unknown> | undefined;
+        const column = props.columns[i];
         let additionalProps: Record<string, unknown> | undefined;
         let minWidth: number | string | undefined;
         if (column) {
-          additionalProps = column[INTERNAL_COL_DEFINE] as Record<string, unknown>;
+          additionalProps = column[INTERNAL_COL_DEFINE];
           if (ctx.tableLayout === 'auto') {
-            minWidth = column.minWidth as number | string | undefined;
+            minWidth = column.minWidth;
           }
         }
         if (width || minWidth || additionalProps || mustInsert) {
@@ -40,7 +48,7 @@ const ColGroup = defineComponent({
               key: i,
               style: {
                 // ⚠️ React 自动加 px，Vue 不加（无单位 width 会被丢弃，见 scrollTableStyle）
-                width: typeof width === 'number' ? `${width}px` : (width as string | undefined),
+                width: typeof width === 'number' ? `${width}px` : width,
                 minWidth,
               },
               ...restAdditionalProps,
@@ -49,7 +57,7 @@ const ColGroup = defineComponent({
           mustInsert = true;
         }
       }
-      return cols.length > 0 ? h('colgroup', cols as never) : null;
+      return cols.length > 0 ? h('colgroup', cols) : null;
     };
   },
 });

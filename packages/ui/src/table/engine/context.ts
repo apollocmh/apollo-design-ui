@@ -1,3 +1,4 @@
+import type { EngineExpandableConfig } from './interface';
 /**
  * Table 的运行时上下文（rc `context/TableContext.js` + `PerfContext` 的等价物）。
  *
@@ -11,12 +12,12 @@
  * 的**行级 provide**（`rowContextKey`）。粒度与上游 selector 订阅同构。
  */
 
-import { type ComputedRef, type InjectionKey, inject } from 'vue';
+import { type InjectionKey, inject, type VNodeChild } from 'vue';
 import type {
   ColumnsType,
-  ExpandableConfig,
   GetRowKey,
   RenderExpandIcon,
+  TableComponent,
   TableComponents,
   TableScrollConfig,
   TableSemanticClassNames,
@@ -25,8 +26,8 @@ import type {
 import type { CellFixedInfo, StickyOffsets } from './utils/fixUtil';
 
 /** 行级上下文（BodyRow provide ⇒ Cell inject）。字段全部是**值**（reactive 解包）。 */
-export interface RowContextValue {
-  record: Record<string, unknown> | undefined;
+export interface RowContextValue<RecordType extends object = Record<string, unknown>> {
+  record: RecordType;
   /** 展平后的渲染序号（≠ 展平序号）。 */
   renderIndex: number;
   /** 展平序号。 */
@@ -42,7 +43,6 @@ export interface RowContextValue {
   /** = rowSupportExpand || nestExpandable。 */
   expandable: boolean;
   /** 展平后的行 span 基准（expandedRowOffset 场景的 originRowSpan）。 */
-  rowKeysExpandedCount: (start: number, count: number) => number;
   rowProps: Record<string, unknown>;
   expandedRowInfo: { offset: number; colSpan: number; sticky: number } | undefined;
   hovering: boolean;
@@ -50,10 +50,10 @@ export interface RowContextValue {
   prefixCls: string;
   expandIconColumnIndex: number;
   indentSize: number;
-  expandIcon: ExpandableConfig['expandIcon'];
+  expandIcon: EngineExpandableConfig<RecordType>['expandIcon'];
   fixedInfoList: CellFixedInfo[];
   expandedKeys: Set<string | number>;
-  onTriggerExpand: (record: Record<string, unknown>, event?: Event) => void;
+  onTriggerExpand: (record: RecordType, event?: Event) => void;
   hoveringBySpan: (rowSpan: number) => boolean;
 }
 
@@ -66,10 +66,10 @@ export interface TableContextValue<RecordType = Record<string, unknown>> {
   styles?: Partial<TableSemanticStyles>;
   // ---- Table ----
   prefixCls: string;
-  getComponent: (path: string[], defaultComponent: unknown) => unknown;
+  getComponent: (path: string[], defaultComponent: TableComponent) => TableComponent;
   scrollbarSize: number;
   direction?: 'ltr' | 'rtl';
-  fixedInfoList: ComputedRef<CellFixedInfo[]> | CellFixedInfo[];
+  fixedInfoList: CellFixedInfo[];
   isSticky: boolean;
   componentWidth: number;
   fixHeader: boolean;
@@ -79,37 +79,36 @@ export interface TableContextValue<RecordType = Record<string, unknown>> {
   // ---- Body ----
   tableLayout: 'auto' | 'fixed';
   rowClassName?: string | ((record: RecordType, index: number, indent: number) => string);
-  expandedRowClassName?: ExpandableConfig<RecordType>['expandedRowClassName'];
+  expandedRowClassName?: EngineExpandableConfig<RecordType>['expandedRowClassName'];
   expandIcon: RenderExpandIcon<RecordType>;
   expandableType: false | 'row' | 'nest';
   expandRowByClick: boolean;
-  expandedRowRender?: ExpandableConfig<RecordType>['expandedRowRender'];
+  expandedRowRender?: EngineExpandableConfig<RecordType>['expandedRowRender'];
   forceRender: boolean;
   expandedRowOffset: number;
   onTriggerExpand: (record: RecordType, event?: Event) => void;
   expandIconColumnIndex: number;
   indentSize: number;
   allColumnsFixedLeft: boolean;
-  emptyNode: unknown;
+  emptyNode: VNodeChild;
   // ---- Column ----
   columns: ColumnsType<RecordType>;
   flattenColumns: ColumnsType<RecordType>;
-  onColumnResize: (columnKey: string | number, width: number | null) => void;
+  onColumnResize: (columnKey: string | number, width: number) => void;
   colWidths: (number | undefined)[];
   // ---- Row ----
   hoverStartRow: number;
   hoverEndRow: number;
   onHover: (start: number, end: number) => void;
-  rowExpandable?: ExpandableConfig<RecordType>['rowExpandable'];
+  rowExpandable?: EngineExpandableConfig<RecordType>['rowExpandable'];
   onRow?: (record: RecordType, index?: number) => Record<string, unknown>;
   getRowKey: GetRowKey<RecordType>;
   expandedKeys: Set<string | number>;
   childrenColumnName: string;
   rowHoverable: boolean;
   // ---- Measure ----
-  measureRowRender?: (node: unknown) => unknown;
+  measureRowRender?: (node: VNodeChild) => VNodeChild;
   // ---- 展开（T2）----
-  expandableConfig: ComputedRef<ExpandableConfig<RecordType>>;
   // ---- components 自定义 ----
   components?: TableComponents<RecordType>;
   /** 粘性列头的 z-index 基数（--columns-count）。 */
@@ -123,8 +122,8 @@ export interface TableContextValue<RecordType = Record<string, unknown>> {
   scrollSummaryRef: { value: HTMLElement | null };
 }
 
-export const tableContextKey: InjectionKey<TableContextValue> = Symbol('tableContext');
-export const rowContextKey: InjectionKey<RowContextValue> = Symbol('tableRowContext');
+export const tableContextKey = Symbol('tableContext');
+export const rowContextKey = Symbol('tableRowContext');
 
 /** PerfContext 的对应物（render 里改 props 的 legacy 警告通道，Vue 侧仅保留计数）。 */
 export interface PerfContextValue {
@@ -136,7 +135,7 @@ export const perfContextKey: InjectionKey<PerfContextValue> = Symbol('tablePerfC
 /** Summary（tfoot）内部上下文：滚动列 index / 粘滞几何。 */
 export interface SummaryContextValue {
   stickyOffsets: StickyOffsets;
-  flattenColumns: ColumnsType;
+  flattenColumns: readonly { fixed?: unknown; scrollbar?: unknown }[];
   scrollColumnIndex: number | null;
 }
 
@@ -151,8 +150,10 @@ export const summaryContextKey: InjectionKey<SummaryContextValue> = Symbol('tabl
  * **必然**渲染在 `<Table>` 内部 ⇒ 用 `!` 只是把「万一不在」变成运行期 `undefined` 解引用
  * （报错信息看不出原因）。这里显式抛一条可读的错，同时消掉 13 处 `!`。
  */
-export function useTableContext(): TableContextValue {
-  const ctx = inject(tableContextKey);
+export function useTableContext<
+  RecordType extends object = Record<string, unknown>,
+>(): TableContextValue<RecordType> {
+  const ctx = inject<TableContextValue<RecordType>>(tableContextKey);
   if (!ctx) {
     throw new Error('[apollo/table] 缺少 TableContext：引擎件必须在 <Table> 内部渲染');
   }
@@ -160,8 +161,10 @@ export function useTableContext(): TableContextValue {
 }
 
 /** 取行级上下文（`BodyRow` provide ⇒ `Cell` inject）。 */
-export function useRowContext(): RowContextValue {
-  const ctx = inject(rowContextKey);
+export function useRowContext<
+  RecordType extends object = Record<string, unknown>,
+>(): RowContextValue<RecordType> {
+  const ctx = inject<RowContextValue<RecordType>>(rowContextKey);
   if (!ctx) {
     throw new Error('[apollo/table] 缺少 RowContext：Cell 必须在 BodyRow 内部渲染');
   }

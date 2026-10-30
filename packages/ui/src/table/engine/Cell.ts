@@ -7,28 +7,56 @@
  * 固定列阴影读表级 `scrollInfo` 是有意豁免 —— 只有固定列单元格会订阅它。
  */
 
-import { computed, defineComponent, h, inject, type PropType } from 'vue';
-import type { ColumnType, TableKey } from '../interface';
-import { perfContextKey, rowContextKey, tableContextKey } from './context';
+import {
+  computed,
+  defineComponent,
+  h,
+  inject,
+  isVNode,
+  mergeProps,
+  normalizeStyle,
+  type SetupContext,
+  type SlotsType,
+  type StyleValue,
+  toDisplayString,
+  type VNodeChild,
+} from 'vue';
+import type {
+  ColumnType,
+  TableComponent,
+  TableKey,
+  TableRenderedCell,
+  TableSlots,
+} from '../interface';
+import {
+  perfContextKey,
+  type RowContextValue,
+  rowContextKey,
+  type TableContextValue,
+  tableContextKey,
+} from './context';
+import { renderElement } from './element';
 import { validateValue } from './utils/valueUtil';
 
-/** legacy `render` 返回 `{ children, props }` 的对象形态（rc `isRenderCell`）。 */
-function isRenderCell(data: unknown): data is { children: unknown; props: unknown } {
-  return !!data && typeof data === 'object' && !Array.isArray(data) && !isVNodeLike(data);
+function isRenderCell(data: VNodeChild | TableRenderedCell): data is TableRenderedCell {
+  return !!data && typeof data === 'object' && !Array.isArray(data) && !isVNode(data);
 }
 
-/** 判断一个值是不是本仓 render 函数产出的「元素形态」（数组 [tag, props, ...] 或 VNode）。 */
-function isVNodeLike(data: unknown): boolean {
-  if (Array.isArray(data) && typeof data[0] === 'string' && typeof data[1] === 'object') {
-    return true;
-  }
-  return !!data && typeof data === 'object' && '__v_isVNode' in (data as Record<string, unknown>);
+/** Match Vue text interpolation for values without a column renderer. */
+function renderValue(value: unknown): VNodeChild {
+  if (
+    value == null ||
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    isVNode(value)
+  )
+    return value;
+  if (Array.isArray(value)) return value.map(renderValue);
+  return toDisplayString(value);
 }
 
-function getValueByPath(
-  record: Record<string, unknown> | undefined,
-  dataIndex: ColumnType['dataIndex'],
-): unknown {
+function getValueByPath(record: object | undefined, dataIndex: ColumnType['dataIndex']): unknown {
   if (!record) return undefined;
   const path =
     dataIndex === null || dataIndex === undefined || dataIndex === ''
@@ -71,21 +99,23 @@ function getTitleFromCellRenderChildren(params: {
   return title;
 }
 
-export interface CellProps {
-  component?: string;
+export interface CellProps<RecordType extends object = Record<string, unknown>> {
+  component?: TableComponent;
   prefixCls: string;
   className?: unknown;
-  style?: Record<string, unknown>;
+  style?: StyleValue;
   align?: ColumnType['align'];
   ellipsis?: ColumnType['ellipsis'];
   scope?: string | null;
   // ---- Value ----
-  record?: Record<string, unknown> | null;
-  render?: ((...args: unknown[]) => unknown) | null;
+  record?: RecordType | null;
+  column?: ColumnType<RecordType>;
+  bodyCell?: TableSlots<RecordType>['bodyCell'];
+  render?: ColumnType<RecordType>['render'] | null;
   dataIndex?: ColumnType['dataIndex'];
   renderIndex?: number;
-  shouldCellUpdate?: ColumnType['shouldCellUpdate'];
-  children?: unknown;
+  shouldCellUpdate?: ColumnType<RecordType>['shouldCellUpdate'];
+  children?: VNodeChild;
   // ---- Row ----
   index?: number;
   rowType?: 'header' | 'body' | 'footer';
@@ -93,8 +123,8 @@ export interface CellProps {
   colSpan?: number;
   rowSpan?: number;
   // ---- Fixed ----
-  fixStart?: number;
-  fixEnd?: number;
+  fixStart?: number | null;
+  fixEnd?: number | null;
   fixedStartShadow?: boolean;
   fixedEndShadow?: boolean;
   offsetFixedStartShadow?: number;
@@ -103,79 +133,71 @@ export interface CellProps {
   zIndexReverse?: number;
   isSticky?: boolean;
   // ---- Private ----
-  appendNode?: unknown;
+  appendNode?: VNodeChild;
   additionalProps?: Record<string, unknown> | null;
   originRowSpan?: number;
 }
 
-const Cell = defineComponent({
-  name: 'TableCell',
-  inheritAttrs: false,
-  props: {
-    component: { type: String, default: undefined },
-    prefixCls: { type: String, required: true },
-    style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    align: { type: String as PropType<CellProps['align']>, default: undefined },
-    ellipsis: { type: null as unknown as PropType<CellProps['ellipsis']>, default: undefined },
-    scope: { type: String, default: null },
-    record: { type: null as unknown as PropType<CellProps['record']>, default: null },
-    render: { type: Function as unknown as PropType<CellProps['render']>, default: undefined },
-    dataIndex: { type: null as unknown as PropType<CellProps['dataIndex']>, default: undefined },
-    renderIndex: { type: Number, default: undefined },
-    shouldCellUpdate: { type: Function, default: undefined },
-    children: { type: null, default: undefined },
-    index: { type: Number, default: undefined },
-    rowType: { type: String, default: undefined },
-    colSpan: { type: Number, default: undefined },
-    rowSpan: { type: Number, default: undefined },
-    fixStart: { type: Number, default: undefined },
-    fixEnd: { type: Number, default: undefined },
-    fixedStartShadow: { type: Boolean, default: false },
-    fixedEndShadow: { type: Boolean, default: false },
-    offsetFixedStartShadow: { type: Number, default: 0 },
-    offsetFixedEndShadow: { type: Number, default: 0 },
-    zIndex: { type: Number, default: undefined },
-    zIndexReverse: { type: Number, default: undefined },
-    isSticky: { type: Boolean, default: false },
-    appendNode: { type: null, default: undefined },
-    additionalProps: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    originRowSpan: { type: Number, default: undefined },
-  },
-  setup(props, { attrs, slots }) {
-    const ctx = inject(tableContextKey, null);
-    const rowCtx = inject(rowContextKey, null);
+const NativeCell = defineComponent(
+  <RecordType extends object>(
+    props: CellProps<RecordType>,
+    { attrs: nativeAttrs, slots }: SetupContext<[], SlotsType<{ default?: () => VNodeChild }>>,
+  ) => {
+    const ctx = inject<TableContextValue<RecordType> | null>(tableContextKey, null);
+    const rowCtx = inject<RowContextValue<RecordType> | null>(rowContextKey, null);
     const perf = inject(perfContextKey, null);
 
     // ====================== Value（useCellRender） ======================
-    const cellRender = computed<[unknown, Record<string, unknown> | undefined]>(() => {
-      if (validateValue(props.children)) {
-        return [props.children, undefined];
-      }
-      const value = getValueByPath(props.record ?? undefined, props.dataIndex);
-      let returnChildNode: unknown = value;
-      let returnCellProps: Record<string, unknown> | undefined;
-      if (props.render) {
-        const renderData = props.render(value, props.record, props.renderIndex);
-        if (isRenderCell(renderData)) {
-          // legacy `render` 返回 { children, props }
-          returnChildNode = renderData.children;
-          returnCellProps = renderData.props as Record<string, unknown>;
-          if (perf) perf.renderWithProps = true;
-        } else {
-          returnChildNode = renderData;
+    type RenderResult = [VNodeChild, TableRenderedCell['props']];
+    let previous:
+      | {
+          record: RecordType;
+          render: CellProps<RecordType>['render'];
+          dataIndex: CellProps<RecordType>['dataIndex'];
+          renderIndex: number | undefined;
+          shouldCellUpdate: CellProps<RecordType>['shouldCellUpdate'];
+          result: RenderResult;
         }
+      | undefined;
+    const cellRender = computed<RenderResult>(() => {
+      if (validateValue(props.children)) return [props.children, undefined];
+      const { record, render, dataIndex, renderIndex, shouldCellUpdate } = props;
+      if (
+        record &&
+        previous &&
+        render === previous.render &&
+        dataIndex === previous.dataIndex &&
+        renderIndex === previous.renderIndex &&
+        shouldCellUpdate === previous.shouldCellUpdate &&
+        shouldCellUpdate &&
+        !shouldCellUpdate(record, previous.record)
+      ) {
+        return previous.result;
       }
-      return [returnChildNode, returnCellProps];
+      const value = getValueByPath(record ?? undefined, dataIndex);
+      let result: RenderResult = [renderValue(value), undefined];
+      if (render && record) {
+        const rendered = render(value, record, renderIndex ?? props.index ?? 0);
+        result = isRenderCell(rendered)
+          ? [rendered.children, rendered.props]
+          : [rendered, undefined];
+        if (isRenderCell(rendered) && perf) perf.renderWithProps = true;
+      }
+      if (record) previous = { record, render, dataIndex, renderIndex, shouldCellUpdate, result };
+      return result;
     });
-    const childNode = computed(() => {
+    const childNode = () => {
       const base = cellRender.value[0];
-      // Cell 也支持 default slot（ExpandedRow / SummaryCell 通道）
-      if (base === undefined || base === null) {
-        const fromSlot = slots.default?.();
-        if (fromSlot !== undefined && fromSlot !== null) return fromSlot;
-      }
-      return base;
-    });
+      if (props.bodyCell && props.column && props.record)
+        return props.bodyCell({
+          text: getValueByPath(props.record, props.dataIndex),
+          record: props.record,
+          index: props.renderIndex ?? props.index ?? 0,
+          column: props.column,
+          originNode: base,
+        });
+      return slots.default ? slots.default() : base;
+    };
     const legacyCellProps = computed(() => cellRender.value[1]);
 
     // ====================== Fixed ======================
@@ -185,7 +207,7 @@ const Cell = defineComponent({
     const isFixEnd = computed(() => typeof props.fixEnd === 'number' && !ctx?.allColumnsFixedLeft);
     const shadowState = computed<[boolean, boolean]>(() => {
       if (!isFixStart.value && !isFixEnd.value) return [false, false];
-      const [absScroll, scrollWidth] = (ctx?.scrollInfo as [number, number]) ?? [0, 0];
+      const [absScroll, scrollWidth] = ctx?.scrollInfo ?? [0, 0];
       const showStartShadow =
         Number(isFixStart.value && props.fixedStartShadow && absScroll) -
           (props.offsetFixedStartShadow ?? 0) >=
@@ -218,38 +240,36 @@ const Cell = defineComponent({
     // ====================== Hover（行级） ======================
     const hovering = computed(() => rowCtx?.hovering ?? false);
 
-    const onMouseEnter = (event: MouseEvent) => {
+    const onMouseEnter = (_event: MouseEvent) => {
       if (props.record && ctx) {
         ctx.onHover(props.index ?? -1, (props.index ?? -1) + mergedHoverRowSpan.value - 1);
       }
-      (props.additionalProps?.onMouseEnter as ((e: MouseEvent) => void) | undefined)?.(event);
     };
-    const onMouseLeave = (event: MouseEvent) => {
+    const onMouseLeave = (_event: MouseEvent) => {
       if (props.record && ctx) {
         ctx.onHover(-1, -1);
       }
-      (props.additionalProps?.onMouseLeave as ((e: MouseEvent) => void) | undefined)?.(event);
     };
 
     // ====================== Render ======================
     const visible = computed(() => mergedColSpan.value !== 0 && mergedRowSpan.value !== 0);
 
-    const title = computed(() => {
+    const title = (child: unknown) => {
       const fromAdditional = props.additionalProps?.title;
       if (fromAdditional !== undefined) return fromAdditional;
       return getTitleFromCellRenderChildren({
         rowType: props.rowType,
         ellipsis: props.ellipsis,
-        children: childNode.value,
+        children: child,
       });
-    });
+    };
 
-    const mergedClassName = computed(() => {
+    const mergedClassName = () => {
       const cellPrefixCls = `${props.prefixCls}-cell`;
       const [showFixStartShadow, showFixEndShadow] = shadowState.value;
       return [
         cellPrefixCls,
-        (attrs as { class?: unknown }).class,
+        nativeAttrs.class,
         {
           [`${cellPrefixCls}-fix`]: isFixStart.value || isFixEnd.value,
           [`${cellPrefixCls}-fix-start`]: isFixStart.value,
@@ -263,12 +283,14 @@ const Cell = defineComponent({
           [`${cellPrefixCls}-fix-sticky`]: (isFixStart.value || isFixEnd.value) && props.isSticky,
           [`${cellPrefixCls}-row-hover`]: !legacyCellProps.value && hovering.value,
         },
+        props.additionalProps?.class,
         props.additionalProps?.className,
+        legacyCellProps.value?.class,
         legacyCellProps.value?.className,
       ];
-    });
+    };
 
-    const mergedStyle = computed<Record<string, unknown>>(() => {
+    const mergedStyle = computed(() => {
       const fixedStyle: Record<string, unknown> = {};
       if (isFixStart.value) {
         // ⚠️ React 自动加 px；Vue 不加 ⇒ 无单位值被丢弃（固定列吸边失效）
@@ -285,68 +307,117 @@ const Cell = defineComponent({
       if (props.align) {
         alignStyle.textAlign = props.align;
       }
-      return {
-        ...(legacyCellProps.value?.style as Record<string, unknown> | undefined),
-        ...fixedStyle,
-        ...alignStyle,
-        ...(props.additionalProps?.style as Record<string, unknown> | undefined),
-        ...props.style,
-      };
+      return normalizeStyle([
+        legacyCellProps.value?.style,
+        fixedStyle,
+        alignStyle,
+        props.additionalProps?.style,
+        props.style,
+      ]);
     });
 
     // 固定阴影 + ellipsis 时内容要包一层 span（rc 同判）
-    const wrappedChild = computed(() => {
-      if (props.ellipsis && (props.fixedStartShadow || props.fixedEndShadow)) {
-        return h('span', { class: `${props.prefixCls}-cell-content` }, childNode.value as never);
-      }
-      return childNode.value;
-    });
-
     return () => {
       if (!visible.value) return null;
-      const Component = (props.component ?? 'td') as string;
+      const Component = props.component ?? 'td';
+      const child = childNode();
+      const wrappedChild =
+        props.ellipsis && (props.fixedStartShadow || props.fixedEndShadow)
+          ? h('span', { class: `${props.prefixCls}-cell-content` }, [child])
+          : child;
       const { additionalProps } = props;
-      const attrs: Record<string, unknown> = {
-        ...(legacyCellProps.value ?? {}),
-        ...additionalProps,
-        class: mergedClassName.value,
+      const attrs = mergeProps(nativeAttrs, legacyCellProps.value ?? {}, additionalProps ?? {});
+      Object.assign(attrs, {
+        class: mergedClassName(),
         style: mergedStyle.value,
         // A11y
-        title: title.value,
+        title: title(child),
         scope: props.scope ?? undefined,
         // Span（1 不写属性）
         colSpan: mergedColSpan.value !== 1 ? mergedColSpan.value : undefined,
         rowSpan: mergedRowSpan.value !== 1 ? mergedRowSpan.value : undefined,
-      };
+      });
       if (props.record && ctx?.rowHoverable !== false) {
-        attrs.onMouseenter = onMouseEnter;
-        attrs.onMouseleave = onMouseLeave;
+        Object.assign(
+          attrs,
+          mergeProps(attrs, { onMouseenter: onMouseEnter, onMouseleave: onMouseLeave }),
+        );
       }
-      const domProps: Record<string, unknown> = {};
-      for (const key of Object.keys(attrs)) {
-        if (
-          ![
-            'class',
-            'style',
-            'title',
-            'scope',
-            'colSpan',
-            'rowSpan',
-            'onMouseenter',
-            'onMouseleave',
-          ].includes(key) &&
-          typeof (attrs as Record<string, unknown>)[key] !== 'function' &&
-          !key.startsWith('on')
-        ) {
-          domProps[key] = (attrs as Record<string, unknown>)[key];
-        }
-      }
-      const kids: unknown[] =
-        props.appendNode !== undefined
-          ? [props.appendNode as never, wrappedChild.value as never]
-          : [wrappedChild.value as never];
-      return h(Component, attrs, kids as never);
+      const kids: VNodeChild[] =
+        props.appendNode !== undefined ? [props.appendNode, wrappedChild] : [wrappedChild];
+      return renderElement(Component, attrs, kids);
     };
+  },
+  {
+    name: 'TableCell',
+    inheritAttrs: false,
+    emits: [],
+    props: [
+      'component',
+      'prefixCls',
+      'style',
+      'align',
+      'ellipsis',
+      'scope',
+      'record',
+      'column',
+      'bodyCell',
+      'render',
+      'dataIndex',
+      'renderIndex',
+      'shouldCellUpdate',
+      'children',
+      'index',
+      'rowType',
+      'colSpan',
+      'rowSpan',
+      'fixStart',
+      'fixEnd',
+      'fixedStartShadow',
+      'fixedEndShadow',
+      'offsetFixedStartShadow',
+      'offsetFixedEndShadow',
+      'zIndex',
+      'zIndexReverse',
+      'isSticky',
+      'appendNode',
+      'additionalProps',
+      'originRowSpan',
+    ],
+  },
+);
+const Cell: typeof NativeCell = Object.assign(NativeCell, {
+  props: {
+    component: { type: [String, Object, Function], default: undefined },
+    prefixCls: { type: String, required: true },
+    style: { type: [String, Array, Object], default: undefined },
+    align: { type: String, default: undefined },
+    ellipsis: { type: null, default: undefined },
+    scope: { type: String, default: null },
+    record: { type: null, default: null },
+    column: { type: Object, default: undefined },
+    bodyCell: { type: Function, default: undefined },
+    render: { type: Function, default: undefined },
+    dataIndex: { type: null, default: undefined },
+    renderIndex: { type: Number, default: undefined },
+    shouldCellUpdate: { type: Function, default: undefined },
+    children: { type: null, default: undefined },
+    index: { type: Number, default: undefined },
+    rowType: { type: String, default: undefined },
+    colSpan: { type: Number, default: undefined },
+    rowSpan: { type: Number, default: undefined },
+    fixStart: { type: Number, default: undefined },
+    fixEnd: { type: Number, default: undefined },
+    fixedStartShadow: { type: Boolean, default: false },
+    fixedEndShadow: { type: Boolean, default: false },
+    offsetFixedStartShadow: { type: Number, default: 0 },
+    offsetFixedEndShadow: { type: Number, default: 0 },
+    zIndex: { type: Number, default: undefined },
+    zIndexReverse: { type: Number, default: undefined },
+    isSticky: { type: Boolean, default: false },
+    appendNode: { type: null, default: undefined },
+    additionalProps: { type: Object, default: undefined },
+    originRowSpan: { type: Number, default: undefined },
   },
 });
 

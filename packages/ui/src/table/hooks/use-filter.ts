@@ -7,31 +7,45 @@
  */
 
 import { FilterFilled } from '@apollo-design/icons';
-import { isEqual, isFunction, isNumber } from '@apollo-design/utils';
+import { isEqual, isNumber, useControlledValue } from '@apollo-design/utils';
 import {
   type ComputedRef,
   computed,
   defineComponent,
   h,
   type MaybeRefOrGetter,
-  type PropType,
   ref,
+  type SetupContext,
+  type SlotsType,
   toValue,
+  type VNodeChild,
   watch,
 } from 'vue';
 import { clsx } from '../../_internal/clsx';
 import Button from '../../button/Button.vue';
 import Checkbox from '../../checkbox/Checkbox';
 import Dropdown from '../../dropdown/Dropdown';
+import type { DropdownOpenInfo } from '../../dropdown/interface';
 import Empty from '../../empty/Empty.vue';
+import type { ItemType } from '../../menu/interface';
 import Menu from '../../menu/Menu';
 import Radio from '../../radio/Radio';
+import type {
+  DataNode,
+  EventDataNode,
+  SafeKey,
+  TreeCheckedKeys,
+  TreeCheckInfo,
+} from '../../tree/interface';
 import Tree from '../../tree/Tree';
 import type {
   ColumnFilterItem,
   ColumnsType,
+  ColumnTitleProps,
   ColumnType,
+  FilterSearchType,
   FilterValue,
+  GetPopupContainer,
   TableKey,
   TableLocale,
 } from '../interface';
@@ -52,7 +66,7 @@ export interface TableFilterState<RecordType = Record<string, unknown>> {
 
 const FilterSearch = (props: {
   value: string;
-  onChange: (e: { target: { value: string } }) => void;
+  onChange: (value: string) => void;
   placeholder?: string;
 }) =>
   h('div', { class: 'apollo-table-filter-dropdown-search' }, [
@@ -60,8 +74,7 @@ const FilterSearch = (props: {
       class: 'apollo-table-filter-dropdown-search-input',
       value: props.value,
       placeholder: props.placeholder,
-      onInput: (e: Event) =>
-        props.onChange({ target: { value: (e.target as HTMLInputElement).value } }),
+      onInput: (e: Event) => props.onChange((e.currentTarget as HTMLInputElement).value),
     }),
   ]);
 
@@ -71,7 +84,7 @@ const FilterWrapper = defineComponent({
   name: 'TableFilterDropdownMenuWrapper',
   props: { className: { type: String, default: undefined } },
   setup(props, { slots }) {
-    return () => h('div', { class: props.className }, slots.default?.() as never);
+    return () => h('div', { class: props.className }, slots.default?.());
   },
 });
 
@@ -124,7 +137,7 @@ export function collectFilterStates<RecordType>(
         }
         filterStates.push({
           column,
-          key: getColumnKey(column as never, columnPos),
+          key: getColumnKey(column, columnPos),
           filteredKeys: filteredValues,
           forceFiltered: column.filtered,
         });
@@ -132,7 +145,7 @@ export function collectFilterStates<RecordType>(
         // 非受控
         filterStates.push({
           column,
-          key: getColumnKey(column as never, columnPos),
+          key: getColumnKey(column, columnPos),
           filteredKeys:
             init && column.defaultFilteredValue
               ? (column.defaultFilteredValue as FilterValue)
@@ -141,28 +154,21 @@ export function collectFilterStates<RecordType>(
         });
       }
     }
-    if ('children' in column) {
-      filterStates = [
-        ...filterStates,
-        ...collectFilterStates(
-          (column as unknown as { children: ColumnsType<RecordType> }).children,
-          init,
-          columnPos,
-        ),
-      ];
+    if (column.children) {
+      filterStates = [...filterStates, ...collectFilterStates(column.children, init, columnPos)];
     }
   });
   return filterStates;
 }
 
-function injectFilter<RecordType>(
+function injectFilter<RecordType extends object>(
   prefixCls: string,
   dropdownPrefixCls: string,
   columns: ColumnsType<RecordType>,
   filterStates: TableFilterState<RecordType>[],
   locale: TableLocale,
   triggerFilter: (state: TableFilterState<RecordType>) => void,
-  getPopupContainer: ((node: HTMLElement) => HTMLElement) | undefined,
+  getPopupContainer: GetPopupContainer | undefined,
   pos?: string,
   rootClassName?: string,
 ): ColumnsType<RecordType> {
@@ -177,40 +183,40 @@ function injectFilter<RecordType>(
     } = column as ColumnType<RecordType>;
     let newColumn = column;
     if (newColumn.filters || newColumn.filterDropdown) {
-      const columnKey = getColumnKey(newColumn as never, columnPos);
+      const columnKey = getColumnKey(newColumn, columnPos);
       const filterState = filterStates.find(({ key }) => columnKey === key);
       newColumn = {
         ...newColumn,
-        title: (renderProps: unknown) =>
+        title: (renderProps: ColumnTitleProps<RecordType>) =>
           h(
-            FilterDropdown,
+            FilterDropdown<RecordType>,
             {
               tablePrefixCls: prefixCls,
               prefixCls: `${prefixCls}-filter`,
               dropdownPrefixCls,
-              column: newColumn as never,
+              column: newColumn,
               columnKey,
-              filterState: filterState as never,
+              filterState,
               filterOnClose,
               filterMultiple,
               filterMode,
-              filterSearch: filterSearch as never,
-              triggerFilter: triggerFilter as never,
+              filterSearch,
+              triggerFilter,
               locale,
               getPopupContainer,
               rootClassName,
             },
-            { default: () => renderColumnTitle(column.title, renderProps) as never },
+            { default: () => renderColumnTitle(column.title, renderProps) },
           ),
       } as ColumnType<RecordType>;
     }
-    if ('children' in newColumn) {
+    if (newColumn.children) {
       newColumn = {
         ...newColumn,
         children: injectFilter(
           prefixCls,
           dropdownPrefixCls,
-          (newColumn as unknown as { children: ColumnsType<RecordType> }).children,
+          newColumn.children,
           filterStates,
           locale,
           triggerFilter,
@@ -297,420 +303,442 @@ export function getFilterData<RecordType>(
 
 // ============================== FilterDropdown 组件 ==============================
 
-const FilterDropdown = defineFilterDropdownComponent();
-function defineFilterDropdownComponent() {
-  return defineComponent({
-    name: 'TableFilterDropdown',
-    props: {
-      tablePrefixCls: { type: String, required: true },
-      prefixCls: { type: String, required: true },
-      dropdownPrefixCls: { type: String, required: true },
-      column: { type: Object as PropType<ColumnType>, required: true },
-      columnKey: { type: [String, Number] as PropType<TableKey>, required: true },
-      filterState: { type: Object as PropType<TableFilterState>, default: undefined },
-      filterOnClose: { type: Boolean, default: true },
-      filterMultiple: { type: Boolean, default: true },
-      filterMode: { type: String as PropType<'menu' | 'tree'>, default: 'menu' },
-      filterSearch: { type: null, default: false },
-      triggerFilter: {
-        type: Function as PropType<(state: TableFilterState) => void>,
-        required: true,
-      },
-      locale: { type: Object as PropType<TableLocale>, required: true },
-      getPopupContainer: { type: Function, default: undefined },
-      rootClassName: { type: String, default: undefined },
-    },
-    setup(props, { slots }) {
-      const tablePrefix = () => props.prefixCls.replace(/-filter$/, '');
-      const tableStyle = useTableTheme(tablePrefix);
-      const column = computed(() => props.column);
-      const {
-        filterResetToDefaultFilteredValue,
-        defaultFilteredValue,
-        filterDropdownProps = {},
-        filterDropdownOpen,
-        onFilterDropdownOpenChange,
-      } = column.value as ColumnType & {
-        filterDropdownProps?: { onOpenChange?: (open: boolean) => void; open?: boolean };
-      };
+interface FilterDropdownComponentProps<RecordType> {
+  tablePrefixCls: string;
+  prefixCls: string;
+  dropdownPrefixCls: string;
+  column: ColumnType<RecordType>;
+  columnKey: TableKey;
+  filterState?: TableFilterState<RecordType>;
+  filterOnClose?: boolean;
+  filterMultiple?: boolean;
+  filterMode?: 'tree' | 'menu';
+  filterSearch?: FilterSearchType<ColumnFilterItem>;
+  triggerFilter: (state: TableFilterState<RecordType>) => void;
+  locale: TableLocale;
+  getPopupContainer?: GetPopupContainer;
+  rootClassName?: string;
+}
+const NativeFilterDropdown = defineComponent(
+  <RecordType extends object>(
+    props: FilterDropdownComponentProps<RecordType>,
+    { slots }: SetupContext<[], SlotsType<{ default?: () => VNodeChild }>>,
+  ) => {
+    const tablePrefix = () => props.prefixCls.replace(/-filter$/, '');
+    const tableStyle = useTableTheme(tablePrefix);
+    const column = computed(() => props.column);
+    const filterDropdownProps = computed(() => column.value.filterDropdownProps ?? {});
+    const [visible, setVisible] = useControlledValue<boolean>({
+      defaultValue: () => filterDropdownProps.value.defaultOpen ?? false,
+      getValue: () => filterDropdownProps.value.open ?? column.value.filterDropdownOpen,
+    });
+    const filtered = computed(() =>
+      Boolean(
+        props.filterState &&
+          (props.filterState.filteredKeys?.length || props.filterState.forceFiltered),
+      ),
+    );
+    const triggerOpen = (nextOpen: boolean, info: DropdownOpenInfo = { source: 'trigger' }) => {
+      setVisible(nextOpen);
+      filterDropdownProps.value.onOpenChange?.(nextOpen, info);
+      column.value.onFilterDropdownOpenChange?.(nextOpen);
+    };
+    const mergedVisible = visible;
 
-      const visible = ref(false);
-      const filtered = computed(() =>
-        Boolean(
-          props.filterState &&
-            (props.filterState.filteredKeys?.length || props.filterState.forceFiltered),
+    // ===================== Select Keys =====================
+    const propFilteredKeys = computed(() => props.filterState?.filteredKeys);
+    const filteredKeysSync = ref<FilterValue>(wrapStringListType(propFilteredKeys.value));
+    const getFilteredKeysSync = () => filteredKeysSync.value;
+    const setFilteredKeysSync = (keys: FilterValue) => {
+      filteredKeysSync.value = keys;
+    };
+    const onSelectKeys = ({ selectedKeys }: { selectedKeys: FilterValue }) => {
+      setFilteredKeysSync(selectedKeys);
+    };
+    const onCheck = (keys: SafeKey[] | TreeCheckedKeys, info: TreeCheckInfo) => {
+      if (!props.filterMultiple) {
+        onSelectKeys({ selectedKeys: info.checked ? [info.node.key] : [] });
+      } else {
+        onSelectKeys({ selectedKeys: Array.isArray(keys) ? keys : keys.checked });
+      }
+    };
+    watch([propFilteredKeys, mergedVisible], () => {
+      if (!mergedVisible.value) return;
+      onSelectKeys({ selectedKeys: wrapStringListType(propFilteredKeys.value) });
+    });
+
+    // ====================== Search ======================
+    const searchValue = ref('');
+    const normalizedSearchValue = computed(() => searchValue.value.trim().toLowerCase());
+    watch(mergedVisible, (v) => {
+      if (!v) searchValue.value = '';
+    });
+
+    // ======================= Submit ========================
+    const internalTriggerFilter = (keys: FilterValue | null) => {
+      const mergedKeys = keys?.length ? keys : null;
+      if (mergedKeys === null && !props.filterState?.filteredKeys) {
+        return;
+      }
+      if (isEqual(mergedKeys, props.filterState?.filteredKeys ?? null)) {
+        return;
+      }
+      props.triggerFilter({
+        column: props.column,
+        key: props.columnKey,
+        filteredKeys: mergedKeys,
+        forceFiltered: props.filterState?.forceFiltered,
+      });
+    };
+    const onConfirm = () => {
+      triggerOpen(false);
+      internalTriggerFilter(getFilteredKeysSync());
+    };
+    const onReset = (opts?: { confirm?: boolean; closeDropdown?: boolean }) => {
+      const { confirm = false, closeDropdown = false } = opts ?? {};
+      if (closeDropdown) triggerOpen(false);
+      searchValue.value = '';
+      if (column.value.filterResetToDefaultFilteredValue) {
+        setFilteredKeysSync((column.value.defaultFilteredValue ?? []).map(String));
+      } else {
+        setFilteredKeysSync([]);
+      }
+      if (confirm) internalTriggerFilter(getFilteredKeysSync());
+    };
+    const doFilter = (opts?: { closeDropdown?: boolean }) => {
+      const { closeDropdown = true } = opts ?? {};
+      if (closeDropdown) triggerOpen(false);
+      internalTriggerFilter(getFilteredKeysSync());
+    };
+    const onDropdownOpenChange = (nextOpen: boolean, info: DropdownOpenInfo) => {
+      if (info.source === 'trigger') {
+        if (nextOpen && propFilteredKeys.value !== undefined) {
+          setFilteredKeysSync(wrapStringListType(propFilteredKeys.value));
+        }
+        if (!nextOpen && !column.value.filterDropdown && props.filterOnClose) {
+          onConfirm();
+        } else {
+          triggerOpen(nextOpen, info);
+        }
+      }
+    };
+
+    const dropdownMenuClass = computed(() =>
+      clsx({
+        [`${props.dropdownPrefixCls}-menu-without-submenu`]: !hasSubMenu(
+          (column.value.filters ?? []) as ColumnFilterItem[],
         ),
-      );
-      const triggerOpen = (nextOpen: boolean) => {
-        visible.value = nextOpen;
-        filterDropdownProps?.onOpenChange?.(nextOpen);
-        // deprecated
-        onFilterDropdownOpenChange?.(nextOpen);
-      };
-      const mergedVisible = computed(
-        () => filterDropdownProps?.open ?? filterDropdownOpen ?? visible.value,
-      );
-
-      // ===================== Select Keys =====================
-      const propFilteredKeys = computed(() => props.filterState?.filteredKeys);
-      const filteredKeysSync = ref<FilterValue>(wrapStringListType(propFilteredKeys.value));
-      const getFilteredKeysSync = () => filteredKeysSync.value;
-      const setFilteredKeysSync = (keys: FilterValue) => {
-        filteredKeysSync.value = keys;
-      };
-      const onSelectKeys = ({ selectedKeys }: { selectedKeys: FilterValue }) => {
-        setFilteredKeysSync(selectedKeys);
-      };
-      const onCheck = (
-        keys: (TableKey | boolean)[],
-        info: { node: { key: TableKey }; checked: boolean },
-      ) => {
-        if (!props.filterMultiple) {
-          onSelectKeys({ selectedKeys: info.checked ? [info.node.key] : [] });
-        } else {
-          onSelectKeys({ selectedKeys: keys as FilterValue });
+      }),
+    );
+    const onCheckAll = (_event: Event, checked: boolean) => {
+      if (checked) {
+        const allFilterKeys = flattenKeys(column.value.filters as ColumnFilterItem[]).map(String);
+        setFilteredKeysSync(allFilterKeys);
+      } else {
+        setFilteredKeysSync([]);
+      }
+    };
+    const getTreeData = (filters?: ColumnFilterItem[]): DataNode[] =>
+      (filters ?? []).map((filter, index) => {
+        const key = String(filter.value);
+        const item: DataNode = {
+          title: filter.text,
+          key: filter.value !== undefined ? key : String(index),
+        };
+        if (filter.children) {
+          item.children = getTreeData(filter.children);
         }
-      };
-      watch([propFilteredKeys, mergedVisible], () => {
-        if (!mergedVisible.value) return;
-        onSelectKeys({ selectedKeys: wrapStringListType(propFilteredKeys.value) });
+        return item;
       });
 
-      // ====================== Search ======================
-      const searchValue = ref('');
-      const normalizedSearchValue = computed(() => searchValue.value.trim().toLowerCase());
-      watch(mergedVisible, (v) => {
-        if (!v) searchValue.value = '';
+    const renderFilterItems = (options: {
+      filters: ColumnFilterItem[];
+      filteredKeys: FilterValue;
+      filterMultiple?: boolean;
+      normalizedSearchValue: string;
+    }): ItemType[] =>
+      options.filters.map((filter) => {
+        const key = String(filter.value);
+        if (filter.children) {
+          return {
+            key,
+            label: filter.text,
+            children: renderFilterItems({
+              filters: filter.children,
+              filteredKeys: options.filteredKeys,
+              filterMultiple: options.filterMultiple,
+              normalizedSearchValue: options.normalizedSearchValue,
+            }),
+          };
+        }
+        const control = options.filterMultiple
+          ? h(Checkbox, { checked: options.filteredKeys.includes(key) })
+          : h(Radio, { checked: options.filteredKeys.includes(key) });
+        const item = {
+          key,
+          label: h('span', null, [control, h('span', null, [filter.text])]),
+        };
+        if (options.normalizedSearchValue) {
+          if (typeof props.filterSearch === 'function') {
+            return props.filterSearch(options.normalizedSearchValue, filter) ? item : null;
+          }
+          return searchValueMatched(options.normalizedSearchValue, filter.text) ? item : null;
+        }
+        return item;
       });
 
-      // ======================= Submit ========================
-      const internalTriggerFilter = (keys: FilterValue | null) => {
-        const mergedKeys = keys?.length ? keys : null;
-        if (mergedKeys === null && !props.filterState?.filteredKeys) {
-          return;
-        }
-        if (isEqual(mergedKeys, props.filterState?.filteredKeys ?? null)) {
-          return;
-        }
-        props.triggerFilter({
-          column: props.column,
-          key: props.columnKey,
-          filteredKeys: mergedKeys,
-          forceFiltered: props.filterState?.forceFiltered,
-        } as TableFilterState);
-      };
-      const onConfirm = () => {
-        triggerOpen(false);
-        internalTriggerFilter(getFilteredKeysSync());
-      };
-      const onReset = (opts?: { confirm?: boolean; closeDropdown?: boolean }) => {
-        const { confirm = false, closeDropdown = false } = opts ?? {};
-        if (confirm) internalTriggerFilter([]);
-        if (closeDropdown) triggerOpen(false);
-        searchValue.value = '';
-        if (filterResetToDefaultFilteredValue) {
-          setFilteredKeysSync((defaultFilteredValue ?? []).map(String));
-        } else {
-          setFilteredKeysSync([]);
-        }
-      };
-      const doFilter = (opts?: { closeDropdown?: boolean }) => {
-        const { closeDropdown = true } = opts ?? {};
-        if (closeDropdown) triggerOpen(false);
-        internalTriggerFilter(getFilteredKeysSync());
-      };
-      const onDropdownOpenChange = (nextOpen: boolean, info: { source?: string }) => {
-        if (info.source === 'trigger') {
-          if (nextOpen && propFilteredKeys.value !== undefined) {
-            setFilteredKeysSync(wrapStringListType(propFilteredKeys.value));
-          }
-          if (!nextOpen && !column.value.filterDropdown && props.filterOnClose) {
-            onConfirm();
-          } else {
-            triggerOpen(nextOpen);
-          }
-        }
-      };
-
-      const dropdownMenuClass = computed(() =>
-        clsx({
-          [`${props.dropdownPrefixCls}-menu-without-submenu`]: !hasSubMenu(
-            (column.value.filters ?? []) as ColumnFilterItem[],
-          ),
-        }),
-      );
-      const onCheckAll = (_event: Event, checked: boolean) => {
-        if (checked) {
-          const allFilterKeys = flattenKeys(column.value.filters as ColumnFilterItem[]).map(String);
-          setFilteredKeysSync(allFilterKeys);
-        } else {
-          setFilteredKeysSync([]);
-        }
-      };
-      const getTreeData = (
-        filters?: ColumnFilterItem[],
-      ): { title: unknown; key: string; children?: unknown[] }[] =>
-        (filters ?? []).map((filter, index) => {
-          const key = String(filter.value);
-          const item: { title: unknown; key: string; children?: unknown[] } = {
-            title: filter.text,
-            key: filter.value !== undefined ? key : String(index),
-          };
-          if (filter.children) {
-            item.children = getTreeData(filter.children);
-          }
-          return item;
+    return () => {
+      let dropdownContent: VNodeChild;
+      if (typeof column.value.filterDropdown === 'function') {
+        dropdownContent = column.value.filterDropdown({
+          prefixCls: `${props.dropdownPrefixCls}-custom`,
+          setSelectedKeys: (selectedKeys) => onSelectKeys({ selectedKeys }),
+          selectedKeys: getFilteredKeysSync(),
+          confirm: doFilter,
+          clearFilters: onReset,
+          filters: column.value.filters,
+          visible: mergedVisible.value,
+          close: () => triggerOpen(false, { source: 'menu' }),
         });
-
-      const renderFilterItems = (options: {
-        filters: ColumnFilterItem[];
-        filteredKeys: FilterValue;
-        filterMultiple: boolean;
-        normalizedSearchValue: string;
-      }): unknown[] =>
-        options.filters.map((filter, index) => {
-          const key = String(filter.value);
-          if (filter.children) {
-            return {
-              key: key || index,
-              label: filter.text,
-              children: renderFilterItems({
-                filters: filter.children,
-                filteredKeys: options.filteredKeys,
-                filterMultiple: options.filterMultiple,
-                normalizedSearchValue: options.normalizedSearchValue,
-              }),
-            };
-          }
-          const Comp = options.filterMultiple ? Checkbox : Radio;
-          const item = {
-            key: filter.value !== undefined ? key : index,
-            label: h('span', null, [
-              h(Comp, { checked: options.filteredKeys.includes(key) } as never),
-              h('span', null, filter.text as never),
-            ]),
-          };
-          if (options.normalizedSearchValue) {
-            if (isFunction(props.filterSearch)) {
-              return (props.filterSearch as (v: string, f: ColumnFilterItem) => boolean)(
-                options.normalizedSearchValue,
-                filter,
-              )
-                ? item
-                : null;
-            }
-            return searchValueMatched(options.normalizedSearchValue, filter.text) ? item : null;
-          }
-          return item;
-        });
-
-      return () => {
-        let dropdownContent: unknown;
-        if (isFunction(column.value.filterDropdown)) {
-          const fn = column.value.filterDropdown as unknown as (
-            p: Record<string, unknown>,
-          ) => unknown;
-          dropdownContent = fn({
-            prefixCls: `${props.dropdownPrefixCls}-custom`,
-            setSelectedKeys: (selectedKeys: TableKey[]) =>
-              onSelectKeys({ selectedKeys: selectedKeys as FilterValue }),
-            selectedKeys: getFilteredKeysSync(),
-            confirm: doFilter,
-            clearFilters: onReset,
-            filters: column.value.filters,
-            visible: mergedVisible.value,
-            close: () => triggerOpen(false),
-          });
-        } else if (column.value.filterDropdown) {
-          dropdownContent = column.value.filterDropdown;
-        } else {
-          const selectedKeys = getFilteredKeysSync() ?? [];
-          const empty = h(Empty, {
-            description: props.locale.filterEmptyText,
-            style: { margin: 0, padding: '16px 0' },
-          } as never);
-          const filters = (column.value.filters ?? []) as ColumnFilterItem[];
-          let filterComponent: unknown;
-          if (filters.length === 0) {
-            filterComponent = empty;
-          } else if (props.filterMode === 'tree') {
-            const treeData = getTreeData(filters);
-            const flatCount = flattenKeys(filters).length;
-            filterComponent = h('div', { class: `${props.tablePrefixCls}-filter-dropdown-tree` }, [
-              props.filterMultiple
-                ? h(
-                    Checkbox,
-                    {
-                      checked: selectedKeys.length === flatCount,
-                      indeterminate: selectedKeys.length > 0 && selectedKeys.length < flatCount,
-                      class: `${props.tablePrefixCls}-filter-dropdown-checkall`,
-                      onChange: onCheckAll,
-                    } as never,
-                    { default: () => props.locale.filterCheckAll ?? props.locale.filterCheckall },
-                  )
-                : null,
-              h(Tree, {
-                checkable: true,
-                selectable: false,
-                blockNode: true,
-                multiple: props.filterMultiple,
-                checkStrictly: !props.filterMultiple,
-                class: `${props.dropdownPrefixCls}-menu`,
-                onCheck: onCheck,
-                checkedKeys: selectedKeys,
-                selectedKeys: selectedKeys,
-                showIcon: false,
-                treeData,
-                autoExpandParent: true,
-                defaultExpandAll: true,
-                filterTreeNode: normalizedSearchValue.value
-                  ? (node: { title?: unknown }) => {
-                      if (isFunction(props.filterSearch)) {
-                        return (props.filterSearch as (v: string, f: unknown) => boolean)(
-                          searchValue.value,
-                          node,
-                        );
+      } else if (column.value.filterDropdown !== undefined) {
+        dropdownContent = column.value.filterDropdown;
+      } else {
+        const selectedKeys = getFilteredKeysSync() ?? [];
+        const empty = h(
+          Empty,
+          { style: { margin: 0, padding: '16px 0' } },
+          { description: () => props.locale.filterEmptyText },
+        );
+        const filters = column.value.filters ?? [];
+        let filterComponent: VNodeChild;
+        if (filters.length === 0) {
+          filterComponent = empty;
+        } else if (props.filterMode === 'tree') {
+          const treeData = getTreeData(filters);
+          const flatCount = flattenKeys(filters).length;
+          filterComponent = h('div', { class: `${props.tablePrefixCls}-filter-dropdown-tree` }, [
+            props.filterSearch
+              ? h(FilterSearch, {
+                  value: searchValue.value,
+                  onChange: (value: string) => {
+                    searchValue.value = value;
+                  },
+                  placeholder: props.locale.filterSearchPlaceholder,
+                })
+              : null,
+            props.filterMultiple
+              ? h(
+                  Checkbox,
+                  {
+                    checked: selectedKeys.length === flatCount,
+                    indeterminate: selectedKeys.length > 0 && selectedKeys.length < flatCount,
+                    class: `${props.tablePrefixCls}-filter-dropdown-checkall`,
+                    onChange: onCheckAll,
+                  },
+                  { default: () => props.locale.filterCheckAll ?? props.locale.filterCheckall },
+                )
+              : null,
+            h(Tree, {
+              checkable: true,
+              selectable: false,
+              blockNode: true,
+              multiple: props.filterMultiple,
+              checkStrictly: !props.filterMultiple,
+              class: `${props.dropdownPrefixCls}-menu`,
+              onCheck: onCheck,
+              checkedKeys: selectedKeys.map(String),
+              selectedKeys: selectedKeys.map(String),
+              showIcon: false,
+              treeData,
+              autoExpandParent: true,
+              defaultExpandAll: true,
+              filterTreeNode: normalizedSearchValue.value
+                ? (node: EventDataNode) => {
+                    const find = (filters: ColumnFilterItem[]): ColumnFilterItem | undefined => {
+                      for (const filter of filters) {
+                        if (String(filter.value) === String(node.key)) return filter;
+                        const child = filter.children && find(filter.children);
+                        if (child) return child;
                       }
-                      return searchValueMatched(normalizedSearchValue.value, node.title);
-                    }
-                  : undefined,
-              } as never),
-            ]);
-          } else {
-            const items = renderFilterItems({
-              filters,
-              filteredKeys: getFilteredKeysSync() ?? [],
-              filterMultiple: props.filterMultiple,
-              normalizedSearchValue: normalizedSearchValue.value,
-            });
-            const isEmpty = items.every((item) => item === null);
-            filterComponent = [
-              h(FilterSearch, {
-                value: searchValue.value,
-                onChange: (e: { target: { value: string } }) => {
-                  searchValue.value = e.target.value;
-                },
-                placeholder: props.locale.filterSearchPlaceholder,
-              }),
-              isEmpty
-                ? empty
-                : h(Menu, {
-                    selectable: true,
-                    multiple: props.filterMultiple,
-                    prefixCls: `${props.dropdownPrefixCls}-menu`,
-                    class: dropdownMenuClass.value,
-                    onSelect: (info: { selectedKeys: string[] }) =>
-                      onSelectKeys({ selectedKeys: info.selectedKeys }),
-                    onDeselect: (info: { selectedKeys: string[] }) =>
-                      onSelectKeys({ selectedKeys: info.selectedKeys }),
-                    selectedKeys: selectedKeys as string[],
-                    getPopupContainer: props.getPopupContainer,
-                    items: items as never,
-                  } as never),
-            ];
-          }
-          const getResetDisabled = () => {
-            if (filterResetToDefaultFilteredValue) {
-              return isEqual((defaultFilteredValue ?? []).map(String), selectedKeys);
-            }
-            return selectedKeys.length === 0;
-          };
-          dropdownContent = [
-            filterComponent,
-            h('div', { class: `${props.prefixCls}-dropdown-btns` }, [
-              h(
-                Button,
-                {
-                  type: 'link',
-                  size: 'small',
-                  disabled: getResetDisabled(),
-                  onClick: () => onReset(),
-                },
-                { default: () => props.locale.filterReset },
-              ),
-              h(
-                Button,
-                { type: 'primary', size: 'small', onClick: onConfirm },
-                { default: () => props.locale.filterConfirm },
-              ),
-            ]),
+                      return undefined;
+                    };
+                    const filter = find(filters);
+                    return filter
+                      ? typeof props.filterSearch === 'function'
+                        ? props.filterSearch(searchValue.value, filter)
+                        : searchValueMatched(normalizedSearchValue.value, filter.text)
+                      : false;
+                  }
+                : undefined,
+            }),
+          ]);
+        } else {
+          const items = renderFilterItems({
+            filters,
+            filteredKeys: getFilteredKeysSync() ?? [],
+            filterMultiple: props.filterMultiple,
+            normalizedSearchValue: normalizedSearchValue.value,
+          });
+          const isEmpty = items.every((item) => item === null);
+          filterComponent = [
+            props.filterSearch
+              ? h(FilterSearch, {
+                  value: searchValue.value,
+                  onChange: (value: string) => {
+                    searchValue.value = value;
+                  },
+                  placeholder: props.locale.filterSearchPlaceholder,
+                })
+              : null,
+            isEmpty
+              ? empty
+              : h(Menu, {
+                  selectable: true,
+                  multiple: props.filterMultiple,
+                  prefixCls: `${props.dropdownPrefixCls}-menu`,
+                  class: dropdownMenuClass.value,
+                  onSelect: (info: { selectedKeys: string[] }) =>
+                    onSelectKeys({ selectedKeys: info.selectedKeys }),
+                  onDeselect: (info: { selectedKeys: string[] }) =>
+                    onSelectKeys({ selectedKeys: info.selectedKeys }),
+                  selectedKeys: selectedKeys.map(String),
+                  getPopupContainer: props.getPopupContainer,
+                  items,
+                }),
           ];
         }
-
-        // ⚠️ 先捕获内层内容再包装 —— 若插槽闭包直接引用 dropdownContent 变量，
-        //    变量已被重赋值为包装层 ⇒ 插槽渲染自身 ⇒ 无限递归（React 无此坑：
-        //    children 是立即求值的引用）。
-        const dropdownInner = dropdownContent;
-        // 🚨 必须挂 `apollo-table-css-var`：
-        //    `.apollo-table-filter-dropdown` 的背景 / 阴影 / 圆角全部依赖
-        //    `--apollo-table-filter-dropdown-bg`（声明在 `.apollo-table, .apollo-table-css-var` 上）。
-        //    弹层通过 Teleport 落到 body 后，祖先链上**找不到** `.apollo-table` ⇒ 变量继承失败
-        //    ⇒ 计算样式退回 `transparent`（用户报「过滤菜单没加背景色」，Issue 2026-10-20-01）。
-        //    把 `apollo-table-css-var` 放到 FilterWrapper 自己的 className 上 ⇒ CSS 变量在
-        //    **同一元素**声明、同元素被 `background-color: var(...)` 消费，cascade 闭合。
-        dropdownContent = h(
-          FilterWrapper,
-          {
-            className: clsx(`${props.prefixCls}-dropdown`, `${tablePrefix()}-css-var`),
-            style: tableStyle.value,
-          },
-          { default: () => dropdownInner },
-        );
-
-        // 触发器
-        let filterIcon: unknown;
-        if (isFunction(column.value.filterIcon)) {
-          filterIcon = (column.value.filterIcon as (f: boolean) => unknown)(filtered.value);
-        } else if (column.value.filterIcon) {
-          filterIcon = column.value.filterIcon;
-        } else {
-          filterIcon = h(FilterFilled);
-        }
-        const triggerNode = h(
-          'span',
-          {
-            role: 'button',
-            tabIndex: -1,
-            class: clsx(`${props.prefixCls}-trigger`, { active: filtered.value }),
-            onClick: (e: MouseEvent) => e.stopPropagation(),
-          },
-          [filterIcon as never],
-        );
-
-        return h('div', { class: `${props.prefixCls}-column` }, [
-          h('span', { class: `${props.tablePrefixCls}-column-title` }, slots.default?.() as never),
-          h(
-            Dropdown,
-            {
-              trigger: ['click'],
-              placement: 'bottomRight',
-              getPopupContainer: props.getPopupContainer,
-              ...(filterDropdownProps ?? {}),
-              rootClassName: clsx(props.rootClassName, filterDropdownProps?.rootClassName),
-              open: mergedVisible.value,
-              onOpenChange: onDropdownOpenChange as never,
-              menu: { items: [] },
-            } as never,
-            {
-              default: () => [triggerNode as never],
-              popupRender: (slotProps: { originNode: unknown }) => {
-                void slotProps;
-                if (
-                  isFunction((filterDropdownProps as { dropdownRender?: unknown })?.dropdownRender)
-                ) {
-                  return (
-                    filterDropdownProps as { dropdownRender: (n: unknown) => unknown }
-                  ).dropdownRender(dropdownContent) as never;
-                }
-                return dropdownContent as never;
+        const getResetDisabled = () => {
+          if (column.value.filterResetToDefaultFilteredValue) {
+            return isEqual((column.value.defaultFilteredValue ?? []).map(String), selectedKeys);
+          }
+          return selectedKeys.length === 0;
+        };
+        dropdownContent = [
+          filterComponent,
+          h('div', { class: `${props.prefixCls}-dropdown-btns` }, [
+            h(
+              Button,
+              {
+                type: 'link',
+                size: 'small',
+                disabled: getResetDisabled(),
+                onClick: () => onReset(),
               },
-            },
-          ),
-        ]);
-      };
+              { default: () => props.locale.filterReset },
+            ),
+            h(
+              Button,
+              { type: 'primary', size: 'small', onClick: onConfirm },
+              { default: () => props.locale.filterConfirm },
+            ),
+          ]),
+        ];
+      }
+
+      // ⚠️ 先捕获内层内容再包装 —— 若插槽闭包直接引用 dropdownContent 变量，
+      //    变量已被重赋值为包装层 ⇒ 插槽渲染自身 ⇒ 无限递归（React 无此坑：
+      //    children 是立即求值的引用）。
+      const dropdownInner = dropdownContent;
+      // 🚨 必须挂 `apollo-table-css-var`：
+      //    `.apollo-table-filter-dropdown` 的背景 / 阴影 / 圆角全部依赖
+      //    `--apollo-table-filter-dropdown-bg`（声明在 `.apollo-table, .apollo-table-css-var` 上）。
+      //    弹层通过 Teleport 落到 body 后，祖先链上**找不到** `.apollo-table` ⇒ 变量继承失败
+      //    ⇒ 计算样式退回 `transparent`（用户报「过滤菜单没加背景色」，Issue 2026-10-20-01）。
+      //    把 `apollo-table-css-var` 放到 FilterWrapper 自己的 className 上 ⇒ CSS 变量在
+      //    **同一元素**声明、同元素被 `background-color: var(...)` 消费，cascade 闭合。
+      dropdownContent = h(
+        FilterWrapper,
+        {
+          className: clsx(`${props.prefixCls}-dropdown`, `${tablePrefix()}-css-var`),
+          style: tableStyle.value,
+        },
+        { default: () => dropdownInner },
+      );
+
+      // 触发器
+      let filterIcon: VNodeChild;
+      if (typeof column.value.filterIcon === 'function') {
+        filterIcon = column.value.filterIcon(filtered.value);
+      } else if (column.value.filterIcon !== undefined) {
+        filterIcon = column.value.filterIcon;
+      } else {
+        filterIcon = h(FilterFilled);
+      }
+      const triggerNode = h(
+        'span',
+        {
+          role: 'button',
+          tabIndex: -1,
+          class: clsx(`${props.prefixCls}-trigger`, { active: filtered.value }),
+          onClick: (e: MouseEvent) => e.stopPropagation(),
+        },
+        [filterIcon],
+      );
+
+      return h('div', { class: `${props.prefixCls}-column` }, [
+        h('span', { class: `${props.tablePrefixCls}-column-title` }, [slots.default?.()]),
+        h(
+          Dropdown,
+          {
+            trigger: ['click'],
+            placement: 'bottomRight',
+            getPopupContainer: props.getPopupContainer,
+            ...filterDropdownProps.value,
+            rootClassName: clsx(props.rootClassName, filterDropdownProps.value.rootClassName),
+            open: mergedVisible.value,
+            onOpenChange: onDropdownOpenChange,
+            menu: { items: [] },
+          },
+          {
+            default: () => [triggerNode],
+            popupRender: () => dropdownContent,
+          },
+        ),
+      ]);
+    };
+  },
+  {
+    name: 'TableFilterDropdown',
+    emits: [],
+    props: [
+      'tablePrefixCls',
+      'prefixCls',
+      'dropdownPrefixCls',
+      'column',
+      'columnKey',
+      'filterState',
+      'filterOnClose',
+      'filterMultiple',
+      'filterMode',
+      'filterSearch',
+      'triggerFilter',
+      'locale',
+      'getPopupContainer',
+      'rootClassName',
+    ],
+  },
+);
+const FilterDropdown: typeof NativeFilterDropdown = Object.assign(NativeFilterDropdown, {
+  props: {
+    tablePrefixCls: { type: String, required: true },
+    prefixCls: { type: String, required: true },
+    dropdownPrefixCls: { type: String, required: true },
+    column: { type: Object, required: true },
+    columnKey: { type: [String, Number], required: true },
+    filterState: { type: Object, default: undefined },
+    filterOnClose: { type: Boolean, default: true },
+    filterMultiple: { type: Boolean, default: true },
+    filterMode: { type: String, default: 'menu' },
+    filterSearch: { type: null, default: false },
+    triggerFilter: {
+      type: Function,
+      required: true,
     },
-  });
-}
+    locale: { type: Object, required: true },
+    getPopupContainer: { type: Function, default: undefined },
+    rootClassName: { type: String, default: undefined },
+  },
+});
 
 // ============================== useFilter ==============================
 
@@ -718,14 +746,8 @@ function getMergedColumns<RecordType>(
   rawMergedColumns: ColumnsType<RecordType>,
 ): ColumnsType<RecordType> {
   return rawMergedColumns.flatMap((column) => {
-    if ('children' in column) {
-      return [
-        column,
-        ...getMergedColumns(
-          ((column as unknown as { children?: ColumnsType<RecordType> }).children ??
-            []) as ColumnsType<RecordType>,
-        ),
-      ];
+    if (column.children) {
+      return [column, ...getMergedColumns(column.children)];
     }
     return [column];
   });
@@ -741,12 +763,14 @@ export interface UseFilterParams<RecordType> {
     filterStates: TableFilterState<RecordType>[],
   ) => void;
   /** ⚠️ 收 `MaybeRefOrGetter`：运行时替换容器要生效（Issue #17.3），传普通值 = setup 快照。 */
-  getPopupContainer?: MaybeRefOrGetter<((node: HTMLElement) => HTMLElement) | undefined>;
+  getPopupContainer?: MaybeRefOrGetter<GetPopupContainer | undefined>;
   locale: MaybeRefOrGetter<TableLocale>;
   rootClassName?: string;
 }
 
-export function useFilter<RecordType>(params: UseFilterParams<RecordType>): {
+export function useFilter<RecordType extends object>(
+  params: UseFilterParams<RecordType>,
+): {
   transformColumns: (columns: ColumnsType<RecordType>) => ColumnsType<RecordType>;
   filterStates: ComputedRef<TableFilterState<RecordType>[]>;
   filters: ComputedRef<Record<string, FilterValue | null>>;
@@ -761,9 +785,13 @@ export function useFilter<RecordType>(params: UseFilterParams<RecordType>): {
   const mergedColumns = computed(() =>
     getMergedColumns(baseColumns.value ?? params.mergedColumns.value ?? []),
   );
-  const filterStates = ref<TableFilterState<RecordType>[]>(
-    collectFilterStates(mergedColumns.value, true),
-  );
+  const [filterStates, setFilterStates] = useControlledValue<TableFilterState<RecordType>[]>({
+    defaultValue: () => collectFilterStates(mergedColumns.value, true),
+    getValue: () => {
+      const states = collectFilterStates(mergedColumns.value, false);
+      return states.some((state) => state.filteredKeys !== undefined) ? states : undefined;
+    },
+  });
 
   const mergedFilterStates = computed<TableFilterState<RecordType>[]>(() => {
     const collectedStates = collectFilterStates(mergedColumns.value, false);
@@ -781,27 +809,13 @@ export function useFilter<RecordType>(params: UseFilterParams<RecordType>): {
     });
     if (filteredKeysIsAllNotControlled) {
       const keyList = mergedColumns.value.map((column, index) =>
-        getColumnKey(column as never, getColumnPos(index)),
+        getColumnKey(column, getColumnPos(index)),
       );
-      // ⚠️ 显式 any：TS2589（实例化过深）在这里无解 —— reduce 链套了 4 层泛型
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      // biome-ignore lint/suspicious/noExplicitAny: TS2589（4 层泛型链实例化过深），any 化是本仓已登记的逃生口
-      return (filterStates.value as any[]).reduce<TableFilterState<RecordType>[]>(
-        // biome-ignore lint/suspicious/noExplicitAny: TS2589（4 层泛型链实例化过深），any 化是本仓已登记的逃生口
-        (list: any[], item: any) => {
-          const keyIndex = keyList.indexOf(item.key);
-          if (keyIndex !== -1) {
-            const col = mergedColumns.value[keyIndex] as ColumnType<RecordType>;
-            list.push({
-              ...item,
-              column: { ...item.column, ...col },
-              forceFiltered: col.filtered,
-            } as TableFilterState<RecordType>);
-          }
-          return list;
-        },
-        [],
-      );
+      return filterStates.value.flatMap((item) => {
+        const keyIndex = keyList.indexOf(item.key);
+        const column = mergedColumns.value[keyIndex];
+        return column ? [{ ...item, column, forceFiltered: column.filtered }] : [];
+      });
     }
     return collectedStates;
   });
@@ -811,7 +825,7 @@ export function useFilter<RecordType>(params: UseFilterParams<RecordType>): {
   const triggerFilter = (filterState: TableFilterState<RecordType>) => {
     const newFilterStates = mergedFilterStates.value.filter(({ key }) => key !== filterState.key);
     newFilterStates.push(filterState);
-    filterStates.value = newFilterStates;
+    setFilterStates(newFilterStates);
     onFilterChange(generateFilterInfo(newFilterStates), newFilterStates);
   };
 

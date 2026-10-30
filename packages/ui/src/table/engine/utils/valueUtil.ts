@@ -5,12 +5,6 @@
 /** 列 key 的兜底前缀（上游同名字面量）。 */
 const INTERNAL_KEY_PREFIX = 'RC_TABLE_KEY';
 
-/** `undefined` / `null` ⇒ `[]`；非数组 ⇒ 包成单元素数组。 */
-function toArray<T>(arr: T | T[] | undefined | null): T[] {
-  if (arr === undefined || arr === null) return [];
-  return Array.isArray(arr) ? arr : [arr];
-}
-
 /**
  * 给每一列算一个**唯一**的 key（供 `<col>` / React key / `data-menu-id` 用）。
  *
@@ -29,16 +23,21 @@ function toArray<T>(arr: T | T[] | undefined | null): T[] {
  *    差异只在这一个病态键名上（**登记为 INTENDED**）。
  */
 export function getColumnsKey(
-  columns: readonly (Record<string, unknown> | undefined | null)[],
+  columns: readonly (
+    | { key?: string | number; dataIndex?: string | number | readonly (string | number)[] }
+    | undefined
+    | null
+  )[],
 ): string[] {
   const columnKeys: string[] = [];
   const keys: Record<string, boolean> = Object.create(null);
   for (const column of columns) {
     const { key, dataIndex } = column || {};
-    let mergedKey =
-      (key as string | undefined) ||
-      toArray(dataIndex as string | string[] | undefined).join('-') ||
-      INTERNAL_KEY_PREFIX;
+    const dataKey =
+      typeof dataIndex === 'string' || typeof dataIndex === 'number'
+        ? String(dataIndex)
+        : dataIndex?.join('-');
+    let mergedKey = String(key || dataKey || INTERNAL_KEY_PREFIX);
     while (keys[mergedKey]) {
       mergedKey = `${mergedKey}_next`;
     }

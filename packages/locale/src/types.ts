@@ -173,7 +173,7 @@ export interface TableLocale {
   filterCheckall?: VNodeChild;
   filterCheckAll?: VNodeChild;
   filterSearchPlaceholder?: string;
-  emptyText?: VNodeChild | (() => VNodeChild);
+  emptyText?: VNodeChild;
   selectAll?: VNodeChild;
   selectNone?: VNodeChild;
   selectInvert?: VNodeChild;

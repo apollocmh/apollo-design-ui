@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { TableColumnsType, TableProps } from '@apollo-design/ui';
 import { Button, Space, Table, Tag } from '@apollo-design/ui';
-import { h, ref } from 'vue';
+import { ref } from 'vue';
 
 const refreshCount = ref(0);
 const lastAction = ref('等待操作');
@@ -44,42 +44,6 @@ function refresh(): void {
   lastAction.value = `第 ${refreshCount.value} 次刷新：头部按钮与表格联动`;
 }
 
-const renderTitle = (rows: Record<string, unknown>[]) =>
-  h(
-    'div',
-    {
-      style: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '16px',
-        flexWrap: 'wrap',
-      },
-    },
-    [
-      h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } }, [
-        h('strong', null, '用户列表'),
-        h(Tag, { color: 'blue' }, () => `${rows.length} 行`),
-      ]),
-      h(
-        Space,
-        { size: 12 },
-        {
-          default: () => [
-            h(
-              Button,
-              { size: 'small', onClick: refresh },
-              { default: () => `刷新（${refreshCount.value}）` },
-            ),
-            h(Tag, { color: showFilters.value ? 'green' : 'default' }, () =>
-              showFilters.value ? '已刷新' : '待刷新',
-            ),
-          ],
-        },
-      ),
-    ],
-  );
-
 const onTableChange: TableProps['onChange'] = (_pagination, _filters, sorter) => {
   const field = (sorter as { field?: string }).field;
   lastAction.value = field ? `排序字段：${field}` : '排序已清除';
@@ -96,9 +60,15 @@ const onTableChange: TableProps['onChange'] = (_pagination, _filters, sorter) =>
       :columns="columns"
       :data-source="data"
       :pagination="false"
-      :title="renderTitle"
-      footer="表头与底部均由 Table 的语义槽渲染"
       @change="onTableChange"
-    />
+    >
+      <template #title="{data:rows}">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:8px"><strong>用户列表</strong><Tag color="blue">{{rows.length}} 行</Tag></div>
+          <Space :size="12"><Button size="small" @click="refresh">刷新（{{refreshCount}}）</Button><Tag :color="showFilters?'green':'default'">{{showFilters?'已刷新':'待刷新'}}</Tag></Space>
+        </div>
+      </template>
+      <template #footer>表头与底部均由 Table 的原生插槽渲染</template>
+    </Table>
   </div>
 </template>

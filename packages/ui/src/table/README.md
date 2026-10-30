@@ -1,86 +1,15 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
+# Table 实现说明
 
-# Table 实现说明（XL · 分片交付中）
+当前规范由 [AGENTS.md](../../../../AGENTS.md)、组件 API 与行为测试确定。历史 T0–T7、上游对照和视觉证据保留在原日期的分析/审计文档中；本文件不维护任务进度，进度读取 registry/vue-native-audit.json。
 
-## 1. 对应 antd 组件
+Table.vue 是公开泛型 SFC，以同一行类型声明 Props、Slots、Emits 和 Expose；Table.ts 为实际组件挂静态选择哨兵与 Summary。ColumnsType<T> 与行/列数据服务保留真实数据职责，普通 interface 行不需要索引签名。
 
-- antd 6.6.4 `es/table/`（构建产物 3936 行 / 80 文件 —— 全仓最复杂组件）
-- rc 内核：@rc-component/table@1.11.1（Table.js 692 + Body ~450 + Cell ~300 + Header ~200 + useColumns ~800）
-- 分析产物：`docs/analysis/table.md`（T0–T7 八片计划；T0 引擎事实源已完成）
-- 复用的本仓资产：pagination / spin / checkbox / radio / dropdown / menu / empty / tree conductCheck、`use-merge-semantic`、`color-composite`
-- 样式：antd 真实产物 SSR 提取（`tests/visual/debug/extract-table-css.mjs`：**200 条规则 / 194 唯一选择器 / 37 条组件 token**）机械移植
+主链为当前默认列与响应式列过滤 → 排序/过滤 → 分页 → 选择/展开列 → 私有泛型引擎。顶层内容使用原生具名槽；Cell 只缓存数据 renderer，槽内容在真实渲染阶段求值。按行提供的 getter context 保留 hover 粒度；同 key 行替换使用当前 record/index，并保留可复用的输入节点。展开行首次显示后保留其隐藏内容。
 
-## 2. 文件结构（两层，同 tree/cascader 范式）
+分页、排序、筛选、选择与展开各使用一个接受态来源。change 载荷基于本次提议计算，拒绝受控提议不会污染接受态或选择记录缓存。Provider 的 prefix、语义样式、当前 Token 和容器配置从当前值读取。静态 CSS 与既有默认声明继续复用。
 
-```
-table/
-├── Table.ts            # antd 层主组件（杂项 hooks 合集 + 组装）
-├── ExpandIcon.ts       # button 形态展开图标（aria-label/aria-expanded）
-├── interface.ts        # antd 类型全量移植（ColumnsType/ExpandableConfig/...）
-├── util.ts             # renderColumnTitle / safeColumnTitle / getPaginationSize（L1）
-├── engine/             # rc-table 引擎（Vue 移植）
-│   ├── Table.ts        # rc Table.js + FixedHolder + StickyScrollBar
-│   ├── Body.ts         # Body/BodyRow/ExpandedRow/MeasureRow/MeasureCell
-│   ├── Cell.ts         # rc Cell + useCellRender（rowSpan/ellipsis/fixed 全形态）
-│   ├── Header.ts       # Header/HeaderRow（colSpan/rowSpan 分组表头解析）
-│   ├── ColGroup.ts     # colgroup 宽度
-│   ├── Footer.ts       # Summary/SummaryRow/SummaryCell + Panel
-│   ├── context.ts      # TableContext / RowContext / SummaryContext
-│   ├── hooks/          # use-columns / use-expand / use-table
-│   └── utils/          # fixUtil / valueUtil / expandUtil / legacyUtil（T0 已有）
-├── hooks/              # antd 层 hooks
-│   ├── use-table-data.ts   # useLazyKVMap/usePagination/useFilledColumns/useTitleColumns/...
-│   ├── use-sorter.ts       # useSorter（受控/非受控/多列）
-│   ├── use-filter.ts       # useFilter + FilterDropdown
-│   └── use-selection.ts    # useSelection（tree 联动/shift/invert/none）
-└── style/index.ts      # genTableStyle / genTableTokenDecls（37 token 逐字）
-```
+私有引擎保留分组表头、固定列几何、树形展开、选择级联、跨行补行和虚拟滚动算法。几何与汇总使用实际字段协议；行数据链保留泛型。自定义元素由 Vue 组件的 default 槽渲染；原生 attrs 通过 Vue 合并。动态树字段只在外部数据边界解析为数组。
 
-## 3. 分片进度（docs/analysis/table.md §7 的 T0–T7）
+虚拟表体使用原生滚动条与 flex 行；colSpan/rowSpan 由宽度与补行表达。自定义 components.body 是数据/滚动服务，使用真实 HTMLElement ref 和原生 Event。VirtualList holder 组件需要单个 HTMLElement 根；Fragment/纯文本根没有可测量容器。真实元素更换时更新引用并释放旧观察资源。scrollTo 使用当前容器与安全的 row-key 匹配，不拼接用户 key 到 CSS 选择器。
 
-- **T0 引擎事实源 ✅**：rc/antd 源码通读 + CSS 提取脚本 + util.ts L1
-- **T1 骨架 ✅**：引擎五件套 + antd 壳 + 37 token 样式 + 21 条 L1/L2 用例全绿
-- **T2 展开 ✅ / T3 排序过滤 ✅ / T4 选择分页 ✅ / T5 固定汇总 ✅**（2026-10-03）：
-  L2 40/40 全绿；视觉 7 变体 × 3 视口 = 21/21 exact；registry 全维度 done
-- **T6 虚拟滚动 ✅**（2026-10-04）：引擎 `engine/VirtualTable/{BodyGrid,BodyLine,VirtualCell}` +
-  `virtual` / `listItemHeight` prop；`ui/Table.ts` 的 `listItemHeight` 按 antd 公式从 token 算。
-  L1（`getColumnWidth`）+ L4（DOM 契约）用例；视觉 8 变体 × 3 视口 = **24/24**。
-  横向定位模型 = **flex 行 + 原生横向滚动**（定案见 `docs/analysis/table-virtual.md` §4）
-
-## 4. 与 antd 的行为差异（同步 COMPATIBILITY.md）
-
-| # | 差异 | 分类 | 说明 |
-| --- | --- | --- | --- |
-| 1 | 泛型组件签名暂为 `Record<string, unknown>` 固定 | KNOWN | Vue 泛型组件表达力（AR6）验证点，T7 收口 |
-| 2 | `update:*` 与语义事件同发（C11） | INTENDED | 同 radio/checkbox |
-| 3 | 虚拟滚动用**原生滚动条**（上游是自绘 `ScrollBar`） | PLATFORM | 与 `@apollo-design/virtual-list` 契约 §5.1 同源；`styles={{horizontalScrollBar}}` 不生效 ⇒ sticky 横向滚动条缺失 |
-| 4 | `components.body.row/cell` 传**组件**时回退 `div` | PLATFORM | 本仓 virtual-list 的 `component` 只收 String |
-| 5 | `genVirtualTable` 的 `_renderTimes` 比较器 | INTENDED | Vue 靠 props 响应式，无对应机制 |
-| 6 | 虚拟行是 `div`（非 `tr`）+ `flex` 宽度定位 | INTENDED | 与上游一致；`colSpan/rowSpan` 重置为 1，跨行由 `extraRender` 补行 |
-
-## 5. 实现要点（最容易写错的判据）
-
-1. **ctx getter 已解包 `.value`**：provide 对象用 `get expandableType() { return expandableType.value; }` —— 消费处**不能**再 `.value`（得 undefined，展开行静默消失；实测踩过）。
-2. **哨兵引用判断必须 toRaw**：columns 数组经 ctx/props 链会被深层 reactive 代理，`SELECTION_COLUMN`/`EXPAND_COLUMN` 的引用相等判断全走 `toRaw(col)`（否则代理副本 ≠ 模块单例 ⇒ 选择列重复插入）。
-3. **Dropdown 的 onMenuClick「先按 `source:'menu'` 通知、再写内部 open」（antd dropdown.js:149-157 两步都要做）**：Table 的 `onDropdownOpenChange` 只处理 `source==='trigger'`，所以过滤菜单多选点项不关闭；而**非受控**用法（Table 之外的普通 `<Dropdown>`）靠第二步才真的关闭 —— 少了它就「点菜单项不关闭」。⚠️ 写内部 open 时**必须抑制** `useControlledValue` 的默认通知，否则 Table 会补收到一发 `source:'trigger'` 而关闭（Issue #21 回归）。
-4. **Menu 的 selectable 合并是 props 优先**：`props.selectable ?? override?.selectable ?? true`（antd menu.js:85）—— Dropdown override 的 `selectable:false` 不能盖掉过滤菜单显式的 `selectable:true`。
-5. **`getExpandableProps` 的 truthy 判断**：`'expandable' in props` 决定 legacy 键是否参与合并；`showExpandColumn === false ⇒ expandIconColumnIndex = -1`。
-6. **测试里 Portal 内交互必须真实 Teleport**：test-utils 的 teleport stub 副本**不挂事件监听器** ⇒ `document.body.querySelector` 拿到的 DOM 点击永远无效；mount 需 `global: { stubs: { teleport: false } }`。
-7. **样式 token 落点**：`--{p}-table-*` 落在根类 + `-css-var` 类（PITFALLS 342：过滤下拉走 Portal，不在 `.{p}-table` 子树 ⇒ 只有根块 var 全部静默回退）。
-8. **阴影/圆角等固定几何值升级为派生 decl**（E10：规则侧硬编码值是 error 级）。
-9. 🚨 **antd 每次 render 回填的东西，本仓必须是 getter/computed**（setup 只跑一次）：
-   `changeEventInfo.pagination`（`InternalTable.js:433`，随翻页/受控 pagination 变；Issue #17.1）、
-   `sorter`/`filters`/`sorterStates`/`filterStates` 已用 `Object.defineProperties` getter，别改回赋值。
-10. 🚨 **填充后的列要进渲染链**：`baseColumns = useFilledColumns(columns, computed(()=>props.column))`
-    ⇒ `mergedColumns` ⇒ **引擎 `columns` 与 sorter/filter hooks 都吃 mergedColumns**。
-    引擎若拿 `props.columns` 原始列，`column` 的 align/className/ellipsis 就**完全不生效**
-    （Issue #17.2 的真实根因，比「ref 快照」更靠前）。`ref(props.column)` 同理要改 computed。
-11. **hook 配置项收 `MaybeRefOrGetter` + `toValue`**：`sortDirections`/`tableLocale`/
-    `showSorterTooltip`/`getPopupContainer`（Issue #17.3）—— 它们在 `transformColumns` 里被读，
-    而 `transformColumns` 由引擎在渲染期调用 ⇒ `toValue` 取值那次会被正确追踪。
-
-## 6. 已知缺口（分片待办，勿重复排查）
-
-- 固定列/表头 ✅（FixedHolder 双表 + fix-start/end 阴影 + sticky-holder，21/21 exact）
-- 排序/过滤的完整 demo + 兼容登记（hooks 已实现）
-- 泛型组件签名按 AR6 由消费方 `TableProps<T>` 表达
+本阶段执行相关核心、类型和必要源码浏览器验证；全库九维验收由集成人在统一冻结版本执行。未执行的检查不记为通过。

@@ -214,3 +214,7 @@ CSSMotion/MotionList 的可见性通知统一为 owned `visibleChanged` 事件�
 ### D-form-native-content-and-instances
 
 Form 的 requiredMark 内容函数迁为 `#requiredMark={ label, required }`，label 是可直接渲染的稳定组件；feedbackIcons / hasFeedback.icons 迁为 Form 或 FormItem 的 `#feedbackIcon={ status, errors, warnings }`，hasFeedback 保留 boolean。useFormInstance 读取最近的真实 Form 实例，useForm 保留工厂职责；getFieldInstance 返回实际控制实例，是否支持 focus 取决于该控件。移除无消费的 Item status/fieldId，使用已有 validateStatus/id；requiredMark 在 Form 上配置。同步修正动态槽撤除、路径聚合、原生 attrs、实际焦点/滚动、响应式列与当前十一 Token，详见[Form API](packages/ui/src/form/index.zh-CN.md)。
+
+### D-table-native-data-and-content
+
+Table 的顶层 title/footer/summary/expandedRowRender/expandIcon/emptyText 内容函数迁为具名槽，expandable 内同名全表内容函数也统一迁移；共享语言与组件 locale.emptyText 只承载静态内容，动态空态使用 #emptyText。按列或数据承担业务职责的 render/title/filterDropdown、排序过滤和选择操作函数保留。通知使用 Vue emits，change 保留四个实际业务载荷，scroll 使用原生 Event；公开泛型贯穿数据、列、槽、事件与真实模板引用，不要求用户添加索引签名。修正受控提议与撤控、同 key 行内容与焦点、当前配置和实际滚动资源；虚拟列表的 Vue holder/行按真实 HTMLElement 根测量，隐藏测量单元不再重复挂载表头交互，不可展开行使用装饰占位。详见[Table API](packages/ui/src/table/index.zh-CN.md)。

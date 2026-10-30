@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 167,
+  "revision": 170,
   "dispatch": {
     "status": "paused",
     "maxParallel": 5,
@@ -3183,18 +3183,14 @@
       "kind": "component",
       "ref": "table",
       "title": "Table",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/table",
         "packages/virtual-list/src/virtual-list.ts"
       ],
-      "assignment": {
-        "owner": "native_portal",
-        "baseRevision": 141,
-        "startedAt": "2026-10-30T13:57:14.373Z"
-      },
+      "assignment": null,
       "evidence": [
         "registry/vue-native-audit.json"
       ],
@@ -3205,7 +3201,22 @@
         "docs/audit/2026-10-24-demo-capabilities.md",
         "docs/audit/2026-10-27-typography-contract-audit.md"
       ],
-      "issues": [],
+      "issues": [
+        {
+          "id": "TABLE-VUE-ROW-MEASUREMENT",
+          "status": "fixed",
+          "blocking": true,
+          "impact": "Actual Vue virtual row refs were not measured, causing scrollTo retries to reach their limit.",
+          "reason": "Resolve current holder/item HTMLElement roots and verify measured scrolling/resource replacement with real Table consumers."
+        },
+        {
+          "id": "TABLE-DECORATIVE-LEAF-A11Y",
+          "status": "fixed",
+          "blocking": true,
+          "impact": "Leaf spacing rendered unnamed disabled buttons in three actual Table Demo accessibility scans.",
+          "reason": "Use decorative span content, preserve unavailable expansion behavior and verify actual Demo scans without allowances."
+        }
+      ],
       "plan": {
         "goal": "接续现有排序过滤、分页槽、默认列、主题和实际消费成果，收口 Table 当前 Vue 架构差额",
         "remaining": [
@@ -3243,7 +3254,154 @@
           "change": "Necessary actual-DOM and existing ShadowRoot container consumer corrections; full Table still in progress.",
           "verification": "FND:utils affectedChanges records the single shared focused result: actual Vue red cases, DOM/Motion core and scoped strict with real Dropdown/Menu h() consumers; no full package re-audit."
         }
-      ]
+      ],
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/table",
+          "packages/virtual-list/src/virtual-list.ts",
+          "packages/ui/src/index.ts",
+          "packages/locale/src/types.ts",
+          "packages/locale/src/__tests__/locale.test-d.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/table/__tests__ --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 33020,
+            "log": "/tmp/apollo-table-core-final.log",
+            "result": "8 files, 163 passed, including 44 actual Demo smoke cases",
+            "sourceNote": "Complete Table core before the final decorative leaf delta; final relevant expansion cases rerun below."
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/table/__tests__/native-data.test.ts packages/ui/src/table/__tests__/index.test.ts --testNamePattern 'expand|children|展开|树形' --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11850,
+            "log": "/tmp/apollo-table-expand-leaf-core.log",
+            "result": "12 passed, 48 deliberately unselected"
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/virtual-list/src/__tests__/virtual-list.test.ts --testNamePattern \"component|onScroll|scrollTo\" --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 2517,
+            "log": "/tmp/apollo-table-virtual-shared-consumer-final.log",
+            "result": "13 passed, 44 deliberately unselected",
+            "sourceNote": "Refreshed after the final shared holder/item root implementation; 13 actual native component/scroll consumers passed, 44 unselected are not passes."
+          },
+          {
+            "kind": "a11y",
+            "command": "node node_modules/vitest/vitest.mjs run --project a11y packages/ui/src/table/__tests__/a11y.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 19770,
+            "log": "/tmp/apollo-table-a11y-final-green.log",
+            "result": "50 passed; original jsdom canvas getContext notices retained in log"
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/table/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 14512,
+            "log": "/tmp/apollo-table-native-browser-accepted.log",
+            "functionalResult": "passed",
+            "diagnosticResult": "passed",
+            "diagnostics": []
+          },
+          {
+            "kind": "types",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/.apollo-current-table-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 52289,
+            "resultFile": "/tmp/apollo-table-final-types-result.json",
+            "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y",
+            "result": "Full strict and declaration unchanged; native generic slots and records include effective negative cases."
+          },
+          {
+            "kind": "types",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/.apollo-table-followup-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 20079,
+            "resultFile": "/tmp/apollo-table-a11y-followup-types-result.json",
+            "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y",
+            "result": "Final decorative leaf regression delta; any subsequent ExpandIcon header-only hash change has no executable/type effect."
+          },
+          {
+            "kind": "format",
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/ui/src/table packages/virtual-list/src/virtual-list.ts",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 140,
+            "result": "97 files, no fixes applied"
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "lint",
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/ui/src/table packages/ui/src/index.ts packages/virtual-list/src/virtual-list.ts packages/locale/src/types.ts packages/locale/src/__tests__/locale.test-d.ts",
+            "exitCode": 0,
+            "signal": null,
+            "result": "100 files, no changes; git diff --check HEAD passed."
+          }
+        ],
+        "postFullStrictDelta": [
+          {
+            "path": "packages/ui/src/table/ExpandIcon.ts",
+            "sha256": "7881e631d9a931856797438a7246232bc6f86e872fcfa42d3bf17f4c955c2847"
+          },
+          {
+            "path": "packages/ui/src/table/__tests__/a11y.test.ts",
+            "sha256": "97ac093953031ae8bade292fcf17c955262621139c00610e3aae1566cce4c675"
+          },
+          {
+            "path": "packages/ui/src/table/__tests__/native-data.test.ts",
+            "sha256": "94a2e950433604a0b70ed8329fd21b9f0c6cf31c6c367dc5b47dae15876aeebc"
+          }
+        ],
+        "boundary": "Stage-one Table remediation only. Actual default/virtual/custom-component body, native slot dependencies and controls, accepted-state selection/filter/sort/pagination, current Provider/theme/container, sticky/scrollTo and observer/listener release were verified. VirtualList delta is only the authorized holder/item Vue ref-to-HTMLElement boundary with a single measurable HTMLElement root; Fragment/text component roots are unsupported. Historical red logs remain: original a11y 3 failures, SSR container call and browser virtual measurement diagnostic. No dist build, full repository suite, coverage or final frozen nine-dimension release acceptance was run. Full VirtualList/Locale/utils audits are not claimed. Root owns integration/status/commit; this owner is frozen and takes no further task.",
+        "implemented": [
+          "Native generic SFC keeps one real row type across data, columns, slots, owned emits and expose; global content callbacks move to native slots while real per-data rendering/algorithms remain. TableProps is a closed exact object type accepted by native h without index signatures or constructor casts.",
+          "Current accepted filter/sort/pagination/selection/expanded state, current record/index and stable focused content are preserved; actual slot withdrawal, configuration and resource ownership are verified.",
+          "Native root attrs, current Provider/theme/container and actual Table refs/scrolling reach their consumers. Hidden width measurements do not remount filter controls. Vue custom/virtual holder/item roots rebind actual DOM and release resources.",
+          "Unavailable expansion is decorative span content, without an unnamed fake button or expand actions. Shared locale Table.emptyText matches the static content/slot contract."
+        ],
+        "attemptsNotPassed": [
+          {
+            "kind": "types",
+            "exitCode": 2,
+            "durationMs": 43022,
+            "log": "/tmp/apollo-current-table-types.log",
+            "result": "First complete scoped strict exposed 93 positions from a small set of actual generic schema, group-column, emit and caller typing roots; fixed without dropping cases."
+          },
+          {
+            "kind": "types",
+            "exitCode": 2,
+            "durationMs": 34526,
+            "log": "/tmp/apollo-table-second-types.log",
+            "result": "Four remaining positions: real typed h props, asynchronous Demo deep unwrap, generated scrollbar column protocol and shared locale static content; all corrected and final strict passed."
+          },
+          {
+            "kind": "a11y",
+            "exitCode": 1,
+            "log": "/tmp/apollo-table-a11y-final.log",
+            "result": "Three real Demo button-name failures from nonexpandable leaf placeholders; replaced fake controls with decorative content and retained all 44 Demo scans, no allowances."
+          }
+        ],
+        "sourceReuse": "Complete scoped strict passed on frozen sources. Only ExpandIcon and two regression files changed afterward; their strict followup and targeted core/a11y/actual browser passed. The final ExpandIcon header differs only before the first */; all executable/type source was compared exactly. Other source, dependencies and configurations remain unchanged; earlier valid results retained without duplicating whole-suite work."
+      }
     },
     {
       "id": "CMP:tabs",
@@ -4641,7 +4799,17 @@
           }
         ],
         "boundary": "保留既有语言数据与Provider交付；固定挂载优先级、深更新/撤除/卸载、重置与迟到清理、SSR隔离及完整默认槽已验证。实际ConfigProvider与普通Modal消费者验证嵌套更新、多应用/无Provider应用隔离、编辑器身份以及静态服务显式locale覆盖。无上下文静态服务仍使用当前最后挂载来源，是已说明的全局边界；未声称每应用隔离。生成器真实执行且语言源无改动。最终冻结九维/发布消费者未执行。"
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/locale/src/types.ts",
+            "packages/locale/src/__tests__/locale.test-d.ts"
+          ],
+          "change": "Shared TableLocale.emptyText matches actual static VNodeChild data and the Table dynamic #emptyText contract; removed an unconsumed callback declaration.",
+          "verification": "CMP:table full scoped strict includes every Locale source/type case and the actual Table consumer. Type-only delta; existing Locale runtime/confirmation evidence retained."
+        }
+      ]
     },
     {
       "id": "FND:motion",
@@ -5559,20 +5727,32 @@
       "kind": "foundation",
       "ref": "virtual-list",
       "title": "@apollo-design/virtual-list",
-      "architectureStatus": "not_started",
+      "architectureStatus": "partial",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/virtual-list/src"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
         "docs/foundation/virtual-list-contract.md"
       ],
-      "issues": []
+      "issues": [],
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/virtual-list/src/virtual-list.ts"
+          ],
+          "change": "Table actual consumer delta: native or Vue component holder, real item/holder DOM measurement, live root replacement, scroll/observer lifecycle. One HTMLElement root is required.",
+          "verification": "CMP:table focused verification records current Table core/browser, actual VirtualList consumer regressions and all relevant strict source/type checks.",
+          "boundary": "No complete VirtualList audit or final acceptance is claimed; remaining public contracts still need the existing foundation task."
+        }
+      ]
     }
   ],
   "finalAcceptance": {

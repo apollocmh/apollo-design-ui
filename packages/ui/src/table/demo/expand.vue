@@ -15,5 +15,5 @@ const data = [
 </script>
 
 <template>
-  <Table :columns="columns" :data-source="data" :expandable="{ expandedRowRender: (r) => String((r as { address: string }).address), defaultExpandAllRows: true }" />
+  <Table :columns="columns" :data-source="data" :expandable="{ defaultExpandAllRows: true }"><template #expandedRow="{record}">{{record.address}}</template></Table>
 </template>

@@ -1,125 +1,89 @@
-/**
- * L5 · 无障碍 —— Table
- *
- * 判据来源（antd 6.6.4 + `@rc-component/table`）：
- *   - 表格本体是原生 `<table>`（隐式 `role=table`），表头 `<th scope="col|colgroup">`、
- *     行头 `<th scope="row">`（`engine/Header.ts` / `engine/Cell.ts` 的 `scope`）；
- *   - 排序列表头 `aria-sort="ascending|descending"` + `aria-label`（`hooks/use-sorter.ts`）；
- *   - 筛选是 `role="button"`（`hooks/use-filter.ts`）；
- *   - 选择列复选框有 `aria-label`（"Select all" / 可定制，`hooks/use-selection.ts`）；
- *   - 展开图标 `aria-label` + `aria-expanded`（`ExpandIcon.ts`）。
- *
- * ⚠️ 这是本仓**最后一个没有 a11y 审计的组件**（`docs/KNOWN-ISSUES.md` §1.7）。
- *    若扫描出真实 violation：**不要顺手加豁免** —— `matchA11yAllowances` 的每条豁免
- *    必须写明理由，且先在 KNOWN-ISSUES 登记。
- */
-
+/** Native table, row headers, sort/filter actions, selection names and expansion state. */
 import { a11yDemoTest } from '@apollo-design/test-utils';
-import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import { mount, type VueWrapper } from '@vue/test-utils';
+import { afterEach, describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
 import { Table } from '../index';
+import type { ColumnsType, ColumnType } from '../interface';
 
-const columns = [
+interface Row {
+  key: string;
+  name: string;
+  age: number;
+}
+const columns: [ColumnType<Row>, ColumnType<Row>] = [
   { title: 'Name', dataIndex: 'name', key: 'name' },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-    sorter: (a: never, b: never) => (a as { age: number }).age - (b as { age: number }).age,
-  },
+  { title: 'Age', dataIndex: 'age', key: 'age', sorter: (a, b) => a.age - b.age },
 ];
-const dataSource = [
+const dataSource: Row[] = [
   { key: '1', name: 'Alice', age: 30 },
   { key: '2', name: 'Bob', age: 25 },
 ];
-
+const wrappers: VueWrapper[] = [];
+afterEach(() => {
+  for (const wrapper of wrappers.splice(0)) wrapper.unmount();
+});
 a11yDemoTest('Table', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
   expectCount: 44,
 });
 
-describe('Table · a11y（L5）', () => {
-  it('表头 <th scope="col">、行头 <th scope="row">（有 rowScope 时）', async () => {
-    const w = mount(Table, {
-      props: { columns: columns as never, dataSource: dataSource as never, rowScope: 'row' },
+describe('Table · a11y', () => {
+  it('renders column headers and actual row headers from the column rowScope contract', async () => {
+    const wrapper = mount(Table<Row>, {
+      props: { columns: [{ ...columns[0], rowScope: 'row' }, columns[1]], dataSource },
     });
+    wrappers.push(wrapper);
     await nextTick();
-    const ths = w.findAll('thead th');
-    expect(ths.length).toBeGreaterThan(0);
-    for (const th of ths) {
-      expect(th.attributes('scope')).toBeTruthy();
-    }
+    expect(wrapper.findAll('thead th').length).toBeGreaterThan(0);
+    for (const header of wrapper.findAll('thead th'))
+      expect(header.attributes('scope')).toBeTruthy();
+    const rowHeaders = wrapper.findAll('tbody th[scope=row]');
+    expect(rowHeaders).toHaveLength(2);
+    expect(rowHeaders[0]?.text()).toBe('Alice');
   });
-
-  it('可排序列：已排序时才有 aria-sort，且方向正确', async () => {
-    // ⚠️ 判据（`hooks/use-sorter.ts:240`）：`if (sortOrder) cell['aria-sort'] = …`
-    //    ⇒ **未排序的列不写 `aria-sort`**（不是写 `none`）。所以这里必须给默认排序。
-    const ascColumns = [
-      { title: 'Name', dataIndex: 'name', key: 'name' },
-      {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
-        defaultSortOrder: 'ascend' as const,
-        sorter: (a: never, b: never) => (a as { age: number }).age - (b as { age: number }).age,
-      },
-    ];
-    const w = mount(Table, {
-      props: { columns: ascColumns as never, dataSource: dataSource as never },
-    });
+  it('reports the active sort direction and omits aria-sort before sorting', async () => {
+    const sorted: ColumnsType<Row> = [columns[0], { ...columns[1], defaultSortOrder: 'ascend' }];
+    const wrapper = mount(Table<Row>, { props: { columns: sorted, dataSource } });
+    wrappers.push(wrapper);
     await nextTick();
-    const sorter = w.find('thead th[aria-sort]');
-    expect(sorter.exists()).toBe(true);
-    expect(sorter.attributes('aria-sort')).toBe('ascending');
-
-    // 未排序时**不**写 aria-sort（与上游一致）
-    const plain = mount(Table, {
-      props: { columns: columns as never, dataSource: dataSource as never },
-    });
+    expect(wrapper.get('thead th[aria-sort]').attributes('aria-sort')).toBe('ascending');
+    const plain = mount(Table<Row>, { props: { columns, dataSource } });
+    wrappers.push(plain);
     await nextTick();
     expect(plain.find('thead th[aria-sort]').exists()).toBe(false);
   });
-
-  it('选择列：全选复选框有可访问名', async () => {
-    const w = mount(Table, {
-      props: { columns: columns as never, dataSource: dataSource as never, rowSelection: {} },
-    });
+  it('gives the select-all checkbox an accessible name', async () => {
+    const wrapper = mount(Table<Row>, { props: { columns, dataSource, rowSelection: {} } });
+    wrappers.push(wrapper);
     await nextTick();
-    const boxes = w.findAll('input[type="checkbox"]');
-    expect(boxes.length).toBeGreaterThan(0);
-    // 至少全选那个有 aria-label（antd 的 "Select all" / 可定制）
-    expect(w.find('input[type="checkbox"][aria-label]').exists()).toBe(true);
+    expect(wrapper.findAll('input[type=checkbox]').length).toBeGreaterThan(0);
+    expect(wrapper.find('thead input[type=checkbox][aria-label]').exists()).toBe(true);
   });
-
-  it('展开图标：aria-label + aria-expanded', async () => {
-    const w = mount(Table, {
-      props: {
-        columns: columns as never,
-        dataSource: dataSource as never,
-        expandable: { expandedRowRender: () => 'detail' },
-      },
+  it('gives available expansion controls an accessible name and expanded state', async () => {
+    const wrapper = mount(Table<Row>, {
+      props: { columns, dataSource },
+      slots: { expandedRow: () => 'detail' },
     });
+    wrappers.push(wrapper);
     await nextTick();
-    const icon = w.find('button[aria-expanded]');
-    expect(icon.exists()).toBe(true);
+    const icon = wrapper.get('button[aria-expanded]');
     expect(icon.attributes('aria-label')).toBeTruthy();
+    expect(icon.attributes('aria-expanded')).toBe('false');
   });
-
-  it('筛选是 role="button"（不是裸 div）', async () => {
-    const filterColumns = [
+  it('exposes the filter trigger as a button', async () => {
+    const filterColumns: ColumnsType<Row> = [
       {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
         filters: [{ text: 'Alice', value: 'Alice' }],
-        onFilter: (value: unknown, record: never) => (record as { name: string }).name === value,
+        onFilter: (value, record) => record.name === value,
       },
     ];
-    const w = mount(Table, {
-      props: { columns: filterColumns as never, dataSource: dataSource as never },
-    });
+    const wrapper = mount(Table<Row>, { props: { columns: filterColumns, dataSource } });
+    wrappers.push(wrapper);
     await nextTick();
-    expect(w.find('.apollo-table-filter-trigger[role="button"]').exists()).toBe(true);
+    expect(wrapper.find('.apollo-table-filter-trigger[role=button]').exists()).toBe(true);
   });
 });

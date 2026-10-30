@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import type { TableColumnsType, TableExpandableConfig, TableKey } from '@apollo-design/ui';
 import { Button, Space, Table, Tag } from '@apollo-design/ui';
-import { computed, h, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 interface OuterRow {
-  [key: string]: unknown;
   key: string;
   name: string;
   department: string;
   email: string;
 }
 
-const columns: TableColumnsType = [
+const columns: TableColumnsType<OuterRow> = [
   { title: 'Customer', dataIndex: 'name', key: 'name' },
   { title: 'Department', dataIndex: 'department', key: 'department', width: 160 },
   { title: 'Email', dataIndex: 'email', key: 'email' },
@@ -59,31 +58,11 @@ const innerData: Record<string, Record<string, unknown>[]> = {
 const allKeys = data.map((item) => item.key);
 const expandedRowKeys = ref<TableKey[]>(['1', '2']);
 
-const expandable = computed<TableExpandableConfig>(() => ({
+const expandable = computed<TableExpandableConfig<OuterRow>>(() => ({
   expandedRowKeys: expandedRowKeys.value,
   onExpandedRowsChange: (keys: TableKey[]) => {
     expandedRowKeys.value = keys;
   },
-  expandedRowRender: (record: Record<string, unknown>) =>
-    h(
-      'div',
-      {
-        style: {
-          padding: '12px 0 4px',
-        },
-      },
-      [
-        h('div', { style: { fontWeight: 600, marginBottom: '8px' } }, [
-          `最近订单 · ${String(record.name)}`,
-        ]),
-        h(Table, {
-          columns: innerColumns,
-          dataSource: innerData[String(record.key)] ?? [],
-          pagination: false,
-          size: 'small',
-        }),
-      ],
-    ),
 }));
 
 function expandAll(): void {
@@ -109,6 +88,8 @@ function collapseAll(): void {
       :pagination="false"
       :expandable="expandable"
       bordered
-    />
+    >
+      <template #expandedRow="{record}"><div style="padding:12px 0 4px"><div style="font-weight:600;margin-bottom:8px">最近订单 · {{record.name}}</div><Table :columns="innerColumns" :data-source="innerData[record.key]??[]" :pagination="false" size="small" /></div></template>
+    </Table>
   </div>
 </template>

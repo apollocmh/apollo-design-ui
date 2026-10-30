@@ -5,29 +5,40 @@
  * （rc `Footer/Cell.d.ts` 以 `.d.ts` 为准）。
  */
 
-import { computed, defineComponent, h, inject, type PropType, provide } from 'vue';
-import type { ColumnsType } from '../interface';
+import {
+  computed,
+  defineComponent,
+  h,
+  inject,
+  type PropType,
+  provide,
+  type SetupContext,
+  type SlotsType,
+  type StyleValue,
+  type VNodeChild,
+} from 'vue';
+import type { ColumnType } from '../interface';
 import Cell from './Cell';
+import type { SummaryContextValue } from './context';
 import { summaryContextKey, useTableContext } from './context';
 import { getCellFixedInfo } from './utils/fixUtil';
 
 // ============================== Panel ==============================
 
-export const Panel = defineComponent({
-  name: 'TablePanel',
-  props: {
-    className: { type: null, default: undefined },
-    style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-  },
-  setup(props, { slots }) {
-    return () => h('div', { class: props.className, style: props.style }, slots.default?.());
-  },
-});
+export const Panel = defineComponent(
+  (
+    props: { className?: unknown; style?: StyleValue },
+    { slots }: SetupContext<[], SlotsType<{ default?: () => VNodeChild }>>,
+  ) =>
+    () =>
+      h('div', { class: props.className, style: props.style }, [slots.default?.()]),
+  { name: 'TablePanel', props: ['className', 'style'], emits: [] },
+);
 
 // ============================== Summary components ==============================
 export const SummaryRow = defineComponent({
   name: 'TableSummaryRow',
-  inheritAttrs: true,
+  inheritAttrs: false,
   setup(_, { attrs, slots }) {
     return () => h('tr', attrs, slots.default?.());
   },
@@ -39,7 +50,7 @@ export const SummaryCell = defineComponent({
     index: { type: Number, required: true },
     colSpan: { type: Number, default: 1 },
     rowSpan: { type: Number, default: undefined },
-    align: { type: String, default: undefined },
+    align: { type: String as PropType<ColumnType['align']>, default: undefined },
   },
   setup(props, { slots }) {
     const ctx = useTableContext();
@@ -54,40 +65,44 @@ export const SummaryCell = defineComponent({
         ? getCellFixedInfo(
             props.index,
             props.index + mergedColSpan - 1,
-            summaryCtx.flattenColumns as never,
-            summaryCtx.stickyOffsets as never,
+            summaryCtx.flattenColumns,
+            summaryCtx.stickyOffsets,
           )
         : undefined;
       return { mergedColSpan, fixedInfo };
     });
     return () =>
-      h(Cell, {
-        // ⚠️ 调用方原生 class 不在这里加 —— SummaryCell 没关 inheritAttrs，
-        //    Vue 会自动落到 Cell（Cell 自己读 attrs.class）。
-        index: props.index,
-        component: 'td',
-        prefixCls: ctx.prefixCls,
-        record: null,
-        dataIndex: null,
-        align: props.align,
-        colSpan: merged.value.mergedColSpan,
-        rowSpan: props.rowSpan,
-        render: () => slots.default?.(),
-        ...((merged.value.fixedInfo ?? {}) as unknown as Record<string, unknown>),
-      } as never);
+      h(
+        Cell,
+        {
+          // ⚠️ 调用方原生 class 不在这里加 —— SummaryCell 没关 inheritAttrs，
+          //    Vue 会自动落到 Cell（Cell 自己读 attrs.class）。
+          index: props.index,
+          component: 'td',
+          prefixCls: ctx.prefixCls,
+          record: null,
+          align: props.align,
+          colSpan: merged.value.mergedColSpan,
+          rowSpan: props.rowSpan,
+          ...merged.value.fixedInfo,
+        },
+        { default: () => slots.default?.() },
+      );
   },
 });
 
 /** 语法糖：`<Summary>` 原样渲染 children（rc 同判：不支持 HOC）。 */
-export const Summary = defineComponent({
+const SummaryComponent = defineComponent({
   name: 'TableSummary',
+  inheritAttrs: false,
+  props: {
+    fixed: { type: [Boolean, String] as PropType<boolean | 'top' | 'bottom'>, default: undefined },
+  },
   setup(_, { slots }) {
     return () => slots.default?.();
   },
-}) as never as { Row: typeof SummaryRow; Cell: typeof SummaryCell };
-
-Summary.Row = SummaryRow;
-Summary.Cell = SummaryCell;
+});
+export const Summary = Object.assign(SummaryComponent, { Row: SummaryRow, Cell: SummaryCell });
 
 // ============================== Footer（tfoot） ==============================
 
@@ -98,12 +113,15 @@ const Footer = defineComponent({
       type: Object as PropType<{ start: number[]; end: number[]; widths: number[] }>,
       required: true,
     },
-    flattenColumns: { type: Array as unknown as PropType<ColumnsType>, required: true },
+    flattenColumns: {
+      type: Array as PropType<SummaryContextValue['flattenColumns']>,
+      required: true,
+    },
   },
   setup(props, { slots }) {
     const ctx = useTableContext();
     const summaryContext = computed(() => {
-      const flattenColumns = props.flattenColumns as never as { scrollbar?: boolean }[];
+      const flattenColumns = props.flattenColumns;
       const lastColumnIndex = flattenColumns.length - 1;
       const scrollColumn = flattenColumns[lastColumnIndex];
       return {
@@ -112,7 +130,17 @@ const Footer = defineComponent({
         scrollColumnIndex: scrollColumn?.scrollbar ? lastColumnIndex : null,
       };
     });
-    provide(summaryContextKey, summaryContext.value as never);
+    provide(summaryContextKey, {
+      get stickyOffsets() {
+        return summaryContext.value.stickyOffsets;
+      },
+      get flattenColumns() {
+        return summaryContext.value.flattenColumns;
+      },
+      get scrollColumnIndex() {
+        return summaryContext.value.scrollColumnIndex;
+      },
+    });
     return () => h('tfoot', { class: `${ctx.prefixCls}-summary` }, slots.default?.());
   },
 });

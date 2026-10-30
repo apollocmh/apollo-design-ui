@@ -3,8 +3,8 @@
  * —— 六个小 hook 合并成一个文件（各自都只有 10–55 行，分文件只会稀释注释密度）。
  */
 
-import { type ComputedRef, computed, ref } from 'vue';
-import type { ColumnsType, GetRowKey } from '../../interface';
+import { type ComputedRef, computed, type MaybeRefOrGetter, ref, toValue } from 'vue';
+import type { GetRowKey, TableSticky } from '../../interface';
 import { type CellFixedInfo, getCellFixedInfo, type StickyOffsets } from '../utils/fixUtil';
 
 // ============================== useHover ==============================
@@ -33,7 +33,7 @@ export function useHover(): {
 /** 固定列的粘滞偏移（逐字 rc useStickyOffsets）。 */
 export function useStickyOffsets(
   colWidths: ComputedRef<(number | undefined)[]>,
-  flattenColumns: ComputedRef<ColumnsType>,
+  flattenColumns: ComputedRef<readonly { fixed?: unknown }[]>,
 ): ComputedRef<StickyOffsets> {
   return computed<StickyOffsets>(() => {
     const columns = flattenColumns.value;
@@ -52,7 +52,7 @@ export function useStickyOffsets(
     };
     const startOffsets = getOffsets(0, columnCount, 1);
     const endOffsets = getOffsets(columnCount - 1, -1, -1).reverse();
-    return { start: startOffsets, end: endOffsets, widths: widths as number[] };
+    return { start: startOffsets, end: endOffsets, widths: widths.map((width) => width ?? 0) };
   });
 }
 
@@ -60,56 +60,38 @@ export function useStickyOffsets(
 
 /** 每列的固定信息列表（Cell 渲染 sticky 定位要用）。 */
 export function useFixedInfo(
-  flattenColumns: ComputedRef<ColumnsType>,
+  flattenColumns: ComputedRef<readonly { fixed?: unknown }[]>,
   stickyOffsets: ComputedRef<StickyOffsets>,
 ): ComputedRef<CellFixedInfo[]> {
   return computed(() => {
     const columns = flattenColumns.value;
     const offsets = stickyOffsets.value;
-    return columns.map((_, colIndex) =>
-      getCellFixedInfo(colIndex, colIndex, columns as never, offsets as never),
-    );
+    return columns.map((_, colIndex) => getCellFixedInfo(colIndex, colIndex, columns, offsets));
   });
 }
 
 // ============================== useSticky ==============================
 
-const canUseDom = () => typeof window !== 'undefined';
-
-/** 粘性表头（`sticky` prop）的配置归并（逐字 rc useSticky）。 */
+/** Re-read the current sticky configuration, prefix and owning window. */
 export function useSticky(
-  sticky:
-    | boolean
-    | {
-        offsetHeader?: number;
-        offsetSummary?: number;
-        offsetScroll?: number;
-        getContainer?: () => unknown;
-      }
-    | undefined,
-  prefixCls: string,
-): {
-  isSticky: boolean;
-  stickyClassName: string;
-  offsetHeader: number;
-  offsetSummary: number;
-  offsetScroll: number;
-  container: unknown;
-} {
-  const cfg = typeof sticky === 'object' ? sticky : {};
-  const offsetHeader = cfg.offsetHeader ?? 0;
-  const offsetSummary = cfg.offsetSummary ?? 0;
-  const offsetScroll = cfg.offsetScroll ?? 0;
-  const container = cfg.getContainer?.() ?? (canUseDom() ? window : null);
-  const isSticky = Boolean(sticky);
-  return {
-    isSticky,
-    stickyClassName: isSticky ? `${prefixCls}-sticky-holder` : '',
-    offsetHeader,
-    offsetSummary,
-    offsetScroll,
-    container,
-  };
+  sticky: MaybeRefOrGetter<boolean | TableSticky | undefined>,
+  prefixCls: MaybeRefOrGetter<string>,
+  ownerWindow: () => Window | null,
+) {
+  return computed(() => {
+    const current = toValue(sticky);
+    const config = typeof current === 'object' ? current : {};
+    const isSticky = Boolean(current);
+    const view = ownerWindow();
+    return {
+      isSticky,
+      stickyClassName: isSticky ? `${toValue(prefixCls)}-sticky-holder` : '',
+      offsetHeader: config.offsetHeader ?? 0,
+      offsetSummary: config.offsetSummary ?? 0,
+      offsetScroll: config.offsetScroll ?? 0,
+      container: view ? (config.getContainer?.() ?? view) : null,
+    };
+  });
 }
 
 // ========================== useFlattenRecords ==========================

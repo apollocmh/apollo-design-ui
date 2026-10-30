@@ -4,8 +4,15 @@
  * 6 个函数全部是纯函数 ⇒ L1 直测（`__tests__/util.test.ts`）。
  */
 
-import { isFunction, isNonNullable, isPlainObject } from '@apollo-design/utils';
+import { isNonNullable, isPlainObject } from '@apollo-design/utils';
+import type { VNodeChild } from 'vue';
 import type { SizeType } from '../config-provider/size-context';
+import type { PaginationProps } from '../pagination/interface';
+import type {
+  ColumnTitle,
+  ColumnTitleProps,
+  TablePaginationPlacement as NativePlacement,
+} from './interface';
 
 /** 分页的方位（`top`/`bottom` 与 `start`/`end` 两套写法并存）。 */
 export type TablePaginationPlacement =
@@ -32,10 +39,7 @@ export interface KeyableColumn {
  * ⚠️ 判据是 **`'key' in column && isNonNullable(column.key)`** ——
  *    `key: 0` / `key: ''` 都算「给了」（`0` 是合法的 `Key`）。
  */
-export function getColumnKey<RecordType>(
-  column: KeyableColumn & Partial<RecordType>,
-  defaultKey: string,
-): string | number {
+export function getColumnKey(column: KeyableColumn, defaultKey: string): string | number {
   if ('key' in column && isNonNullable(column.key)) {
     return column.key as string | number;
   }
@@ -53,9 +57,12 @@ export function getColumnPos(index: number, pos?: string): string {
 }
 
 /** 渲染列标题：函数则调用，否则原样返回。 */
-export function renderColumnTitle(title: unknown, props: unknown): unknown {
-  if (isFunction(title)) {
-    return (title as (p: unknown) => unknown)(props);
+export function renderColumnTitle<RecordType>(
+  title: ColumnTitle<RecordType> | undefined,
+  props: ColumnTitleProps<RecordType>,
+): VNodeChild {
+  if (typeof title === 'function') {
+    return title(props);
   }
   return title;
 }
@@ -66,7 +73,10 @@ export function renderColumnTitle(title: unknown, props: unknown): unknown {
  * 用途：`aria-label` 这类**必须是字符串**的位置。直接把 vnode/对象塞进去会渲染成
  * `[object Object]`。
  */
-export function safeColumnTitle(title: unknown, props: unknown): unknown {
+export function safeColumnTitle<RecordType>(
+  title: ColumnTitle<RecordType> | undefined,
+  props: ColumnTitleProps<RecordType>,
+): VNodeChild {
   const result = renderColumnTitle(title, props);
   if (isPlainObject(result) || Array.isArray(result)) {
     return '';
@@ -81,7 +91,7 @@ export function safeColumnTitle(title: unknown, props: unknown): unknown {
  * ⚠️ `toLowerCase()` 之后判断 ⇒ 大小写不敏感。
  */
 export function normalizePlacement(
-  pos: TablePaginationPlacement | TablePaginationPosition,
+  pos: NativePlacement | TablePaginationPlacement | TablePaginationPosition,
 ): NormalizedPlacement {
   const lowerPos = pos.toLowerCase();
   if (lowerPos.includes('center')) {
@@ -96,9 +106,9 @@ export function normalizePlacement(
  * ⚠️ `middle` **不在**判据里（antd 的 `mergedSize` 已被归一成 `medium`）。
  */
 export function getPaginationSize(
-  paginationSize: SizeType | undefined,
+  paginationSize: PaginationProps['size'],
   mergedSize: SizeType | undefined,
-): SizeType | undefined {
+): PaginationProps['size'] {
   if (paginationSize) {
     return paginationSize;
   }

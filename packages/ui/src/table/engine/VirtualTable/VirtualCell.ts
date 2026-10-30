@@ -10,8 +10,8 @@
  * ⚠️ Vue 的 `setStyle` 不做 px 补全（React 会）⇒ 所有数值宽度**必须自己拼单位**。
  */
 
-import { computed, defineComponent, h, type PropType } from 'vue';
-import type { ColumnType } from '../../interface';
+import { computed, defineComponent, h, normalizeStyle, type StyleValue } from 'vue';
+import type { ColumnType, TableComponent, TableSlots } from '../../interface';
 import { getCellProps } from '../Body';
 import Cell from '../Cell';
 import { useRowContext, useTableContext } from '../context';
@@ -22,29 +22,25 @@ export function getColumnWidth(colIndex: number, colSpan: number, columnsOffset:
   return (columnsOffset[colIndex + mergedColSpan] as number) - (columnsOffset[colIndex] || 0);
 }
 
-export default defineComponent({
-  name: 'TableVirtualCell',
-  props: {
-    column: { type: Object as PropType<ColumnType>, required: true },
-    colIndex: { type: Number, required: true },
-    indent: { type: Number, required: true },
-    index: { type: Number, required: true },
-    renderIndex: { type: Number, required: true },
-    record: { type: Object as PropType<Record<string, unknown>>, required: true },
-    component: { type: String, default: 'div' },
-    columnsOffset: { type: Array as PropType<number[]>, required: true },
-    /** `extra`（补行）时为 true —— 隐藏条件与高度来源都与普通行相反。 */
-    inverse: { type: Boolean, default: false },
-    getHeight: {
-      type: Function as PropType<((rowSpan: number) => number | undefined) | undefined>,
-      default: undefined,
-    },
-    style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    className: { type: null, default: undefined },
-  },
-  setup(props) {
-    const ctx = useTableContext();
-    const rowCtx = useRowContext();
+interface VirtualCellProps<RecordType extends object> {
+  column: ColumnType<RecordType>;
+  colIndex: number;
+  bodyCell?: TableSlots<RecordType>['bodyCell'];
+  indent: number;
+  index: number;
+  renderIndex: number;
+  record: RecordType;
+  component?: TableComponent;
+  columnsOffset: number[];
+  inverse?: boolean;
+  getHeight?: (rowSpan: number) => number | undefined;
+  style?: StyleValue;
+  className?: unknown;
+}
+const NativeVirtualCell = defineComponent(
+  <RecordType extends object>(props: VirtualCellProps<RecordType>) => {
+    const ctx = useTableContext<RecordType>();
+    const rowCtx = useRowContext<RecordType>();
 
     // ===================== getCellProps（与 BodyRow 同源） =====================
     const cellProps = computed(() =>
@@ -53,14 +49,14 @@ export default defineComponent({
           record: props.record,
           prefixCls: ctx.prefixCls,
           columnsKey: rowCtx.columnsKey,
-          fixedInfoList: rowCtx.fixedInfoList as never,
+          fixedInfoList: rowCtx.fixedInfoList,
           expandIconColumnIndex: rowCtx.expandIconColumnIndex,
           nestExpandable: rowCtx.nestExpandable,
           indentSize: rowCtx.indentSize,
           expandIcon: rowCtx.expandIcon,
           expanded: rowCtx.expanded,
           hasNestChildren: rowCtx.hasNestChildren,
-          onTriggerExpand: rowCtx.onTriggerExpand as never,
+          onTriggerExpand: rowCtx.onTriggerExpand,
           expandable: rowCtx.expandable,
           expandedKeys: rowCtx.expandedKeys,
         },
@@ -92,10 +88,8 @@ export default defineComponent({
         : colSpan.value === 0 || rowSpan.value === 0 || rowSpan.value > 1,
     );
 
-    const mergedStyle = computed<Record<string, unknown>>(() => {
+    const mergedStyle = computed(() => {
       const style: Record<string, unknown> = {
-        ...((additional.value.style as Record<string, unknown> | undefined) ?? {}),
-        ...(props.style ?? {}),
         flex: `0 0 ${concatColWidth.value}px`,
         width: `${concatColWidth.value}px`,
         marginRight: `${marginOffset.value}px`,
@@ -107,7 +101,7 @@ export default defineComponent({
         const height = props.getHeight?.(rowSpan.value);
         if (height !== undefined) style.height = `${height}px`;
       }
-      return style;
+      return normalizeStyle([additional.value.style, props.style, style]);
     });
 
     // 虚拟布局下 span 无 table 语义 ⇒ 必须重置
@@ -121,7 +115,7 @@ export default defineComponent({
     });
 
     return () =>
-      h(Cell, {
+      h(Cell<RecordType>, {
         class: [props.column.className, props.className],
         ellipsis: props.column.ellipsis,
         align: props.column.align,
@@ -130,12 +124,14 @@ export default defineComponent({
         prefixCls: ctx.prefixCls,
         key: String(cellProps.value.key),
         record: props.record,
+        column: props.column,
+        bodyCell: needHide.value ? undefined : props.bodyCell,
         index: props.index,
         renderIndex: props.renderIndex,
         dataIndex: props.column.dataIndex,
-        render: (needHide.value ? () => null : props.column.render) as never,
+        render: needHide.value ? () => null : props.column.render,
         shouldCellUpdate: props.column.shouldCellUpdate,
-        ...((cellProps.value.fixedInfo ?? {}) as Record<string, unknown>),
+        ...cellProps.value.fixedInfo,
         appendNode: cellProps.value.appendCellNode,
         originRowSpan: cellProps.value.originRowSpan,
         additionalProps: {
@@ -143,6 +139,47 @@ export default defineComponent({
           style: mergedStyle.value,
           ...cellSpan.value,
         },
-      } as never);
+      });
+  },
+  {
+    name: 'TableVirtualCell',
+    emits: [],
+    props: [
+      'column',
+      'colIndex',
+      'bodyCell',
+      'indent',
+      'index',
+      'renderIndex',
+      'record',
+      'component',
+      'columnsOffset',
+      'inverse',
+      'getHeight',
+      'style',
+      'className',
+    ],
+  },
+);
+const VirtualCell: typeof NativeVirtualCell = Object.assign(NativeVirtualCell, {
+  props: {
+    column: { type: Object, required: true },
+    colIndex: { type: Number, required: true },
+    bodyCell: { type: Function, default: undefined },
+    indent: { type: Number, required: true },
+    index: { type: Number, required: true },
+    renderIndex: { type: Number, required: true },
+    record: { type: Object, required: true },
+    component: { type: String, default: 'div' },
+    columnsOffset: { type: Array, required: true },
+    /** `extra`（补行）时为 true —— 隐藏条件与高度来源都与普通行相反。 */
+    inverse: { type: Boolean, default: false },
+    getHeight: {
+      type: Function,
+      default: undefined,
+    },
+    style: { type: Object, default: undefined },
+    className: { type: null, default: undefined },
   },
 });
+export default VirtualCell;

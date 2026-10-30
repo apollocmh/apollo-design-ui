@@ -1,3 +1,4 @@
+import type { EngineExpandableConfig } from '../interface';
 /**
  * rc `hooks/useExpand.js`（74 行）—— Vue 移植。
  *
@@ -5,20 +6,14 @@
  * React 的 useState 在这里是 `ref` + `watch`（受控源变化时同步）。
  */
 
-import { type ComputedRef, computed, type Ref, ref, watch } from 'vue';
-import type {
-  ExpandableConfig,
-  ExpandableConfig as ExpandableConfigT,
-  GetRowKey,
-  RenderExpandIcon,
-} from '../../interface';
-import { INTERNAL_HOOKS } from '../constant';
+import { useControlledValue } from '@apollo-design/utils';
+import { type ComputedRef, computed, type Ref } from 'vue';
+import type { GetRowKey, RenderExpandIcon } from '../../interface';
 import { findAllChildrenKeys, renderExpandIcon } from '../utils/expandUtil';
-import { getExpandableProps } from '../utils/legacyUtil';
 import { hasNestChildren } from './use-columns';
 
 export interface UseExpandResult<RecordType> {
-  expandableConfig: ComputedRef<ExpandableConfigT<RecordType>>;
+  expandableConfig: ComputedRef<EngineExpandableConfig<RecordType>>;
   expandableType: ComputedRef<false | 'row' | 'nest'>;
   mergedExpandedKeys: ComputedRef<Set<string | number>>;
   mergedExpandIcon: ComputedRef<RenderExpandIcon<RecordType>>;
@@ -26,49 +21,24 @@ export interface UseExpandResult<RecordType> {
   onTriggerExpand: (record: RecordType, event?: Event) => void;
 }
 
-export function useExpand<RecordType>(
-  props: Ref<Record<string, unknown>>,
+export function useExpand<RecordType extends object>(
+  props: Ref<{ expandable?: EngineExpandableConfig<RecordType> }>,
   mergedData: ComputedRef<RecordType[]>,
-  getRowKey: GetRowKey<RecordType>,
+  getRowKey: Ref<GetRowKey<RecordType>>,
 ): UseExpandResult<RecordType> {
-  const expandableConfig = computed<ExpandableConfigT<RecordType>>(
-    () =>
-      getExpandableProps(
-        props.value as never,
-        'expandable' in props.value,
-      ) as unknown as ExpandableConfigT<RecordType>,
-  );
-
-  // ⚠️ rc：`const mergedExpandIcon = expandIcon || renderExpandIcon;`（antd 层注入
-  //    的图标工厂优先，引擎默认兜底）—— 此前漏读 cfg.expandIcon 导致
-  //    antd 的 button 形态图标（aria-label/aria-expanded）从未生效。
-  const mergedExpandIcon = computed(
-    () =>
-      (expandableConfig.value.expandIcon ??
-        renderExpandIcon) as unknown as RenderExpandIcon<RecordType>,
+  const expandableConfig = computed<EngineExpandableConfig<RecordType>>(() => {
+    const config = props.value.expandable ?? {};
+    return config.showExpandColumn === false ? { ...config, expandIconColumnIndex: -1 } : config;
+  });
+  const mergedExpandIcon = computed<RenderExpandIcon<RecordType>>(
+    () => expandableConfig.value.expandIcon ?? renderExpandIcon,
   );
   const mergedChildrenColumnName = computed(
-    () => expandableConfig.value.childrenColumnName || 'children',
+    () => expandableConfig.value.childrenColumnName ?? 'children',
   );
-
   const expandableType = computed<false | 'row' | 'nest'>(() => {
-    const cfg = expandableConfig.value;
-    if (cfg.expandedRowRender) {
-      return 'row';
-    }
-    const isInternal =
-      (props.value as { internalHooks?: string }).internalHooks === INTERNAL_HOOKS &&
-      Boolean(
-        (props.value as { expandable?: { __PARENT_RENDER_ICON__?: unknown } }).expandable
-          ?.__PARENT_RENDER_ICON__,
-      );
-    if (
-      (props.value.expandable && isInternal) ||
-      hasNestChildren(mergedData.value as never, mergedChildrenColumnName.value)
-    ) {
-      return 'nest';
-    }
-    return false;
+    if (expandableConfig.value.expandedRowRender) return 'row';
+    return hasNestChildren(mergedData.value, mergedChildrenColumnName.value) ? 'nest' : false;
   });
 
   // 初始化只跑一次：defaultExpandAllRows 变化不重算（rc 同判）。
@@ -78,32 +48,19 @@ export function useExpand<RecordType>(
       return cfg.defaultExpandedRowKeys.slice();
     }
     if (cfg.defaultExpandAllRows) {
-      return findAllChildrenKeys(
-        mergedData.value as never,
-        getRowKey as never,
-        mergedChildrenColumnName.value,
-      );
+      return findAllChildrenKeys(mergedData.value, getRowKey.value, mergedChildrenColumnName.value);
     }
     return [];
   };
-  const innerExpandedKeys = ref<(string | number)[]>(initExpandedKeys());
-
-  const mergedExpandedKeys = computed<Set<string | number>>(() => {
-    const cfg = expandableConfig.value;
-    return new Set(cfg.expandedRowKeys ?? innerExpandedKeys.value ?? []);
+  const [expandedKeys, setExpandedKeys] = useControlledValue<(string | number)[]>({
+    defaultValue: initExpandedKeys,
+    getValue: () => expandableConfig.value.expandedRowKeys,
   });
-
-  // 受控源变化时清掉内部值（rc 语义：受控优先，卸载受控后回退内部态）
-  watch(
-    () => expandableConfig.value.expandedRowKeys,
-    (keys) => {
-      if (keys) innerExpandedKeys.value = [...keys];
-    },
-  );
+  const mergedExpandedKeys = computed(() => new Set(expandedKeys.value));
 
   const onTriggerExpand = (record: RecordType, _event?: Event) => {
     const index = mergedData.value.indexOf(record);
-    const key = getRowKey(record, index);
+    const key = getRowKey.value(record, index);
     const set = new Set(mergedExpandedKeys.value);
     const hasKey = set.has(key);
     let newExpandedKeys: (string | number)[];
@@ -113,7 +70,7 @@ export function useExpand<RecordType>(
     } else {
       newExpandedKeys = [...set, key];
     }
-    innerExpandedKeys.value = newExpandedKeys;
+    setExpandedKeys(newExpandedKeys);
     const cfg = expandableConfig.value;
     cfg.onExpand?.(!hasKey, record);
     cfg.onExpandedRowsChange?.(newExpandedKeys);
@@ -128,5 +85,3 @@ export function useExpand<RecordType>(
     onTriggerExpand,
   };
 }
-
-export type { ExpandableConfig };

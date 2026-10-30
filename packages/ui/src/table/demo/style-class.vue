@@ -95,9 +95,7 @@ function onThemeChange(value: unknown): void {
       :pagination="false"
       :class-names="classNames"
       :styles="styles"
-      title="Style Class"
-      footer="classNames / styles 同时作用于根、表头、表体与标题槽"
-    />
+    ><template #title>Style Class</template><template #footer>classNames / styles 同时作用于根、表头、表体与标题槽</template></Table>
   </div>
 </template>
 

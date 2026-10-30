@@ -1,21 +1,25 @@
-/**
- * rc `Header/{Header,HeaderRow}.js`（~160 行）—— Vue 移植。
- * `parseHeaderRows` 是分组表头的行/列展开算法（逐字）。
- */
-
-import { computed, defineComponent, h, type PropType } from 'vue';
-import type { ColumnsType, ColumnType } from '../interface';
+/** Grouped header geometry and native header row/cell composition. */
+import { type CSSProperties, computed, defineComponent, h, type VNodeChild } from 'vue';
+import type {
+  ColumnsType,
+  ColumnType,
+  TableProps,
+  TableSemanticClassNames,
+  TableSemanticStyles,
+} from '../interface';
+import { renderColumnTitle } from '../util';
 import Cell from './Cell';
 import { useTableContext } from './context';
-import { getCellFixedInfo } from './utils/fixUtil';
+import { renderElement } from './element';
+import { getCellFixedInfo, type StickyOffsets } from './utils/fixUtil';
 import { getColumnsKey } from './utils/valueUtil';
 
-interface HeaderCellInfo {
+interface HeaderCellInfo<RecordType> {
   key: string | number | undefined;
   class: unknown;
-  style: Record<string, unknown> | undefined;
-  children: unknown;
-  column: ColumnType;
+  style?: CSSProperties;
+  children: VNodeChild;
+  column: ColumnType<RecordType>;
   colStart: number;
   colEnd: number;
   colSpan: number;
@@ -23,176 +27,151 @@ interface HeaderCellInfo {
   hasSubColumns?: boolean;
 }
 
-function parseHeaderRows(
-  rootColumns: ColumnsType,
-  classNames: Record<string, string>,
-  styles: Record<string, Record<string, unknown>>,
-): HeaderCellInfo[][] {
-  const rows: HeaderCellInfo[][] = [];
-  function fillRowCells(columns: ColumnsType, colIndex: number, rowIndex = 0): number[] {
+function parseHeaderRows<RecordType>(
+  rootColumns: ColumnsType<RecordType>,
+  classNames: NonNullable<TableSemanticClassNames['header']>,
+  styles: NonNullable<TableSemanticStyles['header']>,
+): HeaderCellInfo<RecordType>[][] {
+  const rows: HeaderCellInfo<RecordType>[][] = [];
+  function fillRowCells(
+    columns: ColumnsType<RecordType>,
+    colIndex: number,
+    rowIndex = 0,
+  ): number[] {
     while (rows.length <= rowIndex) rows.push([]);
     let currentColIndex = colIndex;
-    const colSpans = columns.filter(Boolean).map((rawColumn) => {
-      const column = rawColumn as ColumnType;
-      const cell: HeaderCellInfo = {
+    return columns.map((column) => {
+      const cell: HeaderCellInfo<RecordType> = {
         key: column.key,
         class: [column.className, classNames.cell],
         style: styles.cell,
-        children: column.title,
+        children: renderColumnTitle(column.title, {}),
         column,
         colStart: currentColIndex,
         colEnd: currentColIndex,
         colSpan: 1,
       };
       let colSpan = 1;
-      const subColumns = (column as { children?: ColumnsType }).children;
-      if (subColumns && subColumns.length > 0) {
-        colSpan = fillRowCells(subColumns, currentColIndex, rowIndex + 1).reduce(
+      if (column.children?.length) {
+        colSpan = fillRowCells(column.children, currentColIndex, rowIndex + 1).reduce(
           (total, count) => total + count,
           0,
         );
         cell.hasSubColumns = true;
       }
-      if ('colSpan' in column && (column as { colSpan?: number }).colSpan !== undefined) {
-        colSpan = (column as { colSpan?: number }).colSpan as number;
-      }
-      if ('rowSpan' in column) {
-        (cell as { rowSpan?: number }).rowSpan = (column as { rowSpan?: number }).rowSpan as number;
-      }
+      if (column.colSpan !== undefined) colSpan = column.colSpan;
+      if (column.rowSpan !== undefined) cell.rowSpan = column.rowSpan;
       cell.colSpan = colSpan;
       cell.colEnd = cell.colStart + colSpan - 1;
       rows[rowIndex]?.push(cell);
       currentColIndex += colSpan;
       return colSpan;
     });
-    return colSpans;
   }
-
   fillRowCells(rootColumns, 0);
-
-  const rowCount = rows.length;
-  for (let rowIndex = 0; rowIndex < rowCount; rowIndex += 1) {
-    rows[rowIndex]?.forEach((cell) => {
-      if (!('rowSpan' in cell) && !cell.hasSubColumns) {
-        (cell as { rowSpan?: number }).rowSpan = rowCount - rowIndex;
-      }
+  rows.forEach((row, index) => {
+    row.forEach((cell) => {
+      if (cell.rowSpan === undefined && !cell.hasSubColumns) cell.rowSpan = rows.length - index;
     });
-  }
+  });
   return rows;
 }
 
-const HeaderRow = defineComponent({
-  name: 'TableHeaderRow',
-  props: {
-    cells: { type: Array as PropType<HeaderCellInfo[]>, required: true },
-    stickyOffsets: { type: Object as PropType<{ start: number[]; end: number[] }>, required: true },
-    flattenColumns: { type: Array as PropType<ColumnsType>, required: true },
-    onHeaderRow: { type: Function, default: undefined },
-    index: { type: Number, required: true },
-    classNames: { type: Object as PropType<Record<string, string>>, default: undefined },
-    styles: {
-      type: Object as PropType<Record<string, Record<string, unknown>>>,
-      default: undefined,
-    },
-  },
-  setup(props) {
-    const ctx = useTableContext();
+interface HeaderRowProps<RecordType> {
+  cells: HeaderCellInfo<RecordType>[];
+  stickyOffsets: StickyOffsets;
+  flattenColumns: ColumnsType<RecordType>;
+  onHeaderRow?: TableProps<RecordType>['onHeaderRow'];
+  index: number;
+  classNames?: TableSemanticClassNames['header'];
+  styles?: TableSemanticStyles['header'];
+}
+const HeaderRow = defineComponent(
+  <RecordType extends object>(props: HeaderRowProps<RecordType>) => {
+    const ctx = useTableContext<RecordType>();
     return () => {
       const { cells, stickyOffsets, flattenColumns, classNames, styles } = props;
-      let rowProps: Record<string, unknown> | undefined;
-      if (props.onHeaderRow) {
-        rowProps = props.onHeaderRow(
-          cells.map((cell) => cell.column),
-          props.index,
-        ) as Record<string, unknown>;
-      }
+      const rowProps = props.onHeaderRow?.(
+        cells.map((cell) => cell.column),
+        props.index,
+      );
       const columnsKey = getColumnsKey(cells.map((cell) => cell.column));
-      return h(
-        'tr',
+      return renderElement(
+        ctx.getComponent(['header', 'row'], 'tr'),
         {
           ...rowProps,
-          class: classNames?.row,
-          style: styles?.row,
+          class: [rowProps?.class, rowProps?.className, classNames?.row],
+          style: [rowProps?.style, styles?.row],
         },
-        cells.map((cell, cellIndex) => {
-          const { column, colStart, colEnd, colSpan } = cell;
-          const fixedInfo = getCellFixedInfo(
-            colStart,
-            colEnd,
-            flattenColumns as never,
-            stickyOffsets as never,
-          );
-          const additionalProps = (column?.onHeaderCell?.(column) as Record<string, unknown>) || {};
-          return h(Cell, {
+        cells.map((cell, cellIndex) =>
+          h(Cell<RecordType>, {
             children: cell.children,
             class: cell.class,
             style: cell.style,
             colSpan: cell.colSpan,
-            rowSpan: (cell as { rowSpan?: number }).rowSpan,
-            scope: column.title ? (colSpan > 1 ? 'colgroup' : 'col') : null,
-            ellipsis: column.ellipsis,
-            align: column.align,
-            component: 'th',
+            rowSpan: cell.rowSpan,
+            scope: cell.column.title ? (cell.colSpan > 1 ? 'colgroup' : 'col') : null,
+            ellipsis: cell.column.ellipsis,
+            align: cell.column.align,
+            component: ctx.getComponent(['header', 'cell'], 'th'),
             prefixCls: ctx.prefixCls,
-            key: String(columnsKey[cellIndex]),
-            ...((fixedInfo ?? {}) as unknown as Record<string, unknown>),
-            additionalProps,
+            key: columnsKey[cellIndex],
+            ...getCellFixedInfo(cell.colStart, cell.colEnd, flattenColumns, stickyOffsets),
+            additionalProps: cell.column.onHeaderCell?.(cell.column),
             rowType: 'header',
-          } as never);
-        }),
-      );
-    };
-  },
-});
-
-const Header = defineComponent({
-  name: 'TableHeader',
-  props: {
-    stickyOffsets: {
-      type: Object as PropType<{ start: number[]; end: number[]; widths: number[] }>,
-      required: true,
-    },
-    columns: { type: Array as PropType<ColumnsType>, required: true },
-    flattenColumns: { type: Array as PropType<ColumnsType>, required: true },
-    onHeaderRow: { type: Function, default: undefined },
-  },
-  setup(props) {
-    const ctx = useTableContext();
-    const rows = computed(() => {
-      const headerCls =
-        (ctx.classNames as never as { header?: Record<string, string> } | undefined)?.header ?? {};
-      const headerStyles =
-        (ctx.styles as never as { header?: Record<string, Record<string, unknown>> } | undefined)
-          ?.header ?? {};
-      return parseHeaderRows(props.columns as ColumnsType, headerCls, headerStyles);
-    });
-    return () => {
-      const headerCls =
-        (ctx.classNames as never as { header?: Record<string, string> } | undefined)?.header ?? {};
-      const headerStyles =
-        (ctx.styles as never as { header?: Record<string, Record<string, unknown>> } | undefined)
-          ?.header ?? {};
-      return h(
-        'thead',
-        {
-          class: [`${ctx.prefixCls}-thead`, headerCls.wrapper],
-          style: headerStyles.wrapper,
-        },
-        rows.value.map((row: HeaderCellInfo[], rowIndex: number) =>
-          h(HeaderRow, {
-            classNames: headerCls,
-            styles: headerStyles,
-            key: rowIndex,
-            flattenColumns: props.flattenColumns,
-            cells: row,
-            stickyOffsets: props.stickyOffsets,
-            onHeaderRow: props.onHeaderRow,
-            index: rowIndex,
           }),
         ),
       );
     };
   },
-});
+  {
+    name: 'TableHeaderRow',
+    props: [
+      'cells',
+      'stickyOffsets',
+      'flattenColumns',
+      'onHeaderRow',
+      'index',
+      'classNames',
+      'styles',
+    ],
+  },
+);
+
+interface HeaderProps<RecordType> {
+  stickyOffsets: StickyOffsets;
+  columns: ColumnsType<RecordType>;
+  flattenColumns: ColumnsType<RecordType>;
+  onHeaderRow?: TableProps<RecordType>['onHeaderRow'];
+}
+const Header = defineComponent(
+  <RecordType extends object>(props: HeaderProps<RecordType>) => {
+    const ctx = useTableContext<RecordType>();
+    const rows = computed(() =>
+      parseHeaderRows(props.columns, ctx.classNames?.header ?? {}, ctx.styles?.header ?? {}),
+    );
+    return () =>
+      renderElement(
+        ctx.getComponent(['header', 'wrapper'], 'thead'),
+        {
+          class: [`${ctx.prefixCls}-thead`, ctx.classNames?.header?.wrapper],
+          style: ctx.styles?.header?.wrapper,
+        },
+        rows.value.map((row, index) =>
+          h(HeaderRow<RecordType>, {
+            classNames: ctx.classNames?.header,
+            styles: ctx.styles?.header,
+            key: index,
+            flattenColumns: props.flattenColumns,
+            cells: row,
+            stickyOffsets: props.stickyOffsets,
+            onHeaderRow: props.onHeaderRow,
+            index,
+          }),
+        ),
+      );
+  },
+  { name: 'TableHeader', props: ['stickyOffsets', 'columns', 'flattenColumns', 'onHeaderRow'] },
+);
 
 export default Header;

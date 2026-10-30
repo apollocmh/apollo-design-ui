@@ -3,7 +3,7 @@ import type { TableColumnsType } from '@apollo-design/ui';
 import { Table } from '@apollo-design/ui';
 
 /**
- * ⭐ 单元格合并靠列的 `customCell`：返回 `{ colSpan }` 跨列、`{ rowSpan }` 跨行。
+ * ⭐ 单元格合并靠列的 `onCell`：返回 `{ colSpan }` 跨列、`{ rowSpan }` 跨行。
  * 被跨掉的格子要返回 `{ colSpan: 0 }` / `{ rowSpan: 0 }`，否则后面的列会整体错位。
  */
 const sharedOnCell = (_record: Record<string, unknown>, rowIndex: number) => {
@@ -17,12 +17,12 @@ const columns: TableColumnsType = [
   {
     title: 'Name',
     dataIndex: 'name',
-    customCell: (_r: unknown, index: number) => ({
+    onCell: (_r: unknown, index: number) => ({
       rowSpan: index === 0 ? 3 : index === 3 ? 2 : 0,
     }),
   },
   { title: 'Age', dataIndex: 'age' },
-  { title: 'Home phone', dataIndex: 'tel', customCell: sharedOnCell },
+  { title: 'Home phone', dataIndex: 'tel', onCell: sharedOnCell },
   { title: 'Phone', dataIndex: 'phone' },
   { title: 'Address', dataIndex: 'address' },
 ];

@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import type { TableColumnsType, TableExpandableConfig, TableKey } from '@apollo-design/ui';
 import { Button, Space, Table, Tag } from '@apollo-design/ui';
-import { computed, h, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 interface RowData {
-  [key: string]: unknown;
   key: string;
   name: string;
   owner: string;
   progress: number;
 }
 
-const columns: TableColumnsType = [
+const columns: TableColumnsType<RowData> = [
   { title: 'Task', dataIndex: 'name', key: 'name' },
   { title: 'Owner', dataIndex: 'owner', key: 'owner', width: 140 },
   { title: 'Progress', dataIndex: 'progress', key: 'progress', width: 120 },
@@ -27,29 +26,11 @@ const data: RowData[] = Array.from({ length: 14 }, (_unused, index) => ({
 const allKeys = data.map((item) => item.key);
 const expandedRowKeys = ref<TableKey[]>(['1', '2']);
 
-const expandable = computed<TableExpandableConfig>(() => ({
+const expandable = computed<TableExpandableConfig<RowData>>(() => ({
   expandedRowKeys: expandedRowKeys.value,
   onExpandedRowsChange: (keys: TableKey[]) => {
     expandedRowKeys.value = keys;
   },
-  expandedRowRender: (record: Record<string, unknown>) =>
-    h(
-      'div',
-      {
-        style: {
-          display: 'flex',
-          gap: '24px',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-        },
-      },
-      [
-        h('strong', null, `任务详情 #${String(record.key)}`),
-        h('span', null, `负责人：${String(record.owner)}`),
-        h('span', null, `当前进度：${String(record.progress)}%`),
-        h('span', null, '滚动容器内的 sticky 表头会保持吸附。'),
-      ],
-    ),
 }));
 
 function expandAll(): void {
@@ -76,7 +57,9 @@ function collapseAll(): void {
         :pagination="false"
         :expandable="expandable"
         :sticky="{ offsetHeader: 0 }"
-      />
+      >
+        <template #expandedRow="{record}"><div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap"><strong>任务详情 #{{record.key}}</strong><span>负责人：{{record.owner}}</span><span>当前进度：{{record.progress}}%</span><span>滚动容器内的 sticky 表头会保持吸附。</span></div></template>
+      </Table>
     </div>
   </div>
 </template>

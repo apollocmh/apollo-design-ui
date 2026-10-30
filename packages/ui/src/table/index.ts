@@ -5,6 +5,7 @@
  *    语法糖走 `TableColumn` / `TableColumnGroup` 别名。
  */
 
+import { withInstall } from '../_internal/with-install';
 import { EXPAND_COLUMN } from './engine/constant';
 import { Summary } from './engine/Footer';
 import {
@@ -13,13 +14,15 @@ import {
   SELECTION_INVERT,
   SELECTION_NONE,
 } from './hooks/use-selection';
-import { default as Table } from './Table';
+import TableComponent from './Table';
+export const Table = withInstall(TableComponent);
+
 import { getColumnKey, renderColumnTitle, safeColumnTitle } from './util';
 
 const InternalTable = Table;
 
 export default Table;
-export { InternalTable, Table };
+export { InternalTable };
 
 /** `Table.SELECTION_COLUMN`：选择列的位置哨兵（放进 columns 指定选择列位置）。 */
 const TableSELECTION_COLUMN = SELECTION_COLUMN;
@@ -54,16 +57,27 @@ export type {
   SorterTooltipTarget,
   SortOrder,
   TableAction,
+  TableBodyCellSlotProps,
+  TableBodyInfo,
+  TableComponent,
   TableComponents,
   TableCurrentDataSource,
+  TableDataSlotProps,
+  TableEmits,
+  TableExpandedRowSlotProps,
+  TableExpandIconSlotProps,
+  TableHeaderCellSlotProps,
   TableKey,
   TableLocale,
   TablePaginationConfig,
   TablePaginationPlacement,
   TablePaginationPosition,
   TableProps,
+  TableRef,
+  TableRenderedCell,
   TableRowSelection,
   TableScrollConfig,
+  TableScrollToConfig,
   TableSemanticClassNames,
   TableSemanticStyles,
   TableSlots,

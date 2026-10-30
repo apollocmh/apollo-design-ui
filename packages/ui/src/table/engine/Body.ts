@@ -1,3 +1,4 @@
+import type { EngineExpandableConfig } from './interface';
 /**
  * rc `Body/{index,BodyRow,ExpandedRow,MeasureRow,MeasureCell}.js`（~450 行）—— Vue 移植。
  *
@@ -10,16 +11,22 @@ import {
   computed,
   defineComponent,
   h,
+  mergeProps,
   onBeforeUnmount,
   onMounted,
   type PropType,
   provide,
-  reactive,
   ref,
+  type SetupContext,
+  type StyleValue,
+  type VNodeChild,
+  watch,
 } from 'vue';
-import type { ColumnsType, ColumnType, ExpandableConfig } from '../interface';
+import { getChildren } from '../data';
+import type { ColumnType, TableComponent, TableSlots } from '../interface';
 import Cell from './Cell';
 import { type RowContextValue, rowContextKey, useTableContext } from './context';
+import { renderElement } from './element';
 import { type FlattenRecord, flattenRecords } from './hooks/use-table';
 import { computedExpandedClassName } from './utils/expandUtil';
 import type { CellFixedInfo } from './utils/fixUtil';
@@ -30,29 +37,29 @@ import { getColumnsKey } from './utils/valueUtil';
 export interface CellPropsResult {
   key: string | number;
   fixedInfo: CellFixedInfo | undefined;
-  appendCellNode: unknown;
+  appendCellNode: VNodeChild;
   additionalCellProps: Record<string, unknown>;
   originRowSpan: number | undefined;
 }
 
 /** rc `Body/BodyRow.js` 的 `getCellProps` —— 逐字移植（测试直接对拍）。 */
-export function getCellProps(
+export function getCellProps<RecordType extends object>(
   rowInfo: {
-    record: Record<string, unknown> | undefined;
+    record: RecordType;
     prefixCls: string;
     columnsKey: (string | number)[];
     fixedInfoList: CellFixedInfo[];
     expandIconColumnIndex: number;
     nestExpandable: boolean;
     indentSize: number;
-    expandIcon: ExpandableConfig['expandIcon'];
+    expandIcon: EngineExpandableConfig<RecordType>['expandIcon'];
     expanded: boolean;
     hasNestChildren: boolean;
-    onTriggerExpand: (record: Record<string, unknown>, event?: Event) => void;
+    onTriggerExpand: (record: RecordType, event?: Event) => void;
     expandable: boolean;
     expandedKeys: Set<string | number>;
   },
-  column: ColumnType,
+  column: ColumnType<RecordType>,
   colIndex: number,
   indent: number,
   index: number,
@@ -78,7 +85,7 @@ export function getCellProps(
   const fixedInfo = fixedInfoList?.[colIndex];
 
   // ============= nest 展开列的缩进 + 图标 =============
-  let appendCellNode: unknown;
+  let appendCellNode: VNodeChild;
   if (colIndex === (expandIconColumnIndex || 0) && nestExpandable) {
     appendCellNode = [
       h('span', {
@@ -89,14 +96,14 @@ export function getCellProps(
         prefixCls,
         expanded,
         expandable: hasNestChildren,
-        record: record as never,
-        onExpand: onTriggerExpand as never,
+        record,
+        onExpand: onTriggerExpand,
       }),
     ];
   }
 
   const additionalCellProps: Record<string, unknown> = {
-    ...(column.onCell?.(record as never, index) as Record<string, unknown>),
+    ...column.onCell?.(record, index),
   };
   let originRowSpan: number | undefined;
 
@@ -123,10 +130,11 @@ export function getCellProps(
 
 const ExpandedRow = defineComponent({
   name: 'TableExpandedRow',
+  inheritAttrs: false,
   props: {
     prefixCls: { type: String, required: true },
-    component: { type: String, default: 'tr' },
-    cellComponent: { type: String, default: 'td' },
+    component: { type: [String, Object, Function] as PropType<TableComponent>, default: 'tr' },
+    cellComponent: { type: [String, Object, Function] as PropType<TableComponent>, default: 'td' },
     expanded: { type: Boolean, default: false },
     colSpan: { type: Number, required: true },
     isEmpty: { type: Boolean, default: false },
@@ -134,8 +142,8 @@ const ExpandedRow = defineComponent({
   },
   setup(props, { attrs, slots }) {
     const ctx = useTableContext();
-    const contentNode = computed(() => {
-      let node: unknown = slots.default?.();
+    const contentNode = () => {
+      let node: VNodeChild = slots.default?.();
       const wrapIt = props.isEmpty ? ctx.horizonScroll && ctx.componentWidth : ctx.fixColumn;
       if (wrapIt) {
         node = h(
@@ -149,17 +157,17 @@ const ExpandedRow = defineComponent({
             },
             class: `${props.prefixCls}-expanded-row-fixed`,
           },
-          node as never,
+          [node],
         );
       }
       return node;
-    });
+    };
     return () =>
-      h(
+      renderElement(
         props.component,
         {
-          class: (attrs as { class?: unknown }).class,
-          style: { display: props.expanded ? undefined : 'none' },
+          ...attrs,
+          style: [attrs.style, { display: props.expanded ? undefined : 'none' }],
         },
         [
           h(
@@ -169,7 +177,7 @@ const ExpandedRow = defineComponent({
               prefixCls: props.prefixCls,
               colSpan: props.colSpan,
             },
-            { default: () => contentNode.value },
+            { default: () => contentNode() },
           ),
         ],
       );
@@ -178,99 +186,77 @@ const ExpandedRow = defineComponent({
 
 // ═══════════════════════════ BodyRow ═══════════════════════════
 
-const BodyRow = defineComponent({
-  name: 'TableBodyRow',
-  props: {
-    style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    record: { type: Object as PropType<Record<string, unknown>>, required: true },
-    index: { type: Number, required: true },
-    renderIndex: { type: Number, required: true },
-    rowKey: { type: [String, Number] as PropType<string | number>, required: true },
-    rowKeys: { type: Array as PropType<(string | number)[]>, required: true },
-    indent: { type: Number, default: 0 },
-    rowComponent: { type: String, default: 'tr' },
-    cellComponent: { type: String, default: 'td' },
-    scopeCellComponent: { type: String, default: 'th' },
-    expandedRowInfo: {
-      type: Object as PropType<{ offset: number; colSpan: number; sticky: number }>,
-      default: undefined,
-    },
-  },
-  setup(props, { attrs }) {
-    const ctx = useTableContext();
-    const { record, index, renderIndex, rowKey, rowKeys, indent } = props;
-
+// ═══════════════════════════ BodyRow ═══════════════════════════
+interface BodyRowProps<RecordType extends object> {
+  style?: StyleValue;
+  record: RecordType;
+  bodyCell?: TableSlots<RecordType>['bodyCell'];
+  index: number;
+  renderIndex: number;
+  rowKey: string | number;
+  rowKeys: (string | number)[];
+  indent: number;
+  expandedRowInfo?: { offset: number; colSpan: number; sticky: number };
+}
+const NativeBodyRow = defineComponent(
+  <RecordType extends object>(props: BodyRowProps<RecordType>, { attrs }: SetupContext<[]>) => {
+    const ctx = useTableContext<RecordType>();
     // ======================= 行级信息（useRowInfo） =======================
     // ⚠️ ctx（provide 对象）的 getter 已解包 .value —— 这里不能再 .value（undefined）
     const nestExpandable = computed(() => ctx.expandableType === 'nest');
     const rowSupportExpand = computed(
-      () =>
-        ctx.expandableType === 'row' &&
-        (!ctx.rowExpandable || (ctx.rowExpandable as (r: never) => boolean)(record as never)),
+      () => ctx.expandableType === 'row' && (!ctx.rowExpandable || ctx.rowExpandable(props.record)),
     );
-    const mergedExpandable = computed(() => rowSupportExpand.value || nestExpandable.value);
-    const expanded = computed(() => Boolean(ctx.expandedKeys?.has(rowKey)));
+    const mergedExpandable = computed(
+      () => rowSupportExpand.value || (nestExpandable.value && hasNestChildren.value),
+    );
+    const expanded = computed(() => Boolean(ctx.expandedKeys?.has(props.rowKey)));
     const hasNestChildren = computed(() =>
-      Boolean((record as Record<string, unknown>)?.[ctx.childrenColumnName]),
+      Boolean(getChildren(props.record, ctx.childrenColumnName)?.length),
     );
-
     // ========================= onRow =========================
     const rowProps = computed<Record<string, unknown>>(() => {
-      const base = (ctx.onRow?.(record as never, index) as Record<string, unknown>) ?? {};
+      const base = ctx.onRow?.(props.record, props.index) ?? {};
       const computeRowClassName =
         typeof ctx.rowClassName === 'string'
           ? ctx.rowClassName
           : typeof ctx.rowClassName === 'function'
-            ? (ctx.rowClassName as (r: never, i: number, ind: number) => string)(
-                record as never,
-                index,
-                indent,
-              )
+            ? ctx.rowClassName(props.record, props.index, props.indent)
             : undefined;
       const onClick = (event: MouseEvent) => {
-        if (ctx.expandRowByClick && mergedExpandable.value) {
-          ctx.onTriggerExpand(record as never, event);
+        if (!event.defaultPrevented && ctx.expandRowByClick && mergedExpandable.value) {
+          ctx.onTriggerExpand(props.record, event);
         }
-        (base.onClick as ((e: MouseEvent) => void) | undefined)?.(event);
       };
-      return {
-        ...base,
-        class: [computeRowClassName, base.className as string | undefined],
-        onClick,
-      };
+      return mergeProps(base, { onClick }, { class: [computeRowClassName, base.className] });
     });
-
-    const columnsKey = computed(() => getColumnsKey(ctx.flattenColumns as never));
-    const expandedClsName = computedExpandedClassName(
-      ctx.expandedRowClassName as never,
-      record as never,
-      index,
-      indent,
+    const columnsKey = computed(() => getColumnsKey(ctx.flattenColumns));
+    const expandedClsName = computed(() =>
+      computedExpandedClassName(ctx.expandedRowClassName, props.record, props.index, props.indent),
     );
-
     // hover 联动的 rowSpan 基准（rowSpan>1 的单元格取其 originRowSpan；
     // 常规单行单元格 = 1。基础场景 rc 用 mergedHoverRowSpan = legacy ?? origin ?? rowSpan，
     // 这里 Cell 侧已实现三段回退；行级只按单行判定（与 rc useHoverState(index, rowSpan) 同判，
     // rowSpan 在多行场景由 Cell 以 props 传入修正）。
     // ==================== 行级 provide（T0.2 硬规则） ====================
-    const rowCtx = reactive({
+    const rowCtx: RowContextValue<RecordType> = {
       get record() {
-        return record;
+        return props.record;
       },
       get renderIndex() {
-        return renderIndex;
+        return props.renderIndex;
       },
       get index() {
-        return index;
+        return props.index;
       },
       get indent() {
-        return indent;
+        return props.indent;
       },
       get rowKey() {
-        return rowKey;
+        return props.rowKey;
       },
       get rowKeys() {
-        return rowKeys;
+        return props.rowKeys;
       },
       get columnsKey() {
         return columnsKey.value;
@@ -323,87 +309,82 @@ const BodyRow = defineComponent({
         // mergedHoverRowSpan 计算，这里给不出 ⇒ 用扩展字段承载。
         const start = ctx.hoverStartRow;
         const end = ctx.hoverEndRow;
-        return index <= end && index >= start;
+        return props.index <= end && props.index >= start;
       },
       get hoveringBySpan() {
         return (rowSpan: number) => {
           const start = ctx.hoverStartRow;
           const end = ctx.hoverEndRow;
-          const cellEndRow = index + (rowSpan || 1) - 1;
-          return index <= end && cellEndRow >= start;
+          const cellEndRow = props.index + (rowSpan || 1) - 1;
+          return props.index <= end && cellEndRow >= start;
         };
       },
-    } as unknown as RowContextValue);
+    };
     provide(rowContextKey, rowCtx);
-
     // ======================== Base row ========================
     const baseRowNode = () => {
-      const bodyCls =
-        (ctx.classNames as never as { body?: Record<string, string> } | undefined)?.body ?? {};
-      const bodyStyles =
-        (ctx.styles as never as { body?: Record<string, Record<string, unknown>> } | undefined)
-          ?.body ?? {};
-      return h(
-        props.rowComponent,
+      const bodyCls = ctx.classNames?.body ?? {};
+      const bodyStyles = ctx.styles?.body ?? {};
+      return renderElement(
+        ctx.getComponent(['body', 'row'], 'tr'),
         {
-          ...(rowProps.value ?? {}),
-          'data-row-key': rowKey,
+          ...attrs,
+          ...rowProps.value,
+          'data-row-key': props.rowKey,
           class: [
-            (attrs as { class?: unknown }).class,
+            attrs.class,
             `${ctx.prefixCls}-row`,
-            `${ctx.prefixCls}-row-level-${indent}`,
-            ...(((rowProps.value?.class as unknown[]) ?? []) as unknown[]),
+            `${ctx.prefixCls}-row-level-${props.indent}`,
+            rowProps.value.class,
             bodyCls.row,
-            { [expandedClsName as string]: indent >= 1 },
+            { [expandedClsName.value ?? '']: props.indent >= 1 },
           ],
-          style: {
-            ...props.style,
-            ...((rowProps.value?.style as Record<string, unknown>) ?? {}),
-            ...(bodyStyles.row ?? {}),
-          },
+          style: [props.style, rowProps.value.style, bodyStyles.row],
         },
-        (ctx.flattenColumns as ColumnType[]).map((column, colIndex) => {
+        ctx.flattenColumns.map((column, colIndex) => {
           const { render, dataIndex, className: columnClassName } = column;
           const { key, fixedInfo, appendCellNode, additionalCellProps, originRowSpan } =
             getCellProps(
               {
-                record,
+                record: props.record,
                 prefixCls: ctx.prefixCls,
                 columnsKey: columnsKey.value,
-                fixedInfoList: ctx.fixedInfoList as CellFixedInfo[],
+                fixedInfoList: ctx.fixedInfoList,
                 expandIconColumnIndex: ctx.expandIconColumnIndex,
                 nestExpandable: nestExpandable.value,
                 indentSize: ctx.indentSize,
                 expandIcon: ctx.expandIcon,
                 expanded: expanded.value,
                 hasNestChildren: hasNestChildren.value,
-                onTriggerExpand: ctx.onTriggerExpand as never,
+                onTriggerExpand: ctx.onTriggerExpand,
                 expandable: mergedExpandable.value,
-                expandedKeys: ctx.expandedKeys as Set<string | number>,
+                expandedKeys: ctx.expandedKeys,
               },
               column,
               colIndex,
-              indent,
-              index,
-              rowKeys,
+              props.indent,
+              props.index,
+              props.rowKeys,
               props.expandedRowInfo?.offset ?? 0,
             );
-          return h(Cell, {
+          return h(Cell<RecordType>, {
             class: [columnClassName, bodyCls.cell],
             style: bodyStyles.cell,
             ellipsis: column.ellipsis,
             align: column.align,
             scope: column.rowScope,
-            component: column.rowScope ? props.scopeCellComponent : props.cellComponent,
+            component: ctx.getComponent(['body', 'cell'], column.rowScope ? 'th' : 'td'),
             prefixCls: ctx.prefixCls,
             key: String(key),
-            record,
-            index,
-            renderIndex,
+            record: props.record,
+            column,
+            bodyCell: props.bodyCell,
+            index: props.index,
+            renderIndex: props.renderIndex,
             dataIndex,
-            render: render as never,
+            render,
             shouldCellUpdate: column.shouldCellUpdate,
-            ...((fixedInfo ?? {}) as Record<string, unknown>),
+            ...fixedInfo,
             appendNode: appendCellNode,
             additionalProps: additionalCellProps,
             originRowSpan,
@@ -411,38 +392,39 @@ const BodyRow = defineComponent({
         }),
       );
     };
-
     // ======================== Expand row ========================
-    const expandedRef = ref(false);
-    expandedRef.value = expandedRef.value || expanded.value;
-    const expandRowNode = computed(() => {
+    const expandedRef = ref(expanded.value);
+    watch(
+      expanded,
+      (value) => {
+        if (value) expandedRef.value = true;
+      },
+      { flush: 'sync' },
+    );
+    const expandRowNode = () => {
       if (
         rowSupportExpand.value &&
         (ctx.forceRender || expandedRef.value || expanded.value) &&
         ctx.expandedRowRender
       ) {
-        const expandContent = (
-          ctx.expandedRowRender as unknown as (
-            r: never,
-            i: number,
-            ind: number,
-            exp: boolean,
-          ) => unknown
-        )(record as never, index, indent + 1, expanded.value);
-        const _bodyCls =
-          (ctx.classNames as never as { body?: Record<string, string> } | undefined)?.body ?? {};
+        const expandContent = ctx.expandedRowRender(
+          props.record,
+          props.index,
+          props.indent + 1,
+          expanded.value,
+        );
         return h(
           ExpandedRow,
           {
             expanded: expanded.value,
             class: [
               `${ctx.prefixCls}-expanded-row`,
-              `${ctx.prefixCls}-expanded-row-level-${indent + 1}`,
-              expandedClsName,
+              `${ctx.prefixCls}-expanded-row-level-${props.indent + 1}`,
+              expandedClsName.value,
             ].filter(Boolean),
             prefixCls: ctx.prefixCls,
-            component: props.rowComponent,
-            cellComponent: props.cellComponent,
+            component: ctx.getComponent(['body', 'row'], 'tr'),
+            cellComponent: ctx.getComponent(['body', 'cell'], 'td'),
             colSpan: props.expandedRowInfo
               ? props.expandedRowInfo.colSpan
               : ctx.flattenColumns.length,
@@ -453,9 +435,40 @@ const BodyRow = defineComponent({
         );
       }
       return null;
-    });
-
-    return () => [baseRowNode(), expandRowNode.value];
+    };
+    return () => [baseRowNode(), expandRowNode()];
+  },
+  {
+    name: 'TableBodyRow',
+    inheritAttrs: false,
+    emits: [],
+    props: [
+      'style',
+      'record',
+      'bodyCell',
+      'index',
+      'renderIndex',
+      'rowKey',
+      'rowKeys',
+      'indent',
+      'expandedRowInfo',
+    ],
+  },
+);
+const BodyRow: typeof NativeBodyRow = Object.assign(NativeBodyRow, {
+  props: {
+    style: { type: Object, default: undefined },
+    record: { type: Object, required: true },
+    bodyCell: { type: Function, default: undefined },
+    index: { type: Number, required: true },
+    renderIndex: { type: Number, required: true },
+    rowKey: { type: [String, Number], required: true },
+    rowKeys: { type: Array, required: true },
+    indent: { type: Number, default: 0 },
+    expandedRowInfo: {
+      type: Object,
+      default: undefined,
+    },
   },
 });
 
@@ -472,7 +485,6 @@ const MeasureCell = defineComponent({
       type: Function as PropType<(k: string | number, w: number) => void>,
       required: true,
     },
-    title: { type: null, default: undefined },
   },
   setup(props) {
     const cellRef = ref<HTMLElement | null>(null);
@@ -494,13 +506,7 @@ const MeasureCell = defineComponent({
             height: 0,
           },
         },
-        [
-          h(
-            'div',
-            { style: { height: 0, overflow: 'hidden', fontWeight: 'bold' } },
-            props.title || '\u00a0',
-          ),
-        ],
+        [h('div', { style: { height: 0, overflow: 'hidden', fontWeight: 'bold' } }, '\u00a0')],
       );
   },
 });
@@ -516,7 +522,6 @@ const MeasureRow = defineComponent({
       type: Function as PropType<(k: string | number, w: number) => void>,
       required: true,
     },
-    columns: { type: Array as PropType<ColumnsType>, required: true },
   },
   setup(props) {
     const ctx = useTableContext();
@@ -553,17 +558,15 @@ const MeasureRow = defineComponent({
           ref: rowRef,
         },
         props.columnsKey.map((columnKey) => {
-          const column = props.columns.find((col) => col.key === columnKey);
           return h(MeasureCell, {
             key: String(columnKey),
             columnKey,
             onColumnResize: props.onColumnResize,
-            title: column?.title as never,
           });
         }),
       );
       return typeof ctx.measureRowRender === 'function'
-        ? (ctx.measureRowRender as (n: unknown) => unknown)(measureRow)
+        ? ctx.measureRowRender(measureRow)
         : measureRow;
     };
   },
@@ -571,17 +574,17 @@ const MeasureRow = defineComponent({
 
 // ═══════════════════════════ Body ═══════════════════════════
 
-const Body = defineComponent({
-  name: 'TableBody',
-  props: {
-    data: { type: Array as PropType<Record<string, unknown>[]>, required: true },
-    measureColumnWidth: { type: Boolean, default: false },
-  },
-  setup(props) {
-    const ctx = useTableContext();
+interface BodyProps<RecordType extends object> {
+  data: RecordType[];
+  bodyCell?: TableSlots<RecordType>['bodyCell'];
+  measureColumnWidth?: boolean;
+}
+const NativeBody = defineComponent(
+  <RecordType extends object>(props: BodyProps<RecordType>) => {
+    const ctx = useTableContext<RecordType>();
 
-    const flattenData = computed<FlattenRecord<Record<string, unknown>>[]>(() =>
-      flattenRecords(props.data, ctx.childrenColumnName, ctx.expandedKeys, ctx.getRowKey as never),
+    const flattenData = computed<FlattenRecord<RecordType>[]>(() =>
+      flattenRecords(props.data, ctx.childrenColumnName, ctx.expandedKeys, ctx.getRowKey),
     );
     const rowKeys = computed(() => flattenData.value.map((item) => item.rowKey));
 
@@ -595,23 +598,19 @@ const Body = defineComponent({
       return { offset: expandedRowOffset, colSpan: expandedColSpan, sticky: expandedStickyStart };
     });
 
-    const columnsKey = computed(() => getColumnsKey(ctx.flattenColumns as never));
+    const columnsKey = computed(() => getColumnsKey(ctx.flattenColumns));
 
     return () => {
-      const bodyCls =
-        (ctx.classNames as never as { body?: Record<string, string> } | undefined)?.body ?? {};
-      const bodyStyles =
-        (ctx.styles as never as { body?: Record<string, Record<string, unknown>> } | undefined)
-          ?.body ?? {};
+      const bodyCls = ctx.classNames?.body ?? {};
+      const bodyStyles = ctx.styles?.body ?? {};
       const rows = props.data.length
         ? flattenData.value.map((item, idx) =>
-            h(BodyRow, {
+            h(BodyRow<RecordType>, {
               key: String(item.rowKey),
-              classNames: bodyCls,
-              styles: bodyStyles,
               rowKey: item.rowKey,
               rowKeys: rowKeys.value,
-              record: item.record as Record<string, unknown>,
+              record: item.record,
+              bodyCell: props.bodyCell,
               index: idx,
               renderIndex: item.index,
               indent: item.indent,
@@ -631,8 +630,8 @@ const Body = defineComponent({
             },
             { default: () => ctx.emptyNode },
           );
-      return h(
-        'tbody',
+      return renderElement(
+        ctx.getComponent(['body', 'wrapper'], 'tbody'),
         {
           style: bodyStyles.wrapper,
           class: [`${ctx.prefixCls}-tbody`, bodyCls.wrapper],
@@ -643,12 +642,19 @@ const Body = defineComponent({
               prefixCls: ctx.prefixCls,
               columnsKey: columnsKey.value,
               onColumnResize: ctx.onColumnResize,
-              columns: ctx.flattenColumns as ColumnsType,
             }),
           ...(Array.isArray(rows) ? rows : [rows]),
         ],
       );
     };
+  },
+  { name: 'TableBody', emits: [], props: ['data', 'bodyCell', 'measureColumnWidth'] },
+);
+const Body: typeof NativeBody = Object.assign(NativeBody, {
+  props: {
+    data: { type: Array, required: true },
+    bodyCell: { type: Function, default: undefined },
+    measureColumnWidth: { type: Boolean, default: false },
   },
 });
 

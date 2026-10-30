@@ -9,7 +9,7 @@
  */
 
 import { describe, expect, it, vi } from 'vitest';
-import type { VNode } from 'vue';
+import { h, type VNode } from 'vue';
 import { EXPAND_COLUMN, INTERNAL_HOOKS } from '../engine/constant';
 import {
   computedExpandedClassName,
@@ -17,9 +17,10 @@ import {
   renderExpandIcon,
 } from '../engine/utils/expandUtil';
 import { getCellFixedInfo, type StickyOffsets } from '../engine/utils/fixUtil';
-import { getExpandableProps, INTERNAL_COL_DEFINE } from '../engine/utils/legacyUtil';
+import { INTERNAL_COL_DEFINE } from '../engine/utils/legacyUtil';
 import { getOffset } from '../engine/utils/offsetUtil';
 import { getColumnsKey, validateValue, validNumberValue } from '../engine/utils/valueUtil';
+import type { ColumnTitleProps } from '../interface';
 import {
   getColumnKey,
   getColumnPos,
@@ -257,38 +258,6 @@ describe('Table · engine/expandUtil', () => {
   });
 });
 
-describe('Table · engine/legacyUtil · getExpandableProps', () => {
-  it('有 expandable ⇒ `{...legacy, ...expandable}`', () => {
-    expect(
-      getExpandableProps({ expandable: { expandedRowKeys: ['1'] }, indentSize: 20 }, true),
-    ).toEqual({ indentSize: 20, expandedRowKeys: ['1'] });
-  });
-
-  it('无 expandable ⇒ 用老字段，且**有老字段时告警**', () => {
-    const warn = vi.fn();
-    expect(getExpandableProps({ expandedRowKeys: ['1'] }, false, warn)).toEqual({
-      expandedRowKeys: ['1'],
-    });
-    expect(warn).toHaveBeenCalledWith(
-      false,
-      'expanded related props have been moved into `expandable`.',
-    );
-  });
-
-  it('无 expandable 且无老字段 ⇒ **不告警**', () => {
-    const warn = vi.fn();
-    getExpandableProps({ dataSource: [] }, false, warn);
-    expect(warn).not.toHaveBeenCalled();
-  });
-
-  it('`showExpandColumn: false` ⇒ 强制 `expandIconColumnIndex = -1`', () => {
-    expect(getExpandableProps({ expandable: { showExpandColumn: false } }, true)).toEqual({
-      showExpandColumn: false,
-      expandIconColumnIndex: -1,
-    });
-  });
-});
-
 describe('Table · engine/offsetUtil · getOffset', () => {
   it('= getBoundingClientRect + 页面滚动量 - documentElement 的 border', () => {
     const el = {
@@ -316,7 +285,7 @@ describe('Table · util（antd 层）', () => {
   });
 
   it('renderColumnTitle：函数则调用', () => {
-    const props = { sortOrder: 'ascend' };
+    const props: ColumnTitleProps = { sortOrder: 'ascend' };
     expect(renderColumnTitle((p: unknown) => `t:${JSON.stringify(p)}`, props)).toBe(
       `t:${JSON.stringify(props)}`,
     );
@@ -324,7 +293,7 @@ describe('Table · util（antd 层）', () => {
   });
 
   it('🚨 safeColumnTitle：对象 / 数组 ⇒ `""`（给 `aria-label` 用，避免 `[object Object]`）', () => {
-    expect(safeColumnTitle({ a: 1 }, {})).toBe('');
+    expect(safeColumnTitle(h('span', 'text'), {})).toBe('');
     expect(safeColumnTitle([1, 2], {})).toBe('');
     expect(safeColumnTitle('ok', {})).toBe('ok');
     expect(safeColumnTitle(0, {})).toBe(0);

@@ -1,22 +1,21 @@
 /**
- * antd `table/ExpandIcon.js`（24 行）—— 逐字移植。
- * `renderExpandIcon(locale)` 是**工厂**：返回 rc 的 `expandIcon` 渲染函数。
+ * 展开图标工厂，参考 antd `table/ExpandIcon.js`。
+ * 不可展开行使用隐藏的装饰节点保留对齐。
  */
 
 import { h } from 'vue';
 import { clsx } from '../_internal/clsx';
-import type { TableLocale } from './interface';
+import type { RenderExpandIcon, TableLocale } from './interface';
 
-export default function renderExpandIcon(locale: Partial<TableLocale>) {
-  return (props: {
-    prefixCls: string;
-    onExpand: (record: unknown, event?: Event) => void;
-    record: unknown;
-    expanded: boolean;
-    expandable: boolean;
-  }) => {
+export default function renderExpandIcon<RecordType>(
+  locale: Partial<TableLocale>,
+): RenderExpandIcon<RecordType> {
+  return (props) => {
     const { prefixCls, onExpand, record, expanded, expandable } = props;
     const iconPrefix = `${prefixCls}-row-expand-icon`;
+    if (!expandable)
+      return h('span', { class: [iconPrefix, `${iconPrefix}-spaced`], 'aria-hidden': 'true' });
+
     return h('button', {
       type: 'button',
       onClick: (e: MouseEvent) => {

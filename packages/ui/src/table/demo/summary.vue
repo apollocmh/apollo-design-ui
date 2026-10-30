@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { TableColumnsType } from '@apollo-design/ui';
 import { Table } from '@apollo-design/ui';
-import { h } from 'vue';
 
 const columns: TableColumnsType = [
   { title: 'Name', dataIndex: 'name' },
@@ -16,18 +15,10 @@ const data = [
 ];
 
 const total = data.reduce((acc, d) => acc + d.age, 0);
-const renderSummary = () =>
-  h(Table.Summary, null, {
-    default: () =>
-      h(Table.Summary.Row, null, {
-        default: () => [
-          h(Table.Summary.Cell, { index: 0, colSpan: 2 }, { default: () => 'Total' }),
-          h(Table.Summary.Cell, { index: 2 }, { default: () => String(total) }),
-        ],
-      }),
-  });
 </script>
 
 <template>
-  <Table :columns="columns" :data-source="data" :summary="renderSummary" bordered />
+  <Table :columns="columns" :data-source="data" bordered>
+    <template #summary><Table.Summary><Table.Summary.Row><Table.Summary.Cell :index="0" :col-span="2">Total</Table.Summary.Cell><Table.Summary.Cell :index="2">{{total}}</Table.Summary.Cell></Table.Summary.Row></Table.Summary></template>
+  </Table>
 </template>
