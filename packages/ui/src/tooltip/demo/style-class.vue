@@ -1,7 +1,10 @@
 <script setup lang="ts">
 // 对齐 antd 的 demo/style-class.tsx（antd-style 的 createStaticStyles ⇒ 普通 object）
 
-import { Button, Flex, Tooltip } from '@apollo-design/ui';
+import { Button, ConfigProvider, Flex, Tooltip } from '@apollo-design/ui';
+import { ref } from 'vue';
+
+const maxWidth = ref(160);
 
 const classNames = { container: 'demo-tooltip-container' };
 const styles = { container: { borderRadius: '12px', boxShadow: 'inset 0 0 8px #ccc' } };
@@ -29,6 +32,15 @@ const stylesFn = (info: { props: { arrow?: unknown } }) => {
       <Tooltip :class-names="classNames" :styles="stylesFn" :arrow="false" title="Function text">
         <Button type="primary">Function Style</Button>
       </Tooltip>
+      <ConfigProvider :theme="{ components: { Tooltip: { maxWidth } } }">
+        <Tooltip
+          class="demo-current-tooltip"
+          style="--demo-tooltip: current"
+          title="Click to change the current Tooltip maxWidth token while this hint remains open."
+        >
+          <Button @click="maxWidth = maxWidth === 160 ? 280 : 160">Max width: {{ maxWidth }}px</Button>
+        </Tooltip>
+      </ConfigProvider>
     </Flex>
   </div>
 </template>

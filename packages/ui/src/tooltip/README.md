@@ -4,6 +4,8 @@
 
 # tooltip
 
+当前 Vue 契约见双语 API。2026-10-30 增量将开合、动画结束和浮层点击通知统一为 typed emits；`afterOpenChange` 普通 prop 迁为 `onAfterOpenChange` / `@after-open-change`。原生 class/style 只落浮层根，其他 attrs 仍到触发元素；真实模板 ref 返回当前 DOM 元素属性。当前 Theme 的 Tooltip 双 Token、箭头派生和 placement 共用响应式来源，Provider/语义/原生覆盖可替换或撤回。以下阶段、数量与上游对照是原日期的历史材料，不代表本轮最终验收。
+
 > **层**：L3（`packages/ui`）｜ **优先级**：P3 ｜ **复杂度**：L ｜ **antd 版本**：6.6.4
 >
 > 契约来源：antd `components/tooltip/`（index.tsx 436 行 / PurePanel / util /

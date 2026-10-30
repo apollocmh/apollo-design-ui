@@ -144,7 +144,7 @@ export interface PopconfirmProps {
   /** 强制预渲染浮层。 */
   forceRender?: boolean;
   /** 开合动画结束回调。 */
-  afterOpenChange?: (open: boolean) => void;
+  onAfterOpenChange?: (open: boolean) => void;
   /** 浮层容器 id（ARIA 关联用）。 */
   id?: string;
 }

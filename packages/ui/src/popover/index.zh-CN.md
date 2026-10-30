@@ -43,6 +43,10 @@ subtitle: 气泡卡片
 
 Popover 的原生 `class/style` 作用于浮层根，不传到触发元素。style 接受字符串、对象和混合数组，优先于 `styles.root`，移除后恢复语义值。PopoverPurePanel 的 class/style 只作用于面板根；不再把原生 style 重复应用到 container。分区样式使用 `styles.container/arrow` 与对应 classNames。
 
+### 事件
+
+`@after-open-change` 在开合动画完成后发送 `boolean`，支持 `.once` 和监听器数组。JSX / `h()` 使用 `onAfterOpenChange`；旧 `afterOpenChange` 回调 prop 直接移除。
+
 ### Expose
 
 `forceAlign()`、`nativeElement`、`popupElement`（`TooltipRef` 同形）。

@@ -19,6 +19,7 @@ export type {
   TooltipArrow,
   TooltipClassNames,
   TooltipContent,
+  TooltipEmits,
   TooltipPlacement,
   TooltipProps,
   TooltipRef,

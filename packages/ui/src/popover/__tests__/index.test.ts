@@ -7,7 +7,8 @@
  */
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { h, nextTick, type VNodeChild } from 'vue';
+import { h, nextTick, ref, type VNodeChild } from 'vue';
+import type { PopoverRef } from '../interface';
 import Popover from '../Popover';
 
 const popup = () => document.querySelector<HTMLElement>('.apollo-popover');
@@ -144,15 +145,18 @@ describe('Popover · L1 开合与内容', () => {
 
   it('expose：forceAlign / nativeElement / popupElement 透传', async () => {
     vi.useFakeTimers();
-    const wrapper = mountPopover({ open: true });
+    const popover = ref<PopoverRef | null>(null);
+    const wrapper = mount(
+      () =>
+        h(Popover, { ref: popover, open: true, title: 'Title', content: 'content' }, () =>
+          h('button', { class: 'popover-target' }, 'target'),
+        ),
+      { attachTo: document.body, global: { stubs: { teleport: false } } },
+    );
     await vi.runAllTimersAsync();
-    const exposed = wrapper.vm as unknown as {
-      forceAlign: () => void;
-      nativeElement: () => HTMLElement | null;
-      popupElement: () => HTMLElement | null;
-    };
-    expect(exposed.nativeElement()).toBe(triggerEl());
-    expect(exposed.popupElement()).toBe(popup());
-    expect(() => exposed.forceAlign()).not.toThrow();
+    expect(popover.value?.nativeElement).toBe(triggerEl());
+    expect(popover.value?.popupElement).toBe(popup());
+    expect(() => popover.value?.forceAlign()).not.toThrow();
+    wrapper.unmount();
   });
 });

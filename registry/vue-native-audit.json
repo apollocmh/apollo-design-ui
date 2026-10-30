@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 30,
+  "revision": 33,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -975,13 +975,17 @@
       "kind": "component",
       "ref": "mentions",
       "title": "Mentions",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/mentions"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_mentions",
+        "baseRevision": 31,
+        "startedAt": "2026-10-30T08:20:54.826Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -993,7 +997,22 @@
         "docs/audit/2026-10-25-mentions-popup-slot-remediation.md",
         "docs/audit/2026-10-25-mentions-empty-content-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "复用六组既有 Mentions 成果，补齐当前单元剩余 Vue 原生契约",
+        "remaining": [
+          "既有原生绑定/核心及原生事件/键盘/popup内容组不重做；核对当前 Provider/Theme Token、语义样式、实际 refs、PurePanel 与模型的未覆盖差额，先给真实工作量。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-25-mentions-native-bindings-remediation.md",
+          "docs/audit/2026-10-25-mentions-native-events-remediation.md",
+          "docs/audit/2026-10-25-mentions-core-events-remediation.md",
+          "docs/audit/2026-10-25-mentions-keyboard-remediation.md",
+          "docs/audit/2026-10-25-mentions-popup-slot-remediation.md",
+          "docs/audit/2026-10-25-mentions-empty-content-remediation.md"
+        ]
+      }
     },
     {
       "id": "CMP:menu",
@@ -1901,17 +1920,13 @@
       "kind": "component",
       "ref": "tooltip",
       "title": "Tooltip",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tooltip"
       ],
-      "assignment": {
-        "owner": "native_tooltip",
-        "baseRevision": 18,
-        "startedAt": "2026-10-30T07:25:44.644Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1920,7 +1935,55 @@
         "docs/audit/2026-10-25-overlay-native-styles-remediation.md",
         "docs/audit/2026-10-28-overlay-controlled-delay-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/tooltip"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project theme packages/ui/src/tooltip/__tests__/native-contracts.test.ts packages/ui/src/tooltip/__tests__/theme-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 9460
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/portal/src/__tests__/use-portal.test.ts packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/_internal/__tests__/trigger.test.ts -t '尺寸观察仅属于' --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/popover/__tests__/index.test.ts -t 'expose：' --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/tooltip/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated ready-source strict config; Tooltip/Portal/Popover/Popconfirm source/tests/demos>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49567
+          }
+        ],
+        "boundary": "已验证当前Token/placement/尺寸/真实refs、事件单一通知与两层包装、原生样式落点及Demo；首次消费者命令的旧函数ref断言失败，已依公开属性契约改真实模板ref并定向通过，其余52条原通过范围未重跑。最终冻结版本九维验收未执行。"
+      }
     },
     {
       "id": "CMP:tour",

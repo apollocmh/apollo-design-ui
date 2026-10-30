@@ -63,7 +63,7 @@ const RULES = `
 .apollo-tooltip .apollo-tooltip-container.apollo-fade-leave{animation-timing-function:linear;}
 .apollo-tooltip:has(~ .apollo-tooltip-unique-container) .apollo-tooltip-container{border:none;background:transparent;}
 .apollo-tooltip-placement-topLeft,.apollo-tooltip-placement-topRight,.apollo-tooltip-placement-bottomLeft,.apollo-tooltip-placement-bottomRight{min-width:calc(var(--apollo-border-radius) + var(--apollo-size-popup-arrow) + var(--apollo-tooltip-arrow-offset-horizontal));}
-.apollo-tooltip-placement-left .apollo-tooltip-inner,.apollo-tooltip-placement-leftTop .apollo-tooltip-inner,.apollo-tooltip-placement-leftBottom .apollo-tooltip-inner,.apollo-tooltip-placement-right .apollo-tooltip-inner,.apollo-tooltip-placement-rightTop .apollo-tooltip-inner,.apollo-tooltip-placement-rightBottom .apollo-tooltip-inner{border-radius:min(var(--apollo-border-radius),var(--apollo-tooltip-max-vertical-content-radius));}
+.apollo-tooltip-placement-left .apollo-tooltip-container,.apollo-tooltip-placement-leftTop .apollo-tooltip-container,.apollo-tooltip-placement-leftBottom .apollo-tooltip-container,.apollo-tooltip-placement-right .apollo-tooltip-container,.apollo-tooltip-placement-rightTop .apollo-tooltip-container,.apollo-tooltip-placement-rightBottom .apollo-tooltip-container{border-radius:min(var(--apollo-border-radius),var(--apollo-tooltip-max-vertical-content-radius));}
 .apollo-tooltip .apollo-tooltip-content{position:relative;}
 .apollo-tooltip.apollo-tooltip-blue .apollo-tooltip-container{background-color:var(--apollo-blue-6);}
 .apollo-tooltip.apollo-tooltip-blue .apollo-tooltip-arrow{--apollo-tooltip-arrow-background-color:var(--apollo-blue-6);}

@@ -57,10 +57,6 @@ const Popover = defineComponent({
     open: { type: Boolean, default: undefined },
     defaultOpen: { type: Boolean, default: undefined },
     onOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
-    afterOpenChange: {
-      type: Function as PropType<(open: boolean) => void>,
-      default: undefined,
-    },
     title: {
       type: [Object, String, Number, Boolean, Array] as PropType<TooltipContentLike>,
       default: undefined,
@@ -115,6 +111,7 @@ const Popover = defineComponent({
   },
   emits: {
     'update:open': (_open: boolean) => true,
+    afterOpenChange: (_open: boolean) => true,
   },
   setup(props, { slots, attrs, expose, emit }) {
     // ⚠️ antd 的 `data-popover-inject`：告诉下层 Tooltip「我是注入方」⇒ 跳过
@@ -291,7 +288,7 @@ const Popover = defineComponent({
           openClassName: props.openClassName,
           open: mergedOpen.value,
           onOpenChange: settingOpen,
-          afterOpenChange: props.afterOpenChange,
+          onAfterOpenChange: (open: boolean) => emit('afterOpenChange', open),
           motion: {
             // antd：getTransitionName(rootPrefixCls, 'zoom-big')（非 fast）
             motionName: props.motion?.motionName ?? 'apollo-zoom-big',

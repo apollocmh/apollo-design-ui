@@ -1,6 +1,6 @@
 /**
  * L7 主题 —— Tooltip 的组件变量（zIndexPopup/maxWidth + arrow 派生 5 件套）
- * 以 CSS 变量声明在根 `.apollo-tooltip`；箭头 path/polygon 为构建期解析值；
+ * 以 CSS 变量声明在根 `.apollo-tooltip`；默认值为静态 CSS，当前源见 theme-contracts；
  * 4 个 @keyframes（SSR 不吐，从 fade.ts/zoom.ts 手抄）。
  */
 
@@ -49,6 +49,9 @@ describe('Tooltip · token 契约', () => {
     );
     expect(css).toContain(
       'min-width:calc(var(--apollo-border-radius) + var(--apollo-size-popup-arrow) + var(--apollo-tooltip-arrow-offset-horizontal));',
+    );
+    expect(css).toContain(
+      '.apollo-tooltip-placement-left .apollo-tooltip-container,.apollo-tooltip-placement-leftTop .apollo-tooltip-container,',
     );
   });
 

@@ -499,12 +499,35 @@ export const Trigger = defineComponent({
       });
     }
 
-    // placement / mousePos 变化立即对齐（rc useLayoutEffect [mousePos, popupPlacement]）
-    watch([() => props.placement, () => overlay.mousePos.value], () => triggerAlign());
+    // 当前 placement/align 也可能由主题或响应式配置更新；在 DOM 更新后量测。
+    watch(
+      [
+        () => props.placement,
+        () => props.builtinPlacements[props.placement],
+        () => props.popupAlign,
+        () => overlay.mousePos.value,
+      ],
+      () => triggerAlign(),
+      { deep: true, flush: 'post' },
+    );
     // popupEle 挂上后补一次对齐（supportMotion=false 的简化队列不走 onPrepare）
     watch([popupEle, mergedOpen], () => {
       if (mergedOpen.value && popupEle.value) triggerAlign();
     });
+
+    watch(
+      [popupEle, targetElement, mergedOpen],
+      ([popup, target, open], _previous, onCleanup) => {
+        if (!popup || !open || isMobile) return;
+        const ResizeObserverImpl = popup.ownerDocument.defaultView?.ResizeObserver;
+        if (!ResizeObserverImpl) return;
+        const observer = new ResizeObserverImpl(() => triggerAlign());
+        observer.observe(popup, { box: 'border-box' });
+        if (target) observer.observe(target, { box: 'border-box' });
+        onCleanup(() => observer.disconnect());
+      },
+      { flush: 'post' },
+    );
 
     // ============================ Motion hooks ======================
     // appear/enter 的 prepare ⇒ 先对齐再放行动画（首帧定位先于动画）。

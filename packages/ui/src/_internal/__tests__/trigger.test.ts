@@ -257,6 +257,40 @@ describe('Trigger · L1 开合与渲染', () => {
 });
 
 describe('Trigger · 生命周期清理', () => {
+  it('尺寸观察仅属于当前打开实例，关闭、重开和卸载均释放旧观察', async () => {
+    class ResizeObserverProbe {
+      readonly observe = vi.fn<(target: Element, options?: ResizeObserverOptions) => void>();
+      readonly unobserve = vi.fn<(target: Element) => void>();
+      readonly disconnect = vi.fn();
+      constructor() {
+        observers.push(this);
+      }
+    }
+    const observers: ResizeObserverProbe[] = [];
+    vi.stubGlobal('ResizeObserver', ResizeObserverProbe);
+    const wrapper = mountTrigger({ open: true });
+    try {
+      await vi.waitFor(() => expect(observers.length).toBeGreaterThan(0));
+      const current = observers.at(-1);
+      if (!current) throw new Error('Missing current size observer');
+      expect(current.observe.mock.calls).toEqual([
+        [popup(), { box: 'border-box' }],
+        [triggerEl(), { box: 'border-box' }],
+      ]);
+      await wrapper.setProps({ open: false });
+      expect(current.disconnect).toHaveBeenCalledTimes(1);
+      await wrapper.setProps({ open: true });
+      await nextTick();
+      const reopened = observers.at(-1);
+      expect(reopened).not.toBe(current);
+      wrapper.unmount();
+      for (const observer of observers) expect(observer.disconnect).toHaveBeenCalledTimes(1);
+    } finally {
+      if (wrapper.exists()) wrapper.unmount();
+      vi.unstubAllGlobals();
+    }
+  });
+
   /**
    * VNA-TRIGGER-01 回归。
    *

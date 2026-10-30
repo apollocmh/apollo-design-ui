@@ -102,6 +102,10 @@ import { Popconfirm } from '@apollo-design/ui';
 
 原生 `class/style` 作用于浮层根，style 支持字符串、对象和混合数组，优先于语义根样式。PopconfirmPurePanel 转发 root/container/arrow 的 classNames/styles 给静态面板，icon/title/content 给确认正文；原生 style 只作用于面板根，不覆盖 styles.container。
 
+### 事件
+
+`@after-open-change` 转发开合动画完成时的 `boolean`，支持 `.once` 和监听器数组。JSX / `h()` 使用 `onAfterOpenChange`，不再传旧 `afterOpenChange` 回调 prop。
+
 ### Ref
 
 `Popconfirm` 与 `Popover` 同物：`forceAlign` / `nativeElement` / `popupElement`。

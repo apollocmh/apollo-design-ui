@@ -37,6 +37,10 @@ subtitle: Popover
 
 Popover applies native class/style to the popup root, without adding them to the trigger. Style accepts strings, objects and mixed arrays, overriding matching styles.root values until removed. PopoverPurePanel applies native class/style only to its root, without duplicating styles on the container. Use styles.container/arrow and matching classNames for individual sections.
 
+### Events
+
+`@after-open-change` emits the final `boolean` after an opening or closing animation, including `.once` and listener arrays. JSX / `h()` uses `onAfterOpenChange`; the old `afterOpenChange` callback prop is removed.
+
 ### Expose
 
 `forceAlign()`、`nativeElement`、`popupElement`（`TooltipRef` 同形）。

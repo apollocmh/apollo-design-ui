@@ -106,3 +106,7 @@ Progress 补齐动态位置、原生样式、当前 Provider/六 Token、Circle 
 ### D-masonry-native-layout
 
 Masonry 的 layoutChange 使用 Vue emits，MasonryRef 与文档化 nativeElement() getter 一致；同 key 数据替换和离场资源保持正确。CSS 字符串 gutter 交由浏览器解析，纵向百分比使用文档化 intrinsic/显式高度基准，避免根高反馈循环；item.height 仍是槽和事件的数据，不新增布局提示语义。详见[Masonry API](packages/ui/src/masonry/index.zh-CN.md)。
+
+### D-tooltip-current-overlay
+
+Tooltip 的 openChange/popupClick/afterOpenChange 使用 Vue emits，原生 class/style 只作用于浮层根，模板 ref 暴露真实元素属性。afterOpenChange 通知通过 Popover、Popconfirm 同链迁移为 `@after-open-change` / `onAfterOpenChange`，不保留旧回调 prop。当前主题、箭头、层级与定位跟随实际配置和尺寸更新，详见[Tooltip API](packages/ui/src/tooltip/index.zh-CN.md)。两层包装的其余契约仍按各自进行中任务处理。

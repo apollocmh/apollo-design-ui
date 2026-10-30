@@ -75,10 +75,12 @@ export interface TooltipProps {
   open?: boolean;
   /** 非受控初始值。 */
   defaultOpen?: boolean;
-  /** 开合回调（C11：与 `update:open` 同时发出）。 */
+  /** `openChange` 事件，与 `update:open` 同时发出。 */
   onOpenChange?: (open: boolean) => void;
-  /** 开合动画结束回调。 */
-  afterOpenChange?: (open: boolean) => void;
+  /** `update:open` 事件，供 `v-model:open` 使用。 */
+  'onUpdate:open'?: (open: boolean) => void;
+  /** `afterOpenChange` 事件，开合动画结束时发出。 */
+  onAfterOpenChange?: (open: boolean) => void;
   /** 提示内容（`title === 0` 合法）。 */
   title?: TooltipContent;
   /** ⚠️ 旧版内容通道 `overlay` 已**移除**（C8-R2 裁决）：运行时不消费，保留类型
@@ -118,7 +120,7 @@ export interface TooltipProps {
   zIndex?: number;
   /** 浮层 role=tooltip 元素的 id（aria-describedby 用）。 */
   id?: string;
-  /** 点击浮层内容回调。 */
+  /** `popupClick` 事件，载荷为浮层内容的原始 MouseEvent。 */
   onPopupClick?: (event: MouseEvent) => void;
   /** 关闭时不缓存内容。 */
   fresh?: boolean;
@@ -134,6 +136,13 @@ export interface TooltipProps {
   overlayInnerStyle?: Record<string, string | number>;
   /** ⚠️ 已废弃，请用 `classNames.root`。 */
   overlayClassName?: string;
+}
+
+export interface TooltipEmits {
+  'update:open': (open: boolean) => void;
+  openChange: (open: boolean) => void;
+  afterOpenChange: (open: boolean) => void;
+  popupClick: (event: MouseEvent) => void;
 }
 
 /** expose（antd 的 `TooltipRef`；nativeElement 可空性按真实情况，D22 同判）。 */

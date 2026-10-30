@@ -6,8 +6,8 @@
  * `components/style/roundedArrow.ts`（getArrowToken）。registry 数据：组 token 数 = 2
  * （zIndexPopup / maxWidth —— arrow 系列是 antd 标 @internal 的派生 token）。
  *
- * 全部为**构建期解析值**（collapse D46/D50 同判）：箭头路径/多边形是含主题圆角
- * 的字面量，静态 CSS 无法运行时重算。
+ * 静态 CSS 使用默认值；运行时由 use-tooltip-theme 按当前主题生成同名变量，
+ * 箭头路径/多边形与 placement 共用当前 Alias Token。
  */
 
 import { getDesignToken } from '@apollo-design/theme';

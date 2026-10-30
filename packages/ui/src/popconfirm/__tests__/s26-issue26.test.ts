@@ -6,6 +6,7 @@
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { h, nextTick } from 'vue';
+import Tooltip from '../../tooltip/Tooltip';
 import { PopconfirmPurePanel } from '../index';
 import Popconfirm from '../Popconfirm';
 
@@ -70,13 +71,23 @@ describe('#26.1 公开类型承诺的公共浮层配置要真的生效', () => {
     w.unmount();
   });
 
-  it('[D] afterOpenChange 会触发', async () => {
-    const afterOpenChange = vi.fn();
-    const w = await opened({ afterOpenChange });
-    expect(popup()).not.toBeNull();
-    // jsdom 下动效不推进 ⇒ 只在「开了之后关」这条路径上驱动一次
+  it('[D] afterOpenChange 经 Tooltip 和 Popover 单次发送 Vue 事件', async () => {
+    const first = vi.fn();
+    const second = vi.fn();
+    const once = vi.fn();
+    const w = await opened({
+      onAfterOpenChange: [first, second],
+      onAfterOpenChangeOnce: once,
+    });
+    const tooltip = w.getComponent(Tooltip);
+    // 此处验证拥有者之间的通知链；动效完成的产生时机由 Tooltip 回归负责。
+    tooltip.vm.$emit('afterOpenChange', true);
+    tooltip.vm.$emit('afterOpenChange', false);
+    expect(first.mock.calls).toEqual([[true], [false]]);
+    expect(second.mock.calls).toEqual([[true], [false]]);
+    expect(once.mock.calls).toEqual([[true]]);
+    expect(w.emitted('afterOpenChange')).toEqual([[true], [false]]);
     w.unmount();
-    expect(afterOpenChange.mock.calls.length).toBeGreaterThanOrEqual(0);
   });
 
   it('[E] onPopupClick 走通', async () => {

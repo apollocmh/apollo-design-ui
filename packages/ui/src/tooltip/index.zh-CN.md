@@ -24,8 +24,6 @@ subtitle: 文字提示
 |---|---|---|---|
 | title | 提示内容数据（`0` 合法）；模板富内容使用 `#title` | `VNodeChild` | — |
 | open / defaultOpen | 受控开合（`v-model:open` 等价）/ 非受控初值 | `boolean` | `false` |
-| onOpenChange | 开合回调（与 `update:open` 同时发出） | `(open: boolean) => void` | — |
-| afterOpenChange | 动画结束回调 | `(open: boolean) => void` | — |
 | trigger | 触发动作 | `'hover' \| 'click' \| 'focus' \| 'contextMenu' \| 数组` | `'hover'` |
 | placement | 位置（12 个） | `TooltipPlacement` | `'top'` |
 | arrow | 箭头（`false` 隐藏 / `{ pointAtCenter }` 指中心） | `boolean \| object` | `true` |
@@ -38,9 +36,21 @@ subtitle: 文字提示
 | destroyTooltipOnHide | ⚠️ 已废弃，用 `destroyOnHidden` | `boolean \| object` | — |
 | motion | 动画（仅 motionName 可覆盖） | `{ motionName?: string }` | `apollo-zoom-big-fast` |
 | zIndex | 层级（未传走 useZIndex 层叠体系） | `number` | `1070` |
-| id / onPopupClick / fresh / forceRender / disabled | 同 antd | — | — |
+| id | 提示内容 id，供触发元素的 aria-describedby 引用 | `string` | 自动生成 |
+| fresh / forceRender / disabled | 关闭时更新内容 / 强制挂载 / 禁用 | `boolean` | `false` |
 | classNames / styles | 语义槽 `root / container / arrow`（含函数式） | — | — |
 | overlayStyle / overlayInnerStyle / overlayClassName | ⚠️ 已废弃 | — | — |
+
+### 事件
+
+| 名称 | 载荷 | 说明 |
+|---|---|---|
+| update:open | `boolean` | `v-model:open` 的状态提议 |
+| openChange | `boolean` | 与 update:open 同时通知，受控值由父级接受 |
+| afterOpenChange | `boolean` | 本次开合动画完成 |
+| popupClick | `MouseEvent` | 点击提示内容的原始事件 |
+
+事件使用 Vue emits，支持 `@open-change.once` 等修饰符。`h()` 使用 `onOpenChange`、`onAfterOpenChange` 和 `onPopupClick`；空内容仍遵循下述抑制规则。
 
 ### 插槽
 
@@ -53,11 +63,19 @@ subtitle: 文字提示
 
 ### 原生 class/style
 
-`TooltipPurePanel` 的原生 `class/style` 作用于面板根；style 支持字符串、对象及混合数组，优先于语义根样式。移除原生 style 后恢复语义值，CSS 变量按 Vue 规则合并。
+`Tooltip` 的原生 `class/style` 作用于浮层根；`TooltipPurePanel` 作用于面板根。style 支持字符串、对象及混合数组，优先于 Provider 和语义根样式；移除后恢复当前来源。容器样式使用 `styles.container`，不会从根复制。Tooltip 的其他原生 attrs 和监听器作用于触发元素，触发元素自己的 class/style 写在默认槽子节点上。
+
+### 当前主题
+
+`ConfigProvider.theme.components.Tooltip` 支持 `maxWidth`（数字，默认 250px）和 `zIndexPopup`（数字，默认 `zIndexPopupBase + 70`）。替换、撤回和嵌套主题即时更新现有浮层。箭头形状、偏移与定位读取同一份当前 Alias Token；语义样式和原生 CSS 变量覆盖优先。PurePanel 使用当前主题的颜色和箭头，其静态面板保留自然宽度。
 
 ### Expose
 
-`forceAlign()`、`nativeElement`、`popupElement`（`TooltipRef`）。
+`forceAlign()`、`nativeElement: HTMLElement | null`、`popupElement: HTMLDivElement | null`（`TooltipRef`）。后两者是当前元素属性；关闭并销毁浮层后 popupElement 为 null。
+
+### 开发版迁移
+
+原 `:after-open-change="handler"` 改为 `@after-open-change="handler"`，对象写法由 `afterOpenChange` 改为 `onAfterOpenChange`。原生 class/style 现在只作用于浮层根；要设置触发元素，请直接写在默认槽元素上。当前开发版直接修正，无兼容分支或弃用期。
 
 ## 设计说明
 

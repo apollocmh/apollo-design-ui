@@ -9,7 +9,8 @@
 import { resetWarned } from '@apollo-design/utils';
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { h, nextTick } from 'vue';
+import { h, nextTick, ref } from 'vue';
+import type { TooltipRef } from '../interface';
 import Tooltip from '../Tooltip';
 
 /** 捕获 `console.error` 并返回拼接后的文本（`warning()` 走 error 通道）。 */
@@ -173,16 +174,19 @@ describe('Tooltip · L1 aria 与结构', () => {
   });
 
   it('expose：forceAlign / nativeElement / popupElement', async () => {
-    const wrapper = mountTooltip({ open: true }, 'tips');
+    const tooltip = ref<TooltipRef | null>(null);
+    const wrapper = mount(
+      () =>
+        h(Tooltip, { ref: tooltip, open: true, title: 'tips' }, () =>
+          h('button', { class: 'tooltip-target' }, 'target'),
+        ),
+      { attachTo: document.body, global: { stubs: { teleport: false } } },
+    );
     await nextTick();
-    const exposed = wrapper.vm as unknown as {
-      forceAlign: () => void;
-      nativeElement: () => HTMLElement | null;
-      popupElement: () => HTMLElement | null;
-    };
-    expect(exposed.nativeElement()).toBe(triggerEl());
-    expect(exposed.popupElement()).toBe(popup());
-    expect(() => exposed.forceAlign()).not.toThrow();
+    expect(tooltip.value?.nativeElement).toBe(triggerEl());
+    expect(tooltip.value?.popupElement).toBe(popup());
+    expect(() => tooltip.value?.forceAlign()).not.toThrow();
+    wrapper.unmount();
   });
 
   it('deprecated 告警 ×4（overlayStyle/overlayInnerStyle/overlayClassName/destroyTooltipOnHide）', async () => {

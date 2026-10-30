@@ -97,6 +97,10 @@ A simple and compact dialog used for asking confirmation of an action from the u
 
 Native class/style apply to the popup root. Style accepts strings, objects and mixed arrays, overriding matching semantic root styles. PopconfirmPurePanel routes root/container/arrow classNames/styles to its static panel and icon/title/content to the confirmation body; native style applies only to the panel root and does not override styles.container.
 
+### Events
+
+`@after-open-change` forwards the final `boolean` after opening or closing animations, including `.once` and listener arrays. JSX / `h()` uses `onAfterOpenChange` in place of the old `afterOpenChange` callback prop.
+
 ### Theme Variables
 
 | Token | Description | Default |

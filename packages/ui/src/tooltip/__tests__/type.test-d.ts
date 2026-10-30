@@ -2,7 +2,9 @@
  * L3 类型（G7）—— 正例 + 负例（负例包在永不调用的闭包里，CHECKLIST §一）。
  */
 import { describe, expectTypeOf } from 'vitest';
-import type { TooltipPlacement, TooltipProps } from '../interface';
+import { h } from 'vue';
+import type { TooltipEmits, TooltipPlacement, TooltipProps } from '../interface';
+import Tooltip from '../Tooltip';
 
 describe('Tooltip · 类型', () => {
   it('placement 是 12 值联合', () => {
@@ -53,5 +55,28 @@ describe('Tooltip · 类型', () => {
 
   it('#24.5 `overlay` 不在公开类型里（C8-R2 裁决：类型与运行时一致）', () => {
     expectTypeOf<TooltipProps>().not.toHaveProperty('overlay');
+  });
+
+  it('declares state, motion and popup notifications as typed Vue events', () => {
+    expectTypeOf<Parameters<TooltipEmits['openChange']>>().toEqualTypeOf<[open: boolean]>();
+    expectTypeOf<Parameters<TooltipEmits['afterOpenChange']>>().toEqualTypeOf<[open: boolean]>();
+    expectTypeOf<Parameters<TooltipEmits['popupClick']>>().toEqualTypeOf<[event: MouseEvent]>();
+    const props: TooltipProps = {
+      onOpenChange: (_open: boolean) => {},
+      'onUpdate:open': (_open: boolean) => {},
+      onAfterOpenChange: (_open: boolean) => {},
+      onPopupClick: (_event: MouseEvent) => {},
+    };
+    h(Tooltip, props);
+    const negative = () => {
+      const bad: TooltipProps = {
+        // @ts-expect-error Motion completion uses @after-open-change/onAfterOpenChange.
+        afterOpenChange: (_open: boolean) => {},
+      };
+      // @ts-expect-error Popup clicks carry their actual MouseEvent.
+      h(Tooltip, { onPopupClick: (_open: boolean) => {} });
+      return bad;
+    };
+    void negative;
   });
 });

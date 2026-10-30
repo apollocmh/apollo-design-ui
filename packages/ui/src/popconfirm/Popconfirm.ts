@@ -120,7 +120,10 @@ const Popconfirm = defineComponent({
     },
   },
   /** v-model 状态经 emits；返回值有意义的业务回调声明为 props。 */
-  emits: ['update:open'],
+  emits: {
+    'update:open': (_open: boolean) => true,
+    afterOpenChange: (_open: boolean) => true,
+  },
   setup(props, { attrs, emit, expose, slots }) {
     const context = useComponentConfig('popconfirm');
     const { getPrefixCls } = context;
@@ -251,6 +254,7 @@ const Popconfirm = defineComponent({
           trigger: mergedTrigger.value,
           placement: props.placement ?? 'top',
           onOpenChange: onInternalOpenChange,
+          onAfterOpenChange: (open: boolean) => emit('afterOpenChange', open),
           open: mergedOpen.value,
           mouseEnterDelay: mergedMouseEnterDelay.value,
           mouseLeaveDelay: mergedMouseLeaveDelay.value,

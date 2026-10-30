@@ -14,7 +14,6 @@
 import type { OverlayActionInput } from '@apollo-design/overlay';
 import { useZIndex } from '@apollo-design/portal';
 import { getPlacements } from '@apollo-design/position';
-import { getDesignToken } from '@apollo-design/theme';
 import { devUseWarning, isDev, isEmptyVNode, useControlledValue } from '@apollo-design/utils';
 import {
   Comment,
@@ -27,6 +26,7 @@ import {
   inject,
   isVNode,
   normalizeClass,
+  normalizeStyle,
   type PropType,
   provide,
   type SlotsType,
@@ -44,13 +44,12 @@ import type {
   TooltipClassNames,
   TooltipPlacement,
   TooltipProps,
-  TooltipRef,
   TooltipSemanticType,
   TooltipSlots,
   TooltipStyles,
 } from './interface';
-import { tooltipTokenValues } from './style/token';
 import { useMergedArrow } from './use-merged-arrow';
+import { useTooltipTheme } from './use-tooltip-theme';
 import { parseTooltipColor } from './util';
 
 type StyleLike = Record<string, string | number>;
@@ -98,8 +97,6 @@ const Tooltip = defineComponent({
     prefixCls: { type: String, default: undefined },
     open: { type: Boolean, default: undefined },
     defaultOpen: { type: Boolean, default: undefined },
-    onOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
-    afterOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
     title: {
       type: [String, Number, Boolean, Object, Array] as PropType<TooltipProps['title']>,
       default: undefined,
@@ -139,7 +136,6 @@ const Tooltip = defineComponent({
     motion: { type: Object as PropType<{ motionName?: string }>, default: undefined },
     zIndex: { type: Number, default: undefined },
     id: { type: String, default: undefined },
-    onPopupClick: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
     fresh: { type: Boolean, default: undefined },
     forceRender: { type: Boolean, default: undefined },
     disabled: { type: Boolean, default: undefined },
@@ -154,7 +150,9 @@ const Tooltip = defineComponent({
   },
   emits: {
     'update:open': (_open: boolean) => true,
-    // ⚠️ `onOpenChange` / `afterOpenChange` 走纯 prop 回调，不声明 emit（CHECKLIST #78）
+    openChange: (_open: boolean) => true,
+    afterOpenChange: (_open: boolean) => true,
+    popupClick: (_event: MouseEvent) => true,
   },
   setup(props, { slots, attrs, expose, emit }) {
     if (isDev) {
@@ -194,6 +192,7 @@ const Tooltip = defineComponent({
     //    `getPopupContainer` / `getPrefixCls` / `direction`（Issue #24.4）。
     const injectFromPopover = inject(tooltipInjectKey, false);
     const semanticConfig: typeof contextSemantic = injectFromPopover ? {} : contextSemantic;
+    const tooltipTheme = useTooltipTheme(() => !injectFromPopover);
 
     const prefixCls = computed(() => props.prefixCls ?? context.getPrefixCls('tooltip'));
 
@@ -235,7 +234,7 @@ const Tooltip = defineComponent({
         if (noTitle) {
           return;
         }
-        props.onOpenChange?.(next);
+        emit('openChange', next);
         emit('update:open', next);
       },
     });
@@ -254,12 +253,8 @@ const Tooltip = defineComponent({
     const mergedId = computed(() => props.id ?? `${prefixCls.value}-${innerId}`);
 
     // ========================= Placements ============================
-    const seed = getDesignToken() as unknown as {
-      sizePopupArrow: number;
-      borderRadius: number;
-      marginXXS: number;
-    };
     const tooltipPlacements = computed<Record<string, TriggerAlign>>(() => {
+      const seed = tooltipTheme.theme.token.value;
       return (
         props.builtinPlacements ||
         getPlacements({
@@ -276,13 +271,13 @@ const Tooltip = defineComponent({
 
     // ============================ zIndex =============================
     const zIndex = useZIndex('Tooltip', () => props.zIndex, {
-      zIndexPopupBase: tooltipTokenValues().zIndexPopup,
+      get zIndexPopupBase() {
+        return tooltipTheme.componentToken.value.zIndexPopup;
+      },
     });
 
     // ======================== Merged Semantic ========================
     const colorInfo = computed(() => parseTooltipColor(prefixCls.value, props.color));
-    const contextStyleRoot = semanticConfig.style;
-    const overlayStyleRoot = props.overlayStyle;
 
     const mergedProps = computed<TooltipProps>(() => ({
       ...props,
@@ -305,9 +300,9 @@ const Tooltip = defineComponent({
       ],
       [
         () => semanticConfig.styles,
-        () => (contextStyleRoot ? { root: contextStyleRoot } : undefined),
+        () => (semanticConfig.style ? { root: semanticConfig.style } : undefined),
         () => props.styles as TooltipSemanticType['styles'] | undefined,
-        () => (overlayStyleRoot ? { root: overlayStyleRoot } : undefined),
+        () => (props.overlayStyle ? { root: props.overlayStyle } : undefined),
       ],
       // ⚠️ 传 **computed 本身**（不是 `.value`）：函数式变体每次重算都要看到当前
       //    props；传 setup 期快照会让后续 props 变化在函数式里不可见（Issue #26.3）。
@@ -321,8 +316,6 @@ const Tooltip = defineComponent({
         colorInfo.value.className,
         semanticConfig.className,
         mergedClassNames.value.root,
-        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-        typeof attrs.class === 'string' ? attrs.class : undefined,
       ),
     );
 
@@ -338,15 +331,26 @@ const Tooltip = defineComponent({
     // —— 受控时**不做** noTitle 压制（受控方自己负责；Popover 传 open ⇒ 受控），
     // 只有非受控 + noTitle 才强制关。
     // =========================== Expose ==============================
-    const triggerRef = shallowRef<TooltipRef | null>(null);
+    const triggerRef = shallowRef<{
+      forceAlign: () => void;
+      nativeElement: () => HTMLElement | null;
+      popupElement: () => HTMLDivElement | null;
+    } | null>(null);
     expose({
       forceAlign: () => triggerRef.value?.forceAlign(),
       // antd 的 TooltipRef.nativeElement 是**属性** —— expose 的 computed 自动解包
-      nativeElement: computed(() => triggerRef.value?.nativeElement ?? null),
-      popupElement: computed(() => triggerRef.value?.popupElement ?? null),
+      nativeElement: computed(() => triggerRef.value?.nativeElement() ?? null),
+      popupElement: computed(() => triggerRef.value?.popupElement() ?? null),
     });
 
     return () => {
+      const { class: nativeClass, style: nativeStyle, ...triggerAttrs } = attrs;
+      const popupStyle = normalizeStyle([
+        tooltipTheme.style.value,
+        colorInfo.value.arrowStyle,
+        mergedStyles.value.root,
+        nativeStyle,
+      ]);
       const content = slots.title ? slots.title() : props.title;
       noTitle = content === '' || isEmptyVNode(content);
       const tempOpen = props.open ?? (mergedOpen.value && !noTitle);
@@ -415,7 +419,7 @@ const Tooltip = defineComponent({
           class: clsx(`${prefixCls.value}-container`, mergedClassNames.value.container),
           style: containerStyle.value as CSSProperties,
           role: 'tooltip',
-          onClick: props.onPopupClick ? (e: MouseEvent) => props.onPopupClick?.(e) : undefined,
+          onClick: (event: MouseEvent) => emit('popupClick', event),
         },
         [content],
       );
@@ -423,7 +427,7 @@ const Tooltip = defineComponent({
       return h(
         Trigger,
         {
-          ref: triggerRef as never,
+          ref: triggerRef,
           prefixCls: prefixCls.value,
           popup,
           // antd 的 ActionType 是 string，本仓只认 5 种动作 —— 未知动作在
@@ -431,7 +435,7 @@ const Tooltip = defineComponent({
           action: mergedTrigger.value as OverlayActionInput,
           open: tempOpen,
           onOpenChange: onInternalOpenChange,
-          afterOpenChange: props.afterOpenChange,
+          afterOpenChange: (open: boolean) => emit('afterOpenChange', open),
           disabled: props.disabled,
           mouseEnterDelay: mergedMouseEnterDelay.value,
           mouseLeaveDelay: mergedMouseLeaveDelay.value,
@@ -448,13 +452,9 @@ const Tooltip = defineComponent({
           forceRender: props.forceRender,
           arrow: arrowProp,
           zIndex: zIndex.value,
-          popupClassName: rootClassNames.value,
-          popupStyle: {
-            ...(colorInfo.value.arrowStyle as StyleLike),
-            ...(mergedStyles.value.root ?? {}),
-          },
-          // 根 style 是 Vue 原生 attrs（`...attrs` 在末尾，位置与原先的 props.style 一致）
-          ...attrs,
+          popupClassName: normalizeClass([rootClassNames.value, nativeClass]),
+          popupStyle: typeof popupStyle === 'object' ? popupStyle : undefined,
+          ...triggerAttrs,
         },
         {
           default: () => [triggerNode],

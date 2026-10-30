@@ -42,7 +42,7 @@
    Popover 有没有声明，且 `onPopupClick` 因此被**传了两份**（Overlay 的
    `-inner-content` + Tooltip 容器）⇒ 一次点击回调两次。现在类型与运行时都补齐
    （`getPopupContainer` / `getTooltipContainer` / `align` / `builtinPlacements` /
-   `zIndex` / `destroyOnHidden` / `fresh` / `forceRender` / `afterOpenChange` / `id`），
+   `zIndex` / `destroyOnHidden` / `fresh` / `forceRender` / `onAfterOpenChange` / `id`），
    并显式下传；`restProps` 摘掉 `title` **和** `onPopupClick`。
 2. **PurePanel 要接住 Overlay 的回调与语义槽**（#26.2）：`PurePanelProps extends
    OverlayProps` 承诺的 `onConfirm` / `onCancel` / `onPopupClick` / `classNames` /

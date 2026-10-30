@@ -68,7 +68,7 @@ it('#26.1 来自 AbstractTooltipProps 的公共浮层配置在类型与运行时
     | 'destroyOnHidden'
     | 'fresh'
     | 'forceRender'
-    | 'afterOpenChange'
+    | 'onAfterOpenChange'
     | 'id'
   > = {
     getPopupContainer: () => document.body,
@@ -79,7 +79,7 @@ it('#26.1 来自 AbstractTooltipProps 的公共浮层配置在类型与运行时
     destroyOnHidden: true,
     fresh: false,
     forceRender: true,
-    afterOpenChange: (_open: boolean) => {},
+    onAfterOpenChange: (_open: boolean) => {},
     id: 'pc-1',
   };
   expectTypeOf(props).not.toBeNever();
@@ -88,8 +88,8 @@ it('#26.1 来自 AbstractTooltipProps 的公共浮层配置在类型与运行时
     const bad: PopconfirmProps = {
       // @ts-expect-error zIndex 不接受字符串
       zIndex: '1200',
-      // @ts-expect-error afterOpenChange 是回调，不接受字符串
-      afterOpenChange: 'nope',
+      // @ts-expect-error afterOpenChange 的 Vue 监听器不接受字符串
+      onAfterOpenChange: 'nope',
     };
     return bad;
   };

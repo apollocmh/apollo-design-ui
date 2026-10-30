@@ -7,6 +7,7 @@ import { clsx } from '../_internal/clsx';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import type { TooltipContent, TooltipSemanticType, TooltipSlots } from './interface';
+import { useTooltipTheme } from './use-tooltip-theme';
 import { parseTooltipColor } from './util';
 
 type StyleLike = Record<string, string | number>;
@@ -34,7 +35,8 @@ const PurePanel = defineComponent({
     styles: { type: Object as PropType<TooltipSemanticType['styles']>, default: undefined },
   },
   setup(props, { attrs, slots }) {
-    const { getPrefixCls } = useComponentConfig('tooltip');
+    const context = useComponentConfig('tooltip');
+    const tooltipTheme = useTooltipTheme();
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       Record<string, never>,
       NonNullable<TooltipSemanticType['classNames']>,
@@ -42,7 +44,7 @@ const PurePanel = defineComponent({
     >([() => props.classNames], [() => props.styles], {} as Record<string, never>);
 
     return () => {
-      const prefixCls = props.prefixCls ?? getPrefixCls('tooltip');
+      const prefixCls = props.prefixCls ?? context.getPrefixCls('tooltip');
       const colorInfo = parseTooltipColor(prefixCls, props.color);
       const placement = props.placement ?? 'top';
 
@@ -57,7 +59,12 @@ const PurePanel = defineComponent({
             colorInfo.className,
             mergedClassNames.value.root,
           ),
-          style: [colorInfo.arrowStyle, mergedStyles.value.root, attrs.style],
+          style: [
+            tooltipTheme.style.value,
+            colorInfo.arrowStyle,
+            mergedStyles.value.root,
+            attrs.style,
+          ],
           ...stripClassStyle(attrs),
         },
         [
