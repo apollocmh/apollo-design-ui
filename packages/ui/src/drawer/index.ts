@@ -12,20 +12,18 @@ import DrawerComponent from './Drawer';
 import PurePanel from './PurePanel';
 
 /** Drawer 组件。注册名 `ADrawer`（COMPONENT-RULES.md 规则 R2）。 */
-// ⚠️ `withInstall` 的返回类型与「带静态属性的组件」不是可比较类型 ⇒ 按仓库惯例
-//    （message 的静态方法集合同源）经 `unknown` 断言一次
-export const Drawer = withInstall(DrawerComponent) as unknown as typeof DrawerComponent & {
+export const Drawer = Object.assign(withInstall(DrawerComponent), {
   /** @private Internal Component. Do not use in your production. */
-  _InternalPanelDoNotUseOrYouWillBeFired: typeof PurePanel;
-};
-
-Drawer._InternalPanelDoNotUseOrYouWillBeFired = PurePanel;
+  _InternalPanelDoNotUseOrYouWillBeFired: PurePanel,
+});
 
 export type {
+  DrawerClosable,
+  DrawerEmits,
   DrawerPlacement,
   DrawerProps,
   DrawerPurePanelProps,
-  DrawerResizableConfig,
+  DrawerRef,
   DrawerSemanticType,
   DrawerSize,
   DrawerSlots,

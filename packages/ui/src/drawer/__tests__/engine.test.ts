@@ -15,12 +15,13 @@
  * ⚠️ 用 `getContainer: false`（内联模式）⇒ 内容就在 wrapper 里，`wrapper.find` 可用。
  */
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
 
 import Drawer from '../engine/Drawer';
 
 const BP = { prefixCls: 'apollo-drawer' };
+afterEach(() => vi.useRealTimers());
 
 async function mountDrawer(props: Record<string, unknown> = {}) {
   const wrapper = mount(Drawer, {
@@ -122,10 +123,13 @@ describe('drawer 内核 · 开合与 resizable', () => {
     wrapper.unmount();
   });
 
-  it('destroyOnHidden=true 且关闭 ⇒ 整个卸载', async () => {
+  it('destroyOnHidden=true 保留离场，真实动效完成后整个卸载', async () => {
+    vi.useFakeTimers();
     const wrapper = await mountDrawer({ destroyOnHidden: true });
+    await vi.runAllTimersAsync();
     await wrapper.setProps({ open: false });
-    await nextTick();
+    expect(wrapper.find('.apollo-drawer').exists()).toBe(true);
+    await vi.runAllTimersAsync();
     expect(wrapper.find('.apollo-drawer').exists()).toBe(false);
     wrapper.unmount();
   });

@@ -1,10 +1,13 @@
 /** L3 类型（G7）—— 正例 + 负例（负例包在永不调用的闭包里）。 */
 import type { GetContainer } from '@apollo-design/portal';
 import { describe, expectTypeOf } from 'vitest';
-import type { VNodeChild } from 'vue';
+import { h, type VNodeChild } from 'vue';
+import { Drawer } from '../index';
 import type {
+  DrawerEmits,
   DrawerPlacement,
   DrawerProps,
+  DrawerRef,
   DrawerSemanticType,
   DrawerSize,
   DrawerSlots,
@@ -12,6 +15,50 @@ import type {
 } from '../interface';
 
 describe('Drawer · 类型', () => {
+  it('declares real constructor events, exposed methods and elements', () => {
+    expectTypeOf<Parameters<DrawerEmits['close']>>().toEqualTypeOf<[nativeEvent: Event]>();
+    expectTypeOf<Parameters<DrawerEmits['afterOpenChange']>>().toEqualTypeOf<[open: boolean]>();
+    expectTypeOf<Parameters<DrawerEmits['resize']>>().toEqualTypeOf<[size: number]>();
+    expectTypeOf<Parameters<DrawerEmits['resizeStart']>>().toEqualTypeOf<[size: number]>();
+    expectTypeOf<Parameters<DrawerEmits['resizeEnd']>>().toEqualTypeOf<[size: number]>();
+    expectTypeOf<InstanceType<typeof Drawer>['nativeElement']>().toEqualTypeOf<
+      DrawerRef['nativeElement']
+    >();
+    expectTypeOf<InstanceType<typeof Drawer>['focus']>().toEqualTypeOf<DrawerRef['focus']>();
+    const props: InstanceType<typeof Drawer>['$props'] = {
+      open: true,
+      getContainer: false,
+      maxSize: 500,
+      closable: { disabled: true, 'aria-label': 'Dismiss' },
+      onClose: (_event: Event) => {},
+      onAfterOpenChange: (_open: boolean) => {},
+      resizable: true,
+      onResize: (_size: number) => {},
+      onResizeStart: (_size: number) => {},
+      onResizeEnd: (_size: number) => {},
+    };
+    h(Drawer, props);
+    const negative = () => {
+      const wrongEvent: InstanceType<typeof Drawer>['$props'] = {
+        // @ts-expect-error close carries its native Event, not the visibility state.
+        onClose: (_open: boolean) => {},
+      };
+      const callback: DrawerProps = {
+        // @ts-expect-error Transition completion is a Vue event listener.
+        afterOpenChange: (_open: boolean) => {},
+      };
+      const obsolete: DrawerProps = {
+        // @ts-expect-error Actual DOM access uses the component template ref.
+        panelRef: () => {},
+      };
+      const resizeCallback: DrawerProps = {
+        // @ts-expect-error Resizing notifications use Vue emits, not callback configuration.
+        resizable: { onResize: (_size: number) => {} },
+      };
+      return [wrongEvent, callback, obsolete, resizeCallback];
+    };
+    void negative;
+  });
   it('getContainer matches the native Portal contract, including inline false', () => {
     expectTypeOf<DrawerProps['getContainer']>().toEqualTypeOf<GetContainer>();
   });
@@ -59,7 +106,8 @@ describe('Drawer · 类型', () => {
       open: true,
       placement: 'bottom',
       size: 'large',
-      resizable: { onResize: () => {} },
+      resizable: true,
+      onResize: () => {},
       mask: { blur: true, closable: false },
       focusable: { trap: true },
       title: 't',

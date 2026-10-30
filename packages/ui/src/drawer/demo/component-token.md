@@ -3,8 +3,8 @@ order: 2
 ---
 ## zh-CN
 
-组件级 token。
+打开后切换四个组件 Token，实时观察底部间距、拖拽手柄和层级。
 
 ## en-US
 
-component-token demo.
+Toggle four component tokens while open to update footer spacing, the resize handle and stacking.

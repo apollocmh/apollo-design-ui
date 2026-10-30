@@ -142,3 +142,7 @@ Popconfirm 的所属通知使用 Vue emits，确认 Promise 仍是业务回调�
 ### D-select-native-search-and-events
 
 Select 的通知使用 Vue emits，value/open/searchValue 使用对应 v-model；showSearch 仅承载过滤与排序等搜索算法配置。原 showSearch.searchValue/onSearch/searchIcon 分别迁到顶层模型、search 事件与 #searchIcon，移除 onDropdownVisibleChange。当前配置、有效 Token、实际模板引用和共享引擎消费者同步修正；详见[Select API](packages/ui/src/select/index.zh-CN.md)。AutoComplete 同步转发 searchValue 模型更新。
+
+### D-drawer-native-lifecycle
+
+Drawer 的 close/afterOpenChange/resize/resizeStart/resizeEnd 使用 Vue emits，引用暴露实际 nativeElement 与 focus。resizable 直接使用 boolean，原对象内回调迁为对应 Vue 事件（尺寸载荷为 number）；删除未消费的 panelRef/destroyInactivePanel。修复真实 motion 完成通知、延迟销毁、受控尺寸与拖拽、嵌套推移和焦点资源，详见[Drawer API](packages/ui/src/drawer/index.zh-CN.md)。

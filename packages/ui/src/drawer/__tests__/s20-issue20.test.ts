@@ -11,15 +11,15 @@
  */
 
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, ref } from 'vue';
 import RcDrawer from '../engine/Drawer';
-import DrawerPopup from '../engine/DrawerPopup';
 import Drawer from '../index';
 
 async function ticks(count = 5): Promise<void> {
   for (let i = 0; i < count; i += 1) await nextTick();
 }
+afterEach(() => vi.useRealTimers());
 
 describe('Drawer · Issue #20', () => {
   describe('#20.1 push 需传到引擎', () => {
@@ -80,11 +80,10 @@ describe('Drawer · Issue #20', () => {
   });
 
   describe('#20.2 关闭后焦点回到触发器', () => {
-    // ⚠️ jsdom 下 CSSMotion 不推进（afterOpenChange 连「打开」那次都不触发）⇒ 无法在
-    //    公开组件层等到离场结束。这里在**引擎层**手动驱动 `afterOpenChange(false)`
-    //    （引擎把它作为 prop 传给 DrawerPopup），时序与真实离场一致：
-    //      open=true 记下触发器 → open=false（渲染期不得清空）→ 动效结束回调。
+    // 驱动真实 motion 队列：此前将 onVisibleChanged 误塞进 hooks 才导致通知缺失。
+    // 关闭后必须等离场完成，而不能手动调用内部回调掩盖实际生命周期。
     const driveClose = async () => {
+      vi.useFakeTimers();
       const trigger = document.createElement('button');
       document.body.appendChild(trigger);
       trigger.focus();
@@ -109,7 +108,7 @@ describe('Drawer · Issue #20', () => {
       });
       await ticks();
       open.value = true;
-      await ticks();
+      await vi.runAllTimersAsync();
 
       const inner = document.querySelector('.inner-btn') as HTMLElement | null;
       expect(inner).toBeTruthy();
@@ -118,16 +117,7 @@ describe('Drawer · Issue #20', () => {
 
       // 关闭：这一步在修复前会把 lastActiveRef 清掉
       open.value = false;
-      await ticks();
-
-      // ⚠️ findComponent 拿到的是 WrapperLike（无 props 类型）⇒ 显式断言
-      const popup = w.findComponent(DrawerPopup as never) as unknown as {
-        props: () => Record<string, unknown>;
-      };
-      const afterOpenChange = popup.props().afterOpenChange as ((v: boolean) => void) | undefined;
-      expect(typeof afterOpenChange).toBe('function');
-      afterOpenChange?.(false);
-      await ticks();
+      await vi.runAllTimersAsync();
 
       const restored = document.activeElement === trigger;
       w.unmount();

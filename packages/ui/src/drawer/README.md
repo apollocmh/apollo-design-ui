@@ -8,7 +8,15 @@
 >
 > 契约来源：antd `components/drawer/`（Drawer 369 / DrawerPanel 249 / useFocusable 26 /
 > style 357 + motion 80）+ `@rc-component/drawer@1.4.2`（449 行 / 7 文件）。
-> 上游是**兼容性规格**，不是代码来源。
+> 上游是历史实现参考；当前契约由 Apollo 的类型、组件文档与行为测试共同确定。
+
+## 当前源码说明（2026-10-30）
+
+保留 2026-10-24 的动态/空内容槽、单次标题快照、正文 DOM 与外部 ARIA 成果。关闭、动效完成与三个 resize 通知使用 Vue emits；`resizable` 是布尔开关，实际模板 ref 暴露外层 `nativeElement` 和 `focus()`。原生 class/style 与普通事件属于外层根，dialog 保留 id/role/ARIA；面板定制使用 section 语义字段。迁移写法见双语 API。
+
+`useFocusable` 在真实根就绪或重新打开时同步记录所属文档的焦点，再由挂载/更新后的效果执行锁定与自动聚焦；离场完成或条件卸载时释放并归还。每个子抽屉独立持有推挤登记；拖拽读取当前配置，并在结束、关闭、禁用、换向或卸载时释放所属文档监听。
+
+Drawer / PurePanel 消费当前 Provider 与四个组件 Token。PurePanel 只展示静态内容，不占用活动层或焦点锁。保留既有样式/尺寸/销毁别名；无消费的 panelRef、destroyInactivePanel 与纯回调 DrawerResizableConfig 已直接移除。完整冻结验收与原有历史数字分别解释，不将本段源码说明视为重新通过九维验收。
 
 ## 1. 职责
 
@@ -74,19 +82,20 @@ registry 数据：token 数 = 4。
 2. 🚨 **焦点来源不能在渲染期清空**：rc 只在 `mergedOpen` **变真**那一帧记
    `document.activeElement`（`useLayoutEffect([mergedOpen])`），**从不**在关闭时清。
    本仓改成「渲染期 `!mergedOpen ⇒ null`」后，`afterOpenChange(false)`（离场动效之后）
-   拿到 null ⇒ 焦点回不去。现在用 `prevMergedOpen` 只在「未开→开」记录，归还时用完即清，
-   并加 `isConnected` 安全回退。
+   拿到 null ⇒ 焦点回不去。2026-10-30 改为实际根的同步 watch 记录，避免渲染期写状态；
+   归还时用完即清，并保留 `isConnected` 判定。
 3. 🚨 **标题 ARIA 要在渲染期判定**：`titleSlot`/`hasTitle`/`ariaId` 写进 setup 是快照 ⇒
    标题由「有」变「无」后 `aria-labelledby` 还指向已不存在的节点。用普通函数每渲染现读
    （不要用 computed —— slot 从「无」到「有」时 computed 不失效）。
-4. ⚠️ **jsdom 下 CSSMotion 不推进**：`afterOpenChange` 连「打开」那次都不触发 ⇒ 焦点归还
-   只能在**引擎层**手动驱动 `afterOpenChange(false)` 验证（见 `s20-issue20.test.ts`）。
+4. 2026-10-30 纠正旧结论：此前不是 jsdom 无法推进，而是 `onVisibleChanged` 被放进错误的
+   `hooks` 字段。现在连接 CSSMotion 顶层通知；`s20-issue20.test.ts` 与原生回归均驱动实际
+   动效队列，不再手调完成回调。
 
 ## 5. 已知缺口
 
 | # | 缺口 | 说明 |
 |---|---|---|
-| P1 | ConfigProvider 组件级 `classNames` / `styles` / token 覆盖 | staged（同 image/message/notification） |
+| P1 | ConfigProvider 组件级 `classNames` / `styles` / token 覆盖 | 2026-10-30 已接通当前源码；最终验收仍由本轮状态记录 |
 | P2 | 函数式语义槽 | D36 同判（只支持对象形态） |
 | P3 | watermark 的 `usePanelRef` | antd 用它把面板根注册给水印；本仓未接 |
 | P4 | `holderRender` / `warnContext` | D30 同源（不涉及本组件，但同一批决策） |

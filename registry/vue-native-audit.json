@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 70,
+  "revision": 72,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -552,18 +552,16 @@
       "kind": "component",
       "ref": "drawer",
       "title": "Drawer",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/drawer"
       ],
-      "assignment": {
-        "owner": "native_drawer",
-        "baseRevision": 52,
-        "startedAt": "2026-10-30T09:10:36.703Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -581,6 +579,44 @@
           "docs/audit/2026-10-24-drawer-vue-remediation.md",
           "docs/audit/2026-10-25-image-contract-audit.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/drawer"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project theme --project a11y --project dom-contract packages/ui/src/drawer/__tests__ --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 31000
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/drawer/__tests__/native-contracts.test.ts packages/ui/src/drawer/__tests__/engine.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7610
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/drawer/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 16230
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full drawer source/tests/demo/SFC and affected consumers>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53236
+          }
+        ],
+        "boundary": "保留已有原生内容成果；当前Provider/Token、owned通知与真实ref、受控尺寸及撤控、motion完成/延迟销毁、焦点与嵌套push/Escape、拖拽资源释放和两处更新Demo已验证。resizable改boolean，resize/resizeStart/resizeEnd由Vue事件发送number；删除无消费内部panelRef/destroyInactivePanel。未新增Watermark扩展，未执行最终冻结九维/发布消费者验收。"
       }
     },
     {

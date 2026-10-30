@@ -17,7 +17,7 @@ const onClose = () => {
     <Button type="primary" @click="showDrawer">Open</Button>
     <Drawer
       title="Render in current node"
-      :get-container="(false as never)"
+      :get-container="false"
       :open="open"
       :style="{ position: 'absolute' }"
       @close="onClose"

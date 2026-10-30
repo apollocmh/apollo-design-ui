@@ -1,7 +1,12 @@
 /** L7 主题 —— Drawer 的组件变量（DECLS 字面量）+ token 判据。 */
 
 import { themeTest } from '@apollo-design/test-utils';
+import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import { defineComponent, h, nextTick, ref } from 'vue';
+import ConfigProvider from '../../config-provider/ConfigProvider';
+import Drawer from '../Drawer';
+import PurePanel from '../PurePanel';
 import { genDrawerStyle, genDrawerTokenDecls } from '../style';
 import { drawerTokenValues, prepareComponentToken } from '../style/token';
 
@@ -9,6 +14,83 @@ themeTest('Drawer', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
   expectCount: 18,
   global: { stubs: { teleport: false } },
+});
+
+it('consumes nested theme overrides and returns to current parent tokens after removal', async () => {
+  const custom = ref(true);
+  const parentBase = ref(1400);
+  const customIndex = ref(2500);
+  const wrapper = mount(
+    defineComponent({
+      setup: () => () =>
+        h(
+          ConfigProvider,
+          {
+            theme: {
+              token: {
+                colorText: '#123456',
+                zIndexPopupBase: parentBase.value,
+                padding: 24,
+                paddingXS: 10,
+              },
+            },
+          },
+          () => [
+            h(PurePanel, { class: 'outer-static' }),
+            h(
+              ConfigProvider,
+              {
+                theme: custom.value
+                  ? {
+                      token: { colorText: '#654321' },
+                      components: {
+                        Drawer: {
+                          zIndexPopup: customIndex.value,
+                          footerPaddingBlock: 4,
+                          footerPaddingInline: 9,
+                          draggerSize: 7,
+                        },
+                      },
+                    }
+                  : undefined,
+              },
+              () =>
+                h(Drawer, {
+                  open: true,
+                  getContainer: false,
+                  autoFocus: false,
+                  class: 'inner-overlay',
+                }),
+            ),
+          ],
+        ),
+    }),
+    { global: { stubs: { teleport: false } } },
+  );
+  for (let index = 0; index < 6; index++) await nextTick();
+  const outer = wrapper.get<HTMLElement>('.outer-static').element;
+  const inner = wrapper.get<HTMLElement>('.inner-overlay').element;
+  expect(outer.style.getPropertyValue('--apollo-drawer-z-index-popup')).toBe('1400');
+  expect(outer.style.getPropertyValue('--apollo-drawer-footer-padding-block')).toBe('10px');
+  expect(outer.style.getPropertyValue('--apollo-drawer-footer-padding-inline')).toBe('24px');
+  expect(inner.style.getPropertyValue('--apollo-color-text')).toBe('#654321');
+  expect(inner.style.getPropertyValue('--apollo-drawer-z-index-popup')).toBe('2500');
+  expect(inner.style.getPropertyValue('--apollo-drawer-footer-padding-block')).toBe('4px');
+  expect(inner.style.getPropertyValue('--apollo-drawer-footer-padding-inline')).toBe('9px');
+  expect(inner.style.getPropertyValue('--apollo-drawer-dragger-size')).toBe('7px');
+  customIndex.value = -1;
+  await nextTick();
+  expect(inner.style.getPropertyValue('--apollo-drawer-z-index-popup')).toBe('-1');
+  custom.value = false;
+  parentBase.value = 1700;
+  await nextTick();
+  expect(inner.style.getPropertyValue('--apollo-color-text')).toBe('#123456');
+  expect(inner.style.getPropertyValue('--apollo-drawer-z-index-popup')).toBe('1700');
+  expect(inner.style.getPropertyValue('--apollo-drawer-footer-padding-block')).toBe('10px');
+  expect(inner.style.getPropertyValue('--apollo-drawer-footer-padding-inline')).toBe('24px');
+  expect(inner.style.getPropertyValue('--apollo-drawer-dragger-size')).toBe('4px');
+  expect(outer.style.getPropertyValue('--apollo-drawer-z-index-popup')).toBe('1700');
+  wrapper.unmount();
 });
 
 describe('Drawer · token 契约', () => {

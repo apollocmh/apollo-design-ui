@@ -1,39 +1,54 @@
-/**
- * `useFocusable` —— `@rc-component/drawer@1.4.2` `es/hooks/useFocusable.js` 的 Vue 版。
- *
- * 契约（逐条对齐上游）：
- *   1. `mergedFocusTrap = focusTrap ?? mask !== false` —— **默认跟着 mask 走**：
- *      有遮罩就做焦点陷阱，没遮罩（`mask: false`）就不做；
- *   2. 焦点陷阱用本仓 `@apollo-design/utils` 的 `useLockFocus`（rc-util `Dom/focus` 的对应物），
- *      返回的 `ignoreElement` 由调用方在 `onFocus` 里用（焦点跑到面板外时拉回来）；
- *   3. `autoFocus === true`（**严格 true**）时，打开后把焦点移到面板容器
- *      （`preventScroll: true`，避免页面跳动）。
- */
-import { useLockFocus } from '@apollo-design/utils';
-import { computed, type MaybeRefOrGetter, toValue, watch } from 'vue';
+import { containsComposed, getActiveElement, useLockFocus } from '@apollo-design/utils';
+import { computed, type MaybeRefOrGetter, onScopeDispose, toValue, watch } from 'vue';
 
+// Historical reference: @rc-component/drawer 1.4.2 es/hooks/useFocusable.js.
+
+/** Focus belongs to the actual popup root and its document, including late Portal mounts. */
 export function useFocusable(
   getContainer: () => HTMLElement | null,
   open: MaybeRefOrGetter<boolean>,
   autoFocus: MaybeRefOrGetter<boolean | undefined>,
   focusTrap: MaybeRefOrGetter<boolean | undefined>,
-  mask: MaybeRefOrGetter<unknown>,
-): (ele: HTMLElement) => void {
-  const mergedFocusTrap = computed(() => toValue(focusTrap) ?? toValue(mask) !== false);
+  mask: MaybeRefOrGetter<boolean>,
+  focusTriggerAfterClose: MaybeRefOrGetter<boolean | undefined>,
+): () => void {
+  const mergedFocusTrap = computed(() => toValue(focusTrap) ?? toValue(mask));
+  let lastActive: Element | null = null;
 
-  const [ignoreElement] = useLockFocus(
-    () => !!toValue(open) && mergedFocusTrap.value,
-    () => getContainer(),
+  // Capture before focus-lock's mounted/post effects, using the real owner document.
+  watch(
+    [() => toValue(open), getContainer],
+    ([isOpen, element], [wasOpen, previousElement]) => {
+      if (isOpen && element && (!wasOpen || !previousElement))
+        lastActive = getActiveElement(element);
+    },
+    { flush: 'sync' },
   );
 
+  useLockFocus(() => toValue(open) && mergedFocusTrap.value, getContainer);
   watch(
-    () => !!toValue(open),
-    (isOpen) => {
-      if (isOpen && toValue(autoFocus) === true) {
-        getContainer()?.focus({ preventScroll: true });
+    [() => toValue(open), getContainer],
+    ([isOpen, element], [wasOpen, previousElement]) => {
+      if (isOpen && element && (!wasOpen || element !== previousElement) && toValue(autoFocus)) {
+        element.focus({ preventScroll: true });
       }
     },
+    { flush: 'post' },
   );
 
-  return ignoreElement;
+  const restoreFocus = () => {
+    const target = lastActive;
+    lastActive = null;
+    if (
+      toValue(focusTriggerAfterClose) !== false &&
+      target?.isConnected &&
+      !containsComposed(getContainer(), target) &&
+      'focus' in target &&
+      typeof target.focus === 'function'
+    )
+      target.focus({ preventScroll: true });
+  };
+  // Conditional unmounts still return focus and release the lock without a leave animation.
+  onScopeDispose(restoreFocus);
+  return restoreFocus;
 }

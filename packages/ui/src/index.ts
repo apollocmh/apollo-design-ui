@@ -1084,10 +1084,12 @@ export {
 export type { ComponentToken as DescriptionsComponentToken } from './descriptions/style/token';
 export { prepareComponentToken as prepareDescriptionsComponentToken } from './descriptions/style/token';
 export type {
+  DrawerClosable,
+  DrawerEmits,
   DrawerPlacement,
   DrawerProps,
   DrawerPurePanelProps,
-  DrawerResizableConfig,
+  DrawerRef,
   DrawerSemanticType,
   DrawerSize,
   DrawerSlots,

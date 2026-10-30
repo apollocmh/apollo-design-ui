@@ -1,15 +1,21 @@
 /**
- * `PurePanel` —— antd `Drawer.tsx` 尾部的 `_InternalPanelDoNotUseOrYouWillBeFired`。
- *
- * 根类 = `{p}-drawer {p}-drawer-pure {p}-drawer-{placement}`（默认 `right`），
- * 内部直接渲染 `DrawerPanel`（**不 portal、不 mask、不 autoFocus**）。
+ * Static Drawer content without Portal, mask, focus or resize effects.
+ * Historical reference: antd 6.6.4 components/drawer/Drawer.tsx PurePanel.
  */
-
 import { isEmptyVNode } from '@apollo-design/utils';
-import { defineComponent, h, type PropType, type SlotsType, type VNodeChild } from 'vue';
-import { useComponentConfig } from '../config-provider/context';
+import {
+  type CSSProperties,
+  defineComponent,
+  h,
+  type PropType,
+  type SlotsType,
+  type VNodeChild,
+} from 'vue';
+import { mergeClassNames, mergeStyles } from '../_internal/use-merge-semantic';
+import { type ComponentStyleConfig, useComponentConfig } from '../config-provider/context';
 import DrawerPanel from './DrawerPanel';
-import type { DrawerPlacement, DrawerSlots } from './interface';
+import type { DrawerClosable, DrawerPlacement, DrawerSemanticType, DrawerSlots } from './interface';
+import { useDrawerTheme } from './use-drawer-theme';
 
 const contentSlots: SlotsType<DrawerSlots> = {};
 
@@ -20,54 +26,63 @@ export default defineComponent({
   props: {
     prefixCls: { type: String, default: undefined },
     placement: { type: String as PropType<DrawerPlacement>, default: 'right' },
-    // ⚠️ C8-R2：原 `footer` / `extra` / `closeIcon` 删除改为同名 slot（slot 在前，空 slot
-    //    等价隐藏）；`title` 收窄为 String（富标题走 `#title` slot，slot 优先）。
     title: { type: String, default: undefined },
-    closable: { type: [Boolean, Object, null] as unknown as PropType<unknown>, default: undefined },
-    onClose: { type: Function as PropType<(e: Event) => void>, default: undefined },
+    closable: { type: [Boolean, Object] as PropType<DrawerClosable>, default: undefined },
     loading: { type: Boolean, default: false },
+    classNames: { type: Object as PropType<DrawerSemanticType['classNames']>, default: undefined },
+    styles: { type: Object as PropType<DrawerSemanticType['styles']>, default: undefined },
+    headerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+    bodyStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+    footerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
   },
-  setup(props, { attrs, slots }) {
-    // ============ slot：ReactNode / render prop 的唯一入口（规则 C8-R2）============
+  emits: { close: (_event: Event) => true },
+  setup(props, { attrs, slots, emit }) {
     const readSlot = (name: keyof DrawerSlots): VNodeChild => {
       const slot = slots[name];
       if (!slot) return undefined;
       const nodes = slot();
       return isEmptyVNode(nodes) ? null : nodes;
     };
-
-    const config = useComponentConfig('drawer');
+    const config = useComponentConfig<DrawerSemanticType & ComponentStyleConfig>('drawer');
+    const theme = useDrawerTheme();
     return () => {
-      const prefixCls = props.prefixCls || config.getPrefixCls('drawer');
-
-      const titleSlot = readSlot('title');
-      const mergedTitle = slots.title ? titleSlot : props.title;
-
+      const prefix = props.prefixCls || config.getPrefixCls('drawer');
+      const cn = mergeClassNames(config.classNames, props.classNames);
+      const st = mergeStyles(config.styles, props.styles);
       return h(
         'div',
         {
           ...attrs,
           class: [
-            prefixCls,
-            `${prefixCls}-pure`,
-            `${prefixCls}-${props.placement}`,
-            // 调用方原生 class / style（位置与原先的 props.className / props.style 一致）
+            prefix,
+            `${prefix}-pure`,
+            `${prefix}-${props.placement}`,
+            config.className,
+            cn.content,
+            cn.section,
+            cn.root,
             attrs.class,
+            config.direction === 'rtl' && `${prefix}-rtl`,
           ],
-          style: attrs.style,
+          style: [theme.style.value, config.style, st.content, st.section, st.root, attrs.style],
         },
         h(
           DrawerPanel,
           {
-            prefixCls,
-            title: mergedTitle as never,
-            footer: readSlot('footer') as never,
-            extra: readSlot('extra') as never,
-            closable: props.closable as never,
-            closeIcon: readSlot('closeIcon') as never,
-            onClose: props.onClose,
+            prefixCls: prefix,
+            title: slots.title ? readSlot('title') : props.title,
+            footer: readSlot('footer'),
+            extra: readSlot('extra'),
+            closable: props.closable,
+            closeIcon: readSlot('closeIcon'),
+            onClose: (event) => emit('close', event),
             loading: props.loading,
-          } as never,
+            classNames: cn,
+            styles: st,
+            headerStyle: props.headerStyle,
+            bodyStyle: props.bodyStyle,
+            footerStyle: props.footerStyle,
+          },
           { default: () => slots.default?.() },
         ),
       );

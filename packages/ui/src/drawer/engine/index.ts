@@ -9,11 +9,11 @@
  *   | `DrawerPanel.js`（33） | `DrawerSection.ts`（rc 的 panel：`{p}-section` div） |
  *   | `hooks/useDrag.js`（97） | `useDrag.ts` |
  *   | `hooks/useFocusable.js`（17） | `useFocusable.ts` |
- *   | `context.js` | `context.ts`（推挤链 + panelRef 透传） |
+ *   | `context.js` | `context.ts`（各子实例独立持有的推挤链） |
  */
 
-export type { DrawerContextValue, DrawerRefContextValue } from './context';
-export { drawerContextKey, drawerRefContextKey } from './context';
+export type { DrawerContextValue } from './context';
+export { drawerContextKey } from './context';
 export { default as Drawer } from './Drawer';
 export type { DrawerMotion } from './DrawerPopup';
 export { default as DrawerPopup } from './DrawerPopup';
