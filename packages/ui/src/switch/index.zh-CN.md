@@ -106,15 +106,15 @@ subtitle: 开关
 | innerMinMarginSM | 小号内容区最小边距 | `6px` |
 | innerMaxMarginSM | 小号内容区最大边距 | `18px` |
 
-> ⚠️ 这 13 个是**构建期算好的解析值**，不随主题缩放（其中 `handleBg` / `handleShadow`
-> 在 dark 主题下会与 antd 分叉，已登记）。零运行时下用 CSS 变量覆盖即可自定义：
+这 13 项通过 `ConfigProvider.theme.components.Switch` 配置，数字长度自动补 `px`，也支持 CSS 长度字符串。没有字段覆盖时从当前全局主题派生；嵌套主题只覆盖指定字段，配置替换和撤销会更新现有按钮。旧 D50「组件 Token 不随主题更新」已修正，静态 CSS 仍保留默认值。
 
-```css
-.my-scope .apollo-switch {
-  --apollo-switch-track-height: 14px;
-  --apollo-switch-handle-size: 20px;
-}
+```vue
+<ConfigProvider :theme="{ components: { Switch: { trackHeight: 14, handleSize: 20 } } }">
+  <Switch aria-label="自定义开关" />
+</ConfigProvider>
 ```
+
+主题变量先于 Provider 样式、组件语义根样式和原生根 `style` 合并；可以通过这些根样式覆盖相应 CSS 变量。自定义 `prefixCls` 时组件变量使用当前前缀；仍须提供对应静态 CSS。
 
 ## FAQ
 

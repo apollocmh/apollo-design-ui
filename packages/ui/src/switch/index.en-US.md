@@ -107,16 +107,15 @@ Arrow keys use standard `KeyboardEvent.key` and prevent scrolling. Space/Enter u
 | innerMinMarginSM | Minimum margin of the small content area | `6px` |
 | innerMaxMarginSM | Maximum margin of the small content area | `18px` |
 
-> ⚠️ These 13 values are **resolved at build time** and do not scale with the theme
-> (`handleBg` / `handleShadow` diverge from antd in dark mode — registered). With the
-> zero-runtime architecture, override the CSS variables to customize:
+Configure these 13 fields through `ConfigProvider.theme.components.Switch`. Numeric lengths receive `px`; CSS length strings are also supported. Unspecified fields derive from the current global theme. Nested themes override only supplied fields, and replacing or removing configuration updates the existing button. The former D50 limitation of fixed component tokens is resolved; static CSS retains default values.
 
-```css
-.my-scope .apollo-switch {
-  --apollo-switch-track-height: 14px;
-  --apollo-switch-handle-size: 20px;
-}
+```vue
+<ConfigProvider :theme="{ components: { Switch: { trackHeight: 14, handleSize: 20 } } }">
+  <Switch aria-label="Custom switch" />
+</ConfigProvider>
 ```
+
+Theme variables merge before Provider styles, component semantic root styles and native root `style`; those root styles can override individual CSS variables. With a custom `prefixCls`, component variables use the current prefix and require matching static CSS.
 
 ## FAQ
 

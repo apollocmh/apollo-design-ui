@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 23,
+  "revision": 29,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -642,20 +642,34 @@
       "kind": "component",
       "ref": "float-button",
       "title": "FloatButton",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/float-button"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_float_button",
+        "baseRevision": 26,
+        "startedAt": "2026-10-30T07:50:40.896Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-27-button-contract-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留既有专项成果，完成 FloatButton 剩余 Vue 原生契约",
+        "remaining": [
+          "沿用 Button 已验证原生 style 成果；核对 Group/BackTop/内容槽、当前配置、事件/模型、ref 与资源归属的剩余差额。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-27-button-contract-audit.md"
+        ]
+      }
     },
     {
       "id": "CMP:form",
@@ -1679,17 +1693,13 @@
       "kind": "component",
       "ref": "switch",
       "title": "Switch",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/switch"
       ],
-      "assignment": {
-        "owner": "native_switch",
-        "baseRevision": 16,
-        "startedAt": "2026-10-30T07:12:16.712Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1700,7 +1710,7 @@
       "issues": [
         {
           "id": "SWITCH-LIVE-TOKENS",
-          "status": "open",
+          "status": "fixed",
           "blocking": true,
           "impact": "已声明13个组件Token仅静态生成，当前组件覆盖/派生更新未消费。",
           "reason": "公开接口无效属于本阶段必须修复，不能因旧静态theme测试通过留到最终验收。"
@@ -1709,7 +1719,7 @@
       "verification": {
         "stage": "architecture",
         "scope": [
-          "packages/ui/src/switch/Switch.ts"
+          "packages/ui/src/switch"
         ],
         "passed": true,
         "checks": [
@@ -1728,14 +1738,27 @@
             "durationMs": 4480
           },
           {
-            "kind": "types",
-            "command": "vue-tsc --noEmit -p <temporary config extending all root strict options; current components and utils source/tests/demos>",
+            "kind": "core",
+            "command": "pnpm exec vitest run --project theme --project unit packages/ui/src/switch/__tests__/theme.test.ts packages/ui/src/switch/__tests__/demo.test.ts --maxWorkers=1",
             "exitCode": 0,
             "signal": null,
-            "durationMs": 49702
+            "durationMs": 15030
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/switch/__tests__/theme-browser.mjs",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated ready-source strict config; includes source/tests/demos>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49567
           }
         ],
-        "boundary": "只验证已提交原生事件/内容/焦点/attrs/Provider样式组；当前主题Token消费尚未通过。"
+        "boundary": "保留已交付原生契约；已补齐当前十三 Token、实际 CSS 和原生模板类型。与其他未完成任务隔离验证，最终同一冻结版本九维验收未执行。"
       },
       "plan": {
         "goal": "保留已交付原生契约，补齐 switch 当前组件主题Token消费",
@@ -1776,20 +1799,34 @@
       "kind": "component",
       "ref": "tabs",
       "title": "Tabs",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tabs"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_tabs",
+        "baseRevision": 25,
+        "startedAt": "2026-10-30T07:50:40.803Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-24-tabs-popup-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留既有专项成果，完成 Tabs 剩余 Vue 原生契约",
+        "remaining": [
+          "沿用 popup/extra 槽成果；核对模型、事件、键盘/溢出、当前 Provider/Token、真实 ref 的剩余差额。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-24-tabs-popup-remediation.md"
+        ]
+      }
     },
     {
       "id": "CMP:tag",
@@ -1930,13 +1967,18 @@
       "kind": "component",
       "ref": "tree",
       "title": "Tree",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/ui/src/tree"
+        "packages/ui/src/tree",
+        "packages/ui/src/_internal/tree"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_tree",
+        "baseRevision": 24,
+        "startedAt": "2026-10-30T07:50:40.711Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1960,7 +2002,7 @@
         "goal": "沿用现有清单和失败复现，分根因修复 Tree 公开契约",
         "remaining": [
           "接续标题插槽/Ref、受控模型和响应式配置、键盘/焦点及异步加载等已复现问题；不重复制作只读盘点。",
-          "共享 core 修改先由集成人确认所有权和实际消费者；未修复核心问题不能标记完成。"
+          "Tree owner 独占 _internal/tree 四文件；根导出、TreeSelect 迁移和实际消费者集成由 root 负责。保留已复现组，不重新制作只读盘点。"
         ],
         "effort": "large",
         "basis": [

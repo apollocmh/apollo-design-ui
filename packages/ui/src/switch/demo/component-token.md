@@ -5,8 +5,7 @@ title:
   en-US: Component Token
 ---
 
-> 等价替换：antd 用 `ConfigProvider theme.components.Switch` 覆盖 Component Token；
-> 本仓零运行时 —— Component Token 即 CSS 变量，在容器上覆盖 `--apollo-switch-*` 即可。
+通过 `ConfigProvider.theme.components.Switch` 覆盖组件 Token；当前配置会写入开关根元素的 CSS 变量，由静态样式消费。支持主题切换、嵌套覆盖和撤销。
 
 覆盖 `trackHeight` / `trackMinWidth` / `trackPadding` / `handleSize` / `handleBg` /
 `handleShadow` 后的效果（把手比轨道大，探出轨道外）。

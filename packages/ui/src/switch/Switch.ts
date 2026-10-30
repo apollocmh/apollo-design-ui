@@ -29,6 +29,7 @@ import type {
   SwitchSemanticStyles,
   SwitchSlots,
 } from './interface';
+import { useSwitchTheme } from './use-switch-theme';
 
 export const SwitchComponent = defineComponent({
   name: 'ASwitch',
@@ -96,6 +97,7 @@ export const SwitchComponent = defineComponent({
     );
 
     const prefixCls = computed(() => context.getPrefixCls('switch', props.prefixCls));
+    const themeStyle = useSwitchTheme(() => prefixCls.value);
     const contextSize = useSize<undefined>();
     // Switch has two visual sizes; the global large size uses its regular size.
     const mergedSize = computed(
@@ -173,7 +175,7 @@ export const SwitchComponent = defineComponent({
       const { class: _attrClass, style: attrStyle, ...restAttrs } = attrs;
       // Merge native listeners rather than replacing or manually invoking attrs.
       const rootAttrs = mergeDomAttrs({ onKeydown: onInternalKeyDown }, restAttrs);
-      const rootStyle = normalizeStyle([mergedStyles.value.root, attrStyle]);
+      const rootStyle = normalizeStyle([themeStyle.value, mergedStyles.value.root, attrStyle]);
 
       return h(
         'button',

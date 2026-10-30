@@ -12,10 +12,9 @@
  * 1. 无 hash / `-css-var` 包裹类（D5），也不复制 `box-sizing` 守卫规则
  *    （`.{cls}::before,.{cls}::after{box-sizing:border-box}` 那 4 条）。
  *    13 个 Component Token 声明从 `.css-var-_R_0_.apollo-switch` 落到 `.apollo-switch`。
- * 2. **13 个 token 是构建期算好的解析值**（`prepareComponentToken(getDesignToken())`）
- *    —— 与 antd 的 cssVar 产物逐字相同（`22px` / `44px` / …），代价是**不随主题缩放**
- *    （见 `style/token.ts` 文件头）。两个别名派生的**内部**量仍走 `var()`：
- *    `--apollo-opacity-loading` / `--apollo-color-primary` 等。
+ * 2. 13 个 token 的静态默认值由 `prepareComponentToken(getDesignToken())` 生成。
+ *    当前主题与组件覆盖由 `use-switch-theme.ts` 写到根元素，修正旧 D50 的固定主题限制；
+ *    `--apollo-opacity-loading` / `--apollo-color-primary` 等内部量继续走 `var()`。
  * 3. `.anticon` → `.${rootPrefixCls}-icon`（iconPrefixCls 对齐，D14/D15；result/tag 范式）。
  * 4. 两个 antd 字面量（`border-radius:100px`、loading 图标色）按
  *    `CAPSULE_RADIUS_DECL` / `LOADING_ICON_COLOR_DECL` 消费（唯一真源在 `token.ts`）。
@@ -57,8 +56,7 @@ const px = (value: number | string): string => (typeof value === 'number' ? `${v
 /**
  * Component Token 声明块（`prepareComponentToken` 的 **13** 个字段）。
  *
- * ⚠️ 值是**构建期算好的解析值**（与 antd 的 cssVar 产物逐字相同），不是 `calc()` 组合
- *    —— 理由见 `style/token.ts` 文件头（浮点会让 L6 亚像素漂移）。
+ * 值是构建期默认解析值；存在主题来源时由根元素的当前主题变量覆盖。
  */
 export function genTokenDecls(rootPrefixCls: string): string[] {
   const p = rootPrefixCls;

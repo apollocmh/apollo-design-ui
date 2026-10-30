@@ -4,19 +4,9 @@
  * 契约来源：antd 6.6.4 的 `components/switch/style/index.ts`（445 行）的
  * `ComponentToken` 接口与 `prepareComponentToken`。
  *
- * ── 落地形态（与 skeleton / button 同判） ─────────────────────────────────────
- *
- * `prepareComponentToken` 是**纯函数**（逐字对齐 antd 的公式），`style/index.ts`
- * 在**构建期**用 `prepareComponentToken(getDesignToken())` 算出 13 个值并内联成
- * `--apollo-switch-*` 声明（与 button 的 13 个阴影色同一套路）。
- *
- * ⚠️ **为什么内联解析值而不是写 `calc(var(--apollo-*) …)`**：
- *    `trackHeight = fontSize * lineHeight`，antd 的 cssVar 产物是 `22px`（JS 里
- *    `14 * 1.5714285714285714 === 22` 恰好成立）。若改写成
- *    `calc(var(--apollo-font-size) * var(--apollo-line-height))`，浏览器算出的
- *    中间值是 `21.999999999999996` 这类浮点 —— `line-height` 用它会让 L6 出现
- *    亚像素漂移。**代价**：这 13 个不随主题缩放（与 button 的 13 个阴影色同源，
- *    登记为 D 项）。
+ * `prepareComponentToken` 是纯函数：静态 CSS 用默认主题生成兜底声明，
+ * `use-switch-theme.ts` 则基于当前主题派生并合并 components.Switch 覆盖，
+ * 将解析值写到实际根元素。旧 D50 的固定主题限制已修正，默认数值和公式保留。
  *
  * ⚠️ `handleShadow` 的 `#00230b` 是 antd 的**硬编码色**（不是 token）：antd 用
  *    `new FastColor('#00230b').setA(0.2).toRgbString()`，本仓用 `utils` 的 `Color`

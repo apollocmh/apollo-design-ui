@@ -18,13 +18,13 @@
 | # | 差异 | 分类 | 证据 |
 |---|---|---|---|
 | D49 | Wave 波纹不实现（Switch 的产物里**本来就没有** `ant-wave-target`） | PLATFORM | L4（20 用例与机械基线逐节点一致） |
-| D50 | **13 个 Component Token 是构建期算好的解析值**（`22px` / `44px` / `#fff` / `rgba(0,35,11,0.2)` …），不随主题缩放 | INTENDED | L7 `theme.test.ts` + L6 15/15 exact |
+| D50 | 历史实现的 13 个固定 Component Token 已修正：静态默认值保留，当前主题派生与 `components.Switch` 覆盖写入实际根元素 | 历史已修 | `use-switch-theme.ts`、`theme.test.ts`、`theme-browser.mjs`；原始视觉证据保留 |
 | D51 | `ref` 暴露对象（`{ nativeElement, focus, blur }`）而非 `HTMLButtonElement` 本身 | PLATFORM | interface.ts 注释 |
 | D52 | 声明 `update:checked` / `update:value` / `change`；`onChange` 监听同一语义事件，不另调 attrs 回调 | INTENDED | L1「告警与 v-model」及 `change-emits.test.ts` |
 | D53 | 两个 antd 字面量（`border-radius:100px`、loading 图标色 `rgba(0,0,0,opacityLoading)`）按 `CAPSULE_RADIUS_DECL` / `LOADING_ICON_COLOR_DECL` 收敛到 `token.ts` | INTENDED | L7「两个字面量声明」 |
 | — | `loading-icon` 选择器用 `.apollo-icon`（antd 产物是 `.anticon`） | INTENDED | D14/D15 |
 | — | demo `basic` / `disabled` / `loading` / `size` / `style-class` 加了 `aria-label`（axe 要求 `role="switch"` 有可访问名） | PLATFORM | demo 文件头 + L5 |
-| — | demo `style-class` 用 demo 自带 `<style>` 替代 `antd-style`；`component-token` 用 CSS 变量覆盖替代 ConfigProvider 注入 | PLATFORM | demo 文件头 |
+| — | demo `style-class` 用 demo 自带 `<style>` 提供语义类；`component-token` 直接展示公开的 ConfigProvider 主题配置 | PLATFORM | demo 文件 |
 
 ## 3. .vue / .tsx 选择
 
@@ -59,21 +59,11 @@
 | `innerMinMarginSM` | `handleSizeSM / 2` | `6px` |
 | `innerMaxMarginSM` | `handleSizeSM + padding * 3` | `18px` |
 
-- ⚠️ **值是构建期算好的解析值**（`prepareComponentToken(getDesignToken())`），不是
-  `calc()` 组合 —— 理由见 `style/token.ts` 文件头：`trackHeight` 的 JS 值恰好是 `22`，
-  改写成 `calc(var(--apollo-font-size) * var(--apollo-line-height))` 会让浏览器算出
-  `21.999999999999996` 这类浮点，L6 出现亚像素漂移。**代价**：不随主题缩放（D50）。
-- ⚠️ **dark 主题下有两条已知分叉**（登记在 `tests/visual/matrix.mjs` 的 LIMITATIONS）：
-  `handleBg`（= `colorWhite`）与 `handleShadow`（antd 硬编码色）在 dark 下 antd 会重新
-  生成、我们不会。等 dark 并入 `THEMES` 时决定是否补分支。
-- 零运行时下用 CSS 变量覆盖即可自定义：
-
-```css
-.my-scope .apollo-switch {
-  --apollo-switch-track-height: 14px;
-  --apollo-switch-handle-size: 20px;
-}
-```
+- 静态 CSS 保留表中默认解析值；有主题来源时，`use-switch-theme.ts` 基于当前 Alias
+  派生全部 13 项，并合并 `theme.components.Switch`，支持替换、撤销和嵌套继承。
+- 旧 D50「不随主题缩放」已修正；`handleBg` 跟随当前 `colorWhite`，`handleShadow`
+  的默认公式保留，均可单独覆盖。历史默认 CSS 和参考视觉结果不冒充当前最终视觉验收。
+- 主题变量先于 Provider、组件语义根样式和原生根 `style` 合并；后者可覆盖单项变量。
 
 ## 5. 关键判据速查
 
@@ -114,9 +104,8 @@
 ## 7. 已知缺口
 
 - **Wave 波纹动画**：将来做 wave 基建时补。
-- **dark / compact 主题**：13 个 token 是构建期常量（D50），其中 `handleBg` /
-  `handleShadow` 在 dark 下会与 antd 分叉 —— 落点是 `matrix.mjs` 的 LIMITATIONS
-  条目 `switch·dark-compact`。
+- **旧 D50 已修正**：13 项组件 Token 已消费当前 dark / compact 和自定义主题；
+  历史 `switch·dark-compact` 线索不再表示当前组件仍忽略主题，最终视觉仍统一验收。
 - **`@media (hover: hover)`**：antd 的 switch 没有这条包裹（与 radio 同），
   所以触屏设备的 hover 行为与桌面一致 —— 不是缺口，是**跟随上游**。
 - **v-model 通道仍是全仓缺口**（D52 的姊妹项）：switch 与 radio 已实现 `update:*`，
