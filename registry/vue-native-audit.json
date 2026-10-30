@@ -2,9 +2,9 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 170,
+  "revision": 177,
   "dispatch": {
-    "status": "paused",
+    "status": "running",
     "maxParallel": 5,
     "integrator": "root"
   },
@@ -385,7 +385,7 @@
       "kind": "component",
       "ref": "calendar",
       "title": "Calendar",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [
         "FND:picker"
@@ -393,32 +393,64 @@
       "owns": [
         "packages/ui/src/calendar"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_select",
+        "baseRevision": 173,
+        "startedAt": "2026-10-30T22:16:23.224Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "接续Picker已交付成果，修正Calendar完整Vue外层消费契约",
+        "remaining": [
+          "实际盘点为四组当前差额：7个纯内容prop/条件槽/attrs、模型与semantic快照、Header所属通知和模式控件、当前配置/语言与6自有Token；复用Picker算法，不由历史状态推定快完成。",
+          "复用Picker状态/面板算法，检查当前配置/语言/6 Token、真实ref和条件槽；Header模式控件使用RadioGroup既有update:value稳定模型通道。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/ui/src/calendar/README.md",
+          "docs/foundation/picker-contract.md"
+        ]
+      }
     },
     {
       "id": "CMP:card",
       "kind": "component",
       "ref": "card",
       "title": "Card",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/card"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_form_core",
+        "baseRevision": 174,
+        "startedAt": "2026-10-30T22:16:23.317Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "盘清Card/Grid/Meta并修正现有Vue内容和页签状态职责",
+        "remaining": [
+          "核对onTabChange prop与activeTabKey模型、当前title/extra/cover/actions/default内容、条件插槽、Grid识别和现有Tabs消费。",
+          "检查Meta/Grid原生attrs/ref、当前Provider/13 Token与语义样式；不重做已交付Tabs/Skeleton，不增加无关Card能力。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/card/README.md",
+          "packages/ui/src/card/__tests__/index.test.ts"
+        ]
+      }
     },
     {
       "id": "CMP:carousel",
@@ -2578,13 +2610,17 @@
       "kind": "component",
       "ref": "radio",
       "title": "Radio",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/radio"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_picker",
+        "baseRevision": 171,
+        "startedAt": "2026-10-30T22:16:23.011Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2606,7 +2642,20 @@
           "change": "Native accepted checked restoration and actual Checkbox Event/bool consumer bridge; Radio retains its own existing event contract.",
           "verification": "CMP:checkbox focused checks: native core, actual Chrome/Radio/Transfer/Table consumers and full scoped strict. This delta does not mark the whole Radio/Table audit complete."
         }
-      ]
+      ],
+      "plan": {
+        "goal": "复用已交付原生勾选恢复，收口Radio/Group/Button其余Vue公共契约",
+        "remaining": [
+          "保留Checkbox批次的真实accepted-DOM恢复与同名组清理证据，补核Radio完整模型/owned通知/数据选项/原生attrs与ref链。",
+          "盘清当前Provider、样式、16个Token、Group/Button与实际Table/Calendar等消费；成组迁移React合成通知，不开新的组件审计。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/radio/README.md",
+          "packages/ui/src/radio/__tests__/controlled-native.test.ts",
+          "registry/vue-native-audit.json"
+        ]
+      }
     },
     {
       "id": "CMP:rate",
@@ -2742,19 +2791,35 @@
       "kind": "component",
       "ref": "segmented",
       "title": "Segmented",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/segmented"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_color_picker",
+        "baseRevision": 172,
+        "startedAt": "2026-10-30T22:16:23.108Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "收口Segmented所属通知、当前选项/槽与真实导航和动效消费",
+        "remaining": [
+          "核对onChange attrs旧通道、value模型受控接受/拒绝/撤控、动态选项与当前内容；保留已交付Motion支持和正确算法。",
+          "核对原生根/input attrs、真实ref、键盘/焦点、当前Provider/8 Token与MotionThumb资源；相关最小回归和必要Demo/浏览器。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/segmented/README.md",
+          "packages/ui/src/segmented/__tests__/keyboard.test.ts"
+        ]
+      }
     },
     {
       "id": "CMP:select",
@@ -4345,19 +4410,36 @@
       "kind": "component",
       "ref": "watermark",
       "title": "Watermark",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/watermark"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_portal",
+        "baseRevision": 175,
+        "startedAt": "2026-10-30T22:16:23.415Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留已交付水印绘制/防篡改成果，核对原生Vue生命周期与通知",
+        "remaining": [
+          "盘清当前props/默认槽/通知/ref/attrs/Provider及继承路径，核对onRemove旧回调与实际观察器行为。",
+          "核对图片/文本/font动态更新与异步竞态、canvas/缓存/观察器/RAF卸载资源、多实例和嵌套继承；保留正确算法与现有回归，仅修真实差额。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/watermark/README.md",
+          "packages/ui/src/watermark/__tests__/s42-issue42.test.ts",
+          "packages/ui/src/watermark/__tests__/s49-issue49.test.ts"
+        ]
+      }
     },
     {
       "id": "FND:a11y",
