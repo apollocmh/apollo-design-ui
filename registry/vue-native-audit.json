@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 132,
+  "revision": 134,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -762,7 +762,7 @@
       "kind": "component",
       "ref": "date-picker",
       "title": "DatePicker",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [
         "FND:picker"
@@ -772,11 +772,7 @@
         "packages/picker",
         "packages/ui/src/time-picker"
       ],
-      "assignment": {
-        "owner": "native_picker",
-        "baseRevision": 115,
-        "startedAt": "2026-10-30T12:36:38.934Z"
-      },
+      "assignment": null,
       "evidence": [
         "registry/vue-native-audit.json"
       ],
@@ -795,6 +791,104 @@
         "basis": [
           "docs/audit/2026-10-23-picker-transfer-remediation.md",
           "docs/foundation/picker-contract.md"
+        ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/date-picker",
+          "packages/ui/src/time-picker",
+          "packages/picker"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run packages/picker/src/__tests__/native-keyboard.test.ts packages/ui/src/date-picker/__tests__/footer.test.ts packages/ui/src/date-picker/__tests__/index.test.ts packages/ui/src/date-picker/__tests__/input-attrs.test.ts packages/ui/src/date-picker/__tests__/native-contracts.test.ts packages/ui/src/date-picker/__tests__/s1-smoke.test.ts packages/ui/src/date-picker/__tests__/s2-commit.test.ts packages/ui/src/date-picker/__tests__/s2-typing.test.ts packages/ui/src/date-picker/__tests__/s3-mask.test.ts packages/ui/src/date-picker/__tests__/s4-focus.test.ts packages/ui/src/date-picker/__tests__/s5-mode.test.ts packages/ui/src/date-picker/__tests__/s5-multiple.test.ts packages/ui/src/date-picker/__tests__/s5-presets.test.ts packages/ui/src/date-picker/__tests__/s6-issue5.test.ts packages/ui/src/time-picker/__tests__/index.test.ts packages/ui/src/time-picker/__tests__/s6-issue6.test.ts --reporter=json --outputFile=/tmp/apollo-date-native-frozen-core.json > /tmp/apollo-date-native-frozen-core.log 2>&1",
+            "elapsedSource": "Vitest startTime to final suite endTime",
+            "tests": 220,
+            "result": "/tmp/apollo-date-native-frozen-core.json",
+            "log": "/tmp/apollo-date-native-frozen-core.log",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 23128
+          },
+          {
+            "kind": "browser",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/date-picker/__tests__/native-browser.mjs > /tmp/apollo-date-native-browser-frozen.log 2>&1",
+            "browser": "系统 Chrome",
+            "diagnostics": 0,
+            "coverage": [
+              "actual source SFC models/ref",
+              "readonly date/time/range native keyboard",
+              "partial ordinary input and real mask default actions",
+              "current scoped/decorative slots",
+              "current trigger/popup theme",
+              "two hover range token values from real ::before computed style",
+              "unmount ref/popup cleanup"
+            ],
+            "log": "/tmp/apollo-date-native-browser-frozen.log",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 14497
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run packages/picker/src/__tests__/native-contracts.test.ts packages/picker/src/__tests__/panel-edge.test.ts packages/picker/src/__tests__/panel-interaction.test.ts packages/picker/src/__tests__/panel.test.ts packages/ui/src/calendar/__tests__/index.test.ts packages/ui/src/date-picker/__tests__/demo.test.ts packages/ui/src/date-picker/__tests__/s2-typing.test.ts packages/ui/src/date-picker/__tests__/s4-focus.test.ts packages/ui/src/time-picker/__tests__/demo.test.ts --reporter=json --outputFile=/tmp/apollo-date-picker-consumers.json > /tmp/apollo-date-picker-consumers.log 2>&1",
+            "tests": 246,
+            "result": "/tmp/apollo-date-picker-consumers.json",
+            "log": "/tmp/apollo-date-picker-consumers.log",
+            "reuseBoundary": "Valid existing Picker/Calendar consumers and migrated Date/Time demos were exercised; later current native keyboard/active-endpoint details were additionally covered by the final core and real browser.",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 19868
+          },
+          {
+            "kind": "lint",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec biome check packages/picker/src/panel-body.ts packages/picker/src/time-column.ts packages/picker/src/picker-panel.ts packages/picker/src/date-panel.ts packages/picker/src/upper-panels.ts packages/picker/src/time-panel.ts packages/picker/src/time-panel-body.ts packages/picker/src/panel-context.ts packages/picker/src/panel-props.ts packages/picker/src/panel-header.ts packages/picker/src/__tests__/native-keyboard.test.ts packages/ui/src/date-picker packages/ui/src/time-picker > /tmp/apollo-date-native-biome-final.log 2>&1",
+            "files": 124,
+            "log": "/tmp/apollo-date-native-biome-final.log",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 256
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check -- packages/picker packages/ui/src/date-picker packages/ui/src/time-picker",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run packages/ui/src/date-picker/__tests__/native-contracts.test.ts packages/ui/src/time-picker/__tests__/index.test.ts packages/ui/src/time-picker/__tests__/s6-issue6.test.ts --reporter=json --outputFile=/tmp/apollo-date-strict-fix-regression.json > /tmp/apollo-date-strict-fix-regression.log 2>&1",
+            "tests": 60,
+            "log": "/tmp/apollo-date-strict-fix-regression.log",
+            "result": "/tmp/apollo-date-strict-fix-regression.json",
+            "note": "Production correction normalizes nullable Range from to the declared absent undefined; remaining production changes are truthful types only. Existing browser/DOM behavior results are reused without rerunning an unchanged DOM engine.",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7633
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full DatePicker/TimePicker/Picker source, type cases, native SFC and Demo; declaration/strict unchanged>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 51606
+          }
+        ],
+        "boundary": "DatePicker/RangePicker完整包装契约：accepted models、草稿/IME/原生keydown取消与mask资源、真实面板ref与只读键盘、活动区间端/disabledTime/独立invalid、动态完整槽/owned emits与实际引用、当前Provider/组件Token（含两项真实hover伪元素）和Range重复observe循环已修复。220当前核心与相关消费者/Demo证据复用，最后声明更改相关60项已通过，实际Chrome 0诊断；全部相关源/类型负例/原生SFC/Demo严格检查0。Picker纯算法旧证据保留未重跑，TimePicker仅完成薄桥仍partial。旧DOM/a11y参考的最终一致性与全库/完整视觉/coverage/构建消费者及同版冻结九维未执行。",
+        "attemptsNotPassed": [
+          {
+            "kind": "types",
+            "owner": "root",
+            "command": "Root-managed isolated program; exact launch retained by root.",
+            "log": "/tmp/apollo-frozen-three-types.log",
+            "note": "Only Date/Time diagnostics were read and corrected by this owner; other task diagnostics remain their owners responsibility.",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 37759
+          }
         ]
       }
     },
@@ -2735,7 +2829,18 @@
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-23-picker-transfer-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/date-picker",
+            "packages/ui/src/time-picker",
+            "packages/picker"
+          ],
+          "change": "Date/Time wrapper native slots/events/accepted state; actual panel focus/readonly keyboard, active range endpoint and observer cleanup.",
+          "verification": "CMP:date-picker architecture verification: current core, actual related consumers/Demo, zero-diagnostic Chrome and full scoped strict. This delta does not mark the TimePicker whole audit complete."
+        }
+      ]
     },
     {
       "id": "CMP:timeline",
@@ -4001,7 +4106,18 @@
           "repair": "consumer-bridge uses explicit DatePicker/RangePicker constructors; semantic uses public component props and explicit slot/no-slot h branches. Original scenes and assertions retained. No type-erasing Component/any/forced cast.",
           "verification": "Biome for both changed tests exit 0 (30ms command elapsed); git diff --check exit 0. Root reruns the same strict program. Product source unchanged; prior core/browser results reused as requested."
         }
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/date-picker",
+            "packages/ui/src/time-picker",
+            "packages/picker"
+          ],
+          "change": "Date/Time wrapper native slots/events/accepted state; actual panel focus/readonly keyboard, active range endpoint and observer cleanup.",
+          "verification": "CMP:date-picker architecture verification: current core, actual related consumers/Demo, zero-diagnostic Chrome and full scoped strict. This delta does not mark the TimePicker whole audit complete."
+        }
+      ]
     },
     {
       "id": "FND:portal",
