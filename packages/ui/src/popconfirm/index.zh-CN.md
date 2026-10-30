@@ -66,7 +66,7 @@ import { Popconfirm } from '@apollo-design/ui';
 | --- | --- | --- | --- |
 | title | 标题数据（`0` 合法）；模板内容使用 `#title` | VNodeChild | - |
 | description | 描述数据；模板内容使用 `#description` | VNodeChild | - |
-| disabled | 是否禁用（禁用后不展开，也不发 `onOpenChange`） | boolean | false |
+| disabled | 是否禁用（禁用后不通过触发器展开，也不发 `openChange`） | boolean | false |
 | open | 是否展开（受控） | boolean | - |
 | defaultOpen | 默认是否展开 | boolean | false |
 | trigger | 触发行为 | string \| string[] | 'click' |
@@ -78,14 +78,14 @@ import { Popconfirm } from '@apollo-design/ui';
 | cancelButtonProps | 取消按钮属性；根类名使用 Vue 原生 `class` | PopconfirmButtonProps | - |
 | showCancel | 是否显示取消按钮 | boolean | true |
 | icon | 图标数据；`false` 时不显示。模板组合使用 `#icon` | VNode \| string \| false | ExclamationCircleFilled |
-| onOpenChange | 展开状态变化 | (open: boolean) => void | - |
 | onConfirm | 点击确认 | (e?: MouseEvent) => void \| Promise | - |
 | onCancel | 点击取消 | (e?: MouseEvent) => void | - |
-| onPopupClick | 点击浮层内容 | (e: MouseEvent) => void | - |
 | classNames | 语义化类名（root / container / arrow / icon / title / content） | 对象或函数 | - |
 | styles | 语义化样式（同上） | 对象或函数 | - |
 
-> 业务回调显式声明为 props，支持 `:on-confirm` / `:onConfirm` 等 Vue 绑定；确认回调的返回值用于等待 Promise。状态同步通过 `update:open` / `v-model:open`。
+> `onConfirm` / `onCancel` 是业务回调 props，支持 `:on-confirm` / `:onConfirm` 等 Vue 绑定；确认回调的返回值用于等待 Promise。状态同步通过 `update:open` / `v-model:open`。
+
+确认同步返回时请求关闭；返回 Promise 时，按钮进入 loading，成功后请求关闭，失败保持面板并通过 Vue 错误处理上报。实际接受关闭后，下次打开使用新的确认会话，旧 Promise 不会关闭新面板；业务请求和定时器仍由调用者在取消及卸载时清理。受控父级拒绝关闭时，当前操作继续。
 
 ### 插槽
 
@@ -104,7 +104,16 @@ import { Popconfirm } from '@apollo-design/ui';
 
 ### 事件
 
-`@after-open-change` 转发开合动画完成时的 `boolean`，支持 `.once` 和监听器数组。JSX / `h()` 使用 `onAfterOpenChange`，不再传旧 `afterOpenChange` 回调 prop。
+| 事件 | 说明 | 参数 |
+| --- | --- | --- |
+| openChange | 请求改变展开状态；受控时由父级决定是否接受 | `(open: boolean)` |
+| update:open | `v-model:open` 同步请求 | `(open: boolean)` |
+| popupClick | 确认正文被点击；静态面板同样支持 | `(event: MouseEvent)` |
+| afterOpenChange | 开合动画完成 | `(open: boolean)` |
+
+模板使用 `@open-change` / `@popup-click` / `@after-open-change`，支持 `.once` 和监听器数组；JSX / `h()` 使用 `onOpenChange` / `onPopupClick` / `onAfterOpenChange`。旧的 `:on-open-change` / `:on-popup-click` 函数 prop 直接改为事件，不保留兼容通道。`onConfirm` / `onCancel` 业务回调保持原契约。
+
+原生 `class/style` 只作用于浮层根，其他原生 attrs 和事件传给触发元素。撤销受控 `open` 后保留最后接受的值，父级拒绝的更新请求不会成为本地状态。
 
 ### Ref
 
@@ -115,5 +124,7 @@ import { Popconfirm } from '@apollo-design/ui';
 | Token | 说明 | 默认值 |
 | --- | --- | --- |
 | zIndexPopup | 浮层 z-index | zIndexPopupBase + 60 |
+
+`theme.components.Popconfirm.zIndexPopup` 与现有全局视觉 Token 读取当前主题，支持嵌套、替换和移除，`0` 是有效层级。Popconfirm 与静态面板只消费自己的组件配置；正文中的独立 Popover / Tooltip 仍消费各自配置。内部共享一次层级计算，显式 `zIndex` 优先。
 
 [静态面板原生 style 迁移](../../../../docs/migrations/overlay-native-styles.md)。

@@ -24,6 +24,7 @@ export default Popconfirm;
 export type {
   PopconfirmButtonProps,
   PopconfirmClassNames,
+  PopconfirmEmits,
   PopconfirmProps,
   PopconfirmRef,
   PopconfirmSemanticType,

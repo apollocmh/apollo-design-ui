@@ -14,22 +14,30 @@
  * 2. **`disabled` 时不打开**：`onInternalOpenChange` 里 `if (disabled) return`
  *    —— 注意它在 `settingOpen` **之前**拦截，所以连 `onOpenChange` 都不发。
  * 3. **`onConfirm` 之后关闭**：ActionButton 的 `quitOnNullishReturnValue` +
- *    `emitEvent` 保证「同步返回 falsy/nullish ⇒ 立刻 close」；返回 Promise 时
+ *    `emitEvent` 保证「同步返回值 ⇒ 立刻 close」；返回 Promise 时
  *    等 resolve 才 close（判据见 `_internal/action-button.ts`）。
  * 4. **`onCancel` 先关后回调**：`settingOpen(false)` 在前，`props.onCancel` 在后。
- * 5. **`title` 以 props 形态传给 Overlay，不传给 Popover**：`omit(restProps, ['title'])`
+ * 5. **`title` 以 props 形态传给 Overlay，不传给 Popover**
  *    —— 否则 Popover 会把它当自己的 title 通道渲染一遍。
  * 6. **语义槽**：Popover 的 root/container/arrow 走 Popover 的 classNames/styles；
  *    icon/title/content 走 Overlay 的（且 description 用 `content` 槽）。
  */
 
-import { omit, useControlledValue } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, type SlotsType, shallowRef } from 'vue';
+import { useControlledValue } from '@apollo-design/utils';
+import {
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  type SlotsType,
+  shallowRef,
+  watch,
+} from 'vue';
 import type { TriggerAlign } from '../_internal/trigger';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import type { PopoverRef } from '../popover/interface';
-import Popover from '../popover/Popover';
+import Popover, { providePopoverInjection } from '../popover/Popover';
 import { useMergedArrow } from '../tooltip/use-merged-arrow';
 import type {
   PopconfirmClassNames,
@@ -39,6 +47,7 @@ import type {
   PopconfirmStyles,
 } from './interface';
 import { Overlay } from './PurePanel';
+import { usePopconfirmTheme } from './use-popconfirm-theme';
 
 type StyleLike = Record<string, string | number>;
 
@@ -110,24 +119,16 @@ const Popconfirm = defineComponent({
     id: { type: String, default: undefined },
     onConfirm: { type: Function as PropType<PopconfirmProps['onConfirm']>, default: undefined },
     onCancel: { type: Function as PropType<PopconfirmProps['onCancel']>, default: undefined },
-    onOpenChange: {
-      type: Function as PropType<PopconfirmProps['onOpenChange']>,
-      default: undefined,
-    },
-    onPopupClick: {
-      type: Function as PropType<PopconfirmProps['onPopupClick']>,
-      default: undefined,
-    },
   },
-  /** v-model 状态经 emits；返回值有意义的业务回调声明为 props。 */
+  /** Owned notifications use emits; asynchronous business callbacks remain props. */
   emits: {
     'update:open': (_open: boolean) => true,
+    openChange: (_open: boolean) => true,
     afterOpenChange: (_open: boolean) => true,
+    popupClick: (_event: MouseEvent) => true,
   },
   setup(props, { attrs, emit, expose, slots }) {
-    const context = useComponentConfig('popconfirm');
-    const { getPrefixCls } = context;
-    const contextSemantic = context as {
+    const context = useComponentConfig<{
       classNames?: PopconfirmProps['classNames'];
       styles?: PopconfirmProps['styles'];
       arrow?: boolean | { pointAtCenter?: boolean };
@@ -136,21 +137,23 @@ const Popconfirm = defineComponent({
       mouseLeaveDelay?: number;
       className?: string;
       style?: StyleLike;
-    };
+    }>('popconfirm');
+    const popconfirmTheme = usePopconfirmTheme();
+    providePopoverInjection(() => popconfirmTheme.componentToken.value.zIndexPopup);
 
-    const prefixCls = computed(() => getPrefixCls('popconfirm', props.prefixCls));
+    const prefixCls = computed(() => context.getPrefixCls('popconfirm', props.prefixCls));
 
     // ============================ Merge ==============================
     const mergedArrow = useMergedArrow(
       () => props.arrow,
-      () => contextSemantic.arrow,
+      () => context.arrow,
     );
-    const mergedTrigger = computed(() => props.trigger || contextSemantic.trigger || 'click');
+    const mergedTrigger = computed(() => props.trigger || context.trigger || 'click');
     const mergedMouseEnterDelay = computed(
-      () => props.mouseEnterDelay ?? contextSemantic.mouseEnterDelay ?? 0.1,
+      () => props.mouseEnterDelay ?? context.mouseEnterDelay ?? 0.1,
     );
     const mergedMouseLeaveDelay = computed(
-      () => props.mouseLeaveDelay ?? contextSemantic.mouseLeaveDelay ?? 0.1,
+      () => props.mouseLeaveDelay ?? context.mouseLeaveDelay ?? 0.1,
     );
 
     // ============================= Open ==============================
@@ -158,10 +161,14 @@ const Popconfirm = defineComponent({
       defaultValue: () => props.defaultOpen ?? false,
       getValue: () => props.open,
       onChange: (next: boolean) => {
-        props.onOpenChange?.(next);
+        emit('openChange', next);
         emit('update:open', next);
       },
     });
+    // A refused controlled close keeps the current operation. Accepted hiding
+    // starts a new button session without replacing the confirmation body.
+    const confirmSession = shallowRef(0);
+    watch(mergedOpen, () => confirmSession.value++, { flush: 'sync' });
     const settingOpen = (nextOpen: boolean): void => {
       setOpen(nextOpen);
     };
@@ -202,14 +209,11 @@ const Popconfirm = defineComponent({
       NonNullable<PopconfirmSemanticType['classNames']>,
       NonNullable<PopconfirmSemanticType['styles']>
     >(
+      [() => context.classNames, () => props.classNames],
       [
-        () => contextSemantic.classNames as PopconfirmSemanticType['classNames'] | undefined,
-        () => props.classNames as PopconfirmSemanticType['classNames'] | undefined,
-      ],
-      [
-        () => contextSemantic.styles as PopconfirmSemanticType['styles'] | undefined,
-        () => (contextSemantic.style ? { root: contextSemantic.style } : undefined),
-        () => props.styles as PopconfirmSemanticType['styles'] | undefined,
+        () => context.styles,
+        () => (context.style ? { root: context.style } : undefined),
+        () => props.styles,
         // antd：overlayStyleRoot = useSemanticRootStyle(overlayStyle) 排在最后
         () => (props.overlayStyle ? { root: props.overlayStyle } : undefined),
       ],
@@ -219,37 +223,32 @@ const Popconfirm = defineComponent({
     );
 
     const rootClassNames = computed(() =>
-      [
-        prefixCls.value,
-        contextSemantic.className,
-        props.overlayClassName,
-        (mergedClassNames.value as unknown as { root?: string }).root,
-      ]
+      [prefixCls.value, context.className, props.overlayClassName, mergedClassNames.value.root]
         .filter(Boolean)
         .join(' '),
     );
+    const rootStyles = computed<StyleLike>(() => ({
+      ...popconfirmTheme.style.value,
+      ...mergedStyles.value.root,
+    }));
 
     // ============================ Expose =============================
     const popoverRef = shallowRef<PopoverRef | null>(null);
-    expose({
+    const publicApi = {
       forceAlign: () => popoverRef.value?.forceAlign(),
       nativeElement: computed(() => popoverRef.value?.nativeElement ?? null),
       popupElement: computed(() => popoverRef.value?.popupElement ?? null),
-    });
+    };
+    expose(publicApi);
 
-    return () => {
+    const renderPopconfirm = () => {
       const p = prefixCls.value;
-      // 判据 5：title 不进 Popover 的 restProps。
-      // ⚠️ `onPopupClick` 也必须摘掉：Overlay 的 `-inner-content` 已经挂了这个
-      //    监听，再随 restProps 传给 Popover ⇒ Tooltip 的容器再挂一次 ⇒ 一次点击
-      //    回调两次（Issue #26.1[E]）。
-      const restProps = omit(attrs as Record<string, unknown>, ['title', 'onPopupClick']);
-
+      const session = confirmSession.value;
       return h(
         Popover,
         {
-          ...restProps,
-          ref: popoverRef as never,
+          ...attrs,
+          ref: popoverRef,
           arrow: mergedArrow.value,
           trigger: mergedTrigger.value,
           placement: props.placement ?? 'top',
@@ -264,7 +263,7 @@ const Popconfirm = defineComponent({
             arrow: mergedClassNames.value.arrow,
           },
           styles: {
-            root: mergedStyles.value.root,
+            root: rootStyles.value,
             container: mergedStyles.value.container,
             arrow: mergedStyles.value.arrow,
           },
@@ -291,13 +290,16 @@ const Popconfirm = defineComponent({
               showCancel: props.showCancel,
               title: props.title,
               description: props.description,
-              onPopupClick: props.onPopupClick,
-              close,
+              onPopupClick: (event: MouseEvent) => emit('popupClick', event),
+              confirmSession: session,
+              close: () => {
+                if (session === confirmSession.value) close();
+              },
               onConfirm,
               onCancel,
-              classNames: mergedClassNames.value as never,
-              styles: mergedStyles.value as never,
-            } as never,
+              classNames: mergedClassNames.value,
+              styles: mergedStyles.value,
+            },
             // ⚠️ C8：富内容走**插槽**（`#okText` / `#cancelText` / `#title` /
             //    `#description`）—— Overlay 内部是「slot 优先」（Issue #26.4）。
             {
@@ -308,10 +310,14 @@ const Popconfirm = defineComponent({
               cancelText: slots.cancelText ? () => slots.cancelText?.() : undefined,
             },
           ),
-        } as never,
+        },
         { default: () => slots.default?.() },
       );
     };
+    return { ...publicApi, renderPopconfirm };
+  },
+  render() {
+    return this.renderPopconfirm();
   },
 });
 

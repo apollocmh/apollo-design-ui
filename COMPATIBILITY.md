@@ -134,3 +134,7 @@ Tabs 保留已交付 popup/extra 槽，修正受控撤除、同 key 面板身份
 ### D-upload-native-contracts
 
 Upload / Dragger 修正文件预处理替换、请求/移除竞态、受控列表与取消、预览资源释放，统一原生 attrs、插槽、真实引用及当前 Provider/Token。beforeUpload=false 的 change 文件统一为 UploadFile，通过 originFileObj 读取原文件；自定义请求收到实际文件与默认请求服务。删除无消费的 supportServerRender/styleAttrs 和 UploadListProps.className；预览、下载、异步移除等有返回值的业务回调保留。原生根样式落 wrapper，详见[Upload API](packages/ui/src/upload/index.zh-CN.md)。
+
+### D-popconfirm-native-sessions
+
+Popconfirm 的所属通知使用 Vue emits，确认 Promise 仍是业务回调；当前配置与 Token 由 Popconfirm 拥有，不误用 Popover 配置。异步结果只关闭发起它的已接受会话，卸载后不再触发旧关闭；引用暴露实际实例。详见[Popconfirm API](packages/ui/src/popconfirm/index.zh-CN.md)。

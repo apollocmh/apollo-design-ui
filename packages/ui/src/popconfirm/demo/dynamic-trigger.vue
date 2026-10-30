@@ -23,7 +23,7 @@ const changeCondition = (checked: boolean) => {
       :open="open"
       title="Delete the task"
       description="Are you sure to delete this task?"
-      :on-open-change="changeOpen"
+      @open-change="changeOpen"
     >
       <Button danger>Delete a task</Button>
     </Popconfirm>

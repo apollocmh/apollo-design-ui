@@ -1562,6 +1562,7 @@ export { prepareComponentToken as preparePaginationComponentToken } from './pagi
 export type {
   PopconfirmButtonProps,
   PopconfirmClassNames,
+  PopconfirmEmits,
   PopconfirmProps,
   PopconfirmRef,
   PopconfirmSemanticType,

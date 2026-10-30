@@ -5,10 +5,11 @@
  * 与 tooltip PurePanel 的结构差异（antd 源逐条对齐）：root 额外带
  * `{p}-placement-{placement}` 类；内容是 Overlay（title + content 两块）。
  */
-import { computed, defineComponent, h, type PropType, type SlotsType } from 'vue';
+import { computed, defineComponent, h, inject, type PropType, provide, type SlotsType } from 'vue';
 import { clsx } from '../_internal/clsx';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
+import { tooltipInjectKey } from '../tooltip/Tooltip';
 import { parseTooltipColor } from '../tooltip/util';
 import type {
   PopoverClassNames,
@@ -57,23 +58,26 @@ const PurePanel = defineComponent({
     styles: { type: [Object, Function] as PropType<PopoverStyles>, default: undefined },
   },
   setup(props, { attrs, slots }) {
+    const inheritedOwner = inject(tooltipInjectKey, undefined);
+    if (inheritedOwner) provide(tooltipInjectKey, undefined);
     const context = useComponentConfig<{
       classNames?: PopoverClassNames;
       styles?: PopoverStyles;
       className?: string;
       style?: StyleLike;
     }>('popover');
-    const popoverTheme = usePopoverTheme();
+    const ownedContext: Partial<typeof context> = inheritedOwner ? {} : context;
+    const popoverTheme = usePopoverTheme(() => !inheritedOwner);
     const semanticProps = computed<PopoverProps>(() => ({ ...props }));
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       PopoverProps,
       NonNullable<PopoverSemanticType['classNames']>,
       NonNullable<PopoverSemanticType['styles']>
     >(
-      [() => context.classNames, () => props.classNames],
+      [() => ownedContext.classNames, () => props.classNames],
       [
-        () => context.styles,
-        () => (context.style ? { root: context.style } : undefined),
+        () => ownedContext.styles,
+        () => (ownedContext.style ? { root: ownedContext.style } : undefined),
         () => props.styles,
       ],
       semanticProps,
@@ -95,7 +99,7 @@ const PurePanel = defineComponent({
             `${prefixCls}-pure`,
             `${prefixCls}-placement-${placement}`,
             context.direction === 'rtl' && `${prefixCls}-rtl`,
-            context.className,
+            ownedContext.className,
             colorInfo.className,
             mergedClassNames.value.root,
           ],

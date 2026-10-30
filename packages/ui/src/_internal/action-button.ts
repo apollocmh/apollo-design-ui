@@ -21,7 +21,15 @@
  */
 
 import { isThenable } from '@apollo-design/utils';
-import { defineComponent, h, onMounted, type PropType, ref, type VNodeChild } from 'vue';
+import {
+  defineComponent,
+  h,
+  onBeforeUnmount,
+  onMounted,
+  type PropType,
+  ref,
+  type VNodeChild,
+} from 'vue';
 
 import Button from '../button/Button.vue';
 
@@ -60,6 +68,12 @@ export default defineComponent({
     const clicked = ref(false);
     const loading = ref(false);
     const buttonRef = ref<{ $el?: HTMLElement } | HTMLElement | null>(null);
+    let disposed = false;
+    let focusTimer: ReturnType<typeof setTimeout> | undefined;
+    onBeforeUnmount(() => {
+      disposed = true;
+      if (focusTimer !== undefined) clearTimeout(focusTimer);
+    });
 
     const resolveElement = (): HTMLElement | null => {
       const inst = buttonRef.value;
@@ -71,38 +85,44 @@ export default defineComponent({
     onMounted(() => {
       if (!props.autoFocus) return;
       // 上游用 setTimeout(0)：等面板动效起步后再聚焦，避免被 overflow 抢走
-      setTimeout(() => {
+      focusTimer = setTimeout(() => {
         resolveElement()?.focus({ preventScroll: true });
       });
     });
 
-    const onInternalClose = (...args: unknown[]): void => {
-      props.close?.(...args);
-    };
-
-    const handlePromiseOnOk = (returnValue: unknown): void => {
+    const handlePromiseOnOk = (
+      returnValue: unknown,
+      close: (...args: unknown[]) => void,
+    ): Promise<void> | undefined => {
       if (!isThenable(returnValue)) return;
       loading.value = true;
-      returnValue.then(
-        (...args: unknown[]) => {
+      return Promise.resolve(returnValue).then(
+        (value: unknown) => {
+          if (disposed) return;
           loading.value = false;
-          onInternalClose(...args);
+          close(value);
           clicked.value = false;
         },
         (e: unknown) => {
           // https://github.com/ant-design/ant-design/issues/6183
-          loading.value = false;
-          clicked.value = false;
+          if (!disposed) {
+            loading.value = false;
+            clicked.value = false;
+          }
           // `await` 模式下不抛（`isSilent` 为真）
           if (props.isSilent?.()) return;
-          return Promise.reject(e);
+          throw e;
         },
       );
     };
 
-    const onClick = (e: MouseEvent): void => {
+    const onClick = (e: MouseEvent): void | Promise<void> => {
       if (clicked.value) return;
       clicked.value = true;
+      const close = props.close;
+      const onInternalClose = (...args: unknown[]): void => {
+        if (!disposed) close?.(...args);
+      };
 
       const actionFn = props.actionFn;
       if (!actionFn) {
@@ -130,7 +150,7 @@ export default defineComponent({
         }
       }
 
-      handlePromiseOnOk(returnValue);
+      return handlePromiseOnOk(returnValue, onInternalClose);
     };
 
     return () =>

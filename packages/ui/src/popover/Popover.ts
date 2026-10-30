@@ -14,6 +14,7 @@ import {
   defineComponent,
   Fragment,
   h,
+  inject,
   type PropType,
   type SlotsType,
   shallowRef,
@@ -23,7 +24,7 @@ import type { TriggerAlign } from '../_internal/trigger';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import type { TooltipPlacement, TooltipRef } from '../tooltip/interface';
-import Tooltip, { provideTooltipInjection } from '../tooltip/Tooltip';
+import Tooltip, { provideTooltipInjection, tooltipInjectKey } from '../tooltip/Tooltip';
 import { useMergedArrow } from '../tooltip/use-merged-arrow';
 import type {
   PopoverClassNames,
@@ -34,6 +35,9 @@ import type {
 } from './interface';
 import PurePanel from './PurePanel';
 import { usePopoverTheme } from './use-popover-theme';
+
+/** Popconfirm extends this overlay using the same, single-use owner channel. */
+export { provideTooltipInjection as providePopoverInjection };
 
 type StyleLike = Record<string, string | number>;
 
@@ -120,10 +124,13 @@ const Popover = defineComponent({
     popupClick: (_event: MouseEvent) => true,
   },
   setup(props, { slots, attrs, expose, emit }) {
-    const popoverTheme = usePopoverTheme();
+    const inheritedOwner = inject(tooltipInjectKey, undefined);
+    const popoverTheme = usePopoverTheme(() => !inheritedOwner);
     // ⚠️ antd 的 `data-popover-inject`：告诉下层 Tooltip「我是注入方」⇒ 跳过
     //    ConfigProvider `components.tooltip` 的专属配置（Issue #24.4）。
-    provideTooltipInjection(() => popoverTheme.componentToken.value.zIndexPopup);
+    provideTooltipInjection(
+      inheritedOwner?.zIndexPopupBase ?? (() => popoverTheme.componentToken.value.zIndexPopup),
+    );
     const context = useComponentConfig<{
       classNames?: PopoverClassNames;
       styles?: PopoverStyles;
@@ -134,21 +141,22 @@ const Popover = defineComponent({
       className?: string;
       style?: StyleLike;
     }>('popover');
+    const ownedContext: Partial<typeof context> = inheritedOwner ? {} : context;
 
     const prefixCls = computed(() => props.prefixCls ?? context.getPrefixCls('popover'));
 
     // ============================ Merge ==============================
     const mergedMouseEnterDelay = computed(
-      () => props.mouseEnterDelay ?? context.mouseEnterDelay ?? 0.1,
+      () => props.mouseEnterDelay ?? ownedContext.mouseEnterDelay ?? 0.1,
     );
     const mergedMouseLeaveDelay = computed(
-      () => props.mouseLeaveDelay ?? context.mouseLeaveDelay ?? 0.1,
+      () => props.mouseLeaveDelay ?? ownedContext.mouseLeaveDelay ?? 0.1,
     );
     const mergedArrow = useMergedArrow(
       () => props.arrow,
-      () => context.arrow,
+      () => ownedContext.arrow,
     );
-    const mergedTrigger = computed(() => props.trigger || context.trigger || 'hover');
+    const mergedTrigger = computed(() => props.trigger || ownedContext.trigger || 'hover');
 
     // ============================= Open ==============================
     const [mergedOpen, setOpen] = useControlledValue<boolean>({
@@ -176,10 +184,10 @@ const Popover = defineComponent({
       NonNullable<PopoverSemanticType['classNames']>,
       NonNullable<PopoverSemanticType['styles']>
     >(
-      [() => context.classNames, () => props.classNames],
+      [() => ownedContext.classNames, () => props.classNames],
       [
-        () => context.styles,
-        () => (context.style ? { root: context.style } : undefined),
+        () => ownedContext.styles,
+        () => (ownedContext.style ? { root: ownedContext.style } : undefined),
         () => props.styles,
       ],
       // ⚠️ 传 **computed 本身**（不是 `.value`）：函数式变体每次重算都要看到当前
@@ -189,7 +197,9 @@ const Popover = defineComponent({
 
     // Tooltip routes native class/style to the popup root. Other native attrs
     // keep its existing trigger-element target.
-    const rootClassNames = computed(() => clsx(context.className, mergedClassNames.value.root));
+    const rootClassNames = computed(() =>
+      clsx(ownedContext.className, mergedClassNames.value.root),
+    );
     const rootStyles = computed<StyleLike>(() => ({
       ...popoverTheme.style.value,
       ...mergedStyles.value.root,

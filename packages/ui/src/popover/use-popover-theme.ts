@@ -33,11 +33,11 @@ const aliases = [
 ] as const;
 
 /** Keep the popup and static panel on their own current Popover theme. */
-export function usePopoverTheme() {
+export function usePopoverTheme(acceptComponentOverrides: () => boolean = () => true) {
   const theme = useTheme();
   const componentToken = computed(() => {
     const defaults = prepareComponentToken(theme.token.value);
-    const custom = theme.config.value.components?.Popover;
+    const custom = acceptComponentOverrides() ? theme.config.value.components?.Popover : undefined;
     const length = (name: 'titleMinWidth' | 'innerPadding' | 'titleMarginBottom') => {
       const value = custom?.[name];
       return typeof value === 'number' && Number.isFinite(value) && value >= 0

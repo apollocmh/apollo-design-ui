@@ -5,7 +5,7 @@
 ## 1. 契约来源
 
 - 薄壳：antd 6.6.4 `components/popconfirm/index.tsx`（208 行）+ `PurePanel.tsx`（148 行）
-- 依赖的已收口能力：`Popover`（开合/portal/motion/trigger 全协议）、`Button`、`locale.Popconfirm`、`icons.ExclamationCircleFilled`
+- 实际复用能力：`Popover`（开合/portal/motion/trigger 全协议）、`Button`、`locale.Popconfirm`、`icons.ExclamationCircleFilled`
 - 样式：`es/popconfirm/style/index.js`（`genStyleHooks(..., { resetStyle: false })`，1 个 Component Token）
 - DOM 基线：`tests/compat/baselines/popconfirm.dom.json`（14 用例，机械 oracle）
 
@@ -13,15 +13,15 @@
 
 | # | 差异 | 分类 | 说明 |
 | --- | --- | --- | --- |
-| 1 | 业务回调显式声明为 props，状态同步使用 update:open | Vue 原生契约 | 支持 kebab-case 绑定、当前处理器与 Promise 返回值；旧 attrs 通道已修正 |
+| 1 | 确认/取消业务回调保留 props，通知使用 emits | Vue 原生契约 | onConfirm 保留 Promise 返回值；openChange/popupClick/afterOpenChange 支持 once 与监听器数组 |
 | 2 | `open` 支持 `v-model:open` | INTENDED | 与 `onOpenChange` 同时发出（规则 C11） |
 | 3 | `data-popover-inject` 不渲染 | INTENDED | React 注入标记（D85，与 popover 同判） |
 | 4 | `onOpenChange` 第二参数告警不移植 | INTENDED | Vue 回调本就单参，无 usage 语义 |
-| 5 | `PurePanel` 不消费 `classNames` / `styles`（只接受 `className` / `style`） | 同上游 | antd `PurePanel.tsx` 的解构里没有 classNames/styles；语义槽是 `Popconfirm` 本体的能力 |
+| 5 | `PurePanel` 消费 `classNames` / `styles` 与当前自身 Provider | Vue 原生契约 | root/container/arrow 归静态外壳；icon/title/content 归确认正文；class/style 走原生 attrs |
 
 ## 3. 为什么主实现是 `.ts`（defineComponent + h）
 
-`Popconfirm` 是 Popover 的薄包装：content 通道是**运行时构造的 VNode 树**（Overlay 四层 + 按钮组合），且 `omit(attrs, ['title'])` 这类透传在渲染函数里表达最直接；与 popover / radio 同范式（COMPONENT-RULES §2 条件 1/2）。
+`Popconfirm` 是 Popover 的薄包装：content 通道是**运行时构造的 VNode 树**（Overlay 四层 + 按钮组合），显式转发 props、事件与插槽；通知监听器由 emits 从 attrs 中分类。
 
 ## 4. 实现要点（最容易写错的判据）
 
@@ -29,10 +29,10 @@
 2. **`disabled` 拦在 `settingOpen` 之前** —— 连 `onOpenChange` 都不发。
 3. **`onConfirm` 必须隐式返回 actionFn 的返回值**（上游单行箭头）：写成 `{ …; }` 会吞掉 Promise，表现为「点 OK 立刻关闭」而不是等 resolve。
 4. **`onCancel` 先关后回调**。
-5. **`title` 不进 Popover 的 restProps**（`omit(restProps, ['title'])`），否则 Popover 会把它当自己的 title 再渲染一遍。
+5. **`title` 由已声明 prop 消费，不进 Popover 的 attrs**，否则 Popover 会把它当自己的 title 再渲染一遍。
 6. **description 的语义槽是 `content`**（上游 `classNames?.content` / `styles?.content`）。
 7. **okText / cancelText falsy（含空串）回退 locale**；`title` 为 `0` 仍渲染。
-8. **`useLocale` 返回普通对象不是 ref** —— 别写 `.value`（empty 同判）。
+8. **`useLocale` 返回当前语言的 ref**，Overlay 在 render 读取 `.value`。
 9. **Overlay 通过当前 `content` slot 传给 PopoverPurePanel**；内容数据 prop 保留 VNodeChild，模板富内容优先使用原生槽。
 
 ## 4.5 Issue #26 的四条判据
@@ -43,7 +43,7 @@
    `-inner-content` + Tooltip 容器）⇒ 一次点击回调两次。现在类型与运行时都补齐
    （`getPopupContainer` / `getTooltipContainer` / `align` / `builtinPlacements` /
    `zIndex` / `destroyOnHidden` / `fresh` / `forceRender` / `onAfterOpenChange` / `id`），
-   并显式下传；`restProps` 摘掉 `title` **和** `onPopupClick`。
+   并显式下传；`title` 由 props 消费，`popupClick` 由 emits 分类，仅 Overlay 正文发送。
 2. **PurePanel 要接住 Overlay 的回调与语义槽**（#26.2）：`PurePanelProps extends
    OverlayProps` 承诺的 `onConfirm` / `onCancel` / `onPopupClick` / `classNames` /
    `styles` 原先一个都没声明 ⇒ 只落到外层 attrs，内部 Overlay 收不到。
@@ -62,6 +62,10 @@
 ## 6. Component Token（1 个）
 
 `zIndexPopup = zIndexPopupBase + 60`。其余视觉量（colorWarning / marginXS / marginXXS / fontWeightStrong / colorTextHeading / fontSize）全部走 alias token。
+
+当前主题通过 `usePopconfirmTheme` 同时进入 popup/PurePanel。Popover 只提供结构，不消费其专属 Provider 配置或 Token；层级基准归 Popconfirm，实际层级仅由 Tooltip 调用一次 useZIndex，正文中的独立浮层保持各自配置。
+
+确认会话只随实际接受的 open 变化切换，旧异步结果不能关闭新会话；只重建 ActionButton，不重建确认正文。受控关闭请求被拒绝时，原操作和 loading 保持。Promise 拒绝由共享 ActionButton 返回 Vue 错误处理并允许重试，卸载后不调用 close 服务回调。
 
 ## 7. 测试环境已知边界
 

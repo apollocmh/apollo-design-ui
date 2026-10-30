@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 66,
+  "revision": 68,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -1309,18 +1309,16 @@
       "kind": "component",
       "ref": "popconfirm",
       "title": "Popconfirm",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/popconfirm"
       ],
-      "assignment": {
-        "owner": "native_popconfirm",
-        "baseRevision": 45,
-        "startedAt": "2026-10-30T08:58:22.263Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -1342,6 +1340,52 @@
           "docs/audit/2026-10-25-overlay-native-styles-remediation.md",
           "docs/audit/2026-10-27-button-contract-audit.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/popconfirm",
+          "packages/ui/src/_internal/action-button.ts",
+          "packages/ui/src/popover",
+          "packages/ui/src/tooltip/Tooltip.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract --project theme --project a11y packages/ui/src/popconfirm --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 39820
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/popconfirm/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 5380
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/auto-complete/__tests__/index.test.ts packages/ui/src/pagination/__tests__/index.test.ts packages/ui/src/modal/__tests__/index.test.ts --maxWorkers=1 --reporter=json --outputFile=/tmp/apollo-select-action-current-consumers.json",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/popconfirm/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full popconfirm source/tests/demo/SFC and affected consumers>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53236
+          }
+        ],
+        "boundary": "保留返回Promise的确认业务回调，owned通知改Vue emits；当前组件配置与Token、单一层级owner、真实ref、稳定DOM和按接受开关隔离的异步会话已验证。共享ActionButton的卸载/旧Promise/失败上报与Modal消费者通过。原浏览器因两条Portal诊断误报exit1，保留原记录；对应Portal修复后原严格脚本复跑exit0。未执行最终冻结九维/发布消费者验收。"
       }
     },
     {

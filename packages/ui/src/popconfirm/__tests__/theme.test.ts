@@ -4,7 +4,14 @@
  */
 
 import { themeTest } from '@apollo-design/test-utils';
+import type { ThemeConfig } from '@apollo-design/theme';
+import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import { h, nextTick, ref } from 'vue';
+import ConfigProvider from '../../config-provider/ConfigProvider';
+import Popover from '../../popover/Popover';
+import Popconfirm from '../Popconfirm';
+import PurePanel from '../PurePanel';
 import { genPopconfirmStyle, genTokenDecls as genPopconfirmTokenDecls } from '../style';
 
 themeTest('Popconfirm', {
@@ -42,5 +49,77 @@ describe('Popconfirm · 主题无关性', () => {
   it('浮层字号由 `.apollo-popconfirm.apollo-popover` 单独给（上游同构）', () => {
     expect(css).toContain('.apollo-popconfirm.apollo-popover{');
     expect(css).toContain('font-size:var(--apollo-font-size);');
+  });
+
+  it('consumes its own current token and aliases in popup, static panel and nested z-index context', async () => {
+    const theme = ref<ThemeConfig | undefined>({
+      token: { colorWarning: '#123456', marginXS: 18 },
+      components: {
+        Popconfirm: { zIndexPopup: 2060 },
+        Popover: { zIndexPopup: 9030 },
+        Tooltip: { zIndexPopup: 9999 },
+      },
+    });
+    const wrapper = mount(
+      () =>
+        h(ConfigProvider, { theme: theme.value }, () => [
+          h(
+            Popconfirm,
+            { open: true, title: 'Delete?', classNames: { root: 'current-confirm' } },
+            {
+              default: () => h('button', 'Target'),
+              description: () =>
+                h(
+                  Popover,
+                  { open: true, title: 'Nested', classNames: { root: 'nested-popover' } },
+                  () => h('button', 'Nested target'),
+                ),
+            },
+          ),
+          h(PurePanel, { title: 'Panel', class: 'current-panel' }),
+          h(ConfigProvider, { theme: { components: { Popconfirm: { zIndexPopup: 3060 } } } }, () =>
+            h(PurePanel, { title: 'Nested panel', class: 'nested-panel' }),
+          ),
+        ]),
+      { attachTo: document.body, global: { stubs: { teleport: false } } },
+    );
+    const settle = async () => {
+      await nextTick();
+      await nextTick();
+    };
+    const value = (selector: string, property: string) =>
+      document.querySelector<HTMLElement>(selector)?.style.getPropertyValue(property);
+    try {
+      await settle();
+      expect(value('.current-confirm', '--apollo-popconfirm-z-index-popup')).toBe('2060');
+      expect(value('.current-panel', '--apollo-popconfirm-z-index-popup')).toBe('2060');
+      expect(value('.nested-panel', '--apollo-popconfirm-z-index-popup')).toBe('3060');
+      expect(value('.current-confirm', '--apollo-margin-xs')).toBe('18px');
+      expect(value('.current-panel', '--apollo-color-warning')).toBe('#123456');
+      expect(value('.nested-popover', 'z-index')).toBe('2260');
+      theme.value = {
+        token: { colorWarning: '#654321', marginXS: 10 },
+        components: { Popconfirm: { zIndexPopup: 0 } },
+      };
+      await settle();
+      expect(value('.current-confirm', '--apollo-popconfirm-z-index-popup')).toBe('0');
+      expect(value('.current-panel', '--apollo-popconfirm-z-index-popup')).toBe('0');
+      expect(value('.current-panel', '--apollo-color-warning')).toBe('#654321');
+      expect(value('.nested-popover', 'z-index')).toBe('200');
+      theme.value = {
+        token: { zIndexPopupBase: 3000 },
+        components: { Popconfirm: { zIndexPopup: 'invalid' } },
+      };
+      await settle();
+      expect(value('.current-confirm', '--apollo-popconfirm-z-index-popup')).toBe('3060');
+      theme.value = undefined;
+      await settle();
+      expect(value('.current-confirm', '--apollo-popconfirm-z-index-popup')).toBe('');
+      expect(value('.current-panel', '--apollo-popconfirm-z-index-popup')).toBe('');
+      expect(value('.nested-popover', 'z-index')).toBe('1260');
+      expect(value('.nested-panel', '--apollo-popconfirm-z-index-popup')).toBe('3060');
+    } finally {
+      wrapper.unmount();
+    }
   });
 });

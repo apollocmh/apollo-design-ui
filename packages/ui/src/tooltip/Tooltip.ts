@@ -65,7 +65,7 @@ function isFragmentNode(node: VNode | null | undefined): boolean {
  * Popover/Popconfirm；公共通道（`getPopupContainer` / `direction` / `getPrefixCls`）
  * 不受影响。用 provide/inject 而不是 prop ⇒ 不污染公开 props 面。
  */
-export const tooltipInjectKey: InjectionKey<{ zIndexPopupBase: () => number }> =
+export const tooltipInjectKey: InjectionKey<{ zIndexPopupBase: () => number } | undefined> =
   Symbol('apollo-tooltip-inject');
 
 /** 供 Popover / Popconfirm 声明「我是注入方」。 */
@@ -192,6 +192,7 @@ const Tooltip = defineComponent({
     //    classNames / styles / arrow / trigger / 两个延迟），只留公共通道
     //    `getPopupContainer` / `getPrefixCls` / `direction`（Issue #24.4）。
     const injectFromPopover = inject(tooltipInjectKey, undefined);
+    if (injectFromPopover) provide(tooltipInjectKey, undefined);
     const semanticConfig: typeof contextSemantic = injectFromPopover ? {} : contextSemantic;
     const tooltipTheme = useTooltipTheme(() => !injectFromPopover);
 

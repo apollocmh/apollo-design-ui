@@ -5,7 +5,8 @@
  * 按 AGENTS.md H3 重新定义 —— 不复制上游源码。
  *
  * 与 antd 的差异（INTENDED / PITFALLS 35）：
- *   - 业务回调显式声明为 props，支持 Vue kebab-case 绑定并保留确认返回值；
+ *   - 确认 / 取消业务回调保留 props，确认返回值参与异步关闭；
+ *   - openChange / popupClick / afterOpenChange 使用 Vue emits；
  *   - `open` 支持 `v-model:open`（emits `update:open`）。
  */
 
@@ -15,6 +16,7 @@ import type { TriggerAlign } from '../_internal/trigger';
 import type {
   TooltipArrow,
   TooltipContent,
+  TooltipEmits,
   TooltipPlacement,
   TooltipRef,
 } from '../tooltip/interface';
@@ -87,6 +89,8 @@ export interface PopconfirmProps {
   placement?: TooltipPlacement;
   /** 是否展开（受控）。 */
   open?: boolean;
+  /** v-model:open 的 JSX / h() 监听器。 */
+  'onUpdate:open'?: (open: boolean) => void;
   /** 默认是否展开。 */
   defaultOpen?: boolean;
   /** 确认按钮文案；falsy 时回退到 locale。 */
@@ -113,13 +117,13 @@ export interface PopconfirmProps {
   classNames?: PopconfirmClassNames;
   /** 语义化样式。 */
   styles?: PopconfirmStyles;
-  /** 打开状态变化回调。 */
+  /** openChange 事件的 JSX / h() 监听器。 */
   onOpenChange?: (open: boolean) => void;
   /** 确认回调；Promise 返回值用于等待完成后关闭。 */
   onConfirm?: (e?: MouseEvent) => unknown;
   /** 取消回调。 */
   onCancel?: (e?: MouseEvent) => void;
-  /** 浮层内容点击回调。 */
+  /** popupClick 事件的 JSX / h() 监听器。 */
   onPopupClick?: (e: MouseEvent) => void;
 
   // ------------------------------------------------------------------
@@ -143,7 +147,7 @@ export interface PopconfirmProps {
   fresh?: boolean;
   /** 强制预渲染浮层。 */
   forceRender?: boolean;
-  /** 开合动画结束回调。 */
+  /** afterOpenChange 事件的 JSX / h() 监听器。 */
   onAfterOpenChange?: (open: boolean) => void;
   /** 浮层容器 id（ARIA 关联用）。 */
   id?: string;
@@ -151,5 +155,6 @@ export interface PopconfirmProps {
 
 /** expose —— 与 Popover 同物（antd 的 `TooltipRef`）。 */
 export type PopconfirmRef = TooltipRef;
+export type PopconfirmEmits = TooltipEmits;
 
 export type { TooltipArrow, TooltipContent, TooltipPlacement };

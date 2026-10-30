@@ -5,4 +5,4 @@ title:
   en-US: Dynamic trigger
 ---
 
-`onOpenChange` 里可以决定是否真的开合。
+`@open-change` 中可以决定是否接受受控状态更新。

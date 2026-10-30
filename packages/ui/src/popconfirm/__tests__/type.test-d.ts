@@ -7,8 +7,13 @@
 
 import { expectTypeOf, it } from 'vitest';
 import { h } from 'vue';
-import { Popconfirm } from '../index';
-import type { PopconfirmButtonProps, PopconfirmProps, PopconfirmSemanticType } from '../interface';
+import { Popconfirm, PopconfirmPurePanel } from '../index';
+import type {
+  PopconfirmButtonProps,
+  PopconfirmEmits,
+  PopconfirmProps,
+  PopconfirmSemanticType,
+} from '../interface';
 
 it('PopconfirmProps 的关键字段类型', () => {
   expectTypeOf<PopconfirmProps['title']>().not.toBeNever();
@@ -92,6 +97,35 @@ it('#26.1 来自 AbstractTooltipProps 的公共浮层配置在类型与运行时
       onAfterOpenChange: 'nope',
     };
     return bad;
+  };
+  void negative;
+});
+
+it('keeps constructor event payloads and real refs precise', () => {
+  expectTypeOf<Parameters<PopconfirmEmits['openChange']>>().toEqualTypeOf<[open: boolean]>();
+  expectTypeOf<Parameters<PopconfirmEmits['popupClick']>>().toEqualTypeOf<[event: MouseEvent]>();
+  expectTypeOf<
+    InstanceType<typeof Popconfirm>['nativeElement']
+  >().toEqualTypeOf<HTMLElement | null>();
+  expectTypeOf<
+    InstanceType<typeof Popconfirm>['popupElement']
+  >().toEqualTypeOf<HTMLDivElement | null>();
+  const props: PopconfirmProps = {
+    onOpenChange: (_open: boolean) => {},
+    'onUpdate:open': (_open: boolean) => {},
+    onPopupClick: (_event: MouseEvent) => {},
+    onConfirm: async (_event?: MouseEvent) => {},
+    onCancel: (_event?: MouseEvent) => {},
+  };
+  h(Popconfirm, props);
+  h(PopconfirmPurePanel, { onPopupClick: (_event: MouseEvent) => {} });
+  const negative = () => {
+    // @ts-expect-error Open proposals carry a boolean.
+    h(Popconfirm, { onOpenChange: (_event: MouseEvent) => {} });
+    // @ts-expect-error Popup clicks carry the original MouseEvent.
+    h(Popconfirm, { onPopupClick: (_open: boolean) => {} });
+    // @ts-expect-error PurePanel owns the same MouseEvent popupClick event.
+    h(PopconfirmPurePanel, { onPopupClick: (_open: boolean) => {} });
   };
   void negative;
 });
