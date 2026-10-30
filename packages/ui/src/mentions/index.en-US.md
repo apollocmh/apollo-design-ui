@@ -147,6 +147,8 @@ Current global aliases and all 21 effective component fields apply to the root a
 - Strings: activeBorderColor, hoverBorderColor, activeShadow, errorActiveShadow, warningActiveShadow, hoverBg and activeBg.
 - Layer: zIndexPopup; explicit styles.popup.zIndex has precedence and preserves CSS strings.
 
+Numbers and numeric strings also define the numeric context inherited by descendant overlays. A top-level popup uses its current zIndexPopup; nested popups increment the parent layer. Explicit styles.popup.zIndex, including 0, takes precedence. CSS expressions such as `var(...)`, `calc(...)` and `auto` are preserved but do not participate in automatic numeric stacking. Descendant stacking that depends on these expressions remains deferred and unverified.
+
 The unused addonBg field is removed without a compatibility channel. Other defaults derive from the current theme before components.Mentions overrides are applied.
 
 ## Keyboard & Accessibility

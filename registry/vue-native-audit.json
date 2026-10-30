@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 80,
+  "revision": 83,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2402,8 +2402,22 @@
           "id": "TRIGGER-RESIZE-NOTIFICATION",
           "status": "deferred",
           "blocking": false,
-          "impact": "多Select主题切换时Vite记录三条ResizeObserver延迟通知；源码浏览器契约全部通过、未出现持续循环或焦点/DOM丢失。",
-          "reason": "保留原始诊断，不声称零日志；首阶段非阻塞，最终冻结浏览器验证仍需核对。"
+          "impact": "多Select主题切换时Vite记录三条ResizeObserver延迟通知；源码浏览器契约全部通过、未出现持续循环或焦点/DOM丢失。 Portal六消费者真实浏览器功能断言通过，但原生error门禁完整捕获7条同类RO，整体exit1；该失败未转换为browser通过。",
+          "reason": "保留原始诊断，不声称零日志；首阶段非阻塞，最终冻结浏览器验证仍需核对。",
+          "relatedChecks": [
+            {
+              "kind": "browser",
+              "command": "node packages/ui/src/_internal/__tests__/consumer-z-index-browser.mjs",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 7610,
+              "functionalResult": "passed",
+              "diagnosticResult": "failed",
+              "resizeObserverDiagnostics": 7,
+              "otherDiagnostics": [],
+              "log": "/tmp/apollo-consumer-z-index-browser-final.log"
+            }
+          ]
         }
       ],
       "verification": {
@@ -3024,7 +3038,7 @@
       "kind": "foundation",
       "ref": "portal",
       "title": "@apollo-design/portal",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
@@ -3045,12 +3059,10 @@
         "packages/ui/src/_internal/__tests__/consumer-z-index-browser.mjs",
         "packages/ui/src/_internal/__tests__/fixtures/consumer-z-index-browser.mjs"
       ],
-      "assignment": {
-        "owner": "native_portal",
-        "baseRevision": 58,
-        "startedAt": "2026-10-30T09:50:58.699Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
@@ -3074,19 +3086,55 @@
         },
         {
           "id": "PORTAL-CONSUMER-CSS-CONTEXT",
-          "status": "open",
+          "status": "fixed",
           "blocking": true,
           "impact": "未指定实际CSS基准的顶层consumer默认提供context=50，与视觉1050等值不一致，后代浮层可能低于父层；Select已在自身当前Token桥定向修复。",
-          "reason": "其余consumer和公开useZIndex职责需要在Portal单元集中核对；未解决不得将Portal架构标done。"
+          "reason": "六处实际消费者统一数值层级桥，单位回归与生成CSS真实浏览器行为断言证明视觉/context、嵌套Tooltip、0及当前Token一致。"
+        },
+        {
+          "id": "PORTAL-CSS-EXPRESSION-CONTEXT",
+          "status": "deferred",
+          "blocking": false,
+          "impact": "非数值style.zIndex（var/calc/auto）按CSS原样保留，其自动后代数值层级未实现；仅数值/数值字符串具备视觉与context同步。",
+          "reason": "未引入CSS解释器或额外观察机制；保留公开CSS样式能力，明确自定义表达式下后代可显式指定层级，基础数值契约已修复。"
         }
       ],
       "verification": {
         "stage": "architecture",
         "scope": [
-          "packages/portal"
+          "packages/portal",
+          "docs/foundation/portal-contract.md",
+          "packages/ui/src/_internal/use-consumer-z-index.ts",
+          "packages/ui/src/_internal/__tests__/consumer-z-index.test.ts",
+          "packages/ui/src/_internal/__tests__/consumer-z-index-browser.mjs",
+          "packages/ui/src/_internal/__tests__/fixtures/consumer-z-index-browser.mjs",
+          "packages/ui/src/dropdown/Dropdown.ts",
+          "packages/ui/src/date-picker/DatePicker.vue",
+          "packages/ui/src/date-picker/RangePicker.vue",
+          "packages/ui/src/tree-select/TreeSelect.ts",
+          "packages/ui/src/mentions/Mentions.ts",
+          "packages/ui/src/mentions/use-mentions-theme.ts",
+          "packages/ui/src/mentions/index.zh-CN.md",
+          "packages/ui/src/mentions/index.en-US.md",
+          "packages/ui/src/image/Preview.ts",
+          "packages/ui/src/image/hooks/useImageTheme.ts"
         ],
         "passed": true,
         "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project theme packages/ui/src/image/__tests__/theme-context.test.ts packages/ui/src/mentions/__tests__/theme.test.ts packages/ui/src/mentions/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 25970
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/_internal/__tests__/consumer-z-index.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8430
+          },
           {
             "kind": "core",
             "command": "pnpm exec vitest run --project unit packages/portal/src/__tests__ --maxWorkers=1",
@@ -3102,20 +3150,34 @@
             "durationMs": 3440
           },
           {
-            "kind": "browser",
-            "command": "node packages/ui/src/popconfirm/__tests__/native-browser.mjs",
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/_internal/__tests__/consumer-z-index.test.ts --maxWorkers=1 --reporter=json --outputFile=/tmp/apollo-portal-ui-consumer-final.json",
             "exitCode": 0,
             "signal": null
           },
           {
             "kind": "types",
-            "command": "vue-tsc --noEmit -p <isolated root-strict config; all Portal source/tests/SFC>",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; Portal SFC and all owned UI consumer source/tests>",
             "exitCode": 0,
             "signal": null,
-            "durationMs": 53236
+            "durationMs": 21854
           }
         ],
-        "boundary": "包内祖先诊断及closed ShadowRoot清理修复已验证；真实UI消费者CSS/context桥仍在单独集成，FND:portal整体保持in_progress，未执行最终九维。"
+        "boundary": "Portal包内已通过祖先诊断基准、真实过深告警、numeric provider替换及closed ShadowRoot默认容器关闭/重开/卸载回归；Portal源码SSR/水合及锁/ESC释放、严格console通过。六个实际UI consumer的默认、0、替换/撤除、父层0及当前父层、数字CSS字符串和Mentions/Image当前Token投影已通过局部单元。真实consumer browser使用生成CSS，默认视觉/context、实际嵌套Tooltip数值及center命中、显式0、Mentions/Image Token替换和撤除均已断言通过；脚本整体exit1，原生window.error gate完整捕获7条既有ResizeObserver loop completed with undelivered notifications，无其他console/pageerror，未过滤或记为browser clean，按root裁决作为共享Trigger非阻塞诊断单列。var/calc/auto等非numeric CSS表达式保留样式；browser仅验证var原值及CSS自然解析结果，自动后代层级明确延期未验。完整owned TypeScript/Vue源码与类型例严格检查已通过；上列deferredChecks保留消费者浏览器整体exit1，未作为通过检查，第一阶段最小core/types已通过。未构建dist，未执行最终冻结九维验收。",
+        "deferredChecks": [
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/_internal/__tests__/consumer-z-index-browser.mjs",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 7610,
+            "functionalResult": "passed",
+            "diagnosticResult": "failed",
+            "resizeObserverDiagnostics": 7,
+            "otherDiagnostics": [],
+            "log": "/tmp/apollo-consumer-z-index-browser-final.log"
+          }
+        ]
       },
       "plan": {
         "goal": "保留当前getter/父层0修复，集中收口Portal容器与层级公开契约",

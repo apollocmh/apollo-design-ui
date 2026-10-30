@@ -75,6 +75,28 @@ const lengths = new Set([
 /** Variables consumed by the static CSS on both the editor root and teleported popup. */
 export function useMentionsTheme(prefix: () => string) {
   const theme = useTheme();
+  const component = computed<Record<string, string | number> & { zIndexPopup: string | number }>(
+    () => {
+      const custom = theme.config.value.components?.Mentions ?? {};
+      const defaults = prepareComponentToken(theme.token.value);
+      const values: Record<string, string | number> = {};
+      for (const [name, fallback] of Object.entries(defaults)) {
+        const candidate = custom[name];
+        let value: string | number = fallback;
+        if (typeof candidate === 'string' && candidate.trim() !== '') {
+          value = candidate;
+        } else if (
+          typeof candidate === 'number' &&
+          Number.isFinite(candidate) &&
+          ((lengths.has(name) && candidate >= 0) || name === 'zIndexPopup')
+        ) {
+          value = candidate;
+        }
+        values[name] = value;
+      }
+      return { ...defaults, ...values };
+    },
+  );
   const style = computed<Record<string, string>>(() => {
     if (theme.sourceActive?.value === false) return {};
     const variables = transformToken(theme.token.value).vars;
@@ -84,24 +106,11 @@ export function useMentionsTheme(prefix: () => string) {
       const value = variables[name];
       if (value !== undefined) styles[name] = value;
     }
-    const custom = theme.config.value.components?.Mentions ?? {};
-    const defaults = prepareComponentToken(theme.token.value);
-    for (const [name, fallback] of Object.entries(defaults)) {
-      const candidate = custom[name];
-      let value: string | number = fallback;
-      if (typeof candidate === 'string' && candidate.trim() !== '') {
-        value = candidate;
-      } else if (
-        typeof candidate === 'number' &&
-        Number.isFinite(candidate) &&
-        ((lengths.has(name) && candidate >= 0) || name === 'zIndexPopup')
-      ) {
-        value = candidate;
-      }
+    for (const [name, value] of Object.entries(component.value)) {
       styles[token2CSSVar(name, prefix())] =
         typeof value === 'number' && name !== 'zIndexPopup' ? `${value}px` : String(value);
     }
     return styles;
   });
-  return { theme, style };
+  return { theme, style, zIndexPopup: computed(() => component.value.zIndexPopup) };
 }

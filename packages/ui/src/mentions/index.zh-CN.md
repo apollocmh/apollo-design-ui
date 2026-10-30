@@ -147,6 +147,8 @@ subtitle: 提及
 - 字符串字段：activeBorderColor、hoverBorderColor、activeShadow、errorActiveShadow、warningActiveShadow、hoverBg、activeBg。
 - 层级字段：zIndexPopup；显式 styles.popup.zIndex 优先，保留 CSS 字符串。
 
+数值与纯数字字符串会同步到后代浮层的数值层级。顶层使用当前 zIndexPopup，嵌套时按父层级递增；显式 styles.popup.zIndex（含 0）始终优先。`var(...)`、`calc(...)`、`auto` 等 CSS 表达式保留原样，但不参与自动数值层级计算；依赖这类表达式的后代浮层层级集成仍延期，不能视为已验证。
+
 删除没有 CSS 消费点的 addonBg；不提供无效字段兼容通道。其余字段按当前主题派生默认值，再接受 components.Mentions 覆盖。
 
 ## 键盘与无障碍

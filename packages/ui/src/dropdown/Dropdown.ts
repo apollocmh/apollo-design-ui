@@ -13,7 +13,6 @@
  */
 
 import { LeftOutlined, RightOutlined } from '@apollo-design/icons';
-import { useZIndex } from '@apollo-design/portal';
 import { getPlacements } from '@apollo-design/position';
 import { useControlledValue } from '@apollo-design/utils';
 import {
@@ -31,6 +30,7 @@ import {
   type VNode as VNodeLike,
 } from 'vue';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
+import { useConsumerZIndex } from '../_internal/use-consumer-z-index';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { menuOverrideKey } from '../menu/context';
@@ -201,9 +201,11 @@ const Dropdown = defineComponent({
     };
 
     // ========================== zIndex ================================
-    const zIndex = useZIndex('Dropdown', () => props.zIndex, {
-      zIndexPopupBase: dropdownTokenValues().zIndexPopup,
-    });
+    const zIndex = useConsumerZIndex(
+      'Dropdown',
+      () => props.zIndex,
+      () => dropdownTokenValues().zIndexPopup,
+    );
 
     // ========================== overlay ===============================
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<

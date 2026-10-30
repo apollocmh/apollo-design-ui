@@ -24,11 +24,11 @@ import {
   DownOutlined,
   LoadingOutlined,
 } from '@apollo-design/icons';
-import { useZIndex } from '@apollo-design/portal';
 import { useControlledValue, useId } from '@apollo-design/utils';
 import type { PropType, VNodeChild } from 'vue';
 import { computed, defineComponent, h, ref, shallowRef } from 'vue';
 import { conductCheck } from '../_internal/tree/conduct-util';
+import { useConsumerZIndex } from '../_internal/use-consumer-z-index';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useConfigContext, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
@@ -37,6 +37,7 @@ import { useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
 import BaseSelect from '../select/engine/BaseSelect';
 import type { DisplayValueType, SelectCommonPlacement } from '../select/interface';
+import { DEFAULT_SELECT_POPUP_Z_INDEX } from '../select/style';
 import { useCompactItemContext } from '../space/Compact';
 import type { TreeIconType } from '../tree/interface';
 import { useCheckedKeys } from './hooks/use-checked-keys';
@@ -63,6 +64,7 @@ import {
 import { type FilledFieldNames, fillFieldNames, isNil, toArray } from './utils/value-util';
 
 type StyleLike = Record<string, string | number>;
+type SemanticStyles = { root?: StyleLike; popup?: { root?: StyleLike } };
 
 function isRawValue(value: unknown): value is string | number {
   return !value || typeof value !== 'object';
@@ -604,16 +606,16 @@ const TreeSelect = defineComponent({
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       Record<string, never>,
       Record<string, string>,
-      Record<string, StyleLike>
+      SemanticStyles
     >(
       [
         () => contextSemantic.classNames as Record<string, string> | undefined,
         () => props.classNames as Record<string, string> | undefined,
       ],
       [
-        () => contextSemantic.styles as Record<string, StyleLike> | undefined,
+        () => contextSemantic.styles as SemanticStyles | undefined,
         () => (contextSemantic.style ? { root: contextSemantic.style } : undefined),
-        () => props.styles as Record<string, StyleLike> | undefined,
+        () => props.styles as SemanticStyles | undefined,
         // 根 style 是 Vue 原生 attrs；仍走语义 root 通道（与上游落点一致）
         () => (attrs.style ? { root: attrs.style as StyleLike } : undefined),
       ],
@@ -679,7 +681,11 @@ const TreeSelect = defineComponent({
     const mergedAllowClear = computed(() => props.allowClear);
 
     // ===================== zIndex =====================
-    const zIndex = useZIndex('SelectLike', () => props.popupStyle?.zIndex as number | undefined);
+    const zIndex = useConsumerZIndex(
+      'SelectLike',
+      () => props.popupStyle?.zIndex ?? mergedStyles.value.popup?.root?.zIndex,
+      () => DEFAULT_SELECT_POPUP_Z_INDEX,
+    );
 
     // ===================== Expose =====================
     const baseSelectRef = shallowRef<{
@@ -782,9 +788,10 @@ const TreeSelect = defineComponent({
           transitionName: `${rootPrefixCls.value}-slide-up`,
           popupClassName: mergedPopupClassName.value,
           popupStyle: {
-            ...((mergedStyles.value as { popup?: { root?: StyleLike } }).popup?.root ?? {}),
+            ...mergedStyles.value.popup?.root,
             ...(props.popupStyle ?? {}),
-            zIndex,
+            zIndex:
+              zIndex.value ?? props.popupStyle?.zIndex ?? mergedStyles.value.popup?.root?.zIndex,
           },
           popupRender: props.popupRender ?? props.dropdownRender,
           classNames: mergedClassNames.value,

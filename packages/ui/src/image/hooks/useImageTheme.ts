@@ -51,5 +51,5 @@ export function useImageTheme() {
       '--apollo-image-motion-play-state': theme.token.value.motion ? 'running' : 'paused',
     };
   });
-  return { styles };
+  return { styles, zIndexPopup: computed(() => component.value.zIndexPopup) };
 }

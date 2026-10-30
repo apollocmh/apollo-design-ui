@@ -4,6 +4,20 @@
 
 当前响应式说明（2026-10-26）：容器除了挂载/更新后重解析，也通过watch跟踪resolver的实际响应式结果。稳定的`() => target.value`无需父级重渲染即可搬迁现有Teleport内容；未就绪、默认、显式容器和内联四态保持。下文React每次commit重解析仅保留来源背景。接口未变，当前证据见 [Image统一清单](../audit/2026-10-25-image-contract-audit.md)。
 
+## 当前公开契约与本次增量（2026-10-30）
+
+当前实现使用 Vue 的 computed/watch、生命周期、默认槽及 provide/inject。`Portal` 接收 `open`、`autoDestroy`、`getContainer`、`debug`、`autoLock` 和窗口层栈服务回调 `onEsc`；不声明 v-model 或业务 emits，也不 expose 内部组件实例。内容使用默认槽，DOM 属性由槽内容自身拥有。容器管理公开 `resolveContainer`、`usePortalContainer`、`usePortalOrder` 和 `PORTAL_ORDER_KEY`；层级公开纯计算、偏移常量、`useZIndex` 与数值型 `ZINDEX_KEY`。完整导出以 `packages/portal/src/index.ts` 为准；早期 README 中的 createContainer/destroyContainer/getNextZIndex/ContextIsolator 未曾实现为本包导出，已更正文档。
+
+保留此前已交付的当前 `zIndexPopupBase` getter 和合法父层级 `0` 修正。未指定的顶层层级返回 `undefined`，实际视觉由 UI 的 CSS/Token 决定，并非都靠 DOM 顺序。consumer 的独立视觉基准必须在其唯一 `useZIndex` 调用中作为顶层 `customZIndex` 传入；嵌套继续使用父层级加当前 offset。本包不读取 CSS，也不依赖 Theme/UI。
+
+UI 私有 `useConsumerZIndex` 接通 Dropdown、DatePicker/RangePicker、TreeSelect、Mentions 和 ImagePreview 的当前数值视觉基准与上下文；Select 保留自身已交付的同等桥。显式值、0、数字字符串、替换和撤除沿同一调用传递，Mentions/Image 的 CSS 与数值读取共享原 Token 投影。`var/calc/auto` 等非数值 CSS 表达式保留样式与既有数值路径，不解析 CSS、不抛错或新增告警；表达式决定的自动后代层级仍明确延期，见 [Mentions 边界](../../packages/ui/src/mentions/index.zh-CN.md)。消费者范围证据见 `packages/ui/src/_internal/__tests__/consumer-z-index.test.ts`，不代表这些组件其他接口或全量主题已重新审计。
+
+开发诊断随内部数值 provider 传递有效祖先基准。祖先合法使用较高 Token 或显式 z-index 后，独立子 Popover/Tooltip 不因恢复自己的默认 Token 而误报；超过祖先基准加 1100 的真实深层嵌套仍告警。公开 `ZINDEX_KEY` 仍是 `ComputedRef<number>`；外部重 provide 数值 ref 会切断对应的内部诊断继承，未增加公开选项或兼容模式。
+
+原生 DOM 操作将默认容器搬入 ShadowRoot 后，`parentElement` 为 null，旧清理会泄漏容器。本次改为按 `parentNode` 判断是否已挂载，并直接移除本实例拥有的默认元素。关闭、重开及卸载均覆盖，外部容器所有权不变。
+
+针对性证据在 `packages/portal/src/__tests__/use-portal.test.ts` 和 `native-browser.mjs`：诊断误报、真实过深告警、外部重 provide、closed ShadowRoot 清理；源码浏览器脚本同时在真实无 DOM 的 Node 进程执行 SSR，再验证水合后打开及锁/窗口监听释放。已有模板 ref、动态 resolver、autoDestroy、焦点、所属文档/窗口与 IME 成果沿用原证据。本增量不是最终冻结版本的整包或整库九维验收。
+
 > G1/G2 分析产物。**先于实现存在**（`AGENTS.md` §2：步骤 3 的产物必须先于步骤 5）。
 > 事实来源优先级：用户指令 > 仓库规范文件 > `registry/*.json` > antd 固定版本产物/源码 > 官方文档 > 模型先验。
 

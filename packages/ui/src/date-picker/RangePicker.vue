@@ -49,7 +49,6 @@ import {
   type PickerMode,
   PickerPanel,
 } from '@apollo-design/picker';
-import { useZIndex } from '@apollo-design/portal';
 import { observeResize, useDevWarning } from '@apollo-design/utils';
 import {
   type Component,
@@ -67,6 +66,7 @@ import {
 } from 'vue';
 import { pickerHostContextKey } from '../_internal/picker-host-context';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
+import { useConsumerZIndex } from '../_internal/use-consumer-z-index';
 import { semanticRootStyle } from '../_internal/use-merge-semantic';
 import {
   type GetPopupContainer,
@@ -122,6 +122,7 @@ import type {
   RangeTimeProps,
   RangeValue,
 } from './interface';
+import { datePickerTokenValues } from './style/token';
 
 defineOptions({ name: 'ARangePicker', inheritAttrs: false });
 
@@ -1270,19 +1271,21 @@ const rootClass = computed(() =>
   }),
 );
 
-const zIndex = useZIndex('DatePicker', () => {
-  const rootStyle = semantic.styles.value.popup?.root;
-  return rootStyle?.zIndex as number | undefined;
-});
+const zIndex = useConsumerZIndex(
+  'DatePicker',
+  () => semantic.styles.value.popup?.root?.zIndex,
+  () => datePickerTokenValues().zIndexPopup,
+);
 
 const transitionName = computed(() => getTransitionName(rootPrefixCls.value, props.transitionName));
 const realPlacement = computed(() => getRealPlacement(props.placement, rtl.value));
 const builtinPlacements = computed(() => BUILT_IN_PLACEMENTS as Record<string, TriggerAlign>);
 const popupAlign = computed(() => props.popupAlign as TriggerAlign | undefined);
 const popupMotion = computed(() => ({ motionName: transitionName.value, motionDeadline: 1000 }));
-const popupStyle = computed(
-  () => semantic.styles.value.popup?.root as Record<string, string | number> | undefined,
-);
+const popupStyle = computed(() => ({
+  ...semantic.styles.value.popup?.root,
+  zIndex: zIndex.value ?? semantic.styles.value.popup?.root?.zIndex,
+}));
 const dropdownPrefixCls = computed(() => `${prefixCls.value}-dropdown`);
 
 const selectorProps = computed(() => ({

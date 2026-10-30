@@ -23,7 +23,7 @@ import {
   ZoomOutOutlined,
 } from '@apollo-design/icons';
 import { CSSMotion } from '@apollo-design/motion';
-import { type GetContainer, Portal, useZIndex } from '@apollo-design/portal';
+import { type GetContainer, Portal } from '@apollo-design/portal';
 import {
   containsComposed,
   getActiveElement,
@@ -45,6 +45,7 @@ import {
   type VNodeChild,
   watch,
 } from 'vue';
+import { useConsumerZIndex } from '../_internal/use-consumer-z-index';
 import { useImageMotion } from './hooks/useImageMotion';
 import { useImageTheme } from './hooks/useImageTheme';
 import { useImageTransform } from './hooks/useImageTransform';
@@ -204,7 +205,11 @@ const Preview = defineComponent({
     );
     watch([() => props.open, previewElement], focusPreview, { flush: 'post' });
 
-    const zIndex = useZIndex('ImagePreview', () => props.zIndex);
+    const zIndex = useConsumerZIndex(
+      'ImagePreview',
+      () => props.zIndex ?? props.styles?.root?.zIndex,
+      () => theme.zIndexPopup.value,
+    );
 
     const { transform, limits, updateTransform, dispatchZoomChange, resetTransform } =
       useImageTransform(

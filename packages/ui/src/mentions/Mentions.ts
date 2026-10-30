@@ -22,7 +22,6 @@
  *    注意判据是 `!children`（**有 children 才告警**，与 antd 一致）。
  */
 
-import { useZIndex } from '@apollo-design/portal';
 import { useDevWarning } from '@apollo-design/utils';
 import {
   type CSSProperties,
@@ -37,6 +36,7 @@ import {
   type VNodeChild,
 } from 'vue';
 import { useAllowClear } from '../_internal/use-allow-clear';
+import { useConsumerZIndex } from '../_internal/use-consumer-z-index';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { DefaultRenderEmpty } from '../config-provider/default-render-empty';
@@ -210,19 +210,10 @@ export const MentionsComponent = defineComponent({
       componentName: 'Mentions',
     });
 
-    const zIndex = useZIndex(
+    const zIndex = useConsumerZIndex(
       'SelectLike',
-      () => {
-        const value = mergedStyles.value.popup?.zIndex;
-        if (typeof value === 'number') return value;
-        const custom = mentionsTheme.theme.config.value.components?.Mentions?.zIndexPopup;
-        return typeof custom === 'number' && Number.isFinite(custom) ? custom : undefined;
-      },
-      {
-        get zIndexPopupBase() {
-          return mentionsTheme.theme.token.value.zIndexPopupBase;
-        },
-      },
+      () => mergedStyles.value.popup?.zIndex,
+      () => mentionsTheme.zIndexPopup.value,
     );
 
     // ============================ Not Found ===========================

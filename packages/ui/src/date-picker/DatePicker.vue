@@ -64,7 +64,6 @@ import {
   PickerPanel,
   toggleDates,
 } from '@apollo-design/picker';
-import { useZIndex } from '@apollo-design/portal';
 import { useDevWarning } from '@apollo-design/utils';
 import {
   type Component,
@@ -80,6 +79,7 @@ import {
 } from 'vue';
 import { pickerHostContextKey } from '../_internal/picker-host-context';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
+import { useConsumerZIndex } from '../_internal/use-consumer-z-index';
 import { semanticRootStyle } from '../_internal/use-merge-semantic';
 import {
   type GetPopupContainer,
@@ -124,6 +124,7 @@ import type {
   OpenConfig,
   SingleValue,
 } from './interface';
+import { datePickerTokenValues } from './style/token';
 
 defineOptions({ name: 'ADatePicker', inheritAttrs: false });
 
@@ -1104,10 +1105,11 @@ const rootClass = computed(() =>
  * `DatePicker` 在 `ZIndexConsumer` 里（offset 50）—— 与 Select/Dropdown/Menu 同档。
  * 用户可在 `styles.popup.root.zIndex` 覆盖。
  */
-const zIndex = useZIndex('DatePicker', () => {
-  const rootStyle = semantic.styles.value.popup?.root;
-  return rootStyle?.zIndex as number | undefined;
-});
+const zIndex = useConsumerZIndex(
+  'DatePicker',
+  () => semantic.styles.value.popup?.root?.zIndex,
+  () => datePickerTokenValues().zIndexPopup,
+);
 
 const popupClassNames = computed(() => [
   ...getDropdownClassName({
@@ -1141,12 +1143,12 @@ const transitionName = computed(() => getTransitionName(rootPrefixCls.value, pro
  * 🚨 2026-10-01 补齐：此前 `semantic.styles` 算出来了却**从没绑到 `Trigger`** ⇒
  * `popupStyle` / `styles.popup.root` 静默无效（移植上游 `legacy popupStyle` 用例时抓到）。
  *
- * ⚠️ `Trigger` 的 `popupStyle` 类型是 `Record<string, string | number>`（有索引签名），
- * 而 `CSSProperties` 是**接口**（没有索引签名）⇒ 必须显式收窄，不能直接传。
+ * 浮层样式与 provide 数值使用同一当前层级；非数值 CSS 表达式保留原值。
  */
-const popupStyle = computed(
-  () => semantic.styles.value.popup?.root as Record<string, string | number> | undefined,
-);
+const popupStyle = computed(() => ({
+  ...semantic.styles.value.popup?.root,
+  zIndex: zIndex.value ?? semantic.styles.value.popup?.root?.zIndex,
+}));
 
 const realPlacement = computed(() => getRealPlacement(props.placement, rtl.value));
 
