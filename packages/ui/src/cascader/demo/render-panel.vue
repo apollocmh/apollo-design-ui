@@ -1,9 +1,10 @@
 <script setup lang="ts">
 // 对齐 antd 的 render-panel demo：popupRender 包装整个级联面板
 import { Button, Cascader, Tag } from '@apollo-design/ui';
-import { computed, h, ref, type VNodeChild } from 'vue';
+import { computed, ref } from 'vue';
+import type { CascaderOutputValue } from '../interface';
 
-const value = ref<string[]>([]);
+const value = ref<CascaderOutputValue>([]);
 
 const options = [
   {
@@ -30,32 +31,10 @@ const labels: Record<string, string> = {
 };
 
 const display = computed(() =>
-  value.value.length ? value.value.map((item) => labels[item] ?? item).join(' / ') : '尚未选择',
+  value.value.length
+    ? value.value.map((item) => labels[String(item)] ?? item).join(' / ')
+    : '尚未选择',
 );
-
-const popupRender = (menu: unknown) =>
-  h('div', { class: 'cascader-render-panel' }, [
-    h('div', { class: 'cascader-render-panel-header' }, [
-      h('strong', null, '区域选择面板'),
-      h('span', null, 'popupRender 自定义包装层'),
-    ]),
-    menu as VNodeChild,
-    h('div', { class: 'cascader-render-panel-footer' }, [
-      h('span', null, display.value ? `当前：${display.value}` : '尚未选择'),
-      h(
-        Button,
-        {
-          size: 'small',
-          type: 'link',
-          disabled: !value.value.length,
-          onClick: () => {
-            value.value = [];
-          },
-        },
-        () => '清空选择',
-      ),
-    ]),
-  ]);
 </script>
 
 <template>
@@ -63,9 +42,21 @@ const popupRender = (menu: unknown) =>
     <Cascader
       v-model:value="value"
       :options="options"
-      :popup-render="popupRender"
       placeholder="打开面板查看自定义包装层"
-    />
+    >
+      <template #popupRender="{ menu }">
+        <div class="cascader-render-panel">
+          <div class="cascader-render-panel-header">
+            <strong>区域选择面板</strong><span>popupRender 自定义包装层</span>
+          </div>
+          <component :is="menu" />
+          <div class="cascader-render-panel-footer">
+            <span>当前：{{ display }}</span>
+            <Button size="small" type="link" :disabled="!value.length" @click="value = []">清空选择</Button>
+          </div>
+        </div>
+      </template>
+    </Cascader>
 
     <div style="margin-top: 16px">
       <Tag color="blue">当前选择</Tag>

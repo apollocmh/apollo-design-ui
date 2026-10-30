@@ -2,9 +2,10 @@
 // 对齐 antd 的 style-class demo：classNames / styles 语义槽
 import { Cascader, Switch, Tag } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
+import type { CascaderOutputValue } from '../interface';
 
 const emphasize = ref(true);
-const value = ref<string[]>([]);
+const value = ref<CascaderOutputValue>([]);
 
 const options = [
   {

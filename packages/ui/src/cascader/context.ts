@@ -1,49 +1,33 @@
-/**
- * CascaderContext —— rc `context.js` 的 Vue 版（provide/inject）。
- *
- * OptionList / Panel 从这里读「级联状态」（options / values / onSelect / 搜索结果 /
- * 展开图标 / 列样式 …），与 rc 的 Context.Provider 同构。
- */
-
-import type { InjectionKey, VNodeChild } from 'vue';
-import { inject, provide } from 'vue';
-
-import type { SearchConfig } from './hooks/search';
+import { type ComputedRef, type InjectionKey, inject, provide, type VNodeChild } from 'vue';
+import type {
+  CascaderPanelProps,
+  CascaderSemanticClassNames,
+  CascaderSemanticStyles,
+} from './interface';
 import type { BaseOptionType, FilledFieldNames, ValueCell } from './utils';
-
 export interface CascaderContextProps {
-  classNames?: Record<string, unknown>;
-  styles?: Record<string, unknown>;
+  classNames: CascaderSemanticClassNames;
+  styles: CascaderSemanticStyles;
   options: BaseOptionType[];
   fieldNames: FilledFieldNames;
-  /** 勾选值（多选；单选时为 [当前路径]） */
   values: ValueCell[];
   halfValues: ValueCell[];
-  changeOnSelect?: boolean;
-  onSelect: (valuePath: ValueCell) => void;
-  checkable?: boolean | unknown;
+  changeOnSelect: boolean;
+  onSelect: (path: ValueCell) => void;
   searchOptions: BaseOptionType[];
-  popupPrefixCls?: string;
-  loadData?: (options: BaseOptionType[]) => void;
-  expandTrigger?: 'click' | 'hover';
-  expandIcon?: VNodeChild | null;
-  loadingIcon?: VNodeChild | null;
-  popupMenuColumnStyle?: Record<string, string | number>;
-  optionRender?: ((option: BaseOptionType) => VNodeChild) | null;
+  loadData?: CascaderPanelProps['loadData'];
+  expandTrigger: 'click' | 'hover';
+  expandIcon: VNodeChild;
+  loadingIcon: VNodeChild;
+  popupMenuColumnStyle?: CascaderPanelProps['popupMenuColumnStyle'];
 }
-
-const KEY: InjectionKey<CascaderContextProps> = Symbol('CascaderContext');
-
-export function provideCascaderContext(props: CascaderContextProps): void {
-  provide(KEY, props);
+const KEY: InjectionKey<ComputedRef<CascaderContextProps>> = Symbol('CascaderContext');
+export function provideCascaderContext(context: ComputedRef<CascaderContextProps>): void {
+  provide(KEY, context);
 }
-
-export function useCascaderContext(): CascaderContextProps {
-  const ctx = inject(KEY, null);
-  if (!ctx) {
-    throw new Error('[cascader] CascaderContext 缺失 —— OptionList 必须在 Cascader 内渲染');
-  }
-  return ctx;
+export function useCascaderContext(): ComputedRef<CascaderContextProps> {
+  const context = inject(KEY, null);
+  if (!context) throw new Error('[Cascader] OptionList must be rendered inside a Cascader');
+  return context;
 }
-
-export type { SearchConfig };
+export type { SearchConfig } from './hooks/search';

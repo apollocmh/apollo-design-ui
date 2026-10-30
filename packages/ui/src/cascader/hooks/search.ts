@@ -12,7 +12,17 @@
 
 import { type ComputedRef, computed, type Ref } from 'vue';
 
-import { type BaseOptionType, type FieldNames, type FilledFieldNames, SEARCH_MARK } from '../utils';
+import {
+  type BaseOptionType,
+  type FieldNames,
+  type FilledFieldNames,
+  fillFieldNames,
+  getOptionChildren,
+  getOptionLabel,
+  getOptionValue,
+  getSearchPath,
+  SEARCH_MARK,
+} from '../utils';
 
 export interface SearchConfig {
   filter?: (
@@ -35,14 +45,12 @@ export interface SearchConfig {
   matchInputWidth?: boolean;
   limit?: number | false;
   autoClearSearchValue?: boolean;
-  searchValue?: string;
-  onSearch?: (searchText: string) => void;
 }
 
 /** `showSearch` → [是否开启, 配置]（上游 useSearchConfig）。 */
 export function normalizeSearchConfig(
-  showSearch: boolean | (SearchConfig & { searchIcon?: unknown }) | undefined,
-  props: { autoClearSearchValue?: boolean; searchValue?: string; onSearch?: (t: string) => void },
+  showSearch: boolean | Omit<SearchConfig, 'render'> | undefined,
+  props: { autoClearSearchValue?: boolean },
 ): [boolean, SearchConfig] {
   if (!showSearch) return [false, {}];
 
@@ -50,11 +58,16 @@ export function normalizeSearchConfig(
     matchInputWidth: true,
     limit: 50,
     autoClearSearchValue: props.autoClearSearchValue,
-    searchValue: props.searchValue,
-    onSearch: props.onSearch,
   };
   if (showSearch && typeof showSearch === 'object') {
-    searchConfig = { ...searchConfig, ...showSearch };
+    const {
+      filter,
+      sort,
+      matchInputWidth = true,
+      limit = 50,
+      autoClearSearchValue = props.autoClearSearchValue,
+    } = showSearch;
+    searchConfig = { filter, sort, matchInputWidth, limit, autoClearSearchValue };
   }
   if (typeof searchConfig.limit === 'number' && searchConfig.limit <= 0) {
     searchConfig.limit = false;
@@ -78,7 +91,15 @@ const defaultRender = (
   path: BaseOptionType[],
   _prefixCls: string,
   fieldNames: FieldNames,
-): unknown => path.map((opt) => opt[fieldNames.label ?? 'label']).join(' / ');
+): unknown => {
+  const fields = fillFieldNames(fieldNames);
+  const labels = path.map((option) =>
+    getOptionLabel(option, fields, getOptionValue(option, fields)),
+  );
+  return labels.every((label) => typeof label === 'string' || typeof label === 'number')
+    ? labels.join(' / ')
+    : labels.flatMap((label, index) => (index ? [' / ', label] : [label]));
+};
 
 /** 搜索态的候选 options（过滤 + render + limit + sort；上游 useSearchOptions）。 */
 export function computeSearchOptions(
@@ -104,7 +125,7 @@ export function computeSearchOptions(
       if (!sort && limit !== false && limit > 0 && filteredOptions.length >= limit) return;
 
       const connectedPathOptions = [...pathOptions, option];
-      const children = option[fieldNames.children] as BaseOptionType[] | undefined;
+      const children = getOptionChildren(option, fieldNames);
       const mergedDisabled = parentDisabled || !!option.disabled;
 
       // 只在叶子（或 changeOnSelect / 多选的任意层）上做过滤
@@ -132,7 +153,7 @@ export function computeSearchOptions(
 
   if (sort) {
     filteredOptions.sort((a, b) =>
-      sort(a[SEARCH_MARK] as BaseOptionType[], b[SEARCH_MARK] as BaseOptionType[], search, {
+      sort(getSearchPath(a) ?? [], getSearchPath(b) ?? [], search, {
         label: fieldNames.label,
         value: fieldNames.value,
         children: fieldNames.children,

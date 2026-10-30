@@ -1,91 +1,61 @@
-/**
- * OptionList —— rc-cascader `OptionList/`（List 216 + Column 198 + Checkbox 23 +
- * useActive 23 + useKeyboard 164）的 Vue 版。
- *
- * 结构：RawOptionList（`-menus` 容器）→ Column×N（每级一个 `ul.-menu`）→
- * `li.-menu-item`。列由 `activeValueCells` 逐级下钻；搜索态下第一列被
- * `searchOptions` 替换（每项是拍平的完整路径）。
- *
- * ── 关键判据（实现时对照 rc 源）─────────────────────────────────────────────
- *
- * 1. **搜索项的 fullPath 来自 `SEARCH_MARK`**，非搜索项是 `[...prevValuePath, value]`。
- * 2. **hover 展开时叶子不进 active**（`nextValueCells.pop()`）。
- * 3. **click 选中**：`!multiple || isLeaf` 才触发 onSelect（多选父级靠 checkbox）；
- *    `disableCheckbox` 阻断选中但仍展开。
- * 4. **双击 + changeOnSelect ⇒ 关闭**。
- * 5. **键盘**：UP/DOWN 同列环绕（跳过 disabled）；LEFT/BACKSPACE 回上一列（首列则关）；
- *    RIGHT 进下一列首个可用项；ENTER 选中（搜索项回溯 SEARCH_MARK 原始路径）；ESC 关。
- * 6. **空态**：`-menu-empty` + 一条 `__EMPTY__` 禁用项（label = notFoundContent）。
- * 7. 激活项自动 `scrollIntoParentView`。
- */
-
 import {
   computed,
   defineComponent,
   h,
   nextTick,
-  onMounted,
+  onBeforeUnmount,
   type PropType,
   ref,
+  type SlotsType,
   shallowRef,
-  toRaw,
   type VNodeChild,
   watch,
 } from 'vue';
-import { clsx } from '../_internal/clsx';
 import { useCascaderContext } from './context';
+import type { CascaderOptionSlots } from './interface';
 import {
   type BaseOptionType,
-  getFullPathKeys,
+  getOptionChildren,
+  getOptionLabel,
+  getOptionValue,
+  getSearchPath,
   isLeaf,
-  SEARCH_MARK,
   scrollIntoParentView,
+  toContent,
   toPathKey,
   toPathKeys,
+  toPathOptions,
   type ValueCell,
 } from './utils';
 
-/** 空态列的 label 挂载键（rc 的 FIX_LABEL）。 */
 export const FIX_LABEL = '__cascader_fix_label__';
-
-const KeyCode = { UP: 38, DOWN: 40, LEFT: 37, RIGHT: 39, ENTER: 13, ESC: 27, BACKSPACE: 8 };
-
-// ⚠️ 这里原先有一份本地 clsx（字符串 + `{[k]: boolean}` 对象形态）—— 2026-10-07 删除，
-//    改用共享层的 `_internal/clsx.ts`（行为在本文件的输入空间下完全一致，见 useDrag.ts 的注释）。
-
-// ================================ Checkbox ================================
-
-const Checkbox = defineComponent({
-  name: 'ACascaderCheckbox',
-  props: {
-    prefixCls: { type: String, required: true },
-    checked: { type: Boolean, default: false },
-    halfChecked: { type: Boolean, default: false },
-    disabled: { type: Boolean, default: false },
-    disableCheckbox: { type: Boolean, default: false },
-  },
-  emits: ['click'],
-  setup(props, { emit }) {
-    const { checkable } = useCascaderContext();
-    const customCheckbox =
-      typeof checkable !== 'boolean' && checkable !== undefined ? (checkable as VNodeChild) : null;
-    return () =>
-      h(
-        'span',
-        {
-          class: clsx(props.prefixCls, {
-            [`${props.prefixCls}-checked`]: props.checked,
-            [`${props.prefixCls}-indeterminate`]: !props.checked && props.halfChecked,
-            [`${props.prefixCls}-disabled`]: props.disabled || props.disableCheckbox,
-          }),
-          onClick: (e: MouseEvent) => emit('click', e),
-        },
-        customCheckbox ?? undefined,
-      );
-  },
-});
-
-// ================================ OptionList ===============================
+const legacyKeys: Record<number, string> = {
+  38: 'ArrowUp',
+  40: 'ArrowDown',
+  37: 'ArrowLeft',
+  39: 'ArrowRight',
+  13: 'Enter',
+  27: 'Escape',
+  8: 'Backspace',
+  32: ' ',
+};
+export const navigationKeys = new Set([
+  'ArrowUp',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'Enter',
+  'Escape',
+  'Backspace',
+  ' ',
+]);
+export function getNavigationKey(event: KeyboardEvent): string {
+  return event.key || legacyKeys[event.which || event.keyCode] || '';
+}
+export interface CascaderOptionListRef {
+  onKeyDown: (event: KeyboardEvent) => void | Promise<void>;
+  onKeyUp: () => void;
+}
 
 const RawOptionList = defineComponent({
   name: 'ACascaderOptionList',
@@ -97,542 +67,363 @@ const RawOptionList = defineComponent({
     open: { type: Boolean, default: undefined },
     disabled: { type: Boolean, default: undefined },
     direction: { type: String as PropType<'ltr' | 'rtl'>, default: 'ltr' },
-    lockOptions: { type: Boolean, default: false },
-    notFoundContent: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    notFoundContent: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
     toggleOpen: { type: Function as PropType<(open: boolean) => void>, required: true },
   },
-  setup(props, { expose }) {
-    const ctx = useCascaderContext();
-
-    /**
-     * ⚠️ **不能在 setup 顶部解构 context**：Panel 的 context 是 Proxy 桥（每次
-     * 读取取 computed 最新值），解构会把初值**冻结**——options 变化后 OptionList
-     * 仍渲染旧数据（S3 的 loadData 用例抓出）。必须在每次渲染 / 事件处理时
-     * 重新解构 `getC()`。
-     */
-    const getC = () => ctx;
-    const mergedPrefixCls = computed(() => getC().popupPrefixCls || props.prefixCls);
-    const rtl = computed(() => props.direction === 'rtl');
-    const hoverOpen = computed(() => getC().expandTrigger === 'hover');
-
-    const containerRef = shallowRef<HTMLElement | null>(null);
-
-    // ========================= loadData =========================
-    const loadingKeys = ref<string[]>([]);
-    const internalLoadData = (valueCells: ValueCell): void => {
-      const { loadData, fieldNames } = getC();
-      if (!loadData || props.searchValue) return;
-      const pathOptions = toPathOptionsLocal(valueCells);
-      const lastOption = pathOptions[pathOptions.length - 1]?.option;
-      if (lastOption && !isLeaf(lastOption, fieldNames)) {
-        const pathKey = toPathKey(valueCells);
-        if (!loadingKeys.value.includes(pathKey)) {
-          loadingKeys.value = [...loadingKeys.value, pathKey];
-        }
-        loadData(pathOptions.map(({ option }) => option as BaseOptionType));
-      }
+  slots: Object as SlotsType<CascaderOptionSlots>,
+  emits: { popupScroll: (_event: Event) => true },
+  setup(props, { expose, slots, emit }) {
+    const context = useCascaderContext();
+    const container = shallowRef<HTMLElement | null>(null);
+    const active = ref<ValueCell>([]);
+    const loading = ref(new Set<string>());
+    type Request = { path: ValueCell; option: BaseOptionType; promise?: Promise<void> };
+    const pending = new Map<string, Request>();
+    let disposed = false;
+    const finish = (key: string, request: Request): void => {
+      if (disposed || pending.get(key) !== request) return;
+      pending.delete(key);
+      const next = new Set(loading.value);
+      next.delete(key);
+      loading.value = next;
     };
-
-    /** 本地 toPathOptions（沿 options 逐层找；stringMode 用于 loadingKeys 回查）。 */
-    function toPathOptionsLocal(valueCells: ValueCell, stringMode = false) {
-      const { fieldNames } = getC();
-      let currentList: BaseOptionType[] | undefined = getC().options;
-      const valueOptions: { value: unknown; option: BaseOptionType | null }[] = [];
-      for (let i = 0; i < valueCells.length; i += 1) {
-        const cell = valueCells[i];
-        const foundIndex = currentList?.findIndex((option) => {
-          const val = option[fieldNames.value];
-          return stringMode ? String(val) === String(cell) : val === cell;
-        });
-        const foundOption =
-          foundIndex !== undefined && foundIndex !== -1
-            ? (currentList?.[foundIndex] ?? null)
-            : null;
-        valueOptions.push({ value: foundOption?.[fieldNames.value] ?? cell, option: foundOption });
-        currentList = foundOption?.[fieldNames.children] as BaseOptionType[] | undefined;
+    onBeforeUnmount(() => {
+      disposed = true;
+      pending.clear();
+    });
+    const load = (path: ValueCell): void | Promise<void> => {
+      const { loadData, options, fieldNames } = context.value;
+      if (!loadData || props.searchValue || props.disabled) return;
+      const pathOptions = toPathOptions(path, options, fieldNames).flatMap((item) =>
+        item.option ? [item.option] : [],
+      );
+      const option = pathOptions.at(-1);
+      if (
+        !option ||
+        option.disabled ||
+        isLeaf(option, fieldNames) ||
+        getOptionChildren(option, fieldNames).length
+      )
+        return;
+      const key = toPathKey(path);
+      if (pending.has(key)) return;
+      const request: Request = { path, option };
+      pending.set(key, request);
+      loading.value = new Set([...loading.value, key]);
+      let result: void | Promise<void>;
+      try {
+        result = loadData(pathOptions);
+      } catch (error) {
+        finish(key, request);
+        throw error;
       }
-      return valueOptions;
-    }
-
-    // options 变化后清理已加载完的 loading keys（rc 的 useEffect 依赖
-    // [options, loadingKeys, fieldNames] —— React 里 setState 相同值会 bail out，
-    // ⚠️ Vue 不会：watch 依赖 loadingKeys 又修改它 = 递归自触发（Maximum recursive
-    // updates）。这里只依赖 options（语义等价：清理发生在「数据可能已补上」的时刻）。
+      if (result)
+        request.promise = Promise.resolve(result).then(
+          () => {
+            finish(key, request);
+          },
+          (error) => {
+            finish(key, request);
+            throw error;
+          },
+        );
+      return request.promise;
+    };
     watch(
-      () => getC().options,
+      () => [context.value.options, context.value.fieldNames],
       () => {
-        if (!loadingKeys.value.length) return;
-        const { fieldNames } = getC();
-        loadingKeys.value = loadingKeys.value.filter((key) => {
-          const valueStrCells = key.split('__RC_CASCADER_SPLIT__');
-          const optionList = toPathOptionsLocal(valueStrCells, true).map(({ option }) => option);
-          const lastOption = optionList[optionList.length - 1];
-          return !(
-            !lastOption ||
-            lastOption[fieldNames.children] ||
-            isLeaf(lastOption, fieldNames)
-          );
-        });
-      },
-    );
-
-    // ========================== Values ==========================
-    const checkedSet = computed(() => new Set(toPathKeys(getC().values)));
-    const halfCheckedSet = computed(() => new Set(toPathKeys(getC().halfValues)));
-
-    // ====================== Accessibility =======================
-    // useActive：单选时 open/values 变化 ⇒ 重置 active 为当前值路径
-    const activeValueCells = ref<ValueCell>([]);
-    watch(
-      [() => props.open, () => getC().values[0]],
-      () => {
-        if (!props.multiple) {
-          activeValueCells.value = (getC().values[0] ?? []) as ValueCell;
+        const { options, fieldNames } = context.value;
+        for (const [key, request] of pending) {
+          const current = toPathOptions(request.path, options, fieldNames).at(-1)?.option;
+          if (
+            current !== request.option ||
+            isLeaf(current ?? undefined, fieldNames) ||
+            getOptionChildren(current ?? undefined, fieldNames).length
+          )
+            finish(key, request);
         }
+      },
+      { deep: true },
+    );
+    watch(
+      [() => props.open, () => context.value.values[0]],
+      () => {
+        if (!props.multiple) active.value = context.value.values[0] ?? [];
       },
       { immediate: true },
     );
-
-    // =========================== Path ===========================
-    const onPathOpen = (nextValueCells: ValueCell): void => {
-      activeValueCells.value = nextValueCells;
-      internalLoadData(nextValueCells);
-    };
-    const isSelectable = (option: BaseOptionType): boolean => {
-      if (props.disabled) return false;
-      const { fieldNames, changeOnSelect } = getC();
-      const optionDisabled = option.disabled;
-      return !optionDisabled && (isLeaf(option, fieldNames) || changeOnSelect || props.multiple);
-    };
-    const onPathSelect = (valuePath: ValueCell, leaf: boolean, fromKeyboard = false): void => {
-      const { onSelect, changeOnSelect } = getC();
-      onSelect(valuePath);
-      if (!props.multiple && (leaf || (changeOnSelect && (hoverOpen.value || fromKeyboard)))) {
-        props.toggleOpen(false);
-      }
-    };
-
-    // ========================== Option ==========================
-    const filteredOptions = computed<BaseOptionType[]>(() =>
-      props.searchValue ? getC().searchOptions : getC().options,
+    const checked = computed(() => new Set(toPathKeys(context.value.values)));
+    const half = computed(() => new Set(toPathKeys(context.value.halfValues)));
+    const options = computed(() =>
+      props.searchValue ? context.value.searchOptions : context.value.options,
     );
-
-    // ========================== Columns =========================
-    interface ColumnDef {
-      options: BaseOptionType[];
-    }
-    const optionColumns = computed<ColumnDef[]>(() => {
-      const { fieldNames } = getC();
-      const optionList: ColumnDef[] = [{ options: filteredOptions.value }];
-      let currentList = filteredOptions.value;
-      const fullPathKeys = getFullPathKeys(currentList, fieldNames);
-      for (let i = 0; i < activeValueCells.value.length; i += 1) {
-        const activeValueCell = activeValueCells.value[i];
-        const currentOption = currentList.find((option, index) => {
-          const matchKey = fullPathKeys[index]
-            ? toPathKey(fullPathKeys[index] as (string | number)[])
-            : (option[fieldNames.value] as string | number);
-          return matchKey === activeValueCell;
-        });
-        const subOptions = currentOption?.[fieldNames.children] as BaseOptionType[] | undefined;
-        if (!subOptions?.length) break;
-        currentList = subOptions;
-        optionList.push({ options: subOptions });
+    const searchPath = (option: BaseOptionType): ValueCell | undefined =>
+      getSearchPath(option)?.map((node) => getOptionValue(node, context.value.fieldNames));
+    const activeValue = (option: BaseOptionType): string | number => {
+      const path = searchPath(option);
+      return path ? toPathKey(path) : getOptionValue(option, context.value.fieldNames);
+    };
+    const columns = computed(() => {
+      const result = [options.value];
+      if (!props.searchValue) {
+        let list = options.value;
+        for (const cell of active.value) {
+          const option = list.find(
+            (item) => getOptionValue(item, context.value.fieldNames) === cell,
+          );
+          const children = getOptionChildren(option, context.value.fieldNames);
+          if (!children.length) break;
+          result.push(children);
+          list = children;
+        }
       }
-      return optionList;
+      return result;
     });
-
-    // ========================= Keyboard =========================
-    const onKeyboardSelect = (selectValueCells: ValueCell, option: BaseOptionType): void => {
-      const { fieldNames } = getC();
-      if (isSelectable(option)) {
-        onPathSelect(selectValueCells, isLeaf(option, fieldNames), true);
+    const canSelect = (option: BaseOptionType): boolean =>
+      !props.disabled &&
+      !option.disabled &&
+      (!props.multiple || (!option.disableCheckbox && option.checkable !== false)) &&
+      (props.multiple || context.value.changeOnSelect || isLeaf(option, context.value.fieldNames));
+    const select = (path: ValueCell, option: BaseOptionType, keyboard = false): void => {
+      if (!canSelect(option)) return;
+      context.value.onSelect(path);
+      if (
+        !props.multiple &&
+        (isLeaf(option, context.value.fieldNames) ||
+          (context.value.changeOnSelect && (keyboard || context.value.expandTrigger === 'hover')))
+      )
+        props.toggleOpen(false);
+    };
+    const openPath = (path: ValueCell, option: BaseOptionType): void | Promise<void> => {
+      if (props.disabled || option.disabled) return;
+      active.value =
+        context.value.expandTrigger === 'hover' && isLeaf(option, context.value.fieldNames)
+          ? path.slice(0, -1)
+          : path;
+      return load(path);
+    };
+    const onKeyDown = (event: KeyboardEvent): void | Promise<void> => {
+      if (props.disabled || event.isComposing) return;
+      const key = getNavigationKey(event);
+      if (!navigationKeys.has(key) || (key === ' ' && (!props.multiple || props.searchValue)))
+        return;
+      if (key === 'Backspace' && props.searchValue) return;
+      event.preventDefault();
+      let columnIndex = Math.min(Math.max(active.value.length - 1, 0), columns.value.length - 1);
+      let list = columns.value[columnIndex] ?? [];
+      let index = list.findIndex((option) => activeValue(option) === active.value[columnIndex]);
+      // A replaced/removed active path starts navigation in the first available column.
+      if (index < 0) {
+        columnIndex = 0;
+        list = options.value;
+      }
+      const option = list[index];
+      const previous = (): void => {
+        if (active.value.length > 1) active.value = active.value.slice(0, -1);
+        else props.toggleOpen(false);
+      };
+      const next = (): void | Promise<void> => {
+        if (!option || option.disabled) return;
+        const children = getOptionChildren(option, context.value.fieldNames);
+        const child = children.find((item) => !item.disabled);
+        if (child)
+          active.value = [...active.value, getOptionValue(child, context.value.fieldNames)];
+        else return load(active.value);
+      };
+      if (key === 'ArrowDown' || key === 'ArrowUp') {
+        const direction = key === 'ArrowDown' ? 1 : -1;
+        if (index < 0 && direction < 0) index = list.length;
+        for (let i = 0; i < list.length; i += 1) {
+          index = (index + direction + list.length) % list.length;
+          const candidate = list[index];
+          if (candidate && !candidate.disabled) {
+            active.value = [...active.value.slice(0, columnIndex), activeValue(candidate)];
+            break;
+          }
+        }
+      } else if (key === 'ArrowRight' || key === 'ArrowLeft') {
+        if (!props.searchValue)
+          return (key === 'ArrowRight') !== (props.direction === 'rtl') ? next() : previous();
+      } else if (key === 'Backspace') previous();
+      else if (key === 'Escape') {
+        props.toggleOpen(false);
+        event.stopPropagation();
+      } else if (option) {
+        const origin = getSearchPath(option);
+        if (!option.disabled)
+          select(
+            origin
+              ? origin.map((node) => getOptionValue(node, context.value.fieldNames))
+              : active.value,
+            option,
+            true,
+          );
       }
     };
-
-    // useKeyboard 的主体（直接内联，ref expose onKeyDown）
-    const computeValidActive = () => {
-      const { fieldNames } = getC();
-      let activeIndex = -1;
-      let currentOptions = filteredOptions.value;
-      const mergedActiveIndexes: number[] = [];
-      const mergedActiveValueCells: ValueCell = [];
-      const pathKeys = getFullPathKeys(filteredOptions.value, fieldNames);
-
-      for (let i = 0; i < activeValueCells.value.length && currentOptions; i += 1) {
-        const activeCell = activeValueCells.value[i] as string | number;
-        const nextActiveIndex = currentOptions.findIndex((option, index) => {
-          const matchKey = pathKeys[index]
-            ? toPathKey(pathKeys[index] as (string | number)[])
-            : (option[fieldNames.value] as string | number);
-          return matchKey === activeCell;
-        });
-        if (nextActiveIndex === -1) break;
-        activeIndex = nextActiveIndex;
-        mergedActiveIndexes.push(activeIndex);
-        mergedActiveValueCells.push(activeCell);
-        currentOptions = (currentOptions[activeIndex]?.[fieldNames.children] ??
-          []) as BaseOptionType[];
-      }
-
-      let activeOptions = filteredOptions.value;
-      for (let i = 0; i < mergedActiveIndexes.length - 1; i += 1) {
-        const idx = mergedActiveIndexes[i] as number;
-        const next = activeOptions[idx] as BaseOptionType | undefined;
-        activeOptions = (next?.[fieldNames.children] ?? []) as BaseOptionType[];
-      }
-      return {
-        mergedActiveValueCells,
-        activeIndex,
-        activeOptions,
-        pathKeys,
-      };
-    };
-
-    const onKeyDown = (event: KeyboardEvent): void => {
-      const { mergedActiveValueCells, activeIndex, activeOptions, pathKeys } = computeValidActive();
-      const len = activeOptions.length;
-      const currentIndex = activeIndex;
-
-      const setActive = (next: ValueCell) => {
-        activeValueCells.value = next;
-      };
-
-      // 同列环绕（跳过 disabled）
-      const offsetActiveOption = (offset: number): void => {
-        let index = activeIndex;
-        if (index === -1 && offset < 0) index = len;
-        for (let i = 0; i < len; i += 1) {
-          index = (index + offset + len) % len;
-          const option = activeOptions[index];
-          if (option && !option.disabled) {
-            const nextActiveCells = mergedActiveValueCells
-              .slice(0, -1)
-              .concat(
-                pathKeys[index]
-                  ? toPathKey(pathKeys[index] as (string | number)[])
-                  : (option[fieldNames.value] as string | number),
-              );
-            setActive(nextActiveCells);
-            return;
-          }
-        }
-      };
-
-      const { fieldNames } = getC();
-
-      const prevColumn = (): void => {
-        if (mergedActiveValueCells.length > 1) {
-          setActive(mergedActiveValueCells.slice(0, -1));
-        } else {
-          props.toggleOpen(false);
-        }
-      };
-      const nextColumn = (): void => {
-        const nextOptions = (activeOptions[activeIndex]?.[fieldNames.children] ??
-          []) as BaseOptionType[];
-        const nextOption = nextOptions.find((option) => !option.disabled);
-        if (nextOption) {
-          setActive([...mergedActiveValueCells, nextOption[fieldNames.value] as string | number]);
-        }
-      };
-
-      switch (event.which) {
-        case KeyCode.UP:
-        case KeyCode.DOWN: {
-          const offset = event.which === KeyCode.UP ? -1 : event.which === KeyCode.DOWN ? 1 : 0;
-          if (offset !== 0) offsetActiveOption(offset);
-          break;
-        }
-        case KeyCode.LEFT:
-          if (!props.searchValue) {
-            if (rtl.value) nextColumn();
-            else prevColumn();
-          }
-          break;
-        case KeyCode.RIGHT:
-          if (!props.searchValue) {
-            if (rtl.value) prevColumn();
-            else nextColumn();
-          }
-          break;
-        case KeyCode.BACKSPACE:
-          if (!props.searchValue) prevColumn();
-          break;
-        case KeyCode.ENTER: {
-          if (mergedActiveValueCells.length) {
-            const option = activeOptions[activeIndex] as BaseOptionType | undefined;
-            // 搜索项回溯 SEARCH_MARK 的原始路径
-            const originOptions = (option?.[SEARCH_MARK] ?? []) as BaseOptionType[];
-            if (originOptions.length) {
-              onKeyboardSelect(
-                originOptions.map((opt) => opt[fieldNames.value] as string | number),
-                (originOptions[originOptions.length - 1] ?? {}) as BaseOptionType,
-              );
-            } else {
-              onKeyboardSelect(mergedActiveValueCells, (option ?? {}) as BaseOptionType);
-            }
-          }
-          break;
-        }
-        case KeyCode.ESC:
-          props.toggleOpen(false);
-          if (props.open) event.stopPropagation();
-          break;
-        default:
-          break;
-      }
-      void currentIndex;
-    };
-
-    expose({ onKeyDown, onKeyUp: () => {} });
-
-    // >>>>> Active Scroll
+    expose({ onKeyDown, onKeyUp: () => {} } satisfies CascaderOptionListRef);
     watch(
-      [activeValueCells, () => props.searchValue],
+      [active, () => props.searchValue],
       async () => {
         if (props.searchValue) return;
         await nextTick();
-        for (let i = 0; i < activeValueCells.value.length; i += 1) {
-          const cellPath = activeValueCells.value.slice(0, i + 1);
-          const cellKeyPath = toPathKey(cellPath);
-          const ele = containerRef.value?.querySelector(
-            `li[data-path-key="${cellKeyPath.replace(/\\{0,2}"/g, '\\"')}"]`,
-          );
-          if (ele) scrollIntoParentView(ele as HTMLElement);
+        const rows = container.value?.querySelectorAll<HTMLElement>('li[data-path-key]');
+        if (!rows) return;
+        for (let i = 1; i <= active.value.length; i += 1) {
+          const key = toPathKey(active.value.slice(0, i));
+          const row = Array.from(rows).find((item) => item.dataset.pathKey === key);
+          if (row) scrollIntoParentView(row);
         }
       },
       { flush: 'post' },
     );
-
-    // ========================== Render ==========================
-    const isEmpty = computed(() => !(optionColumns.value[0]?.options?.length ?? false));
-    const emptyList = computed<BaseOptionType[]>(() => [
-      {
-        [getC().fieldNames.value]: '__EMPTY__',
-        [FIX_LABEL]: props.notFoundContent,
-        disabled: true,
-      } as BaseOptionType,
-    ]);
-
-    /** Column 内单项渲染（rc 的 Column 组件体，内联为函数）。 */
-    const renderColumn = (
-      colOptions: BaseOptionType[],
-      prevValuePath: ValueCell,
-      activeValue: string | number | undefined,
-      listIndex: number,
-    ): VNodeChild => {
-      const {
-        fieldNames,
-        changeOnSelect,
-        expandIcon,
-        loadingIcon,
-        popupMenuColumnStyle,
-        optionRender,
-        classNames,
-        styles,
-      } = getC();
-      const menuPrefixCls = `${mergedPrefixCls.value}-menu`;
-      const menuItemPrefixCls = `${mergedPrefixCls.value}-menu-item`;
-
-      const isOptionDisabled = (disabled?: boolean): boolean => props.disabled || !!disabled;
-
-      const optionInfoList = colOptions.map((option) => {
-        const { disabled, disableCheckbox } = option as {
-          disabled?: boolean;
-          disableCheckbox?: boolean;
-        };
-        const searchMarks = option[SEARCH_MARK] as BaseOptionType[] | undefined;
-        const label = option[FIX_LABEL] ?? option[fieldNames.label];
-        const value = option[fieldNames.value] as string | number;
-        const isMergedLeaf = isLeaf(option, fieldNames);
-
-        const fullPath: ValueCell = searchMarks
-          ? searchMarks.map((opt) => opt[fieldNames.value] as string | number)
-          : [...prevValuePath, value];
-        const fullPathKey = toPathKey(fullPath);
-        const isLoading = loadingKeys.value.includes(fullPathKey);
-
-        return {
-          disabled,
-          disableCheckbox,
-          label,
-          value,
-          isLeaf: isMergedLeaf,
-          isLoading,
-          checked: checkedSet.value.has(fullPathKey),
-          halfChecked: halfCheckedSet.value.has(fullPathKey),
-          option,
-          fullPath,
-          fullPathKey,
-        };
-      });
-
-      return h(
-        'ul',
-        {
-          key: listIndex,
-          class: clsx(menuPrefixCls, (classNames as { popup?: { list?: string } })?.popup?.list),
-          style: (styles as { popup?: { list?: Record<string, string | number> } })?.popup?.list,
-          role: 'menu',
-        },
-        optionInfoList.map(
-          ({
-            disabled,
-            disableCheckbox,
-            label,
-            value,
-            isLeaf: isMergedLeaf,
-            isLoading,
-            checked,
-            halfChecked,
-            option,
-            fullPath,
-            fullPathKey,
-          }) => {
-            // aria / data 透传（rc 的 pickAttrs）
-            const ariaProps: Record<string, unknown> = {};
-            Object.keys(toRaw(option)).forEach((key) => {
-              if (key.startsWith('aria-') || key.startsWith('data-')) {
-                ariaProps[key] = (option as BaseOptionType)[key];
-              }
-            });
-
-            const triggerOpenPath = (): void => {
-              if (isOptionDisabled(disabled)) return;
-              const nextValueCells = [...fullPath];
-              if (hoverOpen.value && isMergedLeaf) nextValueCells.pop();
-              onPathOpen(nextValueCells);
-            };
-            const triggerSelect = (): void => {
-              if (isSelectable(option) && !isOptionDisabled(disabled)) {
-                // ⚠️ 这里调的是本组件的 onPathSelect（双参：leaf 驱动「是否关闭浮层」），
-                //    不是 ctx.onSelect（单参，由 onPathSelect 内部转发）
-                onPathSelect(fullPath, isMergedLeaf);
-              }
-            };
-            const title =
-              typeof option.title === 'string'
-                ? option.title
-                : typeof label === 'string'
-                  ? label
-                  : undefined;
-
-            return h(
-              'li',
-              {
-                key: fullPathKey,
-                ...ariaProps,
-                class: clsx(
-                  menuItemPrefixCls,
-                  (classNames as { popup?: { listItem?: string } })?.popup?.listItem,
-                  {
-                    [`${menuItemPrefixCls}-expand`]: !isMergedLeaf,
-                    [`${menuItemPrefixCls}-active`]:
-                      activeValue === value || activeValue === fullPathKey,
-                    [`${menuItemPrefixCls}-disabled`]: isOptionDisabled(disabled),
-                    [`${menuItemPrefixCls}-loading`]: isLoading,
-                  },
-                ),
-                style: {
-                  ...(popupMenuColumnStyle ?? {}),
-                  ...(styles as { popup?: { listItem?: Record<string, string | number> } })?.popup
-                    ?.listItem,
-                },
-                role: 'menuitemcheckbox',
-                title,
-                'aria-checked': checked,
-                'data-path-key': fullPathKey,
-                onClick: () => {
-                  triggerOpenPath();
-                  if (disableCheckbox) return;
-                  if (!props.multiple || isMergedLeaf) triggerSelect();
-                },
-                onDblclick: () => {
-                  if (changeOnSelect) props.toggleOpen(false);
-                },
-                onMouseenter: () => {
-                  if (hoverOpen.value) triggerOpenPath();
-                },
-                onMousedown: (e: MouseEvent) => {
-                  // 防止 selector 失焦
-                  e.preventDefault();
-                },
-              },
-              [
-                props.multiple && !isEmpty.value
-                  ? h(Checkbox, {
-                      key: 'checkbox',
-                      prefixCls: `${mergedPrefixCls.value}-checkbox`,
-                      checked,
-                      halfChecked,
-                      disabled: isOptionDisabled(disabled) || !!disableCheckbox,
-                      disableCheckbox: !!disableCheckbox,
-                      onClick: (e: MouseEvent) => {
-                        if (disableCheckbox) return;
-                        e.stopPropagation();
-                        triggerSelect();
-                      },
-                    })
-                  : null,
-                h(
-                  'div',
-                  { key: 'content', class: `${menuItemPrefixCls}-content` },
-                  ((optionRender && value !== '__EMPTY__'
-                    ? (optionRender as (opt: BaseOptionType) => VNodeChild)(option)
-                    : label) as VNodeChild) ?? undefined,
-                ),
-                !isLoading && expandIcon && !isMergedLeaf
-                  ? h(
-                      'div',
-                      { key: 'expand', class: `${menuItemPrefixCls}-expand-icon` },
-                      (expandIcon as VNodeChild) ?? undefined,
-                    )
-                  : null,
-                isLoading && loadingIcon
-                  ? h(
-                      'div',
-                      { key: 'loading', class: `${menuItemPrefixCls}-loading-icon` },
-                      (loadingIcon as VNodeChild) ?? undefined,
-                    )
-                  : null,
-              ],
-            );
-          },
-        ),
-      );
-    };
-
-    onMounted(() => {
-      const first = getC().values[0];
-      if (!props.multiple && first) activeValueCells.value = first;
-    });
-
     return () => {
-      const mergedOptionColumns = isEmpty.value
-        ? [{ options: emptyList.value }]
-        : optionColumns.value;
-
+      const { fieldNames, classNames, styles } = context.value;
+      const p = props.prefixCls;
+      const isEmpty = !options.value.length;
+      const lists = isEmpty
+        ? [
+            [
+              {
+                [fieldNames.value]: '__EMPTY__',
+                [FIX_LABEL]: props.notFoundContent,
+                disabled: true,
+              },
+            ],
+          ]
+        : columns.value;
       return h(
         'div',
         {
-          class: clsx(`${mergedPrefixCls.value}-menus`, {
-            [`${mergedPrefixCls.value}-menu-empty`]: isEmpty.value,
-            [`${mergedPrefixCls.value}-rtl`]: rtl.value,
-          }),
-          ref: containerRef,
+          ref: container,
+          class: [
+            `${p}-menus`,
+            { [`${p}-menu-empty`]: isEmpty, [`${p}-rtl`]: props.direction === 'rtl' },
+          ],
         },
-        mergedOptionColumns.map((col, index) =>
-          renderColumn(
-            col.options,
-            activeValueCells.value.slice(0, index),
-            activeValueCells.value[index],
-            index,
+        lists.map((list, columnIndex) =>
+          h(
+            'ul',
+            {
+              key: columnIndex,
+              class: [`${p}-menu`, classNames.popup?.list],
+              style: [context.value.popupMenuColumnStyle, styles.popup?.list],
+              role: 'menu',
+              onScroll: (event: Event) => emit('popupScroll', event),
+            },
+            list.map((option) => {
+              const pathOptions = getSearchPath(option) ?? [
+                ...toPathOptions(
+                  active.value.slice(0, columnIndex),
+                  context.value.options,
+                  fieldNames,
+                ).flatMap((item) => (item.option ? [item.option] : [])),
+                option,
+              ];
+              const path = pathOptions.map((item) => getOptionValue(item, fieldNames));
+              const key = toPathKey(path);
+              const leaf = isLeaf(option, fieldNames),
+                disabled = !!(props.disabled || option.disabled);
+              const isLoading = !!option.loading || loading.value.has(key);
+              const label = isEmpty
+                ? toContent(option[FIX_LABEL])
+                : getOptionLabel(option, fieldNames, getOptionValue(option, fieldNames));
+              const iconScope = { option };
+              const expandIcon = slots.expandIcon
+                ? slots.expandIcon(iconScope)
+                : context.value.expandIcon;
+              const loadingIcon = slots.loadingIcon
+                ? slots.loadingIcon(iconScope)
+                : context.value.loadingIcon;
+              const content = isEmpty
+                ? label
+                : props.searchValue && slots.searchRender
+                  ? slots.searchRender({ inputValue: props.searchValue, pathOptions, fieldNames })
+                  : slots.optionRender
+                    ? slots.optionRender({ option, pathOptions })
+                    : label;
+              const optionAttrs = Object.fromEntries(
+                Object.entries(option).filter(
+                  ([name]) => name.startsWith('aria-') || name.startsWith('data-'),
+                ),
+              );
+              return h(
+                'li',
+                {
+                  key,
+                  ...optionAttrs,
+                  class: [
+                    `${p}-menu-item`,
+                    classNames.popup?.listItem,
+                    {
+                      [`${p}-menu-item-expand`]: !leaf,
+                      [`${p}-menu-item-active`]: active.value[columnIndex] === activeValue(option),
+                      [`${p}-menu-item-disabled`]: disabled,
+                      [`${p}-menu-item-loading`]: isLoading,
+                    },
+                  ],
+                  style: styles.popup?.listItem,
+                  role: 'menuitemcheckbox',
+                  title:
+                    typeof option.title === 'string'
+                      ? option.title
+                      : typeof label === 'string'
+                        ? label
+                        : undefined,
+                  'aria-checked': half.value.has(key) ? 'mixed' : checked.value.has(key),
+                  'aria-disabled': disabled || undefined,
+                  'aria-expanded': leaf
+                    ? undefined
+                    : active.value[columnIndex] === activeValue(option),
+                  'data-path-key': key,
+                  onClick: () => {
+                    const result = openPath(path, option);
+                    if (!props.multiple || leaf) select(path, option);
+                    return result;
+                  },
+                  onDblclick: () => {
+                    if (!disabled && context.value.changeOnSelect) props.toggleOpen(false);
+                  },
+                  onMouseenter: () => {
+                    if (context.value.expandTrigger === 'hover') return openPath(path, option);
+                  },
+                  onMousedown: (event: MouseEvent) => event.preventDefault(),
+                },
+                [
+                  props.multiple && !isEmpty
+                    ? h('span', {
+                        class: [
+                          `${p}-checkbox`,
+                          {
+                            [`${p}-checkbox-checked`]: checked.value.has(key),
+                            [`${p}-checkbox-indeterminate`]:
+                              !checked.value.has(key) && half.value.has(key),
+                            [`${p}-checkbox-disabled`]:
+                              disabled || option.disableCheckbox || option.checkable === false,
+                          },
+                        ],
+                        onClick: (event: MouseEvent) => {
+                          event.stopPropagation();
+                          select(path, option);
+                        },
+                      })
+                    : null,
+                  h('div', { class: `${p}-menu-item-content` }, [content]),
+                  !isLoading && !leaf
+                    ? h('div', { class: `${p}-menu-item-expand-icon` }, [expandIcon])
+                    : null,
+                  isLoading
+                    ? h('div', { class: `${p}-menu-item-loading-icon` }, [loadingIcon])
+                    : null,
+                ],
+              );
+            }),
           ),
         ),
       );
     };
   },
 });
-
 export default RawOptionList;

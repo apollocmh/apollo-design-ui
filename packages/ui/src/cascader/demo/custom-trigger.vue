@@ -3,8 +3,9 @@
 import { EnvironmentOutlined } from '@apollo-design/icons';
 import { Button, Cascader, Tag } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
+import type { CascaderOutputValue } from '../interface';
 
-const value = ref<string[]>(['zhejiang', 'hangzhou']);
+const value = ref<CascaderOutputValue>(['zhejiang', 'hangzhou']);
 
 const options = [
   {
@@ -32,7 +33,7 @@ const labels: Record<string, string> = {
 
 const display = computed(() => {
   if (!value.value.length) return '请选择地区';
-  return value.value.map((item) => labels[item] ?? item).join(' / ');
+  return value.value.map((item) => labels[String(item)] ?? item).join(' / ');
 });
 </script>
 

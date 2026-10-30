@@ -2,9 +2,10 @@
 // 对齐 antd 的多选勾选策略：SHOW_PARENT / SHOW_CHILD
 import { CASCADER_SHOW_CHILD, CASCADER_SHOW_PARENT, Cascader, Tag } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
+import type { CascaderOutputValue } from '../interface';
 
-const parentValue = ref<string[][]>([['zhejiang', 'hangzhou']]);
-const childValue = ref<string[][]>([['zhejiang', 'hangzhou']]);
+const parentValue = ref<CascaderOutputValue>([['zhejiang', 'hangzhou']]);
+const childValue = ref<CascaderOutputValue>([['zhejiang', 'hangzhou']]);
 
 const options = [
   {
@@ -27,12 +28,16 @@ const options = [
 
 const parentDisplay = computed(() =>
   parentValue.value.length
-    ? parentValue.value.map((path) => path.join(' / ')).join('；')
+    ? parentValue.value
+        .map((path) => (Array.isArray(path) ? path.join(' / ') : String(path)))
+        .join('；')
     : '尚未选择',
 );
 const childDisplay = computed(() =>
   childValue.value.length
-    ? childValue.value.map((path) => path.join(' / ')).join('；')
+    ? childValue.value
+        .map((path) => (Array.isArray(path) ? path.join(' / ') : String(path)))
+        .join('；')
     : '尚未选择',
 );
 </script>

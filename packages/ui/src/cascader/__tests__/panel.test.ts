@@ -62,7 +62,10 @@ describe('CascaderPanel · 展开', () => {
     await items(w)[4]?.trigger('click');
     await nextTick();
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith(['zj', 'hz', 'xh']);
+    expect(onChange).toHaveBeenCalledWith(
+      ['zj', 'hz', 'xh'],
+      [OPTIONS[0], OPTIONS[0]?.children?.[0], OPTIONS[0]?.children?.[0]?.children?.[0]],
+    );
   });
 
   it('defaultValue：初始即展开到已选路径', async () => {
@@ -72,7 +75,9 @@ describe('CascaderPanel · 展开', () => {
     await nextTick();
     expect(menus(w).length).toBeGreaterThanOrEqual(2);
     // 当前值路径上有 active 类
-    expect(w.html()).toContain('data-path-key="zj__RC_CASCADER_SPLIT__hz"');
+    expect(w.findAll('[data-path-key]').map((row) => row.attributes('data-path-key'))).toContain(
+      '["zj","hz"]',
+    );
   });
 
   it('hover 展开触发（expandTrigger=hover）', async () => {
@@ -124,7 +129,7 @@ describe('CascaderPanel · changeOnSelect', () => {
     });
     await items(w)[0]?.trigger('click');
     await nextTick();
-    expect(onChange).toHaveBeenCalledWith(['zj']);
+    expect(onChange).toHaveBeenCalledWith(['zj'], [OPTIONS[0]]);
   });
 });
 
@@ -146,7 +151,7 @@ describe('CascaderPanel · 键盘', () => {
     await nextTick();
     await fire(13); // ENTER：选中 nj（叶子）
     await nextTick();
-    expect(onChange).toHaveBeenCalledWith(['js', 'nj']);
+    expect(onChange).toHaveBeenCalledWith(['js', 'nj'], [OPTIONS[1], OPTIONS[1]?.children?.[0]]);
   });
 
   it('ESC：触发 toggleOpen(false)（Panel 的 noop，无副作用）', async () => {
@@ -165,7 +170,9 @@ describe('CascaderPanel · 受控', () => {
       props: { options: OPTIONS, value: ['js', 'nj'] },
     });
     await nextTick();
-    expect(w.html()).toContain('data-path-key="js__RC_CASCADER_SPLIT__nj"');
+    expect(w.findAll('[data-path-key]').map((row) => row.attributes('data-path-key'))).toContain(
+      '["js","nj"]',
+    );
   });
 });
 

@@ -166,7 +166,7 @@ export const SearchInput = defineComponent({
         'aria-label': props.ariaLabel,
         'aria-labelledby': props.ariaLabelledby,
         'aria-expanded': props.open || false,
-        'aria-haspopup': 'listbox',
+        'aria-haspopup': attrs['aria-haspopup'] ?? 'listbox',
         'aria-autocomplete': 'list',
         'aria-owns': props.open ? `${props.id}_list` : undefined,
         'aria-controls': props.open ? `${props.id}_list` : undefined,

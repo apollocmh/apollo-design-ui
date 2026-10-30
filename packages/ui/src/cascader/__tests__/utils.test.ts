@@ -43,8 +43,8 @@ const OPTIONS: BaseOptionType[] = [
 
 describe('utils · 值与路径', () => {
   it('toPathKey / toPathValueStr 互逆', () => {
-    expect(toPathKey(['zj', 'hz'])).toBe('zj__RC_CASCADER_SPLIT__hz');
-    expect(toPathValueStr('zj__RC_CASCADER_SPLIT__hz')).toEqual(['zj', 'hz']);
+    expect(toPathKey(['zj', 'hz'])).toBe('["zj","hz"]');
+    expect(toPathValueStr('["zj","hz"]')).toEqual(['zj', 'hz']);
   });
 
   it('toRawValues：一维包一层 / 二维原样 / 空兜底', () => {
@@ -91,20 +91,20 @@ describe('formatStrategyValues（多选回填去重）', () => {
 
   it('SHOW_PARENT：父被选时子丢弃', () => {
     const result = formatStrategyValues(
-      ['zj', 'zj__RC_CASCADER_SPLIT__hz'],
+      [toPathKey(['zj']), toPathKey(['zj', 'hz'])],
       getPathKeyEntities,
       SHOW_PARENT,
     );
-    expect(result).toEqual(['zj']);
+    expect(result).toEqual([toPathKey(['zj'])]);
   });
 
   it('SHOW_CHILD：有子被选的父不保留', () => {
     const result = formatStrategyValues(
-      ['zj', 'zj__RC_CASCADER_SPLIT__hz'],
+      [toPathKey(['zj']), toPathKey(['zj', 'hz'])],
       getPathKeyEntities,
       SHOW_CHILD,
     );
-    expect(result).toEqual(['zj__RC_CASCADER_SPLIT__hz']);
+    expect(result).toEqual([toPathKey(['zj', 'hz'])]);
   });
 });
 
@@ -165,7 +165,7 @@ describe('displayValues（computeDisplayValues）', () => {
   it('单选：全路径 ` / ` 连接', () => {
     const result = computeDisplayValues([['zj', 'hz', 'xh']], OPTIONS, FIELD, false);
     expect(result[0]?.label).toBe('浙江 / 杭州 / 西湖');
-    expect(result[0]?.value).toBe('zj__RC_CASCADER_SPLIT__hz__RC_CASCADER_SPLIT__xh');
+    expect(result[0]?.value).toBe(toPathKey(['zj', 'hz', 'xh']));
   });
 
   it('多选：只取最后一段', () => {

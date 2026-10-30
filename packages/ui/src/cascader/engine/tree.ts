@@ -73,7 +73,7 @@ function getKey(key: unknown, pos: string): string {
  * 遍历嵌套数据（广度优先按层级展开，与上游同序）。
  *
  * ⚠️ 上游 `traverseDataNodes` 的 `nodes` 是**路径链**（根→当前），不是 children ——
- *    Cascader 的 `pathKey = nodes.map(v => v[value]).join(VALUE_SPLIT)` 依赖它。
+ *    Cascader 的 typed value path 依赖完整的 nodes 路径。
  */
 export function traverseDataNodes(
   dataNodes: Record<string, unknown>[],
@@ -160,10 +160,20 @@ export function convertDataToEntities(
       const entity: DataEntity = { node, nodes, index, key, pos, level };
       const mergedKey = getKey(key, pos);
 
-      posEntities[pos] = entity;
-      keyEntities[mergedKey] = entity;
+      Object.defineProperty(posEntities, pos, {
+        value: entity,
+        writable: true,
+        configurable: true,
+        enumerable: true,
+      });
+      Object.defineProperty(keyEntities, mergedKey, {
+        value: entity,
+        writable: true,
+        configurable: true,
+        enumerable: true,
+      });
 
-      entity.parent = posEntities[parentPos];
+      entity.parent = Object.hasOwn(posEntities, parentPos) ? posEntities[parentPos] : undefined;
       if (entity.parent) {
         entity.parent.children = entity.parent.children || [];
         entity.parent.children.push(entity);
@@ -213,7 +223,7 @@ function groupByLevel(keyEntities: Record<string, DataEntity>) {
   let maxLevel = 0;
   Object.keys(keyEntities).forEach((key) => {
     // noUncheckedIndexedAccess：索引访问可能 undefined（key 来自 Object.keys，防御式收窄）
-    const entity = keyEntities[key];
+    const entity = Object.hasOwn(keyEntities, key) ? keyEntities[key] : undefined;
     if (!entity) return;
     const { level } = entity;
     // ⚠️ 用局部变量接住（`get(...)!` 消不掉，且 `Map.get` 的返回类型永远是 `T | undefined`）
@@ -380,7 +390,7 @@ export function conductCheck(
   const getDisabled = getCheckDisabled ?? isCheckDisabled;
 
   // 只处理存在的 key（上游会 warning 缺失的 key，本仓静默过滤）
-  const keys = new Set(keyList.filter((key) => !!keyEntities[key]));
+  const keys = new Set(keyList.filter((key) => Object.hasOwn(keyEntities, key)));
 
   const { levelEntities, maxLevel } = groupByLevel(keyEntities);
 

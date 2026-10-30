@@ -1,10 +1,12 @@
 <script setup lang="ts">
 // 对齐 antd 的 custom-dropdown demo：popupClassName + popupStyle
 import { Cascader, Switch, Tag } from '@apollo-design/ui';
+import type { CSSProperties } from 'vue';
 import { computed, ref } from 'vue';
+import type { CascaderOutputValue } from '../interface';
 
 const enhanced = ref(true);
-const value = ref<string[]>([]);
+const value = ref<CascaderOutputValue>([]);
 
 const options = [
   {
@@ -26,7 +28,7 @@ const popupClassName = computed(() =>
   enhanced.value ? 'cascader-custom-dropdown-popup' : undefined,
 );
 
-const popupStyle = computed<Record<string, string | number> | undefined>(() =>
+const popupStyle = computed<CSSProperties | undefined>(() =>
   enhanced.value
     ? {
         borderRadius: '14px',
@@ -36,7 +38,7 @@ const popupStyle = computed<Record<string, string | number> | undefined>(() =>
     : undefined,
 );
 
-const columnStyle = computed<Record<string, string | number> | undefined>(() =>
+const columnStyle = computed<CSSProperties | undefined>(() =>
   enhanced.value ? { backgroundColor: '#f6ffed' } : undefined,
 );
 

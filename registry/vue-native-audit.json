@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 124,
+  "revision": 129,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -179,7 +179,17 @@
           }
         ],
         "boundary": "保留F02条件选项成果；通知/三个model、真实模板Ctor与ref、完整当前槽/attrs、backfill预览/接受/拒绝/0/关闭重开、Tab提交与原生焦点离开已验证。AutoComplete自身Provider与Select配置隔离，语义fn在各自public props上一次解析；依当前公开声明继续共享Select Token，不新增独立Token。算法filter始终收到实际option，类型同步。14 Demo与源码浏览器通过且诊断为空。自定义input替换协议和AutoComplete PurePanel原本未公开支持，本轮不新增。未执行最终冻结九维/发布消费者。"
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/select/engine/BaseSelect.ts",
+            "packages/ui/src/select/engine/SearchInput.ts"
+          ],
+          "change": "Shared input native event ownership and ARIA override; raw popup consumes the same current presentation as the normal branch.",
+          "verification": "CMP:cascader verification: shared native consumer regressions, strict and raw-popup browser functionality; browser diagnostic exit1 is retained as non-blocking."
+        }
+      ]
     },
     {
       "id": "CMP:avatar",
@@ -434,24 +444,30 @@
       "kind": "component",
       "ref": "cascader",
       "title": "Cascader",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/cascader"
       ],
-      "assignment": {
-        "owner": "native_color_picker",
-        "baseRevision": 107,
-        "startedAt": "2026-10-30T12:00:47.657Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-23-vue-reactivity-remediation.md"
       ],
-      "issues": [],
+      "issues": [
+        {
+          "id": "CASCADER-TRIGGER-RESIZE-NOTIFICATION",
+          "status": "deferred",
+          "blocking": false,
+          "impact": "真实浏览器全部功能断言通过；共享Trigger产生1条原生ResizeObserver延迟通知，browser整体exit1，未出现持续循环或焦点/DOM丢失。",
+          "reason": "沿用已登记的共享非阻塞问题TRIGGER-RESIZE-NOTIFICATION，保留失败命令与诊断；最终冻结时统一核对，不扩大本次Cascader整改范围。"
+        }
+      ],
       "plan": {
         "goal": "保留已有条件选项成果，核对Cascader完整当前原生契约差额",
         "remaining": [
@@ -461,6 +477,98 @@
         "basis": [
           "docs/audit/2026-10-23-vue-reactivity-remediation.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/cascader",
+          "packages/ui/src/select/engine/BaseSelect.ts",
+          "packages/ui/src/select/engine/SearchInput.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/cascader --maxWorkers=1",
+            "exitCode": 0,
+            "durationMs": 25070,
+            "result": "8 files, 114 passed",
+            "log": "/tmp/apollo-cascader-final-core.log"
+          },
+          {
+            "kind": "semantic",
+            "command": "pnpm exec vitest run --project dom-contract packages/ui/src/cascader/__tests__/semantic.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "durationMs": 4490,
+            "result": "4 passed, final shared raw transport source",
+            "log": "/tmp/apollo-cascader-final-semantic.log"
+          },
+          {
+            "kind": "a11y-targeted",
+            "command": "pnpm exec vitest run --project a11y packages/ui/src/cascader/__tests__/a11y.test.ts -t 'data-path-key' --maxWorkers=1",
+            "exitCode": 0,
+            "durationMs": 10340,
+            "result": "1 passed, 27 skipped; fixes stale private encoding assertion",
+            "log": "/tmp/apollo-cascader-final-a11y-key.log"
+          },
+          {
+            "kind": "format",
+            "command": "pnpm exec biome check [owned changed/untracked Cascader files]",
+            "exitCode": 0,
+            "result": "27 supported files checked; final whitespace-only fix also git diff --check exit0",
+            "log": "/tmp/apollo-cascader-format.log"
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check -- packages/ui/src/cascader",
+            "exitCode": 0
+          },
+          {
+            "kind": "core-type-fix",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/cascader/__tests__/native-contracts.test.ts packages/ui/src/cascader/__tests__/utils.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "durationMs": 7450,
+            "result": "2 files,37 passed after correcting true private BaseSelect ref shape, undefined keyboard return and real ValueCell narrowing",
+            "log": "/tmp/apollo-cascader-final-type-fix-core.log"
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/tree-select/__tests__/native-contracts.test.ts packages/ui/src/tree/__tests__/native-contracts.test.ts packages/ui/src/select/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11160,
+            "result": "3 files,47 passed; shared accepted keyboard ownership and input ARIA bridge consumers"
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full Cascader source/type tests/native SFC/all Demo and BaseSelect/SearchInput; declaration/strict unchanged>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 54670
+          }
+        ],
+        "deferredChecks": [
+          {
+            "kind": "theme+a11y",
+            "command": "pnpm exec vitest run --project a11y --project theme packages/ui/src/cascader --maxWorkers=1",
+            "exitCode": 1,
+            "durationMs": 17020,
+            "result": "theme14 and a11y27 passed; only one stale data-path-key expectation failed, then targeted corrected check passed. No full aggregate pass claim; jsdom reports canvas getContext unavailable.",
+            "log": "/tmp/apollo-cascader-final-presentation.log"
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/cascader/__tests__/native-browser.mjs",
+            "exitCode": 1,
+            "durationMs": null,
+            "functionalResult": "passed",
+            "diagnosticResult": "failed: one native window.error ResizeObserver late-notification",
+            "result": "All compiled-slot/editor identity/focus/draft, typed zero path models/modern keys/search Space, 8 tokens, Panel attrs+RTL+Promise loading, raw popup320px/z1630/styles+Token/keyboard, unmount assertions passed before strict native error gate failed. No console/pageerror/Vue warning; no filtering or retry.",
+            "log": "/tmp/apollo-cascader-native-browser.log",
+            "relatedIssue": "TRIGGER-RESIZE-NOTIFICATION"
+          }
+        ],
+        "boundary": "Cascader 与 Panel 的类型/路径实体/accepted models、当前完整插槽/实际ref/原生attrs、Provider/8Token、键盘/IME/异步请求资源和共享 raw popup 传递已实现；所有源类型、正负类型用例、真实SFC与全部Demo strict exit0。核心/semantic与变化断言通过；theme+a11y旧组合整体exit1，受影响私有路径编码断言已定向修正验证，不将该组合冒称全部通过。真实Chrome功能断言通过，但最终诊断门禁捕获1条共享Trigger RO，整体exit1；保留非阻塞问题及原日志，不宣称browser clean。D113内部面板别名保留；全库、构建消费者和冻结九维未执行。"
       }
     },
     {
@@ -1035,7 +1143,7 @@
       "kind": "component",
       "ref": "form",
       "title": "Form",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [
         "FND:form-core"
@@ -1043,7 +1151,11 @@
       "owns": [
         "packages/ui/src/form"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_form_core",
+        "baseRevision": 125,
+        "startedAt": "2026-10-30T13:38:16.216Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1052,7 +1164,21 @@
         "docs/audit/2026-10-24-form-prefix-recheck.md",
         "docs/audit/2026-10-29-config-provider-contract-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "接续已交付 Form Core 与既有前缀/Provider 成果，收口 UI Form 剩余 Vue 契约",
+        "remaining": [
+          "复用 Form Core 具名槽、owned emits、真实 ref 和生命周期证据；重点核对 UI 包装、关联布局子组件、当前 Provider/语义样式、11 个已有 Token、实际焦点/滚动与原生 attrs 的剩余消费差额。",
+          "README 已知缺口按当前源码验证后裁定；不重新审核基础状态/校验算法，不扩上游 Demo 全覆盖，不开展全库九维。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/form/README.md",
+          "docs/foundation/form-core-contract.md",
+          "docs/audit/2026-10-24-form-prefix-recheck.md",
+          "docs/audit/2026-10-29-config-provider-contract-audit.md"
+        ]
+      }
     },
     {
       "id": "CMP:grid",
@@ -2156,7 +2282,17 @@
           }
         ],
         "boundary": "沿用条件选项既有成果；实际emits/三个model、完整动态槽、焦点/scrollTo/模板Ctor、当前Provider和有效Token、原生attrs及共享引擎消费者已验证。showSearch只保留搜索算法配置，搜索状态/通知/图标迁顶层模型、事件及槽；AutoComplete同步桥接searchValue更新。源码浏览器exit0，保留三条Vite ResizeObserver late notification，未出现持续循环/焦点丢失；该共享Trigger诊断非阻塞延期，不宣称零诊断。未执行最终冻结九维/发布消费者验收。"
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/select/engine/BaseSelect.ts",
+            "packages/ui/src/select/engine/SearchInput.ts"
+          ],
+          "change": "Shared input native event ownership and ARIA override; raw popup consumes the same current presentation as the normal branch.",
+          "verification": "CMP:cascader verification: shared native consumer regressions, strict and raw-popup browser functionality; browser diagnostic exit1 is retained as non-blocking."
+        }
+      ]
     },
     {
       "id": "CMP:skeleton",
@@ -2650,7 +2786,7 @@
           "id": "TRIGGER-RESIZE-NOTIFICATION",
           "status": "deferred",
           "blocking": false,
-          "impact": "多Select主题切换时Vite记录三条ResizeObserver延迟通知；源码浏览器契约全部通过、未出现持续循环或焦点/DOM丢失。 Portal六消费者真实浏览器功能断言通过，但原生error门禁完整捕获7条同类RO，整体exit1；该失败未转换为browser通过。",
+          "impact": "多Select主题切换时Vite记录三条ResizeObserver延迟通知；源码浏览器契约全部通过、未出现持续循环或焦点/DOM丢失。 Portal六消费者真实浏览器功能断言通过，但原生error门禁完整捕获7条同类RO，整体exit1；该失败未转换为browser通过。 Cascader 真实 raw 浮层功能/焦点/身份断言通过，但原生 error 门禁捕获1条同类RO，整体exit1。",
           "reason": "保留原始诊断，不声称零日志；首阶段非阻塞，最终冻结浏览器验证仍需核对。",
           "relatedChecks": [
             {
@@ -2664,6 +2800,17 @@
               "resizeObserverDiagnostics": 7,
               "otherDiagnostics": [],
               "log": "/tmp/apollo-consumer-z-index-browser-final.log"
+            },
+            {
+              "kind": "browser",
+              "command": "node packages/ui/src/cascader/__tests__/native-browser.mjs",
+              "exitCode": 1,
+              "durationMs": null,
+              "functionalResult": "passed",
+              "diagnosticResult": "failed: one native window.error ResizeObserver late-notification",
+              "result": "All compiled-slot/editor identity/focus/draft, typed zero path models/modern keys/search Space, 8 tokens, Panel attrs+RTL+Promise loading, raw popup320px/z1630/styles+Token/keyboard, unmount assertions passed before strict native error gate failed. No console/pageerror/Vue warning; no filtering or retry.",
+              "log": "/tmp/apollo-cascader-native-browser.log",
+              "relatedIssue": "TRIGGER-RESIZE-NOTIFICATION"
             }
           ]
         }

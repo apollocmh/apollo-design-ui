@@ -32,7 +32,21 @@ export const CascaderPanel = withInstall(CascaderPanelComponent);
 
 export default Cascader;
 
-export type { CascaderPanelProps } from './Panel';
+export type {
+  CascaderEmits,
+  CascaderOptionSlots,
+  CascaderOutputValue,
+  CascaderPanelProps,
+  CascaderPanelSlots,
+  CascaderProps,
+  CascaderRef,
+  CascaderSearchConfig,
+  CascaderSelectedOptions,
+  CascaderSemanticClassNames,
+  CascaderSemanticStyles,
+  CascaderSlots,
+  CascaderValue,
+} from './interface';
 export { genCascaderStyle, genTokenDecls as genCascaderTokenDecls } from './style';
 export type { ComponentToken as CascaderComponentToken } from './style/token';
 export { prepareComponentToken as prepareCascaderComponentToken } from './style/token';

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 // 对齐 antd 的 component-token demo。
-// 本仓零运行时：Cascader 的 Component Token 就是 `--apollo-cascader-*` CSS 变量，
-// 在触发器和浮层根上覆盖同名变量即可（8 个 token 见 cascader/style/token.ts）。
-import { Cascader, Switch, Tag } from '@apollo-design/ui';
+// 当前Provider Token同步作用于触发器和teleport浮层。
+import { Cascader, ConfigProvider, Switch, Tag } from '@apollo-design/ui';
 import { ref } from 'vue';
+import type { CascaderOutputValue } from '../interface';
 
 const custom = ref(true);
-const value = ref<string[]>(['zhejiang', 'hangzhou']);
+const value = ref<CascaderOutputValue>(['zhejiang', 'hangzhou']);
 
 const options = [
   {
@@ -40,29 +40,12 @@ const options = [
       </Tag>
     </div>
 
-    <Cascader
-      v-model:value="value"
-      :options="options"
-      :popup-class-name="custom ? 'cascader-component-token-popup' : undefined"
-      placeholder="请选择地区"
-    />
+    <ConfigProvider :theme="{ components: { Cascader: custom ? { controlWidth: 260, controlItemWidth: 142, dropdownHeight: 220, optionSelectedBg: '#fff0f6', optionSelectedFontWeight: 700, optionSelectedColor: '#c41d7f', optionPadding: '8px 14px', menuPadding: 8 } : {} } }">
+      <Cascader v-model:value="value" :options="options" placeholder="请选择地区" />
+    </ConfigProvider>
 
     <p style="margin-bottom: 0">
       当前选择：{{ value.length ? value.join(' / ') : '尚未选择' }}
     </p>
   </div>
 </template>
-
-<style>
-.cascader-component-token-demo.is-custom .apollo-cascader,
-.apollo-cascader-dropdown.cascader-component-token-popup {
-  --apollo-cascader-control-width: 260px;
-  --apollo-cascader-control-item-width: 142px;
-  --apollo-cascader-dropdown-height: 220px;
-  --apollo-cascader-option-selected-bg: #fff0f6;
-  --apollo-cascader-option-selected-font-weight: 700;
-  --apollo-cascader-option-selected-color: #c41d7f;
-  --apollo-cascader-option-padding: 8px 14px;
-  --apollo-cascader-menu-padding: 8px;
-}
-</style>

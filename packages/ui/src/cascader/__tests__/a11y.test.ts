@@ -74,7 +74,7 @@ describe('Cascader · ARIA 契约', () => {
   it('data-path-key 存在（键盘滚动与激活定位锚点）', async () => {
     const w = mount(CascaderPanel, { props: { options: [{ value: 'a', label: 'A' }] } });
     await nextTick();
-    expect(w.find('.apollo-cascader-menu-item').attributes('data-path-key')).toBe('a');
+    expect(w.find('.apollo-cascader-menu-item').attributes('data-path-key')).toBe('["a"]');
     w.unmount();
   });
 });

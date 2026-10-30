@@ -178,3 +178,7 @@ Dropdown/DropdownButton 的开关、动效与主按钮通知使用 Vue emits，a
 ### D-form-core-native-scopes
 
 Form Core 的通知由 Vue emits 拥有，store/useForm 的业务回调仍保留。Form、Field、List 默认槽分别接收 `{ values, form }`、`{ control, meta, form }`、`{ fields, operations, meta }`，模板与 h() 使用同一对象；UI Form/FormItem 同步迁移，FormList 已有对象形态保留。外部 store、动态注册、受控 fields 和校验资源同步修正，实际宿主通过 nativeElement 返回。详见[Form Core 当前契约](docs/foundation/form-core-contract.md)；UI Form 的完整外观整改仍单独推进。
+
+### D-cascader-native-paths
+
+Cascader/CascaderPanel 的通知使用 Vue emits，选择器提供 value/open/searchValue 三个模型。displayRender、optionRender、popupRender、showSearch.render、函数式标签与图标内容迁为原生槽；popupRender 的 menu 可直接用 `<component :is="menu" />`。移除未消费的 trigger/placeholder2 与重复开关通知，nativeElement 改为实际属性；过滤、排序和异步加载保留函数。修正类型安全的路径身份、当前配置/Token、键盘、异步会话和 raw 浮层传递，详见[Cascader API](packages/ui/src/cascader/index.zh-CN.md)。

@@ -104,7 +104,10 @@ describe('Cascader · 薄壳组装', () => {
   });
 
   it('自定义 suffixIcon 覆盖默认', () => {
-    const w = mountCascader({ suffixIcon: () => h('i', { class: 'my-suffix' }, 'x') });
+    const w = mount(Cascader, {
+      props: { options: OPTIONS },
+      slots: { suffixIcon: () => h('i', { class: 'my-suffix' }, 'x') },
+    });
     expect(w.find('.apollo-cascader-suffix .my-suffix').exists()).toBe(true);
     w.unmount();
   });

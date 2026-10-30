@@ -465,7 +465,12 @@ export const BaseSelect = defineComponent({
     };
 
     const onInternalKeyDown = (event: KeyboardEvent): void => {
-      if (props.disabled || event.isComposing) return;
+      if (props.disabled) return;
+      if (event.isComposing || event.defaultPrevented) {
+        props.onKeyDown?.(event);
+        emit('keydown', event);
+        return;
+      }
       const clearLock = getClearLock();
       const key = event.key;
       const code = (event as unknown as { keyCode?: number }).keyCode;
@@ -749,6 +754,40 @@ export const BaseSelect = defineComponent({
       let popupNode = popupElement();
       if (props.popupRender) popupNode = props.popupRender(popupNode);
 
+      // ⚠️ rc：popupMatchSelectWidth=true ⇒ stretch='width'（钳制最大宽）。
+      //    本仓 Trigger 的 stretch 协议只实现了 'minWidth'（trigger.ts §3），
+      //    视觉主契约「浮层不窄于触发器」等价；「内容更宽时收窄」的差异
+      //    登记 COMPATIBILITY（待 Trigger 补 'width' 后切回）。
+      // 🚨 `popupMatchSelectWidth === false` ⇒ **不拉伸**（浮层宽度由内容决定）。
+      //    此前这里是无条件 `'minWidth'` —— 对 select 恰好等价（它默认 true），
+      //    但 cascader 的 `popupMatchSelectWidth` 默认 false ⇒ 浮层被硬撑到触发器
+      //    宽度。L6 实测（multiple 形态）：浮层 184 vs antd 111；
+      //    basic 形态因内容 333 > 184 被掩盖，所以一直没暴露。
+      const stretch: 'minWidth' | undefined =
+        props.popupMatchSelectWidth === false ? undefined : 'minWidth';
+      const popupPresentation = {
+        stretch,
+        popupClassName: [props.popupClassName, props.emptyOptions ? `${popupPrefixCls}-empty` : '']
+          .filter(Boolean)
+          .join(' '),
+        popupStyle: {
+          ...props.popupStyle,
+          ...(typeof props.popupMatchSelectWidth === 'number'
+            ? { width: `${props.popupMatchSelectWidth}px` }
+            : {}),
+          ...(props.zIndex !== undefined ? { zIndex: props.zIndex } : {}),
+        },
+      };
+      const renderedPopup = h(
+        'div',
+        {
+          onMouseenter: () => undefined,
+          onMousedown: onRootMouseDown,
+          onBlur: onRootBlur,
+        },
+        [popupNode],
+      );
+
       // ---- raw 模式：Trigger child = 注入后的 raw 元素（无 Selector 结构）----
       if (props.getRawInputElement) {
         const rawNode = renderRawTrigger();
@@ -780,7 +819,8 @@ export const BaseSelect = defineComponent({
               {
                 ref: triggerRef as never,
                 prefixCls: popupPrefixCls,
-                popup: h('div', { class: popupPrefixCls }, [popupNode as never]),
+                popup: renderedPopup,
+                ...popupPresentation,
                 open: mergedOpen.value,
                 // ⚠️ 选择类浮层只能 click 开合（rc-select 的 showAction/hideAction
                 //    都是 `['click']`）。Trigger 的默认 action 是 `'hover'`，不显式
@@ -839,15 +879,7 @@ export const BaseSelect = defineComponent({
           {
             ref: triggerRef as never,
             prefixCls: popupPrefixCls,
-            popup: h(
-              'div',
-              {
-                onMouseenter: () => undefined,
-                onMousedown: onRootMouseDown,
-                onBlur: onRootBlur,
-              },
-              [popupNode as never],
-            ),
+            popup: renderedPopup,
             open: mergedOpen.value,
             // 同上：选择类浮层只响应 click，绝不允许 hover 开层。
             action: [],
@@ -860,29 +892,7 @@ export const BaseSelect = defineComponent({
               motionName: props.transitionName ?? 'apollo-slide-up',
               motionDeadline: 500,
             },
-            // ⚠️ rc：popupMatchSelectWidth=true ⇒ stretch='width'（钳制最大宽）。
-            //    本仓 Trigger 的 stretch 协议只实现了 'minWidth'（trigger.ts §3），
-            //    视觉主契约「浮层不窄于触发器」等价；「内容更宽时收窄」的差异
-            //    登记 COMPATIBILITY（待 Trigger 补 'width' 后切回）。
-            // 🚨 `popupMatchSelectWidth === false` ⇒ **不拉伸**（浮层宽度由内容决定）。
-            //    此前这里是无条件 `'minWidth'` —— 对 select 恰好等价（它默认 true），
-            //    但 cascader 的 `popupMatchSelectWidth` 默认 false ⇒ 浮层被硬撑到触发器
-            //    宽度。L6 实测（multiple 形态）：浮层 184 vs antd 111；
-            //    basic 形态因内容 333 > 184 被掩盖，所以一直没暴露。
-            stretch: props.popupMatchSelectWidth === false ? undefined : 'minWidth',
-            popupClassName: [
-              props.popupClassName,
-              props.emptyOptions ? `${popupPrefixCls}-empty` : '',
-            ]
-              .filter(Boolean)
-              .join(' '),
-            popupStyle: {
-              ...(props.popupStyle ?? {}),
-              ...(typeof props.popupMatchSelectWidth === 'number'
-                ? { width: `${props.popupMatchSelectWidth}px` }
-                : {}),
-              ...(props.zIndex !== undefined ? { zIndex: props.zIndex } : {}),
-            } as never,
+            ...popupPresentation,
           },
           {
             default: () =>
