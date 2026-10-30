@@ -22,6 +22,7 @@ import {
 import { normalizeAttrs, svgBaseProps } from '../render';
 import type { TwoToneColor } from '../two-tone-color';
 import type { IconDefinition } from '../types';
+import NativeIcons from './fixtures/NativeIcons.vue';
 
 /**
  * L1（单元）+ L2（交互）。
@@ -110,12 +111,8 @@ describe('L1 · isIconDefinition', () => {
     expect(isIconDefinition({ theme: 'outlined', icon: {} })).toBe(false);
   });
 
-  it('⚠️ `icon: null` 被判为**合法** —— 与 antd 逐字一致，不要"修"', () => {
-    // `typeof null === 'object'`，所以 antd 的表达式放它过去。
-    // 这不是疏忽：isIconDefinition 判的是「结构够不够渲染」，不是「数据对不对」。
-    // 把它"修正"成 `candidate.icon !== null` 会让某些历史定义从"渲染为空 + 告警"
-    // 变成"静默渲染为空"，行为差异没有收益。
-    expect(isIconDefinition({ ...valid, icon: null })).toBe(true);
+  it('rejects null SVG nodes at the public definition boundary', () => {
+    expect(isIconDefinition({ ...valid, icon: null })).toBe(false);
   });
 });
 
@@ -507,7 +504,7 @@ describe('L2 · createFromIconfontCN', () => {
     expect(scripts[0]?.getAttribute('src')).toBe('//at.alicdn.com/t/font_c2.js');
   });
 
-  it('数组是**串行**加载的：前一个 load 之后才插入下一个', () => {
+  it('数组是**串行**加载的：前一个 load 之后才插入下一个', async () => {
     // 覆盖 `loadNext`（createScriptUrlElements 里挂到 onload/onerror 上的闭包）。
     // 这条是「倒序插入」的另一半语义：倒序只保证**插入顺序**，真正的加载是链式的 ——
     // 一次只插一个 <script>，等它 load（或 error）再插下一个。
@@ -526,20 +523,24 @@ describe('L2 · createFromIconfontCN', () => {
 
     // 触发 load → loadNext → 插入下一个
     first[0]?.dispatchEvent(new Event('load'));
+    await nextTick();
     const second = newScripts();
     expect(second).toHaveLength(2);
     expect(second[1]?.getAttribute('src')).toBe('//at.alicdn.com/t/font_d1.js');
 
-    // 最后一个不再挂 onload（`scriptUrls.length > index + 1` 为假），链到此为止
-    expect((second[1] as HTMLScriptElement).onload).toBeNull();
+    // Completing the last script must not append any additional URL.
+    second[1]?.dispatchEvent(new Event('load'));
+    await nextTick();
+    expect(newScripts()).toHaveLength(2);
   });
 
-  it('error 与 load 走同一条链（一个地址加载失败不应卡住后面的）', () => {
+  it('error 与 load 走同一条链（一个地址加载失败不应卡住后面的）', async () => {
     createFromIconfontCN({
       scriptUrl: ['//at.alicdn.com/t/font_e1.js', '//at.alicdn.com/t/font_e2.js'],
     });
     const first = newScripts();
     first[0]?.dispatchEvent(new Event('error'));
+    await nextTick();
     expect(newScripts()).toHaveLength(2);
   });
 
@@ -716,3 +717,191 @@ function fillsOf(html: string): string[] {
   }
   return found;
 }
+
+describe('native Vue contracts', () => {
+  const cleanups: (() => void)[] = [];
+  const scriptPrefix = '//apollo-icons-contract.test/';
+  const scripts = () =>
+    Array.from(document.querySelectorAll<HTMLScriptElement>('script[data-namespace]')).filter(
+      (script) => script.getAttribute('data-namespace')?.startsWith(scriptPrefix),
+    );
+  const mount = (node: VNode) => {
+    const mounted = mountVNode(node);
+    cleanups.push(mounted.unmount);
+    return mounted;
+  };
+
+  afterEach(() => {
+    for (const cleanup of cleanups.splice(0)) cleanup();
+    for (const script of scripts()) script.remove();
+    setTwoToneColor(DEFAULT_TWOTONE_COLOR);
+    vi.restoreAllMocks();
+  });
+
+  it('mounts the typed template using concrete icon constructors and provider value', () => {
+    const wrapper = mount(h(NativeIcons));
+    const icon = wrapper.host.querySelector<HTMLElement>('#native-icon');
+    expect(icon?.getAttribute('tabindex')).toBe('0');
+    icon?.click();
+    icon?.click();
+    expect(wrapper.host.querySelectorAll('.configured-icon')).toHaveLength(2);
+    expect(
+      wrapper.host.querySelector('#font-icon svg')?.classList.contains('apollo-icon-spin'),
+    ).toBe(true);
+    expect(wrapper.host.querySelector('#font-icon svg')?.getAttribute('style')).toContain(
+      'rotate(45deg)',
+    );
+    return nextTick().then(() => {
+      expect(wrapper.host.querySelector('output')?.textContent).toBe('1');
+    });
+  });
+
+  it('preserves iconfont common defaults while honoring explicitly declared instance props', () => {
+    const Font = createFromIconfontCN({ extraCommonProps: { spin: true, rotate: 30 } });
+    const defaults = mount(h(Font, { type: 'defaults' }));
+    const explicit = mount(h(Font, { type: 'explicit', spin: false, rotate: 45 }));
+    expect(defaults.element()?.querySelector('svg')?.classList.contains('apollo-icon-spin')).toBe(
+      true,
+    );
+    expect(defaults.element()?.querySelector('svg')?.getAttribute('style')).toContain(
+      'rotate(30deg)',
+    );
+    expect(explicit.element()?.querySelector('svg')?.classList.contains('apollo-icon-spin')).toBe(
+      false,
+    );
+    expect(explicit.element()?.querySelector('svg')?.getAttribute('style')).toContain(
+      'rotate(45deg)',
+    );
+  });
+
+  it('honors native tabindex on generated, custom and iconfont roots', () => {
+    const IconFont = createFromIconfontCN();
+    const generated = mount(h(Icons.HomeOutlined, { tabindex: '0', tabIndex: -1 }));
+    const custom = mount(
+      h(Icon, { tabindex: '0', viewBox: '0 0 8 8' }, () => h('path', { d: 'M0 0h1v1H0z' })),
+    );
+    const font = mount(h(IconFont, { type: 'native', tabindex: '0' }));
+    for (const wrapper of [generated, custom, font]) {
+      expect(wrapper.element()?.getAttribute('tabindex')).toBe('0');
+      wrapper.element()?.focus();
+      expect(document.activeElement).toBe(wrapper.element());
+    }
+  });
+
+  it('keeps native .once listeners focusable without claiming component events', () => {
+    const click = vi.fn();
+    const wrapper = mount(h(Icons.HomeOutlined, { onClickOnce: click }));
+    expect(wrapper.element()?.getAttribute('tabindex')).toBe('-1');
+    wrapper.element()?.click();
+    wrapper.element()?.click();
+    expect(click).toHaveBeenCalledTimes(1);
+  });
+
+  it('forwards a present empty default slot to a custom SVG component', async () => {
+    const empty = ref(false);
+    const Custom = defineComponent({
+      setup(_props, { slots }) {
+        return () => h('svg', {}, slots.default?.() ?? [h('path', { 'data-fallback': '' })]);
+      },
+    });
+    const wrapper = mount(
+      h(
+        defineComponent({
+          setup: () => () =>
+            h(
+              Icon,
+              { component: Custom },
+              {
+                default: () => (empty.value ? [] : h('path', { 'data-supplied': '' })),
+              },
+            ),
+        }),
+      ),
+    );
+    expect(wrapper.element()?.querySelector('[data-supplied]')).not.toBeNull();
+    empty.value = true;
+    await nextTick();
+    expect(wrapper.element()?.querySelector('[data-supplied]')).toBeNull();
+    expect(wrapper.element()?.querySelector('[data-fallback]')).toBeNull();
+    empty.value = false;
+    await nextTick();
+    expect(wrapper.element()?.querySelector('[data-supplied]')).not.toBeNull();
+  });
+
+  it('lets an empty iconfont slot override type rather than restoring its use element', () => {
+    const IconFont = createFromIconfontCN();
+    resetWarned();
+    const warn = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const wrapper = mount(h(IconFont, { type: 'fallback' }, { default: () => [] }));
+    expect(wrapper.element()?.querySelector('use')).toBeNull();
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('updates mounted global TwoTone icons while preserving explicit per-icon colors', async () => {
+    const global = mount(h(Icons.AccountBookTwoTone));
+    const explicit = mount(h(Icons.AccountBookTwoTone, { twoToneColor: ['#123456', '#abcdef'] }));
+    setTwoToneColor(['#eb2f96', '#fff1f0']);
+    await nextTick();
+    expect(fillsOf(global.html())).toEqual(expect.arrayContaining(['#eb2f96', '#fff1f0']));
+    expect(fillsOf(explicit.html())).toEqual(expect.arrayContaining(['#123456', '#abcdef']));
+    setTwoToneColors({ primaryColor: '#52c41a' });
+    await nextTick();
+    expect(fillsOf(global.html())).toEqual(
+      expect.arrayContaining(['#52c41a', getSecondaryColor('#52c41a')]),
+    );
+    expect(fillsOf(explicit.html())).toEqual(expect.arrayContaining(['#123456', '#abcdef']));
+  });
+
+  it('continues an iconfont URL sequence past an already completed cached script', async () => {
+    const cached = `${scriptPrefix}completed.js`;
+    const next = `${scriptPrefix}after-completed.js`;
+    createFromIconfontCN({ scriptUrl: cached });
+    scripts()[0]?.dispatchEvent(new Event('load'));
+    await nextTick();
+    createFromIconfontCN({ scriptUrl: [next, cached] });
+    await nextTick();
+    expect(scripts().map((script) => script.getAttribute('src'))).toEqual([cached, next]);
+  });
+
+  it('shares an inflight iconfont script and waits for it before loading the next', async () => {
+    const first = `${scriptPrefix}inflight.js`;
+    const next = `${scriptPrefix}after-inflight.js`;
+    createFromIconfontCN({ scriptUrl: first });
+    createFromIconfontCN({ scriptUrl: [next, first] });
+    expect(scripts().map((script) => script.getAttribute('src'))).toEqual([first]);
+    scripts()[0]?.dispatchEvent(new Event('load'));
+    await nextTick();
+    expect(scripts().map((script) => script.getAttribute('src'))).toEqual([first, next]);
+  });
+
+  it('skips duplicate URLs inside one sequence and still loads its remaining tail', async () => {
+    const duplicate = `${scriptPrefix}duplicate.js`;
+    const tail = `${scriptPrefix}tail.js`;
+    createFromIconfontCN({ scriptUrl: [tail, duplicate, duplicate] });
+    scripts()[0]?.dispatchEvent(new Event('load'));
+    await vi.waitFor(() => {
+      expect(scripts().map((script) => script.getAttribute('src'))).toEqual([duplicate, tail]);
+    });
+  });
+
+  it('rejects absent SVG nodes instead of affirming definitions that cannot render', () => {
+    expect(isIconDefinition({ name: 'missing', theme: 'outlined', icon: null })).toBe(false);
+    expect(isIconDefinition({ name: 'missing', theme: 'outlined', icon: {} })).toBe(false);
+  });
+
+  it('keeps context-only provider attrs off its children without Vue fallthrough warnings', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const wrapper = mount(
+      h(
+        IconProvider,
+        { class: 'not-a-host', value: { rootClassName: 'configured-icon' } },
+        {
+          default: () => [h(Icons.HomeOutlined), h(Icons.LoadingOutlined)],
+        },
+      ),
+    );
+    expect(wrapper.html()).not.toContain('not-a-host');
+    expect(wrapper.host.querySelectorAll('.configured-icon')).toHaveLength(2);
+    expect(warn).not.toHaveBeenCalled();
+  });
+});

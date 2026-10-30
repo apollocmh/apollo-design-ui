@@ -12,8 +12,8 @@
  *      Vue 的 `slots.default` 判存在性，直接对应会让「无内容」渲染出一个空 `<svg>`
  */
 
-import { defineComponent, h, type VNode } from 'vue';
-import { Icon } from './icon';
+import { defineComponent, h, type SlotsType, type VNode, type VNodeChild } from 'vue';
+import { Icon, iconProps } from './icon';
 
 /** {@link createFromIconfontCN} 的选项。 */
 export interface CustomIconOptions {
@@ -24,13 +24,7 @@ export interface CustomIconOptions {
 }
 
 /** 已插入过的脚本地址。避免同一地址重复插入。 */
-const customCache = new Set<string>();
-
-function isValidCustomScriptUrl(scriptUrl: unknown): scriptUrl is string {
-  return Boolean(
-    typeof scriptUrl === 'string' && scriptUrl.length > 0 && !customCache.has(scriptUrl),
-  );
-}
+const customCache = new Map<string, Promise<void>>();
 
 /**
  * 依次插入脚本。
@@ -41,17 +35,31 @@ function isValidCustomScriptUrl(scriptUrl: unknown): scriptUrl is string {
  */
 function createScriptUrlElements(scriptUrls: readonly string[], index = 0): void {
   const currentScriptUrl = scriptUrls[index];
-  if (!isValidCustomScriptUrl(currentScriptUrl)) return;
+  if (currentScriptUrl === undefined) return;
+  const loadNext = () => createScriptUrlElements(scriptUrls, index + 1);
+  if (typeof currentScriptUrl !== 'string' || currentScriptUrl.length === 0) {
+    loadNext();
+    return;
+  }
+
+  const cached = customCache.get(currentScriptUrl);
+  if (cached) {
+    void cached.then(loadNext);
+    return;
+  }
 
   const script = document.createElement('script');
   script.setAttribute('src', currentScriptUrl);
   script.setAttribute('data-namespace', currentScriptUrl);
+  const completed = new Promise<void>((resolve) => {
+    // A failed resource must not prevent the remaining independent URLs from loading.
+    script.onload = () => resolve();
+    script.onerror = () => resolve();
+  });
+  customCache.set(currentScriptUrl, completed);
   if (scriptUrls.length > index + 1) {
-    const loadNext = () => createScriptUrlElements(scriptUrls, index + 1);
-    script.onload = loadNext;
-    script.onerror = loadNext;
+    void completed.then(loadNext);
   }
-  customCache.add(currentScriptUrl);
   document.body.appendChild(script);
 }
 
@@ -85,28 +93,25 @@ export function createFromIconfontCN(options: CustomIconOptions = {}) {
   return defineComponent({
     name: 'AIconfont',
     inheritAttrs: false,
+    slots: Object as SlotsType<{ default?: () => VNodeChild }>,
     props: {
+      ...iconProps,
+      // Absent instance props must preserve factory-level common defaults.
+      spin: { type: Boolean, default: undefined },
       /** iconfont 项目里的图标 id（不含 `#`）。 */
       type: { type: String, default: undefined },
     },
     setup(props, { attrs, slots }) {
       return (): VNode => {
-        // children > type（与 antd 一致）
-        let content: VNode[] = [];
-        if (props.type) {
-          // Vue 的 SVG 属性名要用带命名空间前缀的字面量 `xlink:href`；
-          // 写 camelCase 的 `xlinkHref` 不会被 runtime-dom 识别为 xlink 属性（已读源码确认）。
-          content = [h('use', { 'xlink:href': `#${props.type}` })];
+        const defaultSlot =
+          slots.default ??
+          (props.type ? () => h('use', { 'xlink:href': `#${props.type}` }) : undefined);
+        const forwarded: Record<string, unknown> = { ...extraCommonProps };
+        for (const [key, value] of Object.entries(props)) {
+          if (key !== 'type' && value !== undefined) forwarded[key] = value;
         }
-        const slotContent = slots.default?.() ?? [];
-        if (slotContent.length > 0) {
-          content = slotContent;
-        }
-
-        const iconProps = { ...extraCommonProps, ...attrs };
-        return content.length > 0
-          ? h(Icon, iconProps, { default: () => content })
-          : h(Icon, iconProps);
+        Object.assign(forwarded, attrs);
+        return defaultSlot ? h(Icon, forwarded, { default: defaultSlot }) : h(Icon, forwarded);
       };
     },
   });

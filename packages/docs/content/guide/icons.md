@@ -51,7 +51,7 @@ setTwoToneColor('#1677ff');
 
 ```vue
 <template>
-  <IconProvider icon-prefix-cls="my-icon">
+  <IconProvider :value="{ prefixCls: 'my-icon' }">
     <SearchOutlined />
   </IconProvider>
 </template>
@@ -136,7 +136,7 @@ setTwoToneColor('#1677ff');
 
 ```vue
 <template>
-  <IconProvider icon-prefix-cls="my-icon">
+  <IconProvider :value="{ prefixCls: 'my-icon' }">
     <SearchOutlined />
   </IconProvider>
 </template>

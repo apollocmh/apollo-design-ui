@@ -10,8 +10,17 @@
  *   - `spin` 对 span 的影响要求**同时**存在 `component`；svg 上则一律加
  */
 
+import { isEmptyVNode } from '@apollo-design/utils';
 import type { Component } from 'vue';
-import { defineComponent, h, type PropType, type VNode } from 'vue';
+import {
+  defineComponent,
+  h,
+  isVNode,
+  type PropType,
+  type SlotsType,
+  type VNode,
+  type VNodeChild,
+} from 'vue';
 import { classNames } from './class-names';
 import { DEFAULT_ICON_PREFIX_CLS, useIconContext } from './context';
 import { svgBaseProps, warning } from './render';
@@ -32,28 +41,32 @@ export interface CustomIconComponentProps {
   style?: Record<string, string>;
 }
 
+/** @internal Reused by the iconfont wrapper without weakening its public constructor. */
+export const iconProps = {
+  /** 自定义 svg 组件。与 `children` 互斥，`component` 优先（与 antd 一致）。 */
+  component: { type: [Object, Function] as PropType<Component>, default: undefined },
+  /** svg 的 `color` 属性。 */
+  color: { type: String, default: undefined },
+  /** svg 的 `viewBox`。省略时由调用方保证 `children` 自带正确的坐标系。 */
+  viewBox: { type: String, default: undefined },
+  spin: { type: Boolean, default: false },
+  rotate: { type: Number, default: undefined },
+  tabIndex: { type: Number, default: undefined },
+  /**
+   * 可访问名。
+   *
+   * ⚠️ antd 的 `IconComponentProps` 声明了这个 prop，但 `components/Icon.ts` **没有消费它** ——
+   * 结果是它以 `arialabel="…"` 的形式泄漏到 DOM（React 对未识别的驼峰属性就是这个行为）。
+   * 我们不复刻这个缺陷，改为映射到 `aria-label`。见 `COMPATIBILITY.md` D17（DEFECT）。
+   */
+  ariaLabel: { type: String, default: undefined },
+};
+
 export const Icon = defineComponent({
   name: 'AIcon',
   inheritAttrs: false,
-  props: {
-    /** 自定义 svg 组件。与 `children` 互斥，`component` 优先（与 antd 一致）。 */
-    component: { type: [Object, Function] as PropType<Component>, default: undefined },
-    /** svg 的 `color` 属性。 */
-    color: { type: String, default: undefined },
-    /** svg 的 `viewBox`。省略时由调用方保证 `children` 自带正确的坐标系。 */
-    viewBox: { type: String, default: undefined },
-    spin: { type: Boolean, default: false },
-    rotate: { type: Number, default: undefined },
-    tabIndex: { type: Number, default: undefined },
-    /**
-     * 可访问名。
-     *
-     * ⚠️ antd 的 `IconComponentProps` 声明了这个 prop，但 `components/Icon.ts` **没有消费它** ——
-     * 结果是它以 `arialabel="…"` 的形式泄漏到 DOM（React 对未识别的驼峰属性就是这个行为）。
-     * 我们不复刻这个缺陷，改为映射到 `aria-label`。见 `COMPATIBILITY.md` D17（DEFECT）。
-     */
-    ariaLabel: { type: String, default: undefined },
-  },
+  slots: Object as SlotsType<{ default?: () => VNodeChild }>,
+  props: iconProps,
   setup(props, { attrs, slots }) {
     const context = useIconContext();
 
@@ -85,28 +98,35 @@ export const Icon = defineComponent({
         innerSvgProps.viewBox = props.viewBox;
       }
 
-      const children = slots.default?.() ?? [];
-      const hasChildren = children.length > 0;
+      const defaultSlot = slots.default;
+      const children = defaultSlot?.() ?? [];
 
-      warning(hasComponent || hasChildren, 'Should have `component` prop or `children`.');
+      warning(hasComponent || !!defaultSlot, 'Should have `component` prop or `children`.');
 
       let innerNode: VNode | null = null;
       if (hasComponent) {
-        // antd 是 `createElement(Component, innerSvgProps, children)` —— 有 children 才传第三个参数。
-        // Vue 侧对应「传不传默认插槽」，写成恒传会让空内容的自定义组件收到一个空插槽。
-        innerNode = hasChildren
+        // Preserve slot presence: an explicitly empty slot must reach the custom
+        // component so it does not render its own fallback content.
+        innerNode = defaultSlot
           ? h(component, innerSvgProps, () => children)
           : h(component, innerSvgProps);
-      } else if (hasChildren) {
+      } else if (defaultSlot) {
+        const onlyChild = Array.isArray(children)
+          ? children.length === 1
+            ? children[0]
+            : undefined
+          : children;
         warning(
-          Boolean(props.viewBox) || (children.length === 1 && children[0]?.type === 'use'),
+          isEmptyVNode(children) ||
+            Boolean(props.viewBox) ||
+            (isVNode(onlyChild) && onlyChild.type === 'use'),
           'Make sure that you provide correct `viewBox` prop (default `0 0 1024 1024`) to the icon.',
         );
         innerNode = h('svg', innerSvgProps, children);
       }
 
       let tabIndex = props.tabIndex;
-      if (tabIndex === undefined && attrs.onClick) {
+      if (tabIndex === undefined && (attrs.onClick || attrs.onClickOnce)) {
         tabIndex = -1;
       }
 
@@ -120,8 +140,8 @@ export const Icon = defineComponent({
         {
           role: 'img',
           ...(props.ariaLabel === undefined ? {} : { 'aria-label': props.ariaLabel }),
-          ...restAttrs,
           tabindex: tabIndex,
+          ...restAttrs,
           class: mergedClassName,
         },
         innerNode ? [innerNode] : undefined,

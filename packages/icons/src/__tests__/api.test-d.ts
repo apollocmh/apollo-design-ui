@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, it } from 'vitest';
-import type { Component } from 'vue';
+import type { Component, VNodeChild } from 'vue';
 import { HomeOutlined, LoadingOutlined } from '../icons';
 import type {
   AbstractNode,
@@ -55,6 +55,34 @@ const SAMPLE_DEFINITION: IconDefinition = {
 };
 
 describe('icons 类型契约', () => {
+  it('Icon, Iconfont and Provider expose synchronous complete default slots', () => {
+    type IconSlot = NonNullable<InstanceType<typeof Icon>['$slots']['default']>;
+    type ProviderSlot = NonNullable<InstanceType<typeof IconProvider>['$slots']['default']>;
+    type Font = ReturnType<typeof createFromIconfontCN>;
+    type FontSlot = NonNullable<InstanceType<Font>['$slots']['default']>;
+    expectTypeOf<ReturnType<IconSlot>>().toEqualTypeOf<VNodeChild>();
+    expectTypeOf<ReturnType<ProviderSlot>>().toEqualTypeOf<VNodeChild>();
+    expectTypeOf<ReturnType<FontSlot>>().toEqualTypeOf<VNodeChild>();
+    const complete: IconSlot = () => ['label', 0, null, false];
+    const empty: FontSlot = () => [];
+    // @ts-expect-error Native SVG slots are synchronous VNode content, not promises.
+    const asyncSlot: IconSlot = () => Promise.resolve('invalid');
+    void complete;
+    void empty;
+    void asyncSlot;
+  });
+
+  it('Iconfont declares the base Icon props it already forwards', () => {
+    type FontProps = InstanceType<ReturnType<typeof createFromIconfontCN>>['$props'];
+    const valid: FontProps = { type: 'sample', spin: true, rotate: 45, viewBox: '0 0 8 8' };
+    expectTypeOf<FontProps['spin']>().toEqualTypeOf<boolean | undefined>();
+    expectTypeOf<FontProps['rotate']>().toEqualTypeOf<number | undefined>();
+    // @ts-expect-error Rotation is a number, matching the actual Icon runtime prop.
+    const invalid: FontProps = { rotate: '45deg' };
+    void valid;
+    void invalid;
+  });
+
   it('TwoToneColor 恰好是 string | [string, string]', () => {
     expectTypeOf<TwoToneColor>().toEqualTypeOf<string | [string, string]>();
     expectTypeOf<TwoToneColor>().not.toEqualTypeOf<string[]>();

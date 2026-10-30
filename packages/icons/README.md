@@ -11,7 +11,7 @@
 
 ## 职责
 
-Vue 图标组件集。以 @ant-design/icons-svg 为数据源生成，保证与 antd 图标像素一致。
+Vue 图标组件集。以 @ant-design/icons-svg 为构建期 SVG 数据源，公开行为按 Apollo 的 Vue 契约定义；保留原始图形与历史参考证据。
 
 ## 替代的 Ant Design 依赖
 
@@ -35,7 +35,34 @@ Vue 图标组件集。以 @ant-design/icons-svg 为数据源生成，保证与 a
 - 图标名与 @ant-design/icons 完全一致（Outlined / Filled / TwoTone 三种主题）
 - 图标尺寸继承 font-size，颜色继承 currentColor
 - TwoTone 图标支持双色定制；非 TwoTone 图标忽略 twoToneColor（与 antd 一致）
-- DOM 契约以 tests/compat/baselines/icons.dom.json（机械 oracle）为准
+- 当前 Vue 行为以公开类型和行为测试共同描述；tests/compat/baselines/icons.dom.json 保留原始参考，不能固化上游缺陷。
+
+## 当前 Vue 用法
+
+```vue
+<script setup lang="ts">
+import { AccountBookTwoTone, IconProvider, setTwoToneColor } from '@apollo-design/icons';
+
+const updatePalette = () => setTwoToneColor(['#eb2f96', '#fff1f0']);
+</script>
+
+<template>
+  <IconProvider :value="{ prefixCls: 'apollo-icon', rootClassName: 'my-icons' }">
+    <AccountBookTwoTone />
+  </IconProvider>
+  <button type="button" @click="updatePalette">Change icon colors</button>
+</template>
+```
+
+`class`、`style`、`tabindex`、ARIA 属性与原生事件落到实际根 span；原生 `tabindex` 优先于内部焦点兜底。没有组件模型、所属业务事件或额外 Expose，事件保持 Vue DOM 监听语义。`IconProvider` 只提供上下文，不把自身 attrs 分配给内容节点。
+
+`Icon`、`IconProvider` 与 `createFromIconfontCN()` 返回的组件声明完整同步默认槽。空默认槽同样表达用户意图：传给自定义 SVG 组件，或覆盖 iconfont 的 `type` 内容，不回退到旧内容。Iconfont 构造器显式声明实际支持的基础 Icon props，工厂 `extraCommonProps` 提供默认值，实例显式配置优先。
+
+双色 setter 会更新已挂载的图标，单个图标的 `twoToneColor` 仍优先。全局 setter 的作用域仍是当前模块；SSR 请求有独立配色时使用实例 prop，不改写共享全局来源。
+
+`createFromIconfontCN({ scriptUrl })` 是立即加载资源的工厂服务，SSR 下不访问 DOM。URL 数组按既有倒序优先级串行处理；重复及在途资源共享，错误不会卡住后续地址，也不自动重试。共享资源不随单个图标卸载而删除。
+
+基础 CSS 通过 `getIconStyle()` → UI 的 `BASE_CSS` → 单组件与汇总静态产物消费，不在挂载时插入样式。单独使用本包或采用自定义 `prefixCls` 时，在构建时将相应 `getIconStyle(prefixCls)` 文本写入项目 CSS 并引入。
 
 ## 依赖
 
@@ -88,4 +115,4 @@ pnpm --filter @apollo-design/icons lint
 行为测试的落点在 9 个手写文件（`render` / `create-icon` / `icon` / `icon-font` / `two-tone-color` / `context` / `class-names` / `style` / `index`）上。
 
 
-2026-10-29 ConfigProvider 关联修复移除了无消费者的 IconContextProps.csp / layer / zeroRuntime；它们没有静态 SVG 行为。value 的组件 props 与导出类型使用同一精确接口，前缀变化保持响应式。见[迁移记录](../../docs/migrations/config-provider-contracts.md)。本轮范围限于上下文链，不声明全部 Icons 重新验收。
+2026-10-29 ConfigProvider 关联修复移除了无消费者的 IconContextProps.csp / layer / zeroRuntime；它们没有静态 SVG 行为。value 的组件 props 与导出类型使用同一精确接口，前缀变化保持响应式。见[迁移记录](../../docs/migrations/config-provider-contracts.md)。该历史专项仅覆盖上下文链，其证据不冒充本轮或最终整包验收。

@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 86,
+  "revision": 90,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2810,13 +2810,18 @@
       "kind": "foundation",
       "ref": "a11y",
       "title": "@apollo-design/a11y",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/a11y/src"
+        "packages/a11y",
+        "docs/foundation/a11y-contract.md"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_a11y",
+        "baseRevision": 87,
+        "startedAt": "2026-10-30T10:55:06.772Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2825,7 +2830,19 @@
         "docs/audit/2026-10-25-image-preview-focus-remediation.md",
         "docs/audit/2026-10-25-image-contract-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "复用Image焦点既有成果，核对a11y基础包剩余Vue契约与资源职责",
+        "remaining": [
+          "只补现有完整焦点/回焦成果之外的公开工具和组件/组合函数差额；先核对真实输入、动态target/Provider/SSR/清理及实际消费者，不因partial假设接近完成。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/foundation/a11y-contract.md",
+          "docs/audit/2026-10-25-image-preview-focus-remediation.md",
+          "docs/audit/2026-10-25-image-contract-audit.md"
+        ]
+      }
     },
     {
       "id": "FND:form-core",
@@ -2854,19 +2871,17 @@
       "kind": "foundation",
       "ref": "icons",
       "title": "@apollo-design/icons",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/icons",
         "docs/foundation/icons-contract.md"
       ],
-      "assignment": {
-        "owner": "native_icons",
-        "baseRevision": 84,
-        "startedAt": "2026-10-30T10:41:35.919Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
@@ -2885,6 +2900,81 @@
           "docs/foundation/icons-contract.md",
           "docs/migrations/config-provider-contracts.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/icons",
+          "docs/foundation/icons-contract.md"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract packages/icons/src/__tests__ --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 10080,
+            "result": "118 passed; final package core, oracle and original semantic comparisons"
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract packages/icons/src/__tests__ packages/ui/src/button/__tests__/index.test.ts packages/ui/src/result/__tests__/index.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 15490,
+            "result": "246 passed including actual Button and Result consumers; later empty-slot viewBox guard has separate current native/core coverage"
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/icons/src/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7416,
+            "result": "SSR, concrete SFC, tabindex/once/focus, static CSS without runtime insertion, live palette, actual cached/inflight/duplicate script loading; strict diagnostics empty"
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full Icons source, api.test-d.ts and NativeIcons.vue>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 10281
+          },
+          {
+            "kind": "format",
+            "command": "pnpm exec biome check --write packages/icons/src/context.ts packages/icons/src/create-icon.ts packages/icons/src/icon.ts packages/icons/src/icon-font.ts packages/icons/src/render.ts packages/icons/src/two-tone-color.ts packages/icons/src/__tests__/icons.test.ts packages/icons/src/__tests__/api.test-d.ts packages/icons/src/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 92
+          },
+          {
+            "kind": "syntax",
+            "command": "node --check packages/icons/src/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null
+          }
+        ],
+        "reproductions": [
+          {
+            "command": "pnpm exec vitest run --project unit packages/icons/src/__tests__/icons.test.ts -t \"native Vue contracts\" --maxWorkers=1",
+            "exitCode": 1,
+            "durationMs": 4180,
+            "result": "10 real failures on original source; /tmp/apollo-icons-native-red.log"
+          }
+        ],
+        "sourceSha256": {
+          "packages/icons/src/context.ts": "6d8e385e62b6fc0b7a2485f8f3f427b87d10e8125c9f9753115e557368090f4d",
+          "packages/icons/src/create-icon.ts": "3844d88418f15b11a3d625451f865a6b7bb38f8cc70f2fa88892c0acd344ce3e",
+          "packages/icons/src/icon.ts": "4af3ecf9a0cf2a2374f010bca0edcd2429b7a1ed2f6aab06211f9fd061f59b05",
+          "packages/icons/src/icon-font.ts": "0df1b95777ce0dbfb444a37ac5dae6873491f9a8494e4811198153555fef40fe",
+          "packages/icons/src/render.ts": "321fd7e886ef4f39014e952452d2b500e4c02ad54690e1af86f250f9482351b2",
+          "packages/icons/src/two-tone-color.ts": "3feb328893cc3ff90dd28b2e4f6795971efdefd5467ef1808c9349aff50e118f",
+          "packages/icons/src/__tests__/icons.test.ts": "09911e2b02647b604972a04646b9c4547e4beaa88a92c4f1c4ad128b1fec0231",
+          "packages/icons/src/__tests__/api.test-d.ts": "b01a08d82ee659ff1a49589a9a5f1a7ce1ede80b69eff0b341176f47cb35be6c",
+          "packages/icons/src/__tests__/fixtures/NativeIcons.vue": "1db545e252ba09fdae1390d191850d8f59049f84a0eca0dfad4ae2b07a15f7c5"
+        },
+        "typedSourceDrift": [],
+        "boundary": "保留已有IconProvider配置、848份SVG数据和原参考。无新增模型/所属emits/Expose；事件为根DOM attrs。默认静态CSS链源码核对且getIconStyle生成的CSS真实浏览器通过，未构建dist。自定义icon前缀需静态引入匹配CSS；模块全局双色setter不宣称SSR请求隔离，实例prop可隔离。iconfont工厂保持立即加载；共享脚本/sprite按页面保留，错误继续后续，不自动重试。最终冻结九维/发布消费者未执行。"
       }
     },
     {

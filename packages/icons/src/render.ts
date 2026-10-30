@@ -33,16 +33,24 @@ export function warning(valid: boolean, message: string): void {
 /**
  * 判断一个值是否是合法的图标定义。
  *
- * ⚠️ 与 antd 逐字一致，包括**不检查 `icon` 是否为 null**（`typeof null === 'object'`）——
- * 这一条不是疏忽：`isIconDefinition` 是「结构够不够渲染」的判断，不是「数据对不对」的校验。
+ * Public input is checked at the definition boundary; a null or missing SVG node
+ * is not renderable even though JavaScript reports it as an object.
  */
 export function isIconDefinition(target: unknown): target is IconDefinition {
   if (target === null || typeof target !== 'object') return false;
-  const candidate = target as Partial<IconDefinition>;
+  if (!('name' in target) || !('theme' in target) || !('icon' in target)) return false;
+  const icon = target.icon;
   return (
-    typeof candidate.name === 'string' &&
-    typeof candidate.theme === 'string' &&
-    (typeof candidate.icon === 'object' || typeof candidate.icon === 'function')
+    typeof target.name === 'string' &&
+    (target.theme === 'filled' || target.theme === 'outlined' || target.theme === 'twotone') &&
+    (typeof icon === 'function' ||
+      (icon !== null &&
+        typeof icon === 'object' &&
+        'tag' in icon &&
+        typeof icon.tag === 'string' &&
+        'attrs' in icon &&
+        icon.attrs !== null &&
+        typeof icon.attrs === 'object'))
   );
 }
 

@@ -16,6 +16,8 @@ import {
   inject,
   type PropType,
   provide,
+  type SlotsType,
+  type VNodeChild,
 } from 'vue';
 
 /** 图标上下文的有效配置；静态 SVG 渲染只消费前缀和根类名。 */
@@ -66,6 +68,8 @@ export function useIconContext(): ComputedRef<IconContextProps> {
  */
 export const IconProvider = defineComponent({
   name: 'AIconProvider',
+  inheritAttrs: false,
+  slots: Object as SlotsType<{ default?: () => VNodeChild }>,
   props: {
     value: { type: Object as PropType<IconContextProps>, default: () => ({}) },
   },

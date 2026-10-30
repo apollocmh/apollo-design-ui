@@ -136,7 +136,7 @@ export function createIcon(definition: IconDefinition, displayName?: string) {
         );
 
         let tabIndex = props.tabIndex;
-        if (tabIndex === undefined && attrs.onClick) {
+        if (tabIndex === undefined && (attrs.onClick || attrs.onClickOnce)) {
           tabIndex = -1;
         }
 
@@ -154,8 +154,8 @@ export function createIcon(definition: IconDefinition, displayName?: string) {
           {
             role: 'img',
             'aria-label': iconName,
-            ...restAttrs,
             tabindex: tabIndex,
+            ...restAttrs,
             class: mergedClassName,
           },
           [

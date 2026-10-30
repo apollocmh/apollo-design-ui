@@ -15,6 +15,7 @@
  */
 
 import { generatePalette } from '@apollo-design/utils';
+import { shallowRef } from 'vue';
 
 /** 双色图标的颜色。单值 = 主色（副色派生）；二元组 = `[主色, 副色]`。 */
 export type TwoToneColor = string | [string, string];
@@ -79,25 +80,27 @@ export interface TwoToneColorPalette {
  * ⚠️ 这是**有意保留的可变模块状态**，不是疏忽：antd 的 `setTwoToneColor` 就是全局设置，
  *    语义上「整站默认双色」而不是「单个图标的 prop」。改成 provide/inject 会改变公开语义。
  */
-const twoToneColorPalette: TwoToneColorPalette = {
+const twoToneColorPalette = shallowRef<TwoToneColorPalette>({
   primaryColor: '#333',
   secondaryColor: '#E6E6E6',
   calculated: false,
-};
+});
 
 /** 设置全局双色调色板。副色省略时按主色派生。 */
 export function setTwoToneColors({
   primaryColor,
   secondaryColor,
 }: TwoToneColorPaletteSetter): void {
-  twoToneColorPalette.primaryColor = primaryColor;
-  twoToneColorPalette.secondaryColor = secondaryColor || getSecondaryColor(primaryColor);
-  twoToneColorPalette.calculated = !!secondaryColor;
+  twoToneColorPalette.value = {
+    primaryColor,
+    secondaryColor: secondaryColor || getSecondaryColor(primaryColor),
+    calculated: !!secondaryColor,
+  };
 }
 
 /** 读取全局双色调色板的快照（拷贝，避免外部改写模块状态）。 */
 export function getTwoToneColors(): TwoToneColorPalette {
-  return { ...twoToneColorPalette };
+  return { ...twoToneColorPalette.value };
 }
 
 /**

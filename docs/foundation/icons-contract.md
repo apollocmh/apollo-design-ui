@@ -4,7 +4,23 @@
 
 > 2026-10-29 当前上下文契约：IconProvider.value / IconContextProps 只保留实际消费的 prefixCls、rootClassName；csp / layer / zeroRuntime 已移除。详见[集中迁移](../migrations/config-provider-contracts.md)，本轮仅更新 ConfigProvider 关联链，不代表 Icons 全包重新验收。
 
-# `@ant-design/icons` 契约提取（`@apollo-design/icons` 的实现依据）
+## 当前 Apollo 契约 · 2026-10-30
+
+本轮范围是生成工厂和十个手写运行时模块的剩余 Vue 差额；既有 Provider 配置成果和 848 份 SVG 数据保留，下面的上游提取正文保持历史原义。
+
+`createIcon` 的生成组件保留 spin/rotate/tabIndex/twoToneColor，其他原生 attrs 与事件落根 span。原生 `tabindex` 和 `.once` 监听真实生效。`Icon` 的 component 仍是实际 Vue SVG 组件，内容使用默认槽；Iconfont 复用其基础 props 并精确定义构造器，工厂公共默认值由实例显式配置覆盖。
+
+Icon、Iconfont 和 Provider 的默认槽同步返回完整 VNode 内容；槽存在时尊重空内容，不恢复 type 或自定义 SVG 的缺省内容。Provider 是无宿主上下文组件，不转发 attrs 给子节点。没有新增模型、所属业务 emits 或 Expose；事件本来属于实际 DOM。
+
+全局双色 setter 原子替换响应式快照，已挂载图标及时更新；显式 twoToneColor 优先。setter 仍有明确的模块全局作用域，不将其宣称为 SSR 请求隔离配置。返回的 palette 仍是副本，外部改写不会修改来源。
+
+Iconfont 工厂继续立即加载脚本，SSR 不触碰 DOM。数组保留原有倒序覆盖约定；缓存同时表示已完成与在途资源，等待共享资源后继续剩余 URL，重复项不截断序列。加载错误继续后续地址，不新增自动重试；共享脚本与 sprite 不归单个实例卸载管理。isIconDefinition 拒绝 null 或缺失 SVG 节点，原先固化上游崩溃的断言改为这一边界的回归。
+
+样式链已核对为 getIconStyle → packages/ui/src/style/index.ts 的 BASE_CSS → genComponentStyleSheet/genAllStyles → packages/ui/build.config.ts 写入静态 CSS。默认链无需重写；独立使用或自定义 icon 前缀仍须静态引入相应 getIconStyle(prefixCls)，不新增运行时注入。
+
+验证结果由本轮唯一状态记录；局部核心、消费者与源码浏览器不代替最终冻结版本的九维验收。
+
+# `@ant-design/icons` 历史契约提取（初期实现依据）
 
 > **状态**：Phase 2 / foundation `@apollo-design/icons`（`implOrder=3`）的前置产物
 > **事实来源**：`@ant-design/icons@6.3.4` npm 产物（`es/` + `es/**/*.d.ts`）+ `@ant-design/icons-svg@4.6.0` 的 `es/asn/`
