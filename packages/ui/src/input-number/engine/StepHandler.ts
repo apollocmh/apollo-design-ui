@@ -53,7 +53,7 @@ export const StepHandler = defineComponent({
   setup(props) {
     const isUpAction = props.action === 'up';
     let stepTimeout: ReturnType<typeof setTimeout> | undefined;
-    const frameIds: number[] = [];
+    let stopFrame: number | null = null;
 
     const onStopStep = (): void => {
       clearTimeout(stepTimeout);
@@ -74,14 +74,16 @@ export const StepHandler = defineComponent({
 
     // Safari 乱序保护：mouseup 经 raf 排队，保证晚于 mousedown 处理
     const safeOnStopStep = (): void => {
-      frameIds.push(raf(onStopStep));
+      if (stopFrame !== null) cancelRaf(stopFrame);
+      stopFrame = raf(() => {
+        stopFrame = null;
+        onStopStep();
+      });
     };
 
     onScopeDispose(() => {
       onStopStep();
-      for (const id of frameIds) {
-        cancelRaf(id);
-      }
+      if (stopFrame !== null) cancelRaf(stopFrame);
     });
 
     return () => {

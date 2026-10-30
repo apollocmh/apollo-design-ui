@@ -12,8 +12,8 @@
  *    键入中（userTyping）不做 precision 格式化、不钳制范围；flush（blur/Enter）
  *    才回正。受控 `value` 与 `parse(inputValue)` 相等且在键入中 ⇒ **不**重写文本
  *    （`1.2` 键入成 `1.` 不被立即格式化成 `1`）。
- * 2. **受控不落内部态**：`value !== undefined` 时 `setUncontrolledDecimalValue`
- *    跳过（rc 的判据在 setter 里，不在 effect 里）。
+ * 2. **受控值只接收父级值**：共享 useControlledValue 管理 Decimal，撤控保留最后
+ *    接收值；显示文本保留独立的输入过程。
  * 3. **onChange(null)**：空输入在 flush 时触发（上游 issue 13896）。
  * 4. **事件绑定面**：mousedown/mouseup/leave/move/enter/out/click 落**根**
  *    （mousedown 在非 input 目标时 focus 输入框 + preventDefault）；
@@ -27,14 +27,22 @@
  */
 
 import { DownOutlined, MinusOutlined, PlusOutlined, UpOutlined } from '@apollo-design/icons';
-import { cancelRaf, isPlainObject, raf, triggerFocus, useDevWarning } from '@apollo-design/utils';
+import {
+  cancelRaf,
+  isPlainObject,
+  mergeDomAttrs,
+  raf,
+  triggerFocus,
+  useControlledValue,
+  useDevWarning,
+} from '@apollo-design/utils';
 import {
   type Component,
-  type CSSProperties,
   computed,
   defineComponent,
   h,
   isVNode,
+  normalizeStyle,
   onMounted,
   onScopeDispose,
   type PropType,
@@ -59,14 +67,17 @@ import { getDecupleSteps, getNumberPrecision, num2str, validateNumber } from './
 import { StepHandler, type StepInfo } from './engine/StepHandler';
 import { useCursor } from './engine/use-cursor';
 import type {
+  InputNumberConfig,
   InputNumberControls,
   InputNumberProps,
   InputNumberRef,
   InputNumberSemanticClassNames,
   InputNumberSemanticStyles,
   InputNumberSlots,
+  InputNumberStepInfo,
   ValueType,
 } from './interface';
+import { useInputNumberTheme } from './use-input-number-theme';
 
 type VNodeLike = NonNullable<InputNumberProps['prefix']>;
 
@@ -144,16 +155,20 @@ const validateEventValue = (value: ValueType | null): boolean =>
 const inputNumberEmits = {
   'update:value': validateEventValue,
   change: validateEventValue,
+  step: (value: ValueType, _info: InputNumberStepInfo) =>
+    typeof value === 'string' || typeof value === 'number',
+  pressEnter: (event: KeyboardEvent) => !!event,
 };
 
 export const InputNumberInternalComponent = defineComponent({
   name: 'AInputNumberInternal',
   inheritAttrs: false,
+  expose: ['focus', 'blur', 'nativeElement'],
   props: inputNumberPropDefs,
   slots: Object as SlotsType<InputNumberSlots>,
   emits: inputNumberEmits,
-  setup(props, { attrs, emit, expose, slots }) {
-    const context = useComponentConfig('inputNumber');
+  setup(props, { attrs, emit, slots }) {
+    const context = useComponentConfig<InputNumberConfig>('inputNumber');
     const direction = useDirection();
     const contextDisabled = useDisabled();
     const formItemContext = useFormItemInputContext();
@@ -161,6 +176,7 @@ export const InputNumberInternalComponent = defineComponent({
     // ============================= Prefix ==============================
     // ⚠️ Internal 拿到的是 wrapper 已解析好的完整前缀（antd 同构）
     const prefixCls = computed(() => props.prefixCls ?? 'apollo-input-number');
+    const themeStyle = useInputNumberTheme(() => prefixCls.value);
 
     // ============================ Refs =============================
     const rootRef = shallowRef<HTMLDivElement | null>(null);
@@ -213,14 +229,13 @@ export const InputNumberInternalComponent = defineComponent({
     const focus = ref(false);
 
     // ---- 真实值 ----
-    const decimalValue = ref<Decimal>(getMiniDecimal(props.value ?? props.defaultValue));
-
-    /** 受控时不落内部态（rc 的判据在 setter 里）。 */
-    function setUncontrolledDecimalValue(newDecimal: Decimal): void {
-      if (props.value === undefined) {
-        decimalValue.value = newDecimal;
-      }
-    }
+    const controlledDecimal = computed(() =>
+      props.value === undefined ? undefined : getMiniDecimal(props.value),
+    );
+    const [decimalValue, setDecimalValue] = useControlledValue<Decimal>({
+      getValue: () => controlledDecimal.value,
+      defaultValue: () => getMiniDecimal(props.defaultValue),
+    });
 
     // ---- precision / parser / formatter ----
     function getPrecision(numStr: string, typing: boolean): number | undefined {
@@ -260,8 +275,7 @@ export const InputNumberInternalComponent = defineComponent({
 
     function mergedFormatter(number: ValueType | Decimal, typing: boolean): string {
       if (props.formatter) {
-        const raw: ValueType =
-          typeof number === 'number' ? number : (number.toString() as ValueType);
+        const raw: ValueType = typeof number === 'number' ? number : number.toString();
         return props.formatter(raw, { userTyping: typing, input: currentInputText });
       }
       let str = typeof number === 'number' ? num2str(number) : String(number);
@@ -279,7 +293,7 @@ export const InputNumberInternalComponent = defineComponent({
 
     // ---- 显示文本 ----
     function initialInputValue(): string {
-      const initValue = props.defaultValue ?? props.value;
+      const initValue = props.value !== undefined ? props.value : props.defaultValue;
       const next =
         decimalValue.value.isInvalidate() && ['string', 'number'].includes(typeof initValue)
           ? typeof initValue === 'number' && Number.isNaN(initValue)
@@ -353,7 +367,7 @@ export const InputNumberInternalComponent = defineComponent({
         }
 
         if (!updateValue.equals(decimalValue.value)) {
-          setUncontrolledDecimalValue(updateValue);
+          setDecimalValue(updateValue);
           const next = updateValue.isEmpty()
             ? null
             : getDecimalValue(props.stringMode === true, updateValue);
@@ -430,7 +444,12 @@ export const InputNumberInternalComponent = defineComponent({
 
     // ---- step ----
     function onInternalStep(up: boolean, emitter: StepInfo['emitter']): void {
-      if ((up && upDisabled.value) || (!up && downDisabled.value)) {
+      if (
+        mergedDisabled.value ||
+        props.readOnly ||
+        (up && upDisabled.value) ||
+        (!up && downDisabled.value)
+      ) {
         return;
       }
       // 步进清掉键入状态 —— 之后要与输入框文本同步
@@ -446,33 +465,31 @@ export const InputNumberInternalComponent = defineComponent({
       // 🚨 **不要 `as number`**：`stringMode` 下 `getDecimalValue` 返回的是**字符串**
       //    （上游 `onStep?: (value: T, …)`，`T extends ValueType`）⇒ 断言只是骗 TS
       //    （Issue #7.4）。类型已放宽到 `ValueType`。
-      (attrs as { onStep?: InputNumberProps['onStep'] }).onStep?.(
-        getDecimalValue(props.stringMode === true, updatedValue),
-        {
-          offset: shiftKey ? getDecupleSteps(mergedStep.value) : mergedStep.value,
-          type: up ? 'up' : 'down',
-          emitter,
-        },
-      );
+      emit('step', getDecimalValue(props.stringMode === true, updatedValue), {
+        offset: shiftKey ? getDecupleSteps(mergedStep.value) : mergedStep.value,
+        type: up ? 'up' : 'down',
+        emitter,
+      });
       inputRef.value?.focus();
     }
 
     // ---- 事件（内部处理落根，rc 的绑定面）----
     function onKeyDown(event: KeyboardEvent): void {
+      if (event.defaultPrevented || mergedDisabled.value || composition || event.isComposing) {
+        return;
+      }
       const { key, shiftKey: pressedShift } = event;
       userTyping = true;
       shiftKey = pressedShift;
       if (key === 'Enter') {
-        if (!composition) {
-          userTyping = false;
-        }
+        userTyping = false;
         flushInputValue(false);
-        (attrs as { onPressEnter?: InputNumberProps['onPressEnter'] }).onPressEnter?.(event);
+        emit('pressEnter', event);
       }
-      if (props.keyboard === false) {
+      if (props.keyboard === false || props.readOnly) {
         return;
       }
-      if (!composition && ['Up', 'ArrowUp', 'Down', 'ArrowDown'].includes(key)) {
+      if (['Up', 'ArrowUp', 'Down', 'ArrowDown'].includes(key)) {
         onInternalStep(key === 'Up' || key === 'ArrowUp', 'keyboard');
         event.preventDefault();
       }
@@ -496,14 +513,13 @@ export const InputNumberInternalComponent = defineComponent({
         inputRef.value.focus();
         event.preventDefault();
       }
-      // 用户回调经 renderInner 的 userMouseDown 统一触发（避免双调）
     }
 
     // ---- wheel（非 passive）----
     watch(
-      [() => props.changeOnWheel, focus],
-      ([changeOnWheel, focused], _prev, onCleanup) => {
-        if (!changeOnWheel || !focused) {
+      [() => props.changeOnWheel, focus, mergedDisabled, () => props.readOnly],
+      ([changeOnWheel, focused, disabled, readOnly], _prev, onCleanup) => {
+        if (!changeOnWheel || !focused || disabled || readOnly) {
           return;
         }
         const onWheel = (event: WheelEvent): void => {
@@ -530,8 +546,7 @@ export const InputNumberInternalComponent = defineComponent({
        *
        * 原生 `autofocus` 只在 HTML **解析期**生效；Vue 的 `patchProp` 是元素创建
        * **之后**才设属性 ⇒ 浏览器与 jsdom 都不会因此聚焦。
-       * `restInputAttrs()` 又把 `autoFocus` 保留（Vue 已把它摘成 prop）⇒ 此前这个
-       * 公开 prop **完全没有任何效果**。
+       * `autoFocus` 是声明的 prop，不依赖原生 attrs 透传来获取焦点。
        *
        * 判据与 `Rate` / `_internal/action-button` / `select/engine/SearchInput` 一致：
        * **禁用态不聚焦**。
@@ -546,18 +561,22 @@ export const InputNumberInternalComponent = defineComponent({
         if (!mounted) {
           return;
         }
-        const newValue = getMiniDecimal(value);
-        decimalValue.value = newValue;
+        const newValue = decimalValue.value;
         const currentParsedValue = getMiniDecimal(mergedParser(inputValue.value));
 
         // `1.2` 键入到 `1.` 时不立即格式化；给了 formatter 则跟随外部
-        if (!newValue.equals(currentParsedValue) || !userTyping || props.formatter) {
-          setInputValue(newValue, userTyping);
+        if (
+          value === undefined ||
+          !newValue.equals(currentParsedValue) ||
+          !userTyping ||
+          props.formatter
+        ) {
+          setInputValue(newValue, value === undefined ? false : userTyping);
         }
       },
     );
     watch(
-      () => [props.precision, props.formatter],
+      () => [props.precision, props.formatter, props.decimalSeparator],
       () => {
         if (!mounted) {
           return;
@@ -569,11 +588,15 @@ export const InputNumberInternalComponent = defineComponent({
     );
 
     // formatter 改写文本后恢复光标
-    watch(inputValue, () => {
-      if (props.formatter) {
-        restoreCursor();
-      }
-    });
+    watch(
+      inputValue,
+      () => {
+        if (props.formatter) {
+          restoreCursor();
+        }
+      },
+      { flush: 'post' },
+    );
 
     // 组件卸载时清理 rAF 句柄。
     onScopeDispose(() => {
@@ -583,46 +606,30 @@ export const InputNumberInternalComponent = defineComponent({
     });
 
     // ---- expose ----
-    expose({
+    const exposed = {
       focus: (option?: { preventScroll?: boolean; cursor?: 'start' | 'end' | 'all' }) => {
         triggerFocus(inputRef.value, option);
       },
       blur: () => {
         inputRef.value?.blur();
       },
-      get nativeElement() {
-        return rootRef.value;
-      },
-    } satisfies InputNumberRef);
+    } satisfies Omit<InputNumberRef, 'nativeElement'>;
 
     // ========================== 语义化合并 ==============================
-    const mergedProps = computed<InputNumberProps>(
-      () =>
-        ({
-          ...props,
-          size: mergedSize.value,
-          disabled: mergedDisabled.value,
-          controls: mergedControls.value,
-        }) as InputNumberProps,
-    );
+    const mergedProps = computed<InputNumberProps>(() => ({
+      ...props,
+      size: mergedSize.value,
+      disabled: mergedDisabled.value,
+      controls: mergedControls.value,
+      variant: variant.value,
+    }));
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
       InputNumberProps,
       InputNumberSemanticClassNames,
       InputNumberSemanticStyles
     >(
-      [
-        () => context.classNames as InputNumberSemanticClassNames | undefined,
-        () => props.classNames,
-      ],
-      [
-        () => context.styles as InputNumberSemanticStyles | undefined,
-        () => props.styles,
-        // 🚨 **根 `style` 是 Vue 原生 attrs**，但必须经语义 `root` 通道下发
-        //    （上游把 `style` 落在同一处）—— 放在**最后** ⇒ 原生 attrs 胜。
-        //    此前完全没接：`restInputAttrs()` 又把 `style` 保留（不给 input），
-        //    于是 `style="width:240px"` **整条丢掉**（Issue #7.1）。
-        () => semanticRootStyle(attrs.style as CSSProperties),
-      ],
+      [() => context.classNames, () => props.classNames],
+      [() => context.styles, () => semanticRootStyle(context.style), () => props.styles],
       // ⚠️ 传 getter 而不是 `mergedProps.value`：后者是 setup 期求值出的对象，
       //    函数式 classNames/styles 会永远按首帧的 props 计算（Issue #7.3，
       //    与 `input/Input.ts` 同判）。
@@ -649,7 +656,7 @@ export const InputNumberInternalComponent = defineComponent({
         // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
         attrs.class,
         mergedClassNames.value.root,
-        (context as { className?: string }).className,
+        context.className,
         compactItemClassnames.value,
         getStatusClassNames(prefixCls.value, mergedStatus.value, hasFeedback.value),
         {
@@ -672,28 +679,35 @@ export const InputNumberInternalComponent = defineComponent({
         },
       ];
 
-      const rootStyle = styleAttrs(mergedStyles.value.root);
-
-      // 根上的用户 mouse 事件（antd 落根）—— 兼容模板（onMousedown）/JSX（onMouseDown）键形
+      const {
+        class: _class,
+        style: attrStyle,
+        className: _className,
+        rootClassName: _rootClassName,
+        ...nativeAttrs
+      } = attrs;
+      const rootStyle = normalizeStyle([themeStyle.value, mergedStyles.value.root, attrStyle]);
+      const rootStyleAttrs =
+        typeof rootStyle === 'string' ? { style: rootStyle } : styleAttrs(rootStyle);
       const rootEventProps: Record<string, unknown> = {};
-      for (const name of [
-        'onMouseUp',
-        'onMouseLeave',
-        'onMouseMove',
-        'onMouseEnter',
-        'onMouseOut',
+      const inputAttrs: Record<string, unknown> = {};
+      const rootEvents = new Set([
+        'onMousedown',
+        'onMouseup',
+        'onMouseleave',
+        'onMousemove',
+        'onMouseenter',
+        'onMouseout',
         'onClick',
-      ]) {
-        for (const key of [name, name.toLowerCase()]) {
-          if (attrs[key] !== undefined) {
-            rootEventProps[key] = attrs[key];
-          }
+      ]);
+      for (const [key, value] of Object.entries(mergeDomAttrs(nativeAttrs))) {
+        const eventName = key.replace(/(?:Once|Capture|Passive)+$/, '');
+        if (rootEvents.has(eventName)) {
+          rootEventProps[key] = value;
+        } else if (eventName !== 'onInput') {
+          inputAttrs[key] = value;
         }
       }
-      // mousedown：内部处理（焦点转移 + preventDefault）与用户回调都要执行（rc 顺序）
-      const userMouseDown = (attrs.onMouseDown ?? attrs.onMousedown) as
-        | ((e: MouseEvent) => void)
-        | undefined;
 
       const upIcon = customIcons.value
         ? (asNode(customIcons.value.upIcon) ?? asNode(defaultUpIcon.value))
@@ -738,6 +752,7 @@ export const InputNumberInternalComponent = defineComponent({
       }
       children.push(
         h('input', {
+          ...inputAttrs,
           key: 'input',
           ref: inputRef,
           class: [`${prefixCls.value}-input`, mergedClassNames.value.input],
@@ -753,7 +768,6 @@ export const InputNumberInternalComponent = defineComponent({
           readOnly: props.readOnly === true,
           placeholder: props.placeholder,
           onInput: onInternalInput,
-          ...restInputAttrs(),
         }),
       );
       if (slots.suffix || props.suffix !== undefined || hasFeedback.value) {
@@ -791,13 +805,10 @@ export const InputNumberInternalComponent = defineComponent({
       return h(
         'div',
         {
+          ...mergeDomAttrs({ onMousedown: onInternalMouseDown }, rootEventProps),
           ref: rootRef,
           class: rootClass,
-          ...rootStyle,
-          onMousedown: (e: MouseEvent) => {
-            onInternalMouseDown(e);
-            userMouseDown?.(e);
-          },
+          ...rootStyleAttrs,
           onFocusin: () => {
             focus.value = true;
           },
@@ -816,74 +827,15 @@ export const InputNumberInternalComponent = defineComponent({
           onBeforeinput: () => {
             userTyping = true;
           },
-          ...rootEventProps,
         },
         children,
       );
     }
 
-    // rc 把「未消费的 restProps」透传给 input；根事件已挑走、声明 props 已消费，其余进 input
-    function restInputAttrs(): Record<string, unknown> {
-      const reserved = new Set([
-        'class',
-        'style',
-        // 声明 props（Vue 已从 attrs 剥离，防御性再列一层）
-        'prefixCls',
-        'rootClassName',
-        'className',
-        'size',
-        'disabled',
-        'prefix',
-        'suffix',
-        'bordered',
-        'status',
-        'controls',
-        'variant',
-        'addonBefore',
-        'addonAfter',
-        'onPressEnter',
-        'onStep',
-        'onChange',
-        'value',
-        'defaultValue',
-        'min',
-        'max',
-        'step',
-        'keyboard',
-        'changeOnBlur',
-        'changeOnWheel',
-        'readOnly',
-        'autoFocus',
-        'stringMode',
-        'formatter',
-        'parser',
-        'precision',
-        'decimalSeparator',
-        'placeholder',
-        'mode',
-        'classNames',
-        'styles',
-        'onInput',
-        ...[
-          'onMouseDown',
-          'onMouseUp',
-          'onMouseLeave',
-          'onMouseMove',
-          'onMouseEnter',
-          'onMouseOut',
-          'onClick',
-        ].flatMap((n) => [n, n.toLowerCase()]),
-      ]);
-      const rest: Record<string, unknown> = {};
-      for (const key of Object.keys(attrs)) {
-        if (!reserved.has(key)) {
-          rest[key] = attrs[key];
-        }
-      }
-      return rest;
-    }
-
-    return () => renderInner();
+    return { ...exposed, nativeElement: rootRef, renderInner };
+  },
+  render() {
+    return this.renderInner();
   },
 });
 
@@ -899,18 +851,15 @@ export const InputNumberInternalComponent = defineComponent({
 export const InputNumberComponent = defineComponent({
   name: 'AInputNumber',
   inheritAttrs: false,
+  expose: ['focus', 'blur', 'nativeElement'],
   props: inputNumberPropDefs,
   slots: Object as SlotsType<InputNumberSlots>,
   emits: inputNumberEmits,
-  setup(props, { attrs, emit, expose, slots }) {
+  setup(props, { attrs, emit, slots }) {
     const devWarning = useDevWarning('InputNumber');
-    const { getPrefixCls } = useComponentConfig('inputNumber');
+    const context = useComponentConfig<InputNumberConfig>('inputNumber');
     const formItemContext = useFormItemInputContext();
-    const internalRef = ref<{
-      focus: InputNumberRef['focus'];
-      blur: InputNumberRef['blur'];
-      nativeElement: HTMLDivElement | null;
-    } | null>(null);
+    const internalRef = shallowRef<InputNumberRef | null>(null);
 
     // ============================ Warning ==============================
     watchEffect(() => {
@@ -926,7 +875,7 @@ export const InputNumberComponent = defineComponent({
     });
 
     // ============================= Prefix ==============================
-    const prefixCls = computed(() => getPrefixCls('input-number', props.prefixCls));
+    const prefixCls = computed(() => context.getPrefixCls('input-number', props.prefixCls));
 
     // ============================ Status ===============================
     const mergedStatus = computed(() =>
@@ -954,34 +903,33 @@ export const InputNumberComponent = defineComponent({
       );
     };
 
-    expose({
+    const exposed = {
       focus: (option?: { preventScroll?: boolean; cursor?: 'start' | 'end' | 'all' }) => {
         internalRef.value?.focus(option);
       },
       blur: () => {
         internalRef.value?.blur();
       },
-      get nativeElement() {
-        return internalRef.value?.nativeElement ?? null;
-      },
-    } satisfies InputNumberRef);
+    } satisfies Omit<InputNumberRef, 'nativeElement'>;
 
-    return () => {
+    const renderInputNumber = () => {
       // Internal：受控/非受控引擎 + 状态机（attrs 透传给 input，rc 的 restProps 语义）
       const inner = h(
         InputNumberInternalComponent,
         {
           ...props,
           ...attrs,
-          ref: internalRef as never,
+          ref: internalRef,
           key: undefined,
           prefixCls: prefixCls.value,
           // 原生 `class` 转给内部件（有 legacy addon 时只落 SpaceCompact，与原先同判）
-          class: hasLegacyAddon.value ? undefined : (attrs.class as string | undefined),
+          class: hasLegacyAddon.value ? undefined : attrs.class,
           status: mergedStatus.value,
           'onUpdate:value': (v: string | number | null) => emit('update:value', v),
           onChange: (value: ValueType | null) => emit('change', value),
-        } as never,
+          onStep: (value: ValueType, info: InputNumberStepInfo) => emit('step', value, info),
+          onPressEnter: (event: KeyboardEvent) => emit('pressEnter', event),
+        },
         slots,
       );
       if (hasLegacyAddon.value) {
@@ -993,5 +941,13 @@ export const InputNumberComponent = defineComponent({
       }
       return inner;
     };
+    return {
+      ...exposed,
+      nativeElement: computed(() => internalRef.value?.nativeElement ?? null),
+      renderInputNumber,
+    };
+  },
+  render() {
+    return this.renderInputNumber();
   },
 });

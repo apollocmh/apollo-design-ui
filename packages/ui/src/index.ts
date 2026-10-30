@@ -1254,6 +1254,7 @@ export { prepareComponentToken as prepareInputComponentToken } from './input/sty
 //    form/context、form/hooks/useVariants 为本组件落的最小叶子模块。
 // ---------------------------------------------------------------------------
 export type {
+  InputNumberConfig,
   InputNumberControls,
   InputNumberMode,
   InputNumberProps,

@@ -40,7 +40,7 @@ describe('InputNumber · token 契约', () => {
 
   it('hover/focus 展开 actions（width 0 → handleWidth）', () => {
     expect(css).toContain(
-      '.apollo-input-number-mode-input:hover .apollo-input-number-actions,.apollo-input-number-mode-input-focused .apollo-input-number-actions{width:var(--apollo-input-number-handle-width);opacity:1;}',
+      '.apollo-input-number-mode-input:hover .apollo-input-number-actions,.apollo-input-number-mode-input.apollo-input-number-focused .apollo-input-number-actions{width:var(--apollo-input-number-handle-hover-width);opacity:var(--apollo-input-number-handle-hover-opacity);}',
     );
   });
 

@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 20,
+  "revision": 21,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -760,17 +760,13 @@
       "kind": "component",
       "ref": "input-number",
       "title": "InputNumber",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/input-number"
       ],
-      "assignment": {
-        "owner": "native_input_number",
-        "baseRevision": 9,
-        "startedAt": "2026-10-30T06:21:15.497Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -778,7 +774,58 @@
         "docs/audit/2026-10-23-vue-reactivity-remediation.md",
         "docs/audit/2026-10-24-content-events-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/input-number"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --maxWorkers=1 --project unit --project dom-contract --project a11y --project theme packages/ui/src/input-number/__tests__/{index,slots,contracts,s7-issue7,demo,semantic,a11y,theme,theme-contracts}.test.ts",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 32180
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --maxWorkers=1 --project unit --project theme packages/ui/src/input-number/__tests__/contracts.test.ts packages/ui/src/input-number/__tests__/s7-issue7.test.ts packages/ui/src/input-number/__tests__/theme-contracts.test.ts packages/ui/src/input-number/__tests__/theme.test.ts",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 21030
+          },
+          {
+            "kind": "core",
+            "command": "vitest run --project theme packages/ui/src/input-number --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 14240
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --maxWorkers=1 --project unit packages/ui/src/color-picker/__tests__/index.test.ts packages/ui/src/space/__tests__/contracts.test.ts packages/ui/src/switch/__tests__/change-emits.test.ts",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 12930
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/input-number/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <temporary config extending root strict options; current source/tests/demos>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 50098
+          }
+        ],
+        "boundary": "保留已有 F04/F09 成果；已验证当前 Provider/variant/Token、真实 ref、模型、输入法、光标、事件与资源清理。最终冻结版本九维验收未执行。"
+      }
     },
     {
       "id": "CMP:layout",

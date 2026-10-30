@@ -14,7 +14,7 @@
  */
 
 import type { CSSProperties, VNodeChild } from 'vue';
-import type { Variant } from '../config-provider/context';
+import type { ComponentStyleConfig, Variant } from '../config-provider/context';
 import type { InputStatus } from '../space/statusUtils';
 
 /** antd 的 `ValueType`（rc 侧定义）：受控值的标量类型。 */
@@ -89,11 +89,10 @@ export interface InputNumberProps {
   max?: ValueType;
   /** 步长，可为小数。默认 `1`。 */
   step?: ValueType;
-  /** 键入 Enter 的回调（同步触发 flush）。 */
+  /** `pressEnter` 事件监听器；输入法组合完成后按 Enter 同步触发 flush。 */
   onPressEnter?: (e: KeyboardEvent) => void;
-  /** 步进回调（按钮 / 键盘 / 滚轮共用，`info.emitter` 区分来源）。 */
   /**
-   * 步进回调。
+   * `step` 事件监听器（按钮 / 键盘 / 滚轮共用）。
    *
    * 🚨 载荷是 **`ValueType`**（`string | number`），**不是** `number` ——
    * 上游 `onStep?: (value: T, info) => void`（`T extends ValueType`），
@@ -157,6 +156,10 @@ export interface InputNumberProps {
   classNames?: InputNumberSemanticClassNames | InputNumberSemanticClassNamesFn;
   styles?: InputNumberSemanticStyles | InputNumberSemanticStylesFn;
 }
+
+/** Current ConfigProvider presentation defaults for InputNumber. */
+export type InputNumberConfig = Pick<ComponentStyleConfig, keyof ComponentStyleConfig> &
+  Pick<InputNumberProps, 'classNames' | 'styles' | 'variant'>;
 
 /** 暴露给父组件的实例（antd 的 `InputNumberRef`，rc 的 proxyObject 形状）。 */
 export interface InputNumberRef {

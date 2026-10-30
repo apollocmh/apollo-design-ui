@@ -6,8 +6,10 @@
 import { describe, expectTypeOf, it } from 'vitest';
 import type { VNodeChild } from 'vue';
 import type { Variant } from '../../config-provider/context';
+import type { ConfigProviderProps } from '../../config-provider/interface';
 import type { InputNumber } from '../index';
 import type {
+  InputNumberConfig,
   InputNumberControls,
   InputNumberProps,
   InputNumberRef,
@@ -50,6 +52,17 @@ describe('InputNumber · onStep / parser 的类型（Issue #7.4 / #7.5）', () =
 });
 
 describe('InputNumber · L3 类型', () => {
+  it('accepts the precise InputNumberConfig in the public Provider component map', () => {
+    const config: InputNumberConfig = {
+      className: 'number-config',
+      style: { width: '120px' },
+      variant: 'filled',
+      classNames: ({ props }) => ({ input: props.disabled ? 'disabled-input' : 'enabled-input' }),
+    };
+    const provider: ConfigProviderProps = { components: { inputNumber: config } };
+    expectTypeOf(provider).toEqualTypeOf<ConfigProviderProps>();
+  });
+
   it('Props 面关键字段', () => {
     expectTypeOf<InputNumberProps['value']>().toEqualTypeOf<ValueType | null | undefined>();
     expectTypeOf<InputNumberProps['step']>().toEqualTypeOf<ValueType | undefined>();
@@ -133,5 +146,14 @@ const checkSemanticNumberEmit = (vm: InstanceType<typeof InputNumber>) => {
   vm.$emit('change', null);
   // @ts-expect-error F09: semantic change carries a value, not a DOM event.
   vm.$emit('change', new Event('change'));
+  vm.$emit('step', '1', { offset: 1, type: 'up', emitter: 'keyboard' });
+  vm.$emit('pressEnter', new KeyboardEvent('keydown', { key: 'Enter' }));
+  // @ts-expect-error step carries a numeric value, not a DOM event.
+  vm.$emit('step', new Event('step'), { offset: 1, type: 'up', emitter: 'keyboard' });
+  // @ts-expect-error pressEnter carries a keyboard event.
+  vm.$emit('pressEnter', 1);
+  expectTypeOf(vm.nativeElement).toEqualTypeOf<HTMLDivElement | null>();
+  expectTypeOf(vm.focus).toEqualTypeOf<InputNumberRef['focus']>();
+  expectTypeOf(vm.blur).toEqualTypeOf<InputNumberRef['blur']>();
 };
 void checkSemanticNumberEmit;

@@ -6,6 +6,8 @@
 
 F04：外层及内部件支持有类型的 #prefix/#suffix，render 中按插槽存在性选择，空 slot 不回退 prop；保留反馈图标、Compact/addon 与数字引擎。 验证见 `docs/audit/2026-10-23-vue-reactivity-remediation.md`。
 
+2026-10-30：受控 Decimal 接入共享 `useControlledValue`，显示文本继续独立；`step` / `pressEnter` 声明为 Vue 事件，原生鼠标监听器经 Vue 合并并落根。补齐输入法 Enter、分隔符刷新、DOM 更新后的光标恢复、实际实例类型与当前 Provider 平铺样式。当前主题及 `theme.components.InputNumber` 映射到根 CSS 变量，支持动态/嵌套/撤除；公开前后缀间距和步进可见性已有实际样式消费。第一阶段验证不代表最终九维验收。
+
 ## 1. 对应 antd 组件
 
 - antd 6.6.4 · `es/input-number/` + `@rc-component/input-number@1.6.2` +
@@ -43,9 +45,7 @@ inject 发生在 Compact 的 provide 之前，紧凑项类名永远拿不到（L
 
 ## 4. 已知取舍
 
-- `handleOpacity` / `handleVisibleWidth` / padding 系 / `filledHandleBg`
-  为**构建期解析值**（collapse D46/D50 同判），用户主题覆盖这些 Component
-  Token 在静态 CSS 下不生效。
+- 默认静态 CSS 保留构建期默认值；显式当前 ThemeConfig 通过根变量覆盖尺寸、颜色与派生值，不引入 CSS-in-JS。
 - antd 产物的两条死规则（`:hover -handler-wrap`、`-textarea-rtl`）中，
   handler-wrap 按产物保留（对拍减少噪音），textarea 选择器丢弃（Input/Affix
   共享段，本组件 DOM 不可达）。

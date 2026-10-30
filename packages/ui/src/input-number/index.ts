@@ -16,6 +16,7 @@ export const InputNumber = withInstall(InputNumberComponent);
 export default InputNumber;
 
 export type {
+  InputNumberConfig,
   InputNumberControls,
   InputNumberMode,
   InputNumberProps,

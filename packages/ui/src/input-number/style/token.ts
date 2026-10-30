@@ -151,7 +151,7 @@ let tokenCache: ComponentToken | null = null;
 /** 构建期 token 值（缓存；首次调用时读主题默认 seed）。 */
 export function inputNumberTokenValues(): ComponentToken {
   if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken() as unknown as InputNumberSeedToken);
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }

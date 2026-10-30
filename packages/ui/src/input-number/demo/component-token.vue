@@ -1,21 +1,25 @@
 <script setup lang="ts">
-// 组件 Token：覆盖 InputNumber 根节点上的 --apollo-input-number-* 变量
-import { InputNumber } from '@apollo-design/ui';
+import { ConfigProvider, InputNumber } from '@apollo-design/ui';
 </script>
 
 <template>
   <div class="demo-input-number-token">
     <span class="demo-input-number-token__label">紫色聚焦态与更宽的步进按钮</span>
-    <InputNumber
-      aria-label="自定义令牌数字输入框"
-      :default-value="5"
-      :min="0"
-      :max="20"
-      style="width: 200px"
-    />
+    <ConfigProvider
+      :theme="{
+        token: { colorPrimary: '#722ed1', colorPrimaryHover: '#9254de', controlOutline: 'rgba(114,46,209,0.18)' },
+        components: { InputNumber: { controlWidth: 200, handleWidth: 28, handleFontSize: 14, handleVisible: true, paddingInline: 18, handleBg: '#f9f0ff', handleHoverColor: '#722ed1' } },
+      }"
+    >
+      <InputNumber
+        aria-label="自定义令牌数字输入框"
+        :default-value="5"
+        :min="0"
+        :max="20"
+      />
+    </ConfigProvider>
     <p class="demo-input-number-token__hint">
-      覆盖 --apollo-input-number-control-width / handle-width / handle-bg /
-      active-border-color 等组件 token。
+      通过 theme.components.InputNumber 配置宽度、步进按钮与背景，通过当前主题配置聚焦色。
     </p>
   </div>
 </template>
@@ -31,18 +35,6 @@ import { InputNumber } from '@apollo-design/ui';
 .demo-input-number-token__label {
   color: #595959;
   font-size: 12px;
-}
-
-.demo-input-number-token .apollo-input-number {
-  --apollo-input-number-control-width: 36px;
-  --apollo-input-number-handle-width: 28px;
-  --apollo-input-number-handle-font-size: 14px;
-  --apollo-input-number-padding-inline: 18px;
-  --apollo-input-number-handle-bg: #f9f0ff;
-  --apollo-input-number-handle-hover-color: #722ed1;
-  --apollo-input-number-hover-border-color: #9254de;
-  --apollo-input-number-active-border-color: #722ed1;
-  --apollo-input-number-active-shadow: 0 0 0 2px rgb(114 46 209 / 18%);
 }
 
 .demo-input-number-token__hint {

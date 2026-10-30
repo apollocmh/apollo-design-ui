@@ -28,7 +28,7 @@ Enter a number within certain range with the mouse or keyboard.
 
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
-| value | Current value (`v-model:value`) | number \| string | - |
+| value | Current value (`v-model:value`); `null` means empty | number \| string \| null | - |
 | defaultValue | Initial value | number \| string | - |
 | min | Min value | number \| string | - |
 | max | Max value | number \| string | - |
@@ -71,9 +71,34 @@ Slots are read during rendering and support conditional insertion/removal and re
 | --- | --- | --- |
 | change | Value change (emitted together with `update:value`) | (value: number \| string \| null) |
 | press-enter | Enter key pressed | (e: KeyboardEvent) |
-| step | Step via button / keyboard / wheel | (value: number, info: { offset, type, emitter }) |
+| step | Step via button / keyboard / wheel | (value: number \| string, info: { offset, type, emitter }) |
 
-`change` is a declared Vue event. `@change` and `onChange` register the same listener, receiving a number, a string in stringMode, or `null` for an empty value. Native DOM `change` does not reach this listener. The wrapper forwards each internal change once.
+`change`, `step` and `pressEnter` are declared Vue events, supporting template listeners and `.once`. `@change` and `onChange` register the same listener, receiving a number, a string in stringMode, or `null`. The wrapper forwards each event once; native DOM `change` does not reach the semantic listener. Enter during IME composition does not flush or emit `press-enter`. Native `@keydown.prevent` cancels that internal keyboard action.
+
+### Controlled values and native attributes
+
+When `value !== undefined`, user changes propose updates. Rejected proposals do not become local state when control is released. Setting `value` to `undefined` retains the last value received from the parent. `defaultValue` only initializes the value; explicit `null` stays empty.
+
+Native `class`, `style` and mouse listeners target the container. `id`, `name`, `tabindex`, label/ARIA attributes, focus/blur and keyboard listeners target the input. The component owns its numeric state, spinbutton role and numeric ARIA attributes. `input` collects display text internally; use `change` / `update:value` to observe value changes.
+
+ConfigProvider `components.inputNumber` accepts `InputNumberConfig`: `className`, flat `style`, `classNames`, `styles` and `variant`. Root styles merge in this order: Provider semantic styles, Provider flat style, component semantic styles, native `style`. Later values take precedence. Semantic callbacks receive the current resolved `size`, `disabled`, `controls` and `variant`.
+
+### Component tokens
+
+Configure `theme.components.InputNumber`. Dimensions accept nonnegative numbers (converted to px) or CSS lengths. Current and nested themes update reactively; removing overrides restores the current defaults. Native CSS variables in `style` take precedence.
+
+| Token | Description |
+| --- | --- |
+| controlWidth | Input width; default `90px` |
+| handleWidth / handleFontSize | Step area width and icon size |
+| handleVisible | In input mode: `'auto'` shows on hover/focus; `true` always shows; `false` hides |
+| handleBg / handleActiveBg / filledHandleBg | Step, pressed and filled backgrounds |
+| handleHoverColor / handleBorderColor | Step hover and border colors |
+| paddingBlock / paddingBlockSM / paddingBlockLG | Vertical padding for each size |
+| paddingInline / paddingInlineSM / paddingInlineLG | Horizontal padding for each size |
+| inputFontSize / inputFontSizeSM / inputFontSizeLG | Input font size for each size |
+| inputAffixPadding | Prefix/suffix spacing |
+| handleOpacity / handleVisibleWidth | Idle opacity and visible width, derived from `handleVisible` by default |
 
 ### Ref
 
