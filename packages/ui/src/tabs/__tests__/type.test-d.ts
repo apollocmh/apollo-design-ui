@@ -111,7 +111,11 @@ describe('Tabs · L3 类型', () => {
 
   it('`editable`（内部配置）的 onEdit 载荷与 emits 同形', () => {
     expectTypeOf<NonNullable<TabsEditableConfig['onEdit']>>().toEqualTypeOf<
-      (type: TabsEditAction, info: { key?: string; event: TabsEditEvent }) => void
+      (
+        ...args:
+          | [type: 'add', info: { event: TabsEditEvent }]
+          | [type: 'remove', info: { key: string; event: TabsEditEvent }]
+      ) => void
     >();
     expectTypeOf<TabsEditableConfig['showAdd']>().toEqualTypeOf<boolean | undefined>();
   });
@@ -145,7 +149,8 @@ describe('Tabs · L3 类型', () => {
   });
 
   it('`TabsRef` 只有 `nativeElement`（与上游一致）', () => {
-    expectTypeOf<TabsRef>().toEqualTypeOf<{ nativeElement: HTMLElement | null }>();
+    expectTypeOf<TabsRef>().toEqualTypeOf<{ readonly nativeElement: HTMLElement | null }>();
+    expectTypeOf<InstanceType<typeof Tabs>['nativeElement']>().toEqualTypeOf<HTMLElement | null>();
   });
 
   it('`locale` 的三个键都是可选 string', () => {
@@ -222,3 +227,18 @@ const checkRemovedPopupRender = () => {
   void slot;
 };
 void checkRemovedPopupRender;
+
+const removedTopLevelChildren = () => {
+  // @ts-expect-error The inert top-level children prop was removed; use items[].children.
+  const props: TabsProps = { children: 'unused' };
+  void props;
+};
+void removedTopLevelChildren;
+
+const requireRemovalKey = (editable: TabsEditableConfig, event: MouseEvent) => {
+  editable.onEdit('add', { event });
+  editable.onEdit('remove', { key: 'a', event });
+  // @ts-expect-error Removing an item requires its data key.
+  editable.onEdit('remove', { event });
+};
+void requireRemovalKey;

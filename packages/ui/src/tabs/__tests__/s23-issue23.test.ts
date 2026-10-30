@@ -82,7 +82,7 @@ describe('Tabs · Issue #23', () => {
     };
     const Host = defineComponent({
       setup() {
-        useTouchMove(targetRef, () => {});
+        useTouchMove(targetRef, () => false);
         return () =>
           flag.value ? h('div', { ref: setRef }, 'A') : h('span', { ref: setRef }, 'B');
       },

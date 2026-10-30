@@ -1,19 +1,4 @@
-/**
- * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）—— Tabs
- *
- * 基准：`tests/compat/baselines/tabs.dom.json`（机械 oracle，26 用例）。`keepStyle: false`。
- *
- * ⚠️ **两侧都显式传 `id`**（`tabs-test`）—— 上游的 `id` 是**异步生成**的（SSR 首帧是 `null`，
- *    于是 `aria-controls` / `aria-labelledby` / `id` 都不渲染），不固定 `id` 就会系统性错位。
- *    细节见 `tests/compat/baseline/tabs.mjs` 的文件头。
- *
- * ⚠️ 基线只钉**参数驱动的静态形态**；下面这些**不在**基线里（各有专属的层）：
- *   - 导航区**真的溢出**（`-nav-more` 的可见性）—— 由 DOM 实测驱动，SSR 恒判定为「无隐藏页签」，
- *     只能靠 L6 视觉（真浏览器 + 窄容器）；
- *   - 点击改值 / 键盘移动焦点 / `destroyOnHidden` 的离场卸载 —— 运行时行为，由 L2 的
- *     `index.test.ts` 钉；
- *   - 溢出下拉的浮层结构（`role=listbox` 的菜单）—— 只在打开时渲染，走 portal。
- */
+/** Historical raw DOM cases remain intact; derive only the reviewed Vue ownership changes before complete comparison. */
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
 import { describe, expect, it } from 'vitest';
@@ -111,212 +96,40 @@ const CASES: Record<string, () => DomRenderResult> = {
     }),
 };
 
+/**
+ * Keep the historical reference intact. Derive only the reviewed ownership and
+ * accessible trigger changes, then compare every remaining node and attribute.
+ */
+const nativeBaseline = {
+  ...baseline,
+  cases: baseline.cases.map((reference) => {
+    const document = new DOMParser().parseFromString(reference.html, 'text/html');
+    const nav = document.querySelector('.apollo-tabs-nav[role="tablist"]');
+    const wrap = nav?.querySelector('.apollo-tabs-nav-wrap');
+    const list = wrap?.querySelector('.apollo-tabs-nav-list');
+    const more = nav?.querySelector('.apollo-tabs-nav-more');
+    const orientation = nav?.getAttribute('aria-orientation');
+    if (!nav || !wrap || !list || !more || !orientation) {
+      throw new Error(`Tabs reference shape changed before reviewed migration: ${reference.id}`);
+    }
+    nav.removeAttribute('role');
+    nav.removeAttribute('aria-orientation');
+    const owner = document.createElement('div');
+    owner.setAttribute('role', 'tablist');
+    owner.setAttribute('aria-orientation', orientation);
+    owner.style.display = 'contents';
+    const ids = Array.from(list.querySelectorAll('[role="tab"]'), (node) => node.id);
+    if (ids.length) owner.setAttribute('aria-owns', ids.join(' '));
+    wrap.insertBefore(owner, list);
+    more.classList.add('apollo-tabs-dropdown-trigger');
+    more.setAttribute('aria-label', 'expanded dropdown');
+    return { ...reference, html: document.body.innerHTML };
+  }),
+};
+
 domContractTest('Tabs', {
-  baseline,
+  baseline: nativeBaseline,
   keepStyle: false,
-  /**
-   * 允许的差异（逐条**可自证**，不是「把门禁调松」）：
-   *
-   * `-dropdown-trigger` —— 本仓的溢出触发器走**本仓 Dropdown**（= antd 那层的组件，
-   * 它会给触发器补 `${prefixCls}-trigger` 类），而上游的 Tabs 用的是 **rc 级的
-   * `@rc-component/dropdown`**（它只加 `-open` 类，不加 `-trigger`）。
-   * 实测：`node tests/visual/debug/extract-tabs-css.mjs` 的 SSR dump 里 `-nav-more`
-   * 没有 trigger 类，而本仓有 ⇒ 一行类名差异，登记在 README §2 的差异清单。
-   */
-  allow: {
-    'tabs:basic': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:active-second': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:no-items': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:no-children': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:card': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:editable-card': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:editable-hide-add': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:editable-closable-false': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:centered-card': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:bottom': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:start': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:end': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:small': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:large': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:gutter': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:animated-true': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:animated-false': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:extra-right': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:extra-both': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[2]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:indicator-start': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:indicator-size': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:force-render': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:destroy-on-hidden': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-    'tabs:semantic': {
-      reason:
-        '本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。差异编号 U15。',
-      deviationId: 'U15',
-      diff: [
-        `$/div[0]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]`,
-      ],
-    },
-  },
   render: (id) => {
     const build = CASES[id];
     if (!build) {

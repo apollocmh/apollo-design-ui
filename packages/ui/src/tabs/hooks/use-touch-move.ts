@@ -36,8 +36,7 @@ const SPEED_OFF_MULTIPLE = 0.995 ** REFRESH_INTERVAL;
  */
 export function useTouchMove(
   target: Ref<HTMLElement | null>,
-  // biome-ignore lint/suspicious/noConfusingVoidType: 上游逐字契约（rc-tabs 的 onOffset 就是 boolean | void）；改成 undefined 会放宽写法、与上游分叉
-  onOffset: (offsetX: number, offsetY: number) => boolean | void,
+  onOffset: (offsetX: number, offsetY: number) => boolean,
 ): void {
   const touchPosition = ref<{ x: number; y: number } | null>(null);
   let lastTimestamp = 0;
@@ -56,6 +55,9 @@ export function useTouchMove(
     const touch = e.touches[0];
     if (!touch) return;
     touchPosition.value = { x: touch.screenX, y: touch.screenY };
+    lastTimestamp = Date.now();
+    lastTimeDiff = 0;
+    lastOffset = null;
     clearMotion();
   };
 
@@ -69,12 +71,12 @@ export function useTouchMove(
 
     const offsetX = touch.screenX - prev.x;
     const offsetY = touch.screenY - prev.y;
-    onOffset(offsetX, offsetY);
+    const moved = onOffset(offsetX, offsetY);
 
     const now = Date.now();
     lastTimeDiff = now - lastTimestamp;
     lastTimestamp = now;
-    lastOffset = { x: offsetX, y: offsetY };
+    lastOffset = moved ? { x: offsetX, y: offsetY } : null;
   };
 
   const onTouchEnd = (): void => {
@@ -100,7 +102,7 @@ export function useTouchMove(
           ) {
             currentX *= SPEED_OFF_MULTIPLE;
             currentY *= SPEED_OFF_MULTIPLE;
-            onOffset(currentX * REFRESH_INTERVAL, currentY * REFRESH_INTERVAL);
+            if (!onOffset(currentX * REFRESH_INTERVAL, currentY * REFRESH_INTERVAL)) clearMotion();
           } else {
             clearMotion();
           }
@@ -109,6 +111,13 @@ export function useTouchMove(
     }
     lastOffset = null;
     lastTimeDiff = 0;
+  };
+
+  const cancelTouch = (): void => {
+    touchPosition.value = null;
+    lastOffset = null;
+    lastTimeDiff = 0;
+    clearMotion();
   };
 
   // ⚠️ 记录**绑定时的那个元素**：watch 回调触发时 `target.value` 已经是新元素，
@@ -122,6 +131,7 @@ export function useTouchMove(
     el.addEventListener('touchstart', onTouchStart, { passive: true });
     el.addEventListener('touchmove', onTouchMove, { passive: true });
     el.addEventListener('touchend', onTouchEnd, { passive: true });
+    el.addEventListener('touchcancel', cancelTouch, { passive: true });
   };
 
   const detach = (): void => {
@@ -129,9 +139,10 @@ export function useTouchMove(
       boundEl.removeEventListener('touchstart', onTouchStart);
       boundEl.removeEventListener('touchmove', onTouchMove);
       boundEl.removeEventListener('touchend', onTouchEnd);
+      boundEl.removeEventListener('touchcancel', cancelTouch);
       boundEl = null;
     }
-    clearMotion();
+    cancelTouch();
   };
 
   // ⚠️ 与 `useResizeObserver` 同判：`flush: 'post'` 保证 DOM 就绪后再挂监听

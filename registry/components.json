@@ -3108,7 +3108,7 @@
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
-        "tokenCount": 26,
+        "tokenCount": 24,
         "tokenGroup": "Tabs"
       },
       "dependencies": {

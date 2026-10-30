@@ -1,20 +1,4 @@
-/**
- * L7 主题 —— Tabs 的 Component Token（**26 个** + 6 个内部 token）。
- *
- * 判定值逐字对拍 antd 6.6.4 产物（可复现命令：
- * `node tests/visual/debug/extract-tabs-css.mjs --tokens`）。
- *
- * G11 起 demo 是真的，主题矩阵也接上了：`themeTest('Tabs', { demos })` 会把 13 个 demo
- * 在 light / dark / compact / token-override 四种主题下各渲染一遍。
- *
- * ── 这个文件证明了什么 / 没证明什么 ────────────────────────────────────────────
- *
- * 证明：26 个 token 的**判定值与派生算式**与上游一致；内部 token 的 6 个字段与判定值；
- * 三个 `cardHeight` 覆盖位真的参与「合并后回写」；纯函数性质。
- *
- * 没证明：这些值在**产物 CSS** 里被正确消费（那是 G4 的机械移植 + L6 的逐像素比对）；
- * 也没证明 ConfigProvider 能覆盖它们（本仓没有那条管线，见 `style/token.ts` 的缺口说明）。
- */
+/** Static token derivation and existing demo theme matrix; native-browser.mjs verifies actual CSS consumption. */
 
 import { themeTest } from '@apollo-design/test-utils';
 import { getDesignToken } from '@apollo-design/theme';
@@ -27,12 +11,12 @@ import {
   tabsTokenValues,
 } from '../style/token';
 
-const seed = (): TabsSeedToken => getDesignToken() as unknown as TabsSeedToken;
+const seed = (): TabsSeedToken => getDesignToken();
 
-describe('Tabs · Component Token 判定值（antd 产物逐字对拍）', () => {
+describe('Tabs · Component Token 默认派生与当前契约', () => {
   const t = tabsTokenValues();
 
-  it('26 个字段恰好齐全（不多不少）', () => {
+  it('24 个实际消费的组件字段齐全', () => {
     expect(Object.keys(t).sort()).toEqual(
       [
         'zIndexPopup',
@@ -49,8 +33,6 @@ describe('Tabs · Component Token 判定值（antd 产物逐字对拍）', () =>
         'inkBarColor',
         'horizontalMargin',
         'horizontalItemGutter',
-        'horizontalItemMargin',
-        'horizontalItemMarginRTL',
         'horizontalItemPadding',
         'horizontalItemPaddingSM',
         'horizontalItemPaddingLG',
@@ -63,7 +45,7 @@ describe('Tabs · Component Token 判定值（antd 产物逐字对拍）', () =>
         'cardGutter',
       ].sort(),
     );
-    expect(Object.keys(t).length).toBe(26);
+    expect(Object.keys(t).length).toBe(24);
   });
 
   it('z-index：`zIndexPopupBase + 50`', () => {
@@ -95,9 +77,9 @@ describe('Tabs · Component Token 判定值（antd 产物逐字对拍）', () =>
     expect(t.cardBg).toBe('rgba(0,0,0,0.02)'); // colorFillAlter
     expect(t.inkBarColor).toBe('#1677ff'); // colorPrimary
     expect(t.itemColor).toBe('rgba(0,0,0,0.88)'); // colorText
-    expect(t.itemSelectedColor).toBe('#1677ff'); // colorPrimary
-    expect(t.itemHoverColor).toBe('#4096ff'); // colorPrimaryHover
-    expect(t.itemActiveColor).toBe('#0958d9'); // colorPrimaryActive
+    expect(t.itemSelectedColor).toBe(seed().colorPrimaryTextActive);
+    expect(t.itemHoverColor).toBe(seed().colorPrimaryTextActive);
+    expect(t.itemActiveColor).toBe(seed().colorPrimaryTextActive); // colorPrimaryActive
   });
 
   it('横向：margin / 固定 gutter / 三档 padding', () => {
@@ -108,9 +90,10 @@ describe('Tabs · Component Token 判定值（antd 产物逐字对拍）', () =>
     expect(t.horizontalItemPaddingLG).toBe('16px 0'); // padding
   });
 
-  it('两个「空串占位」token 存在且为空（与上游的 26 个逐字对齐）', () => {
-    expect(t.horizontalItemMargin).toBe('');
-    expect(t.horizontalItemMarginRTL).toBe('');
+  it('removes unused placeholder margins and keeps the consumed gutter', () => {
+    expect(t).not.toHaveProperty('horizontalItemMargin');
+    expect(t).not.toHaveProperty('horizontalItemMarginRTL');
+    expect(t.horizontalItemGutter).toBe(32);
   });
 
   it('纵向：padding / margin 与 cardGutter', () => {
@@ -143,14 +126,14 @@ describe('Tabs · Component Token 判定值（antd 产物逐字对拍）', () =>
     const customized = prepareComponentToken({
       ...seed(),
       colorPrimary: '#ff0000',
-      colorPrimaryHover: '#ff3333',
-      colorPrimaryActive: '#cc0000',
+      colorPrimaryTextHover: '#990000',
+      colorPrimaryTextActive: '#550000',
       margin: 20,
     });
     expect(customized.inkBarColor).toBe('#ff0000');
-    expect(customized.itemSelectedColor).toBe('#ff0000');
-    expect(customized.itemHoverColor).toBe('#ff3333');
-    expect(customized.itemActiveColor).toBe('#cc0000');
+    expect(customized.itemSelectedColor).toBe('#550000');
+    expect(customized.itemHoverColor).toBe('#550000');
+    expect(customized.itemActiveColor).toBe('#550000');
     expect(customized.horizontalMargin).toBe('0 0 20px 0');
     expect(customized.verticalItemMargin).toBe('20px 0 0 0');
   });

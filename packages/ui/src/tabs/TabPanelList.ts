@@ -11,7 +11,7 @@
  *
  * ⚠️ 三条判据：
  *
- *   1. `removeOnLeave` 取 **`destroyOnHidden ?? item.destroyOnHidden`** —— 组件级优先，
+ *   1. `removeOnLeave` 取 **`item.destroyOnHidden ?? destroyOnHidden`** —— item 级优先，
  *      回落到 **item 级**（antd 壳在归一 items 时已把 item 的 `destroyInactiveTabPane`
  *      映射成 `destroyOnHidden`）；
  *   2. `-animated` 类与 `tabPaneMotion` 都看 `animated.tabPane`（**默认 false**）；
@@ -19,8 +19,8 @@
  *      `style` 的优先级是 `contentStyle → item.style → motionStyle`（后者覆盖前者）。
  */
 
-import { CSSMotion } from '@apollo-design/motion';
-import { defineComponent, h, type PropType } from 'vue';
+import { CSSMotion, type CSSMotionSlotProps } from '@apollo-design/motion';
+import { type CSSProperties, defineComponent, h, type PropType } from 'vue';
 import type { TabPosition, TabsItem } from './interface';
 import TabPane from './TabPane';
 
@@ -36,25 +36,25 @@ export default defineComponent({
   name: 'ATabPanelList',
   props: {
     prefixCls: { type: String, required: true },
-    id: { type: String, default: undefined },
+    id: { type: String as PropType<string | undefined>, default: undefined },
     tabs: { type: Array as PropType<TabsItem[]>, required: true },
-    activeKey: { type: String, default: undefined },
+    activeKey: { type: String as PropType<string | undefined>, default: undefined },
     animated: {
       type: Object as PropType<{ tabPane?: boolean; tabPaneMotion?: TabPaneMotionConfig }>,
       default: () => ({}),
     },
     tabPosition: { type: String as PropType<TabPosition>, default: 'top' },
-    destroyOnHidden: { type: Boolean, default: undefined },
+    destroyOnHidden: { type: Boolean as PropType<boolean | undefined>, default: undefined },
     bodyStyle: {
-      type: Object as PropType<Record<string, unknown> | undefined>,
+      type: Object as PropType<CSSProperties | undefined>,
       default: undefined,
     },
-    bodyClassName: { type: String, default: undefined },
+    bodyClassName: { type: String as PropType<string | undefined>, default: undefined },
     contentStyle: {
-      type: Object as PropType<Record<string, unknown> | undefined>,
+      type: Object as PropType<CSSProperties | undefined>,
       default: undefined,
     },
-    contentClassName: { type: String, default: undefined },
+    contentClassName: { type: String as PropType<string | undefined>, default: undefined },
   },
   setup(props) {
     return () => {
@@ -77,43 +77,40 @@ export default defineComponent({
               .join(' '),
             style: props.bodyStyle,
           },
-          tabs.map((item, index) => {
+          tabs.map((item) => {
             const { key, forceRender, style: paneStyle, className: paneClassName } = item;
             const active = key === activeKey;
-            const removeOnLeave = !!(props.destroyOnHidden ?? item.destroyOnHidden);
+            const removeOnLeave = !!(item.destroyOnHidden ?? props.destroyOnHidden);
 
             const motionConfig = animated.tabPaneMotion ?? {};
 
             return h(
-              CSSMotion as never,
+              CSSMotion,
               {
-                key: `${key}-${index}`,
+                key,
                 visible: active,
-                forceRender,
+                forceRender: forceRender ?? false,
                 removeOnLeave,
                 leavedClassName: `${contentPrefixCls}-hidden`,
-                ...(motionConfig as Record<string, unknown>),
-              } as never,
+                ...motionConfig,
+              },
               {
-                default: (slotProps: { className?: string; style?: Record<string, unknown> }) =>
-                  h(
-                    TabPane as never,
-                    {
-                      prefixCls: contentPrefixCls,
-                      id,
-                      tabKey: key,
-                      active,
-                      children: item.children,
-                      className: [props.contentClassName, paneClassName, slotProps.className]
-                        .filter(Boolean)
-                        .join(' '),
-                      style: {
-                        ...props.contentStyle,
-                        ...paneStyle,
-                        ...slotProps.style,
-                      },
-                    } as never,
-                  ),
+                default: (slotProps: CSSMotionSlotProps) =>
+                  h(TabPane, {
+                    prefixCls: contentPrefixCls,
+                    id,
+                    tabKey: key,
+                    active,
+                    children: item.children,
+                    className: [props.contentClassName, paneClassName, slotProps.className]
+                      .filter(Boolean)
+                      .join(' '),
+                    style: {
+                      ...props.contentStyle,
+                      ...paneStyle,
+                      ...slotProps.style,
+                    },
+                  }),
               },
             );
           }),

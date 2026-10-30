@@ -16,26 +16,27 @@
 
 import type { CSSProperties } from 'vue';
 import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { getPanelId, getTabId } from './util';
 
 export default defineComponent({
   name: 'ATabPane',
   props: {
     prefixCls: { type: String, required: true },
-    className: { type: String, default: undefined },
+    className: { type: String as PropType<string | undefined>, default: undefined },
     style: { type: Object as PropType<CSSProperties | undefined>, default: undefined },
-    id: { type: String, default: undefined },
+    id: { type: String as PropType<string | undefined>, default: undefined },
     active: { type: Boolean, default: false },
     tabKey: { type: String, required: true },
     children: { type: null as unknown as PropType<VNodeChild>, default: undefined },
   },
-  setup(props, { expose }) {
-    const elementRef = { value: null as HTMLElement | null };
-    expose({ getElement: (): HTMLElement | null => elementRef.value });
-
+  setup(props) {
     const hasContent = computed(() => {
       const children = props.children;
       if (children === undefined || children === null || children === false) return false;
-      if (Array.isArray(children)) return children.filter(Boolean).length > 0;
+      if (Array.isArray(children))
+        return children.some(
+          (child) => child !== undefined && child !== null && child !== false && child !== '',
+        );
       return children !== '';
     });
 
@@ -43,10 +44,10 @@ export default defineComponent({
       h(
         'div',
         {
-          id: props.id ? `${props.id}-panel-${props.tabKey}` : undefined,
+          id: props.id ? getPanelId(props.id, props.tabKey) : undefined,
           role: 'tabpanel',
           tabIndex: props.active && hasContent.value ? 0 : -1,
-          'aria-labelledby': props.id ? `${props.id}-tab-${props.tabKey}` : undefined,
+          'aria-labelledby': props.id ? getTabId(props.id, props.tabKey) : undefined,
           'aria-hidden': !props.active,
           style: props.style,
           class: [
@@ -56,13 +57,8 @@ export default defineComponent({
           ]
             .filter(Boolean)
             .join(' '),
-          ref: (el: unknown) => {
-            elementRef.value = (el as HTMLElement | null) ?? null;
-          },
         },
-        props.children === undefined || props.children === null
-          ? undefined
-          : [props.children as VNodeChild],
+        props.children === undefined || props.children === null ? undefined : [props.children],
       );
   },
 });

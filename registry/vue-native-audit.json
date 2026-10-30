@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 48,
+  "revision": 50,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2042,18 +2042,16 @@
       "kind": "component",
       "ref": "tabs",
       "title": "Tabs",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tabs"
       ],
-      "assignment": {
-        "owner": "native_tabs",
-        "baseRevision": 25,
-        "startedAt": "2026-10-30T07:50:40.803Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -2069,6 +2067,51 @@
         "basis": [
           "docs/audit/2026-10-24-tabs-popup-remediation.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/tabs"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/tabs/ --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 32620
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/tabs/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 5600
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/card/__tests__/index.test.ts packages/ui/src/card/__tests__/demo.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 14460
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/tabs/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 12290
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; entire current Tabs source/tests/demos>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49560
+          }
+        ],
+        "boundary": "既有popup/extra槽成果保留；已验证24Token、当前Provider、原生attrs/真实refs、模型/键盘/面板身份、Card消费者、Chrome实际AX所有权与默认/暗色/紧凑色对。原26DOM场景按精确结构变更完整比较，raw和视觉基线未修改。最终冻结九维/发布消费者未执行。"
       }
     },
     {

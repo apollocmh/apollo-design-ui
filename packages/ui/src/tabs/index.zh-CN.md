@@ -75,107 +75,126 @@ import { Tabs } from '@apollo-design/ui';
 
 <code src="./demo/animated.vue"></code>
 
+### 自定义溢出列表
+
+<code src="./demo/popup-render.vue"></code>
+
+### 组件 Token
+
+<code src="./demo/component-token.vue"></code>
+
 ## API
 
 ### Tabs
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| activeKey（`v-model:activeKey`） | 当前激活页签的 key | `string` | —— |
-| defaultActiveKey | 非受控初始激活页签 | `string` | 第一项 |
-| items | 页签内容（**唯一**的写法） | `TabsItem[]` | `[]` |
+| activeKey | 受控激活项，支持 `v-model:activeKey` | `string` | — |
+| defaultActiveKey | 非受控初始激活项 | `string` | 首个启用项 |
+| items | 页签与面板数据 | `TabsItem[]` | `[]` |
 | type | 页签类型 | `'line' \| 'card' \| 'editable-card'` | `'line'` |
-| size | 尺寸（未传走 ConfigProvider 的 `componentSize`） | `SizeType`（`'small' \| 'medium' \| 'middle' \| 'large'`） | —— |
-| tabPlacement | 位置（`start`/`end` 会按 RTL 映射成 `left`/`right`） | `'top' \| 'end' \| 'bottom' \| 'start'` | `'top'` |
-| centered | 卡片式页签整体居中 | `boolean` | `false` |
-| tabBarGutter | 页签间距 | `number` | —— |
-| tabBarStyle | 导航区样式 | `CSSProperties` | —— |
-| tabBarExtraContent | 导航区两侧的附加内容 | `VNodeChild \| { left?, right? }` | —— |
-| addIcon / removeIcon | 「+」与删除按钮的图标 | `VNodeChild` | —— |
-| hideAdd | 隐藏「+」（仅 `editable-card` 有意义） | `boolean` | `false` |
-| more | 溢出下拉的配置（`icon` / `transitionName`） | `TabsMoreProps` | —— |
-| indicator | 指示条：`align`（`start`/`center`/`end`）与 `size`（数字 / `(origin) => number`） | `TabsIndicator` | `{ align: 'center' }` |
-| animated | 动画：`false` / `true` / 对象 | `boolean \| TabsAnimatedConfig` | `{ inkBar: true, tabPane: false }` |
-| destroyOnHidden | 隐藏时销毁面板（**组件级**默认，item 级可覆盖） | `boolean` | `false` |
-| locale | 语言包（`dropdownAriaLabel` / `removeAriaLabel` / `addAriaLabel`） | `TabsLocale` | —— |
-| getPopupContainer | 溢出下拉的挂载容器 | `(node) => HTMLElement` | —— |
-| classNames / styles | 语义化类名 / 样式（**8 个平铺 + 1 个嵌套 `popup`**） | `TabsSemanticAllType` | —— |
-| id | 根节点 id，同时是 aria 关联的前缀 | `string` | **异步生成** |
-| prefixCls | 类名前缀 | —— | —— |
-| class / style | **根元素原生 attrs**（不是 Props）；`style` 经语义 root 通道下发 | —— | —— |
+| size | 局部尺寸；依次回落到 `components.tabs.size`、全局尺寸 | `'small' \| 'medium' \| 'middle' \| 'large'` | — |
+| tabPlacement | 导航位置；start/end 按文字方向映射 | `'top' \| 'end' \| 'bottom' \| 'start'` | `'top'` |
+| direction | 文字方向，未传读取当前 Provider | `'ltr' \| 'rtl'` | — |
+| centered | 导航居中 | `boolean` | `false` |
+| tabBarGutter | 相邻页签的间距，单位 px | `number` | — |
+| tabBarStyle | 导航区样式 | `CSSProperties` | — |
+| tabBarExtraContent | 附加内容；单节点位于右侧 | `VNodeChild \| { left?: VNodeChild; right?: VNodeChild }` | — |
+| addIcon / removeIcon | 新增与关闭按钮图标 | `VNodeChild` | — |
+| hideAdd | 隐藏新增按钮，仅用于 editable-card | `boolean` | `false` |
+| more | 溢出按钮图标与浮层动效名 | `{ icon?: VNodeChild; transitionName?: string }` | — |
+| indicator | 指示条对齐与长度；函数接收原始长度 | `{ align?: 'start' \| 'center' \| 'end'; size?: number \| ((origin: number) => number) }` | `{ align: 'center' }` |
+| animated | 指示条与面板动画 | `boolean \| { inkBar?: boolean; tabPane?: boolean }` | `{ inkBar: true, tabPane: false }` |
+| destroyOnHidden | 未设置 item 配置时，隐藏面板是否销毁 | `boolean` | `false` |
+| locale | 按钮与溢出列表的可访问名称 | `{ dropdownAriaLabel?: string; removeAriaLabel?: string; addAriaLabel?: string }` | 英文默认名称 |
+| getPopupContainer | 溢出浮层的挂载容器 | `(trigger: HTMLElement) => HTMLElement` | 当前 Provider / body |
+| classNames / styles | 语义区域对象，或 `({ props: TabsProps }) => 对象` | `TabsProps['classNames'] / TabsProps['styles']` | — |
+| id | 根 id 与内部 ARIA id 的前缀 | `string` | Vue `useId()` |
+| prefixCls | DOM 类名前缀 | `string` | `'apollo-tabs'` |
 
-#### `TabsItem`
+保留的废弃别名：`tabPosition`（top/right/bottom/left）、`indicatorSize`、`moreIcon`、`popupClassName`、`destroyInactiveTabPane`。优先使用 tabPlacement、indicator.size、more.icon、classNames.popup.root、destroyOnHidden。
+
+### TabsItem
 
 | 字段 | 说明 | 类型 |
 | --- | --- | --- |
-| key | **必填** | `string` |
-| label | 页签标题 | `VNodeChild` |
-| children | 面板内容 | `VNodeChild` |
-| icon | 图标（与**字符串** label 同时存在时 label 会被包一层 `<span>`） | `VNodeChild` |
-| disabled | 禁用 | `boolean` |
-| closable | 是否可删（`false` 时无删除按钮；仅 `editable-card` 有意义） | `boolean` |
-| closeIcon | 自定义关闭图标（`null` / `false` + `closable` 未传 ⇒ 不可删） | `VNodeChild` |
-| forceRender | 未激活时也渲染面板 | `boolean` |
-| destroyOnHidden | 隐藏时销毁该面板 | `boolean` |
+| key | 唯一数据键；事件始终传回原值 | `string` |
+| label / children | 页签标题 / 面板内容，支持完整 Vue 内容和数字 0 | `VNodeChild` |
+| icon | 标题图标 | `VNodeChild` |
+| disabled | 禁止用户激活与移除 | `boolean` |
+| closable | 是否可移除，仅用于 editable-card | `boolean` |
+| closeIcon | 当 closable 未设置时，null/false 会关闭该项的移除能力 | `VNodeChild` |
+| forceRender | 激活前也渲染该面板 | `boolean` |
+| destroyOnHidden | 覆盖组件级隐藏销毁默认值，包括显式 false | `boolean` |
+| destroyInactiveTabPane | destroyOnHidden 的废弃别名 | `boolean` |
+| className / style | 面板区域的类名 / 样式 | `string / CSSProperties` |
 
 ### 事件
 
-| 事件 | 说明 | 参数 |
-| --- | --- | --- |
-| `update:activeKey` | 激活页签变化（`v-model:activeKey`） | `(activeKey: string)` |
-| `change` | **真的发生变化**时（反复点同一个不发） | `(activeKey: string)` |
-| `tabClick` | 每次点击都发（含重复点击当前页签） | `(key: string, event: MouseEvent \| KeyboardEvent)` |
-| `tabScroll` | 导航区滚动 | `({ direction })` |
-| `edit` | 增删页签（⚠️ 载荷**被改写**：`add` ⇒ **事件对象**、`remove` ⇒ **key**） | `(target, action)` |
+| 事件 | 触发与参数 |
+| --- | --- |
+| update:activeKey | 激活请求不同于当前公开值时，`(key: string)` |
+| change | 与 update:activeKey 同次发送，`(key: string)` |
+| tabClick | 每次有效页签点击或键盘激活，包括当前项，`(key: string, event: MouseEvent \| KeyboardEvent)` |
+| tabScroll | 导航位移变化，`({ direction: 'left' \| 'right' \| 'top' \| 'bottom' })` |
+| edit | 新增发送 `(event, 'add')`，移除发送 `(key, 'remove')`；数据由调用方更新 |
 
-### 插槽
+事件统一由 Vue emits 发送，不另调用监听器 prop。受控请求须由父级接受才改变公开值；activeKey 变为 undefined 时保留最后一次实际接受的值。默认值只初始化一次。非受控激活项被移除时，按原索引选择附近的启用项；数据整理本身不发送用户激活事件。
 
-| 插槽 | 说明 | 参数 |
-| --- | --- | --- |
-| `tabBar` | 整体替换导航区（替代 `renderTabBar`） | `TabsRenderTabBarProps` |
-| `popupRender` | 自定义溢出下拉内容（替代 `more.popupRender`） | `{ originNode, restTabs, onClose }` |
-| `extra` | 导航区两侧的附加内容（替代 `tabBarExtraContent`） | `({ position: 'left' \| 'right' })` |
+### 插槽与实例
 
-### 键盘
+| 插槽 | 作用域 |
+| --- | --- |
+| tabBar | `TabsRenderTabBarProps`：当前 id、prefixCls、tabs、activeKey、方向、位置、动画、样式及导航回调；整体替换导航 |
+| popupRender | `{ originNode, restTabs, onClose }`：原始溢出列表、当前隐藏项与关闭方法 |
+| extra | `{ position: 'left' \| 'right' }`：两侧附加内容 |
+
+插槽在渲染时读取。extra 插槽存在时优先于 tabBarExtraContent，空槽也会压住默认内容；popupRender 同样支持条件出现、空内容和撤除。tabBar 自定义导航负责自己的键盘与 ARIA；editable.onEdit 的 remove 命令必须提供 `{ key, event }`，add 命令提供 `{ event }`。
+
+模板 ref 的 `nativeElement` 是实际根 `HTMLElement | null` 属性：`tabsRef.value?.nativeElement`。不调用 nativeElement()。
+
+### 原生属性、语义与焦点
+
+class、style、data-*、ARIA 和未声明的原生事件落在根 div。根 style 支持对象、数组与字符串，优先于组件语义根样式。语义区域为 root、header、item、remove、indicator、body、content，以及嵌套的 popup.root；Provider 样式先合并，再由局部语义样式和原生根 style 覆盖。函数式语义样式收到当前解析后的 props。
+
+页签与关闭按钮各自拥有交互，tablist 通过 aria-owns 只拥有 tab；溢出 listbox 只拥有 option，移除按钮是独立控件。数据 key 的 id 片段会编码，避免空白或标点破坏 ARIA 关联。未显式传 id 时，SSR 与水合使用 Vue 的确定 id。相同 key 的面板在重排时保留输入和组件状态。
 
 | 按键 | 行为 |
 | --- | --- |
-| `←` / `→` | **横向**时在**启用**的页签间环形移动焦点（纵向时**什么都不做**、也不阻止默认行为） |
-| `↑` / `↓` | **纵向**时移动焦点；无论方向都先 `preventDefault` |
-| `Home` / `End` | 第一个 / 最后一个**启用**页签 |
-| `Enter` / `Space` | 激活「当前焦点页签」（没有焦点页签时用 `activeKey`） |
-| `Backspace` / `Delete` | 删除「当前焦点页签」（可删时） |
-| 溢出触发器的 `↓` / `Space` / `Enter` | 打开下拉 |
+| 左 / 右 | 横向导航，在启用项间循环，RTL 反转方向；阻止已处理的默认滚动 |
+| 上 / 下 | 纵向导航；横向时保留页面默认行为 |
+| Home / End | 首个 / 最后一个启用项 |
+| Enter / Space | 激活焦点项 |
+| Backspace / Delete | 对可移除的焦点项发送 edit；只有数据实际移除后才移动焦点 |
+| 溢出按钮的上 / 下 / Enter / Space | 打开并聚焦溢出列表；上键从最后一项开始 |
+| 溢出列表的上 / 下、Home / End | 跳过禁用项移动当前选项 |
+| 溢出列表的 Enter / Space、Escape | 选择并关闭 / 关闭，焦点返回溢出按钮 |
 
-> ⚠️ 焦点**只在启用的页签**上停留（`disabled` 页签的 `tabindex` 被移除，方向键会跳过它）。
+溢出按钮支持鼠标悬停与点击，点击外部关闭。关闭图标与自定义插槽中的表单控件保留自己的键盘操作。禁用的当前项不会取消其他启用项的 Tab 入口。触摸移动、惯性、观察器与浮层监听在取消、换目标和卸载时清理。
 
 ## 设计 Token
 
-**26 个** Component Token（与 antd 逐条对齐）：
+24 个组件 Token 读取当前 `ConfigProvider.theme.components.Tabs`，支持嵌套、替换、撤除和全局派生。数值长度使用 px，zIndexPopup 为无单位数值；浮层使用同一套当前 Token。
 
-| Token | 默认值（light） | 说明 |
-| --- | --- | --- |
-| `zIndexPopup` | `1050` | 溢出下拉的 z-index |
-| `cardBg` / `cardGutter` | `rgba(0,0,0,0.02)` / `2px` | 卡片背景 / 卡片间距 |
-| `cardHeight` / `-SM` / `-LG` | `40` / `32` / `48` | 卡片高度三档（**合并后**的值，可由用户覆盖） |
-| `cardPadding` / `-SM` / `-LG` | `8px 16px` / `4px 8px` / `11px 16px` | 卡片内边距（由高度与 `fontHeight` 算出） |
-| `titleFontSize` / `-LG` / `-SM` | `14` / `16` / `14` | 标题字号（SM 复用 `fontSize`） |
-| `inkBarColor` | `#1677ff` | 指示条颜色 |
-| `horizontalMargin` | `0 0 16px 0` | 横向页签外间距 |
-| `horizontalItemGutter` | `32`（**固定值**） | 横向页签间距 |
-| `horizontalItemMargin` / `-RTL` | `''` | 上游就是**空串**（无规则引用；保留只为逐字对齐） |
-| `horizontalItemPadding` / `-SM` / `-LG` | `12px 0` / `8px 0` / `16px 0` | 横向内边距三档 |
-| `verticalItemPadding` / `verticalItemMargin` | `8px 24px` / `16px 0 0 0` | 纵向内边距 / 外间距 |
-| `itemColor` / `-SelectedColor` / `-HoverColor` / `-ActiveColor` | `rgba(0,0,0,0.88)` / `#1677ff` / `#4096ff` / `#0958d9` | 文字四态 |
+| Token | 默认值 / 派生 |
+| --- | --- |
+| zIndexPopup | 1050 |
+| cardBg / cardGutter | colorFillAlter / 2 |
+| cardHeight / cardHeightSM / cardHeightLG | 40 / 32 / 48；控制新增按钮最小尺寸与默认 padding 派生 |
+| cardPadding / cardPaddingSM / cardPaddingLG | 8px 16px / 4px 8px / 11px 16px；高度覆盖后重新派生，显式 padding 优先 |
+| titleFontSize / titleFontSizeLG / titleFontSizeSM | 14 / 16 / 14 |
+| inkBarColor | colorPrimary |
+| horizontalMargin | 0 0 16px 0 |
+| horizontalItemGutter | 32，可覆盖 |
+| horizontalItemPadding / horizontalItemPaddingSM / horizontalItemPaddingLG | 12px 0 / 8px 0 / 16px 0 |
+| verticalItemPadding / verticalItemMargin | 8px 24px / 16px 0 0 0 |
+| itemColor | colorText |
+| itemSelectedColor / itemHoverColor / itemActiveColor | 亮背景取 colorPrimaryTextActive，暗背景取 colorPrimaryTextHover |
 
-⚠️ 另有 **6 个内部 token**（`mergeToken` 的等价物）：`tabsCardPadding`、
-`dropdownEdgeChildVerticalPadding`、`tabsDropdownHeight`(200)、`tabsDropdownWidth`(120)、
-`tabsHorizontalItemMargin(-RTL)` —— 详见 `style/token.ts`。
+默认文字三状态复用当前主题中已有的可读主色；背景明暗分类与 Button 相同，不生成新色值。显式 item*Color、原生样式、透明或自定义背景由调用方保证实际色对可读。样式仍由静态 CSS 与 CSS 变量消费；自定义 prefixCls 需要配套静态选择器。
 
-主题切换请用 `ConfigProvider` 的 `theme`；组件样式走静态 CSS + CSS 变量（零运行时）。
+### 开发版直接迁移
 
+移除无实现的顶层 children，使用 items[].children。移除从未消费的 horizontalItemMargin / horizontalItemMarginRTL，使用 horizontalItemGutter。已声明为属性的 nativeElement 修正为真实元素，旧函数调用改为属性读取；id 在 SSR 首帧即生效，key 片段编码。item.destroyOnHidden 现在按既有文档覆盖组件默认值。以上没有兼容层或弃用期。
 
-`#popupRender` 使用单个具名对象参数，原始菜单通过 `originNode` 渲染；`restTabs` 为当前隐藏页签，`onClose` 可直接绑定关闭按钮。移除 `more.popupRender` 函数入口，不提供兼容层或弃用期。`more` 仅声明实际支持的 icon/transitionName，不再以任意键类型暗示浮层 props 均可透传。`#extra` 和 `#popupRender` 均支持挂载后的条件出现/移除及当前响应式内容；空插槽压住默认内容。
-
-
-ConfigProvider.components.tabs 已声明的 size、type、centered、className 与语义样式均响应当前配置；Tabs 局部 props 优先，包括显式 centered=false。
+既有 popupRender 单对象与条件插槽迁移保留，见 [2026-10-24 迁移记录](../../../../docs/migrations/tabs-popup-slots.md)。原始 DOM/视觉参考保留；本阶段验证不等同于冻结版本的整库最终验收。

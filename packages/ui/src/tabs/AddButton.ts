@@ -10,7 +10,7 @@
  *    （不是 `display: none`，因为要**占位**，否则测量会抖动）。
  */
 
-import { defineComponent, h, type PropType } from 'vue';
+import { defineComponent, h, type PropType, ref } from 'vue';
 import type { TabsEditableConfig } from './interface';
 
 export default defineComponent({
@@ -22,7 +22,7 @@ export default defineComponent({
     style: { type: Object as PropType<Record<string, unknown> | undefined>, default: undefined },
   },
   setup(props, { expose }) {
-    const buttonRef = { value: null as HTMLElement | null };
+    const buttonRef = ref<HTMLButtonElement | null>(null);
     expose({ getElement: (): HTMLElement | null => buttonRef.value });
 
     return () => {
@@ -32,9 +32,7 @@ export default defineComponent({
       return h(
         'button',
         {
-          ref: (el: unknown) => {
-            buttonRef.value = (el as HTMLElement | null) ?? null;
-          },
+          ref: buttonRef,
           type: 'button',
           class: `${prefixCls}-nav-add`,
           style: props.style,
@@ -43,7 +41,7 @@ export default defineComponent({
             editable.onEdit('add', { event });
           },
         },
-        editable.addIcon || '+',
+        [editable.addIcon ?? '+'],
       );
     };
   },

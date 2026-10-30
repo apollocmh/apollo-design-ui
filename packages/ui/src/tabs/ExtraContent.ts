@@ -33,7 +33,7 @@ export default defineComponent({
 
     return () => {
       const { extra, position, prefixCls } = props;
-      if (!extra) return null;
+      if (extra === undefined || extra === null || extra === false) return null;
 
       let assertExtra: { left?: VNodeChild; right?: VNodeChild } = {};
       if (typeof extra === 'object' && !isVNode(extra) && !Array.isArray(extra)) {
@@ -43,7 +43,7 @@ export default defineComponent({
       }
 
       const content = position === 'right' ? assertExtra.right : assertExtra.left;
-      if (!content) return null;
+      if (content === undefined || content === null || content === false) return null;
 
       return h(
         'div',

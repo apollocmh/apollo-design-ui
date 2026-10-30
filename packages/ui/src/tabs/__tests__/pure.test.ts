@@ -369,18 +369,18 @@ describe('getIndicatorStyle · align × rtl × size', () => {
     });
   });
 
-  it('★ 横向 RTL：定位键换成 `right`，但 center 的 transform 翻转、end 的**不翻转**', () => {
+  it('横向 RTL：right 定位时 center 和 end 的位移均向右补偿', () => {
     // ⚠️ 换成 `right` 之后取的是 `offset.right`（不是 `offset.left`）
     expect(getIndicatorStyle(offset, true, true, { align: 'center' })).toEqual({
       width: '100px',
       right: '50px', // offset.right(0) + width/2(50)
       transform: 'translateX(50%)',
     });
-    // 上游如此：end 恒为 translateX(-100%)
+    // Right anchoring requires a positive translation to align the left edge.
     expect(getIndicatorStyle(offset, true, true, { align: 'end' })).toEqual({
       width: '100px',
       right: '100px', // offset.right(0) + width(100)
-      transform: 'translateX(-100%)',
+      transform: 'translateX(100%)',
     });
   });
 
@@ -417,6 +417,9 @@ describe('getIndicatorStyle · align × rtl × size', () => {
     expect(isIndicatorStyleEqual({ left: '1.2px' }, { left: '1.4px' })).toBe(true);
     expect(isIndicatorStyleEqual({ left: '1.2px' }, { left: '1.6px' })).toBe(false);
     expect(isIndicatorStyleEqual({ left: '1px' }, { left: '1px', width: '2px' })).toBe(false);
+    expect(
+      isIndicatorStyleEqual({ left: '1px', transform: 'translateX(-50%)' }, { left: '1px' }),
+    ).toBe(false);
     // `transform` 这类非数值串走严格相等
     expect(
       isIndicatorStyleEqual({ transform: 'translateX(-50%)' }, { transform: 'translateX(50%)' }),

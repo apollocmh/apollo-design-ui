@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Select, Space, Tabs, Tag } from '@apollo-design/ui';
+import { ConfigProvider, Select, Space, Tabs, Tag } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const presets = [
@@ -7,28 +7,28 @@ const presets = [
     value: 'blue',
     label: '默认蓝',
     inkBar: '#1677ff',
-    selected: '#1677ff',
-    hover: '#4096ff',
-    fontSize: '14px',
-    gutter: '32px',
+    selected: '#002c8c',
+    hover: '#003eb3',
+    fontSize: 14,
+    gutter: 32,
   },
   {
     value: 'purple',
     label: '紫罗兰',
     inkBar: '#722ed1',
     selected: '#722ed1',
-    hover: '#9254de',
-    fontSize: '16px',
-    gutter: '24px',
+    hover: '#531dab',
+    fontSize: 16,
+    gutter: 24,
   },
   {
     value: 'green',
     label: '青绿色',
     inkBar: '#389e0d',
-    selected: '#389e0d',
-    hover: '#52c41a',
-    fontSize: '18px',
-    gutter: '16px',
+    selected: '#237804',
+    hover: '#135200',
+    fontSize: 18,
+    gutter: 16,
   },
 ];
 
@@ -39,15 +39,19 @@ const activeKey = ref('1');
 
 const currentPreset = computed(
   () =>
-    presets.find((item) => item.value === preset.value) ?? (presets[0] as (typeof presets)[number]),
+    presets.find((item) => item.value === preset.value) ?? { inkBar: '#1677ff', selected: '#002c8c', hover: '#003eb3', fontSize: 14, gutter: 32 },
 );
 
-const tokenStyle = computed(() => ({
-  '--apollo-tabs-ink-bar-color': currentPreset.value.inkBar,
-  '--apollo-tabs-item-selected-color': currentPreset.value.selected,
-  '--apollo-tabs-item-hover-color': currentPreset.value.hover,
-  '--apollo-tabs-title-font-size': currentPreset.value.fontSize,
-  '--apollo-tabs-horizontal-item-gutter': currentPreset.value.gutter,
+const theme = computed(() => ({
+  components: {
+    Tabs: {
+      inkBarColor: currentPreset.value.inkBar,
+      itemSelectedColor: currentPreset.value.selected,
+      itemHoverColor: currentPreset.value.hover,
+      titleFontSize: currentPreset.value.fontSize,
+      horizontalItemGutter: currentPreset.value.gutter,
+    },
+  },
 }));
 
 const items = [
@@ -55,13 +59,13 @@ const items = [
   {
     key: '2',
     label: '开发指南',
-    children: '切换配色预设会实时覆盖根节点上的 --apollo-tabs-* 变量。',
+    children: '切换配色预设会实时更新 ConfigProvider 的 Tabs 组件 Token。',
   },
   { key: '3', label: '发布记录', children: '页签间距来自 --apollo-tabs-horizontal-item-gutter。' },
 ];
 
 function onPresetChange(value: unknown): void {
-  preset.value = value as PresetValue;
+  if (value === 'blue' || value === 'purple' || value === 'green') preset.value = value;
 }
 </script>
 
@@ -79,10 +83,8 @@ function onPresetChange(value: unknown): void {
       <Tag>页签间距 {{ currentPreset.gutter }}</Tag>
     </Space>
 
-    <Tabs
-      v-model:active-key="activeKey"
-      :items="items"
-      :style="tokenStyle"
-    />
+    <ConfigProvider :theme="theme">
+      <Tabs v-model:active-key="activeKey" :items="items" />
+    </ConfigProvider>
   </div>
 </template>

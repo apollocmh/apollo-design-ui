@@ -1,50 +1,17 @@
 /**
- * 导航区（rc `TabNavList/index.js` 593 行的 Vue 等价物）—— **本组件最难的一块**。
- *
- * ── 结构（逐字）────────────────────────────────────────────────────────────────
- *
- * ```
- * div.{p}-nav[role=tablist][aria-orientation=horizontal|vertical][class=header][style=header]
- * ├─ ExtraContent(left)                       → div.{p}-extra-content
- * ├─ div.{p}-nav-wrap[-ping-left|-right|-top|-bottom]
- * │  └─ div.{p}-nav-list[style: translate(x,y) / transition]
- * │     ├─ {tabNodes}
- * │     ├─ AddButton（editable-card）→ button.{p}-nav-add
- * │     └─ div.{p}-ink-bar[-animated]         ← **在 nav-list 内部**
- * ├─ OperationNode → div.{p}-nav-operations[-hidden]   ← **在 nav-wrap 外部（兄弟）**
- * └─ ExtraContent(right)
- * ```
- *
- * ── 测量链（全部走 DOM 实测，不是纯计算）────────────────────────────────────────
- *
- * | 量 | 来源 |
- * |---|---|
- * | `containerExcludeExtraSize` | nav 容器尺寸 − 左 extra − 右 extra |
- * | `tabContentSize` | `-nav-list` 尺寸 − `addSize`（⚠️ 列表**含** AddButton） |
- * | `addSize` / `operationSize` | `-nav-add` / `-nav-operations` 的尺寸 |
- * | `tabSizes` | 每个 `[data-node-key]` 的 `[w,h,left,top]`（相对 `-nav-list`） |
- *
- * `needScroll = floor(container) < floor(tabContent + add)`
- * `visibleTabContentValue = needScroll ? container − operationSize : container − addSize`
- *
- * ── 三处「只有真机能看出来」的细节 ─────────────────────────────────────────────
- *
- *   1. `getSize` 的 **< 1 容差**（`rect` 与 `offsetWidth` 差小于 1 才采信 `rect`）——
- *      去掉会让指示条与位移出现小数抖动；
- *   2. `transition: lockAnimation ? 'none' : undefined` —— 拖动/键盘期间**禁过渡**，
- *      否则位移会「追」手指（`doLockAnimation` 记时间戳，100ms 后清零）；
- *   3. `ping` 四类的判据**随 RTL 翻转**（见 `getTransformRange` 的注释）。
- *
- * ⚠️ jsdom 里 `ResizeObserver` 不存在（`observeResize` 退化成 no-op），所有尺寸恒 0
- *    ⇒ 「滚动/溢出」这条线**只能靠 L6 视觉**（`docs/analysis/tabs.md` R2）；
- *    本文件在挂载后主动跑一次 `onListHolderResize()`，让真机的首帧测量不等观察器回调。
+ * Tabs navigation: DOM measurement, scroll range, current focus, indicator and overflow.
+ * Geometry retains the original rc-tabs 1.13.0 reference; Vue lifecycle owns observers
+ * and timers. The visual navigation and its independent controls remain outside the
+ * tablist's explicitly owned tab buttons.
  */
 
 import { useResizeObserver } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
+  onBeforeUnmount,
   onMounted,
   type PropType,
   ref,
@@ -75,8 +42,9 @@ import OperationNode from './OperationNode';
 import TabNode from './TabNode';
 import {
   alignInRange as clampRange,
-  genDataNodeKey,
+  getRemovable,
   getSize,
+  getTabId,
   getTabSize,
   getTransformRange,
   getUnitValue,
@@ -92,9 +60,9 @@ export default defineComponent({
   slots: popupSlots,
   props: {
     prefixCls: { type: String, required: true },
-    id: { type: String, default: undefined },
+    id: { type: String as PropType<string | undefined>, default: undefined },
     tabs: { type: Array as PropType<TabsItem[]>, required: true },
-    activeKey: { type: String, default: undefined },
+    activeKey: { type: String as PropType<string | undefined>, default: undefined },
     animated: {
       type: Object as PropType<{ inkBar?: boolean; tabPane?: boolean }>,
       default: () => ({}),
@@ -105,11 +73,11 @@ export default defineComponent({
     editable: { type: Object as PropType<TabsEditableConfig | undefined>, default: undefined },
     locale: { type: Object as PropType<TabsLocale | undefined>, default: undefined },
     more: { type: Object as PropType<TabsMoreProps | undefined>, default: undefined },
-    tabBarGutter: { type: Number, default: undefined },
+    tabBarGutter: { type: Number as PropType<number | undefined>, default: undefined },
     extra: { type: null as unknown as PropType<TabsExtraContent>, default: undefined },
     indicator: { type: Object as PropType<TabsIndicator | undefined>, default: undefined },
     getPopupContainer: {
-      type: Function as PropType<(node: HTMLElement) => HTMLElement>,
+      type: Function as PropType<((node: HTMLElement) => HTMLElement) | undefined>,
       default: undefined,
     },
     classNames: {
@@ -117,25 +85,20 @@ export default defineComponent({
       default: undefined,
     },
     styles: { type: Object as PropType<TabsSemanticStyles | undefined>, default: undefined },
-    popupClassName: { type: String, default: undefined },
+    popupClassName: { type: String as PropType<string | undefined>, default: undefined },
+    popupZIndex: { type: Number as PropType<number | undefined>, default: undefined },
     popupStyle: {
-      type: Object as PropType<Record<string, unknown> | undefined>,
+      type: Object as PropType<CSSProperties | undefined>,
       default: undefined,
     },
-    className: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, unknown> | undefined>, default: undefined },
-    onTabClick: {
-      type: Function as PropType<(key: string, event: TabsEditEvent) => void>,
-      required: true,
-    },
-    onTabScroll: {
-      type: Function as PropType<
-        (info: { direction: 'left' | 'right' | 'top' | 'bottom' }) => void
-      >,
-      default: undefined,
-    },
+    className: { type: String as PropType<string | undefined>, default: undefined },
+    style: { type: Object as PropType<CSSProperties | undefined>, default: undefined },
   },
-  setup(props, { expose, slots }) {
+  emits: {
+    tabClick: (_key: string, _event: TabsEditEvent) => true,
+    tabScroll: (_info: { direction: 'left' | 'right' | 'top' | 'bottom' }) => true,
+  },
+  setup(props, { expose, slots, emit }) {
     // ---- refs（测量用）----
     const containerRef = ref<HTMLElement | null>(null);
     // ⚠️ 只声明**用到的那一个方法**（`expose({ getElement })`），不写 `InstanceType` ——
@@ -156,13 +119,13 @@ export default defineComponent({
 
     // rc 用 `useSyncState(0, onChange)`：**值真的变了**才回调，方向按大小判
     watch(transformLeft, (next, prev) => {
-      if (topOrBottom.value && props.onTabScroll) {
-        props.onTabScroll({ direction: next > prev ? 'left' : 'right' });
+      if (topOrBottom.value) {
+        emit('tabScroll', { direction: next > prev ? 'left' : 'right' });
       }
     });
     watch(transformTop, (next, prev) => {
-      if (!topOrBottom.value && props.onTabScroll) {
-        props.onTabScroll({ direction: next > prev ? 'top' : 'bottom' });
+      if (!topOrBottom.value) {
+        emit('tabScroll', { direction: next > prev ? 'top' : 'bottom' });
       }
     });
 
@@ -225,6 +188,7 @@ export default defineComponent({
         touchMovingTimer = undefined;
       }
     };
+    onBeforeUnmount(clearTouchMoving);
     const doLockAnimation = (): void => {
       lockAnimation.value = Date.now();
     };
@@ -232,10 +196,13 @@ export default defineComponent({
     useTouchMove(tabsWrapperRef, (offsetX, offsetY) => {
       // Skip scroll if place is enough
       if (!needScroll.value) return false;
+      const current = topOrBottom.value ? transformLeft.value : transformTop.value;
+      const next = alignInRange(current + (topOrBottom.value ? offsetX : offsetY));
+      if (next === current) return false;
       if (topOrBottom.value) {
-        transformLeft.value = alignInRange(transformLeft.value + offsetX);
+        transformLeft.value = next;
       } else {
-        transformTop.value = alignInRange(transformTop.value + offsetY);
+        transformTop.value = next;
       }
       clearTouchMoving();
       doLockAnimation();
@@ -308,81 +275,77 @@ export default defineComponent({
 
     // ---- 焦点与键盘 ----
     const focusKey = ref<string | undefined>(undefined);
-    const isMouse = ref(false);
 
     const enabledTabs = computed(() =>
       props.tabs.filter((tab) => !tab.disabled).map((tab) => tab.key),
     );
+    const tabStopKey = computed(() =>
+      props.activeKey !== undefined && enabledTabs.value.includes(props.activeKey)
+        ? props.activeKey
+        : enabledTabs.value[0],
+    );
 
     const onOffset = (offset: number): void => {
-      const len = enabledTabs.value.length;
-      if (!len) return;
+      const keys = enabledTabs.value;
+      if (!keys.length) return;
       const base = focusKey.value ?? props.activeKey;
-      const currentIndex = base === undefined ? -1 : enabledTabs.value.indexOf(base);
-      const nextIndex = (currentIndex + offset + len) % len;
-      focusKey.value = enabledTabs.value[nextIndex];
+      const currentIndex = base === undefined ? -1 : keys.indexOf(base);
+      const nextIndex =
+        currentIndex < 0
+          ? offset > 0
+            ? 0
+            : keys.length - 1
+          : (currentIndex + offset + keys.length) % keys.length;
+      focusKey.value = keys[nextIndex];
     };
 
-    const handleRemoveTab = (removalTabKey: string | undefined, e: TabsEditEvent): void => {
-      if (removalTabKey === undefined || !props.editable) return;
-      const removeIndex = enabledTabs.value.indexOf(removalTabKey);
-      const removeTab = props.tabs.find((tab) => tab.key === removalTabKey);
-      const removable = !removeTab?.disabled && removeTab?.closable !== false;
-      if (!removable) return;
-
-      e.preventDefault();
-      e.stopPropagation();
-      props.editable.onEdit('remove', { key: removalTabKey, event: e });
-
-      // when remove last tab, focus previous tab
-      if (removeIndex === enabledTabs.value.length - 1) {
-        onOffset(-1);
-      } else {
-        onOffset(1);
-      }
+    let pendingRemoval: { key: string; index: number } | undefined;
+    const handleRemoveTab = (key: string | undefined, event: TabsEditEvent): void => {
+      if (key === undefined) return;
+      const tab = props.tabs.find((item) => item.key === key);
+      if (!tab || !getRemovable(tab.closable, tab.closeIcon, props.editable, tab.disabled)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      pendingRemoval = { key, index: props.tabs.indexOf(tab) };
+      props.editable?.onEdit('remove', { key, event });
     };
 
-    const handleKeyDown = (e: KeyboardEvent): void => {
-      // ⚠️ rc 读的是 `e.code`（不是 keyCode）
-      const { code } = e;
-      const isRTL = props.rtl && topOrBottom.value;
-      const firstEnabledTab = enabledTabs.value[0];
-      const lastEnabledTab = enabledTabs.value[enabledTabs.value.length - 1];
-
-      switch (code) {
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      const key = event.key || event.code;
+      switch (key) {
         case 'ArrowLeft':
-          // ⚠️ 纵向**什么都不做**（也**不** preventDefault）
-          if (topOrBottom.value) onOffset(isRTL ? 1 : -1);
-          break;
         case 'ArrowRight':
-          if (topOrBottom.value) onOffset(isRTL ? -1 : 1);
+          if (topOrBottom.value) {
+            event.preventDefault();
+            const offset = key === 'ArrowRight' ? 1 : -1;
+            onOffset(props.rtl ? -offset : offset);
+          }
           break;
         case 'ArrowUp':
-          e.preventDefault();
-          if (!topOrBottom.value) onOffset(-1);
-          break;
         case 'ArrowDown':
-          e.preventDefault();
-          if (!topOrBottom.value) onOffset(1);
+          if (!topOrBottom.value) {
+            event.preventDefault();
+            onOffset(key === 'ArrowDown' ? 1 : -1);
+          }
           break;
         case 'Home':
-          e.preventDefault();
-          focusKey.value = firstEnabledTab;
-          break;
         case 'End':
-          e.preventDefault();
-          focusKey.value = lastEnabledTab;
+          event.preventDefault();
+          focusKey.value = key === 'Home' ? enabledTabs.value[0] : enabledTabs.value.at(-1);
           break;
         case 'Enter':
-        case 'Space':
-          e.preventDefault();
-          props.onTabClick(focusKey.value ?? props.activeKey ?? '', e);
+        case ' ':
+        case 'Space': {
+          event.preventDefault();
+          const target = focusKey.value ?? props.activeKey;
+          if (target !== undefined && enabledTabs.value.includes(target)) {
+            emit('tabClick', target, event);
+          }
           break;
+        }
         case 'Backspace':
         case 'Delete':
-          handleRemoveTab(focusKey.value, e);
-          break;
-        default:
+          handleRemoveTab(focusKey.value ?? props.activeKey, event);
           break;
       }
     };
@@ -405,13 +368,16 @@ export default defineComponent({
       const next = new Map<string, TabSizeTuple>();
       const listRect = tabListRef.value?.getBoundingClientRect();
       if (tabListRef.value && listRect) {
-        for (const { key } of props.tabs) {
-          const node = tabListRef.value.querySelector(`[data-node-key="${genDataNodeKey(key)}"]`);
+        const nodes = Array.from(tabListRef.value.children).filter((node) =>
+          node.hasAttribute('data-node-key'),
+        );
+        props.tabs.forEach((tab, index) => {
+          const node = nodes[index];
           if (node) {
             const [width, height, left, top] = getTabSize(node, listRect);
-            next.set(key, [width, height, left, top]);
+            next.set(tab.key, [width, height, left, top]);
           }
-        }
+        });
       }
       tabSizes.value = next;
     };
@@ -444,10 +410,26 @@ export default defineComponent({
     useResizeObserver({ target: tabsWrapperRef, onResize: onListHolderResize });
     useResizeObserver({ target: tabListRef, onResize: onListHolderResize });
 
-    // key 列表变化 ⇒ 重测（rc 的 `useEffect([keys.join('_')])`）
     watch(
-      () => props.tabs.map((tab) => tab.key).join('_'),
-      () => updateTabSizes(),
+      [() => props.tabs.map((tab) => tab.key), enabledTabs],
+      ([keys, enabled], [previous]) => {
+        onListHolderResize();
+        const removed =
+          pendingRemoval && !keys.includes(pendingRemoval.key)
+            ? pendingRemoval
+            : focusKey.value !== undefined && !enabled.includes(focusKey.value)
+              ? { key: focusKey.value, index: previous.indexOf(focusKey.value) }
+              : undefined;
+        if (removed) {
+          const target =
+            props.tabs.slice(Math.max(0, removed.index)).find((tab) => !tab.disabled) ??
+            props.tabs.findLast((tab) => !tab.disabled);
+          focusKey.value = target?.key;
+          if (!target) innerAddButtonRef.value?.getElement()?.focus();
+        }
+        pendingRemoval = undefined;
+      },
+      { flush: 'post' },
     );
 
     // 激活页签 / 区间变化 ⇒ 把它滚进可见区
@@ -460,13 +442,14 @@ export default defineComponent({
         stringify(tabOffsets.value),
         topOrBottom.value,
       ],
-      () => scrollToTab(),
+      () => scrollToTab(focusKey.value ?? props.activeKey),
     );
 
     // rtl 变化要重算（rc 的 `useEffect([rtl])`）
     watch(
-      () => props.rtl,
+      () => [props.rtl, props.tabPosition],
       () => onListHolderResize(),
+      { flush: 'post' },
     );
 
     // 真机首帧：ResizeObserver 的首次回调本就会来，但 jsdom 下没有观察器 ⇒
@@ -481,7 +464,7 @@ export default defineComponent({
     });
 
     // ---- 渲染 ----
-    const tabNodeStyle = computed<Record<string, unknown>>(() => {
+    const tabNodeStyle = computed<CSSProperties>(() => {
       if (props.tabBarGutter === undefined) return {};
       // 🚨 必须过 `toCssSize`：Vue 3 不给 `style` 里的裸数字补 `px`，而
       //    `style.setProperty('margin-inline-start', 24)` 会被**静默丢弃**
@@ -525,7 +508,7 @@ export default defineComponent({
         : transformTop.value !== transformMin.value;
 
       const tabNodes = tabs.map((tab, i) =>
-        h(TabNode as never, {
+        h(TabNode, {
           key: tab.key,
           prefixCls,
           id,
@@ -539,14 +522,15 @@ export default defineComponent({
           closable: tab.closable,
           editable,
           active: tab.key === activeKey,
+          tabStop: tab.key === tabStopKey.value,
           focus: tab.key === focusKey.value,
           removeAriaLabel: locale?.removeAriaLabel,
           tabCount: enabledTabs.value.length,
-          currentPosition: i + 1,
-          onTabClick: (key: string, event: TabsEditEvent) => props.onTabClick(key, event),
+          currentPosition: enabledTabs.value.indexOf(tab.key) + 1,
+          onTabClick: (key: string, event: TabsEditEvent) => emit('tabClick', key, event),
           onTabKeydown: handleKeyDown,
           onFocusTab: (key: string) => {
-            if (!isMouse.value) focusKey.value = key;
+            focusKey.value = key;
             scrollToTab(key);
             doLockAnimation();
             if (!tabsWrapperRef.value) return;
@@ -558,12 +542,8 @@ export default defineComponent({
             focusKey.value = undefined;
           },
           onTabMousedown: (key: string, e: MouseEvent) => {
-            isMouse.value = true;
             // Middle mouse button
             if (e.button === 1) handleRemoveTab(key, e);
-          },
-          onTabMouseup: () => {
-            isMouse.value = false;
           },
           onRemoveTab: handleRemoveTab,
         }),
@@ -573,8 +553,6 @@ export default defineComponent({
         'div',
         {
           ref: containerRef,
-          role: 'tablist',
-          'aria-orientation': tabPositionTopOrBottom ? 'horizontal' : 'vertical',
           class: [`${prefixCls}-nav`, props.className, semanticClassNames?.header]
             .filter(Boolean)
             .join(' '),
@@ -585,7 +563,7 @@ export default defineComponent({
           },
         },
         [
-          h(ExtraContent as never, { ref: extraLeftRef, prefixCls, position: 'left', extra }),
+          h(ExtraContent, { ref: extraLeftRef, prefixCls, position: 'left', extra }),
           h(
             'div',
             {
@@ -601,6 +579,15 @@ export default defineComponent({
                 .join(' '),
             },
             [
+              h('div', {
+                role: 'tablist',
+                'aria-orientation': tabPositionTopOrBottom ? 'horizontal' : 'vertical',
+                'aria-owns':
+                  tabs.length && id
+                    ? tabs.map((tab) => getTabId(id, tab.key)).join(' ')
+                    : undefined,
+                style: { display: 'contents' },
+              }),
               h(
                 'div',
                 {
@@ -614,7 +601,7 @@ export default defineComponent({
                 },
                 [
                   ...tabNodes,
-                  h(AddButton as never, {
+                  h(AddButton, {
                     ref: innerAddButtonRef,
                     prefixCls,
                     locale,
@@ -639,7 +626,7 @@ export default defineComponent({
             ],
           ),
           h(
-            OperationNode as never,
+            OperationNode,
             {
               ref: operationsRef,
               prefixCls,
@@ -657,13 +644,13 @@ export default defineComponent({
               removeStyle: semanticStyles?.remove,
               popupClassName: props.popupClassName,
               popupStyle: props.popupStyle,
+              popupZIndex: props.popupZIndex,
               className: hasDropdown.value ? undefined : `${prefixCls}-nav-operations-hidden`,
-              style: props.style,
-              onTabClick: props.onTabClick,
+              onTabClick: (key: string, event: TabsEditEvent) => emit('tabClick', key, event),
             },
             slots.popupRender ? { popupRender: slots.popupRender } : {},
           ),
-          h(ExtraContent as never, { ref: extraRightRef, prefixCls, position: 'right', extra }),
+          h(ExtraContent, { ref: extraRightRef, prefixCls, position: 'right', extra }),
         ],
       );
     };

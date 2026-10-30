@@ -27,6 +27,13 @@ export const TABS_DQ = 'TABS_DQ';
 /** `data-node-key` 的值（rc `genDataNodeKey`）。 */
 export const genDataNodeKey = (key: string | number): string => String(key).replace(/"/g, TABS_DQ);
 
+/** A data key stays unchanged in events; its ID segment must be a single ARIA IDREF. */
+export const getTabId = (id: string, key: string): string => `${id}-tab-${encodeURIComponent(key)}`;
+export const getPanelId = (id: string, key: string): string =>
+  `${id}-panel-${encodeURIComponent(key)}`;
+export const getOverflowOptionId = (popupId: string, key: string): string =>
+  `${popupId}-${encodeURIComponent(key)}`;
+
 /**
  * 该页签是否可删除（rc `getRemovable`，**四条件**）。
  *

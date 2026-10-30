@@ -28,21 +28,7 @@
 
 import { tabsTokenValues } from './token';
 
-/**
- * Token 声明块（**恰好 26 条** = 26 个自有 Component Token）。
- *
- * ⚠️ **6 个内部 token 不在声明块里**：它们的判定值在构建期就被**内联进规则**了
- *    （`tabsDropdownHeight: 200` → `max-height:200px`；`dropdownEdgeChildVerticalPadding`
- *    → `var(--apollo-padding-xxs)`；`tabsHorizontalItemMargin` → 规则里是
- *    `margin:0 0 0 var(--apollo-tabs-horizontal-item-gutter)` —— 上游 cssinjs 的变量替换
- *    把拼串里的 `32px` 换成了 gutter 的 var 形态）。声明它们只会得到**没人引用的死变量**。
- *    判定值由 `__tests__/theme.test.ts` 钉住（`tabsInternalTokenValues()`）。
- *
- * ⚠️ `horizontalItemMargin` / `-RTL` 是**空值声明**（`--{p}-tabs-horizontal-item-margin:;`）——
- *    与上游产物逐字一致（见 `token.ts` 的说明），且**没有任何规则引用它们**；
- *    保留只为「26 个逐字对齐」这条判据。
- * ⚠️ 数值字段必须带 `px`（`horizontalItemGutter` = 32 → `32px`，`cardGutter` = 2 → `2px`）。
- */
+/** Static declarations for the 24 consumed component tokens. Runtime theme overrides use the same variables. */
 export function genTokenDecls(rootPrefixCls: string): string[] {
   const t = tabsTokenValues();
   const n = `--${rootPrefixCls}-tabs`;
@@ -50,7 +36,7 @@ export function genTokenDecls(rootPrefixCls: string): string[] {
   const px = (v: string | number): string => (typeof v === 'number' ? `${v}px` : v);
 
   return [
-    // ── 26 个自有 ──
+    // Component tokens
     `  ${n}-z-index-popup:${t.zIndexPopup};`,
     `  ${n}-card-bg:${t.cardBg};`,
     `  ${n}-card-height:${px(t.cardHeight)};`,
@@ -65,8 +51,6 @@ export function genTokenDecls(rootPrefixCls: string): string[] {
     `  ${n}-ink-bar-color:${t.inkBarColor};`,
     `  ${n}-horizontal-margin:${t.horizontalMargin};`,
     `  ${n}-horizontal-item-gutter:${px(t.horizontalItemGutter)};`,
-    `  ${n}-horizontal-item-margin:${t.horizontalItemMargin};`,
-    `  ${n}-horizontal-item-margin-rtl:${t.horizontalItemMarginRTL};`,
     `  ${n}-horizontal-item-padding:${t.horizontalItemPadding};`,
     `  ${n}-horizontal-item-padding-sm:${t.horizontalItemPaddingSM};`,
     `  ${n}-horizontal-item-padding-lg:${t.horizontalItemPaddingLG};`,
@@ -156,7 +140,8 @@ export const TABS_RULES = `
   .apollo-tabs-dropdown .apollo-tabs-dropdown-menu-item >span{flex:1;white-space:nowrap;}
   .apollo-tabs-dropdown .apollo-tabs-dropdown-menu-item-remove{flex:none;margin-left:var(--apollo-margin-sm);color:var(--apollo-color-icon);font-size:var(--apollo-font-size-sm);background:transparent;border:0;cursor:pointer;}
   .apollo-tabs-dropdown .apollo-tabs-dropdown-menu-item-remove:hover{color:var(--apollo-tabs-item-hover-color);}
-  .apollo-tabs-dropdown .apollo-tabs-dropdown-menu-item:hover{background:var(--apollo-control-item-bg-hover);}
+  .apollo-tabs-dropdown .apollo-tabs-dropdown-menu-item:hover,.apollo-tabs-dropdown .apollo-tabs-dropdown-menu-item-active{background:var(--apollo-control-item-bg-hover);}
+  .apollo-tabs-dropdown .apollo-tabs-dropdown-menu:has([role="listbox"]:focus-visible) .apollo-tabs-dropdown-menu-item-active{outline:var(--apollo-line-width-focus) solid var(--apollo-color-primary-border);outline-offset:-2px;}
   .apollo-tabs-dropdown .apollo-tabs-dropdown-menu-item-disabled,.apollo-tabs-dropdown .apollo-tabs-dropdown-menu-item-disabled:hover{color:var(--apollo-color-text-disabled);background:transparent;cursor:not-allowed;}
   .apollo-tabs-card >.apollo-tabs-nav .apollo-tabs-tab,.apollo-tabs-card >div>.apollo-tabs-nav .apollo-tabs-tab{margin:0;padding:var(--apollo-tabs-card-padding);background:var(--apollo-tabs-card-bg);border:var(--apollo-line-width) var(--apollo-line-type) var(--apollo-color-border-secondary);transition:all var(--apollo-motion-duration-slow) var(--apollo-motion-ease-in-out);}
   .apollo-tabs-card >.apollo-tabs-nav .apollo-tabs-tab-active,.apollo-tabs-card >div>.apollo-tabs-nav .apollo-tabs-tab-active{color:var(--apollo-tabs-item-selected-color);background:var(--apollo-color-bg-container);}
@@ -233,5 +218,5 @@ const KEYFRAMES = `
 /** 生成完整样式：token 声明块 + 规则体。 */
 export function genTabsStyle(rootPrefixCls: string): string {
   const decls = genTokenDecls(rootPrefixCls).join('');
-  return `${KEYFRAMES}\n.${rootPrefixCls}-tabs{${decls}}\n\n${TABS_RULES}`;
+  return `${KEYFRAMES}\n.${rootPrefixCls}-tabs,.${rootPrefixCls}-tabs-dropdown{${decls}}\n\n${TABS_RULES}`;
 }

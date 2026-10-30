@@ -126,3 +126,7 @@ Tree / DirectoryTree 修正受控模型、完整事件转发、原生事件载�
 ### D-mentions-current-contracts
 
 Mentions 保留六组既有整改，补齐当前 Provider/二十一个有效组合 Token、可空容器与真实模板 ref；只读、禁用和 hidden 路由到实际拥有者。PurePanel 在自身 host 展示真实菜单。移除未消费的 Mentions addonBg 与 OptionProps.children，Option 内容使用默认槽、key 支持 string/number；Input 自己有效的 addonBg 保留。详见[Mentions API](packages/ui/src/mentions/index.zh-CN.md)。
+
+### D-tabs-native-contracts
+
+Tabs 保留已交付 popup/extra 槽，修正受控撤除、同 key 面板身份、item 级销毁优先级、SSR 稳定 ARIA id 与真实 ref 属性。导航和溢出选项拥有独立的可访问树，关闭按钮保留键盘入口；当前 Provider 与二十四个有效 Token 实际消费。移除从未实现的顶层 children 与两个空 margin Token，items[].children 和 horizontalItemGutter 保留；开发版 editable 命令类型要求 remove 携带 key。详见[Tabs API](packages/ui/src/tabs/index.zh-CN.md)。

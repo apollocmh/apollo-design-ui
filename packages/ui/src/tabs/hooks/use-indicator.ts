@@ -14,8 +14,7 @@
  * 纵向同构（`top` + `translateY`）。`size` 三形态：
  *   数字 ⇒ 定长；函数 ⇒ `size(origin)`；缺省 ⇒ `origin`（页签自身长度）。
  *
- * ⚠️ 横向的定位键随 RTL 变（`right` / `left`），但 **`align === 'end'` 的 transform 恒为
- *    `translateX(-100%)`**（不随 RTL 翻转）—— 上游如此。
+ * 横向定位与位移方向均随 RTL 改变；end 使用右锚点时向右补偿一个指示条宽度。
  *
  * ── 🚨 所有数值必须过 `toCssSize`（PITFALLS 8 / D94，2026-09-30 实测踩到）──────────
  *
@@ -84,7 +83,7 @@ export function getIndicatorStyle(
     }
     if (align === 'end') {
       style[key] = px(activeTabOffset[key] + activeTabOffset.width);
-      style.transform = 'translateX(-100%)';
+      style.transform = rtl ? 'translateX(100%)' : 'translateX(-100%)';
     }
   } else {
     style.height = px(getIndicatorLength(activeTabOffset.height, size));
@@ -121,6 +120,7 @@ export const isIndicatorStyleEqual = (prev: IndicatorStyle, next: IndicatorStyle
     return Number.isNaN(parsed) ? undefined : parsed;
   };
 
+  if (Object.keys(prev).length !== Object.keys(next).length) return false;
   return Object.keys(next).every((key) => {
     const newValue = (next as Record<string, unknown>)[key];
     const oldValue = (prev as Record<string, unknown>)[key];

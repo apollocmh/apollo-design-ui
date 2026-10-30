@@ -1,29 +1,4 @@
-/**
- * L5 无障碍 —— Tabs 的 role/ARIA 契约、键盘可达性与 axe 扫描。
- *
- * ── 判据（antd 6.6.4 = rc-tabs@1.13.0）────────────────────────────────────────
- *
- * | 项 | 判据 |
- * |---|---|
- * | 根 | `div`（**没有 role**；语义在 nav 上） |
- * | 导航区 | `div[role=tablist]` + `aria-orientation=horizontal\|vertical` |
- * | 页签 | `div[role=tab]` + `aria-selected` + **tabIndex 三态**（disabled ⇒ 无、active ⇒ 0、其余 ⇒ -1） |
- * | 面板 | `div[role=tabpanel]` + `aria-labelledby` + `aria-hidden=!active` + `tabIndex` 仅 active 且有内容时 0 |
- * | 溢出触发器 | `button[aria-haspopup=listbox]` + `aria-controls` + `aria-expanded` |
- * | 「+」按钮 | `button[aria-label]`（`locale.addAriaLabel || 'Add tab'`） |
- * | 删除按钮 | `button[aria-label]`（`locale.removeAriaLabel || 'remove'`） |
- * | 键盘 | ← → ↑ ↓ Home End Enter Space（**读 `e.code`**）；焦点只能落在**启用**页签上 |
- *
- * ── 关于 axe 的两条说明 ───────────────────────────────────────────────────────
- *
- * 1. 两层扫描都在：**demo 维度**用 `a11yDemoTest`（13 个 demo 逐个跑 axe），
- *    **真实配置维度**用下面的 `cases` 表（含 demo 未必碰到的组合，如 `forceRender` /
- *    无内容页签 / 纵向 + 底部）。
- * 2. `aria-controls` 指向的面板在**未 `forceRender` 时不进 DOM**（上游行为：面板按需渲染）
- *    ⇒ 若 axe 的 `aria-valid-attr-value` 报「引用了不存在的元素」，那是**上游同款**行为，
- *    会在 `allow` 里带原因登记（不是「把门禁调松」，而是「与上游一致地豁免」）。
- */
-
+/** Tabs accessibility: current ownership, keyboard focus and all existing axe configurations. */
 import { mount } from '@vue/test-utils';
 import axe from 'axe-core';
 import { describe, expect, it } from 'vitest';
@@ -60,26 +35,12 @@ const mountA11y = (props: Record<string, unknown> = {}) =>
   );
 
 describe('Tabs · axe 扫描（真实配置）', () => {
-  /**
-   * ⚠️ `allow` 里的每一条都必须**可自证**（不是「把门禁调松」）：
-   *
-   * `aria-required-children`（`div[role=tablist]` 里有 `<button>`）—— 这是**上游同款**行为：
-   * rc 把「+」按钮（`AddButton`）放在 `-nav-list` 里（要和页签一起被测量/滚动），
-   * 于是 `role=tablist` 的**可达子节点**里出现了 `role=tab` 之外的 `<button>`。
-   * 实测 antd 6.6.4 自己的 DOM 报**同一条**（同一节点）：
-   *   `node tests/visual/debug/probe-tabs-axe-antd.mjs`
-   *   → `ANTD_VIOLATIONS: [{ id: 'aria-required-children', html: ['<div role="tablist" …'] }]`
-   * 修掉它要动 DOM 结构（把 AddButton 挪出 tablist）⇒ 与上游的 DOM 契约不符。
-   */
-  const ADD_BUTTON_IN_TABLIST = ['aria-required-children'];
-
   const cases: Record<string, { props: Record<string, unknown>; allow?: string[] }> = {
     常规: { props: {} },
     卡片: { props: { type: 'card' } },
-    可编辑卡片: { props: { type: 'editable-card' }, allow: ADD_BUTTON_IN_TABLIST },
+    可编辑卡片: { props: { type: 'editable-card' } },
     可编辑隐藏加号: {
       props: { type: 'editable-card', hideAdd: true },
-      allow: ADD_BUTTON_IN_TABLIST,
     },
     居中卡片: { props: { type: 'card', centered: true } },
     纵向: { props: { tabPlacement: 'left' } },
@@ -87,12 +48,8 @@ describe('Tabs · axe 扫描（真实配置）', () => {
     小尺寸: { props: { size: 'small' } },
     大尺寸: { props: { size: 'large' } },
     带额外内容: { props: { tabBarExtraContent: h('span', 'extra') } },
-    // ⚠️ 交互元素放在 extra 里时**必然**命中 `aria-required-children`：它落在 `-extra-content`
-    //    （`-nav-wrap` 外的兄弟），可访问性树里被提升为 `role=tablist` 的子节点。
-    //    上游同款（`-extra-content` 同样是 `-nav` 的子节点）；见文件头的说明。
     带按钮的额外内容: {
       props: { tabBarExtraContent: h('button', { type: 'button' }, 'extra') },
-      allow: ADD_BUTTON_IN_TABLIST,
     },
     两侧额外内容: { props: { tabBarExtraContent: { left: 'L', right: 'R' } } },
     自定义指示条: { props: { indicator: { align: 'start', size: 20 } } },
@@ -131,13 +88,13 @@ describe('Tabs · role / ARIA 契约（L5）', () => {
     const w = mountA11y();
     expect(w.element.tagName).toBe('DIV');
     expect(w.attributes('role')).toBeUndefined();
-    const nav = w.find(`.${P}-nav`);
+    const nav = w.find('[role="tablist"]');
     expect(nav.attributes('role')).toBe('tablist');
     expect(nav.attributes('aria-orientation')).toBe('horizontal');
     w.unmount();
 
     const vertical = mountA11y({ tabPlacement: 'left' });
-    expect(vertical.find(`.${P}-nav`).attributes('aria-orientation')).toBe('vertical');
+    expect(vertical.find('[role="tablist"]').attributes('aria-orientation')).toBe('vertical');
     vertical.unmount();
   });
 
@@ -208,18 +165,6 @@ const fireKey = (el: Element, code: string): void => {
   el.dispatchEvent(new KeyboardEvent('keydown', { code, bubbles: true, cancelable: true }));
 };
 
-/**
- * 溢出下拉的键盘：组件按 **rc 的写法读 `e.which`**（`@rc-component/util` 的 `KeyCode` 数字），
- * 而 jsdom 的 `which` / `keyCode` 是**只读 getter（恒 0）** ⇒ 必须 `defineProperty` 塞进去
- * （与 pagination 的 a11y 测试同一手法）。
- */
-const fireWhichKey = (el: Element, which: number): void => {
-  const event = new KeyboardEvent('keydown', { bubbles: true, cancelable: true });
-  Object.defineProperty(event, 'which', { value: which });
-  Object.defineProperty(event, 'keyCode', { value: which });
-  el.dispatchEvent(event);
-};
-
 describe('Tabs · 键盘可达性（L5）', () => {
   it('★ 焦点只在**启用**的页签间移动（disabled 的 tabIndex 被移除）', async () => {
     const w = mountA11y();
@@ -282,29 +227,13 @@ describe('Tabs · 键盘可达性（L5）', () => {
     w.unmount();
   });
 
-  it('溢出下拉：关着时 ↓ / Space / Enter 打开（`aria-expanded` 变 true）', async () => {
+  it('没有隐藏页签时键盘不能打开空溢出下拉', async () => {
     const w = mountA11y();
     const more = w.find(`.${P}-nav-more`);
-    fireWhichKey(more.element, 40); // ↓
+    fireKey(more.element, 'ArrowDown');
     await nextTick();
-    expect(w.find(`.${P}-nav-more`).attributes('aria-expanded')).toBe('true');
+    // No overflow at zero layout width: test the real overflow node separately below.
+    expect(w.find(`.${P}-nav-more`).attributes('aria-expanded')).toBe('false');
     w.unmount();
   });
 });
-
-/**
- * ── 为什么不接 `a11yDemoTest`（demo 维度的 axe）────────────────────────────────
- *
- * `a11yDemoTest` 的 `allow` 是**全局**的：`matchA11yAllowances` 按「每个 demo 逐次调用」，
- * 未被命中的豁免会进 `stale` 并让该 demo 失败 ⇒ **要求「每个 demo 都命中 allow 里的每一条」**。
- *
- * 而 Tabs 的 `aria-required-children` 是**结构固有且只出现在含 `<button>` 的 demo 上**：
- *   - `type='editable-card'` ⇒ `-nav-list` 里有「+」按钮（rc 为了让它和页签一起被测量/滚动）；
- *   - `tabBarExtraContent` 里放交互元素（`Button`）⇒ 它落在 `-nav-wrap` 边的 `-extra-content` 里。
- * 两者在**可访问性树**里都会被「提升」为 `role=tablist` 的子节点（无 role 的 div 会穿透），
- * 而其余 10 个 demo **没有**这条违规 ⇒ 「每个 demo 都要命中」的语义**无法表达这个形状**。
- *
- * ⇒ demo 的形态改由下面的 `cases` 表覆盖（**按用例 id 定向豁免**），
- *   并补了「额外内容里放 Button」这一条（它正是 demo 里唯一非结构性诱因）。
- *   证据：`node tests/visual/debug/probe-tabs-axe-antd.mjs` 实测 antd 自己的 DOM 报同一条。
- */

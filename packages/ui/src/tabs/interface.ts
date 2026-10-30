@@ -1,29 +1,4 @@
-/**
- * Tabs 的类型契约（G2 产物）。
- *
- * 契约来源：antd 6.6.4 `es/tabs/index.d.ts`（+ `TabPane.d.ts`）与 rc 内核
- * `@rc-component/tabs@1.13.0` 的 `es/interface.d.ts`（**重新定义**，不搬运，H2）。
- * 判据逐条见 `docs/analysis/tabs.md`。
- *
- * ── Vue 化映射（COMPATIBILITY.md 的规则）───────────────────────────────────────
- *
- * | React | Vue | 规则 |
- * |---|---|---|
- * | `activeKey` + `onChange` | `v-model:activeKey`（同时发 `change`，C11） | §3 |
- * | `onTabClick` / `onEdit` / `onTabScroll` | **emits**（载荷与 antd 同形） | C5 |
- * | `renderTabBar` | **scoped slot** `#tabBar`（槽参数 = rc 的 `RenderTabBarProps`） | C8 |
- * | `more.popupRender` | **scoped slot** `#popupRender`（`{ originNode, restTabs, onClose }`） | C8 |
- * | `tabBarExtraContent`（`ReactNode \| {left,right}`） | `#extra` 槽（带 `position` 参数）+ 同形 prop | C8 |
- * | `TabsRef.nativeElement` | `expose({ nativeElement })` | 同上游 |
- * | `Tabs.TabPane`（children 兼容写法） | **不实现**（v6 已 deprecated），只发告警 | UPSTREAM |
- *
- * ── 与本仓其它组件的两处差异（刻意）─────────────────────────────────────────────
- *
- * 1. **语义槽是「8 个平铺 + 1 个嵌套」**（`popup` 是 `{ root }`）—— 与 antd 的
- *    `TabsSemanticType` 同形。⚠️ rc 侧消费的是**扁平**的 `classNames.popup`，所以 G4 在
- *    传给内部组件时要**展平**（`popup: mergedClassNames.popup?.root`）。
- * 2. **有 expose**（`nativeElement`）—— 与 pagination 的「无 expose」相反。
- */
+/** Public Vue Tabs contracts. Original geometry reference: rc-tabs 1.13.0. */
 
 import type { CSSProperties, VNodeChild } from 'vue';
 import type { SizeType } from '../config-provider/size-context';
@@ -176,7 +151,11 @@ export interface TabsLocale {
 /** `editable-card` 的内部配置（antd 壳组装后传给内核）。 */
 export interface TabsEditableConfig {
   /** ⚠️ `type=\'add\'` 时调用方拿到的是**事件对象**、`remove` 时是 **key**。 */
-  onEdit: (type: TabsEditAction, info: { key?: string; event: TabsEditEvent }) => void;
+  onEdit: (
+    ...args:
+      | [type: 'add', info: { event: TabsEditEvent }]
+      | [type: 'remove', info: { key: string; event: TabsEditEvent }]
+  ) => void;
   showAdd?: boolean;
   removeIcon?: VNodeChild;
   addIcon?: VNodeChild;
@@ -184,7 +163,12 @@ export interface TabsEditableConfig {
 
 /** `#tabBar` 槽 / `renderTabBar` 拿到的参数（= rc 的 `RenderTabBarProps` 的 Vue 化）。 */
 export interface TabsRenderTabBarProps {
-  id: string | null;
+  id: string;
+  prefixCls: string;
+  tabs: TabsItem[];
+  animated: TabsAnimatedConfig;
+  classNames: TabsSemanticClassNames;
+  styles: TabsSemanticStyles;
   activeKey: string | undefined;
   tabPosition: TabPosition;
   rtl: boolean;
@@ -202,7 +186,7 @@ export interface TabsRenderTabBarProps {
 
 /** 实例句柄（antd 的 `TabsRef`）。 */
 export interface TabsRef {
-  nativeElement: HTMLElement | null;
+  readonly nativeElement: HTMLElement | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -243,18 +227,9 @@ export interface TabsProps {
   /** 受控激活页签（`v-model:activeKey`）。 */
   activeKey?: string;
   defaultActiveKey?: string;
-  /**
-   * 根节点的 `id`，同时被用作 aria 关联的前缀（`{id}-tab-{key}` / `{id}-panel-{key}`）。
-   *
-   * ⚠️ **不传时是异步生成的**（首帧 `null` ⇒ 首帧没有 `aria-controls` / `aria-labelledby`），
-   *    这是上游的刻意行为（避免 SSR 与客户端 id 不匹配）。做 DOM 对拍（L4）时要**显式传**
-   *    它，否则两侧的首帧对不上。
-   */
+  /** Root id and tab/panel association prefix. Omission uses Vue useId during SSR and hydration. */
   id?: string;
   items?: TabsItem[];
-  /** ⚠️ 兼容形态：只发 deprecated 告警，**不实现**（用 `items`）。 */
-  children?: VNodeChild;
-  /** ⚠️ `renderTabBar` 已**移除**：按 C8 一律走 `#tabBar` 作用域插槽（Issue #23.4）。 */
   onChange?: (activeKey: string) => void;
   onTabClick?: (key: string, event: TabsEditEvent) => void;
   onTabScroll?: (info: { direction: 'left' | 'right' | 'top' | 'bottom' }) => void;

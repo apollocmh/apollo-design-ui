@@ -2,6 +2,22 @@
 
 # Tabs 实现说明
 
+## 当前实现（2026-10-30）
+
+公共契约见 [中文 API](index.zh-CN.md) / [English API](index.en-US.md)。本目录继续沿用已交付的 popupRender/extra 插槽，补齐以下链路：
+
+- useControlledValue 保留最后接受值；真实 nativeElement 属性；Vue useId 的 SSR/水合关联及安全 key 片段。
+- 同 key 面板保持身份，item.destroyOnHidden 覆盖组件默认值，数字 0 内容完整渲染。
+- 标准键值、禁用/移除边界、实际删除后的焦点、当前焦点项滚入视野，触摸/惯性与卸载清理。
+- tablist 与 overflow listbox 使用明确 ARIA 所有权；关闭控件为独立按钮。Dropdown 承担浮层，OperationNode 承担原生选项与键盘。
+- 当前 Provider、语义 props 和 24 个有效组件 Token；浮层读取同一套变量及 z-index。移除无消费的两个 margin 占位 Token。
+
+`native-contracts.test.ts` 覆盖这些状态与资源边界，`native-browser.mjs` 验证源码 CSS、实际溢出与键盘、Chrome axe、当前/嵌套主题及 Token Demo。semantic.test.ts 保留原始参考，只派生已审查的角色、所有权和按钮名称变化，随后完整比较。
+
+当前任务与验收状态只读 registry/vue-native-audit.json；这里不维护另一套进度。以下原文是历史实现与当时证据，不代表当前实现或本轮统一验收。
+
+## 历史实现记录（原文保留）
+
 > 收口记录（2026-09-30）。
 
 ## 1. 对应 antd 组件

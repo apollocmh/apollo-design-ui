@@ -10,7 +10,7 @@
  * |---|---|---|
  * | 结构 | 根类名、`role=tablist` 的 `aria-orientation`、`-ink-bar` 在 `-nav-list` **内部**、`-nav-operations` 在**外部** | §4.7 |
  * | ARIA | btn 的 tabIndex 三态、remove 的 tabIndex 用 **active**、`aria-live` 仅 focus 时、`data-node-key` | §4.8 |
- * | id | **异步生成**：首帧没有 `aria-controls`，挂载后有 | §3.2 / R3 |
+ * | id | Vue 确定 id：首帧即具备 ARIA 关联 | 原生契约 |
  * | 状态机 | `activeKey` 受控 / 自动重置（删末尾 / 删中间 / 删光） | §3.1 / R4 |
  * | 事件 | `change` **只在真的变了**时发、`tabClick` **每次都发**、`update:activeKey` 与 `change` 同发（C11） | §3.4 |
  * | 键盘 | `ArrowLeft/Right`（横向）、`ArrowUp/Down`（纵向 + preventDefault）、`Home/End`、`Enter/Space` | §5 |
@@ -168,7 +168,7 @@ describe('Tabs · 结构与类名', () => {
 // ARIA / id
 // ---------------------------------------------------------------------------
 
-describe('Tabs · ARIA 与异步 id', () => {
+describe('Tabs · ARIA 与确定 id', () => {
   it('btn 的 tabIndex 三态 + `aria-selected` + `aria-disabled`', () => {
     const w = mountTabs({
       items: [
@@ -197,18 +197,17 @@ describe('Tabs · ARIA 与异步 id', () => {
     w.unmount();
   });
 
-  it('★ 不给 `id` 时 id **异步生成**：首帧没有 aria，挂载后才有', async () => {
+  it('不给 id 时使用 Vue 确定 id，首帧就具备 ARIA 关联', async () => {
     const w = mount(h(Tabs as never, { defaultActiveKey: '1', items: baseItems() } as never), {
       attachTo: document.body,
     });
-    // 首帧：`innerId` 还是 null ⇒ 三个属性都不渲染
-    expect(at(w.findAll(`.${P}-tab-btn`), 0).attributes('id')).toBeUndefined();
-    expect(at(w.findAll('[role="tabpanel"]'), 0).attributes('id')).toBeUndefined();
-    await nextTick();
-    // 挂载后补上（前缀是 `apollo-tabs-`；上游是 `rc-tabs-`，见 README §2）
     const btn = at(w.findAll(`.${P}-tab-btn`), 0);
-    expect(btn.attributes('id')).toMatch(/^apollo-tabs-\d+-tab-1$/);
-    expect(btn.attributes('aria-controls')).toMatch(/^apollo-tabs-\d+-panel-1$/);
+    const panel = at(w.findAll('[role="tabpanel"]'), 0);
+    expect(btn.attributes('id')).toMatch(/^apollo-tabs-v-\d+-tab-1$/);
+    expect(btn.attributes('aria-controls')).toBe(panel.attributes('id'));
+    expect(panel.attributes('aria-labelledby')).toBe(btn.attributes('id'));
+    await nextTick();
+    expect(btn.attributes('aria-controls')).toBe(panel.attributes('id'));
     w.unmount();
   });
 
