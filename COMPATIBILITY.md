@@ -72,3 +72,7 @@ Theme的可写深响应式配置、同应用默认来源共享/跨应用与SSR�
 共享 `useControlledValue` 的受控请求、撤控保留值与函数更新规则见[受控状态迁移](docs/migrations/controlled-value.md)。开发阶段直接修正 rc 内部状态语义，不提供旧行为开关。
 
 Switch 的 Provider 样式、具名槽、原生 attrs 和真实模板 ref 类型修正见[Switch API](packages/ui/src/switch/index.zh-CN.md)；全局 large 解析为该组件已支持的 medium，不新增尺寸能力。
+
+### D-back-top-native-content
+
+BackTop 改为原生 button 和完整内容槽，click 发送原生 MouseEvent，公开真实按钮引用；target 跟随当前模板 ref，并在换目标、重复点击和卸载时清理滚动动画。历史 div/首节点克隆的差异在本组件 semantic 测试中精确登记，参考基线保留。迁移见[BackTop API](packages/ui/src/back-top/index.zh-CN.md)。

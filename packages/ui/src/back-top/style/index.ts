@@ -34,6 +34,9 @@ export function genBackTopStyle(rootPrefixCls: string): string {
     //   按钮行高 16.1 vs 22；color 也来自它，不是 genCommonStyle 的子集）
     `  margin:0;`,
     `  padding:0;`,
+    `  border:0;`,
+    `  background:transparent;`,
+    `  appearance:none;`,
     `  color:${v('colorText')};`,
     `  font-size:${v('fontSize')};`,
     `  line-height:${v('lineHeight')};`,
@@ -49,12 +52,18 @@ export function genBackTopStyle(rootPrefixCls: string): string {
     `}`,
 
     // ---- :empty 兜底（children 为空时隐藏）----
-    `${cls}:empty{`,
+    `${cls}:empty,${cls}[hidden]{`,
     `  display:none;`,
+    `}`,
+
+    `${cls}:focus-visible{`,
+    `  outline:${v('lineWidthFocus')} solid ${v('colorPrimaryBorder')};`,
+    `  outline-offset:2px;`,
     `}`,
 
     // ---- content ----
     `${cls} ${cls}-content{`,
+    `  display:block;`,
     `  width:${v('controlHeightLG')};`,
     `  height:${v('controlHeightLG')};`,
     `  overflow:hidden;`,
@@ -71,6 +80,7 @@ export function genBackTopStyle(rootPrefixCls: string): string {
 
     // ---- icon ----
     `${cls} ${cls}-icon{`,
+    `  display:block;`,
     `  font-size:${v('fontSizeHeading3')};`,
     `  line-height:${v('controlHeightLG')};`,
     `}`,

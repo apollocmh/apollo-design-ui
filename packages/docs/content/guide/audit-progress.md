@@ -15,7 +15,7 @@ order: 0
 
 | 范围 | 架构整改完成 | 历史完整交付 | 本轮冻结验收通过 |
 | --- | --- | --- | --- |
-| 组件单元 | 26/72 | 25 | 0 |
+| 组件单元 | 27/72 | 25 | 0 |
 | 基础包 | 1/13 | 0 | 0 |
 
 历史交付沿用仍有效的代码、测试与证据，不代表已经对本轮冻结版本重新验证。第一阶段完成相关类型、核心行为及必要 Demo/消费者检查即可继续；非阻塞问题记录影响与延期理由，第二阶段统一执行九维验收。源码导入关系用于影响面分析，只有任务中明确登记的整改依赖才阻塞推进。
@@ -30,7 +30,7 @@ order: 0
 | App | 未开始 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | AutoComplete | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Avatar | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-avatar-contract-audit.md) |
-| BackTop | 进行中 | native_back_top | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| BackTop | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Badge | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-badge-contract-audit.md) |
 | BorderBeam | 未开始 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Breadcrumb | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/four-unit-final-acceptance.json) |
@@ -68,7 +68,7 @@ order: 0
 | Pagination | 进行中 | native_pagination | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Popconfirm | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Popover | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
-| Progress | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Progress | 进行中 | native_progress | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | QRCode | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-qrcode-contract-audit.md) |
 | Radio | 未开始 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Rate | 进行中 | native_rate | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
@@ -120,7 +120,7 @@ Current stage: **Vue native architecture**. Dispatch: **running**; active tasks 
 
 | Scope | Architecture complete | Historical deliveries | Passed on the frozen version |
 | --- | --- | --- | --- |
-| Component units | 26/72 | 25 | 0 |
+| Component units | 27/72 | 25 | 0 |
 | Foundation packages | 1/13 | 0 | 0 |
 
 Existing code, tests and valid evidence are retained. Historical deliveries do not claim a fresh frozen-version pass. Focused types, core behavior and necessary demo/consumer checks allow architecture work to progress. Record non-blocking issues and defer full nine-dimension acceptance to stage two. Imports describe impact; only explicit work dependencies block task completion.
@@ -135,7 +135,7 @@ Final library acceptance: **not_started**. Unknown, untested and deferred checks
 | App | Not started | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | AutoComplete | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Avatar | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-avatar-contract-audit.md) |
-| BackTop | In progress | native_back_top | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| BackTop | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Badge | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-28-badge-contract-audit.md) |
 | BorderBeam | Not started | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Breadcrumb | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/four-unit-final-acceptance.json) |
@@ -173,7 +173,7 @@ Final library acceptance: **not_started**. Unknown, untested and deferred checks
 | Pagination | In progress | native_pagination | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Popconfirm | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Popover | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
-| Progress | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Progress | In progress | native_progress | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | QRCode | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-qrcode-contract-audit.md) |
 | Radio | Not started | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Rate | In progress | native_rate | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |

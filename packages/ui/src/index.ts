@@ -77,7 +77,14 @@ export { prepareComponentToken as prepareAffixComponentToken } from './affix/sty
 // ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token 1 个（zIndexPopup）。
 //    fade 动画无 CSS（antd 产物同样没有 `-fade` keyframes，G1 §2.8）。
 // ---------------------------------------------------------------------------
-export type { BackTopProps, BackTopTarget, ScrollToOptions } from './back-top';
+export type {
+  BackTopConfig,
+  BackTopExpose,
+  BackTopProps,
+  BackTopSlots,
+  BackTopTarget,
+  ScrollToOptions,
+} from './back-top';
 export { BackTop, easeInOutCubic, scrollTo } from './back-top';
 export { genBackTopStyle } from './back-top/style';
 export type { ComponentToken as BackTopComponentToken } from './back-top/style/token';

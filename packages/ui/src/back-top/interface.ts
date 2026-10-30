@@ -1,15 +1,19 @@
-/**
- * BackTop 的类型定义。
- *
- * 契约来源：antd 6.6.4 的 `es/back-top/index.d.ts`。
- * **逐字段对齐**（规则 R7）。差异：children 不在 Props（规则 C19，默认插槽）。
- *
- * ⚠️ 整个组件在 antd 6.x 已 `@deprecated`（→ FloatButton.BackTop）——
- *    JSDoc 标记逐字保留。
- */
+import type { VNodeChild } from 'vue';
+import type { ComponentStyleConfig } from '../config-provider/context';
 
-/** antd 的 `getDefaultTarget` 返回：ownerDocument 或 window。 */
-export type BackTopTarget = () => HTMLElement | Window | Document;
+/** Scroll container getter; pending template refs may return null. */
+export type BackTopTarget = () => HTMLElement | Window | Document | null;
+
+export interface BackTopConfig extends ComponentStyleConfig {}
+
+export interface BackTopSlots {
+  /** Complete button content; an explicitly empty slot hides the control. */
+  default?: () => VNodeChild;
+}
+
+export interface BackTopExpose {
+  readonly nativeElement: HTMLButtonElement | null;
+}
 
 /**
  * @deprecated Please use `GetProps<typeof FloatButton.BackTop>` instead.
@@ -17,9 +21,9 @@ export type BackTopTarget = () => HTMLElement | Window | Document;
 export interface BackTopProps {
   /** 滚动超过该值才显示（px）。 */
   visibilityHeight?: number;
-  /** 点击回调（滚动开始后调用）。 */
+  /** Vue click event (emitted once after scrolling starts). */
   onClick?: (e: MouseEvent) => void;
-  /** 滚动容器（默认 ownerDocument / window）。 */
+  /** 滚动容器（默认按钮所属的 ownerDocument）。 */
   target?: BackTopTarget;
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-back-top`。 */
   prefixCls?: string;

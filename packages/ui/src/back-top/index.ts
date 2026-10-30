@@ -17,7 +17,13 @@ export const BackTop = withInstall(BackTopComponent);
 export default BackTop;
 
 export { easeInOutCubic, type ScrollToOptions, scrollTo } from '../_internal/scroll-to';
-export type { BackTopProps, BackTopTarget } from './interface';
+export type {
+  BackTopConfig,
+  BackTopExpose,
+  BackTopProps,
+  BackTopSlots,
+  BackTopTarget,
+} from './interface';
 export { genBackTopStyle } from './style';
 export type { ComponentToken as BackTopComponentToken } from './style/token';
 export { prepareBackTopComponentToken } from './style/token';

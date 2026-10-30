@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 6,
+  "revision": 9,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -149,24 +149,68 @@
       "kind": "component",
       "ref": "back-top",
       "title": "BackTop",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/back-top"
       ],
-      "assignment": {
-        "owner": "native_back_top",
-        "baseRevision": 1,
-        "startedAt": "2026-10-30T05:40:32.202Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-22-motion-review-002.md"
       ],
-      "issues": []
+      "issues": [
+        {
+          "id": "BACKTOP-STATIC-BREAKPOINTS",
+          "status": "deferred",
+          "blocking": false,
+          "impact": "布局位置仍使用现有768/480静态断点，未随全局屏幕Token变化。",
+          "reason": "不影响本轮已声明BackTop单Token、内容/键盘/生命周期契约；作为全库响应式设计项另案，避免扩大本轮视觉调整。",
+          "evidence": [
+            "packages/ui/src/back-top/style/index.ts"
+          ]
+        }
+      ],
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/back-top"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/back-top --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 27690
+          },
+          {
+            "kind": "core",
+            "command": "vitest run --project unit packages/ui/src/back-top/__tests__/native.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4890
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <temporary strict source/tests/demo config>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49702
+          },
+          {
+            "kind": "demo",
+            "command": "node packages/ui/src/back-top/__tests__/browser.mjs",
+            "exitCode": 0,
+            "signal": null
+          }
+        ],
+        "boundary": "现有静态响应式断点另记；发布产物和完整视觉留最终冻结验收。"
+      }
     },
     {
       "id": "CMP:badge",
@@ -1014,13 +1058,17 @@
       "kind": "component",
       "ref": "progress",
       "title": "Progress",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/progress"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_progress",
+        "baseRevision": 6,
+        "startedAt": "2026-10-30T06:18:42.425Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",

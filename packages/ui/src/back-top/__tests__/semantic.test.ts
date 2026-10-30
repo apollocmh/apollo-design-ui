@@ -14,7 +14,7 @@
  */
 
 import { domContractTest } from '@apollo-design/test-utils';
-import { beforeAll } from 'vitest';
+import { beforeAll, expect, it } from 'vitest';
 import { createSSRApp, h, type VNode } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import baseline from '../../../../../tests/compat/baselines/back-top.dom.json';
@@ -50,7 +50,56 @@ beforeAll(async () => {
 domContractTest('BackTop', {
   baseline,
   keepStyle: true,
-  allow: {},
+  // ADR 0007: preserve the original oracle and permit only this documented
+  // native button/content ownership change, with exact per-case differences.
+  allow: {
+    'back-top:prefix-cls:no-props': {
+      reason:
+        'Native button, complete content host and decorative default icon; index.zh-CN.md migration',
+      deviationId: 'back-top-native-button',
+      diff: [
+        '$/div[0]: 标签不同 <div> vs <button>',
+        '$/div[0]: 我们多出属性 aria-label="Back to top"',
+        '$/div[0]/div[0]: 标签不同 <div> vs <span>',
+        '$/div[0]/div[0]/div[0]: 标签不同 <div> vs <span>',
+        '$/div[0]/div[0]/div[0]: 我们多出属性 aria-hidden="true"',
+      ],
+    },
+    'back-top:basic': {
+      reason:
+        'Native button, complete content host and decorative default icon; index.zh-CN.md migration',
+      deviationId: 'back-top-native-button',
+      diff: [
+        '$/div[0]: 标签不同 <div> vs <button>',
+        '$/div[0]: 我们多出属性 aria-label="Back to top"',
+        '$/div[0]/div[0]: 标签不同 <div> vs <span>',
+        '$/div[0]/div[0]/div[0]: 标签不同 <div> vs <span>',
+        '$/div[0]/div[0]/div[0]: 我们多出属性 aria-hidden="true"',
+      ],
+    },
+    'back-top:custom-children': {
+      reason:
+        'Native button with a stable host preserving the complete custom slot; index.zh-CN.md migration',
+      deviationId: 'back-top-native-button',
+      diff: [
+        '$/div[0]: 标签不同 <div> vs <button>',
+        '$/div[0]/div[0]: 标签不同 <div> vs <span>',
+        '$/div[0]/div[0]: 类名不同 [my-content] vs [apollo-back-top-custom]',
+        '$/div[0]/div[0]: 子节点数不同 0 vs 1',
+      ],
+    },
+    'back-top:default-with-attrs': {
+      reason:
+        'Native button and decorative default icon retain the caller aria-label; index.zh-CN.md migration',
+      deviationId: 'back-top-native-button',
+      diff: [
+        '$/div[0]: 标签不同 <div> vs <button>',
+        '$/div[0]/div[0]: 标签不同 <div> vs <span>',
+        '$/div[0]/div[0]/div[0]: 标签不同 <div> vs <span>',
+        '$/div[0]/div[0]/div[0]: 我们多出属性 aria-hidden="true"',
+      ],
+    },
+  },
   render: (id) => {
     const spec = specs[id];
     if (!spec)
@@ -59,4 +108,10 @@ domContractTest('BackTop', {
     if (html === undefined) throw new Error(`[BackTop L4] SSR markup missing: ${id}`);
     return html;
   },
+});
+
+it('SSR retains the custom child inside its stable motion host', () => {
+  expect(markup.get('back-top:custom-children')).toContain(
+    '<span class="apollo-back-top-custom"><div class="my-content">top</div></span>',
+  );
 });

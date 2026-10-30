@@ -2,6 +2,16 @@
 
 # BackTop 实现说明
 
+## 当前 Vue 契约（2026-10-30）
+
+- 根为原生 `button`，通过 `click` emit 发送原始 `MouseEvent`；完整默认槽渲染到稳定宿主，空槽隐藏、缺省使用装饰图标。实例 `nativeElement` 为真实按钮。
+- `target` getter 跟踪响应式/模板 ref（允许 `null`），当前容器监听与点击回顶使用同一容器；换容器、重复点击、卸载取消旧动画，卸载同时取消滚动节流帧。
+- 根 attrs、当前 Provider 样式/方向及 `BackTop.zIndexPopup` 由本组件消费；用户根 style 优先。尊重系统减少动态效果和主题 motion 配置。
+- 保留 Issue #55 同步阈值校准、滚动 rAF 节流和已有 SSR 动效修正。`FloatButton.BackTop` 独立实现，双方仅共享未改动的滚动工具与 CSSMotion。
+- API 与开发期 DOM 迁移见 [中文文档](./index.zh-CN.md)。本轮定向验证不代表最终九维验收。
+
+以下段落保留此前实现、上游对照和验收证据的原义；当前内容/按钮/事件契约以上述 Vue API 为准。
+
 ## 1. 对应 antd 组件
 
 - antd 6.6.4 · `es/back-top/`（只读参照，H2）
