@@ -8,9 +8,10 @@
 
 import type { FormInstance } from '@apollo-design/form-core';
 import { describe, expectTypeOf, it } from 'vitest';
-import type { VNodeChild } from 'vue';
-import { useForm } from '../hooks/use-form';
-import type { Form, FormItem, FormList } from '../index';
+import { h, type VNodeChild } from 'vue';
+import FormItemInput from '../FormItemInput';
+import { useForm, type useFormInstance } from '../hooks/use-form';
+import type { ErrorListComponent, Form, FormItem, FormList } from '../index';
 import type {
   FormEmits,
   FormItemProps,
@@ -25,11 +26,26 @@ import type {
 } from '../interface';
 
 describe('Form · props 类型', () => {
-  it('layout 三值联合 + requiredMark 四形态', () => {
+  it('layout control accepts the actual null margin state and absent field/column configuration', () => {
+    const render = () =>
+      h(FormItemInput, {
+        prefixCls: 'apollo-form',
+        fieldId: undefined,
+        marginBottom: null,
+        labelCol: undefined,
+        wrapperCol: undefined,
+      });
+    type Margin = InstanceType<typeof FormItemInput>['$props']['marginBottom'];
+    expectTypeOf<Margin>().toEqualTypeOf<number | null | undefined>();
+    // @ts-expect-error measured margin accepts numbers or the real null sentinel, not CSS strings.
+    const invalid: Margin = '24px';
+    void invalid;
+    void render;
+  });
+
+  it('layout 三值联合 + requiredMark primitive', () => {
     expectTypeOf<FormLayout>().toEqualTypeOf<'horizontal' | 'inline' | 'vertical'>();
-    expectTypeOf<RequiredMark>().toEqualTypeOf<
-      boolean | 'optional' | ((labelNode: VNodeChild, info: { required: boolean }) => VNodeChild)
-    >();
+    expectTypeOf<RequiredMark>().toEqualTypeOf<boolean | 'optional'>();
   });
 
   it('ValidateStatus 含空串（「无状态」是合法值）', () => {
@@ -39,7 +55,7 @@ describe('Form · props 类型', () => {
   });
 
   it('FormProps 的事件是 emits（不在 props 上）—— 与 FormEmits 对齐', () => {
-    // props 侧必须 Omit 掉 onFinish* / onValuesChange / onFieldsChange
+    // onXxx types describe JSX listeners; runtime delivery uses emits.
     const props: keyof FormProps = 'layout';
     expectTypeOf(props).toBeString();
     expectTypeOf<FormEmits>().toHaveProperty('finish');
@@ -86,6 +102,8 @@ describe('Form · hooks 类型', () => {
     expectTypeOf(form.validateFields).toBeFunction();
     expectTypeOf(form.setFieldsValue).toBeFunction();
     expectTypeOf(form.getFieldsValue).toBeFunction();
+    expectTypeOf(form.getFieldInstance?.('user')).toEqualTypeOf<object | undefined>();
+    expectTypeOf<ReturnType<typeof useFormInstance>>().toEqualTypeOf<FormInstance | undefined>();
   });
 });
 
@@ -100,15 +118,33 @@ describe('Form · named scoped slots', () => {
       form: InstanceType<typeof Form>,
       item: InstanceType<typeof FormItem>,
       instance: FormInstance,
+      errors: InstanceType<typeof ErrorListComponent>,
     ) => {
       form.$slots.default?.({ values: {}, form: instance });
       item.$emit('reset');
       // @ts-expect-error Item metaChange requires actual field metadata.
       item.$emit('metaChange', 'invalid');
+      errors.$emit('visibleChanged', true);
+      // @ts-expect-error ErrorList visibleChanged carries a boolean, not a DOM Event.
+      errors.$emit('visibleChanged', new Event('change'));
       // @ts-expect-error Form defaults accept one named object.
       form.$slots.default?.({}, instance);
     };
     void check;
+  });
+
+  it('required mark and feedback content have explicit slot scopes', () => {
+    type Mark = Parameters<NonNullable<FormSlots['requiredMark']>>[0];
+    type Feedback = Parameters<NonNullable<FormSlots['feedbackIcon']>>[0];
+    expectTypeOf<keyof Mark>().toEqualTypeOf<'label' | 'required'>();
+    expectTypeOf<keyof Feedback>().toEqualTypeOf<'status' | 'errors' | 'warnings'>();
+    expectTypeOf<FormItemSlots['feedbackIcon']>().toEqualTypeOf<FormSlots['feedbackIcon']>();
+    // @ts-expect-error requiredMark content functions use the named slot.
+    const oldMark: RequiredMark = () => null;
+    // @ts-expect-error feedback icon content uses the named slot rather than hasFeedback.icons.
+    const oldFeedback: FormItemProps['hasFeedback'] = { icons: () => ({}) };
+    void oldMark;
+    void oldFeedback;
   });
 });
 
@@ -122,7 +158,7 @@ describe('Form · 负例', () => {
 
   it('requiredMark 不接受数字', () => {
     type Acceptable = RequiredMark | undefined;
-    // @ts-expect-error 数字不是合法取值（boolean / 'optional' / 函数）
+    // @ts-expect-error 数字不是合法取值（boolean / 'optional'）
     const bad: Acceptable = 1;
     expectTypeOf(bad).not.toBeNever();
   });

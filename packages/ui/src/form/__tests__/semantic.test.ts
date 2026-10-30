@@ -132,12 +132,27 @@ const CASES: Record<string, () => DomRenderResult> = {
     form({ name: 'login' }, item({ label: 'User', name: 'user', prefixCls: BP.prefixCls })),
 };
 
+const feedbackAllowance = {
+  reason: 'Decorative Form feedback is aria-hidden; validation content remains in the field help.',
+  diff: [],
+};
+
 inputContractReference(
   'Form',
   {
     baseline,
     keepStyle: false,
-    allow: {},
+    allow: {
+      'form:label-tooltip': {
+        reason:
+          'Form label help is a keyboard-focusable native button beside the associated label, so the label retains one control target.',
+        diff: [],
+      },
+      'form:feedback-success': feedbackAllowance,
+      'form:feedback-warning': feedbackAllowance,
+      'form:feedback-error': feedbackAllowance,
+      'form:feedback-validating': feedbackAllowance,
+    },
     render: (id) => {
       const build = CASES[id];
       if (!build) {

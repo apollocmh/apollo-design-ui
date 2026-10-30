@@ -11,7 +11,7 @@
  * 只有 L6 的 inline 用例能发现（PITFALLS 170 同族）。
  */
 
-import { getDesignToken } from '@apollo-design/theme';
+import { type AliasToken, getDesignToken } from '@apollo-design/theme';
 
 export interface ComponentToken {
   labelRequiredMarkColor: string;
@@ -28,17 +28,7 @@ export interface ComponentToken {
 }
 
 /** antd prepareComponentToken 逐字（light 主题判定值）。 */
-export function prepareComponentToken(): ComponentToken {
-  const t = getDesignToken() as {
-    colorError: string;
-    colorTextHeading: string;
-    fontSize: number;
-    controlHeight: number;
-    marginXXS: number;
-    marginXS: number;
-    marginLG: number;
-    paddingXS: number;
-  };
+export function prepareComponentToken(t: AliasToken = getDesignToken()): ComponentToken {
   return {
     labelRequiredMarkColor: t.colorError, // #ff4d4f
     labelColor: t.colorTextHeading, // rgba(0,0,0,0.88)

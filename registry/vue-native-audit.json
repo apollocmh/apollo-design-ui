@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 163,
+  "revision": 165,
   "dispatch": {
     "status": "paused",
     "maxParallel": 5,
@@ -1383,7 +1383,7 @@
       "kind": "component",
       "ref": "form",
       "title": "Form",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [
         "FND:form-core"
@@ -1391,12 +1391,10 @@
       "owns": [
         "packages/ui/src/form"
       ],
-      "assignment": {
-        "owner": "native_form_core",
-        "baseRevision": 125,
-        "startedAt": "2026-10-30T13:38:16.216Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -1418,6 +1416,226 @@
           "docs/audit/2026-10-24-form-prefix-recheck.md",
           "docs/audit/2026-10-29-config-provider-contract-audit.md"
         ]
+      },
+      "verification": {
+        "task": "CMP:form",
+        "owner": "native_form_core",
+        "passed": true,
+        "scope": [
+          "packages/ui/src/form",
+          "packages/form-core/src/form-types.ts",
+          "packages/ui/src/index.ts"
+        ],
+        "pending": [],
+        "summary": [
+          "Form content uses named requiredMark/feedbackIcon slots, including dynamic removal through current reactive Provider data; primitive requiredMark and business/validation functions retain their contracts.",
+          "Actual Vue control refs back focus/scroll/getFieldInstance; the same raw external form and repeated UI consumers share one canonical instance and registry; useFormInstance reads the nearest current Form.",
+          "Current disabled/variant/semantic styles and all eleven Form theme Tokens reach their real consumers; native attrs and numeric responsive columns work, including custom prefixes on a narrow viewport.",
+          "noStyle aggregation distinguishes actual paths and cleans only the removed field; the debounce watcher owns and releases its timer.",
+          "Necessary required-mark/component-token Demos, exported scope types and bilingual API are synchronized; historical README/F03/foundation evidence remains dated and unchanged."
+        ],
+        "reproductions": [
+          {
+            "log": "/tmp/apollo-ui-form-native-red.log",
+            "exitCode": 1,
+            "elapsedSeconds": 6.47,
+            "result": "Original UI instance/attrs/Provider/content failures; repaired in the current main source."
+          },
+          {
+            "log": "/tmp/apollo-ui-form-path-collision-red.log",
+            "exitCode": 1,
+            "elapsedSeconds": 7.58,
+            "result": "Literal separator field key overwrote a distinct nested path; repaired with typed real-path aggregation."
+          },
+          {
+            "log": "/tmp/apollo-ui-form-responsive-red.log",
+            "exitCode": 1,
+            "elapsedSeconds": 49.04,
+            "result": "480px responsive columns were forced to full width by ant-col literal selectors; repaired and verified in the subsequent browser pass."
+          },
+          {
+            "log": "/tmp/apollo-ui-form-error-attrs-red.log",
+            "exitCode": 1,
+            "elapsedSeconds": 7.04,
+            "result": "Current Motion already forwards native attrs; ErrorList listener fires once but no owned visibleChanged emit is recorded. Remaining Form change."
+          },
+          {
+            "log": "/tmp/apollo-ui-form-error-list-red.log",
+            "exitCode": 1,
+            "elapsedSeconds": 6.93,
+            "result": "Duplicate arbitrary message keys retain three actual DOM rows after replacement with two. Remaining Form change; the initial attrs case in this run also lacked an async mount wait and was corrected in the separate reproduction."
+          },
+          {
+            "log": "/tmp/apollo-ui-form-leave-red.log",
+            "exitCode": 1,
+            "elapsedSeconds": 46.63,
+            "result": "ErrorList current-key lookup discards leaving message content. Will consume the stable typed retained MotionList row scope."
+          }
+        ],
+        "unverified": [
+          "JSDOM axe checks pass but log missing canvas.getContext; complete real-browser color contrast remains stage two.",
+          "Full-library coverage, complete theme/visual matrix, build and published consumers remain the shared stage-two checks."
+        ],
+        "remainingBlockingIssues": [],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/form/__tests__/native-contracts.test.ts",
+            "exitCode": 0,
+            "elapsedSeconds": 9.07,
+            "result": "20 passed: canonical raw/external UI instance and refs, focus/scroll control, Provider/content/current Token variables, Fragment control injection, numeric help/native attrs, responsive column boundary, noStyle path cleanup, owned ErrorList event/native attrs/duplicate message replacement, debounce scope cleanup.",
+            "log": "/tmp/apollo-ui-form-native-final.log"
+          },
+          {
+            "kind": "demo",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/form/__tests__/form.test.ts packages/ui/src/form/__tests__/s8-issue8.test.ts packages/ui/src/form/__tests__/input-reference.test.ts packages/ui/src/form/__tests__/prefix-reactivity.test.ts packages/ui/src/form/__tests__/variant-reactivity.test.ts packages/ui/src/form/__tests__/demo.test.ts",
+            "exitCode": 0,
+            "elapsedSeconds": 16.76,
+            "result": "6 files, 78 passed, including the existing complete 35-Demo smoke inventory, actual Input ownership/events/directives/refs, F03 prefix/layout/SSR and Provider semantics. Unchanged form-core algorithm evidence is reused, not rerun.",
+            "log": "/tmp/apollo-ui-form-core-demo-final.log"
+          },
+          {
+            "kind": "dom-a11y",
+            "command": "node node_modules/vitest/vitest.mjs run --project dom-contract --project a11y packages/ui/src/form/__tests__/semantic.test.ts packages/ui/src/form/__tests__/a11y.test.ts",
+            "exitCode": 0,
+            "elapsedSeconds": 19.4,
+            "result": "2 files, 62 passed. Original upstream DOM oracle preserved; only five audited Apollo physical references changed for the native tooltip button and decorative feedback aria-hidden. JSDOM canvas getContext remains unavailable; full browser contrast is not claimed.",
+            "log": "/tmp/apollo-ui-form-dom-a11y-final.log"
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/form/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "elapsedSeconds": 6.82,
+            "result": "12 real Chrome groups passed, zero browser/Vue diagnostics: actual refs, eleven actual Token consumers, keyboard tooltip, retained draft/focus/selection, compiled dynamic slot withdrawal, override removal/custom prefix, actual scrolling/focus and false first-error scroll, retained leaving ErrorList content and placeholder release, List move/remove identity/current registration, extra ResizeObserver update, 480px column ratios, observer cleanup.",
+            "log": "/tmp/apollo-ui-form-browser-final.log",
+            "report": "/tmp/apollo-ui-form-native-browser.json"
+          },
+          {
+            "kind": "lint",
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/ui/src/form/ErrorList.ts packages/ui/src/form/Form.vue packages/ui/src/form/FormItem.vue packages/ui/src/form/FormItem/ItemHolder.ts packages/ui/src/form/FormItem/StatusProvider.ts packages/ui/src/form/FormItemInput.ts packages/ui/src/form/FormItemLabel.ts packages/ui/src/form/__tests__/demo.test.ts packages/ui/src/form/__tests__/fixtures/NativeForm.vue packages/ui/src/form/__tests__/input-contract-reference.json packages/ui/src/form/__tests__/native-browser.mjs packages/ui/src/form/__tests__/native-contracts.test.ts packages/ui/src/form/__tests__/semantic.test.ts packages/ui/src/form/__tests__/type.test-d.ts packages/ui/src/form/context.ts packages/ui/src/form/demo/component-token.vue packages/ui/src/form/demo/required-mark.vue packages/ui/src/form/hooks/use-debounce.ts packages/ui/src/form/hooks/use-form.ts packages/ui/src/form/interface.ts packages/ui/src/form/style/index.ts packages/ui/src/form/style/token.ts packages/ui/src/form/use-form-theme.ts packages/ui/src/form/util.ts",
+            "exitCode": 0,
+            "elapsedSeconds": 0.29,
+            "result": "24 owned changed source/test/SFC/JSON files, no fixes or diagnostics. Public indices excluded.",
+            "log": "/tmp/apollo-ui-form-format-final.log"
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check HEAD -- packages/ui/src/form",
+            "exitCode": 0,
+            "elapsedSeconds": 0.02,
+            "log": "/tmp/apollo-ui-form-diff-final.log"
+          },
+          {
+            "kind": "types",
+            "command": "node node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p <isolated root-strict Form+Motion config; all Form source, types, native SFC and all Demo files, actual public root exports and affected Motion consumers>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 54293,
+            "result": "All scoped strict checks passed; declaration and strict preserved. Current source byte-matches checked snapshot.",
+            "log": "/tmp/apollo-form-motion-final-types.log"
+          },
+          {
+            "kind": "lint",
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/ui/src/form packages/ui/src/index.ts packages/form-core/src/form-types.ts",
+            "exitCode": 0,
+            "result": "74 files; public export order only normalized after initial organizeImports diagnostic. No runtime or type-contract change."
+          }
+        ],
+        "migration": [
+          "requiredMark content function -> Form requiredMark slot {label: stable Vue component, required}; primitive boolean/optional remains.",
+          "feedbackIcons / FormFeedbackIcons / hasFeedback.icons -> Form or Form.Item feedbackIcon slot {status, errors, warnings}; Item priority, hasFeedback boolean.",
+          "useFormInstance is the nearest existing FormInstance or undefined, not the useForm factory alias. Same raw external instance is the canonical UI form and registry.",
+          "getFieldInstance returns the actual object or undefined; callers must check real focus capability. Integrator owns the matching core declaration increment.",
+          "Inert Item status/fieldId declarations were removed; actual props are validateStatus/id. requiredMark is configured at Form, not an Item prop.",
+          "ErrorList visibleChanged is an owned boolean emit; h/JSX listener remains onVisibleChanged. Real motion prepare/style/end service hooks retain their return values."
+        ],
+        "publicIndexOwners": "Integrator already synchronized useFormInstance and FormFeedbackIconSlotProps/FormRequiredMarkSlotProps/FormSlots/FormItemSlots exports; this owner did not edit either public index.",
+        "historicalEvidence": [
+          "docs/foundation/form-core-contract.md",
+          "docs/audit/2026-10-24-form-prefix-recheck.md",
+          "docs/audit/2026-10-24-form-prefix-remediation.md",
+          "docs/audit/2026-10-29-config-provider-contract-audit.md"
+        ],
+        "sourceHashes": {
+          "packages/ui/src/form/ErrorList.ts": "1921fe115fba09b64954634fa400ce27614b6bf944aacd4fe7ae6d951c38e621",
+          "packages/ui/src/form/Form.vue": "6eebb6c53221f3a857d80493840444f2a2820d24157f1a306a416d4d1776c0a0",
+          "packages/ui/src/form/FormItem.vue": "f622dde144bc0038476cfffb6742399be34c1c7bd081a54c4084b5d38ce8ce50",
+          "packages/ui/src/form/FormItem/ItemHolder.ts": "037f016c42abac44a32c4756c81f40f7d97d8c78d7b519fde9f335b15e5d4e24",
+          "packages/ui/src/form/FormItem/StatusProvider.ts": "a8ed329cb453e33e805d53509f877471376cad3cab1adc2d8e651a757b446d95",
+          "packages/ui/src/form/FormItemInput.ts": "dc40da940485857df0c7485e9f34de2670dcad0eccb1193ff2f081f2320fb767",
+          "packages/ui/src/form/FormItemLabel.ts": "c7afbf3028edeee44cb905f6158c0395aca2774a5ff94fab537496fab441ce81",
+          "packages/ui/src/form/README.md": "56379f9e537dcb77341476535fd5e4354c2260c296015b4c969d1f4f8fb87e15",
+          "packages/ui/src/form/__tests__/demo.test.ts": "0199a368b500cbbb5862f94746c0e9445d4dfcae19f9a48df86274d0589f4e7e",
+          "packages/ui/src/form/__tests__/fixtures/NativeForm.vue": "21efc53af5cf2e8af54b43969dd201e596b4ca004b3ef67e28999f585af1afb9",
+          "packages/ui/src/form/__tests__/input-contract-reference.json": "769557a72f33b02389e9861fd1ccefd32bd32a726205ddd5980943229109e75b",
+          "packages/ui/src/form/__tests__/native-browser.mjs": "d151dc874084fd8206a48e8aee372d7805048185c328fcfa2ff6e2613f68d015",
+          "packages/ui/src/form/__tests__/native-contracts.test.ts": "06ffd928e89be637f81c254b7a4bde543b4042657107f7eac62f1a29dc13c2b1",
+          "packages/ui/src/form/__tests__/semantic.test.ts": "7d887993ab58000c58e181a10704798f397248238ac911c1c1270ff5cafefc4f",
+          "packages/ui/src/form/__tests__/type.test-d.ts": "d4a36ba7c87665f39d80547735a758a673798b7a98b939de59fdadca3681a17d",
+          "packages/ui/src/form/context.ts": "9ff03a499d9aa6a7cccc1a02d2324ac7f152aa736a84b3dcdd9348340468f091",
+          "packages/ui/src/form/demo/component-token.md": "60696b5bd3d69dba0866bff20cad53b225d4dc66e973f4cd6f4428bf0f34a525",
+          "packages/ui/src/form/demo/component-token.vue": "12e6c4e1a6ebd16f3eedc6a4a670910a67b569a0a9e4c608a293092c9a1923dd",
+          "packages/ui/src/form/demo/finish-failed.vue": "7ce7845eae1b1e6077c347be917c6f35422b3979a48dcdd094255645012a53e4",
+          "packages/ui/src/form/demo/nest-messages.vue": "37b4ac4b26234771bd588f3f8a43d66beb5e89c1ac1b86f6e446228a1c17d9fc",
+          "packages/ui/src/form/demo/required-mark.md": "92c760b0adf322cb136be30323f5a104825351d1a091de94346cf9edabb2d7f8",
+          "packages/ui/src/form/demo/required-mark.vue": "ff8753f9dd070523449f47c0dfd9767c7225cf731542ad193eeeece5a6f477dd",
+          "packages/ui/src/form/demo/warning-only.vue": "a5507162a647dac6515d67acb2d7541d26c87787776cb95a67d50133bb1fe3b0",
+          "packages/ui/src/form/hooks/use-debounce.ts": "29f119b0ce9e1866d160f75888cf6e9d47cdcd2fe7b95ec7800eb683dfd79b3b",
+          "packages/ui/src/form/hooks/use-form.ts": "0dc98bc1071c5fbedb34d44599d4111ba6886e113f646a07c2e1f51276b57126",
+          "packages/ui/src/form/index.en-US.md": "0782d369efb33b821c91a27dd9dcdaf22038705fe85ff918b0a370c1799af074",
+          "packages/ui/src/form/index.zh-CN.md": "1d9f805863fcb197173509da29cb75542434e42fc97fd10c54e6e0892f61121a",
+          "packages/ui/src/form/interface.ts": "2ca660bcbe9d75a91cc605c026544863c3588f6346429294c90ede856a510988",
+          "packages/ui/src/form/style/index.ts": "bfe3c31e3c0ba10147dd2926f725ecddf4acabdfc2f8275409eaa852860dfa6f",
+          "packages/ui/src/form/style/token.ts": "ddba8edcf07a26398b61d8cbe39b30a08c6084e2b4c6b23ba7ca261e4244c6f1",
+          "packages/ui/src/form/use-form-theme.ts": "5c4c2adc2220e20f1043ce939597dbc7856a94e3c61bcfb7eb95dd6368f8ca73",
+          "packages/ui/src/form/util.ts": "89a34bd63ea161b11338e07ad8a21bf12a53e3701b7af3eb1d33b742cee1ab8a"
+        },
+        "dependencyHashes": {
+          "packages/form-core/src/form-types.ts": "f03544cbd5e15b519cabd8a799e0752bfe8b174b9b7d4a5b7317297a9abab1ab",
+          "packages/form-core/src/form.ts": "a4b2d49957cf4ca9be26f5891b088159b0ad8518c5bde75e47a435066ac785bd",
+          "packages/form-core/src/field.ts": "8209b20aff6bc1d3d4b0455e396daf81169cb124250f602343c537666b6029b1",
+          "packages/form-core/src/list.ts": "72459b55a98bdcbbdcd85570fd7a681cfadd4575d7d213e42abc40f0fa40c33d",
+          "packages/motion/src/css-motion.ts": "8120975b45367e17ed6b21115e456fe544b8ba00f2633381927d41909e934eea",
+          "packages/motion/src/motion-list.ts": "293133b3af4da4ab9b1ba30d55b368c9b400a9c7377ca2ff3ad7d29434c967fe",
+          "packages/motion/src/driver.ts": "3f1301d76d591b29f8c75831f59a61404307e0245ea0c2fd5ea9a815d65492fc",
+          "packages/motion/src/diff.ts": "0f64f74f35a27a8a4538e000df94ca8b29f4f5fd4b970906a0e2345a00b980af",
+          "packages/ui/src/config-provider/context.ts": "0927c693129d61ba70f7416863108fd324c84e1f6ffd521a936afa09ca25fe4a",
+          "packages/theme/src/vue.ts": "13d526128ea11b85bc7528ce34aa76085ee505f9a6c17e7bc84ac455174e7837"
+        },
+        "recordedAt": "2026-10-30T16:14:17.855216+00:00",
+        "timingBoundary": "Commands have measured wall time. Separate analysis/implementation/integration-freeze wait durations were not instrumented and remain unknown.",
+        "typeFollowup": {
+          "basis": {
+            "reportedBy": "integrator",
+            "exitCode": 2,
+            "elapsedSeconds": 35.538,
+            "log": "/tmp/apollo-current-form-motion-types.log",
+            "scope": "Seven Form diagnostic positions; three stale Demo message annotations plus one nullable-margin h overload root cause."
+          },
+          "changes": [
+            "FormItemInput Number runtime prop explicitly types its existing real null default with PropType<number | null>. Field id and column optionality remain unchanged.",
+            "finish-failed/nest-messages/warning-only import the public ValidateErrorEntity type from @apollo-design/form-core; all existing templates and business handlers remain.",
+            "Type cases use real typed h with null margin and explicit undefined field/column inputs; exact nullable margin and CSS-string negative prevent an artificial constructor or broad input."
+          ],
+          "runtimeBoundary": "Only erased TypeScript annotations/type imports and type-test code changed. Runtime body, prop constructors/defaults, events and snapshots are unchanged; existing 20/78/62/browser checks are reused as directed.",
+          "checks": [
+            {
+              "command": "node node_modules/@biomejs/biome/bin/biome check --write packages/ui/src/form/FormItemInput.ts packages/ui/src/form/demo/finish-failed.vue packages/ui/src/form/demo/nest-messages.vue packages/ui/src/form/demo/warning-only.vue packages/ui/src/form/__tests__/type.test-d.ts",
+              "exitCode": 0,
+              "elapsedSeconds": 0.09,
+              "log": "/tmp/apollo-ui-form-type-followup-format.log"
+            },
+            {
+              "command": "git diff --check HEAD -- packages/ui/src/form",
+              "exitCode": 0,
+              "elapsedSeconds": 0.02,
+              "log": "/tmp/apollo-ui-form-type-followup-diff.log"
+            }
+          ]
+        },
+        "stage": "architecture",
+        "boundary": "当前 UI Form 架构单元已完成；复用 Form Core 既有有效证据，仅补真实控制实例声明与 UI 消费验证。核心、现有 Demo、DOM/a11y、真实 Chrome 和全单元严格类型已通过；JSDOM canvas 诊断保留，完整视觉/主题/覆盖率、构建消费者与同版九维尚未执行。"
       }
     },
     {
@@ -4193,7 +4411,17 @@
             "log": "/tmp/apollo-form-core-types-runtime.log"
           }
         ]
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/form-core/src/form-types.ts",
+            "packages/ui/src/form"
+          ],
+          "change": "getFieldInstance accurately returns the actual registered object; UI canonical form/control identity, native focus/scroll and nearest useFormInstance are verified.",
+          "verification": "CMP:form focused core, Demo, real Chrome and full scoped strict. Existing Form Core algorithm and historical evidence retained; no repeated full foundation audit."
+        }
+      ]
     },
     {
       "id": "FND:icons",

@@ -1,5 +1,7 @@
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
+> 2026-10-30 UI 增量：当前实现使用 requiredMark/feedbackIcon 内容槽、真实控件 ref 注册与聚焦/滚动、响应式 Disabled/Variant/语义配置、11 个当前主题 Token、原生 attrs 及响应式列布局。useFormInstance 读取最近实例，外建实例与重复 useForm 共用同一控件注册表；noStyle 错误聚合按真实路径区分。当前已有 35 个 Demo，required-mark 与 component-token 已展示原生槽/Provider 配置。动态槽、真实焦点/滚动、列表 move/remove 身份与资源释放由 native-contracts.test.ts 和 native-browser.mjs 钉住，旧 F03 前缀/SSR/布局证据继续保留。下文 §7 的旧缺口及 §8 数量是原日期事实，当前 API 以双语文档与当前测试为准；最终九维和发布消费者仍留统一冻结阶段。
+
 > 2026-10-30 增量：随 form-core 迁移 Form 默认槽 `{ values, form }`、Form.Item 默认槽 `{ control, meta, form }` 及所属 reset/metaChange emits；Form.List 既有对象槽保持不变。renderProps 只追加整表更新，字段状态/重置仍运行；外建实例订阅与真实 nativeElement 桥同步修正。本轮为共享基础层关联迁移，不表示 Form 布局/Token 全单元重新验收。当前契约与迁移见 [API](./index.zh-CN.md) 与 [foundation 增量](../../../../docs/foundation/form-core-contract.md)。下文原日期的交付事实保持原义。
 
 # Form 实现说明

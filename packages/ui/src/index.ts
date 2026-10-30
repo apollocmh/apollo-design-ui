@@ -1181,10 +1181,11 @@ export {
 // Form —— 表单（form-core 第一个 UI 消费者；BaseSelect 同源消费协议）
 export type {
   ColProps as FormColProps,
-  FeedbackIcons as FormFeedbackIcons,
   FormEmits,
+  FormFeedbackIconSlotProps,
   FormItemLayout,
   FormItemProps,
+  FormItemSlots,
   FormItemTooltipType,
   FormLabelAlign,
   FormLayout,
@@ -1192,8 +1193,10 @@ export type {
   FormListSlotProps,
   FormListSlots,
   FormProps,
+  FormRequiredMarkSlotProps,
   FormSemanticClassNames,
   FormSemanticStyles,
+  FormSlots,
   RequiredMark,
   ScrollFocusOptions as FormScrollFocusOptions,
   ScrollOptions as FormScrollOptions,
@@ -1205,7 +1208,7 @@ export {
   FormItem,
   FormList,
   useForm,
-  useForm as useFormInstance,
+  useFormInstance,
   useWatch,
 } from './form';
 export { genFormStyle, genTokenDecls as genFormTokenDecls } from './form/style';
@@ -1975,6 +1978,7 @@ export {
 export type {
   PaginationType as TransferPaginationType,
   TransferDirection,
+  TransferEmits,
   TransferFooterSlotProps,
   TransferItem,
   TransferItemSlotProps,
@@ -1982,7 +1986,6 @@ export type {
   TransferListBodyProps,
   TransferListSlotProps,
   TransferLocale,
-  TransferEmits,
   TransferProps,
   TransferRef,
   TransferSelectAllLabelSlotProps,

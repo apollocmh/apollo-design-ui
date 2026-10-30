@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd 的 demo/finish-failed.tsx
+import type { ValidateErrorEntity } from '@apollo-design/form-core';
 import { Button, Form, FormItem, Input, useForm } from '@apollo-design/ui';
 import { ref } from 'vue';
 
@@ -10,9 +11,7 @@ const onFinish = (values: unknown) => {
   errorInfo.value = `提交成功：${JSON.stringify(values)}`;
 };
 
-const onFinishFailed = (errorInfoValue: {
-  errorFields: { name: unknown[]; errors: string[] }[];
-}) => {
+const onFinishFailed = (errorInfoValue: ValidateErrorEntity) => {
   errorInfo.value = `校验失败：${errorInfoValue.errorFields
     .map((field) => field.errors.join('、'))
     .join('；')}`;

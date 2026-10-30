@@ -1,26 +1,7 @@
 <script lang="ts">
-/**
- * Form —— 表单容器（antd `es/form/Form.js` 188 行的 Vue 等价物）。
- *
- * 结构：消费 form-core 的 `Form`（FieldForm 壳，store 逻辑已在 foundation 落地），
- * 本组件只做 **antd 展示层**：context 合并 / 类名 / onFinishFailed 包装
- * （scrollToFirstError）/ NoFormStyle(status) / FormContext 下发。
- *
- * ── 关键判据（docs/analysis/form.md §2）──────────────────────────────────────
- * 1. context 合并：requiredMark（prop → ctx → true）、colon（prop ?? ctx）、
- *    labelAlign/labelWrap（prop ?? ctx）、tooltip（ctx 与 prop 浅合并）、
- *    scrollToFirstError（prop ?? ctx）；
- * 2. 类名：`${p}` + `${p}-${layout}` + `-hide-required-mark`(requiredMark===false)
- *    + `-rtl` + `-large/-small`；
- * 3. onFinishFailed 包装：先回调用户，再有 errorFields 且 scrollToFirstError 时
- *    `scrollToField(fieldName, {block:'nearest', ...options})`；
- * 4. context 栈：VariantContext → DisabledContext → SizeContext → FormProvider →
- *    FormContext → NoFormStyle(status=true)（Form 根上不吃 Item 的状态反馈）；
- * 5. expose：`{ ...formInstance, nativeElement }`。
- */
-
 import {
   Form as CoreForm,
+  type FieldData,
   type FormInstance,
   type FormRef,
   type ValidateErrorEntity,
@@ -30,15 +11,17 @@ import {
   computed,
   defineComponent,
   h,
+  inject,
+  normalizeStyle,
+  onBeforeUpdate,
   type PropType,
   provide,
-  type Ref,
   type SlotsType,
   shallowRef,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
-import { useDisabled } from '../config-provider/disabled-context';
+import { disabledContextKey, useDisabled } from '../config-provider/disabled-context';
 import { sizeContextKey, useSize } from '../config-provider/size-context';
 import {
   type FormContextValue,
@@ -46,8 +29,21 @@ import {
   provideNoFormStyle,
   variantContextKey,
 } from './context';
-import { useForm as useUiForm } from './hooks/use-form';
-import type { FormProps, FormSlots } from './interface';
+import { useFormWithRegistry } from './hooks/use-form';
+import type { FormProps, FormSemanticProps, FormSlots } from './interface';
+import { useFormTheme } from './use-form-theme';
+
+type FormDefaults = Pick<
+  FormProps,
+  | 'requiredMark'
+  | 'colon'
+  | 'labelAlign'
+  | 'labelWrap'
+  | 'scrollToFirstError'
+  | 'tooltip'
+  | 'classNames'
+  | 'styles'
+> & { className?: string; style?: CSSProperties };
 
 export default defineComponent({
   name: 'AForm',
@@ -60,7 +56,6 @@ export default defineComponent({
     labelWrap: { type: Boolean, default: undefined },
     labelCol: { type: Object as PropType<FormProps['labelCol']>, default: undefined },
     wrapperCol: { type: Object as PropType<FormProps['wrapperCol']>, default: undefined },
-    feedbackIcons: { type: Function as PropType<FormProps['feedbackIcons']>, default: undefined },
     size: { type: String as PropType<FormProps['size']>, default: undefined },
     disabled: { type: Boolean, default: undefined },
     scrollToFirstError: {
@@ -68,20 +63,23 @@ export default defineComponent({
       default: undefined,
     },
     requiredMark: {
-      type: [Boolean, String, Function] as PropType<FormProps['requiredMark']>,
+      type: [Boolean, String] as PropType<FormProps['requiredMark']>,
       default: undefined,
     },
     variant: { type: String as PropType<FormProps['variant']>, default: undefined },
     tooltip: { type: Object as PropType<FormProps['tooltip']>, default: undefined },
-    classNames: { type: Object as PropType<FormProps['classNames']>, default: undefined },
-    styles: { type: Object as PropType<FormProps['styles']>, default: undefined },
-    // ---- form-core FormProps（Form.vue 原骨架声明，转发给 core Form）----
+    classNames: {
+      type: [Object, Function] as PropType<FormProps['classNames']>,
+      default: undefined,
+    },
+    styles: { type: [Object, Function] as PropType<FormProps['styles']>, default: undefined },
     form: { type: Object as PropType<FormInstance>, default: undefined },
     component: {
       type: [Boolean, String, Object, Function] as PropType<FormProps['component']>,
       default: 'form',
     },
     name: { type: String, default: undefined },
+    fields: { type: Array as PropType<FieldData[]>, default: undefined },
     validateMessages: {
       type: Object as PropType<FormProps['validateMessages']>,
       default: undefined,
@@ -95,207 +93,167 @@ export default defineComponent({
     initialValues: { type: Object as PropType<FormProps['initialValues']>, default: undefined },
     renderProps: { type: Boolean, default: undefined },
   },
-  emits: ['valuesChange', 'fieldsChange', 'finish', 'finishFailed'],
+  emits: {
+    valuesChange: (_changed: Record<string, unknown>, _values: Record<string, unknown>) => true,
+    fieldsChange: (_changed: FieldData[], _fields: FieldData[]) => true,
+    finish: (_values: Record<string, unknown>) => true,
+    finishFailed: (_error: ValidateErrorEntity) => true,
+  },
   slots: Object as SlotsType<FormSlots>,
   setup(props, { slots, attrs, expose, emit }) {
-    const context = useComponentConfig('form');
-    const contextSemantic = context as unknown as {
-      requiredMark?: FormProps['requiredMark'];
-      colon?: boolean;
-      labelAlign?: FormProps['labelAlign'];
-      labelWrap?: boolean;
-      scrollToFirstError?: FormProps['scrollToFirstError'];
-      tooltip?: FormProps['tooltip'];
-      className?: string;
-      style?: Record<string, string | number>;
-      classNames?: FormProps['classNames'];
-      styles?: FormProps['styles'];
-      direction?: 'ltr' | 'rtl';
-      getPrefixCls: (s?: string, c?: string) => string;
-    };
-    const contextDisabled = useDisabled(() => props.disabled);
-    // ⚠️ antd 的 Form 会 **重新提供 SizeContext**（`SizeContext.Provider value={mergedSize}`）：
-    //    Form 的 `size` 必须能传导到所有 input 族控件（-small / -large 类）。
-    //    只 provide DisabledContext 是不够的 —— form 的 L4 契约用例
-    //    `form:size-small/-large` 就是被这条抓出来的。
-    // 🚨 必须用**函数形态**（解析器）：`useSize(props.size)` 在 setup 期读一次
-    //    ⇒ 运行中改 `size` / `componentSize` 都传不到子控件（Issue #8.1）。
-    //    ⚠️ 写法要带 context 兜底 —— `useSize(() => props.size)` **不是**等价物：
-    //    它走的是「解析器」分支，返回值直接就是 `props.size`，
-    //    `ConfigProvider componentSize` 会被绕过（实测：根类名拿不到 `-small`）。
-    //    全仓既有范式（tabs / radio / card / input / pagination …）都是这一条。
-    const mergedSize = useSize((ctxSize) => props.size ?? ctxSize);
-    provide(sizeContextKey, mergedSize);
-
-    const mergedRequiredMark = (): FormProps['requiredMark'] => {
-      if (props.requiredMark !== undefined) return props.requiredMark;
-      if (contextSemantic.requiredMark !== undefined) return contextSemantic.requiredMark;
-      return true;
-    };
-    const mergedColon = (): boolean | undefined => props.colon ?? contextSemantic.colon;
-    const mergedLabelAlign = (): FormProps['labelAlign'] =>
-      props.labelAlign ?? contextSemantic.labelAlign;
-    const mergedLabelWrap = (): boolean | undefined => props.labelWrap ?? contextSemantic.labelWrap;
-    const mergedTooltip = (): FormProps['tooltip'] => ({
-      ...(contextSemantic.tooltip ?? {}),
-      ...(props.tooltip ?? {}),
-    });
-    const mergedScrollToFirstError = (): FormProps['scrollToFirstError'] =>
-      props.scrollToFirstError ?? contextSemantic.scrollToFirstError;
-
-    const prefixCls = () => contextSemantic.getPrefixCls('form', props.prefixCls);
-
-    // ── form 实例（转发外部受控 form）──
-    const [wrapForm] = useUiForm(props.form as FormInstance | undefined);
-
-    // itemRef 注册表（__INTERNAL__.itemRef 同构）
-    const itemRefMap = new Map<string, Ref<unknown>>();
-    const itemRef = (name: string | string[]): Ref<unknown> => {
-      const key = Array.isArray(name) ? name.join('_') : name;
-      if (!itemRefMap.has(key)) {
-        const holder = shallowRef(null);
-        itemRefMap.set(key, holder);
-      }
-      return itemRefMap.get(key) as Ref<unknown>;
-    };
-    // ⚠️ `__INTERNAL__` 非空是 useCoreForm 的构造保证（同 antd 壳的直接访问）
-    const internal = (wrapForm as unknown as { __INTERNAL__: Record<string, unknown> })
-      .__INTERNAL__;
-    internal.name = props.name;
-    internal.itemRef = itemRef;
-
-    const nativeElementRef = shallowRef<FormRef | null>(null);
-    expose({
-      ...wrapForm,
-      get nativeElement() {
-        return nativeElementRef.value?.nativeElement ?? null;
-      },
-    });
-
-    // ── onFinishFailed 包装（scrollToFirstError）──
-    const onInternalFinishFailed = (errorInfo: ValidateErrorEntity): void => {
-      // ⚠️ `finishFailed` 是**已声明的 emit**（`FormEmits`），所以监听器走 emit 通道 ——
-      //    写成 `props.onFinishFailed?.()` 会拿到 `undefined`（Vue 不把已声明的
-      //    事件监听器放进 props），用户的回调被静默丢弃。
-      emit('finishFailed', errorInfo);
-      const firstError = errorInfo.errorFields[0];
-      if (firstError) {
-        const fieldName = firstError.name;
-        const options = mergedScrollToFirstError();
-        if (options !== undefined) {
-          const defaultOpt = { block: 'nearest' as ScrollBehavior | 'nearest' };
-          const merged = typeof options === 'object' ? { ...defaultOpt, ...options } : defaultOpt;
-          wrapForm.scrollToField?.(fieldName as never, merged as never);
-        }
-      }
-    };
-
-    // ── FormContext（Proxy 桥：读时取最新合并值）──
-    const formContextValue: FormContextValue = new Proxy({} as FormContextValue, {
-      get(_t, key) {
-        const source: FormContextValue = {
-          name: props.name,
-          get labelAlign() {
-            return mergedLabelAlign();
-          },
-          labelCol: props.labelCol as never,
-          get labelWrap() {
-            return mergedLabelWrap();
-          },
-          wrapperCol: props.wrapperCol as never,
-          layout: props.layout ?? 'horizontal',
-          get colon() {
-            return mergedColon();
-          },
-          get requiredMark() {
-            return mergedRequiredMark();
-          },
-          itemRef: itemRef as never,
-          form: wrapForm as never,
-          feedbackIcons: props.feedbackIcons as never,
-          get tooltip() {
-            return mergedTooltip();
-          },
-          classNames: props.classNames as never,
-          styles: props.styles as never,
-          get scrollToFirstError() {
-            return mergedScrollToFirstError();
-          },
-        };
-        return (source as unknown as Record<string | symbol, unknown>)[key];
-      },
-    });
-    provide(formContextKey, formContextValue);
-    // VariantContext（Form 级 variant 覆盖）
+    const defaults = useComponentConfig<FormDefaults>('form');
+    const prefixCls = () => defaults.getPrefixCls('form', props.prefixCls);
+    const themeStyle = useFormTheme(prefixCls);
+    const disabled = useDisabled(() => props.disabled);
+    const size = useSize((contextSize) => props.size ?? contextSize);
+    provide(disabledContextKey, disabled);
+    provide(sizeContextKey, size);
+    const parentVariant = inject(variantContextKey, undefined);
     provide(
       variantContextKey,
-      computed(() => props.variant),
+      computed(() => props.variant ?? parentVariant?.value),
     );
-    // ⚠️ NoFormStyle(status=true)：Form 根上不吃 Item 的状态反馈（antd 逐字）
     provideNoFormStyle({ status: true });
 
-    /**
-     * 语义化合并（上游 `Form.js:78-97`）。
-     *
-     * 🚨 此前本组件**完全没有语义通道** —— 根类名 / 根样式都是裸读
-     * `props.classNames?.root` / `props.styles?.root` ⇒ 三件事同时坏掉（Issue #8.2）：
-     *  ① `ConfigProvider` 的 `components.form.classNames` / `styles` 被丢；
-     *  ② 调用方原生 `class` / `style` 被 `class:` / `style:` 覆盖 ⇒ **整条丢**；
-     *  ③ `classNames` / `styles` 的**函数形态**被当对象读（拿到函数对象本身）。
-     *
-     * 顺序逐字对齐上游：`[contextStyles, contextStyleRoot, styles, styleRoot]`
-     * —— 调用方 `style`（`styleRoot`）在**最后** ⇒ 胜出。
-     */
-    const semanticSource = computed(() => contextSemantic);
-    const semanticProps = computed<Record<string, unknown>>(() => ({
+    const requiredMark = () => props.requiredMark ?? defaults.requiredMark ?? true;
+    const colon = () => props.colon ?? defaults.colon;
+    const labelAlign = () => props.labelAlign ?? defaults.labelAlign;
+    const labelWrap = () => props.labelWrap ?? defaults.labelWrap;
+    const tooltip = () => ({ ...defaults.tooltip, ...props.tooltip });
+    const scrollToFirstError = () => props.scrollToFirstError ?? defaults.scrollToFirstError;
+
+    const { form, registerField } = useFormWithRegistry(props.form);
+    const element = shallowRef<FormRef | null>(null);
+    const exposed: FormRef = {
+      getFieldValue: form.getFieldValue,
+      getFieldsValue: form.getFieldsValue,
+      getFieldError: form.getFieldError,
+      getFieldWarning: form.getFieldWarning,
+      getFieldsError: form.getFieldsError,
+      isFieldsTouched: form.isFieldsTouched,
+      isFieldTouched: form.isFieldTouched,
+      isFieldValidating: form.isFieldValidating,
+      isFieldsValidating: form.isFieldsValidating,
+      resetFields: form.resetFields,
+      setFields: form.setFields,
+      setFieldValue: form.setFieldValue,
+      setFieldsValue: form.setFieldsValue,
+      validateFields: form.validateFields,
+      submit: form.submit,
+      scrollToField: form.scrollToField,
+      focusField: form.focusField,
+      getFieldInstance: form.getFieldInstance,
+      get nativeElement() {
+        return element.value?.nativeElement ?? null;
+      },
+    };
+    expose(exposed);
+
+    const semanticProps = computed<FormSemanticProps>(() => ({
       ...props,
-      size: mergedSize.value,
-      disabled: props.disabled,
       layout: props.layout,
-      colon: mergedColon(),
-      requiredMark: mergedRequiredMark(),
-      labelAlign: mergedLabelAlign(),
-      labelWrap: mergedLabelWrap(),
+      size: size.value,
+      disabled: disabled.value,
+      colon: colon(),
+      requiredMark: requiredMark(),
+      labelAlign: labelAlign(),
+      labelWrap: labelWrap(),
     }));
-    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic(
-      [() => semanticSource.value.classNames, () => props.classNames],
+    const { classNames, styles } = useMergeSemantic(
+      [() => defaults.classNames, () => props.classNames],
       [
-        () => semanticSource.value.styles,
-        () => semanticRootStyle(semanticSource.value.style),
+        () => defaults.styles,
+        () => semanticRootStyle(defaults.style),
         () => props.styles,
-        () => semanticRootStyle(attrs.style as CSSProperties),
+        () => semanticRootStyle(normalizeStyle(attrs.style)),
       ],
       () => semanticProps.value,
     );
+    const componentVariables = computed<Record<string, string | number>>(() => {
+      const variables: Record<string, string | number> = {};
+      for (const [name, value] of Object.entries(styles.value.root ?? {})) {
+        if (name.startsWith('--') && (typeof value === 'string' || typeof value === 'number'))
+          variables[name] = value;
+      }
+      return variables;
+    });
+    const feedbackIcon = shallowRef(slots.feedbackIcon);
+    const requiredMarkSlot = shallowRef(slots.requiredMark);
+    onBeforeUpdate(() => {
+      feedbackIcon.value = slots.feedbackIcon;
+      requiredMarkSlot.value = slots.requiredMark;
+    });
+    const context: FormContextValue = {
+      get name() {
+        return props.name;
+      },
+      get labelAlign() {
+        return labelAlign();
+      },
+      get labelWrap() {
+        return labelWrap();
+      },
+      get labelCol() {
+        return props.labelCol;
+      },
+      get wrapperCol() {
+        return props.wrapperCol;
+      },
+      get layout() {
+        return props.layout;
+      },
+      get colon() {
+        return colon();
+      },
+      get requiredMark() {
+        return requiredMark();
+      },
+      get tooltip() {
+        return tooltip();
+      },
+      get feedbackIcon() {
+        return feedbackIcon.value;
+      },
+      get requiredMarkSlot() {
+        return requiredMarkSlot.value;
+      },
+      get classNames() {
+        return classNames.value;
+      },
+      get styles() {
+        return styles.value;
+      },
+      get componentVariables() {
+        return componentVariables.value;
+      },
+      get scrollToFirstError() {
+        return scrollToFirstError();
+      },
+      itemRef: registerField,
+      form,
+    };
+    provide(formContextKey, context);
 
-    return () => {
-      const p = prefixCls();
-      const rm = mergedRequiredMark();
-      const formClassName = [
-        p,
-        `${p}-${props.layout}`,
-        rm === false ? `${p}-hide-required-mark` : '',
-        contextSemantic.direction === 'rtl' ? `${p}-rtl` : '',
-        // 🚨 判据是 **`mergedSize`**（上游 `Form.js:104-105` 逐字），不是裸 `props.size`：
-        //    组件级 `ConfigProvider componentSize` 也要产出 `-small` / `-large`。
-        mergedSize.value === 'large' ? `${p}-large` : '',
-        mergedSize.value === 'small' ? `${p}-small` : '',
-        // 调用方 `class` 与 context 的 `className`：位置对齐上游
-        // `clsx(…, contextClassName, className, rootClassName, mergedClassNames.root)`
-        contextSemantic.className,
-        attrs.class as string | undefined,
-        mergedClassNames.value.root,
-      ]
-        .filter(Boolean)
-        .join(' ');
+    const onFinishFailed = (error: ValidateErrorEntity): void => {
+      emit('finishFailed', error);
+      const first = error.errorFields[0];
+      const options = scrollToFirstError();
+      if (first && options) {
+        form.scrollToField?.(
+          first.name,
+          typeof options === 'object' ? { block: 'nearest', ...options } : { block: 'nearest' },
+        );
+      }
+    };
 
-      // 外层 provider（variant / disabled）先落，再进 core Form
-      const core = h(
+    return () =>
+      h(
         CoreForm,
         {
-          ...(attrs as Record<string, unknown>),
-          id: props.name,
+          ...attrs,
+          id: attrs.id ?? props.name,
           name: props.name,
+          fields: props.fields,
           initialValues: props.initialValues,
           validateMessages: props.validateMessages,
           validateTrigger: props.validateTrigger,
@@ -303,28 +261,29 @@ export default defineComponent({
           clearOnDestroy: props.clearOnDestroy,
           component: props.component,
           renderProps: props.renderProps,
-          form: wrapForm,
-          ref: nativeElementRef,
-          // 上游 `Form.js:181`：根样式就是**合并后**的 `mergedStyles.root`
-          // （含 context styles / 组件 styles / 调用方 `style`）。
-          style: mergedStyles.value.root,
-          class: formClassName,
-          onFinish: (values: unknown) => {
-            emit('finish', values);
-          },
-          onValuesChange: (changed: unknown, all: unknown) => {
-            emit('valuesChange', changed, all);
-          },
-          onFieldsChange: (changed: unknown, all: unknown) => {
-            emit('fieldsChange', changed, all);
-          },
-          onFinishFailed: onInternalFinishFailed,
+          form,
+          ref: element,
+          style: [themeStyle.value, styles.value.root],
+          class: [
+            prefixCls(),
+            `${prefixCls()}-${props.layout}`,
+            requiredMark() === false ? `${prefixCls()}-hide-required-mark` : '',
+            defaults.direction === 'rtl' ? `${prefixCls()}-rtl` : '',
+            size.value === 'large' ? `${prefixCls()}-large` : '',
+            size.value === 'small' ? `${prefixCls()}-small` : '',
+            defaults.className,
+            attrs.class,
+            classNames.value.root,
+          ],
+          onFinish: (values: Record<string, unknown>) => emit('finish', values),
+          onValuesChange: (changed: Record<string, unknown>, values: Record<string, unknown>) =>
+            emit('valuesChange', changed, values),
+          onFieldsChange: (changed: FieldData[], fields: FieldData[]) =>
+            emit('fieldsChange', changed, fields),
+          onFinishFailed,
         },
         { default: slots.default },
       );
-
-      return core;
-    };
   },
 });
 </script>

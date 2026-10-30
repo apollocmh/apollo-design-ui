@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // 对齐 antd 的 demo/warning-only.tsx：warningOnly 规则只提示、不阻断提交。
+import type { ValidateErrorEntity } from '@apollo-design/form-core';
 import { Alert, Button, Form, FormItem, Input, useForm } from '@apollo-design/ui';
 import { ref } from 'vue';
 
@@ -12,7 +13,7 @@ const onFinish = (values: unknown) => {
   feedback.value = `提交成功：${JSON.stringify(values)}`;
 };
 
-const onFinishFailed = (errorInfo: { errorFields: { name: unknown[]; errors: string[] }[] }) => {
+const onFinishFailed = (errorInfo: ValidateErrorEntity) => {
   failed.value = true;
   feedback.value = `提交被阻断：${errorInfo.errorFields
     .map((field) => field.errors.join('、'))

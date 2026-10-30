@@ -3,7 +3,7 @@
  *
  * ── 关键判据 ────────────────────────────────────────────────────────────────
  * 1. help 非空 ⇒ 只渲染 help 一条（状态 = helpStatus）；否则 errors + warnings 逐条；
- * 2. key 去重：重复 key 加 `-fallback-${index}`；
+ * 2. 按消息及其出现次数生成唯一 key，保留离场行的最后内容；
  * 3. 双层动效（都是 collapse 预设）：容器 `${p}-show-help`（CSSMotion）+
  *    逐条 `${p}-show-help-item`（CSSMotionList，`component:false` 不额外包元素）；
  * 4. DOM：`-item-explain`（id = `${fieldId}_help`）> `-item-explain-${status}`；
@@ -18,9 +18,16 @@
  *    否则 Vue 把它们当事件监听器、高度测量静默失效（upload / collapse 同范式）。
  */
 
-import { CSSMotion, initCollapseMotion, type MotionHooks, MotionList } from '@apollo-design/motion';
+import {
+  CSSMotion,
+  type CSSMotionSlotProps,
+  initCollapseMotion,
+  type MotionHooks,
+  MotionList,
+  type MotionListSlotProps,
+} from '@apollo-design/motion';
 import type { PropType, VNodeChild } from 'vue';
-import { computed, defineComponent, h, useAttrs } from 'vue';
+import { computed, defineComponent, h } from 'vue';
 import { useFormContext } from './context';
 import { useDebounce } from './hooks/use-debounce';
 import { useFormItemPrefixContext } from './hooks/use-form-item-prefix';
@@ -46,6 +53,7 @@ function toErrorEntity(
 
 const ErrorList = defineComponent({
   name: 'AFormItemErrorList',
+  inheritAttrs: false,
   props: {
     help: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     helpStatus: { type: String as PropType<string>, default: undefined },
@@ -55,17 +63,12 @@ const ErrorList = defineComponent({
     helpClassName: { type: String, default: undefined },
     helpItemClassName: { type: String, default: undefined },
     fieldId: { type: String, default: undefined },
-    onVisibleChanged: {
-      type: Function as PropType<(visible: boolean) => void>,
-      default: undefined,
-    },
   },
-  setup(props) {
+  emits: { visibleChanged: (_visible: boolean) => true },
+  setup(props, { attrs, emit }) {
     const prefixContext = useFormItemPrefixContext();
     const prefixCls = computed(() => prefixContext.prefixCls);
     const formContext = useFormContext();
-    /** 调用方原生 class（见下方 render：CSSMotion 不接力 fallthrough）。 */
-    const attrs = useAttrs();
     const baseClassName = computed(() => `${prefixCls.value}-item-explain`);
 
     // antd useDebounce：延迟若干帧再更新（对拍 rc `useDebounce.js`；
@@ -76,7 +79,7 @@ const ErrorList = defineComponent({
     const hasHelp = computed(() => props.help !== undefined && props.help !== null);
     const fullKeyList = computed<ErrorEntity[]>(() => {
       if (hasHelp.value) {
-        return [toErrorEntity(props.help as VNodeChild, 'help', props.helpStatus ?? '')];
+        return [toErrorEntity(props.help, 'help', props.helpStatus ?? '')];
       }
       return [
         ...(debounceErrors.value ?? []).map((error: VNodeChild, index: number) =>
@@ -89,14 +92,12 @@ const ErrorList = defineComponent({
     });
 
     const filledKeyList = computed<ErrorEntity[]>(() => {
-      const keysCount: Record<string, number> = {};
-      fullKeyList.value.forEach(({ key }) => {
-        keysCount[key] = (keysCount[key] ?? 0) + 1;
+      const occurrences = new Map<string, number>();
+      return fullKeyList.value.map((entity) => {
+        const occurrence = occurrences.get(entity.key) ?? 0;
+        occurrences.set(entity.key, occurrence + 1);
+        return { ...entity, key: JSON.stringify([entity.key, occurrence]) };
       });
-      return fullKeyList.value.map((entity, index) => ({
-        ...entity,
-        key: (keysCount[entity.key] ?? 0) > 1 ? `${entity.key}-fallback-${index}` : entity.key,
-      }));
     });
 
     const visible = computed(() => filledKeyList.value.length > 0);
@@ -120,41 +121,28 @@ const ErrorList = defineComponent({
     });
 
     return () => {
-      const helpProps: Record<string, unknown> = {};
-      if (props.fieldId) {
-        helpProps.id = `${props.fieldId}_help`;
-      }
-
       return h(
         CSSMotion,
         {
           motionName: `${prefixCls.value}-show-help`,
           motionDeadline: collapseMotion.value.motionDeadline,
           visible: visible.value,
-          onVisibleChanged: (nextVisible: boolean) => {
-            props.onVisibleChanged?.(nextVisible);
-          },
+          onVisibleChanged: (nextVisible: boolean) => emit('visibleChanged', nextVisible),
         },
         {
-          default: (holderProps: { className?: string; style?: Record<string, string | number> }) =>
+          default: (holderProps: CSSMotionSlotProps) =>
             h(
               'div',
               {
-                ...helpProps,
+                ...attrs,
+                id: attrs.id ?? (props.fieldId ? `${props.fieldId}_help` : undefined),
                 class: [
                   baseClassName.value,
                   holderProps.className,
                   props.helpClassName ?? formContext.classNames?.help,
-                  // 🚨 **调用方原生 class 必须在这里显式加**：本组件的根 vnode 是
-                  //    `CSSMotion`（不是这个 div），Vue 的 class fallthrough 落在
-                  //    CSSMotion 上而它不往 slot 里传 ⇒ 静默丢失（dom-probe
-                  //    form/status 抓出：少了 `-explain-connected`）。
-                  //    这里不会重复 —— CSSMotion 那条通路已被证明不生效。
                   attrs.class,
-                ]
-                  .filter(Boolean)
-                  .join(' '),
-                style: { ...formContext.styles?.help, ...holderProps.style },
+                ],
+                style: [formContext.styles?.help, holderProps.style, attrs.style],
               },
               [
                 h(
@@ -167,30 +155,22 @@ const ErrorList = defineComponent({
                     hooks: collapseHooks.value,
                   },
                   {
-                    default: (itemProps: {
-                      itemKey?: unknown;
-                      className?: string;
-                      style?: Record<string, string | number>;
-                    }) => {
-                      const entity = filledKeyList.value.find(
-                        (item) => item.key === itemProps.itemKey,
-                      );
-                      if (!entity) return null;
+                    default: (itemProps: MotionListSlotProps<ErrorEntity>) => {
                       return h(
                         'div',
                         {
                           class: [
                             itemProps.className,
                             props.helpItemClassName ?? formContext.classNames?.helpItem,
-                            entity.errorStatus
-                              ? `${baseClassName.value}-${entity.errorStatus}`
+                            itemProps.errorStatus
+                              ? `${baseClassName.value}-${itemProps.errorStatus}`
                               : undefined,
                           ]
                             .filter(Boolean)
                             .join(' '),
-                          style: { ...formContext.styles?.helpItem, ...itemProps.style },
+                          style: [formContext.styles?.helpItem, itemProps.style],
                         },
-                        [entity.error],
+                        [itemProps.error],
                       );
                     },
                   },

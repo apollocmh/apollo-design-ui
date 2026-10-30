@@ -10,7 +10,7 @@
  *    aria-describedby/invalid/required）+ trigger/validateTrigger 事件合成
  *    （control 的先调、用户的后调，两者都保留）；
  * 2. isRequired：prop.required ?? rules.some(r => r.required && !warningOnly)；
- * 3. noStyle：错误上抛（NoStyleItemContext）+ 子 Field meta 聚合（NAME_SPLIT key）；
+ * 3. noStyle：错误上抛（NoStyleItemContext）+ 按真实路径聚合子 Field meta；
  * 4. meta 聚合：自身 meta.errors + 子 noStyle Field errors → ItemHolder；
  * 5. props 里所有 Boolean 形态的字段必须显式 `default: undefined`（Boolean 转换坑，
  *    骨架注释逐字保留）。
@@ -20,27 +20,28 @@
  */
 
 import {
-  type Meta as CoreMeta,
   Field,
   type FieldSlots,
-  type FormInstance,
   fieldProps,
   type InternalNamePath,
   listContextKey,
   type MetaEvent,
 } from '@apollo-design/form-core';
 import {
+  Comment,
   type ComponentPublicInstance,
   cloneVNode,
   computed,
   defineComponent,
+  Fragment,
   h,
   inject,
+  isVNode,
   mergeProps,
   onBeforeUnmount,
   type PropType,
-  reactive,
   type SlotsType,
+  shallowReactive,
   shallowRef,
   type VNode,
   type VNodeChild,
@@ -50,11 +51,22 @@ import { formContextKey, type NoStyleItemNotify, noStyleItemContextKey } from '.
 import ItemHolder from './FormItem/ItemHolder';
 import StatusProvider from './FormItem/StatusProvider';
 import type { FormItemProps, FormItemSlots } from './interface';
+import { useFormTheme } from './use-form-theme';
 import { getFieldId, toArray } from './util';
 
-const NAME_SPLIT = '__SPLIT__';
+function controlChildren(children: VNodeChild): VNodeChild[] {
+  if (Array.isArray(children)) return children.flatMap(controlChildren);
+  if (isVNode(children) && children.type === Fragment && Array.isArray(children.children)) {
+    return children.children.flatMap(controlChildren);
+  }
+  return children == null ||
+    typeof children === 'boolean' ||
+    (isVNode(children) && children.type === Comment)
+    ? []
+    : [children];
+}
 
-function genEmptyMeta(): CoreMeta & { destroy?: boolean } {
+function genEmptyMeta(): MetaEvent {
   return {
     errors: [],
     warnings: [],
@@ -69,10 +81,7 @@ function genEmptyMeta(): CoreMeta & { destroy?: boolean } {
 const uiProps = {
   prefixCls: { type: String, default: undefined },
   noStyle: { type: Boolean, default: undefined },
-  hasFeedback: {
-    type: [Boolean, Object] as PropType<boolean | { icons: unknown }>,
-    default: undefined,
-  },
+  hasFeedback: { type: Boolean, default: undefined },
   validateStatus: { type: String as PropType<FormItemProps['validateStatus']>, default: undefined },
   required: { type: Boolean, default: undefined },
   hidden: { type: Boolean, default: undefined },
@@ -86,13 +95,13 @@ const uiProps = {
   tooltip: { type: null as unknown as PropType<FormItemProps['tooltip']>, default: undefined },
   wrapperCol: { type: Object as PropType<FormItemProps['wrapperCol']>, default: undefined },
   extra: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-  status: { type: String as PropType<FormItemProps['status']>, default: undefined },
   help: { type: null as unknown as PropType<VNodeChild>, default: undefined },
   id: { type: String, default: undefined },
 };
 
 export default defineComponent({
   name: 'AFormItem',
+  inheritAttrs: false,
   props: {
     ...fieldProps,
     ...uiProps,
@@ -102,7 +111,7 @@ export default defineComponent({
     reset: () => true,
     metaChange: (_meta: MetaEvent) => true,
   },
-  setup(props, { slots, emit }) {
+  setup(props, { slots, attrs, emit }) {
     const { getPrefixCls } = useComponentConfig('form');
     const formContext = inject(formContextKey, undefined);
     const notifyParentMetaChange = inject<NoStyleItemNotify | null>(noStyleItemContextKey, null);
@@ -114,15 +123,16 @@ export default defineComponent({
     });
 
     const prefixCls = computed(() => getPrefixCls('form', props.prefixCls));
+    const themeStyle = useFormTheme(() => prefixCls.value);
     const hasName = computed(() => props.name !== undefined && props.name !== null);
     const isRenderProps = computed(() => typeof props.shouldUpdate !== 'undefined');
 
     // ── 子 Field 错误聚合（noStyle 链）──
-    const subFieldErrors = reactive<Record<string, CoreMeta & { destroy?: boolean }>>({});
-    const meta = shallowRef<CoreMeta & { destroy?: boolean }>(genEmptyMeta());
+    const subFieldErrors = shallowReactive(new Map<string, MetaEvent>());
+    const meta = shallowRef<MetaEvent>(genEmptyMeta());
     const fieldKeyPathRef = shallowRef<InternalNamePath | null>(null);
 
-    const onMetaChange = (nextMeta: CoreMeta & { destroy?: boolean }): void => {
+    const onMetaChange = (nextMeta: MetaEvent): void => {
       const keyInfo = listContext?.getKey(nextMeta.name);
       meta.value = nextMeta.destroy ? genEmptyMeta() : nextMeta;
       emit('metaChange', nextMeta);
@@ -143,49 +153,43 @@ export default defineComponent({
       }
     };
 
-    /** noStyle 子 Field 的 meta 上抛聚合（antd onSubItemMetaChange 逐字）。 */
-    const onSubItemMetaChange = (
-      subMeta: CoreMeta & { destroy?: boolean },
-      uniqueKeys: unknown,
-    ): void => {
-      const mergedNamePath = [
-        ...(subMeta.name.slice(0, -1) as (string | number)[]),
-        ...(Array.isArray(uniqueKeys) ? uniqueKeys : [uniqueKeys]),
-      ] as (string | number)[];
-      const mergedNameKey = mergedNamePath.join(NAME_SPLIT);
+    const onSubItemMetaChange: NoStyleItemNotify = (subMeta, uniqueKeys): void => {
+      const mergedNameKey = JSON.stringify(uniqueKeys);
       if (subMeta.destroy) {
-        delete subFieldErrors[mergedNameKey];
+        subFieldErrors.delete(mergedNameKey);
       } else {
-        subFieldErrors[mergedNameKey] = subMeta;
+        subFieldErrors.set(mergedNameKey, subMeta);
       }
     };
 
     const mergedErrors = computed<VNodeChild[]>(() => {
       const errorList: VNodeChild[] = [...(meta.value.errors ?? [])];
-      Object.values(subFieldErrors).forEach((subFieldError) => {
-        errorList.push(...((subFieldError.errors ?? []) as VNodeChild[]));
+      subFieldErrors.forEach((subFieldError) => {
+        errorList.push(...subFieldError.errors);
       });
       return errorList;
     });
     const mergedWarnings = computed<VNodeChild[]>(() => {
       const warningList: VNodeChild[] = [...(meta.value.warnings ?? [])];
-      Object.values(subFieldErrors).forEach((subFieldError) => {
-        warningList.push(...((subFieldError.warnings ?? []) as VNodeChild[]));
+      subFieldErrors.forEach((subFieldError) => {
+        warningList.push(...subFieldError.warnings);
       });
       return warningList;
     });
 
-    // ── ref 收集（useItemRef：form.scrollToField / focus 用）──
-    const itemRefMap = new Map<string, ComponentPublicInstance | HTMLElement | null>();
-    const getItemRef = (name: (string | number)[]): ((el: unknown) => void) | undefined => {
-      const key = (getFieldId(name) ?? name.join('_')) as string;
-      if (!itemRefMap.has(key)) {
-        itemRefMap.set(key, null);
+    let controlRefKey: string | undefined;
+    let controlRef: ((node: Element | ComponentPublicInstance | null) => void) | undefined;
+    const getItemRef = (name: InternalNamePath) => {
+      const key = JSON.stringify(name);
+      if (controlRefKey !== key) {
+        controlRefKey = key;
+        let cancel: (() => void) | undefined;
+        controlRef = (node) => {
+          cancel?.();
+          cancel = node ? formContext?.itemRef(name, node) : undefined;
+        };
       }
-      return (el: unknown) => {
-        const element = (el as ComponentPublicInstance | null)?.$el ?? (el as HTMLElement | null);
-        itemRefMap.set(key, element);
-      };
+      return controlRef;
     };
 
     return () => {
@@ -194,52 +198,60 @@ export default defineComponent({
         fieldId: string | undefined,
         isRequired: boolean,
       ): VNodeChild {
+        const help = slots.help ? slots.help() : props.help;
+        const extra = slots.extra ? slots.extra() : props.extra;
         if (props.noStyle && !props.hidden) {
           return h(
             StatusProvider,
             {
               prefixCls: prefixCls.value,
-              hasFeedback: props.hasFeedback as never,
-              validateStatus: props.validateStatus as never,
+              hasFeedback: props.hasFeedback,
+              validateStatus: props.validateStatus,
               meta: meta.value,
               errors: mergedErrors.value,
               warnings: mergedWarnings.value,
               noStyle: true,
             },
-            { default: () => [baseChildren] },
+            {
+              default: () => [baseChildren],
+              ...(slots.feedbackIcon ? { feedbackIcon: slots.feedbackIcon } : {}),
+            },
           );
         }
         return h(
-          ItemHolder as never,
+          ItemHolder,
           {
+            ...attrs,
+            style: [themeStyle.value, formContext?.componentVariables, attrs.style],
             prefixCls: prefixCls.value,
-            // ⚠️ 原生 class/style **不在这里转发** —— FormItem 没关 inheritAttrs，
-            //    Vue 会自动把它们落到 ItemHolder 的根（位置与原先一致）。
-            help: props.help,
+            help,
             errors: mergedErrors.value,
             warnings: mergedWarnings.value,
-            validateStatus: props.validateStatus as never,
+            validateStatus: props.validateStatus,
             meta: meta.value,
-            hasFeedback: props.hasFeedback as never,
+            hasFeedback: props.hasFeedback,
             hidden: props.hidden,
             fieldId,
             required: props.required,
             isRequired,
-            onSubItemMetaChange: onSubItemMetaChange as never,
-            layout: props.layout as never,
+            onSubItemMetaChange,
+            layout: props.layout,
             htmlFor: props.htmlFor,
             label: props.label,
             labelAlign: props.labelAlign,
-            labelCol: props.labelCol as never,
-            wrapperCol: props.wrapperCol as never,
+            labelCol: props.labelCol,
+            wrapperCol: props.wrapperCol,
             colon: props.colon,
             tooltip: props.tooltip,
-            extra: props.extra,
-            requiredMark: formContext?.requiredMark as never,
-            name: props.name as never,
+            extra,
+            requiredMark: formContext?.requiredMark,
+            name: props.name,
           },
           {
-            default: () => [baseChildren, slots.help?.(), slots.extra?.()],
+            default: () => [baseChildren],
+            ...(slots.label ? { label: slots.label } : {}),
+            ...(slots.tooltip ? { tooltip: slots.tooltip } : {}),
+            ...(slots.feedbackIcon ? { feedbackIcon: slots.feedbackIcon } : {}),
           },
         );
       }
@@ -267,7 +279,7 @@ export default defineComponent({
       return h(
         Field,
         {
-          ...(props as Record<string, unknown>),
+          ...props,
           messageVariables: variables,
           trigger: props.trigger,
           validateTrigger: props.validateTrigger,
@@ -280,38 +292,32 @@ export default defineComponent({
             meta: renderMeta,
             form: context,
           }: Parameters<NonNullable<FieldSlots['default']>>[0]) => {
-            const mergedName =
-              toArray(props.name as never).length && renderMeta ? renderMeta.name : [];
-            const fieldId = getFieldId(mergedName, formContext?.name) ?? props.id;
+            const mergedName = hasName.value ? renderMeta.name : [];
+            let fieldId = props.id ?? getFieldId(mergedName, formContext?.name);
             const isRequired =
               props.required !== undefined
                 ? props.required
                 : (props.rules ?? []).some((rule) => {
                     if (typeof rule === 'object' && rule !== null && 'required' in rule) {
-                      const r = rule as { required?: boolean; warningOnly?: boolean };
-                      return !!r.required && !r.warningOnly;
+                      return !!rule.required && !rule.warningOnly;
                     }
                     if (typeof rule === 'function') {
-                      const ruleEntity = (
-                        rule as (f: FormInstance) => { required?: boolean; warningOnly?: boolean }
-                      )(context);
-                      return ruleEntity?.required && !ruleEntity?.warningOnly;
+                      const ruleEntity = rule(context);
+                      return Boolean(ruleEntity.required && !ruleEntity.warningOnly);
                     }
                     return false;
                   });
 
             // ── Children ──
             const childNodes = slots.default?.({ control, meta: renderMeta, form: context }) ?? [];
-            const list = Array.isArray(childNodes) ? childNodes : [childNodes];
-            const single = list.filter(
-              (n): n is VNode => !!n && typeof n === 'object' && 'type' in (n as object),
-            );
+            const list = controlChildren(childNodes);
+            const child = list.length === 1 && isVNode(list[0]) ? list[0] : undefined;
             let childNode: VNodeChild;
             if (list.length > 1 && hasName.value) {
               // 多子节点带 name：antd 告警后原样渲染
               childNode = childNodes;
-            } else if (single.length === 1 && hasName.value && !isRenderProps.value) {
-              const child = single[0] as VNode;
+            } else if (child && hasName.value && child.type !== Comment) {
+              if (typeof child.props?.id === 'string') fieldId = child.props.id;
               const childProps: Record<string, unknown> = {
                 ...(child.props ?? {}),
                 ...control,
@@ -319,15 +325,29 @@ export default defineComponent({
               if (!childProps.id && fieldId) {
                 childProps.id = fieldId;
               }
-              const describedbyArr: string[] = [];
-              if (props.help || mergedErrors.value.length > 0) {
+              const describedby = childProps['aria-describedby'];
+              const describedbyArr =
+                typeof describedby === 'string' ? describedby.split(/\s+/).filter(Boolean) : [];
+              if (
+                fieldId &&
+                (slots.help ||
+                  (props.help !== undefined && props.help !== null) ||
+                  mergedErrors.value.length > 0 ||
+                  mergedWarnings.value.length > 0)
+              ) {
                 describedbyArr.push(`${fieldId}_help`);
               }
-              if (props.extra) {
+              if (
+                fieldId &&
+                (slots.extra ||
+                  (props.extra !== undefined &&
+                    props.extra !== null &&
+                    typeof props.extra !== 'boolean'))
+              ) {
                 describedbyArr.push(`${fieldId}_extra`);
               }
               if (describedbyArr.length) {
-                childProps['aria-describedby'] = describedbyArr.join(' ');
+                childProps['aria-describedby'] = [...new Set(describedbyArr)].join(' ');
               }
               if (mergedErrors.value.length > 0) {
                 childProps['aria-invalid'] = 'true';
@@ -336,7 +356,6 @@ export default defineComponent({
                 childProps['aria-required'] = 'true';
               }
               // ref 收集（scrollToField / focus）
-              childProps.ref = getItemRef(mergedName as string[]);
 
               // 事件合成：trigger + validateTrigger 的 handler（control 先、用户后）。
               // antd 在 React 事件名上合成；Vue 侧 control 的键即触发名（onChange），
@@ -346,7 +365,7 @@ export default defineComponent({
               const valuePropName = props.valuePropName ?? 'value';
               const triggers = new Set<string>([
                 ...toArray(props.trigger ?? 'onChange'),
-                ...toArray(props.validateTrigger as never),
+                ...toArray(props.validateTrigger),
               ]);
               /**
                * 合成一个事件处理器：**control 先、用户原回调后**，各调**一次**
@@ -355,7 +374,7 @@ export default defineComponent({
                * ⚠️ 用户原回调必须从**原 child 的 props** 上取 —— 它在 `childProps`
                * 里已经被这一行覆盖掉了。
                */
-              const originalProps = (child.props ?? {}) as Record<string, unknown>;
+              const originalProps = child.props ?? {};
               const makeHandler = (
                 eventName: string,
                 userKey: string,
@@ -404,7 +423,7 @@ export default defineComponent({
               // Preserve Vue's normalized ref owner, directives, key and scope IDs.
               // An empty extra-props object requests FULL_PROPS for dynamic field attrs;
               // assigning the final props avoids merging composed listeners a second time.
-              childNode = cloneVNode(child, {});
+              childNode = cloneVNode(child, { ref: getItemRef(mergedName) }, true);
               childNode.props = childProps;
             } else {
               childNode = childNodes;

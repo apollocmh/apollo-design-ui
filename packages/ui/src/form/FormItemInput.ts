@@ -12,15 +12,16 @@
  * 6. 向下透传 FormContext 时**剥离 col 配置**（嵌套 Item 不继承列宽）。
  */
 
+import { useResizeObserver } from '@apollo-design/utils';
 import type { PropType, VNodeChild } from 'vue';
-import { computed, defineComponent, h, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, defineComponent, h, onMounted, ref, watch } from 'vue';
 import { Col } from '../grid';
 import { provideFormContextShallow, useFormContext } from './context';
 import ErrorList from './ErrorList';
 import type { ColProps, ValidateStatus } from './interface';
 
 // responsive 断点（antd responsiveArrayReversed：逐档自大向小；undefined = 基础档）
-const RESPONSIVE_SIZES = ['xxl', 'xl', 'lg', 'md', 'sm', undefined] as const;
+const RESPONSIVE_SIZES = ['xxxl', 'xxl', 'xl', 'lg', 'md', 'sm', 'xs', undefined] as const;
 const GRID_MAX = 24;
 
 const FormItemInput = defineComponent({
@@ -35,39 +36,28 @@ const FormItemInput = defineComponent({
     extra: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     help: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     fieldId: { type: String, default: undefined },
-    marginBottom: { type: Number, default: null },
+    marginBottom: { type: Number as PropType<number | null>, default: null },
     label: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     /** ErrorList 的显隐回调（antd ItemHolder → FormItemInput → ErrorList 逐字透传）。 */
-    onVisibleChanged: {
-      type: Function as PropType<(visible: boolean) => void>,
-      default: undefined,
-    },
   },
-  setup(props, { slots }) {
+  emits: { visibleChanged: (_visible: boolean) => true },
+  setup(props, { slots, emit }) {
     const formContext = useFormContext();
 
-    const mergedWrapperCol = computed<Record<string, unknown>>(() => {
-      let mergedWrapper: Record<string, unknown> = {
-        ...((props.wrapperCol ?? formContext.wrapperCol ?? {}) as Record<string, unknown>),
-      };
+    const mergedWrapperCol = computed<ColProps>(() => {
+      const mergedWrapper: ColProps = { ...(props.wrapperCol ?? formContext.wrapperCol) };
       if (props.label === null && !props.labelCol && !props.wrapperCol && formContext.labelCol) {
         const list = [...RESPONSIVE_SIZES];
         list.forEach((size) => {
-          const formLabel = size
-            ? (formContext.labelCol as Record<string, unknown>)?.[size]
-            : formContext.labelCol;
-          const formLabelObj = (formLabel ?? {}) as Record<string, unknown>;
+          const formLabel = size ? formContext.labelCol?.[size] : formContext.labelCol;
+          const span = typeof formLabel === 'number' ? formLabel : formLabel?.span;
           const wrapper = size ? mergedWrapper[size] : mergedWrapper;
-          const wrapperObj = (wrapper ?? {}) as Record<string, unknown>;
-          if (
-            'span' in formLabelObj &&
-            !('offset' in wrapperObj) &&
-            Number(formLabelObj.span) < GRID_MAX
-          ) {
+          const wrapperObj = typeof wrapper === 'number' ? { span: wrapper } : (wrapper ?? {});
+          if (span !== undefined && wrapperObj.offset === undefined && span < GRID_MAX) {
             if (size) {
-              mergedWrapper[size] = { ...wrapperObj, offset: formLabelObj.span };
+              mergedWrapper[size] = { ...wrapperObj, offset: span };
             } else {
-              mergedWrapper = { ...mergedWrapper, offset: formLabelObj.span };
+              mergedWrapper.offset = span;
             }
           }
         });
@@ -79,7 +69,7 @@ const FormItemInput = defineComponent({
     const extraRef = ref<HTMLElement | null>(null);
     const extraHeight = ref(0);
     const measureExtra = (): void => {
-      extraHeight.value = props.extra && extraRef.value ? extraRef.value.clientHeight : 0;
+      extraHeight.value = extraRef.value?.clientHeight ?? 0;
     };
     onMounted(measureExtra);
     watch(
@@ -89,7 +79,7 @@ const FormItemInput = defineComponent({
       },
       { flush: 'post' },
     );
-    onBeforeUnmount(() => {});
+    useResizeObserver({ target: extraRef, onResize: measureExtra });
 
     // ⚠️ provide 必须在 setup 同步阶段；剥离 col 配置（antd 逐字解构丢弃），
     //    值用 Proxy 桥（读时取最新 formContext —— cascader 同范式）。
@@ -97,12 +87,7 @@ const FormItemInput = defineComponent({
 
     return () => {
       const baseClassName = `${props.prefixCls}-item`;
-      const className = [
-        `${baseClassName}-control`,
-        (mergedWrapperCol.value as { className?: string }).className ?? '',
-      ]
-        .filter(Boolean)
-        .join(' ');
+      const className = [`${baseClassName}-control`, mergedWrapperCol.value.class];
 
       const inputDom = h(
         'div',
@@ -130,24 +115,25 @@ const FormItemInput = defineComponent({
             helpStatus: props.status,
             // ErrorList 已迁移到「根 class 走原生 attrs」⇒ 用 `class`
             class: `${baseClassName}-explain-connected`,
-            onVisibleChanged: props.onVisibleChanged,
+            onVisibleChanged: (visible: boolean) => emit('visibleChanged', visible),
           })
         : null;
 
-      const extraDom = props.extra
-        ? h(
-            'div',
-            {
-              ...(props.fieldId ? { id: `${props.fieldId}_extra` } : {}),
-              class: [`${baseClassName}-extra`, formContext.classNames?.extra]
-                .filter(Boolean)
-                .join(' '),
-              style: formContext.styles?.extra,
-              ref: extraRef,
-            },
-            [props.extra],
-          )
-        : null;
+      const extraDom =
+        props.extra !== undefined && props.extra !== null && typeof props.extra !== 'boolean'
+          ? h(
+              'div',
+              {
+                ...(props.fieldId ? { id: `${props.fieldId}_extra` } : {}),
+                class: [`${baseClassName}-extra`, formContext.classNames?.extra]
+                  .filter(Boolean)
+                  .join(' '),
+                style: formContext.styles?.extra,
+                ref: extraRef,
+              },
+              [props.extra],
+            )
+          : null;
 
       const additionalDom =
         errorListDom || extraDom
@@ -164,9 +150,13 @@ const FormItemInput = defineComponent({
           : null;
 
       // Col 已迁移到「根 class 走原生 attrs」⇒ 用 `class`
-      return h(Col, { ...(mergedWrapperCol.value as object), class: className } as never, {
-        default: () => [inputDom, additionalDom],
-      });
+      return h(
+        Col,
+        { ...mergedWrapperCol.value, class: className },
+        {
+          default: () => [inputDom, additionalDom],
+        },
+      );
     };
   },
 });

@@ -1,55 +1,30 @@
-/**
- * `Form` / `Form.Item` / `Form.List` 的类型契约（**骨架阶段**）。
- *
- * 契约来源：antd 6.6.4 的 `es/form/Form.d.ts` / `es/form/FormItem/index.d.ts` /
- * `es/form/FormList.d.ts` / `es/form/FormItemLabel.d.ts` / `es/form/FormItemInput.d.ts`
- * / `es/form/context.d.ts` / `es/form/interface.d.ts`。
- *
- * ⚠️⚠️ **本目录是骨架，不是实现**（`registry/foundation.json` 的 `doneWhen`：
- * 「批次③ 开工前先有 ui/src/form 骨架（否则 API 形状无从校验）」）。
- *
- * 骨架的唯一职责：把 antd 的 API 面**逐条落成 Vue 的类型与 slot 声明**，
- * 再让它去消费 `@apollo-design/form-core` 的批次③ 类型面 —— 能通过 `vue-tsc`
- * 就证明「form-core 的 API 形状可以被真实消费」。
- *
- * ❌ 骨架**不含**：布局/校验状态/错误展示/Token/CSS/demo/文档/测试。
- * ⚠️ 因此 `registry/components.json` 里 `form` 的**任何维度都不得置 `done`**。
- *
- * ── 占位类型（依赖尚未实现的包，落地时替换）──────────────────────────────────
- *
- * 下面标了 `TODO(dep)` 的类型来自**尚未实现**的包。这里给出**结构占位**，
- * 只为让骨架自洽；落地时必须换成真源，否则就是一个「看起来对」的谎。
- *
- * | 占位 | 真源（落地时替换） |
- * |---|---|
- * | `ColProps` | `grid` 组件的 `ColProps`（antd `es/grid/col`） |
- * | `SizeType` | `config-provider` 的 `SizeType`（antd `es/config-provider/SizeContext`） |
- * | `Variant` | `config-provider` 的 `Variant`（antd `es/config-provider`） |
- * | `FormTooltipProps` | `tooltip` 组件的 `TooltipProps`（antd `es/tooltip`） |
- * | `FormSemanticClassNames` / `FormSemanticStyles` | 本组件的 `style/`（G3/G4） |
- */
+/** Vue Form public props, named slots, events and semantic targets. */
 
 import type {
+  FieldData,
   FieldProps,
   FormInstance,
   Meta,
   FormProps as RcFormProps,
   ListProps as RcListProps,
   StoreValue,
+  ValidateErrorEntity,
 } from '@apollo-design/form-core';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { Component, CSSProperties, HTMLAttributes, VNodeChild } from 'vue';
+import type { SemanticInput } from '../_internal/use-merge-semantic';
 import type { SizeType, Variant } from '../config-provider';
-import type { ColProps } from '../grid';
+import type { ColProps as GridColProps } from '../grid';
 import type { TooltipProps } from '../tooltip';
 
 // ---------------------------------------------------------------------------
-// 真源类型（G4 收口时替换掉骨架期的占位：grid / config-provider / tooltip 均已落地）
+// Shared component contracts
 // ---------------------------------------------------------------------------
 
-export type { ColProps, SizeType, Variant };
+export type ColProps = GridColProps & HTMLAttributes;
+export type { SizeType, Variant };
 
-/** antd 逐字：`TooltipProps & { icon?: ReactElement }`。 */
+/** Tooltip configuration with an optional indicator node. */
 export type FormTooltipProps = TooltipProps & { icon?: VNodeChild };
 
 export type FormItemTooltipType = FormTooltipProps | VNodeChild;
@@ -68,20 +43,21 @@ export type FormLayout = 'horizontal' | 'inline' | 'vertical';
 export type FormItemLayout = 'horizontal' | 'vertical';
 export type FormLabelAlign = 'left' | 'right';
 
-/** ⭐ `'optional'` 与函数形态都是合法取值（不是「布尔 + 特例」）。 */
-export type RequiredMark =
-  | boolean
-  | 'optional'
-  | ((labelNode: VNodeChild, info: { required: boolean }) => VNodeChild);
+/** Custom mark content belongs to the requiredMark slot. */
+export type RequiredMark = boolean | 'optional';
 
-/** 反馈图标：按状态给出图标。 */
-export type FeedbackIcons = (itemStatus: {
+export interface FormFeedbackIconSlotProps {
   status: ValidateStatus;
-  errors?: VNodeChild[];
-  warnings?: VNodeChild[];
-}) => { [key in ValidateStatus]?: VNodeChild };
+  errors: VNodeChild[];
+  warnings: VNodeChild[];
+}
 
-/** TODO(dep): 由 G3/G4 的语义化 `classNames`/`styles` 生成。 */
+export interface FormRequiredMarkSlotProps {
+  label: Component;
+  required: boolean;
+}
+
+/** Semantic classes applied to their actual Form hosts. */
 export interface FormSemanticClassNames {
   root?: string;
   label?: string;
@@ -91,7 +67,7 @@ export interface FormSemanticClassNames {
   extra?: string;
 }
 
-/** TODO(dep): 由 G3/G4 的语义化 `classNames`/`styles` 生成。 */
+/** Semantic styles applied to their actual Form hosts. */
 export interface FormSemanticStyles {
   root?: CSSProperties;
   label?: CSSProperties;
@@ -101,14 +77,23 @@ export interface FormSemanticStyles {
   extra?: CSSProperties;
 }
 
+export interface FormSemanticProps {
+  name?: string;
+  layout: FormLayout;
+  size?: SizeType;
+  disabled: boolean;
+  variant?: Variant;
+  colon?: boolean;
+  requiredMark?: RequiredMark;
+  labelAlign?: FormLabelAlign;
+  labelWrap?: boolean;
+}
+
 /**
  * `Form` 的 props。
  *
- * ⚠️ **Omit 掉四个 `onXxx` 回调**（`onValuesChange` / `onFieldsChange` / `onFinish` /
- * `onFinishFailed`）—— 按规则 C5 它们在 Vue 侧是 **emits**，不是 props。
- * 不 Omit 会与 `defineEmits` 生成的 `onXxx` 监听 prop **撞键**：
- * Vue 会把 `onValuesChange` 从 `$attrs` 里摘走当事件监听，于是「props 里有个同名键」
- * 就成了一个永远拿不到值的假 prop。
+ * Inherited onXxx types describe JSX listeners; runtime notifications are owned emits.
+ * Native root class/style are Vue attrs.
  */
 export interface FormProps<Values = unknown>
   extends Omit<RcFormProps<Values>, 'className' | 'style' | 'rootClassName'> {
@@ -119,32 +104,22 @@ export interface FormProps<Values = unknown>
   labelWrap?: boolean;
   labelCol?: ColProps;
   wrapperCol?: ColProps;
-  feedbackIcons?: FeedbackIcons;
   size?: SizeType;
   disabled?: boolean;
   scrollToFirstError?: ScrollFocusOptions | boolean;
   requiredMark?: RequiredMark;
   variant?: Variant;
   tooltip?: FormTooltipProps;
-  classNames?: FormSemanticClassNames;
-  styles?: FormSemanticStyles;
+  classNames?: SemanticInput<FormSemanticClassNames, FormSemanticProps>;
+  styles?: SemanticInput<FormSemanticStyles, FormSemanticProps>;
 }
 
-/**
- * Form 的 emits（`COMPATIBILITY.md` 规则 C5：`onXxx` → `xxx`）。
- *
- * ⚠️ TODO(api): **`submit` / `reset` 不在 emits 里** —— 它们是原生 DOM 事件，
- * 按规则 C6 必须经 `$attrs` 透传。但 `Form` 又**必须拦截**它们（`preventDefault`
- * + `form.submit()` / `form.resetFields()`），这与 C6 的「原生事件不拦截」有张力。
- * 落地时按 antd 的实际行为裁决：antd 的 `onSubmit` 被**完全接管**（不转发用户的），
- * 而 `onReset` 在 `resetFields()` 之后**会**调 `restProps.onReset?.(event)`。
- * ⇒ 待 `form` 的 G1/G2 出结论后写死，骨架阶段**不猜**。
- */
+/** Business notifications. Native submit/reset retain their actual DOM Events. */
 export interface FormEmits<Values = unknown> {
   valuesChange: [changedValues: Partial<Values>, values: Values];
-  fieldsChange: [changedFields: unknown[], allFields: unknown[]];
+  fieldsChange: [changedFields: FieldData<Values>[], allFields: FieldData<Values>[]];
   finish: [values: Values];
-  finishFailed: [errorInfo: unknown];
+  finishFailed: [errorInfo: ValidateErrorEntity<Values>];
 }
 
 /** ⭐ render props → scoped slot（规则 C8）。 */
@@ -153,6 +128,8 @@ export interface FormSlots<Values = unknown> {
     values: Record<string, StoreValue>;
     form: FormInstance<Values>;
   }) => VNodeChild;
+  requiredMark?: (scope: FormRequiredMarkSlotProps) => VNodeChild;
+  feedbackIcon?: (scope: FormFeedbackIconSlotProps) => VNodeChild;
 }
 
 // ---------------------------------------------------------------------------
@@ -169,7 +146,7 @@ export interface FormItemProps<Values = unknown> extends FieldProps<Values> {
   prefixCls?: string;
   noStyle?: boolean;
   id?: string;
-  hasFeedback?: boolean | { icons: FeedbackIcons };
+  hasFeedback?: boolean;
   validateStatus?: ValidateStatus;
   required?: boolean;
   hidden?: boolean;
@@ -186,9 +163,7 @@ export interface FormItemProps<Values = unknown> extends FieldProps<Values> {
   /** 以下来自 `FormItemInputProps` */
   wrapperCol?: ColProps;
   extra?: VNodeChild;
-  status?: ValidateStatus;
   help?: VNodeChild;
-  fieldId?: string;
 }
 
 /** Form.Item 默认槽始终接收具名对象；独立布局项的 form 为 undefined。 */
@@ -202,6 +177,7 @@ export interface FormItemSlots<Values = unknown> {
   extra?: () => VNodeChild;
   help?: () => VNodeChild;
   tooltip?: () => VNodeChild;
+  feedbackIcon?: (scope: FormFeedbackIconSlotProps) => VNodeChild;
 }
 
 // ---------------------------------------------------------------------------

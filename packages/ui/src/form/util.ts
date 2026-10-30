@@ -14,7 +14,7 @@ export function toArray<T>(candidate: T | T[] | undefined | false | null): T[] {
   if (candidate === undefined || candidate === false || candidate === null) {
     return [];
   }
-  return Array.isArray(candidate) ? candidate : [candidate as T];
+  return Array.isArray(candidate) ? candidate : [candidate];
 }
 
 /**
@@ -48,9 +48,9 @@ export function getStatus(
   hasFeedback: boolean | undefined,
   validateStatus?: ValidateStatus | '',
 ): ValidateStatus {
-  let status: ValidateStatus = (defaultValidateStatus ?? '') as ValidateStatus;
+  let status: ValidateStatus = defaultValidateStatus ?? '';
   if (validateStatus !== undefined) {
-    status = validateStatus as ValidateStatus;
+    status = validateStatus;
   } else if (meta.validating) {
     status = 'validating';
   } else if (errors.length) {

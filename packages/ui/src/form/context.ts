@@ -19,6 +19,7 @@
  */
 
 import {
+  type ComponentPublicInstance,
   type ComputedRef,
   computed,
   type InjectionKey,
@@ -109,15 +110,16 @@ export function getMergedStatus(
 // Form 落地期扩展（antd `es/form/context.js` 的其余通道）
 // ---------------------------------------------------------------------------
 
-import type { FormInstance, InternalNamePath } from '@apollo-design/form-core';
+import type { FormInstance, InternalNamePath, MetaEvent } from '@apollo-design/form-core';
 import { provide } from 'vue';
 import type {
   ColProps,
-  FeedbackIcons,
   FormLabelAlign,
   FormLayout,
   FormSemanticClassNames,
   FormSemanticStyles,
+  FormSlots,
+  FormTooltipProps,
   RequiredMark,
   ScrollFocusOptions,
   ValidateStatus,
@@ -133,22 +135,24 @@ export interface FormContextValue {
   layout: FormLayout;
   colon?: boolean;
   requiredMark?: RequiredMark;
-  itemRef: (
-    name: InternalNamePath | string | string[],
-  ) => Ref<unknown> | ((node: unknown) => void) | undefined;
+  itemRef: (name: InternalNamePath, instance: FieldControl) => () => void;
   form?: FormInstance;
-  feedbackIcons?: FeedbackIcons;
-  tooltip?: { title?: unknown; icon?: unknown };
+  feedbackIcon?: FormSlots['feedbackIcon'];
+  requiredMarkSlot?: FormSlots['requiredMark'];
+  tooltip?: FormTooltipProps;
   classNames?: FormSemanticClassNames;
   styles?: FormSemanticStyles;
+  componentVariables?: Readonly<Record<string, string | number>>;
   /** `scrollToFirstError` 的 context 通道（antd 在 ConfigProvider 上）。 */
   scrollToFirstError?: boolean | ScrollFocusOptions;
 }
 
+export type FieldControl = Element | ComponentPublicInstance;
+
 export const formContextKey: InjectionKey<FormContextValue> = Symbol('apolloFormContext');
 
 /** `NoStyleItemContext`：noStyle 子项向父 Form.Item 上抛 meta。 */
-export type NoStyleItemNotify = (meta: unknown, namePath: InternalNamePath) => void;
+export type NoStyleItemNotify = (meta: MetaEvent, namePath: InternalNamePath) => void;
 export const noStyleItemContextKey: InjectionKey<NoStyleItemNotify> = Symbol(
   'apolloNoStyleItemContext',
 );
@@ -166,7 +170,7 @@ export const formItemPrefixContextKey: InjectionKey<FormItemPrefixContextValue> 
 export const defaultFormContextValue: FormContextValue = {
   labelAlign: 'right',
   layout: 'horizontal',
-  itemRef: () => undefined,
+  itemRef: () => () => {},
   requiredMark: true,
 };
 
@@ -204,10 +208,10 @@ export function provideNoFormStyle(options: { status?: boolean; override?: boole
  * （cascader 的 makeBridge 同范式）。
  */
 export function provideFormContextShallow(source: FormContextValue): void {
-  const bridged: FormContextValue = new Proxy({} as FormContextValue, {
-    get(_t, key) {
-      const value = (source as unknown as Record<string | symbol, unknown>)[key];
-      return value;
+  const bridged: FormContextValue = new Proxy(source, {
+    get(target, key, receiver) {
+      if (key === 'labelCol' || key === 'wrapperCol') return undefined;
+      return Reflect.get(target, key, receiver);
     },
   });
   provide(formContextKey, bridged);

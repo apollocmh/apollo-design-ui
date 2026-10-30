@@ -1,10 +1,9 @@
 <script setup lang="ts">
-// 对齐 antd 的 demo/required-mark.tsx：Form 级 requiredMark 的三种形态。
 import type { RequiredMark } from '@apollo-design/ui';
 import { Button, Form, FormItem, Input, Radio, RadioGroup } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
-const markMode = ref<'required' | 'hidden' | 'optional'>('required');
+const markMode = ref<'required' | 'hidden' | 'optional' | 'custom'>('required');
 
 const requiredMark = computed<RequiredMark>(() => {
   if (markMode.value === 'optional') return 'optional';
@@ -18,9 +17,14 @@ const requiredMark = computed<RequiredMark>(() => {
       <Radio value="required">显示必填星号</Radio>
       <Radio value="hidden">隐藏必填标记</Radio>
       <Radio value="optional">显示 optional</Radio>
+      <Radio value="custom">自定义插槽</Radio>
     </RadioGroup>
   </div>
   <Form :required-mark="requiredMark" layout="vertical" style="max-width: 420px">
+    <template v-if="markMode === 'custom'" #requiredMark="{ label, required }">
+      <component :is="label" />
+      <span class="demo-custom-mark">{{ required ? '必填' : '选填' }}</span>
+    </template>
     <FormItem
       label="用户名"
       name="username"
@@ -47,5 +51,10 @@ const requiredMark = computed<RequiredMark>(() => {
 <style scoped>
 .demo-mark-switch {
   margin-bottom: 16px;
+}
+.demo-custom-mark {
+  margin-inline-start: 8px;
+  color: #722ed1;
+  font-size: 12px;
 }
 </style>

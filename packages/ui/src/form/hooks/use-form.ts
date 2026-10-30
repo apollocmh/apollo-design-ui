@@ -1,82 +1,85 @@
-/**
- * useForm —— form-core 的 useForm + antd 壳层补丁
- * （antd `es/form/hooks/useForm.js` 68 行逐字语义）。
- *
- * 补丁内容（antd 在壳层加，rc 无）：
- * - `scrollToField(name, options)`：getFieldDOMNode → scroll-into-view-if-needed，
- *   `focus` 选项滚动后聚焦；
- * - `focusField(name)`：FieldInstance.focus 或 DOM focus。
- *
- * 字段 ref 注册表由 Form.vue 的 `__INTERNAL__.itemRef` 指回（FormItem.useItemRef 收集）。
- */
-
-import { type FormInstance, useForm as useCoreForm } from '@apollo-design/form-core';
+import {
+  type FormInstance,
+  getNamePath,
+  type InternalNamePath,
+  useForm as useCoreForm,
+} from '@apollo-design/form-core';
 import scrollIntoView from 'scroll-into-view-if-needed';
-import { getFieldId, toArray } from '../util';
+import { inject } from 'vue';
+import { type FieldControl, formContextKey } from '../context';
 
-/** antd `getFieldDOMNode`：FieldInstance.$el → getElementById 兜底。 */
-function getFieldDOMNode(name: unknown, wrapForm: FormInstance): HTMLElement | null {
-  const field = (
-    wrapForm as unknown as {
-      getFieldInstance?: (n: unknown) => { $el?: HTMLElement; focus?: () => void } | null;
-    }
-  ).getFieldInstance?.(name);
-  const fieldDom = (field as { $el?: HTMLElement } | undefined)?.$el ?? null;
-  if (fieldDom) {
-    return fieldDom;
+type RegisterField = (name: InternalNamePath, instance: FieldControl) => () => void;
+const registries = new WeakMap<object, RegisterField>();
+
+function fieldElement(instance: FieldControl): Element | undefined {
+  if (instance instanceof Element) return instance;
+  if ('nativeElement' in instance && instance.nativeElement instanceof Element)
+    return instance.nativeElement;
+  if ('$el' in instance && instance.$el instanceof Element) return instance.$el;
+  return undefined;
+}
+
+function focusControl(instance: FieldControl): void {
+  if ('focus' in instance && typeof instance.focus === 'function') {
+    instance.focus();
+    return;
   }
-  const fieldId = getFieldId(
-    toArray(name) as never,
-    (wrapForm as unknown as { __INTERNAL__: { name?: string } }).__INTERNAL__.name,
-  );
-  if (fieldId) {
-    return document.getElementById(fieldId);
-  }
-  return null;
+  const element = fieldElement(instance);
+  if (element && 'focus' in element && typeof element.focus === 'function') element.focus();
+}
+
+/** The UI and its public instance share one registry of actual Vue control refs. */
+export function useFormWithRegistry<Values = unknown>(
+  form?: FormInstance<Values>,
+): {
+  form: FormInstance<Values>;
+  registerField: RegisterField;
+} {
+  const [coreForm] = useCoreForm<Values>(form);
+  const existing = registries.get(coreForm);
+  if (existing) return { form: coreForm, registerField: existing };
+
+  const fields = new Map<string, { instance: FieldControl }>();
+  const keyOf = (name: InternalNamePath): string => JSON.stringify(name);
+  const registerField: RegisterField = (name, instance) => {
+    const key = keyOf(name);
+    const entry = { instance };
+    fields.set(key, entry);
+    return () => {
+      if (fields.get(key) === entry) fields.delete(key);
+    };
+  };
+  const currentField = (name: Parameters<FormInstance<Values>['getFieldValue']>[0]) =>
+    fields.get(keyOf(getNamePath<Values>(name)))?.instance;
+
+  const methods: Required<
+    Pick<FormInstance<Values>, 'getFieldInstance' | 'focusField' | 'scrollToField'>
+  > = {
+    getFieldInstance: currentField,
+    focusField: (name) => {
+      const instance = currentField(name);
+      if (instance) focusControl(instance);
+    },
+    scrollToField: (name, options = {}) => {
+      const instance = currentField(name);
+      if (!instance) return;
+      const element = fieldElement(instance);
+      if (!element) return;
+      const { focus, ...scrollOptions } = options;
+      scrollIntoView(element, { scrollMode: 'if-needed', block: 'nearest', ...scrollOptions });
+      if (focus) focusControl(instance);
+    },
+  };
+  Object.assign(coreForm, methods);
+  registries.set(coreForm, registerField);
+  return { form: coreForm, registerField };
 }
 
 export function useForm<Values = unknown>(form?: FormInstance<Values>): [FormInstance<Values>] {
-  const [coreForm] = useCoreForm<Values>(form);
+  return [useFormWithRegistry(form).form];
+}
 
-  const wrapForm: FormInstance<Values> = {
-    ...coreForm,
-    // antd 壳层补丁：__INTERNAL__（rc 的 useForm.js:25-27 逐字 —— name/itemRef 挂钩）
-    __INTERNAL__: {
-      /** 由 Form.vue 写入（`__INTERNAL__.name = props.name`）。 */
-      name: undefined as string | undefined,
-      /** FormItem.useItemRef 收集的 ref（Form.vue 里 `itemRef` 指回注册表）。 */
-      itemRef: (): void => {},
-    },
-    // antd 壳层补丁（rc FormInstance 无此二方法）
-    scrollToField: (name: never, options: unknown = {}) => {
-      const { focus, ...restOpt } = (options ?? {}) as { focus?: boolean } & Record<
-        string,
-        unknown
-      >;
-      const node = getFieldDOMNode(name, coreForm as never);
-      if (node) {
-        scrollIntoView(node, {
-          scrollMode: 'if-needed',
-          block: 'nearest',
-          ...restOpt,
-        } as never);
-        // Focus if scroll success
-        if (focus) {
-          (wrapForm as unknown as { focusField: (n: never) => void }).focusField(name);
-        }
-      }
-    },
-    focusField: (name: never) => {
-      const field = (
-        coreForm as unknown as { getFieldInstance?: (n: unknown) => { focus?: () => void } | null }
-      ).getFieldInstance?.(name);
-      if (typeof field?.focus === 'function') {
-        field.focus();
-      } else {
-        getFieldDOMNode(name, coreForm as never)?.focus?.();
-      }
-    },
-  } as FormInstance<Values>;
-
-  return [wrapForm];
+/** Read the nearest mounted UI Form instead of creating a new store. */
+export function useFormInstance(): FormInstance | undefined {
+  return inject(formContextKey, undefined)?.form;
 }

@@ -426,7 +426,8 @@ export interface FormInstance<Values = any> {
    */
   scrollToField?: (name: NamePath<Values>, options?: ScrollOptions) => void;
   focusField?: (name: NamePath<Values>) => void;
-  getFieldInstance?: (name: NamePath<Values>) => { focus?: () => void } | undefined;
+  /** Actual registered control instance; focus support depends on that control. */
+  getFieldInstance?: (name: NamePath<Values>) => object | undefined;
 }
 
 /** antd `ScrollFocusOptions` 的最小面（scroll-into-view-if-needed 的 options + focus）。 */

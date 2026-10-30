@@ -210,3 +210,7 @@ Checkbox 的 change 改为 `(event: Event, checked: boolean)`：首参为原生�
 ### D-motion-native-slots-and-events
 
 CSSMotion/MotionList 的可见性通知统一为 owned `visibleChanged` 事件，原 hooks.onVisibleChanged 迁为 `@visible-changed` / onVisibleChanged；其余有返回值的动效服务 hooks 保留。CSSMotion 将原生 attrs 与原 ref 合并到真实单个动画根，支持条件空槽和 Fragment，多个真实根明确不支持；MotionList 默认槽泛型保留移除项的浅快照元数据，component 支持原生标签、Vue 组件或 null。修正动态配置、异步准备错误归属与根替换后的监听释放，Trigger、Modal、Segmented、Form 和 Masonry 同步必要消费。详见[Motion 当前契约](docs/foundation/motion-contract.md)。
+
+### D-form-native-content-and-instances
+
+Form 的 requiredMark 内容函数迁为 `#requiredMark={ label, required }`，label 是可直接渲染的稳定组件；feedbackIcons / hasFeedback.icons 迁为 Form 或 FormItem 的 `#feedbackIcon={ status, errors, warnings }`，hasFeedback 保留 boolean。useFormInstance 读取最近的真实 Form 实例，useForm 保留工厂职责；getFieldInstance 返回实际控制实例，是否支持 focus 取决于该控件。移除无消费的 Item status/fieldId，使用已有 validateStatus/id；requiredMark 在 Form 上配置。同步修正动态槽撤除、路径聚合、原生 attrs、实际焦点/滚动、响应式列与当前十一 Token，详见[Form API](packages/ui/src/form/index.zh-CN.md)。

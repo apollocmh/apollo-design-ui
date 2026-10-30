@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // biome-ignore-all lint/suspicious/noTemplateCurlyInString: validateMessages 的 `${name}` / `${min}` 是运行时占位符，必须保持字面量。
 // 对齐 antd 的 demo/nest-messages.tsx：Form 级 validateMessages 的嵌套模板。
+import type { ValidateErrorEntity } from '@apollo-design/form-core';
 import type { FormProps } from '@apollo-design/ui';
 import { Alert, Button, Form, FormItem, Input, InputNumber } from '@apollo-design/ui';
 import { ref } from 'vue';
@@ -26,7 +27,7 @@ const onFinish = (values: unknown) => {
   feedback.value = `提交成功：${JSON.stringify(values)}`;
 };
 
-const onFinishFailed = (errorInfo: { errorFields: { name: unknown[]; errors: string[] }[] }) => {
+const onFinishFailed = (errorInfo: ValidateErrorEntity) => {
   failed.value = true;
   feedback.value = errorInfo.errorFields
     .map((field) => `${field.name.join('.')}：${field.errors.join('、')}`)

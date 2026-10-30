@@ -40,12 +40,12 @@ export default Form;
 
 export { ErrorList as ErrorListComponent } from './ErrorList';
 // ── 静态属性与 hooks（antd Form 复合面）──
-export { useForm, useForm as useFormInstance } from './hooks/use-form';
+export { useForm, useFormInstance } from './hooks/use-form';
 export { stringify, useWatch, useWatch as useFormWatch } from './hooks/use-watch';
 export type {
   ColProps,
-  FeedbackIcons,
   FormEmits,
+  FormFeedbackIconSlotProps,
   FormItemLayout,
   FormItemProps,
   FormItemSlots,
@@ -56,6 +56,7 @@ export type {
   FormListSlotProps,
   FormListSlots,
   FormProps,
+  FormRequiredMarkSlotProps,
   FormSemanticClassNames,
   FormSemanticStyles,
   FormSlots,
