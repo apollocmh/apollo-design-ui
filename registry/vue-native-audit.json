@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 134,
+  "revision": 140,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -1092,7 +1092,7 @@
             "signal": null
           }
         ],
-        "boundary": "Dropdown/DropdownButton/PurePanel的owned事件与model、当前完整槽、真实getter ref、native attrs与真正浮层root、Provider与已有7个CSS字段/定位/数值层级、Menu语义转发与实际当前配置已验证。保留此前popup-slot、受控延迟、CSSProperties和Portal层级成果。root完成的Menu prefix/group/inline前缀、selectable与keyboard listener及Breadcrumb完成通知支持与本任务一起验证；Tabs/Breadcrumb原槽与Table真实过滤/容器路径通过。真实源码browser含SFC refs、当前主题替换撤除、实际Tooltip、20px→12px定位间距、草稿/选择/焦点、Menu键盘选择/归焦、Escape、完整/空icon、可见静态面板、更新的style-class Demo及卸载，严格console/pageerror/window.error均为空。原5条参考数据与allowance未改；id本身按既有contract投影不比较，另由原生DOM断言核对。UI根十个新类型已由root导出。root首轮窄strict exit2仅发现本目录Provider泛型及RawSlots兼容声明，已用ComponentStyleConfig和精确slots对象type修复（无运行时更改），保留原h正例，等待root重跑同一单进程窄strict。非numeric CSS表达式的自动后代层级仍按既有边界延期；未新增autoFocus/focus能力、未重审Menu全契约、未扩D04前缀CSS策略。未构建dist，未执行全库/coverage/完整视觉/发布消费者或最终冻结九维验收。 Shared Provider editor identity is verified using real Teleport; the structural test stub is not used as evidence of production remount."
+        "boundary": "Dropdown/DropdownButton/PurePanel的owned事件与model、当前完整槽、真实getter ref、native attrs与真正浮层root、Provider与已有7个CSS字段/定位/数值层级、Menu语义转发与实际当前配置已验证。保留此前popup-slot、受控延迟、CSSProperties和Portal层级成果。root完成的Menu prefix/group/inline前缀、selectable与keyboard listener及Breadcrumb完成通知支持与本任务一起验证；Tabs/Breadcrumb原槽与Table真实过滤/容器路径通过。真实源码browser含SFC refs、当前主题替换撤除、实际Tooltip、20px→12px定位间距、草稿/选择/焦点、Menu键盘选择/归焦、Escape、完整/空icon、可见静态面板、更新的style-class Demo及卸载，严格console/pageerror/window.error均为空。原5条参考数据与allowance未改；id本身按既有contract投影不比较，另由原生DOM断言核对。UI根十个新类型已由root导出。root首轮窄strict exit2仅发现本目录Provider泛型及RawSlots兼容声明，已用ComponentStyleConfig和精确slots对象type修复（无运行时更改），保留原h正例，最终单进程窄strict已exit0（49.692s），完整命令见checks。非numeric CSS表达式的自动后代层级仍按既有边界延期；未新增autoFocus/focus能力、未重审Menu全契约、未扩D04前缀CSS策略。未构建dist，未执行全库/coverage/完整视觉/发布消费者或最终冻结九维验收。 Shared Provider editor identity is verified using real Teleport; the structural test stub is not used as evidence of production remount."
       },
       "plan": {
         "goal": "保留popup槽、受控延迟和层级交付，收口Dropdown及Button组合剩余Vue差额",
@@ -1105,7 +1105,17 @@
           "docs/audit/2026-10-28-overlay-controlled-delay-audit.md",
           "packages/ui/src/dropdown/__tests__/type.test-d.ts"
         ]
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/menu",
+            "packages/ui/src/dropdown/__tests__/native-contracts.test.ts"
+          ],
+          "change": "Menu owns native notifications, current presentation and popup-only context; Dropdown uses the native onKeydown listener.",
+          "verification": "CMP:menu full scoped strict, core/actual Dropdown/Tabs/Breadcrumb consumers and zero-diagnostic source browser."
+        }
+      ]
     },
     {
       "id": "CMP:empty",
@@ -1649,19 +1659,17 @@
       "kind": "component",
       "ref": "menu",
       "title": "Menu",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/menu",
         "packages/ui/src/dropdown/__tests__/native-contracts.test.ts"
       ],
-      "assignment": {
-        "owner": "native_portal",
-        "baseRevision": 120,
-        "startedAt": "2026-10-30T13:08:00.085Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -1677,6 +1685,67 @@
         "basis": [
           "docs/audit/2026-10-28-menu-native-actions-audit.md",
           "packages/ui/src/menu/__tests__/s22-issue22.test.ts"
+        ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/menu",
+          "packages/ui/src/dropdown/__tests__/native-contracts.test.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract --project theme packages/ui/src/menu/__tests__ packages/ui/src/dropdown/__tests__/native-contracts.test.ts packages/ui/src/tabs/__tests__/vue-slots.test.ts packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 50720,
+            "log": "/tmp/apollo-menu-frozen-core.log"
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/menu/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 12006,
+            "log": "/tmp/apollo-menu-frozen-browser.log"
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract packages/ui/src/menu/__tests__/native-contracts.test.ts packages/ui/src/menu/__tests__/semantic.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7740,
+            "log": "/tmp/apollo-menu-types-boundaries-core.log"
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; all Menu source/type cases/native SFC/Demo and actual Dropdown consumer; declaration/strict unchanged>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 51902
+          }
+        ],
+        "boundary": "保留2026-10-28原生动作、native取消/disabled/导航焦点以及Dropdown前缀/选择/键盘与CSSProperties增量。已实现owned click/select/deselect/openChange及现有models，受控activeKey/撤控，原生键盘数组/once/取消，真实root attrs/style/Tabindex与Overflow.$el边界ref，安全key查找当前popup项，当前Provider语义/disabled/方向及公开10Token和global Alias在root/inline/popup实际列表的投影。唯一useZIndex放在仅popup分支挂载的Menu私有PopupTrigger，inline透传真实祖先层级；已验显式0/数值层级、CSS表达式样式保留、嵌套主题/数据通知/完整与空scoped slots、实际数据图标函数、空typed submenu、静态Ctor及正负类型例。177项含SSR独立渲染ID稳定、Menu全目录unit/dom-contract/theme、全部15Demo及Dropdown/Tabs/Breadcrumb真实消费者；原基线未改。源码browser实际230→160宽、2800→1050与Tooltip2900→1150、嵌套主题/层级、输入节点/选择/焦点保持、Overflow溢出选择/扩宽/键盘/refs、组件Token Demo切换/卸载通过，console/pageerror/window.error均为空。Biome17文件exit0/diff0/node--check0。root首轮strict exit2/37.759s暴露本目录12处边界，已修Provider fixture、准确DOM wrapper、ComputedRef注入、itemData窄化、真实VNode数组/单节点与tuple runtime声明；追加22项native+原DOM回归exit0/7.74s、增量Biome6文件exit0/diff0，原正负例保留且增加tuple长度负例。root已导出7个new public类型；最终同一范围单进程strict exit0；空配置分支以精确getter返回类型修正，不改变运行时或缩减场景。未另开TS/构建dist/全库/coverage/视觉矩阵/发布或最终九维。其余静态CSS变量不宣称是已实现组件Token；CSS表达式的自动numeric后代层级仍延期；不新增default children组件树模式或前缀CSS策略。",
+        "attemptsNotPassed": [
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <frozen TreeSelect/Menu/Date source cohort>",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 37759,
+            "log": "/tmp/apollo-frozen-three-types.log"
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <Menu source/type cases/SFC/Demo scope>",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 32858,
+            "log": "/tmp/apollo-menu-ready-types.log",
+            "resolution": "Only the empty Provider fixture configuration inferred an optional undefined record entry; explicit actual getter result type corrected it, final strict exit0."
+          }
         ]
       }
     },
@@ -2814,15 +2883,20 @@
       "kind": "component",
       "ref": "time-picker",
       "title": "TimePicker",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [
         "FND:picker"
       ],
       "owns": [
-        "packages/ui/src/time-picker"
+        "packages/ui/src/time-picker",
+        "packages/ui/src/date-picker/RangePicker.vue"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_picker",
+        "baseRevision": 135,
+        "startedAt": "2026-10-30T13:49:54.227Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2840,7 +2914,20 @@
           "change": "Date/Time wrapper native slots/events/accepted state; actual panel focus/readonly keyboard, active range endpoint and observer cleanup.",
           "verification": "CMP:date-picker architecture verification: current core, actual related consumers/Demo, zero-diagnostic Chrome and full scoped strict. This delta does not mark the TimePicker whole audit complete."
         }
-      ]
+      ],
+      "plan": {
+        "goal": "接续 DatePicker/Picker 最新交付，收口 TimePicker 与 TimeRangePicker 薄壳剩余 Vue 差额",
+        "remaining": [
+          "复用已交付原生事件/槽桥、严格类型、真实只读键盘与有关消费者证据，不重审 DatePicker 或面板算法。",
+          "以当前源码核对 timePicker 配置路由、accepted models 与当前ref/attrs/完整槽、默认Boolean/时间配置和已有样式职责；历史 README 缺口逐一对照现实，不新增上游内部面板等无关能力。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/time-picker/README.md",
+          "packages/ui/src/time-picker/index.zh-CN.md",
+          "docs/audit/2026-10-23-picker-transfer-remediation.md"
+        ]
+      }
     },
     {
       "id": "CMP:timeline",

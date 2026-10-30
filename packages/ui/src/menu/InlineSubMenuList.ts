@@ -3,18 +3,21 @@ import { computed, defineComponent, h, type PropType, provide, ref, watch } from
 
 import { inheritMenuContext, menuContextKey, useMenuContext } from './context';
 import type { MenuMode } from './interface';
+import { useMenuTheme } from './use-menu-theme';
 
 /** 保留离场中的 inline 子树，模式退出完成后再销毁。 */
 export default defineComponent({
   name: 'AMenuInlineSubMenuList',
+  inheritAttrs: false,
   props: {
     id: { type: String, required: true },
     open: { type: Boolean, required: true },
     mode: { type: String as PropType<MenuMode>, required: true },
     depth: { type: Number, required: true },
   },
-  setup(props, { slots }) {
+  setup(props, { slots, attrs }) {
     const ctx = useMenuContext();
+    const theme = useMenuTheme();
     // 父级切为 popup 模式时，离场中的后代仍按 inline 布局测量高度。
     provide(
       menuContextKey,
@@ -69,8 +72,9 @@ export default defineComponent({
                       `${ctx.prefixCls}-sub`,
                       `${ctx.prefixCls}-inline`,
                       className,
+                      attrs.class,
                     ],
-                    style,
+                    style: [theme.style.value, style, attrs.style],
                     role: 'menu',
                     'data-menu-list': true,
                   },

@@ -12,30 +12,37 @@ import MenuItemGroupComponent from './MenuItemGroup';
 import SubMenuComponent from './SubMenu';
 
 /** Menu 组件。注册名 `AMenu`（COMPONENT-RULES.md 规则 R2）。 */
-export const Menu = withInstall(MenuComponent);
-
 /** 静态子组件（Menu.Item / Menu.SubMenu / Menu.Divider / Menu.ItemGroup 同物）。 */
 export const MenuItem = withInstall(MenuItemComponent);
 export const MenuSubMenu = withInstall(SubMenuComponent);
 export const MenuDivider = withInstall(MenuDividerComponent);
 export const MenuItemGroup = withInstall(MenuItemGroupComponent);
 
-Menu.Item = MenuItem as never;
-Menu.SubMenu = MenuSubMenu as never;
-Menu.Divider = MenuDivider as never;
-Menu.ItemGroup = MenuItemGroup as never;
+export const Menu = Object.assign(withInstall(MenuComponent), {
+  Item: MenuItem,
+  SubMenu: MenuSubMenu,
+  Divider: MenuDivider,
+  ItemGroup: MenuItemGroup,
+});
 
 export type {
   ItemType,
+  MenuClassNames,
   MenuDividerType,
+  MenuEmits,
   MenuInfo,
+  MenuItemGroupSlots,
   MenuItemGroupType,
+  MenuItemSlots,
   MenuItemType,
   MenuMode,
   MenuPopupSemanticType,
   MenuProps,
   MenuRef,
   MenuSemanticType,
+  MenuSlots,
+  MenuStyles,
+  MenuSubMenuSlots,
   MenuTheme,
   SelectInfo,
   SubMenuSemanticType,

@@ -1,3 +1,9 @@
+# Menu · Vue 原生契约
+
+2026-10-30 本轮保留 2026-10-28 原生动作及 Dropdown 共享增量，补齐 owned 通知、当前 Provider/十个公开 Token、完整根 attrs、真实 Overflow ref、数据项与 scoped slot 转发。API 与迁移见双语组件文档；当前进度及验证记录以 `registry/vue-native-audit.json` 为准。源码 browser 入口为 `__tests__/native-browser.mjs`，不构建发布产物。
+
+以下为原有历史实现说明，保留原意；其中旧 workflow 与延期标记不覆盖当前规范及 API。
+
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
 > 历史实施记录：原勾选、当时结果和缺口保留。2026-10-30 起，本文的 G0–G14 / 逐组件 G13 全仓收口与旧 Registry 进度规则由仓库 `WORKFLOW.md`、`TESTING.md` 两阶段流程替代；当前任务状态只读 `registry/vue-native-audit.json`，不据本文重复派发或重跑已有效验证。

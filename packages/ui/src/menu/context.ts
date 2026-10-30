@@ -6,6 +6,8 @@
  * - `pathTrackerKey`：rc PathTrackerContext（keyPath 数组，SubMenu 注入）。
  * - `pathRegisterKey`：rc PathRegisterContext（非空 ⇒ measure 模式，只登记不渲染）。
  */
+
+import type { VNodeChild } from 'vue';
 import {
   type ComputedRef,
   computed,
@@ -16,8 +18,17 @@ import {
   type Ref,
   watch,
 } from 'vue';
-
-import type { MenuMode, RenderIconType, TriggerSubMenuAction } from './interface';
+import type { ParsedNode } from './engine/parse-items';
+import type {
+  MenuClassNames,
+  MenuInfo,
+  MenuMode,
+  MenuProps,
+  MenuStyles,
+  RenderIconInfo,
+  RenderIconType,
+  TriggerSubMenuAction,
+} from './interface';
 
 export interface MenuContextData {
   /** 首次整棵菜单挂载时不播 appear，后续进入 inline 才启用。 */
@@ -35,11 +46,11 @@ export interface MenuContextData {
   motion: unknown;
   defaultMotions: unknown;
   // Active
-  activeKey: ComputedRef<string | undefined>;
+  activeKey: Ref<string | undefined>;
   onActive: (key: string) => void;
   onInactive: (key: string) => void;
   // Selection
-  selectedKeys: ComputedRef<string[]>;
+  selectedKeys: Ref<string[]>;
   // Level
   inlineIndent: number;
   // Popup
@@ -53,12 +64,17 @@ export interface MenuContextData {
   itemIcon?: RenderIconType;
   expandIcon?: RenderIconType;
   // Events
-  onItemClick: (info: unknown) => void;
+  onItemClick: (info: MenuInfo) => void;
   onOpenChange: (key: string, open: boolean) => void;
   // Open keys（rc MenuContext 同字段）
   openKeys: ComputedRef<string[]>;
   /** 规范节点渲染器（Menu 提供，SubMenu 递归子树用）。 */
-  renderNode: (node: unknown, keyPath: string[]) => unknown;
+  renderNode: (
+    node: ParsedNode,
+    keyPath: string[],
+    overflowDisabled?: boolean,
+    overflowCls?: string,
+  ) => VNodeChild;
   /**
    * 登记子菜单弹层的「取消关闭计时器」句柄；返回注销函数。
    * `path` 是 getter —— 路径可能随 items / key 变化。
@@ -69,7 +85,8 @@ export interface MenuContextData {
   // antd 扩展（MenuContext.tsx）
   inlineCollapsed: boolean;
   /** 折叠态 item 的 Tooltip 配置（`false` = 关闭）。 */
-  tooltip?: false | Record<string, unknown>;
+  tooltip?: MenuProps['tooltip'];
+  renderExpandIcon?: (info: RenderIconInfo) => VNodeChild;
   direction?: 'ltr' | 'rtl';
   firstLevel: boolean;
   theme: 'light' | 'dark';
@@ -82,8 +99,8 @@ export interface MenuContextData {
    *
    * ⚠️ 用 computed 而不是 setup 期快照 —— 否则运行期改 `classNames` 不生效。
    */
-  semanticClassNames?: ComputedRef<Record<string, unknown>>;
-  semanticStyles?: ComputedRef<Record<string, unknown>>;
+  semanticClassNames?: ComputedRef<MenuClassNames>;
+  semanticStyles?: ComputedRef<MenuStyles>;
 }
 
 export const menuContextKey: InjectionKey<MenuContextData> = Symbol('menuContext');
@@ -111,7 +128,7 @@ export const pathRegisterKey: InjectionKey<PathRegister> = Symbol('pathRegister'
 /** rc OverrideContextProps（dropdown 的 OverrideProvider 对应物）。 */
 export interface MenuOverrideData {
   prefixCls?: string;
-  expandIcon?: unknown;
+  expandIcon?: RenderIconType;
   mode?: 'horizontal' | 'vertical' | 'inline';
   selectable?: boolean;
   onClick?: () => void;

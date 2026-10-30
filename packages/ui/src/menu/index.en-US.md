@@ -1,67 +1,74 @@
 ---
 category: Navigation
 title: Menu
-subtitle: Menu
 ---
 
-为页面和功能提供导航的菜单列表。
-
-## When To Use
-
-- Navigation menu for pages and features.
+Horizontal, vertical and inline navigation driven by `items`. See [`demo/`](./demo).
 
 ## API
 
-Inline submenus expand and collapse with a height transition when activated by click or keyboard.
-Closing keeps the list hidden after the transition; changing mode or enabling `inlineCollapsed`
-removes the inline list after its leave transition. The initial menu mount does not animate.
-
 ### Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| Property | Description | Type | Default |
 |---|---|---|---|
-| items | 菜单内容（唯一真源） | `ItemType[]` | — |
-| mode | 菜单类型 | `'horizontal' \| 'vertical' \| 'inline'` | `'vertical'` |
-| theme | 主题 | `'light' \| 'dark'` | `'light'` |
-| selectedKeys / defaultSelectedKeys | 受控/非受控选中（`v-model:selectedKeys`） | `string[]` | — |
-| openKeys / defaultOpenKeys | 受控/非受控展开（`v-model:openKeys`） | `string[]` | — |
-| onSelect / onDeselect / onClick | 选择事件（keyPath 为 **逆序**，antd 同款） | — | — |
-| onOpenChange | 子菜单展开回调 | `(openKeys) => void` | — |
-| selectable / multiple | 是否可选中 / 多选 | `boolean` | `true` / `false` |
-| inlineCollapsed | 折叠为图标条（配合 Tooltip 显示标题） | `boolean` | — |
-| tooltip | Tooltip config for collapsed items; `false` disables it | `false \| TooltipProps` | — |
-| inlineIndent | 缩进（px） | `number` | `24` |
-| triggerSubMenuAction | 子菜单触发方式 | `'hover' \| 'click'` | `'hover'` |
-| disabledOverflow | 关闭水平溢出折叠 | `boolean` | `false` |
-| classNames / styles | 语义槽 `root/list/itemTitle/item/itemIcon/itemContent`（+popup/subMenu） | — | — |
+| items | The content source, including VNode data and per-item icon functions | `ItemType[]` | — |
+| mode / theme | Layout and light/dark theme | `'horizontal' \| 'vertical' \| 'inline'` / `'light' \| 'dark'` | `'vertical'` / `'light'` |
+| selectedKeys / defaultSelectedKeys | Controlled selection / initial selection; `v-model:selectedKeys` | `string[]` | `[]` |
+| openKeys / defaultOpenKeys | Controlled opening / initial opening; `v-model:openKeys` | `string[]` | `[]` |
+| activeKey | Controlled active item; withdrawal keeps the last accepted value | `string` | — |
+| selectable / multiple | Selection / multiple selection | `boolean` | `true` / `false` |
+| disabled | Inherits ConfigProvider when omitted | `boolean` | — |
+| inlineCollapsed | Collapsed icons; falls back to Sider | `boolean` | — |
+| tooltip | Collapsed-item Tooltip options; false disables it | `false \| TooltipProps` | — |
+| inlineIndent | Inline indentation in px | `number` | `24` |
+| triggerSubMenuAction | Popup activation; inline menus use click and keyboard | `'hover' \| 'click'` | `'hover'` |
+| subMenuOpenDelay / subMenuCloseDelay | Hover delays in seconds | `number` | `0.1` / `0.1` |
+| forceSubMenuRender / disabledOverflow | Preserve submenu rendering / disable horizontal overflow | `boolean` | `false` |
+| getPopupContainer | Popup container; inherits the current ConfigProvider | `(node: HTMLElement) => HTMLElement` | — |
+| prefixCls / id / role / tabIndex | Current prefix and root-list attributes | `string` / `string` / `string` / `number` | — / — / `'menu'` / `0` |
+| classNames / styles | `root/list/item/itemTitle/itemIcon/itemContent`, nested `popup.root` and `subMenu` | `MenuClassNames` / `MenuStyles` | — |
 
-### ItemType
+Native class, style (including strings and arrays), data/ARIA attributes and native listeners reach the actual root ul in every mode. `click` carries a Menu business payload. Native keyboard listeners use `@keydown`, or `onKeydown` with h(). Native root styles override Provider and semantic styles. The hidden path-registration tree receives none of these root attributes.
 
-```ts
-{ key, label, icon?, danger?, disabled?, extra?, children?, type?: 'group' | 'divider' }
-```
+### Emits
 
-### Slots（C8-R2）
+| Event | Payload |
+|---|---|
+| update:selectedKeys / update:openKeys | `string[]` |
+| click | `MenuInfo`: key, keyPath, itemData and native domEvent |
+| select / deselect | `SelectInfo`, including selectedKeys; deselect only removes a multiple selection |
+| openChange | Proposed `string[]` |
 
-Static sub-components `AMenuItem` / `AMenu.SubMenu` use slots for rich content (aligns with antd's VNode props):
+Vue owns these notifications, including listener arrays and `.once`. keyPath runs from the item to the root. domEvent can cancel a link's default navigation. Rejected controlled proposals do not contaminate state after control is withdrawn.
 
-| Component | Slot | Description | Former prop |
-|---|---|---|---|
-| AMenuItem / AMenu.SubMenu | `#title` | Rich title (text may still use `title` prop; slot wins) | `title` |
-| AMenuItem | `#extra` | Right-aligned extra content (rich) | `extra` |
+### Data and slots
 
-> `title` prop is narrowed to `string` (data carrier); `extra` prop is removed — rich content goes through `items[].extra` or the `#extra` slot.
+Item label, extra, icon and itemIcon remain data fields. Icon functions receive RenderIconInfo. Submenu expandIcon functions and per-item click/title/hover handlers retain their data responsibility. A submenu theme also reaches descendant popups. An explicit `type: 'submenu'` supports an empty children array.
+
+| Component | Slot | Scope / content |
+|---|---|---|
+| Menu | expandIcon | `{ isOpen, isSelected, isSubMenu, disabled }`; per-item expandIcon takes precedence |
+| MenuItem | default / title / extra | Main content and extra content; a text title prop remains available |
+| MenuItem | icon | RenderIconInfo |
+| MenuSubMenu | title / icon / expandIcon | Icon slots receive RenderIconInfo |
+| MenuItemGroup | title / default | Group title / children |
+
+Slots are read during rendering. A present slot wins, including intentionally empty, text and multiple-node results. Menu does not interpret its default slot as a second menu declaration tree: items and path registration retain one data source. Existing static components use the same internal Menu context.
 
 ### Expose
 
-`focus(options?)`、`list`、`findItem({key})`。
+`list: HTMLUListElement | null` is the current root, including horizontal Overflow. `focus(options?)` focuses the first enabled item. `findItem({ key })` finds this instance's actual item, including teleported submenus and keys containing quotes. Element references clear on unmount.
 
-## 设计说明
+## Provider and styles
 
-- **rc-menu 内核自建**：items 解析 / key↔path 登记 / 键盘导航三件 engine，
-  Overflow 溢出折叠为新基建（`_internal/overflow.ts`）。
-- 与 antd 的已知差异见组件 README。
+The current components.menu className/style/classNames/styles, global disabled state, direction and popup container respond to replacement and removal. theme.components.Menu supports the existing ten numeric tokens: dropdownWidth, zIndexPopup, radiusItem, itemBorderRadius, radiusSubMenuItem, subMenuItemBorderRadius, activeBarWidth, activeBarHeight, activeBarBorderWidth and itemMarginInline. The legacy radius aliases affect the corresponding radius unless its modern field is explicit. Other static CSS variables remain available for direct styling; they are not additional implemented component tokens. Current aliases and these ten tokens reach root, inline and actual popup lists. Numeric popup layers also provide descendant context. Nonnumeric CSS layer expressions retain their styles; automatic numeric descendant layering for expressions remains deferred.
 
-## Keyboard and native actions
+## Keyboard and lifecycle
 
-When the item itself has focus, Enter or Space activates its single native link or button. Plain items emit one action. Focused child controls retain browser activation without an extra keydown click. Disabled items block native navigation, and domEvent.preventDefault() can cancel link navigation. Editors retain their own keys. For multiple actions, focus the intended control directly; the item does not guess.
+Enter or Space on an item activates its single owned native link or button, or emits one ordinary item action. A focused native control owns its browser activation. Disabled items block native navigation. Inputs and editable content keep their own keys. With multiple native actions, focus the intended control directly.
+
+Inline lists hide after closing motion. Leaving inline mode removes them after motion; initial mounting does not animate. Pending hover timers and focus frames are released on unmount.
+
+## Development migration
+
+Use #expandIcon instead of the top-level expandIcon rendering prop, and #icon for static item icons. Per-item rendering functions remain. Replace onKeyDown with native onKeydown / @keydown. The unused children type field is removed; content continues to use items. Business listeners keep @click/@select/@deselect/@openChange and their programmatic onClick/onSelect/onDeselect/onOpenChange names.

@@ -18,23 +18,32 @@
 import { EllipsisOutlined } from '@apollo-design/icons';
 import { useControlledValue } from '@apollo-design/utils';
 import {
-  type ComputedRef,
+  type ComponentPublicInstance,
   computed,
   defineComponent,
   Fragment,
   h,
   inject,
+  mergeProps,
+  normalizeClass,
   onMounted,
   type PropType,
   provide,
   ref,
+  type SlotsType,
   shallowRef,
+  useId,
   type VNodeChild,
   watch,
 } from 'vue';
 import Overflow, { INVALIDATE, RESPONSIVE } from '../_internal/overflow';
-import { styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig, useDirection } from '../config-provider/context';
+import { useMergeSemantic } from '../_internal/use-merge-semantic';
+import {
+  type ComponentStyleConfig,
+  useComponentConfig,
+  useDirection,
+} from '../config-provider/context';
+import { useDisabled } from '../config-provider/disabled-context';
 import { useSiderContext } from '../layout/context';
 import {
   isSubPathKeyKey,
@@ -47,14 +56,15 @@ import {
 } from './context';
 import { OVERFLOW_KEY, useKeyRecords } from './engine/key-records';
 import { type ParsedNode, parseItems } from './engine/parse-items';
-import { useAccessibility } from './engine/use-accessibility';
+import { getMenuId, useAccessibility } from './engine/use-accessibility';
 import type {
   ItemType,
   MenuInfo,
   MenuMode,
   MenuProps,
+  MenuRef,
+  MenuSlots,
   MenuTheme,
-  RenderIconType,
   SelectInfo,
   TriggerSubMenuAction,
 } from './interface';
@@ -62,19 +72,19 @@ import MenuDivider from './MenuDivider';
 import MenuItem from './MenuItem';
 import MenuItemGroup from './MenuItemGroup';
 import SubMenu from './SubMenu';
-
-let uuid = 0;
+import { useMenuTheme } from './use-menu-theme';
 
 const Menu = defineComponent({
   name: 'AMenu',
   inheritAttrs: false,
+  slots: Object as SlotsType<MenuSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
     mode: { type: String as PropType<MenuMode>, default: 'vertical' },
     theme: { type: String as PropType<MenuTheme>, default: 'light' },
     items: { type: Array as PropType<ItemType[]>, default: undefined },
     inlineCollapsed: { type: Boolean, default: undefined },
-    disabled: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: undefined },
     disabledOverflow: { type: Boolean, default: false },
     selectable: { type: Boolean, default: undefined },
     multiple: { type: Boolean, default: false },
@@ -89,7 +99,7 @@ const Menu = defineComponent({
     forceSubMenuRender: { type: Boolean, default: false },
     /** 折叠态 item 标题的 Tooltip 配置（`false` 关闭）；与 antd Menu 同判。 */
     tooltip: {
-      type: [Boolean, Object] as PropType<false | Record<string, unknown>>,
+      type: [Boolean, Object] as PropType<MenuProps['tooltip']>,
       default: undefined,
     },
     triggerSubMenuAction: {
@@ -112,14 +122,6 @@ const Menu = defineComponent({
      */
     role: { type: String, default: 'menu' },
     id: { type: String, default: undefined },
-    onClick: { type: Function as PropType<(info: MenuInfo) => void>, default: undefined },
-    onSelect: { type: Function as PropType<(info: SelectInfo) => void>, default: undefined },
-    onDeselect: { type: Function as PropType<(info: SelectInfo) => void>, default: undefined },
-    onOpenChange: {
-      type: Function as PropType<(openKeys: string[]) => void>,
-      default: undefined,
-    },
-    onKeyDown: { type: Function as PropType<(e: KeyboardEvent) => void>, default: undefined },
     /**
      * 语义化槽位（Issue #22.6）：`root / list / item / itemTitle / itemIcon / itemContent`
      * + 嵌套的 `popup` / `subMenu`。
@@ -136,19 +138,28 @@ const Menu = defineComponent({
   emits: {
     'update:selectedKeys': (_keys: string[]) => true,
     'update:openKeys': (_keys: string[]) => true,
+    click: (_info: MenuInfo) => true,
+    select: (_info: SelectInfo) => true,
+    deselect: (_info: SelectInfo) => true,
+    openChange: (_keys: string[]) => true,
   },
-  setup(props, { emit, expose, attrs }) {
+  setup(props, { emit, expose, attrs, slots }) {
     // rc OverrideProvider（dropdown 等包装者）的覆盖通道
     const override = inject<MenuOverrideData | null>(menuOverrideKey, null);
-    const menuConfig = useComponentConfig('menu');
+    const menuConfig = useComponentConfig<
+      ComponentStyleConfig & Pick<MenuProps, 'classNames' | 'styles'>
+    >('menu');
+    const disabled = useDisabled(() => props.disabled);
+    const theme = useMenuTheme();
     // antd menu.js:76：`getPrefixCls('menu', customizePrefixCls || overrideObj.prefixCls)`
     const prefixCls = computed(() =>
       menuConfig.getPrefixCls('menu', props.prefixCls || override?.prefixCls),
     );
     // antd menu.js:65：motion 类名前缀取自**根前缀**（默认 `apollo`），不是 `apollo-menu`。
     const rootPrefixCls = computed(() => menuConfig.getPrefixCls());
-    const menuId = props.id ?? `apollo-menu-${uuid++}`;
-    const containerRef = shallowRef<HTMLElement | null>(null);
+    const instanceId = useId();
+    const menuId = computed(() => props.id ?? `apollo-menu-${instanceId}`);
+    const containerRef = shallowRef<HTMLUListElement | null>(null);
     /**
      * 横向 Overflow 当前可见项数量。
      *
@@ -168,10 +179,15 @@ const Menu = defineComponent({
       MenuProps,
       NonNullable<MenuProps['classNames']>,
       NonNullable<MenuProps['styles']>
-    >([() => props.classNames], [() => props.styles], () => props, {
-      popup: { _default: 'root' },
-      subMenu: { _default: 'root' },
-    });
+    >(
+      [() => menuConfig.classNames, () => props.classNames],
+      [() => menuConfig.styles, () => props.styles],
+      () => props,
+      {
+        popup: { _default: 'root' },
+        subMenu: { _default: 'root' },
+      },
+    );
 
     const parsedNodes = computed<ParsedNode[]>(() => parseItems(props.items));
 
@@ -220,7 +236,7 @@ const Menu = defineComponent({
 
     const triggerOpenKeys = (keys: string[]): void => {
       setOpenKeys(keys);
-      props.onOpenChange?.(keys);
+      emit('openChange', keys);
     };
 
     // rc `Menu.js` 的 inlineCacheOpenKeys：折叠时清空 openKeys（弹层只由 hover 开），
@@ -240,20 +256,13 @@ const Menu = defineComponent({
     });
 
     // ====================== Active =======================
-    const activeKey = ref<string | undefined>(props.activeKey);
-    // ⚠️ 受控 `activeKey` 要跟着 props 走（原来只在 setup 取一次 ⇒ 外部改了不同步，
-    //    Issue #22.7）
-    watch(
-      () => props.activeKey,
-      (key) => {
-        activeKey.value = key;
-      },
-    );
-    const onActive = (key: string): void => {
-      activeKey.value = key;
-    };
+    const [activeKey, setActiveKey] = useControlledValue<string | undefined>({
+      defaultValue: undefined,
+      getValue: () => props.activeKey,
+    });
+    const onActive = (key: string): void => setActiveKey(key);
     const onInactive = (key: string): void => {
-      if (activeKey.value === key) activeKey.value = undefined;
+      if (activeKey.value === key) setActiveKey(undefined);
     };
 
     // ===================== Selection =====================
@@ -275,11 +284,8 @@ const Menu = defineComponent({
         }
         setSelectKeys(newSelectKeys);
         const selectInfo: SelectInfo = { ...info, selectedKeys: newSelectKeys };
-        if (exist) {
-          props.onDeselect?.(selectInfo);
-        } else {
-          props.onSelect?.(selectInfo);
-        }
+        if (props.multiple && exist) emit('deselect', selectInfo);
+        else emit('select', selectInfo);
       }
       // Whatever selectable, always close it（非 inline）
       if (!props.multiple && mergedOpenKeys.value.length && mergedMode.value !== 'inline') {
@@ -289,7 +295,7 @@ const Menu = defineComponent({
 
     const onInternalClick = (info: MenuInfo): void => {
       override?.onClick?.();
-      props.onClick?.(info);
+      emit('click', info);
       triggerSelection(info);
     };
 
@@ -316,15 +322,14 @@ const Menu = defineComponent({
     const isRtl = computed(() => direction.value === 'rtl');
     const onInternalKeyDown = useAccessibility({
       mode: mergedMode,
-      activeKey: activeKey as ComputedRef<string | undefined>,
+      activeKey,
       isRtl,
-      id: computed(() => menuId),
+      id: menuId,
       containerRef,
       getKeys,
       getKeyPath,
       onActive,
       triggerOpen: triggerAccessibilityOpen,
-      originOnKeyDown: (event) => props.onKeyDown?.(event),
     });
 
     // ====================== Context ======================
@@ -362,15 +367,17 @@ const Menu = defineComponent({
       get rootPrefixCls() {
         return rootPrefixCls.value;
       },
-      menuId,
+      get menuId() {
+        return menuId.value;
+      },
       mode: mergedMode,
       get disabled() {
-        return props.disabled;
+        return disabled.value;
       },
-      activeKey: activeKey as ComputedRef<string | undefined>,
+      activeKey,
       onActive,
       onInactive,
-      selectedKeys: mergedSelectKeys as ComputedRef<string[]>,
+      selectedKeys: mergedSelectKeys,
       // ⚠️ 以下是 **getter**：context 对象在 setup 里只建一次，写成普通值就是快照 ⇒
       //    运行时改 `disabled`/`inlineIndent`/延迟/`collapsed`/`theme` 等配置，
       //    MenuItem / SubMenu 完全感知不到（Issue #22.7）。getter 让消费处在
@@ -397,10 +404,10 @@ const Menu = defineComponent({
       },
       motion: null,
       defaultMotions: null,
-      onItemClick: onInternalClick as (info: unknown) => void,
+      onItemClick: onInternalClick,
       onOpenChange: onInternalOpenChange,
       openKeys: mergedOpenKeys,
-      renderNode: renderNode as unknown as (node: unknown, keyPath: string[]) => unknown,
+      renderNode,
       registerPopupClose,
       cancelAncestorPopupClose,
       get inlineCollapsed() {
@@ -414,18 +421,24 @@ const Menu = defineComponent({
         return props.theme;
       },
       get expandIcon() {
-        return override?.expandIcon as RenderIconType | undefined;
+        return override?.expandIcon;
+      },
+      get direction() {
+        return direction.value;
+      },
+      get renderExpandIcon() {
+        return slots.expandIcon;
       },
       // 语义槽（Issue #22.6）：computed 直接下发，子组件在渲染里读 ⇒ 响应式
-      semanticClassNames: mergedClassNames as unknown as ComputedRef<Record<string, unknown>>,
-      semanticStyles: mergedStyles as unknown as ComputedRef<Record<string, unknown>>,
+      semanticClassNames: mergedClassNames,
+      semanticStyles: mergedStyles,
     };
     provide(menuContextKey, menuContext);
     provide(isSubPathKeyKey, isSubPathKey);
     // 可见子树的 keyPath 根
     provide(
       pathTrackerKey,
-      computed(() => [] as string[]),
+      computed<string[]>(() => []),
     );
 
     /** measure 子树的注入包装（rc PathRegisterContext.Provider 同构）。 */
@@ -438,15 +451,27 @@ const Menu = defineComponent({
     });
 
     // ======================= Expose ======================
-    expose({
-      list: containerRef,
+    const publicApi: MenuRef = {
+      get list() {
+        return containerRef.value;
+      },
       focus: (options?: FocusOptions) => {
-        const first = containerRef.value?.querySelector<HTMLElement>('[role="menuitem"]');
+        const first = containerRef.value?.querySelector<HTMLElement>(
+          '[data-menu-id]:not([aria-disabled="true"]):not([aria-hidden="true"])',
+        );
         first?.focus(options);
       },
-      findItem: ({ key }: { key: string }) =>
-        containerRef.value?.querySelector<HTMLElement>(`[data-menu-id='${menuId}-${key}']`) ?? null,
-    });
+      findItem: ({ key }) => {
+        const id = getMenuId(menuId.value, key);
+        return (
+          [
+            ...(containerRef.value?.ownerDocument.querySelectorAll<HTMLElement>('[data-menu-id]') ??
+              []),
+          ].find((element) => element.getAttribute('data-menu-id') === id) ?? null
+        );
+      },
+    };
+    expose(publicApi);
 
     // ====================== Render =======================
     /**
@@ -455,31 +480,11 @@ const Menu = defineComponent({
      * `<MenuItem role="option" aria-controls=...>` 把菜单当 listbox 用 —— Issue #22.4）。
      * ⚠️ 只放纯 DOM 语义的键：`tabindex` / `data-menu-id` / 事件仍由 MenuItem 决定。
      */
-    const ITEM_DOM_KEYS = [
-      'id',
-      'role',
-      'title',
-      'aria-controls',
-      'aria-expanded',
-      'aria-haspopup',
-      'aria-label',
-      'aria-describedby',
-    ] as const;
-
-    const pickItemDomAttrs = (node: ParsedNode): Record<string, unknown> => {
-      const out: Record<string, unknown> = {};
-      for (const key of ITEM_DOM_KEYS) {
-        const value = (node as unknown as Record<string, unknown>)[key];
-        if (value !== undefined) out[key] = value;
-      }
-      return out;
-    };
-
     /** 规范节点 → vnode（可见/measure 两棵子树共用）。 */
     function renderNode(
       node: ParsedNode,
       keyPath: string[],
-      overflowDisabled: boolean,
+      overflowDisabled = false,
       overflowCls?: string,
     ): VNodeChild {
       const eventKey = node.key;
@@ -489,23 +494,27 @@ const Menu = defineComponent({
           return h(
             MenuItem,
             {
-              ...pickItemDomAttrs(node),
+              id: node.id,
+              role: node.role,
+              'aria-controls': node['aria-controls'],
+              'aria-expanded': node['aria-expanded'],
+              'aria-haspopup': node['aria-haspopup'],
+              'aria-label': node['aria-label'],
+              'aria-describedby': node['aria-describedby'],
               key: eventKey,
               eventKey,
               disabled: node.disabled,
               danger: node.danger,
-              icon: node.icon,
-              itemIcon: node.itemIcon,
               // title/extra 经 slot 下发（items 的 VNodeChild 富内容；C8-R2）
               title: typeof node.title === 'string' ? node.title : undefined,
               labelText: typeof node.label === 'string' ? node.label : undefined,
               overflowDisabled,
               overflowCls,
-              itemData: { ...node, key: eventKey } as Record<string, unknown>,
+              itemData: node,
               onClick: node.onClick,
               onMouseEnter: node.onMouseEnter,
               onMouseLeave: node.onMouseLeave,
-            } as never,
+            },
             {
               default: () => node.label,
               // title 解析为 node.title ?? node.label（items 富内容走 slot）
@@ -521,22 +530,24 @@ const Menu = defineComponent({
               eventKey,
               disabled: node.disabled,
               danger: node.danger,
-              icon: node.icon,
-              itemIcon: node.itemIcon,
               // antd SubMenuType.theme：该子菜单弹层独立主题（不改变根主题）
               theme: node.theme,
               // title 经 slot 下发（items 的 VNodeChild 富内容；C8-R2）
-              title:
-                typeof (node.title ?? node.label) === 'string'
-                  ? (node.title ?? node.label)
-                  : undefined,
-              popupClassName: node.popupClassName,
+              title: node.title ?? (typeof node.label === 'string' ? node.label : undefined),
+              popupClassName: normalizeClass([node.rootClassName, node.popupClassName]),
               popupOffset: node.popupOffset,
               popupStyle: node.popupStyle,
               overflowDisabled,
               overflowCls,
               childrenNodes: node.children,
-            } as never,
+              itemData: node,
+              onMouseEnter: node.onMouseEnter,
+              onMouseLeave: node.onMouseLeave,
+              onTitleClick: node.onTitleClick,
+              onTitleMouseEnter: node.onTitleMouseEnter,
+              onTitleMouseLeave: node.onTitleMouseLeave,
+              onClick: node.onClick,
+            },
             {
               // title 解析为 node.title ?? node.label（items 富内容走 slot）
               title: () => node.title ?? node.label,
@@ -547,7 +558,7 @@ const Menu = defineComponent({
           // OverflowContext）；子项经递归携带。
           return h(
             MenuItemGroup,
-            { key: eventKey, eventKey, label: node.label as VNodeChild },
+            { key: eventKey, eventKey, label: node.label },
             {
               default: () =>
                 (node.children ?? []).map((c) =>
@@ -574,27 +585,19 @@ const Menu = defineComponent({
       // rc 的 Overflow component='ul' 同构；ul > div > li 会破坏 menu 的 DOM 语义）
       // `aria-*` 从 attrs 放行（与 rc-menu 的 `...restProps` 同判）：
       // 溢出下拉要用 `aria-activedescendant` / `aria-label`。
-      const ariaAttrs = Object.fromEntries(
-        Object.entries(attrs).filter(([key]) => key.startsWith('aria-')),
-      );
-      // 语义槽（Issue #22.6）：本仓的根 `<ul>` 同时承担 antd 的 `root` 与 `list` 两个槽
-      // （antd 6 的 Menu 根就是 ul，没有额外包裹层）⇒ 两个槽的 class 都拼到这一个元素上。
-      const rootCls = mergedClassNames.value as Record<string, string | undefined>;
-      const rootStyle = mergedStyles.value as Record<string, unknown>;
-      const rootAttrs = {
-        ref: containerRef as never,
+      const { class: nativeClass, style: nativeStyle, ...nativeAttrs } = attrs;
+      const rootAttrs = mergeProps(nativeAttrs, {
         'data-menu-list': true,
         role: props.role,
-        tabindex: props.tabIndex,
+        tabindex: attrs.tabindex ?? props.tabIndex,
         id: props.id,
-        ...ariaAttrs,
-        ...styleAttrs({
-          ...(typeof attrs.style === 'object'
-            ? (attrs.style as Record<string, string | number>)
-            : {}),
-          ...((rootStyle.root ?? {}) as Record<string, string | number>),
-          ...((rootStyle.list ?? {}) as Record<string, string | number>),
-        }),
+        style: [
+          theme.style.value,
+          menuConfig.style,
+          mergedStyles.value.root,
+          mergedStyles.value.list,
+          nativeStyle,
+        ],
         class: [
           prefixCls.value,
           `${prefixCls.value}-root`,
@@ -602,28 +605,30 @@ const Menu = defineComponent({
           `${prefixCls.value}-${props.theme}`,
           mergedInlineCollapsed.value ? `${prefixCls.value}-inline-collapsed` : undefined,
           isRtl.value ? `${prefixCls.value}-rtl` : undefined,
-          typeof attrs.class === 'string' ? attrs.class : undefined,
-          rootCls.root,
-          rootCls.list,
+          menuConfig.className,
+          mergedClassNames.value.root,
+          mergedClassNames.value.list,
+          nativeClass,
         ],
         dir: direction.value,
         onKeydown: onInternalKeyDown,
-      };
+      });
 
+      const { class: overflowClass, ...overflowAttrs } = rootAttrs;
       const container = useOverflow
         ? h(Overflow, {
             key: 'overflow',
             prefixCls: `${prefixCls.value}-overflow`,
             component: 'ul',
-            'data-menu-list': true,
-            role: props.role,
-            tabindex: props.tabIndex,
-            ...ariaAttrs,
-            id: props.id,
-            onKeydown: onInternalKeyDown,
-            className: rootAttrs.class,
+            ...overflowAttrs,
+            // Overflow has one native ul root; normalize the actual Vue component ref at this boundary.
+            ref: (value: Element | ComponentPublicInstance | null) => {
+              const element = value && '$el' in value ? value.$el : value;
+              containerRef.value = element instanceof HTMLUListElement ? element : null;
+            },
+            className: normalizeClass(overflowClass),
             ssr: 'full',
-            data: parsedNodes.value as unknown[],
+            data: parsedNodes.value,
             itemKey: (item: unknown) => (item as ParsedNode).key,
             maxCount,
             onVisibleChange: (count: number) => {
@@ -647,14 +652,14 @@ const Menu = defineComponent({
                   // ⚠️ rc `Menu.js:361-371`：省略项**作为 children 进子菜单**，
                   //    `internalPopupClose = len === 0`。原来写死 `true` + 空 children
                   //    ⇒ 「更多」永远是个空菜单（Issue #22.3）。
-                  internalPopupClose: (omittedItems?.length ?? 0) === 0,
-                  childrenNodes: (omittedItems ?? []) as ParsedNode[],
-                } as never,
+                  internalPopupClose: omittedItems.length === 0,
+                  childrenNodes: omittedItems as ParsedNode[],
+                },
                 // 溢出「更多」指示：程序化 VNode ⇒ 走 #title slot（C8-R2）
                 { title: () => h(EllipsisOutlined) },
               ),
-          } as never)
-        : h('ul', rootAttrs, renderList());
+          })
+        : h('ul', { ...rootAttrs, ref: containerRef }, renderList());
 
       // ---- measure 子树（display:none，只登记路径）----
       const measureTree = h(

@@ -36,6 +36,12 @@ describe('parseItems · rc convertItemsToNodes 同判', () => {
     }
   });
 
+  it('an explicitly typed empty submenu stays a submenu', () => {
+    expect(
+      parseItems([{ type: 'submenu', key: 'pending', label: 'Pending', children: [] }])[0],
+    ).toMatchObject({ kind: 'submenu', key: 'pending', children: [] });
+  });
+
   it('type=divider ⇒ divider；null 项被过滤；空 children 不构成 submenu（⇒ item）', () => {
     const nodes = parseItems([
       { type: 'divider', key: 'd' },

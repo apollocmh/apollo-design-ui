@@ -8,6 +8,7 @@ import { useMeasure, useMenuContext } from './context';
 
 const MenuDivider = defineComponent({
   name: 'AMenuDivider',
+  inheritAttrs: false,
   props: {
     eventKey: { type: String, default: undefined },
     dashed: { type: Boolean, default: false },

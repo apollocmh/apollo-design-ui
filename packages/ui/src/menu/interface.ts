@@ -6,7 +6,8 @@
  * icon 收窄为 RenderIconType（VNodeChild | 函数）。
  */
 
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { CSSProperties, HTMLAttributes, VNodeChild } from 'vue';
+import type { TooltipProps } from '../tooltip/interface';
 
 export type MenuMode = 'horizontal' | 'vertical' | 'inline';
 export type MenuTheme = 'light' | 'dark';
@@ -52,7 +53,11 @@ export type MenuHoverEventHandler = (info: { key: string; domEvent: MouseEvent }
 // items 联合（antd interface.ts 的 ItemType 族）
 // ---------------------------------------------------------------------------
 
-export interface MenuItemType {
+export interface MenuItemType
+  extends Pick<
+    HTMLAttributes,
+    'aria-expanded' | 'aria-haspopup' | 'aria-label' | 'aria-describedby'
+  > {
   type?: 'item';
   label?: VNodeChild;
   key?: string;
@@ -174,6 +179,39 @@ export interface MenuRef {
   findItem: (params: { key: string }) => HTMLElement | null;
 }
 
+export type MenuSlots = {
+  expandIcon?: (scope: RenderIconInfo) => VNodeChild;
+};
+export type MenuItemSlots = {
+  default?: () => VNodeChild;
+  title?: () => VNodeChild;
+  icon?: (scope: RenderIconInfo) => VNodeChild;
+  extra?: () => VNodeChild;
+};
+export type MenuItemGroupSlots = {
+  default?: () => VNodeChild;
+  title?: () => VNodeChild;
+};
+export type MenuSubMenuSlots = Pick<MenuItemSlots, 'title' | 'icon'> & {
+  expandIcon?: (scope: RenderIconInfo) => VNodeChild;
+};
+export interface MenuEmits {
+  'update:selectedKeys': (keys: string[]) => void;
+  'update:openKeys': (keys: string[]) => void;
+  click: MenuClickEventHandler;
+  select: SelectEventHandler;
+  deselect: SelectEventHandler;
+  openChange: (keys: string[]) => void;
+}
+export type MenuClassNames = NonNullable<MenuSemanticType['classNames']> & {
+  popup?: MenuPopupSemanticType['classNames'];
+  subMenu?: SubMenuSemanticType['classNames'];
+};
+export type MenuStyles = NonNullable<MenuSemanticType['styles']> & {
+  popup?: MenuPopupSemanticType['styles'];
+  subMenu?: SubMenuSemanticType['styles'];
+};
+
 // ---------------------------------------------------------------------------
 // MenuProps（rc MenuProps 的本仓子集 + antd 壳扩展）
 // ---------------------------------------------------------------------------
@@ -191,6 +229,8 @@ export interface MenuProps {
   selectedKeys?: string[];
   defaultSelectedKeys?: string[];
   openKeys?: string[];
+  'onUpdate:selectedKeys'?: MenuEmits['update:selectedKeys'];
+  'onUpdate:openKeys'?: MenuEmits['update:openKeys'];
   defaultOpenKeys?: string[];
   activeKey?: string;
   inlineIndent?: number;
@@ -200,24 +240,15 @@ export interface MenuProps {
   triggerSubMenuAction?: TriggerSubMenuAction;
   getPopupContainer?: (node: HTMLElement) => HTMLElement;
   tabIndex?: number;
+  role?: string;
   id?: string;
   onClick?: MenuClickEventHandler;
   onSelect?: SelectEventHandler;
   onDeselect?: SelectEventHandler;
   onOpenChange?: (openKeys: string[]) => void;
-  onKeyDown?: (e: KeyboardEvent) => void;
+  onKeydown?: (e: KeyboardEvent) => void;
   /** 折叠态 item 标题的 Tooltip 配置（`false` 关闭）。 */
-  tooltip?: false | Record<string, unknown>;
-  /** expandIcon 覆盖（函数 / 元素 / null 隐藏）。 */
-  expandIcon?: RenderIconType | null;
-  classNames?: MenuSemanticType['classNames'] & {
-    popup?: MenuPopupSemanticType['classNames'];
-    subMenu?: SubMenuSemanticType['classNames'];
-  };
-  styles?: MenuSemanticType['styles'] & {
-    popup?: MenuPopupSemanticType['styles'];
-    subMenu?: SubMenuSemanticType['styles'];
-  };
-  /** ⚠️ deprecated：用 items（children 写法仅告警）。 */
-  children?: VNodeChild;
+  tooltip?: false | TooltipProps;
+  classNames?: MenuClassNames;
+  styles?: MenuStyles;
 }

@@ -6,60 +6,23 @@
  * 两棵子树实现（rc 的 measureChildList 同构）。
  */
 
-import { isEmptyVNode } from '@apollo-design/utils';
-import {
-  computed,
-  defineComponent,
-  h,
-  isVNode,
-  mergeProps,
-  type PropType,
-  Text,
-  type VNodeChild,
-} from 'vue';
+import { computed, defineComponent, h, mergeProps, type PropType, type SlotsType } from 'vue';
 
-import { styleAttrs } from '../_internal/use-merge-semantic';
 import Tooltip from '../tooltip';
 import { useFullPath, useMeasure, useMenuContext, usePathRegister } from './context';
 import { ownedMenuActions } from './engine/native-actions';
 import { getEventKeyCode, getMenuId, KeyCode } from './engine/use-accessibility';
-import type { MenuClickEventHandler, MenuHoverEventHandler, RenderIconType } from './interface';
-
-/** 解包 Vue slot 归一结果：单元素数组 ⇒ 元素；Text VNode（string slot 归一产物）⇒ 字符串。 */
-function unwrapSlotResult(nodes: unknown): unknown {
-  let r = nodes;
-  if (Array.isArray(r) && r.length === 1) r = r[0];
-  if (isVNode(r) && r.type === Text) r = (r.children as string) ?? '';
-  return r;
-}
-
-/** 读具名 slot；无 slot 返回 undefined，空 slot 归一成 comment ⇒ 返回 null（隐藏）。 */
-function readSlot(slots: Record<string, unknown>, name: string): unknown {
-  const fn = (slots as Record<string, (() => unknown) | undefined>)[name];
-  if (typeof fn !== 'function') return undefined;
-  const nodes = fn();
-  if (nodes === undefined) return undefined;
-  const resolved = unwrapSlotResult(nodes);
-  return isEmptyVNode(resolved as never) ? null : resolved;
-}
+import type { ItemData, MenuInfo, MenuItemSlots, MenuItemType } from './interface';
 
 const MenuItem = defineComponent({
   name: 'AMenuItem',
   // 根 li 显式合并 attrs（restAttrs / class / style）；默认继承会把 class 应用两次。
   inheritAttrs: false,
+  slots: Object as SlotsType<MenuItemSlots>,
   props: {
     eventKey: { type: String, default: undefined },
     disabled: { type: Boolean, default: false },
     danger: { type: Boolean, default: false },
-    icon: {
-      type: [Object, String, Number, Function] as PropType<RenderIconType>,
-      default: undefined,
-    },
-    /** rc 的 itemIcon（items 数据字段；icon 未传时回退到它）。 */
-    itemIcon: {
-      type: [Object, String, Number, Function] as PropType<RenderIconType>,
-      default: undefined,
-    },
     /** 文本主导：收窄 String；富内容走 #title slot（优先于 prop）。 */
     title: { type: String, default: undefined },
     /** items 的 string label（collapsed 态 noicon 首字符用；rc 的 label 判定）。 */
@@ -67,14 +30,16 @@ const MenuItem = defineComponent({
     overflowDisabled: { type: Boolean, default: undefined },
     overflowCls: { type: String, default: undefined },
     // extra 为 VNode 主导 —— 已删除 prop，改 #extra slot（见 render 中 readSlot）。
-    itemData: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    onMouseEnter: { type: Function as PropType<MenuHoverEventHandler>, default: undefined },
-    onMouseLeave: { type: Function as PropType<MenuHoverEventHandler>, default: undefined },
-    onClick: { type: Function as PropType<MenuClickEventHandler>, default: undefined },
+    itemData: { type: Object as PropType<MenuItemType & { key: string }>, default: undefined },
   },
-  setup(props, { slots, attrs }) {
-    const mergedTitle = (): unknown => readSlot(slots, 'title') ?? props.title;
-    const mergedExtra = (): unknown => readSlot(slots, 'extra');
+  emits: {
+    click: (_info: MenuInfo) => true,
+    mouseEnter: (_info: { key: string; domEvent: MouseEvent }) => true,
+    mouseLeave: (_info: { key: string; domEvent: MouseEvent }) => true,
+  },
+  setup(props, { slots, attrs, emit }) {
+    const mergedTitle = () => (slots.title ? slots.title() : props.title);
+    const mergedExtra = () => slots.extra?.();
     const measure = useMeasure();
     const connectedKeyPath = useFullPath(props.eventKey);
 
@@ -96,21 +61,17 @@ const MenuItem = defineComponent({
       const eventKey = props.eventKey ?? '';
       const connectedKeys = connectedKeyPath.value;
       const itemCls = `${ctx.prefixCls}-item`;
-      const children = slots.default?.();
+      const children = slots.default ? slots.default() : mergedTitle();
       // 语义槽（Issue #22.6）：item / itemContent / itemIcon
-      const semCls = (ctx.semanticClassNames?.value ?? {}) as Record<string, string | undefined>;
-      const semStyle = (ctx.semanticStyles?.value ?? {}) as Record<
-        string,
-        Record<string, string | number> | undefined
-      >;
-
-      const getEventInfo = (e: Event) => {
-        const itemData = props.itemData ?? {
+      const semCls = ctx.semanticClassNames?.value ?? {};
+      const semStyle = ctx.semanticStyles?.value ?? {};
+      const getEventInfo = (e: Event): MenuInfo => {
+        const itemData: ItemData = props.itemData ?? {
           key: eventKey,
           label: children,
-          itemIcon: props.icon,
+          itemIcon: ctx.itemIcon,
           extra: mergedExtra(),
-          title: mergedTitle(),
+          title: props.title,
         };
         return {
           key: eventKey,
@@ -125,7 +86,7 @@ const MenuItem = defineComponent({
       const onInternalClick = (e: MouseEvent): void => {
         if (mergedDisabled.value) return;
         const info = getEventInfo(e);
-        props.onClick?.(info as never);
+        emit('click', info);
         ctx.onItemClick(info);
       };
       const onClickCapture = (e: MouseEvent): void => {
@@ -157,7 +118,7 @@ const MenuItem = defineComponent({
           return;
         }
         const info = getEventInfo(e);
-        props.onClick?.(info as never);
+        emit('click', info);
         ctx.onItemClick(info);
       };
       const onInternalFocus = (): void => {
@@ -165,18 +126,29 @@ const MenuItem = defineComponent({
       };
       const onInternalMouseEnter = (e: MouseEvent): void => {
         if (!mergedDisabled.value) ctx.onActive(eventKey);
-        props.onMouseEnter?.({ key: eventKey, domEvent: e });
+        emit('mouseEnter', { key: eventKey, domEvent: e });
       };
       const onInternalMouseLeave = (e: MouseEvent): void => {
         ctx.onInactive(eventKey);
-        props.onMouseLeave?.({ key: eventKey, domEvent: e });
+        emit('mouseLeave', { key: eventKey, domEvent: e });
       };
 
-      const mergedItemIcon = props.icon ?? props.itemIcon ?? ctx.itemIcon;
+      const icon = props.itemData?.icon ?? props.itemData?.itemIcon ?? ctx.itemIcon;
+      const info = {
+        isSelected: isSelected.value,
+        disabled: mergedDisabled.value,
+        isSubMenu: false,
+      };
+      const iconNode = slots.icon
+        ? slots.icon(info)
+        : typeof icon === 'function'
+          ? icon(info)
+          : icon;
+      const hasIcon = slots.icon !== undefined || icon != null;
       // rc renderItemChildren：折叠态 + firstLevel + 无 icon + 字符串 label ⇒
       // 渲染首字符的 {p}-inline-collapsed-noicon 块
       const collapsedNoIcon =
-        ctx.inlineCollapsed && ctx.firstLevel && !props.icon && props.labelText
+        ctx.inlineCollapsed && ctx.firstLevel && !hasIcon && props.labelText
           ? props.labelText.charAt(0)
           : null;
 
@@ -185,15 +157,12 @@ const MenuItem = defineComponent({
       //    并且 rc 在 `role === 'option'` 时**补一个 `aria-selected`**。
       //    本仓原先硬编码 `'menuitem'`（且写在 `...attrs` **之后**，连 attrs 都盖掉）
       //    ⇒ 那个用法无法表达、且多出错误的 `aria-selected` 语义（2026-09-30 修）。
-      const { role: roleAttr, ...restAttrs } = attrs as { role?: string | null };
+      const { role: roleAttr, class: nativeClass, style: nativeStyle, ...restAttrs } = attrs;
       const itemRole = roleAttr === null ? 'none' : roleAttr || 'menuitem';
 
       const node = h(
         'li',
-        {
-          ...mergeProps(restAttrs, {
-            onClickCapture: mergedDisabled.value ? onClickCapture : undefined,
-          }),
+        mergeProps(restAttrs, {
           role: itemRole,
           ...(itemRole === 'option' ? { 'aria-selected': isSelected.value } : {}),
           // rc：tabIndex disabled? null : -1（roving tabindex 的 -1 基线）
@@ -209,59 +178,54 @@ const MenuItem = defineComponent({
             isSelected.value ? `${itemCls}-selected` : undefined,
             mergedDisabled.value ? `${itemCls}-disabled` : undefined,
             props.danger ? `${itemCls}-danger` : undefined,
-            !mergedItemIcon ? `${itemCls}-only-child` : undefined,
+            !hasIcon ? `${itemCls}-only-child` : undefined,
             props.overflowCls,
             semCls.item,
-            (restAttrs as { class?: string }).class,
+            nativeClass,
           ],
-          ...styleAttrs({
-            // rc useDirectionStyle：inline 模式的缩进（level × inlineIndent，内联；
-            // ⚠️ Vue 的 style 值必须是带单位字符串 —— 数字会被静默丢弃）
-            ...(ctx.mode.value === 'inline'
+          style: [
+            ctx.mode.value === 'inline'
               ? { paddingLeft: `${connectedKeys.length * ctx.inlineIndent}px` }
-              : {}),
-            ...(attrs.style as Record<string, string | number> | undefined),
-            ...(semStyle.item ?? {}),
-          }),
+              : undefined,
+            semStyle.item,
+            nativeStyle,
+          ],
+          onClickCapture: mergedDisabled.value ? onClickCapture : undefined,
           onClick: onInternalClick,
           onKeydown: onInternalKeyDown,
           onFocus: onInternalFocus,
           onFocusin: onInternalFocus,
           onMouseenter: onInternalMouseEnter,
           onMouseleave: onInternalMouseLeave,
-        },
+        }),
         collapsedNoIcon !== null
           ? [h('div', { class: `${ctx.prefixCls}-inline-collapsed-noicon` }, collapsedNoIcon)]
           : [
               // ⚠️ antd `MenuItem.tsx`：icon 在 title-content **之前**（cloneElement 的
               //    icon 是第一个 child）。本仓原先写反了 ⇒ `.apollo-menu-item-icon + span`
               //    的 margin-inline-start 永不命中，图标跑到文字右侧。
-              mergedItemIcon
+              hasIcon
                 ? h(
                     'span',
                     {
                       class: [`${ctx.prefixCls}-item-icon`, semCls.itemIcon],
-                      ...styleAttrs(semStyle.itemIcon),
+                      style: semStyle.itemIcon,
                     },
-                    typeof mergedItemIcon === 'function'
-                      ? [mergedItemIcon({ isSelected: isSelected.value })].filter(
-                          (c) => c !== null && c !== undefined,
-                        )
-                      : [mergedItemIcon].filter((c) => c !== null && c !== undefined),
+                    [iconNode],
                   )
                 : null,
               h(
                 'span',
                 {
                   class: [`${ctx.prefixCls}-title-content`, semCls.itemContent],
-                  ...styleAttrs(semStyle.itemContent),
+                  style: semStyle.itemContent,
                 },
                 [
                   children,
                   (() => {
                     const extra = mergedExtra();
                     return extra !== undefined && extra !== null
-                      ? h('span', { class: `${ctx.prefixCls}-item-extra` }, [extra as VNodeChild])
+                      ? h('span', { class: `${ctx.prefixCls}-item-extra` }, [extra])
                       : null;
                   })(),
                 ],
@@ -272,31 +236,32 @@ const MenuItem = defineComponent({
       // antd `MenuItem.tsx`：折叠态（inlineCollapsed / Sider 折叠）用 Tooltip 展示标题。
       // 未展开时 `title` 为 null ⇒ Tooltip 不显示；`tooltip === false` 完全关闭。
       if (!ctx.inlineCollapsed || ctx.tooltip === false) return node;
-      const tooltipConfig = (ctx.tooltip ?? {}) as Record<string, unknown>;
-      const cfgClassNames = tooltipConfig.classNames as Record<string, string> | undefined;
+      const tooltipConfig = ctx.tooltip ?? {};
       const tooltipTitle =
         tooltipConfig.title !== undefined
           ? tooltipConfig.title
-          : typeof props.title === 'string'
-            ? props.title
-            : ctx.firstLevel
-              ? props.labelText
-              : undefined;
+          : slots.title
+            ? mergedTitle()
+            : (props.title ?? (ctx.firstLevel ? props.labelText : undefined));
       return h(
         Tooltip,
         {
           ...tooltipConfig,
           title: tooltipTitle ?? null,
-          placement:
-            (tooltipConfig.placement as string | undefined) ??
-            (ctx.direction === 'rtl' ? 'left' : 'right'),
-          classNames: {
-            ...(cfgClassNames ?? {}),
-            root: [`${ctx.prefixCls}-inline-collapsed-tooltip`, cfgClassNames?.root]
-              .filter(Boolean)
-              .join(' '),
+          placement: tooltipConfig.placement ?? (ctx.direction === 'rtl' ? 'left' : 'right'),
+          classNames: (info) => {
+            const names =
+              typeof tooltipConfig.classNames === 'function'
+                ? tooltipConfig.classNames(info)
+                : tooltipConfig.classNames;
+            return {
+              ...names,
+              root: [`${ctx.prefixCls}-inline-collapsed-tooltip`, names?.root]
+                .filter(Boolean)
+                .join(' '),
+            };
           },
-        } as never,
+        },
         { default: () => node },
       );
     };

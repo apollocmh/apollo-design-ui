@@ -2,13 +2,23 @@
  * MenuItemGroup —— rc-menu `MenuItemGroup.js` 的 Vue 版。
  * measure 模式 ⇒ 只递归渲染子节点（不渲染 group 本体，供路径登记）。
  */
-import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  mergeProps,
+  type PropType,
+  type SlotsType,
+  type VNodeChild,
+} from 'vue';
 
 import { useMeasure, useMenuContext } from './context';
-import type { ItemType } from './interface';
+import type { ItemType, MenuItemGroupSlots } from './interface';
 
 const MenuItemGroup = defineComponent({
   name: 'AMenuItemGroup',
+  inheritAttrs: false,
+  slots: Object as SlotsType<MenuItemGroupSlots>,
   props: {
     eventKey: { type: String, default: undefined },
     label: { type: [Object, String, Number] as PropType<VNodeChild>, default: undefined },
@@ -30,12 +40,11 @@ const MenuItemGroup = defineComponent({
     return () =>
       h(
         'li',
-        {
-          ...attrs,
+        mergeProps(attrs, {
           role: 'presentation',
           onClick: (e: MouseEvent) => e.stopPropagation(),
-          class: [groupPrefixCls.value, props.overflowCls, attrs.class],
-        },
+          class: [groupPrefixCls.value, props.overflowCls],
+        }),
         [
           h(
             'div',
@@ -44,9 +53,9 @@ const MenuItemGroup = defineComponent({
               class: `${groupPrefixCls.value}-title`,
               title: typeof props.label === 'string' ? props.label : undefined,
             },
-            props.label ?? slots.default?.(),
+            [slots.title ? slots.title() : props.label],
           ),
-          h('ul', { role: 'group', class: `${groupPrefixCls.value}-list` }, slots.default?.()),
+          h('ul', { role: 'group', class: `${groupPrefixCls.value}-list` }, [slots.default?.()]),
         ],
       );
   },

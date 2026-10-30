@@ -186,3 +186,7 @@ Cascader/CascaderPanel 的通知使用 Vue emits，选择器提供 value/open/se
 ### D-date-picker-native-input-and-panels
 
 DatePicker/RangePicker 的内容函数迁为 cellRender/panelRender/extraFooter/tagRender 等具名槽，移除无实际替换链路的 components/inputRender、失效的 changeOnBlur 与无运行时组件的 PurePanel 类型。通知使用 Vue emits，value/open/pickerValue/mode 支持模型请求；keydown 只接收原生 KeyboardEvent，preventDefault() 在内部操作前生效，暴露 DOM 引用准确包含 null。修正输入草稿/IME、受控撤控、范围活动端与禁用时间、只读面板键盘、动态槽与主题及观察器清理；TimePicker 仅同步关联包装桥，详见[DatePicker API](packages/ui/src/date-picker/index.zh-CN.md)。
+
+### D-menu-native-notifications
+
+Menu 的选择/展开通知统一使用 Vue emits，原生键盘监听使用 onKeydown（模板为 @keydown），替代 React 拼法 onKeyDown；顶层 expandIcon 与静态子组件图标渲染迁为具名槽，数据项的图标和操作函数保留。移除从未消费的 children 类型，继续使用 items 数据源；实际 Overflow 根引用、当前 Provider/语义样式、已有十个 Token 和 popup/inline 层级职责同步修正，详见[Menu API](packages/ui/src/menu/index.zh-CN.md)。

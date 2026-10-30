@@ -20,25 +20,28 @@
  *      不再手写 getBoundingClientRect + 双 rAF 的简化定位。
  */
 
-import { isEmptyVNode } from '@apollo-design/utils';
 import {
+  cloneVNode,
   computed,
   defineComponent,
   h,
   inject,
   isVNode,
+  mergeProps,
+  normalizeClass,
   onUnmounted,
   type PropType,
   provide,
   ref,
+  type SlotsType,
   Text,
   type VNode,
   type VNodeChild,
   watch,
 } from 'vue';
 
-import { Trigger, type TriggerAlign } from '../_internal/trigger';
-import { styleAttrs } from '../_internal/use-merge-semantic';
+import type { TriggerAlign } from '../_internal/trigger';
+import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import {
   inheritMenuContext,
   isSubPathKeyKey,
@@ -53,7 +56,15 @@ import {
 import type { ParsedNode } from './engine/parse-items';
 import { getMenuId } from './engine/use-accessibility';
 import InlineSubMenuList from './InlineSubMenuList';
-import type { MenuHoverEventHandler, MenuTheme, RenderIconType } from './interface';
+import type {
+  MenuInfo,
+  MenuSubMenuSlots,
+  MenuTheme,
+  SubMenuSemanticType,
+  SubMenuType,
+} from './interface';
+import PopupTrigger from './PopupTrigger';
+import { useMenuTheme } from './use-menu-theme';
 
 /**
  * rc `@rc-component/menu/es/placements.js` 的 8 个 placement。
@@ -85,29 +96,27 @@ const SubMenu = defineComponent({
   name: 'AMenuSubMenu',
   // 根 li 显式合并 attrs（class/style/其他属性）；默认继承会让 class 被应用两次。
   inheritAttrs: false,
+  slots: Object as SlotsType<MenuSubMenuSlots>,
   props: {
     eventKey: { type: String, default: undefined },
     /** 文本主导：收窄 String；富内容走 #title slot（优先于 prop）。 */
     title: { type: String, default: undefined },
     disabled: { type: Boolean, default: false },
     danger: { type: Boolean, default: false },
-    icon: {
-      type: [Object, String, Number, Function] as PropType<RenderIconType>,
-      default: undefined,
-    },
-    itemIcon: {
-      type: [Object, String, Number, Function] as PropType<RenderIconType>,
-      default: undefined,
-    },
     /** 该弹层的独立主题（antd SubMenuType.theme）。 */
     theme: { type: String as PropType<MenuTheme>, default: undefined },
     popupClassName: { type: String, default: undefined },
     popupOffset: {
-      type: Array as unknown as PropType<[number, number]>,
+      type: Object as PropType<[number, number]>,
+      validator: (value: unknown) =>
+        Array.isArray(value) &&
+        value.length === 2 &&
+        typeof value[0] === 'number' &&
+        typeof value[1] === 'number',
       default: undefined,
     },
     popupStyle: {
-      type: Object as PropType<Record<string, string | number>>,
+      type: Object as PropType<SubMenuType['popupStyle']>,
       default: undefined,
     },
     overflowDisabled: { type: Boolean, default: false },
@@ -115,39 +124,17 @@ const SubMenu = defineComponent({
     internalPopupClose: { type: Boolean, default: false },
     /** items 模式：子节点由 Menu 解析后经 props 下发（Vue 无 cloneElement）。 */
     childrenNodes: { type: Array as PropType<ParsedNode[]>, default: () => [] },
-    onMouseEnter: { type: Function as PropType<MenuHoverEventHandler>, default: undefined },
-    onMouseLeave: { type: Function as PropType<MenuHoverEventHandler>, default: undefined },
-    onTitleMouseEnter: {
-      type: Function as PropType<MenuHoverEventHandler>,
-      default: undefined,
-    },
-    onTitleMouseLeave: {
-      type: Function as PropType<MenuHoverEventHandler>,
-      default: undefined,
-    },
-    onTitleClick: {
-      type: Function as PropType<(info: { key: string; domEvent: MouseEvent }) => void>,
-      default: undefined,
-    },
+    itemData: { type: Object as PropType<SubMenuType & { key: string }>, default: undefined },
   },
-  setup(props, { attrs, slots }) {
-    /** 解包 Vue slot 归一结果：单元素数组 ⇒ 元素；Text VNode（string slot 归一产物）⇒ 字符串。 */
-    const unwrapSlotResult = (nodes: unknown): unknown => {
-      let r = nodes;
-      if (Array.isArray(r) && r.length === 1) r = r[0];
-      if (isVNode(r) && r.type === Text) r = (r.children as string) ?? '';
-      return r;
-    };
-    /** 读 #title slot；无 slot 返回 undefined，空 slot 归一成 comment ⇒ 返回 null。
-     *  单元素数组 / Text VNode 解包，便于 typeof 判字符串。 */
-    const readTitleSlot = (): unknown => {
-      const fn = slots.title;
-      if (typeof fn !== 'function') return undefined;
-      const nodes = fn();
-      if (nodes === undefined) return undefined;
-      const resolved = unwrapSlotResult(nodes);
-      return isEmptyVNode(resolved as never) ? null : resolved;
-    };
+  emits: {
+    mouseEnter: (_info: { key: string; domEvent: MouseEvent }) => true,
+    mouseLeave: (_info: { key: string; domEvent: MouseEvent }) => true,
+    titleMouseEnter: (_info: { key: string; domEvent: MouseEvent }) => true,
+    titleMouseLeave: (_info: { key: string; domEvent: MouseEvent }) => true,
+    titleClick: (_info: { key: string; domEvent: MouseEvent }) => true,
+    click: (_info: MenuInfo) => true,
+  },
+  setup(props, { attrs, slots, emit }) {
     const measure = useMeasure();
     const connectedPath = useFullPath(props.eventKey);
 
@@ -161,10 +148,7 @@ const SubMenu = defineComponent({
       // PathTrackerContext 同样必须提供，否则嵌套层级会被拍平。
       provide(pathTrackerKey, connectedPath);
       const ctx = useMenuContext();
-      return () =>
-        props.childrenNodes.map(
-          (node) => ctx.renderNode(node, connectedPath.value) as VNodeChild,
-        ) as VNodeChild[];
+      return () => props.childrenNodes.map((node) => ctx.renderNode(node, connectedPath.value));
     }
 
     const ctx = useMenuContext();
@@ -173,11 +157,31 @@ const SubMenu = defineComponent({
       mode: computed(() => (ctx.mode.value === 'horizontal' ? 'vertical' : ctx.mode.value)),
       firstLevel: false,
       overflowDisabled: false,
+      get theme() {
+        return props.theme ?? ctx.theme;
+      },
+      get itemIcon() {
+        return props.itemData?.itemIcon ?? ctx.itemIcon;
+      },
+      onItemClick: (info) => {
+        emit('click', info);
+        ctx.onItemClick(info);
+      },
     });
     provide(menuContextKey, subCtx);
     // 子项 keyPath = [...connectedPath, childKey]（rc PathTrackerContext 同构）
     provide(pathTrackerKey, connectedPath);
 
+    const theme = useMenuTheme();
+    const semantic = useMergeSemantic<
+      SubMenuType,
+      NonNullable<SubMenuSemanticType['classNames']>,
+      NonNullable<SubMenuSemanticType['styles']>
+    >(
+      [() => ctx.semanticClassNames?.value, () => ctx.semanticClassNames?.value.subMenu],
+      [() => ctx.semanticStyles?.value, () => ctx.semanticStyles?.value.subMenu],
+      () => props.itemData ?? { key: props.eventKey, children: [] },
+    );
     const mergedDisabled = computed(() => ctx.disabled || props.disabled);
     const originOpen = computed(() => ctx.openKeys.value.includes(props.eventKey ?? ''));
     const open = computed(
@@ -241,7 +245,15 @@ const SubMenu = defineComponent({
       openTimer = null;
       closeTimer = null;
     };
-    watch(ctx.mode, clearTimers);
+    watch(
+      () => [
+        ctx.mode.value,
+        mergedDisabled.value,
+        ctx.triggerSubMenuAction,
+        props.overflowDisabled,
+      ],
+      clearTimers,
+    );
     onUnmounted(clearTimers);
     /**
      * ⭐ inline 模式**只**通过 click / 键盘展开（rc `onPopupVisibleChange` 的
@@ -262,7 +274,7 @@ const SubMenu = defineComponent({
         );
       }
       if (!mergedDisabled.value) ctx.onActive(props.eventKey ?? '');
-      props.onTitleMouseEnter?.({ key: props.eventKey ?? '', domEvent: e });
+      emit('titleMouseEnter', { key: props.eventKey ?? '', domEvent: e });
     };
     const onTitleMouseLeave = (e: MouseEvent): void => {
       clearTimers();
@@ -273,11 +285,11 @@ const SubMenu = defineComponent({
         );
       }
       ctx.onInactive(props.eventKey ?? '');
-      props.onTitleMouseLeave?.({ key: props.eventKey ?? '', domEvent: e });
+      emit('titleMouseLeave', { key: props.eventKey ?? '', domEvent: e });
     };
     const onInternalTitleClick = (e: MouseEvent): void => {
       if (mergedDisabled.value) return;
-      props.onTitleClick?.({ key: props.eventKey ?? '', domEvent: e });
+      emit('titleClick', { key: props.eventKey ?? '', domEvent: e });
       // rc：只有 inline 由 click 切换；非 inline 的 click 触发由 Trigger 的
       // `action: ['click']` 负责（overflowDisabled 时没有 Trigger，也不切换）。
       if (props.overflowDisabled) return;
@@ -309,70 +321,75 @@ const SubMenu = defineComponent({
     // 登记「取消本层关闭计时器」的句柄（Menu 在任意后代弹层 mouseenter 时调用）。
     onUnmounted(ctx.registerPopupClose?.(() => connectedPath.value, clearTimers) ?? (() => {}));
 
-    const renderChildren = (): VNode[] =>
-      props.childrenNodes
-        .map((node) => ctx.renderNode(node, connectedPath.value) as VNode)
-        .filter((n) => n !== null && n !== undefined);
-
-    const mergedItemIcon = computed(() => props.icon ?? props.itemIcon);
-    const renderIcon = (icon: RenderIconType): VNodeChild => {
-      if (typeof icon === 'function') {
-        return (icon as (info: { isSelected: boolean; isOpen: boolean }) => VNodeChild)({
-          isSelected: childrenSelected.value,
-          isOpen: open.value,
-        });
-      }
-      return icon as VNodeChild;
-    };
+    const renderChildren = (): VNodeChild[] =>
+      props.childrenNodes.map((node) => ctx.renderNode(node, connectedPath.value));
 
     return () => {
+      const { class: nativeClass, style: nativeStyle, ...nativeAttrs } = attrs;
       const eventKey = props.eventKey ?? '';
       const subMenuPrefixCls = `${ctx.prefixCls}-submenu`;
       const popupId = getMenuId(ctx.menuId, `${eventKey}-popup`);
       const mode = ctx.mode.value;
       const isInline = mode === 'inline';
 
-      // 语义槽（Issue #22.6）：item / itemTitle / itemContent / itemIcon / popup
-      // ⚠️ 先收成 `unknown` 再按槽位 cast：顶层既有字符串（item 等）又有嵌套对象
-      //    （popup / subMenu），一次 cast 到具体形态会因索引签名不重叠而报 TS2352。
-      const semCls = (ctx.semanticClassNames?.value ?? {}) as Record<string, unknown>;
-      const semStyle = (ctx.semanticStyles?.value ?? {}) as Record<string, unknown>;
-      const itemClsOf = semCls as Record<string, string | undefined>;
-      const itemStyleOf = semStyle as Record<string, Record<string, string | number> | undefined>;
-      const popupSemCls = (semCls.popup ?? {}) as Record<string, string | undefined>;
-      const popupSemStyle = (semStyle.popup ?? {}) as Record<
-        string,
-        Record<string, string | number> | undefined
-      >;
-
-      const rawTitle = readTitleSlot() ?? props.title;
+      const itemClsOf = semantic.classNames.value;
+      const itemStyleOf = semantic.styles.value;
+      const popupSemCls = ctx.semanticClassNames?.value.popup ?? {};
+      const popupSemStyle = ctx.semanticStyles?.value.popup ?? {};
+      const iconInfo = {
+        isSelected: childrenSelected.value,
+        isOpen: open.value,
+        isSubMenu: true,
+        disabled: mergedDisabled.value,
+      };
+      const icon = props.itemData?.icon ?? props.itemData?.itemIcon ?? ctx.itemIcon;
+      const hasIcon = slots.icon !== undefined || icon != null;
+      const iconContent = slots.icon
+        ? slots.icon(iconInfo)
+        : typeof icon === 'function'
+          ? icon(iconInfo)
+          : icon;
+      const expandIcon =
+        props.itemData?.expandIcon !== undefined ? props.itemData.expandIcon : ctx.expandIcon;
+      const customExpandIcon =
+        slots.expandIcon ??
+        (props.itemData?.expandIcon === undefined ? ctx.renderExpandIcon : undefined);
+      const hasExpandIcon = customExpandIcon !== undefined || expandIcon !== undefined;
+      const expandContent = customExpandIcon
+        ? customExpandIcon(iconInfo)
+        : typeof expandIcon === 'function'
+          ? expandIcon(iconInfo)
+          : expandIcon;
+      const titleNodes = slots.title?.();
+      const single =
+        Array.isArray(titleNodes) && titleNodes.length === 1 ? titleNodes[0] : undefined;
+      const rawTitle =
+        single && isVNode(single) && single.type === Text && typeof single.children === 'string'
+          ? single.children
+          : (single ?? titleNodes ?? props.title);
       const titleContent =
-        ctx.inlineCollapsed && !mergedItemIcon.value && typeof rawTitle === 'string'
-          ? h(
-              'div',
-              { class: `${ctx.prefixCls}-inline-collapsed-noicon` },
-              (rawTitle as string).charAt(0),
-            )
+        ctx.inlineCollapsed && !hasIcon && typeof rawTitle === 'string'
+          ? h('div', { class: `${ctx.prefixCls}-inline-collapsed-noicon` }, rawTitle.charAt(0))
           : isVNode(rawTitle)
-            ? rawTitle
+            ? cloneVNode(rawTitle, { class: itemClsOf.itemContent, style: itemStyleOf.itemContent })
             : h(
                 'span',
                 {
                   class: [`${ctx.prefixCls}-title-content`, itemClsOf.itemContent],
-                  ...styleAttrs(itemStyleOf.itemContent),
+                  style: itemStyleOf.itemContent,
                 },
-                [rawTitle as VNodeChild].filter((c) => c !== null && c !== undefined),
+                [rawTitle],
               );
 
       /** rc `@rc-component/menu` 的 Icon：图标必须在标题文字之前（CSS 依赖 `+ span`）。 */
-      const iconNode = mergedItemIcon.value
+      const iconNode = hasIcon
         ? h(
             'span',
             {
               class: [`${ctx.prefixCls}-item-icon`, itemClsOf.itemIcon],
-              ...styleAttrs(itemStyleOf.itemIcon),
+              style: itemStyleOf.itemIcon,
             },
-            [renderIcon(mergedItemIcon.value)].filter((c) => c !== null && c !== undefined),
+            [iconContent],
           )
         : null;
 
@@ -380,19 +397,23 @@ const SubMenu = defineComponent({
         'div',
         {
           // rc useDirectionStyle：仅 inline 模式缩进（vertical 的弹出子菜单无内联缩进）
-          style:
+          style: [
             mode === 'inline'
               ? { paddingLeft: `${connectedPath.value.length * ctx.inlineIndent}px` }
               : undefined,
+            itemStyleOf.itemTitle,
+          ],
           class: [`${subMenuPrefixCls}-title`, itemClsOf.itemTitle],
-          ...styleAttrs(itemStyleOf.itemTitle),
           role: 'menuitem',
           'data-menu-id': props.overflowDisabled ? undefined : getMenuId(ctx.menuId, eventKey),
           tabindex: mergedDisabled.value ? undefined : -1,
           'aria-expanded': open.value,
           'aria-haspopup': true,
           'aria-controls': popupId,
-          'aria-disabled': props.disabled ? true : undefined,
+          'aria-disabled': mergedDisabled.value ? true : undefined,
+          onFocus: () => {
+            if (!mergedDisabled.value) ctx.onActive(eventKey);
+          },
           onClick: onInternalTitleClick,
           onMouseenter: onTitleMouseEnter,
           onMouseleave: onTitleMouseLeave,
@@ -401,14 +422,14 @@ const SubMenu = defineComponent({
           iconNode,
           titleContent,
           // rc：expandIcon 覆盖（dropdown 的 OverrideProvider 注入 arrow icon）
-          ctx.expandIcon
+          hasExpandIcon
             ? h(
                 'span',
                 {
                   class: [`${subMenuPrefixCls}-expand-icon`, itemClsOf.itemIcon],
-                  ...styleAttrs(itemStyleOf.itemIcon),
+                  style: itemStyleOf.itemIcon,
                 },
-                [ctx.expandIcon as VNodeChild],
+                [expandContent],
               )
             : h('i', { class: `${subMenuPrefixCls}-arrow` }),
         ].filter((n) => n !== null && n !== undefined),
@@ -427,7 +448,9 @@ const SubMenu = defineComponent({
               ctx.prefixCls,
               `${ctx.prefixCls}-sub`,
               `${ctx.prefixCls}-${mode === 'horizontal' ? 'vertical' : mode}`,
+              itemClsOf.list,
             ],
+            style: [theme.style.value, itemStyleOf.list],
             role: 'menu',
             'data-menu-list': true,
             onMouseenter: onPopupMouseEnter,
@@ -442,50 +465,53 @@ const SubMenu = defineComponent({
       const wrappedTitle =
         !isInline && !props.overflowDisabled
           ? h(
-              Trigger,
+              PopupTrigger,
               {
                 prefixCls: subMenuPrefixCls,
                 popup: renderPopupContent,
                 open: popupOpen.value,
                 // 开合计时器由本组件管理（inline 判据 + 嵌套弹层取消逻辑都在这里）。
-                action: [],
                 placement: popupPlacement.value,
                 builtinPlacements: builtinPlacements.value,
                 popupAlign: popupAlign.value,
-                popupClassName: [
+                popupClassName: normalizeClass([
                   `${subMenuPrefixCls}-popup`,
                   props.popupClassName,
                   `${ctx.prefixCls}-${mergedTheme.value}`,
                   isRtl.value ? `${subMenuPrefixCls}-rtl` : undefined,
                   popupSemCls.root,
-                ].filter((c): c is string => typeof c === 'string' && c.length > 0),
-                // antd：`{...props.popupStyle, ...styles.popup.root}`（语义槽后写、优先）
+                ]),
                 popupStyle: {
-                  ...(props.popupStyle ?? {}),
-                  ...(popupSemStyle.root ?? {}),
+                  ...theme.style.value,
+                  ...props.popupStyle,
+                  ...popupSemStyle.root,
                 },
                 getPopupContainer: ctx.getPopupContainer,
                 motion: popupMotion.value,
-                fresh: true,
                 forceRender: ctx.forceSubMenuRender,
                 // antd PopupTrigger：关闭后保留节点（离场动画结束由 -hidden 隐藏），
                 // 这样快速 hover 重开时不会重新挂 DOM 导致 motion 丢失。
-                destroyOnHidden: false,
-              } as never,
+              },
               { default: () => titleNode },
             )
           : titleNode;
 
       const inlineListNode = h(
         InlineSubMenuList,
-        { id: popupId, open: open.value, mode, depth: connectedPath.value.length },
+        {
+          id: popupId,
+          open: open.value,
+          mode,
+          depth: connectedPath.value.length,
+          class: itemClsOf.list,
+          style: itemStyleOf.list,
+        },
         { default: renderChildren },
       );
 
       return h(
         'li',
-        {
-          ...attrs,
+        mergeProps(nativeAttrs, {
           role: 'none',
           class: [
             props.overflowCls,
@@ -497,21 +523,18 @@ const SubMenu = defineComponent({
             mergedDisabled.value ? `${subMenuPrefixCls}-disabled` : undefined,
             props.danger ? `${subMenuPrefixCls}-danger` : undefined,
             itemClsOf.item,
-            attrs.class as string | undefined,
+            nativeClass,
           ],
-          ...styleAttrs({
-            ...(attrs.style as Record<string, string | number> | undefined),
-            ...(itemStyleOf.item ?? {}),
-          }),
+          style: [itemStyleOf.item, nativeStyle],
           onMouseenter: (e: MouseEvent) => {
             if (!mergedDisabled.value) childrenActive.value = true;
-            props.onMouseEnter?.({ key: eventKey, domEvent: e });
+            emit('mouseEnter', { key: eventKey, domEvent: e });
           },
           onMouseleave: (e: MouseEvent) => {
             if (!mergedDisabled.value) childrenActive.value = false;
-            props.onMouseLeave?.({ key: eventKey, domEvent: e });
+            emit('mouseLeave', { key: eventKey, domEvent: e });
           },
-        },
+        }),
         [wrappedTitle, inlineListNode].filter((n) => n !== null),
       );
     };

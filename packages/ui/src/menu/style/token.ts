@@ -69,7 +69,7 @@ let tokenCache: ComponentToken | null = null;
 /** 构建期 token 值（缓存；首次调用时读主题默认 seed）。 */
 export function menuTokenValues(): ComponentToken {
   if (!tokenCache) {
-    const seed = getDesignToken() as unknown as MenuSeedToken;
+    const seed = getDesignToken();
     tokenCache = prepareComponentToken(seed);
   }
   return tokenCache;

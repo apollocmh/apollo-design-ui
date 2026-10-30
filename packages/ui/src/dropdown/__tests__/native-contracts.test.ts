@@ -190,7 +190,7 @@ describe('Dropdown owned notifications and target', () => {
                 selectable: selectable.value,
                 multiple: true,
                 onSelect: selected,
-                onKeyDown: changed.value ? currentKey : previousKey,
+                onKeydown: changed.value ? currentKey : previousKey,
               },
             },
             () => h('button', 'Current Menu'),
