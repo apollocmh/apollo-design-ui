@@ -4,6 +4,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import ts from 'typescript';
 
 export const ROOT = path.resolve(import.meta.dirname, '..');
 const pnpm = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
@@ -141,6 +142,52 @@ export function changedPlan(root, files) {
   for (const name of [...packages].sort())
     scopes.push(`packages/${name.replace('@apollo-design/', '')}/src`);
   const checks = scopes.length ? focusedPlan(root, scopes, { projects: [...projects] }).checks : [];
+  const changedBaselines = new Set(
+    files.flatMap((file) => {
+      const generator = file.match(/^tests\/compat\/baseline\/([^/]+)\.mjs$/);
+      return generator
+        ? [path.resolve(root, `tests/compat/baselines/${generator[1]}.dom.json`)]
+        : /^tests\/compat\/baselines\/[^/]+\.dom\.json$/.test(file)
+          ? [path.resolve(root, file)]
+          : [];
+    }),
+  );
+  if (changedBaselines.size) {
+    const sourceRoots = ['packages/ui/src', ...foundation.map((row) => `packages/${row.dir}/src`)];
+    const consumers = sourceRoots
+      .flatMap((scope) => filesUnder(path.join(root, scope)))
+      .filter((file) => file.endsWith('/__tests__/semantic.test.ts'))
+      .filter((file) => {
+        const source = ts.createSourceFile(
+          file,
+          fs.readFileSync(file, 'utf8'),
+          ts.ScriptTarget.Latest,
+        );
+        return source.statements.some(
+          (statement) =>
+            ts.isImportDeclaration(statement) &&
+            ts.isStringLiteral(statement.moduleSpecifier) &&
+            changedBaselines.has(path.resolve(path.dirname(file), statement.moduleSpecifier.text)),
+        );
+      })
+      .map((file) => path.relative(root, file))
+      .sort();
+    const existing = checks.find((step) => step.vitest && step.args.includes('dom-contract'));
+    const missing = consumers.filter(
+      (file) => !existing?.args.some((scope) => file === scope || file.startsWith(`${scope}/`)),
+    );
+    if (missing.length) {
+      if (existing) existing.args.push(...missing);
+      else
+        checks.push(
+          node(
+            'core',
+            ['node_modules/vitest/vitest.mjs', 'run', '--project', 'dom-contract', ...missing],
+            { vitest: true },
+          ),
+        );
+    }
+  }
   if (workflow) {
     const tests = filesUnder(path.join(root, 'tests/tooling'))
       .filter((file) => file.endsWith('.test.mjs'))

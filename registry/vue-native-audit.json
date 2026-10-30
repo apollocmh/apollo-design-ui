@@ -2,9 +2,9 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 1,
+  "revision": 3,
   "dispatch": {
-    "status": "paused",
+    "status": "running",
     "maxParallel": 5,
     "integrator": "root"
   },
@@ -149,13 +149,17 @@
       "kind": "component",
       "ref": "back-top",
       "title": "BackTop",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/back-top"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_back_top",
+        "baseRevision": 1,
+        "startedAt": "2026-10-30T05:40:32.202Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -941,13 +945,17 @@
       "kind": "component",
       "ref": "pagination",
       "title": "Pagination",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/pagination"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_pagination",
+        "baseRevision": 1,
+        "startedAt": "2026-10-30T05:40:32.202Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1079,13 +1087,17 @@
       "kind": "component",
       "ref": "rate",
       "title": "Rate",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/rate"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_rate",
+        "baseRevision": 1,
+        "startedAt": "2026-10-30T05:40:32.201Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1334,13 +1346,17 @@
       "kind": "component",
       "ref": "switch",
       "title": "Switch",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/switch"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_switch",
+        "baseRevision": 1,
+        "startedAt": "2026-10-30T05:40:32.202Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1901,13 +1917,17 @@
       "kind": "foundation",
       "ref": "utils",
       "title": "@apollo-design/utils",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/utils/src"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "root",
+        "baseRevision": 2,
+        "startedAt": "2026-10-30T05:47:14.124Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",

@@ -224,6 +224,38 @@ test('browser checks select changed scripts and route the progress helper to its
   assert.equal(plan.checks.filter((step) => step.kind === 'build').length, 1);
 });
 
+test('compat DOM baseline and generator changes select their actual Vue semantic consumers', (t) => {
+  const f = fixture(t);
+  const baseline = 'tests/compat/baselines/shared-action.dom.json';
+  const consumer = (name) => `packages/ui/src/${name}/__tests__/semantic.test.ts`;
+  for (const name of ['button', 'reader'])
+    f.write(
+      consumer(name),
+      "import baseline from '../../../../../tests/compat/baselines/shared-action.dom.json';\nexport default baseline;",
+    );
+  f.write(
+    consumer('input'),
+    "// import baseline from '../../../../../tests/compat/baselines/shared-action.dom.json';\nexport default null;",
+  );
+  for (const file of [baseline, 'tests/compat/baseline/shared-action.mjs']) {
+    const plan = changedPlan(f.root, [file]);
+    const semantic = plan.checks.filter((step) => step.args.includes('dom-contract'));
+    assert.equal(semantic.length, 1);
+    assert.deepEqual(semantic[0].args.slice(4), [consumer('button'), consumer('reader')]);
+    assert.deepEqual(plan.scope, []);
+    assert.equal(
+      plan.checks.some((step) => step.kind === 'build' || step.args.includes('unit')),
+      false,
+    );
+  }
+  const combined = changedPlan(f.root, [baseline, consumer('button')]);
+  const semantic = combined.checks.filter((step) => step.args.includes('dom-contract'));
+  assert.equal(semantic.length, 1);
+  assert.ok(semantic[0].args.includes('packages/ui/src/button'));
+  assert.ok(semantic[0].args.includes(consumer('reader')));
+  assert.equal(semantic[0].args.includes(consumer('button')), false);
+});
+
 test('a changed standalone consumer fixture is executed, rather than only the tarball runner', (t) => {
   const f = fixture(t);
   const file = 'tests/consumer/button-ssr.mjs';
