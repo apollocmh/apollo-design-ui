@@ -124,6 +124,12 @@ import { Pagination } from '@apollo-design/ui';
 | Enter | 在页码 / 上一页 / 下一页 / 跳页项上触发 |
 | Enter（快速跳转输入框） | 跳到输入页；↑ / ↓ 在简化模式下是 ∓1 |
 
+`current` and `pageSize` are independently controlled. Defaults initialize uncontrolled state once. External updates emit no events; releasing control retains the last received value and discards rejected requests. An uncontrolled page stays clamped after total shrinks and grows; a controlled page follows its input. Size changes notify in this order: `update:pageSize`, `showSizeChange`, `update:current`, `change`. The `showSizeChange` page is the previous page.
+
+Simple input shows the actual model after Enter or blur; empty input restores the current page. Moving focus to this instance's page controls, including custom slot buttons, lets that control handle navigation. Moving to another pagination still commits the quick jumper. `goButton` accepts Vue content including `0`; `true` uses the default button, while `false` / `null` / `undefined` hide confirmation content. Enter and arrow keys support `KeyboardEvent.key`; an Enter already cancelled by slot content is respected. Disabled controls and the zero-total placeholder leave the tab order and report `aria-disabled`. Disabled size callbacks, unchanged sizes and non-positive/non-integer size requests do not emit updates.
+
+Select configuration in `showSizeChanger` accepts native `class` strings, arrays and objects. Replace the undeclared `showSizeChanger.className` spelling from older tests with `showSizeChanger.class`; there is no compatibility alias. `classNames.item` / `styles.item` still target pagination items. There are no public exposed methods; the Vue instance's `$el` references the current root `<ul>` (a comment when hidden).
+
 > ⚠️ **尺寸切换器注入点有两个字段名**：rc 的 `sizeChangerRender` 实参叫 `onSizeChange`，
 > antd 的 `components.sizeChanger` 叫 `onChange` —— 本仓**两个都给**（同一个函数），
 > 照哪份文档写都能用（见 `COMPATIBILITY.md` 的 U14 上下文）。
@@ -132,17 +138,15 @@ import { Pagination } from '@apollo-design/ui';
 
 | Token | Default (light) | Description |
 | --- | --- | --- |
-| `itemBg` / `itemActiveBg` / `itemLinkBg` / `itemInputBg` | `#ffffff` | 页码 / 激活 / 链接 / 输入背景 |
+| `itemBg` / `itemActiveBg` / `itemLinkBg` / `itemInputBg` | `#ffffff` | Page / active page / regular previous-next button / simple input backgrounds |
 | `itemSize` / `itemSizeSM` / `itemSizeLG` | `32px` / `24px` / `40px` | 页码尺寸（`controlHeight` 三档） |
 | `itemActiveColor` / `itemActiveColorHover` | `#1677ff` / `#4096ff` | 激活态文字色 / hover |
 | `itemActiveColorDisabled` | `rgba(0,0,0,0.25)` | 激活态禁用文字色 |
 | `itemActiveBgDisabled` | `rgba(0,0,0,0.15)` | 激活态禁用背景 |
 | `miniOptionsSizeChangerTop` | `0px` | mini 形态下切换器上边距 |
 
-⚠️ 另有 **输入框族 19 个** token（`paddingBlock` / `paddingInline` / `activeShadow` …）与
-**2 个派生** token（`itemSizeActual` / `itemSpacingActual`）—— 前者与 `Input` 同式（尺寸切换器的
-Select 与快速跳转的 input 消费它们），后者的 `itemSizeActual` 是 **var 套 var**。
+`ConfigProvider`'s `theme.components.Pagination` accepts these 12 component tokens. Dimensions accept CSS strings or numbers in pixels; `miniOptionsSizeChangerTop` also accepts negative offsets. Replacing or removing overrides derives fallbacks from the current global tokens. Native root `style` takes priority over semantic root styles, followed by theme variables. A custom `prefixCls` uses the corresponding component variable namespace and requires matching caller-provided styles.
 
-Switch themes through `ConfigProvider`'s `theme`; component styles are static CSS + CSS variables (zero runtime).
+Quick-jumper font, padding and focus variables derive from current global tokens and are not additional Pagination component override fields. The size Select owns its own tokens. With no active source theme, static CSS and ancestor CSS variables retain control. Theme updates write root variables; style rules remain static.
 
 Content uses native #itemRender/#total/#sizeChanger slots. The three renderer props are removed directly without compatibility or deprecation layers. Item slots cover page/prev/next/jump-prev/jump-next. Empty slots suppress defaults; conditional addition/removal and reactive updates work after mount. PaginationItemSlotProps/PaginationTotalSlotProps/PaginationSlots export the contracts. Native root id/title/events and string/object/array styles are forwarded and merged with semantic root styles using Vue rules.

@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 18,
+  "revision": 20,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -1031,24 +1031,70 @@
       "kind": "component",
       "ref": "pagination",
       "title": "Pagination",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/pagination"
       ],
-      "assignment": {
-        "owner": "native_pagination",
-        "baseRevision": 1,
-        "startedAt": "2026-10-30T05:40:32.202Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-24-pagination-slots-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/pagination"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "vitest run --project unit --project dom-contract packages/ui/src/pagination --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 23490
+          },
+          {
+            "kind": "core",
+            "command": "vitest run --project a11y packages/ui/src/pagination --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 12480
+          },
+          {
+            "kind": "core",
+            "command": "vitest run --project theme packages/ui/src/pagination/__tests__/theme.test.ts --project unit packages/ui/src/pagination/__tests__/demo.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 15090
+          },
+          {
+            "kind": "browser",
+            "command": "node /tmp/apollo-pagination-source-browser.mjs",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "browser",
+            "command": "node /tmp/apollo-pagination-theme-browser.mjs",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <temporary config extending root strict options; current source/tests/demos>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 50098
+          }
+        ],
+        "boundary": "已验证原生模型/键盘/焦点/禁用、List/Table 实际组合、当前十二 Token 与现有 Demo；最终冻结版本九维验收未执行。"
+      }
     },
     {
       "id": "CMP:popconfirm",
@@ -1756,13 +1802,17 @@
       "kind": "component",
       "ref": "tooltip",
       "title": "Tooltip",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tooltip"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_tooltip",
+        "baseRevision": 18,
+        "startedAt": "2026-10-30T07:25:44.644Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",

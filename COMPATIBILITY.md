@@ -83,6 +83,16 @@ BackTop 改为原生 button 和完整内容槽，click 发送原生 MouseEvent�
 
 Rate 的 change/hoverChange/focus/blur 使用 Vue emits，焦点事件带原始 FocusEvent；具名槽和真实实例引用保留精确类型。radio 组只保留一个已选值和一个 Tab 入口，动态 tooltip 不替换焦点项；新增可达性属性与旧前缀差异逐场景精确比较，不忽略整类属性。迁移见[Rate API](packages/ui/src/rate/index.zh-CN.md)。
 
+六个组件 Token 读取当前主题，嵌套、替换、撤除和全局派生及时生效；原生与语义样式继续按既有优先级覆盖。
+
+### D-pagination-native-model-inputs
+
+Pagination 保留既有原生插槽交付，修正受控页码/尺寸撤控、总量收缩、键盘提交、焦点归属及禁用交互。尺寸选择器使用原生 class；十二个组件 Token 与输入样式读取当前主题。精确 DOM 差异保留在 semantic 测试，参考基线不变，详见[Pagination API](packages/ui/src/pagination/index.zh-CN.md)。
+
+### D-input-number-native-contracts
+
+InputNumber 的 change/step/pressEnter 统一为 Vue 事件，模板引用暴露实际元素与方法；显式 null、受控撤除、输入法、光标及异步清理遵守文档契约。当前 Provider、variant 和组件 Token 跟随配置替换或移除，详见[InputNumber API](packages/ui/src/input-number/index.zh-CN.md)。
+
 ### D-steps-live-tokens
 
 Steps 使用唯一 change emit，接通九个有效组件 Token。直接移除从未被组件消费的 customIconSize/customIconTop/iconTop/titleLineHeight；使用现有 iconSize/customIconFontSize 或原生样式表达受支持的定制，不新增旧字段兼容。既有四槽和 inline Tooltip 成果保留，详见[Steps API](packages/ui/src/steps/index.zh-CN.md)。

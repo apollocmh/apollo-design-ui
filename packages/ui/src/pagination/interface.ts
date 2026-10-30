@@ -17,8 +17,7 @@
  * | `role: AriaRole` | `string` | PLATFORM |
  * | `selectComponentClass` | **不实现**（antd：非官方 API + v7 移除） | UPSTREAM |
  *
- * ⚠️ 本组件**没有** expose：antd 的 `Pagination` 是 `React.FC`（不是 forwardRef），
- *    rc 内部的 `paginationRef`（指向 `<ul>`）不是公开 API。
+ * 本组件没有公开 expose 方法；根元素使用 Vue 实例的 `$el`。
  *
  * Native root attrs/events and Vue styles are forwarded to ul.
  */
@@ -127,10 +126,10 @@ export interface PaginationProps {
   prefixCls?: string;
   /** ⚠️ `total === 0` 时 `allPages === 0`，`current` 被钳到 **1**（不是 0）。 */
   total?: number;
-  /** 受控当前页（`v-model:current`）。 */
+  /** 受控当前页；移除控制后延续最后接收值，未接受的 update 请求不进入内态。 */
   current?: number;
   defaultCurrent?: number;
-  /** 受控 pageSize（`v-model:pageSize`）。 */
+  /** 受控 pageSize；移除控制后延续最后接收值。 */
   pageSize?: number;
   defaultPageSize?: number;
   /** 每页条数的可选项；⚠️ 字符串形态 antd 标注「下个大版本移除」，本仓**只收数字**。 */
@@ -140,7 +139,7 @@ export interface PaginationProps {
   /**
    * 尺寸切换器：`true` / `false` / **Select 的 props 对象**（对象 ⇒ 视为启用 + 透传）。
    * 未传时与 ConfigProvider 的 `pagination.showSizeChanger` 做 `??` 合并，再回落到
-   * `total > totalBoundaryShowSizeChanger`。
+   * `total > totalBoundaryShowSizeChanger`。Select 根类使用原生 `class`。
    */
   showSizeChanger?: boolean | SelectProps;
   /** 快速跳转；`{ goButton }` 可自定义确认按钮。 */

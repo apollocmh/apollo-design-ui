@@ -20,8 +20,8 @@
  *
  * ── 输入框族（`initComponentToken` / `initInputToken` 展开，**本文件本地复刻**）──────
  *
- * antd 的 pagination 调 `initComponentToken(token)` 把**输入框族的 20 个 token**
- * 也注册进 `--ant-pagination-*` 命名空间（尺寸切换器的 Select 与快速跳转的 input 消费它们）。
+ * 上游把输入框派生值注册进 pagination 命名空间。本仓保留这些公式与静态声明，
+ * 运行时仅投影 Pagination 规则实际消费的字段；尺寸选择器本体使用 Select 的变量。
  *
  * ⚠️ 本仓**刻意不跨组件 import** `input/style/token.ts` —— 与 `input-number/style/token.ts`
  *    的先例一致（那两个文件里都写明了理由：antd 上游就是每个组件各自调
@@ -207,7 +207,7 @@ let inputCache: PaginationInputToken | null = null;
 /** 构建期 token 值（缓存；首次调用时读主题默认 seed）。 */
 export function paginationTokenValues(): ComponentToken {
   if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken() as unknown as PaginationSeedToken);
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }
@@ -215,7 +215,7 @@ export function paginationTokenValues(): ComponentToken {
 /** 输入框族的构建期值（缓存）。 */
 export function paginationInputTokenValues(): PaginationInputToken {
   if (!inputCache) {
-    inputCache = prepareInputToken(getDesignToken() as unknown as PaginationSeedToken);
+    inputCache = prepareInputToken(getDesignToken());
   }
   return inputCache;
 }

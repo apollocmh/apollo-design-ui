@@ -111,7 +111,30 @@ const CASES: Record<string, () => DomRenderResult> = {
 domContractTest('Pagination', {
   baseline,
   keepStyle: false,
-  allow: {},
+  allow: {
+    'pagination:zero': {
+      deviationId: 'pagination-native-model-inputs',
+      reason:
+        'The zero-total placeholder is disabled and reports that state to assistive technology.',
+      diff: ['$/ul[0]/li[1]: 我们多出属性 aria-disabled="true"'],
+    },
+    'pagination:disabled': {
+      deviationId: 'pagination-native-model-inputs',
+      reason:
+        'Disabled controls report their actual state; native-contracts.test.ts also verifies focus and activation.',
+      diff: [
+        '$/ul[0]/li[0]: 属性 aria-disabled 不同 "false" vs "true"',
+        '$/ul[0]/li[1]: 我们多出属性 aria-disabled="true"',
+        '$/ul[0]/li[2]: 我们多出属性 aria-disabled="true"',
+        '$/ul[0]/li[3]: 我们多出属性 aria-disabled="true"',
+        '$/ul[0]/li[4]: 我们多出属性 aria-disabled="true"',
+        '$/ul[0]/li[5]: 我们多出属性 aria-disabled="true"',
+        '$/ul[0]/li[6]: 我们多出属性 aria-disabled="true"',
+        '$/ul[0]/li[7]: 我们多出属性 aria-disabled="true"',
+        '$/ul[0]/li[8]: 属性 aria-disabled 不同 "false" vs "true"',
+      ],
+    },
+  },
   render: (id) => {
     const build = CASES[id];
     if (!build) {

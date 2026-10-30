@@ -29,13 +29,13 @@ describe('Pagination · Issue #18 showSizeChanger 响应性', () => {
     w.unmount();
   });
 
-  it('[B] 对象形态：className 变更同步到 Select', async () => {
-    const w = mountPg({ showSizeChanger: { className: 'sc-a' } });
+  it('[B] 对象形态：原生 class 变更同步到 Select', async () => {
+    const w = mountPg({ showSizeChanger: { class: 'sc-a' } });
     await nextTick();
     const select = () => w.find('.apollo-select');
     expect(select().classes()).toContain('sc-a');
 
-    await w.setProps({ showSizeChanger: { className: 'sc-b' } } as never);
+    await w.setProps({ showSizeChanger: { class: 'sc-b' } } as never);
     await nextTick();
     expect(select().classes()).toContain('sc-b');
     expect(select().classes()).not.toContain('sc-a');
@@ -43,7 +43,7 @@ describe('Pagination · Issue #18 showSizeChanger 响应性', () => {
   });
 
   it('[C] 对象 ⇒ false：显式关闭能盖掉对象形态', async () => {
-    const w = mountPg({ showSizeChanger: { className: 'sc-a' } });
+    const w = mountPg({ showSizeChanger: { class: 'sc-a' } });
     await nextTick();
     expect(w.find(`.${P}-options`).exists()).toBe(true);
 

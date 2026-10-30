@@ -6,8 +6,7 @@
  * li.{p}-item.{p}-item-{n}[-active][-disabled][-item-after-jump-prev|-item-before-jump-next]
  *   > {itemRender(page, 'page', <a rel="nofollow">{page}</a>)}
  * ```
- * ⚠️ `tabIndex` 恒为 `0`（rc 在 Pager 里写死；`-disabled` 只是视觉与 `disabled` 类），
- *    与 `prev` / `next` 的 `tabIndex = 可用 ? 0 : null` **不同**。
+ * 可用页码支持 Enter 激活；禁用项不参与 Tab 顺序，并以 aria-disabled 表明状态。
  */
 
 import { isEmptyVNode } from '@apollo-design/utils';
@@ -24,21 +23,16 @@ export default defineComponent({
     rootPrefixCls: { type: String, required: true },
     page: { type: Number, required: true },
     active: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false },
     /** 语义槽 `item` 的类名（antd 传给每个 li）。 */
     itemClassName: { type: String, default: undefined },
     itemStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     /** 跳页项相邻的补类。 */
     extraClass: { type: String, default: undefined },
     showTitle: { type: Boolean, default: true },
-    onClick: { type: Function as PropType<(page: number) => void>, default: undefined },
-    onKeydown: {
-      type: Function as PropType<
-        (e: KeyboardEvent, cb: (page: number) => void, page: number) => void
-      >,
-      default: undefined,
-    },
   },
-  setup(props, { slots }) {
+  emits: { select: (_page: number) => true },
+  setup(props, { slots, emit }) {
     return () => {
       const prefixCls = `${props.rootPrefixCls}-item`;
       const className = [
@@ -52,9 +46,15 @@ export default defineComponent({
         .filter(Boolean)
         .join(' ');
 
-      const handleClick = (): void => props.onClick?.(props.page);
+      const handleClick = (): void => {
+        if (!props.disabled) emit('select', props.page);
+      };
       const handleKeydown = (e: KeyboardEvent): void => {
-        props.onKeydown?.(e, (page: number) => props.onClick?.(page), props.page);
+        if (e.defaultPrevented) return;
+        if (e.key === 'Enter' || e.charCode === 13 || e.keyCode === 13) {
+          e.preventDefault();
+          handleClick();
+        }
       };
 
       const anchor = h('a', { rel: 'nofollow' }, String(props.page));
@@ -72,7 +72,8 @@ export default defineComponent({
           style: props.itemStyle,
           onClick: handleClick,
           onKeydown: handleKeydown,
-          tabIndex: 0,
+          tabIndex: props.disabled ? undefined : 0,
+          'aria-disabled': props.disabled || undefined,
         },
         [content],
       );

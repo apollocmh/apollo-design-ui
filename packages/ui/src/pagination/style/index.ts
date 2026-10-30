@@ -1,5 +1,6 @@
 /**
  * Pagination 的静态样式（antd 6.6.4 `es/pagination/style/index.js` 的**机械移植**）。
+ * Apollo 现有 itemLinkBg / miniOptionsSizeChangerTop 的消费于 2026-10-30 补齐。
  *
  * ── 这份文件是怎么来的 ──────────────────────────────────────────────────────
  *
@@ -114,13 +115,14 @@ const RULES = `
 .apollo-pagination .apollo-pagination-prev,.apollo-pagination .apollo-pagination-next,.apollo-pagination .apollo-pagination-jump-prev,.apollo-pagination .apollo-pagination-jump-next{display:inline-block;min-width:var(--apollo-pagination-item-size-actual);height:var(--apollo-pagination-item-size-actual);color:var(--apollo-color-text);font-family:var(--apollo-font-family);line-height:var(--apollo-pagination-item-size-actual);text-align:center;vertical-align:middle;list-style:none;border-radius:var(--apollo-border-radius);cursor:pointer;transition:all var(--apollo-motion-duration-mid);}
 .apollo-pagination .apollo-pagination-prev,.apollo-pagination .apollo-pagination-next{outline:0;}
 .apollo-pagination .apollo-pagination-prev button,.apollo-pagination .apollo-pagination-next button{color:var(--apollo-color-text);cursor:pointer;user-select:none;}
-.apollo-pagination .apollo-pagination-prev .apollo-pagination-item-link,.apollo-pagination .apollo-pagination-next .apollo-pagination-item-link{display:block;width:100%;height:100%;padding:0;font-size:var(--apollo-font-size-sm);text-align:center;background-color:transparent;border:var(--apollo-line-width) var(--apollo-line-type) transparent;border-radius:var(--apollo-border-radius);outline:none;transition:all var(--apollo-motion-duration-mid);}
+.apollo-pagination .apollo-pagination-prev .apollo-pagination-item-link,.apollo-pagination .apollo-pagination-next .apollo-pagination-item-link{display:block;width:100%;height:100%;padding:0;font-size:var(--apollo-font-size-sm);text-align:center;background-color:var(--apollo-pagination-item-link-bg);border:var(--apollo-line-width) var(--apollo-line-type) transparent;border-radius:var(--apollo-border-radius);outline:none;transition:all var(--apollo-motion-duration-mid);}
 .apollo-pagination .apollo-pagination-prev:hover .apollo-pagination-item-link,.apollo-pagination .apollo-pagination-next:hover .apollo-pagination-item-link{background-color:var(--apollo-color-bg-text-hover);}
 .apollo-pagination .apollo-pagination-prev:active .apollo-pagination-item-link,.apollo-pagination .apollo-pagination-next:active .apollo-pagination-item-link{background-color:var(--apollo-color-bg-text-active);}
 .apollo-pagination .apollo-pagination-prev.apollo-pagination-disabled:hover .apollo-pagination-item-link,.apollo-pagination .apollo-pagination-next.apollo-pagination-disabled:hover .apollo-pagination-item-link{background-color:transparent;}
 .apollo-pagination .apollo-pagination-slash{margin-inline-end:var(--apollo-margin-sm);margin-inline-start:var(--apollo-margin-sm);}
 .apollo-pagination .apollo-pagination-options{display:inline-block;margin-inline-start:var(--apollo-margin);vertical-align:middle;}
 .apollo-pagination .apollo-pagination-options-size-changer,.apollo-pagination .apollo-pagination-options-size-changer.apollo-pagination-options-size-changer-select{width:auto;}
+.apollo-pagination-mini .apollo-pagination-options-size-changer{position:relative;top:var(--apollo-pagination-mini-options-size-changer-top);}
 .apollo-pagination .apollo-pagination-options-quick-jumper{display:inline-block;height:var(--apollo-pagination-item-size-actual);margin-inline-start:var(--apollo-margin-xs);line-height:var(--apollo-pagination-item-size-actual);vertical-align:baseline;}
 .apollo-pagination .apollo-pagination-options-quick-jumper input{position:relative;display:inline-block;width:calc(var(--apollo-control-height-lg) * 1.25);min-width:0;padding:var(--apollo-pagination-padding-block) var(--apollo-pagination-padding-inline);color:var(--apollo-color-text);font-size:var(--apollo-pagination-input-font-size);line-height:var(--apollo-line-height);border-radius:var(--apollo-border-radius);transition:all var(--apollo-motion-duration-mid);background:var(--apollo-color-bg-container);border-width:var(--apollo-line-width);border-style:var(--apollo-line-type);border-color:var(--apollo-color-border);height:var(--apollo-pagination-item-size-actual);box-sizing:border-box;margin:0;margin-inline-start:var(--apollo-pagination-item-spacing-actual);margin-inline-end:var(--apollo-pagination-item-spacing-actual);}
 .apollo-pagination .apollo-pagination-options-quick-jumper input::-moz-placeholder{opacity:1;}

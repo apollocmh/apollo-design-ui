@@ -2,7 +2,7 @@
  * `Options` —— rc-pagination `Options.js`（119 行）的 Vue 等价物。
  *
  * 一个 `<li class="{p}-options">` 里放两样东西：
- *   1. **尺寸切换器**：由 `sizeChangerRender` 注入（antd 侧渲染成本仓的 Select）；
+ *   1. **尺寸切换器**：由原生 `#sizeChanger` 槽传入，默认渲染本仓 Select；
  *   2. **快速跳转**：`跳至 <input> 页 [确认按钮]`。
  *
  * 判据（`docs/analysis/pagination.md` §5）：
@@ -10,13 +10,12 @@
  *   - 跳转输入的**合法值**：空 ⇒ `undefined`；非数字 ⇒ `undefined`；其余 `Number(...)`；
  *   - `change` 只接受 `/^\d*$/`（其余字符被吞掉）；
  *   - `blur` 时：有 `goButton` 或输入为空 ⇒ 不动；否则清空输入并 `quickGo(validValue)`，
- *     **但若 relatedTarget 是分页自己的 `-item-link` / `-item`**（即点在页码上）⇒ 不提交；
+ *     **但若 relatedTarget 属于同一分页的页码/上下页/跳页控件** ⇒ 不提交；
  *   - 提交（Enter / click）：先清空输入，再 `quickGo(validValue)`；
  *   - 尺寸选项：`pageSizeOptions` 里没有当前 pageSize 时会**追加**并按数值升序排序；
  *   - `buildOptionText` 默认 `${value} ${items_per_page}`。
  *
- * ⚠️ Vue 侧的差异（登记 COMPATIBILITY）：`sizeChangerRender` 的产物由**父组件**通过
- *    `#sizeChanger` 槽或 `sizeChangerRender` prop 提供；本组件只负责在正确位置渲染它。
+ * 父组件以原生 `#sizeChanger` 槽传递当前内容，本组件负责尺寸选项和跳页输入。
  */
 
 import {
@@ -56,7 +55,11 @@ export default defineComponent({
     },
   },
   setup(props, { slots }) {
+    const root = ref<HTMLLIElement | null>(null);
     const goInputText = ref('');
+    const hasGoButton = computed(
+      () => props.goButton !== undefined && props.goButton !== null && props.goButton !== false,
+    );
 
     /** 输入文本 → 合法页号（空 / 非数字 ⇒ `undefined`）。 */
     const readValid = (text: string): number | undefined =>
@@ -77,14 +80,14 @@ export default defineComponent({
 
     const go = (e: KeyboardEvent | MouseEvent): void => {
       if (goInputText.value === '') return;
-      const isEnter = 'keyCode' in e && e.keyCode === 13;
+      const isEnter = 'key' in e && (e.key === 'Enter' || e.keyCode === 13);
       if (isEnter || e.type === 'click') {
         // ⚠️ **必须先取值再清空**：Vue 的 `ref` 是**同步**的，清空之后 `validValue` 立刻变
         //    `undefined`（rc 能这么写是因为 React 的 setState 是异步的，事件处理器内读到的
         //    仍是旧值）—— 顺序反了会导致「点确认按钮没反应」且**没有任何报错**。
         const next = validValue.value;
         goInputText.value = '';
-        props.quickGo?.(next as number);
+        if (next !== undefined) props.quickGo?.(next);
       }
     };
 
@@ -101,20 +104,22 @@ export default defineComponent({
     };
 
     const handleBlur = (e: FocusEvent): void => {
-      if (props.goButton || goInputText.value === '') return;
+      if (hasGoButton.value || goInputText.value === '') return;
       // 同 `go`：先取值再清空（Vue 的 ref 是同步的）
       const pending = readValid(goInputText.value);
       goInputText.value = '';
-      const related = e.relatedTarget as HTMLElement | null;
-      const relatedClass = related?.className ?? '';
-      // ⚠️ 点在分页自己的页码/上下页上时不提交（rc 逐字）
+      const related = e.relatedTarget;
+      const item = related instanceof Element ? related.closest('li') : null;
       if (
-        relatedClass.includes(`${props.rootPrefixCls}-item-link`) ||
-        relatedClass.includes(`${props.rootPrefixCls}-item`)
+        item &&
+        item.parentElement === root.value?.parentElement &&
+        ['item', 'prev', 'next', 'jump-prev', 'jump-next'].some((part) =>
+          item.classList.contains(`${props.rootPrefixCls}-${part}`),
+        )
       ) {
         return;
       }
-      props.quickGo?.(pending as number);
+      if (pending !== undefined) props.quickGo?.(pending);
     };
 
     return () => {
@@ -144,7 +149,7 @@ export default defineComponent({
       let goInput: VNodeChild = null;
       if (props.quickGo) {
         let gotoButton: VNodeChild = null;
-        if (props.goButton) {
+        if (hasGoButton.value) {
           gotoButton =
             props.goButton === true
               ? h(
@@ -158,7 +163,7 @@ export default defineComponent({
                   },
                   props.locale.jump_to_confirm,
                 )
-              : h('span', { onClick: go, onKeyup: go }, [props.goButton as VNodeChild]);
+              : h('span', { onClick: go, onKeyup: go }, [props.goButton]);
         }
         goInput = h('div', { class: `${prefixCls}-quick-jumper` }, [
           props.locale.jump_to,
@@ -177,7 +182,7 @@ export default defineComponent({
         ]);
       }
 
-      return h('li', { class: prefixCls }, [changeSelect, goInput]);
+      return h('li', { ref: root, class: prefixCls }, [changeSelect, goInput]);
     };
   },
 });

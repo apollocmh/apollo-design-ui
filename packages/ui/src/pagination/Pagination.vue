@@ -8,7 +8,7 @@
  * ── 壳层（antd）──────────────────────────────────────────────────────────────
  * `responsive` 的 breakpoint（xs ⇒ small）、`size`、`variant('input')` 的类名、
  * locale 三级合并（rc enUS → ConfigProvider → props.locale）、`showSizeChanger` 的
- * props↔ConfigProvider **`??` 合并**、`sizeChangerRender`（渲染成本仓 Select）、
+ * props↔ConfigProvider **`??` 合并**、默认尺寸切换器（渲染成本仓 Select）、
  * 4 组图标（RTL 下左右互换）、`wireframe` 的 `-bordered` 类。
  *
  * ── 状态机（rc）──────────────────────────────────────────────────────────────
@@ -20,7 +20,7 @@
  *   - `v-model:current` / `v-model:pageSize`（C11：`update:*` 与语义事件同发）；
  *   - `itemRender` / `showTotal` / `components.sizeChanger` → scoped slot（C8）；
  *   - Native root attrs/events and Vue string/object/array styles are forwarded to ul;
- *   - 本组件**没有** expose（上游是 `React.FC`）。
+ *   - 本组件没有公开 expose 方法，根元素使用 Vue 实例的 `$el`。
  */
 
 import {
@@ -33,7 +33,6 @@ import {
 import { useLocale } from '@apollo-design/locale';
 import { mergeDomAttrs } from '@apollo-design/utils';
 import {
-  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -46,7 +45,11 @@ import {
   watch,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig, useDirection } from '../config-provider/context';
+import {
+  type ComponentStyleConfig,
+  useComponentConfig,
+  useDirection,
+} from '../config-provider/context';
 import { useSize } from '../config-provider/size-context';
 import { useVariant } from '../form/hooks/useVariants';
 import { useBreakpoint } from '../grid/hooks/use-breakpoint';
@@ -63,6 +66,7 @@ import type {
 } from './interface';
 import Options from './Options';
 import Pager from './Pager';
+import { usePaginationTheme } from './use-pagination-theme';
 import { useShowSizeChanger } from './useShowSizeChanger';
 
 const contentSlots: SlotsType<PaginationSlots> = {};
@@ -116,17 +120,16 @@ export default defineComponent({
   },
   setup(props, { slots, emit }) {
     const attrs = useAttrs();
-    const config = useComponentConfig('pagination') as unknown as {
-      getPrefixCls: (suffix?: string, custom?: string) => string;
-      className?: string;
-      style?: CSSProperties;
-      classNames?: PaginationSemanticClassNames;
-      styles?: PaginationSemanticStyles;
-      showSizeChanger?: PaginationProps['showSizeChanger'];
-      totalBoundaryShowSizeChanger?: number;
-    };
+    const config = useComponentConfig<
+      ComponentStyleConfig &
+        Pick<
+          PaginationProps,
+          'classNames' | 'styles' | 'showSizeChanger' | 'totalBoundaryShowSizeChanger'
+        >
+    >('pagination');
     const direction = useDirection();
     const prefixCls = computed(() => config.getPrefixCls('pagination', props.prefixCls));
+    const themeStyle = usePaginationTheme(() => prefixCls.value);
 
     // ---- 语义合并 ----
     const mergedSemantic = useMergeSemantic<
@@ -166,16 +169,30 @@ export default defineComponent({
     const { variant: inputVariant, enableVariantCls } = useVariant({ component: 'pagination' });
 
     // ---- 状态：pageSize / current（受控 + 内部）----
-    const innerPageSize = ref(props.defaultPageSize);
+    const innerPageSize = ref(props.pageSize ?? props.defaultPageSize);
+    watch(
+      () => props.pageSize,
+      (pageSize) => {
+        if (pageSize !== undefined) innerPageSize.value = pageSize;
+      },
+      { flush: 'sync' },
+    );
     const mergedPageSize = computed(() => props.pageSize ?? innerPageSize.value);
-    const innerCurrent = ref(props.defaultCurrent);
+    const innerCurrent = ref(props.current ?? props.defaultCurrent);
 
     const allPages = computed(() => calculatePage(mergedPageSize.value, props.total ?? 0));
+    watch(
+      [() => props.current, allPages],
+      ([current, pages]) => {
+        innerCurrent.value = Math.max(1, Math.min(current ?? innerCurrent.value, pages));
+      },
+      { immediate: true, flush: 'sync' },
+    );
     const mergedCurrent = computed(() =>
       Math.max(1, Math.min(props.current ?? innerCurrent.value, allPages.value)),
     );
-    /** 简化模式输入框的内部值（rc 的 `internalInputVal`）。 */
-    const inputValue = ref(mergedCurrent.value);
+    /** 简化模式输入草稿与实际 current 分开，提交后以模型状态为准。 */
+    const inputValue = ref<number | ''>(mergedCurrent.value);
     watch(mergedCurrent, (next) => {
       inputValue.value = next;
     });
@@ -200,28 +217,28 @@ export default defineComponent({
     );
 
     // ---- 变化入口 ----
-    const isValid = (page: number): boolean =>
-      Number.isInteger(page) &&
-      page !== mergedCurrent.value &&
-      Number.isInteger(props.total) &&
-      (props.total ?? 0) > 0;
-
     const changeCurrent = (page: number): number => {
-      if (isValid(page) && !props.disabled) {
-        const total = allPages.value;
-        let newPage = page;
-        if (page > total) newPage = total;
-        else if (page < 1) newPage = 1;
-        if (newPage !== inputValue.value) inputValue.value = newPage;
-        innerCurrent.value = newPage;
-        emit('update:current', newPage);
-        emit('change', newPage, mergedPageSize.value);
-        return newPage;
+      if (
+        props.disabled ||
+        !Number.isInteger(page) ||
+        !Number.isInteger(props.total) ||
+        props.total <= 0
+      ) {
+        return mergedCurrent.value;
       }
-      return mergedCurrent.value;
+      const newPage = Math.max(1, Math.min(page, allPages.value));
+      if (newPage === mergedCurrent.value) return mergedCurrent.value;
+      if (props.current === undefined) innerCurrent.value = newPage;
+      inputValue.value = mergedCurrent.value;
+      emit('update:current', newPage);
+      emit('change', newPage, mergedPageSize.value);
+      return newPage;
     };
 
     const changePageSize = (size: number): void => {
+      if (props.disabled || !Number.isInteger(size) || size <= 0 || size === mergedPageSize.value) {
+        return;
+      }
       // 🚨 **必须在改 pageSize 之前**把当前页取出来：Vue 的 `computed` 是惰性求值，
       //    一旦 `innerPageSize` 变了，`mergedCurrent`（= clamp(current, 1, allPages)）
       //    会**立刻**按新的 allPages 重新钳制 —— 直接在下面 emit `mergedCurrent.value`
@@ -231,11 +248,11 @@ export default defineComponent({
       const newCurrent = calculatePage(size, props.total ?? 0);
       const nextCurrent =
         previousCurrent > newCurrent && newCurrent !== 0 ? newCurrent : previousCurrent;
-      innerPageSize.value = size;
-      inputValue.value = nextCurrent;
+      if (props.pageSize === undefined) innerPageSize.value = size;
+      if (props.current === undefined) innerCurrent.value = nextCurrent;
+      inputValue.value = mergedCurrent.value;
       emit('update:pageSize', size);
       emit('showSizeChange', previousCurrent, size);
-      innerCurrent.value = nextCurrent;
       emit('update:current', nextCurrent);
       emit('change', nextCurrent, size);
     };
@@ -266,8 +283,11 @@ export default defineComponent({
     const goButton = computed(() =>
       typeof props.showQuickJumper === 'object' ? props.showQuickJumper.goButton : undefined,
     );
+    const hasGoButton = computed(
+      () => goButton.value !== undefined && goButton.value !== null && goButton.value !== false,
+    );
 
-    const getValidInputValue = (e: Event): number | string => {
+    const getValidInputValue = (e: Event): number | '' => {
       const raw = (e.target as HTMLInputElement).value;
       const pages = allPages.value;
       if (raw === '') return '';
@@ -278,37 +298,40 @@ export default defineComponent({
 
     const handleSimpleKeyDown = (e: KeyboardEvent): void => {
       // 防止上下键把光标移到文本开头（rc 附的 stackoverflow 链接）
-      if (e.keyCode === 38 || e.keyCode === 40) e.preventDefault();
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.keyCode === 38 || e.keyCode === 40) {
+        e.preventDefault();
+      }
+    };
+    const commitSimpleValue = (value: number | ''): void => {
+      if (value !== '') changeCurrent(value);
+      inputValue.value = mergedCurrent.value;
+    };
+    const handleSimpleInput = (e: Event): void => {
+      inputValue.value = getValidInputValue(e);
+      // 状态未变时 Vue 不会 patch value，仍需恢复被拒绝的原生输入。
+      (e.target as HTMLInputElement).value = String(inputValue.value);
     };
     const handleSimpleKeyUp = (e: KeyboardEvent): void => {
       const value = getValidInputValue(e);
-      if (value !== inputValue.value) inputValue.value = value as number;
-      switch (e.keyCode) {
-        case 13:
-          changeCurrent(value as number);
-          break;
-        case 38:
-          changeCurrent((value as number) - 1);
-          break;
-        case 40:
-          changeCurrent((value as number) + 1);
-          break;
-        default:
-          break;
+      inputValue.value = value;
+      if (e.key === 'Enter' || e.keyCode === 13) {
+        commitSimpleValue(value);
+      } else if (value !== '' && (e.key === 'ArrowUp' || e.keyCode === 38)) {
+        commitSimpleValue(value - 1);
+      } else if (value !== '' && (e.key === 'ArrowDown' || e.keyCode === 40)) {
+        commitSimpleValue(value + 1);
       }
     };
     const handleSimpleBlur = (e: FocusEvent): void => {
-      changeCurrent(getValidInputValue(e) as number);
+      commitSimpleValue(getValidInputValue(e));
     };
 
     // ---- 键盘：仅 Enter 触发 ----
-    const runIfEnter = (
-      event: KeyboardEvent,
-      callback: (...args: never[]) => void,
-      ...rest: never[]
-    ): void => {
+    const runIfEnter = (event: KeyboardEvent, callback: () => void): void => {
+      if (event.defaultPrevented) return;
       if (event.key === 'Enter' || event.charCode === 13 || event.keyCode === 13) {
-        callback(...rest);
+        event.preventDefault();
+        callback();
       }
     };
 
@@ -319,12 +342,26 @@ export default defineComponent({
       const ellipsis = h('span', { class: `${p}-item-ellipsis` }, [h(EllipsisOutlined)]);
       return {
         ellipsis,
-        prevIcon: h('button', { class: `${p}-item-link`, type: 'button', tabIndex: -1 }, [
-          isRTL ? h(RightOutlined) : h(LeftOutlined),
-        ]),
-        nextIcon: h('button', { class: `${p}-item-link`, type: 'button', tabIndex: -1 }, [
-          isRTL ? h(LeftOutlined) : h(RightOutlined),
-        ]),
+        prevIcon: h(
+          'button',
+          {
+            class: `${p}-item-link`,
+            type: 'button',
+            tabIndex: -1,
+            disabled: props.disabled || !hasPrev.value,
+          },
+          [isRTL ? h(RightOutlined) : h(LeftOutlined)],
+        ),
+        nextIcon: h(
+          'button',
+          {
+            class: `${p}-item-link`,
+            type: 'button',
+            tabIndex: -1,
+            disabled: props.disabled || !hasNext.value,
+          },
+          [isRTL ? h(LeftOutlined) : h(RightOutlined)],
+        ),
         jumpPrevIcon: h('a', { class: `${p}-item-link` }, [
           h('div', { class: `${p}-item-container` }, [
             isRTL
@@ -351,29 +388,20 @@ export default defineComponent({
       const selectedValue =
         info.options.find((option) => String(option.value) === String(info.value))?.value ??
         info.value;
-      return h(
-        Select as never,
-        {
-          ...(selectProps as Record<string, unknown>),
-          disabled: info.disabled,
-          showSearch: true,
-          popupMatchSelectWidth: false,
-          getPopupContainer: (triggerNode: HTMLElement) => triggerNode.parentNode as HTMLElement,
-          'aria-label': info['aria-label'],
-          options: info.options,
-          value: selectedValue,
-          size: mergedSize.value,
-          // ✅ Select 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
-          class: [
-            `${p}-options-size-changer-select`,
-            info.className,
-            (selectProps as { className?: string }).className,
-          ]
-            .filter(Boolean)
-            .join(' '),
-          onChange: (next: number) => (info.onSizeChange ?? info.onChange)?.(Number(next)),
-        } as never,
-      );
+      return h(Select, {
+        ...selectProps,
+        disabled: info.disabled,
+        showSearch: true,
+        popupMatchSelectWidth: false,
+        getPopupContainer: (triggerNode: HTMLElement) => triggerNode.parentNode as HTMLElement,
+        'aria-label': info['aria-label'],
+        options: info.options,
+        value: selectedValue,
+        size: mergedSize.value === 'default' ? 'middle' : (mergedSize.value ?? 'middle'),
+        // ✅ Select 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
+        class: [`${p}-options-size-changer-select`, info.className, selectProps.class],
+        onChange: (next: unknown) => info.onSizeChange(Number(next)),
+      });
     };
 
     return () => {
@@ -387,7 +415,7 @@ export default defineComponent({
       const styles = mergedSemantic.styles.value;
 
       const { class: _rootClass, style: rootStyle, ...rootAttrs } = attrs;
-      const mergedRootStyle = normalizeStyle([styles.root, rootStyle]);
+      const mergedRootStyle = normalizeStyle([themeStyle.value, styles.root, rootStyle]);
 
       // ---- 「共 x 条」 ----
       const totalText = (() => {
@@ -407,16 +435,20 @@ export default defineComponent({
       // ---- 简化模式 ----
       const simplePager = (() => {
         if (!props.simple) return null;
-        let gotoButton = goButton.value;
-        if (goButton.value) {
+        let gotoButton: VNodeChild = null;
+        if (hasGoButton.value) {
           const content =
             goButton.value === true
               ? h(
                   'button',
-                  { type: 'button', onClick: () => changeCurrent(inputValue.value) },
+                  {
+                    type: 'button',
+                    disabled: props.disabled,
+                    onClick: () => commitSimpleValue(inputValue.value),
+                  },
                   mergedLocale.value.jump_to_confirm,
                 )
-              : h('span', { onClick: () => changeCurrent(inputValue.value) }, [goButton.value]);
+              : h('span', { onClick: () => commitSimpleValue(inputValue.value) }, [goButton.value]);
           gotoButton = h(
             'li',
             {
@@ -438,7 +470,8 @@ export default defineComponent({
               size: 3,
               onKeydown: handleSimpleKeyDown,
               onKeyup: handleSimpleKeyUp,
-              onChange: handleSimpleKeyUp,
+              onInput: handleSimpleInput,
+              onChange: handleSimpleInput,
               onBlur: handleSimpleBlur,
             });
         return [
@@ -471,18 +504,9 @@ export default defineComponent({
             ? !hasNext.value
             : !hasNext.value || !allPages.value;
 
-        // ⚠️ tabIndex 的两套判据（rc 逐字）：
-        //    简化模式下 next 用 **hasPrev**（不是 hasNext）；非简化模式用「!disabled」。
-        let tabIndex: number | undefined;
-        if (props.simple) {
-          tabIndex = isPrev ? (hasPrev.value ? 0 : undefined) : hasPrev.value ? 0 : undefined;
-        } else {
-          tabIndex = disabledFlag ? undefined : 0;
-        }
+        const disabled = props.disabled || disabledFlag;
 
-        // ⚠️ rc 的 `prevHandle` / `nextHandle` **有守卫**（`if (hasPrev|hasNext)`）：
-        //    没守卫时点「已禁用的上一页」会把 0 传进 `changeCurrent` —— `isValid(0)` 会通过
-        //    （0 是整数、≠ current、total>0），钳回 1 后仍**发出一次多余的同值事件**（实测）。
+        // 相邻页只在该方向确实还有页码时请求更新。
         const activate = (): void => {
           if (isPrev ? !hasPrev.value : !hasNext.value) return;
           changeCurrent(isPrev ? mergedCurrent.value - 1 : mergedCurrent.value + 1);
@@ -500,8 +524,8 @@ export default defineComponent({
               .filter(Boolean)
               .join(' '),
             style: styles.item,
-            tabIndex,
-            'aria-disabled': disabledFlag,
+            tabIndex: disabled ? undefined : 0,
+            'aria-disabled': disabled,
             onClick: activate,
             onKeydown: (e: KeyboardEvent) => runIfEnter(e, activate),
           },
@@ -530,14 +554,14 @@ export default defineComponent({
                   rootPrefixCls: p,
                   page: item.page,
                   active: item.active,
+                  disabled: props.disabled || item.disabled,
                   itemClassName: classNames.item,
                   itemStyle: styles.item,
                   // ⚠️ 三选一：`allPages === 0` 的占位项（`-item-disabled`，rc 由外层传入）
                   //    或跳页项相邻的补类
                   extraClass: item.disabled ? 'item-disabled' : item.extraClass,
                   showTitle: props.showTitle,
-                  onClick: (page: number) => changeCurrent(page),
-                  onKeydown: runIfEnter as never,
+                  onSelect: changeCurrent,
                 },
                 slots.itemRender ? { default: slots.itemRender } : {},
               ),
@@ -562,8 +586,13 @@ export default defineComponent({
                   class: [
                     `${p}-${item.kind}`,
                     isPrev ? `${p}-jump-prev-custom-icon` : `${p}-jump-next-custom-icon`,
-                  ].join(' '),
-                  tabIndex: 0,
+                    classNames.item,
+                  ]
+                    .filter(Boolean)
+                    .join(' '),
+                  style: styles.item,
+                  tabIndex: props.disabled ? undefined : 0,
+                  'aria-disabled': props.disabled || undefined,
                   onClick: () => changeCurrent(item.page),
                   onKeydown: (e: KeyboardEvent) => runIfEnter(e, () => changeCurrent(item.page)),
                 },
@@ -581,7 +610,7 @@ export default defineComponent({
 
       items.push(
         h(
-          Options as never,
+          Options,
           {
             rootPrefixCls: p,
             locale: mergedLocale.value,
@@ -594,7 +623,7 @@ export default defineComponent({
               : undefined,
             goButton: goButton.value,
             onChangeSize: changePageSize,
-          } as never,
+          },
           { sizeChanger: slots.sizeChanger ?? renderDefaultSizeChanger },
         ),
       );

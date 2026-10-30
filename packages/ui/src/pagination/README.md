@@ -2,6 +2,8 @@
 
 # Pagination 实现说明
 
+当前主题契约（2026-10-30）：`theme.components.Pagination` 的 12 个公开 Token 经组件私有主题消费写入根变量，并响应全局派生、覆盖替换/移除与当前前缀。`component-token` 现有 Demo 使用 ConfigProvider；输入框族仅为本组件实际输入派生，Select 使用自身 Token。当前 Demo 以目录和测试为准；下方旧计数、缺口与对照结果保留原日期含义，不作为当前交付结论。公开用法见双语 API。
+
 > 收口记录（2026-09-29）。
 
 ## 1. 对应 antd 组件

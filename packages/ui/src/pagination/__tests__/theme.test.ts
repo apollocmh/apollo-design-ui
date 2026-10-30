@@ -9,7 +9,14 @@
  */
 
 import { themeTest } from '@apollo-design/test-utils';
+import { getDesignToken, type ThemeConfig, ThemeProvider } from '@apollo-design/theme';
+import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import { createSSRApp, defineComponent, h, nextTick, ref } from 'vue';
+import { renderToString } from 'vue/server-renderer';
+import ConfigProvider from '../../config-provider';
+import Pagination from '../Pagination.vue';
+import { genPaginationStyle } from '../style';
 import {
   paginationDerivedToken,
   paginationInputTokenValues,
@@ -152,4 +159,169 @@ describe('Pagination · 派生 Token', () => {
 
 themeTest('Pagination', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
+});
+
+describe('Pagination current theme ownership', () => {
+  it('projects all twelve public component overrides onto the actual root', () => {
+    const custom = {
+      itemBg: '#112233',
+      itemSize: 44,
+      itemSizeSM: '30px',
+      itemSizeLG: 52,
+      itemActiveBg: '#223344',
+      itemActiveColor: '#334455',
+      itemActiveColorHover: '#445566',
+      itemLinkBg: '#556677',
+      itemActiveBgDisabled: '#667788',
+      itemActiveColorDisabled: '#778899',
+      itemInputBg: '#8899aa',
+      miniOptionsSizeChangerTop: -3,
+    };
+    const w = mount(ConfigProvider, {
+      props: { theme: { components: { Pagination: custom } } },
+      slots: { default: () => h(Pagination, { total: 100 }) },
+    });
+    const style = w.get<HTMLUListElement>('.apollo-pagination').element.style;
+    expect(style.getPropertyValue('--apollo-pagination-item-bg')).toBe('#112233');
+    expect(style.getPropertyValue('--apollo-pagination-item-size')).toBe('44px');
+    expect(style.getPropertyValue('--apollo-pagination-item-size-sm')).toBe('30px');
+    expect(style.getPropertyValue('--apollo-pagination-item-size-lg')).toBe('52px');
+    expect(style.getPropertyValue('--apollo-pagination-item-active-bg')).toBe('#223344');
+    expect(style.getPropertyValue('--apollo-pagination-item-active-color')).toBe('#334455');
+    expect(style.getPropertyValue('--apollo-pagination-item-active-color-hover')).toBe('#445566');
+    expect(style.getPropertyValue('--apollo-pagination-item-link-bg')).toBe('#556677');
+    expect(style.getPropertyValue('--apollo-pagination-item-active-bg-disabled')).toBe('#667788');
+    expect(style.getPropertyValue('--apollo-pagination-item-active-color-disabled')).toBe(
+      '#778899',
+    );
+    expect(style.getPropertyValue('--apollo-pagination-item-input-bg')).toBe('#8899aa');
+    expect(style.getPropertyValue('--apollo-pagination-mini-options-size-changer-top')).toBe(
+      '-3px',
+    );
+    w.unmount();
+  });
+
+  it('replaces overrides and restores current global derivation without replacing the root', async () => {
+    const theme = ref<ThemeConfig | undefined>({
+      token: { controlHeight: 36, colorBgContainer: '#112233' },
+      components: { Pagination: { itemSize: 48, itemBg: '#334455' } },
+    });
+    const w = mount(
+      defineComponent({
+        setup: () => () =>
+          h(ConfigProvider, { theme: theme.value }, () =>
+            h('section', [h(Pagination, { total: 100, showQuickJumper: true })]),
+          ),
+      }),
+    );
+    const root = w.get<HTMLUListElement>('.apollo-pagination').element;
+    expect(root.style.getPropertyValue('--apollo-pagination-item-size')).toBe('48px');
+    theme.value = {
+      token: { controlHeight: 38, fontSize: 16, lineHeight: 1.5, colorBgContainer: '#556677' },
+      components: { Pagination: { itemSize: 50 } },
+    };
+    await nextTick();
+    expect(w.get('.apollo-pagination').element).toBe(root);
+    expect(root.style.getPropertyValue('--apollo-pagination-item-size')).toBe('50px');
+    expect(root.style.getPropertyValue('--apollo-pagination-item-bg')).toBe('#556677');
+    theme.value = { token: { controlHeight: 38, fontSize: 16, lineHeight: 1.5 } };
+    await nextTick();
+    expect(root.style.getPropertyValue('--apollo-pagination-item-size')).toBe('38px');
+    expect(root.style.getPropertyValue('--apollo-pagination-input-font-size')).toBe('16px');
+    expect(root.style.getPropertyValue('--apollo-pagination-padding-block')).toBe('6px');
+    theme.value = undefined;
+    await nextTick();
+    expect(root.style.getPropertyValue('--apollo-pagination-item-size')).toBe('');
+    expect(root.style.getPropertyValue('--apollo-pagination-input-font-size')).toBe('');
+    w.unmount();
+  });
+
+  it('uses source theme aliases without requiring global CSS injection', () => {
+    const token = { colorPrimary: '#d00044', controlHeight: 42, fontSize: 18 };
+    const w = mount(ThemeProvider, {
+      props: { theme: { token } },
+      slots: { default: () => h(Pagination, { total: 100, showSizeChanger: false }) },
+    });
+    const style = w.get<HTMLUListElement>('.apollo-pagination').element.style;
+    expect(style.getPropertyValue('--apollo-color-primary')).toBe('#d00044');
+    expect(style.getPropertyValue('--apollo-font-size')).toBe('18px');
+    expect(style.getPropertyValue('--apollo-pagination-item-size')).toBe('42px');
+    expect(style.getPropertyValue('--apollo-pagination-item-active-color')).toBe('#d00044');
+    expect(style.getPropertyValue('--apollo-pagination-item-active-color-hover')).toBe(
+      getDesignToken({ token }).colorPrimaryHover,
+    );
+    w.unmount();
+  });
+
+  it('keeps private input derivation separate from component overrides and Select ownership', () => {
+    const w = mount(ThemeProvider, {
+      props: {
+        theme: {
+          token: { paddingSM: 15, lineWidth: 1, fontSize: 17 },
+          components: { Pagination: { paddingInline: 99, addonBg: '#abcdef' } },
+        },
+      },
+      slots: { default: () => h(Pagination, { total: 100, showSizeChanger: true }) },
+    });
+    const style = w.get<HTMLUListElement>('.apollo-pagination').element.style;
+    expect(style.getPropertyValue('--apollo-pagination-padding-inline')).toBe('14px');
+    expect(style.getPropertyValue('--apollo-pagination-input-font-size')).toBe('17px');
+    expect(style.getPropertyValue('--apollo-pagination-addon-bg')).toBe('');
+    expect(style.getPropertyValue('--apollo-select-padding-inline')).toBe('');
+    w.unmount();
+  });
+
+  it('follows the current custom component prefix and preserves native style priority', async () => {
+    const prefix = ref('brand-pages');
+    const native = ref<string | undefined>('--brand-pages-item-size:64px');
+    const w = mount(
+      defineComponent({
+        setup: () => () =>
+          h(ThemeProvider, { theme: { components: { Pagination: { itemSize: 44 } } } }, () =>
+            h(Pagination, { prefixCls: prefix.value, style: native.value }),
+          ),
+      }),
+    );
+    const root = w.get<HTMLUListElement>('ul').element;
+    expect(root.style.getPropertyValue('--brand-pages-item-size')).toBe('64px');
+    native.value = undefined;
+    await nextTick();
+    expect(root.style.getPropertyValue('--brand-pages-item-size')).toBe('44px');
+    prefix.value = 'next-pages';
+    await nextTick();
+    expect(w.get('ul').element).toBe(root);
+    expect(root.classList.contains('next-pages')).toBe(true);
+    expect(root.style.getPropertyValue('--next-pages-item-size')).toBe('44px');
+    expect(root.style.getPropertyValue('--brand-pages-item-size')).toBe('');
+    w.unmount();
+  });
+
+  it('retains CSS-only ownership when no source theme is active', () => {
+    const w = mount(Pagination, { props: { total: 100 } });
+    const style = w.get<HTMLUListElement>('ul').element.style;
+    expect(style.getPropertyValue('--apollo-pagination-item-size')).toBe('');
+    expect(style.getPropertyValue('--apollo-color-primary')).toBe('');
+    w.unmount();
+  });
+
+  it('serializes current component tokens during SSR', async () => {
+    const html = await renderToString(
+      createSSRApp({
+        render: () =>
+          h(
+            ThemeProvider,
+            { theme: { components: { Pagination: { itemSize: 46, itemActiveBg: '#abcdef' } } } },
+            () => h(Pagination, { total: 100, prefixCls: 'server-pages' }),
+          ),
+      }),
+    );
+    expect(html).toContain('--server-pages-item-size:46px');
+    expect(html).toContain('--server-pages-item-active-bg:#abcdef');
+  });
+
+  it('consumes the existing link background and mini size-changer offset tokens', () => {
+    const css = genPaginationStyle('apollo');
+    expect(css).toContain('background-color:var(--apollo-pagination-item-link-bg)');
+    expect(css).toContain('top:var(--apollo-pagination-mini-options-size-changer-top)');
+  });
 });
