@@ -13,8 +13,8 @@ const toggleDisable = () => {
   disabled.value = !disabled.value;
 };
 
-const onChange = (e: { target: { checked: boolean } }) => {
-  checked.value = e.target.checked;
+const onChange = (_event: Event, next: boolean) => {
+  checked.value = next;
 };
 
 const label = computed(

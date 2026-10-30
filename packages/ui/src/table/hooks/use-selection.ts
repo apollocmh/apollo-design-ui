@@ -390,9 +390,9 @@ export function useSelection<RecordType>(
     const checkedCurrentAll = recordKeys.every((key) => keySet.has(key));
     const checkedCurrentSome = recordKeys.some((key) => keySet.has(key));
 
-    const onSelectAllChange = () => {
+    const onSelectAllChange = (checked: boolean) => {
       const changeKeys: TableKey[] = [];
-      if (checkedCurrentAll) {
+      if (!checked) {
         recordKeys.forEach((key) => {
           keySet.delete(key);
           changeKeys.push(key);
@@ -407,7 +407,7 @@ export function useSelection<RecordType>(
       }
       const keys = Array.from(keySet);
       rowSelection.onSelectAll?.(
-        !checkedCurrentAll,
+        checked,
         keys.map((k) => config.getRecordByKey(k)) as RecordType[],
         changeKeys.map((k) => config.getRecordByKey(k)) as RecordType[],
       );
@@ -456,7 +456,7 @@ export function useSelection<RecordType>(
       const customCheckboxProps =
         (rowSelection.getTitleCheckboxProps?.() as Record<string, unknown>) ?? {};
       const { onChange: onTitleChange, disabled } = customCheckboxProps as {
-        onChange?: (e: unknown) => void;
+        onChange?: (event: Event, checked: boolean) => void;
         disabled?: boolean;
       };
       columnTitleCheckbox = h(Checkbox, {
@@ -468,9 +468,9 @@ export function useSelection<RecordType>(
         indeterminate: !allDisabled
           ? !checkedCurrentAll && checkedCurrentSome
           : !allDisabledAndChecked && allDisabledSomeChecked,
-        onChange: (e: unknown) => {
-          onSelectAllChange();
-          (onTitleChange as ((e: unknown) => void) | undefined)?.(e);
+        onChange: (event: Event, checked: boolean) => {
+          onSelectAllChange(checked);
+          onTitleChange?.(event, checked);
         },
         disabled: disabled ?? (flattedData.value.length === 0 || allDisabled),
         skipGroup: true,
@@ -527,6 +527,7 @@ export function useSelection<RecordType>(
             (checkboxProps?.indeterminate as boolean | undefined) ?? indeterminate;
         }
         const defaultAriaLabel = checked ? `Row ${index + 1} selected` : `Select row ${index + 1}`;
+        let selectWithShift = false;
         return {
           node: h(Checkbox, {
             'aria-label': defaultAriaLabel,
@@ -534,13 +535,14 @@ export function useSelection<RecordType>(
             indeterminate: mergedIndeterminate,
             checked,
             skipGroup: true,
-            onClick: (e: Event) => {
+            onClick: (e: MouseEvent) => {
+              selectWithShift = e.shiftKey;
               e.stopPropagation();
               (checkboxProps?.onClick as ((e: Event) => void) | undefined)?.(e);
             },
-            onChange: (event: { nativeEvent?: Event }) => {
-              const nativeEvent = (event.nativeEvent ?? event) as Event;
-              const { shiftKey } = nativeEvent as KeyboardEvent & { shiftKey?: boolean };
+            onChange: (nativeEvent: Event, proposedChecked: boolean) => {
+              const shiftKey = selectWithShift;
+              selectWithShift = false;
               const currentSelectedIndex = recordKeys.indexOf(key);
               const isMultiple =
                 derivedSelectedKeySet.value.size > 0 &&
@@ -550,7 +552,7 @@ export function useSelection<RecordType>(
                 const changedKeys = multipleSelect(currentSelectedIndex, recordKeys, keySet);
                 const keys = Array.from(keySet);
                 rowSelection.onSelectMultiple?.(
-                  !checked,
+                  proposedChecked,
                   keys.map((k) => config.getRecordByKey(k)) as RecordType[],
                   changedKeys.map((k) => config.getRecordByKey(k)) as RecordType[],
                 );
@@ -558,10 +560,10 @@ export function useSelection<RecordType>(
               } else {
                 const originCheckedKeys = derivedSelectedKeys.value[0];
                 if (checkStrictly) {
-                  const checkedKeys = checked
+                  const checkedKeys = !proposedChecked
                     ? arrDel(originCheckedKeys as never, key as never)
                     : arrAdd(originCheckedKeys as never, key as never);
-                  triggerSingleSelection(key, !checked, checkedKeys as TableKey[], nativeEvent);
+                  triggerSingleSelection(key, proposedChecked, checkedKeys as TableKey[], nativeEvent);
                 } else {
                   const result = conductCheck(
                     [...(originCheckedKeys as never[]), key as never] as never,
@@ -570,7 +572,7 @@ export function useSelection<RecordType>(
                     isCheckboxDisabled as never,
                   );
                   let nextCheckedKeys = result.checkedKeys as TableKey[];
-                  if (checked) {
+                  if (!proposedChecked) {
                     const tempKeySet = new Set(nextCheckedKeys);
                     tempKeySet.delete(key);
                     nextCheckedKeys = conductCheck(
@@ -580,15 +582,18 @@ export function useSelection<RecordType>(
                       isCheckboxDisabled as never,
                     ).checkedKeys as TableKey[];
                   }
-                  triggerSingleSelection(key, !checked, nextCheckedKeys, nativeEvent);
+                  triggerSingleSelection(key, proposedChecked, nextCheckedKeys, nativeEvent);
                 }
               }
-              if (checked) {
+              if (!proposedChecked) {
                 updatePrevSelectedIndex(null);
               } else {
                 updatePrevSelectedIndex(currentSelectedIndex);
               }
-              (checkboxProps?.onChange as ((e: unknown) => void) | undefined)?.(event);
+              (checkboxProps?.onChange as ((event: Event, checked: boolean) => void) | undefined)?.(
+                nativeEvent,
+                proposedChecked,
+              );
             },
           } as never),
           checked,

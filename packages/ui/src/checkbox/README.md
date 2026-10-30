@@ -1,3 +1,5 @@
+> 2026-10-30 当前原生化差额：Checkbox change 为真实 `Event` 与第二参 checked 提议快照，update:checked 为 bool；Group change/update:value 为真实标量数组。原生 input.click 后按 accepted model 校正 checked/indeterminate，同名 Radio Group 按成员注册恢复整组，Radio 自身通知 API 本轮未迁移。当前 Provider 语义、Vue style 字符串/数组、动态 skipGroup 注册、真实 refs 与原生表单 value 已接线。无独立 Component Token。以下历史阶段、上游对照和旧缺口保留原日期与原义，现行状态仅见 registry。
+
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
 # Checkbox 实现说明

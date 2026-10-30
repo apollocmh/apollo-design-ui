@@ -918,7 +918,8 @@ export { prepareComponentToken as prepareCascaderComponentToken } from './cascad
 export type {
   AbstractCheckboxProps,
   CheckboxChangeEvent,
-  CheckboxChangeEventTarget,
+  CheckboxEmits,
+  CheckboxGroupEmits,
   CheckboxGroupProps,
   CheckboxGroupRef,
   CheckboxOptionType,
@@ -926,6 +927,8 @@ export type {
   CheckboxRef,
   CheckboxSemanticClassNames,
   CheckboxSemanticStyles,
+  CheckboxSlots,
+  CheckboxValueType,
 } from './checkbox';
 export { Checkbox, CheckboxGroup } from './checkbox';
 export { genCheckboxStyle } from './checkbox/style';

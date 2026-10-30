@@ -149,6 +149,19 @@ export const GroupComponent = defineComponent({
      */
     const mergedSize = useSize((ctxSize) => props.size ?? ctxSize);
 
+    // A native same-name radio activation also unchecks its accepted sibling.
+    // Keep group-owned controls registered so rejection restores the entire set.
+    const checkedControls = new Set<() => void>();
+    const registerChecked = (sync: () => void) => {
+      checkedControls.add(sync);
+      return () => {
+        checkedControls.delete(sync);
+      };
+    };
+    const syncChecked = () => {
+      for (const sync of checkedControls) sync();
+    };
+
     // ============================ Provide ==============================
     // ⚠️ 必须 reactive（自动解包 ref/computed）：子 Radio 的
     //    `props.value === groupContext.value` 要**随受控 value 更新** ——
@@ -156,6 +169,8 @@ export const GroupComponent = defineComponent({
     provideRadioGroupContext(
       reactive({
         onChange: onRadioChange,
+        registerChecked,
+        syncChecked,
         value: innerValue,
         disabled: computed(() => props.disabled),
         name: mergedName,

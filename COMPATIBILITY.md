@@ -202,3 +202,7 @@ TimePicker/TimeRangePicker 固定为时间轴，移除从 DatePicker 误继承�
 ### D-test-utils-native-contracts
 
 Test Utils 保留既有 Vue 测试入口，修正真实 VNodeChild、CSS/DOM 精确归一、焦点与原生属性断言、异常卸载/observer目标身份和收集器恢复；空执行范围不能冒称通过。ObserverBaseline.resizeTargets 由数量改为实际目标身份集合，包外没有旧字段消费者。C11 只检查公开组件的真实 runtime props，保留精确非模型数据豁免；Steps 同步补齐 update:current，模板可直接使用 v-model:current，原 change 数字载荷保留。
+
+### D-checkbox-native-input-events
+
+Checkbox 的 change 改为 `(event: Event, checked: boolean)`：首参为原生事件，第二参保留本次提议；移除合成 target/nativeEvent 包装及旧 Target DTO。其余 DOM 通知采用原生拼写与事件，Group change 保留值数组；值范围统一为实际支持的 string/number/boolean。修正父拒绝更新后的 checked/indeterminate、动态 skipGroup 注册、当前 Provider 和原生样式，引用暴露真实 nullable DOM。Radio 仅同步已证实的勾选恢复边界，完整事件迁移仍另行审计；Table/Transfer 已同步本次消费，详见[Checkbox API](packages/ui/src/checkbox/index.zh-CN.md)。

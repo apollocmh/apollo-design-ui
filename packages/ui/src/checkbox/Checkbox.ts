@@ -1,49 +1,28 @@
-/**
- * Checkbox —— 复选框。
- *
- * 契约来源：antd 6.6.4 的 `es/checkbox/Checkbox.js` + `@rc-component/checkbox`
- * 的 DOM 分配（判据逐条对齐，G1 分析 §2/§3）。
- *
- * ── 七条最容易写错的判据 ─────────────────────────────────────────────────────
- *
- * 1. **checked 受控/非受控**：`useControlledValue(defaultChecked, checked)`；
- *    在 Group 内（非 skipGroup）⇒ `mergedChecked = group.value.includes(value)`。
- * 2. **disabled 三级合并**：`props.disabled ?? group.disabled ?? DisabledContext`
- *    —— `false` 必须能显式关闭（?? 判据）。
- * 3. **DOM 分配**（rc-checkbox 语义）：`title` / 语义 styles.icon 落 **span**；
- *    `id/name/required/tabIndex/autofocus/onFocus/onBlur/onKeyDown/…` 落 **input**；
- *    `onMouseEnter/onMouseLeave` 落 **label**。
- * 4. **类名三段**：label = `-wrapper + 状态类 + context + className + 语义 root +
- *    rootClassName`；span = `语义 icon + -indeterminate + ant-wave-target +
- *    -checked + -disabled`；input = `-input`。
- * 5. **indeterminate 是副作用**：直接写 `input.indeterminate`（不是 attr）。
- * 6. **`value` 在组外不是有效 prop**（发 usage 告警）；Group 内是选项值。
- * 7. **事件冒泡锁**：label click 设 raf 锁，锁期内 input click 被 stopPropagation
- *    （防 label→input→label 双触发）。
- */
+/** Native Checkbox: accepted checked state, owned DOM notifications and explicit input/root attrs. */
 
 import { isRenderable, useControlledValue, useDevWarning } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
   h,
+  nextTick,
   onMounted,
-  onScopeDispose,
   type PropType,
+  type SlotsType,
   shallowRef,
-  type VNodeChild,
   watch,
   watchEffect,
 } from 'vue';
 import { mergeClassNames, mergeStyles, resolveSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
+import { useFormItemInputContext } from '../form/context';
 import { useCheckboxGroup } from './context';
 import type {
   CheckboxProps,
-  CheckboxRef,
   CheckboxSemanticClassNames,
   CheckboxSemanticStyles,
+  CheckboxSlots,
 } from './interface';
 import { useBubbleLock } from './use-bubble-lock';
 
@@ -53,6 +32,7 @@ export const WAVE_TARGET_CLS = 'ant-wave-target';
 export const CheckboxComponent = defineComponent({
   name: 'ACheckbox',
   inheritAttrs: false,
+  expose: ['focus', 'blur', 'input', 'nativeElement'],
   props: {
     prefixCls: { type: String, default: undefined },
     defaultChecked: { type: Boolean, default: false },
@@ -61,16 +41,13 @@ export const CheckboxComponent = defineComponent({
     title: { type: String, default: undefined },
     indeterminate: { type: Boolean, default: false },
     skipGroup: { type: Boolean, default: false },
-    // ⚠️ 不能写 PropType<unknown>：vue-tsc 会把它推断成 undefined（SFC 模板与
-    //    h() 全线误报「not assignable to undefined」）。antd 的 value 语义上是
-    //    原始值选项 ⇒ 收窄为 string|number|boolean（Group 侧已用 VNodeProps 放行）。
+    // Native option values and Group data share the same scalar contract.
     value: {
       type: [String, Number, Boolean] as PropType<string | number | boolean>,
       default: undefined,
     },
     name: { type: String, default: undefined },
     id: { type: String, default: undefined },
-    type: { type: String, default: undefined },
     tabIndex: { type: Number, default: undefined },
     required: { type: Boolean, default: undefined },
     autoFocus: { type: Boolean, default: undefined },
@@ -80,228 +57,153 @@ export const CheckboxComponent = defineComponent({
     },
     styles: { type: [Object, Function] as PropType<CheckboxProps['styles']>, default: undefined },
   },
-  /**
-   * ⚠️ 只声明 `update:checked`（供 `v-model:checked`），**不**声明 `change` ——
-   * antd 的 `onChange` 是 props 形态回调，声明成 emits 会被 Vue 从 attrs 摘掉
-   * （PITFALLS 35）。两者同时发出（COMPATIBILITY.md 规则 C11，radio 同款 D48）。
-   */
-  emits: ['update:checked'],
-  // ⚠️ onChange/onClick/onFocus/onBlur/… 是 antd 的 props 形态回调 —— 走 attrs（layout 同判）
-  setup(props, { attrs, emit, expose, slots }) {
-    const callbacks = attrs as unknown as Pick<
-      CheckboxProps,
-      'onChange' | 'onClick' | 'onMouseEnter' | 'onMouseLeave' | 'onFocus' | 'onBlur'
-    >;
-
-    const context = useComponentConfig('checkbox');
-    const { getPrefixCls } = context;
+  emits: {
+    'update:checked': (_checked: boolean) => true,
+    change: (_event: Event, _checked: boolean) => true,
+    click: (_event: MouseEvent) => true,
+    mouseenter: (_event: MouseEvent) => true,
+    mouseleave: (_event: MouseEvent) => true,
+    focus: (_event: FocusEvent) => true,
+    blur: (_event: FocusEvent) => true,
+    keydown: (_event: KeyboardEvent) => true,
+    keypress: (_event: KeyboardEvent) => true,
+  },
+  slots: Object as SlotsType<CheckboxSlots>,
+  setup(props, { attrs, emit, slots }) {
+    const context = useComponentConfig<{
+      className?: string;
+      style?: import('vue').CSSProperties;
+      classNames?: CheckboxProps['classNames'];
+      styles?: CheckboxProps['styles'];
+    }>('checkbox');
     const checkboxGroup = useCheckboxGroup();
     const contextDisabled = useDisabled();
+    const form = useFormItemInputContext();
     const devWarning = useDevWarning('Checkbox');
-
-    // ============================ Warning ==============================
-    // antd：`'checked' in props || !!checkboxGroup || !('value' in props)`
-    // —— 组外传 value 且没传 checked ⇒ 告警。
-    const hasChecked = computed(() => props.checked !== undefined);
     watchEffect(() => {
       devWarning(
-        hasChecked.value || !!checkboxGroup || props.value === undefined,
+        props.checked !== undefined || !!checkboxGroup || props.value === undefined,
         '`value` is not a valid prop, do you mean `checked`?',
       );
     });
-
-    // ============================= Disabled =============================
-    const mergedDisabled = computed<boolean>(
-      () => props.disabled ?? checkboxGroup?.disabled ?? contextDisabled.value,
+    const inGroup = computed(() => !!checkboxGroup && !props.skipGroup);
+    const mergedDisabled = computed(
+      () =>
+        props.disabled ??
+        (inGroup.value ? checkboxGroup?.disabled : undefined) ??
+        contextDisabled.value,
     );
-
-    // ============================== Checked =============================
     const [innerChecked, setInnerChecked] = useControlledValue<boolean>({
       defaultValue: () => props.defaultChecked,
       getValue: () => props.checked,
     });
-
-    const mergedChecked = computed<boolean>(() => {
-      if (checkboxGroup && !props.skipGroup) {
-        return (checkboxGroup.value ?? []).includes(props.value);
-      }
-      return innerChecked.value;
-    });
-
-    const onInternalChange = (event: Event) => {
-      const inputEl = event.target as HTMLInputElement;
-      setInnerChecked(inputEl.checked);
-      // v-model:checked 通道（规则 C11：与语义事件同时发出）
-      emit('update:checked', inputEl.checked);
-      callbacks.onChange?.({
-        target: {
-          ...(props as unknown as Record<string, unknown>),
-          type: 'checkbox',
-          checked: inputEl.checked,
-        },
-        stopPropagation: () => event.stopPropagation(),
-        preventDefault: () => event.preventDefault(),
-        nativeEvent: event,
-      });
-      if (!props.skipGroup && checkboxGroup?.toggleOption) {
-        checkboxGroup.toggleOption({
-          label: slots.default?.() as VNodeChild,
-          value: props.value,
-        });
-      }
+    const mergedChecked = computed(() =>
+      inGroup.value && checkboxGroup
+        ? props.value !== undefined && checkboxGroup.value.includes(props.value)
+        : innerChecked.value,
+    );
+    const inputRef = shallowRef<HTMLInputElement | null>(null);
+    const holderRef = shallowRef<HTMLElement | null>(null);
+    const syncNativeState = () => {
+      const input = inputRef.value;
+      if (!input) return;
+      input.checked = mergedChecked.value;
+      input.indeterminate = props.indeterminate;
     };
-
-    // ======================== Register to Group =========================
-    if (checkboxGroup && !props.skipGroup) {
-      /**
-       * 🚨 **必须 watch `props.value`**（Issue #9.3）：注册 / 注销只发生在
-       * 挂载 / 卸载时的话，运行中把 `value` 从 `a` 改成 `b`（DOM 不卸载）
-       * 会让 Group 的 `registeredValues` **一直持旧值** ⇒ 排序 / 筛选 / 选择结果全歪。
-       *
-       * 上游是 `useEffect(() => { registerValue(value); return () => cancelValue(value) },
-       * [value])` —— 依赖变化时先 cancel 旧的、再 register 新的。
-       */
+    const onInternalChange = (event: Event) => {
+      const input = inputRef.value;
+      if (!input) return;
+      if (!mergedDisabled.value) {
+        const checked = input.checked;
+        if (!inGroup.value) setInnerChecked(checked);
+        emit('update:checked', checked);
+        emit('change', event, checked);
+        if (inGroup.value && checkboxGroup && props.value !== undefined)
+          checkboxGroup.toggleOption(props.value);
+      }
+      void nextTick(syncNativeState);
+    };
+    if (checkboxGroup) {
       watch(
-        () => props.value,
-        (value, previous) => {
-          if (previous !== undefined) {
-            checkboxGroup.cancelValue?.(previous);
-          }
-          checkboxGroup.registerValue?.(value);
+        () => [props.value, props.skipGroup] as const,
+        ([value, skip], _previous, onCleanup) => {
+          if (skip || value === undefined) return;
+          checkboxGroup.registerValue(value);
+          onCleanup(() => checkboxGroup.cancelValue(value));
         },
         { immediate: true },
       );
-      // 卸载时注销**当前**值（`props.value` 在这里现读，是懒的）
-      onScopeDispose(() => checkboxGroup.cancelValue?.(props.value));
     }
-
-    // ========================== Indeterminate ===========================
-    const inputRef = shallowRef<HTMLInputElement | null>(null);
-    const holderRef = shallowRef<HTMLElement | null>(null);
-    // ⚠️ watchEffect（pre-flush）在首帧 inputRef 还没赋值时就跑完了，且此后
-    //    props 不变不再触发 —— 挂载后要主动补一次（antd 的 useEffect 同语义）。
-    const applyIndeterminate = () => {
-      if (inputRef.value) {
-        inputRef.value.indeterminate = props.indeterminate ?? false;
-      }
-    };
-    onMounted(applyIndeterminate);
-    watchEffect(applyIndeterminate);
-
-    /**
-     * `autoFocus` 必须**自己调 `focus()`**（Issue #9.1）。
-     *
-     * 原生 `autofocus` 只在 HTML **解析期**生效；Vue 的 `patchProp` 是元素创建
-     * **之后**才设属性 ⇒ 浏览器与 jsdom 都不会因此聚焦（React 之所以能用，
-     * 是它在 mount 时显式 `node.focus()`）。禁用态不聚焦。
-     * 判据与 `Rate` / `_internal/action-button` / `input-number` 一致。
-     */
-    onMounted(() => {
-      if (props.autoFocus === true && !mergedDisabled.value) {
-        inputRef.value?.focus();
-      }
+    watchEffect(() => {
+      if (inputRef.value) inputRef.value.indeterminate = props.indeterminate;
     });
-
-    // ============================ Semantic ==============================
-    const semanticProps = computed<CheckboxProps>(
-      () =>
-        ({
-          ...props,
-          disabled: mergedDisabled.value,
-          checked: mergedChecked.value,
-        }) as CheckboxProps,
-    );
+    onMounted(() => {
+      syncNativeState();
+      if (props.autoFocus && !mergedDisabled.value) inputRef.value?.focus();
+    });
+    const semanticProps = computed<CheckboxProps>(() => ({
+      ...props,
+      disabled: mergedDisabled.value,
+      checked: mergedChecked.value,
+    }));
     const info = computed(() => ({ props: semanticProps.value }));
     const mergedClassNames = computed(() =>
       mergeClassNames<CheckboxSemanticClassNames>(
-        resolveSemantic<CheckboxSemanticClassNames, CheckboxProps>(
-          props.classNames as never,
-          info.value,
-        ),
+        resolveSemantic(context.classNames, info.value),
+        resolveSemantic(props.classNames, info.value),
       ),
     );
     const mergedStyles = computed(() =>
       mergeStyles<CheckboxSemanticStyles>(
-        resolveSemantic<CheckboxSemanticStyles, CheckboxProps>(props.styles as never, info.value),
+        resolveSemantic(context.styles, info.value),
+        context.style ? { root: context.style } : undefined,
+        resolveSemantic(props.styles, info.value),
       ),
     );
-
-    // ============================ Event Lock ============================
-    // ⚠️ 传 getter（Issue #9.2）：`callbacks` 就是 `attrs`，裸传会把首帧的
-    //    `onClick` 焊死 —— 父级替换 handler 之后仍调旧的。
     const { onLabelClick, onInputClick } = useBubbleLock(
-      () => (attrs as { onClick?: (e: MouseEvent) => void }).onClick,
+      () => (event: MouseEvent) => emit('click', event),
     );
-
-    expose({
-      focus: (options?: FocusOptions) => inputRef.value?.focus(options),
-      blur: () => inputRef.value?.blur(),
-      get input() {
-        return inputRef.value;
-      },
-      get nativeElement() {
-        return holderRef.value;
-      },
-    } satisfies CheckboxRef);
-
-    const prefixCls = computed(() => getPrefixCls('checkbox', props.prefixCls));
-
-    return () => {
+    const focus = (options?: FocusOptions) => inputRef.value?.focus(options);
+    const blur = () => inputRef.value?.blur();
+    const prefixCls = computed(() => context.getPrefixCls('checkbox', props.prefixCls));
+    const renderCheckbox = () => {
       const cls = prefixCls.value;
-
-      const classString = [
-        `${cls}-wrapper`,
-        {
-          [`${cls}-rtl`]: context.direction === 'rtl',
-          [`${cls}-wrapper-checked`]: mergedChecked.value,
-          [`${cls}-wrapper-disabled`]: mergedDisabled.value,
-        },
-        context.className,
-        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-        attrs.class,
-        mergedClassNames.value.root,
-      ];
-
-      const checkboxClass = [
-        cls,
-        mergedClassNames.value.icon,
-        {
-          [`${cls}-indeterminate`]: props.indeterminate,
-        },
-        WAVE_TARGET_CLS,
-        {
-          [`${cls}-checked`]: mergedChecked.value,
-          [`${cls}-disabled`]: mergedDisabled.value,
-        },
-      ];
-
-      // rc-checkbox 语义：除「被 antd 消费的字段」外的 attrs 全部落 input。
-      // ⚠️ `class` / `style` 除外 —— 它们已归根（见上面的 classString 与根 style）。
-      const {
-        class: _attrsClass,
-        style: _attrsStyle,
-        ...inputAttrs
-      } = attrs as Record<string, unknown>;
-      void _attrsClass;
-      void _attrsStyle;
-
-      const labelValue = slots.default?.() as VNodeChild;
-
+      const { class: _class, style: _style, ...inputAttrs } = attrs;
+      const label = slots.default?.();
       return h(
         'label',
         {
-          class: classString,
-          // 根 style：语义 root 之后叠加调用方原生 attrs.style（调用方最后胜出）
-          style: { ...(mergedStyles.value.root ?? {}), ...((attrs.style as object) ?? {}) },
-          onMouseenter: callbacks.onMouseEnter,
-          onMouseleave: callbacks.onMouseLeave,
+          class: [
+            `${cls}-wrapper`,
+            {
+              [`${cls}-rtl`]: context.direction === 'rtl',
+              [`${cls}-wrapper-checked`]: mergedChecked.value,
+              [`${cls}-wrapper-disabled`]: mergedDisabled.value,
+              [`${cls}-wrapper-in-form-item`]: form.value.isFormItemInput,
+            },
+            context.className,
+            attrs.class,
+            mergedClassNames.value.root,
+          ],
+          style: [mergedStyles.value.root, attrs.style],
+          onMouseenter: (event: MouseEvent) => emit('mouseenter', event),
+          onMouseleave: (event: MouseEvent) => emit('mouseleave', event),
           onClick: onLabelClick,
         },
         [
           h(
             'span',
             {
-              class: checkboxClass,
+              class: [
+                cls,
+                mergedClassNames.value.icon,
+                { [`${cls}-indeterminate`]: props.indeterminate },
+                WAVE_TARGET_CLS,
+                {
+                  [`${cls}-checked`]: mergedChecked.value,
+                  [`${cls}-disabled`]: mergedDisabled.value,
+                },
+              ],
               title: props.title,
               style: mergedStyles.value.icon,
               ref: holderRef,
@@ -309,40 +211,44 @@ export const CheckboxComponent = defineComponent({
             [
               h('input', {
                 ...inputAttrs,
-                // 🚨 这三个 + `id` 都是**声明过的 prop** ⇒ Vue 已把它们从 `attrs` 摘走
-                //    ⇒ 不显式绑就永远不会落到 input 上（Issue #9.1）。
-                //    落点判据来自 antd 6.6.4 的 SSR 实测：
-                //    `<input id required tabindex autofocus class type name>`。
                 id: props.id,
                 required: props.required,
                 tabIndex: props.tabIndex,
-                autoFocus: props.autoFocus,
+                autofocus: props.autoFocus,
                 class: `${cls}-input`,
                 type: 'checkbox',
                 ref: inputRef,
-                name: !props.skipGroup && checkboxGroup ? checkboxGroup.name : props.name,
+                value: props.value,
+                name: inGroup.value && checkboxGroup ? checkboxGroup.name : props.name,
                 checked: mergedChecked.value,
                 disabled: mergedDisabled.value,
                 onClick: onInputClick,
                 onChange: onInternalChange,
+                onFocus: (event: FocusEvent) => emit('focus', event),
+                onBlur: (event: FocusEvent) => emit('blur', event),
+                onKeydown: (event: KeyboardEvent) => emit('keydown', event),
+                onKeypress: (event: KeyboardEvent) => emit('keypress', event),
               }),
             ],
           ),
-          isRenderable(labelValue)
+          isRenderable(label)
             ? h(
                 'span',
                 {
                   class: [`${cls}-label`, mergedClassNames.value.label],
                   style: mergedStyles.value.label,
                 },
-                [labelValue],
+                [label],
               )
             : null,
         ],
       );
     };
+    return { input: inputRef, nativeElement: holderRef, focus, blur, renderCheckbox };
+  },
+  render() {
+    return this.renderCheckbox();
   },
 });
-
 export const Checkbox = CheckboxComponent;
 export default Checkbox;

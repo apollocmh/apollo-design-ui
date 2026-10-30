@@ -24,14 +24,27 @@
  */
 
 import type { CSSProperties, VNodeChild } from 'vue';
-import type { CheckboxChangeEvent, CheckboxOptionType, CheckboxRef } from '../checkbox/interface';
+import type { CheckboxOptionType, CheckboxRef } from '../checkbox/interface';
 import type { SizeType } from '../config-provider/size-context';
 
 /** antd：`export type { CheckboxRef as RadioRef } from '@rc-component/checkbox'`。 */
 export type RadioRef = CheckboxRef;
 
 /** antd 的 `RadioChangeEvent` 与 checkbox 侧结构一致（`target = {...props, checked}`）。 */
-export type RadioChangeEvent = CheckboxChangeEvent;
+export interface RadioChangeEvent {
+  target: {
+    checked: boolean;
+    value?: RadioValue;
+    disabled?: boolean;
+    name?: string;
+    id?: string;
+    type?: string;
+    [key: string]: unknown;
+  };
+  stopPropagation: () => void;
+  preventDefault: () => void;
+  nativeEvent: Event;
+}
 
 export type RadioGroupButtonStyle = 'outline' | 'solid';
 export type RadioGroupOptionType = 'default' | 'button';
@@ -43,7 +56,9 @@ export type RadioOrientation = 'horizontal' | 'vertical';
 export type RadioValue = string | number | boolean;
 
 /** Group 的 options 元素类型（antd 复用 checkbox 的 `CheckboxOptionType`）。 */
-export type RadioOptionItem = CheckboxOptionType<RadioValue>;
+export type RadioOptionItem = Omit<CheckboxOptionType<RadioValue>, 'onChange'> & {
+  onChange?: (event: RadioChangeEvent) => void;
+};
 
 // ============================== 语义化 ==============================
 
@@ -168,6 +183,9 @@ export interface RadioGroupProps {
 
 /** antd 的 `RadioGroupContextProps`（`RadioGroupContext.js` 的 value）。 */
 export interface RadioGroupContextValue {
+  /** Group-owned native controls; registration is released with the child scope. */
+  registerChecked?: (sync: () => void) => () => void;
+  syncChecked?: () => void;
   onChange?: (e: RadioChangeEvent) => void;
   value?: RadioValue;
   disabled?: boolean;

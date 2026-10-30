@@ -8,7 +8,7 @@
 import { expectTypeOf, it } from 'vitest';
 import { h } from 'vue';
 import { Checkbox, CheckboxGroup } from '../index';
-import type { CheckboxChangeEvent, CheckboxProps } from '../interface';
+import type { CheckboxChangeEvent, CheckboxEmits, CheckboxProps } from '../interface';
 
 it('CheckboxProps 的关键字段类型', () => {
   expectTypeOf<CheckboxProps['checked']>().toEqualTypeOf<boolean | undefined>();
@@ -20,10 +20,11 @@ it('CheckboxProps 的关键字段类型', () => {
 });
 
 it('CheckboxChangeEvent 的形态', () => {
-  const onChange = (e: CheckboxChangeEvent) => {
-    expectTypeOf(e.target.checked).toBeBoolean();
-    expectTypeOf(e.stopPropagation).toBeFunction();
-    expectTypeOf(e.nativeEvent).not.toBeAny();
+  const onChange: CheckboxEmits['change'] = (event, checked) => {
+    expectTypeOf(event).toEqualTypeOf<Event>();
+    expectTypeOf<CheckboxChangeEvent>().toEqualTypeOf<Event>();
+    expectTypeOf(checked).toBeBoolean();
+    expectTypeOf(event.stopPropagation).toBeFunction();
   };
   void onChange;
 });

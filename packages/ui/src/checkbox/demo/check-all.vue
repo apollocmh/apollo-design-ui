@@ -11,8 +11,8 @@ const indeterminate = computed(
   () => checkedList.value.length > 0 && checkedList.value.length < plainOptions.length,
 );
 
-const onCheckAllChange = (e: { target: { checked: boolean } }) => {
-  checkedList.value = e.target.checked ? [...plainOptions] : [];
+const onCheckAllChange = (_event: Event, checked: boolean) => {
+  checkedList.value = checked ? [...plainOptions] : [];
 };
 </script>
 

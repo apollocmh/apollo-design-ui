@@ -24,8 +24,9 @@ export default Checkbox;
 export type {
   AbstractCheckboxProps,
   CheckboxChangeEvent,
-  CheckboxChangeEventTarget,
+  CheckboxEmits,
   CheckboxGroupContext,
+  CheckboxGroupEmits,
   CheckboxGroupProps,
   CheckboxGroupRef,
   CheckboxOptionType,
@@ -34,6 +35,8 @@ export type {
   CheckboxSemanticClassNames,
   CheckboxSemanticContext,
   CheckboxSemanticStyles,
+  CheckboxSlots,
+  CheckboxValueType,
 } from './interface';
 export { genCheckboxStyle } from './style';
 export type { ComponentToken as CheckboxComponentToken } from './style/token';

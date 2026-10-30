@@ -271,9 +271,9 @@ const Section = defineComponent({
         // 有意增强（超出 antd）：头部全选框无可读文本，aria-label 取全选文案
         //（axe `label` 规则要求表单元素有可访问名）。
         'aria-label': props.selectAll ? String(props.selectAll) : 'Select all',
-        onChange: () => {
+        onChange: (_event: Event, checked: boolean) => {
           // Only select enabled items
-          selectAllItems(getEnabledItemKeys(filteredItems.value), checkStatus.value !== 'all');
+          selectAllItems(getEnabledItemKeys(filteredItems.value), checked);
         },
       }),
     );

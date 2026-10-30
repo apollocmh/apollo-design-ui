@@ -439,8 +439,8 @@ function defineFilterDropdownComponent() {
           ),
         }),
       );
-      const onCheckAll = (e: { target: { checked: boolean } }) => {
-        if (e.target.checked) {
+      const onCheckAll = (_event: Event, checked: boolean) => {
+        if (checked) {
           const allFilterKeys = flattenKeys(column.value.filters as ColumnFilterItem[]).map(String);
           setFilteredKeysSync(allFilterKeys);
         } else {

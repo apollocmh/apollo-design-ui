@@ -13,6 +13,8 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+type CheckboxValue = import('../interface').CheckboxValueType;
+
 const findInput = (w: ReturnType<typeof mount>) => w.find('input');
 
 describe('Checkbox · 基本行为', () => {
@@ -25,7 +27,8 @@ describe('Checkbox · 基本行为', () => {
     await findInput(w).setValue(true);
     expect(onChange).toHaveBeenCalledTimes(1);
     const evt = onChange.mock.calls[0]?.[0];
-    expect(evt?.target.checked).toBe(true);
+    expect(evt).toBeInstanceOf(Event);
+    expect(onChange.mock.calls[0]?.[1]).toBe(true);
     expect(w.find('.apollo-checkbox-wrapper').classes()).toContain(
       'apollo-checkbox-wrapper-checked',
     );
@@ -39,9 +42,9 @@ describe('Checkbox · 基本行为', () => {
         return () =>
           h(Checkbox, {
             checked: checked.value,
-            onChange: (e: { target: { checked: boolean } }) => {
-              onChange(e);
-              checked.value = e.target.checked;
+            onChange: (event: Event, next: boolean) => {
+              onChange(event, next);
+              checked.value = next;
             },
           });
       },
@@ -61,13 +64,13 @@ describe('Checkbox · 基本行为', () => {
   });
 
   it('hover 事件落 label（上游 responses hover events）', async () => {
-    const onMouseEnter = vi.fn();
-    const onMouseLeave = vi.fn();
-    const w = mount(Checkbox, { attrs: { onMouseEnter, onMouseLeave } });
+    const onMouseenter = vi.fn();
+    const onMouseleave = vi.fn();
+    const w = mount(Checkbox, { attrs: { onMouseenter, onMouseleave } });
     await w.find('label').trigger('mouseenter');
     await w.find('label').trigger('mouseleave');
-    expect(onMouseEnter).toHaveBeenCalledTimes(1);
-    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+    expect(onMouseenter).toHaveBeenCalledTimes(1);
+    expect(onMouseleave).toHaveBeenCalledTimes(1);
   });
 
   it('onFocus / onBlur 落 input（上游 issue 50768）', async () => {
@@ -325,14 +328,14 @@ describe('Checkbox · v-model（COMPATIBILITY.md 规则 C11，PITFALLS 162 收�
 
   it('Group 的 v-model:value 与 onChange 同时发出（载荷同 onChange：排序后）', async () => {
     const onChange = vi.fn();
-    const value = ref(['Apple']);
+    const value = ref<CheckboxValue[]>(['Apple']);
     const App = defineComponent({
       setup() {
         return () =>
           h(CheckboxGroup, {
             options: ['Apple', 'Pear', 'Orange'],
             value: value.value,
-            'onUpdate:value': (v: string[]) => {
+            'onUpdate:value': (v: CheckboxValue[]) => {
               value.value = v;
             },
             onChange,

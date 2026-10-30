@@ -4,8 +4,8 @@ import { Checkbox } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const checked = ref(false);
-const onChange = (e: { target: { checked: boolean } }) => {
-  checked.value = e.target.checked;
+const onChange = (_event: Event, next: boolean) => {
+  checked.value = next;
 };
 </script>
 

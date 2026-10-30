@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 158,
+  "revision": 161,
   "dispatch": {
     "status": "paused",
     "maxParallel": 5,
@@ -576,7 +576,7 @@
       "kind": "component",
       "ref": "checkbox",
       "title": "Checkbox",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
@@ -588,12 +588,10 @@
         "packages/ui/src/radio/__tests__/controlled-native.test.ts",
         "packages/ui/src/transfer/Section.ts"
       ],
-      "assignment": {
-        "owner": "native_picker",
-        "baseRevision": 152,
-        "startedAt": "2026-10-30T14:16:28.942Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -601,7 +599,7 @@
       "issues": [
         {
           "id": "NATIVE-CHECKED-REJECTED-MODEL",
-          "status": "open",
+          "status": "fixed",
           "blocking": true,
           "impact": "Table真实受控选择拒绝提议后，原生input.checked与父级accepted值不一致，导致DOM、样式及选择契约失配。",
           "reason": "在Checkbox原生输入边界修正，并实际核对Radio同类问题；不在Table内部兜底。"
@@ -618,6 +616,101 @@
           "packages/ui/src/checkbox/README.md",
           "packages/ui/src/checkbox/__tests__/index.test.ts"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/checkbox",
+          "packages/ui/src/radio/Radio.ts",
+          "packages/ui/src/radio/Group.ts",
+          "packages/ui/src/radio/interface.ts",
+          "packages/ui/src/radio/__tests__/controlled-native.test.ts",
+          "packages/ui/src/transfer/Section.ts",
+          "packages/ui/src/table/hooks/use-selection.ts",
+          "packages/ui/src/table/hooks/use-filter.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run packages/ui/src/checkbox/__tests__/native-contracts.test.ts packages/ui/src/checkbox/__tests__/controlled-native.test.ts packages/ui/src/checkbox/__tests__/index.test.ts packages/ui/src/checkbox/__tests__/s9-issue9.test.ts packages/ui/src/checkbox/__tests__/demo.test.ts packages/ui/src/radio/__tests__/controlled-native.test.ts --reporter=json --outputFile=/tmp/apollo-checkbox-native-final-core.json > /tmp/apollo-checkbox-native-final-core.log 2>&1",
+            "elapsedSource": "Vitest runner",
+            "tests": 53,
+            "result": "/tmp/apollo-checkbox-native-final-core.json",
+            "log": "/tmp/apollo-checkbox-native-final-core.log",
+            "note": "Current Checkbox source/constructor/ref rendering, owned payload, native checked/indeterminate, Group services and existing registration regressions; 8 Checkbox demos plus narrow Radio accepted-DOM tests.",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 12627
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run packages/ui/src/checkbox/__tests__/native-contracts.test.ts packages/ui/src/checkbox/__tests__/controlled-native.test.ts packages/ui/src/checkbox/__tests__/index.test.ts packages/ui/src/checkbox/__tests__/s9-issue9.test.ts packages/ui/src/checkbox/__tests__/demo.test.ts packages/ui/src/radio/__tests__/controlled-native.test.ts packages/ui/src/radio/__tests__/index.test.ts packages/ui/src/radio/__tests__/s10-issue10.test.ts packages/ui/src/transfer/__tests__/index.test.ts packages/ui/src/transfer/__tests__/native-contracts.test.ts --reporter=json --outputFile=/tmp/apollo-checkbox-native-consumers.json > /tmp/apollo-checkbox-native-consumers.log 2>&1",
+            "elapsedSource": "Vitest runner",
+            "tests": 151,
+            "result": "/tmp/apollo-checkbox-native-consumers.json",
+            "log": "/tmp/apollo-checkbox-native-consumers.log",
+            "note": "Broader current Radio core/issue regressions and actual Transfer selection consumers passed with the new event boundary. Later Checkbox render/expose typing was additionally verified by final core and real browser; unrelated consumers were not reaudited.",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 13813
+          },
+          {
+            "kind": "browser",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/checkbox/__tests__/native-browser.mjs > /tmp/apollo-checkbox-native-browser.log 2>&1",
+            "browser": "系统 Chrome",
+            "diagnostics": 0,
+            "log": "/tmp/apollo-checkbox-native-browser.log",
+            "coverage": "actual Checkbox/Group and Radio same-name rejected/accepted clicks, native keyboard, indeterminate, form values, typed refs and teardown",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 2005
+          },
+          {
+            "kind": "lint",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec biome check --write packages/ui/src/checkbox packages/ui/src/radio/Radio.ts packages/ui/src/radio/Group.ts packages/ui/src/radio/interface.ts packages/ui/src/radio/__tests__/controlled-native.test.ts > /tmp/apollo-checkbox-native-format-frozen.log 2>&1",
+            "files": 32,
+            "log": "/tmp/apollo-checkbox-native-format-frozen.log",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 105
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check -- packages/ui/src/checkbox packages/ui/src/radio/Radio.ts packages/ui/src/radio/Group.ts packages/ui/src/radio/interface.ts packages/ui/src/radio/__tests__/controlled-native.test.ts packages/ui/src/transfer/Section.ts",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "core",
+            "owner": "native_portal",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/table/__tests__/native-contracts.test.ts packages/ui/src/table/__tests__/index.test.ts --testNamePattern 'selection|选择|全选|反选|onFilter \\+ filters|reset|filter|过滤|pagination proposal|same-key' --maxWorkers=1",
+            "testsPassed": 22,
+            "skipped": 29,
+            "log": "/tmp/apollo-table-checkbox-native-consumers.log",
+            "note": "Reported by actual Table owner after one migration to native Event/checked and preserved Radio legacy payload. Skipped tests are not counted as passed.",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 9510
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; all Checkbox source/native constructors/SFC/types/Demo and exact Radio/Transfer/Table API consumers; declaration/strict unchanged>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53086
+          },
+          {
+            "kind": "core",
+            "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/table/__tests__/index.test.ts --testNamePattern \"rowSelection：|树形选择|selections 菜单|onFilter \\+ filters\" --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7234,
+            "result": "4 actual Table native-event consumer tests passed;37 filtered tests not counted. Source view uses only the scoped API bridge, excluding unrelated Table WIP."
+          }
+        ],
+        "boundary": "Checkbox/Group完整当前契约已收口：owned原生通知与change(Event,bool)、受控勾选/indeterminate原生恢复、动态skipGroup注册、过滤排序后accepted组值、当前Provider语义/原生style、实际值/FormData及nullable ref、真实Ctor正负例/SFC/Demo。核心53、相关实际消费者151、Chrome0诊断证据有效；原生通知迁移后Table owner22项与隔离HEAD仅API桥4项均通过；重叠结果不相加。严格检查全相关源/正负例/SFC/Demo与消费者0。Radio仅处理实际原生组恢复/必要事件与选项类型解耦，不表示全审；Table完整状态/泛型重构仍为当前进行中的独立任务。未新增合成事件兼容路、任意对象值假支持或假Ctor。全库/完整视觉/coverage/构建消费者及同版冻结九维未执行。"
       }
     },
     {
@@ -2241,7 +2334,7 @@
       "kind": "component",
       "ref": "radio",
       "title": "Radio",
-      "architectureStatus": "not_started",
+      "architectureStatus": "partial",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
@@ -2253,7 +2346,23 @@
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/checkbox",
+            "packages/ui/src/radio/Radio.ts",
+            "packages/ui/src/radio/Group.ts",
+            "packages/ui/src/radio/interface.ts",
+            "packages/ui/src/radio/__tests__/controlled-native.test.ts",
+            "packages/ui/src/transfer/Section.ts",
+            "packages/ui/src/table/hooks/use-selection.ts",
+            "packages/ui/src/table/hooks/use-filter.ts"
+          ],
+          "change": "Native accepted checked restoration and actual Checkbox Event/bool consumer bridge; Radio retains its own existing event contract.",
+          "verification": "CMP:checkbox focused checks: native core, actual Chrome/Radio/Transfer/Table consumers and full scoped strict. This delta does not mark the whole Radio/Table audit complete."
+        }
+      ]
     },
     {
       "id": "CMP:rate",
@@ -2862,7 +2971,23 @@
           "docs/audit/2026-10-24-pagination-slots-remediation.md",
           "docs/audit/2026-10-24-demo-capabilities.md"
         ]
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/checkbox",
+            "packages/ui/src/radio/Radio.ts",
+            "packages/ui/src/radio/Group.ts",
+            "packages/ui/src/radio/interface.ts",
+            "packages/ui/src/radio/__tests__/controlled-native.test.ts",
+            "packages/ui/src/transfer/Section.ts",
+            "packages/ui/src/table/hooks/use-selection.ts",
+            "packages/ui/src/table/hooks/use-filter.ts"
+          ],
+          "change": "Native accepted checked restoration and actual Checkbox Event/bool consumer bridge; Radio retains its own existing event contract.",
+          "verification": "CMP:checkbox focused checks: native core, actual Chrome/Radio/Transfer/Table consumers and full scoped strict. This delta does not mark the whole Radio/Table audit complete."
+        }
+      ]
     },
     {
       "id": "CMP:tabs",
@@ -3410,7 +3535,23 @@
           "leaksPrivatePropOptions": false,
           "retainsTupleAndThirdItemNegative": true
         }
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/checkbox",
+            "packages/ui/src/radio/Radio.ts",
+            "packages/ui/src/radio/Group.ts",
+            "packages/ui/src/radio/interface.ts",
+            "packages/ui/src/radio/__tests__/controlled-native.test.ts",
+            "packages/ui/src/transfer/Section.ts",
+            "packages/ui/src/table/hooks/use-selection.ts",
+            "packages/ui/src/table/hooks/use-filter.ts"
+          ],
+          "change": "Native accepted checked restoration and actual Checkbox Event/bool consumer bridge; Radio retains its own existing event contract.",
+          "verification": "CMP:checkbox focused checks: native core, actual Chrome/Radio/Transfer/Table consumers and full scoped strict. This delta does not mark the whole Radio/Table audit complete."
+        }
+      ]
     },
     {
       "id": "CMP:tree",

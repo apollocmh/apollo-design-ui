@@ -36,6 +36,8 @@ import {
   computed,
   defineComponent,
   h,
+  nextTick,
+  onScopeDispose,
   type PropType,
   shallowRef,
   type VNodeChild,
@@ -222,6 +224,10 @@ export const RadioComponent = defineComponent({
       };
       callbacks.onChange?.(radioEvent);
       groupContext?.onChange?.(radioEvent);
+      void nextTick(() => {
+        if (groupContext?.syncChecked) groupContext.syncChecked();
+        else syncChecked();
+      });
     };
 
     // ============================ Semantic ==============================
@@ -258,6 +264,12 @@ export const RadioComponent = defineComponent({
     // ============================== Refs ===============================
     const inputRef = shallowRef<HTMLInputElement | null>(null);
     const holderRef = shallowRef<HTMLElement | null>(null);
+    const syncChecked = () => {
+      if (inputRef.value) inputRef.value.checked = effectiveChecked.value;
+    };
+    if (groupContext?.registerChecked) {
+      onScopeDispose(groupContext.registerChecked(syncChecked));
+    }
 
     expose({
       focus: (options?: FocusOptions) => inputRef.value?.focus(options),

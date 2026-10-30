@@ -104,7 +104,10 @@ const mountSwappable = (eventName: 'onClick' | 'onChange') => {
     setup(_, { expose }) {
       const handler = ref<((...args: unknown[]) => void) | undefined>(first);
       expose({ swap: () => (handler.value = second) });
-      return () => h(Checkbox, { [eventName]: handler.value } as never);
+      return () =>
+        eventName === 'onClick'
+          ? h(Checkbox, { onClick: handler.value })
+          : h(Checkbox, { onChange: handler.value });
     },
   });
   return { first, second, w: mount(Host) };
@@ -158,12 +161,16 @@ describe('CheckboxGroup · 子项 `value` 变更后注册表同步（Issue #9.3�
       return { second };
     },
     render() {
-      return h(CheckboxGroup as never, { value: [] as unknown[] } as never, {
-        default: () => [
-          h(Checkbox as never, { value: 'a', key: 'a' }),
-          h(Checkbox as never, { value: this.second, key: 'b' }),
-        ],
-      });
+      return h(
+        CheckboxGroup,
+        { value: [] },
+        {
+          default: () => [
+            h(Checkbox, { value: 'a', key: 'a' }),
+            h(Checkbox, { value: this.second, key: 'b' }),
+          ],
+        },
+      );
     },
   });
 
