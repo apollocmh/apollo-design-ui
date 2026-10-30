@@ -35,6 +35,7 @@ import { computed, defineComponent, h, type PropType, provide, ref, type VNodeCh
 import { dayjsConfig } from '../../date-picker/hooks/dayjs-config';
 import { formItemInputContextKey, useFormItemInputContext } from '../../form/context';
 import { RadioButton, RadioGroup } from '../../radio';
+import type { RadioValue } from '../../radio/interface';
 import { Select } from '../../select';
 import type { SelectValue } from '../../select/interface';
 import type { CalendarDate, CalendarMode, SelectInfo } from '../interface';
@@ -179,13 +180,12 @@ function renderModeSwitch(
   return h(
     RadioGroup,
     {
-      // ⚠️ `value` / `onChange` 是 RadioGroup 的 **prop**（不是 emit），见其 interface
       value: p.mode,
       // RadioGroup 已迁移到「根 class 走原生 attrs」⇒ 这里必须用 `class`
       class: `${p.prefixCls}-mode-switch`,
       ...(p.fullscreen ? {} : { size: 'small' as const }),
-      onChange: (e: { target: { value: string } }) => {
-        p.onModeChange(e.target.value as CalendarMode);
+      'onUpdate:value': (value: RadioValue) => {
+        if (value === 'month' || value === 'year') p.onModeChange(value);
       },
     },
     () => [

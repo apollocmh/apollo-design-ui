@@ -16,8 +16,8 @@
  *    **例外两个 unitless 量**：`radioSize` / `dotSize` 在 antd 产物里是**无单位数字**
  *    （`16` / `6`），消费侧写 `calc(var(--apollo-radio-radio-size) * 1px)`。
  *    若改成 `var(--apollo-font-size-lg)`（= `16px`）会得到 `calc(16px * 1px)` —— 非法，
- *    width/height 整条失效。CSS 无法把一个长度「去单位」成数字，所以这两个按默认主题
- *    算成常量（badge 的 `indicatorHeight=20` 同判，登记「不随主题缩放」的边界）。
+ *    width/height 整条失效。这里提供默认主题的静态 fallback；useRadioTheme 将当前
+ *    主题派生值与组件覆盖作为无单位数字投影到实际根上，随当前主题变化。
  * 3. `radioFocusShadow` / `radioButtonFocusShadow`（RadioToken 的 mergeToken 产物）
  *    在实测产物里**从未被 var() 消费** —— 焦点环走的是 `genFocusOutline`
  *    （`outline:var(--apollo-line-width-focus) solid var(--apollo-color-primary-border)`）。

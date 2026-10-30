@@ -97,7 +97,7 @@ import { Table } from '@apollo-design/ui';
 
 顶层 title/footer/summary/expandedRowRender/expandIcon/emptyText，以及 expandable 内 expandedRowRender/expandIcon，改为上述具名槽；位置参数改为具名作用域。`locale.emptyText` 保留静态 VNodeChild，动态内容用 #emptyText。`filterDropdownProps.dropdownRender` 改用列的 filterDropdown 数据 renderer。onRow/onCell/onHeaderCell 返回 Vue 原生 attrs，例如 onKeydown；onChange/onScroll 通过 @change/@scroll 订阅。
 
-选择配置的 getCheckboxProps 按 type 对应真实输入：checkbox change 是 `(event: Event, checked: boolean)`；radio 继续使用 RadioChangeEvent。原生 class/style 落外层根；语义 styles 使用 Vue CSSProperties（含 undefined 与 --custom）。
+选择配置的 getCheckboxProps 按 type 对应真实输入，checkbox/radio change 均为 `(event: Event, checked: boolean)`；选择通知保留同一个原生事件。原生 class/style 落外层根；语义 styles 使用 Vue CSSProperties（含 undefined 与 --custom）。
 
 ### ColumnsType（列描述）
 

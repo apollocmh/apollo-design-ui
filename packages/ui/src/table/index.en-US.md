@@ -85,7 +85,7 @@ A custom components.body service receives `(data, { scrollbarSize, ref, onScroll
 
 Full-table title/footer/summary/expandedRowRender/expandIcon/emptyText callbacks, including nested expandable content callbacks, move to the named slots above with named scope fields. locale.emptyText keeps static VNodeChild content; dynamic content uses #emptyText. Replace filterDropdownProps.dropdownRender with the column's filterDropdown data renderer. Row/cell services return Vue native attrs such as onKeydown. Subscribe to owned notifications with @change/@scroll.
 
-getCheckboxProps follows the actual selection kind: checkbox change receives `(event: Event, checked: boolean)`; radio keeps RadioChangeEvent. Native class/style target the outer root. Semantic styles use Vue CSSProperties, including undefined and --custom properties.
+getCheckboxProps follows the actual selection kind: checkbox/radio change receives `(event: Event, checked: boolean)`; selection notifications retain that same native event. Native class/style target the outer root. Semantic styles use Vue CSSProperties, including undefined and --custom properties.
 
 ### ColumnsType
 

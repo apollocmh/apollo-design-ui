@@ -1,3 +1,5 @@
+> 2026-10-31 当前单元按两阶段流程补齐 owned emits/models/ref/attrs、Provider/16 Token 与原生键盘，见 [当前 API](./index.zh-CN.md)。旧 G 阶段勾选仅为历史证据，本轮类型与最小行为检查由唯一任务状态记录。
+
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
 > 历史实施记录：原勾选、当时结果和缺口保留。2026-10-30 起，本文的 G0–G14 / 逐组件 G13 全仓收口与旧 Registry 进度规则由仓库 `WORKFLOW.md`、`TESTING.md` 两阶段流程替代；当前任务状态只读 `registry/vue-native-audit.json`，不据本文重复派发或重跑已有效验证。

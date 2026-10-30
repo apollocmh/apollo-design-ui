@@ -5,7 +5,11 @@
  */
 
 import { themeTest } from '@apollo-design/test-utils';
+import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import { defineComponent, h, nextTick, ref } from 'vue';
+import ConfigProvider from '../../config-provider/ConfigProvider';
+import { RadioGroup } from '../index';
 import { genRadioStyle, genTokenDecls as genRadioTokenDecls } from '../style';
 
 themeTest('Radio', {
@@ -35,7 +39,7 @@ describe('Radio · 主题无关性', () => {
     expect(css).toContain('--apollo-radio-radio-bg-color:var(--apollo-color-primary);');
   });
 
-  it('unitless 两个是常量，消费侧乘 1px（CSS 无法给长度「去单位」）', () => {
+  it('静态 fallback 的 unitless 变量消费侧乘 1px；当前主题由原生根投影', () => {
     // antd 的 unitless 集合 = { radioSize, dotSize }，产物是裸数字 16 / 6
     expect(css).toContain('width:calc(var(--apollo-radio-radio-size) * 1px);');
     expect(css).toContain('height:calc(var(--apollo-radio-radio-size) * 1px);');
@@ -97,4 +101,78 @@ describe('Radio · 主题无关性', () => {
     expect(ant).toContain('--ant-radio-radio-size:16;');
     expect(ant).toContain('calc(var(--ant-radio-radio-size) * 1px)');
   });
+});
+
+it('projects all sixteen current Radio tokens onto Group and button roots, then removes overrides', async () => {
+  const custom = ref(true);
+  const wrapper = mount(
+    defineComponent({
+      setup: () => () =>
+        h(
+          ConfigProvider,
+          {
+            theme: custom.value
+              ? {
+                  components: {
+                    Radio: {
+                      radioSize: 22,
+                      dotSize: 11,
+                      dotColorDisabled: '#123456',
+                      buttonSolidCheckedColor: '#223344',
+                      buttonSolidCheckedBg: '#334455',
+                      buttonSolidCheckedHoverBg: '#445566',
+                      buttonSolidCheckedActiveBg: '#556677',
+                      buttonBg: '#667788',
+                      buttonCheckedBg: '#778899',
+                      buttonColor: '#8899aa',
+                      buttonCheckedBgDisabled: '#99aabb',
+                      buttonCheckedColorDisabled: '#aabbcc',
+                      buttonPaddingInline: 23,
+                      wrapperMarginInlineEnd: 24,
+                      radioColor: '#bbccdd',
+                      radioBgColor: '#ccddee',
+                    },
+                  },
+                }
+              : {},
+          },
+          { default: () => h(RadioGroup, { options: ['a', 'b'], optionType: 'button' }) },
+        ),
+    }),
+  );
+  const expected = {
+    'radio-size': '22',
+    'dot-size': '11',
+    'dot-color-disabled': '#123456',
+    'button-solid-checked-color': '#223344',
+    'button-solid-checked-bg': '#334455',
+    'button-solid-checked-hover-bg': '#445566',
+    'button-solid-checked-active-bg': '#556677',
+    'button-bg': '#667788',
+    'button-checked-bg': '#778899',
+    'button-color': '#8899aa',
+    'button-checked-bg-disabled': '#99aabb',
+    'button-checked-color-disabled': '#aabbcc',
+    'button-padding-inline': '23px',
+    'wrapper-margin-inline-end': '24px',
+    'radio-color': '#bbccdd',
+    'radio-bg-color': '#ccddee',
+  };
+  const roots = wrapper.findAll<HTMLElement>('.apollo-radio-group, label');
+  expect(roots).toHaveLength(3);
+  for (const root of roots) {
+    for (const [name, value] of Object.entries(expected)) {
+      expect(root.element.style.getPropertyValue(`--apollo-radio-${name}`)).toBe(value);
+    }
+  }
+  custom.value = false;
+  await nextTick();
+  for (const root of roots) {
+    expect(root.element.style.getPropertyValue('--apollo-radio-radio-size')).toBe('16');
+    expect(root.element.style.getPropertyValue('--apollo-radio-dot-size')).toBe('6');
+    expect(root.element.style.getPropertyValue('--apollo-radio-button-padding-inline')).toBe(
+      '15px',
+    );
+  }
+  wrapper.unmount();
 });

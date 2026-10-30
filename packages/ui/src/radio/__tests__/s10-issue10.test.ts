@@ -74,21 +74,20 @@ describe('Issue #10.2 · Form.Item 通道（-wrapper-in-form-item）', () => {
   });
 });
 
-describe('Issue #10.3 · skipGroup（已核为误报：类型继承产物，无运行时语义）', () => {
-  it('★ 组内 `skipGroup` **不**脱离 Group 的选中控制（与 antd 同判）', () => {
-    // SSR 实测（antd 6.6.4）：`<Radio.Group value={1}><Radio skipGroup value={1}/></Radio.Group>`
-    // 里那项照样带 `-wrapper-checked` —— `radio.js:68-73` 的 `if (groupContext)` 无条件生效。
+describe('Issue #10.3 · 清理没有真实职责的继承字段', () => {
+  it('组内始终按标量 value 管理选中态', () => {
     const w = mount(RadioGroup, {
       props: { value: 1 },
-      slots: { default: () => h(Radio, { value: 1, skipGroup: true }, { default: () => 'x' }) },
+      slots: { default: () => h(Radio, { value: 1 }, { default: () => 'x' }) },
     });
-    const label = w.find(`label.${ROOT}-wrapper`);
-    expect(label.classes(), 'skipGroup 不影响 Group 选中控制').toContain(`${ROOT}-wrapper-checked`);
+    expect(w.get(`label.${ROOT}-wrapper`).classes()).toContain(`${ROOT}-wrapper-checked`);
     w.unmount();
   });
-
-  it('★ `skipGroup` 不落 DOM（声明成 prop ⇒ 从 attrs 摘掉；antd 产物里也没有）', () => {
-    const w = mount(Radio, { props: { value: 1, skipGroup: true } });
+  it('Radio 的 props 不再声明 skipGroup、optionType 或 type', () => {
+    for (const name of ['skipGroup', 'optionType', 'type']) {
+      expect(Object.hasOwn(Radio.props, name)).toBe(false);
+    }
+    const w = mount(Radio, { props: { value: 1 } });
     expect(w.html()).not.toMatch(/skipgroup/i);
     w.unmount();
   });
@@ -98,10 +97,9 @@ describe('Issue #10.4 · 冒泡锁取最新 onClick', () => {
   it('★ 父级替换 onClick 后，label 点击调的是**新**回调', async () => {
     const first = vi.fn();
     const second = vi.fn();
+    const handler = ref<((e: MouseEvent) => void) | undefined>(first);
     const Host = defineComponent({
-      setup(_, { expose }) {
-        const handler = ref<((e: MouseEvent) => void) | undefined>(first);
-        expose({ swap: () => (handler.value = second) });
+      setup() {
         return () => h(Radio, { value: 1, onClick: handler.value }, { default: () => 'x' });
       },
     });
@@ -110,7 +108,7 @@ describe('Issue #10.4 · 冒泡锁取最新 onClick', () => {
     expect(first).toHaveBeenCalledTimes(1);
     expect(second).not.toHaveBeenCalled();
 
-    (w.vm as unknown as { swap: () => void }).swap();
+    handler.value = second;
     await nextTick();
     await w.find(`label.${ROOT}-wrapper`).trigger('click');
 

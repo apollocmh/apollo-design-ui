@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 177,
+  "revision": 179,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -415,7 +415,17 @@
           "packages/ui/src/calendar/README.md",
           "docs/foundation/picker-contract.md"
         ]
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/calendar/components/CalendarHeader.ts",
+            "packages/ui/src/calendar/demo/customize-header.vue"
+          ],
+          "change": "Minimal existing update:value consumers allow Radio to integrate independently; complete Calendar remediation remains its current owner task.",
+          "verification": "CMP:radio focused checks record real native-event red→green, immutable Header mode/Demo consumers and full scoped strict; this delta does not repeat or complete the other unit audit."
+        }
+      ]
     },
     {
       "id": "CMP:card",
@@ -2610,18 +2620,16 @@
       "kind": "component",
       "ref": "radio",
       "title": "Radio",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/radio"
       ],
-      "assignment": {
-        "owner": "native_picker",
-        "baseRevision": 171,
-        "startedAt": "2026-10-30T22:16:23.011Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -2655,6 +2663,229 @@
           "packages/ui/src/radio/__tests__/controlled-native.test.ts",
           "registry/vue-native-audit.json"
         ]
+      },
+      "verification": {
+        "task": "CMP:radio",
+        "owner": "native_picker",
+        "base": "314ae835",
+        "writtenAtUtc": "2026-10-30T22:36:45.692295+00:00",
+        "passed": true,
+        "sourceAndTypesFrozen": true,
+        "scope": [
+          "packages/ui/src/radio",
+          "packages/ui/src/table/hooks/use-selection.ts",
+          "packages/ui/src/table/__tests__/index.test.ts",
+          "packages/ui/src/calendar/components/CalendarHeader.ts",
+          "packages/ui/src/calendar/demo/customize-header.vue",
+          "packages/ui/src/index.ts"
+        ],
+        "implemented": [
+          "Owned Radio/Button change(Event,checked), Group change(RadioValue,Event), checked/value models, native DOM notifications and typed default slots; no synthetic wrappers or dual API.",
+          "A single accepted state drives input/icon/wrapper/semantic checked. Existing d3d87414 group-owned native reconciliation/cleanup retained. Option identity distinguishes numbers/strings/booleans and explicit disabled false wins.",
+          "Actual nullable Radio/Button/Group references, current input/root attrs and complete StyleValue, native capture listener merging, empty/fragment/default slot handling and focused keyed option survival.",
+          "Current radio Provider semantic configuration, direction/disabled/size, all16 declared tokens and current alias/wireframe theme projection on actual roots; component-token/wireframe demos use the real ConfigProvider.",
+          "Precise actual constructor h positives/negatives and reference assertions, actual NativeRadio.vue SFC; obsolete declaration-only skipGroup/type/standalone optionType removed."
+        ],
+        "publicMigration": {
+          "radioChange": "(event: Event, checked: boolean)",
+          "groupChange": "(value: RadioValue, event: Event)",
+          "RadioChangeEvent": "Event alias",
+          "optionOnChange": "(event: Event, checked: boolean)",
+          "listeners": "Vue onKeydown/onKeypress/onMouseenter/onMouseleave; template native event names",
+          "newRootExports": [
+            "RadioEmits",
+            "RadioGroupEmits",
+            "RadioSlots",
+            "RadioGroupSlots"
+          ],
+          "removedFields": [
+            "RadioProps.skipGroup",
+            "RadioProps.type",
+            "RadioProps.optionType"
+          ],
+          "modelsRetained": [
+            "Radio.checked",
+            "RadioButton.checked",
+            "RadioGroup.value"
+          ]
+        },
+        "consumers": {
+          "rootOwned": [
+            "Table/hooks/use-selection.ts native selection Event/checked and getCheckboxProps exact forwarding, Table bilingual event description. Root reported actual red->green2 single-selection cases6.782s.",
+            "Calendar Header and customize-header model consumers use existing update:value; root owns bridge.",
+            "UI public index/COMPATIBILITY/Registry owned only by root."
+          ],
+          "modelOnlyUnaffected": [
+            "Form/DatePicker/Drawer/Timeline demos",
+            "Checkbox native SFC radio-group model fixture"
+          ],
+          "displayOnly": [
+            "Table/hooks/use-filter.ts Radio checked"
+          ]
+        },
+        "checks": [
+          {
+            "id": "radio-current-core-and-demo",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/radio/__tests__/native-contracts.test.ts packages/ui/src/radio/__tests__/controlled-native.test.ts packages/ui/src/radio/__tests__/index.test.ts packages/ui/src/radio/__tests__/s10-issue10.test.ts packages/ui/src/radio/__tests__/demo.test.ts --maxWorkers=1 > /tmp/apollo-radio-current-core.log 2>&1",
+            "elapsedMs": 18850,
+            "testsPassed": 90,
+            "log": "/tmp/apollo-radio-current-core.log",
+            "note": "Existing core, accepted DOM, Issue10 and 14 demos retained; later capture listener delta covered below. Subsequent type-only/explicit-void and shallow option-ref corrections do not change these behavior outcomes.",
+            "exitCode": 0,
+            "signal": null,
+            "kind": "core"
+          },
+          {
+            "id": "current-capture-semantic-theme-a11y",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/radio/__tests__/native-contracts.test.ts --project dom-contract packages/ui/src/radio/__tests__/semantic.test.ts --project theme packages/ui/src/radio/__tests__/theme.test.ts --project a11y packages/ui/src/radio/__tests__/a11y.test.ts --maxWorkers=1 --reporter=json --outputFile=/tmp/apollo-radio-directed-final.json > /tmp/apollo-radio-directed-final.log 2>&1",
+            "elapsedMs": 37776.422,
+            "elapsedSource": "max Vitest testResult endTime minus startTime",
+            "testsPassed": 72,
+            "result": "/tmp/apollo-radio-directed-final.json",
+            "log": "/tmp/apollo-radio-directed-final.log",
+            "note": "10 native cases, all32 dated reference scenarios with one exact documented uncontrolled wrapper class difference, 15 axe checks, 15 theme checks including all16 runtime tokens. Overlaps core; totals are not summed.",
+            "exitCode": 0,
+            "signal": null,
+            "kind": "dom-theme-a11y"
+          },
+          {
+            "id": "type-correction-affected-cases",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/radio/__tests__/index.test.ts packages/ui/src/radio/__tests__/s10-issue10.test.ts packages/ui/src/radio/__tests__/native-contracts.test.ts --testNamePattern 'v-model:value|父级替换|keeps option identity|capture listeners' --maxWorkers=1 > /tmp/apollo-radio-types-delta-core.log 2>&1",
+            "elapsedMs": 9040,
+            "testsPassed": 4,
+            "skipped": 68,
+            "log": "/tmp/apollo-radio-types-delta-core.log",
+            "exitCode": 0,
+            "signal": null,
+            "kind": "core"
+          },
+          {
+            "id": "actual-chrome-source",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/radio/__tests__/native-browser.mjs > /tmp/apollo-radio-native-browser.log 2>&1",
+            "elapsedMs": 5255,
+            "diagnostics": 0,
+            "browser": "system Chrome",
+            "log": "/tmp/apollo-radio-native-browser.log",
+            "note": "Real static CSS + source fixture: native click/Space/Arrow rejected and accepted choices, entire named group restoration, disabled skip and wrap, independent groups, keyed focus, actual refs/unmount, current wireframe dimensions and solid button theme withdrawal. Motion disabled in browser test to avoid reading transitions midway; no production motion change.",
+            "exitCode": 0,
+            "signal": null,
+            "kind": "browser"
+          },
+          {
+            "id": "biome-frozen",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/ui/src/radio/Radio.ts packages/ui/src/radio/RadioButton.ts packages/ui/src/radio/Group.ts packages/ui/src/radio/interface.ts packages/ui/src/radio/index.ts packages/ui/src/radio/use-radio-theme.ts packages/ui/src/radio/style/token.ts packages/ui/src/radio/__tests__/native-contracts.test.ts packages/ui/src/radio/__tests__/native-browser.mjs packages/ui/src/radio/__tests__/type.test-d.ts packages/ui/src/radio/__tests__/index.test.ts packages/ui/src/radio/__tests__/s10-issue10.test.ts packages/ui/src/radio/__tests__/semantic.test.ts packages/ui/src/radio/__tests__/theme.test.ts packages/ui/src/radio/__tests__/fixtures/NativeRadio.vue packages/ui/src/radio/demo/component-token.vue packages/ui/src/radio/demo/wireframe.vue > /tmp/apollo-radio-format-frozen.log 2>&1",
+            "elapsedMs": 46,
+            "log": "/tmp/apollo-radio-format-frozen.log",
+            "exitCode": 0,
+            "signal": null,
+            "kind": "lint"
+          },
+          {
+            "id": "diff-whitespace",
+            "command": "git diff --check -- packages/ui/src/radio",
+            "elapsedMs": null,
+            "exitCode": 0,
+            "signal": null,
+            "kind": "diff"
+          },
+          {
+            "kind": "types",
+            "command": "node node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/.apollo-current-radio-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 56471,
+            "log": "/tmp/apollo-radio-batch-final-types.log",
+            "result": "All Radio source/type/native SFC/Demo, root exports, actual Table consumers and minimal Calendar Header bridge; root strict and declaration unchanged."
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/table/__tests__/index.test.ts --testNamePattern radio 型：单选 --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "elapsedMs": 6782,
+            "result": "Two actual Table single-selection cases, including identical native Event forwarded to onSelect and the option listener.",
+            "log": "/tmp/apollo-radio-table-native-green.log"
+          },
+          {
+            "kind": "core",
+            "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/calendar/__tests__/index.test.ts --testNamePattern \"模式切换\" --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "elapsedMs": 8284,
+            "result": "Three existing Calendar mode-control cases in the immutable minimal bridge source view.",
+            "log": "/tmp/apollo-radio-calendar-model-consumer.log"
+          },
+          {
+            "kind": "types",
+            "command": "node node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p .apollo-radio-calendar-demo-tsconfig.json",
+            "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y",
+            "exitCode": 0,
+            "signal": null,
+            "elapsedMs": 54995,
+            "result": "Actual existing customized Header Demo with only its RadioGroup model consumer changed; unrelated Calendar source remains baseline.",
+            "log": "/tmp/apollo-radio-calendar-demo-types.log"
+          },
+          {
+            "kind": "demo",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/calendar/__tests__/demo.test.ts --testNamePattern customize-header --maxWorkers=1",
+            "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y",
+            "exitCode": 0,
+            "signal": null,
+            "elapsedMs": 16052,
+            "result": "Actual existing customized Header Demo smoke in the immutable minimal bridge source view; one selected, ten unselected are not passes.",
+            "log": "/tmp/apollo-radio-calendar-demo-core.log"
+          }
+        ],
+        "redEvidence": [
+          {
+            "log": "/tmp/apollo-radio-native-red.log",
+            "exit": 1,
+            "elapsedMs": 4620,
+            "failures": 6,
+            "scope": "Raw event/snapshot, accepted wrapper/semantic, Button, option disabled/scalar, root attrs, current Provider/theme."
+          },
+          {
+            "log": "/tmp/apollo-radio-native-dynamic.log",
+            "exit": 1,
+            "elapsedMs": 4640,
+            "scope": "Keyed focus and normalized empty slot red confirmed; disabled VTU setValue only mutates DOM and suppresses dispatch, replaced with actual click+dispatchEvent."
+          },
+          {
+            "log": "/tmp/apollo-radio-directed-first.log",
+            "exit": 1,
+            "elapsedMs": 20760,
+            "scope": "Dated reference uncontrolled wrapper mismatch; exact current contract difference now asserted without dropping scenarios."
+          },
+          {
+            "log": "/tmp/apollo-radio-native-browser-first.log",
+            "exit": 1,
+            "scope": "Computed CSS read during native transition; isolated test disables animation/transition before checks."
+          }
+        ],
+        "strict": {
+          "status": "passed",
+          "previousCandidate": {
+            "exit": 2,
+            "elapsedMs": 34722,
+            "log": "/tmp/apollo-radio-batch-types.log"
+          },
+          "corrections": "Exact emits/slots type aliases for Vue conditional/RawSlots boundaries; explicit void native focus methods; RadioValue model callback; shallow option ref to avoid VNode deep-unwrapping instantiation; parent ref replacement rather than untyped test-host expose. Root alone reruns the immutable view.",
+          "resultFile": "/tmp/apollo-radio-batch-final-types-result.json",
+          "sourceComparison": "Exact source bodies compared; two later differences were only existing leading documentation comments."
+        },
+        "unverified": [
+          "Final same-freeze nine dimensions/full coverage/build/published consumer and visual matrix are stage two and were not run here."
+        ],
+        "nonBlockingBoundaries": [
+          "Custom DOM prefixes still require corresponding static CSS (existing shared D04 policy).",
+          "Existing Wave animation/legacy harmless dead stylesheet branches were not expanded into new capabilities.",
+          "Current Chrome check uses document-based input groups; no additional browser/platform matrix claimed."
+        ],
+        "historical": "Prior Checkbox/Radio accepted DOM evidence remains original; README/PLAN history kept below current top notice. No historical full acceptance relabeled as current.",
+        "timing": "Only actual check timings reported; analysis/implementation/integration-wait timings were not separately instrumented.",
+        "stop": "Radio integrated within the authorized five-component batch; no sixth component is dispatched.",
+        "stage": "architecture"
       }
     },
     {
@@ -3318,6 +3549,14 @@
           ],
           "change": "Necessary actual-DOM and existing ShadowRoot container consumer corrections; full Table still in progress.",
           "verification": "FND:utils affectedChanges records the single shared focused result: actual Vue red cases, DOM/Motion core and scoped strict with real Dropdown/Menu h() consumers; no full package re-audit."
+        },
+        {
+          "scope": [
+            "packages/ui/src/table/hooks/use-selection.ts",
+            "packages/ui/src/table/__tests__/index.test.ts"
+          ],
+          "change": "Native Radio Event/checked bridge preserves identical event delivery and existing selection behavior.",
+          "verification": "CMP:radio focused checks record real native-event red→green, immutable Header mode/Demo consumers and full scoped strict; this delta does not repeat or complete the other unit audit."
         }
       ],
       "verification": {

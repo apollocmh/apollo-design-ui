@@ -1,3 +1,7 @@
+> 2026-10-31 当前架构差额：Radio / Button 的 change 已迁为 `(Event, checked)`，Group 为 `(RadioValue, Event)`，由 Vue emits 拥有。模型、真实 nullable 引用、原生 attrs/StyleValue、完整默认槽、当前 Provider/16 Token/wireframe 与选项身份/焦点按 [当前 API](./index.zh-CN.md) 实现。无职责的 skipGroup/type/单项 optionType 已删除；此前 Checkbox 批次的整组 accepted DOM 恢复保留。当前针对性检查记录在 `/tmp/apollo-radio-architecture-checks.json`，最终 strict 由集成人统一执行；不把下列旧完整验收当作本轮新结论。
+>
+> 以下保留 2026-10-30 以前的实现与上游对照记录；其中“回调 props”“只透传 aria/data”“wrapper 不跟随非受控值”“Token 不随主题变化”等已被当前 API 取代。
+
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
 # Radio 实现说明

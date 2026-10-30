@@ -11,9 +11,10 @@
 import { waitFrames } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { defineComponent, h, nextTick, ref } from 'vue';
+import { defineComponent, h, nextTick, ref, type VNodeChild } from 'vue';
 import { ConfigProvider } from '../../config-provider';
 import { Radio, RadioButton, RadioGroup } from '../index';
+import type { RadioProps, RadioValue } from '../interface';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -34,17 +35,15 @@ describe('Radio · 基本行为', () => {
     expect(input.checked).toBe(true);
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(w.find('.apollo-radio').classes()).toContain('apollo-radio-checked');
-    // ⚠️ 上游怪癖（UPSTREAM，逐字保留）：非受控态下 wrapper **不**加 `-wrapper-checked`
-    //    —— wrapper 的类名读的是 `mergedChecked`（= `checked` prop，此处 undefined），
-    //    只有 span / input 读内部态。见 Radio.ts 的 `mergedChecked` 注释。
-    expect(w.find('.apollo-radio-wrapper').classes()).not.toContain('apollo-radio-wrapper-checked');
+    // Apollo uses the same accepted state for both presentation layers.
+    expect(w.find('.apollo-radio-wrapper').classes()).toContain('apollo-radio-wrapper-checked');
   });
 
   // 上游实测（baselines/radio.dom.json 的 radio:default-checked）
-  it('defaultChecked：span 有 -checked，wrapper 没有（上游不一致，逐字保留）', () => {
+  it('defaultChecked：span 与 wrapper 都反映选中态', () => {
     const w = mount(Radio, { props: { defaultChecked: true }, slots: { default: () => 'x' } });
     expect(w.find('.apollo-radio').classes()).toContain('apollo-radio-checked');
-    expect(w.find('.apollo-radio-wrapper').classes()).not.toContain('apollo-radio-wrapper-checked');
+    expect(w.find('.apollo-radio-wrapper').classes()).toContain('apollo-radio-wrapper-checked');
     expect(findInput(w).element.checked).toBe(true);
   });
 
@@ -57,9 +56,9 @@ describe('Radio · 基本行为', () => {
         return () =>
           h(Radio, {
             checked: checked.value,
-            onChange: (e: { target: { checked: boolean } }) => {
-              onChange(e);
-              checked.value = e.target.checked;
+            onChange: (event, requested) => {
+              onChange(event, requested);
+              checked.value = requested;
             },
           });
       },
@@ -76,13 +75,13 @@ describe('Radio · 基本行为', () => {
 
   // 上游：responses hover events
   it('hover 事件落 label', async () => {
-    const onMouseEnter = vi.fn();
-    const onMouseLeave = vi.fn();
-    const w = mount(Radio, { attrs: { onMouseEnter, onMouseLeave } });
+    const onMouseenter = vi.fn();
+    const onMouseleave = vi.fn();
+    const w = mount(Radio, { attrs: { onMouseenter, onMouseleave } });
     await w.find('label').trigger('mouseenter');
     await w.find('label').trigger('mouseleave');
-    expect(onMouseEnter).toHaveBeenCalledTimes(1);
-    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+    expect(onMouseenter).toHaveBeenCalledTimes(1);
+    expect(onMouseleave).toHaveBeenCalledTimes(1);
   });
 
   // 上游：have static property for type detecting
@@ -219,26 +218,18 @@ describe('Radio · 基本行为', () => {
     expect(onBlur).toHaveBeenCalledTimes(1);
   });
 
-  it('optionType 直接传给 Radio ⇒ usage 告警（antd 同）', async () => {
-    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    mount(Radio, { props: { optionType: 'button' } });
-    await nextTick();
-    expect(
-      spy.mock.calls.some((call) =>
-        String(call[0]).includes('`optionType` is only support in Radio.Group'),
-      ),
-    ).toBe(true);
-    spy.mockRestore();
+  it('RadioButton 保持按钮形态，即使 Group 显式使用 default', () => {
+    const w = mount(RadioGroup, {
+      props: { optionType: 'default' },
+      slots: { default: () => h(RadioButton, { value: 'a' }) },
+    });
+    expect(w.find('.apollo-radio-button-wrapper').exists()).toBe(true);
+    w.unmount();
   });
 
   it('expose：focus / blur / input / nativeElement', () => {
     const w = mount(Radio, { slots: { default: () => 'x' } });
-    const vm = w.vm as unknown as {
-      input: HTMLInputElement | null;
-      nativeElement: HTMLElement | null;
-      focus: () => void;
-      blur: () => void;
-    };
+    const vm = w.vm;
     expect(vm.input?.tagName).toBe('INPUT');
     expect(vm.nativeElement?.tagName).toBe('SPAN');
     expect(() => vm.focus()).not.toThrow();
@@ -270,53 +261,41 @@ describe('Radio · button 形态', () => {
 
   it('Radio.Button 的 ref 转发到内部 Radio', () => {
     const w = mount(RadioButton, { slots: { default: () => 'A' } });
-    const vm = w.vm as unknown as { input: HTMLInputElement | null };
+    const vm = w.vm;
     expect(vm.input?.tagName).toBe('INPUT');
   });
 });
 
 describe('RadioGroup', () => {
   const renderGroup = (
-    props: Record<string, unknown>,
-    children?: () => unknown,
-  ): ReturnType<typeof mount> =>
-    mount(
-      defineComponent({
-        setup() {
-          return () =>
-            h(
-              RadioGroup,
-              props,
-              children ? { default: children } : undefined,
-            ) as unknown as ReturnType<typeof h>;
-        },
-      }),
-    );
+    props: InstanceType<typeof RadioGroup>['$props'],
+    children?: () => VNodeChild,
+  ) => mount(RadioGroup, { props, slots: children ? { default: children } : {} });
 
-  const threeChildren = (onChange?: (e: unknown) => void) => () =>
+  const threeChildren = (onChange?: RadioProps['onChange']) => () =>
     ['A', 'B', 'C'].map((value) =>
       h(Radio, { key: value, value, onChange }, { default: () => value }),
     );
 
   // 上游：responses hover events
   it('hover 事件落根 div', async () => {
-    const onMouseEnter = vi.fn();
-    const onMouseLeave = vi.fn();
-    const w = renderGroup({ onMouseEnter, onMouseLeave }, () => h(Radio));
+    const onMouseenter = vi.fn();
+    const onMouseleave = vi.fn();
+    const w = renderGroup({ onMouseenter, onMouseleave }, () => h(Radio));
     await w.find('div').trigger('mouseenter');
     await w.find('div').trigger('mouseleave');
-    expect(onMouseEnter).toHaveBeenCalledTimes(1);
-    expect(onMouseLeave).toHaveBeenCalledTimes(1);
+    expect(onMouseenter).toHaveBeenCalledTimes(1);
+    expect(onMouseleave).toHaveBeenCalledTimes(1);
   });
 
   // 上游：fire change events when value changes
-  it('受控：点击另一项 ⇒ onChange 一次，target.value 是新值', async () => {
+  it('受控：点击另一项 ⇒ onChange 一次，value 是真实标量，第二参是原生事件', async () => {
     const onChange = vi.fn();
     const w = renderGroup({ value: 'A', onChange }, threeChildren());
     const inputs = w.findAll('input');
     await inputs[1]?.setValue(true);
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange.mock.calls[0]?.[0]?.target.value).toBe('B');
+    expect(onChange).toHaveBeenCalledWith('B', expect.any(Event));
   });
 
   // 上游：won't fire change events when value not changes
@@ -389,7 +368,7 @@ describe('RadioGroup', () => {
   it('ref 是根 div', () => {
     const w = mount(RadioGroup, { props: { options: ['A'] } });
     expect(w.element.tagName).toBe('DIV');
-    expect((w.vm as unknown as { nativeElement: HTMLElement }).nativeElement).toBe(w.element);
+    expect(w.vm.nativeElement).toBe(w.element);
   });
 
   // 上游：should support data-* or aria-* props
@@ -424,11 +403,15 @@ describe('RadioGroup', () => {
   });
 
   // 上游：Radio type should not be override
-  it('input 的 type 恒为 radio（不被 Radio 的 type prop 覆盖）', async () => {
+  it('input 的 type 恒为 radio（忽略试图覆盖类型的原生 attr）', async () => {
     const onChange = vi.fn();
     const w = renderGroup({ onChange }, () =>
       [1, 2].map((value) =>
-        h(Radio, { key: value, value, type: String(value) }, { default: () => String(value) }),
+        h(
+          Radio,
+          { ...{ type: String(value) }, key: value, value },
+          { default: () => String(value) },
+        ),
       ),
     );
     await w.findAll('input')[0]?.setValue(true);
@@ -443,7 +426,7 @@ describe('RadioGroup', () => {
     expect(w.findAll('.apollo-radio-wrapper-checked').length).toBe(1);
     await w.findAll('input')[1]?.setValue(true);
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange.mock.calls[0]?.[0]?.target.value).toBe('B');
+    expect(onChange).toHaveBeenCalledWith('B', expect.any(Event));
   });
 
   // 上游：should remain controlled when `value` is null
@@ -479,7 +462,7 @@ describe('RadioGroup', () => {
     expect(onChange).toHaveBeenCalledTimes(1);
   });
 
-  it('options 对象形态：option.disabled 与整组 disabled 取或', () => {
+  it('options 对象形态：option.disabled 显式值优先于整组 disabled', () => {
     const w = renderGroup({
       options: [
         { label: 'A', value: 'A' },
@@ -656,14 +639,14 @@ describe('Radio · v-model（COMPATIBILITY.md 规则 C11）', () => {
 
   it('v-model:value 与 onChange 同时发出', async () => {
     const onChange = vi.fn();
-    const value = ref('A');
+    const value = ref<RadioValue>('A');
     const App = defineComponent({
       setup() {
         return () =>
           h(RadioGroup, {
             value: value.value,
             options: ['A', 'B'],
-            'onUpdate:value': (v: string) => {
+            'onUpdate:value': (v) => {
               value.value = v;
             },
             onChange,

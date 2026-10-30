@@ -8,7 +8,7 @@
 //   3. `headerRender` 是**函数 prop**（返回 VNode）⇒ 本仓用 `h()` 写（`.vue` 模板里
 //      没有「渲染一个 VNode 变量」的语法，见 `empty/components/NodeRenderer.ts`）。
 
-import type { CalendarHeaderRenderConfig } from '@apollo-design/ui';
+import type { CalendarHeaderRenderConfig, RadioValue } from '@apollo-design/ui';
 import { Calendar, Flex, RadioButton, RadioGroup, Select } from '@apollo-design/ui';
 import dayjs from 'dayjs';
 import localeData from 'dayjs/plugin/localeData';
@@ -43,7 +43,9 @@ const headerRender = ({ value, type, onChange, onTypeChange }: CalendarHeaderRen
         {
           size: 'small',
           value: type,
-          onChange: (e: { target: { value: string } }) => onTypeChange(e.target.value as never),
+          'onUpdate:value': (mode: RadioValue) => {
+            if (mode === 'month' || mode === 'year') onTypeChange(mode);
+          },
         },
         () => [
           h(RadioButton, { value: 'month' }, () => 'Month'),

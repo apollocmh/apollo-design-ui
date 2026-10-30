@@ -1,8 +1,7 @@
 /**
  * Radio 的公共导出。
  *
- * 与 antd 的 `es/radio/index.js` 对齐：默认导出 Radio，静态挂 `Radio.Group` 与
- * `Radio.Button`，另有具名 `Group` / `Button`（Skeleton / Statistic / Layout 同范式）。
+ * 提供可安装的 Radio、静态 Radio.Group / Radio.Button 及具名 RadioGroup / RadioButton。
  *
  * ⚠️ `Radio.__ANT_RADIO`：antd 的内部识别标记（`Radio.__ANT_RADIO = true`），
  *    上游 radio.test「have static property for type detecting」钉住它。
@@ -34,11 +33,14 @@ export default Radio;
 export type {
   AbstractRadioProps,
   RadioChangeEvent,
+  RadioEmits,
   RadioGroupButtonStyle,
   RadioGroupContextValue,
+  RadioGroupEmits,
   RadioGroupOptionType,
   RadioGroupProps,
   RadioGroupRef,
+  RadioGroupSlots,
   RadioOptionItem,
   RadioOptionLabel,
   RadioOrientation,
@@ -47,6 +49,7 @@ export type {
   RadioSemanticClassNames,
   RadioSemanticContext,
   RadioSemanticStyles,
+  RadioSlots,
   RadioValue,
 } from './interface';
 export { genRadioStyle, genTokenDecls as genRadioTokenDecls } from './style';

@@ -283,14 +283,27 @@ describe('Table · 选择', () => {
   });
   it('radio 型：单选', async () => {
     const onChange = vi.fn();
+    const onSelect = vi.fn();
+    const onInputChange = vi.fn();
     const w = mountTable({
-      rowSelection: { type: 'radio', onChange } as never,
+      rowSelection: {
+        type: 'radio',
+        onChange,
+        onSelect,
+        getCheckboxProps: () => ({ onChange: onInputChange }),
+      },
     });
-    const radios = w.findAll('.apollo-table-tbody .apollo-radio-wrapper input');
-    await radios[1]!.setValue(true);
+    const radio = w.get<HTMLInputElement>(
+      '.apollo-table-tbody tr[data-row-key="2"] .apollo-radio-wrapper input',
+    );
+    const event = new Event('change', { bubbles: true });
+    radio.element.checked = true;
+    radio.element.dispatchEvent(event);
     await nextTick();
     const [keys] = onChange.mock.calls[0]!;
     expect(keys).toEqual(['2']);
+    expect(onSelect).toHaveBeenCalledWith(data[1], true, [data[1]], event);
+    expect(onInputChange).toHaveBeenCalledExactlyOnceWith(event, true);
     w.unmount();
   });
   it('SELECTION_COLUMN 哨兵：放 columns 即指定选择列位置', () => {

@@ -37,7 +37,6 @@ import { convertDataToEntities } from '../../_internal/tree/tree-util';
 import Checkbox from '../../checkbox/Checkbox';
 import type { CheckboxProps } from '../../checkbox/interface';
 import Dropdown from '../../dropdown/Dropdown';
-import type { RadioChangeEvent } from '../../radio/interface';
 import Radio from '../../radio/Radio';
 import { INTERNAL_COL_DEFINE } from '../engine/utils/legacyUtil';
 import type {
@@ -522,9 +521,9 @@ export function useSelection<RecordType extends object>(
               onClick: (e: MouseEvent) => {
                 e.stopPropagation();
               },
-              onChange: (event: RadioChangeEvent) => {
-                if (!keySet.has(key)) {
-                  triggerSingleSelection(key, true, [key], event.nativeEvent);
+              onChange: (event: Event, proposedChecked: boolean) => {
+                if (proposedChecked && !keySet.has(key)) {
+                  triggerSingleSelection(key, true, [key], event);
                 }
               },
             }),

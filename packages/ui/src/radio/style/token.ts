@@ -9,9 +9,7 @@
  *   radioSize   = fontSizeLG                       （默认 16）
  *   dotSize     = radioSize - (dotPadding + lineWidth) × 2（wireframe=false；默认 6）
  *   buttonPaddingInline = padding - lineWidth      （默认 15）
- * wireframe 分支（dotPadding×2 / colorPrimary 点 / colorBgContainer 底）依赖
- * theme token 注入，本仓尚未落地 —— 全按 **wireframe=false** 取值（PLATFORM，
- * 与 demo 的 wireframe 等价替换同判）。
+ * wireframe 分支读取当前主题（dotPadding×2 / colorPrimary 点 / colorBgContainer 底）。
  *
  * antd unitless 集合：radioSize、dotSize（CSS 侧乘 1px）。
  */
@@ -61,7 +59,7 @@ export const prepareComponentToken = (token: AliasToken): ComponentToken => {
   return {
     // Radio
     radioSize,
-    dotSize: radioSize - (RADIO_DOT_PADDING + token.lineWidth) * 2,
+    dotSize: radioSize - (RADIO_DOT_PADDING + (token.wireframe ? 0 : token.lineWidth)) * 2,
     dotColorDisabled: token.colorTextDisabled,
     // Radio buttons
     buttonSolidCheckedColor: token.colorTextLightSolid,
@@ -75,8 +73,7 @@ export const prepareComponentToken = (token: AliasToken): ComponentToken => {
     buttonCheckedColorDisabled: token.colorTextDisabled,
     buttonPaddingInline: token.padding - token.lineWidth,
     wrapperMarginInlineEnd: token.marginXS,
-    // internal（wireframe=false 分支）
-    radioColor: token.colorWhite,
-    radioBgColor: token.colorPrimary,
+    radioColor: token.wireframe ? token.colorPrimary : token.colorWhite,
+    radioBgColor: token.wireframe ? token.colorBgContainer : token.colorPrimary,
   };
 };

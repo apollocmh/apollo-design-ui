@@ -1,108 +1,143 @@
-/**
- * L3 · 类型测试（Radio / RadioGroup / RadioButton）
- *
- * 正例钉 API 形状，负例钉「哪些写法必须被类型系统拒绝」。
- * ⚠️ 负例一律写在**未被调用的闭包**里：只在类型层面存在，不产生运行时行为
- *    （`*.test-d.ts` 会被 vitest 真执行）。
- */
-
 import { expectTypeOf, it } from 'vitest';
-import { h } from 'vue';
+import { type EmitsToProps, h } from 'vue';
 import type { SizeType } from '../../config-provider/size-context';
 import { Radio, RadioButton, RadioGroup } from '../index';
 import type {
   RadioChangeEvent,
+  RadioEmits,
   RadioGroupButtonStyle,
+  RadioGroupEmits,
   RadioGroupOptionType,
   RadioGroupProps,
+  RadioGroupRef,
+  RadioGroupSlots,
+  RadioOptionItem,
   RadioProps,
+  RadioRef,
+  RadioSlots,
   RadioValue,
 } from '../interface';
 
-it('RadioProps 的关键字段类型', () => {
+type RadioInstance = InstanceType<typeof Radio>;
+type ButtonInstance = InstanceType<typeof RadioButton>;
+type GroupInstance = InstanceType<typeof RadioGroup>;
+
+it('Radio models and scalar option values retain their exact public types', () => {
   expectTypeOf<RadioProps['checked']>().toEqualTypeOf<boolean | undefined>();
   expectTypeOf<RadioProps['defaultChecked']>().toEqualTypeOf<boolean | undefined>();
   expectTypeOf<RadioProps['disabled']>().toEqualTypeOf<boolean | undefined>();
-  expectTypeOf<RadioProps['skipGroup']>().toEqualTypeOf<boolean | undefined>();
   expectTypeOf<RadioProps['title']>().toEqualTypeOf<string | undefined>();
   expectTypeOf<RadioProps['value']>().toEqualTypeOf<RadioValue | undefined>();
-  expectTypeOf<RadioProps['onChange']>().not.toBeNever();
-});
-
-it('RadioGroupProps 的关键字段类型（value 是标量不是数组）', () => {
   expectTypeOf<RadioGroupProps['value']>().toEqualTypeOf<RadioValue | undefined>();
   expectTypeOf<RadioGroupProps['defaultValue']>().toEqualTypeOf<RadioValue | undefined>();
+  expectTypeOf<RadioGroupProps['size']>().toEqualTypeOf<SizeType | undefined>();
   expectTypeOf<RadioGroupProps['buttonStyle']>().toEqualTypeOf<RadioGroupButtonStyle | undefined>();
   expectTypeOf<RadioGroupProps['optionType']>().toEqualTypeOf<RadioGroupOptionType | undefined>();
   expectTypeOf<RadioGroupProps['vertical']>().toEqualTypeOf<boolean | undefined>();
   expectTypeOf<RadioGroupProps['block']>().toEqualTypeOf<boolean | undefined>();
 });
 
-it('RadioChangeEvent 的形态（target.value 是新值）', () => {
-  const onChange = (e: RadioChangeEvent) => {
-    expectTypeOf(e.target.value).not.toBeNever();
-    expectTypeOf(e.target.checked).toBeBoolean();
-    expectTypeOf(e.stopPropagation).toBeFunction();
-    expectTypeOf(e.nativeEvent).not.toBeAny();
-  };
-  void onChange;
+it('owned native notifications have the same payload in public and actual constructor types', () => {
+  expectTypeOf<RadioChangeEvent>().toEqualTypeOf<Event>();
+  expectTypeOf<RadioProps['onChange']>().toEqualTypeOf<RadioEmits['change'] | undefined>();
+  expectTypeOf<RadioOptionItem['onChange']>().toEqualTypeOf<RadioEmits['change'] | undefined>();
+  expectTypeOf<RadioGroupProps['onChange']>().toEqualTypeOf<
+    RadioGroupEmits['change'] | undefined
+  >();
+  expectTypeOf<RadioInstance['$props']['onChange']>().toEqualTypeOf<
+    EmitsToProps<RadioEmits>['onChange']
+  >();
+  expectTypeOf<ButtonInstance['$props']['onChange']>().toEqualTypeOf<
+    RadioInstance['$props']['onChange']
+  >();
+  expectTypeOf<GroupInstance['$props']['onChange']>().toEqualTypeOf<
+    EmitsToProps<RadioGroupEmits>['onChange']
+  >();
 });
 
-it('语义化支持对象与函数两态', () => {
-  const obj: RadioProps = { classNames: { root: 'r', icon: 'i', label: 'l' } };
-  const fn: RadioProps = {
+it('actual Radio/Button/Group references expose the native nullable elements', () => {
+  expectTypeOf<RadioInstance['input']>().toEqualTypeOf<RadioRef['input']>();
+  expectTypeOf<RadioInstance['nativeElement']>().toEqualTypeOf<RadioRef['nativeElement']>();
+  expectTypeOf<RadioInstance['focus']>().toEqualTypeOf<RadioRef['focus']>();
+  expectTypeOf<RadioInstance['blur']>().toEqualTypeOf<RadioRef['blur']>();
+  expectTypeOf<ButtonInstance['input']>().toEqualTypeOf<RadioRef['input']>();
+  expectTypeOf<ButtonInstance['nativeElement']>().toEqualTypeOf<RadioRef['nativeElement']>();
+  expectTypeOf<GroupInstance['nativeElement']>().toEqualTypeOf<RadioGroupRef['nativeElement']>();
+});
+
+it('default slots and object/function semantic styles keep their current contract', () => {
+  const slots: RadioSlots = { default: () => 0 };
+  const groupSlots: RadioGroupSlots = { default: () => [h(Radio, { value: false })] };
+  const props: RadioProps = {
+    classNames: { root: 'r', icon: 'i', label: 'l' },
     styles: ({ props }) => ({ icon: { opacity: props.checked ? 0.5 : 1 } }),
   };
-  expectTypeOf(obj).toEqualTypeOf<RadioProps>();
-  expectTypeOf(fn).toEqualTypeOf<RadioProps>();
+  h(Radio, props, slots);
+  h(RadioGroup, { options: [1, '1', { value: false, label: 'False' }] }, groupSlots);
+  h(Radio.Button, {
+    checked: false,
+    'onUpdate:checked': (checked) => {
+      expectTypeOf(checked).toBeBoolean();
+    },
+  });
+  h(Radio.Group, {
+    onChange: (value, event) => {
+      expectTypeOf(value).toEqualTypeOf<RadioValue>();
+      expectTypeOf(event).toEqualTypeOf<Event>();
+    },
+  });
+  h(RadioButton, {
+    onChange: (event, checked) => {
+      expectTypeOf(event).toEqualTypeOf<Event>();
+      expectTypeOf(checked).toEqualTypeOf<boolean>();
+    },
+    onKeydown: (event) => {
+      expectTypeOf(event).toEqualTypeOf<KeyboardEvent>();
+    },
+  });
 });
 
-it('Radio.Group / Radio.Button 静态子组件可用且能 h()', () => {
-  expectTypeOf(h(Radio.Group)).not.toBeAny();
-  expectTypeOf(h(Radio.Button)).not.toBeAny();
-  expectTypeOf(h(RadioGroup, { options: ['a', 1] })).toBeObject();
-  expectTypeOf(h(RadioButton, { value: 'a' })).toBeObject();
-});
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 负例（全部包在永不调用的闭包里）
-// ─────────────────────────────────────────────────────────────────────────────
-
-it('负例：语义槽只有 root / icon / label 三键', () => {
-  // @ts-expect-error 没有 body 槽
+// Type-negative probes stay uncalled; no invalid component is mounted.
+function invalidContracts() {
+  // @ts-expect-error Radio semantic regions are root/icon/label.
   const badSlot: RadioProps = { classNames: { body: 'b' } };
-  void badSlot;
-});
-
-it('负例：optionType 只接受 default / button', () => {
-  // @ts-expect-error 'solid' 不是 optionType（那是 buttonStyle 的值）
-  const badOptionType: RadioProps = { optionType: 'solid' };
-  void badOptionType;
-});
-
-it('负例：buttonStyle 只接受 outline / solid', () => {
-  // @ts-expect-error 'button' 不是 buttonStyle（那是 optionType 的值）
+  // @ts-expect-error optionType only accepts default/button on Group.
+  const badOptionType: RadioGroupProps = { optionType: 'solid' };
+  // @ts-expect-error buttonStyle only accepts outline/solid.
   const badButtonStyle: RadioGroupProps = { buttonStyle: 'button' };
-  void badButtonStyle;
-});
-
-it('负例：Radio 的 checked 不能是字符串', () => {
-  // @ts-expect-error checked 是 boolean
+  // @ts-expect-error checked is boolean.
   const badChecked: RadioProps = { checked: 'yes' };
-  void badChecked;
-});
-
-it('★ Issue #10.1：RadioGroupProps.size 是共享 SizeType（含 medium）', () => {
-  // 上游 `RadioGroupProps.size?: SizeType`（`radio/interface.d.ts:14`）。
-  expectTypeOf<RadioGroupProps['size']>().toEqualTypeOf<SizeType | undefined>();
-
-  // 正例：'medium' 必须可用（此前手写 `'large' | 'middle' | 'small'` 把它漏掉了）
-  const sizes: NonNullable<RadioGroupProps['size']>[] = ['small', 'medium', 'middle', 'large'];
-  void sizes;
-});
-
-it('负例：RadioGroup 没有语义化槽位（antd 同）', () => {
-  // @ts-expect-error RadioGroupProps 无 classNames
+  // @ts-expect-error Group has no leaf semantic regions.
   const badGroup: RadioGroupProps = { classNames: { root: 'r' } };
-  void badGroup;
-});
+  // @ts-expect-error skipGroup never had a Radio runtime responsibility.
+  const badSkip: RadioInstance['$props'] = { skipGroup: true };
+  // @ts-expect-error Standalone appearance uses RadioButton; optionType belongs to Group.
+  const badAppearance: ButtonInstance['$props'] = { optionType: 'button' };
+  // @ts-expect-error input type is fixed to radio.
+  const badType: RadioProps = { type: 'checkbox' };
+  // @ts-expect-error the legacy React listener spelling is not a Radio event.
+  const badKey: RadioProps = { onKeyDown: (_event: KeyboardEvent) => {} };
+  // @ts-expect-error Radio change receives Event and a separate boolean snapshot.
+  h(Radio, { onChange: (_event: { target: { checked: boolean } }) => {} });
+  // @ts-expect-error Group change receives a scalar value, not the leaf Event payload.
+  h(RadioGroup, { onChange: (_event: Event) => {} });
+  // @ts-expect-error Arbitrary objects cannot be radio option identities.
+  h(RadioButton, { value: { key: 1 } });
+  // @ts-expect-error Group values are scalars, not checkbox arrays.
+  h(RadioGroup, { value: ['a'] });
+  const nativeEvent: RadioChangeEvent = new Event('change');
+  // @ts-expect-error No synthetic nativeEvent wrapper exists.
+  nativeEvent.nativeEvent;
+  void [
+    badSlot,
+    badOptionType,
+    badButtonStyle,
+    badChecked,
+    badGroup,
+    badSkip,
+    badAppearance,
+    badType,
+    badKey,
+  ];
+}
+void invalidContracts;

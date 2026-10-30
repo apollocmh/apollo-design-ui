@@ -184,7 +184,15 @@ const specs: Record<string, { render: () => DomRenderResult }> = {
 domContractTest('Radio', {
   baseline,
   keepStyle: true,
-  allow: {},
+  allow: {
+    'radio:default-checked': {
+      reason:
+        'Apollo uses one accepted checked state for the input, icon, wrapper and semantic context; the dated reference omits the uncontrolled wrapper class.',
+      diff: [
+        '$/label[0]: 类名不同 [apollo-radio-wrapper] vs [apollo-radio-wrapper apollo-radio-wrapper-checked]',
+      ],
+    },
+  },
   render: (id) => {
     const spec = specs[id];
     if (!spec) throw new Error(`[Radio L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);

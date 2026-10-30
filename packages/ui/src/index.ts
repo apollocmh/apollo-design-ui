@@ -353,11 +353,14 @@ export {
 export type {
   AbstractRadioProps,
   RadioChangeEvent,
+  RadioEmits,
   RadioGroupButtonStyle,
   RadioGroupContextValue,
+  RadioGroupEmits,
   RadioGroupOptionType,
   RadioGroupProps,
   RadioGroupRef,
+  RadioGroupSlots,
   RadioOptionItem,
   RadioOptionLabel,
   RadioOrientation,
@@ -366,6 +369,7 @@ export type {
   RadioSemanticClassNames,
   RadioSemanticContext,
   RadioSemanticStyles,
+  RadioSlots,
   RadioValue,
 } from './radio';
 export { Radio, RadioButton, RadioGroup } from './radio';

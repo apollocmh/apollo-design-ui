@@ -218,3 +218,7 @@ Form 的 requiredMark 内容函数迁为 `#requiredMark={ label, required }`，l
 ### D-table-native-data-and-content
 
 Table 的顶层 title/footer/summary/expandedRowRender/expandIcon/emptyText 内容函数迁为具名槽，expandable 内同名全表内容函数也统一迁移；共享语言与组件 locale.emptyText 只承载静态内容，动态空态使用 #emptyText。按列或数据承担业务职责的 render/title/filterDropdown、排序过滤和选择操作函数保留。通知使用 Vue emits，change 保留四个实际业务载荷，scroll 使用原生 Event；公开泛型贯穿数据、列、槽、事件与真实模板引用，不要求用户添加索引签名。修正受控提议与撤控、同 key 行内容与焦点、当前配置和实际滚动资源；虚拟列表的 Vue holder/行按真实 HTMLElement 根测量，隐藏测量单元不再重复挂载表头交互，不可展开行使用装饰占位。详见[Table API](packages/ui/src/table/index.zh-CN.md)。
+
+### D-radio-native-input-and-group
+
+Radio/RadioButton 的 change 改为 `(event: Event, checked: boolean)`，RadioGroup 的 change 改为 `(value: RadioValue, event: Event)`，分别保留 checked/value 模型；RadioChangeEvent 仅为原生 Event 别名，不再构造 target/nativeEvent 包装。选项 change 同步原生双参，Table 保留同一事件，Calendar/Header Demo 使用已有 update:value。移除无实际职责的 Radio skipGroup/type/optionType 声明，Group 的 optionType 保留。修正当前 Provider/十六 Token、完整内容和原生 attrs、选项身份/焦点、Button 引用与单次通知；已交付的受控整组 DOM 恢复继续保留，详见[Radio API](packages/ui/src/radio/index.zh-CN.md)。

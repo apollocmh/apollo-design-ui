@@ -1,383 +1,229 @@
-/**
- * Radio —— 单选框。
- *
- * 契约来源：antd 6.6.4 的 `es/radio/radio.js`（源码 `components/radio/radio.tsx`，
- * 143 行）+ `@rc-component/checkbox@2.0.0` 的 DOM 分配。判据逐条对齐 G1 分析
- * （`docs/analysis/radio.md`）。
- *
- * ── 七条最容易写错的判据 ─────────────────────────────────────────────────────
- *
- * 1. **checked 两个来源**：Group 内 ⇒ `props.value === groupContext.value`
- *    （**相等比较**，不是 checkbox 的 `includes`）；Group 外 ⇒ 受控 `checked` /
- *    非受控 `defaultChecked`（rc-checkbox 的 `useControlledState` 语义）。
- * 2. **disabled 三级合并**：`props.disabled ?? group.disabled ?? DisabledContext`
- *    —— `??` 判据让显式 `false` 能关闭（上游 radio.test 的
- *    「should use own disabled status first」）。
- * 3. **`optionType` 在 Radio 上是无效 prop**：出现即发 usage 告警；组内是经
- *    `RadioOptionTypeContext` 生效的。
- * 4. **DOM 分配**：`title` 落 **label**（⚠️ 与 checkbox 不同 —— checkbox 落 span，
- *    上游 issue 46739 的修复点）；`id/name/required/tabIndex/autofocus/value/type`
- *    与 focus/blur/key 事件落 **input**；`onMouseEnter/onMouseLeave` 落 **label**；
- *    语义 `styles.root` 落 label、`styles.icon` 落 span、`styles.label` 落文案 span。
- * 5. **类名三段**：label = `-wrapper` + 状态类（checked/disabled/rtl/block）+
- *    context + className + rootClassName + 语义 root；
- *    span = `-{cls}` + 语义 icon + `ant-wave-target`（**仅非 button 形态**）+
- *    `-checked` + `-disabled`；input = `-input`。
- * 6. **button 形态换整段前缀**：`prefixCls = ${radioPrefixCls}-button`
- *    ⇒ label/span/input/label-span 四层的类名全部换前缀。
- * 7. **事件冒泡锁**：复用 checkbox 的 `useBubbleLock`（label click 设 raf 锁，
- *    锁期内 input click 被 stopPropagation）—— 上游 radio.test 的
- *    「event bubble should not trigger twice」。
- */
-
-import { isRenderable, useControlledValue, useDevWarning } from '@apollo-design/utils';
+/** Native Radio: one accepted checked state, owned DOM events and explicit input/root attrs. */
+import { isEmptyVNode, useControlledValue } from '@apollo-design/utils';
 import {
-  type CSSProperties,
   computed,
   defineComponent,
   h,
   nextTick,
+  onMounted,
   onScopeDispose,
   type PropType,
+  type SlotsType,
   shallowRef,
-  type VNodeChild,
-  watchEffect,
 } from 'vue';
-import {
-  mergeClassNames,
-  mergeStyles,
-  resolveSemantic,
-  styleAttrs,
-} from '../_internal/use-merge-semantic';
+import { mergeClassNames, mergeStyles, resolveSemantic } from '../_internal/use-merge-semantic';
 import { useBubbleLock } from '../checkbox/use-bubble-lock';
 import { useComponentConfig } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useFormItemInputContext } from '../form/context';
 import { useRadioGroup, useRadioOptionType } from './context';
 import type {
-  RadioChangeEvent,
   RadioProps,
-  RadioRef,
   RadioSemanticClassNames,
   RadioSemanticStyles,
+  RadioSlots,
 } from './interface';
+import { useRadioTheme } from './use-radio-theme';
 
-/** antd Wave 的 `TARGET_CLS` 是固定常量（不随 prefixCls 变），SSR 产物里就有它。 */
 export const WAVE_TARGET_CLS = 'ant-wave-target';
 
-/**
- * Radio 的 props 定义 —— `Radio` 与 `RadioButton` **共用同一份**。
- *
- * 为什么共用：antd 的 `RadioButton` 是 `Radio` 的薄包装（只多 provide 一个
- * `optionType='button'` 并强制 `type='radio'`），运行时的 `{...radioProps}` 转发
- * 会把 `classNames` / `styles` 一并带过去。共用一份保证「RadioButton 能接受的东西
- * 与 Radio 完全一致」，不会出现两处 prop 表漂移。
- *
- * ⚠️ `RadioButtonProps`（antd 的类型）比这窄（= `AbstractCheckboxProps`，不含
- * `classNames` / `styles` / `optionType`）—— 那是**类型**的差异，不是行为差异，
- * 登记为 INTENDED（见 README §2）。
- */
+/** Shared by RadioButton so both public constructors retain the same actual props. */
 export const radioPropDefs = {
   prefixCls: { type: String, default: undefined },
   defaultChecked: { type: Boolean, default: false },
   checked: { type: Boolean, default: undefined },
   disabled: { type: Boolean, default: undefined },
   title: { type: String, default: undefined },
-  // ⚠️ 不能写 PropType<unknown>：vue-tsc 会把它推断成 undefined（SFC 模板与 h()
-  //    全线误报「not assignable to undefined」，PITFALLS 137）。antd 的 value 语义上
-  //    是原始值选项 ⇒ 收窄为 string|number|boolean（Group 侧已用 VNodeProps 放行）。
   value: {
     type: [String, Number, Boolean] as PropType<string | number | boolean>,
     default: undefined,
   },
   name: { type: String, default: undefined },
   id: { type: String, default: undefined },
-  type: { type: String, default: undefined },
   tabIndex: { type: Number, default: undefined },
   required: { type: Boolean, default: undefined },
   autoFocus: { type: Boolean, default: undefined },
-  /**
-   * ⚠️ **类型继承产物，运行时无任何语义**（Issue #10.3，已核为误报）。
-   *
-   * 详见 `interface.ts` 的 `AbstractRadioProps.skipGroup` —— antd 的 `radio.js`
-   * 全文不读它（`groupContext` 无条件生效），但类型从 `AbstractCheckboxProps`
-   * 继承到了。这里**照样声明**：既保持类型面一致，又能把它从 `attrs` 摘掉
-   * （不声明的话它会在 DOM 上留一个 `skipgroup="true"`，antd 产物里没有）。
-   */
-  skipGroup: { type: Boolean, default: false },
-  /** ⚠️ 无效 prop：出现即 usage 告警（见文件头判据 3）。 */
-  optionType: { type: String as PropType<RadioProps['optionType']>, default: undefined },
   classNames: {
     type: [Object, Function] as PropType<RadioProps['classNames']>,
     default: undefined,
   },
   styles: { type: [Object, Function] as PropType<RadioProps['styles']>, default: undefined },
 };
+export const radioEmits = {
+  'update:checked': (_checked: boolean) => true,
+  change: (_event: Event, _checked: boolean) => true,
+  click: (_event: MouseEvent) => true,
+  mouseenter: (_event: MouseEvent) => true,
+  mouseleave: (_event: MouseEvent) => true,
+  focus: (_event: FocusEvent) => true,
+  blur: (_event: FocusEvent) => true,
+  keydown: (_event: KeyboardEvent) => true,
+  keypress: (_event: KeyboardEvent) => true,
+};
+interface RadioConfig {
+  className?: string;
+  style?: import('vue').CSSProperties;
+  classNames?: RadioProps['classNames'];
+  styles?: RadioProps['styles'];
+}
 
 export const RadioComponent = defineComponent({
   name: 'ARadio',
   inheritAttrs: false,
+  expose: ['focus', 'blur', 'input', 'nativeElement'],
   props: radioPropDefs,
-  /**
-   * ⚠️ 只声明 `update:checked`（供 `v-model:checked`），**不**声明 `change` ——
-   * antd 的 `onChange` 是 props 形态回调，声明成 emits 会被 Vue 从 attrs 摘掉
-   * （PITFALLS 35）。两者同时发出（COMPATIBILITY.md 规则 C11）。
-   */
-  emits: ['update:checked'],
-  // ⚠️ onChange/onClick/onFocus/onBlur/… 是 antd 的 props 形态回调 —— 走 attrs
-  //    （PITFALLS 35：Vue 里声明 emits 会把它们从 attrs 摘掉）。
-  setup(props, { attrs, emit, expose, slots }) {
-    const callbacks = attrs as unknown as Pick<
-      RadioProps,
-      'onChange' | 'onClick' | 'onMouseEnter' | 'onMouseLeave'
-    >;
-
-    const context = useComponentConfig('radio');
-    const { getPrefixCls } = context;
-    const groupContext = useRadioGroup();
-    const optionTypeContext = useRadioOptionType();
+  emits: radioEmits,
+  slots: Object as SlotsType<RadioSlots>,
+  setup(props, { attrs, emit, slots }) {
+    const context = useComponentConfig<RadioConfig>('radio');
+    const group = useRadioGroup();
+    const optionType = useRadioOptionType();
     const contextDisabled = useDisabled();
-    /**
-     * Form.Item 通道（Issue #10.2）。
-     *
-     * 上游 `radio.js:27` 读 `FormItemInputContext` 只为产出
-     * `${prefixCls}-wrapper-in-form-item`（`radio.js:92`）—— 本仓原注释写「依赖 form
-     * 未落地 ⇒ 恒 false」，而 **form 已在 Issue #8 落地** ⇒ 那条注释已过期，必须接线。
-     * ⚠️ 它是**纯 DOM 契约类**，antd 的样式里也没有对应规则（SSR 实测确认）——
-     *    但 L4 的 DOM 对拍会看到它，不接就是差异。
-     */
-    const formItemInputContext = useFormItemInputContext();
-    const devWarning = useDevWarning('Radio');
-
-    // ============================ Warning ==============================
-    // antd：`warning(!('optionType' in props), 'usage', …)`。
-    // ⚠️ Vue 的 props 恒含全部声明键 ⇒ 判据必须是 `!== undefined`（PITFALLS 13）。
-    watchEffect(() => {
-      devWarning(props.optionType === undefined, '`optionType` is only support in Radio.Group.');
-    });
-
-    // ============================= Prefix ==============================
-    const radioPrefixCls = computed(() => getPrefixCls('radio', props.prefixCls));
-    const isButtonType = computed(
-      () => (groupContext?.optionType || optionTypeContext) === 'button',
+    const form = useFormItemInputContext();
+    const radioPrefix = computed(() => context.getPrefixCls('radio', props.prefixCls));
+    const isButton = computed(() => (optionType ?? group?.optionType) === 'button');
+    const prefix = computed(() =>
+      isButton.value ? `${radioPrefix.value}-button` : radioPrefix.value,
     );
-    /** button 形态换整段前缀（判据 6）。 */
-    const prefixCls = computed(() =>
-      isButtonType.value ? `${radioPrefixCls.value}-button` : radioPrefixCls.value,
-    );
-
-    // ============================= Disabled =============================
-    const mergedDisabled = computed<boolean>(
-      () => props.disabled ?? groupContext?.disabled ?? contextDisabled.value,
-    );
-
-    // ============================== Checked =============================
+    const themeStyle = useRadioTheme(() => radioPrefix.value);
+    const disabled = computed(() => props.disabled ?? group?.disabled ?? contextDisabled.value);
     const [innerChecked, setInnerChecked] = useControlledValue<boolean>({
       defaultValue: () => props.defaultChecked,
       getValue: () => props.checked,
     });
-
-    /**
-     * antd 的 `mergedChecked` —— **只**由 `checked` prop 或 Group 的值决定。
-     *
-     * ⚠️ 它**不含**非受控的内部态。后果（上游实测，`tests/compat/baselines/radio.dom.json`）：
-     *    `<Radio defaultChecked />` 时 **span 有 `-checked`、wrapper 没有 `-wrapper-checked`**
-     *    —— 因为 wrapper 的类名读的是 `mergedChecked`（这里是 `undefined`），
-     *    而 span / input 读的是 rc-checkbox 的内部态。
-     *    这是上游的不一致（非受控态下 wrapper 类名不跟随），**逐字保留**，
-     *    登记在 `COMPATIBILITY.md` §9.2.1 的 U9（有意不复刻「修正」）。
-     */
-    const mergedChecked = computed<boolean | undefined>(() => {
-      if (groupContext) {
-        return props.value === groupContext.value;
-      }
-      return props.checked;
-    });
-
-    /** 真正生效的选中态 —— 用于 span 的 `-checked` 与 input 的 `checked`。 */
-    const effectiveChecked = computed<boolean>(() => {
-      if (groupContext) {
-        return props.value === groupContext.value;
-      }
-      return innerChecked.value;
-    });
-
-    // ============================== Events =============================
-    const onInternalChange = (event: Event) => {
-      const inputEl = event.target as HTMLInputElement;
-      const nextChecked = inputEl.checked;
-      // 组内由 Group 的 value 驱动（radioProps.checked 恒为受控），不写内部态
-      if (!groupContext) {
-        setInnerChecked(nextChecked);
-      }
-      // v-model:checked 通道（规则 C11：与语义事件同时发出）
-      emit('update:checked', nextChecked);
-      const radioEvent: RadioChangeEvent = {
-        target: {
-          ...(props as unknown as Record<string, unknown>),
-          type: 'radio',
-          checked: nextChecked,
-        },
-        stopPropagation: () => event.stopPropagation(),
-        preventDefault: () => event.preventDefault(),
-        nativeEvent: event,
-      };
-      callbacks.onChange?.(radioEvent);
-      groupContext?.onChange?.(radioEvent);
-      void nextTick(() => {
-        if (groupContext?.syncChecked) groupContext.syncChecked();
-        else syncChecked();
-      });
-    };
-
-    // ============================ Semantic ==============================
-    const semanticProps = computed<RadioProps>(
-      () =>
-        ({
-          ...props,
-          disabled: mergedDisabled.value,
-          checked: mergedChecked.value,
-        }) as RadioProps,
+    const checked = computed(() =>
+      group ? props.value !== undefined && props.value === group.value : innerChecked.value,
     );
-    const info = computed(() => ({ props: semanticProps.value }));
-    const mergedClassNames = computed(() =>
-      mergeClassNames<RadioSemanticClassNames>(
-        resolveSemantic<RadioSemanticClassNames, RadioProps>(props.classNames as never, info.value),
-      ),
-    );
-    const mergedStyles = computed(() =>
-      mergeStyles<RadioSemanticStyles>(
-        resolveSemantic<RadioSemanticStyles, RadioProps>(props.styles as never, info.value),
-      ),
-    );
-
-    // ============================ Event Lock ============================
-    /**
-     * ⚠️ 传 **getter**（Issue #10.4）：`callbacks` 就是 `attrs`，裸传会把首帧的
-     *    `onClick` 焊死 —— 父级替换 handler 之后仍调旧的。与 checkbox 同判
-     *    （`useBubbleLock` 自 #9.2 起收 `MaybeRefOrGetter`）。
-     */
-    const { onLabelClick, onInputClick } = useBubbleLock(
-      () => (attrs as { onClick?: (e: MouseEvent) => void }).onClick,
-    );
-
-    // ============================== Refs ===============================
-    const inputRef = shallowRef<HTMLInputElement | null>(null);
-    const holderRef = shallowRef<HTMLElement | null>(null);
+    const input = shallowRef<HTMLInputElement | null>(null);
+    const nativeElement = shallowRef<HTMLElement | null>(null);
     const syncChecked = () => {
-      if (inputRef.value) inputRef.value.checked = effectiveChecked.value;
+      if (input.value) input.value.checked = checked.value;
     };
-    if (groupContext?.registerChecked) {
-      onScopeDispose(groupContext.registerChecked(syncChecked));
-    }
-
-    expose({
-      focus: (options?: FocusOptions) => inputRef.value?.focus(options),
-      blur: () => inputRef.value?.blur(),
-      get input() {
-        return inputRef.value;
-      },
-      get nativeElement() {
-        return holderRef.value;
-      },
-    } satisfies RadioRef);
-
-    return () => {
-      const cls = prefixCls.value;
-
-      const wrapperClassString = [
-        `${cls}-wrapper`,
-        {
-          [`${cls}-wrapper-checked`]: mergedChecked.value,
-          [`${cls}-wrapper-disabled`]: mergedDisabled.value,
-          [`${cls}-wrapper-rtl`]: context.direction === 'rtl',
-          // 上游 `radio.js:92`：Form.Item 内加这个类（纯 DOM 契约，无样式规则）
-          [`${cls}-wrapper-in-form-item`]: formItemInputContext.value.isFormItemInput,
-          [`${cls}-wrapper-block`]: !!groupContext?.block,
-        },
-        context.className,
-        // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
-        attrs.class,
-        mergedClassNames.value.root,
-      ];
-
-      const radioClassString = [
-        cls,
-        mergedClassNames.value.icon,
-        // ⚠️ button 形态无波纹 ⇒ 只有非 button 才加 `ant-wave-target`
-        { [WAVE_TARGET_CLS]: !isButtonType.value },
-        {
-          [`${cls}-checked`]: effectiveChecked.value,
-          [`${cls}-disabled`]: mergedDisabled.value,
-        },
-      ];
-
-      // rc-checkbox 语义：除「被 antd 消费的字段」外的 attrs 全部落 input
-      const {
-        class: _attrClass,
-        style: _attrStyle,
-        ...inputAttrs
-      } = attrs as Record<string, unknown>;
-
-      const labelValue = slots.default?.() as VNodeChild;
-
+    if (group) onScopeDispose(group.registerChecked(syncChecked));
+    const onChange = (event: Event) => {
+      if (!input.value) return;
+      if (!disabled.value) {
+        const requested = input.value.checked;
+        if (!group) setInnerChecked(requested);
+        emit('update:checked', requested);
+        emit('change', event, requested);
+        if (group && requested && props.value !== undefined) group.onChange(props.value, event);
+      }
+      // Native same-name activation also unchecks the accepted sibling; restore the entire owner.
+      void nextTick(() => (group ? group.syncChecked() : syncChecked()));
+    };
+    onMounted(() => {
+      syncChecked();
+      if (props.autoFocus && !disabled.value) input.value?.focus();
+    });
+    const semanticProps = computed<RadioProps>(() => ({
+      ...props,
+      checked: checked.value,
+      disabled: disabled.value,
+    }));
+    const info = computed(() => ({ props: semanticProps.value }));
+    const classNames = computed(() =>
+      mergeClassNames<RadioSemanticClassNames>(
+        resolveSemantic(context.classNames, info.value),
+        resolveSemantic(props.classNames, info.value),
+      ),
+    );
+    const styles = computed(() =>
+      mergeStyles<RadioSemanticStyles>(
+        resolveSemantic(context.styles, info.value),
+        context.style ? { root: context.style } : undefined,
+        resolveSemantic(props.styles, info.value),
+      ),
+    );
+    const { onLabelClick, onInputClick } = useBubbleLock(
+      () => (event: MouseEvent) => emit('click', event),
+    );
+    const focus = (options?: FocusOptions): void => {
+      input.value?.focus(options);
+    };
+    const blur = (): void => {
+      input.value?.blur();
+    };
+    const renderRadio = () => {
+      const cls = prefix.value;
+      const { class: _class, style: _style, ...inputAttrs } = attrs;
+      const label = slots.default?.();
       return h(
         'label',
         {
-          class: wrapperClassString,
-          // 根 `style` 是 Vue 原生 attrs（`_attrStyle` 已从 inputAttrs 里摘出）
-          ...styleAttrs({
-            ...mergedStyles.value.root,
-            ...((_attrStyle as CSSProperties | undefined) ?? {}),
-          }),
+          class: [
+            `${cls}-wrapper`,
+            {
+              [`${cls}-wrapper-checked`]: checked.value,
+              [`${cls}-wrapper-disabled`]: disabled.value,
+              [`${cls}-wrapper-rtl`]: context.direction === 'rtl',
+              [`${cls}-wrapper-in-form-item`]: form.value.isFormItemInput,
+              [`${cls}-wrapper-block`]: group?.block,
+            },
+            context.className,
+            attrs.class,
+            classNames.value.root,
+          ],
+          style: [themeStyle.value, styles.value.root, attrs.style],
           title: props.title,
-          onMouseenter: callbacks.onMouseEnter,
-          onMouseleave: callbacks.onMouseLeave,
+          onMouseenter: (event: MouseEvent) => emit('mouseenter', event),
+          onMouseleave: (event: MouseEvent) => emit('mouseleave', event),
           onClick: onLabelClick,
         },
         [
           h(
             'span',
             {
-              class: radioClassString,
-              ...styleAttrs(mergedStyles.value.icon),
-              ref: holderRef,
+              ref: nativeElement,
+              class: [
+                cls,
+                classNames.value.icon,
+                {
+                  [WAVE_TARGET_CLS]: !isButton.value,
+                  [`${cls}-checked`]: checked.value,
+                  [`${cls}-disabled`]: disabled.value,
+                },
+              ],
+              style: styles.value.icon,
             },
             [
               h('input', {
                 ...inputAttrs,
                 class: `${cls}-input`,
-                // ⚠️ 上游 radio.test「Radio type should not be override」：恒为 radio
                 type: 'radio',
-                ref: inputRef,
-                name: groupContext ? groupContext.name : props.name,
+                ref: input,
+                name: group ? group.name : props.name,
                 value: props.value,
-                checked: effectiveChecked.value,
-                disabled: mergedDisabled.value,
+                checked: checked.value,
+                disabled: disabled.value,
                 id: props.id,
                 required: props.required,
                 tabIndex: props.tabIndex,
                 autofocus: props.autoFocus,
+                onChange,
                 onClick: onInputClick,
-                onChange: onInternalChange,
+                onFocus: (event: FocusEvent) => emit('focus', event),
+                onBlur: (event: FocusEvent) => emit('blur', event),
+                onKeydown: (event: KeyboardEvent) => emit('keydown', event),
+                onKeypress: (event: KeyboardEvent) => emit('keypress', event),
               }),
             ],
           ),
-          isRenderable(labelValue)
+          !isEmptyVNode(label)
             ? h(
                 'span',
-                {
-                  class: [`${cls}-label`, mergedClassNames.value.label],
-                  ...styleAttrs(mergedStyles.value.label),
-                },
-                [labelValue],
+                { class: [`${cls}-label`, classNames.value.label], style: styles.value.label },
+                [label],
               )
             : null,
         ],
       );
     };
+    return { input, nativeElement, focus, blur, renderRadio };
+  },
+  render() {
+    return this.renderRadio();
   },
 });
-
 export const Radio = RadioComponent;
 export default Radio;
