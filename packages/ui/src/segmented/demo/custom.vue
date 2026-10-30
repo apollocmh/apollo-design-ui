@@ -1,7 +1,8 @@
 <script setup lang="ts">
 // 对齐 antd 的 custom demo。
 // ⚠️ demo 替换登记：antd 用 Avatar（P5 未落地）—— 按仓库约定用等价原生结构替换。
-import { Segmented } from '@apollo-design/ui';
+import { Segmented, type SegmentedOptions } from '@apollo-design/ui';
+import { h } from 'vue';
 
 const users = [
   { label: 'User 1', value: 'user1', tooltip: { title: 'hello user1', color: 'gold' } },
@@ -9,10 +10,10 @@ const users = [
   { label: 'User 3', value: 'user3', tooltip: { title: 'hello user3', color: 'geekblue' } },
 ];
 
-const seasons = [
+const seasons: SegmentedOptions = [
   { label: 'Spring', value: 'spring' },
   { label: 'Summer', value: 'summer' },
-  { label: 'Autumn', value: 'autumn' },
+  { label: [h('b', 'Autumn'), ' 🍂'], value: 'autumn' },
   { label: 'Winter', value: 'winter' },
 ];
 </script>

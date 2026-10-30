@@ -14,6 +14,7 @@ export const Segmented = withInstall(SegmentedComponent);
 export default Segmented;
 
 export type {
+  SegmentedEmits,
   SegmentedLabeledOption,
   SegmentedLabeledOptionWithIcon,
   SegmentedLabeledOptionWithoutIcon,
@@ -24,6 +25,7 @@ export type {
   SegmentedRef,
   SegmentedSemanticClassNames,
   SegmentedSemanticStyles,
+  SegmentedSemanticTypeInput,
   SegmentedValue,
 } from './interface';
 export { genSegmentedStyle, genTokenDecls as genSegmentedTokenDecls } from './style';

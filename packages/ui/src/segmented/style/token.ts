@@ -37,7 +37,7 @@ export interface ComponentToken {
   /** 选项选中文字色（= colorText）。 */
   itemSelectedColor: string;
   /** 控件容器 padding（= lineWidthBold）。 */
-  trackPadding: number;
+  trackPadding: number | string;
   /** 控件容器背景色（= colorBgLayout）。 */
   trackBg: string;
 }

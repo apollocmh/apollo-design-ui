@@ -12,7 +12,7 @@ import { waitFrames } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h, nextTick, ref } from 'vue';
-import { Segmented } from '../index';
+import { Segmented, type SegmentedValue } from '../index';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -75,14 +75,14 @@ describe('Segmented · 基本行为', () => {
   // rc：should be controlled by value
   it('受控：value 变化驱动选中', async () => {
     const onChange = vi.fn();
-    const value = ref('Daily');
+    const value = ref<SegmentedValue>('Daily');
     const App = defineComponent({
       setup() {
         return () =>
           h(Segmented, {
             options: OPTIONS,
             value: value.value,
-            onChange: (v: string) => {
+            onChange: (v: SegmentedValue) => {
               value.value = v;
               onChange(v);
             },

@@ -19,13 +19,14 @@ a11yDemoTest('Segmented', {
 });
 
 describe('Segmented · ARIA 契约', () => {
-  it('根元素：radiogroup + 硬编码 aria-label + orientation', () => {
+  it('radiogroup 提供名称和方向，当前原生 radio 是唯一 Tab 入口', () => {
     const w = mount(Segmented, { props: { options: ['A', 'B'] } });
     const root = w.find('.apollo-segmented');
     expect(root.attributes('role')).toBe('radiogroup');
     expect(root.attributes('aria-label')).toBe('segmented control');
     expect(root.attributes('aria-orientation')).toBe('horizontal');
-    expect(root.attributes('tabindex')).toBe('0');
+    expect(root.attributes('tabindex')).toBeUndefined();
+    expect(w.findAll('input').map((input) => input.attributes('tabindex'))).toEqual(['0', '-1']);
   });
 
   it('vertical 时 aria-orientation=vertical', () => {
@@ -36,6 +37,11 @@ describe('Segmented · ARIA 契约', () => {
   it('整组禁用：根元素不接收焦点（tabindex 移除）', () => {
     const w = mount(Segmented, { props: { options: ['A', 'B'], disabled: true } });
     expect(w.find('.apollo-segmented').attributes('tabindex')).toBeUndefined();
+    expect(
+      w
+        .findAll('input')
+        .every((input) => input.element.disabled && input.attributes('tabindex') === '-1'),
+    ).toBe(true);
   });
 
   it('label 包 input：文本即可访问名', () => {

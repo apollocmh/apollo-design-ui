@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 179,
+  "revision": 181,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -894,7 +894,17 @@
           }
         ],
         "boundary": "Strict types pending root single narrow vue-tsc. Source, runtime tests, migrated demos and fixture are stable. Existing U13 a11y allowances retained, no new waiver; final frozen nine dimensions, published artifacts, visual baselines and full library checks were not run. Initial editor identity failure was VTU global Teleport-stub remount, and raw DOM draft mutation without input notification; final test uses real Teleport and real partial hex input with all identity/focus/draft assertions retained."
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/segmented",
+            "packages/ui/src/color-picker/components/PanelPicker.vue"
+          ],
+          "change": "Actual Segmented owned-event and complete option-content consumer retains ColorPicker panel selection behavior.",
+          "verification": "CMP:segmented records actual ColorPicker core consumers and scoped strict; existing ColorPicker delivery retained."
+        }
+      ]
     },
     {
       "id": "CMP:config-provider",
@@ -3022,18 +3032,16 @@
       "kind": "component",
       "ref": "segmented",
       "title": "Segmented",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/segmented"
       ],
-      "assignment": {
-        "owner": "native_color_picker",
-        "baseRevision": 172,
-        "startedAt": "2026-10-30T22:16:23.108Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -3050,6 +3058,152 @@
           "packages/ui/src/segmented/README.md",
           "packages/ui/src/segmented/__tests__/keyboard.test.ts"
         ]
+      },
+      "verification": {
+        "task": "CMP:segmented",
+        "owner": "native_color_picker",
+        "base": "314ae835",
+        "sourceFrozen": true,
+        "scope": [
+          "packages/ui/src/segmented"
+        ],
+        "implemented": [
+          "Owned update:value/change/keydown emits; current listener arrays use Vue dispatch, no attrs callback channel. Native keydown notification precedes cancellable/IME-safe navigation.",
+          "Full root attrs/class/StyleValue; actual option label id and radio value; complete VNodeChild option data including 0/arrays/Fragment; icon-only native names. No new content slots or compatibility API.",
+          "Accepted model restores rejected browser checked state; control removal preserves accepted value; default/first available batch initializes once without change; reorder/removal preserves chosen scalar identity.",
+          "One enabled radio Tab entry, RTL navigation, disabled skip, accepted-only focus; independent default native names; actual nullable root getter verified in compiled SFC/remount.",
+          "Reactive disabled/size/direction/semantic Provider with explicit false override; real SegmentedProps/CSSProperties semantic types; all eight live component tokens incl number/string trackPadding and removal.",
+          "MotionThumb owned start/end emits, post-flush scoped measurement, per-animation identity and stale-end isolation, option/layout invalidation, unmount cancellation; vertical height transition. Existing Motion algorithms untouched."
+        ],
+        "kept": [
+          "Existing23-case reference DOM baseline unchanged, incl harmless duplicate vertical class.",
+          "Existing core/keyboard/Demo/a11y/theme evidence and Motion5a973c87/getElement3700d8aa work preserved.",
+          "Actual data-driven option tooltip/algorithm callbacks retained; no shared-layer files changed."
+        ],
+        "migration": [
+          "onChange remains the h() listener but is now owned change emits; templates use @change.",
+          "Default root tabindex=0 removed; actual selected/first enabled radio is sole entry.",
+          "label/icon unknown -> VNodeChild, Record semantic styles -> CSSProperties, semantic callback info -> actual SegmentedProps.",
+          "SegmentedOptions accepts readonly arrays; trackPadding public type is number|string.",
+          "Root owns exports SegmentedEmits/SegmentedSemanticTypeInput and COMPATIBILITY integration; local index synchronized.",
+          "size uses existing shared SizeType, including medium, rather than an incomplete local three-value union; runtime mapping unchanged."
+        ],
+        "checks": [
+          {
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/segmented packages/ui/src/color-picker/__tests__/index.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "durationMs": 32550,
+            "result": "5files/74passed; actual ColorPicker mode consumer included",
+            "log": "/tmp/apollo-segmented-core-consumer-final.log",
+            "kind": "core",
+            "signal": null
+          },
+          {
+            "command": "node node_modules/vitest/vitest.mjs run --project a11y packages/ui/src/segmented/__tests__/a11y.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "durationMs": 24630,
+            "result": "21passed; existing16Demo checks + actual native radio entry/disabled/label scenarios",
+            "log": "/tmp/apollo-segmented-a11y-final.log",
+            "kind": "a11y",
+            "signal": null
+          },
+          {
+            "command": "node node_modules/vitest/vitest.mjs run --project dom-contract packages/ui/src/segmented/__tests__/semantic.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "durationMs": 4940,
+            "result": "24passed; existing23reference cases+coverage; no baseline change/extra allowances",
+            "log": "/tmp/apollo-segmented-semantic-final-green.log",
+            "kind": "dom-contract",
+            "signal": null
+          },
+          {
+            "command": "node packages/ui/src/segmented/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "durationMs": 5260,
+            "result": "Compiled model/ref, native checked refusal, FormData, single tab entry, RTL accepted focus, independent groups, rapid/vertical real transitionend, theme removal/remount/unmount; zero captured browser errors/warnings",
+            "log": "/tmp/apollo-segmented-native-browser-final.log",
+            "kind": "browser",
+            "signal": null
+          },
+          {
+            "command": "node node_modules/@biomejs/biome/bin/biome check [15supported changed owned files]",
+            "exitCode": 0,
+            "durationMs": 119,
+            "result": "15files no fixes/warnings",
+            "log": "/tmp/apollo-segmented-format-final.log",
+            "kind": "lint",
+            "signal": null
+          },
+          {
+            "command": "git diff --check -- packages/ui/src/segmented",
+            "exitCode": 0,
+            "kind": "diff",
+            "signal": null
+          },
+          {
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/ui/src/segmented/interface.ts packages/ui/src/segmented/__tests__/index.test.ts packages/ui/src/segmented/__tests__/native-contracts.test.ts packages/ui/src/segmented/__tests__/type.test-d.ts",
+            "exitCode": 0,
+            "result": "4files no fixes; scoped diff0 after pure type corrections",
+            "kind": "lint",
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "node node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/.apollo-current-segmented-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53366,
+            "result": "All owned source/type/native SFC/16 Demo and real ColorPicker consumers/root exports; root strict and declaration unchanged. Exact final source hashes match.",
+            "log": "/tmp/apollo-segmented-final-types.log"
+          }
+        ],
+        "failedChecks": [
+          {
+            "log": "/tmp/apollo-segmented-native-red.log",
+            "result": "Original native core:7failed+1unhandled callbacks.onChange array TypeError; red wrapper ended with cat so shell0 is not treated as pass/actual Vitest exit proof."
+          },
+          {
+            "result": "Intermediate compiled-ref1failure exposed newly-added options.expose overwriting real setup getter; removed that option and retained actual fixture assertion. Final10 native core passed. Intermediate failing log was overwritten by the later targeted10pass log; transcript retains the failure, so the green log is not cited as red evidence."
+          },
+          {
+            "exitCode": 1,
+            "result": "Browser first run locator incorrectly scoped an external ancestor inside label has query; fixed only locator, no retry/filter/production workaround.",
+            "log": "/tmp/apollo-segmented-native-browser.log"
+          },
+          {
+            "exitCode": 1,
+            "result": "Semantic first run22pass/2fail on removed duplicate vertical class; restored existing class, no allowance/baseline change.",
+            "log": "/tmp/apollo-segmented-semantic-final.log"
+          },
+          {
+            "exitCode": 1,
+            "result": "Biome does not process Markdown; docs-only invocation had0files, not counted as validation. Final supported-file formatting and scoped whitespace checks passed."
+          },
+          {
+            "command": "root frozen Segmented scoped strict",
+            "exitCode": 2,
+            "durationMs": 50063,
+            "log": "/tmp/apollo-segmented-batch-types.log",
+            "result": "Only3: two string-only test model/callback annotations against actual string|number events, and semantic size missing existing shared medium. Fixed real declarations/test models, kept h/precise checks; no any/Ctor/callback-interface workaround."
+          },
+          {
+            "command": "complete scoped source/type/SFC check before exact SizeType/model fixes",
+            "exitCode": 2,
+            "durationMs": 50063,
+            "log": "/tmp/apollo-segmented-batch-types.log",
+            "result": "Three real narrow-size/model/callback diagnostics corrected without removing scenarios or forcing a constructor."
+          }
+        ],
+        "pending": [],
+        "boundaries": [
+          "Final frozen-library nine-dimension/release/visual matrix not run.",
+          "Unchanged full theme matrix reused as historical only; new live8Token checks/core and actual CSS/browser cover present changes.",
+          "A11y jsdom emitted existing canvas getContext capability notices; no test failure, not browser contrast-matrix proof.",
+          "Semantic projection omits native radio value/tabindex; these are explicitly covered by native/a11y/real browser checks."
+        ],
+        "timing": "Claim2026-10-30T22:16:23Z; first red06:21:53local, first core06:24:08local. Final core began06:32:46local. Analysis/implementation/test work overlapped; no fabricated exact split or new instrumentation. Independent source freeze sent before other four tasks finished.",
+        "stage": "architecture",
+        "passed": true
       }
     },
     {

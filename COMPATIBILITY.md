@@ -222,3 +222,7 @@ Table 的顶层 title/footer/summary/expandedRowRender/expandIcon/emptyText 内�
 ### D-radio-native-input-and-group
 
 Radio/RadioButton 的 change 改为 `(event: Event, checked: boolean)`，RadioGroup 的 change 改为 `(value: RadioValue, event: Event)`，分别保留 checked/value 模型；RadioChangeEvent 仅为原生 Event 别名，不再构造 target/nativeEvent 包装。选项 change 同步原生双参，Table 保留同一事件，Calendar/Header Demo 使用已有 update:value。移除无实际职责的 Radio skipGroup/type/optionType 声明，Group 的 optionType 保留。修正当前 Provider/十六 Token、完整内容和原生 attrs、选项身份/焦点、Button 引用与单次通知；已交付的受控整组 DOM 恢复继续保留，详见[Radio API](packages/ui/src/radio/index.zh-CN.md)。
+
+### D-segmented-native-selection
+
+Segmented 的 change/keydown 由 Vue emits 拥有，value 模型保持；原生 attrs/style 落真实根，选项 id 与表单 value 真实消费。label/icon 使用完整 VNodeChild，语义样式使用 CSSProperties 与当前 SegmentedProps，尺寸接共享 SizeType（含 medium）。选中或首个可用 radio 是唯一 Tab 入口，拒绝提议后恢复已接受的勾选与焦点，RTL/IME/取消默认行为同步修正。当前八 Token 和快速反向 thumb 动效读取有效配置并清理失效资源；原 DOM 参考保留，详见[Segmented API](packages/ui/src/segmented/index.zh-CN.md)。

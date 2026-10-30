@@ -82,7 +82,7 @@ Display multiple options and allow users to select a single one.
 | disabled | Disable all items | boolean | false |
 | options | Set the options | `SegmentedOptions` | [] |
 | shape | Set the shape | `'default' \| 'round'` | 'default' |
-| size | Set the size | `'small' \| 'middle' \| 'large'` | 'middle' |
+| size | Set the size | `'small' \| 'middle' \| 'medium' \| 'large'` | 'middle' |
 | value | Controlled value | SegmentedValue | - |
 | defaultValue | Initial value; falls back to the first option | SegmentedValue | - |
 | name | Native `name` of the inner radio inputs | string | auto-generated |
@@ -96,7 +96,26 @@ Display multiple options and allow users to select a single one.
 | Event | Description | Arguments |
 | --- | --- | --- |
 | update:value | Value changed (for `v-model:value`) | `(value: SegmentedValue) => void` |
-| onChange | Value changed | `(value: SegmentedValue) => void` |
+| change | Propose a changed value | `(value: SegmentedValue) => void` |
+| keydown | Native keyboard event before navigation; supports `preventDefault()` | `(event: KeyboardEvent) => void` |
+
+Both value notifications are Vue events. Use `@change` / `v-model:value` in templates and `onChange` / `onUpdate:value` with `h()`; listeners are no longer called manually through attrs.
+
+A controlled parent may reject a request: the actual radio checked state is restored. Releasing control retains the last accepted value. Initialization uses `defaultValue`, or the first option when options first become available. Later reordering/removal does not silently change it; a missing accepted value leaves every option unchecked.
+
+Native class, complete style (objects, strings or arrays), id, ARIA/data and listeners land on the real root div. Native style overrides semantic root style. The root adds no default Tab stop; the enabled selected radio, or first enabled radio, is the single entry. Arrows wrap enabled items; horizontal RTL reverses left/right. Native cancellation and composition suppress navigation. Keyboard focus moves only after the parent accepts the requested value.
+
+Current ConfigProvider disabled, size, direction and `components.segmented` semantic configuration remain reactive, including removal; explicit `disabled=false` overrides global disabled.
+
+### SegmentedOptions
+
+Options accept scalar values or `{ value, label?, icon?, disabled?, title?, className?, id?, tooltip? }`. Data label/icon use complete Vue `VNodeChild`, including zero, arrays and Fragments; render callbacks are unsupported. A label is required without an icon. The options array may be readonly. Option id lands on its label; the native radio submits the string form of the value while events preserve the original scalar type. Icon-only items use title or value as their accessible name; supply meaningful titles.
+
+### Ref
+
+```ts
+interface SegmentedRef { nativeElement: HTMLDivElement | null }
+```
 
 ### SegmentedValue
 
@@ -116,3 +135,5 @@ type SegmentedValue = string | number;
 | itemSelectedColor | Text color when selected | colorText |
 | trackPadding | Padding of container | lineWidthBold |
 | trackBg | Background of container | colorBgLayout |
+
+`trackPadding` accepts a number (px) or CSS length string; the other seven tokens accept CSS strings. All eight `theme.components.Segmented` overrides reach the real root and respond to replacement/removal.

@@ -2,12 +2,12 @@
 // 对齐 antd 的 style-class demo（含函数式 styles）
 
 import { CloudOutlined, RocketOutlined, ThunderboltOutlined } from '@apollo-design/icons';
-import { Segmented } from '@apollo-design/ui';
+import { Segmented, type SegmentedProps } from '@apollo-design/ui';
 import { h } from 'vue';
 
 const classNames = { root: 'seg-demo-root' };
 
-const styleFn = (info: { props: { vertical?: boolean } }) => {
+const styleFn: NonNullable<SegmentedProps['styles']> = (info) => {
   if (info.props.vertical) {
     return {
       root: { border: '1px solid #77BEF0', padding: '4px', width: '100px' },

@@ -1676,6 +1676,7 @@ export { prepareRateComponentToken, Rate } from './rate';
 // Segmented —— 分段控制器
 // ---------------------------------------------------------------------------
 export type {
+  SegmentedEmits,
   SegmentedLabeledOption,
   SegmentedLabeledOptionWithIcon,
   SegmentedLabeledOptionWithoutIcon,
@@ -1686,6 +1687,7 @@ export type {
   SegmentedRef,
   SegmentedSemanticClassNames,
   SegmentedSemanticStyles,
+  SegmentedSemanticTypeInput,
   SegmentedValue,
 } from './segmented';
 export { Segmented } from './segmented';

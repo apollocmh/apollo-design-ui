@@ -19,7 +19,7 @@
  * RTL：水平方向用 `translateX(−right)`（右侧锚定）。
  *
  * 与 antd 的等价差异（PLATFORM）：React 的 useLayoutEffect 在浏览器绘制前同步
- * 执行；Vue 用 `watch + nextTick`（flush 后 DOM 已更新），测量时机等价。
+ * 执行；Vue 使用 post-flush watch，在已提交 DOM 上测量；卸载会取消未执行的测量。
  */
 
 import {
@@ -28,16 +28,7 @@ import {
   type MotionHooks,
   type MotionStyle,
 } from '@apollo-design/motion';
-import {
-  computed,
-  defineComponent,
-  h,
-  nextTick,
-  type PropType,
-  type Ref,
-  shallowRef,
-  watch,
-} from 'vue';
+import { computed, defineComponent, h, type PropType, type Ref, shallowRef, watch } from 'vue';
 
 /** 单边测量值（px）。 */
 interface ThumbMeasure {
@@ -96,44 +87,55 @@ export const MotionThumb = defineComponent({
     vertical: { type: Boolean, default: false },
     direction: { type: String as PropType<'ltr' | 'rtl' | undefined>, default: undefined },
     supportMotion: { type: Boolean as PropType<boolean | undefined>, default: undefined },
-    onMotionStart: { type: Function as PropType<() => void>, default: undefined },
-    onMotionEnd: { type: Function as PropType<() => void>, default: undefined },
   },
-  setup(props) {
+  emits: { motionStart: () => true, motionEnd: () => true },
+  setup(props, { emit }) {
     const prevStyle = shallowRef<ThumbMeasure | null>(null);
     const nextStyle = shallowRef<ThumbMeasure | null>(null);
     /** 上一次渲染使用的 value（rc 的 prevValue 判据：仅跨值才动画）。 */
     let prevValue = props.value;
+    const motionId = shallowRef(0);
 
     /** 与 rc 的 findValueElement 对齐：按 index 找 item 元素；offsetParent 为空视为不可动画。 */
     const findValueElement = (val: string | number | undefined): HTMLElement | null => {
       const index = props.getValueIndex(val);
       const items = props.containerRef.value?.querySelectorAll<HTMLElement>(
-        `.${props.prefixCls}-item`,
+        `:scope > .${props.prefixCls}-group > .${props.prefixCls}-item`,
       );
       const ele = items?.[index];
       return ele?.offsetParent ? ele : null;
     };
 
+    const finish = () => {
+      const active = prevStyle.value !== null || nextStyle.value !== null;
+      prevStyle.value = null;
+      nextStyle.value = null;
+      if (active) emit('motionEnd');
+    };
+    // Post-flush sees the actual option DOM. Vue stops the watcher on unmount;
+    // there is no uncancellable nextTick measurement callback left behind.
     watch(
-      () => props.value,
-      (value) => {
-        if (prevValue === value) return;
-        nextTick(() => {
-          const prev = findValueElement(prevValue);
-          const next = findValueElement(value);
-          const calcPrev = calcThumbStyle(prev, props.vertical);
-          const calcNext = calcThumbStyle(next, props.vertical);
-          prevValue = value;
-          if (calcPrev && calcNext) {
-            prevStyle.value = calcPrev;
-            nextStyle.value = calcNext;
-            props.onMotionStart?.();
-          } else {
-            props.onMotionEnd?.();
-          }
-        });
+      () => [props.value, props.vertical, props.direction, props.getValueIndex(props.value)],
+      () => {
+        const value = props.value;
+        if (prevValue === value) {
+          // Option/layout changes invalidate the old geometry, not the value.
+          finish();
+          return;
+        }
+        const previous = calcThumbStyle(findValueElement(prevValue), props.vertical);
+        const next = calcThumbStyle(findValueElement(value), props.vertical);
+        prevValue = value;
+        if (!previous || !next) {
+          finish();
+          return;
+        }
+        prevStyle.value = previous;
+        nextStyle.value = next;
+        motionId.value += 1;
+        emit('motionStart');
       },
+      { flush: 'post' },
     );
 
     // ---- CSS 变量值（rc 的 thumbStart / thumbActive）----
@@ -187,11 +189,6 @@ export const MotionThumb = defineComponent({
               width: 'var(--thumb-active-width)',
             },
     };
-    const onVisibleChanged = (): void => {
-      prevStyle.value = null;
-      nextStyle.value = null;
-      props.onMotionEnd?.();
-    };
 
     return () => {
       // rc 判据：prevStyle / nextStyle 缺一就不渲染（无动画队列时不挂 thumb）
@@ -199,14 +196,18 @@ export const MotionThumb = defineComponent({
       const next = nextStyle.value;
       if (!prev || !next) return null;
 
+      const currentMotion = motionId.value;
       return h(
         CSSMotion,
         {
+          key: currentMotion,
           visible: true,
           motionName: props.motionName,
           motionAppear: true,
           hooks,
-          onVisibleChanged,
+          onVisibleChanged: () => {
+            if (currentMotion === motionId.value) finish();
+          },
           supportMotion: props.supportMotion,
         },
         {

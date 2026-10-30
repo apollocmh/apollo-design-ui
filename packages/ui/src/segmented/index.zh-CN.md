@@ -86,7 +86,7 @@ import { Segmented } from '@apollo-design/ui';
 | disabled | 是否禁用 | boolean | false | |
 | options | 数据化配置选项 | `SegmentedOptions` | [] | |
 | shape | 形状 | `'default' \| 'round'` | 'default' | |
-| size | 控件尺寸 | `'small' \| 'middle' \| 'large'` | 'middle' | |
+| size | 控件尺寸 | `'small' \| 'middle' \| 'medium' \| 'large'` | 'middle' | |
 | value | 当前值（受控） | SegmentedValue | - | |
 | defaultValue | 初始值；未传时选中第一个选项 | SegmentedValue | - | |
 | name | 内部 radio input 的 `name` | string | 自动生成 | |
@@ -101,9 +101,16 @@ import { Segmented } from '@apollo-design/ui';
 | 事件名 | 说明 | 回调参数 |
 | --- | --- | --- |
 | update:value | 选中值变化（配合 `v-model:value`） | `(value: SegmentedValue) => void` |
-| onChange | 选中值变化 | `(value: SegmentedValue) => void` |
+| change | 请求选中值变化 | `(value: SegmentedValue) => void` |
+| keydown | 原生键盘事件；先于内部导航，可调用 `preventDefault()` | `(event: KeyboardEvent) => void` |
 
-> `onChange` 与 antd 一致作为 props 回调传入（`on-change` / `:onChange`），不经过 emits 声明。
+`change` 与 `update:value` 是 Vue 所属事件；模板使用 `@change` / `v-model:value`，`h()` 使用 `onChange` / `onUpdate:value`，不再手动调用 attrs 中的监听器。
+
+受控时仅提议更新，父级拒绝后恢复原生 radio 的实际勾选；撤控保留最后接受的值。`defaultValue` 只初始化一次，未提供时在首批选项到达后取第一项。后续重排或删除不静默改变选择；受控值不在选项中时保持该值且无项目勾选。
+
+原生 `class`、完整 `style`（对象、字符串、数组）、id、ARIA/data 与监听器落到实际根 div，native style 的优先级高于语义根样式。根本身不增加默认 Tab 停靠点，当前可用 radio（未命中时为首个可用项）是唯一 Tab 入口。方向键跳过禁用项并环绕；水平 RTL 反转左右方向，原生取消和输入法期间不导航。只有父级接受更新才移动键盘焦点。
+
+`ConfigProvider` 的当前禁用、尺寸、方向及 `components.segmented` 语义配置响应更新与撤回，组件 `disabled=false` 可显式覆盖全局禁用。
 
 ### SegmentedValue
 
@@ -115,27 +122,29 @@ type SegmentedValue = string | number;
 
 ```ts
 type SegmentedOption = SegmentedValue | SegmentedLabeledOption;
-type SegmentedOptions = SegmentedOption[];
+type SegmentedOptions = readonly SegmentedOption[];
 
 interface SegmentedLabeledOptionWithoutIcon {
   value: SegmentedValue;
-  label: unknown; // string | VNode
+  label: VNodeChild; // 完整 Vue 内容，包括数组和 Fragment
   disabled?: boolean;
   title?: string;
   className?: string;
   id?: string;
-  tooltip?: string | Omit<TooltipProps, 'children'>;
+  tooltip?: string | TooltipProps;
 }
 
 interface SegmentedLabeledOptionWithIcon {
   value: SegmentedValue;
-  icon: VNode;
-  label?: unknown;
+  icon: VNodeChild;
+  label?: VNodeChild;
   disabled?: boolean;
   title?: string;
-  tooltip?: string | Omit<TooltipProps, 'children'>;
+  tooltip?: string | TooltipProps;
 }
 ```
+
+内容通过选项数据提供，`label` / `icon` 接受完整 `VNodeChild`（含 0、数组和 Fragment），不接受未消费的渲染回调。`id` 落到对应 label；原生 radio 的 `value` 是选项值的字符串形式，事件保留原始 string/number 类型。图标选项无文本时以 `title` 或选项值提供原生访问名称，建议填写有意义的 title。
 
 ### Ref
 
@@ -157,3 +166,5 @@ interface SegmentedRef {
 | itemSelectedColor | 选项选中文字色 | colorText |
 | trackPadding | 控件容器 padding | lineWidthBold |
 | trackBg | 控件容器背景色 | colorBgLayout |
+
+`trackPadding` 支持数字（px）或 CSS 长度字符串；其余七项接受 CSS 字符串。通过 `theme.components.Segmented` 覆盖的八项均在实际根生效，并响应替换与移除。

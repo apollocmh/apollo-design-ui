@@ -254,6 +254,10 @@ export function genSegmentedStyle(rootPrefixCls: string): string {
     `  will-change:transform,width;`,
     `  transition:transform ${v('motionDurationSlow')} ${v('motionEaseInOut')},width ${v('motionDurationSlow')} ${v('motionEaseInOut')};`,
     `}`,
+    `${root}-vertical ${thumb}-motion-appear-active{`,
+    `  will-change:transform,height;`,
+    `  transition:transform ${v('motionDurationSlow')} ${v('motionEaseInOut')},height ${v('motionDurationSlow')} ${v('motionEaseInOut')};`,
+    `}`,
     // ---- shape: round ----
     `${root}-shape-round{`,
     `  border-radius:9999px;`,
