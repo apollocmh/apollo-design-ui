@@ -21,6 +21,7 @@ interface ColorHsbInputProps {
   prefixCls: string;
   value?: AggregationColor;
   onChange?: (value: AggregationColor) => void;
+  disabled?: boolean;
 }
 
 defineOptions({ name: 'AColorHsbInput', inheritAttrs: false });
@@ -28,6 +29,7 @@ defineOptions({ name: 'AColorHsbInput', inheritAttrs: false });
 const props = withDefaults(defineProps<ColorHsbInputProps>(), {
   value: undefined,
   onChange: undefined,
+  disabled: undefined,
 });
 
 const internalValue = ref<AggregationColor>(generateColor(props.value || '#000'));
@@ -58,6 +60,7 @@ const percentFormatter: InputNumberProps['formatter'] = (step) =>
 <template>
   <div :class="`${prefixCls}-hsb-input`">
     <ColorSteppers
+      :disabled="disabled"
       :max="360"
       :min="0"
       :value="Number(hsbValue.toHsb().h)"
@@ -67,6 +70,7 @@ const percentFormatter: InputNumberProps['formatter'] = (step) =>
       @change="onHueChange"
     />
     <ColorSteppers
+      :disabled="disabled"
       :max="100"
       :min="0"
       :value="Number(hsbValue.toHsb().s) * 100"
@@ -76,6 +80,7 @@ const percentFormatter: InputNumberProps['formatter'] = (step) =>
       @change="onSaturationChange"
     />
     <ColorSteppers
+      :disabled="disabled"
       :max="100"
       :min="0"
       :value="Number(hsbValue.toHsb().b) * 100"

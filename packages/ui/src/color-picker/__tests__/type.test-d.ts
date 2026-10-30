@@ -26,6 +26,7 @@
 
 import { describe, expectTypeOf, it } from 'vitest';
 import type { Component, CSSProperties, VNodeChild } from 'vue';
+import type { SizeType } from '../../config-provider/size-context';
 import type { TooltipPlacement } from '../../tooltip/interface';
 import type { AggregationColor } from '../color';
 import { ColorPicker, ColorPickerPurePanel } from '../index';
@@ -80,9 +81,9 @@ describe('ColorPicker · Props 类型', () => {
     expectTypeOf<Parameters<ColorPickerEmits['change']>[1]>().toEqualTypeOf<string>();
   });
 
-  it('`panelRender` 的第二个参数是 `ColorPickerPanelRenderExtra`（两个组件引用）', () => {
-    expectTypeOf<NonNullable<ColorPickerProps['panelRender']>>().parameters.toEqualTypeOf<
-      [panel: VNodeChild, extra: ColorPickerPanelRenderExtra]
+  it('panel slot exposes stable native component references', () => {
+    expectTypeOf<NonNullable<ColorPickerSlots['panelRender']>>().parameters.toEqualTypeOf<
+      [{ panel: Component; extra: ColorPickerPanelRenderExtra }]
     >();
     expectTypeOf<ColorPickerPanelRenderExtra['components']>().toEqualTypeOf<{
       Picker: Component;
@@ -90,10 +91,28 @@ describe('ColorPicker · Props 类型', () => {
     }>();
   });
 
-  it('`showText` 是 `boolean | ((color: AggregationColor) => VNodeChild)`', () => {
-    expectTypeOf<ColorPickerProps['showText']>().toEqualTypeOf<
-      boolean | ((color: AggregationColor) => VNodeChild) | undefined
+  it('showText enables default text; custom content uses its scoped slot', () => {
+    expectTypeOf<ColorPickerProps['showText']>().toEqualTypeOf<boolean | undefined>();
+    expectTypeOf<NonNullable<ColorPickerSlots['showText']>>().parameters.toEqualTypeOf<
+      [{ color: AggregationColor }]
     >();
+    expectTypeOf<ColorPickerProps>().not.toHaveProperty('panelRender');
+    expectTypeOf<ColorPickerProps['size']>().toEqualTypeOf<SizeType | undefined>();
+  });
+
+  it('the real constructor preserves emitted listener and slot parameters', () => {
+    type Props = InstanceType<typeof ColorPicker>['$props'];
+    type Slots = InstanceType<typeof ColorPicker>['$slots'];
+    expectTypeOf<NonNullable<Props['onChange']>>().parameters.toEqualTypeOf<
+      [AggregationColor, string]
+    >();
+    expectTypeOf<NonNullable<Props['onUpdate:value']>>().parameters.toEqualTypeOf<
+      [AggregationColor]
+    >();
+    expectTypeOf<NonNullable<Props['onUpdate:open']>>().parameters.toEqualTypeOf<[boolean]>();
+    expectTypeOf<NonNullable<Slots['panelRender']>>()
+      .parameter(0)
+      .toEqualTypeOf<{ panel: Component; extra: ColorPickerPanelRenderExtra }>();
   });
 
   it('`trigger` 只有两档（不像 Tooltip 有 4 档 + 数组）；`placement` = `TooltipPlacement`', () => {
@@ -191,7 +210,15 @@ describe('ColorPicker · 语义槽（不对称）', () => {
       ColorPickerSemanticValue<ColorPickerSemanticClassNames, ColorPickerProps>
     >().toEqualTypeOf<
       | ColorPickerSemanticClassNames
-      | ((info: { props: ColorPickerProps }) => ColorPickerSemanticClassNames)
+      | ((info: { props: ColorPickerProps }) => ColorPickerSemanticClassNames | undefined)
+    >();
+    type ClassNameFunction = Extract<
+      ColorPickerSemanticValue<ColorPickerSemanticClassNames, ColorPickerProps>,
+      (info: { props: ColorPickerProps }) => unknown
+    >;
+    expectTypeOf<ClassNameFunction>().parameters.toEqualTypeOf<[{ props: ColorPickerProps }]>();
+    expectTypeOf<ClassNameFunction>().returns.toEqualTypeOf<
+      ColorPickerSemanticClassNames | undefined
     >();
     expectTypeOf<NonNullable<ColorPickerProps['styles']>>().toEqualTypeOf<
       ColorPickerSemanticValue<ColorPickerSemanticStyles, ColorPickerProps>
@@ -201,10 +228,10 @@ describe('ColorPicker · 语义槽（不对称）', () => {
 
 describe('ColorPicker · 本组件「没有」的东西', () => {
   it('`children` 在 Vue 侧走**默认插槽**（`ColorPickerSlots`），`panelRender` 另有同名 scoped slot', () => {
-    expectTypeOf<keyof ColorPickerSlots>().toEqualTypeOf<'default' | 'panelRender'>();
+    expectTypeOf<keyof ColorPickerSlots>().toEqualTypeOf<'default' | 'panelRender' | 'showText'>();
     expectTypeOf<ColorPickerSlots['default']>().toEqualTypeOf<(() => VNodeChild) | undefined>();
     expectTypeOf<NonNullable<ColorPickerSlots['panelRender']>>().parameters.toEqualTypeOf<
-      [{ panel: VNodeChild; extra: ColorPickerPanelRenderExtra }]
+      [{ panel: Component; extra: ColorPickerPanelRenderExtra }]
     >();
     // 🚨 **负例**：`children` **不在**公开 Props 类型面上（registry `VNA-API-01`）。
     //
@@ -269,13 +296,17 @@ describe('ColorPicker · 负例（永不调用的闭包内）', () => {
 
   it('`showText` 与 `onChange` 的签名必须被守住', () => {
     const _never = () => {
-      // @ts-expect-error `showText` 是 `boolean | ((color) => VNodeChild)`
+      // @ts-expect-error showText accepts only boolean; custom text is a slot.
       const badText: ColorPickerProps = { showText: 'yes' };
+      // @ts-expect-error Public rendering uses #panelRender, not a function prop.
+      const badPanel: ColorPickerProps = { panelRender: () => null };
+      // @ts-expect-error Public rendering uses #showText, not a function prop.
+      const badTextRender: ColorPickerProps = { showText: () => 'old' };
       const badChange: ColorPickerProps = {
         // @ts-expect-error `onChange` 的第二个参数是 `string`（不是 info 对象）
         onChange: (_color: AggregationColor, _info: { css: string }) => {},
       };
-      return [badText, badChange];
+      return [badText, badChange, badPanel, badTextRender];
     };
     void _never;
   });

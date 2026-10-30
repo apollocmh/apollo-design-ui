@@ -14,11 +14,10 @@
  * `.ts` 而非 `.vue` 的理由：`COMPONENT-RULES.md` §2 条件 1（**纯渲染函数型内部件**）。
  */
 
-import { defineComponent, h, type PropType } from 'vue';
+import { type CSSProperties, defineComponent, h, type PropType } from 'vue';
 
 /** 内联样式的值面。⚠️ 数字**不会**被补 `px`（Vue 的 `patchStyle` 不做转换）——
  *  调用方一律传字符串；需要补单位时用 `_internal/to-css-size.ts` 的 `toCssSize`。 */
-type StyleLike = Record<string, string | number>;
 
 export const ColorBlock = defineComponent({
   name: 'AColorBlock',
@@ -27,20 +26,26 @@ export const ColorBlock = defineComponent({
     color: { type: String, required: true },
     prefixCls: { type: String, required: true },
     className: { type: String, default: undefined },
-    style: { type: Object as PropType<StyleLike>, default: undefined },
+    style: { type: Object as PropType<CSSProperties>, default: undefined },
     innerClassName: { type: String, default: undefined },
-    innerStyle: { type: Object as PropType<StyleLike>, default: undefined },
-    onClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
+    innerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+    interactive: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false },
+    label: { type: String, default: undefined },
   },
-  setup(props) {
+  emits: { click: (_event: MouseEvent) => true },
+  setup(props, { emit }) {
     return () => {
       const colorBlockCls = `${props.prefixCls}-color-block`;
       return h(
-        'div',
+        props.interactive ? 'button' : 'div',
         {
           class: [colorBlockCls, props.className],
           style: props.style,
-          onClick: props.onClick,
+          type: props.interactive ? 'button' : undefined,
+          disabled: props.interactive ? props.disabled : undefined,
+          'aria-label': props.interactive ? (props.label ?? props.color) : undefined,
+          onClick: (event: MouseEvent) => emit('click', event),
         },
         [
           h('div', {

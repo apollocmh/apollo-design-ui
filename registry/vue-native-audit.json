@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 100,
+  "revision": 102,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -499,18 +499,16 @@
       "kind": "component",
       "ref": "color-picker",
       "title": "ColorPicker",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/color-picker"
       ],
-      "assignment": {
-        "owner": "native_color_picker",
-        "baseRevision": 75,
-        "startedAt": "2026-10-30T10:30:38.540Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -527,6 +525,88 @@
         "basis": [
           "docs/audit/2026-10-24-dom-attrs-remediation.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/color-picker"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract --project theme --project a11y packages/ui/src/color-picker/__tests__ --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 29500,
+            "result": "9 files / 157 passed; no added waiver or changed raw reference. Later targeted native checks cover final fixes."
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/color-picker/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8280,
+            "result": "15 native contracts passed on final source, including real Teleport/editor draft and intentionally empty slots."
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/color-picker/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11981,
+            "result": "Real source/SFC keyboard, current Provider/styles/theme, stable editor/draft, alpha presets/clear, static flow, three updated original demos, unmount; diagnostics=[]"
+          },
+          {
+            "kind": "lint",
+            "command": "pnpm exec biome check <20 changed ColorPicker TS/mjs files>; node --check packages/ui/src/color-picker/__tests__/native-browser.mjs; git diff --check -- packages/ui/src/color-picker",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/color-picker/__tests__/native-contracts.test.ts -t 'custom trigger|intentional empty|conditional text' --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7430,
+            "result": "Final slot normalization: custom attrs/string styles/listeners, conditional content, empty slots, sibling arrays and scalar string/0 all passed; remaining 12 tests were intentionally outside this targeted rerun."
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full ColorPicker source/tests/demo/SFC>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 50668
+          }
+        ],
+        "implemented": [
+          "Owned events were already Vue emits; retained them and used shared accepted-state semantics for open/format.",
+          "Removed panelRender/showText rendering functions; typed scoped slots and stable native panel component references, complete conditional/empty content.",
+          "Current Provider/functional semantic styles, native StyleValue/attrs/custom trigger ownership, scoped theme aliases and one borrowed Popover owner channel.",
+          "Native trigger/preset/clear buttons and decorative clear graphic; gradient deletion emits one completion and keeps two stops; allowClear is honored.",
+          "Incoming disabledAlpha normalizes each gradient stop, preserves clear and suppresses the false clear warning. Declared numeric colors and numeric string channels normalize at the input boundary without casts.",
+          "Reactive drag disabling, close/cancel/unmount cleanup; PurePanel uses normal document flow without polling or size mirroring, forwarding actual attrs/events/panel slot."
+        ],
+        "reproductions": [
+          {
+            "command": "pnpm exec vitest run --project unit packages/ui/src/color-picker/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "durationMs": 6720,
+            "result": "Initial 8 failing contracts; ordinary gradient round-trip already passed and was preserved."
+          },
+          {
+            "command": "pnpm exec vitest run --project unit packages/ui/src/color-picker/__tests__/native-contracts.test.ts -t \"declared numeric\" --maxWorkers=1",
+            "exitCode": 1,
+            "durationMs": 11250,
+            "result": "Declared numeric AggregationColor input threw base-parser in-operator TypeError."
+          },
+          {
+            "command": "node packages/ui/src/color-picker/__tests__/native-browser.mjs",
+            "exitCode": 1,
+            "result": "Actual browser assertions completed; final diagnostics exposed disabledAlpha clear warning. Production condition was corrected; original strict diagnostics rerun now passes."
+          }
+        ],
+        "boundary": "Strict types pending root single narrow vue-tsc. Source, runtime tests, migrated demos and fixture are stable. Existing U13 a11y allowances retained, no new waiver; final frozen nine dimensions, published artifacts, visual baselines and full library checks were not run. Initial editor identity failure was VTU global Teleport-stub remount, and raw DOM draft mutation without input notification; final test uses real Teleport and real partial hex input with all identity/focus/draft assertions retained."
       }
     },
     {

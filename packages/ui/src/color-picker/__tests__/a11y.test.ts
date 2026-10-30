@@ -1,28 +1,4 @@
-/**
- * L5 无障碍 —— ColorPicker 的 role/ARIA 契约与 axe 扫描。
- *
- * ── 判据（antd 6.6.4）────────────────────────────────────────────────────────
- *
- * | 项 | 判据 | 出处 |
- * |---|---|---|
- * | 清空按钮 | `<div role="button" aria-label="Clear color">` —— **硬编码英文**，不进 locale | `components/ColorClear.tsx:44` |
- * | 清空按钮 · 禁用 | `aria-disabled` **只在禁用时出现**（`disabled \|\| undefined`，不是 `"false"`） | 同上 |
- * | 清空按钮 · 焦点 | `tabindex` **恒为** `-1 \| 0`（禁用 `-1`，否则 `0`） | 同上 |
- * | 清空按钮 · 键盘 | `Enter` / `Space` 触发清空（`preventDefault` + 走 click 路径） | 同上 |
- * | 触发器 | `<div class="{p}-trigger">` —— **不加 `role` / `tabindex`** | `components/ColorTrigger.tsx:110` |
- * | 面板输入 | `InputNumber`（数字）/ `Select`（格式）的 a11y 由**被复用组件**承担 | — |
- *
- * ⚠️ **为什么这几条必须钉**：ColorPicker 的**唯一**自有 a11y 面就是清空按钮
- * （触发器是纯 `div`，面板里的交互件全部复用 `InputNumber` / `Select` / `Slider`）。
- * 钉住清空按钮的三条属性与键盘路径，就覆盖了本组件的自有契约 —— 不去重复测
- * 别人的契约（`InputNumber` / `Select` 各自的 L5 已覆盖）。
- *
- * ⚠️ **面板在 Popover 浮层里**：`open` 受控为 `true` 才渲染，且走 Teleport 到
- * `document.body` ⇒ axe 必须扫 `document.body`（只扫触发器拿不到面板）。
- *
- * ⚠️ **`axe.run()` 不能与 `vi.useFakeTimers()` 共存**（PITFALLS 268）——
- * 本文件**不用**假定时器。
- */
+/** Native trigger, clear action, preset controls and existing axe coverage. */
 
 import { mount } from '@vue/test-utils';
 import axe from 'axe-core';
@@ -48,46 +24,44 @@ afterEach(() => {
 });
 
 describe('ColorPicker · role / ARIA 契约（L5）', () => {
-  it('🚨 清空按钮：`role="button"` + **硬编码英文** `aria-label="Clear color"`', async () => {
-    // 不传值 ⇒ cleared ⇒ 触发器渲染 ColorClear（`.{p}-clear`）
-    const w = await mountA11y();
-    const clear = w.find(`.${P}-trigger .${P}-clear`);
-
-    expect(clear.exists()).toBe(true);
-    expect(clear.attributes('role')).toBe('button');
+  it('the actual clear action is a named native button', async () => {
+    const w = await mountA11y({ defaultValue: '#1677ff', open: true, allowClear: true });
+    const clear = w.get(`.${P}-operation .${P}-clear`);
+    expect(clear.element.tagName).toBe('BUTTON');
+    expect(clear.attributes('type')).toBe('button');
     expect(clear.attributes('aria-label')).toBe('Clear color');
     w.unmount();
   });
 
-  it('🚨 `aria-disabled` **只在禁用时出现**（不是 `aria-disabled="false"`）', async () => {
-    const enabled = await mountA11y();
-    expect(enabled.find(`.${P}-trigger .${P}-clear`).attributes('aria-disabled')).toBeUndefined();
-    enabled.unmount();
-
-    const disabled = await mountA11y({ disabled: true });
-    const clear = disabled.find(`.${P}-trigger .${P}-clear`);
-    expect(clear.attributes('aria-disabled')).toBe('true');
-    expect(clear.classes()).toContain(`${P}-clear-disabled`);
-    disabled.unmount();
+  it('the native trigger owns disabled state and cannot open while disabled', async () => {
+    const w = await mountA11y({ disabled: true });
+    const trigger = w.get(`.${P}-trigger`);
+    expect(trigger.attributes('disabled')).toBe('');
+    expect(trigger.attributes('aria-expanded')).toBe('false');
+    await trigger.trigger('click');
+    expect(w.emitted('openChange')).toBeUndefined();
+    w.unmount();
   });
 
-  it('🚨 `tabindex` 恒存在且恒为 `-1 | 0`', async () => {
-    const enabled = await mountA11y();
-    expect(enabled.find(`.${P}-trigger .${P}-clear`).attributes('tabindex')).toBe('0');
-    enabled.unmount();
-
-    const disabled = await mountA11y({ disabled: true });
-    expect(disabled.find(`.${P}-trigger .${P}-clear`).attributes('tabindex')).toBe('-1');
-    disabled.unmount();
+  it('the cleared decoration adds no second tab stop or interactive role', async () => {
+    const w = await mountA11y();
+    const clear = w.get(`.${P}-trigger .${P}-clear`);
+    expect(clear.element.tagName).toBe('SPAN');
+    expect(clear.attributes('aria-hidden')).toBe('true');
+    expect(clear.attributes('role')).toBeUndefined();
+    expect(clear.attributes('tabindex')).toBeUndefined();
+    w.unmount();
   });
 
-  it('触发器本身是纯 `div`（不加 `role` / `tabindex` —— 上游如此）', async () => {
+  it('the trigger is a native dialog button with current expanded state', async () => {
     const w = await mountA11y({ defaultValue: '#1677ff' });
-    const trigger = w.find(`.${P}-trigger`);
-
-    expect(trigger.element.tagName).toBe('DIV');
-    expect(trigger.attributes('role')).toBeUndefined();
-    expect(trigger.attributes('tabindex')).toBeUndefined();
+    const trigger = w.get(`.${P}-trigger`);
+    expect(trigger.element.tagName).toBe('BUTTON');
+    expect(trigger.attributes('aria-haspopup')).toBe('dialog');
+    expect(trigger.attributes('aria-expanded')).toBe('false');
+    await trigger.trigger('click');
+    await nextTick();
+    expect(trigger.attributes('aria-expanded')).toBe('true');
     w.unmount();
   });
 

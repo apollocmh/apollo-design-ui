@@ -204,7 +204,7 @@ function genColorPickerRules(p: string): string {
     `${I} .${p}-color-picker-presets-items{display:flex;flex-wrap:wrap;gap:calc(${v(
       'marginXXS',
     )} * 1.5);}`,
-    `${I} .${p}-color-picker-presets-items .${p}-color-picker-presets-color{position:relative;cursor:pointer;width:var(--${p}-color-picker-preset-color-size);height:var(--${p}-color-picker-preset-color-size);}`,
+    `${I} .${p}-color-picker-presets-items .${p}-color-picker-presets-color{position:relative;cursor:pointer;padding:0;border:0;width:var(--${p}-color-picker-preset-color-size);height:var(--${p}-color-picker-preset-color-size);}`,
     `${I} .${p}-color-picker-presets-items .${p}-color-picker-presets-color::before{content:"";pointer-events:none;width:calc(var(--${p}-color-picker-preset-color-size) + ${v(
       'lineWidth',
     )} * 4);height:calc(var(--${p}-color-picker-preset-color-size) + ${v(
@@ -237,7 +237,7 @@ function genColorPickerRules(p: string): string {
       'borderRadiusSM',
     )};border:${v('lineWidth')} ${v('lineType')} ${v(
       'colorSplit',
-    )};position:relative;overflow:hidden;cursor:inherit;user-select:none;transition:all ${v(
+    )};padding:0;position:relative;overflow:hidden;cursor:inherit;user-select:none;transition:all ${v(
       'motionDurationFast',
     )};margin-inline-start:auto;}`,
     `${I} .${p}-color-picker-clear::after{content:"";position:absolute;inset-inline-end:calc(${v(

@@ -158,3 +158,7 @@ useRovingFocus 的 activeIndex 按既有文档作为受控输入，拒绝请求�
 ### D-auto-complete-native-combobox
 
 AutoComplete 的通知改为 Vue emits，并明确 value/searchValue/open 三个模型、实际模板引用与像素/条目滚动参数。backfill 只预览键盘候选，Enter/Tab/点击才提交；Tab 保留原生焦点移动。Provider 展示配置由真实包装者拥有，继续共享已文档化的 Select Token。原 showSearch.onSearch 迁为 search 事件，旧 onDropdownVisibleChange 迁 openChange；详见[AutoComplete API](packages/ui/src/auto-complete/index.zh-CN.md)。
+
+### D-color-picker-native-content
+
+ColorPicker 的 panelRender/showText 内容函数直接迁为 #panelRender/#showText；panel 作用域改为稳定组件引用，可用 `<component :is="panel" />`，不再需要 VNode 渲染适配器。默认触发器和预设色块具备原生键盘交互，尺寸采用共享 SizeType，attrs 落到实际触发节点；PurePanel 使用正常文档流并转发真实槽/事件，移除轮询和高度镜像。当前配置、渐变 alpha 与数字颜色输入同步修正，详见[ColorPicker API](packages/ui/src/color-picker/index.zh-CN.md)。

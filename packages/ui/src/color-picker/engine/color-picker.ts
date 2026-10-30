@@ -59,10 +59,6 @@ export const EngineColorPicker = defineComponent({
     slider: { type: [Object, Function] as PropType<Component>, default: undefined },
     className: { type: String, default: undefined },
     style: { type: Object as PropType<StyleLike>, default: undefined },
-    panelRender: {
-      type: Function as PropType<(panel: unknown) => unknown>,
-      default: undefined,
-    },
     onChange: {
       type: Function as PropType<(color: Color, info?: ColorPickerInfo) => void>,
       default: undefined,
@@ -176,18 +172,13 @@ export const EngineColorPicker = defineComponent({
         ]),
       ];
 
-      const content: VNodeChild =
-        typeof props.panelRender === 'function'
-          ? (props.panelRender(defaultPanel) as VNodeChild)
-          : defaultPanel;
-
       return h(
         'div',
         {
           class: [`${p}-panel`, props.className, { [`${p}-panel-disabled`]: props.disabled }],
           style: props.style,
         },
-        [content],
+        defaultPanel,
       );
     };
   },

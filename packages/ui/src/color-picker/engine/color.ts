@@ -36,33 +36,46 @@
  */
 
 import { Color as BaseColor, type ColorInput as BaseColorInput } from '@apollo-design/utils';
-import type { ColorConstructorInput, HSB, HSBA } from './interface';
+import type { ColorConstructorInput, HSBA } from './interface';
 
 /** 上游 `getRoundNumber`（rc `color.js` 与 antd `util.ts` 各有一份，同式）。 */
 export const getRoundNumber = (value: number): number => Math.round(Number(value || 0));
 
-/**
- * hsb → hsv 的构造归一（rc `color.js` 逐字）。
- *
- * 三支：已是颜色实例 ⇒ 原样；对象带 `h` + `b` ⇒ 把 `b` 改名 `v`；
- * 字符串含 `hsb` ⇒ 换成 `hsv`。**其余原样返回**（含 `number`）。
- *
- * ⚠️ 返回类型收窄成基类的 `ColorInput` 时有一次 `as unknown as`：上游的 `HSB` 允许
- * **字符串通道**，而基类只声明数字。运行时行为一致（两条实现的通道运算都会隐式转数字），
- * 这里断言的是「同构」，不是「绕过类型」。
- */
+/** Convert the declared public inputs into the numeric channels accepted by the base parser. */
+function numericChannel(value: string | number): number {
+  const number = Number(value);
+  if (!Number.isFinite(number)) throw new TypeError(`Invalid color channel: ${value}`);
+  return number;
+}
+
 function convertHsb2Hsv(color: ColorConstructorInput): BaseColorInput {
   if (color instanceof BaseColor) {
     return color;
   }
-  if (color && typeof color === 'object' && 'h' in color && 'b' in color) {
-    const { b, ...resets } = color as HSB;
-    return { ...resets, v: b } as unknown as BaseColorInput;
+  if (typeof color === 'number') {
+    if (!Number.isInteger(color) || color < 0 || color > 0xffffff) {
+      throw new RangeError('Numeric colors must be unsigned 24-bit RGB integers');
+    }
+    return { r: color >>> 16, g: (color >>> 8) & 255, b: color & 255 };
   }
-  if (typeof color === 'string' && /hsb/.test(color)) {
+  if (typeof color === 'string') {
     return color.replace(/hsb/, 'hsv');
   }
-  return color as unknown as BaseColorInput;
+  const a = 'a' in color ? color.a : 1;
+  if ('r' in color) {
+    return {
+      r: numericChannel(color.r),
+      g: numericChannel(color.g),
+      b: numericChannel(color.b),
+      a,
+    };
+  }
+  return {
+    h: numericChannel(color.h),
+    s: numericChannel(color.s),
+    v: numericChannel('b' in color ? color.b : color.v),
+    a,
+  };
 }
 
 /**
@@ -75,7 +88,9 @@ export class Color extends BaseColor {
   constructor(color?: ColorConstructorInput) {
     // `color ? … : undefined` 等价于上游的 `if (!input) { … }`（保持初始值）：
     // 空串 / 0 / null / undefined 一律得到「黑 + 不透明」，而不是基类的抛错。
-    super(color ? convertHsb2Hsv(color) : undefined);
+    super(
+      color === undefined || color === null || color === '' ? undefined : convertHsb2Hsv(color),
+    );
   }
 
   /**

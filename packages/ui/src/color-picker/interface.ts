@@ -1,44 +1,7 @@
-/**
- * ColorPicker 的类型契约（G2 产物）。
- *
- * 契约来源：antd 6.6.4 的 `es/color-picker/interface.d.ts` + `es/color-picker/index.d.ts`
- * 与 rc 内核 `@rc-component/color-picker/es/interface.d.ts` —— **重新定义**，不搬运（H2）。
- * 判据逐条见 `docs/analysis/color-picker.md`（G1 产物）。禁 any / as any / @ts-expect-error（H10）。
- *
- * ── 与上游的三处结构性差异（都是判据，别"统一"）────────────────────────────────
- *
- * 1. **`ColorPickerProps = Omit<RcColorPickerProps, 7 个键> & {…自有} & Pick<PopoverProps, 4>`
- *    ⇒ 被 `Omit` 掉的 7 个键（`onChange` / `value` / `defaultValue` / `panelRender` /
- *    `disabledAlpha` / `onChangeComplete` / `components`）在本组件里是**重新声明**的，
- *    签名与 rc 那版**不同**（尤其 `onChange` 的第二个参数是 CSS 串，rc 的是 info 对象）。
- * 2. **语义槽是不对称的**：`classNames` 有 5 个（`popup` 是**嵌套对象**），
- *    `styles` 有 6 个（多一个 `popupOverlayInner`）。**别"补齐"成对称的**。
- * 3. **`popup` 是嵌套槽**（`popup: { root }`），且上游走
- *    `useMergeSemantic(..., { popup: { _default: 'root' } })` —— 只给 `popup.root`
- *    传值时 `root` 也吃到它。本仓的 `_internal/use-merge-semantic.ts` **不支持**
- *    `schema` 档（文件头明说「等出现第一个嵌套语义对象再实现」）⇒ 这一档由
- *    `ColorPicker.vue` **显式展开**，不依赖合并器（见该文件 §语义槽）。
- *
- * ── Vue 化映射（COMPATIBILITY.md）──────────────────────────────────────────────
- *
- * | React | Vue | 规则 |
- * |---|---|---|
- * | `value` + `onChange(color, css)` | `v-model:value` + `@change(color, css)`（**双发**） | C11 |
- * | `open` + `onOpenChange` | `v-model:open` + `@openChange`（**双发**） | C11 |
- * | `format` + `onFormatChange` | `v-model:format` + `@formatChange`（**双发**） | C11 |
- * | `onChangeComplete` / `onClear` | `@changeComplete` / `@clear`（纯通知，无 v-model） | C5 |
- * | `panelRender(panel, extra)` | **函数 prop + 同名 scoped slot 双通道** | C8 |
- * | `children`（覆盖触发器） | 默认插槽 | — |
- * | `ref` | ⚠️ **上游没有 ref**（`ColorPicker.d.ts` 是裸 `React.FC`，`ColorPicker.js` 里 `forwardRef` 出现 **0** 次）⇒ **本仓不 expose** | — |
- *
- * ── 为什么**不**声明 HTML 透传属性 ──────────────────────────────────────────────
- *
- * 根是 `<Popover>`（它自己渲染触发元素），原生属性由 `attrs` 兜住。
- * ⚠️ 代价是**未声明的自定义 prop 会静默进 attrs**（跨包判据 1）⇒
- * 上游 `ColorPickerProps` 的每一个键都必须在下面声明。
- */
+/** Public Vue-native ColorPicker props, events and scoped component slots. */
 
 import type { Component, CSSProperties, VNodeChild } from 'vue';
+import type { SizeType } from '../config-provider/size-context';
 import type { TooltipArrow, TooltipPlacement } from '../tooltip/interface';
 import type { AggregationColor } from './color';
 import type { ColorGenInput, HSB, HSBA, RGB, RGBA, TransformOffset } from './engine/interface';
@@ -131,7 +94,7 @@ export type ColorPickerSemanticClassNames = NonNullable<ColorPickerSemanticType[
 export type ColorPickerSemanticStyles = NonNullable<ColorPickerSemanticType['styles']>;
 
 /** 语义化输入：对象或函数（上游 `GenerateSemantic` 的 `classNamesAndFn` / `stylesAndFn`）。 */
-export type ColorPickerSemanticValue<T, Props> = T | ((info: { props: Props }) => T);
+export type ColorPickerSemanticValue<T, Props> = T | ((info: { props: Props }) => T | undefined);
 
 // ---------------------------------------------------------------------------
 // Props
@@ -193,16 +156,12 @@ export interface ColorPickerProps {
   disabledAlpha?: boolean;
   /** 预设面板（数组才渲染，且会多一条 `<Divider/>`）。 */
   presets?: PresetsItem[];
-  /** 是否显示触发器右侧的文本。`true` 走 locale 文案，函数则自定义。 */
-  showText?: boolean | ((color: AggregationColor) => VNodeChild);
+  /** 是否显示默认文本；自定义内容使用 #showText。 */
+  showText?: boolean;
   /** 尺寸（默认跟随 ConfigProvider）。 */
-  size?: 'small' | 'middle' | 'large' | string;
+  size?: SizeType;
   /** 禁用。 */
   disabled?: boolean;
-
-  // ============================================================ 渲染
-  /** 自定义面板。**函数 prop** 形态（C8 双通道，另有同名 scoped slot）。 */
-  panelRender?: (panel: VNodeChild, extra: ColorPickerPanelRenderExtra) => VNodeChild;
 
   // ============================================================ 外观与语义槽
   /** 类名前缀。默认 = `getPrefixCls('color-picker')` = **`apollo-color-picker`**。 */
@@ -233,6 +192,9 @@ export interface ColorPickerProps {
    * `docs/analysis/color-picker.md` §2.2。
    */
   onChangeComplete?: (value: AggregationColor) => void;
+  'onUpdate:value'?: (value: AggregationColor) => void;
+  'onUpdate:open'?: (open: boolean) => void;
+  'onUpdate:format'?: (format: ColorFormatType | undefined) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -292,7 +254,9 @@ export interface ColorPickerSlots {
   /** 触发器内容（等价上游 `children`）。 */
   default?: () => VNodeChild;
   /** `panelRender` 的插槽形态。`props` 与函数 prop 的入参同形。 */
-  panelRender?: (props: { panel: VNodeChild; extra: ColorPickerPanelRenderExtra }) => VNodeChild;
+  panelRender?: (props: { panel: Component; extra: ColorPickerPanelRenderExtra }) => VNodeChild;
+  /** 自定义当前颜色文字；槽存在时显示，包括空内容。 */
+  showText?: (props: { color: AggregationColor }) => VNodeChild;
 }
 
 /**

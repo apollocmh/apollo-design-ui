@@ -1,6 +1,11 @@
+# ColorPicker 实现说明
+
+## 当前 Vue 契约（2026-10-30）
+
+本轮保留既有颜色算法、原生 attrs 与历史参考证据，修复当前事件/模型、插槽、样式与资源消费。panelRender 函数 prop / showText 函数已迁原生作用域槽，panel 为稳定 Vue 组件引用；PurePanel 在正常文档流展示。完整现行契约与迁移见 index.zh-CN.md；下方开发史中的旧通道/逐字 DOM 结论不再定义当前公共行为。
+
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
-# ColorPicker 实现说明
 
 > 规则 R1：本文件记录实现结论、偏离项与决策。**G4 已落地**（组件与引擎可渲染），
 > G11（demo + 文档）已完成 —— 见 §5.1 的 demo 级替换登记。
@@ -108,9 +113,9 @@ color-picker/
 | `style-class` | `antd-style` 的 `createStyles` 生成 `borderRadius: token.borderRadius` 的类名 | SFC `<style>` 块定义 `.demo-color-picker-root { border-radius: 6px }`（`borderRadius` 的默认解析值）；`classNames.root` 指向它 |
 | `presets` / `panel-render` | `theme.useToken()` 取 `token.colorPrimary` | 等值字面量 `#1677ff`（默认主题 `colorPrimary` 的解析值） |
 | `presets` / `panel-render` | `@ant-design/colors` 的 `generate()` / `presetPalettes`（red / green / cyan） | 把对应 10 档色板**固化成字面量**（值取自 `@ant-design/colors@8.0.1`，逐位一致） |
-| `panel-render` | `panelRender` 返回 JSX，内部渲染 `components.Picker` / `components.Presets` | 函数 prop 返回 `h()`（模板无「渲染 VNode 变量」的语法），`Picker` / `Presets` 同样用 `h()` 渲染 |
+| `panel-render` | 自定义面板 | 使用 #panelRender；panel、Picker、Presets 均为可直接在模板渲染的稳定 Vue 组件引用 |
 | `pure-panel` | `ColorPicker._InternalPanelDoNotUseOrYouWillBeFired`，props 摊平传 `value` / `onChange` | 用 `ColorPickerPurePanel`（`ColorPicker` 上仍挂同名静态别名），`value` / `onChange` 放进 `colorPickerProps` 对象 |
-| `text-render` | `@ant-design/icons` 的 `DownOutlined` | `@apollo-design/icons` 的同名图标（`rotate` / `style` 均支持） |
+| `text-render` | 触发器文本 | showText 启用默认文字；#showText 定制完整内容 |
 | `trigger` | `children` 覆盖触发器 + `value` / `onChange` | 默认插槽 + `:value` / `@change`（C11） |
 | `controlled` / `allowClear` / `format` | `value` + `onChange` / `onFormatChange` 受控 | `v-model:value` / `v-model:format`（或 `:value` + `@change`），C11 双发 |
 | `line-gradient` | `onChangeComplete` 里 `console.log(color.toCssString())` | 同（保留 `console.log`） |

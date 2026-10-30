@@ -200,7 +200,9 @@ export const GradientColorSlider = defineComponent({
               },
               onKeydown: (event: KeyboardEvent) => {
                 if ((event.key === 'Delete' || event.key === 'Backspace') && props.onKeyDelete) {
+                  event.preventDefault();
                   props.onKeyDelete(info.index);
+                  return;
                 }
                 originalKeyDown?.(event);
               },

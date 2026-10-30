@@ -5,22 +5,13 @@ title:
   en-US: Custom Panel
 ---
 
-`panelRender` 是函数 prop，可完全接管面板内容（例如加标题、改成左右分栏）。
+使用 #panelRender 定制布局；panel 是稳定的 Vue 组件引用，可直接用 <component :is="panel" />，extra 提供 Picker / Presets 子面板。
 
 ```vue
 <script setup lang="ts">
-// 对齐 antd 的 panel-render demo：用 `panelRender` 自由控制面板渲染。
-//
-// ⚠️ **三处 demo 级替换**（都不是能力缺口）：
-//   1. 上游用 `theme.useToken()` 取 `colorPrimary` —— 本仓没有这个 hook ⇒ 写**等值
-//      字面量** `#1677ff`（默认主题的 `colorPrimary` 解析值）。
-//   2. 上游用 `@ant-design/colors` 的 `generate` / `red` / `green` / `cyan` —— 本仓没有
-//      该依赖 ⇒ 把对应色板**固化成字面量**（值来自 `@ant-design/colors@8.0.1`，逐位一致）。
-//   3. `panelRender` 是**函数 prop**，返回值是 VNode ⇒ 本仓用 `h()` 写（`.vue` 模板里
-//      没有「渲染一个 VNode 变量」的语法）。
-import type { ColorPickerProps, PresetsItem } from '@apollo-design/ui';
+// Custom panels use Vue scoped slots and stable component references.
+import type { PresetsItem } from '@apollo-design/ui';
 import { Col, ColorPicker, Divider, Row, Space } from '@apollo-design/ui';
-import { h } from 'vue';
 
 /** `token.colorPrimary` 的等值字面量。 */
 const COLOR_PRIMARY = '#1677ff';
@@ -89,50 +80,32 @@ const presets = genPresets({
   cyan: CYAN_PALETTE,
 });
 
-/** 横向布局：预设 + 竖分隔线 + 取色面板（组件引用由 `extra` 提供）。 */
-const horizontalPanelRender: ColorPickerProps['panelRender'] = (
-  _panel,
-  { components: { Picker, Presets } },
-) =>
-  h(Row, { justify: 'space-between', wrap: false }, [
-    h(Col, { span: 12 }, [h(Presets)]),
-    h(Divider, { vertical: true, style: { height: 'auto' } }),
-    h(Col, { flex: 'auto' }, [h(Picker)]),
-  ]);
-
-/** 在面板上方加一行标题。 */
-const basicPanelRender: ColorPickerProps['panelRender'] = (panel) =>
-  h('div', { class: 'custom-panel' }, [
-    h(
-      'div',
-      {
-        style: {
-          fontSize: '12px',
-          color: 'rgba(0, 0, 0, 0.88)',
-          lineHeight: '20px',
-          marginBottom: '8px',
-        },
-      },
-      'Color Picker',
-    ),
-    panel,
-  ]);
 </script>
 
 <template>
   <Space vertical>
     <Space>
       <span>Add title:</span>
-      <ColorPicker default-value="#1677ff" :panel-render="basicPanelRender" />
+      <ColorPicker default-value="#1677ff">
+        <template #panelRender="{ panel }">
+          <section class="custom-panel">
+            <div :style="{ fontSize: '12px', color: 'var(--apollo-color-text)', lineHeight: '20px', marginBottom: '8px' }">Color Picker</div>
+            <component :is="panel" />
+          </section>
+        </template>
+      </ColorPicker>
     </Space>
     <Space>
       <span>Horizontal layout:</span>
-      <ColorPicker
-        :default-value="COLOR_PRIMARY"
-        :styles="{ popupOverlayInner: { width: 480 } }"
-        :presets="presets"
-        :panel-render="horizontalPanelRender"
-      />
+      <ColorPicker :default-value="COLOR_PRIMARY" :styles="{ popupOverlayInner: { width: '480px' } }" :presets="presets">
+        <template #panelRender="{ extra }">
+          <Row justify="space-between" :wrap="false">
+            <Col :span="12"><component :is="extra.components.Presets" /></Col>
+            <Divider vertical :style="{ height: 'auto' }" />
+            <Col flex="auto"><component :is="extra.components.Picker" /></Col>
+          </Row>
+        </template>
+      </ColorPicker>
     </Space>
   </Space>
 </template>

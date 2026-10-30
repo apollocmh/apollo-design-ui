@@ -1,70 +1,27 @@
 <script setup lang="ts">
-/**
- * ColorPicker 主实现 —— antd 6.6.4 `es/color-picker/ColorPicker.js`（354 行）。
- *
- * 契约全文见 `docs/analysis/color-picker.md`；这里只留**实现期最容易写错的判据**。
- *
- * ── 渲染骨架（上游 `:280-331`）────────────────────────────────────────────────
- *
- * ```html
- * <Popover classNames={{root: mergedPopupCls}} styles={{root, container}} …>
- *   content: <ColorPickerPanel/>              ← 面板（-inner 在浮层里）
- *   default: children || <ColorTrigger/>      ← 传了 children 就**完全不要**内置触发器
- * </Popover>
- * ```
- *
- * ── 十条必须复刻的判据 ────────────────────────────────────────────────────────
- *
- * 1. 🚨 **`popupOpen = !mergedDisabled && internalPopupOpen`** —— 禁用态**恒关**；
- *    而 `triggerOpenChange` 的守卫是 `!open || !disabled` ⇒ **禁用时「开」被吞掉、
- *    「关」仍然放行**（两条判据不是一回事）。
- * 2. **`triggerFormatChange` 先取快照、再写状态**（PITFALLS 13/207）——
- *    `formatValue` 是 computed，写完立刻变 ⇒ 不取快照就恒「同值不发」。
- * 3. **`onInternalChange` 的顺序**：① `disabledAlpha && isAlphaColor` 时用
- *    `genAlphaColor` 改写 → ② `setColor` → ③ **清 `cachedGradientColor`** →
- *    ④ 发 `change` → ⑤ **非拖拽才发 `changeComplete`**。
- * 4. **`onInternalModeChange` 里 `setCachedGradientColor(mergedColor)` 必须在
- *    `onInternalChange` 之后** —— 因为 ③ 会把它清掉（上游注释原文）。
- * 5. **`mergedRootCls` 同时进「触发器类名」与「浮层根类名」**（两处都要带）。
- * 6. **类名顺序**：`-trigger` → `mergedCls`（状态/尺寸/紧凑/上下文/`mergedRootCls`/`className`）
- *    → `classNames.root` → `{active, disabled}`。上游快照实测：
- *    `ant-color-picker-trigger css-var-root ant-color-picker-css-var ant-color-picker-trigger-disabled`。
- * 7. **`css-var-root` + `-css-var` 两个类都要挂**（与 `genColorPickerStyle` 的声明块选择器对应）。
- * 8. **`destroyOnHidden = destroyOnHidden ?? !!destroyTooltipOnHide`**。
- * 9. 🚨 **`popup._default: 'root'` 不是「回退到顶层 `root`」** —— 读上游
- *    `useMergeSemantic/utils.ts` 的 `fillObjectBySchema`：`_default` 只做
- *    「把嵌套键初始化为 `{}`」，以及「某来源把 `popup` 传成**字符串**时落到
- *    `popup.root`」。两者对本组件都是空转（我们用可选链读 `popup.root`）
- *    ⇒ **本仓不需要给 `useMergeSemantic` 加 schema 档**（分析文档 §2.7 的
- *    「待验证」到此关闭）。
- * 10. ⚠️ **`disabledAlpha` 的告警**：`devWarning(!(disabledAlpha && isAlphaColor), …)`。
- *
- * ── 平台差异 ──────────────────────────────────────────────────────────────────
- *
- * - **没有 `ContextIsolator`**（上游用它屏蔽 Form 的 `status`）—— 本仓无此物，
- *   而面板侧**没有**任何子件读 `useFormItemInputContext` ⇒ 行为等价（PLATFORM）。
- * - **`children` 走默认插槽**（C8）而不是 `children` prop。
- * - **`onChangeComplete` 的存在性守卫被去掉**：上游 `if (onChangeComplete)` 只跳过
- *   `generateColor` / `genAlphaColor` 的**纯计算**（无副作用）⇒ 恒发事件与上游可观测行为相同。
- * - **无 `hashId`**（D2）。
- */
+/** ColorPicker uses owned Vue events/models, current provider styles and render-time scoped slots. */
 
-import { useDevWarning } from '@apollo-design/utils';
+import { useControlledValue, useDevWarning } from '@apollo-design/utils';
 import {
+  type Component,
+  cloneVNode,
+  Comment,
   type CSSProperties,
   computed,
   defineComponent,
+  Fragment,
   h,
+  isVNode,
   type PropType,
+  normalizeStyle,
   ref,
-  shallowReactive,
   shallowRef,
   useAttrs,
-  useSlots,
+  Text,
   type VNodeChild,
   watch,
 } from 'vue';
-import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
+import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
@@ -80,28 +37,27 @@ import ColorTrigger from './components/ColorTrigger.vue';
 import useModeColor from './hooks/use-mode-color';
 import type {
   ColorFormatType,
-  ColorPickerEmits,
   ColorPickerPanelRenderExtra,
   ColorPickerProps,
   ColorPickerSemanticClassNames,
   ColorPickerSemanticStyles,
+  ColorPickerSlots,
   ModeType,
 } from './interface';
 import { genAlphaColor, generateColor, getColorAlpha } from './util';
+import { useColorPickerTheme } from './use-color-picker-theme';
 
 /** `children` 走默认插槽、`onXxx` 走 emits ⇒ 运行时 props 面要摘掉它们。 */
 type ColorPickerVueProps = Omit<
   ColorPickerProps,
-  'children' | 'onChange' | 'onChangeComplete' | 'onOpenChange' | 'onFormatChange' | 'onClear'
+  'onChange' | 'onChangeComplete' | 'onOpenChange' | 'onFormatChange' | 'onClear' |
+  'onUpdate:value' | 'onUpdate:open' | 'onUpdate:format'
 >;
 
 defineOptions({ name: 'AColorPicker', inheritAttrs: false });
 
 const props = withDefaults(defineProps<ColorPickerVueProps>(), {
   prefixCls: undefined,
-  className: undefined,
-  rootClassName: undefined,
-  style: undefined,
   classNames: undefined,
   styles: undefined,
   mode: undefined,
@@ -124,7 +80,6 @@ const props = withDefaults(defineProps<ColorPickerVueProps>(), {
   showText: undefined,
   size: undefined,
   disabled: undefined,
-  panelRender: undefined,
 });
 
 // ⚠️ 用**运行时对象形态**（仓内主流，与 slider / calendar 同判），不用
@@ -142,35 +97,24 @@ const emit = defineEmits({
 });
 
 const attrs = useAttrs();
-const slots = useSlots();
+const slots = defineSlots<ColorPickerSlots>();
+const pickerTheme = useColorPickerTheme();
 
-/**
- * 面板渲染通道：**同名 slot 优先于函数 prop**（registry `VNA-SLOT-01`）。
- *
- * ⚠️ 两者**入参形状不同**：prop 是 `(originPanel, extra)`，slot 收一个对象
- * `{ panel, extra }`（Vue 插槽的惯例）⇒ 这里做一层适配，把 slot 形态归一成 prop 形态。
- * 此前 `ColorPickerSlots.panelRender` 只在类型面上存在、**运行时从不读取**
- * ⇒ 写了 `#panelRender` 的模板什么也不会发生。
- */
+/** The slot receives one stable Vue component reference for the default panel. */
 const mergedPanelRender = (
-  originPanel: VNodeChild,
+  originPanel: Component,
   extra: ColorPickerPanelRenderExtra,
 ): VNodeChild =>
-  slots.panelRender
-    ? (slots.panelRender({ panel: originPanel, extra }) as VNodeChild)
-    : props.panelRender
-      ? props.panelRender(originPanel, extra)
-      : originPanel;
+  slots.panelRender ? slots.panelRender({ panel: originPanel, extra }) : h(originPanel);
 
 // ============================== Context ==============================
-const context = useComponentConfig('color-picker') as unknown as {
-  getPrefixCls: (suffix?: string, custom?: string) => string;
+const context = useComponentConfig<{
   className?: string;
   style?: CSSProperties;
-  classNames?: ColorPickerSemanticClassNames;
-  styles?: ColorPickerSemanticStyles;
+  classNames?: ColorPickerProps['classNames'];
+  styles?: ColorPickerProps['styles'];
   arrow?: ColorPickerProps['arrow'];
-};
+}>('color-picker');
 const direction = useDirection();
 
 const prefixCls = computed(() => context.getPrefixCls('color-picker', props.prefixCls));
@@ -208,15 +152,7 @@ const setGradientDragging = (dragging: boolean): void => {
 };
 
 // =========== Merged Props for Semantic ===========
-/**
- * 传给函数式 `classNames` / `styles` 的 `info.props`。
- *
- * ⚠️ 上游每次渲染新建一个对象；本仓用 `shallowReactive` + watch 同步 ——
- * 这样 `useMergeSemantic` 的 `info.props` **引用稳定**、读到的值**最新**。
- * （`shallow` 是必需的：深响应式会把 `AggregationColor` 实例包成 Proxy，
- * 破坏 `instanceof` 与身份比较。）
- */
-const semanticProps = shallowReactive<ColorPickerProps>({ ...props });
+/** Derive semantic inputs directly from current props and providers. */
 const mergedSemanticProps = computed<ColorPickerProps>(() => ({
   ...props,
   trigger: props.trigger ?? 'click',
@@ -228,13 +164,6 @@ const mergedSemanticProps = computed<ColorPickerProps>(() => ({
   disabled: mergedDisabled.value,
   size: mergedSize.value,
 }));
-watch(
-  mergedSemanticProps,
-  (next) => {
-    Object.assign(semanticProps, next);
-  },
-  { immediate: true },
-);
 
 const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   ColorPickerProps,
@@ -244,12 +173,10 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   [() => context.classNames, () => props.classNames],
   [
     () => context.styles,
-    () => semanticRootStyle(context.style),
+    () => context.style ? { root: context.style } : undefined,
     () => props.styles,
-    // 根 style 是 Vue 原生 attrs；仍走语义 root 通道
-    () => semanticRootStyle(attrs.style as CSSProperties | undefined),
   ],
-  semanticProps,
+  mergedSemanticProps,
   // ⚠️ 与 antd 6.6.4 逐字（`ColorPicker.js:98-100`）。本文件头 §9 曾判「本仓不需要
   //    schema 档」—— 对「可选链读 popup.root」的**读取侧**确实空转，但**合并侧**在
   //    「字符串 + 对象混用」时会产垃圾键（KNOWN-ISSUES §1.7b）⇒ 2026-10-03 补上。
@@ -257,27 +184,31 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
 );
 
 // ============================== 开合 / 格式 ==============================
-// 与 rc 的 `useControlledState(false, open)` / `useControlledState(defaultFormat, format)` 同判：
-// 内部值恒被写，读的时候**受控值优先**。
-const innerPopupOpen = ref(false);
-const popupOpen = computed(() => !mergedDisabled.value && (props.open ?? innerPopupOpen.value));
+// Shared accepted state keeps rejected controlled requests out of later uncontrolled state.
+const [innerPopupOpen, setPopupOpen] = useControlledValue<boolean>({
+  defaultValue: () => false,
+  getValue: () => props.open,
+});
+const popupOpen = computed(() => !mergedDisabled.value && innerPopupOpen.value);
 
 /** 判据 1（第二条）。 */
 const triggerOpenChange = (open: boolean): void => {
   if (!open || !mergedDisabled.value) {
-    innerPopupOpen.value = open;
+    setPopupOpen(open);
     emit('update:open', open);
     emit('openChange', open);
   }
 };
 
-const innerFormat = ref<ColorFormatType | undefined>(props.defaultFormat);
-const formatValue = computed(() => props.format ?? innerFormat.value);
+const [formatValue, setFormat] = useControlledValue<ColorFormatType | undefined>({
+  defaultValue: () => props.defaultFormat,
+  getValue: () => props.format,
+});
 
 /** 判据 2：**先取快照**。 */
 const triggerFormatChange = (newFormat?: ColorFormatType): void => {
   const prev = formatValue.value;
-  innerFormat.value = newFormat;
+  setFormat(newFormat);
 
   if (prev !== newFormat) {
     emit('update:format', newFormat);
@@ -290,7 +221,7 @@ const triggerFormatChange = (newFormat?: ColorFormatType): void => {
 const onInternalChangeComplete = (color: AggregationColor): void => {
   let changeColor = generateColor(color);
   // 忽略 alpha 色
-  if (props.disabledAlpha && isAlphaColor.value) {
+  if (props.disabledAlpha && !color.cleared) {
     changeColor = genAlphaColor(color);
   }
   emit('changeComplete', changeColor);
@@ -301,7 +232,7 @@ const onInternalChange = (data: AggregationColor, changeFromPickerDrag?: boolean
   let color: AggregationColor = generateColor(data);
 
   // 忽略 alpha 色
-  if (props.disabledAlpha && isAlphaColor.value) {
+  if (props.disabledAlpha && !color.cleared) {
     color = genAlphaColor(color);
   }
 
@@ -353,11 +284,8 @@ const joinCls = (...parts: Array<string | false | null | undefined>): string =>
   parts.filter(Boolean).join(' ');
 
 const mergedRootCls = computed<string[]>(() => {
-  // 调用方原生 class（位置与原先的 props.rootClassName 一致；它同时进触发器与浮层根）。
-  // ⚠️ `attrs.class` 的类型是 Vue 的 `ClassValue`（可能是数组）⇒ 归一成字符串。
-  const rawClass = attrs.class as string | string[] | undefined;
+  // Internal scoping classes; native class belongs to the actual trigger.
   const list = [
-    Array.isArray(rawClass) ? rawClass.join(' ') : (rawClass ?? ''),
     'css-var-root',
     `${prefixCls.value}-css-var`,
   ];
@@ -376,9 +304,7 @@ const mergedCls = computed(() =>
     ...mergedRootCls.value,
   ),
 );
-const mergedPopupCls = computed(() =>
-  joinCls(prefixCls.value, ...mergedRootCls.value, mergedClassNames.value.popup?.root),
-);
+const mergedPopupCls = computed(() => joinCls(prefixCls.value, ...mergedRootCls.value, mergedClassNames.value.popup?.root));
 
 /** 空样式对象要转成 `undefined`，否则 SSR 会渲染出 `style=""`。 */
 function nonEmpty(style: CSSProperties | undefined): CSSProperties | undefined {
@@ -388,15 +314,10 @@ function nonEmpty(style: CSSProperties | undefined): CSSProperties | undefined {
 /** `styles.popupOverlayInner` → Popover 的 `styles.container`（上游逐字）。 */
 const popoverStyles = computed(
   () =>
-    // ⚠️ 一次 `as unknown as`：本仓 `PopoverSemanticType['styles']` 的槽位类型是
-    //    `Record<string, string | number>`，而 `CSSProperties` 没有索引签名 ⇒
-    //    结构上不可直接赋值。运行时逐键原样透传，无任何转换。
     ({
-      root: nonEmpty(mergedStyles.value.popup?.root),
-      container: nonEmpty(
-        (props.styles as ColorPickerSemanticStyles | undefined)?.popupOverlayInner,
-      ),
-    }) as unknown as NonNullable<PopoverSemanticType['styles']>,
+      root: { ...pickerTheme.style.value, ...mergedStyles.value.popup?.root },
+      container: nonEmpty(mergedStyles.value.popupOverlayInner),
+    }) satisfies NonNullable<PopoverSemanticType['styles']>,
 );
 
 /**
@@ -406,10 +327,11 @@ const popoverStyles = computed(
  * 而 `ColorTrigger` 的 `style` prop 是 `CSSProperties` ⇒ 整体 `v-bind="attrs"` 会类型不匹配。
  * 两者单独处理（`class` 并进 `mergedCls`，`style` 单独绑定）。
  */
-const triggerAttrs = computed(() => {
+const triggerAttrs = () => {
   const { class: _class, style: _style, ...rest } = attrs;
-  return rest;
-});
+  return { ...rest, ...(mergedDisabled.value ? { disabled: true } : {}) };
+};
+const customTriggerAttrs = () => ({ ...triggerAttrs(), ...(mergedDisabled.value ? { 'aria-disabled': true } : {}) });
 
 /** 判据 8。 */
 const mergedDestroyOnHidden = computed(() => props.destroyOnHidden ?? !!props.destroyTooltipOnHide);
@@ -420,7 +342,7 @@ watch(
   () => [props.disabledAlpha, isAlphaColor.value],
   () => {
     devWarning(
-      !(props.disabledAlpha && isAlphaColor.value),
+      !(props.disabledAlpha && !mergedColor.value.cleared && isAlphaColor.value),
       '`disabledAlpha` will make the alpha to be 100% when use alpha color.',
     );
   },
@@ -444,11 +366,18 @@ watch(
  */
 const TriggerHost = defineComponent({
   name: 'AColorPickerTriggerHost',
+  inheritAttrs: false,
   props: {
     render: { type: Function as PropType<() => VNodeChild>, required: true },
   },
-  setup(props) {
-    return () => props.render();
+  setup(props, { attrs }) {
+    return () => {
+      const node = props.render();
+      if (isVNode(node) && node.type !== Fragment && node.type !== Text && node.type !== Comment) {
+        return cloneVNode(node, attrs, true);
+      }
+      return h('span', attrs, Array.isArray(node) ? node : [node]);
+    };
   },
 });
 
@@ -457,7 +386,9 @@ const TriggerHost = defineComponent({
  * （多子节点仍会被包 span —— 上游的 `children` 是单个 ReactNode，无对应物）。
  */
 const renderChildren = (): VNodeChild => {
-  const nodes = (slots.default?.() ?? []).filter(
+  const content = slots.default?.();
+  const children: VNodeChild[] = Array.isArray(content) ? content : [content];
+  const nodes = children.filter(
     (node) => node !== null && node !== undefined && typeof node !== 'boolean',
   );
   return nodes.length === 1 ? nodes[0] : nodes;
@@ -474,12 +405,14 @@ const onClearInternal = (): void => {
     :class-names="{ root: mergedPopupCls }"
     :styles="popoverStyles"
     :open="popupOpen"
+    :disabled="mergedDisabled"
     :trigger="trigger"
     :placement="placement"
     :arrow="mergedArrow"
     :get-popup-container="getPopupContainer"
     :auto-adjust-overflow="autoAdjustOverflow"
     :destroy-on-hidden="mergedDestroyOnHidden"
+    fresh
     @open-change="triggerOpenChange"
   >
     <template #content>
@@ -490,7 +423,7 @@ const onClearInternal = (): void => {
         :on-mode-change="onInternalModeChange"
         :mode-options="modeOptions"
         :allow-clear="allowClear"
-        :disabled="mergedDisabled"
+        :disabled="mergedDisabled || !popupOpen"
         :disabled-alpha="disabledAlpha"
         :presets="presets"
         :panel-render="mergedPanelRender"
@@ -507,11 +440,12 @@ const onClearInternal = (): void => {
       />
     </template>
     <template #default>
-      <TriggerHost v-if="slots.default" :render="renderChildren" />
+    <TriggerHost v-if="slots.default" v-bind="customTriggerAttrs()" :class="[context.className, mergedClassNames.root, attrs.class]" :style="[pickerTheme.style.value, mergedStyles.root, normalizeStyle(attrs.style)]" :render="renderChildren" />
       <ColorTrigger
         v-else
-        v-bind="triggerAttrs"
-        :style="attrs.style as CSSProperties | undefined"
+        v-bind="triggerAttrs()"
+        :style="[pickerTheme.style.value, normalizeStyle(attrs.style)]"
+        :class="attrs.class"
         :active-index="popupOpen ? activeIndex : -1"
         :open="popupOpen"
         :class-name="mergedCls"
@@ -519,10 +453,14 @@ const onClearInternal = (): void => {
         :styles="mergedStyles"
         :prefix-cls="prefixCls"
         :disabled="mergedDisabled"
-        :show-text="showText"
+        :show-text="showText || !!slots.showText"
         :format="formatValue"
         :color="mergedColor"
-      />
+      >
+        <template v-if="slots.showText" #showText="scope">
+          <slot name="showText" v-bind="scope" />
+        </template>
+      </ColorTrigger>
     </template>
   </Popover>
 </template>

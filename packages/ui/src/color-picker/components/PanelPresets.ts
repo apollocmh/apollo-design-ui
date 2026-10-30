@@ -29,6 +29,7 @@ export const PanelPresets = defineComponent({
         prefixCls: ctx.prefixCls,
         value: ctx.value,
         presets: ctx.presets,
+        disabled: ctx.disabled,
         onChange: ctx.onChange,
       });
     };

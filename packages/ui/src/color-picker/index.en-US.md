@@ -23,7 +23,7 @@ See [`demo/`](./demo) (**16** demos, mirroring antd's user-visible demos).
 | `size` | Trigger sizes `small` / default / `large` (with `showText`) |
 | `controlled` | Two controlled rhythms: `value` + `@change` / `@changeComplete` |
 | `line-gradient` | `mode` single / gradient (can be an array) |
-| `text-render` | `showText` as a boolean or a function |
+| `text-render` | Default text and the #showText scoped slot |
 | `disabled` | Disabled state |
 | `disabled-alpha` | `disabledAlpha` removes transparency |
 | `allowClear` | Clear entry and the "cleared" state |
@@ -64,14 +64,14 @@ Native class, id, ARIA and mouse listeners target the trigger. Known Vue event k
 | allowClear | Whether clearing is allowed | `boolean` | `false` | × |
 | disabledAlpha | Disable alpha (the panel drops the alpha slider and input; a semi-transparent color is forced opaque) | `boolean` | `false` | × |
 | presets | Preset panel (only an **array** renders it, plus an extra `Divider`) | `PresetsItem[]` | — | × |
-| showText | Text next to the trigger; `true` uses locale, a function customizes it | `boolean \| ((color: Color) => VNodeChild)` | `false` | × |
+| showText | Show default text; customize it with #showText | `boolean` | `false` | × |
 | size | Size | `'small' \| 'middle' \| 'large' \| string` | from ConfigProvider | ✅ |
 | disabled | Disabled | `boolean` | from ConfigProvider | ✅ |
-| panelRender | Customize the panel. **Function prop** (returns a VNode); a same-named scoped slot also exists | `(panel, extra) => VNodeChild` | — | × |
+
 | classNames | Semantic class names (`root` / `body` / `content` / `description` / `popup`); function form supported | `ColorPickerSemanticClassNames \| ((info) => …)` | — | ✅ |
 | styles | Semantic styles (6 slots — one more than `classNames`: `popupOverlayInner`); function form supported | `ColorPickerSemanticStyles \| ((info) => …)` | — | ✅ |
 | prefixCls | Class name prefix | `string` | from ConfigProvider, fallback `apollo-color-picker` | × |
-| class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`; `class` goes to both the trigger and the popup root) | `string \| array \| object` / `CSSProperties` | — | × |
+| class / style | Native attrs target the actual trigger; use popup.root for the popup | Vue class / StyleValue | — | × |
 
 #### ColorValueType
 
@@ -84,6 +84,8 @@ type ColorValueType = SingleValueType | null | LineGradientType;
 ⚠️ **"Cleared" is not `null`** — it is a color instance with alpha=0 and
 `cleared = true`. The trigger switches between `ColorClear` (transparent checkerboard)
 and `ColorBlock` (a color swatch) based on it.
+
+Color instance numeric inputs are unsigned 24-bit RGB integers. Object channels accept finite numbers and numeric strings; HSB s/b use 0–1. Invalid numeric inputs throw instead of becoming a default color.
 
 #### PresetsItem
 
@@ -112,33 +114,33 @@ and `ColorBlock` (a color swatch) based on it.
 | Slot | Description | Parameters |
 |---|---|---|
 | default | Trigger content (equivalent to upstream `children`). Providing it **completely replaces** the built-in trigger | — |
-| panelRender | The slot form of `panelRender` (pick one of prop / slot; the slot wins) | `{ panel: VNodeChild; extra: ColorPickerPanelRenderExtra }` |
+| panelRender | Custom panel; panel is a stable Vue component reference | `{ panel: Component; extra: ColorPickerPanelRenderExtra }` |
+| showText | Complete trigger text from the current slot | `{ color: Color }` |
 
 `extra.components` provides two component references `{ Picker, Presets }` so a custom
 panel can lay them out freely:
 
 ```vue
 <script setup lang="ts">
-import type { ColorPickerPanelRenderExtra } from '@apollo-design/ui';
 import { ColorPicker } from '@apollo-design/ui';
-import { h, type VNodeChild } from 'vue';
-
-const panelRender = (
-  _panel: VNodeChild,
-  { components: { Picker, Presets } }: ColorPickerPanelRenderExtra,
-) => h('div', { style: { display: 'flex' } }, [h(Presets), h(Picker)]);
 </script>
 
 <template>
-  <ColorPicker :panel-render="panelRender" />
+  <ColorPicker default-value="#1677ff">
+    <template #panelRender="{ panel }">
+      <section>
+        <p>Color Picker</p>
+        <component :is="panel" />
+      </section>
+    </template>
+    <template #showText="{ color }">{{ color.toHexString() }}</template>
+  </ColorPicker>
 </template>
 ```
 
 ### Methods
 
-None. ⚠️ Upstream `ColorPicker` **does not forward a ref** (`ColorPicker.d.ts` is a bare
-`React.FC`), so this port does **not expose** anything either — read the root element
-directly when you need DOM access.
+This round adds no methods or Expose API.
 
 ### Design Token
 
@@ -164,7 +166,7 @@ This port declares upstream's 9 `mergeToken` derived values as
 
 | Slot | Lands on |
 |---|---|
-| `root` | The trigger `<div>` |
+| `root` | The native trigger button, or the custom trigger host |
 | `body` | The swatch / transparent checkerboard inside the trigger |
 | `content` | The **inner** layer of the swatch (`ColorBlock`'s inner) |
 | `description` | The text container next to the trigger |
@@ -188,8 +190,11 @@ Upstream behavior: under `disabledAlpha`, if the current color has `alpha < 100`
 value received by `change` / `changeComplete` is rewritten to opaque by `genAlphaColor`
 (and a dev-time warning is emitted).
 
-### Should `panelRender` be a prop or a slot?
+### Development migration
 
-They are equivalent, and the slot wins. The function prop is convenient when composing
-with `h()` inside `<script setup>` (this library's templates have no syntax to render a
-VNode variable); the slot suits simple wrapping.
+- Replace the panelRender function prop with #panelRender. Its panel value is now a stable Vue component reference, rendered with <component :is="panel" />.
+- showText accepts boolean. Use #showText for custom content; its scope contains the current color, including conditional and empty slots.
+- Default triggers, preset choices and clear actions use native buttons. The cleared trigger graphic is decorative. The original reference remains intact; semantic tests derive only these reviewed differences.
+- size uses the shared SizeType. Native class/style target the trigger; customize popup.root and popupOverlayInner for popup targets.
+- Rejected controlled open/format requests do not leak into uncontrolled state. disabledAlpha normalizes each incoming gradient stop while preserving the cleared action.
+- PurePanel presents the actual panel in normal flow, forwarding native host attrs, its panelRender slot and Vue events without size polling.

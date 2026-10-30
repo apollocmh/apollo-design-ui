@@ -20,6 +20,7 @@ interface ColorRgbInputProps {
   prefixCls: string;
   value?: AggregationColor;
   onChange?: (value: AggregationColor) => void;
+  disabled?: boolean;
 }
 
 defineOptions({ name: 'AColorRgbInput', inheritAttrs: false });
@@ -27,6 +28,7 @@ defineOptions({ name: 'AColorRgbInput', inheritAttrs: false });
 const props = withDefaults(defineProps<ColorRgbInputProps>(), {
   value: undefined,
   onChange: undefined,
+  disabled: undefined,
 });
 
 /** 判据 1。 */
@@ -52,6 +54,7 @@ const onBlueChange = (step: number | null): void => handleRgbChange(step, 'b');
 <template>
   <div :class="`${prefixCls}-rgb-input`">
     <ColorSteppers
+      :disabled="disabled"
       :max="255"
       :min="0"
       :value="Number(rgbValue.toRgb().r)"
@@ -60,6 +63,7 @@ const onBlueChange = (step: number | null): void => handleRgbChange(step, 'b');
       @change="onRedChange"
     />
     <ColorSteppers
+      :disabled="disabled"
       :max="255"
       :min="0"
       :value="Number(rgbValue.toRgb().g)"
@@ -68,6 +72,7 @@ const onBlueChange = (step: number | null): void => handleRgbChange(step, 'b');
       @change="onGreenChange"
     />
     <ColorSteppers
+      :disabled="disabled"
       :max="255"
       :min="0"
       :value="Number(rgbValue.toRgb().b)"

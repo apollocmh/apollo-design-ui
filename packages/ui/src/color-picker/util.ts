@@ -41,6 +41,14 @@ export const getColorAlpha = (color: AggregationColor): number =>
  * 「透明黑」，`disabledAlpha` 的改写结果就错了。
  */
 export const genAlphaColor = (color: AggregationColor, alpha?: number): AggregationColor => {
+  if (color.isGradient()) {
+    return new AggregationColor(
+      color.getColors().map((item) => ({
+        percent: item.percent,
+        color: genAlphaColor(item.color, alpha),
+      })),
+    );
+  }
   const rgba = color.toRgb();
 
   if (!rgba.r && !rgba.g && !rgba.b) {

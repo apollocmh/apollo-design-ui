@@ -25,6 +25,7 @@ interface ColorSteppersProps {
   onChange?: (value: number | null) => void;
   className?: string;
   formatter?: InputNumberProps['formatter'];
+  disabled?: boolean;
 }
 
 defineOptions({ name: 'AColorSteppers', inheritAttrs: false });
@@ -36,6 +37,7 @@ const props = withDefaults(defineProps<ColorSteppersProps>(), {
   onChange: undefined,
   className: undefined,
   formatter: undefined,
+  disabled: undefined,
 });
 
 const internalValue = ref<number | undefined>(0);
@@ -59,6 +61,7 @@ const onInternalChange = (step: number | string | null): void => {
     :min="min"
     :max="max"
     :value="stepValue"
+    :disabled="disabled"
     :formatter="formatter"
     size="small"
     @change="onInternalChange"

@@ -41,6 +41,7 @@ interface ColorInputProps {
   value?: AggregationColor;
   onChange?: (value: AggregationColor) => void;
   disabledFormat?: boolean;
+  disabled?: boolean;
 }
 
 defineOptions({ name: 'AColorInput', inheritAttrs: false });
@@ -52,6 +53,7 @@ const props = withDefaults(defineProps<ColorInputProps>(), {
   value: undefined,
   onChange: undefined,
   disabledFormat: undefined,
+  disabled: undefined,
 });
 
 const selectOptions: DefaultOptionType[] = [FORMAT_HEX, FORMAT_HSB, FORMAT_RGB].map((format) => ({
@@ -81,7 +83,7 @@ const getPopupContainer = (current: HTMLElement): HTMLElement => current;
 
 /** `Select` 的 `change` 载荷是 `SelectValue`（宽）⇒ 形参写 `unknown` 再收窄。 */
 const onSelectFormatChange = (value: unknown): void => {
-  triggerFormatChange(value as ColorFormatType);
+  if (value === FORMAT_HEX || value === FORMAT_HSB || value === FORMAT_RGB) triggerFormatChange(value);
 };
 
 const steppersComponent = computed(() => {
@@ -99,6 +101,7 @@ const inputProps = computed(() => ({
   prefixCls: props.prefixCls,
   value: props.value,
   onChange: props.onChange,
+  disabled: props.disabled,
 }));
 </script>
 
@@ -114,6 +117,7 @@ const inputProps = computed(() => ({
       :class="`${prefixCls}-format-select`"
       size="small"
       :options="selectOptions"
+      :disabled="disabled"
       @change="onSelectFormatChange"
     />
     <div :class="`${prefixCls}-input`">
@@ -124,6 +128,7 @@ const inputProps = computed(() => ({
       :prefix-cls="prefixCls"
       :value="value"
       :on-change="onChange"
+      :disabled="disabled"
     />
   </div>
 </template>

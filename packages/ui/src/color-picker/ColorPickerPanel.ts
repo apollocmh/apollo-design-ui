@@ -19,7 +19,15 @@
  */
 
 import { isFunction } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, provide, type VNodeChild } from 'vue';
+import {
+  type Component,
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  provide,
+  type VNodeChild,
+} from 'vue';
 import { Divider } from '../divider';
 import { provideNoFormStyle } from '../form/context';
 import type { AggregationColor } from './color';
@@ -35,7 +43,6 @@ import type { ModeOptions } from './hooks/use-mode-color';
 import type {
   ColorFormatType,
   ColorPickerPanelRenderExtra,
-  ColorPickerProps,
   ModeType,
   PresetsItem,
 } from './interface';
@@ -53,7 +60,7 @@ export interface ColorPickerPanelProps {
   gradientDragging: boolean;
   onGradientDragging: (dragging: boolean) => void;
   presets?: PresetsItem[];
-  panelRender?: ColorPickerProps['panelRender'];
+  panelRender?: (panel: Component, extra: ColorPickerPanelRenderExtra) => VNodeChild;
   format?: ColorFormatType;
   onFormatChange?: (format?: ColorFormatType) => void;
   onClear?: () => void;
@@ -67,7 +74,7 @@ export const ColorPickerPanel = defineComponent({
   name: 'AColorPickerPanel',
   props: {
     prefixCls: { type: String, required: true },
-    value: { type: Object as unknown as PropType<AggregationColor>, required: true },
+    value: { type: Object as PropType<AggregationColor>, required: true },
     onChange: {
       type: Function as PropType<(value: AggregationColor, pickColor?: boolean) => void>,
       required: true,
@@ -78,7 +85,7 @@ export const ColorPickerPanel = defineComponent({
     },
     mode: { type: String as PropType<ModeType>, required: true },
     onModeChange: { type: Function as PropType<(mode: ModeType) => void>, required: true },
-    modeOptions: { type: Array as unknown as PropType<ModeOptions>, required: true },
+    modeOptions: { type: Array as PropType<ModeOptions>, required: true },
     activeIndex: { type: Number, required: true },
     onActive: { type: Function as PropType<(index: number) => void>, required: true },
     gradientDragging: { type: Boolean, required: true },
@@ -86,9 +93,9 @@ export const ColorPickerPanel = defineComponent({
       type: Function as PropType<(dragging: boolean) => void>,
       required: true,
     },
-    presets: { type: Array as unknown as PropType<PresetsItem[]>, default: undefined },
+    presets: { type: Array as PropType<PresetsItem[]>, default: undefined },
     panelRender: {
-      type: Function as PropType<ColorPickerProps['panelRender']>,
+      type: Function as PropType<ColorPickerPanelProps['panelRender']>,
       default: undefined,
     },
     format: { type: String as PropType<ColorFormatType>, default: undefined },
@@ -128,7 +135,10 @@ export const ColorPickerPanel = defineComponent({
       prefixCls: props.prefixCls,
       value: props.value,
       presets: props.presets,
-      onChange: (next: AggregationColor) => props.onChange(next),
+      disabled: props.disabled,
+      onChange: (next: AggregationColor) => {
+        if (!props.disabled) props.onChange(next);
+      },
     }));
 
     provide(panelPickerContextKey, pickerContext);
@@ -149,25 +159,24 @@ export const ColorPickerPanel = defineComponent({
      */
     provideNoFormStyle({ override: true, status: true });
 
+    const DefaultPanel = defineComponent({
+      name: 'AColorPickerDefaultPanel',
+      setup: () => () =>
+        h('div', { class: `${props.prefixCls}-inner-content` }, [
+          h(PanelPicker),
+          Array.isArray(props.presets) ? h(Divider) : null,
+          h(PanelPresets),
+        ]),
+    });
+    const extra: ColorPickerPanelRenderExtra = {
+      components: { Picker: PanelPicker, Presets: PanelPresets },
+    };
     return (): VNodeChild => {
-      const p = props.prefixCls;
-
-      const innerChildren: VNodeChild[] = [h(PanelPicker)];
-      // 判据 1
-      if (Array.isArray(props.presets)) {
-        innerChildren.push(h(Divider));
-      }
-      innerChildren.push(h(PanelPresets));
-
-      const innerPanel = h('div', { class: `${p}-inner-content` }, innerChildren);
-
       const content = isFunction(props.panelRender)
-        ? props.panelRender(innerPanel, {
-            components: { Picker: PanelPicker, Presets: PanelPresets },
-          } satisfies ColorPickerPanelRenderExtra)
-        : innerPanel;
+        ? props.panelRender(DefaultPanel, extra)
+        : h(DefaultPanel);
 
-      return h('div', { class: `${p}-inner` }, [content]);
+      return h('div', { class: `${props.prefixCls}-inner` }, [content]);
     };
   },
 });

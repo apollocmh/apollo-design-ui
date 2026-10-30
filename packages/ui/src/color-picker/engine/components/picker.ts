@@ -76,7 +76,7 @@ export const Picker = defineComponent({
       calculate: () => calcOffset(props.color),
       onDragChange,
       onDragChangeComplete: () => props.onChangeComplete?.(colorRef.value),
-      disabledDrag: props.disabled,
+      disabledDrag: () => props.disabled,
     });
 
     return () => {

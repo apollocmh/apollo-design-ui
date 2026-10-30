@@ -28,6 +28,7 @@ interface ColorHexInputProps {
   prefixCls: string;
   value?: AggregationColor;
   onChange?: (value: AggregationColor) => void;
+  disabled?: boolean;
 }
 
 defineOptions({ name: 'AColorHexInput', inheritAttrs: false });
@@ -35,6 +36,7 @@ defineOptions({ name: 'AColorHexInput', inheritAttrs: false });
 const props = withDefaults(defineProps<ColorHexInputProps>(), {
   value: undefined,
   onChange: undefined,
+  disabled: undefined,
 });
 
 const hexReg = /(^#[\da-f]{6}$)|(^#[\da-f]{8}$)/i;
@@ -69,6 +71,7 @@ const handleHexChange = (event: Event): void => {
   <Input
     :class="`${prefixCls}-hex-input`"
     :value="hexValue"
+    :disabled="disabled"
     prefix="#"
     size="small"
     @change="handleHexChange"

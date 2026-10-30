@@ -58,7 +58,7 @@ export interface UseColorDragProps {
   /** `'x'` = 只在横轴移动（滑块）；不传 = 两轴（取色面板）。 */
   direction?: 'x';
   /** 禁用拖拽。 */
-  disabledDrag?: boolean;
+  disabledDrag?: MaybeRefOrGetter<boolean>;
 }
 
 export function useColorDrag(
@@ -85,12 +85,20 @@ export function useColorDrag(
     if (mouseUpHandler) {
       document.removeEventListener('mouseup', mouseUpHandler);
       document.removeEventListener('touchend', mouseUpHandler);
+      document.removeEventListener('touchcancel', mouseUpHandler);
     }
     mouseMoveHandler = null;
     mouseUpHandler = null;
   };
 
   onBeforeUnmount(removeListeners);
+  watch(
+    () => toValue(props.disabledDrag),
+    (disabled) => {
+      if (disabled) removeListeners();
+    },
+    { flush: 'sync' },
+  );
 
   const updateOffset = (e: ColorDragEvent): boolean => {
     const container = props.containerRef.value;
@@ -139,17 +147,18 @@ export function useColorDrag(
     removeListeners();
 
     // 判据 2：禁用时不派发（但旧监听已经清掉）
-    if (props.disabledDrag) {
+    if (toValue(props.disabledDrag)) {
       return;
     }
 
-    updateOffset(e);
+    if (!updateOffset(e)) return;
     mouseMoveHandler = onDragMove;
     mouseUpHandler = onDragStop;
     document.addEventListener('mousemove', onDragMove);
     document.addEventListener('mouseup', onDragStop);
-    document.addEventListener('touchmove', onDragMove);
+    document.addEventListener('touchmove', onDragMove, { passive: false });
     document.addEventListener('touchend', onDragStop);
+    document.addEventListener('touchcancel', onDragStop);
   };
 
   return [offsetValue, onDragStart];

@@ -20,6 +20,7 @@ interface ColorAlphaInputProps {
   prefixCls: string;
   value?: AggregationColor;
   onChange?: (value: AggregationColor) => void;
+  disabled?: boolean;
 }
 
 defineOptions({ name: 'AColorAlphaInput', inheritAttrs: false });
@@ -27,6 +28,7 @@ defineOptions({ name: 'AColorAlphaInput', inheritAttrs: false });
 const props = withDefaults(defineProps<ColorAlphaInputProps>(), {
   value: undefined,
   onChange: undefined,
+  disabled: undefined,
 });
 
 const internalValue = ref<AggregationColor>(generateColor(props.value || '#000'));
@@ -50,6 +52,7 @@ const alphaFormatter: InputNumberProps['formatter'] = (step) => `${step}%`;
 <template>
   <ColorSteppers
     :value="getColorAlpha(alphaValue)"
+    :disabled="disabled"
     :prefix-cls="prefixCls"
     :formatter="alphaFormatter"
     :class-name="`${prefixCls}-alpha-input`"

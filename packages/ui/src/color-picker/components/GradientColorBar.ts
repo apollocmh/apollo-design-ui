@@ -51,6 +51,7 @@ export interface GradientColorBarProps {
   onChangeComplete: (value: AggregationColor) => void;
   onActive: (index: number) => void;
   activeIndex: number;
+  disabled?: boolean;
   onGradientDragging: (dragging: boolean) => void;
 }
 
@@ -70,6 +71,7 @@ export const GradientColorBar = defineComponent({
     },
     onActive: { type: Function as PropType<(index: number) => void>, required: true },
     activeIndex: { type: Number, required: true },
+    disabled: { type: Boolean, default: false },
     onGradientDragging: {
       type: Function as PropType<(dragging: boolean) => void>,
       required: true,
@@ -129,13 +131,15 @@ export const GradientColorBar = defineComponent({
     };
 
     const onKeyDelete = (index: number): void => {
+      if (colorList.value.length <= 2) return;
       const nextColors = [...colorList.value];
       nextColors.splice(index, 1);
 
       const nextColor = new AggregationColor(nextColors);
 
-      props.onChange(nextColor);
+      props.onChange(nextColor, true);
       props.onChangeComplete(nextColor);
+      if (props.activeIndex >= nextColors.length) props.onActive(nextColors.length - 1);
     };
 
     const onInternalChangeComplete = (nextValues: number[]): void => {
@@ -165,7 +169,7 @@ export const GradientColorBar = defineComponent({
         value: values.value,
         range: true,
         onChangeComplete: onInternalChangeComplete,
-        disabled: false,
+        disabled: props.disabled,
         type: 'gradient',
         activeIndex: props.activeIndex,
         onActive: props.onActive,

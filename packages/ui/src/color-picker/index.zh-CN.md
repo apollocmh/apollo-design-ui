@@ -22,7 +22,7 @@ subtitle: 颜色选择器
 | `size` | 触发器 `small` / 默认 / `large` 三档（含 `showText`） |
 | `controlled` | `value` + `@change` / `@changeComplete` 两种受控节奏 |
 | `line-gradient` | `mode` 单色 / 渐变（可多选） |
-| `text-render` | `showText` 的布尔 / 函数形态 |
+| `text-render` | 默认文本与原生 #showText 作用域插槽 |
 | `disabled` | 禁用态 |
 | `disabled-alpha` | `disabledAlpha` 去掉透明度 |
 | `allowClear` | 清空入口与「已清空」态 |
@@ -63,14 +63,14 @@ subtitle: 颜色选择器
 | allowClear | 是否允许清空 | `boolean` | `false` | × |
 | disabledAlpha | 禁用 alpha（面板不渲染 alpha 滑块与输入；半透明色会被强制为不透明） | `boolean` | `false` | × |
 | presets | 预设面板（**数组**才渲染，且会多一条 `Divider`） | `PresetsItem[]` | — | × |
-| showText | 触发器右侧文本；`true` 走 locale，函数则自定义 | `boolean \| ((color: Color) => VNodeChild)` | `false` | × |
+| showText | 显示默认文本；自定义内容用 #showText | `boolean` | `false` | × |
 | size | 尺寸 | `'small' \| 'middle' \| 'large' \| string` | 跟随 ConfigProvider | ✅ |
 | disabled | 禁用 | `boolean` | 跟随 ConfigProvider | ✅ |
-| panelRender | 自定义面板。**函数 prop**（返回 VNode），另有同名 scoped slot | `(panel, extra) => VNodeChild` | — | × |
+
 | classNames | 语义化类名（`root` / `body` / `content` / `description` / `popup`），支持函数形态 | `ColorPickerSemanticClassNames \| ((info) => …)` | — | ✅ |
 | styles | 语义化样式（6 个槽，比 `classNames` 多一个 `popupOverlayInner`），支持函数形态 | `ColorPickerSemanticStyles \| ((info) => …)` | — | ✅ |
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-color-picker` | × |
-| class / style | **根节点原生 attrs**（替代上游 `className` / `rootClassName` / `style`；`class` 同时进触发器与浮层根） | `string \| array \| object` / `CSSProperties` | — | × |
+| class / style | 原生 attrs 作用于实际触发器；浮层使用 popup.root | Vue class / StyleValue | — | × |
 
 #### ColorValueType
 
@@ -82,6 +82,8 @@ type ColorValueType = SingleValueType | null | LineGradientType;
 
 ⚠️ **「清空」不是 `null`，而是 alpha=0 的颜色实例 + `cleared = true`**。触发器据此
 在 `ColorClear`（透明棋盘格）与 `ColorBlock`（色块）之间切换。
+
+Color 实例的数字输入表示 0x000000–0xffffff 的整数 RGB；对象通道支持有限数字与数字字符串，HSB 的 s/b 为 0–1。非法数字会抛出可定位的输入错误，不转成默认颜色。
 
 #### PresetsItem
 
@@ -110,38 +112,38 @@ type ColorValueType = SingleValueType | null | LineGradientType;
 | 插槽 | 说明 | 参数 |
 |---|---|---|
 | default | 触发器内容（等价上游 `children`）。传了就**完全不要**内置触发器 | — |
-| panelRender | `panelRender` 的插槽形态（与函数 prop 二选一，slot 优先） | `{ panel: VNodeChild; extra: ColorPickerPanelRenderExtra }` |
+| panelRender | 自定义面板；panel 是稳定的 Vue 组件引用 | `{ panel: Component; extra: ColorPickerPanelRenderExtra }` |
+| showText | 自定义触发器文字，按当前插槽存在性渲染完整内容 | `{ color: Color }` |
 
 `extra.components` 提供 `{ Picker, Presets }` 两个组件引用，供自定义面板自行编排：
 
 ```vue
 <script setup lang="ts">
-import type { ColorPickerPanelRenderExtra } from '@apollo-design/ui';
 import { ColorPicker } from '@apollo-design/ui';
-import { h, type VNodeChild } from 'vue';
-
-const panelRender = (
-  _panel: VNodeChild,
-  { components: { Picker, Presets } }: ColorPickerPanelRenderExtra,
-) => h('div', { style: { display: 'flex' } }, [h(Presets), h(Picker)]);
 </script>
 
 <template>
-  <ColorPicker :panel-render="panelRender" />
+  <ColorPicker default-value="#1677ff">
+    <template #panelRender="{ panel }">
+      <section>
+        <p>Color Picker</p>
+        <component :is="panel" />
+      </section>
+    </template>
+    <template #showText="{ color }">{{ color.toHexString() }}</template>
+  </ColorPicker>
 </template>
 ```
 
 ### Methods
 
-无。⚠️ 上游 `ColorPicker` **不转发 ref**（`ColorPicker.d.ts` 是裸 `React.FC`），
-本仓同样**不 expose** —— 需要 DOM 时直接读组件根元素。
+本轮不新增命令或 Expose 接口。
 
 ### Design Token
 
 **用户可覆盖的 Component Token：0 个**（与 antd 一致）。
 
-本仓把上游 9 个 `mergeToken` 派生值声明成 `--apollo-color-picker-*`（**用户不可覆盖**，
-有意差异，见 `README.md` §2 / §4）：
+九个样式派生值使用 --apollo-color-picker-* CSS 变量，不是 theme.components.ColorPicker 的配置字段。当前主题别名同步到触发器与弹层；需要自定义派生样式时，在对应宿主覆盖 CSS 变量：
 
 | 变量 | 值 |
 |---|---|
@@ -159,7 +161,7 @@ const panelRender = (
 
 | 槽 | 落在哪 |
 |---|---|
-| `root` | 触发器 `<div>` |
+| `root` | 原生触发按钮（自定义触发器时为所属宿主） |
 | `body` | 触发器里的色块 / 透明棋盘格 |
 | `content` | 色块**内层**（`ColorBlock` 的 inner） |
 | `description` | 触发器右侧文本容器 |
@@ -177,10 +179,13 @@ const panelRender = (
 
 ### `disabledAlpha` 为什么把半透明色改写了？
 
-上游行为：`disabledAlpha` 下，若当前色 `alpha < 100`，`change` / `changeComplete`
-拿到的值会被 `genAlphaColor` 改写成不透明（并在开发期告警）。
+disabledAlpha 下，新输入在 change / changeComplete 中归一为不透明；渐变逐段处理，不扁平化为单色。清空动作保留其独立语义。
 
-### `panelRender` 用 prop 还是插槽？
+### 开发版迁移
 
-两者等价，插槽优先。函数 prop 适合在 `<script setup>` 里用 `h()` 组织（本仓模板没有
-「渲染一个 VNode 变量」的语法）；插槽适合简单包装。
+- 删除 panelRender 函数 prop，改用 #panelRender；作用域 panel 现在是稳定的 Vue 组件引用，可直接写 <component :is="panel" />。
+- showText 只接受 boolean，函数内容改为 #showText，作用域提供当前 color。条件槽与空槽按存在性处理。
+- 默认触发器、预设选择和面板清空使用原生 button；触发器内清空图形为不可聚焦装饰。原始参考保留，语义测试只派生这组已说明的差异。
+- size 使用共享 SizeType，不接受任意字符串。原生 class/style 只作用于触发器；浮层用 classNames.popup.root/styles.popup.root，内部容器用 styles.popupOverlayInner。
+- 受控开关/格式拒绝的请求不泄漏到撤控状态；disabledAlpha 归一新输入的每个渐变段，清空动作保持 cleared。
+- PurePanel 在正常文档流展示真实面板；原生 attrs 落宿主，panelRender 槽与 Vue 事件真实转发，不再轮询尺寸。

@@ -47,7 +47,7 @@ import {
   DEFAULT_CONFIG_CONTEXT,
 } from '../../config-provider/context';
 import { ColorPicker } from '../index';
-import type { ColorPickerProps } from '../interface';
+import type { ColorPickerProps, ColorPickerSlots } from '../interface';
 
 /** 两侧共用的前缀。与 `tests/compat/baseline/color-picker.mjs` 里的 `PREFIX` 必须一致。 */
 const PREFIX = 'apollo';
@@ -72,7 +72,7 @@ const specs: Record<
   {
     props: ColorPickerProps & Record<string, unknown>;
     /** ⚠️ 本仓的 `children` 是**默认插槽**（规则 C8）⇒ 单独一个字段，不能塞进 props */
-    slots?: Record<string, () => VNodeChild>;
+    slots?: ColorPickerSlots;
     ctx?: Partial<ConfigContextValue>;
     /** 不包 ConfigProvider（用来钉「默认根前缀」的差异 D1）。 */
     bare?: boolean;
@@ -94,10 +94,8 @@ const specs: Record<
   'color-picker:show-text': { props: { ...BASE, showText: true } },
   'color-picker:show-text-cleared': { props: { prefixCls: PREFIX, showText: true } },
   'color-picker:show-text-fn': {
-    props: {
-      ...BASE,
-      showText: (color: { toHexString: () => string }) => color.toHexString().toUpperCase(),
-    },
+    props: { ...BASE },
+    slots: { showText: ({ color }) => color.toHexString().toUpperCase() },
   },
   'color-picker:show-text-format-rgb': { props: { ...BASE, showText: true, format: 'rgb' } },
   'color-picker:show-text-format-hsb': { props: { ...BASE, showText: true, format: 'hsb' } },
@@ -145,8 +143,58 @@ const specs: Record<
   },
 };
 
+// Preserve the raw oracle. Apply only the reviewed native trigger/decoration migration.
+const nativeBaseline = {
+  ...baseline,
+  cases: baseline.cases.map((reference) => {
+    if (reference.id === 'color-picker:children') return reference;
+    const document = new DOMParser().parseFromString(reference.html, 'text/html');
+    const old = document.body.firstElementChild;
+    if (
+      old?.tagName !== 'DIV' ||
+      !Array.from(old.classList).some((name) => name.endsWith('-trigger'))
+    ) {
+      throw new Error(`ColorPicker reference trigger changed: ${reference.id}`);
+    }
+    const trigger = document.createElement('button');
+    for (const attr of old.attributes) trigger.setAttribute(attr.name, attr.value);
+    trigger.setAttribute('type', 'button');
+    trigger.setAttribute('aria-haspopup', 'dialog');
+    trigger.setAttribute(
+      'aria-expanded',
+      reference.id === 'color-picker:open-no-portal' ? 'true' : 'false',
+    );
+    const clear = old.querySelector('[role="button"][aria-label="Clear color"]');
+    if (!trigger.hasAttribute('aria-label')) {
+      trigger.setAttribute(
+        'aria-label',
+        clear
+          ? 'Transparent'
+          : reference.id === 'color-picker:show-text-alpha'
+            ? 'rgba(22,119,255,0.5)'
+            : 'rgb(22,119,255)',
+      );
+    }
+    if (reference.id.startsWith('color-picker:disabled')) trigger.setAttribute('disabled', '');
+    if (clear) {
+      if (clear.tagName !== 'DIV')
+        throw new Error(`ColorPicker clear reference changed: ${reference.id}`);
+      const decoration = document.createElement('span');
+      for (const attr of clear.attributes) {
+        if (!['role', 'aria-label', 'aria-disabled', 'tabindex'].includes(attr.name))
+          decoration.setAttribute(attr.name, attr.value);
+      }
+      decoration.setAttribute('aria-hidden', 'true');
+      clear.replaceWith(decoration);
+    }
+    trigger.append(...old.childNodes);
+    old.replaceWith(trigger);
+    return { ...reference, html: document.body.innerHTML };
+  }),
+};
+
 domContractTest('ColorPicker', {
-  baseline,
+  baseline: nativeBaseline,
   keepStyle: true,
   // 上游 `open` 时由 React 的 `useId` 生成 `aria-describedby`（`_R_7_`），
   // 本仓走自己的 id 方案 ⇒ 两侧必然不同（D 家族，id 生成策略是平台差异）。
@@ -160,8 +208,8 @@ domContractTest('ColorPicker', {
       reason: 'D1 · 默认根前缀 apollo vs ant（bare 用例，cleared 分支）',
       deviationId: 'D1',
       diff: [
-        '$/div[0]: 类名不同 [ant-color-picker-trigger] vs [apollo-color-picker-trigger]',
-        '$/div[0]/div[0]: 类名不同 [ant-color-picker-clear] vs [apollo-color-picker-clear]',
+        '$/button[0]: 类名不同 [ant-color-picker-trigger] vs [apollo-color-picker-trigger]',
+        '$/button[0]/span[0]: 类名不同 [ant-color-picker-clear] vs [apollo-color-picker-clear]',
       ],
     },
     // ✅ `children` 通道的差异**已修**（2026-10-02）：改为经一个渲染函数宿主组件转交
@@ -180,7 +228,7 @@ domContractTest('ColorPicker', {
     'color-picker:styles': {
       reason: 'PLATFORM · CSSOM 把十六进制色规范化成 rgb()，语义等价',
       deviationId: 'D114',
-      diff: ['$/div[0]: style 不同 [background:#fafafa] vs [background:rgb(250,250,250)]'],
+      diff: ['$/button[0]: style 不同 [background:#fafafa] vs [background:rgb(250,250,250)]'],
     },
   },
   render: (id) => {

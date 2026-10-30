@@ -35,6 +35,7 @@ interface ColorPresetsProps {
   presets: PresetsItem[];
   value?: AggregationColor;
   onChange?: (value: AggregationColor) => void;
+  disabled?: boolean;
 }
 
 defineOptions({ name: 'AColorPresets', inheritAttrs: false });
@@ -42,6 +43,7 @@ defineOptions({ name: 'AColorPresets', inheritAttrs: false });
 const props = withDefaults(defineProps<ColorPresetsProps>(), {
   value: undefined,
   onChange: undefined,
+  disabled: undefined,
 });
 
 const [locale] = useLocale('ColorPicker');
@@ -83,7 +85,7 @@ const activeKeys = computed(() =>
 );
 
 const handleClick = (colorValue: AggregationColor): void => {
-  props.onChange?.(colorValue);
+  if (!props.disabled) props.onChange?.(colorValue);
 };
 
 const items = computed(() =>
@@ -99,6 +101,9 @@ const items = computed(() =>
             return h(ColorBlock, {
               key: `preset-${colorIndex}-${presetColor.toHexString()}`,
               color: colorInst.toCssString(),
+              interactive: true,
+              disabled: props.disabled,
+              label: colorInst.toCssString(),
               prefixCls: props.prefixCls,
               className: [
                 `${colorPresetsPrefixCls.value}-color`,

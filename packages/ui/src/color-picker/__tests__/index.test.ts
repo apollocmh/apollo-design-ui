@@ -40,7 +40,8 @@ describe('ColorPicker · 触发器（默认值 / 清空态）', () => {
     expect(w.find(`.${P}-color-block`).exists()).toBe(false);
     const clear = w.find(`.${P}-trigger .${P}-clear`);
     expect(clear.exists()).toBe(true);
-    expect(clear.attributes('tabindex')).toBe('0');
+    expect(clear.element.tagName).toBe('SPAN');
+    expect(clear.attributes('aria-hidden')).toBe('true');
     expect(clear.attributes('aria-disabled')).toBeUndefined();
   });
 
@@ -58,8 +59,8 @@ describe('ColorPicker · 触发器（默认值 / 清空态）', () => {
     expect(w.find(`.${P}-trigger`).classes()).toContain(`${P}-trigger-disabled`);
     const clear = w.find(`.${P}-trigger .${P}-clear`);
     expect(clear.classes()).toContain(`${P}-clear-disabled`);
-    expect(clear.attributes('aria-disabled')).toBe('true');
-    expect(clear.attributes('tabindex')).toBe('-1');
+    expect(w.get(`.${P}-trigger`).attributes('disabled')).toBe('');
+    expect(clear.attributes('tabindex')).toBeUndefined();
   });
 
   it('`size="small"` / `size="large"` ⇒ `-sm` / `-lg`', () => {
@@ -142,9 +143,10 @@ describe('ColorPicker · 面板（open）', () => {
   });
 
   it('`panelRender` 换掉面板骨架，且 `-inner-content` 落在它**里面**', async () => {
-    const w = mountPicker({
-      open: true,
-      panelRender: (panel: unknown) => h('div', { class: 'my-panel' }, [panel as never]),
+    const w = mount(ColorPicker, {
+      props: { open: true },
+      slots: { panelRender: ({ panel }) => h('div', { class: 'my-panel' }, [h(panel)]) },
+      attachTo: document.body,
     });
     await nextTick();
     const custom = w.find('.my-panel');

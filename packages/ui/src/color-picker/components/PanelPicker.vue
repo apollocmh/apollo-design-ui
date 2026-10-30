@@ -35,6 +35,7 @@ import Segmented from '../../segmented';
 import { AggregationColor, type GradientColor } from '../color';
 import { panelPickerContextKey } from '../context';
 import type { Color as EngineColor } from '../engine/color';
+import type { ColorFormatType } from '../interface';
 import EngineColorPicker from '../engine/color-picker';
 import { genAlphaColor, generateColor } from '../util';
 import ColorClear from './ColorClear.vue';
@@ -71,7 +72,7 @@ const onChangeComplete = (next: AggregationColor): void => {
   context?.value.onChangeComplete(next);
 };
 const onModeChange = (next: string | number | boolean): void => {
-  context?.value.onModeChange(next as never);
+  if (next === 'single' || next === 'gradient') context?.value.onModeChange(next);
 };
 const onActive = (index: number): void => {
   context?.value.onActive(index);
@@ -79,8 +80,8 @@ const onActive = (index: number): void => {
 const onGradientDragging = (dragging: boolean): void => {
   context?.value.onGradientDragging(dragging);
 };
-const onFormatChange = (next: string | undefined): void => {
-  context?.value.onFormatChange?.(next as never);
+const onFormatChange = (next: ColorFormatType | undefined): void => {
+  context?.value.onFormatChange?.(next);
 };
 
 // ============================ Colors ============================
@@ -224,6 +225,7 @@ const onClearClick = (clearColor: AggregationColor): void => {
       @change="onModeChange"
     />
     <ColorClear
+      v-if="allowClear"
       :prefix-cls="prefixCls"
       :value="value"
       :disabled="disabled"
@@ -236,6 +238,7 @@ const onClearClick = (clearColor: AggregationColor): void => {
     :mode="mode"
     :colors="colors"
     :active-index="activeIndex"
+    :disabled="disabled"
     :on-change="onChange"
     :on-change-complete="onChangeComplete"
     :on-active="onActive"
@@ -256,6 +259,7 @@ const onClearClick = (clearColor: AggregationColor): void => {
     :prefix-cls="prefixCls"
     :value="activeColor"
     :disabled-alpha="disabledAlpha"
+    :disabled="disabled"
     :format="format"
     :disabled-format="disabledFormat"
     :on-format-change="onFormatChange"
