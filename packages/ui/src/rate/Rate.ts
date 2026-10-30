@@ -21,6 +21,7 @@ import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
 import type { RateProps, RateRef, RateSlots } from './interface';
 import StarComponent from './Star';
+import { useRateTheme } from './use-rate-theme';
 import { getOffsetLeft } from './util';
 
 /** antd 薄壳从 `useComponentConfig('rate')` 读取的组件级配置。 */
@@ -76,6 +77,7 @@ const RateComponent = defineComponent({
 
     // ============================ Prefix ==============================
     const prefixCls = computed(() => context.getPrefixCls('rate', props.prefixCls));
+    const themeStyle = useRateTheme(() => prefixCls.value);
 
     // =========================== Disabled =============================
     const contextDisabled = useDisabled();
@@ -322,7 +324,7 @@ const RateComponent = defineComponent({
         mergeDomAttrs(
           {
             class: classString,
-            style: context.style,
+            style: [themeStyle.value, context.style],
             onFocusin: onInternalFocus,
             onFocusout: onInternalBlur,
             onKeydown: mergedDisabled.value ? null : onInternalKeyDown,

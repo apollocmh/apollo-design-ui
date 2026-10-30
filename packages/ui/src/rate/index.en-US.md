@@ -73,6 +73,21 @@ The root is a `radiogroup`; provide `aria-label` or `aria-labelledby`. Only the 
 
 `change`, `hoverChange`, `focus` and `blur` are declared Vue emits. Existing listeners such as `@change` / `onChange` continue to work. `focus` / `blur` now carry a native `FocusEvent`; focus methods and `tabIndex` target the current radio instead of the root container. `#character.value` follows the visual preview. Adding or removing tooltips preserves star DOM and focus.
 
+### Component Token
+
+Override the six tokens with ConfigProvider's `theme.components.Rate`. Nested providers inherit individual fields. Replacing or removing overrides restores values derived from the current global theme. A custom `prefixCls` uses the matching component variable names.
+
+| Token | Description | Default |
+|---|---|---|
+| starColor | Selected star color | `yellow6` |
+| starBg | Unselected star color | `colorFillContent` |
+| starSize | Standard star size | `controlHeight × 0.625` |
+| starSizeSM | Small star size | `controlHeightSM × 0.625` |
+| starSizeLG | Large star size | `controlHeightLG × 0.625` |
+| starHoverScale | Hover and keyboard focus scale | `scale(1.1)` |
+
+Numeric sizes use pixels; theme overrides also accept CSS length strings. Styles apply in this order: theme tokens, `components.rate.style`, then native component `style`. Without an active source theme, static CSS variables retain ownership.
+
 ## Design notes
 
 - **Vue-native rebuild of the rc-rate 1.0.1 core** (Rate + Star + util.getOffsetLeft).

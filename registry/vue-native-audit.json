@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 21,
+  "revision": 23,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -1317,17 +1317,13 @@
       "kind": "component",
       "ref": "rate",
       "title": "Rate",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/rate"
       ],
-      "assignment": {
-        "owner": "native_rate",
-        "baseRevision": 14,
-        "startedAt": "2026-10-30T06:48:55.167Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1337,7 +1333,7 @@
       "issues": [
         {
           "id": "RATE-LIVE-TOKENS",
-          "status": "open",
+          "status": "fixed",
           "blocking": true,
           "impact": "已声明6个组件Token仅静态生成，当前组件覆盖/派生更新未消费。",
           "reason": "公开接口无效属于本阶段必须修复，不能因旧静态theme测试通过留到最终验收。"
@@ -1346,7 +1342,7 @@
       "verification": {
         "stage": "architecture",
         "scope": [
-          "packages/ui/src/rate/Rate.ts"
+          "packages/ui/src/rate"
         ],
         "passed": true,
         "checks": [
@@ -1365,15 +1361,34 @@
             "durationMs": 4380
           },
           {
-            "kind": "types",
-            "command": "vue-tsc --noEmit -p <temporary strict source/tests/demo config>",
+            "kind": "core",
+            "command": "vitest run --project theme packages/ui/src/rate --maxWorkers=1",
             "exitCode": 0,
             "signal": null,
-            "durationMs": 49702
+            "durationMs": 13580
+          },
+          {
+            "kind": "core",
+            "command": "vitest run --project unit packages/ui/src/rate/__tests__/demo.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 10760
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/rate/__tests__/theme-browser.mjs",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <temporary config extending root strict options; current source/tests/demos>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 50098
           }
         ],
-        "browser": "隔离源码SSR/hydration/Chrome键盘/焦点/axe已验证；无共享dist构建。",
-        "boundary": "只验证已提交原生事件/内容/焦点/attrs/Provider样式组；当前主题Token消费尚未通过。"
+        "boundary": "原生事件、插槽、焦点与 attrs 已有同范围有效证据；补齐当前六 Token 和 Demo 的实际 CSS 消费。最终冻结版本九维验收未执行。"
       },
       "plan": {
         "goal": "保留已交付原生契约，补齐 rate 当前组件主题Token消费",

@@ -73,6 +73,21 @@ subtitle: 评分
 
 `change`、`hoverChange`、`focus`、`blur` 已声明为 Vue emits，原有 `@change` / `onChange` 等监听写法继续工作。`focus` / `blur` 现在提供原生 `FocusEvent`；焦点与 `tabIndex` 的目标由根容器调整为当前 radio 项。`#character.value` 与视觉预览一致；动态添加或移除 tooltips 保留星项 DOM 和焦点。
 
+### Component Token
+
+通过 `ConfigProvider` 的 `theme.components.Rate` 覆盖当前评分组件的六个 Token。嵌套 Provider 按字段继承，替换或移除覆盖后恢复当前全局主题的派生值；自定义 `prefixCls` 使用对应的组件变量名。
+
+| Token | 说明 | 默认值 |
+|---|---|---|
+| starColor | 已选星颜色 | `yellow6` |
+| starBg | 未选星颜色 | `colorFillContent` |
+| starSize | 标准星尺寸 | `controlHeight × 0.625` |
+| starSizeSM | 小星尺寸 | `controlHeightSM × 0.625` |
+| starSizeLG | 大星尺寸 | `controlHeightLG × 0.625` |
+| starHoverScale | 悬停和键盘焦点缩放 | `scale(1.1)` |
+
+尺寸数字按像素处理，也可通过主题配置提供 CSS 长度字符串。样式优先级为主题 Token、`components.rate.style`、组件原生 `style`；无活动源码主题时沿用静态 CSS 变量。
+
 ## 设计说明
 
 - **rc-rate 1.0.1 内核的 Vue 自建**（Rate + Star + util.getOffsetLeft 逐字移植）。
