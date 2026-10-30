@@ -8,13 +8,6 @@ import { prepareComponentToken } from '../style/token';
 themeTest('Dropdown', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
   global: { stubs: { teleport: false } },
-  allow: [
-    {
-      // demo/dropdown-button.vue 用到 deprecated 的 DropdownButton（D91）。
-      match: '`Dropdown.Button` is deprecated',
-      reason: 'D91：组件整体 deprecated，demo 用到即有同款告警。',
-    },
-  ],
 });
 
 describe('Dropdown · token 契约', () => {

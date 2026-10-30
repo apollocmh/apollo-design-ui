@@ -1,69 +1,93 @@
-/**
- * PurePanel —— antd `genPurePanel(Dropdown, ...)` 的 Vue 版。
- * `_InternalPanelDoNotUseOrYouWillBeFired` 静态面板（demo / 文档用）：
- * 直接渲染 `{p}-dropdown` 根 + Menu（override 覆盖，无 Trigger/portal）。
- */
-import { defineComponent, h, type PropType, provide, type VNodeChild } from 'vue';
-
-import { menuOverrideKey } from '../menu/context';
-import Menu from '../menu/Menu';
-import type { DropdownProps } from './interface';
-
-type StyleLike = Record<string, string | number>;
-
-/** OverrideProvider 的 Vue 对应物（provide 必须在 setup 顶层 ⇒ 独立组件）。 */
-const OverrideProvider = defineComponent({
-  name: 'ADropdownPureOverride',
-  props: {
-    override: { type: Object as PropType<Record<string, unknown>>, required: true },
-  },
-  setup(props, { slots }) {
-    provide(menuOverrideKey, props.override as never);
-    return () => slots.default?.();
-  },
-});
+/** Static Dropdown panel: the same current Menu, styles and content without a Trigger. */
+import { computed, defineComponent, h, type PropType, type SlotsType } from 'vue';
+import { useConsumerZIndex } from '../_internal/use-consumer-z-index';
+import { useMergeSemantic } from '../_internal/use-merge-semantic';
+import {
+  type ComponentStyleConfig,
+  useComponentConfig,
+  useDirection,
+} from '../config-provider/context';
+import DropdownMenu from './DropdownMenu';
+import type {
+  DropdownClassNames,
+  DropdownProps,
+  DropdownSemanticType,
+  DropdownSlots,
+  DropdownStyles,
+} from './interface';
+import { useDropdownTheme } from './use-dropdown-theme';
 
 const PurePanel = defineComponent({
   name: 'ADropdownPurePanel',
   inheritAttrs: false,
+  slots: Object as SlotsType<Pick<DropdownSlots, 'popupRender'>>,
   props: {
     prefixCls: { type: String, default: undefined },
     menu: { type: Object as PropType<DropdownProps['menu']>, default: undefined },
-    classNames: { type: Object as PropType<DropdownProps['classNames']>, default: undefined },
-    styles: { type: Object as PropType<DropdownProps['styles']>, default: undefined },
+    classNames: { type: [Object, Function] as PropType<DropdownClassNames>, default: undefined },
+    styles: { type: [Object, Function] as PropType<DropdownStyles>, default: undefined },
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, slots }) {
+    const config = useComponentConfig<
+      ComponentStyleConfig & { classNames?: DropdownClassNames; styles?: DropdownStyles }
+    >('dropdown');
+    const prefixCls = computed(() => props.prefixCls ?? config.getPrefixCls('dropdown'));
+    const direction = useDirection();
+    const theme = useDropdownTheme();
+    const semantic = useMergeSemantic<
+      DropdownProps,
+      NonNullable<DropdownSemanticType['classNames']>,
+      NonNullable<DropdownSemanticType['styles']>
+    >(
+      [() => config.classNames, () => props.classNames],
+      [
+        () => config.styles,
+        () => (config.style ? { root: config.style } : undefined),
+        () => props.styles,
+      ],
+      () => props,
+    );
+    const zIndex = useConsumerZIndex(
+      'Dropdown',
+      () => semantic.styles.value.root?.zIndex,
+      () => theme.componentToken.value.zIndexPopup,
+    );
     return () => {
-      const prefixCls = props.prefixCls ?? 'apollo-dropdown';
-      const override = {
-        prefixCls: `${prefixCls}-menu`,
-        mode: 'vertical' as const,
-        selectable: false,
-      };
-      const restAttrs = Object.fromEntries(
-        Object.entries(attrs).filter(([k]) => k !== 'class' && k !== 'style'),
-      );
+      const { class: nativeClass, style: nativeStyle, ...restAttrs } = attrs;
       return h(
         'div',
         {
           ...restAttrs,
-          // 根 `class` / `style` 是 Vue 原生 attrs（`attrs.class` 已在数组里）。
-          class: [prefixCls, props.classNames?.root, attrs.class],
-          style: {
-            ...(props.styles?.root ?? {}),
-            ...((attrs.style as StyleLike | undefined) ?? {}),
-          },
+          class: [prefixCls.value, config.className, semantic.classNames.value.root, nativeClass],
+          style: [
+            {
+              position: 'relative',
+              top: 'auto',
+              left: 'auto',
+              display: 'inline-block',
+              direction: direction.value,
+              zIndex: zIndex.value,
+            },
+            theme.style.value,
+            semantic.styles.value.root,
+            nativeStyle,
+          ],
         },
-        h(OverrideProvider, { override }, () =>
-          props.menu?.items
-            ? h(Menu, { ...(props.menu as object), prefixCls: `${prefixCls}-menu` } as never)
-            : ([props.menu as unknown as VNodeChild].filter(
-                (c) => c !== null && c !== undefined,
-              ) as VNodeChild),
-        ),
+        [
+          h(
+            DropdownMenu,
+            {
+              prefixCls: prefixCls.value,
+              rtl: direction.value === 'rtl',
+              menu: props.menu,
+              classNames: semantic.classNames.value,
+              styles: semantic.styles.value,
+            },
+            slots.popupRender ? { popupRender: slots.popupRender } : {},
+          ),
+        ],
       );
     };
   },
 });
-
 export default PurePanel;

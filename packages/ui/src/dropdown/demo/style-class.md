@@ -3,8 +3,8 @@ order: 16
 ---
 ## zh-CN
 
-自定义 classNames/styles 语义槽。
+浮层根与菜单内容使用各自的 classNames/styles；切换当前主题的菜单间距与层级。
 
 ## en-US
 
-自定义 classNames/styles 语义槽。
+Use separate semantic regions for the popup root and menu content; switch the current menu spacing and layer.

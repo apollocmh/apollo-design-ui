@@ -1112,11 +1112,21 @@ export type { ComponentToken as DrawerComponentToken } from './drawer/style/toke
 export { prepareComponentToken as prepareDrawerComponentToken } from './drawer/style/token';
 export type {
   DropdownArrowOptions,
+  DropdownButtonEmits,
   DropdownButtonProps,
+  DropdownButtonRef,
+  DropdownButtonSlots,
+  DropdownClassNames,
+  DropdownEmits,
+  DropdownOpenInfo,
   DropdownPlacement,
   DropdownPopupPlacement,
+  DropdownPopupRenderSlotProps,
   DropdownProps,
+  DropdownRef,
   DropdownSemanticType,
+  DropdownSlots,
+  DropdownStyles,
   DropdownTriggerAction,
 } from './dropdown';
 export { Dropdown, DropdownButton, DropdownPurePanel } from './dropdown';

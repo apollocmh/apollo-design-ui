@@ -2,11 +2,10 @@
  * Dropdown 的类型定义（G2 产物）。
  *
  * 契约来源：antd 6.6.4 `es/dropdown/dropdown.d.ts` + `components/dropdown/dropdown.tsx`。
- * 按本仓 Vue 化约定重新定义（H2）：classNames/styles 收窄为静态对象形态
- * （函数式语义槽 PENDING，D36 同判）。
+ * Dropdown owns its model/events, trigger attrs and popup/Menu semantic regions.
  */
 
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { CSSProperties, StyleValue, VNode, VNodeChild } from 'vue';
 
 import type { MenuProps } from '../menu/interface';
 
@@ -45,12 +44,51 @@ export interface DropdownSemanticType {
   };
   styles?: {
     root?: CSSProperties;
-    item?: Record<string, string | number>;
-    itemTitle?: Record<string, string | number>;
-    itemIcon?: Record<string, string | number>;
-    itemContent?: Record<string, string | number>;
+    item?: CSSProperties;
+    itemTitle?: CSSProperties;
+    itemIcon?: CSSProperties;
+    itemContent?: CSSProperties;
   };
 }
+
+export type DropdownClassNames =
+  | DropdownSemanticType['classNames']
+  | ((info: { props: DropdownProps }) => DropdownSemanticType['classNames']);
+export type DropdownStyles =
+  | DropdownSemanticType['styles']
+  | ((info: { props: DropdownProps }) => DropdownSemanticType['styles']);
+export interface DropdownOpenInfo {
+  source: 'trigger' | 'menu';
+}
+export interface DropdownPopupRenderSlotProps {
+  originNode: VNodeChild;
+}
+export type DropdownSlots = {
+  default?: () => VNodeChild;
+  popupRender?: (scope: DropdownPopupRenderSlotProps) => VNodeChild;
+};
+export type DropdownButtonSlots = DropdownSlots & {
+  icon?: () => VNodeChild;
+  /** Return the main and trigger positions as two Vue children. */
+  buttonsRender?: (scope: { buttons: [VNode, VNode] }) => VNodeChild[];
+};
+export interface DropdownEmits {
+  'update:open': (open: boolean) => void;
+  openChange: (open: boolean, info: DropdownOpenInfo) => void;
+  afterOpenChange: (open: boolean) => void;
+}
+export interface DropdownButtonEmits {
+  'update:open': (open: boolean) => void;
+  openChange: (open: boolean, info: DropdownOpenInfo) => void;
+  click: (event: MouseEvent) => void;
+}
+/** Existing method-shaped DOM getters; also used by Breadcrumb and Tabs. */
+export interface DropdownRef {
+  forceAlign: () => void;
+  nativeElement: () => HTMLElement | null;
+  popupElement: () => HTMLElement | null;
+}
+export type DropdownButtonRef = Pick<DropdownRef, 'nativeElement'>;
 
 export interface DropdownProps {
   prefixCls?: string;
@@ -62,8 +100,9 @@ export interface DropdownProps {
   /** 受控开合（`v-model:open` 等价）。 */
   open?: boolean;
   defaultOpen?: boolean;
-  onOpenChange?: (open: boolean, info: { source: 'trigger' | 'menu' }) => void;
-  afterOpenChange?: (open: boolean) => void;
+  'onUpdate:open'?: (open: boolean) => void;
+  onOpenChange?: DropdownEmits['openChange'];
+  onAfterOpenChange?: DropdownEmits['afterOpenChange'];
   disabled?: boolean;
   placement?: DropdownPlacement;
   /** 动画名覆盖（默认按 placement 推 slide-up/down/left/right）。 */
@@ -95,8 +134,8 @@ export interface DropdownProps {
   openClassName?: string;
   id?: string;
   zIndex?: number;
-  classNames?: DropdownSemanticType['classNames'];
-  styles?: DropdownSemanticType['styles'];
+  classNames?: DropdownClassNames;
+  styles?: DropdownStyles;
 }
 
 /** DropdownButton 的 props（Button 面 + Dropdown 面的并集，redirect 字段收窄）。 */
@@ -106,7 +145,6 @@ export interface DropdownButtonProps {
   size?: 'large' | 'middle' | 'small';
   loading?: boolean;
   danger?: boolean;
-  icon?: VNodeChild;
   href?: string;
   target?: string;
   disabled?: boolean;
@@ -117,11 +155,12 @@ export interface DropdownButtonProps {
   trigger?: DropdownTriggerAction[];
   arrow?: boolean | DropdownArrowOptions;
   open?: boolean;
-  onOpenChange?: (open: boolean, info: { source: 'trigger' | 'menu' }) => void;
+  'onUpdate:open'?: (open: boolean) => void;
+  onOpenChange?: DropdownButtonEmits['openChange'];
   /** split：按钮与箭头分离（点击主钮 = onClick；箭头区触发下拉）。 */
   split?: boolean;
-  /** ⚠️ deprecated：直接写原生 attrs（`class` / `style` 会经 attrs 透传到根 div）。 */
-  style?: Record<string, string | number>;
+  /** Native group-root style, including Vue strings and arrays. */
+  style?: StyleValue;
   autoAdjustOverflow?: boolean;
   destroyOnHidden?: boolean;
   forceRender?: boolean;

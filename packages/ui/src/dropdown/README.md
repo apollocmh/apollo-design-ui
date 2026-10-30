@@ -4,6 +4,16 @@
 
 # dropdown
 
+## 当前实现（2026-10-30）
+
+Dropdown/DropdownButton 的通知和模型由 Vue emits 发送；完成通知使用 `@after-open-change`，对应 `onAfterOpenChange`，旧 `afterOpenChange` 函数 prop 直接迁移。原 getter ref 方法保留并补公开类型，Tabs/Breadcrumb 的调用继续有效。DropdownButton 是 Apollo 当前支持的组件，不再因其他库弃用它而发出弃用告警；已不存在的 icon prop 从类型中移除，继续使用既有 `#icon`。
+
+当前槽在 render 读取，图标完整保留，空图标槽不会恢复默认图标；`buttonsRender` 继续代表主钮、触发钮两个位置。native attrs 作用于触发元素，DropdownButton 的 native attrs 属于按钮组根；实际浮层根与 Menu 四个区域由各自语义字段拥有。PurePanel 使用同一 Menu 组合和主题投影，支持原生字符串/数组样式，并在文档流内展示。
+
+Provider 配置、当前 Token、定位参数和数值层级使用同一当前来源。七个已有 CSS 字段包括 zIndexPopup/paddingBlock 及五个箭头派生字段，不新增 Token 名称。Menu 仍拥有选择、导航与子菜单；本次只验证真实组合所依赖的当前配置与资源边界。完整当前 API 见双语文档与类型。
+
+以下编号章节保留 2026-09-25 的原始实施与验收含义；其中旧完成状态、上游弃用与当时缺口不是本轮状态或新验收结论。
+
 > **层**：L3（`packages/ui`）｜ **优先级**：P3 ｜ **复杂度**：L ｜ **antd 版本**：6.6.4
 >
 > 契约来源：antd `components/dropdown/`（dropdown.tsx 404 行 / dropdown-button.tsx

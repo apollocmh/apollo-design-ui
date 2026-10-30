@@ -141,11 +141,12 @@ const Menu = defineComponent({
     // rc OverrideProvider（dropdown 等包装者）的覆盖通道
     const override = inject<MenuOverrideData | null>(menuOverrideKey, null);
     const menuConfig = useComponentConfig('menu');
-    const getPrefixCls = menuConfig.getPrefixCls;
     // antd menu.js:76：`getPrefixCls('menu', customizePrefixCls || overrideObj.prefixCls)`
-    const prefixCls = getPrefixCls('menu', props.prefixCls || override?.prefixCls);
+    const prefixCls = computed(() =>
+      menuConfig.getPrefixCls('menu', props.prefixCls || override?.prefixCls),
+    );
     // antd menu.js:65：motion 类名前缀取自**根前缀**（默认 `apollo`），不是 `apollo-menu`。
-    const rootPrefixCls = getPrefixCls();
+    const rootPrefixCls = computed(() => menuConfig.getPrefixCls());
     const menuId = props.id ?? `apollo-menu-${uuid++}`;
     const containerRef = shallowRef<HTMLElement | null>(null);
     /**
@@ -259,9 +260,9 @@ const Menu = defineComponent({
     // ⚠️ antd menu.js:85：`selectable ?? overrideObj.selectable` —— **props 优先**，
     //    override 只是兜底（Dropdown override 的 selectable=false 不应盖掉
     //    Table 过滤菜单显式传的 selectable=true）；props 未给时默认 true。
-    const mergedSelectable = props.selectable ?? override?.selectable ?? true;
+    const mergedSelectable = computed(() => props.selectable ?? override?.selectable ?? true);
     const triggerSelection = (info: MenuInfo): void => {
-      if (mergedSelectable) {
+      if (mergedSelectable.value) {
         const targetKey = info.key;
         const exist = mergedSelectKeys.value.includes(targetKey);
         let newSelectKeys: string[];
@@ -323,7 +324,7 @@ const Menu = defineComponent({
       getKeyPath,
       onActive,
       triggerOpen: triggerAccessibilityOpen,
-      originOnKeyDown: props.onKeyDown,
+      originOnKeyDown: (event) => props.onKeyDown?.(event),
     });
 
     // ====================== Context ======================
@@ -355,8 +356,12 @@ const Menu = defineComponent({
     });
     const menuContext: MenuContextData = {
       mounted,
-      prefixCls,
-      rootPrefixCls,
+      get prefixCls() {
+        return prefixCls.value;
+      },
+      get rootPrefixCls() {
+        return rootPrefixCls.value;
+      },
       menuId,
       mode: mergedMode,
       get disabled() {
@@ -591,12 +596,12 @@ const Menu = defineComponent({
           ...((rootStyle.list ?? {}) as Record<string, string | number>),
         }),
         class: [
-          prefixCls,
-          `${prefixCls}-root`,
-          `${prefixCls}-${mergedMode.value}`,
-          `${prefixCls}-${props.theme}`,
-          mergedInlineCollapsed.value ? `${prefixCls}-inline-collapsed` : undefined,
-          isRtl.value ? `${prefixCls}-rtl` : undefined,
+          prefixCls.value,
+          `${prefixCls.value}-root`,
+          `${prefixCls.value}-${mergedMode.value}`,
+          `${prefixCls.value}-${props.theme}`,
+          mergedInlineCollapsed.value ? `${prefixCls.value}-inline-collapsed` : undefined,
+          isRtl.value ? `${prefixCls.value}-rtl` : undefined,
           typeof attrs.class === 'string' ? attrs.class : undefined,
           rootCls.root,
           rootCls.list,
@@ -608,7 +613,7 @@ const Menu = defineComponent({
       const container = useOverflow
         ? h(Overflow, {
             key: 'overflow',
-            prefixCls: `${prefixCls}-overflow`,
+            prefixCls: `${prefixCls.value}-overflow`,
             component: 'ul',
             'data-menu-list': true,
             role: props.role,
@@ -631,7 +636,7 @@ const Menu = defineComponent({
                 item as ParsedNode,
                 [],
                 index > overflowIndex.value,
-                `${prefixCls}-overflow-item`,
+                `${prefixCls.value}-overflow-item`,
               ),
             renderRawRest: (omittedItems: unknown[]) =>
               h(

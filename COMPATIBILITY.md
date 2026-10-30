@@ -170,3 +170,7 @@ Transfer 保留已有四槽成果，补齐 targetKeys/selectedKeys 双模型、�
 ### D-picker-native-panels
 
 Picker 面板引擎的通知使用 Vue emits，PickerPanel 提供 value/pickerValue/mode 三个模型；cellRender 内容 prop 迁为 #cellRender，对日期与时间列提供真实 Dayjs/number/meridiem 类型。当前时间配置、Provider、原生槽和面板引用直接消费；滚动对齐、取消与卸载资源已修复。DatePicker/RangePicker/Calendar 仅同步引擎消费桥，CellRenderInfo.locale 修正为实际面板语言子集，包装器其余契约继续各自整改。详见[Picker 当前契约](docs/foundation/picker-contract.md)。
+
+### D-dropdown-native-menu
+
+Dropdown/DropdownButton 的开关、动效与主按钮通知使用 Vue emits，afterOpenChange prop 迁为 after-open-change 事件；真实引用保留既有三个 getter 方法。Provider、有效 Token、原生 attrs 与完整按钮/浮层槽真实消费，未实现的 icon 类型字段改用已有图标槽；id 落到实际触发节点。Menu 同步当前前缀、分组/动效、selectable 与键盘监听，语义样式传至实际菜单项。PurePanel 保持正常静态定位，详见[Dropdown API](packages/ui/src/dropdown/index.zh-CN.md)。

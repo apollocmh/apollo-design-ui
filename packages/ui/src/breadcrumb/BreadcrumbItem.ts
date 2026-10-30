@@ -134,8 +134,8 @@ export const InternalBreadcrumbItem = defineComponent({
               trigger: actions,
               open: visibleOpen.value,
               'onUpdate:open': (value: boolean) => setOpen(value),
-              afterOpenChange: (value: boolean) => {
-                props.dropdownProps?.afterOpenChange?.(value);
+              onAfterOpenChange: (value: boolean) => {
+                props.dropdownProps?.onAfterOpenChange?.(value);
                 if (value) focusMenu();
               },
             },

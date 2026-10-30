@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 113,
+  "revision": 119,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -654,22 +654,39 @@
       "kind": "component",
       "ref": "date-picker",
       "title": "DatePicker",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [
         "FND:picker"
       ],
       "owns": [
-        "packages/ui/src/date-picker"
+        "packages/ui/src/date-picker",
+        "packages/picker",
+        "packages/ui/src/time-picker"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_picker",
+        "baseRevision": 115,
+        "startedAt": "2026-10-30T12:36:38.934Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-23-picker-transfer-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "共享Picker引擎已交付后，接续DatePicker/RangePicker公共包装层剩余Vue契约",
+        "remaining": [
+          "复用已交付cell槽、当前引擎桥及既有Provider/原生样式证据；先完整盘清输入/受控提交/清空/解析/键盘焦点、公开props/slots/events/ref、当前配置/Token与相关子组件，不重复Picker引擎审计。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-23-picker-transfer-remediation.md",
+          "docs/foundation/picker-contract.md"
+        ]
+      }
     },
     {
       "id": "CMP:descriptions",
@@ -798,7 +815,7 @@
       "kind": "component",
       "ref": "dropdown",
       "title": "Dropdown",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
@@ -809,12 +826,10 @@
         "packages/ui/src/menu/interface.ts",
         "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
       ],
-      "assignment": {
-        "owner": "native_portal",
-        "baseRevision": 94,
-        "startedAt": "2026-10-30T11:20:42.981Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -826,20 +841,54 @@
       "verification": {
         "stage": "architecture",
         "scope": [
-          "packages/ui/src/dropdown/interface.ts",
-          "packages/ui/src/_internal/trigger.ts"
+          "packages/ui/src/dropdown",
+          "packages/ui/src/menu/Menu.ts",
+          "packages/ui/src/menu/MenuItemGroup.ts",
+          "packages/ui/src/menu/InlineSubMenuList.ts",
+          "packages/ui/src/menu/interface.ts",
+          "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
         ],
         "passed": true,
         "checks": [
           {
-            "kind": "types",
-            "command": "vue-tsc --noEmit -p <isolated strict config; Dropdown and FloatButton source/tests/demos>",
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract --project theme packages/ui/src/dropdown/__tests__ packages/ui/src/tabs/__tests__/vue-slots.test.ts packages/ui/src/breadcrumb/__tests__/contract-audit.test.ts packages/ui/src/menu/__tests__/s22-issue22.test.ts --maxWorkers=1",
             "exitCode": 0,
             "signal": null,
-            "durationMs": 49615
+            "durationMs": 35990,
+            "log": "/tmp/apollo-dropdown-final-core.log"
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/table/__tests__/index.test.ts packages/ui/src/table/__tests__/s17-issue17.test.ts --testNamePattern 'onFilter \\+ filters|翻到第 2 页后过滤|getPopupContainer 运行时替换' --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8350,
+            "log": "/tmp/apollo-dropdown-table-consumer.log"
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/dropdown/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11480,
+            "log": "/tmp/apollo-dropdown-browser-final.log"
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; all Dropdown source/tests/demo/SFC and exact Menu/Breadcrumb consumers>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49692
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/_internal/__tests__/provider-editor-identity.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null
           }
         ],
-        "boundary": "仅验证浮层root/overlayStyle经Trigger直接接收Vue CSSProperties的类型链；其余Dropdown整改仍partial，没有新增运行时验收结论。"
+        "boundary": "Dropdown/DropdownButton/PurePanel的owned事件与model、当前完整槽、真实getter ref、native attrs与真正浮层root、Provider与已有7个CSS字段/定位/数值层级、Menu语义转发与实际当前配置已验证。保留此前popup-slot、受控延迟、CSSProperties和Portal层级成果。root完成的Menu prefix/group/inline前缀、selectable与keyboard listener及Breadcrumb完成通知支持与本任务一起验证；Tabs/Breadcrumb原槽与Table真实过滤/容器路径通过。真实源码browser含SFC refs、当前主题替换撤除、实际Tooltip、20px→12px定位间距、草稿/选择/焦点、Menu键盘选择/归焦、Escape、完整/空icon、可见静态面板、更新的style-class Demo及卸载，严格console/pageerror/window.error均为空。原5条参考数据与allowance未改；id本身按既有contract投影不比较，另由原生DOM断言核对。UI根十个新类型已由root导出。root首轮窄strict exit2仅发现本目录Provider泛型及RawSlots兼容声明，已用ComponentStyleConfig和精确slots对象type修复（无运行时更改），保留原h正例，等待root重跑同一单进程窄strict。非numeric CSS表达式的自动后代层级仍按既有边界延期；未新增autoFocus/focus能力、未重审Menu全契约、未扩D04前缀CSS策略。未构建dist，未执行全库/coverage/完整视觉/发布消费者或最终冻结九维验收。 Shared Provider editor identity is verified using real Teleport; the structural test stub is not used as evidence of production remount."
       },
       "plan": {
         "goal": "保留popup槽、受控延迟和层级交付，收口Dropdown及Button组合剩余Vue差额",
@@ -2951,7 +3000,8 @@
         "packages/ui/src/tree-select",
         "packages/ui/src/tree/Tree.ts",
         "packages/ui/src/tree/__tests__/native-contracts.test.ts",
-        "packages/ui/src/select/engine/BaseSelect.ts"
+        "packages/ui/src/select/engine/BaseSelect.ts",
+        "packages/ui/src/select/engine/SearchInput.ts"
       ],
       "assignment": {
         "owner": "native_select",

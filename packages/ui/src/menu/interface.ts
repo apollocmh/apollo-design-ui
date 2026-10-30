@@ -6,7 +6,7 @@
  * icon 收窄为 RenderIconType（VNodeChild | 函数）。
  */
 
-import type { VNodeChild } from 'vue';
+import type { CSSProperties, VNodeChild } from 'vue';
 
 export type MenuMode = 'horizontal' | 'vertical' | 'inline';
 export type MenuTheme = 'light' | 'dark';
@@ -95,7 +95,7 @@ export interface SubMenuType {
   rootClassName?: string;
   popupClassName?: string;
   popupOffset?: [number, number];
-  popupStyle?: Record<string, string | number>;
+  popupStyle?: CSSProperties;
   onMouseEnter?: MenuHoverEventHandler;
   onMouseLeave?: MenuHoverEventHandler;
   onTitleClick?: (info: { key: string; domEvent: MouseEvent }) => void;
@@ -133,18 +133,18 @@ export interface MenuSemanticType {
     itemContent?: string;
   };
   styles?: {
-    root?: Record<string, string | number>;
-    itemTitle?: Record<string, string | number>;
-    list?: Record<string, string | number>;
-    item?: Record<string, string | number>;
-    itemIcon?: Record<string, string | number>;
-    itemContent?: Record<string, string | number>;
+    root?: CSSProperties;
+    itemTitle?: CSSProperties;
+    list?: CSSProperties;
+    item?: CSSProperties;
+    itemIcon?: CSSProperties;
+    itemContent?: CSSProperties;
   };
 }
 
 export interface MenuPopupSemanticType {
   classNames?: { root?: string };
-  styles?: { root?: Record<string, string | number> };
+  styles?: { root?: CSSProperties };
 }
 
 export interface SubMenuSemanticType {
@@ -156,11 +156,11 @@ export interface SubMenuSemanticType {
     itemIcon?: string;
   };
   styles?: {
-    item?: Record<string, string | number>;
-    itemTitle?: Record<string, string | number>;
-    list?: Record<string, string | number>;
-    itemContent?: Record<string, string | number>;
-    itemIcon?: Record<string, string | number>;
+    item?: CSSProperties;
+    itemTitle?: CSSProperties;
+    list?: CSSProperties;
+    itemContent?: CSSProperties;
+    itemIcon?: CSSProperties;
   };
 }
 

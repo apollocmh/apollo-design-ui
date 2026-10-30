@@ -36,7 +36,10 @@ export default defineComponent({
       },
       { flush: 'sync' },
     );
-    const { motionName, motionDeadline, ...hooks } = initCollapseMotion(ctx.rootPrefixCls);
+    const motion = computed(() => {
+      const { motionName, motionDeadline, ...hooks } = initCollapseMotion(ctx.rootPrefixCls);
+      return { motionName, motionDeadline, hooks };
+    });
 
     return () =>
       destroyed.value
@@ -45,9 +48,7 @@ export default defineComponent({
             CSSMotion,
             {
               visible: props.mode === 'inline' && props.open,
-              motionName,
-              motionDeadline,
-              hooks,
+              ...motion.value,
               motionAppear: ctx.mounted.value && props.depth === 1,
               forceRender: ctx.forceSubMenuRender ?? false,
               removeOnLeave: false,

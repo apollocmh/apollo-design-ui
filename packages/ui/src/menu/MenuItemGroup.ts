@@ -2,7 +2,7 @@
  * MenuItemGroup —— rc-menu `MenuItemGroup.js` 的 Vue 版。
  * measure 模式 ⇒ 只递归渲染子节点（不渲染 group 本体，供路径登记）。
  */
-import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { computed, defineComponent, h, type PropType, type VNodeChild } from 'vue';
 
 import { useMeasure, useMenuContext } from './context';
 import type { ItemType } from './interface';
@@ -25,7 +25,7 @@ const MenuItemGroup = defineComponent({
     }
 
     const ctx = useMenuContext();
-    const groupPrefixCls = `${ctx.prefixCls}-item-group`;
+    const groupPrefixCls = computed(() => `${ctx.prefixCls}-item-group`);
 
     return () =>
       h(
@@ -34,19 +34,19 @@ const MenuItemGroup = defineComponent({
           ...attrs,
           role: 'presentation',
           onClick: (e: MouseEvent) => e.stopPropagation(),
-          class: [groupPrefixCls, props.overflowCls, attrs.class],
+          class: [groupPrefixCls.value, props.overflowCls, attrs.class],
         },
         [
           h(
             'div',
             {
               role: 'presentation',
-              class: `${groupPrefixCls}-title`,
+              class: `${groupPrefixCls.value}-title`,
               title: typeof props.label === 'string' ? props.label : undefined,
             },
             props.label ?? slots.default?.(),
           ),
-          h('ul', { role: 'group', class: `${groupPrefixCls}-list` }, slots.default?.()),
+          h('ul', { role: 'group', class: `${groupPrefixCls.value}-list` }, slots.default?.()),
         ],
       );
   },

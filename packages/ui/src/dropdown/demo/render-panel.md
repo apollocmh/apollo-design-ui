@@ -3,8 +3,8 @@ order: 13
 ---
 ## zh-CN
 
-PurePanel 静态面板（Tooltip._InternalPanelDoNotUseOrYouWillBeFired 对应物）。
+DropdownPurePanel 在文档流中展示同一个菜单组合；支持当前主题和原生 class/style。
 
 ## en-US
 
-PurePanel 静态面板（Tooltip._InternalPanelDoNotUseOrYouWillBeFired 对应物）。
+DropdownPurePanel displays the same menu composition in document flow, with the current theme and native class/style.
