@@ -40,10 +40,6 @@ export function useVariant(options: UseVariantOptions): {
   enableVariantCls: Ref<boolean>;
 } {
   const context = useConfigContext();
-  // 组件级配置：`components.inputNumber.variant`
-  const componentConfig = context.components?.[options.component] as
-    | { variant?: Variant }
-    | undefined;
   const ctxVariant = inject(variantContextKey, undefined);
 
   const variant = computed<Variant>(() => {
@@ -55,6 +51,9 @@ export function useVariant(options: UseVariantOptions): {
     if (legacyBordered === false) {
       return 'borderless';
     }
+    const componentConfig = context.components?.[options.component] as
+      | { variant?: Variant }
+      | undefined;
     // form variant > 组件级全局配置 > 全局 variant > 默认
     return ctxVariant?.value ?? componentConfig?.variant ?? context.variant ?? 'outlined';
   });
