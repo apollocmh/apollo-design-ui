@@ -223,11 +223,9 @@ describe('FieldProps / FieldSlots', () => {
     void ok2;
   });
 
-  it('⭐ FieldSlots.default 收到 (control, meta, form)', () => {
+  it('FieldSlots.default 收到具名 control / meta / form', () => {
     type Args = Parameters<NonNullable<FieldSlots['default']>>;
-    expectTypeOf<Args[0]>().toEqualTypeOf<ChildProps>();
-    expectTypeOf<Args[1]>().toEqualTypeOf<Meta>();
-    expectTypeOf<Args[2]>().toEqualTypeOf<FormInstance>();
+    expectTypeOf<Args>().toEqualTypeOf<[{ control: ChildProps; meta: Meta; form: FormInstance }]>();
   });
 });
 

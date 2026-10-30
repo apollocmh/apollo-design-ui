@@ -50,20 +50,27 @@ import { FormStore } from '../form-store';
 import type {
   ChildProps,
   FieldData,
+  FieldSlots,
   FormContextProps,
   FormInstance,
   FormRef,
   FormRule,
+  FormSlots,
   InternalNamePath,
   ListContextProps,
   ListField,
   ListOperations,
   ListProps,
+  ListSlots,
   Meta,
   Store,
   StoreValue,
 } from '../form-types';
 import { List } from '../list';
+
+type FieldScope = Parameters<NonNullable<FieldSlots['default']>>[0];
+type FormScope = Parameters<NonNullable<FormSlots['default']>>[0];
+type ListScope = Parameters<NonNullable<ListSlots['default']>>[0];
 
 // ---------------------------------------------------------------------------
 // 工具
@@ -122,8 +129,8 @@ interface FormHarness {
   wrapper: VueWrapper;
   /** `expose()` 出来的对象（`FormRef`）。 */
   exposed: () => FormRef | null;
-  /** 每次插槽调用收到的实参 `[values, form]`。 */
-  slotCalls: () => unknown[][];
+  /** 每次插槽调用收到的具名作用域。 */
+  slotCalls: () => FormScope[];
   renderCount: () => number;
   /** 插槽第一次调用拿到的 `form`（即本表单实例）。 */
   form: () => FormInstance;
@@ -146,7 +153,7 @@ function mountForm(
   options: MountFormOptions = {},
 ): FormHarness {
   const exposed = shallowRef<FormRef | null>(null);
-  const slotCalls: unknown[][] = [];
+  const slotCalls: FormScope[] = [];
   let renderCount = 0;
   let control: ChildProps = {};
 
@@ -163,11 +170,11 @@ function mountForm(
           options.noSlot
             ? undefined
             : {
-                default: (...args: unknown[]) => {
+                default: (scope: FormScope) => {
                   renderCount += 1;
-                  slotCalls.push(args);
+                  slotCalls.push(scope);
                   const children: VNodeChild[] = options.slot
-                    ? options.slot(args[0] as Store, args[1] as FormInstance)
+                    ? options.slot(scope.values, scope.form)
                     : [h('i', { class: 'probe' })];
                   if (options.field) {
                     children.push(
@@ -175,7 +182,7 @@ function mountForm(
                         Field,
                         { name: options.field.name, rules: options.field.rules },
                         {
-                          default: (c: ChildProps) => {
+                          default: ({ control: c }: FieldScope) => {
                             control = c;
                             return [h('i', { class: 'field-probe' })];
                           },
@@ -199,7 +206,7 @@ function mountForm(
     form: () => {
       const first = slotCalls[0];
       if (!first) throw new Error('插槽还没有被调用过');
-      return first[1] as FormInstance;
+      return first.form;
     },
     control: () => control,
   };
@@ -354,8 +361,8 @@ describe('Form · store 挂钩', () => {
             Form,
             { initialValues: initialValues.value },
             {
-              default: (...args: unknown[]) => {
-                form = args[1] as FormInstance;
+              default: (scope: FormScope) => {
+                form = scope.form;
                 return [h('i')];
               },
             },
@@ -415,7 +422,7 @@ describe('Form · store 挂钩', () => {
                   Field,
                   { name: 'a' },
                   {
-                    default: (c: ChildProps) => {
+                    default: ({ control: c }: FieldScope) => {
                       control = c;
                       return [h('i')];
                     },
@@ -458,14 +465,14 @@ describe('Form · store 挂钩', () => {
             Form,
             { preserve: preserve.value },
             {
-              default: (...args: unknown[]) => {
-                form = args[1] as FormInstance;
+              default: (scope: FormScope) => {
+                form = scope.form;
                 return [
                   h(
                     Field,
                     { name: 'a' },
                     {
-                      default: (c: ChildProps) => {
+                      default: ({ control: c }: FieldScope) => {
                         control = c;
                         return [h('i')];
                       },
@@ -501,8 +508,8 @@ describe('Form · store 挂钩', () => {
             Form,
             { validateMessages: validateMessages.value as never },
             {
-              default: (...args: unknown[]) => {
-                form = args[1] as FormInstance;
+              default: (scope: FormScope) => {
+                form = scope.form;
                 return [
                   h(
                     Field,
@@ -663,7 +670,7 @@ describe('Form · 渲染模式与 provide', () => {
             Form,
             { renderProps: true, ref: exposed },
             {
-              default: (values: Store) => {
+              default: ({ values }: FormScope) => {
                 renderCount += 1;
                 texts.push(String(values.a));
                 return [h('i')];
@@ -681,9 +688,11 @@ describe('Form · 渲染模式与 provide', () => {
     expect(texts[1]).toBe('1');
   });
 
-  it('renderProps 未开时插槽也能收到 (values, form)（多余的实参被忽略）', () => {
+  it('renderProps 未开时插槽也能收到具名 values / form', () => {
     const h1 = mountForm({ initialValues: { x: 1 } });
-    const [values, form] = h1.slotCalls()[0] as [Store, FormInstance];
+    const scope = h1.slotCalls()[0];
+    if (!scope) throw new Error('Missing Form slot scope');
+    const { values, form } = scope;
     expect(values).toEqual({ x: 1 });
     expect(typeof form.getFieldValue).toBe('function');
   });
@@ -703,7 +712,7 @@ describe('Form · 渲染模式与 provide', () => {
             Form,
             {},
             {
-              default: (values: Store, form: FormInstance) => {
+              default: ({ values, form }: FormScope) => {
                 void values;
                 void form;
                 return [h(Probe)];
@@ -793,14 +802,14 @@ describe('FormProvider', () => {
                   Form,
                   { name: 'a' },
                   {
-                    default: (...args: unknown[]) => {
-                      formA = args[1] as FormInstance;
+                    default: (scope: FormScope) => {
+                      formA = scope.form;
                       return [
                         h(
                           Field,
                           { name: 'x' },
                           {
-                            default: (c: ChildProps) => {
+                            default: ({ control: c }: FieldScope) => {
                               controlA = c;
                               return [h('i')];
                             },
@@ -814,8 +823,8 @@ describe('FormProvider', () => {
                   Form,
                   { name: 'b' },
                   {
-                    default: (...args: unknown[]) => {
-                      formB = args[1] as FormInstance;
+                    default: (scope: FormScope) => {
+                      formB = scope.form;
                       return [h('i')];
                     },
                   },
@@ -862,7 +871,7 @@ describe('FormProvider', () => {
                         Field,
                         { name: 'x' },
                         {
-                          default: (c: ChildProps) => {
+                          default: ({ control: c }: FieldScope) => {
                             control = c;
                             return [h('i')];
                           },
@@ -902,8 +911,8 @@ describe('FormProvider', () => {
                   Form,
                   { name: 'a' },
                   {
-                    default: (...args: unknown[]) => {
-                      form = args[1] as FormInstance;
+                    default: (scope: FormScope) => {
+                      form = scope.form;
                       return [h(Field, { name: 'v' }, { default: () => [h('i')] })];
                     },
                   },
@@ -955,7 +964,7 @@ describe('FormProvider', () => {
                         Field,
                         { name: 'y' },
                         {
-                          default: (c: ChildProps) => {
+                          default: ({ control: c }: FieldScope) => {
                             controlBox.current = c;
                             return [h('i')];
                           },
@@ -1010,7 +1019,7 @@ describe('FormProvider', () => {
                               Field,
                               { name: 'x' },
                               {
-                                default: (c: ChildProps) => {
+                                default: ({ control: c }: FieldScope) => {
                                   control = c;
                                   return [h('i')];
                                 },
@@ -1060,8 +1069,8 @@ describe('FormProvider', () => {
                         Form,
                         { name: 'a' },
                         {
-                          default: (...args: unknown[]) => {
-                            form = args[1] as FormInstance;
+                          default: (scope: FormScope) => {
+                            form = scope.form;
                             return [h(Field, { name: 'x' }, { default: () => [h('i')] })];
                           },
                         },
@@ -1105,8 +1114,8 @@ describe('FormProvider', () => {
                         Form,
                         {},
                         {
-                          default: (...args: unknown[]) => {
-                            form = args[1] as FormInstance;
+                          default: (scope: FormScope) => {
+                            form = scope.form;
                             return [
                               h(
                                 Field,
@@ -1200,7 +1209,7 @@ function mountList(
           {
             default: () => [
               h(List, listProps as unknown as ListProps, {
-                default: (fields: ListField[], operations: ListOperations, meta: Meta) => {
+                default: ({ fields, operations, meta }: ListScope) => {
                   renderCount += 1;
                   capturedFields = fields;
                   capturedOps = operations;
@@ -1216,7 +1225,7 @@ function mountList(
                           Field,
                           { name: [field.name, 'name'] },
                           {
-                            default: (_control: ChildProps, m: Meta) => {
+                            default: ({ meta: m }: FieldScope) => {
                               innerMeta.set(field.name, m);
                               return [h('i', { class: 'inner' })];
                             },
@@ -1276,19 +1285,19 @@ describe('List · 上下文', () => {
                   List,
                   { name: ['outer'] },
                   {
-                    default: (outerFields: ListField[]) =>
+                    default: ({ fields: outerFields }: ListScope) =>
                       outerFields.map((outerField) =>
                         h(
                           List,
                           { name: [outerField.name, 'inner'] },
                           {
-                            default: (fields: ListField[]) =>
+                            default: ({ fields }: ListScope) =>
                               fields.map((field) =>
                                 h(
                                   Field,
                                   { name: [field.name, 'x'] },
                                   {
-                                    default: (_c: ChildProps, m: Meta) => {
+                                    default: ({ meta: m }: FieldScope) => {
                                       metas.push(m);
                                       return [h('i')];
                                     },
@@ -1330,13 +1339,13 @@ describe('List · 上下文', () => {
                         List,
                         { name: ['inner'] },
                         {
-                          default: (fields: ListField[]) =>
+                          default: ({ fields }: ListScope) =>
                             fields.map((field) =>
                               h(
                                 Field,
                                 { name: [field.name, 'x'] },
                                 {
-                                  default: (_c: ChildProps, m: Meta) => {
+                                  default: ({ meta: m }: FieldScope) => {
                                     metas.push(m);
                                     return [h('i')];
                                   },
@@ -1365,6 +1374,7 @@ describe('List · 上下文', () => {
     const getKey = l.getKey();
     expect(getKey).toBeTruthy();
     expect(getKey?.(['users', 0, 'name'])).toEqual([0, ['name']]);
+    expect(getKey?.(['users', 10, 'name'])).toEqual([undefined, ['name']]);
   });
 
   it('List 内的 Field：isListField 由 listContext 推导 ⇒ preserve: false 会告警', () => {
@@ -1409,7 +1419,7 @@ describe('List · 上下文', () => {
     const messages = captureWarnings(() => {
       mount(Host);
     });
-    expect(messages.some((m) => m.includes('Form.List only accepts function as children.'))).toBe(
+    expect(messages.some((m) => m.includes('Form.List requires a default scoped slot.'))).toBe(
       true,
     );
   });
@@ -1697,13 +1707,13 @@ describe('组合 · Form + List + Field', () => {
                   List,
                   { name: 'users', initialValue: [{ name: 'a' }] },
                   {
-                    default: (fields: ListField[]) =>
+                    default: ({ fields }: ListScope) =>
                       fields.map((field) =>
                         h(
                           Field,
                           { name: [field.name, 'name'] },
                           {
-                            default: (control: ChildProps) => {
+                            default: ({ control }: FieldScope) => {
                               controls.set(field.name, control);
                               return [h('i')];
                             },
@@ -1741,7 +1751,7 @@ describe('组合 · Form + List + Field', () => {
                   List,
                   { name: 'users', initialValue: ['a', 'b'] },
                   {
-                    default: (fields: ListField[]) =>
+                    default: ({ fields }: ListScope) =>
                       fields.map((field) =>
                         h(Field, { name: [field.name] }, { default: () => [h('i')] }),
                       ),
@@ -1772,7 +1782,7 @@ describe('组合 · Form + List + Field', () => {
                   List,
                   { name: 'users' },
                   {
-                    default: (fields: ListField[]) => fields.map((f) => h('i', { key: f.key })),
+                    default: ({ fields }: ListScope) => fields.map((f) => h('i', { key: f.key })),
                   },
                 ),
               ],

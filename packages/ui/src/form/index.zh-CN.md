@@ -69,11 +69,14 @@ const { Item, List, useForm, useWatch, ErrorList } = Form;
 | size / variant / tooltip / feedbackIcons | 表单态 | - | - |
 | scrollToFirstError | 校验失败滚动到首个错误字段 | boolean \| ScrollOptions | - |
 | component | 容器元素（false 不渲染） | string \| Component \| false | 'form' |
+| renderProps | 让默认槽的 values 随 store 更新；字段仍处理自身状态与重置 | boolean | false |
 | classNames / styles | 语义槽（root/label/content/help/helpItem/extra）。⚠️ 也接受**函数形态**（`(info) => …`）；根槽与 `ConfigProvider components.form` 及调用方原生 `class` / `style` **合并**（原生 `style` 胜） | object \| function | - |
 
 ### 事件（Emits）
 
 `finish(values)` / `finishFailed(errorInfo)` / `valuesChange(changed, all)` / `fieldsChange(changed, all)`；`update:*` 不适用（值由 store 管理）。
+
+默认作用域插槽为 `{ values, form }`。例如 `<Form render-props v-slot="{ values }">…</Form>`；普通字段表单可省略 `render-props`，字段继续独立订阅。
 
 ### FormInstance（expose）
 
@@ -83,17 +86,21 @@ const { Item, List, useForm, useWatch, ErrorList } = Form;
 
 props：`name`（NamePath）、`rules`、`dependencies`、`trigger`、`valuePropName`、`getValueFromEvent`、`getValueProps`、`normalize`、`validateTrigger`、`validateFirst`、`preserve`、`initialValue`、`messageVariables`、`shouldUpdate`；展示：`label` / `labelCol` / `wrapperCol` / `colon` / `required` / `requiredMark` / `tooltip` / `noStyle` / `help` / `extra` / `hasFeedback` / `validateStatus` / `hidden` / `htmlFor` / `layout`。
 
-slots：`default`（子控件；有 name 时控件被注入 value 与事件）、`label` / `help` / `extra`。
+slots：`default({ control, meta, form })`（子控件；有 name 时单个控件被注入 value 与事件）、`label` / `help` / `extra`。无字段的布局项也提供同一对象，control 为空、meta 为当前空状态；脱离 Form 的布局项 form 为 undefined。
+
+事件：`reset()` / `metaChange(meta)`，分别使用 `@reset` / `@meta-change`。组件不手动调用同名回调 Prop。
 
 动态 `prefixCls` 与布局变更会更新派生类、真实控件的反馈图标、错误/帮助内容，并按已加载 CSS 重新测量 margin 占位。`Form.ErrorList` 独立使用时读取 ConfigProvider 前缀；在 Form.Item / Form.List 中使用最近的前缀上下文。动态前缀需要预先提供对应的静态 CSS，组件不会生成运行时样式。
 
 ### Form.List
 
-props：`name`。scoped slot `(fields, operation, meta)` —— `fields: { name, key, fieldKey }[]`、`operation: { add, remove, move }`、`meta: { errors, warnings }`。`Form.ErrorList` 用于展示 List 级错误。
+props：`name`。scoped slot `{ fields, operations, meta }` —— `fields: { name, key, fieldKey }[]`、`operations: { add, remove, move }`、`meta: { errors, warnings }`。`Form.ErrorList` 用于展示 List 级错误。
 
 ### useWatch
 
-`useWatch(dependencies, form, options)` —— 监听单个字段值。
+`useWatch(dependencies, form)` 或 `useWatch(dependencies, { form, preserve })` —— 返回监听字段路径/selector 的 Ref，随调用它的 effect scope 释放。
+
+开发版直接把 Form / Form.Item 的旧位置参数槽迁为具名对象，不提供兼容层或弃用期。Form.List 既有对象作用域保持不变。校验器、取值/归一算法与异步业务回调仍是函数。
 
 ### 主题变量
 

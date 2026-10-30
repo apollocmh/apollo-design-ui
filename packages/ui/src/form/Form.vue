@@ -19,7 +19,12 @@
  * 5. expose：`{ ...formInstance, nativeElement }`。
  */
 
-import { Form as CoreForm, type FormInstance, useForm } from '@apollo-design/form-core';
+import {
+  Form as CoreForm,
+  type FormInstance,
+  type FormRef,
+  type ValidateErrorEntity,
+} from '@apollo-design/form-core';
 import {
   type CSSProperties,
   computed,
@@ -28,6 +33,7 @@ import {
   type PropType,
   provide,
   type Ref,
+  type SlotsType,
   shallowRef,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -41,7 +47,7 @@ import {
   variantContextKey,
 } from './context';
 import { useForm as useUiForm } from './hooks/use-form';
-import type { FormProps } from './interface';
+import type { FormProps, FormSlots } from './interface';
 
 export default defineComponent({
   name: 'AForm',
@@ -71,7 +77,10 @@ export default defineComponent({
     styles: { type: Object as PropType<FormProps['styles']>, default: undefined },
     // ---- form-core FormProps（Form.vue 原骨架声明，转发给 core Form）----
     form: { type: Object as PropType<FormInstance>, default: undefined },
-    component: { type: [Boolean, String] as PropType<FormProps['component']>, default: 'form' },
+    component: {
+      type: [Boolean, String, Object, Function] as PropType<FormProps['component']>,
+      default: 'form',
+    },
     name: { type: String, default: undefined },
     validateMessages: {
       type: Object as PropType<FormProps['validateMessages']>,
@@ -87,6 +96,7 @@ export default defineComponent({
     renderProps: { type: Boolean, default: undefined },
   },
   emits: ['valuesChange', 'fieldsChange', 'finish', 'finishFailed'],
+  slots: Object as SlotsType<FormSlots>,
   setup(props, { slots, attrs, expose, emit }) {
     const context = useComponentConfig('form');
     const contextSemantic = context as unknown as {
@@ -154,16 +164,16 @@ export default defineComponent({
     internal.name = props.name;
     internal.itemRef = itemRef;
 
-    const nativeElementRef = shallowRef<HTMLElement | null>(null);
+    const nativeElementRef = shallowRef<FormRef | null>(null);
     expose({
       ...wrapForm,
       get nativeElement() {
-        return nativeElementRef.value;
+        return nativeElementRef.value?.nativeElement ?? null;
       },
     });
 
     // ── onFinishFailed 包装（scrollToFirstError）──
-    const onInternalFinishFailed = (errorInfo: { errorFields: { name: string[] }[] }): void => {
+    const onInternalFinishFailed = (errorInfo: ValidateErrorEntity): void => {
       // ⚠️ `finishFailed` 是**已声明的 emit**（`FormEmits`），所以监听器走 emit 通道 ——
       //    写成 `props.onFinishFailed?.()` 会拿到 `undefined`（Vue 不把已声明的
       //    事件监听器放进 props），用户的回调被静默丢弃。
@@ -281,7 +291,7 @@ export default defineComponent({
 
       // 外层 provider（variant / disabled）先落，再进 core Form
       const core = h(
-        CoreForm as never,
+        CoreForm,
         {
           ...(attrs as Record<string, unknown>),
           id: props.name,
@@ -293,8 +303,8 @@ export default defineComponent({
           clearOnDestroy: props.clearOnDestroy,
           component: props.component,
           renderProps: props.renderProps,
-          form: wrapForm as never,
-          ref: nativeElementRef as never,
+          form: wrapForm,
+          ref: nativeElementRef,
           // 上游 `Form.js:181`：根样式就是**合并后**的 `mergedStyles.root`
           // （含 context styles / 组件 styles / 调用方 `style`）。
           style: mergedStyles.value.root,
@@ -308,9 +318,9 @@ export default defineComponent({
           onFieldsChange: (changed: unknown, all: unknown) => {
             emit('fieldsChange', changed, all);
           },
-          onFinishFailed: onInternalFinishFailed as never,
+          onFinishFailed: onInternalFinishFailed,
         },
-        { default: slots.default as never },
+        { default: slots.default },
       );
 
       return core;

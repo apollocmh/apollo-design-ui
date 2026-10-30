@@ -174,3 +174,7 @@ Picker 面板引擎的通知使用 Vue emits，PickerPanel 提供 value/pickerVa
 ### D-dropdown-native-menu
 
 Dropdown/DropdownButton 的开关、动效与主按钮通知使用 Vue emits，afterOpenChange prop 迁为 after-open-change 事件；真实引用保留既有三个 getter 方法。Provider、有效 Token、原生 attrs 与完整按钮/浮层槽真实消费，未实现的 icon 类型字段改用已有图标槽；id 落到实际触发节点。Menu 同步当前前缀、分组/动效、selectable 与键盘监听，语义样式传至实际菜单项。PurePanel 保持正常静态定位，详见[Dropdown API](packages/ui/src/dropdown/index.zh-CN.md)。
+
+### D-form-core-native-scopes
+
+Form Core 的通知由 Vue emits 拥有，store/useForm 的业务回调仍保留。Form、Field、List 默认槽分别接收 `{ values, form }`、`{ control, meta, form }`、`{ fields, operations, meta }`，模板与 h() 使用同一对象；UI Form/FormItem 同步迁移，FormList 已有对象形态保留。外部 store、动态注册、受控 fields 和校验资源同步修正，实际宿主通过 nativeElement 返回。详见[Form Core 当前契约](docs/foundation/form-core-contract.md)；UI Form 的完整外观整改仍单独推进。

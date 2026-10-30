@@ -371,7 +371,7 @@ export interface InternalHooks {
   dispatch: (action: ReducerAction) => void;
   initEntityValue: (entity: FieldEntity) => void;
   registerField: (entity: FieldEntity) => FieldCancelRegister;
-  useSubscribe: (subscribable: boolean) => void;
+  useSubscribe: (subscribable: boolean, rootUpdate?: () => void) => () => void;
   /**
    * ⚠️ 形参含 `undefined`（③c 的声明订正）：唯一的调用点 `Form.js:80` 传的是
    * `props.initialValues`（可缺省），而 `FormStore.setInitialValues` 的第一行就是
@@ -437,7 +437,7 @@ export interface ScrollOptions {
 }
 
 export type FormRef<Values = any> = FormInstance<Values> & {
-  nativeElement?: HTMLElement;
+  nativeElement: HTMLElement | null;
 };
 
 export type InternalFormInstance = Omit<FormInstance, 'validateFields'> & {
@@ -528,7 +528,7 @@ export interface FieldProps<Values = any> extends Omit<InternalFieldProps<Values
 
 /** ⭐ Vue 的 scoped slot —— 上游 `children` render prop 的对应物。 */
 export interface FieldSlots<Values = any> {
-  default?: (control: ChildProps, meta: Meta, form: FormInstance<Values>) => VNodeChild;
+  default?: (scope: { control: ChildProps; meta: Meta; form: FormInstance<Values> }) => VNodeChild;
 }
 
 export interface FieldState {
@@ -557,11 +557,13 @@ export interface FormProps<Values = any> {
   validateTrigger?: string | string[] | false;
   preserve?: boolean;
   clearOnDestroy?: boolean;
+  /** 整体订阅默认插槽中的 values；false 时由 Field 分别订阅。 */
+  renderProps?: boolean;
 }
 
-/** Form 的默认插槽：`(values, form) => VNodeChild`（上游 render props）。 */
+/** Form 默认插槽使用 Vue 具名作用域。 */
 export interface FormSlots<Values = any> {
-  default?: (values: Store, form: FormInstance<Values>) => VNodeChild;
+  default?: (scope: { values: Store; form: FormInstance<Values> }) => VNodeChild;
 }
 
 // ---------------------------------------------------------------------------
@@ -624,7 +626,7 @@ export interface ListProps<Values = any> {
 
 // biome-ignore lint/correctness/noUnusedVariables: `Values` 是**有意保留**的泛型位 —— 与 `FieldSlots<Values>` 对称，③c 落地 `List` 时 slot 的 `fields` 会按 `Values` 推导（契约 §6.4.3）。现在删掉等于将来再加一次。
 export interface ListSlots<Values = any> {
-  default?: (fields: ListField[], operations: ListOperations, meta: Meta) => VNodeChild;
+  default?: (scope: { fields: ListField[]; operations: ListOperations; meta: Meta }) => VNodeChild;
 }
 
 // ---------------------------------------------------------------------------
@@ -632,7 +634,7 @@ export interface ListSlots<Values = any> {
 // ---------------------------------------------------------------------------
 
 export interface ListContextProps {
-  getKey: (namePath: InternalNamePath) => [InternalNamePath[number], InternalNamePath];
+  getKey: (namePath: InternalNamePath) => [InternalNamePath[number] | undefined, InternalNamePath];
 }
 
 // ---------------------------------------------------------------------------

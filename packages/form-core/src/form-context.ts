@@ -20,58 +20,55 @@ import type { FormContextProps, InternalFormInstance, ListContextProps } from '.
 /** ⭐ 保持上游字符串（不是可观测 API，不做无意义改名）。 */
 export const HOOK_MARK = 'RC_FORM_INTERNAL_HOOKS';
 
-/**
- * 默认值里的「告警桩」。
- *
- * ⚠️ 返回类型必须声明成 **`never`**，不能写 `void`/`undefined`：
- * TS 的可赋值性规则只允许「返回 `void` 的函数」赋给「返回 `void` 的函数类型」，
- * 而这里的方法签名是 `getFieldError(): FieldMessage[]` / `validateFields(): Promise<X>`
- * 等**有返回值**的形态。`never` 可赋给一切，是表达「这个桩永远给不出值」的标准写法。
- *
- * ⚠️ 运行时它**真的返回 `undefined`（不抛错）** —— 与上游一致：
- * 字段脱离 `Form` 使用时只告警并静默返回，让「组件先渲染、Form 后挂载」的时序不炸。
- * 唯一用到的类型层面手段是末尾那个 `as never`（不是 `as any`，也不放宽任何断言）。
- */
-function warnStub(): never {
-  warning(false, 'Can not find FormContext. Please make sure you wrap Field under Form.');
-  return undefined as never;
+const missingFormMessage = 'Can not find FormContext. Please make sure you wrap Field under Form.';
+
+function warnMissingForm(): void {
+  warning(false, missingFormMessage);
+}
+
+function emptyList(): [] {
+  warnMissingForm();
+  return [];
+}
+
+function emptyValue(): undefined {
+  warnMissingForm();
+  return undefined;
+}
+
+function untouched(): false {
+  warnMissingForm();
+  return false;
 }
 
 /**
  * 找不到 `FieldContext` 时的兜底实例：**所有方法都告警**。
  */
 export const defaultFieldContext: InternalFormInstance = {
-  getFieldValue: warnStub,
-  getFieldsValue: warnStub,
-  getFieldError: warnStub,
-  getFieldWarning: warnStub,
-  getFieldsError: warnStub,
-  isFieldsTouched: warnStub,
-  isFieldTouched: warnStub,
-  isFieldValidating: warnStub,
-  isFieldsValidating: warnStub,
-  resetFields: warnStub,
-  setFields: warnStub,
-  setFieldValue: warnStub,
-  setFieldsValue: warnStub,
-  validateFields: warnStub,
-  submit: warnStub,
+  getFieldValue: emptyValue,
+  getFieldsValue: () => {
+    warnMissingForm();
+    return {};
+  },
+  getFieldError: emptyList,
+  getFieldWarning: emptyList,
+  getFieldsError: emptyList,
+  isFieldsTouched: untouched,
+  isFieldTouched: untouched,
+  isFieldValidating: untouched,
+  isFieldsValidating: untouched,
+  resetFields: warnMissingForm,
+  setFields: warnMissingForm,
+  setFieldValue: warnMissingForm,
+  setFieldsValue: warnMissingForm,
+  validateFields: () => {
+    warnMissingForm();
+    return Promise.reject(new Error(missingFormMessage));
+  },
+  submit: warnMissingForm,
   getInternalHooks: () => {
-    warnStub();
-    return {
-      dispatch: warnStub,
-      initEntityValue: warnStub,
-      registerField: warnStub,
-      useSubscribe: warnStub,
-      setInitialValues: warnStub,
-      destroyForm: warnStub,
-      setCallbacks: warnStub,
-      registerWatch: warnStub,
-      getFields: warnStub,
-      setValidateMessages: warnStub,
-      setPreserve: warnStub,
-      getInitialValue: warnStub,
-    };
+    warnMissingForm();
+    return null;
   },
 };
 

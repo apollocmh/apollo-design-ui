@@ -8,10 +8,11 @@
  * （form-core List 已 provide），本组件只做 prefixCls 前缀与 prefix context。
  */
 
-import { List, listProps } from '@apollo-design/form-core';
-import { computed, defineComponent, h, inject, type PropType, provide } from 'vue';
+import { List, type ListSlots, listProps } from '@apollo-design/form-core';
+import { computed, defineComponent, h, provide, type SlotsType } from 'vue';
 import { useComponentConfig } from '../config-provider/context';
 import { formItemPrefixContextKey } from './context';
+import type { FormListSlots } from './interface';
 
 export default defineComponent({
   name: 'AFormList',
@@ -20,6 +21,7 @@ export default defineComponent({
     ...listProps,
     prefixCls: { type: String, default: undefined },
   },
+  slots: Object as SlotsType<FormListSlots>,
   setup(props, { slots }) {
     const { getPrefixCls } = useComponentConfig('form');
     const prefixCls = computed(() => getPrefixCls('form', props.prefixCls));
@@ -33,20 +35,21 @@ export default defineComponent({
     });
 
     return () => {
-      return h(List as never, { ...(props as Record<string, unknown>) } as never, {
-        default: (fields: unknown, operation: unknown, meta: unknown) => {
-          const allFields = (fields as { key: number }[]).map((field) => ({
-            ...(field as object),
+      return h(List, props, {
+        default: ({
+          fields,
+          operations,
+          meta,
+        }: Parameters<NonNullable<ListSlots['default']>>[0]) => {
+          const allFields = fields.map((field) => ({
+            ...field,
             fieldKey: field.key,
           }));
-          void inject;
-          // ⚠️ 必须包成单对象：模板 scoped slot 只接收一个 props 对象，
-          //    位置参数会让 `operations` / `meta` 在模板侧永远拿不到。
           return slots.default?.({
             fields: allFields,
-            operations: operation,
-            meta: (meta as { errors?: unknown[]; warnings?: unknown[] }) ?? {},
-          } as never);
+            operations,
+            meta: { errors: meta.errors, warnings: meta.warnings },
+          });
         },
       });
     };

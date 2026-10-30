@@ -1,5 +1,7 @@
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
+> 2026-10-30 增量：随 form-core 迁移 Form 默认槽 `{ values, form }`、Form.Item 默认槽 `{ control, meta, form }` 及所属 reset/metaChange emits；Form.List 既有对象槽保持不变。renderProps 只追加整表更新，字段状态/重置仍运行；外建实例订阅与真实 nativeElement 桥同步修正。本轮为共享基础层关联迁移，不表示 Form 布局/Token 全单元重新验收。当前契约与迁移见 [API](./index.zh-CN.md) 与 [foundation 增量](../../../../docs/foundation/form-core-contract.md)。下文原日期的交付事实保持原义。
+
 # Form 实现说明
 
 > 收口记录（2026-09-29）。**form 是 `@apollo-design/form-core`（foundation）的第一个 UI 消费者。**

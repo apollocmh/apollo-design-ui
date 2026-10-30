@@ -18,10 +18,10 @@
  * | 上游（渲染体里每次跑） | 我们 | 理由 |
  * |---|---|---|
  * | `setValidateMessages(...)` | `watchEffect` 跟踪全部合并源 | 父级消息 getter、props 替换及深更新都需要同步到同一表单 store |
- * | `setCallbacks({...})` | `setup()` 里一次 + 四个回调的 `watch` | 回调 prop 是父组件可能换掉的闭包 ⇒ 必须 watch |
+ * | `setCallbacks({...})` | 一次登记 Vue emit 桥 | Vue emit 每次读取当前事件监听器 |
  * | `setPreserve(preserve)` | `setup()` 里一次 + `watch` | 同上（表单级 `preserve` 影响字段注销行为） |
  * | `setInitialValues(v, !mountRef)` | `setup()` 里 `init=true` 一次 + `watch` 补 `init=false` | 上游有 `mountRef` 判「是否首次渲染」 |
- * | `isSimilar(prevFields, fields)` ⇒ `setFields` | `onMounted` 里跑首次 + `watch(flush:'post')` | 上游是 `useEffect`（**挂载后**执行），所以首次也必须是挂载后 |
+ * | `fields` ⇒ `setFields` | `onMounted` 首次 + `watch(deep:true, flush:'post')` | 首次在字段登记后应用，原地字段更新也同步 |
  *
  * ── 两处 Vue-native 的对应物 ──────────────────────────────────────────────────
  *
@@ -32,13 +32,14 @@
  *   ⇒ `provide()` + **getter**（`validateTrigger` 是 prop，可能变）。
  */
 
-import type { Component, PropType } from 'vue';
+import type { Component, ComponentPublicInstance, PropType, SlotsType } from 'vue';
 import {
   defineComponent,
   h,
   inject,
+  mergeProps,
+  onBeforeUnmount,
   onMounted,
-  onUnmounted,
   provide,
   shallowRef,
   watch,
@@ -53,15 +54,16 @@ import {
   listContextKey,
 } from './form-context';
 import type {
-  Callbacks,
   FieldData,
   FormInstance,
+  FormRef,
+  FormSlots,
   InternalFormInstance,
   Store,
+  ValidateErrorEntity,
   ValidateMessages,
 } from './form-types';
 import { useForm } from './use-form';
-import { isSimilar } from './value-util';
 
 const formProps = {
   name: { type: String, default: undefined },
@@ -92,13 +94,9 @@ const formProps = {
    * 逐字段订阅，是更安全的一侧）。
    */
   renderProps: { type: Boolean, default: undefined },
-  /** ⚠️ 以下四个含 `Boolean` ⇒ **必须**显式 `default: undefined`（PITFALLS 46）。 */
+  /** 含 `Boolean` ⇒ 显式 `default: undefined`，保留继承语义。 */
   preserve: { type: Boolean, default: undefined },
   clearOnDestroy: { type: Boolean, default: undefined },
-  onValuesChange: { type: Function as PropType<Callbacks['onValuesChange']>, default: undefined },
-  onFieldsChange: { type: Function as PropType<Callbacks['onFieldsChange']>, default: undefined },
-  onFinish: { type: Function as PropType<Callbacks['onFinish']>, default: undefined },
-  onFinishFailed: { type: Function as PropType<Callbacks['onFinishFailed']>, default: undefined },
 } as const;
 
 /**
@@ -108,7 +106,7 @@ const formProps = {
  *
  * ```vue
  * <Form :form="form" :initial-values="{ a: 1 }" @finish="onFinish">
- *   <Field :name="['a']" v-slot="(control)"><input v-bind="control" /></Field>
+ *   <Field :name="['a']" v-slot="{ control }"><input v-bind="control" /></Field>
  * </Form>
  * ```
  *
@@ -118,11 +116,17 @@ export const Form = defineComponent({
   name: 'AForm',
   inheritAttrs: false,
   props: formProps,
-  setup(props, { slots, attrs, expose }) {
+  slots: Object as SlotsType<FormSlots>,
+  emits: {
+    valuesChange: (_changedValues: Store, _values: Store) => true,
+    fieldsChange: (_changedFields: FieldData[], _allFields: FieldData[]) => true,
+    finish: (_values: Store) => true,
+    finishFailed: (_errorInfo: ValidateErrorEntity) => true,
+  },
+  setup(props, { slots, attrs, expose, emit }) {
     const formContext = inject(formContextKey, defaultFormContext);
 
-    // ⭐ `useForm` 的 `forceRootUpdate` 落在**本实例**的 `$forceUpdate()` 上
-    //    （契约 §6.4.1 的订正）—— render-props 模式下全量重渲染靠它。
+    // 表单实例可以从外部创建；当前根通过下方版本 Ref 独立订阅。
     const [formInstance] = useForm(props.form);
 
     /**
@@ -138,7 +142,8 @@ export const Form = defineComponent({
     const hooks = internalForm.getInternalHooks(HOOK_MARK)!;
 
     /** `useImperativeHandle` 里的 `nativeElementRef.current`（差异 4）。 */
-    const nativeElement = shallowRef<HTMLElement | null>(null);
+    const nativeElement = shallowRef<Element | ComponentPublicInstance | null>(null);
+    const version = shallowRef(0);
 
     /**
      * 上游允许 `name` 为 `undefined`（`registerForm(undefined, form)` 是 no-op，
@@ -149,28 +154,19 @@ export const Form = defineComponent({
 
     // ── 把 props 灌进 store（上游 `Form.js:56-76`）─────────────────────────────
 
-    const syncCallbacks = (): void => {
-      hooks.setCallbacks({
-        onValuesChange: props.onValuesChange,
-        onFieldsChange: (changedFields, ...rest) => {
-          formContext.triggerFormChange(formName(), changedFields);
-          props.onFieldsChange?.(changedFields, ...rest);
-        },
-        onFinish: (values) => {
-          formContext.triggerFormFinish(formName(), values);
-          props.onFinish?.(values);
-        },
-        onFinishFailed: props.onFinishFailed,
-      });
-    };
-
-    syncCallbacks();
+    hooks.setCallbacks({
+      onValuesChange: (changedValues, values) => emit('valuesChange', changedValues, values),
+      onFieldsChange: (changedFields, allFields) => {
+        formContext.triggerFormChange(formName(), changedFields);
+        emit('fieldsChange', changedFields, allFields);
+      },
+      onFinish: (values) => {
+        formContext.triggerFormFinish(formName(), values);
+        emit('finish', values);
+      },
+      onFinishFailed: (errorInfo) => emit('finishFailed', errorInfo),
+    });
     hooks.setPreserve(props.preserve);
-
-    watch(
-      () => [props.onValuesChange, props.onFieldsChange, props.onFinish, props.onFinishFailed],
-      syncCallbacks,
-    );
     watch(
       () => props.preserve,
       (preserve) => hooks.setPreserve(preserve),
@@ -189,35 +185,49 @@ export const Form = defineComponent({
 
     // ── `fields` prop（上游 `Form.js:104-110` 的 `useEffect`）──────────────────
     // ⚠️ 上游是 effect ⇒ **挂载后**才跑首次。Vue 侧对应 `onMounted` + `flush:'post'`。
-    let prevFields: FieldData[] | undefined;
     const applyFields = (fields: FieldData[] | undefined): void => {
-      if (!isSimilar(prevFields ?? [], fields ?? [])) {
-        formInstance.setFields(fields ?? []);
-      }
-      prevFields = fields;
+      formInstance.setFields(fields ?? []);
     };
     onMounted(() => {
       applyFields(props.fields);
     });
-    watch(() => props.fields, applyFields, { flush: 'post' });
+    watch(() => props.fields, applyFields, { deep: true, flush: 'post' });
 
     // ── 注册进 FormContext（上游 `Form.js:48-53` 的 `useEffect`）───────────────
     onMounted(() => {
       formContext.registerForm(formName(), formInstance);
     });
-    onUnmounted(() => {
+    watch(
+      () => props.name,
+      (name, previousName) => {
+        formContext.unregisterForm(previousName ?? '');
+        formContext.registerForm(name ?? '', formInstance);
+      },
+      { flush: 'post' },
+    );
+    onBeforeUnmount(() => {
       formContext.unregisterForm(formName());
     });
 
     // ── 卸载（上游 `Form.js:86-88`）───────────────────────────────────────────
-    onUnmounted(() => {
+    let cancelRootSubscription: (() => void) | undefined;
+    onBeforeUnmount(() => {
+      cancelRootSubscription?.();
       hooks.destroyForm(props.clearOnDestroy);
     });
 
     // ── 渲染模式（上游 `Form.js:92-101` 的 `typeof children === 'function'`）───
     // ⚠️ 无法自动判定（差异 13），只能看 `renderProps` prop。
-    const childrenRenderProps = props.renderProps === true;
-    hooks.useSubscribe(!childrenRenderProps);
+    watch(
+      () => props.renderProps,
+      (renderProps) => {
+        cancelRootSubscription?.();
+        cancelRootSubscription = hooks.useSubscribe(renderProps !== true, () => {
+          version.value += 1;
+        });
+      },
+      { immediate: true, flush: 'sync' },
+    );
 
     // ── 两个 provide（上游 `Form.js:113-121` 的两层 Provider）─────────────────
     const fieldContextValue: InternalFormInstance = {
@@ -231,19 +241,40 @@ export const Form = defineComponent({
     // ⭐ `Form` 重置 `ListContext` —— 直接挂在 `Form` 下的 `Field` 不属于任何 List。
     provide(listContextKey, null);
 
-    expose({
-      ...formInstance,
+    const exposed: FormRef = {
+      getFieldValue: formInstance.getFieldValue,
+      getFieldsValue: formInstance.getFieldsValue,
+      getFieldError: formInstance.getFieldError,
+      getFieldWarning: formInstance.getFieldWarning,
+      getFieldsError: formInstance.getFieldsError,
+      isFieldsTouched: formInstance.isFieldsTouched,
+      isFieldTouched: formInstance.isFieldTouched,
+      isFieldValidating: formInstance.isFieldValidating,
+      isFieldsValidating: formInstance.isFieldsValidating,
+      resetFields: formInstance.resetFields,
+      setFields: formInstance.setFields,
+      setFieldValue: formInstance.setFieldValue,
+      setFieldsValue: formInstance.setFieldsValue,
+      validateFields: formInstance.validateFields,
+      submit: formInstance.submit,
+      scrollToField: formInstance.scrollToField,
+      focusField: formInstance.focusField,
+      getFieldInstance: formInstance.getFieldInstance,
       get nativeElement() {
-        return nativeElement.value;
+        const instance = nativeElement.value;
+        const element: unknown = instance && '$el' in instance ? instance.$el : instance;
+        return typeof HTMLElement !== 'undefined' && element instanceof HTMLElement
+          ? element
+          : null;
       },
-    });
+    };
+    expose(exposed);
 
     return () => {
-      // ⭐ 无论哪种模式都把 `(values, form)` 传下去：非 render-props 的插槽
-      //    忽略多余实参，代价为零；而 SFC 的 `v-slot` 拿不到形参个数（差异 13）
-      //    ⇒ 「只在 render-props 模式传参」会让那种写法收到 `undefined`。
+      void version.value;
+      // 两种订阅模式使用相同的具名作用域；renderProps 仅决定更新范围。
       const values = formInstance.getFieldsValue(true);
-      const children = slots.default?.(values, formInstance) ?? [];
+      const children = slots.default?.({ values, form: formInstance }) ?? [];
 
       if (props.component === false) {
         return children;
@@ -251,21 +282,23 @@ export const Form = defineComponent({
 
       return h(
         props.component,
-        {
-          ...attrs,
-          ref: nativeElement,
-          onSubmit: (event: Event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            formInstance.submit();
+        mergeProps(
+          {
+            ...attrs,
+            ref: nativeElement,
+            onSubmit: (event: Event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              formInstance.submit();
+            },
+            onReset: (event: Event) => {
+              event.preventDefault();
+              formInstance.resetFields();
+            },
           },
-          onReset: (event: Event) => {
-            event.preventDefault();
-            formInstance.resetFields();
-            (attrs.onReset as ((e: Event) => void) | undefined)?.(event);
-          },
-        },
-        children,
+          { onReset: attrs.onReset },
+        ),
+        typeof props.component === 'string' ? children : { default: () => children },
       );
     };
   },

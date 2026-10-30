@@ -81,6 +81,8 @@ export class FormStore {
 
   private forceRootUpdate: () => void;
 
+  private rootUpdate: (() => void) | undefined;
+
   private subscribable = true;
 
   /**
@@ -100,6 +102,8 @@ export class FormStore {
   private preserve: boolean | null | undefined = null;
 
   private lastValidatePromise: Promise<unknown[]> | null = null;
+
+  private formLifecycle = 0;
 
   private watcherCenter = new WatcherCenter(this);
 
@@ -165,8 +169,15 @@ export class FormStore {
     return null;
   };
 
-  useSubscribe = (subscribable: boolean): void => {
+  useSubscribe = (subscribable: boolean, rootUpdate?: () => void): (() => void) => {
     this.subscribable = subscribable;
+    this.rootUpdate = rootUpdate;
+    return () => {
+      if (this.rootUpdate === rootUpdate) {
+        this.subscribable = true;
+        this.rootUpdate = undefined;
+      }
+    };
   };
 
   /** 首次 `setInitialValues` 要把初值灌进 store。 */
@@ -186,6 +197,13 @@ export class FormStore {
   };
 
   destroyForm = (clearOnDestroy?: boolean): void => {
+    this.formLifecycle += 1;
+    this.lastValidatePromise = null;
+    this.callbacks = {};
+    if (this.timeoutId !== null) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
+    }
     if (clearOnDestroy) {
       this.updateStore({});
     } else {
@@ -680,13 +698,12 @@ export class FormStore {
     namePathList: InternalNamePath[] | null,
     info: NotifyInfo,
   ): void => {
-    if (this.subscribable) {
-      const mergedInfo = { ...info, store: this.getFieldsValue(true) as Store };
-      this.getFieldEntities().forEach(({ onStoreChange }) => {
-        onStoreChange(prevStore, namePathList, mergedInfo);
-      });
-    } else {
-      this.forceRootUpdate();
+    const mergedInfo = { ...info, store: this.getFieldsValue(true) as Store };
+    this.getFieldEntities().forEach(({ onStoreChange }) => {
+      onStoreChange(prevStore, namePathList, mergedInfo);
+    });
+    if (!this.subscribable) {
+      (this.rootUpdate ?? this.forceRootUpdate)();
     }
   };
 
@@ -941,8 +958,10 @@ export class FormStore {
 
   submit = (): void => {
     this.warningUnhooked();
+    const lifecycle = this.formLifecycle;
     this.validateFields()
       .then((values) => {
+        if (lifecycle !== this.formLifecycle) return;
         const { onFinish } = this.callbacks;
         if (onFinish) {
           try {
@@ -954,6 +973,7 @@ export class FormStore {
         }
       })
       .catch((e: ValidateErrorEntity) => {
+        if (lifecycle !== this.formLifecycle) return;
         const { onFinishFailed } = this.callbacks;
         if (onFinishFailed) {
           onFinishFailed(e);

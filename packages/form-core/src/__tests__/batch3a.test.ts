@@ -1029,7 +1029,7 @@ describe('FormStore · 生命周期与开关', () => {
     expect(form.getFieldValue('a')).toBe('init');
   });
 
-  it('subscribable = false ⇒ 只调 forceRootUpdate，不逐个通知字段', () => {
+  it('根订阅追加 forceRootUpdate，保留字段状态通知', () => {
     const { form, hooks, forceRootUpdate } = createStore();
     const a = createField(['a']);
     hooks.registerField(a.entity);
@@ -1037,7 +1037,7 @@ describe('FormStore · 生命周期与开关', () => {
 
     form.setFieldsValue({ a: 1 });
     expect(forceRootUpdate).toHaveBeenCalled();
-    expect(a.storeChanges).toHaveLength(0);
+    expect(a.storeChanges).toHaveLength(1);
   });
 });
 
@@ -1421,23 +1421,23 @@ describe('delayFrame', () => {
 // ---------------------------------------------------------------------------
 
 describe('默认 Context 兜底', () => {
-  it('⭐ 字段脱离 Form 时：每个方法都 dev 告警并返回 undefined（不抛错）', () => {
+  it('字段脱离 Form 时告警，空读取与失败校验符合返回类型', async () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     expect(defaultFieldContext.getFieldValue('a')).toBeUndefined();
-    expect(defaultFieldContext.getFieldsValue()).toBeUndefined();
-    expect(defaultFieldContext.getFieldError('a')).toBeUndefined();
-    expect(defaultFieldContext.getFieldWarning('a')).toBeUndefined();
-    expect(defaultFieldContext.getFieldsError()).toBeUndefined();
-    expect(defaultFieldContext.isFieldsTouched()).toBeUndefined();
-    expect(defaultFieldContext.isFieldTouched('a')).toBeUndefined();
-    expect(defaultFieldContext.isFieldValidating('a')).toBeUndefined();
-    expect(defaultFieldContext.isFieldsValidating()).toBeUndefined();
+    expect(defaultFieldContext.getFieldsValue()).toEqual({});
+    expect(defaultFieldContext.getFieldError('a')).toEqual([]);
+    expect(defaultFieldContext.getFieldWarning('a')).toEqual([]);
+    expect(defaultFieldContext.getFieldsError()).toEqual([]);
+    expect(defaultFieldContext.isFieldsTouched()).toBe(false);
+    expect(defaultFieldContext.isFieldTouched('a')).toBe(false);
+    expect(defaultFieldContext.isFieldValidating('a')).toBe(false);
+    expect(defaultFieldContext.isFieldsValidating()).toBe(false);
     expect(defaultFieldContext.resetFields()).toBeUndefined();
     expect(defaultFieldContext.setFields([])).toBeUndefined();
     expect(defaultFieldContext.setFieldValue('a', 1)).toBeUndefined();
     expect(defaultFieldContext.setFieldsValue({})).toBeUndefined();
-    expect(defaultFieldContext.validateFields()).toBeUndefined();
+    await expect(defaultFieldContext.validateFields()).rejects.toThrow('Can not find FormContext');
     expect(defaultFieldContext.submit()).toBeUndefined();
 
     expect(spy.mock.calls.length).toBeGreaterThan(0);
@@ -1445,24 +1445,11 @@ describe('默认 Context 兜底', () => {
     spy.mockRestore();
   });
 
-  it('⭐ getInternalHooks 兜底也告警，并返回一整套告警桩', () => {
+  it('没有 Form 时 getInternalHooks 告警并明确返回 null', () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const hooks = defaultFieldContext.getInternalHooks(HOOK_MARK);
 
-    expect(hooks).not.toBeNull();
-    // 每个挂钩都是同一个告警桩 ⇒ 调用只告警不抛错
-    hooks?.setPreserve(false);
-    hooks?.setValidateMessages({});
-    hooks?.useSubscribe(true);
-    hooks?.setInitialValues({}, true);
-    hooks?.setCallbacks({});
-    hooks?.destroyForm();
-    hooks?.getFields();
-    hooks?.getInitialValue(['a']);
-    hooks?.initEntityValue(createField(['a']).entity);
-    hooks?.dispatch({ type: 'validateField', namePath: ['a'], triggerName: 'onChange' });
-    hooks?.registerField(createField(['a']).entity);
-    hooks?.registerWatch(() => {});
+    expect(hooks).toBeNull();
 
     expect(spy.mock.calls.length).toBeGreaterThan(0);
     spy.mockRestore();

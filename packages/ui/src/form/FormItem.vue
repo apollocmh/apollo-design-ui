@@ -2,7 +2,7 @@
 /**
  * Form.Item —— 字段项（antd `es/form/FormItem/index.js` 284 行的 Vue 等价物）。
  *
- * 结构：消费 form-core 的 `Field`（scoped slot `(control, meta, form)`）→
+ * 结构：消费 form-core 的 `Field`（scoped slot `{ control, meta, form }`）→
  * 子节点 control 注入（cloneVNode）→ renderLayout（noStyle ? StatusProvider : ItemHolder）。
  *
  * ── 关键判据（docs/analysis/form.md §3）──────────────────────────────────────
@@ -22,9 +22,12 @@
 import {
   type Meta as CoreMeta,
   Field,
+  type FieldSlots,
   type FormInstance,
   fieldProps,
+  type InternalNamePath,
   listContextKey,
+  type MetaEvent,
 } from '@apollo-design/form-core';
 import {
   type ComponentPublicInstance,
@@ -37,6 +40,7 @@ import {
   onBeforeUnmount,
   type PropType,
   reactive,
+  type SlotsType,
   shallowRef,
   type VNode,
   type VNodeChild,
@@ -45,7 +49,7 @@ import { useComponentConfig } from '../config-provider/context';
 import { formContextKey, type NoStyleItemNotify, noStyleItemContextKey } from './context';
 import ItemHolder from './FormItem/ItemHolder';
 import StatusProvider from './FormItem/StatusProvider';
-import type { FormItemProps } from './interface';
+import type { FormItemProps, FormItemSlots } from './interface';
 import { getFieldId, toArray } from './util';
 
 const NAME_SPLIT = '__SPLIT__';
@@ -93,7 +97,12 @@ export default defineComponent({
     ...fieldProps,
     ...uiProps,
   },
-  setup(props, { slots }) {
+  slots: Object as SlotsType<FormItemSlots>,
+  emits: {
+    reset: () => true,
+    metaChange: (_meta: MetaEvent) => true,
+  },
+  setup(props, { slots, emit }) {
     const { getPrefixCls } = useComponentConfig('form');
     const formContext = inject(formContextKey, undefined);
     const notifyParentMetaChange = inject<NoStyleItemNotify | null>(noStyleItemContextKey, null);
@@ -111,23 +120,18 @@ export default defineComponent({
     // ── 子 Field 错误聚合（noStyle 链）──
     const subFieldErrors = reactive<Record<string, CoreMeta & { destroy?: boolean }>>({});
     const meta = shallowRef<CoreMeta & { destroy?: boolean }>(genEmptyMeta());
-    const fieldKeyPathRef = shallowRef<string[] | null>(null);
+    const fieldKeyPathRef = shallowRef<InternalNamePath | null>(null);
 
     const onMetaChange = (nextMeta: CoreMeta & { destroy?: boolean }): void => {
-      const keyInfo =
-        listContext && typeof (listContext as { getKey?: unknown }).getKey === 'function'
-          ? (listContext as unknown as { getKey: (name: unknown) => [string, ...string[]] }).getKey(
-              nextMeta.name,
-            )
-          : undefined;
+      const keyInfo = listContext?.getKey(nextMeta.name);
       meta.value = nextMeta.destroy ? genEmptyMeta() : nextMeta;
-      props.onMetaChange?.(nextMeta as never);
+      emit('metaChange', nextMeta);
       // Bump to parent since noStyle
       if (props.noStyle && props.help !== false && notifyParentMetaChange) {
-        let namePath = [...(nextMeta.name ?? [])] as string[];
+        let namePath = [...nextMeta.name];
         if (!nextMeta.destroy) {
-          if (keyInfo !== undefined) {
-            const [fieldKey, ...restPath] = keyInfo;
+          if (keyInfo?.[0] !== undefined) {
+            const [fieldKey, restPath] = keyInfo;
             namePath = [fieldKey, ...restPath];
             fieldKeyPathRef.value = namePath;
           }
@@ -135,7 +139,7 @@ export default defineComponent({
           // Use origin cache data
           namePath = fieldKeyPathRef.value ?? namePath;
         }
-        notifyParentMetaChange(nextMeta, namePath as never);
+        notifyParentMetaChange(nextMeta, namePath);
       }
     };
 
@@ -242,7 +246,11 @@ export default defineComponent({
 
       // 纯布局 Item：无 name / 非 render-props / 无 dependencies
       if (!hasName.value && !isRenderProps.value && !props.dependencies) {
-        return renderLayout(slots.default?.(), undefined, false);
+        return renderLayout(
+          slots.default?.({ control: {}, meta: meta.value, form: formContext?.form }),
+          undefined,
+          false,
+        );
       }
 
       const variables: Record<string, string> = {};
@@ -263,14 +271,15 @@ export default defineComponent({
           messageVariables: variables,
           trigger: props.trigger,
           validateTrigger: props.validateTrigger,
-          onMetaChange: onMetaChange as never,
+          onMetaChange,
+          onReset: () => emit('reset'),
         },
         {
-          default: (
-            control: Record<string, unknown>,
-            renderMeta: CoreMeta,
-            context: FormInstance,
-          ) => {
+          default: ({
+            control,
+            meta: renderMeta,
+            form: context,
+          }: Parameters<NonNullable<FieldSlots['default']>>[0]) => {
             const mergedName =
               toArray(props.name as never).length && renderMeta ? renderMeta.name : [];
             const fieldId = getFieldId(mergedName, formContext?.name) ?? props.id;
@@ -292,8 +301,7 @@ export default defineComponent({
                   });
 
             // ── Children ──
-            const childNodes = (slots.default?.(control as never, renderMeta as never, context) ??
-              []) as VNodeChild[];
+            const childNodes = slots.default?.({ control, meta: renderMeta, form: context }) ?? [];
             const list = Array.isArray(childNodes) ? childNodes : [childNodes];
             const single = list.filter(
               (n): n is VNode => !!n && typeof n === 'object' && 'type' in (n as object),

@@ -16,7 +16,7 @@
  * |---|---|
  * | `forceUpdate()` | 组件的 `shallowRef` 版本号，渲染函数读它（**有人读才成立**） |
  * | `setState({resetCount})` | 组件的 `ref` + 渲染时包一层 **keyed `Fragment`** |
- * | `cloneElement(child, control)` | **scoped slot** `default(control, meta, form)` |
+ * | `cloneElement(child, control)` | **scoped slot** `default({ control, meta, form })` |
  * | `constructor` 的 `initEntityValue` | `setup()` 里调（Vue setup 只跑一次，早于 mount） |
  * | `componentDidMount` / `componentWillUnmount` | `onMounted` / `onUnmounted` |
  * | `WrapperField`（函数组件，读两个 Context） | 合并进 `setup()`（Vue 没有"函数体每次重跑"） |
@@ -31,7 +31,7 @@
  */
 
 import { isEqual, warning } from '@apollo-design/utils';
-import type { PropType, VNodeChild } from 'vue';
+import type { PropType, SlotsType, VNodeChild } from 'vue';
 import { defineComponent, Fragment, h, inject, onMounted, onUnmounted, ref, shallowRef } from 'vue';
 
 import delayFrame from './delay-frame';
@@ -43,6 +43,7 @@ import type {
   FieldEntity,
   FieldEntityProps,
   FieldMessage,
+  FieldSlots,
   FormInstance,
   FormRule,
   InternalFieldProps,
@@ -134,6 +135,8 @@ class FieldController implements FieldEntity {
   mounted = false;
 
   cancelRegisterFunc: FieldCancelRegister | null = null;
+
+  cancelDebounce: (() => void) | undefined;
 
   private metaCache: MetaEvent | null = null;
 
@@ -326,6 +329,7 @@ class FieldController implements FieldEntity {
     const namePath = this.getNamePath();
     const currentValue = this.getValue();
     const { triggerName, validateOnly = false, delayFrame: showDelayFrame } = options || {};
+    if (!validateOnly) this.cancelDebounce?.();
 
     // Force change to async to avoid rule OOD under renderProps field
     const rootPromise = Promise.resolve().then(async (): Promise<RuleError[]> => {
@@ -338,6 +342,7 @@ class FieldController implements FieldEntity {
       // since developer may `useWatch` value in the rules.
       if (showDelayFrame) {
         await delayFrame();
+        if (!this.mounted) return [];
       }
 
       // Start validate
@@ -357,8 +362,17 @@ class FieldController implements FieldEntity {
 
       // Wait for debounce. Skip if no `triggerName` since its from `validateFields / submit`
       if (validateDebounce && triggerName) {
+        if (this.validatePromise !== rootPromise) return [];
         await new Promise<void>((resolve) => {
-          setTimeout(resolve, validateDebounce);
+          const timeout = setTimeout(() => {
+            this.cancelDebounce = undefined;
+            resolve();
+          }, validateDebounce);
+          this.cancelDebounce = () => {
+            clearTimeout(timeout);
+            this.cancelDebounce = undefined;
+            resolve();
+          };
         });
 
         // Skip since out of date
@@ -622,8 +636,6 @@ export const fieldProps = {
   },
   messageVariables: { type: Object as PropType<Record<string, string>>, default: undefined },
   shouldUpdate: { type: [Boolean, Function] as PropType<ShouldUpdate>, default: undefined },
-  onReset: { type: Function as PropType<() => void>, default: undefined },
-  onMetaChange: { type: Function as PropType<(meta: MetaEvent) => void>, default: undefined },
   preserve: { type: Boolean, default: undefined },
   isListField: { type: Boolean, default: undefined },
   isList: { type: Boolean, default: undefined },
@@ -635,18 +647,23 @@ export const fieldProps = {
  * 用法（契约 §6.4.3）：
  *
  * ```vue
- * <Field :name="['user', 'name']" :rules="rules" v-slot="(control, meta, form)">
+ * <Field :name="['user', 'name']" :rules="rules" v-slot="{ control, meta, form }">
  *   <input v-bind="control" />
  * </Field>
  * ```
  *
- * ⚠️ `v-slot` 的参数列表就是上游 render prop 的 `(control, meta, form)` 三个位置参数。
+ * 模板和 h() 的默认插槽使用同一具名作用域对象。
  */
 export const Field = defineComponent({
   name: 'AField',
   inheritAttrs: false,
   props: fieldProps,
-  setup(props, { slots }) {
+  slots: Object as SlotsType<FieldSlots>,
+  emits: {
+    reset: () => true,
+    metaChange: (_meta: MetaEvent) => true,
+  },
+  setup(props, { slots, emit }) {
     const fieldContext = inject(fieldContextKey, defaultFieldContext);
     const listContext = inject(listContextKey, null);
 
@@ -673,8 +690,8 @@ export const Field = defineComponent({
       getValueProps: props.getValueProps,
       messageVariables: props.messageVariables,
       initialValue: props.initialValue,
-      onReset: props.onReset,
-      onMetaChange: props.onMetaChange,
+      onReset: () => emit('reset'),
+      onMetaChange: (meta) => emit('metaChange', meta),
       preserve: props.preserve,
       isListField: isMergedListField(),
       isList: props.isList,
@@ -741,9 +758,11 @@ export const Field = defineComponent({
     });
 
     onUnmounted(() => {
+      controller.validatePromise = null;
+      controller.mounted = false;
+      controller.cancelDebounce?.();
       controller.cancelRegister();
       controller.triggerMetaEvent(true);
-      controller.mounted = false;
     });
 
     return (): VNodeChild => {
@@ -752,7 +771,7 @@ export const Field = defineComponent({
 
       const meta = controller.getMeta();
       const control = controller.getControlled();
-      const child = slots.default?.(control, meta, fieldContext as FormInstance);
+      const child = slots.default?.({ control, meta, form: fieldContext });
 
       // ⭐ keyed Fragment：`refresh()` 改 `resetCount` ⇒ Fragment 的 key 变化 ⇒
       //    Vue 整体 unmount/mount（等价上游 `<Fragment key={resetCount}>`，差异 11）。

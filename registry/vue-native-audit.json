@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 119,
+  "revision": 124,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -1427,13 +1427,18 @@
       "kind": "component",
       "ref": "menu",
       "title": "Menu",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/ui/src/menu"
+        "packages/ui/src/menu",
+        "packages/ui/src/dropdown/__tests__/native-contracts.test.ts"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_portal",
+        "baseRevision": 120,
+        "startedAt": "2026-10-30T13:08:00.085Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1442,13 +1447,14 @@
       ],
       "issues": [],
       "plan": {
-        "goal": "完成 Menu 原生操作专项之外的剩余 Vue 契约整改",
+        "goal": "保留原生动作及Dropdown共享增量，完成Menu其余真实Vue契约",
         "remaining": [
-          "复用原生点击、键盘、焦点与 disabled 专项；先核对尚未覆盖的 items/slots、模型及 Provider 链路，再确定实施差额。"
+          "复用2026-10-28 native actions、当前prefix/selectable/keyboard与CSSProperties桥，完整核对items/数据渲染与组件slot、models/owned通知/真实ref、当前Provider/有效Token与Overflow/子菜单链，不重做已经有效的动作审计。"
         ],
         "effort": "unknown",
         "basis": [
-          "docs/audit/2026-10-28-menu-native-actions-audit.md"
+          "docs/audit/2026-10-28-menu-native-actions-audit.md",
+          "packages/ui/src/menu/__tests__/s22-issue22.test.ts"
         ]
       }
     },
@@ -3267,7 +3273,7 @@
       "kind": "foundation",
       "ref": "form-core",
       "title": "@apollo-design/form-core",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
@@ -3283,12 +3289,10 @@
         "packages/ui/src/form/index.en-US.md",
         "packages/ui/src/form/README.md"
       ],
-      "assignment": {
-        "owner": "native_form_core",
-        "baseRevision": 108,
-        "startedAt": "2026-10-30T12:00:47.816Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
@@ -3306,6 +3310,94 @@
         "basis": [
           "docs/foundation/form-core-contract.md",
           "docs/audit/2026-10-29-config-provider-contract-audit.md"
+        ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/form-core",
+          "packages/ui/src/form",
+          "docs/foundation/form-core-contract.md"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/form-core/src/__tests__ packages/ui/src/form/__tests__",
+            "exitCode": 0,
+            "result": "16 files, 611 passed before the final native-reset/custom-host, debounce and List key-tuple differences. Unaffected engine/store/prefix/Input checks are reused; the changed chains have separate final checks below.",
+            "log": "/tmp/apollo-form-core-final-core.log",
+            "signal": null,
+            "durationMs": 20440
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/form-core/src/__tests__/native-contracts.test.ts packages/form-core/src/__tests__/batch3b.test.ts packages/form-core/src/__tests__/consumer-bridge.test.ts packages/ui/src/form/__tests__/s8-issue8.test.ts packages/ui/src/form/__tests__/demo.test.ts",
+            "exitCode": 0,
+            "result": "5 files, 166 passed after debounce/native-reset/custom-host fixes. Follow-up List key-tuple difference is verified by the final consumer check below.",
+            "log": "/tmp/apollo-form-core-final-field.log",
+            "signal": null,
+            "durationMs": 12910
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/form-core/src/__tests__/consumer-bridge.test.ts packages/form-core/src/__tests__/batch3c.test.ts packages/ui/src/form/__tests__/form.test.ts packages/ui/src/form/__tests__/input-reference.test.ts",
+            "exitCode": 0,
+            "result": "4 files, 106 passed on the final List key-tuple/metadata bridge, including SFC/SSR and real Input consumers.",
+            "log": "/tmp/apollo-form-core-final-list-bridge.log",
+            "signal": null,
+            "durationMs": 7650
+          },
+          {
+            "kind": "lint",
+            "command": "node node_modules/@biomejs/biome/bin/biome check --write <23 owned changed TS/SFC files>",
+            "exitCode": 0,
+            "result": "23 files checked; safe format/import fixes applied.",
+            "log": "/tmp/apollo-form-core-biome-final.log",
+            "signal": null,
+            "durationMs": 155
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check -- packages/form-core packages/ui/src/form docs/foundation/form-core-contract.md",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "demo",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/form/__tests__/demo.test.ts -t 'form-list|dynamic-form-items|control-hooks'",
+            "exitCode": 0,
+            "result": "4 relevant Demo renders passed on the final List bridge; 33 filtered tests skipped, not counted as passed.",
+            "log": "/tmp/apollo-form-core-final-demo.log",
+            "signal": null,
+            "durationMs": 11220
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/form-core/src/__tests__/native-contracts.test.ts -t 'controlled fields update in place without replacing the array'",
+            "exitCode": 0,
+            "result": "1 affected regression passed; 16 filtered tests skipped, not counted as passed. Production unchanged.",
+            "log": "/tmp/apollo-form-core-native-fields-focused.log",
+            "signal": null,
+            "durationMs": 5140
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; all Form Core/UI Form source, type tests, native SFC and Demo; declaration/strict unchanged>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 54670
+          }
+        ],
+        "boundary": "Core Form/Field/List、Provider 的具名对象插槽和 owned emits、外部 store 根订阅、受控 fields 深更新、当前 trigger/初值/注册、真实宿主 ref、校验/防抖/MessageChannel 资源和重入 watch 已实现并通过相关检查。已有 611 项范围结果沿用未受影响部分；实际变化链以最终 166、106 项和单条 fields 回归及4个 Demo 为证，重叠检查不相加为覆盖率。最后类型更改仅精确描述深响应式测试数据，源码和 h() 正例未放宽；最终同一源码 strict exit0。UI Form 全部视觉/Token 整改仍为 partial；全库、完整浏览器/视觉矩阵、构建消费者及冻结九维未执行。",
+        "attemptsNotPassed": [
+          {
+            "command": "vitest --project types --typecheck.enabled=false <3 type test files>",
+            "exitCode": 130,
+            "elapsedSeconds": 33.46,
+            "reason": "Child project still started vue-tsc despite the disable flag. Only this owner process and its checker were interrupted to preserve the integrator single-checker policy; not a type pass.",
+            "log": "/tmp/apollo-form-core-types-runtime.log"
+          }
         ]
       }
     },

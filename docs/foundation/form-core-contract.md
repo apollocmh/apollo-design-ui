@@ -1,5 +1,38 @@
 > 证据范围：本文保留初期分析与回归来源。上游对齐、版本和阶段要求不是当前项目规范；现行规则见根目录 AGENTS.md 与 ADR 0005。有效的组件场景、算法契约及缺陷证据继续保留。
 
+## 2026-10-30 架构整改增量
+
+本轮接续已交付的校验引擎、取值工具、状态机及 ConfigProvider 校验消息同步，不重做历史批次的算法审计。以下当前契约优先于后文带日期的上游映射记录。
+
+| 单元 | 当前公开职责 |
+| --- | --- |
+| Schema、rules、validators、值/路径工具 | 保留算法、校验回调和 Promise 结果；本轮不改验证算法或来源/许可说明 |
+| FormStore / useForm | 保留公开读写、重置、校验与提交 API；store 为普通数据对象，字段及 useWatch 显式订阅。程序化 callbacks、normalize、getValueFromEvent、getValueProps、shouldUpdate、规则生成器均保留其真实函数职责 |
+| useWatch / WatcherCenter | useWatch 返回 Ref，在挂载后同步注册并随 Vue effect scope 释放；路径/selector 是既有静态参数。保留已实现的 preserve 与批量通知语义 |
+| Form | Props 保留 form、name、initialValues、fields、component、validateMessages、validateTrigger、preserve、clearOnDestroy、renderProps；四个业务通知使用 emits，默认槽为 `{ values, form }`。没有表单值 v-model，值由 store 管理 |
+| Field | 保留字段规则、触发器、依赖、取值/归一算法与 preserve 等 Props；`reset()`、`metaChange(meta)` 使用 emits，默认槽为 `{ control, meta, form }`。renderless，无 attrs 宿主或公开实例方法 |
+| List | 保留 name、rules、validateTrigger、initialValue、isListField；默认槽为 `{ fields, operations, meta }`，operations 保留 add/remove/move。renderless，无模型、业务事件或公开实例方法 |
+| FormProvider | validateMessages 为配置 Prop；`formChange(name, info)` / `formFinish(name, info)` 使用 emits，默认槽透传正文，attrs 不落 DOM，无模型/Expose |
+
+Form 的原生 attrs 只落当前容器；`component=false` 不创建宿主。原生 submit 仍由 Form 防止默认提交并调用 store.submit，reset 在重置后转发原事件。Core Form 的 ref 只公开 FormInstance 的文档化方法及 `nativeElement: HTMLElement | null`，不泄漏内部 hook/品牌标记；自定义组件容器读取其当前实际 HTML 根，Fragment/无容器时返回 null。UI Form 的 nativeElement 读取该实际元素。
+
+本轮修复的根因：
+
+- 三个核心默认槽直接使用具名对象；UI Form、Form.Item 与 Form.List 的真实消费桥同步迁移。Form.Item 的无字段布局分支也收到 `{ control: {}, meta, form }`；独立布局项的 form 明确为 undefined。UI Form.List 既有 `{ fields, operations, meta }` 形状不变，fieldKey 继续来自稳定 key。
+- ListContext.getKey 的真实返回为 `[key | undefined, restPath]`，未登记下标不强行宣称已有 key；noStyle Item 元数据通知按此元组展开为平坦稳定路径，不把 restPath 再嵌套一层。
+- 组件通知通过 Vue emit 一次发送，事件监听器更新和 `.once` 由 Vue 管理。Props 类型里的 onXxx 是 JSX/h 监听器签名；它们不再作为运行时函数 Prop 手动调用。store 的程序化 callbacks 继续是函数接口。
+- Form 的 fields 观察包含原地字段更新，name 改变同步迁移 Provider 登记；renderProps 可动态切换。实际 Form 用自身 shallowRef 订阅外部创建的 store，卸载只释放自己的根订阅。根订阅同时保留 Field 的状态通知，确保 reset/meta/清理不因整表渲染而失效。
+- List 每次渲染读取当前默认槽，继承的 validateTrigger 使用 getter，嵌套 List 不冻结祖先配置。配置专项已实现的 validateMessages watchEffect 保持不变。
+- Field 卸载作废待完成的 meta 更新，释放 debounce 定时器并完成被取消的等待；被新校验取代的 debounce 同样释放，延迟一帧后先检查生命周期。Form 在子字段注销前保存 preserve 边界，卸载作废旧提交的通知并释放回调/告警定时器；正常校验的 Promise 与 outOfDate 语义保留。
+- MessageChannel 投递后关闭两个端口，watcher 同步写入产生的下一批路径在当前通知前分离，避免被本批清空。
+- defaultFieldContext 不再用 `undefined as never` 伪装返回类型。脱离 Form 的 Field 仍告警并可渲染；空读取返回 undefined / 空对象 / 空数组 / false，getInternalHooks 返回 null，validateFields 返回拒绝的 Promise，不能把未连接校验冒充成功。
+
+开发版 `0.0.0` 按 ADR 0007 直接迁移，兼容层与弃用期均为无。旧 `default(control, meta, form)`、`default(values, form)`、`default(fields, operations, meta)` 分别改为对应单对象参数；模板使用 `#default="{ control, meta, form }"` 等。`@reset` / `@meta-change` / `@form-change` 等通知载荷保持业务语义，h/JSX 继续写 onXxx 监听器。
+
+本轮已运行包内已有行为/Oracle、真实 SFC 模板、Input 消费、动态槽与配置、SSR、资源与异步边界及相关 Demo。具名槽的类型正负例已同步，严格 vue-tsc 由集成人对冻结源码统一执行，当前不冒称已通过；不宣称 UI Form 全组件 Token/布局审计、浏览器完整矩阵、覆盖率或冻结版本最终验收完成。历史完整结果与下文的原始缺口仍保留原日期/范围，不能当作本轮重新验证。
+
+---
+
 # `form-core` 契约文档
 
 > G1/G2 分析产物。**先于实现存在**（`AGENTS.md` §2：步骤 3 的产物必须先于步骤 5）。

@@ -24,19 +24,19 @@
  */
 
 import { warning } from '@apollo-design/utils';
-import type { PropType } from 'vue';
+import type { PropType, SlotsType } from 'vue';
 import { defineComponent, h, inject, provide } from 'vue';
 
 import { Field } from './field';
 import { defaultFieldContext, fieldContextKey, listContextKey } from './form-context';
 import type {
-  ChildProps,
+  FieldSlots,
   InternalFormInstance,
   InternalNamePath,
   ListContextProps,
   ListField,
   ListOperations,
-  Meta,
+  ListSlots,
   NamePath,
   ShouldUpdate,
   StoreValue,
@@ -65,9 +65,9 @@ export const listProps = {
  * 用法（契约 §6.4.3）：
  *
  * ```vue
- * <List :name="['users']" v-slot="(fields, operations, meta)">
+ * <List :name="['users']" v-slot="{ fields, operations, meta }">
  *   <div v-for="field in fields" :key="field.key">
- *     <Field :name="[field.name, 'first']" v-slot="(control)">
+ *     <Field :name="[field.name, 'first']" v-slot="{ control }">
  *       <input v-bind="control" />
  *     </Field>
  *   </div>
@@ -81,6 +81,7 @@ export const List = defineComponent({
   name: 'AList',
   inheritAttrs: false,
   props: listProps,
+  slots: Object as SlotsType<ListSlots>,
   setup(props, { slots }) {
     const context = inject(fieldContextKey, defaultFieldContext);
     const wrapperListContext = inject(listContextKey, null);
@@ -100,35 +101,24 @@ export const List = defineComponent({
 
     const fieldContext: InternalFormInstance = {
       ...context,
+      get validateTrigger() {
+        return context.validateTrigger;
+      },
       get prefixName() {
         return prefixName();
       },
     };
     provide(fieldContextKey, fieldContext);
 
-    /**
-     * 上游 `List.js:32-38`。
-     *
-     * ⚠️ 返回元组的第一个元素在「该 index 还没登记过 key」时是 `undefined`
-     * —— 但 `ListContextProps.getKey` 的声明（上游 `ListContext.d.ts`）写的是
-     * `InternalNamePath[number]`，即**不含 undefined**。这里按声明收敛（上游同款失真），
-     * 消费方（`Field` 的 `getKey` 调用点）只用真值语境。
-     */
+    /** 当前列表下标对应的稳定 key；该下标尚未渲染时为 undefined。 */
     const listContext: ListContextProps = {
       getKey: (namePath) => {
         const len = prefixName().length;
-        const pathName = namePath[len] as number;
-        return [keyManager.keys[pathName] as number, namePath.slice(len + 1)];
+        const pathName = Number(namePath[len]);
+        return [keyManager.keys[pathName], namePath.slice(len + 1)];
       },
     };
     provide(listContextKey, listContext);
-
-    // 上游 `List.js:41-44`：`typeof children !== 'function'` ⇒ 告警 + `null`。
-    // Vue 的插槽**总是**函数，所以「不是函数」的对应物是「根本没有这个插槽」（差异 14）。
-    if (!slots.default) {
-      warning(false, 'Form.List only accepts function as children.');
-      return () => null;
-    }
 
     /**
      * 上游 `List.js:45-52`：内部来源的更新**不**触发 `shouldUpdate` 重渲染
@@ -142,8 +132,12 @@ export const List = defineComponent({
       return prevValue !== nextValue;
     };
 
-    return () =>
-      h(
+    return () => {
+      if (!slots.default) {
+        warning(false, 'Form.List requires a default scoped slot.');
+        return null;
+      }
+      return h(
         Field,
         {
           name: [],
@@ -155,7 +149,7 @@ export const List = defineComponent({
           isListField: props.isListField ?? Boolean(wrapperListContext),
         },
         {
-          default: (control: ChildProps, meta: Meta) => {
+          default: ({ control, meta }: Parameters<NonNullable<FieldSlots['default']>>[0]) => {
             const onChange = control.onChange as (value: StoreValue[]) => void;
 
             /**
@@ -250,10 +244,11 @@ export const List = defineComponent({
               return { name: index, key, isListField: true };
             });
 
-            return slots.default?.(fields, operations, meta);
+            return slots.default?.({ fields, operations, meta });
           },
         },
       );
+    };
   },
 });
 

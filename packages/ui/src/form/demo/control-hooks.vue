@@ -42,7 +42,7 @@ const reset = () => {
 </script>
 
 <template>
-  <Form :form="form" layout="vertical">
+  <Form :form="form" layout="vertical" render-props v-slot="{ values }">
     <FormItem
       label="用户名"
       name="username"
@@ -70,6 +70,7 @@ const reset = () => {
       </Space>
     </FormItem>
     <pre class="demo-method-output">{{ output }}</pre>
+    <output>当前表单值：{{ JSON.stringify(values) }}</output>
   </Form>
 </template>
 

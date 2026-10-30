@@ -25,7 +25,12 @@ import { matchNamePath } from './value-util';
  */
 export const macroTask = (fn: () => void): void => {
   const channel = new MessageChannel();
-  channel.port1.onmessage = fn;
+  channel.port1.onmessage = () => {
+    channel.port1.onmessage = null;
+    channel.port1.close();
+    channel.port2.close();
+    fn();
+  };
   channel.port2.postMessage(null);
 };
 
@@ -83,10 +88,11 @@ export default class WatcherCenter {
         const formInst = this.form.getForm();
         const values = formInst.getFieldsValue();
         const allValues = formInst.getFieldsValue(true);
-        this.watcherList.forEach((callback) => {
-          callback(values, allValues, this.namePathList);
-        });
+        const namePathList = this.namePathList;
         this.namePathList = [];
+        this.watcherList.forEach((callback) => {
+          callback(values, allValues, namePathList);
+        });
       }
     });
   }

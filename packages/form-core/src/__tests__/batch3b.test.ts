@@ -37,6 +37,7 @@ import { FormStore } from '../form-store';
 import type {
   ChildProps,
   FieldMessage,
+  FieldSlots,
   FormInstance,
   FormRule,
   InternalFormInstance,
@@ -104,7 +105,11 @@ function mountField(
       }
       return () =>
         h(Field, props, {
-          default: (control: ChildProps, meta: Meta, f: FormInstance) => {
+          default: ({
+            control,
+            meta,
+            form: f,
+          }: Parameters<NonNullable<FieldSlots['default']>>[0]) => {
             renderCount += 1;
             captured.control = control;
             captured.meta = meta;

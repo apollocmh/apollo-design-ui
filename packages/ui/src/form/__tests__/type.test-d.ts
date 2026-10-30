@@ -14,10 +14,12 @@ import type { Form, FormItem, FormList } from '../index';
 import type {
   FormEmits,
   FormItemProps,
+  FormItemSlots,
   FormLayout,
   FormProps,
   FormSemanticClassNames,
   FormSemanticStyles,
+  FormSlots,
   RequiredMark,
   ValidateStatus,
 } from '../interface';
@@ -84,6 +86,29 @@ describe('Form · hooks 类型', () => {
     expectTypeOf(form.validateFields).toBeFunction();
     expectTypeOf(form.setFieldsValue).toBeFunction();
     expectTypeOf(form.getFieldsValue).toBeFunction();
+  });
+});
+
+describe('Form · named scoped slots', () => {
+  it('Form and Item share named objects in exported and component types', () => {
+    type FormScope = Parameters<NonNullable<FormSlots['default']>>[0];
+    type ItemScope = Parameters<NonNullable<FormItemSlots['default']>>[0];
+    expectTypeOf<keyof FormScope>().toEqualTypeOf<'values' | 'form'>();
+    expectTypeOf<keyof ItemScope>().toEqualTypeOf<'control' | 'meta' | 'form'>();
+    expectTypeOf<ItemScope['form']>().toEqualTypeOf<FormInstance<unknown> | undefined>();
+    const check = (
+      form: InstanceType<typeof Form>,
+      item: InstanceType<typeof FormItem>,
+      instance: FormInstance,
+    ) => {
+      form.$slots.default?.({ values: {}, form: instance });
+      item.$emit('reset');
+      // @ts-expect-error Item metaChange requires actual field metadata.
+      item.$emit('metaChange', 'invalid');
+      // @ts-expect-error Form defaults accept one named object.
+      form.$slots.default?.({}, instance);
+    };
+    void check;
   });
 });
 

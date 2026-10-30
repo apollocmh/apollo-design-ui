@@ -32,6 +32,7 @@
 import type {
   FieldProps,
   FormInstance,
+  Meta,
   FormProps as RcFormProps,
   ListProps as RcListProps,
   StoreValue,
@@ -148,7 +149,10 @@ export interface FormEmits<Values = unknown> {
 
 /** ⭐ render props → scoped slot（规则 C8）。 */
 export interface FormSlots<Values = unknown> {
-  default?: (values: Record<string, StoreValue>, form: FormInstance<Values>) => VNodeChild;
+  default?: (scope: {
+    values: Record<string, StoreValue>;
+    form: FormInstance<Values>;
+  }) => VNodeChild;
 }
 
 // ---------------------------------------------------------------------------
@@ -187,17 +191,13 @@ export interface FormItemProps<Values = unknown> extends FieldProps<Values> {
   fieldId?: string;
 }
 
-/**
- * `Form.Item` 的 slots。
- *
- * ⚠️ 与 form-core 的 `FieldSlots.default(control, meta, form)` 是**两层**：
- * form-core 的 `Field` 暴露 `(control, meta, form)`；antd 的 `Form.Item` 在其上
- * 再包一层布局，并把 `meta` 转成 `validateStatus`/`help`/`extra` 的渲染。
- * 骨架阶段**先只声明与 antd 一致的 `default` 插槽**，render-props 形态
- * （`children` 作为函数）留待 G1/G2 按 C8 裁决（主推 scoped slot、兼容保留函数）。
- */
-export interface FormItemSlots {
-  default?: () => VNodeChild;
+/** Form.Item 默认槽始终接收具名对象；独立布局项的 form 为 undefined。 */
+export interface FormItemSlots<Values = unknown> {
+  default?: (scope: {
+    control: Record<string, unknown>;
+    meta: Meta;
+    form: FormInstance<Values> | undefined;
+  }) => VNodeChild;
   label?: () => VNodeChild;
   extra?: () => VNodeChild;
   help?: () => VNodeChild;

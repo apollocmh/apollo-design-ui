@@ -24,7 +24,7 @@
  * 那一刻的快照对象（上游如此），不是实时视图。
  */
 
-import type { PropType } from 'vue';
+import type { PropType, SlotsType } from 'vue';
 import { defineComponent, inject, provide } from 'vue';
 
 import { defaultFormContext, formContextKey } from './form-context';
@@ -33,6 +33,7 @@ import type {
   FormChangeInfo,
   FormFinishInfo,
   FormInstance,
+  FormProviderSlots,
   Forms,
   Store,
   ValidateMessages,
@@ -40,14 +41,6 @@ import type {
 
 const formProviderProps = {
   validateMessages: { type: Object as PropType<ValidateMessages>, default: undefined },
-  onFormChange: {
-    type: Function as PropType<(name: string, info: FormChangeInfo) => void>,
-    default: undefined,
-  },
-  onFormFinish: {
-    type: Function as PropType<(name: string, info: FormFinishInfo) => void>,
-    default: undefined,
-  },
 } as const;
 
 /**
@@ -68,7 +61,12 @@ export const FormProvider = defineComponent({
   name: 'AFormProvider',
   inheritAttrs: false,
   props: formProviderProps,
-  setup(props, { slots }) {
+  slots: Object as SlotsType<FormProviderSlots>,
+  emits: {
+    formChange: (_name: string, _info: FormChangeInfo) => true,
+    formFinish: (_name: string, _info: FormFinishInfo) => true,
+  },
+  setup(props, { slots, emit }) {
     const parentContext = inject(formContextKey, defaultFormContext);
 
     /**
@@ -90,12 +88,12 @@ export const FormProvider = defineComponent({
       },
 
       triggerFormChange: (name: string, changedFields: FieldData[]): void => {
-        props.onFormChange?.(name, { changedFields, forms });
+        emit('formChange', name, { changedFields, forms });
         parentContext.triggerFormChange(name, changedFields);
       },
 
       triggerFormFinish: (name: string, values: Store): void => {
-        props.onFormFinish?.(name, { values, forms });
+        emit('formFinish', name, { values, forms });
         parentContext.triggerFormFinish(name, values);
       },
 
