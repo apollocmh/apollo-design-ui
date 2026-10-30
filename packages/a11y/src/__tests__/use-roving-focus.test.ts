@@ -5,11 +5,16 @@ import { NO_ACTIVE_INDEX, useRovingFocus } from '../index';
 
 /** 组合式里没有全局监听，但 `watch` 需要作用域 —— 统一在 effectScope 里跑。 */
 function withRoving(
-  options: UseRovingFocusOptions,
+  options: UseRovingFocusOptions & { initialIndex?: number },
   run: (api: UseRovingFocusReturn) => void,
 ): void {
   const scope = effectScope();
-  scope.run(() => run(useRovingFocus(options)));
+  const { initialIndex, ...hookOptions } = options;
+  scope.run(() => {
+    const api = useRovingFocus(hookOptions);
+    if (initialIndex !== undefined) api.setActive(initialIndex, false);
+    run(api);
+  });
   scope.stop();
 }
 
@@ -37,7 +42,7 @@ afterEach(() => {
 
 describe('useRovingFocus · tabindex 形态', () => {
   it('只有当前项是 0，其余全 -1', () => {
-    withRoving({ count: 3, activeIndex: 1 }, (api) => {
+    withRoving({ count: 3, initialIndex: 1 }, (api) => {
       expect(api.getTabIndex(0)).toBe(-1);
       expect(api.getTabIndex(1)).toBe(0);
       expect(api.getTabIndex(2)).toBe(-1);
@@ -63,7 +68,7 @@ describe('useRovingFocus · 键盘导航', () => {
   it('⭐ ArrowDown 向后移动并真的 focus 到目标元素', () => {
     const [items, getItem] = makeItems(3);
     const focusSpies = items.map((el) => vi.spyOn(el, 'focus'));
-    withRoving({ count: 3, activeIndex: 0, getItem }, (api) => {
+    withRoving({ count: 3, initialIndex: 0, getItem }, (api) => {
       expect(api.onKeyDown(keyEvent('ArrowDown'))).toBe(true);
       expect(api.activeIndex.value).toBe(1);
       expect(focusSpies[1]).toHaveBeenCalledTimes(1);
@@ -72,7 +77,7 @@ describe('useRovingFocus · 键盘导航', () => {
 
   it('ArrowUp 向前移动', () => {
     const [, getItem] = makeItems(3);
-    withRoving({ count: 3, activeIndex: 2, getItem }, (api) => {
+    withRoving({ count: 3, initialIndex: 2, getItem }, (api) => {
       api.onKeyDown(keyEvent('ArrowUp'));
       expect(api.activeIndex.value).toBe(1);
     });
@@ -80,7 +85,7 @@ describe('useRovingFocus · 键盘导航', () => {
 
   it('⭐ 消费掉的键会 preventDefault（方向键默认是滚页面）', () => {
     const [, getItem] = makeItems(3);
-    withRoving({ count: 3, activeIndex: 0, getItem }, (api) => {
+    withRoving({ count: 3, initialIndex: 0, getItem }, (api) => {
       const consumed = keyEvent('ArrowDown');
       api.onKeyDown(consumed);
       expect(consumed.defaultPrevented).toBe(true);
@@ -89,7 +94,7 @@ describe('useRovingFocus · 键盘导航', () => {
 
   it('⭐ 未参与导航的键**不**消费也不 preventDefault（否则会吃掉别处的导航）', () => {
     const [, getItem] = makeItems(3);
-    withRoving({ count: 3, activeIndex: 0, orientation: 'vertical', getItem }, (api) => {
+    withRoving({ count: 3, initialIndex: 0, orientation: 'vertical', getItem }, (api) => {
       const ignored = keyEvent('ArrowRight');
       expect(api.onKeyDown(ignored)).toBe(false);
       expect(ignored.defaultPrevented).toBe(false);
@@ -99,7 +104,7 @@ describe('useRovingFocus · 键盘导航', () => {
 
   it('vertical 不管左右，horizontal 不管上下', () => {
     const [, getItem] = makeItems(3);
-    withRoving({ count: 3, activeIndex: 1, orientation: 'horizontal', getItem }, (api) => {
+    withRoving({ count: 3, initialIndex: 1, orientation: 'horizontal', getItem }, (api) => {
       expect(api.onKeyDown(keyEvent('ArrowDown'))).toBe(false);
       expect(api.onKeyDown(keyEvent('ArrowRight'))).toBe(true);
       expect(api.activeIndex.value).toBe(2);
@@ -109,7 +114,7 @@ describe('useRovingFocus · 键盘导航', () => {
   it('⭐ horizontal + RTL 时左右互换', () => {
     const [, getItem] = makeItems(3);
     withRoving(
-      { count: 3, activeIndex: 1, orientation: 'horizontal', rtl: true, getItem },
+      { count: 3, initialIndex: 1, orientation: 'horizontal', rtl: true, getItem },
       (api) => {
         api.onKeyDown(keyEvent('ArrowRight'));
         expect(api.activeIndex.value).toBe(0);
@@ -121,7 +126,7 @@ describe('useRovingFocus · 键盘导航', () => {
 
   it('both 时四个方向都移动', () => {
     const [, getItem] = makeItems(5);
-    withRoving({ count: 5, activeIndex: 2, orientation: 'both', getItem }, (api) => {
+    withRoving({ count: 5, initialIndex: 2, orientation: 'both', getItem }, (api) => {
       expect(api.onKeyDown(keyEvent('ArrowDown'))).toBe(true);
       expect(api.activeIndex.value).toBe(3);
       expect(api.onKeyDown(keyEvent('ArrowRight'))).toBe(true);
@@ -131,7 +136,7 @@ describe('useRovingFocus · 键盘导航', () => {
 
   it('Home / End 跳到首尾', () => {
     const [, getItem] = makeItems(4);
-    withRoving({ count: 4, activeIndex: 2, getItem }, (api) => {
+    withRoving({ count: 4, initialIndex: 2, getItem }, (api) => {
       expect(api.onKeyDown(keyEvent('End'))).toBe(true);
       expect(api.activeIndex.value).toBe(3);
       expect(api.onKeyDown(keyEvent('Home'))).toBe(true);
@@ -141,7 +146,7 @@ describe('useRovingFocus · 键盘导航', () => {
 
   it('默认环绕：末尾再往后回到开头', () => {
     const [, getItem] = makeItems(3);
-    withRoving({ count: 3, activeIndex: 2, getItem }, (api) => {
+    withRoving({ count: 3, initialIndex: 2, getItem }, (api) => {
       api.onKeyDown(keyEvent('ArrowDown'));
       expect(api.activeIndex.value).toBe(0);
     });
@@ -149,14 +154,14 @@ describe('useRovingFocus · 键盘导航', () => {
 
   it('⭐ loop=false 时停在边界，不环绕', () => {
     const [, getItem] = makeItems(3);
-    withRoving({ count: 3, activeIndex: 2, loop: false, getItem }, (api) => {
+    withRoving({ count: 3, initialIndex: 2, loop: false, getItem }, (api) => {
       api.onKeyDown(keyEvent('ArrowDown'));
       expect(api.activeIndex.value).toBe(2);
     });
   });
 
   it('无关的键（字母 / Enter）返回 false', () => {
-    withRoving({ count: 3, activeIndex: 0 }, (api) => {
+    withRoving({ count: 3, initialIndex: 0 }, (api) => {
       expect(api.onKeyDown(keyEvent('a'))).toBe(false);
       expect(api.onKeyDown(keyEvent('Enter'))).toBe(false);
       expect(api.onKeyDown(keyEvent('Escape'))).toBe(false);
@@ -189,28 +194,30 @@ describe('useRovingFocus · 受控与副作用', () => {
     ) as UseRovingFocusReturn;
 
     api.move(1);
-    expect(api.activeIndex.value).toBe(1);
+    expect(api.activeIndex.value).toBe(0);
 
-    // 外部把受控值置回 undefined —— 内部状态必须保持不变
+    // 撤控保留实际接受值，不能泄漏被父级拒绝的移动请求。
     active.value = undefined;
     await nextTick();
+    expect(api.activeIndex.value).toBe(0);
+    api.move(1);
     expect(api.activeIndex.value).toBe(1);
     scope.stop();
   });
 
-  it('onChange 在每次移动后收到新下标', () => {
+  it('onChange 在初值设置及每次移动后收到新下标', () => {
     const seen: number[] = [];
-    withRoving({ count: 3, activeIndex: 0, onChange: (i) => seen.push(i) }, (api) => {
+    withRoving({ count: 3, initialIndex: 0, onChange: (i) => seen.push(i) }, (api) => {
       api.onKeyDown(keyEvent('ArrowDown'));
       api.onKeyDown(keyEvent('ArrowDown'));
     });
-    expect(seen).toEqual([1, 2]);
+    expect(seen).toEqual([0, 1, 2]);
   });
 
   it('⭐ focusOnMove=false 时只改状态，不碰焦点', () => {
     const [items, getItem] = makeItems(3);
     const focusSpies = items.map((el) => vi.spyOn(el, 'focus'));
-    withRoving({ count: 3, activeIndex: 0, getItem, focusOnMove: false }, (api) => {
+    withRoving({ count: 3, initialIndex: 0, getItem, focusOnMove: false }, (api) => {
       api.onKeyDown(keyEvent('ArrowDown'));
       expect(api.activeIndex.value).toBe(1);
       expect(focusSpies[1]).not.toHaveBeenCalled();
@@ -218,14 +225,14 @@ describe('useRovingFocus · 受控与副作用', () => {
   });
 
   it('没给 getItem 时移动不抛错（只改状态）', () => {
-    withRoving({ count: 3, activeIndex: 0 }, (api) => {
+    withRoving({ count: 3, initialIndex: 0 }, (api) => {
       expect(() => api.onKeyDown(keyEvent('ArrowDown'))).not.toThrow();
       expect(api.activeIndex.value).toBe(1);
     });
   });
 
   it('setActive 会被 count 夹住', () => {
-    withRoving({ count: 3, activeIndex: 0 }, (api) => {
+    withRoving({ count: 3, initialIndex: 0 }, (api) => {
       api.setActive(99);
       expect(api.activeIndex.value).toBe(2);
       api.setActive(-5);
@@ -234,7 +241,7 @@ describe('useRovingFocus · 受控与副作用', () => {
   });
 
   it('moveHome / moveEnd 是 Home / End 的等价物', () => {
-    withRoving({ count: 4, activeIndex: 1 }, (api) => {
+    withRoving({ count: 4, initialIndex: 1 }, (api) => {
       api.moveEnd();
       expect(api.activeIndex.value).toBe(3);
       api.moveHome();
@@ -242,23 +249,26 @@ describe('useRovingFocus · 受控与副作用', () => {
     });
   });
 
-  it('count 是响应式的 —— 列表变短后移动被夹住', async () => {
+  it('count 收缩先收束当前项，后续按当前列表环绕', async () => {
     const count = ref(5);
     const scope = effectScope();
     // effectScope.run 的返回类型带 | undefined；回调一定返回值，这里收窄一次
-    const api = scope.run(() => useRovingFocus({ count, activeIndex: 4 })) as UseRovingFocusReturn;
+    const api = scope.run(() => useRovingFocus({ count }));
+    if (!api) throw new Error('The test scope must be active');
+    api.setActive(4, false);
 
     count.value = 2;
     await nextTick();
-    api.move(1);
     expect(api.activeIndex.value).toBe(1);
+    api.move(1);
+    expect(api.activeIndex.value).toBe(0);
     scope.stop();
   });
 
   it('setActive(index, false) 不移动焦点', () => {
     const [items, getItem] = makeItems(3);
     const focusSpies = items.map((el) => vi.spyOn(el, 'focus'));
-    withRoving({ count: 3, activeIndex: 0, getItem }, (api) => {
+    withRoving({ count: 3, initialIndex: 0, getItem }, (api) => {
       api.setActive(2, false);
       expect(api.activeIndex.value).toBe(2);
       expect(focusSpies[2]).not.toHaveBeenCalled();

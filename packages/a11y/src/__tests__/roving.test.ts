@@ -36,10 +36,10 @@ describe('nextRovingIndex（rc-menu useAccessibility.js:126-137）', () => {
     expect(nextRovingIndex(NO_ACTIVE_INDEX, -1, 3)).toBe(2);
   });
 
-  it('offset 为 0 ⇒ 原地（但会做一次规范化）', () => {
+  it('offset 为 0 保持原地，包括尚无活动项', () => {
     expect(nextRovingIndex(1, 0, 3)).toBe(1);
-    // -1 原地：(-1 + 3) % 3 = 2 —— 上游同样如此，不是「保持 -1」
-    expect(nextRovingIndex(NO_ACTIVE_INDEX, 0, 3)).toBe(2);
+    // Apollo 的零偏移不发起导航，不将尚未激活状态变成最后一项。
+    expect(nextRovingIndex(NO_ACTIVE_INDEX, 0, 3)).toBe(NO_ACTIVE_INDEX);
   });
 
   it('只有一项时无论怎么走都是 0', () => {

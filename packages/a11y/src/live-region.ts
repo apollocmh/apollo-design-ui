@@ -157,7 +157,7 @@ export function createLiveRegion(options: LiveRegionOptions = {}): LiveRegionHan
 }
 
 export interface UseLiveRegionReturn {
-  /** 直接播报一段文本 */
+  /** 播报当前文本；挂载前调用保留最新文本，挂载后写入本实例节点。 */
   announce(text: string): void;
   /** 播报一组值（走 `formatLiveRegionText` 的截断规则） */
   announceValues(values: readonly LiveRegionValue[], maxCount?: number): void;
@@ -214,9 +214,15 @@ export function resetAnnounceRegion(): void {
  */
 export function useLiveRegion(options: LiveRegionOptions = {}): UseLiveRegionReturn {
   let region: LiveRegionHandle | null = null;
+  let currentText = '';
+  const announce = (text: string): void => {
+    currentText = text;
+    region?.setText(text);
+  };
 
   onMounted(() => {
     region = createLiveRegion(options);
+    region.setText(currentText);
   });
 
   onScopeDispose(() => {
@@ -225,11 +231,9 @@ export function useLiveRegion(options: LiveRegionOptions = {}): UseLiveRegionRet
   });
 
   return {
-    announce(text: string): void {
-      region?.setText(text);
-    },
+    announce,
     announceValues(values: readonly LiveRegionValue[], maxCount?: number): void {
-      region?.setText(formatLiveRegionText(values, maxCount));
+      announce(formatLiveRegionText(values, maxCount));
     },
   };
 }

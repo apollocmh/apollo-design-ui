@@ -37,6 +37,8 @@ export const NO_ACTIVE_INDEX = -1;
  * @param count      总项数
  * @returns 下一个下标；`count <= 0` 时返回 `NO_ACTIVE_INDEX`
  *
+ * 零偏移严格保持当前值，包括未激活的 `-1`，不因归一化而跳到末项。
+ *
  * ⚠️ 与上游的一处**有意**差异：`count <= 0` 时上游会算出 `NaN`（`(x + 0) % 0`），
  *    然后 `list[NaN]` 得到 `undefined`。我们返回 `-1` —— 对调用方而言同样是「没有目标」，
  *    但 `-1` 是可用下标哨兵，不会把 NaN 带进后续算术。见契约文档 §6。
@@ -45,6 +47,7 @@ export function nextRovingIndex(focusIndex: number, offset: number, count: numbe
   if (count <= 0) {
     return NO_ACTIVE_INDEX;
   }
+  if (offset === 0) return focusIndex;
 
   let index = focusIndex;
   if (offset < 0) {
@@ -98,6 +101,7 @@ export function moveRovingIndex(
   if (count <= 0) {
     return NO_ACTIVE_INDEX;
   }
+  if (offset === 0) return current;
   if (loop) {
     return nextRovingIndex(current, offset, count);
   }

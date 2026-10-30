@@ -91,9 +91,10 @@ export function pushTypeaheadChar(
 /**
  * 这个按键是不是「要参与 typeahead」的可打印字符。
  *
- * 判据只有两条：
- *   1. 带修饰键（Ctrl / Meta / Alt）的一律不算 —— 那是快捷键，不是搜索
- *   2. `key.length === 1` —— 可打印字符的 `key` 恰好是一个字符；
+ * 判据：
+ *   1. 已处理或正在输入法组合的事件交还所属控件，不参与搜索。
+ *   2. 带修饰键（Ctrl / Meta / Alt）的一律不算 —— 那是快捷键，不是搜索
+ *   3. `key.length === 1` —— 可打印字符的 `key` 恰好是一个字符；
  *      功能键（`'ArrowDown'` / `'Enter'` / `'Escape'`）长度都大于 1
  *
  * ⚠️ 刻意**不排除空格**：经典 typeahead 里空格是合法搜索字符。
@@ -108,8 +109,16 @@ export function isTypeaheadKey(event: {
   ctrlKey?: boolean;
   metaKey?: boolean;
   altKey?: boolean;
+  isComposing?: boolean;
+  defaultPrevented?: boolean;
 }): boolean {
-  if (event.ctrlKey || event.metaKey || event.altKey) {
+  if (
+    event.ctrlKey ||
+    event.metaKey ||
+    event.altKey ||
+    event.isComposing ||
+    event.defaultPrevented
+  ) {
     return false;
   }
   return event.key.length === 1;

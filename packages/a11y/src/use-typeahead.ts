@@ -49,7 +49,6 @@ export interface UseTypeaheadReturn {
 export function useTypeahead(options: UseTypeaheadOptions): UseTypeaheadReturn {
   let state: TypeaheadState = INITIAL_TYPEAHEAD_STATE;
   const buffer = ref('');
-  const clock = options.now ?? (() => Date.now());
 
   const reset = (): void => {
     state = INITIAL_TYPEAHEAD_STATE;
@@ -63,7 +62,12 @@ export function useTypeahead(options: UseTypeaheadOptions): UseTypeaheadReturn {
 
     const labels = toValue(options.labels);
     const from = toValue(options.activeIndex) ?? NO_ACTIVE_INDEX;
-    const accumulated = pushTypeaheadChar(state, event.key, clock(), options.resetDelay);
+    const accumulated = pushTypeaheadChar(
+      state,
+      event.key,
+      (options.now ?? Date.now)(),
+      options.resetDelay,
+    );
 
     let index = findTypeaheadIndex(labels, accumulated.buffer, from);
     if (index === NO_ACTIVE_INDEX) {

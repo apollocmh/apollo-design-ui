@@ -320,6 +320,13 @@ describe('useTypeahead 的类型', () => {
     expectTypeOf(
       isTypeaheadKey({ key: 'a', ctrlKey: true, metaKey: true, altKey: true }),
     ).toEqualTypeOf<boolean>();
+    expectTypeOf(
+      isTypeaheadKey({ key: 'a', isComposing: true, defaultPrevented: false }),
+    ).toEqualTypeOf<boolean>();
+    neverCalled(() => {
+      // @ts-expect-error composition state must be a boolean
+      isTypeaheadKey({ key: 'a', isComposing: 'yes' });
+    });
   });
 });
 

@@ -150,3 +150,7 @@ Drawer 的 close/afterOpenChange/resize/resizeStart/resizeEnd 使用 Vue emits�
 ### D-locale-provider-order
 
 LocaleProvider 与 ConfigProvider 的静态确认语言来源按挂载顺序固定优先级，内容更新不重新占位；清空来源后旧清理不恢复过期语言。普通 Modal 只读取本应用响应式语言，静态 confirm 仍可显式传 locale；无上下文静态服务的全局来源边界保留。详见[Locale 当前契约](docs/foundation/locale-contract.md)。
+
+### D-a11y-accepted-navigation
+
+useRovingFocus 的 activeIndex 按既有文档作为受控输入，拒绝请求不再修改已接受值或抢焦点，撤控保留已接受值。需要本地初值时不传受控 activeIndex，调用 setActive(index, false)；零偏移保持当前位置，跳末项使用 moveEnd。键盘事件保留原生阻止/输入法边界，挂载前播报在真实宿主就绪后保留。详见[a11y 当前契约](docs/foundation/a11y-contract.md)。

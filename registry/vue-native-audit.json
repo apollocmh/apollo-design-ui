@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 90,
+  "revision": 92,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2810,19 +2810,17 @@
       "kind": "foundation",
       "ref": "a11y",
       "title": "@apollo-design/a11y",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/a11y",
         "docs/foundation/a11y-contract.md"
       ],
-      "assignment": {
-        "owner": "native_a11y",
-        "baseRevision": 87,
-        "startedAt": "2026-10-30T10:55:06.772Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
@@ -2842,6 +2840,75 @@
           "docs/audit/2026-10-25-image-preview-focus-remediation.md",
           "docs/audit/2026-10-25-image-contract-audit.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/a11y",
+          "docs/foundation/a11y-contract.md"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/a11y/src/__tests__ --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11630,
+            "result": "156 passed, including actual Vue item rendering, accepted/rejected/withdrawn models, scope disposal, keyboard ownership, setup announcements and concurrent SSR"
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/image/__tests__/preview-focus.test.ts packages/ui/src/modal/__tests__/engine.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 14600,
+            "result": "32 passed, existing focusRestore consumers retained"
+          },
+          {
+            "kind": "format",
+            "command": "pnpm exec biome check --write packages/a11y/src/use-roving-focus.ts packages/a11y/src/roving.ts packages/a11y/src/combobox.ts packages/a11y/src/use-typeahead.ts packages/a11y/src/live-region.ts packages/a11y/src/__tests__/native-contracts.test.ts packages/a11y/src/__tests__/use-roving-focus.test.ts packages/a11y/src/__tests__/roving.test.ts packages/a11y/src/__tests__/a11y.test-d.ts",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 36,
+            "result": "9 files checked, no fixes on final source"
+          },
+          {
+            "kind": "format",
+            "command": "git diff --check -- packages/a11y docs/foundation/a11y-contract.md",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full a11y source and type cases>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 3165
+          }
+        ],
+        "reproduction": {
+          "command": "pnpm exec vitest run --project unit packages/a11y/src/__tests__/native-contracts.test.ts --maxWorkers=1",
+          "exitCode": 1,
+          "signal": null,
+          "durationMs": 1670,
+          "result": "Initial 9 contract scenarios failed on the original implementation",
+          "log": "/tmp/apollo-a11y-native-red.log"
+        },
+        "boundary": "No new UI component, emits, model name, expose method, compatibility branch or shared focus implementation. Static activeIndex is controlled, not a default; seed local state with setActive(index, false). Accepted/withdrawn state reuses shared useControlledValue, writable activeIndex uses the same request path; no-item/zero-offset and keyboard ownership are explicit. focus-restore.ts, utils focus APIs and existing Image historical evidence remain unchanged. Host owns logical item order and disabled filtering; default no-active remains -1. Live-region text/DOM lifecycle was tested, not physical assistive-technology audio. No dist build, full library, published consumers or final frozen nine-dimension acceptance run.",
+        "sourceSha256": {
+          "docs/foundation/a11y-contract.md": "75f050bb25d662a604f01b3691c08aea3dd550c128ed8d001967f28e0fd9eea6",
+          "packages/a11y/README.md": "63b1aaf2c2f18ab398fb4bbf8c96fc3efc409e04a85f6597b2357cc01a41948c",
+          "packages/a11y/src/__tests__/a11y.test-d.ts": "0ba918939da791b0880121813a960c8ced6ea8c81713445912ca7a0ffd5f4418",
+          "packages/a11y/src/__tests__/roving.test.ts": "d55ef82d34a21c186f8c703560c97b096f68498ab885cab871b1887a9b5ec452",
+          "packages/a11y/src/__tests__/use-roving-focus.test.ts": "358702cbc4738169235711d15b03759ca5c0ec4a04b410785be3863f28b37ae9",
+          "packages/a11y/src/combobox.ts": "1f63cdb2250041db5916d890c9b978ba0a96276cc5522bd31d253234db439153",
+          "packages/a11y/src/live-region.ts": "c51128196cde0815f6b18d7d48a2c59f3d2adae3565cd0e107e05ad25b6899ff",
+          "packages/a11y/src/roving.ts": "22b5692ec6d6bf47e986ee4f0ed7845b856f00336726034f2337ba154ac3683f",
+          "packages/a11y/src/use-roving-focus.ts": "8d60ed1165e9cc59b5a3289bbd6a743f9335190c4f007cdd18424702ae74b0b8",
+          "packages/a11y/src/use-typeahead.ts": "a50101737abb1bc4f9433c6d7641cf5805e5780b09b6af5de98597d025f4d954",
+          "packages/a11y/src/__tests__/native-contracts.test.ts": "fa2845228e088a27a4c420def926dc125dd9ed08262175f2157edd1e17b22423"
+        }
       }
     },
     {

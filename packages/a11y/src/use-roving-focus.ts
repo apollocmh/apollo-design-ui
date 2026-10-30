@@ -10,7 +10,8 @@
  * 这样「谁响应方向键」的边界是显式的，不会像全局监听那样误吞外部的方向键。
  */
 
-import { type MaybeRefOrGetter, type Ref, ref, toValue, watch } from 'vue';
+import { useControlledValue } from '@apollo-design/utils';
+import { computed, type MaybeRefOrGetter, type Ref, toValue, watch } from 'vue';
 import {
   getRovingOffset,
   getRovingTabIndex,
@@ -24,7 +25,7 @@ import {
 export interface UseRovingFocusOptions {
   /** 项数。响应式 —— 列表增删后不用重建组合式 */
   count: MaybeRefOrGetter<number>;
-  /** 受控的当前项；不传则是非受控。`-1` / `undefined` 表示还没有当前项 */
+  /** 受控当前项；`-1` 表示无当前项，undefined 撤控并保留最后接收的值。 */
   activeIndex?: MaybeRefOrGetter<number | undefined>;
   /** 默认 `'vertical'` */
   orientation?: MaybeRefOrGetter<RovingOrientation>;
@@ -34,14 +35,14 @@ export interface UseRovingFocusOptions {
   loop?: MaybeRefOrGetter<boolean>;
   /** 取第 `index` 个元素，用于真正移动焦点。不传则只改状态 */
   getItem?: (index: number) => HTMLElement | null;
-  /** 当前项变化时通知（受控用法里由调用方 setProps） */
+  /** 提议当前项；受控用法由调用方接受，拒绝时不提前改状态或焦点。 */
   onChange?: (index: number) => void;
   /** 默认 `true`：移动后调 `getItem(index)?.focus()`。传 `false` 可只改状态 */
   focusOnMove?: MaybeRefOrGetter<boolean>;
 }
 
 export interface UseRovingFocusReturn {
-  /** 当前项下标；`-1` 表示还没有当前项 */
+  /** 当前项下标；写入同 setActive，`-1` 表示还没有当前项。 */
   activeIndex: Ref<number>;
   /** 第 `index` 项该挂的 `tabindex` */
   getTabIndex(index: number): 0 | -1;
@@ -52,47 +53,86 @@ export interface UseRovingFocusReturn {
   moveEnd(): void;
   /**
    * 处理一个键盘事件。
-   * @returns 是否被本组合式消费 —— 调用方据此决定要不要 `preventDefault` / 继续冒泡
+   * @returns 是否已消费并 preventDefault；调用方据此决定是否继续派发。
    */
   onKeyDown(event: KeyboardEvent): boolean;
 }
 
 export function useRovingFocus(options: UseRovingFocusOptions): UseRovingFocusReturn {
-  const internal = ref(toValue(options.activeIndex) ?? NO_ACTIVE_INDEX);
-
-  // 受控：外部值变化时同步进来。`undefined` 视为「不管」，避免非受控用法被覆盖。
-  watch(
-    () => toValue(options.activeIndex),
-    (value) => {
-      if (value !== undefined) {
-        internal.value = value;
-      }
-    },
-  );
-
   const getCount = (): number => Math.max(0, Math.trunc(toValue(options.count)));
-
-  const setActive = (index: number, focus = true): void => {
+  const normalizeIndex = (index: number): number => {
     const count = getCount();
-    const next = count === 0 ? NO_ACTIVE_INDEX : Math.min(Math.max(index, 0), count - 1);
-    internal.value = next;
-    options.onChange?.(next);
-    // `focusOnMove` 默认 true；显式传 false 时只改状态（用于「受控方自己负责移动焦点」）
-    if (focus && toValue(options.focusOnMove) !== false && next !== NO_ACTIVE_INDEX) {
-      options.getItem?.(next)?.focus();
+    return count === 0 || index === NO_ACTIVE_INDEX
+      ? NO_ACTIVE_INDEX
+      : Math.min(Math.max(index, 0), count - 1);
+  };
+  const [state, setState] = useControlledValue<number>({
+    getValue: () => toValue(options.activeIndex),
+    defaultValue: NO_ACTIVE_INDEX,
+    onChange: (index) => options.onChange?.(index),
+  });
+  const activeIndex = computed({
+    get: () => normalizeIndex(state.value),
+    set: (index: number) => setActive(index),
+  });
+  let pendingFocus: number | undefined;
+
+  const focusAcceptedItem = (): void => {
+    if (pendingFocus === undefined || pendingFocus !== activeIndex.value) return;
+    if (pendingFocus === NO_ACTIVE_INDEX || toValue(options.focusOnMove) === false) {
+      pendingFocus = undefined;
+      return;
+    }
+    const item = options.getItem?.(pendingFocus);
+    if (item) {
+      pendingFocus = undefined;
+      item.focus();
     }
   };
 
+  function setActive(index: number, focus = true): void {
+    const next = normalizeIndex(index);
+    pendingFocus = focus && toValue(options.focusOnMove) !== false ? next : undefined;
+    setState(next);
+    focusAcceptedItem();
+  }
+
+  // A controlled parent or a newly rendered item can accept a request on the
+  // following Vue update. External changes without a request never steal focus.
+  watch(
+    activeIndex,
+    (index) => {
+      if (pendingFocus !== undefined && pendingFocus !== index) pendingFocus = undefined;
+      focusAcceptedItem();
+    },
+    { flush: 'post' },
+  );
+  watch(
+    getCount,
+    () => {
+      pendingFocus = undefined;
+      const next = normalizeIndex(state.value);
+      if (next !== state.value) setState(next);
+    },
+    { flush: 'sync' },
+  );
+
   const move = (offset: number): void => {
-    setActive(moveRovingIndex(internal.value, offset, getCount(), toValue(options.loop) ?? true));
+    if (offset === 0) return;
+    setActive(
+      moveRovingIndex(activeIndex.value, offset, getCount(), toValue(options.loop) ?? true),
+    );
   };
 
   const onKeyDown = (event: KeyboardEvent): boolean => {
+    if (event.defaultPrevented || event.isComposing || getCount() === 0) return false;
     if (event.key === 'Home') {
+      event.preventDefault();
       setActive(resolveRovingHome(getCount()));
       return true;
     }
     if (event.key === 'End') {
+      event.preventDefault();
       setActive(resolveRovingEnd(getCount()));
       return true;
     }
@@ -114,8 +154,8 @@ export function useRovingFocus(options: UseRovingFocusOptions): UseRovingFocusRe
   };
 
   return {
-    activeIndex: internal,
-    getTabIndex: (index: number) => getRovingTabIndex(internal.value, index),
+    activeIndex,
+    getTabIndex: (index: number) => getRovingTabIndex(activeIndex.value, index),
     setActive,
     move,
     moveHome: () => setActive(resolveRovingHome(getCount())),

@@ -36,6 +36,39 @@
 - ❌ 不重写焦点陷阱（已在 utils，本包只再导出）
 - ❌ 不渲染组件（列表 / 菜单 / 浮层的 DOM 结构属 ui 层）
 
+## 当前 Vue 用法
+
+组合函数的回调负责提出请求，组件是否接受由当前 ref 决定。`undefined` 撤控后保留最后接收值；返回的 `activeIndex` ref 可直接写入，也会经过同一请求出口。已有代码若只是要设置非受控初值，改用 `setActive(index, false)`，不要把静态 `activeIndex` 当作默认值。
+
+```vue
+<script setup lang="ts">
+import { useRovingFocus } from '@apollo-design/a11y';
+import { ref, useTemplateRef } from 'vue';
+
+const count = ref(3);
+const selected = ref(0);
+const items = useTemplateRef<HTMLButtonElement[]>('items');
+const { getTabIndex, onKeyDown } = useRovingFocus({
+  count,
+  activeIndex: selected,
+  onChange: (index) => { selected.value = index; },
+  getItem: (index) => items.value?.[index] ?? null,
+});
+</script>
+
+<template>
+  <div role="toolbar" aria-label="Actions" @keydown="onKeyDown">
+    <button v-for="index in count" :key="index" ref="items" :tabindex="getTabIndex(index - 1)">
+      Action {{ index }}
+    </button>
+  </div>
+</template>
+```
+
+导航仅在接受目标后移动焦点，Home/End 与方向键会阻止默认行为；已处理事件、输入法事件和空列表不消费。宿主提供逻辑项顺序及禁用过滤。本包不创建控件 DOM。
+
+`useLiveRegion()` 可在 setup 的 `watchEffect` 中播报；挂载前保留最后文本，挂载后创建节点，卸载销毁。命令式 `announce()` 继续使用默认文档的共享节点。详细契约与历史证据见[当前增量](../../docs/foundation/a11y-contract.md#当前增量--2026-10-30)。
+
 ## 必须遵守的契约
 
 - 所有原语必须可在 jsdom 中用键盘事件断言（不需要真实浏览器）
