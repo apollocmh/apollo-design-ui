@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 11,
+  "revision": 13,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -854,13 +854,17 @@
       "kind": "component",
       "ref": "masonry",
       "title": "Masonry",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/masonry"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_masonry",
+        "baseRevision": 11,
+        "startedAt": "2026-10-30T06:23:54.895Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1139,7 +1143,7 @@
       "kind": "component",
       "ref": "rate",
       "title": "Rate",
-      "architectureStatus": "done",
+      "architectureStatus": "partial",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
@@ -1152,11 +1156,19 @@
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-24-dom-attrs-remediation.md"
       ],
-      "issues": [],
+      "issues": [
+        {
+          "id": "RATE-LIVE-TOKENS",
+          "status": "open",
+          "blocking": true,
+          "impact": "已声明6个组件Token仅静态生成，当前组件覆盖/派生更新未消费。",
+          "reason": "公开接口无效属于本阶段必须修复，不能因旧静态theme测试通过留到最终验收。"
+        }
+      ],
       "verification": {
         "stage": "architecture",
         "scope": [
-          "packages/ui/src/rate"
+          "packages/ui/src/rate/Rate.ts"
         ],
         "passed": true,
         "checks": [
@@ -1183,7 +1195,18 @@
           }
         ],
         "browser": "隔离源码SSR/hydration/Chrome键盘/焦点/axe已验证；无共享dist构建。",
-        "boundary": "仅架构阶段验证；完整视觉与冻结版本验收未执行。"
+        "boundary": "只验证已提交原生事件/内容/焦点/attrs/Provider样式组；当前主题Token消费尚未通过。"
+      },
+      "plan": {
+        "goal": "保留已交付原生契约，补齐 rate 当前组件主题Token消费",
+        "remaining": [
+          "只补当前Theme组件覆盖与6个Token动态消费链，不重做已验证事件/焦点/Slots/Expose。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/rate/style/token.ts",
+          "packages/ui/src/rate/index.zh-CN.md"
+        ]
       }
     },
     {
@@ -1430,7 +1453,7 @@
       "kind": "component",
       "ref": "switch",
       "title": "Switch",
-      "architectureStatus": "done",
+      "architectureStatus": "partial",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
@@ -1444,11 +1467,19 @@
         "docs/audit/2026-10-24-content-events-remediation.md",
         "docs/audit/2026-10-24-switch-native-events-remediation.md"
       ],
-      "issues": [],
+      "issues": [
+        {
+          "id": "SWITCH-LIVE-TOKENS",
+          "status": "open",
+          "blocking": true,
+          "impact": "已声明13个组件Token仅静态生成，当前组件覆盖/派生更新未消费。",
+          "reason": "公开接口无效属于本阶段必须修复，不能因旧静态theme测试通过留到最终验收。"
+        }
+      ],
       "verification": {
         "stage": "architecture",
         "scope": [
-          "packages/ui/src/switch"
+          "packages/ui/src/switch/Switch.ts"
         ],
         "passed": true,
         "checks": [
@@ -1474,7 +1505,18 @@
             "durationMs": 49702
           }
         ],
-        "boundary": "历史视觉缺口仍保留；未进行冻结版本九维、发布构建或消费者验收。"
+        "boundary": "只验证已提交原生事件/内容/焦点/attrs/Provider样式组；当前主题Token消费尚未通过。"
+      },
+      "plan": {
+        "goal": "保留已交付原生契约，补齐 switch 当前组件主题Token消费",
+        "remaining": [
+          "只补当前Theme组件覆盖与13个Token动态消费链，不重做已验证事件/焦点/Slots/Expose。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/switch/style/token.ts",
+          "packages/ui/src/switch/index.zh-CN.md"
+        ]
       }
     },
     {
