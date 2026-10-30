@@ -294,7 +294,7 @@ describe('Masonry（L2）', () => {
     w.unmount();
   });
 
-  it('`layoutChange` 事件与 `onLayoutChange` prop **同时**发出，载荷是 `{...item, column}`', async () => {
+  it('`layoutChange` 通过 Vue 调用监听器一次，载荷是 `{...item, column}`', async () => {
     const onLayoutChange = vi.fn();
     const w = await mountMasonry({ onLayoutChange });
 
@@ -311,10 +311,10 @@ describe('Masonry（L2）', () => {
     w.unmount();
   });
 
-  it('不传 `onLayoutChange` ⇒ 一次都不发（上游两段 effect 都先判它）', async () => {
+  it('不传 `onLayoutChange` 仍发出一次完整的布局事件', async () => {
     const w = await mountMasonry();
 
-    expect(w.emitted('layoutChange')).toBeUndefined();
+    expect(w.emitted('layoutChange')).toHaveLength(1);
     w.unmount();
   });
 

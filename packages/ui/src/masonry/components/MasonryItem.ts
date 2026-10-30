@@ -5,7 +5,7 @@
  *    「组件是**纯渲染函数型**内部件」）：
  * 它的全部工作是把**三个来源**的 class / style 按固定顺序合成，再渲染一个由外部
  * 传入的 `content` vnode（内容由父组件按 `当前 #item 或 item.children 回退` 生成 ——
- * 那里才有泛型）。模板表达不了「按 key 查表 + 三源定序合并」，而 `v-bind` 一个
+ * 那里才有泛型）。模板表达不了「三源定序合并」，而 `v-bind` 一个
  * 无类型对象会丢掉绑定检查。理由同步登记在 `README.md` §3。
  *
  * ── 三源定序（逐字照抄上游 `Masonry.tsx:288-294`）────────────────────────────
@@ -23,22 +23,6 @@ import { observeResize } from '@apollo-design/utils';
 import { defineComponent, h, onScopeDispose, type PropType, type VNodeChild } from 'vue';
 import { toCssSize } from '../../_internal/to-css-size';
 import type { GutterValue } from '../../grid/interface';
-
-/**
- * 单项的**布局**数据。
- *
- * ⚠️ 只有布局 —— 业务数据（`item.data` 等）由 `content` 承载，
- * 这样本组件就**没有泛型**，可以被模板按类型绑定。
- */
-export interface MasonryItemLayout {
-  /** 落在第几列（0 基）。 */
-  columnIndex: number;
-  /** 纵向偏移（px）。SSR / 未量测时是 `undefined`（⇒ 不写 `top`）。 */
-  top: number | undefined;
-}
-
-/** 上游 `const { column: columnIndex = 0 } = position` 的等价默认值。 */
-export const DEFAULT_ITEM_LAYOUT: MasonryItemLayout = { columnIndex: 0, top: undefined };
 
 export const MasonryItem = defineComponent({
   name: 'AMasonryItem',
@@ -77,8 +61,7 @@ export const MasonryItem = defineComponent({
     content: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     columnCount: { type: Number, required: true },
     /**
-     * 水平间距。上游把它直接插进 `calc` 字符串（`${horizontalGutter}px`）——
-     * `Gutter` 类型允许 `string`（antd 的 grid 也这么定），所以这里不收窄成 `Number`。
+     * 水平间距。数字按 px，CSS 字符串保留单位后参与布局计算。
      */
     horizontalGutter: {
       type: [Number, String] as PropType<GutterValue>,
@@ -130,20 +113,19 @@ export const MasonryItem = defineComponent({
     return () => {
       // 上游：`const { column: columnIndex = 0 } = position`（position 可能不存在）
       const { columnIndex, top } = props;
+      const gutter = toCssSize(props.horizontalGutter);
 
       const style: Record<string, string | number | undefined> = {
         ...props.motionStyle,
         ...props.itemStyle,
         // ① 组件作用域变量：先在本元素上声明，②③ 的 `var()` 才取得到
         //    （自定义属性对内联样式**同元素**可见 —— 与上游 genCssVar 的用法一致）
-        [props.itemWidthVar]: `calc((100% + ${props.horizontalGutter}px) / ${props.columnCount})`,
+        [props.itemWidthVar]: `calc((100% + ${gutter}) / ${props.columnCount})`,
         // ② 横向：列偏移 + 宽度（宽度要减掉一个水平间距）
         insetInlineStart: props.measured
           ? `calc(var(${props.itemWidthVar}) * ${columnIndex})`
           : undefined,
-        width: props.measured
-          ? `calc(var(${props.itemWidthVar}) - ${props.horizontalGutter}px)`
-          : undefined,
+        width: props.measured ? `calc(var(${props.itemWidthVar}) - ${gutter})` : undefined,
         // ③ 纵向：🚨 数字必须过 `toCssSize()`（Vue 的 patchStyle 不补 px，PITFALLS 170）
         top: props.measured ? toCssSize(top) : undefined,
         position: props.measured ? 'absolute' : 'relative',

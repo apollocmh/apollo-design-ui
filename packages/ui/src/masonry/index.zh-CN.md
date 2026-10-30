@@ -34,12 +34,13 @@ subtitle: 瀑布流
 | columns | 列数。对象形态按断点解析（从大到小取第一个已配置的断点；都没命中 ⇒ `columns.xs ?? 1`） | `number \| Partial<Record<Breakpoint, number>>` | `3` | × |
 | gutter | 间距。复用 Grid 的 `Gutter`（数字 / 字符串 / 断点对象 / `[水平, 纵向]`） | `Gutter` | `0` | × |
 | fresh | 为**每个条目**各挂一个 `ResizeObserver`（内容高度会变时用）。⚠️ **不改变 DOM 结构** | `boolean` | `false` | × |
-| onLayoutChange | 布局顺序变化时触发。载荷是 **`{...item, column}`**（item 本体被展开） | `(sortInfo: MasonryLayoutItem<T>[]) => void` | — | × |
+| onLayoutChange | `layoutChange` 的 Vue 事件监听器；当前条目全部完成测量后接收 **`{...item, column}`** | `(sortInfo: MasonryLayoutItem<T>[]) => void` | — | × |
 | classNames | 语义化类名（`root` / `item`），支持函数形态 | `MasonrySemanticClassNames \| ((info) => …)` | — | ✅（`masonry.classNames`） |
 | styles | 语义化样式（`root` / `item`），支持函数形态 | `MasonrySemanticStyles \| ((info) => …)` | — | ✅（`masonry.styles`） |
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-masonry` | × |
-| class / style | **根元素原生 attrs**（不是 Props） | `string \| array \| object` / `CSSProperties` | — | × |
-| style | 根元素内联样式。**会覆盖算出来的容器高度** | `CSSProperties` | — | × |
+| class / style | **根元素原生 attrs**（不是 Props）；调用方样式覆盖同名语义样式及计算得到的容器高度 | Vue class/style 绑定 | — | × |
+
+`gutter` 数字按像素处理；CSS 字符串如 `['2rem', 'calc(0.5rem + 4px)']`、`var()` 和百分比保留 CSS 单位。横向百分比以容器宽度为基准；纵向百分比以当前条目零间距排布的高度为基准，提供显式根高度时优先使用该高度，避免间距与根高相互反馈。局部隐藏测量节点观察字体、视口和 CSS 变量变化，双轴均切回数字或组件卸载时释放。
 
 #### MasonryItemType
 
@@ -48,20 +49,22 @@ subtitle: 瀑布流
 | key | 唯一标识（数字会内部 `String()` 化） | `string \| number` | — |
 | data | 业务数据，泛型 T 由 items 推导并传给 #item | `T` | — |
 | column | 指定落在第几列（0 基）。超界会夹到最后一列 | `number` | 自动选最矮列 |
-| height | ⚠️ **上游声明了但从不读** —— 高度一律实测 | `number` | — |
+| height | 传给 #item 和 layoutChange 的可选元数据，不设置实测布局高度 | `number` | — |
 | children | 未提供 #item 时使用的回退内容 | `VNodeChild` | — |
 
 ### Events
 
 | 名称 | 说明 | 参数 |
 |---|---|---|
-| layoutChange | 布局顺序变化（= `onLayoutChange`，两者**同时**发出） | `(sortInfo: MasonryLayoutItem<T>[])` |
+| layoutChange | 完整实测布局变化。原生 Vue 监听器（包括 `.once`）接收同一个事件，事件发布不依赖 `onLayoutChange` prop | `(sortInfo: MasonryLayoutItem<T>[])` |
 
 ### Ref
 
 | 名称 | 类型 | 说明 |
 |---|---|---|
-| nativeElement | `() => HTMLDivElement \| null` | 根元素（对应 antd 的 forwardRef ref） |
+| nativeElement | `() => HTMLDivElement \| null` | 当前根元素；卸载后返回 null |
+
+开发版 API 修正（`0.0.0`）：`MasonryRef` 现与 `MasonryExpose` 一致，使用 `masonryRef.value?.nativeElement()` 获取根元素；旧 `MasonryRef.nativeElement` 的直接元素类型与已文档化的 getter 不符。本次直接修正，无兼容层或弃用期。
 
 ### Slots
 
@@ -69,7 +72,7 @@ subtitle: 瀑布流
 |---|---|---|
 | item | `MasonryItemSlotProps<T>`：`{ key, data, index, column, children?, height? }` | 当前条目；优先于 item.children，空槽也覆盖回退内容 |
 
-column 为当前测量列号，首次测量前暂为 0。条件插槽、同 key 替换数据和语义样式函数均读取当前输入；组件更新后会重测量。CSS 过渡或后代独立尺寸变化可用 fresh 持续观察。泛型也传给 layoutChange。旧 itemRender prop 已移除，见[迁移说明](../../../../docs/migrations/masonry-slots.md)。
+column 为当前测量列号，首次测量前暂为 0。条件插槽、同 key 替换数据（包括响应式数组原地替换条目对象）和语义样式函数均读取当前输入；组件更新后会重测量。CSS 过渡或后代独立尺寸变化可用 fresh 持续观察。泛型也传给 layoutChange。旧 itemRender prop 已移除，见[迁移说明](../../../../docs/migrations/masonry-slots.md)。
 
 ## Theme
 

@@ -36,12 +36,13 @@ See [`demo/`](./demo) (6 demos, mirroring antd one by one).
 | columns | Column count. The object form resolves per breakpoint (first configured one, from largest to smallest; if none matches ⇒ `columns.xs ?? 1`) | `number \| Partial<Record<Breakpoint, number>>` | `3` | × |
 | gutter | Spacing. Reuses Grid's `Gutter` (number / string / breakpoint object / `[horizontal, vertical]`) | `Gutter` | `0` | × |
 | fresh | Attaches a `ResizeObserver` to **each item** (for content that resizes). ⚠️ Does **not** change the DOM structure | `boolean` | `false` | × |
-| onLayoutChange | Fires when the layout order changes. The payload is **`{...item, column}`** (the item itself is spread) | `(sortInfo: MasonryLayoutItem<T>[]) => void` | — | × |
+| onLayoutChange | Vue listener for `layoutChange`; receives **`{...item, column}`** after every current item has a measured position | `(sortInfo: MasonryLayoutItem<T>[]) => void` | — | × |
 | classNames | Semantic class names (`root` / `item`); the function form is supported | `MasonrySemanticClassNames \| ((info) => …)` | — | ✅ (`masonry.classNames`) |
 | styles | Semantic styles (`root` / `item`); the function form is supported | `MasonrySemanticStyles \| ((info) => …)` | — | ✅ (`masonry.styles`) |
 | prefixCls | Class name prefix | `string` | from ConfigProvider, fallback `apollo-masonry` | × |
-| class / style | **Native root attrs** (not Props) | `string \| array \| object` / `CSSProperties` | — | × |
-| style | Root element inline style. **Overrides the computed container height** | `CSSProperties` | — | × |
+| class / style | **Native root attrs** (not Props). Caller styles override matching semantic styles and the computed container height | Vue class/style bindings | — | × |
+
+Numbers in `gutter` use pixels; CSS strings such as `['2rem', 'calc(0.5rem + 4px)']`, `var()` and percentages retain their CSS units. Horizontal percentages use the container width. Vertical percentages use the current zero-gap masonry height, or the caller's explicit root height when provided; this stable basis prevents container-height feedback. A local hidden measurement node observes font, viewport and CSS-variable changes and is removed when both gaps become numbers or the component unmounts.
 
 #### MasonryItemType
 
@@ -50,20 +51,22 @@ See [`demo/`](./demo) (6 demos, mirroring antd one by one).
 | key | Unique identifier (numbers are stringified internally) | `string \| number` | — |
 | data | Business data; T is inferred from items and passed to #item | `T` | — |
 | column | Pins the item to a column (0-based). Out-of-range values are clamped to the last column | `number` | the shortest column |
-| height | ⚠️ **Declared upstream but never read** — heights are always measured | `number` | — |
+| height | Optional metadata passed to #item and layoutChange; does not set the measured layout height | `number` | — |
 | children | Fallback content when #item is absent | `VNodeChild` | — |
 
 ### Events
 
 | Name | Description | Parameters |
 |---|---|---|
-| layoutChange | Layout order changed (= `onLayoutChange`; **both** are emitted) | `(sortInfo: MasonryLayoutItem<T>[])` |
+| layoutChange | Complete measured layout changed. Native Vue listeners, including `.once`, receive this single event; the emitter does not depend on an `onLayoutChange` prop | `(sortInfo: MasonryLayoutItem<T>[])` |
 
 ### Ref
 
 | Name | Type | Description |
 |---|---|---|
-| nativeElement | `() => HTMLDivElement \| null` | Root element (mirrors antd's forwardRef ref) |
+| nativeElement | `() => HTMLDivElement \| null` | Current root element; returns null after unmount |
+
+Development API correction (`0.0.0`): `MasonryRef` now matches `MasonryExpose`. Read the root with `masonryRef.value?.nativeElement()`; the former direct-element `MasonryRef.nativeElement` annotation did not match the documented getter. There is no compatibility layer or deprecation period.
 
 ### Slots
 
@@ -71,7 +74,7 @@ See [`demo/`](./demo) (6 demos, mirroring antd one by one).
 |---|---|---|
 | item | `MasonryItemSlotProps<T>`: `{ key, data, index, column, children?, height? }` | Current item; a present slot overrides item.children, including an empty slot |
 
-Column is the current measured column, provisionally 0 before measurement. Conditional slots, same-key data replacements and semantic callbacks read current inputs. Component updates schedule measurement; use fresh to observe transitions and independent descendant resizes. T also flows into layoutChange. The itemRender prop has been removed; see the [migration guide](../../../../docs/migrations/masonry-slots.md).
+Column is the current measured column, provisionally 0 before measurement. Conditional slots, same-key data replacements (including replacing an entry in a reactive array) and semantic callbacks read current inputs. Component updates schedule measurement; use fresh to observe transitions and independent descendant resizes. T also flows into layoutChange. The itemRender prop has been removed; see the [migration guide](../../../../docs/migrations/masonry-slots.md).
 
 ## Theme
 

@@ -25,7 +25,7 @@
 | D7 | 原生 load/error 捕获触发量测，fresh=false 也能响应图片尺寸变化 | INTENDED | ADR0007；当前回归见 2026-10-24 native media 报告 |
 | D8 | 初始 items 同步渲染，SSR 使用正常网格流；挂载后实测并切换最短列定位，不复制 React effect 空首屏 | INTENDED | ADR0007；SSR 专项回归 |
 | D9 | `columnCount === 0`（`columns={0}`）时上游会写出 `top: undefined` / `NaN` 传播；本仓收敛成 `0` | INTENDED | `positions.ts` 文件头（未定义行为不复制） |
-| D10 | 纵向间距非数字时上游退化成字符串拼接（`totalHeight` 变 `NaN`）；本仓收敛成「能转成有限数就用，否则 0」 | INTENDED | `Masonry.vue` 的 `verticalGutterPx` |
+| D10 | CSS 字符串间距由浏览器解析，横向保留单位；纵向百分比以零间距实测排布高度为基准，显式调用方根高度优先，避免容器高度循环反馈 | INTENDED | `Masonry.vue` 的局部测量节点与 `__tests__/browser.mjs` |
 | D11 | 测量前使用自然高度，空列表高度 0；测量后使用实测容器高度，不按 React 序列化格式限制 Vue | INTENDED | SSR/尺寸回归 |
 | D12 | 内部 prop `onResize` 用 `undefined` 而不是上游的 `null` | PLATFORM | 内部 prop，不可观测 |
 | D13 | `items` **更新契约**：上游 `useEffect([items])` 是**引用比较** ⇒ 原地 `push`/`splice`/`swap`/改 `column` **完全不更新**。本仓用「依赖探针（逐条读 `length`/`key`/`column`）+ 赋值浅拷贝」把响应式数组（`ref`/`reactive` 持有）的**原地变更也变成完整更新路径**（量测 + 重排 + `onLayoutChange` 三条通道同步）。⚠️ 修复前本仓是「**DOM 更新了、布局没更新**」的半更新态（比上游更糟：新 item 无位置 ⇒ 堆在左上角，且 `collectLayout` 要求全部有位置 ⇒ 回调停在旧载荷）。保留边界：① **普通（非响应式）数组**没有数据源 ⇒ 物理上不可追踪（请给新数组）；② 组件更新重测量；持续过渡/独立后代尺寸变化使用 fresh 的逐项 ResizeObserver | INTENDED | L1 `s52-issue52`（Issue #52） |
@@ -39,7 +39,7 @@
   （`{...motionStyle, ...mergedStyles.item, ...itemStyle}` /
   `[itemCls, mergedClassNames.item, motionClassName]`），再渲染一个由外部传入的
   `content` vnode（内容由父组件按 `当前 #item 或 item.children 回退` 生成 —— 泛型在那边）。
-  模板表达不了「三源定序合并 + 按 key 查表」，而 `v-bind` 一个无类型对象会丢掉绑定检查。
+  布局和内容经 MotionList 的 key 对象传递并保留到离场结束，不维护第二份永久缓存。
   上游 `MasonryItem.tsx` 也是同一形态。
 
 ## 4. Component Token 清单
@@ -62,8 +62,7 @@
    替换后「不产生告警」仍是硬约束（`demo.test.ts` 钉住）。
 2. **demo 的随机值改成确定值**：antd 的 `dynamic` / `fresh` demo 用 `Math.random()`
    取高度 —— 那会让每次渲染不同、demo 冒烟测试不可复现。本仓改用确定值并在 `.md` 里注明。
-3. **`item.height` 从不被读**（上游也如此）：高度一律**实测**
-   （`getBoundingClientRect`）。类型上保留该字段只为对齐上游的对外面。
+3. **`item.height` 是元数据**：传给作用域槽和布局事件；布局高度仍由 `getBoundingClientRect` 实测，不用该字段预设高度。
 
 2026-10-24：根原生attrs/当前class和style、非冒泡图片事件测量已修复，见 [专项报告](../../../../docs/audit/2026-10-24-masonry-native-media-remediation.md)。itemRender模板迁移与首帧/SSR事项另行推进，未宣称整组件重新验收。
 

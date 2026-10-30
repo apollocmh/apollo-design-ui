@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 16,
+  "revision": 18,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -854,17 +854,13 @@
       "kind": "component",
       "ref": "masonry",
       "title": "Masonry",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/masonry"
       ],
-      "assignment": {
-        "owner": "native_masonry",
-        "baseRevision": 11,
-        "startedAt": "2026-10-30T06:23:54.895Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -873,7 +869,45 @@
         "docs/audit/2026-10-24-masonry-ssr-remediation.md",
         "docs/audit/2026-10-24-masonry-native-media-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/masonry"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "vitest run --project unit packages/ui/src/masonry --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 20650
+          },
+          {
+            "kind": "core",
+            "command": "vitest run --project unit packages/ui/src/masonry/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 5030
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <temporary strict source/tests/demo config>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 50098
+          },
+          {
+            "kind": "demo",
+            "command": "node packages/ui/src/masonry/__tests__/browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4470
+          }
+        ],
+        "boundary": "无组件Token；item.height为保留数据，真实高度仍实测；完整视觉/发布验证留冻结版本。"
+      }
     },
     {
       "id": "CMP:mentions",
@@ -1537,13 +1571,17 @@
       "kind": "component",
       "ref": "switch",
       "title": "Switch",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/switch"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_switch",
+        "baseRevision": 16,
+        "startedAt": "2026-10-30T07:12:16.712Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",

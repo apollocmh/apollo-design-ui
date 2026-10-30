@@ -101,8 +101,8 @@ describe('Masonry · emits / expose', () => {
     expectTypeOf<keyof MasonryEmits>().toEqualTypeOf<'layoutChange'>();
   });
 
-  it('`MasonryRef.nativeElement` 可空；`MasonryExpose` 是函数形态', () => {
-    expectTypeOf<MasonryRef['nativeElement']>().toEqualTypeOf<HTMLDivElement | null>();
+  it('组件 ref 与 Expose 都提供可空根元素的 getter', () => {
+    expectTypeOf<MasonryRef>().toEqualTypeOf<MasonryExpose>();
     expectTypeOf<MasonryExpose['nativeElement']>().toEqualTypeOf<() => HTMLDivElement | null>();
   });
 });

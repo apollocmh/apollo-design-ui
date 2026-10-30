@@ -12,7 +12,6 @@ import {
   ref,
   shallowRef,
   useAttrs,
-  type VNodeChild,
   watch,
 } from 'vue';
 import { toCssSize } from '../_internal/to-css-size';
@@ -20,14 +19,14 @@ import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-sema
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useBreakpoint } from '../grid/hooks/use-breakpoint';
 import useGutter from '../grid/hooks/use-gutter';
-import { DEFAULT_ITEM_LAYOUT, MasonryItem, type MasonryItemLayout } from './components/MasonryItem';
+import { MasonryItem } from './components/MasonryItem';
 import { resolveColumnCount } from './hooks/column-count';
 import { computeItemPositions, type ItemHeightData } from './hooks/positions';
 import { useDelay } from './hooks/use-delay';
 import type {
   MasonryEmits,
+  MasonryExpose,
   MasonryItemType,
-  MasonryKey,
   MasonryLayoutItem,
   MasonryProps,
   MasonrySemanticClassNames,
@@ -84,55 +83,17 @@ const itemWidthVar = computed(() => `--${rootPrefixCls.value}-masonry-item-width
  */
 const mergedItems = shallowRef<MasonryItemType<T>[]>(props.items ? [...props.items] : []);
 
-/**
- * 🚨 **`items` 的依赖探针**（Issue #52）。
- *
- * 上游 `useEffect(…, [items])` 是**引用比较** ⇒ 原地 `push` / `splice` 完全不更新。
- * 本仓照抄后出现了**比上游更糟的半更新态**：`mergedItems` 存的就是调用方那个响应式
- * 数组本身，而 `motionKeys` 是 `mergedItems.value.map(...)` ⇒ 遍历读到 `length`
- * ⇒ **DOM 跟着多渲染出 item**；但 `watch([mergedItems, columnCount], collectItemSize)`
- * 因**引用未变**不重测量 ⇒ 新 item **没有位置**（`top: undefined`、列号 0，视觉上
- * 堆在左上角），且 `collectLayout` 要求「**全部** item 都有位置」⇒ `onLayoutChange`
- * 停在旧载荷。上游是「不更新」，本仓是「**DOM 更新了、布局没更新**」。
- *
- * ⇒ 逐条读 `length` / `key` / `column` 建立响应式依赖，返回**字符串签名**：
- *   · 原地 `push` / `splice` / `swap` ⇒ length 或 key 序列变 ⇒ 签名变 ⇒ 触发；
- *   · 原地改 `item.column` ⇒ 签名变 ⇒ 触发（重新排布到指定列）；
- *   · **返回字符串而不是对象**：内容相同时字符串相同 ⇒ `Object.is` 判定「未变」
- *     ⇒ 不会自激循环（[E] 用例钉住）。
- *
- * ⚠️ 刻意**不用** `{ deep: true }`：`item.children` 是 `VNodeChild`（递归类型，且含
- *    `el` / `component` 等成环引用），深遍历既贵又危险。`children` / `data` 变化
- *    ⇒ 组件更新会重测量；持续尺寸变化可用 `fresh`。
- */
-const itemsSignature = (): string => {
-  const items = props.items;
-  if (!items) return '';
-  let signature = String(items.length);
-  for (let i = 0; i < items.length; i += 1) {
-    const item = items[i];
-    if (!item) {
-      signature += '|';
-      continue;
-    }
-    // 只掺**参与布局**的标量：`key` 决定位置表的键，`column` 决定落列
-    signature += `|${String(item.key ?? i)}:${item.column ?? ''}`;
-  }
-  return signature;
-};
+/** Track array entries and layout scalars without traversing business data or
+ * VNodes. Entry identity matters even when a replacement keeps the same key. */
+const itemInputs = () => props.items?.map((item, index) => [item, item.key ?? index, item.column]);
 
-/**
- * ⚠️ **必须拷贝**（`[...items]`），不能写 `mergedItems.value = props.items`：
- * 原地变更时两者是**同一个数组** ⇒ 赋值等于赋同一个引用 ⇒ `shallowRef` 不触发
- * ⇒ 量测 / 排布 / 回调三条通道**仍然不同步**（[B] 用例的第二种失败模式）。
- * 拷贝是**浅**的：元素仍是调用方的原对象（`shallowRef` 的「不深度代理」意图保留），
- * 且对象身份稳定 ⇒ `itemColumns` 的 `isEqual` 去重与 `MotionList` 的 key 都不受影响。
- */
+/** Keep a shallow snapshot so in-place push/splice/swap also trigger layout
+ * collection (Issue #52), while the caller's item objects keep their identity. */
 const syncItems = (): void => {
   mergedItems.value = props.items ? [...props.items] : [];
 };
 
-watch([() => props.items, itemsSignature], syncItems, { flush: 'sync' });
+watch(itemInputs, syncItems, { flush: 'sync' });
 
 // ============================== 列数 / 间距 ==============================
 const screens = useBreakpoint();
@@ -143,30 +104,83 @@ const gutters = computed(() => useGutter(props.gutter, screens.value));
 const horizontalGutter = computed(() => gutters.value[0] ?? 0);
 const verticalGutter = computed(() => gutters.value[1] ?? gutters.value[0] ?? 0);
 
-/**
- * 纵向间距的**数值**形态。
- *
- * 🚨 上游写的是 `usePositions(itemHeights, columnCount, verticalGutter as number)` ——
- * 一个不安全的断言。`Gutter` 类型允许 `string`（antd 的 grid 也这么定），
- * 而 `usePositions` 里是**算术**：`columnHeights[t] += height + verticalGutter`。
- * 传 `'16'` 时上游会退化成字符串拼接（`150 + '16'` ⇒ `'15016'`）⇒ `totalHeight` 变 `NaN`。
- *
- * 本仓把这条**未定义行为**收敛成「能转成有限数就用，否则 0」，登记为差异 **D10**。
- * 数字输入（正常用法）两边完全一致。
- */
-const verticalGutterPx = computed<number>(() => {
-  const value = verticalGutter.value;
-  if (typeof value === 'number') return value;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : 0;
-});
+/** Pixel height resolved by the browser alongside item measurements. */
+const verticalGutterPx = shallowRef(0);
 
 // ============================== 量测 ==============================
+const rootEl = ref<HTMLDivElement | null>(null);
+defineExpose<MasonryExpose>({ nativeElement: () => rootEl.value });
+
+let gutterContainer: HTMLDivElement | null = null;
+let gutterSize: HTMLDivElement | null = null;
+let disposeGutterResize: (() => void) | null = null;
+
+const releaseGutterMeasure = (): void => {
+  disposeGutterResize?.();
+  disposeGutterResize = null;
+  gutterContainer?.remove();
+  gutterContainer = null;
+  gutterSize = null;
+};
+
+/** The probe inherits CSS variables and fonts. Its percentage basis is stable:
+ * caller height when specified, otherwise current zero-gap intrinsic height. */
+const measureGutter = (items: ItemHeightData[]): void => {
+  const root = rootEl.value;
+  if (!root) return;
+  const horizontal = horizontalGutter.value;
+  const vertical = verticalGutter.value;
+  if (typeof horizontal === 'number' && typeof vertical === 'number') {
+    releaseGutterMeasure();
+    verticalGutterPx.value = vertical;
+    return;
+  }
+
+  if (!gutterContainer || !gutterSize) {
+    gutterContainer = root.ownerDocument.createElement('div');
+    gutterContainer.setAttribute('aria-hidden', 'true');
+    Object.assign(gutterContainer.style, {
+      position: 'absolute',
+      top: '0',
+      left: '0',
+      visibility: 'hidden',
+      pointerEvents: 'none',
+      overflow: 'hidden',
+      padding: '0',
+      border: '0',
+    });
+    gutterSize = root.ownerDocument.createElement('div');
+    Object.assign(gutterSize.style, { margin: '0', padding: '0', border: '0' });
+    gutterContainer.append(gutterSize);
+    root.append(gutterContainer);
+    // Independent font/viewport/CSS-variable changes can resize the gap even
+    // when the root width and fixed-height item content remain unchanged.
+    disposeGutterResize = observeResize(gutterSize, collectItemSize);
+  }
+
+  const callerStyle = normalizeStyle([mergedStyles.value.root, attrs.style]);
+  const callerHeight = typeof callerStyle === 'object' ? callerStyle?.height : undefined;
+  const basis =
+    callerHeight != null && callerHeight !== '' && callerHeight !== 'auto'
+      ? root.clientHeight
+      : computeItemPositions(items, columnCount.value, 0)[1];
+  gutterContainer.style.width = toCssSize(root.clientWidth) ?? '';
+  gutterContainer.style.height = toCssSize(basis) ?? '';
+  gutterSize.style.width = toCssSize(horizontal) ?? '';
+  gutterSize.style.height = toCssSize(vertical) ?? '';
+  verticalGutterPx.value =
+    typeof vertical === 'number' ? vertical : gutterSize.getBoundingClientRect().height;
+};
+
 /** key（原样）→ item 元素。⚠️ 用 `String(key)` 查：槽回传的 key 被 `String()` 化了。 */
-const itemEls = new Map<string, HTMLDivElement | null>();
+const itemEls = new Map<string, HTMLDivElement>();
 const setItemRef = (key: string, el: HTMLDivElement | null): void => {
-  itemEls.set(key, el);
-  if (el) collectItemSize();
+  if (el) {
+    itemEls.set(key, el);
+    collectItemSize();
+  } else {
+    itemEls.delete(key);
+  }
 };
 
 const itemHeights = shallowRef<ItemHeightData[]>([]);
@@ -187,6 +201,7 @@ const collectItemSize = useDelay(() => {
     if (!el) return;
     next.push([itemKey, el.getBoundingClientRect().height, item.column]);
   }
+  measureGutter(next);
 
   // 上游用 `isEqual` 去重：高度没变就不 setState（防重排循环）
   if (!isEqual(itemHeights.value, next)) {
@@ -196,11 +211,10 @@ const collectItemSize = useDelay(() => {
 
 // Measure only after DOM refs exist; setItemRef also covers delayed motion mounts.
 onMounted(collectItemSize);
-watch([mergedItems, columnCount], collectItemSize, { flush: 'post' });
+watch([mergedItems, columnCount, horizontalGutter, verticalGutter], collectItemSize, { flush: 'post' });
 onUpdated(collectItemSize);
 
 // 根元素尺寸变化 ⇒ 重算（`ResizeObserver` 不产生 DOM，等价于上游包一层）
-const rootEl = ref<HTMLDivElement | null>(null);
 let disposeRootResize: (() => void) | null = null;
 
 onMounted(() => {
@@ -211,6 +225,7 @@ onMounted(() => {
 
 onScopeDispose(() => {
   disposeRootResize?.();
+  releaseGutterMeasure();
 });
 
 // ============================== 排布 ==============================
@@ -238,63 +253,26 @@ const layoutReady = computed(() =>
   motionKeys.value.every(({ position }) => position !== undefined),
 );
 
-/**
- * key（`String()` 化）→ **最近一次**的渲染数据。
- *
- * 🚨 **粘性表：只写不删。** 离场中的 item 已经不在 `items` 里了，但它的淡出动画
- * 还要跑 —— 那时 `itemContent()` 必须还能拿到内容与布局。
- * 上游靠 `diffKeys` 保留的 key 对象达到同一效果（`MotionList` 现在也会把 key 对象的
- * 其余字段透传给插槽，但插槽载荷是无类型的，所以本仓在**父组件**按 key 查表，
- * 好处是 item 槽的调用点是**有类型**的）。
- */
-interface MasonryRenderEntry {
-  item: MasonryItemType<T>;
-  itemIndex: number;
-  layout: MasonryItemLayout;
-}
-
-const entryByKey = new Map<string, MasonryRenderEntry>();
-
-watch(
-  motionKeys,
-  (next) => {
-    for (const { key, item, itemIndex, position } of next) {
-      entryByKey.set(String(key), {
-        item,
-        itemIndex,
-        layout: { columnIndex: position?.column ?? 0, top: position?.top },
-      });
-    }
-  },
-  // `sync`：必须在**消费它的那次渲染之前**把表刷好（表本身不是响应式的）
-  { immediate: true, flush: 'sync' },
-);
-
-/** 按 key 取布局；缺省 = 上游 `position = {}` 的等价形态。 */
-const layoutOf = (itemKey: string): MasonryItemLayout =>
-  entryByKey.get(itemKey)?.layout ?? DEFAULT_ITEM_LAYOUT;
-
-/** Evaluate the current native slot during render; an empty slot suppresses fallback. */
-const itemContent = (itemKey: string): VNodeChild => {
-  const entry = entryByKey.get(itemKey);
-  if (!entry) return undefined;
-  const { item, itemIndex, layout } = entry;
-  return slots.item
-    ? slots.item({ ...item, index: itemIndex, column: layout.columnIndex })
-    : item.children;
-};
-
-/** Snapshot native slot content in the owner render, then pass it through MotionList. */
+/** Evaluate slots in their owner render. MotionList retains each key's content
+ * and position until leave completes, so removed data needs no permanent cache. */
 const renderKeys = () =>
-  motionKeys.value.map((entry) => ({ ...entry, content: itemContent(String(entry.key)) }));
+  motionKeys.value.map((entry) => ({
+    ...entry,
+    content: slots.item
+      ? slots.item({
+          ...entry.item,
+          index: entry.itemIndex,
+          column: entry.position?.column ?? 0,
+        })
+      : entry.item.children,
+  }));
 
 // ============================== onLayoutChange ==============================
-/** 已排布的 `[item, column]`（上游 `itemColumns`）。 */
-const itemColumns = shallowRef<readonly [MasonryItemType<T>, number][]>([]);
+/** Last published complete layout, for event deduplication. */
+let itemColumns: readonly [MasonryItemType<T>, number][] = [];
 
-/** 上游第一段 `useLayoutEffect`：全部有位置时写 `itemColumns`（`isEqual` 去重）。 */
+/** Publish only complete measured layouts, independently of listener syntax. */
 const collectLayout = (): void => {
-  if (!props.onLayoutChange) return;
   const next = motionKeys.value;
   if (!next.every(({ position }) => position)) return;
 
@@ -302,40 +280,19 @@ const collectLayout = (): void => {
     item,
     position?.column ?? 0,
   ]);
-  if (!isEqual(itemColumns.value, mapped)) {
-    itemColumns.value = mapped;
+  if (!isEqual(itemColumns, mapped)) {
+    itemColumns = mapped;
+    const sortInfo: MasonryLayoutItem<T>[] = mapped.map(([item, column]) => ({
+      ...item,
+      column,
+    }));
+    // Vue delivers normal and once listeners; never call the prop separately.
+    emit('layoutChange', sortInfo);
   }
 };
 
 onMounted(collectLayout);
 watch(motionKeys, collectLayout, { flush: 'post' });
-
-/** 上游第二段：`itemColumns` 变化且长度与 `items` 一致时回调。 */
-watch(
-  itemColumns,
-  () => {
-    if (!props.onLayoutChange) return;
-    if (!props.items || props.items.length !== itemColumns.value.length) return;
-
-    const sortInfo: MasonryLayoutItem<T>[] = itemColumns.value.map(([item, column]) => ({
-      ...item,
-      column,
-    }));
-    /**
-     * ⚠️ **只 `emit`，不要额外再调 `props.onLayoutChange`。**
-     *
-     * Vue 的 `emit('layoutChange')` 自己就会去找 `props.onLayoutChange` 并调用它
-     * （`toHandlerKey(event)` 的映射）⇒ 再手写一遍就是**两次**。
-     * 2026-10-01 L2 实测抓到（`onLayoutChange` 被调 2 次而 `emitted` 只有 1 条）。
-     *
-     * 这一条 emit 同时满足两种写法：`<Masonry @layout-change>` 与 `:on-layout-change`。
-     * ⚠️ splitter 的 `props.onResize?.(x); emit('resize', x)` 是同一形态 ——
-     * 若 `onResize` 被 Vue 认作 `resize` 的处理器，那里就是同一个重复调用。
-     */
-    emit('layoutChange', sortInfo);
-  },
-  { flush: 'post' },
-);
 
 // ============================== 语义化 ==============================
 /** Semantic callbacks read the current props and resolved column count. */
@@ -409,8 +366,8 @@ const itemResize = computed(() => (props.fresh ? collectItemSize : undefined));
           :prefix-cls="prefixCls"
           :measured="layoutReady"
           :item-key="slot.itemKey"
-          :column-index="layoutOf(slot.itemKey).columnIndex"
-          :top="layoutOf(slot.itemKey).top"
+          :column-index="slot.position?.column ?? 0"
+          :top="slot.position?.top"
           :motion-class-name="slot.className"
           :motion-style="slot.style"
           :item-class-name="mergedClassNames.item"

@@ -29,19 +29,12 @@ import type { Gutter } from '../grid/interface';
 /** `React.Key` 的 Vue 对应物。 */
 export type MasonryKey = string | number;
 
-/**
- * 一个 item（上游 `MasonryItemType<T>`）。
- *
- * ⚠️ **`height` 上游声明了但从不读** —— 高度一律**实测**
- * （`getBoundingClientRect().height`）。保留它只为对齐类型面
- * （`interface.ts` 不裁剪字段的既有约定：类型过了但运行时没实现比类型上没有更糟，
- * 而裁掉会让迁移代码编译不过）。
- */
+/** Item data and fallback content. Layout heights are always measured. */
 export interface MasonryItemType<ItemDataType = unknown> {
   key: MasonryKey;
   /** 指定该 item 落在第几列（0 基）。不给 ⇒ 自动选**当前最矮**的一列。 */
   column?: number | undefined;
-  /** @see 上面的说明：上游从不读它。 */
+  /** Optional metadata forwarded to slots/events; does not set layout height. */
   height?: number | undefined;
   /** Fallback content when the item slot is absent. */
   children?: VNodeChild | undefined;
@@ -105,7 +98,8 @@ export interface MasonryProps<ItemDataType = unknown> {
     | undefined;
 
   // ---------------------------------------------------------------- 布局
-  /** 间距。复用 grid 的 `Gutter`（上游就是 `RowProps['gutter']`）。@default 0 */
+  /** CSS spacing; numbers use px. Vertical percentages use zero-gap intrinsic
+   * height, or the caller's explicit root height. @default 0 */
   gutter?: Gutter | undefined;
   /**
    * 列数。
@@ -125,38 +119,23 @@ export interface MasonryProps<ItemDataType = unknown> {
   // ---------------------------------------------------------------- 数据
   items?: MasonryItemType<ItemDataType>[] | undefined;
 
-  // ---------------------------------------------------------------- 回调
+  // ---------------------------------------------------------------- 事件监听
   /**
-   * 布局顺序变化时触发（上游 `onLayoutChange`）。
-   *
-   * ⚠️ 上游两段 `useLayoutEffect` 都先判 `onLayoutChange &&` ⇒ 不传回调时**完全空转**；
-   * 且只有在 `items.length === 已排布项数` 时才回调（长度不等时**不**回调）。
+   * `layoutChange` 的 Vue 事件监听器。全部当前条目完成测量后发布布局变化；
+   * 与 `@layout-change` 是同一个事件，不另行调用回调。
    */
   onLayoutChange?: ((sortInfo: MasonryLayoutItem<ItemDataType>[]) => void) | undefined;
 }
 
-/**
- * 事件（C11 双发不适用 —— 本组件没有 `v-model`）。
- *
- * ⚠️ `layoutChange` 是 `onLayoutChange` 的语义事件形态；两者**同时发**
- * （与全仓 `update:*` + 语义事件的约定一致，`PITFALLS 162`）。
- */
+/** Native Vue events. This component has no v-model. */
 export interface MasonryEmits<ItemDataType = unknown> {
   layoutChange: [sortInfo: MasonryLayoutItem<ItemDataType>[]];
 }
 
-/**
- * 暴露的命令面（上游 `MasonryRef`）。
- *
- * ⚠️ 上游类型是 `nativeElement: HTMLDivElement`（非空）；本仓按
- * `SplitterRef` 的既有约定声明成可空 —— 未挂载时确实是 `null`，
- * 类型上写非空只是把断言推给消费者。
- */
-export interface MasonryRef {
-  nativeElement: HTMLDivElement | null;
-}
-
-/** `defineExpose` 的形态（`nativeElement` 做成**函数**：`setup` 期 `ref` 还是 `null`）。 */
+/** Public Vue component ref. The getter returns null after unmount. */
 export interface MasonryExpose {
   nativeElement: () => HTMLDivElement | null;
 }
+
+/** The component ref has the same shape as its exposed API. */
+export type MasonryRef = MasonryExpose;

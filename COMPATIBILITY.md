@@ -90,3 +90,7 @@ Steps 使用唯一 change emit，接通九个有效组件 Token。直接移除�
 ### D-progress-live-contracts
 
 Progress 补齐动态位置、原生样式、当前 Provider/六 Token、Circle 描边与渐变、CSS 长度宽度等已声明行为；保留 format/rounding 与现有别名。单色 inner 文字修正前景对比，语义 color 仍优先；自定义渐变和透明背景的配色边界见[Progress API](packages/ui/src/progress/index.zh-CN.md)。Upload 已交付进度语义不变。
+
+### D-masonry-native-layout
+
+Masonry 的 layoutChange 使用 Vue emits，MasonryRef 与文档化 nativeElement() getter 一致；同 key 数据替换和离场资源保持正确。CSS 字符串 gutter 交由浏览器解析，纵向百分比使用文档化 intrinsic/显式高度基准，避免根高反馈循环；item.height 仍是槽和事件的数据，不新增布局提示语义。详见[Masonry API](packages/ui/src/masonry/index.zh-CN.md)。
