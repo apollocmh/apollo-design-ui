@@ -34,8 +34,17 @@ See [`demo/`](./demo) (21 demos, including native scoped slots).
 | maxCount | Max visible steps (≥3, hidden ranges collapse into ellipsis steps) | `number` | — |
 | responsive | Auto switch to vertical on narrow screens | `boolean` | `true` |
 | ellipsis / offset | Ellipsis mode / inline offset | `boolean` / `number` | — |
-| onChange | Step click callback (makes steps clickable + keyboard-accessible) | `(current) => void` | — |
+| prefixCls | DOM class prefix; custom prefixes require matching static CSS | `string` | `'apollo-steps'` |
+| classNames / styles | Classes/styles for ten semantic regions; functions receive current resolved props | `StepsProps['classNames']` / `StepsProps['styles']` | — |
 | direction / labelPlacement / progressDot | ⚠️ Deprecated (`orientation` / `titlePlacement` / `type="dot"`) | — | — |
+
+### Events
+
+| Event | Description | Parameters |
+|---|---|---|
+| change | Requests a different step; a listener enables click and Enter/Space actions on enabled items | `(current: number)` |
+
+The parent controls current; an event only proposes a change. The active step stays unchanged until the parent updates current. Use `@change` in templates, including `.once` or listener arrays. Native root change events do not invoke this business event. Root `@click` and the data-item `items.onClick` callback receive MouseEvent; disabled items do not invoke their callback.
 
 ### Slots
 
@@ -67,3 +76,9 @@ All four slots receive one named object with precise inference in native Vue tem
 Visible items, folding and active status update with items/current/initial/maxCount; click actions use the current index mapping. Native class/style are read during render and accept Vue string/object/array styles; matching styles.root values retain their existing priority. Documented classNames/styles functions receive current resolved props. Steps has no large variant, so a global large default resolves to medium.
 
 responsive can change from false to true after mount and immediately uses the current viewport, without waiting for a resize. Disabling it restores the explicit/default orientation.
+
+## Theme tokens
+
+`ConfigProvider.theme.components.Steps` consumes nine fields: `descriptionMaxWidth`, `customIconFontSize`, `iconSize`, `iconFontSize`, `dotSize`, `dotCurrentSize`, `navArrowColor`, `navContentMaxWidth` and `iconSizeSM`. Current theme values are scoped to the component root and support replacement, removal and nesting. Deprecated descriptionMaxWidth retains its existing behavior. Explicit native style and styles.root override matching theme variables, with styles.root retaining the final priority. Icon data 0 renders zero; false/empty-string icons intentionally render no content. Omitting icon restores the default number.
+
+Development version `0.0.0` removes the ineffective historical tokens `customIconSize`, `customIconTop`, `iconTop` and `titleLineHeight`. Their settings were never consumed by CSS. Use iconSize/customIconFontSize or existing semantic styles for supported customization. There is no compatibility layer or deprecation period. Vue change emits now owns notification; programmatic `h(Steps, { onChange })` and its numeric payload remain supported. Templates use `@change`.

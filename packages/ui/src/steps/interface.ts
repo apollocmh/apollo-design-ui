@@ -11,7 +11,7 @@
  * 程序化上下文，VNodeChild 合法。
  */
 
-import type { CSSProperties, VNodeChild } from 'vue';
+import type { CSSProperties, StyleValue, VNodeChild } from 'vue';
 import type { SizeType } from '../config-provider/size-context';
 
 // ---------------------------------------------------------------------------
@@ -139,7 +139,8 @@ export interface StepsProps {
     | undefined;
   /** 语义化样式（十个槽）。⚠️ 同样支持函数形态（见上）。 */
   styles?: StepsSemanticStyles | ((info: { props: StepsProps }) => StepsSemanticStyles) | undefined;
-  style?: CSSProperties;
+  /** Native root style, read from Vue attrs. */
+  style?: StyleValue;
 
   variant?: StepsVariant;
   /** `default` deprecated ⇒ `medium`（v7 移除）。 */
@@ -169,8 +170,15 @@ export interface StepsProps {
   percent?: number;
   status?: StepsStatus;
 
-  // ---- 事件 ----
-  onChange?: (current: number) => void;
+  // Vue listeners also determine whether items offer click/keyboard actions.
+  onChange?: StepsChangeListener;
+  onChangeOnce?: StepsChangeListener;
+}
+
+type StepsChangeListener = ((current: number) => void) | ((current: number) => void)[];
+
+export interface StepsEmits {
+  change: [current: number];
 }
 
 // ---------------------------------------------------------------------------

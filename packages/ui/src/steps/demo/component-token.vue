@@ -1,10 +1,11 @@
 <script setup lang="ts">
 // 对齐 antd demo/component-token.tsx
 import { ConfigProvider, Steps } from '@apollo-design/ui';
+import { h } from 'vue';
 
 const items = [
   { title: '第一步', content: '说明' },
-  { title: '第二步', content: '说明' },
+  { title: '第二步', content: '说明', icon: h('span', '2') },
 ];
 </script>
 

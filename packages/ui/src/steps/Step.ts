@@ -123,7 +123,7 @@ const Step = defineComponent({
         accessibilityProps.onKeydown = (e: KeyboardEvent) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            (e.currentTarget as HTMLElement).click();
+            if (e.currentTarget instanceof HTMLElement) e.currentTarget.click();
           }
         };
       }
@@ -136,7 +136,7 @@ const Step = defineComponent({
       const classString = [
         itemCls,
         `${itemCls}-${mergedStatus}`,
-        icon ? `${itemCls}-custom` : '',
+        icon !== undefined && icon !== null ? `${itemCls}-custom` : '',
         props.active ? `${itemCls}-active` : '',
         disabled === true ? `${itemCls}-disabled` : '',
         !hasTitle && !hasSubTitle ? `${itemCls}-empty-header` : '',
@@ -241,7 +241,7 @@ const Step = defineComponent({
                         status: props.railFollowPrevStatus
                           ? mergedStatus
                           : (props.nextStatus ?? 'wait'),
-                      } as never)
+                      })
                     : null,
                 ],
               ),

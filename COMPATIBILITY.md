@@ -82,3 +82,7 @@ BackTop 改为原生 button 和完整内容槽，click 发送原生 MouseEvent�
 ### D-rate-native-events-and-focus
 
 Rate 的 change/hoverChange/focus/blur 使用 Vue emits，焦点事件带原始 FocusEvent；具名槽和真实实例引用保留精确类型。radio 组只保留一个已选值和一个 Tab 入口，动态 tooltip 不替换焦点项；新增可达性属性与旧前缀差异逐场景精确比较，不忽略整类属性。迁移见[Rate API](packages/ui/src/rate/index.zh-CN.md)。
+
+### D-steps-live-tokens
+
+Steps 使用唯一 change emit，接通九个有效组件 Token。直接移除从未被组件消费的 customIconSize/customIconTop/iconTop/titleLineHeight；使用现有 iconSize/customIconFontSize 或原生样式表达受支持的定制，不新增旧字段兼容。既有四槽和 inline Tooltip 成果保留，详见[Steps API](packages/ui/src/steps/index.zh-CN.md)。

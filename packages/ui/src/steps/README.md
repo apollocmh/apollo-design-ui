@@ -55,8 +55,8 @@ steps/
 
 ## 4. Component Token 清单
 
-registry 数据：token 数 = **13**。关键默认值（`prepareStepsComponentToken` 构建期解析）：
-`iconSize = controlHeight`、`iconTop = -0.5`、`dotSize = controlHeight/4`、
+当前有效 token 数 = **9**。关键默认值（`prepareStepsComponentToken` 派生）：
+`iconSize = controlHeight`、`dotSize = controlHeight/4`、
 `dotCurrentSize = controlHeightLG/4`、`customIconFontSize = controlHeightSM`、
 `iconSizeSM = fontSizeHeading3`、`navArrowColor = colorTextDisabled`。
 
@@ -77,3 +77,5 @@ registry 数据：token 数 = **13**。关键默认值（`prepareStepsComponentT
 2026-10-25：当前数据/布局/原生attrs/ConfigProvider与语义函数响应性已专项修复，见 [报告](../../../../docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md)。保留历史验收记录；Apollo基线缺失，Timeline富内容模板事项继续推进。
 
 2026-10-25：四个具名槽接入真实SlotsType，移除桥接never/unknown断言和未消费的default类型；修复inline itemRender自引用Tooltip与无itemRender默认Tooltip缺失。原生Demo增至21，见 [迁移说明](../../../../docs/migrations/steps-native-slots.md) 与 [报告](../../../../docs/audit/2026-10-25-steps-native-slots-remediation.md)，不宣称新视觉验收。
+
+2026-10-30：change 通过 typed emits 单次通知，监听器数组、once及可点击性随当前监听器更新；current 保留父级受控契约。九个有效组件 Token 接入当前主题与自身根作用域；从未消费的 customIconSize/customIconTop/iconTop/titleLineHeight 已直接移除，迁移使用 iconSize/customIconFontSize 或语义 styles，详见当前双语 API。历史门禁结果保持原日期和范围。

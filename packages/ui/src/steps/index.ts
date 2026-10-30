@@ -14,6 +14,7 @@ export default Steps;
 
 export type {
   StepItem,
+  StepsEmits,
   StepsIconRenderSlotProps,
   StepsItemRenderSlotProps,
   StepsItemWrapperRenderSlotProps,

@@ -46,6 +46,7 @@ import PanelArrow from './PanelArrow';
 import ProgressIcon from './ProgressIcon';
 import Step from './Step';
 import StepIcon, { stepsIconContextKey } from './StepIcon';
+import { useStepsTheme } from './use-theme';
 import { useDisplaySteps } from './useDisplaySteps';
 
 export const Steps = defineComponent({
@@ -81,14 +82,20 @@ export const Steps = defineComponent({
     percent: { type: Number, default: undefined },
     status: { type: String as PropType<StepsStatus>, default: undefined },
 
-    // ---- 事件 ----
+    // Declared listeners keep the optional interaction affordance reactive.
+    // Vue emit owns delivery, including arrays and .once.
     onChange: {
-      type: Function as PropType<((current: number) => void) | undefined>,
+      type: [Function, Array] as PropType<StepsProps['onChange']>,
+      default: undefined,
+    },
+    onChangeOnce: {
+      type: [Function, Array] as PropType<StepsProps['onChangeOnce']>,
       default: undefined,
     },
   },
+  emits: { change: (_current: number) => true },
   slots: Object as SlotsType<StepsSlots>,
-  setup(props, { attrs, slots }) {
+  setup(props, { attrs, emit, slots }) {
     const config = useComponentConfig<{
       className?: string;
       style?: CSSProperties;
@@ -100,6 +107,7 @@ export const Steps = defineComponent({
 
     const rootPrefixCls = computed(() => config.getPrefixCls());
     const prefixCls = computed(() => config.getPrefixCls('steps', props.prefixCls));
+    const themeStyle = useStepsTheme(() => prefixCls.value);
 
     // ---- deprecated / usage 告警 ----
     if (props.size === 'default') {
@@ -221,7 +229,7 @@ export const Steps = defineComponent({
       const itemIconCls = `${prefixCls.value}-item-icon`;
 
       let iconContent: VNodeChild = null;
-      if (isDot.value || icon) {
+      if (isDot.value || (icon !== undefined && icon !== null)) {
         iconContent = icon ?? null;
       } else {
         switch (status) {
@@ -283,10 +291,10 @@ export const Steps = defineComponent({
     // ---- onChange（display 索引 → origin 索引）----
     const onStepClick = (displayIndex: number): void => {
       // 比较基准是 **display 索引的当前步**（mappedDisplayCurrent），不是原始 current
-      if (props.onChange && display.value.mappedDisplayCurrent !== displayIndex) {
+      if (display.value.mappedDisplayCurrent !== displayIndex) {
         const target = display.value.displaySteps[displayIndex];
         if (target && target.originIndex >= 0) {
-          props.onChange((props.initial ?? 0) + target.originIndex);
+          emit('change', (props.initial ?? 0) + target.originIndex);
         }
       }
     };
@@ -324,6 +332,7 @@ export const Steps = defineComponent({
     // ---- root style ----
     const rootStyle = () =>
       normalizeStyle([
+        themeStyle.value,
         { [`--${rootPrefixCls.value}-cmp-steps-items-offset`]: String(props.offset) },
         attrs.style,
         mergedStyles.value?.root,
@@ -384,7 +393,7 @@ export const Steps = defineComponent({
             active: stepIndex === display.value.mappedDisplayCurrent,
             index: stepIndex,
             last: displayItemsWithEllipsisIcon.value.length - 1 === index,
-            onClick: props.onChange ? onStepClick : undefined,
+            onClick: props.onChange || props.onChangeOnce ? onStepClick : undefined,
           },
           {
             icon: () => {

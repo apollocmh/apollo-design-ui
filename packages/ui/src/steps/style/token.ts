@@ -2,7 +2,7 @@
  * Steps 的 Component Token（G3 产物）。
  *
  * 契约来源：antd 6.6.4 es/steps/style/index.js 的 `prepareComponentToken`
- * （默认值构建期派生，逐条对齐）。registry 数据：token 数 = 13。
+ * 默认值供静态样式与当前主题派生共同使用。
  */
 
 import type { CSSProperties } from 'vue';
@@ -10,16 +10,10 @@ import type { CSSProperties } from 'vue';
 export interface ComponentToken {
   /** @deprecated v6 默认已移除该值。 */
   descriptionMaxWidth?: number;
-  /** 自定义图标容器尺寸。 */
-  customIconSize: number;
-  /** 自定义图标 top。 */
-  customIconTop: number;
   /** 自定义图标字号。 */
   customIconFontSize: number;
   /** 图标容器尺寸。 */
   iconSize: number;
-  /** 图标 top。 */
-  iconTop: number;
   /** 图标字号。 */
   iconFontSize: number;
   /** 点状步骤点大小。 */
@@ -32,8 +26,6 @@ export interface ComponentToken {
   navContentMaxWidth: CSSProperties['maxWidth'];
   /** 小号步骤条图标大小。 */
   iconSizeSM: number | string;
-  /** @deprecated 不再使用。标题行高。 */
-  titleLineHeight: number | string;
 }
 
 /** 别名 token 的最小面（构建期派生所需的键）。 */
@@ -52,15 +44,11 @@ export interface StepsAliasToken {
   wireframe?: boolean;
 }
 
-/** antd `prepareComponentToken` 的逐字移植（构建期解析为 px 字面量）。 */
+/** 从当前 Alias Token 派生九个有效组件字段的默认值。 */
 export function prepareStepsComponentToken(token: StepsAliasToken): Partial<ComponentToken> {
   return {
-    titleLineHeight: token.controlHeight,
-    customIconSize: token.controlHeight,
-    customIconTop: 0,
     customIconFontSize: token.controlHeightSM,
     iconSize: token.controlHeight,
-    iconTop: -0.5,
     // magic for ui experience
     iconFontSize: token.fontSize,
     iconSizeSM: token.fontSizeHeading3,

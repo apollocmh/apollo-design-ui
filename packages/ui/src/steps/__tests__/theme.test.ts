@@ -15,9 +15,7 @@ describe('Steps · token 契约', () => {
   const decls = genStepsTokenDecls();
 
   it('组件变量声明块（关键值对拍 antd .ant-steps 根块）', () => {
-    expect(decls).toContain('--apollo-steps-title-line-height:32px;');
     expect(decls).toContain('--apollo-steps-icon-size:32px;');
-    expect(decls).toContain('--apollo-steps-icon-top:-0.5px;');
     expect(decls).toContain('--apollo-steps-dot-size:8px;');
     expect(decls).toContain('--apollo-steps-dot-current-size:10px;');
     expect(decls).toContain('--apollo-steps-icon-size-sm:24px;');
@@ -68,11 +66,8 @@ describe('Steps · prepareComponentToken 判据', () => {
       controlItemBgActive: '#e6f4ff',
       wireframe: false,
     });
-    expect(t.titleLineHeight).toBe(32);
-    expect(t.customIconSize).toBe(32);
     expect(t.customIconFontSize).toBe(24);
     expect(t.iconSize).toBe(32);
-    expect(t.iconTop).toBe(-0.5);
     expect(t.iconFontSize).toBe(14);
     expect(t.iconSizeSM).toBe(20);
     expect(t.dotSize).toBe(8);

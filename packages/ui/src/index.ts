@@ -1697,6 +1697,7 @@ export { Splitter, SplitterPanel } from './splitter';
 export { genSplitterStyle, genTokenDecls as genSplitterTokenDecls } from './splitter/style';
 export type {
   StepItem,
+  StepsEmits,
   StepsIconRenderSlotProps,
   StepsItemRenderSlotProps,
   StepsItemWrapperRenderSlotProps,

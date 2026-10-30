@@ -22,7 +22,7 @@ export function genStepsTokenDecls(): string {
   return DECLS;
 }
 
-const DECLS = `--apollo-steps-title-line-height:32px;--apollo-steps-custom-icon-size:32px;--apollo-steps-custom-icon-top:0px;--apollo-steps-custom-icon-font-size:24px;--apollo-steps-icon-size:32px;--apollo-steps-icon-top:-0.5px;--apollo-steps-icon-font-size:14px;--apollo-steps-icon-size-sm:24px;--apollo-steps-dot-size:8px;--apollo-steps-dot-current-size:10px;--apollo-steps-nav-arrow-color:rgba(0,0,0,0.25);--apollo-steps-nav-content-max-width:unset;--apollo-steps-wait-icon-color:rgba(0,0,0,0.65);--apollo-steps-wait-icon-bg-color:rgba(0,0,0,0.06);--apollo-steps-wait-icon-border-color:transparent;--apollo-steps-finish-icon-bg-color:#e6f4ff;--apollo-steps-finish-icon-border-color:#e6f4ff;`;
+const DECLS = `--apollo-steps-custom-icon-font-size:24px;--apollo-steps-icon-size:32px;--apollo-steps-icon-font-size:14px;--apollo-steps-icon-size-sm:24px;--apollo-steps-dot-size:8px;--apollo-steps-dot-current-size:10px;--apollo-steps-nav-arrow-color:rgba(0,0,0,0.25);--apollo-steps-nav-content-max-width:unset;--apollo-steps-wait-icon-color:rgba(0,0,0,0.65);--apollo-steps-wait-icon-bg-color:rgba(0,0,0,0.06);--apollo-steps-wait-icon-border-color:transparent;--apollo-steps-finish-icon-bg-color:#e6f4ff;--apollo-steps-finish-icon-border-color:#e6f4ff;`;
 
 /** antd 产物机械转换段（原序）。 */
 const RULES = `

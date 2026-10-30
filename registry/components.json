@@ -2898,7 +2898,7 @@
       "derived": {
         "dagLevel": 3,
         "unblocks": 1,
-        "tokenCount": 13,
+        "tokenCount": 9,
         "tokenGroup": "Steps"
       },
       "dependencies": {

@@ -34,8 +34,17 @@ subtitle: 步骤条
 | maxCount | 最大展示步数（≥3，隐藏区段折叠为省略步） | `number` | — |
 | responsive | 窄屏自动转竖向 | `boolean` | `true` |
 | ellipsis / offset | 省略模式 / inline 偏移 | `boolean` / `number` | — |
-| onChange | 点击步骤回调（使步骤可点击 + 键盘可操作） | `(current) => void` | — |
+| prefixCls | DOM 类名前缀，自定义值需配套静态样式 | `string` | `'apollo-steps'` |
+| classNames / styles | 十个语义区域的类名/样式，支持读取当前解析后 props 的函数 | `StepsProps['classNames']` / `StepsProps['styles']` | — |
 | direction / labelPlacement / progressDot | ⚠️ 已废弃（`orientation` / `titlePlacement` / `type="dot"`） | — | — |
+
+### Events
+
+| 事件 | 说明 | 参数 |
+|---|---|---|
+| change | 请求切换到不同步骤；监听此事件使非禁用步骤可点击并支持 Enter/空格 | `(current: number)` |
+
+`current` 始终由父级控制，事件只提出请求；父级未更新时当前步骤保持不变。模板使用 `@change`，支持 `.once` 和监听器数组。原生根节点的 `change` 不会触发该业务事件；根 `@click` 仍接收原生 MouseEvent。`items.onClick` 是数据项回调，接收 MouseEvent，禁用项不会调用。
 
 ### Slots
 
@@ -66,3 +75,9 @@ subtitle: 步骤条
 items、current、initial 和 maxCount 变化后重新派生可见项、折叠和当前状态，点击动作使用当前索引。class/style 在 render 中读取，支持 Vue 字符串、对象和数组 style；同名 styles.root 仍按既有顺序覆盖原生 style。classNames/styles 支持文档化的函数形态，读取当前解析后的 props。Steps 没有 large 尺寸，全局 large 默认值按 medium 解析。
 
 responsive 可在挂载后由 false 切为 true，立即按当前视口调整方向，无需等待 resize；再关闭时恢复显式/默认方向。
+
+## 主题 Token
+
+`ConfigProvider.theme.components.Steps` 支持 `descriptionMaxWidth`、`customIconFontSize`、`iconSize`、`iconFontSize`、`dotSize`、`dotCurrentSize`、`navArrowColor`、`navContentMaxWidth`、`iconSizeSM` 九个实际消费字段。组件在自身根节点消费当前主题，支持替换、移除和嵌套作用域；`descriptionMaxWidth` 已废弃但仍保留现有行为。显式原生 style 和 styles.root 可覆盖同名主题变量，styles.root 继续最后生效。图标数据 `0` 显示为零，`false`/空字符串有意隐藏图标；省略 icon 后恢复默认序号。
+
+开发版 `0.0.0` 直接移除 `customIconSize`、`customIconTop`、`iconTop`、`titleLineHeight` 四个无效历史 Token：旧设置从未被 CSS 消费，现不再声明或生成。请使用 `iconSize`/`customIconFontSize` 或现有语义 styles 定制图标；不提供兼容层或弃用期。原 `onChange` 手调通道统一由 Vue `change` emits 处理，`h(Steps, { onChange })` 写法与数字载荷保持，模板使用 `@change`。
