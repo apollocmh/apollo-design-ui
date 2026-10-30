@@ -2,10 +2,10 @@ import { transformToken, useTheme } from '@apollo-design/theme';
 import { computed } from 'vue';
 import { prepareComponentToken } from '../style/token';
 
-function numeric(value: string | number | undefined, fallback: number): number {
+function numeric(value: unknown, fallback: number): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
 }
-function text(value: string | number | undefined, fallback: string): string {
+function text(value: unknown, fallback: string): string {
   return typeof value === 'string' && value.trim() ? value : fallback;
 }
 

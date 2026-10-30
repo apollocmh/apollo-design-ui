@@ -404,7 +404,7 @@ export interface AliasToken extends MapToken {
  * 本包遵循同样的分工：这里只声明类型与合并机制，默认值由 `packages/ui` 逐组件提供 ——
  * 见本包 README 的「明确不做」。
  */
-export type ComponentTokenMap = Record<string, Record<string, string | number>>;
+export type ComponentTokenMap = Record<string, Record<string, string | number | boolean>>;
 
 // ---------------------------------------------------------------------------
 // 算法与配置

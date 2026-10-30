@@ -22,6 +22,30 @@ import {
  * "这里应当报错"；若 TS 不再报错，@ts-expect-error 本身会变成错误。
  */
 describe('theme 类型契约', () => {
+  it('组件配置接受已有布尔 Token，但不接受对象和回调', () => {
+    const config: ThemeConfig = { components: { InputNumber: { handleVisible: false } } };
+    expectTypeOf(config).toMatchTypeOf<ThemeConfig>();
+    const invalid = () => {
+      const callback: ThemeConfig = {
+        components: {
+          InputNumber: {
+            // @ts-expect-error Component tokens are scalar values, not callbacks.
+            handleVisible: () => true,
+          },
+        },
+      };
+      const nested: ThemeConfig = {
+        components: {
+          InputNumber: {
+            // @ts-expect-error Nested objects are not component token values.
+            handleVisible: { value: true },
+          },
+        },
+      };
+      return [callback, nested];
+    };
+    expectTypeOf(invalid).toBeFunction();
+  });
   it('getDesignToken 返回完整 AliasToken', () => {
     expectTypeOf(getDesignToken()).toMatchTypeOf<AliasToken>();
   });

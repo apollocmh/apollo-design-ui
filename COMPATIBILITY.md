@@ -71,6 +71,8 @@ Theme的可写深响应式配置、同应用默认来源共享/跨应用与SSR�
 
 共享 `useControlledValue` 的受控请求、撤控保留值与函数更新规则见[受控状态迁移](docs/migrations/controlled-value.md)。开发阶段直接修正 rc 内部状态语义，不提供旧行为开关。
 
+组件 Token 配置保留字符串、数字和布尔标量，以支持已公开的 `InputNumber.handleVisible`；不接受函数或嵌套对象。各组件仍按其字段契约消费，布尔开关不会当作其他组件的 CSS 数值。
+
 Switch 的 Provider 样式、具名槽、原生 attrs 和真实模板 ref 类型修正见[Switch API](packages/ui/src/switch/index.zh-CN.md)；全局 large 解析为该组件已支持的 medium，不新增尺寸能力。
 
 ### D-back-top-native-button
