@@ -6,6 +6,8 @@ import { AutoComplete } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const value = ref('');
+const searchValue = ref('');
+const open = ref(false);
 const options = ref<DefaultOptionType[]>([]);
 const anotherOptions = ref<DefaultOptionType[]>([]);
 
@@ -27,7 +29,7 @@ const onChange = (data: SelectValue) => {
     <AutoComplete aria-label="自动补全输入框"
       :options="options"
       style="width: 200px"
-      :show-search="{ onSearch: (t: string) => (options = getPanelValue(t)) }"
+      @search="text => (options = getPanelValue(text))"
       placeholder="input here"
       @select="onSelect"
     />
@@ -35,12 +37,16 @@ const onChange = (data: SelectValue) => {
     <br />
     <AutoComplete aria-label="自动补全输入框"
       v-model:value="value"
+      v-model:search-value="searchValue"
+      v-model:open="open"
+      backfill
       :options="anotherOptions"
       style="width: 200px"
-      :show-search="{ onSearch: (t: string) => (anotherOptions = getPanelValue(t)) }"
+      @search="text => (anotherOptions = getPanelValue(text))"
       placeholder="control mode"
       @select="onSelect"
       @change="onChange"
     />
+    <p>Value: {{ value || '—' }} · Search: {{ searchValue || '—' }} · Open: {{ open }}</p>
   </div>
 </template>

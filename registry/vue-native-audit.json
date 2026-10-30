@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 92,
+  "revision": 100,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -105,7 +105,7 @@
       "kind": "component",
       "ref": "auto-complete",
       "title": "AutoComplete",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
@@ -114,12 +114,10 @@
         "packages/ui/src/select/engine/Selector.ts",
         "packages/ui/src/select/engine/BaseSelect.ts"
       ],
-      "assignment": {
-        "owner": "native_select",
-        "baseRevision": 73,
-        "startedAt": "2026-10-30T10:30:38.351Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -138,6 +136,49 @@
           "packages/ui/src/auto-complete/interface.ts",
           "docs/audit/2026-10-23-vue-reactivity-remediation.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/auto-complete",
+          "packages/ui/src/select/Select.ts",
+          "packages/ui/src/select/interface.ts",
+          "packages/ui/src/select/engine/BaseSelect.ts",
+          "packages/ui/src/select/engine/Selector.ts",
+          "packages/ui/src/select/__tests__/type.test-d.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract --project theme --project a11y packages/ui/src/auto-complete/__tests__ packages/ui/src/select/__tests__/native-contracts.test.ts packages/ui/src/select/__tests__/index.test.ts packages/ui/src/select/__tests__/dynamic-options.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 39510
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/auto-complete/__tests__/native-contracts.test.ts packages/ui/src/select/__tests__/native-contracts.test.ts packages/ui/src/select/__tests__/index.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11450
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/auto-complete/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 9107
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full AutoComplete and affected Select engine source/tests/demo/SFC>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 50668
+          }
+        ],
+        "boundary": "保留F02条件选项成果；通知/三个model、真实模板Ctor与ref、完整当前槽/attrs、backfill预览/接受/拒绝/0/关闭重开、Tab提交与原生焦点离开已验证。AutoComplete自身Provider与Select配置隔离，语义fn在各自public props上一次解析；依当前公开声明继续共享Select Token，不新增独立Token。算法filter始终收到实际option，类型同步。14 Demo与源码浏览器通过且诊断为空。自定义input替换协议和AutoComplete PurePanel原本未公开支持，本轮不新增。未执行最终冻结九维/发布消费者。"
       }
     },
     {
@@ -336,7 +377,9 @@
       "title": "Calendar",
       "architectureStatus": "not_started",
       "acceptanceStatus": "not_started",
-      "workDependencies": [],
+      "workDependencies": [
+        "FND:picker"
+      ],
       "owns": [
         "packages/ui/src/calendar"
       ],
@@ -519,7 +562,9 @@
       "title": "DatePicker",
       "architectureStatus": "partial",
       "acceptanceStatus": "not_started",
-      "workDependencies": [],
+      "workDependencies": [
+        "FND:picker"
+      ],
       "owns": [
         "packages/ui/src/date-picker"
       ],
@@ -659,13 +704,17 @@
       "kind": "component",
       "ref": "dropdown",
       "title": "Dropdown",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/dropdown"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_portal",
+        "baseRevision": 94,
+        "startedAt": "2026-10-30T11:20:42.981Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -692,6 +741,18 @@
           }
         ],
         "boundary": "仅验证浮层root/overlayStyle经Trigger直接接收Vue CSSProperties的类型链；其余Dropdown整改仍partial，没有新增运行时验收结论。"
+      },
+      "plan": {
+        "goal": "保留popup槽、受控延迟和层级交付，收口Dropdown及Button组合剩余Vue差额",
+        "remaining": [
+          "沿用当前CSSProperties与视觉/context修复；核对Dropdown/DropdownButton/PurePanel的owned事件、模型、完整槽、attrs/ref、Provider/有效Token及菜单组合。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-24-tabs-popup-remediation.md",
+          "docs/audit/2026-10-28-overlay-controlled-delay-audit.md",
+          "packages/ui/src/dropdown/__tests__/type.test-d.ts"
+        ]
       }
     },
     {
@@ -2367,7 +2428,9 @@
       "title": "TimePicker",
       "architectureStatus": "partial",
       "acceptanceStatus": "not_started",
-      "workDependencies": [],
+      "workDependencies": [
+        "FND:picker"
+      ],
       "owns": [
         "packages/ui/src/time-picker"
       ],
@@ -3233,13 +3296,23 @@
       "kind": "foundation",
       "ref": "picker",
       "title": "@apollo-design/picker",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/picker/src"
+        "packages/picker",
+        "docs/foundation/picker-contract.md",
+        "packages/ui/src/date-picker/DatePicker.vue",
+        "packages/ui/src/date-picker/RangePicker.vue",
+        "packages/ui/src/calendar/Calendar.vue",
+        "packages/ui/src/date-picker/interface.ts",
+        "packages/ui/src/date-picker/__tests__/s5-presets.test.ts"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_picker",
+        "baseRevision": 93,
+        "startedAt": "2026-10-30T11:20:42.876Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3247,7 +3320,18 @@
         "docs/foundation/picker-contract.md",
         "docs/audit/2026-10-23-picker-transfer-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "优先完成日期时间共享引擎的真实Vue差额，减少后续包装层返工",
+        "remaining": [
+          "复用日期/时间/Transfer原生槽与既有算法证据，完整核对当前公开引擎、组合函数、面板与真实调用者；先评估实际剩余与消费者桥，不把旧契约提取当实现事实。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/foundation/picker-contract.md",
+          "docs/audit/2026-10-23-picker-transfer-remediation.md"
+        ]
+      }
     },
     {
       "id": "FND:portal",

@@ -173,14 +173,33 @@ type SelectConfig = Partial<SelectProps> & {
   menuItemSelectedIcon?: VNodeChild;
 };
 
+/** @internal Resolved presentation configuration for the two existing wrappers. */
+export interface SelectEngineComponentConfig {
+  componentName: 'select' | 'autoComplete';
+  className?: string;
+  style?: CSSProperties;
+  classNames?: SelectSemanticClassNames;
+  styles?: SelectSemanticStyles;
+  showSearch?: SelectProps['showSearch'];
+  allowClear?: SelectProps['allowClear'];
+  suffixIcon?: VNodeChild;
+  loadingIcon?: VNodeChild;
+  clearIcon?: VNodeChild;
+  removeIcon?: VNodeChild;
+  menuItemSelectedIcon?: VNodeChild;
+}
+
 // The public render boundary normalizes option VNodes. Ordinary child props then
 // invalidate the value/filter/cache chain without writing reactive state in render.
-const SelectEngine = defineComponent({
+/** @internal Shared implementation for Select and AutoComplete's combobox. */
+export const SelectEngine = defineComponent({
   name: 'ApolloSelectEngine',
   inheritAttrs: false,
   props: {
     ...selectProps,
+    componentConfig: { type: Object as PropType<SelectEngineComponentConfig>, default: undefined },
     mode: { type: String as PropType<InternalSelectMode>, default: undefined },
+    backfill: { type: Boolean, default: undefined },
     optionChildren: { type: Array as PropType<DefaultOptionType[]>, default: () => [] },
   },
   slots: Object as SlotsType<SelectSlots>,
@@ -194,11 +213,13 @@ const SelectEngine = defineComponent({
      * 原生监听器时，重渲染读到的还是首帧那一份（Issue #4.2）。
      * 解构移到渲染函数里（见下方 `...restAttrs`）。
      */
-    const componentConfig = useComponentConfig<SelectConfig>('select');
+    const selectConfig = useComponentConfig<SelectConfig>('select');
+    const componentConfig = computed(() => props.componentConfig ?? selectConfig);
     const config = useConfigContext();
-    const prefixCls = computed(() => props.prefixCls ?? componentConfig.getPrefixCls('select'));
-    const rootPrefixCls = computed(() => componentConfig.getPrefixCls());
+    const prefixCls = computed(() => props.prefixCls ?? config.getPrefixCls('select'));
+    const rootPrefixCls = computed(() => config.getPrefixCls());
 
+    const activeValue = ref<string | null>(null);
     const multiple = computed(() => props.mode === 'multiple' || props.mode === 'tags');
     const defaultId = useId();
     const mergedId = computed(() => props.id ?? defaultId);
@@ -222,7 +243,7 @@ const SelectEngine = defineComponent({
 
     // --------------------------- 外观 ---------------------------
     const { variant, enableVariantCls } = useVariant({
-      component: 'select',
+      component: props.componentConfig?.componentName ?? 'select',
       variant: () => props.variant,
       legacyBordered: () => props.bordered,
     });
@@ -263,7 +284,7 @@ const SelectEngine = defineComponent({
 
     // --------------------------- 搜索配置 ---------------------------
     // Search algorithms stay in configuration; state and notifications use Vue models/emits.
-    const showSearchProp = computed(() => props.showSearch ?? componentConfig.showSearch);
+    const showSearchProp = computed(() => props.showSearch ?? componentConfig.value.showSearch);
     const searchTuple = computed(() =>
       resolveSearchConfig(
         showSearchProp.value,
@@ -285,11 +306,15 @@ const SelectEngine = defineComponent({
       return Array.isArray(raw) ? raw : [raw];
     });
 
-    const [innerSearch, setSearchValue] = useControlledValue<string>({
+    const [innerSearch, syncSearchValue] = useControlledValue<string>({
       defaultValue: () => searchConfig.value.searchValue ?? '',
       getValue: () => searchConfig.value.searchValue,
-      onChange: (value) => emit('update:searchValue', value),
+      onChange: () => undefined,
     });
+    const setSearchValue = (value: string): void => {
+      syncSearchValue(value);
+      emit('update:searchValue', value);
+    };
     // ⚠️ 非受控时读 `innerSearch`（受控时 `getValue()` 恒有值，与 rc 的
     //    `useControlledState` 同语义）—— 不能写成 `searchConfig.searchValue ?? ''`，
     //    那样输入永远读不到内部状态。
@@ -384,8 +409,9 @@ const SelectEngine = defineComponent({
       () => mergedValues.value,
       () => {
         if (props.mode === 'combobox') {
+          activeValue.value = null;
           const strValue = mergedValues.value[0]?.value;
-          setSearchValue(hasValue(strValue) ? String(strValue) : '');
+          syncSearchValue(hasValue(strValue) ? String(strValue) : '');
         }
       },
     );
@@ -518,7 +544,8 @@ const SelectEngine = defineComponent({
       triggerChange(cloneValues);
       triggerSelect(val, Boolean(mergedSelect));
       if (props.mode === 'combobox') {
-        activeValue.value = '';
+        activeValue.value = null;
+        setSearchValue(String(val));
       } else if (!multiple.value || searchConfig.value.autoClearSearchValue) {
         setSearchValue('');
         activeValue.value = '';
@@ -592,7 +619,6 @@ const SelectEngine = defineComponent({
     };
 
     // --------------------------- 无障碍 ---------------------------
-    const activeValue = ref<string | null>(null);
     const accessibilityIndex = ref(0);
     const onActiveValue = (
       active: RawValueType | null,
@@ -600,12 +626,13 @@ const SelectEngine = defineComponent({
       info?: { source?: 'keyboard' | 'mouse' },
     ): void => {
       accessibilityIndex.value = index;
-      // combobox 的 `backfill`：键盘激活项回填到输入框（v1 未接 backfill，仅记录）
-      if (props.mode === 'combobox') {
+      if (props.mode === 'combobox' && props.backfill && info?.source === 'keyboard') {
         activeValue.value = active === null ? null : String(active);
       }
-      void info;
     };
+    watch([() => props.backfill, () => props.mode, mergedDisabled], () => {
+      activeValue.value = null;
+    });
     const mergedDefaultActiveFirstOption = computed(() =>
       props.defaultActiveFirstOption !== undefined
         ? props.defaultActiveFirstOption
@@ -633,17 +660,23 @@ const SelectEngine = defineComponent({
         return getSuffixIconNode(readSlot('searchIcon'));
       if (slots.suffixIcon) return getSuffixIconNode(slots.suffixIcon(state));
       if (props.loading)
-        return getSuffixIconNode(componentConfig.loadingIcon ?? h(LoadingOutlined, { spin: true }));
+        return getSuffixIconNode(
+          componentConfig.value.loadingIcon ?? h(LoadingOutlined, { spin: true }),
+        );
       if (state.open && state.showSearch) return getSuffixIconNode(h(SearchOutlined));
-      return getSuffixIconNode(componentConfig.suffixIcon ?? h(DownOutlined));
+      return getSuffixIconNode(componentConfig.value.suffixIcon ?? h(DownOutlined));
     };
 
     const getClearIcon = () =>
-      slots.clearIcon ? readSlot('clearIcon') : (componentConfig.clearIcon ?? h(CloseCircleFilled));
+      slots.clearIcon
+        ? readSlot('clearIcon')
+        : (componentConfig.value.clearIcon ?? h(CloseCircleFilled));
     const getRemoveIcon = () =>
-      slots.removeIcon ? readSlot('removeIcon') : (componentConfig.removeIcon ?? h(CloseOutlined));
+      slots.removeIcon
+        ? readSlot('removeIcon')
+        : (componentConfig.value.removeIcon ?? h(CloseOutlined));
     const getAllowClear = () => {
-      const value = props.allowClear ?? componentConfig.allowClear;
+      const value = props.allowClear ?? componentConfig.value.allowClear;
       if (value === true) return { clearIcon: getClearIcon() };
       if (value && typeof value === 'object' && slots.clearIcon)
         return { ...value, clearIcon: getClearIcon() };
@@ -663,8 +696,8 @@ const SelectEngine = defineComponent({
       SelectSemanticClassNames,
       SelectSemanticStyles
     >(
-      [() => componentConfig.classNames, () => props.classNames],
-      [() => componentConfig.styles, () => props.styles],
+      [() => componentConfig.value.classNames, () => props.classNames],
+      [() => componentConfig.value.styles, () => props.styles],
       props,
       {
         popup: { _default: 'root' },
@@ -704,7 +737,7 @@ const SelectEngine = defineComponent({
         getStatusClassNames(prefixCls.value, mergedStatus.value, formItem.value.hasFeedback),
         compactItemClassnames.value,
         // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-        componentConfig.className,
+        componentConfig.value.className,
         attrs.class,
         cssVarCls.value,
         'css-var-root',
@@ -804,7 +837,7 @@ const SelectEngine = defineComponent({
           // 根 style 是 Vue 原生 attrs（位置与原先的语义 root 之后：调用方最后胜出）
           style: [
             selectTheme.style.value,
-            componentConfig.style,
+            componentConfig.value.style,
             mergedStyles.value?.root,
             normalizeStyle(attrs.style),
           ],
@@ -910,7 +943,7 @@ const SelectEngine = defineComponent({
             slots.menuItemSelectedIcon
               ? slots.menuItemSelectedIcon(info)
               : info.isSelected
-                ? (componentConfig.menuItemSelectedIcon ??
+                ? (componentConfig.value.menuItemSelectedIcon ??
                   (multiple.value ? h(CheckOutlined) : undefined))
                 : undefined,
         },
@@ -936,6 +969,7 @@ export const Select = defineComponent({
         {
           ...attrs,
           ...props,
+          componentConfig: undefined,
           ref: engine,
           optionChildren:
             props.options === undefined

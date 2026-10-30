@@ -17,10 +17,13 @@ export const AutoCompleteOption = SelectOption;
 export default AutoComplete;
 
 export type {
+  AutoCompleteEmits,
   AutoCompleteProps,
   AutoCompleteRef,
+  AutoCompleteScrollToArg,
   AutoCompleteSemanticClassNames,
   AutoCompleteSemanticStyles,
+  AutoCompleteSlots,
   DataSourceItemObject,
   DataSourceItemType,
   InputStatus,

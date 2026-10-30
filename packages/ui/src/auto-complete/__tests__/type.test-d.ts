@@ -10,8 +10,9 @@ describe('AutoComplete · 类型', () => {
     >();
   });
 
-  it('dataSource 元素：DataSourceItemObject | unknown（deprecated）', () => {
-    expectTypeOf<DataSourceItemObject>().toEqualTypeOf<{ value: string; text: string }>();
+  it('dataSource 元素接受结构化数据、文本与选项VNode（deprecated）', () => {
+    const item: DataSourceItemObject = { value: 0, text: 0 };
+    expectTypeOf(item.value).toEqualTypeOf<string | number>();
   });
 
   it('语义面：root/prefix/input/placeholder/content/clear/popup（无 item 系）', () => {
@@ -23,20 +24,12 @@ describe('AutoComplete · 类型', () => {
     expectTypeOf(cn).not.toBeNever();
   });
 
-  it('回调面（props 形态）', () => {
-    expectTypeOf<AutoCompleteProps['onChange']>().toEqualTypeOf<
-      ((value: import('../../select/interface').SelectValue, option: unknown) => void) | undefined
-    >();
-    expectTypeOf<AutoCompleteProps['onOpenChange']>().toEqualTypeOf<
-      ((open: boolean) => void) | undefined
-    >();
-  });
-
   it('AutoCompleteRef：focus/blur/scrollTo', () => {
     const ref: AutoCompleteRef = {
       focus: () => undefined,
       blur: () => undefined,
       scrollTo: () => undefined,
+      nativeElement: null,
     };
     expectTypeOf(ref).not.toBeNever();
   });
@@ -64,3 +57,33 @@ describe('AutoComplete · 类型', () => {
     void negative;
   });
 });
+
+import type { AutoComplete, AutoCompleteEmits, AutoCompleteSlots } from '../index';
+
+type ActualProps = InstanceType<typeof AutoComplete>['$props'];
+expectTypeOf<InstanceType<typeof AutoComplete>>().toExtend<AutoCompleteRef>();
+expectTypeOf<Parameters<NonNullable<ActualProps['onChange']>>>().toEqualTypeOf<
+  AutoCompleteEmits['change']
+>();
+expectTypeOf<Parameters<NonNullable<ActualProps['onSelect']>>>().toEqualTypeOf<
+  AutoCompleteEmits['select']
+>();
+expectTypeOf<Parameters<NonNullable<ActualProps['onSearch']>>>().toEqualTypeOf<[value: string]>();
+expectTypeOf<Parameters<NonNullable<ActualProps['onUpdate:open']>>>().toEqualTypeOf<
+  [open: boolean]
+>();
+expectTypeOf<InstanceType<typeof AutoComplete>['$slots']['searchIcon']>().toExtend<
+  AutoCompleteSlots['searchIcon']
+>();
+const rejectedProps = () => {
+  // @ts-expect-error The combobox owns its internal mode.
+  const mode: ActualProps = { mode: 'multiple' };
+  // @ts-expect-error Content functions are slots.
+  const render: ActualProps = { optionRender: () => null };
+  // @ts-expect-error Open notifications use @openChange.
+  const oldCallback: ActualProps = { onDropdownVisibleChange: () => {} };
+  // @ts-expect-error Search notifications are owned emits, not configuration callbacks.
+  const config: ActualProps = { showSearch: { onSearch: () => {} } };
+  return [mode, render, oldCallback, config];
+};
+void rejectedProps;

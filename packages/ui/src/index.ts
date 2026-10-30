@@ -737,10 +737,13 @@ export { App } from './app';
 export { genAppStyle } from './app/style';
 export { useApp } from './app/useApp';
 export type {
+  AutoCompleteEmits,
   AutoCompleteProps,
   AutoCompleteRef,
+  AutoCompleteScrollToArg,
   AutoCompleteSemanticClassNames,
   AutoCompleteSemanticStyles,
+  AutoCompleteSlots,
   DataSourceItemObject,
   DataSourceItemType,
 } from './auto-complete';

@@ -2,7 +2,7 @@
  * L1/L2 —— 判据：antd AutoComplete.tsx（245 行壳）逐件 + 本仓 Select combobox 内核。
  *
  * 覆盖：v-model:value（C11）/ showSearch.onSearch 驱动候选 / SelectOption children
- * 数据化 / dataSource 映射 / deprecated 告警 ×6 / 自定义输入元素 usage 告警 / 无箭头 /
+ * 数据化 / dataSource 映射 / deprecated 样式与数据告警 / 自定义输入元素 usage 告警 / 无箭头 /
  * root 类 / popupClassName → classNames.popup.root / #popupRender 透传 / status 落类 /
  * expose。
  */
@@ -126,8 +126,8 @@ describe('AutoComplete · 数据通道', () => {
   });
 });
 
-describe('AutoComplete · deprecated 告警 ×6', () => {
-  it('dropdownMatchSelectWidth / dropdownStyle / dropdownClassName / popupClassName / onDropdownVisibleChange / dataSource', () => {
+describe('AutoComplete · deprecated 样式与数据告警', () => {
+  it('dropdownMatchSelectWidth / dropdownStyle / dropdownClassName / popupClassName / dataSource', () => {
     const warnings: string[] = [];
     const spy = vi.spyOn(console, 'error').mockImplementation((...a) => {
       warnings.push(a.map(String).join(' '));
@@ -137,7 +137,6 @@ describe('AutoComplete · deprecated 告警 ×6', () => {
       dropdownStyle: { color: 'red' },
       dropdownClassName: 'legacy-dd',
       popupClassName: 'legacy-popup',
-      onDropdownVisibleChange: () => undefined,
       dataSource: ['x'],
     });
     spy.mockRestore();
@@ -146,7 +145,6 @@ describe('AutoComplete · deprecated 告警 ×6', () => {
     expect(all).toContain('`dropdownStyle` is deprecated');
     expect(all).toContain('`dropdownClassName` is deprecated');
     expect(all).toContain('`popupClassName` is deprecated');
-    expect(all).toContain('`onDropdownVisibleChange` is deprecated');
     expect(all).toContain('`dataSource` is deprecated');
     w.unmount();
   });
@@ -184,7 +182,7 @@ describe('AutoComplete · 插槽与回调', () => {
     w.unmount();
   });
 
-  it('onChange / onSearch prop 形态回调（1:1 转发 Select）', async () => {
+  it('change / search 监听器（通过 owned emits 发送）', async () => {
     const onSearch = vi.fn();
     const w = mountAC({ options: [{ value: 'a' }], onSearch });
     await w.find('input').setValue('hello');

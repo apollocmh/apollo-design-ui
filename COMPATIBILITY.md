@@ -154,3 +154,7 @@ LocaleProvider 与 ConfigProvider 的静态确认语言来源按挂载顺序固�
 ### D-a11y-accepted-navigation
 
 useRovingFocus 的 activeIndex 按既有文档作为受控输入，拒绝请求不再修改已接受值或抢焦点，撤控保留已接受值。需要本地初值时不传受控 activeIndex，调用 setActive(index, false)；零偏移保持当前位置，跳末项使用 moveEnd。键盘事件保留原生阻止/输入法边界，挂载前播报在真实宿主就绪后保留。详见[a11y 当前契约](docs/foundation/a11y-contract.md)。
+
+### D-auto-complete-native-combobox
+
+AutoComplete 的通知改为 Vue emits，并明确 value/searchValue/open 三个模型、实际模板引用与像素/条目滚动参数。backfill 只预览键盘候选，Enter/Tab/点击才提交；Tab 保留原生焦点移动。Provider 展示配置由真实包装者拥有，继续共享已文档化的 Select Token。原 showSearch.onSearch 迁为 search 事件，旧 onDropdownVisibleChange 迁 openChange；详见[AutoComplete API](packages/ui/src/auto-complete/index.zh-CN.md)。

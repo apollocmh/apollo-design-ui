@@ -16,9 +16,9 @@ const onSearch = (text: string) => {
 
 <template>
   <Flex vertical gap="12px">
-    <AutoComplete aria-label="自动补全输入框" :options="options" style="width: 200px" placeholder="Outlined" :show-search="{ onSearch }" />
-    <AutoComplete aria-label="自动补全输入框" :options="options" style="width: 200px" placeholder="Filled" variant="filled" :show-search="{ onSearch }" />
-    <AutoComplete aria-label="自动补全输入框" :options="options" style="width: 200px" placeholder="Borderless" variant="borderless" :show-search="{ onSearch }" />
-    <AutoComplete aria-label="自动补全输入框" :options="options" style="width: 200px" placeholder="Underlined" variant="underlined" :on-search="onSearch" />
+    <AutoComplete aria-label="自动补全输入框" :options="options" style="width: 200px" placeholder="Outlined" @search="onSearch" />
+    <AutoComplete aria-label="自动补全输入框" :options="options" style="width: 200px" placeholder="Filled" variant="filled" @search="onSearch" />
+    <AutoComplete aria-label="自动补全输入框" :options="options" style="width: 200px" placeholder="Borderless" variant="borderless" @search="onSearch" />
+    <AutoComplete aria-label="自动补全输入框" :options="options" style="width: 200px" placeholder="Underlined" variant="underlined" @search="onSearch" />
   </Flex>
 </template>

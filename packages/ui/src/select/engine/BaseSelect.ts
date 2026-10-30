@@ -307,6 +307,8 @@ export const BaseSelect = defineComponent({
 
     // 关闭时清搜索（非多选、非 combobox）—— 用 rawOpen 判据
     watch(rawOpen, () => {
+      if (!rawOpen.value && props.mode === 'combobox')
+        props.onActiveValueChange?.(null, activeIndex.value, { source: 'keyboard' });
       if (!rawOpen.value && !multiple.value && props.mode !== 'combobox') {
         onInternalSearch('', false, false);
       }
@@ -453,7 +455,7 @@ export const BaseSelect = defineComponent({
         } else {
           onSelectValue(undefined);
         }
-        if (mergedOpen.value) event.preventDefault();
+        if (enter && mergedOpen.value) event.preventDefault();
         return;
       }
       if (esc) {

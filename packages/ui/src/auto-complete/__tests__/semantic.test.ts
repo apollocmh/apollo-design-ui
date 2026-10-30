@@ -29,6 +29,14 @@ const CASES: Record<string, () => DomRenderResult> = {
 };
 
 const ALLOW = {
+  'class-name': {
+    reason:
+      'Native class is merged once; the dated React reference duplicates the same class. Dynamic attrs and exactly-once class merging are covered by native-contracts.test.ts.',
+    deviationId: 'vue-native-class-once',
+    diff: [
+      '$/div[0]: 类名不同 [apollo-select apollo-select-auto-complete apollo-select-outlined apollo-select-show-search apollo-select-single extra extra] vs [apollo-select apollo-select-auto-complete apollo-select-outlined apollo-select-show-search apollo-select-single extra]',
+    ],
+  },
   'prefix-cls:no-props': {
     reason:
       'antd 的默认 prefixCls 是 `ant`，我们是 `apollo`（裁决 `prefix-cls-default` = A）。' +

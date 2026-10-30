@@ -97,7 +97,7 @@ export type SelectDirection = 'ltr' | 'rtl';
 // 搜索配置
 // ---------------------------------------------------------------------------
 
-export type FilterFunc<OptionType> = (inputValue: string, option?: OptionType) => boolean;
+export type FilterFunc<OptionType> = (inputValue: string, option: OptionType) => boolean;
 
 export interface SearchConfig<OptionType = DefaultOptionType> {
   autoClearSearchValue?: boolean;

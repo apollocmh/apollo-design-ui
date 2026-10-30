@@ -11,6 +11,13 @@ import type {
 } from '../interface';
 
 describe('Select · 类型', () => {
+  it('filterOption receives the actual option supplied by the engine', () => {
+    const props: SelectProps = {
+      filterOption: (input, option) => String(option.value).includes(input),
+    };
+    expectTypeOf(props).toMatchTypeOf<SelectProps>();
+  });
+
   it('公开 mode 只有 multiple | tags（combobox 是内核私有）', () => {
     expectTypeOf<SelectMode>().toEqualTypeOf<'multiple' | 'tags'>();
   });

@@ -26,7 +26,7 @@ const RenderVNode = defineComponent({
       :options="options"
       placeholder="输入以生成候选"
       style="width: 280px"
-      :on-search="onSearch"
+      @search="onSearch"
     >
       <template #popupRender="{ menu }">
         <div>

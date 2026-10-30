@@ -17,7 +17,7 @@ const handleSearch = (value: string) => {
   <Flex vertical gap="medium">
     <AutoComplete aria-label="自动补全输入框"
       style="width: 200px"
-      :show-search="{ onSearch: handleSearch }"
+      @search="handleSearch"
       placeholder="try to type `b`"
       :options="options"
     />

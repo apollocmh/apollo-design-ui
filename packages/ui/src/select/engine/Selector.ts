@@ -402,7 +402,11 @@ export const Selector = defineComponent({
       // ------------------------------ 单选 ------------------------------
       const renderSingle = () => {
         const displayValue = props.displayValues[0];
-        const mergedSearchValue = props.showSearch ? props.searchValue : '';
+        const mergedSearchValue = props.showSearch
+          ? props.mode === 'combobox' && props.open
+            ? (props.activeValue ?? props.searchValue)
+            : props.searchValue
+          : '';
         const showHasValueCls =
           !!displayValue &&
           displayValue.label !== null &&

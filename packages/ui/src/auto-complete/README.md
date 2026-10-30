@@ -13,11 +13,16 @@
 
 F02：选项分类与插槽读取移至当前 render，不再依靠始终转发 default 包装函数来间接使 computed 失效。支持条件插槽、分组及 VNode 数据源的已有行为。 验证见 `docs/audit/2026-10-23-vue-reactivity-remediation.md`。
 
+## 2026-10-30 包装层 Vue 契约
+
+公共通知使用 typed emits，值/搜索/开合三个模型完整转发；当前内容插槽、原生 attrs 与 AutoComplete Provider 配置在 render/响应性链中消费，不重复拼接 class 或冻结原生样式。Ref 提供真实 nativeElement、focus options 和完整滚动参数。
+
+复用 SelectEngine 的内部 combobox 入口，不向公共 Select.mode 添加 combobox 或强断言。backfill 的真实预览链由本单元补齐，键盘预览不发送值/搜索事件，接受值、输入、关闭或撤销标志会清理。2026-10-23 的条件选项与 VNode 数据源成果保留，当前验证从唯一任务状态读取。
+
 ## 1. 职责
 
 输入自动完成：Select 的 combobox 薄包装。数据通道三选一（options /
-deprecated dataSource / ASelectOption children）、搜索回调（showSearch.onSearch
-config 通道）、语义面（root/input/placeholder/content/clear/popup）、
+deprecated dataSource / ASelectOption children）、搜索通知（Vue search emits）、语义面（root/input/placeholder/content/clear/popup）、
 deprecated ×6 告警。
 
 ## 2. 文件布局与关键决策
@@ -34,13 +39,11 @@ auto-complete/
 ### 实现判据
 
 1. **prefixCls 复用 select**：root 类 `{prefix}-select-auto-complete`。
-2. **mode 走内核 combobox 分支**（公开 SelectProps 类型不含，边界 cast —— 内核已实现）。
+2. **mode 走内核 combobox 分支**（公开 SelectProps 类型不含，直接使用具名内部 SelectEngine 入口）。
 3. **suffixIcon={null}** ⇒ `#suffixIcon` 空 slot；Selector 对空 suffix **不渲染容器**
    （rc 的 `suffixNode && wrapper` 语义 —— 本次在 Selector 落地修复）。
-4. **回调全 prop 形态**，与 Select 的 props 表逐字同形、1:1 转发；v-model:value 走
-   `update:value` 中继（C11）。
-5. **merge**：popupMatchSelectWidth ?? dropdownMatchSelectWidth；onOpenChange ??
-   onDropdownVisibleChange；popupClassName/dropdownClassName → classNames.popup.root。
+4. **通知由 typed emits 负责**；值、搜索词与开合使用三个既有 update/v-model 通道。
+5. **merge**：保留样式/宽度别名；通知不保留旧回调别名，当前 Provider 与局部语义按真实 props 合并。
 
 ### 顺手修复的 Select 既有缺陷（本次 L4 抓出）
 

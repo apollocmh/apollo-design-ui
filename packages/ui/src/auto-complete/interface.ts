@@ -7,25 +7,29 @@
  * suffixIcon={null} → `#suffixIcon` 空 slot（用户插槽优先）。dataSource 是数据 prop。
  */
 
-import type { CSSProperties } from 'vue';
+import type { CSSProperties, VNode, VNodeChild } from 'vue';
 import type { SizeType } from '../config-provider/size-context';
 import type {
   DefaultOptionType,
+  RawValueType,
+  ScrollToArg,
+  SelectEmits,
   SelectProps,
   SelectSemanticClassNames,
   SelectSemanticStyles,
+  SelectSlots,
   SelectValue,
   SelectVariant,
 } from '../select/interface';
 
 /** antd 的 `DataSourceItemObject`。 */
 export interface DataSourceItemObject {
-  value: string;
-  text: string;
+  value: RawValueType;
+  text?: VNodeChild;
 }
 
 /** antd 的 `DataSourceItemType`（deprecated `dataSource` 的元素形态）。 */
-export type DataSourceItemType = DataSourceItemObject | unknown;
+export type DataSourceItemType = string | DataSourceItemObject | VNode;
 
 /**
  * AutoComplete 的语义面（antd 的 `AutoCompleteSemanticType`）。
@@ -77,7 +81,7 @@ export interface AutoCompleteProps {
   size?: SizeType;
   variant?: SelectVariant;
   status?: InputStatus;
-  allowClear?: boolean | Record<string, unknown>;
+  allowClear?: SelectProps['allowClear'];
   autoFocus?: boolean;
   defaultActiveFirstOption?: boolean;
   backfill?: boolean;
@@ -88,7 +92,8 @@ export interface AutoCompleteProps {
   listHeight?: number;
   listItemHeight?: number;
   virtual?: boolean;
-  placement?: string;
+  placement?: SelectProps['placement'];
+  getPopupContainer?: SelectProps['getPopupContainer'];
   /** 浮层宽度对齐（deprecated `dropdownMatchSelectWidth`）。 */
   popupMatchSelectWidth?: boolean | number;
   /** @deprecated 用 `popupMatchSelectWidth`。 */
@@ -113,27 +118,22 @@ export interface AutoCompleteProps {
   // ---- 搜索 ----
   showSearch?: SelectProps['showSearch'];
   searchValue?: string;
-  filterOption?: boolean | ((inputValue: string, option: DefaultOptionType) => boolean);
-
-  // ---- 回调（props 形态，与本仓 Select 同判；emits 同名同发）----
-  onChange?: (value: SelectValue, option: unknown) => void;
-  onSelect?: (value: string | number, option: DefaultOptionType) => void;
-  onDeselect?: (value: string | number, option: DefaultOptionType) => void;
-  onSearch?: (value: string) => void;
-  /** 浮层开合（deprecated `onDropdownVisibleChange`）。 */
-  onOpenChange?: (open: boolean) => void;
-  /** @deprecated 用 `onOpenChange`。 */
-  onDropdownVisibleChange?: (open: boolean) => void;
-  onFocus?: (event: FocusEvent) => void;
-  onBlur?: (event: FocusEvent) => void;
-  onClear?: () => void;
-  onPopupScroll?: (event: Event) => void;
-  onInputKeyDown?: (event: KeyboardEvent) => void;
+  filterOption?: SelectProps['filterOption'];
 }
 
-/** `ref` 的 expose 面（与 Select 的 RefSelectProps 一致）。 */
+/** Owned Vue notifications; algorithm callbacks remain props. */
+export interface AutoCompleteEmits extends Omit<SelectEmits, 'select' | 'deselect'> {
+  select: [value: RawValueType, option: DefaultOptionType];
+  deselect: [value: RawValueType, option: DefaultOptionType];
+}
+
+export type AutoCompleteSlots = Omit<SelectSlots, 'tagRender' | 'removeIcon' | 'maxTagPlaceholder'>;
+
+export type AutoCompleteScrollToArg = ScrollToArg | { top: number };
+
 export interface AutoCompleteRef {
   focus: (options?: FocusOptions) => void;
   blur: () => void;
-  scrollTo: (arg?: number | { top: number }) => void;
+  scrollTo: (arg?: AutoCompleteScrollToArg) => void;
+  nativeElement: HTMLElement | null;
 }
