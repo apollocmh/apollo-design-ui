@@ -18,13 +18,6 @@ import { TreeSelect } from '../index';
 a11yDemoTest('TreeSelect', {
   demos: import.meta.glob('../demo/*.vue', { eager: true }),
   global: { stubs: { teleport: false } },
-  allow: [
-    {
-      rule: 'label',
-      reason:
-        'combobox 的可访问名由 role=combobox + aria-* 状态承担（select 收口同款放行，antd 自测一致）。',
-    },
-  ],
 });
 
 const TREE_DATA = [
@@ -42,7 +35,7 @@ const TREE_DATA = [
 const P = { prefixCls: 'apollo-tree-select' };
 
 describe('TreeSelect · ARIA（L5）', () => {
-  it('触发器：combobox + aria-haspopup=listbox', async () => {
+  it('触发器：combobox 的 tree 声明及引用指向真实树根', async () => {
     const w = mount(TreeSelect, {
       props: { ...P, treeData: TREE_DATA, open: true },
       attachTo: document.body,
@@ -50,7 +43,11 @@ describe('TreeSelect · ARIA（L5）', () => {
     await nextTick();
     const input = w.find('input[role="combobox"]');
     expect(input.exists()).toBe(true);
-    expect(input.attributes('aria-haspopup')).toBe('listbox');
+    expect(input.attributes('aria-haspopup')).toBe('tree');
+    const controls = input.attributes('aria-controls');
+    if (!controls) throw new Error('The open combobox must reference its actual tree');
+    expect(input.attributes('aria-owns')).toBe(controls);
+    expect(document.getElementById(controls)?.getAttribute('role')).toBe('tree');
     w.unmount();
   });
 

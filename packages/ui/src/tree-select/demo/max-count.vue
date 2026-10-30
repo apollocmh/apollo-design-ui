@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { TreeSelectValue } from '@apollo-design/ui';
 import { TreeSelect } from '@apollo-design/ui';
 import { ref } from 'vue';
 
-const value = ref(['0-0-0']);
+const value = ref<TreeSelectValue>(['0-0-0']);
 
 const treeData = [
   {
@@ -17,5 +18,5 @@ const treeData = [
 </script>
 
 <template>
-  <TreeSelect v-model:value="value" multiple :max-count="2" :tree-data="treeData" placeholder="最多选 2 个" />
+  <TreeSelect aria-label="Tree select: max count" v-model:value="value" multiple :max-count="2" :tree-data="treeData" placeholder="最多选 2 个" />
 </template>

@@ -9,7 +9,7 @@ const treeData = [
 
 <template>
   <div style="display: flex; flex-direction: column; row-gap: 12px">
-    <TreeSelect :tree-data="treeData" placeholder="节点级 disabled" />
-    <TreeSelect :tree-data="treeData" disabled placeholder="整树 disabled" />
+    <TreeSelect aria-label="Tree select: disabled" :tree-data="treeData" placeholder="节点级 disabled" />
+    <TreeSelect aria-label="Tree select: disabled" :tree-data="treeData" disabled placeholder="整树 disabled" />
   </div>
 </template>

@@ -2034,6 +2034,13 @@ export type {
   LabeledValueType as TreeSelectLabeledValueType,
   SimpleModeConfig as TreeSelectSimpleModeConfig,
   TreeSelectDataNode,
+  TreeSelectEmits,
+  TreeSelectFieldNames,
+  TreeSelectProps,
+  TreeSelectRef,
+  TreeSelectSemanticClassNames,
+  TreeSelectSemanticStyles,
+  TreeSelectSlots,
   TreeSelectValue,
 } from './tree-select';
 export { SHOW_ALL, SHOW_CHILD, SHOW_PARENT, TreeSelect } from './tree-select';

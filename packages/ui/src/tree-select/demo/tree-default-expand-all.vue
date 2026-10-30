@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { TreeSelectDataNode } from '@apollo-design/ui';
+import type { TreeSelectDataNode, TreeSelectValue } from '@apollo-design/ui';
 import { Space, Tag, TreeSelect } from '@apollo-design/ui';
 import { ref } from 'vue';
 
-const value = ref<string>('leaf-1-1-1');
+const value = ref<TreeSelectValue>('leaf-1-1-1');
 
 const treeData: TreeSelectDataNode[] = [
   {
@@ -46,7 +46,7 @@ const treeData: TreeSelectDataNode[] = [
       <Tag>打开下拉后所有父节点默认展开</Tag>
     </Space>
 
-    <TreeSelect
+    <TreeSelect aria-label="Tree select: tree default expand all"
       v-model:value="value"
       :tree-data="treeData"
       tree-default-expand-all

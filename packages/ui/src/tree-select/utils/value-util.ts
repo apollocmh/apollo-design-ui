@@ -10,6 +10,15 @@ import type { BasicDataNode, TreeKey } from '../../tree/interface';
 
 export type RawValue = string | number;
 
+/** Only string/number values from public mapped data enter selection state. */
+export function getNodeValue(
+  node: Record<string, unknown> | undefined,
+  field: string,
+): RawValue | undefined {
+  const value = node?.[field];
+  return typeof value === 'string' || typeof value === 'number' ? value : undefined;
+}
+
 export interface TreeSelectFieldNames {
   value?: string;
   label?: string;

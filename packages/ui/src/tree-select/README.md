@@ -2,6 +2,12 @@
 
 # TreeSelect 实现说明
 
+## 当前 Vue 契约（2026-10-30）
+
+通知使用 typed emits，五个状态提供对应 v-model；模型整形与是否监听 change 无关。顶层标题/tag/popup/switcher 内容函数直接迁具名插槽，保留节点数据图标、过滤和异步服务职责。原生 attrs、语义函数、Provider 与共享 Tree/Select 主题读取当前值。公开 ref 提供元素属性 nativeElement、focus(options)、blur 和 scrollTo。
+
+下文保留原实现与参考的历史说明，当前公共用法以双语 API 和 native-contracts 回归为准。原“反馈图标未接”与固定默认行高的缺口已在本轮实现链修正。
+
 ## 1. 对应 antd 组件
 
 - antd 6.6.4 `es/tree-select/`（index.js 273 行薄壳 + style 62 行）

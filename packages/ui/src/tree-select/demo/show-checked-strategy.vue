@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { TreeSelectValue } from '@apollo-design/ui';
 import { TreeSelect } from '@apollo-design/ui';
 import { ref } from 'vue';
 
-const value = ref(['0-0-0', '0-0-1']);
+const value = ref<TreeSelectValue>(['0-0-0', '0-0-1']);
 
 const treeData = [
   {
@@ -18,7 +19,7 @@ const treeData = [
 
 <template>
   <div style="display: flex; flex-direction: column; row-gap: 12px">
-    <TreeSelect v-model:value="value" tree-checkable show-checked-strategy="SHOW_PARENT" :tree-data="treeData" placeholder="SHOW_PARENT" />
-    <TreeSelect v-model:value="value" tree-checkable show-checked-strategy="SHOW_ALL" :tree-data="treeData" placeholder="SHOW_ALL" />
+    <TreeSelect aria-label="Tree select: show checked strategy" v-model:value="value" tree-checkable show-checked-strategy="SHOW_PARENT" :tree-data="treeData" placeholder="SHOW_PARENT" />
+    <TreeSelect aria-label="Tree select: show checked strategy" v-model:value="value" tree-checkable show-checked-strategy="SHOW_ALL" :tree-data="treeData" placeholder="SHOW_ALL" />
   </div>
 </template>

@@ -344,6 +344,71 @@ describe('Tree list and event owners', () => {
 });
 
 describe('Tree async request generations', () => {
+  for (const childrenField of ['children', 'nodes']) {
+    for (const empty of [false, true]) {
+      it(`accepts immutable ${childrenField} ${empty ? 'empty leaf' : 'child'} results without duplicating the request`, async () => {
+        let complete: (() => void) | undefined;
+        const load = vi.fn(
+          () =>
+            new Promise<void>((resolve) => {
+              complete = resolve;
+            }),
+        );
+        const wrapper = own(
+          mount(Tree, {
+            props: {
+              treeData: [{ key: 'lazy', title: 'Lazy', isLeaf: false }],
+              fieldNames: { children: childrenField },
+              expandedKeys: ['lazy'],
+              loadedKeys: [],
+              loadData: load,
+            },
+          }),
+        );
+        expect(load).toHaveBeenCalledTimes(1);
+        await wrapper.setProps({
+          treeData: [
+            {
+              key: 'lazy',
+              title: 'Lazy',
+              isLeaf: empty,
+              [childrenField]: empty ? [] : [{ key: 'child', title: 'Child' }],
+            },
+          ],
+        });
+        expect(load).toHaveBeenCalledTimes(1);
+        complete?.();
+        await flushPromises();
+        expect(wrapper.emitted('load')).toHaveLength(1);
+        expect(wrapper.emitted('update:loadedKeys')).toEqual([[['lazy']]]);
+        await wrapper.setProps({ selectedKeys: ['lazy'] });
+        expect(load).toHaveBeenCalledTimes(1);
+        expect(wrapper.findAll('[role="treeitem"]')).toHaveLength(empty ? 1 : 2);
+      });
+    }
+  }
+
+  it('discards an async result after the requested node is removed', async () => {
+    let complete: (() => void) | undefined;
+    const wrapper = own(
+      mount(Tree, {
+        props: {
+          treeData: [{ key: 'lazy', title: 'Lazy', isLeaf: false }],
+          expandedKeys: ['lazy'],
+          loadData: () =>
+            new Promise<void>((resolve) => {
+              complete = resolve;
+            }),
+        },
+      }),
+    );
+    await wrapper.setProps({ treeData: [] });
+    complete?.();
+    await flushPromises();
+    expect(wrapper.emitted('load')).toBeUndefined();
+    expect(wrapper.emitted('update:loadedKeys')).toBeUndefined();
+  });
+
   it('does not reload after the parent refuses successful loadedKeys', async () => {
     let complete: () => void = () => {
       throw new Error('Load did not start');

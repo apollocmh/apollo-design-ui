@@ -17,7 +17,7 @@ function buildTreeStructure(
   const rootNodes: TreeSelectDataNode[] = [];
   nodes.forEach((node) => {
     const nodeKey = node[id];
-    nodeMap.set(nodeKey, { ...node, key: node.key || nodeKey });
+    nodeMap.set(nodeKey, { ...node, key: node.key ?? nodeKey });
   });
   nodeMap.forEach((node) => {
     const parentKey = node[pId];

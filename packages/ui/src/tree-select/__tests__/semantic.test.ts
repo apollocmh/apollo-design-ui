@@ -70,10 +70,39 @@ const CASES: Record<string, () => DomRenderResult> = {
   'tsel:size-large': () => h(TreeSelect, { ...BP, treeData: TREE_DATA, size: 'large' }),
 };
 
+// The dated listbox declaration disagrees with the actual Tree popup. Keep its
+// reference HTML and permit only this precise ARIA correction in each case.
+const popupRolePaths = {
+  'tsel:basic': '$/div[0]/div[0]/input[1]',
+  'tsel:placeholder': '$/div[0]/div[0]/input[1]',
+  'tsel:value-single': '$/div[0]/div[0]/input[0]',
+  'tsel:value-multiple': '$/div[0]/div[0]/div[2]/input[0]',
+  'tsel:label-in-value': '$/div[0]/div[0]/div[1]/input[0]',
+  'tsel:max-tag': '$/div[0]/div[0]/div[2]/input[0]',
+  'tsel:open': '$/div[0]/div[0]/input[1]',
+  'tsel:disabled': '$/div[0]/div[0]/input[1]',
+  'tsel:status-error': '$/div[0]/div[0]/input[1]',
+  'tsel:variant-filled': '$/div[0]/div[0]/input[1]',
+  'tsel:allow-clear': '$/div[0]/div[0]/input[0]',
+  'tsel:show-search': '$/div[0]/div[0]/input[1]',
+  'tsel:size-large': '$/div[0]/div[0]/input[1]',
+};
+const ALLOW = Object.fromEntries(
+  Object.entries(popupRolePaths).map(([id, path]) => [
+    id,
+    {
+      reason:
+        'TreeSelect declares its actual tree popup. The a11y regression verifies that controls/owns resolve to the real role=tree element.',
+      deviationId: 'tree-select-popup-role',
+      diff: [`${path}: 属性 aria-haspopup 不同 "listbox" vs "tree"`],
+    },
+  ]),
+);
+
 domContractTest('TreeSelect', {
   baseline,
   keepStyle: false,
-  allow: {},
+  allow: ALLOW,
   render: (id) => {
     const build = CASES[id];
     if (!build) {

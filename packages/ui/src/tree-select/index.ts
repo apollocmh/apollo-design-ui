@@ -27,6 +27,13 @@ export type {
   LabeledValueType,
   SimpleModeConfig,
   TreeSelectDataNode,
+  TreeSelectEmits,
+  TreeSelectFieldNames,
+  TreeSelectProps,
+  TreeSelectRef,
+  TreeSelectSemanticClassNames,
+  TreeSelectSemanticStyles,
+  TreeSelectSlots,
   TreeSelectValue,
 } from './interface';
 export { genTreeSelectStyle } from './style';

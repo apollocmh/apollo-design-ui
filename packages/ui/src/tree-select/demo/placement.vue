@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { TreeSelectValue } from '@apollo-design/ui';
 import { Button, Select, Space, Tag, TreeSelect } from '@apollo-design/ui';
 import { ref } from 'vue';
 
@@ -6,7 +7,7 @@ type Placement = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight';
 
 const placement = ref<Placement>('bottomLeft');
 const open = ref(false);
-const value = ref<string>();
+const value = ref<TreeSelectValue>();
 
 const placementOptions: { value: Placement; label: string }[] = [
   { value: 'bottomLeft', label: 'bottomLeft' },
@@ -43,7 +44,7 @@ function onPlacementChange(next: unknown): void {
   <div>
     <Space :size="12" wrap style="margin-bottom: 16px">
       <span>placement</span>
-      <Select
+      <Select aria-label="Popup placement"
         :value="placement"
         :options="placementOptions"
         style="width: 160px"
@@ -55,7 +56,7 @@ function onPlacementChange(next: unknown): void {
       <Tag>{{ open ? '浮层已打开' : '浮层已关闭' }}</Tag>
     </Space>
 
-    <TreeSelect
+    <TreeSelect aria-label="Tree select: placement"
       v-model:value="value"
       v-model:open="open"
       :placement="placement"

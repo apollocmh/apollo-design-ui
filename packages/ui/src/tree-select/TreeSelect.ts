@@ -25,8 +25,17 @@ import {
   LoadingOutlined,
 } from '@apollo-design/icons';
 import { useControlledValue, useId } from '@apollo-design/utils';
-import type { PropType, VNodeChild } from 'vue';
-import { computed, defineComponent, h, ref, shallowRef } from 'vue';
+import type { CSSProperties, PropType, SlotsType, VNode, VNodeChild } from 'vue';
+import {
+  cloneVNode,
+  computed,
+  defineComponent,
+  h,
+  isVNode,
+  normalizeClass,
+  normalizeStyle,
+  shallowRef,
+} from 'vue';
 import { conductCheck } from '../_internal/tree/conduct-util';
 import { useConsumerZIndex } from '../_internal/use-consumer-z-index';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -35,11 +44,13 @@ import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
 import { useFormItemInputContext } from '../form/context';
 import { useVariant } from '../form/hooks/useVariants';
-import BaseSelect from '../select/engine/BaseSelect';
-import type { DisplayValueType, SelectCommonPlacement } from '../select/interface';
-import { DEFAULT_SELECT_POPUP_Z_INDEX } from '../select/style';
+import BaseSelect, { type SearchSource } from '../select/engine/BaseSelect';
+import type { DisplayValueType, SelectCommonPlacement, SelectSlots } from '../select/interface';
+import { useSelectTheme } from '../select/use-select-theme';
 import { useCompactItemContext } from '../space/Compact';
-import type { TreeIconType } from '../tree/interface';
+import { getStatusClassNames } from '../space/statusUtils';
+import type { TreeScrollConfig } from '../tree/interface';
+import { useTreeTheme } from '../tree/use-tree-theme';
 import { useCheckedKeys } from './hooks/use-checked-keys';
 import { useDataEntities } from './hooks/use-data-entities';
 import { useFilterTreeData } from './hooks/use-filter-tree-data';
@@ -47,10 +58,13 @@ import { useTreeData } from './hooks/use-tree-data';
 import type {
   ChangeEventExtra,
   InternalLabeledValue,
-  LabeledValueType,
   SearchConfig,
   SimpleModeConfig,
   TreeSelectDataNode,
+  TreeSelectProps,
+  TreeSelectSemanticClassNames,
+  TreeSelectSemanticStyles,
+  TreeSelectSlots,
   TreeSelectValue,
 } from './interface';
 import OptionList from './OptionList';
@@ -61,14 +75,54 @@ import {
   SHOW_CHILD,
   type ShowCheckedStrategy as ShowCheckedStrategyType,
 } from './utils/strategy-util';
-import { type FilledFieldNames, fillFieldNames, isNil, toArray } from './utils/value-util';
+import {
+  type FilledFieldNames,
+  fillFieldNames,
+  getNodeValue,
+  isNil,
+  type RawValue,
+  toArray,
+} from './utils/value-util';
 
-type StyleLike = Record<string, string | number>;
-type SemanticStyles = { root?: StyleLike; popup?: { root?: StyleLike } };
-
-function isRawValue(value: unknown): value is string | number {
-  return !value || typeof value !== 'object';
+interface TreeSelectDisplayValue extends DisplayValueType {
+  value: RawValue;
+  label?: VNodeChild;
 }
+
+type TreeSelectConfig = Pick<
+  TreeSelectProps,
+  | 'classNames'
+  | 'styles'
+  | 'showSearch'
+  | 'allowClear'
+  | 'switcherIcon'
+  | 'clearIcon'
+  | 'suffixIcon'
+  | 'removeIcon'
+> & {
+  className?: string;
+  style?: CSSProperties;
+};
+
+const treeSelectEmits = {
+  'update:value': (_value: TreeSelectValue) => true,
+  change: (_value: TreeSelectValue, _labels: VNodeChild[] | null, _extra: ChangeEventExtra) => true,
+  select: (_value: string | number, _node: TreeSelectDataNode | null | undefined) => true,
+  deselect: (_value: string | number, _node: TreeSelectDataNode | null | undefined) => true,
+  'update:open': (_open: boolean) => true,
+  openChange: (_open: boolean) => true,
+  'update:searchValue': (_value: string) => true,
+  search: (_value: string) => true,
+  'update:treeExpandedKeys': (_keys: (string | number)[]) => true,
+  treeExpand: (_keys: (string | number)[]) => true,
+  'update:treeLoadedKeys': (_keys: (string | number)[]) => true,
+  treeLoad: (_keys: (string | number)[]) => true,
+  clear: () => true,
+  popupScroll: (_event: Event) => true,
+  focus: (_event: FocusEvent) => true,
+  blur: (_event: FocusEvent) => true,
+  inputKeyDown: (_event: KeyboardEvent) => true,
+};
 
 const TreeSelect = defineComponent({
   name: 'ATreeSelect',
@@ -78,15 +132,15 @@ const TreeSelect = defineComponent({
     prefixCls: { type: String, default: undefined },
     id: { type: String, default: undefined },
     classNames: {
-      type: [Object, Function] as PropType<Record<string, unknown>>,
+      type: [Object, Function] as PropType<TreeSelectProps['classNames']>,
       default: undefined,
     },
-    styles: { type: [Object, Function] as PropType<Record<string, unknown>>, default: undefined },
-    size: { type: String as PropType<'small' | 'middle' | 'large'>, default: undefined },
+    styles: { type: [Object, Function] as PropType<TreeSelectProps['styles']>, default: undefined },
+    size: { type: String as PropType<TreeSelectProps['size']>, default: undefined },
     disabled: { type: Boolean, default: undefined },
-    status: { type: String as PropType<'error' | 'warning'>, default: undefined },
-    variant: { type: String as PropType<'outlined' | 'borderless' | 'filled'>, default: undefined },
-    bordered: { type: Boolean, default: true },
+    status: { type: String as PropType<TreeSelectProps['status']>, default: undefined },
+    variant: { type: String as PropType<TreeSelectProps['variant']>, default: undefined },
+    bordered: { type: Boolean, default: undefined },
     // ---- value ----
     value: { type: null as unknown as PropType<TreeSelectValue>, default: undefined },
     defaultValue: { type: null as unknown as PropType<TreeSelectValue>, default: undefined },
@@ -107,19 +161,18 @@ const TreeSelect = defineComponent({
       default: undefined,
     },
     treeLoadedKeys: { type: Array as PropType<(string | number)[]>, default: undefined },
-    treeCheckable: { type: [Boolean, Object], default: undefined },
+    treeCheckable: { type: Boolean, default: undefined },
     treeCheckStrictly: { type: Boolean, default: undefined },
     treeDefaultExpandAll: { type: Boolean, default: undefined },
     treeExpandedKeys: { type: Array as PropType<(string | number)[]>, default: undefined },
     treeDefaultExpandedKeys: { type: Array as PropType<(string | number)[]>, default: undefined },
-    treeLine: { type: [Boolean, Object], default: undefined },
-    treeIcon: { type: Boolean, default: undefined },
-    showTreeIcon: { type: Boolean, default: undefined },
-    switcherIcon: { type: null as unknown as PropType<TreeIconType>, default: undefined },
-    treeTitleRender: {
-      type: Function as PropType<(node: TreeSelectDataNode) => VNodeChild>,
+    treeLine: {
+      type: [Boolean, Object] as PropType<TreeSelectProps['treeLine']>,
       default: undefined,
     },
+    treeIcon: { type: Boolean, default: undefined },
+    showTreeIcon: { type: Boolean, default: undefined },
+    switcherIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     treeExpandAction: {
       type: [Boolean, String] as PropType<false | 'click' | 'doubleClick'>,
       default: undefined,
@@ -144,7 +197,7 @@ const TreeSelect = defineComponent({
     placeholder: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     maxTagCount: { type: Number, default: undefined },
     maxTagTextLength: { type: Number, default: undefined },
-    maxTagPlaceholder: { type: null as unknown as PropType<unknown>, default: undefined },
+    maxTagPlaceholder: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     listHeight: { type: Number, default: 256 },
     listItemHeight: { type: Number, default: undefined },
     virtual: { type: Boolean, default: undefined },
@@ -159,68 +212,34 @@ const TreeSelect = defineComponent({
     open: { type: Boolean, default: undefined },
     defaultOpen: { type: Boolean, default: undefined },
     getPopupContainer: {
-      type: Function as PropType<(node: HTMLElement) => HTMLElement>,
+      type: Function as PropType<TreeSelectProps['getPopupContainer']>,
       default: undefined,
     },
     allowClear: {
-      type: [Boolean, Object] as PropType<boolean | { clearIcon?: unknown }>,
+      type: [Boolean, Object] as PropType<TreeSelectProps['allowClear']>,
       default: undefined,
     },
-    clearIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    suffixIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    removeIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    tagRender: {
-      type: Function as PropType<(props: Record<string, unknown>) => VNodeChild>,
-      default: undefined,
-    },
+    clearIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    suffixIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    removeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     notFoundContent: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    popupRender: { type: Function as PropType<(menu: unknown) => unknown>, default: undefined },
-    dropdownRender: { type: Function as PropType<(menu: unknown) => unknown>, default: undefined },
     popupClassName: { type: String, default: undefined },
     dropdownClassName: { type: String, default: undefined },
-    popupStyle: { type: Object as PropType<StyleLike>, default: undefined },
+    popupStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     loading: { type: Boolean, default: undefined },
+    tabIndex: { type: Number, default: undefined },
+    autoFocus: { type: Boolean, default: undefined },
+    maxLength: { type: Number, default: undefined },
   },
-  emits: [
-    'update:value',
-    'update:open',
-    'update:searchValue',
-    'update:treeExpandedKeys',
-    'update:treeLoadedKeys',
-  ],
-  setup(props, { attrs, emit, expose, slots }) {
-    const callbacks = attrs as unknown as {
-      onChange?: (value: unknown, labels: unknown, info: ChangeEventExtra) => void;
-      onSelect?: (value: unknown, node: TreeSelectDataNode | null | undefined) => void;
-      onDeselect?: (value: unknown, node: TreeSelectDataNode | null | undefined) => void;
-      onSearch?: (text: string) => void;
-      onOpenChange?: (open: boolean) => void;
-      onPopupVisibleChange?: (open: boolean) => void;
-      onDropdownVisibleChange?: (open: boolean) => void;
-      onTreeExpand?: (keys: (string | number)[]) => void;
-      onTreeLoad?: (keys: (string | number)[]) => void;
-      onClear?: () => void;
-      onPopupScroll?: (e: UIEvent) => void;
-      onFocus?: (e: FocusEvent) => void;
-      onBlur?: (e: FocusEvent) => void;
-    };
-
-    const context = useComponentConfig('treeSelect');
-    const contextSemantic = context as {
-      getPrefixCls: (suffix?: string, customize?: string) => string;
-      getPopupContainer?: (node: HTMLElement) => HTMLElement;
-      renderEmpty?: (name: string) => unknown;
-      switcherIcon?: TreeIconType;
-      classNames?: Record<string, unknown>;
-      styles?: Record<string, unknown>;
-      className?: string;
-      style?: StyleLike;
-      clearIcon?: unknown;
-      removeIcon?: unknown;
-      suffixIcon?: unknown;
-    };
-    const { getPrefixCls } = contextSemantic;
-    const mergedId = useId(props.id);
+  slots: Object as SlotsType<TreeSelectSlots>,
+  emits: treeSelectEmits,
+  expose: ['nativeElement', 'focus', 'blur', 'scrollTo'],
+  setup(props, { attrs, emit, slots }) {
+    const componentConfig = useComponentConfig<TreeSelectConfig>('treeSelect');
+    const selectTheme = useSelectTheme();
+    const treeTheme = useTreeTheme();
+    const defaultId = useId();
+    const mergedId = computed(() => props.id ?? defaultId);
     const formItem = useFormItemInputContext();
     const mergedDisabled = useDisabled(() => props.disabled);
     /**
@@ -235,9 +254,9 @@ const TreeSelect = defineComponent({
     );
     /** ConfigProvider 的全局配置（`getPopupContainer` 等，Issue #13.4）。 */
     const config = useConfigContext();
-    const rootPrefixCls = computed(() => getPrefixCls());
+    const rootPrefixCls = computed(() => componentConfig.getPrefixCls());
 
-    const prefixCls = computed(() => getPrefixCls('tree-select', props.prefixCls));
+    const prefixCls = computed(() => componentConfig.getPrefixCls('tree-select', props.prefixCls));
     // antd 薄壳三前缀：customize 模式下合一；默认模式本仓单前缀直通（见文件头 §判据 6）。
 
     // ===================== 开合 =====================
@@ -245,9 +264,7 @@ const TreeSelect = defineComponent({
       defaultValue: () => props.defaultOpen ?? false,
       getValue: () => props.open,
       onChange: (next: boolean) => {
-        callbacks.onOpenChange?.(next);
-        callbacks.onPopupVisibleChange?.(next);
-        callbacks.onDropdownVisibleChange?.(next);
+        emit('openChange', next);
         emit('update:open', next);
       },
     });
@@ -259,7 +276,7 @@ const TreeSelect = defineComponent({
     const mergedLabelInValue = computed(() => props.treeCheckStrictly || !!props.labelInValue);
     const mergedShowCheckedStrategy = computed<ShowCheckedStrategyType>(() => {
       if (!props.treeCheckable) return SHOW_ALL;
-      return (props.showCheckedStrategy as ShowCheckedStrategyType) || SHOW_CHILD;
+      return props.showCheckedStrategy ?? SHOW_CHILD;
     });
     // antd 薄壳：SHOW_ALL(非 strictly)/SHOW_PARENT 下 maxCount 无效
     const mergedMaxCount = computed<number | undefined>(() => {
@@ -274,6 +291,19 @@ const TreeSelect = defineComponent({
     });
 
     // ===================== 搜索 =====================
+    const showSearch = computed(() => props.showSearch ?? componentConfig.showSearch ?? false);
+    const searchConfig = computed(() =>
+      typeof showSearch.value === 'object' ? showSearch.value : {},
+    );
+    const autoClearSearchValue = computed(
+      () => searchConfig.value.autoClearSearchValue ?? props.autoClearSearchValue ?? true,
+    );
+    const treeNodeFilterProp = computed(
+      () => searchConfig.value.treeNodeFilterProp ?? props.treeNodeFilterProp ?? 'value',
+    );
+    const filterTreeNode = computed(
+      () => searchConfig.value.filterTreeNode ?? props.filterTreeNode,
+    );
     const [internalSearchValue, setSearchValue] = useControlledValue<string>({
       defaultValue: () => '',
       getValue: () => props.searchValue,
@@ -282,9 +312,10 @@ const TreeSelect = defineComponent({
       },
     });
     const mergedSearchValue = computed(() => internalSearchValue.value || '');
-    const onInternalSearch = (searchText: string): void => {
-      setSearchValue(searchText);
-      callbacks.onSearch?.(searchText);
+    const onInternalSearch = (searchText: string, info: SearchSource): void => {
+      if (info.source === 'effect' && !autoClearSearchValue.value) return;
+      if (mergedSearchValue.value !== searchText) setSearchValue(searchText);
+      if (info.source === 'typing') emit('search', searchText);
     };
 
     // ===================== 数据 =====================
@@ -298,43 +329,45 @@ const TreeSelect = defineComponent({
     const valueEntities = computed(() => entities.value.valueEntities);
     const filteredTreeData = useFilterTreeData(mergedTreeData, mergedSearchValue, {
       fieldNames: mergedFieldNames,
-      treeNodeFilterProp: computed(() => props.treeNodeFilterProp ?? 'value'),
-      filterTreeNode: computed(() => props.filterTreeNode),
+      treeNodeFilterProp,
+      filterTreeNode,
     });
 
     // ===================== Label =====================
-    const getLabel = (item: Record<string, unknown> | undefined): unknown => {
+    const getLabel = (item: TreeSelectDataNode | undefined): VNodeChild => {
       if (!item) return undefined;
-      if (props.treeNodeLabelProp) return item[props.treeNodeLabelProp];
+      const resolve = (title: TreeSelectDataNode['title']): VNodeChild =>
+        typeof title === 'function' ? title(item) : title;
+      if (props.treeNodeLabelProp)
+        return resolve(item[props.treeNodeLabelProp] as TreeSelectDataNode['title']);
       for (const titleKey of mergedFieldNames.value._title) {
         const title = item[titleKey];
-        if (title !== undefined) return title;
+        if (title !== undefined) return resolve(title as TreeSelectDataNode['title']);
       }
       return undefined;
     };
 
     // ===================== 值归一 =====================
-    const toLabeledValues = (draftValues: unknown): InternalLabeledValue[] =>
-      toArray(draftValues).map((val) =>
-        isRawValue(val)
-          ? { value: val as never }
-          : ({ ...(val as LabeledValueType) } as InternalLabeledValue),
-      );
+    const toLabeledValues = (draftValues: TreeSelectValue): InternalLabeledValue[] =>
+      toArray(draftValues).flatMap((val): InternalLabeledValue[] => {
+        if (typeof val === 'string' || typeof val === 'number') return [{ value: val }];
+        return val.value === undefined ? [] : [{ ...val, value: val.value }];
+      });
 
     /**
      * 受控值（rc `useControlledState(defaultValue, value)`）。⚠️ 内部值一律是
      * **LabeledValueType[] 形态**（rc setInternalValue 语义），对外 emit 才按
      * labelInValue / 单多选整形。
      */
-    const [internalValue, setInternalValue] = useControlledValue<unknown>({
+    const [internalValue, setInternalValue] = useControlledValue<TreeSelectValue>({
       // rc `useControlledState(defaultValue, value)` —— 初值来自 defaultValue
       defaultValue: () => props.defaultValue,
       getValue: () => props.value,
     });
 
     const convert2LabelValues = (
-      draftValues: unknown[],
-      currentInternal: unknown,
+      draftValues: TreeSelectValue,
+      currentInternal: TreeSelectValue,
     ): InternalLabeledValue[] =>
       toLabeledValues(draftValues).map((item) => {
         let rawLabel = item.label;
@@ -343,10 +376,8 @@ const TreeSelect = defineComponent({
         let rawDisabled: boolean | undefined;
         const entity = valueEntities.value.get(rawValue);
         if (entity) {
-          rawLabel = props.treeTitleRender
-            ? props.treeTitleRender(entity.node as TreeSelectDataNode)
-            : (rawLabel ?? getLabel(entity.node as Record<string, unknown>));
-          rawDisabled = (entity.node as { disabled?: boolean }).disabled;
+          rawLabel = rawLabel ?? getLabel(entity.node);
+          rawDisabled = entity.node.disabled;
         } else if (rawLabel === undefined) {
           const labelInValueItem = toLabeledValues(currentInternal).find(
             (labeledItem) => labeledItem.value === rawValue,
@@ -389,7 +420,7 @@ const TreeSelect = defineComponent({
     const rawHalfCheckedValues = computed(() => checkedKeysResult.value[1]);
 
     // ===================== 展示值 =====================
-    const displayValues = computed<DisplayValueType[]>(() => {
+    const displayValues = computed<TreeSelectDisplayValue[]>(() => {
       const displayKeys = formatStrategyValues(
         rawCheckedValues.value,
         mergedShowCheckedStrategy.value,
@@ -397,17 +428,11 @@ const TreeSelect = defineComponent({
         mergedFieldNames.value,
       );
       const values = displayKeys.map(
-        (key) =>
-          (keyEntities.value[key]?.node as Record<string, unknown> | undefined)?.[
-            mergedFieldNames.value.value
-          ] ?? key,
+        (key) => getNodeValue(keyEntities.value[key]?.node, mergedFieldNames.value.value) ?? key,
       );
       const labeledValues = values.map((val) => {
         const targetItem = rawLabeledValues.value.find((item) => item.value === val);
-        const label = mergedLabelInValue.value
-          ? targetItem?.label
-          : props.treeTitleRender?.(targetItem as never);
-        return { value: val, label };
+        return { value: val, label: targetItem?.label };
       });
       const rawDisplayValues = convert2LabelValues(labeledValues, internalValue.value);
       const firstVal = rawDisplayValues[0];
@@ -416,30 +441,30 @@ const TreeSelect = defineComponent({
       }
       return rawDisplayValues.map((item) => ({
         value: item.value,
-        label: item.label ?? item.value,
+        label: item.label,
         disabled: item.disabled,
-      })) as DisplayValueType[];
+      }));
     });
 
     /** label 缓存（rc useCache：树数据异步加载后 tag 标签不丢）。 */
-    const labelCache = ref(new Map<unknown, unknown>());
-    const cachedDisplayValues = computed<DisplayValueType[]>(() => {
-      const valueLabelsCache = new Map<unknown, unknown>();
+    const labelCache = new Map<RawValue, VNodeChild>();
+    const cachedDisplayValues = computed<TreeSelectDisplayValue[]>(() => {
       const filled = displayValues.value.map((item) => {
-        const mergedLabel = item.label ?? labelCache.value.get(item.value);
-        valueLabelsCache.set(item.value, mergedLabel);
+        const mergedLabel = item.label ?? labelCache.get(item.value) ?? item.value;
+        labelCache.set(item.value, mergedLabel);
         return { ...item, label: mergedLabel };
       });
-      labelCache.value = valueLabelsCache;
+      const currentValues = new Set(filled.map((item) => item.value));
+      for (const key of labelCache.keys()) if (!currentValues.has(key)) labelCache.delete(key);
       return filled;
     });
 
     // ===================== Change =====================
     const triggerChange = (
       newRawValues: (string | number)[],
-      extra: Partial<{ triggerValue: unknown; selected: boolean }> | undefined,
+      extra: Partial<{ triggerValue: string | number; selected: boolean }> | undefined,
       source: string,
-    ): void => {
+    ): boolean => {
       const formattedKeyList = formatStrategyValues(
         newRawValues,
         mergedShowCheckedStrategy.value,
@@ -448,79 +473,72 @@ const TreeSelect = defineComponent({
       );
       // rc 层 maxCount 拦截（超出时值不变）
       if (mergedMaxCount.value && formattedKeyList.length > mergedMaxCount.value) {
-        return;
+        return false;
       }
-      const labeledValues = convert2LabelValues(newRawValues, internalValue.value);
-      setInternalValue(labeledValues);
+      const previousValue = rawLabeledValues.value;
+      const halfValues = props.treeCheckStrictly
+        ? rawHalfLabeledValues.value.filter((item) => !newRawValues.includes(item.value))
+        : [];
 
-      if (props.autoClearSearchValue !== false) {
+      if (autoClearSearchValue.value && mergedSearchValue.value !== '') {
         setSearchValue('');
       }
 
-      if (callbacks.onChange) {
-        let eventValues = newRawValues;
-        if (treeConduction.value) {
-          eventValues = formattedKeyList.map((key): string | number => {
-            const node = valueEntities.value.get(key)?.node as Record<string, unknown> | undefined;
-            return (node?.[mergedFieldNames.value.value] as string | number | undefined) ?? key;
-          });
-        }
-        const { triggerValue, selected } = extra ?? {};
-        let returnRawValues = eventValues;
-        if (props.treeCheckStrictly) {
-          const halfValues = rawHalfLabeledValues.value.filter(
-            (item) => !eventValues.includes(item.value),
+      let eventValues = newRawValues;
+      if (treeConduction.value) {
+        eventValues = formattedKeyList.map((key): string | number => {
+          return (
+            getNodeValue(valueEntities.value.get(key)?.node, mergedFieldNames.value.value) ?? key
           );
-          returnRawValues = [...returnRawValues, ...halfValues.map((item) => item.value)];
-        }
-        const returnLabeledValues = convert2LabelValues(returnRawValues, internalValue.value);
-        const additionalInfo: Record<string, unknown> = {
-          preValue: rawLabeledValues.value as LabeledValueType[],
-          triggerValue,
-        };
-        let showPosition = true;
-        if (props.treeCheckStrictly || (source === 'selection' && !selected)) {
-          showPosition = false;
-        }
-        fillAdditionalInfo(
-          additionalInfo,
-          triggerValue as string | number | undefined,
-          newRawValues,
-          mergedTreeData.value as TreeSelectDataNode[],
-          mergedFieldNames.value,
-          // 🚨 判据下沉到 `fillAdditionalInfo`（Issue #13.2）—— 此前在这里再定义一次
-          //    同名 getter，而新 getter 内又读 `additionalInfo.allCheckedNodes`
-          //    （= 它自己）⇒ 访问即 `RangeError: Maximum call stack size exceeded`。
-          showPosition,
-        );
-        if (mergedCheckable.value) additionalInfo.checked = selected;
-        else additionalInfo.selected = selected;
-
-        const returnValues = mergedLabelInValue.value
-          ? returnLabeledValues
-          : returnLabeledValues.map((item) => item.value);
-        /**
-         * 🚨 **单选时是单值**（Issue #13.3）—— 多选数组 / 单选单值，
-         * 与 `labelInValue` 无关。此前 `labelInValue` 分支直接把数组发出去了
-         * ⇒ 单选 + `labelInValue` 时 `v-model:value` 拿到 `[{value,label}]`
-         *     而不是 `{value,label}`（与 `onChange` 首参也不一致）。
-         */
-        const nextValue = (isMultiple.value ? returnValues : returnValues[0]) as never;
-        callbacks.onChange(
-          nextValue,
-          mergedLabelInValue.value ? null : returnLabeledValues.map((item) => item.label),
-          additionalInfo as unknown as ChangeEventExtra,
-        );
-        // C11：update:value 与 onChange 同发；形状 = rc onChange **首参**（同一份）。
-        emit('update:value', nextValue);
-      } else {
-        // 无 onChange 回调时仍按同一形状 emit（C11）
-        const plainValues = labeledValues.map((item) => item.value);
-        const emitValue = mergedLabelInValue.value
-          ? ((isMultiple.value ? labeledValues : labeledValues[0]) as never)
-          : ((isMultiple.value ? plainValues : plainValues[0]) as never);
-        emit('update:value', emitValue);
+        });
       }
+      const { triggerValue, selected } = extra ?? {};
+      const returnLabeledValues = convert2LabelValues(
+        [...eventValues, ...halfValues],
+        internalValue.value,
+      );
+      setInternalValue(convert2LabelValues([...newRawValues, ...halfValues], internalValue.value));
+      const additionalInfo: ChangeEventExtra = {
+        preValue: previousValue,
+        triggerValue,
+      };
+      let showPosition = true;
+      if (props.treeCheckStrictly || (source === 'selection' && !selected)) {
+        showPosition = false;
+      }
+      fillAdditionalInfo(
+        additionalInfo,
+        triggerValue,
+        newRawValues,
+        mergedTreeData.value,
+        mergedFieldNames.value,
+        // 🚨 判据下沉到 `fillAdditionalInfo`（Issue #13.2）—— 此前在这里再定义一次
+        //    同名 getter，而新 getter 内又读 `additionalInfo.allCheckedNodes`
+        //    （= 它自己）⇒ 访问即 `RangeError: Maximum call stack size exceeded`。
+        showPosition,
+      );
+      if (mergedCheckable.value) additionalInfo.checked = selected;
+      else additionalInfo.selected = selected;
+
+      const returnValues = mergedLabelInValue.value
+        ? returnLabeledValues
+        : returnLabeledValues.map((item) => item.value);
+      /**
+       * 🚨 **单选时是单值**（Issue #13.3）—— 多选数组 / 单选单值，
+       * 与 `labelInValue` 无关。此前 `labelInValue` 分支直接把数组发出去了
+       * ⇒ 单选 + `labelInValue` 时 `v-model:value` 拿到 `[{value,label}]`
+       *     而不是 `{value,label}`（与 `onChange` 首参也不一致）。
+       */
+      const nextValue = isMultiple.value ? returnValues : returnValues[0];
+      emit(
+        'change',
+        nextValue,
+        mergedLabelInValue.value ? null : returnLabeledValues.map((item) => item.label),
+        additionalInfo,
+      );
+      // C11：update:value 与 onChange 同发；形状 = rc onChange **首参**（同一份）。
+      emit('update:value', nextValue);
+      return true;
     };
 
     // ===================== OptionList 选择 =====================
@@ -528,14 +546,14 @@ const TreeSelect = defineComponent({
       selectedKey: string | number,
       info: { selected: boolean; source?: string },
     ): void => {
-      const entity = keyEntities.value[selectedKey as string];
-      const node = entity?.node as Record<string, unknown> | undefined;
-      const selectedValue = (node?.[mergedFieldNames.value.value] ?? selectedKey) as
-        | string
-        | number;
+      const entity = keyEntities.value[selectedKey];
+      const selectedValue = getNodeValue(entity?.node, mergedFieldNames.value.value) ?? selectedKey;
 
       if (!isMultiple.value) {
-        triggerChange([selectedValue], { selected: true, triggerValue: selectedValue }, 'option');
+        if (
+          !triggerChange([selectedValue], { selected: true, triggerValue: selectedValue }, 'option')
+        )
+          return;
       } else {
         let newRawValues: (string | number)[] = info.selected
           ? [...rawValues.value, selectedValue]
@@ -546,7 +564,7 @@ const TreeSelect = defineComponent({
           );
           const existRawValues = newRawValues.filter((val) => valueEntities.value.has(val));
           // biome-ignore lint/style/noNonNullAssertion: 上一行已用 .has(val) 过滤 ⇒ get 必命中（Map.get 的类型收窄不掉）
-          const keyList = existRawValues.map((val) => valueEntities.value.get(val)!.key as string);
+          const keyList = existRawValues.map((val) => valueEntities.value.get(val)!.key);
           let checkedKeys: (string | number)[];
           if (info.selected) {
             ({ checkedKeys } = conductCheck(keyList, true, keyEntities.value));
@@ -563,23 +581,25 @@ const TreeSelect = defineComponent({
           newRawValues = [
             ...missingRawValues,
             ...checkedKeys.map((key): string | number => {
-              const node = keyEntities.value[key]?.node as Record<string, unknown> | undefined;
-              return (node?.[mergedFieldNames.value.value] as string | number | undefined) ?? key;
+              return (
+                getNodeValue(keyEntities.value[key]?.node, mergedFieldNames.value.value) ?? key
+              );
             }),
           ];
         }
-        triggerChange(
+        const changed = triggerChange(
           newRawValues,
           { selected: info.selected, triggerValue: selectedValue },
           info.source || 'option',
         );
+        if (!changed) return;
       }
 
-      const legacyNode = fillLegacyProps((entity?.node as TreeSelectDataNode | undefined) ?? null);
+      const legacyNode = fillLegacyProps(entity?.node ?? null);
       if (info.selected || !isMultiple.value) {
-        callbacks.onSelect?.(selectedValue, legacyNode);
+        emit('select', selectedValue, legacyNode);
       } else {
-        callbacks.onDeselect?.(selectedValue, legacyNode);
+        emit('deselect', selectedValue, legacyNode);
       }
     };
 
@@ -594,278 +614,309 @@ const TreeSelect = defineComponent({
         return;
       }
       const first = info.values[0];
-      if (first) {
-        onOptionSelect(first.value as string | number, {
+      if (first?.value !== undefined) {
+        onOptionSelect(first.value, {
           selected: false,
           source: 'selection',
         });
       }
     };
 
-    // ===================== 语义合并 =====================
+    // ===================== Current presentation =====================
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
-      Record<string, never>,
-      Record<string, string>,
-      SemanticStyles
+      Readonly<TreeSelectProps>,
+      TreeSelectSemanticClassNames,
+      TreeSelectSemanticStyles
     >(
-      [
-        () => contextSemantic.classNames as Record<string, string> | undefined,
-        () => props.classNames as Record<string, string> | undefined,
-      ],
-      [
-        () => contextSemantic.styles as SemanticStyles | undefined,
-        () => (contextSemantic.style ? { root: contextSemantic.style } : undefined),
-        () => props.styles as SemanticStyles | undefined,
-        // 根 style 是 Vue 原生 attrs；仍走语义 root 通道（与上游落点一致）
-        () => (attrs.style ? { root: attrs.style as StyleLike } : undefined),
-      ],
-      { ...props } as never,
+      [() => componentConfig.classNames, () => props.classNames],
+      [() => componentConfig.styles, () => props.styles],
+      props,
+      { popup: { _default: 'root' } },
     );
-
-    const mergedRootClassName = computed(
-      () =>
-        [
-          !props.prefixCls ? prefixCls.value : '',
-          mergedSize.value === 'large' ? `${prefixCls.value}-lg` : '',
-          mergedSize.value === 'small' ? `${prefixCls.value}-sm` : '',
-          mergedDirection.value === 'rtl' ? `${prefixCls.value}-rtl` : '',
-          enableVariantCls.value ? `${prefixCls.value}-${variant.value}` : '',
-          formItem.value.isFormItemInput ? `${prefixCls.value}-in-form-item` : '',
-          // antd getStatusClassNames：`${p}-status-${status}`（hasFeedback 图标本仓 form 未接）
-          props.status ? `${prefixCls.value}-status-${props.status}` : '',
-          compactItemClassnames.value,
-          // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-          attrs.class,
-          (mergedClassNames.value as { root?: string }).root,
-        ]
-          .filter(Boolean)
-          .join(' ') || undefined,
-    );
-
-    const mergedPopupClassName = computed(
-      () =>
-        [
-          props.popupClassName || props.dropdownClassName,
-          `${prefixCls.value}-dropdown`,
-          mergedDirection.value === 'rtl' ? `${prefixCls.value}-dropdown-rtl` : '',
-          (mergedClassNames.value as { popup?: { root?: string } }).popup?.root,
-        ]
-          .filter(Boolean)
-          .join(' ') || undefined,
-    );
-
-    const memoPlacement = computed<SelectCommonPlacement>(() => {
-      if (props.placement !== undefined) return props.placement;
-      return mergedDirection.value === 'rtl' ? 'bottomRight' : 'bottomLeft';
-    });
-
-    const mergedNotFoundContent = computed<unknown>(() => {
-      if (props.notFoundContent !== undefined) return props.notFoundContent;
-      return contextSemantic.renderEmpty ? contextSemantic.renderEmpty('Select') : 'Not Found';
-    });
-
+    const mergedStatus = computed(() => props.status || formItem.value.status);
     const { variant, enableVariantCls } = useVariant({
       component: 'treeSelect',
       variant: () => props.variant,
       legacyBordered: () => props.bordered,
     });
-    // antd 逐字（tree-select/index.js:120）：customizeSize ?? compactSize ?? form ctx
-    //（2026-10-04 接上 Space.Compact 上下文 —— 此前 compact 尺寸/类名都不生效）
     const { compactSize, compactItemClassnames } = useCompactItemContext(
       prefixCls,
       () => mergedDirection.value,
     );
     const mergedSize = useSize((ctxSize) => props.size ?? compactSize.value ?? ctxSize);
-    // allowClear=true 时保持布尔：clearIcon 由独立 prop 传（resolveAllowClear 的
-    // fallback 链 config.clearIcon ?? clearIcon —— 布尔 true 会吞掉 prop 的 VNode）
-    const mergedAllowClear = computed(() => props.allowClear);
-
-    // ===================== zIndex =====================
+    const getRootClassName = () =>
+      normalizeClass([
+        mergedSize.value === 'large' && `${prefixCls.value}-lg`,
+        mergedSize.value === 'small' && `${prefixCls.value}-sm`,
+        mergedDirection.value === 'rtl' && `${prefixCls.value}-rtl`,
+        enableVariantCls.value && `${prefixCls.value}-${variant.value}`,
+        formItem.value.isFormItemInput && `${prefixCls.value}-in-form-item`,
+        getStatusClassNames(prefixCls.value, mergedStatus.value, formItem.value.hasFeedback),
+        compactItemClassnames.value,
+        componentConfig.className,
+        attrs.class,
+      ]);
+    const mergedPopupClassName = computed(() =>
+      normalizeClass([
+        props.popupClassName,
+        props.dropdownClassName,
+        mergedDirection.value === 'rtl' && `${prefixCls.value}-dropdown-rtl`,
+        mergedClassNames.value.popup?.root,
+      ]),
+    );
+    const memoPlacement = computed<SelectCommonPlacement>(
+      () => props.placement ?? (mergedDirection.value === 'rtl' ? 'bottomRight' : 'bottomLeft'),
+    );
     const zIndex = useConsumerZIndex(
       'SelectLike',
       () => props.popupStyle?.zIndex ?? mergedStyles.value.popup?.root?.zIndex,
-      () => DEFAULT_SELECT_POPUP_Z_INDEX,
+      () => selectTheme.zIndexPopup.value,
     );
 
-    // ===================== Expose =====================
+    // ===================== Public instance =====================
     const baseSelectRef = shallowRef<{
       nativeElement: () => HTMLElement | null;
-      focus?: () => void;
-      blur?: () => void;
+      focus: (options?: FocusOptions) => void;
+      blur: () => void;
     } | null>(null);
-    const optionListRef = shallowRef<{ onKeyDown: (e: KeyboardEvent) => void } | null>(null);
-    expose({
-      nativeElement: (): HTMLElement | null => baseSelectRef.value?.nativeElement() ?? null,
-      focus: (): void => baseSelectRef.value?.focus?.(),
-      blur: (): void => baseSelectRef.value?.blur?.(),
-    });
+    const optionListRef = shallowRef<{
+      onKeyDown: (e: KeyboardEvent) => void;
+      scrollTo: (arg?: number | TreeScrollConfig | null) => void;
+    } | null>(null);
 
     // ===================== Render =====================
-    return () => {
-      /**
-       * 🚨 末尾的 `...restAttrs` 会**整段覆盖**同名的前序键（对象展开后者胜）。
-       *    `attrs` 里既有调用方的原生 `class` / `style`（它们已经单独并进
-       *    `mergedRootClassName` / `mergedStyles.root`），也有 antd 的 props 形态回调
-       *    （`onSearch` / `onClear` / `onOpenChange` …）。后者会把 BaseSelect 接线上
-       *    由**内部持有**的同名处理器顶掉（Issue #13.1）：
-       *      `onSearch` → `onInternalSearch`（内部先 `setSearchValue`，再调 `callbacks.onSearch`）
-       *      `onClear`  → `() => callbacks.onClear?.()`
-       *      `onOpenChange` → `setOpen`（内部再调 `callbacks.onOpenChange` / …）
-       *    ⇒ 全部**只摘不补**（用户回调本来就在内部处理器里被调，语义与上游一致）。
-       */
+    const renderTreeSelect = () => {
       const {
-        class: _attrsClass,
-        style: _attrsStyle,
-        onSearch: _onSearch,
-        onDisplayValuesChange: _onDisplayValuesChange,
-        onClear: _onClear,
-        onOpenChange: _onOpenChange,
-        onInputKeyDown: _onInputKeyDown,
+        class: _nativeClass,
+        style: nativeStyle,
+        'aria-label': ariaLabel,
+        'aria-labelledby': ariaLabelledby,
+        tabindex,
         ...restAttrs
-      } = attrs as Record<string, unknown>;
-      void _attrsClass;
-      void _attrsStyle;
-      void _onSearch;
-      void _onDisplayValuesChange;
-      void _onClear;
-      void _onOpenChange;
-      void _onInputKeyDown;
-
-      const emptyOptions = !mergedTreeData.value.length;
-      // antd：controlHeightSM(24) + paddingXXS(4) = 28（构建期派生常量写死）
-      const listItemHeight = props.listItemHeight ?? 28;
-
-      return h(
-        BaseSelect,
-        {
-          ref: baseSelectRef as never,
-          prefixCls: prefixCls.value,
-          id: mergedId,
-          className: mergedRootClassName.value,
-          style: mergedStyles.value?.root,
-          multiple: isMultiple.value,
-          showSearch: props.showSearch === undefined ? false : !!props.showSearch,
-          searchValue: mergedSearchValue.value,
-          autoClearSearchValue: props.autoClearSearchValue ?? true,
-          displayValues: cachedDisplayValues.value,
-          disabled: mergedDisabled.value,
-          loading: props.loading,
-          // ⚠️ 必须传**本层的 mergedOpen**，不能传原始 `props.open`（与 Cascader 同判据）：
-          //    传 `undefined` 时 BaseSelect 走自己的非受控状态，与本层 mergedOpen 是
-          //    两套互不同步的状态 ⇒ 树里选节点 `toggleOpen(false)` 只改本层，浮层收不到
-          //    ⇒ **非受控单选选完不关闭**（antd 会关）。
-          open: mergedOpen.value,
-          defaultOpen: props.defaultOpen,
-          notFoundContent: mergedNotFoundContent.value,
-          placeholder: (slots.placeholder?.() as VNodeChild) ?? props.placeholder,
-          allowClear: mergedAllowClear.value,
-          // antd useIcons：clearIcon 默认 CloseCircleFilled（fallback 链最后一位）
-          clearIcon: props.clearIcon ?? contextSemantic.clearIcon ?? h(CloseCircleFilled),
-          suffixIcon:
-            props.suffixIcon ??
-            contextSemantic.suffixIcon ??
-            (props.loading ? h(LoadingOutlined, { spin: true }) : h(DownOutlined)),
-          // antd useIcons：multiple 的 removeIcon 默认 CloseOutlined（逐字）
-          removeIcon:
-            props.removeIcon ??
-            contextSemantic.removeIcon ??
-            (isMultiple.value ? h(CloseOutlined) : undefined),
-          maxTagCount: props.maxTagCount,
-          maxTagTextLength: props.maxTagTextLength,
-          maxTagPlaceholder: props.maxTagPlaceholder,
-          maxCount: mergedMaxCount.value,
-          emptyOptions,
-          placement: memoPlacement.value,
-          direction: mergedDirection.value,
-          popupMatchSelectWidth:
-            props.popupMatchSelectWidth ??
-            props.dropdownMatchSelectWidth ??
-            config.popupMatchSelectWidth ??
-            true,
-          // antd：`getPopupContainer || getContextPopupContainer`
-          // —— 局部优先、**回退到 ConfigProvider 的全局设置**（Issue #13.4）。
-          getPopupContainer: props.getPopupContainer ?? config.getPopupContainer,
-          transitionName: `${rootPrefixCls.value}-slide-up`,
-          popupClassName: mergedPopupClassName.value,
-          popupStyle: {
-            ...mergedStyles.value.popup?.root,
-            ...(props.popupStyle ?? {}),
-            zIndex:
-              zIndex.value ?? props.popupStyle?.zIndex ?? mergedStyles.value.popup?.root?.zIndex,
-          },
-          popupRender: props.popupRender ?? props.dropdownRender,
-          classNames: mergedClassNames.value,
-          styles: mergedStyles.value,
-          onSearch: onInternalSearch,
-          onDisplayValuesChange: onDisplayValuesChange,
-          onClear: () => callbacks.onClear?.(),
-          onOpenChange: (next: boolean) => setOpen(next),
-          onInputKeyDown: (event: KeyboardEvent) => {
+      } = attrs;
+      const notFoundContent = slots.notFoundContent
+        ? slots.notFoundContent()
+        : props.notFoundContent !== undefined
+          ? props.notFoundContent
+          : componentConfig.renderEmpty
+            ? componentConfig.renderEmpty('TreeSelect')
+            : 'Not Found';
+      const displayValues = cachedDisplayValues.value.map((item) => {
+        const entity = valueEntities.value.get(item.value);
+        return entity && slots.treeTitleRender
+          ? { ...item, label: slots.treeTitleRender({ node: entity.node }) }
+          : item;
+      });
+      const suffixIcon: NonNullable<SelectSlots['suffixIcon']> = (scope) => {
+        const icon = slots.suffixIcon
+          ? slots.suffixIcon(scope)
+          : props.suffixIcon !== undefined
+            ? props.suffixIcon
+            : componentConfig.suffixIcon !== undefined
+              ? componentConfig.suffixIcon
+              : props.loading
+                ? slots.loadingIcon
+                  ? slots.loadingIcon()
+                  : h(LoadingOutlined, { spin: true })
+                : h(DownOutlined);
+        return formItem.value.hasFeedback ? [icon, formItem.value.feedbackIcon] : icon;
+      };
+      const rawContent = slots.default?.();
+      const singleRaw = isVNode(rawContent)
+        ? rawContent
+        : Array.isArray(rawContent) && rawContent.length === 1 && isVNode(rawContent[0])
+          ? rawContent[0]
+          : undefined;
+      // Text and arrays retain their full content in one native trigger host.
+      const rawHost: VNode | undefined = !slots.default
+        ? undefined
+        : singleRaw &&
+            (typeof singleRaw.type === 'string' ||
+              typeof singleRaw.type === 'object' ||
+              typeof singleRaw.type === 'function')
+          ? singleRaw
+          : h('span', {}, Array.isArray(rawContent) ? rawContent : [rawContent]);
+      const rawTrigger = rawHost
+        ? cloneVNode(rawHost, {
+            class: normalizeClass([
+              componentConfig.className,
+              mergedClassNames.value.root,
+              attrs.class,
+            ]),
+            style: [
+              selectTheme.style.value,
+              treeTheme.style.value,
+              componentConfig.style,
+              mergedStyles.value.root,
+              normalizeStyle(nativeStyle),
+            ],
+          })
+        : undefined;
+      return h(BaseSelect, {
+        ...restAttrs,
+        ref: baseSelectRef,
+        prefixCls: prefixCls.value,
+        id: mergedId.value,
+        ariaLabel: typeof ariaLabel === 'string' ? ariaLabel : undefined,
+        ariaLabelledby: typeof ariaLabelledby === 'string' ? ariaLabelledby : undefined,
+        'aria-haspopup': 'tree',
+        className: getRootClassName(),
+        style: [
+          selectTheme.style.value,
+          treeTheme.style.value,
+          componentConfig.style,
+          mergedStyles.value.root,
+          normalizeStyle(nativeStyle),
+        ],
+        mode: undefined,
+        multiple: isMultiple.value,
+        showSearch: !!showSearch.value,
+        searchValue: mergedSearchValue.value,
+        autoClearSearchValue: autoClearSearchValue.value,
+        displayValues,
+        disabled: mergedDisabled.value,
+        loading: props.loading,
+        tabIndex:
+          props.tabIndex ??
+          (typeof tabindex === 'number'
+            ? tabindex
+            : typeof tabindex === 'string'
+              ? Number(tabindex)
+              : undefined),
+        autoFocus: props.autoFocus,
+        maxLength: props.maxLength,
+        open: mergedOpen.value,
+        defaultOpen: props.defaultOpen,
+        notFoundContent,
+        placeholder: slots.placeholder ? slots.placeholder() : props.placeholder,
+        prefix: slots.prefix?.(),
+        allowClear: props.allowClear ?? componentConfig.allowClear,
+        clearIcon: slots.clearIcon
+          ? slots.clearIcon()
+          : (props.clearIcon ?? componentConfig.clearIcon ?? h(CloseCircleFilled)),
+        suffixIcon,
+        removeIcon: slots.removeIcon
+          ? slots.removeIcon()
+          : (props.removeIcon ??
+            componentConfig.removeIcon ??
+            (isMultiple.value ? h(CloseOutlined) : undefined)),
+        tagRender: slots.tagRender,
+        maxTagCount: props.maxTagCount,
+        maxTagTextLength: props.maxTagTextLength,
+        maxTagPlaceholder: slots.maxTagPlaceholder
+          ? (omittedValues) => slots.maxTagPlaceholder?.({ omittedValues })
+          : props.maxTagPlaceholder,
+        maxCount: mergedMaxCount.value,
+        emptyOptions: !mergedTreeData.value.length,
+        placement: memoPlacement.value,
+        direction: mergedDirection.value,
+        popupMatchSelectWidth:
+          props.popupMatchSelectWidth ??
+          props.dropdownMatchSelectWidth ??
+          config.popupMatchSelectWidth ??
+          true,
+        getPopupContainer: props.getPopupContainer ?? config.getPopupContainer,
+        transitionName: `${rootPrefixCls.value}-slide-up`,
+        popupClassName: mergedPopupClassName.value,
+        popupStyle: {
+          ...selectTheme.style.value,
+          ...treeTheme.style.value,
+          ...mergedStyles.value.popup?.root,
+          ...props.popupStyle,
+          zIndex: zIndex.value,
+        },
+        popupRender: slots.popupRender ? (menu) => slots.popupRender?.({ menu }) : undefined,
+        classNames: mergedClassNames.value,
+        styles: mergedStyles.value,
+        onSearch: onInternalSearch,
+        onDisplayValuesChange,
+        onClear: () => emit('clear'),
+        onOpenChange: setOpen,
+        onFocus: (event) => emit('focus', event),
+        onBlur: (event) => emit('blur', event),
+        onInputKeyDown: (event) => {
+          if (mergedOpen.value && !mergedDisabled.value && !event.isComposing)
             optionListRef.value?.onKeyDown(event);
-          },
-          optionListRenderer: () =>
-            h(OptionList, {
-              ref: optionListRef as never,
+          emit('inputKeyDown', event);
+        },
+        getRawInputElement: rawTrigger ? () => rawTrigger : undefined,
+        optionListRenderer: () =>
+          h(
+            OptionList,
+            {
+              ref: optionListRef,
               prefixCls: prefixCls.value,
+              id: `${mergedId.value}_list`,
               multiple: isMultiple.value,
               searchValue: mergedSearchValue.value,
               open: mergedOpen.value,
-              notFoundContent: mergedNotFoundContent.value,
-              toggleOpen: (next: boolean) => setOpen(next),
+              notFoundContent,
+              toggleOpen: setOpen,
               virtual: props.virtual ?? config.virtual,
               listHeight: props.listHeight,
-              listItemHeight,
-              listItemScrollOffset: 0,
+              listItemHeight: props.listItemHeight ?? treeTheme.itemHeight.value,
               popupMatchSelectWidth:
                 props.popupMatchSelectWidth ??
                 props.dropdownMatchSelectWidth ??
                 config.popupMatchSelectWidth ??
                 true,
-              treeData: filteredTreeData.value as never,
+              treeData: filteredTreeData.value,
               fieldNames: mergedFieldNames.value,
-              onSelect: onOptionSelect as never,
+              onSelect: onOptionSelect,
               treeExpandAction: props.treeExpandAction,
-              treeTitleRender: props.treeTitleRender,
-              onPopupScroll: callbacks.onPopupScroll,
+              onPopupScroll: (event) => emit('popupScroll', event),
               leftMaxCount:
                 mergedMaxCount.value === undefined
                   ? null
-                  : mergedMaxCount.value - cachedDisplayValues.value.length,
+                  : mergedMaxCount.value - displayValues.length,
               leafCountOnly:
                 mergedShowCheckedStrategy.value === 'SHOW_CHILD' &&
                 !props.treeCheckStrictly &&
                 !!props.treeCheckable,
               valueEntities: valueEntities.value,
-              checkable: props.treeCheckable
-                ? h('span', { class: `${prefixCls.value}-checkbox-inner` })
-                : mergedCheckable.value,
+              checkable: mergedCheckable.value,
               loadData: props.loadData,
               treeLoadedKeys: props.treeLoadedKeys,
-              onTreeLoad: (keys: (string | number)[]) => {
-                callbacks.onTreeLoad?.(keys);
+              onTreeLoad: (keys) => {
+                emit('treeLoad', keys);
                 emit('update:treeLoadedKeys', keys);
               },
-              checkedKeys: rawCheckedValues.value as never,
+              checkedKeys: rawCheckedValues.value,
               halfCheckedKeys: rawHalfCheckedValues.value,
               treeDefaultExpandAll: props.treeDefaultExpandAll,
               treeExpandedKeys: props.treeExpandedKeys,
               treeDefaultExpandedKeys: props.treeDefaultExpandedKeys,
-              onTreeExpand: (keys: (string | number)[]) => {
-                callbacks.onTreeExpand?.(keys);
+              onTreeExpand: (keys) => {
+                emit('treeExpand', keys);
                 emit('update:treeExpandedKeys', keys);
               },
               treeIcon: props.treeIcon,
               showTreeIcon: props.showTreeIcon,
-              switcherIcon: props.switcherIcon ?? contextSemantic.switcherIcon,
+              switcherIcon: props.switcherIcon ?? componentConfig.switcherIcon,
               treeLine: props.treeLine,
-              treeNodeFilterProp: props.treeNodeFilterProp ?? 'value',
+              treeNodeFilterProp: treeNodeFilterProp.value,
+              filterTreeNode: filterTreeNode.value,
               keyEntities: keyEntities.value,
-            } as never),
-          ...restAttrs,
-        } as never,
-        {},
-      );
+            },
+            {
+              treeTitleRender: slots.treeTitleRender,
+              treeIcon: slots.treeIcon,
+              switcherIcon: slots.switcherIcon,
+              switcherLoadingIcon: slots.switcherLoadingIcon,
+            },
+          ),
+      });
     };
+    return {
+      nativeElement: computed(() => baseSelectRef.value?.nativeElement() ?? null),
+      focus: (options?: FocusOptions) => baseSelectRef.value?.focus(options),
+      blur: () => baseSelectRef.value?.blur(),
+      scrollTo: (arg?: number | TreeScrollConfig | null) => optionListRef.value?.scrollTo(arg),
+      renderTreeSelect,
+    };
+  },
+  render() {
+    return this.renderTreeSelect();
   },
 });
 

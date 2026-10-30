@@ -1,36 +1,31 @@
-/**
- * TreeSelect 的树型选项列表（rc `OptionList.js` 347 行的 Vue 等价物）。
- *
- * 内嵌**本仓 Tree**（BaseSelect 的 optionListRenderer 注入，Cascader 同范式）。
- *
- * ── 关键判据（docs/analysis/tree-select.md §3）──────────────────────────────
- * 1. 传给内嵌树的一律 `checkStrictly: true` —— 勾选级联由 TreeSelect 层算好
- *    （{checked, halfChecked}），树只做受控显示。
- * 2. checkedKeys 双语义：checkable ⇒ 勾选集合；否则直接当 selectedKeys。
- * 3. 展开三分支：treeExpandedKeys（受控）?? (searchValue ? searchExpandedKeys
- *    : expandedKeys)；搜索词出现时展开全部父节点（getAllKeys）。
- * 4. active：打开时定位首个可选节点（搜索时首个命中）；单选定位当前选中。
- *    Enter 选中 active，Esc 关闭，方向键代理树的 onKeyDown（focusable=false）。
- * 5. 单选打开时 scrollTo 定位当前选中节点。
- * 6. 空态：role="listbox" + `-empty` + notFoundContent。
- * 7. aria-live=assertive 隐藏 span 播报 active 节点值（基线逐字）。
- */
+/** TreeSelect owns value conduction; this list owns the current Tree projection and keyboard target. */
 
-import type { PropType, VNodeChild } from 'vue';
-import { computed, defineComponent, h, ref, shallowRef, watch } from 'vue';
-import { Tree } from '../tree';
-import type { TreeIconType, TreeKey, TreeSlots } from '../tree/interface';
-import type { TreeSelectDataNode } from './interface';
+import { useControlledValue } from '@apollo-design/utils';
+import {
+  computed,
+  defineComponent,
+  type HTMLAttributes,
+  h,
+  type PropType,
+  ref,
+  type SlotsType,
+  shallowRef,
+  type VNodeChild,
+  watch,
+} from 'vue';
+import { conductCheck } from '../_internal/tree/conduct-util';
+import type { TreeKey, TreeProps, TreeRef, TreeScrollConfig, TreeSlots } from '../tree/interface';
+import { TreeSelectTree as Tree } from '../tree/Tree';
+import type { DataEntities } from './hooks/use-data-entities';
+import type {
+  SearchConfig,
+  TreeSelectDataNode,
+  TreeSelectProps,
+  TreeSelectSlots,
+} from './interface';
+import { formatStrategyValues, SHOW_CHILD } from './utils/strategy-util';
 import type { FilledFieldNames } from './utils/value-util';
-import { getAllKeys, isCheckDisabled } from './utils/value-util';
-
-/** 实体表条目（props 通道以 unknown 传递，使用处断言到本接口）。 */
-interface LooseEntity {
-  node: TreeSelectDataNode;
-  key: string | number;
-  parent?: LooseEntity;
-  children?: LooseEntity[];
-}
+import { getAllKeys, getNodeValue, isCheckDisabled } from './utils/value-util';
 
 const HIDDEN_STYLE = {
   width: '0',
@@ -42,333 +37,265 @@ const HIDDEN_STYLE = {
   padding: '0',
   margin: '0',
 } as const;
+type ListSlots = Pick<
+  TreeSelectSlots,
+  'treeTitleRender' | 'treeIcon' | 'switcherIcon' | 'switcherLoadingIcon'
+>;
 
-const OptionList = defineComponent({
+export default defineComponent({
   name: 'ATreeSelectOptionList',
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, required: true },
-    // BaseProps
+    id: { type: String, required: true },
     multiple: { type: Boolean, default: false },
     searchValue: { type: String, default: '' },
     open: { type: Boolean, default: false },
     notFoundContent: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     toggleOpen: { type: Function as PropType<(open: boolean) => void>, required: true },
-    // TreeSelectContext
     virtual: { type: Boolean, default: undefined },
     listHeight: { type: Number, default: 256 },
     listItemHeight: { type: Number, default: 28 },
-    listItemScrollOffset: { type: Number, default: 0 },
     popupMatchSelectWidth: { type: [Boolean, Number], default: undefined },
     treeData: { type: Array as PropType<TreeSelectDataNode[]>, default: () => [] },
     fieldNames: { type: Object as PropType<FilledFieldNames>, required: true },
     onSelect: {
       type: Function as PropType<
-        (
-          key: TreeKey,
-          info: { selected: boolean; source?: string; node?: TreeSelectDataNode },
-        ) => void
+        (key: TreeKey, info: { selected: boolean; source?: string }) => void
       >,
       required: true,
     },
     treeExpandAction: {
-      type: [Boolean, String] as PropType<false | 'click' | 'doubleClick'>,
+      type: [Boolean, String] as PropType<TreeSelectProps['treeExpandAction']>,
       default: undefined,
     },
-    treeTitleRender: {
-      type: Function as PropType<(node: TreeSelectDataNode) => VNodeChild>,
-      default: undefined,
-    },
-    onPopupScroll: { type: Function as PropType<(e: UIEvent) => void>, default: undefined },
-    leftMaxCount: { type: Number, default: null },
+    onPopupScroll: { type: Function as PropType<(event: Event) => void>, default: undefined },
+    leftMaxCount: { type: Number as PropType<number | null>, default: null },
     leafCountOnly: { type: Boolean, default: false },
-    valueEntities: { type: Object as PropType<Map<unknown, unknown>>, required: true },
-    // LegacyContext
-    checkable: { type: [Boolean, Object], default: false },
-    loadData: {
-      type: Function as PropType<(node: TreeSelectDataNode) => Promise<unknown>>,
-      default: undefined,
-    },
+    valueEntities: { type: Object as PropType<DataEntities['valueEntities']>, required: true },
+    checkable: { type: Boolean, default: false },
+    loadData: { type: Function as PropType<TreeSelectProps['loadData']>, default: undefined },
     treeLoadedKeys: { type: Array as PropType<TreeKey[]>, default: undefined },
     onTreeLoad: { type: Function as PropType<(keys: TreeKey[]) => void>, default: undefined },
-    checkedKeys: { type: Array as PropType<string[]>, default: () => [] },
-    halfCheckedKeys: { type: Array as PropType<string[]>, default: () => [] },
+    checkedKeys: { type: Array as PropType<TreeKey[]>, default: () => [] },
+    halfCheckedKeys: { type: Array as PropType<TreeKey[]>, default: () => [] },
     treeDefaultExpandAll: { type: Boolean, default: undefined },
     treeExpandedKeys: { type: Array as PropType<TreeKey[]>, default: undefined },
     treeDefaultExpandedKeys: { type: Array as PropType<TreeKey[]>, default: undefined },
     onTreeExpand: { type: Function as PropType<(keys: TreeKey[]) => void>, default: undefined },
-    treeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    treeIcon: { type: Boolean, default: undefined },
     showTreeIcon: { type: Boolean, default: undefined },
-    switcherIcon: { type: null as unknown as PropType<TreeIconType>, default: undefined },
-    treeLine: { type: [Boolean, Object], default: undefined },
+    switcherIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    treeLine: {
+      type: [Boolean, Object] as PropType<TreeSelectProps['treeLine']>,
+      default: undefined,
+    },
     treeNodeFilterProp: { type: String, default: 'value' },
-    keyEntities: { type: Object as PropType<Record<string, unknown>>, required: true },
+    filterTreeNode: {
+      type: [Boolean, Function] as PropType<SearchConfig['filterTreeNode']>,
+      default: undefined,
+    },
+    keyEntities: { type: Object as PropType<DataEntities['keyEntities']>, required: true },
   },
-  setup(props, { expose }) {
-    const treeRef = shallowRef<{
-      scrollTo: (s: unknown) => void;
-      onKeyDown: (e: KeyboardEvent) => void;
-    } | null>(null);
-
-    /** 打开期间的数据快照（rc memoTreeData：open 变化才重算，避免动画期闪烁）。 */
-    // ⚠️ shallowRef：树数据是递归结构，深 ref 的 UnwrapRef 会爆 TS2589（且无需深响应）
+  slots: Object as SlotsType<ListSlots>,
+  setup(props, { expose, slots }) {
+    const treeRef = shallowRef<
+      (TreeRef<object> & { onKeyDown: (event: KeyboardEvent) => void }) | null
+    >(null);
+    // Keep the last open data during the popup's leave animation.
     const memoTreeData = shallowRef<TreeSelectDataNode[]>([]);
     watch(
       () => [props.open, props.treeData] as const,
-      ([nextOpen, nextData]) => {
-        if (nextOpen && nextData) memoTreeData.value = nextData;
+      ([open, data]) => {
+        if (open) memoTreeData.value = data;
       },
       { immediate: true },
     );
-
-    // ========================== Values ==========================
-    const mergedCheckedKeys = computed(() => {
-      if (!props.checkable) return null;
-      return { checked: props.checkedKeys, halfChecked: props.halfCheckedKeys };
+    const [expandedKeys, setExpandedKeys] = useControlledValue<TreeKey[]>({
+      getValue: () => props.treeExpandedKeys,
+      defaultValue: () =>
+        props.treeDefaultExpandedKeys ??
+        (props.treeDefaultExpandAll ? getAllKeys(props.treeData, props.fieldNames) : []),
     });
-
-    // ========================== Scroll ==========================
+    const searchExpandedKeys = ref<TreeKey[]>([]);
     watch(
-      () => props.open,
-      (open) => {
-        // 单选打开时定位当前选中（rc 逐字）
-        if (open && !props.multiple && props.checkedKeys.length) {
-          treeRef.value?.scrollTo({ key: props.checkedKeys[0] });
-        }
+      () => [props.searchValue, props.treeData] as const,
+      ([search]) => {
+        if (search) searchExpandedKeys.value = getAllKeys(props.treeData, props.fieldNames);
       },
+      { immediate: true },
     );
-
-    // ========================== Events ==========================
-    const onInternalSelect = (
-      _key: unknown,
-      info: { node: TreeSelectDataNode | { key: TreeKey }; selected?: boolean },
-    ): void => {
-      const node = info.node as TreeSelectDataNode;
-      const key = (node.key ??
-        (node as Record<string, unknown>)[props.fieldNames.value]) as TreeKey;
-      if (props.checkable && isCheckDisabled(node)) {
-        return;
-      }
-      props.onSelect(key, { selected: !props.checkedKeys.includes(key as string) });
-      if (!props.multiple) {
-        props.toggleOpen(false);
-      }
-    };
-
-    // =========================== Keys ===========================
-    const expandedKeys = ref<TreeKey[] | undefined>(props.treeDefaultExpandedKeys);
-    const searchExpandedKeys = ref<TreeKey[] | null>(null);
-    const mergedExpandedKeys = computed(() => {
-      if (props.treeExpandedKeys) return [...props.treeExpandedKeys];
-      return props.searchValue ? searchExpandedKeys.value : expandedKeys.value;
-    });
-    const onInternalExpand = (keys: TreeKey[]): void => {
-      expandedKeys.value = keys;
+    const mergedExpandedKeys = computed(
+      () =>
+        props.treeExpandedKeys ??
+        (props.searchValue ? searchExpandedKeys.value : expandedKeys.value),
+    );
+    const onInternalExpand = (keys: TreeKey[]) => {
+      setExpandedKeys(keys);
       searchExpandedKeys.value = keys;
       props.onTreeExpand?.(keys);
     };
 
-    // ========================== Search ==========================
-    const lowerSearchValue = computed(() => String(props.searchValue).toLowerCase());
-    const filterTreeNode = (treeNode: TreeSelectDataNode): boolean => {
-      if (!lowerSearchValue.value) return false;
-      return String((treeNode as Record<string, unknown>)[props.treeNodeFilterProp] ?? '')
+    const getDataNode = (key: TreeKey) => props.keyEntities[key]?.node;
+    const matchesSearch = (node: TreeSelectDataNode): boolean => {
+      if (!props.searchValue) return false;
+      if (typeof props.filterTreeNode === 'function')
+        return props.filterTreeNode(props.searchValue, node);
+      return String(node[props.treeNodeFilterProp] ?? '')
         .toLowerCase()
-        .includes(lowerSearchValue.value);
-    };
-    watch(
-      () => props.searchValue,
-      (searchValue) => {
-        if (searchValue) {
-          searchExpandedKeys.value = getAllKeys(props.treeData, props.fieldNames) as TreeKey[];
-        }
-      },
-    );
-
-    // ========================= maxCount 禁用 =====================
-    // rc 经 UnstableContext.nodeDisabled 注入；Vue 侧等价实现：把超额节点在数据层
-    // 标 disabled（同样的 DOM 产物 —— TreeNode 走 disabled 分支）。缓存避免重复计算。
-    const disabledCache = ref(new Map<unknown, boolean>());
-    watch(
-      () => props.leftMaxCount,
-      () => {
-        disabledCache.value = new Map();
-      },
-    );
-    const getDisabledWithCache = (node: TreeSelectDataNode): boolean => {
-      const value = node[props.fieldNames.value];
-      if (!disabledCache.value.has(value)) {
-        const entity = props.valueEntities.get(value) as LooseEntity | undefined;
-        const children = entity?.children ?? [];
-        const isLeaf = children.length === 0;
-        if (!isLeaf) {
-          const checkableChildrenCount = children.filter(
-            (child: { node: Record<string, unknown> }) =>
-              !child.node.disabled &&
-              !(child.node as { disableCheckbox?: boolean }).disableCheckbox &&
-              !props.checkedKeys.includes(
-                (child.node as Record<string, unknown>)[props.fieldNames.value] as string,
-              ),
-          ).length;
-          disabledCache.value.set(value, checkableChildrenCount > (props.leftMaxCount as number));
-        } else {
-          disabledCache.value.set(value, false);
-        }
-      }
-      return disabledCache.value.get(value) ?? false;
+        .includes(props.searchValue.toLowerCase());
     };
     const nodeDisabled = (node: TreeSelectDataNode): boolean => {
-      const nodeValue = node[props.fieldNames.value];
-      if (props.checkedKeys.includes(nodeValue as string)) return false;
-      if (props.leftMaxCount === null) return false;
+      const value = getNodeValue(node, props.fieldNames.value);
+      if ((value !== undefined && props.checkedKeys.includes(value)) || props.leftMaxCount === null)
+        return false;
       if (props.leftMaxCount <= 0) return true;
-      if (props.leafCountOnly && props.leftMaxCount) return getDisabledWithCache(node);
-      return false;
+      if (!props.leafCountOnly) return false;
+      const entity = props.valueEntities.get(value);
+      if (!entity) return false;
+      const project = (keys: TreeKey[]) =>
+        formatStrategyValues(keys, SHOW_CHILD, props.keyEntities, props.fieldNames).length;
+      const checked = conductCheck(
+        [...props.checkedKeys, entity.key],
+        true,
+        props.keyEntities,
+      ).checkedKeys;
+      return project(checked) - project(props.checkedKeys) > props.leftMaxCount;
     };
-    /** 把 nodeDisabled 写入数据副本（只在上层有 maxCount 限制时生效；render 内调用）。 */
-    const buildEffectiveTreeData = (): TreeSelectDataNode[] => {
+    const effectiveTreeData = computed<TreeSelectDataNode[]>(() => {
       if (props.leftMaxCount === null) return memoTreeData.value;
-      type Node = TreeSelectDataNode;
-      const dig = (nodes: Node[]): Node[] =>
-        nodes.map((node: Node): Node => {
-          const next: Node = { ...node };
-          if (nodeDisabled(node)) next.disabled = true;
-          const rec = next as unknown as Record<string, unknown>;
-          const children = rec[props.fieldNames.children] as TreeSelectDataNode[] | undefined;
-          if (children) rec[props.fieldNames.children] = dig(children);
-          return next;
+      const dig = (nodes: TreeSelectDataNode[]): TreeSelectDataNode[] =>
+        nodes.map((node) => {
+          const children = node[props.fieldNames.children] as TreeSelectDataNode[] | undefined;
+          return {
+            ...node,
+            disabled: node.disabled || nodeDisabled(node),
+            ...(children ? { [props.fieldNames.children]: dig(children) } : {}),
+          };
         });
       return dig(memoTreeData.value);
-    };
-
-    // ==================== 首个可选节点 / active ==================
-    const getFirstMatchingNode = (nodes: TreeSelectDataNode[]): TreeSelectDataNode | null => {
+    });
+    const canSelect = (node: TreeSelectDataNode) =>
+      !node.disabled &&
+      !nodeDisabled(node) &&
+      (props.checkable ? !isCheckDisabled(node) : node.selectable !== false);
+    const firstMatchingKey = (nodes: TreeSelectDataNode[]): TreeKey | null => {
       for (const node of nodes) {
-        if (node.disabled || node.selectable === false) continue;
-        if (props.searchValue) {
-          if (filterTreeNode(node)) return node;
-        } else {
-          return node;
-        }
+        if (
+          canSelect(node) &&
+          (!props.searchValue || props.filterTreeNode === false || matchesSearch(node))
+        )
+          return getNodeValue(node, props.fieldNames.value) ?? null;
         const children = node[props.fieldNames.children] as TreeSelectDataNode[] | undefined;
         if (children) {
-          const matchInChildren = getFirstMatchingNode(children);
-          if (matchInChildren) return matchInChildren;
+          const child = firstMatchingKey(children);
+          if (child !== null) return child;
         }
       }
       return null;
     };
-
     const activeKey = ref<TreeKey | null>(null);
     const activeEntity = computed(() =>
-      activeKey.value
-        ? (props.keyEntities[activeKey.value as string] as LooseEntity | undefined)
-        : undefined,
+      activeKey.value === null ? undefined : props.keyEntities[activeKey.value],
     );
     watch(
-      () => [props.open, props.searchValue] as const,
+      () => [props.open, props.searchValue, props.treeData] as const,
       ([open]) => {
         if (!open) return;
-        const getFirstNode = (): TreeKey | null => {
-          const firstNode = getFirstMatchingNode(buildEffectiveTreeData());
-          return firstNode
-            ? ((firstNode as Record<string, unknown>)[props.fieldNames.value] as TreeKey)
-            : null;
-        };
-        const nextActiveKey =
+        activeKey.value =
           !props.multiple && props.checkedKeys.length && !props.searchValue
-            ? (props.checkedKeys[0] as TreeKey)
-            : getFirstNode();
-        activeKey.value = nextActiveKey;
+            ? (props.checkedKeys[0] ?? null)
+            : firstMatchingKey(effectiveTreeData.value);
+        if (activeKey.value !== null) treeRef.value?.scrollTo({ key: activeKey.value });
       },
+      { immediate: true, flush: 'post' },
     );
-
-    // ========================= Keyboard =========================
+    const selectKey = (key: TreeKey) => {
+      const entity = props.keyEntities[key];
+      if (!entity || !canSelect(entity.node)) return;
+      props.onSelect(key, { selected: !props.checkedKeys.includes(key) });
+      if (!props.multiple) props.toggleOpen(false);
+    };
+    const onInternalSelect = (_keys: unknown, info: { node: { key: TreeKey } }) =>
+      selectKey(info.node.key);
     const onKeyDown = (event: KeyboardEvent): void => {
+      if (!props.open || event.isComposing) return;
       switch (event.key) {
         case 'ArrowUp':
         case 'ArrowDown':
         case 'ArrowLeft':
         case 'ArrowRight':
+        case 'Home':
+        case 'End':
           treeRef.value?.onKeyDown(event);
           break;
-        case 'Enter': {
-          const entity = activeEntity.value;
-          if (entity) {
-            const isNodeDisabled = nodeDisabled(entity.node as TreeSelectDataNode);
-            const node = entity.node as TreeSelectDataNode & {
-              selectable?: boolean;
-              value?: unknown;
-              disabled?: boolean;
-            };
-            if (node.selectable !== false && !node.disabled && !isNodeDisabled) {
-              onInternalSelect(null, {
-                node: { key: activeKey.value as TreeKey },
-                selected: !props.checkedKeys.includes(String(node.value)),
-              });
-            }
-          }
+        case 'Enter':
+          if (activeKey.value !== null) selectKey(activeKey.value);
+          event.preventDefault();
           break;
-        }
         case 'Escape':
           props.toggleOpen(false);
           break;
       }
     };
-
-    // 🚨 曾漏了这段 expose（2026-09-30 修）：外层 `TreeSelect.ts` 有
-    //    `optionListRef` + `onInputKeyDown → optionListRef.value?.onKeyDown(event)`
-    //    的转发链，README 也写了「键盘方向键代理 Tree.onKeyDown」—— 但本组件**从未
-    //    expose** ⇒ `optionListRef.value` 里拿不到 `onKeyDown` ⇒ **弹层里按方向键没反应**
-    //    （转发静默打空）。
-    //    发现路径：`biome check` 报 `onKeyDown` 未被引用 —— 与 tree 的
-    //    `onNodeContextMenu` 漏接线是同一类「定义了但没接线」的问题。
-    //    与 `tree/Tree.ts` 的 expose 同构（rc 的 ref API：`scrollTo` / `keyEntities` / `onKeyDown`）。
-    expose({ onKeyDown });
-
-    // ========================= loadData =========================
-    // rc：搜索期间停用异步加载（hasLoadDataFn）
-    const syncLoadData = computed(() => (props.searchValue ? undefined : props.loadData));
-
-    // ========================= Render ===========================
+    expose({
+      onKeyDown,
+      scrollTo: (arg?: number | TreeScrollConfig | null) => treeRef.value?.scrollTo(arg),
+    });
+    const filterTreeNode: NonNullable<TreeProps['filterTreeNode']> = (node) => {
+      const data = getDataNode(node.key);
+      // The popup can still render its leave snapshot after source data is removed.
+      return data ? matchesSearch(data) : false;
+    };
+    const syncLoadData = computed<TreeProps['loadData']>(() => {
+      const loadData = !props.open || props.searchValue ? undefined : props.loadData;
+      return loadData
+        ? (node) => {
+            const data = getDataNode(node.key);
+            if (!data)
+              throw new Error(`TreeSelect has no current data for load key ${String(node.key)}`);
+            return loadData(data);
+          }
+        : undefined;
+    });
     return () => {
-      const treeData = buildEffectiveTreeData();
-      if (treeData.length === 0) {
+      if (!effectiveTreeData.value.length)
         return h(
           'div',
           {
-            role: 'listbox',
+            role: 'tree',
+            id: props.id,
             class: `${props.prefixCls}-empty`,
             onMousedown: (event: MouseEvent) => event.preventDefault(),
           },
           [props.notFoundContent],
         );
-      }
-
-      const treeProps: Record<string, unknown> = {
+      const treeSlots: TreeSlots = {};
+      if (slots.treeTitleRender)
+        treeSlots.title = ({ data }) => slots.treeTitleRender?.({ node: data });
+      if (slots.treeIcon) treeSlots.icon = slots.treeIcon;
+      if (slots.switcherIcon) treeSlots.switcherIcon = slots.switcherIcon;
+      if (slots.switcherLoadingIcon) treeSlots.switcherLoadingIcon = slots.switcherLoadingIcon;
+      const treeProps = {
         ref: treeRef,
-        // ⚠️ antd 薄壳三前缀（select/select-tree/tree-select）在 customize 模式下
-        //    **合一**（getPrefixCls(x, customize) 直接用 customize）—— 本仓单前缀直通。
+        listId: props.id,
         prefixCls: props.prefixCls,
-        treeData: treeData as never,
+        treeData: effectiveTreeData.value,
         height: props.listHeight,
         itemHeight: props.listItemHeight,
-        itemScrollOffset: props.listItemScrollOffset,
         virtual: props.virtual !== false && props.popupMatchSelectWidth !== false,
         multiple: props.multiple,
-        icon: props.treeIcon,
-        showIcon: props.showTreeIcon,
-        switcherIcon: typeof props.switcherIcon === 'function' ? undefined : props.switcherIcon,
+        showIcon: props.showTreeIcon ?? props.treeIcon,
+        switcherIcon: props.switcherIcon,
         showLine: props.treeLine,
         loadData: syncLoadData.value,
-        motion: false, // rc：antd 薄壳固定 treeMotion: null
         activeKey: activeKey.value,
-        // 勾选级联由 TreeSelect 层算 —— 树永远严格模式
         checkable: props.checkable,
         checkStrictly: true,
-        checkedKeys: mergedCheckedKeys.value as never,
+        checkedKeys: props.checkable
+          ? { checked: props.checkedKeys, halfChecked: props.halfCheckedKeys }
+          : [],
         selectedKeys: props.checkable ? [] : props.checkedKeys,
-        defaultExpandAll: props.treeDefaultExpandAll,
         fieldNames: {
           key: props.fieldNames.key,
           title: props.fieldNames._title[0],
@@ -377,40 +304,29 @@ const OptionList = defineComponent({
         focusable: false,
         filterTreeNode,
         expandAction: props.treeExpandAction,
-        onActiveChange: (key: TreeKey | null) => {
+        onActiveChange: (key) => {
           activeKey.value = key;
         },
-        onSelect: onInternalSelect as never,
-        onCheck: onInternalSelect as never,
-        onExpand: (keys: TreeKey[]) => onInternalExpand(keys),
-        onLoad: (loadedKeys: TreeKey[]) => props.onTreeLoad?.(loadedKeys),
-        onScroll: props.onPopupScroll,
+        onSelect: onInternalSelect,
+        onCheck: onInternalSelect,
+        onExpand: onInternalExpand,
+        onLoad: (keys) => props.onTreeLoad?.(keys),
+        onScrollCapture: props.onPopupScroll,
+        loadedKeys: props.treeLoadedKeys,
+        expandedKeys: mergedExpandedKeys.value,
+      } satisfies InstanceType<typeof Tree>['$props'] & {
+        onScrollCapture?: HTMLAttributes['onScroll'];
       };
-      if (props.treeLoadedKeys) treeProps.loadedKeys = props.treeLoadedKeys;
-      if (mergedExpandedKeys.value) treeProps.expandedKeys = mergedExpandedKeys.value;
-      const treeSlots: TreeSlots = {};
-      const renderTitle = props.treeTitleRender;
-      if (renderTitle) treeSlots.title = ({ data }) => renderTitle(data);
-      const renderSwitcher = props.switcherIcon;
-      if (typeof renderSwitcher === 'function') {
-        treeSlots.switcherIcon = ({ node, data }) =>
-          renderSwitcher({ ...node, eventKey: node.key, data });
-      }
-
       return h('div', { onMousedown: (event: MouseEvent) => event.preventDefault() }, [
-        activeEntity.value &&
-          props.open &&
-          h(
-            'span',
-            { style: HIDDEN_STYLE, 'aria-live': 'assertive' },
-            String(
-              (activeEntity.value.node as Record<string, unknown>)[props.fieldNames.value] ?? '',
-            ),
-          ),
+        activeEntity.value && props.open
+          ? h(
+              'span',
+              { style: HIDDEN_STYLE, 'aria-live': 'assertive' },
+              String(activeEntity.value.node[props.fieldNames.value] ?? ''),
+            )
+          : null,
         h(Tree, treeProps, { ...treeSlots }),
       ]);
     };
   },
 });
-
-export default OptionList;

@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { TreeSelectValue } from '@apollo-design/ui';
 import { TreeSelect } from '@apollo-design/ui';
 import { ref } from 'vue';
 
-const value = ref<string>();
+const value = ref<TreeSelectValue>();
 
 const treeData = [
   {
@@ -14,7 +15,7 @@ const treeData = [
 </script>
 
 <template>
-  <TreeSelect
+  <TreeSelect aria-label="Tree select: field names"
     v-model:value="value"
     :tree-data="treeData"
     :field-names="{ value: 'id', label: 'name', children: 'subs' }"

@@ -190,3 +190,7 @@ DatePicker/RangePicker 的内容函数迁为 cellRender/panelRender/extraFooter/
 ### D-menu-native-notifications
 
 Menu 的选择/展开通知统一使用 Vue emits，原生键盘监听使用 onKeydown（模板为 @keydown），替代 React 拼法 onKeyDown；顶层 expandIcon 与静态子组件图标渲染迁为具名槽，数据项的图标和操作函数保留。移除从未消费的 children 类型，继续使用 items 数据源；实际 Overflow 根引用、当前 Provider/语义样式、已有十个 Token 和 popup/inline 层级职责同步修正，详见[Menu API](packages/ui/src/menu/index.zh-CN.md)。
+
+### D-tree-select-native-tree-owner
+
+TreeSelect 的通知统一为 Vue emits，保留 value/open/searchValue/treeExpandedKeys/treeLoadedKeys 模型，监听 change 不再改变值的形态。顶层标题/标签/浮层与图标内容函数迁为具名槽，数据项 title/icon 与过滤、加载服务保留真实数据职责；旧开关通知别名改为 openChange，nativeElement() 改为实际属性。配置由 TreeSelect 自己拥有，继续共享 Tree/Select Token；修正原始数据服务载荷、异步 children 更新、键盘和实际 tree ARIA 目标，详见[TreeSelect API](packages/ui/src/tree-select/index.zh-CN.md)。

@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { TreeSelectValue } from '@apollo-design/ui';
 import { TreeSelect, type TreeSelectDataNode } from '@apollo-design/ui';
 import { ref } from 'vue';
 
-const value = ref<string>();
+const value = ref<TreeSelectValue>();
 
 const build = (pre: string, level: number): TreeSelectDataNode[] | undefined => {
   if (level < 0) return undefined;
@@ -15,5 +16,5 @@ const treeData: TreeSelectDataNode[] = build('0-', 3) ?? [];
 </script>
 
 <template>
-  <TreeSelect v-model:value="value" :tree-data="treeData" tree-default-expand-all :list-height="200" placeholder="虚拟滚动" />
+  <TreeSelect aria-label="Tree select: virtual scroll" v-model:value="value" :tree-data="treeData" tree-default-expand-all :list-height="200" placeholder="虚拟滚动" />
 </template>

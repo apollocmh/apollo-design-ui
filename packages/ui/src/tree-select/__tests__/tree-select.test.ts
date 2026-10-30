@@ -46,10 +46,10 @@ describe('TreeSelect · 浮层树结构', () => {
     w.unmount();
   });
 
-  it('空数据：role=listbox + -empty + notFoundContent', async () => {
+  it('空数据：role=tree + -empty + notFoundContent', async () => {
     const w = await mountOpen({ treeData: [], notFoundContent: '暂无' });
     const empty = document.querySelector('.apollo-tree-select-empty');
-    expect(empty?.getAttribute('role')).toBe('listbox');
+    expect(empty?.getAttribute('role')).toBe('tree');
     expect(empty?.textContent).toContain('暂无');
     w.unmount();
   });

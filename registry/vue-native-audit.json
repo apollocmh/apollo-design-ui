@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 140,
+  "revision": 145,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2456,6 +2456,17 @@
           ],
           "change": "Shared input native event ownership and ARIA override; raw popup consumes the same current presentation as the normal branch.",
           "verification": "CMP:cascader verification: shared native consumer regressions, strict and raw-popup browser functionality; browser diagnostic exit1 is retained as non-blocking."
+        },
+        {
+          "scope": [
+            "packages/ui/src/tree-select",
+            "packages/ui/src/tree/Tree.ts",
+            "packages/ui/src/tree/__tests__/native-contracts.test.ts",
+            "packages/ui/src/select/engine/BaseSelect.ts",
+            "packages/ui/src/select/engine/SearchInput.ts"
+          ],
+          "change": "TreeSelect-owned Tree presentation, true event-node/business-node boundary and immutable child loads; current tree ARIA and native keyboard/raw popup transport.",
+          "verification": "CMP:tree-select compact verification: actual affected consumers and complete scoped strict, historical full delivery preserved."
         }
       ]
     },
@@ -2760,13 +2771,17 @@
       "kind": "component",
       "ref": "table",
       "title": "Table",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/table"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_portal",
+        "baseRevision": 141,
+        "startedAt": "2026-10-30T13:57:14.373Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2775,7 +2790,20 @@
         "docs/audit/2026-10-24-demo-capabilities.md",
         "docs/audit/2026-10-27-typography-contract-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "接续现有排序过滤、分页槽、默认列、主题和实际消费成果，收口 Table 当前 Vue 架构差额",
+        "remaining": [
+          "XL 单元，先一次核对当前包装/引擎/关联 hooks 的真实公开链路并按根因分组；不能从 partial 推定快完成。",
+          "优先保留已交付实际动态过滤/分页、默认列/配置、原生虚拟滚动与主题证据；聚焦 owned 通知/模型、顶层与数据内容职责、动态槽/props、attrs/ref/Provider 和当前声明无效的关键交互，不新增无关功能或全库验收。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/ui/src/table/README.md",
+          "docs/audit/2026-10-24-pagination-slots-remediation.md",
+          "docs/audit/2026-10-24-demo-capabilities.md"
+        ]
+      }
     },
     {
       "id": "CMP:tabs",
@@ -3333,14 +3361,27 @@
           }
         ],
         "boundary": "原14组只读失败清单逐组修复，未重做历史盘点；实际79项源码浏览器在最终一行卸载guard前通过，guard与当前source原生回归已通过。当前Table/TreeSelect消费者102条及精确slot桥通过。历史基线保留，最终冻结版本九维验收未执行。"
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/tree-select",
+            "packages/ui/src/tree/Tree.ts",
+            "packages/ui/src/tree/__tests__/native-contracts.test.ts",
+            "packages/ui/src/select/engine/BaseSelect.ts",
+            "packages/ui/src/select/engine/SearchInput.ts"
+          ],
+          "change": "TreeSelect-owned Tree presentation, true event-node/business-node boundary and immutable child loads; current tree ARIA and native keyboard/raw popup transport.",
+          "verification": "CMP:tree-select compact verification: actual affected consumers and complete scoped strict, historical full delivery preserved."
+        }
+      ]
     },
     {
       "id": "CMP:tree-select",
       "kind": "component",
       "ref": "tree-select",
       "title": "TreeSelect",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
@@ -3350,12 +3391,10 @@
         "packages/ui/src/select/engine/BaseSelect.ts",
         "packages/ui/src/select/engine/SearchInput.ts"
       ],
-      "assignment": {
-        "owner": "native_select",
-        "baseRevision": 106,
-        "startedAt": "2026-10-30T12:00:47.544Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -3365,10 +3404,10 @@
       "issues": [
         {
           "id": "TREE-SELECT-SHARED-CONTRACTS",
-          "status": "open",
+          "status": "fixed",
           "blocking": true,
           "impact": "已复现借用Tree的展示配置泄漏、immutable补children后请求失效，以及BaseSelect IME提前返回吞原生keydown。",
-          "reason": "本整改单元负责关联共享差额，保留原Tree加载替换/卸载与Select组成保护；修复并回归后关闭。"
+          "reason": "以同一typed Tree setup隔离实际owner、按当前原始业务node桥接服务/过滤、保留真实替换/卸载的异步会话、BaseSelect原生IME/已消费键通知及raw传递修复；实际消费者与最终strict均已通过。"
         }
       ],
       "plan": {
@@ -3381,6 +3420,122 @@
           "docs/audit/2026-10-23-vue-reactivity-remediation.md",
           "packages/ui/src/tree-select/__tests__/tree-slots.test.ts"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/tree-select",
+          "packages/ui/src/tree/Tree.ts",
+          "packages/ui/src/tree/__tests__/native-contracts.test.ts",
+          "packages/ui/src/select/engine/BaseSelect.ts",
+          "packages/ui/src/select/engine/SearchInput.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "name": "Related runtime, DOM, theme, a11y and 19 demos",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run --project unit --project dom-contract --project theme --project a11y packages/ui/src/tree-select/__tests__ packages/ui/src/tree/__tests__/native-contracts.test.ts packages/ui/src/tree/__tests__/index.test.ts packages/ui/src/tree/__tests__/keyboard.test.ts packages/ui/src/select/__tests__/native-contracts.test.ts packages/ui/src/select/__tests__/index.test.ts packages/ui/src/auto-complete/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "result": "16 files, 257 tests passed",
+            "log": "/tmp/apollo-tree-select-final-corrected.log",
+            "boundary": "Broad related run before final keyboard/ARIA and type-boundary fixes. Later affected checks below supplement it; counts are not additive.",
+            "signal": null,
+            "durationMs": 56760
+          },
+          {
+            "kind": "core",
+            "name": "Exact DOM differences and actual tree ARIA references",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run --project unit --project dom-contract --project a11y packages/ui/src/tree-select/__tests__/native-contracts.test.ts packages/ui/src/tree-select/__tests__/semantic.test.ts packages/ui/src/tree-select/__tests__/a11y.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "result": "3 files, 46 tests passed; no label allowance",
+            "log": "/tmp/apollo-tree-select-aria-green.log",
+            "signal": null,
+            "durationMs": 18250
+          },
+          {
+            "kind": "core",
+            "name": "Final raw transport actual consumers",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run --project unit packages/ui/src/select/__tests__/native-contracts.test.ts packages/ui/src/auto-complete/__tests__/native-contracts.test.ts packages/ui/src/tree-select/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "result": "3 files, 33 tests passed",
+            "log": "/tmp/apollo-select-raw-transport-consumers.log",
+            "signal": null,
+            "durationMs": 11390
+          },
+          {
+            "kind": "core",
+            "name": "Final strong type-boundary behavior",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run --project unit --project a11y packages/ui/src/tree-select/__tests__/native-contracts.test.ts packages/ui/src/tree-select/__tests__/tree-select.test.ts packages/ui/src/tree-select/__tests__/tree-slots.test.ts packages/ui/src/tree-select/__tests__/a11y.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "result": "4 files, 55 tests passed, including mapped numeric 0, cached label, full raw arrays -> 0, stable host/focus and actual tree id references",
+            "log": "/tmp/apollo-tree-select-type-boundaries.log",
+            "signal": null,
+            "durationMs": 22790
+          },
+          {
+            "kind": "browser",
+            "name": "Source browser",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/tree-select/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "result": "Real keyboard and controlled rejection/acceptance, numeric 0, search, focus/DOM identity, current shared tokens, immutable async Demo, actual tree ARIA target and unmount cleanup passed; zero console/pageerror diagnostics",
+            "log": "/tmp/apollo-tree-select-browser-ready.log",
+            "boundary": "Later changes normalized raw VNodeChild and mapped-field types; those paths received the focused regression above. No complete visual matrix or physical assistive-technology test.",
+            "signal": null,
+            "durationMs": 10596
+          },
+          {
+            "kind": "lint",
+            "name": "Formatting and whitespace",
+            "exitCode": 0,
+            "result": "Passed. Final type-boundary changed files were also formatted and checked; duration not retained.",
+            "log": null,
+            "commands": [
+              "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec biome check packages/ui/src/tree-select packages/ui/src/tree/Tree.ts packages/ui/src/tree/__tests__/native-contracts.test.ts packages/ui/src/select/engine/BaseSelect.ts packages/ui/src/select/engine/SearchInput.ts",
+              "git diff --check -- packages/ui/src/tree-select packages/ui/src/tree/Tree.ts packages/ui/src/tree/__tests__/native-contracts.test.ts packages/ui/src/select/engine/BaseSelect.ts packages/ui/src/select/engine/SearchInput.ts"
+            ],
+            "signal": null
+          },
+          {
+            "kind": "core",
+            "name": "Final Tree data callback boundary and native scroll",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run --project unit packages/ui/src/tree-select/__tests__/native-contracts.test.ts packages/ui/src/tree-select/__tests__/tree-slots.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "result": "2 files, 15 tests passed. Current source-node load/filter payloads, immutable async loading, data title functions, mapped zero, full raw content/ref and real non-bubbling popup scroll covered.",
+            "log": "/tmp/apollo-tree-select-final-data-bridge.log",
+            "signal": null,
+            "durationMs": 8410
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; all TreeSelect source/type cases/native SFC/all Demo and actual Tree consumer; declaration/strict unchanged>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 52570
+          }
+        ],
+        "attemptsNotPassed": [
+          {
+            "kind": "core",
+            "name": "Final shared Tree/Select keyboard and TreeSelect ARIA consumer check",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run --project unit --project dom-contract --project a11y packages/ui/src/tree-select/__tests__/native-contracts.test.ts packages/ui/src/tree-select/__tests__/semantic.test.ts packages/ui/src/tree-select/__tests__/a11y.test.ts packages/ui/src/tree/__tests__/native-contracts.test.ts packages/ui/src/tree/__tests__/index.test.ts packages/ui/src/tree/__tests__/keyboard.test.ts packages/ui/src/select/__tests__/native-contracts.test.ts packages/ui/src/select/__tests__/index.test.ts packages/ui/src/auto-complete/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "result": "8 files passed; 164 tests passed; 13 DOM cases differed only in the intended aria-haspopup listbox -> tree correction",
+            "log": "/tmp/apollo-tree-select-aria-first.log",
+            "boundary": "Nonzero command remains failed. The precise DOM differences were subsequently registered without changing reference baselines, then rerun below.",
+            "signal": null,
+            "durationMs": 34790
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <frozen TreeSelect/Menu/Date source cohort>",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 37759,
+            "log": "/tmp/apollo-frozen-three-types.log"
+          }
+        ],
+        "boundary": "TreeSelect完整当前Props/5models/owned通知、动态完整槽/真实ref/attrs、自己的Provider展示职责与共享Tree/Select主题、当前原始业务node加载/过滤、最大选择与受控缓存、async不可变children有效更新及加载替换/卸载保护、真实Tree ARIA关系已实现并通过相关核心、实际消费者、Demo及最终完整窄strict。源码Chrome零console/pageerror，后续类型/原始node桥和非冒泡scroll变化另用最终15项回归覆盖；未将重叠测试数相加为全库覆盖。ARIA从listbox改为tree的13条精确差异有当前原生断言，RAW/HTML基线未改。含a11y的日志保留17条jsdom canvas未实现诊断，不声称unit零日志。TreeSelect没有新独立Token；TreeNode children数据形态继续不支持。全库、coverage、完整视觉/辅助技术、构建消费者及同版冻结九维未执行。"
       }
     },
     {

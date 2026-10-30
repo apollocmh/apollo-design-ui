@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TreeSelectDataNode } from '@apollo-design/ui';
+import type { TreeSelectDataNode, TreeSelectValue } from '@apollo-design/ui';
 import { Select, Space, Tag, TreeSelect } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
@@ -33,7 +33,7 @@ const presets = [
 type PresetValue = (typeof presets)[number]['value'];
 
 const preset = ref<PresetValue>('default');
-const value = ref<string>('leaf-1-1');
+const value = ref<TreeSelectValue>('leaf-1-1');
 
 const currentPreset = computed(
   () =>
@@ -82,7 +82,7 @@ function onPresetChange(next: unknown): void {
   <div>
     <Space :size="12" wrap style="margin-bottom: 16px">
       <span>树节点 Token</span>
-      <Select
+      <Select aria-label="Tree node theme"
         :value="preset"
         :options="presets"
         style="width: 140px"
@@ -92,7 +92,7 @@ function onPresetChange(next: unknown): void {
       <Tag>选中背景: {{ currentPreset.selectedBg }}</Tag>
     </Space>
 
-    <TreeSelect
+    <TreeSelect aria-label="Tree select: component token"
       v-model:value="value"
       :tree-data="treeData"
       :popup-style="popupStyle"

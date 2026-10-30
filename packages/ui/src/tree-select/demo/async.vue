@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { TreeSelectValue } from '@apollo-design/ui';
 import { TreeSelect, type TreeSelectDataNode } from '@apollo-design/ui';
 import { ref } from 'vue';
 
-const value = ref<string>();
+const value = ref<TreeSelectValue>();
 const treeData = ref<TreeSelectDataNode[]>([{ title: 'Expand to load', value: '0' }]);
 
 const onLoadData = (treeNode: TreeSelectDataNode) =>
@@ -25,5 +26,5 @@ const onLoadData = (treeNode: TreeSelectDataNode) =>
 </script>
 
 <template>
-  <TreeSelect v-model:value="value" :load-data="onLoadData" :tree-data="treeData" placeholder="请选择" />
+  <TreeSelect aria-label="Tree select: async" v-model:value="value" :load-data="onLoadData" :tree-data="treeData" placeholder="请选择" />
 </template>

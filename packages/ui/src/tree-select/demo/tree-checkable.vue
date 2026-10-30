@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { TreeSelectValue } from '@apollo-design/ui';
 import { TreeSelect } from '@apollo-design/ui';
 import { ref } from 'vue';
 
-const value = ref(['0-0-0']);
+const value = ref<TreeSelectValue>(['0-0-0']);
 
 const treeData = [
   {
@@ -18,5 +19,5 @@ const treeData = [
 </script>
 
 <template>
-  <TreeSelect v-model:value="value" tree-checkable show-search :tree-data="treeData" placeholder="请选择" />
+  <TreeSelect aria-label="Tree select: tree checkable" v-model:value="value" tree-checkable show-search :tree-data="treeData" placeholder="请选择" />
 </template>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { TreeSelectDataNode, TreeSelectLabeledValueType } from '@apollo-design/ui';
+import type { TreeSelectDataNode, TreeSelectValue } from '@apollo-design/ui';
 import { Space, Tag, TreeSelect } from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
-const value = ref<TreeSelectLabeledValueType>({
+const value = ref<TreeSelectValue>({
   value: 'leaf-1-1',
   label: '组件库',
 });
@@ -28,7 +28,7 @@ const treeData: TreeSelectDataNode[] = [
 
 const selectedInfo = computed(() => {
   const current = value.value;
-  if (!current) return '未选择';
+  if (!current || typeof current !== 'object' || Array.isArray(current)) return '未选择';
   return `value: ${String(current.value)} · label: ${String(current.label)}`;
 });
 </script>
@@ -40,7 +40,7 @@ const selectedInfo = computed(() => {
       <Tag>labelInValue 会同时保留 value 与展示文案</Tag>
     </Space>
 
-    <TreeSelect
+    <TreeSelect aria-label="Tree select: label in value"
       v-model:value="value"
       :tree-data="treeData"
       label-in-value

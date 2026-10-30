@@ -36,7 +36,7 @@ export function fillLegacyProps(
 }
 
 export function fillAdditionalInfo(
-  extra: Record<string, unknown>,
+  extra: object,
   triggerValue: string | number | undefined,
   checkedValues: (string | number)[],
   treeData: TreeSelectDataNode[],

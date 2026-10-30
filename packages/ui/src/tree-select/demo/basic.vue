@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import type { TreeSelectValue } from '@apollo-design/ui';
 import { TreeSelect } from '@apollo-design/ui';
 import { ref } from 'vue';
 
-const value = ref<string>();
+const value = ref<TreeSelectValue>();
+const search = ref('');
+const open = ref(false);
 
 const treeData = [
   {
@@ -18,5 +21,5 @@ const treeData = [
 </script>
 
 <template>
-  <TreeSelect v-model:value="value" show-search :tree-data="treeData" placeholder="请选择" />
+  <TreeSelect aria-label="Tree select: basic" v-model:value="value" v-model:search-value="search" v-model:open="open" show-search :tree-data="treeData" placeholder="请选择" />
 </template>
