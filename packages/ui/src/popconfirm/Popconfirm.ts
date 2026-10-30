@@ -25,6 +25,7 @@
 
 import { useControlledValue } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -48,8 +49,6 @@ import type {
 } from './interface';
 import { Overlay } from './PurePanel';
 import { usePopconfirmTheme } from './use-popconfirm-theme';
-
-type StyleLike = Record<string, string | number>;
 
 const Popconfirm = defineComponent({
   name: 'APopconfirm',
@@ -93,7 +92,7 @@ const Popconfirm = defineComponent({
     mouseEnterDelay: { type: Number, default: undefined },
     mouseLeaveDelay: { type: Number, default: undefined },
     overlayClassName: { type: String, default: undefined },
-    overlayStyle: { type: Object as PropType<StyleLike>, default: undefined },
+    overlayStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     classNames: { type: [Object, Function] as PropType<PopconfirmClassNames>, default: undefined },
     styles: { type: [Object, Function] as PropType<PopconfirmStyles>, default: undefined },
     // ⚠️ 以下来自 antd `AbstractTooltipProps`（Issue #26.1）：原先**没声明** ⇒ 落进
@@ -136,7 +135,7 @@ const Popconfirm = defineComponent({
       mouseEnterDelay?: number;
       mouseLeaveDelay?: number;
       className?: string;
-      style?: StyleLike;
+      style?: CSSProperties;
     }>('popconfirm');
     const popconfirmTheme = usePopconfirmTheme();
     providePopoverInjection(() => popconfirmTheme.componentToken.value.zIndexPopup);
@@ -227,7 +226,7 @@ const Popconfirm = defineComponent({
         .filter(Boolean)
         .join(' '),
     );
-    const rootStyles = computed<StyleLike>(() => ({
+    const rootStyles = computed<CSSProperties>(() => ({
       ...popconfirmTheme.style.value,
       ...mergedStyles.value.root,
     }));

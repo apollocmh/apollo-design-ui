@@ -72,7 +72,7 @@ export interface TriggerMotion {
 
 export interface TriggerArrow {
   className?: string;
-  style?: Record<string, string | number>;
+  style?: CSSProperties;
   content?: VNodeChild;
 }
 

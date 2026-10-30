@@ -10,6 +10,7 @@
 
 import { useControlledValue } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   Fragment,
@@ -38,8 +39,6 @@ import { usePopoverTheme } from './use-popover-theme';
 
 /** Popconfirm extends this overlay using the same, single-use owner channel. */
 export { provideTooltipInjection as providePopoverInjection };
-
-type StyleLike = Record<string, string | number>;
 
 /** antd `isReactRenderable`：排除 null / undefined / boolean（`0` 合法）。 */
 function isRenderable(value: unknown): boolean {
@@ -139,7 +138,7 @@ const Popover = defineComponent({
       mouseEnterDelay?: number;
       mouseLeaveDelay?: number;
       className?: string;
-      style?: StyleLike;
+      style?: CSSProperties;
     }>('popover');
     const ownedContext: Partial<typeof context> = inheritedOwner ? {} : context;
 
@@ -200,7 +199,7 @@ const Popover = defineComponent({
     const rootClassNames = computed(() =>
       clsx(ownedContext.className, mergedClassNames.value.root),
     );
-    const rootStyles = computed<StyleLike>(() => ({
+    const rootStyles = computed<CSSProperties>(() => ({
       ...popoverTheme.style.value,
       ...mergedStyles.value.root,
     }));

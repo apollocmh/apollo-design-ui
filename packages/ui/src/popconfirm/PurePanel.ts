@@ -19,7 +19,14 @@
 import { ExclamationCircleFilled } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
 import { isEmptyVNode, isRenderable } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, type SlotsType } from 'vue';
+import {
+  type CSSProperties,
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  type SlotsType,
+} from 'vue';
 
 import ActionButton, { convertLegacyProps } from '../_internal/action-button';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -245,7 +252,7 @@ const PurePanel = defineComponent({
       classNames?: PopconfirmProps['classNames'];
       styles?: PopconfirmProps['styles'];
       className?: string;
-      style?: Record<string, string | number>;
+      style?: CSSProperties;
     }>('popconfirm');
     const popconfirmTheme = usePopconfirmTheme();
     providePopoverInjection(() => popconfirmTheme.componentToken.value.zIndexPopup);

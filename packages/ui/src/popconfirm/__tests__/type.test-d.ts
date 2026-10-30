@@ -6,7 +6,7 @@
  */
 
 import { expectTypeOf, it } from 'vitest';
-import { h } from 'vue';
+import { type CSSProperties, h } from 'vue';
 import { Popconfirm, PopconfirmPurePanel } from '../index';
 import type {
   PopconfirmButtonProps,
@@ -14,6 +14,43 @@ import type {
   PopconfirmProps,
   PopconfirmSemanticType,
 } from '../interface';
+
+it('accepts Vue CSSProperties in all semantic, legacy and PurePanel styles', () => {
+  const css: CSSProperties = {
+    display: 'flex',
+    marginTop: undefined,
+    '--overlay-accent': '#123456',
+  };
+  const styles: PopconfirmSemanticType['styles'] = {
+    root: css,
+    container: css,
+    arrow: css,
+    icon: css,
+    title: css,
+    content: css,
+  };
+  const props: PopconfirmProps = { styles, overlayStyle: css };
+  h(Popconfirm, props);
+  h(Popconfirm, { styles: () => styles });
+  h(PopconfirmPurePanel, { styles });
+  type Semantic = NonNullable<PopconfirmSemanticType['styles']>;
+  expectTypeOf<Semantic[keyof Semantic]>().toEqualTypeOf<CSSProperties | undefined>();
+  expectTypeOf<PopconfirmProps['overlayStyle']>().toEqualTypeOf<CSSProperties | undefined>();
+  const negative = () => {
+    const invalid: PopconfirmProps = {
+      styles: {
+        icon: {
+          // @ts-expect-error Semantic styles use valid CSS property values.
+          position: 'floating',
+        },
+      },
+    };
+    // @ts-expect-error CSS custom properties accept scalar values, not objects.
+    h(Popconfirm, { styles: { title: { '--invalid': {} } } });
+    return invalid;
+  };
+  void negative;
+});
 
 it('PopconfirmProps 的关键字段类型', () => {
   expectTypeOf<PopconfirmProps['title']>().not.toBeNever();

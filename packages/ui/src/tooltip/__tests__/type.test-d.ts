@@ -2,11 +2,48 @@
  * L3 类型（G7）—— 正例 + 负例（负例包在永不调用的闭包里，CHECKLIST §一）。
  */
 import { describe, expectTypeOf } from 'vitest';
-import { h } from 'vue';
-import type { TooltipEmits, TooltipPlacement, TooltipProps } from '../interface';
+import { type CSSProperties, h } from 'vue';
+import type {
+  TooltipEmits,
+  TooltipPlacement,
+  TooltipProps,
+  TooltipSemanticType,
+} from '../interface';
+import PurePanel from '../PurePanel';
 import Tooltip from '../Tooltip';
 
 describe('Tooltip · 类型', () => {
+  it('accepts Vue CSSProperties in every semantic and legacy style channel', () => {
+    const css: CSSProperties = {
+      display: 'flex',
+      marginTop: undefined,
+      '--overlay-accent': '#123456',
+    };
+    const styles: TooltipSemanticType['styles'] = { root: css, container: css, arrow: css };
+    const props: TooltipProps = { styles, overlayStyle: css, overlayInnerStyle: css };
+    h(Tooltip, props);
+    h(Tooltip, { styles: () => styles });
+    h(PurePanel, { styles });
+    type Semantic = NonNullable<TooltipSemanticType['styles']>;
+    expectTypeOf<Semantic[keyof Semantic]>().toEqualTypeOf<CSSProperties | undefined>();
+    expectTypeOf<TooltipProps['overlayStyle']>().toEqualTypeOf<CSSProperties | undefined>();
+    expectTypeOf<TooltipProps['overlayInnerStyle']>().toEqualTypeOf<CSSProperties | undefined>();
+    const negative = () => {
+      const invalid: TooltipProps = {
+        styles: {
+          root: {
+            // @ts-expect-error Semantic styles use valid CSS property values.
+            position: 'floating',
+          },
+        },
+      };
+      // @ts-expect-error CSS custom properties accept scalar values, not objects.
+      h(Tooltip, { styles: { arrow: { '--invalid': {} } } });
+      return invalid;
+    };
+    void negative;
+  });
+
   it('placement 是 12 值联合', () => {
     expectTypeOf<TooltipPlacement>().toEqualTypeOf<
       | 'top'

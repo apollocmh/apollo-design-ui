@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 83,
+  "revision": 86,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -477,9 +477,10 @@
       "plan": {
         "goal": "保留已交付DOM attrs成果，收口ColorPicker剩余Vue契约",
         "remaining": [
-          "先核对受控颜色/开关、owned事件与真实业务算法、完整槽/实际ref、当前Provider/Token及关联子组件，复用现有DOM attrs验证，不扩展新颜色能力。"
+          "先核对受控颜色/开关、owned事件与真实业务算法、完整槽/实际ref、当前Provider/Token及关联子组件，复用现有DOM attrs验证，不扩展新颜色能力。",
+          "共享浮层CSSProperties链由root统一负责并精确委托native_portal写，ColorPicker任务不重复调查/修改共享目录。"
         ],
-        "effort": "unknown",
+        "effort": "medium",
         "basis": [
           "docs/audit/2026-10-24-dom-attrs-remediation.md"
         ]
@@ -1453,9 +1454,23 @@
             "exitCode": 0,
             "signal": null,
             "durationMs": 53236
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/_internal/__tests__/overlay-css-properties.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4740
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; Tooltip/Popover/Popconfirm full style chain and positive/negative type cases>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 55416
           }
         ],
-        "boundary": "保留返回Promise的确认业务回调，owned通知改Vue emits；当前组件配置与Token、单一层级owner、真实ref、稳定DOM和按接受开关隔离的异步会话已验证。共享ActionButton的卸载/旧Promise/失败上报与Modal消费者通过。原浏览器因两条Portal诊断误报exit1，保留原记录；对应Portal修复后原严格脚本复跑exit0。未执行最终冻结九维/发布消费者验收。"
+        "boundary": "保留返回Promise的确认业务回调，owned通知改Vue emits；当前组件配置与Token、单一层级owner、真实ref、稳定DOM和按接受开关隔离的异步会话已验证。共享ActionButton的卸载/旧Promise/失败上报与Modal消费者通过。原浏览器因两条Portal诊断误报exit1，保留原记录；对应Portal修复后原严格脚本复跑exit0。未执行最终冻结九维/发布消费者验收。 后续共享样式类型修正：语义/旧别名/PurePanel与箭头终端统一Vue CSSProperties，实际6路DOM验证undefined撤除/自定义属性/节点身份，完整正负类型通过；原其他证据沿用，非阻塞诊断边界不变。"
       }
     },
     {
@@ -1546,9 +1561,23 @@
             "exitCode": 0,
             "signal": null,
             "durationMs": 52408
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/_internal/__tests__/overlay-css-properties.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4740
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; Tooltip/Popover/Popconfirm full style chain and positive/negative type cases>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 55416
           }
         ],
-        "boundary": "沿用既有内容/native-style/delay成果；已验证自身Provider/四Token、Vue事件与模板ref、嵌套层级和Popconfirm消费者。wireframe视觉边界延期，完整冻结版本九维/发布消费者未执行。"
+        "boundary": "沿用既有内容/native-style/delay成果；已验证自身Provider/四Token、Vue事件与模板ref、嵌套层级和Popconfirm消费者。wireframe视觉边界延期，完整冻结版本九维/发布消费者未执行。 后续共享样式类型修正：语义/旧别名/PurePanel与箭头终端统一Vue CSSProperties，实际6路DOM验证undefined撤除/自定义属性/节点身份，完整正负类型通过；原其他证据沿用，非阻塞诊断边界不变。"
       }
     },
     {
@@ -2464,9 +2493,23 @@
             "exitCode": 0,
             "signal": null,
             "durationMs": 49567
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/_internal/__tests__/overlay-css-properties.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4740
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; Tooltip/Popover/Popconfirm full style chain and positive/negative type cases>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 55416
           }
         ],
-        "boundary": "已验证当前Token/placement/尺寸/真实refs、事件单一通知与两层包装、原生样式落点及Demo；首次消费者命令的旧函数ref断言失败，已依公开属性契约改真实模板ref并定向通过，其余52条原通过范围未重跑。最终冻结版本九维验收未执行。"
+        "boundary": "已验证当前Token/placement/尺寸/真实refs、事件单一通知与两层包装、原生样式落点及Demo；首次消费者命令的旧函数ref断言失败，已依公开属性契约改真实模板ref并定向通过，其余52条原通过范围未重跑。最终冻结版本九维验收未执行。 后续共享样式类型修正：语义/旧别名/PurePanel与箭头终端统一Vue CSSProperties，实际6路DOM验证undefined撤除/自定义属性/节点身份，完整正负类型通过；原其他证据沿用，非阻塞诊断边界不变。"
       }
     },
     {
@@ -2811,13 +2854,18 @@
       "kind": "foundation",
       "ref": "icons",
       "title": "@apollo-design/icons",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/icons/src"
+        "packages/icons",
+        "docs/foundation/icons-contract.md"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_icons",
+        "baseRevision": 84,
+        "startedAt": "2026-10-30T10:41:35.919Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2826,7 +2874,18 @@
         "docs/audit/2026-10-29-config-provider-contract-audit.md",
         "docs/audit/evidence/current-batch-final-acceptance.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留已修正Icon上下文，核对基础工厂及公开工具的真实Vue差额",
+        "remaining": [
+          "完整核对约十个手写运行时模块及生成入口的统一消费链；不逐个重审848份同构图标，不重做既有IconProvider成果。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/foundation/icons-contract.md",
+          "docs/migrations/config-provider-contracts.md"
+        ]
+      }
     },
     {
       "id": "FND:locale",

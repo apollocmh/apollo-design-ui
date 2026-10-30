@@ -52,8 +52,6 @@ import { useMergedArrow } from './use-merged-arrow';
 import { useTooltipTheme } from './use-tooltip-theme';
 import { parseTooltipColor } from './util';
 
-type StyleLike = Record<string, string | number>;
-
 function isFragmentNode(node: VNode | null | undefined): boolean {
   return node !== null && node !== undefined && node.type === Symbol.for('v-fgt');
 }
@@ -145,8 +143,8 @@ const Tooltip = defineComponent({
       default: undefined,
     },
     styles: { type: [Object, Function] as PropType<TooltipStyles>, default: undefined },
-    overlayStyle: { type: Object as PropType<StyleLike>, default: undefined },
-    overlayInnerStyle: { type: Object as PropType<StyleLike>, default: undefined },
+    overlayStyle: { type: Object as PropType<CSSProperties>, default: undefined },
+    overlayInnerStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     overlayClassName: { type: String, default: undefined },
   },
   emits: {
@@ -184,7 +182,7 @@ const Tooltip = defineComponent({
       mouseLeaveDelay?: number;
       getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
       className?: string;
-      style?: StyleLike;
+      style?: CSSProperties;
     };
 
     // ⚠️ antd（`tooltip/index.js:63-73`）：从 Popover/Popconfirm 注入时
@@ -305,7 +303,7 @@ const Tooltip = defineComponent({
       [
         () => semanticConfig.styles,
         () => (semanticConfig.style ? { root: semanticConfig.style } : undefined),
-        () => props.styles as TooltipSemanticType['styles'] | undefined,
+        () => props.styles,
         () => (props.overlayStyle ? { root: props.overlayStyle } : undefined),
       ],
       // ⚠️ 传 **computed 本身**（不是 `.value`）：函数式变体每次重算都要看到当前
@@ -323,10 +321,10 @@ const Tooltip = defineComponent({
       ),
     );
 
-    const containerStyle = computed<StyleLike>(() => ({
+    const containerStyle = computed<CSSProperties>(() => ({
       ...(mergedStyles.value.container ?? {}),
       ...(props.overlayInnerStyle ?? {}),
-      ...(colorInfo.value.overlayStyle as StyleLike),
+      ...colorInfo.value.overlayStyle,
     }));
 
     // ========================= tempOpen ==============================
@@ -410,7 +408,7 @@ const Tooltip = defineComponent({
             content: h('span', { class: `${prefixCls.value}-arrow-content` }),
             className: mergedClassNames.value.arrow,
             style: {
-              ...(colorInfo.value.arrowStyle as StyleLike),
+              ...colorInfo.value.arrowStyle,
               ...(mergedStyles.value.arrow ?? {}),
             },
           }
@@ -421,7 +419,7 @@ const Tooltip = defineComponent({
         {
           id: mergedId.value,
           class: clsx(`${prefixCls.value}-container`, mergedClassNames.value.container),
-          style: containerStyle.value as CSSProperties,
+          style: containerStyle.value,
           role: 'tooltip',
           onClick: (event: MouseEvent) => emit('popupClick', event),
         },

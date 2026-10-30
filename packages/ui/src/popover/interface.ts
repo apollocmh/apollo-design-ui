@@ -9,7 +9,7 @@
  * 内容通道（title + content 双通道）与语义槽（title/content）上扩展。
  */
 
-import type { VNodeChild } from 'vue';
+import type { CSSProperties, VNodeChild } from 'vue';
 import type {
   TooltipArrow,
   TooltipContent,
@@ -37,11 +37,11 @@ export interface PopoverSemanticType {
     content?: string;
   };
   styles?: {
-    root?: Record<string, string | number>;
-    container?: Record<string, string | number>;
-    arrow?: Record<string, string | number>;
-    title?: Record<string, string | number>;
-    content?: Record<string, string | number>;
+    root?: CSSProperties;
+    container?: CSSProperties;
+    arrow?: CSSProperties;
+    title?: CSSProperties;
+    content?: CSSProperties;
   };
 }
 

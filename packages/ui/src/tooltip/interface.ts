@@ -6,9 +6,8 @@
  * TooltipProps（H2 重新定义，禁止复制搬运）。禁 any / as any / @ts-expect-error（H10）。
  */
 
+import type { CSSProperties, VNodeChild } from 'vue';
 import type { TriggerAlign } from '../_internal/trigger';
-
-type VNodeChild = import('vue').VNodeChild;
 
 /** antd 的 `TooltipPlacement`（_util 的 12 个 placement）。 */
 export type TooltipPlacement =
@@ -52,9 +51,9 @@ export interface TooltipSemanticType {
     arrow?: string;
   };
   styles?: {
-    root?: Record<string, string | number>;
-    container?: Record<string, string | number>;
-    arrow?: Record<string, string | number>;
+    root?: CSSProperties;
+    container?: CSSProperties;
+    arrow?: CSSProperties;
   };
 }
 
@@ -131,9 +130,9 @@ export interface TooltipProps {
   classNames?: TooltipClassNames;
   styles?: TooltipStyles;
   /** ⚠️ 已废弃，请用 `styles.root`。 */
-  overlayStyle?: Record<string, string | number>;
+  overlayStyle?: CSSProperties;
   /** ⚠️ 已废弃，请用 `styles.container`。 */
-  overlayInnerStyle?: Record<string, string | number>;
+  overlayInnerStyle?: CSSProperties;
   /** ⚠️ 已废弃，请用 `classNames.root`。 */
   overlayClassName?: string;
 }

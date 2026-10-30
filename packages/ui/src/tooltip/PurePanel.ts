@@ -10,8 +10,6 @@ import type { TooltipContent, TooltipSemanticType, TooltipSlots } from './interf
 import { useTooltipTheme } from './use-tooltip-theme';
 import { parseTooltipColor } from './util';
 
-type StyleLike = Record<string, string | number>;
-
 function stripClassStyle(attrs: Record<string, unknown>): Record<string, unknown> {
   const rest = { ...attrs };
   delete rest.class;
@@ -72,7 +70,7 @@ const PurePanel = defineComponent({
           h('div', {
             class: clsx(`${prefixCls}-arrow`, mergedClassNames.value.arrow),
             style: {
-              ...(colorInfo.arrowStyle as StyleLike),
+              ...colorInfo.arrowStyle,
               ...(mergedStyles.value.arrow ?? {}),
             },
           }),
@@ -82,7 +80,7 @@ const PurePanel = defineComponent({
               class: clsx(`${prefixCls}-container`, mergedClassNames.value.container),
               style: {
                 ...(mergedStyles.value.container ?? {}),
-                ...(colorInfo.overlayStyle as StyleLike),
+                ...colorInfo.overlayStyle,
               },
               role: 'tooltip',
             },

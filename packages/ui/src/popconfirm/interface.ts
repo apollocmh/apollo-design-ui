@@ -51,12 +51,12 @@ export interface PopconfirmSemanticType {
     content?: string;
   };
   styles?: {
-    root?: Record<string, string | number>;
-    container?: Record<string, string | number>;
-    arrow?: Record<string, string | number>;
-    icon?: Record<string, string | number>;
-    title?: Record<string, string | number>;
-    content?: Record<string, string | number>;
+    root?: CSSProperties;
+    container?: CSSProperties;
+    arrow?: CSSProperties;
+    icon?: CSSProperties;
+    title?: CSSProperties;
+    content?: CSSProperties;
   };
 }
 
@@ -76,7 +76,7 @@ export interface PopconfirmProps {
   /** 根元素（浮层）追加类名。 */
   overlayClassName?: string;
   /** 浮层内联样式。 */
-  overlayStyle?: Record<string, string | number>;
+  overlayStyle?: CSSProperties;
   /** 标题数据（`0` 合法）；富内容优先使用 #title。 */
   title?: TooltipContent;
   /** 描述数据；富内容优先使用 #description。 */
