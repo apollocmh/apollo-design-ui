@@ -22,6 +22,7 @@ export default Switch;
 export type {
   SwitchChangeEventHandler,
   SwitchClickEventHandler,
+  SwitchConfig,
   SwitchEvent,
   SwitchProps,
   SwitchRef,
@@ -29,6 +30,7 @@ export type {
   SwitchSemanticContext,
   SwitchSemanticStyles,
   SwitchSize,
+  SwitchSlots,
 } from './interface';
 export { genSwitchStyle, genTokenDecls as genSwitchTokenDecls } from './style';
 export type { ComponentToken as SwitchComponentToken } from './style/token';

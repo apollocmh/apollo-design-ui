@@ -87,9 +87,11 @@
   显式 dispatchEvent 仍传事件，但不改状态或发送 change/update。见 ADR0007。
 - **左右方向键**：使用标准 `event.key`，ArrowRight ⇒ true、ArrowLeft ⇒ false，
   阻止滚动且不合成 click；Space/Enter 交给按钮原生激活，不重复切换。
-- **`size` 走 `useSize` 的「函数形态」**：`useSize((ctx) => props.size ?? ctx)`
-  —— 写成 `useSize(props.size)` 只在 setup 期读一次，受控切换 size 会静默失效
-  （PITFALLS 163，radio 同源已修）。
+- **`size` 响应式读取组件 prop 与 `useSize` 上下文**，全局 `large` 使用常规 `medium`。
+- **Provider 样式配置响应式合并**：`components.switch` 的 `style`、`className`、
+  `classNames`、`styles` 按 API 文档的优先级落到相应区域；原生根 `style` 优先。
+- **内容槽与实例有公开类型**：`SwitchSlots` 声明两个内容槽；实际组件实例提供
+  `nativeElement`、`focus`、`blur`，类型与 `SwitchRef` 一致。
 - **DOM 三层恒存在**：`-handle` 与 `-inner-checked` / `-inner-unchecked` 都无条件渲染。
 - **`size="default"` 发 deprecation 告警**（提示改用 `"medium"`），视觉与 medium 相同。
 - **5 处 `@media (prefers-reduced-motion: reduce)`**，且**没有** hover media query

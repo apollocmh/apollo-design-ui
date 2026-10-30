@@ -590,6 +590,7 @@ export {
 export type {
   SwitchChangeEventHandler,
   SwitchClickEventHandler,
+  SwitchConfig,
   SwitchEvent,
   SwitchProps,
   SwitchRef,
@@ -597,6 +598,7 @@ export type {
   SwitchSemanticContext,
   SwitchSemanticStyles,
   SwitchSize,
+  SwitchSlots,
 } from './switch';
 export { Switch } from './switch';
 export { genSwitchStyle, genTokenDecls as genSwitchTokenDecls } from './switch/style';

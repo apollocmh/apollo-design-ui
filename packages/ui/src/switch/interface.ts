@@ -1,6 +1,7 @@
 /** Vue Switch public contracts. State change and native click have distinct payloads. */
 
 import type { CSSProperties, VNodeChild } from 'vue';
+import type { ComponentStyleConfig } from '../config-provider/context';
 
 /**
  * antd：`Exclude<SizeType, 'large'> | 'default'`。
@@ -78,6 +79,14 @@ export interface SwitchProps {
   classNames?: SwitchSemanticClassNames | SwitchSemanticClassNamesFn;
   styles?: SwitchSemanticStyles | SwitchSemanticStylesFn;
 }
+
+export interface SwitchSlots {
+  checkedChildren?: () => VNodeChild;
+  unCheckedChildren?: () => VNodeChild;
+}
+
+export type SwitchConfig = Pick<ComponentStyleConfig, keyof ComponentStyleConfig> &
+  Pick<SwitchProps, 'classNames' | 'styles'>;
 
 /**
  * 暴露给父组件的实例。

@@ -35,6 +35,23 @@ subtitle: 开关
 | class / style | **根元素原生 attrs**（不是 Props） | — | — |
 | classNames / styles | 语义槽 `{ root, content, indicator }`（对象或函数） | — | — |
 
+`checked` 优先于 `value`；`defaultChecked` 优先于 `defaultValue`，默认值只用于初始化。受控交互只提出更新，显示状态由父级回传决定；撤销两个受控值后保留最后已接受的状态。
+
+### Slots
+
+| 插槽 | 说明 |
+|---|---|
+| checkedChildren | 选中内容；存在时优先于同名 prop，包括有意为空的内容 |
+| unCheckedChildren | 未选中内容；存在时优先于同名 prop，包括有意为空的内容 |
+
+插槽内容会随当前渲染更新；条件插槽消失时恢复同名 prop。支持文本、数字（含 `0`）、VNode 和数组。
+
+### ConfigProvider
+
+`components.switch` 支持 `SwitchConfig` 的 `className`、`style`、`classNames` 和 `styles`。同一区域的类名拼接，样式按 Provider `styles` → Provider 根 `style` → 组件 `styles` → 原生根 `style` 合并，后者优先；配置替换和撤销会即时生效。
+
+未指定的 `disabled` 和 `size` 分别跟随 `componentDisabled`、`componentSize`。全局 `large` 使用 Switch 的常规 `medium` 尺寸；显式组件 prop 优先，`loading` 始终禁用交互。语义函数读取当前解析后的 `size` 和 `disabled`。
+
 ### Events
 
 | 事件 | 说明 | 参数 |
@@ -47,6 +64,7 @@ subtitle: 开关
 `@change` 与 `onChange` 注册同一事件，不会额外监听原生 DOM `change`。`@click` 只接收原生 `MouseEvent`，支持 `.stop` / `.prevent` / `.once`；不再传旧 `(checked, event)`，无兼容层或弃用期。迁移状态读取到 `@change` 或 `v-model:checked`。
 
 原生根 `style` 支持字符串、对象和数组，与语义 root 样式按 Vue 规则合并；调用方样式优先。
+原生小写 `tabindex` / `autofocus` 同样落在按钮；同时提供时，显式 `tabIndex` / `autoFocus` prop 优先。
 
 ### 键盘
 

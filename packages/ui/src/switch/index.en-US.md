@@ -36,6 +36,23 @@ See [`demo/`](./demo) (7 demos, covering the main antd scenarios.
 | class / style | **Native root attrs** (not Props) | — | — |
 | classNames / styles | Semantic slots `{ root, content, indicator }` (object or function) | — | — |
 
+`checked` takes precedence over `value`, and `defaultChecked` over `defaultValue`. Defaults apply only during initialization. Controlled interactions propose an update and wait for the parent to accept it; removing both controlled values retains the last accepted state.
+
+### Slots
+
+| Slot | Description |
+|---|---|
+| checkedChildren | On-state content; takes precedence over its prop whenever present, including intentionally empty content |
+| unCheckedChildren | Off-state content; takes precedence over its prop whenever present, including intentionally empty content |
+
+Slots read current content on each render and fall back to the matching prop when withdrawn. Text, numbers including `0`, VNodes and arrays are supported.
+
+### ConfigProvider
+
+`components.switch` accepts `SwitchConfig`: `className`, `style`, `classNames` and `styles`. Classes concatenate within each region. Styles merge in this order: Provider `styles`, Provider root `style`, component `styles`, native root `style`; later values win. Replacing or removing the configuration updates the existing button.
+
+An omitted `disabled` or `size` follows `componentDisabled` or `componentSize`. The global `large` size resolves to Switch's regular `medium` size. Explicit component props take precedence, while `loading` always disables interaction. Semantic functions receive the current resolved `size` and `disabled`.
+
 ### Events
 
 | Event | Description | Payload |
@@ -48,6 +65,7 @@ See [`demo/`](./demo) (7 demos, covering the main antd scenarios.
 `@change` and `onChange` register the same event. They do not attach an additional native DOM `change` listener. `@click` receives only the native `MouseEvent`, supporting `.stop`, `.prevent` and `.once`. The old `(checked, event)` callback is removed directly, without a compatibility layer or deprecation period. Read state from `@change` or `v-model:checked`.
 
 Native root `style` accepts strings, objects and arrays, merged with semantic root styles using Vue rules; caller styles take precedence.
+Native lowercase `tabindex` / `autofocus` also reach the button; explicit `tabIndex` / `autoFocus` props take precedence when both are supplied.
 
 ### Keyboard
 

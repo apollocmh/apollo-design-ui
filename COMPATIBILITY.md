@@ -70,3 +70,5 @@ Flex的完整内容、当前gap与原生样式见[Flex契约迁移](docs/migrati
 Theme的可写深响应式配置、同应用默认来源共享/跨应用与SSR隔离、mounted变量注入和可释放scope所有权，以及空算法/undefined覆盖、精确Alias类型和原生DOM引用target，集中见[Theme契约迁移](docs/migrations/theme-foundation-contracts.md)。开发期直接移除无消费的ThemeConfig.prefixCls；DOM类名沿用ConfigProvider顶层prefixCls，CSS变量名使用cssVarPrefix，不新增兼容通道。该源码里程碑不代表ConfigProvider/Tree完整单元或全库最终门禁已关闭。
 
 共享 `useControlledValue` 的受控请求、撤控保留值与函数更新规则见[受控状态迁移](docs/migrations/controlled-value.md)。开发阶段直接修正 rc 内部状态语义，不提供旧行为开关。
+
+Switch 的 Provider 样式、具名槽、原生 attrs 和真实模板 ref 类型修正见[Switch API](packages/ui/src/switch/index.zh-CN.md)；全局 large 解析为该组件已支持的 medium，不新增尺寸能力。

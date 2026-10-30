@@ -12,30 +12,28 @@ import {
   h,
   normalizeStyle,
   type PropType,
+  type SlotsType,
   shallowRef,
   type VNodeChild,
   watchEffect,
 } from 'vue';
-import {
-  mergeClassNames,
-  mergeStyles,
-  resolveSemantic,
-  styleAttrs,
-} from '../_internal/use-merge-semantic';
+import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
 import type {
+  SwitchConfig,
   SwitchEvent,
   SwitchProps,
-  SwitchRef,
   SwitchSemanticClassNames,
   SwitchSemanticStyles,
+  SwitchSlots,
 } from './interface';
 
 export const SwitchComponent = defineComponent({
   name: 'ASwitch',
   inheritAttrs: false,
+  expose: ['nativeElement', 'focus', 'blur'],
   props: {
     prefixCls: { type: String, default: undefined },
     size: { type: String as PropType<SwitchProps['size']>, default: undefined },
@@ -67,6 +65,7 @@ export const SwitchComponent = defineComponent({
     },
     styles: { type: [Object, Function] as PropType<SwitchProps['styles']>, default: undefined },
   },
+  slots: Object as SlotsType<SwitchSlots>,
   // Native click and semantic change use distinct, typed Vue events.
   emits: {
     click: (event: MouseEvent) => !!event,
@@ -74,9 +73,8 @@ export const SwitchComponent = defineComponent({
     'update:value': (checked: boolean) => typeof checked === 'boolean',
     change: (checked: boolean, event: SwitchEvent) => typeof checked === 'boolean' && !!event,
   },
-  setup(props, { attrs, emit, expose, slots }) {
-    const context = useComponentConfig('switch');
-    const { getPrefixCls } = context;
+  setup(props, { attrs, emit, slots }) {
+    const context = useComponentConfig<SwitchConfig>('switch');
     const contextDisabled = useDisabled();
     const devWarning = useDevWarning('Switch');
 
@@ -97,33 +95,27 @@ export const SwitchComponent = defineComponent({
       () => (props.disabled ?? contextDisabled.value) || props.loading,
     );
 
-    const prefixCls = computed(() => getPrefixCls('switch', props.prefixCls));
-    // ⚠️ 必须用**函数形态**：`useSize(props.size)` 只在 setup 期读一次 `props.size`，
-    //    之后 props 变化不会重算（skeleton 的 Avatar/Button/Input 同判）。
-    const mergedSize = useSize((ctxSize) => props.size ?? ctxSize);
+    const prefixCls = computed(() => context.getPrefixCls('switch', props.prefixCls));
+    const contextSize = useSize<undefined>();
+    // Switch has two visual sizes; the global large size uses its regular size.
+    const mergedSize = computed(
+      () => props.size ?? (contextSize.value === 'large' ? 'medium' : contextSize.value),
+    );
 
     // ============================ Semantic ==============================
-    const mergedProps = computed<SwitchProps>(
-      () =>
-        ({
-          ...props,
-          size: mergedSize.value,
-          disabled: mergedDisabled.value,
-        }) as SwitchProps,
-    );
-    const info = computed(() => ({ props: mergedProps.value }));
-    const mergedClassNames = computed(() =>
-      mergeClassNames<SwitchSemanticClassNames>(
-        resolveSemantic<SwitchSemanticClassNames, SwitchProps>(
-          props.classNames as never,
-          info.value,
-        ),
-      ),
-    );
-    const mergedStyles = computed(() =>
-      mergeStyles<SwitchSemanticStyles>(
-        resolveSemantic<SwitchSemanticStyles, SwitchProps>(props.styles as never, info.value),
-      ),
+    const mergedProps = computed<SwitchProps>(() => ({
+      ...props,
+      size: mergedSize.value,
+      disabled: mergedDisabled.value,
+    }));
+    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
+      SwitchProps,
+      SwitchSemanticClassNames,
+      SwitchSemanticStyles
+    >(
+      [() => context.classNames, () => props.classNames],
+      [() => context.styles, () => semanticRootStyle(context.style), () => props.styles],
+      mergedProps,
     );
 
     // ============================== Events ==============================
@@ -156,15 +148,7 @@ export const SwitchComponent = defineComponent({
     // ============================== Refs ===============================
     const buttonRef = shallowRef<HTMLButtonElement | null>(null);
 
-    expose({
-      get nativeElement() {
-        return buttonRef.value;
-      },
-      focus: (options?: FocusOptions) => buttonRef.value?.focus(options),
-      blur: () => buttonRef.value?.blur(),
-    } satisfies SwitchRef);
-
-    return () => {
+    const renderSwitch = () => {
       const cls = prefixCls.value;
 
       // ⚠️ 顺序逐字对齐 antd：`clsx(prefixCls, contextClassName, {small,loading,rtl},
@@ -202,12 +186,11 @@ export const SwitchComponent = defineComponent({
           class: classString,
           ...(typeof rootStyle === 'string' ? { style: rootStyle } : styleAttrs(rootStyle)),
           ref: buttonRef,
-          // ⚠️ 这四个是**声明过的 prop**（不在 attrs 里），antd 的 `{...restProps}` 会把它们
-          //    透传到 button —— 我们必须显式落一遍，否则静默丢失。
+          // Declared native props need explicit routing; preserve native lowercase attrs too.
           title: props.title,
           id: props.id,
-          tabindex: props.tabIndex,
-          autofocus: props.autoFocus || undefined,
+          tabindex: props.tabIndex ?? attrs.tabindex,
+          autofocus: props.autoFocus ?? attrs.autofocus,
           onClick: onInternalClick,
         },
         [
@@ -241,6 +224,15 @@ export const SwitchComponent = defineComponent({
         ],
       );
     };
+    return {
+      nativeElement: buttonRef,
+      focus: (options?: FocusOptions): void => buttonRef.value?.focus(options),
+      blur: (): void => buttonRef.value?.blur(),
+      renderSwitch,
+    };
+  },
+  render() {
+    return this.renderSwitch();
   },
 });
 

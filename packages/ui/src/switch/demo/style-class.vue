@@ -2,7 +2,8 @@
 // 对齐 antd 的 style-class demo（语义化三槽：root / content / indicator）
 // ⚠️ PLATFORM 替换：antd 用 antd-style 的 createStyles；本仓零运行时 —— 类名与样式
 //    由 demo 自己的 <style> 提供（两边生成机制本就不同，比的是挂载结果）。
-import { Flex, Switch } from '@apollo-design/ui';
+import { ConfigProvider, Flex, Switch, type SwitchConfig } from '@apollo-design/ui';
+import { ref } from 'vue';
 
 /** 对象形态的 `styles`。 */
 const stylesObject = { root: { backgroundColor: '#F5D2D2' } };
@@ -10,6 +11,13 @@ const stylesObject = { root: { backgroundColor: '#F5D2D2' } };
 /** 函数形态的 `styles` —— 按合并后的 `size` 分支。 */
 const stylesFn = (info: { props: { size?: string } }) =>
   info.props.size === 'medium' ? { root: { backgroundColor: '#BDE3C3' } } : {};
+
+const providerChecked = ref(false);
+const providerConfig: SwitchConfig = {
+  style: { marginInlineStart: '4px' },
+  classNames: { content: 'demo-switch-content' },
+  styles: ({ props }) => ({ root: { opacity: props.checked ? 1 : 0.6 } }),
+};
 </script>
 
 <template>
@@ -33,6 +41,14 @@ const stylesFn = (info: { props: { size?: string } }) =>
       aria-label="MUI style switch"
       :class-names="{ root: 'demo-switch-mui-root', indicator: 'demo-switch-mui-indicator' }"
     />
+    <ConfigProvider :components="{ switch: providerConfig }">
+      <Switch
+        v-model:checked="providerChecked"
+        checked-children="On"
+        un-checked-children="Off"
+        aria-label="Switch with Provider defaults"
+      />
+    </ConfigProvider>
   </Flex>
 </template>
 

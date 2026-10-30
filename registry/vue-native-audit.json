@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 4,
+  "revision": 6,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -1311,13 +1311,17 @@
       "kind": "component",
       "ref": "steps",
       "title": "Steps",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/steps"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_steps",
+        "baseRevision": 4,
+        "startedAt": "2026-10-30T06:11:45.457Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1346,17 +1350,13 @@
       "kind": "component",
       "ref": "switch",
       "title": "Switch",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/switch"
       ],
-      "assignment": {
-        "owner": "native_switch",
-        "baseRevision": 1,
-        "startedAt": "2026-10-30T05:40:32.202Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1364,7 +1364,38 @@
         "docs/audit/2026-10-24-content-events-remediation.md",
         "docs/audit/2026-10-24-switch-native-events-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/switch"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/switch --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 29300
+          },
+          {
+            "kind": "core",
+            "command": "vitest run --project unit packages/ui/src/switch/__tests__/contract-audit.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4480
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <temporary config extending all root strict options; current components and utils source/tests/demos>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49702
+          }
+        ],
+        "boundary": "历史视觉缺口仍保留；未进行冻结版本九维、发布构建或消费者验收。"
+      }
     },
     {
       "id": "CMP:table",

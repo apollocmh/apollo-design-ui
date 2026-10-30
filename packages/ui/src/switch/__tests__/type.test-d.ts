@@ -7,15 +7,17 @@
  */
 
 import { expectTypeOf, it } from 'vitest';
-import { h } from 'vue';
+import { h, type VNodeChild } from 'vue';
 import { Switch } from '../index';
 import type {
   SwitchChangeEventHandler,
   SwitchClickEventHandler,
+  SwitchConfig,
   SwitchEvent,
   SwitchProps,
   SwitchRef,
   SwitchSize,
+  SwitchSlots,
 } from '../interface';
 
 it('SwitchProps 的关键字段类型', () => {
@@ -55,6 +57,37 @@ it('SwitchRef 的形状', () => {
   expectTypeOf<SwitchRef['nativeElement']>().toEqualTypeOf<HTMLButtonElement | null>();
   expectTypeOf<SwitchRef['focus']>().toBeFunction();
   expectTypeOf<SwitchRef['blur']>().toBeFunction();
+  expectTypeOf<
+    InstanceType<typeof Switch>['nativeElement']
+  >().toEqualTypeOf<HTMLButtonElement | null>();
+  expectTypeOf<InstanceType<typeof Switch>['focus']>().toEqualTypeOf<SwitchRef['focus']>();
+  expectTypeOf<InstanceType<typeof Switch>['blur']>().toEqualTypeOf<SwitchRef['blur']>();
+});
+
+it('public named slots and Provider defaults retain their Vue contracts', () => {
+  expectTypeOf<SwitchSlots>().toEqualTypeOf<import('../../index').SwitchSlots>();
+  expectTypeOf<SwitchConfig>().toEqualTypeOf<import('../../index').SwitchConfig>();
+  const slots: SwitchSlots = {
+    checkedChildren: () => [h('strong', 'On'), 0],
+    unCheckedChildren: () => false,
+  };
+  expectTypeOf(slots.checkedChildren).toEqualTypeOf<(() => VNodeChild) | undefined>();
+  expectTypeOf<InstanceType<typeof Switch>['$slots']['checkedChildren']>().toMatchTypeOf<
+    (() => VNodeChild) | undefined
+  >();
+  expectTypeOf<SwitchConfig>().toMatchTypeOf<
+    NonNullable<import('../../config-provider/interface').ConfigProviderProps['components']>[string]
+  >();
+  const negatives = () => {
+    // @ts-expect-error Switch only accepts checkedChildren and unCheckedChildren slots.
+    const unknownSlot: SwitchSlots = { default: () => 'Off' };
+    // @ts-expect-error Provider defaults do not control an individual Switch value.
+    const controlledConfig: SwitchConfig = { checked: true };
+    // @ts-expect-error Provider style retains its existing CSSProperties contract.
+    const invalidStyle: SwitchConfig = { style: 'color: red' };
+    return [unknownSlot, controlledConfig, invalidStyle];
+  };
+  expectTypeOf(negatives).toBeFunction();
 });
 
 it('能 h() 且静态标记存在', () => {
