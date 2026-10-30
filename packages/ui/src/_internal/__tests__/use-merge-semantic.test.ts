@@ -14,14 +14,32 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { ref } from 'vue';
 import {
   fillObjectBySchema,
   mergeClassNames,
   mergeClassNamesBySchema,
   mergeStyles,
+  type SemanticInput,
   type SemanticSchema,
   useMergeSemantic,
 } from '../use-merge-semantic';
+
+it('条件语义函数返回 undefined 时保留默认值，随后响应当前 props', () => {
+  const active = ref(false);
+  const conditional: SemanticInput<{ root?: string }, { active: boolean }> = ({ props }) =>
+    props.active ? { root: 'active' } : undefined;
+  const { classNames } = useMergeSemantic<
+    { active: boolean },
+    { root?: string },
+    Record<string, never>
+  >([{ root: 'base' }, () => conditional], [], () => ({ active: active.value }));
+  expect(classNames.value.root).toBe('base');
+  active.value = true;
+  expect(classNames.value.root).toBe('base active');
+  active.value = false;
+  expect(classNames.value.root).toBe('base');
+});
 
 /** Table 的 schema（antd 原文：`InternalTable.tsx:322-333`）。 */
 const TABLE_SCHEMA: SemanticSchema = {

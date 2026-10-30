@@ -77,7 +77,7 @@ export interface SemanticInfo<P> {
 }
 
 /** 对象式或函数式的语义化输入。 */
-export type SemanticInput<T, P> = T | ((info: SemanticInfo<P>) => T);
+export type SemanticInput<T, P> = T | ((info: SemanticInfo<P>) => T | undefined);
 
 /** 任意可响应化的输入。普通值、ref、getter 都接受（与 `toValue` 同构）。 */
 export type MaybeSource<T> = MaybeRefOrGetter<T>;
@@ -106,7 +106,7 @@ export function resolveSemantic<T, P>(
   info: SemanticInfo<P>,
 ): T | undefined {
   if (value === undefined || value === null) return undefined;
-  return isFunction(value) ? (value as (i: SemanticInfo<P>) => T)(info) : value;
+  return isFunction(value) ? (value as (i: SemanticInfo<P>) => T | undefined)(info) : value;
 }
 
 /**
