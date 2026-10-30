@@ -2,6 +2,18 @@
 
 # Calendar 实现说明
 
+## 2026-10-31 当前 Vue 契约
+
+Calendar 的公开内容由 headerRender、cellRender、fullCellRender 三个作用域槽表达；7 个新旧内容函数 prop 已直接迁移。表头槽的 onChange/onTypeChange 保留真实命令职责。原生 attrs/listeners 落实际根，nativeElement 随卸载清空。
+
+value/mode 使用共享受控状态语义，保留事件顺序、拒绝与撤控的最后接收值；Picker 的几何与交互算法继续复用。当前 Provider、语义函数、locale 与六个 Calendar Token 响应替换和撤除。Header 使用 Select/RadioGroup 的模型提议与私有 typed emits，年/月控件均有当前语言可访问名。
+
+公开 API 和迁移见 index.zh-CN.md / index.en-US.md；测试包含真实 Ctor/SFC、核心交互、原生 attrs/槽、当前配置、主题、DOM 与 a11y。未执行本轮最终冻结九维、覆盖率或发布消费者验收。
+
+## 以下为历史实现与验收记录（原文保留）
+
+下文中的 React 判据、双通道、attrs 丢弃、Token 缺口及当时 Gate 数字保留原日期，不表示当前 API 或重新验证。已由上文当前契约取代。
+
 > 契约来源：antd **6.6.4** 的 `es/calendar/`（`generateCalendar.js` 445 行 +
 > `Header.js` 201 行 + `style/index.js` 275 行）。
 > 逐条判据见 `docs/analysis/calendar.md`（G1 产物）与

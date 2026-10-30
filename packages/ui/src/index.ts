@@ -780,13 +780,11 @@ export { genAvatarStyle, genTokenDecls as genAvatarTokenDecls } from './avatar/s
 export type { ComponentToken as AvatarComponentToken } from './avatar/style/token';
 export { prepareComponentToken as prepareAvatarComponentToken } from './avatar/style/token';
 export type {
-  CalendarCellRender,
   CalendarCellRenderInfo,
+  CalendarCellSlotProps,
   CalendarDate,
   CalendarEmits,
   CalendarExpose,
-  CalendarFullCellRender,
-  CalendarHeaderRender,
   CalendarHeaderRenderConfig,
   CalendarMode,
   CalendarProps,

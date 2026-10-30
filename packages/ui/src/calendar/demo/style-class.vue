@@ -31,10 +31,7 @@ const stylesFunction: CalendarProps['styles'] = (info) => {
       },
     };
   }
-  // ⚠️ 上游这里 `return undefined` —— 本仓的 `CalendarSemanticValue` 函数分支要求返回
-  //    `T`（与上游 `GenerateSemantic` 同形），**不收 `undefined`** ⇒ 返回空对象。
-  //    效果等价（6 个槽全可选，空对象 = 不加任何样式）。见 README §5 第 5 条。
-  return {};
+  return undefined;
 };
 </script>
 

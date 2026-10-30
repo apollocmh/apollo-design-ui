@@ -4,115 +4,85 @@ title: Calendar
 subtitle: Calendar
 ---
 
-A container for displaying data in calendar form.
-
-## When To Use
-
-- When data is in the form of dates, such as schedules, timetables, prices calendar, lunar calendar;
-- When you need to browse and pick a date on a whole-month scale.
-
-> 🚨 **The class prefix is `apollo-picker-calendar`** (upstream `getPrefixCls('picker')`),
-> while the **CSS variables are `--apollo-calendar-*`** — **the class and the variable
-> namespaces differ**. ⚠️ But passing `prefixCls` as a **prop** overrides it entirely
-> (passing `'apollo'` yields `apollo-calendar`), because in
-> `getPrefixCls(suffix, customize)` the `customize` wins.
+Display and select dates using an inline month or year panel.
 
 ## Examples
 
-See [`demo/`](./demo) (**9** demos). ⚠️ Gaps vs. antd are listed in `README.md` §5
-(`lunar` / `component-token` are not ported).
+See [`demo/`](./demo) for nine examples, including native header/cell slots and current component tokens.
 
 ## API
 
-### Calendar
+### Props
 
 | Property | Description | Type | Default |
 |---|---|---|---|
-| value | The displayed date (`v-model:value`) | `CalendarDate` | —— |
-| defaultValue | Uncontrolled initial value | `CalendarDate` | —— |
-| mode | Calendar mode (`v-model:mode`) | `'year' \| 'month'` | `'month'` |
-| fullscreen | Full screen (`false` renders a mini calendar) | `boolean` | `true` |
-| showWeek | Show the week-number column | `boolean` | `false` |
-| validRange | Selectable range (**inclusive**; endpoints are *not* disabled) | `[CalendarDate, CalendarDate]` | —— |
-| disabledDate | Extra disabled predicate | `(date: CalendarDate) => boolean` | —— |
-| headerRender | Custom header (**function prop**) | `(config) => VNodeChild` | —— |
-| cellRender | Customize the cell **content** | `(date, info) => VNodeChild` | —— |
-| fullCellRender | Customize the **whole** cell | `(date, info) => VNodeChild` | —— |
-| locale | Locale (deep-merged with `ConfigProvider`'s `locale.Calendar`) | `PickerLocale` | —— |
-| classNames | Semantic class names (6 slots, **function form** supported) | `CalendarSemanticValue<…>` | —— |
-| styles | Semantic styles (same) | `CalendarSemanticValue<…>` | —— |
-| prefixCls | Custom class prefix | `string` | `apollo-picker` |
-| class / style | **Native root attrs** (not Props) | `string \| array \| object` / `CSSProperties` | —— |
-| style | Inline style of the root | `CSSProperties` | —— |
-| dateFullCellRender | **@deprecated** Use `fullCellRender` | `(date) => VNodeChild` | —— |
-| dateCellRender | **@deprecated** Use `cellRender` | `(date) => VNodeChild` | —— |
-| monthFullCellRender | **@deprecated** Use `fullCellRender` | `(date) => VNodeChild` | —— |
-| monthCellRender | **@deprecated** Use `cellRender` | `(date) => VNodeChild` | —— |
+| value | Accepted date (`v-model:value`) | `CalendarDate` (Dayjs) | — |
+| defaultValue | Initial uncontrolled date; later changes do not reset state | `CalendarDate` | Today |
+| mode | Accepted panel mode (`v-model:mode`) | `'month' \| 'year'` | `'month'` |
+| fullscreen | Full calendar; false uses a compact card | `boolean` | `true` |
+| showWeek | Show week numbers | `boolean` | `false` |
+| validRange | Inclusive selectable bounds | `[CalendarDate, CalendarDate]` | — |
+| disabledDate | Additional disabled predicate, OR-ed with the range | `(date: CalendarDate) => boolean` | — |
+| locale | Deep merge with the current `ConfigProvider.locale.Calendar` | `PickerLocale` | Current locale |
+| classNames | Six semantic targets; object or current-props function | `CalendarSemanticValue<CalendarSemanticClassNames, CalendarProps>` | — |
+| styles | Six semantic targets; object or current-props function | `CalendarSemanticValue<CalendarSemanticStyles, CalendarProps>` | — |
+| prefixCls | Picker class prefix | `string` | Current root prefix + `-picker` |
 
-> ⚠️ **The four deprecated props are detected with `!== undefined`** (Vue's `props`
-> always contains every declared key, so copying upstream's `in props` would warn
-> **unconditionally**).
-> ⚠️ **When neither `value` nor `defaultValue` is given, it falls back to `getNow()`
-> ("today")** — that makes screenshots/assertions drift with the run date, so
-> **tests must pass `value` explicitly**.
-> ⚠️ Upstream's Calendar root has **no `{...restProps}`** (measured: `restProps` occurs
-> **0** times in `generateCalendar.js`) ⇒ `id` / `data-*` / `aria-*` do **not** land on
-> the root element. This repo follows that (Vue's `class` / `style` are still merged,
-> because on the React side they are props).
+Native `class`, all Vue `style` forms, id, ARIA/data attrs, tabindex and ordinary DOM listeners reach the actual root div. Native style follows theme/Provider/local semantic style. Owned notification listeners are consumed by Vue emits.
 
-### Events
-
-| Event | Description | Payload |
-|---|---|---|
-| `change` | The selected date changed | `(date: CalendarDate)` |
-| `update:value` | `v-model:value` | `(date: CalendarDate)` |
-| `panelChange` | Panel granularity / panel value changed | `(date: CalendarDate, mode: CalendarMode)` |
-| `update:mode` | `v-model:mode` | `(mode: CalendarMode)` |
-| `select` | Every selection (including `headerRender`'s own `onChange`) | `(date: CalendarDate, info: { source })` |
-
-> 🚨 **Order is semantics** (`triggerChange`): when the picked day is the **same day**
-> as the current value, **neither `change` nor `panelChange` fires**; a **`panelChange`
-> is only re-emitted** when the date crosses a month (`panelMode === 'date'`) or a year
-> (`panelMode === 'month'`).
-> ⚠️ `update:mode` fires **only when the mode actually changed** — `panelChange` fires
-> one extra time when the date crosses a month/year.
-> ⚠️ For the **panel** branch, `select`'s `source` is **`panelMode`**
-> (`'date'` \| `'month'`), not the literal `'date'`.
+Controlled models emit proposals. Rejected proposals do not become hidden local state; removing control preserves the last accepted value/mode. Defaults only initialize uncontrolled state.
 
 ### Slots
 
-| Slot | Description |
-|---|---|
-| `headerRender` | Slot form of `headerRender` (same `config` shape) |
-| `cellRender` | Slot form of `cellRender` (`{ current, info }`) |
-| `fullCellRender` | Slot form of `fullCellRender` (`{ current, info }`) |
+| Slot | Scope | Behavior |
+|---|---|---|
+| `headerRender` | `{ value, type, onChange, onTypeChange }` (`CalendarHeaderRenderConfig`) | Replace the header. The two commands request a date/mode change through the normal Calendar path. |
+| `cellRender` | `{ current, info }` (`CalendarCellSlotProps`) | Content below the default date/month label. |
+| `fullCellRender` | `{ current, info }` (`CalendarCellSlotProps`) | Replace the complete cell, including its label. Takes precedence over `cellRender`. |
 
-### expose
-
-| Field | Description |
-|---|---|
-| `nativeElement` | Root DOM (`<div class="apollo-picker-calendar …">`) |
-
-> ⚠️ Upstream's `CalendarRef` has **only** `nativeElement` (no `focus` / `blur` — those
-> belong to `DatePicker`'s `PickerRef`) ⇒ this repo does **not** add them.
-
-## Theme
-
-**6 Component Tokens** (`fullBg` / `fullPanelBg` / `itemActiveBg` /
-`yearControlWidth` / `monthControlWidth` / `miniContentHeight`), but
-`prepareComponentToken` spreads `...initPanelComponentToken(token)` which brings in
-**21** panel tokens ⇒ **27** `--apollo-calendar-*` declarations are emitted.
-
-⚠️ To customize through `ConfigProvider`, use the **`calendar`** entry
-(**not** `datePicker`):
+`current` is a Dayjs date; `info` is the existing `CalendarCellRenderInfo` from PickerPanel, including `type`, `locale` and `originNode`. Slots are read during render, so conditional addition/removal works. Arrays, text, 0 and explicit empty content keep their Vue meanings.
 
 ```vue
-<ConfigProvider :components="{ calendar: { classNames: { root: 'my-root' } } }">
-  <Calendar />
-</ConfigProvider>
+<Calendar v-model:value="date" v-model:mode="mode">
+  <template #headerRender="{ value, type, onChange, onTypeChange }">
+    <button @click="onChange(value.add(1, 'month'))">Next month</button>
+    <button @click="onTypeChange(type === 'month' ? 'year' : 'month')">{{ type }}</button>
+  </template>
+  <template #cellRender="{ current }">{{ events[current.format('YYYY-MM-DD')] }}</template>
+</Calendar>
 ```
 
-⚠️ **`styles` / `classNames` support the function form** (`(info: { props }) => object`);
-`info.props.fullscreen` is the **resolved** value (absent ⇒ `true`), while
-`info.props.mode` stays the **raw prop** (absent ⇒ `undefined`) — same as upstream's
-`{...props, mode, fullscreen, showWeek}`.
+Migration: `headerRender`, `cellRender`, `fullCellRender` content props and the four legacy date/month content props are removed. Use the named slots directly. Split date/month content using `info.type`. There is no fallback callback or deprecation channel; `disabledDate` remains a genuine predicate service.
+
+### Events
+
+| Event | Payload |
+|---|---|
+| `update:value` | `(date: CalendarDate)` |
+| `change` | `(date: CalendarDate)` |
+| `update:mode` | `(mode: CalendarMode)` |
+| `panelChange` | `(date: CalendarDate, mode: CalendarMode)` |
+| `select` | `(date: CalendarDate, info: { source: 'date' \| 'month' \| 'year' \| 'customize' })` |
+
+Date requests emit `update:value`, then `panelChange` when crossing a month in month mode or a year in year mode, then `change`, then `select`. The same day only emits `select`. Mode requests emit `update:mode` only when different, then `panelChange` with the current date. The panel's select source is `date` or `month`; header date commands use `customize`.
+
+### Ref
+
+`nativeElement: HTMLDivElement | null` is the actual root and becomes null on unmount. Calendar exposes no imperative focus/blur methods. Its panel and controls retain their own native keyboard/focus behavior.
+
+## Presentation and theme
+
+Semantic targets are `root`, `header`, `body`, `content`, `item`, `itemContent`. The last four reach PickerPanel; `itemContent` also decorates Calendar's default content container. Semantic functions read current public props; fullscreen is resolved (default true), mode remains the raw prop. Returning undefined contributes no override.
+
+`ConfigProvider.components.calendar` supplies presentation defaults. `ConfigProvider.theme.components.Calendar` supplies the six component tokens; replacement/removal updates existing instances.
+
+| Token | Type | Default |
+|---|---|---|
+| fullBg | string | colorBgContainer |
+| fullPanelBg | string | colorBgContainer |
+| itemActiveBg | string | controlItemBgActive |
+| yearControlWidth | number or CSS length string | 80 |
+| monthControlWidth | number or CSS length string | 70 |
+| miniContentHeight | number or CSS length string | 256 |
+
+Numeric lengths become px, including 0. Static CSS and the existing 21 shared panel declarations remain in use; class and variable namespaces differ (`apollo-picker-calendar` versus `--apollo-calendar-*`). Custom class prefixes require the matching generated stylesheet.

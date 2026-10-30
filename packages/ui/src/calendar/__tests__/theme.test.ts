@@ -11,9 +11,10 @@
  *   3. **前缀参数化**：`genCalendarStyle('ant')` 必须产出 `.ant-picker-calendar` 选择器
  *      —— 这是 `date-picker` 的已知缺口（它的规则写死 `.apollo-`），本组件**不复刻**。
  */
+import { getDesignToken } from '@apollo-design/theme';
 import { describe, expect, it } from 'vitest';
 import { genCalendarStyle, genCalendarTokenDecls } from '../style';
-import { CALENDAR_DERIVED, type CalendarSeedToken, prepareComponentToken } from '../style/token';
+import { CALENDAR_DERIVED, prepareComponentToken } from '../style/token';
 
 const DECLS = genCalendarTokenDecls('apollo');
 /** 声明清单（`--apollo-calendar-xxx`）。 */
@@ -118,11 +119,11 @@ describe('Calendar · L7 B7 双向比对（声明 ↔ 规则引用）', () => {
     // 与 date-picker 同判：「死变量」是**允许**的 —— 有一部分值被构建期内联进规则
     //（`cellHoverWithRangeBg` 的 `lighten(35)` / `cellRangeBorderColor` 的 `lighten(20)`），
     // 声明出来只为「27 个逐字对齐」这条判据。Calendar 没有 `multiple`，
-    // 所以 `multiple-*` 那一族 + 内部量也是死的。实测 **11** 个。
+    // 所以 `multiple-*` 那一族 + 内部量也是死的。当前剩余 **9** 个；范围色与边框已由共享面板规则实际消费。
+    expect(used.has('--apollo-calendar-cell-hover-with-range-bg')).toBe(true);
+    expect(used.has('--apollo-calendar-cell-range-border-color')).toBe(true);
     const dead = DECLARED.filter((d) => !used.has(d)).sort();
     expect(dead).toEqual([
-      '--apollo-calendar-cell-hover-with-range-bg',
-      '--apollo-calendar-cell-range-border-color',
       '--apollo-calendar-internal_fixed_item_margin',
       '--apollo-calendar-multiple-item-bg',
       '--apollo-calendar-multiple-item-border-color',
@@ -218,40 +219,7 @@ describe('Calendar · L7 规则体（前缀参数化 + 面板复用）', () => {
   });
 
   it('`prepareComponentToken` 的键数 = 27（6 自有 + 21 面板）', () => {
-    // 用一份最小的 seed 触发（值不重要，只看键集）
-    const seed = {
-      controlHeight: 32,
-      controlHeightSM: 24,
-      controlHeightLG: 40,
-      fontSize: 14,
-      fontSizeLG: 16,
-      lineHeight: 1.57,
-      lineHeightLG: 1.5,
-      lineWidth: 1,
-      lineWidthFocus: 4,
-      paddingSM: 12,
-      paddingXXS: 4,
-      padding: 16,
-      controlPaddingHorizontal: 12,
-      controlPaddingHorizontalSM: 8,
-      controlOutlineWidth: 2,
-      controlOutline: 'rgba(5,145,255,0.1)',
-      colorErrorOutline: 'rgba(255,38,5,0.06)',
-      colorWarningOutline: 'rgba(255,215,5,0.1)',
-      colorFillAlter: 'rgba(0,0,0,0.02)',
-      colorFillSecondary: 'rgba(0,0,0,0.06)',
-      colorPrimary: '#1677ff',
-      colorPrimaryHover: '#4096ff',
-      colorBgContainer: '#ffffff',
-      colorBgContainerDisabled: 'rgba(0,0,0,0.04)',
-      colorTextDisabled: 'rgba(0,0,0,0.25)',
-      controlItemBgHover: 'rgba(0,0,0,0.04)',
-      controlItemBgActive: '#e6f4ff',
-      sizePopupArrow: 16,
-      borderRadiusXS: 2,
-      borderRadiusOuter: 4,
-      zIndexPopupBase: 1000,
-    } as unknown as CalendarSeedToken;
+    const seed = getDesignToken();
     expect(Object.keys(prepareComponentToken(seed))).toHaveLength(27);
   });
 });

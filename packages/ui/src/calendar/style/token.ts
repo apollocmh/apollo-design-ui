@@ -162,7 +162,7 @@ let tokenCache: PreparedToken | null = null;
 /** 构建期 token 值（缓存；首次调用时读主题默认 seed）。 */
 export function calendarTokenValues(): PreparedToken {
   if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken() as unknown as CalendarSeedToken);
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }

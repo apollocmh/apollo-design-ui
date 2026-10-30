@@ -14,13 +14,11 @@ export const Calendar = withInstall(CalendarComponent);
 export default Calendar;
 
 export type {
-  CalendarCellRender,
   CalendarCellRenderInfo,
+  CalendarCellSlotProps,
   CalendarDate,
   CalendarEmits,
   CalendarExpose,
-  CalendarFullCellRender,
-  CalendarHeaderRender,
   CalendarHeaderRenderConfig,
   CalendarMode,
   CalendarProps,

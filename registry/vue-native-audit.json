@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 181,
+  "revision": 183,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -385,7 +385,7 @@
       "kind": "component",
       "ref": "calendar",
       "title": "Calendar",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [
         "FND:picker"
@@ -393,12 +393,10 @@
       "owns": [
         "packages/ui/src/calendar"
       ],
-      "assignment": {
-        "owner": "native_select",
-        "baseRevision": 173,
-        "startedAt": "2026-10-30T22:16:23.224Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -425,7 +423,248 @@
           "change": "Minimal existing update:value consumers allow Radio to integrate independently; complete Calendar remediation remains its current owner task.",
           "verification": "CMP:radio focused checks record real native-event red→green, immutable Header mode/Demo consumers and full scoped strict; this delta does not repeat or complete the other unit audit."
         }
-      ]
+      ],
+      "verification": {
+        "task": "CMP:calendar",
+        "stage": "architecture",
+        "passed": true,
+        "status": "focused architecture checks passed",
+        "scope": [
+          "packages/ui/src/calendar"
+        ],
+        "checks": [
+          {
+            "name": "Calendar core, 9 demos, DOM, theme, a11y",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit --project dom-contract --project theme --project a11y packages/ui/src/calendar/__tests__ --maxWorkers=1",
+            "exitCode": 0,
+            "elapsedSeconds": 27.43,
+            "result": "6 files, 105 passed; before final direction bridge, supplemented below",
+            "log": "/tmp/apollo-calendar-related-final.log",
+            "diagnostics": "8 jsdom canvas getContext-not-implemented diagnostics retained; label rule is enabled",
+            "kind": "core"
+          },
+          {
+            "name": "Final current-direction/native boundaries",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/calendar/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "elapsedSeconds": 6.81,
+            "result": "8 passed; dynamic slots/0/empty, actual root attrs/ref, rejection/release, order/.once, current Provider/locale/range/6 tokens, RTL keyboard",
+            "log": "/tmp/apollo-calendar-native-final.log"
+          },
+          {
+            "name": "Final RTL affected DOM",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project dom-contract packages/ui/src/calendar/__tests__/semantic.test.ts -t 'calendar:rtl' --maxWorkers=1",
+            "exitCode": 0,
+            "elapsedSeconds": 5.59,
+            "result": "Exact additional panel-rtl class with current direction bridge; other reference data unchanged",
+            "log": "/tmp/apollo-calendar-rtl-dom-green.log"
+          },
+          {
+            "name": "Source Chrome",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/calendar/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "elapsedSeconds": 12.802431681,
+            "result": "Actual keyboard/disabled skip/RTL, controlled refusal/acceptance, mode and numeric month 0, all six token CSS effects, scoped Header SFC demo, ref/unmount; zero console/pageerror diagnostics",
+            "log": "/tmp/apollo-calendar-browser-second.log"
+          },
+          {
+            "name": "Formatting/syntax/whitespace",
+            "commands": [
+              "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/ui/src/calendar --assist-enabled=false --write",
+              "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node --check packages/ui/src/calendar/__tests__/native-browser.mjs",
+              "git diff --check -- packages/ui/src/calendar"
+            ],
+            "exitCode": 0,
+            "elapsedSeconds": null,
+            "result": "Vue template-only Calendar value import retained; Biome assist disabled because it otherwise incorrectly converted that runtime import into import type",
+            "log": "/tmp/apollo-calendar-format-final.log"
+          },
+          {
+            "name": "Focused public-type boundary behavior",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/calendar/__tests__/native-contracts.test.ts packages/ui/src/calendar/__tests__/index.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "elapsedSeconds": 9.15,
+            "result": "2 files, 36 passed; actual second typed change listener and .once retained",
+            "log": "/tmp/apollo-calendar-type-fix-core.log"
+          },
+          {
+            "name": "Final tuple metadata and native event boundaries",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/calendar/__tests__/native-contracts.test.ts packages/ui/src/calendar/__tests__/index.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "elapsedSeconds": 9.25,
+            "result": "2 files, 36 passed after shared exact tuple prop metadata; no range/date algorithm change",
+            "log": "/tmp/apollo-calendar-tuple-core.log"
+          },
+          {
+            "name": "Final two-file type correction format",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/ui/src/calendar/components/CalendarHeader.ts packages/ui/src/calendar/__tests__/native-contracts.test.ts --assist-enabled=false",
+            "exitCode": 0,
+            "elapsedSeconds": null,
+            "result": "No runtime change; prior 36/core/browser evidence retained",
+            "log": "/tmp/apollo-calendar-metadata-final-format.log"
+          },
+          {
+            "name": "Named declaration alias formatting",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/ui/src/calendar/components/CalendarHeader.ts --assist-enabled=false",
+            "exitCode": 0,
+            "elapsedSeconds": null,
+            "log": "/tmp/apollo-calendar-declaration-format.log",
+            "result": "One private-module type alias extraction only; diff-check passed. No runtime, core or browser rerun."
+          },
+          {
+            "kind": "types",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/.apollo-batch-last-three-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53261,
+            "log": "/tmp/apollo-batch-last-three-accepted-types.log",
+            "result": "One immutable integration program passed for all current Calendar/Card/Watermark source, native SFC positive/negative cases, tests, Demos, full UI exports and actual Modal consumer; inherited strict and declaration:true unchanged. Only noEmit/incremental/composite overridden.",
+            "sourceViewBase": "7425ca7f059c4e9480676fa908a542648c7e5f21",
+            "scopes": [
+              "packages/ui/src/calendar",
+              "packages/ui/src/watermark",
+              "packages/ui/src/card"
+            ],
+            "config": {
+              "extends": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/tsconfig.json",
+              "compilerOptions": {
+                "noEmit": true,
+                "incremental": false,
+                "composite": false
+              },
+              "include": [
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/calendar/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/calendar/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/watermark/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/watermark/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/card/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/card/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/index.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/modal/engine/Content.ts"
+              ]
+            }
+          },
+          {
+            "kind": "lint",
+            "command": "node node_modules/@biomejs/biome/bin/biome check --assist-enabled=false packages/ui/src/calendar/Calendar.vue packages/ui/src/calendar/__tests__/a11y.test.ts packages/ui/src/calendar/__tests__/demo.test.ts packages/ui/src/calendar/__tests__/fixtures/NativeCalendar.vue packages/ui/src/calendar/__tests__/index.test.ts packages/ui/src/calendar/__tests__/native-browser.mjs packages/ui/src/calendar/__tests__/native-contracts.test.ts packages/ui/src/calendar/__tests__/semantic.test.ts packages/ui/src/calendar/__tests__/theme.test.ts packages/ui/src/calendar/__tests__/type.test-d.ts packages/ui/src/calendar/components/CalendarHeader.ts packages/ui/src/calendar/demo/component-token.vue packages/ui/src/calendar/demo/customize-header.vue packages/ui/src/calendar/demo/event-range.vue packages/ui/src/calendar/demo/notice-calendar.vue packages/ui/src/calendar/demo/style-class.vue packages/ui/src/calendar/index.ts packages/ui/src/calendar/interface.ts packages/ui/src/calendar/style/token.ts packages/ui/src/calendar/use-calendar-theme.ts packages/ui/src/card/Card.vue packages/ui/src/card/CardGrid.vue packages/ui/src/card/CardMeta.vue packages/ui/src/card/__tests__/fixtures/NativeCard.vue packages/ui/src/card/__tests__/index.test.ts packages/ui/src/card/__tests__/native-browser.mjs packages/ui/src/card/__tests__/native-contracts.test.ts packages/ui/src/card/__tests__/semantic.test.ts packages/ui/src/card/__tests__/type.test-d.ts packages/ui/src/card/content.ts packages/ui/src/card/demo/component-token.vue packages/ui/src/card/demo/meta.vue packages/ui/src/card/demo/tabs.vue packages/ui/src/card/index.ts packages/ui/src/card/interface.ts packages/ui/src/card/style/index.ts packages/ui/src/card/style/token.ts packages/ui/src/card/use-card-theme.ts packages/ui/src/watermark/Watermark.ts packages/ui/src/watermark/__tests__/demo.test.ts packages/ui/src/watermark/__tests__/fixtures/NativeWatermark.vue packages/ui/src/watermark/__tests__/fixtures/NativeWatermarkTypes.vue packages/ui/src/watermark/__tests__/index.test.ts packages/ui/src/watermark/__tests__/native-browser.mjs packages/ui/src/watermark/__tests__/native-contracts.test.ts packages/ui/src/watermark/__tests__/s42-issue42.test.ts packages/ui/src/watermark/__tests__/type.test-d.ts packages/ui/src/watermark/context.ts packages/ui/src/watermark/demo/custom.vue packages/ui/src/watermark/demo/portal.vue packages/ui/src/watermark/index.ts packages/ui/src/watermark/interface.ts packages/ui/src/watermark/use-clips.ts packages/ui/src/watermark/use-raf-debounce.ts packages/ui/src/watermark/use-singleton-cache.ts packages/ui/src/watermark/use-watermark.ts packages/ui/src/watermark/utils.ts",
+            "exitCode": 0,
+            "durationMs": 202,
+            "log": "/tmp/apollo-batch-last-three-format.log",
+            "result": "All 57 changed source/test/SFC/browser files across the same three units passed; no fixes applied."
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check HEAD -- packages/ui/src/calendar packages/ui/src/watermark packages/ui/src/card",
+            "exitCode": 0,
+            "result": "No whitespace errors on the three frozen units."
+          }
+        ],
+        "failureEvidence": [
+          {
+            "log": "/tmp/apollo-calendar-native-red.log",
+            "exitCode": 1,
+            "elapsedSeconds": 5.55,
+            "cause": "Five independent failures: attrs, conditional slots, initially accepted controlled release, stale semantic props, inactive six-token config"
+          },
+          {
+            "log": "/tmp/apollo-calendar-direction-red.log",
+            "exitCode": 1,
+            "elapsedSeconds": 5.09,
+            "cause": "RTL ArrowRight moved forward because Calendar omitted the real PickerPanel direction input"
+          },
+          {
+            "log": "/tmp/apollo-calendar-related-first.log",
+            "exitCode": 1,
+            "elapsedSeconds": 30.64,
+            "cause": "25 reference DOM scenarios needed exact native attrs/labels/disabled ARIA assertions; one obsolete shared-panel dead-variable expectation was corrected without changing CSS/baselines"
+          },
+          {
+            "log": "/tmp/apollo-calendar-browser-first.log",
+            "exitCode": 1,
+            "elapsedSeconds": null,
+            "cause": "Harness dayjs resolution diagnostic and attempt to click a visually hidden native radio input. Corrected local alias and real label hit-target; no product workaround."
+          },
+          {
+            "log": "/tmp/apollo-ready-three-types.log",
+            "exitCode": 2,
+            "elapsedSeconds": 34.71,
+            "cause": "First root program failed: closed slot interface, fixture type-only runtime import, direct unsupported ref access, Vue listener composition and two tuple metadata boundaries. Four non-tuple files corrected without payload annotations or weakening the actual constructor; rerun pending."
+          },
+          {
+            "log": "/tmp/apollo-calendar-watermark-final-types.log",
+            "exitCode": 2,
+            "elapsedSeconds": 33.795,
+            "cause": "Latest root program failed on cross-module tuple metadata losing its local narrowing and raw onSelectOnce placement. Exact nameable Pick<Exclude<...>> metadata and typed mergeProps once composition now frozen; runtime unchanged, final root rerun pending."
+          }
+        ],
+        "migrations": [
+          "Seven top-level new/legacy content props become the existing three named scoped slots. No callback fallback/deprecation path. The header scope onChange/onTypeChange commands and disabledDate predicate retain genuine service responsibilities.",
+          "CalendarCellSlotProps is newly exported; CalendarCellRender/CalendarFullCellRender/CalendarHeaderRender obsolete prop-function aliases removed. Root owns UI index/COMPATIBILITY updates. HeaderRenderConfig and CellRenderInfo remain.",
+          "Native attrs/listeners reach the actual root; nativeElement is HTMLDivElement|null and clears on unmount. SFC defineSlots/defineExpose produce the actual public constructor.",
+          "Current Provider/local semantic props and Calendar theme token overrides replace/remove live. Header uses Select/RadioGroup update:value with concrete scalar narrowing and private typed emits.",
+          "All dated DOM cases retained through native slots. Only exact root attrs, localized control names, current Picker disabled ARIA and RTL panel class are allowed; reference baselines remain untouched.",
+          "Runtime validRange metadata now uses Vue ComponentObjectPropsOptions exact tuple with an Array/length-two/Dayjs public-input validator, shared only by Calendar/Header. No ArrayConstructor-to-tuple assertion, broad array, fake constructor or extra date-validity restriction."
+        ],
+        "remainingBoundaries": [
+          "Full-library coverage, final nine-dimension acceptance, dist builds, published consumers and complete visual matrix remain stage two; no pass claimed.",
+          "Lunar demo remains absent because its third-party data service is outside this task; all existing nine demos retained.",
+          "Static CSS and the existing 21 shared panel variables/algorithms remain. Custom class prefixes still require matching generated styles.",
+          "No commit, push, root exports/state/shared-source edits or new task dispatch by this owner."
+        ],
+        "attemptsNotPassed": [
+          {
+            "name": "Final RTL axe",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project dom-contract --project a11y packages/ui/src/calendar/__tests__/semantic.test.ts packages/ui/src/calendar/__tests__/a11y.test.ts -t 'calendar:rtl|RTL' --maxWorkers=1",
+            "exitCode": 1,
+            "elapsedSeconds": 12.7,
+            "result": "Axe RTL passed; DOM found the intended extra panel-rtl class, subsequently asserted and rerun above; this command remains failed",
+            "log": "/tmp/apollo-calendar-rtl-specialized.log"
+          },
+          {
+            "name": "Root strict",
+            "command": null,
+            "exitCode": 2,
+            "elapsedSeconds": 53.045,
+            "result": "Strict+declaration=true failed only on three Calendar TS4023 references to Vue private PropOptions. Same metadata now has an exported private-module CalendarValidRangeMetadata alias; runtime and public indices unchanged. Root declaration rerun pending.",
+            "log": "/tmp/apollo-batch-last-three-final-types.log",
+            "durationMs": 53045
+          }
+        ],
+        "pending": [],
+        "sourceFrozen": true,
+        "sourceHashes": {
+          "packages/ui/src/calendar/use-calendar-theme.ts": "cf4a77bf4334aa7f552b024352e8d99cc71853aeceacf2d6250596897320dd9e",
+          "packages/ui/src/calendar/Calendar.vue": "532f622df13482a860a08844c6ae8c2b92f0653a9aba276dab5322999eed98f4",
+          "packages/ui/src/calendar/interface.ts": "ac2de3756af95bd7fedb6a355bf0909436d4287b9cdf79bd74f39cc44a41356f",
+          "packages/ui/src/calendar/index.ts": "ee72ef550aa545a4c2a9acd8ec14c6275b7595a864a00ee91809d639f2eccc9f",
+          "packages/ui/src/calendar/demo/event-range.vue": "5d769b857f73366b0aa985f6a4b2b7baa5a46dc30e3b6b7ced23b49f9b3384df",
+          "packages/ui/src/calendar/demo/card.vue": "b9fc3edc0e76b39bb6ad74a15c2065c535c1ccbc29b37ff51dc23e2fe447c794",
+          "packages/ui/src/calendar/demo/week.vue": "ea7d5500a4ac8e95731ac4123790895359faf2c4fd41c4b502c0ba26b5126272",
+          "packages/ui/src/calendar/demo/notice-calendar.vue": "3164ba4f075d00a92f3cb4df0933c4ec8304946ab12b563b2e7a3f45cfc9a246",
+          "packages/ui/src/calendar/demo/component-token.vue": "4904412045de210fb422fe4457b0ff68dce313d8e1c9432265e2266b791d1bd6",
+          "packages/ui/src/calendar/demo/style-class.vue": "6b95c4bf05e5816738948c8ed02a2f3b9d22d00b79a57c8b354600a18ed5a982",
+          "packages/ui/src/calendar/demo/customize-header.vue": "55e2df68483fc9ad35c28d4ed0e78baa0e0f2339a6b867827ada3105a721ac5b",
+          "packages/ui/src/calendar/demo/basic.vue": "b0212740a64e8ec020b74fd66bd321cc6008a894001460add80eff968096a8ac",
+          "packages/ui/src/calendar/demo/select.vue": "74953938389505d88ce283193c58ed25dfe88bb164476010beea2a42cc1248e5",
+          "packages/ui/src/calendar/style/index.ts": "f52da101e9a74346b16ba9d52b8ff3a98c4078b3a872822fb8d0e1deae02deba",
+          "packages/ui/src/calendar/style/token.ts": "9627b82c6278358d8d9fcfd3e423a873919da9a008a6608eb2a24e514f341dfa",
+          "packages/ui/src/calendar/components/CalendarHeader.ts": "66f6481db20193be65a13eb42529af3ec7497297099aeb0248e7ee6c2ed7dc89",
+          "packages/ui/src/calendar/__tests__/a11y.test.ts": "c0d0e35f763153b535dbc2fdbd4880cabc696a7e1f20f6372dd32959549e219c",
+          "packages/ui/src/calendar/__tests__/native-contracts.test.ts": "b94508d0d2e63363b64ab600c3b04c1533cce7297b93643efa65b28aea5b14da",
+          "packages/ui/src/calendar/__tests__/index.test.ts": "146a8a307daf9e4db8131a5f0374dcfe365222c00c31f8808001a0fa206a5927",
+          "packages/ui/src/calendar/__tests__/demo.test.ts": "173bf944fafc7ab5ad984781070eb70e9be1c4b1b6a229606d144d687f1067da",
+          "packages/ui/src/calendar/__tests__/type.test-d.ts": "8426687f9ae513e8c230c0ff74e9e576f02cab44b964d0a9e56fd376f126ea95",
+          "packages/ui/src/calendar/__tests__/theme.test.ts": "20564ab6c4ce934b4a9a5dc3c5c0a7592b123cfdfdecd8ef39db1939ad27c28c",
+          "packages/ui/src/calendar/__tests__/semantic.test.ts": "e3101625cc43437d4ca2ec7969fc0eedaf3f92446887f7e717ad113886332eb8",
+          "packages/ui/src/calendar/__tests__/fixtures/NativeCalendar.vue": "547499c6dc7b168f3727933ca4c809d5d9530b43ad8ab3d372116f668ac813a5"
+        },
+        "integrationSnapshot": {
+          "baseCommit": "7425ca7f059c4e9480676fa908a542648c7e5f21",
+          "uiBarrelSha256": "370d37d80ffacc124bfba943153f1352028554336fd86b3febfd3583722d4fa0",
+          "publicExports": "Root integrates each component export in its own commit; full final export surface was included in the passed integration program."
+        },
+        "recordedAt": "2026-10-30T23:32:37.766833+00:00"
+      }
     },
     {
       "id": "CMP:card",

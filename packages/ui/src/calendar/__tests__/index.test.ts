@@ -24,13 +24,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { h } from 'vue';
 import { ConfigProvider } from '../../config-provider';
 import { Calendar } from '../index';
+import type { CalendarHeaderRenderConfig, CalendarSlots } from '../interface';
 
 const P = 'apollo-picker-calendar';
 
 const V = dayjs('2026-09-30');
 
-const mountCal = (props: Record<string, unknown> = {}) =>
-  mount(Calendar, { props: { value: V, ...props }, attachTo: document.body });
+const mountCal = (props: Record<string, unknown> = {}, slots: CalendarSlots = {}) =>
+  mount(Calendar, { props: { value: V, ...props }, slots, attachTo: document.body });
 
 const emitted = (w: ReturnType<typeof mountCal>, name: string) => w.emitted(name) ?? [];
 
@@ -177,8 +178,9 @@ describe('Calendar · 事件链（顺序即语义）', () => {
     const panel = emitted(w, 'panelChange')[0];
     expect(panel?.[1]).toBe('year');
     // ⚠️ 第一个参数是**当前值**（不是新日期）
-    const panelValue = panel?.[0] as dayjs.Dayjs | undefined;
-    expect(panelValue?.format('YYYY-MM-DD')).toBe('2026-09-30');
+    const panelValue = panel?.[0];
+    if (!dayjs.isDayjs(panelValue)) throw new Error('Expected the panel date');
+    expect(panelValue.format('YYYY-MM-DD')).toBe('2026-09-30');
   });
 
   it('🚨 非受控：`defaultValue` 起手，点击后 `change` **要发**（先取快照的哨兵）', async () => {
@@ -216,44 +218,58 @@ describe('Calendar · 单元格渲染', () => {
   });
 
   it('`fullCellRender` 换掉**整个**格子（`-date-value` 不再产出）', () => {
-    const w = mountCal({
-      fullCellRender: (date: dayjs.Dayjs) => h('span', { class: 'mine' }, date.format('D')),
-    });
+    const w = mountCal(
+      {},
+      {
+        fullCellRender: ({ current }) => h('span', { class: 'mine' }, current.format('D')),
+      },
+    );
     expect(w.findAll('.mine').length).toBeGreaterThan(0);
     expect(w.findAll(`.${P}-date-value`)).toHaveLength(0);
   });
 
   it('`cellRender` 只换**内容**（`-date-value` 仍在）', () => {
-    const w = mountCal({ cellRender: () => h('i', { class: 'inner' }) });
+    const w = mountCal({}, { cellRender: () => h('i', { class: 'inner' }) });
     expect(w.findAll('.inner').length).toBeGreaterThan(0);
     expect(w.findAll(`.${P}-date-value`).length).toBeGreaterThan(0);
   });
 
-  it('🚨 废弃的 `dateFullCellRender` **仍然生效**（三级回退的中间一级）', () => {
+  it('原 dateFullCellRender 的整格场景迁移到 fullCellRender 槽', () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    const w = mountCal({
-      dateFullCellRender: (date: dayjs.Dayjs) => h('span', { class: 'legacy' }, date.format('D')),
-    });
+    const w = mountCal(
+      {},
+      {
+        fullCellRender: ({ current }) => h('span', { class: 'legacy' }, current.format('D')),
+      },
+    );
     expect(w.findAll('.legacy').length).toBeGreaterThan(0);
   });
 
-  it('`headerRender` 换掉整块 header（函数 prop）', () => {
-    const w = mountCal({ headerRender: () => h('div', { class: 'my-header' }, 'H') });
+  it('`headerRender` 具名槽换掉整块 header', () => {
+    const w = mountCal({}, { headerRender: () => h('div', { class: 'my-header' }, 'H') });
     expect(w.find('.my-header').exists()).toBe(true);
     expect(w.find(`.${P}-year-select`).exists()).toBe(false);
   });
 
   it('`headerRender` 的 config 恰好带 value / type / onChange / onTypeChange', () => {
-    let seen: Record<string, unknown> | null = null;
-    mountCal({
-      headerRender: (cfg: Record<string, unknown>) => {
-        seen = cfg;
-        return h('div');
+    const seen: { config?: CalendarHeaderRenderConfig } = {};
+    mountCal(
+      {},
+      {
+        headerRender: (cfg) => {
+          seen.config = cfg;
+          return h('div');
+        },
       },
-    });
-    expect(seen).not.toBeNull();
-    expect(Object.keys(seen ?? {}).sort()).toEqual(['onChange', 'onTypeChange', 'type', 'value']);
-    expect((seen as unknown as { type: string }).type).toBe('month');
+    );
+    expect(seen.config).toBeDefined();
+    expect(Object.keys(seen.config ?? {}).sort()).toEqual([
+      'onChange',
+      'onTypeChange',
+      'type',
+      'value',
+    ]);
+    expect(seen.config?.type).toBe('month');
   });
 });
 
@@ -331,26 +347,13 @@ describe('Calendar · 语义槽（6 槽两段式归属）', () => {
 // 告警
 // ---------------------------------------------------------------------------
 
-describe('Calendar · 废弃告警（判据是 `!== undefined`）', () => {
-  // ⚠️ 本仓的废弃告警走 **`console.error`**（`[apollo: Calendar] \`x\` is deprecated…`），
-  //    不是 `console.warn`（本轮实测踩到）。
-  const deprecations = (err: { mock: { calls: unknown[][] } }) =>
-    err.mock.calls.map((c) => String(c[0])).filter((t) => t.includes('[apollo: Calendar]'));
-
-  it('不传 ⇒ 不告警；传了 ⇒ 告警', () => {
-    const err = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    mountCal();
-    expect(deprecations(err)).toHaveLength(0);
-
-    mountCal({ dateCellRender: () => null });
-    const calls = deprecations(err);
-    expect(calls.some((c) => c.includes('dateCellRender'))).toBe(true);
-  });
-
-  it('🚨 显式传 `undefined` **不**告警（Vue 没有「键存在」）', () => {
-    const err = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    mountCal({ dateCellRender: undefined });
-    expect(deprecations(err)).toHaveLength(0);
+describe('Calendar · 原生内容槽', () => {
+  it('使用内容槽不产生废弃告警', () => {
+    const error = vi.spyOn(console, 'error');
+    const warn = vi.spyOn(console, 'warn');
+    mountCal({}, { cellRender: () => 0 });
+    expect(error).not.toHaveBeenCalled();
+    expect(warn).not.toHaveBeenCalled();
   });
 });
 
@@ -361,9 +364,9 @@ describe('Calendar · 废弃告警（判据是 `!== undefined`）', () => {
 describe('Calendar · expose', () => {
   it('只暴露 `nativeElement`（上游 `CalendarRef` 没有 focus/blur）', () => {
     const w = mountCal();
-    const vm = w.vm as unknown as Record<string, unknown>;
+    const vm = w.vm;
     expect(vm.nativeElement).toBe(w.element);
-    expect(vm.focus).toBeUndefined();
-    expect(vm.blur).toBeUndefined();
+    expect('focus' in vm).toBe(false);
+    expect('blur' in vm).toBe(false);
   });
 });

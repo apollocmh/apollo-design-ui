@@ -16,10 +16,8 @@ title:
 //    色值用 token 的**等值字面量**（`colorPrimary` / `colorSuccess` / `colorWarning` /
 //    `colorError` 的默认解析值），因为本仓没有 `theme.useToken()`。
 
-import type { CalendarCellRenderInfo } from '@apollo-design/ui';
 import { Calendar } from '@apollo-design/ui';
 import dayjs from 'dayjs';
-import { h } from 'vue';
 
 interface CalendarEvent {
   key: string;
@@ -31,10 +29,34 @@ interface CalendarEvent {
 
 /** 色值 = 默认主题的 `colorPrimary` / `colorSuccess` / `colorWarning` / `colorError`。 */
 const EVENTS: CalendarEvent[] = [
-  { key: 'release', title: 'Release window', start: dayjs('2026-01-08'), end: dayjs('2026-01-10'), color: '#1677ff' },
-  { key: 'design-review', title: 'Design review', start: dayjs('2026-01-14'), end: dayjs('2026-01-14'), color: '#52c41a' },
-  { key: 'maintenance', title: 'Maintenance', start: dayjs('2026-01-21'), end: dayjs('2026-01-24'), color: '#faad14' },
-  { key: 'bug-fix', title: 'Bug fix', start: dayjs('2026-01-30'), end: dayjs('2026-01-31'), color: '#ff4d4f' },
+  {
+    key: 'release',
+    title: 'Release window',
+    start: dayjs('2026-01-08'),
+    end: dayjs('2026-01-10'),
+    color: '#1677ff',
+  },
+  {
+    key: 'design-review',
+    title: 'Design review',
+    start: dayjs('2026-01-14'),
+    end: dayjs('2026-01-14'),
+    color: '#52c41a',
+  },
+  {
+    key: 'maintenance',
+    title: 'Maintenance',
+    start: dayjs('2026-01-21'),
+    end: dayjs('2026-01-24'),
+    color: '#faad14',
+  },
+  {
+    key: 'bug-fix',
+    title: 'Bug fix',
+    start: dayjs('2026-01-30'),
+    end: dayjs('2026-01-31'),
+    color: '#ff4d4f',
+  },
 ];
 
 /** 上游 `defaultValue={dayjs('2026-01-01')}` —— 锚定到有事件的那个月。 */
@@ -89,37 +111,20 @@ const rangeStyle: Record<RangePosition, Record<string, string>> = {
   },
   single: { paddingInlineStart: `${PADDING_XXS + PADDING_XXS}px`, borderRadius: BAR_RADIUS },
 };
-
-const cellRender = (current: dayjs.Dayjs, info: CalendarCellRenderInfo) => {
-  if (info.type !== 'date') {
-    return info.originNode;
-  }
-
-  const currentEvents = EVENTS.filter((event) => isInRange(current, event));
-
-  return h('div', { style: { minHeight: '32px', overflow: 'visible' } }, [
-    h(
-      'div',
-      { style: { display: 'flex', flexDirection: 'column', gap: `${MARGIN_XXS}px`, marginTop: `${MARGIN_XXS}px` } },
-      currentEvents.map((event) => {
-        const position = getRangePosition(current, event);
-        return h(
-          'span',
-          {
-            key: event.key,
-            style: { ...barStyle, ...rangeStyle[position], backgroundColor: event.color },
-          },
-          // ⚠️ 用**数组**形态传 children：`VNodeChild` 含 `null`，直传不满足 `h` 的
-          //    `RawChildren`（仓内惯例，见 `picker/panel-body.ts`）
-          [position === 'start' || position === 'single' ? event.title : null],
-        );
-      }),
-    ),
-  ]);
-};
 </script>
 
 <template>
-  <Calendar :default-value="defaultValue" :cell-render="cellRender" />
+  <Calendar :default-value="defaultValue">
+    <template #cellRender="{ current, info }">
+      <div v-if="info.type === 'date'" style="min-height: 32px; overflow: visible">
+        <div :style="{ display: 'flex', flexDirection: 'column', gap: `${MARGIN_XXS}px`, marginTop: `${MARGIN_XXS}px` }">
+          <span v-for="event in EVENTS.filter(event => isInRange(current, event))" :key="event.key"
+            :style="{ ...barStyle, ...rangeStyle[getRangePosition(current, event)], backgroundColor: event.color }">
+            {{ ['start', 'single'].includes(getRangePosition(current, event)) ? event.title : '' }}
+          </span>
+        </div>
+      </div>
+    </template>
+  </Calendar>
 </template>
 ```

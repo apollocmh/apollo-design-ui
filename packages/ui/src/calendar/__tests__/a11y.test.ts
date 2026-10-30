@@ -24,6 +24,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { h, nextTick } from 'vue';
 import { ConfigProvider } from '../../config-provider';
 import { Calendar } from '../index';
+import type { CalendarSlots } from '../interface';
 
 const P = 'apollo-picker-calendar';
 const PANEL = 'apollo-picker';
@@ -33,29 +34,15 @@ const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 const V = dayjs('2026-09-30');
 
-/**
- * 🚨 **豁免 `label` 规则**（与 `select/__tests__/a11y.test.ts` 同一条放行）：
- *
- * header 里的年 / 月下拉是 `Select` 的 combobox，其可访问名由
- * `role="combobox"` + `aria-*` 状态承担 —— **antd 同款不绑 `<label>`**
- * （`components/select/__tests__/a11y.test.ts` 自己就这么放行的），
- * 上游 `Calendar/Header.tsx` 也没给这两个 `Select` 传 `aria-label`。
- * R13 的判据是「**不低于 antd**」，所以这里照放。
- *
- * ⚠️ 这是**唯一**的豁免；其余规则必须 0 violation。
- */
-const ALLOW = { label: { enabled: false } } as const;
-
 async function runAxe(): Promise<axe.Result[]> {
   const results = await axe.run(document.body, {
     runOnly: { type: 'tag', values: TAGS },
-    rules: ALLOW,
   });
   return results.violations;
 }
 
-const mountCal = async (props: Record<string, unknown> = {}) => {
-  const w = mount(Calendar, { props: { value: V, ...props }, attachTo: document.body });
+const mountCal = async (props: Record<string, unknown> = {}, slots: CalendarSlots = {}) => {
+  const w = mount(Calendar, { props: { value: V, ...props }, slots, attachTo: document.body });
   await nextTick();
   return w;
 };
@@ -116,6 +103,7 @@ describe('Calendar · 结构语义（根 / 面板 / header）', () => {
       expect(s.getAttribute('role')).toBe('combobox');
       expect(s.getAttribute('aria-haspopup')).toBe('listbox');
       expect(s.getAttribute('aria-expanded')).toBe('false');
+      expect(s.getAttribute('aria-label')).toBeTruthy();
     }
     // 模式切换是 Radio.Group
     const group = document.querySelector(`.${P}-mode-switch`) as HTMLElement;
@@ -169,12 +157,15 @@ describe('Calendar · axe（WCAG 2.0/2.1/2.2 A+AA，0 violation）', () => {
     expect(await runAxe()).toEqual([]);
   });
 
-  it('三个渲染 prop 都传（`headerRender` + `cellRender` + `fullCellRender`）', async () => {
-    await mountCal({
-      headerRender: () => h('div', null, 'HEADER'),
-      cellRender: () => h('span', null, 'c'),
-      fullCellRender: () => h('span', null, 'f'),
-    });
+  it('三个具名内容槽都提供（header / cell / full cell）', async () => {
+    await mountCal(
+      {},
+      {
+        headerRender: () => h('div', null, 'HEADER'),
+        cellRender: () => h('span', null, 'c'),
+        fullCellRender: () => h('span', null, 'f'),
+      },
+    );
     expect(await runAxe()).toEqual([]);
   });
 

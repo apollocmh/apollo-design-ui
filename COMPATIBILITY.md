@@ -226,3 +226,7 @@ Radio/RadioButton 的 change 改为 `(event: Event, checked: boolean)`，RadioGr
 ### D-segmented-native-selection
 
 Segmented 的 change/keydown 由 Vue emits 拥有，value 模型保持；原生 attrs/style 落真实根，选项 id 与表单 value 真实消费。label/icon 使用完整 VNodeChild，语义样式使用 CSSProperties 与当前 SegmentedProps，尺寸接共享 SizeType（含 medium）。选中或首个可用 radio 是唯一 Tab 入口，拒绝提议后恢复已接受的勾选与焦点，RTL/IME/取消默认行为同步修正。当前八 Token 和快速反向 thumb 动效读取有效配置并清理失效资源；原 DOM 参考保留，详见[Segmented API](packages/ui/src/segmented/index.zh-CN.md)。
+
+### D-calendar-native-content-and-panels
+
+Calendar 的 headerRender/cellRender/fullCellRender 内容 prop 及四个旧别名统一迁为已有同名具名槽，作用域使用具名对象；移除对应纯回调类型，保留 Header 作用域中的 onChange/onTypeChange 操作服务。value/mode 模型与 change/panelChange/select 顺序保持，Header 使用 RadioGroup 的 update:value。修正条件槽、原生 attrs/真实引用、当前配置/语言/六 Token，并将当前方向传给实际 Picker 面板；复用已交付的面板算法，详见[Calendar API](packages/ui/src/calendar/index.zh-CN.md)。
