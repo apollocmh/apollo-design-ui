@@ -4,6 +4,13 @@
 
 # float-button
 
+2026-10-30 原生化接续：完整内容在 render 读取，Group 使用独立的 item/trigger
+provide 边界，`openChange` / `update:open` / `click` 由单一 emits 出口发出。
+原生 attrs 只落实际根，当前 Provider 和 Alias Token 可替换与移除；BackTop
+转发完整插槽并随当前容器取消动画、释放监听。触发按钮位于列表前以支持原生 Tab
+顺序，Escape 在已接受关闭后归还列表焦点。以下旧记录保留原义，原 P1 已修复；
+当前契约见双语 API 与 `native-contracts.test.ts`，旧验收不是本轮最终验收。
+
 > **层**：L3（`packages/ui`）｜ **优先级**：P4 ｜ **复杂度**：M ｜ **antd 版本**：6.6.4
 >
 > 契约来源：antd `components/float-button/`（FloatButton 228 + Group 344 + BackTop 121

@@ -25,13 +25,22 @@ export { floatButtonPrefixCls } from './FloatButton';
 export type {
   FloatButtonBackTopProps,
   FloatButtonBadgeProps,
+  FloatButtonConfig,
+  FloatButtonGroupConfig,
+  FloatButtonGroupEmits,
   FloatButtonGroupPlacement,
   FloatButtonGroupProps,
   FloatButtonGroupRef,
+  FloatButtonGroupSemanticClassNames,
+  FloatButtonGroupSemanticStyles,
+  FloatButtonGroupSlots,
   FloatButtonGroupTrigger,
   FloatButtonProps,
   FloatButtonRef,
+  FloatButtonSemanticClassNames,
+  FloatButtonSemanticStyles,
   FloatButtonShape,
+  FloatButtonSlots,
   FloatButtonType,
 } from './interface';
 export { genFloatButtonStyle } from './style';

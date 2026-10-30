@@ -1,121 +1,81 @@
-/**
- * antd `float-button/hooks/useScroll.ts` 的 Vue 移植 —— BackTop 的滚动可见性
- * 与 showProgress 进度（0..1）。
- *
- * antd 逐字：`useState(visibilityHeight === 0)`；滚动/resize 都走
- * throttleByAnimationFrame；scrollProgress = scrollTop / maxScroll。
- */
-
-import {
-  getScroll,
-  isDocument,
-  isHTMLElement,
-  isWindow,
-  type ScrollTarget,
-  throttleByAnimationFrame,
-} from '@apollo-design/utils';
+/** Reactive BackTop visibility/progress with resources owned by the current target. */
+import { getScroll, isDocument, isWindow, throttleByAnimationFrame } from '@apollo-design/utils';
 import {
   type MaybeRefOrGetter,
   onMounted,
   onScopeDispose,
   type Ref,
   ref,
+  shallowRef,
   toValue,
   watch,
 } from 'vue';
 
-type ScrollTargetLike = HTMLElement | Window | Document;
-
+type ScrollTarget = HTMLElement | Window | Document;
 interface ScrollOptions {
-  getTarget: () => ScrollTargetLike | null;
-  /**
-   * ⚠️ 必须是 **getter / ref**：原来是裸值 ⇒ 解构后是 setup 期快照，父级动态改
-   *    `visibilityHeight` / `showProgress` 完全不生效（Issue #27.4）。
-   */
+  getTarget: () => ScrollTarget | null;
   showProgress: MaybeRefOrGetter<boolean>;
   visibilityHeight: MaybeRefOrGetter<number>;
+  onTargetChange?: () => void;
 }
 
-const getScrollProgress = (target: ScrollTargetLike | null): number => {
-  const scrollTop = getScroll(target as ScrollTarget) ?? 0;
-
-  let scrollElement: HTMLElement | null = null;
-
-  if (isWindow(target)) {
-    scrollElement = (target as Window).document.documentElement;
-  } else if (isDocument(target)) {
-    scrollElement = (target as Document).documentElement;
-  } else if (isHTMLElement(target)) {
-    scrollElement = target;
-  }
-
-  if (!scrollElement) {
-    return 0;
-  }
-
-  const maxScroll = Math.max(scrollElement.scrollHeight - scrollElement.clientHeight, 0);
-
-  return maxScroll > 0 ? Math.min(Math.max(scrollTop / maxScroll, 0), 1) : 0;
-};
+function progress(target: ScrollTarget | null): number {
+  if (!target) return 0;
+  const element = isWindow(target)
+    ? target.document.documentElement
+    : isDocument(target)
+      ? target.documentElement
+      : target;
+  const maximum = Math.max(element.scrollHeight - element.clientHeight, 0);
+  return maximum > 0 ? Math.min(Math.max((getScroll(target) ?? 0) / maximum, 0), 1) : 0;
+}
 
 export function useScroll(options: ScrollOptions): {
   scrollProgress: Ref<number>;
   visible: Ref<boolean>;
+  currentTarget: Readonly<Ref<ScrollTarget | null>>;
 } {
-  const { getTarget } = options;
-
   const visible = ref(toValue(options.visibilityHeight) === 0);
   const scrollProgress = ref(0);
-
-  const syncScrollState = (): void => {
-    const container = getTarget();
-    const scrollTop = getScroll(container as ScrollTarget) ?? 0;
-    visible.value = scrollTop >= toValue(options.visibilityHeight);
-    if (toValue(options.showProgress)) {
-      scrollProgress.value = getScrollProgress(container);
-    }
+  const currentTarget = shallowRef<ScrollTarget | null>(null);
+  let view: Window | null = null;
+  const sync = () => {
+    visible.value = (getScroll(currentTarget.value) ?? 0) >= toValue(options.visibilityHeight);
+    scrollProgress.value = toValue(options.showProgress) ? progress(currentTarget.value) : 0;
   };
-
-  const handleScroll = throttleByAnimationFrame(syncScrollState);
-  const handleResize = throttleByAnimationFrame(syncScrollState);
-
-  let currentContainer: ScrollTargetLike | null = null;
-
-  const bind = (): void => {
-    currentContainer = getTarget();
-    syncScrollState();
-    (currentContainer as EventTarget | null)?.addEventListener(
-      'scroll',
-      handleScroll as unknown as EventListener,
-    );
-    window.addEventListener('resize', handleResize as unknown as EventListener);
+  const onScroll = throttleByAnimationFrame(sync);
+  const onResize = throttleByAnimationFrame(sync);
+  const unbind = () => {
+    onScroll.cancel();
+    onResize.cancel();
+    currentTarget.value?.removeEventListener('scroll', onScroll);
+    view?.removeEventListener('resize', onResize);
+    options.onTargetChange?.();
+    currentTarget.value = null;
+    view = null;
   };
-
-  const unbind = (): void => {
-    handleScroll.cancel();
-    handleResize.cancel();
-    (currentContainer as EventTarget | null)?.removeEventListener(
-      'scroll',
-      handleScroll as unknown as EventListener,
-    );
-    window.removeEventListener('resize', handleResize as unknown as EventListener);
-    currentContainer = null;
-  };
-
-  onMounted(bind);
-  onScopeDispose(unbind);
-  // antd 的 useEffect 依赖 [getTarget, showProgress, visibilityHeight] —— 变化重绑。
-  // ⚠️ 依赖必须是**求值后**的结果：写 `[getTarget, showProgress, visibilityHeight]`
-  //    比较的是函数/常量引用 ⇒ 永不变化（Issue #27.4）。
-  watch(
-    () => [getTarget(), toValue(options.showProgress), toValue(options.visibilityHeight)] as const,
-    () => {
-      unbind();
-      bind();
-    },
+  onMounted(() =>
+    watch(
+      options.getTarget,
+      (target) => {
+        unbind();
+        currentTarget.value = target;
+        view = target
+          ? isWindow(target)
+            ? target
+            : isDocument(target)
+              ? target.defaultView
+              : target.ownerDocument.defaultView
+          : null;
+        sync();
+        currentTarget.value?.addEventListener('scroll', onScroll);
+        view?.addEventListener('resize', onResize);
+      },
+      { immediate: true, flush: 'post' },
+    ),
   );
-
-  return { scrollProgress, visible };
+  watch([() => toValue(options.showProgress), () => toValue(options.visibilityHeight)], sync);
+  onScopeDispose(unbind);
+  return { scrollProgress, visible, currentTarget };
 }
-
 export default useScroll;

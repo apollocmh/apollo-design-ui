@@ -74,6 +74,7 @@ const RULES = `
 .apollo-btn.apollo-float-btn.apollo-float-btn-individual{box-shadow:var(--apollo-box-shadow-secondary);}
 .apollo-float-btn.apollo-float-btn-pure{position:relative;inset:auto;}
 .apollo-float-btn:empty{display:none;}
+.apollo-float-btn[hidden]{display:none;}
 .apollo-float-btn .apollo-float-btn-icon{line-height:1;}
 .apollo-float-btn.apollo-float-btn-icon-only .apollo-icon{font-size:calc(var(--apollo-font-size-icon) * 1.5);}
 .apollo-float-btn .apollo-float-btn-content{font-size:var(--apollo-font-size-sm);}
@@ -95,6 +96,7 @@ const RULES = `
 .apollo-float-btn-group .apollo-float-btn-group-list-motion-enter,.apollo-float-btn-group .apollo-float-btn-group-list-motion-appear{opacity:0;transform:var(--apollo-float-btn-list-transform-start);}
 .apollo-float-btn-group .apollo-float-btn-group-list-motion-enter-active,.apollo-float-btn-group .apollo-float-btn-group-list-motion-appear-active{opacity:1;transform:translate(0, 0);}
 .apollo-float-btn-group .apollo-float-btn-group-list-motion-leave-active{opacity:0;transform:var(--apollo-float-btn-list-transform-start);}
+.apollo-float-btn-group-list[aria-hidden="true"]{pointer-events:none;}
 .apollo-float-btn-group-top .apollo-float-btn-group-list{bottom:var(--apollo-float-btn-list-trigger-offset);}
 .apollo-float-btn-group-top .apollo-float-btn-group-list::after{top:100%;bottom:calc(var(--apollo-padding) * -1);}
 .apollo-float-btn-group-bottom .apollo-float-btn-group-list{--apollo-float-btn-list-transform-start:translate(0, calc(var(--apollo-control-height-lg) * -1));top:var(--apollo-float-btn-list-trigger-offset);}
@@ -103,6 +105,7 @@ const RULES = `
 .apollo-float-btn-group-left .apollo-float-btn-group-list::after{left:100%;right:calc(var(--apollo-padding) * -1);}
 .apollo-float-btn-group-right .apollo-float-btn-group-list{--apollo-float-btn-list-transform-start:translate(calc(var(--apollo-control-height-lg) * -1), 0);left:var(--apollo-float-btn-list-trigger-offset);}
 .apollo-float-btn-group-right .apollo-float-btn-group-list::after{left:calc(var(--apollo-padding) * -1);right:100%;}
+@media (prefers-reduced-motion:reduce){.apollo-float-btn-group .apollo-float-btn-group-list-motion{transition:none;}}
 `;
 
 /** 生成单个前缀下的完整样式。 */
@@ -110,6 +113,14 @@ export function genFloatButtonStyle(prefixCls: string = 'apollo'): string {
   const rename = (cssText: string): string =>
     prefixCls === 'apollo'
       ? cssText
-      : cssText.split('.apollo-float-btn').join(`.${prefixCls}-float-btn`);
+      : cssText
+          .split('.apollo-float-btn')
+          .join(`.${prefixCls}-float-btn`)
+          .split('.apollo-btn')
+          .join(`.${prefixCls}-btn`)
+          .split('--apollo-float-btn')
+          .join(`--${prefixCls}-float-btn`)
+          .split('--apollo-btn')
+          .join(`--${prefixCls}-btn`);
   return rename(RULES);
 }

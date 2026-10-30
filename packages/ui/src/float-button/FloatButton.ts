@@ -1,44 +1,23 @@
-/**
- * FloatButton —— antd `FloatButton.tsx`（228 行）的 Vue 版：**Button 的薄壳**。
- *
- * ## 文件头判据
- *
- * 1. **prefixCls = 'float-btn'**（antd 逐字，非 'float-button'）——root 类
- *    `.apollo-float-btn`，Button 自身的 `.apollo-btn` 类共存（产物逐字）。
- * 2. **icon-only 判据**：`!isReactRenderable(mergedContent)` —— 内容为空/纯 null
- *    ⇒ icon-only（默认 FileTextOutlined 图标兜底）。
- * 3. **badge**：`'badge' in props` 判据（Vue：`props.badge !== undefined`）；
- *    omit title/children/status/text 防透传；类 `-badge` / `-badge-dot`。
- * 4. **tooltip**：convertToTooltipProps（string ⇒ {title}；对象 ⇒ 逐字 props）。
- * 5. **GroupContext**：shape/individual/语义注入（item 或 trigger 两套）。
- * 6. C8-R2：icon/content → `#icon`/`#content` 插槽；description(deprecated) 并入
- *    `#content`；badge/tooltip 是数据 prop（豁免）。
- */
-
+/** Floating action control composed with Button, Badge and Tooltip. */
 import { FileTextOutlined } from '@apollo-design/icons';
 import { useZIndex } from '@apollo-design/portal';
-import { isPlainObject, mergeDomAttrs, useDevWarning } from '@apollo-design/utils';
+import { isEmptyVNode, mergeDomAttrs, useDevWarning } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
   h,
   normalizeStyle,
   type PropType,
-  ref,
-  type VNodeChild,
-  watchEffect,
+  type SlotsType,
+  shallowRef,
 } from 'vue';
 import { NodeRenderer } from '../_internal/node-renderer';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import Badge from '../badge';
+import type { BadgeProps } from '../badge/interface';
 import Button from '../button/Button.vue';
-import type {
-  ButtonProps,
-  ButtonRef,
-  ButtonSemanticClassNames,
-  ButtonSemanticStyles,
-} from '../button/interface';
-import { useConfigContext, useDirection } from '../config-provider/context';
+import type { ButtonRef } from '../button/interface';
+import { useComponentConfig } from '../config-provider/context';
 import Tooltip from '../tooltip/Tooltip';
 import {
   type FloatButtonGroupContextValue,
@@ -47,20 +26,23 @@ import {
 } from './context';
 import type {
   FloatButtonBadgeProps,
+  FloatButtonConfig,
   FloatButtonProps,
+  FloatButtonSemanticClassNames,
+  FloatButtonSemanticStyles,
   FloatButtonShape,
+  FloatButtonSlots,
   FloatButtonType,
 } from './interface';
+import { useFloatButtonTheme } from './use-float-button-theme';
 
-/** antd 逐字：`export const floatButtonPrefixCls = 'float-btn'`。 */
 export const floatButtonPrefixCls = 'float-btn';
-
-const isRenderableContent = (content: unknown): boolean =>
-  content !== undefined && content !== null && content !== false && content !== '';
 
 const FloatButtonComponent = defineComponent({
   name: 'AFloatButton',
   inheritAttrs: false,
+  expose: ['nativeElement'],
+  slots: Object as SlotsType<FloatButtonSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
     type: { type: String as PropType<FloatButtonType>, default: undefined },
@@ -85,176 +67,149 @@ const FloatButtonComponent = defineComponent({
       default: undefined,
     },
   },
-  emits: [],
-  setup(props, { slots, attrs, expose }) {
-    const devWarning = useDevWarning('FloatButton');
-    const { getPrefixCls } = useConfigContext();
-    const direction = useDirection();
-    const groupContext = useFloatButtonGroup();
-
-    const prefixCls = computed(() => getPrefixCls(floatButtonPrefixCls, props.prefixCls));
-
-    const mergedShape = computed<FloatButtonShape>(
-      () => groupContext?.shape ?? props.shape ?? 'circle',
-    );
-    const mergedIndividual = computed(() => groupContext?.individual ?? true);
-
-    const mergedType = computed<FloatButtonType>(() => props.type ?? 'default');
-
-    // ---- Warning（antd 逐字）----
-    watchEffect(() => {
-      const contentRenderable = isRenderableContent(slots.content?.() ?? props.description);
-      devWarning(
-        !(mergedShape.value === 'circle' && contentRenderable),
-        'supported only when `shape` is `square`. Due to narrow space for text, short sentence is recommended.',
-      );
-      devWarning.deprecated(props.description === undefined, 'description', 'content');
-    });
-
-    // ---- 语义合并：内置基线（icon/content 类名）+ context + 用户 ----
-    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
+  emits: { click: (_event: MouseEvent) => true },
+  setup(props, { slots, attrs, emit }) {
+    const warning = useDevWarning('FloatButton');
+    const config = useComponentConfig<FloatButtonConfig>('floatButton');
+    const theme = useFloatButtonTheme();
+    const group = useFloatButtonGroup();
+    const prefixCls = computed(() => config.getPrefixCls(floatButtonPrefixCls, props.prefixCls));
+    const shape = computed(() => group?.value?.shape ?? props.shape ?? 'circle');
+    const individual = computed(() => group?.value?.individual ?? true);
+    const type = computed(() => props.type ?? 'default');
+    const { classNames, styles } = useMergeSemantic<
       FloatButtonProps,
-      ButtonSemanticClassNames,
-      ButtonSemanticStyles
+      FloatButtonSemanticClassNames,
+      FloatButtonSemanticStyles
     >(
       [
         () => ({ icon: `${prefixCls.value}-icon`, content: `${prefixCls.value}-content` }),
-        () => groupContext?.classNames ?? {},
-        () => props.classNames ?? {},
+        () => config.classNames,
+        () => group?.value?.classNames,
+        () => props.classNames,
       ],
-      [() => groupContext?.styles ?? {}, () => props.styles ?? {}],
+      [() => config.styles, () => group?.value?.styles, () => props.styles],
       props,
     );
 
-    // Read the same current Vue style sequence consumed by the real Button root.
+    // Preserve the already delivered native style/zIndex precedence on Button's root.
     const explicitZIndex = (): string | number | undefined => {
-      const style = normalizeStyle([mergedStyles.value.root, attrs.style]);
+      const style = normalizeStyle([config.style, styles.value.root, attrs.style]);
       if (!style || typeof style === 'string') return undefined;
       let value: string | number | undefined;
       for (const [name, current] of Object.entries(style))
         if (name === 'zIndex' || name === 'z-index') value = current;
       return value;
     };
-    const zIndex = useZIndex('FloatButton', () => {
-      const value = explicitZIndex();
-      if (typeof value === 'number' && Number.isFinite(value)) return value;
-      if (typeof value === 'string' && value.trim() && Number.isFinite(Number(value)))
-        return Number(value);
-      return undefined;
-    });
-
-    // ---- badge ----
-    const badgeNode = computed<VNodeChild>(() => {
-      if (props.badge === undefined) return null;
-      const badgeProps = { ...props.badge } as Record<string, unknown>;
-      delete badgeProps.title;
-      delete badgeProps.children;
-      delete badgeProps.status;
-      delete badgeProps.text;
-      return h(Badge, {
-        ...(badgeProps as Record<string, unknown>),
-        class: [
-          (badgeProps.className as string) ?? '',
-          `${prefixCls.value}-badge`,
-          (props.badge as { dot?: boolean }).dot ? `${prefixCls.value}-badge-dot` : '',
-        ]
-          .filter(Boolean)
-          .join(' '),
-      });
-    });
-
-    // ---- 内容 / 图标 ----
-    const mergedContent = computed<VNodeChild>(() => {
-      const fromSlot = slots.content?.() as VNodeChild;
-      if (fromSlot !== undefined) return fromSlot;
-      return props.description ?? null;
-    });
-
-    const mergedIcon = computed<VNodeChild>(() => {
-      const fromSlot = slots.icon?.() as VNodeChild;
-      if (fromSlot !== undefined) return fromSlot;
-      if (!isRenderableContent(mergedContent.value)) return h(FileTextOutlined);
-      return null;
-    });
-
-    const iconOnly = computed(() => !isRenderableContent(mergedContent.value));
-
-    // nativeElement 中继：Button 的 expose 面（focus 目标元素）
-    const buttonRef = ref<ButtonRef | null>(null);
-    expose({
-      get nativeElement() {
-        return buttonRef.value?.nativeElement ?? null;
+    const zIndex = useZIndex(
+      'FloatButton',
+      () => {
+        const value = explicitZIndex();
+        if (typeof value === 'number' && Number.isFinite(value)) return value;
+        if (typeof value === 'string' && value.trim() && Number.isFinite(Number(value)))
+          return Number(value);
+        return undefined;
       },
-    });
+      {
+        get zIndexPopupBase() {
+          return theme.theme.token.value.zIndexPopupBase;
+        },
+      },
+    );
 
-    // ---- tooltip 包装 ----
-    const tooltipProps = computed(() => {
-      const t = props.tooltip;
-      if (t === undefined || t === null) return undefined;
-      if (isPlainObject(t)) return t;
-      return { title: t };
-    });
+    const buttonRef = shallowRef<ButtonRef | null>(null);
+    const renderFloatButton = () => {
+      // Slot presence is authoritative, including an intentional empty result.
+      const content = slots.content ? slots.content() : props.description;
+      const iconOnly = isEmptyVNode(content);
+      const icon = slots.icon ? slots.icon() : iconOnly ? h(FileTextOutlined) : null;
+      warning(
+        !(shape.value === 'circle' && !iconOnly),
+        'supported only when `shape` is `square`. Due to narrow space for text, short sentence is recommended.',
+      );
+      warning.deprecated(props.description === undefined, 'description', 'content');
+      const badge: (BadgeProps & { children?: unknown }) | undefined =
+        props.badge === undefined ? undefined : { ...props.badge };
+      if (badge) {
+        delete badge.title;
+        delete badge.text;
+        delete badge.status;
+        delete badge.children;
+      }
 
-    return () => {
-      const buttonProps: ButtonProps = {
-        type: mergedType.value,
-        shape: mergedShape.value === 'circle' ? 'circle' : 'default',
-        size: 'large',
-        icon: mergedIcon.value,
-        href: props.href,
-        htmlType: props.htmlType,
-        disabled: props.disabled,
-        classNames: { root: mergedClassNames.value.root, icon: mergedClassNames.value.icon },
-        styles: { root: mergedStyles.value.root, icon: mergedStyles.value.icon },
-      };
       const fallback =
         explicitZIndex() === undefined && zIndex.value !== undefined
           ? { zIndex: zIndex.value }
           : undefined;
       const buttonNode = h(
         Button,
-        mergeDomAttrs({ style: fallback }, attrs, {
-          ...buttonProps,
-          ref: buttonRef,
-          target: props.target,
-          'aria-label': props['aria-label'],
-          class: [
-            prefixCls.value,
-            `${prefixCls.value}-${mergedType.value}`,
-            `${prefixCls.value}-${mergedShape.value}`,
-            direction.value === 'rtl' ? `${prefixCls.value}-rtl` : '',
-            mergedIndividual.value ? `${prefixCls.value}-individual` : '',
-            iconOnly.value ? `${prefixCls.value}-icon-only` : '',
-          ],
-        }),
+        mergeDomAttrs(
+          { style: [theme.style.value, fallback, config.style, styles.value.root] },
+          attrs,
+          {
+            ref: buttonRef,
+            type: type.value,
+            shape: shape.value === 'circle' ? 'circle' : 'default',
+            size: 'large',
+            href: props.href,
+            target: props.target,
+            htmlType: props.htmlType,
+            disabled: props.disabled,
+            'aria-label': props['aria-label'],
+            onClick: (event: MouseEvent) => emit('click', event),
+            classNames: { root: classNames.value.root, icon: classNames.value.icon },
+            styles: { icon: styles.value.icon },
+            class: [
+              prefixCls.value,
+              `${prefixCls.value}-${type.value}`,
+              `${prefixCls.value}-${shape.value}`,
+              config.className,
+              config.direction === 'rtl' && `${prefixCls.value}-rtl`,
+              individual.value && `${prefixCls.value}-individual`,
+              iconOnly && `${prefixCls.value}-icon-only`,
+            ],
+          },
+        ),
         {
-          // ⚠️ 空 content/badge 不进 children（否则多出空节点 ⇒ L4 子节点数错位）
+          icon: () => icon,
           default: () =>
             [
-              isRenderableContent(mergedContent.value)
-                ? h(
-                    'span',
-                    {
-                      class: mergedClassNames.value.content,
-                      style: mergedStyles.value.content,
-                    },
-                    [h(NodeRenderer, { node: mergedContent.value })],
-                  )
+              !iconOnly
+                ? h('span', { class: classNames.value.content, style: styles.value.content }, [
+                    h(NodeRenderer, { node: content }),
+                  ])
                 : null,
-              badgeNode.value,
-            ].filter((n) => n !== null && n !== undefined && n !== false),
+              badge === undefined
+                ? null
+                : h(Badge, {
+                    ...badge,
+                    class: [
+                      `${prefixCls.value}-badge`,
+                      badge.dot && `${prefixCls.value}-badge-dot`,
+                    ],
+                  }),
+            ].filter((node) => node !== null),
         },
       );
-
-      if (tooltipProps.value) {
-        return h(Tooltip, tooltipProps.value as never, { default: () => buttonNode });
-      }
-      return buttonNode;
+      const tooltip = props.tooltip;
+      return tooltip === undefined
+        ? buttonNode
+        : h(Tooltip, typeof tooltip === 'string' ? { title: tooltip } : tooltip, {
+            default: () => buttonNode,
+          });
     };
+    return {
+      get nativeElement() {
+        return buttonRef.value?.nativeElement ?? null;
+      },
+      renderFloatButton,
+    };
+  },
+  render() {
+    return this.renderFloatButton();
   },
 });
 
 export type { FloatButtonGroupContextValue };
-// `provideFloatButtonGroup` 供 Group 内部使用（re-export 便于单文件闭环）
 export { provideFloatButtonGroup };
 export default FloatButtonComponent;

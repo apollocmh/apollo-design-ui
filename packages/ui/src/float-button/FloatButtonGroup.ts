@@ -1,50 +1,48 @@
-/**
- * FloatButtonGroup —— antd `FloatButtonGroup.tsx`（344 行）的 Vue 版。
- *
- * ## 文件头判据
- *
- * 1. **menu 模式**：trigger ∈ click/hover；列表经 CSSMotion（`${listCls}-motion`）。
- * 2. **click 模式外部点击**：document **capture 级**监听（rc 逐字）。
- * 3. **individual**：shape === 'circle' ⇒ Flex；square ⇒ Space.Compact。
- * 4. **双 context**：listContext（item 系语义）+ triggerContext（trigger 系 + individual）。
- * 5. **open**：受控/非受控二选一（useControlledValue）；disabled 抑制开合。
- */
-
+/** Floating action list with an optional click/hover disclosure trigger. */
 import { CloseOutlined, FileTextOutlined } from '@apollo-design/icons';
 import { CSSMotion } from '@apollo-design/motion';
 import { useZIndex } from '@apollo-design/portal';
-import { useControlledValue, useDevWarning } from '@apollo-design/utils';
+import { mergeDomAttrs, useControlledValue, useDevWarning } from '@apollo-design/utils';
 import {
-  type CSSProperties,
   computed,
   defineComponent,
   h,
-  mergeProps,
+  normalizeStyle,
+  onMounted,
   type PropType,
-  ref,
-  type VNodeChild,
+  type SlotsType,
+  shallowRef,
+  useId,
   watch,
   watchEffect,
 } from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useConfigContext, useDirection } from '../config-provider/context';
+import { useComponentConfig } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import Flex from '../flex';
+import type { FlexRef } from '../flex/interface';
 import { SpaceCompact } from '../space';
-import { provideFloatButtonGroup } from './context';
-import FloatButtonComponent, { floatButtonPrefixCls } from './FloatButton';
+import type { SpaceCompactRef } from '../space/interface';
+import { FloatButtonGroupProvider, provideFloatButtonGroup } from './context';
+import FloatButton, { floatButtonPrefixCls } from './FloatButton';
 import type {
+  FloatButtonGroupConfig,
   FloatButtonGroupPlacement,
   FloatButtonGroupProps,
   FloatButtonGroupSemanticClassNames,
   FloatButtonGroupSemanticStyles,
+  FloatButtonGroupSlots,
+  FloatButtonRef,
   FloatButtonShape,
   FloatButtonType,
 } from './interface';
+import { useFloatButtonTheme } from './use-float-button-theme';
 
-const FloatButtonGroupComponent = defineComponent({
+export default defineComponent({
   name: 'AFloatButtonGroup',
   inheritAttrs: false,
+  expose: ['nativeElement'],
+  slots: Object as SlotsType<FloatButtonGroupSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
     type: { type: String as PropType<FloatButtonType>, default: undefined },
@@ -61,15 +59,7 @@ const FloatButtonGroupComponent = defineComponent({
     badge: { type: Object as PropType<FloatButtonGroupProps['badge']>, default: undefined },
     trigger: { type: String as PropType<FloatButtonGroupProps['trigger']>, default: undefined },
     open: { type: Boolean, default: undefined },
-    onOpenChange: {
-      type: Function as PropType<FloatButtonGroupProps['onOpenChange']>,
-      default: undefined,
-    },
-    onClick: { type: Function as PropType<FloatButtonGroupProps['onClick']>, default: undefined },
-    placement: {
-      type: String as PropType<FloatButtonGroupProps['placement']>,
-      default: undefined,
-    },
+    placement: { type: String as PropType<FloatButtonGroupPlacement>, default: undefined },
     classNames: {
       type: [Object, Function] as PropType<FloatButtonGroupProps['classNames']>,
       default: undefined,
@@ -79,239 +69,280 @@ const FloatButtonGroupComponent = defineComponent({
       default: undefined,
     },
   },
-  /**
-   * ⚠️ 只声明 `update:open`（供 `v-model:open`）；onOpenChange 是 props 形态回调
-   * （PITFALLS 35）—— 两者同时发出（C11）。
-   */
-  emits: ['update:open'],
-  setup(props, { slots, attrs, expose, emit }) {
-    const devWarning = useDevWarning('FloatButton.Group');
-    const { getPrefixCls } = useConfigContext();
-    const direction = useDirection();
+  emits: {
+    'update:open': (_open: boolean) => true,
+    openChange: (_open: boolean) => true,
+    click: (_event: MouseEvent) => true,
+  },
+  setup(props, { slots, attrs, emit }) {
+    const warning = useDevWarning('FloatButton.Group');
+    const config = useComponentConfig<FloatButtonGroupConfig>('floatButtonGroup');
+    const theme = useFloatButtonTheme();
     const contextDisabled = useDisabled();
-
-    const prefixCls = computed(() => getPrefixCls(floatButtonPrefixCls, props.prefixCls));
-    const groupPrefixCls = computed(() => `${prefixCls.value}-group`);
-
-    const mergedType = computed<FloatButtonType>(() => props.type ?? 'default');
-    const mergedShape = computed<FloatButtonShape>(() => props.shape ?? 'circle');
-    const mergedDisabled = computed(() => props.disabled ?? contextDisabled.value);
-
-    const isMenuMode = computed(() => props.trigger === 'click' || props.trigger === 'hover');
-    const hoverTrigger = computed(() => props.trigger === 'hover');
-    const clickTrigger = computed(() => props.trigger === 'click');
-
-    // ---- placement ----
-    const mergedPlacement = computed<FloatButtonGroupPlacement>(() => {
-      const p = props.placement;
-      return p === 'top' || p === 'left' || p === 'right' || p === 'bottom' ? p : 'top';
-    });
-
-    // ---- Warning（antd 逐字）----
-    watchEffect(() => {
-      devWarning(
+    const prefix = computed(() => config.getPrefixCls(floatButtonPrefixCls, props.prefixCls));
+    const groupPrefix = computed(() => `${prefix.value}-group`);
+    const shape = computed(() => props.shape ?? 'circle');
+    const disabled = computed(() => props.disabled ?? contextDisabled.value);
+    const menu = computed(() => props.trigger === 'click' || props.trigger === 'hover');
+    const hover = computed(() => props.trigger === 'hover');
+    const placement = computed(() => props.placement ?? 'top');
+    watchEffect(() =>
+      warning(
         props.open === undefined || Boolean(props.trigger),
         '`open` need to be used together with `trigger`',
-      );
-    });
+      ),
+    );
 
-    // ---- open（受控/非受控）----
-    // ⚠️ 单一回调出口：`setOpen` → `useControlledValue.onChange` 已经发过
-    //    `onOpenChange`；`triggerOpen` 里再调一次就会**双通知**（Issue #27.1）。
-    //    `update:open` 也一起挪进 onChange ⇒ 两条通知同源同次。
-    const [mergedOpen, setOpen] = useControlledValue<boolean>({
+    const [open, setOpen] = useControlledValue<boolean>({
       defaultValue: false,
       getValue: () => props.open,
-      onChange: (next: boolean) => {
-        props.onOpenChange?.(next);
+      onChange: (next) => {
+        emit('openChange', next);
         emit('update:open', next);
       },
     });
-
-    const triggerOpen = (next: boolean): void => {
-      if (mergedDisabled.value) return;
-      if (mergedOpen.value !== next) {
-        setOpen(next);
-      }
+    const triggerOpen = (next: boolean) => {
+      if (!disabled.value && open.value !== next) setOpen(next);
     };
-
-    // ---- zIndex ----
-    // 根 `style` 是 Vue 原生 attrs（zIndex 也从它读）
-    const zIndex = useZIndex('FloatButton', (): number | undefined =>
-      typeof attrs.style === 'object' && attrs.style !== null
-        ? ((attrs.style as CSSProperties).zIndex as number | undefined)
-        : undefined,
-    );
-
-    // ---- click 模式外部点击（document capture，rc 逐字）----
-    const rootRef = ref<HTMLDivElement | null>(null);
-    const onDocClick = (e: MouseEvent): void => {
-      if (rootRef.value?.contains(e.target as Node)) return;
-      triggerOpen(false);
+    const rootRef = shallowRef<HTMLDivElement | null>(null);
+    const triggerRef = shallowRef<FloatButtonRef | null>(null);
+    const listRef = shallowRef<FlexRef | SpaceCompactRef | null>(null);
+    const listId = `float-button-list-${useId()}`;
+    const inside = (target: EventTarget | null) => {
+      const root = rootRef.value;
+      const NodeType = root?.ownerDocument.defaultView?.Node;
+      return Boolean(root && NodeType && target instanceof NodeType && root.contains(target));
     };
-    // ⚠️ 监听必须**跟随 trigger 安装/卸载**：原来只在 onMounted 判一次 ⇒ hover→click
-    //    不补装、click→hover 不摘除（且 onScopeDispose 读的是当时的 clickTrigger，
-    //    可能摘错/漏摘，Issue #27.2）。用 watch + onCleanup ⇒ 每次安装的 cleanup
-    //    精确摘掉自己那一个；组件卸载在 setup 作用域里自动执行最后的 cleanup。
+    const focusInside = () => inside(rootRef.value?.ownerDocument.activeElement ?? null);
+    let returningFocus = false;
     watch(
-      clickTrigger,
-      (enabled, _old, onCleanup) => {
-        if (!enabled) return;
-        document.addEventListener('click', onDocClick, { capture: true });
-        onCleanup(() => document.removeEventListener('click', onDocClick, { capture: true }));
+      open,
+      (next, previous) => {
+        const active = rootRef.value?.ownerDocument.activeElement;
+        if (previous && !next && active && listRef.value?.nativeElement?.contains(active)) {
+          returningFocus = true;
+          triggerRef.value?.nativeElement?.focus();
+          returningFocus = false;
+        }
       },
-      { immediate: true, flush: 'post' },
+      { flush: 'pre' },
     );
 
-    // ---- 语义合并 ----
-    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
+    // Bind to the actual owner document, after mounting, and release each binding.
+    onMounted(() =>
+      watch(
+        () => props.trigger === 'click',
+        (enabled, _old, cleanup) => {
+          if (!enabled) return;
+          const document = rootRef.value?.ownerDocument;
+          const onClick = (event: MouseEvent) => {
+            if (!inside(event.target)) triggerOpen(false);
+          };
+          document?.addEventListener('click', onClick, true);
+          cleanup(() => document?.removeEventListener('click', onClick, true));
+        },
+        { immediate: true, flush: 'post' },
+      ),
+    );
+
+    const { classNames, styles } = useMergeSemantic<
       FloatButtonGroupProps,
       FloatButtonGroupSemanticClassNames,
       FloatButtonGroupSemanticStyles
-    >([() => props.classNames], [() => props.styles], props);
-
-    // ---- contexts（antd 逐字：list 与 trigger 两套）----
-    const listContext = computed(() => ({
-      shape: mergedShape.value,
-      individual: mergedShape.value === 'circle',
+    >(
+      [() => config.classNames, () => props.classNames],
+      [() => config.styles, () => props.styles],
+      props,
+    );
+    const explicitZIndex = () => {
+      const style = normalizeStyle([config.style, styles.value.root, attrs.style]);
+      if (!style || typeof style === 'string') return undefined;
+      let value: string | number | undefined;
+      for (const [name, current] of Object.entries(style))
+        if (name === 'zIndex' || name === 'z-index') value = current;
+      return value;
+    };
+    const zIndex = useZIndex(
+      'FloatButton',
+      () => {
+        const value = explicitZIndex();
+        return value !== undefined && String(value).trim() && Number.isFinite(Number(value))
+          ? Number(value)
+          : undefined;
+      },
+      {
+        get zIndexPopupBase() {
+          return theme.theme.token.value.zIndexPopupBase;
+        },
+      },
+    );
+    provideFloatButtonGroup(
+      computed(() => ({
+        shape: shape.value,
+        individual: shape.value === 'circle',
+        classNames: {
+          root: classNames.value.item,
+          icon: classNames.value.itemIcon,
+          content: classNames.value.itemContent,
+        },
+        styles: {
+          root: styles.value.item,
+          icon: styles.value.itemIcon,
+          content: styles.value.itemContent,
+        },
+      })),
+    );
+    const triggerContext = computed(() => ({
+      shape: shape.value,
+      individual: true,
       classNames: {
-        root: mergedClassNames.value.item,
-        icon: mergedClassNames.value.itemIcon,
-        content: mergedClassNames.value.itemContent,
+        root: classNames.value.trigger,
+        icon: classNames.value.triggerIcon,
+        content: classNames.value.triggerContent,
       },
       styles: {
-        root: mergedStyles.value.item,
-        icon: mergedStyles.value.itemIcon,
-        content: mergedStyles.value.itemContent,
+        root: styles.value.trigger,
+        icon: styles.value.triggerIcon,
+        content: styles.value.triggerContent,
       },
     }));
-    provideFloatButtonGroup(listContext);
 
-    expose({
-      get nativeElement() {
-        return rootRef.value;
-      },
-    });
-
-    // ---- 触发按钮事件 ----
-    const onTriggerClick = (e: MouseEvent): void => {
-      if (clickTrigger.value) {
-        triggerOpen(!mergedOpen.value);
-      }
-      props.onClick?.(e);
+    const onTriggerClick = (event: MouseEvent) => {
+      // Hover menus also support native button activation for keyboard/touch users.
+      triggerOpen(!open.value);
+      emit('click', event);
     };
-
-    return () => {
-      const gCls = groupPrefixCls.value;
-      const listCls = `${gCls}-list`;
-      const vertical = mergedPlacement.value === 'top' || mergedPlacement.value === 'bottom';
-
-      const listSharedClass = (motionClassName?: string) =>
-        [listCls, mergedClassNames.value.list, motionClassName].filter(Boolean).join(' ');
-
-      const renderList = (motionClassName?: string): ReturnType<typeof h> => {
-        // Flex / SpaceCompact 都已迁移到「根 class 走原生 attrs」⇒ 这里必须用 `class`
+    const onKeydown = (event: KeyboardEvent) => {
+      if (menu.value && open.value && event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        triggerOpen(false);
+      }
+    };
+    const renderGroup = () => {
+      const group = groupPrefix.value;
+      const list = `${group}-list`;
+      const renderList = (
+        motionClass?: string,
+        motionStyle?: Record<string, string | number> | null,
+      ) => {
         const shared = {
-          class: listSharedClass(motionClassName),
-          style: mergedStyles.value.list,
+          id: menu.value ? listId : undefined,
+          ref: listRef,
+          class: [list, classNames.value.list, motionClass],
+          style: [styles.value.list, motionStyle],
+          inert: menu.value && !open.value ? true : undefined,
+          'aria-hidden': menu.value && !open.value ? 'true' : undefined,
+          vertical: placement.value === 'top' || placement.value === 'bottom',
         };
-        if (mergedShape.value === 'circle') {
-          return h(Flex, { vertical: vertical, ...shared }, { default: () => slots.default?.() });
-        }
-        return h(SpaceCompact, { vertical: vertical, ...shared } as never, {
-          default: () => slots.default?.(),
-        });
+        return shape.value === 'circle'
+          ? h(Flex, shared, { default: () => slots.default?.() })
+          : h(SpaceCompact, shared, { default: () => slots.default?.() });
       };
-
-      // 触发按钮 icon：open ⇒ closeIcon（用户 #closeIcon 插槽 / 默认 CloseOutlined）
-      const triggerIcon = computed<VNodeChild>(() => {
-        if (mergedOpen.value) {
-          const fromSlot = slots.closeIcon?.();
-          if (fromSlot !== undefined) return fromSlot;
-          return h(CloseOutlined);
-        }
-        const fromSlot = slots.icon?.();
-        if (fromSlot !== undefined) return fromSlot;
-        return h(FileTextOutlined);
-      });
-
-      // ⚠️ antd 的 triggerContext（trigger 系语义 + individual=true）依赖
-      //    render 期 Provider —— Vue 的 provide 必须在 setup 期，v1 用 listContext
-      //    承担 trigger 的 item 系语义（差异登记 README §3）
-      const triggerNode = isMenuMode.value
+      const trigger = menu.value
         ? h(
-            FloatButtonComponent,
+            FloatButtonGroupProvider,
+            { value: triggerContext.value },
             {
-              type: mergedType.value,
-              shape: mergedShape.value,
-              icon: triggerIcon.value as never,
-              'aria-label': props['aria-label'],
-              className: `${gCls}-trigger`,
-              onClick: onTriggerClick,
-              disabled: props.disabled,
-              href: props.href,
-              target: props.target,
-              htmlType: props.htmlType,
-              tooltip: props.tooltip,
-              badge: props.badge ?? undefined,
-              ...attrs,
-            } as never,
-            { default: () => null },
+              default: () =>
+                h(
+                  FloatButton,
+                  {
+                    ref: triggerRef,
+                    prefixCls: props.prefixCls,
+                    type: props.type,
+                    shape: shape.value,
+                    'aria-label': props['aria-label'] ?? (slots.content ? undefined : 'Actions'),
+                    'aria-expanded': open.value,
+                    'aria-controls': listId,
+                    class: `${group}-trigger`,
+                    disabled: disabled.value,
+                    href: props.href,
+                    target: props.target,
+                    htmlType: props.htmlType,
+                    tooltip: props.tooltip,
+                    badge: props.badge,
+                    onClick: onTriggerClick,
+                  },
+                  {
+                    icon: () =>
+                      open.value
+                        ? slots.closeIcon
+                          ? slots.closeIcon()
+                          : h(CloseOutlined)
+                        : slots.icon
+                          ? slots.icon()
+                          : h(FileTextOutlined),
+                    ...(slots.content ? { content: () => slots.content?.() } : {}),
+                  },
+                ),
+            },
           )
         : null;
-
-      const rootClass = [
-        gCls,
-        direction.value === 'rtl' ? `${gCls}-rtl` : '',
-        mergedShape.value === 'circle' ? `${gCls}-individual` : '',
-        isMenuMode.value ? `${gCls}-${mergedPlacement.value}` : '',
-        isMenuMode.value ? `${gCls}-menu-mode` : '',
-        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-        attrs.class,
-      ]
-        .filter(Boolean)
-        .join(' ');
-
-      // ⚠️ `...attrs` 放在末尾会**覆盖**内部同名的 `class` / `onMouseenter` /
-      //    `onMouseleave`（Issue #27.3）⇒ 用 `mergeProps` 组合：class/style 合并、
-      //    同名事件拼成数组（用户的与内部的都会执行）。
+      const fallback = explicitZIndex() === undefined ? { zIndex: zIndex.value } : undefined;
       return h(
         'div',
-        mergeProps(
+        mergeDomAttrs(
           {
             ref: rootRef,
-            class: rootClass,
-            style: {
-              zIndex: zIndex.value,
-              ...(mergedStyles.value.root ?? {}),
-            },
+            class: [
+              group,
+              config.className,
+              classNames.value.root,
+              config.direction === 'rtl' && `${group}-rtl`,
+              shape.value === 'circle' && `${group}-individual`,
+              menu.value && `${group}-${placement.value}`,
+              menu.value && `${group}-menu-mode`,
+            ],
+            style: [theme.style.value, fallback, config.style, styles.value.root],
             onMouseenter: () => {
-              if (hoverTrigger.value) triggerOpen(true);
+              if (hover.value) triggerOpen(true);
             },
             onMouseleave: () => {
-              if (hoverTrigger.value) triggerOpen(false);
+              if (hover.value && !focusInside()) triggerOpen(false);
             },
+            onFocusin: () => {
+              if (hover.value && !returningFocus) triggerOpen(true);
+            },
+            onFocusout: (event: FocusEvent) => {
+              if (menu.value && !inside(event.relatedTarget)) triggerOpen(false);
+            },
+            onKeydown,
           },
           attrs,
         ),
         [
-          isMenuMode.value
+          // DOM order follows keyboard order: trigger, then the disclosed actions.
+          trigger,
+          menu.value
             ? h(
                 CSSMotion,
-                { visible: mergedOpen.value, motionName: `${listCls}-motion` },
                 {
-                  default: ({ className: motionClassName }: { className?: string }) =>
-                    renderList(motionClassName),
+                  visible: open.value,
+                  motionName: theme.motion.value ? `${list}-motion` : undefined,
+                },
+                {
+                  default: ({
+                    className,
+                    style,
+                  }: {
+                    className: string;
+                    style: Record<string, string | number> | null;
+                  }) => renderList(className, style),
                 },
               )
             : renderList(),
-          // trigger 按钮（menu 模式）：triggerContext 经 useFloatButtonGroup 的
-          // 注入不可在渲染期 provide —— 直接以 props 覆盖语义（等价传递）
-          triggerNode,
         ],
       );
     };
+    return {
+      get nativeElement() {
+        return rootRef.value;
+      },
+      renderGroup,
+    };
+  },
+  render() {
+    return this.renderGroup();
   },
 });
-
-export default FloatButtonGroupComponent;

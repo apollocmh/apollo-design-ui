@@ -8,9 +8,10 @@
  * tooltip / badge 是数据 prop（C8-R2 豁免）。
  */
 
-import type { CSSProperties } from 'vue';
+import type { CSSProperties, VNodeChild } from 'vue';
 import type { BadgeProps } from '../badge/interface';
 import type { ButtonSemanticClassNames, ButtonSemanticStyles } from '../button/interface';
+import type { ComponentStyleConfig } from '../config-provider/context';
 import type { TooltipProps } from '../tooltip/interface';
 
 export type FloatButtonType = 'default' | 'primary';
@@ -52,11 +53,24 @@ export interface FloatButtonProps {
   // ---- 附加 ----
   tooltip?: TooltipProps | string;
   badge?: FloatButtonBadgeProps;
+  /** Vue click event from the actual button or anchor. */
+  onClick?: (event: MouseEvent) => void;
 }
+
+export interface FloatButtonSlots {
+  icon?: () => VNodeChild;
+  content?: () => VNodeChild;
+}
+
+type FloatButtonConfigFields = ComponentStyleConfig &
+  Pick<FloatButtonProps, 'classNames' | 'styles'>;
+export type FloatButtonConfig = {
+  [Key in keyof FloatButtonConfigFields]: FloatButtonConfigFields[Key];
+};
 
 /** `ref` 的 expose 面（antd `FloatButtonRef`）。 */
 export interface FloatButtonRef {
-  get nativeElement(): HTMLElement | null;
+  readonly nativeElement: HTMLButtonElement | HTMLAnchorElement | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -110,7 +124,9 @@ export interface FloatButtonGroupProps {
   trigger?: FloatButtonGroupTrigger;
   /** 受控开合（需与 trigger 同用，usage 告警）。 */
   open?: boolean;
+  /** Vue openChange event, emitted with update:open for each proposal. */
   onOpenChange?: (open: boolean) => void;
+  'onUpdate:open'?: (open: boolean) => void;
   /** 触发按钮点击（menu 模式下先于开合逻辑之外触发）。 */
   onClick?: (event: MouseEvent) => void;
 
@@ -118,7 +134,24 @@ export interface FloatButtonGroupProps {
 }
 
 export interface FloatButtonGroupRef {
-  get nativeElement(): HTMLElement | null;
+  readonly nativeElement: HTMLDivElement | null;
+}
+
+export interface FloatButtonGroupSlots extends FloatButtonSlots {
+  default?: () => VNodeChild;
+  closeIcon?: () => VNodeChild;
+}
+
+type FloatButtonGroupConfigFields = ComponentStyleConfig &
+  Pick<FloatButtonGroupProps, 'classNames' | 'styles'>;
+export type FloatButtonGroupConfig = {
+  [Key in keyof FloatButtonGroupConfigFields]: FloatButtonGroupConfigFields[Key];
+};
+
+export interface FloatButtonGroupEmits {
+  openChange: (open: boolean) => void;
+  'update:open': (open: boolean) => void;
+  click: (event: MouseEvent) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -126,8 +159,8 @@ export interface FloatButtonGroupRef {
 // ---------------------------------------------------------------------------
 
 export interface FloatButtonBackTopProps extends Omit<FloatButtonProps, 'target'> {
-  /** 滚动容器（默认 ownerDocument || window）。 */
-  target?: () => HTMLElement | Window | Document;
+  /** 滚动容器（默认按钮的 ownerDocument）；待绑定的 ref 可以返回 null。 */
+  target?: () => HTMLElement | Window | Document | null;
   /** 滚动超过该高度才可见（默认 400；0 ⇒ 恒可见）。 */
   visibilityHeight?: number;
   duration?: number;

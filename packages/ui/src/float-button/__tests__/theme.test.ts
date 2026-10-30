@@ -15,8 +15,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { themeTest } from '@apollo-design/test-utils';
-import { getCSSVarDeclarations, getDesignToken } from '@apollo-design/theme';
+import {
+  createThemeContext,
+  getCSSVarDeclarations,
+  getDesignToken,
+  ThemeContextKey,
+} from '@apollo-design/theme';
+import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import { h } from 'vue';
+import FloatButton from '../FloatButton';
+import Group from '../FloatButtonGroup';
 import { genFloatButtonStyle } from '../style';
 import { prepareComponentToken } from '../style/token';
 
@@ -69,5 +78,69 @@ describe('FloatButton · 全局 token 引用', () => {
   it('ant 残留核查（类名与变量前缀都已换成本仓前缀）', () => {
     expect(css).not.toContain('css-dev');
     expect(css).not.toMatch(/[^a-z-]anticon/);
+  });
+});
+
+describe('FloatButton · current alias source', () => {
+  it('keeps generated custom-prefix Button composition and owned variables in the same namespace', () => {
+    const custom = genFloatButtonStyle('brand');
+    expect(custom).toContain('.brand-float-btn.brand-btn.brand-float-btn-progress');
+    expect(custom).toContain('--brand-float-btn-progress');
+    expect(custom).toContain('--brand-btn-bg-color');
+    expect(custom).toContain('var(--apollo-control-height-lg)');
+    expect(custom).not.toMatch(/\.apollo-(?:float-btn|btn)/);
+    expect(custom).not.toMatch(/--apollo-(?:float-btn|btn)-/);
+  });
+  it('projects current aliases for FloatButton and Group and restores defaults after override removal', async () => {
+    const theme = createThemeContext({
+      token: { controlHeightLG: 52, marginLG: 35, padding: 22, zIndexPopupBase: 1700 },
+    });
+    const wrapper = mount(
+      { render: () => h('section', [h(FloatButton), h(Group)]) },
+      {
+        global: { provide: { [ThemeContextKey]: theme }, stubs: { teleport: false } },
+      },
+    );
+    try {
+      for (const selector of ['button', '.apollo-float-btn-group']) {
+        const style = wrapper.get<HTMLElement>(selector).element.style;
+        expect(style.getPropertyValue('--apollo-control-height-lg')).toBe('52px');
+        expect(style.getPropertyValue('--apollo-margin-lg')).toBe('35px');
+        expect(style.getPropertyValue('--apollo-padding')).toBe('22px');
+        expect(style.getPropertyValue('--apollo-z-index-popup-base')).toBe('1700');
+      }
+      theme.config.value = { token: { controlHeightLG: 44 } };
+      await wrapper.vm.$nextTick();
+      expect(
+        wrapper
+          .get<HTMLElement>('.apollo-float-btn-group')
+          .element.style.getPropertyValue('--apollo-control-height-lg'),
+      ).toBe('44px');
+      theme.config.value = {};
+      await wrapper.vm.$nextTick();
+      expect(
+        wrapper
+          .get<HTMLElement>('.apollo-float-btn-group')
+          .element.style.getPropertyValue('--apollo-control-height-lg'),
+      ).toBe('40px');
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it('keeps native variables and explicit zIndex ahead of Provider/semantic sources', () => {
+    const theme = createThemeContext({ token: { controlHeightLG: 52 } });
+    const wrapper = mount(Group, {
+      props: { styles: { root: { '--apollo-control-height-lg': '60px', zIndex: 15 } } },
+      attrs: { style: [{ '--apollo-control-height-lg': '64px' }, 'z-index:0'] },
+      global: { provide: { [ThemeContextKey]: theme } },
+    });
+    try {
+      const style = wrapper.get<HTMLElement>('.apollo-float-btn-group').element.style;
+      expect(style.getPropertyValue('--apollo-control-height-lg')).toBe('64px');
+      expect(style.zIndex).toBe('0');
+    } finally {
+      wrapper.unmount();
+    }
   });
 });

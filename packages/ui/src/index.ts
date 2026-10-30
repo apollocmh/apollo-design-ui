@@ -1121,13 +1121,22 @@ export { prepareComponentToken as prepareDropdownComponentToken } from './dropdo
 export type {
   FloatButtonBackTopProps,
   FloatButtonBadgeProps,
+  FloatButtonConfig,
+  FloatButtonGroupConfig,
+  FloatButtonGroupEmits,
   FloatButtonGroupPlacement,
   FloatButtonGroupProps,
   FloatButtonGroupRef,
+  FloatButtonGroupSemanticClassNames,
+  FloatButtonGroupSemanticStyles,
+  FloatButtonGroupSlots,
   FloatButtonGroupTrigger,
   FloatButtonProps,
   FloatButtonRef,
+  FloatButtonSemanticClassNames,
+  FloatButtonSemanticStyles,
   FloatButtonShape,
+  FloatButtonSlots,
   FloatButtonType,
 } from './float-button';
 // ---------------------------------------------------------------------------

@@ -35,16 +35,11 @@ describe('#27.1 一次开合只通知一次', () => {
     const onOpenChange = vi.fn();
     const w = mountGroup({ onOpenChange });
     await nextTick();
-    const trigger = w.find(`.${G}-trigger`);
-    if (trigger.exists()) {
-      await trigger.trigger('click');
-    } else {
-      await w.find(`.${G}`).trigger('click');
-    }
+    await w.get(`.${G}-trigger`).trigger('click');
     await nextTick();
 
     expect(onOpenChange).toHaveBeenCalledTimes(1);
-    expect(w.emitted('update:open')?.length ?? 0).toBeLessThanOrEqual(1);
+    expect(w.emitted('update:open')).toEqual([[true]]);
     w.unmount();
   });
 

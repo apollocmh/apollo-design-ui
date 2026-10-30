@@ -5,14 +5,18 @@ import { FloatButton, FloatButtonGroup } from '@apollo-design/ui';
 import { ref } from 'vue';
 
 const open = ref(false);
+const changes = ref(0);
 </script>
 
 <template>
+  <div aria-live="polite">{{ open ? 'Expanded' : 'Closed' }} · changes: {{ changes }}</div>
   <FloatButtonGroup
     v-model:open="open"
     trigger="click"
     type="primary"
     style="inset-inline-end: 24px"
+    aria-label="Support actions"
+    @open-change="changes++"
   >
     <template #icon><CustomerServiceOutlined /></template>
     <FloatButton />

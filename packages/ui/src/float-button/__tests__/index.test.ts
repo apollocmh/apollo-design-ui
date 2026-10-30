@@ -114,8 +114,7 @@ describe('FloatButton · 结构契约', () => {
 
   it('expose nativeElement', () => {
     const w = mountFB();
-    const vm = w.vm as unknown as { nativeElement: HTMLElement | null };
-    expect(vm.nativeElement).toBeTruthy();
+    expect(w.vm.nativeElement).toBe(w.get('button').element);
     w.unmount();
   });
 

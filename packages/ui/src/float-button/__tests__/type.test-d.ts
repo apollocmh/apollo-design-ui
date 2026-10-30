@@ -1,10 +1,15 @@
 /** L3 类型（G7）—— 正例 + 负例（负例包在永不调用的闭包里，CHECKLIST §一）。 */
 import { describe, expectTypeOf, it } from 'vitest';
+import type BackTop from '../BackTop';
+import type FloatButton from '../FloatButton';
+import type Group from '../FloatButtonGroup';
 import type {
   FloatButtonBackTopProps,
   FloatButtonGroupProps,
+  FloatButtonGroupSlots,
   FloatButtonProps,
   FloatButtonShape,
+  FloatButtonSlots,
   FloatButtonType,
 } from '../interface';
 
@@ -51,6 +56,33 @@ describe('FloatButton · 类型', () => {
     expectTypeOf(sample).not.toBeNever();
   });
 
+  it('typed Vue emits, slots and real instance refs', () => {
+    expectTypeOf<InstanceType<typeof FloatButton>['nativeElement']>().toEqualTypeOf<
+      HTMLButtonElement | HTMLAnchorElement | null
+    >();
+    expectTypeOf<
+      InstanceType<typeof Group>['nativeElement']
+    >().toEqualTypeOf<HTMLDivElement | null>();
+    expectTypeOf<InstanceType<typeof BackTop>['nativeElement']>().toEqualTypeOf<
+      HTMLButtonElement | HTMLAnchorElement | null
+    >();
+    const slots: FloatButtonSlots = { icon: () => [null, 'icon'], content: () => 0 };
+    const groupSlots: FloatButtonGroupSlots = {
+      ...slots,
+      default: () => [],
+      closeIcon: () => null,
+    };
+    const props: InstanceType<typeof Group>['$props'] = {
+      onOpenChange: (open) => expectTypeOf(open).toBeBoolean(),
+      'onUpdate:open': (open) => expectTypeOf(open).toBeBoolean(),
+      onClick: (event) => expectTypeOf(event).toEqualTypeOf<MouseEvent>(),
+    };
+    const pending: FloatButtonBackTopProps = { target: () => null };
+    expectTypeOf(props).not.toBeNever();
+    expectTypeOf(groupSlots).not.toBeNever();
+    expectTypeOf(pending).not.toBeNever();
+  });
+
   it('负例（永不调用的闭包）', () => {
     const negative = () => {
       const props: FloatButtonProps = {
@@ -59,6 +91,16 @@ describe('FloatButton · 类型', () => {
         // @ts-expect-error shape 是两值联合
         shape: 'round',
       };
+      const group: InstanceType<typeof Group>['$props'] = {
+        // @ts-expect-error openChange carries boolean, not a React-style event.
+        onOpenChange: (_event: MouseEvent) => {},
+      };
+      const slots: FloatButtonSlots = {
+        // @ts-expect-error FloatButton exposes named icon/content slots only.
+        title: () => 'title',
+      };
+      void group;
+      void slots;
       return props;
     };
     void negative;

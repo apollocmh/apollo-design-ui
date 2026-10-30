@@ -110,3 +110,7 @@ Masonry 的 layoutChange 使用 Vue emits，MasonryRef 与文档化 nativeElemen
 ### D-tooltip-current-overlay
 
 Tooltip 的 openChange/popupClick/afterOpenChange 使用 Vue emits，原生 class/style 只作用于浮层根，模板 ref 暴露真实元素属性。afterOpenChange 通知通过 Popover、Popconfirm 同链迁移为 `@after-open-change` / `onAfterOpenChange`，不保留旧回调 prop。当前主题、箭头、层级与定位跟随实际配置和尺寸更新，详见[Tooltip API](packages/ui/src/tooltip/index.zh-CN.md)。两层包装的其余契约仍按各自进行中任务处理。
+
+### D-float-button-native-group
+
+FloatButton / Group 使用当前插槽、Provider 与主题别名；Group 通知改为 Vue emits，原生 attrs 只作用于根，trigger 在列表前以支持自然 Tab 顺序，Escape 在接受关闭后返回焦点。BackTop 保留当前目标并释放动画/监听，PurePanel 展示真实分支；既有样式生成器正确消费显式自定义前缀，不新增运行时 CSS。详见[FloatButton API](packages/ui/src/float-button/index.zh-CN.md)。

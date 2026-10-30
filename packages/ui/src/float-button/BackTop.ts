@@ -1,155 +1,174 @@
-/**
- * FloatButton.BackTop —— antd `BackTop.tsx`（121 行）的 Vue 版。
- *
- * 复用 back-top 的滚动基建（getScroll / throttleByAnimationFrame / scrollTo /
- * CSSMotion fade）+ 本目录 hooks/useScroll（showProgress 进度环）。
- */
-
+/** Back-to-top action with current target, slots and cancellable scrolling. */
 import { VerticalAlignTopOutlined } from '@apollo-design/icons';
 import { CSSMotion } from '@apollo-design/motion';
-import { useDevWarning } from '@apollo-design/utils';
+import { isDocument } from '@apollo-design/utils';
 import {
-  type ComponentPublicInstance,
   computed,
   defineComponent,
+  getCurrentInstance,
   h,
+  mergeProps,
+  onScopeDispose,
   type PropType,
-  ref,
+  type SlotsType,
+  shallowRef,
 } from 'vue';
 import { scrollTo } from '../_internal/scroll-to';
 import { useComponentConfig } from '../config-provider/context';
-import { useFloatButtonGroup } from './context';
-import FloatButtonComponent, { floatButtonPrefixCls } from './FloatButton';
+import FloatButton, { floatButtonPrefixCls } from './FloatButton';
 import useScroll from './hooks/useScroll';
-import type { FloatButtonBackTopProps, FloatButtonShape, FloatButtonType } from './interface';
+import type {
+  FloatButtonBackTopProps,
+  FloatButtonRef,
+  FloatButtonShape,
+  FloatButtonSlots,
+  FloatButtonType,
+} from './interface';
+import { useFloatButtonTheme } from './use-float-button-theme';
 
-const BackTopComponent = defineComponent({
+export default defineComponent({
   name: 'AFloatButtonBackTop',
   inheritAttrs: false,
+  expose: ['nativeElement'],
+  slots: Object as SlotsType<FloatButtonSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
     type: { type: String as PropType<FloatButtonType>, default: undefined },
     shape: { type: String as PropType<FloatButtonShape>, default: undefined },
     description: { type: String, default: undefined },
+    disabled: { type: Boolean, default: undefined },
     tooltip: {
       type: [Object, String] as PropType<FloatButtonBackTopProps['tooltip']>,
       default: undefined,
     },
     badge: { type: Object as PropType<FloatButtonBackTopProps['badge']>, default: undefined },
+    classNames: {
+      type: [Object, Function] as PropType<FloatButtonBackTopProps['classNames']>,
+      default: undefined,
+    },
+    styles: {
+      type: [Object, Function] as PropType<FloatButtonBackTopProps['styles']>,
+      default: undefined,
+    },
     'aria-label': { type: String, default: undefined },
     href: { type: String, default: undefined },
     htmlType: { type: String as PropType<FloatButtonBackTopProps['htmlType']>, default: undefined },
-    // antd：BackTopProps omit 掉 FloatButton 的 anchor `target` 后重声明为滚动容器
-    target: {
-      type: Function as PropType<FloatButtonBackTopProps['target']>,
-      default: undefined,
-    },
+    target: { type: Function as PropType<FloatButtonBackTopProps['target']>, default: undefined },
     visibilityHeight: { type: Number, default: 400 },
     duration: { type: Number, default: 450 },
     showProgress: { type: Boolean, default: false },
-    onClick: {
-      type: Function as PropType<FloatButtonBackTopProps['onClick']>,
-      default: undefined,
-    },
   },
-  setup(props, { attrs, expose }) {
-    const devWarning = useDevWarning('FloatButton.BackTop');
-    const { getPrefixCls } = useComponentConfig('floatButton' as never);
-    void devWarning;
-
-    const prefixCls = computed(() => getPrefixCls(floatButtonPrefixCls, props.prefixCls));
-    const rootPrefixCls = computed(() => getPrefixCls());
-
-    const internalRef = ref<ComponentPublicInstance | null>(null);
-    expose({
-      get nativeElement() {
-        return (
-          (internalRef.value as unknown as { nativeElement?: HTMLElement | null } | null)
-            ?.nativeElement ?? null
-        );
-      },
-    });
-
-    /** antd 逐字：`ref.current?.ownerDocument || window`。 */
-    const getDefaultTarget = (): HTMLElement | Window | Document =>
-      (internalRef.value as unknown as { nativeElement?: HTMLElement | null } | null)?.nativeElement
-        ?.ownerDocument ?? window;
-
-    const getTarget = (): HTMLElement | Window | Document =>
-      props.target ? props.target() : getDefaultTarget();
-
-    // ⚠️ 两个配置要传 **getter**：`useScroll` 会在 watch 里对求值结果做依赖比较，
-    //    传裸值 ⇒ 阈值/进度开关动态变化不生效（Issue #27.4）。
-    const { scrollProgress, visible } = useScroll({
-      getTarget,
-      showProgress: () => props.showProgress ?? false,
-      visibilityHeight: () => props.visibilityHeight ?? 400,
-    });
-
-    const groupShape = useFloatButtonGroup()?.shape ?? null;
-    const mergedShape = computed<FloatButtonShape>(() => groupShape ?? props.shape ?? 'circle');
-    const mergedType = computed<FloatButtonType>(() => props.type ?? 'default');
-
-    const scrollToTop = (e: MouseEvent): void => {
-      const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
-      scrollTo(0, {
-        getContainer: () => getTarget(),
-        duration: prefersReducedMotion?.matches ? 0 : (props.duration ?? 450),
-      });
-      props.onClick?.(e);
+  emits: { click: (_event: MouseEvent) => true },
+  setup(props, { attrs, slots, emit }) {
+    const config = useComponentConfig('floatButton');
+    const prefix = computed(() => config.getPrefixCls(floatButtonPrefixCls, props.prefixCls));
+    const rootPrefix = computed(() => config.getPrefixCls());
+    const theme = useFloatButtonTheme();
+    const instance = getCurrentInstance();
+    const internalRef = shallowRef<FloatButtonRef | null>(null);
+    let cancelScroll: (() => void) | undefined;
+    const stopScroll = () => {
+      cancelScroll?.();
+      cancelScroll = undefined;
     };
-
-    return () => {
-      const styleObj = {
-        // 根 style 是 Vue 原生 attrs
-        ...(typeof attrs.style === 'object' ? attrs.style : {}),
-        ...(props.showProgress
-          ? { [`--${prefixCls.value}-progress`]: `${scrollProgress.value}turn` }
-          : {}),
-      };
-
-      return h(
+    const { visible, scrollProgress, currentTarget } = useScroll({
+      getTarget: () => {
+        if (props.target) return props.target();
+        // A hidden motion root is a real comment anchor in the mount document.
+        const anchor: unknown = instance?.vnode.el;
+        const owner =
+          anchor &&
+          typeof anchor === 'object' &&
+          'ownerDocument' in anchor &&
+          isDocument(anchor.ownerDocument)
+            ? anchor.ownerDocument
+            : document;
+        return internalRef.value?.nativeElement?.ownerDocument ?? owner;
+      },
+      visibilityHeight: () => props.visibilityHeight,
+      showProgress: () => props.showProgress,
+      onTargetChange: stopScroll,
+    });
+    onScopeDispose(stopScroll);
+    const scrollToTop = (event: MouseEvent) => {
+      stopScroll();
+      const reduced = internalRef.value?.nativeElement?.ownerDocument.defaultView?.matchMedia?.(
+        '(prefers-reduced-motion: reduce)',
+      ).matches;
+      cancelScroll = scrollTo(0, {
+        getContainer: () => currentTarget.value,
+        duration: reduced || !theme.motion.value ? 0 : props.duration,
+      });
+      emit('click', event);
+    };
+    const renderBackTop = () =>
+      h(
         CSSMotion,
-        { visible: visible.value, motionName: `${rootPrefixCls.value}-fade` },
         {
-          default: ({ className: motionClassName }: { className?: string }) =>
+          visible: visible.value,
+          motionName: theme.motion.value ? `${rootPrefix.value}-fade` : undefined,
+        },
+        {
+          default: ({
+            className,
+            style,
+          }: {
+            className: string;
+            style: Record<string, string | number> | null;
+          }) =>
             h(
-              FloatButtonComponent,
+              FloatButton,
+              mergeProps(
+                {
+                  style: [
+                    style,
+                    props.showProgress
+                      ? { [`--${prefix.value}-progress`]: `${scrollProgress.value}turn` }
+                      : undefined,
+                  ],
+                },
+                attrs,
+                {
+                  ref: internalRef,
+                  prefixCls: props.prefixCls,
+                  type: props.type,
+                  shape: props.shape,
+                  disabled: props.disabled,
+                  description: props.description,
+                  tooltip: props.tooltip,
+                  badge: props.badge,
+                  classNames: props.classNames,
+                  styles: props.styles,
+                  'aria-label':
+                    props['aria-label'] ??
+                    (slots.content || props.description !== undefined ? undefined : 'Back to top'),
+                  href: props.href,
+                  htmlType: props.htmlType,
+                  hidden: !visible.value,
+                  onClick: scrollToTop,
+                  class: [className, props.showProgress && `${prefix.value}-progress`],
+                },
+              ),
               {
-                ...attrs,
-                ref: internalRef,
-                prefixCls: props.prefixCls,
-                type: mergedType.value,
-                shape: mergedShape.value,
-                description: props.description,
-                tooltip: props.tooltip,
-                badge: props.badge,
-                'aria-label': props['aria-label'],
-                href: props.href,
-                htmlType: props.htmlType,
-                onClick: scrollToTop,
-                style: styleObj,
-                // FloatButton 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
-                class: [
-                  attrs.class as string | undefined,
-                  motionClassName,
-                  props.showProgress ? `${prefixCls.value}-progress` : '',
-                ]
-                  .filter(Boolean)
-                  .join(' '),
-              } as never,
-              // BackTop 无内容（icon-only；默认 VerticalAlignTopOutlined 在 FloatButton
-              // 的 icon 兜底之前 —— antd 走 mergedIcon 默认值）
-              {
+                ...(slots.content ? { content: () => slots.content?.() } : {}),
                 icon: () =>
-                  props.description === undefined ? h(VerticalAlignTopOutlined) : (null as never),
-                default: () => null,
+                  slots.icon
+                    ? slots.icon()
+                    : !slots.content && props.description === undefined
+                      ? h(VerticalAlignTopOutlined)
+                      : null,
               },
             ),
         },
       );
+    return {
+      get nativeElement() {
+        return internalRef.value?.nativeElement ?? null;
+      },
+      renderBackTop,
     };
   },
+  render() {
+    return this.renderBackTop();
+  },
 });
-
-export default BackTopComponent;

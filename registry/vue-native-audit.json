@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 36,
+  "revision": 37,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -661,17 +661,13 @@
       "kind": "component",
       "ref": "float-button",
       "title": "FloatButton",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/float-button"
       ],
-      "assignment": {
-        "owner": "native_float_button",
-        "baseRevision": 26,
-        "startedAt": "2026-10-30T07:50:40.896Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -688,6 +684,51 @@
         "basis": [
           "docs/audit/2026-10-27-button-contract-audit.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/float-button"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/float-button --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 19710
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/float-button/__tests__/native-contracts.test.ts packages/ui/src/float-button/__tests__/index.test.ts packages/ui/src/float-button/__tests__/s27-issue27.test.ts packages/ui/src/float-button/__tests__/vue-bindings.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8350
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project theme packages/ui/src/float-button --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 15420
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/float-button/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 9610
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated strict config; full FloatButton source/tests/demos/SFC>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49615
+          }
+        ],
+        "boundary": "保留Button专项原生样式成果；已验证Group单一事件/attrs/键盘焦点/受控拒绝、当前Provider/Alias、BackTop目标和资源、PurePanel/显式brand样式工具及实际Demo。最终同一冻结提交九维验收未执行。"
       }
     },
     {

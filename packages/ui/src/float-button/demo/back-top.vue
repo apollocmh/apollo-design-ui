@@ -6,7 +6,7 @@ import { ref } from 'vue';
 const scrollContainer = ref<HTMLElement | null>(null);
 const scrollTop = ref(0);
 
-const getTarget = () => scrollContainer.value ?? window;
+const getTarget = () => scrollContainer.value;
 
 const onScroll = (event: Event) => {
   scrollTop.value = Math.round((event.currentTarget as HTMLElement).scrollTop);
