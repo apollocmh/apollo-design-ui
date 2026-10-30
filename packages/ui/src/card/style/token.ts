@@ -114,7 +114,7 @@ export interface ComponentToken {
  * ⚠️ `bodyPadding` / `headerPadding` 用的是 `token.paddingLG`（上游的
  *    `token.bodyPadding ?? token.paddingLG`，见文件头）。
  */
-export const prepareComponentToken = (token: AliasToken): Partial<ComponentToken> => ({
+export const prepareComponentToken = (token: AliasToken): ComponentToken => ({
   headerBg: 'transparent',
   headerFontSize: token.fontSizeLG,
   headerFontSizeSM: token.fontSize,

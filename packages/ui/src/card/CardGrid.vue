@@ -20,14 +20,15 @@
  *    Vue 随即关闭 attrs 自动透传（`class` / `style` 静默丢失）。注释写在这里。
  */
 
-import { computed, ref, type VNodeChild } from 'vue';
+import { computed, ref } from 'vue';
 import { useComponentConfig } from '../config-provider/context';
-import type { CardGridProps } from './interface';
+import type { CardGridProps, CardGridSlots } from './interface';
+import { useCardTheme } from './use-card-theme';
 
 defineOptions({ name: 'ACardGrid' });
 
 /** 默认插槽 = 上游的 `children`（规则 C19）。 */
-defineSlots<{ default?: () => VNodeChild }>();
+defineSlots<CardGridSlots>();
 
 /**
  * ⚠️ `hoverable: true` **必须**写在这里：Vue 对未传的 Boolean prop 会赋 `false`，
@@ -42,6 +43,7 @@ const props = withDefaults(defineProps<CardGridProps>(), {
 const { getPrefixCls } = useComponentConfig('card');
 
 const prefixCls = computed(() => getPrefixCls('card', props.prefixCls));
+const theme = useCardTheme(() => prefixCls.value);
 
 /** `clsx(`${prefix}-grid`, className, { [`${prefix}-grid-hoverable`]: hoverable })`。 */
 const classString = computed(() => [
@@ -54,5 +56,5 @@ defineExpose({ nativeElement: rootRef });
 </script>
 
 <template>
-  <div ref="rootRef" :class="classString"><slot /></div>
+  <div ref="rootRef" :class="classString" :style="theme.aliasStyles.value"><slot /></div>
 </template>

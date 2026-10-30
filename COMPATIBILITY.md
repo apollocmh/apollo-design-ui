@@ -234,3 +234,7 @@ Calendar 的 headerRender/cellRender/fullCellRender 内容 prop 及四个旧别�
 ### D-watermark-native-drawing-lifecycle
 
 Watermark 的 remove 通知改由 Vue emits 拥有，模板使用 @remove，h() 的 onRemove 仍是自然监听器。fontSize 保留 number/string，由浏览器解析合法 CSS 单位；移除无效的 fontStyle="none"。修正实际图片身份缓存、异步图片竞态、当前原生 attrs/样式、继承面板和观察器/帧的释放；保留既有水印几何及防篡改行为，真实 Modal 消费同步验证，详见[Watermark API](packages/ui/src/watermark/index.zh-CN.md)。
+
+### D-card-native-content-and-tabs
+
+Card 的 tabChange/update:activeTabKey 由 Vue emits 拥有，支持 v-model:activeTabKey；h() 的 onTabChange 仍是自然监听器。Tabs 保留选择状态职责，tabProps 不再建立第二个受控来源。已有 actions 内容增加 #actions 入口；Meta 的默认槽作为 description 的后备，具名 description 槽（含空槽）优先，其次是显式 description 数据。修正条件内容身份与焦点、Card/Grid/Meta 原生 attrs/真实引用、当前配置和十三 Token，详见[Card API](packages/ui/src/card/index.zh-CN.md)。

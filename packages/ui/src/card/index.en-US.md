@@ -30,10 +30,7 @@ See [`demo/`](./demo) (**12**, matching antd's user-visible demos).
 | `tabs` | Card with tabs via `tabList` |
 | `meta` | Cover + avatar + title + description |
 
-⚠️ 4 antd demos are **not ported** (gaps in `README.md` §5):
-`style-class` (needs `antd-style`) · `component-token` (tokens are build-time artifacts
-in a zero-runtime architecture) · `no-body-debug` / `button-alignment-debug`
-(marked `debug` upstream, not in the docs body).
+The current twelve Demos include style-class and component-token. Historical counts and gaps retain their original dates in README.
 
 ## API
 
@@ -51,16 +48,14 @@ in a zero-runtime architecture) · `no-body-debug` / `button-alignment-debug`
 | type | Card type (only `'inner'` for now) | `'inner'` | — | × |
 | variant | Variant. `'borderless'` drops `-bordered` and uses the tertiary shadow | `'outlined' \| 'borderless'` | `outlined` | ✅ (`card.variant`) |
 | tabList | Tab list. ⚠️ `tab` is deprecated, use `label` | `CardTabListType[]` | — | × |
-| activeTabKey | Controlled active tab (**mutually exclusive with `defaultActiveTabKey`**) | `string` | — | × |
+| activeTabKey | Current tab; supports v-model:active-tab-key and release to the last accepted value | `string` | — | × |
 | defaultActiveTabKey | Initial active tab (uncontrolled) | `string` | — | × |
 | tabBarExtraContent | Extra content on the tab bar | `VNodeChild \| { left, right }` | — | × |
 | tabProps | Props forwarded to the internal `Tabs` | `TabsProps` | — | × |
-| onTabChange | Tab switch callback. ⚠️ This is a **prop**, not an event | `(key: string) => void` | — | × |
 | classNames | Semantic class names (7 slots), function form supported | `CardSemanticClassNames \| ((info) => …)` | — | ✅ (`card.classNames`) |
 | styles | Semantic styles (7 slots), function form supported | `CardSemanticStyles \| ((info) => …)` | — | ✅ (`card.styles`) |
 | prefixCls | Class prefix (**the root prefix itself**, not a suffix) | `string` | from ConfigProvider, falls back to `apollo-card` | × |
 | class / style | **Native root attrs** (not Props) | `string \| array \| object` / `CSSProperties` | — | × |
-| style | Root inline style (**overrides** `styles.root`) | `CSSProperties` | — | × |
 | id | Root element id | `string` | — | × |
 | bordered | ⚠️ **Deprecated**, use `variant` | `boolean` | — | × |
 | headStyle | ⚠️ **Deprecated**, use `styles.header` | `CSSProperties` | — | × |
@@ -71,15 +66,15 @@ in a zero-runtime architecture) · `no-body-debug` / `button-alignment-debug`
 
 ### Events
 
-**None.** `onTabChange` is a **prop** upstream (there is no value/onChange pair, so the
-"emit both" rule of `COMPATIBILITY.md` §3 does not apply). ⚠️ This repo's `Tabs` uses
-`v-model:activeKey` + a `change` event, but Card keeps the upstream prop form.
+`tabChange(key: string)` and `update:activeTabKey(key: string)` are owned events. Use `@tab-change` for notification and `v-model:active-tab-key` to accept updates. JSX `onTabChange` is the same listener, called once. Controlled proposals rejected by the parent do not leak when control is released. defaultActiveTabKey only sets the initial uncontrolled value. Card owns its active/default keys, items and tabBarExtraContent over nested tabProps; other Tabs configuration, VNode labels and value-returning service functions are forwarded.
 
 ### Slots
 
 | Name | Description |
 |---|---|
-| default | Card content (antd's `children`) |
+| default | Card content; hidden content is not evaluated while loading |
+| title / extra / cover | Current named content; slot presence overrides data, including intentional empty content |
+| actions | Existing action list, with conditional items and stable VNode keys |
 
 ### Card.Meta
 
@@ -151,3 +146,9 @@ All three components expose `{ nativeElement }` (`HTMLDivElement | null`).
 Runtime tuning uses CSS variables: `--apollo-card-header-height` /
 `--apollo-card-body-padding` / `--apollo-card-actions-bg` … (13 of them, named the same
 way as antd's `--ant-card-*`).
+
+Current Vue contracts: Card implements default/title/extra/cover/actions slots. Slot presence wins over data, including intentional empty slots, and conditional regions preserve existing editors. The actions slot expresses the existing list; stable VNode keys preserve item identity and focus through reordering. Loading uses the real Skeleton and does not evaluate hidden body content.
+
+Card.Meta default supplies description fallback: description slot (even empty) → explicit description data (including 0/null/false) → default. Its avatar/title/description slots stay current. Card/Grid/Meta expose their real nullable nativeElement and forward native attrs to the actual root.
+
+All thirteen component Tokens consume current ConfigProvider theme.components.Card and alias tokens, including replacement/removal. Standalone Grid/Meta read the current theme. Semantic functions receive current resolved props. Card uses its own two surface variants and maps inherited large size to medium; Form input variant does not change Card. Native style CSS variables keep local priority. Preload static CSS for custom prefixes.

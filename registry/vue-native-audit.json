@@ -2,9 +2,9 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 185,
+  "revision": 187,
   "dispatch": {
-    "status": "running",
+    "status": "paused",
     "maxParallel": 5,
     "integrator": "root"
   },
@@ -671,18 +671,16 @@
       "kind": "component",
       "ref": "card",
       "title": "Card",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/card"
       ],
-      "assignment": {
-        "owner": "native_form_core",
-        "baseRevision": 174,
-        "startedAt": "2026-10-30T22:16:23.317Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -699,6 +697,271 @@
           "packages/ui/src/card/README.md",
           "packages/ui/src/card/__tests__/index.test.ts"
         ]
+      },
+      "verification": {
+        "task": "CMP:card",
+        "owner": "native_form_core",
+        "baseRevision": "314ae835",
+        "passed": true,
+        "pending": [],
+        "scope": [
+          "packages/ui/src/card"
+        ],
+        "summary": [
+          "Card owns tabChange and update:activeTabKey, with JSX listener types preserved; real Tabs continues to own selection, rejection/release state, keyboard and measurement algorithms. Card active/default keys and tab data remain authoritative over nested tabProps.",
+          "Card and Meta read current slot functions once in actual render, including empty slots. The existing NodeRenderer preserves VNode handling and genuine script-setup expose. Stable region keys preserve existing editors through conditional title/extra/cover/Meta changes.",
+          "actions slot expresses the existing action list, retaining keyed data/VNode identity. A Chrome-proven DOM-move blur is repaired only for a still-connected same action when focus fell to body; removal and external focus are respected.",
+          "Meta description priority is description slot (including empty), explicit description data (including 0/null/false), then default. Existing Grid hover default and all three native attrs/ref contracts remain.",
+          "All thirteen existing Card Tokens and current alias values are consumed; semantic functions read current effective props. Card uses its own two surface variants and normalizes inherited large to medium rather than reading Form input variant.",
+          "Necessary 12-Demo inventory remains; tabs uses v-model, Meta demonstrates default fallback, component-token demonstrates current Provider configuration. Historical README facts remain below a dated increment.",
+          "Card DOM consumer derives only already-reviewed native Tabs ownership/trigger/id-link changes from the untouched original oracle, then compares every remaining node/attribute in all 51 existing cases."
+        ],
+        "migration": [
+          "Use @tab-change and v-model:active-tab-key. onTabChange remains the natural JSX listener for the owned event, not a runtime callback prop; there is one notification channel.",
+          "New closed slot type aliases: CardSlots, CardGridSlots, CardMetaSlots. CardEmits is a tuple-map. Integrator owns card/index.ts and UI root exports.",
+          "#actions overrides actions data when present, including intentional empty; use stable VNode keys for action identity. VNode tab labels and returning indicator service callbacks remain.",
+          "Meta.default is description fallback with exact priority: description slot -> explicit description data -> default. 0/null/false are explicit data, not fallback requests.",
+          "CardConfig now accurately includes its existing variant setting. Native class/style and root listeners still land once; published refs remain {nativeElement:HTMLDivElement|null}.",
+          "No Radio consumers exist in this directory. The existing Switch listener remains valid; no other component source was modified."
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit --project theme packages/ui/src/card/__tests__/native-contracts.test.ts packages/ui/src/card/__tests__/index.test.ts packages/ui/src/card/__tests__/demo.test.ts packages/ui/src/card/__tests__/theme.test.ts",
+            "exitCode": 0,
+            "elapsedSeconds": 13.36,
+            "result": "4 files, 92 passed, preserving the existing core/Demo/Token assertions and covering model rejection/release, actual slots/VNodes/current semantic props/theme, ref/attrs and SSR rendering.",
+            "log": "/tmp/apollo-card-core-demo-token-final.log"
+          },
+          {
+            "kind": "dom-a11y",
+            "command": "node node_modules/vitest/vitest.mjs run --project dom-contract --project a11y packages/ui/src/card/__tests__/semantic.test.ts packages/ui/src/card/__tests__/a11y.test.ts",
+            "exitCode": 0,
+            "elapsedSeconds": 6.67,
+            "result": "2 files, 66 passed. Original compatibility JSON unchanged, all 51 DOM cases retained, with exact reviewed native Tabs references. JSDOM emits its known missing canvas.getContext notice; real-browser contrast is not claimed.",
+            "log": "/tmp/apollo-card-native-dom-a11y.log"
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/card/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "elapsedSeconds": 6.74,
+            "result": "10 real Chrome groups: three actual refs, thirteen actual Token consumers, conditional content identity/draft/focus/selection, current theme/attrs, three-key action reorder, empty/withdrawn action slots and actual VNode data, real Tabs keyboard rejection/release and exactly-once listeners, VNode labels/indicator service, custom prefix/override removal, actual Skeleton and ResizeObserver cleanup. Zero browser/Vue diagnostics.",
+            "log": "/tmp/apollo-card-native-browser-final.log",
+            "report": "/tmp/apollo-card-native-browser.json"
+          },
+          {
+            "kind": "lint",
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/ui/src/card/Card.vue packages/ui/src/card/CardGrid.vue packages/ui/src/card/CardMeta.vue packages/ui/src/card/__tests__/fixtures/NativeCard.vue packages/ui/src/card/__tests__/index.test.ts packages/ui/src/card/__tests__/native-browser.mjs packages/ui/src/card/__tests__/native-contracts.test.ts packages/ui/src/card/__tests__/semantic.test.ts packages/ui/src/card/__tests__/type.test-d.ts packages/ui/src/card/content.ts packages/ui/src/card/demo/component-token.vue packages/ui/src/card/demo/meta.vue packages/ui/src/card/demo/tabs.vue packages/ui/src/card/interface.ts packages/ui/src/card/style/index.ts packages/ui/src/card/style/token.ts packages/ui/src/card/use-card-theme.ts",
+            "exitCode": 0,
+            "elapsedSeconds": 0.28,
+            "result": "17 changed owned source/test/SFC files; no fixes or diagnostics. Public index excluded.",
+            "log": "/tmp/apollo-card-format-final.log"
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check HEAD -- packages/ui/src/card",
+            "exitCode": 0,
+            "elapsedSeconds": 0.01,
+            "log": "/tmp/apollo-card-diff-final.log"
+          },
+          {
+            "kind": "strict-boundary-cases",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/card/__tests__/native-contracts.test.ts -t 'gives the existing actions list|forwards current native attrs'",
+            "exitCode": 0,
+            "elapsedSeconds": 6.05,
+            "result": "2 passed; 11 intentionally skipped by this exact filter. Uses actual HTMLInputElement wrapper and a reactive Host updating native attrs as a whole; all original DOM/style assertions retained. Production source unchanged.",
+            "log": "/tmp/apollo-card-strict-boundary-cases.log"
+          },
+          {
+            "kind": "strict-boundary-lint",
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/ui/src/card/__tests__/native-contracts.test.ts",
+            "exitCode": 0,
+            "elapsedSeconds": 0.1,
+            "log": "/tmp/apollo-card-strict-boundary-lint-final.log"
+          },
+          {
+            "kind": "strict-boundary-diff",
+            "command": "git diff --check HEAD -- packages/ui/src/card/__tests__/native-contracts.test.ts",
+            "exitCode": 0,
+            "elapsedSeconds": 0.01,
+            "log": "/tmp/apollo-card-strict-boundary-diff.log"
+          },
+          {
+            "kind": "types",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/.apollo-batch-last-three-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53261,
+            "log": "/tmp/apollo-batch-last-three-accepted-types.log",
+            "result": "One immutable integration program passed for all current Calendar/Card/Watermark source, native SFC positive/negative cases, tests, Demos, full UI exports and actual Modal consumer; inherited strict and declaration:true unchanged. Only noEmit/incremental/composite overridden.",
+            "sourceViewBase": "7425ca7f059c4e9480676fa908a542648c7e5f21",
+            "scopes": [
+              "packages/ui/src/calendar",
+              "packages/ui/src/watermark",
+              "packages/ui/src/card"
+            ],
+            "config": {
+              "extends": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/tsconfig.json",
+              "compilerOptions": {
+                "noEmit": true,
+                "incremental": false,
+                "composite": false
+              },
+              "include": [
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/calendar/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/calendar/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/watermark/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/watermark/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/card/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/card/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/index.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-ready-integration-leUF6Y/packages/ui/src/modal/engine/Content.ts"
+              ]
+            }
+          },
+          {
+            "kind": "lint",
+            "command": "node node_modules/@biomejs/biome/bin/biome check --assist-enabled=false packages/ui/src/calendar/Calendar.vue packages/ui/src/calendar/__tests__/a11y.test.ts packages/ui/src/calendar/__tests__/demo.test.ts packages/ui/src/calendar/__tests__/fixtures/NativeCalendar.vue packages/ui/src/calendar/__tests__/index.test.ts packages/ui/src/calendar/__tests__/native-browser.mjs packages/ui/src/calendar/__tests__/native-contracts.test.ts packages/ui/src/calendar/__tests__/semantic.test.ts packages/ui/src/calendar/__tests__/theme.test.ts packages/ui/src/calendar/__tests__/type.test-d.ts packages/ui/src/calendar/components/CalendarHeader.ts packages/ui/src/calendar/demo/component-token.vue packages/ui/src/calendar/demo/customize-header.vue packages/ui/src/calendar/demo/event-range.vue packages/ui/src/calendar/demo/notice-calendar.vue packages/ui/src/calendar/demo/style-class.vue packages/ui/src/calendar/index.ts packages/ui/src/calendar/interface.ts packages/ui/src/calendar/style/token.ts packages/ui/src/calendar/use-calendar-theme.ts packages/ui/src/card/Card.vue packages/ui/src/card/CardGrid.vue packages/ui/src/card/CardMeta.vue packages/ui/src/card/__tests__/fixtures/NativeCard.vue packages/ui/src/card/__tests__/index.test.ts packages/ui/src/card/__tests__/native-browser.mjs packages/ui/src/card/__tests__/native-contracts.test.ts packages/ui/src/card/__tests__/semantic.test.ts packages/ui/src/card/__tests__/type.test-d.ts packages/ui/src/card/content.ts packages/ui/src/card/demo/component-token.vue packages/ui/src/card/demo/meta.vue packages/ui/src/card/demo/tabs.vue packages/ui/src/card/index.ts packages/ui/src/card/interface.ts packages/ui/src/card/style/index.ts packages/ui/src/card/style/token.ts packages/ui/src/card/use-card-theme.ts packages/ui/src/watermark/Watermark.ts packages/ui/src/watermark/__tests__/demo.test.ts packages/ui/src/watermark/__tests__/fixtures/NativeWatermark.vue packages/ui/src/watermark/__tests__/fixtures/NativeWatermarkTypes.vue packages/ui/src/watermark/__tests__/index.test.ts packages/ui/src/watermark/__tests__/native-browser.mjs packages/ui/src/watermark/__tests__/native-contracts.test.ts packages/ui/src/watermark/__tests__/s42-issue42.test.ts packages/ui/src/watermark/__tests__/type.test-d.ts packages/ui/src/watermark/context.ts packages/ui/src/watermark/demo/custom.vue packages/ui/src/watermark/demo/portal.vue packages/ui/src/watermark/index.ts packages/ui/src/watermark/interface.ts packages/ui/src/watermark/use-clips.ts packages/ui/src/watermark/use-raf-debounce.ts packages/ui/src/watermark/use-singleton-cache.ts packages/ui/src/watermark/use-watermark.ts packages/ui/src/watermark/utils.ts",
+            "exitCode": 0,
+            "durationMs": 202,
+            "log": "/tmp/apollo-batch-last-three-format.log",
+            "result": "All 57 changed source/test/SFC/browser files across the same three units passed; no fixes applied."
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check HEAD -- packages/ui/src/calendar packages/ui/src/watermark packages/ui/src/card",
+            "exitCode": 0,
+            "result": "No whitespace errors on the three frozen units."
+          }
+        ],
+        "reproductions": [
+          {
+            "log": "/tmp/apollo-card-native-red.log",
+            "exitCode": 1,
+            "elapsedSeconds": 7.06,
+            "result": "Initial eleven regressions: ten failed, attrs update passed. The model case initially used a mismatched DOM selector and was corrected separately; other failures covered current slots/semantics/Provider, nested control keys, hidden body and declared actions/Meta capabilities."
+          },
+          {
+            "log": "/tmp/apollo-card-model-red.log",
+            "exitCode": 1,
+            "elapsedSeconds": 6.49,
+            "result": "Corrected real Tabs button selector proves Card emits no model update proposal."
+          },
+          {
+            "log": "/tmp/apollo-card-native-core.log",
+            "exitCode": 1,
+            "elapsedSeconds": 6.64,
+            "result": "During the render migration, unkeyed structural regions replaced the body editor; corrected with stable region keys."
+          },
+          {
+            "log": "/tmp/apollo-card-header-focus-red.log",
+            "exitCode": 1,
+            "elapsedSeconds": 6.2,
+            "result": "Inserting title before extra replaced the extra editor; corrected with stable inner region keys."
+          },
+          {
+            "log": "/tmp/apollo-card-action-focus-red.log",
+            "exitCode": 1,
+            "elapsedSeconds": 6.37,
+            "result": "Real Chrome three-key action reorder retains element/value/selection but loses focus. Scoped real VNode lifecycle restoration fixes only this observed loss."
+          },
+          {
+            "log": "/tmp/apollo-card-dom-a11y-final.log",
+            "exitCode": 1,
+            "elapsedSeconds": 8.66,
+            "result": "Eight Card Tabs consumer references still expected the historical Tabs accessibility topology. Synchronized with the already-reviewed Tabs contract without editing Tabs or the original JSON oracle."
+          }
+        ],
+        "attemptsNotPassed": [
+          {
+            "log": "/tmp/apollo-card-native-browser-fixed.log",
+            "exitCode": 1,
+            "elapsedSeconds": 48.17,
+            "reason": "Browser locator used an exact accessible name that legitimately changes when Tabs announces focused position. Corrected selector uses the same real tab element."
+          },
+          {
+            "log": "/tmp/apollo-card-native-browser-complete.log",
+            "exitCode": 1,
+            "elapsedSeconds": 6.56,
+            "reason": "Probe assumed arrow navigation activates immediately. Corrected to the already-delivered manual Tabs contract: arrows move focus, Enter proposes activation."
+          },
+          {
+            "kind": "integrator-strict-before-two-test-boundary-fixes",
+            "exitCode": 2,
+            "elapsedSeconds": 33.989,
+            "log": "/tmp/apollo-batch-last-three-types.log",
+            "result": "Only two Card test errors: generic Element focus and VTU setProps called with undeclared native data attr; all production/SFC/Demo/declarations and Calendar/Watermark had no diagnostics. Both exact test boundaries repaired; await integrator strict rerun."
+          },
+          {
+            "kind": "strict-boundary-initial-lint",
+            "exitCode": 1,
+            "elapsedSeconds": 0.1,
+            "log": "/tmp/apollo-card-strict-boundary-lint.log",
+            "result": "Only StyleValue import ordering; corrected and exact file final check passed."
+          }
+        ],
+        "remainingBlockingIssues": [],
+        "unverified": [
+          "Full-library coverage, complete theme/visual matrix, real-browser contrast, builds and published consumers remain stage two; no production artifact was rebuilt.",
+          "SSR was exercised through renderToString in the unit environment; there is no unconditional DOM access in setup/render, and action DOM hooks run only on client vnode updates."
+        ],
+        "sourceHashes": {
+          "packages/ui/src/card/Card.vue": "115c44ab5eb8139365958846e4d35d14deef4a968bdd566eb63f26f5fbb34c87",
+          "packages/ui/src/card/CardMeta.vue": "bdce898a9388fc3cfad6cf9dc43cca5ca2afd503caf3f73126bb7e3c7d6b3178",
+          "packages/ui/src/card/CardGrid.vue": "04f6914bfc1177029e31cb176cd2d05c6057fa5ebfc7f8d8987459651e9b6a6a",
+          "packages/ui/src/card/content.ts": "3880342bc101264db76314de5bbad316b2dfbcb2faaf6f945fa44126efdb2580",
+          "packages/ui/src/card/interface.ts": "10db34a9cc4d2e08641f2954eefeaa73ee26c0300a3732648580ec5ff1f29508",
+          "packages/ui/src/card/use-card-theme.ts": "31df8b6874e41931967d2f8d01f8aaee29b72490d297b0e04fe2d262b4784037",
+          "packages/ui/src/card/index.ts": "715d80c7d75cf1d76d717e24c280fe6b529a541161dad784990cda7934a2372d",
+          "packages/ui/src/card/demo/inner.vue": "d9df706a32ff3d171c5e4fbbfcdef0f91ff1900287503988175487f32a3ad148",
+          "packages/ui/src/card/demo/flexible-content.vue": "91be473928320586e52898aa32b48d3d3b36d2ba393c04992bc6d05af018e334",
+          "packages/ui/src/card/demo/tabs.vue": "59f6612e8c4312eaa112d26ec94e2bed9c547315ac6af3be1bcc8cfda72add94",
+          "packages/ui/src/card/demo/in-column.vue": "b24a688cd46aeecf6bd61fcbd925ac9643e1bb10a0016bf2df4c3d70540fe724",
+          "packages/ui/src/card/demo/meta.vue": "45e7a8ee385fe9a5c755a886dd06d28db0660ca5d579d1983be35d794839b792",
+          "packages/ui/src/card/demo/component-token.vue": "f0bba13d6f1d68f2a52d91e4e1799ae590608de7046ec3bba1e22458ffcb5f07",
+          "packages/ui/src/card/demo/style-class.vue": "4be46af22ed78b1ba7a313cbc400062a1d34a4d9a91fc5d92830332a8ee69d58",
+          "packages/ui/src/card/demo/simple.vue": "f29cc974e35427697e893d5860ed9c0558546c551c40e700fc37af63787b69c4",
+          "packages/ui/src/card/demo/basic.vue": "f88fe3aa74cf42804ab03e1f67b4b5295c2c2ff9bf894f777a057d4850ab4841",
+          "packages/ui/src/card/demo/loading.vue": "17a6fa1724d7b7c03c12844a43fc2a6c40c4365bba154c068bb3c834ca6c636a",
+          "packages/ui/src/card/demo/border-less.vue": "9767d24e159994d0badf718eddb47c70f277dcb14b37d9de183738c726c052da",
+          "packages/ui/src/card/demo/grid-card.vue": "f57b451d841d398b81e52feb116ce85eca95d85d410fd6fc13afeb7f4d879358",
+          "packages/ui/src/card/style/index.ts": "1878ec4cfaaaed76e2ae2628df36ce8b237764b225413963764fe04b5c6a065f",
+          "packages/ui/src/card/style/token.ts": "33aa7d4fc1cb50680ca3166271ea1323124e2b996746d2d5d991cd0c43c51a01",
+          "packages/ui/src/card/__tests__/a11y.test.ts": "09ecc29a74a1f2292a10a8ee6823b1083a54ea34b64583f1017da0c31337187a",
+          "packages/ui/src/card/__tests__/native-contracts.test.ts": "5711d5b08111be2d8b1aeaba5804926586f7151387919d3e089eb4253b2197f8",
+          "packages/ui/src/card/__tests__/index.test.ts": "741f2fc293fd10924716aaa32ba5603045529a415d7cfcdd38ec2898bc708948",
+          "packages/ui/src/card/__tests__/demo.test.ts": "074d63c11d76f9fdb614681b4354ee9f9eea69ddb3634a7ae42a807ea4a88d4c",
+          "packages/ui/src/card/__tests__/type.test-d.ts": "1ae56eba2513a5dbf823a541ca9135295524b720f339687e007e0238c2b8c4c7",
+          "packages/ui/src/card/__tests__/theme.test.ts": "18be4829061d7f2832948dfeeaf98d5de38d8145600d3ae635c8c509dd92d26f",
+          "packages/ui/src/card/__tests__/semantic.test.ts": "fb47ad144b21645a89c4ba599db9d5a6544c0eec763856a3d04b96e6982c7ed4",
+          "packages/ui/src/card/__tests__/fixtures/NativeCard.vue": "ead18cb7aabf7afd2eb7d20ba80a69427d6337ee7fd138b53c24434d885967c1"
+        },
+        "dependencyHashes": {
+          "packages/ui/src/tabs/Tabs.vue": "d746f7a744cf456be31b114f7763f9d4e93000b44b985fc98e86162ad7246271",
+          "packages/ui/src/tabs/TabNode.ts": "24c05d01f3818addf0661c4c88309fa0e0781d0556dc9540b45ff4195ab94045",
+          "packages/ui/src/tabs/TabNavList.ts": "7056e99b988bb12c3139a9c35107d21fd06aed4bd102e4292d0396ccdf2b2907",
+          "packages/ui/src/tabs/__tests__/semantic.test.ts": "ef713445a42ac938c79899d0923ab1afff7f1540c4305e158afcca99d0885d00",
+          "packages/ui/src/skeleton/Skeleton.vue": "5b962d43cea650d4d479c1fe6cea94572bb51a842a613940920cba8410f03b2d",
+          "packages/ui/src/_internal/node-renderer.ts": "aedd4cc2a2c44e27ff441fcb0208a6661bd8a845d07798773c8c1e6be6521fa4",
+          "packages/ui/src/_internal/use-merge-semantic.ts": "6132279dd2558c1a78cd0ed6f7a181e096265524a9a2cd829b06007ef914db00",
+          "packages/ui/src/config-provider/context.ts": "0927c693129d61ba70f7416863108fd324c84e1f6ffd521a936afa09ca25fe4a",
+          "packages/ui/src/config-provider/use-theme-scope.ts": "7b410b6b7772055a3ef1a7e180db9cb59086ed32ec2fd0d272ab573e8d2b10b6",
+          "packages/theme/src/vue.ts": "13d526128ea11b85bc7528ce34aa76085ee505f9a6c17e7bc84ac455174e7837"
+        },
+        "recordedAt": "2026-10-30T23:32:37.768867+00:00",
+        "timingBoundary": "Individual commands have measured wall time; analysis/implementation durations were not separately instrumented and remain unknown.",
+        "batchBoundary": "Exactly this Card assignment; no subagents, no new component task, no global state/public-index write, no commit.",
+        "stage": "architecture",
+        "sourceFrozen": true,
+        "integrationSnapshot": {
+          "baseCommit": "7425ca7f059c4e9480676fa908a542648c7e5f21",
+          "uiBarrelSha256": "370d37d80ffacc124bfba943153f1352028554336fd86b3febfd3583722d4fa0",
+          "publicExports": "Root integrates each component export in its own commit; full final export surface was included in the passed integration program.",
+          "commentOnlyChanges": [
+            "Root UI barrel Card comment now documents owned tabChange/update:activeTabKey; its executable/type declarations exactly match the passed immutable program."
+          ]
+        }
       }
     },
     {

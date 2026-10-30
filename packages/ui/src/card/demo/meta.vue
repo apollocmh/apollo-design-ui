@@ -38,6 +38,6 @@ const avatar = (text: string): VNodeChild =>
 
 <template>
   <Card :style="{ width: '300px' }" :cover="cover()" :actions="actions">
-    <CardMeta :avatar="avatar('A')" title="Card title" description="This is the description" />
+    <CardMeta :avatar="avatar('A')" title="Card title">This is the description</CardMeta>
   </Card>
 </template>

@@ -2,6 +2,8 @@
 
 > 历史实施记录：原勾选、当时结果和缺口保留。2026-10-30 起，本文的 G0–G14 / 逐组件 G13 全仓收口与旧 Registry 进度规则由仓库 `WORKFLOW.md`、`TESTING.md` 两阶段流程替代；当前任务状态只读 `registry/vue-native-audit.json`，不据本文重复派发或重跑已有效验证。
 
+> 2026-10-31 原生化增量：Card 使用 owned tabChange/update:activeTabKey 与 v-model，保留数据页签 VNode 和 Tabs 服务函数；当前内容在实际 render 中一次读取，移除按生命周期清理的槽缓存。title/extra/cover/actions 与 Meta 槽支持动态和显式空，Meta.default 依既定优先级补足描述能力。结构区与动作项使用真实稳定 key，动作列表 DOM 移动丢焦点的 Chrome 回归有局部焦点恢复；三者真实 nativeElement 保留。13 Token 消费当前主题，语义函数读当前解析 Props，Card 不再借用 Form 输入 variant。当前 Demo 为 12 个，含原生模型、Meta 默认槽和 Provider Token 示例。旧日期、旧差额及结果保持原义；当前 API 见双语文档，九维/完整视觉/发布消费者留统一冻结阶段。
+
 # Card 实现说明
 
 > 规则 R1：本文件必须记录（G11 前补齐）。

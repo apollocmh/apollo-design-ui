@@ -817,8 +817,7 @@ export { prepareComponentToken as prepareCalendarComponentToken } from './calend
 // ⚠️ 类名前缀 `apollo-card`；**13 个 Component Token** + 4 个 `mergeToken` 派生
 //    （派生值落 `--apollo-box-shadow-card` / `--apollo-padding` / `--apollo-padding-lg`
 //    / `--apollo-font-size` 这些**全局** token，见 style/token.ts）。
-// ⚠️ **没有 `emits`** —— `onTabChange` 是上游的 **prop**（无 value/onChange 对，
-//    C11 的双发不适用），所以按 prop 形态保留。
+// 页签通知由 tabChange / update:activeTabKey emits 拥有，Tabs 负责选择状态。
 // ⚠️ `ref` 暴露的是 `{ nativeElement }`（**不是**元素本身；上游 `Card` 是
 //    `forwardRef<HTMLDivElement>`，本仓按 badge/Ribbon 的既有约定统一成对象）。
 // ⚠️ **同一组件族两个 ConfigProvider 键**：`components.card` 与 `components.cardMeta`
@@ -827,9 +826,11 @@ export { prepareComponentToken as prepareCalendarComponentToken } from './calend
 // ---------------------------------------------------------------------------
 export type {
   CardConfig,
+  CardEmits,
   CardGridProps,
   CardGridRef,
   CardGridSlot,
+  CardGridSlots,
   CardMetaConfig,
   CardMetaProps,
   CardMetaRef,
@@ -839,6 +840,7 @@ export type {
   CardMetaSemanticType,
   CardMetaSemanticValue,
   CardMetaSlot,
+  CardMetaSlots,
   CardProps,
   CardRef,
   CardSemanticAllType,
@@ -848,6 +850,7 @@ export type {
   CardSemanticValue,
   CardSize,
   CardSlot,
+  CardSlots,
   CardTabListType,
   CardType,
 } from './card';

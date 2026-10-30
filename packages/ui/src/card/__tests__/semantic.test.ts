@@ -329,8 +329,63 @@ const specs: Record<
   },
 };
 
+// Tabs already reviewed this native ownership migration in its own DOM contract.
+// Preserve the original oracle and compare the complete Card tree after only these changes.
+const tabCases = new Set([
+  'card:tabs',
+  'card:tabs-empty',
+  'card:tabs-active-key',
+  'card:tabs-default-active-key',
+  'card:tabs-extra',
+  'card:tabs-tab-props',
+  'card:tabs-label',
+  'card:tabs-small',
+]);
+const nativeBaseline = {
+  ...baseline,
+  cases: baseline.cases.map((reference) => {
+    if (!tabCases.has(reference.id)) return reference;
+    const document = new DOMParser().parseFromString(reference.html, 'text/html');
+    const nav = document.querySelector('.apollo-tabs-nav[role="tablist"]');
+    const wrap = nav?.querySelector('.apollo-tabs-nav-wrap');
+    const list = wrap?.querySelector('.apollo-tabs-nav-list');
+    const more = nav?.querySelector('.apollo-tabs-nav-more');
+    const orientation = nav?.getAttribute('aria-orientation');
+    if (!nav || !wrap || !list || !more || !orientation) {
+      throw new Error(`Card Tabs reference changed before reviewed migration: ${reference.id}`);
+    }
+    const tabs = Array.from(list.querySelectorAll('[role="tab"]'));
+    for (const tab of tabs) {
+      const key = tab.closest('[data-node-key]')?.getAttribute('data-node-key');
+      if (key == null) throw new Error(`Card reference tab has no data key: ${reference.id}`);
+      tab.id = `card-reference-tab-${key}`;
+      tab.setAttribute('aria-controls', `card-reference-panel-${key}`);
+    }
+    const panels = Array.from(document.querySelectorAll('[role="tabpanel"]'));
+    const selected = tabs.filter((tab) => tab.getAttribute('aria-selected') === 'true');
+    if (panels.length > 1 || (panels.length === 1 && selected.length !== 1)) {
+      throw new Error(`Card reference active panel changed: ${reference.id}`);
+    }
+    if (panels[0] && selected[0]) {
+      panels[0].id = selected[0].getAttribute('aria-controls') ?? '';
+      panels[0].setAttribute('aria-labelledby', selected[0].id);
+    }
+    nav.removeAttribute('role');
+    nav.removeAttribute('aria-orientation');
+    const owner = document.createElement('div');
+    owner.setAttribute('role', 'tablist');
+    owner.setAttribute('aria-orientation', orientation);
+    owner.style.display = 'contents';
+    if (tabs.length) owner.setAttribute('aria-owns', tabs.map((tab) => tab.id).join(' '));
+    wrap.insertBefore(owner, list);
+    more.classList.add('apollo-tabs-dropdown-trigger');
+    more.setAttribute('aria-label', 'expanded dropdown');
+    return { ...reference, html: document.body.innerHTML };
+  }),
+};
+
 domContractTest('Card', {
-  baseline,
+  baseline: nativeBaseline,
   keepStyle: true,
   allow: {
     ...Object.fromEntries(
@@ -361,35 +416,6 @@ domContractTest('Card', {
       deviationId: 'D114',
       diff: ['$/div[0]: style 不同 [background:#fafafa] vs [background:rgb(250,250,250)]'],
     },
-    // tabs 家族的 **8 个用例**各有一条**继承自 Tabs** 的已知差异（U15）—— 与 Card 的
-    // 实现无关：本仓的溢出触发器走**本仓 Dropdown**（= antd 那一层的组件），它按自己的
-    // 契约给触发器补 `-trigger` 类；上游 Tabs 用的是 **rc 级** `@rc-component/dropdown`
-    // （只加 `-open`）。Tabs 自己已登记同一条（`tabs/__tests__/semantic.test.ts` 的 U15），
-    // 这里只是把它**传递**出来。
-    // ⚠️ 8 个用例的差异**逐字相同**（同一个 Tabs 结构、同一个触发器）⇒ 用生成式声明，
-    //    避免 8 份复制粘贴漂移。
-    ...Object.fromEntries(
-      [
-        'card:tabs',
-        'card:tabs-empty',
-        'card:tabs-active-key',
-        'card:tabs-default-active-key',
-        'card:tabs-extra',
-        'card:tabs-tab-props',
-        'card:tabs-label',
-        'card:tabs-small',
-      ].map((id) => [
-        id,
-        {
-          reason:
-            'U15（继承自 Tabs）：本仓的溢出触发器走本仓 Dropdown（= antd 那层），它按自己的契约给触发器补 `-trigger` 类；上游 Tabs 用的是 rc 级 dropdown（只加 `-open`）。',
-          deviationId: 'U15',
-          diff: [
-            '$/div[0]/div[0]/div[1]/div[0]/div[1]/button[0]: 类名不同 [apollo-tabs-nav-more] vs [apollo-tabs-dropdown-trigger apollo-tabs-nav-more]',
-          ],
-        },
-      ]),
-    ),
   },
   render: (id) => {
     const spec = specs[id];

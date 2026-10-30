@@ -49,9 +49,11 @@ export default Card;
 
 export type {
   CardConfig,
+  CardEmits,
   CardGridProps,
   CardGridRef,
   CardGridSlot,
+  CardGridSlots,
   CardMetaConfig,
   CardMetaProps,
   CardMetaRef,
@@ -61,6 +63,7 @@ export type {
   CardMetaSemanticType,
   CardMetaSemanticValue,
   CardMetaSlot,
+  CardMetaSlots,
   CardProps,
   CardRef,
   CardSemanticAllType,
@@ -70,6 +73,7 @@ export type {
   CardSemanticValue,
   CardSize,
   CardSlot,
+  CardSlots,
   CardTabListType,
   CardType,
 } from './interface';

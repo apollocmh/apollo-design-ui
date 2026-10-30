@@ -6,9 +6,7 @@
  *
  * ── 本文件钉的六类判据 ───────────────────────────────────────────────────────
  *
- * 1. **本组件「没有」的东西**：`children` prop（Vue 侧是默认插槽，规则 C19）、
- *    **任何 `emits`**（`onTabChange` 是**上游的 prop** —— 没有 value/onChange 对，
- *    规则 C11 的双发不适用）。
+ * 1. 内容使用具名槽；tabChange 与 update:activeTabKey 是所属事件。
  * 2. **`ref` 的形状**：`{ nativeElement: HTMLDivElement | null }` —— 是**对象**，
  *    不是 DOM 本身（上游 `Card` 是 `forwardRef<HTMLDivElement>`，本仓统一成对象）。
  * 3. **`CardSize` 含 `'default'`**（上游已废弃但**未移除**，`COMPONENT-RULES.md` §4）。
@@ -19,25 +17,29 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { VNodeChild } from 'vue';
+import { h, type VNodeChild } from 'vue';
 import type { SizeType } from '../../config-provider/size-context';
 import type { TabsExtraContent, TabsProps } from '../../tabs/interface';
-import type { Card, CardGrid, CardMeta } from '../index';
+import { Card, CardGrid, CardMeta } from '../index';
 import type {
   CardConfig,
+  CardEmits,
   CardGridProps,
   CardGridRef,
+  CardGridSlots,
   CardMetaProps,
   CardMetaRef,
   CardMetaSemanticClassNames,
   CardMetaSemanticStyles,
   CardMetaSemanticValue,
+  CardMetaSlots,
   CardProps,
   CardRef,
   CardSemanticClassNames,
   CardSemanticStyles,
   CardSemanticValue,
   CardSize,
+  CardSlots,
   CardTabListType,
   CardType,
 } from '../interface';
@@ -100,9 +102,51 @@ describe('Card · Props 类型', () => {
     expectTypeOf<CardProps['tabBarExtraContent']>().toEqualTypeOf<TabsExtraContent | undefined>();
   });
 
-  it('🚨 `onTabChange` 是 **prop**（不是 emits）—— 签名 `(key: string) => void`', () => {
+  it('JSX listener 使用所属事件的 string 载荷', () => {
     expectTypeOf<NonNullable<CardProps['onTabChange']>>().parameters.toEqualTypeOf<[key: string]>();
     expectTypeOf<NonNullable<CardProps['onTabChange']>>().returns.toEqualTypeOf<void>();
+    expectTypeOf<CardEmits['tabChange']>().toEqualTypeOf<[key: string]>();
+    expectTypeOf<CardEmits['update:activeTabKey']>().toEqualTypeOf<[key: string]>();
+  });
+
+  it('real constructors, named slots and emits share the public contract', () => {
+    expectTypeOf<keyof CardSlots>().toEqualTypeOf<
+      'default' | 'title' | 'extra' | 'cover' | 'actions'
+    >();
+    expectTypeOf<keyof CardGridSlots>().toEqualTypeOf<'default'>();
+    expectTypeOf<keyof CardMetaSlots>().toEqualTypeOf<
+      'default' | 'avatar' | 'title' | 'description'
+    >();
+    const check = (
+      card: InstanceType<typeof Card>,
+      grid: InstanceType<typeof CardGrid>,
+      meta: InstanceType<typeof CardMeta>,
+    ) => {
+      h(Card, {
+        activeTabKey: 'a',
+        tabList: [{ key: 'a', label: h('strong', 'Alpha') }],
+        onTabChange: (key: string) => void key,
+        'onUpdate:activeTabKey': (key: string) => void key,
+      });
+      h(CardGrid, { hoverable: false });
+      h(CardMeta, { description: 0 });
+      card.$emit('tabChange', 'a');
+      card.$emit('update:activeTabKey', 'b');
+      card.$slots.actions?.();
+      grid.$slots.default?.();
+      meta.$slots.description?.();
+      meta.$slots.default?.();
+      expectTypeOf(card.nativeElement).toEqualTypeOf<HTMLDivElement | null>();
+      expectTypeOf(grid.nativeElement).toEqualTypeOf<HTMLDivElement | null>();
+      expectTypeOf(meta.nativeElement).toEqualTypeOf<HTMLDivElement | null>();
+      // @ts-expect-error Card model proposals carry the key, not a DOM event.
+      card.$emit('update:activeTabKey', new Event('change'));
+      // @ts-expect-error The actual constructor listener expects a string key.
+      h(Card, { onTabChange: (_event: Event) => {} });
+      // @ts-expect-error Card does not own a generic change event.
+      card.$emit('change', 'a');
+    };
+    void check;
   });
 });
 

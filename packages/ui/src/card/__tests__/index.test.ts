@@ -311,7 +311,7 @@ describe('Card · tabList', () => {
     expect(uncontrolled.find('.apollo-tabs-tab-active').text()).toContain('TabB');
   });
 
-  it('点击页签触发 `onTabChange`（prop，**不是** emits）', async () => {
+  it('点击页签通过 owned tabChange 调用 JSX listener 恰好一次', async () => {
     const onTabChange = vi.fn();
     const w = mountCard({ tabList, defaultActiveTabKey: 'a', onTabChange });
 
@@ -321,6 +321,7 @@ describe('Card · tabList', () => {
 
     expect(onTabChange).toHaveBeenCalledTimes(1);
     expect(onTabChange).toHaveBeenCalledWith('b');
+    expect(w.emitted('tabChange')).toEqual([['b']]);
     w.unmount();
   });
 

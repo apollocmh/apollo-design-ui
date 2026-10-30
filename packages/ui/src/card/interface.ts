@@ -211,14 +211,11 @@ export interface CardProps {
   tabList?: CardTabListType[];
   /** 页签栏两侧的附加内容。 */
   tabBarExtraContent?: TabsExtraContent;
-  /**
-   * 页签切换回调。
-   *
-   * ⚠️ 上游是 `onTabChange` **prop**（不是 `v-model`）—— 本仓保持 prop 形态
-   *    （规则 C11 的双发不适用，因为上游没有 value/onChange 对）。
-   */
+  /** JSX listener for the owned tabChange event. */
   onTabChange?: (key: string) => void;
-  /** 受控的当前页签。传了它就用 `activeKey`，否则用 `defaultActiveTabKey`（**不会同时传**）。 */
+  /** JSX listener for v-model:activeTabKey proposals. */
+  'onUpdate:activeTabKey'?: (key: string) => void;
+  /** 当前页签；undefined 撤控时保留最后接收值。 */
   activeTabKey?: string;
   /** 非受控的初始页签。 */
   defaultActiveTabKey?: string;
@@ -239,6 +236,19 @@ export interface CardRef {
 
 /** `Card` 的默认插槽。antd 的 `children` 在 Vue 侧即此插槽。 */
 export type CardSlot = () => VNodeChild;
+
+export type CardSlots = {
+  default?: CardSlot;
+  title?: CardSlot;
+  extra?: CardSlot;
+  cover?: CardSlot;
+  actions?: CardSlot;
+};
+
+export interface CardEmits {
+  tabChange: [key: string];
+  'update:activeTabKey': [key: string];
+}
 
 // ---------------------------------------------------------------------------
 // Card.Grid
@@ -264,6 +274,10 @@ export interface CardGridRef {
 
 /** `Card.Grid` 的默认插槽。 */
 export type CardGridSlot = () => VNodeChild;
+
+export type CardGridSlots = {
+  default?: CardGridSlot;
+};
 
 // ---------------------------------------------------------------------------
 // Card.Meta
@@ -297,6 +311,13 @@ export interface CardMetaRef {
 /** `Card.Meta` 的默认插槽。 */
 export type CardMetaSlot = () => VNodeChild;
 
+export type CardMetaSlots = {
+  default?: CardMetaSlot;
+  avatar?: CardMetaSlot;
+  title?: CardMetaSlot;
+  description?: CardMetaSlot;
+};
+
 // ---------------------------------------------------------------------------
 // ConfigProvider 上的配置
 // ---------------------------------------------------------------------------
@@ -308,7 +329,8 @@ export type CardMetaSlot = () => VNodeChild;
  * ⚠️ 与 anchor / masonry / breadcrumb 一致：走 (B) 通道，**类型未提升**进
  * `ConfigProvider` 的 (A) 通道 —— 运行时可用，只是类型宽。
  */
-export type CardConfig = ComponentStyleConfig & Pick<CardProps, 'classNames' | 'styles'>;
+export type CardConfig = ComponentStyleConfig &
+  Pick<CardProps, 'classNames' | 'styles' | 'variant'>;
 
 /**
  * `ConfigProvider` 的 `cardMeta` 配置。与 antd 的 `CardMetaConfig` 一致。

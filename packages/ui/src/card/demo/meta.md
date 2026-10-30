@@ -5,7 +5,7 @@ title:
   en-US: Support more content configuration
 ---
 
-一种支持封面、头像、标题和描述信息的卡片。
+一种支持封面、头像、标题和描述信息的卡片。默认槽可提供描述后备内容：description 槽存在时优先（含显式空）；否则优先使用显式 description 数据（含 0、null、false），最后才使用默认槽。
 
 `Card.Meta` 的 `avatar` 在 `section` **外面**，`title` / `description` 在 **里面**。
 
@@ -51,7 +51,7 @@ const avatar = (text: string): VNodeChild =>
 
 <template>
   <Card :style="{ width: '300px' }" :cover="cover()" :actions="actions">
-    <CardMeta :avatar="avatar('A')" title="Card title" description="This is the description" />
+    <CardMeta :avatar="avatar('A')" title="Card title">This is the description</CardMeta>
   </Card>
 </template>
 ```

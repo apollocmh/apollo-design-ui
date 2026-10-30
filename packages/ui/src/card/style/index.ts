@@ -52,7 +52,7 @@ let tokenCache: ComponentToken | null = null;
 
 function cardTokenValues(): ComponentToken {
   if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken()) as ComponentToken;
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }

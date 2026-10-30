@@ -28,9 +28,7 @@ subtitle: 卡片
 | `tabs` | `tabList` 的页签卡片 |
 | `meta` | 封面 + 头像 + 标题 + 描述 |
 
-⚠️ 与 antd 的 4 个 demo **未移植**（缺口见 `README.md` §5）：
-`style-class`（依赖 `antd-style`）· `component-token`（零运行时下 token 是构建期产物）·
-`no-body-debug` / `button-alignment-debug`（上游标了 `debug`，不在文档正文里）。
+`style-class` 与 `component-token` 已包含在当前 12 个 Demo 中；前者展示语义样式，后者展示当前 Provider 组件 Token。历史差额保留在 README 的原日期记录中。
 
 ## API
 
@@ -41,23 +39,21 @@ subtitle: 卡片
 | title | 卡片标题；**支持插槽 `#title`**（插槽优先） | `VNodeChild` | — | × |
 | extra | 右上角操作区；**支持插槽 `#extra`** | `VNodeChild` | — | × |
 | cover | 封面；**支持插槽 `#cover`** | `VNodeChild` | — | × |
-| actions | 操作区（每项包一层 `<li><span>`，宽度均分） | `VNodeChild[]` | — | × |
+| actions | 操作区 VNode 数据列表；支持 actions 槽（每项包一层 `<li><span>`，宽度均分） | `VNodeChild[]` | — | × |
 | loading | 加载中（内容替换成 `Skeleton`） | `boolean` | `false` | × |
 | hoverable | 悬浮时显示阴影与手型光标 | `boolean` | `false` | × |
 | size | 尺寸 | `'medium' \| 'small' \| 'middle' \| 'default'` | `medium` | ✅（`componentSize`） |
 | type | 卡片类型（目前只有 `'inner'`） | `'inner'` | — | × |
 | variant | 形态。`'borderless'` ⇒ 不加 `-bordered`、改用三级阴影 | `'outlined' \| 'borderless'` | `outlined` | ✅（`card.variant`） |
 | tabList | 页签列表。⚠️ `tab` 已废弃，用 `label` | `CardTabListType[]` | — | × |
-| activeTabKey | 受控的当前页签（**与 `defaultActiveTabKey` 二选一**） | `string` | — | × |
+| activeTabKey | 当前页签，支持 v-model:active-tab-key；undefined 撤控后保留最后接收值 | `string` | — | × |
 | defaultActiveTabKey | 非受控的初始页签 | `string` | — | × |
 | tabBarExtraContent | 页签栏两侧的附加内容 | `VNodeChild \| { left, right }` | — | × |
 | tabProps | 透传给内部 `Tabs` 的 props | `TabsProps` | — | × |
-| onTabChange | 页签切换回调。⚠️ 这是 **prop**（不是事件） | `(key: string) => void` | — | × |
 | classNames | 语义化类名（7 槽），支持函数形态 | `CardSemanticClassNames \| ((info) => …)` | — | ✅（`card.classNames`） |
 | styles | 语义化样式（7 槽），支持函数形态 | `CardSemanticStyles \| ((info) => …)` | — | ✅（`card.styles`） |
 | prefixCls | 类名前缀（**根前缀本身**，不是后缀） | `string` | 从 ConfigProvider 取，兜底 `apollo-card` | × |
 | class / style | **根元素原生 attrs**（不是 Props） | `string \| array \| object` / `CSSProperties` | — | × |
-| style | 根元素内联样式（**覆盖** `styles.root`） | `CSSProperties` | — | × |
 | id | 根元素 id | `string` | — | × |
 | bordered | ⚠️ **已废弃**，用 `variant` | `boolean` | — | × |
 | headStyle | ⚠️ **已废弃**，用 `styles.header` | `CSSProperties` | — | × |
@@ -68,15 +64,17 @@ subtitle: 卡片
 
 ### 事件
 
-**没有组件事件。** `onTabChange` 是**上游的 prop**（没有 value/onChange 对 ⇒
-`COMPATIBILITY.md` §3 的双发规则不适用）。⚠️ 本仓的 `Tabs` 用的是 `v-model:activeKey` +
-`change` 事件，但 Card 沿上游保持 prop 形态。
+`tabChange(key: string)` 与 `update:activeTabKey(key: string)` 是所属事件。使用 `@tab-change` 监听通知、`v-model:active-tab-key` 接收更新。JSX 的 `onTabChange` 是同一事件的 listener 拼法，组件不另行调用回调。
+
+定义了 activeTabKey 时，更新是父级可接受或拒绝的提议；拒绝后撤控不会泄漏未接收值。defaultActiveTabKey 只设置初值。tabProps 的 activeKey/defaultActiveKey、items 与 tabBarExtraContent 不改变 Card 对应字段的归属，其余 Tabs 配置、VNode 标签及有返回值的服务函数保持透传。
 
 ### 插槽
 
 | 名称 | 说明 |
 |---|---|
-| default | 卡片内容（antd 的 `children`） |
+| default | 卡片内容；loading 时以真实 Skeleton 替换，不求值隐藏内容 |
+| title / extra / cover | 对应内容，存在即优先于 prop，含显式空槽；动态添加/撤除即时生效 |
+| actions | 操作项列表；支持条件项与 Fragment，使用唯一 VNode key 保留项身份 |
 
 ### Card.Meta
 
@@ -89,6 +87,8 @@ subtitle: 卡片
 | styles | 语义化样式（同上五个槽） | `CardMetaSemanticStyles \| ((info) => …)` | — |
 | prefixCls | 类名前缀（**card 的前缀**：传 `x` ⇒ `x-meta`） | `string` | 兜底 `apollo-card` |
 | class / style | 根元素原生 attrs | `string` / `CSSProperties` | — |
+
+插槽：avatar、title、description，以及 description 后备内容的 default。优先顺序为 description 槽（存在即优先，含显式空）→ 显式 description 数据（含 0/null/false）→ default。avatar/title 槽也遵循存在即优先。
 
 > ⚠️ `avatar` 在 `section` **外面**，`title` / `description` 在 **里面**；
 > 根上**没有** `-rtl`（`Card.Meta` 不读 `direction`）。
@@ -144,5 +144,7 @@ subtitle: 卡片
 > 但那个键**不在** antd 6 的 `AliasToken` 里（v4 遗留）⇒ 实际恒取 `paddingLG`。
 > 本仓直接写 `paddingLG`（见 `README.md` §2 第 2 条）。
 
-运行时调参用 CSS 变量：`--apollo-card-header-height` / `--apollo-card-body-padding` /
+当前 13 个 Token 从 `ConfigProvider theme.components.Card` 与当前别名主题派生，支持替换和撤除；Grid/Meta 独立使用也读取当前主题。函数式 classNames/styles 读取当前生效的尺寸、形态和 Props。Card 不读取 Form 的输入形态；继承的 large 尺寸解析成 medium。
+
+原生 class/style、属性和监听器落到实际根元素；直接 CSS 变量覆盖优先于主题和语义根样式。运行时也可用 CSS 变量：`--apollo-card-header-height` / `--apollo-card-body-padding` /
 `--apollo-card-actions-bg` 等（13 个，变量名与 antd 的 `--ant-card-*` 同构）。
