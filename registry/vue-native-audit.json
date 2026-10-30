@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 72,
+  "revision": 77,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -105,20 +105,36 @@
       "kind": "component",
       "ref": "auto-complete",
       "title": "AutoComplete",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/auto-complete"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_select",
+        "baseRevision": 73,
+        "startedAt": "2026-10-30T10:30:38.351Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-23-vue-reactivity-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "接续已交付Select引擎，收口AutoComplete包装层剩余Vue契约",
+        "remaining": [
+          "保留条件选项和本轮searchValue模型桥；核对包装层owned事件声明/转发、动态完整槽、实际ref、当前Provider/Token和所有公开字段消费，按源码确定实施差额。"
+        ],
+        "effort": "small",
+        "basis": [
+          "packages/ui/src/auto-complete/AutoComplete.ts",
+          "packages/ui/src/auto-complete/interface.ts",
+          "docs/audit/2026-10-23-vue-reactivity-remediation.md"
+        ]
+      }
     },
     {
       "id": "CMP:avatar",
@@ -436,20 +452,34 @@
       "kind": "component",
       "ref": "color-picker",
       "title": "ColorPicker",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/color-picker"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_color_picker",
+        "baseRevision": 75,
+        "startedAt": "2026-10-30T10:30:38.540Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-24-dom-attrs-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留已交付DOM attrs成果，收口ColorPicker剩余Vue契约",
+        "remaining": [
+          "先核对受控颜色/开关、owned事件与真实业务算法、完整槽/实际ref、当前Provider/Token及关联子组件，复用现有DOM attrs验证，不扩展新颜色能力。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-24-dom-attrs-remediation.md"
+        ]
+      }
     },
     {
       "id": "CMP:config-provider",
@@ -1719,9 +1749,22 @@
             "exitCode": 0,
             "signal": null,
             "durationMs": 50098
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/rate/__tests__/contracts.test.ts -t \"mounts the typed template\" --maxWorkers=1 --reporter=json --outputFile=/tmp/apollo-rate-runtime-template.json",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; complete Rate source/tests/demo/SFC, concrete runtime fixture binding>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53236
           }
         ],
-        "boundary": "原生事件、插槽、焦点与 attrs 已有同范围有效证据；补齐当前六 Token 和 Demo 的实际 CSS 消费。最终冻结版本九维验收未执行。"
+        "boundary": "原生事件、插槽、焦点与 attrs 已有同范围有效证据；补齐当前六 Token 和 Demo 的实际 CSS 消费。最终冻结版本九维验收未执行。 补查真实SFC绑定：夹具使用实际Rate构造器且真实挂载验证选择/模型/焦点；只补证据，不重做已完成组件审计。"
       },
       "plan": {
         "goal": "保留已交付原生契约，补齐 rate 当前组件主题Token消费",
@@ -2433,20 +2476,35 @@
       "kind": "component",
       "ref": "transfer",
       "title": "Transfer",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/transfer"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_transfer",
+        "baseRevision": 74,
+        "startedAt": "2026-10-30T10:30:38.446Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-23-picker-transfer-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留既有原生四槽成果，核对并修复Transfer其余真实契约差额",
+        "remaining": [
+          "复用已有槽/搜索/过滤/RTL和真实Demo证据；完整核对当前模型/owned事件、分页/选择/禁用、实际ref、Provider/Token及子组件链后再实施，不因partial假设接近完成。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-23-picker-transfer-remediation.md",
+          "docs/migrations/transfer-slots.md"
+        ]
+      }
     },
     {
       "id": "CMP:tree",

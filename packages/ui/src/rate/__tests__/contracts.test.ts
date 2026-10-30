@@ -15,8 +15,22 @@ import { disabledContextKey } from '../../config-provider/disabled-context';
 import { type SizeType, sizeContextKey } from '../../config-provider/size-context';
 import type { RateRef, StarRenderInfo } from '../interface';
 import Rate from '../Rate';
+import RateContracts from './fixtures/RateContracts.vue';
 
 describe('Rate · Vue contracts', () => {
+  it('mounts the typed template against the real runtime component', async () => {
+    const wrapper = mount(RateContracts, { attachTo: document.body });
+    try {
+      expect(wrapper.findAll('[role="radio"]')).toHaveLength(5);
+      await wrapper.findAll('[role="radio"]')[2]?.trigger('click');
+      expect(wrapper.get('output').text()).toContain('3 / 3');
+      await wrapper.get('button').trigger('click');
+      expect(document.activeElement).toBe(wrapper.findAll('[role="radio"]')[2]?.element);
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
   it('declares change/hover-change events and honors template .once listeners', async () => {
     const change = vi.fn();
     const hover = vi.fn();

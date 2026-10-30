@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { Rate } from '../../index';
+import { Rate } from '../../index';
+
+const controls = { Rate };
 
 const rate = ref<InstanceType<typeof Rate> | null>(null);
 const value = ref(2);
@@ -14,7 +16,7 @@ const blur = () => rate.value?.blur();
 </script>
 
 <template>
-  <Rate
+  <controls.Rate
     ref="rate"
     v-model:value="value"
     aria-label="Rating contract"
@@ -25,7 +27,7 @@ const blur = () => rate.value?.blur();
     #character="{ index, value: displayed, allowHalf, disabled, count, focused }"
   >
     {{ index + 1 }} / {{ count }}: {{ displayed }} {{ allowHalf }} {{ disabled }} {{ focused }}
-  </Rate>
+  </controls.Rate>
   <button type="button" @click="focus">Focus rating</button>
   <button type="button" @click="blur">Blur rating</button>
   <output>{{ value }} / {{ changed }} / {{ hover }} / {{ focusType }} / {{ blurType }}</output>
