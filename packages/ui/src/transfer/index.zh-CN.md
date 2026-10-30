@@ -66,8 +66,8 @@ import { Transfer } from '@apollo-design/ui';
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | dataSource | 数据源，条目需含 `key` | `TransferItem[]` | `[]` |
-| targetKeys | 右列（目标列）的 key 集合 | `TransferKey[]` | `[]` |
-| selectedKeys | 勾选的 key 集合（受控） | `TransferKey[]` | - |
+| targetKeys (`v-model:targetKeys`) | 右列 key；传入时受控，未绑定时内部维护 | `TransferKey[]` | `[]` |
+| selectedKeys (`v-model:selectedKeys`) | 勾选 key；传入时受控，未绑定时内部维护 | `TransferKey[]` | - |
 | titles | 左右列标题 | `VNodeChild[]` | `['', '']` |
 | actions | 自定义操作按钮文案 `[向右, 向左]` | `VNodeChild[]` | 箭头图标 |
 | operations | 同 `actions`（deprecated） | `VNodeChild[]` | - |
@@ -105,10 +105,18 @@ import { Transfer } from '@apollo-design/ui';
 
 | 事件 | 说明 | 回调参数 |
 | --- | --- | --- |
-| change | 移动完成后触发 | `(targetKeys, direction, moveKeys)` |
+| update:targetKeys | 请求更新目标 key，供 `v-model:targetKeys` 使用 | `(targetKeys)` |
+| update:selectedKeys | 请求更新勾选 key，供 `v-model:selectedKeys` 使用 | `(selectedKeys)` |
+| change | 请求移动时触发；受控数据以父组件接受结果为准 | `(targetKeys, direction, moveKeys)` |
 | selectChange | 勾选变化 | `(sourceSelectedKeys, targetSelectedKeys)` |
 | search | 搜索值变化（含清空） | `(direction, value)` |
 | scroll | 列表滚动 | `(direction, event)` |
+
+事件使用 Vue emits；模板监听与 `h()` 的监听器数组只通知一次，不会落到原生根上。撤除受控 prop 后保留最后接受的状态。Shift 范围只使用当前筛选列表的可用项，数据重排时按 key 定位选择锚点。
+
+### 引用与原生属性
+
+`TransferRef.nativeElement` 是当前根 `HTMLElement`，卸载后为 `null`；`focus(options?: FocusOptions)` 聚焦本实例第一个可用控件，`blur()` 只移除本实例内的焦点。原生 `class/style/id/data-*` 等落根，style 支持 Vue 的对象、字符串和数组；`styles` 的节点值为 `CSSProperties`。长度显式写单位；opacity 等无单位属性可用数值，遵循 Vue 原生样式语义。
 
 ### 静态属性
 
@@ -116,14 +124,20 @@ import { Transfer } from '@apollo-design/ui';
 - `Transfer.Search` / `TransferSearch`：搜索框；
 - `Transfer.Operation` / `TransferOperation`：操作按钮列。
 
+静态成员与命名导出具有同一类型。`Transfer.Search` 的值支持 `v-model:value`，使用 `@change` / `@clear`；原 `handleClear` 改为 `@clear`。`Transfer.Operation` 使用 `@move-to-right` / `@move-to-left`，直接替代 `moveToRight/moveToLeft` 回调 props。`Transfer.List` 的过滤、清空、选择和移除使用对应 Vue 事件；原 `handleFilter/handleClear` 改为 `@filter/@clear`。
+
+操作内容中的图标、文本和普通节点由所属按钮承载；实际自定义按钮保留 Vue 的 key、ref、指令和监听器数组，禁用时不触发移动。头部菜单由具名原生按钮打开，支持键盘 Enter。
+
 ## 主题变量
 
 | Token | 说明 | 默认值 |
 | --- | --- | --- |
-| `transferListWidth` | 面板宽度 | `180px` |
-| `transferListHeight` | 面板高度 | `200px` |
-| `transferListWidthLG` | 分页下面板宽度 | `250px` |
-| `transferHeaderHeight` | 面板头高度 | `40px` |
-| `transferItemHeight` | 条目最小高度 | `32px` |
-| `transferItemPaddingBlock` | 条目纵向内边距 | `5px` |
+| `listWidth` | 面板宽度 | `180px` |
+| `listHeight` | 面板高度 | `200px` |
+| `listWidthLG` | 分页下面板宽度 | `250px` |
+| `headerHeight` | 面板头高度 | `40px` |
+| `itemHeight` | 条目最小高度 | `32px` |
+| `itemPaddingBlock` | 条目纵向内边距 | `5px` |
 | `transferHeaderVerticalPadding` | 面板头纵向内边距 | `9px` |
+
+通过 `ConfigProvider.theme.components.Transfer` 配置以上七项，数值长度转为 px，字符串保留 CSS 长度；当前主题替换、嵌套和撤除会更新派生值。原生和语义样式仍可覆盖这些变量；`listStyle` 的优先级低于 `styles.section`。

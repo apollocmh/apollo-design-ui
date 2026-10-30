@@ -4,12 +4,16 @@ import type {
   TransferKey,
   TransferListSlotProps,
   TreeCheckedKeys,
-  TreeProps,
 } from '@apollo-design/ui';
 import { Transfer, Tree } from '@apollo-design/ui';
 import { ref } from 'vue';
 
-type TreeNode = NonNullable<TreeProps['treeData']>[number];
+interface TreeNode {
+  key: TransferKey;
+  title: string;
+  disabled: boolean;
+  children?: TreeNode[];
+}
 
 const transferDataSource: TransferItem[] = [
   { key: '0-0', title: '内容一' },

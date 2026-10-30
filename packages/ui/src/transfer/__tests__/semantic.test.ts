@@ -22,6 +22,7 @@ import type { DomRenderResult } from '@apollo-design/test-utils';
 import { describe, expect, it } from 'vitest';
 import { defineComponent, h, type SlotsType } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/transfer.dom.json';
+import { mountCase, resolveRenderable } from '../../../../test-utils/src/render';
 import { ConfigProvider } from '../../config-provider';
 import type { TransferItem, TransferItemSlotProps, TransferSlots } from '../interface';
 import ApolloTransfer from '../Transfer';
@@ -849,6 +850,66 @@ const ALLOW = {
   },
 } as const;
 
+/**
+ * Check every new control attribute before comparing the complete retained tree
+ * with the unchanged historical oracle. No descendant or legacy difference is ignored.
+ */
+function nativeControlReference(html: string, id: string): string {
+  const template = document.createElement('template');
+  template.innerHTML = html;
+  const root = template.content.firstElementChild;
+  if (!root) throw new Error(`${id}: expected the Transfer root`);
+  const prefix = root.classList[0];
+  if (!prefix) throw new Error(`${id}: expected the component prefix`);
+  const triggers = root.querySelectorAll(`.${prefix}-list-header > button.apollo-dropdown-trigger`);
+  expect(triggers.length, `${id}: owned header buttons`).toBe(
+    id === 'show-select-all:false' ? 0 : 2,
+  );
+  triggers.forEach((button, index) => {
+    expect([...button.attributes].map((attr) => attr.name).sort()).toEqual(
+      [
+        'type',
+        'class',
+        'aria-label',
+        'aria-haspopup',
+        ...(id === 'disabled' ? ['disabled'] : []),
+      ].sort(),
+    );
+    expect(button.getAttribute('type')).toBe('button');
+    expect(button.getAttribute('aria-haspopup')).toBe('menu');
+    expect(button.getAttribute('aria-label')).toBe(
+      id === 'one-way' && index === 1 ? 'Remove all data' : 'Select all data',
+    );
+    const inheritedClasses = [
+      'apollo-dropdown-trigger',
+      ...(id === 'config:direction-rtl' ? ['apollo-dropdown-rtl'] : []),
+    ];
+    expect([...button.classList].sort()).toEqual(
+      [`${prefix}-list-header-dropdown`, ...inheritedClasses].sort(),
+    );
+    expect(button.children.length).toBe(1);
+    const icon = button.firstElementChild;
+    if (icon?.tagName !== 'SPAN') throw new Error(`${id}: expected the retained icon host`);
+    expect(icon.hasAttribute('disabled')).toBe(false);
+    icon.classList.add(...inheritedClasses);
+    icon.setAttribute('disabled', id === 'disabled' ? 'true' : 'false');
+    button.replaceWith(icon);
+  });
+  const actions = root.querySelectorAll(`.${prefix}-actions > button`);
+  expect(actions.length, `${id}: owned movement buttons`).toBe(id === 'one-way' ? 1 : 2);
+  actions.forEach((button, index) => {
+    const label =
+      id === 'actions' || id === 'operations'
+        ? null
+        : index === 0
+          ? 'Move selected items to target'
+          : 'Move selected items to source';
+    expect(button.getAttribute('aria-label')).toBe(label);
+    if (label) button.removeAttribute('aria-label');
+  });
+  return template.innerHTML;
+}
+
 inputContractReference(
   'Transfer',
   {
@@ -862,7 +923,14 @@ inputContractReference(
             `  基线里的用例：${baseline.cases.map((c) => c.id).join(', ')}`,
         );
       }
-      return build();
+      const result = build();
+      if (typeof result === 'string') return nativeControlReference(result, id);
+      const mounted = mountCase(() => resolveRenderable(result, `Transfer native reference ${id}`));
+      try {
+        return nativeControlReference(mounted.html(), id);
+      } finally {
+        mounted.destroy();
+      }
     },
     keepStyle: true,
     allow: mergeButtonContentReferenceAllowances(buttonContentDifferences, ALLOW),

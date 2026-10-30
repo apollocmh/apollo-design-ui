@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// 对齐 antd `basic.tsx`。
 import type { TransferKey } from '@apollo-design/ui';
 import { Transfer } from '@apollo-design/ui';
 import { ref } from 'vue';
@@ -11,21 +10,16 @@ const mockData = Array.from({ length: 20 }, (_, i) => ({
   disabled: i % 4 === 0,
 }));
 
-const targetKeys = ref<string[]>(
+const targetKeys = ref<TransferKey[]>(
   mockData.filter((item) => Number(item.key) % 3 > 1).map((item) => item.key),
 );
-const selectedKeys = ref<string[]>(['1', '4']);
-
-const handleChange = (newTargetKeys: TransferKey[]) => {
-  targetKeys.value = newTargetKeys.map(String);
-};
+const selectedKeys = ref<TransferKey[]>(['1', '4']);
 </script>
 
 <template>
   <Transfer
     :data-source="mockData"
-    :target-keys="targetKeys"
-    :selected-keys="selectedKeys"
-    @change="handleChange"
+    v-model:target-keys="targetKeys"
+    v-model:selected-keys="selectedKeys"
   />
 </template>

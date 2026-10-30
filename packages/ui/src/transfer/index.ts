@@ -11,7 +11,7 @@
 import Actions from './Actions';
 import Search from './Search';
 import Section from './Section';
-import Transfer from './Transfer';
+import TransferComponent from './Transfer';
 
 /** 静态挂载：`Transfer.List`（自定义列表面板 / 单面板使用）。 */
 const TransferList = Section;
@@ -20,7 +20,7 @@ const TransferSearch = Search;
 /** 静态挂载：`Transfer.Operation`（操作按钮列）。 */
 const TransferOperation = Actions;
 
-Object.assign(Transfer, {
+const Transfer = Object.assign(TransferComponent, {
   List: Section,
   Search,
   Operation: Actions,
@@ -31,6 +31,7 @@ export default Transfer;
 export type {
   PaginationType,
   TransferDirection,
+  TransferEmits,
   TransferFooterSlotProps,
   TransferItem,
   TransferItemSlotProps,
@@ -39,6 +40,7 @@ export type {
   TransferListSlotProps,
   TransferLocale,
   TransferProps,
+  TransferRef,
   TransferSelectAllLabelSlotProps,
   TransferSemanticClassNames,
   TransferSemanticStyles,

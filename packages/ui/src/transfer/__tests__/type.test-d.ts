@@ -6,24 +6,24 @@
  *
  * ⚠️ 负例必须包在**永不调用**的闭包里 —— 本文件会被 vitest 真的执行。
  *
- * ── 与 antd 类型面的差异（见 `interface.ts` 文件头）────────────────────────────
- *   1. `children`（React render-prop 自定义面板）→ `renderList` 函数 prop（C19）
- *   2. `React.ReactNode` → `VNodeChild`、`React.CSSProperties` → `Record<string, string>`
- *   3. `onSelectChange` 等回调签名与 antd 一致（方向 + keys）
+ * Public props, Vue models/notifications, scoped slots and actual template refs.
+ * Historical React render props were removed by ADR 0006; styles use CSSProperties.
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { VNodeChild } from 'vue';
+import type { CSSProperties, VNodeChild } from 'vue';
 import { h } from 'vue';
 import type {
   PaginationType,
   TransferDirection,
+  TransferEmits,
   TransferItem,
   TransferItemSlotProps,
   TransferKey,
   TransferListSlotProps,
   TransferLocale,
   TransferProps,
+  TransferRef,
   TransferSemanticClassNames,
   TransferSemanticStyles,
   TransferSlots,
@@ -153,9 +153,12 @@ describe('Transfer · 语义结构', () => {
   });
 
   it('styles 的值是声明对象', () => {
-    expectTypeOf<TransferSemanticStyles['root']>().toEqualTypeOf<
-      Record<string, string> | undefined
-    >();
+    expectTypeOf<TransferSemanticStyles['root']>().toEqualTypeOf<CSSProperties | undefined>();
+    const styles: TransferSemanticStyles = {
+      root: { opacity: 0.8 },
+      source: { item: { fontWeight: 600 } },
+    };
+    void styles;
   });
 
   it('locale 覆盖 unit 文案', () => {
@@ -174,8 +177,47 @@ describe('Transfer · 运行时形态', () => {
   });
 
   it('TransferList（Transfer.List）可独立渲染', () => {
-    const node = h(TransferList as never, { prefixCls: 'apollo-transfer' } as never);
+    expectTypeOf(Transfer.List).toEqualTypeOf(TransferList);
+    const node = h(TransferList, {
+      prefixCls: 'apollo-transfer',
+      checkedKeys: [],
+      direction: 'left',
+    });
     expectTypeOf(node).toExtend<VNodeChild>();
+  });
+});
+
+describe('Transfer · native models, events and template refs', () => {
+  it('declares actual constructor model listeners with the public key type', () => {
+    type Props = InstanceType<typeof Transfer>['$props'];
+    expectTypeOf<Parameters<NonNullable<Props['onUpdate:targetKeys']>>>().toEqualTypeOf<
+      [TransferKey[]]
+    >();
+    expectTypeOf<Parameters<NonNullable<Props['onUpdate:selectedKeys']>>>().toEqualTypeOf<
+      [TransferKey[]]
+    >();
+    expectTypeOf<Parameters<NonNullable<Props['onChange']>>>().toEqualTypeOf<
+      [TransferKey[], TransferDirection, TransferKey[]]
+    >();
+    expectTypeOf<TransferEmits['scroll']>().parameters.toEqualTypeOf<[TransferDirection, Event]>();
+  });
+
+  it('exposes the actual stable public root and focus methods', () => {
+    expectTypeOf<
+      Pick<InstanceType<typeof Transfer>, 'nativeElement' | 'focus' | 'blur'>
+    >().toEqualTypeOf<TransferRef>();
+  });
+
+  it('rejects incorrect model payloads and CSS declarations', () => {
+    // @ts-expect-error Model updates carry key arrays, not a data direction.
+    const update: TransferProps['onUpdate:targetKeys'] = (_value: TransferDirection) => {};
+    // @ts-expect-error A CSS declaration cannot be a rendering function.
+    const styles: TransferSemanticStyles = { root: { padding: () => '8px' } };
+    const labels: InstanceType<typeof Transfer>['$props'] = {
+      // @ts-expect-error The actual constructor rejects the third label beyond its two-label bound.
+      selectAllLabels: ['one', 'two', 'three'],
+    };
+    void [update, styles, labels];
   });
 });
 

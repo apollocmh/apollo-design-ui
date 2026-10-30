@@ -49,7 +49,7 @@ describe('Transfer.Search native Input event bridge', () => {
       props: {
         prefixCls: 'apollo-transfer-list-search',
         value: 'draft',
-        handleClear: clear,
+        onClear: clear,
         onChange: change,
       },
       global: { stubs: { AInput: NativeInput } },
@@ -76,7 +76,7 @@ describe('Transfer.Search with the actual Input', () => {
         prefixCls: 'apollo-transfer-list-search',
         value: 'Draft',
         onChange: change,
-        handleClear: clear,
+        onClear: clear,
       },
     });
     try {

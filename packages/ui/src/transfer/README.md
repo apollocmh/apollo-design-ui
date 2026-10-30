@@ -9,6 +9,12 @@
 
 用户已裁决开发阶段直接移除内容渲染函数 prop（ADR 0006）。公开扩展为 `#item`、`#footer`、`#list`、`#selectAllLabel`；默认显示数据 title/key。当前 API、作用域与迁移写法见双语文档及 `docs/migrations/transfer-slots.md`。下文上游移植、旧函数通道和数量描述属于历史实现记录，不能覆盖本节或当前接口。
 
+## 2026-10-30 当前架构契约
+
+在既有四槽成果上接通 `v-model:targetKeys/selectedKeys`、Vue emits、真实根引用与实例焦点；范围选择使用当前筛选视图和 key 锚点，区分数字/字符串行 key。七个组件 Token 读取当前主题；原生字符串/数组样式与 Provider 方向配置遵循真实落点。
+
+公开 Search/List/Operation 的通知也使用 Vue 事件。图标内容放在所属按钮内；自定义按钮用 `cloneVNode` 保留原 Vue owner/ref/key/指令，监听器数组交由 Vue 调用，直接替代下文历史 `createVNode` 重建策略。静态挂载与命名导出保留同一构造器类型。具体契约与迁移见双语 API；本轮架构结果与最终验收分别记录在唯一审计状态，不沿用下文旧 Gate 作为推进门槛。
+
 ## 1. 文件结构
 
 ```

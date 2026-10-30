@@ -23,29 +23,28 @@ const ListItem = defineComponent({
     classNames: { type: Object as PropType<TransferSemanticClassNames>, default: undefined },
     styles: { type: Object as PropType<TransferSemanticStyles>, default: undefined },
     renderedText: { type: [String, Number], default: undefined },
-    renderedEl: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    renderedEl: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
     item: { type: Object as PropType<TransferItem>, required: true },
     checked: { type: Boolean, default: undefined },
     disabled: { type: Boolean, default: undefined },
     showRemove: { type: Boolean, default: undefined },
     removeLabel: { type: String, default: undefined },
-    onClick: {
-      type: Function as PropType<(item: TransferItem, e: MouseEvent) => void>,
-      default: undefined,
-    },
-    onRemove: {
-      type: Function as PropType<(item: TransferItem) => void>,
-      default: undefined,
-    },
   },
-  setup(props) {
+  emits: {
+    click: (_item: TransferItem, _event: MouseEvent) => true,
+    remove: (_item: TransferItem) => true,
+  },
+  setup(props, { emit }) {
     const [contextLocale] = useLocale('Transfer');
     const mergedDisabled = computed(() => props.disabled || !!props.item?.disabled);
     const classes = computed(() => ({
       [`${props.prefixCls}-content-item`]: true,
       [`${props.prefixCls}-content-item-disabled`]: mergedDisabled.value,
       [`${props.prefixCls}-content-item-checked`]: !!props.checked && !mergedDisabled.value,
-      ...(props.classNames?.item ? { [props.classNames.item as string]: true } : {}),
+      ...(props.classNames?.item ? { [props.classNames.item]: true } : {}),
     }));
     const title = computed(() => {
       const rt = props.renderedText;
@@ -58,10 +57,10 @@ const ListItem = defineComponent({
       const labelNode = h(
         'span',
         {
-          class: [`${p}-content-item-text`, props.classNames?.itemContent as string | undefined],
+          class: [`${p}-content-item-text`, props.classNames?.itemContent],
           style: props.styles?.itemContent,
         },
-        props.renderedEl as never,
+        [props.renderedEl],
       );
 
       if (props.showRemove) {
@@ -74,7 +73,7 @@ const ListItem = defineComponent({
               disabled: mergedDisabled.value,
               class: `${p}-content-item-remove`,
               'aria-label': props.removeLabel ?? contextLocale.value.remove,
-              onClick: () => props.onRemove?.(props.item),
+              onClick: () => emit('remove', props.item),
             },
             h(DeleteOutlined),
           ),
@@ -89,7 +88,7 @@ const ListItem = defineComponent({
           title: title.value,
           onClick: mergedDisabled.value
             ? undefined
-            : (event: MouseEvent) => props.onClick?.(props.item, event),
+            : (event: MouseEvent) => emit('click', props.item, event),
         },
         [
           h(Checkbox, {
@@ -105,7 +104,7 @@ const ListItem = defineComponent({
             // 有意增强（超出 antd）：原生 input 经 attrs 透传 aria-label，
             // 否则行 checkbox 无可访问名（axe `label` 规则违规）。
             'aria-label': title.value,
-          } as never),
+          }),
           labelNode,
         ],
       );

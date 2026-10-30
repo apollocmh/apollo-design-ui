@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 102,
+  "revision": 104,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2680,18 +2680,16 @@
       "kind": "component",
       "ref": "transfer",
       "title": "Transfer",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/transfer"
       ],
-      "assignment": {
-        "owner": "native_transfer",
-        "baseRevision": 74,
-        "startedAt": "2026-10-30T10:30:38.446Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -2708,6 +2706,119 @@
           "docs/audit/2026-10-23-picker-transfer-remediation.md",
           "docs/migrations/transfer-slots.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/transfer"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project theme --project a11y --project dom-contract packages/ui/src/transfer/__tests__ --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 43590
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/transfer/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11369
+          },
+          {
+            "kind": "tooling",
+            "command": "pnpm exec biome check <all 17 changed Transfer TS/MJS files>; git diff --check -- packages/ui/src/transfer",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full Transfer source/tests/demo/SFC, declaration inference preserved>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49925
+          }
+        ],
+        "migration": [
+          "UI root exports: TransferEmits, TransferRef",
+          "Search.handleClear -> @clear; Operation moveToRight/moveToLeft -> @move-to-right/@move-to-left; List handleFilter/handleClear -> @filter/@clear",
+          "Remove unused TransferListBodyProps.filteredItems; actual #list.filteredItems remains",
+          "Regenerate the same seven component Token fields with string | number types"
+        ],
+        "reproductions": [
+          {
+            "command": "pnpm exec vitest run --project unit packages/ui/src/transfer/__tests__/native-contracts.test.ts --maxWorkers=1 (original production source)",
+            "exitCode": 1,
+            "durationMs": 6623,
+            "result": "9 real behavior failures",
+            "log": "/tmp/apollo-transfer-native-red-behavior.log"
+          },
+          {
+            "command": "pnpm exec vitest run --project unit packages/ui/src/transfer/__tests__/native-contracts.test.ts -t \"limits Shift ranges\" --maxWorkers=1",
+            "exitCode": 1,
+            "result": "Filtered Shift range included a hidden row",
+            "log": "/tmp/apollo-transfer-filtered-shift-red.log"
+          }
+        ],
+        "priorFailures": [
+          {
+            "exitCode": 1,
+            "result": "103/104 local checks passed; one new test incorrectly expected native Vue CSS numeric lengths to receive px. Corrected explicit units and retained numeric opacity assertion. Final same-scope checks all passed.",
+            "log": "/tmp/apollo-transfer-focused-final.log"
+          },
+          {
+            "command": "node packages/ui/src/transfer/__tests__/native-browser.mjs",
+            "exitCode": 1,
+            "durationMs": 13214,
+            "result": "10s cold navigation timed out during the local matrix; standalone rerun passed with the original thresholds and diagnostics.",
+            "log": "/tmp/apollo-transfer-native-browser-final.log"
+          }
+        ],
+        "sourceSha256": {
+          "packages/ui/src/transfer/__tests__/fixtures/NativeTransfer.vue": "41fde7ade802b5a6cd8ecbb5017365ace25035158756584cb1d9bcd827850c52",
+          "packages/ui/src/transfer/__tests__/native-browser.mjs": "a1a16152f89231cccf9ecfb3c907175fc3202199593cb418f33d9c396814bd49",
+          "packages/ui/src/transfer/__tests__/native-contracts.test.ts": "9074f87511052f3aba4353796b6536363aca0a2f8a27b00a30d5f307844e073f",
+          "packages/ui/src/transfer/use-transfer-theme.ts": "6e061d56b99147dd5afc06c9b1fe334211d4539e9a6e7e0a727d0b4d2d47b0a0",
+          "packages/ui/src/transfer/Actions.ts": "4db1cfe3b2dec557205499895cb07d2ae634f28f97a4f9ac664836fc8707f988",
+          "packages/ui/src/transfer/ListBody.ts": "10c74e7ebbfe57b513f3f0682b618d8ae1cb48459918f5f0862efd40b9e7a893",
+          "packages/ui/src/transfer/ListItem.ts": "6a7992c4b2ff7b837a1ca89159f793fe48c4ee2f5aa7127d39cc262b21dc9c38",
+          "packages/ui/src/transfer/Search.ts": "005b6189a4858e61bdac87b8ab9c9932e2c0930f2eb32e04f4970df167898f78",
+          "packages/ui/src/transfer/Section.ts": "8665689a51648a572b693e3dba8399a0353aed7879eeb7bfb952dc5a6228d354",
+          "packages/ui/src/transfer/Transfer.ts": "890ba32e72eb12852de18481873763bf07fafbde484ba6dc41ca563fb00c66cf",
+          "packages/ui/src/transfer/__tests__/search-events.test.ts": "ef7a15ee3cfaaf87d27002da5664c60c0f029dca13aae7688ea1830ab3870ee2",
+          "packages/ui/src/transfer/__tests__/semantic.test.ts": "59d393be1ae46d4e5ea6194b304eca95999b914f39dc1dc3f69ced7ebe659854",
+          "packages/ui/src/transfer/__tests__/type.test-d.ts": "292a4c46b7fd2ba50ae563663cbf16e05c7d90d16db82e22d1550bab8a43d99e",
+          "packages/ui/src/transfer/demo/basic.vue": "88dd06563516cce013a4068d9f47aa1b6e975f769bcf7798754ee766074eb2bb",
+          "packages/ui/src/transfer/demo/component-token.vue": "04d5beadf3d8fc9a3afdc53f7db2e3a58bc0a3e463b77bdfe2344e0957f43210",
+          "packages/ui/src/transfer/demo/tree-transfer.vue": "935081ac13e8cf40cdcba04d8affbd235834d140877e3db1f4d36138a122991f",
+          "packages/ui/src/transfer/index.ts": "db204b0b47d421022e53adb6e5413505c1bcad1e1ea1e5fc5a3b1e73e0a289f0",
+          "packages/ui/src/transfer/interface.ts": "1ac9cd2c89ab896c6152bdb733fe85b4aa70f9abdfa7d014f9e029a80b5df304",
+          "packages/ui/src/transfer/style/index.ts": "a17b4762df010025338b41033bef39d78ab27f2bcf258749f48547e9a3638bd3",
+          "packages/ui/src/transfer/style/token.ts": "2919e8fc1d2d34519a52de5ce3816c1972489a42c4956433bfeef171afa6d74d",
+          "packages/ui/src/transfer/use-multiple-select.ts": "10f85654234a9ab639538370408adc40336dababd36c9bb026e47bacfb119949"
+        },
+        "historicalReferences": {
+          "tests/compat/baselines/transfer.dom.json": "9025e0135ffeebe7097b44b989540aee5f34e62f1c478f3a0a0a53431cd98e14",
+          "packages/ui/src/transfer/__tests__/input-contract-reference.json": "431d65bab011503652b512a5a846828a7056f5d14dedbd2228b5a766fb6b2775",
+          "packages/ui/src/transfer/__tests__/button-content-reference-diffs.json": "6690374548ff0f8ad4314fb15deeacee2924a6eb45920a33b70a79a22f1a8c94"
+        },
+        "boundary": "Existing four scoped-slot work and dated evidence retained. Current local unit/theme/a11y/DOM checks: 136 passed, exit0. All 31 raw DOM cases retain exact descendant comparison after strict verification of the new native button attributes; raw/Input references unchanged. Actual source browser covers models, keyboard/ref/attrs, independent tokens, disabled background, cleanup/remount and three real Demo components, with console/page/native-error arrays empty. No library-wide build, dist, coverage, full visual matrix or final frozen nine-dimensional acceptance. Analysis/implementation durations are unknown; actual command wall times retained.",
+        "declarationProbe": {
+          "settings": "Root tsconfig compilerOptions, including declaration=true and noEmit=true; declaration-only emission additionally tested without diagnostics suppression",
+          "originalDiagnostics": [
+            4023,
+            4023
+          ],
+          "namedSchemaDiagnostics": [],
+          "declarationEmitSkipped": false,
+          "emissionDiagnostics": [],
+          "emittedDeclarations": 2,
+          "leaksPrivatePropOptions": false,
+          "retainsTupleAndThirdItemNegative": true
+        }
       }
     },
     {

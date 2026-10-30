@@ -162,3 +162,7 @@ AutoComplete 的通知改为 Vue emits，并明确 value/searchValue/open 三个
 ### D-color-picker-native-content
 
 ColorPicker 的 panelRender/showText 内容函数直接迁为 #panelRender/#showText；panel 作用域改为稳定组件引用，可用 `<component :is="panel" />`，不再需要 VNode 渲染适配器。默认触发器和预设色块具备原生键盘交互，尺寸采用共享 SizeType，attrs 落到实际触发节点；PurePanel 使用正常文档流并转发真实槽/事件，移除轮询和高度镜像。当前配置、渐变 alpha 与数字颜色输入同步修正，详见[ColorPicker API](packages/ui/src/color-picker/index.zh-CN.md)。
+
+### D-transfer-native-models
+
+Transfer 保留已有四槽成果，补齐 targetKeys/selectedKeys 双模型、所属 Vue 事件与真实引用。Search.handleClear 和 Operation.moveToLeft/moveToRight 命令 prop 改为 clear/move-to-left/move-to-right 事件；选择范围基于当前筛选视图，业务 key 和 Vue 节点身份保留。七 Token 接受 string/number 并读取当前主题；移除从未消费的 ListBodyProps.filteredItems，#list.filteredItems 保留。详见[Transfer API](packages/ui/src/transfer/index.zh-CN.md)。

@@ -12,8 +12,9 @@
  */
 
 import { useLocale } from '@apollo-design/locale';
-import { isFunction } from '@apollo-design/utils';
+import { isFunction, useControlledValue } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -23,7 +24,7 @@ import {
   type VNodeChild,
 } from 'vue';
 import { clsx } from '../_internal/clsx';
-import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
+import { semanticRootStyle, styleAttrs, useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { DefaultRenderEmpty } from '../config-provider/default-render-empty';
 import { useDisabled } from '../config-provider/disabled-context';
@@ -35,13 +36,30 @@ import type {
   TransferItem,
   TransferKey,
   TransferProps,
+  TransferSemanticClassNames,
+  TransferSemanticStyles,
   TransferSlots,
 } from './interface';
 import { searchEventValue } from './Search';
 import Section from './Section';
 import { useData } from './use-data';
-import { useMultipleSelect } from './use-multiple-select';
 import { useSelection } from './use-selection';
+import { useTransferTheme } from './use-transfer-theme';
+
+/** Name the runtime schema so published constructors do not expose Vue's private PropOptions. */
+export interface TransferSelectAllLabelsSchema {
+  type?: PropType<NonNullable<TransferProps['selectAllLabels']>> | null;
+  default: () => NonNullable<TransferProps['selectAllLabels']>;
+  validator: (value: unknown) => boolean;
+}
+
+// ArrayConstructor alone describes an unbounded array. Keep the public tuple
+// and its real array/arity validator at this single prop boundary.
+const selectAllLabelsProp: TransferSelectAllLabelsSchema = {
+  type: null,
+  default: () => [],
+  validator: (value: unknown) => Array.isArray(value) && value.length <= 2,
+};
 
 const Transfer = defineComponent({
   name: 'ATransfer',
@@ -55,16 +73,13 @@ const Transfer = defineComponent({
       type: [Object, Function] as PropType<TransferProps['listStyle']>,
       default: undefined,
     },
-    operationStyle: { type: Object as PropType<Record<string, string>>, default: undefined },
+    operationStyle: { type: Object as PropType<CSSProperties>, default: undefined },
     operations: { type: Array as PropType<TransferProps['operations']>, default: undefined },
     actions: { type: Array as PropType<TransferProps['actions']>, default: undefined },
     dataSource: { type: Array as PropType<TransferItem[]>, default: undefined },
     targetKeys: { type: Array as PropType<TransferKey[]>, default: undefined },
     selectedKeys: { type: Array as PropType<TransferKey[]>, default: undefined },
-    selectAllLabels: {
-      type: Array as PropType<VNodeChild[]>,
-      default: () => [],
-    },
+    selectAllLabels: selectAllLabelsProp,
     locale: { type: Object as PropType<TransferProps['locale']>, default: undefined },
     titles: { type: Array as PropType<TransferProps['titles']>, default: undefined },
     disabled: { type: Boolean, default: undefined },
@@ -77,23 +92,24 @@ const Transfer = defineComponent({
     pagination: { type: [Boolean, Object] as PropType<PaginationType>, default: undefined },
     status: { type: String as PropType<'error' | 'warning'>, default: undefined },
     selectionsIcon: {
-      type: null as unknown as PropType<TransferProps['selectionsIcon']>,
+      type: [String, Number, Boolean, Object, Array] as PropType<TransferProps['selectionsIcon']>,
       default: undefined,
     },
     filterOption: { type: Function as PropType<TransferProps['filterOption']>, default: undefined },
     rowKey: { type: Function as PropType<TransferProps['rowKey']>, default: undefined },
-    onScroll: { type: Function as PropType<TransferProps['onScroll']>, default: undefined },
-    onChange: { type: Function as PropType<TransferProps['onChange']>, default: undefined },
-    onSearch: { type: Function as PropType<TransferProps['onSearch']>, default: undefined },
-    onSelectChange: {
-      type: Function as PropType<TransferProps['onSelectChange']>,
-      default: undefined,
-    },
   },
-  setup(props, { attrs, expose, slots }) {
+  emits: {
+    'update:targetKeys': (_keys: TransferKey[]) => true,
+    'update:selectedKeys': (_keys: TransferKey[]) => true,
+    change: (_keys: TransferKey[], _direction: TransferDirection, _moveKeys: TransferKey[]) => true,
+    selectChange: (_source: TransferKey[], _target: TransferKey[]) => true,
+    search: (_direction: TransferDirection, _value: string) => true,
+    scroll: (_direction: TransferDirection, _event: Event) => true,
+  },
+  setup(props, { attrs, expose, slots, emit }) {
     const config = useComponentConfig<{
       className?: string;
-      style?: Record<string, string>;
+      style?: CSSProperties;
       classNames?: TransferProps['classNames'];
       styles?: TransferProps['styles'];
       selectionsIcon?: TransferProps['selectionsIcon'];
@@ -102,14 +118,20 @@ const Transfer = defineComponent({
     const contextDisabled = useDisabled();
     const mergedDisabled = computed(() => props.disabled ?? contextDisabled.value);
     const prefixCls = computed(() => config.getPrefixCls('transfer', props.prefixCls));
+    const themeStyle = useTransferTheme(() => prefixCls.value);
     const mergedActions = computed(() => props.actions ?? props.operations ?? []);
     const isRtl = computed(() => direction.value === 'rtl');
+
+    const [targetKeys, setTargetKeys] = useControlledValue<TransferKey[]>({
+      getValue: () => props.targetKeys,
+      defaultValue: [],
+    });
 
     // Fill record with `key`
     const [mergedDataSource, leftDataSource, rightDataSource] = useData(
       computed(() => props.dataSource),
       computed(() => props.rowKey),
-      computed(() => props.targetKeys),
+      targetKeys,
     );
 
     // Get direction selected keys
@@ -120,46 +142,29 @@ const Transfer = defineComponent({
         computed(() => props.selectedKeys),
       );
 
-    const [leftMultipleSelect, updateLeftPrevSelectedIndex] = useMultipleSelect(
-      (item: TransferItem) => item.key,
-    );
-    const [rightMultipleSelect, updateRightPrevSelectedIndex] = useMultipleSelect(
-      (item: TransferItem) => item.key,
-    );
-
-    const setStateKeys = (
-      directionKey: TransferDirection,
-      keys: TransferKey[] | ((prevKeys: TransferKey[]) => TransferKey[]),
-    ) => {
+    const setStateKeys = (directionKey: TransferDirection, keys: TransferKey[]) => {
       if (directionKey === 'left') {
-        setSourceSelectedKeys(isFunction(keys) ? keys(sourceSelectedKeys.value || []) : keys);
+        setSourceSelectedKeys(keys);
       } else {
-        setTargetSelectedKeys(isFunction(keys) ? keys(targetSelectedKeys.value || []) : keys);
+        setTargetSelectedKeys(keys);
       }
-    };
-
-    const setPrevSelectedIndex = (directionKey: TransferDirection, value: number | null) => {
-      const update =
-        directionKey === 'left' ? updateLeftPrevSelectedIndex : updateRightPrevSelectedIndex;
-      update(value);
     };
 
     const handleSelectChange = (directionKey: TransferDirection, holder: TransferKey[]) => {
-      if (directionKey === 'left') {
-        props.onSelectChange?.(holder, targetSelectedKeys.value);
-      } else {
-        props.onSelectChange?.(sourceSelectedKeys.value, holder);
-      }
+      const source = directionKey === 'left' ? holder : sourceSelectedKeys.value;
+      const target = directionKey === 'right' ? holder : targetSelectedKeys.value;
+      emit('update:selectedKeys', [...source, ...target]);
+      emit('selectChange', source, target);
     };
 
     const getTitles = (transferLocale: { titles?: VNodeChild[] }) =>
       props.titles ?? transferLocale.titles ?? [];
 
     const handleLeftScroll = (e: Event) => {
-      props.onScroll?.('left', e);
+      emit('scroll', 'left', e);
     };
     const handleRightScroll = (e: Event) => {
-      props.onScroll?.('right', e);
+      emit('scroll', 'right', e);
     };
 
     const groupDisabledKeysMap = (dataSource: TransferItem[]) => {
@@ -180,7 +185,7 @@ const Transfer = defineComponent({
       const newMoveKeys = moveKeys.filter((key) => !dataSourceDisabledKeysMap.has(key));
       const newMoveKeysMap = new Map(newMoveKeys.map((k, i) => [k, i] as const));
       // move items to target box
-      const tks = props.targetKeys ?? [];
+      const tks = targetKeys.value;
       const newTargetKeys =
         directionKey === 'right'
           ? newMoveKeys.concat(tks)
@@ -189,16 +194,16 @@ const Transfer = defineComponent({
       const oppositeDirection: TransferDirection = directionKey === 'right' ? 'left' : 'right';
       setStateKeys(oppositeDirection, []);
       handleSelectChange(oppositeDirection, []);
-      props.onChange?.(newTargetKeys, directionKey, newMoveKeys);
+      setTargetKeys(newTargetKeys);
+      emit('update:targetKeys', newTargetKeys);
+      emit('change', newTargetKeys, directionKey, newMoveKeys);
     };
 
     const moveToLeft = () => {
       moveTo('left');
-      setPrevSelectedIndex('left', null);
     };
     const moveToRight = () => {
       moveTo('right');
-      setPrevSelectedIndex('right', null);
     };
 
     const onItemSelectAll = (
@@ -223,7 +228,6 @@ const Transfer = defineComponent({
       }
       setStateKeys(directionKey, mergedCheckedKeys);
       handleSelectChange(directionKey, mergedCheckedKeys);
-      setPrevSelectedIndex(directionKey, null);
     };
     const onLeftItemSelectAll = (keys: TransferKey[], checkAll: boolean | 'replace') =>
       onItemSelectAll('left', keys, checkAll);
@@ -232,89 +236,40 @@ const Transfer = defineComponent({
 
     const leftFilter = (event: Event) => {
       const value = searchEventValue(event);
-      if (value !== undefined) props.onSearch?.('left', value);
+      if (value !== undefined) emit('search', 'left', value);
     };
     const rightFilter = (event: Event) => {
       const value = searchEventValue(event);
-      if (value !== undefined) props.onSearch?.('right', value);
+      if (value !== undefined) emit('search', 'right', value);
     };
-    const handleLeftClear = () => props.onSearch?.('left', '');
-    const handleRightClear = () => props.onSearch?.('right', '');
-
-    const handleSingleSelect = (
-      directionKey: TransferDirection,
-      holder: Set<TransferKey>,
-      selectedKey: TransferKey,
-      checked: boolean,
-      currentSelectedIndex: number,
-    ) => {
-      const isSelected = holder.has(selectedKey);
-      if (isSelected) {
-        holder.delete(selectedKey);
-        setPrevSelectedIndex(directionKey, null);
-      }
-      if (checked) {
-        holder.add(selectedKey);
-        setPrevSelectedIndex(directionKey, currentSelectedIndex);
-      }
-    };
-
-    const handleMultipleSelect = (
-      directionKey: TransferDirection,
-      data: TransferItem[],
-      holder: Set<TransferKey>,
-      currentSelectedIndex: number,
-    ) => {
-      const multipleSelect = directionKey === 'left' ? leftMultipleSelect : rightMultipleSelect;
-      multipleSelect(currentSelectedIndex, data, holder);
-    };
+    const handleLeftClear = () => emit('search', 'left', '');
+    const handleRightClear = () => emit('search', 'right', '');
 
     const onItemSelect = (
       directionKey: TransferDirection,
       selectedKey: TransferKey,
       checked: boolean,
-      multiple?: boolean,
     ) => {
       const holder = directionKey === 'left' ? sourceSelectedKeys.value : targetSelectedKeys.value;
       const holderSet = new Set(holder);
-      const data = (directionKey === 'left' ? leftDataSource.value : rightDataSource.value).filter(
-        (item) => !item.disabled,
-      );
-      const currentSelectedIndex = data.findIndex((item) => item.key === selectedKey);
-      // multiple select by hold down the shift key
-      if (multiple && holder.length > 0) {
-        handleMultipleSelect(directionKey, data, holderSet, currentSelectedIndex);
-      } else {
-        handleSingleSelect(directionKey, holderSet, selectedKey, checked, currentSelectedIndex);
-      }
+      if (checked) holderSet.add(selectedKey);
+      else holderSet.delete(selectedKey);
       const holderArr = Array.from(holderSet);
+      setStateKeys(directionKey, holderArr);
       handleSelectChange(directionKey, holderArr);
-      if (!props.selectedKeys) {
-        setStateKeys(directionKey, holderArr);
-      }
     };
 
-    const onLeftItemSelect = (
-      selectedKey: TransferKey,
-      checked: boolean,
-      e?: { shiftKey?: boolean },
-    ) => {
-      onItemSelect('left', selectedKey, checked, e?.shiftKey);
-    };
-    const onRightItemSelect = (
-      selectedKey: TransferKey,
-      checked: boolean,
-      e?: { shiftKey?: boolean },
-    ) => {
-      onItemSelect('right', selectedKey, checked, e?.shiftKey);
-    };
+    const onLeftItemSelect = (key: TransferKey, checked: boolean) =>
+      onItemSelect('left', key, checked);
+    const onRightItemSelect = (key: TransferKey, checked: boolean) =>
+      onItemSelect('right', key, checked);
     const onRightItemRemove = (keys: TransferKey[]) => {
       setStateKeys('right', []);
-      props.onChange?.(
-        (props.targetKeys ?? []).filter((key) => !keys.includes(key)),
-        'left',
-        [...keys],
-      );
+      handleSelectChange('right', []);
+      const nextKeys = targetKeys.value.filter((key) => !keys.includes(key));
+      setTargetKeys(nextKeys);
+      emit('update:targetKeys', nextKeys);
+      emit('change', nextKeys, 'left', [...keys]);
     };
 
     const handleListStyle = (listDirection: TransferDirection) => {
@@ -359,10 +314,8 @@ const Transfer = defineComponent({
         computed(() => config.styles),
         computed(() => semanticRootStyle(config.style)),
         computed(() => props.styles),
-        // 根 style 是 Vue 原生 attrs；仍走语义 root 通道（与上游落点一致）
-        computed(() => semanticRootStyle(attrs.style as Record<string, string> | undefined)),
       ],
-      props as never,
+      props,
     );
 
     const cls = computed(() =>
@@ -375,8 +328,8 @@ const Transfer = defineComponent({
         getStatusClassNames(prefixCls.value, mergedStatus.value, false),
         config.className,
         // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-        attrs.class as string | undefined,
-        (mergedSemantic.classNames.value as Record<string, string | undefined>).root,
+        attrs.class,
+        mergedSemantic.classNames.value.root,
       ),
     );
 
@@ -391,10 +344,22 @@ const Transfer = defineComponent({
     }));
 
     const nativeElementRef = ref<HTMLElement | null>(null);
+    const focus = (options?: FocusOptions) => {
+      nativeElementRef.value
+        ?.querySelector<HTMLElement>(
+          'input:not(:disabled), button:not(:disabled), a[href], [tabindex]:not([tabindex="-1"])',
+        )
+        ?.focus(options);
+    };
+    const blur = () => {
+      const root = nativeElementRef.value;
+      if (root?.matches(':focus')) root.blur();
+      else root?.querySelector<HTMLElement>(':focus')?.blur();
+    };
     expose({
       nativeElement: nativeElementRef,
-      focus: () => {},
-      blur: () => {},
+      focus,
+      blur,
     });
 
     // ── source / target 方向子结构合并（2026-10-04 补齐，antd 逐字）──────────────
@@ -412,22 +377,22 @@ const Transfer = defineComponent({
       'footer',
     ] as const;
 
-    const sectionClassNames = (dir: 'source' | 'target') => {
-      const all = mergedSemantic.classNames.value as Record<string, unknown>;
-      const dirCls = all[dir] as Record<string, string | undefined> | undefined;
-      const out: Record<string, unknown> = { ...all };
+    const sectionClassNames = (dir: 'source' | 'target'): TransferSemanticClassNames => {
+      const all = mergedSemantic.classNames.value;
+      const dirCls = all[dir];
+      const out = { ...all };
       for (const key of SECTION_SEMANTIC_KEYS) {
-        out[key] = clsx(all[key] as string | undefined, dirCls?.[key]);
+        out[key] = clsx(all[key], dirCls?.[key]);
       }
       return out;
     };
-    const sectionStyles = (dir: 'source' | 'target') => {
-      const all = mergedSemantic.styles.value as Record<string, unknown>;
-      const dirStyles = all[dir] as Record<string, Record<string, string> | undefined> | undefined;
-      const out: Record<string, unknown> = { ...all };
+    const sectionStyles = (dir: 'source' | 'target'): TransferSemanticStyles => {
+      const all = mergedSemantic.styles.value;
+      const dirStyles = all[dir];
+      const out = { ...all };
       for (const key of SECTION_SEMANTIC_KEYS) {
         out[key] = {
-          ...((all[key] as Record<string, string> | undefined) ?? {}),
+          ...all[key],
           ...(dirStyles?.[key] ?? {}),
         };
       }
@@ -439,16 +404,19 @@ const Transfer = defineComponent({
       // ⚠️ direction 键与列表方向对应：left 列吃 source、right 列吃 target
       //（antd：sourceSectionClassNames 给左列）。rtl 下的视觉翻转不影响语义键。
       const semanticDir = listDirection === 'left' ? 'source' : 'target';
+      const styles = sectionStyles(semanticDir);
       return {
         prefixCls: prefixCls.value,
-        style: handleListStyle(listDirection),
         classNames: sectionClassNames(semanticDir),
-        styles: sectionStyles(semanticDir),
+        styles: {
+          ...styles,
+          section: { ...handleListStyle(listDirection), ...styles.section },
+        },
         dataSource: listDirection === 'left' ? leftDataSource.value : rightDataSource.value,
         filterOption: props.filterOption,
         checkedKeys: listDirection === 'left' ? sourceSelectedKeys.value : targetSelectedKeys.value,
-        handleFilter: listDirection === 'left' ? leftFilter : rightFilter,
-        handleClear: listDirection === 'left' ? handleLeftClear : handleRightClear,
+        onFilter: listDirection === 'left' ? leftFilter : rightFilter,
+        onClear: listDirection === 'left' ? handleLeftClear : handleRightClear,
         onItemSelect: listDirection === 'left' ? onLeftItemSelect : onRightItemSelect,
         onItemSelectAll: listDirection === 'left' ? onLeftItemSelectAll : onRightItemSelectAll,
         onItemRemove: onRightItemRemove,
@@ -473,33 +441,32 @@ const Transfer = defineComponent({
         remove: locale.remove,
         itemsUnit: locale.itemsUnit,
         itemUnit: locale.itemUnit,
-      } as never;
+      };
     };
 
-    return () => [
+    const renderTransfer = () =>
       h(
         'div',
         {
           ref: nativeElementRef,
-          ...(attrs as Record<string, unknown>),
+          ...attrs,
           class: [cls.value, { [`${prefixCls.value}-customize-list`]: !!slots.list }],
-          style: (mergedSemantic.styles.value as Record<string, Record<string, string>>).root,
+          ...(attrs.style !== undefined
+            ? { style: [themeStyle.value, mergedSemantic.styles.value.root, attrs.style] }
+            : styleAttrs({ ...themeStyle.value, ...mergedSemantic.styles.value.root })),
         },
         [
           h(Section, sectionBind('left', 0), slots),
           h(Actions, {
-            class: clsx(
-              `${prefixCls.value}-actions`,
-              (mergedSemantic.classNames.value as Record<string, string | undefined>).actions,
-            ),
+            class: clsx(`${prefixCls.value}-actions`, mergedSemantic.classNames.value.actions),
             rightActive: rightActive.value,
-            moveToRight,
+            onMoveToRight: moveToRight,
             leftActive: leftActive.value,
-            moveToLeft,
+            onMoveToLeft: moveToLeft,
             actions: mergedActions.value,
             style: {
               ...props.operationStyle,
-              ...(mergedSemantic.styles.value as Record<string, Record<string, string>>).actions,
+              ...mergedSemantic.styles.value.actions,
             },
             disabled: mergedDisabled.value,
             direction: direction.value,
@@ -507,8 +474,12 @@ const Transfer = defineComponent({
           }),
           h(Section, sectionBind('right', 1), slots),
         ],
-      ),
-    ];
+      );
+    return { nativeElement: nativeElementRef, focus, blur, renderTransfer };
+  },
+  expose: ['nativeElement', 'focus', 'blur'],
+  render() {
+    return this.renderTransfer();
   },
 });
 

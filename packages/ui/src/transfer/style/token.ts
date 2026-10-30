@@ -30,19 +30,19 @@ const px = (value: number): string => toCssSize(value) ?? `${value}px`;
 /** `ComponentToken` 的 7 个字段（含派生的 `transferHeaderVerticalPadding`）。 */
 export interface ComponentToken {
   /** 列表面板宽度。 */
-  listWidth: string;
+  listWidth: string | number;
   /** 列表面板高度。 */
-  listHeight: string;
+  listHeight: string | number;
   /** 分页下列表面板宽度。 */
-  listWidthLG: string;
+  listWidthLG: string | number;
   /** 面板头高度（`controlHeightLG`）。 */
-  headerHeight: string;
+  headerHeight: string | number;
   /** 列表项最小高度（`controlHeight`）。 */
-  itemHeight: string;
+  itemHeight: string | number;
   /** 列表项纵向内边距。 */
-  itemPaddingBlock: string;
+  itemPaddingBlock: string | number;
   /** 面板头纵向内边距。 */
-  transferHeaderVerticalPadding: string;
+  transferHeaderVerticalPadding: string | number;
 }
 
 /** `prepareComponentToken` 的入参面（AliasToken 的子集）。 */
@@ -75,7 +75,7 @@ let tokenCache: ComponentToken | undefined;
 /** 组件 token 的构建期值（缓存）。 */
 export function transferTokenValues(): ComponentToken {
   if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken() as unknown as TransferSeedToken);
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }

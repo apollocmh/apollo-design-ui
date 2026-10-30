@@ -51,6 +51,7 @@ const parsePagination = (pagination: PaginationType) => {
 
 const ListBody = defineComponent({
   name: 'ATransferListBody',
+  inheritAttrs: false,
   slots: Object as SlotsType<{
     item?: (props: Omit<TransferItemSlotProps, 'direction'>) => VNodeChild;
   }>,
@@ -135,22 +136,22 @@ const ListBody = defineComponent({
       setPageSize(size);
     };
 
-    return () => {
+    const renderListBody = () => {
       const p = props.prefixCls;
       const listNode = h(
         'ul',
         {
           class: [
             `${p}-content`,
-            props.classNames?.list as string | undefined,
+            props.classNames?.list,
             { [`${p}-content-show-remove`]: props.showRemove },
           ],
           style: props.styles?.list,
-          onScroll: props.onScroll as never,
+          onScroll: props.onScroll,
         },
         (memoizedItems.value ?? []).map(({ renderedEl, renderedText, item }) =>
           h(ListItem, {
-            key: String(item.key),
+            key: item.key,
             prefixCls: p,
             classNames: props.classNames,
             styles: props.styles,
@@ -193,6 +194,11 @@ const ListBody = defineComponent({
 
       return [listNode, paginationNode];
     };
+    return { items: memoizedItems, renderListBody };
+  },
+  expose: ['items'],
+  render() {
+    return this.renderListBody();
   },
 });
 

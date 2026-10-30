@@ -9,14 +9,22 @@
  */
 
 import { LeftOutlined, RightOutlined } from '@apollo-design/icons';
-import { createVNode, defineComponent, h, type PropType, type VNode, type VNodeChild } from 'vue';
+import {
+  cloneVNode,
+  defineComponent,
+  h,
+  isVNode,
+  type PropType,
+  type VNode,
+  type VNodeChild,
+} from 'vue';
 import Button from '../button/Button.vue';
 
 export interface ActionsProps {
   rightActive?: boolean;
-  moveToRight?: (e?: unknown) => void;
+  onMoveToRight?: (event: MouseEvent) => void;
   leftActive?: boolean;
-  moveToLeft?: (e?: unknown) => void;
+  onMoveToLeft?: (event: MouseEvent) => void;
   actions?: VNodeChild[];
   disabled?: boolean;
   direction?: 'ltr' | 'rtl';
@@ -36,8 +44,8 @@ const Action = defineComponent({
   props: {
     type: { type: String as PropType<'left' | 'right'>, required: true },
     actions: { type: Array as PropType<VNodeChild[]>, required: true },
-    moveToRight: { type: Function as PropType<ActionsProps['moveToRight']>, default: undefined },
-    moveToLeft: { type: Function as PropType<ActionsProps['moveToLeft']>, default: undefined },
+    moveToRight: { type: Function as PropType<ActionsProps['onMoveToRight']>, default: undefined },
+    moveToLeft: { type: Function as PropType<ActionsProps['onMoveToLeft']>, default: undefined },
     leftActive: { type: Boolean, default: undefined },
     rightActive: { type: Boolean, default: undefined },
     direction: { type: String as PropType<'ltr' | 'rtl'>, default: undefined },
@@ -51,48 +59,26 @@ const Action = defineComponent({
       const active = isRight ? props.rightActive : props.leftActive;
       const icon = getArrowIcon(props.type, props.direction);
 
-      if (button && typeof button === 'object' && 'type' in (button as VNode)) {
-        const element = button as VNode & { props?: Record<string, unknown> };
-        const mergedDisabled = element.props?.disabled || props.disabled || !active;
-        // ⚠️ 用户原回调要从**原 element.props** 上取 —— 它在下面的重建 props 里
-        //    会被我们的 `onClick` 覆盖掉（React cloneElement 的替换语义）。
-        const userOnClick = element.props?.onClick as ((e: Event) => void) | undefined;
-        const onClick = (event: Event) => {
-          if (mergedDisabled) {
-            event.preventDefault();
-            return;
-          }
-          userOnClick?.(event);
-          moveHandler?.(event);
+      const isCustomButton =
+        isVNode(button) &&
+        (button.type === Button ||
+          (typeof button.type === 'string' && ['button', 'a', 'input'].includes(button.type)) ||
+          !!button.props?.onClick);
+      if (isCustomButton) {
+        const element = cloneVNode(button);
+        const mergedDisabled = !!(element.props?.disabled || props.disabled || !active);
+        const listener = element.props?.onClick;
+        const listeners = Array.isArray(listener) ? listener : listener ? [listener] : [];
+        // Keep Vue's owner, ref, key and directives. Replace the handler once;
+        // Vue invokes listener arrays and reports errors through its normal channel.
+        element.props = {
+          ...element.props,
+          disabled: mergedDisabled,
+          onClick: mergedDisabled
+            ? (event: MouseEvent) => event.preventDefault()
+            : [...listeners, ...(moveHandler ? [moveHandler] : [])],
         };
-        /**
-         * 🚨 **必须 `createVNode` 重建，不能用 `h(element, {...})`**（Issue #15.1）。
-         *
-         * 上游是 `React.cloneElement(element, { disabled, onClick })` —— React 的语义是
-         * **替换**：config 里的键覆盖同名键，其余保留。而 Vue 的 `h(vnode, extra)` 对已有
-         * VNode 走 `cloneVNode` → `mergeProps(vnode.props, extra)`，`mergeProps` 对
-         * `on*` 键是**拼成数组**（不是覆盖）：
-         *
-         * - `onClick` 在两边都存在（用户原回调 vs 我们的合成器）⇒ 合并成
-         *   `[user, ours]` ⇒ 用户回调先在数组里调一次、又在新 `onClick` 里显式调一次
-         *   ⇒ **双调**（实测 2 次）；
-         * - 禁用态更糟：数组里排在首位的 user 回调**先于**我们的 `mergedDisabled`
-         *   早退执行 ⇒ 禁用态也漏调一次用户回调。
-         *
-         * ⇒ 自己构造最终 props（同名键覆盖 = 替换）再 `createVNode(element.type, …)`。
-         *    `key` / `ref` 不是 props 而是 vnode 字段，但 `createBaseVNode` 会从
-         *    `props.key` / `props.ref` 取 ⇒ 随 `element.props` 原样铺过去即可
-         *    （同 `FormItem.vue` 的 Issue #8.3 判据）。
-         */
-        return createVNode(
-          element.type,
-          {
-            ...(element.props ?? {}),
-            disabled: mergedDisabled,
-            onClick,
-          } as never,
-          element.children as never,
-        );
+        return element;
       }
       return h(
         Button,
@@ -100,8 +86,14 @@ const Action = defineComponent({
           type: 'primary',
           size: 'small',
           disabled: props.disabled || !active,
-          onClick: (event: unknown) => moveHandler?.(event),
-          icon,
+          onClick: (event: MouseEvent) => moveHandler?.(event),
+          'aria-label':
+            typeof button === 'string' || typeof button === 'number'
+              ? undefined
+              : isRight
+                ? 'Move selected items to target'
+                : 'Move selected items to source',
+          icon: isVNode(button) ? undefined : icon,
         },
         // ⚠️ 与 React children=undefined 对齐：空文案不给 slot，否则
         //    Vue 侧 slot 函数仍会被计入 childNodes ⇒ 多渲染一个空内容 span、
@@ -116,15 +108,17 @@ const Actions = defineComponent({
   name: 'ATransferActions',
   props: {
     rightActive: { type: Boolean, default: undefined },
-    moveToRight: { type: Function as PropType<ActionsProps['moveToRight']>, default: undefined },
     leftActive: { type: Boolean, default: undefined },
-    moveToLeft: { type: Function as PropType<ActionsProps['moveToLeft']>, default: undefined },
     actions: { type: Array as PropType<VNodeChild[]>, default: () => [] },
     disabled: { type: Boolean, default: undefined },
     direction: { type: String as PropType<'ltr' | 'rtl'>, default: undefined },
     oneWay: { type: Boolean, default: undefined },
   },
-  setup(props) {
+  emits: {
+    moveToRight: (_event: MouseEvent) => true,
+    moveToLeft: (_event: MouseEvent) => true,
+  },
+  setup(props, { emit }) {
     return () => {
       const tail = props.actions?.slice(props.oneWay ? 1 : 2) ?? [];
       // 根 class/style 走 Vue 原生 attrs（未关 inheritAttrs ⇒ 自动落到根 div）
@@ -133,9 +127,9 @@ const Actions = defineComponent({
           type: 'right',
           actions: props.actions ?? [],
           rightActive: props.rightActive,
-          moveToRight: props.moveToRight,
+          moveToRight: (event: MouseEvent) => emit('moveToRight', event),
           leftActive: props.leftActive,
-          moveToLeft: props.moveToLeft,
+          moveToLeft: (event: MouseEvent) => emit('moveToLeft', event),
           direction: props.direction,
           disabled: props.disabled,
         }),
@@ -144,9 +138,9 @@ const Actions = defineComponent({
               type: 'left',
               actions: props.actions ?? [],
               rightActive: props.rightActive,
-              moveToRight: props.moveToRight,
+              moveToRight: (event: MouseEvent) => emit('moveToRight', event),
               leftActive: props.leftActive,
-              moveToLeft: props.moveToLeft,
+              moveToLeft: (event: MouseEvent) => emit('moveToLeft', event),
               direction: props.direction,
               disabled: props.disabled,
             })

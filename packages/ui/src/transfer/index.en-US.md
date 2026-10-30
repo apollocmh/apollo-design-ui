@@ -63,8 +63,8 @@ import { Transfer } from '@apollo-design/ui';
 | Prop | Description | Type | Default |
 | --- | --- | --- | --- |
 | dataSource | Data source, items must contain `key` | `TransferItem[]` | `[]` |
-| targetKeys | Keys shown in the right (target) list | `TransferKey[]` | `[]` |
-| selectedKeys | Controlled checked keys | `TransferKey[]` | - |
+| targetKeys (`v-model:targetKeys`) | Target keys; controlled when provided, otherwise maintained internally | `TransferKey[]` | `[]` |
+| selectedKeys (`v-model:selectedKeys`) | Checked keys; controlled when provided, otherwise maintained internally | `TransferKey[]` | - |
 | titles | Titles of both lists | `VNodeChild[]` | `['', '']` |
 | actions | Custom action texts `[toRight, toLeft]` | `VNodeChild[]` | arrows |
 | disabled | Disable the whole component | `boolean` | `false` |
@@ -96,11 +96,27 @@ The current development version removes `render`, `footer`, `renderList` / `chil
 
 | Event | Description | Arguments |
 | --- | --- | --- |
-| change | Fires after moving | `(targetKeys, direction, moveKeys)` |
+| update:targetKeys | Request target keys for `v-model:targetKeys` | `(targetKeys)` |
+| update:selectedKeys | Request checked keys for `v-model:selectedKeys` | `(selectedKeys)` |
+| change | Request a move; controlled state follows the parent acceptance | `(targetKeys, direction, moveKeys)` |
 | selectChange | Checked keys change | `(sourceSelectedKeys, targetSelectedKeys)` |
 | search | Search value change (including clear) | `(direction, value)` |
 | scroll | List scroll | `(direction, event)` |
 
+Notifications use Vue emits, including listener arrays, without native fallthrough. Removing a controlled prop retains the last accepted state. Shift selection uses enabled items in the current filtered view and identifies its anchor by key after reordering.
+
+### Refs and native attributes
+
+`TransferRef.nativeElement` is the current root `HTMLElement`, or `null` after unmounting. `focus(options?: FocusOptions)` focuses the first enabled control in this instance; `blur()` only blurs a control within this instance. Native class/style/id/data attributes belong to the root. Native style accepts Vue objects, strings and arrays; semantic node styles use `CSSProperties`. Lengths retain explicit units; unitless properties such as opacity accept numbers, following native Vue styles.
+
 ### Statics
 
 `Transfer.List` / `Transfer.Search` / `Transfer.Operation` (also exported as `TransferList` / `TransferSearch` / `TransferOperation`).
+
+Static members and named exports have the same types. Search supports `v-model:value`, `@change` and `@clear`; replace `handleClear` with `@clear`. Operation uses `@move-to-right` / `@move-to-left`, directly replacing the `moveToRight/moveToLeft` callback props. List uses Vue filter/clear/selection/removal events; replace `handleFilter/handleClear` with `@filter/@clear`.
+
+Text, icons and ordinary action content stay inside an owned button. Actual custom buttons retain Vue key/ref/directives and listener arrays. Header menus use named native buttons and support Enter.
+
+### Current component tokens
+
+Configure `listWidth`, `listHeight`, `listWidthLG`, `headerHeight`, `itemHeight`, `itemPaddingBlock` and `transferHeaderVerticalPadding` through `ConfigProvider.theme.components.Transfer`. Numeric lengths use px; CSS strings are preserved. Replacement, nesting and removal update current derived values. Native and semantic styles retain priority; `listStyle` stays below `styles.section`.

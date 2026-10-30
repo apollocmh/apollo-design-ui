@@ -42,6 +42,7 @@ import type {
 } from './interface';
 import ListBody from './ListBody';
 import Search, { searchEventValue } from './Search';
+import { useMultipleSelect } from './use-multiple-select';
 
 function getEnabledItemKeys(items: TransferItem[]): TransferKey[] {
   return items.reduce<TransferKey[]>((keys, data) => {
@@ -78,13 +79,17 @@ const getShowSearchOption = (
 
 const Section = defineComponent({
   name: 'ATransferSection',
+  inheritAttrs: false,
   slots: Object as SlotsType<TransferSlots>,
   props: {
     prefixCls: { type: String, required: true },
     classNames: { type: Object as PropType<TransferSemanticClassNames>, default: undefined },
     styles: { type: Object as PropType<TransferSemanticStyles>, default: undefined },
     dataSource: { type: Array as PropType<TransferItem[]>, default: () => [] },
-    titleText: { type: null as unknown as PropType<VNodeChild>, default: '' },
+    titleText: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: '',
+    },
     checkedKeys: { type: Array as PropType<TransferKey[]>, required: true },
     disabled: { type: Boolean, default: undefined },
     showSearch: {
@@ -95,15 +100,33 @@ const Section = defineComponent({
     },
     searchPlaceholder: { type: String, default: undefined },
     notFoundContent: {
-      type: null as unknown as PropType<VNodeChild | VNodeChild[]>,
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild | VNodeChild[]>,
       default: undefined,
     },
-    selectAll: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    deselectAll: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    selectCurrent: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    selectInvert: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    removeAll: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    removeCurrent: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    selectAll: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
+    deselectAll: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
+    selectCurrent: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
+    selectInvert: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
+    removeAll: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
+    removeCurrent: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
     showSelectAll: { type: Boolean, default: true },
     showRemove: { type: Boolean, default: undefined },
     pagination: { type: [Boolean, Object] as PropType<PaginationType>, default: undefined },
@@ -111,36 +134,30 @@ const Section = defineComponent({
     itemsUnit: { type: String, default: undefined },
     itemUnit: { type: String, default: undefined },
     remove: { type: String, default: undefined },
-    selectAllLabel: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    selectionsIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    selectAllLabel: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
+    selectionsIcon: {
+      type: [String, Number, Boolean, Object, Array] as PropType<VNodeChild>,
+      default: undefined,
+    },
     filterOption: {
       type: Function as PropType<
         (inputValue: string, item: TransferItem, direction: TransferDirection) => boolean
       >,
       default: undefined,
     },
-    onItemSelectAll: {
-      type: Function as PropType<(keys: TransferKey[], checkAll: boolean | 'replace') => void>,
-      default: undefined,
-    },
-    onItemSelect: {
-      type: Function as PropType<
-        (key: TransferKey, check: boolean, e?: { shiftKey?: boolean }) => void
-      >,
-      default: undefined,
-    },
-    onItemRemove: {
-      type: Function as PropType<(keys: TransferKey[]) => void>,
-      default: undefined,
-    },
-    handleFilter: {
-      type: Function as PropType<(event: Event) => void>,
-      required: true,
-    },
-    handleClear: { type: Function as PropType<() => void>, required: true },
-    onScroll: { type: Function as PropType<(e: Event) => void>, default: undefined },
   },
-  setup(props, { attrs, slots }) {
+  emits: {
+    itemSelectAll: (_keys: TransferKey[], _check: boolean | 'replace') => true,
+    itemSelect: (_key: TransferKey, _check: boolean, _event?: { shiftKey?: boolean }) => true,
+    itemRemove: (_keys: TransferKey[]) => true,
+    filter: (_event: Event) => true,
+    clear: () => true,
+    scroll: (_event: Event) => true,
+  },
+  setup(props, { attrs, slots, emit }) {
     // 🚨 必须是 **computed**（Issue #15.3）：此前是 setup 期普通字符串，父级
     //    （Transfer）动态切 `prefixCls` 后这里仍是旧值 ⇒ Section/ListBody/ListItem
     //    整棵子树继续渲染旧前缀类名（实测：根 `custom` 已换、子级还挂 `apollo-section`）。
@@ -150,7 +167,7 @@ const Section = defineComponent({
     const listPrefixCls = computed(() => `${props.prefixCls}-list`);
     const searchOptions = computed(() => getShowSearchOption(props.showSearch ?? false));
     const filterValue = ref(searchOptions.value.defaultValue ?? '');
-    const listBodyRef = ref<{ items?: RenderedItem[] } | null>(null);
+    const listBodyRef = ref<InstanceType<typeof ListBody> | null>(null);
 
     const showSearchBool = computed(
       () => props.showSearch === true || isPlainObject(props.showSearch),
@@ -160,11 +177,11 @@ const Section = defineComponent({
       const value = searchEventValue(event);
       if (value === undefined) return;
       filterValue.value = value;
-      props.handleFilter(event);
+      emit('filter', event);
     };
     const internalHandleClear = () => {
       filterValue.value = '';
-      props.handleClear();
+      emit('clear');
     };
 
     const matchFilter = (text: string, item: TransferItem) => {
@@ -201,6 +218,33 @@ const Section = defineComponent({
     });
     const filteredItems = computed(() => filtered.value[0]);
     const filteredRenderItems = computed(() => filtered.value[1]);
+    const [multipleSelect, setAnchor] = useMultipleSelect((item) => item.key);
+    const selectAllItems = (keys: TransferKey[], check: boolean | 'replace') => {
+      if (props.disabled) return;
+      setAnchor(null);
+      emit('itemSelectAll', keys, check);
+    };
+    const selectItem = (key: TransferKey, selected: boolean, event?: { shiftKey?: boolean }) => {
+      const enabled = filteredItems.value.filter((item) => !item.disabled);
+      const currentIndex = enabled.findIndex((item) => item.key === key);
+      if (props.disabled || currentIndex < 0) return;
+      if (event?.shiftKey && props.checkedKeys.length) {
+        const selectedKeys = new Set(props.checkedKeys);
+        multipleSelect(currentIndex, enabled, selectedKeys);
+        emit('itemSelectAll', [...selectedKeys], 'replace');
+      } else {
+        setAnchor(selected ? key : null);
+        emit('itemSelect', key, selected, event);
+      }
+    };
+    const removeItems = (keys: TransferKey[]) => {
+      if (props.disabled || !props.showRemove) return;
+      const enabled = new Set(getEnabledItemKeys(filteredItems.value));
+      emit(
+        'itemRemove',
+        keys.filter((key) => enabled.has(key)),
+      );
+    };
 
     const checkedActiveItems = computed(() =>
       filteredItems.value.filter((item) => props.checkedKeys.includes(item.key) && !item.disabled),
@@ -229,10 +273,7 @@ const Section = defineComponent({
         'aria-label': props.selectAll ? String(props.selectAll) : 'Select all',
         onChange: () => {
           // Only select enabled items
-          props.onItemSelectAll?.(
-            getEnabledItemKeys(filteredItems.value),
-            checkStatus.value !== 'all',
-          );
+          selectAllItems(getEnabledItemKeys(filteredItems.value), checkStatus.value !== 'all');
         },
       }),
     );
@@ -273,12 +314,11 @@ const Section = defineComponent({
             h(Search, {
               prefixCls: `${listPrefixCls.value}-search`,
               onChange: internalHandleFilter,
-              handleClear: internalHandleClear,
-              placeholder:
-                searchOptions.value.placeholder || (props.searchPlaceholder as string | undefined),
+              onClear: internalHandleClear,
+              placeholder: searchOptions.value.placeholder || props.searchPlaceholder,
               value: filterValue.value,
               disabled: props.disabled,
-            } as never),
+            }),
           )
         : null;
 
@@ -287,28 +327,16 @@ const Section = defineComponent({
         filteredItems: filteredItems.value,
         selectedKeys: props.checkedKeys,
         disabled: !!props.disabled,
-        onItemSelect: (key, selected) => {
-          if (
-            props.disabled ||
-            !filteredItems.value.some((item) => item.key === key && !item.disabled)
-          )
-            return;
-          props.onItemSelect?.(key, selected);
-        },
+        onItemSelect: selectItem,
         onItemSelectAll: (keys, selected) => {
-          if (props.disabled) return;
           const enabled = new Set(getEnabledItemKeys(filteredItems.value));
-          props.onItemSelectAll?.(
+          selectAllItems(
             keys.filter((key) => enabled.has(key)),
             selected,
           );
         },
-        onItemRemove: (keys) => {
-          if (props.disabled || !props.showRemove) return;
-          const enabled = new Set(getEnabledItemKeys(filteredItems.value));
-          props.onItemRemove?.(keys.filter((key) => enabled.has(key)));
-        },
-        onScroll: (event) => props.onScroll?.(event),
+        onItemRemove: removeItems,
+        onScroll: (event) => emit('scroll', event),
       };
       const customize = !!slots.list;
       let bodyContent = slots.list?.(listProps);
@@ -320,9 +348,7 @@ const Section = defineComponent({
         bodyContent = h(
           ListBody,
           {
-            ref: (el: unknown) => {
-              listBodyRef.value = el as { items?: RenderedItem[] } | null;
-            },
+            ref: listBodyRef,
             prefixCls: listPrefixCls.value,
             classNames: props.classNames,
             styles: props.styles,
@@ -332,10 +358,9 @@ const Section = defineComponent({
             showRemove: props.showRemove,
             pagination: props.pagination,
             remove: props.remove,
-            onItemSelect: (key: TransferKey, selected: boolean, event?: { shiftKey?: boolean }) =>
-              props.onItemSelect?.(key, selected, event),
-            onItemRemove: props.onItemRemove,
-            onScroll: props.onScroll,
+            onItemSelect: selectItem,
+            onItemRemove: removeItems,
+            onScroll: (event: Event) => emit('scroll', event),
           },
           slots.item
             ? {
@@ -348,19 +373,15 @@ const Section = defineComponent({
 
       let bodyNode: VNodeChild;
       if (customize) {
-        bodyNode = h(
-          'div' as never,
-          { class: `${listPrefixCls.value}-body-customize-wrapper` } as never,
-          bodyContent as never,
-        );
+        bodyNode = h('div', { class: `${listPrefixCls.value}-body-customize-wrapper` }, [
+          bodyContent,
+        ]);
       } else {
         bodyNode = filteredItems.value.length
           ? bodyContent
-          : h(
-              'div' as never,
-              { class: `${listPrefixCls.value}-body-not-found` } as never,
-              notFoundContentEle.value as never,
-            );
+          : h('div', { class: `${listPrefixCls.value}-body-not-found` }, [
+              notFoundContentEle.value,
+            ]);
       }
 
       return h(
@@ -369,7 +390,7 @@ const Section = defineComponent({
           class: [
             `${listPrefixCls.value}-body`,
             { [`${listPrefixCls.value}-body-with-search`]: showSearchBool.value },
-            props.classNames?.body as string | undefined,
+            props.classNames?.body,
           ],
           style: props.styles?.body,
         },
@@ -387,11 +408,9 @@ const Section = defineComponent({
             label: props.removeCurrent,
             onClick: () => {
               const pageKeys = getEnabledItemKeys(
-                ((listBodyRef.value as { items?: RenderedItem[] } | null)?.items ?? []).map(
-                  (entity) => entity.item,
-                ),
+                (listBodyRef.value?.items ?? []).map((entity) => entity.item),
               );
-              props.onItemRemove?.(pageKeys);
+              removeItems(pageKeys);
             },
           });
         }
@@ -400,7 +419,7 @@ const Section = defineComponent({
           key: 'removeAll',
           label: props.removeAll,
           onClick: () => {
-            props.onItemRemove?.(getEnabledItemKeys(filteredItems.value));
+            removeItems(filteredItems.value.map((item) => item.key));
           },
         });
         return items;
@@ -411,7 +430,7 @@ const Section = defineComponent({
           label: checkStatus.value === 'all' ? props.deselectAll : props.selectAll,
           onClick: () => {
             const keys = getEnabledItemKeys(filteredItems.value);
-            props.onItemSelectAll?.(keys, checkStatus.value !== 'all');
+            selectAllItems(keys, checkStatus.value !== 'all');
           },
         },
       ];
@@ -420,11 +439,8 @@ const Section = defineComponent({
           key: 'selectCurrent',
           label: props.selectCurrent,
           onClick: () => {
-            const pageItems = (listBodyRef.value as { items?: RenderedItem[] } | null)?.items ?? [];
-            props.onItemSelectAll?.(
-              getEnabledItemKeys(pageItems.map((entity) => entity.item)),
-              true,
-            );
+            const pageItems = listBodyRef.value?.items ?? [];
+            selectAllItems(getEnabledItemKeys(pageItems.map((entity) => entity.item)), true);
           },
         });
       }
@@ -433,9 +449,7 @@ const Section = defineComponent({
         label: props.selectInvert,
         onClick: () => {
           const availablePageItemKeys = getEnabledItemKeys(
-            ((listBodyRef.value as { items?: RenderedItem[] } | null)?.items ?? []).map(
-              (entity) => entity.item,
-            ),
+            (listBodyRef.value?.items ?? []).map((entity) => entity.item),
           );
           const checkedKeySet = new Set(props.checkedKeys);
           const newCheckedKeysSet = new Set(checkedKeySet);
@@ -446,7 +460,7 @@ const Section = defineComponent({
               newCheckedKeysSet.add(key);
             }
           });
-          props.onItemSelectAll?.([...newCheckedKeysSet], 'replace');
+          selectAllItems([...newCheckedKeysSet], 'replace');
         },
       });
       return items;
@@ -459,10 +473,28 @@ const Section = defineComponent({
           // ⚠️ antd 的 `<Dropdown className>` 落的是**浮层**（classNames.root →
           //    overlayClassName），不是触发器 —— SSR DOM 里看不到这个类，照抄。
           classNames: { root: `${listPrefixCls.value}-header-dropdown` },
-          menu: { items: dropdownItems.value as never },
+          menu: { items: dropdownItems.value },
+          trigger: ['hover', 'click'],
           disabled: props.disabled,
         },
-        () => (isValidIcon(props.selectionsIcon) ? props.selectionsIcon : h(DownOutlined)),
+        () =>
+          h(
+            'button',
+            {
+              type: 'button',
+              class: `${listPrefixCls.value}-header-dropdown`,
+              disabled: props.disabled,
+              'aria-label': props.showRemove
+                ? typeof props.removeAll === 'string'
+                  ? props.removeAll
+                  : 'Remove items'
+                : typeof props.selectAll === 'string'
+                  ? props.selectAll
+                  : 'Select items',
+              'aria-haspopup': 'menu',
+            },
+            [isValidIcon(props.selectionsIcon) ? props.selectionsIcon : h(DownOutlined)],
+          ),
       ),
     );
 
@@ -472,55 +504,43 @@ const Section = defineComponent({
       return h(
         'div',
         {
+          ...attrs,
           class: [
             sectionPrefixCls.value,
-            props.classNames?.section as string | undefined,
+            props.classNames?.section,
+            attrs.class,
             {
               [`${sectionPrefixCls.value}-with-pagination`]: !!props.pagination,
               [`${sectionPrefixCls.value}-with-footer`]: !!slots.footer,
             },
           ],
           // 根 style 是 Vue 原生 attrs
-          style: {
-            ...((attrs.style as Record<string, string> | undefined) ?? {}),
-            ...props.styles?.section,
-          },
+          style: [props.styles?.section, attrs.style],
         },
         [
           h(
             'div',
             {
-              class: [
-                `${listPrefixCls.value}-header`,
-                props.classNames?.header as string | undefined,
-              ],
+              class: [`${listPrefixCls.value}-header`, props.classNames?.header],
               style: props.styles?.header,
             },
             [
               props.showSelectAll ? [checkAllCheckbox, dropdown.value] : null,
+              h('span', { class: `${listPrefixCls.value}-header-selected` }, [
+                getSelectAllLabel(checkedActiveItems.value.length, filteredItems.value.length),
+              ]),
               h(
                 'span',
-                { class: `${listPrefixCls.value}-header-selected` },
-                getSelectAllLabel(
-                  checkedActiveItems.value.length,
-                  filteredItems.value.length,
-                ) as never,
-              ),
-              h(
-                'span' as never,
                 {
-                  class: [
-                    `${listPrefixCls.value}-header-title`,
-                    props.classNames?.title as string | undefined,
-                  ],
+                  class: [`${listPrefixCls.value}-header-title`, props.classNames?.title],
                   style: props.styles?.title,
-                } as never,
-                props.titleText as never,
+                },
+                [props.titleText],
               ),
             ],
           ),
-          renderListBody() as never,
-          renderFooter() as never,
+          renderListBody(),
+          renderFooter(),
         ],
       );
     };
