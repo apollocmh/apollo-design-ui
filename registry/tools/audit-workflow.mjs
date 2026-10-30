@@ -212,7 +212,6 @@ export function recommendTasks(doc, limit = doc.dispatch.maxParallel) {
     if (!['not_started', 'partial'].includes(task.architectureStatus) || task.assignment !== null)
       continue;
     if (task.workDependencies.some((id) => byId.get(id).architectureStatus !== 'done')) continue;
-    if (task.issues.some((issue) => issue.blocking && issue.status !== 'fixed')) continue;
     if (
       [...occupied, ...selected].some((other) =>
         task.owns.some((left) => other.owns.some((right) => overlaps(left, right))),

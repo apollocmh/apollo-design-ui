@@ -96,6 +96,121 @@ test('actual shared production changes select consumers while workflow/PLAN/READ
   assert.ok(realData.scope.includes('packages/ui/src/button'));
 });
 
+test('changes to dedicated test files run their project within the affected source scope', (t) => {
+  const f = fixture(t);
+  for (const [file, project] of [
+    ['semantic.test.ts', 'dom-contract'],
+    ['a11y.test.ts', 'a11y'],
+    ['theme.test.ts', 'theme'],
+  ]) {
+    const plan = changedPlan(f.root, [`packages/ui/src/button/__tests__/${file}`]);
+    const dedicated = plan.checks.filter((step) => step.args.includes(project));
+    assert.equal(dedicated.length, 1, file);
+    assert.ok(dedicated[0].args.includes('packages/ui/src/button'));
+    assert.ok(dedicated[0].args.includes('packages/ui/src/input'));
+    assert.equal(
+      plan.checks.some((step) => step.kind === 'coverage'),
+      false,
+    );
+  }
+  const mixed = changedPlan(f.root, [
+    'packages/ui/src/button/__tests__/a11y.test.ts',
+    'packages/ui/src/input/__tests__/a11y.test.ts',
+    'packages/ui/src/button/__tests__/semantic.test.ts',
+  ]);
+  for (const project of ['unit', 'types', 'dom-contract', 'a11y'])
+    assert.equal(mixed.checks.filter((step) => step.args.includes(project)).length, 1);
+  assert.equal(
+    mixed.checks.some((step) => step.args.includes('theme')),
+    false,
+  );
+});
+
+test('acceptance infrastructure changes select their layer and share one prerequisite build', (t) => {
+  const f = fixture(t);
+  for (const [file, kind, entry] of [
+    ['tests/build/checks/treeshake.mjs', 'build', 'tests/build/run.mjs'],
+    ['tests/consumer/run.mjs', 'consumer', 'tests/consumer/run.mjs'],
+    ['tests/visual/apollo.mjs', 'visual', 'tests/visual/apollo.mjs'],
+    ['tests/visual/baselines/apollo/button.png', 'visual', 'tests/visual/apollo.mjs'],
+    ['tests/compat/runner/index.mjs', 'compat', 'tests/compat/runner/index.mjs'],
+    ['tests/compat/baselines/button.dom.json', 'compat', 'tests/compat/runner/index.mjs'],
+    ['tests/browser/button-docs.mjs', 'demo', 'scripts/verify-docs-browser.mjs'],
+  ]) {
+    const plan = changedPlan(f.root, [file]);
+    assert.ok(
+      plan.checks.some((step) => step.kind === kind && step.args.includes(entry)),
+      file,
+    );
+    assert.deepEqual(plan.scope, [], file);
+    assert.equal(
+      plan.checks.some((step) => step.kind === 'coverage'),
+      false,
+      file,
+    );
+  }
+  const plan = changedPlan(f.root, [
+    'tests/build/budget.json',
+    'tests/consumer/run.mjs',
+    'tests/visual/matrix.mjs',
+    'packages/docs/src/pages/Component.vue',
+  ]);
+  assert.equal(plan.checks.filter((step) => step.kind === 'build').length, 1);
+  assert.ok(plan.checks.find((step) => step.kind === 'build').args.includes('--strict'));
+  for (const kind of ['consumer', 'visual'])
+    assert.ok(
+      plan.checks.findIndex((step) => step.kind === 'build') <
+        plan.checks.findIndex((step) => step.kind === kind),
+    );
+  assert.equal(
+    plan.checks.some((step) => step.args.includes('content:build')),
+    false,
+  );
+  const docs = changedPlan(f.root, [
+    'README.md',
+    'tests/build/README.md',
+    'tests/consumer/README.md',
+    'tests/visual/README.md',
+    'tests/compat/README.md',
+    'tests/browser/README.md',
+  ]);
+  assert.deepEqual(docs.checks, []);
+});
+
+test('browser checks select changed scripts and route the progress helper to its actual consumer', (t) => {
+  const f = fixture(t);
+  for (const file of [
+    'tests/browser/button-docs.mjs',
+    'tests/browser/audit-progress-check.mjs',
+    'tests/browser/audit-batch-docs.mjs',
+  ])
+    f.write(file, '');
+  const plan = changedPlan(f.root, [
+    'tests/browser/button-docs.mjs',
+    'tests/browser/audit-progress-check.mjs',
+    'tests/browser/audit-batch-docs.mjs',
+  ]);
+  const browser = plan.checks.find((step) => step.kind === 'demo');
+  assert.deepEqual(browser.args, [
+    'scripts/verify-docs-browser.mjs',
+    'tests/browser/button-docs.mjs',
+    'tests/browser/audit-batch-docs.mjs',
+  ]);
+  assert.equal(plan.checks.filter((step) => step.kind === 'build').length, 1);
+});
+
+test('a changed standalone consumer fixture is executed, rather than only the tarball runner', (t) => {
+  const f = fixture(t);
+  const file = 'tests/consumer/button-ssr.mjs';
+  f.write(file, 'throw new Error("changed consumer regression");');
+  const plan = changedPlan(f.root, [file]);
+  const consumer = plan.checks.find((step) => step.args.includes(file));
+  assert.ok(consumer);
+  const result = executePlan({ ...plan, checks: [consumer] }, { root: f.root, quiet: true });
+  assert.equal(result.passed, false);
+  assert.equal(result.checks[0].exitCode, 1);
+});
+
 test('nonzero exits, missing executable, child signals and a green-looking stdout remain failures', (t) => {
   const { root } = fixture(t);
   for (const args of [
@@ -294,6 +409,15 @@ test('Docs browser checks reuse one preview and always close it when a check fai
   assert.deepEqual(executed, DOCS_BROWSER_SCRIPTS);
   assert.equal(starts, 1);
   assert.equal(closes, 1);
+  executed.length = 0;
+  await runDocsBrowser({
+    scripts: ['tests/browser/button-docs.mjs'],
+    start,
+    async run(script) {
+      executed.push(script);
+    },
+  });
+  assert.deepEqual(executed, ['tests/browser/button-docs.mjs']);
   await assert.rejects(
     runDocsBrowser({
       start,
@@ -303,8 +427,8 @@ test('Docs browser checks reuse one preview and always close it when a check fai
     }),
     /actual browser failure/,
   );
-  assert.equal(starts, 2);
-  assert.equal(closes, 2);
+  assert.equal(starts, 3);
+  assert.equal(closes, 3);
 });
 
 test('the standalone runtime entry keeps all four projects in a single Vitest invocation', () => {

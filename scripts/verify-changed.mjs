@@ -15,7 +15,7 @@ try {
   });
   if (values.help)
     console.log(
-      'verify-changed.mjs [--base git-ref] [--dry-run] [--report file] [--quiet]\nChecks changed production scopes and their consumers. Workflow changes use tooling tests; Docs changes use Docs checks.',
+      'verify-changed.mjs [--base git-ref] [--dry-run] [--report file] [--quiet]\nChecks changed production scopes and their consumers. Dedicated tests add their project. Build/consumer/visual/compat/browser changes run the corresponding layer; workflow and Docs changes use their checks.',
     );
   else {
     const plan = changedPlan(ROOT, changedFiles(ROOT, values.base));

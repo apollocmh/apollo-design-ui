@@ -48,14 +48,19 @@ function runScript(file, base) {
     });
   });
 }
-export function runDocsBrowser({ run = runScript, start = startPreview } = {}) {
+export function runDocsBrowser({
+  scripts = DOCS_BROWSER_SCRIPTS,
+  run = runScript,
+  start = startPreview,
+} = {}) {
   return withDocsPreview(async (base) => {
-    for (const script of DOCS_BROWSER_SCRIPTS) await run(script, base);
+    for (const script of scripts) await run(script, base);
   }, start);
 }
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
   try {
-    await runDocsBrowser();
+    const scripts = process.argv.slice(2);
+    await runDocsBrowser(scripts.length ? { scripts } : {});
   } catch (error) {
     console.error(`[docs-browser] ${error.message}`);
     process.exitCode = 1;

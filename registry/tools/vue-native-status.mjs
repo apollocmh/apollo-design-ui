@@ -61,8 +61,6 @@ try {
             )
           )
             throw new Error(`${id} has unfinished architecture dependencies`);
-          if (task.issues.some((issue) => issue.blocking && issue.status !== 'fixed'))
-            throw new Error(`${id} has a blocking issue`);
           task.architectureStatus = 'in_progress';
           task.assignment = {
             owner: values.owner,

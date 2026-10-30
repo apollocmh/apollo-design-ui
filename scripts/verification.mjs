@@ -85,11 +85,15 @@ export function changedPlan(root, files) {
     fs.readFileSync(path.join(root, 'registry/foundation.json'), 'utf8'),
   ).packages;
   const selected = new Set(),
-    packages = new Set();
+    packages = new Set(),
+    projects = new Set(),
+    acceptanceLayers = new Set();
   let workflow = false,
     docs = false,
     globalTypes = false;
   for (const file of files) {
+    const layer = file.match(/^tests\/(build|consumer|visual|compat|browser)\//)?.[1];
+    if (layer && !/\.(?:md|txt)$/.test(file)) acceptanceLayers.add(layer);
     if (/^(scripts\/|registry\/|tests\/tooling\/|\.github\/|(?:package|biome)\.json$)/.test(file))
       workflow = true;
     if (
@@ -102,6 +106,12 @@ export function changedPlan(root, files) {
     if (/^(?:vitest\.config\.ts|vitest\.setup\.ts|pnpm-lock\.yaml)$/.test(file))
       for (const row of components) selected.add(row.name);
     if (!codeFile.test(file)) continue;
+    const project = {
+      'semantic.test.ts': 'dom-contract',
+      'a11y.test.ts': 'a11y',
+      'theme.test.ts': 'theme',
+    }[path.basename(file)];
+    if (project && /^packages\/[^/]+\/src\//.test(file)) projects.add(project);
     const ui = file.match(/^packages\/ui\/src\/([^/]+)(?:\/|$)/);
     if (ui) {
       if (components.some((row) => row.name === ui[1])) selected.add(ui[1]);
@@ -127,7 +137,7 @@ export function changedPlan(root, files) {
   const scopes = [...selected].sort().map((name) => `packages/ui/src/${name}`);
   for (const name of [...packages].sort())
     scopes.push(`packages/${name.replace('@apollo-design/', '')}/src`);
-  const checks = scopes.length ? focusedPlan(root, scopes).checks : [];
+  const checks = scopes.length ? focusedPlan(root, scopes, { projects: [...projects] }).checks : [];
   if (workflow) {
     const tests = filesUnder(path.join(root, 'tests/tooling'))
       .filter((file) => file.endsWith('.test.mjs'))
@@ -144,9 +154,44 @@ export function changedPlan(root, files) {
     checks.push(
       node('types', ['node_modules/vue-tsc/bin/vue-tsc.js', '--noEmit', '-p', 'tsconfig.json']),
     );
+  const build = ['build', 'consumer', 'visual', 'browser'].some((layer) =>
+    acceptanceLayers.has(layer),
+  );
+  if (build) checks.push(node('build', ['tests/build/run.mjs', '--strict']));
+  if (acceptanceLayers.has('consumer')) {
+    const fixtures = [...new Set(files)].filter(
+      (file) =>
+        /^tests\/consumer\/[^/]+\.mjs$/.test(file) &&
+        file !== 'tests/consumer/run.mjs' &&
+        fs.existsSync(path.join(root, file)),
+    );
+    if (files.includes('tests/consumer/run.mjs') || !fixtures.length)
+      checks.push(node('consumer', ['tests/consumer/run.mjs']));
+    for (const file of fixtures) checks.push(node('consumer', [file]));
+  }
+  if (acceptanceLayers.has('visual')) checks.push(node('visual', ['tests/visual/apollo.mjs']));
+  if (acceptanceLayers.has('compat'))
+    checks.push(node('compat', ['tests/compat/runner/index.mjs']));
+  if (acceptanceLayers.has('browser')) {
+    const scripts = [...new Set(files)].filter(
+      (file) => /^tests\/browser\/.*\.mjs$/.test(file) && fs.existsSync(path.join(root, file)),
+    );
+    checks.push(
+      node('demo', [
+        'scripts/verify-docs-browser.mjs',
+        ...new Set(
+          scripts.map((file) =>
+            file === 'tests/browser/audit-progress-check.mjs'
+              ? 'tests/browser/audit-batch-docs.mjs'
+              : file,
+          ),
+        ),
+      ]),
+    );
+  }
   if (docs)
     checks.push(
-      docsRun('docs-content', 'content:build'),
+      ...(!build ? [docsRun('docs-content', 'content:build')] : []),
       docsRun('docs-types', 'typecheck'),
       docsRun('docs-tests', 'test'),
     );

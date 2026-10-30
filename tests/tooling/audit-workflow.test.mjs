@@ -142,7 +142,7 @@ test('architecture completion needs focused success, but never waits for final a
   assert.equal(f.run('--claim', 'CMP:item-1', '--owner', 'next').status, 0);
 });
 
-test('non-blocking deferrals retain impact and reason; unresolved core blockers cannot complete', (t) => {
+test('blocking issues allow repair work but prevent completion; non-blocking deferrals retain their reason', (t) => {
   const f = fixture(t);
   f.doc.tasks[0].issues = [
     {
@@ -163,6 +163,7 @@ test('non-blocking deferrals retain impact and reason; unresolved core blockers 
     },
   ];
   f.save();
+  assert.ok(recommendTasks(f.doc).some((task) => task.id === 'CMP:item-1'));
   assert.equal(f.run('--claim', 'CMP:item-0', '--owner', 'worker').status, 0);
   assert.equal(
     f.run(
@@ -175,11 +176,20 @@ test('non-blocking deferrals retain impact and reason; unresolved core blockers 
     ).status,
     0,
   );
-  assert.notEqual(f.run('--claim', 'CMP:item-1', '--owner', 'blocked').status, 0);
+  assert.equal(f.run('--claim', 'CMP:item-1', '--owner', 'repair').status, 0);
+  const claimed = fs.readFileSync(f.file, 'utf8');
+  const report = f.report('packages/ui/src/item-1');
+  const complete = () => f.run('--complete', 'CMP:item-1', '--owner', 'repair', '--report', report);
+  const blocked = complete();
+  assert.notEqual(blocked.status, 0);
+  assert.match(blocked.stderr, /blocking issue/);
+  assert.equal(fs.readFileSync(f.file, 'utf8'), claimed);
   const doc = readAudit(f.root);
-  doc.tasks[1].architectureStatus = 'done';
-  doc.tasks[1].evidence = ['registry/components.json'];
-  assert.throws(() => validateAudit(doc, f.root), /blocking issue/);
+  assert.equal(doc.tasks[1].assignment.owner, 'repair');
+  doc.tasks[1].issues[0].status = 'fixed';
+  fs.writeFileSync(f.file, JSON.stringify(doc));
+  assert.equal(complete().status, 0);
+  assert.equal(readAudit(f.root).tasks[1].architectureStatus, 'done');
 });
 
 test('SIGTERM during an update keeps valid state and can recover only a dead writer lock', (t) => {
