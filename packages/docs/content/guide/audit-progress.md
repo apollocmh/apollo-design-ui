@@ -11,7 +11,7 @@ order: 0
 
 ## Vue 原生化：架构整改与最终验收
 
-当前阶段：**第一阶段：Vue 原生架构整改**。任务派发：**进行中**；活动任务 3/5。
+当前阶段：**第一阶段：Vue 原生架构整改**。任务派发：**进行中**；活动任务 5/5。
 
 | 范围 | 架构整改完成 | 历史完整交付 | 本轮冻结验收通过 |
 | --- | --- | --- | --- |
@@ -46,7 +46,7 @@ order: 0
 | DatePicker | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Descriptions | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/four-unit-final-acceptance.json) |
 | Divider | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-final-acceptance.json) |
-| Drawer | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Drawer | 进行中 | native_drawer | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Dropdown | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Empty | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-empty-contract-audit.md) |
 | Flex | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/space-flex-alert-layout-final-acceptance.json) |
@@ -101,7 +101,7 @@ order: 0
 | @apollo-design/icons | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/locale | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/motion | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
-| @apollo-design/overlay | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| @apollo-design/overlay | 进行中 | native_overlay | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/picker | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/portal | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/position | 未开始 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
@@ -116,7 +116,7 @@ order: 0
 
 ## Vue native architecture and final acceptance
 
-Current stage: **Vue native architecture**. Dispatch: **running**; active tasks 3/5.
+Current stage: **Vue native architecture**. Dispatch: **running**; active tasks 5/5.
 
 | Scope | Architecture complete | Historical deliveries | Passed on the frozen version |
 | --- | --- | --- | --- |
@@ -151,7 +151,7 @@ Final library acceptance: **not_started**. Unknown, untested and deferred checks
 | DatePicker | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Descriptions | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/four-unit-final-acceptance.json) |
 | Divider | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/current-batch-final-acceptance.json) |
-| Drawer | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Drawer | In progress | native_drawer | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Dropdown | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Empty | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-empty-contract-audit.md) |
 | Flex | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/space-flex-alert-layout-final-acceptance.json) |
@@ -206,7 +206,7 @@ Final library acceptance: **not_started**. Unknown, untested and deferred checks
 | @apollo-design/icons | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/locale | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/motion | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
-| @apollo-design/overlay | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| @apollo-design/overlay | In progress | native_overlay | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/picker | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/portal | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/position | Not started | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |

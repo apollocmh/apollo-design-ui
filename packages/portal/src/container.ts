@@ -112,7 +112,7 @@ export function computeZIndex(input: ComputeZIndexInput): [number | undefined, n
   if (isContainer) {
     zIndex +=
       // ⭐ 有父容器时**不再叠加** zIndexPopupBase —— 否则嵌套越深 z-index 越离谱
-      (parentZIndex ? 0 : zIndexPopupBase) + containerBaseZIndexOffset[componentType];
+      (parentZIndex !== undefined ? 0 : zIndexPopupBase) + containerBaseZIndexOffset[componentType];
   } else {
     zIndex += consumerBaseZIndexOffset[componentType];
   }

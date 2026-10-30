@@ -188,6 +188,10 @@ const useZIndex = (componentType, customZIndex) => {
 
 `result[1]`（传给 `ZIndexContext` 让子孙继承的）永远是算出来的数值。
 
+2026-10-30 原生层级修正：父层 `0` 是合法的已存在层级，子容器只叠加自身 offset，
+不再因真值判断额外叠加设计基准。上方代码保留早期参考来源；当前实现与回归以
+`packages/portal/src/container.ts` 和 `__tests__/container.test.ts` 为准。
+
 `token.zIndexPopupBase` 默认 **1000**（`theme/themes/seed.ts:73`）。
 
 ⭐ **本包不依赖 `@apollo-design/theme`**（`dependsOn` 只有 utils）——

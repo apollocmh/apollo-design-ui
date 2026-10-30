@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 50,
+  "revision": 55,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -552,13 +552,17 @@
       "kind": "component",
       "ref": "drawer",
       "title": "Drawer",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/drawer"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_drawer",
+        "baseRevision": 52,
+        "startedAt": "2026-10-30T09:10:36.703Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -566,7 +570,18 @@
         "docs/audit/2026-10-24-drawer-vue-remediation.md",
         "docs/audit/2026-10-25-image-contract-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "接续Drawer原生内容成果，收口当前单元剩余Vue契约",
+        "remaining": [
+          "保留现有slots/native attrs/ARIA及Image相关公共层成果；核对剩余受控开关、实际refs、Provider/Token/层级/嵌套/焦点与资源，先评估真实工作量。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-24-drawer-vue-remediation.md",
+          "docs/audit/2026-10-25-image-contract-audit.md"
+        ]
+      }
     },
     {
       "id": "CMP:dropdown",
@@ -2204,7 +2219,15 @@
         "docs/audit/2026-10-25-overlay-native-styles-remediation.md",
         "docs/audit/2026-10-28-overlay-controlled-delay-audit.md"
       ],
-      "issues": [],
+      "issues": [
+        {
+          "id": "TRIGGER-RESIZE-NOTIFICATION",
+          "status": "deferred",
+          "blocking": false,
+          "impact": "多Select主题切换时Vite记录三条ResizeObserver延迟通知；源码浏览器契约全部通过、未出现持续循环或焦点/DOM丢失。",
+          "reason": "保留原始诊断，不声称零日志；首阶段非阻塞，最终冻结浏览器验证仍需核对。"
+        }
+      ],
       "verification": {
         "stage": "architecture",
         "scope": [
@@ -2605,13 +2628,18 @@
       "kind": "foundation",
       "ref": "overlay",
       "title": "@apollo-design/overlay",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/overlay/src"
+        "packages/overlay",
+        "docs/foundation/overlay-contract.md"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_overlay",
+        "baseRevision": 51,
+        "startedAt": "2026-10-30T09:10:36.609Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2619,7 +2647,18 @@
         "docs/foundation/overlay-contract.md",
         "docs/audit/2026-10-28-overlay-controlled-delay-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留已完成受控延迟组，核对并整改Overlay原生生命周期及栈职责",
+        "remaining": [
+          "只核对尚未覆盖的响应式动作/配置、事件原生载荷、Esc/外点/焦点与多文档和清理；不接手Trigger几何或Portal容器，不重跑历史完整组件矩阵。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/foundation/overlay-contract.md",
+          "docs/audit/2026-10-28-overlay-controlled-delay-audit.md"
+        ]
+      }
     },
     {
       "id": "FND:picker",
@@ -2662,29 +2701,47 @@
         "docs/audit/2026-10-25-image-contract-audit.md",
         "packages/portal/src/__tests__/use-portal.test.ts"
       ],
-      "issues": [],
+      "issues": [
+        {
+          "id": "PORTAL-ANCESTOR-WARNING-BASE",
+          "status": "deferred",
+          "blocking": false,
+          "impact": "父浮层合法定制层级后，独立子Popover/Tooltip可产生两条zIndex越界误告警；实际层级与交互已通过，Popconfirm browser console-clean命令仍exit1。",
+          "reason": "仅开发诊断误报，无核心行为/资源影响；保留失败日志及原严格断言，在Portal整改单元统一核对继承基准。",
+          "command": "node packages/ui/src/popconfirm/__tests__/native-browser.mjs",
+          "exitCode": 1
+        },
+        {
+          "id": "PORTAL-CONSUMER-CSS-CONTEXT",
+          "status": "open",
+          "blocking": true,
+          "impact": "未指定实际CSS基准的顶层consumer默认提供context=50，与视觉1050等值不一致，后代浮层可能低于父层；Select已在自身当前Token桥定向修复。",
+          "reason": "其余consumer和公开useZIndex职责需要在Portal单元集中核对；未解决不得将Portal架构标done。"
+        }
+      ],
       "verification": {
         "stage": "architecture",
         "scope": [
-          "packages/portal/src/use-portal.ts"
+          "packages/portal/src/use-portal.ts",
+          "packages/portal/src/container.ts"
         ],
         "passed": true,
         "checks": [
           {
             "kind": "core",
-            "command": "pnpm exec vitest run --project unit packages/portal/src/__tests__/use-portal.test.ts packages/ui/src/popconfirm/__tests__/s26-issue26.test.ts --maxWorkers=1",
+            "command": "pnpm exec vitest run --project unit packages/portal/src/__tests__/container.test.ts packages/portal/src/__tests__/use-portal.test.ts packages/ui/src/tooltip/__tests__/injected-layer.test.ts --maxWorkers=1",
             "exitCode": 0,
             "signal": null
           },
           {
             "kind": "types",
-            "command": "vue-tsc --noEmit -p <isolated ready-source strict config; Portal source/tests included>",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; Portal source/tests>",
             "exitCode": 0,
             "signal": null,
-            "durationMs": 49567
+            "durationMs": 51927
           }
         ],
-        "boundary": "仅当前 zIndexPopupBase getter 与嵌套传播；保留其他 Portal partial 工作，不代表基础包整体完成。"
+        "boundary": "仅当前base getter与合法父层0修正。consumer视觉/上下文基准及合法祖先定制的诊断问题仍登记未关闭，Portal整体继续partial。"
       }
     },
     {

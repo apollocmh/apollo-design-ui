@@ -118,12 +118,11 @@ describe('computeZIndex', () => {
     ).toEqual([2200, 2200]);
   });
 
-  it('⭐ parentZIndex 为 0 时的诡异组合 —— 两个判据给出的答案相反', () => {
-    // `parentZIndex ? 0 : base` 用**真值**判断 ⇒ 0 视为「无父」，仍然叠 base；
-    // 但 `parentZIndex === undefined ? customZIndex : zIndex` 用 **undefined** 判断
-    // ⇒ 0 视为「有父」，于是 result[0] 拿到算出来的数值而不是 undefined。
-    // 这不是我们要修的 bug，是 antd 的原始语义，必须钉住。
-    expect(computeZIndex({ componentType: 'Modal', parentZIndex: 0 })).toEqual([1100, 1100]);
+  it('parentZIndex 为 0 仍是已存在的父层，不重复叠加设计基准', () => {
+    expect(computeZIndex({ componentType: 'Modal', parentZIndex: 0 })).toEqual([100, 100]);
+    expect(
+      computeZIndex({ componentType: 'Tooltip', parentZIndex: 0, zIndexPopupBase: 2000 }),
+    ).toEqual([100, 100]);
   });
 
   it('穷举：第二个返回值永远等于「算出来的数值」，且恒为 number', () => {
