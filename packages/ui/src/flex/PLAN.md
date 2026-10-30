@@ -1,5 +1,7 @@
 > 2026-10-29 当前整改：本文件以下 Gate 保留为带日期的历史，不作为授权或验收。完整清单、源码验证与待发布边界见 [当前审计](../../../../docs/audit/2026-10-29-flex-contract-audit.md)；迁移见 [Flex 契约](../../../../docs/migrations/flex-contracts.md)。
 
+> 历史实施记录：原勾选、当时结果和缺口保留。2026-10-30 起，本文的 G0–G14 / 逐组件 G13 全仓收口与旧 Registry 进度规则由仓库 `WORKFLOW.md`、`TESTING.md` 两阶段流程替代；当前任务状态只读 `registry/vue-native-audit.json`，不据本文重复派发或重跑已有效验证。
+
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
 # Flex · 开发计划（G0–G14）

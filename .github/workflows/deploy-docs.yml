@@ -53,24 +53,9 @@ jobs:
           fetch-depth: 0
       - uses: ./.github/actions/setup
 
-      # 发布前先跑文档站自己的门禁（2026-10-21 审计 A04）。
-      - name: 内容管线校验
-        run: pnpm --filter @apollo-design/docs run content:check
-      # `content:check` 只校验、不落盘，而 `src/composables/manifest.ts` 与多个测试
-      # 直接 import `.generated/*.json` ⇒ 类型检查前必须先生成产物，否则干净 checkout
-      # 上必报 TS2307（2026-10-21 首次 Deploy Docs 实测）。
-      - name: 生成内容管线产物
-        run: pnpm --filter @apollo-design/docs run content:build
-      - name: 文档站类型检查
-        run: pnpm --filter @apollo-design/docs run typecheck
-      - name: 文档站单元测试
-        run: pnpm --filter @apollo-design/docs run test
-
-      # 干净 checkout 上没有 foundation dist；必须按拓扑序构建全部包
-      # （utils → theme/icons → … → ui → docs）。L7 门禁的 B1 就是包的
-      # 真实 `scripts.build`，同时校验产物契约；文档站 dist 也由这一步产出。
-      - name: 构建全部包（拓扑序 + L7 产物检查）
-        run: pnpm run test:build
+      # One build generates content and SSG; types/tests reuse those outputs.
+      - name: Docs checks and one dependency-ordered build
+        run: node scripts/verify-docs.mjs --build
 
       - name: 关键产物检查
         run: |

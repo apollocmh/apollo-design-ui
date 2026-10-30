@@ -1,25 +1,8 @@
 {
   "$schema": "./schema.json#/definitions/ComponentsFile",
-  "$comment": "Apollo-owned component inventory and quality records. gen-registry refreshes derived fields only.",
+  "$comment": "Static Apollo component inventory. Current work state is exclusively registry/vue-native-audit.json; prior implementation evidence is archived in docs/history/registry-implementation-2026-10-29/components.json.",
   "generatedAt": "2026-10-15T14:42:57.858Z",
   "legend": {
-    "status": {
-      "todo": "尚未开始",
-      "analyzing": "分析 Apollo 用户场景与组件契约",
-      "implementing": "正在实现（G2-G4）",
-      "testing": "正在跑测试（G5-G8）",
-      "visual-review": "正在视觉验收（G9-G10）",
-      "blocked": "被阻塞，见 blockers 字段",
-      "completed": "历史或当前完成记录；验收范围见证据，不代表当前 HEAD 无缺陷"
-    },
-    "dimension": {
-      "todo": "未开始",
-      "analyzing": "分析中",
-      "in-progress": "进行中",
-      "done": "已完成",
-      "blocked": "被阻塞",
-      "n/a": "该组件不适用此维度"
-    },
     "priority": {
       "P0": "地基与首个垂直切片",
       "P1": "简单展示（无浮层、无引擎）",
@@ -31,9 +14,6 @@
   },
   "summary": {
     "total": 72,
-    "byStatus": {
-      "completed": 72
-    },
     "byPriority": {
       "P0": 8,
       "P1": 12,
@@ -50,11 +30,8 @@
       "反馈": 10,
       "导航": 8,
       "数据录入": 18
-    },
-    "completedCount": 72,
-    "remainingCount": 0
+    }
   },
-  "milestones": [],
   "components": [
     {
       "name": "empty",
@@ -63,7 +40,6 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 53,
@@ -78,25 +54,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "n/a",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-27 Empty完整清单已统一验收，实现193cc3bb+12cf9fee：六Props/三完整槽/四语义、当前Provider/方向/语言/源Alias、合法image及自然布局/对比度、透明合成、六原Demo同步修复。关联Trigger/Portal主题桥接4条红绿复现；最终2856相关四层/434类型、54生产浏览器/40实际popup/18消费者、24 Demo主题/17实际Docs、8 SSR/6组水合、严格类型/发布消费/UI严格L7通过。45张自有视觉逐张审阅批准，连同List57张共102张全部0像素差异；原315记录及PNG不变。全库审计仍继续，验收230fe3cf已发布，工作流40448643538/Pages7350216642及线上17项验证成功。",
-      "layerNotes": {
-        "token": "当前公开接口没有Empty Component Token；样式八类Alias与当前插画调色已按源实现/实际浏览器验证，含替换/移除、紧凑和透明合成。tokenStatus=n/a仅指Component Token，不能误称不消费主题。",
-        "interaction": "无业务Emits/v-model；三个完整槽当前求值/条件空与移除、原生事件一次、草稿/根/焦点/选区、相邻Provider隔离及卸载重挂已验证。",
-        "currentAudit": "完整清单 docs/audit/2026-10-27-empty-contract-audit.md；证据 docs/audit/evidence/empty-contract.json。冻结生产实现12cf9fee：2856四层/434类型、54浏览器/40 popup/18消费者、45 Empty+57 List视觉exact；实际Docs17项通过，验收230fe3cf已部署，工作流40448643538/Pages7350216642成功，线上17项及200进展页通过。",
-        "visual": "清洁12cf9fee、macOS x64/Chrome150的45张候选逐张审阅批准；Empty/List102张最终diffPixels=0。原315批准记录和PNG不变，原机械JSON/投影/参考PNG及插画生成几何不变。",
-        "docs": "六个原Demo保留，公开Provider、完整原生image/description/footer及四语义示例同步；亮暗实际Docs17项、源Demo四算法24项与真实发布六SFC消费通过。验收230fe3cf已上线，工作流40448643538/Pages7350216642成功；线上17项通过，实际主文档/进展页200及Demo404 SPA兜底分开登记。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -124,8 +81,7 @@
           "interaction": "Empty 是纯展示组件：无事件、无状态、无受控/非受控语义、无键盘交互。TESTING.md 的 L2 要求覆盖「鼠标 / 键盘 / 焦点 / 受控 / 禁用」六类，这里一类都不适用。写几个 expect(exists()).toBe(true) 把格子填上属于反模式 A1（用形式上的用例掩盖未覆盖）。"
         },
         "previousNotes": "config-provider 的 defaultRenderEmpty 依赖它，因此必须先于 config-provider 完成。 2026-09-17：G1→G14 走完，10 个维度 done / 2 个 n/a（token / interaction，依据见 layerNotes） / 1 个 blocked（visualStatus —— L6 视觉回归基建尚未落地，见 blockers）。 本组件同时是组件侧流水线的第一块试金石：它暴露并修掉了 4 个基础设施缺口（ui 的 SFC 构建与类型产物、compat 基线机制、mountTest 的观察者误报、tests/build 的字母序构建）。"
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "config-provider",
@@ -134,7 +90,6 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 1,
         "unblocks": 52,
@@ -212,30 +167,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "n/a",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "n/a",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "Token / 主题 / locale / size / disabled / prefixCls 的统一入口，是全部组件的运行时网关。它是零运行时 CSS 变量方案（ARCHITECTURE.md §4.3）的落地点。\n2026-10-26 Image单元源主题/Token组：源上下文跨Portal、7个Token、ThemeProvider继承与Provider主题移除/恢复状态已修；可选作用域用原生Teleport保留同一插槽子树，SSR内联后水合不替换原节点，当前CSS变量前缀清理。56文件1059运行/DOM/a11y/theme串行通过（未改阈值），严格/构建/生产模板消费/L7/Docs通过；23场景生产Chrome及独立SSR水合通过。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image滚动锁/富缩略图/motion/最终视觉仍开放，不据此升级整组件维度。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29原生视觉已审阅批准：Input84张、ConfigProvider42张；清洁4637eb45独立捕获与审阅图原始RGBA完全一致。批准后关联回归和统一验收继续，当前仍testing。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。没有独立ComponentToken；动态主题Alias/作用域/原生根优先级已验收。Provider无业务emits、模型或自有交互控件；实际后代焦点、通知迁移与键盘交互仍验证。",
-      "layerNotes": {
-        "token": "ConfigProvider 本身没有 ComponentToken —— 它是消费 token 的入口，不是 token 的定义者。`theme.components` 字段把每个组件的 ComponentToken 透传给对应组件去用，token 落点仍由各组件的 style/token.ts 决定。",
-        "style": "ConfigProvider没有自有CSS入口。本层给theme时创建display:contents作用域，经createCSSVarScope写入当前派生CSS变量，移除/前缀切换时清理；主题配置同时通过Vue上下文传给消费者。组件静态CSS需显式导入公开style.css或各组件入口，style/index.ts用于构建期生成，不在组件渲染时注入。2026-10-29公共样式69入口与24对真实按需/全量消费证据见stylesheet-dependency-published-stage.json；不是ConfigProvider整单元重新验收。",
-        "interaction": "本体无事件、无状态、无受控语义 —— `n/a` 不是测试跳过，是「没有交互面」。同理 a11y：本体无可聚焦/可交互元素，只对 demo 跑 axe 校验 0 violation。",
-        "unit": "L1 共 68 条用例（含 4 条被变异验证逼出来的缺口用例，commit 6869c5d）。三条最容易写错的判据各自有专属用例钉在文件头。",
-        "visual": "L6 三用例：locale 3/3 exact；theme-token 3/3 size-mismatch 1px（D32，display:contents 在 Chromium #stage 容器留 1px 假盒子，INTENDED 不修）；theme-dark 3/3 block-diff 但 diff 只落在 Empty 的 SVG 插画（不跟 darkAlgorithm 走）—— ConfigProvider 的暗色管道**正常**（文字色两侧一致），diff 是 Empty 流的遗留（D33，EMPTY-LIMIT）。详见 docs/analysis/config-provider.md §9 与 tests/visual/matrix.mjs LIMITATIONS。",
-        "docs": "README.md（开发者文档，含契约/判据/差异/变异）+ index.zh-CN.md + index.en-US.md（用户文档，5 个 demo）。",
-        "compat": "D25-D33 完整登记在 docs/analysis/config-provider.md §9。D25=渐进类型；D26=display:contents 作用域；D27=解构即快照；D28=废弃判据；D29=不提供 tooltip/popover/popconfirm；D30=不实现 holderRender 等；D31=默认前缀 apollo；D32=1px 假盒子；D33=Empty SVG 非主题化。",
-        "leaf-modules": "`form/validateMessagesContext` 由 `@apollo-design/form-core` 的 FormProvider 顶替（form-core 已提供 `formContextKey` 与带默认合并的 `validateMessages` getter），与该 antd 叶子模块行为等价；`tooltip/UniqueProvider` 仍缺失，对应 D29（不提供 tooltip/popover/popconfirm prop）。ConfigProvider 不阻塞这俩落地，组件流恢复时再补回。",
-        "listContractAudit": "2026-10-26 List关联整改：当前Spin Provider/attrs与renderEmpty精确VNode类型已修，相关共享回归通过；不代表本组件所有入口完成当前全局审计。证据 docs/audit/2026-10-26-list-contract-audit.md。",
-        "currentBatchAcceptance": "2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。没有独立ComponentToken；动态主题Alias/作用域/原生根优先级已验收。Provider无业务emits、模型或自有交互控件；实际后代焦点、通知迁移与键盘交互仍验证。"
-      },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -261,8 +192,7 @@
             "tooltip/UniqueProvider"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "button",
@@ -271,7 +201,6 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 2,
@@ -289,32 +218,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-27 Button完整契约已统一收口：19 Props、两个完整槽、原生根/当前Provider/加载生命周期、58既有Token及20原Demo；关联Compact/Search、Float原生样式和示例事件/异步链路同步修复。2352相关四层、398公开类型、147生产浏览器、51实际消费者、1168颜色、8 SSR、20组水合与UI严格L7通过；39自有视觉批准并参与114图exact。全部原机械/参考场景保留，技术预算仅Button37→41/Input89→92KB且依据已记；全库其余单元继续。",
-      "layerNotes": {
-        "referenceHistory": {
-          "unit": "L1+L2 = 113 例（`index.test.ts` 94 + `demo.test.ts` 14 + `style.test.ts` 5），另有 L4 66 / L5 27 / theme 17，四层合跑 **223 passed (223)**。覆盖率（`--coverage.include='packages/ui/src/button/**'`）：**Stmts 100 / Branch 98.42 / Funcs 100 / Lines 100**。残留 3 个未覆盖分支：`Button.vue:217`（`ButtonTypeMap[type] || []` 的兜底，`mergedType` 恒为 5 个键之一）、`Button.vue:532`（模板 `v-if` 的一支）、`style/index.ts:178`（`ghost ? 'none' : c.shadow` 的 ghost 支）。2026-09-20 顺带删掉一段**与上游不符的死代码**：`loading` 的 `delay > 0` 分支里我们多写了 `if (cfg.loading) { innerLoading.value = true; return; }`，而上游（`antd/es/button/Button.js:148-156`）该分支是**无条件** `setInnerLoading(true, { ms: delay })`；且那一支在本仓可证明**不可达**（`loadingOrDelay` 的构造保证 `loading === true ⇒ delay <= 0`，与 `delay > 0` 矛盾）。删掉后 Lines 从 98.13% → 100%，行为不变（不可达支）。",
-          "type": "L3 类型测试 16 例 / 15 条 `@ts-expect-error` 负例（`__tests__/type.test-d.ts`）。2026-09-20 修一处**平台差异**：`icon` / `loading.icon` 的类型从 `VNodeChild` 放宽为 `ButtonIcon = VNodeChild | Component`（与 `EmptyImage` 同一裁决，登记为 `docs/analysis/button.md` D7 / `README.md` D8）。原因：antd 的 `icon` 是 `React.ReactNode`，官方示例写 `icon={<SearchOutlined />}` —— React 里那是**已求值的元素**；Vue 没有这一形态，对应物是**组件对象**。⚠️ 放宽类型**只解决编译**：`NodeRenderer.normalizeNode()` 只做 `isVNode ? cloneVNode : 原样`，组件对象会被原样返回并渲染成字面量 `[object Object]`（实测复现），所以同时必须在进 `NodeRenderer` **之前** `h()` 包一层（`Button.vue` 的 `asIconNode()`）。运行期一侧由 L1 的 3 条用例（`icon` 传组件 / `loading.icon` 传组件 / ConfigProvider `loadingIcon` 传组件，均断言 `not.toContain('[object Object]')`）钉住。",
-          "visual": "L6 视觉回归 **24/27 通过**（21 张 0.000% exact + 3 张 antialias-noise ≤0.021%）。修复前为 0/27（0.233% – 2.326% 全 block-diff）。2026-09-20 复核**证伪**了原先「glyph hinting 抖动 / PLATFORM」的诊断：基线用 --mode baseline 重生成后**逐字节一致**，截图是确定的，不存在抖动。真因是**我方缺声明**（BUG，非 PLATFORM）：① `.apollo-btn` 未设 `line-height` —— antd 的 Button 不调用 `resetComponent`，靠 `antd/dist/reset.css` 的 `button{line-height:inherit}` 从环境继承（实测 22px）；本仓 BASE_CSS 没有这条表单控件归一化（`packages/ui/src/style/index.ts:90` 把「button 重置」列为未决缺口）⇒ 我们的 `<button>` 退回 UA `line-height:normal`，span 高 17px vs 22px、文字基线差 ~2.5px。② `-icon` 未带图标基线 —— ui 静态样式层尚未消费 `@apollo-design/icons` 的 `getIconStyle()`，图标 span 继承行高 22px 而 antd 的 `.anticon` 是 0。两处均在组件范围内修好。剩余 3 例 `type__light__{mobile,tablet,desktop}`（0.060% – 0.149%）的差异**只在**第 6 个按钮（`确定`）：antd 把两字 `join(\" \")` 成 `确 定`（真实空格、进 textContent），我们用 CSS letter-spacing（textContent 保持 `确定`）⇒ INTENDED，已登记为 COMPATIBILITY.md **D41**（本轮改写）。另（2026-09-20 补）：复核发现 `icon` 页原先只覆盖 VNode 形态，**看不见** D42 的组件形态缺陷，已补一条（React `icon={<SearchIcon />}` / Vue `icon: SearchIconComponent`，两侧 DOM 同形）；补后用 `--mode baseline` 重生成 27 张，`git status` **只动 3 张 `icon__light__*.png`**（另 24 张逐字节未变），并通过变异验证（去掉 `h()` ⇒ 0.000% exact → 3.078%–7.313% block-diff）。",
-          "compat": "L4 DOM 契约 66 例全绿 = 65 条机械 oracle 用例 + 1 条 D6 前缀豁免。机械 oracle 由 `tests/compat/baseline/button.mjs` **硬编码 65 个用例**、用 `react-dom/server.renderToStaticMarkup` 渲染 antd 6.6.4 产出 `tests/compat/baselines/button.dom.json`（`caseCount=65`），比对在 `__tests__/semantic.test.ts`。另备 3 份 fixture（`tests/compat/fixtures/button/{basic,loading,type-matrix}.json`）满足 AGENTS §6.1 的「至少 1 个」交付要求；⚠️ button 的 DOM 契约**不由 fixture 驱动**（那套「手写用例 + allow」机制未被 icons/empty 采用，见 `tests/compat/README.md` 末尾）。",
-          "token": "57 个键。antd 6.6.4 `button/style/token.js:21-83` 的 `prepareComponentToken` 返回 58 键（45 显式 + 13 个 `${colorKey}ShadowColor`），本仓逐键对齐、唯一缺 `solidTextColor`（依赖 color-picker 的 `isBright(AggregationColor, \"#fff\")`，本仓无等价能力）—— 由 `theme.test.ts` 的一条「缺 solidTextColor」断言钉住。"
-        },
-        "currentAudit": "2026-10-27完整清单已统一验收；实现7e63e3e1（Result核心ca5d2740），最终相关四层2352/2352、根/SFC严格类型及15组公开类型398/398、114张同次视觉全部0像素差异。按原清单逐项复核，当前范围无代码阻塞；全库审计与最终全量门禁仍继续。见 docs/audit/evidence/button-contract.json。",
-        "nativeAudit": "2026-10-27完整清单已统一验收；实现7e63e3e1（Result核心ca5d2740），最终相关四层2352/2352、根/SFC严格类型及15组公开类型398/398、114张同次视觉全部0像素差异。按原清单逐项复核，当前范围无代码阻塞；全库审计与最终全量门禁仍继续。见 docs/audit/evidence/button-contract.json。",
-        "visual": "清洁7e63e3e1的39张自有场景已逐张审阅批准；Button/Result/QRCode共114张同次逐像素exact。原参考场景保留，原238批准记录中237项及PNG完全不变；唯一旧Button图经原图/新图明确复核后更新浏览器环境及前景。",
-        "docs": "实际站点43/43（20原Demo×亮暗及3交互）通过；Docs161测试/严格类型/SSG及部署产物探针通过。授权线上更新与回执另记，不把本地通过当已上线。",
-        "foregroundCorrection": "2026-10-29用户反馈窄修：00c6ecb6恢复primary/danger默认浅色前景与三态可读背景；六组件1499、发布浏览器161、颜色1168、原Demo80、消费者51、SSR8/水合20、公开类型94通过。318关联视觉中264原RGBA不变、54有意改色已逐张审阅；1215批准总数不变。见docs/audit/evidence/button-foreground-acceptance.json，不据局部通过宣称全库通过。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -342,8 +245,7 @@
             "space/Compact"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "space",
@@ -352,7 +254,6 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 4,
@@ -368,25 +269,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "n/a",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "n/a",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-28完整盘点与成组源码修复e0062edd、Select关联356161b4：当前槽/Provider、key身份/焦点、完整separator数据、Compact实际消费者与Addon主题/纵向连接已修。源码834相关运行时、82浏览器通过；发布JS/CSS/声明、正式视觉/Docs待验收，见space-contract-audit。\n2026-10-29交叉审图确认Input紧凑主题字体/padding和Addon underlined缺底线两项实际缺陷，分别成组整改；原160绘制矩阵将underlined与borderless合并，不能证明底线语义。状态保持testing，75张原生候选未批准，不能据此前源码/发布绿灯标整单元完成。\n2026-10-29最终完整单元验收：发布87/87、严格15个真实Demo；Addon下划线与当前Input关联链已验收；Apollo75张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
-      "layerNotes": {
-        "token": "当前Space/Compact/Addon公开ComponentToken为空，无新增组件Token；gap消费paddingXS/padding/paddingLG三类Alias，根作用域接当前Theme变量。Addon外观直接消费当前Alias，原生变量优先。tokenStatus=n/a只表示没有独立ComponentToken，不表示不消费主题。旧D38展开记录保留于带日期历史证据，不作为underlined应等同borderless的规格。",
-        "interaction": "布局容器没有业务v-model或组件级选择/开关事件，interactionStatus=n/a；仍必须验证当前默认/分隔槽、Provider替换、key/Fragment重排的子项实例、输入草稿/选择与焦点，以及横纵/RTL紧凑上下文和隔离。Addon.disabled是装饰状态，不禁用插槽内原生控件。已有对应源码/发布浏览器证据；Input尺寸和Addon底线新缺陷按本轮补验，不以无业务状态跳过这些边界。",
-        "style": "当前Alias、横纵/RTL紧凑连接已有源码和发布证据；正式审图重开underlined底线与关联Input尺寸，修复及最终75张视觉仍待统一验收。",
-        "currentAcceptance": "2026-10-29最终完整单元验收：发布87/87、严格15个真实Demo；Addon下划线与当前Input关联链已验收；Apollo75张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json；其他层说明保留为此前阶段证据。",
-        "buttonForegroundRegression": "2026-10-29关联Button前景修复：Space八场景×三视口24张恢复白字，布局尺寸不变，逐张审阅更新；其他批准记录保持，318关联场景统一验收。见docs/audit/evidence/button-foreground-visual.json。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -408,8 +290,7 @@
             "config-provider/hooks/useSize"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "flex",
@@ -418,7 +299,6 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -434,26 +314,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "n/a",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-29本轮状态：13ba8d0d源码120回归、60浏览器、6个Demo严格消费；新来源统一整改中。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。\n2026-10-29最终完整单元验收：发布60/60、Node SSR4/4、严格6个真实Demo；medium/middle与实际布局均保留；Apollo42张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
-      "layerNotes": {
-        "interaction": "Flex 是纯布局容器，无事件/受控/焦点/禁用；L2 唯一适用类是「props 更新 → DOM 更新」，由 L1 的响应式用例（setProps vertical 切换）承担。其余五类 n/a。",
-        "type": "8 例（6 正例 + 3 负例，负例 @ts-expect-error 包在永不调用的闭包里）。gap 类型刻意不用 LiteralUnion —— (string & {}) 会让 SFC 编译器把运行时 prop 推成 String|Object，挂 Number 触发开发期告警。",
-        "a11y": "Flex 无 ARIA 输出是上游语义（布局容器不承载可访问性信息）。axe 扫 6 个 demo 0 violation + 显式断言「无 role/aria-*」+ 键盘路径架构上不适用。",
-        "token": "无ComponentToken；gap使用当前Alias。源码120回归及独立消费端通过，sourceActive共享来源边界与发布验收继续。",
-        "compat": "39 条机械基线（tests/compat/baseline/flex.mjs，renderToStaticMarkup 产出）。39/39 过，3 条豁免：D6（默认前缀）、flex:number 与 gap:zero（PLATFORM：SSR 字符串 vs 真实 DOM CSSOM 的序列化规范化，语义等价）。keepStyle: true 钉死 ctx style → prop style 的覆盖顺序。",
-        "currentAcceptance": "2026-10-29最终完整单元验收：发布60/60、Node SSR4/4、严格6个真实Demo；medium/middle与实际布局均保留；Apollo42张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json；其他层说明保留为此前阶段证据。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -472,8 +332,7 @@
           "antdEcosystem": [],
           "leafModules": []
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "grid",
@@ -482,7 +341,6 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -498,26 +356,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "n/a",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "n/a",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-28完整盘点与成组源码修复04be6282、共享observer1588dd11：104运行时、41浏览器、14Demo检查、42原生状态预检、10类型通过；实际共享消费者717与Form/List/Listy256通过（集合有交集，不相加）。发布JS/CSS/声明、正式视觉/Docs待验收，见grid-contract-audit。\n2026-10-29正式原生视觉42张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。\n2026-10-29当前整改单元统一验收完成：当前发布声明/实际Demo、组合CSS/根严格/UI L7、222张新视觉批准后重渲染raw精确（四组总量），既有537回归与Docs161+32通过。完整交付17/72，证据four-unit-final-acceptance.json；更新进展页部署另记。其它组件/最终全库门禁不在此标完成。",
-      "layerNotes": {
-        "interaction": "Row/Col 无事件/受控/焦点/禁用；L2 适用面是 props 更新→DOM 更新（setProps wrap 切换）与断点变化→类名更新（matchMedia mock 驱动的响应式 justify/gutter 用例）。",
-        "type": "8 例（正例 + 3 负例 @ts-expect-error 永不调用闭包）。justify/align/gutter 的响应式对象类型精确断言（toEqualTypeOf）。",
-        "a11y": "Grid 纯布局容器，不输出 ARIA（上游语义）。axe 扫 13 demo 0 violation + 显式断言无 role/aria-* + 自身不可聚焦。",
-        "token": "Row/Col Component Token 各 0 个（prepare*ComponentToken = () => ({}) 逐字一致）。media query 断点取 theme 默认 seed 的 screen*Min；主题覆盖 screen 断点不改变已生成的 media query（antd 会重算），登记为已知边界。",
-        "compat": "24 条机械基线（tests/compat/baseline/grid.mjs）。24/24 过，4 条豁免：D6×2（row/col 默认前缀）、D6 连带（响应式 flex 变量名 --apollo-col-* vs --ant-col-*）、PLATFORM×2（CSSOM 化简 calc 与 min-width:0→0px）。keepStyle 钉死 gutter margin/padding、flex、minWidth hack。响应式 gutter 对象刻意不进基线（React SSR screens=null vs 我们 jsdom screens=全 false，语义不同非实现差异），由 L1 mock 驱动覆盖。",
-        "visual": "2026-10-29 clean a47d96ec 的42张Apollo原生视觉逐图审阅批准，逐图SHA/观察/相同rawRGBA继承关系见four-unit-native-visual-acceptance.json。原537条批准记录及1692份原PNG未改；全库759/1602已批准。此为该视觉维度，Docs与整单元统一验收仍独立开放。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -538,8 +376,7 @@
           ],
           "leafModules": []
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "divider",
@@ -548,7 +385,6 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -565,19 +401,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "n/a",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-29完整清单源码冻结并完成发布专项；状态testing，整批ConfigProvider/Input整合与Docs收口继续，完整组件交付数仍21/72。证据 docs/audit/2026-10-29-divider-collapse-published-milestone.md。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。纯展示Divider无自有模型/事件/操作控件；标题中原生控件、草稿和焦点仍真实验证。",
-      "layerNotes": "2026-10-29源码与发布专项：十二props、完整当前默认槽、attrs/ref、Provider/RTL/方向、11个Alias与三个Component Token已实现并验证。无自有业务emits/v-model，interactionStatus=n/a；当前内容/配置、真实槽内控件焦点/草稿/选择、条件槽和多实例边界仍执行，不能以纯展示跳过。180源码测试、发布浏览器67/67、真实SSR22/22、48张正式Apollo视觉批准后逐像素零差异。类型消费/Docs/共享层统一收口证据见divider-collapse发布里程碑；当前完整单元仍testing，等待ConfigProvider整合与Docs成品收尾。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。纯展示Divider无自有模型/事件/操作控件；标题中原生控件、草稿和焦点仍真实验证。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -610,8 +433,7 @@
             "token": "antd 的 Divider 有 3 个 Component Token：`verticalMarginInline`（派生自 `token.marginXS`）、`textPaddingInline`（字面量 `'1em'`）、`orientationMargin`（字面量 `0.05`，标了 `unitless` —— 它参与 `calc(0.05 * 100%)` 这类算式，被补单位就全错）。三个都按**同名同默认值**复刻（`style/token.ts` 的 `prepareComponentToken` 与 antd 逐字相同），`theme.test.ts` 逐条断言。但**只有 `verticalMarginInline` 能在运行时被覆盖**（它落成 `var(--apollo-margin-xs)`）；两个字面量 Token 走常量内联，因为零运行时管线里 `tokens.css` 只声明 Alias 层（`getDesignToken()` 的返回类型是 `AliasToken`，不含组件层），没有组件变量可覆盖。这是**全库缺口**而非 Divider 独有 —— 修复位置在 `packages/theme` 的 `tokens.css` 生成处（把每个组件的 `prepareComponentToken(getDesignToken())` 结果也声明成变量），属 foundation 侧工作。缺口登记在 README §5.3 / §9；`demo/component-token.md` 给了等价的临时手段（`styles.content.*`）。"
           }
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "typography",
@@ -620,7 +442,6 @@
       "priority": "P0",
       "priorityNum": 0,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -637,30 +458,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-28完整清单收口，生产实现c4883402+c75395fc+68547d9a，关联Table230892d9。1186相关四层、110类型、17生产浏览器、76实际Demo主题/交互、12 SSR/水合、23消费示例46渲染、14Demo发布声明、根严格/UI L7通过。42张清洁自有视觉逐张审阅批准；原453记录/PNG及机械/参考证据不变。Docs161及36本地/线上已验证；最终22186737已发布，workflow40670124684成功，回执入仓。全库其余单元继续。",
-      "layerNotes": {
-        "currentAudit": "docs/audit/2026-10-27-typography-contract-audit.md；functional-stage、acceptance-freeze、editor-geometry及final-acceptance证据；迁移 docs/migrations/typography-contracts.md。",
-        "api": "五入口、唯一default槽、原生class/style/attrs/当前nativeElement；固定标签排除无效component；配置回调保留职责，无新emits/model。",
-        "token": "两个既有标题Token真实消费；0/替换/移除、当前别名与四算法、原生样式优先级。",
-        "unit": "61文件1186项相关四层和8文件110类型通过；76原机械场景保留，仅19个有限原生差异。",
-        "interaction": "成功复制/失败/空串/富内容/并发/卸载、原生多行/IME/受控拒绝/动态高度、四入口编辑所有权、当前Provider与VNode身份。",
-        "type": "根严格与5入口/14实际Demo的发布声明消费通过；只读nativeElement及完整默认槽类型。",
-        "a11y": "可读默认语义色、链接标识/禁用导航、原生键盘入口、可见符号名称、装饰图标、所属焦点与编辑完整行；Chrome150验证。",
-        "visual": "清洁68547d9a的14类×3视口42张逐张审阅，旧编辑几何批次拒收；原453批准记录/PNG和所有参考证据不变。",
-        "docs": "实现、类型、14原Demo、双语API及迁移同步；Docs161/85页、本地与线上36检查通过。最终22186737的workflow40670124684构建/Pages成功；见typography-docs-publication.json，28 Demo深链既有404 SPA边界保留。",
-        "boundaries": "仅Typography整单元；Table仅四十主题变量与两个宿主。任意prefix样式D04及全库剩余审计另案；当前浏览器验收为Chrome150固定环境。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -687,8 +484,7 @@
             "input/TextArea"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "layout",
@@ -697,7 +493,6 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -714,27 +509,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-29本轮状态：e1ff1b47完整源码清单198回归、35浏览器、11Demo主题/交互47项、51视觉准备、20类型及独立严格消费通过。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。\n2026-10-29最终完整单元验收：发布95/95 Demo、51/51原生状态及严格11个Demo；35/35普通契约按实现未变继承；Apollo51张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
-      "layerNotes": {
-        "interaction": "L2：trigger click 折叠（受控/非受控）、零宽触发器 click、多 Sider 逐个移除后 -has-sider 消失、响应式 onBreakpoint 挂载即触发一次。",
-        "type": "18 例（正例 + 4 负例）。SiderProps 联合、语义槽 {root,body} 对象/函数两态、CollapseType 二元、LayoutProps 无语义槽。",
-        "a11y": "原生地标元素（header/footer/main/aside）；axe 扫 11 demo 0 violation。",
-        "token": "19 个 Component Token：三个字面常量（#001529 / #002140）antd 硬编码；其余 calc/var 派生（headerHeight=controlHeight*2 等）。",
-        "compat": "32 条机械基线（SSR：四组件 tagName 与类名合成、has-sider 直系检测、Sider 各态与语义化）。32/32，keepStyle。嵌套检测/响应式由 L1 覆盖。",
-        "visual": "18/18 全 exact（6 variant × 3 viewport）。补 resetComponent 后字体对齐。",
-        "currentAcceptance": "2026-10-29最终完整单元验收：发布95/95 Demo、51/51原生状态及严格11个Demo；35/35普通契约按实现未变继承；Apollo51张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json；其他层说明保留为此前阶段证据。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -758,8 +532,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "tag",
@@ -768,7 +541,6 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -785,29 +557,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-27 Tag三件套完整清单统一验收，实现c49f300b。1088相关运行（Tag131/List153/Listy60等10组）、2289类型门禁、真实发布SFC/refs、296实际压缩颜色、9关闭、50消费者、57原Demo、17 SSR水合、29实际Docs和严格L7通过。45自有视觉逐张审阅且原始RGBA全一致；Tag+List102项按既有门禁0差异，List三加载SVG原始AA差异另记；原360记录/图与13参考不变。验收db24a00c已发布，工作流40461805810/Pages7352080560成功，线上29项与200进度页通过，全库审计继续。",
-      "layerNotes": {
-        "interaction": "原生 close(MouseEvent)/checked/value 更新与 change 各一次；关闭按钮与链接兄弟，取消/禁用/完整槽/当前配置/模型已补。",
-        "type": "全库190文件2289公开类型、8项Tag公开ref/静态子组件/模式类型；根与实际发布SFC（全部12原Demo）严格检查通过。",
-        "a11y": "当前 close 原生 button/locale、checkbox/group 语义；296颜色/axe、9关闭、48原Demo主题+9交互、17 SSR/水合通过。",
-        "token": "3既有Token当前源配置与移除/覆盖有效；原生特性条件保留light-dark以避免默认CSS压缩产生失效helper；296真实颜色/色相/对比度/Token与CSS变量通过。",
-        "compat": "原24机械JSON与共享投影未改；稳定内容/所属原生按钮、内部链接和CSS变量的必要差异逐条精确登记并加完整矩阵反向守卫。",
-        "visual": "45清洁c49f300b自有图逐张审阅批准，Tag45原始RGBA完全一致；加List57共102门禁0差异。三List加载SVG只存在已记录AA边界，原批准图/记录不变，设置未改。",
-        "currentAudit": "完整清单docs/audit/2026-10-27-tag-contract-audit.md；统一证据docs/audit/evidence/tag-contract.json；迁移docs/migrations/tag-contracts.md。冻结c49f300b完整单元通过；验收db24a00c已上线，发布/线上回执见统一证据deployment。",
-        "unit": "一次统一1088/1088、0失败/待定；_internal57/Drawer87/ConfigProvider115/List153/Listy60/Modal138/Notification98/Select152/Tag131/Tour97。",
-        "docs": "12原Demo保留；48主题+9交互57项（含真实指针拖拽），实际Docs29项、类型、161测试、85路由构建通过。进度页双语记录，验收db24a00c已发布，线上29项和200进度页通过；Demo深链沿用已登记404 SPA兜底。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -833,8 +582,7 @@
             "config-provider/hooks/useCSSVarCls"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "badge",
@@ -843,7 +591,6 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -860,29 +607,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-28本地完整清单统一验收：1257相关、104类型、172发布浏览器、64 Demo、12水合、16消费、13Demo发布模板、严格UI L7、Docs161+32；清洁d0bf2cef视觉42原始RGBA exact及Avatar48 exact。验收47b98296已发布40701370080，线上32零错误；见badge-final-acceptance.json。",
-      "layerNotes": {
-        "interaction": "原生根attrs/style/ref及稳定模式切换；完整内容、空槽优先、当前Provider与业务身份；负号/数字可访问文本、偏移、reduced-motion。172发布浏览器及64实际Demo主题/交互通过。 完整VNode计数共用实际宿主；九种空计数、独立文字与状态title分离，条件组件保留一次挂载。 原生dir覆盖/继承、状态点与FloatButton圆点实际几何通过。",
-        "type": "相关10文件104类型、根严格通过；发布Badge/Ribbon/Badge.Ribbon精确Props/Slots/readonlyRef、StyleValue及13真实Demo通过，无源别名。",
-        "a11y": "真实Chrome172契约/颜色和13 Demo四算法axe通过；动画轨道仅当前数字参与朗读，不自动创建live region；作者自定义样式/透明渐变需配对前景。",
-        "token": "九个既有Token从当前Alias派生，消费theme.components.Badge；适用零值/替换/移除及原生CSS变量优先，四算法实际浏览器验证。",
-        "compat": "原26机械场景保留；仅两个自定义色场景精确追加前景推导私有背景变量，原HTML/参考PNG不改，未放宽阈值。",
-        "visual": "14类场景×3视口42图逐张批准并原始RGBA exact；df5e0436首批因测试画布文字重叠拒收，d0bf2cef修正并新增几何断言。Avatar三图仅26像素可读前景更新，其余492旧记录/PNG不变。",
-        "currentAudit": "docs/audit/2026-10-28-badge-contract-audit.md；baseline及functional-stage证据；迁移docs/migrations/badge-contracts.md。",
-        "docs": "验收47b98296最终Docs发布40701370080成功，CI161及拓扑L7 151零失败零待定；线上32零错误，26既有404 SPA导航回退。13Demo/双语API/迁移与全部本地检查完整，证据badge-docs-publication.json。",
-        "style": "包裹状态点/当前statusSize与z-index、完整内容paddingInline、原生boxShadow优先级、独立圆点和调用者定位已验证；静态@scope保留dir=auto及嵌套LTR。42视觉与48关联Avatar复比均通过。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -906,8 +630,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "alert",
@@ -916,7 +639,6 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -932,27 +654,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。\n2026-10-29本轮状态：29cba1e0完整源码清单142回归、29浏览器、15Demo共180场景、60视觉准备、18类型及公开严格消费通过。正式发布产物、Apollo视觉审阅、文档站和全库最终门禁尚待对应执行，历史done不代表本轮完成。\n2026-10-29最终完整单元验收：发布29/29、15个Demo共180/180、60/60原生状态及严格消费；Apollo60张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json",
-      "layerNotes": {
-        "interaction": "L2：关闭按钮 click（onClose / closable.onClose 优先级）、afterClose 经 transitionend 驱动 leave 结束、根元素 mouseenter/leave/click、错误边界切换。",
-        "type": "9 例（正例 + 4 负例）。AlertType/AlertVariant 联合、语义七槽、AlertClosable 三字段、Ref nativeElement 可空。",
-        "a11y": "role=alert 默认可被用户 role 覆盖（L4 钉）；关闭按钮 aria-* 由 closable 对象透传；axe 扫 13 demo 0 violation。",
-        "token": "4 个 Component Token：borderRadius/withDescriptionIconSize 别名派生 var()；defaultPadding/withDescriptionPadding 字符串常量（antd cssVar 产物同为实串 8px 12px / 20px 24px）。",
-        "compat": "28 条机械基线（closable 各态、banner、aria/data、role 覆盖、语义化、rtl）。28/28，keepStyle。ErrorBoundary 不进基线（SSR 恒渲染 children）。",
-        "visual": "18/18 全 exact（6 variant × 3 viewport）。closable 用例以 closable.closeIcon 替代 closeText（废弃告警会被视觉 runner 记 render-error）。",
-        "currentAcceptance": "2026-10-29最终完整单元验收：发布29/29、15个Demo共180/180、60/60原生状态及严格消费；Apollo60张已批准且批准后rawRGBA exact；Docs161+56通过。当前完整单元交付21/72，Input完整API未关闭。证据：docs/audit/evidence/space-flex-alert-layout-final-acceptance.json；其他层说明保留为此前阶段证据。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -977,8 +678,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "skeleton",
@@ -987,7 +687,6 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 4,
@@ -1003,26 +702,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "n/a",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-27 原始完整清单逐项统一验收收口；实现e6be1625。关联360条四层、128相关类型、生产Chrome92项、Node SSR18项、水合6组、严格/SFC/发布声明、UI构建/L7通过。全部九Demo亮暗及五组交互23项、36主题组合通过；清洁实现39图逐张审阅批准并全部exact，关联Statistic36图保持一致，原199批准记录不变。最终发布回执单列，不代表全库完成；详见docs/audit/2026-10-27-skeleton-contract-audit.md。",
-      "layerNotes": {
-        "interactionStatus": "Skeleton 仅展示加载占位，无自身可操作状态；动态 props、结构与主题由现有 unit/DOM/theme 测试覆盖。",
-        "currentAudit": "docs/audit/evidence/skeleton-contract.json；主与五子组件Props 9/6/7/6/5/4、主六语义/子两语义、八Token及原生attrs/槽/样式均核对完成。17生产文件指纹ceeed7df2f651b235c43a1af6e8ebd5e17fb44bf69e5435fc4640ed252bf650d。",
-        "visual": "Apollo 13状态×3视口39张，清洁e6be16258145f11c7dd79c9549564b8e17b8eda3采集并逐张审阅批准，39 PASS/pending0/diffPixels0；关联Statistic36张同次全部exact，原199批准记录不变。旧8场景24参考保留，未将其伪称为本轮像素验收。",
-        "referenceHistory": {
-          "interactionStatus": "Skeleton 仅展示加载占位，无自身可操作状态；动态 props、结构与主题由现有 unit/DOM/theme 测试覆盖。"
-        }
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1044,8 +723,7 @@
             "config-provider/hooks/useSize"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "spin",
@@ -1054,7 +732,6 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 4,
@@ -1069,25 +746,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-26 Spin完整清单已收口：实现57ab2894、验收afaea916。899相关断言保留分批通过证据；最终98单元/13主题/7组生产水合，45张清洁提交自有视觉批准并exact，关联List57张exact。160类型、生产SSR/发布声明、UI/L7与10实际Demo/3组线上交互通过。范围、提交与未验边界见 docs/audit/2026-10-26-spin-contract-audit.md；全库门禁仍开放。",
-      "layerNotes": {
-        "interaction": "已验证当前原生槽/显式scope、延迟与auto清理、Provider/attrs/prefix/ref当前性、多实例及稳定root/section/indicator。生产水合保留服务器节点、编辑值/焦点/选区，反复主题/全屏/加载切换通过；详见最终统一证据。",
-        "token": "四个既有Token消费当前源主题，contentHeight约束嵌套加载层；原生变量优先、嵌套尺寸/busy隔离、空正文几何均通过。motion=false与系统减少动画下旋转/过渡有实际浏览器证据；13条主题和默认/暗/紧凑/组合自有视觉通过。",
-        "compat": "保留47个原机械场景及精确契约差异，不改原基线/共享归一化。开发期直接修正完整Vue槽、作用域进度与稳定语义容器，迁移见 docs/migrations/spin-contracts.md。",
-        "listContractAudit": "2026-10-26 List关联整改：当前Spin Provider/attrs与renderEmpty精确VNode类型已修，相关共享回归通过；不代表本组件所有入口完成当前全局审计。证据 docs/audit/2026-10-26-list-contract-audit.md。\n2026-10-26 List视觉关联：全屏mask单独fixed，root/ref/正文与编辑器保留，mask语义对应真实覆盖层、关闭inert，语义工厂读取当前浅响应式props；3条失败复现已修，47个旧参考用例保留且6个精确差异登记。普通/全屏description对比度修复，迁移见 list-contracts.md；完整Spin其余入口和4个Token仍须独立盘点，本批不升级其视觉状态。",
-        "visual": "Apollo自有15状态×3视口=45张，清洁afaea916重拍与逐张审阅哈希相同，批准后45/45 exact、0 diffPixels；darwin/x64 Chrome150。真实几何和axe检查通过，相关List57张exact；其他平台/引擎未验。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1111,8 +769,7 @@
             "config-provider/hooks/useSize"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "result",
@@ -1121,7 +778,6 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -1136,33 +792,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-27 Result完整契约已统一收口：当前Props/Provider/原生attrs、五个完整槽、六语义与四Token、三静态插画/根导出及十原Demo同步验收。共享Button根因由7e63e3e1解除，原Demo40/40与实际Docs23/23通过；39自有视觉逐张批准，Button/Result/QRCode114图全部exact。99本组件四层/87生产浏览器/8 SSR/5组水合证据保留，最终2352关联四层/398类型/严格构建通过。其他浏览器/设备未冒称验收，全库整改继续。",
-      "layerNotes": {
-        "referenceHistory": {
-          "interaction": "无事件/受控/焦点。L2 适用面：props 更新 → DOM 分支切换（status/icon 渲染分支）。",
-          "type": "8 例（正例 + 2 负例）。status 九值联合、语义槽位六槽精确断言。",
-          "a11y": "无 ARIA 输出（上游语义）。axe 扫 9 demo 0 violation。",
-          "token": "4 个 Component Token（titleFontSize/subtitleFontSize/iconFontSize/extraMargin）以 CSS 变量声明在 .apollo-result；iconFontSize 的 ×3 派生用 calc(var(--apollo-font-size-heading-3) * 3) 表达（与上游 isNumber 判据的数字路径同构）。",
-          "compat": "15 条机械基线（tests/compat/baseline/result.mjs，ConfigProvider 包裹对齐 iconPrefixCls）。15/15 过，D6 豁免仅 no-props 一条。插画为静态 hex 直出，SSR 可逐字节对齐。",
-          "visual": "9/9 全 exact（3 variant × 3 viewport）。"
-        },
-        "currentAudit": "2026-10-27完整清单已统一验收；实现7e63e3e1（Result核心ca5d2740），最终相关四层2352/2352、根/SFC严格类型及15组公开类型398/398、114张同次视觉全部0像素差异。按原清单逐项复核，当前范围无代码阻塞；全库审计与最终全量门禁仍继续。见 docs/audit/evidence/result-contract.json。",
-        "interaction": "无业务事件/v-model；原生根事件一次触发、完整内容/编辑器身份/键盘/焦点/卸载重挂由当前行为及生产浏览器覆盖。",
-        "visual": "清洁7e63e3e1的39张自有场景已逐张审阅批准；Button/Result/QRCode共114张同次逐像素exact。原参考场景保留，原238批准记录中237项及PNG完全不变；唯一旧Button图经原图/新图明确复核后更新浏览器环境及前景。",
-        "a11y": "共享Button对比度阻塞已解决；十原Demo四算法40/40、实际Docs23/23、87项Result浏览器及39自有图实际内容/axe通过。默认异常SVG装饰语义与原生自定义交互均保留；其他浏览器未实测。",
-        "docs": "实际站点23/23（10原Demo×亮暗及3交互）通过；Docs161测试/严格类型/SSG及部署产物探针通过。授权线上更新与回执另记，不把本地通过当已上线。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1186,8 +815,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "watermark",
@@ -1196,7 +824,6 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -1210,26 +837,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "n/a",
-      "styleStatus": "n/a",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": {
-        "interaction": "L2：MutationObserver 防篡改（水印被删/换父 ⇒ 重挂；container style 被改 ⇒ 回写 fixedStyle）、onRemove 换父触发而卸载不触发、参数变化 raf 节流重绘。jsdom 无 canvas ⇒ 跳过绘制不抛错。",
-        "type": "16 例（正例 + 4 负例）。content 联合、gap/offset 二元元组、WatermarkText 每行独立 font、Ref nativeElement 可空、无 classNames/styles 语义槽。",
-        "a11y": "纯装饰层：水印 div 无 ARIA 语义、pointer-events:none 不挡交互；axe 扫 4 demo 0 violation。",
-        "token": "无 Component Token（无样式表）。运行时经 useToken() 取 zIndexPopupBase-1 / colorFill / fontSizeLG 的实值。",
-        "compat": "17 条机械基线（SSR 只产根 div：水印 div 运行时 append）。17/17，keepStyle。绘制与防篡改由 L1/L6 覆盖。",
-        "visual": "12/12 全 exact（4 variant × 3 viewport）。canvas 绘制两侧像素一致；图片用内联 SVG data URL 避免网络时序漂移。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1251,8 +858,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "border-beam",
@@ -1261,7 +867,6 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -1275,26 +880,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "antd v6 新增组件。",
-      "layerNotes": {
-        "interaction": "无事件/受控/焦点。L2 适用面：props 更新 → Effect style/CSS 变量更新。",
-        "type": "8 例（正例 + 2 负例）。color 联合类型、数值 prop number|string 精确断言。",
-        "a11y": "Effect 恒 aria-hidden（纯装饰）。axe 扫 8 demo 0 violation。",
-        "token": "0 个 Component Token（prepareComponentToken 未传，与 antd 逐字一致）。运行时变量 --{root}-border-beam-* 由 props 内联，fallback 逐字对齐。",
-        "compat": "3 条机械基线（SSR 形态）。3/3 过，豁免 PLATFORM×3（CSSOM #ddd → rgb 序列化）。Effect 客户端 portal 两侧一致不进 SSR 基线。",
-        "visual": "6/6 全 exact（2 variant × 3 viewport；流光动画不在比对面，animation 被 stabilize 禁用后比静态形态）。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1317,8 +902,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "statistic",
@@ -1327,7 +911,6 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -1343,30 +926,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-27 完整契约清单统一验收收口；实现111fa024/633c219b。86四层、94相关类型、46生产浏览器、5 SSR、6水合、7实际Demo/两组交互及28主题组合、发布声明/UI/L7通过；清洁633c219b的36图逐张审阅批准并全部exact，原163批准记录不变。Docs主题关联单元13+144项及161测试通过。最终发布回执单列，不代表全库完成；见docs/audit/2026-10-27-statistic-contract-audit.md。",
-      "layerNotes": {
-        "referenceHistory": {
-          "interaction": "L2：mouseenter/leave 落根元素；Timer onChange 每帧、onFinish 仅 countdown 且只一次（fake timers）；loading 切换骨架/内容。",
-          "type": "9 例（正例 + 4 负例）。ValueType/TimerType 联合、语义七槽、CountdownProps 不含 type、Ref nativeElement 可空。",
-          "a11y": "纯展示组件无 role/键盘语义（上游同判）；axe 扫 6 demo 0 violation；aria/data 透传由 L1/L4 钉。",
-          "token": "2 个 Component Token（titleFontSize/contentFontSize）均别名派生，CSS 变量声明在根类、规则侧消费 var()。",
-          "compat": "17 条机械基线（Skeleton loading 分支、Timer SSR '-'、zero title/prefix/suffix、aria/data、valueStyle 合并）。17/17，keepStyle。Timer/Countdown 仅 SSR 形态。",
-          "visual": "15/15 全 exact（5 variant × 3 viewport）。Timer format 只到「天」避免两侧秒级漂移。"
-        },
-        "currentAudit": "docs/audit/evidence/statistic-contract.json：14/13/12运行时Props、四个类型化槽、change/finish emits、七语义落点与两Token；原完整清单逐项核对完成，当前生产指纹d4dbe264547d00bdf6a00798d4e119dccf405550482b0a98df777bdcce5917e6。",
-        "visual": "Apollo 12状态×3视口36张，清洁633c219bdd21857a562fb5758e1677915b11b87b采集、逐张审阅批准；最终比较36 PASS/pending=0/diffPixels=0。旧15参考与首次加载态失败证据保留，首次33图没有批准。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1387,8 +946,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "affix",
@@ -1397,7 +955,6 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 1,
@@ -1412,19 +969,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -1444,8 +988,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "back-top",
@@ -1454,7 +997,6 @@
       "priority": "P1",
       "priorityNum": 1,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -1472,26 +1014,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。L4 改用 Vue SSR 与 React SSR 基线对账，不新增差异豁免。",
-      "layerNotes": {
-        "interaction": "click（scrollTo + onClick）与 scroll（target 容器 → visible 切换）双事件；L2 用 mock target 形状钉监听/节流/scrollTo 参数。卸载必须 cancel（raf 待执行回调捕获组件状态）。",
-        "type": "3 例（正例 + 2 负例）。target 返回 HTMLElement|Window|Document 精确断言。",
-        "a11y": "无 ARIA 输出（上游语义）。axe 扫 1 demo 0 violation。",
-        "token": "1 个 Component Token（zIndexPopup = zIndexBase + 10）以 CSS 变量 calc 表达。",
-        "compat": "4 条机械基线（ConfigProvider 包裹对齐 iconPrefixCls）。4/4 过，0 豁免。",
-        "visual": "3/3 全 exact（1 variant × 3 viewport；fixed 定位，visibilityHeight=0 恒显）。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1516,8 +1038,7 @@
             "config-provider/hooks/useCSSVarCls"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "checkbox",
@@ -1526,7 +1047,6 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -1544,30 +1064,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": {
-        "unit": "20 例：受控/非受控、hover 落 label、focus/blur 落 input（issue 50768）、indeterminate 直写 input.indeterminate、组外 value 告警、冒泡锁；Group 13 例：toggle 序列、整组/option 级 disabled、disabled=false 显式关闭（?? 判据）、name 透传、受控 value、onChange 过滤已移除值（16376）+ 保序（17297）、skipGroup、number 选项、div ref。",
-        "interaction": "并入 unit：点击序列、Group toggle、事件冒泡锁（raf）、focus/blur、键盘原生（input 原生交互不 mock）。",
-        "type": "7 例（负例包永不调用闭包）：value 任意类型、classNames/styles 对象或函数、CheckboxRef expose 形状。",
-        "a11y": "原生 input+label 包裹（文本即可访问名）；Group role=group。axe 扫 8 demo 0 violation。",
-        "token": "0 Component Token（antd 同）：checkboxSize=controlInteractiveSize 全 alias。token.ts 15 行。",
-        "style": "genCheckboxStyle：:after 旋转勾（checkboxSize/14 比例）、:has(input:focus-visible) 焦点环、hover 全包 @media(hover:hover)、indeterminate 横条、direction:ltr（rtl 勾向不变）。20 份组件 CSS 含 checkbox。",
-        "compat": "21 用例机械基线（checkbox.dom.json oracle：类名三段合成 + attrs 分配 + Group 各形态 + 语义槽）——--check 一致；fixtures 4 份。",
-        "visual": "15/15 exact（basic/indeterminate/group/check-all/semantic × 3 viewport，pixelmatch 0.000%）。React 基线 15 张已入库。",
-        "docs": "8 demo 与 antd 非 debug demo 一一对应（demo.test 钉死 expectCount=8）；index.zh-CN.md / index.en-US.md。",
-        "antdApi": "docs/analysis/checkbox.md：Checkbox.js 156 行 + Group.js 105 行 + useBubbleLock + style 215 行逐条判据。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1594,8 +1090,7 @@
             "form/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "radio",
@@ -1604,7 +1099,6 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -1622,31 +1116,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": {
-        "antdApi": "docs/analysis/radio.md：radio.tsx 143 行 + group.tsx 180 行 + radioButton.tsx 31 行 + interface.ts + style 716 行逐条判据；§8 附与 extractStyle 产物的 92/92 条选择器对照、16 个 Component Token 的产物值表，以及两处实现期修正（Group name 默认值、defaultChecked 的 wrapper/span 不一致）。",
-        "api": "RadioProps / RadioGroupProps / RadioRef / RadioChangeEvent / 语义槽三键 + RadioOptionItem（复用 checkbox 的 CheckboxOptionType，antd 同）。⚠️ 命名陷阱：RadioGroupOptionType 指 optionType prop，不是 options 元素类型。",
-        "token": "16 Component Token（antd ComponentToken 全字段，R7）：radioSize / dotSize 是 unitless 常量（消费侧 calc(*1px)，CSS 无法给长度去单位），其余 14 个 var() 别名派生。radioFocusShadow / radioButtonFocusShadow 在产物里从未被消费，故不落变量。",
-        "style": "genRadioStyle：group / basic / button 三段共 92 条规则，与 antd extractStyle 产物选择器集合完全一致、零属性差异（只多 16 条 token 声明）。含 badge 伴随选择器、vertical × first/last 全组合、chrome 的 +0.02px 对齐 hack、上游两条死选择器逐字保留（U7/U8）。⚠️ radio 无 hover media query 也无 prefers-reduced-motion 段（与 checkbox 的差异，产物确认）。",
-        "unit": "51 例（上游 radio/group/radio-button 测试转断言）：非受控/受控 checked、defaultChecked 的 wrapper/span 不一致（上游行为，逐字保留）、hover 落 label、title 落 label（issue 46739）、disabled 三级合并（?? 判据）、冒泡锁（raf）、optionType 告警、语义化对象/函数两态、expose 形状；Group 24 例：受控/非受控 value、同值点击不发 onChange、子 Radio 与 Group 双发、options 三形态（无 -group-item）、name 透传与自动生成、orientation 压过 vertical、role、buttonStyle/size/block、Radio.Button 形态与 ref 转发；v-model 3 例。",
-        "interaction": "并入 unit：点击序列、事件冒泡锁（raf 一帧）、focus/blur、hover、Radio.Button 形态切换；键盘交互为 input 原生（不 mock）。",
-        "type": "10 例（5 条负例包在永不调用的闭包里）：RadioProps / RadioGroupProps 关键字段、RadioChangeEvent 形状、语义化两态、静态子组件 h() 可用、optionType 与 buttonStyle 的枚举互斥、checked 类型。",
-        "a11y": "原生 input+label 包裹（文本即可访问名）；Group role=\"radiogroup\"。axe 扫 14 个 demo 0 violation。",
-        "compat": "31 用例机械基线（radio.dom.json oracle：label/span/input/label-span 四层类名合成、button 形态换整段前缀、Group 各形态、orientation/vertical/size/block/buttonStyle、aria/data 透传、语义槽）；fixtures 4 份（basic/group/button/semantic）。",
-        "visual": "15/15 exact（basic / group / button / size / semantic × 3 viewport，pixelmatch 0.000%）。React 基线 15 张已入库 tests/visual/baselines/react/radio/。",
-        "docs": "14 demo 与 antd 非 debug demo 一一对应（demo.test 钉死 expectCount=14）；index.zh-CN.md / index.en-US.md / README.md（含 16 token 表、关键判据速查、两处死选择器登记、全仓 v-model 缺口）。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1676,8 +1145,7 @@
             "form/hooks/useForm"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "switch",
@@ -1686,7 +1154,6 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -1702,31 +1169,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。\n2026-10-24 后续 D02/ADR0007：原生 click 已直接迁移，旧结果值回调移除；当前证据见 docs/audit/2026-10-24-switch-native-events-remediation.md，旧批次未改 click 的描述保留为历史。",
-      "layerNotes": {
-        "antdApi": "docs/analysis/switch.md：index.tsx 198 行 + style/index.ts 445 行 + rc-switch 1.0.3 的 es/index.js 逐条判据；§8 附与 extractStyle 产物的选择器集合对拍（完全一致、零属性差异）与两处实现缺陷的定位过程。",
-        "api": "SwitchProps / SwitchRef / SwitchChangeEventHandler（`(checked, event)` 两参）/ SwitchSemanticType 三槽。⚠️ `value`/`defaultValue` 是 `checked`/`defaultChecked` 的别名（不是「选项值」）；`size` 保留废弃的 `default`。 2026-10-24：SwitchClickEventHandler 独立为 (event: MouseEvent) => void，click typed emit；change 保留业务载荷。",
-        "token": "13 Component Token（antd ComponentToken 全字段，R7）：构建期用 prepareComponentToken(getDesignToken()) 算出解析值并内联（22px/44px/#fff/rgba(0,35,11,0.2)…），代价是不随主题缩放（D50）。两个 antd 字面量（border-radius:100px、loading 图标色）收敛到 token.ts（D53）。",
-        "style": "genSwitchStyle：根 / inner / handle / small 四段共 42 条规则，与 antd extractStyle 产物选择器集合完全一致、零属性差异（只多 13 条 token 声明）。含 5 处 prefers-reduced-motion（伪元素逐个展开 + handle::before 用 raw 变体）、无 hover media query、chrome 无关的负 margin 轮换几何。",
-        "unit": "28 例（上游 index.test 转断言 + rc-switch 语义）：受控/非受控双别名、loading 强制 disabled（|| 判据）、disabled 三级合并、左右方向键（which 判据）、onClick 收到结果值且 disabled 仍触发（dispatchEvent 观测）、三层 DOM 恒存在、children 四种形态、语义化三槽与函数形态、attrs 透传、deprecation 告警、v-model 两条别名通道。 上述为历史语义，D02 后续以标准 event.key 和原生 MouseEvent 替代 which/结果值 click；新增修饰符、数组/once、disabled 显式派发、原生 style/SSR 回归，Switch/InputNumber 16 文件221条通过。",
-        "interaction": "并入 unit：点击切换序列、键盘左右方向键、focus/blur（原生 button）、hover 由 L6 覆盖；无异步交互。",
-        "type": "10 例（3 条负例包在永不调用的闭包里）：SwitchProps 关键字段、SwitchSize 枚举（含废弃 default）、`(checked, event)` 两参签名、语义化两态、SwitchRef 形状、静态标记。 D02 后续增加原生 click 类型正负例和实际 Vue 模板；拒绝旧双参回调。",
-        "a11y": "原生 button + role=\"switch\" + aria-checked（布尔转 \"true\"/\"false\"）+ disabled；可访问名来自 children 或 aria-label。axe 扫 7 个 demo 0 violation（demo 补了 aria-label，上游同 demo 无名）。",
-        "compat": "20 用例机械基线（switch.dom.json oracle：三层结构恒存在、尺寸三档含废弃 default、loading 强制 disabled、children 四形态、value/defaultValue 别名、attrs 透传、语义化）；fixtures 4 份（basic/loading/size/semantic）。",
-        "visual": "15/15 exact（basic / loading / size / text / semantic × 3 viewport，pixelmatch 0.000%）。React 基线 15 张已入库 tests/visual/baselines/react/switch/。",
-        "docs": "7 demo 与 antd 非 debug demo 一一对应（demo.test 钉死 expectCount=7）；index.zh-CN.md / index.en-US.md / README.md（含 13 token 表、关键判据速查、dark 分叉登记）。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -1754,8 +1196,7 @@
             "config-provider/hooks/useSize"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "input",
@@ -1764,7 +1205,6 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -1786,19 +1226,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "含 Input / TextArea / Search / Password / OTP 子组件。必须保留输入法组合态（IME）处理能力，不可简化。\n2026-10-29当前主题尺寸/覆盖链窄整改：已有19个Input ComponentToken配置未消费、InputAffixPadding声明缺失、Provider style/Group/OTP尺寸及autoSize重测问题已成组复现并修复验收中；Registry原tokenCount0登记缺口由主线程待冻结同步。不是完整Input全API验收，旧completed不能代表本轮通过。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29原生视觉已审阅批准：Input84张、ConfigProvider42张；清洁4637eb45独立捕获与审阅图原始RGBA完全一致。批准后关联回归和统一验收继续，当前仍testing。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。",
-      "layerNotes": "\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。\n2026-10-29 Search消费Button白字窄修及两个原搜索Demo四处监听改为@search：真实Demo红2→绿2，原13消费者场景51/51通过；Search/RTL/compact九张有意改色已审阅。原完整验收保留，见button-search-demo-events.json与button-foreground-visual.json。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -1829,8 +1256,7 @@
             "space/Compact"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "input-number",
@@ -1839,7 +1265,6 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -1859,19 +1284,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-23 F02/F04/F08 修复与回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。",
-      "layerNotes": "L1: index 19 + engine 13（Decimal/toFixed/decuple）。L3: 12（负例闭包）。L4: baselines/input-number.dom.json 24 用例（SSR，addon 升 Compact）。L5: axe 12 demo（label 豁免 U12）+ role=spinbutton/aria。L6: 3 variant × 3 viewport = 9 张。L7: token 契约 12。deprecated×3 告警；D66 两层组件/D67 onXxx 键名。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -1901,8 +1313,7 @@
             "space/Addon"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "listy",
@@ -1911,7 +1322,6 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -1926,19 +1336,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "antd v6 新增组件。",
-      "layerNotes": "L4: baselines/listy.dom.json 7 用例（仅 Raw 路径；虚拟 DOM 属 foundation PLATFORM）。L6: 3 variant × 3 viewport = 9 张。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -1961,8 +1358,7 @@
             "config-provider/hooks/useCSSVarCls"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "qr-code",
@@ -1971,7 +1367,6 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 1,
         "unblocks": 0,
@@ -1989,27 +1384,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-26 完整清单统一验收：原生status槽/稳定refresh事件、当前语言/Provider/遮罩Token、根与图像样式、默认对比度及名称。75四层、92类型、44生产浏览器、10 SSR、6组水合、5实际Demo/两组交互及UI/L7/Docs通过。清洁f4b82b4d的36张Apollo视觉已逐张批准且全部exact；完整清单/指纹与边界见 docs/audit/2026-10-26-qrcode-contract-audit.md。不代表全库最终门禁。",
-      "layerNotes": {
-        "api": "开发版直接移除statusRender，typed #status完整单对象scope；refresh为稳定Vue事件操作，16个运行时Props与原生attrs/ref已核对。",
-        "interaction": "当前语言/Provider与配置移除、原生编辑器身份/焦点、模式/状态往返、真实像素/DPR/绘制回退及Demo重复刷新/卸载通过。",
-        "token": "唯一遮罩Token已消费当前源主题和Alias，原生变量优先；默认黑白图像配对保持，显式颜色由调用者负责对比度。",
-        "a11y": "实际canvas/svg具备可访问名称；无名称上游豁免移除，默认刷新为文本按钮，真实浏览器axe与键盘通过。",
-        "visual": "清洁f4b82b4d：12个自有状态×3视口共36张，逐张审阅批准后复验全部exact，0差异；环境darwin/x64 Chrome150，原127条批准记录未改。",
-        "docs": "原四Demo保留，新增Token Demo；双语API/迁移/发布声明同步，5实际Demo与两组交互本地通过。",
-        "referenceHistory": "L4: baselines/qr-code.dom.json 8 用例（SVG path byte 级；bg hex 的 CSSOM 规范化 PLATFORM allow）。L6: 3 variant × 3 viewport = 9 张（canvas 像素同源一致）。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -2036,8 +1410,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "upload",
@@ -2046,7 +1419,6 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 4,
         "unblocks": 0,
@@ -2067,19 +1439,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-27 Button关联Demo修复：basic/default-file-list的change监听统一使用Vue @change；原生删除removed提示已验证，保留全部23 Demo。此项不是Upload全部API重新验收。\n2026-10-29进度窄单元：内部UploadProgress组合实际Progress，六配置字段、默认/动态尺寸、渐变/信息/ARIA与现有生命周期已修。258相关运行时、48类型、40Demo源码严格及全量/单独CSS各75浏览器通过；发布重建和Docs验收待执行，不宣称完整Upload审计。见2026-10-29-upload-progress-audit.md。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2105,8 +1464,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "splitter",
@@ -2115,7 +1473,6 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -2131,19 +1488,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": "L4: baselines/splitter.dom.json 9 用例（SSR 路径，容器未测量）。L6: 3 variant × 3 viewport = 9 张。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2167,8 +1511,7 @@
             "config-provider/hooks/useCSSVarCls"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "carousel",
@@ -2177,7 +1520,6 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -2192,19 +1534,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": "L4: baselines/carousel.dom.json 19 用例，keepStyle；fade 的 left:0 走 CSSOM PLATFORM 豁免（COMPATIBILITY §9.1）。L6: 4 variant × 3 viewport = 12 张，React 基线入库。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2227,8 +1556,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "collapse",
@@ -2237,7 +1565,6 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -2256,19 +1583,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-24 F07/F09：内容 slot 优先（含空 slot）、当前渲染子树和语义 change emits 的整改证据见 docs/audit/2026-10-24-content-events-remediation.md。Switch click 的 D02 未改载荷；保留历史完成/视觉标记的来源含义。\n2026-10-29完整清单源码冻结并完成发布专项；状态testing，整批ConfigProvider/Input整合与Docs收口继续，完整组件交付数仍21/72。证据 docs/audit/2026-10-29-divider-collapse-published-milestone.md。\n2026-10-29源码整合里程碑：完整实现、迁移、发布JS/CSS/类型及相关浏览器检查已交付；全库运行回归、Input/Provider新视觉和最终Docs统一验收继续，暂不增加完整交付数。本批后暂停，不派发新单元。详见docs/audit/2026-10-29-current-batch-integration.md。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。",
-      "layerNotes": "2026-10-29源码与发布专项：真实Vue Panel、一次typed事件/模型请求、所属原生heading/button/region、内容保留与destroy/forceRender、键盘/焦点、当前配置和十Token已实现并验证。发布浏览器134/134、公开SFC正负例与54张正式Apollo视觉批准后零差异。隔离旧ConfigProvider的联合667/669仍有两条Provider根身份断言未通过，保留并待共享生产者整合，不削弱断言。Docs成品及整批收口仍进行，不能据局部通过标completed。\n2026-10-29完整清单统一验收：当前公开契约、受控/非受控、动态配置/槽、真实节点/Expose、原生事件/焦点、SSR/水合、发布JS/CSS/类型、原Demo与Apollo正式视觉均有证据。本批全库四运行project复验及1215张已批准视觉关联回归通过。Docs成品与最终发布按回执记录。本批后暂停；其他组件与基础包继续开放。证据 docs/audit/evidence/current-batch-final-acceptance.json。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2302,8 +1616,7 @@
           "visualBaseline": "legacy-reference",
           "layerNotes": "L4: baselines/collapse.dom.json 12 用例（SSR 路径）。L6: 3 variant × 3 viewport = 9 张。"
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "descriptions",
@@ -2312,7 +1625,6 @@
       "priority": "P2",
       "priorityNum": 2,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -2327,19 +1639,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "n/a",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-28源码接续5ab9b3c4：119运行时、62浏览器、10SSR/水合、84真实Demo主题/交互与51原生状态预检通过；custom-label键盘帮助已修。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见对应contract-audit和descriptions-acceptance-source.json。\n2026-10-29正式原生视觉51张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。\n2026-10-29当前整改单元统一验收完成：当前发布声明/实际Demo、组合CSS/根严格/UI L7、222张新视觉批准后重渲染raw精确（四组总量），既有537回归与Docs161+32通过。完整交付17/72，证据four-unit-final-acceptance.json；更新进展页部署另记。其它组件/最终全库门禁不在此标完成。",
-      "layerNotes": "L4: baselines/descriptions.dom.json 18 用例，keepStyle。L6: 4 variant × 3 viewport = 12 张（bordered 的色差由像素比对揪出）。\n2026-10-29 clean a47d96ec 的51张Apollo原生视觉逐图审阅批准，逐图SHA/观察/相同rawRGBA继承关系见four-unit-native-visual-acceptance.json。原537条批准记录及1692份原PNG未改；全库759/1602已批准。此为该视觉维度，Docs与整单元统一验收仍独立开放。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2363,8 +1662,7 @@
             "grid/hooks/useBreakpoint"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "tooltip",
@@ -2373,7 +1671,6 @@
       "priority": "P3",
       "priorityNum": 3,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 16,
@@ -2394,19 +1691,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "【trigger 的第一个消费者】用于验证 ARCHITECTURE.md AR1（浮层定位像素级一致性）。必须先通过 PoC 验证再继续。\n2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。\n2026-10-25 F10：五个相关浮层/静态入口按Vue规则合并原生style，修复字符串挂载/SSR异常与面板语义转发。PurePanel原生style仅落根，container独立使用styles.container，按ADR0007直接迁移；证据及范围见 docs/audit/2026-10-25-overlay-native-styles-remediation.md，不表示全组件新增视觉验收。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2434,8 +1718,7 @@
             "table/TableMeasureRowContext"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "popover",
@@ -2444,7 +1727,6 @@
       "priority": "P3",
       "priorityNum": 3,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 3,
@@ -2465,19 +1747,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。\n2026-10-25 F10：五个相关浮层/静态入口按Vue规则合并原生style，修复字符串挂载/SSR异常与面板语义转发。PurePanel原生style仅落根，container独立使用styles.container，按ADR0007直接迁移；证据及范围见 docs/audit/2026-10-25-overlay-native-styles-remediation.md，不表示全组件新增视觉验收。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2499,8 +1768,7 @@
             "tooltip/hook/useMergedArrow"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "menu",
@@ -2509,7 +1777,6 @@
       "priority": "P3",
       "priorityNum": 3,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 2,
@@ -2530,19 +1797,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-28共享原生操作窄修e000152f：18成组用例及39文件576相关四层、Chrome11通过；范围仅MenuItem键盘/原生点击所属与焦点清理，不宣称Menu整组件本轮完成。见menu-native-actions-audit。",
-      "layerNotes": "2026-10-22 复审 002：InlineSubMenuList 接入完整高度 enter/leave、hidden 保留、模式退出后销毁与嵌套 context；首挂载不 appear。Playwright 同机 React/Vue 动态门禁 60/60；menu L6 9/9 exact。详见 docs/audit/2026-10-22-motion-review-002.md。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2569,8 +1823,7 @@
             "layout/Sider"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "dropdown",
@@ -2579,7 +1832,6 @@
       "priority": "P3",
       "priorityNum": 3,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 4,
         "unblocks": 1,
@@ -2604,19 +1856,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。",
-      "layerNotes": "2026-10-24 F11/ADR0006/0007：Tabs popupRender 改为单具名对象并移除函数prop，全链路原生槽转发；修复动态extra及Dropdown槽存在性快照。14文件261条runtime通过，迁移/真实浏览器/类型/产物证据见 docs/audit/2026-10-24-tabs-popup-remediation.md。Tabs20个Demo；保留历史视觉状态，Apollo基线未新验收。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2645,8 +1884,7 @@
             "space/Compact"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "modal",
@@ -2655,7 +1893,6 @@
       "priority": "P3",
       "priorityNum": 3,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -2678,19 +1915,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "【portal + motion 的第一个消费者】用于验证 AR2。焦点陷阱、Esc 关闭、滚动锁定、焦点归还必须完整实现（a11y 硬要求）。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2718,8 +1942,7 @@
             "watermark/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "drawer",
@@ -2728,7 +1951,6 @@
       "priority": "P3",
       "priorityNum": 3,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -2749,19 +1971,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": "L4: baselines/drawer.dom.json 4 用例（PurePanel 路径；打开的 Drawer 走 portal 不可 SSR）。L6: 3 variant × 3 viewport = 9 张，全 0.000% exact（受控 open + getContainer:false 内联）。L7(theme): 16 用例。差异登记 D99（closeLabel 注入点在 button）。附带把 portal 的 autoLock/onEsc 补齐（21 用例）。 2026-10-24 F11/ADR0007：修复 title 重复求值、外部 ARIA、动态空头尾正文身份与 PurePanel 原生 attrs；Drawer/Modal 15 文件225条回归、生产浏览器及类型/构建证据见 docs/audit/2026-10-24-drawer-vue-remediation.md。Apollo 自有9张基线缺失，未重新宣称视觉验收。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2785,8 +1994,7 @@
             "watermark/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "message",
@@ -2795,7 +2003,6 @@
       "priority": "P3",
       "priorityNum": 3,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -2816,19 +2023,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": "L4: baselines/message.dom.json 4 用例（静态面板路径；命令式路径走 portal 不可 SSR）。L6: 3 variant × 3 viewport = 9 张，全 0.000% exact。L7(theme): 11 用例。差异登记 D96/D97。附带落地 notification 内核（notification/engine/）。\n2026-10-22 复审 002：公共 Motion 首帧 NONE 与 DOM 提交时序修复；Playwright 验证新条 -56→8、旧条 8→64，逐帧 CSS 事件与 React 对照通过。证据 docs/audit/evidence/review-002-motion.json。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2857,8 +2051,7 @@
             "notification/util"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "notification",
@@ -2867,7 +2060,6 @@
       "priority": "P3",
       "priorityNum": 3,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -2888,19 +2080,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": "L4: baselines/notification.dom.json 4 用例（静态面板路径）。L6: 3 variant × 3 viewport = 9 张，全 0.000% exact（含 bottomRight 定位与 actions 区）。L7(theme): 16 用例。差异登记 D96/D98。复用上一轮为 message 建的通知内核。\n2026-10-22 复审 002：公共 Motion 首帧 NONE 与 DOM 提交时序修复；Playwright 验证旧条 24→134，测量高度 94，逐帧 CSS 事件与 React 对照通过。当前采样场景未发现第二个 NoticeList 布局根因。详见 docs/audit/2026-10-22-motion-review-002.md。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2927,8 +2106,7 @@
             "config-provider/hooks/useCSSVarCls"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "app",
@@ -2937,7 +2115,6 @@
       "priority": "P3",
       "priorityNum": 3,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -2952,19 +2129,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "⚠️ antd 中 App / message / notification 存在互相引用。我们必须在 ui/src/_internal/ 中提取 AppContext 叶子模块来消除环（见 dependencies.json 的 cycleResolutions）。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -2985,8 +2149,7 @@
             "notification/useNotification"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "image",
@@ -2995,7 +2158,6 @@
       "priority": "P3",
       "priorityNum": 3,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -3013,19 +2175,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-25 F11：顶层imageRender原声明未消费，直接改原生单对象槽并导出ImageSlots/ImageRenderInfo，保留原VNode状态机制。13条修前8失败/5已有通过，修后全过；完整证据见 docs/audit/2026-10-25-image-render-slot-remediation.md，不升级历史视觉或关闭preview配置扩展。 浏览器另复现默认动画名与CSS不匹配、关闭无兜底；随本批修复并保留真实隐藏断言。当前Apollo视觉批准基线仍缺9张。\n2026-10-25 F11/ADR0007：修复native字符串style崩溃和根样式误复制到img；Progress/纯占位在原单根转发attrs，保护受控ARIA并补placeholder.progress嵌套schema。首批3条修前全失败、修后通过；证据见 docs/audit/2026-10-25-image-native-styles-remediation.md，保留历史验收含义与9张Apollo视觉基线缺口。\n2026-10-25 F11：组件级classNames/styles setup快照过期改为当前getter；15条修前12失败/3已有通过、修后全通过，保持静态对象契约、优先级与富节点状态。见 docs/audit/2026-10-25-image-provider-remediation.md；PreviewGroup/预览全局样式与前缀另行复审。\n2026-10-25 F11：Image/PreviewGroup当前prop/Provider前缀改computed，Group mask-hidden改实际previewPrefix派生；14条修前10失败/4已有通过，修后全过，Image/ConfigProvider17文件239条及strict通过。见 docs/audit/2026-10-25-image-prefix-remediation.md；自定义CSS需预生成/预加载，D04不由本批关闭。\n2026-10-25 F11/ADR0007：click/error/keydown及update:open声明typed emits，移除DOM事件Function prop；修复数组/.once、keydown与显式ARIA丢失，Progress事件隔离保留。最小7条修前6失败/1已有通过，扩展20通过；见 docs/audit/2026-10-25-image-native-events-remediation.md。Vue模型/预览状态矛盾独立开放，不由typed通知关闭。\n2026-10-25 F11/ADR0007：兑现顶层v-model:open并统一Group；open/defaultOpen+typed请求，PreviewConfig5状态字段直接移除，Group current通知typed。正式SFC模型2条修前全红，状态29条/迁移6文件91通过；见 docs/audit/2026-10-25-image-open-model-remediation.md。无旧状态fallback，非状态业务配置不夹带迁移。\n2026-10-25：预览真实Portal/CSSMotion焦点13条修前10失败/3已有通过、修后全通过；晚挂载入焦、Tab边界、外部锁、Esc及关闭/卸载归还，自定义装饰图标按钮持名。见 docs/audit/2026-10-25-image-preview-focus-remediation.md；其他扩展和Apollo视觉缺口不由此关闭。\n2026-10-25：更新子图src/alt注销重注册导致组内顺序错位；6条修前4失败/2已有通过，改同id upsert并保留卸载清理后6通过。见 docs/audit/2026-10-25-image-registration-order-remediation.md；公开模型/registry协议不变。\n2026-10-25：失效preview.onTransform直接迁为Image/Group顶层typed transform事件，根导出TransformInfo；正式11条修前9失败/2已有通过，扩展15通过，含当前监听器、once、快照及关闭/拒绝复位。见 docs/audit/2026-10-25-image-transform-event-remediation.md；7条预览renderer继续开放，不升级视觉验收。\n2026-10-25 F11：预览renderer四配置字段/旧ActionsRender直接迁previewImage/previewActions/Group previewCount原生槽，当前单对象scope/typed动作/optional src/空与移除/稳定编辑器。正式13条修前11失败/2已有通过，扩展19通过；方向键编辑3条另有红→绿。见 docs/audit/2026-10-25-image-preview-slots-remediation.md，其他配置与Apollo视觉独立开放。\n2026-10-25 F11：Image使用合并后popup styles，Group补当前Provider popup类名/样式typed合并；18条修前14失败/4已有通过，修后全通过，保持局部字段浅覆盖/原生根隔离。见 docs/audit/2026-10-25-image-popup-provider-remediation.md，不升级视觉或关闭其他配置。\n2026-10-25：Group导航图标现读Provider direction，先合默认/自定义再镜像；正式4条修前3失败/1已有通过，扩展8通过，含单侧/显式null/替换与编辑器焦点变换保持。见 docs/audit/2026-10-25-image-provider-direction-remediation.md，不关闭全局RTL布局或视觉验收。\n2026-10-25 默认计数对比度：白色页面 2.33:1 / 无遮罩 1:1 已复现，默认计数增加 colorBgSpotlight 背景；实际全局主题与生产浏览器证据见 docs/audit/2026-10-25-image-counter-contrast-remediation.md，局部主题跨 Teleport 与 Apollo 视觉批准基线仍独立开放\n2026-10-25 当前缩放边界：双入口6条修前全失败，内核改当前getter；另补上限收紧禁用2红12绿，>=后14条通过。配置更新不变换/通知，保留指针锚点与复位语义；见 docs/audit/2026-10-25-image-scale-bounds-remediation.md，其他配置与视觉验收独立开放。\n2026-10-25 F11 关闭控件：双入口14条修前10红4绿，兑现当前closable/closeIcon并补原生previewCloseIcon槽；扩展18条通过，含空/移除/焦点修复/SSR/Progress/Group所有权。Demo增至18；证据见 docs/audit/2026-10-25-image-preview-close-remediation.md，mask/容器/主题/视觉独立开放。\n2026-10-25 整改单元完整盘点进行中：统一清单 docs/audit/2026-10-25-image-contract-audit.md；无DOM Node生产SSR已复现Image未定义（退出1）为本轮必修，其他字段/生命周期/主题/导出先核实并集中整改。既有独立增量不代表本单元验收，历史维度不升级。\n2026-10-26 集中契约整改（单元仍开放）：资源状态/SSR/fallback候选、mask/容器/当前step、分组模型与数据/精确类型已实施；21文件351运行回归（含57条入口回归）及14文件34条类型通过，生产Node SSR和三组原有Chrome交互通过。全部盘点浏览器20场景15通过5失败（主题及跨文档焦点）；统一证据见 docs/audit/2026-10-25-image-contract-audit.md。共享层、组合水合/视觉尚未统一验收，历史维度不升级。\n2026-10-26 共享焦点/容器组：69文件1348回归及严格通过；生产盘点21场景19通过2主题失败，稳定/替换resolver及同文档/跨文档搬迁保留编辑器焦点/值/选择区，原有堆叠/卸载/拒绝关闭及Drawer浏览器通过。整改单元继续开放；证据仍统一记录在image-contract-audit。\n2026-10-26 Image单元源主题/Token组：源上下文跨Portal、7个Token、ThemeProvider继承与Provider主题移除/恢复状态已修；可选作用域用原生Teleport保留同一插槽子树，SSR内联后水合不替换原节点，当前CSS变量前缀清理。56文件1059运行/DOM/a11y/theme串行通过（未改阈值），严格/构建/生产模板消费/L7/Docs通过；23场景生产Chrome及独立SSR水合通过。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image滚动锁/富缩略图/motion/最终视觉仍开放，不据此升级整组件维度。\n2026-10-26 交互根因组：富内容原生按钮/进度ARIA、所属文档模态退场、ShadowRoot/SVG/分层焦点及动态motion已验证；冻结源码69文件1338运行、352类型及20组生产浏览器、四包L7/SSR/模板/tarball/Docs通过。源环境读取及共享配置/开合去重后Image按需76.98KB，原77KB预算不改。统一证据 docs/audit/2026-10-25-image-contract-audit.md。Image分组所有权补验与24张Apollo视觉最终批准仍开放；全仓格式存量66错误另案登记，不声明整库通过。\n2026-10-26 分组所有权收口：items/注册切换、嵌套/同级隔离和当前项删除补验通过；删除打开者后的焦点候选改由Vue注册关系提供，普通/富内容/嵌套/Teleport及真实Demo共26生产场景零错误。最终Image四层23文件381条，严格、UI L7、SSR/模板消费者与Docs类型/14文件157条/SSG构建通过。新增逻辑成本按用户明确要求调整Image单条预算77→78KB。视觉24张候选仍待清洁提交批准，不代表全库门禁。证据仍统一见image-contract-audit。\n2026-10-26 Image完整整改单元已收口：原始完整清单逐项统一验收，当前381条运行/26场景Chrome及严格/生产L7/SSR/发布类型/Docs通过；清洁798339f5的24张Apollo候选逐张审查哈希一致后批准，真实像素复验24/24全0差异。证据 image-contract-audit 与 evidence/image-visual-browser.json。Chrome/darwin-x64及局部暗/紧凑范围明确；其他组件与全库门禁继续开放。",
-      "layerNotes": "当前L4保留9个场景及精确可访问名称差异；L6 Apollo：8类×3视口共24张，清洁798339f5、全部已审查批准及0像素回归，含局部暗/紧凑，Chrome150/darwin-x64。L7 UI 11项0失败/0pending。历史参考记录（不等于当前Apollo验收）：L4: baselines/image.dom.json 9 用例（SSR 路径）。L6: 3 variant × 3 viewport = 9 张，全 0.000% exact。L7(theme): 13 用例。差异登记 D94/D95（Vue style 数字不补 px / 声明块须覆盖 portal 根）。\n2026-10-26 List共享reset回归：24张中18张与既有批准图exact，6张rich/progress仅原生控件文字颜色有意变化，清洁5336ff77逐张审查/哈希匹配后更新6张批准记录，保留其余18条；最终24/24 exact、0像素差异。26个既有生产交互和源主题SSR水合通过，证据 docs/audit/evidence/list-visual-contract.json。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3050,8 +2199,7 @@
             "config-provider/hooks/useCSSVarCls"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "select",
@@ -3060,7 +2208,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 6,
@@ -3085,19 +2232,6 @@
           "@apollo-design/virtual-list"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "【trigger + virtual-list 的第一个消费者】。含 Select / Option / OptGroup 及 AutoComplete 复用的下拉渲染能力。\n2026-10-23 F02/F04/F08 修复与回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。\n2026-10-28 Space关联窄修356161b4：Select接入当前compactSize并用现有colorBgContainer回退；完整本轮Select审计尚未进行，见space-select-source.json。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3129,8 +2263,7 @@
             "space/Compact"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "auto-complete",
@@ -3139,7 +2272,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -3161,19 +2293,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-23 F02/F04/F08 修复与回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3192,8 +2311,7 @@
           "antdEcosystem": [],
           "leafModules": []
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "cascader",
@@ -3202,7 +2320,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -3228,19 +2345,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-23 F02 消费者回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3276,8 +2380,7 @@
             "space/Compact"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "tree",
@@ -3286,7 +2389,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -3306,19 +2408,6 @@
           "@apollo-design/virtual-list"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-24 F10：已复现并修复 ColorPicker 的 Vue 原生事件键过滤和 Rate 的 @keydown 丢失；Tree 原生 class 保持 Vue fallthrough、无重复。DOM 目标归一与一次调用证据见 docs/audit/2026-10-24-dom-attrs-remediation.md，不变更历史完整验收状态。",
-      "layerNotes": "G0-G14 收口（2026-09-29）。utils 纯函数层 31 L1 + Tree/DirectoryTree 冒烟 12 + index 26 + keyboard 9 + semantic 2+18 契约 + directory 4 + theme 11 + type 14 + a11y 24。契约基线 16 用例（tests/compat/baseline/tree.mjs，Tree 纯同步渲染 SSR 直达）。实现期关键判据：gDSFP 拆分 watch 对齐 rc needSync；MOTION_KEY 哨兵 motion diff；isLeaf prop undefined 语义（=== false 恒否决）；data 自有字段透传（rc {...restProps}）；switcher 类条件 !isLeaf prop（叶子也带 close，基线逐字）；语义合并拼接语义；DirectoryTree 受控初值含 selectedKeys。遗留：TreeNode children 形态不实现（v6 deprecated，UPSTREAM）；jsdom Space 键名规范化为 PLATFORM 差异（浏览器只发空格）。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3343,8 +2432,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "tree-select",
@@ -3353,7 +2441,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -3379,19 +2466,6 @@
           "@apollo-design/virtual-list"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-23 F02 消费者回归：见 docs/audit/2026-10-23-vue-reactivity-remediation.md。仅记录本次证据，历史 completed / legacy-reference 不表示新的完整视觉验收。",
-      "layerNotes": "收口（2026-09-29）。结构：BaseSelect 外壳（第二个 optionListRenderer 消费者，Cascader 同范式）+ 树型 OptionList 内嵌本仓 Tree。utils 纯函数 12 L1 + 主矩阵 18 （浮层树结构/值形状/级联/strategy/搜索/maxCount/clear）+ 契约 13（触发器 DOM，浮层 portal SSR 不可达同 Cascader）+ theme 12（0 自有 token 复用 tree 9 个）+ type 6 + a11y 5 + demo 15 组。关键判据：key===value（fillFieldNames）；conductCheck 在本层算、内嵌树恒 checkStrictly；内部值一律 LabeledValueType[]；BaseSelect onDisplayValuesChange 双参语义（clear 用第一参数）；listItemHeight 28；treeCheckable 包 -checkbox-inner span；样式=tree 规则+select 壳同前缀直通（shell 必须拼在树 reset 之后，dropdown 树压平嵌套 -dropdown 作用域）。遗留：TreeNode children 不实现（UPSTREAM）；Space.Compact 与 form hasFeedback 未接。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3428,8 +2502,7 @@
             "tree/utils/iconUtil"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "popconfirm",
@@ -3438,7 +2511,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 4,
         "unblocks": 0,
@@ -3463,19 +2535,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-25 F11：内容函数 prop 直接迁为原生具名槽，当前/空/移除优先级、VNode/0 数据与类型声明已修正；六入口、SSR hydration、实际发布消费端与生产浏览器证据见 docs/audit/2026-10-25-overlay-content-slots-remediation.md。历史 completed/视觉维度不代表新增 Apollo 基线验收。\n2026-10-25 F10：五个相关浮层/静态入口按Vue规则合并原生style，修复字符串挂载/SSR异常与面板语义转发。PurePanel原生style仅落根，container独立使用styles.container，按ADR0007直接迁移；证据及范围见 docs/audit/2026-10-25-overlay-native-styles-remediation.md，不表示全组件新增视觉验收。\n2026-10-25 F11：新增原生#icon，两入口支持当前/空/移除优先级与默认/VNode/false数据恢复，空槽移除图标包裹并保留正文输入；CSR/SSR/类型/实际消费端及浏览器证据见 docs/audit/2026-10-25-popconfirm-icon-slot-remediation.md。未升级历史视觉维度。\n2026-10-27 Button关联Demo修复：原async示例返回实际Promise，取消/卸载结束并清理操作，修复立即关闭与取消后第二次确认失效。外部okButtonProps.loading独立传递回归正常；共享ActionButton关闭契约未变。7项关联复现通过，非全组件新增验收。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3501,8 +2560,7 @@
             "tooltip/hook/useMergedArrow"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "tour",
@@ -3511,7 +2569,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -3533,19 +2590,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": "G4-G14 收口（2026-09-29）。测试 59+12+14 用例；视觉 9/9 exact；compat 基线 10 用例（tests/compat/baseline/tour.mjs）。实现期修复：mask 默认 true（rc 解构默认）、arrow 默认 true（rc 解构默认，视觉抓到）、Mask className 来源 mergedRootClassName、PurePanel RawPurePanel 壳结构（-placement-top + 双 -pure + container role=tooltip）。连带修复 motion 包 isSupportTransition 缺 motionName 判据（跨组件，全量回归绿）。遗留：inline 模式（getPopupContainer===false）不实现（INTENDED，antd 公开类型也未暴露）。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3572,8 +2616,7 @@
             "popover/PurePanel"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "float-button",
@@ -3582,7 +2625,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -3605,19 +2647,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3644,8 +2673,7 @@
             "config-provider/hooks/useCSSVarCls"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "form",
@@ -3654,7 +2682,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -3677,19 +2704,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "【form-core 的第一个消费者】。含 Form / Form.Item / useForm / Form.List / Form.ErrorList。",
-      "layerNotes": "收口（2026-09-29）。结构：form-core 内核（store/Field/List）+ antd 展示层（Form 壳 / FormItem control 注入 / ItemHolder margin 联动 / Label colon+requiredMark / StatusProvider / ErrorList debounce / FormList）。测试：unit 14（fieldId/布局/校验链/aria/control 注入/noStyle/validateTrigger/validateMessages）+ type 10（含 3 负例）+ dom-contract 21（tests/compat/baselines/form.dom.json，20 用例）+ a11y 11（5 个 demo 的 axe 扫描）+ theme 8 + demo 7。关键判据（本轮**修掉的**四条真 bug）：①状态取 meta.errors 而非 debounce（外层布局项聚合 noStyle 错误时**不带** -has-error，实测 antd 运行时确认）；②tooltip 判据落在 Item 级 prop 上（落在 context 上会让每个 label 多一个问号图标）；③useFormItemInputContext 必须 toValue 解包（否则 Input 吃不到 status/feedbackIcon）；④Form 必须重新 provide SizeContext（-small/-large 传导）。另：StatusProvider 不自造包裹 DOM；classNames/styles 五处语义槽从 FormContext 读；ErrorList 双层 collapse 动效走 motion 包槽。样式：extract-form-css.mjs --emit-static 机械移植 75 条规则 + apolloZoomIn；11 个 Component Token（补上 inlineItemMarginBottom）；Grid 的 --apollo-grid-display 覆盖变量按 antd 接线。遗留：Form.List 的 UI 级测试；Form 级 feedbackIcons（函数形态）的自定义图标未做 L2；scrollToFirstError 的滚动 jsdom 不可断言；demo 覆盖 5/45（README §8 登记）；classNames/styles 的 useMergeSemantic 合并未接。\n2026-10-24 F03 复核：ItemHolder 的 computed 前缀修复已在 6867166a，原 prefix-reactivity 回归 1 条通过；根/row/vertical/状态派生类随 f1→f2→f1 更新且输入 DOM 不重挂。证据 docs/audit/2026-10-24-form-prefix-recheck.md；margin-offset、真实反馈图标、layout 矩阵与生产浏览器扩展验证仍开放，不宣称重新完整验收。\n2026-10-24 F03 后续整改：ErrorList 改为实时 Item/List/ConfigProvider 前缀；prefix/layout 切换后重测 margin。真实 Input 三布局、四状态、help 显隐、独立/List 错误列表与 SSR hydration 共 8 条 prefix 回归、生产 Chrome 矩阵通过；相关消费回归 48 文件 722 条通过。证据 docs/audit/2026-10-24-form-prefix-remediation.md；此前列出的扩展功能验证已覆盖，视觉仍缺 21 张批准基线，D04 静态 CSS 策略及其他 Form 能力继续开放。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3718,8 +2732,7 @@
             "grid/col"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "slider",
@@ -3728,7 +2741,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -3751,19 +2763,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": "收口（2026-09-29）。结构：壳（antd 层）+ rc 状态机三层合一 + Handles/Tracks/Steps/Marks 表现层 + hooks（use-offset 量化内核 / use-drag 拖拽 / use-range 五开关）。测试：index 64（L1 util 3 + useOffset 11 + useRange 1；L2 渲染 13 + 值域与事件链 6 + 键盘表 9 + 点击 4 + 拖拽 4 + 禁用 2 + tooltip 4 + expose 1 + 告警 3 + 自定义把手 1）+ type 15（含 4 负例）+ dom-contract 17（tests/compat/baselines/slider.dom.json）+ a11y 32（13 demo 的 axe + 7 真实配置 + role/ARIA 6 + 键盘焦点 5 + 上游缺口 1）+ theme 10（18 token 判定值 + 4 主题 × 13 demo）+ demo 15 + 视觉 24/24 exact。关键判据：formatValue 的候选集合与「并列取后者」；offsetValues 的 unit（候选步数）vs dist（距离）两种模式；pushable 四段回推；禁用把手当锚点；键盘 Up is plus 与 PageUp=±2 候选步；keyup 才 changeComplete；拖拽结束 focus 被拖把手；值补齐判据 count||value===undefined。样式：extract-slider-css.mjs --emit-static 机械移植 54 条规则 + 18 token 声明挂根；E10 豁免名单补 rgba(0,0,0,0)。遗留：hover/active/focus 与拖拽过程帧不进像素比对；tooltip 浮层不在 L4 基线（portal SSR 不可达）；activeHandle 的三态交互未全量断言；demo 13/16（README §8 登记）。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3788,8 +2787,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "rate",
@@ -3798,7 +2796,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "S",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -3817,19 +2814,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-24 F10：已复现并修复 ColorPicker 的 Vue 原生事件键过滤和 Rate 的 @keydown 丢失；Tree 原生 class 保持 Vue fallthrough、无重复。DOM 目标归一与一次调用证据见 docs/audit/2026-10-24-dom-attrs-remediation.md，不变更历史完整验收状态。\n同批追加：字符串原生 style 的 SSR 字符下标 CSS 已红灯复现并修复，移除对象展开与强制样式断言；最后专项 6 文件 / 79 条通过。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3854,8 +2838,7 @@
             "config-provider/hooks/useSize"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "segmented",
@@ -3864,7 +2847,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -3881,19 +2863,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3917,8 +2886,7 @@
             "config-provider/hooks/useSize"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "steps",
@@ -3927,7 +2895,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 1,
@@ -3946,19 +2913,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-25：修复Timeline/Steps当前数据、布局/折叠索引、原生attrs、配置默认值与语义函数响应性；证据见 docs/audit/2026-10-25-timeline-steps-reactivity-remediation.md。保留历史验收状态，Apollo视觉仍待基线；Timeline富内容模板事项另行推进。\n2026-10-25：断点getter重新启用立即发布当前快照；Steps响应性开关不固定setup初值，Avatar/List动态转响应式复用同一修复。证据见 docs/audit/2026-10-25-breakpoint-reactivity-remediation.md；保留历史验收状态，未宣称新视觉验收。\n2026-10-25 F11/ADR0007：四槽SlotsType与精确SFC作用域接通，移除never/unknown桥接和未消费default类型；inline itemRender Tooltip自引用与默认inline提示缺失分别先红后绿。报告 docs/audit/2026-10-25-steps-native-slots-remediation.md；21个Demo，9张Apollo基线仍缺失，未重新声明整组件验收。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -3983,8 +2937,7 @@
             "grid/hooks/useBreakpoint"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "progress",
@@ -3993,7 +2946,6 @@
       "priority": "P4",
       "priorityNum": 4,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 1,
@@ -4014,19 +2966,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-29 Upload关联窄修：Line数字宽度正确输出px，ARIA保留有限小数并限制0–100，status整数推导保留。源码及关联浏览器验证见upload-progress-source-freeze.json；完整Progress本轮审计仍未完成。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4052,8 +2991,7 @@
             "config-provider/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "pagination",
@@ -4062,7 +3000,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 3,
@@ -4083,19 +3020,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-24 F11/F10/ADR0006/0007：Pagination三个渲染函数入口已直接迁为原生单对象槽；List/Table转发item/total/size内容，Table分页VNode在render创建；原生attrs/style与配置业务回调类型修复。21文件692条runtime及产物/浏览器/类型证据见 docs/audit/2026-10-24-pagination-slots-remediation.md。保留历史状态，不宣称Apollo新视觉验收。",
-      "layerNotes": "收口（2026-09-29）。结构：壳（antd）+ rc 状态机 + Pager/Options/getPagerList（页码算法抽成**纯函数**）+ useShowSizeChanger。测试：L1 pagers 227（**224 行页码列表判定表**用 antd SSR 产物穷举对拍：total × current × showLessItems × showPrevNextJumpers）+ L2 index 47（结构/值变化/showTotal/itemRender/简化模式/快速跳转/尺寸切换/ConfigProvider 合并）+ L3 type 28 + L4 dom 23（tests/compat/baselines/pagination.dom.json）+ L5 a11y 36（12 demo 的 axe + 10 真实配置 + role/ARIA + 键盘 Enter）+ theme 14（12 token 判定 + 4 主题 × 12 demo）+ demo 14 + 视觉 30/30 exact。关键判据：页码列表 6 处边界（pageBufferSize / current!==1+2 / current!==allPages-2 / !showLessItems 挤位 / ±5 与 ±3 / 补类位置）；current 三重钳制；changePageSize 必须先取旧 current；快速跳转要先取值再清空；输入过滤要把 DOM 值按回去；prev/next 的 hasPrev 守卫；simple 仍渲染 prev/next。样式：108 条规则 + 2 媒体查询 + 32 条 token 声明。遗留：getPopupContainer 的浮层位置不在 L4 基线（portal）；responsive 的 xs 分支 jsdom 不可命中；demo 12/16（README §8）。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4121,8 +3045,7 @@
             "grid/hooks/useBreakpoint"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "breadcrumb",
@@ -4131,7 +3054,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -4151,19 +3073,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-28源码接续40ec3962及Menu e000152f：原生Enter导航红灯已修；114运行时、14浏览器、60真实Demo主题/交互和51原生状态预检通过。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见对应contract-audit。\n2026-10-29正式原生视觉51张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。\n2026-10-29当前整改单元统一验收完成：当前发布声明/实际Demo、组合CSS/根严格/UI L7、222张新视觉批准后重渲染raw精确（四组总量），既有537回归与Docs161+32通过。完整交付17/72，证据four-unit-final-acceptance.json；更新进展页部署另记。其它组件/最终全库门禁不在此标完成。",
-      "layerNotes": " 2026-10-24 F11/ADR0006/0007：itemRender函数已移除，改为具名对象槽，保留逐项paths/href；默认子组件按Vue渲染/key更新且无整组件弃用告警。6文件94条runtime通过、10个Demo；当前类型/浏览器/产物证据见 docs/audit/2026-10-24-breadcrumb-slots-remediation.md，Apollo24张批准基线缺失，不升级历史视觉状态。\n2026-10-29 clean a47d96ec 的51张Apollo原生视觉逐图审阅批准，逐图SHA/观察/相同rawRGBA继承关系见four-unit-native-visual-acceptance.json。原537条批准记录及1692份原PNG未改；全库759/1602已批准。此为该视觉维度，Docs与整单元统一验收仍独立开放。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4187,8 +3096,7 @@
             "dropdown/dropdown"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "tabs",
@@ -4197,7 +3105,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 1,
@@ -4217,19 +3124,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": "收口（2026-09-30）。结构：Tabs.vue（壳+状态机）+ TabNavList（593 行的等价物）+ TabNode + OperationNode + AddButton/ExtraContent + TabPanelList/TabPane + util.ts + 5 个 hooks（几何全部抽成**纯函数**）。测试：L1 pure 33（getAnimateConfig 四分支 / getRemovable 四条件 / 三区间 / visibleRange 哨兵 / getTabOffsets「复用只递一层」/ getIndicatorStyle + **单位哨兵**）+ L2 index 46（结构与类名 / ARIA / **id 异步生成** / activeKey 自动重置四态 / change·tabClick 分流 / 键盘表 / editable 载荷改写 / 面板卸载轮询 / ConfigProvider 的 SizeContext 与 more.icon 四级优先 / 语义槽 + popup 展平 / #extra·#tabBar）+ L3 type 36 + L4 dom 26 用例 27/27（各恰好 1 条豁免 = **U15**；两侧都显式传 id）+ L5 a11y 26（16 配置 axe + role/ARIA + 键盘，`aria-required-children` 可自证豁免）+ theme 20（26 token 判定 + 4 主题 × 13 demo）+ demo 15 + 视觉 39/39 exact。关键判据：见 README §5 的 12 条。样式：128 条规则 + 26 条 token 声明。遗留：溢出下拉的「真溢出」只有单元级覆盖；26 个 token 无用户覆盖入口；demo 维度的 axe 刻意不接（allow 语义限制）。 2026-10-24 F11/ADR0006/0007：Tabs popupRender 改为单具名对象并移除函数prop，全链路原生槽转发；修复动态extra及Dropdown槽存在性快照。14文件261条runtime通过，迁移/真实浏览器/类型/产物证据见 docs/audit/2026-10-24-tabs-popup-remediation.md。Tabs20个Demo；保留历史视觉状态，Apollo基线未新验收。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4255,8 +3149,7 @@
             "config-provider/hooks/useSize"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "card",
@@ -4265,7 +3158,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -4285,19 +3177,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4322,8 +3201,7 @@
             "form/hooks/useVariants"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "timeline",
@@ -4332,7 +3210,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 4,
         "unblocks": 0,
@@ -4349,21 +3226,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "n/a",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-28源码接续3ce8d1d2：249相关运行时、17浏览器、180真实Demo主题/宽度组合与78原生状态预检通过；横向长文布局与圆点/连线对齐、Demo对比度/标题修复。发布JS/CSS/声明、正式视觉/Docs统一验收待完成，见timeline-contract-audit。\n2026-10-29正式原生视觉78张已批准，clean a47d96ec；当前声明及52个实际Demo模板消费（四组总量）通过。Docs收口继续，整单元仍testing。\n2026-10-29当前整改单元统一验收完成：当前发布声明/实际Demo、组合CSS/根严格/UI L7、222张新视觉批准后重渲染raw精确（四组总量），既有537回归与Docs161+32通过。完整交付17/72，证据four-unit-final-acceptance.json；更新进展页部署另记。其它组件/最终全库门禁不在此标完成。",
-      "layerNotes": {
-        "visual": "2026-10-29 clean a47d96ec 的78张Apollo原生视觉逐图审阅批准，逐图SHA/观察/相同rawRGBA继承关系见four-unit-native-visual-acceptance.json。原537条批准记录及1692份原PNG未改；全库759/1602已批准。此为该视觉维度，Docs与整单元统一验收仍独立开放。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -4389,8 +3251,7 @@
             "steps/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "masonry",
@@ -4399,7 +3260,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 0,
@@ -4417,19 +3277,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-24 F10/ADR0007：根原生attrs/class/style当前值透传，load/error捕获重测量，fresh=false图片尺寸变更可重新排布；7文件86条runtime及类型/浏览器/产物证据见 docs/audit/2026-10-24-masonry-native-media-remediation.md。itemRender模板迁移与SSR事项仍开放，保留历史验收状态。\n2026-10-24 F11/ADR0006/0007：移除itemRender/MasonryItemRenderInfo，原生泛型#item及槽优先/空槽规则；同key新数组更新、当前语义props、组件更新重测量。专项证据见 docs/audit/2026-10-24-masonry-slots-remediation.md；SSR首帧与21张Apollo基线仍待处理，未重新声明整组件验收。\n2026-10-24 ADR0007：SSR直接输出当前items/#item，测量前正常网格流/自然高度，挂载实测后切换瀑布流；水合保留条目和输入身份/预输入值。见 docs/audit/2026-10-24-masonry-ssr-remediation.md；前阶段SSR待办由此更新，21张Apollo基线仍缺失，保留历史验收记录。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4456,8 +3303,7 @@
             "grid/hooks/useGutter"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "anchor",
@@ -4466,7 +3312,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -4484,19 +3329,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4519,8 +3351,7 @@
             "config-provider/hooks/useCSSVarCls"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "list",
@@ -4529,7 +3360,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 4,
         "unblocks": 0,
@@ -4551,19 +3381,6 @@
           "@apollo-design/virtual-list"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-24 F11/F10/ADR0006/0007：Pagination三个渲染函数入口已直接迁为原生单对象槽；List/Table转发item/total/size内容，Table分页VNode在render创建；原生attrs/style与配置业务回调类型修复。21文件692条runtime及产物/浏览器/类型证据见 docs/audit/2026-10-24-pagination-slots-remediation.md。保留历史状态，不宣称Apollo新视觉验收。\n2026-10-25：断点getter重新启用立即发布当前快照；Steps响应性开关不固定setup初值，Avatar/List动态转响应式复用同一修复。证据见 docs/audit/2026-10-25-breakpoint-reactivity-remediation.md；保留历史验收状态，未宣称新视觉验收。",
-      "layerNotes": "2026-10-24 F11：renderItem 直接迁移为泛型 #item，接通 header/footer/loadMore 插槽并移除继承的整组件废弃警告。证据 docs/audit/2026-10-24-list-slots-remediation.md；Item/Meta 内容字段、根 extra 与拖拽示例继续审查，不宣称完整重新验收。\n后续 F11：Item.extra/actions 与 Meta.avatar/title/description 接通原生插槽，移除默认槽跨帧缓存，覆盖动态/空内容、keyed 操作、heading 与 grid ref。证据 docs/audit/2026-10-24-list-item-slots-remediation.md；根 extra 与拖拽示例继续开放。\n2026-10-26 完整盘点后集中修正配置/稳定内容、分页、前缀、主题及样式隔离；99文件1788条关联unit、152条类型与55项生产Chrome检查通过。整改单元仍开放，Apollo视觉/暗色紧凑与完整收口待验；现有维度保持历史含义。证据 docs/audit/2026-10-26-list-contract-audit.md。\n2026-10-26 视觉/主题验收阶段：带边框Token间距、普通及全屏loading对比度、Spin正文流/真实mask与当前样式工厂已修复；30文件512相关四层、152类型、97项Chrome检查及原生控件19项通过。57张List候选已逐张审阅，仍待清洁提交捕获/批准和最终像素复验，尚未改变visualBaseline。证据 docs/audit/evidence/list-visual-contract.json。\n2026-10-26 List完整清单统一验收收口：16/6/4 Props、9/3/3槽、原生attrs/ref/Provider/分页、11个Token和12个实际Demo已复核。清洁5336ff77的57张Apollo图逐张审查、哈希匹配后批准，最终57/57 exact、0像素差异；连同共享Image共81张全exact。512相关四层、152类型、97项Chrome、19原生控件、715+59命名消费者、13包tarball Vite/Webpack、UI/L7/Docs/Registry通过。证据 docs/audit/2026-10-26-list-contract-audit.md 与 evidence/list-visual-contract.json；其他组件、基础包及最终全库门禁仍开放。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4588,8 +3405,7 @@
             "grid/hooks/useBreakpoint"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     },
     {
       "name": "table",
@@ -4598,7 +3414,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "XL",
-      "status": "completed",
       "derived": {
         "dagLevel": 4,
         "unblocks": 0,
@@ -4627,21 +3442,6 @@
           "@apollo-design/utils",
           "@apollo-design/virtual-list"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "最复杂组件：固定列/表头、虚拟滚动、展开行、排序过滤、行列合并。泛型签名是 AR6（Vue 泛型组件表达力）的验证点。\n2026-10-24 H03：原生行/列拖放消费示例、键盘等效移动、重置与单元格对应关系已浏览器验证，Demo/axe 96 条通过；见 docs/audit/2026-10-24-demo-capabilities.md。仅补能力证据，不宣称 Table 完整重新验收。\n2026-10-24 F11/F10/ADR0006/0007：Pagination三个渲染函数入口已直接迁为原生单对象槽；List/Table转发item/total/size内容，Table分页VNode在render创建；原生attrs/style与配置业务回调类型修复。21文件692条runtime及产物/浏览器/类型证据见 docs/audit/2026-10-24-pagination-slots-remediation.md。保留历史状态，不宣称Apollo新视觉验收。",
-      "layerNotes": {
-        "typographyThemeConsumer": "2026-10-28仅关联四十变量当前主题、既有覆盖、原生优先级和筛选Portal验证，不代表Table完整契约重验收。见Typography清单。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -4672,8 +3472,7 @@
             "grid/hooks/useBreakpoint"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "transfer",
@@ -4682,7 +3481,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "XL",
-      "status": "completed",
       "derived": {
         "dagLevel": 5,
         "unblocks": 0,
@@ -4707,19 +3505,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "\n2026-10-23 F01/F06 整改：见 docs/audit/2026-10-23-picker-transfer-remediation.md。局部回归与具体未验项单独记录，不改变 legacy-reference 的视觉含义。",
-      "layerNotes": "收口（2026-10-04）。结构：Transfer（状态机：useData 拆分/useSelection 勾选/useMultipleSelect shift 区间多选）+ Section（头部三态 checkbox + 下拉菜单 + 过滤 + footer）+ ListBody（列表 + 内嵌 Pagination）+ ListItem（双形态：勾选/oneWay 删除）+ Actions（克隆自定义按钮）。样式：antd 产物机械移植 53 条 + 7 token（transferHeaderVerticalPadding 为派生第 7 个，变量名双 transfer 照抄）。测试：L2 index 33（结构/勾选/移动/oneWay/搜索/filterOption/分页/受控/rowKey/render/footer）+ L4 dom-contract 31（基线 30 用例 + 覆盖对拍；差异仅图标命名 D23 与 a11y 增强 aria-label）+ L5 a11y 19（demo axe + 8 配置 + 3 ARIA）+ theme 11 + types 32。差异：a11y 增强（checkbox aria-label，超出 antd）；rtl 未消费 direction（KNOWN-GAPS）。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4747,8 +3532,7 @@
             "input/Input"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "mentions",
@@ -4757,7 +3541,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "XL",
-      "status": "completed",
       "derived": {
         "dagLevel": 2,
         "unblocks": 0,
@@ -4780,19 +3563,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-25 F11：popupRender函数prop直接迁为单对象原生槽，四层当前函数转发，render边界向Trigger传VNode，支持条件/空/移除、当前菜单数据与编辑器状态/键盘选择；类名边界移除as never并归一，原示例补可访问名且移除旧label豁免。范围与证据见 docs/audit/2026-10-25-mentions-popup-slot-remediation.md，不表示其余内容/attrs或Apollo视觉已验收。\n2026-10-25：8条包装层绑定回归修前6失败/2裸形态通过，修复clear/Form反馈外层根style丢失与显式silent被忽略。CSR/SSR、编辑器状态、三形态生产浏览器及发布消费端见 docs/audit/2026-10-25-mentions-native-bindings-remediation.md，不升级历史视觉验收。\n2026-10-25 F09增量：Mentions change/select/search改typed emits并移除重复input通道，支持.once、监听器数组和当前替换，两个Demo改@search。证据见 docs/audit/2026-10-25-mentions-core-events-remediation.md，其余事件仍待复审。\n2026-10-25：原生/辅助事件改typed emits，6条修前失败验证监听器数组、键盘转发与卸载blur缺陷；追加复现补齐包装focused类，最终7条局部通过。完整检查见 docs/audit/2026-10-25-mentions-native-events-remediation.md，不关闭候选键盘或其他内容问题。\n2026-10-25：6条key-only/冲突which/IME控制键回归修前失败，候选改标准key并保留旧断言，证据见 docs/audit/2026-10-25-mentions-keyboard-remediation.md；完整IME、内容与视觉仍未由此验收。\n2026-10-25 F11：新增原生notFoundContent当前槽，修复配置忽略、false字符串与VNode数组递归、slot存在时回退急求值。另复现候选label同源布尔/数组问题并统一归一，13条局部覆盖含SSR/隐藏popup/已有候选/loading守卫与单次选择；完整证据见 docs/audit/2026-10-25-mentions-empty-content-remediation.md，其他内容/IME/视觉继续复审。",
-      "layerNotes": "引擎 in-ui（packages/ui/src/mentions/engine/）；textarea 复用 input/engine/TextArea（**顺手补了两处 input 引擎缺口**：onKeyUp prop、${prefixCls}-disabled、BaseInput 的 clone 丢 children），浮层复用 _internal/trigger，候选列表**自建**（不复用 menu/Menu，理由见 engine/DropdownMenu.ts）。L4 20/20；L6 24 张。",
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4822,8 +3592,7 @@
             "select/usePopupRender"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "color-picker",
@@ -4832,7 +3601,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 4,
         "unblocks": 0,
@@ -4856,19 +3624,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "颜色引擎在 packages/ui/src/color-picker/engine/（rc 判 in-ui）：Color 子类 + 纯几何。L4 只覆盖触发器 —— 面板在 Popover 的 Portal 里、SSR 不渲染（上游告警 Portal only work in client side），PurePanel 在 SSR 下也不渲染面板 ⇒ 面板的 DOM 契约由 L6（真浏览器，27/27 exact）承担，这是有意的分工。已知差异：① 传自定义 children 时本仓多包一层 span —— **已修**（改为经渲染函数宿主组件转交，见 PITFALLS 330）；② 9 个 mergeToken 派生值本仓声明成 --apollo-color-picker-*（上游内联字面量，有意差异，计算值逐位相同）。L6 抓到的真 bug：use-mode-color 的 watch 漏 immediate ⇒ 初始为渐变时渐变条不渲染（已修，回归哨兵在 fixtures/color-picker/gradient.json）。\n2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。\n2026-10-24 F10：已复现并修复 ColorPicker 的 Vue 原生事件键过滤和 Rate 的 @keydown 丢失；Tree 原生 class 保持 Vue fallthrough、无重复。DOM 目标归一与一次调用证据见 docs/audit/2026-10-24-dom-attrs-remediation.md，不变更历史完整验收状态。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4898,8 +3653,7 @@
             "tooltip/hook/useMergedArrow"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "date-picker",
@@ -4908,7 +3662,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "XL",
-      "status": "completed",
       "derived": {
         "dagLevel": 0,
         "unblocks": 1,
@@ -4929,19 +3682,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "【picker 引擎的第一个消费者】。含 DatePicker / RangePicker / WeekPicker 等。核心成本在 rc 的 PickerInput（4290 行、未 Vue 化），不是 antd 薄壳（非 locale 2650 行）。G1/G2 已完（docs/analysis/date-picker.md + interface.ts）；G4 分叉已裁决 = 完整对齐，决策 id `date-picker-input-kernel`。S1 功能 + 样式已落地（257 规则 / 45 声明）。**S2 全部落地（2026-10-01）**：`format` 的**补齐层**（rc `useLocale`→`fillLocale`，PITFALLS 235 更正了 234 的根因）+ `format` 的**函数形态**（PITFALLS 236）+ **提交时机状态机**（上游 `useRangeValueChange` 405 行的逐字移植，`hooks/picker-value-change.ts`）。⇒ S4 的字段导航**调度**已随之落地，S4 只剩 `-input-active` 分段**渲染**；**S3 掩码模式已落地（2026-10-01）**（`components/mask-format.ts` + `components/mask-input.ts`，上游 `MaskFormat.js` + `Input.js` 的 `format` 分支）；**S4 单值部分已落地（同日）**：`-focused` 根类名 + 确认离开才关浮层（上游 `useFocusEvents.js`）；`-input-active` 与 `useFocusLock` 是**范围专属**，随 S5 的 RangePicker 一起做。**S5 第一片已落地（同日）**：面板粒度的**受控化 + 打开即重置**（上游 `:366` / `:451-456`）；**`multiple` 全链路**（选择器渲染 + `tagRender` / `maxTagCount` / 删除；顺带还清 `_internal/overflow` 的 `renderItem` 欠账）。S5 剩余：范围两端（`RangePicker`）、`presets` / footer（需 Popup 层容器）。**G5/G6 已收口（同日）**：`__tests__/index.test.ts` 镜像上游 `DatePicker.test.tsx` 的 testCases（29 条）。⚠️ 移植中抓到并修掉两个真缺口：**废弃告警一条都没有**（`useDevWarning`，5 条，PITFALLS 246）+ **`popupStyle` 算出来却从没绑到 `Trigger`**（PITFALLS 247）。**G9 L6 二轮（2026-10-01）**：从 **3/21 → 12/21 exact**。修掉三处（都是真 bug，不是调阈值）：① 表头导航图标 —— `PickerPanel` **少声明 4 个图标 props**（PITFALLS 250，属 picker 包）；② 🚨 浮层**缺 `-panel-container` / `-panel-layout` 两层**⇒ 面板在真实浏览器里**完全点不动**（浮层根 `pointer-events: none` 无人重置）+ 无阴影 + `popup.container` 语义槽无宿主（PITFALLS 251）；③ `classNames.popup.root` **新 API 静默失效**（PITFALLS 252）。新增 `__tests__/popup-shell.test.ts`（4 条）钉住浮层外壳。**G9 L6 三轮（同日）：→ 21/21 exact**。补上浮层**页脚**（`components/Footer.ts` = 上游`Popup/Footer.js` 逐字移植 + `getShowNow` = `useShowNow.js` + 接线），`renderExtraFooter` 一并生效（PITFALLS 255；⚠️ 页脚样式早在 257 条规则里，缺的只是组件 + 接线）。顺带修掉**既有 bug**：`picker-shared.ts` 的 `isRenderable` 是**语义写反的本地副本**，收敛回 `@apollo-design/utils`（PITFALLS 254，含「修正把错规格钉住的测试」）。**S5 剩余：范围两端（`RangePicker`）与 `presets`**；`panelRender` / 浮层焦点事件 / `isInvalidateDate` 的 `showTime.disabledTime` 支仍待补（README §5.5 逐条登记）。与 G12/G13/G14。⚠️ 本轮顺带补了**两个收口缺口**：`DatePicker` 从没加进 `packages/ui/src/index.ts`、`date-picker` 从没注册进 `COMPONENT_STYLES`（⇒ CSS 从未产出）。**✅ S5 全部落地（2026-10-01 下午）—— 组件判 completed。**范围两端：`RangePicker.vue`（≈1150 行）= 上游 `generateRangePicker.js`(234) + `PickerInput/RangePicker.js`(574) + `RangeSelector.js`(209) + `Popup/*` 的 Vue 化；`presets` 全链路（`hooks/picker-presets.ts` + `components/PresetPanel.ts`，单值另接**悬停即预览**：`hoverValue` / `selectorValues` / `Selector` 的 `-input-placeholder`）。🚨 **架构差异（PITFALLS 256）**：本仓 `PickerPanel` **自己** `providePanelHack`⇒ 外层注入被「最近的赢」遮蔽 ⇒ 双面板的 `hidePrev` / `hideNext` / `onCellDblClick`改走 **props**（已加回归哨兵）。同批关闭三条欠账（README §5.5(b′) #1/#3/#4）：`useInvalidate` 全量（`isValidate` + `showTime.disabledTime` / legacy 三兄弟）、`onCellDblClick`、`hideHeader`；面板与页脚改拿**合并了 min/max 的** `disabledDate`。🚨 **编译期根因修复（PITFALLS 257/258/261/262/263）**：`picker` 包新增 `TimeConfigShowTime`（范围的 `showTime.disabledTime` 是**三参**，单值一参）；`Selector.onSelectorClick` 放宽成收事件；`toDateArray` 收范围元组（元素 `undefined → null`）；`fieldCount` 范围下改传 getter；`RangePickerProps` 上**没有** `multiple` / `removeIcon`。🚨 **L6 抓到的两个真 bug（PITFALLS 264/265）**：① 浮层 vnode 在**渲染期之外**创建 ⇒ `ref:` 的 owner 是 `null` ⇒ 生产构建抛 `Cannot read properties of null (reading refs)`（dev 只 `warn`，jsdom 与 dev 页面全绿）⇒ 改用 vnode 钩子；② `hoverValues` / `showWeakHover` / `activeHoverValue` **算了但从没传给面板** ⇒ `-cell-in-range` 的浅蓝底永远不出现（`range` 空值三视口 0.000% exact、一有值就 block-diff，正是它）。**G9 L6：21/21 → 27/27 exact**（新增 `range` / `range-value` 两个变体 × 3 视口，React 基线已入库）。L4 契约 16 → **21 用例**（+5 范围：两端 / 分隔符 / `disabled` 的 `every` 形态），L5 a11y 24 → **36 条**（含上游两条 separator 的 `aria-hidden` 测试），新增 `__tests__/s5-presets.test.ts` **15 条**。⚠️ 仍未做：`panelRender` / 浮层焦点事件（README §5.5(g)）/ `BASE_CSS` 的 `a{color:var(--apollo-color-link)}`（§5.5(b′) #2）。\n2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。\n2026-10-23 F01/F06 整改：见 docs/audit/2026-10-23-picker-transfer-remediation.md。局部回归与具体未验项单独记录，不改变 legacy-reference 的视觉含义。",
-      "layerNotes": null,
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -4967,8 +3707,7 @@
             "select/useIcons"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "time-picker",
@@ -4977,7 +3716,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 1,
         "unblocks": 0,
@@ -5001,29 +3739,6 @@
           "@apollo-design/utils"
         ]
       },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "n/a",
-      "styleStatus": "n/a",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-22 复审 002：公共 Motion 首帧修正后，初始 open 的客户端面板测试等待 Vue 提交，原有行为断言保留。\n2026-10-23 F01/F06 整改：见 docs/audit/2026-10-23-picker-transfer-remediation.md。局部回归与具体未验项单独记录，不改变 legacy-reference 的视觉含义。",
-      "layerNotes": {
-        "token": "本组件**没有 Component Token，也没有样式表**：antd 的 `es/time-picker/` 只有 `index.js` / `index.d.ts` / `locale/`（138 个「文件」里 136 个是 dayjs 语言包），没有一句样式代码 ⇒ `tokenCount = 0` 是判据不是遗漏。照 `watermark` 先例置 n/a。",
-        "style": "同上：`es/time-picker/` 没有 `style/` 目录 ⇒ 本仓也不建 `style/`，`COMPONENT_STYLES` 不加行（加了会产出 0 条规则的空文件）。观感 100% 来自 `date-picker` 的 `-picker-*` 样式与全局 Token。",
-        "unit": "L1/L2 22/22：接线（`picker='time'` 用**面板类型**断言、`mode` 丢弃、variant、`renderExtraFooter ?? addon`、范围根）/ 告警矩阵（单个 3 发 3 不发 vs 范围全发）/ 上下文路由（`timePicker` 生效且**合并两次**、`datePicker` 不泄漏）/ 默认形态（`-outlined`）。",
-        "interaction": "同上（L2 与 L1 同文件）：`v-model:open` / `v-model:value` / `@change` 中继。",
-        "type": "L3 36/36，`Type Errors no errors`：`Omit` 掉的三个键（`picker` / `showTime` / `multiple: false`）、单值收窄、语义槽联合、范围三处差别、复合组件；5 组负例闭包。",
-        "a11y": "L5 16/16：核心判据是「`<TimePicker>` 与 `<DatePicker picker=\"time\"/>` 的 a11y 属性**逐项相同**」（同时挡漏传与多传）；axe 5 形态 0 violation。⚠️ 后缀图标是 `clock-circle` 而非 `calendar`（按 picker 模式选）。",
-        "visual": "L6 15/15 `exact`（0.000%），基线 15 张入库、0 组同哈希。🚨 为此修掉了 `picker` 包的时间列滚动（PITFALLS 318：`watch(immediate, post)` 的首次回调跑在本组件渲染之前 ⇒ `ulRef === null` ⇒ 早退且永不重跑）。⚠️ 用例必须由 `value` / `defaultValue` 驱动 —— `defaultOpenValue` 被 date-picker 忽略。",
-        "compat": "L4 22/22（21 用例机械 oracle + 覆盖检查）。⚠️ SSR 下浮层走 Portal ⇒ 面板 DOM 不可达 ⇒ 面板契约由 picker 包的 L4 负责。",
-        "docs": "14 个 demo（`expectCount: 14`）+ README/zh/en。⚠️ 3 个未移植已登记 README §5：`12hours` / `interval-options`（顶层时间 props 静默失效，PITFALLS 317）、`render-panel`（PurePanel 未落地）。"
-      },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
         "antdApiStatus": "done",
@@ -5044,8 +3759,7 @@
             "form/hooks/useVariants"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "calendar",
@@ -5054,7 +3768,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "L",
-      "status": "completed",
       "derived": {
         "dagLevel": 3,
         "unblocks": 0,
@@ -5074,31 +3787,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": null,
-      "layerNotes": {
-        "antdApi": "上游 `es/calendar/` 761 行 / 146 文件（其中 136 个是 dayjs 语言包）。`generateCalendar.js` 445 + `Header.js` 201 + `style/index.js` 275。**全部逻辑都在 antd 这一层**（没有 rc 内核可复用）⇒ 本组件要自己实现状态机。",
-        "api": "`CalendarProps` **21 个键**（值/模式 3 + 渲染 3 + 约束 4 + 外观语义槽 7 + 废弃 4）。⚠️ 4 个废弃 prop 的判据是 `!== undefined`（Vue 的 props 恒含所有键）。`CalendarExpose` **只有** `nativeElement`（上游 `CalendarRef` 没有 focus/blur）。",
-        "token": "**6 个自有** Component Token + `...initPanelComponentToken` 带进 **21** 个面板 token ⇒ 实测 **27 条** `--apollo-calendar-*` 声明（含内部的 `internal_fixed_item_margin`）。⚠️ 27 而不是 26 —— 探针正则漏下划线会读错（PITFALLS 229 复现，已修）。5 个 `mergeToken` 派生里 3 个进 CSS（`CALENDAR_DERIVED` 固化**表达式**）。",
-        "style": "**31 条自有规则**（产物逐条搬运）+ **83 条面板规则**（`genPanelRules` 换作用域 + 换 token 命名空间，与产物 **83/83 逐条逐字节一致**）。⚠️ 前缀参数化（`.${p}-picker-calendar` / `--${p}-calendar-*`），与 card/alert/breadcrumb 同判。🚨 抓到一个真 bug：`calc()` 多了一个 `)` ⇒ 整条 `height` 被浏览器丢弃（L6 首轮 27/30 的根因）⇒ 已加**括号配平守卫**。",
-        "unit": "L1/L2 **29/29**：根类名条件组合（`-full`/`-mini`/`-rtl`）/ header 三段（月下拉**仅** `mode=\"month\"`）/ 事件链三条顺序判据（**同一天什么都不发**）/ `source` 是 **`panelMode`** / 三级回退与两处不同判据（`isFunction` vs 真值）/ 6 槽两段式归属 / 废弃告警。🚨 抓到真 bug：`triggerChange` **先写状态再比较** ⇒ 非受控下 `change` 永不发（PITFALLS 13/207）。",
-        "interaction": "同上（L2 与 L1 同文件）：`v-model:value` / `v-model:mode` / `@select` 中继。⚠️ `update:mode` **只在模式真的变了**时发（`panelChange` 会因跨月/跨年多发一次）。",
-        "type": "L3 **42/42**，`Type Errors no errors`：① `CalendarProps` 的**键集**（21 个，多一个少一个都算）；② `CalendarExpose` 只有 `nativeElement`；③ emits 载荷（C11 双发）；④ 6 槽**平铺**无嵌套；⑤ `CalendarCellRenderInfo` **就是** picker 的 `PanelCellRenderInfo`；⑥ 三个渲染 prop 的签名。**7 组负例**（永不调用的闭包 + `@ts-expect-error`）。",
-        "a11y": "L5 **14/14**：axe **8 形态 0 violation** + 6 条结构语义。🚨 核心判据是「`hideHeader` ⇒ 面板的 4 个导航按钮与它们的 `aria-label` **确实不在**」（本组件刻意少掉的一批语义）。⚠️ 唯一豁免 `label` 规则（header 的 `Select` 是 combobox，antd 同款不绑 `<label>`，照 `select/__tests__/a11y.test.ts` 的同一条放行）。",
-        "visual": "L6 **30/30 exact（0.000%）**：10 变体 × 3 视口，React 基线 30 张入库、0 组同哈希。⚠️ 用例的 `value` 必须落在**过去**（`2025-06-15`）—— `-date-today` 由 `getNow()` 决定，否则基线随运行日漂移。🚨 首轮 27/30 的根因是**我自己写的规则多了一个 `)`**（见 style）。",
-        "compat": "L4 **28/28 零豁免**（机械 oracle：`tests/compat/baseline/calendar.mjs` → 28 用例）。🚨 抓到两个真 bug：① `semanticProps.mode` 用错值（上游只有 `fullscreen` 有解构默认值）；② **上游 Calendar 的根节点没有 `{...restProps}`**（实测 `restProps` 出现 0 次）⇒ 改成不透传 `attrs`（但 Vue 的 class/style 显式并入）。",
-        "docs": "**8 个 demo**（`expectCount: 8`）+ README/zh/en。⚠️ 2 个未移植已登记 README §5：`lunar`（需要第三方 `lunar-typescript`）、`component-token`（与全仓 10+ 组件同判）。⚠️ 3 个 demo 的 `antd-style`（第三方 CSS-in-JS）与 2 个 demo 的 `theme.useToken()` 做了 **demo 级替换**（内联 style / SFC `<style>` / 等值字面量），已在 README §5 逐条登记。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -5123,8 +3811,7 @@
             "form/context"
           ]
         }
-      },
-      "visualBaseline": "legacy-reference"
+      }
     },
     {
       "name": "avatar",
@@ -5133,7 +3820,6 @@
       "priority": "P5",
       "priorityNum": 5,
       "complexity": "M",
-      "status": "completed",
       "derived": {
         "dagLevel": 4,
         "unblocks": 0,
@@ -5150,28 +3836,6 @@
           "@apollo-design/theme",
           "@apollo-design/utils"
         ]
-      },
-      "blockedBy": [],
-      "blockers": [],
-      "apiStatus": "done",
-      "tokenStatus": "done",
-      "styleStatus": "done",
-      "unitStatus": "done",
-      "interactionStatus": "done",
-      "typeStatus": "done",
-      "a11yStatus": "done",
-      "visualStatus": "done",
-      "docsStatus": "done",
-      "notes": "2026-10-27 Avatar完整单元收口：实现9af2a24f，共享ef832304；本组件143通过，相关4484条4461通过/23为独立db24a00c同名Typography基线失败（后续证明Teleport桩所致，原生32/32），未假报全绿。72类型、42浏览器、46Demo、17 SSR水合、16消费、Docs161/27本地与线上通过；48清洁自有图审查及原始RGBA一致、相关105视觉通过。全库其余单元/最终门禁继续。",
-      "layerNotes": {
-        "currentAudit": "docs/audit/2026-10-27-avatar-contract-audit.md；avatar-contract.json、avatar-visual-browser.json、avatar-docs-publication.json和迁移。完整清单收口，仅Avatar；Typography23条已确认测试替身问题；后续完整单元见2026-10-27-typography-contract-audit.md（2026-10-28收口）。",
-        "api": "click/error原生Vue事件，同步beforeFallback取消；image/icon完整槽和VNode数据；max单一配置，静态子组件/ref保持。",
-        "token": "12既有Token实际消费，当前源/替换/移除和四算法；Group/Popover所属宿主私有计算值保持原生变量优先级，不增加公开Token。",
-        "interaction": "初始19契约18失败；当前业务key/草稿/焦点、尺寸测量、原生溢出键盘、受控接受/拒绝和三次重挂验证通过。",
-        "type": "真实AvatarConfig→Provider类型红灯已修正闭合映射；12 Avatar类型和强类型源/发布SFC及全部10Demo通过。",
-        "a11y": "装饰alt、可见SSR文字、默认对比度和原生溢出焦点；axe/真实键盘、受控拒绝关闭、容器切换及所属关闭焦点验证，Chrome150。",
-        "visual": "清洁4e2d9d04逐张审阅48张，ef832304重建后原始RGBA48一致；Avatar/List105项既有门禁0差异，List三处SVG原始AA边界保留；原405批准/PNG和42参考文件不变。",
-        "docs": "10Demo、双语API/元数据/迁移同步；Docs161测试/85页SSG、27本地/线上浏览器通过，8a2410d9发布workflow40486797828成功；Demo深链20处现有404 SPA边界明示。"
       },
       "referenceEvidence": {
         "antdVersion": "6.6.4",
@@ -5198,8 +3862,7 @@
             "grid/hooks/useBreakpoint"
           ]
         }
-      },
-      "visualBaseline": "apollo"
+      }
     }
   ],
   "referenceEvidence": {

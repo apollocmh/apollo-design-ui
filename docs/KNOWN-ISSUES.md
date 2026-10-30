@@ -1,3 +1,5 @@
+> 本轮任务状态统一读取 `registry/vue-native-audit.json`；本文件保留问题和带日期的证据，不再手写维护当前派发/完成计数。旧逐组件九维收口要求已由 `WORKFLOW.md`、`TESTING.md` 的两阶段流程替代。
+
 # Apollo Design · 发布前最终审计与整改台账
 
 > **审计日期：2026-10-23 · 目标：`master` · 基线 SHA：`dcecc4d512582b65a28e69e25c004df0ecada815`**  

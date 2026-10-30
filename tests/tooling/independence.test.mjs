@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -17,7 +18,7 @@ import { buildCases } from '../visual/matrix.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
-test('Registry supports Apollo-only components, preserves evidence and rejects drift without writing', (context) => {
+test('Static Registry supports Apollo-only components, preserves metadata and rejects drift without writing', (context) => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'apollo-registry-'));
   context.after(() => fs.rmSync(root, { recursive: true, force: true }));
   fs.mkdirSync(path.join(root, 'registry/tools'), { recursive: true });
@@ -32,7 +33,6 @@ test('Registry supports Apollo-only components, preserves evidence and rejects d
   data.components.push({
     name: 'apollo-only',
     priority: 'P0',
-    status: 'testing',
     derived: {},
     dependencies: { components: ['button'], typeOnly: [] },
     notes: 'preserve this evidence',
@@ -46,20 +46,107 @@ test('Registry supports Apollo-only components, preserves evidence and rejects d
   assert.equal(spawnSync(process.execPath, [script, '--check']).status, 0);
   const generated = JSON.parse(fs.readFileSync(file, 'utf8'));
   assert.equal(generated.components.at(-1).notes, 'preserve this evidence');
-  assert.equal(generated.components.at(-1).status, 'testing');
+  assert.equal(Object.hasOwn(generated.components.at(-1), 'status'), false);
   const tokenFile = path.join(root, 'registry/tokens.json');
   const tokens = JSON.parse(fs.readFileSync(tokenFile, 'utf8'));
-  tokens.layers.seed.status = 'in-progress';
+  tokens.layers.seed.referenceNote = 'Apollo-owned token inventory';
   tokens.layers.seed.tokens.push('apolloExclusiveToken');
   fs.writeFileSync(tokenFile, JSON.stringify(tokens));
   execFileSync(process.execPath, [script]);
   const refreshed = JSON.parse(fs.readFileSync(tokenFile, 'utf8'));
-  assert.equal(refreshed.layers.seed.status, 'in-progress');
+  assert.equal(refreshed.layers.seed.referenceNote, 'Apollo-owned token inventory');
   assert.equal(refreshed.summary.seed, tokens.layers.seed.tokens.length);
   assert.deepEqual(generated.components[0].referenceEvidence, data.components[0].referenceEvidence);
   generated.components.at(-1).dependencies.components = ['apollo-only'];
   fs.writeFileSync(file, JSON.stringify(generated));
   assert.notEqual(spawnSync(process.execPath, [script]).status, 0);
+});
+
+test('Retired implementation states stay archived and cannot become a second current state', (context) => {
+  const archived = path.join(ROOT, 'docs/history/registry-implementation-2026-10-29');
+  const components = JSON.parse(fs.readFileSync(path.join(archived, 'components.json'), 'utf8'));
+  const foundation = JSON.parse(fs.readFileSync(path.join(archived, 'foundation.json'), 'utf8'));
+  const tokens = JSON.parse(fs.readFileSync(path.join(archived, 'tokens.json'), 'utf8'));
+  assert.equal(
+    components.components.filter((entry) => entry.status === 'completed').length,
+    components.components.length,
+  );
+  assert.ok(components.components.some((entry) => entry.layerNotes && entry.unitStatus));
+  assert.ok(foundation.packages.every((entry) => entry.verification && entry.dimensions));
+  assert.equal(
+    tokens.layers.seed.status,
+    'todo',
+    'the historical token record is preserved even when its old state was stale',
+  );
+  // Immutable migration input from 4bac25ce; no deep Git fetch is needed to check it in CI.
+  const baselineDigests = {
+    'components.json': '67626840dc0c704259a1ee54b8ac2a9e743f06a35d51b25902c57b02b91fe878',
+    'foundation.json': '135cf087f9a0bf22305ec947a664b7feabfade7d7e61a5204a6e1770d64af356',
+    'tokens.json': '162e107d0028a3c6894fc0badc1d2dfa63d963016a781e6593a02e35ca4a015d',
+  };
+  for (const [file, digest] of Object.entries(baselineDigests)) {
+    assert.equal(
+      createHash('sha256')
+        .update(fs.readFileSync(path.join(archived, file)))
+        .digest('hex'),
+      digest,
+    );
+  }
+
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'apollo-static-progress-'));
+  context.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  fs.mkdirSync(path.join(root, 'registry/tools'), { recursive: true });
+  for (const name of ['components.json', 'dependencies.json', 'tokens.json'])
+    fs.copyFileSync(path.join(ROOT, 'registry', name), path.join(root, 'registry', name));
+  const script = path.join(root, 'registry/tools/gen-registry.mjs');
+  fs.copyFileSync(path.join(ROOT, 'registry/tools/gen-registry.mjs'), script);
+  const file = path.join(root, 'registry/components.json');
+  const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+  data.components[0].status = 'completed';
+  fs.writeFileSync(file, JSON.stringify(data));
+  const before = fs.readFileSync(file, 'utf8');
+  const result = spawnSync(process.execPath, [script, '--check'], { encoding: 'utf8' });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /progress belongs to registry\/vue-native-audit.json/);
+  assert.equal(fs.readFileSync(file, 'utf8'), before);
+});
+
+test('Foundation facts regenerate without verification or task-state writes, and --check is read-only', (context) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'apollo-foundation-facts-'));
+  context.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  fs.mkdirSync(path.join(root, 'registry/tools'), { recursive: true });
+  for (const name of ['components.json', 'foundation.json'])
+    fs.copyFileSync(path.join(ROOT, 'registry', name), path.join(root, 'registry', name));
+  const script = path.join(root, 'registry/tools/foundation-status.mjs');
+  fs.copyFileSync(path.join(ROOT, 'registry/tools/foundation-status.mjs'), script);
+  const file = path.join(root, 'registry/foundation.json');
+  const original = JSON.parse(fs.readFileSync(file, 'utf8'));
+  for (const pkg of [...original.packages, { dir: 'ui' }]) {
+    const directory = path.join(root, 'packages', pkg.dir);
+    fs.mkdirSync(path.join(directory, 'src'), { recursive: true });
+    fs.copyFileSync(
+      path.join(ROOT, 'packages', pkg.dir, 'package.json'),
+      path.join(directory, 'package.json'),
+    );
+    fs.writeFileSync(path.join(directory, 'src/index.ts'), 'export const fixture = true;\n');
+  }
+  const before = fs.readFileSync(file, 'utf8');
+  const run = (...args) => spawnSync(process.execPath, [script, ...args], { encoding: 'utf8' });
+  assert.equal(run('--check').status, 1);
+  assert.equal(fs.readFileSync(file, 'utf8'), before);
+  assert.equal(run().status, 0);
+  const refreshed = JSON.parse(fs.readFileSync(file, 'utf8'));
+  assert.deepEqual(refreshed.referenceDecisions, original.referenceDecisions);
+  assert.ok(refreshed.packages.every((pkg) => pkg.derived.srcFiles === 1));
+  assert.ok(
+    refreshed.packages.every(
+      (pkg) => !Object.hasOwn(pkg, 'status') && !Object.hasOwn(pkg, 'verification'),
+    ),
+  );
+  const updated = fs.readFileSync(file, 'utf8');
+  assert.equal(run('--check').status, 0);
+  assert.equal(fs.readFileSync(file, 'utf8'), updated);
+  assert.notEqual(run('--verify').status, 0, 'retired verification mode must not silently survive');
 });
 
 test('Visual acceptance requires complete, reviewed, untampered candidates and keeps missing baselines red', (context) => {

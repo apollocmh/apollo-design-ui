@@ -4,6 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readAudit, summarizeAudit } from './audit-workflow.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const readJson = (p) => JSON.parse(fs.readFileSync(path.join(ROOT, 'registry', p), 'utf8'));
@@ -11,27 +12,9 @@ const readJson = (p) => JSON.parse(fs.readFileSync(path.join(ROOT, 'registry', p
 const [cmd, ...rest] = process.argv.slice(2);
 const flag = (name) => rest.includes(name);
 
-/** 九个质量维度（顺序即 `registry/components.json` 的约定）。 */
-const DIMS = ['api', 'token', 'style', 'unit', 'interaction', 'type', 'a11y', 'visual', 'docs'];
-
 function progress() {
-  const comps = readJson('components.json').components;
-  const done = comps.filter((c) => c.status === 'completed');
-  console.log(`组件：${done.length} / ${comps.length} completed\n`);
-  for (const c of done) console.log(`  ✅ ${c.name}`);
-  const inProg = comps.filter((c) => c.status === 'implementing');
-  if (inProg.length) {
-    console.log(`\n进行中：${inProg.length}`);
-    for (const c of inProg) console.log(`  🔧 ${c.name}`);
-  }
-
-  const f = readJson('foundation.json');
-  const pkgs = f.packages ?? [];
-  const fdone = pkgs.filter((p) => p.status === 'completed');
-  console.log(`\nfoundation：${fdone.length} / ${pkgs.length} completed`);
-  for (const p of pkgs.filter((x) => x.status !== 'completed')) {
-    console.log(`  🔧 ${p.name} (${p.status})`);
-  }
+  const audit = readAudit(ROOT);
+  console.log(JSON.stringify(summarizeAudit(audit), null, 2));
 }
 
 function component(name) {
@@ -44,17 +27,12 @@ function component(name) {
     );
     process.exit(1);
   }
-  console.log(`# ${c.name}  status=${c.status}\n`);
-  for (const d of DIMS) {
-    const v = c[`${d}Status`];
-    const mark = v === 'done' ? '✅' : v === 'n/a' ? '➖' : '⬜';
-    console.log(`  ${mark} ${d.padEnd(12)} ${v ?? '(缺)'}`);
-  }
-  if (c.notes) console.log(`\n## notes\n${c.notes}`);
+  const task = readAudit(ROOT).tasks.find((entry) => entry.id === `CMP:${name}`);
+  console.log(JSON.stringify({ metadata: c, task }, null, 2));
 }
 
 function decisionList() {
-  const ds = readJson('foundation.json').openDecisions ?? [];
+  const ds = readJson('foundation.json').referenceDecisions ?? [];
   const only = flag('--open') ? 'open' : flag('--decided') ? 'decided' : null;
   const rows = ds.filter((d) =>
     only === 'open' ? d.status === 'open' : only === 'decided' ? d.status !== 'open' : true,
@@ -69,10 +47,10 @@ function decisionList() {
 }
 
 function decision(id) {
-  const d = (readJson('foundation.json').openDecisions ?? []).find((x) => x.id === id);
+  const d = (readJson('foundation.json').referenceDecisions ?? []).find((x) => x.id === id);
   if (!d) {
     console.error(
-      `未找到决策 "${id}"。已知：${(readJson('foundation.json').openDecisions ?? []).map((x) => x.id).join(', ')}`,
+      `未找到决策 "${id}"。已知：${(readJson('foundation.json').referenceDecisions ?? []).map((x) => x.id).join(', ')}`,
     );
     process.exit(1);
   }
@@ -124,7 +102,7 @@ switch (cmd) {
         '用法：',
         '  node registry/tools/ask.mjs decisions [--open|--decided]   # 决策清单',
         '  node registry/tools/ask.mjs decision <id>                  # 单个决策全文（原样转录）',
-        '  node registry/tools/ask.mjs component <name>               # 组件状态 + 11 维度',
+        '  node registry/tools/ask.mjs component <name>               # 静态元数据 + 本轮两阶段状态',
         '  node registry/tools/ask.mjs progress                       # 组件 / foundation 进度',
         '  node registry/tools/ask.mjs find <关键词>                   # 全 registry 搜关键词',
       ].join('\n'),

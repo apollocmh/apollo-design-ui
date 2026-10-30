@@ -1,18 +1,9 @@
-# 文档站专项门禁（2026-10-21 审计 A04）
-#
-# 主 CI 的 paths-ignore 会跳过纯文档 / demo 提交，而 docs 包自己的
-# content:check / typecheck / vitest 一直没有 CI 入口 ⇒ 「有测试文件」不等于
-# 「有测试门禁」。这个 workflow 只覆盖文档站及其内容真源，PR 可触发。
+# Explicit complete Docs SSG/browser gate. Scoped PR checks live in the main CI.
 name: Docs CI
 
+# PR Docs feedback runs in the main changed-scope job; this explicit workflow retains
+# the complete SSG and browser suite without building the same packages twice.
 on:
-  pull_request:
-    paths:
-      - 'packages/docs/**'
-      - 'packages/ui/src/**/*.md'
-      - 'packages/ui/src/**/demo/**'
-      - 'packages/theme/src/**'
-      - '.github/workflows/docs-ci.yml'
   workflow_dispatch:
 
 concurrency:
@@ -31,27 +22,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
 
-      - name: 内容管线校验（frontmatter / demo 配对 / 路由）
-        run: pnpm --filter @apollo-design/docs run content:check
-
-      # `content:check` 不落盘；manifest.ts / 测试直接 import `.generated/*.json`。
-      - name: 生成内容管线产物
-        run: pnpm --filter @apollo-design/docs run content:build
-
-      - name: 文档站类型检查
-        run: pnpm --filter @apollo-design/docs run typecheck
-
-      - name: 文档站单元测试
-        run: pnpm --filter @apollo-design/docs run test
-
-      # SSG 构建依赖 theme / ui 的 dist，而 theme 又依赖 utils 的 dist。
-      # 干净 checkout 上必须先按拓扑序构建全部包（L7 门禁会做这件事），
-      # 否则 `theme` 的 build 会因为没有 utils/dist 直接失败。
-      - name: 构建全部包（拓扑序 + L7 产物检查）
-        run: pnpm run test:build
-
-      - name: 构建文档站（vite-ssg）
-        run: pnpm --filter @apollo-design/docs run build
+      - name: Docs checks and one dependency-ordered build including SSG
+        run: node scripts/verify-docs.mjs --build
 
       - name: 关键产物检查（深链接 / base）
         shell: bash
@@ -70,46 +42,5 @@ jobs:
       - name: 安装 Playwright Chromium
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: 浏览器冒烟（生产 preview）
-        shell: bash
-        run: |
-          set -eu
-          # ⚠️ 不能用 `pnpm run preview -- --host …`：pnpm 12 会把 `--` 原样传给
-          # vite，vite 忽略后续参数并退回 4173（2026-10-21 CI 实测）。直接 exec。
-          pnpm --filter @apollo-design/docs exec vite preview --host 127.0.0.1 --port 4477 \
-            > /tmp/docs-preview.log 2>&1 &
-          PREVIEW_PID=$!
-          trap 'kill "$PREVIEW_PID" 2>/dev/null || true' EXIT
-          READY=0
-          for _ in $(seq 1 60); do
-            if curl -fsS http://127.0.0.1:4477/apollo-design-ui/ > /dev/null; then
-              READY=1
-              break
-            fi
-            sleep 1
-          done
-          if [ "$READY" -ne 1 ]; then
-            cat /tmp/docs-preview.log
-            exit 1
-          fi
-          DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
-            node packages/docs/tests/smoke-browser.mjs
-
-          # L8+: 功能性 Demo + 语言同步 + viewport 画布（DatePicker / Upload / Form /
-          # FloatButton）。脚本内置断言，失败即非零退出。
-          DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
-            node docs/audit/tools/stage2-demo-probe.mjs
-
-          # V3 文档站视觉/结构门禁：shell 利用率、稳定 Grid（展开不换列）、
-          # 自举控件、Token 别名、390 无溢出、暗色。失败即非零退出。
-          DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
-            node docs/audit/visual-v3/verify.mjs
-
-          # 2026-10-22 专项审计：Menu 的 hover 开合 / 弹层几何与离场 /
-          # overflow / Sider iframe；Notification 与 Message 的入离场时间线、
-          # 堆叠展开收起、hover 关闭生命周期。这些是 L6 静态截图看不见的事件流。
-          DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
-            node packages/docs/tests/menu-browser.mjs
-          DOCS_URL=http://127.0.0.1:4477/apollo-design-ui \
-            node packages/docs/tests/notification-motion-browser.mjs
-          node packages/docs/tests/motion-review-browser.mjs
+      - name: Existing browser checks on the same built site
+        run: node scripts/verify-docs-browser.mjs

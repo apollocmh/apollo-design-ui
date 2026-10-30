@@ -1,43 +1,29 @@
-# MEMORY.md — 项目长期约定
-> 规则本体：`AGENTS.md` 等 5 份文档；坑全文与索引：`PITFALLS.md`（先看 §0 索引）；环境：`environment.md`。
-> 📁 `.workbuddy` = `.workbuddy-ai` 软链接。本文件只放**仓库文档没有的判别式，一行一条**；
-> 「为什么」写在 PITFALLS.md —— 本文件过大会在注入时截断（实测 >18KB 即截），改判据时两处都要改。
+# MEMORY.md — 当前接手入口与历史索引
 
-## §0 接手顺序
-1. **`docs/KNOWN-ISSUES.md`**（不在 AGENTS §5 清单）§1 仍开放：§1.2 VNodeChild 插槽 · §1.3 date-picker id/tabIndex · §1.4 Select 条件 default slot · §1.5 form setup 期前缀。
-2. `node registry/tools/next-task.mjs`（唯一权威）；`ask.mjs decisions --open`。
-3. **Claude Code 会话结束前写记忆**：追加 `.workbuddy-ai/memory/YYYY-MM-DD.md` 并更新 §5；协议见根 `CLAUDE.md`「Memory / 交接协议」。
-⚠️ 登记簿坐标复核后再信 ⇒ `git log -S` 与跑现成测试比读文档可靠。
+当前规则以根目录 `AGENTS.md`、`WORKFLOW.md`、`TESTING.md` 为准。本文件不维护当前完成数字，不作为另一套执行规范。
 
-## §1 事实来源 / registry
-Vue3+TS 重写 antd 6.6.4（兼容规格）。优先级：用户指令 > 仓库规范 > `registry/*.json` > antd 源码 > 文档 > 先验。
-- 🚨🚨 **元判据（用户 2026-10-15 明示）：「对齐 antd ≠ 复制 antd 的缺陷」。**「antd 也是这样实现的」**不是**拒绝修复的理由。据此 #51/#53/#55/#56 由「上游同款」**改判真缺陷并修复**。
-  - 顺序：**先核上游逐字源码** ⇒ 再问「行为自身站得住吗」 ⇒ 站不住就修，修成**优于上游**，在 README §2 + `COMPATIBILITY.md` §9 登记 INTENDED（D131 起）。
-  - 「实现形态 ≠ 上游」**不是**不修的理由 —— 走了别的路却丢了上游行为（**复制形态、丢了行为**）必须补回。
-  - 仍不修的只有一类：改动会与 **L4/L6 基线**或上游**正确**行为分叉。
-- 🚨 Phase 2 起 antd 降为「参考实现」；根别名用原生 `class`/`style`，非根用 `classNames.*`/`styles.*`。判别式：「这个 prop 指向组件自己的根吗？」。
-- 禁止凭记忆描述 antd/rc：读 `/tmp/antd-src/package/`，缺了现拉（`npm pack antd@6.6.4` / `unpkg.com`，走 `http_proxy=127.0.0.1:7890`）。
-- 生成器顺序 `gen-registry → foundation-status → gen-workstreams → validate-registry`；派生字段手改会被覆盖 ⇒ 注记写 `registry/source/components.meta.mjs`。
+## 接手顺序
 
-## §2 架构 / 构建
-- 🚨 **门禁必须跑真正会被发布的命令、处在真实执行环境**（同一教训三次应验）：裸 `unbuild` 不带参数 / `ui-tree-shaking` D 项 / B1 的 PATH 少了**包自身** `node_modules/.bin`（`vitepress` exit 127）。
-- 包边界：≥2 **个包**消费且无视觉语义才独立成包；只被多个**组件**共用 ⇒ `_internal/`。🚨 搬逻辑时**依赖的类型必须一起搬**。
-- ⚠️ `picker` = 引擎+面板（不产 CSS）。🚨 R7：发布包零 `@ant-design/*` 运行时依赖。14 包 `preserveModules`；B6 预算 `tests/build/budget.json`。ESM-only ⇒ 探针放仓库内、用 `import.meta.resolve`。
+1. 读用户当前范围、上述规则、`registry/vue-native-audit.json` 与 `git status`。
+2. 核对实际 owner、暂停状态、已有交付和专项证据；不因旧 `completed` 或聊天记录重新派发。
+3. `registry:next` 只读建议。暂停时不领取或启动新组件任务；恢复须有用户明确指示。
+4. 仅对证据缺失、后续改动影响或明确问题补查。历史完成与本轮最终验收分开。
 
-## §3 收口
-- 三件套：`COMPONENT_STYLES` 注册 · `index.ts` 导出(B8) · `tests/compat/fixtures/<c>/`(E9)。🚨 收口后 `git status` 确认落盘（曾两次全绿但整片未提交）。新增 demo 配 `.md`（含 `order`）。
-- 🚨 新增视觉用例后必须 `Read` 看基线图（L6 对「内容缺失」全盲）。L4 `it.each` 用同形对象数组。`.vue` 出现 `typeof X` ⇒ biome 把 import 改成 `import type`。语义槽支持函数形态 ⇒ prop 类型 `[Object, Function]`。
-- ⚠️ 修完缺口同步更正 README §7 缺口表 / 组件头注 / 测试头注三处过期描述。
+## 当前执行约定
 
-## §4 环境 / 命令
-- 🚨 视觉与构建门禁带 `CODEBUDDY_SAFE_DELETE_ENABLED=0` + `CODEBUDDY_BROKERED_FS_HOOK_ENABLED=0` + `CODEBUDDY_SAFE_DELETE_SANDBOX=0`（后两个也让 vitest 提速 5-8×）。`pnpm` 不在 PATH ⇒ 📌 **`PATH="/tmp/pnpm-shim:$PATH" pnpm run build:ui"`**（`build:ui` 内部 `pnpm --filter` 找不到 pnpm）。
-- ⚠️ `test:visual`/`test:types` **不在** `verify:full` ⇒ 显式跑；types 报 unhandled error 时「Tests 全绿但 exit=1」⇒ **每轮收口必跑 `vitest run --project types`**（~2min）。
-- ⚠️ L6 解析 `packages/ui/dist` ⇒ 改组件源码先 build:ui。推送走代理：`git -c http.proxy=http://127.0.0.1:7890 push origin HEAD:<branch>`（直连挂起）；`gh` 用 **`/usr/local/bin/gh`**（已登录 apollocmh）。
-- 🚨 **`registry/*.json` 是生成物**：改了 `packages/*/src` 后 `registry:check` 就红 ⇒ 重跑 `node registry/tools/foundation-status.mjs`。
-- ⚠️ zsh 下「前置 env 赋值 + `for` 复合命令」parse error ⇒ 用 `env A=.. bash -c 'for ...'`。
-- 📌 **发布 Pages**（2026-10-23 起）：GitHub Actions 源（`build_type: workflow`），产物走 `configure-pages → upload-pages-artifact → deploy-pages`，**不推任何分支**；手动发 `gh workflow run deploy-docs.yml --ref master`，环境 `github-pages` 策略需放行 `master` + `v*` 标签。站点 https://apollocmh.github.io/apollo-design-ui/ 。
+- 第一阶段只做相关类型、核心行为和必要 Demo/消费者检查；共享改动及时验证真实影响面，不逐组件重跑全库九维。
+- 第二阶段对同一冻结版本统一九维验收，统一构建后只读消费；运行时和覆盖率等重复集合合并执行。
+- 最多五个子任务，按文件归属独立交付；集成人修改状态、公共出口和共享配置。没有实际整改依赖就不人为串行。
+- 非阻塞问题保留影响和延期理由；核心契约、数据、资源与集成阻塞必须处理。未知、延期不记通过。
+- 非零退出、信号、源类型错误、空测试和进程错误不是“噪音绿灯”。保留命令和可定位结果，仅按真实原因补查。
+- 当前状态只写 `registry/vue-native-audit.json`，展示由 `registry:progress` 生成。旧 workstreams、基础包测量写状态和 G13 逐组件全仓规则已替代。
+- 复用现有测试和有效证据，不堆镜像测试、截图、脚本与回执。不要为假想边界添加兜底、重试、未来适配层；保留真实生命周期、SSR、竞态与资源清理。
+- 不用 stash/reset 覆盖其他任务现场。临时诊断先保留原文件，恢复只限自己明确修改的内容。
+- 普通项目流程调整可按当前用户授权直接执行；权限不延伸到外部平台、安全策略、许可证或无关业务契约。
 
-## §5 进度
+以下历史记录保留其原始数字和事实；其中的旧完成结论、审批步骤、命令及阶段要求均不是当前指令。
+
+## 历史记录（截至 2026-10-23，非当前状态）
 - 2026-10-23 Pages 部署架构简化（`cb2174ed`）：`deploy-docs.yml` 改用 `configure-pages@v6 → upload-pages-artifact@v5 → deploy-pages@v5`，删除远程 `gh-pages`；Pages `build_type=workflow`，环境策略改为 `master`(branch) + `v*`(tag)；dispatch run 39893720396 全绿（build 5m37s / deploy 9s），部署 status success、线上 200。
 - 2026-10-22 Menu/Notification 审计整改：`6049fcd6` Trigger（window scroll + 视口外跳过）→ `350df99d` Menu → `c7f0ec2c` Notification → `4ddaf190`/`fc9a1b8e` 浏览器门禁 → `a1e9cf28` 报告+D138/D139；浏览器 28/28 + 21/21、L6 both 9/9×3、types 2213、L7 151/0。
 - 2026-10-22 文档站 V3 发布 **`v0.1.3`**（`63beb259`，tag 对象见远端）：PR #57 合并 `15e1d2d0`；CI `39655514566` / Deploy Docs `39655514632` 全绿；gh-pages `974126fe`；线上 verify 20/20。
@@ -55,7 +41,10 @@ foundation 13/13；组件 72/72 completed；L6 基线全覆盖（71 目录/1128 
 - 2026-10-21 阶段 0（`fix/docs-motion-demo-quality` @ `fceda9a9`）：六类动效真实浏览器复现（Trigger 关闭瞬移屏外 / Notification 立即卸载 / Modal zoom 原点 / Tree 再展开无 motion）；Demo 覆盖 Form 5/44、DatePicker 2/32、Upload 3/24；交付 `docs/audit/{baseline-motion-matrix,demo-coverage-matrix,stage0-static-findings}.md` + `evidence/`。**待用户确认后进入阶段 1**。
 - 2026-10-17～21 文档站 V2 分支 `feature/docs-site-v2`：hover 浮层 `ea0cbf6c` · dropdown 开合 `fee81a58` · cascader/tree-select `9118f946` · 点外部 `d2460163` · `.html` 深链 `463cfcde` · 重复标题 `8cbe272f` · tree 动效收尾 `5de76911` · table 示例 `65243a1e` · 过滤弹层 token `9f0e0d06` · 组件页 TOC 顺序 `797c8399` · **menu #22 三项 `7b00b40c`**。
 
-## §6 判别式索引（完整判据见 PITFALLS.md 末尾「判别式总表」）
+
+## 历史技术案例索引
+
+以下是带日期的实测线索，需结合当前源码判断，不能自动升级为每项必做检查或兼容要求。完整原始事故见 `PITFALLS.md`。
 - **A 静态审计型 issue**：四步：测量 → 核上游**逐字**源码 → **真缺陷才修** → 钉回归。三类产出：真缺陷 / 上游同款（再看是否站得住）/ Vue 超集。🚨 翻案理由：**「有界 ≠ 无代价」**、**「半更新态比完全不更新更糟」**。
 - **B 响应性**（最高频）：setup 期快照三件套 · provide 必须是 ref/computed/getter 且**两侧配套改** · `useImperativeHandle` 无 deps ⇒ expose 挂 getter · hook 工厂传 getter · 模块级单例留 `app` 引用 · `useEffect(无deps)` ⇒ `watchEffect(post)` · attrs 回调不能解构 · 异步回调加 requestId 守卫 · `useSize` 函数形态 · `useMergeSemantic` 第三参传 computed。
 - **C VNode/clone/透传**：根 VNode 末尾 `...attrs` 顶掉内部 ⇒ `mergeProps(内部, attrs)` · cloneVNode 是合并非替换 · `vnode.ref` 是归一化对象（原值在 `props.ref`）· 🚨 **往 children 塞内容是死路 ⇒ `<Teleport :to="宿主DOM">`** · React children ≠ Vue 插槽 · `provide` 无法 setup 后增删。

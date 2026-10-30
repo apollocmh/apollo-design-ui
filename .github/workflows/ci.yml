@@ -1,29 +1,25 @@
-# Apollo quality gates: registry, types, behavior/coverage, artifacts and docs.
-# Upstream visual comparison is an optional manually requested diagnostic.
-
+# Stage one is scoped PR feedback. Stage two is an explicit frozen-version acceptance.
 name: CI
 
 on:
-  # 版本发布门禁：只有打版本标签才跑完整 CI（2026-10-21 用户裁决）。
-  # 普通 master 提交不再触发；标签必须打在 master 上（发布流程约定）。
-  push:
-    tags:
-      - 'v*'
   pull_request:
-    # 只对「合入 master」的 PR 跑门禁（原先无过滤 ⇒ 任何 base 都跑）。
     branches: [master]
     paths-ignore:
-      - '.workbuddy-ai/**'
       - '.workbuddy/**'
-  # 手动跑完整 CI（不受 paths-ignore / 标签限制）—— 发布前的兜底手段。
+  push:
+    tags: ['v*']
   workflow_dispatch:
     inputs:
+      stage:
+        description: Verification stage
+        type: choice
+        options: [architecture, acceptance]
+        default: architecture
       reference_visual:
-        description: Run optional upstream visual diagnostics
+        description: Also run optional upstream visual diagnostics after final acceptance
         type: boolean
         default: false
 
-# 同一 ref 上的新推送取消旧运行：省 runner，也避免旧结果误导。
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -32,233 +28,110 @@ permissions:
   contents: read
 
 jobs:
-  registry:
-    name: "registry:check（E1–E20）"
+  architecture:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.stage != 'acceptance') }}
+    name: Architecture feedback for changed scopes
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
-      - name: Registry 与基线治理回归
-        run: pnpm run test:tooling
-      - name: Apollo 已审阅基线完整性（渐进覆盖）
-        run: pnpm run test:visual:check -- --approved-only
-      # 生成器是幂等的：任何「手改了派生 JSON 却忘了重跑生成器」都会在这里红。
-      - name: registry:check
+      - name: State, metadata and generated progress consistency
         run: pnpm run registry:check
-
-  lint:
-    name: lint（vue-tsc + biome）
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v7
-      - uses: ./.github/actions/setup
-      # `.generated/*.json` 是 gitignore 的构建产物，但 docs 的 `manifest.ts` 与
-      # 多个测试直接 import 它们 ⇒ 类型检查前必须先生成（2026-10-21 CI 实测 TS2307）。
-      - name: 生成文档站内容管线产物
-        run: pnpm --filter @apollo-design/docs run content:build
-      - name: vue-tsc + biome
+      - name: Scoped behavior, types and necessary Docs checks
         env:
-          # 🚨 **必须**：整仓 `vue-tsc` 在 GitHub runner（2 vCPU / **7 GB**）上会撞 V8 默认堆上限。
-          #    实测 2026-10-04（首次真实运行）：
-          #      FATAL ERROR: Ineffective mark-compacts near heap limit
-          #                   Allocation failed - JavaScript heap out of memory   → exit 134
-          #    本机（16 GB）跑得动 ⇒ 这是**环境差异**，不是代码或 lint 规则问题。
-          #    本机实测 vue-tsc 峰值 RSS ≈ 2.39 GB；4 GB 堆上限 + ~1 GB 非堆 ≈ 5 GB < 7 GB，安全。
-          #    ⚠️ **只加在类型检查这一步**，不要提到 job / 全局 env：vitest 的 worker 会继承
-          #    NODE_OPTIONS，多 worker 各自放宽到 4 GB 反而可能触发 runner 的 OOM killer（exit 137）。
-          NODE_OPTIONS: --max-old-space-size=4096
-        run: pnpm run lint
-
-  test:
-    name: "test（类型层；四个运行时 project 见 coverage）"
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v7
-      - uses: ./.github/actions/setup
-
-      # 类型层包含 docs 的 `*.test-d.ts` / `manifest.ts` ⇒ 同 lint job，先落盘 `.generated`。
-      - name: 生成文档站内容管线产物
-        run: pnpm --filter @apollo-design/docs run content:build
-
-      # 🚨 **这里原先还跑「运行时四层」（unit / dom-contract / a11y / theme）——
-      #    2026-10-04 去重后删掉，因为 `coverage` job 跑的是**完全相同的这 4 个 project**：
-      #      test     = test:unit && test:dom && test:a11y && test:theme      （4 个进程）
-      #      coverage = vitest --coverage ... --project unit --project dom-contract \
-      #                 --project a11y --project theme                        （同样 4 个）
-      #    ⇒ 同一批 10092 个用例被完整执行两次。去掉这一份**不减少任何测试量**：
-      #      测试门禁与覆盖率门禁都由 `coverage` job 承担（它本来就同时是两者）。
-      #    ⚠️ 唯一**不在** `coverage` 里的层就是下面的 `types`（`--project types` 没进那条命令）
-      #      ⇒ 这个 job 现在只保留它，失败归因仍然清晰（类型层 vs 测试/阈值层分属两个 job）。
-      - name: 类型层（*.test-d.ts）
-        env:
-          # 同 lint job 的说明：vitest 的 typecheck project 也是「整仓 vue-tsc」口径，
-          # 同样会撞 runner 的 V8 默认堆上限（首次真实运行实测 OOM）。
-          NODE_OPTIONS: --max-old-space-size=4096
-        run: pnpm run test:types
-
-  coverage:
-    name: 覆盖率（ratchet 门禁）
-    runs-on: ubuntu-latest
-    timeout-minutes: 90
-    steps:
-      - uses: actions/checkout@v7
-      - uses: ./.github/actions/setup
-
-      # root vitest 的 unit project 也包含 `packages/docs/tests/**` ⇒ 同 lint / test，
-      # 先落盘 `.generated`（2026-10-21 CI 实测：5 个 docs 测试因缺 manifest 失败）。
-      - name: 生成文档站内容管线产物
-        run: pnpm --filter @apollo-design/docs run content:build
-
-      # 阈值是 **ratchet（棘轮）**（见 `vitest.config.ts` 的 `packages/ui/src/**`）：
-      # 锁住 2026-10-04 的实测基线 **84.76 / 73.8 / 84.38**，**只许升不许降**；
-      # **90 / 85 / 90 是长期目标**，不是现在的门禁。
-      # foundation 档仍是 95 / 90 / 95（实测 98.58 / 94.21 / 98.23 —— 已达标，不动）。
-      #
-      # `--maxWorkers=2`（2026-10-05 由 `--maxWorkers=1 --no-file-parallelism` 改来）：
-      # 在真实 runner（2 vCPU / 7 GB）上 benchmark 过 4 个变体（`.github/workflows/ci-benchmark.yml`）：
-      #   1 进程完全串行 23.3 min · **1 进程 --maxWorkers=2 → 19.5 min（−16%）** ·
-      #   2 进程并发 19.6 min · 4 进程并发 21.2 min（2 vCPU 超额订阅，反而更慢）。
-      # ⇒ 取 **2 个 worker**：与「2 进程」同收益，但只产出一份覆盖率报告（**不需要合并**）。
-      # ✅ 安全性已用数据核过：v2 的 ui/src 是四次运行里**覆盖最高**的一次
-      #   （branches 14388 / statements 23875），逐文件差异只落在已知的时序抖动文件
-      #   且双向（有增有减）⇒ 是噪声，不是并行丢数据。
-      - name: 覆盖率（四 project · ratchet 门禁）
-        run: pnpm run test:coverage
-
-      - name: 上传覆盖率报告
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ -n "$BASE_SHA" ]; then
+            node scripts/verify-changed.mjs --base "$BASE_SHA" --report /tmp/architecture-checks.json
+          else
+            node scripts/verify-changed.mjs --base HEAD^ --report /tmp/architecture-checks.json
+          fi
+      - name: Keep focused results
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: coverage
-          path: coverage/
+          name: architecture-checks
+          path: /tmp/architecture-checks.json
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: 7
 
-  build:
-    name: build（L7 产物门禁）
+  acceptance:
+    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.stage == 'acceptance') }}
+    name: Complete nine-dimension acceptance on one frozen commit
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
-      # 校验 exports、类型、样式、依赖隔离、体积与 SSR 产物。
-      - name: 构建全部包 + L7 产物校验
-        run: pnpm run test:build
-
-      # ⚠️ **这一步不能省**：E11（「产物无 React 痕迹」）只在**扫到 dist/es 目录时**才真正执行，
-      #    扫不到时它降级为一条 warn（`validate-registry.mjs:533`）⇒ 干净 checkout 上
-      #    `registry:check` 里的 E11 是**静默跳过**的。构建完再跑一次 validate，
-      #    H1/H5/H6 那条硬禁令在 CI 上才是真的生效。
-      - name: 产物 React 痕迹扫描（E11 需 dist 存在才执行）
-        run: pnpm run registry:validate
-
-      - name: 文档站契约与构建
-        run: pnpm run verify:docs
-
-      # 把 dist 传给 visual 的 4 个 shard —— 否则每个 shard 都要自己 `test:build` 一遍
-      # （137s × 4 = 9 分钟纯重复）。只在本 run 内用，所以 retention 1 天。
-      #
-      # ⚠️ 必须**先 tar 再上传**：`upload-artifact` 对 `packages/*/dist/**` 这种带通配的
-      #    path 会把「第一个通配符之前的目录」当根 ⇒ 下载侧解出来是顶层 `a11y/`、`ui/`…，
-      #    **`packages/` 与 `dist/` 两级前缀全丢了**（2026-10-04 实测：shard 里
-      #    `packages/*/dist` 不存在 ⇒ vite 打包失败 ⇒ 被 `continue-on-error` 吞成假绿）。
-      #    tar 保留相对路径，解包后就是 `packages/<p>/dist/…`。
-      - name: 打包 dist（tar 保路径，供 visual shard 复用）
-        run: tar czf build-dist.tar.gz packages/*/dist
-
-      - name: 上传 dist（供 visual shard 复用）
+      - name: Install visual browser
+        run: pnpm exec playwright install --with-deps chromium
+      - name: One build, coverage/runtime once, immutable consumers and full native visuals
+        run: node scripts/verify-full.mjs --report /tmp/final-acceptance.json
+      - name: Package the same artifacts for optional reference diagnostics
+        if: ${{ inputs.reference_visual }}
+        run: tar czf build-dist.tar.gz packages/*/dist tests/visual/.artifacts/vue
+      - name: Keep build artifacts
+        if: ${{ inputs.reference_visual }}
         uses: actions/upload-artifact@v7
         with:
           name: build-dist
           path: build-dist.tar.gz
-          # 构建门禁刚校验过产物存在 ⇒ 这里传不出东西就是真出问题了，不要静默放过。
           if-no-files-found: error
           retention-days: 1
+      - name: Keep final results and coverage
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: final-acceptance
+          path: |
+            /tmp/final-acceptance.json
+            coverage/
+            tests/visual/report-apollo.json
+            tests/visual/diff/apollo/
+          if-no-files-found: warn
+          retention-days: 14
 
-  visual:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.reference_visual }}
+  reference:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.reference_visual && inputs.stage == 'acceptance' }}
+    needs: acceptance
     continue-on-error: true
-    name: 上游视觉参考（4-way shard，非发布规格）
+    name: Optional historical upstream comparison
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    # 复用 build job 的 dist（见下面「下载 build 产物」一步）。
-    needs: build
     strategy:
-      # 一个 shard 失败不取消其余 —— 我们要看全 4 份的结果与 diff 产物。
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
-
-      # ① 复用 build job 的 dist。视觉层走的是**已构建的 dist**（`tests/visual/build.mjs`
-      #    不 alias 到 src），而 `packages/ui/dist/index.mjs` 把 11 个 workspace 包
-      #    **external** 化了 ⇒ 依赖包的 dist 必须也在。
-      #    ⚠️ 别在这里再 `pnpm run test:build` 一次：那是 137s × 4 个 shard 的纯重复。
-      #    用 tar 解包（保 `packages/<p>/dist/…` 路径，理由见 build job 的说明）。
-      - name: 下载 build 产物（复用 dist）
-        uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@v8
         with:
           name: build-dist
-
-      - name: 解包 dist
-        run: tar xzf build-dist.tar.gz
-
-      # ② 确定性检查：不开浏览器、秒级 —— **阻塞**。
-      #    它防的是「变体空转」这类假绿：两个变体逐字节相同 ⇒ 看着全绿、实际一格没测。
-      #    它不依赖渲染环境，所以没有理由不阻塞。（每个 shard 都跑一遍，1s，无所谓。）
-      - name: 历史参考基线完整性检查
+      - run: tar xzf build-dist.tar.gz
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Check historical reference integrity
         run: pnpm run test:visual:reference:check
-
-      # ③ 浏览器：`stabilize.mjs` 会先试系统 Chrome、失败再退回 Playwright Chromium。
-      #    runner 镜像自带 Chrome，但那条兜底路径必须有 Chromium 才成立 ⇒ 装上。
-      #    缓存只覆盖浏览器二进制；`--with-deps` 的 apt 依赖在全新 runner 上仍需每次装。
-      - name: 缓存 Playwright Chromium
-        uses: actions/cache@v6
-        with:
-          path: ~/.cache/ms-playwright
-          key: ms-playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: 安装 Chromium
-        run: pnpm exec playwright install --with-deps chromium
-
-      # ④ 像素比对：**非阻塞**（`continue-on-error`）。
-      #
-      #    入库基线是在 macOS + 系统 Chrome 上生成的；CI 是 Linux，字体度量与抗锯齿
-      #    必然不同 ⇒ 这里红是**预期**的，不是回归信号。
-      #    这一步的职责不是「判绿」，而是**产出可审的 diff**（下一段上传）。
-      #
-      #    `--shard i/4`：按 **case 下标取模**划分 ⇒ 确定性、完整覆盖、无重复无遗漏
-      #    （本地已断言：1125 = 282 + 281 + 281 + 281，并集 1125，两两交集 0）。
-      #    不删 case、不改阈值、不改 pixelmatch 参数、不动 baseline 与截图规则。
-      - name: L6 像素比对（非阻塞 · shard ${{ matrix.shard }}/4）
+      - name: Compare against the same published artifacts
         continue-on-error: true
-        run: node tests/visual/run.mjs --mode compare --shard ${{ matrix.shard }}/4
-
-      # ⑤ **防假绿**：像素比对非阻塞，但「渲染前就崩了」不该被它吞成绿
-      #    （2026-10-04 实测：4 个 shard 都在 46s「绿」了，实际零渲染）。
-      #    断言「本 shard 的 case 全渲染了」且「没有渲染期报错」。
-      - name: 断言本 shard 完整渲染（防假绿）
+        run: node tests/visual/run.mjs --no-build --mode compare --shard ${{ matrix.shard }}/4
+      - name: Reject incomplete rendering
         if: always()
         run: node tests/visual/assert-shard.mjs ${{ matrix.shard }}/4
-
-      # ⑥ 可审产物：HTML 报告（含每个 case 的差异率与并排图）+ 逐 case 的 diff 图
-      #    + Vue 侧实拍图 + 摘要 JSON。无论成败都上传。
-      #    ⚠️ artifact 名与报告名都带 shard 号 —— 否则 4 个 shard 会互相覆盖。
-      - name: 上传 diff 产物（shard ${{ matrix.shard }}）
+      - name: Keep reference diagnostics
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: visual-diff-shard-${{ matrix.shard }}
+          name: reference-${{ matrix.shard }}
           path: |
-            tests/visual/report-*.html
             tests/visual/report-*.json
+            tests/visual/report-*.html
             tests/visual/diff/
             tests/visual/snapshots/
-          # 真渲染过就一定有这些文件 ⇒ 空 artifact 说明本 shard 什么都没产出。
           if-no-files-found: error
           retention-days: 14

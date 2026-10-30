@@ -2,15 +2,11 @@
 import assert from 'node:assert/strict';
 import { writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { buildCases } from '../visual/matrix.mjs';
 import { launchBrowser } from '../visual/stabilize.mjs';
+import { checkAuditProgress } from './audit-progress-check.mjs';
 
 const base = (process.env.DOCS_URL ?? 'http://127.0.0.1:4480/apollo-design-ui').replace(/\/$/, '');
 const expectedStatus = Number(process.env.DOCS_DEMO_STATUS ?? 200);
-const expectedAcceptedUnits = Number(process.env.DOCS_ACCEPTED_UNITS ?? 21);
-const expectedPlannedVisuals = Number(
-  process.env.DOCS_PLANNED_VISUALS ?? buildCases({ apollo: true }).length,
-);
 const units = [
   { name: 'descriptions', count: 13, demos: ['basic', 'custom-label'] },
   { name: 'breadcrumb', count: 11, demos: ['native', 'overlay'] },
@@ -301,34 +297,7 @@ try {
   );
   for (const locale of ['zh-CN', 'en-US'])
     await check(`progress/${locale}`, async () => {
-      await page.evaluate((value) => localStorage.setItem('apollo-site-locale', value), locale);
-      const response = await page.goto(`${base}/guide/audit-progress`);
-      assert.equal(response.status(), 200);
-      const main = page.locator('main');
-      const titles = {
-        'zh-CN': '全库进度：按完整单元计，不按测试数量计',
-        'en-US': 'Library-wide progress by complete audit unit',
-      };
-      await main.getByRole('heading', { name: titles[locale], exact: true }).waitFor();
-      const opposite = locale === 'zh-CN' ? 'en-US' : 'zh-CN';
-      assert.equal(
-        await main.getByRole('heading', { name: titles[opposite], exact: true }).count(),
-        0,
-      );
-      const delivered = (
-        await main
-          .locator('table')
-          .first()
-          .getByRole('row')
-          .nth(1)
-          .getByRole('cell')
-          .last()
-          .innerText()
-      ).trim();
-      assert.match(delivered, new RegExp(`^${expectedAcceptedUnits}(?:个|\\s)`));
-      await main.getByText(String(expectedPlannedVisuals), { exact: false }).first().waitFor();
-      assert.ok((await main.textContent()).includes('69'));
-      localeChecks.push({ locale, heading: titles[locale], delivered });
+      localeChecks.push(...(await checkAuditProgress(page, base, [locale])));
     });
   assert.deepEqual(errors, []);
   assert.ok(
@@ -342,7 +311,6 @@ try {
       {
         base,
         expectedDemoStatus: expectedStatus,
-        expectedAcceptedUnits,
         localeChecks,
         results,
         errors,

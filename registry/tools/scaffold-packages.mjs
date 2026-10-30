@@ -817,8 +817,8 @@ if (isMain) {
       //
       // 2026-09-17 扩展（裁决 `ui-style-output` = A：每组件一份 CSS + 汇总 index.css）：
       //   ui 额外声明 `./style.css`（汇总）与 `./<component>/style.css`（按需）。
-      //   子路径清单**由 components.json 推导**，判据是该组件的 `styleStatus === 'done'`
-      //   —— 即「真的产出了 CSS 产物」，而不是「我们打算做」。这样 exports 永远不可能
+      //   子路径清单由 packages/ui/src/style/index.ts 的实际静态样式入口推导，
+      //   不读取组件进度。这样 exports 永远不可能
       //   指向不存在的文件（tests/build/run.mjs 的 B2 还会再独立复核一次）。
       exports: {
         '.': {

@@ -1,3 +1,5 @@
+> 历史交付快照：截至 2026-10-29，保留原始交付事实。当前任务状态以 `registry/vue-native-audit.json` 为准，展示由 `registry/tools/audit-progress.mjs` 派生。本文旧调度及逐组件完整验收要求已由当前 `WORKFLOW.md`、`TESTING.md` 替代。
+
 # 全库当前审计交付清单
 
 2026-10-29当前状态。按当前源码完整盘点、成组修复和统一验收记录；Registry历史completed、局部绿灯及视觉图片数量均不代替本轮完整收口。组件主单元按registry/components.json的72项计，关联子组件随所属单元验收。

@@ -1,5 +1,7 @@
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
+> 历史实施记录：原勾选、当时结果和缺口保留。2026-10-30 起，本文的 G0–G14 / 逐组件 G13 全仓收口与旧 Registry 进度规则由仓库 `WORKFLOW.md`、`TESTING.md` 两阶段流程替代；当前任务状态只读 `registry/vue-native-audit.json`，不据本文重复派发或重跑已有效验证。
+
 # Input · 历史开发计划（G0–G14）
 
 当前六个系列均由本轮统一整改，Search/OTP 已实现；下述旧阶段记录不再定义任务范围或验收。现状见 [README](./README.md)、[迁移说明](../../../../docs/migrations/input-contracts.md) 与本批审计。

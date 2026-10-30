@@ -1,3 +1,5 @@
+> 工作流说明：本文的旧阶段、覆盖率聚合与 Registry 字段描述保留为历史证据；`foundation-status.mjs --verify` 和 foundation 任务进度写入已退役。当前任务只维护 `registry/vue-native-audit.json`，阶段与验证范围见根目录 `WORKFLOW.md`、`TESTING.md`；不据此重跑 Icons 的相同审计或更改既有覆盖率标准。
+
 > 证据范围：本文保留初期分析与回归来源。上游对齐、版本和阶段要求不是当前项目规范；现行规则见根目录 AGENTS.md 与 ADR 0005。有效的组件场景、算法契约及缺陷证据继续保留。
 
 > 2026-10-29 当前上下文契约：IconProvider.value / IconContextProps 只保留实际消费的 prefixCls、rootClassName；csp / layer / zeroRuntime 已移除。详见[集中迁移](../migrations/config-provider-contracts.md)，本轮仅更新 ConfigProvider 关联链，不代表 Icons 全包重新验收。
@@ -239,7 +241,7 @@ const iconPrefixCls = customIconPrefixCls || parentContext.iconPrefixCls || defa
 `icons` 是生成物，`ARCHITECTURE.md` §7 已声明豁免。但「只在
 `vitest.config.ts` 的 `coverage.thresholds` 里不列它」**并不够** —— 那只关掉了阈值校验，
 没有关掉**采集**。`coverage.all` 默认为 `true`，849 个生成模块照样被插桩并写进
-`coverage-summary.json`，而 `foundation-status.mjs --verify` 是按
+`coverage-summary.json`，而当时的 `foundation-status.mjs --verify`（现已退役）是按
 `packages/icons/src/` 前缀聚合的，于是生成文件被算进 icons 的覆盖率。
 
 实测后果（同一份测试，两种采集范围）：

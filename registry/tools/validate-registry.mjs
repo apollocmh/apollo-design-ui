@@ -1,43 +1,15 @@
 #!/usr/bin/env node
 /**
- * validate-registry.mjs
- *
- * 把「规范」变成「可执行的检查」。
- *
- * 本脚本是 AGENTS.md / ARCHITECTURE.md / WORKFLOW.md 中那些约束的执行者。
- * 它必须能在 CI 中运行，且任何 ERROR 都会让构建失败。
- *
- * 检查项：
- *   E1  三个 registry 文件存在且可解析
- *   E2  components.json 的状态字段取值合法
- *   E3  completed 的组件必须 7 个维度全部 done
- *   E4  组件级运行时 DAG 无环
- *   E5  优先级取值与依赖引用合法
- *   E6  blockedBy 与实际依赖状态一致
- *   E7  dependencies.json 的边与 components.json 的依赖一致
- *   E8  foundation 包引用合法
- *   E9  completed 组件有本库契约交付物
- *   E10 无硬编码视觉值（对已实现的组件做静态扫描）
- *   E11 产物中无 React 痕迹（仅当 packages 下有 dist 或 es 目录时检查）
- *   E12 Apollo 源码与自有组件清单一致
- *   E13 compat fixture schema 存在
- *   E14 foundation.json 存在，且与 dependencies.json / components.json 一致
- *   E15 foundation 包的顺序约束（phase2Order 唯一、implOrder 拓扑有效、PoC 豁免规则）
- *   E16 foundation 包进度字段合法 + completed 必须真正完成（含覆盖率与构建门禁）+
- *       PoC 收口必须有 pocResult 结论，且其登记的偏差必须真实存在
- *   E17 blockedBy 必须指向已登记的开放决策
- *   E18 workstreams.json 与 components.json 一致（无环、无跨泳道冲突、未超并发）
- *   E19 发布包零 Ant Design 运行时依赖（R7）
- *   E20 completed 的组件不得残留生成器占位（TODO(G*) / describe.todo）
- *
- * 用法：
- *   node registry/tools/validate-registry.mjs
- *   node registry/tools/validate-registry.mjs --strict   # 把 WARN 也当失败
+ * Validate static inventory, dependency/production contracts, and the single current audit state.
+ * Phase-one architecture completion never requires historical per-component nine-dimensional fields.
+ * Nine-dimensional whole-library gates remain in verify:full on one frozen version.
+ * --strict treats warnings as failures; all errors always fail.
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readAudit, validateAudit } from './audit-workflow.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '../..');
@@ -94,67 +66,40 @@ function report() {
 }
 
 // ---------------------------------------------------------------------------
-// E2 / E3  状态字段合法性
+// E2 / E3  静态清单与唯一当前任务状态分工
 // ---------------------------------------------------------------------------
-/**
- * 组件的九项质量维度。
- * 与 WORKFLOW.md §DoD 一一对应：G1 分析 → G2 设计 → G3 Token → CSS →
- * L1 单测 / L2 交互 / L3 类型 / L5 a11y / L6 视觉 → G10 兼容 → G11 文档。
- */
-const DIMENSIONS = [
-  'apiStatus', // G2 · Vue API 设计
-  'tokenStatus', // G3 · Component Token
-  'styleStatus', // CSS
-  'unitStatus', // L1 · 单元测试
-  'interactionStatus', // L2 · 交互测试
-  'typeStatus', // L3 · 类型测试
-  'a11yStatus', // L5 · 无障碍
-  'visualStatus', // L6 · 视觉回归
-  'docsStatus', // G11 · 文档
-];
-const DIMENSION_VALUES = ['todo', 'analyzing', 'in-progress', 'done', 'blocked', 'n/a'];
-const COMPONENT_STATUS = [
-  'todo',
-  'analyzing',
-  'implementing',
-  'testing',
-  'visual-review',
-  'blocked',
-  'completed',
-];
-
 const components = componentsDoc.components;
-const byName = new Map(components.map((c) => [c.name, c]));
-
-for (const c of components) {
-  if (!COMPONENT_STATUS.includes(c.status)) {
-    err('E2', `${c.name}.status 取值非法: ${c.status}`);
-  }
-  for (const d of DIMENSIONS) {
-    if (!DIMENSION_VALUES.includes(c[d])) {
-      err('E2', `${c.name}.${d} 取值非法: ${c[d]}`);
-    }
-  }
-}
-if (!errors.some((e) => e.code === 'E2')) {
-  ok('E2', `${components.length} 个组件的状态字段取值全部合法`);
-}
-
-for (const c of components) {
-  if (c.status !== 'completed') continue;
-  const unfinished = DIMENSIONS.filter((d) => c[d] !== 'done' && c[d] !== 'n/a');
-  if (unfinished.length) {
+const byName = new Map(components.map((component) => [component.name, component]));
+const retiredComponentFields = [
+  'status',
+  'blockedBy',
+  'blockers',
+  'apiStatus',
+  'tokenStatus',
+  'styleStatus',
+  'unitStatus',
+  'interactionStatus',
+  'typeStatus',
+  'a11yStatus',
+  'visualStatus',
+  'docsStatus',
+];
+for (const component of components) {
+  const retired = retiredComponentFields.filter((key) => Object.hasOwn(component, key));
+  if (retired.length)
     err(
-      'E3',
-      `${c.name} 标记为 completed，但以下维度未 done: ${unfinished
-        .map((d) => `${d}=${c[d]}`)
-        .join(', ')}`,
+      'E2',
+      `${component.name}: current progress belongs to vue-native-audit.json (${retired.join(', ')})`,
     );
-  }
 }
-if (!errors.some((e) => e.code === 'E3')) {
-  const done = components.filter((c) => c.status === 'completed').length;
-  ok('E3', `completed 组件的维度一致性通过（当前 ${done} 个 completed）`);
+if (!errors.some((entry) => entry.code === 'E2'))
+  ok('E2', '组件清单仅保留静态元数据，无第二份当前进度');
+let audit;
+try {
+  audit = validateAudit(readAudit(ROOT), ROOT);
+  ok('E3', '架构整改与最终验收状态分离；historical_passed不冒充冻结版本passed');
+} catch (error) {
+  err('E3', error.message);
 }
 
 // ---------------------------------------------------------------------------
@@ -216,24 +161,9 @@ if (!errors.some((e) => e.code === 'E5'))
   ok('E5', '优先级与依赖引用合法；任务排序不受上游拓扑约束');
 
 // ---------------------------------------------------------------------------
-// E6  blockedBy 与实际状态一致
+// E6  实际整改依赖由唯一任务状态定义，静态 imports 只表示影响面
 // ---------------------------------------------------------------------------
-for (const c of components) {
-  const expected = c.dependencies.components.filter(
-    (d) => (byName.get(d)?.status ?? 'todo') !== 'completed',
-  );
-  const actual = [...c.blockedBy].sort();
-  const exp = [...expected].sort();
-  if (JSON.stringify(actual) !== JSON.stringify(exp)) {
-    warn(
-      'E6',
-      `${c.name}.blockedBy 与依赖状态不一致（registry=[${actual}] 期望=[${exp}]）。运行 gen-registry 刷新`,
-    );
-  }
-}
-if (!warnings.some((w) => w.code === 'E6')) {
-  ok('E6', 'blockedBy 与依赖完成状态一致');
-}
+if (audit) ok('E6', '整改依赖与源码 import 图分离，不等待基础包整包最终验收');
 
 // ---------------------------------------------------------------------------
 // E7  dependencies.json 与 components.json 的边一致
@@ -275,35 +205,19 @@ if (!errors.some((e) => e.code === 'E8')) {
 }
 
 // ---------------------------------------------------------------------------
-// E9  compat fixture 存在性
+// E9  当前组件源码的公开契约交付物
 // ---------------------------------------------------------------------------
 let missingContracts = 0;
-for (const c of components) {
-  if (c.status !== 'completed') continue;
-  const dir = path.join(UI_SRC, c.name);
+for (const component of components) {
+  const dir = path.join(UI_SRC, component.name);
   for (const entry of ['index.ts', '__tests__', 'index.zh-CN.md', 'index.en-US.md']) {
     if (!fs.existsSync(path.join(dir, entry))) {
-      err('E9', `${c.name} 缺少 Apollo 契约交付物: ${entry}`);
+      err('E9', `${component.name} 缺少 Apollo 契约交付物: ${entry}`);
       missingContracts += 1;
     }
   }
-  for (const dimension of DIMENSIONS) {
-    if (
-      c[dimension] === 'n/a' &&
-      !c.layerNotes?.[dimension] &&
-      !c.layerNotes?.[dimension.replace('Status', '')]
-    ) {
-      // Historical records may use explanatory prose rather than keyed notes.
-      if (
-        !c.layerNotes ||
-        (typeof c.layerNotes === 'object' && Object.keys(c.layerNotes).length === 0)
-      ) {
-        err('E9', `${c.name}.${dimension}=n/a 缺少 layerNotes 适用性依据`);
-      }
-    }
-  }
 }
-if (missingContracts === 0) ok('E9', 'completed 组件具备本库契约、文档与回归目录');
+if (missingContracts === 0) ok('E9', '源码具备本库契约、双语文档与回归目录');
 
 // ---------------------------------------------------------------------------
 // E10  无硬编码视觉值（仅扫描已实现的组件）
@@ -580,26 +494,6 @@ if (!foundationDoc) {
 //   implOrder   = 推导的严格拓扑序，必须尊重 dependsOn。
 // 若一个包 pocRequired=false 却排在其依赖之前，那是真错误 —— 它会无法开工。
 // ---------------------------------------------------------------------------
-const FOUNDATION_STATUS = [
-  'todo',
-  'analyzing',
-  'implementing',
-  'testing',
-  'verifying',
-  'blocked',
-  'completed',
-];
-const FOUNDATION_DIMENSIONS = ['api', 'impl', 'types', 'tests', 'docs', 'pkg'];
-const FOUNDATION_TEST_LAYERS = [
-  'L1-unit',
-  'L2-interaction',
-  'L3-type',
-  'L4-dom-contract',
-  'L5-a11y',
-  'L6-visual',
-  'L7-build',
-];
-
 {
   const fByName = new Map(foundationPackages.map((p) => [p.name, p]));
   for (const p of foundationPackages) {
@@ -624,322 +518,51 @@ const FOUNDATION_TEST_LAYERS = [
   }
 }
 
-/**
- * COMPATIBILITY.md §9.2 里**真实登记过**的偏差编号（D1、D2…）。
- *
- * 从 Markdown 表格里刮出来而不是硬编码：硬编码会在新增 D14 时静默过期，
- * 校验就退化成「长得像 D 编号就行」—— 那还不如不校验。
- */
-const REGISTERED_DEVIATION_IDS = (() => {
-  const file = path.join(ROOT, 'docs/history/compatibility-2026-10.md');
-  if (!fs.existsSync(file)) return new Set();
-  const text = fs.readFileSync(file, 'utf8');
-  const section = text.split(/^###\s+9\.2\s/m)[1]?.split(/^###\s+9\.3\s/m)[0] ?? '';
-  return new Set([...section.matchAll(/^\|\s*(D\d+)\s*\|/gm)].map((m) => m[1]));
-})();
+// ---------------------------------------------------------------------------
+// E16  基础包清单只保留静态事实，九维门禁属于第二阶段
+// ---------------------------------------------------------------------------
+const retiredFoundationFields = [
+  'status',
+  'pocStatus',
+  'pocResult',
+  'doneWhen',
+  'dimensions',
+  'testLayers',
+  'verification',
+  'blockedBy',
+  'blockers',
+];
+for (const pkg of foundationPackages) {
+  const retired = retiredFoundationFields.filter((key) => Object.hasOwn(pkg, key));
+  if (retired.length)
+    err(
+      'E16',
+      `${pkg.name}: current progress belongs to vue-native-audit.json (${retired.join(', ')})`,
+    );
+}
+if (!errors.some((entry) => entry.code === 'E16'))
+  ok('E16', '基础包清单无重复手写进度；既有验证证据已归档');
 
 // ---------------------------------------------------------------------------
-// E16  foundation 包进度字段合法 + completed 必须真正完成
+// E17  已接受决策作为只读事实保留，不再反向合并旧调度状态
 // ---------------------------------------------------------------------------
-for (const p of foundationPackages) {
-  if (!FOUNDATION_STATUS.includes(p.status)) {
-    err('E16', `${p.name}.status 取值非法: ${p.status}`);
-  }
-  if (!DIMENSION_VALUES.includes(p.pocStatus)) {
-    err('E16', `${p.name}.pocStatus 取值非法: ${p.pocStatus}`);
-  }
-
-  // PoC 收口必须有结论 —— 防止「PoC 已完成」退化成一个无法追溯结论的状态字符串，
-  // 那正是本项目一直在堵的「虚假进度」：状态说 done，但没人知道证明了什么。
-  if (p.pocStatus === 'done') {
-    const r = p.pocResult;
-    if (!r) {
-      err(
-        'E16',
-        `${p.name} pocStatus=done 但缺少 pocResult —— PoC 结论必须可追溯（status / summary / evidence）`,
-      );
-    } else {
-      if (!['pass', 'pass-with-deviations', 'fail'].includes(r.status)) {
-        err('E16', `${p.name}.pocResult.status 取值非法: ${r.status}`);
-      }
-      if (typeof r.summary !== 'string' || !r.summary.trim()) {
-        err('E16', `${p.name}.pocResult.summary 为空 —— 必须写明「证明了什么 / 否证了什么」`);
-      }
-      if (r.status === 'fail' && p.status === 'completed') {
-        err('E16', `${p.name} PoC 结论为 fail 却标记 completed`);
-      }
-      // PoC 里登记的偏差必须能**追到登记处**，否则等于没登记。
-      // 注意不能只校验「长得像 D 编号」—— D99 也长得像，但它并不存在。
-      for (const dev of r.deviations ?? []) {
-        const isRegisteredCompat = REGISTERED_DEVIATION_IDS.has(dev);
-        const isDecisionId = (foundationDoc?.openDecisions ?? []).some((d) => d.id === dev);
-        if (!isRegisteredCompat && !isDecisionId) {
-          err(
-            'E16',
-            `${p.name}.pocResult.deviations 引用了未登记的偏差 "${dev}" —— 必须真实出现在 COMPATIBILITY.md §9.2 的表格里，或是已登记的开放决策 id`,
-          );
-        }
-      }
-    }
-  }
-  for (const d of FOUNDATION_DIMENSIONS) {
-    if (!DIMENSION_VALUES.includes(p.dimensions?.[d])) {
-      err('E16', `${p.name}.dimensions.${d} 取值非法: ${p.dimensions?.[d]}`);
-    }
-  }
-  for (const l of FOUNDATION_TEST_LAYERS) {
-    if (!DIMENSION_VALUES.includes(p.testLayers?.[l])) {
-      err('E16', `${p.name}.testLayers["${l}"] 取值非法: ${p.testLayers?.[l]}`);
-    }
-  }
-
-  // n/a 必须能指向架构依据 —— 不允许用 n/a 掩盖未做
-  const naLayers = FOUNDATION_TEST_LAYERS.filter((l) => p.testLayers?.[l] === 'n/a');
-  if (naLayers.length && !p.layerNotes) {
-    err(
-      'E16',
-      `${p.name} 有 ${naLayers.length} 个测试层标为 n/a（${naLayers.join(', ')}）但缺少 layerNotes 说明架构依据`,
-    );
-  }
-
-  if (p.status !== 'completed') continue;
-
-  const badDims = FOUNDATION_DIMENSIONS.filter((d) => !['done', 'n/a'].includes(p.dimensions[d]));
-  if (badDims.length) {
-    err(
-      'E16',
-      `${p.name} 标记 completed 但维度未完成: ${badDims.map((d) => `${d}=${p.dimensions[d]}`).join(', ')}`,
-    );
-  }
-  const badLayers = FOUNDATION_TEST_LAYERS.filter(
-    (l) => !['done', 'n/a'].includes(p.testLayers[l]),
-  );
-  if (badLayers.length) {
-    err('E16', `${p.name} 标记 completed 但测试层未完成: ${badLayers.join(', ')}`);
-  }
-  if (p.verification?.thresholds?.met !== true) {
-    err(
-      'E16',
-      `${p.name} 标记 completed 但覆盖率阈值未达标（thresholds.met=${p.verification?.thresholds?.met}）`,
-    );
-  }
-  if (p.verification?.build?.status !== 'passing') {
-    err(
-      'E16',
-      `${p.name} 标记 completed 但构建未通过（build.status=${p.verification?.build?.status}）`,
-    );
-  }
-  if ((p.blockedBy ?? []).length) {
-    err('E16', `${p.name} 标记 completed 但仍有 blockedBy: ${p.blockedBy.join(', ')}`);
+const decisions = foundationDoc?.referenceDecisions ?? [];
+for (const decision of decisions) {
+  if (!decision.id || !decision.question || !decision.impact || !decision.status) {
+    err('E17', `referenceDecisions缺少完整来源: ${decision.id}`);
   }
 }
-if (!errors.some((e) => e.code === 'E16')) {
+if (!errors.some((entry) => entry.code === 'E17'))
+  ok('E17', `保留${decisions.length}条决策事实；不将历史软阻塞升级为任务完成门槛`);
+
+// ---------------------------------------------------------------------------
+// E18  实际领取、所有权、全局并发与可恢复状态（由唯一状态校验）
+// ---------------------------------------------------------------------------
+if (audit)
   ok(
-    'E16',
-    `foundation 包进度字段合法（${foundationPackages.length} 个包，n/a 均有架构依据，completed 均通过门禁）`,
+    'E18',
+    `当前${audit.tasks.length}项任务；活动领取/依赖/文件归属与最多${audit.dispatch.maxParallel}个子任务已校验`,
   );
-}
-
-// ---------------------------------------------------------------------------
-// E17  blockedBy 必须指向已登记的开放决策
-// 否则「项目卡在什么问题上」会重新散落到对话历史里，这正是本注册表要消除的问题。
-// ---------------------------------------------------------------------------
-{
-  const decisions = foundationDoc?.openDecisions ?? [];
-  const decisionStatus = new Map(decisions.map((d) => [d.id, d.status]));
-
-  for (const d of decisions) {
-    if (!d.id || !d.question || !d.impact || !d.status) {
-      err(
-        'E17',
-        `openDecisions 条目字段不完整（需要 id/question/impact/status）: ${JSON.stringify(d.id ?? d)}`,
-      );
-    }
-  }
-
-  for (const p of foundationPackages) {
-    for (const b of p.blockedBy ?? []) {
-      if (!decisionStatus.has(b)) {
-        err(
-          'E17',
-          `${p.name}.blockedBy 引用了未登记的决策 "${b}" —— 阻塞原因必须写进 openDecisions 才能被追踪`,
-        );
-      } else if (decisionStatus.get(b) === 'decided') {
-        err('E17', `${p.name}.blockedBy 引用了已裁决的决策 "${b}" —— 裁决后应解除阻塞并刷新状态`);
-      }
-    }
-  }
-  if (!errors.some((e) => e.code === 'E17')) {
-    ok('E17', `blockedBy 全部指向已登记的开放决策（${decisions.length} 项决策）`);
-  }
-}
-
-// ---------------------------------------------------------------------------
-// E18  workstreams.json 与 registry 其余部分一致，且并行批次本身合法
-//
-// 为什么需要：可并行任务列表一旦与 components/foundation 漂移，「按图施工」就会
-// 变成「按过期图施工」。批次合法性（无跨泳道 exclusive 冲突、不超并发上限）也必须
-// 由工具保证 —— 人眼检查 9 个 item 的两两冲突关系是不现实的。
-// ---------------------------------------------------------------------------
-{
-  const wsFile = path.join(REGISTRY, 'workstreams.json');
-  if (!fs.existsSync(wsFile)) {
-    err('E18', 'registry/workstreams.json 缺失。运行: node registry/tools/gen-workstreams.mjs');
-  } else {
-    const w = JSON.parse(fs.readFileSync(wsFile, 'utf8'));
-    const wsItems = w.items ?? [];
-    const itemById = new Map(wsItems.map((i) => [i.id, i]));
-    const declaredWs = new Set((w.workstreams ?? []).map((x) => x.id));
-    const declaredCs = new Set((w.conflictSets ?? []).map((x) => x.id));
-    const exclusiveCs = new Set(
-      (w.conflictSets ?? []).filter((x) => x.mode === 'exclusive').map((x) => x.id),
-    );
-    const declaredWaves = new Set((w.waves ?? []).map((x) => x.id));
-    const decisionIds = new Set((foundationDoc?.openDecisions ?? []).map((d) => d.id));
-
-    // (a) 引用完整性
-    for (const it of wsItems) {
-      if (!declaredWs.has(it.workstream)) {
-        err('E18', `${it.id}.workstream 引用了未声明的泳道 ${it.workstream}`);
-      }
-      if (!declaredWaves.has(it.wave)) {
-        err('E18', `${it.id}.wave 引用了未声明的波次 ${it.wave}`);
-      }
-      for (const c of it.conflicts ?? []) {
-        if (!declaredCs.has(c)) err('E18', `${it.id}.conflicts 引用了未声明的冲突集 ${c}`);
-      }
-      for (const d of it.dependsOn ?? []) {
-        if (!itemById.has(d)) err('E18', `${it.id}.dependsOn 引用了不存在的 Item ${d}`);
-      }
-      for (const d of it.softBlockers ?? []) {
-        if (!decisionIds.has(d)) err('E18', `${it.id}.softBlockers 引用了未登记的决策 ${d}`);
-      }
-      if (it.id.startsWith('X:') && it.decidedBy?.length) {
-        for (const d of it.decidedBy) {
-          if (!decisionIds.has(d)) err('E18', `${it.id}.decidedBy 引用了未登记的决策 ${d}`);
-        }
-      }
-    }
-
-    // (a2) 横切项标 done 必须交代证据（2026-09-30 补）
-    //
-    // 为什么需要：横切项此前**没有完成通道**（status 写死 'todo'），补上通道之后，
-    // 新的风险是「翻个布尔值就标完成」。所以把「完成」定义成**需要交代证据的动作**：
-    // 必须有 `completedAt` 与非空 `evidence`（每条是「命令/判据 + 结论」）。
-    //
-    // 判据在 `registry/source/workstreams.mjs` 的 CROSS_ITEMS 头部有说明；
-    // 这里只做强制，不推断 —— 生成器不猜「看起来像做完了」。
-    for (const it of wsItems) {
-      if (it.kind !== 'crosscut' || it.status !== 'done') continue;
-      if (typeof it.completedAt !== 'string' || it.completedAt.trim() === '') {
-        err('E18', `${it.id} 标为 done 但缺少 completedAt（完成日期，YYYY-MM-DD）`);
-      }
-      if (!Array.isArray(it.evidence) || it.evidence.length === 0) {
-        err('E18', `${it.id} 标为 done 但 evidence 为空 —— 完成必须交代证据（命令 + 结论）`);
-      } else if (it.evidence.some((e) => typeof e !== 'string' || e.trim() === '')) {
-        err('E18', `${it.id}.evidence 含空条目 —— 每条证据都要能独立读懂`);
-      }
-    }
-
-    // (b) 覆盖率：13 个 foundation 包 + 72 个组件都必须有对应 Item，否则会被漏做
-    for (const p of foundationPackages) {
-      if (!itemById.has(`FND:${p.dir}`)) {
-        err('E18', `foundation 包 ${p.name} 在 workstreams.json 中没有对应的 Work Item`);
-      }
-      if (p.pocRequired && !itemById.has(`FND:${p.dir}:poc`)) {
-        err('E18', `${p.name} 要求 PoC，但 workstreams.json 缺少 FND:${p.dir}:poc`);
-      }
-    }
-    for (const c of components) {
-      if (!itemById.has(`COMP:${c.name}`)) {
-        err('E18', `组件 ${c.name} 在 workstreams.json 中没有对应的 Work Item`);
-      }
-    }
-
-    // (c) Item 依赖图无环（含 PoC → 完整实现 的边）
-    {
-      const state = new Map();
-      const stack = [];
-      const visit = (id) => {
-        if (state.get(id) === 2) return;
-        if (state.get(id) === 1) {
-          const from = stack.indexOf(id);
-          err('E18', `Work Item 依赖存在环: ${stack.slice(from).concat(id).join(' → ')}`);
-          return;
-        }
-        state.set(id, 1);
-        stack.push(id);
-        for (const d of itemById.get(id)?.dependsOn ?? []) if (itemById.has(d)) visit(d);
-        stack.pop();
-        state.set(id, 2);
-      };
-      for (const it of wsItems) visit(it.id);
-    }
-
-    // (d) 批次合法性：ready 状态一致、无跨泳道 exclusive 冲突、不超并发上限
-    {
-      const batch = (w.currentBatch ?? []).map((id) => itemById.get(id));
-      for (const b of batch) {
-        if (!b) err('E18', `currentBatch 引用了不存在的 Item ${b}`);
-        else if (b.status !== 'ready') {
-          err('E18', `currentBatch 含非 ready 的 Item ${b.id}（status=${b.status}）`);
-        }
-      }
-      const usedBy = new Map();
-      const laneLoad = new Map();
-      for (const b of batch) {
-        if (!b) continue;
-        for (const c of b.conflicts ?? []) {
-          if (!exclusiveCs.has(c)) continue;
-          if (!usedBy.has(c)) usedBy.set(c, new Set());
-          usedBy.get(c).add(b.workstream);
-          if (usedBy.get(c).size > 1) {
-            err('E18', `currentBatch 中 ${c} 被多个泳道同时占用: ${[...usedBy.get(c)].join(', ')}`);
-          }
-        }
-        laneLoad.set(b.workstream, (laneLoad.get(b.workstream) ?? 0) + 1);
-      }
-      const wsMax = new Map((w.workstreams ?? []).map((x) => [x.id, x.maxParallel]));
-      for (const [lane, n] of laneLoad) {
-        const max = wsMax.get(lane) ?? 1;
-        if (n > max) err('E18', `currentBatch 中泳道 ${lane} 有 ${n} 个 Item，超过并发上限 ${max}`);
-      }
-    }
-
-    // (e) 泳道归属与 components.json 的 group 一致（防止手改 workstreams.json 造成漂移）
-    {
-      const groupToWs = new Map();
-      for (const ws of w.workstreams ?? []) {
-        // 成员反推：从 items 里取该泳道下 kind=component 的 group
-        const groups = new Set(
-          wsItems
-            .filter((i) => i.workstream === ws.id && i.kind === 'component')
-            .map((i) => i.group),
-        );
-        if (groups.size > 1) {
-          err('E18', `泳道 ${ws.id} 混入了多个组件分组: ${[...groups].join(', ')}`);
-        }
-        if (groups.size === 1) groupToWs.set([...groups][0], ws.id);
-      }
-      for (const c of components) {
-        const it = itemById.get(`COMP:${c.name}`);
-        if (it && groupToWs.get(c.group) && groupToWs.get(c.group) !== it.workstream) {
-          err(
-            'E18',
-            `组件 ${c.name}（group=${c.group}）被分到 ${it.workstream}，与同组其它组件不一致`,
-          );
-        }
-      }
-    }
-
-    if (!errors.some((e) => e.code === 'E18')) {
-      ok(
-        'E18',
-        `workstreams.json 一致（${wsItems.length} 个 Item / ${(w.workstreams ?? []).length} 条泳道 / 批次 ${(w.currentBatch ?? []).length} 个，无环、无跨泳道冲突、未超并发）`,
-      );
-    }
-  }
-}
 
 // ---------------------------------------------------------------------------
 // E19  R7：发布包零 Ant Design 运行时依赖
@@ -1025,23 +648,9 @@ if (!errors.some((e) => e.code === 'E19')) {
 }
 
 // ---------------------------------------------------------------------------
-// E20  「completed」的组件不得残留**生成器占位**
-//
-// 为什么需要它：`status` 与 11 个维度都是**手写**在 components.json 里的，而生成器
-// （`gen-component.mjs`）留下的骨架带着 `TODO(G3)` / `TODO(G4)` / `TODO(G11)` 与
-// `describe.todo(...)` 标记。两者一旦不一致，就会出现「组件判 completed、
-// 但某一层根本没做」—— 2026-10-01 实测出 **11 处**：
-//   - `app` / `float-button` 的 `style/token.ts`（`TODO(G3)`）
-//   - `auto-complete` 的 `style/index.ts`（`TODO(G4)`，而它本来就没有 `style/` 目录）
-//   - **8 个 `describe.todo` 骨架测试**：anchor / auto-complete / float-button /
-//     masonry / progress 的 `theme.test.ts`、date-picker 的 `demo.test.ts`、
-//     steps 的 `semantic.test.ts`、upload 的 `type.test-d.ts`
-//
-// ⇒ 与 E3 互补：**E3 管「声明」（维度必须 done），E20 管「证据」（文件里不能还是骨架）**。
-//
-// ⚠️ 扫描前**剥注释**：骨架文件的文件头注释里就写着「刻意使用 describe.todo」，
-//    而 `s1-smoke.test.ts` 这类文件在**正文注释里讨论**这个约定 —— 不剥会全是假阳性。
-//    （`.md` 不扫：文档里讨论这个约定是正当的。）
+// E20  架构已完成的组件不得残留生成器占位
+// 静态组件清单不存任务完成状态；本检查仅依据唯一当前状态的 architectureStatus。
+// 历史G13/九维记录已归档，不能作为当前推进的前置条件。
 // ---------------------------------------------------------------------------
 // ⚠️ `TODO(G*)` 必须匹配**行首注释**（生成器写的 `// TODO(G3): …` / `<!-- TODO(G4): … -->`），
 //    不能匹配裸文本 —— 否则「测试里断言 `expect(src).not.toContain('TODO(G3)')`」
@@ -1051,7 +660,10 @@ const PLACEHOLDER_DESCRIBE_TODO = /describe\.todo\(/;
 let e20Components = 0;
 let e20Files = 0;
 for (const c of componentsDoc?.components ?? []) {
-  if (c.status !== 'completed') continue;
+  if (
+    !audit?.tasks.some((task) => task.id === `CMP:${c.name}` && task.architectureStatus === 'done')
+  )
+    continue;
   const dir = path.join(UI_SRC, c.name);
   if (!fs.existsSync(dir)) continue;
   e20Components += 1;
@@ -1070,17 +682,23 @@ for (const c of componentsDoc?.components ?? []) {
       const raw = fs.readFileSync(fp, 'utf8');
       const rel = path.relative(ROOT, fp);
       if (PLACEHOLDER_TODO.test(raw)) {
-        err('E20', `${rel} 残留生成器 TODO 占位（行首注释）—— 但 ${c.name} 的 status 是 completed`);
+        err(
+          'E20',
+          `${rel} 残留生成器 TODO 占位（行首注释）—— 但 ${c.name} 的 architectureStatus 是 done`,
+        );
       }
       // `describe.todo(` 要**剥注释**后匹配：文件头注释里就写着这个约定
       if (PLACEHOLDER_DESCRIBE_TODO.test(stripComments(raw))) {
-        err('E20', `${rel} 残留 \`describe.todo\` 骨架测试 —— 但 ${c.name} 的 status 是 completed`);
+        err(
+          'E20',
+          `${rel} 残留 \`describe.todo\` 骨架测试 —— 但 ${c.name} 的 architectureStatus 是 done`,
+        );
       }
     }
   }
 }
 if (!errors.some((e) => e.code === 'E20')) {
-  ok('E20', `completed 组件无占位残留（${e20Components} 个组件目录 / ${e20Files} 个文件）`);
+  ok('E20', `架构已完成组件无占位残留（${e20Components} 个组件目录 / ${e20Files} 个文件）`);
 }
 
 report();

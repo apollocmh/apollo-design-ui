@@ -16,6 +16,13 @@ const componentsDoc = read('components.json');
 const dependenciesDoc = read('dependencies.json');
 const tokensDoc = read('tokens.json');
 const tokens = tokensDoc.layers;
+for (const [name, layer] of Object.entries(tokens)) {
+  if (Object.hasOwn(layer, 'status'))
+    throw new Error(`${name}: token progress belongs to the archived implementation record`);
+}
+if (tokensDoc.algorithms.some((algorithm) => Object.hasOwn(algorithm, 'status'))) {
+  throw new Error('Algorithm progress belongs to the archived implementation record');
+}
 // Alias owns only its additions; effective aliases also include the map layer.
 tokens.alias.own = tokens.alias.effective.filter((token) => !tokens.map.aggregate.includes(token));
 Object.assign(tokensDoc.summary, {
@@ -35,6 +42,28 @@ Object.assign(tokensDoc.summary, {
     .length,
 });
 const components = componentsDoc.components;
+const retiredProgress = [
+  'status',
+  'blockedBy',
+  'blockers',
+  'apiStatus',
+  'tokenStatus',
+  'styleStatus',
+  'unitStatus',
+  'interactionStatus',
+  'typeStatus',
+  'a11yStatus',
+  'visualStatus',
+  'docsStatus',
+];
+for (const component of components) {
+  const retired = retiredProgress.filter((key) => Object.hasOwn(component, key));
+  if (retired.length) {
+    throw new Error(
+      `${component.name}: progress belongs to registry/vue-native-audit.json, not components.json (${retired.join(', ')})`,
+    );
+  }
+}
 const byName = new Map(components.map((c) => [c.name, c]));
 if (byName.size !== components.length) throw new Error('Duplicate component name');
 const levels = new Map();
@@ -66,9 +95,6 @@ for (const component of components) {
   component.derived.dagLevel = level(component.name);
   component.derived.unblocks = dependents(component.name).size;
   component.derived.tokenCount = tokens.component.perComponent[component.name]?.length ?? 0;
-  component.blockedBy = component.dependencies.components.filter(
-    (name) => byName.get(name).status !== 'completed',
-  );
   (layers[component.derived.dagLevel] ??= []).push(component.name);
   for (const [key, kind] of [
     ['components', 'runtime'],
@@ -87,11 +113,8 @@ const countBy = (field) =>
   }, {});
 componentsDoc.summary = {
   total: components.length,
-  byStatus: countBy('status'),
   byPriority: countBy('priority'),
   byGroup: countBy('group'),
-  completedCount: components.filter((c) => c.status === 'completed').length,
-  remainingCount: components.filter((c) => c.status !== 'completed').length,
 };
 dependenciesDoc.componentDag = {
   nodes: Object.fromEntries(
@@ -139,6 +162,6 @@ if (args.includes('--print-dag')) {
     console.log(`L${depth}: ${names.join(', ')}`);
 }
 console.log(
-  `[registry] Apollo inventory: ${components.length} components; status and token records preserved`,
+  `[registry] Apollo inventory: ${components.length} components; static metadata and token records preserved`,
 );
 process.exitCode = drift ? 1 : 0;

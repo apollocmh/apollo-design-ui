@@ -2,24 +2,8 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://apollo-design.dev/schemas/registry.json",
   "title": "Apollo Design Registry",
-  "description": "Apollo 自有清单、状态与派生图；参考证据不约束项目范围。",
+  "description": "Static Apollo inventory, dependency/token metadata and historical reference facts. Current task state has its own vue-native-audit.schema.json.",
   "definitions": {
-    "ComponentStatus": {
-      "type": "string",
-      "enum": [
-        "todo",
-        "analyzing",
-        "implementing",
-        "testing",
-        "visual-review",
-        "blocked",
-        "completed"
-      ]
-    },
-    "DimensionStatus": {
-      "type": "string",
-      "enum": ["todo", "analyzing", "in-progress", "done", "blocked", "n/a"]
-    },
     "Priority": {
       "type": "string",
       "enum": ["P0", "P1", "P2", "P3", "P4", "P5"]
@@ -32,58 +16,9 @@
       "type": "string",
       "enum": ["通用", "布局", "导航", "数据录入", "数据展示", "反馈", "其他"]
     },
-    "Blocker": {
-      "type": "object",
-      "required": ["type", "reason"],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": ["dependency", "component", "architecture", "compat-decision", "upstream"],
-          "description": "阻塞类型，见 WORKFLOW.md「阻塞处理」"
-        },
-        "reason": {
-          "type": "string"
-        },
-        "blockedBy": {
-          "type": "string",
-          "description": "阻塞者：组件名 / 包名 / 决策名"
-        },
-        "unblockCondition": {
-          "type": "string",
-          "description": "解除条件"
-        },
-        "since": {
-          "type": "string",
-          "description": "ISO 日期"
-        },
-        "referenceEvidence": {
-          "type": "object",
-          "description": "带来源版本的历史证据；不参与完成条件"
-        }
-      }
-    },
     "Component": {
       "type": "object",
-      "required": [
-        "name",
-        "exportName",
-        "group",
-        "priority",
-        "complexity",
-        "status",
-        "dependencies",
-        "blockedBy",
-        "apiStatus",
-        "typeStatus",
-        "tokenStatus",
-        "styleStatus",
-        "unitStatus",
-        "interactionStatus",
-        "a11yStatus",
-        "visualStatus",
-        "docsStatus"
-      ],
+      "required": ["name", "exportName", "group", "priority", "complexity", "dependencies"],
       "additionalProperties": false,
       "properties": {
         "name": {
@@ -108,9 +43,6 @@
         },
         "complexity": {
           "$ref": "#/definitions/Complexity"
-        },
-        "status": {
-          "$ref": "#/definitions/ComponentStatus"
         },
         "derived": {
           "type": "object",
@@ -160,103 +92,19 @@
             }
           }
         },
-        "blockedBy": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "当前未完成的已声明依赖；计划线索，不禁止维护任务"
-        },
-        "blockers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Blocker"
-          }
-        },
-        "apiStatus": {
-          "$ref": "#/definitions/DimensionStatus"
-        },
-        "typeStatus": {
-          "$ref": "#/definitions/DimensionStatus"
-        },
-        "tokenStatus": {
-          "$ref": "#/definitions/DimensionStatus"
-        },
-        "styleStatus": {
-          "$ref": "#/definitions/DimensionStatus"
-        },
-        "unitStatus": {
-          "$ref": "#/definitions/DimensionStatus"
-        },
-        "interactionStatus": {
-          "$ref": "#/definitions/DimensionStatus"
-        },
-        "a11yStatus": {
-          "$ref": "#/definitions/DimensionStatus"
-        },
-        "visualStatus": {
-          "$ref": "#/definitions/DimensionStatus"
-        },
-        "docsStatus": {
-          "$ref": "#/definitions/DimensionStatus"
-        },
         "notes": {
           "type": ["string", "null"]
         },
-        "layerNotes": {
-          "type": ["string", "null"],
-          "description": "分层证据（L4 基线用例数 / L6 张数等）。与 notes 一样是 Agent 写的，生成器跨运行保留"
-        },
-        "referenceEvidence": {
-          "type": "object",
-          "description": "带来源版本的历史证据；不参与完成条件"
-        },
-        "visualBaseline": {
-          "enum": ["legacy-reference", "apollo", "pending", "n/a"]
-        }
-      }
-    },
-    "Milestone": {
-      "type": "object",
-      "required": ["id", "label", "description", "criteria"],
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "label": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "components": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "packages": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "criteria": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
         "referenceEvidence": {
           "type": "object",
           "description": "带来源版本的历史证据；不参与完成条件"
         }
-      }
+      },
+      "description": "Static inventory facts only. Current task progress lives in registry/vue-native-audit.json."
     },
     "ComponentsFile": {
       "type": "object",
-      "required": ["generatedAt", "legend", "summary", "milestones", "components"],
+      "required": ["generatedAt", "legend", "summary", "components"],
       "additionalProperties": true,
       "properties": {
         "generatedAt": {
@@ -270,33 +118,18 @@
         },
         "summary": {
           "type": "object",
-          "required": ["total", "byStatus", "byPriority", "byGroup"],
+          "required": ["total", "byPriority", "byGroup"],
           "additionalProperties": true,
           "properties": {
             "total": {
               "type": "integer"
-            },
-            "byStatus": {
-              "type": "object"
             },
             "byPriority": {
               "type": "object"
             },
             "byGroup": {
               "type": "object"
-            },
-            "completedCount": {
-              "type": "integer"
-            },
-            "remainingCount": {
-              "type": "integer"
             }
-          }
-        },
-        "milestones": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Milestone"
           }
         },
         "components": {
@@ -393,135 +226,6 @@
         }
       }
     },
-    "FoundationStatus": {
-      "type": "string",
-      "enum": ["todo", "analyzing", "implementing", "testing", "verifying", "blocked", "completed"],
-      "description": "foundation 包生命周期。与 ComponentStatus 平行，但多一个 verifying —— foundation 包的验收门槛包含「覆盖率达标 + 契约文档 + 产物构建」三项，缺一不可"
-    },
-    "FoundationDimension": {
-      "type": "string",
-      "enum": ["api", "impl", "types", "tests", "docs", "pkg"],
-      "description": "foundation 包的进度维度。比组件的 7 个维度少视觉/Token（L0/L1/L2 不得含视觉语义），多一个 pkg（包配置与构建产物）"
-    },
-    "TestLayer": {
-      "type": "string",
-      "enum": [
-        "L1-unit",
-        "L2-interaction",
-        "L3-type",
-        "L4-dom-contract",
-        "L5-a11y",
-        "L6-visual",
-        "L7-build"
-      ],
-      "description": "TESTING.md 的七层测试架构。foundation 包必须显式声明每一层是 done 还是 n/a —— n/a 必须由架构规则支撑（如 L0 无视觉语义 ⇒ L6 不适用），不允许用 n/a 掩盖未做"
-    },
-    "FoundationVerification": {
-      "type": "object",
-      "additionalProperties": false,
-      "description": "最近一次可复现验证的实测事实。由 foundation-status.mjs --verify 写入，禁止手工编造",
-      "properties": {
-        "verifiedAt": {
-          "type": ["string", "null"],
-          "description": "ISO 日期"
-        },
-        "unit": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "projects": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "files": {
-              "type": "integer"
-            },
-            "tests": {
-              "type": "integer"
-            },
-            "passed": {
-              "type": "integer"
-            },
-            "failed": {
-              "type": "integer"
-            }
-          }
-        },
-        "typecheck": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "status": {
-              "type": "string",
-              "enum": ["clean", "errors", "not-run"]
-            },
-            "errors": {
-              "type": "integer"
-            }
-          }
-        },
-        "coverage": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "statements": {
-              "type": ["number", "null"]
-            },
-            "branches": {
-              "type": ["number", "null"]
-            },
-            "functions": {
-              "type": ["number", "null"]
-            },
-            "lines": {
-              "type": ["number", "null"]
-            }
-          }
-        },
-        "thresholds": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "statements": {
-              "type": "number"
-            },
-            "branches": {
-              "type": "number"
-            },
-            "functions": {
-              "type": "number"
-            },
-            "met": {
-              "type": ["boolean", "null"],
-              "description": "三项是否全部达标。null 表示尚未测量"
-            }
-          }
-        },
-        "build": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "status": {
-              "type": "string",
-              "enum": ["passing", "failing", "not-run", "not-applicable"]
-            },
-            "reason": {
-              "type": ["string", "null"]
-            }
-          }
-        },
-        "contract": {
-          "type": ["string", "null"],
-          "description": "契约文档路径，如 docs/foundation/rc-util-contract.md"
-        },
-        "referenceEvidence": {
-          "type": "object",
-          "description": "带来源版本的历史证据；不参与完成条件"
-        }
-      }
-    },
     "FoundationDerived": {
       "type": "object",
       "additionalProperties": false,
@@ -565,22 +269,15 @@
         "name",
         "dir",
         "layer",
-        "phase2Order",
-        "status",
         "risk",
         "purpose",
         "replaces",
         "notDo",
         "readiness",
         "pocRequired",
-        "pocStatus",
         "dependsOn",
         "dependedOnBy",
-        "dimensions",
-        "testLayers",
-        "verification",
-        "derived",
-        "blockedBy"
+        "derived"
       ],
       "additionalProperties": false,
       "properties": {
@@ -595,14 +292,6 @@
         "layer": {
           "type": "string",
           "enum": ["L0", "L1", "L2", "测试"]
-        },
-        "phase2Order": {
-          "type": "integer",
-          "minimum": 1,
-          "description": "Phase 2 推进顺序（含 PoC 验证点）。允许早于依赖包 —— 当且仅当该槽位是 PoC 而非完整实现，此时 pocRequired 必须为 true"
-        },
-        "status": {
-          "$ref": "#/definitions/FoundationStatus"
         },
         "risk": {
           "type": "string",
@@ -626,28 +315,15 @@
         },
         "readiness": {
           "type": "string",
-          "description": "Phase 1 定义的就绪标准"
-        },
-        "doneWhen": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "可验证的完成判据。status=completed 时必须全部满足，且逐条能指向证据"
+          "description": "Package design/reference fact. Current work dependencies and blockers are defined only in vue-native-audit.json."
         },
         "pocRequired": {
           "type": "boolean",
-          "description": "是否需要先做 PoC 才能开始完整实现（AR1/AR2 等架构风险点）"
-        },
-        "pocStatus": {
-          "$ref": "#/definitions/DimensionStatus"
+          "description": "Package design/reference fact. Current work dependencies and blockers are defined only in vue-native-audit.json."
         },
         "pocNote": {
-          "type": ["string", "null"]
-        },
-        "layerNotes": {
           "type": ["string", "null"],
-          "description": "解释 testLayers 中 n/a 的架构依据。n/a 必须能指向 R3（地基纯净）或 R4（引擎无视觉）这类规则，不允许用它掩盖未做"
+          "description": "Package design/reference fact. Current work dependencies and blockers are defined only in vue-native-audit.json."
         },
         "dependsOn": {
           "type": "array",
@@ -662,126 +338,15 @@
             "type": "string"
           }
         },
-        "dimensions": {
-          "type": "object",
-          "required": ["api", "impl", "types", "tests", "docs", "pkg"],
-          "additionalProperties": false,
-          "properties": {
-            "api": {
-              "$ref": "#/definitions/DimensionStatus"
-            },
-            "impl": {
-              "$ref": "#/definitions/DimensionStatus"
-            },
-            "types": {
-              "$ref": "#/definitions/DimensionStatus"
-            },
-            "tests": {
-              "$ref": "#/definitions/DimensionStatus"
-            },
-            "docs": {
-              "$ref": "#/definitions/DimensionStatus"
-            },
-            "pkg": {
-              "$ref": "#/definitions/DimensionStatus"
-            }
-          }
-        },
-        "testLayers": {
-          "type": "object",
-          "required": [
-            "L1-unit",
-            "L2-interaction",
-            "L3-type",
-            "L4-dom-contract",
-            "L5-a11y",
-            "L6-visual",
-            "L7-build"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "L1-unit": {
-              "$ref": "#/definitions/DimensionStatus"
-            },
-            "L2-interaction": {
-              "$ref": "#/definitions/DimensionStatus"
-            },
-            "L3-type": {
-              "$ref": "#/definitions/DimensionStatus"
-            },
-            "L4-dom-contract": {
-              "$ref": "#/definitions/DimensionStatus"
-            },
-            "L5-a11y": {
-              "$ref": "#/definitions/DimensionStatus"
-            },
-            "L6-visual": {
-              "$ref": "#/definitions/DimensionStatus"
-            },
-            "L7-build": {
-              "$ref": "#/definitions/DimensionStatus"
-            }
-          }
-        },
-        "verification": {
-          "$ref": "#/definitions/FoundationVerification"
-        },
         "derived": {
           "$ref": "#/definitions/FoundationDerived"
-        },
-        "blockedBy": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "blockers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Blocker"
-          }
-        },
-        "notes": {
-          "type": ["string", "null"]
-        },
-        "pocResult": {
-          "type": ["object", "null"],
-          "description": "PoC 结论。pocStatus=done 时必填 —— 防止「PoC 已完成」退化成无法追溯结论的状态字符串。",
-          "required": ["status", "summary"],
-          "additionalProperties": false,
-          "properties": {
-            "status": {
-              "type": "string",
-              "enum": ["pass", "pass-with-deviations", "fail"]
-            },
-            "summary": {
-              "type": "string",
-              "description": "证明了什么 / 否证了什么"
-            },
-            "evidence": {
-              "type": "array",
-              "description": "可复现的证据（命令、文件、用例规模）",
-              "items": {
-                "type": "string"
-              }
-            },
-            "deviations": {
-              "type": "array",
-              "description": "PoC 中发现并登记的偏差 id",
-              "items": {
-                "type": "string"
-              }
-            },
-            "decidedAt": {
-              "type": ["string", "null"]
-            }
-          }
         },
         "referenceEvidence": {
           "type": "object",
           "description": "带来源版本的历史证据；不参与完成条件"
         }
-      }
+      },
+      "description": "Static inventory facts only. Current task progress lives in registry/vue-native-audit.json."
     },
     "FoundationFile": {
       "type": "object",
@@ -797,48 +362,16 @@
         "legend": {
           "type": "object"
         },
-        "phase1Facts": {
-          "type": "object",
-          "description": "Phase 1 分析产出的实测事实（来源 docs/foundation/*.md）。工具只保留、不生成 —— 这些数字无法从当前仓库廉价重新推导。键为包名。",
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": true
-          }
-        },
-        "openDecisions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/OpenDecision"
-          },
-          "description": "等待用户裁决的跨切面决策。工具只保留、不生成。"
-        },
         "summary": {
           "type": "object",
-          "required": ["total", "byStatus", "byLayer", "completedCount", "remainingCount"],
+          "required": ["total", "byLayer"],
           "additionalProperties": true,
           "properties": {
             "total": {
               "type": "integer"
             },
-            "byStatus": {
-              "type": "object"
-            },
             "byLayer": {
               "type": "object"
-            },
-            "completedCount": {
-              "type": "integer"
-            },
-            "remainingCount": {
-              "type": "integer"
-            },
-            "nextPackage": {
-              "type": ["string", "null"],
-              "description": "按 phase2Order 排序、blockedBy 为空的第一个包"
-            },
-            "nextImplementable": {
-              "type": ["string", "null"],
-              "description": "按 implOrder 排序、依赖全部 completed 的第一个包 —— 「可以开始完整实现」的答案"
             }
           }
         },
@@ -852,6 +385,17 @@
         "referenceEvidence": {
           "type": "object",
           "description": "带来源版本的历史证据；不参与完成条件"
+        },
+        "historicalFacts": {
+          "type": "object",
+          "description": "Dated source/analysis facts carried from the archived implementation registry; not a current completion gate."
+        },
+        "referenceDecisions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OpenDecision"
+          },
+          "description": "等待用户裁决的跨切面决策。工具只保留、不生成。"
         }
       }
     },
@@ -900,11 +444,11 @@
           "items": {
             "type": "string"
           },
-          "description": "**影响范围**：本决策会波及哪些 foundation 包（⚠️ 只填 foundation 包名，不要填组件名）。⚠️ **它不是「阻塞与否」的判据** —— 那看 `hardBlock`（2026-10-04 用户裁决）。`gen-workstreams` 据此把决策挂到对应 item 上（仅当 `status: 'open'`）；`status: 'decided'` 时它退化为**历史影响范围**（记录该决策曾约束过哪些包）。⚠️ 已裁决决策保留 blocks 是**有意的**，不要当成陈旧数据清掉。"
+          "description": "Original decision classification retained as a reference fact. It does not impose current task dependencies or completion gates."
         },
         "hardBlock": {
           "type": "boolean",
-          "description": "**「是否阻塞」的唯一判据**（`blocks` 只是影响范围）：`true` = 相关包完全无法开工；`false` = 可以开工但收不了口。`gen-workstreams` 对 `status: 'open'` 的决策按此分流 —— `true` 把 item 按在 waiting-decision，`false` 标 `cannotFinish`。"
+          "description": "Original decision classification retained as a reference fact. It does not impose current task dependencies or completion gates."
         },
         "status": {
           "type": "string",
@@ -1054,363 +598,14 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["name", "status"],
+            "required": ["name"],
             "additionalProperties": false,
             "properties": {
               "name": {
                 "type": "string"
-              },
-              "status": {
-                "$ref": "#/definitions/DimensionStatus"
               }
             }
           }
-        },
-        "referenceEvidence": {
-          "type": "object",
-          "description": "带来源版本的历史证据；不参与完成条件"
-        }
-      }
-    },
-    "WorkstreamFile": {
-      "type": "object",
-      "description": "registry/workstreams.json —— 可并行 Work Item 的编排。由 gen-workstreams.mjs 从 components/foundation + source/workstreams.mjs 推导，勿手工编辑 items。",
-      "required": [
-        "generatedAt",
-        "summary",
-        "conflictSets",
-        "workstreams",
-        "waves",
-        "items",
-        "currentBatch"
-      ],
-      "properties": {
-        "$schema": {
-          "type": "string"
-        },
-        "$comment": {
-          "type": "string"
-        },
-        "generatedAt": {
-          "type": "string"
-        },
-        "sourceFacts": {
-          "type": "string"
-        },
-        "legend": {
-          "type": "object"
-        },
-        "summary": {
-          "type": "object"
-        },
-        "conflictSets": {
-          "$ref": "#/definitions/ConflictSets"
-        },
-        "workstreams": {
-          "$ref": "#/definitions/Workstreams"
-        },
-        "waves": {
-          "$ref": "#/definitions/Waves"
-        },
-        "items": {
-          "$ref": "#/definitions/WorkItems"
-        },
-        "currentBatch": {
-          "type": "array",
-          "description": "当前可同时开工的 Item id 集合（无跨泳道 exclusive 冲突 + 遵守并发上限）",
-          "items": {
-            "type": "string"
-          }
-        },
-        "referenceEvidence": {
-          "type": "object",
-          "description": "带来源版本的历史证据；不参与完成条件"
-        }
-      }
-    },
-    "ConflictSets": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/ConflictSet"
-      }
-    },
-    "ConflictSet": {
-      "type": "object",
-      "description": "共享路径的冲突声明。mode=exclusive 开发期互斥；mode=serialized 提交期排序。",
-      "required": ["id", "name", "mode", "paths"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "pattern": "^CF-"
-        },
-        "name": {
-          "type": "string"
-        },
-        "mode": {
-          "type": "string",
-          "enum": ["exclusive", "serialized"]
-        },
-        "paths": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "note": {
-          "type": "string"
-        },
-        "referenceEvidence": {
-          "type": "object",
-          "description": "带来源版本的历史证据；不参与完成条件"
-        }
-      }
-    },
-    "Workstreams": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/Workstream"
-      }
-    },
-    "Workstream": {
-      "type": "object",
-      "description": "并行泳道。owns 为独占路径；同一泳道内的并发由 maxParallel 限流。",
-      "required": ["id", "name", "kind"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "pattern": "^WS-"
-        },
-        "name": {
-          "type": "string"
-        },
-        "kind": {
-          "type": "string",
-          "enum": ["foundation", "component", "crosscut"]
-        },
-        "foundation": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "group": {
-          "$ref": "#/definitions/Group"
-        },
-        "owns": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "shared": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "maxParallel": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "why": {
-          "type": "string"
-        },
-        "itemCount": {
-          "type": "integer"
-        },
-        "doneCount": {
-          "type": "integer"
-        },
-        "readyCount": {
-          "type": "integer"
-        },
-        "itemIds": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "referenceEvidence": {
-          "type": "object",
-          "description": "带来源版本的历史证据；不参与完成条件"
-        }
-      }
-    },
-    "Waves": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/Wave"
-      }
-    },
-    "Wave": {
-      "type": "object",
-      "description": "批次。成员由工具推导，这里描述目标、进入条件与退出条件。",
-      "required": ["id", "phase", "name", "goal", "entryCriteria", "exitCriteria"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "pattern": "^W[0-9]+$"
-        },
-        "phase": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "name": {
-          "type": "string"
-        },
-        "goal": {
-          "type": "string"
-        },
-        "entryCriteria": {
-          "type": "string"
-        },
-        "exitCriteria": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "status": {
-          "type": "string",
-          "enum": ["done", "active", "pending"]
-        },
-        "itemCount": {
-          "type": "integer"
-        },
-        "doneCount": {
-          "type": "integer"
-        },
-        "readyCount": {
-          "type": "integer"
-        },
-        "blockedCount": {
-          "type": "integer"
-        },
-        "waitingCount": {
-          "type": "integer"
-        },
-        "complete": {
-          "type": "boolean"
-        },
-        "itemIds": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "workstreams": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "referenceEvidence": {
-          "type": "object",
-          "description": "带来源版本的历史证据；不参与完成条件"
-        }
-      }
-    },
-    "WorkItems": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/WorkItem"
-      }
-    },
-    "WorkItem": {
-      "type": "object",
-      "description": "被调度的最小单元。kind=poc 是架构风险验证槽位，不是完整实现。",
-      "required": ["id", "kind", "title", "workstream", "wave", "status"],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "kind": {
-          "type": "string",
-          "enum": ["foundation", "poc", "component", "crosscut"]
-        },
-        "ref": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "workstream": {
-          "type": "string"
-        },
-        "wave": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string",
-          "enum": ["done", "ready", "blocked", "waiting-decision"],
-          "description": "ready 只表示依赖已满足；cannotFinish=true 表示可以开工但收不了口"
-        },
-        "dependsOn": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "conflicts": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "blockers": {
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
-        },
-        "softBlockers": {
-          "type": "array",
-          "description": "软阻塞的开放决策 id —— 不阻止开工，但阻止置 completed",
-          "items": {
-            "type": "string"
-          }
-        },
-        "cannotFinish": {
-          "type": "boolean"
-        },
-        "decidedBy": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "complexity": {
-          "$ref": "#/definitions/Complexity"
-        },
-        "priority": {
-          "$ref": "#/definitions/Priority"
-        },
-        "unblocks": {
-          "type": "integer"
-        },
-        "why": {
-          "type": "string"
-        },
-        "doneWhen": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "group": {
-          "$ref": "#/definitions/Group"
-        },
-        "dagLevel": {
-          "type": "integer"
-        },
-        "pocOf": {
-          "type": "string"
-        },
-        "registryStatus": {
-          "type": "string"
-        },
-        "dimensions": {
-          "type": "object"
         },
         "referenceEvidence": {
           "type": "object",

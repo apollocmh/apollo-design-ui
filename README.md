@@ -9,7 +9,7 @@
 
 组件的可用范围以组件文档为准，尚未解决的缺陷见 [已知问题](docs/KNOWN-ISSUES.md)。Registry 的完成标记不代表不存在缺陷。
 
-Image、List、Spin、QRCode、Statistic与Skeleton已按完整清单完成本轮验收；全库审计继续进行。查看[整改进展与实际示例](https://apollocmh.github.io/apollo-design-ui/guide/audit-progress.html)及对应提交证据。
+Vue 原生化按“架构整改 → 冻结版本统一验收”推进。已有交付和有效证据保留，当前任务状态以 [审计状态](registry/vue-native-audit.json) 为准；[整改进度页](packages/docs/content/guide/audit-progress.md) 从该状态生成。历史完整交付不冒充本轮最终验收。
 
 ## 安装
 
@@ -89,13 +89,20 @@ pnpm docs:preview
 | [兼容政策](COMPATIBILITY.md) | 现有用户、弃用与迁移边界 |
 | [测试标准](TESTING.md) | 契约、视觉与质量门禁 |
 | [路线图](ROADMAP.md) | 当前工作的优先级与验收方向 |
-| [Registry](registry/README.md) | 状态、依赖和历史参考数据 |
+| [Registry](registry/README.md) | 唯一当前状态、静态依赖和历史参考数据 |
 
 ```bash
-pnpm verify:component button  # 局部开发反馈
-pnpm verify:full              # 项目门禁
-pnpm verify:consumer          # 已构建包的消费端检查
+pnpm registry:vue-native --json  # 唯一当前状态
+pnpm registry:next --parallel    # 只读建议，暂停时不派新任务
+pnpm verify:component button     # 第一阶段：相关类型和核心行为反馈
+pnpm verify:changed --dry-run    # 查看改动及消费者检查计划
+pnpm verify:changed              # 第一阶段：执行针对性检查
+pnpm registry:progress           # 生成进度展示
+pnpm verify:full --dry-run       # 查看最终验收计划，不执行
+pnpm verify:full                 # 全部架构完成后，对冻结版本统一验收
 ```
+
+第一阶段完成相关类型、核心行为及必要 Demo/消费者检查即可继续，不逐组件重复全库测试、完整视觉矩阵、覆盖率或发布消费。第二阶段保留九维标准，统一构建后验证同一份产物。普通维护不重复创建组件流程；最多五个子任务按文件归属并行。
 
 Apollo 的公开 API 与明确契约是功能标准。Ant Design 等项目可作为设计参考和可选对照，不绑定 Apollo 的版本、组件范围或发布验收。
 
