@@ -37,6 +37,7 @@ import {
 import type { AppendFn, ContainerLike, GetContainer, ResolvedContainer } from './container';
 import {
   computeZIndex,
+  DEFAULT_Z_INDEX_POPUP_BASE,
   enqueueAppend,
   flushAppendQueue,
   resolveContainer,
@@ -60,6 +61,11 @@ export const PORTAL_ORDER_KEY: InjectionKey<(appendFn: AppendFn) => void> =
  *    这是 Vue 相对 React `useContext` 的必要改写（antd 靠重新渲染拿到新值）。
  */
 export const ZINDEX_KEY: InjectionKey<ComputedRef<number>> = Symbol('apollo-z-index');
+
+const ZINDEX_DIAGNOSTICS_KEY: InjectionKey<{
+  zIndex: ComputedRef<number>;
+  base: ComputedRef<number>;
+}> = Symbol('apollo-z-index-diagnostics');
 
 // ---------------------------------------------------------------------------
 // 容器
@@ -192,15 +198,14 @@ export function usePortalContainer(options: UsePortalContainerOptions): UsePorta
 
   function append(): void {
     const ele = defaultContainer.value;
-    if (ele && !ele.parentElement) {
+    if (ele && !ele.parentNode) {
       getDoc()?.body?.appendChild(ele);
     }
     appended.value = true;
   }
 
   function cleanup(): void {
-    const ele = defaultContainer.value;
-    ele?.parentElement?.removeChild(ele);
+    defaultContainer.value?.remove();
     appended.value = false;
   }
 
@@ -282,8 +287,9 @@ export interface UseZIndexOptions {
 /**
  * z-index 层级（`_util/hooks/useZIndex.ts`）。
  *
- * ⭐ 返回 `undefined` 是**正常且预期**的：最外层浮层不设 z-index，靠 DOM 顺序堆叠。
- * 只有嵌套在父浮层里才会拿到数值。想强制指定就传 `customZIndex`。
+ * 顶层未指定时返回 `undefined`，让组件 CSS 决定视觉层级。
+ * 视觉层级与默认计算不同的组件须将当前 Token 作为顶层 customZIndex，
+ * 使数值上下文与实际浮层一致；嵌套时保留父层级和组件 offset。
  */
 export function useZIndex(
   componentType: ZIndexComponentType,
@@ -291,34 +297,44 @@ export function useZIndex(
   options: UseZIndexOptions = {},
 ): ComputedRef<number | undefined> {
   const parentZIndexRef = inject(ZINDEX_KEY, null);
+  const custom = computed(() => customZIndex?.());
   const pair = computed(() => {
     const { zIndexPopupBase } = options;
     return computeZIndex({
       componentType,
-      customZIndex: customZIndex?.(),
+      customZIndex: custom.value,
       parentZIndex: parentZIndexRef?.value,
       ...(zIndexPopupBase !== undefined ? { zIndexPopupBase } : {}),
     });
   });
 
   // 把算出来的值 provide 给子孙（对应 `<ZIndexContext.Provider value={contextZIndex}>`）
-  provide(
-    ZINDEX_KEY,
-    computed(() => pair.value[1]),
-  );
+  const contextZIndex = computed(() => pair.value[1]);
+  provide(ZINDEX_KEY, contextZIndex);
 
   if (isDev) {
+    const parentDiagnostics = inject(ZINDEX_DIAGNOSTICS_KEY, null);
+    // A public numeric provider can replace the nearest layer independently.
+    const inheritedBase =
+      parentDiagnostics?.zIndex === parentZIndexRef ? parentDiagnostics.base : null;
+    const base = computed(
+      () =>
+        custom.value ??
+        inheritedBase?.value ??
+        options.zIndexPopupBase ??
+        DEFAULT_Z_INDEX_POPUP_BASE,
+    );
+    provide(ZINDEX_DIAGNOSTICS_KEY, { zIndex: contextZIndex, base });
     const warned = shallowRef(false);
     watch(
-      pair,
-      ([current]) => {
+      [pair, base],
+      ([[current], zIndexPopupBase]) => {
         if (warned.value) return;
-        const { zIndexPopupBase } = options;
         if (
           shouldWarnZIndex({
-            customZIndex: customZIndex?.(),
+            customZIndex: custom.value,
             currentZIndex: current,
-            ...(zIndexPopupBase !== undefined ? { zIndexPopupBase } : {}),
+            zIndexPopupBase,
           })
         ) {
           warned.value = true;

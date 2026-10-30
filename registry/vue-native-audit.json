@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 61,
+  "revision": 66,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2626,13 +2626,21 @@
       "kind": "foundation",
       "ref": "locale",
       "title": "@apollo-design/locale",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/locale/src"
+        "packages/locale",
+        "docs/foundation/locale-contract.md",
+        "packages/ui/src/config-provider/ConfigProvider.ts",
+        "packages/ui/src/modal/ModalPanel.ts",
+        "packages/ui/src/config-provider/__tests__/locale-scope.test.ts"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_locale",
+        "baseRevision": 63,
+        "startedAt": "2026-10-30T10:12:51.881Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2641,7 +2649,19 @@
         "docs/audit/2026-10-29-config-provider-contract-audit.md",
         "docs/audit/evidence/current-batch-final-acceptance.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "沿用ConfigProvider本轮证据，收口Locale原生响应式与Provider作用域",
+        "remaining": [
+          "先核对当前Provider/useLocale/确认服务语言的替换、嵌套、多app及卸载差额；语言数据沿用既有生成与测试，不重译或扩大组件功能。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/foundation/locale-contract.md",
+          "docs/audit/2026-10-29-config-provider-contract-audit.md",
+          "docs/audit/evidence/current-batch-final-acceptance.json"
+        ]
+      }
     },
     {
       "id": "FND:motion",
@@ -2776,7 +2796,21 @@
       "workDependencies": [],
       "owns": [
         "packages/portal",
-        "docs/foundation/portal-contract.md"
+        "docs/foundation/portal-contract.md",
+        "packages/ui/src/_internal/use-consumer-z-index.ts",
+        "packages/ui/src/_internal/__tests__/consumer-z-index.test.ts",
+        "packages/ui/src/dropdown/Dropdown.ts",
+        "packages/ui/src/date-picker/DatePicker.vue",
+        "packages/ui/src/date-picker/RangePicker.vue",
+        "packages/ui/src/tree-select/TreeSelect.ts",
+        "packages/ui/src/mentions/Mentions.ts",
+        "packages/ui/src/mentions/use-mentions-theme.ts",
+        "packages/ui/src/image/Preview.ts",
+        "packages/ui/src/image/hooks/useImageTheme.ts",
+        "packages/ui/src/mentions/index.zh-CN.md",
+        "packages/ui/src/mentions/index.en-US.md",
+        "packages/ui/src/_internal/__tests__/consumer-z-index-browser.mjs",
+        "packages/ui/src/_internal/__tests__/fixtures/consumer-z-index-browser.mjs"
       ],
       "assignment": {
         "owner": "native_portal",
@@ -2794,12 +2828,16 @@
       "issues": [
         {
           "id": "PORTAL-ANCESTOR-WARNING-BASE",
-          "status": "deferred",
+          "status": "fixed",
           "blocking": false,
-          "impact": "父浮层合法定制层级后，独立子Popover/Tooltip可产生两条zIndex越界误告警；实际层级与交互已通过，Popconfirm browser console-clean命令仍exit1。",
-          "reason": "仅开发诊断误报，无核心行为/资源影响；保留失败日志及原严格断言，在Portal整改单元统一核对继承基准。",
+          "impact": "曾因合法祖先自定义层级误报两条zIndex诊断，原Popconfirm严格浏览器脚本exit1；原失败日志保留。",
+          "reason": "已用关联数值provider的祖先诊断基准修复，原严格Popconfirm源码浏览器脚本复跑exit0；真实过深与外部numeric provider告警仍保留。",
           "command": "node packages/ui/src/popconfirm/__tests__/native-browser.mjs",
-          "exitCode": 1
+          "exitCode": 0,
+          "priorFailure": {
+            "command": "node packages/ui/src/popconfirm/__tests__/native-browser.mjs",
+            "exitCode": 1
+          }
         },
         {
           "id": "PORTAL-CONSUMER-CSS-CONTEXT",
@@ -2812,26 +2850,39 @@
       "verification": {
         "stage": "architecture",
         "scope": [
-          "packages/portal/src/use-portal.ts",
-          "packages/portal/src/container.ts"
+          "packages/portal"
         ],
         "passed": true,
         "checks": [
           {
             "kind": "core",
-            "command": "pnpm exec vitest run --project unit packages/portal/src/__tests__/container.test.ts packages/portal/src/__tests__/use-portal.test.ts packages/ui/src/tooltip/__tests__/injected-layer.test.ts --maxWorkers=1",
+            "command": "pnpm exec vitest run --project unit packages/portal/src/__tests__ --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 12590
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/portal/src/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 3440
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/popconfirm/__tests__/native-browser.mjs",
             "exitCode": 0,
             "signal": null
           },
           {
             "kind": "types",
-            "command": "vue-tsc --noEmit -p <isolated root-strict config; Portal source/tests>",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; all Portal source/tests/SFC>",
             "exitCode": 0,
             "signal": null,
-            "durationMs": 51927
+            "durationMs": 53236
           }
         ],
-        "boundary": "仅当前base getter与合法父层0修正。consumer视觉/上下文基准及合法祖先定制的诊断问题仍登记未关闭，Portal整体继续partial。"
+        "boundary": "包内祖先诊断及closed ShadowRoot清理修复已验证；真实UI消费者CSS/context桥仍在单独集成，FND:portal整体保持in_progress，未执行最终九维。"
       },
       "plan": {
         "goal": "保留当前getter/父层0修复，集中收口Portal容器与层级公开契约",

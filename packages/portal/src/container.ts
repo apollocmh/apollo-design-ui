@@ -87,10 +87,10 @@ export interface ComputeZIndexInput {
 /**
  * ⭐⭐ 最容易被读错的一条契约：
  *
- * **最外层的浮层不设 z-index**（返回 `undefined`）。
+ * **最外层未指定层级时返回 `undefined`**，让组件 CSS 决定实际 z-index。
  * 因为 `result[0]` 在 `parentZIndex === undefined` 时取的是 `customZIndex`（= undefined）。
- * 顶层浮层靠**容器的 DOM 顺序**决定谁压着谁（见契约文档 §3.3），
- * 只有嵌套在父浮层里的子浮层才拿到数值型 z-index。
+ * 只有嵌套或显式指定时返回数值型 z-index。视觉基准由上层组件拥有；
+ * 顶层 consumer 的 CSS 基准应作为 customZIndex 传入，避免后代只继承 offset。
  *
  * 第二个返回值是给 `ZIndexContext` 让子孙继承的，**永远**是算出来的数值。
  */

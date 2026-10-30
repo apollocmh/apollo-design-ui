@@ -18,6 +18,7 @@ import {
   ref,
   type ShallowRef,
   shallowRef,
+  type VNode,
 } from 'vue';
 
 import type {
@@ -159,6 +160,31 @@ describe('默认容器', () => {
     wrappers.pop();
     await nextTick();
     expect(bodyIndex(def)).toBe(-1);
+  });
+
+  it('默认容器原生搬入 ShadowRoot 后，关闭和卸载仍移除自身容器', async () => {
+    const open = ref(true);
+    const host = document.createElement('section');
+    document.body.append(host);
+    const shadow = host.attachShadow({ mode: 'closed' });
+    const rig = mountHook({ open: () => open.value });
+    await nextTick();
+    const container = mustGet(rig.api().defaultContainer.value, 'default container');
+    try {
+      shadow.append(container);
+      expect(container.isConnected).toBe(true);
+      open.value = false;
+      await nextTick();
+      expect(container.parentNode).toBeNull();
+      open.value = true;
+      await nextTick();
+      expect(container.parentNode).toBe(document.body);
+      shadow.append(container);
+      rig.wrapper.unmount();
+      expect(container.parentNode).toBeNull();
+    } finally {
+      host.remove();
+    }
   });
 
   it('debug ⇒ dev 下打 data-debug', async () => {
@@ -391,6 +417,107 @@ describe('zIndexPopupBase 选项', () => {
   });
 });
 describe('越界告警', () => {
+  it('独立子浮层继承合法祖先的当前诊断基准，而非自己的视觉 Token', async () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const base = ref<number | undefined>(3060);
+    try {
+      const Tooltip = defineComponent({
+        setup() {
+          const z = useZIndex('Tooltip', undefined, { zIndexPopupBase: 1070 });
+          return () => h('span', { 'data-tooltip-z': z.value });
+        },
+      });
+      const Popover = defineComponent({
+        setup() {
+          const z = useZIndex('Popover', undefined, { zIndexPopupBase: 1030 });
+          return () => h('div', { 'data-popover-z': z.value }, [h(Tooltip)]);
+        },
+      });
+      const { wrapper } = mountZIndex('Popconfirm', undefined, Popover, {
+        get zIndexPopupBase() {
+          return base.value;
+        },
+      });
+      expect(wrapper.get('[data-popover-z]').attributes('data-popover-z')).toBe('3260');
+      expect(wrapper.get('[data-tooltip-z]').attributes('data-tooltip-z')).toBe('3360');
+      base.value = 4060;
+      await nextTick();
+      expect(wrapper.get('[data-tooltip-z]').attributes('data-tooltip-z')).toBe('4360');
+      base.value = undefined;
+      await nextTick();
+      expect(wrapper.get('[data-tooltip-z]').attributes('data-tooltip-z')).toBe('1300');
+      expect(spy).not.toHaveBeenCalled();
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it('合法祖先基准仍限制实际过深嵌套', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const Layer = defineComponent({
+        props: { depth: { type: Number, required: true } },
+        setup(props) {
+          const z = useZIndex('Tooltip', undefined, { zIndexPopupBase: 1070 });
+          return (): VNode =>
+            h('div', { 'data-depth': props.depth, 'data-z': z.value }, [
+              props.depth > 1 ? h(Layer, { depth: props.depth - 1 }) : null,
+            ]);
+        },
+      });
+      const Children = defineComponent({
+        setup: () => () => h(Layer, { depth: 11 }),
+      });
+      const { wrapper } = mountZIndex('Popconfirm', undefined, Children, {
+        zIndexPopupBase: 3060,
+      });
+      expect(wrapper.get('[data-depth="1"]').attributes('data-z')).toBe('4260');
+      expect(spy).toHaveBeenCalledTimes(1);
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it('显式层级为后代建立合法基准', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const Child = defineComponent({
+        setup() {
+          const z = useZIndex('Tooltip');
+          return () => h('span', { 'data-child-z': z.value });
+        },
+      });
+      const { wrapper } = mountZIndex('Modal', () => 9999, Child);
+      expect(wrapper.get('[data-child-z]').attributes('data-child-z')).toBe('10099');
+      expect(spy).not.toHaveBeenCalled();
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it('外部重新 provide 数值层级后不沿用更远祖先的诊断基准', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const Child = defineComponent({
+        setup() {
+          const z = useZIndex('Tooltip');
+          return () => h('span', { 'data-child-z': z.value });
+        },
+      });
+      const External = defineComponent({
+        setup() {
+          provide(ZINDEX_KEY, computed(() => 5000));
+          return () => h(Child);
+        },
+      });
+      const { wrapper } = mountZIndex('Modal', undefined, External, { zIndexPopupBase: 6000 });
+      expect(wrapper.get('[data-child-z]').attributes('data-child-z')).toBe('5100');
+      expect(spy).toHaveBeenCalledTimes(1);
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
   it('⭐ 算出来的 z-index 超过 base + 1100 ⇒ dev 下告警一次', async () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     try {

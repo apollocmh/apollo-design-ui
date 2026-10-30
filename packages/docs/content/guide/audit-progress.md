@@ -11,7 +11,7 @@ order: 0
 
 ## Vue 原生化：架构整改与最终验收
 
-当前阶段：**第一阶段：Vue 原生架构整改**。任务派发：**进行中**；活动任务 4/5。
+当前阶段：**第一阶段：Vue 原生架构整改**。任务派发：**进行中**；活动任务 5/5。
 
 | 范围 | 架构整改完成 | 历史完整交付 | 本轮冻结验收通过 |
 | --- | --- | --- | --- |
@@ -99,7 +99,7 @@ order: 0
 | @apollo-design/a11y | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/form-core | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/icons | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
-| @apollo-design/locale | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| @apollo-design/locale | 进行中 | native_locale | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/motion | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/overlay | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | @apollo-design/picker | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
@@ -116,7 +116,7 @@ order: 0
 
 ## Vue native architecture and final acceptance
 
-Current stage: **Vue native architecture**. Dispatch: **running**; active tasks 4/5.
+Current stage: **Vue native architecture**. Dispatch: **running**; active tasks 5/5.
 
 | Scope | Architecture complete | Historical deliveries | Passed on the frozen version |
 | --- | --- | --- | --- |
@@ -204,7 +204,7 @@ Final library acceptance: **not_started**. Unknown, untested and deferred checks
 | @apollo-design/a11y | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/form-core | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/icons | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
-| @apollo-design/locale | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| @apollo-design/locale | In progress | native_locale | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/motion | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | @apollo-design/overlay | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | @apollo-design/picker | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |

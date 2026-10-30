@@ -21,9 +21,9 @@
 ## 公开 API
 
 - Portal 组件（Teleport 封装，支持 SSR 安全延迟挂载）
-- 容器管理：getContainer / createContainer / destroyContainer
-- 层级：useZIndex / ZIndexContext / getNextZIndex
-- ContextIsolator（切断 provider 传递）
+- 容器管理：`resolveContainer` / `usePortalContainer` / `usePortalOrder` / `PORTAL_ORDER_KEY`
+- 层级：`computeZIndex` / `shouldWarnZIndex` / `useZIndex` / `ZINDEX_KEY` 及偏移常量
+- 队列纯函数：`enqueueAppend` / `flushAppendQueue`；测试开关：`portalInlineMock` / `resetPortalInlineMock`
 - **全局副作用**（2026-09-26 为 drawer 补入，modal 同用）：
   - `useScrollLocker(lock)` + Portal 的 `autoLock` prop —— 锁 `html body` 滚动，
     body 溢出且实测滚动条宽度大于0时补 `width: calc(100% - Npx)`，覆盖式滚动条不改宽度；
@@ -57,6 +57,16 @@ Portal 的 autoDestroy 随 prop 更新；usePortalContainer 的对应选项支�
 
 反复切换容器时，本包保持自身编辑器的节点、草稿、选择和焦点，尊重已选外部焦点、非活动文档和普通更新中的主动 blur。具体边界与复现见 [Avatar关联审计](../../docs/audit/2026-10-27-avatar-contract-audit.md)；通用焦点陷阱与对话框层级管理仍在 utils/a11y。
 
+默认容器即使被原生 DOM 操作搬入 ShadowRoot，关闭或卸载仍移除自身容器；重开复用该容器。显式外部容器由调用者拥有，Portal 只清理自己的内容与副作用。
+
+## 视觉层级与数值上下文
+
+`useZIndex` 保留 `ComputedRef<number | undefined>` 返回值和 `ZINDEX_KEY` 的 `ComputedRef<number>` 契约。顶层组件未显式指定时，返回 `undefined` 以使用其 CSS；拥有独立视觉 Token 的 consumer 应把当前 Token 作为顶层 `customZIndex`，嵌套时交给父层级加自身 offset。`zIndexPopupBase` 选项可用属性 getter 读取当前主题，父层级 `0` 是合法值。
+
+开发告警相对实际祖先的有效基准计算。合法的祖先 Token 或显式层级不会让普通子浮层误报；真正超过该基准加 1100 的嵌套仍告警。外部通过公开 `ZINDEX_KEY` 重设数值上下文时，不继承已被替换的内部诊断基准。
+
+UI 消费者将数值和数字字符串接入该上下文。非数值 CSS 表达式保留原样；其自动后代层级仍是明确延期的边界，不通过 CSS 解析或 DOM 读取推导。
+
 ## 明确不做（边界）
 
 - ❌ 不实现浮层定位（那是 @apollo-design/position 的职责）
@@ -65,10 +75,10 @@ Portal 的 autoDestroy 随 prop 更新；usePortalContainer 的对应选项支�
 
 ## 必须遵守的契约
 
-- SSR 下首屏不挂载，hydration 完成后挂载（避免 hydration mismatch）
-- getPopupContainer 的解析优先级与 antd 一致
-- z-index 递增规则与 antd 一致（弹窗类与浮层类分开计数）
-- 同一容器内多个浮层的堆叠顺序与打开顺序一致
+- SSR 下不创建 DOM 或提前调用内容槽；需要首屏打开时在 `onMounted` 后设置 `open`
+- `getContainer` 支持内联、选择器、resolver、Element 和 ShadowRoot，保留未就绪态
+- 浮层的数值上下文与实际视觉基准一致，嵌套叠加当前组件 offset
+- 默认嵌套 Portal 的祖先容器先入 DOM，子容器随后挂载
 
 ## 依赖
 
@@ -103,6 +113,7 @@ Portal 的 autoDestroy 随 prop 更新；usePortalContainer 的对应选项支�
 ```bash
 pnpm --filter @apollo-design/portal test
 pnpm --filter @apollo-design/portal lint
+node packages/portal/src/__tests__/native-browser.mjs
 ```
 
 测试要求见 [`TESTING.md`](../../TESTING.md)。
