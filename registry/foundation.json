@@ -489,7 +489,7 @@
           "@apollo-design/ui"
         ],
         "srcFiles": 26,
-        "srcLines": 6542,
+        "srcLines": 6619,
         "exportDeclarations": 155
       }
     },
@@ -523,8 +523,8 @@
           "@apollo-design/ui"
         ],
         "srcFiles": 25,
-        "srcLines": 5262,
-        "exportDeclarations": 125
+        "srcLines": 5267,
+        "exportDeclarations": 131
       }
     },
     {

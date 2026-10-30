@@ -26,13 +26,18 @@
  *  - decade：起始世纪 **− 10 年**。
  */
 
-import { defineComponent, h, type VNodeChild } from 'vue';
+import { defineComponent, h, type SlotsType, type VNodeChild } from 'vue';
 import { getPanelGeometry } from './panel';
 import { PanelBody } from './panel-body';
-import type { PanelDateType } from './panel-context';
+import type { PanelDateType, PanelSlots } from './panel-context';
 import { PanelHeader } from './panel-header';
 import { getPanelHeaderLimits } from './panel-header-limit';
-import { formatWith, providePanelInfoFromProps, sharedPanelProps } from './panel-props';
+import {
+  formatWith,
+  providePanelInfoFromProps,
+  sharedPanelEmits,
+  sharedPanelProps,
+} from './panel-props';
 import type { DisabledDate, PanelMode } from './types';
 
 /** 四个面板共用的 props（就是 `sharedPanelProps`，此处别名只为可读性）。 */
@@ -107,9 +112,14 @@ function defineUpperPanel(
       /** 覆盖 `prefixCls-${mode}-panel` 的面板名 */
       panelName: { type: String, default: mode },
     },
-    setup(props) {
+    emits: sharedPanelEmits,
+    slots: Object as SlotsType<PanelSlots>,
+    setup(props, { emit, slots }) {
       // ⚠️ 用返回值（面板自己 provide 的东西自己 inject 不到），见 `panel-props.ts`
-      const info = providePanelInfoFromProps(props, mode);
+      const info = providePanelInfoFromProps(props, mode, {
+        onSelect: (date) => emit('select', date),
+        onHover: (date) => emit('hover', date),
+      });
 
       return () => {
         const ctx = info.value;
@@ -138,7 +148,7 @@ function defineUpperPanel(
               type: 'button',
               key: 'year',
               'aria-label': locale.yearSelect,
-              onClick: () => props.onModeChange?.('year'),
+              onClick: () => emit('modeChange', 'year'),
               tabIndex: -1,
               class: `${prefixCls}-year-btn`,
             },
@@ -159,7 +169,7 @@ function defineUpperPanel(
                     type: 'button',
                     key: 'decade',
                     'aria-label': locale.decadeSelect,
-                    onClick: () => props.onModeChange?.('decade'),
+                    onClick: () => emit('modeChange', 'decade'),
                     tabIndex: -1,
                     class: `${prefixCls}-decade-btn`,
                   },
@@ -177,11 +187,11 @@ function defineUpperPanel(
               superOffset: limits.superOffset,
               getStart: limits.getStart,
               getEnd: limits.getEnd,
-              onChange: props.onPickerValueChange,
+              onChange: (next: PanelDateType) => emit('pickerValueChange', next),
             },
             { default: () => titleNode },
           ),
-          h(PanelBody, { geometry, disabledDate: mergedDisabledDate }),
+          h(PanelBody, { geometry, disabledDate: mergedDisabledDate }, slots),
         ]);
       };
     },

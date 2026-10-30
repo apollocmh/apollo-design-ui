@@ -28,13 +28,16 @@
  *    且**取 `queue[index + 1]`，取不到就什么都不做**（不会停在中间态）。
  */
 
+import { useControlledValue } from '@apollo-design/utils';
 import {
+  type Component,
   computed,
   defineComponent,
   h,
   type PropType,
   provide,
   ref,
+  type SlotsType,
   type VNodeChild,
   watch,
 } from 'vue';
@@ -44,10 +47,10 @@ import { fillLocale } from './locale-fill';
 import { pickProps } from './misc-util';
 import {
   PANEL_SHARED_KEY,
-  type PanelCellRender,
   type PanelDateType,
   type PanelSemanticClassNames,
   type PanelSemanticStyles,
+  type PanelSlots,
 } from './panel-context';
 import { providePanelHack } from './panel-props';
 import {
@@ -109,6 +112,7 @@ function getModeQueue(picker: PickerMode): PanelMode[] {
 
 export const PickerPanel = defineComponent({
   name: 'ApolloPickerPanel',
+  expose: ['nativeElement'],
   props: {
     prefixCls: { type: String, default: 'apollo-picker' },
     direction: { type: String as PropType<'ltr' | 'rtl' | undefined>, default: undefined },
@@ -123,25 +127,11 @@ export const PickerPanel = defineComponent({
     // ---------------------------------------------------------------- 模式
     picker: { type: String as PropType<PickerMode | undefined>, default: undefined },
     mode: { type: String as PropType<PanelMode | undefined>, default: undefined },
-    onPanelChange: {
-      type: Function as PropType<
-        ((viewDate: PanelDateType | undefined, mode: PanelMode) => void) | undefined
-      >,
-      default: undefined,
-    },
 
     // ---------------------------------------------------------------- 值
     multiple: { type: Boolean as PropType<boolean | undefined>, default: undefined },
     value: { type: Array as PropType<PanelDateType[] | undefined>, default: undefined },
     defaultValue: { type: Array as PropType<PanelDateType[] | undefined>, default: undefined },
-    onChange: {
-      type: Function as PropType<((next: never) => void) | undefined>,
-      default: undefined,
-    },
-    onSelect: {
-      type: Function as PropType<((date: PanelDateType) => void) | undefined>,
-      default: undefined,
-    },
 
     // ---------------------------------------------------------- 浏览值
     pickerValue: {
@@ -152,18 +142,13 @@ export const PickerPanel = defineComponent({
       type: null as unknown as PropType<PanelDateType | undefined>,
       default: undefined,
     },
-    onPickerValueChange: {
-      type: Function as PropType<((next: PanelDateType) => void) | undefined>,
-      default: undefined,
-    },
 
     // --------------------------------------------------- hover 与格子
     hoverValue: { type: Array as PropType<PanelDateType[] | undefined>, default: undefined },
     hoverRangeValue: {
-      type: Array as PropType<PanelDateType[] | undefined>,
+      type: null as unknown as PropType<PanelDateType | PanelDateType[] | undefined>,
       default: undefined,
     },
-    cellRender: { type: Function as PropType<PanelCellRender | undefined>, default: undefined },
 
     // ---------------------------------------------------- 限制与图标
     disabledDate: {
@@ -172,10 +157,6 @@ export const PickerPanel = defineComponent({
     },
     minDate: { type: null as unknown as PropType<PanelDateType | undefined>, default: undefined },
     maxDate: { type: null as unknown as PropType<PanelDateType | undefined>, default: undefined },
-    onHover: {
-      type: Function as PropType<((date: PanelDateType | null) => void) | undefined>,
-      default: undefined,
-    },
     showWeek: { type: Boolean as PropType<boolean | undefined>, default: undefined },
 
     /**
@@ -246,6 +227,12 @@ export const PickerPanel = defineComponent({
       type: Function as PropType<((hour: number, minute: number) => number[]) | undefined>,
       default: undefined,
     },
+    disabledMilliseconds: {
+      type: Function as PropType<
+        ((hour: number, minute: number, second: number) => number[]) | undefined
+      >,
+      default: undefined,
+    },
     disabledTime: {
       type: Function as PropType<((date: PanelDateType) => DisabledTimes) | undefined>,
       default: undefined,
@@ -267,17 +254,6 @@ export const PickerPanel = defineComponent({
     hidePrev: { type: Boolean as PropType<boolean | undefined>, default: undefined },
     /** 藏掉 next 侧两个按钮（双面板的**左**面板用） */
     hideNext: { type: Boolean as PropType<boolean | undefined>, default: undefined },
-    /**
-     * 双击格子的回调（上游 `PopupPanel.js:36-42`）。
-     *
-     * ⚠️ 上游**无条件**挂在 hack 上，由 `PopupPanel` 决定「`needConfirm` 时才提交」——
-     * 本仓照此：传进来的回调自己判 `needConfirm`。
-     */
-    onCellDblClick: {
-      type: Function as PropType<(() => void) | undefined>,
-      default: undefined,
-    },
-
     // ---------------------------------------------------------- 语义
     classNames: {
       type: Object as PropType<PanelSemanticClassNames | undefined>,
@@ -286,85 +262,72 @@ export const PickerPanel = defineComponent({
     styles: { type: Object as PropType<PanelSemanticStyles | undefined>, default: undefined },
     /** 组件替换表（`mode` ⇒ 组件） */
     components: {
-      type: Object as PropType<Partial<Record<InternalMode, unknown>> | undefined>,
+      type: Object as PropType<Partial<Record<InternalMode, Component>> | undefined>,
       default: undefined,
     },
   },
-  setup(props, { expose }) {
+  emits: {
+    'update:value': (_value: PanelDateType[]) => true,
+    'update:pickerValue': (_value: PanelDateType) => true,
+    'update:mode': (_mode: PanelMode) => true,
+    change: (_value: PanelDateType | PanelDateType[] | undefined) => true,
+    select: (_value: PanelDateType) => true,
+    hover: (_value: PanelDateType | null) => true,
+    pickerValueChange: (_value: PanelDateType) => true,
+    panelChange: (_viewDate: PanelDateType, _mode: PanelMode) => true,
+    cellDblClick: () => true,
+  },
+  slots: Object as SlotsType<PanelSlots>,
+  setup(props, { emit, slots }) {
     const rootRef = ref<HTMLElement | null>(null);
-    expose({ nativeElement: rootRef });
 
     // ========================= Time =========================
     // ⚠️ 入参是「组件 props 的超集」，含顶层的时间 props（`hourStep` 等）。
-    const [timeProps, localeTimeProps, showTimeFormat, propFormat] = computed(() =>
-      getTimeProps(props),
-    ).value;
+    const timeConfig = computed(() => getTimeProps(props));
 
     // ========================= Locale =========================
-    const filledLocale = computed(() => fillLocale(props.locale, localeTimeProps.format ?? ''));
+    const filledLocale = computed(() => fillLocale(props.locale, timeConfig.value[1].format ?? ''));
 
     // ========================= Picker =========================
     const internalPicker = computed<InternalMode>(() =>
       toInternalMode(props.picker, props.showTime),
     );
+    const picker = computed(() => props.picker ?? 'date');
 
     // ======================== ShowTime ========================
     const mergedShowTime = computed(() =>
       fillShowTimeConfig(
         internalPicker.value,
-        showTimeFormat,
-        propFormat,
-        timeProps,
+        timeConfig.value[2],
+        timeConfig.value[3],
+        timeConfig.value[0],
         filledLocale.value,
       ),
     );
 
     // ========================== Mode ==========================
-    const innerMode = ref<PanelMode>(props.mode ?? props.picker ?? 'date');
-    watch(
-      () => props.mode,
-      (next) => {
-        if (next !== undefined) {
-          innerMode.value = next;
-        }
-      },
-    );
-    const mergedMode = computed<PanelMode>(() =>
-      props.mode !== undefined ? props.mode : innerMode.value,
-    );
-    const setMergedMode = (next: PanelMode): void => {
-      if (props.mode === undefined) {
-        innerMode.value = next;
-      }
-    };
+    const [mergedMode, setMergedMode] = useControlledValue<PanelMode>({
+      getValue: () => props.mode,
+      defaultValue: () => picker.value,
+    });
+    watch(picker, (next) => {
+      if (props.mode === undefined) setMergedMode(next);
+    });
     const internalMode = computed<InternalMode>(() =>
       mergedMode.value === 'date' && mergedShowTime.value ? 'datetime' : mergedMode.value,
     );
 
     // ========================= Value =========================
-    const innerValue = ref<PanelDateType[]>(props.defaultValue ?? []);
-    watch(
-      () => props.value,
-      (next) => {
-        if (next !== undefined) {
-          innerValue.value = next;
-        }
-      },
-    );
-    const rawValue = computed<PanelDateType[]>(() =>
-      props.value !== undefined ? props.value : innerValue.value,
-    );
+    const [rawValue, setMergedValue] = useControlledValue<PanelDateType[]>({
+      getValue: () => props.value,
+      defaultValue: () => props.defaultValue ?? [],
+      onChange: (value) => emit('update:value', value),
+    });
     /** 清掉空值；单值模式只留第一个。 */
     const mergedValue = computed<PanelDateType[]>(() => {
       const values = (rawValue.value ?? []).filter((val): val is PanelDateType => Boolean(val));
       return props.multiple ? values : values.slice(0, 1);
     });
-
-    const setMergedValue = (next: PanelDateType[]): void => {
-      if (props.value === undefined) {
-        innerValue.value = next;
-      }
-    };
 
     const generator = (): GenerateConfig<PanelDateType> => props.generateConfig;
 
@@ -379,61 +342,41 @@ export const PickerPanel = defineComponent({
       // 症状：受控用法（`value` 从外部传）一切正常，因为那时 `setMergedValue` 是空操作；
       // 只有**非受控**才暴露 —— 而它是 `defaultValue` 用户的默认路径。
       const current = mergedValue.value;
-      setMergedValue(nextValue);
       const changed =
         current.length !== nextValue.length ||
         current.some(
           (ori, index) =>
-            !isSame(
-              generator(),
-              filledLocale.value,
-              ori,
-              nextValue[index] as PanelDateType,
-              internalPicker.value,
-            ),
+            !isSame(generator(), filledLocale.value, ori, nextValue[index], internalPicker.value),
         );
       if (changed) {
-        props.onChange?.((props.multiple ? nextValue : nextValue[0]) as never);
+        setMergedValue(nextValue);
+        emit('change', props.multiple ? nextValue : nextValue[0]);
       }
     };
 
     /** 面板选了一个日期 —— 只有「当前模式就是 picker 模式」时才真的改值。 */
     const onInternalSelect = (newDate: PanelDateType): void => {
-      props.onSelect?.(newDate);
-      if (mergedMode.value === props.picker) {
+      emit('select', newDate);
+      if (mergedMode.value === picker.value) {
         const nextValues = props.multiple
-          ? (toggleDates(
+          ? toggleDates(
               generator(),
               filledLocale.value,
               internalPicker.value === 'datetime' ? 'date' : internalPicker.value,
               mergedValue.value,
               newDate,
-            ) as PanelDateType[])
+            )
           : [newDate];
         triggerChange(nextValues);
       }
     };
 
     // >>> PickerValue
-    const innerPickerValue = ref<PanelDateType>(
-      props.defaultPickerValue ?? mergedValue.value[0] ?? props.generateConfig.getNow(),
-    );
-    watch(
-      () => props.pickerValue,
-      (next) => {
-        if (next !== undefined) {
-          innerPickerValue.value = next;
-        }
-      },
-    );
-    const mergedPickerValue = computed<PanelDateType>(() =>
-      props.pickerValue !== undefined ? props.pickerValue : innerPickerValue.value,
-    );
-    const setInternalPickerValue = (next: PanelDateType): void => {
-      if (props.pickerValue === undefined) {
-        innerPickerValue.value = next;
-      }
-    };
+    const [mergedPickerValue, setInternalPickerValue] = useControlledValue<PanelDateType>({
+      getValue: () => props.pickerValue,
+      defaultValue: () =>
+        props.defaultPickerValue ?? mergedValue.value[0] ?? props.generateConfig.getNow(),
+    });
 
     // ⚠️ 那条「value 变了 ⇒ 浏览值跟过去」的同步（仅非受控 pickerValue 时生效）
     watch(
@@ -446,17 +389,19 @@ export const PickerPanel = defineComponent({
     );
 
     const triggerPanelChange = (viewDate?: PanelDateType, nextMode?: PanelMode): void => {
-      props.onPanelChange?.(viewDate ?? mergedPickerValue.value, nextMode ?? mergedMode.value);
+      emit('panelChange', viewDate ?? mergedPickerValue.value, nextMode ?? mergedMode.value);
     };
     const setPickerValue = (nextPickerValue: PanelDateType, triggerPanelEvent = false): void => {
       setInternalPickerValue(nextPickerValue);
-      props.onPickerValueChange?.(nextPickerValue);
+      emit('update:pickerValue', nextPickerValue);
+      emit('pickerValueChange', nextPickerValue);
       if (triggerPanelEvent) {
         triggerPanelChange(nextPickerValue);
       }
     };
     const triggerModeChange = (nextMode: PanelMode, viewDate?: PanelDateType): void => {
       setMergedMode(nextMode);
+      emit('update:mode', nextMode);
       if (viewDate) {
         setPickerValue(viewDate);
       }
@@ -465,16 +410,16 @@ export const PickerPanel = defineComponent({
 
     const onPanelValueSelect = (nextValue: PanelDateType): void => {
       onInternalSelect(nextValue);
-      setPickerValue(nextValue);
-
-      if (mergedMode.value !== props.picker) {
-        const queue = getModeQueue((props.picker ?? 'date') as PickerMode);
+      if (mergedMode.value !== picker.value) {
+        const queue = getModeQueue(picker.value);
         const index = queue.indexOf(mergedMode.value);
         const nextMode = queue[index + 1];
         if (nextMode) {
           triggerModeChange(nextMode, nextValue);
+          return;
         }
       }
+      setPickerValue(nextValue);
     };
 
     // ======================= Hover Date =======================
@@ -483,18 +428,10 @@ export const PickerPanel = defineComponent({
       if (!raw) {
         return null;
       }
-      let start: PanelDateType | undefined;
-      let end: PanelDateType | undefined;
-      if (Array.isArray(raw)) {
-        [start, end] = raw;
-      } else {
-        start = raw as unknown as PanelDateType;
-      }
-      if (!start && !end) {
-        return null;
-      }
-      const finalStart = (start ?? end) as PanelDateType;
-      const finalEnd = (end ?? start) as PanelDateType;
+      const [start, end] = Array.isArray(raw) ? raw : [raw];
+      const finalStart = start ?? end;
+      const finalEnd = end ?? start;
+      if (!finalStart || !finalEnd) return null;
       return props.generateConfig.isAfter(finalStart, finalEnd)
         ? [finalEnd, finalStart]
         : [finalStart, finalEnd];
@@ -502,23 +439,32 @@ export const PickerPanel = defineComponent({
 
     // ======================== Context =========================
     provide(PANEL_SHARED_KEY, {
-      classNames: props.classNames ?? {},
-      styles: props.styles ?? {},
+      get classNames() {
+        return props.classNames ?? {};
+      },
+      get styles() {
+        return props.styles ?? {};
+      },
     });
     providePanelHack({
-      hideHeader: props.hideHeader,
-      hidePrev: props.hidePrev,
-      hideNext: props.hideNext,
-      onCellDblClick: props.onCellDblClick,
+      get hideHeader() {
+        return props.hideHeader;
+      },
+      get hidePrev() {
+        return props.hidePrev;
+      },
+      get hideNext() {
+        return props.hideNext;
+      },
+      onCellDblClick: () => emit('cellDblClick'),
     });
 
     // ========================= Render =========================
-    return () => {
+    const renderPanel = () => {
       const prefixCls = props.prefixCls;
       const panelCls = `${prefixCls}-panel`;
       const mode = internalMode.value;
-      const PanelComponent =
-        (props.components?.[mode] as never) ?? DEFAULT_PANEL_COMPONENTS[mode] ?? DatePanel;
+      const PanelComponent: Component = props.components?.[mode] ?? DEFAULT_PANEL_COMPONENTS[mode];
 
       const panelProps = pickProps(props, [
         'showWeek',
@@ -529,8 +475,7 @@ export const PickerPanel = defineComponent({
         'disabledDate',
         'minDate',
         'maxDate',
-        'onHover',
-      ] as unknown as (keyof typeof props)[]);
+      ]);
 
       return h(
         'div',
@@ -540,7 +485,7 @@ export const PickerPanel = defineComponent({
           class: [panelCls, props.direction === 'rtl' ? `${panelCls}-rtl` : undefined],
         },
         h(
-          PanelComponent as never,
+          PanelComponent,
           {
             ...panelProps,
             prefixCls,
@@ -552,15 +497,21 @@ export const PickerPanel = defineComponent({
             onPickerValueChange: (nextPickerValue: PanelDateType) => {
               setPickerValue(nextPickerValue, true);
             },
-            value: mergedValue.value[0],
             values: mergedValue.value,
             onSelect: onPanelValueSelect,
-            cellRender: props.cellRender,
+            onHover: (date: PanelDateType | null) => emit('hover', date),
             hoverRangeValue: hoverRangeDate.value,
             hoverValue: props.hoverValue,
-          } as never,
+          },
+          slots,
         ),
       );
     };
+    return { nativeElement: rootRef, renderPanel };
+  },
+  render() {
+    return this.renderPanel();
   },
 });
+
+export type PickerPanelRef = Pick<InstanceType<typeof PickerPanel>, 'nativeElement'>;

@@ -31,7 +31,7 @@ export interface TimeColumnUnit extends TimeUnit {
  * 生成一个档位表。
  *
  * ⚠️ 三条照抄的细节：
- *  - `step >= 1` 时取整（`step | 0`），否则**强制为 1**（`step: 0.5` 会退化成逐格）；
+ *  - `step >= 1` 时向下取整，否则为 1；不使用会溢出为 0 或负数的 32 位运算；
  *  - `hideDisabledOptions` 为真时**跳过**禁用档位 —— 于是「选中值恰好被禁用」时
  *    列里根本没有它，`getValidTime` 会把它挪到最近的可用档位；
  *  - 循环上界是 `i <= end`（含端点）。
@@ -45,7 +45,7 @@ export function generateUnits(
   pad = 2,
 ): TimeColumnUnit[] {
   const units: TimeColumnUnit[] = [];
-  const integerStep = step >= 1 ? step | 0 : 1;
+  const integerStep = step >= 1 ? Math.floor(step) : 1;
 
   for (let i = start; i <= end; i += integerStep) {
     const disabled = disabledUnits.includes(i);

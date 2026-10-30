@@ -54,6 +54,7 @@
 import type { PickerLocale } from '@apollo-design/locale';
 import type {
   GenerateConfig,
+  PickerLocale as PanelLocale,
   PanelMode,
   CustomFormat as PickerCustomFormat,
   PickerFormat,
@@ -180,7 +181,7 @@ export interface CellRenderInfo {
   originNode: VNodeChild;
   today: DatePickerDate;
   type: DatePickerPanelMode;
-  locale?: PickerLocale;
+  locale?: PanelLocale;
   /** 时间面板列的下标（`type: 'time'` 时才有）。 */
   subType?: 'hour' | 'minute' | 'second' | 'millisecond' | 'meridiem';
 }

@@ -76,17 +76,20 @@ export { toggleDates } from './toggle-dates';
 // ⚠️ 组件**不产 CSS**；class 名结构与上游 `@rc-component/picker@1.12.2` 逐字一致。
 
 export { DatePanel, WeekPanel } from './date-panel';
+export type { PanelBodySlots } from './panel-body';
 export { PanelBody } from './panel-body';
 // ------------------------------------------------------- 上下文与类型
 export type {
   PanelCellRender,
   PanelCellRenderInfo,
+  PanelCellRenderScope,
   PanelDateType,
   PanelHackContext,
   PanelInfo,
   PanelSemanticClassNames,
   PanelSemanticStyles,
   PanelSharedContext,
+  PanelSlots,
 } from './panel-context';
 export {
   hiddenStyleWhen,
@@ -115,8 +118,9 @@ export {
   providePanelInfoFromProps,
   sharedPanelProps,
 } from './panel-props';
+export type { PickerPanelRef } from './picker-panel';
 export { DEFAULT_PANEL_COMPONENTS, PickerPanel } from './picker-panel';
-export type { TimeColumnType } from './time-column';
+export type { TimeColumnType, TimeColumnValue } from './time-column';
 export { flattenUnits, TimeColumn } from './time-column';
 // ------------------------------------------------ 时间面板的纯函数内核
 export type {

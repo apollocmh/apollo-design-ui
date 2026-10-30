@@ -568,7 +568,7 @@ describe('时间列的滚动（自己造布局）', () => {
     }
   });
 
-  it('⭐ 目标格就是首格 ⇒ **一帧都不发**（上游的守卫，防止空转）', async () => {
+  it('切到首格立即回到顶部，不排动画帧', async () => {
     const frames = captureRaf();
     try {
       const w = mountTime();
@@ -583,16 +583,15 @@ describe('时间列的滚动（自己造布局）', () => {
       //    在 `ulRef === null` 处就早退了（**那正是被修掉的 bug**）。
       await nextTick();
       frames.run();
-      // ⚠️ 挂载期已经滚到 `now` 那一格（PITFALLS 318 修好后才有）⇒
-      //    本用例的判据改成「**改值到首格不产生任何位移**」，
-      //    而不是原来的 `readTop() === 0`（那条同样预设了「挂载不滚」）。
+      // 挂载已对齐到非零时刻；换到首格也必须对齐，不能保留旧 scrollTop。
       const topAfterMount = readTop();
 
       // 值改成 0 点 ⇒ `targetLi === firstLi` ⇒ 直接 return
       await w.setProps({ value: [generateConfig.setHour(now, 0)] } as never);
       await nextTick();
       expect(frames.run()).toBe(0);
-      expect(readTop()).toBe(topAfterMount);
+      expect(topAfterMount).toBeGreaterThan(0);
+      expect(readTop()).toBe(0);
       w.unmount();
     } finally {
       frames.raf.mockRestore();

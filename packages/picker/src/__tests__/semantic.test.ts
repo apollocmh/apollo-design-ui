@@ -37,7 +37,7 @@ import { h } from 'vue';
 
 import baseline from '../../../../tests/compat/baselines/picker.dom.json';
 import { dayjsGenerateConfig } from '../generate/dayjs';
-import type { PanelDateType } from '../panel-context';
+import type { PanelDateType, PanelSlots } from '../panel-context';
 import { PickerPanel } from '../picker-panel';
 import type { GenerateConfig, PickerLocale } from '../types';
 
@@ -89,9 +89,9 @@ const base = () => ({
   value: [now],
 });
 
-type PickerPanelProps = Record<string, unknown>;
+type PickerPanelProps = Partial<InstanceType<typeof PickerPanel>['$props']>;
 /**
- * 本文件只走 `h(...)`（不 `mount`），所以面板 props 用 `Record<string, unknown>` 就够。
+ * 由公开组件类型检查场景 props，具名槽通过具体的 h() 分支传入。
  *
  * 🚨 `mount(X as never, …)` 会让 `mount` 的泛型推成 `never` ⇒ `w.element` 也是 `never`
  * ⇒ 在根 `tsconfig.json`（`--project types`）下报「Property 'querySelector' does not
@@ -102,8 +102,10 @@ type PickerPanelProps = Record<string, unknown>;
  * ⇒ 单包 `vue-tsc -p packages/picker/tsconfig.check.json` 看不到这些错误，
  * 必须用**根** `tsconfig.json` 验证测试文件的类型。
  */
-const render = (props: PickerPanelProps): DomRenderResult =>
-  h(PickerPanel as never, { ...base(), ...props } as never);
+const render = (props: PickerPanelProps, slots?: PanelSlots): DomRenderResult =>
+  slots?.cellRender
+    ? h(PickerPanel, { ...base(), ...props }, { cellRender: slots.cellRender })
+    : h(PickerPanel, { ...base(), ...props });
 
 /** 用例 id → Vue 侧 props（必须与 `tests/compat/baseline/picker.mjs` 的 `push` 一一对应）。 */
 const CASES: Record<string, () => DomRenderResult> = {
@@ -210,12 +212,15 @@ const CASES: Record<string, () => DomRenderResult> = {
   'picker:rtl': () => render({ picker: 'date', mode: 'date', direction: 'rtl' }),
   'picker:tab-index-neg': () => render({ picker: 'date', mode: 'date', tabIndex: -1 }),
   'picker:cell-render': () =>
-    render({
-      picker: 'date',
-      mode: 'date',
-      cellRender: (date: PanelDateType, info: { prefixCls: string }) =>
-        h('span', { class: 'custom-cell' }, [`${info.prefixCls}:${generateConfig.getDate(date)}`]),
-    }),
+    render(
+      { picker: 'date', mode: 'date' },
+      {
+        cellRender: ({ current, info }) =>
+          h('span', { class: 'custom-cell' }, [
+            `${info.prefixCls}:${typeof current === 'object' ? generateConfig.getDate(current) : current}`,
+          ]),
+      },
+    ),
 
   // ── 语义槽 ──
   'picker:semantic': () =>

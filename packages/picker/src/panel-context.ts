@@ -32,6 +32,7 @@ import {
   provide,
   type VNodeChild,
 } from 'vue';
+import type { TimeColumnType } from './time-column';
 import type { DisabledDate, GenerateConfig, PanelMode, PickerLocale } from './types';
 
 /** 组件层的日期类型（见文件头）。 */
@@ -94,12 +95,22 @@ export interface PanelCellRenderInfo {
   today: PanelDateType;
   type: PanelMode;
   /** 只在时间列上出现：`'hour' | 'minute' | 'second' | 'millisecond' | 'meridiem'` */
-  subType?: string;
+  subType?: TimeColumnType;
   locale: PickerLocale;
 }
 
-/** 自定义格子渲染。返回 `undefined` / `null` 会渲染成空（与上游一致）。 */
-export type PanelCellRender = (date: PanelDateType, info: PanelCellRenderInfo) => VNodeChild;
+/** 日期格传日期；时间列传实际档位，不能伪装成日期对象。 */
+export interface PanelCellRenderScope {
+  current: PanelDateType | number | 'am' | 'pm';
+  info: PanelCellRenderInfo;
+}
+
+/** 自定义格子的 Vue 作用域插槽；空内容保持为空。 */
+export type PanelCellRender = (scope: PanelCellRenderScope) => VNodeChild;
+
+export interface PanelSlots {
+  cellRender?: PanelCellRender;
+}
 
 /**
  * 单个面板的完整上下文（上游 `useInfo` 的返回值 `info`）。
@@ -121,7 +132,6 @@ export interface PanelInfo {
   disabledDate?: DisabledDate<PanelDateType>;
   minDate?: PanelDateType;
   maxDate?: PanelDateType;
-  cellRender?: PanelCellRender;
   hoverValue?: readonly PanelDateType[] | null;
   hoverRangeValue?: readonly [PanelDateType, PanelDateType] | null;
   onHover?: (date: PanelDateType | null) => void;

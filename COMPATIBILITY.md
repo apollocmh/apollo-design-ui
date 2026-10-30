@@ -166,3 +166,7 @@ ColorPicker 的 panelRender/showText 内容函数直接迁为 #panelRender/#show
 ### D-transfer-native-models
 
 Transfer 保留已有四槽成果，补齐 targetKeys/selectedKeys 双模型、所属 Vue 事件与真实引用。Search.handleClear 和 Operation.moveToLeft/moveToRight 命令 prop 改为 clear/move-to-left/move-to-right 事件；选择范围基于当前筛选视图，业务 key 和 Vue 节点身份保留。七 Token 接受 string/number 并读取当前主题；移除从未消费的 ListBodyProps.filteredItems，#list.filteredItems 保留。详见[Transfer API](packages/ui/src/transfer/index.zh-CN.md)。
+
+### D-picker-native-panels
+
+Picker 面板引擎的通知使用 Vue emits，PickerPanel 提供 value/pickerValue/mode 三个模型；cellRender 内容 prop 迁为 #cellRender，对日期与时间列提供真实 Dayjs/number/meridiem 类型。当前时间配置、Provider、原生槽和面板引用直接消费；滚动对齐、取消与卸载资源已修复。DatePicker/RangePicker/Calendar 仅同步引擎消费桥，CellRenderInfo.locale 修正为实际面板语言子集，包装器其余契约继续各自整改。详见[Picker 当前契约](docs/foundation/picker-contract.md)。

@@ -20,13 +20,14 @@
  * 3. **`title` 只在 `titleFormat` 存在时渲染**（不是空串），否则属性整个不出现。
  */
 
-import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { defineComponent, h, type PropType, type SlotsType, type VNodeChild } from 'vue';
 import { buildPanelCells, type PanelGeometry } from './panel';
-import { type PanelDateType, usePanelHack, usePanelInfo } from './panel-context';
+import { type PanelDateType, type PanelSlots, usePanelHack, usePanelInfo } from './panel-context';
 import type { DisabledDate } from './types';
 
-/** 行首列（周号）的渲染函数。 */
-type PrefixColumnFn = (rowStartDate: PanelDateType) => VNodeChild;
+export interface PanelBodySlots extends PanelSlots {
+  prefixColumn?: (scope: { date: PanelDateType }) => VNodeChild;
+}
 /** 行级 class（week 面板的 `-row-selected` / range 三态都挂在这里）。 */
 type RowClassNameFn = (rowStartDate: PanelDateType) => string | undefined;
 
@@ -42,11 +43,6 @@ export const PanelBody = defineComponent({
       type: Function as PropType<DisabledDate<PanelDateType> | undefined>,
       default: undefined,
     },
-    /** 行首列：week 面板的周号格 */
-    prefixColumn: {
-      type: Function as PropType<PrefixColumnFn | undefined>,
-      default: undefined,
-    },
     /** 行级 class：week 面板的整行选中/区间 */
     rowClassName: {
       type: Function as PropType<RowClassNameFn | undefined>,
@@ -58,10 +54,12 @@ export const PanelBody = defineComponent({
       default: undefined,
     },
   },
-  setup(props) {
+  slots: Object as SlotsType<PanelBodySlots>,
+  setup(props, { slots }) {
+    const info = usePanelInfo();
+    const hack = usePanelHack();
     return () => {
-      const ctx = usePanelInfo().value;
-      const hack = usePanelHack();
+      const ctx = info.value;
       const {
         prefixCls,
         classNames,
@@ -87,7 +85,7 @@ export const PanelBody = defineComponent({
         hoverValue: ctx.hoverValue,
         hoverRangeValue: ctx.hoverRangeValue,
         disabledDate: mergedDisabledDate,
-      } as Parameters<typeof buildPanelCells<PanelDateType>>[1]);
+      });
 
       const renderCell = (cell: (typeof rows)[number][number], col: number): VNodeChild => {
         const inner = h('div', { class: `${cellPrefixCls}-inner` }, [cell.text]);
@@ -139,13 +137,16 @@ export const PanelBody = defineComponent({
           // ⚠️ 用**数组**形态传 children：`VNodeChild` 含 `null` / `boolean`，
           //    直传不满足 `h` 的 `RawChildren`（TS2769）。数组形态是仓内惯例。
           [
-            ctx.cellRender
-              ? ctx.cellRender(cell.date, {
-                  prefixCls,
-                  originNode: inner,
-                  today: now,
-                  type,
-                  locale,
+            slots.cellRender
+              ? slots.cellRender({
+                  current: cell.date,
+                  info: {
+                    prefixCls,
+                    originNode: inner,
+                    today: now,
+                    type,
+                    locale,
+                  },
                 })
               : inner,
           ],
@@ -159,8 +160,8 @@ export const PanelBody = defineComponent({
         );
 
         const tds: VNodeChild[] = [];
-        if (props.prefixColumn) {
-          tds.push(props.prefixColumn(rowStartDate));
+        if (slots.prefixColumn) {
+          tds.push(slots.prefixColumn({ date: rowStartDate }));
         }
         rowCells.forEach((cell, col) => {
           tds.push(renderCell(cell, col));

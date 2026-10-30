@@ -68,22 +68,18 @@ export const PanelHeader = defineComponent({
     superOffset: { type: Function as PropType<OffsetFn | undefined>, default: undefined },
     getStart: { type: Function as PropType<LimitFn | undefined>, default: undefined },
     getEnd: { type: Function as PropType<LimitFn | undefined>, default: undefined },
-    /** 翻页后把新的 `pickerValue` 交回去（受控/非受控与 `onPanelChange` 由面板负责） */
-    onChange: {
-      type: Function as PropType<((next: PanelDateType) => void) | undefined>,
-      default: undefined,
-    },
   },
-  setup(props, { slots }) {
+  emits: { change: (_next: PanelDateType) => true },
+  setup(props, { emit, slots }) {
+    const hack = usePanelHack();
+    const info = usePanelInfo();
     return () => {
-      const hack = usePanelHack();
-
       // 逃生通道先于一切：整块表头都不要时直接返回 `null`（上游在 render 前 return null）
       if (hack.hideHeader) {
         return null;
       }
 
-      const ctx = usePanelInfo().value;
+      const ctx = info.value;
       const { prefixCls, locale, generateConfig: g, pickerValue } = ctx;
 
       const limits: PanelHeaderLimits<PanelDateType> = {
@@ -106,12 +102,12 @@ export const PanelHeader = defineComponent({
 
       const onOffset = (distance: number): void => {
         if (props.offset) {
-          props.onChange?.(props.offset(distance, pickerValue));
+          emit('change', props.offset(distance, pickerValue));
         }
       };
       const onSuperOffset = (distance: number): void => {
         if (props.superOffset) {
-          props.onChange?.(props.superOffset(distance, pickerValue));
+          emit('change', props.superOffset(distance, pickerValue));
         }
       };
 

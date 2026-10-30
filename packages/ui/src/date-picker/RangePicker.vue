@@ -45,6 +45,7 @@ import {
   isSame,
   isSameTimestamp,
   offsetPanelDate,
+  type PanelCellRenderScope,
   type PanelDateType,
   type PickerMode,
   PickerPanel,
@@ -60,6 +61,7 @@ import {
   type Ref,
   ref,
   useAttrs,
+  useSlots,
   type VNode,
   type VNodeChild,
   watch,
@@ -788,7 +790,6 @@ const panelBaseProps = computed(() => ({
   disabledDate: boundaryDisabledDate as never,
   minDate: resolveLimit(props.minDate),
   maxDate: resolveLimit(props.maxDate),
-  cellRender: props.cellRender as never,
   /**
    * 悬停的两个载荷（上游 `RangePicker.js:274-296`）。
    *
@@ -884,24 +885,38 @@ const panelBaseProps = computed(() => ({
   },
 }));
 
-const panelVNode = computed(() => {
+const slots = useSlots();
+const panelSlots = {
+  cellRender: ({ current, info }: PanelCellRenderScope): VNodeChild =>
+    slots.cellRender
+      ? slots.cellRender({ current, info })
+      : props.cellRender
+        ? props.cellRender(current, info)
+        : info.originNode,
+};
+
+const panelVNode = () => {
   const base = panelBaseProps.value as unknown as Record<string, unknown>;
   const isTime = mergedPicker.value === 'time';
   if (!multiplePanel.value) {
-    return h(PickerPanel as Component, { ...base, hideHeader: isTime });
+    return h(PickerPanel as Component, { ...base, hideHeader: isTime }, panelSlots);
   }
   // 🚨 双面板：左藏 next 侧、右藏 prev 侧（`PopupPanel.js:59-76`）
   return h('div', { class: `${prefixCls.value}-panels` }, [
-    h(PickerPanel as Component, { ...base, hideHeader: isTime, hideNext: true }),
-    h(PickerPanel as Component, {
-      ...base,
-      hideHeader: isTime,
-      hidePrev: true,
-      pickerValue: secondPickerValue.value,
-      onPickerValueChange: onSecondPickerValueChange,
-    }),
+    h(PickerPanel as Component, { ...base, hideHeader: isTime, hideNext: true }, panelSlots),
+    h(
+      PickerPanel as Component,
+      {
+        ...base,
+        hideHeader: isTime,
+        hidePrev: true,
+        pickerValue: secondPickerValue.value,
+        onPickerValueChange: onSecondPickerValueChange,
+      },
+      panelSlots,
+    ),
   ]);
-});
+};
 
 // ============================== 浮层 ==============================
 const mergedSuffixIcon = useSuffixIcon({
@@ -996,7 +1011,7 @@ const bindRangeWrapper = (el: HTMLElement | null): void => {
 /**
  * 🚨 **浮层里的元素一律用 vnode 钩子绑，不能用 `ref:`**。
  *
- * 为什么：这些 vnode 由下面的 `popupVNode` computed 创建，而 `Trigger` 的
+ * 为什么：这些 vnode 由下面的 `popupVNode` 内容函数创建，而 `Trigger` 的
  * `contentSource` 在它**自己的 setup 期**就被 `watch({ immediate: true })`
  * 求值了（`trigger.ts:494-504`）⇒ 创建 vnode 时 `currentRenderingInstance` 是 `null`
  * ⇒ `rawRef.i`（owner）是 `null` ⇒ Vue 的 `setRef` 读 `owner.refs` 直接抛
@@ -1040,7 +1055,7 @@ const mergedShowNow = computed(() =>
   getShowNow(mergedPicker.value, mergedMode.value, props.showNow, props.showToday, true),
 );
 
-const panelLayoutVNode = computed(() =>
+const panelLayoutVNode = () =>
   h('div', { class: `${prefixCls.value}-panel-layout` }, [
     h(PresetPanel as Component, {
       prefixCls: prefixCls.value,
@@ -1049,7 +1064,7 @@ const panelLayoutVNode = computed(() =>
       onHover: (value: unknown | null) => onSetHover(value as DatePickerDate[] | null, 'preset'),
     }),
     h('div', null, [
-      panelVNode.value,
+      panelVNode(),
       h(
         Footer as Component,
         {
@@ -1077,8 +1092,7 @@ const panelLayoutVNode = computed(() =>
         } as unknown as Record<string, unknown>,
       ),
     ]),
-  ]),
-);
+  ]);
 
 const popupClassNames = computed(() => [
   ...getDropdownClassName({
@@ -1091,7 +1105,7 @@ const popupClassNames = computed(() => [
 ]);
 
 // ============================== 浮层内容 ==============================
-const popupVNode = computed(() => {
+const popupVNode = () => {
   const popupCls = semantic.classNames.value.popup;
   const popupStyles = semantic.styles.value.popup;
   const container = h(
@@ -1116,7 +1130,7 @@ const popupVNode = computed(() => {
       },
       onBlur: (event: FocusEvent) => onFieldBlur(activeIndex.value, event),
     },
-    [panelLayoutVNode.value],
+    [panelLayoutVNode()],
   );
 
   // 🚨 只有 range 才有这两层（`Popup/index.js:164-178`）
@@ -1138,7 +1152,7 @@ const popupVNode = computed(() => {
       container,
     ],
   );
-});
+};
 
 // ============================== 键入 / 焦点 / 清除 ==============================
 const invalidPair = ref<[boolean, boolean]>([false, false]);
@@ -1376,7 +1390,7 @@ const mergedGetPopupContainer = computed(
   <Trigger
     ref="triggerRef"
     :prefix-cls="dropdownPrefixCls"
-    :popup="popupVNode"
+    :popup="() => popupVNode()"
     :show-action="[]"
     :hide-action="['click']"
     :open="mergedOpen"

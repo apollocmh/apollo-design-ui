@@ -60,6 +60,7 @@ import {
   formatValue,
   type InternalMode,
   isSame,
+  type PanelCellRenderScope,
   type PanelDateType,
   PickerPanel,
   toggleDates,
@@ -1304,9 +1305,6 @@ const panelProps = computed(() => ({
   disabledDate: boundaryDisabledDate as never,
   minDate: resolveLimit(props.minDate),
   maxDate: resolveLimit(props.maxDate),
-  // ⚠️ **只有存在同名 slot 时才接管** —— 否则传一个恒真的函数会让引擎的
-  //    `if (cellRender)` 恒成立、把「没传 cellRender」的原行为覆盖掉（实测会红一片用例）。
-  cellRender: (slots.cellRender ? mergedCellRender : props.cellRender) as never,
   /**
    * 🚨 时间面板**没有表头**（上游 `Popup/PopupPanel.js:44` 的 `hideHeader = picker === 'time'`）。
    *
@@ -1475,12 +1473,12 @@ const selectorProps = computed(() => ({
  * （Vue 插槽的惯例）⇒ 这里做一层适配。此前 `DatePickerSlots` 只在类型面上存在、
  * **运行时从不读取** ⇒ 写了 `#cellRender` 的模板什么也不会发生。
  */
-const mergedCellRender = (date: unknown, info: unknown): unknown =>
+const mergedCellRender = ({ current, info }: PanelCellRenderScope): VNodeChild =>
   slots.cellRender
-    ? slots.cellRender({ current: date as never, info: info as never })
+    ? slots.cellRender({ current, info })
     : props.cellRender
-      ? props.cellRender(date as never, info as never)
-      : undefined;
+      ? props.cellRender(current, info)
+      : info.originNode;
 
 /** `tagRender` 同理（slot 收 `{ label, value, ... }`）。 */
 const mergedTagRender = (tagProps: Record<string, unknown>): unknown =>
@@ -1526,18 +1524,9 @@ const mergedGetPopupContainer = computed(
 const dropdownPrefixCls = computed(() => `${prefixCls.value}-dropdown`);
 /** 面板前缀（上游 `PickerInput/Popup` 的 `panelPrefixCls = `${prefixCls}-panel``）。 */
 const panelPrefixCls = computed(() => `${prefixCls.value}-panel`);
-/**
- * 面板 vnode。
- *
- * ⚠️ `h()` 的 props 形参类型是 `RawProps`（`VNodeProps & Record<string, any>`）——
- * `panelProps` 是**推断出的对象字面量类型**，没有索引签名，直接传会让 `h` 的
- * 重载解析失败（报「missing $, $data, $props…」这种看着像组件实例的错误）。
- * 这里显式收窄成 `Record<string, unknown>`：**不掩盖任何类型问题**
- * （每个字段的值在 `panelProps` 构造处已经过类型检查）。
- */
-const panelVNode = computed(() =>
-  h(PickerPanel as Component, panelProps.value as unknown as Record<string, unknown>),
-);
+/** 使用当前 props 和作用域槽构造面板；槽内容由面板渲染时调用。 */
+const panelVNode = () =>
+  h(PickerPanel as Component, panelProps.value, { cellRender: mergedCellRender });
 
 /**
  * 浮层内容 —— 面板外面**再套两层**（上游 `@rc-component/picker@1.12.2` 的
@@ -1669,20 +1658,10 @@ const footerVNode = computed(() =>
 );
 
 /**
- * 浮层内容（上游 `Popup/index.js` 的 `-panel-container` + `-panel-layout`）。
- *
- * 🚨 **这个 vnode 是在渲染函数之外创建的**（computed，且 `Trigger` 的
- * `contentSource` 在它自己的 setup 期就被 `watch({immediate:true})` 求值）
- * ⇒ 里面**绝不能出现 `ref:`** —— Vue 的 `setRef` 需要 vnode 的 owner，
- * 而这里 `rawRef.i` 是 `null` ⇒ 生产构建抛
- * `Cannot read properties of null (reading 'refs')`（dev 只 `warn`，所以看不出来）。
- * 需要绑元素时用 vnode 钩子（`onVnodeMounted`），见 `RangePicker.vue` 的 `bindEl`
- * 与 PITFALLS 264。
- *
- * ⚠️ 单值这一层当前**没有** ref（要测量的都在 `Selector` 里，那是渲染期创建的），
- * 所以「碰巧能用」—— 别据此以为这种写法安全。
+ * Trigger 消费当前浮层构造函数。元素 ref 由实际渲染的子组件拥有，
+ * 不在此构造函数内绑定跨组件 ref（历史故障见 PITFALLS 264）。
  */
-const popupVNode = computed(() => {
+const popupVNode = () => {
   const popupClassNames = semantic.classNames.value.popup;
   const popupStyles = semantic.styles.value.popup;
   return h(
@@ -1718,10 +1697,10 @@ const popupVNode = computed(() => {
         } as unknown as Record<string, unknown>,
       ),
       // 🚨 上游 `Popup/index.js:127-133`：这一层同时装 `PopupPanel` 与 `Footer`
-      h('div', null, [panelVNode.value, footerVNode.value]),
+      h('div', null, [panelVNode(), footerVNode.value]),
     ]),
   );
-});
+};
 const builtinPlacements = computed(() => BUILT_IN_PLACEMENTS as Record<string, TriggerAlign>);
 const popupAlign = computed(() => props.popupAlign as TriggerAlign | undefined);
 const popupMotion = computed(() => ({ motionName: transitionName.value, motionDeadline: 1000 }));
@@ -1731,7 +1710,7 @@ const popupMotion = computed(() => ({ motionName: transitionName.value, motionDe
   <Trigger
     ref="triggerRef"
     :prefix-cls="dropdownPrefixCls"
-    :popup="popupVNode"
+    :popup="() => popupVNode()"
     :show-action="[]"
     :hide-action="['click']"
     :open="mergedOpen"

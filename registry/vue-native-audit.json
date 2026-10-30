@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 104,
+  "revision": 113,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -434,20 +434,34 @@
       "kind": "component",
       "ref": "cascader",
       "title": "Cascader",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/cascader"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_color_picker",
+        "baseRevision": 107,
+        "startedAt": "2026-10-30T12:00:47.657Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-23-vue-reactivity-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留已有条件选项成果，核对Cascader完整当前原生契约差额",
+        "remaining": [
+          "从已有reactivity回归接续；先核对值路径/受控状态/owned通知、层级菜单与键盘、完整槽/实际ref、当前Provider/Token和共享BaseSelect职责。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-23-vue-reactivity-remediation.md"
+        ]
+      }
     },
     {
       "id": "CMP:checkbox",
@@ -788,7 +802,12 @@
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/ui/src/dropdown"
+        "packages/ui/src/dropdown",
+        "packages/ui/src/menu/Menu.ts",
+        "packages/ui/src/menu/MenuItemGroup.ts",
+        "packages/ui/src/menu/InlineSubMenuList.ts",
+        "packages/ui/src/menu/interface.ts",
+        "packages/ui/src/breadcrumb/BreadcrumbItem.ts"
       ],
       "assignment": {
         "owner": "native_portal",
@@ -969,7 +988,9 @@
       "title": "Form",
       "architectureStatus": "partial",
       "acceptanceStatus": "not_started",
-      "workDependencies": [],
+      "workDependencies": [
+        "FND:form-core"
+      ],
       "owns": [
         "packages/ui/src/form"
       ],
@@ -2923,13 +2944,20 @@
       "kind": "component",
       "ref": "tree-select",
       "title": "TreeSelect",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/ui/src/tree-select"
+        "packages/ui/src/tree-select",
+        "packages/ui/src/tree/Tree.ts",
+        "packages/ui/src/tree/__tests__/native-contracts.test.ts",
+        "packages/ui/src/select/engine/BaseSelect.ts"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_select",
+        "baseRevision": 106,
+        "startedAt": "2026-10-30T12:00:47.544Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2937,7 +2965,26 @@
         "docs/audit/2026-10-23-vue-reactivity-remediation.md",
         "packages/ui/src/tree-select/__tests__/tree-slots.test.ts"
       ],
-      "issues": []
+      "issues": [
+        {
+          "id": "TREE-SELECT-SHARED-CONTRACTS",
+          "status": "open",
+          "blocking": true,
+          "impact": "已复现借用Tree的展示配置泄漏、immutable补children后请求失效，以及BaseSelect IME提前返回吞原生keydown。",
+          "reason": "本整改单元负责关联共享差额，保留原Tree加载替换/卸载与Select组成保护；修复并回归后关闭。"
+        }
+      ],
+      "plan": {
+        "goal": "沿用Tree/Select及条件槽成果，收口TreeSelect包装剩余Vue契约",
+        "remaining": [
+          "保留F02条件树选项与Tree原生slots桥、Portal数值层级修正；核对包装事件/模型/attrs/ref、动态配置与有效Token及Tree链路差额。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-23-vue-reactivity-remediation.md",
+          "packages/ui/src/tree-select/__tests__/tree-slots.test.ts"
+        ]
+      }
     },
     {
       "id": "CMP:typography",
@@ -3170,13 +3217,27 @@
       "kind": "foundation",
       "ref": "form-core",
       "title": "@apollo-design/form-core",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/form-core/src"
+        "packages/form-core",
+        "docs/foundation/form-core-contract.md",
+        "packages/ui/src/form/Form.vue",
+        "packages/ui/src/form/FormItem.vue",
+        "packages/ui/src/form/FormList.vue",
+        "packages/ui/src/form/interface.ts",
+        "packages/ui/src/form/__tests__",
+        "packages/ui/src/form/demo",
+        "packages/ui/src/form/index.zh-CN.md",
+        "packages/ui/src/form/index.en-US.md",
+        "packages/ui/src/form/README.md"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_form_core",
+        "baseRevision": 108,
+        "startedAt": "2026-10-30T12:00:47.816Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3185,7 +3246,18 @@
         "docs/audit/2026-10-29-config-provider-contract-audit.md",
         "docs/audit/evidence/current-batch-final-acceptance.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "优先收口表单共享Vue状态核心，保留既有Provider和验证算法成果",
+        "remaining": [
+          "接续配置专项与历史消费证据，盘清公开store/hooks/Provider的生命周期、控制状态、真实业务回调和UI消费边界；只修真实差额，不重新审Form全组件或重写已正常的校验算法。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/foundation/form-core-contract.md",
+          "docs/audit/2026-10-29-config-provider-contract-audit.md"
+        ]
+      }
     },
     {
       "id": "FND:icons",
@@ -3487,7 +3559,7 @@
       "kind": "foundation",
       "ref": "picker",
       "title": "@apollo-design/picker",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
@@ -3499,12 +3571,10 @@
         "packages/ui/src/date-picker/interface.ts",
         "packages/ui/src/date-picker/__tests__/s5-presets.test.ts"
       ],
-      "assignment": {
-        "owner": "native_picker",
-        "baseRevision": 93,
-        "startedAt": "2026-10-30T11:20:42.876Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
@@ -3522,6 +3592,106 @@
           "docs/foundation/picker-contract.md",
           "docs/audit/2026-10-23-picker-transfer-remediation.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/picker",
+          "docs/foundation/picker-contract.md",
+          "packages/ui/src/date-picker/DatePicker.vue",
+          "packages/ui/src/date-picker/RangePicker.vue",
+          "packages/ui/src/calendar/Calendar.vue",
+          "packages/ui/src/date-picker/interface.ts",
+          "packages/ui/src/date-picker/__tests__/s5-presets.test.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run --project unit --project dom-contract packages/picker/src/__tests__ packages/ui/src/date-picker/__tests__ packages/ui/src/time-picker/__tests__ packages/ui/src/calendar/__tests__ --maxWorkers=1 --reporter=json --outputFile=/tmp/apollo-picker-final-core.json > /tmp/apollo-picker-final-core.log 2>&1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 96782,
+            "result": "42 files / 855 passed / 0 failed",
+            "log": "/tmp/apollo-picker-final-core.log"
+          },
+          {
+            "kind": "browser",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node packages/picker/src/__tests__/native-browser.mjs > /tmp/apollo-picker-final-browser.log 2>&1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 3833,
+            "result": "Real source SFC models/ref, dynamic slot add/remove, mounted/first/later scrolling, scroll cancel/select, unmount; zero console/page errors",
+            "log": "/tmp/apollo-picker-final-browser.log"
+          },
+          {
+            "kind": "style",
+            "command": "PATH=/tmp/apollo-f01-bin:/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec biome check --write packages/picker/src/date-panel.ts packages/picker/src/index.ts packages/picker/src/panel-body.ts packages/picker/src/panel-context.ts packages/picker/src/panel-header.ts packages/picker/src/panel-props.ts packages/picker/src/picker-panel.ts packages/picker/src/time-column.ts packages/picker/src/time-panel-body.ts packages/picker/src/time-panel.ts packages/picker/src/time-units.ts packages/picker/src/toggle-dates.ts packages/picker/src/upper-panels.ts packages/picker/src/__tests__/native-contracts.test.ts packages/picker/src/__tests__/native.test-d.ts packages/picker/src/__tests__/native-browser.mjs packages/picker/src/__tests__/consumer-bridge.test.ts packages/picker/src/__tests__/panel-edge.test.ts packages/picker/src/__tests__/panel-interaction.test.ts packages/picker/src/__tests__/semantic.test.ts packages/picker/src/__tests__/fixtures/NativePicker.vue packages/ui/src/date-picker/DatePicker.vue packages/ui/src/date-picker/RangePicker.vue packages/ui/src/calendar/Calendar.vue packages/ui/src/date-picker/interface.ts packages/ui/src/date-picker/__tests__/s5-presets.test.ts",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 242,
+            "result": "26 files checked; final formatting only"
+          },
+          {
+            "kind": "style",
+            "command": "git diff --check -- packages/picker docs/foundation/picker-contract.md packages/ui/src/date-picker/DatePicker.vue packages/ui/src/date-picker/RangePicker.vue packages/ui/src/calendar/Calendar.vue packages/ui/src/date-picker/interface.ts packages/ui/src/date-picker/__tests__/s5-presets.test.ts",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full Picker source/native.test-d/NativePicker.vue and exact Date/Range/Calendar source consumers>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 19306
+          }
+        ],
+        "previousAttempts": [
+          {
+            "command": "pnpm exec vitest run --project unit packages/picker/src/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "durationMs": 839,
+            "result": "Environment: default Node 22.11.0 ERR_REQUIRE_ESM; no tests collected"
+          },
+          {
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH pnpm exec vitest run --project unit packages/picker/src/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "durationMs": 310,
+            "result": "Environment: pnpm auto-switch ENOEXEC; no tests collected; used existing session shim/direct Node thereafter"
+          },
+          {
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run --project unit packages/picker/src/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "durationMs": 1900,
+            "result": "Pre-fix: all 7 targeted current-configuration/model/slot/lifecycle regressions failed"
+          },
+          {
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run --project unit packages/picker/src/__tests__ --maxWorkers=1 --reporter=json --outputFile=/tmp/apollo-picker-core.json",
+            "exitCode": 1,
+            "result": "Pre-final: native suite import corrected to vue/server-renderer; preserved scalar hoverRange input, corrected old first-option scroll assertion to actual alignment and waited for mounted sync before user-scroll assertion",
+            "log": "/tmp/apollo-picker-core.log"
+          },
+          {
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run --project unit --project dom-contract packages/picker/src/__tests__/semantic.test.ts packages/ui/src/date-picker/__tests__ packages/ui/src/time-picker/__tests__ packages/ui/src/calendar/__tests__ --maxWorkers=1 --reporter=json --outputFile=/tmp/apollo-picker-consumers.json",
+            "exitCode": 1,
+            "result": "Pre-final: one continuous-double-click case failed under VTU teleport:true because stub type recreated the subtree. Reproduced Portal uid stability/stub uid replacement; kept all assertions and moved only that identity-sensitive case to real Teleport/document nodes. No production Portal/Trigger or global stub change.",
+            "log": "/tmp/apollo-picker-consumers.log"
+          }
+        ],
+        "boundary": "Concentrated picker engine source remediation and exact Date/Range/Calendar consumer bridge. Existing pure algorithm/oracle cases and dated reports retained. Current time/provider/model/slot/event/ref/scroll/SSR differences verified in the listed scope. DatePicker/TimePicker/Calendar public wrappers are not re-audited; existing wrapper callback props are only adapted to the new engine slot. Strict source, actual Vue template constructor/ref and positive/negative type cases passed. No dist rebuild, final frozen nine-dimensional acceptance, full coverage, release consumer, or complete visual matrix.",
+        "timings": {
+          "analysisMs": null,
+          "implementationMs": null,
+          "note": "Core duration is Vitest report start/end; browser duration is script performance timer. No inferred implementation duration from assignment age."
+        },
+        "typeFollowup": {
+          "firstRunExitCode": 2,
+          "log": "/tmp/apollo-picker-consumers-strict-types.log",
+          "result": "Two test-only Vue h overload errors; overall strict failed. Product source, native public type cases and SFC template fixture had no diagnostics, which is not promoted to an overall pass.",
+          "repair": "consumer-bridge uses explicit DatePicker/RangePicker constructors; semantic uses public component props and explicit slot/no-slot h branches. Original scenes and assertions retained. No type-erasing Component/any/forced cast.",
+          "verification": "Biome for both changed tests exit 0 (30ms command elapsed); git diff --check exit 0. Root reruns the same strict program. Product source unchanged; prior core/browser results reused as requested."
+        }
       }
     },
     {

@@ -29,7 +29,7 @@
  * 6. 🚨 **`onCellDblClick` 只在 `needConfirm` 时提交**（否则双击什么都不做）。
  */
 
-import { mount } from '@vue/test-utils';
+import { DOMWrapper, mount } from '@vue/test-utils';
 import dayjs, { type Dayjs } from 'dayjs';
 import { describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
@@ -238,10 +238,16 @@ describe('DatePicker · 面板的两个 hack 面（S5）', () => {
   });
 
   it('🚨 `needConfirm` 时双击格子 ⇒ 提交（发 `change`）并关浮层', async () => {
-    const w = mountOpen({
-      needConfirm: true,
-      defaultValue: D('2026-09-10'),
-      defaultPickerValue: D('2026-09-01'),
+    // 连续交互需要真实 Teleport；VTU 的默认结构桩在更新时重建子树。
+    const w = mount(DatePicker, {
+      props: {
+        open: true,
+        needConfirm: true,
+        defaultValue: D('2026-09-10'),
+        defaultPickerValue: D('2026-09-01'),
+      },
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
     });
     await nextTick();
     expect(w.emitted('change')).toBeUndefined();
@@ -252,13 +258,15 @@ describe('DatePicker · 面板的两个 hack 面（S5）', () => {
      *   - `dblclick` ⇒ `onCellDblClick` ⇒ `confirm` ⇒ `switchNext` ⇒ `flushSubmit` ⇒ 提交。
      * 只派发 `dblclick` 的话「临时值 = 已提交值」⇒ 提交后值没变 ⇒ `onChange` **不该**发。
      */
-    const cell = w
-      .findAll(`.${P}-cell-in-view`)
-      .find((c) => c.text() === '15' && !c.classes().includes(`${P}-cell-disabled`));
+    const cell = [...document.querySelectorAll<HTMLElement>(`.${P}-cell-in-view`)].find(
+      (cell) => cell.textContent?.trim() === '15' && !cell.classList.contains(`${P}-cell-disabled`),
+    );
     expect(cell).toBeTruthy();
-    await cell!.trigger('click');
-    await cell!.trigger('click');
-    await cell!.trigger('dblclick');
+    if (!cell) throw new Error('Missing selectable date cell');
+    const liveCell = new DOMWrapper(cell);
+    await liveCell.trigger('click');
+    await liveCell.trigger('click');
+    await liveCell.trigger('dblclick');
 
     const emitted = w.emitted('change');
     expect(emitted).toBeTruthy();

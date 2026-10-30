@@ -52,7 +52,11 @@
  */
 import type { PickerLocale } from '@apollo-design/locale';
 import { useLocale } from '@apollo-design/locale';
-import type { PanelCellRenderInfo, PanelDateType } from '@apollo-design/picker';
+import type {
+  PanelCellRenderInfo,
+  PanelCellRenderScope,
+  PanelDateType,
+} from '@apollo-design/picker';
 import { PickerPanel } from '@apollo-design/picker';
 import { isFunction, merge, useDevWarning } from '@apollo-design/utils';
 import {
@@ -569,27 +573,33 @@ export default defineComponent({
             onModeChange: triggerModeChange,
           });
 
-      const panelVNode = h(PickerPanel as Component, {
-        classNames: panelClassNames.value,
-        styles: panelStyles.value,
-        /**
-         * ⚠️ **必须是数组**：本仓 `PickerPanel` 的 `value` 契约是 `PanelDateType[]`
-         * （上游给 rc 传单个值，rc 内部 `toArray`）。见文件头「平台差异」第 1 条。
-         */
-        value: [mergedValue.value],
-        prefixCls: prefixCls.value,
-        locale: locale.value.lang,
-        generateConfig: dayjsConfig,
-        cellRender: mergedCellRender,
-        onSelect: (nextDate: PanelDateType) => {
-          onInternalSelect(nextDate as CalendarDate, panelMode.value);
+      const panelVNode = h(
+        PickerPanel as Component,
+        {
+          classNames: panelClassNames.value,
+          styles: panelStyles.value,
+          /**
+           * ⚠️ **必须是数组**：本仓 `PickerPanel` 的 `value` 契约是 `PanelDateType[]`
+           * （上游给 rc 传单个值，rc 内部 `toArray`）。见文件头「平台差异」第 1 条。
+           */
+          value: [mergedValue.value],
+          prefixCls: prefixCls.value,
+          locale: locale.value.lang,
+          generateConfig: dayjsConfig,
+          onSelect: (nextDate: PanelDateType) => {
+            onInternalSelect(nextDate as CalendarDate, panelMode.value);
+          },
+          mode: panelMode.value,
+          picker: panelMode.value,
+          disabledDate: mergedDisabledDate,
+          hideHeader: true,
+          showWeek: props.showWeek,
         },
-        mode: panelMode.value,
-        picker: panelMode.value,
-        disabledDate: mergedDisabledDate,
-        hideHeader: true,
-        showWeek: props.showWeek,
-      });
+        {
+          cellRender: ({ current, info }: PanelCellRenderScope) =>
+            typeof current === 'object' ? mergedCellRender(current, info) : undefined,
+        },
+      );
 
       /**
        * 🚨 **根节点不透传 `attrs`** —— 上游 `generateCalendar.js` 的根节点是

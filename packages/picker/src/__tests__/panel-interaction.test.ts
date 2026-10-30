@@ -26,7 +26,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { nextTick } from 'vue';
 
 import { dayjsGenerateConfig } from '../generate/dayjs';
-import type { PanelDateType } from '../panel-context';
+import type { PanelDateType, PanelSlots } from '../panel-context';
 import { PickerPanel } from '../picker-panel';
 import type { GenerateConfig, PickerLocale } from '../types';
 
@@ -86,7 +86,7 @@ interface PanelWrapper {
  * ⚠️ 最初只写了受控版本却按非受控期望 ⇒ 17 条红。**受控时面板不该改自己的状态**，
  * 那是对的（上层负责回填），错的是期望。
  */
-const mountPanel = (props: Record<string, unknown> = {}) =>
+const mountPanel = (props: Record<string, unknown> = {}, slots?: PanelSlots) =>
   mount(
     PickerPanel as never,
     {
@@ -101,6 +101,7 @@ const mountPanel = (props: Record<string, unknown> = {}) =>
         ...props,
       } as never,
       attachTo: document.body,
+      slots,
     } as never,
   ) as unknown as PanelWrapper;
 
@@ -739,6 +740,8 @@ describe('TimeColumn · 滚动（jsdom 限制下的守卫）', () => {
       const ul = w.element.querySelector<HTMLElement>(`.${P}-time-panel-column`);
       expect(ul).not.toBeNull();
 
+      // 用户滚动发生在挂载对齐结束后；同步中的 scroll 应继续由 scrolling 守卫挡住。
+      await vi.advanceTimersByTimeAsync(200);
       await ul?.dispatchEvent(new Event('scroll'));
       vi.advanceTimersByTime(400);
       expect(onSelect).toHaveBeenCalled();
@@ -785,12 +788,15 @@ describe('PickerPanel · 杂项', () => {
 
   it('`cellRender` 替换格内容（收得到 `today` 与 `originNode`）', () => {
     let today: string | null = null;
-    const w = mountPanel({
-      cellRender: (date: PanelDateType, info: { today: PanelDateType }) => {
-        today ??= fmt(info.today);
-        return `${generateConfig.getDate(date)}`;
+    const w = mountPanel(
+      {},
+      {
+        cellRender: ({ current, info }) => {
+          today ??= fmt(info.today);
+          return `${typeof current === 'object' ? generateConfig.getDate(current) : current}`;
+        },
       },
-    });
+    );
     expect(today).toBe('2026-09-30 10:20:30');
     expect(w.element.querySelector(`.${P}-cell`)).not.toBeNull();
     w.unmount();

@@ -17,12 +17,17 @@
  * 所以「先点日期再调时间」时，点日期那一刻继承的是**浏览值**的时刻。
  */
 
-import { defineComponent, h, type PropType } from 'vue';
+import { defineComponent, h, type PropType, type SlotsType } from 'vue';
 import { DatePanel } from './date-panel';
 import { fillTime } from './date-util';
-import type { PanelDateType } from './panel-context';
+import type { PanelDateType, PanelSlots } from './panel-context';
 import { PanelHeader } from './panel-header';
-import { formatWith, providePanelInfoFromProps, sharedPanelProps } from './panel-props';
+import {
+  formatWith,
+  providePanelInfoFromProps,
+  sharedPanelEmits,
+  sharedPanelProps,
+} from './panel-props';
 import type { TimePanelConfig } from './time-config';
 import { TimePanelBody } from './time-panel-body';
 import { getTimeInfo } from './time-units';
@@ -38,10 +43,15 @@ const showTimeProp = {
 export const TimePanel = defineComponent({
   name: 'ApolloPickerTimePanel',
   props: { ...sharedPanelProps, ...showTimeProp },
-  setup(props) {
+  emits: sharedPanelEmits,
+  slots: Object as SlotsType<PanelSlots>,
+  setup(props, { emit, slots }) {
     // ⚠️ 用返回值而不是 `usePanelInfo()`：面板自己 provide 的东西自己 inject 不到
     //    （`inject` 读 `parent.provides`）。见 `panel-props.ts` 的说明。
-    const info = providePanelInfoFromProps(props, 'time');
+    const info = providePanelInfoFromProps(props, 'time', {
+      onSelect: (date) => emit('select', date),
+      onHover: (date) => emit('hover', date),
+    });
 
     return () => {
       const ctx = info.value;
@@ -58,15 +68,19 @@ export const TimePanel = defineComponent({
             default: () => (value ? formatWith(g, locale, props.showTime.format, value) : '\u00A0'),
           },
         ),
-        h(TimePanelBody, {
-          showHour: props.showTime.showHour,
-          showMinute: props.showTime.showMinute,
-          showSecond: props.showTime.showSecond,
-          showMillisecond: props.showTime.showMillisecond,
-          use12Hours: props.showTime.use12Hours,
-          changeOnScroll: props.showTime.changeOnScroll,
-          timeConfig: props.showTime,
-        }),
+        h(
+          TimePanelBody,
+          {
+            showHour: props.showTime.showHour,
+            showMinute: props.showTime.showMinute,
+            showSecond: props.showTime.showSecond,
+            showMillisecond: props.showTime.showMillisecond,
+            use12Hours: props.showTime.use12Hours,
+            changeOnScroll: props.showTime.changeOnScroll,
+            timeConfig: props.showTime,
+          },
+          slots,
+        ),
       ]);
     };
   },
@@ -75,12 +89,14 @@ export const TimePanel = defineComponent({
 export const DateTimePanel = defineComponent({
   name: 'ApolloPickerDateTimePanel',
   props: { ...sharedPanelProps, ...showTimeProp },
-  setup(props) {
+  emits: sharedPanelEmits,
+  slots: Object as SlotsType<PanelSlots>,
+  setup(props, { emit, slots }) {
     // ⚠️ `DateTimePanel` **不 provide** 上下文 —— 它只是把 `DatePanel` 与 `TimePanel`
     //    上下拼起来，而那两个各自 `useInfo(自己的 props)` 并 provide
     //    （上游同样如此）。所以这里需要的一切都从**自己的 props** 取。
     return () => {
-      const { prefixCls, generateConfig: g, values, pickerValue, onHover } = props;
+      const { prefixCls, generateConfig: g, values, pickerValue } = props;
       const panelPrefixCls = `${prefixCls}-datetime-panel`;
 
       const value = values[0] ?? null;
@@ -95,22 +111,34 @@ export const DateTimePanel = defineComponent({
         const cloneDate = mergeTime(date);
         // ⚠️ 两个实参都传 `cloneDate`：`certainDate` 决定「按哪一天算哪些时刻被禁用」，
         //    这里就是刚选的那一天本身。
-        props.onSelect?.(timeInfo.getValidTime(cloneDate, cloneDate));
+        emit('select', timeInfo.getValidTime(cloneDate, cloneDate));
       };
       const onDateHover = (date: PanelDateType | null): void => {
-        onHover?.(date ? mergeTime(date) : date);
+        emit('hover', date ? mergeTime(date) : date);
       };
 
       return h('div', { class: panelPrefixCls }, [
-        h(DatePanel, {
-          ...props,
-          onSelect: onDateSelect as never,
-          onHover: onDateHover as never,
-        }),
-        h(TimePanel, {
-          ...props,
-          values: value ? [value] : [],
-        }),
+        h(
+          DatePanel,
+          {
+            ...props,
+            onSelect: onDateSelect,
+            onHover: onDateHover,
+            onModeChange: (mode, viewDate) => emit('modeChange', mode, viewDate),
+            onPickerValueChange: (next) => emit('pickerValueChange', next),
+          },
+          slots,
+        ),
+        h(
+          TimePanel,
+          {
+            ...props,
+            values: value ? [value] : [],
+            onSelect: (date) => emit('select', date),
+            onHover: (date) => emit('hover', date),
+          },
+          slots,
+        ),
       ]);
     };
   },

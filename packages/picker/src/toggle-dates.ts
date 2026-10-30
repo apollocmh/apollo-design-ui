@@ -24,6 +24,20 @@ export function toggleDates<DateType>(
   generateConfig: GenerateConfig<DateType>,
   locale: PickerLocale,
   panelMode: PanelMode,
+  list: readonly DateType[],
+  target: DateType,
+): DateType[];
+export function toggleDates<DateType>(
+  generateConfig: GenerateConfig<DateType>,
+  locale: PickerLocale,
+  panelMode: PanelMode,
+  list: readonly (DateType | null | undefined)[],
+  target: DateType,
+): (DateType | null | undefined)[];
+export function toggleDates<DateType>(
+  generateConfig: GenerateConfig<DateType>,
+  locale: PickerLocale,
+  panelMode: PanelMode,
   list: readonly (DateType | null | undefined)[],
   target: DateType,
 ): (DateType | null | undefined)[] {

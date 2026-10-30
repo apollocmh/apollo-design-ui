@@ -21,8 +21,17 @@
  */
 
 import { cancelRaf, raf } from '@apollo-design/utils';
-import { defineComponent, h, nextTick, onBeforeUnmount, type PropType, ref, watch } from 'vue';
-import { type PanelDateType, usePanelInfo } from './panel-context';
+import {
+  defineComponent,
+  h,
+  onBeforeUnmount,
+  onMounted,
+  type PropType,
+  ref,
+  type SlotsType,
+  watch,
+} from 'vue';
+import { type PanelSlots, usePanelInfo } from './panel-context';
 import { getNearestUnitIndex, type MeridiemUnit } from './time-tmpl';
 import type { TimeColumnUnit } from './time-units';
 
@@ -33,6 +42,7 @@ import type { TimeColumnUnit } from './time-units';
  * 因为 `defineComponent` 的 props 无法参数化（见 `panel-context.ts` 文件头）。
  */
 export type ColumnUnit = TimeColumnUnit | MeridiemUnit;
+export type TimeColumnValue = ColumnUnit['value'];
 
 /** 滚动停止多久后才提交选中（上游 `SCROLL_DELAY`）。 */
 const SCROLL_DELAY = 300;
@@ -60,29 +70,23 @@ export const TimeColumn = defineComponent({
   props: {
     units: { type: Array as PropType<ColumnUnit[]>, required: true as const },
     /** 当前值（`null` = 未选） */
-    value: { type: [Number, String] as PropType<number | string | null>, default: null },
+    value: { type: [Number, String] as PropType<TimeColumnValue | null>, default: null },
     /** 面板浏览值（`value` 为空时的对齐目标） */
     optionalValue: {
-      type: [Number, String] as PropType<number | string | null>,
+      type: [Number, String] as PropType<TimeColumnValue | null>,
       default: null,
     },
     type: { type: String as PropType<TimeColumnType>, required: true },
-    onChange: {
-      type: Function as PropType<(value: never) => void>,
-      required: true,
-    },
-    onHover: {
-      type: Function as PropType<(value: never | null) => void>,
-      required: true,
-    },
-    /** 双击（RangePicker 的「选完两段就关」） */
-    onDblClick: {
-      type: Function as PropType<(() => void) | undefined>,
-      default: undefined,
-    },
     changeOnScroll: { type: Boolean as PropType<boolean | undefined>, default: undefined },
   },
-  setup(props) {
+  emits: {
+    change: (_value: TimeColumnValue) => true,
+    hover: (_value: TimeColumnValue | null) => true,
+    dblClick: () => true,
+  },
+  slots: Object as SlotsType<PanelSlots>,
+  setup(props, { emit, slots }) {
+    const info = usePanelInfo();
     const ulRef = ref<HTMLUListElement | null>(null);
     let scrollRafId: number | null = null;
     let delayTimer: ReturnType<typeof setTimeout> | undefined;
@@ -107,40 +111,11 @@ export const TimeColumn = defineComponent({
 
     /** 逐帧逼近目标格（上游 `startScroll`）。 */
     const startScroll = (): void => {
+      stopScroll();
+      retryTimes = 0;
       const ul = ulRef.value;
       lastDist = null;
-
-      /**
-       * 🚨 **`ulRef` 为空时必须重排一帧**（PITFALLS 318，2026-10-02 真浏览器实测）。
-       *
-       * 上面那个 `watch` 的 `immediate` 回调**跑在本组件自己的渲染之前** ——
-       * 实测日志顺序是「setup 入口 → startScroll(hasUl=false) → watch 已注册」。
-       * 也就是说它调 `startScroll()` 时 `ulRef.value` 还是 `null`；
-       * 而 `value` / `optionalValue` / `units` 此后都不再变化 ⇒ **watch 永不重跑**
-       * ⇒ 时间列**永远停在 `scrollTop = 0`**。
-       *
-       * 实测（`tests/visual/debug/probe-timepicker-scroll.mjs`）：
-       * react 的 `scrollTop` 是 336/840/1260，vue 是 **0/0/0**，且 +2.6s 后仍是 0
-       * ⇒ 不是「截图早于动画收敛」，是**从未滚动**。
-       *
-       * ⚠️ 为什么这个 bug 潜伏了很久：`date-picker` 的 `datetime` 变体时间值是 `00`
-       * ⇒ `targetLi === firstLi` ⇒ 在下一个守卫处就 return（**根本不需要滚**）⇒ 恒不触发。
-       * 任何「时间值非零」的消费者都会撞上它。
-       *
-       * ⚠️ 用 **`nextTick`** 而不是 `raf`：这里的语义是「等这次渲染 flush 结束」
-       * （`nextTick` 恰好是这个含义），**不是**「等一帧动画」。
-       * 用 `raf` 还会污染测试里被 mock 的帧队列
-       * （`panel-edge.test.ts` 用 `captureRaf()` 数帧，多出来的这一帧会打乱计数）。
-       * ⚠️ 重试有上限 —— 隐藏的列不该空转。
-       */
-      if (!ul) {
-        if (retryTimes < MAX_SCROLL_RETRY) {
-          retryTimes += 1;
-          void nextTick(startScroll);
-        }
-        return;
-      }
-      retryTimes = 0;
+      if (!ul) return;
 
       const targetValue = props.value ?? props.optionalValue;
       const targetLi = ul.querySelector<HTMLElement>(`[data-value="${String(targetValue)}"]`);
@@ -148,7 +123,11 @@ export const TimeColumn = defineComponent({
 
       // ⚠️ 上游的守卫：目标格不存在就**什么都不做**。
       //    没有这条，jsdom（`scrollTop` 写不进去）会让 rAF 永久自转。
-      if (!targetLi || !firstLi || targetLi === firstLi) {
+      if (!targetLi || !firstLi) {
+        return;
+      }
+      if (targetLi === firstLi) {
+        ul.scrollTop = 0;
         return;
       }
 
@@ -166,6 +145,8 @@ export const TimeColumn = defineComponent({
         if (targetLiTop === 0 && targetLi !== firstLi) {
           if (retryTimes <= MAX_SCROLL_RETRY) {
             scrollRafId = raf(doScroll);
+          } else {
+            stopScroll();
           }
           return;
         }
@@ -197,9 +178,8 @@ export const TimeColumn = defineComponent({
     };
 
     /** 滚动停下 300ms 后提交最近的一格（上游 `onInternalScroll` 的回调体）。 */
-    const onInternalScroll = (event: Event): void => {
+    const onInternalScroll = (): void => {
       clearDelayCheck();
-      const target = event.target as HTMLUListElement;
 
       if (scrolling || !props.changeOnScroll) {
         return;
@@ -218,10 +198,10 @@ export const TimeColumn = defineComponent({
         const liList = [...ul.querySelectorAll<HTMLElement>('li')];
         const liTopList = liList.map((li) => li.offsetTop - firstLiTop);
 
-        const index = getNearestUnitIndex(props.units, liTopList, target.scrollTop);
+        const index = getNearestUnitIndex(props.units, liTopList, ul.scrollTop);
         const targetUnit = props.units[index];
         if (targetUnit && !targetUnit.disabled) {
-          props.onChange(targetUnit.value as never);
+          emit('change', targetUnit.value);
         }
       }, SCROLL_DELAY);
     };
@@ -233,8 +213,10 @@ export const TimeColumn = defineComponent({
         startScroll();
         clearDelayCheck();
       },
-      { immediate: true, flush: 'post' },
+      { flush: 'post' },
     );
+    onMounted(startScroll);
+    watch(() => props.changeOnScroll, clearDelayCheck, { flush: 'sync' });
 
     onBeforeUnmount(() => {
       stopScroll();
@@ -242,8 +224,8 @@ export const TimeColumn = defineComponent({
     });
 
     return () => {
-      const ctx = usePanelInfo().value;
-      const { prefixCls, classNames, styles, cellRender, now, locale } = ctx;
+      const ctx = info.value;
+      const { prefixCls, classNames, styles, now, locale } = ctx;
 
       const panelPrefixCls = `${prefixCls}-time-panel`;
       const cellPrefixCls = `${panelPrefixCls}-cell`;
@@ -274,31 +256,34 @@ export const TimeColumn = defineComponent({
               ],
               onClick: () => {
                 if (!disabled) {
-                  props.onChange(unitValue as never);
+                  emit('change', unitValue);
                 }
               },
               onDblclick: () => {
-                if (!disabled && props.onDblClick) {
-                  props.onDblClick();
+                if (!disabled) {
+                  emit('dblClick');
                 }
               },
               onMouseenter: () => {
-                props.onHover(unitValue as never);
+                if (!disabled) emit('hover', unitValue);
               },
               onMouseleave: () => {
-                props.onHover(null as never);
+                if (!disabled) emit('hover', null);
               },
               'data-value': unitValue,
             },
             [
-              cellRender
-                ? cellRender(unitValue as unknown as PanelDateType, {
-                    prefixCls,
-                    originNode: inner,
-                    today: now,
-                    type: 'time',
-                    subType: props.type,
-                    locale,
+              slots.cellRender
+                ? slots.cellRender({
+                    current: unitValue,
+                    info: {
+                      prefixCls,
+                      originNode: inner,
+                      today: now,
+                      type: 'time',
+                      subType: props.type,
+                      locale,
+                    },
                   })
                 : inner,
             ],

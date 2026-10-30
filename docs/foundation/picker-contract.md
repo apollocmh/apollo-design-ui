@@ -1,5 +1,21 @@
 > 证据范围：本文保留初期分析与回归来源。上游对齐、版本和阶段要求不是当前项目规范；现行规则见根目录 AGENTS.md 与 ADR 0005。有效的组件场景、算法契约及缺陷证据继续保留。
 
+## 2026-10-30 当前源码差额
+
+本轮范围为 `packages/picker` 的公开导出、13 个 Vue 面板组件及其实际 DatePicker、RangePicker、Calendar 消费桥。下文早期提取、覆盖率和上游对照保留原日期与原义，不代表本轮最终验收。
+
+- `PickerPanel` 用 `v-model:value`（日期数组）、`v-model:pickerValue`（日期）、`v-model:mode`（面板粒度）表达状态。受控更新只发提议；父级拒绝后撤控仍保留最后接收值。默认 picker 为 `date`；外部改 picker 时只同步未受控的面板模式。默认值仅用于初始化。
+- 所属通知统一为 Vue emits：`select(date)`、`hover(date|null)`、`change(date|dates|undefined)`、`pickerValueChange(date)`、`panelChange(date, mode)`、`cellDblClick()`，以及上述三个模型更新。`change` 只在值实际改变时通知；上层面板选值下钻不会重复发浏览值通知。`h()` 消费继续使用 `onSelect` 等 Vue 监听器。
+- 模板扩展由 `cellRender(current, info)` prop 直接迁为 `#cellRender="{ current, info }"`。日期格的 current 为 Dayjs，时间列为实际数字或 `am`/`pm`，不把数字断言成日期；`info.originNode` 是默认内容。插槽在渲染中读取，显式空内容保持为空，增删后恢复当前默认内容。叶面板、组合面板、`TimePanelBody`、`TimeColumn` 沿同一槽链转发；`PanelBody` 的行首内容使用 `#prefixColumn="{ date }"`。
+- 叶面板通过 `select`、`hover`、`modeChange`、`pickerValueChange` 发提议；`PanelHeader` 使用 `change`，`TimeColumn` 使用带真实档位类型的 `change` / `hover` 和 `dblClick`。`disabledDate`、`disabledTime`、日期适配方法、偏移与类名计算等有返回值的算法函数保留函数职责。
+- 时间格式、列开关、步长、禁用函数（含毫秒）由当前 props 派生；语义 class/style 与隐藏表头/箭头通过 getter provide，替换和撤除均传递到实际节点。`DatePanel.mode` 的 info 随当前模式更新。根 class/style 和原生 attrs 自然落在面板根；业务事件不再同时落到 DOM。
+- 时间列在 mounted 后对齐，在值/档位更新后的 DOM 上重新对齐，切到首项回到顶部；新对齐取消旧帧，关闭滚动选择取消待提交定时器，卸载清理资源。离开时间格清空 hover，禁用格不产生 hover。SSR 不启动浏览器效果。
+- `PickerPanelRef.nativeElement` 是实际面板根，卸载后为 null。没有增加日期网格键盘能力或运行时 CSS：输入、浮层、最终提交、格式解析和样式仍由 UI 包拥有，既有算法与日期/时间插槽成果继续沿用。
+
+DatePicker、RangePicker、Calendar 只调整当前 `h(PickerPanel)` 消费桥。包装层现有公共函数/槽能力不在本轮重新审计；DatePicker 的 `CellRenderInfo.locale` 类型改为实际收到的面板语言子集，组件 `locale` prop 仍是完整语言对象。引擎旧 cellRender prop 无兼容层或弃用期（开发期直接迁移，ADR 0006）。原生模板的模型、作用域槽与 ref 示例见 `packages/picker/src/__tests__/fixtures/NativePicker.vue`，正负类型例见 `native.test-d.ts`。
+
+验证范围为包内核心行为、算法既有回归、面板 DOM 对照、真实消费者窄链及源码浏览器的布局/生命周期；命令与结果归入本轮唯一状态。未构建 dist，未执行冻结版本九维、覆盖率、发布消费者或完整视觉矩阵。
+
 # `picker` 契约文档
 
 > **适用范围**：日期/时间面板引擎。

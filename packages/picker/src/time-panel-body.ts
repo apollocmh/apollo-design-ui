@@ -19,9 +19,9 @@
  * 但「点完之后其它列的值变得不可用」会发生，由 `getValidTime` 兜住。
  */
 
-import { computed, defineComponent, h, type PropType } from 'vue';
-import { type PanelDateType, usePanelHack, usePanelInfo } from './panel-context';
-import { TimeColumn, type TimeColumnType } from './time-column';
+import { computed, defineComponent, h, type PropType, type SlotsType } from 'vue';
+import { type PanelDateType, type PanelSlots, usePanelHack, usePanelInfo } from './panel-context';
+import { TimeColumn, type TimeColumnValue } from './time-column';
 import type { TimePanelConfig } from './time-config';
 import {
   fillTimeUnitValue,
@@ -50,7 +50,10 @@ export const TimePanelBody = defineComponent({
       default: () => ({}),
     },
   },
-  setup(props) {
+  slots: Object as SlotsType<PanelSlots>,
+  setup(props, { slots }) {
+    const info = usePanelInfo();
+    const hack = usePanelHack();
     /** 由面板算好的「禁用规则 + 步长」配置（`showXxx` 不是它的成员）。 */
     const unitConfig = computed<TimePanelConfig<PanelDateType>>(() => ({
       ...props.timeConfig,
@@ -63,8 +66,7 @@ export const TimePanelBody = defineComponent({
     }));
 
     return () => {
-      const ctx = usePanelInfo().value;
-      const hack = usePanelHack();
+      const ctx = info.value;
       const { prefixCls, classNames, styles, values, generateConfig: g, locale } = ctx;
       const onHover = ctx.onHover ?? (() => undefined);
       const { pickerValue } = ctx;
@@ -106,14 +108,16 @@ export const TimePanelBody = defineComponent({
       };
 
       const validHour = getEnabled(rowHourUnits, hour);
-      const minuteUnits = computed(() => getMinuteUnits(validHour ?? 0));
-      const validMinute = getEnabled(minuteUnits.value, minute);
-      const secondUnits = computed(() => getSecondUnits(validHour ?? 0, validMinute ?? 0));
-      const validSecond = getEnabled(secondUnits.value, second);
-      const millisecondUnits = computed(() =>
-        getMillisecondUnits(validHour ?? 0, validMinute ?? 0, validSecond ?? 0),
+      const minuteUnits = getMinuteUnits(validHour ?? 0);
+      const validMinute = getEnabled(minuteUnits, minute);
+      const secondUnits = getSecondUnits(validHour ?? 0, validMinute ?? 0);
+      const validSecond = getEnabled(secondUnits, second);
+      const millisecondUnits = getMillisecondUnits(
+        validHour ?? 0,
+        validMinute ?? 0,
+        validSecond ?? 0,
       );
-      const validMillisecond = getEnabled(millisecondUnits.value, millisecond);
+      const validMillisecond = getEnabled(millisecondUnits, millisecond);
 
       const meridiemUnits = showMeridiem ? getMeridiemUnits(g, locale, rowHourUnits) : [];
 
@@ -125,48 +129,44 @@ export const TimePanelBody = defineComponent({
         ctx.onSelect(getValidTime(nextDate));
       };
 
-      const template = computed(() =>
-        getTriggerDateTemplate({
-          generateConfig: g,
-          value,
-          pickerValue,
-          valueTime,
-          pickerTime,
-          validTime:
-            validHour === undefined
-              ? undefined
-              : {
-                  hour: validHour,
-                  minute: validMinute ?? 0,
-                  second: validSecond ?? 0,
-                  millisecond: validMillisecond ?? 0,
-                },
-        }),
-      );
+      const template = getTriggerDateTemplate({
+        generateConfig: g,
+        value,
+        pickerValue,
+        valueTime,
+        pickerTime,
+        validTime:
+          validHour === undefined
+            ? undefined
+            : {
+                hour: validHour,
+                minute: validMinute ?? 0,
+                second: validSecond ?? 0,
+                millisecond: validMillisecond ?? 0,
+              },
+      });
 
       const changeUnit = (
-        val: number | null,
+        val: TimeColumnValue,
         unit: 'Hour' | 'Minute' | 'Second' | 'Millisecond',
       ) => {
-        triggerChange(fillTimeUnitValue(g, template.value, val, unit));
+        if (typeof val === 'number') triggerChange(fillTimeUnitValue(g, template, val, unit));
       };
       const hoverUnit = (
-        val: number | null,
+        val: TimeColumnValue | null,
         unit: 'Hour' | 'Minute' | 'Second' | 'Millisecond',
       ) => {
-        const next = fillTimeUnitValue(g, template.value, val, unit);
-        if (next !== null) {
-          onHover(next);
+        if (typeof val === 'number' || val === null) {
+          onHover(fillTimeUnitValue(g, template, val, unit));
         }
       };
 
-      const onMeridiemChange = (val: 'am' | 'pm' | null): void => {
-        triggerChange(getMeridiemTime(g, template.value, val, hour));
+      const onMeridiemChange = (val: TimeColumnValue): void => {
+        if (typeof val === 'string') triggerChange(getMeridiemTime(g, template, val, hour));
       };
-      const onMeridiemHover = (val: 'am' | 'pm' | null): void => {
-        const next = getMeridiemTime(g, template.value, val, hour);
-        if (next !== null) {
-          onHover(next);
+      const onMeridiemHover = (val: TimeColumnValue | null): void => {
+        if (typeof val === 'string' || val === null) {
+          onHover(getMeridiemTime(g, template, val, hour));
         }
       };
 
@@ -175,74 +175,94 @@ export const TimePanelBody = defineComponent({
 
       if (props.showHour) {
         columns.push(
-          h(TimeColumn, {
-            units: hourUnits,
-            value: hour,
-            optionalValue: pickerTime?.hour ?? null,
-            type: 'hour' as TimeColumnType,
-            onChange: ((v: number | null) => changeUnit(v, 'Hour')) as never,
-            onHover: ((v: number | null) => hoverUnit(v, 'Hour')) as never,
-            onDblClick: hack.onCellDblClick,
-            changeOnScroll: props.changeOnScroll,
-          }),
+          h(
+            TimeColumn,
+            {
+              units: hourUnits,
+              value: hour,
+              optionalValue: pickerTime?.hour ?? null,
+              type: 'hour',
+              onChange: (value) => changeUnit(value, 'Hour'),
+              onHover: (value) => hoverUnit(value, 'Hour'),
+              onDblClick: hack.onCellDblClick,
+              changeOnScroll: props.changeOnScroll,
+            },
+            slots,
+          ),
         );
       }
       if (props.showMinute) {
         columns.push(
-          h(TimeColumn, {
-            units: minuteUnits.value,
-            value: minute,
-            optionalValue: pickerTime?.minute ?? null,
-            type: 'minute' as TimeColumnType,
-            onChange: ((v: number | null) => changeUnit(v, 'Minute')) as never,
-            onHover: ((v: number | null) => hoverUnit(v, 'Minute')) as never,
-            onDblClick: hack.onCellDblClick,
-            changeOnScroll: props.changeOnScroll,
-          }),
+          h(
+            TimeColumn,
+            {
+              units: minuteUnits,
+              value: minute,
+              optionalValue: pickerTime?.minute ?? null,
+              type: 'minute',
+              onChange: (value) => changeUnit(value, 'Minute'),
+              onHover: (value) => hoverUnit(value, 'Minute'),
+              onDblClick: hack.onCellDblClick,
+              changeOnScroll: props.changeOnScroll,
+            },
+            slots,
+          ),
         );
       }
       if (props.showSecond) {
         columns.push(
-          h(TimeColumn, {
-            units: secondUnits.value,
-            value: second,
-            optionalValue: pickerTime?.second ?? null,
-            type: 'second' as TimeColumnType,
-            onChange: ((v: number | null) => changeUnit(v, 'Second')) as never,
-            onHover: ((v: number | null) => hoverUnit(v, 'Second')) as never,
-            onDblClick: hack.onCellDblClick,
-            changeOnScroll: props.changeOnScroll,
-          }),
+          h(
+            TimeColumn,
+            {
+              units: secondUnits,
+              value: second,
+              optionalValue: pickerTime?.second ?? null,
+              type: 'second',
+              onChange: (value) => changeUnit(value, 'Second'),
+              onHover: (value) => hoverUnit(value, 'Second'),
+              onDblClick: hack.onCellDblClick,
+              changeOnScroll: props.changeOnScroll,
+            },
+            slots,
+          ),
         );
       }
       if (props.showMillisecond) {
         columns.push(
-          h(TimeColumn, {
-            units: millisecondUnits.value,
-            value: millisecond,
-            optionalValue: pickerTime?.millisecond ?? null,
-            type: 'millisecond' as TimeColumnType,
-            onChange: ((v: number | null) => changeUnit(v, 'Millisecond')) as never,
-            onHover: ((v: number | null) => hoverUnit(v, 'Millisecond')) as never,
-            onDblClick: hack.onCellDblClick,
-            changeOnScroll: props.changeOnScroll,
-          }),
+          h(
+            TimeColumn,
+            {
+              units: millisecondUnits,
+              value: millisecond,
+              optionalValue: pickerTime?.millisecond ?? null,
+              type: 'millisecond',
+              onChange: (value) => changeUnit(value, 'Millisecond'),
+              onHover: (value) => hoverUnit(value, 'Millisecond'),
+              onDblClick: hack.onCellDblClick,
+              changeOnScroll: props.changeOnScroll,
+            },
+            slots,
+          ),
         );
       }
       if (showMeridiem) {
         // ⚠️ 上下午列的 `value` 是 `'am' | 'pm'`（字符串），不是数字 ——
         //    `TimeColumn` 的 `value` prop 因此声明成 `number | string | null`。
         columns.push(
-          h(TimeColumn, {
-            units: meridiemUnits,
-            value: meridiem,
-            optionalValue: null,
-            type: 'meridiem' as TimeColumnType,
-            onChange: ((v: 'am' | 'pm' | null) => onMeridiemChange(v)) as never,
-            onHover: ((v: 'am' | 'pm' | null) => onMeridiemHover(v)) as never,
-            onDblClick: hack.onCellDblClick,
-            changeOnScroll: props.changeOnScroll,
-          }),
+          h(
+            TimeColumn,
+            {
+              units: meridiemUnits,
+              value: meridiem,
+              optionalValue: null,
+              type: 'meridiem',
+              onChange: onMeridiemChange,
+              onHover: onMeridiemHover,
+              onDblClick: hack.onCellDblClick,
+              changeOnScroll: props.changeOnScroll,
+            },
+            slots,
+          ),
         );
       }
 

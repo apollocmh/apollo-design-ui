@@ -17,14 +17,19 @@
  *    但**日面板的标题按钮**走的是同一个分支 —— 忘了会得到「Jan 而不是 1月」。
  */
 
-import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
+import { defineComponent, h, type PropType, type SlotsType, type VNodeChild } from 'vue';
 import { formatValue, getWeekStartDate, isInRange, isSameWeek, WEEK_DAY_COUNT } from './date-util';
 import { getPanelGeometry, getRowStartDate } from './panel';
 import { PanelBody } from './panel-body';
-import type { PanelDateType } from './panel-context';
+import type { PanelDateType, PanelSlots } from './panel-context';
 import { PanelHeader } from './panel-header';
 import { getPanelHeaderLimits } from './panel-header-limit';
-import { formatWith, providePanelInfoFromProps, sharedPanelProps } from './panel-props';
+import {
+  formatWith,
+  providePanelInfoFromProps,
+  sharedPanelEmits,
+  sharedPanelProps,
+} from './panel-props';
 
 /** 行级 class 的计算器（week 面板用）。 */
 type RowClassNameFn = (rowStartDate: PanelDateType) => string | undefined;
@@ -47,10 +52,15 @@ const datePanelProps = {
 export const DatePanel = defineComponent({
   name: 'ApolloPickerDatePanel',
   props: datePanelProps,
-  setup(props) {
+  emits: sharedPanelEmits,
+  slots: Object as SlotsType<PanelSlots>,
+  setup(props, { emit, slots }) {
     // ⚠️ 用返回值而不是 `usePanelInfo()`：面板自己 provide 的东西自己 inject 不到
     //    （`inject` 读 `parent.provides`）。见 `panel-props.ts` 的说明。
-    const info = providePanelInfoFromProps(props, props.mode);
+    const info = providePanelInfoFromProps(props, () => props.mode, {
+      onSelect: (date) => emit('select', date),
+      onHover: (date) => emit('hover', date),
+    });
 
     return () => {
       const ctx = info.value;
@@ -146,7 +156,7 @@ export const DatePanel = defineComponent({
           type: 'button',
           'aria-label': locale.yearSelect,
           key: 'year',
-          onClick: () => props.onModeChange?.('year', pickerValue),
+          onClick: () => emit('modeChange', 'year', pickerValue),
           tabIndex: -1,
           class: `${prefixCls}-year-btn`,
         },
@@ -158,7 +168,7 @@ export const DatePanel = defineComponent({
           type: 'button',
           'aria-label': locale.monthSelect,
           key: 'month',
-          onClick: () => props.onModeChange?.('month', pickerValue),
+          onClick: () => emit('modeChange', 'month', pickerValue),
           tabIndex: -1,
           class: `${prefixCls}-month-btn`,
         },
@@ -190,16 +200,24 @@ export const DatePanel = defineComponent({
               superOffset: limits.superOffset,
               getStart: limits.getStart,
               getEnd: limits.getEnd,
-              onChange: props.onPickerValueChange,
+              onChange: (next: PanelDateType) => emit('pickerValueChange', next),
             },
             { default: () => monthYearNodes },
           ),
-          h(PanelBody, {
-            geometry,
-            prefixColumn,
-            rowClassName: props.rowClassName,
-            headerCells,
-          }),
+          h(
+            PanelBody,
+            {
+              geometry,
+              rowClassName: props.rowClassName,
+              headerCells,
+            },
+            {
+              ...slots,
+              ...(prefixColumn
+                ? { prefixColumn: ({ date }: { date: PanelDateType }) => prefixColumn(date) }
+                : {}),
+            },
+          ),
         ],
       );
     };
@@ -215,7 +233,9 @@ export const DatePanel = defineComponent({
 export const WeekPanel = defineComponent({
   name: 'ApolloPickerWeekPanel',
   props: datePanelProps,
-  setup(props) {
+  emits: sharedPanelEmits,
+  slots: Object as SlotsType<PanelSlots>,
+  setup(props, { emit, slots }) {
     // ⚠️ 周面板**不 provide**（它把一切都透传给 `DatePanel`，由后者持有上下文）
     //    ⇒ 它需要的东西一律从**自己的 props** 取（与上游 `WeekPanel` 一致）。
     return () => {
@@ -254,12 +274,20 @@ export const WeekPanel = defineComponent({
         return names.join(' ');
       };
 
-      return h(DatePanel, {
-        ...props,
-        mode: 'week' as const,
-        panelName: 'week',
-        rowClassName,
-      });
+      return h(
+        DatePanel,
+        {
+          ...props,
+          mode: 'week' as const,
+          panelName: 'week',
+          rowClassName,
+          onSelect: (date) => emit('select', date),
+          onHover: (date) => emit('hover', date),
+          onModeChange: (mode, viewDate) => emit('modeChange', mode, viewDate),
+          onPickerValueChange: (next) => emit('pickerValueChange', next),
+        },
+        slots,
+      );
     };
   },
 });
