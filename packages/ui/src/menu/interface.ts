@@ -238,7 +238,7 @@ export interface MenuProps {
   subMenuCloseDelay?: number;
   forceSubMenuRender?: boolean;
   triggerSubMenuAction?: TriggerSubMenuAction;
-  getPopupContainer?: (node: HTMLElement) => HTMLElement;
+  getPopupContainer?: (node: HTMLElement) => HTMLElement | ShadowRoot;
   tabIndex?: number;
   role?: string;
   id?: string;

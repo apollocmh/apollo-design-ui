@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 165,
+  "revision": 167,
   "dispatch": {
     "status": "paused",
     "maxParallel": 5,
@@ -1248,6 +1248,13 @@
           ],
           "change": "Menu owns native notifications, current presentation and popup-only context; Dropdown uses the native onKeydown listener.",
           "verification": "CMP:menu full scoped strict, core/actual Dropdown/Tabs/Breadcrumb consumers and zero-diagnostic source browser."
+        },
+        {
+          "scope": [
+            "packages/ui/src/dropdown"
+          ],
+          "change": "Existing ShadowRoot popup containers are reflected in actual props and constructors; erased type declarations only.",
+          "verification": "FND:utils affectedChanges records the single shared focused result: actual Vue red cases, DOM/Motion core and scoped strict with real Dropdown/Menu h() consumers; no full package re-audit."
         }
       ]
     },
@@ -2109,7 +2116,16 @@
             "resolution": "Only the empty Provider fixture configuration inferred an optional undefined record entry; explicit actual getter result type corrected it, final strict exit0."
           }
         ]
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/menu"
+          ],
+          "change": "Existing ShadowRoot popup containers are reflected in actual props and constructor; erased type declarations only.",
+          "verification": "FND:utils affectedChanges records the single shared focused result: actual Vue red cases, DOM/Motion core and scoped strict with real Dropdown/Menu h() consumers; no full package re-audit."
+        }
+      ]
     },
     {
       "id": "CMP:message",
@@ -3179,7 +3195,9 @@
         "baseRevision": 141,
         "startedAt": "2026-10-30T13:57:14.373Z"
       },
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -3215,6 +3233,15 @@
           ],
           "change": "Native accepted checked restoration and actual Checkbox Event/bool consumer bridge; Radio retains its own existing event contract.",
           "verification": "CMP:checkbox focused checks: native core, actual Chrome/Radio/Transfer/Table consumers and full scoped strict. This delta does not mark the whole Radio/Table audit complete."
+        },
+        {
+          "scope": [
+            "packages/utils/src/dom/get-element.ts",
+            "packages/ui/src/dropdown",
+            "packages/ui/src/menu"
+          ],
+          "change": "Necessary actual-DOM and existing ShadowRoot container consumer corrections; full Table still in progress.",
+          "verification": "FND:utils affectedChanges records the single shared focused result: actual Vue red cases, DOM/Motion core and scoped strict with real Dropdown/Menu h() consumers; no full package re-audit."
         }
       ]
     },
@@ -4837,7 +4864,17 @@
         "stage": "architecture",
         "passed": true,
         "finalTypeResolution": "真实 native generic context 及原有精确 SFC 正负例在 root 同源最终 strict exit0；此前失败保留，不视作通过。"
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/utils/src/dom/get-element.ts",
+            "packages/motion"
+          ],
+          "change": "Actual Vue animated component roots take precedence over value/current data props.",
+          "verification": "FND:utils affectedChanges records the single shared focused result: actual Vue red cases, DOM/Motion core and scoped strict with real Dropdown/Menu h() consumers; no full package re-audit."
+        }
+      ]
     },
     {
       "id": "FND:overlay",
@@ -5429,7 +5466,9 @@
         "packages/utils/src"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
@@ -5475,7 +5514,45 @@
           }
         ],
         "boundary": "仅关闭useControlledValue根因组，不代表Utils整包架构完成或最终验收。"
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/utils/src/dom/get-element.ts",
+            "packages/utils/src/__tests__/dom.test.ts",
+            "packages/ui/src/dropdown/interface.ts",
+            "packages/ui/src/dropdown/DropdownButton.ts",
+            "packages/ui/src/dropdown/__tests__/type.test-d.ts",
+            "packages/ui/src/menu/interface.ts",
+            "packages/ui/src/menu/Menu.ts",
+            "packages/ui/src/menu/__tests__/type.test-d.ts"
+          ],
+          "change": "Necessary Table/Motion integration delta: actual Vue instances with value/current props resolve their own DOM before ref-shaped data; Dropdown/Menu types accurately accept the existing ShadowRoot terminal container.",
+          "checks": [
+            {
+              "kind": "core",
+              "command": "node node_modules/vitest/vitest.mjs run --project unit packages/utils/src/__tests__/dom.test.ts packages/motion/src/__tests__/native-contracts.test.ts packages/motion/src/__tests__/use-motion-status.test.ts --maxWorkers=1",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 5534,
+              "result": "95 DOM/Motion tests passed, including actual Vue value/current component regressions."
+            },
+            {
+              "kind": "types",
+              "command": "vue-tsc --noEmit with root strict/declaration unchanged; exact utility/Dropdown/Menu source, real h/ShadowRoot positives and Motion generic/SFC type consumers",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 13511
+            }
+          ],
+          "reproduction": {
+            "exitCode": 1,
+            "durationMs": 2218,
+            "result": "Both actual Vue component value/current props were misidentified as ref wrappers; expected actual DOM, received null."
+          },
+          "boundary": "Only the evidenced DOM-resolution/container-type delta is verified. Utils remains partial; Table full architecture/types are still in progress. Existing deliveries retained; full-library and frozen-version acceptance not run."
+        }
+      ]
     },
     {
       "id": "FND:virtual-list",

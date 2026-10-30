@@ -107,7 +107,7 @@ const Menu = defineComponent({
       default: 'hover',
     },
     getPopupContainer: {
-      type: Function as PropType<(node: HTMLElement) => HTMLElement>,
+      type: Function as PropType<MenuProps['getPopupContainer']>,
       default: undefined,
     },
     tabIndex: { type: Number, default: 0 },

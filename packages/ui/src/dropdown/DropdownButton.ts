@@ -50,7 +50,7 @@ const DropdownButton = defineComponent({
     destroyOnHidden: { type: Boolean, default: undefined },
     forceRender: { type: Boolean, default: undefined },
     getPopupContainer: {
-      type: Function as PropType<(node: HTMLElement) => HTMLElement>,
+      type: Function as PropType<DropdownButtonProps['getPopupContainer']>,
       default: undefined,
     },
 

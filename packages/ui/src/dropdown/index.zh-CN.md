@@ -22,7 +22,7 @@ subtitle: 下拉菜单
 | arrow | boolean 或 `{ pointAtCenter }` | false |
 | mouseEnterDelay / mouseLeaveDelay | 当前延迟，单位秒 | 0.15 / 0.1 |
 | autoAdjustOverflow | 自动调整溢出 | true |
-| getPopupContainer | 实际浮层容器；未指定时使用 Provider | body |
+| getPopupContainer | 实际浮层容器，支持 HTMLElement / ShadowRoot；未指定时使用 Provider | body |
 | destroyOnHidden / forceRender | 离场完成后销毁 / 预渲染 | false |
 | transitionName | 覆盖已有方向动画名 | 按 placement 选择 |
 | zIndex | 显式数值层级，0 合法 | 当前组件 Token 或父层级加偏移 |

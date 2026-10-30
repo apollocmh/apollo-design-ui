@@ -18,7 +18,7 @@ Place actions in a menu attached to a trigger. Menu owns item data, selection an
 | arrow | Boolean or `{ pointAtCenter }` | false |
 | mouseEnterDelay / mouseLeaveDelay | Current delays in seconds | 0.15 / 0.1 |
 | autoAdjustOverflow | Adjust overflow | true |
-| getPopupContainer | Current popup container; falls back to Provider | body |
+| getPopupContainer | Current HTMLElement / ShadowRoot popup container; falls back to Provider | body |
 | destroyOnHidden / forceRender | Destroy after leave / prerender | false |
 | transitionName | Override the existing directional motion name | Based on placement |
 | zIndex | Explicit numeric layer, including 0 | Current Token or parent plus offset |

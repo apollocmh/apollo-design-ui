@@ -26,7 +26,7 @@ subtitle: 导航菜单
 | subMenuOpenDelay / subMenuCloseDelay | 子菜单悬停延迟，单位秒 | `number` | `0.1` / `0.1` |
 | forceSubMenuRender | 保留子菜单渲染 | `boolean` | `false` |
 | disabledOverflow | 关闭水平溢出折叠 | `boolean` | `false` |
-| getPopupContainer | 弹层容器；未设置时继承当前 ConfigProvider | `(node: HTMLElement) => HTMLElement` | — |
+| getPopupContainer | 弹层容器；未设置时继承当前 ConfigProvider | `(node: HTMLElement) => HTMLElement \| ShadowRoot` | — |
 | prefixCls / id / role / tabIndex | 当前前缀及根列表属性 | `string` / `string` / `string` / `number` | — / — / `'menu'` / `0` |
 | classNames / styles | `root/list/item/itemTitle/itemIcon/itemContent`，嵌套 `popup.root` 与 `subMenu` | `MenuClassNames` / `MenuStyles` | — |
 

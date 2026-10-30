@@ -114,7 +114,7 @@ export interface DropdownProps {
   destroyPopupOnHide?: boolean;
   destroyOnHidden?: boolean;
   forceRender?: boolean;
-  getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
+  getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement | ShadowRoot;
   /** ⚠️ deprecated：用 `classNames.root`。 */
   overlayClassName?: string;
   /** ⚠️ deprecated：用 `styles.root`。 */
@@ -164,7 +164,7 @@ export interface DropdownButtonProps {
   autoAdjustOverflow?: boolean;
   destroyOnHidden?: boolean;
   forceRender?: boolean;
-  getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
+  getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement | ShadowRoot;
   id?: string;
   zIndex?: number;
 }

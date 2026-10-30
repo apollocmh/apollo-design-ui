@@ -57,7 +57,7 @@ function isComponentInstance(value: unknown): value is ComponentPublicInstance {
  * 解析出 DOM 元素。认识上面列出的全部六种形态。
  *
  * 解析顺序（先便宜后昂贵）：
- *   DOM 元素 → `{nativeElement}` → `{value}` → `{current}` → 组件实例/`{$el}` → VNode
+ *   DOM 元素 → `{nativeElement}` → Vue 组件实例 → `{value}` → `{current}` → `{$el}` → VNode
  *
  * `{current}` 分支是为了兼容从 React 迁移过来的调用点，不是我们的对外契约。
  */
@@ -71,6 +71,11 @@ export function getElement(node: unknown): HTMLElement | SVGElement | null {
     return null;
   }
 
+  // `value` / `current` may be ordinary component props, not ref wrappers.
+  if (isComponentInstance(node)) {
+    return getElement(node.$el);
+  }
+
   // `Ref<Element>`：`ref()` 的返回值
   if ('value' in node) {
     return getElement((node as { value: unknown }).value);
@@ -79,10 +84,6 @@ export function getElement(node: unknown): HTMLElement | SVGElement | null {
   // React ref 形态：只为迁移期兼容
   if ('current' in node) {
     return getElement((node as { current: unknown }).current);
-  }
-
-  if (isComponentInstance(node)) {
-    return getElement(node.$el);
   }
 
   if ('$el' in node) {

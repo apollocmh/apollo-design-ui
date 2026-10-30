@@ -24,7 +24,7 @@ Horizontal, vertical and inline navigation driven by `items`. See [`demo/`](./de
 | triggerSubMenuAction | Popup activation; inline menus use click and keyboard | `'hover' \| 'click'` | `'hover'` |
 | subMenuOpenDelay / subMenuCloseDelay | Hover delays in seconds | `number` | `0.1` / `0.1` |
 | forceSubMenuRender / disabledOverflow | Preserve submenu rendering / disable horizontal overflow | `boolean` | `false` |
-| getPopupContainer | Popup container; inherits the current ConfigProvider | `(node: HTMLElement) => HTMLElement` | — |
+| getPopupContainer | Popup container; inherits the current ConfigProvider | `(node: HTMLElement) => HTMLElement \| ShadowRoot` | — |
 | prefixCls / id / role / tabIndex | Current prefix and root-list attributes | `string` / `string` / `string` / `number` | — / — / `'menu'` / `0` |
 | classNames / styles | `root/list/item/itemTitle/itemIcon/itemContent`, nested `popup.root` and `subMenu` | `MenuClassNames` / `MenuStyles` | — |
 

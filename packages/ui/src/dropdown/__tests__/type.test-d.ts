@@ -26,9 +26,11 @@ describe('Dropdown · 类型', () => {
       itemIcon: root,
       itemContent: root,
     };
-    const props: DropdownProps = { styles, overlayStyle: root };
+    const getPopupContainer = () => document.createElement('div').attachShadow({ mode: 'open' });
+    const props: DropdownProps = { styles, overlayStyle: root, getPopupContainer };
     expectTypeOf(styles.root).toEqualTypeOf<CSSProperties | undefined>();
     h(Dropdown, props);
+    h(DropdownButton, { getPopupContainer });
     const invalid: DropdownProps = {
       styles: {
         root: {

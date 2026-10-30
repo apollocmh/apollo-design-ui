@@ -60,6 +60,7 @@ describe('Menu · 类型', () => {
 it('owns typed models, notifications, native keys, exact static constructors and scoped slots', () => {
   const css: CSSProperties = { color: undefined, '--owned-menu': '#123', marginInlineStart: 8 };
   const props: MenuProps = {
+    getPopupContainer: () => document.createElement('div').attachShadow({ mode: 'open' }),
     items: [
       {
         type: 'submenu',

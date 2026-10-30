@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { h } from 'vue';
+import { createApp, defineComponent, h } from 'vue';
 import canUseDom from '../dom/can-use-dom';
 import contains from '../dom/contains';
 import { getDOM, getElement, getElementFromVNode } from '../dom/get-element';
@@ -176,6 +176,20 @@ describe('getDOM / getElement / getElementFromVNode', () => {
     const div = document.createElement('div');
     expect(getElement({ $el: div })).toBe(div);
     expect(getElement({ $el: div, $: {} })).toBe(div);
+  });
+
+  it.each(['value', 'current'])('实际 Vue 组件的 %s prop 不是引用包装', (key) => {
+    const host = document.createElement('div');
+    const app = createApp(
+      defineComponent({ props: [key], setup: () => () => h('div', 'Actual component root') }),
+      { [key]: 'Component data' },
+    );
+    const instance = app.mount(host);
+    try {
+      expect(getElement(instance)).toBe(host.firstElementChild);
+    } finally {
+      app.unmount();
+    }
   });
 
   it('getElement 对 null / 原始值返回 null', () => {
