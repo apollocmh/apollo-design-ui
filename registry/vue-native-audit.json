@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 14,
+  "revision": 16,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -1066,17 +1066,13 @@
       "kind": "component",
       "ref": "progress",
       "title": "Progress",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/progress"
       ],
-      "assignment": {
-        "owner": "native_progress",
-        "baseRevision": 6,
-        "startedAt": "2026-10-30T06:18:42.425Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1093,6 +1089,57 @@
         "basis": [
           "docs/audit/2026-10-29-upload-progress-audit.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/progress"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "vitest run --project unit --project dom-contract --project theme packages/ui/src/progress --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 23590
+          },
+          {
+            "kind": "core",
+            "command": "vitest run --project unit packages/ui/src/progress/__tests__/contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 5280
+          },
+          {
+            "kind": "core",
+            "command": "vitest run --project a11y packages/ui/src/progress --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11550
+          },
+          {
+            "kind": "consumer",
+            "command": "vitest run --project unit packages/ui/src/upload/__tests__/progress.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <temporary strict source/tests/demo config>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 50098
+          },
+          {
+            "kind": "demo",
+            "command": "node packages/ui/src/progress/__tests__/browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 5740
+          }
+        ],
+        "boundary": "自定义渐变/透明背景的文本配色由语义样式配置；未执行最终冻结视觉/发布验收。"
       }
     },
     {
@@ -1143,13 +1190,17 @@
       "kind": "component",
       "ref": "rate",
       "title": "Rate",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/rate"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_rate",
+        "baseRevision": 14,
+        "startedAt": "2026-10-30T06:48:55.167Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",

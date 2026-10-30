@@ -68,10 +68,17 @@ export const getCircleStyle = (
   };
 };
 
-/** rc-progress PtgCircle 的 gradient 站点：conic colors（% 键 → ptg）。 */
-export const getPtgColors = (color: Record<string, string>, scale: number): string[] =>
-  Object.keys(color).map((key) => {
-    const parsedKey = Number.parseFloat(key);
-    const ptgKey = `${Math.floor(parsedKey * scale)}%`;
-    return `${color[key]} ${ptgKey}`;
-  });
+/** Percentage stops in order; from/to is the equivalent two-stop gradient. */
+export const getPtgColors = (
+  color: { from?: string; to?: string; direction?: string } & Record<string, string | undefined>,
+  scale: number,
+): string[] => {
+  const stops = Object.entries(color)
+    .filter(([key]) => key !== 'direction')
+    .map(([key, value]) => ({
+      position: key === 'from' ? 0 : key === 'to' ? 100 : Number.parseFloat(key),
+      value,
+    }))
+    .sort((a, b) => a.position - b.position);
+  return stops.map(({ position, value }) => `${value} ${Math.floor(position * scale)}%`);
+};

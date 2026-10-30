@@ -13,8 +13,8 @@ export type ProgressType = 'line' | 'circle' | 'dashboard';
 
 export type ProgressStatus = 'normal' | 'exception' | 'active' | 'success';
 
-/** Note: `default` is deprecated and will be removed in v7, please use `medium` instead. */
-export type ProgressSize = Exclude<'large' | 'middle' | 'small', 'large'> | 'default';
+/** `default` is deprecated in favor of `medium`; `middle` remains supported. */
+export type ProgressSize = 'medium' | 'middle' | 'small' | 'default';
 
 export type StringGradients = Record<string, string>;
 type FromToGradients = { from: string; to: string };

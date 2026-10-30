@@ -32,7 +32,10 @@ export default defineComponent({
     prefixCls: { type: String, required: true },
     classNames: { type: Object as PropType<ProgressSemanticClassNames>, required: true },
     styles: { type: Object as PropType<ProgressSemanticStyles>, required: true },
-    size: { type: null as unknown as PropType<ProgressProps['size']>, default: undefined },
+    size: {
+      type: [Number, Array, String, Object] as PropType<ProgressProps['size']>,
+      default: undefined,
+    },
     steps: { type: Number, required: true },
     rounding: {
       type: Function as PropType<(step: number) => number>,
@@ -58,7 +61,12 @@ export default defineComponent({
         steps,
         strokeWidth: props.strokeWidth,
       });
-      const unitWidth = width / steps;
+      const unitWidth =
+        typeof width === 'string'
+          ? Array.isArray(mergedSize)
+            ? mergedSize[0]
+            : width
+          : width / steps;
 
       const mergedRailColor = props.railColor ?? props.trailColor;
 

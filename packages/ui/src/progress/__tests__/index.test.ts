@@ -194,8 +194,8 @@ describe('Progress · 结构契约（circle/dashboard）', () => {
     const paths = w.findAll(`.${P}-circle-path`);
     const successPath = paths[1]!.element as SVGElement;
     expect(successPath.getAttribute('opacity')).toBe('0');
-    // jsdom 把 stroke 规范化为 rgb；dashoffset = perimeterWithoutGap - 0.01（clamp 生效）
-    expect(successPath.getAttribute('style')).toContain('stroke: rgb(82, 196, 26)');
+    // 默认成功色读取当前主题；dashoffset = perimeterWithoutGap - 0.01（clamp 生效）
+    expect(successPath.getAttribute('style')).toContain('stroke: var(--apollo-color-success)');
     expect(successPath.getAttribute('style')).toContain('stroke-dashoffset: 295.2997094374406');
     w.unmount();
   });
@@ -233,10 +233,8 @@ describe('Progress · 结构契约（circle/dashboard）', () => {
     });
     const body = w.find(`.${P}-body`).element as HTMLElement;
     expect(body.style.width).toBe('14px');
-    // strokeWidth 默认 = max(minPercent(3/14*100), 20) = 21.4286 ⇒ r = 50 - 10.714
-    expect((w.find(`.${P}-circle-rail`).element as SVGElement).getAttribute('r')).toBe(
-      '39.285714285714285',
-    );
+    // 显式 strokeWidth=20 必须进入 Circle；只有未设置时才使用最小描边推导。
+    expect((w.find(`.${P}-circle-rail`).element as SVGElement).getAttribute('r')).toBe('40');
     w.unmount();
   });
 });

@@ -5,6 +5,8 @@
  * 行为对齐：luminance threshold 128）。
  */
 
+import type { ProgressGradient, ProgressProps } from './interface';
+
 /** antd `@ant-design/colors` 的 presetPrimaryColors.blue（gradient 默认 from/to）。 */
 export const PRESET_BLUE = '#1677ff';
 
@@ -29,7 +31,10 @@ export function getSuccessPercent(props: { success?: { percent?: number } }): nu
 }
 
 /** antd 逐字：getPercentage（circle 的分段）。 */
-export const getPercentage = (props: { percent?: number; success?: { percent?: number } }) => {
+export const getPercentage = (props: {
+  percent?: number;
+  success?: { percent?: number };
+}): [number, number] => {
   const realSuccessPercent = validProgress(getSuccessPercent(props));
   return [
     realSuccessPercent,
@@ -37,27 +42,32 @@ export const getPercentage = (props: { percent?: number; success?: { percent?: n
   ];
 };
 
-/** antd 逐字：getStrokeColor（success 段绿色兜底）。 */
+/** Explicit success color takes precedence over the current theme's success color. */
 export const getStrokeColor = (props: {
   success?: { strokeColor?: string };
-  strokeColor?: string | Record<PropertyKey, string> | null;
-}): (string | Record<PropertyKey, string> | null)[] => {
+  strokeColor?: string | ProgressGradient | null;
+}): [string, string | ProgressGradient | null] => {
   const successColor = props.success?.strokeColor;
-  return [successColor || '#52c41a', (props.strokeColor as string) || null].map((c) => c) as never;
+  return [successColor || 'var(--apollo-color-success)', props.strokeColor || null];
 };
 
-/** antd 逐字：getSize（line/step/circle 三套解析）。 */
-export const getSize = (
-  size:
-    | number
-    | [number | string, number]
-    | string
-    | { width?: number; height?: number }
-    | undefined,
+/** Line/step/circle dimensions; line and step tuple widths retain CSS units. */
+export function getSize(
+  size: ProgressProps['size'],
+  type: 'circle' | 'dashboard',
+  extra?: { steps?: number; strokeWidth?: number },
+): [number, number];
+export function getSize(
+  size: ProgressProps['size'],
+  type: 'line' | 'step',
+  extra?: { steps?: number; strokeWidth?: number },
+): [number | string, number];
+export function getSize(
+  size: ProgressProps['size'],
   type: 'line' | 'circle' | 'dashboard' | 'step',
   extra?: { steps?: number; strokeWidth?: number },
-): [number, number] => {
-  let width = -1;
+): [number | string, number] {
+  let width: number | string = -1;
   let height = -1;
   if (type === 'step') {
     // biome-ignore lint/style/noNonNullAssertion: type === 'step' 时调用方必给 extra（只有 step 形态传），steps 由它算默认值
@@ -70,13 +80,13 @@ export const getSize = (
     } else if (typeof size === 'number') {
       [width, height] = [size, size];
     } else if (Array.isArray(size)) {
-      width = (size[0] as number) ?? 14;
-      height = (size[1] as number) ?? 8;
+      width = size[0] ?? 14;
+      height = size[1] ?? 8;
     } else {
       width = size.width ?? 14;
       height = size.height ?? 8;
     }
-    width *= steps;
+    width = typeof width === 'number' ? width * steps : `calc(${width} * ${steps})`;
   } else if (type === 'line') {
     const strokeWidth = extra?.strokeWidth;
     if (typeof size === 'string' || typeof size === 'undefined') {
@@ -84,8 +94,8 @@ export const getSize = (
     } else if (typeof size === 'number') {
       [width, height] = [size, size];
     } else if (Array.isArray(size)) {
-      width = (size[0] as number) ?? -1;
-      height = (size[1] as number) ?? 8;
+      width = size[0] ?? -1;
+      height = size[1] ?? 8;
     } else {
       width = size.width ?? -1;
       height = size.height ?? 8;
@@ -96,12 +106,12 @@ export const getSize = (
     } else if (typeof size === 'number') {
       [width, height] = [size, size];
     } else if (Array.isArray(size)) {
-      width = (size[0] ?? size[1] ?? 120) as number;
-      height = (size[0] ?? size[1] ?? 120) as number;
+      width = typeof size[0] === 'number' ? size[0] : (size[1] ?? 120);
+      height = width;
     }
   }
   return [width, height];
-};
+}
 
 // ---------------------------------------------------------------------------
 // gradient（antd Line.tsx 的 sortGradient / handleGradient 逐字语义）

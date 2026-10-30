@@ -86,3 +86,7 @@ Rate 的 change/hoverChange/focus/blur 使用 Vue emits，焦点事件带原始 
 ### D-steps-live-tokens
 
 Steps 使用唯一 change emit，接通九个有效组件 Token。直接移除从未被组件消费的 customIconSize/customIconTop/iconTop/titleLineHeight；使用现有 iconSize/customIconFontSize 或原生样式表达受支持的定制，不新增旧字段兼容。既有四槽和 inline Tooltip 成果保留，详见[Steps API](packages/ui/src/steps/index.zh-CN.md)。
+
+### D-progress-live-contracts
+
+Progress 补齐动态位置、原生样式、当前 Provider/六 Token、Circle 描边与渐变、CSS 长度宽度等已声明行为；保留 format/rounding 与现有别名。单色 inner 文字修正前景对比，语义 color 仍优先；自定义渐变和透明背景的配色边界见[Progress API](packages/ui/src/progress/index.zh-CN.md)。Upload 已交付进度语义不变。

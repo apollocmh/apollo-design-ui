@@ -13,6 +13,7 @@ import Tooltip from '../../tooltip/Tooltip';
 import type {
   GapPlacement,
   GapPosition,
+  ProgressGradient,
   ProgressProps,
   ProgressSemanticClassNames,
   ProgressSemanticStyles,
@@ -32,6 +33,7 @@ export interface CircleProps {
   railColor?: string;
   trailColor?: string;
   strokeLinecap?: 'butt' | 'square' | 'round';
+  strokeWidth?: number;
   gapPosition?: GapPosition;
   gapPlacement?: GapPlacement;
   gapDegree?: number;
@@ -40,7 +42,7 @@ export interface CircleProps {
   success?: SuccessProps;
   size?: ProgressProps['size'];
   steps?: number | { count: number; gap: number };
-  strokeColor?: string | string[] | Record<string, string>;
+  strokeColor?: string | ProgressGradient;
   percent?: number;
   direction?: string;
 }
@@ -71,13 +73,16 @@ export default defineComponent({
     width: { type: Number, default: 120 },
     type: { type: String as PropType<ProgressProps['type']>, default: undefined },
     success: { type: Object as PropType<SuccessProps>, default: undefined },
-    size: { type: null as unknown as PropType<ProgressProps['size']>, default: undefined },
+    size: {
+      type: [Number, Array, String, Object] as PropType<ProgressProps['size']>,
+      default: undefined,
+    },
     steps: {
       type: [Number, Object] as PropType<number | { count: number; gap: number }>,
       default: undefined,
     },
     strokeColor: {
-      type: [String, Array, Object] as PropType<string | string[] | Record<string, string>>,
+      type: [String, Object] as PropType<string | ProgressGradient>,
       default: undefined,
     },
     percent: { type: Number, default: undefined },
@@ -85,15 +90,29 @@ export default defineComponent({
   },
   setup(props, { slots }) {
     const uid = useId();
+    const gapPosition = computed((): GapPosition | undefined => {
+      const placement =
+        (props.gapPlacement ?? props.gapPosition) ||
+        (props.type === 'dashboard' ? 'bottom' : undefined);
+      const isRTL = props.direction === 'rtl';
+      switch (placement) {
+        case 'start':
+          return isRTL ? 'right' : 'left';
+        case 'end':
+          return isRTL ? 'left' : 'right';
+        default:
+          return placement;
+      }
+    });
 
     return (): VNodeChild => {
       const { prefixCls, classNames, styles } = props;
 
-      const mergedRailColor = (props.railColor ?? props.trailColor) as string | null;
+      const mergedRailColor = props.railColor ?? props.trailColor ?? null;
 
       const [width, height] = getSize(props.size ?? props.width, 'circle');
 
-      let strokeWidth = props.strokeWidth as number | undefined;
+      let strokeWidth = props.strokeWidth;
       if (strokeWidth === undefined) {
         strokeWidth = Math.max(getMinPercent(width), 6);
       }
@@ -107,29 +126,13 @@ export default defineComponent({
       const realGapDegree =
         props.gapDegree !== undefined ? props.gapDegree : props.type === 'dashboard' ? 75 : 0;
 
-      const percentArray = getPercentage({ percent: props.percent, success: props.success }) as [
-        number,
-        number,
-      ];
-      const gapPos = computed((): GapPosition | undefined => {
-        const mergedPlacement =
-          (props.gapPlacement ?? props.gapPosition) ||
-          (props.type === 'dashboard' ? 'bottom' : undefined);
-        const isRTL = props.direction === 'rtl';
-        switch (mergedPlacement) {
-          case 'start':
-            return isRTL ? 'right' : 'left';
-          case 'end':
-            return isRTL ? 'left' : 'right';
-          default:
-            return mergedPlacement;
-        }
-      }).value;
+      const percentArray = getPercentage({ percent: props.percent, success: props.success });
+      const gapPos = gapPosition.value;
 
       const isGradient = isPlainObject(props.strokeColor);
       const strokeColor = getStrokeColor({
         success: props.success,
-        strokeColor: props.strokeColor as string | null,
+        strokeColor: props.strokeColor,
       });
 
       const gradientId = `${uid}-gradient`;
@@ -156,19 +159,22 @@ export default defineComponent({
             cx: halfSize,
             cy: halfSize,
             'stroke-linecap': isGradient ? 'butt' : props.strokeLinecap,
-            'stroke-width': strokeWidth as number,
-            style: getCircleStyle(
-              perimeter,
-              perimeterWithoutGap,
-              0,
-              100,
-              rotateDeg,
-              realGapDegree,
-              gapPos,
-              mergedRailColor,
-              isGradient ? 'butt' : (props.strokeLinecap as string),
-              strokeWidth as number,
-            ),
+            'stroke-width': strokeWidth,
+            style: {
+              ...getCircleStyle(
+                perimeter,
+                perimeterWithoutGap,
+                0,
+                100,
+                rotateDeg,
+                realGapDegree,
+                gapPos,
+                mergedRailColor,
+                isGradient ? 'butt' : props.strokeLinecap,
+                strokeWidth,
+              ),
+              ...styles.rail,
+            },
           })
         : null;
 
@@ -188,7 +194,7 @@ export default defineComponent({
             gapPos,
             typeof color === 'string' ? color : null,
             'butt',
-            strokeWidth as number,
+            strokeWidth,
             stepGap,
           );
           stackPtg +=
@@ -201,7 +207,7 @@ export default defineComponent({
             cx: halfSize,
             cy: halfSize,
             stroke: typeof color === 'string' ? color : undefined,
-            'stroke-width': strokeWidth as number,
+            'stroke-width': strokeWidth,
             opacity: 1,
             style: { ...circleStyleForStack, ...styles.track },
           });
@@ -223,9 +229,9 @@ export default defineComponent({
             rotateDeg,
             realGapDegree,
             gapPos,
-            (color as string | Record<string, string>) ?? null,
-            isGradient ? 'butt' : (props.strokeLinecap as string),
-            strokeWidth as number,
+            color ?? null,
+            isGradient ? 'butt' : props.strokeLinecap,
+            strokeWidth,
           );
           stackPtg += ptg;
           const isColorGradient = color !== null && typeof color === 'object';
@@ -234,16 +240,16 @@ export default defineComponent({
             r: radius,
             cx: halfSize,
             cy: halfSize,
-            stroke: isColorGradient ? '#FFF' : (color as string | undefined),
+            stroke: isColorGradient ? '#FFF' : (color ?? undefined),
             'stroke-linecap': isGradient ? 'butt' : props.strokeLinecap,
-            'stroke-width': strokeWidth as number,
+            'stroke-width': strokeWidth,
             opacity: ptg === 0 ? 0 : 1,
             style: { ...circleStyleForStack, ...styles.track },
           });
           if (!isColorGradient) return circleNode;
 
           // PtgCircle 的 gradient 方案：mask 包 path + foreignObject 叠加渐变
-          const grad = color as Record<string, string>;
+          const grad = color;
           const maskId = `${gradientId}-conic`;
           const fromDeg = realGapDegree ? `${180 + realGapDegree / 2}deg` : '0deg';
           const conicColors = getPtgColors(grad, (360 - realGapDegree) / 360);

@@ -49,7 +49,10 @@ export default defineComponent({
     styles: { type: Object as PropType<ProgressSemanticStyles>, required: true },
     direction: { type: String, default: undefined },
     percent: { type: Number, default: undefined },
-    size: { type: null as unknown as PropType<ProgressProps['size']>, default: undefined },
+    size: {
+      type: [Number, Array, String, Object] as PropType<ProgressProps['size']>,
+      default: undefined,
+    },
     strokeWidth: { type: Number, default: undefined },
     strokeColor: {
       type: [String, Object] as PropType<string | ProgressGradient>,
@@ -80,6 +83,7 @@ export default defineComponent({
       const mergedSize = props.size ?? [-1, props.strokeWidth || (props.size === 'small' ? 6 : 8)];
 
       const [width, height] = getSize(mergedSize, 'line', { strokeWidth: props.strokeWidth });
+      const bodyWidth = typeof width === 'string' ? width : width > 0 ? px(width) : '100%';
 
       // ---- Rail ----
       const railStyle: Record<string, unknown> = {
@@ -125,7 +129,7 @@ export default defineComponent({
           class: clsx(`${prefixCls}-body`, classNames.body, {
             [`${prefixCls}-body-layout-bottom`]: infoAlign === 'center' && infoPosition === 'outer',
           }),
-          style: { width: width > 0 ? px(width) : '100%', ...styles.body },
+          style: { width: bodyWidth, ...styles.body },
         },
         [
           h(

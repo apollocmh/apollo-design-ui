@@ -22,18 +22,10 @@ import {
   CloseOutlined,
 } from '@apollo-design/icons';
 import { isPlainObject, useDevWarning } from '@apollo-design/utils';
-import {
-  type CSSProperties,
-  computed,
-  defineComponent,
-  h,
-  type PropType,
-  type VNodeChild,
-  watchEffect,
-} from 'vue';
+import { computed, defineComponent, h, type PropType, type VNodeChild, watchEffect } from 'vue';
 import { clsx } from '../_internal/clsx';
-import { useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useConfigContext, useDirection } from '../config-provider/context';
+import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
+import { useComponentConfig, useDirection } from '../config-provider/context';
 import CircleEngine from './engine/Circle';
 import LineEngine from './engine/Line';
 import StepsEngine from './engine/Steps';
@@ -44,9 +36,23 @@ import type {
   ProgressStatus,
   ProgressType,
 } from './interface';
+import { useProgressTheme } from './use-progress-theme';
 import { getSize, getSuccessPercent, isLightColor, validProgress } from './utils';
 
+interface ProgressConfig {
+  className?: string;
+  style?: ProgressSemanticStyles['root'];
+  classNames?: ProgressProps['classNames'];
+  styles?: ProgressProps['styles'];
+}
+
 const ProgressStatuses: readonly ProgressStatus[] = ['normal', 'exception', 'active', 'success'];
+
+/** Match Badge's linear-sRGB black/white selection for an opaque solid track. */
+const readableOn = (background: string): string => {
+  const channel = 'round(up, clamp(0, calc(0.179 - r * 0.2126 - g * 0.7152 - b * 0.0722), 1), 1)';
+  return `color(from ${background} srgb-linear ${channel} ${channel} ${channel} / 1)`;
+};
 
 const ProgressComponent = defineComponent({
   name: 'AProgress',
@@ -94,7 +100,10 @@ const ProgressComponent = defineComponent({
       type: String as PropType<ProgressProps['gapPosition']>,
       default: undefined,
     },
-    size: { type: null as unknown as PropType<ProgressProps['size']>, default: undefined },
+    size: {
+      type: [Number, Array, String, Object] as PropType<ProgressProps['size']>,
+      default: undefined,
+    },
     steps: {
       type: [Number, Object] as PropType<ProgressProps['steps']>,
       default: undefined,
@@ -110,17 +119,19 @@ const ProgressComponent = defineComponent({
   },
   setup(props, { attrs }) {
     const devWarning = useDevWarning('Progress');
-    const { getPrefixCls } = useConfigContext();
+    const config = useComponentConfig<ProgressConfig>('progress');
     const direction = useDirection();
 
-    const prefixCls = computed(() => getPrefixCls('progress', props.prefixCls));
+    const prefixCls = computed(() => config.getPrefixCls('progress', props.prefixCls));
+    const themeStyle = useProgressTheme(() => prefixCls.value);
 
     const percent = computed(() => props.percent ?? 0);
     const size = computed(() => props.size ?? 'medium');
     const type = computed(() => props.type ?? 'line');
     const showInfo = computed(() => props.showInfo ?? true);
     const percentPosition = computed(() => props.percentPosition ?? {});
-    const { align: infoAlign = 'end', type: infoPosition = 'outer' } = percentPosition.value;
+    const infoAlign = computed(() => percentPosition.value.align ?? 'end');
+    const infoPosition = computed(() => percentPosition.value.type ?? 'outer');
 
     // ---- Warning（antd 逐字）----
     watchEffect(() => {
@@ -185,8 +196,7 @@ const ProgressComponent = defineComponent({
     const strokeColorIsBright = computed(() => {
       const c = strokeColorNotArray.value;
       if (c) {
-        const color =
-          typeof c === 'string' ? c : (Object.values(c as Record<string, string>)[0] ?? '');
+        const color = typeof c === 'string' ? c : (Object.values(c)[0] ?? '');
         return isLightColor(color);
       }
       return false;
@@ -198,8 +208,8 @@ const ProgressComponent = defineComponent({
       ProgressSemanticClassNames,
       ProgressSemanticStyles
     >(
-      [() => props.classNames as ProgressSemanticClassNames | undefined],
-      [() => props.styles as ProgressSemanticStyles | undefined],
+      [() => config.classNames, () => props.classNames],
+      [() => config.styles, () => semanticRootStyle(config.style), () => props.styles],
       props,
     );
 
@@ -215,9 +225,9 @@ const ProgressComponent = defineComponent({
       let text: VNodeChild;
       const textFormatter = props.format || ((number?: number) => `${number}%`);
       const isBrightInnerColor =
-        isLineType.value && strokeColorIsBright.value && infoPosition === 'inner';
+        isLineType.value && strokeColorIsBright.value && infoPosition.value === 'inner';
       if (
-        infoPosition === 'inner' ||
+        infoPosition.value === 'inner' ||
         props.format ||
         (progressStatus.value !== 'exception' && progressStatus.value !== 'success')
       ) {
@@ -228,6 +238,24 @@ const ProgressComponent = defineComponent({
         text = isLineType.value ? h(CheckCircleFilled) : h(CheckOutlined);
       }
 
+      const fallbackColor =
+        progressStatus.value === 'exception'
+          ? 'var(--apollo-color-error)'
+          : progressStatus.value === 'success'
+            ? 'var(--apollo-color-success)'
+            : 'var(--apollo-progress-default-color)';
+      const strokeColor = strokeColorNotArray.value;
+      const solidColor =
+        typeof strokeColor === 'string'
+          ? strokeColor || fallbackColor
+          : strokeColor === undefined
+            ? fallbackColor
+            : undefined;
+      const color =
+        isPureLineType.value && infoPosition.value === 'inner' && solidColor
+          ? readableOn(solidColor)
+          : undefined;
+
       return h(
         'span',
         {
@@ -235,12 +263,12 @@ const ProgressComponent = defineComponent({
             `${prefixCls.value}-indicator`,
             {
               [`${prefixCls.value}-indicator-bright`]: isBrightInnerColor,
-              [`${prefixCls.value}-indicator-${infoAlign}`]: isPureLineType.value,
-              [`${prefixCls.value}-indicator-${infoPosition}`]: isPureLineType.value,
+              [`${prefixCls.value}-indicator-${infoAlign.value}`]: isPureLineType.value,
+              [`${prefixCls.value}-indicator-${infoPosition.value}`]: isPureLineType.value,
             },
             mergedClassNames.value.indicator,
           ),
-          style: mergedStyles.value.indicator,
+          style: [{ color }, mergedStyles.value.indicator],
           title: typeof text === 'string' ? text : undefined,
         },
         text ?? undefined,
@@ -249,8 +277,8 @@ const ProgressComponent = defineComponent({
 
     return () => {
       const pCls = prefixCls.value;
-      const infoAlignCur = percentPosition.value.align ?? 'end';
-      const infoPositionCur = percentPosition.value.type ?? 'outer';
+      const infoAlignCur = infoAlign.value;
+      const infoPositionCur = infoPosition.value;
 
       const sharedClassNames = mergedClassNames.value;
       const sharedStyles = mergedStyles.value;
@@ -266,17 +294,14 @@ const ProgressComponent = defineComponent({
                 classNames: sharedClassNames,
                 styles: sharedStyles,
                 size: size.value,
-                steps: isPlainObject(props.steps)
-                  ? (props.steps as { count: number }).count
-                  : // biome-ignore lint/style/noNonNullAssertion: 这条分支只可能在 step 形态走到，此时 steps 必是 number（prop 类型是 number | {count} | undefined）
-                    props.steps!,
+                steps: typeof props.steps === 'object' ? props.steps.count : props.steps,
                 rounding: props.rounding,
                 percent: percent.value,
                 strokeWidth: props.strokeWidth ?? 8,
-                strokeColor: strokeColorNotGradient.value as string | string[] | undefined,
+                strokeColor: strokeColorNotGradient.value,
                 railColor: props.railColor,
                 trailColor: props.trailColor,
-              } as never,
+              },
               { default: () => progressInfo.value },
             )
           : h(
@@ -289,13 +314,13 @@ const ProgressComponent = defineComponent({
                 percent: percent.value,
                 size: size.value,
                 strokeWidth: props.strokeWidth,
-                strokeColor: strokeColorNotArray.value as never,
+                strokeColor: strokeColorNotArray.value,
                 strokeLinecap: props.strokeLinecap ?? 'round',
                 railColor: props.railColor,
                 trailColor: props.trailColor,
                 percentPosition: { align: infoAlignCur, type: infoPositionCur },
                 success: props.success,
-              } as never,
+              },
               { default: () => progressInfo.value },
             );
       } else {
@@ -308,18 +333,19 @@ const ProgressComponent = defineComponent({
             railColor: props.railColor,
             trailColor: props.trailColor,
             strokeLinecap: props.strokeLinecap ?? 'round',
+            strokeWidth: props.strokeWidth,
             gapPosition: props.gapPosition,
             gapPlacement: props.gapPlacement,
             gapDegree: props.gapDegree,
             width: props.width ?? 120,
             type: type.value,
             success: props.success,
-            size: size.value,
+            size: props.size,
             steps: props.steps,
-            strokeColor: strokeColorNotArray.value as never,
+            strokeColor: strokeColorNotArray.value,
             percent: percent.value,
             direction: direction.value,
-          } as never,
+          },
           { default: () => progressInfo.value },
         );
       }
@@ -330,7 +356,7 @@ const ProgressComponent = defineComponent({
         {
           [`${pCls}-${type.value === 'dashboard' ? 'circle' : type.value}`]: type.value !== 'line',
           [`${pCls}-inline-circle`]:
-            type.value === 'circle' && getSize(size.value, 'circle')[0] <= 20,
+            type.value === 'circle' && getSize(props.size ?? props.width, 'circle')[0] <= 20,
           [`${pCls}-line`]: isPureLineType.value,
           [`${pCls}-line-align-${infoAlignCur}`]: isPureLineType.value,
           [`${pCls}-line-position-${infoPositionCur}`]: isPureLineType.value,
@@ -339,7 +365,7 @@ const ProgressComponent = defineComponent({
           [`${pCls}-small`]: size.value === 'small',
           [`${pCls}-rtl`]: direction.value === 'rtl',
         },
-        // 调用方原生 `class`（位置与原先的 props.className/rootClassName 一致）
+        config.className,
         attrs.class,
         mergedClassNames.value.root,
       );
@@ -348,11 +374,7 @@ const ProgressComponent = defineComponent({
         'div',
         {
           ...attrs,
-          // 根 `style` 是 Vue 原生 attrs（位置与原先的 props.style 一致：最后胜出）
-          style: {
-            ...sharedStyles.root,
-            ...(typeof attrs.style === 'object' ? (attrs.style as CSSProperties) : {}),
-          },
+          style: [themeStyle.value, sharedStyles.root, attrs.style],
           class: classString,
           role: 'progressbar',
           'aria-valuenow': accessiblePercent.value,

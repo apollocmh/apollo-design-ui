@@ -9,6 +9,7 @@ import type {
   ProgressType,
   SuccessProps,
 } from '../interface';
+import type Progress from '../Progress';
 
 describe('Progress · 类型', () => {
   it('type 三值；status 四值', () => {
@@ -17,9 +18,15 @@ describe('Progress · 类型', () => {
   });
 
   it('size 是数字 | [w,h] | 预设 | 对象', () => {
-    expectTypeOf<ProgressSize>().toEqualTypeOf<'middle' | 'small' | 'default'>();
+    expectTypeOf<ProgressSize>().toEqualTypeOf<'medium' | 'middle' | 'small' | 'default'>();
     const s: ProgressProps['size'] = [300, 20];
+    const preset: ProgressProps['size'] = 'medium';
+    const cssWidth: ProgressProps['size'] = ['65%', 12];
     expectTypeOf(s).not.toBeNever();
+    expectTypeOf([preset, cssWidth]).not.toBeNever();
+    expectTypeOf<InstanceType<typeof Progress>['$props']['size']>().toEqualTypeOf<
+      ProgressProps['size']
+    >();
   });
 
   it('gradient：from/to 或 % 键', () => {

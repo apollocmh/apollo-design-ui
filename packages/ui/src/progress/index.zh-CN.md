@@ -31,7 +31,7 @@ subtitle: 进度条
 | trailColor | ⚠️ 已废弃（用 `railColor`） | `string` | — |
 | strokeLinecap | 端点形状 | `'round' \| 'butt' \| 'square'` | `'round'` |
 | strokeWidth | 描边宽（line ⇒ 轨道高；circle ⇒ 描边） | `number` | line 8 / circle max(6, 3/宽×100) |
-| size | 尺寸（预设/数字/[w,h]/对象） | `ProgressSize \| number \| [number \| string, number] \| object` | `'medium'` |
+| size | 尺寸（预设/数字/[w,h]/对象） | `'medium' \| 'middle' \| 'small' \| 'default' \| number \| [number \| string, number] \| { width?: number; height?: number }` | `'medium'` |
 | width | ⚠️ 已废弃（用 `size`） | `number` | — |
 | success | 成功分段 | `{ percent?, strokeColor? }` | — |
 | steps | 分段数 | `number \| { count, gap }` | — |
@@ -47,8 +47,37 @@ subtitle: 进度条
 
 `root` / `body` / `rail` / `track` / `indicator`（对象式与函数式 `({ props }) => …`）。
 
+`rail` 指向线形轨道或连续圆环的 SVG 轨道；分段项使用 `track`，没有独立的 rail 节点。
+圆环的 rail 样式直接落在 SVG 元素上。函数式语义配置读取当前 `{ props }`。
+
 线形 size 中的数值宽度按 px 输出，数值、数值 tuple 或对象可设置对应宽度和轨道高度；非正宽度自适应。
 `showInfo` 显示的指示文本可以使 body 高于轨道，size 的高度约束轨道。
+tuple 宽度也支持 CSS 长度，例如 `['65%', 12]`；线形分段的 tuple 宽度约束每一段。
+circle/dashboard 支持数字和预设尺寸，显式 `size` 优先于现存已废弃的 `width`。
+保留 `middle`，同时支持文档默认值 `medium`。
+
+`steps.gap` 控制 circle/dashboard 分段间距；`rounding` 控制线形分段取整。
+`strokeColor` 数组为线形分段逐项设色，其他形态读取第一个颜色。
+渐变接受 `from`/`to` 或百分比站点，`direction` 控制线形渐变方向；圆环站点按百分比排序。
+
+`percentPosition` 替换或移除时，指示内容的宿主、对齐和亮色类同步更新。
+`format` 保留为领域数值格式化回调，接收归一化后的进度值和成功进度值，可以返回完整 Vue 内容。
+组件没有公开插槽、自有事件、v-model 或 expose 方法。
+
+纯线内嵌文本根据当前不透明单色轨道选择可读的黑/白前景，包含主题色和状态色；
+显式 `styles.indicator.color` 仍优先。自定义渐变、透明色或覆盖 track 背景时由作者配对文本颜色。
+此处直接修正开发阶段亮色轨道默认对比度不足，没有兼容开关和弃用期。
+
+Vue 原生 `class`、字符串/对象/数组 `style`、DOM attrs 与监听器落在根 progressbar，
+每次 DOM 事件只触发一次监听。样式优先级依次为主题变量、Provider `styles`、
+Provider `style`、组件 `styles`、原生根 `style`，语义类名合并。
+ConfigProvider 的 `components.progress` 消费 `className`、`style`、`classNames`、`styles`，
+支持整体替换和移除，并读取当前前缀与方向。
+
+现有六个组件 Token 从 `theme.components.Progress` 消费：`circleTextColor`、`defaultColor`、
+`remainingColor`、`lineBorderRadius`、`circleTextFontSize`、`circleIconFontSize`。
+`lineBorderRadius` 数字使用 px，其他值为 CSS 字符串。当前主题别名与嵌套覆盖在 SSR 和动态更新时生效。
+圆环默认成功段使用当前主题成功色，显式 `success.strokeColor` 优先。
 
 实际 progressbar 的 `aria-valuenow` 优先读取 success.percent，否则读取 percent；
 保留有限小数，限制到 0–100，非有限输入按 0。内部无障碍值保持权威，
