@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 9,
+  "revision": 11,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -760,13 +760,17 @@
       "kind": "component",
       "ref": "input-number",
       "title": "InputNumber",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/input-number"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_input_number",
+        "baseRevision": 9,
+        "startedAt": "2026-10-30T06:21:15.497Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1135,24 +1139,52 @@
       "kind": "component",
       "ref": "rate",
       "title": "Rate",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/rate"
       ],
-      "assignment": {
-        "owner": "native_rate",
-        "baseRevision": 1,
-        "startedAt": "2026-10-30T05:40:32.201Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-24-dom-attrs-remediation.md"
       ],
-      "issues": []
+      "issues": [],
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/rate"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "vitest run --project unit --project dom-contract --project a11y packages/ui/src/rate --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 33010
+          },
+          {
+            "kind": "core",
+            "command": "vitest run --project unit packages/ui/src/rate/__tests__/contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4380
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <temporary strict source/tests/demo config>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49702
+          }
+        ],
+        "browser": "隔离源码SSR/hydration/Chrome键盘/焦点/axe已验证；无共享dist构建。",
+        "boundary": "仅架构阶段验证；完整视觉与冻结版本验收未执行。"
+      }
     },
     {
       "id": "CMP:result",

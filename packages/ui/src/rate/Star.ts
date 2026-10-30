@@ -6,22 +6,25 @@
  * `#character` / `#characterRender` 插槽），Star 只负责事件与类名三态。
  */
 
-import { KeyCode } from '@apollo-design/utils';
 import {
+  type ComponentPublicInstance,
   defineComponent,
   h,
-  onBeforeUnmount,
-  onMounted,
   type PropType,
-  ref,
   type VNodeChild,
 } from 'vue';
+import type { TooltipProps } from '../tooltip/interface';
+import Tooltip from '../tooltip/Tooltip';
 
 export interface StarProps {
   prefixCls: string;
   index: number;
   count: number;
   value: number;
+  checked: boolean;
+  label: string;
+  tabIndex: number;
+  tooltip?: TooltipProps | string;
   allowHalf?: boolean;
   disabled?: boolean;
   focused?: boolean;
@@ -43,6 +46,10 @@ const StarComponent = defineComponent({
     index: { type: Number, required: true },
     count: { type: Number, required: true },
     value: { type: Number, required: true },
+    checked: { type: Boolean, required: true },
+    label: { type: String, required: true },
+    tabIndex: { type: Number, required: true },
+    tooltip: { type: [String, Object] as PropType<StarProps['tooltip']>, default: undefined },
     allowHalf: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
     focused: { type: Boolean, default: false },
@@ -65,11 +72,9 @@ const StarComponent = defineComponent({
     starRef: { type: Function as PropType<StarProps['starRef']>, required: true },
   },
   setup(props) {
-    // li 元素注册：不用 Vue 函数 ref（vue-tsc 对 h() 的 ref 联合有误报），改走
-    // mounted/unmount 生命周期回调 —— 对 Rate 侧的 starEls 表等价。
-    const liRef = ref<HTMLElement | null>(null);
-    onMounted(() => props.starRef(liRef.value));
-    onBeforeUnmount(() => props.starRef(null));
+    const setElement = (element: Element | ComponentPublicInstance | null): void => {
+      props.starRef(element instanceof Element ? element : null);
+    };
 
     const onHover = (e: MouseEvent) => {
       if (!props.disabled) props.onInternalHover?.(e, props.index);
@@ -78,7 +83,8 @@ const StarComponent = defineComponent({
       if (!props.disabled) props.onInternalClick?.(e, props.index);
     };
     const onKeyDown = (e: KeyboardEvent) => {
-      if (!props.disabled && e.keyCode === KeyCode.ENTER) {
+      if (!props.disabled && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
         props.onInternalClick?.(e, props.index);
       }
     };
@@ -89,52 +95,51 @@ const StarComponent = defineComponent({
 
       // rc：类名三态（Set 收敛）
       const classNameList = new Set<string>([prefixCls]);
-      if (value === 0 && index === 0 && focused) {
-        classNameList.add(`${prefixCls}-focused`);
-      } else if (allowHalf && value + 0.5 >= starValue && value < starValue) {
+      if (allowHalf && value + 0.5 >= starValue && value < starValue) {
         classNameList.add(`${prefixCls}-half`);
         classNameList.add(`${prefixCls}-active`);
-        if (focused) {
-          classNameList.add(`${prefixCls}-focused`);
-        }
       } else {
         if (starValue <= value) {
           classNameList.add(`${prefixCls}-full`);
         } else {
           classNameList.add(`${prefixCls}-zero`);
         }
-        if (starValue === value && focused) {
-          classNameList.add(`${prefixCls}-focused`);
-        }
+      }
+      if (focused && (value === 0 ? index === 0 : Math.ceil(value) === starValue)) {
+        classNameList.add(`${prefixCls}-focused`);
       }
 
       const characterNode = props.character({ index });
+      const tooltipProps =
+        typeof props.tooltip === 'object' ? props.tooltip : { title: props.tooltip };
+      const radio = h(
+        'div',
+        {
+          role: 'radio',
+          'aria-checked': String(props.checked),
+          'aria-label': props.label,
+          'aria-posinset': index + 1,
+          'aria-setsize': count,
+          tabIndex: props.tabIndex,
+          onClick,
+          onKeydown: onKeyDown,
+          onMousemove: onHover,
+        },
+        [
+          h('div', { class: `${prefixCls}-first` }, [characterNode]),
+          h('div', { class: `${prefixCls}-second` }, [characterNode]),
+        ],
+      );
 
       let start: VNodeChild = h(
         'li',
         {
           class: Array.from(classNameList).join(' '),
-          ref: liRef,
+          role: 'none',
+          ref: setElement,
         },
-        [
-          h(
-            'div',
-            {
-              role: 'radio',
-              'aria-checked': value > index ? 'true' : 'false',
-              'aria-posinset': index + 1,
-              'aria-setsize': count,
-              tabIndex: props.disabled ? -1 : 0,
-              onClick,
-              onKeydown: onKeyDown,
-              onMousemove: onHover,
-            },
-            [
-              h('div', { class: `${prefixCls}-first` }, [characterNode]),
-              h('div', { class: `${prefixCls}-second` }, [characterNode]),
-            ],
-          ),
-        ],
+        // The stable trigger preserves radio DOM/focus when tooltip content changes.
+        [h(Tooltip, tooltipProps, { default: () => radio })],
       );
 
       if (props.characterRender) {

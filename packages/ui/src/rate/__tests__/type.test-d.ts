@@ -1,7 +1,9 @@
 /** L3 类型（G7）—— 正例 + 负例（负例包在永不调用的闭包里，CHECKLIST §一）。 */
 import { describe, expectTypeOf, it } from 'vitest';
+import type { VNodeChild } from 'vue';
 import type { TooltipProps } from '../../tooltip/interface';
-import type { RateProps, RateRef, StarRenderInfo } from '../interface';
+import type { Rate } from '../index';
+import type { RateProps, RateRef, RateSlots, StarRenderInfo } from '../interface';
 
 describe('Rate · 类型', () => {
   it('value/defaultValue 是 number；count 是 number', () => {
@@ -18,15 +20,22 @@ describe('Rate · 类型', () => {
     expectTypeOf<RateProps['tooltips']>().toEqualTypeOf<(TooltipProps | string)[] | undefined>();
   });
 
-  it('回调面：onChange(value) / onHoverChange(value|undefined)（props 形态，非 emits）', () => {
+  it('事件面：change(value) / hoverChange(value|undefined) / update:value(value)', () => {
     expectTypeOf<RateProps['onChange']>().toEqualTypeOf<((value: number) => void) | undefined>();
     expectTypeOf<RateProps['onHoverChange']>().toEqualTypeOf<
       ((value: number | undefined) => void) | undefined
     >();
+    expectTypeOf<RateProps['onUpdate:value']>().toEqualTypeOf<
+      ((value: number) => void) | undefined
+    >();
+    expectTypeOf<RateProps['onFocus']>().toEqualTypeOf<((event: FocusEvent) => void) | undefined>();
+    expectTypeOf<RateProps['onBlur']>().toEqualTypeOf<((event: FocusEvent) => void) | undefined>();
   });
 
   it('RateRef：focus/blur', () => {
     expectTypeOf<RateRef>().toEqualTypeOf<{ focus: () => void; blur: () => void }>();
+    expectTypeOf<InstanceType<typeof Rate>['focus']>().toEqualTypeOf<RateRef['focus']>();
+    expectTypeOf<InstanceType<typeof Rate>['blur']>().toEqualTypeOf<RateRef['blur']>();
   });
 
   it('#character / #characterRender 的 slot props 面（StarRenderInfo）', () => {
@@ -40,6 +49,16 @@ describe('Rate · 类型', () => {
     };
     expectTypeOf(info.index).toBeNumber();
     expectTypeOf(info.value).toBeNumber();
+    expectTypeOf<
+      Parameters<NonNullable<RateSlots['character']>>[0]
+    >().toEqualTypeOf<StarRenderInfo>();
+    expectTypeOf<Parameters<NonNullable<RateSlots['characterRender']>>[0]>().toEqualTypeOf<{
+      node: VNodeChild;
+      index: number;
+    }>();
+    expectTypeOf<
+      Parameters<NonNullable<InstanceType<typeof Rate>['$slots']['character']>>[0]
+    >().toEqualTypeOf<StarRenderInfo>();
   });
 
   it('正例（受控 + 插槽组合）', () => {
@@ -66,5 +85,20 @@ describe('Rate · 类型', () => {
       return props;
     };
     void negative;
+
+    const invalidListener = () => {
+      const props: RateProps = {
+        // @ts-expect-error focus uses a native FocusEvent, not a rating payload.
+        onFocus: (_value: number) => undefined,
+        // @ts-expect-error model events carry a number.
+        'onUpdate:value': (_value: string) => undefined,
+      };
+      const slots: RateSlots = {
+        // @ts-expect-error scoped character slots receive a named info object.
+        character: (_index: number) => 'star',
+      };
+      return { props, slots };
+    };
+    void invalidListener;
   });
 });

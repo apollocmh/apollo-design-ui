@@ -84,7 +84,7 @@ describe('Rate · 渲染与状态类（rc Star 三态）', () => {
     const w = mountRate({ value: 2 });
     const radios = w.findAll('div[role="radio"]');
     expect(radios).toHaveLength(5);
-    expect(radios[0]?.attributes('aria-checked')).toBe('true');
+    expect(radios[0]?.attributes('aria-checked')).toBe('false');
     expect(radios[1]?.attributes('aria-checked')).toBe('true');
     expect(radios[2]?.attributes('aria-checked')).toBe('false');
     expect(radios[0]?.attributes('aria-posinset')).toBe('1');
@@ -96,7 +96,8 @@ describe('Rate · 渲染与状态类（rc Star 三态）', () => {
     const w = mountRate({ id: 'my-rate', value: 1 });
     const root = w.find('ul');
     expect(root.attributes('id')).toBe('my-rate');
-    expect(root.attributes('tabindex')).toBe('0');
+    expect(root.attributes('tabindex')).toBe('-1');
+    expect(w.findAll('[tabindex="0"]')).toHaveLength(1);
     expect(root.classes()).toContain(P);
     w.unmount();
 
@@ -105,7 +106,7 @@ describe('Rate · 渲染与状态类（rc Star 三态）', () => {
       attrs: { role: 'group', 'data-x': '1' },
       attachTo: document.body,
     });
-    expect(w2.find('ul').attributes('role')).toBe('group');
+    expect(w2.find('ul').attributes('role')).toBe('radiogroup');
     expect(w2.find('ul').attributes('data-x')).toBe('1');
     w2.unmount();
   });
@@ -219,17 +220,17 @@ describe('Rate · 受控 / 事件（C11：update:value + onChange 同时发出�
     const onFocus = vi.fn();
     const onBlur = vi.fn();
     const w = mountRate({ onFocus, onBlur });
-    await w.find('ul').trigger('focus');
+    await w.find('ul').trigger('focusin');
     expect(onFocus).toHaveBeenCalledTimes(1);
-    await w.find('ul').trigger('blur');
+    await w.find('ul').trigger('focusout');
     expect(onBlur).toHaveBeenCalledTimes(1);
     (w.vm as unknown as { blur: () => void }).blur();
     w.unmount();
   });
 
-  it('autoFocus ⇒ 挂载即 focus（对 root 元素）', async () => {
+  it('autoFocus ⇒ 挂载即 focus（对当前星项）', async () => {
     const w = mountRate({ autoFocus: true });
-    expect(document.activeElement).toBe(w.find('ul').element);
+    expect(document.activeElement).toBe(w.find('[role="radio"]').element);
     w.unmount();
   });
 });
@@ -293,8 +294,7 @@ describe('Rate · C8-R2 插槽与 tooltips（数据 prop）', () => {
     // tooltips 只影响提示，不改变星数（count 默认 5）
     expect(w.findAll(`.${P}-star`)).toHaveLength(5);
     // hover 触发 tooltip
-    // Tooltip 的触发元素是包装 li（克隆注入 onMouseenter）—— 对 li 直接触发
-    await w.findAll(`.${P}-star`)[0]!.trigger('mouseenter');
+    await w.findAll('[role="radio"]')[0]!.trigger('mouseenter');
     await new Promise((r) => setTimeout(r, 300));
     expect(document.body.textContent).toContain('one');
     w.unmount();
@@ -305,8 +305,7 @@ describe('Rate · C8-R2 插槽与 tooltips（数据 prop）', () => {
       value: 1,
       tooltips: [{ placement: 'top' as const, title: 'obj tip' }],
     });
-    // Tooltip 的触发元素是包装 li（克隆注入 onMouseenter）—— 对 li 直接触发
-    await w.findAll(`.${P}-star`)[0]!.trigger('mouseenter');
+    await w.findAll('[role="radio"]')[0]!.trigger('mouseenter');
     await new Promise((r) => setTimeout(r, 300));
     expect(document.body.textContent).toContain('obj tip');
     w.unmount();

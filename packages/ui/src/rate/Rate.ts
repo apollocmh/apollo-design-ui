@@ -1,34 +1,7 @@
-/**
- * Rate 评分 —— rc-rate `Rate.js`（193 行）的逐字自建 + antd `index.tsx`（102 行）壳。
- *
- * 上游是**兼容性规格**，不是代码来源（H2/H3）。
- *
- * ## 文件头判据（实现期踩坑沉淀）
- *
- * 1. **onChange 等是 props 形态回调**，不声明 emits（PITFALLS 35：声明了会被 Vue
- *    从 attrs 摘掉）；v-model 走 `update:value`（COMPATIBILITY.md 规则 C11：两者同时发出）。
- * 2. **hover 展示值**：Star 的 `value` = `hoverValue ?? value`（rc 逐字）——hover 时
- *    整条星星按 hoverValue 重算类名，移出回落。
- * 3. **cleanedValue**：allowClear 点击同值重置 0 后记录被清的值；hover 更新判据是
- *    `nextHoverValue !== cleanedValue`（防止清零后 hover 回同一值闪烁）。
- * 4. **C8-R2**：antd `character`（ReactNode）→ `#character` 插槽（默认 StarFilled）；
- *    `characterRender`（fn）→ `#characterRender` 作用域插槽。tooltips 是数据 prop
- *    （string / TooltipProps 对象），在内部经 characterRender 通道包装 —— antd 里
- *    用户 characterRender 会**覆盖** tooltip 包装（JSX spread 在后），本仓为 slot
- *    **组合**（先 tooltip 再用户插槽），登记 INTENDED（COMPATIBILITY.md）。
- * 5. **tooltips 的 TooltipProps 对象形态**：`isPlainObject` 判据 ⇒ `<Tooltip {...props}>`；
- *    string ⇒ `<Tooltip title>`。
- */
+/** Vue rating state and typed events; character slots compose with optional tooltips. */
 
 import { StarFilled } from '@apollo-design/icons';
-import {
-  isPlainObject,
-  KeyCode,
-  mergeDomAttrs,
-  pickAttrs,
-  useControlledValue,
-  useDevWarning,
-} from '@apollo-design/utils';
+import { mergeDomAttrs, pickAttrs, useControlledValue, useDevWarning } from '@apollo-design/utils';
 import {
   type CSSProperties,
   computed,
@@ -37,15 +10,16 @@ import {
   onMounted,
   type PropType,
   ref,
+  type SlotsType,
   type VNode,
   type VNodeChild,
+  watch,
   watchEffect,
 } from 'vue';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import { useSize } from '../config-provider/size-context';
-import Tooltip from '../tooltip/Tooltip';
-import type { RateProps } from './interface';
+import type { RateProps, RateRef, RateSlots } from './interface';
 import StarComponent from './Star';
 import { getOffsetLeft } from './util';
 
@@ -79,20 +53,16 @@ const RateComponent = defineComponent({
   name: 'ARate',
   inheritAttrs: false,
   props: ratePropDefs,
-  /**
-   * ⚠️ 只声明 `update:value`（供 `v-model:value`），**不**声明 `change` ——
-   * antd 的 `onChange` 是 props 形态回调，声明成 emits 会被 Vue 从 attrs 摘掉
-   * （PITFALLS 35）。两者同时发出（COMPATIBILITY.md 规则 C11）。
-   */
-  emits: ['update:value'],
+  slots: Object as SlotsType<RateSlots>,
+  emits: {
+    'update:value': (_value: number) => true,
+    change: (_value: number) => true,
+    hoverChange: (_value: number | undefined) => true,
+    focus: (_event: FocusEvent) => true,
+    blur: (_event: FocusEvent) => true,
+  },
   setup(props, { attrs, emit, expose, slots }) {
-    const callbacks = attrs as unknown as Pick<
-      RateProps,
-      'onChange' | 'onHoverChange' | 'onFocus' | 'onBlur'
-    >;
-
     const context = useComponentConfig<RateConfig>('rate');
-    const { getPrefixCls } = context;
     const directionContext = useDirection();
 
     // ============================ Warning ==============================
@@ -105,7 +75,7 @@ const RateComponent = defineComponent({
     });
 
     // ============================ Prefix ==============================
-    const prefixCls = computed(() => getPrefixCls('rate', props.prefixCls));
+    const prefixCls = computed(() => context.getPrefixCls('rate', props.prefixCls));
 
     // =========================== Disabled =============================
     const contextDisabled = useDisabled();
@@ -119,7 +89,7 @@ const RateComponent = defineComponent({
       defaultValue: props.defaultValue ?? 0,
       getValue: () => props.value,
       onChange: (next) => {
-        callbacks.onChange?.(next);
+        emit('change', next);
         emit('update:value', next);
       },
     });
@@ -150,24 +120,49 @@ const RateComponent = defineComponent({
     // =========================== Focus ============================
     const rootRef = ref<HTMLUListElement | null>(null);
     const focused = ref(false);
+    const activeIndex = computed(() =>
+      Math.min(Math.max(Math.ceil(mergedValue.value) - 1, 0), (props.count ?? 5) - 1),
+    );
+
+    const focusCurrentStar = (): void => {
+      starEls[activeIndex.value]?.querySelector<HTMLElement>('[role="radio"]')?.focus();
+    };
 
     const triggerFocus = (): void => {
-      if (!mergedDisabled.value) {
-        rootRef.value?.focus();
-      }
+      if (!mergedDisabled.value) focusCurrentStar();
     };
 
-    const onInternalFocus = (): void => {
-      focused.value = true;
-      callbacks.onFocus?.();
+    const onInternalFocus = (event: FocusEvent): void => {
+      if (!focused.value && !mergedDisabled.value) {
+        focused.value = true;
+        emit('focus', event);
+      }
     };
-    const onInternalBlur = (): void => {
+    const onInternalBlur = (event: FocusEvent): void => {
+      if (event.relatedTarget instanceof Node && rootRef.value?.contains(event.relatedTarget))
+        return;
+      if (!focused.value) return;
       focused.value = false;
-      callbacks.onBlur?.();
+      emit('blur', event);
     };
 
     // =========================== Hover ============================
     const hoverValue = ref<number | null>(null);
+
+    watch(mergedDisabled, (disabled) => {
+      if (disabled) {
+        hoverValue.value = null;
+        cleanedValue.value = null;
+      }
+    });
+
+    watch(
+      activeIndex,
+      () => {
+        if (focused.value && !mergedDisabled.value) focusCurrentStar();
+      },
+      { flush: 'post' },
+    );
 
     const onHover = (event: MouseEvent, index: number): void => {
       const nextHoverValue = getStarValue(index, event.pageX);
@@ -175,20 +170,22 @@ const RateComponent = defineComponent({
         hoverValue.value = nextHoverValue;
         cleanedValue.value = null;
       }
-      callbacks.onHoverChange?.(nextHoverValue);
+      emit('hoverChange', nextHoverValue);
     };
 
     const onMouseLeaveCallback = (): void => {
       if (!mergedDisabled.value) {
         hoverValue.value = null;
         cleanedValue.value = null;
-        callbacks.onHoverChange?.(undefined);
+        emit('hoverChange', undefined);
       }
     };
 
     // =========================== Click ============================
     const onClick = (event: MouseEvent | KeyboardEvent, index: number): void => {
-      const newValue = getStarValue(index, (event as MouseEvent).pageX ?? 0);
+      if (event.currentTarget instanceof HTMLElement) event.currentTarget.focus();
+      const newValue =
+        event instanceof KeyboardEvent ? index + 1 : getStarValue(index, event.pageX);
       let isReset = false;
       if (props.allowClear) {
         isReset = newValue === mergedValue.value;
@@ -199,20 +196,20 @@ const RateComponent = defineComponent({
     };
 
     const onInternalKeyDown = (event: KeyboardEvent): void => {
-      const { keyCode } = event;
+      const { key } = event;
       const reverse = (props.direction ?? directionContext.value) === 'rtl';
       const step = props.allowHalf ? 0.5 : 1;
       if (props.keyboard) {
-        if (keyCode === KeyCode.RIGHT && mergedValue.value < (props.count ?? 5) && !reverse) {
+        if (key === 'ArrowRight' && mergedValue.value < (props.count ?? 5) && !reverse) {
           changeValue(mergedValue.value + step);
           event.preventDefault();
-        } else if (keyCode === KeyCode.LEFT && mergedValue.value > 0 && !reverse) {
+        } else if (key === 'ArrowLeft' && mergedValue.value > 0 && !reverse) {
           changeValue(mergedValue.value - step);
           event.preventDefault();
-        } else if (keyCode === KeyCode.RIGHT && mergedValue.value > 0 && reverse) {
+        } else if (key === 'ArrowRight' && mergedValue.value > 0 && reverse) {
           changeValue(mergedValue.value - step);
           event.preventDefault();
-        } else if (keyCode === KeyCode.LEFT && mergedValue.value < (props.count ?? 5) && reverse) {
+        } else if (key === 'ArrowLeft' && mergedValue.value < (props.count ?? 5) && reverse) {
           changeValue(mergedValue.value + step);
           event.preventDefault();
         }
@@ -225,14 +222,17 @@ const RateComponent = defineComponent({
       starEls[index] = el;
     };
 
-    expose({
-      focus: triggerFocus,
-      blur: () => {
-        if (!mergedDisabled.value) {
-          rootRef.value?.blur();
-        }
-      },
-    });
+    const blur = (): void => {
+      const active = rootRef.value?.ownerDocument.activeElement;
+      if (
+        !mergedDisabled.value &&
+        active instanceof HTMLElement &&
+        rootRef.value?.contains(active)
+      ) {
+        active.blur();
+      }
+    };
+    expose({ focus: triggerFocus, blur } satisfies RateRef);
 
     onMounted(() => {
       if (props.autoFocus && !mergedDisabled.value) {
@@ -248,41 +248,26 @@ const RateComponent = defineComponent({
       if (typeof fn === 'function') {
         return fn({
           index: info.index,
-          value: mergedValue.value,
+          value: hoverValue.value ?? mergedValue.value,
           allowHalf: props.allowHalf === true,
           disabled: mergedDisabled.value,
           count: props.count ?? 5,
           focused: focused.value,
-        }) as VNodeChild;
+        });
       }
       return h(StarFilled);
     };
 
-    // antd 壳的 characterRender：tooltips 包装。C8-R2 下与用户 `#characterRender`
-    // 插槽**组合**（antd 是覆盖 —— JSX spread 在后，用户传了 tooltips 就断）。
-    const wrapTooltip = (node: VNodeChild, index: number): VNodeChild => {
-      const tooltipsItem = props.tooltips?.[index];
-      if (tooltipsItem === undefined || tooltipsItem === null) {
-        return node;
-      }
-      if (isPlainObject(tooltipsItem)) {
-        return h(Tooltip, tooltipsItem as never, { default: () => node });
-      }
-      // isPlainObject 不收窄类型（boolean 返回）—— 此处已是 string 分支
-      return h(Tooltip, { title: tooltipsItem as string }, { default: () => node });
-    };
-
     const renderCharacterWrapped = (node: VNodeChild, info: { index: number }): VNodeChild => {
       const index = info.index;
-      const withTooltip = wrapTooltip(node, index);
       const userRender = slots.characterRender;
       if (typeof userRender === 'function') {
-        return (userRender({ node: withTooltip, index }) as VNodeChild) ?? withTooltip;
+        return userRender({ node, index });
       }
-      return withTooltip;
+      return node;
     };
 
-    return () => {
+    const renderRate = () => {
       const cls = prefixCls.value;
       const count = props.count ?? 5;
       const displayValue = hoverValue.value === null ? mergedValue.value : hoverValue.value;
@@ -293,6 +278,11 @@ const RateComponent = defineComponent({
           index,
           count,
           value: displayValue,
+          tooltip: props.tooltips?.[index],
+          checked: Math.ceil(mergedValue.value) === index + 1,
+          label: String(Math.ceil(mergedValue.value) === index + 1 ? mergedValue.value : index + 1),
+          tabIndex:
+            mergedDisabled.value || activeIndex.value !== index ? -1 : (props.tabIndex ?? 0),
           allowHalf: props.allowHalf === true,
           disabled: mergedDisabled.value,
           focused: focused.value,
@@ -319,22 +309,8 @@ const RateComponent = defineComponent({
         .filter(Boolean)
         .join(' ');
 
-      // antd：restProps 经 pickAttrs({aria,data,attr}) 落根 ul。本仓的手工回调
-      // 语义 focus/blur/change/hover 已内联处理，剔除后再合并原生 DOM 监听器。
-      const {
-        onFocus: _f,
-        onBlur: _b,
-        onChange: _c,
-        onHoverChange: _h,
-        ...restAttrs
-      } = attrs as Record<string, unknown>;
-      void _f;
-      void _b;
-      void _c;
-      void _h;
-
       // Native style values stay intact until mergeDomAttrs combines them with context style.
-      const domAttrs = mergeDomAttrs(pickAttrs(restAttrs, { aria: true, data: true, attr: true }));
+      const domAttrs = mergeDomAttrs(pickAttrs(attrs, { aria: true, data: true, attr: true }));
       if (mergedDisabled.value) {
         for (const key of Object.keys(domAttrs)) {
           if (/^onKeydown(?:Once|Passive|Capture)*$/.test(key)) delete domAttrs[key];
@@ -347,21 +323,27 @@ const RateComponent = defineComponent({
           {
             class: classString,
             style: context.style,
-            onFocus: mergedDisabled.value ? null : onInternalFocus,
-            onBlur: mergedDisabled.value ? null : onInternalBlur,
+            onFocusin: onInternalFocus,
+            onFocusout: onInternalBlur,
             onKeydown: mergedDisabled.value ? null : onInternalKeyDown,
             onMouseleave: onMouseLeaveCallback,
           },
           domAttrs,
           {
             id: props.id,
-            tabIndex: mergedDisabled.value ? -1 : (props.tabIndex ?? 0),
+            role: 'radiogroup',
+            'aria-disabled': mergedDisabled.value || undefined,
+            tabIndex: -1,
             ref: rootRef,
           },
         ),
         starNodes,
       );
     };
+    return { focus: triggerFocus, blur, renderRate };
+  },
+  render() {
+    return this.renderRate();
   },
 });
 

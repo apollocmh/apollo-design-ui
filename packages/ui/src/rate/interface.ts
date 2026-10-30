@@ -1,13 +1,6 @@
-/**
- * Rate 的类型定义（G2 产物）。
- *
- * 契约来源：antd 6.6.4 `es/rate/index.d.ts`（RcRateProps）+ 壳的扩展字段
- * （rootClassName / tooltips / size），**重新定义**（H2），不复制搬运。
- *
- * C8-R2：antd 的 `character`（ReactNode）→ `#character` 插槽；
- * `characterRender`（fn）→ `#characterRender` 作用域插槽。`tooltips` 是数据 prop。
- */
+/** Public rating props, Vue events, scoped slots and template-ref methods. */
 
+import type { VNodeChild } from 'vue';
 import type { TooltipProps } from '../tooltip/interface';
 
 /** rc `Star.d.ts` 的渲染上下文（`#character` / `#characterRender` 的 slot props 面）。 */
@@ -41,7 +34,7 @@ export interface RateProps {
   keyboard?: boolean;
   /** 禁用（与 DisabledContext 合并：显式值优先）。 */
   disabled?: boolean;
-  /** 根 ul 的 tabIndex（disabled 时强制 -1）。 */
+  /** 当前星项焦点入口的 tabIndex（disabled 时所有星项均为 -1）。 */
   tabIndex?: number;
   /** 挂载后自动聚焦。 */
   autoFocus?: boolean;
@@ -49,12 +42,14 @@ export interface RateProps {
   direction?: 'ltr' | 'rtl';
   /** 透传给根 ul 的 id。 */
   id?: string;
-  /** antd 的 `onChange` —— props 形态回调（本仓惯例，switch/radio 同判）。 */
+  /** `change` 事件；载荷为请求的新评分。 */
   onChange?: (value: number) => void;
-  /** antd 的 `onHoverChange`（移出传 `undefined`）。 */
+  /** `update:value` 事件，供 `v-model:value` 使用。 */
+  'onUpdate:value'?: (value: number) => void;
+  /** `hoverChange` 事件（移出传 `undefined`）。 */
   onHoverChange?: (value: number | undefined) => void;
-  onFocus?: () => void;
-  onBlur?: () => void;
+  onFocus?: (event: FocusEvent) => void;
+  onBlur?: (event: FocusEvent) => void;
   onKeyDown?: (event: KeyboardEvent) => void;
   onMouseEnter?: (event: MouseEvent) => void;
   onMouseLeave?: (event: MouseEvent) => void;
@@ -62,6 +57,11 @@ export interface RateProps {
   tooltips?: (TooltipProps | string)[];
   /** antd 尺寸语义：`-large` / `-small`（middle 不落类）。 */
   size?: 'large' | 'small' | 'middle';
+}
+
+export interface RateSlots {
+  character?: (info: StarRenderInfo) => VNodeChild;
+  characterRender?: (info: { node: VNodeChild; index: number }) => VNodeChild;
 }
 
 /** `ref` 的 expose 面（rc 的 RateRef）。 */

@@ -19,7 +19,9 @@
  *   - 没证明键盘 / hover 行为（L1 的 fake 事件钉住）
  */
 
-import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import { diffHtml } from '@apollo-design/test-utils';
+import { mount } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
 import { defineComponent, h, provide, type VNodeChild } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/rate.dom.json';
 import type { ConfigContextValue } from '../../config-provider/context';
@@ -39,7 +41,7 @@ function withConfig(config: Partial<ConfigContextValue>, children: () => VNodeCh
   });
 }
 
-const CASES: Record<string, () => DomRenderResult> = {
+const CASES: Record<string, () => VNodeChild> = {
   // ---- 1. 基本形态 ----
   plain: () => h(Rate, { prefixCls: PREFIX }),
   'value:3': () => h(Rate, { prefixCls: PREFIX, value: 3 }),
@@ -66,8 +68,7 @@ const CASES: Record<string, () => DomRenderResult> = {
   'size:small': () => h(Rate, { prefixCls: PREFIX, size: 'small' }),
 
   // ---- 7. RTL（antd 是真 ConfigProvider；Vue 侧 provide 同一份上下文）----
-  rtl: () =>
-    withConfig({ direction: 'rtl' }, () => h(Rate, { prefixCls: PREFIX, value: 3 })) as never,
+  rtl: () => h(withConfig({ direction: 'rtl' }, () => h(Rate, { prefixCls: PREFIX, value: 3 }))),
 };
 
 const ALLOW = {
@@ -110,21 +111,48 @@ const ALLOW = {
   },
 };
 
-domContractTest('Rate', {
-  baseline,
-  // `render` 必须覆盖基线里的每一个 id —— 少一条会让测试失败，而不是静默跳过。
-  render: (id) => {
-    const build = CASES[id];
-    if (!build) {
-      throw new Error(
-        `[Rate semantic.test] 基线里有用例 "${id}"，但 CASES 里没有对应构造。\n` +
-          `  基线里的用例：${baseline.cases.map((c) => c.id).join(', ')}`,
-      );
-    }
-    return build();
-  },
-  keepStyle: false,
-  allow: ALLOW,
+// The historical reference marks every filled star checked and omits the group/name.
+// Assert only these exact current accessibility differences, keeping all DOM comparisons.
+const RATING: Record<string, number> = {
+  'value:3': 3,
+  'half:value:2.5': 2.5,
+  'half:value:0.5': 0.5,
+  'count:10+value:8': 8,
+  'disabled:value:2': 2,
+  'allow-clear:false': 3,
+  'character:text': 1,
+  rtl: 3,
+};
+
+describe('Rate · DOM 契约', () => {
+  for (const { id, html } of baseline.cases) {
+    it(id, () => {
+      const build = CASES[id];
+      if (!build) throw new Error(`Missing Rate DOM case: ${id}`);
+      const w = mount(defineComponent({ render: build }));
+      try {
+        const value = RATING[id] ?? 0;
+        const count = id === 'count:10+value:8' ? 10 : 5;
+        const expected = ['$/ul[0]: 我们多出属性 role="radiogroup"'];
+        if (id === 'disabled:value:2') {
+          expected.push('$/ul[0]: 我们多出属性 aria-disabled="true"');
+        }
+        for (let index = 0; index < count; index += 1) {
+          expected.push(`$/ul[0]/li[${index}]: 我们多出属性 role="none"`);
+          const path = `$/ul[0]/li[${index}]/div[0]`;
+          const selected = Math.ceil(value) === index + 1;
+          expected.push(`${path}: 我们多出属性 aria-label="${selected ? value : index + 1}"`);
+          if (value > index && !selected) {
+            expected.push(`${path}: 属性 aria-checked 不同 "true" vs "false"`);
+          }
+        }
+        if (id === 'prefix-cls:no-props') expected.push(...ALLOW[id].diff);
+        expect(diffHtml(html, w.html(), { keepStyle: false }).sort()).toEqual(expected.sort());
+      } finally {
+        w.unmount();
+      }
+    });
+  }
 });
 
 /** `CASES` 里多出来的 id 会让「少测一条」表现为「测试通过」，所以反向也校验一次。 */

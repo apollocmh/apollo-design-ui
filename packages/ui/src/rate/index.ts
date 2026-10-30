@@ -12,7 +12,7 @@ export const Rate = withInstall(RateComponent);
 
 export default Rate;
 
-export type { RateProps, RateRef, StarRenderInfo } from './interface';
+export type { RateProps, RateRef, RateSlots, StarRenderInfo } from './interface';
 export type { RateConfig } from './Rate';
 export { genRateStyle, genTokenDecls as genRateTokenDecls } from './style';
 export type { ComponentToken as RateComponentToken } from './style/token';

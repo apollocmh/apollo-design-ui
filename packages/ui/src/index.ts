@@ -1613,7 +1613,7 @@ export type {
 } from './qr-code';
 export { QrCode } from './qr-code';
 export { genQrCodeStyle, genTokenDecls as genQrCodeTokenDecls } from './qr-code/style';
-export type { RateComponentToken, RateProps, RateRef, StarRenderInfo } from './rate';
+export type { RateComponentToken, RateProps, RateRef, RateSlots, StarRenderInfo } from './rate';
 // ---------------------------------------------------------------------------
 // Rate —— 评分（rc-rate 1.0.1 内核自建 + antd 壳；C8-R2：character → #character 插槽）
 // ---------------------------------------------------------------------------

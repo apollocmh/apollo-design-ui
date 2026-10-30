@@ -32,11 +32,25 @@ subtitle: 评分
 | tooltips | 每颗星的提示（string 或 TooltipProps 对象） | `(TooltipProps \| string)[]` | — |
 | direction | 文本方向（rtl 时半星/方向键反向） | `'ltr' \| 'rtl'` | `'ltr'` |
 | autoFocus | 挂载后自动聚焦 | `boolean` | `false` |
-| tabIndex | 根元素的 tabIndex | `number` | `0` |
-| onChange / onHoverChange / onFocus / onBlur | 语义回调 | — | — |
-| onKeyDown / onMouseLeave | 原生监听器的兼容拼写；模板可使用 `@keydown` / `@mouseleave` | — | — |
+| tabIndex | 当前星项焦点入口的 tabIndex；其余星项及根元素为 `-1` | `number` | `0` |
+| id | 根 `ul` 的 id | `string` | — |
+| prefixCls | 组件类名前缀 | `string` | `apollo-rate` |
 
-原生监听器与内部状态处理经 Vue 属性合并，两种拼写注册同一函数时只调用一次；键盘事件先更新评分再通知监听器。disabled 时抑制键盘处理与通知。
+### Events
+
+| 事件 | 说明 | 载荷 |
+|---|---|---|
+| update:value | 评分更新请求，供 `v-model:value` 使用 | `number` |
+| change | 评分更新请求，先于 `update:value` 触发 | `number` |
+| hoverChange | 当前悬停值；移出时为 `undefined` | `number \| undefined` |
+| focus | 焦点进入评分组 | `FocusEvent` |
+| blur | 焦点离开评分组；组内移动不重复触发 | `FocusEvent` |
+
+组件事件支持 Vue 的 `.once`。`@keydown`、`@mouseleave` 等原生监听器及 `class` / `style`、`aria-label`、`aria-labelledby`、`data-*` 落在根 `ul`，键盘事件先处理评分再通知监听器。disabled 时抑制键盘处理与通知。已有 `onKeyDown` / `onMouseLeave` 拼写仍走同一原生事件通道。
+
+`value` 为受控值：父级未回传时保持原评分；移除 `value` 后沿用最后一次已接收值。`defaultValue` 只用于非受控初始值。悬停仅改变预览和 `#character.value`，不会改变已选项或模型。
+
+根元素为 `radiogroup`，请提供 `aria-label` 或 `aria-labelledby`。当前星项是唯一的 Tab 入口；评分为 `0` 时进入第一项，半星值由对应的下一整星项表示并读出实际值。左右方向键更新评分并跟随焦点，RTL 时方向反转，Enter/空格选择当前项，`allowClear` 允许再次激活清零。disabled 时全部星项退出 Tab 序列。
 
 ### Slots
 
@@ -52,8 +66,12 @@ subtitle: 评分
 
 | 方法 | 说明 |
 |---|---|
-| focus() | 聚焦（disabled 时无效） |
-| blur() | 失焦（disabled 时无效） |
+| focus() | 聚焦当前星项（disabled 时无效） |
+| blur() | 移除评分组内的实际焦点（disabled 时无效） |
+
+### 开发期迁移
+
+`change`、`hoverChange`、`focus`、`blur` 已声明为 Vue emits，原有 `@change` / `onChange` 等监听写法继续工作。`focus` / `blur` 现在提供原生 `FocusEvent`；焦点与 `tabIndex` 的目标由根容器调整为当前 radio 项。`#character.value` 与视觉预览一致；动态添加或移除 tooltips 保留星项 DOM 和焦点。
 
 ## 设计说明
 

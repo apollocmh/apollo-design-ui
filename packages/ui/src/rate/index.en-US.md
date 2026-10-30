@@ -13,7 +13,7 @@ Rate component.
 
 ## Examples
 
-See [`demo/`](./demo) (9 demos, covering the main antd scenarios.
+See [`demo/`](./demo) for 9 examples.
 
 ## API
 
@@ -32,11 +32,25 @@ See [`demo/`](./demo) (9 demos, covering the main antd scenarios.
 | tooltips | Hint per star (string or TooltipProps object) | `(TooltipProps \| string)[]` | — |
 | direction | Text direction (rtl flips half-star/arrow logic) | `'ltr' \| 'rtl'` | `'ltr'` |
 | autoFocus | Auto focus after mount | `boolean` | `false` |
-| tabIndex | tabIndex of the root ul | `number` | `0` |
-| onChange / onHoverChange / onFocus / onBlur | Semantic callbacks | — | — |
-| onKeyDown / onMouseLeave | Alternate spellings of native listeners; templates use `@keydown` / `@mouseleave` | — | — |
+| tabIndex | tabIndex of the current star; the root and other stars use `-1` | `number` | `0` |
+| id | id of the root `ul` | `string` | — |
+| prefixCls | Component class prefix | `string` | `apollo-rate` |
 
-Native listeners are merged with internal handling. Registering the same function under both spellings invokes it once. Keyboard handling updates the rating before notifying listeners; disabled ratings suppress both.
+### Events
+
+| Event | Description | Payload |
+|---|---|---|
+| update:value | Rating update request used by `v-model:value` | `number` |
+| change | Rating update request, emitted before `update:value` | `number` |
+| hoverChange | Hovered value; `undefined` when leaving | `number \| undefined` |
+| focus | Focus enters the rating group | `FocusEvent` |
+| blur | Focus leaves the group; moving between stars does not repeat this event | `FocusEvent` |
+
+Component events support Vue's `.once` modifier. Native listeners such as `@keydown` / `@mouseleave`, `class` / `style`, `aria-label`, `aria-labelledby` and `data-*` target the root `ul`. Keyboard handling processes the rating before notifying native listeners; disabled ratings suppress both. Existing `onKeyDown` / `onMouseLeave` spellings use the same native event channel.
+
+With controlled `value`, the displayed rating remains unchanged until the parent accepts an update. Removing `value` retains the last accepted value. `defaultValue` only initializes uncontrolled state. Hover changes the preview and `#character.value`, leaving the selected radio and model unchanged.
+
+The root is a `radiogroup`; provide `aria-label` or `aria-labelledby`. Only the current star is in the Tab order, or the first star when the rating is `0`. A half rating selects the next whole-star item and announces its actual value. Left/right arrow keys update the rating and move focus, with reversed direction in RTL. Enter/Space selects the focused star; `allowClear` clears a repeated selection. Disabled stars leave the Tab order.
 
 ### Slots
 
@@ -52,8 +66,12 @@ Native listeners are merged with internal handling. Registering the same functio
 
 | Method | Description |
 |---|---|
-| focus() | Focus (no-op when disabled) |
-| blur() | Blur (no-op when disabled) |
+| focus() | Focus the current star (no-op when disabled) |
+| blur() | Blur the actual focused element in the group (no-op when disabled) |
+
+### Development migration
+
+`change`, `hoverChange`, `focus` and `blur` are declared Vue emits. Existing listeners such as `@change` / `onChange` continue to work. `focus` / `blur` now carry a native `FocusEvent`; focus methods and `tabIndex` target the current radio instead of the root container. `#character.value` follows the visual preview. Adding or removing tooltips preserves star DOM and focus.
 
 ## Design notes
 
