@@ -98,14 +98,13 @@ describe('Tree · switcher 图标决策树（antd index 矩阵）', () => {
     w.unmount();
   });
 
-  it('switcherIcon render-prop fn：按 expanded 分支', async () => {
+  it('switcherIcon scoped slot follows expanded state', async () => {
     const w = mount(Tree, {
       props: {
         treeData,
         defaultExpandAll: true,
-        switcherIcon: (node: { expanded?: boolean }) =>
-          node.expanded ? 'open-mark' : 'close-mark',
       },
+      slots: { switcherIcon: ({ node }) => (node.expanded ? 'open-mark' : 'close-mark') },
       global: globalCfg,
     });
     await nextTick();

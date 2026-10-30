@@ -3,7 +3,7 @@
 // ⚠️ 两处类型要点：①`treeData` 用公开的 `DataNode`（别推断成 `unknown[]`）；
 //    ②`loadData` 的签名是 `(node: EventDataNode) => Promise<unknown>`。
 import { Tree } from '@apollo-design/ui';
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 // ⚠️ `DataNode` / `EventDataNode` **不在包根导出**（根 barrel 只导 `Tree*` 前缀的类型）
 //    ⇒ 从组件的本地模块导入；写成 `from '@apollo-design/ui'` 会报 TS2305。
 import type { DataNode, EventDataNode } from '../interface';
@@ -14,7 +14,7 @@ const initTreeData: DataNode[] = [
   { title: 'Tree Node', key: '2', isLeaf: true },
 ];
 
-const treeData = ref<DataNode[]>(initTreeData);
+const treeData = shallowRef<DataNode[]>(initTreeData);
 
 function updateTreeData(list: DataNode[], key: string | number, children: DataNode[]): DataNode[] {
   return list.map((node) => {

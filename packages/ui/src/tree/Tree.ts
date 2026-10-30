@@ -1,32 +1,24 @@
 /**
- * Tree —— 导览树（rc-tree 1.4.0 内核 + antd 6.6.4 薄壳的 Vue 合并实现）。
- *
- * 架构：rc class 组件的 `state`（23 槽）→ 本文件的一组 ref；
- * `gDSFP` 八步流水线 → computed（fieldNames/keyEntities/flattenNodes）+ 拆分 watch
- * （每个受控键一条 watch，触发条件与 rc needSync 逐一对齐）；
- * `setUncontrolledState` → 逐事件的「props 有则跳过」判断（受控不落地内层 ref，仍 emit）。
- *
- * antd 壳六件事全部并入（docs/analysis/tree.md §3）：showIcon=false 默认、collapse motion、
- * itemHeight=paddingXS/2+titleHeight、draggableConfig(icon 默认 HolderOutlined)、
- * checkable 自定义 span（checkable 的 VNode 形态原样入 context）、语义槽 ×5（函数形态）。
- *
- * 事件面（C11）：四键 `update:*` 与语义事件（expand/check/select/load）同发。
+ * Tree owns accepted model values, computed node projections and business events.
+ * NodeList owns the actual list/focus host; TreeNode consumes reactive context and slots.
  */
 
 import { HolderOutlined } from '@apollo-design/icons';
 import { initCollapseMotion } from '@apollo-design/motion';
-import { getDesignToken } from '@apollo-design/theme';
-import { warning as devWarning, pickAttrs } from '@apollo-design/utils';
+import { warning as devWarning, pickAttrs, useControlledValue } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
+  nextTick,
   onBeforeUnmount,
   onMounted,
   type PropType,
   provide,
-  reactive,
   ref,
+  type SlotsType,
+  type VNodeChild,
   watch,
 } from 'vue';
 import { clsx } from '../_internal/clsx';
@@ -35,7 +27,6 @@ import getEntity from '../_internal/tree/key-util';
 import {
   convertDataToEntities,
   convertNodePropsToEventData,
-  type EventDataNodeLike,
   type FlattenNode,
   fillFieldNames,
   flattenTreeData,
@@ -45,25 +36,32 @@ import {
   warningWithoutKey,
 } from '../_internal/tree/tree-util';
 import { mergeClassNames, mergeStyles } from '../_internal/use-merge-semantic';
-import {
-  useComponentConfig,
-  useConfigContext,
-  useDirection,
-  useThemeConfig,
-} from '../config-provider/context';
+import { useComponentConfig, useConfigContext, useDirection } from '../config-provider/context';
 import { useDisabled } from '../config-provider/disabled-context';
 import DropIndicator, { type DropIndicatorProps } from './DropIndicator';
 import type {
   DataNode,
+  EventDataNode,
   SafeKey,
   TreeCheckedKeys,
+  TreeCheckInfo,
+  TreeDragEnterEventInfo,
+  TreeDragEventInfo,
+  TreeDropEventInfo,
+  TreeExpandEventInfo,
   TreeKey,
+  TreeLoadEventInfo,
   TreeProps,
+  TreeRef,
+  TreeScrollConfig,
+  TreeSelectEventInfo,
   TreeSemanticClassNames,
   TreeSemanticStyles,
+  TreeSlots,
 } from './interface';
-import NodeList, { MOTION_KEY, MotionEntity } from './NodeList';
-import { type DragNodeSnapshot, treeContextKey } from './TreeContext';
+import NodeList, { MOTION_KEY, MotionEntity, type NodeListRef } from './NodeList';
+import { type DragNodeSnapshot, type TreeContextValue, treeContextKey } from './TreeContext';
+import { useTreeTheme } from './use-tree-theme';
 import {
   arrAdd,
   arrDel,
@@ -76,16 +74,13 @@ import {
 } from './utils';
 import renderSwitcherIcon from './utils/iconUtil';
 
-/** rc `MAX_RETRY_TIMES`：loadData 失败重试上限。 */
-const MAX_RETRY_TIMES = 10;
-
 /** rc `EventDataNodeLike` 的本仓别名（convertNodePropsToEventData 的产物）。 */
-type TreeEventData = EventDataNodeLike<BasicDataNodeLike>;
+type TreeEventData = EventDataNode;
 
 type BasicDataNodeLike = import('../_internal/tree/key-util').BasicDataNodeLike;
 
 export const treeProps = {
-  treeData: { type: Array as PropType<DataNode[]>, default: undefined },
+  treeData: { type: Array as PropType<object[]>, default: undefined },
   fieldNames: { type: Object as PropType<TreeProps['fieldNames']>, default: undefined },
 
   expandedKeys: { type: Array as PropType<TreeKey[]>, default: undefined },
@@ -94,7 +89,7 @@ export const treeProps = {
   defaultExpandParent: { type: Boolean, default: true },
   autoExpandParent: { type: Boolean, default: false },
 
-  checkable: { type: [Boolean, Object] as PropType<TreeProps['checkable']>, default: false },
+  checkable: { type: null as unknown as PropType<TreeProps['checkable']>, default: false },
   checkStrictly: { type: Boolean, default: false },
   checkedKeys: {
     type: [Array, Object] as PropType<SafeKey[] | TreeCheckedKeys>,
@@ -113,13 +108,13 @@ export const treeProps = {
   // ⚠️ default undefined（非 false）：DirectoryTree 需区分「未传」以覆盖 true
   showIcon: { type: Boolean, default: undefined },
   showLine: { type: [Boolean, Object] as PropType<TreeProps['showLine']>, default: false },
-  icon: { type: [Object, Function, String] as PropType<TreeProps['icon']>, default: undefined },
+  icon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
   switcherIcon: {
-    type: [Object, Function, String] as PropType<TreeProps['switcherIcon']>,
+    type: null as unknown as PropType<VNodeChild>,
     default: undefined,
   },
   switcherLoadingIcon: {
-    type: [Object, Function] as PropType<TreeProps['switcherLoadingIcon']>,
+    type: null as unknown as PropType<VNodeChild>,
     default: undefined,
   },
   blockNode: { type: Boolean, default: false },
@@ -127,7 +122,6 @@ export const treeProps = {
     type: [Boolean, String] as PropType<TreeProps['expandAction']>,
     default: false,
   },
-  titleRender: { type: Function as PropType<TreeProps['titleRender']>, default: undefined },
 
   disabled: { type: Boolean, default: undefined },
   draggable: {
@@ -149,7 +143,7 @@ export const treeProps = {
   filterTreeNode: { type: Function as PropType<TreeProps['filterTreeNode']>, default: undefined },
 
   prefixCls: { type: String, default: undefined },
-  rootStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+  rootStyle: { type: Object as PropType<CSSProperties>, default: undefined },
   classNames: {
     type: [Object, Function] as PropType<TreeProps['classNames']>,
     default: undefined,
@@ -157,43 +151,50 @@ export const treeProps = {
   styles: { type: [Object, Function] as PropType<TreeProps['styles']>, default: undefined },
 };
 
+function eventType<Args extends unknown[]>(..._args: Args): boolean {
+  return true;
+}
+export const treeEmits = {
+  'update:expandedKeys': eventType<[keys: TreeKey[]]>,
+  'update:checkedKeys': eventType<[keys: SafeKey[] | TreeCheckedKeys]>,
+  'update:selectedKeys': eventType<[keys: TreeKey[]]>,
+  'update:loadedKeys': eventType<[keys: SafeKey[]]>,
+  'update:activeKey': eventType<[key: TreeKey | null]>,
+  activeChange: eventType<[key: TreeKey | null]>,
+  expand: eventType<[keys: TreeKey[], info: TreeExpandEventInfo]>,
+  check: eventType<[keys: SafeKey[] | TreeCheckedKeys, info: TreeCheckInfo]>,
+  select: eventType<[keys: TreeKey[], info: TreeSelectEventInfo]>,
+  load: eventType<[keys: SafeKey[], info: TreeLoadEventInfo]>,
+  click: eventType<[event: MouseEvent, node: EventDataNode]>,
+  doubleClick: eventType<[event: MouseEvent, node: EventDataNode]>,
+  contextmenu: eventType<[event: MouseEvent, node: EventDataNode]>,
+  mouseEnter: eventType<[event: MouseEvent, node: EventDataNode]>,
+  mouseLeave: eventType<[event: MouseEvent, node: EventDataNode]>,
+  dragStart: eventType<[event: DragEvent, info: TreeDragEventInfo]>,
+  dragEnter: eventType<[event: DragEvent, info: TreeDragEnterEventInfo]>,
+  dragOver: eventType<[event: DragEvent, info: TreeDragEventInfo]>,
+  dragLeave: eventType<[event: DragEvent, info: TreeDragEventInfo]>,
+  dragEnd: eventType<[event: DragEvent, info: { node: EventDataNode | null }]>,
+  drop: eventType<[event: DragEvent, info: TreeDropEventInfo]>,
+};
+
 export default defineComponent({
   name: 'ATree',
   props: treeProps,
-  emits: [
-    'update:expandedKeys',
-    'update:checkedKeys',
-    'update:selectedKeys',
-    'update:loadedKeys',
-    'update:activeKey',
-    'expand',
-    'check',
-    'select',
-    'load',
-    'click',
-    'doubleClick',
-    'contextmenu',
-    'mouseEnter',
-    'mouseLeave',
-    'dragStart',
-    'dragEnter',
-    'dragOver',
-    'dragLeave',
-    'dragEnd',
-    'drop',
-    'activeChange',
-  ],
+  emits: treeEmits,
+  slots: Object as SlotsType<TreeSlots>,
   setup(props, { emit, attrs, slots, expose }) {
     // ======================== Config ========================
     const componentConfig = useComponentConfig('tree');
     const getPrefixCls = componentConfig.getPrefixCls;
     const config = useConfigContext();
     const direction = useDirection();
+    const getDirection = () =>
+      attrs.dir === 'rtl' || attrs.dir === 'ltr' ? attrs.dir : direction.value;
     const ctxDisabled = useDisabled();
-    const themeConfig = useThemeConfig();
+    const treeTheme = useTreeTheme();
 
     const prefixCls = computed(() => props.prefixCls ?? getPrefixCls('tree'));
-    const rootPrefixCls = getPrefixCls();
     const mergedDisabled = computed(() => props.disabled ?? ctxDisabled.value);
     // antd：virtual 来自 ConfigProvider（props 显式传值优先）
     const mergedVirtual = computed(() => props.virtual ?? config.virtual ?? true);
@@ -206,20 +207,12 @@ export default defineComponent({
     // ⇒ `transitionend` 永不到 ⇒ 收起动效永不结束 ⇒ `listChanging` 永久为真
     // ⇒ 整棵树的展开/收起全部失效。`motionDeadline` 是慢机器上的兜底闸门。
     const motion = computed(() => ({
-      ...initCollapseMotion(rootPrefixCls),
+      ...initCollapseMotion(getPrefixCls()),
       motionAppear: false,
     }));
 
-    // itemHeight = token.paddingXS / 2 + (token.Tree?.titleHeight || token.controlHeightSM)
-    const computedItemHeight = computed(() => {
-      const token = getDesignToken(themeConfig.value) as unknown as {
-        paddingXS: number;
-        controlHeightSM: number;
-        Tree?: { titleHeight?: number };
-      };
-      return token.paddingXS / 2 + (token.Tree?.titleHeight ?? token.controlHeightSM);
-    });
-    const mergedItemHeight = computed(() => props.itemHeight ?? computedItemHeight.value);
+    const checkableEnabled = computed(() => props.checkable !== false && props.checkable != null);
+    const mergedItemHeight = computed(() => props.itemHeight ?? treeTheme.itemHeight.value);
 
     // ======================== 语义槽 ×5（函数形态）========================
     // ⚠️ classNames 是**拼接**语义、styles 是逐键浅合并（后者胜）——
@@ -253,7 +246,7 @@ export default defineComponent({
     const fieldNames = computed(() => fillFieldNames(props.fieldNames));
 
     /** rc：`children` 形态 deprecated —— 传了就告警（本仓不实现转换）。 */
-    if (slots.default) {
+    if ('default' in slots) {
       devWarning(false, '`children` of Tree is deprecated. Please use `treeData` instead.');
     }
 
@@ -273,170 +266,76 @@ export default defineComponent({
       { immediate: true },
     );
 
-    // ======================== 展开态（gDSFP 4-5）========================
-    const expandedKeysRef = ref<TreeKey[]>([]);
-    const expandedKeysControlled = computed(() => props.expandedKeys !== undefined);
-
-    /** rc setExpandedKeys：受控时 no-op。 */
-    function setExpandedKeys(keys: TreeKey[]): void {
-      if (expandedKeysControlled.value) {
-        return;
-      }
-      expandedKeysRef.value = keys;
-    }
-
-    // 分支 A：受控 expandedKeys 变化（含 autoExpandParent 触发的 conductExpandParent）
+    // Models keep accepted values separate from their current visual projection.
+    const initialExpandedKeys = props.defaultExpandAll
+      ? Object.values(keyEntities.value)
+          .filter((entity) => entity.key !== MOTION_KEY && entity.children?.length)
+          .map((entity) => entity.key)
+      : (props.defaultExpandedKeys ?? []);
+    const [expandedKeysModel, setExpandedKeys] = useControlledValue<TreeKey[]>({
+      getValue: () => props.expandedKeys,
+      defaultValue: () =>
+        props.defaultExpandParent
+          ? conductExpandParent(initialExpandedKeys, keyEntities.value)
+          : [...initialExpandedKeys],
+    });
+    const initialControlledParents = ref(
+      props.expandedKeys !== undefined && props.defaultExpandParent && !props.autoExpandParent,
+    );
+    const initialControlledExpanded =
+      props.expandedKeys === undefined
+        ? []
+        : conductExpandParent(props.expandedKeys, keyEntities.value);
     watch(
       () => props.expandedKeys,
-      (controlledKeys, oldKeys) => {
-        if (controlledKeys === undefined) return;
-        const isFirst = oldKeys === undefined;
-        expandedKeysRef.value =
-          props.autoExpandParent || (isFirst && props.defaultExpandParent)
-            ? conductExpandParent(controlledKeys, keyEntities.value)
-            : [...controlledKeys];
-      },
-      { immediate: true },
-    );
-    // 分支 A'：autoExpandParent 变化（rc needSync('autoExpandParent')）
-    watch(
-      () => props.autoExpandParent,
-      (autoExpand) => {
-        if (props.expandedKeys !== undefined && autoExpand) {
-          expandedKeysRef.value = conductExpandParent(props.expandedKeys, keyEntities.value);
-        }
+      () => {
+        initialControlledParents.value = false;
       },
     );
-    // 分支 B/C：首挂 defaultExpandAll / defaultExpandedKeys
-    if (props.expandedKeys === undefined) {
-      if (props.defaultExpandAll) {
-        // ⚠️ 只取有 children 的 key（rc 性能判据），且排除 MOTION_KEY
-        const next: TreeKey[] = [];
-        for (const key of Object.keys(keyEntities.value)) {
-          if (key === MOTION_KEY) continue;
-          const entity = keyEntities.value[key as SafeKey] as
-            | { children?: unknown[]; key: SafeKey }
-            | undefined;
-          if (entity?.children?.length) {
-            next.push(entity.key);
-          }
-        }
-        expandedKeysRef.value = next;
-      } else if (props.defaultExpandedKeys) {
-        expandedKeysRef.value =
-          props.autoExpandParent || props.defaultExpandParent
-            ? conductExpandParent(props.defaultExpandedKeys, keyEntities.value)
-            : [...props.defaultExpandedKeys];
-      }
-    }
-
+    const expandedKeysRef = computed(() =>
+      props.autoExpandParent
+        ? conductExpandParent(expandedKeysModel.value, keyEntities.value)
+        : initialControlledParents.value
+          ? initialControlledExpanded
+          : expandedKeysModel.value,
+    );
     const flattenNodes = computed<FlattenNode[]>(() =>
       flattenTreeData(props.treeData ?? [], expandedKeysRef.value, props.fieldNames),
     );
 
-    // ======================== 选中态（gDSFP 6）========================
-    const selectedKeysRef = ref<TreeKey[]>([]);
-
-    watch(
-      () => props.selectedKeys,
-      (controlledKeys, oldKeys) => {
-        if (!props.selectable) return;
-        if (controlledKeys !== undefined) {
-          selectedKeysRef.value = calcSelectedKeys(controlledKeys, props) ?? [];
-        } else if (oldKeys === undefined && props.defaultSelectedKeys) {
-          selectedKeysRef.value = calcSelectedKeys(props.defaultSelectedKeys, props) ?? [];
-        }
-      },
-      { immediate: true },
-    );
-
-    // ======================== 勾选态（gDSFP 7）========================
-    const checkedKeysRef = ref<SafeKey[]>([]);
-    const halfCheckedKeysRef = ref<SafeKey[]>([]);
-
-    /**
-     * rc gDSFP 勾选段的落地动作（Tree.js:229-232）：base + 最新 keyEntities → conduct → refs。
-     *
-     * ⚠️ 纯派生，**不 emit** —— rc 在 gDSFP 里改 state，用户侧感知不到 change。treeData 驱动的
-     * 级联同步必须走这条路径（Issue #16），否则会污染受控语义：父组件没改 `checkedKeys`，
-     * 却收到 `update:checkedKeys`。
-     */
-    const applyCheckedEntity = (
-      entity: { checkedKeys?: TreeKey[]; halfCheckedKeys?: SafeKey[] },
-      entities: typeof keyEntities.value,
-    ) => {
-      let { checkedKeys = [], halfCheckedKeys = [] } = entity;
-      if (!props.checkStrictly) {
-        const conduct = conductCheck(checkedKeys, true, entities as never);
-        checkedKeys = conduct.checkedKeys;
-        halfCheckedKeys = conduct.halfCheckedKeys;
-      }
-      checkedKeysRef.value = checkedKeys as SafeKey[];
-      halfCheckedKeysRef.value = halfCheckedKeys ?? [];
-    };
-
-    watch(
-      () => props.checkedKeys,
-      (controlledKeys, oldKeys) => {
-        if (!props.checkable) return;
-        let checkedKeyEntity: ReturnType<typeof parseCheckedKeys> | null = null;
-        if (controlledKeys !== undefined) {
-          checkedKeyEntity = parseCheckedKeys(controlledKeys as never);
-        } else if (oldKeys === undefined && props.defaultCheckedKeys) {
-          checkedKeyEntity = parseCheckedKeys(props.defaultCheckedKeys);
-        } else if (oldKeys !== undefined && controlledKeys === undefined) {
-          // 从受控切回非受控（防御）
-          return;
-        }
-        if (checkedKeyEntity) {
-          applyCheckedEntity(checkedKeyEntity, keyEntities.value);
-        }
-      },
-      { immediate: true },
-    );
-    // rc：treeData 变化 ⇒ 用当前勾选态重算级联（Tree.js:215-220 第三分支）
-    //
-    // ⚠️ **受控与否不影响这条路径**（Issue #16）—— rc 的判据是
-    //   `parseCheckedKeys(props.checkedKeys) || { checkedKeys: prevState.checkedKeys, … }`
-    // 即：受控 ⇒ 以 **props 原值**为 base（不是内部已派生的肯定勾选集），非受控 ⇒ 以当前派生态为 base。
-    // 差别在语义：受控时按新 keyEntities 从「用户给的键」重新导电，异步挂到已勾选父节点下的
-    // 新子节点才能继承勾选、父被部分勾选时才能重建半选。
-    watch(keyEntities, (entities) => {
-      if (!props.checkable || props.checkStrictly) return;
-      applyCheckedEntity(
-        parseCheckedKeys(props.checkedKeys as never) ?? {
-          checkedKeys: checkedKeysRef.value,
-          halfCheckedKeys: halfCheckedKeysRef.value,
-        },
-        entities,
-      );
+    const [selectedKeysModel, setSelectedKeys] = useControlledValue<TreeKey[]>({
+      getValue: () => props.selectedKeys,
+      defaultValue: () => [...(props.defaultSelectedKeys ?? [])],
     });
+    const selectedKeysRef = computed(() =>
+      props.selectable ? (calcSelectedKeys(selectedKeysModel.value, props) ?? []) : [],
+    );
 
-    // ======================== 加载态（gDSFP 8）========================
-    const loadedKeysRef = ref<SafeKey[]>([]);
+    const [checkedKeysModel, setCheckedKeys] = useControlledValue<SafeKey[] | TreeCheckedKeys>({
+      getValue: () => props.checkedKeys,
+      defaultValue: () => [...(props.defaultCheckedKeys ?? [])],
+    });
+    const checkedProjection = computed(() => {
+      const parsed = parseCheckedKeys(checkedKeysModel.value);
+      const checkedKeys = parsed?.checkedKeys ?? [];
+      const halfCheckedKeys = parsed?.halfCheckedKeys ?? [];
+      if (!checkableEnabled.value) return { checkedKeys: [], halfCheckedKeys: [] };
+      return props.checkStrictly
+        ? { checkedKeys, halfCheckedKeys }
+        : conductCheck(checkedKeys, true, keyEntities.value);
+    });
+    const checkedKeysRef = computed(() => checkedProjection.value.checkedKeys);
+    const halfCheckedKeysRef = computed(() => checkedProjection.value.halfCheckedKeys);
+
+    const [loadedKeysRef, setLoadedKeys] = useControlledValue<SafeKey[]>({
+      getValue: () => props.loadedKeys,
+      defaultValue: [],
+    });
     const loadingKeysRef = ref<SafeKey[]>([]);
-    watch(
-      () => props.loadedKeys,
-      (keys) => {
-        if (keys !== undefined) loadedKeysRef.value = [...keys];
-      },
-      { immediate: true },
-    );
-
-    // ======================== 焦点 / 拖拽 / 动效槽 ========================
-    const activeKeyRef = ref<TreeKey | null>(null);
-    watch(
-      () => props.activeKey,
-      (key) => {
-        if (key !== undefined && key !== activeKeyRef.value) {
-          activeKeyRef.value = key;
-          if (key !== null) {
-            scrollTo({ key, offset: props.itemScrollOffset });
-          }
-        }
-      },
-      { immediate: true },
-    );
+    const [activeKeyRef, setActiveKey] = useControlledValue<TreeKey | null>({
+      getValue: () => props.activeKey,
+      defaultValue: null,
+    });
 
     const draggingNodeKey = ref<TreeKey | null>(null);
     const dragChildrenKeys = ref<TreeKey[]>([]);
@@ -455,40 +354,20 @@ export default defineComponent({
       dragNodeProps: null as DragNodeSnapshot | null,
       currentMouseOverDroppableNodeKey: null as TreeKey | null,
       focusedByMouse: false,
-      loadingRetryTimes: {} as Record<string, number>,
       destroyed: false,
       delayedDragEnterLogic: {} as Record<string, ReturnType<typeof setTimeout>>,
     };
     let dragStartMouse: { x: number; y: number } | null = null;
 
-    const listRef = ref<{ scrollTo: (s: unknown) => void; getIndentWidth: () => number } | null>(
-      null,
+    const listRef = ref<NodeListRef | null>(null);
+    let listChangeTimer: ReturnType<typeof setTimeout> | undefined;
+    watch(
+      activeKeyRef,
+      (key) => {
+        if (key !== null) scrollTo({ key, align: 'top', offset: props.itemScrollOffset });
+      },
+      { flush: 'post' },
     );
-
-    // ======================== setUncontrolledState ========================
-    /** rc 语义：props 上已有同名键（受控）⇒ 跳过该键的落地。 */
-    function setUncontrolled(
-      key: 'expandedKeys' | 'selectedKeys' | 'checkedKeys' | 'loadedKeys',
-      value: unknown,
-      extra?: () => void,
-    ): void {
-      if (instanceState.destroyed) return;
-      const controlled =
-        key === 'expandedKeys'
-          ? props.expandedKeys !== undefined
-          : key === 'selectedKeys'
-            ? props.selectedKeys !== undefined
-            : key === 'checkedKeys'
-              ? props.checkedKeys !== undefined
-              : props.loadedKeys !== undefined;
-      if (!controlled) {
-        if (key === 'expandedKeys') expandedKeysRef.value = value as TreeKey[];
-        else if (key === 'selectedKeys') selectedKeysRef.value = value as TreeKey[];
-        else if (key === 'checkedKeys') checkedKeysRef.value = value as SafeKey[];
-        else loadedKeysRef.value = value as SafeKey[];
-      }
-      extra?.();
-    }
 
     // ======================== treeNodeRequiredProps ========================
     function getTreeNodeRequiredProps(): TreeNodeRequiredProps {
@@ -506,7 +385,7 @@ export default defineComponent({
     }
 
     // ======================== 展开事件 ========================
-    function onNodeExpand(e: MouseEvent | undefined, treeNode: TreeEventData): void {
+    function onNodeExpand(e: MouseEvent | KeyboardEvent, treeNode: TreeEventData): void {
       let expandedKeys = expandedKeysRef.value;
 
       // Do nothing when motion is in progress
@@ -514,8 +393,7 @@ export default defineComponent({
         return;
       }
 
-      const fieldKey = fieldNames.value.key;
-      const key = (treeNode as unknown as Record<string, unknown>)[fieldKey] as TreeKey;
+      const key = treeNode.key as TreeKey;
       const targetExpanded = !treeNode.expanded;
       expandedKeys = targetExpanded ? arrAdd(expandedKeys, key) : arrDel(expandedKeys, key);
       setExpandedKeys(expandedKeys);
@@ -523,34 +401,33 @@ export default defineComponent({
       emit('expand', [...expandedKeys], {
         node: treeNode,
         expanded: targetExpanded,
-        nativeEvent: e as unknown as MouseEvent,
+        nativeEvent: e,
       } as never);
 
       // Async Load data
       if (targetExpanded && props.loadData) {
+        const expandedNode = getEntity(keyEntities.value, key)?.node;
         const loadPromise = onNodeLoad(treeNode);
         if (loadPromise) {
-          loadPromise
-            .then(() => {
-              // [Legacy] flattenNodes 为 computed 已自动刷新（rc 显式 setState 的等价物）
-              setUncontrolled('expandedKeys', [...expandedKeysRef.value]);
-            })
-            .catch(() => {
-              const current = expandedKeysRef.value;
-              const restore = arrDel(current, key);
-              setExpandedKeys(restore);
-            });
+          void loadPromise.then((loaded) => {
+            if (
+              !loaded &&
+              !instanceState.destroyed &&
+              getEntity(keyEntities.value, key)?.node === expandedNode
+            ) {
+              setExpandedKeys(arrDel(expandedKeysRef.value, key));
+            }
+          });
         }
       }
     }
 
     // ======================== 选中 / 勾选 / 加载 ========================
-    function onNodeSelect(e: MouseEvent | undefined, treeNode: TreeEventData): void {
+    function onNodeSelect(e: MouseEvent | KeyboardEvent, treeNode: TreeEventData): void {
       let selectedKeys = [...selectedKeysRef.value];
       const { multiple } = props;
       const { selected } = treeNode;
-      const fieldKey = fieldNames.value.key;
-      const key = (treeNode as unknown as Record<string, unknown>)[fieldKey] as TreeKey;
+      const key = treeNode.key as TreeKey;
       const targetSelected = !selected;
 
       if (!targetSelected) {
@@ -570,26 +447,26 @@ export default defineComponent({
         )
         .filter(Boolean);
 
-      setUncontrolled('selectedKeys', selectedKeys);
+      setSelectedKeys(selectedKeys);
       emit('update:selectedKeys', [...selectedKeys]);
       emit('select', [...selectedKeys], {
         event: 'select',
         selected: targetSelected,
         node: treeNode,
         selectedNodes,
-        nativeEvent: e as unknown as MouseEvent,
+        nativeEvent: e,
       } as never);
     }
 
     function onNodeCheck(
-      e: MouseEvent | undefined,
+      e: MouseEvent | KeyboardEvent,
       treeNode: TreeEventData,
       checked: boolean,
     ): void {
       const oriCheckedKeys = [...checkedKeysRef.value];
       const oriHalfCheckedKeys = [...halfCheckedKeysRef.value];
       const { checkStrictly } = props;
-      const key = (treeNode as unknown as Record<string, unknown>)[fieldNames.value.key] as TreeKey;
+      const key = treeNode.key as TreeKey;
 
       let checkedObj: SafeKey[] | TreeCheckedKeys;
       const eventObj: Record<string, unknown> & {
@@ -600,7 +477,7 @@ export default defineComponent({
         event: 'check',
         node: treeNode,
         checked,
-        nativeEvent: e as unknown as MouseEvent,
+        nativeEvent: e,
       };
       if (checkStrictly) {
         const checkedKeys = checked ? arrAdd(oriCheckedKeys, key) : arrDel(oriCheckedKeys, key);
@@ -613,7 +490,7 @@ export default defineComponent({
                 ?.node,
           )
           .filter(Boolean);
-        setUncontrolled('checkedKeys', checkedKeys);
+        setCheckedKeys(checkedObj);
       } else {
         // Always fill first
         let { checkedKeys, halfCheckedKeys } = conductCheck(
@@ -652,64 +529,67 @@ export default defineComponent({
             pos: entity.pos,
           });
         });
-        setUncontrolled('checkedKeys', checkedKeys, () => {
-          halfCheckedKeysRef.value = halfCheckedKeys;
-        });
+        setCheckedKeys(checkedObj);
       }
       emit('update:checkedKeys', checkedObj as never);
       emit('check', checkedObj as never, eventObj as never);
     }
 
-    function onNodeLoad(treeNode: TreeEventData): Promise<unknown> | null {
-      const key = (treeNode as unknown as Record<string, unknown>)[fieldNames.value.key] as TreeKey;
-      const entity = getEntity(keyEntities.value as never, key) as never as {
-        children?: unknown[];
-      };
-
-      // Skip if has children already
-      if (entity?.children?.length) {
-        return null;
-      }
-      if (!props.loadData) return null;
-      if (
-        loadedKeysRef.value.includes(key as SafeKey) ||
-        loadingKeysRef.value.includes(key as SafeKey)
-      ) {
-        return null;
-      }
-
-      loadingKeysRef.value = arrAdd(loadingKeysRef.value, key as SafeKey);
-      const promise = props.loadData(treeNode as never);
-      promise
-        .then(() => {
-          const newLoadedKeys = arrAdd(loadedKeysRef.value, key as SafeKey);
-          // onLoad 先于内部 setState（antd #12464 判据）
-          emit('update:loadedKeys', [...newLoadedKeys]);
-          emit('load', [...newLoadedKeys], { event: 'load', node: treeNode } as never);
-          setUncontrolled('loadedKeys', newLoadedKeys);
+    const loadRequests = new Map<TreeKey, { node: BasicDataNodeLike; promise: Promise<boolean> }>();
+    watch(keyEntities, (entities) => {
+      for (const [key, request] of loadRequests) {
+        if (getEntity(entities, key)?.node !== request.node) {
+          loadRequests.delete(key);
           loadingKeysRef.value = arrDel(loadingKeysRef.value, key);
-        })
-        .catch(() => {
-          loadingKeysRef.value = arrDel(loadingKeysRef.value, key);
-          instanceState.loadingRetryTimes[String(key)] =
-            (instanceState.loadingRetryTimes[String(key)] ?? 0) + 1;
-          const retryTimes = instanceState.loadingRetryTimes[String(key)] ?? 0;
-          if (retryTimes >= MAX_RETRY_TIMES) {
-            devWarning(false, 'Retry for `loadData` many times but still failed. No more retry.');
-            const current = loadedKeysRef.value ?? [];
-            setUncontrolled('loadedKeys', arrAdd(current, key as SafeKey));
+        }
+      }
+    });
+    function onNodeLoad(treeNode: TreeEventData): Promise<boolean> | null {
+      const key = treeNode.key as TreeKey;
+      const entity = getEntity(keyEntities.value, key);
+      const loadData = props.loadData;
+      if (!entity || entity.children?.length || !loadData || loadedKeysRef.value.includes(key))
+        return null;
+      const inFlight = loadRequests.get(key);
+      if (inFlight?.node === entity.node) return inFlight.promise;
+      const requestNode = entity.node;
+      loadingKeysRef.value = arrAdd(loadingKeysRef.value, key);
+      const isCurrent = () =>
+        !instanceState.destroyed &&
+        getEntity(keyEntities.value, key)?.node === requestNode &&
+        loadRequests.get(key)?.promise === promise;
+      const promise = new Promise<unknown>((resolve) => {
+        resolve(loadData(treeNode));
+      })
+        .then(
+          () => {
+            if (!isCurrent()) return false;
+            const newLoadedKeys = arrAdd(loadedKeysRef.value, key);
+            emit('update:loadedKeys', [...newLoadedKeys]);
+            emit('load', [...newLoadedKeys], { event: 'load', node: treeNode } as never);
+            setLoadedKeys(newLoadedKeys);
+            return true;
+          },
+          (error: unknown) => {
+            if (isCurrent())
+              devWarning(false, `Tree loadData failed for '${key}': ${String(error)}`);
+            return false;
+          },
+        )
+        .finally(() => {
+          if (loadRequests.get(key)?.promise === promise) {
+            loadRequests.delete(key);
+            if (!instanceState.destroyed) loadingKeysRef.value = arrDel(loadingKeysRef.value, key);
           }
         });
+      loadRequests.set(key, { node: requestNode, promise });
       return promise;
     }
 
     // ======================== 点击 / 悬停 / 右键 ========================
     function triggerExpandActionExpand(e: MouseEvent, treeNode: TreeEventData): void {
-      const { expanded, key } = treeNode;
-      const isLeaf =
-        (treeNode as unknown as { isLeaf?: boolean }).isLeaf ??
-        (treeNode.data as { isLeaf?: boolean } | undefined)?.isLeaf ??
-        false;
+      const { key } = treeNode;
+      const isLeaf = treeNode.isLeaf === true;
       if (isLeaf || e.shiftKey || e.metaKey || e.ctrlKey) {
         return;
       }
@@ -722,11 +602,6 @@ export default defineComponent({
         isStart: node.isStart,
         isEnd: node.isEnd,
       } as never);
-      setExpandedKeys(
-        expanded
-          ? arrDel(expandedKeysRef.value, key as TreeKey)
-          : arrAdd(expandedKeysRef.value, key as TreeKey),
-      );
       onNodeExpand(e, eventNode);
     }
 
@@ -743,10 +618,10 @@ export default defineComponent({
       emit('doubleClick', e, treeNode);
     }
     function onNodeMouseEnter(event: MouseEvent, node: TreeEventData): void {
-      emit('mouseEnter', { event, node } as never);
+      emit('mouseEnter', event, node);
     }
     function onNodeMouseLeave(event: MouseEvent, node: TreeEventData): void {
-      emit('mouseLeave', { event, node } as never);
+      emit('mouseLeave', event, node);
     }
     function onNodeContextMenu(event: MouseEvent, node: TreeEventData): void {
       emit('contextmenu', event, node);
@@ -755,10 +630,7 @@ export default defineComponent({
     // ======================== 焦点 / active ========================
     function onActiveChange(newActiveKey: TreeKey | null): void {
       if (activeKeyRef.value === newActiveKey) return;
-      activeKeyRef.value = newActiveKey;
-      if (newActiveKey !== null) {
-        scrollTo({ key: newActiveKey, offset: props.itemScrollOffset });
-      }
+      setActiveKey(newActiveKey);
       emit('update:activeKey', newActiveKey);
       emit('activeChange', newActiveKey);
     }
@@ -809,7 +681,8 @@ export default defineComponent({
 
     // ======================== 键盘（rc :1014-1129）=======================
     function onKeyDown(event: KeyboardEvent): void {
-      const { checkable, selectable } = props;
+      const { selectable } = props;
+      const checkable = checkableEnabled.value;
       if (mergedDisabled.value) {
         return;
       }
@@ -874,7 +747,7 @@ export default defineComponent({
         switch (event.key) {
           case 'ArrowLeft': {
             if (expandable && expandedKeys.includes(activeKeyRef.value as TreeKey)) {
-              onNodeExpand(undefined, eventNode);
+              onNodeExpand(event, eventNode);
             } else if (activeItem.parent) {
               onActiveChange((activeItem.parent as FlattenNode).key);
             }
@@ -883,7 +756,7 @@ export default defineComponent({
           }
           case 'ArrowRight': {
             if (expandable && !expandedKeys.includes(activeKeyRef.value as TreeKey)) {
-              onNodeExpand(undefined, eventNode);
+              onNodeExpand(event, eventNode);
             } else if (firstChild) {
               onActiveChange(firstChild.key);
             }
@@ -893,13 +766,13 @@ export default defineComponent({
           case 'Enter': {
             if (expandable) {
               event.preventDefault();
-              onNodeExpand(undefined, eventNode);
+              onNodeExpand(event, eventNode);
             } else if (canCheck && !checkedKeys.includes(activeKeyRef.value as SafeKey)) {
               event.preventDefault();
-              onNodeCheck(undefined, eventNode, true);
+              onNodeCheck(event, eventNode, true);
             } else if (canSelect && !(eventNode as unknown as { selected?: boolean }).selected) {
               event.preventDefault();
-              onNodeSelect(undefined, eventNode);
+              onNodeSelect(event, eventNode);
             }
             break;
           }
@@ -910,14 +783,10 @@ export default defineComponent({
           case 'Space': {
             if (canCheck) {
               event.preventDefault();
-              onNodeCheck(
-                undefined,
-                eventNode,
-                !checkedKeys.includes(activeKeyRef.value as SafeKey),
-              );
+              onNodeCheck(event, eventNode, !checkedKeys.includes(activeKeyRef.value as SafeKey));
             } else if (canSelect) {
               event.preventDefault();
-              onNodeSelect(undefined, eventNode);
+              onNodeSelect(event, eventNode);
             }
             break;
           }
@@ -927,6 +796,7 @@ export default defineComponent({
 
     // ======================== 拖拽（rc :250-500）=======================
     function resetDragState(): void {
+      clearDragTimers();
       dragOverNodeKey.value = null;
       dropPosition.value = null;
       dropLevelOffset.value = null;
@@ -936,16 +806,16 @@ export default defineComponent({
       dropAllowed.value = false;
     }
 
+    function clearDragTimers(): void {
+      for (const timer of Object.values(instanceState.delayedDragEnterLogic)) clearTimeout(timer);
+      instanceState.delayedDragEnterLogic = {};
+    }
+
     function cleanDragState(): void {
-      if (draggingNodeKey.value !== null) {
-        draggingNodeKey.value = null;
-        dropPosition.value = null;
-        dropContainerKey.value = null;
-        dropTargetKey.value = null;
-        dropLevelOffset.value = null;
-        dropAllowed.value = true;
-        dragOverNodeKey.value = null;
-      }
+      resetDragState();
+      draggingNodeKey.value = null;
+      dragChildrenKeys.value = [];
+      window.removeEventListener('dragend', onWindowDragEnd);
       dragStartMouse = null;
       instanceState.currentMouseOverDroppableNodeKey = null;
     }
@@ -960,8 +830,7 @@ export default defineComponent({
       indent.value = listRef.value?.getIndentWidth() ?? 0;
       setExpandedKeys(newExpandedKeys);
       window.addEventListener('dragend', onWindowDragEnd);
-      emit('dragStart', {
-        event,
+      emit('dragStart', event, {
         node: convertNodePropsToEventData(nodeProps as never),
       } as never);
     }
@@ -984,11 +853,11 @@ export default defineComponent({
         nodeProps as never,
         indent.value ?? 0,
         dragStartMouse,
-        props.allowDrop as never,
+        (props.allowDrop ?? (() => true)) as never,
         flattenNodes.value as never,
         keyEntities.value as never,
         expandedKeysRef.value,
-        direction.value,
+        getDirection(),
       ) as never;
     }
 
@@ -1051,6 +920,11 @@ export default defineComponent({
         dropAllowed: da,
         dragOverNodeKey: dok,
       } = calcDrop(event, nodeProps);
+      if (!da) {
+        resetDragState();
+        clearDragTimers();
+        return;
+      }
       void dp;
       void dlo;
       void dtk;
@@ -1061,8 +935,7 @@ export default defineComponent({
       dropContainerKey.value = dck;
       dropTargetPos.value = dtp;
       dropAllowed.value = da;
-      emit('dragEnter', {
-        event,
+      emit('dragEnter', event, {
         node: convertNodePropsToEventData(nodeProps as never),
         expandedKeys: expandedKeysRef.value,
       } as never);
@@ -1082,6 +955,7 @@ export default defineComponent({
         dragOverNodeKey: dok,
       } = calcDrop(event, nodeProps);
       if (dragChildrenKeys.value.includes(dtk) || !da) {
+        resetDragState();
         return;
       }
       if (instanceState.dragNodeProps.eventKey === dtk && dlo === 0) {
@@ -1105,8 +979,7 @@ export default defineComponent({
         dropAllowed.value = da;
         dragOverNodeKey.value = dok;
       }
-      emit('dragOver', {
-        event,
+      emit('dragOver', event, {
         node: convertNodePropsToEventData(nodeProps as never),
       } as never);
     }
@@ -1122,8 +995,7 @@ export default defineComponent({
         resetDragState();
         instanceState.currentMouseOverDroppableNodeKey = null;
       }
-      emit('dragLeave', {
-        event,
+      emit('dragLeave', event, {
         node: convertNodePropsToEventData(nodeProps as never),
       } as never);
     }
@@ -1140,8 +1012,7 @@ export default defineComponent({
     ): void {
       dragOverNodeKey.value = null;
       cleanDragState();
-      emit('dragEnd', {
-        event,
+      emit('dragEnd', event, {
         node: nodeProps ? convertNodePropsToEventData(nodeProps as never) : null,
       } as never);
       instanceState.dragNodeProps = null;
@@ -1157,12 +1028,17 @@ export default defineComponent({
       const dtp = dropTargetKey.value;
       const dp = dropPosition.value;
       const da = dropAllowed.value;
+      const targetPos = dropTargetPos.value;
+      const dragSnapshot = instanceState.dragNodeProps;
       if (!da) {
+        cleanDragState();
+        instanceState.dragNodeProps = null;
         return;
       }
       dragOverNodeKey.value = null;
       cleanDragState();
-      if (dtp === null) return;
+      instanceState.dragNodeProps = null;
+      if (dtp === null || !dragSnapshot) return;
       const entity = getEntity(keyEntities.value as never, dtp) as never as { node: DataNode };
       const abstractDropNodeProps = {
         ...getTreeNodeProps(dtp, getTreeNodeRequiredProps()),
@@ -1174,52 +1050,59 @@ export default defineComponent({
         !dropToChild,
         "Can not drop to dragNode's children node. This is a bug of rc-tree. Please report an issue.",
       );
-      const posArr = posToArr(dropTargetPos.value ?? '');
+      const posArr = posToArr(targetPos ?? '');
       const dropResult = {
         event,
         node: convertNodePropsToEventData(abstractDropNodeProps as never),
-        dragNode: instanceState.dragNodeProps
-          ? convertNodePropsToEventData(instanceState.dragNodeProps as never)
-          : null,
-        dragNodesKeys: [
-          (instanceState.dragNodeProps as { eventKey: TreeKey } | null)?.eventKey,
-          ...dragChildrenKeysVal,
-        ].filter((k) => k !== undefined),
+        dragNode: convertNodePropsToEventData(dragSnapshot as never),
+        dragNodesKeys: [dragSnapshot.eventKey, ...dragChildrenKeysVal].filter(
+          (k) => k !== undefined,
+        ),
         dropToGap: dp !== 0,
         dropPosition: (dp ?? 0) + Number(posArr[posArr.length - 1]),
       };
       if (!outsideTree) {
-        emit('drop', dropResult as never);
+        emit('drop', event, dropResult as never);
       }
       instanceState.dragNodeProps = null;
     }
 
     // ======================== scroll / expose ========================
-    function scrollTo(
-      scroll?: number | { key?: TreeKey; autoExpand?: boolean; offset?: number } | null,
-    ): void {
+    function scrollTo(scroll?: number | TreeScrollConfig | null): void {
       if (scroll && typeof scroll === 'object' && scroll.autoExpand) {
-        setExpandedKeys(arrAdd(expandedKeysRef.value, scroll.key as TreeKey));
+        const ancestors = conductExpandParent([scroll.key], keyEntities.value);
+        const next = Array.from(new Set([...expandedKeysRef.value, ...ancestors]));
+        setExpandedKeys(next);
+        emit('update:expandedKeys', next);
+        void nextTick(() => listRef.value?.scrollTo(scroll));
+      } else {
+        listRef.value?.scrollTo(scroll);
       }
-      listRef.value?.scrollTo(scroll);
     }
 
     expose({
       scrollTo,
-      keyEntities,
-      // rc Tree ref API 同构：keyboard 事件代理入口（focusable=false 时由
-      // 外层容器转发，TreeSelect 的 OptionList 依赖它）。
+      focus: () => listRef.value?.focus(),
+      get keyEntities() {
+        return keyEntities.value;
+      },
+      // TreeSelect forwards keyboard events while it owns focus.
       onKeyDown,
-    });
+    } satisfies TreeRef<object> & { onKeyDown: (event: KeyboardEvent) => void });
 
     onMounted(() => {
       instanceState.destroyed = false;
+      if (activeKeyRef.value !== null)
+        scrollTo({ key: activeKeyRef.value, align: 'top', offset: props.itemScrollOffset });
       window.addEventListener('mouseup', onGlobalMouseUp);
     });
     onBeforeUnmount(() => {
       window.removeEventListener('dragend', onWindowDragEnd);
       window.removeEventListener('mouseup', onGlobalMouseUp);
       instanceState.destroyed = true;
+      clearTimeout(listChangeTimer);
+      clearDragTimers();
+      loadRequests.clear();
     });
 
     // ======================== draggableConfig（antd 壳）========================
@@ -1249,130 +1132,118 @@ export default defineComponent({
     });
 
     /** iconUtil 包装（antd 壳的 renderSwitcherIcon）。 */
-    function renderSwitcherIconFn(treeNodeProps: {
-      isLeaf?: boolean;
-      expanded?: boolean;
-      loading?: boolean;
-    }) {
+    function renderSwitcherIconFn(node: EventDataNode, data: Record<string, unknown>) {
       return renderSwitcherIcon({
         prefixCls: prefixCls.value,
-        switcherIcon: props.switcherIcon,
+        switcherIcon:
+          typeof node.switcherIcon === 'function'
+            ? node.switcherIcon({ ...node, eventKey: node.key, data })
+            : (node.switcherIcon ?? props.switcherIcon),
         switcherLoadingIcon: props.switcherLoadingIcon,
-        treeNodeProps: treeNodeProps as never,
+        treeNodeProps: node,
         showLine: props.showLine,
       });
     }
 
     // ======================== Context ========================
-    provide(
-      treeContextKey,
-      reactive({
-        get prefixCls() {
-          return prefixCls.value;
-        },
-        get selectable() {
-          return props.selectable;
-        },
-        get showIcon() {
-          return props.showIcon;
-        },
-        get icon() {
-          return props.icon;
-        },
-        get switcherIcon() {
-          return renderSwitcherIconFn;
-        },
-        get draggable() {
-          return draggableConfig.value;
-        },
-        get draggingNodeKey() {
-          return draggingNodeKey.value;
-        },
-        get checkable() {
-          // antd 壳：checkable ⇒ 自定义 `<span class="{p}-checkbox-inner">`（非原生框）
-          return props.checkable
-            ? h('span', { class: `${prefixCls.value}-checkbox-inner` })
-            : props.checkable;
-        },
-        get checkStrictly() {
-          return props.checkStrictly;
-        },
-        get disabled() {
-          return mergedDisabled.value;
-        },
-        get keyEntities() {
-          return keyEntities.value;
-        },
-        get dropLevelOffset() {
-          return dropLevelOffset.value;
-        },
-        get dropContainerKey() {
-          return dropContainerKey.value;
-        },
-        get dropTargetKey() {
-          return dropTargetKey.value;
-        },
-        get dropPosition() {
-          return dropPosition.value;
-        },
-        get dragOverNodeKey() {
-          return dragOverNodeKey.value;
-        },
-        get indent() {
-          return indent.value;
-        },
-        get direction() {
-          return direction.value;
-        },
-        get dropIndicatorRender() {
-          return (dropProps: DropIndicatorProps) => h(DropIndicator, dropProps);
-        },
-        get loadData() {
-          return props.loadData;
-        },
-        get filterTreeNode() {
-          return props.filterTreeNode;
-        },
-        get titleRender() {
-          return props.titleRender;
-        },
-        get classNames() {
-          return mergedClassNames.value;
-        },
-        get styles() {
-          return mergedStyles.value;
-        },
-        onNodeClick,
-        onNodeDoubleClick,
-        onNodeExpand,
-        onNodeSelect,
-        onNodeCheck,
-        onNodeLoad,
-        onNodeMouseEnter,
-        onNodeMouseLeave,
-        // 🚨 曾漏了这一行（2026-09-30 修）：`TreeNode` 的 `onContextmenu` 会调
-        //    `ctx.onNodeContextMenu(...)`，而它不在 context 对象里 ⇒ **右键点击节点抛
-        //    `TypeError: ctx.onNodeContextMenu is not a function`**（不是「事件不触发」）。
-        //    之所以没被类型检查拦住：整个 context 对象被 `as never` 断言了
-        //    （`TreeContext` 里该字段是必填，但断言把它绕过了）。
-        //    发现路径：`biome check` 报 `onNodeContextMenu` 未被引用 ——
-        //    这类「定义了但没接线」的死代码正是门禁要抓的东西。
-        onNodeContextMenu,
-        onNodeDragStart,
-        onNodeDragEnter,
-        onNodeDragOver,
-        onNodeDragLeave,
-        onNodeDragEnd,
-        onNodeDrop,
-        onNodeMouseMove: () => {
-          // rc：mouse 移动 ⇒ active 复位
-          if (activeKeyRef.value !== null && props.activeKey === undefined) {
-            activeKeyRef.value = null;
-            emit('update:activeKey', null);
-          }
-        },
-      }) as never,
-    );
+    provide(treeContextKey, {
+      get prefixCls() {
+        return prefixCls.value;
+      },
+      get selectable() {
+        return props.selectable;
+      },
+      get showIcon() {
+        return props.showIcon ?? false;
+      },
+      get icon() {
+        return props.icon;
+      },
+      get switcherIcon() {
+        return renderSwitcherIconFn;
+      },
+      get draggable() {
+        return draggableConfig.value;
+      },
+      get draggingNodeKey() {
+        return draggingNodeKey.value;
+      },
+      get checkable() {
+        // antd 壳：checkable ⇒ 自定义 `<span class="{p}-checkbox-inner">`（非原生框）
+        return props.checkable === true
+          ? h('span', { class: `${prefixCls.value}-checkbox-inner` })
+          : props.checkable;
+      },
+      get checkStrictly() {
+        return props.checkStrictly;
+      },
+      get disabled() {
+        return mergedDisabled.value;
+      },
+      get keyEntities() {
+        return keyEntities.value;
+      },
+      get dropLevelOffset() {
+        return dropLevelOffset.value;
+      },
+      get dropContainerKey() {
+        return dropContainerKey.value;
+      },
+      get dropTargetKey() {
+        return dropTargetKey.value;
+      },
+      get dropPosition() {
+        return dropPosition.value;
+      },
+      get dropAllowed() {
+        return dropAllowed.value;
+      },
+      get dragOverNodeKey() {
+        return dragOverNodeKey.value;
+      },
+      get indent() {
+        return indent.value;
+      },
+      get direction() {
+        return getDirection();
+      },
+      get dropIndicatorRender() {
+        return (dropProps: DropIndicatorProps) => h(DropIndicator, dropProps);
+      },
+      get loadData() {
+        return props.loadData;
+      },
+      get filterTreeNode() {
+        return props.filterTreeNode;
+      },
+      get classNames() {
+        return mergedClassNames.value;
+      },
+      get styles() {
+        return mergedStyles.value;
+      },
+      onNodeClick,
+      onNodeDoubleClick,
+      onNodeExpand,
+      onNodeSelect,
+      onNodeCheck,
+      onNodeLoad,
+      onNodeMouseEnter,
+      onNodeMouseLeave,
+      onNodeContextMenu,
+      onNodeDragStart,
+      onNodeDragEnter,
+      onNodeDragOver,
+      onNodeDragLeave,
+      onNodeDragEnd,
+      onNodeDrop,
+      onNodeMouseMove: () => {
+        // rc：mouse 移动 ⇒ active 复位
+        if (activeKeyRef.value !== null) {
+          onActiveChange(null);
+        }
+      },
+    } satisfies TreeContextValue);
 
     return () => {
       const domProps = pickAttrs({ ...attrs } as Record<string, unknown>, {
@@ -1389,7 +1260,7 @@ export default defineComponent({
           [`${prefixCls.value}-icon-hide`]: !(props.showIcon ?? false),
           [`${prefixCls.value}-block-node`]: props.blockNode,
           [`${prefixCls.value}-unselectable`]: !props.selectable,
-          [`${prefixCls.value}-rtl`]: direction.value === 'rtl',
+          [`${prefixCls.value}-rtl`]: getDirection() === 'rtl',
           [`${prefixCls.value}-disabled`]: mergedDisabled.value,
         },
         componentConfig.className,
@@ -1400,6 +1271,7 @@ export default defineComponent({
         {
           class: rootClass,
           style: {
+            ...treeTheme.style.value,
             ...(componentConfig.style as Record<string, unknown> | undefined),
             ...(mergedStyles.value.root as Record<string, unknown> | undefined),
             ...(props.rootStyle as Record<string, unknown> | undefined),
@@ -1407,38 +1279,45 @@ export default defineComponent({
           },
         },
         [
-          h(NodeList, {
-            prefixCls: prefixCls.value,
-            data: flattenNodes.value,
-            expandedKeys: expandedKeysRef.value,
-            disabled: mergedDisabled.value,
-            selectable: props.selectable,
-            checkable: !!props.checkable,
-            motion: motion.value,
-            dragging: draggingNodeKey.value !== null,
-            height: props.height,
-            itemHeight: mergedItemHeight.value,
-            virtual: mergedVirtual.value,
-            focusable: props.focusable,
-            activeKey: activeKeyRef.value,
-            tabIndex: props.tabIndex,
-            treeNodeRequiredProps: getTreeNodeRequiredProps(),
-            onActiveChange: onActiveChange,
-            onListChangeStart: () => {
-              listChanging.value = true;
+          h(
+            NodeList,
+            {
+              ref: listRef,
+              prefixCls: prefixCls.value,
+              data: flattenNodes.value,
+              expandedKeys: expandedKeysRef.value,
+              disabled: mergedDisabled.value,
+              selectable: props.selectable,
+              checkable: checkableEnabled.value,
+              motion: motion.value,
+              dragging: draggingNodeKey.value !== null,
+              height: props.height,
+              itemHeight: mergedItemHeight.value,
+              virtual: mergedVirtual.value,
+              focusable: props.focusable,
+              activeKey: activeKeyRef.value,
+              tabIndex: props.tabIndex,
+              treeNodeRequiredProps: getTreeNodeRequiredProps(),
+              onActiveChange: onActiveChange,
+              onListChangeStart: () => {
+                listChanging.value = true;
+              },
+              onListChangeEnd: () => {
+                if (instanceState.destroyed) return;
+                clearTimeout(listChangeTimer);
+                listChangeTimer = setTimeout(() => {
+                  listChanging.value = false;
+                });
+              },
+              onKeydown: onKeyDown,
+              onFocus: onFocus,
+              onBlur: onBlur,
+              onMousedown: onMouseDown,
+              scrollWidth: props.scrollWidth,
+              ...domProps,
             },
-            onListChangeEnd: () => {
-              setTimeout(() => {
-                listChanging.value = false;
-              });
-            },
-            onKeydown: onKeyDown,
-            onFocus: onFocus,
-            onBlur: onBlur,
-            onMousedown: onMouseDown,
-            scrollWidth: props.scrollWidth,
-            ...domProps,
-          }),
+            slots,
+          ),
         ],
       );
     };

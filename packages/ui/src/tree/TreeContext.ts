@@ -2,13 +2,13 @@
  * Tree 的运行时上下文（rc `contextTypes.js` 的 provide/inject 等价物）。
  *
  * rc 在 Tree（class）render 里构造 `contextValue` 传给 `TreeContext.Provider`；
- * Vue 侧用 `provide()` + `reactive()`：字段是 computed/函数，`reactive` 会自动解包
- * ref —— TreeNode / NodeList 侧读到的是值（响应式追踪保留）。
+ * Vue 侧通过类型化 provide/inject 与 getter 读取当前 ref/props，消费者保留响应式追踪。
+ * 内容插槽通过 NodeList/MotionTreeNode 以函数逐层转发，动态存在性由 Vue 更新。
  *
  * 状态字段语义见 docs/analysis/tree.md §2.2（23 槽）。
  */
 
-import type { InjectionKey } from 'vue';
+import type { InjectionKey, VNodeChild } from 'vue';
 import type { DropIndicatorProps } from './DropIndicator';
 import type {
   DataNode,
@@ -42,8 +42,8 @@ export interface TreeContextValue {
   prefixCls: string;
   selectable: boolean;
   showIcon: boolean;
-  icon?: unknown;
-  switcherIcon?: unknown;
+  icon?: VNodeChild;
+  switcherIcon?: (node: EventDataNode, data: Record<string, unknown>) => VNodeChild;
   /** antd 壳注入的渲染函数（iconUtil），VNode 形态。 */
   draggable: { nodeDraggable?: (node: DataNode) => boolean; icon?: unknown } | false;
   draggingNodeKey: TreeKey | null;
@@ -55,23 +55,23 @@ export interface TreeContextValue {
   dropContainerKey: TreeKey | null;
   dropTargetKey: TreeKey | null;
   dropPosition: -1 | 0 | 1 | null;
+  dropAllowed: boolean;
   dragOverNodeKey: TreeKey | null;
   indent: number | null;
   direction?: 'ltr' | 'rtl';
   dropIndicatorRender: (props: TreeDropIndicatorRenderProps) => VNodeLike;
   loadData?: (node: EventDataNode) => Promise<unknown>;
   filterTreeNode?: (node: EventDataNode) => boolean;
-  titleRender?: (node: DataNode) => VNodeLike;
   classNames?: Partial<TreeSemanticClassNames>;
   styles?: Partial<TreeSemanticStyles>;
 
   // ---- 事件（Tree 侧实现，TreeNode 侧调用）----
   onNodeClick: (e: MouseEvent, node: EventDataNode) => void;
   onNodeDoubleClick: (e: MouseEvent, node: EventDataNode) => void;
-  onNodeExpand: (e: MouseEvent | undefined, node: EventDataNode) => void;
-  onNodeSelect: (e: MouseEvent | undefined, node: EventDataNode) => void;
-  onNodeCheck: (e: MouseEvent | undefined, node: EventDataNode, checked: boolean) => void;
-  onNodeLoad: (node: EventDataNode) => Promise<unknown>;
+  onNodeExpand: (e: MouseEvent | KeyboardEvent, node: EventDataNode) => void;
+  onNodeSelect: (e: MouseEvent | KeyboardEvent, node: EventDataNode) => void;
+  onNodeCheck: (e: MouseEvent | KeyboardEvent, node: EventDataNode, checked: boolean) => void;
+  onNodeLoad: (node: EventDataNode) => Promise<boolean> | null;
   onNodeMouseEnter: (e: MouseEvent, node: EventDataNode) => void;
   onNodeMouseLeave: (e: MouseEvent, node: EventDataNode) => void;
   /** rc NodeList 传给 TreeNode 的 onMouseMove（鼠标移动 ⇒ active 复位）。 */

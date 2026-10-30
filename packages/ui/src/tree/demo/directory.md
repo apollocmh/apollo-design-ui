@@ -1,4 +1,4 @@
 ---
 order: 106
 ---
-内置的目录树。`multiple` 模式支持 `shift` / `ctrl`（meta）多选。\n
+内置的目录树。`multiple` 模式支持 `shift` / `ctrl`（meta）多选。

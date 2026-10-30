@@ -119,7 +119,7 @@ export function calcDropPosition(
 
   // 过滤掉「当前没有 children 的节点」（异步加载节点不参与虚拟展开判定）
   const filteredExpandKeys = expandKeys.filter(
-    (key) => keyEntities[key as SafeKey]?.children?.length,
+    (key) => getEntity(keyEntities, key)?.children?.length,
   );
 
   // find abstract drop node by horizontal offset
@@ -244,7 +244,7 @@ export function calcDropPosition(
     dropTargetKey: abstractDropNodeEntity.key,
     dropTargetPos: abstractDropNodeEntity.pos,
     dragOverNodeKey,
-    dropContainerKey: dropPosition === 0 ? null : abstractDropNodeEntity.parent?.key || null,
+    dropContainerKey: dropPosition === 0 ? null : (abstractDropNodeEntity.parent?.key ?? null),
     dropAllowed,
   };
 }
@@ -296,9 +296,9 @@ export function parseCheckedKeys(
  * `autoExpandParent` / `defaultExpandParent`：把 keys 的祖先全部补进展开集。
  * 节点 disabled 时不再向上传导（rc 逐字）。
  */
-export function conductExpandParent(
+export function conductExpandParent<TreeDataType extends BasicDataNodeLike>(
   keyList: TreeKey[] | undefined,
-  keyEntities: Record<SafeKey, TreeDataEntity>,
+  keyEntities: Record<SafeKey, TreeDataEntity<TreeDataType>>,
 ): SafeKey[] {
   const expandedKeys = new Set<TreeKey>();
   function conductUp(key: TreeKey): void {

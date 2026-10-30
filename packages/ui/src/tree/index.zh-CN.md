@@ -90,7 +90,7 @@ import { Tree, DirectoryTree } from '@apollo-design/ui';
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| treeData | 树数据（v6 主通道；`<TreeNode>` children 形态已 deprecated 不实现） | DataNode[] | - |
+| treeData | 树数据；字段可用 fieldNames 映射，默认 key/title/children | object[]（可用 `TreeProps<T>` 声明数据类型） | - |
 | fieldNames | 字段名映射 | { key?, title?, children? } | - |
 | expandedKeys | 展开节点（受控，`v-model:expandedKeys`） | TreeKey[] | - |
 | defaultExpandedKeys | 默认展开 | TreeKey[] | [] |
@@ -98,7 +98,7 @@ import { Tree, DirectoryTree } from '@apollo-design/ui';
 | defaultExpandParent | 默认展开父节点（首挂 conductExpandParent 补祖先） | boolean | true |
 | autoExpandParent | 展开受控时自动补全祖先 | boolean | false |
 | checkable | 勾选（自定义勾选框） | boolean \| VNodeChild | false |
-| checkStrictly | 勾选完全受控（父子不关联；`checkedKeys` 为对象形态） | boolean | false |
+| checkStrictly | 父子独立勾选；事件返回 `{ checked, halfChecked }`，不决定是否受控 | boolean | false |
 | checkedKeys | 勾选节点（受控，`v-model:checkedKeys`） | SafeKey[] \| { checked, halfChecked } | - |
 | defaultCheckedKeys | 默认勾选 | SafeKey[] | [] |
 | selectable | 可选中 | boolean | true |
@@ -109,50 +109,87 @@ import { Tree, DirectoryTree } from '@apollo-design/ui';
 | loadedKeys | 已加载节点（受控，`v-model:loadedKeys`） | SafeKey[] | - |
 | showIcon | 显示节点图标 | boolean | false |
 | showLine | 连接线 | boolean \| { showLeafIcon } | false |
-| icon | 节点图标（fn 或 VNode） | TreeIconType | - |
-| switcherIcon | 展开按钮图标 | TreeIconType | - |
+| icon | 节点图标内容；动态内容用 `#icon` | VNodeChild | - |
+| switcherIcon | 展开按钮图标内容；动态内容用 `#switcherIcon` | VNodeChild | - |
 | switcherLoadingIcon | 加载中图标 | VNodeChild | - |
 | blockNode | 节点占满一行 | boolean | false |
 | expandAction | 点击/双击节点时触发展开 | false \| 'click' \| 'doubleClick' | false |
-| titleRender | 标题渲染函数（`#title` 插槽优先） | (node) => VNodeChild | - |
 | disabled | 整棵树禁用 | boolean | - |
 | draggable | 可拖拽 | boolean \| fn \| { nodeDraggable?, icon? } | false |
 | allowDrop | 是否允许拖入 | (options) => boolean | () => true |
 | height | 虚拟滚动容器高度 | number | - |
-| itemHeight | 行高（antd 按 paddingXS/2 + titleHeight 计算，勿手传） | number | - |
+| itemHeight | 虚拟列表估算行高，默认 paddingXS/2 + titleHeight | number | - |
 | scrollWidth | 横向滚动宽度 | number | - |
 | virtual | 虚拟滚动（默认读 ConfigProvider） | boolean | - |
 | itemScrollOffset | activeKey 滚动跟随附加偏移 | number | 0 |
 | focusable | 可聚焦 | boolean | true |
-| activeKey | 键盘活动节点 | TreeKey \| null | - |
+| activeKey | 键盘活动节点（`v-model:activeKey`，null 清空） | TreeKey \| null | - |
 | filterTreeNode | 过滤命中节点（`-filter-node` 类） | (node) => boolean | - |
+| tabIndex | 树焦点宿主的 tabindex | number | 0 |
+| prefixCls | DOM 类前缀（需配套静态 CSS） | string | apollo-tree |
+| classNames / styles | root、item、itemIcon、itemTitle、itemSwitcher 语义区域；支持 `{ props }` 函数 | object \| function | - |
+| rootStyle | 根样式（建议使用原生 style） | CSSProperties | - |
 
 ### 事件（Emits）
 
-四键 `v-model` 与语义事件**同发**（C11）：`update:expandedKeys` + `expand`、`update:checkedKeys` + `check`（checkStrictly 时为对象形态）、`update:selectedKeys` + `select`、`update:loadedKeys` + `load`；另有 `click` / `doubleClick` / `contextmenu` / `mouseEnter` / `mouseLeave` / 拖拽 7 事件（dragStart/dragEnter/dragOver/dragLeave/dragEnd/drop）/ `activeChange`。
+`expandedKeys`、`checkedKeys`、`selectedKeys`、`loadedKeys` 的更新分别同时发送 `update:*` 和 `expand`、`check`、`select`、`load`。`activeKey` 同时发送 `update:activeKey` 和 `activeChange`。
+
+| 事件 | 参数 |
+| --- | --- |
+| expand | (keys, { node, expanded, nativeEvent: MouseEvent \| KeyboardEvent }) |
+| check | (keysOrObject, { event: 'check', node, checked, checkedNodes, checkedNodesPositions?, halfCheckedKeys?, nativeEvent }) |
+| select | (keys, { event: 'select', node, selected, selectedNodes, nativeEvent }) |
+| load | (keys, { event: 'load', node }) |
+| activeChange | (key: TreeKey \| null) |
+| click / doubleClick / contextmenu / mouseEnter / mouseLeave | (event: MouseEvent, node) |
+| dragStart / dragOver / dragLeave | (event: DragEvent, { node }) |
+| dragEnter | (event: DragEvent, { node, expandedKeys }) |
+| dragEnd | (event: DragEvent, { node: EventDataNode \| null })；在树外结束时 node 为 null |
+| drop | (event: DragEvent, { node, dragNode, dragNodesKeys, dropPosition, dropToGap }) |
+
+受控 prop 的每次更新都是请求；父级拒绝时，当前展示与撤控后的本地状态保留最后接受值。`multiple`、`checkStrictly`、能力与数据变化会重新投影当前键，纯派生不发送用户事件。`defaultExpandParent` 只影响初始化；`autoExpandParent` 是持续生效的祖先补全。
+
+异步加载针对同一节点合并进行中的请求。完成但父级拒绝 `loadedKeys` 时不会自动再次请求；失败会报告警告，可通过下一次展开重试。替换或移除节点、卸载后的旧结果不更新状态。
 
 ### Slots
 
+所有作用域均为 `{ node, data }`：node 含规范 key、展开/选择/勾选/加载/拖放状态，data 是原始数据对象（保留 fieldNames 对应字段）。插槽存在即优先，包括空内容。
+
 | 插槽 | 说明 |
 | --- | --- |
-| title | 节点标题（优先于同名 prop / titleRender） |
+| title | 节点标题，优先于数据项 title（包括数据标题函数） |
+| icon | showIcon 开启时的节点图标，优先于内容 prop 和数据图标 |
+| switcherIcon | 可展开节点的展开图标 |
+| switcherLoadingIcon | 加载状态的展开图标 |
+
+顶层 `titleRender` 和 icon/switcherIcon 函数已迁移到对应插槽；VNode 内容 prop、数据项 title/icon/switcherIcon 函数及算法/异步回调仍保留。
+
+```vue
+<Tree :tree-data="nodes" show-icon>
+  <template #title="{ node, data }">{{ data.name }}（{{ node.key }}）</template>
+  <template #switcherIcon="{ node }">{{ node.expanded ? '−' : '+' }}</template>
+</Tree>
+```
 
 ### TreeRef（expose）
 
 | 方法 | 说明 |
 | --- | --- |
-| scrollTo({ key, autoExpand?, offset?, align? }) | 滚动定位到节点 |
-| keyEntities | 键实体表（只读快照） |
+| scrollTo(number \| { key, autoExpand?, offset?, align? } \| null) | 按像素或 key 定位；align 为 top/bottom，省略时只在目标越界时滚动；autoExpand 先请求展开全部祖先 |
+| focus() | 聚焦实际树容器 |
+| keyEntities | 当前只读实体表，含父子关系；数字 0 与字符串 '0' 使用同一键表示，不能同时使用 |
+
+原生 class/style 落在组件根，语义样式按区域合并；每棵树的节点 id/checkbox 标签关系由组件维护。
 
 ### DirectoryTree
 
-`Tree.DirectoryTree` 的对应物：目录树变体（`showIcon=true` / `expandAction='click'` / `blockNode` / File-Folder 图标）；`multiple` 下支持 `shift` / `ctrl`（meta）范围多选，`select` 事件额外带 `selectedNodes`。默认 `defaultExpandAll` 展开全部实体 key（与 Tree 的「只展开有 children」不同）。
+`Tree.DirectoryTree` 的对应物：目录树变体（`showIcon=true` / `expandAction='click'` / `blockNode` / File-Folder 图标）；`multiple` 下支持 `shift` / `ctrl`（meta）范围多选，`select` 事件带 `selectedNodes`；完整转发 Tree 的模型、业务及原生事件，显式 false 与自定义图标有效。默认 `defaultExpandAll` 展开全部实体 key（与 Tree 的「只展开有 children」不同）。
 
 ### 主题变量
 
 | Token | 说明 | 默认值 |
 | --- | --- | --- |
-| titleHeight | 节点标题高度 | controlHeightSM（24px） |
+| titleHeight | 节点标题高度（number，单位 px） | controlHeightSM（24px） |
 | switcherSize | 展开按钮尺寸 | 24px |
 | indentSize | 缩进宽度 | 24px |
 | nodeHoverBg / nodeHoverColor | 节点悬浮态 | controlItemBgHover / colorText |

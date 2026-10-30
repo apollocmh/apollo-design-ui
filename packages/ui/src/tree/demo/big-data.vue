@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { Tree } from '@apollo-design/ui';
-import { h } from 'vue';
 
-// 生成 4 层 × 2 分叉 = 31+ 节点（虚拟滚动可视区外不渲染）
+// Two roots with nine levels produce 1,022 nodes.
 interface DemoNode {
   title: string;
   key: string;
@@ -15,9 +14,9 @@ const build = (pre: string, level: number): DemoNode[] | undefined => {
     return { title: `节点 ${key}`, key, children: build(`${key}-`, level - 1) };
   });
 };
-const treeData = build('0-', 4) ?? [];
+const treeData = build('0-', 8) ?? [];
 </script>
 
 <template>
-  <Tree :tree-data="build('0-', 4)" :height="234" default-expand-all />
+  <Tree :tree-data="treeData" :height="234" default-expand-all />
 </template>

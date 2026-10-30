@@ -16,13 +16,33 @@
  */
 
 import { useId } from '@apollo-design/utils';
-import { VirtualList } from '@apollo-design/virtual-list';
-import { computed, defineComponent, h, onUnmounted, type PropType, ref, watch } from 'vue';
+import { VirtualList, type VirtualListExposed } from '@apollo-design/virtual-list';
+import {
+  computed,
+  defineComponent,
+  type FunctionalComponent,
+  h,
+  nextTick,
+  onUnmounted,
+  type PropType,
+  ref,
+  type SlotsType,
+  watch,
+} from 'vue';
 import { type FlattenNode, getKey, getTreeNodeProps } from '../_internal/tree/tree-util';
-import type { TreeKey } from './interface';
+import type { TreeKey, TreeRef, TreeSlots } from './interface';
 import MotionTreeNode from './MotionTreeNode';
 import type { TreeNodeRequiredProps } from './TreeContext';
+import { getNodeId } from './TreeNode';
 import { findExpandedKeys, getExpandRange } from './utils/diffUtil';
+
+// Vue refs on a functional component resolve to its native root. The list measures
+// that element while MotionTreeNode retains its own reactive animation lifecycle.
+const TreeListItem: FunctionalComponent<InstanceType<typeof MotionTreeNode>['$props']> = (
+  props,
+  { slots },
+) => h(MotionTreeNode, props, slots);
+TreeListItem.inheritAttrs = false;
 
 export const MOTION_KEY = `RC_TREE_MOTION_${Math.random()}`;
 const MotionNode = { key: MOTION_KEY };
@@ -33,6 +53,7 @@ export const MotionEntity = {
   pos: '0',
   node: MotionNode,
   nodes: [MotionNode],
+  children: [],
 };
 const MotionFlattenData: FlattenNode = {
   parent: null,
@@ -63,8 +84,15 @@ function itemKey(item: FlattenNode): TreeKey {
   return getKey(item.key, item.pos);
 }
 
+export interface NodeListRef {
+  scrollTo: TreeRef['scrollTo'];
+  focus: () => void;
+  getIndentWidth: () => number;
+}
+
 export default defineComponent({
   name: 'ATreeNodeList',
+  slots: Object as SlotsType<TreeSlots>,
   props: {
     prefixCls: { type: String, required: true },
     data: { type: Array as PropType<FlattenNode[]>, required: true },
@@ -92,19 +120,25 @@ export default defineComponent({
     onListChangeStart: { type: Function as PropType<() => void>, required: true },
     onListChangeEnd: { type: Function as PropType<() => void>, required: true },
   },
-  setup(props, { attrs, expose }) {
+  setup(props, { attrs, expose, slots }) {
     const treeId = useId();
 
     // =============================== Ref ================================
-    const listRef = ref<{ scrollTo: (s: unknown) => void } | null>(null);
+    const listRef = ref<(VirtualListExposed & { containerElement: HTMLElement | null }) | null>(
+      null,
+    );
     const indentMeasurerRef = ref<HTMLElement | null>(null);
 
     expose({
-      scrollTo: (scroll: unknown) => {
-        listRef.value?.scrollTo(scroll);
+      scrollTo: (scroll) => {
+        if (motionType.value !== null) {
+          onMotionEnd();
+          void nextTick(() => listRef.value?.scrollTo(scroll));
+        } else listRef.value?.scrollTo(scroll);
       },
+      focus: () => listRef.value?.containerElement?.focus(),
       getIndentWidth: () => indentMeasurerRef.value?.offsetWidth ?? 0,
-    });
+    } satisfies NodeListRef);
 
     // ============================== Motion ==============================
     const prevExpandedKeys = ref<TreeKey[]>([...props.expandedKeys]);
@@ -138,6 +172,10 @@ export default defineComponent({
               props.height,
               props.itemHeight,
             );
+            if (rangeNodes.length === 0) {
+              onMotionEnd();
+              return;
+            }
             const newTransitionData = prevData.value.slice();
             newTransitionData.splice(keyIndex + 1, 0, MotionFlattenData);
             transitionData.value = newTransitionData;
@@ -151,6 +189,10 @@ export default defineComponent({
               props.height,
               props.itemHeight,
             );
+            if (rangeNodes.length === 0) {
+              onMotionEnd();
+              return;
+            }
             const newTransitionData = nextData.slice();
             newTransitionData.splice(keyIndex + 1, 0, MotionFlattenData);
             transitionData.value = newTransitionData;
@@ -242,7 +284,7 @@ export default defineComponent({
             role: 'tree',
             tabIndex: focusable ? props.tabIndex : undefined,
             'aria-activedescendant': activeItem.value
-              ? `${treeId}_${String(activeItem.value.key)}`
+              ? getNodeId(treeId, activeItem.value.key)
               : undefined,
             onVisibleChange: (originList: FlattenNode[]) => {
               // 虚拟下哨兵滚出可见窗口时也应收尾（rc 判据）
@@ -257,28 +299,32 @@ export default defineComponent({
               const treeNode = slotItem.item;
               const mergedKey = getKey(treeNode.key, treeNode.pos);
               const treeNodeProps = getTreeNodeProps(mergedKey, treeNodeRequiredProps as never);
-              return h(MotionTreeNode, {
-                key: mergedKey as string | number,
-                prefixCls: props.prefixCls,
-                ...treeNodeProps,
-                title: treeNode.title,
-                active: !!activeItem.value && treeNode.key === activeItem.value.key,
-                pos: treeNode.pos,
-                data: treeNode.data as Record<string, unknown>,
-                isStart: treeNode.isStart,
-                isEnd: treeNode.isEnd,
-                motion: props.motion,
-                motionNodes: treeNode.key === MOTION_KEY ? transitionRange.value : null,
-                motionType: motionType.value,
-                onMotionStart: props.onListChangeStart,
-                onMotionEnd: onMotionEnd,
-                treeNodeRequiredProps: treeNodeRequiredProps,
-                treeId: treeId,
-                node: treeNode,
-                onMouseMove: () => {
-                  props.onActiveChange(null);
-                },
-              } as never);
+              return h(
+                TreeListItem,
+                {
+                  key: mergedKey as string | number,
+                  prefixCls: props.prefixCls,
+                  ...treeNodeProps,
+                  title: treeNode.title,
+                  active: !!activeItem.value && treeNode.key === activeItem.value.key,
+                  pos: treeNode.pos,
+                  data: treeNode.data as Record<string, unknown>,
+                  isStart: treeNode.isStart,
+                  isEnd: treeNode.isEnd,
+                  motion: props.motion,
+                  motionNodes: treeNode.key === MOTION_KEY ? transitionRange.value : null,
+                  motionType: motionType.value,
+                  onMotionStart: props.onListChangeStart,
+                  onMotionEnd: onMotionEnd,
+                  treeNodeRequiredProps: treeNodeRequiredProps,
+                  treeId: treeId,
+                  node: treeNode,
+                  onMouseMove: () => {
+                    props.onActiveChange(null);
+                  },
+                } as never,
+                slots,
+              );
             },
           },
         ),

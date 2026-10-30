@@ -1,26 +1,3 @@
-/**
- * Tree 的类型定义（G2 产物）。
- *
- * 契约来源：antd 6.6.4 `es/tree/Tree.d.ts` + `DirectoryTree` 的行为面 + `@rc-component/tree`
- * 1.4.0 的 `Tree.d.ts` / `interface.d.ts`（antd 用 `Omit<RcTreeProps, ...>` 继承）。
- * 分析见 `docs/analysis/tree.md`（G1，R1–R8 已闭环）。
- *
- * ── Vue 化映射（COMPATIBILITY.md §1–§4 的规则）────────────────────────────────
- *   · `expandedKeys` / `checkedKeys` / `selectedKeys` / `loadedKeys` + onExpand/onCheck/
- *     onSelect/onLoad → `v-model:*` + `update:*` + `expand`/`check`/`select`/`load`
- *     语义事件**同发**（规则 C11）
- *   · 拖拽 7 个 onDragXxx / onClick / onMouseEnter 等 → 纯 emit（Vue 事件面）
- *   · `title`（fn）→ scoped slot `#title`；`titleRender` prop 保留 fn（C8-R2）
- *   · `icon` / `switcherIcon` / `switcherLoadingIcon` / `draggable.icon` 保留 VNode|fn
- *     —— iconUtil 需要按节点态分支，属 D111 程序化上下文例外清单
- *   · `<TreeNode>` children 形态：v6 已 deprecated（rc gDSFP 传 children 时告警），
- *     本仓**不实现**——传 children 时 dev 告警指回 treeData（UPSTREAM 同判）
- *   · `classNames` / `styles` 5 槽支持**函数形态**（GenerateSemantic）
- *   · `checkable` 支持 `boolean | VNode`（antd 传 `<span class="{p}-checkbox-inner">`）
- *
- * ⚠️ 禁止 any / as any / @ts-expect-error（H10）。
- */
-
 import type { CSSProperties, VNodeChild } from 'vue';
 import type {
   BasicDataNode,
@@ -79,14 +56,14 @@ export type TreeAllowDrop<TreeDataType extends BasicDataNode = DataNode> = (
 export interface TreeExpandEventInfo<TreeDataType extends BasicDataNode = DataNode> {
   node: EventDataNode<TreeDataType>;
   expanded: boolean;
-  nativeEvent: MouseEvent;
+  nativeEvent: MouseEvent | KeyboardEvent;
 }
 
 export interface TreeCheckInfo<TreeDataType extends BasicDataNode = DataNode> {
   event: 'check';
   node: EventDataNode<TreeDataType>;
   checked: boolean;
-  nativeEvent: MouseEvent;
+  nativeEvent: MouseEvent | KeyboardEvent;
   checkedNodes: TreeDataType[];
   /** 仅非 checkStrictly（级联）时携带（rc [Legacy]，tree-select 依赖）。 */
   checkedNodesPositions?: { node: TreeDataType; pos: string }[];
@@ -98,7 +75,7 @@ export interface TreeSelectEventInfo<TreeDataType extends BasicDataNode = DataNo
   selected: boolean;
   node: EventDataNode<TreeDataType>;
   selectedNodes: TreeDataType[];
-  nativeEvent: MouseEvent;
+  nativeEvent: MouseEvent | KeyboardEvent;
 }
 
 export interface TreeLoadEventInfo<TreeDataType extends BasicDataNode = DataNode> {
@@ -107,7 +84,6 @@ export interface TreeLoadEventInfo<TreeDataType extends BasicDataNode = DataNode
 }
 
 export interface TreeDragEventInfo<TreeDataType extends BasicDataNode = DataNode> {
-  event: MouseEvent;
   node: EventDataNode<TreeDataType>;
 }
 
@@ -179,10 +155,10 @@ export interface TreeScrollConfig {
   align?: 'top' | 'bottom';
 }
 
-export interface TreeProps {
+export interface TreeProps<TreeDataType extends object = object> {
   // ---- 数据 ----
   /** 树数据（v6 主通道；`<TreeNode>` children 形态已 deprecated，不实现）。 */
-  treeData?: DataNode[];
+  treeData?: TreeDataType[];
   /** 字段名映射（title / key / children）。 */
   fieldNames?: TreeFieldNames;
 
@@ -215,14 +191,12 @@ export interface TreeProps {
   // ---- 外观 ----
   showIcon?: boolean;
   showLine?: boolean | { showLeafIcon: boolean | TreeIconType };
-  icon?: TreeIconType;
-  switcherIcon?: TreeIconType;
+  icon?: VNodeChild;
+  switcherIcon?: VNodeChild;
   switcherLoadingIcon?: VNodeChild;
   blockNode?: boolean;
   /** 点击/双击节点时是否触发展开（DirectoryTree 默认 'click'）。 */
   expandAction?: TreeExpandAction;
-  /** 标题渲染函数（`#title` slot 优先）。 */
-  titleRender?: (node: DataNode) => VNodeChild;
 
   // ---- 禁用 / 拖拽 ----
   disabled?: boolean;
@@ -269,6 +243,8 @@ export interface TreeEmits {
   (e: 'update:selectedKeys', keys: TreeKey[]): void;
   /** `v-model:loadedKeys`。 */
   (e: 'update:loadedKeys', keys: SafeKey[]): void;
+  (e: 'update:activeKey', key: TreeKey | null): void;
+  (e: 'activeChange', key: TreeKey | null): void;
   /** 展开/收起（与 `update:expandedKeys` 同发）。 */
   (e: 'expand', keys: TreeKey[], info: TreeExpandEventInfo): void;
   /** 勾选（与 `update:checkedKeys` 同发；返回值形态随 checkStrictly）。 */
@@ -280,36 +256,44 @@ export interface TreeEmits {
   (e: 'click', evt: MouseEvent, node: EventDataNode): void;
   (e: 'doubleClick', evt: MouseEvent, node: EventDataNode): void;
   (e: 'contextmenu', evt: MouseEvent, node: EventDataNode): void;
-  (e: 'mouseEnter', info: { event: MouseEvent; node: EventDataNode }): void;
-  (e: 'mouseLeave', info: { event: MouseEvent; node: EventDataNode }): void;
-  (e: 'dragStart', info: TreeDragEventInfo): void;
-  (e: 'dragEnter', info: TreeDragEnterEventInfo): void;
-  (e: 'dragOver', info: TreeDragEventInfo): void;
-  (e: 'dragLeave', info: TreeDragEventInfo): void;
-  (e: 'dragEnd', info: TreeDragEventInfo): void;
-  (e: 'drop', info: TreeDropEventInfo): void;
+  (e: 'mouseEnter', evt: MouseEvent, node: EventDataNode): void;
+  (e: 'mouseLeave', evt: MouseEvent, node: EventDataNode): void;
+  (e: 'dragStart', evt: DragEvent, info: TreeDragEventInfo): void;
+  (e: 'dragEnter', evt: DragEvent, info: TreeDragEnterEventInfo): void;
+  (e: 'dragOver', evt: DragEvent, info: TreeDragEventInfo): void;
+  (e: 'dragLeave', evt: DragEvent, info: TreeDragEventInfo): void;
+  (e: 'dragEnd', evt: DragEvent, info: { node: EventDataNode | null }): void;
+  (e: 'drop', evt: DragEvent, info: TreeDropEventInfo): void;
 }
 
 // ---------------------------------------------------------------------------
 // Slots
 // ---------------------------------------------------------------------------
 
-export interface TreeSlots {
-  /** 节点标题（优先于 `treeData[].title` 与 `titleRender`）。 */
-  title?: (props: { node: EventDataNode; data: DataNode }) => VNodeChild;
+export interface TreeSlotScope<TreeDataType extends object = Record<string, unknown>> {
+  node: EventDataNode;
+  data: TreeDataType;
+}
+
+export interface TreeSlots<TreeDataType extends object = Record<string, unknown>> {
+  /** Slot presence takes priority, including an intentionally empty result. */
+  title?: (props: TreeSlotScope<TreeDataType>) => VNodeChild;
+  icon?: (props: TreeSlotScope<TreeDataType>) => VNodeChild;
+  switcherIcon?: (props: TreeSlotScope<TreeDataType>) => VNodeChild;
+  switcherLoadingIcon?: (props: TreeSlotScope<TreeDataType>) => VNodeChild;
 }
 
 // ---------------------------------------------------------------------------
 // Expose（rc class 实例的公开方法面）
 // ---------------------------------------------------------------------------
 
-export interface TreeRef {
+export interface TreeRef<TreeDataType extends object = DataNode> {
   /** 滚动到指定节点；`autoExpand: true` 时先展开再滚。 */
   scrollTo: (scroll?: number | TreeScrollConfig | null) => void;
   /** 聚焦树容器（rc focusable 管理）。 */
   focus: () => void;
   /** 节点数据实体表（只读快照）。 */
-  keyEntities: Record<SafeKey, TreeDataEntity>;
+  keyEntities: Record<SafeKey, TreeDataEntity<TreeDataType>>;
 }
 
 // ---------------------------------------------------------------------------

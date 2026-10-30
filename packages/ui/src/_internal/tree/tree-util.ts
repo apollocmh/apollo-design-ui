@@ -265,8 +265,8 @@ export function convertDataToEntities<TreeDataType extends BasicDataNodeLike>(
   legacyExternalGetKey?: string | ((node: BasicDataNodeLike) => TreeKey),
 ): ConvertDataToEntitiesWrapper<TreeDataType> {
   const mergedExternalGetKey = options?.externalGetKey ?? legacyExternalGetKey;
-  const posEntities: Record<string, TreeEntity<TreeDataType>> = {};
-  const keyEntities: Record<SafeKey, TreeEntity<TreeDataType>> = {};
+  const posEntities: Record<string, TreeEntity<TreeDataType>> = Object.create(null);
+  const keyEntities: Record<SafeKey, TreeEntity<TreeDataType>> = Object.create(null);
   let wrapper: ConvertDataToEntitiesWrapper<TreeDataType> = { posEntities, keyEntities };
   if (options?.initWrapper) {
     wrapper = options.initWrapper(wrapper) ?? wrapper;
@@ -395,7 +395,8 @@ export function convertNodePropsToEventData<
     dragOverGapBottom?: boolean;
     pos?: string;
     active?: boolean;
-    eventKey?: TreeKey;
+    isLeaf?: boolean;
+    eventKey: TreeKey;
   },
 >(props: Props): EventDataNodeLike<TreeDataType> {
   const {
@@ -414,37 +415,38 @@ export function convertNodePropsToEventData<
     eventKey,
   } = props;
   const eventData = {
-    ...(data as Record<string, unknown>),
-    expanded,
-    selected,
-    checked,
-    loaded,
-    loading,
-    halfChecked,
-    dragOver,
-    dragOverGapTop,
-    dragOverGapBottom,
-    pos,
-    active,
+    ...data,
+    expanded: Boolean(expanded),
+    selected: Boolean(selected),
+    checked: Boolean(checked),
+    loaded: Boolean(loaded),
+    loading: Boolean(loading),
+    halfChecked: Boolean(halfChecked),
+    dragOver: Boolean(dragOver),
+    dragOverGapTop: Boolean(dragOverGapTop),
+    dragOverGapBottom: Boolean(dragOverGapBottom),
+    pos: pos ?? '',
+    active: Boolean(active),
     key: eventKey,
-  } as EventDataNodeLike<TreeDataType>;
+    isLeaf: props.isLeaf ?? data?.isLeaf,
+  };
   return eventData;
 }
 
 /** 事件回调的节点形态（EventDataNode 的结构约束版，供 utils 内使用）。 */
-export interface EventDataNodeLike<TreeDataType extends BasicDataNodeLike>
-  extends BasicDataNodeLike {
-  key: TreeKey | undefined;
-  expanded?: boolean;
-  selected?: boolean;
-  checked?: boolean;
-  loaded?: boolean;
-  loading?: boolean;
-  halfChecked?: boolean;
-  dragOver?: boolean;
-  dragOverGapTop?: boolean;
-  dragOverGapBottom?: boolean;
-  pos?: string;
-  active?: boolean;
+export interface EventDataNodeLike<TreeDataType extends BasicDataNodeLike> {
+  [field: string]: unknown;
+  key: TreeKey;
+  expanded: boolean;
+  selected: boolean;
+  checked: boolean;
+  loaded: boolean;
+  loading: boolean;
+  halfChecked: boolean;
+  dragOver: boolean;
+  dragOverGapTop: boolean;
+  dragOverGapBottom: boolean;
+  pos: string;
+  active: boolean;
   data?: TreeDataType;
 }

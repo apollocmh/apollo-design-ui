@@ -9,15 +9,26 @@
  */
 
 import { CSSMotion, type MotionHooks } from '@apollo-design/motion';
-import { computed, defineComponent, h, onMounted, type PropType, ref, watch } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  onMounted,
+  type PropType,
+  ref,
+  type SlotsType,
+  watch,
+} from 'vue';
 import { clsx } from '../_internal/clsx';
 import type { FlattenNode } from '../_internal/tree/tree-util';
 import { getTreeNodeProps } from '../_internal/tree/tree-util';
+import type { TreeSlots } from './interface';
 import type { TreeNodeRequiredProps } from './TreeContext';
 import TreeNode from './TreeNode';
 
 export default defineComponent({
   name: 'ATreeMotionTreeNode',
+  slots: Object as SlotsType<TreeSlots>,
   props: {
     prefixCls: { type: String, required: true },
     motion: { type: Object as PropType<Record<string, unknown> | undefined>, default: undefined },
@@ -35,7 +46,7 @@ export default defineComponent({
     isEnd: { type: Array as unknown as () => boolean[], required: true },
     node: { type: Object as PropType<FlattenNode>, required: true },
   },
-  setup(props) {
+  setup(props, { slots }) {
     const visible = ref(true);
     // Should only trigger once
     const triggerMotionEndRef = ref(false);
@@ -141,18 +152,22 @@ export default defineComponent({
                     treeNode.key as never,
                     props.treeNodeRequiredProps as never,
                   );
-                  return h(TreeNode, {
-                    key: treeNode.key,
-                    treeId: props.treeId,
-                    ...treeNodeProps,
-                    title: treeNode.title,
-                    active: props.active,
-                    data: treeNode.data as Record<string, unknown>,
-                    isStart: treeNode.isStart,
-                    isEnd: treeNode.isEnd,
-                    // rc `{...restProps}` 判据：data 自有字段透传（isLeaf/disabled/icon…）
-                    ...dataPropsOf(treeNode),
-                  } as never);
+                  return h(
+                    TreeNode,
+                    {
+                      key: treeNode.key,
+                      treeId: props.treeId,
+                      ...treeNodeProps,
+                      title: treeNode.title,
+                      active: props.active,
+                      data: treeNode.data as Record<string, unknown>,
+                      isStart: treeNode.isStart,
+                      isEnd: treeNode.isEnd,
+                      // rc `{...restProps}` 判据：data 自有字段透传（isLeaf/disabled/icon…）
+                      ...dataPropsOf(treeNode),
+                    } as never,
+                    slots,
+                  );
                 }),
               ),
           },
@@ -165,21 +180,25 @@ export default defineComponent({
         props.node.key as never,
         props.treeNodeRequiredProps as never,
       );
-      return h(TreeNode, {
-        className: props.className,
-        style: props.style,
-        treeId: props.treeId,
-        // rc `{...restProps}` 判据：data 自有字段透传（isLeaf/disabled/icon…）
-        ...dataPropsOf(props.node),
-        ...treeNodeProps,
-        title: props.node.title,
-        pos: props.node.pos,
-        eventKey: props.node.key,
-        active: props.active,
-        data: props.node.data as Record<string, unknown>,
-        isStart: props.node.isStart,
-        isEnd: props.node.isEnd,
-      } as never);
+      return h(
+        TreeNode,
+        {
+          className: props.className,
+          style: props.style,
+          treeId: props.treeId,
+          // rc `{...restProps}` 判据：data 自有字段透传（isLeaf/disabled/icon…）
+          ...dataPropsOf(props.node),
+          ...treeNodeProps,
+          title: props.node.title,
+          pos: props.node.pos,
+          eventKey: props.node.key,
+          active: props.active,
+          data: props.node.data as Record<string, unknown>,
+          isStart: props.node.isStart,
+          isEnd: props.node.isEnd,
+        } as never,
+        slots,
+      );
     };
   },
 });
@@ -204,16 +223,20 @@ const MOTION_HOOK_KEYS: Record<string, true> = {
 /** rc：`delete restProps.children / key` —— data 自有字段（isLeaf/disabled/icon 等）
  * 原样作为 TreeNode props 透传（rc NodeList 的 `{...restProps}` 判据）。 */
 function dataPropsOf(node: FlattenNode): Record<string, unknown> {
-  const {
-    key: _k,
-    children: _c,
-    title: _t,
-    pos: _p,
-    ...rest
-  } = node.data as Record<string, unknown>;
-  void _k;
-  void _c;
-  void _t;
-  void _p;
-  return rest;
+  const result: Record<string, unknown> = {};
+  const fields = new Set([
+    'checkable',
+    'disabled',
+    'disableCheckbox',
+    'icon',
+    'isLeaf',
+    'selectable',
+    'switcherIcon',
+    'className',
+    'style',
+  ]);
+  for (const [key, value] of Object.entries(node.data)) {
+    if (fields.has(key) || /^(aria-|data-)/.test(key)) result[key] = value;
+  }
+  return result;
 }

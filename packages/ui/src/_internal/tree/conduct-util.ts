@@ -10,7 +10,7 @@
  */
 
 import { warning } from '@apollo-design/utils';
-import type { BasicDataNodeLike } from './key-util';
+import getEntity, { type BasicDataNodeLike } from './key-util';
 import type { SafeKey } from './types';
 
 /** 级联计算用的最小实体视图（TreeDataEntity 的结构子集，node 收窄为 BasicDataNodeLike）。 */
@@ -207,7 +207,7 @@ export function conductCheck(
   // We only handle exist keys
   const keys = new Set(
     keyList.filter((key) => {
-      const hasEntity = Boolean(keyEntities[key as SafeKey]);
+      const hasEntity = Boolean(getEntity(keyEntities, key));
       if (!hasEntity) {
         warningMissKeys.push(key);
       }

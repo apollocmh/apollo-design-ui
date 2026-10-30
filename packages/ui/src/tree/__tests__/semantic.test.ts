@@ -77,13 +77,6 @@ describe('Tree · 语义槽（L4）', () => {
     );
     await nextTick();
     const root = w.find('.apollo-tree');
-    // eslint-disable-next-line no-console
-    console.log(
-      'ROOT classes:',
-      JSON.stringify(root.classes()),
-      'style:',
-      root.attributes('style'),
-    );
     expect(root.classes()).toContain('ctx-root');
     expect(root.classes()).toContain('prop-root');
     expect(root.attributes('style')).toContain('padding: 9px');
@@ -154,7 +147,7 @@ const CASES: Record<string, () => DomRenderResult> = {
     h(Tree, {
       ...BP,
       defaultExpandAll: true,
-      treeData: [{ id: 'a', name: 'A', subs: [{ id: 'a1', name: 'A1' }] }] as never,
+      treeData: [{ id: 'a', name: 'A', subs: [{ id: 'a1', name: 'A1' }] }],
       fieldNames: { key: 'id', title: 'name', children: 'subs' },
     }),
   'tree:disabled-node': () =>
@@ -194,10 +187,30 @@ const CASES: Record<string, () => DomRenderResult> = {
     h(Tree, { ...BP, treeData: TREE_DATA, defaultExpandAll: true, draggable: true }),
 };
 
+// The historical reference marks every defaultExpandAll key expanded and rendered
+// leaf entries as open folders. Apollo derives the leaf capability for its file icon.
+// Keep every reference scene and require exactly the three leaf-icon changes.
+const directoryLeafIcons = [1, 2, 3].flatMap((index) => {
+  const path = `$/div[0]/div[1]/div[0]/div[0]/div[0]/div[${index}]/span[2]/span[0]/span[0]`;
+  return [
+    `${path}: 类名不同 [apollo-icon apollo-icon-folder-open] vs [apollo-icon apollo-icon-file]`,
+    `${path}: 属性 aria-label 不同 "folder-open" vs "file"`,
+    `${path}/svg[0]: 属性 data-icon 不同 "folder-open" vs "file"`,
+  ];
+});
+const directoryIconContract = {
+  reason:
+    'DirectoryTree uses its derived leaf state for File/Folder icons, as documented in tree/index.zh-CN.md and verified in native-contracts.test.ts. Historical reference HTML remains unchanged.',
+  diff: directoryLeafIcons,
+};
+
 domContractTest('Tree', {
   baseline,
   keepStyle: false,
-  allow: {},
+  allow: {
+    'tree:directory': directoryIconContract,
+    'tree:directory-selected': directoryIconContract,
+  },
   render: (id) => {
     const build = CASES[id];
     if (!build) {

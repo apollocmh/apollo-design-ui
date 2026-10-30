@@ -1,4 +1,4 @@
 ---
 order: 104
 ---
-通过主题定制 Component Token（`titleHeight` / `nodeSelectedBg`）。\n
+通过主题定制 Component Token（`titleHeight` / `nodeSelectedBg`）。

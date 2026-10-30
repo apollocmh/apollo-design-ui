@@ -1,66 +1,17 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
+# Tree implementation
 
-# Tree 实现说明
+The public contract lives in [the Chinese API](./index.zh-CN.md), [the English API](./index.en-US.md), exported types and behavior tests. Current architecture state comes from `registry/vue-native-audit.json`.
 
-## 1. 对应 antd 组件
+Tree owns controlled models through `useControlledValue`. Computed projections consume the current data and configuration; accepted model values remain separate from ancestors, checked descendants and half checks. DirectoryTree owns its selection policy and uses the same accepted-value boundary while forwarding Tree events.
 
-- antd 6.6.4 `es/tree/`（Tree.js 148 薄壳 + DirectoryTree.js 147 + utils 185 + style）
-- 内核参照：@rc-component/tree 1.4.0（**class 组件 1299 行 + utils 1051 行** —— 全仓最大内核；缓存 node_modules）
-- 分析产物：`docs/analysis/tree.md`（§2 23 state 槽 / §2.3 gDSFP 八步 / §8 R1–R8）
-- 依赖的已收口能力：`@apollo-design/virtual-list`（NodeList）、`@apollo-design/motion`（展开动画）、`locale`、`icons`（CaretDownFilled 等 8 个）
-- 样式：100 条规则机械提取（`tests/visual/debug/extract-tree-css.mjs`），9 个自有 Component Token
+TreeNode reads title/icon slots during rendering. Slots receive `{ node, data }`, take priority when present and preserve intentionally empty output. Top-level content functions use slots; per-data-item title/icon functions and business predicates keep their separate responsibilities.
 
-## 2. 与 antd 的行为差异清单（同步 COMPATIBILITY.md）
+NodeList owns virtual scrolling, the actual focus host, indent measurement and expansion motion. Empty motion ranges finish immediately. Tree refs delegate to this owner. Expansion requested by scrollTo resolves ancestors before the list scrolls.
 
-| # | 差异 | 分类 | 说明 |
-| --- | --- | --- | --- |
-| 1 | `checkedKeys` 等四键走 `v-model` + 语义事件（expand/check/select/load）同发 | INTENDED | C11 |
-| 2 | `<TreeNode>` children 形态不实现 | 同上游 | v6 deprecated + 告警 |
-| 3 | `title`：slot / fn / string 三通道（C8-R2）；`icon`/`switcherIcon` 保留 fn 与 VNode | INTENDED | D111 程序化上下文 |
-| 4 | rc `Tree.useTree` 保留导出（getPath） | 同上游 | 公开 API |
-| 5 | `scrollTo` 支持 `{key, autoExpand, offset, align}` | 同上游 | rc TreeScrollConfig |
-| 6 | 键盘 `Space` 兼容 `'Space'` 键名 | PLATFORM | jsdom 规范化 key（浏览器只发 `' '`），真实行为不变 |
-| 7 | `Tree.DirectoryTree` 拆为 `DirectoryTree` 独立导出 | INTENDED | Vue 命名空间惯例 |
+Loads are deduplicated by key and source-node identity. Stale results are ignored; completing a controlled request does not cause polling when the parent refuses loadedKeys. Failure is reported and a later expansion can retry. Drag timers, global listeners and list timers are released on teardown.
 
-## 3. .ts 选择
+The four files under `_internal/tree` provide entity lookup, traversal, field mapping and check conduction shared with Table and TreeSelect. Entity tables retain own prototype-named keys safely. Record key semantics are unchanged: numeric and string representations of the same key must not coexist.
 
-全部 `.ts`（defineComponent + h）：Tree/NodeList/TreeNode/MotionTreeNode 为 VNode 组装型，与 tooltip/drawer 同范式；utils 纯函数层可独立 L1 直测。
+`use-tree-theme.ts` projects current source aliases and all nine component tokens. Without an active source, the static component variables inherit the current CSS aliases. Native root style keeps precedence. The drop indicator obtains its color and height from static CSS and uses logical geometry.
 
-## 4. Component Token（9 个）
-
-`titleHeight` / `switcherSize` / `indentSize`（= controlHeightSM 24）/ `nodeHoverBg`（controlItemBgHover）/ `nodeHoverColor`（colorText）/ `nodeSelectedBg`（controlItemBgActive）/ `nodeSelectedColor`（colorText）/ `directoryNodeSelectedColor`（colorTextLightSolid）/ `directoryNodeSelectedBg`（colorPrimary）。
-⚠️ registry 旧值 `tokenCount: 2` 与产物不符，以 extract-tree-css.mjs 对拍为准。
-
-## 5. 实现要点（最容易写错的判据）
-
-1. **gDSFP 八步 → computed + 拆分 watch**：受控键 watch 的触发条件逐一对齐 rc needSync；`setUncontrolled` 按键判「props 有则跳过」。
-2. **MOTION_KEY 哨兵**：随机串实体注入 keyEntities + flatten 挖洞插入 MotionFlattenData；NodeList 的 `onVisibleChange` 兜底收尾（虚拟下哨兵滚出窗口）。
-3. **`isLeaf` prop 是 undefined 语义**（`isLeaf === false` 恒否决）—— Vue Boolean prop 必须 `default: undefined`。
-4. **data 自有字段透传**（rc `{...restProps}`）：isLeaf/disabled/icon/selectable 等由 data 直接进 TreeNode props。
-5. **switcher 类条件是 `!isLeaf`（prop）**：叶子也带 `-treenode-switcher-close`（基线逐字）。
-6. **checkable 自定义 span**：antd 壳传 `<span class="{p}-checkbox-inner">`；checkbox 的 aria-disabled 是**值语义**（falsy 省略），treeitem 上是字符串（基线逐字）。
-7. **语义合并**：classNames 拼接（mergeClassNames）、styles 逐键浅合并 —— 对象展开会丢 ctx。
-8. **Wrapper 初值**：DirectoryTree 的 selectedKeysRef 初值必须含受控 `selectedKeys`（rc useControlledState 受控初值语义）。
-9. **NodeList 返回 Fragment**（量测 div + VirtualList 平铺）—— 包 wrapper 会破坏根 div 子节点数契约。
-10. **VirtualList slot 是 `{item,index,style,offsetX}` 包装对象**；事件键必须 DOM 小写（onKeydown 非 onKeyDown）；Wrapper 布尔 prop 用 `default: undefined`。
-11. 🚨 **受控 checkedKeys 也要随 treeData 重导电**（Issue #16）：rc 的第三分支是
-    `parseCheckedKeys(props.checkedKeys) || prevState`，即 **受控与否不影响 treeData 变化时
-    的重算，只决定 base 取 props 原值还是取内部派生态**。 ⇒ 受控时以「用户给的键」在新
-    keyEntities 上重跑 conductCheck（异步挂到已勾选父下的子节点才继承勾选、孤儿半选才会
-    回落）；两者共用同一落地路径且**不 emit**（gDSFP 里改 state，用户侧不该感知 change）。
-    非对称拉 perimeter ⇒ 别写成「受控时跳过 treeData watch」。
-
-## 6. 已知缺口
-
-- 拖拽的 window 级时序在 jsdom 受限（mousedown 派发）—— 拖拽断言在 calcDropPosition L1 + 视觉层覆盖。
-- axe demo 扫描已接入（expectCount=18）；G9 视觉基线待跑。
-- ⚠️ **jsdom 下 collapse/expand 动效不结束**：测试里只改 treeData（不同步重设 `expandedKeys`）
-  才能看到新结构；一旦 `expandedKeys` 引用变化，NodeList 会进入 `motionType='show'` 且
-  `onMotionEnd` 不触发 ⇒ transitionData 停在旧列表。另外「新出现的 key 即使已在 expandedKeys
-  里也不会自动展开」—— rc 的 expandedKeys 只在自身变化时重算，**与上游一致**，不是缺陷。
-
-## 7. demo 替换登记
-
-- `search.vue`：antd 用 `Input.Search`（未落地）⇒ 原生 `input` 等价替换。
-- `draggable.vue`/`big-data.vue`/`virtual-scroll.vue`：antd 的拖拽落点重排逻辑等价移植（API 面 1:1）。
-- `customized-icon.vue`/`line.vue`/`switcher-icon.vue`：icon 用 fn 传法（D111），与上游 vnode 产物一致。
+[The dated read-only inventory](../../../../docs/audit/2026-10-29-tree-readonly-inventory.md) and [the historical implementation plan](./PLAN.md) retain their original evidence. Their upstream comparisons and former gates do not define the current Apollo contract or current verification status.

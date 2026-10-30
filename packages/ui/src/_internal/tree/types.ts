@@ -76,7 +76,7 @@ export interface TreeFieldNames {
 }
 
 /** rc `DataEntity`（键实体表值；keyEntities 的公开形态）。 */
-export interface TreeDataEntity<TreeDataType extends BasicDataNode = DataNode> {
+export interface TreeDataEntity<TreeDataType extends object = DataNode> {
   index: number;
   key: SafeKey;
   pos: string;
@@ -88,7 +88,7 @@ export interface TreeDataEntity<TreeDataType extends BasicDataNode = DataNode> {
 }
 
 /** 节点态传给 icon/switcherIcon fn 的参数（rc `TreeNodeProps` 的只读子集）。 */
-export interface TreeNodeRenderInfo<TreeDataType extends BasicDataNode = DataNode> {
+export interface TreeNodeRenderInfo<TreeDataType extends object = Record<string, unknown>> {
   eventKey?: TreeKey;
   expanded?: boolean;
   selected?: boolean;
@@ -111,7 +111,9 @@ export interface TreeNodeRenderInfo<TreeDataType extends BasicDataNode = DataNod
 }
 
 /** rc `IconType`：VNode 或按节点态求值的 fn。 */
-export type TreeIconType = VNodeChild | ((props: TreeNodeRenderInfo) => VNodeChild);
+export type TreeIconType<TreeDataType extends object = Record<string, unknown>> =
+  | VNodeChild
+  | ((props: TreeNodeRenderInfo<TreeDataType>) => VNodeChild);
 
 /** rc `ExpandAction`。 */
 export type TreeExpandAction = false | 'click' | 'doubleClick';

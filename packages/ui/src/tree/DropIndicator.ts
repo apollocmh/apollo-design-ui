@@ -1,9 +1,4 @@
-/**
- * DropIndicator —— 拖拽落点指示线（rc `DropIndicator.js` 逐字移植）。
- *
- * 注意 rc 原文样式 `backgroundColor: 'red'` 是**产物字面量**（测试依赖它），
- * 不走 token（与 image 的 100px 同判，E10 豁免记录在 README）。
- */
+/** Drop geometry is local; color and line height belong to Tree's static CSS. */
 
 import { type CSSProperties, defineComponent, h } from 'vue';
 
@@ -29,25 +24,23 @@ export default defineComponent({
       const style: CSSProperties & Record<string, unknown> = {
         pointerEvents: 'none',
         position: 'absolute',
-        right: 0,
-        backgroundColor: 'red',
-        height: 2,
+        insetInlineEnd: 0,
       };
       switch (props.dropPosition) {
         case -1:
           style.top = 0;
-          style.left = `${-props.dropLevelOffset * props.indent}px`;
+          style.insetInlineStart = `${-props.dropLevelOffset * props.indent}px`;
           break;
         case 1:
           style.bottom = 0;
-          style.left = `${-props.dropLevelOffset * props.indent}px`;
+          style.insetInlineStart = `${-props.dropLevelOffset * props.indent}px`;
           break;
         case 0:
           style.bottom = 0;
-          style.left = `${props.indent}px`;
+          style.insetInlineStart = `${props.indent}px`;
           break;
       }
-      return h('div', { style });
+      return h('div', { class: `${props.prefixCls}-drop-indicator`, style });
     };
   },
 });

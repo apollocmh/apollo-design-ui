@@ -19,7 +19,7 @@
 import type { PropType, VNodeChild } from 'vue';
 import { computed, defineComponent, h, ref, shallowRef, watch } from 'vue';
 import { Tree } from '../tree';
-import type { TreeKey } from '../tree/interface';
+import type { TreeIconType, TreeKey, TreeSlots } from '../tree/interface';
 import type { TreeSelectDataNode } from './interface';
 import type { FilledFieldNames } from './utils/value-util';
 import { getAllKeys, isCheckDisabled } from './utils/value-util';
@@ -99,7 +99,7 @@ const OptionList = defineComponent({
     onTreeExpand: { type: Function as PropType<(keys: TreeKey[]) => void>, default: undefined },
     treeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     showTreeIcon: { type: Boolean, default: undefined },
-    switcherIcon: { type: null as unknown as PropType<unknown>, default: undefined },
+    switcherIcon: { type: null as unknown as PropType<TreeIconType>, default: undefined },
     treeLine: { type: [Boolean, Object], default: undefined },
     treeNodeFilterProp: { type: String, default: 'value' },
     keyEntities: { type: Object as PropType<Record<string, unknown>>, required: true },
@@ -358,7 +358,7 @@ const OptionList = defineComponent({
         multiple: props.multiple,
         icon: props.treeIcon,
         showIcon: props.showTreeIcon,
-        switcherIcon: props.switcherIcon,
+        switcherIcon: typeof props.switcherIcon === 'function' ? undefined : props.switcherIcon,
         showLine: props.treeLine,
         loadData: syncLoadData.value,
         motion: false, // rc：antd 薄壳固定 treeMotion: null
@@ -369,7 +369,6 @@ const OptionList = defineComponent({
         checkedKeys: mergedCheckedKeys.value as never,
         selectedKeys: props.checkable ? [] : props.checkedKeys,
         defaultExpandAll: props.treeDefaultExpandAll,
-        titleRender: props.treeTitleRender,
         fieldNames: {
           key: props.fieldNames.key,
           title: props.fieldNames._title[0],
@@ -378,7 +377,7 @@ const OptionList = defineComponent({
         focusable: false,
         filterTreeNode,
         expandAction: props.treeExpandAction,
-        onActiveChange: (key: TreeKey) => {
+        onActiveChange: (key: TreeKey | null) => {
           activeKey.value = key;
         },
         onSelect: onInternalSelect as never,
@@ -389,6 +388,14 @@ const OptionList = defineComponent({
       };
       if (props.treeLoadedKeys) treeProps.loadedKeys = props.treeLoadedKeys;
       if (mergedExpandedKeys.value) treeProps.expandedKeys = mergedExpandedKeys.value;
+      const treeSlots: TreeSlots = {};
+      const renderTitle = props.treeTitleRender;
+      if (renderTitle) treeSlots.title = ({ data }) => renderTitle(data);
+      const renderSwitcher = props.switcherIcon;
+      if (typeof renderSwitcher === 'function') {
+        treeSlots.switcherIcon = ({ node, data }) =>
+          renderSwitcher({ ...node, eventKey: node.key, data });
+      }
 
       return h('div', { onMousedown: (event: MouseEvent) => event.preventDefault() }, [
         activeEntity.value &&
@@ -400,7 +407,7 @@ const OptionList = defineComponent({
               (activeEntity.value.node as Record<string, unknown>)[props.fieldNames.value] ?? '',
             ),
           ),
-        h(Tree, treeProps as never),
+        h(Tree, treeProps, { ...treeSlots }),
       ]);
     };
   },

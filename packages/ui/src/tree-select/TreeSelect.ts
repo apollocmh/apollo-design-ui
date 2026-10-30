@@ -38,6 +38,7 @@ import { useVariant } from '../form/hooks/useVariants';
 import BaseSelect from '../select/engine/BaseSelect';
 import type { DisplayValueType, SelectCommonPlacement } from '../select/interface';
 import { useCompactItemContext } from '../space/Compact';
+import type { TreeIconType } from '../tree/interface';
 import { useCheckedKeys } from './hooks/use-checked-keys';
 import { useDataEntities } from './hooks/use-data-entities';
 import { useFilterTreeData } from './hooks/use-filter-tree-data';
@@ -112,7 +113,7 @@ const TreeSelect = defineComponent({
     treeLine: { type: [Boolean, Object], default: undefined },
     treeIcon: { type: Boolean, default: undefined },
     showTreeIcon: { type: Boolean, default: undefined },
-    switcherIcon: { type: null as unknown as PropType<unknown>, default: undefined },
+    switcherIcon: { type: null as unknown as PropType<TreeIconType>, default: undefined },
     treeTitleRender: {
       type: Function as PropType<(node: TreeSelectDataNode) => VNodeChild>,
       default: undefined,
@@ -207,7 +208,7 @@ const TreeSelect = defineComponent({
       getPrefixCls: (suffix?: string, customize?: string) => string;
       getPopupContainer?: (node: HTMLElement) => HTMLElement;
       renderEmpty?: (name: string) => unknown;
-      switcherIcon?: unknown;
+      switcherIcon?: TreeIconType;
       classNames?: Record<string, unknown>;
       styles?: Record<string, unknown>;
       className?: string;

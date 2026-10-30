@@ -15,12 +15,21 @@
  *     ⇒ onNodeLoad —— Vue 侧用 watch 实现（依赖集等价）
  */
 
-import { computed, defineComponent, h, inject, type PropType, type VNodeChild, watch } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  inject,
+  type PropType,
+  type SlotsType,
+  type VNodeChild,
+  watch,
+} from 'vue';
 import { clsx } from '../_internal/clsx';
 import getEntity from '../_internal/tree/key-util';
 import { convertNodePropsToEventData, isLeafNode } from '../_internal/tree/tree-util';
 import Indent from './Indent';
-import type { TreeKey } from './interface';
+import type { TreeKey, TreeSlots } from './interface';
 import { treeContextKey } from './TreeContext';
 
 const ICON_OPEN = 'open';
@@ -29,11 +38,13 @@ const defaultTitle = '---';
 
 /** rc `getId(treeId, eventKey)`：节点 DOM id（checkbox 的 aria-labelledby 用）。 */
 export function getNodeId(treeId: string, eventKey: TreeKey | null | undefined): string {
-  return `${treeId}_${String(eventKey ?? '')}`;
+  return `${treeId}_${encodeURIComponent(String(eventKey ?? ''))}`;
 }
 
 export default defineComponent({
   name: 'ATreeTreeNode',
+  slots: Object as SlotsType<TreeSlots>,
+  inheritAttrs: false,
   props: {
     eventKey: { type: [String, Number] as PropType<TreeKey>, default: undefined },
     className: { type: String, default: undefined },
@@ -59,13 +70,28 @@ export default defineComponent({
     disableCheckbox: { type: Boolean, default: false },
     // ---- 数据 ----
     data: { type: Object as PropType<Record<string, unknown>>, required: true },
-    title: { type: [String, Object, Function] as PropType<unknown>, default: undefined },
-    icon: { type: [String, Object, Function] as PropType<unknown>, default: undefined },
-    switcherIcon: { type: [String, Object, Function] as PropType<unknown>, default: undefined },
+    title: {
+      type: null as unknown as PropType<
+        VNodeChild | ((data: Record<string, unknown>) => VNodeChild)
+      >,
+      default: undefined,
+    },
+    icon: {
+      type: null as unknown as PropType<
+        VNodeChild | ((node: Record<string, unknown>) => VNodeChild)
+      >,
+      default: undefined,
+    },
+    switcherIcon: {
+      type: null as unknown as PropType<
+        VNodeChild | ((node: Record<string, unknown>) => VNodeChild)
+      >,
+      default: undefined,
+    },
     pos: { type: String, default: undefined },
     treeId: { type: String, required: true },
   },
-  setup(props, { attrs }) {
+  setup(props, { attrs, slots }) {
     const ctx = inject(treeContextKey);
     if (!ctx) {
       // TreeNode 只由 Tree/NodeList 渲染（不单独公开），无 Provider 属编程错误
@@ -76,13 +102,9 @@ export default defineComponent({
     const isDisabled = computed(() => !!(ctx.disabled || props.disabled));
 
     // ======= Checkable =======
-    const isCheckable = computed(() => {
-      // tree 或 treeNode 任一不可勾 ⇒ false；checkable 的 VNode 形态原样透传
-      if (!ctx.checkable || props.checkable === false) {
-        return false;
-      }
-      return ctx.checkable;
-    });
+    const isCheckable = computed(
+      () => ctx.checkable !== false && ctx.checkable != null && props.checkable !== false,
+    );
 
     // ======= Selectable =======
     const isSelectable = computed(() => {
@@ -120,11 +142,14 @@ export default defineComponent({
         loading: props.loading,
         loaded: props.loaded,
         active: props.active,
+        dragOver: props.dragOver,
+        dragOverGapTop: props.dragOverGapTop,
+        dragOverGapBottom: props.dragOverGapBottom,
         disabled: props.disabled,
         checkable: props.checkable,
         selectable: props.selectable,
         disableCheckbox: props.disableCheckbox,
-        isLeaf: props.isLeaf,
+        isLeaf: memoizedIsLeaf.value,
         data: props.data,
         title: props.title,
         pos: props.pos,
@@ -170,11 +195,7 @@ export default defineComponent({
     const onDragStart = (e: DragEvent) => {
       e.stopPropagation();
       ctx.onNodeDragStart(e, allProps() as never);
-      try {
-        e.dataTransfer?.setData('text/plain', '');
-      } catch {
-        // ie throws
-      }
+      e.dataTransfer?.setData('text/plain', String(props.eventKey));
     };
     const onDragEnter = (e: DragEvent) => {
       e.preventDefault();
@@ -202,16 +223,9 @@ export default defineComponent({
 
     // ======= loadData effect（rc useEffect 依赖集等价）=======
     watch(
-      () => [
-        props.loading,
-        typeof ctx.loadData === 'function',
-        props.expanded,
-        memoizedIsLeaf.value,
-        props.loaded,
-      ],
-      ([loading, hasLoadData, expanded, isLeafNow, loaded]) => {
-        if (loading) return;
-        if (hasLoadData && expanded && !isLeafNow && !loaded) {
+      () => [ctx.loadData, props.expanded, memoizedIsLeaf.value, props.loaded, props.data],
+      ([loadData, expanded, isLeafNow, loaded]) => {
+        if (loadData && expanded && !isLeafNow && !loaded) {
           ctx.onNodeLoad(convertNodePropsToEventData(allProps() as never) as never);
         }
       },
@@ -227,14 +241,14 @@ export default defineComponent({
       // ---- Switcher ----
       const renderSwitcherIconDom = (isInternalLeaf: boolean): VNodeChild => {
         // 上游 antd 壳传下来的是渲染函数（iconUtil）；rc 兼容 fn/vnode
-        const switcherIcon = p.switcherIcon ?? ctx.switcherIcon;
-        if (typeof switcherIcon === 'function') {
-          return (switcherIcon as (n: Record<string, unknown>) => VNodeChild)({
-            ...allProps(),
-            isLeaf: isInternalLeaf,
-          });
-        }
-        return switcherIcon as VNodeChild;
+        const node = {
+          ...convertNodePropsToEventData(allProps() as never),
+          isLeaf: isInternalLeaf,
+        };
+        const scope = { node, data: p.data };
+        if (node.loading && slots.switcherLoadingIcon) return slots.switcherLoadingIcon(scope);
+        if (!isInternalLeaf && slots.switcherIcon) return slots.switcherIcon(scope);
+        return ctx.switcherIcon?.(node, p.data);
       };
       const renderSwitcher = () => {
         if (memoizedIsLeaf.value) {
@@ -277,7 +291,7 @@ export default defineComponent({
       // ---- Checkbox（[Legacy] 自定义元素与 checkable 分离是未来事）----
       const checkboxNode = (() => {
         if (!isCheckable.value) return null;
-        const $custom = typeof isCheckable.value !== 'boolean' ? isCheckable.value : null;
+        const $custom = typeof ctx.checkable !== 'boolean' ? ctx.checkable : null;
         return h(
           'span',
           {
@@ -293,7 +307,7 @@ export default defineComponent({
             'aria-disabled': isDisabled.value || p.disableCheckbox ? 'true' : undefined,
             'aria-labelledby': getNodeId(p.treeId, p.eventKey as TreeKey),
           },
-          $custom ? [$custom as never] : [],
+          $custom == null ? [] : [$custom as never],
         );
       })();
 
@@ -314,7 +328,11 @@ export default defineComponent({
       // ---- DropIndicator（allowDrop 在 Tree 侧算好）----
       const dropIndicatorNode = (() => {
         const rootDraggable = Boolean(ctx.draggable);
-        const showIndicator = !p.disabled && rootDraggable && ctx.dragOverNodeKey === p.eventKey;
+        const showIndicator =
+          !isDisabled.value &&
+          ctx.dropAllowed &&
+          rootDraggable &&
+          ctx.dragOverNodeKey === p.eventKey;
         if (!showIndicator) return null;
         return (ctx.dropIndicatorRender as unknown as (o: Record<string, unknown>) => VNodeChild)({
           dropPosition: ctx.dropPosition,
@@ -327,43 +345,50 @@ export default defineComponent({
 
       // ---- Icon + Title（selector）----
       const selectorNode = (() => {
-        const title = (p.title ?? defaultTitle) as unknown;
+        const title = p.title === undefined ? defaultTitle : p.title;
         const wrapClass = `${prefixCls}-node-content-wrapper`;
 
         // Icon：showIcon 时用定制 icon（无则默认空壳）；无 showIcon 但 loading 时仍显示
         let $icon: ReturnType<typeof h> | null = null;
         if (ctx.showIcon) {
           const currentIcon = p.icon ?? ctx.icon;
-          $icon = currentIcon
-            ? h(
-                'span',
-                {
-                  class: clsx(
-                    treeClassNames?.itemIcon,
-                    `${prefixCls}-iconEle`,
-                    `${prefixCls}-icon__customize`,
-                  ),
-                  style: styles?.itemIcon,
-                },
-                [
-                  typeof currentIcon === 'function'
-                    ? (currentIcon as (n: Record<string, unknown>) => VNodeChild)(allProps())
-                    : (currentIcon as VNodeChild),
-                ],
-              )
-            : iconNode();
+          const slot = slots.icon;
+          const content = slot
+            ? slot({
+                node: convertNodePropsToEventData(allProps() as never) as never,
+                data: p.data,
+              })
+            : typeof currentIcon === 'function'
+              ? currentIcon(allProps())
+              : currentIcon;
+          $icon =
+            slot || currentIcon !== undefined
+              ? h(
+                  'span',
+                  {
+                    class: clsx(
+                      treeClassNames?.itemIcon,
+                      `${prefixCls}-iconEle`,
+                      `${prefixCls}-icon__customize`,
+                    ),
+                    style: styles?.itemIcon,
+                  },
+                  [content as VNodeChild],
+                )
+              : iconNode();
         } else if (ctx.loadData && p.loading) {
           $icon = iconNode();
         }
 
-        // Title：fn(data) > titleRender(data) > title 本体
+        // The current title slot takes priority over data title content/functions.
         let titleNode: unknown;
-        if (typeof title === 'function') {
+        if (slots.title) {
+          titleNode = slots.title({
+            node: convertNodePropsToEventData(allProps() as never) as never,
+            data: p.data,
+          });
+        } else if (typeof title === 'function') {
           titleNode = (title as (d: Record<string, unknown>) => unknown)(p.data);
-        } else if (ctx.titleRender) {
-          titleNode = (ctx.titleRender as unknown as (d: Record<string, unknown>) => unknown)(
-            p.data,
-          );
         } else {
           titleNode = title;
         }
@@ -395,7 +420,7 @@ export default defineComponent({
                 class: clsx(`${prefixCls}-title`, treeClassNames?.itemTitle),
                 style: styles?.itemTitle,
               },
-              titleNode as never,
+              [titleNode as VNodeChild],
             ),
             dropIndicatorNode,
           ],

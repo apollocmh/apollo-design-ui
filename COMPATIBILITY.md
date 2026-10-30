@@ -118,3 +118,7 @@ FloatButton / Group 使用当前插槽、Provider 与主题别名；Group 通知
 ### D-popover-current-owner
 
 Popover 拥有 openChange/popupClick/afterOpenChange 的 Vue emits，继承的样式与销毁别名真实转发；自身四 Token、当前 Provider 与 PurePanel 颜色生效。包装层把当前层级基准传给 Tooltip，共享同一层级上下文，不重复叠加。真实引用、原生样式与内容插槽沿用既有成果；wireframe 的视觉缺口仍明确延期，详见[Popover API](packages/ui/src/popover/index.zh-CN.md)。
+
+### D-tree-native-contracts
+
+Tree / DirectoryTree 修正受控模型、完整事件转发、原生事件载荷、实际焦点/滚动/行测量与加载和拖放资源。顶层 titleRender、icon/switcherIcon 等内容函数迁为具名作用域插槽；数据项函数按数据职责保留，TreeSelect 同步迁移实际消费桥。九个组件 Token 使用当前主题，prototype 命名键安全保留；Directory 叶子显示文件图标，历史 DOM 参考只登记精确差异。详见[Tree API](packages/ui/src/tree/index.zh-CN.md)。

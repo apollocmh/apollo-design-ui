@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 41,
+  "revision": 43,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2181,19 +2181,17 @@
       "kind": "component",
       "ref": "tree",
       "title": "Tree",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tree",
         "packages/ui/src/_internal/tree"
       ],
-      "assignment": {
-        "owner": "native_tree",
-        "baseRevision": 24,
-        "startedAt": "2026-10-30T07:50:40.711Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -2203,7 +2201,7 @@
       "issues": [
         {
           "id": "TREE-PUBLIC-CONTRACTS",
-          "status": "open",
+          "status": "fixed",
           "blocking": true,
           "impact": "只读盘点已复现公开标题槽、受控模型及键盘/焦点等核心契约问题；实施尚未开始。",
           "reason": "保留已有分组复现与完整清单，恢复此任务时继续实现，不重新派发只读盘点。",
@@ -2222,6 +2220,57 @@
         "basis": [
           "docs/audit/2026-10-29-tree-readonly-inventory.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/tree",
+          "packages/ui/src/_internal/tree",
+          "packages/ui/src/tree-select"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/tree/",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 17750
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/tree/__tests__/native-contracts.test.ts",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4660
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/tree-select/__tests__/tree-slots.test.ts packages/ui/src/tree-select/__tests__/tree-select.test.ts packages/ui/src/tree-select/__tests__/utils.test.ts packages/ui/src/table/__tests__/index.test.ts packages/ui/src/table/__tests__/util.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/_internal/__tests__/use-merge-semantic.test.ts packages/ui/src/tree-select/__tests__/tree-slots.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/tree/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; entire Tree/TreeSelect source/tests/demos/SFC>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 52408
+          }
+        ],
+        "boundary": "原14组只读失败清单逐组修复，未重做历史盘点；实际79项源码浏览器在最终一行卸载guard前通过，guard与当前source原生回归已通过。当前Table/TreeSelect消费者102条及精确slot桥通过。历史基线保留，最终冻结版本九维验收未执行。"
       }
     },
     {

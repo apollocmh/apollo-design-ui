@@ -1,131 +1,78 @@
-/**
- * L3 类型 —— Tree / DirectoryTree（G7）。
- *
- * 正例：API 形状（TreeProps 9 组 / TreeRef / 事件 info 形状 / DirectoryTreeProps）。
- * 负例：包在永不调用的闭包里（*.test-d.ts 会被 vitest 真执行）。
- */
-
 import { describe, expectTypeOf, it } from 'vitest';
-import type { CSSProperties } from 'vue';
+import { h } from 'vue';
+import type { DirectoryTree, Tree } from '../index';
 import type {
-  DataNode,
-  DirectoryTreeProps,
   TreeCheckedKeys,
+  TreeEmits,
   TreeKey,
   TreeProps,
   TreeRef,
-  TreeSelectEventInfo,
-  TreeSemanticClassNames,
+  TreeSlots,
 } from '../interface';
+import { useTree } from '../use-tree';
+import NativeTree from './fixtures/NativeTree.vue';
 
-describe('Tree 类型 · 正例', () => {
-  it('TreeProps 9 组字段', () => {
-    const props: TreeProps = {
-      treeData: [{ key: 'k', title: 't', children: [] }],
-      fieldNames: { key: 'id', title: 'name', children: 'subs' },
-      expandedKeys: ['a'],
-      defaultExpandedKeys: ['a'],
-      defaultExpandAll: true,
-      defaultExpandParent: true,
-      autoExpandParent: false,
-      checkable: true,
-      checkStrictly: false,
-      checkedKeys: ['a'],
-      defaultCheckedKeys: [],
-      selectable: true,
-      multiple: false,
-      selectedKeys: ['a'],
-      defaultSelectedKeys: [],
-      loadData: () => Promise.resolve(),
-      loadedKeys: ['a'],
-      showIcon: false,
-      showLine: true,
-      blockNode: false,
-      expandAction: 'click',
-      disabled: false,
-      draggable: true,
-      allowDrop: ({ dropNode }) => !dropNode.isLeaf,
-      height: 200,
-      itemHeight: 28,
-      virtual: true,
-      focusable: true,
-      activeKey: 'a',
-      tabIndex: 0,
-      filterTreeNode: () => false,
-      classNames: { root: 'r', item: 'i', itemIcon: 'ic', itemTitle: 't', itemSwitcher: 's' },
-      styles: { root: { padding: 0 } },
+interface MappedNode {
+  id: string;
+  name: string;
+  nodes?: MappedNode[];
+}
+const mapped: MappedNode[] = [{ id: 'one', name: 'One' }];
+
+describe('Tree actual constructor and SFC contracts', () => {
+  it('accepts mapped objects, complete VNode content and all active channels', () => {
+    const props: TreeProps<MappedNode> = {
+      treeData: mapped,
+      fieldNames: { key: 'id', title: 'name', children: 'nodes' },
+      checkable: h('i', 'check'),
+      switcherLoadingIcon: 'loading',
+      activeKey: 'one',
     };
-    expectTypeOf(props).toMatchTypeOf<TreeProps>();
+    const actual: InstanceType<typeof Tree>['$props'] = props;
+    expectTypeOf(actual.activeKey).toEqualTypeOf<TreeKey | null | undefined>();
+    expectTypeOf(NativeTree).not.toBeAny();
+    expectTypeOf<InstanceType<typeof DirectoryTree>['$props']['checkedKeys']>().toEqualTypeOf<
+      SafeKeys | TreeCheckedKeys | undefined
+    >();
   });
 
-  it('事件 info 形状（Vue 事件面走 TreeEmits，无 onSelect prop）', () => {
-    const info = {
-      event: 'select',
-      selected: true,
-      node: { key: 'a', title: 't' } as never as DataNode,
-      selectedNodes: [],
-      nativeEvent: new MouseEvent('click'),
-    } as unknown as TreeSelectEventInfo;
-    expectTypeOf(info.selected).toEqualTypeOf<boolean>();
-    expectTypeOf(info.event).toEqualTypeOf<'select'>();
-  });
-
-  it('TreeRef 三个方法/字段', () => {
-    const ref: TreeRef = {
-      scrollTo: (s) => {
-        expectTypeOf(s).toMatchTypeOf<
-          { key: TreeKey; autoExpand?: boolean; offset?: number } | number | null | undefined
-        >();
-      },
-      focus: () => {},
-      keyEntities: {},
+  it('allows typed raw slot data and a documented template ref', () => {
+    const slots: TreeSlots<MappedNode> = {
+      title: ({ node, data }) => h('span', `${data.name}:${node.key}`),
     };
-    expectTypeOf(ref.scrollTo).toBeFunction();
+    if (slots.title) expectTypeOf(slots.title).toBeFunction();
+    const path = useTree(() => mapped, {
+      fieldNames: { key: 'id', title: 'name', children: 'nodes' },
+    }).getPath('one');
+    expectTypeOf(path[0]?.node).toEqualTypeOf<MappedNode | undefined>();
+    expectTypeOf<TreeRef<MappedNode>['keyEntities'][string]['node']>().toEqualTypeOf<MappedNode>();
+    expectTypeOf<TreeRef['scrollTo']>().toBeFunction();
   });
 
-  it('DirectoryTreeProps 与 TreeProps 同构', () => {
-    const d: DirectoryTreeProps = {
-      expandAction: 'doubleClick',
-      showLine: { showLeafIcon: false },
-    };
-    expectTypeOf(d).toMatchTypeOf<TreeProps>();
-  });
-
-  it('语义槽函数形态', () => {
-    const fn: TreeSemanticClassNames | ((info: { props: TreeProps }) => TreeSemanticClassNames) =
-      () => ({ root: 'x' });
-    expectTypeOf(fn).toBeFunction();
-    const styles: TreeProps['styles'] = { itemTitle: {} as CSSProperties };
-    expectTypeOf(styles).toMatchTypeOf<TreeProps['styles']>();
-  });
-
-  it('checkedKeys 双形态（数组 / checkStrictly 对象）', () => {
-    const arr: TreeProps['checkedKeys'] = ['a'];
-    const obj: TreeCheckedKeys = { checked: ['a'], halfChecked: ['b'] };
-    expectTypeOf(arr).toMatchTypeOf<SafeKeysUnion | TreeCheckedKeys | undefined>();
-    expectTypeOf(obj).toMatchTypeOf<TreeCheckedKeys>();
+  void (() => {
+    declareEmit('activeChange', 'one');
+    declareEmit('update:activeKey', null);
+    const actual = getTree();
+    actual.$emit('update:activeKey', 'one');
+    actual.$emit('mouseEnter', new MouseEvent('mouseenter'), node());
+    // @ts-expect-error the actual constructor rejects non-array selection keys.
+    actual.$emit('select', 42, {});
+    // @ts-expect-error activeKey accepts a key or null, never arrays.
+    actual.$emit('update:activeKey', []);
+    // @ts-expect-error mouseEnter sends its DOM event before the node.
+    actual.$emit('mouseEnter', { event: new MouseEvent('mouseenter'), node: node() });
+    // @ts-expect-error unknown slots are not part of the actual Tree constructor.
+    actual.$slots.unknownSlot;
+    // @ts-expect-error titleRender moved to the title slot.
+    const oldTitle = { titleRender: () => 'title' } satisfies TreeProps;
+    // @ts-expect-error top-level icon functions use the icon slot.
+    const oldIcon = { icon: () => 'icon' } satisfies TreeProps;
+    // @ts-expect-error expandAction only supports click and doubleClick.
+    const action = { expandAction: 'hover' } satisfies TreeProps;
+    void [oldTitle, oldIcon, action];
   });
 });
-
-type SafeKeysUnion = TreeKey[];
-
-describe('Tree 类型 · 负例（仅类型层面，永不调用）', () => {
-  it('负例由 @ts-expect-error 在类型层钉住（本用例保 suite 非空）', () => {
-    expectTypeOf(true).toBeBoolean();
-  });
-
-  void ((): void => {
-    const props = {
-      treeData: [{ key: 'a', title: 't' }],
-    } satisfies TreeProps;
-    void props;
-
-    // @ts-expect-error steps 无此字段（防复制 tour 面板面）
-    const bad = { steps: [] } satisfies Partial<TreeProps>;
-    void bad;
-
-    // @ts-expect-error expandAction 只接受 false | 'click' | 'doubleClick'
-    const badAction = { expandAction: 'hover' } satisfies Partial<TreeProps>;
-    void badAction;
-  });
-});
+type SafeKeys = TreeKey[];
+declare const declareEmit: TreeEmits;
+declare function getTree(): InstanceType<typeof Tree>;
+declare function node(): import('../interface').EventDataNode;

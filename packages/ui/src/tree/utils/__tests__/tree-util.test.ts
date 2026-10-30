@@ -6,6 +6,7 @@
  */
 
 import { describe, expect, it, vi } from 'vitest';
+import getEntity from '../../../_internal/tree/key-util';
 import {
   arrAdd,
   arrDel,
@@ -35,6 +36,26 @@ const treeData = [
   },
   { key: '0-1', title: '0-1' },
 ];
+
+describe('Tree entity keys', () => {
+  it('ignores inherited properties and retains own prototype-named keys', () => {
+    expect(getEntity({}, 'constructor')).toBeUndefined();
+    expect(getEntity({}, '__proto__')).toBeUndefined();
+    const data = [{ key: '__proto__', children: [{ key: 'constructor' }, { key: 0 }] }];
+    const { keyEntities } = convertDataToEntities(data);
+    expect(Object.keys(keyEntities)).toEqual(['0', '__proto__', 'constructor']);
+    expect(getEntity(keyEntities, '__proto__')?.node).toBe(data[0]);
+    expect(conductExpandParent(['constructor'], keyEntities)).toEqual(['constructor', '__proto__']);
+    expect(conductCheck(['__proto__'], true, keyEntities).checkedKeys).toEqual([
+      '__proto__',
+      'constructor',
+      0,
+    ]);
+    const warn = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(conductCheck(['toString'], true, keyEntities).checkedKeys).toEqual([]);
+    warn.mockRestore();
+  });
+});
 
 describe('Tree utils · getPosition / posToArr', () => {
   it('pos 格式为 level-index 链', () => {

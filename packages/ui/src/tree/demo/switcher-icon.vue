@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { DownOutlined } from '@apollo-design/icons';
 import { Tree } from '@apollo-design/ui';
-import { h } from 'vue';
 
 const treeData = [
   {
@@ -13,5 +12,7 @@ const treeData = [
 </script>
 
 <template>
-  <Tree :switcher-icon="h(DownOutlined)" default-expand-all :tree-data="treeData" />
+  <Tree default-expand-all :tree-data="treeData">
+    <template #switcherIcon="{ node }"><DownOutlined :data-expanded="node.expanded" /></template>
+  </Tree>
 </template>

@@ -45,7 +45,7 @@ export default function renderSwitcherIcon(props: {
   const { isLeaf, expanded, loading } = treeNodeProps;
 
   if (loading) {
-    if (isVNode(switcherLoadingIcon)) {
+    if (switcherLoadingIcon !== undefined) {
       return switcherLoadingIcon;
     }
     return h(LoadingOutlined, { class: `${prefixCls}-switcher-loading-icon` });
@@ -70,7 +70,7 @@ export default function renderSwitcherIcon(props: {
   }
 
   const switcherCls = `${prefixCls}-switcher-icon`;
-  const switcher = typeof switcherIcon === 'function' ? switcherIcon(treeNodeProps) : switcherIcon;
+  const switcher = switcherIcon;
 
   if (isVNode(switcher)) {
     return mergeIconClass(
@@ -78,7 +78,7 @@ export default function renderSwitcherIcon(props: {
       clsx(showLine ? `${prefixCls}-switcher-line-icon` : switcherCls),
     );
   }
-  if (switcher !== undefined && switcher !== null && switcher !== false) {
+  if (switcher !== undefined) {
     return switcher as VNodeChild;
   }
   if (showLine) {

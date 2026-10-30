@@ -7,28 +7,30 @@
 import { computed } from 'vue';
 import getEntity from '../_internal/tree/key-util';
 import type { TreeEntity } from '../_internal/tree/tree-util';
-import { convertDataToEntities, fillFieldNames } from '../_internal/tree/tree-util';
-import type { DataNode, TreeFieldNames, TreeKey } from './interface';
+import { convertDataToEntities } from '../_internal/tree/tree-util';
+import type { TreeFieldNames, TreeKey } from './interface';
 
 export interface UseTreeOptions {
   fieldNames?: TreeFieldNames;
 }
 
-export function useTree(treeData: () => DataNode[], config: UseTreeOptions = {}) {
+export function useTree<TreeDataType extends object>(
+  treeData: () => TreeDataType[],
+  config: UseTreeOptions = {},
+) {
   const keyEntities = computed(() => {
     const { keyEntities: entities } = convertDataToEntities(treeData(), {
       fieldNames: config.fieldNames,
     });
     return entities;
   });
-  void fillFieldNames;
 
-  const getPath = (key: TreeKey): TreeEntity<DataNode>[] => {
-    const path: TreeEntity<DataNode>[] = [];
-    let entity = getEntity(keyEntities.value, key) as TreeEntity<DataNode> | undefined;
+  const getPath = (key: TreeKey): TreeEntity<TreeDataType>[] => {
+    const path: TreeEntity<TreeDataType>[] = [];
+    let entity = getEntity(keyEntities.value, key);
     while (entity) {
       path.unshift(entity);
-      entity = entity.parent as TreeEntity<DataNode> | undefined;
+      entity = entity.parent;
     }
     return path;
   };

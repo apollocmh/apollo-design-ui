@@ -16,28 +16,19 @@
  *   6. `switcher-leaf-line` 的 border 与 `-op-icon` svg 尺寸是产物字面量，E10 豁免。
  */
 
-import { getDesignToken } from '@apollo-design/theme';
-import { type ComponentToken, prepareComponentToken } from './token';
-
-/** 组件变量值（G3 产物对拍：24px ×3、rgba(0,0,0,0.04)、#e6f4ff、#fff、#1677ff）。 */
-function treeTokenValues(): ComponentToken {
-  return prepareComponentToken(getDesignToken() as never);
-}
-
-/** 组件变量声明（对拍 antd 的 .css-var-*.ant-tree 块；单位规则：3 个尺寸 px）。 */
+/** Defaults remain linked to the surrounding CSS theme when no source provider is active. */
 export function genTreeTokenDecls(): string {
-  const t = treeTokenValues();
-  return (
-    `--apollo-tree-title-height:${t.titleHeight}px;` +
-    `--apollo-tree-switcher-size:${t.switcherSize}px;` +
-    `--apollo-tree-indent-size:${t.indentSize}px;` +
-    `--apollo-tree-node-hover-bg:${t.nodeHoverBg};` +
-    `--apollo-tree-node-hover-color:${t.nodeHoverColor};` +
-    `--apollo-tree-node-selected-bg:${t.nodeSelectedBg};` +
-    `--apollo-tree-node-selected-color:${t.nodeSelectedColor};` +
-    `--apollo-tree-directory-node-selected-color:${t.directoryNodeSelectedColor};` +
-    `--apollo-tree-directory-node-selected-bg:${t.directoryNodeSelectedBg};`
-  );
+  return `${[
+    '--apollo-tree-title-height:var(--apollo-control-height-sm)',
+    '--apollo-tree-switcher-size:var(--apollo-tree-title-height)',
+    '--apollo-tree-indent-size:var(--apollo-tree-title-height)',
+    '--apollo-tree-node-hover-bg:var(--apollo-control-item-bg-hover)',
+    '--apollo-tree-node-hover-color:var(--apollo-color-text)',
+    '--apollo-tree-node-selected-bg:var(--apollo-control-item-bg-active)',
+    '--apollo-tree-node-selected-color:var(--apollo-color-text)',
+    '--apollo-tree-directory-node-selected-color:var(--apollo-color-text-light-solid)',
+    '--apollo-tree-directory-node-selected-bg:var(--apollo-color-primary)',
+  ].join(';')};`;
 }
 
 /** antd 产物机械转换段（100 条，原序）。 */
@@ -132,7 +123,7 @@ const RULES = `
 .apollo-tree.apollo-tree-directory .apollo-tree-treenode .apollo-tree-node-content-wrapper >*:not(.apollo-tree-drop-indicator){position:relative;}
 .apollo-tree.apollo-tree-directory .apollo-tree-treenode .apollo-tree-node-content-wrapper:hover{background:transparent;}
 .apollo-tree.apollo-tree-directory .apollo-tree-treenode .apollo-tree-node-content-wrapper:before{position:absolute;inset:0;transition:background-color var(--apollo-motion-duration-mid);content:"";border-radius:var(--apollo-border-radius);}
-.apollo-tree.apollo-tree-directory .apollo-tree-treenode .apollo-tree-node-content-wrapper:hover:before{background:var(--apollo-control-item-bg-hover);}
+.apollo-tree.apollo-tree-directory .apollo-tree-treenode .apollo-tree-node-content-wrapper:hover:before{background:var(--apollo-tree-node-hover-bg);}
 .apollo-tree.apollo-tree-directory .apollo-tree-treenode .apollo-tree-switcher,.apollo-tree.apollo-tree-directory .apollo-tree-treenode .apollo-tree-checkbox,.apollo-tree.apollo-tree-directory .apollo-tree-treenode .apollo-tree-draggable-icon{z-index:1;}
 .apollo-tree.apollo-tree-directory .apollo-tree-treenode-selected{background:var(--apollo-tree-directory-node-selected-bg);border-radius:var(--apollo-border-radius);}
 .apollo-tree.apollo-tree-directory .apollo-tree-treenode-selected .apollo-tree-switcher,.apollo-tree.apollo-tree-directory .apollo-tree-treenode-selected .apollo-tree-draggable-icon{color:var(--apollo-tree-directory-node-selected-color);}
