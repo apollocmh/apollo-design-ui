@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 43,
+  "revision": 48,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -1043,18 +1043,16 @@
       "kind": "component",
       "ref": "mentions",
       "title": "Mentions",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/mentions"
       ],
-      "assignment": {
-        "owner": "native_mentions",
-        "baseRevision": 31,
-        "startedAt": "2026-10-30T08:20:54.826Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -1080,6 +1078,51 @@
           "docs/audit/2026-10-25-mentions-popup-slot-remediation.md",
           "docs/audit/2026-10-25-mentions-empty-content-remediation.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/mentions"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract --project theme --project a11y packages/ui/src/mentions --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 48680
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract --project theme packages/ui/src/mentions/__tests__/native-contracts.test.ts packages/ui/src/mentions/__tests__/semantic.test.ts packages/ui/src/mentions/__tests__/theme.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 23850
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract packages/ui/src/mentions/__tests__/native-contracts.test.ts packages/ui/src/mentions/__tests__/semantic.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 17350
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/mentions/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11150
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; entire Mentions source/tests/demos/SFC>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 52408
+          }
+        ],
+        "boundary": "六组既有成果保留；已验证当前21字段/Provider/容器/语义/真实refs、PurePanel菜单与模型及readonly/disabled/hidden。删除无消费者的字段，Input自有有效字段不删。最终冻结版本九维验收/发布消费者未执行。"
       }
     },
     {
@@ -1251,13 +1294,17 @@
       "kind": "component",
       "ref": "popconfirm",
       "title": "Popconfirm",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/popconfirm"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_popconfirm",
+        "baseRevision": 45,
+        "startedAt": "2026-10-30T08:58:22.263Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1267,7 +1314,20 @@
         "docs/audit/2026-10-25-overlay-native-styles-remediation.md",
         "docs/audit/2026-10-27-button-contract-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "沿用Popover/Tooltip新成果，收口Popconfirm剩余确认交互及当前配置",
+        "remaining": [
+          "保留已有icon/content/native-style和异步Button成果；核对当前确认/取消业务回调、owned通知、模型与生命周期、当前Provider/Token、真实refs/PurePanel；不重做已完成Popover/Tooltip链。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-25-popconfirm-icon-slot-remediation.md",
+          "docs/audit/2026-10-25-overlay-content-slots-remediation.md",
+          "docs/audit/2026-10-25-overlay-native-styles-remediation.md",
+          "docs/audit/2026-10-27-button-contract-audit.md"
+        ]
+      }
     },
     {
       "id": "CMP:popover",
@@ -1628,13 +1688,17 @@
       "kind": "component",
       "ref": "select",
       "title": "Select",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/select"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_select",
+        "baseRevision": 44,
+        "startedAt": "2026-10-30T08:58:22.170Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1642,7 +1706,18 @@
         "docs/audit/2026-10-23-vue-reactivity-remediation.md",
         "docs/audit/2026-10-28-space-contract-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "接续选项响应式成果，修复Select公共与共享引擎的剩余Vue契约",
+        "remaining": [
+          "先核对当前真实剩余Props/slots/events/models/ref/Provider/Theme和共享BaseSelect消费；原F02条件选项不重做，共享引擎修改及时同步AutoComplete/TreeSelect/Cascader等实际调用者。"
+        ],
+        "effort": "unknown",
+        "basis": [
+          "docs/audit/2026-10-23-vue-reactivity-remediation.md",
+          "docs/audit/2026-10-28-space-contract-audit.md"
+        ]
+      }
     },
     {
       "id": "CMP:skeleton",
@@ -2289,7 +2364,8 @@
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
-        "docs/audit/2026-10-23-vue-reactivity-remediation.md"
+        "docs/audit/2026-10-23-vue-reactivity-remediation.md",
+        "packages/ui/src/tree-select/__tests__/tree-slots.test.ts"
       ],
       "issues": []
     },

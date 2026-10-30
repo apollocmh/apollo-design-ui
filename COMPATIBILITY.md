@@ -122,3 +122,7 @@ Popover 拥有 openChange/popupClick/afterOpenChange 的 Vue emits，继承的�
 ### D-tree-native-contracts
 
 Tree / DirectoryTree 修正受控模型、完整事件转发、原生事件载荷、实际焦点/滚动/行测量与加载和拖放资源。顶层 titleRender、icon/switcherIcon 等内容函数迁为具名作用域插槽；数据项函数按数据职责保留，TreeSelect 同步迁移实际消费桥。九个组件 Token 使用当前主题，prototype 命名键安全保留；Directory 叶子显示文件图标，历史 DOM 参考只登记精确差异。详见[Tree API](packages/ui/src/tree/index.zh-CN.md)。
+
+### D-mentions-current-contracts
+
+Mentions 保留六组既有整改，补齐当前 Provider/二十一个有效组合 Token、可空容器与真实模板 ref；只读、禁用和 hidden 路由到实际拥有者。PurePanel 在自身 host 展示真实菜单。移除未消费的 Mentions addonBg 与 OptionProps.children，Option 内容使用默认槽、key 支持 string/number；Input 自己有效的 addonBg 保留。详见[Mentions API](packages/ui/src/mentions/index.zh-CN.md)。

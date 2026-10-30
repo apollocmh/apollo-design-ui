@@ -29,7 +29,7 @@
 import { mentionsTokenValues } from './token';
 
 /**
- * Component Token 声明块（对拍 antd 的 `.css-var-root.ant-mentions` 块，**22 条**）。
+ * 当前 21 个有效 Component Token；默认值保留既有视觉契约。
  *
  * ⚠️ 与 `input/style/index.ts` 的分工不同：input 把声明挂在**三种根形态**上
  * （裸 input / affix wrapper / group wrapper 都带 `-css-var` 类）；mentions 只有两种根，
@@ -46,7 +46,6 @@ export function genTokenDecls(rootPrefixCls: string): string[] {
     `  --${rootPrefixCls}-mentions-padding-inline:${t.paddingInline};`,
     `  --${rootPrefixCls}-mentions-padding-inline-sm:${t.paddingInlineSM};`,
     `  --${rootPrefixCls}-mentions-padding-inline-lg:${t.paddingInlineLG};`,
-    `  --${rootPrefixCls}-mentions-addon-bg:${t.addonBg};`,
     `  --${rootPrefixCls}-mentions-active-border-color:${t.activeBorderColor};`,
     `  --${rootPrefixCls}-mentions-hover-border-color:${t.hoverBorderColor};`,
     `  --${rootPrefixCls}-mentions-active-shadow:${t.activeShadow};`,

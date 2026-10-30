@@ -1,5 +1,6 @@
 /**
  * Mentions 的 Component Token（G3 产物）。
+ * 当前有效字段为 21 项；无 CSS 消费点的 addonBg 已移除。下方 22 条提取结果保留历史来源说明。
  *
  * 契约来源：antd 6.6.4 `es/mentions/style/index.js` 的
  * `prepareComponentToken = token => ({...initComponentToken(token), dropdownHeight, controlItemWidth,
@@ -62,8 +63,6 @@ export interface ComponentToken {
   paddingInlineSM: string;
   /** `controlPaddingHorizontal - lineWidth`。 */
   paddingInlineLG: string;
-  /** `colorFillAlter`（别名 → var()）。 */
-  addonBg: string;
   /** `colorPrimary`（别名 → var()）。 */
   activeBorderColor: string;
   /** `colorPrimaryHover`（别名 → var()）。 */
@@ -87,7 +86,7 @@ export interface ComponentToken {
   controlItemWidth: string;
   /** `zIndexPopupBase + 50`。 */
   zIndexPopup: string;
-  /** `(controlHeight - fontHeight) / 2`（**算式派生，用户不可覆盖**）。 */
+  /** 默认 `(controlHeight - fontHeight) / 2`，支持当前组件覆盖。 */
   itemPaddingVertical: string;
 }
 
@@ -137,7 +136,6 @@ export function prepareComponentToken(token: MentionsSeedToken): ComponentToken 
     paddingInline: px(token.paddingSM - token.lineWidth),
     paddingInlineSM: px(token.controlPaddingHorizontalSM - token.lineWidth),
     paddingInlineLG: px(token.controlPaddingHorizontal - token.lineWidth),
-    addonBg: v('colorFillAlter'),
     activeBorderColor: v('colorPrimary'),
     hoverBorderColor: v('colorPrimaryHover'),
     activeShadow: shadow(v('controlOutline')),
@@ -160,7 +158,7 @@ let tokenCache: ComponentToken | null = null;
 /** 构建期 token 值（缓存；首次调用时读主题默认 seed）。 */
 export function mentionsTokenValues(): ComponentToken {
   if (!tokenCache) {
-    tokenCache = prepareComponentToken(getDesignToken() as unknown as MentionsSeedToken);
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }

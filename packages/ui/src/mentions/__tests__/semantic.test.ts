@@ -13,7 +13,9 @@ import inputReferences from './input-contract-reference.json';
  */
 
 import type { DomRenderResult } from '@apollo-design/test-utils';
-import { defineComponent, h, provide } from 'vue';
+import { mount } from '@vue/test-utils';
+import { describe, expect, it } from 'vitest';
+import { defineComponent, h, nextTick, provide } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/mentions.dom.json';
 import {
   type ConfigContextValue,
@@ -22,6 +24,7 @@ import {
 } from '../../config-provider/context';
 import type { MentionsProps } from '../interface';
 import Mentions from '../Mentions';
+import PurePanel from '../PurePanel';
 
 const BP = { prefixCls: 'apollo-mentions' };
 
@@ -110,3 +113,42 @@ inputContractReference(
   },
   inputReferences,
 );
+
+describe('Mentions PurePanel Apollo DOM contract', () => {
+  // The original raw baseline has no panel case. Its closed-state cases above stay intact.
+  // Apollo's panel deliberately renders its menu and owns its layout, replacing the old omission.
+  it('keeps root styles on the editor and a real in-flow menu in the same host', async () => {
+    const wrapper = mount(PurePanel, {
+      props: { value: '@', options: [{ value: 'alpha', label: 'Alpha' }] },
+      attrs: {
+        class: 'current-panel',
+        style: ['width:230px', { marginTop: '7px' }],
+        'aria-label': 'Preview mentions',
+      },
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
+    await nextTick();
+    await nextTick();
+    const host = wrapper.get<HTMLElement>('div').element;
+    expect(host.tagName).toBe('DIV');
+    expect(host.style.position).toBe('relative');
+    const root = wrapper.get<HTMLElement>('.current-panel').element;
+    expect(root.style.width).toBe('230px');
+    expect(root.style.margin).toBe('0px');
+    const popup = wrapper.get<HTMLElement>('.apollo-mentions-dropdown').element;
+    expect(host.contains(popup)).toBe(true);
+    expect(popup.style.position).toBe('relative');
+    expect([popup.style.top, popup.style.left, popup.style.right, popup.style.bottom]).toEqual([
+      '0px',
+      '0px',
+      'auto',
+      'auto',
+    ]);
+    expect(popup.querySelector('ul')?.getAttribute('role')).toBe('menu');
+    expect(popup.querySelector('li')?.textContent).toBe('Alpha');
+    expect(popup.querySelector('li')?.getAttribute('role')).toBe('menuitem');
+    wrapper.unmount();
+    expect(document.querySelector('.apollo-mentions-dropdown')).toBeNull();
+  });
+});

@@ -11,5 +11,5 @@ const options = [
 </script>
 
 <template>
-  <InternalMentions style="width: 100%" value="@" :options="options" />
+  <InternalMentions style="width: 100%" value="@" :options="options" aria-label="Mention panel preview" />
 </template>

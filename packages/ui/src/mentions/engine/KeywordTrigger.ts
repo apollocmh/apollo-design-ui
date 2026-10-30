@@ -4,7 +4,7 @@
  * 上游做的事只有三件：① 4 个 `BUILT_IN_PLACEMENTS`；② 由 `placement` + `direction`
  * 推出 `bottomRight` / `bottomLeft` / `topRight` / `topLeft`；③ 把这些交给 rc-trigger。
  * **本仓的 `_internal/trigger.ts` 就是 rc-trigger 的等价物**（tooltip 的第一消费者），
- * 所以这里只剩「prop 名映射」与「`getPopupContainer` 签名适配」。
+ * 所以这里只负责位置推导与当前浮层配置转发。
  *
  * ── prop 名映射（rc-trigger → 本仓 Trigger）────────────────────────────────────
  *
@@ -15,7 +15,7 @@
  * | `popupMotion` | `motion: { motionName }` |
  * | `builtinPlacements` | 同名（**required**） |
  * | `afterOpenChange` | 同名 |
- * | `getPopupContainer(triggerNode)` | 本仓签名同；而 `MentionsProps.getPopupContainer` 是 `() => HTMLElement` ⇒ **这里适配** |
+ * | `getPopupContainer(triggerNode)` | Provider 策略接收实际元素，公开无参策略直接忽略该参数 |
  *
  * ── 实测对拍 ──────────────────────────────────────────────────────────────────
  *
@@ -67,7 +67,10 @@ export const KeywordTrigger = defineComponent({
     /** 恒为真（组件只在 measuring 时渲染）—— 保留 prop 是为了与上游同形。 */
     visible: { type: Boolean, default: undefined },
     transitionName: { type: String, default: undefined },
-    getPopupContainer: { type: Function as PropType<() => HTMLElement>, default: undefined },
+    getPopupContainer: {
+      type: Function as PropType<(trigger: HTMLElement) => HTMLElement | null>,
+      default: undefined,
+    },
     popupClassName: { type: String as PropType<string | undefined>, default: undefined },
     popupStyle: {
       type: Object as PropType<Record<string, string | number> | undefined>,
@@ -110,9 +113,7 @@ export const KeywordTrigger = defineComponent({
           placement: dropdownPlacement.value,
           builtinPlacements: BUILT_IN_PLACEMENTS,
           motion: { motionName: props.transitionName },
-          ...(props.getPopupContainer
-            ? { getPopupContainer: () => props.getPopupContainer?.() ?? document.body }
-            : {}),
+          getPopupContainer: props.getPopupContainer,
           popupClassName: props.popupClassName,
           popupStyle: props.popupStyle,
           afterOpenChange: (open: boolean) => {

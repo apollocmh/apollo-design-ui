@@ -51,11 +51,12 @@ See [`demo/`](./demo) (16 demos, covering the main antd scenarios.
 | loading | Candidates are loading (shows a Spin and **Enter does not select**) | `boolean` | `false` | × |
 | silent | Explicitly suppress selection on Enter, independently of loading; loading always suppresses selection | `boolean` | `false` | × |
 | placement | Popup placement | `'top' \| 'bottom'` | `'bottom'` | × |
-| getPopupContainer | Popup mount point | `() => HTMLElement` | — | ✅ |
+| getPopupContainer | Popup mount point; may return null before mounting | `() => HTMLElement \| null` | — | ✅ |
 | popupClassName | Extra class name for the popup | `string` | — | × |
 | size | Size | `'large' \| 'middle' \| 'small'` | From ConfigProvider | ✅ |
 | disabled | Disabled | `boolean` | From `DisabledContext` | ✅ |
-| readOnly | Read only (**no class name**, only `readonly` on the textarea) | `boolean` | `false` | × |
+| readOnly | Read only; disables clear and candidate editing | `boolean` | `false` | × |
+| hidden | Hide the entire component root | `boolean` | `false` | × |
 | status | Validation status | `'error' \| 'warning'` | From `Form.Item` | ✅ |
 | variant | Variant | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` | ✅ |
 | allowClear | Clear button | `boolean \| { clearIcon?, disabled? }` | `false` | ✅ (`mentions.allowClear`) |
@@ -68,7 +69,9 @@ See [`demo/`](./demo) (16 demos, covering the main antd scenarios.
 | prefixCls | Class name prefix | `string` | From ConfigProvider, fallback `apollo-mentions` | × |
 | class / style | **Native root attrs** (replacing upstream `className` / `rootClassName` / `style`) | `string \| array \| object` / `StyleValue` | — | × |
 
-Native class/style apply to the outer root in bare, allowClear and Form feedback modes. Style accepts strings, objects, mixed arrays and CSS variables, overrides matching styles.root values, and restores them when removed. id/ARIA remain on the textarea. Current style and silent/loading updates preserve the editor node.
+Native class/style apply to the outer root in bare, allowClear and Form feedback modes. Style accepts strings, objects, mixed arrays and CSS variables, overrides matching styles.root values, and restores them when removed. id/ARIA/tabindex remain on the textarea. Current style and silent/loading updates preserve the editor node. Provider style participates in root merging; textarea, popup and suffix semantic styles reach their regions. The current ConfigProvider getPopupContainer applies unless the component specifies its own.
+
+Controlled updates are requests: rejected input or clear requests do not become local state after control is removed. Removing value retains the last accepted value, then input updates local state. Becoming disabled/readOnly ends ordinary candidate interaction; readOnly blocks clear.
 
 #### MentionsOptionProps
 
@@ -121,7 +124,7 @@ Empty content precedence is `#notFoundContent` (including an intentionally empty
 |---|---|---|
 | focus | Focus | `() => void` |
 | blur | Blur | `() => void` |
-| textarea | Native `<textarea>` (**upstream marks it as "may not work as expected"**) | `HTMLTextAreaElement \| null` |
+| textarea | Current native `<textarea>` | `HTMLTextAreaElement \| null` |
 | nativeElement | Root element | `HTMLElement \| null` |
 
 ### Static members
@@ -131,6 +134,20 @@ Empty content precedence is `#notFoundContent` (including an intentionally empty
 | `Mentions.Option` | @deprecated, use `options` (also available as the named export `MentionsOption`) |
 | `Mentions.getMentions(value, config?)` | **Pure function**: parse mention entities from text |
 | `Mentions._InternalPanelDoNotUseOrYouWillBeFired` | Static panel (debug / docs only) |
+
+`InstanceType<typeof Mentions>` and `MentionsRef` provide the actual methods and element types. Deprecated Mentions.Option still reads its current default slot, supporting template v-for, native class/style and string/number keys. The unused OptionProps.children field is removed; put its content in the default slot. options[].label remains VNodeChild data.
+
+The internal static panel displays a real candidate menu when value contains a trigger prefix. The menu stays inside its host, participates in layout and is released on unmount. Ordinary Mentions gains no open prop.
+
+### Component Token
+
+Current global aliases and all 21 effective component fields apply to the root and teleported popup. Nested overrides, replacement and removal update existing nodes. Semantic styles and native root style keep precedence.
+
+- Lengths (numbers become px; CSS length strings also work): lineWidthFocus, paddingBlock/SM/LG, paddingInline/SM/LG, inputFontSize/SM/LG, dropdownHeight, controlItemWidth and itemPaddingVertical.
+- Strings: activeBorderColor, hoverBorderColor, activeShadow, errorActiveShadow, warningActiveShadow, hoverBg and activeBg.
+- Layer: zIndexPopup; explicit styles.popup.zIndex has precedence and preserves CSS strings.
+
+The unused addonBg field is removed without a compatibility channel. Other defaults derive from the current theme before components.Mentions overrides are applied.
 
 ## Keyboard & Accessibility
 

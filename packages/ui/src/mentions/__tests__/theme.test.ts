@@ -1,7 +1,14 @@
-/** L7 主题 —— Mentions 组件变量（22 条声明）+ `prepareComponentToken` 判据。 */
+/** Mentions 当前 21 项变量、默认派生与主题行为。 */
 
 import { themeTest } from '@apollo-design/test-utils';
+import { token2CSSVar } from '@apollo-design/theme';
+import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import { h, nextTick, shallowRef } from 'vue';
+import { renderToString } from 'vue/server-renderer';
+import ConfigProvider from '../../config-provider';
+import { MentionsUnstableProvider } from '../engine/context';
+import Mentions from '../index';
 import { genMentionsStyle, genTokenDecls } from '../style';
 import { prepareComponentToken } from '../style/token';
 
@@ -14,7 +21,92 @@ describe('Mentions · token 契约', () => {
   const css = genMentionsStyle('apollo');
   const decls = genTokenDecls('apollo').join('\n');
 
-  it('22 条组件变量声明（逐条对拍 antd 的 `.css-var-root.ant-mentions` 块）', () => {
+  it('renders current theme variables on the server without mounting a popup', async () => {
+    const html = await renderToString(
+      h(
+        ConfigProvider,
+        {
+          theme: { components: { Mentions: { paddingInline: 17, dropdownHeight: 180 } } },
+        },
+        () => h(Mentions, { value: '@', options: [{ value: 'alpha', label: 'Alpha' }] }),
+      ),
+    );
+    expect(html).toContain('--apollo-mentions-padding-inline:17px');
+    expect(html).toContain('--apollo-mentions-dropdown-height:180px');
+    expect(html).not.toContain('role="menu"');
+  });
+
+  it('consumes all 21 current component fields with native and semantic style precedence', async () => {
+    const custom = {
+      lineWidthFocus: 2,
+      paddingBlock: 8,
+      paddingBlockSM: 3,
+      paddingBlockLG: 10,
+      paddingInline: 18,
+      paddingInlineSM: 12,
+      paddingInlineLG: 22,
+      activeBorderColor: '#123456',
+      hoverBorderColor: '#654321',
+      activeShadow: '0 0 0 3px red',
+      errorActiveShadow: '0 0 0 4px pink',
+      warningActiveShadow: '0 0 0 4px orange',
+      hoverBg: '#eeeeee',
+      activeBg: '#dddddd',
+      inputFontSize: 18,
+      inputFontSizeLG: 22,
+      inputFontSizeSM: 16,
+      dropdownHeight: 180,
+      controlItemWidth: 210,
+      zIndexPopup: 1500,
+      itemPaddingVertical: 7,
+    };
+    const nativeStyle = shallowRef<string | undefined>();
+    const semanticStyle = shallowRef<
+      { root: { '--apollo-mentions-padding-inline': string } } | undefined
+    >();
+    const wrapper = mount(ConfigProvider, {
+      props: { theme: { components: { Mentions: custom } } },
+      slots: {
+        default: () =>
+          h(MentionsUnstableProvider, { value: { open: true } }, () =>
+            h(Mentions, {
+              value: '@',
+              options: [{ value: 'alpha', label: 'Alpha' }],
+              style: nativeStyle.value,
+              styles: semanticStyle.value,
+            }),
+          ),
+      },
+      attachTo: document.body,
+      global: { stubs: { teleport: false } },
+    });
+    await nextTick();
+    const root = wrapper.get<HTMLElement>('.apollo-mentions').element;
+    const popup = document.querySelector<HTMLElement>('.apollo-mentions-dropdown');
+    for (const [field, value] of Object.entries(custom)) {
+      const expected =
+        typeof value === 'number' && field !== 'zIndexPopup' ? `${value}px` : String(value);
+      const key = token2CSSVar(field, 'apollo-mentions');
+      expect(root.style.getPropertyValue(key), field).toBe(expected);
+      expect(popup?.style.getPropertyValue(key), field).toBe(expected);
+    }
+    expect(decls).not.toContain('addon-bg');
+    semanticStyle.value = { root: { '--apollo-mentions-padding-inline': '24px' } };
+    await nextTick();
+    expect(root.style.getPropertyValue('--apollo-mentions-padding-inline')).toBe('24px');
+    nativeStyle.value = '--apollo-mentions-padding-inline: 27px';
+    await nextTick();
+    expect(root.style.getPropertyValue('--apollo-mentions-padding-inline')).toBe('27px');
+    nativeStyle.value = undefined;
+    await nextTick();
+    expect(root.style.getPropertyValue('--apollo-mentions-padding-inline')).toBe('24px');
+    semanticStyle.value = undefined;
+    await nextTick();
+    expect(root.style.getPropertyValue('--apollo-mentions-padding-inline')).toBe('18px');
+    wrapper.unmount();
+  });
+
+  it('当前组件变量保留既有默认值', () => {
     expect(decls).toContain('--apollo-mentions-line-width-focus:1px');
     expect(decls).toContain('--apollo-mentions-padding-block:4px');
     expect(decls).toContain('--apollo-mentions-padding-block-sm:0px');

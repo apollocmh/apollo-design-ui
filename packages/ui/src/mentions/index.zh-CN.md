@@ -51,11 +51,12 @@ subtitle: 提及
 | loading | 候选加载中（面板显示 Spin，且 **Enter 不选中**） | `boolean` | `false` | × |
 | silent | 显式静默，Enter 不选中；独立于 loading，loading 时始终禁止选择 | `boolean` | `false` | × |
 | placement | 浮层方位 | `'top' \| 'bottom'` | `'bottom'` | × |
-| getPopupContainer | 浮层挂载点 | `() => HTMLElement` | — | ✅ |
+| getPopupContainer | 浮层挂载点；挂载前可返回 null | `() => HTMLElement \| null` | — | ✅ |
 | popupClassName | 浮层额外类名 | `string` | — | × |
 | size | 尺寸 | `'large' \| 'middle' \| 'small'` | 从 ConfigProvider 取 | ✅ |
 | disabled | 禁用 | `boolean` | 从 `DisabledContext` 取 | ✅ |
-| readOnly | 只读（**不加类名**，只给 textarea 加 `readonly`） | `boolean` | `false` | × |
+| readOnly | 只读；禁止清空与候选编辑 | `boolean` | `false` | × |
+| hidden | 隐藏整个组件根元素 | `boolean` | `false` | × |
 | status | 校验状态 | `'error' \| 'warning'` | 从 `Form.Item` 取 | ✅ |
 | variant | 形态 | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` | ✅ |
 | allowClear | 清除按钮 | `boolean \| { clearIcon?, disabled? }` | `false` | ✅（`mentions.allowClear`） |
@@ -68,7 +69,9 @@ subtitle: 提及
 | prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取，兜底 `apollo-mentions` | × |
 | class / style | **根节点原生 attrs**（替代上游 `className` / `rootClassName` / `style`） | `string \| array \| object` / `StyleValue` | — | × |
 
-原生 class/style 在裸形态、allowClear 及 Form 反馈三种形态中都落到最外层根。style 支持字符串、对象、混合数组和 CSS 变量，优先于 styles.root，移除后恢复语义值；id/ARIA 继续属于 textarea。样式与 silent/loading 的当前值更新不会重挂编辑器。
+原生 class/style 在裸形态、allowClear 及 Form 反馈三种形态中都落到最外层根。style 支持字符串、对象、混合数组和 CSS 变量，优先于 styles.root，移除后恢复语义值；id/ARIA/tabindex 继续属于 textarea。样式与 silent/loading 的当前值更新不会重挂编辑器。组件配置的 style 参与根样式合并；textarea、popup、suffix 语义样式作用于对应区域。ConfigProvider 的当前 getPopupContainer 生效，组件显式指定时优先。
+
+受控更新是请求：父级未接受的输入或清空不会成为撤控后的本地值；移除 value 后保留最后接受值，后续输入转为本地更新。切为 disabled/readOnly 会结束普通候选交互，只读时不允许清空。
 
 #### MentionsOptionProps
 
@@ -121,7 +124,7 @@ subtitle: 提及
 |---|---|---|
 | focus | 聚焦 | `() => void` |
 | blur | 失焦 | `() => void` |
-| textarea | 原生 `<textarea>`（**上游标注 may not work as expected**） | `HTMLTextAreaElement \| null` |
+| textarea | 当前原生 `<textarea>` | `HTMLTextAreaElement \| null` |
 | nativeElement | 根元素 | `HTMLElement \| null` |
 
 ### 静态成员
@@ -131,6 +134,20 @@ subtitle: 提及
 | `Mentions.Option` | @deprecated，用 `options`（也可用具名导出 `MentionsOption`） |
 | `Mentions.getMentions(value, config?)` | **纯函数**：解析文本里的提及实体 |
 | `Mentions._InternalPanelDoNotUseOrYouWillBeFired` | 静态面板（调试/文档用） |
+
+`InstanceType<typeof Mentions>` 与 `MentionsRef` 均提供实际方法和元素类型。已弃用的 `Mentions.Option` 仍读取当前默认插槽，支持模板 v-for、原生 class/style 及 string/number key；未被消费的 `OptionProps.children` 已移除，内容直接写入默认插槽。`options[].label` 继续接收 VNodeChild 数据。
+
+内部静态面板在 value 含触发前缀时展示真实候选菜单；菜单挂在自身容器内并参与布局，卸载时释放。普通 Mentions 不增加 open prop。
+
+### Component Token
+
+当前主题的全局别名和 21 个有效组件字段同时作用于根与 Teleport 浮层；嵌套覆盖、替换和撤除会更新现有节点。语义样式及原生根 style 继续优先。
+
+- 长度字段（number 自动转 px，也可用 CSS 长度字符串）：lineWidthFocus、paddingBlock/SM/LG、paddingInline/SM/LG、inputFontSize/SM/LG、dropdownHeight、controlItemWidth、itemPaddingVertical。
+- 字符串字段：activeBorderColor、hoverBorderColor、activeShadow、errorActiveShadow、warningActiveShadow、hoverBg、activeBg。
+- 层级字段：zIndexPopup；显式 styles.popup.zIndex 优先，保留 CSS 字符串。
+
+删除没有 CSS 消费点的 addonBg；不提供无效字段兼容通道。其余字段按当前主题派生默认值，再接受 components.Mentions 覆盖。
 
 ## 键盘与无障碍
 

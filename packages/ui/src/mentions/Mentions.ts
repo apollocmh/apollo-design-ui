@@ -29,6 +29,8 @@ import {
   computed,
   defineComponent,
   h,
+  normalizeClass,
+  normalizeStyle,
   type PropType,
   ref,
   type SlotsType,
@@ -55,74 +57,79 @@ import type {
   MentionsSemanticStylesFn,
   MentionsSlots,
 } from './interface';
+import { useMentionsTheme } from './use-mentions-theme';
 
 /** loading 时的过滤函数：恒真（候选只有「加载中」那一条）。 */
 function loadingFilterOption(): boolean {
   return true;
 }
 
+/** One runtime declaration shared with the internal preview; no component-option casts. */
+export const mentionsProps = {
+  prefixCls: { type: String, default: undefined },
+  classNames: {
+    type: [Object, Function] as PropType<MentionsProps['classNames']>,
+    default: undefined,
+  },
+  styles: { type: [Object, Function] as PropType<MentionsProps['styles']>, default: undefined },
+  // ---- 值 / 尺寸 / 状态 ----
+  value: { type: String as PropType<string | undefined>, default: undefined },
+  defaultValue: { type: String as PropType<string | undefined>, default: undefined },
+  size: { type: String as PropType<MentionsProps['size']>, default: undefined },
+  disabled: { type: Boolean, default: undefined },
+  readOnly: { type: Boolean, default: undefined },
+  /** @deprecated 用 `variant`。 */
+  bordered: { type: Boolean, default: undefined },
+  variant: { type: String as PropType<MentionsProps['variant']>, default: undefined },
+  status: { type: String as PropType<MentionsProps['status']>, default: undefined },
+  allowClear: {
+    type: [Boolean, Object] as PropType<MentionsProps['allowClear']>,
+    default: undefined,
+  },
+  loading: { type: Boolean, default: undefined },
+  // ---- 候选 ----
+  options: { type: Array as PropType<MentionsOptionProps[]>, default: undefined },
+  notFoundContent: {
+    type: null as unknown as PropType<VNodeChild>,
+    default: undefined,
+  },
+  prefix: { type: [String, Array] as PropType<string | string[]>, default: undefined },
+  split: { type: String, default: undefined },
+  silent: { type: Boolean, default: undefined },
+  filterOption: {
+    type: [Boolean, Function] as PropType<MentionsProps['filterOption']>,
+    default: undefined,
+  },
+  validateSearch: {
+    type: Function as PropType<MentionsProps['validateSearch']>,
+    default: undefined,
+  },
+  // ---- 浮层 ----
+  placement: { type: String as PropType<MentionsProps['placement']>, default: undefined },
+  getPopupContainer: {
+    type: Function as PropType<MentionsProps['getPopupContainer']>,
+    default: undefined,
+  },
+  popupClassName: { type: String, default: undefined },
+  // ---- 从 TextArea 继承、需要显式转发的 ----
+  maxLength: { type: Number, default: undefined },
+  rows: { type: Number, default: undefined },
+  autoSize: {
+    type: [Boolean, Object] as PropType<MentionsProps['autoSize']>,
+    default: undefined,
+  },
+  autoComplete: { type: String, default: undefined },
+  hidden: { type: Boolean, default: undefined },
+  placeholder: { type: String, default: undefined },
+  count: { type: Object as PropType<MentionsProps['count']>, default: undefined },
+};
+
 export const MentionsComponent = defineComponent({
   name: 'AMentions',
   inheritAttrs: false,
+  expose: ['focus', 'blur', 'textarea', 'nativeElement'],
   slots: Object as SlotsType<MentionsSlots>,
-  props: {
-    prefixCls: { type: String, default: undefined },
-    classNames: {
-      type: [Object, Function] as PropType<MentionsProps['classNames']>,
-      default: undefined,
-    },
-    styles: { type: [Object, Function] as PropType<MentionsProps['styles']>, default: undefined },
-    // ---- 值 / 尺寸 / 状态 ----
-    value: { type: String as PropType<string | undefined>, default: undefined },
-    defaultValue: { type: String as PropType<string | undefined>, default: undefined },
-    size: { type: String as PropType<MentionsProps['size']>, default: undefined },
-    disabled: { type: Boolean, default: undefined },
-    readOnly: { type: Boolean, default: undefined },
-    /** @deprecated 用 `variant`。 */
-    bordered: { type: Boolean, default: undefined },
-    variant: { type: String as PropType<MentionsProps['variant']>, default: undefined },
-    status: { type: String as PropType<MentionsProps['status']>, default: undefined },
-    allowClear: {
-      type: [Boolean, Object] as PropType<MentionsProps['allowClear']>,
-      default: undefined,
-    },
-    loading: { type: Boolean, default: undefined },
-    // ---- 候选 ----
-    options: { type: Array as PropType<MentionsOptionProps[]>, default: undefined },
-    notFoundContent: {
-      type: null as unknown as PropType<VNodeChild>,
-      default: undefined,
-    },
-    prefix: { type: [String, Array] as PropType<string | string[]>, default: undefined },
-    split: { type: String, default: undefined },
-    silent: { type: Boolean, default: undefined },
-    filterOption: {
-      type: [Boolean, Function] as PropType<MentionsProps['filterOption']>,
-      default: undefined,
-    },
-    validateSearch: {
-      type: Function as PropType<MentionsProps['validateSearch']>,
-      default: undefined,
-    },
-    // ---- 浮层 ----
-    placement: { type: String as PropType<MentionsProps['placement']>, default: undefined },
-    getPopupContainer: {
-      type: Function as PropType<MentionsProps['getPopupContainer']>,
-      default: undefined,
-    },
-    popupClassName: { type: String, default: undefined },
-    // ---- 从 TextArea 继承、需要显式转发的 ----
-    maxLength: { type: Number, default: undefined },
-    rows: { type: Number, default: undefined },
-    autoSize: {
-      type: [Boolean, Object] as PropType<MentionsProps['autoSize']>,
-      default: undefined,
-    },
-    autoComplete: { type: String, default: undefined },
-    hidden: { type: Boolean, default: undefined },
-    placeholder: { type: String, default: undefined },
-    count: { type: Object as PropType<MentionsProps['count']>, default: undefined },
-  },
+  props: mentionsProps,
   emits: {
     'update:value': (_value: string) => true,
     change: (_value: string) => true,
@@ -138,7 +145,7 @@ export const MentionsComponent = defineComponent({
     resize: (_size: { width: number; height: number }) => true,
     clear: () => true,
   },
-  setup(props, { attrs, emit, expose, slots }) {
+  setup(props, { attrs, emit, slots }) {
     const devWarning = useDevWarning('Mentions');
     // ⚠️ 判据是「有 children 才告警」（上游 `warning.deprecated(!children, ...)`）
     devWarning.deprecated(!slots.default, 'Mentions.Option', 'options');
@@ -162,40 +169,38 @@ export const MentionsComponent = defineComponent({
     const mergedStatus = computed(() =>
       getMergedStatus(formItemContext.value.status, props.status),
     );
-
-    // ============================ Semantic ============================
-    const mergedProps = computed<MentionsProps>(
-      () =>
-        ({
-          ...props,
-          disabled: mergedDisabled.value,
-          status: mergedStatus.value,
-          variant: props.variant,
-        }) as MentionsProps,
-    );
-    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
-      MentionsProps,
-      MentionsSemanticClassNames,
-      MentionsSemanticStyles
-    >(
-      [() => context.classNames as MentionsSemanticClassNames | undefined, () => props.classNames],
-      [
-        () => context.styles as MentionsSemanticStyles | undefined,
-        () => semanticRootStyle(undefined),
-        () => props.styles,
-        // 根 style 是 Vue 原生 attrs（仍走语义 root 通道，与上游落点一致）
-        () => semanticRootStyle(attrs.style as CSSProperties),
-      ],
-      // ⚠️ 传 getter（与 Input 同判，Issue #3.2）：裸对象会让函数式语义化永远
-      //    按首帧的 props 计算。
-      () => mergedProps.value,
-    );
-
+    const mentionsTheme = useMentionsTheme(() => prefixCls.value);
     const { variant, enableVariantCls } = useVariant({
       component: 'mentions',
       variant: () => props.variant,
       legacyBordered: () => props.bordered,
     });
+
+    // ============================ Semantic ============================
+    const mergedProps = computed<MentionsProps>(() => ({
+      ...props,
+      disabled: mergedDisabled.value,
+      status: mergedStatus.value,
+      size: mergedSize.value,
+      variant: variant.value,
+    }));
+    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
+      MentionsProps,
+      MentionsSemanticClassNames,
+      MentionsSemanticStyles
+    >(
+      [() => context.classNames, () => props.classNames],
+      [
+        () => context.styles,
+        () => semanticRootStyle(context.style),
+        () => props.styles,
+        // 根 style 是 Vue 原生 attrs（仍走语义 root 通道，与上游落点一致）
+        () => semanticRootStyle(normalizeStyle(attrs.style)),
+      ],
+      // ⚠️ 传 getter（与 Input 同判，Issue #3.2）：裸对象会让函数式语义化永远
+      //    按首帧的 props 计算。
+      () => mergedProps.value,
+    );
 
     // ⚠️ 传 getter（与 Input 同判，Issue #3.1）。
     const mergedAllowClear = useAllowClear({
@@ -207,7 +212,17 @@ export const MentionsComponent = defineComponent({
 
     const zIndex = useZIndex(
       'SelectLike',
-      () => mergedStyles.value.popup?.zIndex as number | undefined,
+      () => {
+        const value = mergedStyles.value.popup?.zIndex;
+        if (typeof value === 'number') return value;
+        const custom = mentionsTheme.theme.config.value.components?.Mentions?.zIndexPopup;
+        return typeof custom === 'number' && Number.isFinite(custom) ? custom : undefined;
+      },
+      {
+        get zIndexPopupBase() {
+          return mentionsTheme.theme.token.value.zIndexPopupBase;
+        },
+      },
     );
 
     // ============================ Not Found ===========================
@@ -253,30 +268,13 @@ export const MentionsComponent = defineComponent({
     };
 
     const innerRef = ref<MentionsRef | null>(null);
-    expose({
-      focus: () => (innerRef.value as { focus?: () => void } | null)?.focus?.(),
-      blur: () => (innerRef.value as { blur?: () => void } | null)?.blur?.(),
-      get textarea() {
-        return (
-          (innerRef.value as { textarea?: HTMLTextAreaElement | null } | null)?.textarea ?? null
-        );
-      },
-      get nativeElement() {
-        return (
-          (innerRef.value as { nativeElement?: HTMLElement | null } | null)?.nativeElement ?? null
-        );
-      },
-    });
-
-    return () => {
+    const renderMentions = () => {
       const p = prefixCls.value;
       const mc: MentionsSemanticClassNames = mergedClassNames.value;
       const ms: MentionsSemanticStyles = mergedStyles.value;
       const hasFeedback = formItemContext.value.hasFeedback === true;
 
-      const suffixNode = hasFeedback
-        ? (formItemContext.value.feedbackIcon as VNodeChild)
-        : undefined;
+      const suffixNode = hasFeedback ? formItemContext.value.feedbackIcon : undefined;
 
       const mergedClassName = [
         context.className,
@@ -293,34 +291,34 @@ export const MentionsComponent = defineComponent({
       /** 传给引擎的类名（比公开的语义类型多 3 个内部键，见文件头 §3）。 */
       const engineClassNames = {
         textarea: mc.textarea,
-        popup: [mc.popup, props.popupClassName, `${p}-css-var`],
+        popup: normalizeClass([mc.popup, props.popupClassName, `${p}-css-var`]),
         suffix: mc.suffix,
         // 引擎内部通道：`-disabled` / `-focused` / `-rtl`
-        mentions: {
+        mentions: normalizeClass({
           [`${p}-disabled`]: mergedDisabled.value,
           [`${p}-focused`]: focused.value,
           [`${p}-rtl`]: direction.value === 'rtl',
-        },
-        variant: [
+        }),
+        variant: normalizeClass([
           { [`${p}-${variant.value}`]: enableVariantCls.value },
           getStatusClassNames(p, mergedStatus.value),
-        ],
+        ]),
         affixWrapper: undefined,
       };
 
       const engineStyles = {
         textarea: ms.textarea,
-        popup: { ...(ms.popup ?? {}), zIndex: zIndex.value },
+        popup: {
+          ...mentionsTheme.style.value,
+          ...ms.popup,
+          zIndex: ms.popup?.zIndex ?? zIndex.value,
+        },
         suffix: ms.suffix,
       };
 
       // ⚠️ 末尾的 `...restAttrs` 会**覆盖** `className` / `style`（对象展开后者胜）
       //    ⇒ 必须先把 `class` / `style` 摘掉，否则整条 mergedClassName 被顶掉。
-      const {
-        class: _attrsClass,
-        style: _attrsStyle,
-        ...restAttrs
-      } = attrs as Record<string, unknown>;
+      const { class: _attrsClass, style: _attrsStyle, ...restAttrs } = attrs;
       void _attrsClass;
       void _attrsStyle;
 
@@ -336,7 +334,7 @@ export const MentionsComponent = defineComponent({
           disabled: mergedDisabled.value,
           allowClear: mergedAllowClear.value,
           direction: direction.value,
-          style: ms.root,
+          style: { ...mentionsTheme.style.value, ...ms.root },
           filterOption: mentionsFilterOption.value,
           onFocus,
           onBlur,
@@ -373,7 +371,7 @@ export const MentionsComponent = defineComponent({
           split: props.split,
           validateSearch: props.validateSearch,
           placement: props.placement,
-          getPopupContainer: props.getPopupContainer,
+          getPopupContainer: props.getPopupContainer ?? context.getPopupContainer,
         } as never,
         {
           popupRender: slots.popupRender,
@@ -391,6 +389,16 @@ export const MentionsComponent = defineComponent({
         },
       );
     };
+    return {
+      focus: (): void => innerRef.value?.focus(),
+      blur: (): void => innerRef.value?.blur(),
+      textarea: computed(() => innerRef.value?.textarea ?? null),
+      nativeElement: computed(() => innerRef.value?.nativeElement ?? null),
+      renderMentions,
+    };
+  },
+  render() {
+    return this.renderMentions();
   },
 });
 

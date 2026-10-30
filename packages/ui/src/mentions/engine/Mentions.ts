@@ -44,13 +44,9 @@ import {
 } from 'vue';
 import { BaseInput } from '../../input/engine/BaseInput';
 import { RcTextArea } from '../../input/engine/TextArea';
-import type { MentionsOptionProps, MentionsSlots } from '../interface';
-import {
-  type MentionsContextValue,
-  mentionsContextKey,
-  type UnstableContextProps,
-  unstableContextKey,
-} from './context';
+import type { TextAreaRef } from '../../input/interface';
+import type { MentionsOptionProps, MentionsRef, MentionsSlots } from '../interface';
+import { type MentionsContextValue, mentionsContextKey, unstableContextKey } from './context';
 import type { NormalizedOption } from './DropdownMenu';
 import { KeywordTrigger } from './KeywordTrigger';
 import { useEffectState } from './use-effect-state';
@@ -67,6 +63,7 @@ import {
 export const MentionsOption = defineComponent({
   name: 'AMentionsOption',
   inheritAttrs: false,
+  slots: Object as SlotsType<Pick<MentionsSlots, 'default'>>,
   props: {
     value: { type: String, default: undefined },
     disabled: { type: Boolean, default: undefined },
@@ -97,7 +94,7 @@ function nextMentionsId(): string {
  *    ⇒ `vnode.children` 永远非空，必须显式过滤 `Comment`；
  *    但 `Text('')`（空字符串）要**保留**（上游的 `''` 是**有值**的）。
  */
-function readOptionLabel(vnode: VNode): unknown {
+function readOptionLabel(vnode: VNode): VNodeChild {
   const children = vnode.children;
   if (children === null || children === undefined) {
     return undefined;
@@ -113,7 +110,7 @@ function readOptionLabel(vnode: VNode): unknown {
     return filtered.length === 1 ? filtered[0] : filtered;
   }
   if (typeof children === 'object' && 'default' in children) {
-    return (children as { default?: () => VNodeChild }).default?.();
+    return typeof children.default === 'function' ? children.default() : undefined;
   }
   return undefined;
 }
@@ -136,7 +133,8 @@ export function mentionsChildrenToOptions(nodes: readonly unknown[]): MentionsOp
       const key = node.key;
       return {
         ...(optionProps as unknown as MentionsOptionProps),
-        label: readOptionLabel(node) as VNodeChild,
+        label: readOptionLabel(node),
+        className: normalizeClass([optionProps.className, optionProps.class]),
         ...(typeof key === 'string' || typeof key === 'number' ? { key } : {}),
       };
     });
@@ -179,6 +177,8 @@ export const InternalMentions = defineComponent({
     /** 外层是否套了 `BaseInput`（有 suffix/allowClear）⇒ 内层不再渲染自己的根 div。 */
     hasWrapper: { type: Boolean, default: undefined },
     silent: { type: Boolean, default: undefined },
+    disabled: { type: Boolean, default: undefined },
+    readOnly: { type: Boolean, default: undefined },
     // ---- Events ----
     validateSearch: {
       type: Function as PropType<(text: string, split: string) => boolean>,
@@ -208,7 +208,10 @@ export const InternalMentions = defineComponent({
     transitionName: { type: String, default: undefined },
     placement: { type: String as PropType<'top' | 'bottom' | undefined>, default: undefined },
     direction: { type: String as PropType<'ltr' | 'rtl' | undefined>, default: undefined },
-    getPopupContainer: { type: Function as PropType<() => HTMLElement>, default: undefined },
+    getPopupContainer: {
+      type: Function as PropType<(trigger: HTMLElement) => HTMLElement | null>,
+      default: undefined,
+    },
     popupClassName: { type: String, default: undefined },
     rows: { type: Number, default: 1 },
     onPopupScroll: { type: Function as PropType<(e: Event) => void>, default: undefined },
@@ -217,12 +220,7 @@ export const InternalMentions = defineComponent({
     // =============================== Refs ===============================
     const containerRef = ref<HTMLElement | null>(null);
     const measureRef = ref<HTMLElement | null>(null);
-    const textareaRef = shallowRef<{
-      focus?: (option?: { preventScroll?: boolean }) => void;
-      blur?: () => void;
-      resizableTextArea?: { textArea: HTMLTextAreaElement | null };
-      nativeElement?: HTMLElement | null;
-    } | null>(null);
+    const textareaRef = shallowRef<TextAreaRef | null>(null);
 
     const getTextArea = (): HTMLTextAreaElement | null =>
       textareaRef.value?.resizableTextArea?.textArea ?? null;
@@ -257,8 +255,8 @@ export const InternalMentions = defineComponent({
 
     // =============================== Open ===============================
     // UnstableContext（语义预览的强制展开）—— 见 engine/context.ts
-    const unstable = inject<UnstableContextProps | undefined>(unstableContextKey, undefined);
-    const unstableOpen = computed(() => unstable?.open === true);
+    const unstable = inject(unstableContextKey, undefined);
+    const unstableOpen = computed(() => unstable?.value.open === true);
 
     const mergedPrefix = computed<string[]>(() =>
       Array.isArray(props.prefix) ? props.prefix : [props.prefix],
@@ -366,6 +364,12 @@ export const InternalMentions = defineComponent({
       measureText.value = '';
       onSelectionEffect(() => callback?.());
     };
+    watch(
+      () => props.disabled || props.readOnly,
+      (inactive) => {
+        if (inactive) stopMeasure();
+      },
+    );
 
     // ============================== Change ==============================
     const triggerChange = (nextValue: string): void => {
@@ -379,7 +383,7 @@ export const InternalMentions = defineComponent({
     };
 
     const selectOption = (option: MentionsOptionProps | undefined): void => {
-      if (!option || option.disabled) {
+      if (props.disabled || props.readOnly || !option || option.disabled) {
         return;
       }
       const mentionValue = option.value ?? '';
@@ -405,7 +409,7 @@ export const InternalMentions = defineComponent({
       const { key } = event;
       props.onKeyDown?.(event);
 
-      if (event.isComposing || !mergedMeasuring.value) {
+      if (props.disabled || props.readOnly || event.isComposing || !mergedMeasuring.value) {
         return;
       }
       if (key === 'ArrowUp' || key === 'ArrowDown') {
@@ -461,6 +465,7 @@ export const InternalMentions = defineComponent({
 
       props.onKeyUp?.(event);
 
+      if (props.disabled || props.readOnly) return;
       if (['Escape', 'ArrowUp', 'ArrowDown', 'Enter'].includes(key)) {
         return;
       }
@@ -610,6 +615,8 @@ export const InternalMentions = defineComponent({
         value: mergedValue.value,
         rows: props.rows,
         id: props.id,
+        disabled: props.disabled,
+        readOnly: props.readOnly,
         onChange: onInternalChange,
         // RcTextArea 已将原生 input 归一到 onChange；额外 onInput 会重复提交。
         onKeyDown: onInternalKeyDown,
@@ -695,7 +702,9 @@ export const RcMentions = defineComponent({
       default: undefined,
     },
     disabled: { type: Boolean, default: undefined },
+    readOnly: { type: Boolean, default: undefined },
     focused: { type: Boolean, default: undefined },
+    hidden: { type: Boolean, default: undefined },
     /**
      * ⚠️ 上游靠 `...rest` 把 `options` 透传给内层；本仓外层要在 **render 期**
      * 把 `<Mentions.Option>` 的插槽归一成 `options`（见 `mentionsChildrenToOptions`）
@@ -709,12 +718,7 @@ export const RcMentions = defineComponent({
     const hasSuffix = computed(() => !!(props.suffix || props.allowClear));
 
     const holderEl = shallowRef<HTMLElement | null>(null);
-    const innerRef = shallowRef<{
-      focus?: () => void;
-      blur?: () => void;
-      textarea?: HTMLTextAreaElement | null;
-      nativeElement?: HTMLElement | null;
-    } | null>(null);
+    const innerRef = shallowRef<MentionsRef | null>(null);
 
     const [mergedValue, setMergedValue] = useControlledValue<string>({
       defaultValue: () => props.defaultValue ?? '',
@@ -767,7 +771,10 @@ export const RcMentions = defineComponent({
             { [`${props.prefixCls}-has-suffix`]: hasSuffix.value },
           ],
           classNames: props.classNames,
+          styles: { suffix: props.styles?.suffix },
           disabled: props.disabled,
+          readOnly: props.readOnly,
+          hidden: props.hidden,
           onReset: handleReset,
           onTriggerFocus: () => innerRef.value?.focus?.(),
           onClear: props.onClear,
@@ -790,6 +797,7 @@ export const RcMentions = defineComponent({
                 id: props.id,
                 onChange: triggerChange,
                 disabled: props.disabled,
+                readOnly: props.readOnly,
                 hasWrapper: hasSuffix.value,
                 options: normalizedOptions,
                 /**

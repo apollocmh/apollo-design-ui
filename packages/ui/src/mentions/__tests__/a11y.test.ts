@@ -49,15 +49,7 @@ const demos = import.meta.glob('../demo/*.vue', { eager: true }) as Record<
  * ⚠️ 这份清单是**可自证**的：下面的循环会断言「列在这里的 demo 真的出现了 `label`
  * 违规」—— 给某个 demo 补了 `placeholder` 却忘了删这一行 ⇒ 红。
  */
-const LABEL_ALLOWED = new Set([
-  'basic',
-  'autoSize',
-  'placement',
-  'allowClear',
-  'status',
-  'component-token',
-  'render-panel',
-]);
+const LABEL_ALLOWED = new Set(['basic', 'autoSize', 'placement', 'allowClear', 'status']);
 
 const demoName = (path: string): string => path.replace('../demo/', '').replace('.vue', '');
 

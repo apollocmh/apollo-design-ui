@@ -55,7 +55,7 @@ export interface MentionsOptionProps {
   disabled?: boolean;
   className?: string;
   style?: CSSProperties;
-  /** 只用于 React 的 key / `data-menu-id`；本仓用计数器补足。 */
+  /** string/number 候选键，同时参与 `data-menu-id`。 */
   key?: string | number;
 }
 
@@ -66,9 +66,8 @@ export interface MentionsOptionProps {
  */
 export interface OptionProps {
   value?: string;
-  key?: string;
+  key?: string | number;
   disabled?: boolean;
-  children?: VNodeChild;
   className?: string;
   style?: CSSProperties;
 }
@@ -152,10 +151,9 @@ export interface MentionsProps extends MentionsBaseTextareaAttrs {
   /**
    * 浮层容器的挂载点。
    *
-   * ⚠️ 上游类型是 `() => HTMLElement`（**不收触发元素**）；本仓 `Trigger` 收一个参数
-   * ⇒ 引擎层做一层适配（见 `engine/KeywordTrigger.ts`）。
+   * 未挂载的模板容器可暂为 null；ConfigProvider 的策略仍接收实际触发元素。
    */
-  getPopupContainer?: () => HTMLElement;
+  getPopupContainer?: () => HTMLElement | null;
   /** 原生 textarea 事件，支持标准 Vue 监听语法。 */
   onInput?: (event: Event) => void;
   onFocus?: (event: FocusEvent) => void;
@@ -187,7 +185,7 @@ export type MentionProps = MentionsProps;
 export interface MentionsRef {
   focus: () => void;
   blur: () => void;
-  /** @deprecated 上游标注「may not work as expected」。 */
+  /** 当前实际编辑器。 */
   textarea: HTMLTextAreaElement | null;
   nativeElement: HTMLElement | null;
 }

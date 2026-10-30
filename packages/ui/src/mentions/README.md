@@ -70,28 +70,34 @@ mentions/
 
 ## 4. Component Token 清单
 
-registry 数据：`tokenCount = 3`（`zIndexPopup` / `dropdownHeight` / `controlItemWidth`）。
-实际声明 **22 条**（`style/token.ts` 的 `prepareComponentToken`）：
+当前声明与消费 **21 项**（`style/token.ts` 的 `prepareComponentToken`），均支持 `theme.components.Mentions` 当前覆盖：
 
 - **3 个新增常量**：`dropdownHeight: 250px` / `controlItemWidth: 100px` / `zIndexPopup: 1050`（= `zIndexPopupBase + 50`）；
-- **1 个算式派生（用户不可覆盖）**：`itemPaddingVertical = (controlHeight - fontHeight) / 2` = `5px`；
-- **18 个继承面**（antd 上游是各组件各调一次 `initComponentToken` ⇒ 本仓按组件隔离同构复刻）：
-  `lineWidthFocus` / `paddingBlock{,SM,LG}` / `paddingInline{,SM,LG}` / `addonBg` /
+- **1 个默认算式派生**：`itemPaddingVertical = (controlHeight - fontHeight) / 2` = `5px`；
+- **17 个输入样式字段**：
+  `lineWidthFocus` / `paddingBlock{,SM,LG}` / `paddingInline{,SM,LG}` /
   `activeBorderColor` / `hoverBorderColor` / `activeShadow` / `errorActiveShadow` /
   `warningActiveShadow` / `hoverBg` / `activeBg` / `inputFontSize{,LG,SM}`。
 
 ⚠️ `initInputToken` 的 `inputAffixPadding` **不在**声明块里（antd 在 style 函数里用
 `mergeToken` 注入，不进 component token），且 mentions 的规则一条都不引用它。
 
+无 CSS 消费点的 `addonBg` 直接移除；不保留假兼容。根与 Teleport 浮层从当前主题派生值，嵌套、替换和撤除同步生效，语义样式与原生 style 仍优先。
+
+### 当前 Vue 契约补齐（2026-10-30）
+
+保留 2026-10-25 六组原生绑定、事件、键盘与内容槽交付。Provider.style 与 getPopupContainer 接通当前消费，suffix 样式落到实际 BaseInput 后缀；readonly/disabled 结束普通候选交互，hidden 隐藏实际根。真实 `InstanceType<typeof Mentions>` 与文档化 ref 方法/元素一致。
+
+PurePanel 用既有内部响应式预览上下文在自身 host 展示真实候选菜单并参与布局，不增加普通组件 open 模式。Option 默认槽按当前模板读取，原生 class 合入候选类名；未消费的 OptionProps.children 删除，key 支持 string/number。当前契约与迁移见双语 API；旧报告和 raw 基线保留原义。
+
 ## 5. 已知缺口
 
 1. **文本框没有可访问名**（与 antd 逐字一致）。给名字是使用方的责任：
    `placeholder` / `aria-label` / `Form.Item` 的 label 三者任一。
-   `__tests__/a11y.test.ts` 对 9 个没有名字的 demo 逐条豁免 `label` 并**断言豁免真的命中**。
+   `__tests__/a11y.test.ts` 对仍没有名字的 demo 逐条豁免 `label` 并**断言豁免真的命中**；本轮修改的两个面板示例已补可访问名。
 2. **`Mentions.Option` 已 deprecated**（上游同样）：`children` 非空时打
    `Warning: [apollo: Mentions] 'Mentions.Option' is deprecated. Please use 'options' instead.`。
-3. **`getPopupContainer` 的签名**：上游是 `() => HTMLElement`（**不收触发元素**），
-   本仓 `Trigger` 收一个参数 ⇒ 引擎层做一层适配（`engine/KeywordTrigger.ts`）。
+3. **`getPopupContainer` 的签名**：公开无参策略可返回未挂载的 null；Provider 策略仍接收共享 Trigger 的实际触发元素。
 4. **`.vue` 的 demo 是「等价替换」**（见下表），不产生告警仍是硬约束（`demo.test.ts` 钉住）。
 
 ### 5.1 demo 级替换（G11）

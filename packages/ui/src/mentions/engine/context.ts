@@ -21,6 +21,7 @@
 
 import {
   type ComputedRef,
+  computed,
   defineComponent,
   type InjectionKey,
   type PropType,
@@ -57,7 +58,7 @@ export interface UnstableContextProps {
   open?: boolean;
 }
 
-export const unstableContextKey: InjectionKey<UnstableContextProps> =
+export const unstableContextKey: InjectionKey<ComputedRef<UnstableContextProps>> =
   Symbol('apolloMentionsUnstable');
 
 /**
@@ -76,7 +77,10 @@ export const MentionsUnstableProvider = defineComponent({
     value: { type: Object as PropType<UnstableContextProps>, default: () => ({}) },
   },
   setup(props, { slots }) {
-    provide(unstableContextKey, props.value);
+    provide(
+      unstableContextKey,
+      computed(() => props.value),
+    );
     return () => slots.default?.() ?? null;
   },
 });

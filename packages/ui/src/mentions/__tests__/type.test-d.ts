@@ -8,7 +8,8 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-import type { MentionsOptionProps, MentionsProps, MentionsRef } from '../interface';
+import type Mentions from '../index';
+import type { MentionsOptionProps, MentionsProps, MentionsRef, OptionProps } from '../interface';
 
 describe('Mentions · 类型', () => {
   it('prefix 是 `string | string[]`（不是 VNodeChild —— 上游 Omit 后重声明）', () => {
@@ -36,6 +37,26 @@ describe('Mentions · 类型', () => {
     >();
   });
 
+  it('legacy Option uses a default slot and string or number keys', () => {
+    expectTypeOf<OptionProps['key']>().toEqualTypeOf<string | number | undefined>();
+    const stringKey: OptionProps = { value: 'alpha', key: 'author-alpha' };
+    const numberKey: OptionProps = { value: 'beta', key: 2 };
+    expectTypeOf(stringKey).toEqualTypeOf<OptionProps>();
+    expectTypeOf(numberKey).toEqualTypeOf<OptionProps>();
+    const negative = () => {
+      const children: OptionProps = {
+        // @ts-expect-error Option content is supplied through the default slot.
+        children: 'Use a slot',
+      };
+      const symbolKey: OptionProps = {
+        // @ts-expect-error Mentions keys support string or number, not symbol.
+        key: Symbol('unsupported'),
+      };
+      return [children, symbolKey];
+    };
+    void negative;
+  });
+
   it('placement 是 `top | bottom`；variant 是四值联合', () => {
     expectTypeOf<MentionsProps['placement']>().toEqualTypeOf<'top' | 'bottom' | undefined>();
     expectTypeOf<MentionsProps['variant']>().toEqualTypeOf<
@@ -58,6 +79,11 @@ describe('Mentions · 类型', () => {
     expectTypeOf<MentionsRef['blur']>().toEqualTypeOf<() => void>();
     expectTypeOf<MentionsRef['textarea']>().toEqualTypeOf<HTMLTextAreaElement | null>();
     expectTypeOf<MentionsRef['nativeElement']>().toEqualTypeOf<HTMLElement | null>();
+    type ActualRef = InstanceType<typeof Mentions>;
+    expectTypeOf<ActualRef['focus']>().toEqualTypeOf<MentionsRef['focus']>();
+    expectTypeOf<ActualRef['blur']>().toEqualTypeOf<MentionsRef['blur']>();
+    expectTypeOf<ActualRef['textarea']>().toEqualTypeOf<MentionsRef['textarea']>();
+    expectTypeOf<ActualRef['nativeElement']>().toEqualTypeOf<MentionsRef['nativeElement']>();
   });
 
   it('正例（受控 + 候选 + 浮层配置）', () => {
