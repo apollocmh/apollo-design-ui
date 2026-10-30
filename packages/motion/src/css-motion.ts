@@ -1,136 +1,147 @@
-/**
- * `CSSMotion` —— `CSSMotion.js` 的 Vue 等价物。
- *
- * ## 与 React 版的三个结构性差异（都是必需的，不是风格选择）
- *
- * 1. **children 是 slot 而不是 render prop**。
- *    React 版是 `children(props, ref)`；Vue 里用作用域 slot（§「slot 契约」）。
- * 2. **handler 走 `hooks` 对象 prop 而不是 12 个独立 prop**。
- *    因为它们的返回值是有意义的（start/active 返回 style、end 返回可否决的布尔），
- *    不能用 `emit`（emit 不返回值）。
- * 3. **元素引用靠 `cloneVNode` 注入**。
- *    React 版用 `cloneElement` + `composeRef`（`CSSMotion.js:147-153`）；
- *    Vue 对应 `cloneVNode`。少了这一步，驱动拿不到 DOM，
- *    事件与测量（`scrollHeight` / `offsetHeight`）全部失效。
- *
- * @see `es/CSSMotion.js:85-155`
- */
-
 import { getElement } from '@apollo-design/utils';
-import { cloneVNode, defineComponent, type PropType, type VNode } from 'vue';
-
+import {
+  Comment,
+  type CSSProperties,
+  cloneVNode,
+  defineComponent,
+  Fragment,
+  isVNode,
+  type PropType,
+  type SlotsType,
+  Text,
+  type VNode,
+  type VNodeChild,
+} from 'vue';
 import type { MotionHooks } from './driver';
 import type { MotionStatus, StepStatus } from './status';
 import { detectSupportMotion } from './support';
 import { useMotionStatus } from './use-motion-status';
 
+export interface CSSMotionProps {
+  visible?: boolean;
+  motionName?: string;
+  motionAppear?: boolean;
+  motionEnter?: boolean;
+  motionLeave?: boolean;
+  motionLeaveImmediately?: boolean;
+  motionDeadline?: number;
+  removeOnLeave?: boolean;
+  forceRender?: boolean;
+  leavedClassName?: string;
+  hooks?: MotionHooks;
+  supportMotion?: boolean;
+  onVisibleChanged?: (visible: boolean) => void;
+}
 export interface CSSMotionSlotProps {
-  /** 本帧应挂的 class（含裸的 `{n}`）。动画未开始时为空串 */
   className: string;
-  /** 本帧应写的内联样式。`null` 表示不写 */
-  style: Record<string, string | number> | null;
-  /** 与 props.visible 相同，方便 slot 内部按可见性分支 */
+  style: CSSProperties | null;
   visible: boolean;
   status: MotionStatus;
   step: StepStatus;
+}
+export interface CSSMotionSlots {
+  default?: (scope: CSSMotionSlotProps) => VNodeChild;
+}
+
+/** Shared runtime declarations keep the list's per-item animation contract identical. */
+export const motionProps = {
+  motionName: { type: String, default: undefined },
+  motionAppear: { type: Boolean, default: true },
+  motionEnter: { type: Boolean, default: true },
+  motionLeave: { type: Boolean, default: true },
+  motionLeaveImmediately: { type: Boolean, default: false },
+  motionDeadline: { type: Number, default: 0 },
+  removeOnLeave: { type: Boolean, default: true },
+  forceRender: { type: Boolean, default: false },
+  leavedClassName: { type: String, default: undefined },
+  hooks: { type: Object as PropType<MotionHooks>, default: undefined },
+  supportMotion: { type: Boolean, default: undefined },
+};
+
+/** A motion binds one real element/component; fragments and comments add no host. */
+function motionChild(content: VNodeChild): VNode | undefined {
+  const nodes: VNode[] = [];
+  const collect = (child: VNodeChild): void => {
+    if (Array.isArray(child)) {
+      for (const node of child) collect(node);
+      return;
+    }
+    if (child === null || child === undefined || typeof child === 'boolean') return;
+    if (!isVNode(child)) {
+      if (typeof child === 'string' && child.trim() === '') return;
+      throw new TypeError(
+        '[CSSMotion] The default slot requires one element or component to animate',
+      );
+    }
+    if (
+      child.type === Comment ||
+      (child.type === Text && typeof child.children === 'string' && child.children.trim() === '')
+    )
+      return;
+    if (child.type === Text)
+      throw new TypeError('[CSSMotion] Text alone is not an animated element');
+    if (child.type === Fragment) {
+      const children = child.children;
+      if (Array.isArray(children)) for (const node of children) collect(node);
+      else if (typeof children === 'string') collect(children);
+      return;
+    }
+    nodes.push(child);
+  };
+  collect(content);
+  if (nodes.length > 1)
+    throw new TypeError(
+      '[CSSMotion] The default slot has multiple roots; provide one element/component or use MotionList',
+    );
+  return nodes[0];
 }
 
 export const CSSMotion = defineComponent({
   name: 'CSSMotion',
   inheritAttrs: false,
-  props: {
-    visible: { type: Boolean, default: false },
-    motionName: { type: String, default: undefined },
-    motionAppear: { type: Boolean, default: true },
-    motionEnter: { type: Boolean, default: true },
-    motionLeave: { type: Boolean, default: true },
-    motionLeaveImmediately: { type: Boolean, default: false },
-    motionDeadline: { type: Number, default: 0 },
-    removeOnLeave: { type: Boolean, default: true },
-    forceRender: { type: Boolean, default: false },
-    leavedClassName: { type: String, default: undefined },
-    /** 五个时机 × 三类 handler。见 `MotionHooks` */
-    hooks: { type: Object as PropType<MotionHooks>, default: undefined },
-    /**
-     * 可见性最终生效后的通知（rc-motion `CSSMotion` 同名 prop）。
-     *
-     * ⚠️ 必须显式声明：本组件 `inheritAttrs: false`，未声明的 prop 会被**静默丢弃**
-     *    —— Tree 的 `MotionTreeNode` 就曾因此把 `onVisibleChanged` 传了个寂寞，
-     *    收起动效永远不收尾（2026-10-17 修）。语义见 `useMotionStatus` 的同名选项。
-     */
-    onVisibleChanged: {
-      type: Function as PropType<(visible: boolean) => void>,
-      default: undefined,
-    },
-    /**
-     * 是否支持 CSS 动画。不传则调 `detectSupportMotion()` 探测。
-     * ⚠️ 测试里**必须**显式传 `true`：jsdom 的 CSSStyleDeclaration 未必认
-     *    `animation` / `transition` 属性，探测结果可能是 false，
-     *    那样走的是简队列（`prepare → prepared`），测不到 start/active 时间线。
-     */
-    supportMotion: { type: Boolean as PropType<boolean | undefined>, default: undefined },
-  },
-  setup(props, { slots }) {
+  props: { visible: { type: Boolean, default: false }, ...motionProps },
+  slots: Object as SlotsType<CSSMotionSlots>,
+  emits: { visibleChanged: (_visible: boolean) => true },
+  setup(props, { slots, attrs, emit }) {
     const motion = useMotionStatus({
       visible: () => props.visible,
       motionName: () => props.motionName,
       supportMotion: () => props.supportMotion ?? detectSupportMotion(),
-      motionAppear: props.motionAppear,
-      motionEnter: props.motionEnter,
-      motionLeave: props.motionLeave,
-      motionLeaveImmediately: props.motionLeaveImmediately,
-      motionDeadline: props.motionDeadline,
-      removeOnLeave: props.removeOnLeave,
-      forceRender: props.forceRender,
-      leavedClassName: props.leavedClassName,
-      hooks: props.hooks,
-      onVisibleChanged: props.onVisibleChanged,
+      motionAppear: () => props.motionAppear,
+      motionEnter: () => props.motionEnter,
+      motionLeave: () => props.motionLeave,
+      motionLeaveImmediately: () => props.motionLeaveImmediately,
+      motionDeadline: () => props.motionDeadline,
+      removeOnLeave: () => props.removeOnLeave,
+      forceRender: () => props.forceRender,
+      leavedClassName: () => props.leavedClassName,
+      hooks: () => props.hooks ?? {},
+      onVisibleChanged: (visible) => emit('visibleChanged', visible),
     });
-
     return () => {
       const mode = motion.renderMode.value;
-
-      // 首帧不渲染（支持动画 + 开了 appear）—— 避免未带初始 class 的元素闪一帧
+      // Preserve the verified fresh-mount/SSR/hydration snapshot boundary.
       if (mode === 'null') return null;
-
-      const slotProps: CSSMotionSlotProps = {
-        className: motion.className.value,
-        style: motion.style.value,
+      const scope: CSSMotionSlotProps = {
+        className:
+          mode === 'leaved'
+            ? (props.leavedClassName ?? '')
+            : mode === 'hidden'
+              ? ''
+              : motion.className.value,
+        style: mode === 'hidden' ? { display: 'none' } : motion.style.value,
         visible: props.visible,
         status: motion.status.value,
         step: motion.step.value,
       };
-
-      if (mode === 'leaved') {
-        // 离场结束但 `removeOnLeave=false`：留一个带 leavedClassName 的残骸
-        slotProps.className = props.leavedClassName ?? '';
-      }
-      if (mode === 'hidden') {
-        // forceRender 或「不移除但没给 leavedClassName」：留在 DOM 里隐藏
-        slotProps.className = '';
-        slotProps.style = { display: 'none' };
-      }
-
-      const children = slots.default?.(slotProps);
-      const first: VNode | undefined = children?.[0];
-      if (!first) return null;
-
-      // ⭐ 把元素引用注入进 slot 的根 vnode —— 驱动靠它拿 DOM。
-      //    `ref` 传 Ref 对象时 Vue 会把元素/实例赋给 `.value`。
-      //    `mergeRef = true`：用户 ref 与 motion ref **合并成数组**而不是被覆盖
-      //    —— Alert 这类「motion 元素即 expose 元素」的组件，根 vnode 上同时
-      //    要挂 nativeElement 的 ref（Vue 对数组 ref 会逐个调用，行为可加）。
-      //
-      // ⚠️ 但根 vnode 是**组件**时，ref 拿到的是组件实例（不是元素）—— 驱动要的是
-      //    元素，直接 `attach` 会 `element.addEventListener is not a function`。
-      //    所以这里用函数 ref 过一道 `getElement`（utils 的既定判据：组件 vnode
-      //    一律视为支持 ref，拿到后用 `getElement` 解析，解析失败给 `null` 而不是抛错）。
-      //    实测来源：notification 内核的 notice 就是组件 vnode（2026-09-25）。
+      const child = motionChild(slots.default?.(scope));
+      if (!child) return null;
       return cloneVNode(
-        first,
+        child,
         {
-          ref: (node: unknown) => {
-            motion.elementRef.value = getElement(node);
+          ...attrs,
+          ref: (target: unknown) => {
+            motion.elementRef.value = getElement(target);
           },
         },
         true,

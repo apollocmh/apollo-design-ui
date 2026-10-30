@@ -20,7 +20,14 @@
  */
 
 import { observeResize } from '@apollo-design/utils';
-import { defineComponent, h, onScopeDispose, type PropType, type VNodeChild } from 'vue';
+import {
+  type CSSProperties,
+  defineComponent,
+  h,
+  onScopeDispose,
+  type PropType,
+  type VNodeChild,
+} from 'vue';
 import { toCssSize } from '../../_internal/to-css-size';
 import type { GutterValue } from '../../grid/interface';
 
@@ -42,7 +49,7 @@ export const MasonryItem = defineComponent({
     motionClassName: { type: String as PropType<string | undefined>, default: undefined },
     /** `MotionList` 槽回传的动效样式（可能是 `null`）。 */
     motionStyle: {
-      type: Object as PropType<Record<string, string | number> | null>,
+      type: Object as PropType<CSSProperties | null>,
       default: undefined,
     },
     /** 语义化 `classNames.item`。 */
@@ -115,7 +122,7 @@ export const MasonryItem = defineComponent({
       const { columnIndex, top } = props;
       const gutter = toCssSize(props.horizontalGutter);
 
-      const style: Record<string, string | number | undefined> = {
+      const style: CSSProperties = {
         ...props.motionStyle,
         ...props.itemStyle,
         // ① 组件作用域变量：先在本元素上声明，②③ 的 `var()` 才取得到

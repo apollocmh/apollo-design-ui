@@ -206,3 +206,7 @@ Test Utils 保留既有 Vue 测试入口，修正真实 VNodeChild、CSS/DOM 精
 ### D-checkbox-native-input-events
 
 Checkbox 的 change 改为 `(event: Event, checked: boolean)`：首参为原生事件，第二参保留本次提议；移除合成 target/nativeEvent 包装及旧 Target DTO。其余 DOM 通知采用原生拼写与事件，Group change 保留值数组；值范围统一为实际支持的 string/number/boolean。修正父拒绝更新后的 checked/indeterminate、动态 skipGroup 注册、当前 Provider 和原生样式，引用暴露真实 nullable DOM。Radio 仅同步已证实的勾选恢复边界，完整事件迁移仍另行审计；Table/Transfer 已同步本次消费，详见[Checkbox API](packages/ui/src/checkbox/index.zh-CN.md)。
+
+### D-motion-native-slots-and-events
+
+CSSMotion/MotionList 的可见性通知统一为 owned `visibleChanged` 事件，原 hooks.onVisibleChanged 迁为 `@visible-changed` / onVisibleChanged；其余有返回值的动效服务 hooks 保留。CSSMotion 将原生 attrs 与原 ref 合并到真实单个动画根，支持条件空槽和 Fragment，多个真实根明确不支持；MotionList 默认槽泛型保留移除项的浅快照元数据，component 支持原生标签、Vue 组件或 null。修正动态配置、异步准备错误归属与根替换后的监听释放，Trigger、Modal、Segmented、Form 和 Masonry 同步必要消费。详见[Motion 当前契约](docs/foundation/motion-contract.md)。

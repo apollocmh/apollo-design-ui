@@ -210,8 +210,8 @@
           "@apollo-design/ui"
         ],
         "srcFiles": 10,
-        "srcLines": 2080,
-        "exportDeclarations": 70
+        "srcLines": 2191,
+        "exportDeclarations": 80
       }
     },
     {

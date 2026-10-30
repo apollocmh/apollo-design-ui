@@ -100,7 +100,6 @@ export default defineComponent({
     const motionHooks = {
       onAppearPrepare: onPrepare,
       onEnterPrepare: onPrepare,
-      onVisibleChanged: (visible: boolean) => props.onVisibleChanged?.(visible),
     };
 
     return () => {
@@ -123,6 +122,7 @@ export default defineComponent({
            */
           motionDeadline: 500,
           hooks: motionHooks,
+          onVisibleChanged: (visible: boolean) => props.onVisibleChanged?.(visible),
         },
         {
           default: (motion: { className?: string; style?: Record<string, unknown> | null }) =>

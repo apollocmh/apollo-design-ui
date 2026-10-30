@@ -16,7 +16,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { createSSRApp, defineComponent, h, nextTick, type PropType } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
-import type { MotionHooks } from '../index';
+import type { CSSMotionSlotProps, MotionHooks } from '../index';
 import { CSSMotion, useMotionStatus } from '../index';
 import type { FramePump } from './frame-pump';
 import { createFramePump } from './frame-pump';
@@ -301,16 +301,16 @@ describe('清理', () => {
 // ---------------------------------------------------------------------------
 
 /** slot 必须同时吃 className 与 style —— 少一个就测不到组件的时间线 */
-const defaultSlot = (p: Record<string, unknown>) =>
+const defaultSlot = (p: CSSMotionSlotProps) =>
   h('div', {
     'data-box': '',
-    class: p.className as string,
-    style: p.style as Record<string, string>,
+    class: p.className,
+    style: p.style,
   });
 
 function mountMotion(
   props: Record<string, unknown>,
-  slot?: (p: Record<string, unknown>) => unknown,
+  slot?: (p: CSSMotionSlotProps) => import('vue').VNodeChild,
 ) {
   return mount(CSSMotion, {
     props: { supportMotion: true, ...props } as never,
@@ -487,7 +487,7 @@ describe('CSSMotion 的边界分支', () => {
     const wrapper = mount(CSSMotion, {
       props: { visible: true, motionName: MOTION_NAME } as never,
       slots: {
-        default: (p: Record<string, unknown>) => h('div', { class: p.className as string }),
+        default: (p: CSSMotionSlotProps) => h('div', { class: p.className }),
       },
     });
     await nextTick();

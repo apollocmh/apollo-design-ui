@@ -36,21 +36,30 @@ export interface KeyEntity extends KeyObject {
   status: MotionKeyStatus;
 }
 
-/** 字符串与 `{ key }` 对象都收；key 一律 `String()` 化 —— 上游就这么干的。 */
+/** Own key-object fields survive normalization; scalar keys carry no metadata. */
+export type KeyObjectOf<T> = T extends { key: unknown } ? KeyObject & Omit<T, 'key'> : KeyObject;
+export type KeyEntityOf<T> = T extends { key: unknown }
+  ? KeyEntity & Omit<T, 'key' | 'status'>
+  : KeyEntity;
+
+export function wrapKeyToObject<T>(key: T): KeyObjectOf<T>;
 export function wrapKeyToObject(key: unknown): KeyObject {
-  let keyObj: KeyObject;
   if (key && typeof key === 'object' && 'key' in key) {
-    keyObj = { ...(key as Record<string, unknown>) } as KeyObject;
-  } else {
-    keyObj = { key } as unknown as KeyObject;
+    const own = { ...key };
+    return { ...own, key: String(own.key) };
   }
-  return { ...keyObj, key: String(keyObj.key) };
+  return { key: String(key) };
 }
 
+export function parseKeys<T>(keys?: readonly T[]): KeyObjectOf<T>[];
 export function parseKeys(keys: readonly unknown[] = []): KeyObject[] {
   return keys.map(wrapKeyToObject);
 }
 
+export function diffKeys<Previous, Current = Previous>(
+  prevKeys?: readonly Previous[],
+  currentKeys?: readonly Current[],
+): KeyEntityOf<Previous | Current>[];
 export function diffKeys(
   prevKeys: readonly unknown[] = [],
   currentKeys: readonly unknown[] = [],
@@ -98,11 +107,11 @@ export function diffKeys(
    * Merge same key when it remove and add again:
    *    [1 - add, 2 - keep, 1 - remove] -> [1 - keep, 2 - keep]
    */
-  const keys: Record<string, number> = {};
+  const keys = new Map<string, number>();
   list.forEach(({ key }) => {
-    keys[key] = (keys[key] || 0) + 1;
+    keys.set(key, (keys.get(key) ?? 0) + 1);
   });
-  const duplicatedKeys = Object.keys(keys).filter((key) => (keys[key] ?? 0) > 1);
+  const duplicatedKeys = [...keys].filter(([, count]) => count > 1).map(([key]) => key);
   duplicatedKeys.forEach((matchKey) => {
     // Remove `STATUS_REMOVE` node.
     list = list.filter(({ key, status }) => key !== matchKey || status !== STATUS_REMOVE);

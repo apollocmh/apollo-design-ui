@@ -20,10 +20,10 @@
  */
 
 // ---- Vue 层 ----
-export type { CSSMotionSlotProps } from './css-motion';
+export type { CSSMotionProps, CSSMotionSlotProps, CSSMotionSlots } from './css-motion';
 export { CSSMotion } from './css-motion';
 // ---- 多元素 key diff ----
-export type { KeyEntity, KeyObject, MotionKeyStatus } from './diff';
+export type { KeyEntity, KeyEntityOf, KeyObject, KeyObjectOf, MotionKeyStatus } from './diff';
 export {
   diffKeys,
   parseKeys,
@@ -39,12 +39,14 @@ export type {
   MotionDriverOptions,
   MotionEndHandler,
   MotionHooks,
+  MotionOption,
   MotionPrepareHandler,
   MotionScheduler,
   MotionSnapshot,
   MotionStepHandler,
 } from './driver';
 export { createMotionDriver, defaultDomAdapter, defaultScheduler } from './driver';
+export type { MotionListProps, MotionListSlotProps, MotionListSlots } from './motion-list';
 export { MotionList } from './motion-list';
 export type { NextFrameHandle } from './next-frame';
 export { useNextFrame } from './next-frame';

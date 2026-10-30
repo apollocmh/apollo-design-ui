@@ -43,9 +43,9 @@ import {
 import { transformToken, useTheme } from '@apollo-design/theme';
 import { canUseDom } from '@apollo-design/utils';
 import {
+  type CSSProperties,
   cloneVNode,
   computed,
-  type CSSProperties,
   defineComponent,
   h,
   onBeforeUnmount,
@@ -541,11 +541,11 @@ export const Trigger = defineComponent({
         if (element instanceof HTMLElement && !popupEle.value) setPopupEle(element);
         onAlign();
       },
-      onVisibleChanged: (visible: boolean) => {
-        inMotion.value = false;
-        onAlign();
-        props.afterOpenChange?.(visible);
-      },
+    };
+    const onMotionVisibleChanged = (visible: boolean): void => {
+      inMotion.value = false;
+      onAlign();
+      props.afterOpenChange?.(visible);
     };
 
     expose({
@@ -681,6 +681,7 @@ export const Trigger = defineComponent({
                 leavedClassName: `${props.prefixCls}-hidden`,
                 forceRender: props.forceRender,
                 hooks: motionHooks,
+                onVisibleChanged: onMotionVisibleChanged,
                 ...(props.motion?.supportMotion !== undefined
                   ? { supportMotion: props.motion.supportMotion }
                   : {}),

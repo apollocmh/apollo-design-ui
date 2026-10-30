@@ -2,6 +2,8 @@
 
 # `motion` 契约文档
 
+当前 Vue 组件 API 与执行边界见第 11 节；前十节保留初期分析与历史证据。
+
 > AR2（motion 五类语义）的分析产物。**先于实现存在**（`AGENTS.md` §2：步骤 3 的产物必须先于步骤 5）。
 >
 > 本文中所有「antd 原文」的行号都指 `@rc-component/motion@1.3.3` 的 `es/` 产物，
@@ -410,3 +412,33 @@ transform、opacity、height、rect、CSS 变量和结束事件；同机运行 R
 SSR 同步输出可见内容；hydration 的首次客户端渲染必须复用该节点，不能应用普通新挂载的首帧 null 规则。Vue 在 hydration setup 前已经把服务端节点放入组件 vnode.el；只在这个边界让初始快照匹配 SSR。随后 onMounted 仍按正常 supportMotion/motionAppear 启动 appear，未关闭动画、未改变 driver 或队列。
 
 普通客户端新挂载继续返回 NONE/null，保持 002 已验收的首帧防闪烁规则。SSR false/forceRender 的隐藏节点同样按服务端快照复用。证据见 [hydration 修复报告](../audit/2026-10-24-motion-hydration-remediation.md)。
+
+## 11. 当前 Vue 原生契约（2026-10-30）
+
+本节替代前文的当前 API 设计和旧阶段执行说明；前十节保留原始 PoC、002、hydration 的事实、日期和证据，不冒充本轮重新验证。公开导出以 `packages/motion/src/index.ts`、组件类型和行为回归为准。全库九维验收仍在最终冻结版本统一执行。
+
+### 单元素、插槽、attrs 与 ref
+
+CSSMotion 的原生 default 作用域为 `{ className, style, visible, status, step }`，style 使用 Vue CSSProperties。调用者将动画 class/style 绑定到自己的实际元素。动画需要一个元素/组件根；解析 native Fragment、条件注释、空槽，不增加 layout host，也不只截取第一个兄弟。多个真实根或纯文本目标明确报错，调用方可显式提供单根或使用 MotionList。
+
+原生 attrs（包含 class/style/listeners）与该根的 props 按 Vue 规则合并，原始元素/组件 ref 与内部测量 ref 共存。未新增公共实例状态或 React ref 兼容层。根被条件替换时，活动结束监听转移到当前元素；旧元素与卸载后的资源释放。
+
+### 一个组件通知通道与真实 service hooks
+
+CSSMotion 的 `visibleChanged(visible: boolean)` 使用 Vue Emits；当前监听器与数组监听器由 Vue 派发一次。首次不可见且空闲不通知；可见性最终生效后通知。删除 hooks 内的重复通知，原 UI 消费者迁移到顶层 `onVisibleChanged` / 模板 `@visibleChanged`。MotionList 同样以 `visibleChanged` 转发每项完成，以 `allRemoved` 表示整列移除完成。
+
+MotionHooks 只包含 appear/enter/leave 的 prepare、start、active、end。prepare Promise、start/active 样式、end false 否决都参与控制流程，因此保留函数。框架无关 createMotionDriver 的完成与错误 callback 属于 driver options，不混入 phase hooks，也不模拟组件 Emits。
+
+### 当前配置和资源生命周期
+
+除原有 visible、motionName、supportMotion 链外，phase flags、deadline、hooks 和 removeOnLeave/forceRender/leavedClassName 不再在 setup 冻结。useMotionStatus 与 driver 接受相应值或 getter：phase flags 用于下一次可见性转换；deadline 在进入 active 时读取；每一步与 end 读取当前 hooks；渲染选项直接响应当前值。不为配置替换重建 driver 或改变已验收的双帧顺序。
+
+prepare 的 Promise 在返回后立即绑定拒绝处理，不等待两帧后才观察拒绝。失败取消当前 generation 的帧/监听/deadline，落到当前可见性的自然样式并将错误交 Vue transition error handling；旧请求失败不终止新 generation。无静默 catch、自动重试或伪造成功状态。无 Promise 的 prepare 保留原有微任务与 DOM 提交节奏。
+
+### 列表职责和剩余边界
+
+MotionList 保留 key 对象数据到 leave 完成；重新加入同 key 时取消待移除状态，完成的 tombstone 不再留在 DOM。no-motion 的移除同样完成；allRemoved 每次真实清空只发一次。仅修正 diff 计数容器对 prototype 属性名的误判，原始 diff 顺序和 String key 规则不变。
+
+component 支持元素名、Vue 组件（含 functional）及 false/null；有 wrapper 时 attrs 落 wrapper，无 wrapper 没有唯一原生 attrs 目标，调用方在逐项插槽绑定。业务扩展数据按最后收到的浅快照保留，不能改从删除项已消失的实时 Map 回查。MotionList 公开入口使用真实 Vue generic functional 函数，keys 的同一泛型直接贯穿 Props 与实际 slot context；既有 Vue 状态循环留在私有 core。公开形态用 Parameters 表达，不声明 new 构造器/ref/expose；不伪造泛型构造器、不引入 SFC 构建依赖。元数据字段仍按原有展开顺序交给槽，motion 保留字段准确覆盖；Masonry 继续直接消费离场槽的 position/content，motionStyle 准确接收 CSSProperties。
+
+通用 MotionProvider、全局 reduced-motion 订阅和 stagger 排程没有导出；系统/主题偏好由现有 UI 消费者通过 supportMotion 输入，不将旧规划写成已完成能力。原纯算法、002 DOM 提交、SSR hydration、dynamic-support 成果保留；本轮只补实际受影响的原生组件和消费者证据。

@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 161,
+  "revision": 163,
   "dispatch": {
     "status": "paused",
     "maxParallel": 5,
@@ -1699,7 +1699,17 @@
           }
         ],
         "boundary": "无组件Token；item.height为保留数据，真实高度仍实测；完整视觉/发布验证留冻结版本。"
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/masonry/components/MasonryItem.ts",
+            "packages/motion"
+          ],
+          "change": "MotionList retained generic slot metadata and actual CSSProperties motionStyle; Masonry continues to consume retained slot data.",
+          "verification": "FND:motion final Motion/Masonry core, native browser and scoped strict; existing Masonry historical delivery retained."
+        }
+      ]
     },
     {
       "id": "CMP:mentions",
@@ -2943,7 +2953,8 @@
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
-        "packages/ui/src/table"
+        "packages/ui/src/table",
+        "packages/virtual-list/src/virtual-list.ts"
       ],
       "assignment": {
         "owner": "native_portal",
@@ -4382,7 +4393,7 @@
       "kind": "foundation",
       "ref": "motion",
       "title": "@apollo-design/motion",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
@@ -4391,12 +4402,10 @@
         "packages/ui/src/masonry/Masonry.vue",
         "packages/ui/src/masonry/components/MasonryItem.ts"
       ],
-      "assignment": {
-        "owner": "native_color_picker",
-        "baseRevision": 130,
-        "startedAt": "2026-10-30T13:39:41.764Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
@@ -4418,6 +4427,188 @@
           "docs/audit/2026-10-22-motion-review-002.md",
           "docs/audit/2026-10-24-motion-hydration-remediation.md"
         ]
+      },
+      "verification": {
+        "task": "FND:motion",
+        "owner": "native_color_picker",
+        "sourceFrozen": true,
+        "scope": [
+          "packages/motion",
+          "docs/foundation/motion-contract.md",
+          "packages/ui/src/_internal/trigger.ts",
+          "packages/ui/src/modal/engine/Content.ts",
+          "packages/ui/src/segmented/components/MotionThumb.ts",
+          "packages/ui/src/form/ErrorList.ts",
+          "packages/ui/src/masonry/components/MasonryItem.ts"
+        ],
+        "implemented": [
+          "CSSMotion/ MotionList Props+Slots类型与runtime接通，visibleChanged owned Emits替代hooks重复通知；driver层服务callback独立于phase hooks，不模拟Vue事件。",
+          "动态phase flags/deadline/hooks与render配置按实际生效点读取；保留002提交边界、双帧/无Promise微任务节奏、SSR与hydration原成果。",
+          "真实单个动画元素边界：Fragment/Comment/空槽、完整根内容、attrs/native listeners/原ref合并；多真实根明确错误，无新增layout host。",
+          "MotionList保留移除key元数据与原diff顺序；prototype名称计数改Map，移除/重加、无motion及retained CSSMotion完成项正确收尾，null/functional wrapper接线。",
+          "活动根替换移动监听；prepare Promise立即挂拒绝处理、只清理原generation并交Vue transition error handler，不吞错/重试。",
+          "MotionList保持纯TS发布图：真实generic functional公开入口→现有私有Vue状态循环，typed正规化浅快照→retained source→slot保留元数据并准确覆盖motion保留字段；Masonry.vue仍读retained槽，MasonryItem准确接CSSProperties。",
+          "Public MotionList is an actual generic functional function, with the existing Vue state loop in private core. Its single T covers real props and actual slot context; two owned notifications bridge through ctx.emit. No public constructor/ref/expose facade is claimed."
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/motion/src --maxWorkers=1",
+            "exitCode": 0,
+            "durationMs": 15700,
+            "result": "9 files/148 passed, including existing driver/002/hydration/dynamic-support and new native contracts",
+            "log": "/tmp/apollo-motion-final-core.log"
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/motion/src/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "durationMs": 2000,
+            "result": "compiled native slots/conditional empty content/attrs/ref/list removal, actual measured collapse height transition/end and once visible notifications, no console/pageerror/window error",
+            "log": "/tmp/apollo-motion-native-browser.log"
+          },
+          {
+            "kind": "format",
+            "command": "pnpm exec biome check --write [owned changed/untracked Motion files and contract]",
+            "exitCode": 0,
+            "result": "10 supported files, no fixes/warnings in final run",
+            "log": "/tmp/apollo-motion-format.log"
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check -- packages/motion docs/foundation/motion-contract.md",
+            "exitCode": 0
+          },
+          {
+            "kind": "core-metadata",
+            "command": "pnpm exec vitest run --project unit packages/motion/src/__tests__/native-contracts.test.ts packages/motion/src/__tests__/use-motion-status.test.ts packages/motion/src/__tests__/motion-list.test.ts packages/ui/src/masonry/__tests__/item-slots.test.ts packages/ui/src/masonry/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "durationMs": 12010,
+            "result": "5 files,65 passed; includes retained shallow snapshot after the source object is mutated post-removal",
+            "log": "/tmp/apollo-motion-metadata-final-core.log",
+            "environment": "pnpm automatically reconciled node_modules before execution (4.4s/0 downloads/3 package removals); root was informed; no further pnpm exec permitted. This command did actually reach/run tests and pass."
+          },
+          {
+            "kind": "format-metadata",
+            "command": "node node_modules/@biomejs/biome/bin/biome check [6 changed metadata/consumer files]",
+            "exitCode": 0,
+            "durationMs": 31,
+            "result": "6 files, no fixes",
+            "log": "/tmp/apollo-motion-metadata-format.log"
+          },
+          {
+            "kind": "browser-metadata",
+            "command": "node packages/motion/src/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "durationMs": 2100,
+            "result": "same native source/compiled-slot/list/real collapse browser contracts after true TS generic retained metadata implementation",
+            "log": "/tmp/apollo-motion-metadata-browser.log"
+          },
+          {
+            "kind": "core-default-schema",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/motion/src/__tests__/native-contracts.test.ts packages/motion/src/__tests__/motion-list.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "durationMs": 3710,
+            "result": "2 files,24 passed; actual unchanged runtime default schema is attached before generic component mount, defaults/visibility/removal/events verified",
+            "log": "/tmp/apollo-motion-default-schema-core.log"
+          },
+          {
+            "kind": "core-functional",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/motion/src/__tests__/native-contracts.test.ts packages/motion/src/__tests__/motion-list.test.ts packages/ui/src/masonry/__tests__/item-slots.test.ts packages/ui/src/masonry/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "durationMs": 9890,
+            "result": "4 files,38 passed after functional public boundary; attrs/defaults/key lifecycles, metadata snapshots and actual Masonry consumers retained",
+            "log": "/tmp/apollo-motion-functional-core.log"
+          },
+          {
+            "kind": "format-functional",
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/motion/src/motion-list.ts packages/motion/src/__tests__/motion.test-d.ts packages/motion/src/__tests__/fixtures/TypedMotionList.vue",
+            "exitCode": 0,
+            "durationMs": 14,
+            "result": "3 files, no fixes"
+          },
+          {
+            "kind": "format-native-generic-context",
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/motion/src/motion-list.ts packages/motion/src/__tests__/native-contracts.test.ts",
+            "exitCode": 0,
+            "result": "2 files, no fixes; scoped git diff --check exit0"
+          },
+          {
+            "kind": "browser-functional",
+            "command": "node packages/motion/src/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "durationMs": 1940,
+            "result": "after true functional boundary, compiled slots/attrs/ref/list defaults+removal and measured native collapse/end notifications; zero captured browser errors/warnings",
+            "log": "/tmp/apollo-motion-functional-browser.log"
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/_internal/__tests__/trigger.test.ts packages/ui/src/_internal/__tests__/trigger-theme.test.ts packages/ui/src/modal/__tests__/engine.test.ts packages/ui/src/segmented/__tests__/index.test.ts packages/ui/src/form/__tests__/s8-issue8.test.ts packages/ui/src/masonry/__tests__/native-contracts.test.ts packages/ui/src/notification/__tests__/engine.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 21378,
+            "result": "83 affected UI consumer tests passed across Trigger, Modal, Segmented, Form, Masonry and Notification; later list boundary additionally covered by final Motion/Masonry core and browser.",
+            "log": "/tmp/apollo-motion-consumers.log"
+          },
+          {
+            "kind": "types",
+            "command": "node node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p <isolated root-strict Form+Motion config; all Motion source, types, native generic SFC positive/negative cases and exact UI consumers, plus staged ErrorList bridge proof>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 54293,
+            "result": "All scoped strict checks passed, declaration and strict preserved; 28 owned source/consumer files and staged ErrorList bridge exactly match the checked snapshot.",
+            "log": "/tmp/apollo-form-motion-final-types.log"
+          },
+          {
+            "kind": "lint",
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/motion/src packages/ui/src/_internal/trigger.ts packages/ui/src/modal/engine/Content.ts packages/ui/src/segmented/components/MotionThumb.ts packages/ui/src/masonry/components/MasonryItem.ts",
+            "exitCode": 0,
+            "result": "30 files checked, no changes."
+          }
+        ],
+        "historicalResultsPreserved": [
+          "docs/audit/2026-10-22-motion-review-002.md",
+          "docs/audit/2026-10-24-motion-hydration-remediation.md",
+          "packages/motion/src/__tests__/dynamic-support.test.ts"
+        ],
+        "failedChecksRetained": [
+          {
+            "command": "native-contracts first red",
+            "exitCode": 1,
+            "durationMs": 1640,
+            "result": "8 failed/1 passed; prototype test then corrected to true duplicated prototype-key ordering rather than treating a wrong normal-order expectation as a defect",
+            "log": "/tmp/apollo-motion-native-red.log"
+          },
+          {
+            "command": "native-contracts -t 'current animated element|rejected preparation'",
+            "exitCode": 1,
+            "durationMs": 1580,
+            "result": "2 failed and 2 unhandled rejections, reproduced actual lost replacement end event/late prepare rejection handling",
+            "log": "/tmp/apollo-motion-resources-red.log"
+          },
+          {
+            "command": "intermediate full motion core",
+            "exitCode": 1,
+            "durationMs": 15960,
+            "result": "existing002 timing assertion found extra microtask introduced by immediate promise rejection guard; fixed by only wrapping actual Promise and retaining original void-prepare schedule; final full core passed",
+            "note": "The valid002 assertion was retained, not loosened."
+          },
+          {
+            "command": "root same scoped strict before native __ctx projection",
+            "exitCode": 2,
+            "durationMs": 8183,
+            "result": "Parameters slot exact now passed; actual TypedMotionList/Masonry templates still unknown; static runtime schema leaked into h inference and metadata mount was not instantiated. Fixed at true public type boundary; final strict pending.",
+            "log": "/tmp/apollo-motion-native-slot-types.log"
+          }
+        ],
+        "pending": [],
+        "boundary": "当前 Motion 架构单元及必要 UI 消费者已通过相关核心、真实浏览器和严格类型；MotionList 真实函数泛型、槽元数据、真实 SFC 正负例与旧 ErrorList 迁移桥均验证。无新增 Provider、stagger 或 CSS 运行时；活动根替换仅重绑结束监听，不承诺在同一 active 阶段重跑业务几何。全库、完整视觉、覆盖率、构建和发布消费者及同版九维尚未执行。",
+        "timing": "registry claim21:39:41、首批关键红21:46:19、最终owned core22:07:08开始/15.70s结束；约28分钟覆盖盘点、红例、实现和定向验证，未伪造纯分析/纯实现分摊。随后等待统一strict/消费者集成。",
+        "metadataTypeFix": "修正6个包内诊断位置：真实SlotProps/VNodeChild数组/原有CSSMotionSlotProps回调/移除不可达removed比较；保留所有有效断言。没有asCtor、any、实时positionMap回查、默认content或额外schema。",
+        "finalTypeFix": "真实函数参数上的slot exact title=string已由root上一轮strict证明非any，但模板scope仍unknown。已采用Vue language-core原生generic组件VNode可选__ctx投影，把同一真实props/slots/emit/attrs上下文留给模板；公开函数显式typeof实际实现，隐藏仅runtime的静态schema反推。保留全部exact/SFC正负例，无cast/假Ctor；mount用真实MotionList<typeof row>专门化。最终同一strict等待root结果。",
+        "stage": "architecture",
+        "passed": true,
+        "finalTypeResolution": "真实 native generic context 及原有精确 SFC 正负例在 root 同源最终 strict exit0；此前失败保留，不视作通过。"
       }
     },
     {

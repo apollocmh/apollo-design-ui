@@ -186,11 +186,11 @@ export const MotionThumb = defineComponent({
               transform: 'translateX(var(--thumb-active-left))',
               width: 'var(--thumb-active-width)',
             },
-      onVisibleChanged: () => {
-        prevStyle.value = null;
-        nextStyle.value = null;
-        props.onMotionEnd?.();
-      },
+    };
+    const onVisibleChanged = (): void => {
+      prevStyle.value = null;
+      nextStyle.value = null;
+      props.onMotionEnd?.();
     };
 
     return () => {
@@ -206,6 +206,7 @@ export const MotionThumb = defineComponent({
           motionName: props.motionName,
           motionAppear: true,
           hooks,
+          onVisibleChanged,
           supportMotion: props.supportMotion,
         },
         {

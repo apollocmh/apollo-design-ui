@@ -18,7 +18,9 @@
 import {
   type ComputedRef,
   computed,
+  ErrorCodes,
   getCurrentInstance,
+  handleError,
   inject,
   nextTick,
   onMounted,
@@ -29,8 +31,14 @@ import {
   watch,
 } from 'vue';
 
-import type { MotionDomAdapter, MotionHooks, MotionScheduler } from './driver';
-import { createMotionDriver } from './driver';
+import type {
+  MotionDomAdapter,
+  MotionHooks,
+  MotionOption,
+  MotionScheduler,
+  MotionSnapshot,
+} from './driver';
+import { createMotionDriver, readMotionOption } from './driver';
 import type { MotionEndEventLike, MotionStatus, RenderMode, StepStatus } from './status';
 import {
   getMotionClassName,
@@ -52,16 +60,16 @@ export interface UseMotionStatusOptions {
    * 不传则调 `detectSupportMotion()` 探测（SSR 下为 false）。
    */
   supportMotion?: boolean | (() => boolean);
-  motionAppear?: boolean;
-  motionEnter?: boolean;
-  motionLeave?: boolean;
-  motionLeaveImmediately?: boolean;
+  motionAppear?: MotionOption<boolean>;
+  motionEnter?: MotionOption<boolean>;
+  motionLeave?: MotionOption<boolean>;
+  motionLeaveImmediately?: MotionOption<boolean>;
   /** > 0 时启用兜底定时器：CSS 事件没来也会在此时长后判结束 */
-  motionDeadline?: number;
-  removeOnLeave?: boolean;
-  forceRender?: boolean;
-  leavedClassName?: string;
-  hooks?: MotionHooks;
+  motionDeadline?: MotionOption<number>;
+  removeOnLeave?: MotionOption<boolean>;
+  forceRender?: MotionOption<boolean>;
+  leavedClassName?: MotionOption<string | undefined>;
+  hooks?: MotionOption<MotionHooks>;
   /**
    * 可见性**最终生效后**的通知（rc-motion `useStatus` 的 `onVisibleChanged`）。
    *
@@ -105,11 +113,6 @@ export interface UseMotionStatusReturn {
   onMotionEnd: (event: MotionEndEventLike) => void;
 }
 
-function resolve<T>(value: T | (() => T) | undefined, fallback: T): T {
-  if (value === undefined) return fallback;
-  return typeof value === 'function' ? (value as () => T)() : value;
-}
-
 export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatusReturn {
   const {
     visible,
@@ -124,7 +127,6 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
     forceRender = false,
     leavedClassName,
     hooks,
-    onVisibleChanged,
     scheduler,
     dom,
   } = options;
@@ -144,8 +146,8 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
   // SSR 可能运行在有 window 的预渲染环境中；此时也必须同步输出内容。
   const isSSR = inject(ssrContextKey, null) !== null;
   const effectiveSupport = computed(() => {
-    const name = resolve(motionName, undefined as string | undefined);
-    return !isSSR && !!resolve(supportMotion, detectSupportMotion()) && !!name;
+    const name = readMotionOption(motionName, undefined);
+    return !isSSR && !!readMotionOption(supportMotion, detectSupportMotion()) && !!name;
   });
 
   // ── 首帧语义（2026-09-22，badge 实测修复）──────────────────────────────────
@@ -161,19 +163,20 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
   // Vue attaches the existing server node to the component vnode before setup
   // during hydration. Match that SSR snapshot first; driver.mount still starts
   // the normal appear sequence after refs attach. Fresh client mounts keep NONE.
-  const isHydrating = !isSSR && getCurrentInstance()?.vnode.el != null;
+  const instance = getCurrentInstance();
+  const isHydrating = !isSSR && instance?.vnode.el != null;
   const initialSupport = effectiveSupport.value && !isHydrating;
   // 快照整体替换而不是逐字段 ref：驱动每次 emit 都是**一组**状态，
   // 分开放会出现「class 已更新但 style 还没」的中间态。
-  const snapshot = shallowRef({
-    status: STATUS_NONE as MotionStatus,
-    step: 'none' as StepStatus,
-    style: null as Record<string, string | number> | null,
+  const snapshot = shallowRef<MotionSnapshot>({
+    status: STATUS_NONE,
+    step: STEP_NONE,
+    style: null,
     styleReady: getStyleReady({
       mounted: false,
       status: STATUS_NONE,
       supportMotion: initialSupport,
-      motionAppear,
+      motionAppear: readMotionOption(motionAppear, true),
       step: STEP_NONE,
       styleStep: null,
     }),
@@ -194,12 +197,15 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
       void nextTick(callback);
     },
     hooks,
+    onError: (error) => handleError(error, instance, ErrorCodes.TRANSITION_HOOK),
     ...(scheduler ? { scheduler } : {}),
     ...(dom ? { dom } : {}),
     onChange: (next) => {
       snapshot.value = next;
     },
   });
+
+  watch(elementRef, () => driver.syncElement(), { flush: 'post' });
 
   onMounted(() => {
     // ⚠️ 必须在挂载后：`mount()` 里 `isMounted === false`，这才走 appear 分支。
@@ -219,7 +225,7 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
   // ⚠️ 这个 watch 必须**排在** `watch(visible, …)` 之后：驱动在 `setVisible`
   //    里同步 emit 新快照，先建的那个 watch 先跑，这里读到的 `status` 才是
   //    本次变更后的值（否则会拿上一帧的 NONE 误发一条通知）。
-  if (onVisibleChanged) {
+  {
     // rc 的 `asyncVisible`：跟随 props.visible，但只在 effect 里更新，
     // 用来区分「还没跑过 effect」与「已经跑过」。
     const asyncVisible = shallowRef<boolean | undefined>(undefined);
@@ -240,7 +246,7 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
 
       if (asyncVisible.value !== undefined && status === STATUS_NONE) {
         if (firstMountChange || asyncVisible.value) {
-          onVisibleChanged(asyncVisible.value);
+          options.onVisibleChanged?.(asyncVisible.value);
         }
         firstMountChange = true;
       }
@@ -270,7 +276,7 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
   });
 
   const className = computed(() => {
-    const name = resolve(motionName, undefined as string | undefined);
+    const name = readMotionOption(motionName, undefined);
     // `status === none` 时 antd 不挂任何 motion class（终态就是元素的自然样式）
     if (snapshot.value.status === STATUS_NONE) return '';
     return getMotionClassName(name, snapshot.value.status, snapshot.value.step);
@@ -281,9 +287,9 @@ export function useMotionStatus(options: UseMotionStatusOptions): UseMotionStatu
       styleReady: snapshot.value.styleReady,
       status: snapshot.value.status,
       mergedVisible: snapshot.value.mergedVisible,
-      removeOnLeave,
-      forceRender,
-      leavedClassName,
+      removeOnLeave: readMotionOption(removeOnLeave, true),
+      forceRender: readMotionOption(forceRender, false),
+      leavedClassName: readMotionOption(leavedClassName, undefined),
       rendered: snapshot.value.rendered,
     }),
   );

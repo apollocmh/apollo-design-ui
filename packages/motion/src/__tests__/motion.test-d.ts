@@ -10,7 +10,6 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
-
 import type {
   CollapseMotionPreset,
   KeyEntity,
@@ -237,5 +236,105 @@ describe('Vue 层', () => {
   it('CSSMotion / MotionList 是组件', () => {
     expectTypeOf(CSSMotion).not.toBeAny();
     expectTypeOf(MotionList).not.toBeAny();
+  });
+});
+
+describe('native component contracts', () => {
+  it('keeps phase hooks as services and owned notifications as Vue listeners', () => {
+    expectTypeOf<MotionHooks>().not.toHaveProperty('onVisibleChanged');
+    expectTypeOf<
+      NonNullable<import('../index').CSSMotionProps['onVisibleChanged']>
+    >().parameters.toEqualTypeOf<[boolean]>();
+    expectTypeOf<import('../index').CSSMotionSlotProps['style']>().toEqualTypeOf<
+      import('vue').CSSProperties | null
+    >();
+    expectTypeOf<
+      Parameters<NonNullable<import('../index').CSSMotionSlots['default']>>
+    >().toEqualTypeOf<[import('../index').CSSMotionSlotProps]>();
+    expectTypeOf<import('../index').MotionListSlotProps['itemKey']>().toEqualTypeOf<string>();
+    expectTypeOf<import('../index').MotionListSlotProps['index']>().toEqualTypeOf<number>();
+    expectTypeOf<import('../index').MotionListSlotProps['visible']>().toEqualTypeOf<boolean>();
+    expectTypeOf<import('../index').MotionListProps['keys']>().toEqualTypeOf<
+      readonly unknown[] | undefined
+    >();
+  });
+  it('accepts actual dynamic configuration getters without changing hook return contracts', () => {
+    const options: import('../index').UseMotionStatusOptions = {
+      visible: () => true,
+      motionAppear: () => false,
+      motionEnter: () => true,
+      motionDeadline: () => 120,
+      removeOnLeave: () => false,
+      forceRender: () => true,
+      leavedClassName: () => 'left',
+      hooks: () => ({ onLeaveEnd: () => false, onEnterStart: () => ({ height: 0 }) }),
+    };
+    expectTypeOf(options).toMatchTypeOf<import('../index').UseMotionStatusOptions>();
+    neverCalled(() => {
+      const oldHooks: MotionHooks = {
+        // @ts-expect-error component completion uses @visibleChanged, not a hook callback
+        onVisibleChanged: () => {},
+      };
+      const invalidWrapper: import('../index').MotionListProps = {
+        // @ts-expect-error only false/null disable the wrapper; true is not a component
+        component: true,
+      };
+      void [oldHooks, invalidWrapper];
+    });
+  });
+});
+
+describe('retained key metadata through the real generic Vue component', () => {
+  interface Row {
+    key: number;
+    title: string;
+    position: { column: number; top: number };
+    content: import('vue').VNodeChild;
+  }
+  it('uses a real generic functional boundary and rejects missing required metadata', () => {
+    type Props = Parameters<typeof MotionList<Row>>[0];
+    type Context = Parameters<typeof MotionList<Row>>[1];
+    expectTypeOf<Props['keys']>().toEqualTypeOf<readonly Row[] | undefined>();
+    expectTypeOf<
+      Parameters<NonNullable<Context['slots']['default']>>[0]['title']
+    >().toEqualTypeOf<string>();
+    neverCalled(() => {
+      const invalid: Props = {
+        // @ts-expect-error the actual generic functional component requires every Row title
+        keys: [{ key: 0, position: { column: 0, top: 0 }, content: 'Missing title' }],
+      };
+      void invalid;
+    });
+  });
+  it('preserves actual row data in normalization, retained diff entities and slots', () => {
+    const row: Row = {
+      key: 0,
+      title: 'Retained',
+      position: { column: 1, top: 80 },
+      content: 'Original content',
+    };
+    const normalized = parseKeys([row]);
+    const retained = diffKeys([row], [row]);
+    expectTypeOf(normalized[0]?.position).toEqualTypeOf<Row['position'] | undefined>();
+    expectTypeOf(retained[0]?.content).toEqualTypeOf<import('vue').VNodeChild>();
+    expectTypeOf<import('../index').MotionListSlotProps<Row>['position']>().toEqualTypeOf<
+      Row['position']
+    >();
+    expectTypeOf<import('../index').MotionListSlotProps<Row>['title']>().toEqualTypeOf<string>();
+    expectTypeOf<import('../index').MotionListSlotProps<Row>['key']>().toEqualTypeOf<string>();
+    expectTypeOf<
+      import('../index').MotionListSlotProps<{
+        key: string;
+        className: number;
+        visible: string;
+      }>['className']
+    >().toEqualTypeOf<string>();
+    expectTypeOf<
+      import('../index').MotionListSlotProps<{
+        key: string;
+        className: number;
+        visible: string;
+      }>['visible']
+    >().toEqualTypeOf<boolean>();
   });
 });

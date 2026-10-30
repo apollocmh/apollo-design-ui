@@ -131,10 +131,8 @@ const ErrorList = defineComponent({
           motionName: `${prefixCls.value}-show-help`,
           motionDeadline: collapseMotion.value.motionDeadline,
           visible: visible.value,
-          hooks: {
-            onVisibleChanged: (nextVisible: boolean) => {
-              props.onVisibleChanged?.(nextVisible);
-            },
+          onVisibleChanged: (nextVisible: boolean) => {
+            props.onVisibleChanged?.(nextVisible);
           },
         },
         {

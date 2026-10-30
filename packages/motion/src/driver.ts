@@ -94,7 +94,7 @@ export const defaultScheduler: MotionScheduler = {
 
 export const defaultDomAdapter: MotionDomAdapter = {
   attach: (element, onEnd) => {
-    const listener = (event: Event) => onEnd(event as unknown as MotionEndEventLike);
+    const listener = (event: Event) => onEnd(event);
     element.addEventListener('transitionend', listener);
     element.addEventListener('animationend', listener);
     (element as Element & { __motionListener?: EventListener }).__motionListener = listener;
@@ -141,7 +141,6 @@ export interface MotionHooks {
   onAppearEnd?: MotionEndHandler;
   onEnterEnd?: MotionEndHandler;
   onLeaveEnd?: MotionEndHandler;
-  onVisibleChanged?: (visible: boolean) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -165,16 +164,28 @@ export interface MotionSnapshot {
 // 驱动
 // ---------------------------------------------------------------------------
 
+export type MotionOption<T> = T | (() => T);
+
+/** Read actual animation configuration at the point where it takes effect. */
+export function readMotionOption<T extends boolean | number | string | MotionHooks | undefined>(
+  value: MotionOption<T> | undefined,
+  fallback: T,
+): T {
+  return typeof value === 'function' ? value() : (value ?? fallback);
+}
+
 export interface MotionDriverOptions {
-  supportMotion: boolean | (() => boolean);
-  motionAppear?: boolean;
-  motionEnter?: boolean;
-  motionLeave?: boolean;
-  motionLeaveImmediately?: boolean;
+  supportMotion: MotionOption<boolean>;
+  motionAppear?: MotionOption<boolean>;
+  motionEnter?: MotionOption<boolean>;
+  motionLeave?: MotionOption<boolean>;
+  motionLeaveImmediately?: MotionOption<boolean>;
   /** > 0 时启用兜底定时器 */
-  motionDeadline?: number;
+  motionDeadline?: MotionOption<number>;
   getElement: () => Element | null;
-  hooks?: MotionHooks;
+  hooks?: MotionOption<MotionHooks>;
+  onVisibleChanged?: (visible: boolean) => void;
+  onError?: (error: unknown) => void;
   scheduler?: MotionScheduler;
   dom?: MotionDomAdapter;
   /** DOM 适配层提交 prepare 节点后，再执行测量与 start 回调。默认同步。 */
@@ -188,6 +199,8 @@ export interface MotionDriver {
   setVisible(visible: boolean): void;
   /** 推进一帧。双 rAF 意味着要调用两次才推进一个 step */
   tickFrame(): void;
+  /** Rebind end listeners when the Vue slot replaces its actual animated root. */
+  syncElement(): void;
   /** DOM 结束事件（transitionend / animationend）；deadline 由驱动自己造 */
   notifyEnd(event?: MotionEndEventLike): void;
   destroy(): void;
@@ -264,7 +277,7 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
   let generation = 0;
 
   function handlers() {
-    return pickHandlers(hooks, status);
+    return pickHandlers(readMotionOption(hooks, {}), status);
   }
 
   function getSnapshot(): MotionSnapshot {
@@ -280,7 +293,7 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
         mounted,
         status,
         supportMotion: getSupport(),
-        motionAppear,
+        motionAppear: readMotionOption(motionAppear, true),
         step,
         styleStep,
       }),
@@ -309,7 +322,7 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
 
   function maybeEmitVisibleChanged(): void {
     if (asyncVisible !== undefined && status === STATUS_NONE) {
-      hooks.onVisibleChanged?.(asyncVisible);
+      options.onVisibleChanged?.(asyncVisible);
     }
   }
 
@@ -325,20 +338,44 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
     }
   }
 
-  function onDomEnd(event: MotionEndEventLike): void {
-    const element = getElement();
-    const verdict = (() => {
-      if (status === STATUS_APPEAR) return handlers().end?.(element, event);
-      if (status === STATUS_ENTER) return handlers().end?.(element, event);
-      if (status === STATUS_LEAVE) return handlers().end?.(element, event);
-      return undefined;
-    })();
-
-    if (
-      shouldEndMotion({ status, active: isActiveStep(step), element, event, endVerdict: verdict })
-    ) {
+  function failMotion(error: unknown, expectedGeneration: number): void {
+    if (generation === expectedGeneration) {
+      generation += 1;
+      cancelFrame?.();
+      cancelFrame = null;
       finishMotion();
     }
+    if (options.onError) options.onError(error);
+    else throw error;
+  }
+
+  function syncElement(): void {
+    const element = status !== STATUS_NONE && isActiveStep(step) ? getElement() : null;
+    if (element === attachedElement) return;
+    detachEvents();
+    if (element) {
+      dom.attach(element, onDomEnd);
+      attachedElement = element;
+    }
+  }
+
+  function onDomEnd(event?: MotionEndEventLike): void {
+    const element = getElement();
+    if (
+      status === STATUS_NONE ||
+      !isActiveStep(step) ||
+      (event && !event.deadline && event.target !== element)
+    )
+      return;
+    let verdict: ReturnType<MotionEndHandler>;
+    try {
+      verdict = handlers().end?.(element, event);
+    } catch (error) {
+      failMotion(error, generation);
+      return;
+    }
+    if (shouldEndMotion({ status, active: true, element, event, endVerdict: verdict }))
+      finishMotion();
   }
 
   // ---- 步进回调（useStatus.js:108-138）----
@@ -380,15 +417,11 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
 
     if (currentStep === STEP_ACTIVE && status !== STATUS_NONE) {
       // Patch events when motion needed
-      const el = getElement();
-      if (el && el !== attachedElement) {
-        detachEvents();
-        dom.attach(el, onDomEnd);
-        attachedElement = el;
-      }
-      if (motionDeadline > 0) {
+      syncElement();
+      const deadline = readMotionOption(motionDeadline, 0);
+      if (deadline > 0) {
         clearDeadline();
-        cancelDeadline = scheduler.setDeadline(() => onDomEnd({ deadline: true }), motionDeadline);
+        cancelDeadline = scheduler.setDeadline(() => onDomEnd({ deadline: true }), deadline);
       }
     }
 
@@ -405,7 +438,14 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
     // `step !== NONE && step !== ACTIVATED` 才继续；SkipStep 会在同一轮里同步连锁
     while (step !== STEP_NONE && step !== 'end') {
       const next = nextStepInQueue(step, !getSupport());
-      const result = runStepCallback(step);
+      const queueGeneration = generation;
+      let result: boolean | Promise<unknown> | undefined;
+      try {
+        result = runStepCallback(step);
+      } catch (error) {
+        failMotion(error, queueGeneration);
+        return;
+      }
 
       if (result === false) {
         // SkipStep —— 同步跳到下一步，不占帧
@@ -417,7 +457,12 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
       if (!next) return;
 
       const captured = next;
-      const queueGeneration = generation;
+      // Attach rejection handling immediately; do not leave a rejected prepare
+      // unobserved until the two-frame wait has elapsed.
+      const pending =
+        typeof result === 'object'
+          ? result.catch((error) => failMotion(error, queueGeneration))
+          : undefined;
       cancelFrame?.();
       cancelFrame = scheduler.nextFrame(() => {
         cancelFrame = null;
@@ -426,7 +471,7 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
         };
         // `result === true` 时同步推进；其余（含 prepare 返回的 Promise）走微任务
         if (result === true) advance();
-        else Promise.resolve(result).then(advance);
+        else void (pending ?? Promise.resolve(result)).then(advance);
       });
       return;
     }
@@ -451,17 +496,19 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
     const nextStatus = pickStatus({
       mounted: isMounted,
       visible: nextVisible,
-      motionAppear,
-      motionEnter,
-      motionLeave,
-      motionLeaveImmediately,
+      motionAppear: readMotionOption(motionAppear, true),
+      motionEnter: readMotionOption(motionEnter, true),
+      motionLeave: readMotionOption(motionLeave, true),
+      motionLeaveImmediately: readMotionOption(motionLeaveImmediately, false),
     });
 
     if (
       shouldStartMotion({
         nextStatus,
         supportMotion: getSupport(),
-        hasPrepare: Boolean(pickHandlers(hooks, nextStatus ?? STATUS_NONE).prepare),
+        hasPrepare: Boolean(
+          pickHandlers(readMotionOption(hooks, {}), nextStatus ?? STATUS_NONE).prepare,
+        ),
       })
     ) {
       status = nextStatus ?? STATUS_NONE;
@@ -494,9 +541,10 @@ export function createMotionDriver(options: MotionDriverOptions): MotionDriver {
       // 「两帧」这件事由 scheduler 负责；测试注入的帧泵通过 `tick()` 显式推进
       scheduler.tick?.();
     },
+    syncElement,
     notifyEnd(event) {
       // event 缺省表示「没有事件对象」—— 与 deadline 是两回事，别混
-      onDomEnd(event as MotionEndEventLike);
+      onDomEnd(event);
     },
     destroy() {
       generation += 1;

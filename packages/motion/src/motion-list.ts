@@ -1,153 +1,188 @@
-/**
- * `MotionList` —— `CSSMotionList.js` 的 Vue 等价物。
- *
- * 职责**只有**三件（`motion-contract.md` §3.9）：
- *   1. 对 `keys` 做四态 diff，每个 key 各自套一个 `CSSMotion`；
- *   2. 某个 key 的 leave 播完后把它标成 `removed` 并摘掉；
- *   3. 全部摘完后触发 `allRemoved`。
- *
- * ⚠️ **stagger（错峰）不在这一层**。antd 里错峰是各组件自己在 `motionDelay`
- *    / `style` 上加的（如 Collapse 逐项），CSSMotionList 不做这件事。
- *    本包同样不提供 —— 谁需要错峰谁自己给 `style` 加 `animation-delay`。
- */
+import {
+  type Component,
+  defineComponent,
+  h,
+  type PropType,
+  type SetupContext,
+  type SlotsType,
+  shallowRef,
+  type VNode,
+  type VNodeChild,
+  watch,
+} from 'vue';
+import { CSSMotion, type CSSMotionProps, type CSSMotionSlotProps, motionProps } from './css-motion';
+import {
+  diffKeys,
+  type KeyEntityOf,
+  type KeyObject,
+  type KeyObjectOf,
+  parseKeys,
+  STATUS_ADD,
+  STATUS_REMOVE,
+  STATUS_REMOVED,
+  wrapKeyToObject,
+} from './diff';
 
-import { type Component, defineComponent, h, type PropType, ref, watch } from 'vue';
+export interface MotionListProps<T = unknown> extends Omit<CSSMotionProps, 'visible'> {
+  keys?: readonly T[];
+  component?: string | Component | false | null;
+  onAllRemoved?: () => void;
+}
+export type MotionListSlotProps<T = unknown> = KeyObject &
+  CSSMotionSlotProps & {
+    itemKey: string;
+    index: number;
+  } & (T extends { key: unknown }
+    ? Omit<T, keyof CSSMotionSlotProps | 'key' | 'itemKey' | 'index'>
+    : object);
+export interface MotionListSlots<T = unknown> {
+  default?: (scope: MotionListSlotProps<T>) => VNodeChild;
+}
 
-import { CSSMotion } from './css-motion';
-import type { KeyEntity } from './diff';
-import { diffKeys, parseKeys, STATUS_ADD, STATUS_REMOVE, STATUS_REMOVED } from './diff';
-import type { MotionHooks } from './driver';
+const emits = { allRemoved: () => true, visibleChanged: (_visible: boolean) => true };
 
-export const MotionList = defineComponent({
-  name: 'MotionList',
-  props: {
-    /** 当前应当存在的 key 列表。顺序有意义（diff 依赖它） */
-    keys: { type: Array as PropType<unknown[]>, default: () => [] },
-    /** 包裹元素。传 `null` / `false` 表示不包裹，直接返回片段 */
-    component: {
-      type: [String, Object, Boolean] as PropType<string | Component | false>,
-      default: 'div',
-    },
-    // ---- 透传给每个 CSSMotion ----
-    motionName: { type: String, default: undefined },
-    motionAppear: { type: Boolean, default: true },
-    motionEnter: { type: Boolean, default: true },
-    motionLeave: { type: Boolean, default: true },
-    motionLeaveImmediately: { type: Boolean, default: false },
-    motionDeadline: { type: Number, default: 0 },
-    removeOnLeave: { type: Boolean, default: true },
-    forceRender: { type: Boolean, default: false },
-    leavedClassName: { type: String, default: undefined },
-    hooks: { type: Object as PropType<MotionHooks>, default: undefined },
-    /** 透传给每个 CSSMotion。测试里必须显式传 true（理由同 CSSMotion） */
-    supportMotion: { type: Boolean as PropType<boolean | undefined>, default: undefined },
+/** Match the real normalization/spread order, including reserved motion fields. */
+function itemScope<T>(
+  source: KeyObjectOf<T>,
+  motion: CSSMotionSlotProps,
+  key: string,
+  index: number,
+): MotionListSlotProps<T>;
+function itemScope(
+  source: KeyObject,
+  motion: CSSMotionSlotProps,
+  key: string,
+  index: number,
+): MotionListSlotProps {
+  return { ...source, ...motion, key, itemKey: key, index };
+}
+
+const runtimeProps = {
+  keys: { type: Array, default: () => [] },
+  component: {
+    type: [String, Object, Function, Boolean] as PropType<string | Component | false | null>,
+    default: 'div',
   },
-  emits: {
-    /** 所有被移除的 key 都播完离场后触发 */
-    allRemoved: () => true,
-  },
-  setup(props, { slots, emit }) {
-    const entities = ref<KeyEntity[]>(
-      parseKeys(props.keys).map((obj) => ({ ...obj, status: STATUS_ADD })),
-    );
+  ...motionProps,
+};
 
-    watch(
-      () => props.keys,
-      (next) => {
-        const mixed = diffKeys(
-          entities.value.map((e) => ({ ...e })),
-          next,
-        );
-        // 已经标成 removed 的 key，本次又是 remove ⇒ 直接丢掉，不再留着播第二次
-        entities.value = mixed.filter((entity) => {
-          const prev = entities.value.find(({ key }) => entity.key === key);
-          if (prev && prev.status === STATUS_REMOVED && entity.status === STATUS_REMOVE) {
-            return false;
-          }
-          return true;
+const MotionListCore = Object.assign(
+  defineComponent(
+    <T>(
+      props: MotionListProps<T>,
+      { slots, emit, attrs }: SetupContext<typeof emits, SlotsType<MotionListSlots<T>>>,
+    ) => {
+      // Store the typed shallow snapshot alongside its normalized key. Retiring keys
+      // keep this snapshot; never recover their data from the current key list.
+      type Source = { key: string; source: KeyObjectOf<T> };
+      type Retained = KeyEntityOf<Source>;
+      const sources = (): Source[] =>
+        (props.keys ?? []).map((input) => {
+          const source = wrapKeyToObject(input);
+          return { key: source.key, source };
         });
-      },
-      { deep: true },
-    );
-
-    function markRemoved(key: string): void {
-      entities.value = entities.value.map((entity) =>
-        entity.key === key ? { ...entity, status: STATUS_REMOVED } : entity,
+      const entities = shallowRef<Retained[]>(
+        parseKeys(sources()).map((item) => ({ ...item, status: STATUS_ADD })),
       );
-      const rest = entities.value.filter(({ status }) => status !== STATUS_REMOVED).length;
-      if (rest === 0) {
-        emit('allRemoved');
-      }
-    }
-
-    return () => {
-      const children = entities.value.map((entity, entityIndex) => {
-        const userHooks = props.hooks;
-        const hooks: MotionHooks = {
-          ...userHooks,
-          onVisibleChanged: (visible: boolean) => {
-            userHooks?.onVisibleChanged?.(visible);
-            if (!visible) markRemoved(entity.key);
-          },
-        };
-
-        /**
-         * 上游 `CSSMotionList` 是 `keyEntities.map(({ status, ...eventProps }, index) => …)`
-         * —— 它把 key 对象的**其余字段**当作 `eventProps` 交给 `CSSMotion`，
-         * 而 `CSSMotion` 再把它们铺进给 children 的载荷里：
-         *
-         * ```js
-         * const mergedProps = { ...eventProps, visible };
-         * children({ ...mergedProps, [className], [style] }, nodeRef)
-         * ```
-         *
-         * ⇒ 槽载荷 = **`{...key对象(去掉 status), visible, [className], [style], index}`**。
-         *
-         * ⚠️ 这里必须同样透传，否则「按 key 携带业务数据」的用法（masonry 就是）
-         * 拿不到数据；更要命的是**离场中的 key 只在 `diffKeys` 的实体里**——
-         * 列表里已经删掉了，只有这条通路还能拿到它的内容
-         * （上游 `Masonry` 正是靠它让「被移除的 item 播完淡出」而不是瞬间变空）。
-         *
-         * 合并顺序与上游一致：**key 对象先铺、motion 字段覆盖同名键**
-         * （`visible` / `className` / `style` 永远以 motion 为准）。
-         */
-        const { status: _diffStatus, ...eventProps } = entity;
-
-        return h(
-          CSSMotion,
-          {
-            key: entity.key,
-            visible: entity.status !== STATUS_REMOVE && entity.status !== STATUS_REMOVED,
-            motionName: props.motionName,
-            motionAppear: props.motionAppear,
-            motionEnter: props.motionEnter,
-            motionLeave: props.motionLeave,
-            motionLeaveImmediately: props.motionLeaveImmediately,
-            motionDeadline: props.motionDeadline,
-            removeOnLeave: props.removeOnLeave,
-            forceRender: props.forceRender,
-            leavedClassName: props.leavedClassName,
-            supportMotion: props.supportMotion,
-            hooks,
-          },
-          slots.default
-            ? {
-                default: (slotProps: Record<string, unknown>) =>
-                  slots.default?.({
-                    ...eventProps,
-                    ...slotProps,
-                    // 本仓既有契约（upload / form / notification 在用）：`itemKey` = `String(key)`
-                    itemKey: entity.key,
-                    // 上游同名：`keyEntities` 里的下标
-                    index: entityIndex,
-                  }),
-              }
-            : undefined,
+      watch(
+        () => props.keys,
+        () => {
+          const previous = entities.value;
+          entities.value = diffKeys<Source>(previous, sources()).filter(
+            (entity) =>
+              !(
+                entity.status === STATUS_REMOVE &&
+                previous.some((item) => item.key === entity.key && item.status === STATUS_REMOVED)
+              ),
+          );
+        },
+        { deep: true },
+      );
+      const markRemoved = (key: string): void => {
+        const entity = entities.value.find((item) => item.key === key);
+        if (!entity || entity.status !== STATUS_REMOVE) return;
+        entities.value = entities.value.map((item) =>
+          item.key === key ? { ...item, status: STATUS_REMOVED } : item,
         );
-      });
+        if (entities.value.every((item) => item.status === STATUS_REMOVED)) emit('allRemoved');
+      };
+      return () => {
+        const children = entities.value.map((entity, index) => {
+          if (entity.status === STATUS_REMOVED) return null;
+          return h(
+            CSSMotion,
+            {
+              key: entity.key,
+              visible: entity.status !== STATUS_REMOVE,
+              motionName: props.motionName,
+              motionAppear: props.motionAppear,
+              motionEnter: props.motionEnter,
+              motionLeave: props.motionLeave,
+              motionLeaveImmediately: props.motionLeaveImmediately,
+              motionDeadline: props.motionDeadline,
+              removeOnLeave: props.removeOnLeave,
+              forceRender: props.forceRender,
+              leavedClassName: props.leavedClassName,
+              supportMotion: props.supportMotion,
+              hooks: props.hooks,
+              onVisibleChanged: (visible) => {
+                emit('visibleChanged', visible);
+                if (!visible) markRemoved(entity.key);
+              },
+            },
+            {
+              default: (scope: CSSMotionSlotProps) =>
+                slots.default?.(itemScope<T>(entity.source, scope, entity.key, index)),
+            },
+          );
+        });
+        // A fragment has no native attr target. Bind per-item attrs in its slot.
+        if (!props.component) return children;
+        return typeof props.component === 'string'
+          ? h(props.component, attrs, children)
+          : h(props.component, attrs, { default: () => children });
+      };
+    },
+    { name: 'MotionListCore', inheritAttrs: false, emits },
+  ),
+  { props: Object.keys(runtimeProps) },
+);
 
-      if (!props.component) return children;
-      return h(props.component, null, children);
-    };
-  },
+type MotionListContext<T> = Pick<
+  SetupContext<typeof emits, SlotsType<MotionListSlots<T>>>,
+  'attrs' | 'slots' | 'emit'
+>;
+type MotionListVNode<T> = VNode & {
+  /** Vue language-core's native generic-component context projection. */
+  __ctx?: {
+    props: MotionListProps<T>;
+    slots: MotionListContext<T>['slots'];
+    emit: MotionListContext<T>['emit'];
+    attrs: MotionListContext<T>['attrs'];
+  };
+};
+
+function renderMotionList<T>(
+  props: MotionListProps<T>,
+  { attrs, slots, emit }: MotionListContext<T>,
+): MotionListVNode<T> {
+  return h(
+    MotionListCore<T>,
+    {
+      ...attrs,
+      ...props,
+      onAllRemoved: () => emit('allRemoved'),
+      onVisibleChanged: (visible: boolean) => emit('visibleChanged', visible),
+    },
+    slots,
+  );
+}
+
+// Keep the true callable public contract; attach the one runtime schema to the
+// actual function without letting its defaulted fields redefine public Props.
+export const MotionList: typeof renderMotionList = Object.assign(renderMotionList, {
+  props: runtimeProps,
+  emits,
+  inheritAttrs: false,
+  displayName: 'MotionList',
 });
