@@ -114,3 +114,7 @@ Tooltip 的 openChange/popupClick/afterOpenChange 使用 Vue emits，原生 clas
 ### D-float-button-native-group
 
 FloatButton / Group 使用当前插槽、Provider 与主题别名；Group 通知改为 Vue emits，原生 attrs 只作用于根，trigger 在列表前以支持自然 Tab 顺序，Escape 在接受关闭后返回焦点。BackTop 保留当前目标并释放动画/监听，PurePanel 展示真实分支；既有样式生成器正确消费显式自定义前缀，不新增运行时 CSS。详见[FloatButton API](packages/ui/src/float-button/index.zh-CN.md)。
+
+### D-popover-current-owner
+
+Popover 拥有 openChange/popupClick/afterOpenChange 的 Vue emits，继承的样式与销毁别名真实转发；自身四 Token、当前 Provider 与 PurePanel 颜色生效。包装层把当前层级基准传给 Tooltip，共享同一层级上下文，不重复叠加。真实引用、原生样式与内容插槽沿用既有成果；wireframe 的视觉缺口仍明确延期，详见[Popover API](packages/ui/src/popover/index.zh-CN.md)。

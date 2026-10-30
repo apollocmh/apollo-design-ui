@@ -13,6 +13,7 @@ import type { VNodeChild } from 'vue';
 import type {
   TooltipArrow,
   TooltipContent,
+  TooltipEmits,
   TooltipPlacement,
   TooltipProps,
   TooltipRef,
@@ -67,3 +68,6 @@ export interface PopoverProps extends Omit<TooltipProps, 'classNames' | 'styles'
 
 /** expose —— 与 Tooltip 同物（antd 的 `TooltipRef`）。 */
 export type PopoverRef = TooltipRef;
+
+/** Popover owns the same typed notification and model events as Tooltip. */
+export type PopoverEmits = TooltipEmits;

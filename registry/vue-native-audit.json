@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 37,
+  "revision": 41,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -156,7 +156,9 @@
         "packages/ui/src/back-top"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -668,7 +670,9 @@
         "packages/ui/src/float-button"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -694,21 +698,21 @@
         "checks": [
           {
             "kind": "core",
-            "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/float-button --maxWorkers=1",
+            "command": "pnpm exec vitest run --project unit --project dom-contract --project theme --project a11y packages/ui/src/float-button --maxWorkers=2",
             "exitCode": 0,
             "signal": null,
             "durationMs": 19710
           },
           {
             "kind": "core",
-            "command": "pnpm exec vitest run --project unit packages/ui/src/float-button/__tests__/native-contracts.test.ts packages/ui/src/float-button/__tests__/index.test.ts packages/ui/src/float-button/__tests__/s27-issue27.test.ts packages/ui/src/float-button/__tests__/vue-bindings.test.ts --maxWorkers=1",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/float-button/__tests__/native-contracts.test.ts packages/ui/src/float-button/__tests__/index.test.ts packages/ui/src/float-button/__tests__/s27-issue27.test.ts packages/ui/src/float-button/__tests__/button-consumer-contracts.test.ts --maxWorkers=2",
             "exitCode": 0,
             "signal": null,
             "durationMs": 8350
           },
           {
             "kind": "core",
-            "command": "pnpm exec vitest run --project theme packages/ui/src/float-button --maxWorkers=1",
+            "command": "pnpm exec vitest run --project theme packages/ui/src/float-button --maxWorkers=2",
             "exitCode": 0,
             "signal": null,
             "durationMs": 15420
@@ -841,7 +845,9 @@
         "packages/ui/src/input-number"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -982,7 +988,9 @@
         "packages/ui/src/masonry"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -1178,7 +1186,9 @@
         "packages/ui/src/pagination"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -1264,18 +1274,16 @@
       "kind": "component",
       "ref": "popover",
       "title": "Popover",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/popover"
       ],
-      "assignment": {
-        "owner": "native_popover",
-        "baseRevision": 34,
-        "startedAt": "2026-10-30T08:23:36.196Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -1283,7 +1291,15 @@
         "docs/audit/2026-10-25-overlay-native-styles-remediation.md",
         "docs/audit/2026-10-28-overlay-controlled-delay-audit.md"
       ],
-      "issues": [],
+      "issues": [
+        {
+          "id": "POPOVER-WIREFRAME-STYLE",
+          "status": "deferred",
+          "blocking": false,
+          "impact": "可选wireframe主题下仍显示普通Popover形态；保留原已知视觉边界，未宣称该模式通过。",
+          "reason": "本单元不扩此前明确未支持的可选视觉模式；现有核心事件、模型、内容、Provider与组件Token链已修复，最终全库验收仍须核对该边界。"
+        }
+      ],
       "plan": {
         "goal": "保留已有Overlay slots/native-style和Tooltip迁移成果，收口Popover剩余Vue契约",
         "remaining": [
@@ -1295,6 +1311,55 @@
           "docs/audit/2026-10-25-overlay-native-styles-remediation.md",
           "docs/audit/2026-10-28-overlay-controlled-delay-audit.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/popover",
+          "packages/ui/src/tooltip/Tooltip.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit --project dom-contract --project a11y --project theme packages/ui/src/popover packages/ui/src/popconfirm --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 61950
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/popover/__tests__/native-contracts.test.ts -t 'owns openChange' --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/tooltip/__tests__/injected-layer.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "core",
+            "command": "pnpm exec vitest run --project unit packages/ui/src/_internal/__tests__/use-merge-semantic.test.ts packages/ui/src/tree-select/__tests__/tree-slots.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/popover/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <isolated root-strict config; full Popover/Tooltip source/tests/demos/SFC>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 52408
+          }
+        ],
+        "boundary": "沿用既有内容/native-style/delay成果；已验证自身Provider/四Token、Vue事件与模板ref、嵌套层级和Popconfirm消费者。wireframe视觉边界延期，完整冻结版本九维/发布消费者未执行。"
       }
     },
     {
@@ -1309,7 +1374,9 @@
         "packages/ui/src/progress"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -1433,7 +1500,9 @@
         "packages/ui/src/rate"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -1723,7 +1792,9 @@
         "packages/ui/src/steps"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -1795,7 +1866,9 @@
         "packages/ui/src/switch"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -2003,7 +2076,9 @@
         "packages/ui/src/tooltip"
       ],
       "assignment": null,
-      "evidence": [],
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -2198,13 +2273,17 @@
       "kind": "component",
       "ref": "upload",
       "title": "Upload",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/upload"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_upload",
+        "baseRevision": 38,
+        "startedAt": "2026-10-30T08:34:41.792Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",

@@ -5,11 +5,20 @@
  * 与 tooltip PurePanel 的结构差异（antd 源逐条对齐）：root 额外带
  * `{p}-placement-{placement}` 类；内容是 Overlay（title + content 两块）。
  */
-import { defineComponent, h, type PropType, type SlotsType } from 'vue';
+import { computed, defineComponent, h, type PropType, type SlotsType } from 'vue';
 import { clsx } from '../_internal/clsx';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
-import type { PopoverProps, PopoverSemanticType, PopoverSlots } from './interface';
+import { parseTooltipColor } from '../tooltip/util';
+import type {
+  PopoverClassNames,
+  PopoverProps,
+  PopoverSemanticType,
+  PopoverSlots,
+  PopoverStyles,
+  TooltipPlacement,
+} from './interface';
+import { usePopoverTheme } from './use-popover-theme';
 
 type StyleLike = Record<string, string | number>;
 
@@ -32,7 +41,7 @@ const PurePanel = defineComponent({
   props: {
     prefixCls: { type: String, default: undefined },
     color: { type: String, default: undefined },
-    placement: { type: String, default: 'top' },
+    placement: { type: String as PropType<TooltipPlacement>, default: 'top' },
     title: {
       type: [Object, String, Number, Boolean, Array] as PropType<PopoverProps['title']>,
       default: undefined,
@@ -42,21 +51,37 @@ const PurePanel = defineComponent({
       default: undefined,
     },
     classNames: {
-      type: Object as PropType<PopoverSemanticType['classNames']>,
+      type: [Object, Function] as PropType<PopoverClassNames>,
       default: undefined,
     },
-    styles: { type: Object as PropType<PopoverSemanticType['styles']>, default: undefined },
+    styles: { type: [Object, Function] as PropType<PopoverStyles>, default: undefined },
   },
   setup(props, { attrs, slots }) {
-    const { getPrefixCls } = useComponentConfig('popover');
+    const context = useComponentConfig<{
+      classNames?: PopoverClassNames;
+      styles?: PopoverStyles;
+      className?: string;
+      style?: StyleLike;
+    }>('popover');
+    const popoverTheme = usePopoverTheme();
+    const semanticProps = computed<PopoverProps>(() => ({ ...props }));
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
-      Record<string, never>,
+      PopoverProps,
       NonNullable<PopoverSemanticType['classNames']>,
       NonNullable<PopoverSemanticType['styles']>
-    >([() => props.classNames], [() => props.styles], {} as Record<string, never>);
+    >(
+      [() => context.classNames, () => props.classNames],
+      [
+        () => context.styles,
+        () => (context.style ? { root: context.style } : undefined),
+        () => props.styles,
+      ],
+      semanticProps,
+    );
 
     return () => {
-      const prefixCls = props.prefixCls ?? getPrefixCls('popover');
+      const prefixCls = props.prefixCls ?? context.getPrefixCls('popover');
+      const colorInfo = parseTooltipColor(prefixCls, props.color);
       const placement = props.placement ?? 'top';
       const title = slots.title ? slots.title() : props.title;
       const content = slots.content ? slots.content() : props.content;
@@ -64,27 +89,35 @@ const PurePanel = defineComponent({
       return h(
         'div',
         {
-          class: clsx(
-            typeof attrs.class === 'string' ? attrs.class : undefined,
+          class: [
+            attrs.class,
             prefixCls,
             `${prefixCls}-pure`,
             `${prefixCls}-placement-${placement}`,
+            context.direction === 'rtl' && `${prefixCls}-rtl`,
+            context.className,
+            colorInfo.className,
             mergedClassNames.value.root,
-          ),
-          style: [mergedStyles.value.root, attrs.style],
+          ],
+          style: [
+            popoverTheme.style.value,
+            colorInfo.arrowStyle,
+            mergedStyles.value.root,
+            attrs.style,
+          ],
           ...stripClassStyle(attrs),
         },
         [
           h('div', {
             class: [`${prefixCls}-arrow`, mergedClassNames.value.arrow],
-            style: mergedStyles.value.arrow,
+            style: [colorInfo.arrowStyle, mergedStyles.value.arrow],
           }),
           h(
             'div',
             {
               class: clsx(`${prefixCls}-container`, mergedClassNames.value.container),
               // 原生 style 只作用于根；容器保持独立的语义样式。
-              style: mergedStyles.value.container,
+              style: [mergedStyles.value.container, colorInfo.overlayStyle],
               role: 'tooltip',
             },
             [
@@ -94,7 +127,7 @@ const PurePanel = defineComponent({
                     {
                       key: 'title',
                       class: clsx(`${prefixCls}-title`, mergedClassNames.value.title),
-                      style: mergedStyles.value.title as StyleLike | undefined,
+                      style: mergedStyles.value.title,
                     },
                     [title],
                   )
@@ -105,7 +138,7 @@ const PurePanel = defineComponent({
                     {
                       key: 'content',
                       class: clsx(`${prefixCls}-content`, mergedClassNames.value.content),
-                      style: mergedStyles.value.content as StyleLike | undefined,
+                      style: mergedStyles.value.content,
                     },
                     [content],
                   )

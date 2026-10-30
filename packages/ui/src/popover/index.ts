@@ -18,6 +18,7 @@ Popover._InternalPanelDoNotUseOrYouWillBeFired = PopoverPurePanel;
 
 export type {
   PopoverClassNames,
+  PopoverEmits,
   PopoverProps,
   PopoverRef,
   PopoverSemanticType,

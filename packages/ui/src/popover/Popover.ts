@@ -4,12 +4,8 @@
  * 结构（analysis §1）：Tooltip 的薄包装 —— Trigger/portal/motion/开合协议全部
  * 复用 Tooltip 组件，只把内容通道换成 Overlay（`{p}-title` + `{p}-content`）。
  *
- * 与 antd 的差异（COMPATIBILITY §9.2 D83–D85）：
- * - ConfigProvider.popover 不消费（D29 同判：UniqueProvider 未实现）；
- *   `useComponentConfig('popover')` 走 `components` 逃生口。
- * - wireframe 主题态不支持（D84）。
- * - `data-popover-inject` attr 不渲染（D85，React 注入标记）。
- * - onOpenChange 第二参数告警不移植（Vue 回调本就单参，无 usage 语义）。
+ * Popover 自己消费当前 Provider、组件 Token、内容和通知事件，Tooltip
+ * 负责实际浮层生命周期与定位；注入标记避免消费 Tooltip 专属配置。
  */
 
 import { useControlledValue } from '@apollo-design/utils';
@@ -18,7 +14,6 @@ import {
   defineComponent,
   Fragment,
   h,
-  normalizeStyle,
   type PropType,
   type SlotsType,
   shallowRef,
@@ -38,6 +33,7 @@ import type {
   PopoverStyles,
 } from './interface';
 import PurePanel from './PurePanel';
+import { usePopoverTheme } from './use-popover-theme';
 
 type StyleLike = Record<string, string | number>;
 
@@ -56,7 +52,6 @@ const Popover = defineComponent({
     prefixCls: { type: String, default: undefined },
     open: { type: Boolean, default: undefined },
     defaultOpen: { type: Boolean, default: undefined },
-    onOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
     title: {
       type: [Object, String, Number, Boolean, Array] as PropType<TooltipContentLike>,
       default: undefined,
@@ -78,6 +73,10 @@ const Popover = defineComponent({
     id: { type: String, default: undefined },
     disabled: { type: Boolean, default: undefined },
     destroyOnHidden: { type: Boolean, default: undefined },
+    destroyTooltipOnHide: {
+      type: [Boolean, Object] as PropType<PopoverProps['destroyTooltipOnHide']>,
+      default: undefined,
+    },
     fresh: { type: Boolean, default: undefined },
     forceRender: { type: Boolean, default: undefined },
     autoAdjustOverflow: {
@@ -106,50 +105,57 @@ const Popover = defineComponent({
       type: Object as PropType<Record<string, TriggerAlign>>,
       default: undefined,
     },
-    onPopupClick: { type: Function as PropType<(event: MouseEvent) => void>, default: undefined },
     openClassName: { type: String, default: undefined },
+    overlayStyle: { type: Object as PropType<PopoverProps['overlayStyle']>, default: undefined },
+    overlayInnerStyle: {
+      type: Object as PropType<PopoverProps['overlayInnerStyle']>,
+      default: undefined,
+    },
+    overlayClassName: { type: String, default: undefined },
   },
   emits: {
     'update:open': (_open: boolean) => true,
+    openChange: (_open: boolean) => true,
     afterOpenChange: (_open: boolean) => true,
+    popupClick: (_event: MouseEvent) => true,
   },
   setup(props, { slots, attrs, expose, emit }) {
+    const popoverTheme = usePopoverTheme();
     // ⚠️ antd 的 `data-popover-inject`：告诉下层 Tooltip「我是注入方」⇒ 跳过
     //    ConfigProvider `components.tooltip` 的专属配置（Issue #24.4）。
-    provideTooltipInjection();
-    const context = useComponentConfig('popover');
-    const contextSemantic = context as {
-      classNames?: PopoverSemanticType['classNames'];
-      styles?: PopoverSemanticType['styles'];
+    provideTooltipInjection(() => popoverTheme.componentToken.value.zIndexPopup);
+    const context = useComponentConfig<{
+      classNames?: PopoverClassNames;
+      styles?: PopoverStyles;
       arrow?: boolean | { pointAtCenter?: boolean };
       trigger?: string | string[];
       mouseEnterDelay?: number;
       mouseLeaveDelay?: number;
       className?: string;
       style?: StyleLike;
-    };
+    }>('popover');
 
     const prefixCls = computed(() => props.prefixCls ?? context.getPrefixCls('popover'));
 
     // ============================ Merge ==============================
     const mergedMouseEnterDelay = computed(
-      () => props.mouseEnterDelay ?? contextSemantic.mouseEnterDelay ?? 0.1,
+      () => props.mouseEnterDelay ?? context.mouseEnterDelay ?? 0.1,
     );
     const mergedMouseLeaveDelay = computed(
-      () => props.mouseLeaveDelay ?? contextSemantic.mouseLeaveDelay ?? 0.1,
+      () => props.mouseLeaveDelay ?? context.mouseLeaveDelay ?? 0.1,
     );
     const mergedArrow = useMergedArrow(
       () => props.arrow,
-      () => contextSemantic.arrow,
+      () => context.arrow,
     );
-    const mergedTrigger = computed(() => props.trigger || contextSemantic.trigger || 'hover');
+    const mergedTrigger = computed(() => props.trigger || context.trigger || 'hover');
 
     // ============================= Open ==============================
     const [mergedOpen, setOpen] = useControlledValue<boolean>({
       defaultValue: () => props.defaultOpen ?? false,
       getValue: () => props.open,
       onChange: (next: boolean) => {
-        props.onOpenChange?.(next);
+        emit('openChange', next);
         emit('update:open', next);
       },
     });
@@ -170,35 +176,24 @@ const Popover = defineComponent({
       NonNullable<PopoverSemanticType['classNames']>,
       NonNullable<PopoverSemanticType['styles']>
     >(
+      [() => context.classNames, () => props.classNames],
       [
-        () => contextSemantic.classNames,
-        () => props.classNames as PopoverSemanticType['classNames'] | undefined,
-      ],
-      [
-        () => contextSemantic.styles,
-        () => (contextSemantic.style ? { root: contextSemantic.style } : undefined),
-        () => props.styles as PopoverSemanticType['styles'] | undefined,
+        () => context.styles,
+        () => (context.style ? { root: context.style } : undefined),
+        () => props.styles,
       ],
       // ⚠️ 传 **computed 本身**（不是 `.value`）：函数式变体每次重算都要看到当前
       //    props；传 setup 期快照会让后续 props 变化在函数式里不可见（Issue #26.3）。
       mergedProps,
     );
 
-    // ⚠️ 根 class/style：语义 root + ConfigProvider 的 `className`（#25.4）+
-    //    调用方的**原生** class/style（#25.3）。
-    //    原生 class/style **不**走 Tooltip 的 attrs 通道 —— 那条通道会被 Trigger
-    //    `cloneVNode(child, {...attrs})` 打到**触发元素**上（双落点污染）。
-    const rootClassNames = computed(() =>
-      clsx(
-        contextSemantic.className,
-        mergedClassNames.value.root,
-        attrs.class as string | undefined,
-      ),
-    );
-    const rootStyles = computed<StyleLike>(() => {
-      const style = normalizeStyle([mergedStyles.value.root, attrs.style]);
-      return typeof style === 'object' ? style : {};
-    });
+    // Tooltip routes native class/style to the popup root. Other native attrs
+    // keep its existing trigger-element target.
+    const rootClassNames = computed(() => clsx(context.className, mergedClassNames.value.root));
+    const rootStyles = computed<StyleLike>(() => ({
+      ...popoverTheme.style.value,
+      ...mergedStyles.value.root,
+    }));
 
     // ============================ Overlay ============================
     // antd：title/content 双双不可渲染 ⇒ overlay=null ⇒ Tooltip 的 noTitle 生效。
@@ -216,7 +211,7 @@ const Popover = defineComponent({
               {
                 key: 'title',
                 class: [`${prefixCls.value}-title`, mergedClassNames.value.title],
-                style: mergedStyles.value.title as StyleLike | undefined,
+                style: mergedStyles.value.title,
               },
               [title],
             )
@@ -227,7 +222,7 @@ const Popover = defineComponent({
               {
                 key: 'content',
                 class: [`${prefixCls.value}-content`, mergedClassNames.value.content],
-                style: mergedStyles.value.content as StyleLike | undefined,
+                style: mergedStyles.value.content,
               },
               [content],
             )
@@ -249,7 +244,8 @@ const Popover = defineComponent({
       return h(
         Tooltip,
         {
-          ref: tooltipRef as never,
+          ...attrs,
+          ref: tooltipRef,
           prefixCls: prefixCls.value,
           arrow: mergedArrow.value.show ? mergedArrow.value : false,
           placement: props.placement ?? 'top',
@@ -262,6 +258,7 @@ const Popover = defineComponent({
           zIndex: props.zIndex,
           autoAdjustOverflow: props.autoAdjustOverflow,
           destroyOnHidden: props.destroyOnHidden,
+          destroyTooltipOnHide: props.destroyTooltipOnHide,
           fresh: props.fresh,
           forceRender: props.forceRender,
           // 语义：Popover 的 root 合并了 overlayClassName/contextClassName 之外
@@ -271,20 +268,21 @@ const Popover = defineComponent({
             root: rootClassNames.value,
             container: mergedClassNames.value.container,
             arrow: mergedClassNames.value.arrow,
-          } as PopoverSemanticType['classNames'],
+          },
           styles: {
             root: rootStyles.value,
             container: mergedStyles.value.container,
             arrow: mergedStyles.value.arrow,
-          } as PopoverSemanticType['styles'],
-          // ⚠️ 调用方原生 class/style **不再**经 Tooltip 的 attrs 通道转发
-          //    （那条通道会落到触发元素上）⇒ 已在上面并入语义 root。
+          },
+          overlayClassName: props.overlayClassName,
+          overlayStyle: props.overlayStyle,
+          overlayInnerStyle: props.overlayInnerStyle,
           // 以下是 `PopoverProps extends TooltipProps` 的公共配置（Issue #25.1）。
           getPopupContainer: props.getPopupContainer,
           getTooltipContainer: props.getTooltipContainer,
           align: props.align,
           builtinPlacements: props.builtinPlacements,
-          onPopupClick: props.onPopupClick,
+          onPopupClick: (event: MouseEvent) => emit('popupClick', event),
           openClassName: props.openClassName,
           open: mergedOpen.value,
           onOpenChange: settingOpen,

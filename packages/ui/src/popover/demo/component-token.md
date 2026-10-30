@@ -3,8 +3,8 @@ order: 3
 ---
 ## zh-CN
 
-ConfigProvider 的组件级 token 覆盖不支持（D25/D83）。
+通过当前 ConfigProvider 的 `theme.components.Popover` 定制标题宽度、内边距和标题间距。点击按钮后两个静态面板即时更新。
 
 ## en-US
 
-Component token override via ConfigProvider is not supported (D25/D83).
+Customize title width, padding and title spacing with the current ConfigProvider's `theme.components.Popover`. Both panels update when the button is clicked.

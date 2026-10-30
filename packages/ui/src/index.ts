@@ -1574,6 +1574,7 @@ export type { ComponentToken as PopconfirmComponentToken } from './popconfirm/st
 export { prepareComponentToken as preparePopconfirmComponentToken } from './popconfirm/style/token';
 export type {
   PopoverClassNames,
+  PopoverEmits,
   PopoverProps,
   PopoverRef,
   PopoverSemanticType,

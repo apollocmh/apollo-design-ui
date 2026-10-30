@@ -41,20 +41,41 @@ subtitle: 气泡卡片
 
 ### 原生 class/style
 
-Popover 的原生 `class/style` 作用于浮层根，不传到触发元素。style 接受字符串、对象和混合数组，优先于 `styles.root`，移除后恢复语义值。PopoverPurePanel 的 class/style 只作用于面板根；不再把原生 style 重复应用到 container。分区样式使用 `styles.container/arrow` 与对应 classNames。
+Popover 的原生 `class/style` 作用于浮层根，不传到触发元素。style 接受字符串、对象和混合数组，优先于 `styles.root`，移除后恢复语义值。其他原生 attrs 和监听器沿用 Tooltip 的触发元素落点。PopoverPurePanel 的 attrs、class/style 作用于面板根；不把原生 style 重复应用到 container。分区样式使用 `styles.container/arrow` 与对应 classNames。
 
 ### 事件
 
-`@after-open-change` 在开合动画完成后发送 `boolean`，支持 `.once` 和监听器数组。JSX / `h()` 使用 `onAfterOpenChange`；旧 `afterOpenChange` 回调 prop 直接移除。
+| 事件 | 载荷 | 说明 |
+|---|---|---|
+| update:open | `boolean` | `v-model:open`；受控值由调用方决定是否接受 |
+| open-change | `boolean` | 与模型同时发送开合提议 |
+| after-open-change | `boolean` | 实际开合动画完成 |
+| popup-click | `MouseEvent` | 浮层内容的原始点击事件 |
+
+通知统一使用 Vue emits，支持 `.once` 和监听器数组；`h()` 使用 `onOpenChange`、`onAfterOpenChange` 和 `onPopupClick`，不再作为函数 prop 手动调用。导出 `PopoverEmits`。旧 `afterOpenChange` 回调 prop 已直接移除。
 
 ### Expose
 
-`forceAlign()`、`nativeElement`、`popupElement`（`TooltipRef` 同形）。
+`forceAlign()`、`nativeElement: HTMLElement | null`、`popupElement: HTMLDivElement | null`（`PopoverRef`）。后两者是当前 DOM 属性，关闭卸载后 `popupElement` 为 `null`。
+
+### 当前配置与主题
+
+主组件和 PopoverPurePanel 消费当前 `ConfigProvider.components.popover` 的类名、语义样式及根样式；不会叠加 `components.tooltip` 的专属配置。PurePanel 支持 `title`、`content`、`color`、`placement`、`prefixCls`、`classNames` 和 `styles`，内容槽契约与主组件相同。
+
+`theme.components.Popover` 支持以下数值 Token；主题替换、嵌套和撤除会更新实际浮层与静态面板，不替换正文输入或焦点。原生和语义样式仍可覆盖对应 CSS 变量。
+
+| Token | 默认值 | 说明 |
+|---|---|---|
+| titleMinWidth | `177` | 标题最小宽度，px |
+| zIndexPopup | 全局 `zIndexPopupBase + 30` | 浮层层级；显式 `zIndex` 和父浮层层叠仍有效 |
+| innerPadding | `12` | 内容容器内边距，px |
+| titleMarginBottom | `8` | 标题下间距，px |
+
+现存 Tooltip 样式别名 `overlayClassName`、`overlayStyle`、`overlayInnerStyle` 和 `destroyTooltipOnHide` 按继承契约生效，优先使用 `classNames.root`、`styles.root/container` 和 `destroyOnHidden`。线框主题仍为已记录缺口。
 
 ## 设计说明
 
-- **薄包装**：主体逻辑全部在 Tooltip / `_internal/trigger.ts`，本组件只做内容
-  与语义槽扩展（[`docs/analysis/popover.md`](../../../../docs/analysis/popover.md)）。
+- **职责**：Tooltip / `_internal/trigger.ts` 管浮层生命周期与定位，Popover 管自己的内容、事件、Provider 和 Token（[`历史分析`](../../../../docs/analysis/popover.md)）。
 - 与 antd 的已知差异见组件 README。
 
 [静态面板原生 style 迁移](../../../../docs/migrations/overlay-native-styles.md)。

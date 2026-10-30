@@ -6,7 +6,13 @@
  */
 
 import { themeTest } from '@apollo-design/test-utils';
+import type { ThemeConfig } from '@apollo-design/theme';
+import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
+import { h, nextTick, ref } from 'vue';
+import ConfigProvider from '../../config-provider/ConfigProvider';
+import Popover from '../Popover';
+import PurePanel from '../PurePanel';
 import { genPopoverStyle, genPopoverTokenDecls } from '../style';
 import { prepareComponentToken } from '../style/token';
 
@@ -153,4 +159,80 @@ describe('Popover · prepareComponentToken 判据', () => {
     expect(t.arrowOffsetHorizontal).toBe(16);
     expect(t.arrowOffsetVertical).toBe(8);
   });
+});
+
+it('projects current Popover tokens and global aliases into the popup and PurePanel', async () => {
+  const theme = ref<ThemeConfig | undefined>({
+    token: { colorBgElevated: '#123456', borderRadiusLG: 18, sizePopupArrow: 24 },
+    components: {
+      Popover: { titleMinWidth: 220, zIndexPopup: 2030, innerPadding: 18, titleMarginBottom: 11 },
+      Tooltip: { zIndexPopup: 9999 },
+    },
+  });
+  const wrapper = mount(
+    () =>
+      h(ConfigProvider, { theme: theme.value }, () => [
+        h(Popover, { open: true, title: 'Title', content: 'Content' }, () => h('button', 'Target')),
+        h(PurePanel, { title: 'Panel', class: 'current-panel' }),
+        h(ConfigProvider, { theme: { components: { Popover: { innerPadding: 6 } } } }, () =>
+          h(PurePanel, { title: 'Nested', class: 'nested-panel' }),
+        ),
+      ]),
+    { attachTo: document.body, global: { stubs: { teleport: false } } },
+  );
+  try {
+    await nextTick();
+    await nextTick();
+    const popup = document.querySelector<HTMLElement>('.apollo-popover:not(.apollo-popover-pure)');
+    const panel = wrapper.get<HTMLElement>('.current-panel').element;
+    const nested = wrapper.get<HTMLElement>('.nested-panel').element;
+    if (!popup) throw Error('Missing Popover');
+    for (const element of [popup, panel]) {
+      expect(element.style.getPropertyValue('--apollo-popover-title-min-width')).toBe('220px');
+      expect(element.style.getPropertyValue('--apollo-popover-z-index-popup')).toBe('2030');
+      expect(element.style.getPropertyValue('--apollo-popover-inner-padding')).toBe('18px');
+      expect(element.style.getPropertyValue('--apollo-popover-title-margin-bottom')).toBe('11px');
+      expect(element.style.getPropertyValue('--apollo-color-bg-elevated')).toBe('#123456');
+      expect(element.style.getPropertyValue('--apollo-popover-arrow-offset-horizontal')).toBe(
+        '20px',
+      );
+      expect(element.style.getPropertyValue('--apollo-size-popup-arrow')).toBe('24px');
+      expect(element.style.getPropertyValue('--apollo-tooltip-z-index-popup')).toBe('');
+    }
+    expect(nested.style.getPropertyValue('--apollo-popover-inner-padding')).toBe('6px');
+    expect(nested.style.getPropertyValue('--apollo-popover-title-min-width')).toBe('220px');
+    theme.value = {
+      token: { colorBgElevated: '#654321', borderRadiusLG: 6 },
+      components: {
+        Popover: { titleMinWidth: 300, zIndexPopup: 3030, innerPadding: 20, titleMarginBottom: 4 },
+      },
+    };
+    await nextTick();
+    await nextTick();
+    for (const element of [popup, panel]) {
+      expect(element.style.getPropertyValue('--apollo-popover-title-min-width')).toBe('300px');
+      expect(element.style.getPropertyValue('--apollo-popover-z-index-popup')).toBe('3030');
+      expect(element.style.getPropertyValue('--apollo-popover-inner-padding')).toBe('20px');
+      expect(element.style.getPropertyValue('--apollo-popover-title-margin-bottom')).toBe('4px');
+      expect(element.style.getPropertyValue('--apollo-color-bg-elevated')).toBe('#654321');
+      expect(element.style.getPropertyValue('--apollo-popover-arrow-offset-horizontal')).toBe(
+        '12px',
+      );
+    }
+    expect(document.querySelector('.apollo-popover:not(.apollo-popover-pure)')).toBe(popup);
+    expect(nested.style.getPropertyValue('--apollo-popover-title-min-width')).toBe('300px');
+    expect(nested.style.getPropertyValue('--apollo-popover-inner-padding')).toBe('6px');
+    theme.value = undefined;
+    await nextTick();
+    await nextTick();
+    for (const element of [popup, panel]) {
+      expect(element.style.getPropertyValue('--apollo-popover-title-min-width')).toBe('');
+      expect(element.style.getPropertyValue('--apollo-popover-inner-padding')).toBe('');
+      expect(element.style.getPropertyValue('--apollo-color-bg-elevated')).toBe('');
+    }
+    expect(nested.style.getPropertyValue('--apollo-popover-title-min-width')).toBe('177px');
+    expect(nested.style.getPropertyValue('--apollo-popover-inner-padding')).toBe('6px');
+  } finally {
+    wrapper.unmount();
+  }
 });

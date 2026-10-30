@@ -65,11 +65,12 @@ function isFragmentNode(node: VNode | null | undefined): boolean {
  * Popover/Popconfirm；公共通道（`getPopupContainer` / `direction` / `getPrefixCls`）
  * 不受影响。用 provide/inject 而不是 prop ⇒ 不污染公开 props 面。
  */
-export const tooltipInjectKey: InjectionKey<boolean> = Symbol('apollo-tooltip-inject');
+export const tooltipInjectKey: InjectionKey<{ zIndexPopupBase: () => number }> =
+  Symbol('apollo-tooltip-inject');
 
 /** 供 Popover / Popconfirm 声明「我是注入方」。 */
-export function provideTooltipInjection(): void {
-  provide(tooltipInjectKey, true);
+export function provideTooltipInjection(zIndexPopupBase: () => number): void {
+  provide(tooltipInjectKey, { zIndexPopupBase });
 }
 
 /**
@@ -190,7 +191,7 @@ const Tooltip = defineComponent({
     //    `injectFromPopover` ⇒ 专属语义配置整组置空（className / style /
     //    classNames / styles / arrow / trigger / 两个延迟），只留公共通道
     //    `getPopupContainer` / `getPrefixCls` / `direction`（Issue #24.4）。
-    const injectFromPopover = inject(tooltipInjectKey, false);
+    const injectFromPopover = inject(tooltipInjectKey, undefined);
     const semanticConfig: typeof contextSemantic = injectFromPopover ? {} : contextSemantic;
     const tooltipTheme = useTooltipTheme(() => !injectFromPopover);
 
@@ -272,7 +273,9 @@ const Tooltip = defineComponent({
     // ============================ zIndex =============================
     const zIndex = useZIndex('Tooltip', () => props.zIndex, {
       get zIndexPopupBase() {
-        return tooltipTheme.componentToken.value.zIndexPopup;
+        return injectFromPopover
+          ? injectFromPopover.zIndexPopupBase()
+          : tooltipTheme.componentToken.value.zIndexPopup;
       },
     });
 

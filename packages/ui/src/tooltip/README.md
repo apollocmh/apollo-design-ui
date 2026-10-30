@@ -61,9 +61,10 @@ L6 视觉 9 张（3 variant × 3 viewport）**全部 0.000% exact**。
    且 `vnode.props.class` 其实已被 Vue 归一成字符串 ⇒ 「数组 class 不加 -open」的分支
    实际不可达）。
 5. **Popover/Popconfirm 注入要隔离 tooltip 专属配置**（#24.4，antd
-   `tooltip/index.js:63-73` 的 `data-popover-inject`）：用 `provideTooltipInjection()`
-   + `inject(tooltipInjectKey)` 传标记 ⇒ 跳过 `className/style/classNames/styles/arrow/
-   trigger/延迟`；公共 `getPopupContainer` / `direction` / `getPrefixCls` 不受影响。
+   `tooltip/index.js:63-73` 的 `data-popover-inject`）：通过
+   `provideTooltipInjection(() => currentZIndexPopup)` 传递包装层当前层级基准并跳过
+   `className/style/classNames/styles/arrow/trigger/延迟`；公共 `getPopupContainer` /
+   `direction` / `getPrefixCls` 不受影响，后代层级由同一个 `useZIndex` 提供。
 6. **语义 arrow 要并进 arrow 配置**（#24.6，rc-tooltip `Tooltip.js:51-63`）：
    `classNames.arrow` → `arrow.className`、`styles.arrow` → `arrow.style`（颜色内联变量
    在先、用户样式在后）；`PurePanel` 的箭头同样要吃这两个槽。

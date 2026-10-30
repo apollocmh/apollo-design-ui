@@ -7,7 +7,7 @@
  * （titleMinWidth / zIndexPopup / innerPadding / titleMarginBottom ——
  * arrow 系列与其余 internal 是 antd 标 @internal 的派生 token）。
  *
- * 全部为**构建期解析值**（collapse D46/D50 同判）。wireframe 主题态不支持
+ * 同时提供静态 CSS 缺省与组件当前主题的派生值。wireframe 主题态不支持
  * （D84）：titlePadding=0 / titleBorderBottom=none / innerContentPadding=0
  * 取非线框缺省。
  */
@@ -75,8 +75,7 @@ let tokenCache: PopoverComponentToken | null = null;
 /** 构建期 token 值（缓存；首次调用时读主题默认 seed）。 */
 export function popoverTokenValues(): PopoverComponentToken {
   if (!tokenCache) {
-    const seed = getDesignToken() as unknown as PopoverSeedToken;
-    tokenCache = prepareComponentToken(seed);
+    tokenCache = prepareComponentToken(getDesignToken());
   }
   return tokenCache;
 }

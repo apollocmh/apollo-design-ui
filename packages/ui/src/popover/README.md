@@ -4,6 +4,8 @@
 
 # popover
 
+2026-10-30 架构整改：`openChange` / `popupClick` 已统一为 typed Vue emits，继承的 Tooltip 样式与销毁别名实际下传。主组件与 PurePanel 使用当前 Popover Provider、四个组件 Token 和静态 CSS 消费的全局别名；PurePanel 的 `color` 已接通。原生 class/style 只落浮层根，其余 attrs 按 [当前 API](./index.zh-CN.md) 路由。以下旧 G13 数字与上游差异保留历史含义，不代表本轮最终验收；其中 D83 / P1 的组件配置与 Token 缺口、D86 的 style 双落点已经被后续实现替代，wireframe 缺口保留。
+
 > **层**：L3（`packages/ui`）｜ **优先级**：P3 ｜ **复杂度**：L ｜ **antd 版本**：6.6.4
 >
 > 契约来源：antd `components/popover/`（index.tsx 192 行 / PurePanel / style 259 行）。
