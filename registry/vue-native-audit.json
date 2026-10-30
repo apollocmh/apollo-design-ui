@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 3,
+  "revision": 4,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -1917,17 +1917,13 @@
       "kind": "foundation",
       "ref": "utils",
       "title": "@apollo-design/utils",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "partial",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/utils/src"
       ],
-      "assignment": {
-        "owner": "root",
-        "baseRevision": 2,
-        "startedAt": "2026-10-30T05:47:14.124Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -1935,9 +1931,46 @@
         "docs/foundation/rc-util-contract.md",
         "docs/audit/2026-10-24-dom-attrs-remediation.md",
         "docs/audit/2026-10-24-breadcrumb-slots-remediation.md",
-        "docs/audit/2026-10-25-image-contract-audit.md"
+        "docs/audit/2026-10-25-image-contract-audit.md",
+        "docs/migrations/controlled-value.md",
+        "packages/utils/src/__tests__/hooks.test.ts"
       ],
-      "issues": []
+      "issues": [
+        {
+          "id": "UTILS-CONTROLLED-RELEASE",
+          "status": "fixed",
+          "blocking": true,
+          "impact": "撤控变成undefined、拒绝更新泄漏与函数式更新使用隐藏值，会破坏消费组件模型和ARIA。",
+          "reason": "以Vue公开值和最后接收值实现统一受控边界；保留非受控更新。",
+          "evidence": [
+            "docs/migrations/controlled-value.md"
+          ]
+        }
+      ],
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/utils/src/hooks/use-controlled-value.ts"
+        ],
+        "passed": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "vitest run --project unit packages/utils/src packages/overlay/src packages/ui/src/tree-select packages/ui/src/upload packages/ui/src/radio packages/ui/src/float-button packages/ui/src/tag packages/ui/src/dropdown packages/ui/src/popover packages/ui/src/tooltip packages/ui/src/color-picker packages/ui/src/checkbox packages/ui/src/transfer packages/ui/src/mentions packages/ui/src/cascader packages/ui/src/menu packages/ui/src/tour packages/ui/src/slider packages/ui/src/typography packages/ui/src/breadcrumb packages/ui/src/select packages/ui/src/input packages/ui/src/date-picker --maxWorkers=2",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 191619
+          },
+          {
+            "kind": "types",
+            "command": "vue-tsc --noEmit -p <temporary config extending root tsconfig; utils and current component source/tests/demos>",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49702
+          }
+        ],
+        "boundary": "仅关闭useControlledValue根因组，不代表Utils整包架构完成或最终验收。"
+      }
     },
     {
       "id": "FND:virtual-list",

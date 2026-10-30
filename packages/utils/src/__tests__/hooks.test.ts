@@ -417,7 +417,7 @@ describe('useControlledValue', () => {
     expect(onChange).toHaveBeenCalledWith(3);
   });
 
-  it('★ setValue 的函数式更新以 inner 为基准，而不是 merged（通过 onChange 观测）', () => {
+  it('函数式请求以当前公开的受控值为基准，拒绝请求不会累积内部提议', () => {
     const source = ref<number | undefined>(3);
     const onChange = vi.fn();
     const [, setValue] = useControlledValue({
@@ -426,9 +426,9 @@ describe('useControlledValue', () => {
       onChange,
     });
 
-    // watch 不带 immediate ⇒ 首次不同步 ⇒ inner 仍是 100（merged 是 3）
     setValue((prev) => prev + 1);
-    expect(onChange).toHaveBeenCalledWith(101);
+    setValue((prev) => prev + 1);
+    expect(onChange.mock.calls).toEqual([[4], [4]]);
   });
 
   it('受控值变化后 inner 跟随，函数式更新随之改变基准', async () => {
@@ -446,15 +446,21 @@ describe('useControlledValue', () => {
     expect(onChange).toHaveBeenCalledWith(5);
   });
 
-  it('★ 受控 → 非受控切换时 inner 被重置为 undefined（rc-util 的既定行为）', async () => {
+  it('撤销受控保留最后接收值，而不是丢成 undefined 或泄漏被拒绝的请求', async () => {
     const source = ref<number | undefined>(5);
-    const [merged] = useControlledValue({ defaultValue: 1, getValue: () => source.value });
+    const [merged, setValue] = useControlledValue({
+      defaultValue: 1,
+      getValue: () => source.value,
+    });
 
+    expect(merged.value).toBe(5);
+    setValue(9);
     expect(merged.value).toBe(5);
     source.value = undefined;
     await nextTick();
-    // 不是回落到 defaultValue 1 —— 这就是 "Sync value back to undefined" 的字面含义
-    expect(merged.value).toBeUndefined();
+    expect(merged.value).toBe(5);
+    setValue(6);
+    expect(merged.value).toBe(6);
   });
 
   it('非受控 → 受控切换时立即取受控值', async () => {
@@ -481,11 +487,26 @@ describe('useControlledValue', () => {
       onChange,
     });
 
-    // 赋同样的值 → watch 不触发 → inner 不被同步
     source.value = 3;
     await nextTick();
     setValue((prev) => prev + 1);
-    expect(onChange).toHaveBeenCalledWith(101);
+    expect(onChange).toHaveBeenCalledWith(4);
+  });
+
+  it('同步接受父级值后撤控、重新受控和再次撤控均保留实际接收的值', () => {
+    const source = ref<number | undefined>(2);
+    const [merged, setValue] = useControlledValue({
+      defaultValue: 0,
+      getValue: () => source.value,
+    });
+    source.value = 4;
+    source.value = undefined;
+    expect(merged.value).toBe(4);
+    setValue(8);
+    source.value = 1;
+    setValue(9);
+    source.value = undefined;
+    expect(merged.value).toBe(1);
   });
 
   it('默认导出与具名导出一致', async () => {

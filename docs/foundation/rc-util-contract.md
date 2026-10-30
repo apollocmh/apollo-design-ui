@@ -241,6 +241,8 @@ resetWarned(): void
 
 ### 3.1 `useControlledState(defaultStateValue, value?)` → `defineModel` / `useControlledValue`
 
+> 2026-10-30 当前 Apollo 契约：`useControlledValue(options)` 的受控请求不写本地值，撤控保留最后接收值，函数式更新使用当前公开值；下述 React 内部状态同步仅保留为来源分析，不再作为实现规则。见[受控状态迁移](../migrations/controlled-value.md)。
+
 React 语义：`mergedValue = value !== undefined ? value : innerValue`；`useLayoutEffect([value])` 在**非首次挂载**时 `setInnerValue(value)`（即受控 → 非受控切换时把内部值重置为 `undefined`）。
 
 **Vue 映射决策**

@@ -1,8 +1,7 @@
 /**
  * `useControlledValue` —— 受控 / 非受控二选一的状态（Vue 版）。
  *
- * 契约来源：`@rc-component/util/hooks/useControlledState`（antd 侧 22 个组件使用，
- * 是使用面第二广的 hook）。
+ * 以 Vue 公开模型值为准：受控时仅提议更新，非受控时保存本地值。
  *
  * ---------------------------------------------------------------------------
  * 什么时候用 `defineModel`，什么时候用这个？（依据：rc-util-contract.md §3.1）
@@ -19,23 +18,11 @@
  * 必须有一个显式的受控/非受控实现。
  *
  * ---------------------------------------------------------------------------
- * 与 React 版的语义对照
+ * 受控边界
  * ---------------------------------------------------------------------------
  *
- *   React:  merged = value !== undefined ? value : inner
- *           useLayoutEffect([value]) 在**非首次**时 inner = value
- *   Vue:    merged = computed(() => getValue() !== undefined ? getValue() : inner)
- *           watch(getValue, v => inner = v)   ← 无 immediate，天然跳过首次
- *
- * `watch` 不带 `immediate` 恰好等价于 React 版"跳过首次挂载"的标记，不需要额外状态。
- *
- * 「受控 → 非受控」切换时 `inner` 会被重置为 `undefined`，这是 rc-util 的既定行为
- * （它注释里叫 "Sync value back to `undefined` when it from control to un-control"），
- * 我们保留。
- *
- * ⚠️ `setValue` 的函数式更新以 **`inner`** 为基准，不是 `merged`。
- *    这与 React 版一致（React 的 setState 也基于 innerValue）。
- *    差异只在"受控且父级未回传"的瞬时窗口内可见，正常用法下两者相等。
+ * `undefined` 表示撤销受控；此时保留最后一次实际接收的值，不泄漏父级拒绝的提议。
+ * 函数式更新始终读取当前 merged 值。父级值同步接收，避免同一轮更新后撤控丢值。
  */
 
 import { type ComputedRef, computed, type Ref, ref, watch } from 'vue';
@@ -56,8 +43,13 @@ export function useControlledValue<T>(
 ): [ComputedRef<T>, (next: ControlledUpdater<T>) => void] {
   const { defaultValue, getValue, onChange } = options;
 
+  const initialControlled = getValue();
   const inner = ref(
-    typeof defaultValue === 'function' ? (defaultValue as () => T)() : defaultValue,
+    initialControlled !== undefined
+      ? initialControlled
+      : typeof defaultValue === 'function'
+        ? (defaultValue as () => T)()
+        : defaultValue,
   ) as Ref<T>;
 
   const merged = computed<T>(() => {
@@ -65,14 +57,17 @@ export function useControlledValue<T>(
     return controlled !== undefined ? controlled : inner.value;
   });
 
-  // 非首次的 value 变化 → 同步回 inner（含"受控变非受控"时重置为 undefined）
-  watch(getValue, (next) => {
-    inner.value = next as T;
-  });
+  watch(
+    getValue,
+    (next) => {
+      if (next !== undefined) inner.value = next;
+    },
+    { flush: 'sync' },
+  );
 
   const setValue = (next: ControlledUpdater<T>): void => {
-    const resolved = typeof next === 'function' ? (next as (prev: T) => T)(inner.value) : next;
-    inner.value = resolved;
+    const resolved = typeof next === 'function' ? (next as (prev: T) => T)(merged.value) : next;
+    if (getValue() === undefined) inner.value = resolved;
     onChange?.(resolved);
   };
 

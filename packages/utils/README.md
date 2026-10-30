@@ -40,6 +40,8 @@
 `lockFocus` / `useLockFocus` 按元素所属文档协调锁栈，同文档后打开的锁优先；监听器绑定所属窗口。Tab在边界同步循环，子控件的preventDefault优先；无可Tab子项时保留可编程聚焦的容器。实际DOM搬迁保留记忆焦点，跨文档时迁移锁及监听器。每个活动文档共享一个原生MutationObserver，最后一个锁释放后清理。Vue作用域结束会取消待执行重试，卸载后不会重新注册。当前接口签名不变；Image/Modal/Drawer的验证范围见 [统一清单](../../docs/audit/2026-10-25-image-contract-audit.md)。
 - 观察器：useResizeObserver / useMutationObserver / useOverflow（单例复用）
 - composable：useControlledValue / useDelayState / useUpdateEffect / useId / useSafeState
+
+`useControlledValue` 的 `undefined` 表示非受控。受控请求只通知 `onChange`，父级拒绝时不写本地值；撤销受控保留最后接收值，函数式请求依据当前公开值。开发期迁移见 [受控状态契约](../../docs/migrations/controlled-value.md)。
 - 其他：toList / capitalize
 - 颜色：Color / generatePalette（10 阶色板）—— 由 color.oracle.test.ts 对上游差分验证
 
