@@ -1,54 +1,39 @@
-/**
- * Carousel —— 走马灯（渲染函数组件）。
- *
- * 契约来源：antd 6.6.4 的 `es/carousel/index.js`（外层包装）+
- * `@ant-design/react-slick@2.0.0`（DOM 与行为的真正生产者：track.js / dots.js /
- * arrows.js / inner-slider.js / slider.js）。判据逐条对齐 G1 分析
- * （`docs/analysis/carousel.md`），引擎状态机见 `engine.ts`（决策 B：自建）。
- *
- * ── 八条最容易写错的判据 ─────────────────────────────────────────────────────
- *
- * 1. **用户 style 落在 `.slick-slider` 上，不在根节点**：antd 把
- *    `{...contextStyle, ...style}` 传给 SlickCarousel（→ InnerSlider 的 style），
- *    根 div 只有 `--dot-duration`。SSR 探针确认。
- * 2. **arrows 的 antd 默认是 false**（slick 默认 true 被 antd 覆盖）；默认箭头按钮
- *    **没有文案**（antd 用空内容的 ArrowButton 包裹），aria-label 来自 locale，
- *    rtl 时 prev/next 文案互换。
- * 3. **infinite 默认 true ⇒ SSR 就渲染 clone**（data-index=-1 与 data-index=n，
- *    class `slick-cloned`，无 outline:none）；fade 分支**不渲染 clone**。
- * 4. **slide 外层的 tab/aria 由 slick 注入**（tabindex=-1、aria-hidden=!active）；
- *    内层还有一个 `tabindex=-1, style="width:100%;display:inline-block"` 的
- *    包裹 div（slider.js 的 rows/slidesPerRow=1 路径）—— 三层结构缺一不可。
- * 5. **dots 非激活项的 class 是空字符串**（不是省略属性）：li 的 className 走
- *    clsx({slick-active: bool}) ⇒ bool=false 时 class=""。L4 逐字节对齐。
- * 6. **waitForAnimate 的 antd 默认是 false**（slick 默认 true 被 antd 覆盖）——
- *    动画中新的切换会打断旧动画并**立即补发旧 slide 的 afterChange**。
- * 7. **`targetSlide` 初始值是 `initialSlide ? initialSlide : 0`**（不是恒 0）——
- *    它决定第一帧 `slick-current` 落在哪张（initialSlide>0 时 track 位置与
- *    current 类分开计算）。
- * 8. **键盘判据是 `keyCode`**（37/39，rtl 互换），挂在 `.slick-list` 上。
- */
+/** Vue owns Carousel content, keys, native attrs and notifications; the private
+ * engine retains the established positioning/slide algorithm and lifecycle. */
 
 import { useLocale } from '@apollo-design/locale';
-import { useDevWarning } from '@apollo-design/utils';
+import { useDevWarning, useId } from '@apollo-design/utils';
 import {
   Comment,
+  type CSSProperties,
   cloneVNode,
   computed,
+  createTextVNode,
   defineComponent,
   Fragment,
   h,
+  isVNode,
   mergeProps,
+  onUpdated,
   type PropType,
+  type SlotsType,
   shallowRef,
+  Text,
   type VNode,
+  type VNodeArrayChildren,
   type VNodeChild,
   watch,
   watchEffect,
 } from 'vue';
 import { useComponentConfig, useDirection } from '../config-provider/context';
 import { type CarouselConfig, canGoNext, useCarouselEngine } from './engine';
-import type { CarouselProps, DotPlacement } from './interface';
+import type {
+  CarouselProps,
+  CarouselSlots,
+  CarouselSwipeDirection,
+  DotPlacement,
+} from './interface';
+import { useCarouselTheme } from './use-carousel-theme';
 
 /** 用户裁决（2026-09-23）显式不支持的 Settings —— 出现在 attrs 里就发 dev 告警。 */
 const UNSUPPORTED_SETTINGS = [
@@ -85,8 +70,6 @@ export const CarouselComponent = defineComponent({
     styles: { type: Object as PropType<CarouselProps['styles']>, default: undefined },
     /** @deprecated 用 `classNames.slider`。 */
     className: { type: String, default: undefined },
-    /** @deprecated 用 `styles.slider`。 */
-    style: { type: Object as PropType<CarouselProps['style']>, default: undefined },
     id: { type: String, default: undefined },
     effect: { type: String as PropType<CarouselProps['effect']>, default: undefined },
     dots: { type: [Boolean, Object] as PropType<CarouselProps['dots']>, default: undefined },
@@ -102,7 +85,6 @@ export const CarouselComponent = defineComponent({
     autoplaySpeed: { type: Number, default: undefined },
     speed: { type: Number, default: undefined },
     cssEase: { type: String, default: undefined },
-    easing: { type: String, default: undefined },
     infinite: { type: Boolean, default: undefined },
     initialSlide: { type: Number, default: undefined },
     slidesToShow: { type: Number, default: undefined },
@@ -128,12 +110,25 @@ export const CarouselComponent = defineComponent({
    * 事件（规则 C19）：antd 的 `beforeChange` / `afterChange` / `onSwipe` / `onEdge`
    * props 回调映射为 Vue 事件。没有 value 语义 ⇒ 无 `update:*` 通道。
    */
-  emits: ['before-change', 'after-change', 'swipe', 'edge'],
+  emits: {
+    beforeChange: (_current: number, _next: number) => true,
+    afterChange: (_current: number) => true,
+    swipe: (_direction: CarouselSwipeDirection) => true,
+    edge: (_direction: CarouselSwipeDirection) => true,
+    keydown: (_event: KeyboardEvent) => true,
+  },
+  slots: Object as SlotsType<CarouselSlots>,
   setup(props, { attrs, slots, emit, expose }) {
-    const context = useComponentConfig('carousel');
-    const { getPrefixCls } = context;
+    const context = useComponentConfig<{
+      className?: string;
+      style?: CSSProperties;
+      classNames?: CarouselProps['classNames'];
+      styles?: CarouselProps['styles'];
+    }>('carousel');
+    const themeStyles = useCarouselTheme(() => context.getPrefixCls('carousel', props.prefixCls));
     const direction = useDirection();
     const devWarning = useDevWarning('Carousel');
+    const instanceId = useId();
     const [locale] = useLocale('Carousel');
 
     // ============================= Warning ==============================
@@ -195,80 +190,55 @@ export const CarouselComponent = defineComponent({
     });
 
     const engine = useCarouselEngine(() => config.value, {
-      onBeforeChange: (current, next) => emit('before-change', current, next),
-      onAfterChange: (current) => emit('after-change', current),
+      onBeforeChange: (current, next) => emit('beforeChange', current, next),
+      onAfterChange: (current) => emit('afterChange', current),
       onSwipe: (dir) => emit('swipe', dir),
       onEdge: (dir) => emit('edge', dir),
     });
     const state = engine.state;
 
     // ============================== children ============================
-    const collectChildren = (nodes: VNodeChild[]): VNode[] => {
-      const out: VNode[] = [];
-      const walk = (list: VNodeChild[]) => {
-        for (const node of list) {
-          if (!node || typeof node !== 'object') continue;
-          const v = node as VNode;
-          if (v.type === Comment) continue;
-          if (v.type === Fragment) {
-            walk((v.children as VNodeChild[]) ?? []);
-            continue;
-          }
-          out.push(v);
-        }
-      };
-      walk(nodes);
-      return out;
-    };
-
-    // ⚠️ children 只在 render 内消费（slot 在渲染函数外调用会丢依赖追踪并触发
-    //    Vue 的 "Slot invoked outside of render" 警告）。数量变化走 childrenCount
-    //    ref 触发下面的 watch。
-    const childrenCount = shallowRef(0);
-    let currentChildren: VNode[] = [];
-
-    // ---- children 数量变化：重算 track + 越界回调（componentDidUpdate 语义） ----
-    watch(childrenCount, (count) => {
-      engine.setSlideCount(count);
-      engine.update(true, () => {
-        if (state.currentSlide >= count) {
-          engine.changeSlide({ message: 'index', index: count - config.value.slidesToShow });
-        }
-      });
-    });
-
-    // ---- autoplay / autoplaySpeed 变化（componentDidUpdate 语义） ----
-    let prevAutoplay = false;
-    watch(
-      () => [config.value.autoplay, config.value.autoplaySpeed] as const,
-      ([autoplay]) => {
-        if (autoplay === prevAutoplay) {
-          if (autoplay) engine.autoPlay('update');
-          prevAutoplay = autoplay;
+    const collectChildren = (nodes: VNodeChild): VNode[] => {
+      const result: VNode[] = [];
+      const visit = (node: VNodeChild): void => {
+        if (Array.isArray(node)) {
+          node.forEach(visit);
           return;
         }
-        if (!prevAutoplay && autoplay) engine.autoPlay('playing');
-        else if (autoplay) engine.autoPlay('update');
-        else engine.pause('paused');
-        prevAutoplay = autoplay;
-      },
-    );
-
-    // ---- initialSlide / rtl 变化（antd 的 useEffect [initialSlide, isRTL]） ----
-    watch(
-      () => [props.initialSlide ?? 0, isRTL.value] as const,
-      ([initialSlide, rtlFlag]) => {
-        if (childrenCount.value > 0) {
-          const newIndex = rtlFlag ? childrenCount.value - initialSlide - 1 : initialSlide;
-          engine.goTo(newIndex, false);
+        if (isVNode(node)) {
+          if (
+            node.type === Comment ||
+            (node.type === Text && typeof node.children === 'string' && !node.children.trim())
+          )
+            return;
+          if (node.type === Fragment) {
+            if (Array.isArray(node.children) || typeof node.children === 'string')
+              visit(node.children);
+            return;
+          }
+          result.push(node);
+        } else if (typeof node === 'number' || (typeof node === 'string' && node.trim())) {
+          result.push(createTextVNode(String(node)));
         }
-      },
+      };
+      visit(nodes);
+      return result;
+    };
+    const childrenCount = shallowRef(0);
+    const slidesVersion = shallowRef(0);
+    let currentChildren: VNode[] = [];
+    watch(
+      () => [config.value, slidesVersion.value],
+      () => engine.reconfigure(),
+      { flush: 'post' },
     );
+    onUpdated(() => engine.syncObservers());
 
     // ---- adaptiveHeight：slick 在每次更新后调用（componentDidUpdate） ----
     watch(
       () => [state.currentSlide, state.trackStyle] as const,
       () => engine.adaptHeight(),
+      { flush: 'post' },
     );
 
     // ============================ Refs / Expose =========================
@@ -283,7 +253,7 @@ export const CarouselComponent = defineComponent({
       prev: engine.prev,
       autoPlay: engine.autoPlay,
       get innerSlider() {
-        return state as unknown as Record<string, unknown>;
+        return state;
       },
     });
 
@@ -299,7 +269,8 @@ export const CarouselComponent = defineComponent({
       // track.js L21-25：rtl 时 index 先镜像成 `slideCount - 1 - index` 再判定
       const idx = config.value.rtl ? n - 1 - index : index;
       const slickCloned = idx < 0 || idx >= n;
-      const slickActive = state.currentSlide <= idx && idx < state.currentSlide + show;
+      const slickActive =
+        state.unslick || (state.currentSlide <= idx && idx < state.currentSlide + show);
       let focusedSlide = state.targetSlide;
       if (focusedSlide < 0) focusedSlide += n;
       else if (focusedSlide >= n) focusedSlide -= n;
@@ -316,7 +287,7 @@ export const CarouselComponent = defineComponent({
       const c = config.value;
       const style: Record<string, string> = {};
       if (state.slideWidth !== null && state.slideWidth !== undefined) {
-        style.width = px(state.slideWidth as number | string);
+        style.width = px(state.slideWidth);
       }
       if (!c.fade) return style;
       style.position = 'relative';
@@ -327,8 +298,9 @@ export const CarouselComponent = defineComponent({
       } else {
         style.left = px(-index * slideWidthInt);
       }
-      style.opacity = state.currentSlide === index ? '1' : '0';
-      style.zIndex = state.currentSlide === index ? '999' : '998';
+      const active = getSlideClasses(index)['slick-active'];
+      style.opacity = active ? '1' : '0';
+      style.zIndex = active ? '999' : '998';
       if (c.useCSS) {
         style.transition = `opacity ${c.speed}ms ${c.cssEase}, visibility ${c.speed}ms ${c.cssEase}`;
       }
@@ -358,23 +330,113 @@ export const CarouselComponent = defineComponent({
       });
       return entries
         .filter(([, v]) => v !== undefined && v !== '')
-        .map(([k, v]) => `${k}:${v}`)
+        .map(
+          ([k, v]) =>
+            `${k}:${(k === 'left' || k === 'top') && v !== '' && Number.isFinite(Number(v)) ? `${v}px` : v}`,
+        )
         .join(';');
     });
 
     /** 单个 slide 的完整 DOM（外层 slick-slide + 内层包裹 + child），track.js + slider.js。 */
-    const renderSlide = (child: VNode, index: number, key: string): VNode => {
+    // Visual duplicates must not claim the parent refs of the original content.
+    const cloneIds = new Map<NonNullable<VNode['key']>, number>();
+    let nextCloneId = 0;
+    const visualClone = (node: VNode, suffix: string): VNode => {
+      const ids = new Map<string, string>();
+      const collectIds = (child: VNodeChild): void => {
+        if (Array.isArray(child)) {
+          child.forEach(collectIds);
+          return;
+        }
+        if (!isVNode(child)) return;
+        if (typeof child.type === 'string' && typeof child.props?.id === 'string')
+          ids.set(child.props.id, `${child.props.id}--${suffix}`);
+        if (Array.isArray(child.children)) child.children.forEach(collectIds);
+      };
+      collectIds(node);
+      const duplicateNode = (child: VNode): VNode => {
+        const copy = Object.assign(cloneVNode(child), { dynamicChildren: null });
+        copy.ref = null;
+        // Only concrete native DOM attrs are relationships. Component id props
+        // and uninvoked component slots retain their actual business contracts.
+        if (typeof copy.type === 'string' && copy.props) {
+          const props = { ...copy.props };
+          if (typeof props.id === 'string') props.id = ids.get(props.id) ?? props.id;
+          for (const name of [
+            'for',
+            'htmlFor',
+            'aria-labelledby',
+            'aria-describedby',
+            'aria-controls',
+            'aria-owns',
+            'aria-activedescendant',
+            'aria-details',
+            'aria-errormessage',
+          ]) {
+            const value = props[name];
+            if (typeof value === 'string')
+              props[name] = value.replace(/\S+/g, (id) => ids.get(id) ?? id);
+          }
+          copy.props = props;
+        }
+        if (Array.isArray(copy.children)) copy.children = copy.children.map(duplicateChild);
+        else if (
+          (copy.shapeFlag & (2 | 4)) !== 0 &&
+          copy.children &&
+          typeof copy.children === 'object'
+        ) {
+          const source = copy.children;
+          // A fresh raw slot object lets Vue normalize with the original owner.
+          // Compiler stable/cache flags cannot describe these transformed slots.
+          const forwarded: typeof source = { _ctx: source._ctx };
+          const duplicateSlotContent = (value: unknown): VNodeChild => {
+            if (Array.isArray(value)) return value.map(duplicateSlotContent);
+            if (isVNode(value)) return duplicateNode(value);
+            if (
+              value == null ||
+              typeof value === 'string' ||
+              typeof value === 'number' ||
+              typeof value === 'boolean'
+            )
+              return value;
+            throw new TypeError('[Carousel] Slot content must be a Vue VNodeChild');
+          };
+          for (const [name, value] of Object.entries(source)) {
+            if (name.startsWith('_') || name === '$stable') continue;
+            forwarded[name] =
+              typeof value === 'function'
+                ? (...args: unknown[]) => duplicateSlotContent(value(...args))
+                : value;
+          }
+          copy.children = forwarded;
+          // Vue FULL_PROPS | DYNAMIC_SLOTS: the private clone changed both trees.
+          copy.patchFlag = Math.max(copy.patchFlag, 0) | (1 << 4) | (1 << 10);
+        }
+        return copy;
+      };
+      const duplicateChild = (child: VNodeArrayChildren[number]): VNodeArrayChildren[number] => {
+        if (Array.isArray(child)) return child.map(duplicateChild);
+        return isVNode(child) ? duplicateNode(child) : child;
+      };
+      return duplicateNode(node);
+    };
+
+    const renderSlide = (child: VNode, index: number, sourceIndex: number): VNode => {
       const classes = getSlideClasses(index);
-      const fadeStyle = getSlideStyle(index);
       const isClone = index < 0 || index >= childrenCount.value;
-      // 外层 style：正片多一个 outline:none（React {outline:'none', ...childStyle}）
-      const outerStyle: Record<string, string> = isClone
-        ? { ...fadeStyle }
-        : { outline: 'none', ...fadeStyle };
-      const userStyle = child.props?.style as Record<string, string> | undefined;
-      const mergedOuter = userStyle
-        ? styleToString({ ...userStyle, ...outerStyle })
-        : styleToString(outerStyle);
+      const active = !!classes['slick-active'];
+      const key = child.key ?? sourceIndex;
+      let cloneId = cloneIds.get(key);
+      if (cloneId === undefined) {
+        cloneId = ++nextCloneId;
+        cloneIds.set(key, cloneId);
+      }
+      const content = isClone
+        ? visualClone(child, `${instanceId}-${index < 0 ? 'pre' : 'post'}-${cloneId}`)
+        : child;
+      const outerStyle = isClone
+        ? getSlideStyle(index)
+        : { outline: 'none', ...getSlideStyle(index) };
       return h(
         'div',
         {
@@ -382,44 +444,45 @@ export const CarouselComponent = defineComponent({
           'data-index': index,
           tabindex: -1,
           class: classes,
-          'aria-hidden': String(!classes['slick-active']),
-          style: mergedOuter,
+          'aria-hidden': String(!active),
+          inert: active ? undefined : true,
+          style: styleToString(outerStyle),
         },
         [
           h('div', [
-            // slider.js 的 rows/slidesPerRow=1 包裹：tabIndex + width:100%
-            cloneVNode(child, {
-              key: `inner-${key}`,
-              tabindex: -1,
+            cloneVNode(content, {
               style: { width: '100%', display: 'inline-block' },
             }),
           ]),
         ],
       );
     };
-
-    /** track.js 的 `renderSlides`（含 clone 的取材与排序规则）。 */
     const renderTrackSlides = (): VNode[] => {
-      const kids = currentChildren;
-      const n = kids.length;
-      const c = config.value;
-      const originals: VNode[] = kids.map((child, i) => renderSlide(child, i, `original${i}`));
-      // ⚠️ clone 条件：`infinite && childrenCount>1 && !fade && !unslick`（track.js L125）
-      if (!c.infinite || n <= 1 || c.fade || state.unslick) return originals;
-      const k = c.slidesToShow;
-      const pre: VNode[] = [];
-      const post: VNode[] = [];
-      kids.forEach((child, i) => {
-        const preCloneNo = n - i;
-        if (preCloneNo <= k) {
-          pre.push(renderSlide(child, -preCloneNo, `precloned${-preCloneNo}`));
-        }
-        if (i < k) {
-          post.push(renderSlide(child, n + i, `postcloned${n + i}`));
-        }
-      });
-      const list = [...pre, ...originals, ...post];
-      return c.rtl ? list.reverse() : list;
+      const kids = currentChildren,
+        n = kids.length,
+        c = config.value;
+      const currentKeys = new Set(kids.map((child, i) => child.key ?? i));
+      for (const key of cloneIds.keys()) if (!currentKeys.has(key)) cloneIds.delete(key);
+      const originals = kids.map((child, i) => renderSlide(child, i, i));
+      const pre: VNode[] = [],
+        post: VNode[] = [];
+      if (c.infinite && n > 1 && !c.fade && !state.unslick) {
+        kids.forEach((child, i) => {
+          const preCount = n - i;
+          if (preCount <= c.slidesToShow) pre.push(renderSlide(child, -preCount, i));
+          if (i < c.slidesToShow) post.push(renderSlide(child, n + i, i));
+        });
+      }
+      // Native keyed Fragment groups isolate clone key domains without a DOM host.
+      const groups = [
+        { key: 'pre', slides: pre },
+        { key: 'original', slides: originals },
+        { key: 'post', slides: post },
+      ];
+      if (c.rtl) groups.reverse();
+      return groups.map((group) =>
+        h(Fragment, { key: group.key }, c.rtl ? group.slides.reverse() : group.slides),
+      );
     };
 
     /** dots.js（appendDots/customPaging 用默认实现）。⚠️ dots 的 antd 默认是 true。 */
@@ -463,20 +526,21 @@ export const CarouselComponent = defineComponent({
       ]
         .filter(Boolean)
         .join(' ');
-      const mouseHandlers: Record<string, unknown> = {};
-      if (c.pauseOnDotsHover) {
-        // ⚠️ slick 的原样映射：mouseenter→onDotsLeave、mouseover→onDotsOver（非笔误）
-        mouseHandlers.onMouseenter = engine.onDotsLeave;
-        mouseHandlers.onMouseover = engine.onDotsOver;
-        mouseHandlers.onMouseleave = engine.onDotsLeave;
-      }
-      return h('ul', { style: 'display:block', class: dsClass, ...mouseHandlers }, dots);
+      return h(
+        'ul',
+        {
+          style: 'display:block',
+          class: dsClass,
+          onMouseenter: engine.onDotsOver,
+          onMouseleave: engine.onDotsLeave,
+        },
+        dots,
+      );
     };
 
-    /** arrows.js + antd 的 ArrowButton（默认无文案；aria-label 来自 locale）。 */
     const renderArrow = (kind: 'prev' | 'next'): VNode => {
-      const c = config.value;
-      const isPrev = kind === 'prev';
+      const c = config.value,
+        isPrev = kind === 'prev';
       const disabled = isPrev
         ? !c.infinite && (state.currentSlide === 0 || state.slideCount <= c.slidesToShow)
         : !canGoNext({
@@ -485,57 +549,58 @@ export const CarouselComponent = defineComponent({
             slidesToShow: c.slidesToShow,
             currentSlide: state.currentSlide,
           });
-      const classes = ['slick-arrow', isPrev ? 'slick-prev' : 'slick-next'];
-      if (disabled) classes.push('slick-disabled');
-      const common = {
-        'data-role': 'none',
-        class: classes.join(' '),
-        style: 'display:block',
-        onClick: disabled
-          ? undefined
-          : () => engine.changeSlide({ message: isPrev ? 'previous' : 'next' }),
-      };
-      const slot = slots[isPrev ? 'prev-arrow' : 'next-arrow'];
-      if (slot) {
-        const vnode = slot({
-          currentSlide: state.currentSlide,
-          slideCount: state.slideCount,
-        }) as VNode[];
-        const first = Array.isArray(vnode) ? vnode[0] : vnode;
-        if (first && typeof first === 'object') {
-          return cloneVNode(first, {
-            ...common,
-            class: [first.props?.class as string | undefined, common.class]
-              .filter(Boolean)
-              .join(' '),
-            style: [first.props?.style as string | undefined, common.style]
-              .filter(Boolean)
-              .join(';'),
-          });
-        }
-      }
-      return h('button', {
-        type: 'button',
-        'aria-label': isPrev
-          ? isRTL.value
-            ? locale.value.nextSlide
-            : locale.value.prevSlide
-          : isRTL.value
-            ? locale.value.prevSlide
-            : locale.value.nextSlide,
-        ...common,
+      const content = slots[isPrev ? 'prev-arrow' : 'next-arrow']?.({
+        currentSlide: state.currentSlide,
+        slideCount: state.slideCount,
       });
+      const custom = collectChildren(content).length > 0;
+      return h(
+        'button',
+        {
+          type: 'button',
+          disabled,
+          'aria-label': isPrev
+            ? isRTL.value
+              ? locale.value.nextSlide
+              : locale.value.prevSlide
+            : isRTL.value
+              ? locale.value.prevSlide
+              : locale.value.nextSlide,
+          'data-role': 'none',
+          class: [
+            'slick-arrow',
+            isPrev ? 'slick-prev' : 'slick-next',
+            { 'slick-disabled': disabled, 'slick-arrow-custom': custom },
+          ],
+          style: 'display:block',
+          onClick: (event: MouseEvent) => {
+            if (!event.defaultPrevented && !disabled)
+              engine.changeSlide({ message: isPrev ? 'previous' : 'next' });
+          },
+        },
+        [content],
+      );
     };
 
     // ============================== Render ==============================
     return () => {
       // ⚠️ slot 只能在 render 里调用（见 childrenCount 注释）；数量变化在这里同步
-      currentChildren = collectChildren((slots.default?.() ?? []) as VNodeChild[]);
+      const nextChildren = collectChildren(slots.default?.());
+      const changed =
+        nextChildren.length !== currentChildren.length ||
+        nextChildren.some(
+          (child, index) =>
+            child.key !== currentChildren[index]?.key ||
+            child.type !== currentChildren[index]?.type,
+        );
+      currentChildren = nextChildren;
       if (currentChildren.length !== childrenCount.value) {
         childrenCount.value = currentChildren.length;
         engine.setSlideCount(currentChildren.length);
       }
-      const cls = getPrefixCls('carousel', props.prefixCls);
+      if (changed) slidesVersion.value += 1;
+      const { class: nativeClass, style: nativeStyle, ...rootAttrs } = attrs;
+      const cls = context.getPrefixCls('carousel', props.prefixCls);
       const c = config.value;
       const st = state;
       const touchMove = c.touchMove;
@@ -551,7 +616,7 @@ export const CarouselComponent = defineComponent({
             onTouchmove: st.dragging && touchMove ? engine.swipeMove : undefined,
             onTouchend: touchMove ? engine.swipeEnd : undefined,
             onTouchcancel: st.dragging && touchMove ? engine.swipeEnd : undefined,
-            onKeydown: c.accessibility ? engine.onListKeyDown : undefined,
+            onClickCapture: engine.onListClickCapture,
           };
       // vertical 时 list 有 height（initializedState 的 listHeight）。
       // ⚠️ Vue 的字符串 style 是整段 cssText —— 必须是完整声明，不能只是值。
@@ -568,10 +633,7 @@ export const CarouselComponent = defineComponent({
           ? { '--dot-duration': `${c.autoplaySpeed}ms` }
           : undefined;
 
-      // 根 `class` / `style` 是 Vue 原生 attrs（替代上游的 `rootClassName`）；
-      // ⚠️ **其余 attrs 不透传** —— 上游不 spread restProps（L4 基线 `carousel:attrs`
-      //    里 React 产物没有 `data-x`），这里保持同一行为。
-      // 另：`className` / `style` prop 指向**内层 `slick-slider`**，属独立目标（见 interface.ts）。
+      // Native attrs belong to the actual root; semantic slider inputs stay inside.
       return h(
         'div',
         mergeProps(
@@ -585,9 +647,19 @@ export const CarouselComponent = defineComponent({
               },
             ],
             id: props.id,
-            style: dotDurationStyle,
           },
-          { class: attrs.class, style: attrs.style },
+          rootAttrs,
+          {
+            class: nativeClass,
+            style: [themeStyles.value, dotDurationStyle, nativeStyle],
+            onFocusin: engine.onSlideFocus,
+            onFocusout: engine.onSlideBlur,
+            onKeydown: (event: KeyboardEvent) => {
+              emit('keydown', event);
+              if (event.target instanceof Node && engine.listRef.value?.contains(event.target))
+                engine.onListKeyDown(event);
+            },
+          },
         ),
         [
           h(
@@ -596,34 +668,40 @@ export const CarouselComponent = defineComponent({
               class: [
                 'slick-slider',
                 // 语义槽在前、deprecated 的 React 名在后（后者覆盖前者，保证旧代码行为不变）
+                context.classNames?.slider,
                 props.classNames?.slider,
                 props.className,
-                context.className as string | undefined,
+                context.className,
                 { 'slick-vertical': c.vertical, 'slick-initialized': true },
               ],
               dir: 'ltr',
-              style: {
-                ...(context.style as Record<string, string | number> | undefined),
-                ...(props.styles?.slider ?? {}),
-                ...props.style,
-              },
+              style: [context.styles?.slider, context.style, props.styles?.slider],
             },
             [
               prevArrow,
-              h('div', { ref: engine.listRef, class: 'slick-list', ...listHandlers }, [
-                h(
-                  'div',
-                  {
-                    ref: engine.trackRef,
-                    class: 'slick-track',
-                    style: trackStyleString.value,
-                    onMouseenter: c.pauseOnHover ? engine.onTrackOver : undefined,
-                    onMouseover: c.pauseOnHover ? engine.onTrackOver : undefined,
-                    onMouseleave: c.pauseOnHover ? engine.onTrackLeave : undefined,
-                  },
-                  renderTrackSlides(),
-                ),
-              ]),
+              h(
+                'div',
+                {
+                  ref: engine.listRef,
+                  class: 'slick-list',
+                  tabindex: c.accessibility && !st.unslick ? 0 : undefined,
+                  ...listHandlers,
+                },
+                [
+                  h(
+                    'div',
+                    {
+                      ref: engine.trackRef,
+                      class: 'slick-track',
+                      style: trackStyleString.value,
+                      onMouseenter: engine.onTrackOver,
+
+                      onMouseleave: engine.onTrackLeave,
+                    },
+                    renderTrackSlides(),
+                  ),
+                ],
+              ),
               nextArrow,
               dotsNode,
             ],

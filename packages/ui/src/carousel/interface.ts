@@ -1,31 +1,7 @@
-/**
- * Carousel 的类型定义（Vue API）。
- *
- * 契约来源：antd 6.6.4 的 `es/carousel/index.d.ts`（CarouselProps extends
- * `Omit<Settings, 'dots' | 'dotsClass' | 'autoplay'>`）+ `@ant-design/react-slick@2.0.0`
- * 的 `Settings` / `defaultProps`（机械判据）。
- *
- * ── 与 antd 的有意差异（详见 docs/analysis/carousel.md §2 / §8）────────────────
- *
- * 1. **Settings 不再整包透传**：antd 的 Props 是 `Omit<Settings, …>`（40+ 个键），
- *    其中 `responsive` / `rows` / `slidesPerRow` / `centerMode` / `variableWidth` /
- *    `lazyLoad` / `asNavFor` / `focusOnSelect` / `swipeToSlide` / `appendDots` /
- *    `customPaging` / `slide` / `unslick` / `onEdge` / `onSwipe` / `onInit` /
- *    `onReInit` / `onLazyLoad` / `swipeEvent` 首版**显式不支持**（用户裁决，
- *    2026-09-23）。antd 侧传了会有 deprecation 告警（`useDevWarning`）。
- * 2. **`beforeChange` / `afterChange` / `onSwipe` / `onEdge` 是 Vue 事件**
- *    （规则 C19）：`emit('before-change', current, next)` 等；Props 里没有它们。
- * 3. **`prevArrow` / `nextArrow` 用插槽**（规则 C19 的 Vue-native 映射）：
- *    `#prev-arrow` / `#next-arrow`；不传时渲染 antd 同款的默认箭头按钮
- *    （`aria-label` 来自 locale，与 antd 逐字一致）。
- * 4. `dotPosition`（deprecated）保留并映射到 `dotPlacement`（与 antd 同：
- *    left→start、right→end），运行时发 deprecated 告警。
- * 5. Ref 形状：`{ nativeElement, goTo, next, prev, autoPlay, innerSlider }`
- *    —— `innerSlider` 是 PLATFORM 差异（React 是 slick 实例；Vue 侧是引擎的
- *    响应式状态对象，字段名与 slick 的 state 对齐，供调试/联动用）。
- */
+/** Native Carousel props, scoped content, owned notifications and real reference. */
 
-import type { VNodeChild } from 'vue';
+import type { CSSProperties, VNodeChild } from 'vue';
+import type { CarouselEngineState } from './engine';
 
 /** 轮播切换动画：横向滚动 / 淡入淡出。 */
 export type CarouselEffect = 'scrollx' | 'fade';
@@ -74,8 +50,6 @@ export interface CarouselProps {
   speed?: number;
   /** 切换动画的 CSS 缓动（transition 用），默认 `'ease'`。 */
   cssEase?: string;
-  /** 切换动画的缓动（antd 文档暴露、react-slick 2.0 内部未消费 —— 接受但无效果）。 */
-  easing?: string;
   /** 是否无限循环（渲染 clone），默认 `true`。 */
   infinite?: boolean;
   /** 初始定位到第几张（0 起），默认 `0`。 */
@@ -128,9 +102,15 @@ export interface CarouselProps {
    *   代码能直接跑；新代码请用槽位。
    */
   className?: string;
-  /** ⚠️ 同上：落在内层 `slick-slider`。@deprecated 用 `styles.slider`。 */
-  style?: Record<string, string | number>;
   id?: string;
+  useCSS?: boolean;
+  useTransform?: boolean;
+  edgeFriction?: number;
+  onBeforeChange?: CarouselEmits['beforeChange'];
+  onAfterChange?: CarouselEmits['afterChange'];
+  onSwipe?: CarouselEmits['swipe'];
+  onEdge?: CarouselEmits['edge'];
+  onKeydown?: CarouselEmits['keydown'];
 }
 
 /** 语义化类名槽位。 */
@@ -142,7 +122,7 @@ export interface CarouselSemanticClassNames {
 /** 语义化内联样式槽位。 */
 export interface CarouselSemanticStyles {
   /** 内层 `slick-slider`（= 上游 `style` 的落点）。 */
-  slider?: Record<string, string | number>;
+  slider?: CSSProperties;
 }
 
 /** ref 形状（`innerSlider` 是 PLATFORM 差异 —— 引擎状态对象，非 slick 实例）。 */
@@ -154,8 +134,25 @@ export interface CarouselRef {
   /** playType 语义与 slick 一致：'update' | 'leave' | 'blur'（后者是「恢复播放」）。 */
   autoPlay: (playType?: 'update' | 'leave' | 'blur') => void;
   /** 引擎状态（slick state 的同名字段子集；调试/联动用，非 slick 实例）。 */
-  innerSlider: Record<string, unknown>;
+  innerSlider: Readonly<CarouselEngineState>;
 }
 
 /** children 内容（默认插槽）。 */
 export type CarouselChildren = VNodeChild;
+
+export type CarouselEmits = {
+  beforeChange: CarouselBeforeChangeEventHandler;
+  afterChange: CarouselAfterChangeEventHandler;
+  swipe: (direction: CarouselSwipeDirection) => void;
+  edge: (direction: CarouselSwipeDirection) => void;
+  keydown: (event: KeyboardEvent) => void;
+};
+export interface CarouselArrowScope {
+  currentSlide: number;
+  slideCount: number;
+}
+export type CarouselSlots = {
+  default?: () => VNodeChild;
+  'prev-arrow'?: (scope: CarouselArrowScope) => VNodeChild;
+  'next-arrow'?: (scope: CarouselArrowScope) => VNodeChild;
+};

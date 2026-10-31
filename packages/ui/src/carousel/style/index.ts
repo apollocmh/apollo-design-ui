@@ -11,8 +11,7 @@
  * 1. 无 hash / css-var 包裹类（D5）；8 个 Component Token 声明直接落在
  *    `.{prefix}-carousel` 上（D50：构建期解析值，见 `style/token.ts` 文件头）。
  * 2. cssinjs 的 `token.calc(...).equal()` 产物改写为等价的 `calc()` 字符串或
- *    JS 解析值：`arrowLength = 16/√2` 是无理数 ⇒ ::after 几何用 JS 常量
- *    （`CAROUSEL_ARROW_LENGTH_SCALE`），与 switch 的 `trackHeight` 同判。
+ *    JS 解析值；箭头几何通过 `calc(var(--arrow-size) / √2)` 消费当前尺寸。
  * 3. Keyframes：cssinjs 的 `Keyframes('carousel-dot-animation')` 移植为静态
  *    `@keyframes`（width 0 → dotActiveWidth；纵向变体为 height），名字加根前缀
  *    防跨前缀碰撞。antd 的 `var(--dot-duration)` 消费方式逐字保留。
@@ -57,7 +56,7 @@ export function genTokenDecls(rootPrefixCls: string): string[] {
     `  --${p}-carousel-dot-gap:${px(t.dotGap)};`,
     `  --${p}-carousel-dot-offset:${px(t.dotOffset)};`,
     `  --${p}-carousel-dot-width-active:${px(t.dotWidthActive)};`,
-    `  --${p}-carousel-dot-active-width:${px(t.dotActiveWidth)};`,
+    `  --${p}-carousel-dot-active-width:var(--${p}-carousel-dot-width-active);`,
   ];
 }
 
@@ -165,13 +164,10 @@ function genCarouselRootStyle(p: string): string[] {
 /** 箭头段 —— antd 的 `genArrowsStyle`（::after 旋转边框箭头；√2 几何用 JS 解析值）。 */
 function genArrowsStyle(p: string): string[] {
   const cls = `.${p}-carousel`;
-  const t = carouselTokenValues();
   const motionDurationSlow = v('motionDurationSlow');
-  const arrowSize = t.arrowSize as number;
-  // ⚠️ 用**除法**对齐 antd 的 `.div(Math.SQRT2)`（乘倒数可能差 1 ulp，L6 会见）
-  const arrowLength = arrowSize / Math.SQRT2;
-  // antd 原式：top = calc(arrowSize).sub(arrowLength).div(2) → (16px - 11.3137px) / 2
-  const arrowCenter = px((arrowSize - arrowLength) / 2);
+  // The divisor is dimensionless; calc keeps arbitrary CSS lengths responsive.
+  const arrowLength = `calc(${sv(p, 'arrow-size')} / ${Math.SQRT2})`;
+  const arrowCenter = `calc((${sv(p, 'arrow-size')} - ${arrowLength}) / 2)`;
   const arrowOffset = sv(p, 'arrow-offset');
 
   return [
@@ -206,14 +202,15 @@ function genArrowsStyle(p: string): string[] {
     `  top:${arrowCenter};`,
     `  inset-inline-start:${arrowCenter};`,
     `  display:inline-block;`,
-    `  width:${px(arrowLength)};`,
-    `  height:${px(arrowLength)};`,
+    `  width:${arrowLength};`,
+    `  height:${arrowLength};`,
     `  border:0 solid currentcolor;`,
     `  border-inline-start-width:2px;`,
     `  border-block-start-width:2px;`,
     `  ${CAROUSEL_ARROW_TIP_RADIUS_DECL};`,
     `  content:"";`,
     `}`,
+    `${cls} .slick-arrow-custom::after{display:none;}`,
     `${cls} .slick-prev{`,
     `  inset-inline-start:${arrowOffset};`,
     `}`,

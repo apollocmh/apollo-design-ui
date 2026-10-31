@@ -4,129 +4,96 @@ title: Carousel
 subtitle: 走马灯
 ---
 
-旋转木马轮播组件。
+# Carousel
 
-## 何时使用
-
-- 需要在有限空间内**轮播展示**一组内容（图片 / 卡片 / 文案）。
-- 需要自动播放、循环滚动或淡入淡出切换。
-
-## 代码演示
-
-见 [`demo/`](./demo)（9 个，覆盖 antd 的主要用户场景）。
+通过原生默认插槽提供轮播内容。示例见 [demo](./demo)（保留现有九个示例）。
 
 ## API
 
-| 参数 | 说明 | 类型 | 默认值 |
-|---|---|---|---|
+| 属性 | 说明 | 类型 | 默认 |
+| --- | --- | --- | --- |
 | effect | 动画效果 | `'scrollx' \| 'fade'` | `'scrollx'` |
-| dots | 圆点；对象形态可定制 className | `boolean \| { className?: string }` | `true` |
-| dotPlacement | 圆点位置 | `'top' \| 'bottom' \| 'start' \| 'end'` | `'bottom'` |
-| dotPosition | ⚠️ 已废弃，用 `dotPlacement`（left/right 映射 start/end，发告警） | 同上 + `'left' \| 'right'` | — |
-| autoplay | 自动播放；对象形态可开圆点进度动画 | `boolean \| { dotDuration?: boolean }` | `false` |
-| autoplaySpeed | 自动播放间隔（ms） | `number` | `3000` |
-| speed | 切换动画时长（ms） | `number` | `500` |
-| cssEase | 切换动画的 CSS 缓动 | `string` | `'ease'` |
-| easing | 缓动（antd 文档暴露；react-slick 2.0 内部未消费，接受但无效果） | `string` | `'linear'` |
-| infinite | 无限循环（渲染 clone） | `boolean` | `true` |
-| initialSlide | 初始定位（0 起） | `number` | `0` |
-| slidesToShow | 一屏几张（⚠️ fade 下强制 1） | `number` | `1` |
-| slidesToScroll | 一次滚动几张（⚠️ fade 下强制 1） | `number` | `1` |
+| dots | 显示圆点，可提供内层圆点类 | `boolean \| { className?: string }` | `true` |
+| dotPlacement | 圆点位置；start/end默认启用纵向 | `'top' \| 'bottom' \| 'start' \| 'end'` | `'bottom'` |
+| dotPosition | 已有位置别名；请用dotPlacement | `DotPlacement \| 'left' \| 'right'` | `—` |
+| autoplay | 自动播放；对象形态启用圆点进度 | `boolean \| { dotDuration?: boolean }` | `false` |
+| autoplaySpeed | 播放间隔配置，毫秒 | `number` | `3000` |
+| speed | 动画时长，毫秒 | `number` | `500` |
+| cssEase | 实际CSS过渡缓动 | `string` | `'ease'` |
+| infinite | 循环轮播，包含克隆实例 | `boolean` | `true` |
+| initialSlide | 初始索引；动态变更重新定位 | `number` | `0` |
+| slidesToShow | 可见页数；fade强制为1 | `number` | `1` |
+| slidesToScroll | 每次翻页数；fade强制为1 | `number` | `1` |
 | draggable | 鼠标拖拽 | `boolean` | `true` |
-| swipe | 触摸滑动 | `boolean` | `true` |
-| touchMove | 响应触摸/鼠标移动 | `boolean` | `true` |
-| touchThreshold | 触发翻页的滑动距离系数 | `number` | `5` |
-| vertical | 纵向布局（`dotPlacement` 为 start/end 时自动 true） | `boolean` | — |
-| waitForAnimate | 动画中拦截新切换；⚠️ antd 默认 **false**（slick 默认 true） | `boolean` | `false` |
-| pauseOnHover | 悬停暂停自动播放 | `boolean` | `true` |
-| pauseOnDotsHover | 圆点悬停暂停 | `boolean` | `false` |
-| pauseOnFocus | 聚焦暂停 | `boolean` | `false` |
-| arrows | 左右箭头；⚠️ antd 默认 **false**（slick 默认 true） | `boolean` | `false` |
-| accessibility | 键盘 Left/Right 切换 | `boolean` | `true` |
-| adaptiveHeight | 自适应高度 | `boolean` | `false` |
-| rtl | RTL（默认跟随 ConfigProvider 的 direction，且不与 vertical 同用） | `boolean` | — |
-| id | 根元素 id | `string` | — | — |
-| class / style | **根节点原生 attrs**（替代上游 `rootClassName`） | — | — | — |
-| classNames.slider | 落在**内层 `.slick-slider`**。**本仓自有 API**（上游没有 `classNames`）—— 因为 Vue 里根节点已用原生 `class`，内层需要一个不冲突的入口 | `{ slider?: string }` | — | — |
-| styles.slider | 同槽位的内联样式 | `{ slider?: CSSProperties }` | — | — |
-| ~~className~~ / ~~style~~（prop） | ⚠️ 落在**内层 `.slick-slider`**。**@deprecated**：用 `classNames.slider` / `styles.slider`（同一落点，保留只为让 antd 迁过来的代码能直接跑） | — | — | — |
+| swipe | 允许手势切换 | `boolean` | `true` |
+| touchMove | 响应鼠标/触摸移动 | `boolean` | `true` |
+| touchThreshold | 最小位移的除数：可视尺寸/该值 | `number` | `5` |
+| vertical | 纵向布局；未传时从位置推导 | `boolean` | `—` |
+| waitForAnimate | 动画中拒绝新切换 | `boolean` | `false` |
+| pauseOnHover | 内容悬停时暂停 | `boolean` | `true` |
+| pauseOnDotsHover | 圆点悬停时暂停 | `boolean` | `false` |
+| pauseOnFocus | 本组件内聚焦时暂停 | `boolean` | `false` |
+| arrows | 显示前后原生按钮 | `boolean` | `false` |
+| accessibility | 启用轮播键盘操作和list焦点入口 | `boolean` | `true` |
+| adaptiveHeight | list高度跟随当前页 | `boolean` | `false` |
+| rtl | 水平RTL；默认读取当前Provider方向 | `boolean` | `—` |
+| useCSS | 启用CSS切换动画 | `boolean` | `true` |
+| useTransform | 使用transform；false时使用left/top | `boolean` | `true` |
+| edgeFriction | 非循环边缘拖拽阻力 | `number` | `0.35` |
+| prefixCls | 根类名前缀 | `string` | `'apollo-carousel'` |
+| id | 实际根div的id | `string` | `—` |
+| classNames | 内层语义类名 | `{ slider?: string }` | `—` |
+| styles | 内层语义样式 | `{ slider?: CSSProperties }` | `—` |
+| className | 已有内层类名别名，落点不变；新代码用classNames.slider | `string` | `—` |
 
-### Slots
+原生 `class`、完整 `style`（对象、字符串、数组）、ARIA/data 与监听器落到实际根 div。原内层 `style` prop 直接移除，内层样式使用 `styles.slider`；已有不冲突的 `className` 仍落内层。Provider 的 `components.carousel` 类名/语义样式及当前方向响应替换和撤回。
 
-| 插槽 | 说明 | 作用域 |
-|---|---|---|
-| default | 轮播内容（每张一个节点） | — |
-| prev-arrow / next-arrow | 自定义箭头（需 `arrows`） | `{ currentSlide, slideCount }` |
+`easing` 原来没有消费实现，开发阶段直接删除；缓动使用实际工作的 `cssEase`。没有兼容通道。
 
-### Events
+### 插槽
 
-| 事件 | 说明 | 参数 |
-|---|---|---|
-| before-change | 切换前 | `(current: number, next: number)` |
-| after-change | 切换后 | `(current: number)` |
-| swipe | 滑动方向 | `('left' \| 'right' \| 'up' \| 'down')` |
-| edge | 非循环模式拖到边界 | `('left' \| 'right' \| 'up' \| 'down')` |
+| 插槽 | 作用 | 参数 |
+| --- | --- | --- |
+| default | 完整 Vue 轮播内容；数组、Fragment、条件空内容和0均可处理 | — |
+| prev-arrow / next-arrow | 既有原生箭头按钮的完整内容 | `{ currentSlide: number, slideCount: number }` |
 
-### 键盘
+箭头的禁用、名称、点击和键盘行为由原生 button 拥有。旧箭头槽中的 button 根直接改为图标/span等内容，避免嵌套按钮；多个内容节点和条件空槽不再被截断。自定义内容出现时不叠加默认箭头图形。
 
-| 按键 | 行为 |
-|---|---|
-| `ArrowLeft` | 上一张（rtl 时为下一张） |
-| `ArrowRight` | 下一张（rtl 时为上一张） |
+### 事件
 
-判据是 `keyCode`（37/39），焦点在 `INPUT` / `TEXTAREA` / `SELECT` 内不触发。
+| 事件 | 模板 | 参数 |
+| --- | --- | --- |
+| beforeChange | `@before-change` | `(current: number, next: number)` |
+| afterChange | `@after-change` | `(current: number)` |
+| swipe | `@swipe` | `('left' \| 'right' \| 'up' \| 'down')` |
+| edge | `@edge` | 同上，非循环边缘拖拽 |
+| keydown | `@keydown` | 原生 `KeyboardEvent`；先于导航，可 `preventDefault()` |
 
-## Ref
+`h()` 使用 `onBeforeChange` / `onAfterChange` 等自然监听器。通知由 Vue emits 派发，不手调 attrs。没有 value 模型；定位通过公开方法。完成的滑动只通知一次，非切换的同位置请求不伪造切换。
 
-| 名称 | 类型 |
-|---|---|
-| nativeElement | `HTMLDivElement \| null` |
-| goTo | `(slide: number, dontAnimate?: boolean) => void` |
-| next / prev | `() => void` |
-| autoPlay | `(playType?: 'update' \| 'leave' \| 'blur') => void` |
-| innerSlider | 引擎状态对象（引擎状态对象） |
+### 引用与交互
 
-## Theme（Component Token）
-
-8 个，与 antd 的 `ComponentToken` 逐字段对齐（CSS 变量形态 `--apollo-carousel-*`）。
-
-| Token | 说明 | 默认值 |
-|---|---|---|
-| arrowSize | 箭头尺寸 | `16px` |
-| arrowOffset | 箭头到边缘距离（= `marginXS`） | `8px` |
-| dotWidth | 圆点宽 | `16px` |
-| dotHeight | 圆点高 | `3px` |
-| dotGap | 圆点间距（= `marginXXS`） | `4px` |
-| dotOffset | 圆点到边缘距离 | `12px` |
-| dotWidthActive | ⚠️ 已废弃，= `dotActiveWidth` | `24px` |
-| dotActiveWidth | 激活圆点宽（纵向时为高） | `24px` |
-
-> ⚠️ 这 8 个是**构建期算好的解析值**，不随主题缩放（`arrowLength = arrowSize/√2`
-> 的无理数几何是主因，登记 COMPATIBILITY）。零运行时下用 CSS 变量覆盖即可自定义：
-
-```css
-.my-scope .apollo-carousel {
-  --apollo-carousel-dot-width: 24px;
-  --apollo-carousel-dot-active-width: 48px;
+```ts
+interface CarouselRef {
+  nativeElement: HTMLDivElement | null;
+  goTo(slide: number, dontAnimate?: boolean): void;
+  next(): void;
+  prev(): void;
+  autoPlay(playType?: 'update' | 'leave' | 'blur'): void;
+  innerSlider: Readonly<CarouselEngineState>;
 }
 ```
 
-## 与 antd 的差异（摘要）
+`innerSlider` 是实际响应式引擎状态，非 slick 实例。`goTo` 对有限索引按当前页数循环或约束；关闭动画时立即完成。动态配置/slide结构变化会收尾已接受的旧动画并按当前配置重测，旧计时器不能回写旧布局。`initialSlide` 或有效RTL改变会按当前初值重新定位。
 
-- **自建引擎**：antd 基于 react-slick；本仓按用户裁决自建（embla 无法对齐 slick 的
-  DOM 契约，见 `docs/analysis/carousel.md` §7）。DOM 与行为逐条对拍 react-slick@2.0.0。
-- **Settings 不再整包透传**：`responsive` / `rows` / `slidesPerRow` / `centerMode` /
-  `variableWidth` / `lazyLoad` / `asNavFor` / `focusOnSelect` / `swipeToSlide` /
-  `appendDots` / `customPaging` / `unslick` 首版**显式不支持**（传了发 dev 告警）。
-- **`beforeChange` / `afterChange` / `onSwipe` / `onEdge` 是事件**（C19）；
-  `prevArrow` / `nextArrow` 用插槽。
+方向键支持原生 key（并保留 keyCode），水平RTL交换左右方向，纵向支持上下方向。输入框、选择框、textarea、可编辑内容、输入法和已取消的事件不触发轮播导航。原始可交互内容保留其原生 Tab 行为；当前不可见内容使用 inert/aria-hidden，静止视口中可见的边界克隆保持交互。自动播放保留既有 `autoplaySpeed + 50` 调度，焦点、内容/圆点悬停原因合并，本实例的内移焦点不会提前恢复。
 
-## FAQ
+原始 slide 使用用户 key 保持组件身份。克隆树内已知原生 id 与指向这些 id 的 for/ARIA 关联带稳定的实例后缀，外部ID和自定义组件业务id不改。原件ref归原件；组件透传内容槽在实际渲染时只调用一次并保留作用域/owner，克隆返回节点清理ref。
 
-**为什么单张内容时圆点消失了？**
-slick 的 `unslick` 行为：children 数 ≤ `slidesToShow` 时引擎停摆 —— 不渲染 clone
-与 dots/arrows，这是上游原样语义（L4 基线钉住）。
+克隆仍是独立组件实例，不镜像任意内部未受控状态；需要单一组件实例的内容可使用 `infinite=false`。没有探测或改写组件内部不可见的固定ID，也不预调用其插槽来搜集内部结构。
 
-**`autoplaySpeed` 和 `speed` 的区别？**
-`autoplaySpeed` 是两张之间停留多久；`speed` 是切换动画播放多久。slick 的自动播放
-定时器是 `autoplaySpeed + 50`（原样保留）。
+## 主题
+
+保留八项：`arrowSize`、`arrowOffset`、`dotWidth`、`dotHeight`、`dotGap`、`dotOffset`、`dotWidthActive`、`dotActiveWidth`。全部接受数字(px)或CSS长度字符串，当前 `theme.components.Carousel` 替换/撤回生效。`dotWidthActive` 是既有别名，未设置新版字段时供应 `dotActiveWidth`；新版显式值优先。箭头尖角随当前 arrowSize 用 CSS calc 派生，支持 rem 等长度。原生根 style 中的变量可显式覆盖。
+
+不支持的旧 slick 能力（responsive、rows、variableWidth、lazyLoad、asNavFor、appendDots/customPaging 等）没有在本轮新增。已有参考和算法证据保留；全库九维验收在最终冻结版本统一进行。

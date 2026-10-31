@@ -294,12 +294,20 @@ export const keyHandler = (
   e: KeyboardEvent,
   accessibility?: boolean,
   rtl?: boolean,
+  vertical = false,
 ): '' | 'previous' | 'next' => {
-  const target = e.target as HTMLElement | null;
-  if (target && /^(TEXTAREA|INPUT|SELECT)$/.test(target.tagName)) return '';
-  if (!accessibility) return '';
-  if (e.keyCode === 37) return rtl ? 'next' : 'previous';
-  if (e.keyCode === 39) return rtl ? 'previous' : 'next';
+  if (e.defaultPrevented || e.isComposing || e.keyCode === 229 || !accessibility) return '';
+  const target = e.target;
+  if (
+    target instanceof Element &&
+    (/^(TEXTAREA|INPUT|SELECT)$/.test(target.tagName) ||
+      target.closest('[contenteditable]:not([contenteditable="false"])'))
+  )
+    return '';
+  if (vertical && (e.key ? e.key === 'ArrowUp' : e.keyCode === 38)) return 'previous';
+  if (vertical && (e.key ? e.key === 'ArrowDown' : e.keyCode === 40)) return 'next';
+  if (e.key ? e.key === 'ArrowLeft' : e.keyCode === 37) return rtl ? 'next' : 'previous';
+  if (e.key ? e.key === 'ArrowRight' : e.keyCode === 39) return rtl ? 'previous' : 'next';
   return '';
 };
 
@@ -368,6 +376,7 @@ export function ssrTrackStyle(
   currentSlide: number,
   clones: number,
 ): { trackStyle: Record<string, string>; slideWidth: string } {
+  if (slideCount === 0) return { trackStyle: { width: '0%', left: '0%' }, slideWidth: '0%' };
   const total = clones + slideCount + clones;
   const trackWidth = (100 / slidesToShow) * total;
   const slideWidth = 100 / total;
@@ -387,8 +396,8 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
   const slideCount0 = 0; // 由组件层在渲染前通过 setSlideCount 提供
   // slick 的 unslick 判据（slider.js L220）：children 数 <= slidesToShow 时引擎停摆
   const clonesOf = (n: number): number => {
-    const unslick = n <= cfg0.slidesToShow;
-    return cfg0.infinite && !unslick ? cfg0.slidesToShow : 0;
+    const c = config();
+    return c.infinite && n > c.slidesToShow ? c.slidesToShow : 0;
   };
   const ssr0 = ssrTrackStyle(0, cfg0.slidesToShow, cfg0.initialSlide, clonesOf(0));
   const state = reactive({
@@ -420,8 +429,9 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
 
   const setSlideCount = (n: number) => {
     state.slideCount = n;
-    state.unslick = n <= cfg0.slidesToShow;
-    const ssr = ssrTrackStyle(n, cfg0.slidesToShow, cfg0.initialSlide, clonesOf(n));
+    const current = config();
+    state.unslick = n <= current.slidesToShow;
+    const ssr = ssrTrackStyle(n, current.slidesToShow, current.initialSlide, clonesOf(n));
     if (!state.initialized) {
       state.trackStyle = ssr.trackStyle;
       state.slideWidth = ssr.slideWidth;
@@ -430,7 +440,8 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
 
   let autoplayTimer: ReturnType<typeof setInterval> | null = null;
   let animationEndCallback: ReturnType<typeof setTimeout> | undefined;
-  const callbackTimers: ReturnType<typeof setTimeout>[] = [];
+  let resizeMotionTimer: ReturnType<typeof setTimeout> | null = null;
+  let finishAnimation: (() => void) | undefined;
 
   const specWith = (extra?: Partial<SlickSpec>): SlickSpec => {
     const c = config();
@@ -471,7 +482,7 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
     const c = config();
     const slideWidth = !c.vertical ? Math.ceil(listWidth / c.slidesToShow) : listWidth;
     const slideHeight = list
-      ? ((list.querySelector('[data-index="0"]') as HTMLElement | null)?.offsetHeight ?? 0)
+      ? (list.querySelector<HTMLElement>('.slick-slide:not(.slick-cloned)')?.offsetHeight ?? 0)
       : 0;
     state.slideWidth = slideWidth;
     state.listWidth = listWidth;
@@ -490,14 +501,17 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
   const adaptHeight = () => {
     const list = listRef.value;
     if (config().adaptiveHeight && list) {
-      const el = list.querySelector(`[data-index="${state.currentSlide}"]`) as HTMLElement | null;
+      const el = list.querySelector<HTMLElement>('.slick-slide.slick-active:not(.slick-cloned)');
       list.style.height = `${el ? el.offsetHeight : 0}px`;
+    } else if (list && !config().vertical) {
+      list.style.height = '';
     }
   };
 
   // ---- handleSlide（inner-slider.js `slideHandler` 方法，含回调与 waitForAnimate） ----
   const handleSlide = (index: number, dontAnimate = false) => {
     const c = config();
+    if (state.unslick || state.slideCount === 0) return;
     const currentSlide = state.currentSlide;
     const { state: next, nextState: after } = slideHandler({
       ...specWith(),
@@ -505,27 +519,37 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
       useCSS: c.useCSS && !dontAnimate,
     });
     if (!next) return;
+    if (next.currentSlide === currentSlide) {
+      if (next.trackStyle) state.trackStyle = after?.trackStyle ?? next.trackStyle;
+      return;
+    }
     callbacks.onBeforeChange(currentSlide, next.currentSlide ?? currentSlide);
     // ⚠️ antd 侧 `waitForAnimate=false`：动画中被新目标打断时立即补发旧 slide 的 afterChange
     if (!c.waitForAnimate && animationEndCallback) {
       clearTimeout(animationEndCallback);
       callbacks.onAfterChange(currentSlide);
       animationEndCallback = undefined;
+      finishAnimation = undefined;
     }
     if (next.animating !== undefined) state.animating = next.animating;
     if (next.currentSlide !== undefined) state.currentSlide = next.currentSlide;
     if (next.targetSlide !== undefined) state.targetSlide = next.targetSlide;
     if (next.trackStyle) state.trackStyle = next.trackStyle;
-    if (!after) return;
-    animationEndCallback = setTimeout(() => {
+    if (!after || !next.animating) {
+      callbacks.onAfterChange(next.currentSlide ?? currentSlide);
+      return;
+    }
+    finishAnimation = () => {
       if (after.currentSlide !== undefined) state.currentSlide = after.currentSlide;
       if (after.targetSlide !== undefined) state.targetSlide = after.targetSlide;
       if (after.trackStyle) state.trackStyle = after.trackStyle;
       state.animating = after.animating ?? false;
       state.swipeLeft = null;
       animationEndCallback = undefined;
+      finishAnimation = undefined;
       callbacks.onAfterChange(next.currentSlide ?? currentSlide);
-    }, c.speed);
+    };
+    animationEndCallback = setTimeout(finishAnimation, c.speed);
   };
 
   // ---- changeSlide（inner-slider.js `changeSlide` 方法） ----
@@ -555,22 +579,29 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
     handleSlide(nextIndex);
   };
 
+  let trackHovered = false,
+    dotsHovered = false,
+    slideFocused = false;
   const autoPlay = (playType?: 'update' | 'leave' | 'blur' | 'playing') => {
     if (autoplayTimer) {
       clearInterval(autoplayTimer);
       autoplayTimer = null;
     }
-    const autoplaying = state.autoplaying;
-    if (playType === 'update') {
-      if (autoplaying === 'hovered' || autoplaying === 'focused' || autoplaying === 'paused')
-        return;
-    } else if (playType === 'leave') {
-      if (autoplaying === 'paused' || autoplaying === 'focused') return;
-    } else if (playType === 'blur') {
-      if (autoplaying === 'paused' || autoplaying === 'hovered') return;
+    if (state.unslick) {
+      state.autoplaying = null;
+      return;
     }
-    // ⚠️ `autoplaySpeed + 50` 是 slick 的原样行为（不是笔误）
-    autoplayTimer = setInterval(play, config().autoplaySpeed + 50);
+    if (playType !== 'playing' && state.autoplaying === 'paused') return;
+    const c = config();
+    if (slideFocused && c.pauseOnFocus) {
+      state.autoplaying = 'focused';
+      return;
+    }
+    if ((trackHovered && c.pauseOnHover) || (dotsHovered && c.pauseOnDotsHover)) {
+      state.autoplaying = 'hovered';
+      return;
+    }
+    autoplayTimer = setInterval(play, c.autoplaySpeed + 50);
     state.autoplaying = 'playing';
   };
 
@@ -589,21 +620,43 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
     }
   };
 
-  const onTrackOver = () => config().autoplay && pause('hovered');
-  const onTrackLeave = () =>
-    config().autoplay && state.autoplaying === 'hovered' && autoPlay('leave');
-  const onDotsOver = () => config().autoplay && pause('hovered');
-  const onDotsLeave = () =>
-    config().autoplay && state.autoplaying === 'hovered' && autoPlay('leave');
-  const onSlideFocus = () => config().autoplay && pause('focused');
-  const onSlideBlur = () =>
-    config().autoplay && state.autoplaying === 'focused' && autoPlay('blur');
-
-  // ---- 键盘（挂在 .slick-list 上；判据是 keyCode，37/39） ----
-  const onListKeyDown = (e: KeyboardEvent) => {
+  const onTrackOver = () => {
+    trackHovered = true;
+    if (config().autoplay && config().pauseOnHover) autoPlay('update');
+  };
+  const onTrackLeave = () => {
+    trackHovered = false;
+    if (config().autoplay && state.autoplaying === 'hovered') autoPlay('leave');
+  };
+  const onDotsOver = () => {
+    dotsHovered = true;
+    if (config().autoplay && config().pauseOnDotsHover) autoPlay('update');
+  };
+  const onDotsLeave = () => {
+    dotsHovered = false;
+    if (config().autoplay && state.autoplaying === 'hovered') autoPlay('leave');
+  };
+  const onSlideFocus = () => {
+    slideFocused = true;
+    if (config().autoplay && config().pauseOnFocus) autoPlay('update');
+  };
+  const onSlideBlur = (event: FocusEvent) => {
+    if (
+      event.currentTarget instanceof Node &&
+      event.relatedTarget instanceof Node &&
+      event.currentTarget.contains(event.relatedTarget)
+    )
+      return;
+    slideFocused = false;
+    if (config().autoplay && state.autoplaying === 'focused') autoPlay('blur');
+  };
+  const onListKeyDown = (event: KeyboardEvent) => {
     const c = config();
-    const dir = keyHandler(e, c.accessibility, c.rtl);
-    if (dir !== '') changeSlide({ message: dir });
+    const direction = keyHandler(event, c.accessibility, c.rtl, c.vertical);
+    if (c.accessibility && direction !== '') {
+      event.preventDefault();
+      changeSlide({ message: direction });
+    }
   };
 
   // ---- 拖拽 / 滑动（swipeStart/Move/End；verticalSwiping = vertical） ----
@@ -612,10 +665,25 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
     return { x: (e as MouseEvent).clientX, y: (e as MouseEvent).clientY };
   };
 
+  let suppressClick = false;
+  const onListClickCapture = (event: MouseEvent) => {
+    if (!suppressClick) return;
+    suppressClick = false;
+    event.preventDefault();
+    event.stopPropagation();
+  };
   const swipeStart = (e: MouseEvent | TouchEvent) => {
     const c = config();
-    const target = e.target as HTMLElement;
-    if (target.tagName === 'IMG') e.preventDefault();
+    if (e.defaultPrevented) return;
+    const target = e.target;
+    if (
+      target instanceof Element &&
+      (/^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName) ||
+        target.closest('[contenteditable]:not([contenteditable="false"])'))
+    )
+      return;
+    suppressClick = false;
+    if (target instanceof Element && target.tagName === 'IMG') e.preventDefault();
     if (!c.swipe || (!c.draggable && e.type.indexOf('mouse') !== -1)) return;
     const pt = pointOf(e);
     state.dragging = true;
@@ -641,8 +709,12 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
       return;
     }
     if (c.vertical) touchObject.swipeLength = verticalSwipeLength;
-    const positionOffset = (!c.rtl ? 1 : -1) * (touchObject.curX > touchObject.startX ? 1 : -1);
+    const positive = c.vertical
+      ? touchObject.curY > touchObject.startY
+      : touchObject.curX > touchObject.startX;
+    const positionOffset = (!c.rtl ? 1 : -1) * (positive ? 1 : -1);
     const swipeDirection = getSwipeDirection(touchObject, c.vertical);
+    if (swipeDirection === 'vertical') return;
     let touchSwipeLength = touchObject.swipeLength ?? 0;
     if (!c.infinite) {
       if (
@@ -653,13 +725,12 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
       ) {
         touchSwipeLength = (touchObject.swipeLength ?? 0) * c.edgeFriction;
         if (!state.edgeDragged) {
-          callbacks.onEdge(swipeDirection as 'left' | 'right' | 'up' | 'down');
+          callbacks.onEdge(swipeDirection);
           state.edgeDragged = true;
         }
       }
     }
     if (!state.swiped) {
-      callbacks.onSwipe(swipeDirection as 'left' | 'right' | 'up' | 'down');
       state.swiped = true;
     }
     let swipeLeft: number;
@@ -668,14 +739,13 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
         ? curLeft + touchSwipeLength * positionOffset
         : curLeft - touchSwipeLength * positionOffset;
     } else {
-      swipeLeft =
-        curLeft +
-        touchSwipeLength * ((state.listHeight ?? 0) / (state.listWidth || 1)) * positionOffset;
+      swipeLeft = curLeft + touchSwipeLength * positionOffset;
     }
     // slick L403：纵向位移占比大时仅更新状态，不判定为横滑
     if (
+      !c.vertical &&
       Math.abs(touchObject.curX - touchObject.startX) <
-      Math.abs(touchObject.curY - touchObject.startY) * 0.8
+        Math.abs(touchObject.curY - touchObject.startY) * 0.8
     ) {
       return;
     }
@@ -698,6 +768,7 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
       ? (state.listHeight ?? 0) / c.touchThreshold
       : (state.listWidth ?? 0) / c.touchThreshold;
     const swipeDirection = getSwipeDirection(touchObject, c.vertical);
+    suppressClick = state.swiping;
     state.dragging = false;
     state.edgeDragged = false;
     state.scrolling = false;
@@ -706,9 +777,9 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
     state.swipeLeft = null;
     state.touchObject = { ...INITIAL_TOUCH };
     if (!touchObject.swipeLength) return;
-    if ((touchObject.swipeLength ?? 0) > minSwipe) {
+    if (swipeDirection !== 'vertical' && (touchObject.swipeLength ?? 0) > minSwipe) {
       e.preventDefault();
-      callbacks.onSwipe(swipeDirection as 'left' | 'right' | 'up' | 'down');
+      callbacks.onSwipe(swipeDirection);
       const activeSlide = c.infinite ? state.currentSlide : state.targetSlide;
       let newSlide: number;
       switch (swipeDirection) {
@@ -739,6 +810,7 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
     if (resizeTimer) clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       resizeTimer = null;
+      settleAnimation();
       update(true, () => {
         if (config().autoplay) autoPlay('update');
         else pause('paused');
@@ -751,33 +823,91 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
     }, 50);
   };
 
+  const settleAnimation = () => {
+    if (animationEndCallback) clearTimeout(animationEndCallback);
+    const finish = finishAnimation;
+    animationEndCallback = undefined;
+    finishAnimation = undefined;
+    finish?.();
+  };
+  let previousConfig = cfg0;
+  const reconfigure = () => {
+    const c = config(),
+      previous = previousConfig;
+    previousConfig = c;
+    if (resizeMotionTimer) {
+      clearTimeout(resizeMotionTimer);
+      resizeMotionTimer = null;
+    }
+    if (resizeTimer) {
+      clearTimeout(resizeTimer);
+      resizeTimer = null;
+    }
+    settleAnimation();
+    setSlideCount(state.slideCount);
+    const reset = c.initialSlide !== previous.initialSlide || c.rtl !== previous.rtl;
+    const requested = reset
+      ? c.rtl
+        ? state.slideCount - c.initialSlide - 1
+        : c.initialSlide
+      : state.currentSlide;
+    const limit = Math.max(0, state.slideCount - (c.infinite ? 1 : c.slidesToShow));
+    state.currentSlide = clamp(requested, 0, limit);
+    state.targetSlide = state.currentSlide;
+    state.dragging = false;
+    suppressClick = false;
+    state.scrolling = false;
+    state.swiping = false;
+    state.swipeLeft = null;
+    state.touchObject = { ...INITIAL_TOUCH };
+    update(true);
+    adaptHeight();
+    if (state.unslick) {
+      if (autoplayTimer) clearInterval(autoplayTimer);
+      autoplayTimer = null;
+      state.autoplaying = null;
+    } else if (c.autoplay) autoPlay(previous.autoplay ? 'update' : 'playing');
+    else if (previous.autoplay) pause('paused');
+    syncObservers();
+  };
   let ro: ResizeObserver | undefined;
-
+  const observed = new Set<Element>();
+  const syncObservers = () => {
+    if (!ro) return;
+    const next = new Set<Element>();
+    if (listRef.value) {
+      next.add(listRef.value);
+      for (const slide of listRef.value.querySelectorAll(
+        ':scope > .slick-track > .slick-slide:not(.slick-cloned)',
+      ))
+        next.add(slide);
+    }
+    for (const target of observed)
+      if (!next.has(target)) {
+        ro.unobserve(target);
+        observed.delete(target);
+      }
+    for (const target of next)
+      if (!observed.has(target)) {
+        ro.observe(target);
+        observed.add(target);
+      }
+  };
   onMounted(() => {
-    update(true, () => {
-      adaptHeight();
-      if (config().autoplay) autoPlay('playing');
-    });
-    if (typeof ResizeObserver !== 'undefined' && listRef.value) {
+    update(true);
+    adaptHeight();
+    if (config().autoplay) autoPlay('playing');
+    if (typeof ResizeObserver !== 'undefined') {
       ro = new ResizeObserver(() => {
         if (state.animating) {
-          callbackTimers.push(setTimeout(() => onWindowResized(), config().speed));
-        } else {
-          onWindowResized();
-        }
+          if (!resizeMotionTimer)
+            resizeMotionTimer = setTimeout(() => {
+              resizeMotionTimer = null;
+              onWindowResized();
+            }, config().speed);
+        } else onWindowResized();
       });
-      ro.observe(listRef.value);
-    }
-    // pauseOnFocus：slick 把 focus/blur 挂到 slide 元素上（antd 是 document 全局查询 ——
-    // 我们收敛到本实例的 list 内，PLATFORM 差异，登记 COMPATIBILITY）
-    if (listRef.value) {
-      Array.prototype.forEach.call(
-        listRef.value.querySelectorAll('.slick-slide'),
-        (slide: HTMLElement) => {
-          slide.onfocus = config().pauseOnFocus ? onSlideFocus : null;
-          slide.onblur = config().pauseOnFocus ? onSlideBlur : null;
-        },
-      );
+      syncObservers();
     }
   });
 
@@ -785,14 +915,19 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
     if (animationEndCallback) clearTimeout(animationEndCallback);
     if (autoplayTimer) clearInterval(autoplayTimer);
     if (resizeTimer) clearTimeout(resizeTimer);
-    callbackTimers.forEach(clearTimeout);
+    if (resizeMotionTimer) clearTimeout(resizeMotionTimer);
+    finishAnimation = undefined;
+    observed.clear();
     ro?.disconnect();
   });
 
   // ---- 暴露给组件层 ----
   const goTo = (slide: number, dontAnimate = false) => {
-    const n = Number(slide);
-    if (Number.isNaN(n)) return;
+    if (!Number.isFinite(slide) || !state.slideCount) return;
+    const index = Math.trunc(slide);
+    const n = config().infinite
+      ? ((index % state.slideCount) + state.slideCount) % state.slideCount
+      : clamp(index, 0, Math.max(0, state.slideCount - config().slidesToShow));
     // slick 的 slickGoTo 包了 setTimeout(0)（等首帧 state 就绪）；Vue 首帧同步，直接调用
     changeSlide({ message: 'index', index: n }, dontAnimate);
   };
@@ -820,8 +955,15 @@ export function useCarouselEngine(config: () => CarouselConfig, callbacks: Engin
     onDotsOver,
     onDotsLeave,
     onListKeyDown,
+    onSlideFocus,
+    onSlideBlur,
+    reconfigure,
+    syncObservers,
+    onListClickCapture,
     swipeStart,
     swipeMove,
     swipeEnd,
   };
 }
+
+export type CarouselEngineState = ReturnType<typeof useCarouselEngine>['state'];

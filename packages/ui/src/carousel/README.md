@@ -1,78 +1,16 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
-
 # Carousel 实现说明
 
-## 1. 对应 antd 组件
+当前契约见 [中文 API](./index.zh-CN.md) / [English API](./index.en-US.md)。保留既有轮播定位/切换公式、19场景原参考和有效状态、Demo、主题证据；旧上游同构与逐组件九维门禁不再控制实现。
 
-- antd 6.6.4 · `es/carousel/` + `@ant-design/react-slick@2.0.0`（只读参照，H2）
-- 分析产物：`docs/analysis/carousel.md`（G1，先于实现存在；§7 是 embla 可行性核对）
-- **决策 B：自建引擎**（`carousel-engine` 开放决策，2026-09-23 用户裁决）——
-  embla 无法对齐 slick 的 DOM 契约（clone / 内联定位 / aria 结构 / snap 物理），
-  见分析文档 §7。引擎源：`engine.ts`（slick 状态机的 Vue 移植，判据逐行对拍
-  `@ant-design/react-slick/es/*`）
-- **无子组件**、无 `__ANT_*` 静态标记（与 antd 一致）
-- 样式：`genCarouselStyle()` 移植 antd 五段样式 —— 全部挂在 **slick 命名空间类**
-  （`.slick-*` 不随 prefixCls 变），只多 8 条 Component Token 声明
+本轮按四条根因整改：
 
-## 2. 与 antd 的行为差异清单
+- 所属通知为 typed beforeChange/afterChange/swipe/edge/keydown emits，自然 h() 与模板拼法一致。根 attrs/完整 style 正常落地；内层 styles.slider 独立，既有 className 内层别名保留。删除无消费 easing，缓动使用 cssEase。
+- default内容原生归一，按用户 key 分别维护 pre/original/post 的无DOM Fragment身份。箭头槽作为既有原生 button 的完整内容，不截首VNode。实际可见范围决定 inert/aria-hidden，包含边界克隆和多张/unslick/fade。
+- 原件ref归原件；实际原生VNode树内的id/for/ARIA关系有稳定克隆后缀，不改组件业务id或外部ID。clone中的组件内容槽交由Vue重新规范化上下文，实际调用一次后清返回ref，不预调用/缓存slot结果或沿用失效编译标记。
+- 动态配置、结构和几何更新先收尾旧动画；焦点、内容/圆点悬停合并本实例暂停原因。原生键盘取消/输入法/编辑控件得到尊重，横纵拖拽载荷一次。ResizeObserver目标与延迟合并，卸载释放计时器和观察目标。八项当前Token真实消费，箭头sqrt2几何使用CSS长度计算，旧宽度别名接通。
 
-同步到 `COMPATIBILITY.md` §9.1 / §9.2（D54–D57）。
+原参考JSON不修改。DOM对照只保留原两个CSSOM零值差异，并精确登记新增根data属性；CSS值中的合法空格按当前TestUtils规则保留。原生焦点、inert、label/control、refs、动态布局和实际过渡由额外核心及真实浏览器回归覆盖，不靠旧投影漏项声称通过。
 
-| # | 差异 | 分类 | 证据 |
-|---|---|---|---|
-| D54 | **Settings 不整包透传**：`responsive` / `rows` / `slidesPerRow` / `centerMode` / `variableWidth` / `lazyLoad` / `asNavFor` / `focusOnSelect` / `swipeToSlide` / `appendDots` / `customPaging` / `slide` / `unslick` / `onInit` / `onReInit` / `onLazyLoad` / `swipeEvent` 显式不支持（用户裁决 2026-09-23），传了发 dev 告警 | INTENDED | interface.ts + L1 |
-| D55 | **8 个 Component Token 是构建期解析值**，且 `arrowLength = arrowSize/√2` 是无理数 ⇒ ::after 几何必须 JS 常量（CSS 无法除以 √2），不随主题缩放 | INTENDED | L7 `theme.test.ts` |
-| D56 | `beforeChange` / `afterChange` / `onSwipe` / `onEdge` 是 Vue 事件；`prevArrow` / `nextArrow` 用插槽（cloneVNode 合并 class/style/data-role/onClick + 作用域 `{ currentSlide, slideCount }`） | INTENDED（C19） | L1 |
-| D57 | `innerSlider` 是引擎的响应式状态对象（非 slick 实例）；`pauseOnFocus` 的 focus/blur 只挂本实例的 slide（antd 是 `document.querySelectorAll('.slick-slide')` 全局挂） | PLATFORM | L1「ref 形状」 |
-| — | fade 当前张的内联 `left:0`：React SSR 输出 `"0"`，经 CSSOM（含真实浏览器）规范化为 `"0px"`——计算值一致 | PLATFORM | L4 allowance（CSSOM_LEFT_ZERO） |
-| — | slick 的 autoplay 定时器是 `autoplaySpeed + 50`、dots 的 mouseenter→onDotsLeave 映射等「怪但既有」语义逐字保留 | PLATFORM | engine.ts 注释 |
+边界：clone是既有独立组件实例，不镜像任意内部未受控状态；没有重写为另一套轮播引擎。没有预调用插槽检查组件内部固定ID，也不宣称解决其隐藏内部结构。新增RawSlots私有桥只处理已复现的透传ref归属，公开类型不降级。最终全库九维/视觉/发布验收未逐组件重跑。
 
-## 3. 渲染函数选型（无 .vue）
-
-`Carousel.ts` 用渲染函数，与 `Switch.ts` 同判且更强：
-
-- slide/dots/arrows 的 DOM 是 slick 的**机械契约**（clone 编号、内联定位、类名次序、
-  `class=""`），模板写起来只会更绕；
-- track/slide 的 style 是**字符串拼接**（React 的驼峰 CSS 属性 + 值形态逐字对齐），
-  模板绑定对象反而会引入 Vue 的 camelCase→CSSOM 差异；
-- slot 的 children 统计必须在 render 内消费（Vue 的 slot 依赖追踪限制）。
-
-## 4. Component Token 清单（8 个）
-
-与 antd 的 `ComponentToken` 接口**逐字段对齐**（规则 R7）。
-
-| Token | 计算方式 | 默认值 |
-|---|---|---|
-| `arrowSize` | 字面量 | `16px` |
-| `arrowOffset` | `marginXS` | `8px` |
-| `dotWidth` | 字面量 | `16px` |
-| `dotHeight` | 字面量 | `3px` |
-| `dotGap` | `marginXXS` | `4px` |
-| `dotOffset` | 字面量 | `12px` |
-| `dotWidthActive` | ⚠️ deprecated（映射 dotActiveWidth） | `24px` |
-| `dotActiveWidth` | 字面量 | `24px` |
-
-- `--dot-duration` 是运行时 CSS 变量（`autoplay.dotDuration && autoplaySpeed` 时挂根节点），
-  圆点进度动画消费它 —— 与 antd 逐字一致。
-- 两个 `@keyframes`（横向 width / 纵向 height）以根前缀命名防碰撞
-  （`apollo-carousel-dot-animation`）；antd 的 cssinjs Keyframes 名是 `carousel-dot-animation`。
-
-## 5. 测试矩阵
-
-| 层 | 文件 | 条数 | 钉什么 |
-|---|---|---|---|
-| L1/L2 | `__tests__/index.test.ts` | 29 | 状态机：切换/回绕/waitForAnimate/打断补发/fade/键盘/自动播放/pauseOnHover/rtl 镜像/unslick 边界/children 变化/ref 形状 |
-| L3 | `__tests__/type.test-d.ts` | 7 | 负例闭包（无受控 API、dotPosition 的 left/right、ref 形状） |
-| L4 | `__tests__/semantic.test.ts` | 19 | 与 `baselines/carousel.dom.json` 逐节点一致（keepStyle；fade 的 left:0 走 PLATFORM 豁免） |
-| L5 | `__tests__/a11y.test.ts` | 7 demo | axe 0 violation |
-| L6 | `tests/visual/render/cases/{react,vue}/carousel.*` | 4×3 | basic / fade / arrows / vertical |
-| L7 | `__tests__/theme.test.ts` | 6 | Token 解析值 + slick 类挂载 + keyframes + √2 几何 |
-| — | `tests/compat/fixtures/carousel/*.json` | 4 | basic / fade / arrows / dot-placement-start |
-
-## 6. 已知边界
-
-- **不支持的 Settings** 见 §2 D54（首版裁决；后续按需补）。
-- jsdom 里 `offsetWidth=0` ⇒ L1 的 track transform 数值无意义，定位**公式**由 L4 的
-  SSR 基线钉（`width:500%` / `left:-100%`），状态机由 L1 钉。
-- unslick（children ≤ slidesToShow）：无 clone、无 dots/arrows、list 无 handlers ——
-  slick 原样语义，L4 `carousel:single-child` 钉住。
+既有来源：[原分析](../../../../docs/analysis/carousel.md)、[原参考JSON](../../../../tests/compat/baselines/carousel.dom.json)。这些保留原义，不冒充当前版本的全库通过。

@@ -439,7 +439,7 @@ describe('Carousel · 语义槽 classNames.slider / styles.slider', () => {
     expect(w.find('.slick-slider').classes()).toContain('on-slider');
   });
 
-  it('deprecated 的 className / style 仍然生效，且排在槽位之后（旧代码行为不变）', () => {
+  it('原生style与内层styles.slider独立，既有className仍在内层', () => {
     const w = makeCarousel({
       classNames: { slider: 'from-slot' },
       className: 'from-legacy',
@@ -450,6 +450,7 @@ describe('Carousel · 语义槽 classNames.slider / styles.slider', () => {
     expect(slider.classes()).toContain('from-slot');
     expect(slider.classes()).toContain('from-legacy');
     // 后者覆盖前者
-    expect(styleOf(slider)).toContain('margin-top:2px');
+    expect(styleOf(slider)).toContain('margin-top:1px');
+    expect(styleOf(w.find('.apollo-carousel'))).toContain('margin-top:2px');
   });
 });

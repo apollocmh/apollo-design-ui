@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 200,
+  "revision": 202,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -969,18 +969,16 @@
       "kind": "component",
       "ref": "carousel",
       "title": "Carousel",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/carousel"
       ],
-      "assignment": {
-        "owner": "native_color_picker",
-        "baseRevision": 190,
-        "startedAt": "2026-10-31T00:26:03.189Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -997,6 +995,214 @@
           "packages/ui/src/carousel/README.md",
           "packages/ui/src/carousel/interface.ts"
         ]
+      },
+      "verification": {
+        "task": "CMP:carousel",
+        "stage": "architecture",
+        "owner": "native_color_picker",
+        "scope": [
+          "packages/ui/src/carousel"
+        ],
+        "assignmentBase": "fd589dc8",
+        "verifiedViewBase": "2fd33814425f1297353ee0502a5055024974899e",
+        "sourceFrozen": true,
+        "readyForIntegration": true,
+        "implemented": [
+          "Typed camel canonical beforeChange/afterChange/swipe/edge/keydown emits; natural h/template listeners, once-only swipe and native cancellation/IME/editable boundaries. No value model added.",
+          "Actual root attrs/complete StyleValue; inner CSSProperties semantic target stays independent. Remove unconsumed easing and inner style prop; preserve non-conflicting className alias. Arrow slots are complete content of owned native buttons.",
+          "Preserve original keyed slide identity and refs; native Fragment clone domains, current visible-range inert/ARIA incl multi/unslick/fade. Visible boundary clone is interactive; concrete native clone id/for/ARIA mapping is stable/unique and leaves business/external IDs intact.",
+          "Private clone RawSlots forwards one actual call with original scope/owner, sanitizes returned refs and lets Vue normalize fresh slots; invalid stable/block flags reset. No slot pre-call/result cache/public generic facade.",
+          "Live config/structure settles accepted old animations; current autoplay focus/content/dots pause reasons combine per instance. Native horizontal/vertical drag and precise payloads; resize work coalesces, actual observer targets/timers release on unmount.",
+          "Current Provider presentation and8 existing tokens consume live values, CSS lengths and legacy width alias; arrow geometry derives through CSS calc. True readonly EngineState reference; existing runtime useCSS/useTransform/edgeFriction declarations completed."
+        ],
+        "migration": [
+          "easing removed -> cssEase; style -> native root, inner target styles.slider; className retained inside.",
+          "beforeChange/afterChange are canonical emits; existing template @before-change/@after-change remains natural.",
+          "Arrow slots now button content; migrate former button root to icon/span content.",
+          "Root owns6 type exports/COMPATIBILITY/status; local index and bilingual API/needed Token Demo synchronized."
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "passed": true,
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/carousel --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 15360,
+            "log": "/tmp/apollo-carousel-final-core.log",
+            "result": "3 files/56 passed; existing33 state scenarios,9Demo coverage and new native/clone/ref/scope/resource regressions"
+          },
+          {
+            "kind": "theme",
+            "passed": true,
+            "command": "node node_modules/vitest/vitest.mjs run --project theme packages/ui/src/carousel/__tests__/theme.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 15670,
+            "log": "/tmp/apollo-carousel-theme.log",
+            "result": "11 passed; existing8 tokens with live CSS geometry/alias contract"
+          },
+          {
+            "kind": "semantic",
+            "passed": true,
+            "command": "node node_modules/vitest/vitest.mjs run --project dom-contract packages/ui/src/carousel/__tests__/semantic.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 2570,
+            "log": "/tmp/apollo-carousel-semantic-final.log",
+            "result": "19 passed; original JSON unchanged, exact root data-x deviation and existing2 CSSOM-zero allowances only"
+          },
+          {
+            "kind": "browser",
+            "passed": true,
+            "command": "node packages/ui/src/carousel/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 5710,
+            "log": "/tmp/apollo-carousel-native-browser-final.log",
+            "timing": "Script startup/assertion clock; cleanup excluded.",
+            "result": "Actual compiled refs/slots/events, visible boundary clone input+label/ARIA/IDs/focus, direct+RawSlots parent refs, scope update, RTL/vertical keys/drag, live sqrt geometry, autoplay reasons, configuration/theme removal/unmount; zero captured Vue/page/window errors"
+          },
+          {
+            "kind": "format",
+            "passed": true,
+            "command": "node node_modules/@biomejs/biome/bin/biome check [17 supported changed owned files]",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 146,
+            "log": "/tmp/apollo-carousel-format-final.log",
+            "result": "17 files no fixes; final fixture shallowRef delta separately checked exit0/no fixes"
+          },
+          {
+            "kind": "diff",
+            "passed": true,
+            "command": "git diff --check -- packages/ui/src/carousel",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "passed": true,
+            "runner": "root",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-carousel-tsconfig.json",
+            "cwd": null,
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 52837,
+            "log": "/tmp/apollo-carousel-final-types.log",
+            "proof": "/tmp/apollo-carousel-final-types-result.json"
+          },
+          {
+            "kind": "a11y",
+            "passed": true,
+            "runner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project a11y packages/ui/src/carousel/__tests__/a11y.test.ts --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11950,
+            "log": "/tmp/apollo-carousel-related-a11y.log",
+            "proof": "/tmp/apollo-carousel-related-a11y-result.json"
+          }
+        ],
+        "failedAttempts": [
+          {
+            "exitCode": 1,
+            "durationMs": 4630,
+            "log": "/tmp/apollo-carousel-native-red.log",
+            "result": "Original native contracts6failed/1passed; meaningful callbacks/attrs/refs/conditional arrow/config/Provider defects reproduced."
+          },
+          {
+            "exitCode": 1,
+            "durationMs": 7590,
+            "log": "/tmp/apollo-carousel-initial-core.log",
+            "result": "38passed/2failed: active inert=false attribute presence and old inner-style contract; fixed native inert absence and migrated same retained style scene to actual root."
+          },
+          {
+            "exitCode": 1,
+            "log": "/tmp/apollo-carousel-native-browser.log",
+            "result": "Harness selector .slick-active also matched dots; restricted to .slick-slide, no production workaround or retry/filter."
+          },
+          {
+            "exitCode": 1,
+            "durationMs": 5230,
+            "log": "/tmp/apollo-carousel-semantic-red.log",
+            "result": "16passed/3failed: two old CSSOM-zero allowance strings needed current TestUtils value whitespace, plus explicitly changed native root data-x; exact differences only, original baseline intact."
+          },
+          {
+            "exitCode": 1,
+            "durationMs": 4510,
+            "log": "/tmp/apollo-carousel-slot-ref-red.log",
+            "result": "Component content slot returned parent ref stolen by post clone. Same identity scene retained and strengthened with original scope and exactly-once update assertions."
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-carousel-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 54579,
+            "log": "/tmp/apollo-carousel-types.log"
+          },
+          {
+            "result": "First strict sole TS2742 fixture deep-ref CSSProperties declaration path; only fixture switched to named shallowRef<CarouselProps> with its already-tested replacement updates. Final same-source root strict exit0; no Ctor/type weakening."
+          },
+          {
+            "result": "Transient missing new helper import affected sibling consumer collection; complete helper was written and affected owner reran only failed project. No successful check claimed for that startup failure."
+          },
+          {
+            "exitCode": 2,
+            "result": "Scoped git whitespace caught extra blank EOF in Token Demo; removed only trailing blank, final scoped diff exit0."
+          }
+        ],
+        "preserved": [
+          "Existing wheel positioning/slide formulas and valid state tests; original19 reference JSON unchanged.",
+          "Existing9 Demo coverage and prior design evidence; no shared engine replacement or old slick capability expansion."
+        ],
+        "boundaries": [
+          "Clones remain independent component instances; arbitrary internal uncontrolled state is not mirrored. Existing controlled data and original stateful/key/ref scenarios retained, not removed.",
+          "Native clone ID mapping is limited to the concrete VNode tree; component business IDs and external targets unchanged. No claim to inspect/fix hidden component-internal fixed IDs or pre-evaluate slots.",
+          "Root a11y10 passed with8 original jsdom canvas capability diagnostics retained; no browser contrast-matrix claim.",
+          "Root strict command is noEmit, including declaration portability diagnostics; no release artifact/build/consumer/complete visual/nine-dimension acceptance claimed."
+        ],
+        "timing": "Claim2026-10-31T00:26:03Z; first red08:32:51local; final core09:17:45local/15.36s. Analysis/implementation overlapped with probes; exact split unavailable. Main rework was the proved RawSlots ref boundary; root strict54.579s first/52.837s final. No new timing platform or delivery claims based on counts.",
+        "remainingBlocking": [],
+        "passed": true,
+        "status": "Focused architecture checks passed",
+        "sourceHashes": {
+          "packages/ui/src/carousel/engine.ts": "76f270807496f2539d851945cbf7e2c9a35e7acae415dff2abb0080040453f74",
+          "packages/ui/src/carousel/Carousel.ts": "24b4c6b8087f5f7eaba1d8b569c35f531cdece741df063a8b83e2ab58cbc3b03",
+          "packages/ui/src/carousel/use-carousel-theme.ts": "a32f8614bda93c8d59a03cb19e1731f078c3e4d690c9324e451ba5b0997101c2",
+          "packages/ui/src/carousel/interface.ts": "c376496c9f2973ff5362424b649df54eaa6a263ed95d8844329b9dbae4bb6272",
+          "packages/ui/src/carousel/index.ts": "27a17628f7f2ba55de05a7f6a717ab9502443dc106afe2b51cea69d14db4928d",
+          "packages/ui/src/carousel/demo/position.vue": "65ea186879cad26d607a9365c83f39f60d66b6352524c1e4dd3e6d98eb37872d",
+          "packages/ui/src/carousel/demo/fade.vue": "9095ed6538f96094342203a0acb8840458c4848c6e1a718b5e24557222ffcd49",
+          "packages/ui/src/carousel/demo/arrows.vue": "df4cf315a7890f306c00771d8c1d88d15936e9b3c287fc3a45df2b249f33731e",
+          "packages/ui/src/carousel/demo/drag.vue": "630ec88ad75ff03ab949588a1496d988f32517e3010eff616ccbd1a1f7c7faa5",
+          "packages/ui/src/carousel/demo/placement.vue": "b7f1b2466a3d6425bf9b463e640a192f335d622384afcd69a4ab3f988e56ee51",
+          "packages/ui/src/carousel/demo/component-token.vue": "274751a7823200d93ec4e2140c579dc23458ceb3661418fac57fe25974fa3f7b",
+          "packages/ui/src/carousel/demo/basic.vue": "3c24fd12777f008e100165cf11639aa1c9848fe79b254abc3044a25e5046c014",
+          "packages/ui/src/carousel/demo/dot-duration.vue": "a93b5dcd275f0204aaf4510568cb204fcb4d6363bf65c6c0466c69078348f810",
+          "packages/ui/src/carousel/demo/autoplay.vue": "334c27c9e9ae158d08c188bc18266aa11a60620630e4aeb19bf14a1f7a826e07",
+          "packages/ui/src/carousel/style/index.ts": "c128898e3af02712b5b9cde6a5fd60c406ef910e9f87e9d2d1785e6d85584930",
+          "packages/ui/src/carousel/style/token.ts": "512e99f322529838c31368a62068d75e152eb5ede4a2ad733f951e8df2df7d27",
+          "packages/ui/src/carousel/__tests__/a11y.test.ts": "687fdfdaa5c77cd157dfe36cb4a5774e47c426768d704de35a9d5b77d34464b7",
+          "packages/ui/src/carousel/__tests__/native-contracts.test.ts": "5de1c4b71b459c95a3c5e3bc7c30f19eb74274571132bccb577d2f854b51b439",
+          "packages/ui/src/carousel/__tests__/index.test.ts": "be0feff7270a3e9c30be9f92a639ff3c10db5337bb9e08f9b66d2fe75185e3fc",
+          "packages/ui/src/carousel/__tests__/demo.test.ts": "9e8bd395b62b1475aba907b1e52585e95d4b9bb745b1603203381e7d972c828c",
+          "packages/ui/src/carousel/__tests__/type.test-d.ts": "027a44b913550b20452e4466f09a8126fbe2a9ba5f4d198e8a14d9b940d171a8",
+          "packages/ui/src/carousel/__tests__/theme.test.ts": "b13c0444d8463a8352aee9bccd4b1fbbe710f07a122265655bb675060eb349a2",
+          "packages/ui/src/carousel/__tests__/semantic.test.ts": "e27f865a467dca298aad9875bf7e0bd236b972a3b6468615294fedc18dad60ac",
+          "packages/ui/src/carousel/__tests__/fixtures/SlotShell.vue": "3f4cd4045b55438418192246d59f539865dd56dca45c1d1bce5d37dc88ea2d58",
+          "packages/ui/src/carousel/__tests__/fixtures/NativeCarousel.vue": "30a4777872f735214edbcf26793d46e0aa881ce0e025e2819847d284af0094df",
+          "packages/ui/src/carousel/__tests__/fixtures/InvalidCarousel.vue": "81cd73d0babad09b31a105aa3b2612512c42c0af34613f7185085c3585e219a3",
+          "packages/ui/src/index.ts": "9437ef872405cb31023bc846a7fae8e8148f200757955104e27447ae32f153b9"
+        },
+        "pending": [],
+        "integrationSnapshot": {
+          "sourceBase": "2fd33814425f1297353ee0502a5055024974899e",
+          "uiBarrelSha256": "9437ef872405cb31023bc846a7fae8e8148f200757955104e27447ae32f153b9",
+          "result": "Final bytes match the immutable whole-source/public export/real h-SFC-Demo program. Fixture shallowRef retains the real constructor; declaration:true unchanged."
+        },
+        "recordedAt": "2026-10-31T01:28:34.217237+00:00"
       }
     },
     {

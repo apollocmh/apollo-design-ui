@@ -99,13 +99,13 @@ const CSSOM_LEFT_ZERO = {
   reason:
     'fade 模式当前 slide 的内联 left:0 在 React SSR 是 "0"，本管线（jsdom mount）经 CSSOM 规范化为 "0px"。React 客户端渲染产物同为 "0px"，计算值一致 —— 渲染管线差异，非实现缺陷。登记 COMPATIBILITY §9.1（PLATFORM）。',
   diff: [
-    '$/div[0]/div[0]/div[0]/div[0]/div[0]: style 不同 [left:0;opacity:1;outline:none;position:relative;transition:opacity500msease,visibility500msease;width:20%;z-index:999] vs [left:0px;opacity:1;outline:none;position:relative;transition:opacity500msease,visibility500msease;width:20%;z-index:999]',
+    '$/div[0]/div[0]/div[0]/div[0]/div[0]: style 不同 [left:0;opacity:1;outline:none;position:relative;transition:opacity 500ms ease,visibility 500ms ease;width:20%;z-index:999] vs [left:0px;opacity:1;outline:none;position:relative;transition:opacity 500ms ease,visibility 500ms ease;width:20%;z-index:999]',
   ],
 } as const;
 const CSSOM_LEFT_ZERO_800 = {
   reason: CSSOM_LEFT_ZERO.reason,
   diff: [
-    '$/div[0]/div[0]/div[0]/div[0]/div[0]: style 不同 [left:0;opacity:1;outline:none;position:relative;transition:opacity800mslinear,visibility800mslinear;width:20%;z-index:999] vs [left:0px;opacity:1;outline:none;position:relative;transition:opacity800mslinear,visibility800mslinear;width:20%;z-index:999]',
+    '$/div[0]/div[0]/div[0]/div[0]/div[0]: style 不同 [left:0;opacity:1;outline:none;position:relative;transition:opacity 800ms linear,visibility 800ms linear;width:20%;z-index:999] vs [left:0px;opacity:1;outline:none;position:relative;transition:opacity 800ms linear,visibility 800ms linear;width:20%;z-index:999]',
   ],
 } as const;
 
@@ -115,6 +115,12 @@ domContractTest('Carousel', {
   allow: {
     'carousel:fade': CSSOM_LEFT_ZERO,
     'carousel:fade-speed-css': CSSOM_LEFT_ZERO_800,
+    'carousel:attrs': {
+      reason:
+        'Vue native attrs land on the actual root. Development migration removes the old React wrapper behavior that discarded data attrs; the historical reference remains unchanged.',
+      deviationId: 'D-carousel-native-root',
+      diff: ['$/div[0]: 我们多出属性 data-x="1"'],
+    },
   },
   render: (id) => {
     const spec = specs[id];

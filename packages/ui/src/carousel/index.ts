@@ -13,15 +13,21 @@ export const Carousel = withInstall(CarouselComponent);
 
 export default Carousel;
 
+export type { CarouselEngineState } from './engine';
 export type {
   CarouselAfterChangeEventHandler,
+  CarouselArrowScope,
   CarouselAutoplay,
   CarouselBeforeChangeEventHandler,
   CarouselChildren,
   CarouselDots,
   CarouselEffect,
+  CarouselEmits,
   CarouselProps,
   CarouselRef,
+  CarouselSemanticClassNames,
+  CarouselSemanticStyles,
+  CarouselSlots,
   CarouselSwipeDirection,
   DotPlacement,
 } from './interface';

@@ -250,3 +250,7 @@ Splitter 的 resizeStart/resize/resizeEnd/collapse/draggerDoubleClick 统一由 
 ### D-slider-native-handles-and-proposals
 
 Slider 的 handle/activeHandle 槽准确公开实际 nodeProps/ref/事件及当前 index/value，ColorPicker 使用同一类型。value 支持已有 null 输入，通知仍返回 number/number[]；beforeChange 统一为有效交互的首个提议，changeComplete 使用该会话最后提议，拒绝更新不改变已接受状态，无变更或取消不伪报完成。原生 tabindex/ARIA 落实际把手，键盘取消、拖拽/触摸及卸载资源、当前十八 Token 和范围 Tooltip 同步修正；删除 Tooltip 未消费的开关回调及内部 value/draggingDelete 声明，已有 open/formatter 保留，详见[Slider API](packages/ui/src/slider/index.zh-CN.md)。
+
+### D-carousel-native-slides-and-config
+
+Carousel 的 beforeChange/afterChange/swipe/edge 使用所属 Vue emits，模板自然支持短横线事件名；原生 style/attrs 落真实根，内层样式用 styles.slider，移除未消费的 easing。箭头槽提供既有原生按钮的完整内容，原件 key/ref 与条件槽保持真实 Vue 归属；克隆按实际可见范围提供交互，原生 ID 关联和透传插槽 ref 在克隆边界处理。修正动态配置、自动播放暂停原因、动画/尺寸资源及当前八 Token；克隆仍是独立组件实例，不镜像任意内部状态，详见[Carousel API](packages/ui/src/carousel/index.zh-CN.md)。

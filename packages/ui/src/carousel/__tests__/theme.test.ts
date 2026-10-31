@@ -25,7 +25,9 @@ describe('Carousel · 主题无关性', () => {
     expect(css).toContain('--apollo-carousel-dot-gap:4px;'); // marginXXS
     expect(css).toContain('--apollo-carousel-dot-offset:12px;');
     expect(css).toContain('--apollo-carousel-dot-width-active:24px;'); // deprecated 别名
-    expect(css).toContain('--apollo-carousel-dot-active-width:24px;');
+    expect(css).toContain(
+      '--apollo-carousel-dot-active-width:var(--apollo-carousel-dot-width-active);',
+    );
   });
 
   it('样式挂在 slick 命名空间类上（.slick-* 不随 prefixCls 变）', () => {
@@ -46,12 +48,12 @@ describe('Carousel · 主题无关性', () => {
     expect(css).toContain('animation-fill-mode:forwards;');
   });
 
-  it('箭头 ::after 的 √2 几何是构建期解析值（arrowLength = 16/√2）', () => {
+  it('箭头 ::after 的 √2 几何消费当前CSS长度Token', () => {
     // antd：calc(arrowSize).sub(arrowLength).div(2) → JS 解析值 (16 - 16/√2)/2
-    const arrowLength = 16 / Math.SQRT2;
-    const center = (16 - arrowLength) / 2;
-    expect(css).toContain(`top:${center}px;`);
-    expect(css).toContain(`width:${arrowLength}px;`);
+    const arrowLength = `calc(var(--apollo-carousel-arrow-size) / ${Math.SQRT2})`;
+    const center = `calc((var(--apollo-carousel-arrow-size) - ${arrowLength}) / 2)`;
+    expect(css).toContain(`top:${center};`);
+    expect(css).toContain(`width:${arrowLength};`);
     expect(css).toContain('border-inline-start-width:2px;');
   });
 

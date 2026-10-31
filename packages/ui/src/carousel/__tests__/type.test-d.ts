@@ -3,8 +3,19 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
+import { type CSSProperties, h } from 'vue';
+import type { CarouselEngineState } from '../engine';
 import { Carousel } from '../index';
-import type { CarouselEffect, CarouselProps, CarouselRef, DotPlacement } from '../interface';
+import type {
+  CarouselArrowScope,
+  CarouselEffect,
+  CarouselEmits,
+  CarouselProps,
+  CarouselRef,
+  CarouselSemanticStyles,
+  CarouselSlots,
+  DotPlacement,
+} from '../interface';
 
 describe('Carousel · Props 类型', () => {
   it('★ 核心参数类型', () => {
@@ -53,7 +64,7 @@ describe('Carousel · Ref 形状', () => {
       (playType?: 'update' | 'leave' | 'blur') => void
     >();
     // ⚠️ innerSlider 是 PLATFORM 差异：引擎状态对象（非 slick 实例）
-    expectTypeOf<CarouselRef['innerSlider']>().toEqualTypeOf<Record<string, unknown>>();
+    expectTypeOf<CarouselRef['innerSlider']>().toEqualTypeOf<Readonly<CarouselEngineState>>();
   });
 });
 
@@ -61,5 +72,55 @@ describe('Carousel · 组件导出', () => {
   it('Carousel 是 withInstall 产物（组件 + Plugin）', () => {
     // withInstall 返回 T & Plugin —— 既是组件也是插件
     expectTypeOf(Carousel).toHaveProperty('install');
+  });
+});
+
+describe('Carousel actual Vue contracts', () => {
+  it('keeps the real runtime slots and event payloads precise', () => {
+    type Instance = InstanceType<typeof Carousel>;
+    type Scope = Parameters<NonNullable<Instance['$slots']['next-arrow']>>[0];
+    expectTypeOf<Scope['currentSlide']>().toEqualTypeOf<number>();
+    expectTypeOf<Scope['slideCount']>().toEqualTypeOf<number>();
+    expectTypeOf<CarouselSemanticStyles['slider']>().toEqualTypeOf<CSSProperties | undefined>();
+    expectTypeOf<CarouselEmits['beforeChange']>().toEqualTypeOf<
+      (current: number, next: number) => void
+    >();
+    h(
+      Carousel,
+      {
+        onBeforeChange: (current, next) => {
+          expectTypeOf(current).toEqualTypeOf<number>();
+          expectTypeOf(next).toEqualTypeOf<number>();
+        },
+        onAfterChange: (current) => expectTypeOf(current).toEqualTypeOf<number>(),
+        onKeydown: (event) => expectTypeOf(event).toEqualTypeOf<KeyboardEvent>(),
+        useCSS: false,
+        useTransform: false,
+        edgeFriction: 0.35,
+      },
+      {
+        default: () => [h('div', 'One'), h('div', 'Two')],
+        'next-arrow': (scope: CarouselArrowScope) => [
+          h('span', scope.currentSlide),
+          h('b', scope.slideCount),
+        ],
+      },
+    );
+    expectTypeOf<CarouselSlots['next-arrow']>().toMatchTypeOf<
+      ((scope: CarouselArrowScope) => import('vue').VNodeChild) | undefined
+    >();
+  });
+  it('rejects unconsumed API, synthetic payloads and invalid CSS', () => {
+    void (() => {
+      const obsolete: CarouselProps = {
+        // @ts-expect-error easing had no runtime consumer and is removed; use cssEase
+        easing: 'linear',
+      };
+      // @ts-expect-error beforeChange has numeric indices
+      h(Carousel, { onBeforeChange: (_current: string, _next: string) => {} });
+      // @ts-expect-error semantic CSS types are actual Vue CSSProperties
+      h(Carousel, { styles: { slider: { textAlign: 123 } } });
+      void obsolete;
+    });
   });
 });

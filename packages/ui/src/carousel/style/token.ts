@@ -1,30 +1,6 @@
-/**
- * Carousel 的 Component Token（antd `prepareComponentToken` 全 **8 个字段**）。
- *
- * 契约来源：antd 6.6.4 的 `es/carousel/style/index.js` 的 `prepareComponentToken`：
- *
- * ```js
- * const dotActiveWidth = 24;
- * return {
- *   arrowSize: 16,
- *   arrowOffset: token.marginXS,
- *   dotWidth: 16,
- *   dotHeight: 3,
- *   dotGap: token.marginXXS,
- *   dotOffset: 12,
- *   dotWidthActive: dotActiveWidth,   // deprecated（deprecatedTokens 映射到 dotActiveWidth）
- *   dotActiveWidth,
- * };
- * ```
- *
- * ── 落地形态（与 switch 的 D50 同判）─────────────────────────────────────────
- *
- * 值在**构建期**算好并内联成 `--apollo-carousel-*` 声明。两处算术量必须用 JS 解析值：
- * - `arrowLength = arrowSize / √2` 是**无理数**，CSS calc 无法表达「除以 √2」⇒
- *   `::after` 的几何（top/insetInlineStart/width/height）全部用 JS 常量内联。
- * - `dotHeight` 参与的 `borderRadius` / 尺寸走 `var()` 即可（纯引用）。
- * 代价：不随主题缩放（登记 COMPATIBILITY D 项）。
- */
+/** The existing eight Carousel component tokens. Static CSS supplies defaults;
+ * current Provider values and CSS lengths are consumed on the actual root.
+ * Arrow geometry derives from arrowSize in CSS, including arbitrary lengths. */
 
 import type { AliasToken } from '@apollo-design/theme';
 

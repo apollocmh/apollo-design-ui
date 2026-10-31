@@ -860,22 +860,26 @@ export { genCardStyle, genTokenDecls as genCardTokenDecls } from './card/style';
 export type { ComponentToken as CardComponentToken } from './card/style/token';
 export { prepareComponentToken as prepareCardComponentToken } from './card/style/token';
 // ---------------------------------------------------------------------------
-// Carousel —— 走马灯（决策 B：自建 slick 引擎，见 engine.ts）
+// Carousel —— 走马灯（自有轮播引擎，见 engine.ts）
 //
-// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **8** 个（构建期解析值，
-//    arrowLength=arrowSize/√2 的无理数几何用 JS 常量，见 style/token.ts 文件头）。
-//    `beforeChange` / `afterChange` / `onSwipe` / `onEdge` 是 Vue 事件（C19）；
-//    prevArrow / nextArrow 用 `#prev-arrow` / `#next-arrow` 插槽。
+// 八个 Component Token 读取当前主题，箭头长度通过 CSS calc 派生。
+// beforeChange/afterChange/swipe/edge 由 Vue emits 拥有；箭头槽提供按钮内容。
 // ---------------------------------------------------------------------------
 export type {
   CarouselAfterChangeEventHandler,
+  CarouselArrowScope,
   CarouselAutoplay,
   CarouselBeforeChangeEventHandler,
   CarouselChildren,
   CarouselDots,
   CarouselEffect,
+  CarouselEmits,
+  CarouselEngineState,
   CarouselProps,
   CarouselRef,
+  CarouselSemanticClassNames,
+  CarouselSemanticStyles,
+  CarouselSlots,
   CarouselSwipeDirection,
   DotPlacement,
 } from './carousel';
