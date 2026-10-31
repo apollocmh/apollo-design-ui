@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 238,
+  "revision": 239,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -8831,6 +8831,51 @@
       "issues": [],
       "historicalAcceptance": [
         "docs/audit/2026-10-27-typography-contract-audit.md"
+      ],
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/typography/Base.ts"
+          ],
+          "change": "Pass the semantic action class through the existing private CopyBtn field so it reaches the actual copy button; public native attrs, original DOM baselines and exact allowances are retained.",
+          "checks": [
+            {
+              "kind": "core",
+              "cwd": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run packages/ui/src/typography/__tests__/index.test.ts --project unit -t 'copyable|actions\\.placement|四个语义槽位各自落位' --maxWorkers=1",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 8434,
+              "log": "/tmp/apollo-final-typography-fixed-core.log"
+            },
+            {
+              "kind": "dom-contract",
+              "cwd": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run packages/ui/src/typography/__tests__/semantic.test.ts --project dom-contract --maxWorkers=1",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 8744,
+              "log": "/tmp/apollo-final-typography-fixed-semantic.log"
+            },
+            {
+              "kind": "types",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "node_modules/vue-tsc/bin/vue-tsc.js",
+                "--noEmit",
+                "-p",
+                "tsconfig.json"
+              ],
+              "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 119562,
+              "log": "/tmp/apollo-final-remediation-strict.log"
+            }
+          ],
+          "sourceHash": "bd56cda7928e34db27a65e29285bfde9f97f233afad55d3ae977ef7aecfb043f",
+          "boundary": "Whole-source strict and focused source consumers passed; final frozen built/visual acceptance remains pending."
+        }
       ]
     },
     {

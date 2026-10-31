@@ -722,8 +722,8 @@ const BaseContent = defineComponent({
         onCopy: onCopyClick,
         loading: copyLoading.value,
         iconOnly: !hasContent.value,
-        // Tooltip 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
-        class: mergedClassNames.value.action,
+        // 私有 CopyBtn 将 className 作用于实际复制按钮。
+        className: mergedClassNames.value.action,
         style: mergedStyles.value.action,
       });
     };
