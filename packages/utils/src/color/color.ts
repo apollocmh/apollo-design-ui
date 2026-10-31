@@ -37,7 +37,7 @@ function clamp(value: number, max: number): number {
 }
 
 /** hex 是否合法：`#rgb` … `#rrggbbaa`。 */
-const HEX_RE = /^#?[A-F\d]{3,8}$/i;
+const HEX_RE = /^#?(?:[A-F\d]{3,4}|[A-F\d]{6}|[A-F\d]{8})$/i;
 
 /**
  * 解析 hex。
@@ -84,7 +84,7 @@ function splitColorStr(
     str
       .replace(/^[^(]*\((.*)/, '$1')
       .replace(/\).*/, '')
-      .match(/\d*\.?\d+%?/g) ?? [];
+      .match(/[+-]?\d*\.?\d+%?/g) ?? [];
   const raw = match.map((item) => parseFloat(item));
   // `|| 0`：匹配缺失或解析失败时 `parseFloat` 给 NaN，上游也是这么兜的。
   const num = (i: number) => raw[i] || 0;
@@ -381,7 +381,7 @@ export class Color {
    */
   toHexString(): string {
     const channel = (value: number) => {
-      const hex = (value || 0).toString(16);
+      const hex = Math.round(value || 0).toString(16);
       return hex.length === 2 ? hex : `0${hex}`;
     };
     let hex = `#${channel(this.r)}${channel(this.g)}${channel(this.b)}`;

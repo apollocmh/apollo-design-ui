@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 227,
+  "revision": 228,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -10078,17 +10078,13 @@
       "kind": "foundation",
       "ref": "utils",
       "title": "@apollo-design/utils",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/utils/src"
       ],
-      "assignment": {
-        "owner": "native_form_core",
-        "baseRevision": 222,
-        "startedAt": "2026-10-31T05:15:03.196Z"
-      },
+      "assignment": null,
       "evidence": [
         "registry/vue-native-audit.json"
       ],
@@ -10117,26 +10113,353 @@
       "verification": {
         "stage": "architecture",
         "scope": [
-          "packages/utils/src/hooks/use-controlled-value.ts"
+          "packages/utils/src"
         ],
+        "owner": "native_form_core",
+        "baseCommit": "5bde28e47af7614ee63b6779b0a99a690aa0062d",
         "passed": true,
+        "implemented": [
+          "Vue ref collection source with stable receiver identities, real public expose/functional DOM resolution; delete unused React current wrappers and arbitrary getNodeRef type generic.",
+          "Cross-realm/adopted HTML/SVG and native input selection support; retain existing owner-document/ShadowRoot focus behavior.",
+          "Independent duplicate observer subscription ownership, failed native observation releases/does not commit registry; reactive target/scope semantics preserved.",
+          "Shallow generic state value identity, accurate no-default SafeState updater, native watch cleanup on thrown update, false delay and disposed late setter/cancel correctness; no controlled release algorithm rewrite.",
+          "Immutable actual leaf deletion, own data keys including __proto__, own-key equality, defined-value mergeProps types; retain object/Color/palette Oracle algorithms.",
+          "Valid signed color parsing, integer hex encoding, valid hex widths; warning terminal cancellation and prototype-named dedup/component keys.",
+          "Keyed temporary style follows current explicit owner/container; throttle permanent cancellation stays permanent."
+        ],
+        "migration": [
+          "RefLike no longer accepts {current}; use native Vue writable value ref or callback. Vue component current business props still resolve as component DOM.",
+          "useComposeRef accepts one readonly collection source (array/getter/Ref); useComposeRef(() => [refs...]) instead of variadic per-ref getters.",
+          "getNodeRef returns real object | null with no caller-supplied generic. Resolve DOM using getElement/isHTMLElement.",
+          "State helpers preserve supplied object/nested Ref identity instead of implicit deep proxy/unwrapping; update through existing setter.",
+          "mergeProps only takes object/null/undefined; root fixed actual shared private closable false/object normalization instead of widening helper."
+        ],
         "checks": [
           {
             "kind": "core",
-            "command": "vitest run --project unit packages/utils/src packages/overlay/src packages/ui/src/tree-select packages/ui/src/upload packages/ui/src/radio packages/ui/src/float-button packages/ui/src/tag packages/ui/src/dropdown packages/ui/src/popover packages/ui/src/tooltip packages/ui/src/color-picker packages/ui/src/checkbox packages/ui/src/transfer packages/ui/src/mentions packages/ui/src/cascader packages/ui/src/menu packages/ui/src/tour packages/ui/src/slider packages/ui/src/typography packages/ui/src/breadcrumb packages/ui/src/select packages/ui/src/input packages/ui/src/date-picker --maxWorkers=2",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "node_modules/vitest/vitest.mjs",
+              "run",
+              "--project",
+              "unit",
+              "packages/utils/src/__tests__/native-ref-boundaries.test.ts",
+              "--maxWorkers=1"
+            ],
             "exitCode": 0,
             "signal": null,
-            "durationMs": 191619
+            "durationMs": 2610,
+            "log": "/tmp/apollo-utils-sfc-ref-final.log",
+            "summary": "6 passed. Exact actual Vue replacement sequence original:set/replacement:set, actual unmount replacement:clear, original editor DOM/draft/focus/selection and mounted public ref assertions retained."
+          },
+          {
+            "kind": "core",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "packages/utils/src/__tests__/native-browser.mjs"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "log": "/tmp/apollo-utils-native-browser-final.log",
+            "durationMs": 2975
+          },
+          {
+            "kind": "core",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "node_modules/@biomejs/biome/bin/biome",
+              "check",
+              "packages/utils/src/__tests__/api.test-d.ts",
+              "packages/utils/src/__tests__/barrel.test.ts",
+              "packages/utils/src/__tests__/dom.test.ts",
+              "packages/utils/src/__tests__/fixtures/NativeUtils.vue",
+              "packages/utils/src/__tests__/native-data-boundaries.test.ts",
+              "packages/utils/src/__tests__/native-dom-boundaries.test.ts",
+              "packages/utils/src/__tests__/native-hooks-boundaries.test.ts",
+              "packages/utils/src/__tests__/native-ref-boundaries.test.ts",
+              "packages/utils/src/__tests__/native-resources.test.ts",
+              "packages/utils/src/__tests__/native-service-boundaries.test.ts",
+              "packages/utils/src/__tests__/ref.test.ts",
+              "packages/utils/src/color/color.ts",
+              "packages/utils/src/dev-warning.ts",
+              "packages/utils/src/dom/focus.ts",
+              "packages/utils/src/dom/get-element.ts",
+              "packages/utils/src/dom/update-css.ts",
+              "packages/utils/src/hooks/use-controlled-value.ts",
+              "packages/utils/src/hooks/use-delay-state.ts",
+              "packages/utils/src/hooks/use-safe-state.ts",
+              "packages/utils/src/hooks/use-update-effect.ts",
+              "packages/utils/src/is-equal.ts",
+              "packages/utils/src/is.ts",
+              "packages/utils/src/merge-props.ts",
+              "packages/utils/src/object.ts",
+              "packages/utils/src/observers/use-mutation-observer.ts",
+              "packages/utils/src/observers/use-resize-observer.ts",
+              "packages/utils/src/omit.ts",
+              "packages/utils/src/raf.ts",
+              "packages/utils/src/ref.ts",
+              "packages/utils/src/throttle.ts",
+              "packages/utils/src/warning.ts",
+              "packages/utils/src/__tests__/native-browser.mjs"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 140,
+            "log": "/tmp/apollo-utils-format-final.log"
+          },
+          {
+            "kind": "core",
+            "command": [
+              "git",
+              "diff",
+              "--check",
+              "--",
+              "packages/utils/src",
+              "docs/foundation/rc-util-contract.md"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 27,
+            "log": "/tmp/apollo-utils-diff-final.log"
           },
           {
             "kind": "types",
-            "command": "vue-tsc --noEmit -p <temporary config extending root tsconfig; utils and current component source/tests/demos>",
+            "owner": "root",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/.apollo-final-architecture-tsconfig.json",
             "exitCode": 0,
             "signal": null,
-            "durationMs": 49702
+            "durationMs": 56690,
+            "log": "/tmp/apollo-final-architecture-types.log",
+            "result": "Strict focused program and real consumers passed; declaration emission was not run.",
+            "summary": "All 78 Utils TS/Vue input hashes match current frozen source; actual h narrow generic and native SFC included.",
+            "sourceMismatches": []
+          },
+          {
+            "kind": "consumer",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "node_modules/vitest/vitest.mjs",
+              "run",
+              "--project",
+              "unit",
+              "packages/theme/src/__tests__/palettes.test.ts",
+              "packages/theme/src/__tests__/context-lifecycle.test.ts",
+              "packages/ui/src/typography/__tests__/contract-audit.test.ts",
+              "packages/ui/src/typography/__tests__/index.test.ts:458",
+              "packages/ui/src/watermark/__tests__/native-contracts.test.ts",
+              "packages/ui/src/date-picker/__tests__/native-contracts.test.ts",
+              "packages/ui/src/color-picker/__tests__/native-contracts.test.ts",
+              "packages/ui/src/color-picker/__tests__/color.test.ts:24",
+              "packages/ui/src/color-picker/__tests__/color.test.ts:86",
+              "packages/ui/src/select/__tests__/native-contracts.test.ts",
+              "packages/ui/src/select/__tests__/index.test.ts:162",
+              "--includeTaskLocation",
+              "--maxWorkers=1"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 28205,
+            "log": "/tmp/apollo-utils-ui-consumers.log",
+            "summary": [
+              "Test Files  10 passed (10)",
+              "Tests  131 passed | 162 skipped (293)",
+              "Duration  27.54s (environment 33%, transform 23%, tests 20%, import 13%, setup 12%)"
+            ],
+            "coverage": [
+              "Current Color/generatePalette calls through actual theme palettes and Provider DOM lifecycle, including target/prefix/disable cleanup.",
+              "Real Typography editing/copy/DOM ref contracts plus exactly one existing 3s copied=false restoration case; no new tests or source changes.",
+              "Watermark actual root/slot, cross-owner DOM panel moves, MutationObserver/raf coalescing and scope disposal.",
+              "DatePicker accepted/rejected/released Dayjs models and actual range/input/focus/ResizeObserver paths.",
+              "ColorPicker object/Color/gradient models and actual input/drag lifecycle plus engine Color/AggregationColor suites only.",
+              "Select current native models/refs/delayed-open cancellation plus exactly one existing labelInValue object case."
+            ],
+            "limits": [
+              "No direct Utils.updateCSS consumer exists in the specified theme/UI source directories. Direct Portal scroll-locker consumption was identified but no new task/source/extra Portal test run was started.",
+              "Specified UI call sites do not pass useDelayState second argument false; that exact false-delay branch remains owner package regression evidence. This UI run verifies delayed false state restoration actually used by Typography.",
+              "Line filters use installed Vitest parseFilter support with --includeTaskLocation; skipped unrelated cases are not passes. No nine-dimensional/full-library/build/published/browser acceptance claimed."
+            ]
+          },
+          {
+            "kind": "consumer",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/portal/src/__tests__/scroll-locker.test.ts packages/ui/src/modal/__tests__/index.test.ts packages/ui/src/notification/__tests__/index.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 19377,
+            "log": "/tmp/apollo-utils-css-closable-consumers.log"
           }
         ],
-        "boundary": "仅关闭useControlledValue根因组，不代表Utils整包架构完成或最终验收。"
+        "retainedPreviousVerification": {
+          "stage": "architecture",
+          "scope": [
+            "packages/utils/src/hooks/use-controlled-value.ts"
+          ],
+          "passed": true,
+          "checks": [
+            {
+              "kind": "core",
+              "command": "vitest run --project unit packages/utils/src packages/overlay/src packages/ui/src/tree-select packages/ui/src/upload packages/ui/src/radio packages/ui/src/float-button packages/ui/src/tag packages/ui/src/dropdown packages/ui/src/popover packages/ui/src/tooltip packages/ui/src/color-picker packages/ui/src/checkbox packages/ui/src/transfer packages/ui/src/mentions packages/ui/src/cascader packages/ui/src/menu packages/ui/src/tour packages/ui/src/slider packages/ui/src/typography packages/ui/src/breadcrumb packages/ui/src/select packages/ui/src/input packages/ui/src/date-picker --maxWorkers=2",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 191619
+            },
+            {
+              "kind": "types",
+              "command": "vue-tsc --noEmit -p <temporary config extending root tsconfig; utils and current component source/tests/demos>",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 49702
+            }
+          ],
+          "boundary": "仅关闭useControlledValue根因组，不代表Utils整包架构完成或最终验收。"
+        },
+        "failedAttempts": {
+          "previous": [
+            {
+              "log": "/tmp/apollo-utils-dom-boundaries-red.log",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 2140,
+              "summary": "3 failed"
+            },
+            {
+              "log": "/tmp/apollo-utils-resources-red.log",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 2150,
+              "summary": "10 failed"
+            },
+            {
+              "log": "/tmp/apollo-utils-ref-boundaries-red.log",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 2140,
+              "summary": "4 failed"
+            },
+            {
+              "log": "/tmp/apollo-utils-hooks-boundaries-red.log",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 2200,
+              "summary": "3 failed / 1 passed"
+            },
+            {
+              "log": "/tmp/apollo-utils-data-boundaries-red.log",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 2210,
+              "summary": "7 failed"
+            },
+            {
+              "log": "/tmp/apollo-utils-service-boundaries-red.log",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 2130,
+              "summary": "4 failed"
+            },
+            {
+              "result": "/tmp/apollo-final-architecture-types-first-failed-result.json",
+              "scope": "root merged initial strict; Utils sole diagnostic api.test-d actual h ref boundary now fixed"
+            },
+            {
+              "kind": "core",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "packages/utils/src/__tests__/native-browser.mjs"
+              ],
+              "exitCode": 1,
+              "signal": null,
+              "elapsedSeconds": 3.072,
+              "log": "/tmp/apollo-utils-native-browser-provenance.log"
+            }
+          ],
+          "wholePackageAttempt": [
+            {
+              "kind": "core",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "node_modules/vitest/vitest.mjs",
+                "run",
+                "--project",
+                "unit",
+                "packages/utils/src",
+                "packages/icons/src/__tests__/two-tone-color.oracle.test.ts",
+                "--maxWorkers=1"
+              ],
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 40630,
+              "log": "/tmp/apollo-utils-core-final.log",
+              "summary": "30 files; 633 passed, 1 failed. Sole failure was a new test assuming React-style old function-ref null during replacement. All production assertions and existing Color/two-tone Oracle cases passed. No successful exit claimed."
+            }
+          ]
+        },
+        "coreEvidenceNote": "Complete package/Icons Oracle command really exited 1, with 633 successes and one newly authored wrong ref expectation. Only that whole six-case test file changed and was rerun at exit0; production source unchanged. Valid unrelated greens not repeated.",
+        "consumerCoverage": "Read-only consumer run 131 passed / 162 exact-filter skipped across theme, Typography, Watermark, DatePicker, ColorPicker, Select; parent direct updateCSS/closable consumer run Portal scroll-locker+Modal+Notification 52/52. Position/VirtualList/BorderBeam keep their own exact checks.",
+        "browserEvidence": {
+          "result": "/tmp/apollo-utils-native-browser.json",
+          "provenanceFailure": "/tmp/apollo-utils-native-browser-provenance.json",
+          "groups": 7,
+          "diagnostics": [],
+          "ownedResizeObservers": 1,
+          "ownedMutationObservers": 3,
+          "remainingOwnedTargets": 0,
+          "automationObserver": "Exactly one non-library creator InjectedScript._setupGlobalListenersRemovalDetection observes #document; all remaining creators are audited, no target-type filtering."
+        },
+        "sourceHashes": {
+          "packages/ui/src/_internal/use-closable.ts": "936faa67c2fd258a8af74b21cdbe5c4f4988e429df9f67522816e4ecd16e27ad",
+          "packages/utils/src/__tests__/api.test-d.ts": "ad01b1ffc27b820c5a7540459329be7c9d9bb43124f5f790161b8dc3a7e601c8",
+          "packages/utils/src/__tests__/barrel.test.ts": "3a5caa0418666d864d59d20b34798b29bba0034844cf8db14576832395e21c97",
+          "packages/utils/src/__tests__/dom.test.ts": "88772e698f56d9d3a6dd87a5df4191c2c654d3efc245d17aa9ae72999edf62a6",
+          "packages/utils/src/__tests__/fixtures/NativeUtils.vue": "40abaa23bb6dd8c00a28bca420c541eb0210f8bc68e26367f48bb3eda5e27255",
+          "packages/utils/src/__tests__/native-browser.mjs": "4d42347718b8a7556b578b99de301811e7dde5b5ed4768d44a1a8f70fda35962",
+          "packages/utils/src/__tests__/native-data-boundaries.test.ts": "04906fe61854910e4db880234e319b4ed56e6445a797df1fcbc792dfeb567570",
+          "packages/utils/src/__tests__/native-dom-boundaries.test.ts": "4924667a947b9de8e5c9227aefba65f26642811544edf5995ffb6f39f3a32797",
+          "packages/utils/src/__tests__/native-hooks-boundaries.test.ts": "2def6d669727178851ab6fba7e6b70881ec26dd93e3c18662f3d6c694d4721b5",
+          "packages/utils/src/__tests__/native-ref-boundaries.test.ts": "c2934f11af0fb812d917fd7adb7f5e041bdba1b6db2863a300381f01ca7478d3",
+          "packages/utils/src/__tests__/native-resources.test.ts": "6def76354c7fedd2edd260ab7af5a24069ef798c6ffa343e5f47437ede74175a",
+          "packages/utils/src/__tests__/native-service-boundaries.test.ts": "5b3a16e48b1619b9aec26fc8de25241f382a68e2eaac000572fd9a0072ea8967",
+          "packages/utils/src/__tests__/ref.test.ts": "5e18a171bde825f637598ae648a0868be1328d0d74e5fde917a1c0907658b595",
+          "packages/utils/src/color/color.ts": "78a96e5debb3141b4b41e8dd25de1c7b2ab7743fc6fd365dab384d42463a590d",
+          "packages/utils/src/dev-warning.ts": "eb084002a13ab18bd706423e633859dcd7df743e38d98a30a087534fad1bdbfa",
+          "packages/utils/src/dom/focus.ts": "9c8a7c9f8265c94977f52f75eb4797669ae004791bd0991b046674887d30966e",
+          "packages/utils/src/dom/get-element.ts": "7aab0478f2ac107835da8fd2100e82b6a9179d7ccb816c75d99b09b866330548",
+          "packages/utils/src/dom/index.ts": "5727fe3ccfad8368167e148ef6256178182121ac2814d6707dd99805d0cb2ec7",
+          "packages/utils/src/dom/update-css.ts": "31c6b466404b4236c941c4bbe7582c0ec65ebce654cfe3e7a635ef9af82036c5",
+          "packages/utils/src/hooks/use-controlled-value.ts": "c7cad20feca786eee09c7c1835bf7893db1a6984210d203050b958cd22dd880f",
+          "packages/utils/src/hooks/use-delay-state.ts": "9a706adc8466c4c21afecc0bb303967c24f107e5fc3f5f7c563c6a243ff02974",
+          "packages/utils/src/hooks/use-safe-state.ts": "75dbdd42b4c2c559db29b34639ebea2cbec5d3d8fd3cf788848f184b035db466",
+          "packages/utils/src/hooks/use-update-effect.ts": "87e7f1330dc24d58d304f147d02d1c34e5df2ce54da8d59b1848fe809a6ca2a1",
+          "packages/utils/src/index.ts": "426440731199a43466dfe00789c15b575464408e8e39da44c6655fc3664f57aa",
+          "packages/utils/src/is-equal.ts": "c8791c8fe886bfe3b49348b6a4726a9609b1e6d26604caf92c9a9bfef4b9a772",
+          "packages/utils/src/is.ts": "df8ca37fd5a495cd39fa2468abe1477bcd462bfacf69be47fca410d3483c353e",
+          "packages/utils/src/merge-props.ts": "d558b8886db9af36b9ad1b3ca4ac3f5d50edaa393def2fba8037e9c22c6a97eb",
+          "packages/utils/src/object.ts": "aba7fc0e5bc2e3e45c33487c9c58f8aa197e8c3e2d4300b453577de0c1401a87",
+          "packages/utils/src/observers/use-mutation-observer.ts": "a804e40247217c575b2b23ccdf75ba8295d936ebea4da76d4030c7e8e56a0a7e",
+          "packages/utils/src/observers/use-resize-observer.ts": "4c07d19fc73fb1317c3fa13d5a5bc973adfe8bb2206d4552bab7fecf515a5452",
+          "packages/utils/src/omit.ts": "1341bca4812767648f846991ca6e5eb00ba7837ce69f9b3a2af8fb0fb8be5efb",
+          "packages/utils/src/raf.ts": "37e1fd137e2db970881ba4a2dd975f32e0798879e61e13bc64febb0a06e139d6",
+          "packages/utils/src/ref.ts": "054b45e14338cd71ef217815801d42fcc31e8bc93700de6040084b7d6f28ab4d",
+          "packages/utils/src/throttle.ts": "d09f7f2a0a68ae007af574a535b55eb4f0b676b8ebfdda9256645949fb099050",
+          "packages/utils/src/warning.ts": "794a3f38c55c3bc12fa901234e601920b6eca3d6d73d1eb577f7f66581cbf681"
+        },
+        "integrationSnapshot": {
+          "typedSourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+          "typedFiles": 194,
+          "typedInputsMatchedBeforeComment": true,
+          "commentOnlyDelta": {
+            "file": "packages/utils/src/ref.ts",
+            "beforeSha256": "978ae3fa803d30e2fb8321ac0976e096922f23e5674f3ac6a176b356394dd0dc",
+            "afterSha256": "054b45e14338cd71ef217815801d42fcc31e8bc93700de6040084b7d6f28ab4d",
+            "runtimeAndTypesUnchanged": true,
+            "method": "TypeScript AST printer with comments removed",
+            "change": "Correct Vue callback replacement comment only"
+          },
+          "headAtIntegration": "5bde28e47af7614ee63b6779b0a99a690aa0062d"
+        },
+        "remainingBoundaries": [
+          "Final declaration emission, unified build and frozen-version nine-dimensional acceptance have not run.",
+          "The whole-package command had one wrong newly authored expectation and exited 1; its 633 other passing cases remain valid and the changed six-case file was rerun at exit 0. This is not reported as a green whole-package run."
+        ]
       },
       "affectedChanges": [
         {

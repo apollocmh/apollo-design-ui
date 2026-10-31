@@ -113,13 +113,25 @@ export interface InputFocusOptions extends FocusOptions {
   cursor?: 'start' | 'end' | 'all';
 }
 
+function supportsSelection(
+  element: HTMLElement,
+): element is HTMLInputElement | HTMLTextAreaElement {
+  return (
+    element.localName === 'textarea' ||
+    (element.localName === 'input' &&
+      'type' in element &&
+      typeof element.type === 'string' &&
+      ['text', 'search', 'tel', 'url', 'password'].includes(element.type))
+  );
+}
+
 /** 聚焦元素；若是 input/textarea 且指定了 `cursor`，同时设置选区。 */
 export function triggerFocus(element?: HTMLElement | null, option?: InputFocusOptions): void {
   if (!element) return;
   element.focus(option);
 
   const { cursor } = option ?? {};
-  if (cursor && (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement)) {
+  if (cursor && supportsSelection(element)) {
     const len = element.value.length;
     switch (cursor) {
       case 'start':

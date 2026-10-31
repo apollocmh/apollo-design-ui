@@ -42,7 +42,7 @@ export interface ResizeObserverSize {
 export type ResizeCallback = (size: ResizeObserverSize, entry: ResizeObserverEntry) => void;
 
 /** 元素 → 回调集合。用 `Set` 保证同一个回调重复注册只生效一次。 */
-const elementCallbacks = new Map<Element, Set<ResizeCallback>>();
+const elementCallbacks = new Map<Element, Map<ResizeCallback, number>>();
 
 let observer: ResizeObserver | null = null;
 let observerSupported: boolean | null = null;
@@ -62,7 +62,7 @@ function getObserver(): ResizeObserver | null {
         const callbacks = elementCallbacks.get(entry.target);
         if (!callbacks) continue;
         // 快照：回调里可能注销自己，直接遍历 Set 会出问题
-        for (const callback of [...callbacks]) {
+        for (const callback of [...callbacks.keys()]) {
           callback(toSize(entry), entry);
         }
       }
@@ -100,16 +100,22 @@ export function observeResize(element: Element, callback: ResizeCallback): () =>
 
   let callbacks = elementCallbacks.get(element);
   if (!callbacks) {
-    callbacks = new Set();
-    elementCallbacks.set(element, callbacks);
+    callbacks = new Map();
+    // A rejected native observe must leave no registered callback behind.
     ro.observe(element);
+    elementCallbacks.set(element, callbacks);
   }
-  callbacks.add(callback);
+  callbacks.set(callback, (callbacks.get(callback) ?? 0) + 1);
+  let active = true;
 
   return () => {
+    if (!active) return;
+    active = false;
     const current = elementCallbacks.get(element);
-    if (!current) return;
-    current.delete(callback);
+    if (!current || current !== callbacks) return;
+    const owners = current.get(callback) ?? 0;
+    if (owners > 1) current.set(callback, owners - 1);
+    else current.delete(callback);
     if (current.size === 0) {
       elementCallbacks.delete(element);
       ro.unobserve(element);

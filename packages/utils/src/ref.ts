@@ -36,23 +36,17 @@
 
 import type { VNode } from 'vue';
 import { type ComputedRef, computed, type MaybeRefOrGetter, toValue } from 'vue';
-import { isComponentVNode, isElementVNode, isFragmentVNode, isVNode } from './is';
+import { isComponentVNode, isDOM, isElementVNode, isFragmentVNode, isVNode } from './is';
 
 /** 可以被 `fillRef` 填充的形态。 */
-export type RefLike<T> =
-  | ((node: T | null) => void)
-  | { value: T | null }
-  | { current: T | null }
-  | null
-  | undefined;
+export type RefLike<T> = ((node: T | null) => void) | { value: T | null } | null | undefined;
 
 /**
  * 把 `node` 写入任意形态的 ref。
  *
- * 支持三种目标（前两种是 Vue 的原生形态，第三种只为迁移期兼容 React 代码）：
+ * 支持 Vue 的函数 ref 与可写 `{ value }` 引用：
  *   - 函数 ref（Vue 模板 `:ref="fn"` 的形态）
  *   - `Ref<T>`（`{ value }`）
- *   - `{ current }`（React ref 对象）
  */
 export function fillRef<T>(ref: RefLike<T>, node: T | null): void {
   if (typeof ref === 'function') {
@@ -61,9 +55,7 @@ export function fillRef<T>(ref: RefLike<T>, node: T | null): void {
   }
   if (ref && typeof ref === 'object') {
     if ('value' in ref) {
-      (ref as { value: T | null }).value = node;
-    } else if ('current' in ref) {
-      (ref as { current: T | null }).current = node;
+      ref.value = node;
     }
   }
 }
@@ -92,12 +84,12 @@ export function composeRef<T>(...refs: RefLike<T>[]): RefLike<T> {
 /**
  * 带缓存的 `composeRef`。
  *
- * 为什么必须有缓存：如果每次求值都返回**新的函数**，Vue 的渲染器会认为 ref 变了，
- * 于是对旧函数调 `null`、对新函数调元素值 —— 组件挂载/更新时都会多做一轮无效的 ref 往返。
+ * 接收者集合不变时保持函数身份，避免重复 ref 通知；替换函数后由 Vue 通知新函数，
+ * 卸载时通知当前函数 `null`。
  *
  * 缓存键与 rc-util 的比较器一致：**数组长度 + 逐项身份**。
- * 用 `MaybeRefOrGetter` 而不是裸值，是为了在 props 变化时能正确失效
- * （React 版靠每次 render 重新调用 + memo 比较，Vue 版靠响应式追踪）。
+ * 接受一个明确的数组、ref 数组或 getter 集合源。只解析集合来源，不执行其中的
+ * 函数 ref、不解包其中的 Vue Ref；集合内逐项身份决定缓存是否失效。
  *
  * @example
  * ```vue
@@ -106,13 +98,13 @@ export function composeRef<T>(...refs: RefLike<T>[]): RefLike<T> {
  * 模板里顶层 ref 会自动解包，所以直接把 `mergedRef` 绑到 `:ref` 即可。
  */
 export function useComposeRef<T>(
-  ...refs: MaybeRefOrGetter<RefLike<T>>[]
+  refs: MaybeRefOrGetter<readonly RefLike<T>[]> = [],
 ): ComputedRef<(node: T | null) => void> {
-  let lastValues: unknown[] | null = null;
+  let lastValues: readonly RefLike<T>[] | null = null;
   let lastFn: ((node: T | null) => void) | null = null;
 
   return computed(() => {
-    const values = refs.map((ref) => toValue(ref));
+    const values = toValue(refs);
     if (lastFn && lastValues && sameIdentity(lastValues, values)) {
       return lastFn;
     }
@@ -124,7 +116,7 @@ export function useComposeRef<T>(
         : (node: T | null) => {
             fillRef(composed, node);
           };
-    lastValues = values;
+    lastValues = [...values];
     return lastFn;
   });
 }
@@ -161,18 +153,23 @@ export function supportNodeRef(node: unknown): boolean {
  * 取 vnode 上挂载的 ref 解析结果。
  *
  * Vue 侧：
- *   - 组件 vnode → `component.proxy`（组件实例；`defineExpose` 决定它能被读到什么）
+ *   - 已挂载的有状态组件 → Vue 已解析的 public expose proxy，或无 expose 的实例
+ *   - 函数组件单 DOM 根 → 真实元素
  *   - 元素 vnode → `el`（真实 DOM）
  *   - 其它 → `null`
  *
  * 需要 DOM 元素时请再经 `getElement()` 解析（组件实例要用 `$el` 取元素）。
  */
-export function getNodeRef<T = unknown>(node: VNode | null | undefined): T | null {
-  if (!isVNode(node)) {
-    return null;
+export function getNodeRef(node: VNode | null | undefined): object | null {
+  if (!isVNode(node)) return null;
+  if (isElementVNode(node) || (isComponentVNode(node) && typeof node.type === 'function')) {
+    return isDOM(node.el) ? node.el : null;
   }
   if (isComponentVNode(node)) {
-    return (node.component?.proxy ?? null) as T | null;
+    const instance = node.component;
+    if (!instance) return null;
+    // Vue owns the public expose proxy. Never substitute its private setup proxy.
+    return instance.exposed ? (instance.exposeProxy ?? null) : instance.proxy;
   }
-  return (node.el ?? null) as T | null;
+  return null;
 }

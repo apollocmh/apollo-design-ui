@@ -15,7 +15,7 @@
  * 但会**保留对组件状态的引用**，阻止 GC。所以这个保护在 Vue 里依然有价值。
  */
 
-import { getCurrentScope, onScopeDispose, type Ref, ref } from 'vue';
+import { getCurrentScope, onScopeDispose, type Ref, shallowRef } from 'vue';
 
 export type SetState<T> = (
   nextValue: T | ((prevValue: T) => T),
@@ -26,13 +26,17 @@ export type SetState<T> = (
   ignoreDestroy?: boolean,
 ) => void;
 
-export function useSafeState<T>(defaultValue?: T | (() => T)): [Ref<T | undefined>, SetState<T>] {
-  const value = ref(
+export function useSafeState<T>(defaultValue: T | (() => T)): [Ref<T>, SetState<T>];
+export function useSafeState<T = undefined>(): [Ref<T | undefined>, SetState<T | undefined>];
+export function useSafeState<T>(
+  defaultValue?: T | (() => T),
+): [Ref<T | undefined>, SetState<T> | SetState<T | undefined>] {
+  const value = shallowRef<T | undefined>(
     typeof defaultValue === 'function' ? (defaultValue as () => T)() : defaultValue,
-  ) as Ref<T | undefined>;
+  );
   let destroyed = false;
 
-  const setState: SetState<T> = (nextValue, ignoreDestroy) => {
+  const setState: SetState<T | undefined> = (nextValue, ignoreDestroy) => {
     if (ignoreDestroy && destroyed) {
       return;
     }

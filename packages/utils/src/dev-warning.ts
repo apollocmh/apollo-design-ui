@@ -105,8 +105,18 @@ export function useDevWarning(component: string): DevWarning {
     if (readContext().strict === false && type === 'deprecated') {
       const isFirstEver = deprecatedWarnList === null;
       if (!deprecatedWarnList) deprecatedWarnList = {};
-      deprecatedWarnList[component] ??= [];
-      const list = deprecatedWarnList[component];
+      const list =
+        (Object.hasOwn(deprecatedWarnList, component)
+          ? deprecatedWarnList[component]
+          : undefined) ?? [];
+      if (!Object.hasOwn(deprecatedWarnList, component)) {
+        Object.defineProperty(deprecatedWarnList, component, {
+          value: list,
+          configurable: true,
+          enumerable: true,
+          writable: true,
+        });
+      }
       if (!list.includes(message)) list.push(message);
       // 只在「第一次发生聚合」时打印一次
       if (isFirstEver) {

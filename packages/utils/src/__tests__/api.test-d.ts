@@ -1,5 +1,14 @@
 import { describe, expectTypeOf, it } from 'vitest';
-import { type ComputedRef, computed, effectScope, type Ref, ref, type VNode } from 'vue';
+import {
+  type ComponentPublicInstance,
+  type ComputedRef,
+  computed,
+  effectScope,
+  h,
+  type Ref,
+  ref,
+  type VNode,
+} from 'vue';
 import {
   type ControlledUpdater,
   capitalize,
@@ -8,9 +17,11 @@ import {
   fillRef,
   get,
   getActiveElement,
+  getElement,
   getFocusNodeList,
   getNodeRef,
   isEditableTarget,
+  isHTMLElement,
   isNonNullable,
   isReactEventName,
   isRenderable,
@@ -107,23 +118,36 @@ describe('omit —— 返回 Omit<T, K>', () => {
   });
 });
 
-describe('mergeProps —— 返回 B & A，且没有 1 参重载', () => {
-  it('两参返回 B & A', () => {
+describe('mergeProps — actual defined-key overrides with 2–4 inputs', () => {
+  it('two inputs retain both actual field types', () => {
     const a = { x: 1 };
     const b = { y: 's' };
-    expectTypeOf(mergeProps(a, b)).toEqualTypeOf<{ x: number } & { y: string }>();
+    expectTypeOf(mergeProps(a, b)).toEqualTypeOf<{ x: number; y: string }>();
   });
 
-  it('三参返回 C & B & A', () => {
-    expectTypeOf(mergeProps({ a: 1 }, { b: 2 }, { c: 3 })).toEqualTypeOf<
-      { a: number } & { b: number } & { c: number }
-    >();
+  it('three inputs retain all actual field types', () => {
+    expectTypeOf(mergeProps({ a: 1 }, { b: 2 }, { c: 3 })).toEqualTypeOf<{
+      a: number;
+      b: number;
+      c: number;
+    }>();
   });
 
-  it('四参返回 D & C & B & A', () => {
-    expectTypeOf(mergeProps({ a: 1 }, { b: 2 }, { c: 3 }, { d: 4 })).toEqualTypeOf<
-      { a: number } & { b: number } & { c: number } & { d: number }
-    >();
+  it('four inputs retain all actual field types', () => {
+    expectTypeOf(mergeProps({ a: 1 }, { b: 2 }, { c: 3 }, { d: 4 })).toEqualTypeOf<{
+      a: number;
+      b: number;
+      c: number;
+      d: number;
+    }>();
+  });
+
+  it('defined overrides do not collapse conflicting field types to never', () => {
+    expectTypeOf(mergeProps({ value: 1 }, { value: 'accepted' }).value).toEqualTypeOf<string>();
+    expectTypeOf(mergeProps({ value: 1 }, { value: undefined }).value).toEqualTypeOf<number>();
+    const optional: { value?: string } = {};
+    expectTypeOf(mergeProps({ value: 1 }, optional)).toEqualTypeOf<{ value: number | string }>();
+    expectTypeOf(mergeProps(null, optional)).toEqualTypeOf<{ value?: string }>();
   });
 
   it('★ 负例：1 个参数不被接受（与上游逐字一致，无 1 参重载）', () => {
@@ -247,7 +271,26 @@ describe('useDelayState / useSafeState', () => {
   it('useSafeState 的值类型含 undefined（初始值可省略）', () => {
     const [value, setState] = useSafeState<number>();
     expectTypeOf(value).toEqualTypeOf<Ref<number | undefined>>();
-    expectTypeOf(setState).toEqualTypeOf<SetState<number>>();
+    expectTypeOf(setState).toEqualTypeOf<SetState<number | undefined>>();
+  });
+
+  it('useSafeState with an initial value has a defined payload; an empty state updater sees undefined', () => {
+    const [value, set] = useSafeState(1);
+    expectTypeOf(value).toEqualTypeOf<Ref<number>>();
+    set((previous) => {
+      expectTypeOf(previous).toEqualTypeOf<number>();
+      return previous + 1;
+    });
+    const [, setEmpty] = useSafeState<number>();
+    setEmpty((previous) => {
+      expectTypeOf(previous).toEqualTypeOf<number | undefined>();
+      return (previous ?? 0) + 1;
+    });
+    const invalid = () => {
+      // @ts-expect-error An omitted initial state can pass undefined to its updater.
+      setEmpty((previous: number) => previous + 1);
+    };
+    void invalid;
   });
 
   it('★ 负例：useSafeState 的 setter 同样不接受错误类型', () => {
@@ -332,16 +375,17 @@ describe('useUpdateEffect / useId / useLockFocus', () => {
 });
 
 describe('ref 工具', () => {
-  it('fillRef 接受三种形态 + null/undefined', () => {
+  it('fillRef accepts native function/value references plus null/undefined', () => {
     const node = document.createElement('div');
     fillRef<HTMLElement>((n) => void n, node);
     fillRef<HTMLElement>({ value: null }, node);
+    // @ts-expect-error React current wrappers are not native Vue refs.
     fillRef<HTMLElement>({ current: null }, node);
     fillRef<HTMLElement>(null, node);
     fillRef<HTMLElement>(undefined, node);
   });
 
-  it('★ 负例：既非函数也无 value/current 的对象必须报错', () => {
+  it('★ 负例：既非函数也无 value 的对象必须报错', () => {
     const node = document.createElement('div');
     // @ts-expect-error { other: number } 不满足 RefLike
     fillRef<HTMLElement>({ other: 1 }, node);
@@ -353,14 +397,42 @@ describe('ref 工具', () => {
   });
 
   it('useComposeRef 恒返回可调用的 computed（把非函数形态包起来）', () => {
-    const merged = useComposeRef<HTMLElement>({ value: null });
+    const merged = useComposeRef<HTMLElement>([{ value: null }]);
     expectTypeOf(merged).toEqualTypeOf<ComputedRef<(node: HTMLElement | null) => void>>();
+    const vueTarget = ref<Element | ComponentPublicInstance | null>(null);
+    const forVue = useComposeRef<Element | ComponentPublicInstance>([
+      vueTarget,
+      (node) => {
+        const element = getElement(node);
+        if (isHTMLElement(element)) element.focus();
+      },
+    ]);
+    h('input', { ref: forVue.value });
+    const input = ref<HTMLInputElement | null>(null);
+    const narrow = useComposeRef<HTMLInputElement>([
+      input,
+      (node) => {
+        node?.select();
+      },
+    ]);
+    expectTypeOf(narrow).toEqualTypeOf<ComputedRef<(node: HTMLInputElement | null) => void>>();
+    const collection = ref<RefLike<HTMLElement>[]>([]);
+    useComposeRef(collection);
+    useComposeRef<HTMLElement>(() => [{ value: null }, (element) => void element]);
+    const invalid = () => {
+      // @ts-expect-error A ref recipient must accept the actual element payload.
+      useComposeRef<HTMLElement>([(_value: number | null) => {}]);
+    };
+    void invalid;
   });
 
-  it('getNodeRef 的泛型参数决定返回类型', () => {
+  it('getNodeRef returns an opaque mounted object or null without an arbitrary generic', () => {
     const node = null as VNode | null;
-    expectTypeOf(getNodeRef<HTMLDivElement>(node)).toEqualTypeOf<HTMLDivElement | null>();
-    expectTypeOf(getNodeRef(node)).toEqualTypeOf<unknown>();
+    expectTypeOf(getNodeRef(node)).toEqualTypeOf<object | null>();
+    // @ts-expect-error Callers cannot invent a VNode public-instance type.
+    getNodeRef<HTMLDivElement>(node);
+    // @ts-expect-error Ref sources belong in an explicit collection.
+    useComposeRef<HTMLElement>({ value: null });
   });
 });
 

@@ -16,7 +16,7 @@ export default function omit<T extends object, K extends keyof T>(
   obj: T,
   fields: K[] | readonly K[],
 ): Omit<T, K> {
-  const clone = Object.assign({}, obj) as Record<string, unknown>;
+  const clone = { ...obj } as Record<string, unknown>;
   if (Array.isArray(fields)) {
     for (const key of fields) {
       delete clone[key as string];

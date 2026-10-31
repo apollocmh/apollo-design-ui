@@ -34,11 +34,11 @@ export function preMessage(fn: PreMessageFn): void {
 }
 
 /** 已告警过的消息集合（`warningOnce` / `noteOnce` 去重用）。 */
-let warned: Record<string, boolean> = {};
+const warned = new Set<string>();
 
 /** 清空去重表。测试之间必须调用，否则会互相污染。 */
 export function resetWarned(): void {
-  warned = {};
+  warned.clear();
 }
 
 /**
@@ -56,10 +56,12 @@ function applyPreMessage(
   message: string,
   type: 'warning' | 'note',
 ): string | number | null | undefined {
-  return preWarningFns.reduce<string | number | null | undefined>(
-    (msg, fn) => fn(String(msg ?? ''), type),
-    message,
-  );
+  let current: string | number | null | undefined = message;
+  for (const fn of preWarningFns) {
+    current = fn(String(current), type);
+    if (!current) return current;
+  }
+  return current;
 }
 
 /**
@@ -97,9 +99,9 @@ export function call(
   valid: boolean,
   message: string,
 ): void {
-  if (!valid && !warned[message]) {
+  if (!valid && !warned.has(message)) {
     method(false, message);
-    warned[message] = true;
+    warned.add(message);
   }
 }
 

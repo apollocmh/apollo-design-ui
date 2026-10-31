@@ -274,3 +274,7 @@ Message/Notification 保留命令式 API、有效服务回调和零参数 holder
 ### D-app-native-services-and-host
 
 AppConfig 和 useApp() 改用真实通知配置及 MessageInstance、NotificationInstance、ModalHookAPI，静态 App.useApp 保留相同准确类型。useApp() 必须在真实 App 提供的 Vue 注入上下文中调用，缺少 Provider 时明确报错，不再返回伪造的空 API。保留原有四种宿主标签与 component=false、默认槽、嵌套配置和实例隔离；当前 Provider 根样式与原生 attrs 合并到实际宿主，动态切换宿主保留服务内容和生命周期。详见[App API](packages/ui/src/app/index.zh-CN.md)。
+
+### D-utils-native-refs-and-resources
+
+RefLike 删除没有真实消费者的 React `{current}` 包装，使用 Vue 可写 value 引用或函数 ref；组件自己的 current 业务 prop 继续按实例处理。useComposeRef 接收一个数组、Ref 或 getter 集合源，例如 `useComposeRef(() => [localRef, callback])`；getNodeRef 返回真实 public expose 或 DOM，不再允许任意指定结果泛型。状态工具保留 T 与嵌套 Ref 的身份，既有受控提议和撤控算法保持；mergeProps 类型描述实际的后值覆盖，输入限对象、null、undefined，共享关闭配置同步规范化。补齐所属文档、独立订阅释放、取消、临时 CSS 容器及合法颜色输入边界，详见[Utils 当前契约](docs/foundation/rc-util-contract.md)。开发阶段直接迁移，无兼容分支或弃用期；声明产物与全库验收留到统一冻结阶段。

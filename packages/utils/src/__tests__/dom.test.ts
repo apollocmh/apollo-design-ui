@@ -167,9 +167,9 @@ describe('getDOM / getElement / getElementFromVNode', () => {
     expect(getElement({ value: { value: div } })).toBe(div);
   });
 
-  it('getElement 兼容 { current }（迁移期）', () => {
+  it('getElement does not accept a React-only current wrapper', () => {
     const div = document.createElement('div');
-    expect(getElement({ current: div })).toBe(div);
+    expect(getElement({ current: div })).toBeNull();
   });
 
   it('getElement 认识 { $el } 与组件实例', () => {

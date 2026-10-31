@@ -1,5 +1,5 @@
+import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import type { VNode } from 'vue';
 import {
   Comment,
   createTextVNode,
@@ -42,11 +42,12 @@ describe('fillRef', () => {
     expect(target.value).toBe(node);
   });
 
-  it('{ current } 形态（React 的 ref 对象，仅为迁移期兼容）', () => {
+  it('React-only current wrappers are rejected by types and do not become Vue refs', () => {
     const target = { current: null as HTMLElement | null };
     const node = document.createElement('div');
+    // @ts-expect-error React current wrappers are not a Vue RefLike.
     fillRef(target, node);
-    expect(target.current).toBe(node);
+    expect(target.current).toBeNull();
   });
 
   it('写 null 可以清空（卸载时渲染器会这样调）', () => {
@@ -64,7 +65,8 @@ describe('fillRef', () => {
   it('★ 既没有 value 也没有 current 的对象被静默忽略（不报错、不新增字段）', () => {
     const target: Record<string, unknown> = {};
     expect(() =>
-      fillRef(target as unknown as RefLike<HTMLElement>, document.createElement('div')),
+      // @ts-expect-error Invalid JavaScript input remains ignored, without creating a value field.
+      fillRef(target, document.createElement('div')),
     ).not.toThrow();
     expect(Object.keys(target)).toHaveLength(0);
   });
@@ -97,7 +99,7 @@ describe('composeRef', () => {
   it('多个 ref 时返回函数，调用一次写全部', () => {
     const fn = vi.fn();
     const a = { value: null as HTMLElement | null };
-    const b = { current: null as HTMLElement | null };
+    const b = ref<HTMLElement | null>(null);
     const node = document.createElement('div');
 
     const composed = composeRef(fn, a, b);
@@ -106,7 +108,7 @@ describe('composeRef', () => {
 
     expect(fn).toHaveBeenCalledWith(node);
     expect(a.value).toBe(node);
-    expect(b.current).toBe(node);
+    expect(b.value).toBe(node);
   });
 
   it('★ falsy 项被过滤只影响「是否包装」的判断，遍历时仍会走 fillRef', () => {
@@ -132,9 +134,21 @@ describe('composeRef', () => {
 });
 
 describe('useComposeRef', () => {
+  it('updates an in-place reactive collection while preserving stable recipient identity', () => {
+    const first = vi.fn();
+    const second = vi.fn();
+    const source = ref<RefLike<unknown>[]>([first]);
+    const merged = useComposeRef(source);
+    const original = merged.value;
+    source.value.push(second);
+    expect(merged.value).not.toBe(original);
+    merged.value('node');
+    expect(first).toHaveBeenCalledExactlyOnceWith('node');
+    expect(second).toHaveBeenCalledExactlyOnceWith('node');
+  });
   it('返回 computed；单 ref 时直接复用该函数（不产生新闭包）', () => {
     const fn = vi.fn();
-    const merged = useComposeRef<(n: unknown) => void>(() => fn);
+    const merged = useComposeRef<unknown>(() => [fn]);
     expect(merged.value).toBe(fn);
   });
 
@@ -142,10 +156,7 @@ describe('useComposeRef', () => {
     const a = vi.fn();
     const b = vi.fn();
     // 泛型用 unknown 而不是函数类型：我们要测的是"载荷被原样传给每个 ref"
-    const merged = useComposeRef<unknown>(
-      () => a,
-      () => b,
-    );
+    const merged = useComposeRef<unknown>(() => [a, b]);
     merged.value('x');
     expect(a).toHaveBeenCalledWith('x');
     expect(b).toHaveBeenCalledWith('x');
@@ -156,13 +167,10 @@ describe('useComposeRef', () => {
     const a = ref<(n: unknown) => void>(() => {});
     const b = ref<(n: unknown) => void>(() => {});
     // 读 tick 只是为了制造一次「重算但值没变」
-    const merged = useComposeRef<(n: unknown) => void>(
-      () => {
-        void tick.value;
-        return a.value;
-      },
-      () => b.value,
-    );
+    const merged = useComposeRef<unknown>(() => {
+      void tick.value;
+      return [a.value, b.value];
+    });
 
     let notifications = 0;
     watch(merged, () => {
@@ -181,7 +189,7 @@ describe('useComposeRef', () => {
   it('ref 身份变化时返回新函数（缓存失效）', () => {
     const a = ref<(n: unknown) => void>(() => {});
     const b = ref<(n: unknown) => void>(() => {});
-    const merged = useComposeRef<(n: unknown) => void>(a, b);
+    const merged = useComposeRef<unknown>(() => [a.value, b.value]);
 
     const first = merged.value;
     a.value = () => {};
@@ -191,7 +199,7 @@ describe('useComposeRef', () => {
 
   it('★ 唯一一个 ref 不是函数时会被包成函数（保证返回值恒为可调用）', () => {
     const target = { value: null as unknown };
-    const merged = useComposeRef(target);
+    const merged = useComposeRef([target]);
     expect(typeof merged.value).toBe('function');
 
     const node = document.createElement('div');
@@ -257,16 +265,13 @@ describe('getNodeRef', () => {
   it('元素 vnode → el', () => {
     const vnode = createVNode('div');
     const el = document.createElement('div');
-    (vnode as VNode & { el: Element | null }).el = el;
+    vnode.el = el;
     expect(getNodeRef(vnode)).toBe(el);
   });
 
-  it('组件 vnode → component.proxy（defineExpose 决定它暴露什么）', () => {
-    const vnode = createVNode(defineComponent({ render: () => h('div') }));
-    const proxy = { exposed: true };
-    // 组件实例的形状由 Vue 定义，这里只关心 getNodeRef 把 proxy 原样取出来
-    (vnode as unknown as { component: { proxy: unknown } }).component = { proxy };
-    expect(getNodeRef(vnode)).toBe(proxy);
+  it('mounted ordinary component returns the actual Vue public instance', () => {
+    const wrapper = mount(defineComponent({ render: () => h('div') }));
+    expect(getNodeRef(wrapper.vm.$.vnode)).toBe(wrapper.vm);
   });
 
   it('组件 vnode 尚未挂载（component 为 null）→ null，不抛错', () => {
@@ -281,14 +286,15 @@ describe('getNodeRef', () => {
   it('非 vnode 入参 → null', () => {
     expect(getNodeRef(null)).toBeNull();
     expect(getNodeRef(undefined)).toBeNull();
-    expect(getNodeRef(document.createElement('div') as unknown as VNode)).toBeNull();
+    // @ts-expect-error DOM elements are not VNodes; invalid JS input returns null.
+    expect(getNodeRef(document.createElement('div'))).toBeNull();
   });
 
-  it('泛型参数决定返回类型（编译期），运行期仍是同一个对象', () => {
+  it('returns the same actual DOM object without a caller-invented result type', () => {
     const vnode = createVNode('div');
     const el = document.createElement('div');
-    (vnode as VNode & { el: Element | null }).el = el;
-    const typed = getNodeRef<HTMLDivElement>(vnode);
-    expect(typed).toBe(el as unknown as HTMLDivElement);
+    vnode.el = el;
+    const typed = getNodeRef(vnode);
+    expect(typed).toBe(el);
   });
 });

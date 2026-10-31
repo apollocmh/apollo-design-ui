@@ -111,6 +111,7 @@ const EXPECTED_FUNCTIONS = [
   'isDocument',
   'isHTMLElement',
   'isDOM',
+  'isShadowRoot',
   'isVNode',
   'isElementVNode',
   'isComponentVNode',
@@ -207,8 +208,10 @@ describe('@apollo-design/utils barrel —— 架构约束', () => {
     //    ARCHITECTURE.md R2 例外条款允许的（theme 与 icons 共用）。
     //    所以这里去掉 color / palette 两个关键词，改用下面那条**源码扫描**来守 R3 ——
     //    它测的是规格本身，比名字匹配严格。
-    const offenders = Object.keys(barrel).filter((name) =>
-      /radius|shadow|font|theme|token/i.test(name),
+    const offenders = Object.keys(barrel).filter(
+      (name) =>
+        // This existing DOM-root predicate contains no design shadow value.
+        name !== 'isShadowRoot' && /radius|shadow|font|theme|token/i.test(name),
     );
     expect(offenders).toEqual([]);
   });

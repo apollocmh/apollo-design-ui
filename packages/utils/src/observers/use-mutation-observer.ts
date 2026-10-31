@@ -15,9 +15,8 @@ import { getCurrentScope, type MaybeRefOrGetter, onScopeDispose, toValue, watch 
 
 export type MutationCallback = (mutations: MutationRecord[], observer: MutationObserver) => void;
 
-const elementCallbacks = new Map<Element, Set<MutationCallback>>();
+const elementCallbacks = new Map<Element, Map<MutationCallback, number>>();
 const elementObservers = new Map<Element, MutationObserver>();
-const elementOptions = new Map<Element, MutationObserverInit>();
 
 let supported: boolean | null = null;
 
@@ -55,31 +54,39 @@ export function observeMutation(
 
   let callbacks = elementCallbacks.get(element);
   if (!callbacks) {
-    callbacks = new Set();
-    elementCallbacks.set(element, callbacks);
-    elementOptions.set(element, options ?? DEFAULT_MUTATION_OPTIONS);
-
+    callbacks = new Map();
     const mo = new MutationObserver((mutations, obs) => {
       const current = elementCallbacks.get(element);
       if (!current) return;
-      for (const cb of [...current]) {
+      for (const cb of [...current.keys()]) {
         cb(mutations, obs);
       }
     });
+    const initialOptions = options ?? DEFAULT_MUTATION_OPTIONS;
+    try {
+      mo.observe(element, initialOptions);
+    } catch (error) {
+      mo.disconnect();
+      throw error;
+    }
+    elementCallbacks.set(element, callbacks);
     elementObservers.set(element, mo);
-    mo.observe(element, elementOptions.get(element));
   }
-  callbacks.add(callback);
+  callbacks.set(callback, (callbacks.get(callback) ?? 0) + 1);
+  let active = true;
 
   return () => {
+    if (!active) return;
+    active = false;
     const current = elementCallbacks.get(element);
-    if (!current) return;
-    current.delete(callback);
+    if (!current || current !== callbacks) return;
+    const owners = current.get(callback) ?? 0;
+    if (owners > 1) current.set(callback, owners - 1);
+    else current.delete(callback);
     if (current.size === 0) {
       elementObservers.get(element)?.disconnect();
       elementObservers.delete(element);
       elementCallbacks.delete(element);
-      elementOptions.delete(element);
     }
   };
 }
@@ -91,7 +98,6 @@ export function resetMutationObserver(): void {
   }
   elementObservers.clear();
   elementCallbacks.clear();
-  elementOptions.clear();
   supported = null;
 }
 

@@ -25,7 +25,7 @@
  * 函数式更新始终读取当前 merged 值。父级值同步接收，避免同一轮更新后撤控丢值。
  */
 
-import { type ComputedRef, computed, type Ref, ref, watch } from 'vue';
+import { type ComputedRef, computed, shallowRef, watch } from 'vue';
 
 export type ControlledUpdater<T> = T | ((prevValue: T) => T);
 
@@ -44,13 +44,13 @@ export function useControlledValue<T>(
   const { defaultValue, getValue, onChange } = options;
 
   const initialControlled = getValue();
-  const inner = ref(
+  const inner = shallowRef<T>(
     initialControlled !== undefined
       ? initialControlled
       : typeof defaultValue === 'function'
         ? (defaultValue as () => T)()
         : defaultValue,
-  ) as Ref<T>;
+  );
 
   const merged = computed<T>(() => {
     const controlled = getValue();

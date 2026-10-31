@@ -47,23 +47,23 @@ function internalSet(
     clone = { ...(entity as Record<string | number | symbol, unknown>) };
   }
 
-  if (removeIfUndefined && value === undefined && restPath.length === 1) {
-    // ⚠️ quirk（与 rc-util 一致，必须保留）：这里改的是 clone 里**共享的子对象**，
-    //    因为上面的拷贝是浅的。测试会锁定这个行为。
-    const parent = (
-      clone as Record<string | number | symbol, Record<string | number | symbol, unknown>>
-    )[path];
-    const leaf = restPath[0] as string | number | symbol;
-    if (parent) {
-      delete parent[leaf];
-    }
+  if (removeIfUndefined && value === undefined && restPath.length === 0) {
+    delete (clone as Record<string | number | symbol, unknown>)[path];
   } else {
-    (clone as Record<string | number | symbol, unknown>)[path] = internalSet(
+    const next = internalSet(
       (clone as Record<string | number | symbol, unknown>)[path],
       restPath,
       value,
       removeIfUndefined,
     );
+    Object.defineProperty(clone, path, {
+      ...(Object.getOwnPropertyDescriptor(clone, path) ?? {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      }),
+      value: next,
+    });
   }
 
   return clone;

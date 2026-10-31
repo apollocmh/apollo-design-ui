@@ -1,5 +1,63 @@
 > 证据范围：本文保留初期分析与回归来源。上游对齐、版本和阶段要求不是当前项目规范；现行规则见根目录 AGENTS.md 与 ADR 0005。有效的组件场景、算法契约及缺陷证据继续保留。
 
+## 2026-10-31 Apollo 当前契约增量
+
+本节描述当前 Vue 公共边界。下文保留早期来源分析、当时的签名、对照结论与原始日期；其 React 内部机制、旧阶段要求及与本节不一致的签名不再作为实现规则。任务与验收状态只读 `registry/vue-native-audit.json`，本文不维护第二套进度。
+
+| 当前公开职责 | 边界与实现来源 |
+| --- | --- |
+| ref 与真实元素 | `ref.ts`、`dom/get-element.ts`；函数 ref / 可写 Vue value 引用、实际 public expose、真实 DOM，私有代理不冒充公开引用 |
+| children、attrs、事件、键盘、类型 | `children/to-array.ts`、`dom-attrs.ts`、`pick-attrs.ts`、`event-name.ts`、`key-code.ts`、`is.ts`；完整 Vue 内容与已有事件拼写转换保留，名称含 React 不等于引入 React 运行时 |
+| 组合式状态 | 五个 `hooks/`：受控状态、延迟状态、安全状态、更新 effect、Vue 原生 ID；既有控制/撤控与有效 ID 行为保留 |
+| DOM 与焦点 | `dom/`：元素与滚动/可见性、样式支持/临时 CSS、所属文档与 ShadowRoot 焦点；既有 focus 锁、滚动条和可组合包含关系保持各自职责 |
+| 观察器与调度 | `observers/`、`raf.ts`、`throttle*.ts`；各订阅拥有自己的释放，保持原生通知、单例与取消/节流语义 |
+| 普通数据与颜色 | `object.ts`、`merge-props.ts`、`omit.ts`、`is-equal.ts`、`to-list.ts`、`color/`；不可变路径写入、实际覆盖类型、纯颜色数学，不承载组件状态或设计常量 |
+| 环境与诊断 | `env.ts`、`brand.ts`、`warning.ts`、`dev-warning.ts`；现有 dev/prod 探测、当前 Provider warning 配置与去重保留 |
+
+### 明确的原生 ref 来源
+
+`RefLike<T>` 仅接受 `(node: T | null) => void`、可写 `{ value: T | null }`、null 或 undefined。删除仅为 React 迁移保留且无真实消费者的 `{ current }` 包装；组件自己的 `current` 业务 prop 仍按真实 Vue 实例解析，不影响 Table 自己的数据字段。
+
+`composeRef(...refs)` 保留单个 ref 原样返回的身份语义。`useComposeRef` 改成一个明确的**集合来源**：
+
+```ts
+const merged = useComposeRef<HTMLElement>(() => [localRef, externalCallback]);
+const fromArray = useComposeRef<HTMLElement>([localRef, externalCallback]);
+// 也接受 Ref<readonly RefLike<T>[]>。模板直接 :ref="merged"。
+```
+
+只在集合层 `toValue`，不会执行其中的函数 ref，也不会把其中的 Vue Ref 解包成其 DOM 值。缓存按集合长度与各接收者身份判断，原地修改响应式集合也会更新；同一组接收者维持函数身份。旧的逐个 getter/参数签名直接迁移为集合源，不增设兼容重载。
+
+`getNodeRef(vnode): object | null` 不再接受调用者任意指定的结果泛型。有状态组件读取 Vue 实际 public expose proxy；存在 `defineExpose` 但 Vue 尚未生成实际 public proxy 时返回 null，不退回私有 setup proxy，也不自行模拟暴露代理。无 expose 的普通组件可返回其实例，原生元素与单 DOM 根函数组件返回真实元素；Fragment、Teleport、Suspense 和文本锚点不冒充元素。需要 DOM 时再用 `getElement` 收窄。`getElement` 原有 nativeElement / Vue 实例 / value 引用 / $el / VNode 链路保持，函数组件 VNode 也解析其真实根。
+
+### 值身份、控制状态与 effect 清理
+
+`useControlledValue` 的已交付受控提议、父级接受/拒绝、同步接收与撤控保留最后接受值的算法不变。`useControlledValue`、`useSafeState`、`useDelayState` 用浅存储保留公开泛型 T 的实际对象和 nested Ref，不额外代理或深解包；传入已是 reactive 的对象仍保留其原有响应性。状态改变仍通过各自已有 setter 表达。
+
+有初值的 `useSafeState(initial)` 返回 `Ref<T>` / `SetState<T>`；省略初值时返回 `Ref<T | undefined>`，其 updater 的 previous 参数也包含 undefined。保留既有 `ignoreDestroy` 显式选择，不用静默兜底掩盖调用者的异步清理。
+
+`useDelayState` 返回的 setter(next, false) 与省略标志一样走下一帧；true 立即更新，frame=0 也同步应用。新请求取代旧请求，已完成的调度清掉 pending，所属 scope 销毁后旧 setter 不再排出新资源。原生 timeout 句柄保持其真实类型。`raf` 的 times 必须是非负整数；负数、非整数、NaN、Infinity 在分配帧前抛 RangeError，避免永不归零的排队；0 同步、多帧、包装 id、取消幂等及生产不暴露调试 ids 的既有行为保留。throttle 的永久 cancel 不会被后续 upcomingOnly 取消重新激活。
+
+`useUpdateEffect` 继续监听 refs/getters、在 Vue DOM 更新后执行且不在挂载时执行，清理由 Vue watch 的 `onCleanup` 拥有。下一 callback 抛错时，上一资源仍只清理一次，错误继续交给 Vue 原有错误通道。
+
+### 所属文档、观察器与临时样式
+
+`isDOM` / `isHTMLElement` 识别真实 HTML/SVG 的 namespace 与 DOM 能力，不依赖当前 window 的构造器身份，覆盖同源 iframe 与被 adopt 的节点。`triggerFocus` 在实际所属文档聚焦，并只对原生可设选区的文本 input / textarea 设置光标；number 等不支持选区的 input 正常聚焦，不伪造选择操作。既有 owner-document focus 锁、ShadowRoot 焦点、可见性与滚动条算法不重写。已有 `isShadowRoot` 公开供 Position 等职责复用，不构建另一套 realm guard。
+
+ResizeObserver 保留全局原生实例与每元素通知去重，MutationObserver 保留每元素原生实例和首个 options 配置。相同 callback 重复注册，各次订阅独立计数，任何一次释放只清自己；重复释放和旧释放不会摘掉其它仍有效订阅。原生 observe 拒绝后不留下假登记；Mutation 失败释放刚建实例并原样抛错，不吞错误或自动重试。target / disabled 的响应式绑定与 scope 释放保持。可观察范围以实际原生 API 为准，不新增 owner-window 调度平台。
+
+`updateCSS` 仍按全局 key 对应单个临时 style，保留同 key 元素身份与按 key 移除。显式 container 更新时将该元素移到当前目标，创建使用目标自己的 document；它不产生组件样式、不增加多容器缓存系统。
+
+### 数据与颜色输入
+
+`set(..., undefined, true)` 在真实叶层删除，逐层复制而不修改原父对象，已有不存在父路径时返回原值的行为保留。set / mergeProps / omit 对普通自有 `__proto__` 数据键保持数据属性，不改变结果原型；数组原有 length 描述符保留。`mergeProps` 继续从左到右跳过 undefined，只是返回类型现在描述真实覆盖及可选字段，不再用冲突字段交集推成 never。
+
+`isEqual` 继续比较数组和可枚举字符串键，保留共享引用/环检测、现有内建对象的枚举键语义；它不是新的 Date/Map 比较平台。本轮仅修不同自有键集不能因为双方取值恰为 undefined 而相等。`omit`、list/类型判断与其它对象算法的有效场景保留。
+
+Color 保留原 HSV/HSL、缓存、mix/明暗与 palette 数学及原逐位 Oracle。输入/输出边界只补负号、fractional RGB 输出到合法 hex 字节，以及仅接受 3/4/6/8 位 hex。signed CSS 与 fractional 通道由 Apollo 自身合法输入测试和浏览器 CSS 对照验证；旧 Oracle 的合法整数与色板断言不放宽，上游相同的边界缺陷不作为保留理由。CSS 颜色名仍不属于当前支持输入，不新增颜色数据或运行时依赖。
+
+---
+
 # `@rc-component/util` 契约提取（`@apollo-design/utils` 的实现依据）
 
 > **状态**：Phase 2 / S1 前置产物（Task 1）

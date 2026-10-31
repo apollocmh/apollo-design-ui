@@ -54,6 +54,9 @@ function cleanup(id: number): void {
 }
 
 const wrapperRaf = ((callback: RafCallback, times = 1): number => {
+  if (!Number.isInteger(times) || times < 0) {
+    throw new RangeError('raf frame count must be a non-negative integer');
+  }
   rafUUID += 1;
   const id = rafUUID;
 

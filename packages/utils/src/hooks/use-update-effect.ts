@@ -6,7 +6,7 @@
  * Sources must be refs or getters; pass () => props.value rather than a setup snapshot.
  */
 
-import { getCurrentScope, onScopeDispose, type WatchSource, watch } from 'vue';
+import { type WatchSource, watch } from 'vue';
 
 export type UpdateEffectDeps = readonly WatchSource<unknown>[];
 
@@ -26,29 +26,14 @@ type UpdateEffectCallback = () => void | (() => void);
  * @param deps 依赖数组。传空数组等价于"永不执行"。
  */
 export function useUpdateEffect(callback: UpdateEffectCallback, deps: UpdateEffectDeps): void {
-  // `callback()` 的返回类型含 void，而 void 不可赋值给 undefined ——
-  // 改成 `(() => void) | undefined` 会在 `cleanup = callback()` 处直接报 TS2322。
-  // biome-ignore lint/suspicious/noConfusingVoidType: void 在此必需（见上两行，已用 tsc --strict 实测）
-  let cleanup: void | (() => void);
-
-  const run = (): void => {
-    if (typeof cleanup === 'function') {
-      cleanup();
-    }
-    cleanup = callback();
-  };
-
-  // immediate 默认 false —— 这正是"首次挂载不执行"的语义，不需要额外的首帧标记。
-  watch(deps, run, { flush: 'post' });
-
-  if (getCurrentScope()) {
-    onScopeDispose(() => {
-      if (typeof cleanup === 'function') {
-        cleanup();
-      }
-      cleanup = undefined;
-    });
-  }
+  watch(
+    deps,
+    (_values, _previous, onCleanup) => {
+      const cleanup = callback();
+      if (typeof cleanup === 'function') onCleanup(cleanup);
+    },
+    { flush: 'post' },
+  );
 }
 
 export default useUpdateEffect;

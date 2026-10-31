@@ -33,14 +33,13 @@ export function updateCSS(
   key: string,
   container?: HTMLElement,
 ): HTMLStyleElement | null {
-  if (typeof document === 'undefined') return null;
-
-  const target = container ?? document.head;
+  const target = container ?? (typeof document === 'undefined' ? undefined : document.head);
+  if (!target) return null;
   let style = styleCache.get(key);
 
   // 元素被外部摘掉（或从没建过）⇒ 重建，保证「注入后一定在 DOM 里」
   if (!style?.isConnected) {
-    style = document.createElement('style');
+    style = target.ownerDocument.createElement('style');
     style.setAttribute('data-apollo-css-key', key);
     styleCache.set(key, style);
   }
@@ -48,7 +47,7 @@ export function updateCSS(
   if (style.textContent !== css) {
     style.textContent = css;
   }
-  if (!style.isConnected) {
+  if (style.parentNode !== target) {
     target.appendChild(style);
   }
 

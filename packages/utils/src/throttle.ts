@@ -69,7 +69,7 @@ export function throttle<F extends AnyFn>(
     const upcomingOnly = cancelOptions?.upcomingOnly ?? false;
     clearExistingTimeout();
     // ⚠️ 默认不是"只清定时器"，而是把整个 wrapper 作废
-    cancelled = !upcomingOnly;
+    if (!upcomingOnly) cancelled = true;
   }
 
   function wrapper(this: unknown, ...args: Parameters<F>): void {

@@ -103,16 +103,33 @@ export function isDocument(value: unknown): value is Document {
 }
 
 export function isHTMLElement(value: unknown): value is HTMLElement {
-  if (!isNonNullable(value)) return false;
-  return typeof HTMLElement !== 'undefined' && value instanceof HTMLElement;
+  return isElementNode(value) && value.namespaceURI === 'http://www.w3.org/1999/xhtml';
 }
 
-/** 是 DOM 元素（含 SVG）。SSR 下恒为 `false`，不抛错。 */
+function isElementNode(value: unknown): value is Element {
+  return (
+    !!value &&
+    typeof value === 'object' &&
+    'nodeType' in value &&
+    value.nodeType === 1 &&
+    'namespaceURI' in value &&
+    typeof value.namespaceURI === 'string' &&
+    'ownerDocument' in value &&
+    isDocument(value.ownerDocument) &&
+    'getAttribute' in value &&
+    typeof value.getAttribute === 'function' &&
+    'getBoundingClientRect' in value &&
+    typeof value.getBoundingClientRect === 'function'
+  );
+}
+
+/** Real HTML/SVG elements, including a foreign realm or a node adopted into another document. */
 export function isDOM(value: unknown): value is HTMLElement | SVGElement {
-  if (!isNonNullable(value)) return false;
-  if (typeof HTMLElement !== 'undefined' && value instanceof HTMLElement) return true;
-  if (typeof SVGElement !== 'undefined' && value instanceof SVGElement) return true;
-  return false;
+  return (
+    isElementNode(value) &&
+    (value.namespaceURI === 'http://www.w3.org/1999/xhtml' ||
+      value.namespaceURI === 'http://www.w3.org/2000/svg')
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -145,7 +162,15 @@ export function isElementVNode(value: unknown): value is VNode & { type: string 
 export function isComponentVNode(value: unknown): value is VNode & {
   type: object | ((...args: never[]) => unknown);
 } {
-  return isVNode(value) && (typeof value.type === 'object' || typeof value.type === 'function');
+  if (!isVNode(value)) return false;
+  const type = value.type;
+  return (
+    typeof type === 'function' ||
+    (type !== null &&
+      typeof type === 'object' &&
+      !('__isTeleport' in type && type.__isTeleport === true) &&
+      !('__isSuspense' in type && type.__isSuspense === true))
+  );
 }
 
 /** Fragment vnode。 */

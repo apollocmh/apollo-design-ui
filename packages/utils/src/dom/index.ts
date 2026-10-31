@@ -1,4 +1,4 @@
-export { containsComposed, getActiveElement } from './active-element';
+export { containsComposed, getActiveElement, isShadowRoot } from './active-element';
 export { default as canUseDom } from './can-use-dom';
 export { default as contains } from './contains';
 export type { FocusNode, InputFocusOptions } from './focus';

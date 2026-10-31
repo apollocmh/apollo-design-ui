@@ -23,7 +23,7 @@
  *    否则在 `requestAnimationFrame` 驱动的场景（拖拽、动画）下时序会错。
  */
 
-import { getCurrentScope, onScopeDispose, type Ref, ref } from 'vue';
+import { getCurrentScope, onScopeDispose, type Ref, shallowRef } from 'vue';
 import raf from '../raf';
 
 export type DelayConfig = { frame: number; ms?: never } | { frame?: never; ms: number };
@@ -35,26 +35,31 @@ export type SetDelayState<T> = (
 ) => void;
 
 export function useDelayState<T>(defaultValue: T | (() => T)): [Ref<T>, SetDelayState<T>] {
-  const value = ref(
+  const value = shallowRef<T>(
     typeof defaultValue === 'function' ? (defaultValue as () => T)() : defaultValue,
-  ) as Ref<T>;
+  );
 
   /** 待执行的调度：`[是否为 rAF, 取消句柄]`。`null` 表示没有待执行更新。 */
-  let pending: [isRaf: boolean, handle: number] | null = null;
+  let pending:
+    | { type: 'frame'; handle: number }
+    | { type: 'timeout'; handle: ReturnType<typeof setTimeout> }
+    | null = null;
+  let disposed = false;
 
   function cancelPending(): void {
     if (!pending) return;
-    const [isRaf, handle] = pending;
-    if (isRaf) {
-      raf.cancel(handle);
+    if (pending.type === 'frame') {
+      raf.cancel(pending.handle);
     } else {
-      clearTimeout(handle);
+      clearTimeout(pending.handle);
     }
     pending = null;
   }
 
   const setDelayState: SetDelayState<T> = (nextValue, immediatelyOrDelay) => {
+    if (disposed) return;
     const apply = (): void => {
+      pending = null;
       value.value =
         typeof nextValue === 'function' ? (nextValue as (prev: T) => T)(value.value) : nextValue;
     };
@@ -67,22 +72,25 @@ export function useDelayState<T>(defaultValue: T | (() => T)): [Ref<T>, SetDelay
       return;
     }
 
-    const delayConfig: DelayConfig = (immediatelyOrDelay as DelayConfig | undefined) ?? {
-      frame: 1,
-    };
+    const delayConfig: DelayConfig =
+      typeof immediatelyOrDelay === 'object' ? immediatelyOrDelay : { frame: 1 };
 
     if ('ms' in delayConfig) {
-      pending = [false, setTimeout(apply, delayConfig.ms) as unknown as number];
+      pending = { type: 'timeout', handle: setTimeout(apply, delayConfig.ms) };
       return;
     }
 
-    pending = [true, raf(apply, delayConfig.frame)];
+    if (delayConfig.frame === 0) apply();
+    else pending = { type: 'frame', handle: raf(apply, delayConfig.frame) };
   };
 
   // 组件卸载/作用域销毁时取消待执行更新，避免对已销毁的 ref 赋值。
   // 守卫 getCurrentScope：允许在组件外（如 headless composable 的单测）使用而不告警。
   if (getCurrentScope()) {
-    onScopeDispose(cancelPending);
+    onScopeDispose(() => {
+      disposed = true;
+      cancelPending();
+    });
   }
 
   return [value, setDelayState];

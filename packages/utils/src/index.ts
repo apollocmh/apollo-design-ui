@@ -54,6 +54,7 @@ export {
   getScroll,
   getTargetScrollBarSize,
   isBodyOverflowing,
+  isShadowRoot,
   isStyleSupport,
   isVisible,
   lockFocus,

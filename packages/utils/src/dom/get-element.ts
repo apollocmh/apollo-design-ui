@@ -32,12 +32,8 @@ export function getDOM(node: unknown): HTMLElement | SVGElement | null {
   if (isDOM(node)) {
     return node;
   }
-  if (
-    node &&
-    typeof node === 'object' &&
-    isDOM((node as { nativeElement?: unknown }).nativeElement)
-  ) {
-    return (node as { nativeElement: HTMLElement | SVGElement }).nativeElement;
+  if (node && typeof node === 'object' && 'nativeElement' in node && isDOM(node.nativeElement)) {
+    return node.nativeElement;
   }
   return null;
 }
@@ -57,9 +53,9 @@ function isComponentInstance(value: unknown): value is ComponentPublicInstance {
  * 解析出 DOM 元素。认识上面列出的全部六种形态。
  *
  * 解析顺序（先便宜后昂贵）：
- *   DOM 元素 → `{nativeElement}` → Vue 组件实例 → `{value}` → `{current}` → `{$el}` → VNode
+ *   DOM 元素 → `{nativeElement}` → Vue 组件实例 → `{value}` → `{$el}` → VNode
  *
- * `{current}` 分支是为了兼容从 React 迁移过来的调用点，不是我们的对外契约。
+ * React `{current}` 包装不属于此 Vue 公共契约；组件自己的 current prop 仍按真实实例处理。
  */
 export function getElement(node: unknown): HTMLElement | SVGElement | null {
   const direct = getDOM(node);
@@ -78,16 +74,11 @@ export function getElement(node: unknown): HTMLElement | SVGElement | null {
 
   // `Ref<Element>`：`ref()` 的返回值
   if ('value' in node) {
-    return getElement((node as { value: unknown }).value);
-  }
-
-  // React ref 形态：只为迁移期兼容
-  if ('current' in node) {
-    return getElement((node as { current: unknown }).current);
+    return getElement(node.value);
   }
 
   if ('$el' in node) {
-    return getElement((node as { $el: unknown }).$el);
+    return getElement(node.$el);
   }
 
   if (isVNode(node)) {
@@ -104,8 +95,8 @@ export function getElementFromVNode(
   if (!isVNode(vnode)) {
     return null;
   }
-  if (isElementVNode(vnode)) {
-    return isDOM(vnode.el) ? (vnode.el as HTMLElement | SVGElement) : null;
+  if (isElementVNode(vnode) || (isComponentVNode(vnode) && typeof vnode.type === 'function')) {
+    return isDOM(vnode.el) ? vnode.el : null;
   }
   if (isComponentVNode(vnode)) {
     const proxy = vnode.component?.proxy;

@@ -62,12 +62,14 @@ function isEqual(obj1: unknown, obj2: unknown, shallow = false): boolean {
       if (keys.length !== Object.keys(b).length) {
         return false;
       }
-      return keys.every((key) =>
-        deepEqual(
-          (a as Record<string, unknown>)[key],
-          (b as Record<string, unknown>)[key],
-          nextLevel,
-        ),
+      return keys.every(
+        (key) =>
+          Object.hasOwn(b, key) &&
+          deepEqual(
+            (a as Record<string, unknown>)[key],
+            (b as Record<string, unknown>)[key],
+            nextLevel,
+          ),
       );
     }
 

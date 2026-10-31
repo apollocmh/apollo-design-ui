@@ -76,7 +76,7 @@ export function pickClosable(
 function computeClosableConfig(
   closable: ClosableType | undefined,
   closeIcon: VNodeChild,
-): ClosableConfig | boolean | null {
+): ClosableConfig | false | null {
   if (!closable && (closable === false || closeIcon === false || closeIcon === null)) {
     return false;
   }
@@ -93,15 +93,15 @@ function computeClosableConfig(
 }
 
 function mergeClosableConfigs(
-  propConfig: ClosableConfig | boolean | null,
-  contextConfig: ClosableConfig | boolean | null,
+  propConfig: ClosableConfig | false | null,
+  contextConfig: ClosableConfig | false | null,
   fallbackConfig: ClosableConfig,
 ): ClosableConfig | false {
   if (propConfig === false) {
     return false;
   }
   if (propConfig) {
-    return mergeProps(fallbackConfig, contextConfig ?? {}, propConfig);
+    return mergeProps(fallbackConfig, contextConfig || {}, propConfig);
   }
   if (contextConfig === false) {
     return false;
