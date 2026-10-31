@@ -1,5 +1,3 @@
-> 2026-10-30 当前 API：动态内容使用 `#cellRender="{ current, info }"`、`#panelRender="{ originPanel }"`、`#extraFooter="{ mode }"`、`#tagRender="scope"`；前缀、后缀、清除、区间分隔与预设分别使用同名具名槽。移除旧函数渲染 props、`addon`、无实际组件的 PurePanel 类型及 notification props；使用 `@select`/其它原生 emits。`@keydown` 只收到原生 KeyboardEvent，可直接 preventDefault()；支持 `v-model:mode`。只读输入按 ArrowDown 进入面板，方向键导航，Enter/Space 选值，Escape 返回。DOM refs 在挂载前/卸载后为 null。
-
 ---
 category: 数据录入
 title: DatePicker
@@ -7,6 +5,8 @@ subtitle: 日期选择器
 titleTemplate: '%s - @apollo-design/ui'
 description: 输入或选择日期的控件。
 ---
+
+> 2026-10-30 当前 API：动态内容使用 `#cellRender="{ current, info }"`、`#panelRender="{ originPanel }"`、`#extraFooter="{ mode }"`、`#tagRender="scope"`；前缀、后缀、清除、区间分隔与预设分别使用同名具名槽。移除旧函数渲染 props、`addon`、无实际组件的 PurePanel 类型及 notification props；使用 `@select`/其它原生 emits。`@keydown` 只收到原生 KeyboardEvent，可直接 preventDefault()；支持 `v-model:mode`。只读输入按 ArrowDown 进入面板，方向键导航，Enter/Space 选值，Escape 返回。DOM refs 在挂载前/卸载后为 null。
 
 # DatePicker 日期选择器
 

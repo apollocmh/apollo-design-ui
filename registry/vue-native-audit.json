@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
-  "phase": "acceptance",
-  "revision": 232,
+  "phase": "architecture",
+  "revision": 234,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2565,6 +2565,28 @@
           ],
           "change": "Range reads the actual existing host owner with rangePicker fallback; popupStyle helper accurately accepts Vue CSSProperties.",
           "verification": "CMP:time-picker core/SFC/Demo and full scoped strict include both TimeRange and ordinary Date Range current ownership/withdrawal. Prior Date full evidence remains historical to its commit."
+        },
+        {
+          "scope": [
+            "packages/ui/src/date-picker/index.zh-CN.md",
+            "packages/ui/src/date-picker/index.en-US.md"
+          ],
+          "change": "Keep YAML frontmatter first; move the existing API migration note below it so both locales retain navigation metadata. No component implementation or historical evidence changed.",
+          "checks": [
+            {
+              "kind": "docs",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "packages/docs/tooling/content/build-manifest.mjs",
+                "--check"
+              ],
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 37511,
+              "log": "/tmp/apollo-final-datepicker-content-check.log"
+            }
+          ],
+          "boundary": "Current content validation only; complete docs build and browser validation remain in frozen acceptance."
         }
       ]
     },
@@ -11272,13 +11294,17 @@
       "kind": "foundation",
       "ref": "virtual-list",
       "title": "@apollo-design/virtual-list",
-      "architectureStatus": "done",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/virtual-list/src"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_picker",
+        "baseRevision": 232,
+        "startedAt": "2026-10-31T06:38:01.184Z"
+      },
       "evidence": [
         "registry/vue-native-audit.json"
       ],
@@ -11287,7 +11313,19 @@
         "docs/history/registry-implementation-2026-10-29/foundation.json",
         "docs/foundation/virtual-list-contract.md"
       ],
-      "issues": [],
+      "issues": [
+        {
+          "id": "VIRTUAL-LIST-SFC-BUILD",
+          "status": "open",
+          "blocking": true,
+          "impact": "Published package is missing because the shared TS-only foundation pipeline cannot parse Filler.vue; UI consumers cannot import the package.",
+          "reason": "Connect the existing SFC and generated generic declarations to the package build; preserve the current source/runtime evidence.",
+          "evidence": [
+            "packages/virtual-list/package.json",
+            "scripts/unbuild-preserve-modules.mjs"
+          ]
+        }
+      ],
       "affectedChanges": [
         {
           "scope": [
@@ -11764,8 +11802,24 @@
     }
   ],
   "finalAcceptance": {
-    "status": "not_started",
-    "sourceCommit": null,
-    "gates": []
+    "status": "failed",
+    "sourceCommit": "c43cf24f16d0207026825c1fd69cc1a324107cb6",
+    "gates": [
+      {
+        "dimension": "api",
+        "status": "blocked",
+        "sourceCommit": "c43cf24f16d0207026825c1fd69cc1a324107cb6",
+        "reason": "Unified build prerequisite failed before API/artifact consumers: VirtualList SFC is not compiled by the old TS-only foundation pipeline; DatePicker document frontmatter is not at the start. Later nine-dimensional gates were not executed.",
+        "checks": [
+          {
+            "kind": "build",
+            "command": "node tests/build/run.mjs --strict",
+            "exitCode": 1,
+            "signal": null,
+            "log": "/tmp/apollo-final-acceptance-c43cf24f.log"
+          }
+        ]
+      }
+    ]
   }
 }

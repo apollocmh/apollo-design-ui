@@ -1,11 +1,11 @@
-> Current API (2026-10-30): use named scoped slots for dynamic content (`cellRender`, `panelRender`, `extraFooter`, `tagRender`) and named decoration/preset slots. Legacy render props, `addon`, notification props and unimplemented PurePanel types are removed. Use owned emits, including `@select`; `@keydown` receives one native KeyboardEvent and honors preventDefault(). `v-model:mode` is supported. ArrowDown enters a readonly picker panel; arrows navigate, Enter/Space selects, Escape restores input focus. DOM refs are nullable.
-
 ---
 title: DatePicker
 subtitle: Date picker
 titleTemplate: '%s - @apollo-design/ui'
 description: To select or input a date.
 ---
+
+> Current API (2026-10-30): use named scoped slots for dynamic content (`cellRender`, `panelRender`, `extraFooter`, `tagRender`) and named decoration/preset slots. Legacy render props, `addon`, notification props and unimplemented PurePanel types are removed. Use owned emits, including `@select`; `@keydown` receives one native KeyboardEvent and honors preventDefault(). `v-model:mode` is supported. ArrowDown enters a readonly picker panel; arrows navigate, Enter/Space selects, Escape restores input focus. DOM refs are nullable.
 
 # DatePicker
 
