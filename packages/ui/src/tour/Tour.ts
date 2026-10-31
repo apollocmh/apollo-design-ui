@@ -1,52 +1,26 @@
-/**
- * Tour —— 引导遮罩。rc-tour 2.4.0（状态机 / 定位 / 蒙层）+ antd 6.6.4 `es/tour/index.js`
- * （薄壳）的 Vue 版。逐条判据的行号/源码出处见 `docs/analysis/tour.md`（§9 V1–V8）。
- *
- * ── 组装关系 ─────────────────────────────────────────────────────────────────
- *
- *   | rc / antd 侧                      | 本仓承接 |
- *   |---|---|---|
- *   | rc-trigger 的 Placeholder（占位）  | 本文件内联渲染的 div（Trigger 对齐其 slot 首个 vnode） |
- *   | rc `hooks/useTarget`              | 本文件 `updatePos` + window resize/scroll 监听 |
- *   | rc `Mask.js`                      | `./Mask`（独立 Portal + SVG 挖洞） |
- *   | antd `panelRender.js`（自研面板）  | `./panel`（TourPanel） |
- *   | antd `_util/placements`           | `@apollo-design/position` 的 `getPlacements` |
- *   | rc `useControlledState`           | 手写受控/非受控 ref（**不用** useControlledValue —— 重开归零需要「静默 set」，见下） |
- *   | rc Portal 的 Esc 栈               | `@apollo-design/portal` 的 `Portal onEsc`（经 Mask） |
- *
- * ── 六条最容易写错的判据（全部有源码出处，勿「顺手修」）────────────────────────
- *
- *   1. `mergedOpen = current 越界 ? false : (internalOpen ?? true)` —— 不传
- *      open/defaultOpen 且 current 合法时**默认打开**（rc `?? true`，§9-V6）；
- *      open 翻 true 且之前是关的 ⇒ `current` **静默归零**（不 emit change ——
- *      rc 的 useControlledState setter 不触发 onChange）。
- *   2. `mergedPlacement = step ?? global ?? (无 target ? 'center' : 'bottom')` ——
- *      'center' 是兜底值而非 placements 条目；查表落空 ⇒ 空 align ⇒
- *      position 包 splitPoints 兜底 'c' ⇒ 居中（§9-V1，已对拍 rc getAlignPoint）。
- *   3. 无 target 时箭头恒 `false`（rc：`mergedArrow = targetElement ? ... : false`）。
- *   4. antd 在 `arrowPointAtCenter` / `current` 变化后 `forceAlign()`（index.js 的
- *      useLayoutEffect）—— 本仓 Trigger expose 了同名方法，照做。
- *   5. Esc 条件是 `keyboard && mergedClosable !== null`；closable 合并是 rc
- *      `useClosable` 的『step 层不补默认、root 层补（preset=true）』双层语义（§9-V3）。
- *   6. `animated: true` 是 antd 运行时强制（index.js restProps 后覆盖）；本仓按 G2
- *      的 API 面保留用户 `animated`，`-placeholder-animated` 判据取
- *      `typeof animated === 'object' ? animated.placeholder : (animated ?? true)`。
- */
+/** Guided content owns its models; geometry is driven by the current target and open scope. */
 
-import type { GetContainer } from '@apollo-design/portal';
-import { useZIndex } from '@apollo-design/portal';
+import { useFocusRestore } from '@apollo-design/a11y';
+import { useZIndex, ZINDEX_KEY } from '@apollo-design/portal';
 import { getPlacements } from '@apollo-design/position';
-import { getDesignToken } from '@apollo-design/theme';
-import { observeResize } from '@apollo-design/utils';
 import {
-  type CSSProperties,
+  containsComposed,
+  getActiveElement,
+  getElement,
+  observeResize,
+  useId,
+} from '@apollo-design/utils';
+import {
   computed,
   defineComponent,
   h,
+  inject,
+  mergeProps,
   onBeforeUnmount,
   onMounted,
   type PropType,
   ref,
+  type SlotsType,
   shallowRef,
   type VNode,
   type VNodeChild,
@@ -56,7 +30,12 @@ import {
 import { clsx } from '../_internal/clsx';
 import { Trigger, type TriggerAlign } from '../_internal/trigger';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
-import { useComponentConfig, useDirection } from '../config-provider/context';
+import {
+  type ComponentStyleConfig,
+  useComponentConfig,
+  useDirection,
+} from '../config-provider/context';
+import { contentProp } from './content-prop';
 import type {
   TourAnimatedConfig,
   TourClosableConfig,
@@ -64,20 +43,22 @@ import type {
   TourProps,
   TourSemanticClassNames,
   TourSemanticStyles,
+  TourSlots,
   TourStepProps,
   TourType,
 } from './interface';
 import TourMask, { type TourMaskPos } from './Mask';
 import TourPanel, { type TourPanelStep } from './panel';
-import { tourTokenValues } from './style/token';
+import { useTourTheme } from './use-tour-theme';
 
 // ---------------------------------------------------------------------------
 // rc util.js（机械移植）
 // ---------------------------------------------------------------------------
 
 function isInViewPort(element: HTMLElement): boolean {
-  const viewWidth = window.innerWidth || document.documentElement.clientWidth;
-  const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+  const doc = element.ownerDocument;
+  const viewWidth = doc.defaultView?.innerWidth ?? doc.documentElement.clientWidth;
+  const viewHeight = doc.defaultView?.innerHeight ?? doc.documentElement.clientHeight;
   const { top, right, bottom, left } = element.getBoundingClientRect();
   return top >= 0 && left >= 0 && right <= viewWidth && bottom <= viewHeight;
 }
@@ -113,13 +94,16 @@ function getClosableConfig(
 ): ClosableResolved {
   if (
     closable === false ||
-    (closeIcon === false && (!isConfigObj(closable) || !closable.closeIcon))
+    (closeIcon === false && (!isConfigObj(closable) || closable.closeIcon === undefined))
   ) {
     return null;
   }
   const mergedCloseIcon = typeof closeIcon !== 'boolean' ? closeIcon : undefined;
   if (isConfigObj(closable)) {
-    return { ...closable, closeIcon: closable.closeIcon ?? mergedCloseIcon };
+    return {
+      ...closable,
+      closeIcon: closable.closeIcon !== undefined ? closable.closeIcon : mergedCloseIcon,
+    };
   }
   // step 层（preset=false）不自动补默认；root 层（preset=true）要补
   return preset || closable || closeIcon ? { closeIcon: mergedCloseIcon } : 'empty';
@@ -148,21 +132,12 @@ const CENTER_PLACEHOLDER = { left: '50%', top: '50%', width: '1px', height: '1px
 
 // ---------------------------------------------------------------------------
 
-type StyleLike = Record<string, string | number>;
-
-/** ConfigProvider 的 tour 段（antd `useComponentConfig('tour')` 的解构面）。 */
-interface TourContext {
-  className?: string;
-  style?: VueCSSProperties;
-  classNames?: TourSemanticClassNames;
-  styles?: TourSemanticStyles;
-  closeIcon?: VNodeChild;
-}
-type VueCSSProperties = CSSProperties;
+type TourContext = ComponentStyleConfig & Pick<TourProps, 'classNames' | 'styles' | 'closeIcon'>;
 
 const Tour = defineComponent({
   name: 'ATour',
   inheritAttrs: false,
+  slots: Object as SlotsType<TourSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
     open: { type: Boolean, default: undefined },
@@ -184,14 +159,14 @@ const Tour = defineComponent({
       type: [Boolean, Object] as PropType<TourProps['scrollIntoViewOptions']>,
       default: undefined,
     },
-    closeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    closeIcon: contentProp,
     closable: {
       type: [Boolean, Object] as PropType<TourProps['closable']>,
       default: undefined,
     },
     zIndex: { type: Number, default: undefined },
     getPopupContainer: {
-      type: Function as PropType<(node: HTMLElement) => HTMLElement>,
+      type: Function as PropType<NonNullable<TourProps['getPopupContainer']>>,
       default: undefined,
     },
     builtinPlacements: {
@@ -199,10 +174,6 @@ const Tour = defineComponent({
       default: undefined,
     },
     disabledInteraction: { type: Boolean, default: undefined },
-    onPopupAlign: {
-      type: Function as PropType<(element: HTMLElement, align: TriggerAlign) => void>,
-      default: undefined,
-    },
     classNames: {
       type: [Object, Function] as PropType<TourProps['classNames']>,
       default: undefined,
@@ -215,11 +186,20 @@ const Tour = defineComponent({
     change: (_current: number) => true,
     close: (_current: number) => true,
     finish: () => true,
+    popupAlign: (_element: HTMLElement, _align: TriggerAlign) => true,
   },
   setup(props, { slots, attrs, emit }) {
     const context = useComponentConfig<TourContext>('tour');
     const direction = useDirection();
-    const { getPrefixCls } = context;
+    const tourTheme = useTourTheme();
+    const mounted = ref(false);
+    onMounted(() => {
+      mounted.value = true;
+    });
+    const placeholderRef = shallowRef<HTMLDivElement | null>(null);
+    const popupElement = shallowRef<HTMLElement | null>(null);
+    const maskReadyContainer = shallowRef<HTMLElement | ShadowRoot | null>(null);
+    const titleId = `tour-title-${useId()}`;
 
     // ============================ Steps =============================
     // antd index.js：steps 逐条补 `-primary`（`(step.type ?? type) === 'primary'`）
@@ -233,13 +213,13 @@ const Tour = defineComponent({
       })),
     );
 
-    const prefixCls = computed(() => props.prefixCls ?? getPrefixCls('tour'));
+    const prefixCls = computed(() => context.getPrefixCls('tour', props.prefixCls));
 
     // ====================== Controlled State ========================
     // ⚠️ 不用 useControlledValue：rc useControlledState 的 setter **不触发**
     //    onChange —— 「重开归零」是静默 set，而 useControlledValue.setValue
     //    恒走 onChange。两个状态都手写（watch 同步受控值的行为与其一致）。
-    const currentInner = ref(props.defaultCurrent ?? 0);
+    const currentInner = ref(props.current ?? props.defaultCurrent ?? 0);
     const mergedCurrent = computed(() =>
       props.current !== undefined ? props.current : currentInner.value,
     );
@@ -248,15 +228,17 @@ const Tour = defineComponent({
       (v) => {
         if (v !== undefined) currentInner.value = v;
       },
+      { flush: 'sync' },
     );
 
-    const openInner = ref<boolean | undefined>(props.defaultOpen);
+    const openInner = ref(props.open ?? props.defaultOpen ?? true);
     const internalOpen = computed(() => (props.open !== undefined ? props.open : openInner.value));
     watch(
       () => props.open,
       (v) => {
-        openInner.value = v;
+        if (v !== undefined) openInner.value = v;
       },
+      { flush: 'sync' },
     );
 
     /** rc：`current 越界 ⇒ false`，否则 `internalOpen ?? true`（V6）。 */
@@ -267,28 +249,23 @@ const Tour = defineComponent({
       return internalOpen.value ?? true;
     });
 
-    /** 「曾经打开过」标志（rc hasOpened：渲染门，once true 恒 true）。 */
-    const hasOpened = ref(mergedOpen.value);
-    const openRef = ref(mergedOpen.value);
-    watch(mergedOpen, (open) => {
-      if (open) {
-        if (!openRef.value) {
-          // 静默归零（rc setMergedCurrent(0)，不发 change）
-          currentInner.value = 0;
-        }
-        hasOpened.value = true;
-      }
-      openRef.value = open;
-    });
+    // Only an accepted opening resets an uncontrolled step. Step-list validity is separate.
+    watch(
+      internalOpen,
+      (open, previous) => {
+        if (open && !previous && props.current === undefined) currentInner.value = 0;
+      },
+      { flush: 'pre' },
+    );
 
     const setCurrent = (next: number): void => {
-      currentInner.value = next;
+      if (props.current === undefined) currentInner.value = next;
       emit('update:current', next);
       emit('change', next);
     };
 
     const setClosed = (): void => {
-      openInner.value = false;
+      if (props.open === undefined) openInner.value = false;
       emit('update:open', false);
     };
 
@@ -305,6 +282,10 @@ const Tour = defineComponent({
     const targetElement = shallowRef<HTMLElement | null | undefined>(undefined);
     watchEffect(
       () => {
+        if (!mounted.value || !mergedOpen.value) {
+          targetElement.value = undefined;
+          return;
+        }
         const target = currentStep.value.target;
         const nextElement = typeof target === 'function' ? target() : target;
         targetElement.value = nextElement || null;
@@ -324,10 +305,10 @@ const Tour = defineComponent({
     // rc useTarget：getBoundingClientRect 视口坐标；gap 外扩在 mergedPosInfo。
     // inlineMode（getPopupContainer === false）不在公开面，不实现（§9-V5）。
     const posInfo = ref<TourMaskPos | null>(null);
-    const updatePos = (): void => {
+    const updatePos = (reveal = false): void => {
       const el = targetElement.value;
       if (el) {
-        if (!isInViewPort(el) && mergedOpen.value) {
+        if (reveal && !isInViewPort(el) && mergedOpen.value) {
           const options = mergedScrollIntoViewOptions.value;
           if (typeof options === 'boolean') {
             if (options) el.scrollIntoView();
@@ -369,77 +350,57 @@ const Tour = defineComponent({
     //     （也切断了「RO 回调 → 重排 → 再 RO」的自激）；
     //   · 只在打开时注册，关闭 / 切步 / 卸载时全部注销。
 
-    /** 待执行的帧回调 id（`null` = 没有挂起的测量）。 */
     let pendingFrame: number | null = null;
-
-    /** rAF 合并后的位置更新。无 rAF 环境（SSR / 老 jsdom）退化为同步。 */
-    const scheduleUpdatePos = (): void => {
-      if (typeof requestAnimationFrame !== 'function') {
+    let activeWindow: Window | null = null;
+    let activeDocument: Document | null = null;
+    let unobserveFns: Array<() => void> = [];
+    const scheduleUpdatePos = () => {
+      if (!mergedOpen.value) return;
+      if (!activeWindow?.requestAnimationFrame) {
         updatePos();
         return;
       }
       if (pendingFrame !== null) return;
-      pendingFrame = requestAnimationFrame(() => {
+      pendingFrame = activeWindow.requestAnimationFrame(() => {
         pendingFrame = null;
         updatePos();
       });
     };
-
-    const cancelScheduledUpdatePos = (): void => {
-      if (pendingFrame !== null) {
-        cancelAnimationFrame(pendingFrame);
-        pendingFrame = null;
-      }
-    };
-
-    /** 当前注册的 ResizeObserver 注销函数。 */
-    let unobserveFns: Array<() => void> = [];
-
-    const stopObserving = (): void => {
+    const stopObserving = () => {
       for (const off of unobserveFns) off();
       unobserveFns = [];
+      activeWindow?.removeEventListener('resize', scheduleUpdatePos);
+      activeDocument?.removeEventListener('scroll', scheduleUpdatePos, true);
+      if (pendingFrame !== null) activeWindow?.cancelAnimationFrame(pendingFrame);
+      pendingFrame = null;
+      activeWindow = null;
+      activeDocument = null;
     };
-
-    /**
-     * 观察目标**及其祖先链**（止于 `documentElement`，即含 `body`，不含 `html`：
-     * 文档级尺寸变化由 window resize 覆盖）。
-     *
-     * 注意传的是**稳定引用** `scheduleUpdatePos`：`observeResize` 用 Set 按引用去重，
-     * 每次传新箭头函数会让「同元素只注册一次」失效。
-     */
-    const startObserving = (): void => {
-      stopObserving();
-      const el = targetElement.value;
-      if (!el || !mergedOpen.value) return;
-      unobserveFns.push(observeResize(el, scheduleUpdatePos));
-      let ancestor = el.parentElement;
-      while (ancestor && ancestor !== document.documentElement) {
-        unobserveFns.push(observeResize(ancestor, scheduleUpdatePos));
-        ancestor = ancestor.parentElement;
-      }
-    };
-
-    watch([targetElement, mergedOpen], () => {
-      updatePos();
-      if (mergedOpen.value) {
-        startObserving();
-      } else {
-        stopObserving();
-      }
-    });
     onMounted(() => {
-      updatePos();
-      startObserving();
-      window.addEventListener('resize', scheduleUpdatePos);
-      // 🚨 capture 阶段：scroll 不冒泡，冒泡阶段只能收到 window/document 自身的滚动。
-      document.addEventListener('scroll', scheduleUpdatePos, true);
+      watch(
+        [targetElement, mergedOpen, mergedCurrent, mergedScrollIntoViewOptions],
+        () => {
+          stopObserving();
+          if (!mergedOpen.value) return;
+          const target = targetElement.value;
+          activeDocument = target?.ownerDocument ?? placeholderRef.value?.ownerDocument ?? document;
+          activeWindow = activeDocument.defaultView;
+          updatePos(true);
+          if (target) {
+            unobserveFns.push(observeResize(target, scheduleUpdatePos));
+            let ancestor = target.parentElement;
+            while (ancestor && ancestor !== activeDocument.documentElement) {
+              unobserveFns.push(observeResize(ancestor, scheduleUpdatePos));
+              ancestor = ancestor.parentElement;
+            }
+          }
+          activeWindow?.addEventListener('resize', scheduleUpdatePos);
+          activeDocument.addEventListener('scroll', scheduleUpdatePos, true);
+        },
+        { immediate: true, flush: 'post' },
+      );
     });
-    onBeforeUnmount(() => {
-      window.removeEventListener('resize', scheduleUpdatePos);
-      document.removeEventListener('scroll', scheduleUpdatePos, true);
-      stopObserving();
-      cancelScheduledUpdatePos();
-    });
+    onBeforeUnmount(stopObserving);
 
     // gap 外扩：offset 默认 6、radius 默认 2；二元组是 [水平, 垂直]
     const getGapOffset = (index: 0 | 1): number => {
@@ -477,42 +438,36 @@ const Tour = defineComponent({
     );
     const arrowPointAtCenter = computed<boolean>(() =>
       typeof mergedArrow.value === 'object' && mergedArrow.value !== null
-        ? (mergedArrow.value as { pointAtCenter: boolean }).pointAtCenter
+        ? mergedArrow.value.pointAtCenter
         : false,
     );
 
     // ====================== builtinPlacements =======================
     // antd：getPlacements({ arrowPointAtCenter ?? true, autoAdjustOverflow: true,
     // offset: marginXXS, arrowWidth: sizePopupArrow, borderRadius })
-    const seed = getDesignToken() as unknown as {
-      marginXXS: number;
-      sizePopupArrow: number;
-      borderRadius: number;
-    };
     const mergedBuiltinPlacements = computed<Record<string, TriggerAlign>>(() => {
       if (props.builtinPlacements) return props.builtinPlacements;
       return getPlacements({
         arrowPointAtCenter: arrowPointAtCenter.value,
         autoAdjustOverflow: true,
-        offset: seed.marginXXS,
-        arrowWidth: seed.sizePopupArrow,
-        borderRadius: seed.borderRadius,
+        offset: tourTheme.theme.token.value.marginXXS,
+        arrowWidth: tourTheme.theme.token.value.sizePopupArrow,
+        borderRadius: tourTheme.theme.token.value.borderRadius,
       });
     });
 
     // ========================= closable =============================
-    const mergedCloseIcon = computed<VNodeChild>(
-      () => slots.closeIcon?.() ?? props.closeIcon ?? context.closeIcon,
-    );
-    const mergedClosable = computed<ClosableResolved>(() => {
-      const stepCfg = getClosableConfig(
+    const resolveClosable = (icon: VNodeChild): ClosableResolved => {
+      const step = getClosableConfig(
         currentStep.value.closable,
         currentStep.value.closeIcon,
         false,
       );
-      const rootCfg = getClosableConfig(props.closable, mergedCloseIcon.value, true);
-      return stepCfg !== 'empty' ? stepCfg : rootCfg;
-    });
+      return step !== 'empty' ? step : getClosableConfig(props.closable, icon, true);
+    };
+    const isClosable = () =>
+      resolveClosable(slots.closeIcon ? undefined : (props.closeIcon ?? context.closeIcon)) !==
+      null;
 
     // =========================== mask ===============================
     // rc：`mask = true` 是解构默认值（缺省即显示蒙层）
@@ -530,15 +485,28 @@ const Tour = defineComponent({
     );
 
     // =========================== zIndex =============================
-    const zIndex = useZIndex('Tour', () => props.zIndex, {
-      zIndexPopupBase: tourTokenValues().zIndexPopup,
-    });
+    const parentZIndex = inject(ZINDEX_KEY, null);
+    const zIndex = useZIndex(
+      'Tour',
+      () =>
+        props.zIndex ??
+        (parentZIndex?.value === undefined
+          ? tourTheme.componentToken.value.zIndexPopup
+          : undefined),
+      {
+        get zIndexPopupBase() {
+          return tourTheme.theme.token.value.zIndexPopupBase;
+        },
+      },
+    );
 
     // ===================== Merged Semantic ==========================
     // antd：4 处 root 值经 useSemanticRootStyle(..., 'mask') 同时落到 mask（§2.3）
     const mergedProps = computed<TourProps>(() => ({
       ...props,
       steps: mergedSteps.value,
+      current: mergedCurrent.value,
+      open: mergedOpen.value,
     }));
     const resolvedPropsClassNames = computed(() =>
       typeof props.classNames === 'function'
@@ -551,7 +519,11 @@ const Tour = defineComponent({
         : props.styles,
     );
     const contextClassNames = computed(() => context.classNames);
-    const contextStyles = computed(() => context.styles);
+    const contextStyles = computed(() =>
+      typeof context.styles === 'function'
+        ? context.styles({ props: mergedProps.value })
+        : context.styles,
+    );
     const contextStyle = computed(() => context.style);
 
     const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
@@ -563,10 +535,9 @@ const Tour = defineComponent({
       [
         () => semanticRootStyle(contextStyles.value?.root, 'mask'),
         contextStyles,
-        () => semanticRootStyle(contextStyle.value, 'mask'),
+        () => (contextStyle.value ? { root: contextStyle.value } : undefined),
         () => semanticRootStyle(resolvedPropsStyles.value?.root, 'mask'),
         resolvedPropsStyles,
-        () => semanticRootStyle(attrs.style as VueCSSProperties | undefined, 'mask'),
       ],
       // ⚠️ 传 **computed 本身**（不是 `.value`）：函数式变体每次重算都要看到当前
       //    props；传 setup 期快照会让后续 props 变化在函数式里不可见（Issue #26.3）。
@@ -580,15 +551,15 @@ const Tour = defineComponent({
         direction.value === 'rtl' && `${prefixCls.value}-rtl`,
         context.className,
         mergedClassNames.value.root,
-        // 调用方原生 class（位置与原先的 props.className/rootClassName 一致）
-        attrs.class as string | undefined,
+        currentStep.value.classNames?.root,
+        currentStep.value.className,
       ),
     );
 
     // ========================= keyboard =============================
     const onInternalChange = (next: number): void => setCurrent(next);
     const keyboardHandler = (e: KeyboardEvent): void => {
-      if (isEditableTarget(e)) return;
+      if (e.defaultPrevented || e.isComposing || isEditableTarget(e)) return;
       if (props.keyboard !== false && e.key === 'ArrowLeft') {
         if (mergedCurrent.value > 0) {
           e.preventDefault();
@@ -603,21 +574,11 @@ const Tour = defineComponent({
         }
       }
     };
-    watch(
-      mergedOpen,
-      (open, _prev, onCleanup) => {
-        if (!open) return;
-        window.addEventListener('keydown', keyboardHandler);
-        onCleanup(() => window.removeEventListener('keydown', keyboardHandler));
-      },
-      { immediate: true },
-    );
-
     // ====================== Esc（经 Mask Portal）====================
     // rc：`keyboard && mergedClosable !== null` 时 preventDefault + handleClose
     //（不判 top —— 上游 Mask 的 Portal 是唯一带 onEsc 的栈项，逐字保留）
-    const handleEscClose = ({ event }: { top: boolean; event: KeyboardEvent }): void => {
-      if (props.keyboard !== false && mergedClosable.value !== null) {
+    const handleEscClose = ({ top, event }: { top: boolean; event: KeyboardEvent }): void => {
+      if (top && props.keyboard !== false && isClosable()) {
         event.preventDefault();
         handleClose();
       }
@@ -626,70 +587,98 @@ const Tour = defineComponent({
     // ===================== forceAlign（V8）==========================
     // antd：arrowPointAtCenter / mergedCurrent 变化后 triggerRef.forceAlign()
     const triggerRef = shallowRef<{ forceAlign: () => void } | null>(null);
-    watch([arrowPointAtCenter, mergedCurrent], () => {
-      triggerRef.value?.forceAlign();
+    watch(
+      [arrowPointAtCenter, mergedCurrent, mergedPosInfo],
+      () => {
+        triggerRef.value?.forceAlign();
+      },
+      { flush: 'post' },
+    );
+
+    const focusRestore = useFocusRestore(() => popupElement.value);
+    const restoreOwnedFocus = () => {
+      const element = popupElement.value;
+      const active = element ? getActiveElement(element) : null;
+      if (
+        element &&
+        (!active || active === element.ownerDocument.body || containsComposed(element, active))
+      )
+        focusRestore.restore();
+      else focusRestore.save(null);
+    };
+    onMounted(() => {
+      watch(
+        mergedOpen,
+        (open) => {
+          if (open) focusRestore.save();
+          else {
+            restoreOwnedFocus();
+            popupElement.value = null;
+          }
+        },
+        { immediate: true, flush: 'sync' },
+      );
+      watch(
+        popupElement,
+        (element) => {
+          if (element && mergedOpen.value) {
+            focusRestore.save();
+            if (!containsComposed(element, getActiveElement(element)))
+              element.focus({ preventScroll: true });
+          }
+        },
+        { flush: 'post' },
+      );
     });
+    onBeforeUnmount(restoreOwnedFocus);
 
-    // ========================== Render ==============================
+    const resolveContainer = (node: HTMLElement): HTMLElement | ShadowRoot | null => {
+      const custom = props.getPopupContainer ?? context.getPopupContainer;
+      if (custom) return custom(node);
+      const root = node.getRootNode();
+      return typeof ShadowRoot !== 'undefined' && root instanceof ShadowRoot
+        ? root
+        : node.ownerDocument.body;
+    };
+    const currentContainer = computed(() =>
+      placeholderRef.value ? resolveContainer(placeholderRef.value) : null,
+    );
+    const maskContainer = () => currentContainer.value;
+    const onPopupAlign = (element: HTMLElement, align: TriggerAlign) => {
+      emit('popupAlign', element, align);
+    };
+
     return () => {
-      // 渲染门（rc）：target 未解析 / 从未打开过 ⇒ null
-      if (targetElement.value === undefined || !hasOpened.value) {
-        return null;
-      }
-
+      if (!mounted.value || !mergedOpen.value || targetElement.value === undefined) return null;
       const step = currentStep.value;
       const p = prefixCls.value;
-
-      // ── Placeholder（rc Trigger 的 child）：挖洞位 / 中心占位 ──
-      // 数字必须转 px 字符串（PITFALLS 1：Vue patchStyle 不做转换）
       const pos = mergedPosInfo.value;
-      const placeholderStyle: StyleLike = {
-        ...(pos
-          ? {
-              left: `${pos.left}px`,
-              top: `${pos.top}px`,
-              width: `${pos.width}px`,
-              height: `${pos.height}px`,
-            }
-          : CENTER_PLACEHOLDER),
-        position: 'fixed',
-        pointerEvents: 'none',
-        // 根 style 是 Vue 原生 attrs
-        ...(attrs.style as StyleLike),
-      };
       const placeholder = h('div', {
-        class: clsx(
-          typeof attrs.class === 'string' ? attrs.class : undefined,
-          `${p}-target-placeholder`,
-        ),
-        style: placeholderStyle,
+        ref: placeholderRef,
+        class: `${p}-target-placeholder`,
+        style: {
+          ...(pos
+            ? {
+                left: `${pos.left}px`,
+                top: `${pos.top}px`,
+                width: `${pos.width}px`,
+                height: `${pos.height}px`,
+              }
+            : CENTER_PLACEHOLDER),
+          position: 'fixed',
+          pointerEvents: 'none',
+        },
       });
-
-      // ── 面板注入位（rc TourStep 的 props 装配）──────────────────
-      // slot 优先（C8-R2）：title/description/cover/按钮文案在这里解析
-      const total = mergedSteps.value.length;
+      const closeIcon = slots.closeIcon
+        ? slots.closeIcon()
+        : (props.closeIcon ?? context.closeIcon);
+      const closable = resolveClosable(closeIcon);
       const panelStep: TourPanelStep = {
         ...step,
         prefixCls: p,
-        total,
+        total: mergedSteps.value.length,
         current: mergedCurrent.value,
-        title: slots.title?.({ step, current: mergedCurrent.value, total }) ?? step.title,
-        description:
-          slots.description?.({ step, current: mergedCurrent.value, total }) ?? step.description,
-        cover: slots.cover?.({ step, current: mergedCurrent.value, total }) ?? step.cover,
-        nextButtonProps: {
-          ...step.nextButtonProps,
-          children:
-            slots.nextButton?.({ step, current: mergedCurrent.value, total }) ??
-            step.nextButtonProps?.children,
-        },
-        prevButtonProps: {
-          ...step.prevButtonProps,
-          children:
-            slots.prevButton?.({ step, current: mergedCurrent.value, total }) ??
-            step.prevButtonProps?.children,
-        },
-        closable: mergedClosable.value === 'empty' ? undefined : mergedClosable.value,
+        closable: closable === 'empty' ? undefined : closable,
         onClose: handleClose,
         onPrev: () => onInternalChange(mergedCurrent.value - 1),
         onNext: () => onInternalChange(mergedCurrent.value + 1),
@@ -698,25 +687,21 @@ const Tour = defineComponent({
           emit('finish');
         },
       };
-
       const popup = () =>
-        h(TourPanel, {
-          prefixCls: p,
-          stepProps: panelStep,
-          current: mergedCurrent.value,
-          type: props.type,
-          classNames: mergedClassNames.value,
-          styles: mergedStyles.value,
-          // #indicators / #actions → antd 两个 render prop 的桥接（C8-R2）
-          indicatorsRender: slots.indicators
-            ? (current: number, total: number) => slots.indicators?.({ current, total })
-            : undefined,
-          actionsRender: slots.actions
-            ? (originNode: VNodeChild, info: { current: number; total: number }) =>
-                slots.actions?.({ ...info, originNode })
-            : undefined,
-        });
-
+        h(
+          TourPanel,
+          {
+            prefixCls: p,
+            stepProps: panelStep,
+            slotStep: step,
+            current: mergedCurrent.value,
+            type: props.type,
+            classNames: mergedClassNames.value,
+            styles: mergedStyles.value,
+            titleId,
+          },
+          slots,
+        );
       const mask = h(TourMask, {
         prefixCls: p,
         pos: mergedPosInfo.value,
@@ -727,39 +712,60 @@ const Tour = defineComponent({
         placeholderAnimated: placeholderAnimated.value,
         zIndex: zIndex.value,
         disabledInteraction: props.disabledInteraction,
-        // antd：Mask 的 rootClassName = mergedRootClassName（含 classNames.root /
-        // ctx className / className），再加语义槽 mask —— 逐字同构
-        maskClassName: clsx(mergedRootClassName.value, mergedClassNames.value.mask),
-        maskStyle: mergedStyles.value.mask,
-        getContainer: props.getPopupContainer as unknown as GetContainer | undefined,
+        maskClassName: clsx(
+          mergedClassNames.value.root,
+          step.classNames?.root,
+          mergedClassNames.value.mask,
+          step.classNames?.mask,
+        ),
+        maskStyle: { ...mergedStyles.value.mask, ...step.styles?.root, ...step.styles?.mask },
+        getContainer: maskContainer,
         onEsc: handleEscClose,
+        onReady: (container: HTMLElement | ShadowRoot | null) => {
+          maskReadyContainer.value = container;
+        },
       });
-
+      const popupAttrs = mergeProps(
+        {
+          class: mergedRootClassName.value,
+          style: [tourTheme.style.value, mergedStyles.value.root, step.styles?.root, step.style],
+          role: 'dialog',
+          dir: context.direction,
+          tabindex: -1,
+          onVnodeMounted: (node: VNode) => {
+            const element = getElement(node);
+            if (element instanceof HTMLElement) popupElement.value = element;
+          },
+          onVnodeBeforeUnmount: () => {
+            restoreOwnedFocus();
+            popupElement.value = null;
+          },
+          ...(attrs['aria-label'] === undefined && attrs['aria-labelledby'] === undefined
+            ? { 'aria-labelledby': titleId }
+            : {}),
+        },
+        attrs,
+        { onKeydown: keyboardHandler },
+      );
       const trigger = h(
         Trigger,
         {
-          ref: triggerRef as never,
+          ref: triggerRef,
           prefixCls: p,
           popup,
-          // rc：无 action（占位 pointer-events:none，开合只走受控 open）
-          open: mergedOpen.value,
+          open: mergedOpen.value && maskReadyContainer.value !== null,
           placement: mergedPlacement.value,
           builtinPlacements: mergedBuiltinPlacements.value,
-          getPopupContainer: props.getPopupContainer,
-          popupStyle: step.style as StyleLike,
-          popupClassName: clsx(mergedRootClassName.value, step.className),
-          // rc：forceRender: false + autoDestroy: true
+          getPopupContainer: maskContainer,
           destroyOnHidden: true,
           zIndex: zIndex.value,
           arrow: mergedArrow.value ? {} : undefined,
-          onPopupAlign: props.onPopupAlign,
-          ...attrs,
+          onPopupAlign,
+          popupAttrs,
         },
         { default: () => [placeholder] },
       );
-
-      // rc 返回 Fragment [Mask, Trigger] —— Vue 数组同构
-      return [mask, trigger] as unknown as VNode;
+      return [mask, trigger];
     };
   },
 });

@@ -254,3 +254,7 @@ Slider 的 handle/activeHandle 槽准确公开实际 nodeProps/ref/事件及当�
 ### D-carousel-native-slides-and-config
 
 Carousel 的 beforeChange/afterChange/swipe/edge 使用所属 Vue emits，模板自然支持短横线事件名；原生 style/attrs 落真实根，内层样式用 styles.slider，移除未消费的 easing。箭头槽提供既有原生按钮的完整内容，原件 key/ref 与条件槽保持真实 Vue 归属；克隆按实际可见范围提供交互，原生 ID 关联和透传插槽 ref 在克隆边界处理。修正动态配置、自动播放暂停原因、动画/尺寸资源及当前八 Token；克隆仍是独立组件实例，不镜像任意内部状态，详见[Carousel API](packages/ui/src/carousel/index.zh-CN.md)。
+
+### D-tour-native-target-and-popup
+
+Tour 保留 open/current 模型与已有具名槽，拒绝请求不泄漏到撤控状态，异步步骤和真正重开分别处理。actions 的 originNode 改为稳定可直接渲染的组件；popupAlign 使用 Vue emits，步骤按钮传原生 MouseEvent 并支持取消导航。原生 attrs 经私有 Trigger 通道落真实弹层，修正当前目标/容器、配置/语言/Token、PurePanel 及焦点；遮罩使用原生 SVG 属性，实际滚动、换容器与切换遮罩保持正确几何和子树身份。没有新增观察任意纯位置重排的能力，详见[Tour API](packages/ui/src/tour/index.zh-CN.md)。

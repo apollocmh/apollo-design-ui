@@ -35,7 +35,7 @@ function mountTour(props: Record<string, unknown> = {}) {
 
 function pressKey(key: string, target?: HTMLElement): void {
   const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
-  (target ?? window).dispatchEvent(event);
+  (target ?? document.querySelector<HTMLElement>('.apollo-tour') ?? window).dispatchEvent(event);
 }
 
 afterEach(() => {
@@ -82,7 +82,7 @@ describe('Tour · 键盘导航（←/→）', () => {
     const w = mountTour();
     await waitOpen();
     const input = document.createElement('input');
-    document.body.appendChild(input);
+    document.querySelector('.apollo-tour')?.appendChild(input);
     pressKey('ArrowRight', input);
     await nextTick();
     expect(titleText()).toBe('step-0');

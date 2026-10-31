@@ -2,9 +2,9 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 202,
+  "revision": 204,
   "dispatch": {
-    "status": "running",
+    "status": "paused",
     "maxParallel": 5,
     "integrator": "root"
   },
@@ -6122,17 +6122,13 @@
       "kind": "component",
       "ref": "tour",
       "title": "Tour",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tour"
       ],
-      "assignment": {
-        "owner": "native_portal",
-        "baseRevision": 191,
-        "startedAt": "2026-10-31T00:26:03.369Z"
-      },
+      "assignment": null,
       "evidence": [
         "registry/vue-native-audit.json"
       ],
@@ -6220,7 +6216,223 @@
           },
           "boundary": "Completes only the required private Trigger bridge; Tour architecture remains assigned/in progress and final nine-dimension acceptance has not started."
         }
-      ]
+      ],
+      "verification": {
+        "stage": "architecture",
+        "unit": "CMP:tour",
+        "scope": [
+          "packages/ui/src/tour"
+        ],
+        "passed": true,
+        "frozen": true,
+        "environment": {
+          "node": "22.22.2",
+          "pathPrefix": "/Users/nanren/.nvm/versions/node/v22.22.2/bin"
+        },
+        "sourceHashes": {
+          "packages/ui/src/tour/use-tour-theme.ts": "bd783764b14b55c579671bd6a7f48dcbd3f53bb5444326d18e00897db3afbee6",
+          "packages/ui/src/tour/panel.ts": "ba0befb59787881b43a7594e55b1cd0e2a3f2b751b6dd1861d66dc9280e0bd76",
+          "packages/ui/src/tour/Tour.ts": "70779330314ff702d0525a4c5452c66d8f9239175d1de2eb8cb06f85b33a4d84",
+          "packages/ui/src/tour/PurePanel.ts": "7f03690e65ee515b4f5014f8e03f8f0dfcb97ec28a6fb05d93dedb7390a0a528",
+          "packages/ui/src/tour/content-prop.ts": "93f52577c2e881341e7cea8aab3b32a21f851a3bd926acf4257591e4beb1dbcb",
+          "packages/ui/src/tour/interface.ts": "8cc9b4b0b93bfd51597d3d18e4714f98192fa5c43dd8a397f708f64905c24d4f",
+          "packages/ui/src/tour/index.ts": "74095a2f787e61ec6cb18298ad566f1bf692e56f274c8e64577ac8f7d1d9580e",
+          "packages/ui/src/tour/Mask.ts": "419c6868e245f5812b5e728f305f9989cc9b8cc38dced63a95093bf4d10971d7",
+          "packages/ui/src/tour/demo/indicator.vue": "51bab376f7167254a822c1727a21de3de0fb9a37a73a13ef630d2f1d0ca17aee",
+          "packages/ui/src/tour/demo/actions-render.vue": "ced52142c9008e4c31b6e96846ebdeea47a0e38c19d61b90afefea0f2c089b80",
+          "packages/ui/src/tour/demo/placement.vue": "a2044fedd030562e6fe7d6b37f7fa22b70b2413cffbc76aade7032fcafe77db1",
+          "packages/ui/src/tour/demo/render-panel.vue": "261709339ba692632531f8c8297c592f27f8a1b61346baa98aad804602629ce2",
+          "packages/ui/src/tour/demo/style-class.vue": "018ffc6f49a3d27ceacd398132320f18a92849abc37bbeccba463a269b237657",
+          "packages/ui/src/tour/demo/gap.vue": "05e34048d8a502765e3c2a2115b027a6315e2000b3660976f238c900482bf924",
+          "packages/ui/src/tour/demo/mask.vue": "a6172bb6e3a84d9d0e6c5870899e4c2a0fbfd37b2e1ea1c26ab15394602dbc7c",
+          "packages/ui/src/tour/demo/basic.vue": "0a46d7cc18925c95ec003608eb27b8063398190db98b022b84b0935d1d5b824e",
+          "packages/ui/src/tour/demo/non-modal.vue": "a5baa301fed40b80c6509d74c8e15368eb2fcad230314fd31cd04edb570e1378",
+          "packages/ui/src/tour/style/index.ts": "a712c3bc803f3f58965b4c68640f740fdbffdbd6b1e4ebd87a58efa599ab49e5",
+          "packages/ui/src/tour/style/token.ts": "d863a76323944e6a851d0f74ce4f5770e166bc648389e6e772edc0fbfebaf3b3",
+          "packages/ui/src/tour/__tests__/a11y.test.ts": "21af0233d2dea3393f3311f89db7bd595a6a0c76d3aba703402aee708f527ce4",
+          "packages/ui/src/tour/__tests__/native-contracts.test.ts": "26d877d53ecd8ae79fdf57d515218ee718f52f2de9163b405acc6f9a4dbf5c12",
+          "packages/ui/src/tour/__tests__/index.test.ts": "5a471e2fdf7320334a284598bff5cf0f823ff239b5978aa58aefd329fae1c7a2",
+          "packages/ui/src/tour/__tests__/demo.test.ts": "46757431a07ec9ce4ba47b54fe74a888ebae77fc1f86024e824d1538298803f4",
+          "packages/ui/src/tour/__tests__/type.test-d.ts": "34ba322bb28a68c1fbd9260e8e65e555cd2f380aab37fb1e04b00ce5f35aac31",
+          "packages/ui/src/tour/__tests__/s53-issue53.test.ts": "576d6e8f42c82c47a750eb660456e4a33eb3a21819813e84f8013aae2e871a61",
+          "packages/ui/src/tour/__tests__/keyboard.test.ts": "daf0038824bc7ab68dfd02f1d688c01b9f9937e9ff54feefaa0ffec1ffeae8ca",
+          "packages/ui/src/tour/__tests__/theme.test.ts": "de8bbd0a2323839999e99ae3804d1aa574e490bb5560dd5d729e68d24531c08b",
+          "packages/ui/src/tour/__tests__/semantic.test.ts": "49a7149e09e18c9e2d088c802dc11bc1ebf17bae09d6249af7f640ec17820a14",
+          "packages/ui/src/tour/__tests__/fixtures/NativeTourTypes.vue": "cb47932c3aa70e26f71a95837e5d7286be6330fedd8a118ab7b33b15d6e87c7c",
+          "packages/ui/src/tour/__tests__/fixtures/NativeTour.vue": "ffa31b39494018a3647221a1b40ea393273e607f2bb9d0ec42dfab4c9dbe0cbc",
+          "packages/ui/src/index.ts": "9437ef872405cb31023bc846a7fae8e8148f200757955104e27447ae32f153b9"
+        },
+        "typesSourceHashesMatch": true,
+        "checks": [
+          {
+            "kind": "core",
+            "scope": [
+              "packages/ui/src/tour"
+            ],
+            "cwd": "/Users/nanren/Code/apollo-design-ui",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit --project dom-contract packages/ui/src/tour/__tests__/index.test.ts packages/ui/src/tour/__tests__/s53-issue53.test.ts packages/ui/src/tour/__tests__/native-contracts.test.ts packages/ui/src/tour/__tests__/keyboard.test.ts packages/ui/src/tour/__tests__/semantic.test.ts packages/ui/src/tour/__tests__/demo.test.ts --maxWorkers=1",
+            "commandNote": "Direct invocation restated from the executed six-file/project selection; logging shell wrapper omitted.",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 25820,
+            "durationSource": "Vitest duration",
+            "testFiles": 6,
+            "tests": 94,
+            "log": "/tmp/apollo-tour-core-dom-frozen.log"
+          },
+          {
+            "kind": "browser",
+            "scope": [
+              "packages/ui/src/tour"
+            ],
+            "cwd": "/Users/nanren/Code/apollo-design-ui",
+            "command": "node packages/ui/src/tour/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7257,
+            "behaviorPassed": true,
+            "diagnostics": [],
+            "log": "/tmp/apollo-tour-browser-frozen.log"
+          },
+          {
+            "kind": "types",
+            "scope": [
+              "packages/ui/src/tour",
+              "packages/ui/src/index.ts"
+            ],
+            "owner": "root",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-tour-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53842,
+            "log": "/tmp/apollo-tour-types.log",
+            "evidence": "/tmp/apollo-tour-types-result.json",
+            "includes": [
+              "all Tour TS/SFC",
+              "9 demos",
+              "real h()/SFC positive and negative type examples",
+              "strict and declaration unchanged",
+              "entire UI public root exports"
+            ]
+          },
+          {
+            "kind": "a11y",
+            "scope": [
+              "packages/ui/src/tour/__tests__/a11y.test.ts"
+            ],
+            "owner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project a11y packages/ui/src/tour/__tests__/a11y.test.ts --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11922,
+            "log": "/tmp/apollo-tour-related-a11y.log",
+            "tests": 15,
+            "diagnostics": [
+              "jsdom HTMLCanvasElement.getContext unavailable; color contrast not claimed"
+            ]
+          },
+          {
+            "kind": "lint",
+            "scope": [
+              "packages/ui/src/tour"
+            ],
+            "cwd": "/Users/nanren/Code/apollo-design-ui",
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/ui/src/tour",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 49,
+            "durationSource": "Biome duration",
+            "files": 32,
+            "result": "No fixes applied"
+          },
+          {
+            "kind": "diff",
+            "scope": [
+              "packages/ui/src/tour"
+            ],
+            "cwd": "/Users/nanren/Code/apollo-design-ui",
+            "command": "git diff --check -- packages/ui/src/tour",
+            "exitCode": 0,
+            "signal": null
+          }
+        ],
+        "implemented": [
+          "Keep one accepted source per open/current model across rejected and accepted proposals, release of control, delayed/dynamic steps, batched reopen and release.",
+          "Preserve complete render-time Vue slots and stable directly renderable actions.originNode Component; native cancellable MouseEvent data actions.",
+          "Owned popupAlign notification; actual popup attrs, styles, listeners and ARIA ownership through existing Trigger.popupAttrs.",
+          "Current Provider locale, prefix, direction, styles and effective Theme/Token projection shared by Tour/PurePanel; actual visual z-index and numeric context agree including explicit zero.",
+          "Open-scoped owner-document listeners, ResizeObserver and frame cancellation; preserve target reveal geometry and scroll-coalescing, align popup after updated placeholder DOM.",
+          "Real SVG pointer-events, initial sibling portal readiness, persistent input/draft/caret/focus across container and mask switches; nonmodal no body lock.",
+          "Top-layer Escape and popup-scoped arrows; accepted-close focus restore respects outside focus choice; SSR performs no browser side effects.",
+          "Real local static constructors and Vue VNodeChild prop metadata; actual h/SFC scoped-slot and emit positive/negative examples."
+        ],
+        "migration": [
+          "Use @popup-align(element, align); programmatic onPopupAlign remains the owned event listener.",
+          "Render actions.originNode directly with <component :is=\"originNode\" />; remove VNode wrappers and assertions.",
+          "Native root attrs now land once on the visible popup; use styles.mask to style the mask.",
+          "nextButtonProps/prevButtonProps.onClick receive real MouseEvent and may preventDefault to cancel navigation.",
+          "PurePanel accepts actual render fields plus prefixCls/current/total; Tour exposes no public imperative API."
+        ],
+        "exports": {
+          "added": [],
+          "removed": [],
+          "rootChangesNeeded": false,
+          "changedTypes": [
+            "TourProps",
+            "TourStepProps",
+            "TourButtonProps",
+            "TourSlots",
+            "TourPurePanelProps",
+            "TourEmits"
+          ]
+        },
+        "failedEvidence": [
+          {
+            "log": "/tmp/apollo-tour-native-red.log",
+            "exitCode": 1,
+            "durationMs": 6070,
+            "failure": "11 initial native contract cases failed before fixes."
+          },
+          {
+            "log": "/tmp/apollo-tour-browser-second.log",
+            "exitCode": 1,
+            "durationMs": 6184,
+            "failure": "Real SVG mask outside target did not intercept pointer events."
+          },
+          {
+            "log": "/tmp/apollo-tour-browser-third.log",
+            "exitCode": 1,
+            "durationMs": 17617,
+            "failure": "Initial independent portal append order put mask over popup."
+          },
+          {
+            "log": "/tmp/apollo-tour-browser-fourth.log",
+            "exitCode": 1,
+            "durationMs": 6640,
+            "failure": "Batched reopening and control release retained stale current."
+          },
+          {
+            "log": "/tmp/apollo-tour-popup-scroll-red.log",
+            "exitCode": 1,
+            "durationMs": 7362,
+            "failure": "Target hole moved on scroll but popup stayed at old coordinates."
+          }
+        ],
+        "sharedSupport": {
+          "commit": "13f2f500",
+          "owner": "root",
+          "change": "Private Trigger.popupAttrs merge onto actual popup root; related core and strict/declaration evidence retained by root."
+        },
+        "boundaries": [
+          "Existing s53 geometry signals remain: pure position rearrangement without observed size, scroll or explicit activation signal is not watched with a new DOM observer or polling.",
+          "jsdom a11y cannot validate canvas-based color contrast; its diagnostic is retained.",
+          "Stage-one targeted source Chrome and existing DOM/demo cases only; final nine-dimensional matrix, full visual/theme matrix, coverage, distribution and release consumers remain unified final acceptance."
+        ],
+        "sourceFrozen": true,
+        "recordedAt": "2026-10-31T01:42:37.287425+00:00"
+      }
     },
     {
       "id": "CMP:transfer",

@@ -14,7 +14,7 @@ import buttonContentDifferences from './button-content-reference-diffs.json';
 
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
 import { mount } from '@vue/test-utils';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { h, nextTick } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/tour.dom.json';
 import { Tour, TourPurePanel } from '../index';
@@ -215,7 +215,7 @@ describe('Tour · 语义化 12 槽（antd custom styles 用例全量）', () => 
     target.remove();
   });
 
-  it('顶层 style 双落点：placeholder（rc 协议）与 mask（useSemanticRootStyle）', async () => {
+  it('原生 style 只落实际 popup 根，不污染定位 placeholder 或 mask', async () => {
     mount(Tour, {
       attachTo: document.body,
       global: { stubs: { teleport: false } },
@@ -232,11 +232,14 @@ describe('Tour · 语义化 12 槽（antd custom styles 用例全量）', () => 
       .catch(() => {});
     await nextTick();
     const maskEl = document.querySelector<HTMLElement>('.apollo-tour-mask');
-    // style（顶层）→ mask（antd `useSemanticRootStyle(style, 'mask')`）
-    expect(maskEl?.getAttribute('style')).toContain('background-color: rgb(255, 200, 255)');
-    // style（顶层）→ placeholder（rc-tour 的 Placeholder style 摊平）
+    // 原生 style 由 popupAttrs 唯一消费；显式 styles.mask 仍控制遮罩。
+    expect(maskEl?.getAttribute('style')).not.toContain('background-color: rgb(255, 200, 255)');
+    // 定位 placeholder 的几何不受原生样式影响。
     const placeholder = document.querySelector<HTMLElement>('.apollo-tour-target-placeholder');
-    expect(placeholder?.getAttribute('style')).toContain('background-color: rgb(255, 200, 255)');
+    expect(placeholder?.getAttribute('style')).not.toContain(
+      'background-color: rgb(255, 200, 255)',
+    );
+    expect(panelRoot()?.style.backgroundColor).toBe('rgb(255, 200, 255)');
   });
 
   it('函数式 classNames/styles（裁决 empty-semantic-fn = B）', async () => {

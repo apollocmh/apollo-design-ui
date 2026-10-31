@@ -10,13 +10,11 @@ import { withInstall } from '../_internal/with-install';
 import PurePanelComponent from './PurePanel';
 import TourComponent from './Tour';
 
-/** Tour 组件。注册名 `ATour`（COMPONENT-RULES.md 规则 R2）。 */
-export const Tour = withInstall(TourComponent);
-
-/** 静态面板（`Tour._InternalPanelDoNotUseOrYouWillBeFired` 的对应物）。 */
+/** Static preview remains a real Vue constructor before attaching the public static. */
 export const TourPurePanel = withInstall(PurePanelComponent);
-
-Tour._InternalPanelDoNotUseOrYouWillBeFired = TourPurePanel;
+export const Tour = withInstall(
+  Object.assign(TourComponent, { _InternalPanelDoNotUseOrYouWillBeFired: TourPurePanel }),
+);
 
 export default Tour;
 

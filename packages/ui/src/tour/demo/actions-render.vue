@@ -1,8 +1,7 @@
 <script setup lang="ts">
 // 对齐 antd demo/actions-render.tsx：#actions scoped slot（originNode + Skip 按钮）
 import { Button, Divider, Space, Tour } from '@apollo-design/ui';
-import type { ComponentPublicInstance, VNodeChild } from 'vue';
-import { h, ref } from 'vue';
+import { ref } from 'vue';
 
 const open = ref(false);
 
@@ -10,9 +9,9 @@ const ref1 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null }
 const ref2 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null } | null>(null);
 const ref3 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null } | null>(null);
 
-const target1 = () => (ref1.value?.nativeElement as HTMLElement) ?? null;
-const target2 = () => (ref2.value?.nativeElement as HTMLElement) ?? null;
-const target3 = () => (ref3.value?.nativeElement as HTMLElement) ?? null;
+const target1 = () => ref1.value?.nativeElement;
+const target2 = () => ref2.value?.nativeElement;
+const target3 = () => ref3.value?.nativeElement;
 
 const steps = [
   { title: 'Upload File', description: 'Put your files here.', target: target1 },
@@ -35,7 +34,7 @@ const steps = [
         <Button size="small" @click="open = false">Skip</Button>
       </template>
       <template v-if="originNode !== undefined">
-        <component :is="() => originNode as VNodeChild" />
+        <component :is="originNode" />
       </template>
     </template>
   </Tour>

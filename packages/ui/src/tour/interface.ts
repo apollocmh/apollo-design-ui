@@ -1,28 +1,7 @@
-/**
- * Tour 的类型定义（G2 产物）。
- *
- * 契约来源：antd 6.6.4 `es/tour/interface.d.ts`（antd 自有面）+ `@rc-component/tour`
- * 2.4.0 `es/interface.d.ts`（rc 面，antd 用 `Omit<...>` 继承）。分析见 `docs/analysis/tour.md`。
- *
- * ── Vue 化映射（COMPATIBILITY.md §1–§4 的规则）────────────────────────────────
- *   · `open` + `onChange`/`onClose` → `v-model:open` + `update:open` + `change`/`close`
- *     （规则 C11：v-model 与语义事件**同时**发出）
- *   · `current` + `onChange` → `v-model:current` + `update:current` + `change`
- *   · `title`/`description`/`cover`/`nextButtonProps.children`/`prevButtonProps.children`
- *     → **slot 优先**，同名 prop 收窄为 `string` 兜底（规则 C8-R2）
- *   · `indicatorsRender` / `actionsRender` → scoped slot（C8-R2）
- *   · `renderPanel` → **不公开**（antd 自己也只用它注入自家 Panel；上游已 `Omit`）
- *   · `closeIcon`（含 `steps[].closeIcon` / `closable.closeIcon`）保留 VNode prop
- *     —— 程序化上下文，属 D111 的例外清单
- *   · `classNames` / `styles` → 保留，且支持**函数形态**（裁决 `empty-semantic-fn` = B）
- *
- * ⚠️ 禁止 any / as any / @ts-expect-error（H10）。VNode 类 prop 必须显式
- *    `undefined` 默认值（PITFALLS 2/185：Boolean 转换陷阱 + `PropType<unknown>` 会让
- *    整个 prop 推断成 `undefined`）。
- */
+/** Native Tour contracts. Historical source references do not override the current Vue API. */
 
 import type { TourLocale } from '@apollo-design/locale';
-import type { ClassValue, CSSProperties, VNodeChild } from 'vue';
+import type { ClassValue, Component, CSSProperties, VNodeChild } from 'vue';
 
 import type { TriggerAlign } from '../_internal/trigger';
 
@@ -156,7 +135,7 @@ export interface TourSemanticAllType {
 export interface TourButtonProps {
   /** slot `#nextButton` / `#prevButton` 优先；此 prop 为字符串兜底。 */
   children?: string;
-  onClick?: () => void;
+  onClick?: (event: MouseEvent) => void;
   /** Vue 原生 class attrs，落在步骤操作按钮上。 */
   class?: ClassValue;
   style?: CSSProperties;
@@ -174,7 +153,7 @@ export interface TourStepProps {
    * 高亮的目标元素。`null` 表示**无目标**（居中显示）。
    * ⚠️ React 的 `() => HTMLElement` 在 Vue 里保留函数形态（与 ref 取值时机有关）。
    */
-  target?: HTMLElement | (() => HTMLElement) | null;
+  target?: HTMLElement | (() => HTMLElement | null | undefined) | null;
   /** 标题。slot `#title` 优先。 */
   title?: string;
   /** 描述。slot `#description` 优先。 */
@@ -212,6 +191,11 @@ export interface TourStepProps {
 // ---------------------------------------------------------------------------
 
 export interface TourProps {
+  'onUpdate:open'?: (open: boolean) => void;
+  'onUpdate:current'?: (current: number) => void;
+  onChange?: (current: number) => void;
+  onClose?: (current: number) => void;
+  onFinish?: () => void;
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo`。 */
   prefixCls?: string;
   /** 是否打开（受控）。配合 `v-model:open` 使用。 */
@@ -250,12 +234,12 @@ export interface TourProps {
   /** 浮层 z-index。不传由 `useZIndex('Tour')` 计算。 */
   zIndex?: number;
   /** 挂载容器。 */
-  getPopupContainer?: (node: HTMLElement) => HTMLElement;
+  getPopupContainer?: (node: HTMLElement) => HTMLElement | ShadowRoot | null;
   /** 自定义 placement 配置表（默认由 `getPlacements` 生成）。 */
   builtinPlacements?: Record<string, TriggerAlign>;
   /** 蒙层是否拦截交互（`true` 时蒙层可点，不穿透）。 */
   disabledInteraction?: boolean;
-  /** 浮层对齐完成后的回调（rc-trigger 的 `onPopupAlign` 同构）。 */
+  /** Vue popupAlign 事件监听器；不作为回调 prop 调用。 */
   onPopupAlign?: (element: HTMLElement, align: TriggerAlign) => void;
   /** 语义化类名（对象或函数）。 */
   classNames?: TourSemanticValue<TourSemanticClassNames>;
@@ -275,10 +259,11 @@ export interface TourEmits {
   (e: 'update:current', current: number): void;
   /** 步骤变化（与 `update:current` 同时发出）。 */
   (e: 'change', current: number): void;
-  /** 关闭（含 `Esc` / 关闭按钮 / 蒙层点击），携带关闭时的步骤下标。 */
+  /** 关闭（含 `Esc` / 关闭按钮 / 完成），携带关闭时的步骤下标。 */
   (e: 'close', current: number): void;
   /** 最后一步点「完成」。 */
   (e: 'finish'): void;
+  (e: 'popupAlign', element: HTMLElement, align: TriggerAlign): void;
 }
 
 /**
@@ -287,7 +272,7 @@ export interface TourEmits {
  * `title` / `description` / `cover` / `nextButton` / `prevButton` 的 slot **优先于**
  * 同名 `string` prop。`indicators` / `actions` 是 antd 两个 render prop 的 scoped slot。
  */
-export interface TourSlots {
+export type TourSlots = {
   /** 标题（优先于 `steps[].title`）。 */
   title?: (props: { step: TourStepProps; current: number; total: number }) => VNodeChild;
   /** 描述（优先于 `steps[].description`）。 */
@@ -304,16 +289,28 @@ export interface TourSlots {
   indicators?: (props: { current: number; total: number }) => VNodeChild;
   /**
    * 自定义操作区（对应 antd `actionsRender`）。
-   * `originNode` 是默认的「上一步 / 下一步」按钮组。
+   * `originNode` 是可直接渲染且身份稳定的默认操作组件。
    */
-  actions?: (props: { current: number; total: number; originNode: VNodeChild }) => VNodeChild;
-}
+  actions?: (props: { current: number; total: number; originNode: Component }) => VNodeChild;
+};
 
 // ---------------------------------------------------------------------------
 // PurePanel / locale 再导出
 // ---------------------------------------------------------------------------
 
 /** `_InternalPanelDoNotUseOrYouWillBeFired` 的 props（= `TourStepProps`）。 */
-export type TourPurePanelProps = TourStepProps;
+export type TourPurePanelProps = Pick<
+  TourStepProps,
+  | 'title'
+  | 'description'
+  | 'cover'
+  | 'type'
+  | 'closable'
+  | 'closeIcon'
+  | 'classNames'
+  | 'styles'
+  | 'nextButtonProps'
+  | 'prevButtonProps'
+> & { prefixCls?: string; current?: number; total?: number };
 
 export type { TourLocale };

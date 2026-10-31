@@ -20,7 +20,7 @@
 import type { GetContainer } from '@apollo-design/portal';
 import { Portal } from '@apollo-design/portal';
 import { useId } from '@apollo-design/utils';
-import { type CSSProperties, defineComponent, h, type PropType } from 'vue';
+import { type CSSProperties, defineComponent, h, type PropType, type VNode } from 'vue';
 
 /** rc `useTarget` 产出的挖洞位（视口坐标 + gap 外扩后的结果）。 */
 export interface TourMaskPos {
@@ -34,11 +34,12 @@ export interface TourMaskPos {
 /** rc `COVER_PROPS`。 */
 const COVER_PROPS = {
   fill: 'transparent',
-  pointerEvents: 'auto',
+  'pointer-events': 'auto',
 } as const;
 
 const TourMask = defineComponent({
   name: 'ATourMask',
+  emits: { ready: (_container: HTMLElement | ShadowRoot | null) => true },
   props: {
     prefixCls: { type: String, required: true },
     pos: { type: Object as PropType<TourMaskPos | null>, default: null },
@@ -62,8 +63,18 @@ const TourMask = defineComponent({
       default: undefined,
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const id = useId();
+    const reportContainer = (node: VNode) => {
+      const parent = node.el?.parentNode;
+      emit(
+        'ready',
+        parent instanceof HTMLElement ||
+          (typeof ShadowRoot !== 'undefined' && parent instanceof ShadowRoot)
+          ? parent
+          : null,
+      );
+    };
     return () => {
       const {
         prefixCls,
@@ -95,7 +106,7 @@ const TourMask = defineComponent({
         {
           open: open ?? false,
           // rc：Mask 的 Portal 恒 autoLock（滚动锁）
-          autoLock: true,
+          autoLock: !!showMask,
           ...(getContainer !== undefined ? { getContainer } : {}),
           ...(onEsc ? { onEsc } : {}),
         },
@@ -105,6 +116,10 @@ const TourMask = defineComponent({
               'div',
               {
                 class: [`${prefixCls}-mask`, maskClassName],
+                'aria-hidden': true,
+                onVnodeMounted: reportContainer,
+                onVnodeUpdated: reportContainer,
+                onVnodeBeforeUnmount: () => emit('ready', null),
                 style: {
                   position: 'fixed',
                   left: 0,
@@ -112,7 +127,7 @@ const TourMask = defineComponent({
                   top: 0,
                   bottom: 0,
                   zIndex,
-                  pointerEvents: pos && !disabledInteraction ? 'none' : 'auto',
+                  pointerEvents: !showMask || (pos && !disabledInteraction) ? 'none' : 'auto',
                   ...style,
                   ...maskStyle,
                 } as CSSProperties,

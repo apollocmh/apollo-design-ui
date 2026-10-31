@@ -10,9 +10,9 @@ const ref1 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null }
 const ref2 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null } | null>(null);
 const ref3 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null } | null>(null);
 
-const target1 = () => (ref1.value?.nativeElement as HTMLElement) ?? null;
-const target2 = () => (ref2.value?.nativeElement as HTMLElement) ?? null;
-const target3 = () => (ref3.value?.nativeElement as HTMLElement) ?? null;
+const target1 = () => ref1.value?.nativeElement;
+const target2 = () => ref2.value?.nativeElement;
+const target3 = () => ref3.value?.nativeElement;
 
 const steps = [
   {

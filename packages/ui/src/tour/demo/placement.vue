@@ -6,7 +6,7 @@ import { ref } from 'vue';
 const open = ref(false);
 const ref1 = ref<{ nativeElement: HTMLButtonElement | HTMLAnchorElement | null } | null>(null);
 
-const target = () => (ref1.value?.nativeElement as HTMLElement) ?? null;
+const target = () => ref1.value?.nativeElement;
 
 import type { TourStepProps } from '../interface';
 

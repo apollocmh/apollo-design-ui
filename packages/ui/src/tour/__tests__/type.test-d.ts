@@ -7,12 +7,13 @@
 
 import { expectTypeOf, it } from 'vitest';
 import { h } from 'vue';
-import { Tour } from '../index';
+import { Tour, TourPurePanel } from '../index';
 import type {
   TourButtonProps,
   TourClosableConfig,
   TourPlacement,
   TourProps,
+  TourPurePanelProps,
   TourSemanticClassNames,
   TourSlots,
   TourStepProps,
@@ -93,7 +94,60 @@ it('语义槽 12 个（对象与函数双形态）', () => {
 it('插槽面（scoped slot 的参数形状）', () => {
   expectTypeOf<TourSlots['indicators']>().not.toBeNever();
   expectTypeOf<TourSlots['actions']>().not.toBeNever();
+  type Actions = NonNullable<InstanceType<typeof Tour>['$slots']['actions']>;
+  expectTypeOf<Parameters<Actions>[0]['current']>().toEqualTypeOf<number>();
+  expectTypeOf<Parameters<Actions>[0]['originNode']>().toEqualTypeOf<import('vue').Component>();
+  expectTypeOf<
+    Parameters<NonNullable<InstanceType<typeof Tour>['$slots']['title']>>[0]['step']
+  >().toEqualTypeOf<TourStepProps>();
+  expectTypeOf<InstanceType<typeof TourPurePanel>['$slots']['actions']>().toEqualTypeOf<
+    TourSlots['actions']
+  >();
 });
+
+it('真实组件支持 typed props、具名槽与 Vue owned 通知', () => {
+  const props: TourProps = {
+    open: true,
+    current: 0,
+    steps: [
+      {
+        target: () => null,
+        nextButtonProps: {
+          onClick: (event) => {
+            expectTypeOf(event).toEqualTypeOf<MouseEvent>();
+          },
+        },
+      },
+    ],
+    getPopupContainer: (node) => node.attachShadow({ mode: 'open' }),
+    onPopupAlign: (element, align) => {
+      expectTypeOf(element).toEqualTypeOf<HTMLElement>();
+      expectTypeOf(align).toEqualTypeOf<import('../../_internal/trigger').TriggerAlign>();
+    },
+    'onUpdate:open': (_open: boolean) => {},
+    onClose: (_current: number) => {},
+  };
+  const slots: TourSlots = {
+    actions: ({ originNode }) => h(originNode),
+    title: ({ current }) => ['Title ', current],
+  };
+  h(Tour, props, slots);
+  const preview: TourPurePanelProps = { current: 1, total: 3, title: 'Preview' };
+  h(TourPurePanel, preview, slots);
+  expectTypeOf(Tour._InternalPanelDoNotUseOrYouWillBeFired).toEqualTypeOf<typeof TourPurePanel>();
+});
+
+function actualEvents(instance: InstanceType<typeof Tour>) {
+  instance.$emit('update:current', 1);
+  instance.$emit('popupAlign', document.createElement('div'), {});
+  // @ts-expect-error current proposal is numeric
+  instance.$emit('update:current', '1');
+  // @ts-expect-error finish has no synthetic event payload
+  instance.$emit('finish', new Event('finish'));
+  // @ts-expect-error a title slot has no arbitrary record field
+  instance.$slots.title?.({ record: {}, current: 0, total: 1 });
+}
+void actualEvents;
 
 it('closable 的对象形态透传 aria-* / data-*', () => {
   const config: TourClosableConfig = { 'aria-label': 'x', 'data-id': '1' };
