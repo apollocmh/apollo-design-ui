@@ -285,6 +285,7 @@ describe('getVisibleArea', () => {
       offset: { width: 200, height: 100 },
       client: { width: 185, height: 88 },
       border: { top: 2, bottom: 3, left: 4, right: 5 },
+      css: { overflow: 'auto' },
     });
 
     expect(getVisibleArea(full, [scroller])).toEqual({
@@ -362,11 +363,13 @@ describe('getVisibleArea', () => {
       rect: { x: 10, y: 10, width: 300, height: 300 },
       offset: { width: 300, height: 300 },
       client: { width: 300, height: 300 },
+      css: { overflow: 'auto' },
     });
     const b = stubEle({
       rect: { x: 50, y: 50, width: 400, height: 400 },
       offset: { width: 400, height: 400 },
       client: { width: 400, height: 400 },
+      css: { overflow: 'auto' },
     });
 
     expect(getVisibleArea(full, [a, b])).toEqual({ left: 50, top: 50, right: 310, bottom: 310 });

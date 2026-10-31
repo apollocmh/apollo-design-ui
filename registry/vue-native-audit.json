@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 228,
+  "revision": 229,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -9872,17 +9872,13 @@
       "kind": "foundation",
       "ref": "position",
       "title": "@apollo-design/position",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/position/src"
       ],
-      "assignment": {
-        "owner": "native_portal",
-        "baseRevision": 221,
-        "startedAt": "2026-10-31T05:15:03.015Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -9901,6 +9897,548 @@
           "packages/position/src/index.ts",
           "packages/position/src/measure.ts",
           "docs/foundation/position-contract.md"
+        ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/position/src"
+        ],
+        "owner": "native_portal",
+        "baseCommit": "5bde28e47af7614ee63b6779b0a99a690aa0062d",
+        "passed": true,
+        "implemented": [
+          "Use shared realm-safe Document/HTMLElement/ShadowRoot predicates; distinguish Element targets from readonly point tuples without ambient Element constructors.",
+          "Read composed clipping ancestors, current overflow per axis, and the owning document shell identity.",
+          "Measure scale against the true CSS border box including content-box padding and borders.",
+          "Consume native computed clip-margin reference-box and px length; retain existing border/scrollbar/scale math and pure geometry.",
+          "Restore the original style attribute including priority/order/presence, release the owned placeholder in its actual parent, and preserve original errors.",
+          "Trigger passes viewport/scroll areas to their actual geometry roles, observes both composed ancestor chains and the popup owner window only while open, and rebinds after Portal container moves."
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run --project unit packages/position/src --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 9691,
+            "log": "/tmp/apollo-position-core-final.log",
+            "scope": [
+              "packages/position/src"
+            ]
+          },
+          {
+            "kind": "browser",
+            "scope": [
+              "packages/position/src"
+            ],
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/position/src/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 2468,
+            "behaviorPassed": true,
+            "diagnostics": [],
+            "log": "/tmp/apollo-position-browser-fifth.log"
+          },
+          {
+            "kind": "lint",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/@biomejs/biome/bin/biome check packages/position/src",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 138,
+            "log": "/tmp/apollo-position-biome.log"
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check -- packages/position/src docs/foundation/position-contract.md",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 21,
+            "log": "/tmp/apollo-position-diff.log"
+          },
+          {
+            "kind": "types",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/.apollo-final-architecture-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 56690,
+            "log": "/tmp/apollo-final-architecture-types.log"
+          },
+          {
+            "kind": "consumer",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/_internal/__tests__/trigger-position.test.ts packages/ui/src/_internal/__tests__/trigger.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4725,
+            "log": "/tmp/apollo-position-trigger-frozen-core.log"
+          },
+          {
+            "kind": "browser",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node /Users/nanren/Code/apollo-design-ui/packages/ui/src/_internal/__tests__/trigger-position-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 2669,
+            "log": "/tmp/apollo-position-trigger-browser-final.log",
+            "behaviorPassed": true,
+            "diagnostics": [],
+            "sameSource": true,
+            "metrics": {
+              "modes": [
+                {
+                  "mode": "visible",
+                  "target": {
+                    "left": 760,
+                    "top": 500,
+                    "bottom": 520,
+                    "width": 10,
+                    "height": 20
+                  },
+                  "popup": {
+                    "left": 700,
+                    "top": 350,
+                    "width": 100,
+                    "height": 150
+                  },
+                  "aligns": 5,
+                  "clientWidth": 800,
+                  "clientHeight": 600,
+                  "scrollWidth": 2400,
+                  "scrollHeight": 2400,
+                  "owner": true
+                },
+                {
+                  "mode": "scroll",
+                  "target": {
+                    "left": 760,
+                    "top": 500,
+                    "bottom": 520,
+                    "width": 10,
+                    "height": 20
+                  },
+                  "popup": {
+                    "left": 700,
+                    "top": 520,
+                    "width": 100,
+                    "height": 150
+                  },
+                  "aligns": 5,
+                  "clientWidth": 800,
+                  "clientHeight": 600,
+                  "scrollWidth": 2400,
+                  "scrollHeight": 2400,
+                  "owner": true
+                },
+                {
+                  "mode": "visibleFirst",
+                  "target": {
+                    "left": 760,
+                    "top": 500,
+                    "bottom": 520,
+                    "width": 10,
+                    "height": 20
+                  },
+                  "popup": {
+                    "left": 700,
+                    "top": 350,
+                    "width": 100,
+                    "height": 150
+                  },
+                  "aligns": 5,
+                  "clientWidth": 800,
+                  "clientHeight": 600,
+                  "scrollWidth": 2400,
+                  "scrollHeight": 2400,
+                  "owner": true
+                }
+              ],
+              "iframe": {
+                "before": {
+                  "target": {
+                    "left": 240,
+                    "top": 60,
+                    "bottom": 80,
+                    "width": 20,
+                    "height": 20
+                  },
+                  "popup": {
+                    "left": 240,
+                    "top": 80,
+                    "width": 100,
+                    "height": 60
+                  },
+                  "aligns": 5,
+                  "clientWidth": 400,
+                  "clientHeight": 320,
+                  "scrollWidth": 400,
+                  "scrollHeight": 320,
+                  "owner": true,
+                  "resizes": 0
+                },
+                "after": {
+                  "target": {
+                    "left": 380,
+                    "top": 60,
+                    "bottom": 80,
+                    "width": 20,
+                    "height": 20
+                  },
+                  "popup": {
+                    "left": 380,
+                    "top": 80,
+                    "width": 100,
+                    "height": 60
+                  },
+                  "aligns": 6,
+                  "clientWidth": 540,
+                  "clientHeight": 320,
+                  "scrollWidth": 540,
+                  "scrollHeight": 320,
+                  "owner": true
+                }
+              },
+              "shadow": {
+                "before": {
+                  "target": {
+                    "left": 180,
+                    "top": 210,
+                    "bottom": 230,
+                    "width": 20,
+                    "height": 20
+                  },
+                  "popup": {
+                    "left": 180,
+                    "top": 230,
+                    "width": 100,
+                    "height": 60
+                  },
+                  "aligns": 5,
+                  "clientWidth": 800,
+                  "clientHeight": 600,
+                  "scrollWidth": 800,
+                  "scrollHeight": 600,
+                  "owner": true,
+                  "windowScrolls": 0
+                },
+                "after": {
+                  "target": {
+                    "left": 180,
+                    "top": 170,
+                    "bottom": 190,
+                    "width": 20,
+                    "height": 20
+                  },
+                  "popup": {
+                    "left": 180,
+                    "top": 190,
+                    "width": 100,
+                    "height": 60
+                  },
+                  "aligns": 6,
+                  "clientWidth": 800,
+                  "clientHeight": 600,
+                  "scrollWidth": 800,
+                  "scrollHeight": 600,
+                  "owner": true
+                },
+                "moved": {
+                  "target": {
+                    "left": 180,
+                    "top": 170,
+                    "bottom": 190,
+                    "width": 20,
+                    "height": 20
+                  },
+                  "popup": {
+                    "left": 180,
+                    "top": 190,
+                    "width": 100,
+                    "height": 60
+                  },
+                  "aligns": 8,
+                  "clientWidth": 800,
+                  "clientHeight": 600,
+                  "scrollWidth": 800,
+                  "scrollHeight": 600,
+                  "owner": true
+                }
+              }
+            }
+          }
+        ],
+        "failedAttempts": {
+          "package": [
+            {
+              "result": "/tmp/apollo-position-native-red-result.json",
+              "exitCode": 1,
+              "durationMs": 2705,
+              "failed": 10,
+              "passed": 1,
+              "note": "Ten actual DOM/CSS/session failures; important/order case already passed and is not presented as a reproduced defect."
+            },
+            {
+              "result": "/tmp/apollo-position-core-first-result.json",
+              "exitCode": 1,
+              "durationMs": 9908,
+              "note": "Per-axis computed-overflow test preconditions and CSSOM-vs-attribute fixture difference; resolved in owned fixtures without relaxing mathematical expectations."
+            },
+            {
+              "log": "/tmp/apollo-position-browser-third.log",
+              "exitCode": 1,
+              "durationMs": 1977,
+              "note": "Real CSS-only popup changed absent style to empty style. Native minimal reproduction identified declaration reset before removeAttribute."
+            }
+          ],
+          "triggerReproductions": [
+            {
+              "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/_internal/__tests__/trigger-position.test.ts --maxWorkers=1",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 2647,
+              "log": "/tmp/apollo-position-trigger-red.log"
+            },
+            {
+              "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/_internal/__tests__/trigger-position.test.ts -t flip region --maxWorkers=1",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 4677,
+              "log": "/tmp/apollo-position-trigger-region-red.log"
+            },
+            {
+              "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/_internal/__tests__/trigger-position.test.ts -t container changes --maxWorkers=1",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 2506,
+              "log": "/tmp/apollo-position-trigger-container-red.log"
+            },
+            {
+              "kind": "browser",
+              "scope": [
+                "packages/ui/src/_internal/__tests__/trigger-position-browser.mjs"
+              ],
+              "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node /Users/nanren/Code/apollo-design-ui/packages/ui/src/_internal/__tests__/trigger-position-browser.mjs",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 7685,
+              "log": "/tmp/apollo-position-trigger-browser-first.log",
+              "behaviorPassed": false,
+              "diagnostics": [],
+              "sourceBefore": {
+                "packages/ui/src/_internal/trigger.ts": "4ff364b2990584bfa3f5057bf3257cf62bc026593af5cafa46fcba987f182ccf",
+                "packages/position/src/measure.ts": "ef69dbe2f8cf8414a4c45b3e82fa65bce7606aafbbeb2f71edc9b520a02b24f1"
+              },
+              "sourceAfter": {
+                "packages/ui/src/_internal/trigger.ts": "4ff364b2990584bfa3f5057bf3257cf62bc026593af5cafa46fcba987f182ccf",
+                "packages/position/src/measure.ts": "ef69dbe2f8cf8414a4c45b3e82fa65bce7606aafbbeb2f71edc9b520a02b24f1"
+              },
+              "sameSource": true,
+              "metrics": {
+                "modes": [
+                  {
+                    "mode": "visible",
+                    "target": {
+                      "left": 760,
+                      "top": 500,
+                      "bottom": 520,
+                      "width": 10,
+                      "height": 20
+                    },
+                    "popup": {
+                      "left": 700,
+                      "top": 350,
+                      "width": 100,
+                      "height": 150
+                    },
+                    "aligns": 4,
+                    "clientWidth": 800,
+                    "clientHeight": 600,
+                    "scrollWidth": 2400,
+                    "scrollHeight": 2400,
+                    "owner": true
+                  },
+                  {
+                    "mode": "scroll",
+                    "target": {
+                      "left": 760,
+                      "top": 500,
+                      "bottom": 520,
+                      "width": 10,
+                      "height": 20
+                    },
+                    "popup": {
+                      "left": 700,
+                      "top": 520,
+                      "width": 100,
+                      "height": 150
+                    },
+                    "aligns": 4,
+                    "clientWidth": 800,
+                    "clientHeight": 600,
+                    "scrollWidth": 2400,
+                    "scrollHeight": 2400,
+                    "owner": true
+                  },
+                  {
+                    "mode": "visibleFirst",
+                    "target": {
+                      "left": 760,
+                      "top": 500,
+                      "bottom": 520,
+                      "width": 10,
+                      "height": 20
+                    },
+                    "popup": {
+                      "left": 700,
+                      "top": 350,
+                      "width": 100,
+                      "height": 150
+                    },
+                    "aligns": 4,
+                    "clientWidth": 800,
+                    "clientHeight": 600,
+                    "scrollWidth": 2400,
+                    "scrollHeight": 2400,
+                    "owner": true
+                  }
+                ],
+                "iframe": {
+                  "before": {
+                    "target": {
+                      "left": 240,
+                      "top": 60,
+                      "bottom": 80,
+                      "width": 20,
+                      "height": 20
+                    },
+                    "popup": {
+                      "left": 240,
+                      "top": 80,
+                      "width": 100,
+                      "height": 60
+                    },
+                    "aligns": 4,
+                    "clientWidth": 400,
+                    "clientHeight": 320,
+                    "scrollWidth": 400,
+                    "scrollHeight": 320,
+                    "owner": true,
+                    "resizes": 0
+                  },
+                  "after": {
+                    "target": {
+                      "left": 380,
+                      "top": 60,
+                      "bottom": 80,
+                      "width": 20,
+                      "height": 20
+                    },
+                    "popup": {
+                      "left": 380,
+                      "top": 80,
+                      "width": 100,
+                      "height": 60
+                    },
+                    "aligns": 5,
+                    "clientWidth": 540,
+                    "clientHeight": 320,
+                    "scrollWidth": 540,
+                    "scrollHeight": 320,
+                    "owner": true
+                  }
+                },
+                "failureState": {
+                  "snapshot": {
+                    "target": {
+                      "left": 180,
+                      "top": 170,
+                      "bottom": 190,
+                      "width": 20,
+                      "height": 20
+                    },
+                    "popup": {
+                      "left": 260,
+                      "top": 270,
+                      "width": 100,
+                      "height": 60
+                    },
+                    "aligns": 5,
+                    "clientWidth": 800,
+                    "clientHeight": 600,
+                    "scrollWidth": 800,
+                    "scrollHeight": 600,
+                    "owner": true
+                  },
+                  "resources": {
+                    "listeners": 3,
+                    "observers": 2,
+                    "frames": 1,
+                    "errors": []
+                  },
+                  "moved": true
+                }
+              },
+              "failure": "TimeoutError: page.waitForFunction: Timeout 5000ms exceeded."
+            }
+          ],
+          "otherAttempts": [
+            {
+              "kind": "consumer",
+              "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/_internal/__tests__/trigger-position.test.ts --maxWorkers=1",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 2425,
+              "log": "/tmp/apollo-position-trigger-first.log"
+            },
+            {
+              "kind": "consumer",
+              "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/_internal/__tests__/trigger-position.test.ts packages/ui/src/_internal/__tests__/trigger.test.ts packages/ui/src/_internal/__tests__/trigger-theme.test.ts packages/ui/src/tooltip/__tests__/index.test.ts packages/ui/src/dropdown/__tests__/index.test.ts --maxWorkers=1",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 15493,
+              "log": "/tmp/apollo-position-trigger-final-consumers.log"
+            }
+          ]
+        },
+        "consumerEvidence": {
+          "earlierBroaderConsumers": {
+            "kind": "consumer",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/_internal/__tests__/trigger-position.test.ts packages/ui/src/_internal/__tests__/trigger.test.ts packages/ui/src/_internal/__tests__/trigger-theme.test.ts packages/ui/src/tooltip/__tests__/index.test.ts packages/ui/src/dropdown/__tests__/index.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 15001,
+            "log": "/tmp/apollo-position-trigger-consumers.log"
+          },
+          "reuse": "Earlier 51-case Trigger/theme/Tooltip/Dropdown checks retained; the subsequent container listener/timing delta has final 22-case Trigger regression and actual browser coverage. No complete re-audit of those components."
+        },
+        "sourceHashes": {
+          "packages/position/src/__tests__/measure-rig.ts": "1361e19371c1ad6d2510d9918a15fde2870a46121fd4aea6c7bdfdf8a507e7ff",
+          "packages/position/src/__tests__/measure.test.ts": "1bf7ce1452c04f8bcb934ce7e82d98c00908d2057e3bb5db57c08dcd259aa5fa",
+          "packages/position/src/__tests__/native-browser.mjs": "6c086b4888f1e2be38cc04a6dbd6c3978e714948e97b1929435e19eb86d99139",
+          "packages/position/src/__tests__/native-measure.test.ts": "d43742dc3bd1607f0866dc2386059f3ea2c76f0883ab93a361f00e4f3f78a4d6",
+          "packages/position/src/measure.ts": "ef69dbe2f8cf8414a4c45b3e82fa65bce7606aafbbeb2f71edc9b520a02b24f1",
+          "packages/ui/src/_internal/__tests__/trigger-position-browser.mjs": "6aa4b5b0fb9771fa94b0b3182f8088462f0b5054c67aaed16892f8ea566caa9f",
+          "packages/ui/src/_internal/__tests__/trigger-position.test.ts": "951ea2c5729ad3458996fe78e82ee65d121120b68ee053fc1ad899bfb696c5d4",
+          "packages/ui/src/_internal/__tests__/trigger.test.ts": "c8ac785192ed3f8bb901eeb29f06b8a0aff5c051e4c6ca5d6354f6cc99d7a045",
+          "packages/ui/src/_internal/trigger.ts": "7a6f171340be31aebb966213935b7ce1858306bb065583a03357161230b68bba"
+        },
+        "integrationSnapshot": {
+          "headAtIntegration": "37010fe988250ad1e4d5ea32f572af0a02f0871f",
+          "typedSourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+          "positionAndTriggerTypeInputsMatch": true,
+          "utilsCommentOnlyDelta": {
+            "file": "packages/utils/src/ref.ts",
+            "beforeSha256": "978ae3fa803d30e2fb8321ac0976e096922f23e5674f3ac6a176b356394dd0dc",
+            "afterSha256": "054b45e14338cd71ef217815801d42fcc31e8bc93700de6040084b7d6f28ab4d",
+            "runtimeAndTypesUnchanged": true,
+            "method": "TypeScript AST printer with comments removed",
+            "change": "Correct Vue callback replacement comment only"
+          }
+        },
+        "remainingBoundaries": [
+          "Only same-Document target/popup coordinates are supported here; no cross-iframe coordinate conversion was added.",
+          "Rectangular axis-aligned projection only; no new rotation/perspective, clip-path or rounded-mask contour model.",
+          "Current Chrome overflow:clip reference-box rendering is checked. Future scroll-container changes in the evolving specification are outside this fix.",
+          "This machine uses overlay scrollbars; classic left-side scrollbar geometry is untested.",
+          "Final nine-dimensional, coverage, built distribution and release-consumer acceptance remain for the unified frozen stage."
         ]
       }
     },

@@ -278,3 +278,7 @@ AppConfig 和 useApp() 改用真实通知配置及 MessageInstance、Notificatio
 ### D-utils-native-refs-and-resources
 
 RefLike 删除没有真实消费者的 React `{current}` 包装，使用 Vue 可写 value 引用或函数 ref；组件自己的 current 业务 prop 继续按实例处理。useComposeRef 接收一个数组、Ref 或 getter 集合源，例如 `useComposeRef(() => [localRef, callback])`；getNodeRef 返回真实 public expose 或 DOM，不再允许任意指定结果泛型。状态工具保留 T 与嵌套 Ref 的身份，既有受控提议和撤控算法保持；mergeProps 类型描述实际的后值覆盖，输入限对象、null、undefined，共享关闭配置同步规范化。补齐所属文档、独立订阅释放、取消、临时 CSS 容器及合法颜色输入边界，详见[Utils 当前契约](docs/foundation/rc-util-contract.md)。开发阶段直接迁移，无兼容分支或弃用期；声明产物与全库验收留到统一冻结阶段。
+
+### D-position-owner-document-and-clipping
+
+Position 的公开签名及纯几何算法保持，测量使用目标所属文档、组合祖先和当前逐轴裁剪，修正边框盒缩放、overflow-clip-margin 与临时样式恢复。共享 Trigger 将视口和滚动区域分别传入对齐引擎，按当前容器绑定滚动及所属窗口 resize；迁移已有弹层不重建业务子树，关闭和卸载释放监听。仅支持同一 Document 内的轴对齐矩形，不新增跨 iframe 坐标换算或轮廓裁剪能力，详见[Position 当前契约](docs/foundation/position-contract.md)。

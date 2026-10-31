@@ -2,6 +2,57 @@
 
 # `position` 契约文档
 
+## 当前契约（2026-10-31）
+
+本节与当前源码、公开类型及消费者共同描述 Apollo 的测量边界。下方初期分析、参考版本和测试状态保留历史含义，其中“上游是规格”“必须使用当前 realm 构造函数”等旧要求不再作为判据；旧通过标记不代表本轮重新验证。
+
+### 职责与公开面
+
+`position` 保留纯几何 `alignPopup`、area/point/offset 和 placements 的既有算法与 Oracle。DOM 侧只执行一次同步测量事务，输出矩形、区域、比例和镜像矩形；不管理 Vue 生命周期、Portal、监听器、观察器、定时器、显隐模型或最终定位样式。此次没有新增/移除公开导出或配置模式。
+
+`MeasureInput.popupEle` 是实际 HTMLElement；target 是实际 Element（含 SVG）或只读 `[x, y]` 元组。点坐标属于浮层所属文档的视口。元素目标与浮层在同一 Document 中使用；本轮修复 foreign-realm 对象身份，不新增不同 iframe 文档之间的坐标转换。
+
+`getWin(Node)` 按真实所属 Document 返回 defaultView，直接 Document 入参也跨 realm 有效。没有 defaultView 的文档返回 null，`measureAlign` 在写样式或插入占位前返回 null；普通 detached 元素仍保留其所属文档窗口。测量不依赖调用窗口的 Element/Document/HTMLBodyElement 构造身份。
+
+### 组合祖先与当前 CSS
+
+`collectScroller` 不包含自身，沿当前 parentElement、assignedSlot 和 ShadowRoot.host 收集实际裁剪祖先，返回 HTMLElement[]。从内部元素可达的 closed ShadowRoot 与同源 iframe 内的真实节点适用。传入缓存 scrollers 的调用者负责在祖先或容器改变后重新收集；`getVisibleArea` 仍读取列表中各元素当前 computed overflow。
+
+裁剪按 X/Y 轴分别执行，visible 轴不被另一个 clip 轴收窄。所属文档的 body/html 已由初始视口/文档区域表示，不因 foreign realm 重复裁剪。保留既有边框、滚动条和缩放公式，以及 `clipArea` 的纯交集逻辑。
+
+`measureScale` 比较 viewport border-box 与 computed 的未变换 border-box；content-box 的 padding/border 是尺寸，不是缩放。保留已有三位比例、auto/NaN 后备及几何内核的取整职责。
+
+`overflow-clip-margin` 只消费浏览器已经计算好的 px 长度和 content-box/padding-box/border-box 标准化值；没有编写 authored CSS、calc、变量或单位解析器。未写 reference-box 时沿用 padding-box。此处只兑现已验证的当前 Chrome `overflow: clip` 绘制，不追随工作草案对 scroll-container 的后续扩展。[CSS Overflow 3 定义](https://drafts.csswg.org/css-overflow/#overflow-clip-margin)是语义来源；实际裁剪边、绘制内/外点由源码 Chrome 回归核对。
+
+### 测量事务与恢复
+
+原有归零 → 测目标/浮层 → 右下镜像顺序保留。临时占位插入真实 parentNode，包含 ShadowRoot；结束、早退或异常时清理自身占位，已被移除或搬动的占位不覆盖原始测量错误。
+
+测量结束恢复原始 style 属性，保留其声明、优先级、顺序及原先不存在的状态。CSS-only 浮层不会遗留空 style；实际异常继续向调用者抛出。该过程没有异步任务或额外资源持有。
+
+### 区域与纯几何的传递
+
+现有 MeasureResult 字段含义保留：
+
+| MeasureInput.htmlRegion | result.visible | result.check |
+| --- | --- | --- |
+| visible（缺省） | 裁剪后的视口区 | 裁剪后的视口区 |
+| scroll | 裁剪后的文档滚动区 | 裁剪后的文档滚动区 |
+| visibleFirst | 裁剪后的文档滚动区 | 裁剪后的视口区 |
+
+纯 `alignPopup` 的 `ctx.visible` 始终指视口区、`ctx.scroll` 始终指文档滚动区。需要两区的调用者可请求 `measureAlign({ ...input, htmlRegion: 'visibleFirst' })`，把 result.check 传给 ctx.visible、result.visible 传给 ctx.scroll；实际对齐仍由传给纯几何的 align.htmlRegion 决定，不能把已选区域再次当作原始两区重复选择。
+
+### 本轮验证及边界
+
+新增 `native-measure.test.ts` 与 `native-browser.mjs` 覆盖 ownerDocument、Element/点分流、组合祖先、content-box、单轴 clip、reference-box、样式恢复和异常清理。原始 Oracle 和 measure-session 正确用例保留；旧几何 fixture 补实际 overflow 前提，未放宽数学断言。当前命令与结果记录在本轮唯一状态及紧凑临时报告中。
+
+本包输出轴对齐矩形，不新增旋转/透视、clip-path 或圆角的精确轮廓，也不新增无信号位置观察或生命周期平台。本机 Chrome 使用 overlay 滚动条；classic 左侧滚动条专项尚未测。整库冻结九维、覆盖率与发布消费者验收属于统一最终阶段。
+
+---
+
+## 初期分析与历史证据（原文保留）
+
+
 > **适用范围**：DOM 测量层（`position` 的剩余工作）。
 > 几何内核（对齐点 / 翻转 / 平移 / 箭头）已在 AR1 PoC 中完成并由 `oracle.js` 差分证明，
 > 结论见 `ARCHITECTURE.md` §9.1。本文档只处理**它之外的那一半**。

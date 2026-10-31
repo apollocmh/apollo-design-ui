@@ -14,12 +14,12 @@
  * DOM 侧只做「取值 + 临时改写 + 还原」这一件不可测的事。
  * 于是 §「纯数据侧」的所有函数都可以被穷举测试，而副作用集中在 `measureAlign` 一处。
  *
- * 行为与 `@rc-component/trigger@3.10.1` 的 `useAlign.js`（`onAlign` 94–226 行）
- * 与 `util.js`（`collectScroller` 30–46 / `getVisibleArea` 75–137）逐位对齐。
- * 逐条契约与推导见 `docs/foundation/position-contract.md`。
+ * 初期公式参考 `@rc-component/trigger@3.10.1` 的 `useAlign.js` / `util.js`。
+ * 已交付纯几何与 Oracle 保留；DOM 侧按当前所属文档、CSS 盒模型及恢复契约工作。
+ * 当前约定和带日期的历史证据见 `docs/foundation/position-contract.md`。
  */
 
-import { isVisible } from '@apollo-design/utils';
+import { isDocument, isHTMLElement, isShadowRoot, isVisible } from '@apollo-design/utils';
 
 import { clipArea } from './area';
 import type { Area, Rect } from './types';
@@ -58,9 +58,8 @@ export interface MeasureInput {
   /**
    * 复用已收集的滚动容器。
    *
-   * antd 把它挂在 `popupEle` 上做 `useMemo`（`useAlign.js` 75–80）：
-   * 逐级走 DOM 树 + 每个节点一次 `getComputedStyle` 不便宜，
-   * 而同一个浮层在一次显隐周期内容器不会变。
+   * 缺省每次读取当前组合祖先树。复用列表的调用者负责在祖先/容器改变后重采；
+   * 列表内每个元素的当前 computed overflow 仍会按轴重新读取。
    */
   scrollers?: readonly HTMLElement[];
 }
@@ -178,24 +177,10 @@ export function shouldMeasure(scaleX: number, scaleY: number, targetVisible: boo
  * 取元素所属窗口（antd `util.js` 21–23）。
  *
  * 刻意不用全局 `window`：浮层可能挂在 iframe 的文档里。
- * 无窗口时返回 `null`（detached 元素 / SSR）—— 调用方需处理。
+ * 所属 Document 没有 defaultView 时返回 null；普通 detached 元素仍保留其所属窗口。
  */
 export function getWin(node: Node): Window | null {
-  // `ownerDocument` 对 Document **自身**返回 null —— 所以要有第二个分支。
-  // 这里用 `instanceof` 窄化而不是 `as Document` 断言：
-  // Node 不是 Document 的子类型，断言能骗过 tsc 但骗不过运行时，而窄化是真的成立。
-  if (node.ownerDocument) {
-    return node.ownerDocument.defaultView ?? null;
-  }
-  if (typeof Document !== 'undefined' && node instanceof Document) {
-    return node.defaultView ?? null;
-  }
-  // ⚠️ 按 DOM 规范**不可达**：`ownerDocument` 为 null 的节点只有 Document 本身。
-  //    这一行不会被测到，覆盖率会记为未覆盖 —— 那是预期的，不要为了刷绿删掉它。
-  //    删掉它就必须写 `as Document`，而断言既骗不过运行时也算不上类型正确（H10）。
-  //    同时它也造不出替身：jsdom 的 IDL getter 带 brand 校验，
-  //    `Object.create(Node.prototype)` 会抛 "not a valid instance of Node"。
-  return null;
+  return isDocument(node) ? node.defaultView : (node.ownerDocument?.defaultView ?? null);
 }
 
 /** computed style 的 overflow 中哪些值表示「会裁剪可视区」（antd `util.js` 33）。 */
@@ -204,16 +189,23 @@ const SCROLL_STYLES: readonly string[] = ['hidden', 'scroll', 'clip', 'auto'];
 /**
  * 自内向外收集会裁剪可视区的祖先（antd `util.js` 30–46）。
  *
- * ⚠️ 从 `parentElement` 起，**不含自身**。
+ * 从组合父节点起，不含自身；沿 assignedSlot 和 ShadowRoot.host 继续。
  * ⚠️ 必须读**计算值**而不是 inline style：CSS 规范里 `overflow-x: hidden`
  *    会把 `overflow-y: visible` 计算成 `auto`，这个组合理应被收进来，
  *    读 inline style 会漏掉它。
  *
  * @returns 自内向外的滚动容器列表
  */
+function parentElement(element: Element): HTMLElement | null {
+  if (element.assignedSlot) return element.assignedSlot;
+  if (element.parentElement) return element.parentElement;
+  const root = element.getRootNode();
+  return isShadowRoot(root) && isHTMLElement(root.host) ? root.host : null;
+}
+
 export function collectScroller(ele: Element): HTMLElement[] {
   const list: HTMLElement[] = [];
-  let current: HTMLElement | null = ele.parentElement;
+  let current = parentElement(ele);
 
   while (current) {
     const win = getWin(current);
@@ -228,7 +220,7 @@ export function collectScroller(ele: Element): HTMLElement[] {
         list.push(current);
       }
     }
-    current = current.parentElement;
+    current = parentElement(current);
   }
 
   return list;
@@ -244,22 +236,10 @@ export function collectScroller(ele: Element): HTMLElement[] {
  *    · `eleRight` 从 `eleLeft` 起算，不是从 `eleRect.x` —— 否则丢掉左边框与 clip margin
  *    · 滚动条尺寸是「先减边框，再乘 scale」，顺序反了会多扣
  */
-/**
- * `body` / `html` 不裁剪任何东西 —— 它们的可视范围已经由 `initArea`
- * （视口区或文档滚动区）表达了，再裁一刀只会重复。
- *
- * ⚠️ 这里**照抄 antd 的 `instanceof`（`util.js` 80），不改成与 `ownerDocument.body` 比较**。
- *    两种写法在同 realm 下结果相同，跨 iframe 时不同：父窗口的 `HTMLBodyElement`
- *    与 iframe 的不是同一个构造函数，所以 antd 在跨 frame 时**不会**跳过 iframe 的
- *    body，会把它当普通滚动容器再裁一次。这是上游既有行为（UPSTREAM）。
- *    本项目按「antd 是规格」复刻它，不在这一层悄悄修正 —— 静默修正比已知的
- *    上游怪癖更危险。留 `typeof` 守卫只为 SSR（无 DOM 全局）下不抛 `ReferenceError`。
- */
+/** The owning document's shell is already represented by the initial area. */
 function isHtmlShell(ele: Element): boolean {
-  return (
-    (typeof HTMLBodyElement !== 'undefined' && ele instanceof HTMLBodyElement) ||
-    (typeof HTMLHtmlElement !== 'undefined' && ele instanceof HTMLHtmlElement)
-  );
+  const doc = ele.ownerDocument;
+  return ele === doc.body || ele === doc.documentElement;
 }
 
 export function getVisibleArea(initArea: Area, scrollers: readonly HTMLElement[]): Area {
@@ -274,7 +254,14 @@ export function getVisibleArea(initArea: Area, scrollers: readonly HTMLElement[]
     if (!win) continue;
 
     const style = win.getComputedStyle(ele);
-    const clipMargin = pxValue(style.overflowClipMargin);
+    const overflowX = style.overflowX || style.overflow;
+    const overflowY = style.overflowY || style.overflow;
+    const clipX = SCROLL_STYLES.includes(overflowX);
+    const clipY = SCROLL_STYLES.includes(overflowY);
+    if (!clipX && !clipY) continue;
+    // Consume the browser's computed visual-box + px length, rather than authored CSS.
+    const [clipBox, clipLength] = (style.overflowClipMargin || '').split(/\s+/);
+    const clipMargin = pxValue(clipLength ?? clipBox);
     const borderTop = pxValue(style.borderTopWidth);
     const borderBottom = pxValue(style.borderBottomWidth);
     const borderLeft = pxValue(style.borderLeftWidth);
@@ -299,27 +286,72 @@ export function getVisibleArea(initArea: Area, scrollers: readonly HTMLElement[]
     const scaledBorderRight = borderRight * scaleX;
 
     // 只有 overflow: clip 才有 clip margin —— 其余取值下它是 0
-    const clipMarginWidth = style.overflow === 'clip' ? clipMargin * scaleX : 0;
-    const clipMarginHeight = style.overflow === 'clip' ? clipMargin * scaleY : 0;
+    const marginLeft =
+      overflowX === 'clip'
+        ? (clipMargin +
+            (clipBox === 'border-box'
+              ? borderLeft
+              : clipBox === 'content-box'
+                ? -pxValue(style.paddingLeft)
+                : 0)) *
+          scaleX
+        : 0;
+    const marginRight =
+      overflowX === 'clip'
+        ? (clipMargin +
+            (clipBox === 'border-box'
+              ? borderRight
+              : clipBox === 'content-box'
+                ? -pxValue(style.paddingRight)
+                : 0)) *
+          scaleX
+        : 0;
+    const marginTop =
+      overflowY === 'clip'
+        ? (clipMargin +
+            (clipBox === 'border-box'
+              ? borderTop
+              : clipBox === 'content-box'
+                ? -pxValue(style.paddingTop)
+                : 0)) *
+          scaleY
+        : 0;
+    const marginBottom =
+      overflowY === 'clip'
+        ? (clipMargin +
+            (clipBox === 'border-box'
+              ? borderBottom
+              : clipBox === 'content-box'
+                ? -pxValue(style.paddingBottom)
+                : 0)) *
+          scaleY
+        : 0;
 
-    const eleLeft = eleRect.x + scaledBorderLeft - clipMarginWidth;
-    const eleTop = eleRect.y + scaledBorderTop - clipMarginHeight;
+    const eleLeft = eleRect.x + scaledBorderLeft - marginLeft;
+    const eleTop = eleRect.y + scaledBorderTop - marginTop;
     const eleRight =
       eleLeft +
       eleRect.width +
-      2 * clipMarginWidth -
+      marginLeft +
+      marginRight -
       scaledBorderLeft -
       scaledBorderRight -
       eleScrollWidth;
     const eleBottom =
       eleTop +
       eleRect.height +
-      2 * clipMarginHeight -
+      marginTop +
+      marginBottom -
       scaledBorderTop -
       scaledBorderBottom -
       eleScrollHeight;
 
-    clips.push({ left: eleLeft, top: eleTop, right: eleRight, bottom: eleBottom });
+    clips.push({
+      left: clipX ? eleLeft : initArea.left,
+      top: clipY ? eleTop : initArea.top,
+      right: clipX ? eleRight : initArea.right,
+      bottom: clipY ? eleBottom : initArea.bottom,
+    });
   }
 
   return clipArea(initArea, clips);
@@ -361,17 +393,34 @@ export function measureRect(ele: Element): Rect {
  * CSS `scale` 测量（antd `useAlign.js` 219–221）。
  *
  * 分子是**实测**矩形（`getBoundingClientRect`，受 transform 影响），
- * 分母是 **CSS 声明值**（`getComputedStyle().width`，不受 transform 影响）。
- * 两者之比就是缩放系数。
+ * 分母是 computed width/height 对应的未变换 border-box；content-box 时包含
+ * computed padding 与 border。两者之比才是缩放系数，不把装饰尺寸当成缩放。
  *
  * ⚠️ 分母可能是 `auto`（内容撑开的浮层）→ `parseFloat` → NaN → 比值 NaN →
  *    经 `toSafeNum` 兜底为 1。这也是 jsdom 下的常态（见 `toSafeNum` 注释）。
  */
 export function measureScale(ele: Element, rect: Rect, win: Window): ScaleResult {
-  const { width, height } = win.getComputedStyle(ele);
+  const style = win.getComputedStyle(ele);
+  const contentBox = style.boxSizing !== 'border-box';
+  const width =
+    Number.parseFloat(style.width) +
+    (contentBox
+      ? pxValue(style.paddingLeft) +
+        pxValue(style.paddingRight) +
+        pxValue(style.borderLeftWidth) +
+        pxValue(style.borderRightWidth)
+      : 0);
+  const height =
+    Number.parseFloat(style.height) +
+    (contentBox
+      ? pxValue(style.paddingTop) +
+        pxValue(style.paddingBottom) +
+        pxValue(style.borderTopWidth) +
+        pxValue(style.borderBottomWidth)
+      : 0);
   return {
-    scaleX: toSafeNum(Math.round((rect.width / Number.parseFloat(width)) * 1000) / 1000),
-    scaleY: toSafeNum(Math.round((rect.height / Number.parseFloat(height)) * 1000) / 1000),
+    scaleX: toSafeNum(Math.round((rect.width / width) * 1000) / 1000),
+    scaleY: toSafeNum(Math.round((rect.height / height) * 1000) / 1000),
   };
 }
 
@@ -379,40 +428,26 @@ export function measureScale(ele: Element, rect: Rect, win: Window): ScaleResult
 // 测量会话 —— 唯一有副作用的地方
 // ---------------------------------------------------------------------------
 
-/** 需要临时改写、之后必须逐项还原的 inline style。 */
-const RESTORE_KEYS = [
-  'left',
-  'top',
-  'right',
-  'bottom',
-  'overflow',
-  'overflowX',
-  'overflowY',
-] as const;
-
-type RestoreKey = (typeof RESTORE_KEYS)[number];
-
 interface InlineSnapshot {
-  values: Record<RestoreKey, string>;
+  style: string | null;
   placeholder: HTMLElement | null;
-  parent: HTMLElement | null;
 }
 
 function snapshot(popupEle: HTMLElement): InlineSnapshot {
-  const values = {} as Record<RestoreKey, string>;
-  for (const key of RESTORE_KEYS) {
-    values[key] = popupEle.style[key];
-  }
-  return { values, placeholder: null, parent: null };
+  return { style: popupEle.getAttribute('style'), placeholder: null };
 }
 
 function restore(popupEle: HTMLElement, snap: InlineSnapshot): void {
-  for (const key of RESTORE_KEYS) {
-    popupEle.style[key] = snap.values[key];
-  }
-  if (snap.placeholder && snap.parent) {
-    snap.parent.removeChild(snap.placeholder);
-  }
+  // Reset the declaration block before removing an originally absent attribute.
+  popupEle.setAttribute('style', snap.style ?? '');
+  if (snap.style === null) popupEle.removeAttribute('style');
+  // A measurement callback may already have removed/moved this owned node.
+  // remove() releases its actual parent without hiding the original error.
+  snap.placeholder?.remove();
+}
+
+function isPointTarget(target: MeasureTarget): target is readonly [number, number] {
+  return Array.isArray(target);
 }
 
 /**
@@ -463,8 +498,7 @@ export function measureAlign(input: MeasureInput): MeasureResult | null {
     //    flex / grid 容器下插入一个空块级项会推移既有子项，差异是真实可见的。
     const placeholder = doc.createElement('div');
     snap.placeholder = placeholder;
-    snap.parent = popupEle.parentElement;
-    snap.parent?.appendChild(placeholder);
+    popupEle.parentNode?.appendChild(placeholder);
     placeholder.style.left = `${popupEle.offsetLeft}px`;
     placeholder.style.top = `${popupEle.offsetTop}px`;
     placeholder.style.position = popupPosition;
@@ -478,8 +512,9 @@ export function measureAlign(input: MeasureInput): MeasureResult | null {
     popupEle.style.bottom = 'auto';
     popupEle.style.overflow = 'hidden';
 
-    const targetRect: Rect =
-      target instanceof Element ? measureRect(target) : pointRect(target[0], target[1]);
+    const targetRect: Rect = isPointTarget(target)
+      ? pointRect(target[0], target[1])
+      : measureRect(target);
     const popupRect = measureRect(popupEle);
     const { scaleX, scaleY } = measureScale(popupEle, popupRect, win);
 
@@ -492,7 +527,7 @@ export function measureAlign(input: MeasureInput): MeasureResult | null {
 
     // 5. 早退判定。这里只**记录**结果、不 return —— 还原交给 finally，
     //    净效果与 antd 一致（antd 也是先还原（209–217）再 return（224））。
-    const targetVisible = target instanceof Element ? isVisible(target) : true;
+    const targetVisible = isPointTarget(target) ? true : isVisible(target);
     if (shouldMeasure(scaleX, scaleY, targetVisible)) {
       result = {
         target: targetRect,

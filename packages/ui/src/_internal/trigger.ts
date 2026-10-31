@@ -41,7 +41,7 @@ import {
   measureAlign,
 } from '@apollo-design/position';
 import { transformToken, useTheme } from '@apollo-design/theme';
-import { canUseDom } from '@apollo-design/utils';
+import { canUseDom, getElement, isHTMLElement } from '@apollo-design/utils';
 import {
   type CSSProperties,
   cloneVNode,
@@ -49,7 +49,7 @@ import {
   defineComponent,
   h,
   mergeProps,
-  onBeforeUnmount,
+  nextTick,
   type PropType,
   ref,
   shallowRef,
@@ -152,10 +152,8 @@ export function getAlignPopupClassName(
  * ⇒ 取不到就回落 `null`，与「未绑 ref」同判（rc 的可选链语义）。
  */
 function resolveTriggerElement(value: unknown): HTMLElement | null {
-  if (!value) return null;
-  if (value instanceof HTMLElement) return value;
-  const el = (value as { $el?: unknown }).$el;
-  return el instanceof HTMLElement ? el : null;
+  const element = getElement(value);
+  return isHTMLElement(element) ? element : null;
 }
 
 // ---------------------------------------------------------------------------
@@ -348,7 +346,9 @@ export const Trigger = defineComponent({
       const result = measureAlign({
         popupEle: ele,
         target: tgt,
-        ...(placementInfo.htmlRegion ? { htmlRegion: placementInfo.htmlRegion } : {}),
+        // This mode measures both scroll and viewport areas. The geometry
+        // engine chooses how to use them from the actual placement below.
+        htmlRegion: 'visibleFirst',
       });
       if (!result) {
         return;
@@ -365,18 +365,15 @@ export const Trigger = defineComponent({
        * 修正：视口外不产生任何对齐结果，等滚动进视口后按**无记忆**的初始状态
        * 重新对齐。jsdom 的矩形恒为 0 ⇒ 不触发该分支，既有单测不受影响。
        */
-      if (
-        tgt instanceof HTMLElement &&
-        isTargetOutsideArea(tgt.getBoundingClientRect(), result.visible)
-      ) {
+      if (isHTMLElement(tgt) && isTargetOutsideArea(tgt.getBoundingClientRect(), result.check)) {
         return;
       }
       const outcome: AlignOutcome = alignPopup(
         {
           target: result.target,
           popup: result.popup,
-          visible: result.visible,
-          scroll: result.check,
+          visible: result.check,
+          scroll: result.visible,
           scaleX: result.scaleX,
           scaleY: result.scaleY,
         },
@@ -388,7 +385,7 @@ export const Trigger = defineComponent({
       // ── stretch（rc-trigger 的 stretchStyle：'minWidth' ⇒ 浮层 min-width = 目标宽）──
       // 用 getBoundingClientRect（rc 同款，**不取整** —— offsetWidth 的整数化会让
       // 浮层宽 1px 偏移、L6 逐像素红）。
-      if (props.stretch === 'minWidth' && tgt instanceof HTMLElement) {
+      if (props.stretch === 'minWidth' && isHTMLElement(tgt)) {
         stretchMinWidth.value = `${tgt.getBoundingClientRect().width}px`;
       }
 
@@ -456,52 +453,60 @@ export const Trigger = defineComponent({
       }
     });
 
-    // re-align：滚动容器滚动 / 窗口 resize（rc useWatch + useResizeObserver）
+    // Observe the actual target and popup scroll chains while open. Shadow-root
+    // scroll events need their own listener; the owner window supplies resize.
     watch(
-      () => (popupEle.value && !isMobile ? collectScroller(popupEle.value as HTMLElement) : []),
-      (scrollers, _prev, onCleanup) => {
-        const onScroll = () => {
-          // rc：alignPoint + clickToHide 时滚动即关闭；tooltip 不用 alignPoint，
-          // dropdown 接入时再补 hideActions 判据。
-          if (mergedOpen.value && props.alignPoint) {
-            overlay.setOpen(false);
-            return;
-          }
-          triggerAlign();
-        };
-        for (const scroller of scrollers) {
-          scroller.addEventListener('scroll', onScroll, true);
-        }
-        /**
-         * 🚨 上游 `useWatch.js` 的 `mergedList = new Set([win, ...targetScrollList,
-         * ...popupScrollList])` —— **window 本身也是一个滚动源**。
-         *
-         * 本仓原先只挂了 `collectScroller()` 的产物，而 `html` / `body` 的计算
-         * `overflow` 是 `visible` ⇒ 不在列表里 ⇒ 页面整页滚动（文档站最常见的情形）
-         * 不会触发重新对齐：弹层停在旧位置（2026-10-22 Menu 审计 M-06 实测，
-         * 垂直子菜单在 scrollIntoView 后偏移 140px）。
-         */
-        const win = popupEle.value?.ownerDocument?.defaultView ?? (canUseDom() ? window : null);
-        win?.addEventListener('scroll', onScroll, true);
+      [
+        popupEle,
+        targetElement,
+        mergedOpen,
+        () => props.getPopupContainer,
+        () => {
+          const target = targetElement.value;
+          return target ? props.getPopupContainer?.(target) : undefined;
+        },
+      ],
+      ([popup, target, open], _prev, onCleanup) => {
+        if (!popup || !open || isMobile) return;
+        let active = true;
+        let release: (() => void) | undefined;
         onCleanup(() => {
+          active = false;
+          release?.();
+        });
+        // Portal moves its existing subtree after this parent's update. Observe
+        // the actual new ancestors and measure only after that move completes.
+        void nextTick(() => {
+          if (!active) return;
+          const scrollers = new Set([
+            ...collectScroller(popup),
+            ...(target ? collectScroller(target) : []),
+          ]);
+          const onScroll = () => {
+            if (mergedOpen.value && props.alignPoint) {
+              overlay.setOpen(false);
+              return;
+            }
+            triggerAlign();
+          };
           for (const scroller of scrollers) {
-            scroller.removeEventListener('scroll', onScroll, true);
+            scroller.addEventListener('scroll', onScroll, true);
           }
-          win?.removeEventListener('scroll', onScroll, true);
+          const win = popup.ownerDocument.defaultView;
+          win?.addEventListener('scroll', onScroll, true);
+          win?.addEventListener('resize', triggerAlign);
+          release = () => {
+            for (const scroller of scrollers) {
+              scroller.removeEventListener('scroll', onScroll, true);
+            }
+            win?.removeEventListener('scroll', onScroll, true);
+            win?.removeEventListener('resize', triggerAlign);
+          };
+          triggerAlign();
         });
       },
       { flush: 'post' },
     );
-    // ⚠️ 这是**原生全局监听**，Vue 不会自动清理（只有 `watch` 的 onCleanup 会自动跑）
-    //    ⇒ 必须在卸载时显式移除，否则每个已卸载的 Trigger 都会继续响应 window resize
-    //    （Trigger 是 tooltip/dropdown/select/cascader/date-picker/tour/mentions 的共享基建，
-    //     泄漏按实例累积）。全仓扫描确认这是唯一一处缺移除的 addEventListener。
-    if (canUseDom()) {
-      window.addEventListener('resize', triggerAlign);
-      onBeforeUnmount(() => {
-        window.removeEventListener('resize', triggerAlign);
-      });
-    }
 
     // 当前 placement/align 也可能由主题或响应式配置更新；在 DOM 更新后量测。
     watch(
@@ -537,11 +542,11 @@ export const Trigger = defineComponent({
     // appear/enter 的 prepare ⇒ 先对齐再放行动画（首帧定位先于动画）。
     const motionHooks = {
       onAppearPrepare: (element: Element | null) => {
-        if (element instanceof HTMLElement && !popupEle.value) setPopupEle(element);
+        if (isHTMLElement(element) && !popupEle.value) setPopupEle(element);
         onAlign();
       },
       onEnterPrepare: (element: Element | null) => {
-        if (element instanceof HTMLElement && !popupEle.value) setPopupEle(element);
+        if (isHTMLElement(element) && !popupEle.value) setPopupEle(element);
         onAlign();
       },
     };

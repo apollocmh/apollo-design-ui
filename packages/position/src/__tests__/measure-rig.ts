@@ -48,6 +48,12 @@ export function stubEle(m: StubMetrics = {}): HTMLElement {
   for (const [prop, value] of Object.entries(m.css ?? {})) {
     el.style.setProperty(prop, value);
   }
+  // jsdom does not project overflow shorthand values onto computed axes.
+  // Real browser computed styles do. Keep these layout fixtures explicit.
+  if (m.css?.overflow) {
+    if (!m.css['overflow-x']) el.style.overflowX = m.css.overflow;
+    if (!m.css['overflow-y']) el.style.overflowY = m.css.overflow;
+  }
 
   const r = m.rect ?? { x: 0, y: 0, width: 0, height: 0 };
   el.getBoundingClientRect = () => new DOMRect(r.x, r.y, r.width, r.height);

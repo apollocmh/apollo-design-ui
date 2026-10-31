@@ -398,29 +398,39 @@ describe('Trigger · 生命周期清理', () => {
   /**
    * VNA-TRIGGER-01 回归。
    *
-   * `window.addEventListener('resize', …)` 是**原生全局监听**，Vue 不会自动清理
-   * （只有 `watch` 的 onCleanup 会自动跑）⇒ 必须在卸载时显式移除，否则每个已卸载的
-   * Trigger 都会继续响应 window resize（Trigger 是 tooltip / dropdown / select /
-   * cascader / date-picker / tour / mentions 的共享基建，泄漏按实例累积）。
-   *
-   * 反向哨兵：删掉 `onBeforeUnmount(() => window.removeEventListener('resize', triggerAlign))`
-   * 后，`removed` 里不会有对应 handler ⇒ 本用例变红。
+   * Native owner-window listeners are active only while open and are released
+   * through the same watcher cleanup on close, reopening and unmount.
    */
   it('★ 卸载时移除 window resize 监听（同一函数引用，否则静默泄漏）', async () => {
     const addSpy = vi.spyOn(window, 'addEventListener');
     const removeSpy = vi.spyOn(window, 'removeEventListener');
 
     const wrapper = mountTrigger({ open: false });
+    expect(addSpy.mock.calls.filter(([type]) => type === 'resize')).toHaveLength(0);
+    await wrapper.setProps({ open: true });
+    await vi.waitFor(() => expect(popup()).not.toBeNull());
+    await nextTick();
     const addedResize = addSpy.mock.calls.filter(([type]) => type === 'resize').map(([, fn]) => fn);
     expect(addedResize.length, '挂载时应注册 window resize 监听').toBeGreaterThan(0);
 
-    wrapper.unmount();
-
+    await wrapper.setProps({ open: false });
     const removedResize = removeSpy.mock.calls
       .filter(([type]) => type === 'resize')
       .map(([, fn]) => fn);
     for (const handler of addedResize) {
-      expect(removedResize, '卸载时应移除刚注册的同一个 handler').toContain(handler);
+      expect(removedResize, '关闭时应移除刚注册的同一个 handler').toContain(handler);
+    }
+
+    await wrapper.setProps({ open: true });
+    await nextTick();
+    const beforeUnmount = removeSpy.mock.calls.length;
+    wrapper.unmount();
+    const removedOnUnmount = removeSpy.mock.calls
+      .slice(beforeUnmount)
+      .filter(([type]) => type === 'resize')
+      .map(([, fn]) => fn);
+    for (const handler of addedResize) {
+      expect(removedOnUnmount, '重新打开后卸载仍移除当前 handler').toContain(handler);
     }
 
     addSpy.mockRestore();
@@ -437,6 +447,7 @@ describe('Trigger · 滚动跟随与视口外对齐（2026-10-22 Menu 审计 M-0
       expect(popup()).not.toBeNull();
     });
 
+    await nextTick();
     const addedScroll = addSpy.mock.calls
       .filter(([type]) => type === 'scroll')
       .map(([, handler]) => handler);
