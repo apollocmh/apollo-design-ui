@@ -49,9 +49,12 @@ const listState = () =>
     };
   });
 
-async function gotoTab(tab) {
-  await page.goto(`${BASE}/components/${tab}`, { waitUntil: 'domcontentloaded' });
-  await page.waitForSelector(`.demo-renderer[data-demo="${tab}-stack"] .apollo-btn`, {
+async function gotoTab(tab, name = 'stack') {
+  // 等客户端完成页面加载，避免在水合替换 SSR 节点时开始滚动。
+  await page.goto(`${BASE}/components/${tab}`, { waitUntil: 'networkidle' });
+  // DemoRenderer 在进入视口附近后加载，先滚动当前测试实际使用的卡片。
+  await page.locator(`.demo-renderer[data-demo="${tab}-${name}"]`).scrollIntoViewIfNeeded();
+  await page.waitForSelector(`.demo-renderer[data-demo="${tab}-${name}"] .apollo-btn`, {
     timeout: 30000,
   });
   await page.waitForTimeout(600);
@@ -69,7 +72,7 @@ async function openStackDemo(count) {
 
 try {
   // ── MN-04 / MN-05：单条通知的 appear → leave 时间线 ────────────────────
-  await gotoTab('notification');
+  await gotoTab('notification', 'basic');
   await page.evaluate(() => {
     window.__motionEnds = [];
     for (const type of ['transitionend', 'animationend']) {
@@ -235,7 +238,7 @@ try {
   );
 
   // ── MN-03：同 key 更新只保留一条，且不出现 0 高度 ─────────────────────
-  await gotoTab('notification');
+  await gotoTab('notification', 'update');
   const updateButton = page
     .locator('.demo-renderer[data-demo="notification-update"] .apollo-btn')
     .first();
@@ -254,7 +257,8 @@ try {
   check('MN-03 更新后的标题已生效', (await notice(0).innerText()).includes('New Title'));
 
   // ── Message：默认不堆叠 / 显式 stack 折叠 ─────────────────────────────
-  await page.goto(`${BASE}/components/message`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/components/message`, { waitUntil: 'networkidle' });
+  await page.locator('.demo-renderer[data-demo="message-hooks"]').scrollIntoViewIfNeeded();
   await page.waitForSelector('.demo-renderer[data-demo="message-hooks"] .apollo-btn', {
     timeout: 30000,
   });
@@ -278,7 +282,8 @@ try {
     messageDefault.className,
   );
 
-  await page.goto(`${BASE}/components/message`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${BASE}/components/message`, { waitUntil: 'networkidle' });
+  await page.locator('.demo-renderer[data-demo="message-stack"]').scrollIntoViewIfNeeded();
   await page.waitForSelector('.demo-renderer[data-demo="message-stack"] .apollo-btn', {
     timeout: 30000,
   });

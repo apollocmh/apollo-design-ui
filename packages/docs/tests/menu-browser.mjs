@@ -30,11 +30,14 @@ page.on('console', (message) => {
 
 async function gotoMenu() {
   await page.goto(`${BASE}/components/menu`, { waitUntil: 'domcontentloaded' });
+  await page.locator(demo('horizontal')).scrollIntoViewIfNeeded();
   await page.waitForSelector(`${demo('horizontal')} .apollo-menu`, { timeout: 30000 });
   await page.waitForTimeout(800);
 }
 
 async function hoverTitle(scope, index = 0) {
+  // 屏外示例尚未挂载，先激活卡片，再定位其菜单内容。
+  await page.locator(scope).scrollIntoViewIfNeeded();
   const title = page.locator(`${scope} .apollo-menu-submenu-title`).nth(index);
   await title.scrollIntoViewIfNeeded();
   const box = await title.boundingBox();
@@ -112,6 +115,7 @@ try {
   await page.mouse.move(5, 5);
 
   // ── M-03：inline 的 hover 不改 openKeys，指针移到子项后仍可点击 ──────────
+  await page.locator(demo('inline')).scrollIntoViewIfNeeded();
   const inlineTitle = page
     .locator(`${demo('inline')} .apollo-menu-submenu > .apollo-menu-submenu-title`)
     .first();
@@ -173,11 +177,6 @@ try {
     'M-03/M-06 移入弹层后保持展开',
     (await verticalHover.title.getAttribute('aria-expanded')) === 'true',
   );
-  // 滚动跟随：弹层与标题一起位移
-  const beforeScroll = {
-    title: await verticalHover.title.boundingBox(),
-    popup: await verticalPopup.boundingBox(),
-  };
   await page.mouse.move(5, 5);
   await page.waitForTimeout(150);
   const leaveClass = (await verticalPopup.getAttribute('class')) ?? '';
@@ -197,12 +196,20 @@ try {
   await hoverTitle(`${demo('vertical')}`, 0);
   check('M-07 离场后可再次打开', (await verticalPopup.count()) === 1);
 
-  // 滚动跟随
-  await page.evaluate(() => window.scrollBy(0, 120));
+  // 滚动时指针留在弹层内，避免标题移开后触发正常的 hover 离场。
+  await verticalPopup.hover({ position: { x: 10, y: 10 } });
+  // 重开时会把示例滚回视口，必须在重开后测量滚动起点。
+  const beforeScroll = {
+    title: await verticalHover.title.boundingBox(),
+    popup: await verticalPopup.boundingBox(),
+    popupClass: await verticalPopup.getAttribute('class'),
+  };
+  await page.evaluate(() => window.scrollBy({ top: 120, behavior: 'instant' }));
   await page.waitForTimeout(200);
   const afterScroll = {
     title: await verticalHover.title.boundingBox(),
     popup: await verticalPopup.boundingBox(),
+    popupClass: await verticalPopup.getAttribute('class'),
   };
   check(
     'M-06 滚动后弹层跟随标题',
@@ -210,15 +217,21 @@ try {
       beforeScroll.popup &&
       afterScroll.title &&
       afterScroll.popup &&
-      near(afterScroll.title.y - beforeScroll.title.y, -120, 5) &&
-      near(afterScroll.popup.y - beforeScroll.popup.y, -120, 5),
-    `${Math.round(afterScroll.popup?.y ?? 0) - Math.round(beforeScroll.popup?.y ?? 0)}`,
+      afterScroll.title.y < beforeScroll.title.y - 5 &&
+      // 邻近 Demo 挂载会触发滚动锚定；跟随量应等于标题的实际位移。
+      near(
+        afterScroll.popup.y - beforeScroll.popup.y,
+        afterScroll.title.y - beforeScroll.title.y,
+        5,
+      ),
+    JSON.stringify({ before: beforeScroll, after: afterScroll }),
   );
   await page.evaluate(() => window.scrollTo(0, 0));
 
   // ── M-05 / M-09：getPopupContainer + 子菜单独立主题 ────────────────────
   const subTheme = `${demo('submenu-theme')}`;
   await page.locator(subTheme).scrollIntoViewIfNeeded();
+  await page.locator(`${subTheme} .apollo-menu-submenu-popup`).waitFor();
   const popupInsideDemo = await page.evaluate((selector) => {
     const root = document.querySelector(selector);
     const popup = root?.querySelector('.apollo-menu-submenu-popup');
@@ -243,6 +256,7 @@ try {
 
   // ── M-01：Sider demo 必须进 iframe，父页面不得出现固定 trigger ──────────
   const siderFrame = page.locator('iframe[src*="menu/demo/sider-current"]');
+  await siderFrame.scrollIntoViewIfNeeded();
   check('M-01 sider-current 使用独立视口 iframe', (await siderFrame.count()) === 1);
   check(
     'M-01 父页面无 Sider fixed trigger',
@@ -268,6 +282,7 @@ try {
         })),
     );
   await page.setViewportSize({ width: 390, height: 900 });
+  await page.locator(demo('horizontal')).scrollIntoViewIfNeeded();
   await page.waitForTimeout(500);
   const narrow = await visibleTopItems();
   check(

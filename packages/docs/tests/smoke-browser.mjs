@@ -73,10 +73,51 @@ try {
 
   // ── 2b. Input.Search / InputOTP demo 真实渲染 ────────────────────────
   await page.goto(`${BASE}/components/input`, { waitUntil: 'domcontentloaded' });
-  await page.waitForSelector('.demo-canvas .apollo-input-search', { timeout: 15000 });
-  check('Search demo 渲染', (await page.locator('.demo-canvas .apollo-input-search').count()) > 0);
-  await page.waitForSelector('.demo-canvas .apollo-otp', { timeout: 15000 });
-  check('OTP demo 渲染', (await page.locator('.demo-canvas .apollo-otp').count()) > 0);
+  // 示例在靠近视口时才挂载；先滚动实际卡片，不能等待尚未激活的远处内容。
+  const searchDemo = page.locator('#demo-search');
+  await searchDemo.scrollIntoViewIfNeeded();
+  await searchDemo.locator('.apollo-input-search').first().waitFor({
+    state: 'visible',
+    timeout: 15000,
+  });
+  check('Search demo 渲染', (await searchDemo.locator('.apollo-input-search').count()) > 0);
+  await searchDemo.getByRole('searchbox').first().fill('keyboard smoke');
+  await searchDemo.getByRole('searchbox').first().press('Enter');
+  await searchDemo.getByText('last search: keyboard smoke', { exact: true }).waitFor({
+    state: 'visible',
+    timeout: 15000,
+  });
+  check(
+    'Search 原生 Enter 搜索回填',
+    (await searchDemo.innerText()).includes('last search: keyboard smoke'),
+  );
+  const buttonSearch = searchDemo.locator('.apollo-input-search').nth(2);
+  await buttonSearch.getByRole('searchbox').fill('button smoke');
+  await buttonSearch.getByRole('button', { name: 'Search', exact: true }).click();
+  await searchDemo.getByText('last search: button smoke', { exact: true }).waitFor({
+    state: 'visible',
+    timeout: 15000,
+  });
+  check(
+    'Search 原生按钮搜索回填',
+    (await searchDemo.innerText()).includes('last search: button smoke'),
+  );
+
+  const otpDemo = page.locator('#demo-otp');
+  await otpDemo.scrollIntoViewIfNeeded();
+  await otpDemo.locator('.apollo-otp').first().waitFor({ state: 'visible', timeout: 15000 });
+  check('OTP demo 渲染', (await otpDemo.locator('.apollo-otp').count()) > 0);
+  await otpDemo
+    .locator('.apollo-otp')
+    .first()
+    .getByRole('textbox')
+    .first()
+    .pressSequentially('123456');
+  await otpDemo.getByText('values: 123456 / -', { exact: true }).waitFor({
+    state: 'visible',
+    timeout: 15000,
+  });
+  check('OTP 原生顺序输入回填', (await otpDemo.innerText()).includes('values: 123456 / -'));
 
   // ── 3. 语言切换 ─────────────────────────────────────────────────────
   // 回到 Button 页：语言断言依赖「When To Use / 何时使用」这组标题，
