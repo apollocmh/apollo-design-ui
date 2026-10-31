@@ -2,9 +2,9 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 187,
+  "revision": 193,
   "dispatch": {
-    "status": "paused",
+    "status": "running",
     "maxParallel": 5,
     "integrator": "root"
   },
@@ -969,19 +969,35 @@
       "kind": "component",
       "ref": "carousel",
       "title": "Carousel",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/carousel"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_color_picker",
+        "baseRevision": 190,
+        "startedAt": "2026-10-31T00:26:03.189Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留现有轮播引擎，修正当前Vue内容、通知和真实导航/自动播放消费",
+        "remaining": [
+          "核对已有事件拼法、完整default/arrow槽与动态slide身份、实际attrs/style/ref；easing等已声明无实际消费的差额集中裁决。",
+          "核对动态配置、RTL/纵向、拖拽/键盘、clone交互归属、autoplay/动画/尺寸监听和卸载资源；不增加未支持的slick功能。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/ui/src/carousel/README.md",
+          "packages/ui/src/carousel/interface.ts"
+        ]
+      }
     },
     {
       "id": "CMP:cascader",
@@ -2707,20 +2723,36 @@
       "kind": "component",
       "ref": "modal",
       "title": "Modal",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/modal"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_select",
+        "baseRevision": 188,
+        "startedAt": "2026-10-31T00:26:02.853Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-27-button-contract-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "接续既有Portal/Motion/Button成果，整改Modal、Confirm与useModal的Vue契约和真实会话生命周期",
+        "remaining": [
+          "核对普通Modal所属ok/cancel/开关通知、footer/modalRender内容扩展、实际attrs/ref与当前Provider/语言/Token；命令式confirm的异步业务回调仍承担原有返回值职责。",
+          "追踪Dialog引擎、静态confirm与useModal的状态/焦点/容器/异步销毁边界；已完成的Button/Watermark等只检查受影响消费，不重审。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/ui/src/modal/README.md",
+          "packages/ui/src/modal/interface.ts"
+        ]
+      }
     },
     {
       "id": "CMP:notification",
@@ -3845,19 +3877,35 @@
       "kind": "component",
       "ref": "slider",
       "title": "Slider",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/slider"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_picker",
+        "baseRevision": 189,
+        "startedAt": "2026-10-31T00:26:03.009Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "复用已有Slider算法与原生槽，修正受控值、实际把手与输入生命周期",
+        "remaining": [
+          "盘清single/range公开值、owned事件、handle/activeHandle槽、逐把手无障碍及真实ref/attrs；检查已声明但无效的输入配置，不新增模式。",
+          "核对拒绝/接受/撤控、动态范围/disabled/marks、真实鼠标/触摸/键盘与拖拽资源、当前Provider/Token和Tooltip消费。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/ui/src/slider/README.md",
+          "packages/ui/src/slider/interface.ts"
+        ]
+      }
     },
     {
       "id": "CMP:space",
@@ -3914,19 +3962,35 @@
       "kind": "component",
       "ref": "splitter",
       "title": "Splitter",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/splitter"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_form_core",
+        "baseRevision": 192,
+        "startedAt": "2026-10-31T00:26:03.550Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留已有尺寸/折叠算法，收口Splitter/Panel原生Vue通知与布局生命周期",
+        "remaining": [
+          "核对重复onResize等prop与emits通道、Panel槽/身份/attrs/ref、size受控接受拒绝撤控、动态面板及折叠状态；保留有效数据配置。",
+          "核对真实拖拽/键盘、lazy/方向/禁用/边界、Provider/Token及ResizeObserver/文档监听释放；复用s33/s51已有回归。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/splitter/README.md",
+          "packages/ui/src/splitter/interface.ts"
+        ]
+      }
     },
     {
       "id": "CMP:statistic",
@@ -4750,20 +4814,36 @@
       "kind": "component",
       "ref": "tour",
       "title": "Tour",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/tour"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_portal",
+        "baseRevision": 191,
+        "startedAt": "2026-10-31T00:26:03.369Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
         "docs/audit/2026-10-27-button-contract-audit.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留已有Tour槽/模型成果，收口当前步骤、目标与弹层状态职责",
+        "remaining": [
+          "核对open/current受控模型、已有各具名槽及具名作用域、step数据与owned通知、实际ref/attrs、当前Provider/语言/Token和PurePanel。",
+          "追踪动态target/steps、空槽、取消/完成/重开、实际Trigger/Portal/遮罩/焦点与监听清理；仅验证现有position消费，不重审共享基础包。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/ui/src/tour/README.md",
+          "packages/ui/src/tour/interface.ts"
+        ]
+      }
     },
     {
       "id": "CMP:transfer",
