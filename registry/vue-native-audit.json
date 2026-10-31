@@ -2,9 +2,9 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 218,
+  "revision": 224,
   "dispatch": {
-    "status": "paused",
+    "status": "running",
     "maxParallel": 5,
     "integrator": "root"
   },
@@ -440,19 +440,35 @@
       "kind": "component",
       "ref": "app",
       "title": "App",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/app"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_select",
+        "baseRevision": 219,
+        "startedAt": "2026-10-31T05:15:02.700Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留真实通知/Modal接线，收口App原生组合与公开服务类型",
+        "remaining": [
+          "盘清App/静态useApp/叶子context、当前Provider配置合并和撤回、真实默认槽/根attrs/方向/主题；保留s40/s41成果。",
+          "核对component=false/动态宿主、多实例/嵌套、早期命令与卸载资源；叶子context占位类型/缺省行为由root统一修正，不重做通知引擎。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/app/App.ts",
+          "packages/ui/src/_internal/app-context.ts"
+        ]
+      }
     },
     {
       "id": "CMP:auto-complete",
@@ -668,19 +684,35 @@
       "kind": "component",
       "ref": "border-beam",
       "title": "BorderBeam",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/border-beam"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_color_picker",
+        "baseRevision": 220,
+        "startedAt": "2026-10-31T05:15:02.858Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "沿用宿主采样/Teleport成果，修正当前Vue宿主与Effect消费",
+        "remaining": [
+          "盘清全部props/默认槽/attrs/Provider/样式与host-ref传递，复用s50共享采样和s56不重挂成果，按根因一次评估旧className/style和真实Vue节点归属。",
+          "检查条件/异步单根宿主、动态样式与元素切换、焦点/原ref、SSR/多文档与sampler资源；不扩新动画或图形能力。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/border-beam/BorderBeam.ts",
+          "packages/ui/src/border-beam/border-sampler.ts"
+        ]
+      }
     },
     {
       "id": "CMP:breadcrumb",
@@ -9650,20 +9682,37 @@
       "kind": "foundation",
       "ref": "position",
       "title": "@apollo-design/position",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/position/src"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_portal",
+        "baseRevision": 221,
+        "startedAt": "2026-10-31T05:15:03.015Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/foundation.json",
         "docs/foundation/position-contract.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "保留纯几何与Oracle成果，完成当前测量契约和真实定位集成",
+        "remaining": [
+          "盘清现有公共几何/测量/placements/类型导出与实际Overlay/Trigger调用链；不重写已证实几何算法。",
+          "聚焦ownerDocument、容器/缩放/滚动裁剪、临时DOM/style恢复、当前配置和SSR边界，按真实缺陷补回归与实际浏览器；消费者桥由root集成。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/position/src/index.ts",
+          "packages/position/src/measure.ts",
+          "docs/foundation/position-contract.md"
+        ]
+      }
     },
     {
       "id": "FND:test-utils",
@@ -9839,13 +9888,17 @@
       "kind": "foundation",
       "ref": "utils",
       "title": "@apollo-design/utils",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/utils/src"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_form_core",
+        "baseRevision": 222,
+        "startedAt": "2026-10-31T05:15:03.196Z"
+      },
       "evidence": [
         "registry/vue-native-audit.json"
       ],
@@ -9932,20 +9985,37 @@
           },
           "boundary": "Only the evidenced DOM-resolution/container-type delta is verified. Utils remains partial; Table full architecture/types are still in progress. Existing deliveries retained; full-library and frozen-version acceptance not run."
         }
-      ]
+      ],
+      "plan": {
+        "goal": "保留已交付受控/DOM成果，按职责组收口工具包Vue原生边界",
+        "remaining": [
+          "完整清点当前公开工具：ref/children/事件attrs、hooks、DOM/焦点、observers/调度、对象/颜色/类型等，沿用有效已有证据，不重做算法或增加工具平台。",
+          "集中处理实际生命周期/响应式/类型与资源缺陷；useControlledValue及getElement已修成果仅补受影响差额。及时通知Position/VirtualList负责人真实共享契约变化，由root补实际消费者。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/utils/src/index.ts",
+          "packages/utils/src/__tests__/hooks.test.ts",
+          "docs/foundation/rc-util-contract.md"
+        ]
+      }
     },
     {
       "id": "FND:virtual-list",
       "kind": "foundation",
       "ref": "virtual-list",
       "title": "@apollo-design/virtual-list",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/virtual-list/src"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_picker",
+        "baseRevision": 223,
+        "startedAt": "2026-10-31T05:15:03.352Z"
+      },
       "evidence": [
         "registry/vue-native-audit.json"
       ],
@@ -9964,7 +10034,20 @@
           "verification": "CMP:table focused verification records current Table core/browser, actual VirtualList consumer regressions and all relevant strict source/type checks.",
           "boundary": "No complete VirtualList audit or final acceptance is claimed; remaining public contracts still need the existing foundation task."
         }
-      ]
+      ],
+      "plan": {
+        "goal": "保留Table真实根测量与Listy成果，收口泛型/原生槽/事件和实际滚动",
+        "remaining": [
+          "盘清VirtualList/Filler/useHeights/纯算法/cache及公开Props/Slots/Emits/ref；修正未知数据和多参数行槽对Vue公共用法的牺牲，统一评估无效showScrollBar。",
+          "核对raw/virtual切换、动态数据/key/尺寸、RTL/横向/scrollTo、实际holder attrs/identity和释放；根负责当前Table/Listy/Select等实际消费桥，保留已有单根Vue holder支持与原生滚动。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/virtual-list/src/virtual-list.ts",
+          "packages/virtual-list/src/types.ts",
+          "docs/foundation/virtual-list-contract.md"
+        ]
+      }
     }
   ],
   "finalAcceptance": {
