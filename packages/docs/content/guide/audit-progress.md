@@ -11,7 +11,7 @@ order: 0
 
 ## Vue 原生化：架构整改与最终验收
 
-当前阶段：**第一阶段：Vue 原生架构整改**。任务派发：**暂停**；活动任务 0/5。
+当前阶段：**第一阶段：Vue 原生架构整改**。任务派发：**进行中**；活动任务 5/5。
 
 | 范围 | 架构整改完成 | 历史完整交付 | 本轮冻结验收通过 |
 | --- | --- | --- | --- |
@@ -24,9 +24,9 @@ order: 0
 
 | 任务 | 架构状态 | 当前负责人 | 保留证据 |
 | --- | --- | --- | --- |
-| Affix | 未开始 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Affix | 进行中 | native_portal | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Alert | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/space-flex-alert-layout-final-acceptance.json) |
-| Anchor | 未开始 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Anchor | 进行中 | native_portal | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | App | 未开始 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | AutoComplete | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Avatar | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-avatar-contract-audit.md) |
@@ -58,13 +58,13 @@ order: 0
 | InputNumber | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Layout | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/space-flex-alert-layout-final-acceptance.json) |
 | List | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md) |
-| Listy | 未开始 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Listy | 进行中 | native_picker | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Masonry | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Mentions | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Menu | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
-| Message | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Message | 进行中 | native_select | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Modal | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
-| Notification | 已有专项，待续 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Notification | 进行中 | native_select | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Pagination | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Popconfirm | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Popover | 架构整改完成 | — | [证据](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
@@ -116,7 +116,7 @@ order: 0
 
 ## Vue native architecture and final acceptance
 
-Current stage: **Vue native architecture**. Dispatch: **paused**; active tasks 0/5.
+Current stage: **Vue native architecture**. Dispatch: **running**; active tasks 5/5.
 
 | Scope | Architecture complete | Historical deliveries | Passed on the frozen version |
 | --- | --- | --- | --- |
@@ -129,9 +129,9 @@ Final library acceptance: **not_started**. Unknown, untested and deferred checks
 
 | Task | Architecture status | Current owner | Retained evidence |
 | --- | --- | --- | --- |
-| Affix | Not started | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Affix | In progress | native_portal | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Alert | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/space-flex-alert-layout-final-acceptance.json) |
-| Anchor | Not started | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Anchor | In progress | native_portal | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | App | Not started | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | AutoComplete | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Avatar | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-27-avatar-contract-audit.md) |
@@ -163,13 +163,13 @@ Final library acceptance: **not_started**. Unknown, untested and deferred checks
 | InputNumber | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Layout | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/evidence/space-flex-alert-layout-final-acceptance.json) |
 | List | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/audit/2026-10-26-list-contract-audit.md) |
-| Listy | Not started | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Listy | In progress | native_picker | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Masonry | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Mentions | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Menu | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
-| Message | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Message | In progress | native_select | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Modal | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
-| Notification | Partial work retained | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
+| Notification | In progress | native_select | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/docs/history/vue-native-audit-2026-10-23.json) |
 | Pagination | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Popconfirm | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |
 | Popover | Architecture complete | — | [Evidence](https://github.com/apollocmh/apollo-design-ui/blob/master/registry/vue-native-audit.json) |

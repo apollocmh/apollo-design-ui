@@ -2,9 +2,9 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 204,
+  "revision": 210,
   "dispatch": {
-    "status": "paused",
+    "status": "running",
     "maxParallel": 5,
     "integrator": "root"
   },
@@ -22,19 +22,35 @@
       "kind": "component",
       "ref": "affix",
       "title": "Affix",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/affix"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_portal",
+        "baseRevision": 207,
+        "startedAt": "2026-10-31T04:14:38.992Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "与Anchor成组核对吸附/滚动的真实Vue生命周期与当前公开用法",
+        "remaining": [
+          "沿用已交付change/updatePosition与s54成果，盘清当前target/offset、真实attrs/默认槽/Provider、元素身份与尺寸/位置链。",
+          "核对换target、动态偏移/重挂、滚动/RO/RAF释放；Anchor的Affix消费在同负责人范围，保留现有几何算法和有效回归。"
+        ],
+        "effort": "medium",
+        "basis": [
+          "packages/ui/src/affix/README.md",
+          "packages/ui/src/affix/Affix.vue"
+        ]
+      }
     },
     {
       "id": "CMP:alert",
@@ -67,19 +83,35 @@
       "kind": "component",
       "ref": "anchor",
       "title": "Anchor",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/anchor"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_portal",
+        "baseRevision": 208,
+        "startedAt": "2026-10-31T04:14:39.173Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "与Affix统一整改当前锚点导航、内容与Vue通知链",
+        "remaining": [
+          "盘清Anchor/AnchorLink、旧onClick/onChange prop与owned emits、items/default/具名槽及真实原生attrs/Provider/Token；纯高亮映射等业务算法保留。",
+          "核对真实滚动容器、当前target/偏移、链接/默认取消/键盘、指示条、条件槽与节点身份、卸载资源，并核对Affix实际消费；不新增路由平台。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/ui/src/anchor/README.md",
+          "packages/ui/src/anchor/Anchor.ts"
+        ]
+      }
     },
     {
       "id": "CMP:app",
@@ -2642,19 +2674,36 @@
       "kind": "component",
       "ref": "listy",
       "title": "Listy",
-      "architectureStatus": "not_started",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/listy"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_picker",
+        "baseRevision": 209,
+        "startedAt": "2026-10-31T04:14:39.328Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "盘清Listy真实泛型内容与分组/虚拟化职责，修正Vue公开契约",
+        "remaining": [
+          "核对真实Props/Slots/Emits/scrollTo、当前rowKey/items/group、原生attrs/样式/Provider/Token，追踪Raw与Virtual两分支和八个已有Demo。",
+          "复用s38和VirtualList已交付测量成果，核对同key替换/重排/分组、实际滚动/高度/焦点、当前配置与资源；公共渲染API集中评估，必要基础层差额报root统一处理，不重审整个基础包。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/ui/src/listy/README.md",
+          "packages/ui/src/listy/Listy.ts",
+          "docs/foundation/virtual-list-contract.md"
+        ]
+      }
     },
     {
       "id": "CMP:masonry",
@@ -2924,13 +2973,17 @@
       "kind": "component",
       "ref": "message",
       "title": "Message",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/message"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_select",
+        "baseRevision": 205,
+        "startedAt": "2026-10-31T04:14:38.678Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -2938,7 +2991,20 @@
         "docs/audit/2026-10-22-menu-notification-motion-remediation.md",
         "docs/audit/2026-10-22-motion-review-002.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "复用已有通知/动效专项，与Notification统一整改共享通知引擎及Message的Vue服务契约",
+        "remaining": [
+          "共同盘清notification/engine与Message holder/静态服务、真实PurePanel、通知载荷与thenable；保留仍有效历史证据，核对早期调用/队列/卸载与同key更新。",
+          "核对当前Provider/配置/语义样式/Token、完整内容和实际容器/资源；与Notification同一负责人，App仅验证受影响消费，不重审。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/ui/src/message/README.md",
+          "packages/ui/src/message/useMessage.ts",
+          "docs/audit/2026-10-22-menu-notification-motion-remediation.md"
+        ]
+      }
     },
     {
       "id": "CMP:modal",
@@ -3371,13 +3437,17 @@
       "kind": "component",
       "ref": "notification",
       "title": "Notification",
-      "architectureStatus": "partial",
+      "architectureStatus": "in_progress",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/notification"
       ],
-      "assignment": null,
+      "assignment": {
+        "owner": "native_select",
+        "baseRevision": 206,
+        "startedAt": "2026-10-31T04:14:38.835Z"
+      },
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -3385,7 +3455,20 @@
         "docs/audit/2026-10-22-menu-notification-motion-remediation.md",
         "docs/audit/2026-10-22-motion-review-002.md"
       ],
-      "issues": []
+      "issues": [],
+      "plan": {
+        "goal": "与Message成组收口现有共享通知引擎，修正实际生命周期与Vue公共消费",
+        "remaining": [
+          "区分命令式配置的服务回调与实际Vue组件owned emits，追踪Notice/NoticeList/holder/static/useNotification/PurePanel；核对动态配置和已声明接口实际消费。",
+          "复用已有Motion/Portal修复，集中处理key归属、计时/进度/堆叠、焦点/ARIA、早期调用和卸载；只相关核心/类型/Demo与必要真实浏览器。"
+        ],
+        "effort": "large",
+        "basis": [
+          "packages/ui/src/notification/README.md",
+          "packages/ui/src/notification/useNotification.ts",
+          "docs/audit/2026-10-22-motion-review-002.md"
+        ]
+      }
     },
     {
       "id": "CMP:pagination",
