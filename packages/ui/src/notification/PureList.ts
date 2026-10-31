@@ -1,28 +1,17 @@
-/**
- * `PureList` —— antd `components/notification/PureList.tsx` 的 Vue 版。
- *
- * 一组通知的**静态**列表（不 portal、不自动关闭）。逐条对齐上游：
- *   - `placement` 默认 `'topRight'`（可传）；
- *   - `stack` 恒 `false`（静态列表不折叠）；
- *   - 每条：`closable.closeIcon` 用 **notice 前缀**（`{p}-notification-notice`）的
- *     `getCloseIcon`，`className` 叠加 `{p}-notice-{type}`，语义槽只叠 `icon`。
- */
-import { defineComponent, h, type PropType } from 'vue';
-
+import { defineComponent, h, mergeProps, normalizeStyle, type PropType } from 'vue';
+import { mergeClassNames, mergeStyles } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import NoticeList from './engine/NoticeList';
 import { getCloseIcon, TypeIcon } from './icon';
-import type { NotificationPlacement, NotificationSemanticType } from './interface';
+import type {
+  NotificationConfig,
+  NotificationPlacement,
+  NotificationSemanticType,
+  PureListItem,
+} from './interface';
+import { provideNoticeZIndex, useNotificationTheme } from './use-notice-theme';
 
-export interface PureListItem {
-  key: string | number;
-  title?: unknown;
-  description?: unknown;
-  type?: 'success' | 'info' | 'error' | 'warning';
-  actions?: unknown;
-  duration?: number | false;
-  showProgress?: boolean;
-}
+export type { PureListItem } from './interface';
 
 export default defineComponent({
   name: 'ANotificationPureList',
@@ -34,39 +23,49 @@ export default defineComponent({
       type: Object as PropType<NotificationSemanticType['classNames']>,
       default: undefined,
     },
-    style: { type: Object as PropType<NotificationSemanticType['styles']>, default: undefined },
+    styles: { type: Object as PropType<NotificationSemanticType['styles']>, default: undefined },
   },
-  setup(props) {
+  setup(props, { attrs }) {
+    const config = useComponentConfig<
+      NotificationConfig & { className?: string; style?: import('vue').CSSProperties }
+    >('notification');
+    const theme = useNotificationTheme();
+    provideNoticeZIndex(
+      () => theme.token.value.zIndexPopup,
+      () => {
+        const style = normalizeStyle(mergeProps({ style: config.style }, attrs).style);
+        return (
+          (typeof style === 'object' ? (style.zIndex ?? style['z-index']) : undefined) ??
+          props.styles?.list?.zIndex ??
+          config.styles?.list?.zIndex
+        );
+      },
+    );
     return () => {
-      const config = useComponentConfig('notification');
       const prefixCls = config.getPrefixCls('notification');
-      const noticePrefixCls = `${prefixCls}-notice`;
-
-      const configList = props.items.map((item) => {
-        const { actions, description, duration, key, showProgress, title, type } = item;
-        const typeIconCls = type ? `${noticePrefixCls}-icon-${type}` : undefined;
-        return {
-          key,
-          actions,
-          closable: { closeIcon: getCloseIcon(noticePrefixCls) },
-          description,
-          duration,
-          icon: type ? h(TypeIcon[type]) : null,
-          showProgress,
-          title,
-          className: type ? `${noticePrefixCls}-${type}` : undefined,
-          classNames: { icon: typeIconCls },
-        };
-      });
-
-      return h(NoticeList, {
+      const cn = mergeClassNames(config.classNames, props.classNames);
+      const st = mergeStyles(config.styles, props.styles);
+      const configList = props.items.map((item) => ({
+        ...item,
+        closable: { closeIcon: getCloseIcon(`${prefixCls}-notice`) },
+        icon: item.type ? h(TypeIcon[item.type]) : null,
+        className: item.type ? `${prefixCls}-notice-${item.type}` : undefined,
+        classNames: { icon: item.type ? `${prefixCls}-notice-icon-${item.type}` : undefined },
+      }));
+      const native = mergeProps(
+        { class: config.className, style: [theme.style.value, config.style] },
+        attrs,
+      );
+      const listProps = {
+        ...native,
         prefixCls,
         placement: props.placement,
         configList,
-        classNames: props.classNames,
-        style: props.style,
+        classNames: cn,
+        styles: st,
         stack: false,
-      } as never);
+      } satisfies InstanceType<typeof NoticeList>['$props'];
+      return h(NoticeList, listProps);
     };
   },
 });

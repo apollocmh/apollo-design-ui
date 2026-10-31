@@ -1508,6 +1508,10 @@ export type {
   ConfigOptions as MessageConfigOptions,
   JointContent as MessageJointContent,
   MessageInstance,
+  MessagePureListProps,
+  MessagePurePanelEmits,
+  MessagePurePanelProps,
+  MessagePurePanelSlots,
   MessageSemanticType,
   MessageType,
   NoticeType as MessageNoticeType,
@@ -1571,6 +1575,10 @@ export type {
   NotificationConfig,
   NotificationInstance,
   NotificationPlacement,
+  NotificationPureListProps,
+  NotificationPurePanelEmits,
+  NotificationPurePanelProps,
+  NotificationPurePanelSlots,
   NotificationSemanticType,
 } from './notification';
 // ---------------------------------------------------------------------------

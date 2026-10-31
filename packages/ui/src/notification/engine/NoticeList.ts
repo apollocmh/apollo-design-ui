@@ -14,8 +14,9 @@
  *   4. `stackInThreshold`：`notificationIndex < threshold` 的条目才带
  *      `-notice-stack-in-threshold` 类（折叠时它们是被盖住的那几条）。
  */
-import { MotionList } from '@apollo-design/motion';
+import { MotionList, type MotionListSlotProps } from '@apollo-design/motion';
 import {
+  type CSSProperties,
   computed,
   defineComponent,
   h,
@@ -31,6 +32,8 @@ import { clsx } from '../../_internal/clsx';
 import { useListPosition } from './hooks/useListPosition';
 import { useStack } from './hooks/useStack';
 import type {
+  NoticeClassNames,
+  NoticeKey,
   NoticeListConfig,
   NoticeListProps,
   NoticeStyles,
@@ -42,6 +45,8 @@ import NoticeListContent from './NoticeListContent';
 import { useNotificationContext } from './NotificationProvider';
 
 /** rc 的 9 个 notice 槽（顺序即合并顺序）。 */
+type NoticeMotionEntry = { key: string; config: NoticeListConfig };
+
 const NOTICE_SLOT_KEYS = [
   'wrapper',
   'root',
@@ -67,9 +72,12 @@ export default defineComponent({
     stack: { type: [Boolean, Object] as PropType<NoticeListProps['stack']>, default: undefined },
     motion: { type: [Object, Function] as PropType<NoticeListProps['motion']>, default: undefined },
     className: { type: String, default: undefined },
-    style: { type: Object as PropType<NoticeListProps['style']>, default: undefined },
+    style: {
+      type: [Object, Array, String] as PropType<import('vue').StyleValue>,
+      default: undefined,
+    },
     onNoticeClose: {
-      type: Function as PropType<(key: string | number) => void>,
+      type: Function as PropType<(key: string | number, source: NoticeListConfig) => void>,
       default: undefined,
     },
     onAllRemoved: {
@@ -81,7 +89,7 @@ export default defineComponent({
     const context = useNotificationContext();
 
     const keys = computed(() =>
-      props.configList.map((config) => ({ config, key: String(config.key) })),
+      props.configList.map((config) => ({ config, key: `${typeof config.key}:${config.key}` })),
     );
 
     const placementMotion = computed(() =>
@@ -141,9 +149,9 @@ export default defineComponent({
      *      稳定 ref 不会再触发测量；上游 2.0.8 同样不重测，但那会让 `--notification-y`
      *      停在旧高度。这里补一个观察器，仅在元素 border-box 变化时重测。
      */
-    const elementByKey = new Map<string, HTMLElement>();
-    const elementKeys = new WeakMap<Element, string>();
-    const noticeRefs = new Map<string, (inst: unknown) => void>();
+    const elementByKey = new Map<NoticeKey, HTMLElement>();
+    const elementKeys = new WeakMap<Element, NoticeKey>();
+    const noticeRefs = new Map<NoticeKey, (inst: unknown) => void>();
     let resizeObserver: ResizeObserver | null = null;
 
     const getResizeObserver = (): ResizeObserver | null => {
@@ -161,7 +169,7 @@ export default defineComponent({
       return resizeObserver;
     };
 
-    const getNoticeRef = (key: string): ((inst: unknown) => void) => {
+    const getNoticeRef = (key: NoticeKey): ((inst: unknown) => void) => {
       let fn = noticeRefs.get(key);
       if (fn) return fn;
       fn = (inst: unknown) => {
@@ -221,8 +229,8 @@ export default defineComponent({
       };
     });
 
-    const getIndex = (key: string): number | undefined => {
-      const index = keys.value.findIndex((item) => item.key === key);
+    const getIndex = (key: NoticeKey): number | undefined => {
+      const index = keys.value.findIndex((item) => item.config.key === key);
       return index === -1 ? undefined : keys.value.length - index - 1;
     };
 
@@ -230,51 +238,61 @@ export default defineComponent({
     const mergeSlots = (
       config: NoticeListConfig,
     ): {
-      classNames: NotificationClassNames;
+      classNames: NoticeClassNames;
       styles: NoticeStyles;
     } => {
-      const classNames: Record<string, string> = {};
-      const styles: Record<string, Record<string, unknown>> = {};
+      const classNames: NoticeClassNames = {};
+      const styles: NoticeStyles = {};
       for (const key of NOTICE_SLOT_KEYS) {
         classNames[key] = clsx(
-          (props.classNames as Record<string, unknown> | undefined)?.[key],
-          (config.classNames as Record<string, unknown> | undefined)?.[key],
+          context.value.classNames?.[key],
+          props.classNames?.[key],
+          config.classNames?.[key],
         );
-        styles[key] = Object.assign(
-          {},
-          (props.styles as Record<string, unknown> | undefined)?.[key] ?? {},
-          (config.styles as Record<string, unknown> | undefined)?.[key] ?? {},
-        );
+        styles[key] = Object.assign({}, props.styles?.[key], config.styles?.[key]);
       }
       return {
-        classNames: classNames as NotificationClassNames,
-        styles: styles as unknown as NoticeStyles,
+        classNames,
+        styles,
       };
     };
 
     const renderItem = (
       config: NoticeListConfig,
       motionClassName: string | undefined,
-      motionStyle: Record<string, unknown> | null,
+      motionStyle: CSSProperties | null,
     ) => {
-      const key = String(config.key);
-      const { placement: _itemPlacement, ...noticeConfig } = config;
+      const key = config.key;
+      const {
+        placement: _itemPlacement,
+        onRemoved: _removed,
+        onClose: _close,
+        onMouseEnter: _mouseEnter,
+        onMouseLeave: _mouseLeave,
+        props: rootProps,
+        ...noticeConfig
+      } = config;
       const notificationIndex = getIndex(key);
       const merged = mergeSlots(config);
-      const contextNotice = (context.value.classNames as { notice?: string } | undefined)?.notice;
 
       return h(Notice, {
-        ...(noticeConfig as Record<string, unknown>),
+        ...noticeConfig,
         // ⚠️ 必须按 key 复用同一个函数 ref（MN-03）：每次渲染新建会让 Vue 在 patch
         //    时先 null 后 element，把 sizeMap 清掉再测，布局瞬态归零。
         ref: getNoticeRef(key),
         prefixCls: props.prefixCls,
-        className: clsx(contextNotice, toValue(config.className), motionClassName),
+        rootProps,
+        onMouseenter: config.onMouseEnter,
+        onMouseleave: config.onMouseLeave,
+        className: clsx(toValue(config.className), motionClassName),
         closable: toValue(config.closable),
         style: { ...(motionStyle ?? {}), ...(config.style ?? {}) },
         classNames: merged.classNames,
         styles: merged.styles,
         components: { ...(props.components ?? {}), ...(config.components ?? {}) },
+        active: props.configList.some(
+          (item) => item.key === config.key && item.times === config.times,
+        ),
         hovering: stackEnabled.value && listHovering.value,
         pauseOnHover: config.pauseOnHover ?? props.pauseOnHover,
         offset: position.value.get(key),
@@ -284,10 +302,9 @@ export default defineComponent({
             ? notificationIndex < stackParams.value.threshold
             : undefined,
         onClose: () => {
-          config.onClose?.();
-          props.onNoticeClose?.(config.key);
+          props.onNoticeClose?.(config.key, config);
         },
-      } as never);
+      });
     };
 
     return () => {
@@ -312,7 +329,7 @@ export default defineComponent({
           onMouseleave: () => {
             listHovering.value = false;
           },
-          style: { ...(props.styles?.list ?? {}), ...(props.style ?? {}) },
+          style: [props.styles?.list, props.style],
         },
         [
           h(
@@ -326,13 +343,13 @@ export default defineComponent({
               height: totalHeight.value,
               topNoticeHeight: topNoticeHeight.value,
               topNoticeWidth: topNoticeWidth.value,
-              className: props.classNames?.listContent,
+              className: clsx(context.value.classNames?.listContent, props.classNames?.listContent),
               style: props.styles?.listContent,
             },
             {
               default: () =>
                 h(
-                  MotionList,
+                  MotionList<NoticeMotionEntry>,
                   {
                     component: false,
                     // ⚠️ 必须把 `{ key, config }` **整个对象**交给 MotionList：
@@ -348,17 +365,8 @@ export default defineComponent({
                     },
                   },
                   {
-                    default: (slotProps: Record<string, unknown>) => {
-                      const config =
-                        (slotProps.config as NoticeListConfig | undefined) ??
-                        keys.value.find((entry) => entry.key === String(slotProps.itemKey))?.config;
-                      if (!config) return null;
-                      return renderItem(
-                        config,
-                        slotProps.className as string | undefined,
-                        slotProps.style as Record<string, unknown> | null,
-                      );
-                    },
+                    default: (slotProps: MotionListSlotProps<NoticeMotionEntry>) =>
+                      renderItem(slotProps.config, slotProps.className, slotProps.style),
                   },
                 ),
             },

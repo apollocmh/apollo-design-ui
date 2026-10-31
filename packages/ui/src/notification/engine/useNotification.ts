@@ -19,20 +19,17 @@ import {
   h,
   nextTick,
   onMounted,
+  onScopeDispose,
   onUpdated,
   ref,
+  shallowRef,
   toValue,
   type VNode,
   watch,
   watchEffect,
 } from 'vue';
 
-import type {
-  NoticeListConfig,
-  NotificationAPI,
-  NotificationConfig,
-  NotificationsProps,
-} from './interface';
+import type { NoticeListConfig, NotificationAPI, NotificationConfig } from './interface';
 import Notifications from './Notifications';
 
 const defaultGetContainer = (): HTMLElement => document.body;
@@ -43,20 +40,6 @@ type Task =
   | { type: 'destroy' };
 
 let uniqueKey = 0;
-
-/** rc 的 `mergeConfig`：逐键覆盖，`undefined` 不覆盖。 */
-function mergeConfig(
-  ...objList: Array<Record<string, unknown> | undefined>
-): Record<string, unknown> {
-  const clone: Record<string, unknown> = {};
-  for (const obj of objList) {
-    if (!obj) continue;
-    for (const key of Object.keys(obj)) {
-      if (obj[key] !== undefined) clone[key] = obj[key];
-    }
-  }
-  return clone;
-}
 
 export interface UseNotificationResult {
   api: NotificationAPI;
@@ -90,22 +73,19 @@ export function useNotification(rootConfig: NotificationConfig = {}): UseNotific
     renderNotifications,
   } = rootConfig;
 
-  // ⚠️ `duration` / `showProgress` 可能是 getter（Issue #45 / #46）⇒ 每次 `open`
-  //    都重新求值，否则「holder 建好之后再改配置」传不进内核
-  const shareConfig = () => ({
-    placement,
-    closable: toValue(closable),
-    duration: toValue(duration) as number | false | null | undefined,
-    showProgress: toValue(showProgress) as boolean | undefined,
-  });
-
   const container = ref<HTMLElement | ShadowRoot | null>(null);
   const notificationsRef = ref<{
-    open: (c: Partial<NoticeListConfig>) => void;
+    open: (c: NoticeListConfig) => void;
     close: (k: string | number) => void;
     destroy: () => void;
   } | null>(null);
-  const taskQueue = ref<Task[]>([]);
+  const taskQueue = shallowRef<Task[]>([]);
+  let disposed = false;
+  onScopeDispose(() => {
+    disposed = true;
+    for (const task of taskQueue.value) if (task.type === 'open') task.config.onRemoved?.();
+    taskQueue.value = [];
+  });
 
   const holder = (): VNode =>
     h(Notifications, {
@@ -115,38 +95,40 @@ export function useNotification(rootConfig: NotificationConfig = {}): UseNotific
       motion,
       maxCount,
       pauseOnHover,
-      classNames,
-      styles,
+      classNames: toValue(classNames),
+      styles: toValue(styles),
       components,
       className,
       style,
       onAllRemoved,
       stack,
       renderNotifications,
-    } as NotificationsProps as never);
+    });
 
   const open = (config: Partial<NoticeListConfig>): void => {
-    const mergedConfig = mergeConfig(
-      shareConfig(),
-      config as Record<string, unknown>,
-    ) as Partial<NoticeListConfig>;
-    if (mergedConfig.key === null || mergedConfig.key === undefined) {
-      mergedConfig.key = `rc-notification-${uniqueKey}`;
-      uniqueKey += 1;
+    const key = config.key ?? `rc-notification-${uniqueKey++}`;
+    const mergedConfig: NoticeListConfig = {
+      ...config,
+      key,
+      placement: config.placement ?? placement,
+      closable: config.closable !== undefined ? config.closable : toValue(closable),
+      duration: config.duration !== undefined ? config.duration : toValue(duration),
+      showProgress: config.showProgress !== undefined ? config.showProgress : toValue(showProgress),
+    };
+    if (disposed) {
+      mergedConfig.onRemoved?.();
+      return;
     }
-    taskQueue.value = [
-      ...taskQueue.value,
-      { type: 'open', config: mergedConfig as NoticeListConfig },
-    ];
+    taskQueue.value = [...taskQueue.value, { type: 'open', config: mergedConfig }];
   };
 
   const api: NotificationAPI = {
     open,
     close: (key: string | number) => {
-      taskQueue.value = [...taskQueue.value, { type: 'close', key }];
+      if (!disposed) taskQueue.value = [...taskQueue.value, { type: 'close', key }];
     },
     destroy: () => {
-      taskQueue.value = [...taskQueue.value, { type: 'destroy' }];
+      if (!disposed) taskQueue.value = [...taskQueue.value, { type: 'destroy' }];
     },
   };
 
@@ -158,12 +140,13 @@ export function useNotification(rootConfig: NotificationConfig = {}): UseNotific
   const flush = (): void => {
     const instance = notificationsRef.value;
     if (!instance || !taskQueue.value.length) return;
-    for (const task of taskQueue.value) {
+    const tasks = taskQueue.value;
+    taskQueue.value = [];
+    for (const task of tasks) {
       if (task.type === 'open') instance.open(task.config);
       else if (task.type === 'close') instance.close(task.key);
       else instance.destroy();
     }
-    taskQueue.value = [];
   };
 
   onMounted(() => {

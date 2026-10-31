@@ -266,3 +266,7 @@ Anchor 与 Anchor.Link 的 click 使用所属 Vue emits，载荷为原生 MouseE
 ### D-listy-native-generics-and-content
 
 Listy 使用真实泛型 Vue 组件，保留任意数据类型与有效字符串/数字 key，rowKey 字段按其实际值类型约束。itemRender 迁为 #default={item,index}，group.title 迁为 #groupHeader={groupKey,items,sticky,fixed}，group.key 保留数据分组职责；类型贯穿模板、h()、插槽与 scrollTo 引用。toTaggedKey 的结果包含 key 的原始类型，数字和字符串不再碰撞；不要自行拼接旧格式。修正 Raw/Virtual 的真实滚动目标、跨分组节点身份、组头定位与资源释放，Provider 和当前两个 Token 实际消费，详见[Listy API](packages/ui/src/listy/index.zh-CN.md)。
+
+### D-notices-native-sessions-and-panels
+
+Message/Notification 保留命令式 API、有效服务回调和零参数 holder 工厂，提前调用进入实际挂载队列；Message 句柄在真正终止时结算，同 key 的各次等待均有效，手动关闭、销毁、淘汰和卸载不新增 public onClose 通知。关闭按钮和计时关闭仍调用当前 onClose；原始数字/字符串 key 分离，更新重置当前计时。单条配置中移除未消费的 classNames/styles.list 与 listContent，列表语义继续在 hook/全局配置中设置；PurePanel/PureList 使用准确类型、原生槽与事件。补齐当前十个 Token、Provider/关闭图标类型与真实容器消费，Modal/Tag 的共享关闭图标链同步验证，详见[Message API](packages/ui/src/message/index.zh-CN.md)和[Notification API](packages/ui/src/notification/index.zh-CN.md)。

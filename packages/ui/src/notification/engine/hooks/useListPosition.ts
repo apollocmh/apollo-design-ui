@@ -12,12 +12,12 @@
  */
 import { type ComputedRef, computed, type MaybeRefOrGetter, toValue } from 'vue';
 
-import type { NoticeListConfig, StackConfig } from '../interface';
+import type { NoticeKey, NoticeListConfig, StackConfig } from '../interface';
 import { type NodeSize, useSizes } from './useSizes';
 
 export interface UseListPositionResult {
-  position: ComputedRef<Map<string, number>>;
-  setNodeSize: (key: string, node: { offsetWidth: number; offsetHeight: number } | null) => void;
+  position: ComputedRef<Map<NoticeKey, number>>;
+  setNodeSize: (key: NoticeKey, node: { offsetWidth: number; offsetHeight: number } | null) => void;
   totalHeight: ComputedRef<number>;
   topNoticeHeight: ComputedRef<number>;
   topNoticeWidth: ComputedRef<number>;
@@ -35,7 +35,7 @@ export function useListPosition(
     let totalHeight = 0;
     const stackValue = toValue(stack);
     const stackThreshold = stackValue?.threshold ?? 0;
-    const position = new Map<string, number>();
+    const position = new Map<NoticeKey, number>();
     let topNoticeHeight = 0;
     let topNoticeWidth = 0;
     const gapValue = toValue(gap);
@@ -45,8 +45,8 @@ export function useListPosition(
       // 倒序：index 0 是**最新**的一条
       const config = list[list.length - 1 - index];
       if (!config) continue;
-      const key = String(config.key);
-      const size: NodeSize | undefined = sizeMap.value[key];
+      const key = config.key;
+      const size: NodeSize | undefined = sizeMap.value.get(key);
       const height = size?.height ?? 0;
       const y = stackValue && index > 0 ? offsetY + (stackValue.offset ?? 0) - height : offsetY;
       position.set(key, y);

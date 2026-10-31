@@ -26,22 +26,28 @@ import {
   computed,
   defineComponent,
   h,
+  isVNode,
   type MaybeRefOrGetter,
+  onScopeDispose,
   type PropType,
   shallowRef,
   toValue,
   type VNode,
+  watch,
 } from 'vue';
 import { clsx } from '../_internal/clsx';
+import { mergeClassNames, mergeStyles } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { useNotification } from '../notification/engine';
 import type { NoticeListConfig } from '../notification/engine/interface';
 import { useStackConfig } from '../notification/hooks/useStackConfig';
+import { provideNoticeZIndex, useMessageTheme } from '../notification/use-notice-theme';
 import { getPlacementOffsetStyle } from '../notification/util';
 import { getMessageIcon } from './icon';
 import type {
   ArgsProps,
   ConfigOptions,
+  JointContent,
   MessageInstance,
   MessageType,
   NoticeType,
@@ -73,42 +79,58 @@ const Holder = defineComponent({
     prefixCls: { type: String, default: undefined },
     getContainer: { type: Function as PropType<ConfigOptions['getContainer']>, default: undefined },
     maxCount: { type: Number, default: undefined },
-    duration: { type: Number, default: DEFAULT_DURATION },
+    duration: { type: Number, default: undefined },
     rtl: { type: Boolean, default: undefined },
     classNames: { type: Object as PropType<ConfigOptions['classNames']>, default: undefined },
     styles: { type: Object as PropType<ConfigOptions['styles']>, default: undefined },
     transitionName: { type: String, default: undefined },
-    pauseOnHover: { type: Boolean, default: true },
+    pauseOnHover: { type: Boolean, default: undefined },
     stack: { type: [Boolean, Object] as PropType<ConfigOptions['stack']>, default: undefined },
     onAllRemoved: { type: Function as PropType<() => void>, default: undefined },
   },
   setup(props, { expose }) {
-    const config = useComponentConfig('message');
+    const config = useComponentConfig<
+      ConfigOptions & { className?: string; style?: import('vue').CSSProperties }
+    >('message');
+    const theme = useMessageTheme();
+    provideNoticeZIndex(
+      () => theme.token.value.zIndexPopup,
+      () => config.style?.zIndex ?? props.styles?.list?.zIndex ?? config.styles?.list?.zIndex,
+    );
     const prefixCls = computed(() => props.prefixCls || config.getPrefixCls('message'));
 
     const stackConfig = useStackConfig(
-      () => props.stack,
+      () => props.stack ?? config.stack,
       () => DEFAULT_STACK_CONFIG,
     );
 
     const { api, holder } = useNotification({
       prefixCls: () => prefixCls.value,
-      style: () => getPlacementOffsetStyle(props.top ?? DEFAULT_OFFSET),
+      style: () => ({
+        ...theme.style.value,
+        ...config.style,
+        ...getPlacementOffsetStyle(props.top ?? config.top ?? DEFAULT_OFFSET),
+      }),
       className: () =>
-        clsx((props.rtl ?? config.direction === 'rtl') ? `${prefixCls.value}-rtl` : undefined),
+        clsx(
+          config.className,
+          (props.rtl ?? config.rtl ?? config.direction === 'rtl')
+            ? `${prefixCls.value}-rtl`
+            : undefined,
+        ),
       motion: () => getMotion(prefixCls.value, props.transitionName),
       closable: false,
       // ⚠️ 这几个必须是 **getter**（Issue #45）：`useNotification` 在 setup 期把
       //    根配置解构成常量 ⇒ 传裸值会被钉死，「holder 建好之后再改配置」
       //    （`message.config({ maxCount })` 等）就传不进内核。
       //    `style` / `className` / `motion` / `getContainer` 本来就是 getter，同判。
-      duration: () => props.duration,
+      duration: () => props.duration ?? config.duration ?? DEFAULT_DURATION,
       getContainer: () => props.getContainer?.() ?? config.getPopupContainer?.() ?? document.body,
-      maxCount: () => props.maxCount,
-      onAllRemoved: props.onAllRemoved,
-      classNames: props.classNames as never,
-      styles: props.styles as never,
-      pauseOnHover: () => props.pauseOnHover,
+      maxCount: () => props.maxCount ?? config.maxCount,
+      onAllRemoved: () => props.onAllRemoved?.(),
+      classNames: () => mergeClassNames(config.classNames, props.classNames),
+      styles: () => mergeStyles(config.styles, props.styles),
+      pauseOnHover: () => props.pauseOnHover ?? config.pauseOnHover ?? true,
       stack: () => stackConfig.value,
     });
 
@@ -128,81 +150,106 @@ const Holder = defineComponent({
 // ==============================================================================
 
 let keyIndex = 0;
+function isMessageConfig(value: JointContent): value is ArgsProps {
+  return isPlainObject(value) && !isVNode(value) && 'content' in value;
+}
 
 export function useInternalMessage(
   messageConfig?: MaybeRefOrGetter<ConfigOptions | undefined>,
 ): readonly [MessageInstance, () => VNode] {
   const holderRef = shallowRef<HolderRef | null>(null);
-
-  const close = (key: string | number): void => {
-    holderRef.value?.close(key);
+  let disposed = false;
+  let queue: Array<(instance: HolderRef) => void> = [];
+  const settlements = new Set<() => void>();
+  const submit = (action: (instance: HolderRef) => void) => {
+    if (disposed) return;
+    if (holderRef.value) action(holderRef.value);
+    else queue.push(action);
   };
+  watch(
+    holderRef,
+    (instance) => {
+      if (!instance) return;
+      const pending = queue;
+      queue = [];
+      for (const action of pending) action(instance);
+    },
+    { flush: 'post' },
+  );
+  onScopeDispose(() => {
+    disposed = true;
+    queue = [];
+    for (const settle of [...settlements]) settle();
+  });
+  const close = (key: string | number) => submit((instance) => instance.close(key));
 
-  const open = (config: ArgsProps): MessageType => {
-    const instance = holderRef.value;
-    if (!instance) {
-      // 与上游同判：在 render 期调用拿不到实例 ⇒ 返回一个空壳（不抛错）
-      const fakeResult = (() => {}) as MessageType;
-      // biome-ignore lint/suspicious/noThenProperty: 空壳也要满足 MessageType 的 thenable 契约（上游同样给 fakeResult 挂 then）
-      fakeResult.then = (() => Promise.resolve(false)) as MessageType['then'];
-      fakeResult.promise = Promise.resolve(false);
-      return fakeResult;
-    }
-
-    const prefixCls = () => instance.prefixCls ?? 'apollo-message';
-    const noticePrefixCls = () => `${prefixCls()}-notice`;
-
-    const {
-      content,
-      icon,
-      type,
-      key,
-      className,
-      style,
-      onClose,
-      classNames: configClassNames = {},
-      styles = {},
-      ...restConfig
-    } = config;
-
-    let mergedKey: string | number = key as string | number;
-    if (mergedKey === null || mergedKey === undefined) {
-      keyIndex += 1;
-      mergedKey = `apollo-message-${keyIndex}`;
-    }
-
-    const iconNode = getMessageIcon(type, icon);
-
+  const open = (input: ArgsProps): MessageType => {
+    const config = { ...input };
+    const mergedKey = config.key ?? `apollo-message-${++keyIndex}`;
     return wrapPromiseFn((resolve) => {
-      instance.open({
-        ...(restConfig as Partial<NoticeListConfig>),
-        key: mergedKey,
-        icon: iconNode,
-        title: content,
-        classNames: {
-          ...configClassNames,
-          get wrapper() {
-            return clsx(type ? `${prefixCls()}-${type}` : undefined, configClassNames.wrapper);
-          },
-          get icon() {
-            return clsx(
-              type ? `${noticePrefixCls()}-icon-${type}` : undefined,
-              configClassNames.icon,
-            );
-          },
-        } as never,
-        styles: styles as never,
-        placement: 'top',
-        className: () => clsx(type ? `${noticePrefixCls()}-${type}` : undefined, className),
-        style,
-        onClose: () => {
-          onClose?.();
-          resolve();
-        },
-      });
+      let submitted = false;
+      let canceled = false;
+      let settled = false;
+      const settle = () => {
+        if (settled) return;
+        settled = true;
+        settlements.delete(settle);
+        resolve();
+      };
+      settlements.add(settle);
+      if (disposed) settle();
+      else
+        submit((instance) => {
+          if (canceled) return;
+          submitted = true;
+          const prefixCls = () => instance.prefixCls ?? 'apollo-message';
+          const noticePrefixCls = () => `${prefixCls()}-notice`;
 
+          const {
+            content,
+            icon,
+            type,
+            key,
+            className,
+            style,
+            onClose,
+            classNames: configClassNames = {},
+            styles = {},
+            ...restConfig
+          } = config;
+
+          const iconNode = getMessageIcon(type, icon);
+
+          instance.open({
+            ...restConfig,
+            key: mergedKey,
+            icon: iconNode,
+            title: content,
+            classNames: {
+              ...configClassNames,
+              get wrapper() {
+                return clsx(type ? `${prefixCls()}-${type}` : undefined, configClassNames.wrapper);
+              },
+              get icon() {
+                return clsx(
+                  type ? `${noticePrefixCls()}-icon-${type}` : undefined,
+                  configClassNames.icon,
+                );
+              },
+            },
+            styles,
+            placement: 'top',
+            className: () => clsx(type ? `${noticePrefixCls()}-${type}` : undefined, className),
+            style,
+            onClose,
+            onRemoved: settle,
+          });
+        });
       return () => {
-        close(mergedKey);
+        if (!submitted) {
+          canceled = true;
+          settle();
+        } else close(mergedKey);
       };
     });
   };
@@ -211,20 +258,17 @@ export function useInternalMessage(
     if (key !== undefined) {
       close(key);
     } else {
-      holderRef.value?.destroy();
+      submit((instance) => instance.destroy());
     }
   };
 
-  const clone = { open, destroy } as MessageInstance;
-
-  const keys: NoticeType[] = ['info', 'success', 'warning', 'error', 'loading'];
-  for (const type of keys) {
+  const typeMethod = (type: NoticeType): TypeOpen => {
     const typeOpen: TypeOpen = (jointContent, duration, onClose) => {
       let config: ArgsProps;
-      if (isPlainObject(jointContent) && 'content' in (jointContent as ArgsProps)) {
-        config = jointContent as ArgsProps;
+      if (isMessageConfig(jointContent)) {
+        config = jointContent;
       } else {
-        config = { content: jointContent as ArgsProps['content'] };
+        config = { content: jointContent };
       }
 
       // 第二参传函数 ⇒ 视为 onClose（第三参被忽略）
@@ -244,14 +288,23 @@ export function useInternalMessage(
         type,
       });
     };
-    clone[type] = typeOpen;
-  }
+    return typeOpen;
+  };
+  const clone: MessageInstance = {
+    open,
+    destroy,
+    info: typeMethod('info'),
+    success: typeMethod('success'),
+    warning: typeMethod('warning'),
+    error: typeMethod('error'),
+    loading: typeMethod('loading'),
+  };
 
   const holderFactory = (): VNode =>
     h(Holder, {
       ref: holderRef,
-      ...((toValue(messageConfig) ?? {}) as Record<string, unknown>),
-    } as never);
+      ...(toValue(messageConfig) ?? {}),
+    });
 
   return [clone, holderFactory] as const;
 }

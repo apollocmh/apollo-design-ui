@@ -68,3 +68,48 @@ describe('Message · 类型', () => {
     void negative;
   });
 });
+
+import { h } from 'vue';
+import message from '../index';
+import type { MessagePurePanelSlots } from '../interface';
+import useMessage from '../useMessage';
+
+const MessagePanel = message._InternalPanelDoNotUseOrYouWillBeFired;
+const MessageList = message._InternalListDoNotUseOrYouWillBeFired;
+const panelSlots: MessagePurePanelSlots = { content: () => 0, icon: () => null };
+h(MessagePanel, { content: 'Text', onClick: (event) => event.preventDefault() }, panelSlots);
+h(MessageList, {
+  items: [{ key: 0, content: h('span', 'Content'), type: 'info' }],
+  styles: { list: { zIndex: 0 } },
+});
+expectTypeOf<
+  NonNullable<InstanceType<typeof MessagePanel>['$props']['onClick']>
+>().parameters.toEqualTypeOf<[event: MouseEvent]>();
+expectTypeOf<InstanceType<typeof MessagePanel>['$props']>().not.toHaveProperty('className');
+const hookContracts = () => {
+  const [api, Holder] = useMessage({
+    classNames: { list: 'list' },
+    getContainer: () => document.createElement('div').attachShadow({ mode: 'open' }),
+  });
+  h(Holder);
+  h('div', [Holder()]);
+  const handle = api.info(0);
+  handle.then((closed) => closed.valueOf());
+  handle();
+  // @ts-expect-error List styling belongs to the holder configuration.
+  api.open({ content: 'Text', styles: { list: { color: 'red' } } });
+  // @ts-expect-error PurePanel text props stay strings; rich content uses #content.
+  const invalidText: InstanceType<typeof MessagePanel>['$props'] = { content: h('span') };
+  // @ts-expect-error PurePanel uses native class.
+  const invalidClass: InstanceType<typeof MessagePanel>['$props'] = { className: 'legacy' };
+  const invalidListClass: InstanceType<typeof MessagePanel>['$props'] = {
+    // @ts-expect-error PurePanel has no list container; list semantics belong to PureList or the holder.
+    classNames: { list: 'invalid' },
+  };
+  const invalidListStyle: InstanceType<typeof MessagePanel>['$props'] = {
+    // @ts-expect-error PurePanel has no listContent container.
+    styles: { listContent: { color: 'red' } },
+  };
+  return [invalidText, invalidClass, invalidListClass, invalidListStyle];
+};
+void hookContracts;

@@ -1,3 +1,4 @@
+import { isEmptyVNode } from '@apollo-design/utils';
 /**
  * `Notice` —— rc `Notification.js` 的 Vue 版（**单条**通知）。
  *
@@ -23,7 +24,16 @@
  *   3. 鼠标事件里 `pauseOnHover && !forcedHovering` 才恢复计时 —— 列表 hover（堆叠折叠）
  *      期间强制暂停，此时单条离开不该恢复。
  */
-import { computed, defineComponent, h, type PropType, ref, type VNodeChild, watch } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  mergeProps,
+  type PropType,
+  ref,
+  type VNodeChild,
+  watch,
+} from 'vue';
 import { clsx } from '../../_internal/clsx';
 import { useClosable } from './hooks/useClosable';
 import { useNoticeTimer } from './hooks/useNoticeTimer';
@@ -35,6 +45,7 @@ const DEFAULT_DURATION = 4.5;
 
 export default defineComponent({
   name: 'ANotification',
+  inheritAttrs: false,
   props: {
     prefixCls: { type: String, required: true },
     className: { type: String, default: undefined },
@@ -71,23 +82,38 @@ export default defineComponent({
       default: DEFAULT_DURATION,
     },
     showProgress: { type: Boolean, default: undefined },
+    active: { type: Boolean, default: true },
     hovering: { type: Boolean, default: undefined },
     pauseOnHover: { type: Boolean, default: true },
-    onClick: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
-    onMouseEnter: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
-    onMouseLeave: { type: Function as PropType<(e: MouseEvent) => void>, default: undefined },
-    onClose: { type: Function as PropType<() => void>, default: undefined },
   },
-  setup(props) {
+  emits: {
+    click: (_event: MouseEvent) => true,
+    mouseenter: (_event: MouseEvent) => true,
+    mouseleave: (_event: MouseEvent) => true,
+    close: () => true,
+  },
+  setup(props, { attrs, emit }) {
     const noticePrefixCls = computed(() => `${props.prefixCls}-notice`);
     const percent = ref(0);
     const hovering = ref(false);
 
     const { closable, config: closableConfig, ariaProps } = useClosable(() => props.closable);
 
+    let closed = false;
+    watch(
+      () => props.times,
+      () => {
+        closed = false;
+      },
+    );
     const onInternalClose = (): void => {
-      closableConfig.value.onClose?.();
-      props.onClose?.();
+      if (closed || !props.active) return;
+      closed = true;
+      try {
+        closableConfig.value.onClose?.();
+      } finally {
+        emit('close');
+      }
     };
 
     const { onResume, onPause } = useNoticeTimer(
@@ -96,6 +122,7 @@ export default defineComponent({
       (v) => {
         percent.value = v;
       },
+      () => props.times,
     );
 
     const validPercent = computed(() => 100 - Math.min(Math.max(percent.value * 100, 0), 100));
@@ -103,9 +130,16 @@ export default defineComponent({
     // 暂停/恢复：forcedHovering（列表 hover）优先
     const forcedHovering = computed(() => props.hovering === true);
     watch(
-      () => [forcedHovering.value, hovering.value, props.pauseOnHover] as const,
+      () => [forcedHovering.value, hovering.value, props.pauseOnHover, props.active] as const,
       () => {
-        if (!props.pauseOnHover) return;
+        if (!props.active) {
+          onPause();
+          return;
+        }
+        if (!props.pauseOnHover) {
+          onResume();
+          return;
+        }
         if (forcedHovering.value) {
           onPause();
         } else if (!hovering.value) {
@@ -118,12 +152,12 @@ export default defineComponent({
     const onInternalMouseEnter = (e: MouseEvent): void => {
       hovering.value = true;
       if (props.pauseOnHover) onPause();
-      props.onMouseEnter?.(e);
+      emit('mouseenter', e);
     };
     const onInternalMouseLeave = (e: MouseEvent): void => {
       hovering.value = false;
-      if (props.pauseOnHover && !forcedHovering.value) onResume();
-      props.onMouseLeave?.(e);
+      if (props.active && props.pauseOnHover && !forcedHovering.value) onResume();
+      emit('mouseleave', e);
     };
     const onInternalCloseClick = (e: MouseEvent): void => {
       e.preventDefault();
@@ -146,25 +180,21 @@ export default defineComponent({
       const sty = props.styles ?? {};
 
       // ---------------- Content ----------------
-      const titleNode =
-        props.title !== undefined && props.title !== null
-          ? h(
-              'div',
-              { class: [`${noticePrefixCls.value}-title`, cls.title], style: sty.title },
-              props.title as never,
-            )
-          : null;
-      const descNode =
-        props.description !== undefined && props.description !== null
-          ? h(
-              'div',
-              {
-                class: [`${noticePrefixCls.value}-description`, cls.description],
-                style: sty.description,
-              },
-              props.description as never,
-            )
-          : null;
+      const titleNode = !isEmptyVNode(props.title)
+        ? h('div', { class: [`${noticePrefixCls.value}-title`, cls.title], style: sty.title }, [
+            props.title,
+          ])
+        : null;
+      const descNode = !isEmptyVNode(props.description)
+        ? h(
+            'div',
+            {
+              class: [`${noticePrefixCls.value}-description`, cls.description],
+              style: sty.description,
+            },
+            [props.description],
+          )
+        : null;
       let contentNode: VNodeChild = null;
       if (titleNode && descNode) {
         contentNode = h(
@@ -175,26 +205,24 @@ export default defineComponent({
       } else {
         contentNode = titleNode ?? descNode;
       }
-      if (props.icon !== undefined && props.icon !== null) {
+      if (!isEmptyVNode(props.icon)) {
         contentNode = h(
           'div',
           { class: [`${noticePrefixCls.value}-wrapper`, cls.wrapper], style: sty.wrapper },
           [
-            h(
-              'div',
-              { class: [`${noticePrefixCls.value}-icon`, cls.icon], style: sty.icon },
-              props.icon as never,
-            ),
+            h('div', { class: [`${noticePrefixCls.value}-icon`, cls.icon], style: sty.icon }, [
+              props.icon,
+            ]),
             contentNode,
           ],
         );
       }
 
-      const actionsNode = props.actions
+      const actionsNode = !isEmptyVNode(props.actions)
         ? h(
             'div',
             { class: [`${noticePrefixCls.value}-actions`, cls.actions], style: sty.actions },
-            props.actions as never,
+            [props.actions],
           )
         : null;
 
@@ -211,22 +239,25 @@ export default defineComponent({
 
       return h(
         'div',
-        {
-          ...(props.rootProps ?? {}),
-          role: props.role ?? (props.rootProps?.role as string | undefined) ?? 'alert',
-          'data-notification-index': mergedIndex,
-          class: [
-            noticePrefixCls.value,
-            props.className,
-            cls.root,
-            closable.value ? `${noticePrefixCls.value}-closable` : undefined,
-            props.stackInThreshold ? `${noticePrefixCls.value}-stack-in-threshold` : undefined,
-          ],
-          style: mergedStyle,
-          onClick: props.onClick,
-          onMouseenter: onInternalMouseEnter,
-          onMouseleave: onInternalMouseLeave,
-        },
+        mergeProps(
+          props.rootProps ?? {},
+          {
+            role: props.role ?? (props.rootProps?.role as string | undefined) ?? 'alert',
+            'data-notification-index': mergedIndex,
+            class: [
+              noticePrefixCls.value,
+              props.className,
+              cls.root,
+              closable.value ? `${noticePrefixCls.value}-closable` : undefined,
+              props.stackInThreshold ? `${noticePrefixCls.value}-stack-in-threshold` : undefined,
+            ],
+            style: mergedStyle,
+            onClick: (event: MouseEvent) => emit('click', event),
+            onMouseenter: onInternalMouseEnter,
+            onMouseleave: onInternalMouseLeave,
+          },
+          attrs,
+        ),
         [
           contentNode,
           actionsNode,
@@ -242,7 +273,7 @@ export default defineComponent({
                   style: sty.close,
                   onClick: onInternalCloseClick,
                 },
-                closableConfig.value.closeIcon as never,
+                [closableConfig.value.closeIcon],
               )
             : null,
           props.showProgress && typeof props.duration === 'number' && props.duration > 0

@@ -16,9 +16,10 @@
 
 import { Portal } from '@apollo-design/portal';
 import {
-  cloneVNode,
   defineComponent,
+  Fragment,
   h,
+  onBeforeUnmount,
   type PropType,
   ref,
   shallowRef,
@@ -34,7 +35,6 @@ import type {
   NotificationStyles,
   NotificationsProps,
   Placement,
-  StackConfig,
 } from './interface';
 import NoticeList from './NoticeList';
 
@@ -75,7 +75,17 @@ export default defineComponent({
     },
   },
   setup(props, { expose }) {
-    const configList = ref<NoticeListConfig[]>([]);
+    const configList = shallowRef<NoticeListConfig[]>([]);
+    const settlements = new Map<string | number, Set<() => void>>();
+    let nextVersion = 0;
+    const settleKey = (key: string | number) => {
+      const callbacks = settlements.get(key);
+      settlements.delete(key);
+      for (const callback of callbacks ?? []) callback();
+    };
+    onBeforeUnmount(() => {
+      for (const key of [...settlements.keys()]) settleKey(key);
+    });
     const emptyRef = ref(false);
 
     /** ⚠️ 保留空 placement：见文件头 3。 */
@@ -103,28 +113,31 @@ export default defineComponent({
       placements.value = next;
     });
 
-    const open = (config: Partial<NoticeListConfig>): void => {
-      const list = [...configList.value];
-      const index = list.findIndex((item) => item.key === config.key);
-      const innerConfig = { ...config } as NoticeListConfig;
-      if (index >= 0) {
-        innerConfig.times = (list[index]?.times ?? 0) + 1;
-        list[index] = innerConfig;
-      } else {
-        innerConfig.times = 0;
-        list.push(innerConfig);
-      }
-      const maxCount = toValue(props.maxCount) as number | undefined;
-      configList.value =
-        maxCount && maxCount > 0 && list.length > maxCount ? list.slice(-maxCount) : list;
-    };
-
     const close = (key: string | number): void => {
       configList.value = configList.value.filter((item) => item.key !== key);
+      settleKey(key);
     };
-
     const destroy = (): void => {
       configList.value = [];
+      for (const key of [...settlements.keys()]) settleKey(key);
+    };
+    const open = (config: NoticeListConfig): void => {
+      const key = config.key;
+      if (config.onRemoved) {
+        const callbacks = settlements.get(key) ?? new Set<() => void>();
+        callbacks.add(config.onRemoved);
+        settlements.set(key, callbacks);
+      }
+      const list = [...configList.value];
+      const index = list.findIndex((item) => item.key === key);
+      const innerConfig: NoticeListConfig = { ...config, key, times: nextVersion++ };
+      if (index >= 0) list[index] = innerConfig;
+      else list.push(innerConfig);
+      const maxCount = toValue(props.maxCount);
+      const kept =
+        maxCount && maxCount > 0 && list.length > maxCount ? list.slice(-maxCount) : list;
+      configList.value = kept;
+      for (const item of list) if (!kept.includes(item)) settleKey(item.key);
     };
 
     const onAllNoticeRemoved = (placement: Placement): void => {
@@ -161,32 +174,35 @@ export default defineComponent({
         const key = placement as Placement;
         // ⚠️ props 对象显式收成 Record：直接内联对象字面量会让 TS 在
         //    「组件 props × 泛型 h()」上做深度实例化（TS2589）。
-        const listProps: Record<string, unknown> = {
+        const listProps = {
           key,
           configList: placements.value[key],
           placement: key,
           prefixCls: props.prefixCls,
-          pauseOnHover: toValue(props.pauseOnHover) as boolean | undefined,
+          pauseOnHover: toValue(props.pauseOnHover),
           classNames: props.classNames,
           styles: props.styles,
           components: props.components,
           className: props.className?.(key),
           style: props.style?.(key),
           motion: props.motion,
-          stack: toValue(props.stack) as boolean | StackConfig | undefined,
-          onNoticeClose: (closeKey: string | number) => {
-            configList.value = configList.value.filter((item) => item.key !== closeKey);
+          stack: toValue(props.stack),
+          onNoticeClose: (closeKey: string | number, source: NoticeListConfig) => {
+            const current = configList.value.find((item) => item.key === closeKey);
+            if (!current || current.times !== source.times) return;
+            close(closeKey);
+            current.onClose?.();
           },
           onAllRemoved: onAllNoticeRemoved,
-        };
-        const noticeList = h(NoticeList, listProps as never);
+        } satisfies InstanceType<typeof NoticeList>['$props'];
+        const noticeList = h(NoticeList, listProps);
 
         if (props.renderNotifications) {
           const wrapped = props.renderNotifications(noticeList, {
             prefixCls: props.prefixCls,
             key,
           });
-          return cloneVNode(wrapped as never, { key });
+          return h(Fragment, { key }, [wrapped]);
         }
         return noticeList;
       });
@@ -196,7 +212,7 @@ export default defineComponent({
         {
           open: true,
           autoDestroy: false,
-          getContainer: () => props.container as HTMLElement,
+          getContainer: () => props.container,
         },
         { default: () => list },
       );

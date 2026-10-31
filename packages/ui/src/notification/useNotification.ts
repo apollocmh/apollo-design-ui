@@ -28,13 +28,16 @@ import {
   h,
   isVNode,
   type MaybeRefOrGetter,
+  onScopeDispose,
   type PropType,
   shallowRef,
   toValue,
   type VNode,
+  watch,
 } from 'vue';
 import { clsx } from '../_internal/clsx';
 import { computeClosable } from '../_internal/use-closable';
+import { mergeClassNames, mergeStyles } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { useNotification as useKernelNotification } from './engine';
 import { useStackConfig } from './hooks/useStackConfig';
@@ -46,6 +49,7 @@ import type {
   NotificationInstance,
   NotificationPlacement,
 } from './interface';
+import { provideNoticeZIndex, useNotificationTheme } from './use-notice-theme';
 import { getCloseIconConfig, getMotion, getPlacementOffsetStyle } from './util';
 
 const DEFAULT_DURATION = 4.5;
@@ -80,9 +84,9 @@ const Holder = defineComponent({
     stack: { type: [Boolean, Object] as PropType<NotificationConfig['stack']>, default: undefined },
     duration: {
       type: [Number, Boolean] as PropType<NotificationConfig['duration']>,
-      default: DEFAULT_DURATION,
+      default: undefined,
     },
-    pauseOnHover: { type: Boolean, default: true },
+    pauseOnHover: { type: Boolean, default: undefined },
     showProgress: { type: Boolean, default: undefined },
     classNames: {
       type: Object as PropType<NotificationConfig['classNames']>,
@@ -92,7 +96,14 @@ const Holder = defineComponent({
     onAllRemoved: { type: Function as PropType<() => void>, default: undefined },
   },
   setup(props, { expose }) {
-    const config = useComponentConfig('notification');
+    const config = useComponentConfig<
+      NotificationConfig & { className?: string; style?: import('vue').CSSProperties }
+    >('notification');
+    const theme = useNotificationTheme();
+    provideNoticeZIndex(
+      () => theme.token.value.zIndexPopup,
+      () => config.style?.zIndex ?? props.styles?.list?.zIndex ?? config.styles?.list?.zIndex,
+    );
     const prefixCls = computed(() => props.prefixCls || config.getPrefixCls('notification'));
     // ⚠️ 必须用**响应式**变体（Issue #47）：把 `closeLabel` 拍成 setup 期常量的话，
     //    运行时切语言后**新开**的通知仍拿旧文案。上游的 React 版没有这个问题 ——
@@ -102,20 +113,30 @@ const Holder = defineComponent({
     const [locale] = useLocale('global');
     const closeLabel = computed(() => locale.value?.close ?? 'Close');
 
-    const mergedDuration = computed(() =>
-      isNumber(props.duration) && props.duration > 0 ? props.duration : false,
-    );
+    const mergedDuration = computed(() => {
+      const duration = props.duration ?? config.duration ?? DEFAULT_DURATION;
+      return isNumber(duration) && duration > 0 ? duration : false;
+    });
 
     const stackConfig = useStackConfig(
-      () => props.stack,
+      () => props.stack ?? config.stack,
       () => DEFAULT_STACK_CONFIG,
     );
 
     const { api, holder } = useKernelNotification({
       prefixCls: () => prefixCls.value,
-      style: () => getPlacementOffsetStyle(props.top, props.bottom),
+      style: () => ({
+        ...theme.style.value,
+        ...config.style,
+        ...getPlacementOffsetStyle(props.top ?? config.top, props.bottom ?? config.bottom),
+      }),
       className: () =>
-        clsx((props.rtl ?? config.direction === 'rtl') ? `${prefixCls.value}-rtl` : undefined),
+        clsx(
+          config.className,
+          (props.rtl ?? config.rtl ?? config.direction === 'rtl')
+            ? `${prefixCls.value}-rtl`
+            : undefined,
+        ),
       motion: () => getMotion(prefixCls.value),
       closable: () => ({ closeIcon: getCloseIcon(prefixCls.value) }),
       // ⚠️ 这几个必须是 **getter**（Issue #46，与 message #45 同判）：`useNotification`
@@ -124,12 +145,12 @@ const Holder = defineComponent({
       //    `style` / `className` / `motion` / `getContainer` 本来就是 getter，同判。
       duration: () => mergedDuration.value,
       getContainer: () => props.getContainer?.() ?? config.getPopupContainer?.() ?? document.body,
-      maxCount: () => props.maxCount,
-      pauseOnHover: () => props.pauseOnHover,
-      showProgress: () => props.showProgress,
-      classNames: props.classNames as never,
-      styles: props.styles as never,
-      onAllRemoved: props.onAllRemoved,
+      maxCount: () => props.maxCount ?? config.maxCount,
+      pauseOnHover: () => props.pauseOnHover ?? config.pauseOnHover ?? true,
+      showProgress: () => props.showProgress ?? config.showProgress,
+      classNames: () => mergeClassNames(config.classNames, props.classNames),
+      styles: () => mergeStyles(config.styles, props.styles),
+      onAllRemoved: () => props.onAllRemoved?.(),
       stack: () => stackConfig.value,
     });
 
@@ -157,110 +178,132 @@ export function useInternalNotification(
   notificationConfig?: MaybeRefOrGetter<NotificationConfig | undefined>,
 ): readonly [NotificationInstance, () => VNode] {
   const holderRef = shallowRef<HolderRef | null>(null);
+  let disposed = false;
+  let queue: Array<(instance: HolderRef) => void> = [];
+  const submit = (action: (instance: HolderRef) => void) => {
+    if (disposed) return;
+    if (holderRef.value) action(holderRef.value);
+    else queue.push(action);
+  };
+  watch(
+    holderRef,
+    (instance) => {
+      if (!instance) return;
+      const pending = queue;
+      queue = [];
+      for (const action of pending) action(instance);
+    },
+    { flush: 'post' },
+  );
+  onScopeDispose(() => {
+    disposed = true;
+    queue = [];
+  });
+  const open = (input: ArgsProps): void => {
+    const config = { ...input };
+    submit((instance) => {
+      const prefixCls = () => instance.prefixCls ?? 'apollo-notification';
+      const noticePrefixCls = () => `${prefixCls()}-notice`;
 
-  const open = (config: ArgsProps): void => {
-    const instance = holderRef.value;
-    // 与上游同判：在 render 期调用拿不到实例 ⇒ 直接返回（dev 下上游会告警，本仓无该基建）
-    if (!instance) return;
+      const {
+        title,
+        message,
+        description,
+        icon,
+        type,
+        btn,
+        actions,
+        className,
+        style,
+        role = 'alert',
+        closeIcon,
+        closable,
+        classNames: configClassNames = {},
+        styles = {},
+        ...restConfig
+      } = config;
 
-    const prefixCls = () => instance.prefixCls ?? 'apollo-notification';
-    const noticePrefixCls = () => `${prefixCls()}-notice`;
+      const mergedTitle = title ?? message;
+      const hasTitle = isRenderable(mergedTitle);
+      const mergedActions = actions ?? btn;
 
-    const {
-      title,
-      message,
-      description,
-      icon,
-      type,
-      btn,
-      actions,
-      className,
-      style,
-      role = 'alert',
-      closeIcon,
-      closable,
-      classNames: configClassNames = {},
-      styles = {},
-      ...restConfig
-    } = config;
+      const configValue = () => toValue(notificationConfig) ?? {};
+      // Keep the notice's explicit options and content, and derive only Provider defaults
+      // at render time. Reopening a key still goes through the normal update/timer path.
+      const mergedClosable = () => {
+        // ArgsProps documents null as an explicit request to hide the close button.
+        if (closable === null) return false;
+        const closeLabel = instance.closeLabel ?? 'Close';
+        const realCloseIcon = getCloseIcon(
+          noticePrefixCls(),
+          getCloseIconConfig(closeIcon, configValue(), undefined),
+        );
+        const result = computeClosable({ ...configValue(), ...config }, undefined, {
+          closable: true,
+          closeIcon: realCloseIcon,
+          closeIconRender: (node) =>
+            isVNode(node) ? getCloseIconWithLabel(noticePrefixCls(), node, closeLabel) : node,
+          closeLabel,
+        });
+        return result.closable
+          ? {
+              onClose: isPlainObject(closable) ? closable.onClose : undefined,
+              closeIcon: result.closeIconNode,
+              disabled: result.closeBtnIsDisabled,
+              ...result.ariaProps,
+            }
+          : false;
+      };
 
-    const mergedTitle = title ?? message;
-    const hasTitle = isRenderable(mergedTitle);
-    const mergedActions = actions ?? btn;
+      const iconNode = icon !== undefined ? icon : type ? h(TypeIcon[type]) : null;
 
-    const configValue = toValue(notificationConfig) ?? {};
-    // Keep the notice's explicit options and content, and derive only Provider defaults
-    // at render time. Reopening a key still goes through the normal update/timer path.
-    const mergedClosable = () => {
-      // ArgsProps documents null as an explicit request to hide the close button.
-      if (closable === null) return false;
-      const closeLabel = instance.closeLabel ?? 'Close';
-      const realCloseIcon = getCloseIcon(
-        noticePrefixCls(),
-        getCloseIconConfig(closeIcon, configValue, undefined),
-      );
-      const result = computeClosable({ ...configValue, ...config }, undefined, {
-        closable: true,
-        closeIcon: realCloseIcon,
-        closeIconRender: (node) =>
-          isVNode(node) ? getCloseIconWithLabel(noticePrefixCls(), node, closeLabel) : node,
-        closeLabel,
-      });
-      return result.closable
-        ? {
-            onClose: isPlainObject(closable) ? closable.onClose : undefined,
-            closeIcon: result.closeIconNode,
-            disabled: result.closeBtnIsDisabled,
-            ...result.ariaProps,
-          }
-        : false;
-    };
-
-    const iconNode = icon !== undefined ? icon : type ? h(TypeIcon[type]) : null;
-
-    instance.open({
-      placement: configValue.placement ?? DEFAULT_PLACEMENT,
-      ...(restConfig as Partial<import('./engine/interface').NoticeListConfig>),
-      title: hasTitle ? mergedTitle : null,
-      description,
-      icon: iconNode,
-      actions: mergedActions,
-      role,
-      classNames: {
-        ...configClassNames,
-        get icon() {
-          return clsx(
-            icon === undefined && type ? `${noticePrefixCls()}-icon-${type}` : undefined,
-            configClassNames.icon,
-          );
+      instance.open({
+        placement: configValue().placement ?? DEFAULT_PLACEMENT,
+        ...restConfig,
+        title: hasTitle ? mergedTitle : null,
+        description,
+        icon: iconNode,
+        actions: mergedActions,
+        role,
+        classNames: {
+          ...configClassNames,
+          get icon() {
+            return clsx(
+              icon === undefined && type ? `${noticePrefixCls()}-icon-${type}` : undefined,
+              configClassNames.icon,
+            );
+          },
         },
-      } as never,
-      styles: styles as never,
-      className: () => clsx(type ? `${noticePrefixCls()}-${type}` : undefined, className),
-      style,
-      closable: mergedClosable,
+        styles,
+        className: () => clsx(type ? `${noticePrefixCls()}-${type}` : undefined, className),
+        style,
+        closable: mergedClosable,
+      });
     });
   };
 
   const destroy = (key?: string | number): void => {
     if (key !== undefined) {
-      holderRef.value?.close(key);
+      submit((instance) => instance.close(key));
     } else {
-      holderRef.value?.destroy();
+      submit((instance) => instance.destroy());
     }
   };
 
-  const clone = { open, destroy } as NotificationInstance;
-  const keys = ['success', 'info', 'warning', 'error'] as const;
-  for (const type of keys) {
-    clone[type] = (config: ArgsProps) => open({ ...config, type });
-  }
+  const clone: NotificationInstance = {
+    open,
+    destroy,
+    success: (config) => open({ ...config, type: 'success' }),
+    info: (config) => open({ ...config, type: 'info' }),
+    warning: (config) => open({ ...config, type: 'warning' }),
+    error: (config) => open({ ...config, type: 'error' }),
+  };
 
   const holderFactory = (): VNode =>
     h(Holder, {
       ref: holderRef,
-      ...((toValue(notificationConfig) ?? {}) as Record<string, unknown>),
-    } as never);
+      ...(toValue(notificationConfig) ?? {}),
+    });
 
   return [clone, holderFactory] as const;
 }

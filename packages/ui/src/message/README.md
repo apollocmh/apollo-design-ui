@@ -4,6 +4,14 @@
 
 # message
 
+## 当前 Vue 实现（2026-10-31）
+
+共享 Notice 使用 typed emits；命令式 Args 的业务订阅保留。Holder factory 继续零参返回 VNode，setup 早期命令排队，owner 卸载释放队列、计时器及观察器。当前 Provider/语义对象替换和撤除、动态主题与容器配置均由实际渲染读取。PurePanel 使用原生 attrs、具名槽和 owned emits；单条配置不再声明未消费的 list/listContent。PureList 保留列表语义。
+
+Message 的所有同 key 句柄在真实终止时 resolve true，手动关闭/destroy/淘汰/卸载不额外触发 public onClose。Notification 保留按钮和超时调用最新订阅的边界。原有稳定 ref、ResizeObserver 与 MotionList 白名单/deadline 成果保留，见 [2026-10-22 历史证据](../../../../docs/audit/2026-10-22-menu-notification-motion-remediation.md)。本轮行为与迁移详见双语 API 和 native-contracts 回归。
+
+以下原阶段对照、缺口及全矩阵数字是历史记录；App 真实 API、组件级配置与 Token 覆盖已由后续实现及本轮相关消费者验证取代，不表示本轮重新执行历史矩阵。对象语义配置是当前契约。
+
 > **层**：L3（`packages/ui`）｜ **优先级**：P3 ｜ **复杂度**：M ｜ **antd 版本**：6.6.4
 >
 > 契约来源：antd `components/message/`（index 346 / useMessage 308 / PurePanel 120 /
@@ -66,7 +74,7 @@ registry 数据：token 数 = 3。
 | `contentBg` | `colorBgElevated` |
 | `contentPadding` | `(controlHeightLG − fontSize × lineHeight) / 2` px + `paddingSM` px = `9px 12px` |
 
-## 5. 已知缺口
+## 5. 历史缺口记录
 
 | # | 缺口 | 说明 |
 |---|---|---|
@@ -75,7 +83,7 @@ registry 数据：token 数 = 3。
 | P3 | 函数式语义槽 | D36 同判（只支持对象形态） |
 | P4 | `holderRender` / `warnContext` | D30：React 特有 / 未落地（D96 已登记） |
 
-## 6. 收口证据（G13）
+## 6. 历史收口证据（G13，非本轮复验）
 
 - L1+L2 20 / L3 8 / L4 4（基线 `tests/compat/baselines/message.dom.json`）/ L5 16 /
   L7(theme) 11 / demo 11（`expectCount` 钉死）/ L6 **9/9 0.000% exact**

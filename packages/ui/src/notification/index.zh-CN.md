@@ -53,7 +53,9 @@ stack / style-class / update / with-btn / with-icon。
 | icon | 自定义图标（**给了就不叠 `-notice-icon-{type}` 类**） | `VNodeChild` | 类型图标 |
 | role | notice 根的 ARIA 角色 | `'alert' \| 'status'` | `'alert'` |
 | key | 唯一标识；同 key 再 open ⇒ 复用同一条 | `string \| number` | 自动生成 |
-| onClose / onClick / className / style / classNames / styles / props | 同 antd | — | — |
+| onClose | 关闭按钮或超时调用最新订阅；destroy、淘汰、卸载不调用 | `() => void` | — |
+| onClick | 点击订阅 | `(event: MouseEvent) => void` | — |
+| className / style / classNames / styles / props | 单条根 class/style、单条语义对象及原生根属性 | — | — |
 | message / btn | ⚠️ 已废弃：用 `title` / `actions` | — | — |
 
 ### Slots（C8-R2，仅 `_InternalPanelDoNotUseOrYouWillBeFired` 静态面板）
@@ -87,7 +89,7 @@ list / listContent                                    // 列表级
 wrapper / root / title / description / actions / icon / section / close / progress   // 单条级
 ```
 
-> ⚠️ 只支持**对象形态**（函数式语义槽尚未支持）。
+> ⚠️ `classNames` / `styles` 使用对象。`list` / `listContent` 只属于 NotificationConfig 和 PureList；单条 Args 与 PurePanel 只接受单条字段。
 
 ### 类型导出
 
@@ -143,3 +145,14 @@ import '@apollo-design/ui/style.css';               // 汇总
 
 
 Hook holder 内已打开通知保留 keyed 正文与用户样式；类型、图标和关闭按钮类跟随当前前缀，默认关闭可访问名跟随当前语言，显式 closable aria-label 优先。closable.disabled 禁用原生关闭按钮。
+
+PurePanel 的 `closable` 只描述图标、disabled 和可访问名等展示配置，关闭使用类型化 `@close`。原来未被消费的嵌套 `closable.onClose` 已移除；命令式 Args、hook/global 的订阅职责保持。
+
+
+### Vue 契约与迁移
+
+在 setup 中调用 `useNotification`，将零参 holder factory 作为组件渲染，或调用它取得 VNode。挂载前命令排队等候该 holder 就绪，owner 卸载后不再执行。同 key 更新保留内容身份并重新开始计时，数值 key 与字符串 key 保持独立。
+
+PurePanel 将原生 `class`、`style`、attrs 和类型化 `@click` / `@close` 作用到实际宿主。旧 `className` 改用 `class`；富内容使用具名槽并保留 `0` 与显式空内容。PureList 的语义样式映射改用 `styles`，原生 `style` 设置其宿主样式。`getContainer` 可返回 HTMLElement 或 ShadowRoot。
+
+当前 holder 配置和 Provider 对象可替换或撤除，七个 Token 与默认语言跟随当前上下文。列表数值 z-index 覆盖（含 `0` 和数值字符串）同时提供后代 popup 上下文；CSS 表达式保持原样，数值上下文使用当前 Token。静态方法读取 ConfigProvider 全局服务，不注入调用组件的上下文。

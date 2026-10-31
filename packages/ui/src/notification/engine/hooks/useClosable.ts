@@ -14,12 +14,12 @@
 import { pickAttrs } from '@apollo-design/utils';
 import { type ComputedRef, computed, type MaybeRefOrGetter, toValue } from 'vue';
 
-import type { NoticeProps } from '../interface';
+import type { NoticeNode, NoticeProps } from '../interface';
 
 export type ClosableType = NoticeProps['closable'];
 
 export interface ClosableConfig {
-  closeIcon?: unknown;
+  closeIcon?: NoticeNode;
   disabled?: boolean;
   onClose?: () => void;
   'aria-label'?: string;

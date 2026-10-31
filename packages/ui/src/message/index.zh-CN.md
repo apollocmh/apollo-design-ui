@@ -11,7 +11,7 @@ subtitle: 全局提示
 - 需要在页面顶部短暂提示操作结果（成功 / 失败 / 警告 / 进行中）。
 - 需要「进行中 → 完成」的连续反馈（`loading` + `then` 串联）。
 - ⚠️ 优先用 `message.useMessage()` 的 `contextHolder`：静态方法**无法消费 context**，
-  ConfigProvider 的配置对它不生效。
+  组件内 Provider 的配置不会注入静态实例；静态实例读取 `ConfigProvider.config()` 的全局服务。
 
 ## 代码演示
 
@@ -36,7 +36,7 @@ info / loading / other / render-panel / stack / style-class / thenable / update�
 
 ### 返回值 `MessageType`
 
-**可调用 + thenable**（与 antd 同构）：
+**可调用 + thenable**：
 
 ```ts
 const hide = message.loading('进行中…', 0);
@@ -47,7 +47,7 @@ message.loading('进行中…', 2).then(() => message.success('完成'));
 | 成员 | 说明 |
 |---|---|
 | `()` | 关闭这条消息 |
-| `.then(fn)` | **自然关闭**（计时到点）后 resolve `true`；⚠️ 手动关闭不 resolve（上游语义） |
+| `.then(fn)` | 消息终止后 resolve `true`：计时关闭、调用句柄、destroy、淘汰、挂载前取消或 owner 卸载 |
 | `.promise` | 底层 `Promise<boolean>` |
 
 ### `ArgsProps`（`message.open` 的入参）
@@ -75,7 +75,7 @@ message.loading('进行中…', 2).then(() => message.success('完成'));
 | rtl | 列表根加 `-rtl` 类 | `boolean` | 取 ConfigProvider 方向 |
 | stack | 堆叠折叠：`true` 或 `{ threshold }` | `boolean \| { threshold?: number }` | `false` |
 | pauseOnHover | 悬停暂停 | `boolean` | `true` |
-| getContainer | portal 容器 | `() => HTMLElement` | `document.body` |
+| getContainer | portal 容器 | `() => HTMLElement \| ShadowRoot` | `document.body` |
 | prefixCls | 类名前缀 | `string` | `apollo-message` |
 | transitionName | 动效名 | `string` | `{prefixCls}-fade` |
 | classNames / styles | 语义化槽位 | — | — |
@@ -87,7 +87,7 @@ list / listContent        // 列表级
 root / wrapper / icon / title   // 单条级
 ```
 
-> ⚠️ 只支持**对象形态**（函数式语义槽尚未支持）。
+> ⚠️ `classNames` / `styles` 使用对象。`list` / `listContent` 只属于 holder 配置和 PureList；单条 Args 与 PurePanel 只接受单条字段。
 
 ### Slots（C8-R2，仅 `_InternalPanelDoNotUseOrYouWillBeFired` 静态面板）
 
@@ -144,8 +144,16 @@ message 传的是 `closable: false`（与 antd 一致）—— 消息靠计时�
 
 **`config()` 之后已经显示的消息会跟着变吗？**
 
-`top` / `rtl` / `prefixCls` 这类**列表级**配置会影响后续渲染；`maxCount` 只影响下一次 open。
-已经显示出来的单条不会重排（与 antd 同）。
+当前列表展示跟随配置更新，`maxCount` 在下一次 `open` 时执行。
 
 
 Hook holder 内已打开消息的类型与图标类跟随当前 ConfigProvider 前缀，保留 keyed 正文及用户样式。显式 icon（含 null、false、0）优先于类型默认图标。手动 destroy 不触发 onClose，自然关闭保留既有回调契约。
+
+
+### Vue 契约与迁移
+
+在 setup 中调用 `useMessage`，将零参 holder factory 作为组件渲染，或调用它取得 VNode。holder 挂载前的命令按序排队。同 key 的每个返回句柄都会在终止时结算；`true` 表示终止，不表示成功展示。最新 `onClose` 仍只在自动关闭时调用，调用关闭句柄、destroy、淘汰或卸载不会额外触发它。
+
+PurePanel 将原生 `class`、`style`、attrs 和类型化 `@click` 作用到实际宿主；旧 `className` 改用 `class`。富内容使用 `#content` / `#icon`，保留 `0` 与显式空内容。PureList 的语义样式映射改用 `styles`，原生 `style` 设置其宿主样式。
+
+Holder 配置和 Provider 对象在渲染时读取，替换和撤除会更新已有 keyed 内容且保留用户输入节点。三个组件 Token 跟随当前主题。列表数值 z-index 覆盖（含 `0` 和数值字符串）同时提供后代 popup 使用的数值上下文；CSS 表达式保持原样，数值上下文使用当前 Token。

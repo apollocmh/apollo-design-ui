@@ -26,7 +26,10 @@
  *   - 不实现 `holderRender`（D30：React 特有的「再包一层」）；
  *   - 不实现 `warnContext` 告警（D30 同源：本仓没有那套 context 告警基建）。
  */
-import { type App, createApp, defineComponent, shallowRef } from 'vue';
+import { type App, createApp, defineComponent, h, shallowRef } from 'vue';
+
+import ConfigProvider from '../config-provider';
+import { globalConfig } from '../config-provider/global-config';
 
 import type {
   ArgsProps,
@@ -89,19 +92,15 @@ let defaultGlobalConfig: ConfigOptions = {};
 const globalConfigRef = shallowRef<ConfigOptions>({});
 
 function getGlobalContext(): ConfigOptions {
-  const { getContainer, duration, rtl, maxCount, top, stack, prefixCls } = defaultGlobalConfig;
-  const mergedContainer = getContainer?.() || document.body;
-
-  // ⚠️ 比上游多带一个 `prefixCls`：antd 的 `GlobalHolder` 在**模块作用域**直接读
-  //    `defaultGlobalConfig.prefixCls`，而我们的 Holder 是子组件（拿不到模块变量）
-  //    ⇒ 通过配置对象转发，语义等价。
-  return { getContainer: () => mergedContainer, duration, rtl, maxCount, top, stack, prefixCls };
+  const mergedContainer = defaultGlobalConfig.getContainer?.() ?? document.body;
+  return { ...defaultGlobalConfig, getContainer: () => mergedContainer };
 }
 
 /** 全局 holder 的根组件：把内核实例交给模块级单例。 */
 const GlobalHolder = defineComponent({
   name: 'AMessageGlobalHolder',
   setup() {
+    const owner = message;
     const [api, holder] = useInternalMessage(globalConfigRef);
     const sync = (): void => {
       globalConfigRef.value = getGlobalContext();
@@ -110,10 +109,10 @@ const GlobalHolder = defineComponent({
     // ⚠️ 等 mount 完成后再交付实例（对齐上游的 `Promise.resolve().then(...)`）：
     //    此刻 holder 内部的 ref 才被赋上，`open` 才真的能落进内核。
     Promise.resolve().then(() => {
-      if (!message) return;
-      if (!message.instance) {
-        message.instance = api;
-        message.sync = sync;
+      if (!owner || message !== owner) return;
+      if (!owner.instance) {
+        owner.instance = api;
+        owner.sync = sync;
         flushMessageQueue();
       }
     });
@@ -136,7 +135,20 @@ function flushMessageQueue(): void {
     globalConfigRef.value = getGlobalContext();
 
     act(() => {
-      const app = createApp(GlobalHolder);
+      const global = globalConfig();
+      const Root = defineComponent({
+        setup: () => () =>
+          h(
+            ConfigProvider,
+            {
+              prefixCls: global.getPrefixCls(),
+              iconPrefixCls: global.getIconPrefixCls(),
+              theme: global.getTheme(),
+            },
+            { default: () => h(GlobalHolder) },
+          ),
+      });
+      const app = createApp(Root);
       app.mount(container);
       newMessage.app = app;
     });
@@ -148,7 +160,9 @@ function flushMessageQueue(): void {
   if (!message.instance) return;
 
   const instance = message.instance;
-  for (const task of taskQueue) {
+  const tasks = taskQueue;
+  taskQueue = [];
+  for (const task of tasks) {
     // `skipped`：用户在实例就绪前就取消了这条
     if (task.skipped) continue;
 
@@ -177,8 +191,6 @@ function flushMessageQueue(): void {
       }
     }
   }
-
-  taskQueue = [];
 }
 
 // ==============================================================================
@@ -214,6 +226,7 @@ function open(config: ArgsProps): MessageType {
         });
       } else {
         task.skipped = true;
+        task.resolve();
       }
     };
   });
@@ -245,6 +258,7 @@ function typeOpen(type: NoticeType, args: Parameters<TypeOpen>): MessageType {
         });
       } else {
         task.skipped = true;
+        task.resolve();
       }
     };
   });
@@ -259,41 +273,19 @@ const destroy = (key?: string | number): void => {
   flushMessageQueue();
 };
 
-interface BaseMethods {
-  open: (config: ArgsProps) => MessageType;
-  destroy: (key?: string | number) => void;
-  config: typeof setMessageGlobalConfig;
-  useMessage: typeof useMessage;
-  /** @private Internal Component. Do not use in your production. */
-  _InternalPanelDoNotUseOrYouWillBeFired: typeof PurePanel;
-  /** @private Internal Component. Do not use in your production. */
-  _InternalListDoNotUseOrYouWillBeFired: typeof PureList;
-}
-
-interface MessageMethods {
-  info: TypeOpen;
-  success: TypeOpen;
-  error: TypeOpen;
-  warning: TypeOpen;
-  loading: TypeOpen;
-}
-
-const methods: (keyof MessageMethods)[] = ['success', 'info', 'warning', 'error', 'loading'];
-
-const baseStaticMethods: BaseMethods = {
+const staticMethods = {
   open,
   destroy,
   config: setMessageGlobalConfig,
   useMessage,
   _InternalPanelDoNotUseOrYouWillBeFired: PurePanel,
   _InternalListDoNotUseOrYouWillBeFired: PureList,
+  info: (...args: Parameters<TypeOpen>) => typeOpen('info', args),
+  success: (...args: Parameters<TypeOpen>) => typeOpen('success', args),
+  warning: (...args: Parameters<TypeOpen>) => typeOpen('warning', args),
+  error: (...args: Parameters<TypeOpen>) => typeOpen('error', args),
+  loading: (...args: Parameters<TypeOpen>) => typeOpen('loading', args),
 };
-
-const staticMethods = baseStaticMethods as MessageMethods & BaseMethods;
-
-for (const type of methods) {
-  staticMethods[type] = (...args: Parameters<TypeOpen>) => typeOpen(type, args);
-}
 
 // ==============================================================================
 // ==                                   Test                                   ==
@@ -316,6 +308,7 @@ export function actWrapper(wrapper: (fn: () => void) => void): void {
 export function actDestroy(): void {
   // ⚠️ 先卸载根应用：只重置模块变量会留下一个仍在运行的 Vue app
   //    （它的 watch 还在、Teleport 出去的 notice 还挂在 document.body 上）。
+  for (const task of taskQueue) if (task.type !== 'destroy') task.resolve();
   message?.app?.unmount();
   message = null;
   taskQueue = [];
@@ -330,6 +323,10 @@ export type {
   ConfigOptions,
   JointContent,
   MessageInstance,
+  MessagePureListProps,
+  MessagePurePanelEmits,
+  MessagePurePanelProps,
+  MessagePurePanelSlots,
   MessageSemanticType,
   MessageType,
   NoticeType,

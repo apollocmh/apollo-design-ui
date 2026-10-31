@@ -82,10 +82,10 @@ export interface ArgsProps {
   placement?: NotificationPlacement;
   style?: CSSProperties;
   className?: string;
-  classNames?: NotificationSemanticType['classNames'];
-  styles?: NotificationSemanticType['styles'];
+  classNames?: Omit<NonNullable<NotificationSemanticType['classNames']>, 'list' | 'listContent'>;
+  styles?: Omit<NonNullable<NotificationSemanticType['styles']>, 'list' | 'listContent'>;
   readonly type?: IconType;
-  onClick?: () => void;
+  onClick?: (event: MouseEvent) => void;
   /** `null` / `false` ⇒ 关闭按钮还在，但**不渲染图标**。 */
   closeIcon?: VNodeChild;
   closable?:
@@ -121,7 +121,7 @@ export interface GlobalConfigProps {
   showProgress?: boolean;
   pauseOnHover?: boolean;
   prefixCls?: string;
-  getContainer?: () => HTMLElement;
+  getContainer?: () => HTMLElement | ShadowRoot;
   placement?: NotificationPlacement;
   closeIcon?: VNodeChild;
   closable?: ArgsProps['closable'];
@@ -135,7 +135,7 @@ export interface NotificationConfig {
   top?: number;
   bottom?: number;
   prefixCls?: string;
-  getContainer?: () => HTMLElement;
+  getContainer?: () => HTMLElement | ShadowRoot;
   placement?: NotificationPlacement;
   maxCount?: number;
   rtl?: boolean;
@@ -143,6 +143,7 @@ export interface NotificationConfig {
   duration?: number | false;
   showProgress?: boolean;
   pauseOnHover?: boolean;
+  closable?: ArgsProps['closable'];
   closeIcon?: VNodeChild;
   classNames?: NotificationSemanticType['classNames'];
   styles?: NotificationSemanticType['styles'];
@@ -155,4 +156,38 @@ export interface PureListItem {
   description?: VNodeChild;
   type?: IconType;
   duration?: number | false;
+  actions?: VNodeChild;
+  showProgress?: boolean;
+}
+
+export type NotificationPurePanelSlots = {
+  title?: () => VNodeChild;
+  message?: () => VNodeChild;
+  description?: () => VNodeChild;
+  icon?: () => VNodeChild;
+  actions?: () => VNodeChild;
+  btn?: () => VNodeChild;
+  closeIcon?: () => VNodeChild;
+};
+export type NotificationPurePanelEmits = { click: [event: MouseEvent]; close: [] };
+
+export interface NotificationPurePanelProps {
+  prefixCls?: string;
+  message?: string;
+  title?: string;
+  description?: string;
+  type?: IconType;
+  role?: ArgsProps['role'];
+  closable?:
+    | boolean
+    | null
+    | Omit<Exclude<ArgsProps['closable'], boolean | null | undefined>, 'onClose'>;
+  classNames?: ArgsProps['classNames'];
+  styles?: ArgsProps['styles'];
+}
+export interface NotificationPureListProps {
+  items?: PureListItem[];
+  placement?: NotificationPlacement;
+  classNames?: NotificationSemanticType['classNames'];
+  styles?: NotificationSemanticType['styles'];
 }

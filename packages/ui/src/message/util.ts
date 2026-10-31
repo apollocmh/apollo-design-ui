@@ -28,13 +28,9 @@ export function wrapPromiseFn(openFn: (resolve: VoidFunction) => VoidFunction): 
     });
   });
 
-  const result = (() => {
-    closeFn?.();
-  }) as MessageType;
-
-  // biome-ignore lint/suspicious/noThenProperty: 这是**有意的 thenable** —— 上游契约就是「可调用 + PromiseLike」（）
-  result.then = (filled, rejected) => closePromise.then(filled, rejected);
-  result.promise = closePromise;
-
-  return result;
+  return Object.assign(() => closeFn?.(), {
+    // biome-ignore lint/suspicious/noThenProperty: the public close handle intentionally implements PromiseLike<boolean>.
+    then: closePromise.then.bind(closePromise),
+    promise: closePromise,
+  });
 }

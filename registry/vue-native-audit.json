@@ -2,9 +2,9 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 215,
+  "revision": 218,
   "dispatch": {
-    "status": "running",
+    "status": "paused",
     "maxParallel": 5,
     "integrator": "root"
   },
@@ -3511,18 +3511,16 @@
       "kind": "component",
       "ref": "message",
       "title": "Message",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/message"
       ],
-      "assignment": {
-        "owner": "native_select",
-        "baseRevision": 205,
-        "startedAt": "2026-10-31T04:14:38.678Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -3542,6 +3540,373 @@
           "packages/ui/src/message/useMessage.ts",
           "docs/audit/2026-10-22-menu-notification-motion-remediation.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "kind": "core",
+        "owner": "native_select",
+        "scope": [
+          "packages/ui/src/message",
+          "packages/ui/src/notification"
+        ],
+        "baseCommit": "72abc7f6",
+        "passed": true,
+        "strictStatus": "Root final strict + declaration exit0/53896ms; five negative test comments relocated, cases retained and effective",
+        "implemented": [
+          "Queue actual early commands and cancel on owner disposal; Message terminates every same-key handle with true on real removal",
+          "Typed Notice/PurePanel Vue emits, complete named content/native attrs and real constructors",
+          "Current object config/Provider replacement and withdrawal; 3 Message + 7 Notification tokens and actual list layer context",
+          "Restart same-duration updates, preserve numeric/string key identity, hover pause withdrawal and stale static owner protection"
+        ],
+        "preserved": [
+          "Imperative service subscriptions and existing public onClose boundaries; destroy/evict/unmount do not synthesize callbacks",
+          "Zero-argument holder factory returning VNode and actual App consumer shape",
+          "Historical 2026-10-22 stable refs/RO cleanup and full MotionList whitelist/deadline evidence; existing DOM baselines, a11y allowances and defaults"
+        ],
+        "migrations": [
+          "PurePanel className -> native class; owned @click/@close, Notification visual closable excludes nested onClose",
+          "PureList semantic style map -> styles; native style stays host style",
+          "Args/PurePanel list/listContent removed; holder/PureList retain these container fields",
+          "Message callable close/destroy/evict/early cancellation/unmount now settle true, without additional public onClose",
+          "Only object classNames/styles supported; no new function API"
+        ],
+        "localTypeExports": [
+          "MessagePurePanelProps",
+          "MessagePurePanelSlots",
+          "MessagePurePanelEmits",
+          "MessagePureListProps",
+          "NotificationPurePanelProps",
+          "NotificationPurePanelSlots",
+          "NotificationPurePanelEmits",
+          "NotificationPureListProps"
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run packages/ui/src/message/__tests__/index.test.ts packages/ui/src/notification/__tests__/index.test.ts packages/ui/src/notification/__tests__/engine.test.ts packages/ui/src/notification/__tests__/audit-ref-stability.test.ts packages/ui/src/notification/__tests__/audit-motion-config.test.ts --project unit --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 17280,
+            "durationSource": "Vitest output",
+            "log": "/tmp/apollo-notices-core-first.log",
+            "result": "5 files, 54 passed; subsequent key/version changes covered by targeted native/ref regressions"
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run packages/ui/src/notification/__tests__/native-contracts.test.ts packages/ui/src/message/__tests__/s43-issue43.test.ts packages/ui/src/message/__tests__/s45-issue45.test.ts packages/ui/src/notification/__tests__/s44-issue44.test.ts packages/ui/src/notification/__tests__/s46-issue46.test.ts packages/ui/src/notification/__tests__/s47-issue47.test.ts packages/ui/src/notification/__tests__/audit-ref-stability.test.ts --project unit --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 21200,
+            "durationSource": "Vitest output",
+            "log": "/tmp/apollo-notices-lifecycle-final.log",
+            "result": "7 files, 28 passed"
+          },
+          {
+            "kind": "related",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run packages/ui/src/message/__tests__/demo.test.ts packages/ui/src/notification/__tests__/demo.test.ts packages/ui/src/message/__tests__/semantic.test.ts packages/ui/src/notification/__tests__/semantic.test.ts packages/ui/src/message/__tests__/theme.test.ts packages/ui/src/notification/__tests__/theme.test.ts packages/ui/src/message/__tests__/a11y.test.ts packages/ui/src/notification/__tests__/a11y.test.ts --project unit --project dom-contract --project theme --project a11y --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 35910,
+            "durationSource": "Vitest output",
+            "log": "/tmp/apollo-notices-related-first.log",
+            "result": "8 files, 99 passed; six jsdom canvas getContext diagnostics retained, existing a11y gates unchanged"
+          },
+          {
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/notification/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8662,
+            "log": "/tmp/apollo-notices-browser-final.log",
+            "kind": "browser",
+            "result": "Chrome, no captured errors/Vue warnings; focus/identity/tokens/progress/stack/expiry/unmount"
+          },
+          {
+            "kind": "format",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/ui/src/message packages/ui/src/notification",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 105,
+            "log": "/tmp/apollo-notices-format-complete.log"
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check -- packages/ui/src/message packages/ui/src/notification",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": null,
+            "log": null
+          },
+          {
+            "kind": "syntax",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node --check packages/ui/src/notification/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": null,
+            "log": null
+          },
+          {
+            "kind": "consumer",
+            "runner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/app/__tests__/s40-issue40.test.ts packages/ui/src/app/__tests__/s41-issue41.test.ts packages/ui/src/config-provider/__tests__/notices.test.ts --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 13503,
+            "log": "/tmp/apollo-notices-app-provider.log"
+          },
+          {
+            "kind": "consumer",
+            "runner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/config-provider/__tests__/consumers.test.ts -t message and notification hooks --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 12337,
+            "log": "/tmp/apollo-notices-provider-prefix.log"
+          },
+          {
+            "kind": "consumer",
+            "runner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/modal/__tests__/index.test.ts packages/ui/src/tag/__tests__/index.test.ts -t closable|closeIcon|关闭图标|close-icon|关闭流程|preventDefault --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8224,
+            "log": "/tmp/apollo-notices-closable-consumers.log"
+          },
+          {
+            "kind": "consumer",
+            "runner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/config-provider/__tests__/notice-layers.test.ts --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8073,
+            "log": "/tmp/apollo-notices-popup-consumer.log"
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-notices-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53896,
+            "log": "/tmp/apollo-notices-types.log",
+            "kind": "types",
+            "runner": "root",
+            "resultFile": "/tmp/apollo-notices-types-result.json",
+            "result": "strict + declaration, complete source/public constructors/h/SFC/all 25 Demo/shared and actual consumers; expected-error negative cases active"
+          },
+          {
+            "kind": "format",
+            "runner": "root",
+            "command": "node node_modules/@biomejs/biome/bin/biome check [30 supported changed staged files]",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 150,
+            "log": "/tmp/apollo-notices-integration-format.log"
+          }
+        ],
+        "failureAttempts": [
+          {
+            "kind": "core",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 4780,
+            "log": "/tmp/apollo-notices-native-red.log",
+            "result": "Early commands, pre-ready cancellation and same-key handle settlement: 3 failed / 1 passed"
+          },
+          {
+            "kind": "core",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 4720,
+            "log": "/tmp/apollo-notices-timer-red.log",
+            "result": "Same-duration reopening fired public close at old deadline"
+          },
+          {
+            "kind": "core",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 4760,
+            "log": "/tmp/apollo-notices-key-index-red.log",
+            "result": "0 and string 0 had duplicate stack indexes"
+          },
+          {
+            "kind": "browser-driver",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": null,
+            "log": "/tmp/apollo-notices-browser-first.log",
+            "result": "Selector matched PurePanel plus floating notice; use actual list container"
+          },
+          {
+            "kind": "browser-driver",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": null,
+            "log": "/tmp/apollo-notices-browser-second.log",
+            "result": "Chrome progress shadow pseudo not exposed through getComputedStyle; replaced with current token plus rendered pixel assertions"
+          },
+          {
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/notification/__tests__/native-browser.mjs",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 7889,
+            "log": "/tmp/apollo-notices-browser-third.log",
+            "result": "Test driver captured Node variable inside browser evaluate without argument; corrected driver only"
+          }
+        ],
+        "strictAttempts": [
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-notices-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 39397,
+            "log": "/tmp/apollo-notices-types-first-failed.log",
+            "resultFile": "/tmp/apollo-notices-types-first-failed-result.json"
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-notices-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 35067,
+            "log": "/tmp/apollo-notices-types-second-failed.log",
+            "resultFile": "/tmp/apollo-notices-types-second-failed-result.json"
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-notices-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 37670,
+            "log": "/tmp/apollo-notices-types-third-failed.log",
+            "resultFile": "/tmp/apollo-notices-types-third-failed-result.json"
+          }
+        ],
+        "otherRecordedChecks": [
+          {
+            "log": "/tmp/apollo-notices-native-first.log",
+            "exitCode": 0,
+            "durationMs": 4860,
+            "result": "Initial 4 native regressions green"
+          },
+          {
+            "log": "/tmp/apollo-notices-native-second.log",
+            "exitCode": 0,
+            "durationMs": 6670,
+            "result": "10 native + 1 historical ref test green"
+          },
+          {
+            "log": "/tmp/apollo-notices-key-red.log",
+            "exitCode": 0,
+            "durationMs": 4800,
+            "result": "Initial weak key count test passed, not a reproduced failure"
+          }
+        ],
+        "remainingBoundaries": [
+          "Arbitrary CSS z-index expressions remain CSS; numeric descendant context uses actual token fallback",
+          "Stage 2 complete nine-dimension library/visual/coverage/release-consumer validation not run here; historical browser matrix not claimed as rerun",
+          "Six jsdom canvas getContext diagnostics retained in related log; no gate or exception relaxed"
+        ],
+        "sourceFreeze": "Final production, real h/SFC/25 Demo and type cases frozen. Root relocated five expected-error comments without changing cases. Browser script, bilingual API and README finalized; parent owns integration. No commits, pushes, dist builds or shared state edits by owner.",
+        "sourceHashes": {
+          "packages/ui/src/message/PurePanel.ts": "69285f78dd310530d830609a852963a7a32b3b0bf905cb79549ba289c9845f5a",
+          "packages/ui/src/message/useMessage.ts": "b86cd71dfde84dfe08624ca444b758bea8e9f0ca6fef74aff55405fe24901686",
+          "packages/ui/src/message/interface.ts": "aeff4a54e96b3d4b184df7ad81e548a0e296f5b72d76dbf3fbeed8826e487349",
+          "packages/ui/src/message/util.ts": "911d9236d24599f89d6c3ac05538a8d5fd6858669bc021c17ccf518a5bbc7555",
+          "packages/ui/src/message/index.ts": "ed050c63d3f08271069717f15cc9ba88f8f43249f1f987d52feca3add3cb0cbd",
+          "packages/ui/src/message/PureList.ts": "c76f158459eac3da094d9849ed797cf4338f03914afa25649e389a5a6bdb11ae",
+          "packages/ui/src/message/icon.ts": "bc8d93d26f668767b429430433f8747bdaa1998c826f4924a5a07f9b0e4976c2",
+          "packages/ui/src/message/demo/hooks.vue": "fb432e07c8d1da92e93ad188a58e83e4165a48007344a227f0146bd0259d588c",
+          "packages/ui/src/message/demo/info.vue": "117e1c3ec473039f7001ff8a5bcbd4e2673e104396a46a0a8ac9713e634aa3cc",
+          "packages/ui/src/message/demo/update.vue": "25edbe907f9b9873a6fed3e5fb99cee0377642438d329772d9564817b3f77716",
+          "packages/ui/src/message/demo/stack.vue": "5ebb27cd0742ae883470ef7c9eaa3aaf6c2e9b480e14449dbeac93ba649a65f2",
+          "packages/ui/src/message/demo/render-panel.vue": "db610832cd4f76cac91e0da82107170c017080894c07ae2cca3e1d9f200c77dc",
+          "packages/ui/src/message/demo/component-token.vue": "92f15903c9344b46b69736473e031d97842fa2bcd93a9e9a5bf84fc0e1c8f5b8",
+          "packages/ui/src/message/demo/style-class.vue": "33fe11f8a7c398b55c3cffaaf37c6a50c9c8133594bdcf1a4e8857d66f5dcecd",
+          "packages/ui/src/message/demo/other.vue": "f59171443e559fa0ca14d42452001cf365989891aaedebe6d56adc0b777c96bf",
+          "packages/ui/src/message/demo/loading.vue": "3d18ba0d51e0ab5e5c3347269c1849ade42248da92859d45d96c0fc2b8ececd0",
+          "packages/ui/src/message/demo/thenable.vue": "72d80cf15ef9c0932ad0b86a7696879793387f70c459e768b53a9cc1ed5e8315",
+          "packages/ui/src/message/demo/duration.vue": "59480ef7af4356f12590d5f0b8d472484eb11c5e6afb14df145602062d4167a1",
+          "packages/ui/src/message/style/index.ts": "659dacfb4b073726ba0980e4cc10969fd3dcabbb49664d04dc4d5de8d36f2349",
+          "packages/ui/src/message/style/token.ts": "8b5ada0c8584a096858f04533a6e9d3f0df86ca09854a7798d724fde36e8f162",
+          "packages/ui/src/message/__tests__/a11y.test.ts": "095166a9d7e4460caef96290aba74b93954b1dd27a5eede233fcdd8af98a5c69",
+          "packages/ui/src/message/__tests__/index.test.ts": "c6fa89effe1f2413632c8c83fea89d3e1b4678214e1cb719934e370fe92d5080",
+          "packages/ui/src/message/__tests__/demo.test.ts": "2176ad650216de47737448731c9ca1001e10f4d3465795d6bb8289eae73030bc",
+          "packages/ui/src/message/__tests__/s43-issue43.test.ts": "e12efb7a2e8059d280f05295d4e6ff5abdf7000581e6ccb34ba16a2ff0da7cee",
+          "packages/ui/src/message/__tests__/type.test-d.ts": "a36722a39db9d3057f758ce577f06c07c5048118b0843f44716076326d348520",
+          "packages/ui/src/message/__tests__/s45-issue45.test.ts": "9d453fd94765514ef877463185ec5fd3b61e06669d80211ce8c7e7738c3657cf",
+          "packages/ui/src/message/__tests__/theme.test.ts": "01965aab0a3c5029b5dfdc22f68d3fa2f2a7ac3ba3b60a56793c63a1b55ac0d7",
+          "packages/ui/src/message/__tests__/semantic.test.ts": "13a631bc818319937ddca94f4268f4a796939d4752a19c5093e05d8ec8c57465",
+          "packages/ui/src/notification/useNotification.ts": "286bd2891a9b15d2c80ba3bbf399b536b894402fc4cf36e83dd039346f2d2af1",
+          "packages/ui/src/notification/use-notice-theme.ts": "61dc43d37e72e9d93926f43ff6ce634f2060d9a13695897fdd72ae2b3ffe918b",
+          "packages/ui/src/notification/PurePanel.ts": "3db8d52dd104f931494643c8310ef4f1df6006fb12b55bc2bd0ac66e130ab33b",
+          "packages/ui/src/notification/interface.ts": "4f1ca225b1c4d4d32b0bc29f788752dbbef6aa3082fb4ef8904e729e4a939d08",
+          "packages/ui/src/notification/util.ts": "50d842d4449410a25cd8c85d51052b2cf5921a6a1afd0aeb25d0ef5f2ebea403",
+          "packages/ui/src/notification/index.ts": "4ac3ac28a5c1b215865c740dff68454a6b16652a8d0e84a477cee65879cec38b",
+          "packages/ui/src/notification/PureList.ts": "40671ae1361fe6ec63f783c879d094d2dd9f35688e8561841a84dfed03c635ae",
+          "packages/ui/src/notification/icon.ts": "a5d4294d40aad43f46de41b3d1d94261960575c82a218892463246cdb91ad7e2",
+          "packages/ui/src/notification/demo/with-icon.vue": "f6ce80006c95be02b98e064f922566d1fcca633f4fe15b631739a8a2e2969cb0",
+          "packages/ui/src/notification/demo/progress-color.vue": "6ac524c3dbf9c7e272f593a0e7eb724bedd4ca5d088fc1eeec32ab481994206e",
+          "packages/ui/src/notification/demo/hooks.vue": "10654d58dff6f5d5c530afa6097e427537aa1eb42bfaa080cb47871281eb1222",
+          "packages/ui/src/notification/demo/update.vue": "5d701651531cca11c14b2bf75659e04d2e4de2ec376597081d10495c0416c519",
+          "packages/ui/src/notification/demo/custom-icon.vue": "25d814f15381341d4baa285965e54f051f09e56c3da8b29028cd8984a7f024c8",
+          "packages/ui/src/notification/demo/with-btn.vue": "9f94d871c26d8297152dcdef631460fb28345d76e3a5fcf98d5f5243f61105cb",
+          "packages/ui/src/notification/demo/stack.vue": "e22f6ff1fd334dfd626e8add255e51b64a6f979cd9e9bca16e559dc4f989760b",
+          "packages/ui/src/notification/demo/placement.vue": "7c6a3effe9fecb940662ca21fc8fd97ddc28f610438b8e4cd6210407c2af45a6",
+          "packages/ui/src/notification/demo/render-panel.vue": "68883cb7d65b903372f74e0b4cd60590e22f89ef66da753448d8861866df9ae4",
+          "packages/ui/src/notification/demo/component-token.vue": "b9150bdf39541db965a23c6b6e643b85c5b29da1a9a5f4833cf58965897c18cf",
+          "packages/ui/src/notification/demo/style-class.vue": "3a80f03fbf17144ec9dd7184e191441ae9f266e77086b953db21944244f55612",
+          "packages/ui/src/notification/demo/show-with-progress.vue": "38b80a26eb5ea260b845511ae5be1f7fb35868c3ce87092ea25cb4af14cd6bb1",
+          "packages/ui/src/notification/demo/basic.vue": "7aba2285f5daeec3fb2ff5ce1bde84eb06fb5ef4f5b3ca5624f1a832a6b5d2ea",
+          "packages/ui/src/notification/demo/duration.vue": "b144dc8ba51249300a8009183813ba6f19ef1ee5428debb4e206407d810b454d",
+          "packages/ui/src/notification/style/index.ts": "26b8db789180cafe424f3d0ca8f417e3fa660b91a788b58c29c33965929751c9",
+          "packages/ui/src/notification/style/token.ts": "73b3e5bfa811cc55b45443175d88ee2851769a7b0818630ddc126e6280c0c654",
+          "packages/ui/src/notification/__tests__/a11y.test.ts": "301a5172aacf2b7f6d0140fb03653802830400c4c1a36ce8e6126ac54bdd30f0",
+          "packages/ui/src/notification/__tests__/native-contracts.test.ts": "47b1aa756c5508b995291de34f8cba8c13461b28c9245a685120113df8f1ef9a",
+          "packages/ui/src/notification/__tests__/index.test.ts": "8d20565a63afbc28f5959f9c8d0d10b233e31e07caa7842280ed36740e0cc504",
+          "packages/ui/src/notification/__tests__/demo.test.ts": "e8ee1aea50840e84dec6f0aefcc4c9ce6041c2824132fc54529673c49b487a1b",
+          "packages/ui/src/notification/__tests__/s46-issue46.test.ts": "a4befcff916beebcb510437ba7c195f4400235e1ba2387c3e2b98d3280f2dffd",
+          "packages/ui/src/notification/__tests__/engine.test.ts": "329e4ba8dacc6b08252266c1610600d613c4a6cde55e51c6c9cbb12857bd5440",
+          "packages/ui/src/notification/__tests__/audit-motion-config.test.ts": "c4905e9bb9b5007eb28b0526f4f02511a3c81fc49ea6a1affc930363ae2d30c9",
+          "packages/ui/src/notification/__tests__/type.test-d.ts": "3b4ec58940877772a5c3ece81aeb6fd330e1d61fdfbc2042ca88fd133755a094",
+          "packages/ui/src/notification/__tests__/s47-issue47.test.ts": "f46ea81e1d16fffc20ce838c88afab29bb61279512bce95687aeae4bd8346a05",
+          "packages/ui/src/notification/__tests__/s44-issue44.test.ts": "64581e1b5df8c1bf705e577110b99a17911ffcccba98e69829dd0f695f5c6ea8",
+          "packages/ui/src/notification/__tests__/audit-ref-stability.test.ts": "d87818165218ee3a8311b172e118dcab0c372914bb74ed4263d0377f62c30344",
+          "packages/ui/src/notification/__tests__/theme.test.ts": "927c49eb8cc391af13c1d102f61c2b7b2e65e86618e2eb6594fc66c0a3e62e55",
+          "packages/ui/src/notification/__tests__/semantic.test.ts": "5bf328c8e185fd67c481b30702ec4b59728e547d38b87b545e9c8ac54bb5f833",
+          "packages/ui/src/notification/hooks/useStackConfig.ts": "5def8bfc29f4fd287a3c8e774463fe16f369051bd0bec6c8371233e7219c21d8",
+          "packages/ui/src/notification/engine/useNotification.ts": "65ac3a53e7cad05afe8c73cd9afd9be1aead03f5e345f3e090cea9d2743bad27",
+          "packages/ui/src/notification/engine/Progress.ts": "8560530a21d7ff3cbdaf976be19361d4fdf88b45a7b05857189dd5960771b487",
+          "packages/ui/src/notification/engine/Notifications.ts": "8e2c27b0d0f20c6d04ad3804628d8b507abde7e30d0c1d73a06c02d74350a459",
+          "packages/ui/src/notification/engine/NoticeListContent.ts": "5b864ba95ec798cd43d330d1c426b4d9c492ca3560bdc7831b2fe96981bd2b28",
+          "packages/ui/src/notification/engine/NotificationProvider.ts": "53701545f825ff2c565cd7bc979260cad0c4db7972a7ebeb2f2c82acaf9434b1",
+          "packages/ui/src/notification/engine/interface.ts": "bf2fcfbaf169aae70c4f7447e14dafd1556300a874ec61d7bf1bd9a57465d10b",
+          "packages/ui/src/notification/engine/NoticeList.ts": "c5ba6e2bfe073631acb575340ed72d4d8a6c388915fa088634255e2fbbc716ce",
+          "packages/ui/src/notification/engine/Notice.ts": "0459c4ce277b7907896ac6dbb8bc7fe872ae14baac2644f624d76f3bb5dbe756",
+          "packages/ui/src/notification/engine/index.ts": "a595f9fbed94247b2824a2c47ea8092c59e1f3c9c3850c7fc7ac0baf20b49e9e",
+          "packages/ui/src/notification/__tests__/fixtures/NativeNotices.vue": "af1c6a86bc77f227f2d2849a86edc8dd23234d0528d54602b4f6bba1274adac9",
+          "packages/ui/src/notification/engine/hooks/useStack.ts": "aaba3cdc3b10166396d34824f2fb1cfc38d9208d360214c479b58e481b40dbfb",
+          "packages/ui/src/notification/engine/hooks/useNoticeTimer.ts": "0ac965e9433ab9089c90fc0fcbe90b1fc160ae86614e755b85df056dd0ada7db",
+          "packages/ui/src/notification/engine/hooks/useClosable.ts": "7cc636d98fba12c2be9e140ba33412bbe67d437d8d18ce0c48a3934483160419",
+          "packages/ui/src/notification/engine/hooks/useListPosition.ts": "e2665d46a55e379207f3b522bba799c8a82a7f1640d1f1e570ae0db70a6bd43e",
+          "packages/ui/src/notification/engine/hooks/useSizes.ts": "d4d6bbf151ba11e250e24ccef9e5e4b99bd63ba64b3ae23b2439456e2189565d",
+          "packages/ui/src/index.ts": "6cd45601e6ec3b45e4f53e5d7bbbefe686ab55a74395a0216e4f328936d75728",
+          "packages/ui/src/_internal/use-closable.ts": "4da0cc0639375e64449bef427ec645b3ab3513cb5ecffad9111e4f6fc2b153dc",
+          "packages/ui/src/_internal/__tests__/use-closable.test-d.ts": "86fdba40443bec2996288573a28d77317bff6721bda78fea6c372891c88ff7b8",
+          "packages/ui/src/modal/Modal.ts": "d746742c1ff39849667b50c9d1ed6bf3cc35d180f88f129342c156b474f4f42a",
+          "packages/ui/src/app/App.ts": "0795817b6a47d6a30bd6e666caa9862dcbe01395ef4de6a6e20e96dd1388fd74",
+          "packages/ui/src/app/__tests__/s40-issue40.test.ts": "688038e9c1dbfc77e5822e752335e7574aa846f10764546a6c3c7f9dfe66a89b",
+          "packages/ui/src/app/__tests__/s41-issue41.test.ts": "c61f0c97bca8d26e7ea1f021fb997e6cd253995864e157c62583de53d0cc510e",
+          "packages/ui/src/config-provider/__tests__/notices.test.ts": "c9ab5da6f218410e8b13411ad142d774cbb94e264e5c980d388fc4a9eb58ec33",
+          "packages/ui/src/config-provider/__tests__/consumers.test.ts": "871d689dfbc6a62df533808fe998c5007c262f290c25b57d6659e81e4e658b3f",
+          "packages/ui/src/config-provider/__tests__/notice-layers.test.ts": "713a6f04576d8f71515b14370d8046d5ac13b996595a6a4618c50f02e3dcc5e1"
+        },
+        "verifiedViewBase": "72abc7f640242b09d3a73f7a3d87ee121fe41bb5",
+        "remainingBlocking": [],
+        "integrationSnapshot": {
+          "files": 91,
+          "result": "All 91 checked TS/Vue/public barrel/shared/actual consumer bytes match current integration source; full inherited strict and declaration unchanged."
+        },
+        "timing": "Claim2026-10-31T04:14Z. Actual root strict39.397s/35.067s/37.670s failures and53.896s final; browser8.662s; consumer checks13.503s/12.337s/8.224s/8.073s. Rework was shared Vue content typing, missing PurePanel type aliases and negative-comment locations; exact analysis/implementation split unavailable."
       }
     },
     {
@@ -3968,25 +4333,52 @@
           "boundary": "Other component WIP exports excluded; root stages exactly this passed Modal barrel increment. Slider adds only its separately checked HandleNodeProps later."
         },
         "recordedAt": "2026-10-31T01:11:02.105323+00:00"
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/_internal/use-closable.ts",
+            "packages/ui/src/_internal/__tests__/use-closable.test-d.ts",
+            "packages/ui/src/modal/Modal.ts"
+          ],
+          "change": "Shared close icon inputs/render/results retain actual VNodeChild instead of unknown; remove redundant casts. Existing merge/ARIA/close behavior retained.",
+          "verification": {
+            "stage": "focused shared change",
+            "passed": true,
+            "checks": [
+              {
+                "kind": "consumer",
+                "runner": "root",
+                "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/modal/__tests__/index.test.ts packages/ui/src/tag/__tests__/index.test.ts -t closable|closeIcon|关闭图标|close-icon|关闭流程|preventDefault --maxWorkers=1",
+                "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+                "exitCode": 0,
+                "signal": null,
+                "durationMs": 8224,
+                "log": "/tmp/apollo-notices-closable-consumers.log"
+              }
+            ],
+            "typeEvidence": "registry/vue-native-audit.json#CMP:notification.verification",
+            "result": "Root final strict+declaration0 includes shared positive/negative type boundaries and actual Modal/Tag public source."
+          },
+          "boundary": "Consumer regression only; original architecture/historical acceptance evidence retained without claiming a new component audit or final nine-dimension acceptance."
+        }
+      ]
     },
     {
       "id": "CMP:notification",
       "kind": "component",
       "ref": "notification",
       "title": "Notification",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/notification"
       ],
-      "assignment": {
-        "owner": "native_select",
-        "baseRevision": 206,
-        "startedAt": "2026-10-31T04:14:38.835Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -4006,6 +4398,373 @@
           "packages/ui/src/notification/useNotification.ts",
           "docs/audit/2026-10-22-motion-review-002.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "kind": "core",
+        "owner": "native_select",
+        "scope": [
+          "packages/ui/src/message",
+          "packages/ui/src/notification"
+        ],
+        "baseCommit": "72abc7f6",
+        "passed": true,
+        "strictStatus": "Root final strict + declaration exit0/53896ms; five negative test comments relocated, cases retained and effective",
+        "implemented": [
+          "Queue actual early commands and cancel on owner disposal; Message terminates every same-key handle with true on real removal",
+          "Typed Notice/PurePanel Vue emits, complete named content/native attrs and real constructors",
+          "Current object config/Provider replacement and withdrawal; 3 Message + 7 Notification tokens and actual list layer context",
+          "Restart same-duration updates, preserve numeric/string key identity, hover pause withdrawal and stale static owner protection"
+        ],
+        "preserved": [
+          "Imperative service subscriptions and existing public onClose boundaries; destroy/evict/unmount do not synthesize callbacks",
+          "Zero-argument holder factory returning VNode and actual App consumer shape",
+          "Historical 2026-10-22 stable refs/RO cleanup and full MotionList whitelist/deadline evidence; existing DOM baselines, a11y allowances and defaults"
+        ],
+        "migrations": [
+          "PurePanel className -> native class; owned @click/@close, Notification visual closable excludes nested onClose",
+          "PureList semantic style map -> styles; native style stays host style",
+          "Args/PurePanel list/listContent removed; holder/PureList retain these container fields",
+          "Message callable close/destroy/evict/early cancellation/unmount now settle true, without additional public onClose",
+          "Only object classNames/styles supported; no new function API"
+        ],
+        "localTypeExports": [
+          "MessagePurePanelProps",
+          "MessagePurePanelSlots",
+          "MessagePurePanelEmits",
+          "MessagePureListProps",
+          "NotificationPurePanelProps",
+          "NotificationPurePanelSlots",
+          "NotificationPurePanelEmits",
+          "NotificationPureListProps"
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run packages/ui/src/message/__tests__/index.test.ts packages/ui/src/notification/__tests__/index.test.ts packages/ui/src/notification/__tests__/engine.test.ts packages/ui/src/notification/__tests__/audit-ref-stability.test.ts packages/ui/src/notification/__tests__/audit-motion-config.test.ts --project unit --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 17280,
+            "durationSource": "Vitest output",
+            "log": "/tmp/apollo-notices-core-first.log",
+            "result": "5 files, 54 passed; subsequent key/version changes covered by targeted native/ref regressions"
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run packages/ui/src/notification/__tests__/native-contracts.test.ts packages/ui/src/message/__tests__/s43-issue43.test.ts packages/ui/src/message/__tests__/s45-issue45.test.ts packages/ui/src/notification/__tests__/s44-issue44.test.ts packages/ui/src/notification/__tests__/s46-issue46.test.ts packages/ui/src/notification/__tests__/s47-issue47.test.ts packages/ui/src/notification/__tests__/audit-ref-stability.test.ts --project unit --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 21200,
+            "durationSource": "Vitest output",
+            "log": "/tmp/apollo-notices-lifecycle-final.log",
+            "result": "7 files, 28 passed"
+          },
+          {
+            "kind": "related",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run packages/ui/src/message/__tests__/demo.test.ts packages/ui/src/notification/__tests__/demo.test.ts packages/ui/src/message/__tests__/semantic.test.ts packages/ui/src/notification/__tests__/semantic.test.ts packages/ui/src/message/__tests__/theme.test.ts packages/ui/src/notification/__tests__/theme.test.ts packages/ui/src/message/__tests__/a11y.test.ts packages/ui/src/notification/__tests__/a11y.test.ts --project unit --project dom-contract --project theme --project a11y --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 35910,
+            "durationSource": "Vitest output",
+            "log": "/tmp/apollo-notices-related-first.log",
+            "result": "8 files, 99 passed; six jsdom canvas getContext diagnostics retained, existing a11y gates unchanged"
+          },
+          {
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/notification/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8662,
+            "log": "/tmp/apollo-notices-browser-final.log",
+            "kind": "browser",
+            "result": "Chrome, no captured errors/Vue warnings; focus/identity/tokens/progress/stack/expiry/unmount"
+          },
+          {
+            "kind": "format",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/ui/src/message packages/ui/src/notification",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 105,
+            "log": "/tmp/apollo-notices-format-complete.log"
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check -- packages/ui/src/message packages/ui/src/notification",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": null,
+            "log": null
+          },
+          {
+            "kind": "syntax",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node --check packages/ui/src/notification/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": null,
+            "log": null
+          },
+          {
+            "kind": "consumer",
+            "runner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/app/__tests__/s40-issue40.test.ts packages/ui/src/app/__tests__/s41-issue41.test.ts packages/ui/src/config-provider/__tests__/notices.test.ts --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 13503,
+            "log": "/tmp/apollo-notices-app-provider.log"
+          },
+          {
+            "kind": "consumer",
+            "runner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/config-provider/__tests__/consumers.test.ts -t message and notification hooks --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 12337,
+            "log": "/tmp/apollo-notices-provider-prefix.log"
+          },
+          {
+            "kind": "consumer",
+            "runner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/modal/__tests__/index.test.ts packages/ui/src/tag/__tests__/index.test.ts -t closable|closeIcon|关闭图标|close-icon|关闭流程|preventDefault --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8224,
+            "log": "/tmp/apollo-notices-closable-consumers.log"
+          },
+          {
+            "kind": "consumer",
+            "runner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/config-provider/__tests__/notice-layers.test.ts --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8073,
+            "log": "/tmp/apollo-notices-popup-consumer.log"
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-notices-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53896,
+            "log": "/tmp/apollo-notices-types.log",
+            "kind": "types",
+            "runner": "root",
+            "resultFile": "/tmp/apollo-notices-types-result.json",
+            "result": "strict + declaration, complete source/public constructors/h/SFC/all 25 Demo/shared and actual consumers; expected-error negative cases active"
+          },
+          {
+            "kind": "format",
+            "runner": "root",
+            "command": "node node_modules/@biomejs/biome/bin/biome check [30 supported changed staged files]",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 150,
+            "log": "/tmp/apollo-notices-integration-format.log"
+          }
+        ],
+        "failureAttempts": [
+          {
+            "kind": "core",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 4780,
+            "log": "/tmp/apollo-notices-native-red.log",
+            "result": "Early commands, pre-ready cancellation and same-key handle settlement: 3 failed / 1 passed"
+          },
+          {
+            "kind": "core",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 4720,
+            "log": "/tmp/apollo-notices-timer-red.log",
+            "result": "Same-duration reopening fired public close at old deadline"
+          },
+          {
+            "kind": "core",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 4760,
+            "log": "/tmp/apollo-notices-key-index-red.log",
+            "result": "0 and string 0 had duplicate stack indexes"
+          },
+          {
+            "kind": "browser-driver",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": null,
+            "log": "/tmp/apollo-notices-browser-first.log",
+            "result": "Selector matched PurePanel plus floating notice; use actual list container"
+          },
+          {
+            "kind": "browser-driver",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": null,
+            "log": "/tmp/apollo-notices-browser-second.log",
+            "result": "Chrome progress shadow pseudo not exposed through getComputedStyle; replaced with current token plus rendered pixel assertions"
+          },
+          {
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/notification/__tests__/native-browser.mjs",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 7889,
+            "log": "/tmp/apollo-notices-browser-third.log",
+            "result": "Test driver captured Node variable inside browser evaluate without argument; corrected driver only"
+          }
+        ],
+        "strictAttempts": [
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-notices-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 39397,
+            "log": "/tmp/apollo-notices-types-first-failed.log",
+            "resultFile": "/tmp/apollo-notices-types-first-failed-result.json"
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-notices-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 35067,
+            "log": "/tmp/apollo-notices-types-second-failed.log",
+            "resultFile": "/tmp/apollo-notices-types-second-failed-result.json"
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-notices-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 37670,
+            "log": "/tmp/apollo-notices-types-third-failed.log",
+            "resultFile": "/tmp/apollo-notices-types-third-failed-result.json"
+          }
+        ],
+        "otherRecordedChecks": [
+          {
+            "log": "/tmp/apollo-notices-native-first.log",
+            "exitCode": 0,
+            "durationMs": 4860,
+            "result": "Initial 4 native regressions green"
+          },
+          {
+            "log": "/tmp/apollo-notices-native-second.log",
+            "exitCode": 0,
+            "durationMs": 6670,
+            "result": "10 native + 1 historical ref test green"
+          },
+          {
+            "log": "/tmp/apollo-notices-key-red.log",
+            "exitCode": 0,
+            "durationMs": 4800,
+            "result": "Initial weak key count test passed, not a reproduced failure"
+          }
+        ],
+        "remainingBoundaries": [
+          "Arbitrary CSS z-index expressions remain CSS; numeric descendant context uses actual token fallback",
+          "Stage 2 complete nine-dimension library/visual/coverage/release-consumer validation not run here; historical browser matrix not claimed as rerun",
+          "Six jsdom canvas getContext diagnostics retained in related log; no gate or exception relaxed"
+        ],
+        "sourceFreeze": "Final production, real h/SFC/25 Demo and type cases frozen. Root relocated five expected-error comments without changing cases. Browser script, bilingual API and README finalized; parent owns integration. No commits, pushes, dist builds or shared state edits by owner.",
+        "sourceHashes": {
+          "packages/ui/src/message/PurePanel.ts": "69285f78dd310530d830609a852963a7a32b3b0bf905cb79549ba289c9845f5a",
+          "packages/ui/src/message/useMessage.ts": "b86cd71dfde84dfe08624ca444b758bea8e9f0ca6fef74aff55405fe24901686",
+          "packages/ui/src/message/interface.ts": "aeff4a54e96b3d4b184df7ad81e548a0e296f5b72d76dbf3fbeed8826e487349",
+          "packages/ui/src/message/util.ts": "911d9236d24599f89d6c3ac05538a8d5fd6858669bc021c17ccf518a5bbc7555",
+          "packages/ui/src/message/index.ts": "ed050c63d3f08271069717f15cc9ba88f8f43249f1f987d52feca3add3cb0cbd",
+          "packages/ui/src/message/PureList.ts": "c76f158459eac3da094d9849ed797cf4338f03914afa25649e389a5a6bdb11ae",
+          "packages/ui/src/message/icon.ts": "bc8d93d26f668767b429430433f8747bdaa1998c826f4924a5a07f9b0e4976c2",
+          "packages/ui/src/message/demo/hooks.vue": "fb432e07c8d1da92e93ad188a58e83e4165a48007344a227f0146bd0259d588c",
+          "packages/ui/src/message/demo/info.vue": "117e1c3ec473039f7001ff8a5bcbd4e2673e104396a46a0a8ac9713e634aa3cc",
+          "packages/ui/src/message/demo/update.vue": "25edbe907f9b9873a6fed3e5fb99cee0377642438d329772d9564817b3f77716",
+          "packages/ui/src/message/demo/stack.vue": "5ebb27cd0742ae883470ef7c9eaa3aaf6c2e9b480e14449dbeac93ba649a65f2",
+          "packages/ui/src/message/demo/render-panel.vue": "db610832cd4f76cac91e0da82107170c017080894c07ae2cca3e1d9f200c77dc",
+          "packages/ui/src/message/demo/component-token.vue": "92f15903c9344b46b69736473e031d97842fa2bcd93a9e9a5bf84fc0e1c8f5b8",
+          "packages/ui/src/message/demo/style-class.vue": "33fe11f8a7c398b55c3cffaaf37c6a50c9c8133594bdcf1a4e8857d66f5dcecd",
+          "packages/ui/src/message/demo/other.vue": "f59171443e559fa0ca14d42452001cf365989891aaedebe6d56adc0b777c96bf",
+          "packages/ui/src/message/demo/loading.vue": "3d18ba0d51e0ab5e5c3347269c1849ade42248da92859d45d96c0fc2b8ececd0",
+          "packages/ui/src/message/demo/thenable.vue": "72d80cf15ef9c0932ad0b86a7696879793387f70c459e768b53a9cc1ed5e8315",
+          "packages/ui/src/message/demo/duration.vue": "59480ef7af4356f12590d5f0b8d472484eb11c5e6afb14df145602062d4167a1",
+          "packages/ui/src/message/style/index.ts": "659dacfb4b073726ba0980e4cc10969fd3dcabbb49664d04dc4d5de8d36f2349",
+          "packages/ui/src/message/style/token.ts": "8b5ada0c8584a096858f04533a6e9d3f0df86ca09854a7798d724fde36e8f162",
+          "packages/ui/src/message/__tests__/a11y.test.ts": "095166a9d7e4460caef96290aba74b93954b1dd27a5eede233fcdd8af98a5c69",
+          "packages/ui/src/message/__tests__/index.test.ts": "c6fa89effe1f2413632c8c83fea89d3e1b4678214e1cb719934e370fe92d5080",
+          "packages/ui/src/message/__tests__/demo.test.ts": "2176ad650216de47737448731c9ca1001e10f4d3465795d6bb8289eae73030bc",
+          "packages/ui/src/message/__tests__/s43-issue43.test.ts": "e12efb7a2e8059d280f05295d4e6ff5abdf7000581e6ccb34ba16a2ff0da7cee",
+          "packages/ui/src/message/__tests__/type.test-d.ts": "a36722a39db9d3057f758ce577f06c07c5048118b0843f44716076326d348520",
+          "packages/ui/src/message/__tests__/s45-issue45.test.ts": "9d453fd94765514ef877463185ec5fd3b61e06669d80211ce8c7e7738c3657cf",
+          "packages/ui/src/message/__tests__/theme.test.ts": "01965aab0a3c5029b5dfdc22f68d3fa2f2a7ac3ba3b60a56793c63a1b55ac0d7",
+          "packages/ui/src/message/__tests__/semantic.test.ts": "13a631bc818319937ddca94f4268f4a796939d4752a19c5093e05d8ec8c57465",
+          "packages/ui/src/notification/useNotification.ts": "286bd2891a9b15d2c80ba3bbf399b536b894402fc4cf36e83dd039346f2d2af1",
+          "packages/ui/src/notification/use-notice-theme.ts": "61dc43d37e72e9d93926f43ff6ce634f2060d9a13695897fdd72ae2b3ffe918b",
+          "packages/ui/src/notification/PurePanel.ts": "3db8d52dd104f931494643c8310ef4f1df6006fb12b55bc2bd0ac66e130ab33b",
+          "packages/ui/src/notification/interface.ts": "4f1ca225b1c4d4d32b0bc29f788752dbbef6aa3082fb4ef8904e729e4a939d08",
+          "packages/ui/src/notification/util.ts": "50d842d4449410a25cd8c85d51052b2cf5921a6a1afd0aeb25d0ef5f2ebea403",
+          "packages/ui/src/notification/index.ts": "4ac3ac28a5c1b215865c740dff68454a6b16652a8d0e84a477cee65879cec38b",
+          "packages/ui/src/notification/PureList.ts": "40671ae1361fe6ec63f783c879d094d2dd9f35688e8561841a84dfed03c635ae",
+          "packages/ui/src/notification/icon.ts": "a5d4294d40aad43f46de41b3d1d94261960575c82a218892463246cdb91ad7e2",
+          "packages/ui/src/notification/demo/with-icon.vue": "f6ce80006c95be02b98e064f922566d1fcca633f4fe15b631739a8a2e2969cb0",
+          "packages/ui/src/notification/demo/progress-color.vue": "6ac524c3dbf9c7e272f593a0e7eb724bedd4ca5d088fc1eeec32ab481994206e",
+          "packages/ui/src/notification/demo/hooks.vue": "10654d58dff6f5d5c530afa6097e427537aa1eb42bfaa080cb47871281eb1222",
+          "packages/ui/src/notification/demo/update.vue": "5d701651531cca11c14b2bf75659e04d2e4de2ec376597081d10495c0416c519",
+          "packages/ui/src/notification/demo/custom-icon.vue": "25d814f15381341d4baa285965e54f051f09e56c3da8b29028cd8984a7f024c8",
+          "packages/ui/src/notification/demo/with-btn.vue": "9f94d871c26d8297152dcdef631460fb28345d76e3a5fcf98d5f5243f61105cb",
+          "packages/ui/src/notification/demo/stack.vue": "e22f6ff1fd334dfd626e8add255e51b64a6f979cd9e9bca16e559dc4f989760b",
+          "packages/ui/src/notification/demo/placement.vue": "7c6a3effe9fecb940662ca21fc8fd97ddc28f610438b8e4cd6210407c2af45a6",
+          "packages/ui/src/notification/demo/render-panel.vue": "68883cb7d65b903372f74e0b4cd60590e22f89ef66da753448d8861866df9ae4",
+          "packages/ui/src/notification/demo/component-token.vue": "b9150bdf39541db965a23c6b6e643b85c5b29da1a9a5f4833cf58965897c18cf",
+          "packages/ui/src/notification/demo/style-class.vue": "3a80f03fbf17144ec9dd7184e191441ae9f266e77086b953db21944244f55612",
+          "packages/ui/src/notification/demo/show-with-progress.vue": "38b80a26eb5ea260b845511ae5be1f7fb35868c3ce87092ea25cb4af14cd6bb1",
+          "packages/ui/src/notification/demo/basic.vue": "7aba2285f5daeec3fb2ff5ce1bde84eb06fb5ef4f5b3ca5624f1a832a6b5d2ea",
+          "packages/ui/src/notification/demo/duration.vue": "b144dc8ba51249300a8009183813ba6f19ef1ee5428debb4e206407d810b454d",
+          "packages/ui/src/notification/style/index.ts": "26b8db789180cafe424f3d0ca8f417e3fa660b91a788b58c29c33965929751c9",
+          "packages/ui/src/notification/style/token.ts": "73b3e5bfa811cc55b45443175d88ee2851769a7b0818630ddc126e6280c0c654",
+          "packages/ui/src/notification/__tests__/a11y.test.ts": "301a5172aacf2b7f6d0140fb03653802830400c4c1a36ce8e6126ac54bdd30f0",
+          "packages/ui/src/notification/__tests__/native-contracts.test.ts": "47b1aa756c5508b995291de34f8cba8c13461b28c9245a685120113df8f1ef9a",
+          "packages/ui/src/notification/__tests__/index.test.ts": "8d20565a63afbc28f5959f9c8d0d10b233e31e07caa7842280ed36740e0cc504",
+          "packages/ui/src/notification/__tests__/demo.test.ts": "e8ee1aea50840e84dec6f0aefcc4c9ce6041c2824132fc54529673c49b487a1b",
+          "packages/ui/src/notification/__tests__/s46-issue46.test.ts": "a4befcff916beebcb510437ba7c195f4400235e1ba2387c3e2b98d3280f2dffd",
+          "packages/ui/src/notification/__tests__/engine.test.ts": "329e4ba8dacc6b08252266c1610600d613c4a6cde55e51c6c9cbb12857bd5440",
+          "packages/ui/src/notification/__tests__/audit-motion-config.test.ts": "c4905e9bb9b5007eb28b0526f4f02511a3c81fc49ea6a1affc930363ae2d30c9",
+          "packages/ui/src/notification/__tests__/type.test-d.ts": "3b4ec58940877772a5c3ece81aeb6fd330e1d61fdfbc2042ca88fd133755a094",
+          "packages/ui/src/notification/__tests__/s47-issue47.test.ts": "f46ea81e1d16fffc20ce838c88afab29bb61279512bce95687aeae4bd8346a05",
+          "packages/ui/src/notification/__tests__/s44-issue44.test.ts": "64581e1b5df8c1bf705e577110b99a17911ffcccba98e69829dd0f695f5c6ea8",
+          "packages/ui/src/notification/__tests__/audit-ref-stability.test.ts": "d87818165218ee3a8311b172e118dcab0c372914bb74ed4263d0377f62c30344",
+          "packages/ui/src/notification/__tests__/theme.test.ts": "927c49eb8cc391af13c1d102f61c2b7b2e65e86618e2eb6594fc66c0a3e62e55",
+          "packages/ui/src/notification/__tests__/semantic.test.ts": "5bf328c8e185fd67c481b30702ec4b59728e547d38b87b545e9c8ac54bb5f833",
+          "packages/ui/src/notification/hooks/useStackConfig.ts": "5def8bfc29f4fd287a3c8e774463fe16f369051bd0bec6c8371233e7219c21d8",
+          "packages/ui/src/notification/engine/useNotification.ts": "65ac3a53e7cad05afe8c73cd9afd9be1aead03f5e345f3e090cea9d2743bad27",
+          "packages/ui/src/notification/engine/Progress.ts": "8560530a21d7ff3cbdaf976be19361d4fdf88b45a7b05857189dd5960771b487",
+          "packages/ui/src/notification/engine/Notifications.ts": "8e2c27b0d0f20c6d04ad3804628d8b507abde7e30d0c1d73a06c02d74350a459",
+          "packages/ui/src/notification/engine/NoticeListContent.ts": "5b864ba95ec798cd43d330d1c426b4d9c492ca3560bdc7831b2fe96981bd2b28",
+          "packages/ui/src/notification/engine/NotificationProvider.ts": "53701545f825ff2c565cd7bc979260cad0c4db7972a7ebeb2f2c82acaf9434b1",
+          "packages/ui/src/notification/engine/interface.ts": "bf2fcfbaf169aae70c4f7447e14dafd1556300a874ec61d7bf1bd9a57465d10b",
+          "packages/ui/src/notification/engine/NoticeList.ts": "c5ba6e2bfe073631acb575340ed72d4d8a6c388915fa088634255e2fbbc716ce",
+          "packages/ui/src/notification/engine/Notice.ts": "0459c4ce277b7907896ac6dbb8bc7fe872ae14baac2644f624d76f3bb5dbe756",
+          "packages/ui/src/notification/engine/index.ts": "a595f9fbed94247b2824a2c47ea8092c59e1f3c9c3850c7fc7ac0baf20b49e9e",
+          "packages/ui/src/notification/__tests__/fixtures/NativeNotices.vue": "af1c6a86bc77f227f2d2849a86edc8dd23234d0528d54602b4f6bba1274adac9",
+          "packages/ui/src/notification/engine/hooks/useStack.ts": "aaba3cdc3b10166396d34824f2fb1cfc38d9208d360214c479b58e481b40dbfb",
+          "packages/ui/src/notification/engine/hooks/useNoticeTimer.ts": "0ac965e9433ab9089c90fc0fcbe90b1fc160ae86614e755b85df056dd0ada7db",
+          "packages/ui/src/notification/engine/hooks/useClosable.ts": "7cc636d98fba12c2be9e140ba33412bbe67d437d8d18ce0c48a3934483160419",
+          "packages/ui/src/notification/engine/hooks/useListPosition.ts": "e2665d46a55e379207f3b522bba799c8a82a7f1640d1f1e570ae0db70a6bd43e",
+          "packages/ui/src/notification/engine/hooks/useSizes.ts": "d4d6bbf151ba11e250e24ccef9e5e4b99bd63ba64b3ae23b2439456e2189565d",
+          "packages/ui/src/index.ts": "6cd45601e6ec3b45e4f53e5d7bbbefe686ab55a74395a0216e4f328936d75728",
+          "packages/ui/src/_internal/use-closable.ts": "4da0cc0639375e64449bef427ec645b3ab3513cb5ecffad9111e4f6fc2b153dc",
+          "packages/ui/src/_internal/__tests__/use-closable.test-d.ts": "86fdba40443bec2996288573a28d77317bff6721bda78fea6c372891c88ff7b8",
+          "packages/ui/src/modal/Modal.ts": "d746742c1ff39849667b50c9d1ed6bf3cc35d180f88f129342c156b474f4f42a",
+          "packages/ui/src/app/App.ts": "0795817b6a47d6a30bd6e666caa9862dcbe01395ef4de6a6e20e96dd1388fd74",
+          "packages/ui/src/app/__tests__/s40-issue40.test.ts": "688038e9c1dbfc77e5822e752335e7574aa846f10764546a6c3c7f9dfe66a89b",
+          "packages/ui/src/app/__tests__/s41-issue41.test.ts": "c61f0c97bca8d26e7ea1f021fb997e6cd253995864e157c62583de53d0cc510e",
+          "packages/ui/src/config-provider/__tests__/notices.test.ts": "c9ab5da6f218410e8b13411ad142d774cbb94e264e5c980d388fc4a9eb58ec33",
+          "packages/ui/src/config-provider/__tests__/consumers.test.ts": "871d689dfbc6a62df533808fe998c5007c262f290c25b57d6659e81e4e658b3f",
+          "packages/ui/src/config-provider/__tests__/notice-layers.test.ts": "713a6f04576d8f71515b14370d8046d5ac13b996595a6a4618c50f02e3dcc5e1"
+        },
+        "verifiedViewBase": "72abc7f640242b09d3a73f7a3d87ee121fe41bb5",
+        "remainingBlocking": [],
+        "integrationSnapshot": {
+          "files": 91,
+          "result": "All 91 checked TS/Vue/public barrel/shared/actual consumer bytes match current integration source; full inherited strict and declaration unchanged."
+        },
+        "timing": "Claim2026-10-31T04:14Z. Actual root strict39.397s/35.067s/37.670s failures and53.896s final; browser8.662s; consumer checks13.503s/12.337s/8.224s/8.073s. Rework was shared Vue content typing, missing PurePanel type aliases and negative-comment locations; exact analysis/implementation split unavailable."
       }
     },
     {
@@ -6455,6 +7214,35 @@
       "issues": [],
       "historicalAcceptance": [
         "docs/audit/2026-10-27-tag-contract-audit.md"
+      ],
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/_internal/use-closable.ts",
+            "packages/ui/src/_internal/__tests__/use-closable.test-d.ts",
+            "packages/ui/src/modal/Modal.ts"
+          ],
+          "change": "Shared close icon inputs/render/results retain actual VNodeChild instead of unknown; remove redundant casts. Existing merge/ARIA/close behavior retained.",
+          "verification": {
+            "stage": "focused shared change",
+            "passed": true,
+            "checks": [
+              {
+                "kind": "consumer",
+                "runner": "root",
+                "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/modal/__tests__/index.test.ts packages/ui/src/tag/__tests__/index.test.ts -t closable|closeIcon|关闭图标|close-icon|关闭流程|preventDefault --maxWorkers=1",
+                "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+                "exitCode": 0,
+                "signal": null,
+                "durationMs": 8224,
+                "log": "/tmp/apollo-notices-closable-consumers.log"
+              }
+            ],
+            "typeEvidence": "registry/vue-native-audit.json#CMP:notification.verification",
+            "result": "Root final strict+declaration0 includes shared positive/negative type boundaries and actual Modal/Tag public source."
+          },
+          "boundary": "Consumer regression only; original architecture/historical acceptance evidence retained without claiming a new component audit or final nine-dimension acceptance."
+        }
       ]
     },
     {

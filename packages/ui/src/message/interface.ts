@@ -12,7 +12,7 @@
 
 import type { CSSProperties, VNodeChild } from 'vue';
 
-/** 消息类型。`loading` 是「不自动关闭 + 旋转图标」的形态。 */
+/** 消息类型。`loading` 使用旋转图标；duration:0 可关闭自动计时。 */
 export type NoticeType = 'info' | 'success' | 'error' | 'warning' | 'loading';
 
 /** 6 个语义槽（`list` / `listContent` 是**列表级**，其余是**单条**级）。 */
@@ -42,7 +42,7 @@ export interface ConfigOptions {
   /** 默认时长（秒）。 */
   duration?: number;
   prefixCls?: string;
-  getContainer?: () => HTMLElement;
+  getContainer?: () => HTMLElement | ShadowRoot;
   transitionName?: string;
   /** 最多同时显示多少条（超出保留**最后** N 条）。 */
   maxCount?: number;
@@ -84,8 +84,8 @@ export interface ArgsProps {
   key?: string | number;
   style?: CSSProperties;
   className?: string;
-  classNames?: MessageSemanticType['classNames'];
-  styles?: MessageSemanticType['styles'];
+  classNames?: Omit<NonNullable<MessageSemanticType['classNames']>, 'list' | 'listContent'>;
+  styles?: Omit<NonNullable<MessageSemanticType['styles']>, 'list' | 'listContent'>;
   /**
    * @descCN 消息通知点击时的回调函数
    * @descEN Callback function when message notification is clicked
@@ -143,4 +143,20 @@ export interface PureListItem {
   content: VNodeChild;
   type: NoticeType;
   duration?: number | false;
+}
+
+export type MessagePurePanelSlots = { content?: () => VNodeChild; icon?: () => VNodeChild };
+export type MessagePurePanelEmits = { click: [event: MouseEvent] };
+
+export interface MessagePurePanelProps {
+  prefixCls?: string;
+  type?: NoticeType;
+  content?: string;
+  classNames?: ArgsProps['classNames'];
+  styles?: ArgsProps['styles'];
+}
+export interface MessagePureListProps {
+  items?: PureListItem[];
+  classNames?: MessageSemanticType['classNames'];
+  styles?: MessageSemanticType['styles'];
 }

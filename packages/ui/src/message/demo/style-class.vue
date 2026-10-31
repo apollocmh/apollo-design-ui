@@ -1,6 +1,5 @@
 <script setup lang="ts">
 // 对齐 antd demo/style-class.tsx —— 用 classNames / styles 自定义语义化结构样式
-// ⚠️ 本仓只支持**对象形态**（函数式语义槽 PENDING，D36 同判）⇒ 只演示对象形态
 
 import type { MessageArgsProps } from '@apollo-design/ui';
 import { Button, message, Space } from '@apollo-design/ui';

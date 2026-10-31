@@ -11,7 +11,7 @@ Display global feedback messages. Imperative API (`message.success(...)`), the o
 - Show a short-lived result of an operation at the top of the page (success / error / warning / loading).
 - Chain a "in progress → done" flow (`loading` + `then`).
 - ⚠️ Prefer `message.useMessage()` and its `contextHolder`: static methods **cannot consume
-  context**, so ConfigProvider configuration does not apply to them.
+  component context**. Static instances read the global services configured through `ConfigProvider.config()`.
 
 ## Demos
 
@@ -36,7 +36,7 @@ info / loading / other / render-panel / stack / style-class / thenable / update.
 
 ### Return value `MessageType`
 
-**Callable + thenable** (identical to antd):
+**Callable + thenable**:
 
 ```ts
 const hide = message.loading('In progress…', 0);
@@ -47,7 +47,7 @@ message.loading('In progress…', 2).then(() => message.success('Done'));
 | Member | Description |
 |---|---|
 | `()` | Close this message |
-| `.then(fn)` | Resolves `true` on **natural close** (timer expiry); ⚠️ a manual close does **not** resolve (upstream semantics) |
+| `.then(fn)` | Resolves `true` when terminated: timeout, callable close, destroy, eviction, early cancellation or owner unmount |
 | `.promise` | Underlying `Promise<boolean>` |
 
 ### `ArgsProps` (input of `message.open`)
@@ -75,7 +75,7 @@ message.loading('In progress…', 2).then(() => message.success('Done'));
 | rtl | Adds `-rtl` to the list root | `boolean` | from ConfigProvider direction |
 | stack | Stacked collapse: `true` or `{ threshold }` | `boolean \| { threshold?: number }` | `false` |
 | pauseOnHover | Pause on hover | `boolean` | `true` |
-| getContainer | Portal container | `() => HTMLElement` | `document.body` |
+| getContainer | Portal container | `() => HTMLElement \| ShadowRoot` | `document.body` |
 | prefixCls | Class prefix | `string` | `apollo-message` |
 | transitionName | Motion name | `string` | `{prefixCls}-fade` |
 | classNames / styles | Semantic slots | — | — |
@@ -87,7 +87,7 @@ list / listContent              // list level
 root / wrapper / icon / title   // notice level
 ```
 
-> ⚠️ Only the **object form** is supported (function form is PENDING).
+> ⚠️ `classNames` / `styles` accept objects. `list` / `listContent` belong to holder config and PureList; per-notice Args and PurePanel accept only notice fields.
 
 ### Slots (C8-R2, only the `_InternalPanelDoNotUseOrYouWillBeFired` static panel)
 
@@ -145,9 +145,16 @@ message passes `closable: false` (same as antd) — messages dismiss themselves 
 
 **Do already visible messages follow a later `config()`?**
 
-List-level options such as `top` / `rtl` / `prefixCls` affect subsequent renders, and
-`maxCount` only affects the next `open`. Notices already displayed are not re-laid out
-(same as antd).
+Current list presentation follows configuration replacement; `maxCount` is enforced by the next `open`.
 
 
 Hook holders read the current ConfigProvider prefix for existing notice type and icon classes, while preserving keyed content and explicit user styles. An explicit icon value, including null, false or 0, overrides the type icon. Manual destroy does not call onClose; automatic closure keeps its existing callback contract.
+
+
+### Vue contract and migration
+
+Call `useMessage` in setup and render its zero-argument holder factory as a component or invoke it to obtain a VNode. Commands before holder mount are queued. Every handle for the same key settles at termination; `true` denotes termination, not successful display. The latest `onClose` still runs only on automatic closure; callable close, destroy, eviction and unmount do not synthesize it.
+
+PurePanel forwards native `class`, `style`, attributes and typed `@click` to its host; replace its old `className` with `class`. Rich content uses `#content` / `#icon`, including `0` and explicit empty content. PureList semantic style maps use `styles`; native `style` styles its host.
+
+Holder configuration and Provider objects are read during rendering, so replacement and removal update existing keyed content without replacing user input nodes. All three component tokens follow the current theme. Numeric list z-index overrides (including `0` and numeric strings) also provide the context used by descendant popups. CSS expressions remain CSS and use the current token for the numeric context.

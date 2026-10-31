@@ -70,3 +70,81 @@ describe('Notification · 类型', () => {
     void negative;
   });
 });
+
+import { h } from 'vue';
+import Notice from '../engine/Notice';
+import notification from '../index';
+import type { NotificationPurePanelSlots } from '../interface';
+import useNotification from '../useNotification';
+
+const NotificationPanel = notification._InternalPanelDoNotUseOrYouWillBeFired;
+const NotificationList = notification._InternalListDoNotUseOrYouWillBeFired;
+const panelSlots: NotificationPurePanelSlots = {
+  title: () => 0,
+  actions: () => [h('button', 'Act')],
+};
+h(
+  NotificationPanel,
+  { title: 'Title', onClose: () => {}, onClick: (event) => event.preventDefault() },
+  panelSlots,
+);
+h(NotificationList, {
+  items: [{ key: 0, title: 0, description: 0, actions: 0 }],
+  styles: { list: { zIndex: 0 } },
+});
+h(Notice, {
+  prefixCls: 'apollo-notification',
+  title: 0,
+  description: 0,
+  actions: 0,
+  onClick: (event) => event.preventDefault(),
+  onClose: () => {},
+});
+expectTypeOf<
+  NonNullable<InstanceType<typeof Notice>['$props']['onClick']>
+>().parameters.toEqualTypeOf<[event: MouseEvent]>();
+expectTypeOf<
+  NonNullable<InstanceType<typeof NotificationPanel>['$props']['onClose']>
+>().parameters.toEqualTypeOf<[]>();
+expectTypeOf<InstanceType<typeof NotificationPanel>['$props']>().not.toHaveProperty('className');
+const hookContracts = () => {
+  const [api, Holder] = useNotification({
+    classNames: { list: 'list' },
+    styles: { list: { zIndex: '0' } },
+  });
+  h(Holder);
+  h('div', [Holder()]);
+  api.open({
+    title: 0,
+    description: h('span'),
+    actions: 0,
+    onClick: (event) => event.preventDefault(),
+  });
+  // @ts-expect-error List styling belongs to the holder configuration.
+  api.open({ title: 'Text', classNames: { list: 'invalid' } });
+  // @ts-expect-error PurePanel text props stay strings; rich titles use #title.
+  const invalidTitle: InstanceType<typeof NotificationPanel>['$props'] = { title: h('span') };
+  // @ts-expect-error PurePanel uses native class.
+  const invalidClass: InstanceType<typeof NotificationPanel>['$props'] = { className: 'legacy' };
+  // @ts-expect-error A real Notice click emits a MouseEvent.
+  const invalidEvent: InstanceType<typeof Notice>['$props'] = { onClick: (_event: string) => {} };
+  return [invalidTitle, invalidClass, invalidEvent];
+};
+void hookContracts;
+
+const invalidPureSubscription = () => {
+  const invalid: InstanceType<typeof NotificationPanel>['$props'] = {
+    // @ts-expect-error PurePanel owns close through Vue emits; nested command subscriptions belong to ArgsProps.
+    closable: { onClose: () => {} },
+  };
+  const invalidClass: InstanceType<typeof NotificationPanel>['$props'] = {
+    // @ts-expect-error PurePanel has no list container; list semantics belong to PureList or the holder.
+    classNames: { list: 'invalid' },
+  };
+  const invalidStyle: InstanceType<typeof NotificationPanel>['$props'] = {
+    // @ts-expect-error PurePanel has no listContent container.
+    styles: { listContent: { color: 'red' } },
+  };
+  return [invalid, invalidClass, invalidStyle];
+};
+void invalidPureSubscription;

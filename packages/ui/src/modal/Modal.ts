@@ -338,13 +338,13 @@ export default defineComponent({
           closable: true,
           closeLabel: globalLocale.value.close,
           closeIcon: h(CloseOutlined, { class: `${prefixCls.value}-close-icon` }),
-          closeIconRender: (icon: unknown) => renderCloseIcon(prefixCls.value, icon as VNodeChild),
+          closeIconRender: (icon) => renderCloseIcon(prefixCls.value, icon),
         },
       );
       const mergedClosable = closableResult.closable
         ? {
             disabled: closableResult.closeBtnIsDisabled,
-            closeIcon: closableResult.closeIconNode as VNodeChild,
+            closeIcon: closableResult.closeIconNode,
             afterClose: closableAfterClose.value,
             ...closableResult.ariaProps,
           }
@@ -402,7 +402,7 @@ export default defineComponent({
           rootStyle: { ...theme.style.value, ...config.style, ...props.rootStyle, ...st.root },
           footer,
           closable: mergedClosable,
-          closeIcon: closableResult.closeIconNode as VNodeChild,
+          closeIcon: closableResult.closeIconNode,
           // ⚠️ 动效名走 **rootPrefixCls**（`apollo-zoom` / `apollo-fade`），
           //    不是组件前缀 —— 见 `util.ts` 的 `getTransitionName`
           transitionName: getTransitionName(rootPrefixCls.value, 'zoom', props.transitionName),

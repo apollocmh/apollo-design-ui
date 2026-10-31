@@ -11,7 +11,9 @@
  * `Notification.js` / `NotificationProvider.js` / `Progress.js` / `hooks/*`。
  */
 import type { MotionHooks } from '@apollo-design/motion';
-import type { Component, CSSProperties } from 'vue';
+import type { Component, CSSProperties, VNodeChild } from 'vue';
+
+export type NoticeKey = string | number;
 
 export type Placement = 'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight';
 
@@ -57,17 +59,14 @@ export interface ComponentsType {
   progress?: Component;
 }
 
-/**
- * ⚠️ 内容类字段一律用 `unknown` 而不是 `VNodeChild`。
- *
- * 判据（实测 TS2589）：`VNodeChild` 是**递归类型**（`VNodeArrayChildren` 自引用），
- * 而内核要把它放进 `NoticeListConfig` → `Record<string, NoticeListConfig[]>` →
- * `computed` / 索引访问里，任何一层结构操作都会让 TS 做深度实例化
- * （`Type instantiation is excessively deep and possibly infinite`）。
- * 内核只是把这些值原样透传给 `h()`，不需要类型精度；
- * **对外的 `VNodeChild` 精度保留在 message / notification 自己的类型里**。
- */
-export type NoticeNode = unknown;
+export type NoticeNode = VNodeChild;
+
+export type NoticeEmits = {
+  click: [event: MouseEvent];
+  mouseenter: [event: MouseEvent];
+  mouseleave: [event: MouseEvent];
+  close: [];
+};
 
 /** rc `NotificationProps`：单条 notice 的全部入参。 */
 export interface NoticeProps {
@@ -94,12 +93,8 @@ export interface NoticeProps {
   showProgress?: boolean;
   times?: number;
   hovering?: boolean;
+  active?: boolean;
   pauseOnHover?: boolean;
-  onClick?: (e: MouseEvent) => void;
-  onMouseEnter?: (e: MouseEvent) => void;
-  onMouseLeave?: (e: MouseEvent) => void;
-  /** @deprecated 用 `closable.onClose`。 */
-  onClose?: () => void;
 }
 
 /** rc `NotificationListConfig`：带 key 的 notice 配置。 */
@@ -108,6 +103,12 @@ export interface NoticeListConfig
   /** Derived defaults stay current while this keyed notice remains mounted. */
   className?: ConfigValue<NoticeProps['className']>;
   closable?: ConfigValue<NoticeProps['closable']>;
+  onClick?: (event: MouseEvent) => void;
+  onMouseEnter?: (event: MouseEvent) => void;
+  onMouseLeave?: (event: MouseEvent) => void;
+  onClose?: () => void;
+  /** Internal message lifecycle settlement; distinct from the public close subscription. */
+  onRemoved?: () => void;
   key: string | number;
   placement?: Placement;
 }
@@ -156,7 +157,7 @@ export interface NoticeListProps {
   motion?: NoticeMotionConfig | ((placement: Placement) => NoticeMotionConfig);
   className?: string;
   style?: CSSProperties;
-  onNoticeClose?: (key: string | number) => void;
+  onNoticeClose?: (key: string | number, source: NoticeListConfig) => void;
   onAllRemoved?: (placement: Placement) => void;
 }
 
@@ -190,8 +191,11 @@ export interface NotificationsProps {
 }
 
 /** rc `NotificationConfig`：`useNotification` 的根配置。 */
-export interface NotificationConfig extends Omit<NotificationsProps, 'container' | 'prefixCls'> {
+export interface NotificationConfig
+  extends Omit<NotificationsProps, 'container' | 'prefixCls' | 'classNames' | 'styles'> {
   prefixCls?: ConfigValue<string>;
+  classNames?: ConfigValue<NotificationClassNames>;
+  styles?: ConfigValue<NotificationStyles>;
   placement?: Placement;
   getContainer?: () => HTMLElement | ShadowRoot;
   closable?: ConfigValue<NoticeProps['closable']>;

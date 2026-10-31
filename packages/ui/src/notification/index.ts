@@ -9,7 +9,10 @@
  *   - 用**游离的 `div`** 承载 holder（React 用 `DocumentFragment`，两者都不进 document）；
  *   - 不实现 `holderRender` / `warnContext`（D30 同源）。
  */
-import { type App, createApp, defineComponent, shallowRef } from 'vue';
+import { type App, createApp, defineComponent, h, shallowRef } from 'vue';
+import ConfigProvider from '../config-provider';
+import { globalConfig } from '../config-provider/global-config';
+
 import type { ArgsProps, GlobalConfigProps, NotificationInstance } from './interface';
 import PureList from './PureList';
 import PurePanel from './PurePanel';
@@ -46,36 +49,24 @@ let defaultGlobalConfig: GlobalConfigProps = {};
 const globalConfigRef = shallowRef<GlobalConfigProps>({});
 
 function getGlobalContext(): GlobalConfigProps {
-  const { getContainer, rtl, maxCount, top, bottom, showProgress, pauseOnHover, prefixCls } =
-    defaultGlobalConfig;
-  const mergedContainer = getContainer?.() || document.body;
-
-  // ⚠️ 比上游多带 `prefixCls`（同 message：antd 的 GlobalHolder 在模块作用域直接读它）
-  return {
-    getContainer: () => mergedContainer,
-    rtl,
-    maxCount,
-    top,
-    bottom,
-    showProgress,
-    pauseOnHover,
-    prefixCls,
-  };
+  const mergedContainer = defaultGlobalConfig.getContainer?.() ?? document.body;
+  return { ...defaultGlobalConfig, getContainer: () => mergedContainer };
 }
 
 const GlobalHolder = defineComponent({
   name: 'ANotificationGlobalHolder',
   setup() {
+    const owner = notification;
     const [api, holder] = useInternalNotification(globalConfigRef);
     const sync = (): void => {
       globalConfigRef.value = getGlobalContext();
     };
 
     Promise.resolve().then(() => {
-      if (!notification) return;
-      if (!notification.instance) {
-        notification.instance = api;
-        notification.sync = sync;
+      if (!owner || notification !== owner) return;
+      if (!owner.instance) {
+        owner.instance = api;
+        owner.sync = sync;
         flushNotificationQueue();
       }
     });
@@ -95,7 +86,20 @@ function flushNotificationQueue(): void {
     globalConfigRef.value = getGlobalContext();
 
     act(() => {
-      const app = createApp(GlobalHolder);
+      const global = globalConfig();
+      const Root = defineComponent({
+        setup: () => () =>
+          h(
+            ConfigProvider,
+            {
+              prefixCls: global.getPrefixCls(),
+              iconPrefixCls: global.getIconPrefixCls(),
+              theme: global.getTheme(),
+            },
+            { default: () => h(GlobalHolder) },
+          ),
+      });
+      const app = createApp(Root);
       app.mount(container);
       newNotification.app = app;
     });
@@ -106,7 +110,9 @@ function flushNotificationQueue(): void {
   if (!notification.instance) return;
 
   const instance = notification.instance;
-  for (const task of taskQueue) {
+  const tasks = taskQueue;
+  taskQueue = [];
+  for (const task of tasks) {
     switch (task.type) {
       case 'open':
         act(() => {
@@ -121,8 +127,6 @@ function flushNotificationQueue(): void {
         break;
     }
   }
-
-  taskQueue = [];
 }
 
 // ==============================================================================
@@ -147,40 +151,18 @@ const destroy = (key?: string | number): void => {
   flushNotificationQueue();
 };
 
-interface BaseMethods {
-  open: (config: ArgsProps) => void;
-  destroy: (key?: string | number) => void;
-  config: (config: GlobalConfigProps) => void;
-  useNotification: typeof useNotification;
-  /** @private Internal Component. Do not use in your production. */
-  _InternalPanelDoNotUseOrYouWillBeFired: typeof PurePanel;
-  /** @private Internal Component. Do not use in your production. */
-  _InternalListDoNotUseOrYouWillBeFired: typeof PureList;
-}
-
-interface NoticeMethods {
-  success: (config: ArgsProps) => void;
-  info: (config: ArgsProps) => void;
-  warning: (config: ArgsProps) => void;
-  error: (config: ArgsProps) => void;
-}
-
-const methods: (keyof NoticeMethods)[] = ['success', 'info', 'warning', 'error'];
-
-const baseStaticMethods: BaseMethods = {
+const staticMethods = {
   open,
   destroy,
   config: setNotificationGlobalConfig,
   useNotification,
   _InternalPanelDoNotUseOrYouWillBeFired: PurePanel,
   _InternalListDoNotUseOrYouWillBeFired: PureList,
+  success: (config: ArgsProps) => open({ ...config, type: 'success' }),
+  info: (config: ArgsProps) => open({ ...config, type: 'info' }),
+  warning: (config: ArgsProps) => open({ ...config, type: 'warning' }),
+  error: (config: ArgsProps) => open({ ...config, type: 'error' }),
 };
-
-const staticMethods = baseStaticMethods as NoticeMethods & BaseMethods;
-
-for (const type of methods) {
-  staticMethods[type] = (config: ArgsProps) => open({ ...config, type });
-}
 
 // ==============================================================================
 // ==                                   Test                                   ==
@@ -214,5 +196,9 @@ export type {
   NotificationConfig,
   NotificationInstance,
   NotificationPlacement,
+  NotificationPureListProps,
+  NotificationPurePanelEmits,
+  NotificationPurePanelProps,
+  NotificationPurePanelSlots,
   NotificationSemanticType,
 } from './interface';

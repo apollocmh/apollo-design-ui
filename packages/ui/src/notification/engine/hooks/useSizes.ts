@@ -6,7 +6,9 @@
  *   - 节点卸载（`null`）⇒ 删除该 key；不存在则不触发更新；
  *   - 尺寸与上次相同 ⇒ **不触发更新**（否则每次测量都会引发一轮重渲染）。
  */
-import { type Ref, ref } from 'vue';
+import { type Ref, shallowRef } from 'vue';
+
+import type { NoticeKey } from '../interface';
 
 export interface NodeSize {
   width: number;
@@ -14,30 +16,30 @@ export interface NodeSize {
 }
 
 export interface UseSizesResult {
-  sizeMap: Ref<Record<string, NodeSize>>;
-  setNodeSize: (key: string, node: { offsetWidth: number; offsetHeight: number } | null) => void;
+  sizeMap: Ref<Map<NoticeKey, NodeSize>>;
+  setNodeSize: (key: NoticeKey, node: { offsetWidth: number; offsetHeight: number } | null) => void;
 }
 
 export function useSizes(): UseSizesResult {
-  const sizeMap = ref<Record<string, NodeSize>>({});
+  const sizeMap = shallowRef(new Map<NoticeKey, NodeSize>());
 
   const setNodeSize = (
-    key: string,
+    key: NoticeKey,
     node: { offsetWidth: number; offsetHeight: number } | null,
   ): void => {
     if (!node) {
-      if (!(key in sizeMap.value)) return;
-      const next = { ...sizeMap.value };
-      delete next[key];
+      if (!sizeMap.value.has(key)) return;
+      const next = new Map(sizeMap.value);
+      next.delete(key);
       sizeMap.value = next;
       return;
     }
     const nextSize = { width: node.offsetWidth, height: node.offsetHeight };
-    const prevSize = sizeMap.value[key];
+    const prevSize = sizeMap.value.get(key);
     if (prevSize && prevSize.width === nextSize.width && prevSize.height === nextSize.height) {
       return;
     }
-    sizeMap.value = { ...sizeMap.value, [key]: nextSize };
+    sizeMap.value = new Map(sizeMap.value).set(key, nextSize);
   };
 
   return { sizeMap, setNodeSize };

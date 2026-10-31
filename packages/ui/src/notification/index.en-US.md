@@ -55,7 +55,9 @@ stack / style-class / update / with-btn / with-icon.
 | icon | Custom icon (when given, `-notice-icon-{type}` is **not** applied) | `VNodeChild` | type icon |
 | role | ARIA role of the notice root | `'alert' \| 'status'` | `'alert'` |
 | key | Unique id; opening the same key reuses the notice | `string \| number` | auto |
-| onClose / onClick / className / style / classNames / styles / props | same as antd | — | — |
+| onClose | Latest subscription, called on button/timeout closure; destroy, eviction and unmount remain silent | `() => void` | — |
+| onClick | Click subscription | `(event: MouseEvent) => void` | — |
+| className / style / classNames / styles / props | Notice root class/style, per-notice semantic objects and native root attributes | — | — |
 | message / btn | ⚠️ Deprecated: use `title` / `actions` | — | — |
 
 ### Slots (C8-R2, only the `_InternalPanelDoNotUseOrYouWillBeFired` static panel)
@@ -87,7 +89,7 @@ list / listContent                                                              
 wrapper / root / title / description / actions / icon / section / close / progress    // notice level
 ```
 
-> ⚠️ Only the **object form** is supported (function form is PENDING).
+> ⚠️ `classNames` / `styles` accept objects. `list` / `listContent` belong to NotificationConfig and PureList; per-notice Args and PurePanel accept only notice fields.
 
 ### Type exports
 
@@ -145,3 +147,14 @@ The notice is reused and its content updated (see the `update` demo); no new not
 
 
 Hook holders keep existing notices in place when Provider defaults change. Type/icon/close classes follow the current prefix, the default accessible close label follows the current locale, and an explicit closable aria-label takes priority. Content and user styles remain keyed. closable.disabled disables the native close button.
+
+PurePanel `closable` is visual configuration (icon, disabled state and accessible label). Use its typed `@close` event; the previously unconsumed nested `closable.onClose` field is removed. Imperative Args/hook/global subscriptions retain their existing behavior.
+
+
+### Vue contract and migration
+
+Call `useNotification` in setup and render its zero-argument holder factory as a component or invoke it to obtain a VNode. Early commands are queued until that holder is ready and discarded on owner unmount. Updating an existing key keeps its content identity and restarts its duration; numeric and string keys remain distinct.
+
+PurePanel forwards native `class`, `style`, attributes and typed `@click` / `@close` to its real host. Replace its old `className` with `class`. Rich content uses named slots and preserves `0` and explicit empty content. PureList semantic style maps use `styles`; native `style` styles its host. `getContainer` accepts an HTMLElement or ShadowRoot.
+
+Current holder and Provider objects can be replaced or removed; all seven tokens and locale defaults follow the current context. Numeric list z-index overrides (including `0` and numeric strings) also provide descendant popup context. CSS expressions stay unchanged and use the current token for numeric context. Static methods read global ConfigProvider services and do not inject the calling component’s context.

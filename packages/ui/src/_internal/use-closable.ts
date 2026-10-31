@@ -2,7 +2,7 @@
  * `useClosable` / `pickClosable` —— closable + closeIcon 的三方合并。
  *
  * 契约来源：antd 6.6.4 的 `es/_util/hooks/useClosable.js`（**判据逐条对齐**；
- * Tag 是第一个消费者，Alert / Notification 将来复用 —— 三次法则内收进 _internal）。
+ * 当前由 Tag、Modal、Notification 共享合并判据）。
  *
  * 合并语义（与直觉不同，必须精确）：
  *   - props 层：`closable === false` 或 `closeIcon === false/null` → 强制关闭（false）
@@ -22,12 +22,12 @@ import {
   isVNode,
   type MaybeRefOrGetter,
   toValue,
-  type VNode,
+  type VNodeChild,
 } from 'vue';
 
 /** `closable` 支持布尔或配置对象（antd 的 ClosableType）。 */
 export interface ClosableConfig {
-  closeIcon?: unknown;
+  closeIcon?: VNodeChild;
   disabled?: boolean;
   [key: string]: unknown;
 }
@@ -40,12 +40,12 @@ export type ClosableType = boolean | ClosableConfig | null;
 
 export interface ClosableCollection {
   closable?: ClosableType;
-  closeIcon?: unknown;
+  closeIcon?: VNodeChild;
 }
 
 export interface ClosableFallback extends ClosableCollection {
-  /** 关闭图标的渲染前处理（Tag 用它注入 role/tabIndex/类名/事件）。 */
-  closeIconRender?: (iconNode: unknown) => unknown;
+  /** 关闭图标的渲染前处理（Modal/Notification 的图标内容与类名）。 */
+  closeIconRender?: (iconNode: VNodeChild) => VNodeChild;
   /** aria-label 文案（来自 locale 的 global.close）。 */
   closeLabel?: string;
 }
@@ -54,7 +54,7 @@ export interface ClosableResult {
   /** 是否渲染关闭按钮。 */
   closable: boolean;
   /** 关闭图标节点（可能经 closeIconRender 处理）。 */
-  closeIconNode: unknown;
+  closeIconNode: VNodeChild;
   /** 关闭按钮是否处于禁用态（来自 closable 配置对象的 disabled）。 */
   closeBtnIsDisabled: boolean;
   /** 需要透传到关闭按钮上的 aria/data 属性。 */
@@ -75,7 +75,7 @@ export function pickClosable(
 /** antd 逐字：`!closable && (closable === false || closeIcon === false/null)` → false。 */
 function computeClosableConfig(
   closable: ClosableType | undefined,
-  closeIcon: unknown,
+  closeIcon: VNodeChild,
 ): ClosableConfig | boolean | null {
   if (!closable && (closable === false || closeIcon === false || closeIcon === null)) {
     return false;
@@ -101,13 +101,13 @@ function mergeClosableConfigs(
     return false;
   }
   if (propConfig) {
-    return mergeProps(fallbackConfig, contextConfig ?? {}, propConfig) as ClosableConfig;
+    return mergeProps(fallbackConfig, contextConfig ?? {}, propConfig);
   }
   if (contextConfig === false) {
     return false;
   }
   if (contextConfig) {
-    return mergeProps(fallbackConfig, contextConfig) as ClosableConfig;
+    return mergeProps(fallbackConfig, contextConfig);
   }
   return fallbackConfig.closable ? fallbackConfig : false;
 }
@@ -149,7 +149,7 @@ export function computeClosable(
   }
 
   // merged 此时必为配置对象（false 已提前返回）
-  const mergedConfig = merged as ClosableConfig;
+  const mergedConfig = merged;
   const closeLabel = fallbackCloseCollection.closeLabel ?? 'Close';
   const { closeIconRender } = fallbackCloseCollection;
   const { closeIcon: _ignored, ...restConfig } = mergedConfig;
@@ -157,7 +157,7 @@ export function computeClosable(
   // antd 逐字：`ariaOrDataProps = pickAttrs(restConfig, true)` —— 只留 aria/data，
   // `closable` / `closeIconRender` 这类配置键不能漏到 DOM 上。
   const ariaOrDataProps = pickAttrs(restConfig, true);
-  let finalCloseIcon: unknown = mergedConfig.closeIcon;
+  let finalCloseIcon = mergedConfig.closeIcon;
 
   if (isNonNullable(finalCloseIcon)) {
     if (closeIconRender) {
@@ -167,7 +167,7 @@ export function computeClosable(
       // antd 逐字：`cloneElement(finalCloseIcon, {
       //   'aria-label': closeLabel, ...finalCloseIcon.props, ...ariaOrDataProps })`
       // —— 优先级：closable 对象里的 aria > 图标自身 props > locale 文案。
-      const vnode = finalCloseIcon as VNode;
+      const vnode = finalCloseIcon;
       finalCloseIcon = cloneVNode(vnode, {
         'aria-label': closeLabel,
         ...vnode.props,
@@ -175,11 +175,9 @@ export function computeClosable(
       });
     } else if (typeof finalCloseIcon !== 'object') {
       // 非 vnode 的原始值（字符串等）兜底包 span（antd 的 createElement 分支）
-      finalCloseIcon = h(
-        'span',
-        { 'aria-label': closeLabel, ...ariaOrDataProps },
-        finalCloseIcon as never,
-      );
+      finalCloseIcon = h('span', { 'aria-label': closeLabel, ...ariaOrDataProps }, [
+        finalCloseIcon,
+      ]);
     }
   }
 

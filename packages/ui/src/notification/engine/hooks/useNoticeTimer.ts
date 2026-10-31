@@ -24,6 +24,7 @@ export function useNoticeTimer(
   duration: MaybeRefOrGetter<number | false | null | undefined>,
   onClose: () => void,
   onUpdate: (percent: number) => void,
+  restart?: MaybeRefOrGetter<number | undefined>,
 ): UseNoticeTimerResult {
   const durationMs = () => {
     const d = toValue(duration);
@@ -31,6 +32,7 @@ export function useNoticeTimer(
   };
 
   const walking = ref(durationMs() > 0);
+  let paused = false;
   let passTime = 0;
   let lastRafTime: number | null = null;
   let rafId: number | null = null;
@@ -51,9 +53,11 @@ export function useNoticeTimer(
   }
 
   function step(): void {
+    rafId = null;
     const ms = durationMs();
     syncPassTime();
     if (passTime >= ms) {
+      walking.value = false;
       onUpdate(1);
       onClose();
       return;
@@ -69,11 +73,14 @@ export function useNoticeTimer(
   }
 
   const onPause = (): void => {
-    syncPassTime();
+    paused = true;
+    if (walking.value) syncPassTime();
     walking.value = false;
+    stop();
   };
 
   const onResume = (): void => {
+    paused = false;
     if (durationMs() > 0) {
       lastRafTime = Date.now();
       walking.value = true;
@@ -84,11 +91,15 @@ export function useNoticeTimer(
 
   // walking 变化 ⇒ 起停 raf；duration 变化 ⇒ 清零重来
   watch(walking, (v) => (v ? start() : stop()), { immediate: true });
-  watch(durationMs, () => {
-    passTime = 0;
-    lastRafTime = null;
-    walking.value = durationMs() > 0;
-  });
+  watch(
+    () => [durationMs(), toValue(restart)] as const,
+    () => {
+      passTime = 0;
+      lastRafTime = null;
+      walking.value = durationMs() > 0 && !paused;
+      start();
+    },
+  );
 
   onBeforeUnmount(stop);
 
