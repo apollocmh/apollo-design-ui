@@ -2,6 +2,16 @@
 
 # BorderBeam 实现说明
 
+## 当前实现（2026-10-31）
+
+- `cloneVNode` 保留原宿主的 refs、key、children、具名槽及用户钩子；单根 Fragment、条件或异步 HTML 根使用真实 VNode 生命周期跟随，多根/文本完整透传。
+- 宿主原生 `class/style/事件` 与 Effect 的 `classNames.effect/styles.effect` 分开，删除旧组件别名；Provider 配置保持响应式。Effect 变量按实际完整前缀生成。
+- s56 的稳定 Fragment 与真实 Teleport 保留。独立的无 DOM 根 Effect 渲染组件仅在宿主文本更新已移除 Teleport 锚点时重建装饰，正常换宿主仍移动原 Effect；不改写用户 children 或接管用户 ref。
+- s50 继续只有一个 500ms 共享时钟，采样/可见性依据每个宿主实际文档；无 HTML 宿主不订阅，迁移文档和卸载释放资源。没有新增 Component Token、事件、模型或 Expose。
+- 当前公开契约及迁移见 [中文 API](./index.zh-CN.md) / [English API](./index.en-US.md)。本轮核心、真实 SFC 和 Chrome 证据由唯一任务状态收录；不把历史完整验收冒充当前版本已通过。
+
+以下保留此前的上游对照与历史实现说明，其 `createVNode` / 手动 ref / 异步宿主缺口已被上述实现替代；原 s50/s56 的有效行为回归继续沿用。
+
 ## 1. 对应 antd 组件
 
 - antd 6.6.4 · `es/border-beam/`（只读参照，H2）

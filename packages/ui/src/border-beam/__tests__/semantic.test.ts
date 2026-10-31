@@ -58,19 +58,19 @@ domContractTest('BorderBeam', {
     'border-beam:prefix-cls:no-props': {
       reason: 'PLATFORM · CSSOM 颜色序列化 #ddd → rgb(221,221,221)',
       diff: [
-        '$/div[0]: style 不同 [border:2pxsolid#ddd;padding:16px;position:relative] vs [border:2pxsolidrgb(221,221,221);padding:16px;position:relative]',
+        '$/div[0]: style 不同 [border:2px solid #ddd;padding:16px;position:relative] vs [border:2px solid rgb(221,221,221);padding:16px;position:relative]',
       ],
     },
     'border-beam:basic': {
       reason: 'PLATFORM · CSSOM 颜色序列化 #ddd → rgb(221,221,221)',
       diff: [
-        '$/div[0]: style 不同 [border:2pxsolid#ddd;padding:16px;position:relative] vs [border:2pxsolidrgb(221,221,221);padding:16px;position:relative]',
+        '$/div[0]: style 不同 [border:2px solid #ddd;padding:16px;position:relative] vs [border:2px solid rgb(221,221,221);padding:16px;position:relative]',
       ],
     },
     'border-beam:props': {
       reason: 'PLATFORM · CSSOM 颜色序列化 #ddd → rgb(221,221,221)',
       diff: [
-        '$/div[0]: style 不同 [border:2pxsolid#ddd;padding:16px;position:relative] vs [border:2pxsolidrgb(221,221,221);padding:16px;position:relative]',
+        '$/div[0]: style 不同 [border:2px solid #ddd;padding:16px;position:relative] vs [border:2px solid rgb(221,221,221);padding:16px;position:relative]',
       ],
     },
   },

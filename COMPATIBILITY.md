@@ -282,3 +282,7 @@ RefLike 删除没有真实消费者的 React `{current}` 包装，使用 Vue 可
 ### D-position-owner-document-and-clipping
 
 Position 的公开签名及纯几何算法保持，测量使用目标所属文档、组合祖先和当前逐轴裁剪，修正边框盒缩放、overflow-clip-margin 与临时样式恢复。共享 Trigger 将视口和滚动区域分别传入对齐引擎，按当前容器绑定滚动及所属窗口 resize；迁移已有弹层不重建业务子树，关闭和卸载释放监听。仅支持同一 Document 内的轴对齐矩形，不新增跨 iframe 坐标换算或轮廓裁剪能力，详见[Position 当前契约](docs/foundation/position-contract.md)。
+
+### D-border-beam-native-host-and-effect
+
+BorderBeam 的原生 class/style/事件合并到默认槽的单一 HTML 宿主；旧组件 className 改用 classNames.effect，旧装饰 style 改用 styles.effect。Provider 的装饰配置保留原义。完整 Vue 内容、模板 ref、key 与组件插槽保留各自归属，条件或异步根更新后跟随真实宿主；多根、文本及 SVG 内容完整透传但不产生描边。动态 textContent 移除装饰节点时只重建描边，动画会重启，业务内容与焦点保持；共享采样跟随宿主所属文档并在卸载释放，详见[BorderBeam API](packages/ui/src/border-beam/index.zh-CN.md)。开发阶段直接迁移，无旧形态兼容层。

@@ -16,7 +16,10 @@ export type {
   BorderBeamColor,
   BorderBeamGradient,
   BorderBeamProps,
+  BorderBeamSemanticClassNames,
+  BorderBeamSemanticStyles,
   BorderBeamSlot,
+  BorderBeamSlots,
 } from './interface';
 export { genBorderBeamStyle } from './style';
 export type { ComponentToken as BorderBeamComponentToken } from './style/token';

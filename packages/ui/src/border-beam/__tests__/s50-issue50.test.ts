@@ -19,7 +19,7 @@ import BorderBeam from '../BorderBeam';
 
 const SAMPLER_DELAY = 500;
 
-const gcsSpy = vi.spyOn(globalThis, 'getComputedStyle');
+const gcsSpy = vi.spyOn(window, 'getComputedStyle');
 const intervalSpy = vi.spyOn(globalThis, 'setInterval');
 const clearSpy = vi.spyOn(globalThis, 'clearInterval');
 

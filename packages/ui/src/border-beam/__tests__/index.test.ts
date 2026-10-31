@@ -175,10 +175,10 @@ describe('BorderBeam · 结构', () => {
     }
   });
 
-  it('deprecated 的 className / style 仍生效，且排在槽位之后（旧代码行为不变）', async () => {
+  it('native class/style target the host independently of semantic effect presentation', async () => {
     const w = mountInHost({
       classNames: { effect: 'from-slot' },
-      className: 'from-legacy',
+      class: 'from-native',
       styles: { effect: { marginTop: '1px' } },
       style: { marginTop: '2px' },
     });
@@ -186,9 +186,11 @@ describe('BorderBeam · 结构', () => {
     await nextTick();
     const effect = w.element.querySelector('.apollo-border-beam') as HTMLElement;
     expect(effect.classList.contains('from-slot')).toBe(true);
-    expect(effect.classList.contains('from-legacy')).toBe(true);
-    // 后者覆盖前者
-    expect(effect.getAttribute('style')).toContain('margin-top: 2px');
+    expect(effect.classList.contains('from-native')).toBe(false);
+    expect(effect.getAttribute('style')).toContain('margin-top: 1px');
+    const host = w.get<HTMLElement>('.inner');
+    expect(host.classes()).toContain('from-native');
+    expect(host.element.style.marginTop).toBe('2px');
   });
 });
 

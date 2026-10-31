@@ -123,7 +123,10 @@ export type {
   BorderBeamColor,
   BorderBeamGradient,
   BorderBeamProps,
+  BorderBeamSemanticClassNames,
+  BorderBeamSemanticStyles,
   BorderBeamSlot,
+  BorderBeamSlots,
 } from './border-beam';
 export { BorderBeam, DEFAULT_BORDER_BEAM_DURATION, getBorderBeamGradient } from './border-beam';
 export { genBorderBeamStyle } from './border-beam/style';

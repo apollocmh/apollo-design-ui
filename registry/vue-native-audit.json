@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 229,
+  "revision": 230,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -874,17 +874,13 @@
       "kind": "component",
       "ref": "border-beam",
       "title": "BorderBeam",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/border-beam"
       ],
-      "assignment": {
-        "owner": "native_color_picker",
-        "baseRevision": 220,
-        "startedAt": "2026-10-31T05:15:02.858Z"
-      },
+      "assignment": null,
       "evidence": [],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
@@ -902,6 +898,184 @@
           "packages/ui/src/border-beam/BorderBeam.ts",
           "packages/ui/src/border-beam/border-sampler.ts"
         ]
+      },
+      "verification": {
+        "task": "CMP:border-beam",
+        "stage": "architecture",
+        "owner": "native_color_picker",
+        "scope": [
+          "packages/ui/src/border-beam"
+        ],
+        "assignmentBase": "6965a725",
+        "verifiedViewBase": "5bde28e47af7614ee63b6779b0a99a690aa0062d",
+        "sourceFrozen": true,
+        "readyForIntegration": true,
+        "passed": true,
+        "implemented": [
+          "cloneVNode retains caller normalized refs/ref_for, keys, children, named slots and lifecycle hooks. Complete slots survive comments/single Fragments; conditional/nested/async single HTML roots follow real VNode commits without a placeholder host or unavailable-host poll.",
+          "Native class/style/listeners target the selected host VNode; remove obsolete className/style Props. Semantic effect classes/styles and current Provider flat/semantic presentation remain distinct, with exact Vue CSSProperties and complete VNodeChild slot types.",
+          "Keep stable Fragment + real Teleport. A private effect renderer recreates only decorations whose Teleport anchors were removed by host textContent patches; normal host replacement moves the existing effect DOM. Original host identity/focus survives concurrent text/count changes.",
+          "Keep one 500ms shared sampler, subscribe only real HTML hosts, read actual ownerDocument.defaultView, skip each hidden document, refresh visibility and transfer document listeners on adoption, release all timers/listeners on unmount. Existing s50/s56 and pure gradient algorithms retained.",
+          "Runtime variables use the actual full effect prefix. No new Component Token/Expose/events/models. Bilingual API, one necessary native-vs-effect Demo, precise h/SFC types and compact current README notes synchronized; historical PLAN and reports unchanged."
+        ],
+        "migration": [
+          "Component className -> classNames.effect. Old effect style -> styles.effect; native style now merges onto the host with host own same-property values winning.",
+          "BorderBeamSlot name retained as ()=>VNodeChild; add BorderBeamSlots and two semantic type exports (local/root barrel owned by root).",
+          "Provider component className/style remain valid effect presentation and are not removed by association."
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "passed": true,
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/border-beam/__tests__/native-contracts.test.ts packages/ui/src/border-beam/__tests__/index.test.ts packages/ui/src/border-beam/__tests__/s50-issue50.test.ts packages/ui/src/border-beam/__tests__/s56-issue56.test.ts packages/ui/src/border-beam/__tests__/demo.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 17380,
+            "log": "/tmp/apollo-border-beam-core-final.log",
+            "result": "5 files/41 passed: existing s50/s56, core props/semantics, new native/ref/async/owner-document/retention cases and all 8 Demo smoke. Subsequent actual slot-array type normalization rechecked below."
+          },
+          {
+            "kind": "consumer",
+            "passed": true,
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/border-beam/__tests__/native-contracts.test.ts packages/ui/src/config-provider/__tests__/consumers.test.ts -t 'BorderBeam native|borderBeam reads current component' --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 12440,
+            "log": "/tmp/apollo-border-beam-native-consumer-final.log",
+            "result": "9 passed/31 unrelated skipped: final native8 plus existing actual ConfigProvider BorderBeam consumer."
+          },
+          {
+            "kind": "semantic",
+            "passed": true,
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project dom-contract packages/ui/src/border-beam/__tests__/semantic.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 1970,
+            "log": "/tmp/apollo-border-beam-semantic-final.log",
+            "result": "3 passed; original baseline unchanged, same exact CSSOM #ddd/rgb difference, updated only legitimate CSS whitespace in old allowance strings."
+          },
+          {
+            "kind": "browser",
+            "passed": true,
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/border-beam/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4730,
+            "log": "/tmp/apollo-border-beam-native-browser.log",
+            "result": "Real Chrome source: compiled refs/focus and text updates, actual theme gradient/line width/reduced motion, nested component root replacement with same instance/effect DOM, iframe/adoption and 1 shared timer/0 subscriptions after unmount; zero captured Vue/page errors. Timing is script startup/assertions, cleanup excluded."
+          },
+          {
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "node_modules/@biomejs/biome/bin/biome",
+              "check",
+              "packages/ui/src/border-beam/BorderBeam.ts",
+              "packages/ui/src/border-beam/__tests__/index.test.ts",
+              "packages/ui/src/border-beam/__tests__/s50-issue50.test.ts",
+              "packages/ui/src/border-beam/__tests__/semantic.test.ts",
+              "packages/ui/src/border-beam/__tests__/type.test-d.ts",
+              "packages/ui/src/border-beam/border-sampler.ts",
+              "packages/ui/src/border-beam/demo/custom-container.vue",
+              "packages/ui/src/border-beam/interface.ts",
+              "packages/ui/src/border-beam/__tests__/fixtures/NativeBorderBeam.vue",
+              "packages/ui/src/border-beam/__tests__/fixtures/RefForBorderBeam.vue",
+              "packages/ui/src/border-beam/__tests__/native-browser.mjs",
+              "packages/ui/src/border-beam/__tests__/native-contracts.test.ts"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 100,
+            "log": "/tmp/apollo-border-beam-format-final.log",
+            "kind": "format",
+            "passed": true,
+            "result": "12 supported changed/new owned files, no fixes."
+          },
+          {
+            "kind": "diff",
+            "passed": true,
+            "command": "git diff --check -- packages/ui/src/border-beam",
+            "exitCode": 0,
+            "signal": null
+          },
+          {
+            "kind": "types",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/.apollo-final-architecture-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 56690,
+            "log": "/tmp/apollo-final-architecture-types.log",
+            "result": "Strict current source, actual h/SFC positive/negative consumers and all Demo sources passed. Declaration emission belongs to the unified frozen build."
+          }
+        ],
+        "failedAttempts": [
+          {
+            "exitCode": null,
+            "signal": null,
+            "durationMs": 1830,
+            "log": "/tmp/apollo-border-beam-native-red.log",
+            "result": "4 initial real contract failures; original process receipt unavailable after compaction, failed runner log retained and never counted as a pass."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 1850,
+            "log": "/tmp/apollo-border-beam-native-first.log",
+            "result": "2 passed/2 selector failures: VTU descendant selector excluded root that contained the actual effect. Used host.get(effect) while retaining actual DOM identity/content assertions; no production workaround."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 5380,
+            "log": "/tmp/apollo-border-beam-text-red.log",
+            "result": "Dynamic host text cleared all 3 Teleport effect nodes; added real failing assertion and fixed private effect patch ownership. Concurrent count/text plus stable ref/focus retained."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 2080,
+            "log": "/tmp/apollo-border-beam-semantic-first.log",
+            "result": "3 old CSSOM allowance strings removed CSS spaces while current helper preserves them; corrected only the exact existing difference, baseline and assertions unchanged."
+          }
+        ],
+        "remainingBoundaries": [
+          "The effect requires one actual HTML root. Multi-root/text/SVG content passes through complete with no effect or invented wrapper; custom components retain normal attrs forwarding responsibility.",
+          "Host textContent replacement necessarily recreates removed decorative nodes and restarts their animation; it does not remount user content or reset user focus/state.",
+          "Host must provide a positioning context such as position:relative. No new animation capability, arbitrary DOM mutation observer or own Component Token introduced.",
+          "Full-library nine-dimensional acceptance/build/published consumers/visual matrix remain final frozen-version work, not claimed by these focused results."
+        ],
+        "sourceHashes": {
+          "packages/ui/src/border-beam/BorderBeam.ts": "b9fc15b86773dba18f2dec235ffca052b1066ab0120fb02af489532d63b45dbb",
+          "packages/ui/src/border-beam/README.md": "6b160db37cd449838ee9e4cf78a97f296417af5b1a4b022ca878455c751a6371",
+          "packages/ui/src/border-beam/__tests__/fixtures/NativeBorderBeam.vue": "5fbb6c9777229afc9d5e664865df5918b633583a66cff1cc43607cad551e3550",
+          "packages/ui/src/border-beam/__tests__/fixtures/RefForBorderBeam.vue": "d99435aad5f9a03985e0a022ab8ba0cf73857501c85c54d0e7a869e08f873d63",
+          "packages/ui/src/border-beam/__tests__/index.test.ts": "06f07d3eba89795c295d32e98d99c3882fb6e05d6f7d997b6719c0a78c67d705",
+          "packages/ui/src/border-beam/__tests__/native-browser.mjs": "e7965bba56bc6ff6588b6b861153dcfb32baf761537744c47f6bcaea189490f7",
+          "packages/ui/src/border-beam/__tests__/native-contracts.test.ts": "7f642ef0f28d4c3e5014779dd9c486a77c0469fb8f0b7edc91436e8ec375b047",
+          "packages/ui/src/border-beam/__tests__/s50-issue50.test.ts": "9f846cc8757b42747bdf860d3eba9b589d53162ab66014adac1c21553eeef4de",
+          "packages/ui/src/border-beam/__tests__/semantic.test.ts": "917913be9d9b2899f23440519b1a6fb9ff10dbba0a09621547228af1e686b1b7",
+          "packages/ui/src/border-beam/__tests__/type.test-d.ts": "76a2fc01596936b57755232a5d86b06d535a03f5201996fc83cb102a572d3528",
+          "packages/ui/src/border-beam/border-sampler.ts": "288e6eeab7add4679a32d0975b4bed8e139f3aa58ce56c3a93aeaddc6b223440",
+          "packages/ui/src/border-beam/demo/custom-container.md": "91d69830b73134cc9655c39cd6d67fb92d8eeb8c33e81167e2e1a4e2f1a42814",
+          "packages/ui/src/border-beam/demo/custom-container.vue": "6e6905548feb783e0046cd99e152e7de5637ca1b59bef5fef6f66a0aa89ba6b8",
+          "packages/ui/src/border-beam/index.en-US.md": "126698ec97f9d2af1aa369d5678aed7583175b2e8e524958c85a08d8e4a1526a",
+          "packages/ui/src/border-beam/index.ts": "b64b78022d0fa9834bb61b0669a9f5661902a16a1e0b2e027fcb1cf14cb6e24e",
+          "packages/ui/src/border-beam/index.zh-CN.md": "ca68713cb23eb812b79e0b79bf36177659c03ecc3e3c469c5771b946e4c3f4d5",
+          "packages/ui/src/border-beam/interface.ts": "866b001cefce4ca6edba902a75bf0846e72fb65fe4cca8f56314597af6fbd0d3",
+          "packages/ui/src/index.ts": "34a33812d3db2aee7133524f6d31173970aec43ababc7289ed40e80f0930e599"
+        },
+        "integrationSnapshot": {
+          "headAtIntegration": "6e4db273e8dbe58f1eaa03e49dabe7a9e9d04851",
+          "typedSourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+          "allOwnedTypeInputsMatch": true,
+          "utilsCommentOnlyDelta": {
+            "file": "packages/utils/src/ref.ts",
+            "beforeSha256": "978ae3fa803d30e2fb8321ac0976e096922f23e5674f3ac6a176b356394dd0dc",
+            "afterSha256": "054b45e14338cd71ef217815801d42fcc31e8bc93700de6040084b7d6f28ab4d",
+            "runtimeAndTypesUnchanged": true,
+            "method": "TypeScript AST printer with comments removed",
+            "change": "Correct Vue callback replacement comment only"
+          }
+        }
       }
     },
     {

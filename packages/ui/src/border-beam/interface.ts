@@ -5,7 +5,7 @@
  * **逐字段对齐**（规则 R7）。差异：children 不在 Props（规则 C19，默认插槽）。
  */
 
-import type { CSSProperties } from 'vue';
+import type { CSSProperties, VNodeChild } from 'vue';
 
 /** 渐变色标（percent 0–100，用户视角的整段分布）。 */
 export interface BorderBeamGradient {
@@ -20,22 +20,16 @@ export interface BorderBeamProps {
   /** 类名前缀。不传则从 ConfigProvider 取，兜底 `apollo-border-beam`。 */
   prefixCls?: string;
   /**
-   * 语义化类名。**本仓自有 API** —— `BorderBeam` 是 renderless（没有自己的 DOM 根，
-   * 它把 Effect 层注入宿主的 children），所以「根类名」在 Vue 里无处可放；
-   * 槽位让这个落点有个 Vue-native 的名字。
+   * Effect 层的语义化类名。原生 class/style/事件传递到默认插槽的单一宿主。
    */
   classNames?: BorderBeamSemanticClassNames;
   /** 语义化内联样式，与 `classNames` 同槽位。 */
   styles?: BorderBeamSemanticStyles;
-  /** 透传到 Effect 根元素的类名。@deprecated 用 `classNames.effect`。 */
-  className?: string;
-  /** 透传到 Effect 根元素的样式（合并 CSS 变量之后）。@deprecated 用 `styles.effect`。 */
-  style?: CSSProperties;
   /** 渐变：纯色或色标数组（0–100 会线性映射到 0–70% 保留尾部淡出）。 */
   color?: BorderBeamColor;
   /** 流光条数（≥1 取整；非法值回落 1）。 */
   count?: number;
-  /** 单圈时长秒数（>0 才生效）。 */
+  /** 单圈时长秒数（有限且 >0 才生效）。 */
   duration?: number;
   /** 流光描边厚度（数字补 px）。 */
   lineWidth?: number | string;
@@ -58,4 +52,8 @@ export interface BorderBeamSemanticStyles {
 }
 
 /** 默认插槽（宿主；必须是可以挂 ref 的元素/组件才有流光效果）。 */
-export type BorderBeamSlot = () => unknown;
+export type BorderBeamSlot = () => VNodeChild;
+
+export type BorderBeamSlots = {
+  default?: BorderBeamSlot;
+};
