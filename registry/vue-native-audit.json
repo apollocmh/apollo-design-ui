@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
-  "phase": "architecture",
-  "revision": 234,
+  "phase": "acceptance",
+  "revision": 237,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -11294,17 +11294,13 @@
       "kind": "foundation",
       "ref": "virtual-list",
       "title": "@apollo-design/virtual-list",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/virtual-list/src"
       ],
-      "assignment": {
-        "owner": "native_picker",
-        "baseRevision": 232,
-        "startedAt": "2026-10-31T06:38:01.184Z"
-      },
+      "assignment": null,
       "evidence": [
         "registry/vue-native-audit.json"
       ],
@@ -11316,13 +11312,15 @@
       "issues": [
         {
           "id": "VIRTUAL-LIST-SFC-BUILD",
-          "status": "open",
+          "status": "fixed",
           "blocking": true,
           "impact": "Published package is missing because the shared TS-only foundation pipeline cannot parse Filler.vue; UI consumers cannot import the package.",
-          "reason": "Connect the existing SFC and generated generic declarations to the package build; preserve the current source/runtime evidence.",
+          "reason": "Actual unbuild and isolated built-package import/SSR/h/SFC type consumers passed with real generated declarations; runtime source unchanged.",
           "evidence": [
             "packages/virtual-list/package.json",
-            "scripts/unbuild-preserve-modules.mjs"
+            "scripts/unbuild-preserve-modules.mjs",
+            "packages/virtual-list/build.config.mjs",
+            "packages/virtual-list/tsconfig.build.json"
           ]
         }
       ],
@@ -11352,7 +11350,7 @@
       "verification": {
         "stage": "architecture",
         "scope": [
-          "packages/virtual-list/src"
+          "packages/virtual-list"
         ],
         "task": "FND:virtual-list",
         "owner": "native_picker",
@@ -11477,6 +11475,32 @@
             "signal": null,
             "durationMs": 11935,
             "log": "/tmp/apollo-virtual-list-table-browser.log"
+          },
+          {
+            "kind": "build",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node ../../node_modules/unbuild/dist/cli.mjs",
+            "cwd": "packages/virtual-list",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": null,
+            "log": "/tmp/apollo-virtual-list-sfc-build.log",
+            "result": "Real preserved JS and vue-tsc-generated index.d.ts, VirtualList.vue.d.ts and Filler.vue.d.ts. Duration was not independently timed; successful build not repeated."
+          },
+          {
+            "kind": "import",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-virtual-list-dist-consumer-2CABuQ/runtime.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 193,
+            "log": "/tmp/apollo-virtual-list-dist-import.log"
+          },
+          {
+            "kind": "types",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-virtual-list-dist-consumer-2CABuQ/tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 4654,
+            "log": "/tmp/apollo-virtual-list-dist-consumer-types.log"
           }
         ],
         "failedAttempts": [
@@ -11567,7 +11591,7 @@
         ],
         "types": {
           "strict": "passed",
-          "declarationEmission": "not_run; final unified build",
+          "declarationEmission": "passed: real vue-tsc-generated declarations and isolated h/SFC positive/negative consumer",
           "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3"
         },
         "implemented": [
@@ -11612,7 +11636,7 @@
           "Existing native scrolling, holder/root measurement, pure algorithm cases and historical Oracle evidence preserved. Pure horizontal clamp now returns 0 when content fits instead of an impossible negative range.",
           "Default item slot requires exactly one measurable HTMLElement root; offscreen virtualization still unmounts rows, no persistent-cache/Portal platform added.",
           "useHeights outside a Vue scope remains an imperative service; callers pair registration with setInstanceRef(item,null).",
-          "No full-library coverage/visual/publication/nine-dimension acceptance was executed; current checks prove this architecture unit only."
+          "Actual package build and isolated built declarations now verified; full-library coverage/visual/publication/nine-dimensional acceptance remains pending."
         ],
         "finalRuntimeDelta": [
           "Public mounted VNode el/anchor validation replaces private staticCount access; legitimate static SFC/native single roots covered.",
@@ -11651,7 +11675,12 @@
           "packages/virtual-list/src/range.ts": "92a8d2d6040312f1b5504c22fee08e46c1b02e7a8fbb7dfe2555fa57008a4eaa",
           "packages/virtual-list/src/types.ts": "46bb9dd1c0bd94580d03e2da0404138bb3b2d80e57003869062c06cf0999c0e9",
           "packages/virtual-list/src/use-heights.ts": "1cff9e700c1fd3ab9a9a4168f18ecfdc25445a9ebd3b398e4aa380cfce7d41e2",
-          "packages/virtual-list/src/virtual-list.ts": "ba6accb8590ccbe74290afcfdedfbee57fc90d8a5fe862427cf7fade8d75447b"
+          "packages/virtual-list/src/virtual-list.ts": "ba6accb8590ccbe74290afcfdedfbee57fc90d8a5fe862427cf7fade8d75447b",
+          "packages/virtual-list/build.config.mjs": "37e732cf4d8fb258a2731c3055f034405a4c5887c3a10dd41380b4d0710ec2d1",
+          "packages/virtual-list/tsconfig.build.json": "46cff21ee695c8b9446f61658424b4c4c35ec427ee6b314dc38fa9b5aeb62306",
+          "packages/virtual-list/package.json": "47c16fc0e1b22dd6acf35f5ed607d74c9f4fae34fdb071b117c4ccc381c863f2",
+          "registry/tools/scaffold-packages.mjs": "b38f16034014084db7c87b25b7bc74fd289e30dadd56efef4e4f11bbcd2879a2",
+          "scripts/unbuild-preserve-modules.mjs": "642cf67e812d5446c4d79cbc05d63a92497eb9827cbed65b28462c927f697fbc"
         },
         "integrationSnapshot": {
           "headAtIntegration": "cdd36a99d12a95ff5742657c26e8d191085d5383",
@@ -11797,13 +11826,68 @@
             "durationMs": 40343,
             "log": "/tmp/apollo-virtual-list-types.log"
           }
-        }
+        },
+        "buildIntegration": {
+          "failure": {
+            "sourceCommit": "c43cf24f16d0207026825c1fd69cc1a324107cb6",
+            "toolchain": {
+              "node": "22.22.2",
+              "pnpm": "12.4.2"
+            },
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "scripts/verify-full.mjs",
+              "--report",
+              "/tmp/apollo-final-acceptance-c43cf24f.json"
+            ],
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 177376,
+            "log": "/tmp/apollo-final-acceptance-c43cf24f.log",
+            "report": "/tmp/apollo-final-acceptance-c43cf24f.json"
+          },
+          "cause": "The former TS-only foundation pipeline could not parse new SFCs. UI import/CSS/SSR failures were downstream effects.",
+          "fix": "Local config reuses shared module-layout hook, adds actual Vue compiler and emits real declarations before unbuild validates outputs. The generator now preserves the local build entry.",
+          "runtimeSourceChanged": false,
+          "consumer": {
+            "consumer": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-virtual-list-dist-consumer-2CABuQ",
+            "sourceFallback": false,
+            "builtPackage": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-virtual-list-dist-consumer-2CABuQ/node_modules/@apollo-design/virtual-list",
+            "checks": [
+              {
+                "kind": "import",
+                "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-virtual-list-dist-consumer-2CABuQ/runtime.mjs",
+                "exitCode": 0,
+                "signal": null,
+                "durationMs": 193,
+                "log": "/tmp/apollo-virtual-list-dist-import.log"
+              },
+              {
+                "kind": "types",
+                "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-virtual-list-dist-consumer-2CABuQ/tsconfig.json",
+                "exitCode": 0,
+                "signal": null,
+                "durationMs": 4654,
+                "log": "/tmp/apollo-virtual-list-dist-consumer-types.log"
+              }
+            ],
+            "passed": true
+          },
+          "boundaries": "Package-local dist consumer only; full frozen-library build/consumer/nine-dimensional checks remain pending."
+        },
+        "previousBoundaries": [
+          "Owner did not edit public src/index.ts (root), UI consumer files, shared config/state, dependency installs or build artifacts.",
+          "Existing native scrolling, holder/root measurement, pure algorithm cases and historical Oracle evidence preserved. Pure horizontal clamp now returns 0 when content fits instead of an impossible negative range.",
+          "Default item slot requires exactly one measurable HTMLElement root; offscreen virtualization still unmounts rows, no persistent-cache/Portal platform added.",
+          "useHeights outside a Vue scope remains an imperative service; callers pair registration with setInstanceRef(item,null).",
+          "No full-library coverage/visual/publication/nine-dimension acceptance was executed; current checks prove this architecture unit only."
+        ]
       }
     }
   ],
   "finalAcceptance": {
-    "status": "failed",
-    "sourceCommit": "c43cf24f16d0207026825c1fd69cc1a324107cb6",
+    "status": "in_progress",
+    "sourceCommit": null,
     "gates": [
       {
         "dimension": "api",

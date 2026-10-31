@@ -29,7 +29,9 @@
 
 原生 attrs 单落点：`id / role / tabindex / aria-*` 与 key/focus/blur 监听交给真实 holder；class/style/data 及其他普通 attrs 留 outer，不复制同一 ID、ARIA 或事件。`innerProps` 独立指向 Filler 内层。`component` 继续支持字符串标签或真实单 HTMLElement 根的 Vue 组件，两个 ref getter 始终返回当前实际 DOM。消费者的 attrs/ARIA 引用随此桥接，Table、Listy、Select、Tree 的既有真实测量、聚焦与键盘能力沿用。
 
-本轮针对性验证包含原算法与核心场景、真实 h/SFC 正负例及 Chrome 的实际滚动/布局/身份/资源；没有重做整库九维、覆盖率或发布产物。原始失败、当前命令与边界单独保留，不以历史结果冒充本次通过。
+本包构建使用本地配置复用基础包的 preserveModules 布局，追加 Vue SFC 编译；声明由 vue-tsc 真实生成，排除测试与示例后只复制本包声明。包生成器保留该配置入口。独立消费检查读取实际 dist，验证泛型、插槽、事件及引用，不回退源码或使用伪造构造器类型。
+
+本轮针对性验证包含原算法与核心场景、真实 h/SFC 正负例及 Chrome 的实际滚动/布局/身份/资源，并补齐本包构建与独立产物消费；整库九维、覆盖率与完整发布消费者验收仍在统一冻结阶段执行。原始失败、当前命令与边界单独保留，不以历史结果冒充本次通过。
 
 ---
 

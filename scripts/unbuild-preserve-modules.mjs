@@ -25,15 +25,16 @@
  *    那条路径会解析失败。
  *
  * ⚠️ `theme` / `ui` **不用**本配置（它们各有自己的 `build.config.ts`：theme 要写
- *    `dist/tokens.css`、ui 要处理 SFC 与每组件 CSS）。
+ *    `dist/tokens.css`、ui 要处理 SFC 与每组件 CSS）。`virtual-list` 的 SFC 构建
+ *    配置复用这里的模块布局 hook，另行处理 Vue 编译与声明生成。
  *
  *    ⚠️ **但它们在自己的配置里各自打开了同样的 `preserveModules`** —— 2026-10-07 补记：
  *    theme 一开始**漏了**（`ownBuildConfig` ⇒ 被本配置跳过），导致 D 实际只落地 12/13，
  *    而门禁里那句「产物已是模块结构」对 theme 是**假的**。改 theme 的人请记住：
  *    **「不用本配置」不等于「不用 preserveModules」**，两件事必须一起看。
  *
- * 覆盖方式：本配置只设 `output.preserveModules*`，不碰 unbuild 的其它默认
- * （`declaration` 仍为 true —— foundation 包是纯 TS，rollup-plugin-dts 能正常出声明）。
+ * 覆盖方式：本配置只设 `output.preserveModules*`，不碰 unbuild 的其它默认。
+ * 纯 TS 包继续由 rollup-plugin-dts 出声明；含 SFC 的包使用 vue-tsc。
  */
 import { resolve } from 'node:path';
 import { defineBuildConfig } from 'unbuild';

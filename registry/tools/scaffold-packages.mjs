@@ -402,6 +402,8 @@ const PACKAGES = [
   },
   {
     dir: 'virtual-list',
+    /** SFC 编译与 vue-tsc 声明由本包配置完成；模块布局复用共享 hook。 */
+    ownBuildConfig: true,
     name: '@apollo-design/virtual-list',
     layer: 'L1',
     purpose: '虚拟滚动。替代 @rc-component/virtual-list。',
@@ -833,9 +835,9 @@ if (isMain) {
         // unbuild 默认 declaration: true，dist/index.d.ts 由它产出，不再单独跑 vue-tsc
         // （旧的 build:types 指向不存在的 tsconfig.build.json，属悬空脚本，已移除）。
         //
-        // ⚠️ ui 是例外：它含 .vue SFC，而 unbuild 的 rollup-plugin-dts 不认识 SFC
+        // ⚠️ ui / virtual-list 含 .vue SFC，unbuild 的 rollup-plugin-dts 不认识 SFC
         //    （实测会把编译后的 JS 当成 .d.ts 写出去，是**静默的错误产物**）。
-        //    所以 ui 在 build.config.ts 里关掉 declaration，改由 `build:done` hook
+        //    它们在自己的构建配置里关掉 declaration，改由 `build:done` hook
         //    调 vue-tsc 出声明。package.json 这边无需变化。
         //
         // 🚨 2026-10-07（裁决 `ui-tree-shaking` 的 D 项）：foundation 包改用**共享配置**
@@ -845,7 +847,7 @@ if (isMain) {
         //    必然漂移，所以用 `--config` 指向同一份（`build-output-contract` 选项 B 的
         //    tradeoff 里「每个包多一套构建配置」那半条债可以避免）。
         //    ⚠️ `--config` 的路径**相对 CWD**，而 pnpm 在包目录里跑 `build` ⇒ 成立。
-        //    theme / ui 有自己的 `build.config.ts`（`ownBuildConfig: true`）⇒ 仍用裸 `unbuild`。
+        //    theme / ui / virtual-list 有自己的配置（`ownBuildConfig: true`）⇒ 用裸 `unbuild`。
         build: p.ownBuildConfig
           ? 'unbuild'
           : 'unbuild --config ../../scripts/unbuild-preserve-modules.mjs',
