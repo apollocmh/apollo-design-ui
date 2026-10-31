@@ -1,27 +1,3 @@
-/**
- * `ConfirmDialog` —— antd `components/modal/ConfirmDialog.tsx` 的 Vue 版。
- *
- * 两个组件：
- *   - `ConfirmContent`：正文（图标 + 标题 + 内容 + 按钮组），被 `Modal` 以
- *     `_renderSemanticContent` 的形式塞进 body；
- *   - `ConfirmDialog`：把上面那棵树包成 `Modal`（`footer: null`、`closable` 默认 false、
- *     `width` 默认 416、mask 的 `closable` 默认 **false**）。
- *
- * 关键判据：
- *   1. `mergedOkCancel = okCancel ?? type === 'confirm'`；
- *   2. `autoFocusButton` 默认 **`'ok'`** —— 判据是 `base || base === null ? base : 'ok'`，
- *      即**显式 `null` 表示不自动聚焦**（不能当成 undefined）；
- *   3. 图标只在 `icon === undefined` 时取默认：`info` → InfoCircleFilled、
- *      `success` → CheckCircleFilled、`error` → CloseCircleFilled、
- *      其余（含 `confirm` / `warning` / `warn`）→ ExclamationCircleFilled；
- *   4. `hasTitle` / `hasIcon` 用 `isRenderable` 判，决定 `-has-title` / `-no-icon` 两个类；
- *   5. `okText` 默认取 `mergedOkCancel ? locale.okText : locale.justOkText`；
- *   6. `zIndex` 默认 `zIndexPopupBase + CONTAINER_MAX_OFFSET`（静态方法恒用最大层级）。
- *
- * ⚠️ 与上游的一处**结构差异**：上游在树尾渲染一个 `<Confirm/>`（cssinjs 的
- *    `genSubStyleComponent` 占位组件，只负责注册样式、**不产出 DOM**）。
- *    本仓是静态 CSS（构建期已落进 `dist/index.css`）⇒ 不需要它，也不产出 DOM。
- */
 import {
   CheckCircleFilled,
   CloseCircleFilled,
@@ -30,8 +6,8 @@ import {
 } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
 import { CONTAINER_MAX_OFFSET } from '@apollo-design/portal';
-import { getDesignToken } from '@apollo-design/theme';
-import { isFunction, isPlainObject, isRenderable, omit } from '@apollo-design/utils';
+import { useTheme } from '@apollo-design/theme';
+import { isFunction, isPlainObject, isRenderable } from '@apollo-design/utils';
 import { computed, defineComponent, h, type PropType, provide, type VNodeChild } from 'vue';
 import { type MaskType, normalizeMaskConfig } from '../_internal/use-merged-mask';
 import { useComponentConfig } from '../config-provider/context';
@@ -41,12 +17,14 @@ import { modalContextKey } from './context';
 import type {
   AutoFocusButton,
   FocusableConfig,
+  ModalAction,
   ModalButtonProps,
   ModalFooterExtra,
+  ModalFuncProps,
   ModalGetContainer,
   ModalLocale,
+  ModalProps,
   ModalSemanticType,
-  ModalSemanticTypeInput,
   ModalType,
 } from './interface';
 import Modal from './Modal';
@@ -64,6 +42,8 @@ export const ConfirmContent = defineComponent({
     type: { type: String as PropType<ModalType>, default: undefined },
     // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     icon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    okType: { type: String as PropType<import('./interface').ModalOkType>, default: undefined },
+    confirmLoading: { type: Boolean, default: undefined },
     okCancel: { type: Boolean, default: undefined },
     // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     okText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
@@ -93,15 +73,15 @@ export const ConfirmContent = defineComponent({
       default: undefined,
     },
     contentClassName: { type: String, default: undefined },
-    contentStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    contentStyle: { type: Object as PropType<import('vue').CSSProperties>, default: undefined },
     okButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
     cancelButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
-    closable: { type: [Boolean, Object, null] as unknown as PropType<unknown>, default: undefined },
+    closable: { type: [Boolean, Object] as PropType<ModalProps['closable']>, default: undefined },
     // 命令式路径透传
     close: { type: Function as PropType<(...args: unknown[]) => void>, default: undefined },
     onConfirm: { type: Function as PropType<(confirmed: boolean) => void>, default: undefined },
-    onOk: { type: Function as PropType<(...args: unknown[]) => unknown>, default: undefined },
-    onCancel: { type: Function as PropType<(...args: unknown[]) => unknown>, default: undefined },
+    onOk: { type: Function as PropType<ModalAction>, default: undefined },
+    onCancel: { type: Function as PropType<ModalAction>, default: undefined },
     rootPrefixCls: { type: String, default: undefined },
     isSilent: { type: Function as PropType<() => boolean>, default: undefined },
   },
@@ -114,14 +94,17 @@ export const ConfirmContent = defineComponent({
     }>('modal');
 
     const [locale] = useLocale('Modal');
-    const mergedLocale = computed(() => props.locale ?? locale.value);
+    const mergedLocale = computed(() => ({ ...locale.value, ...props.locale }));
 
     /** `okCancel ?? type === 'confirm'`。 */
     const mergedOkCancel = computed(() => props.okCancel ?? props.type === 'confirm');
 
     /** ⚠️ 显式 `null` ⇒ 不自动聚焦；未给 ⇒ `'ok'`。 */
     const mergedAutoFocusButton = computed<AutoFocusButton | undefined>(() => {
-      const base = props.focusable?.autoFocusButton || props.autoFocusButton;
+      const base =
+        props.focusable?.autoFocusButton !== undefined
+          ? props.focusable.autoFocusButton
+          : props.autoFocusButton;
       return base || base === null ? base : 'ok';
     });
 
@@ -144,6 +127,7 @@ export const ConfirmContent = defineComponent({
       modalContextKey,
       computed(() => ({
         autoFocusButton: mergedAutoFocusButton.value,
+        confirmLoading: props.confirmLoading,
         cancelTextLocale: cancelTextLocale.value,
         okTextLocale: okTextLocale.value,
         mergedOkCancel: mergedOkCancel.value,
@@ -152,8 +136,9 @@ export const ConfirmContent = defineComponent({
         rootPrefixCls: props.rootPrefixCls,
         close: props.close,
         onConfirm: props.onConfirm,
-        onOk: props.onOk,
-        onCancel: props.onCancel,
+        actionOnOk: props.onOk,
+        actionOnCancel: props.onCancel,
+        okType: props.okType,
         okButtonProps: props.okButtonProps,
         cancelButtonProps: props.cancelButtonProps,
       })),
@@ -167,16 +152,16 @@ export const ConfirmContent = defineComponent({
       if (props.icon === undefined) {
         switch (type) {
           case 'info':
-            mergedIcon = fallbackProp(config.infoIcon, h(InfoCircleFilled)) as VNodeChild;
+            mergedIcon = fallbackProp(config.infoIcon, h(InfoCircleFilled));
             break;
           case 'success':
-            mergedIcon = fallbackProp(config.successIcon, h(CheckCircleFilled)) as VNodeChild;
+            mergedIcon = fallbackProp(config.successIcon, h(CheckCircleFilled));
             break;
           case 'error':
-            mergedIcon = fallbackProp(config.errorIcon, h(CloseCircleFilled)) as VNodeChild;
+            mergedIcon = fallbackProp(config.errorIcon, h(CloseCircleFilled));
             break;
           default:
-            mergedIcon = fallbackProp(config.warningIcon, h(ExclamationCircleFilled)) as VNodeChild;
+            mergedIcon = fallbackProp(config.warningIcon, h(ExclamationCircleFilled));
         }
       }
 
@@ -191,13 +176,10 @@ export const ConfirmContent = defineComponent({
         typeof footer === 'undefined' || isFunction(footer)
           ? h('div', { class: `${confirmPrefixCls}-btns` }, [
               isFunction(footer)
-                ? (footer as (node: VNodeChild, extra: ModalFooterExtra) => VNodeChild)(
-                    footerOriginNode,
-                    { OkBtn, CancelBtn },
-                  )
+                ? footer(footerOriginNode, { OkBtn, CancelBtn })
                 : footerOriginNode,
             ])
-          : (footer as VNodeChild);
+          : footer;
 
       return h('div', { class: `${confirmPrefixCls}-body-wrapper` }, [
         h(
@@ -212,11 +194,9 @@ export const ConfirmContent = defineComponent({
               .join(' '),
           },
           [
-            mergedIcon as never,
+            mergedIcon,
             h('div', { class: `${confirmPrefixCls}-paragraph` }, [
-              hasTitle
-                ? h('span', { class: `${confirmPrefixCls}-title` }, props.title as never)
-                : null,
+              hasTitle ? h('span', { class: `${confirmPrefixCls}-title` }, [props.title]) : null,
               h(
                 'div',
                 {
@@ -224,9 +204,9 @@ export const ConfirmContent = defineComponent({
                     .filter(Boolean)
                     .join(' '),
                   style: props.contentStyle,
-                  ...(attrs as Record<string, unknown>),
+                  ...attrs,
                 },
-                props.content as never,
+                [props.content],
               ),
             ]),
           ],
@@ -236,11 +216,6 @@ export const ConfirmContent = defineComponent({
     };
   },
 });
-
-/** 静态方法恒用最大层级（上游 `token.zIndexPopupBase + CONTAINER_MAX_OFFSET`）。 */
-function confirmMaxZIndex(): number {
-  return (getDesignToken() as { zIndexPopupBase: number }).zIndexPopupBase + CONTAINER_MAX_OFFSET;
-}
 
 const ConfirmDialog = defineComponent({
   name: 'AConfirmDialog',
@@ -253,7 +228,7 @@ const ConfirmDialog = defineComponent({
     zIndex: { type: Number, default: undefined },
     width: { type: [String, Number] as PropType<string | number>, default: undefined },
     centered: { type: Boolean, default: undefined },
-    closable: { type: [Boolean, Object, null] as unknown as PropType<unknown>, default: false },
+    closable: { type: [Boolean, Object] as PropType<ModalProps['closable']>, default: false },
     mask: { type: [Boolean, Object] as unknown as PropType<MaskType>, default: undefined },
     maskClosable: { type: Boolean, default: undefined },
     type: { type: String as PropType<ModalType>, default: undefined },
@@ -268,6 +243,7 @@ const ConfirmDialog = defineComponent({
     // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     cancelText: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     okType: { type: String as PropType<import('./interface').ModalOkType>, default: undefined },
+    confirmLoading: { type: Boolean, default: undefined },
     okCancel: { type: Boolean, default: undefined },
     // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     footer: {
@@ -277,14 +253,19 @@ const ConfirmDialog = defineComponent({
       default: undefined,
     },
     style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    styles: {
-      type: [Object, Function] as unknown as PropType<ModalSemanticTypeInput['styles']>,
+    styles: { type: [Object, Function] as PropType<ModalProps['styles']>, default: undefined },
+    classNames: {
+      type: [Object, Function] as PropType<ModalProps['classNames']>,
       default: undefined,
     },
+    locale: { type: Object as PropType<Partial<ModalLocale>>, default: undefined },
+    afterClose: { type: Function as PropType<() => void>, default: undefined },
+    afterOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
+    modalRender: { type: Function as PropType<ModalFuncProps['modalRender']>, default: undefined },
     className: { type: String, default: undefined },
     wrapClassName: { type: String, default: undefined },
-    bodyStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    maskStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    bodyStyle: { type: Object as PropType<import('vue').CSSProperties>, default: undefined },
+    maskStyle: { type: Object as PropType<import('vue').CSSProperties>, default: undefined },
     direction: { type: String as PropType<'ltr' | 'rtl'>, default: undefined },
     transitionName: { type: String, default: undefined },
     maskTransitionName: { type: String, default: undefined },
@@ -292,7 +273,7 @@ const ConfirmDialog = defineComponent({
       type: String as unknown as PropType<AutoFocusButton | undefined>,
       default: undefined,
     },
-    focusable: { type: Object as PropType<FocusableConfig>, default: undefined },
+    focusable: { type: Object as PropType<ModalFuncProps['focusable']>, default: undefined },
     okButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
     cancelButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
     keyboard: { type: Boolean, default: undefined },
@@ -303,8 +284,8 @@ const ConfirmDialog = defineComponent({
     // 命令式路径
     close: { type: Function as PropType<(...args: unknown[]) => void>, default: undefined },
     onConfirm: { type: Function as PropType<(confirmed: boolean) => void>, default: undefined },
-    onOk: { type: Function as PropType<(...args: unknown[]) => unknown>, default: undefined },
-    onCancel: { type: Function as PropType<(...args: unknown[]) => unknown>, default: undefined },
+    onOk: { type: Function as PropType<ModalAction>, default: undefined },
+    onCancel: { type: Function as PropType<ModalAction>, default: undefined },
     isSilent: { type: Function as PropType<() => boolean>, default: undefined },
   },
   setup(props, { attrs }) {
@@ -313,17 +294,15 @@ const ConfirmDialog = defineComponent({
       okButtonProps?: ModalButtonProps;
     }>('modal');
 
+    const theme = useTheme();
     const confirmPrefixCls = computed(() => `${props.prefixCls}-confirm`);
-    const width = computed(() => props.width || 416);
+    const width = computed(() => props.width ?? 416);
     const style = computed(() => props.style || {});
 
-    /** `styles` 支持函数形态：`{ body: bodyStyle, mask: maskStyle, ...styles(info) }`。 */
-    const semanticStyles = computed<Record<string, unknown>>(() => {
-      const base = { body: props.bodyStyle, mask: props.maskStyle };
-      const raw = props.styles;
-      return isFunction(raw)
-        ? { ...base, ...(raw as (info: { props: unknown }) => Record<string, unknown>)({ props }) }
-        : { ...base, ...((raw ?? {}) as Record<string, unknown>) };
+    const semanticStyles = (info: { props: ModalProps }) => ({
+      body: props.bodyStyle,
+      mask: props.maskStyle,
+      ...(typeof props.styles === 'function' ? props.styles(info) : props.styles),
     });
 
     const classString = computed(() =>
@@ -344,18 +323,15 @@ const ConfirmDialog = defineComponent({
       return nextMaskConfig;
     });
 
-    const mergedZIndex = computed(() => props.zIndex ?? confirmMaxZIndex());
+    const mergedZIndex = computed(
+      () => props.zIndex ?? theme.token.value.zIndexPopupBase + CONTAINER_MAX_OFFSET,
+    );
 
     return () =>
       h(
         Modal,
-        // props 整体 `as never`：Modal 的 props 类型不含 confirm 注入的内部键
-        //（_semanticOmit/_renderSemanticContent 等），三参 h() 的重载推断会失败。
         {
-          ...(omit(attrs as Record<string, unknown>, ['bodyStyle', 'maskStyle']) as Record<
-            string,
-            unknown
-          >),
+          ...attrs,
           prefixCls: props.prefixCls,
           open: props.open,
           // Modal 已迁移到「根 class 走原生 attrs」⇒ 这里用 `class`
@@ -368,15 +344,18 @@ const ConfirmDialog = defineComponent({
             props.close?.({ triggerCancel: true });
             props.onConfirm?.(false);
           },
-          title: props.title,
           transitionName: props.transitionName,
           maskTransitionName: props.maskTransitionName,
-          mask: mergedMask.value as unknown as MaskType,
+          mask: mergedMask.value,
           style: style.value,
-          styles: semanticStyles.value as ModalSemanticType['styles'],
+          styles: semanticStyles,
+          classNames: props.classNames,
+          onAfterClose: props.afterClose,
+          onAfterOpenChange: props.afterOpenChange,
           width: width.value,
           zIndex: mergedZIndex.value,
           closable: props.closable,
+          confirmLoading: props.confirmLoading,
           keyboard: props.keyboard,
           getContainer: props.getContainer,
           centered: props.centered,
@@ -389,13 +368,13 @@ const ConfirmDialog = defineComponent({
             styles: ModalSemanticType['styles'];
           }) =>
             h(ConfirmContent, {
-              ...(attrs as Record<string, unknown>),
               prefixCls: props.prefixCls,
               confirmPrefixCls: confirmPrefixCls.value,
               rootPrefixCls: props.rootPrefixCls,
               type: props.type,
               icon: props.icon,
               okCancel: props.okCancel,
+              confirmLoading: props.confirmLoading,
               okText: props.okText,
               cancelText: props.cancelText,
               okType: props.okType,
@@ -413,13 +392,22 @@ const ConfirmDialog = defineComponent({
               cancelButtonProps: { ...config.cancelButtonProps, ...props.cancelButtonProps },
               contentClassName: mergedClassNames?.body,
               contentStyle: mergedStyles?.body,
-            } as never),
-        } as never,
+              locale: props.locale,
+            }),
+        },
         // 🚨 footer 必须走 **slot** 关闭（C8-R2：Modal 的 footer ReactNode prop 已删除，
         // 传 `footer: null` prop 只是无效 attrs）。空 slot ⇒ readSlot 归一为 null
         // ⇒ Modal 不渲染默认 footer —— 确认框的按钮由 ConfirmContent 自绘。
         // 漏了这条会让 Modal 默认 footer 与 ConfirmContent 的按钮**同屏两份**。
-        { footer: () => null },
+        {
+          footer: () => null,
+          ...(props.modalRender
+            ? {
+                modalRender: ({ ModalPanel }: import('./interface').ModalRenderSlotProps) =>
+                  props.modalRender?.(h(ModalPanel)),
+              }
+            : {}),
+        },
       );
   },
 });

@@ -1,36 +1,20 @@
-/**
- * Modal 的类型定义（G2 产物）。
- *
- * 契约来源：antd 6.6.4 `components/modal/interface.ts`（`ModalProps` / `ModalFuncProps` /
- * `ModalSemanticType` / `ModalLocale` / `MousePosition`）+ `@rc-component/dialog@1.10.0`
- * 的 `IDialogPropTypes`（`es/IDialogPropTypes.d.ts`）。
- *
- * 按本仓 Vue 化约定重新定义（H2，不搬运）：
- *   - `React.ReactNode` ⇒ `VNodeChild`；`React.CSSProperties` ⇒ `CSSProperties`；
- *   - `SyntheticEvent | KeyboardEvent` ⇒ `Event`（DOM 事件）；
- *   - `visible` ⇒ `open`（上游 antd 侧已改名，rc 侧仍叫 `visible`）；
- *   - 语义槽的**函数式形态**（`GenerateSemantic`）本仓未落地 ⇒ 只保留对象形态（D36 同判）；
- *   - 命令式的 `destroy` / `update` 由 `confirm` 返回（见 `ModalInstance`）。
- *
- * ⚠️ 与 antd 的 `extends` 结构对应关系（便于逐条核对）：
- *   `ModalProps = Omit<RcDialogProps, 'footer'|'width'|'onClose'|'animation'|'maskAnimation'|
- *    'transitionName'|'maskTransitionName'|'mask'|'classNames'|'styles'|OmitFocusType>`
- *   + antd 自有字段。本仓不引 rc 类型（R7），把 rc 侧**未 omit** 的字段逐条展开写在这里。
- */
-
-import type { ClassValue, CSSProperties, VNodeChild } from 'vue';
-
+import type { GetContainer } from '@apollo-design/portal';
+import type { ClassValue, CSSProperties, FunctionalComponent, Ref, VNodeChild } from 'vue';
 // ---------------------------------------------------------------------------
 // 复用 _internal 的单一真源（三次法则后的落点）
 // ---------------------------------------------------------------------------
-import type { ClosableType } from '../_internal/use-closable';
+import type { SemanticInput } from '../_internal/use-merge-semantic';
 import type { MaskType } from '../_internal/use-merged-mask';
+import type ConfirmCancelBtn from './components/ConfirmCancelBtn';
+import type ConfirmOkBtn from './components/ConfirmOkBtn';
+import type NormalCancelBtn from './components/NormalCancelBtn';
+import type NormalOkBtn from './components/NormalOkBtn';
 
 export type { ClosableConfig, ClosableType } from '../_internal/use-closable';
 export type { MaskConfig, MaskType } from '../_internal/use-merged-mask';
 
 /** `getContainer` 的形态（rc 的 `GetContainer | false`）。 */
-export type ModalGetContainer = string | HTMLElement | (() => HTMLElement) | false | undefined;
+export type ModalGetContainer = GetContainer;
 
 /** 鼠标位置（`mousePosition`）—— 有值时 zoom 动效从该点展开。 */
 export type MousePosition = { x: number; y: number } | null;
@@ -56,32 +40,45 @@ export type ModalType = 'info' | 'success' | 'error' | 'warn' | 'warning' | 'con
 /** OK 按钮的类型（antd 的 `LegacyButtonType` = `ButtonType | 'danger'`）。 */
 export type ModalOkType = 'text' | 'link' | 'primary' | 'default' | 'dashed' | 'danger';
 
-/**
- * 语义槽的**运行时输入**形态 —— 对象，或函数（`(info) => slots`）。
- *
- * ⚠️ 为什么单列一个类型：`useMergeSemantic` 的 `resolveSemantic` **运行时支持函数形态**，
- *    但 prop 的 `PropType` 若只声明对象形态，vue-tsc 会把模板里的 `:styles="fn"` 判成
- *    不可赋值（modal 的 `style-class` demo 实测）。
- *    公开的 `ModalSemanticType` 仍按 D36 只声明对象形态；这个只给 prop 的 `PropType` 用。
- *
- * ⚠️ 函数形态的入参用 `Record<string, unknown>` 而不是 `ModalProps` ——
- *    要能直接喂给 `useMergeSemantic<Record<string, unknown>, …>` 的
- *    `SemanticInput`（它要求 `(info: SemanticInfo<P>) => …`，P 是调用方选的）。
- *    传 `ModalProps` 会因为**参数逆变**不可赋值。
- */
+/** Public semantics always receive the current public props. */
 export interface ModalSemanticTypeInput {
-  classNames?:
-    | ModalSemanticType['classNames']
-    | ((info: { props: Record<string, unknown> }) => ModalSemanticType['classNames']);
-  styles?:
-    | ModalSemanticType['styles']
-    | ((info: { props: Record<string, unknown> }) => ModalSemanticType['styles']);
+  classNames?: SemanticInput<ModalSemanticType['classNames'], ModalProps>;
+  styles?: SemanticInput<ModalSemanticType['styles'], ModalProps>;
 }
+
+export interface ModalClosableConfig {
+  closeIcon?: VNodeChild;
+  disabled?: boolean;
+  onClose?: () => void;
+  afterClose?: () => void;
+  'aria-label'?: string;
+  [key: string]: unknown;
+}
+export type ModalPanelRef = Ref<HTMLElement | null> | ((element: HTMLElement | null) => void);
+export type ModalEmits = {
+  'update:open': [open: boolean];
+  ok: [event: Event];
+  cancel: [event: Event];
+  afterClose: [];
+  afterOpenChange: [open: boolean];
+};
+export interface ModalRenderSlotProps {
+  ModalPanel: FunctionalComponent;
+}
+export type ModalSlots = {
+  default?: () => VNodeChild;
+  title?: () => VNodeChild;
+  okText?: () => VNodeChild;
+  cancelText?: () => VNodeChild;
+  closeIcon?: () => VNodeChild;
+  footer?: (scope: ModalFooterExtra) => VNodeChild;
+  modalRender?: (scope: ModalRenderSlotProps) => VNodeChild;
+};
 
 /**
  * 9 个语义槽。
  *
- * ⚠️ `body` / `mask` 在 `ConfirmDialog` 里被 `_semanticOmit` 摘掉后**改挂到
+ * `body` 在 `ConfirmDialog` 里被 `_semanticOmit` 摘掉后**改挂到
  *    `{p}-confirm-content` 上**（见 `ConfirmDialog` 的 `_renderSemanticContent`）。
  */
 export interface ModalSemanticType {
@@ -110,40 +107,11 @@ export interface ModalSemanticType {
 }
 
 /**
- * 面板（`Panel`）的 props —— rc-dialog 侧，本仓内部使用。
- *
- * ⚠️ 本仓**不导出**它（`Panel` 只在 `_InternalPanelDoNotUseOrYouWillBeFired` 里出现）。
- */
-export interface ModalPanelProps {
-  prefixCls?: string;
-  className?: string;
-  style?: CSSProperties;
-  title?: VNodeChild;
-  ariaId?: string;
-  footer?: VNodeChild;
-  closable?: boolean | (ClosableType & Record<string, unknown>);
-  closeIcon?: VNodeChild;
-  onClose?: (e: Event) => void;
-  bodyStyle?: CSSProperties;
-  bodyProps?: Record<string, unknown>;
-  modalRender?: (node: VNodeChild) => VNodeChild;
-  visible?: boolean;
-  forceRender?: boolean;
-  width?: string | number;
-  height?: string | number;
-  classNames?: ModalSemanticType['classNames'];
-  styles?: ModalSemanticType['styles'];
-  /** 容器 `position` 是否为 `fixed`（焦点陷阱的门控之一）。 */
-  isFixedPos?: boolean;
-  focusTrap?: boolean;
-}
-
-/**
  * `Modal` 的 props。
  *
  * 分组：① rc-dialog 侧（本仓不引 rc 类型，逐条展开）；② antd 自有；③ deprecated。
  */
-export interface ModalProps {
+export interface ModalProps extends ModalSemanticTypeInput {
   // ------------------------- ① rc-dialog 侧（未 omit 的） -------------------------
   /** 是否显示（rc 的 `visible`）。 */
   open?: boolean;
@@ -167,22 +135,12 @@ export interface ModalProps {
   keyboard?: boolean;
   /** 打开时是否锁 body 滚动。默认 `true`。 */
   scrollLock?: boolean;
-  /** 动效结束（开与关都触发）。 */
-  afterOpenChange?: (open: boolean) => void;
-  /** 关闭动效结束。 */
-  afterClose?: () => void;
-  /** 点遮罩 / 右上角 × / 取消按钮 / ESC 都走它。 */
-  onCancel?: (e: Event) => void;
-  /** 自定义面板渲染（包一层 `{p}-render`）。 */
-  modalRender?: (node: VNodeChild) => VNodeChild;
   /** 打开时从该鼠标位置展开 zoom 动效。 */
   mousePosition?: MousePosition;
   /** 面板根节点（透传给 watermark 等）。 */
-  panelRef?: unknown;
+  panelRef?: ModalPanelRef;
   /** @deprecated rc 侧：请用 `focusable.focusTriggerAfterClose`。 */
   focusTriggerAfterClose?: boolean;
-  /** @deprecated rc 侧：请用 `focusable.trap`。 */
-  focusTrap?: boolean;
 
   // ------------------------------ ② antd 自有 ------------------------------
   /** 标题区。同名 `#title` slot 优先。 */
@@ -197,27 +155,18 @@ export interface ModalProps {
   confirmLoading?: boolean;
   okButtonProps?: ModalButtonProps;
   cancelButtonProps?: ModalButtonProps;
-  /** 点 OK 的回调。 */
-  onOk?: (e: Event) => void;
   /** 内容区骨架态（此时 footer 强制不渲染）。 */
   loading?: boolean;
   /** 垂直居中。 */
   centered?: boolean;
-  /** 关闭按钮（`false` 隐藏；对象形态可带 `disabled` / `onClose` / `afterClose`）。 */
-  closable?:
-    | boolean
-    | (Exclude<ClosableType, boolean> & {
-        onClose?: () => void;
-        afterClose?: () => void;
-      });
+  /** Close button and its current native content/configuration. */
+  closable?: boolean | ModalClosableConfig | null;
   /** 遮罩（对象形态见 `MaskType`）。 */
   mask?: MaskType;
   /** 关闭后是否卸载内容。 */
   destroyOnHidden?: boolean;
   /** 焦点行为。 */
   focusable?: FocusableConfig;
-  classNames?: ModalSemanticType['classNames'];
-  styles?: ModalSemanticType['styles'];
 
   // ------------------------------ ③ deprecated ------------------------------
   /** @deprecated 请用 `mask.closable`。 */
@@ -230,8 +179,8 @@ export interface ModalProps {
 
 /** `footer` 函数形态的第二参（两个预设按钮）。 */
 export interface ModalFooterExtra {
-  OkBtn: unknown;
-  CancelBtn: unknown;
+  OkBtn: typeof NormalOkBtn | typeof ConfirmOkBtn;
+  CancelBtn: typeof NormalCancelBtn | typeof ConfirmCancelBtn;
 }
 
 /**
@@ -273,8 +222,7 @@ export interface ModalLocale {
  * ⚠️ 与 `ModalProps` 的差异（上游逐字）：多了 `content` / `icon` / `okCancel` / `type` /
  *    `direction` / `autoFocusButton`，且 `width` 只收 `string | number`（无响应式对象）。
  */
-export interface ModalFuncProps
-  extends Omit<ModalProps, 'width' | 'children' | 'onOk' | 'footer' | 'title'> {
+export interface ModalFuncProps extends Omit<ModalProps, 'width' | 'title' | 'open'> {
   width?: string | number;
   /**
    * 标题区（命令式上下文允许 `VNodeChild`——程序化里 `h()` 即 React render fn 的等价物）。
@@ -292,10 +240,16 @@ export interface ModalFuncProps
   focusable?: FocusableConfig & { autoFocusButton?: AutoFocusButton };
   /** 文字方向（命令式路径没有组件上下文，靠它显式指定）。 */
   direction?: 'ltr' | 'rtl';
-  onOk?: (...args: unknown[]) => unknown;
-  onCancel?: (...args: unknown[]) => unknown;
+  onOk?: ModalAction;
+  onCancel?: ModalAction;
+  afterClose?: () => void;
+  afterOpenChange?: (open: boolean) => void;
+  modalRender?: (node: VNodeChild) => VNodeChild;
   footer?: VNodeChild | ((originNode: VNodeChild, extra: ModalFooterExtra) => VNodeChild);
 }
+
+export type ModalClose = (...args: unknown[]) => void;
+export type ModalAction = (close: ModalClose) => unknown;
 
 /**
  * 命令式实例（`Modal.confirm(...)` / `useModal()` 的返回值）。
@@ -307,17 +261,20 @@ export interface ModalInstance {
   update: (config: Partial<ModalFuncProps> | ((prev: ModalFuncProps) => ModalFuncProps)) => void;
 }
 
+/** Hook commands additionally resolve to their accepted result. */
+export interface ModalHookInstance extends ModalInstance, PromiseLike<boolean> {}
+
 /**
  * `useModal()` 返回的 6 个方法。
  * ⚠️ `warning` 与 `warn` 是**同一个函数**（上游 `modalWarn`）。
  */
 export interface ModalHookAPI {
-  info: (props: ModalFuncProps) => ModalInstance;
-  success: (props: ModalFuncProps) => ModalInstance;
-  error: (props: ModalFuncProps) => ModalInstance;
-  warning: (props: ModalFuncProps) => ModalInstance;
-  warn: (props: ModalFuncProps) => ModalInstance;
-  confirm: (props: ModalFuncProps) => ModalInstance;
+  info: (props: ModalFuncProps) => ModalHookInstance;
+  success: (props: ModalFuncProps) => ModalHookInstance;
+  error: (props: ModalFuncProps) => ModalHookInstance;
+  warning: (props: ModalFuncProps) => ModalHookInstance;
+  warn: (props: ModalFuncProps) => ModalHookInstance;
+  confirm: (props: ModalFuncProps) => ModalHookInstance;
 }
 
 /** `Modal.config` 的参数（**已废弃**，指向 `ConfigProvider.config`）。 */
@@ -326,14 +283,12 @@ export interface ModalGlobalConfig {
 }
 
 /** `_InternalPanelDoNotUseOrYouWillBeFired` 的 props。 */
-export interface ModalPurePanelProps {
+export interface ModalPurePanelProps extends ModalSemanticTypeInput {
   prefixCls?: string;
-  closable?: boolean | (ClosableType & Record<string, unknown>);
+  closable?: ModalProps['closable'];
   type?: ModalType;
   /** 标题区。同名 `#title` slot 优先。 */
   title?: string;
-  classNames?: ModalSemanticType['classNames'];
-  styles?: ModalSemanticType['styles'];
   /** confirm 形态的正文（`type` 有值时用）。同名 `#content` slot 优先。 */
   content?: string;
 }

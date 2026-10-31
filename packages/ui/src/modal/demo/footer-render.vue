@@ -15,11 +15,11 @@ const open = ref(false);
     @cancel="open = false"
   >
     <p>Some contents...</p>
-    <template #footer>
+    <template #footer="{ OkBtn, CancelBtn }">
       <Space>
-        <Button @click="open = false">Cancel</Button>
+        <component :is="CancelBtn" />
         <Button danger type="primary" @click="open = false">Custom</Button>
-        <Button type="primary" @click="open = false">OK</Button>
+        <component :is="OkBtn" />
       </Space>
     </template>
   </Modal>

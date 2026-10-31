@@ -19,7 +19,7 @@
  */
 import { type ComputedRef, computed, type InjectionKey, inject, type VNodeChild } from 'vue';
 
-import type { AutoFocusButton, ModalButtonProps, ModalOkType } from './interface';
+import type { AutoFocusButton, ModalAction, ModalButtonProps, ModalOkType } from './interface';
 
 export interface ModalContextValue {
   // ------------------------------ Footer ------------------------------
@@ -32,6 +32,8 @@ export interface ModalContextValue {
   onOk?: (e: Event) => void;
   onCancel?: (e: Event) => void;
 
+  actionOnOk?: ModalAction;
+  actionOnCancel?: ModalAction;
   // ------------------------------ Confirm ------------------------------
   autoFocusButton?: AutoFocusButton;
   mergedOkCancel?: boolean;

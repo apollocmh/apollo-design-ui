@@ -30,37 +30,20 @@ function modalWarn(props: Parameters<typeof confirm>[0]) {
 }
 
 /** Modal 组件。注册名 `AModal`（COMPONENT-RULES.md 规则 R2）。 */
-// ⚠️ `withInstall` 的返回类型与「带静态方法的组件」不是可比较类型 ⇒ 按仓库惯例
-//    （drawer 的静态属性同源）经 `unknown` 断言一次
-export const Modal = withInstall(ModalComponent) as unknown as typeof ModalComponent & {
-  useModal: typeof useModal;
-  info: typeof confirm;
-  success: typeof confirm;
-  error: typeof confirm;
-  warning: typeof confirm;
-  warn: typeof confirm;
-  confirm: typeof confirm;
-  destroyAll: () => void;
-  config: typeof modalGlobalConfig;
-  /** @private Internal Component. Do not use in your production. */
-  _InternalPanelDoNotUseOrYouWillBeFired: typeof PurePanel;
-};
-
-Modal.useModal = useModal;
-Modal.info = (props) => confirm(withInfo(props));
-Modal.success = (props) => confirm(withSuccess(props));
-Modal.error = (props) => confirm(withError(props));
-Modal.warning = modalWarn;
-Modal.warn = modalWarn;
-Modal.confirm = (props) => confirm(withConfirm(props));
-Modal.destroyAll = () => {
-  while (destroyFns.length) {
-    const close = destroyFns.pop();
-    if (close) close();
-  }
-};
-Modal.config = modalGlobalConfig;
-Modal._InternalPanelDoNotUseOrYouWillBeFired = PurePanel;
+export const Modal = Object.assign(withInstall(ModalComponent), {
+  useModal,
+  info: (props: Parameters<typeof confirm>[0]) => confirm(withInfo(props)),
+  success: (props: Parameters<typeof confirm>[0]) => confirm(withSuccess(props)),
+  error: (props: Parameters<typeof confirm>[0]) => confirm(withError(props)),
+  warning: modalWarn,
+  warn: modalWarn,
+  confirm: (props: Parameters<typeof confirm>[0]) => confirm(withConfirm(props)),
+  destroyAll() {
+    while (destroyFns.length) destroyFns.pop()?.();
+  },
+  config: modalGlobalConfig,
+  _InternalPanelDoNotUseOrYouWillBeFired: PurePanel,
+});
 
 export default Modal;
 
@@ -71,17 +54,26 @@ export type {
   FocusableConfig,
   MaskConfig,
   MaskType,
+  ModalAction,
   ModalButtonProps,
+  ModalClosableConfig,
+  ModalClose,
+  ModalEmits,
+  ModalFooterExtra,
   ModalFuncProps,
   ModalGetContainer,
   ModalGlobalConfig,
   ModalHookAPI,
+  ModalHookInstance,
   ModalInstance,
   ModalLocale,
   ModalOkType,
+  ModalPanelRef,
   ModalProps,
   ModalPurePanelProps,
+  ModalRenderSlotProps,
   ModalSemanticType,
+  ModalSlots,
   ModalType,
   MousePosition,
 } from './interface';

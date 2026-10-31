@@ -1,140 +1,110 @@
-/**
- * `PurePanel` —— antd `components/modal/PurePanel.tsx` 的 Vue 版。
- *
- * 用途：`_InternalPanelDoNotUseOrYouWillBeFired` —— **不 portal、不 mask、不动效**，
- * 直接把面板渲染在当前位置。它是 L4/L6 的取证入口（PITFALLS 177）。
- *
- * 判据：
- *   1. 根类 = `{p} {p}-pure-panel [className] [{p}-confirm] [{p}-confirm-{type}]`
- *      —— ⚠️ `{p}`（面板类）必须在，否则静态 CSS 的变量声明块挂不上（D69）；
- *   2. `type` 有值 ⇒ 渲染 `ConfirmContent`，`closable` 默认 **false**、`title`/`footer` 置空；
- *      否则 `closable` 默认 **true**、正常渲染 title/footer；
- *   3. 包一层 `withPureRenderTheme`（antd 用来把主题变量限定在纯面板内）——
- *      本仓的变量声明块已经在 `.apollo-modal` 上，无需额外包裹（平台差异）。
- */
-import { defineComponent, h, type PropType } from 'vue';
+import { isEmptyVNode } from '@apollo-design/utils';
+import {
+  defineComponent,
+  h,
+  normalizeClass,
+  normalizeStyle,
+  type PropType,
+  type SlotsType,
+} from 'vue';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useComponentConfig } from '../config-provider/context';
 import { ConfirmContent } from './ConfirmDialog';
+import NormalCancelBtn from './components/NormalCancelBtn';
+import NormalOkBtn from './components/NormalOkBtn';
 import Panel from './engine/Panel';
-import type { ModalProps, ModalSemanticType, ModalSemanticTypeInput, ModalType } from './interface';
+import type {
+  ModalProps,
+  ModalPurePanelProps,
+  ModalSemanticType,
+  ModalSlots,
+  ModalType,
+} from './interface';
 import ModalPanel, { renderCloseIcon } from './ModalPanel';
+import { useModalTheme } from './use-modal-theme';
 
 export default defineComponent({
   name: 'AModalPurePanel',
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    closable: {
-      type: [Boolean, Object] as unknown as PropType<ModalProps['closable']>,
-      default: undefined,
-    },
+    closable: { type: [Boolean, Object] as PropType<ModalProps['closable']>, default: undefined },
     type: { type: String as PropType<ModalType>, default: undefined },
-    /** 标题区。同名 `#title` slot 优先。 */
     title: { type: String, default: undefined },
-    /** confirm 形态正文。同名 `#content` slot 优先。 */
     content: { type: String, default: undefined },
     classNames: {
-      type: [Object, Function] as unknown as PropType<ModalSemanticTypeInput['classNames']>,
+      type: [Object, Function] as PropType<ModalProps['classNames']>,
       default: undefined,
     },
-    styles: {
-      type: [Object, Function] as unknown as PropType<ModalSemanticTypeInput['styles']>,
-      default: undefined,
-    },
+    styles: { type: [Object, Function] as PropType<ModalProps['styles']>, default: undefined },
   },
+  slots: {} as SlotsType<ModalSlots & { content?: () => import('vue').VNodeChild }>,
   setup(props, { attrs, slots }) {
-    const config = useComponentConfig<{
-      className?: string;
-      style?: Record<string, unknown>;
-      classNames?: ModalSemanticType['classNames'];
-      styles?: ModalSemanticType['styles'];
-    }>('modal');
-
+    const config = useComponentConfig<
+      ModalProps & { className?: string; style?: import('vue').CSSProperties }
+    >('modal');
+    const theme = useModalTheme();
     const semantic = useMergeSemantic<
-      Record<string, unknown>,
+      ModalPurePanelProps,
       NonNullable<ModalSemanticType['classNames']>,
       NonNullable<ModalSemanticType['styles']>
     >(
-      [
-        () => config.classNames,
-        // 见下方说明：函数形态由 `resolveSemantic` 在运行时处理，类型面收敛成对象形态
-        () => props.classNames as unknown as NonNullable<ModalSemanticType['classNames']>,
-      ],
-      [
-        () => config.styles,
-        // `useSemanticRootStyle(style)` 的等价物：把裸 style 当成 `root` 槽。
-        // 根 style 现在是 Vue 原生 attrs。
-        () =>
-          attrs.style
-            ? ({ root: attrs.style } as unknown as NonNullable<ModalSemanticType['styles']>)
-            : undefined,
-        () => props.styles as unknown as NonNullable<ModalSemanticType['styles']>,
-      ],
-      props as unknown as Record<string, unknown>,
+      [() => config.classNames, () => props.classNames],
+      [() => config.styles, () => props.styles],
+      () => props,
     );
-
     return () => {
-      const prefixCls = props.prefixCls || config.getPrefixCls('modal');
-      const rootPrefixCls = config.getPrefixCls();
-      const confirmPrefixCls = `${prefixCls}-confirm`;
-      const cn = semantic.classNames.value as ModalSemanticType['classNames'];
-      const st = semantic.styles.value as ModalSemanticType['styles'];
-
-      const className = [
-        // ⚠️ **不含** `prefixCls` 本身 —— `Panel` 的根类已经会加它（上游同样只在
-        //    PurePanel 这里加 `-pure-panel` 与 confirm 段）
-        `${prefixCls}-pure-panel`,
-        props.type ? confirmPrefixCls : undefined,
-        props.type ? `${confirmPrefixCls}-${props.type}` : undefined,
-        // 调用方原生 class（位置与原先的 props.className 一致）
-        attrs.class,
-        config.className,
-        cn?.root,
-      ]
-        .filter(Boolean)
-        .join(' ');
-
+      const prefixCls = props.prefixCls ?? config.getPrefixCls('modal');
+      const cn = semantic.classNames.value;
+      const st = semantic.styles.value;
+      const { class: rootClass, style: rootStyle, ...nativeAttrs } = attrs;
+      const title = slots.title ? slots.title() : props.title;
+      const footerContent = slots.footer?.({ OkBtn: NormalOkBtn, CancelBtn: NormalCancelBtn });
       const children = props.type
         ? h(ConfirmContent, {
-            ...(attrs as Record<string, unknown>),
             prefixCls,
-            confirmPrefixCls,
-            rootPrefixCls,
+            confirmPrefixCls: `${prefixCls}-confirm`,
+            rootPrefixCls: config.getPrefixCls(),
             type: props.type,
-            title: props.title ?? slots.title?.(),
-            // ⚠️ 上游给 ConfirmContent 的 `content` 是 **children**（`content={children}`），
-            //    **不是** `content` prop —— `PurePanel` 的 type 分支里 `content` prop 被忽略。
-            //    L6 抓到：传 `content` 会多出一行正文（confirm 用例差 0.68–1.43%）
-            content: slots.default?.(),
+            title,
+            content: slots.content
+              ? slots.content()
+              : slots.default
+                ? slots.default()
+                : props.content,
             closable: props.closable ?? false,
-          } as never)
+            contentClassName: cn.body,
+            contentStyle: st.body,
+          })
         : slots.default?.();
-
-      const additionalProps = props.type
-        ? { closable: props.closable ?? false, title: undefined, footer: undefined }
-        : {
-            closable: props.closable ?? true,
-            title: props.title ?? slots.title?.(),
-            footer: h(ModalPanel, {
-              ...(props as unknown as Record<string, unknown>),
-              footer: slots.footer?.(),
-            } as never),
-          };
-
       return h(
         Panel,
         {
-          ...(attrs as Record<string, unknown>),
+          ...nativeAttrs,
           prefixCls,
-          className,
-          style: st?.root,
+          className: normalizeClass([
+            `${prefixCls}-pure-panel`,
+            props.type && `${prefixCls}-confirm`,
+            props.type && `${prefixCls}-confirm-${props.type}`,
+            rootClass,
+            config.className,
+            cn.root,
+          ]),
+          style: [theme.style.value, config.style, normalizeStyle(rootStyle), st.root],
           classNames: cn,
           styles: st,
           closeIcon: renderCloseIcon(prefixCls, slots.closeIcon?.()),
-          ...additionalProps,
-        } as never,
-        { default: () => children },
+          closable: props.closable ?? !props.type,
+          title: props.type ? undefined : title,
+          footer:
+            props.type || (slots.footer && isEmptyVNode(footerContent))
+              ? undefined
+              : h(ModalPanel, null, slots.footer ? { default: () => footerContent } : undefined),
+        },
+        {
+          default: () => children,
+          ...(slots.modalRender ? { modalRender: slots.modalRender } : {}),
+        },
       );
     };
   },

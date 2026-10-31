@@ -9,6 +9,8 @@
  *   `Modal.confirm` 的 `okText: null` 正是靠这条把默认文案「显式清空」。
  */
 import type { VNodeChild } from 'vue';
+import type { ButtonProps } from '../button/interface';
+import type { ModalButtonProps, ModalOkType } from './interface';
 
 export function fallbackProp<T>(...args: T[]): T | undefined {
   return args.find((arg) => arg !== undefined);
@@ -29,11 +31,18 @@ export function fallbackNode(...args: VNodeChild[]): VNodeChild | undefined {
  * antd `buttonHelpers.convertLegacyProps(type)`：`'danger'` / `'ghost'` 是**布尔 prop**
  * 而不是 `type` 的取值，其余原样进 `type`。
  */
-export function convertLegacyProps(type?: string): Record<string, unknown> {
-  if (type === 'danger' || type === 'ghost') {
-    return { [type]: true };
-  }
+export function convertLegacyProps(
+  type?: ModalOkType | 'ghost',
+): Pick<ButtonProps, 'type' | 'danger' | 'ghost'> {
+  if (type === 'danger') return { danger: true };
+  if (type === 'ghost') return { ghost: true };
   return type ? { type } : {};
+}
+
+/** Modal's declared legacy type is translated before forwarding actual Button inputs. */
+export function normalizeButtonProps(props: ModalButtonProps = {}) {
+  const { type, ...rest } = props;
+  return { ...convertLegacyProps(type), ...rest };
 }
 
 /**

@@ -1,23 +1,14 @@
-/**
- * `ModalPanel` —— antd `components/modal/shared.tsx` 的 Vue 版（`renderCloseIcon` + `Footer`）。
- *
- * ⚠️ 命名说明：上游文件叫 `shared.tsx`，本仓叫 `ModalPanel.ts`（`modal/` 目录下已有
- *    `engine/Panel.ts`，同名会混）。
- *
- * 逐条对齐上游：
- *   1. `renderCloseIcon(prefixCls, closeIcon)`：包一层 `<span class="{p}-close-x">`，
- *      没给图标时用 `CloseOutlined` 并挂 `{p}-close-icon`；
- *   2. `Footer` 的文案走 `fallbackProp(okText, locale.okText)`（**第一个非 undefined**）；
- *   3. `footer` 是函数或 `undefined` ⇒ 渲染默认的「取消 + 确定」，函数形态会收到
- *      `(originNode, { OkBtn, CancelBtn })`；
- *   4. `footer` 是其它节点 ⇒ **原样渲染**，不进 ModalContext；
- *   5. 整棵树外面包一层 `DisabledContext(disabled: false)` —— **模态框内的按钮
- *      不受全局 `disabled` 影响**（上游的刻意设计）。
- */
 import { CloseOutlined } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
-import { isFunction } from '@apollo-design/utils';
-import { computed, defineComponent, h, type PropType, provide, type VNodeChild } from 'vue';
+import {
+  computed,
+  defineComponent,
+  h,
+  type PropType,
+  provide,
+  type SlotsType,
+  type VNodeChild,
+} from 'vue';
 
 import { disabledContextKey } from '../config-provider/disabled-context';
 import NormalCancelBtn from './components/NormalCancelBtn';
@@ -28,11 +19,9 @@ import { fallbackProp } from './util';
 
 /** `<span class="{p}-close-x">` 包裹关闭图标（上游 `renderCloseIcon`）。 */
 export function renderCloseIcon(prefixCls: string, closeIcon?: VNodeChild): VNodeChild {
-  return h(
-    'span',
-    { class: `${prefixCls}-close-x` },
-    closeIcon || h(CloseOutlined, { class: `${prefixCls}-close-icon` }),
-  );
+  return h('span', { class: `${prefixCls}-close-x` }, [
+    closeIcon ?? h(CloseOutlined, { class: `${prefixCls}-close-icon` }),
+  ]);
 }
 
 /** `DisabledContext(disabled: false)` 的提供者（上游的 `DisabledContextProvider`）。 */
@@ -61,15 +50,9 @@ export default defineComponent({
     onCancel: { type: Function as PropType<(e: Event) => void>, default: undefined },
     okButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
     cancelButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
-    // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
-    footer: {
-      type: [String, Number, Object, Array, Function] as unknown as PropType<
-        VNodeChild | ((originNode: VNodeChild, extra: ModalFooterExtra) => VNodeChild)
-      >,
-      default: undefined,
-    },
   },
-  setup(props) {
+  slots: {} as SlotsType<{ default?: (scope: ModalFooterExtra) => VNodeChild }>,
+  setup(props, { slots }) {
     const [locale] = useLocale('Modal');
 
     // 上游的 `okType = 'primary'` 默认值
@@ -93,23 +76,12 @@ export default defineComponent({
       })),
     );
 
-    return () => {
-      let footerNode: VNodeChild;
-
-      if (isFunction(props.footer) || typeof props.footer === 'undefined') {
-        let inner: VNodeChild = [h(NormalCancelBtn), h(NormalOkBtn)];
-        if (isFunction(props.footer)) {
-          inner = (props.footer as (node: VNodeChild, extra: ModalFooterExtra) => VNodeChild)(
-            inner,
-            { OkBtn: NormalOkBtn, CancelBtn: NormalCancelBtn },
-          );
-        }
-        footerNode = inner;
-      } else {
-        footerNode = props.footer as VNodeChild;
-      }
-
-      return h(DisabledFalseProvider, null, { default: () => footerNode });
-    };
+    return () =>
+      h(DisabledFalseProvider, null, {
+        default: () =>
+          slots.default
+            ? slots.default({ OkBtn: NormalOkBtn, CancelBtn: NormalCancelBtn })
+            : [h(NormalCancelBtn), h(NormalOkBtn)],
+      });
   },
 });

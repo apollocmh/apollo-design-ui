@@ -164,8 +164,6 @@ describe('Modal · 焦点三条（registry 点名的 a11y 硬要求）', () => {
 
   it('③ autoFocusButton=null（顶层，deprecated）⇒ 不自动聚焦', async () => {
     stubLayout();
-    // ⚠️ 用**顶层**的 `autoFocusButton`（antd 已标 deprecated）——
-    //    只有它能表达「不自动聚焦」，见下一条用例的 quirk
     Modal.confirm({ title: 'T', content: 'C', autoFocusButton: null });
     await new Promise<void>((resolve) => {
       setTimeout(resolve, 0);
@@ -181,12 +179,8 @@ describe('Modal · 焦点三条（registry 点名的 a11y 硬要求）', () => {
     expect(document.activeElement).not.toBe(okBtn);
   });
 
-  it('⚠️ quirk：`focusable.autoFocusButton: null` 会**退回 `ok`**（上游的 `||` 吃掉 null）', async () => {
+  it('focusable.autoFocusButton:null explicitly disables button autofocus', async () => {
     stubLayout();
-    // 上游：`const base = focusable?.autoFocusButton || autoFocusButton;`
-    //       ⇒ `null || undefined` = `undefined` ⇒ 走默认 `'ok'`
-    // 即：**只有** deprecated 的顶层 `autoFocusButton` 能表达「不聚焦」。
-    // 本仓跟随上游（不做「顺手修」），登记在 COMPATIBILITY.md。
     Modal.confirm({ title: 'T', content: 'C', focusable: { autoFocusButton: null } });
     await new Promise<void>((resolve) => {
       setTimeout(resolve, 0);
@@ -199,7 +193,7 @@ describe('Modal · 焦点三条（registry 点名的 a11y 硬要求）', () => {
 
     const okBtn = [...document.body.querySelectorAll('button')].find((b) => b.textContent === 'OK');
     expect(okBtn).toBeTruthy();
-    expect(document.activeElement).toBe(okBtn);
+    expect(document.activeElement).not.toBe(okBtn);
   });
 
   it('③ autoFocusButton=cancel ⇒ 聚焦取消按钮', async () => {

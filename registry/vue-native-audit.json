@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 196,
+  "revision": 198,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -1448,6 +1448,15 @@
       "historicalAcceptance": [
         "docs/audit/evidence/current-batch-final-acceptance.json",
         "docs/audit/2026-10-29-current-batch-integration.md"
+      ],
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/ui/src/config-provider/__tests__/locale-scope.test.ts"
+          ],
+          "change": "Use native defaultValue for the existing uncontrolled draft scene; preserve its identity/draft assertions and add current controlled slot value coverage. ConfigProvider production unchanged.",
+          "verification": "CMP:modal records actual App/locale consumer run and strict source checks; no full ConfigProvider re-audit claimed."
+        }
       ]
     },
     {
@@ -2723,18 +2732,16 @@
       "kind": "component",
       "ref": "modal",
       "title": "Modal",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/modal"
       ],
-      "assignment": {
-        "owner": "native_select",
-        "baseRevision": 188,
-        "startedAt": "2026-10-31T00:26:02.853Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json",
@@ -2752,6 +2759,398 @@
           "packages/ui/src/modal/README.md",
           "packages/ui/src/modal/interface.ts"
         ]
+      },
+      "verification": {
+        "task": "CMP:modal",
+        "stage": "architecture",
+        "passed": true,
+        "status": "Focused architecture checks passed",
+        "scope": [
+          "packages/ui/src/modal"
+        ],
+        "implemented": [
+          "Typed ordinary ok/cancel/afterClose/afterOpenChange/update:open; OK notification only; cancel close request with refusal/release preservation",
+          "Scoped footer buttons and modalRender stable panel component; current render-time slots including zero/empty/removal",
+          "Actual panel native attrs/style/ref; current Provider/locale/semantics and six declared tokens in portal/confirm/PurePanel",
+          "Hook holder VNode retained; setup-time commands, results, updates and teardown share one owned session; static/hook close idempotency, no resurrection, registry/timer cleanup",
+          "Focus restoration on open unmount; fixed CSS-variable namespace for custom-prefix responsive widths",
+          "Imperative confirmLoading update reaches current OK action; false does not override an unsettled business Promise loading state; existing explicit button overrides retain precedence",
+          "Declared legacy Button configuration normalized once to actual Button props on four real paths; Portal GetContainer is the public container type, including Provider ShadowRoot; initialized session ref types and real listener parameter contract corrected"
+        ],
+        "preserved": [
+          "Shared Portal/Motion/Button/ActionButton/focus helpers, motion deadline and mask-drag/top-ESC/scroll-lock behavior",
+          "Imperative returning onOk/onCancel/close services and programmatic footer/modalRender config",
+          "Existing S19/default core, DOM baselines, Button content reference allowances, static CSS declaration defaults"
+        ],
+        "migrations": [
+          "Ordinary afterClose/afterOpenChange props -> onAfterClose/onAfterOpenChange listeners or template events; ok/cancel owned emits",
+          "Ordinary modalRender -> scoped #modalRender {ModalPanel}; footer -> scoped #footer {OkBtn,CancelBtn}",
+          "Dead ordinary focusTrap declaration removed; use focusable.trap",
+          "Imperative inherited open removed; invocation opens, destroy closes, update modifies a live session",
+          "Hook-only result type ModalHookInstance implements PromiseLike<boolean>; static ModalInstance remains non-thenable"
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "name": "Focused Modal core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run packages/ui/src/modal/__tests__/native-contracts.test.ts packages/ui/src/modal/__tests__/engine.test.ts packages/ui/src/modal/__tests__/index.test.ts packages/ui/src/modal/__tests__/s19-issue19.test.ts --project unit --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 21880,
+            "log": "/tmp/apollo-modal-core-third.log",
+            "result": "62 passed. Original core/S19 retained; later narrow changes supplemented below."
+          },
+          {
+            "kind": "core",
+            "name": "Final native and actual Button/Portal boundaries",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run packages/ui/src/modal/__tests__/native-contracts.test.ts --project unit --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 6180,
+            "log": "/tmp/apollo-modal-type-boundary-native.log",
+            "result": "16 passed: all 14 prior native cases, actual ordinary/imperative declared legacy button configuration normalization, Provider ShadowRoot Portal mount/unmount."
+          },
+          {
+            "kind": "related",
+            "name": "Demos/DOM/theme/a11y",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run packages/ui/src/modal/__tests__/semantic.test.ts packages/ui/src/modal/__tests__/theme.test.ts packages/ui/src/modal/__tests__/a11y.test.ts packages/ui/src/modal/__tests__/demo.test.ts --project dom-contract --project theme --project a11y --project unit --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 29450,
+            "log": "/tmp/apollo-modal-special-first.log",
+            "result": "87 passed, including 23 Demos. Existing DOM baselines/Button reference allowances unchanged. Four jsdom canvas getContext diagnostics retained; no assertion/console gate weakened."
+          },
+          {
+            "kind": "browser",
+            "name": "Source Chrome",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/modal/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 6587,
+            "log": "/tmp/apollo-modal-browser-final.log",
+            "result": "Actual SFC/models/emits/scoped components; ARIA/panel ref; six current token CSS effects; draft identity/focus; OK remains open; Escape/reopen/close/focus restore; custom-prefix responsive width; unmount/scroll-lock cleanup. Zero console/pageerror diagnostics."
+          },
+          {
+            "kind": "format",
+            "name": "Final formatting/syntax/whitespace",
+            "commands": [
+              "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check --write packages/ui/src/modal",
+              "git diff --check -- packages/ui/src/modal",
+              "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node --check packages/ui/src/modal/__tests__/native-browser.mjs"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": null,
+            "log": "/tmp/apollo-modal-type-boundary-format.log",
+            "result": "64 files checked; diff whitespace passed; unchanged browser script syntax previously passed."
+          },
+          {
+            "kind": "types",
+            "stage": "architecture",
+            "scope": [
+              "packages/ui/src/modal"
+            ],
+            "baseCommit": "f463fc367124d2aa3812da3fc3f58b90a18849bd",
+            "config": {
+              "extends": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/tsconfig.json",
+              "compilerOptions": {
+                "noEmit": true,
+                "incremental": false,
+                "composite": false
+              },
+              "include": [
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/packages/ui/src/modal/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/packages/ui/src/modal/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/packages/ui/src/index.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/packages/ui/src/app/App.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/packages/ui/src/app/__tests__/s40-issue40.test.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/packages/ui/src/config-provider/__tests__/locale-scope.test.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/packages/ui/src/watermark/__tests__/fixtures/NativeWatermark.vue"
+              ]
+            },
+            "affectedConsumers": [
+              "packages/ui/src/app/App.ts",
+              "packages/ui/src/app/__tests__/s40-issue40.test.ts",
+              "packages/ui/src/config-provider/__tests__/locale-scope.test.ts",
+              "packages/ui/src/watermark/__tests__/fixtures/NativeWatermark.vue"
+            ],
+            "sourceHashes": {
+              "packages/ui/src/modal/confirm.ts": "e122e3b7efbfb0825186742e31cde8b9ad8c7299a042b5ca2ec4d71fb4c19d19",
+              "packages/ui/src/modal/useModal.ts": "791ba3fdc8ff98be5def52b7e55450c1e8deb230c08a99c75d6843fe715f8136",
+              "packages/ui/src/modal/PurePanel.ts": "a918938d836a926bc1c95357c676c887c6fbe19c5982edd4331d0f25957972ee",
+              "packages/ui/src/modal/use-modal-theme.ts": "80c33c2cea2b1755cfdabb7d9f787a7ebccabe941d136d8a0588f6c5c5d12390",
+              "packages/ui/src/modal/Modal.ts": "bcc1f2556484e7ef49e29f634f539c0f4339b840346fa50170e023b0dc607de5",
+              "packages/ui/src/modal/context.ts": "12b6bee22da6c2756920b5c1d3a3d26c388f6b1dc95df67a10642e1bb942fa1e",
+              "packages/ui/src/modal/ConfirmDialog.ts": "9e25075d835487fb2d3afeca4f84b11aff804c2d56f198eead45c4eb4395cb5b",
+              "packages/ui/src/modal/ModalPanel.ts": "d67559b645be154c03f847eb3043134be04c6f910c4fb8567be5ee19a962c1d4",
+              "packages/ui/src/modal/interface.ts": "f7257816fc52684067c2dfe5f7ef7810b9e5c66561b8b5d81121850ff29397e3",
+              "packages/ui/src/modal/util.ts": "42ac9a2572876ab9fe4a23322e63c8ac141d4846b65dcce1f32bb5b348a2a09c",
+              "packages/ui/src/modal/index.ts": "3c5abbef2843c0906e12c9bc06f9c659f031fd69f1e7d8578d4adb59d34cda2c",
+              "packages/ui/src/modal/destroyFns.ts": "cb29c626bd3dd7279bf5277e355765b113e4b136c244fe4f412d8350854897e3",
+              "packages/ui/src/modal/demo/position.vue": "053b1e2175d25440d1e65271dc605efc98038095ec04b2f6ffb92fce8fe3dcb2",
+              "packages/ui/src/modal/demo/nested.vue": "f73ca86dec1ec2014d0f2b825e281b2cafaff1f24dd741ffb4dd168dc6ef85e8",
+              "packages/ui/src/modal/demo/width.vue": "cff92ab28eb5f87ce1c431a4a09effa94e3a9fbe8b269af263a5f72d3a341368",
+              "packages/ui/src/modal/demo/dark.vue": "a34f5216f924ebb1240a347d24168591b8e2c9de3a76fb9a77ec13e06cc77ade",
+              "packages/ui/src/modal/demo/hooks.vue": "347c49cfddf303f857f81c31e770224efe4a032edc80bb6c8a34c4a7f48a886b",
+              "packages/ui/src/modal/demo/confirm-router.vue": "67979719084ecbfd38478a4eb986e6f04782612e1dd0cfb32d75b35f77e61c1b",
+              "packages/ui/src/modal/demo/async.vue": "8b217b13e6e38a193a38acdec919eb5ccc32c3d6121de19afb7dadf6d8952553",
+              "packages/ui/src/modal/demo/wireframe.vue": "bec7e6b7c9b32176a3df6810f7f09e480fcd0ae100f017b7de7dde4e99ecf784",
+              "packages/ui/src/modal/demo/footer.vue": "4994d9771f42d2244a2484d0ed089d66add80874a21bb59422e9f3d7e53d3dd8",
+              "packages/ui/src/modal/demo/render-panel.vue": "796b135fd285328594f8eefaed0671ee045f4efbcd5864074f2ba90016dbe4f8",
+              "packages/ui/src/modal/demo/component-token.vue": "cb356b194124dcb74280992f53eaf9a821cf5446579133d54db96182e2cadb04",
+              "packages/ui/src/modal/demo/manual.vue": "182c9e684912940ab6e78b05d6aed3fdfbae5732f1ee3d9cc0fa8a130823c3c3",
+              "packages/ui/src/modal/demo/footer-render.vue": "58f5dde0dcc0c70d6929eb2897a1e50f0bf0a7e7f7ce66b9335455d7b8bd1cb9",
+              "packages/ui/src/modal/demo/style-class.vue": "22ba2edfb7f4da882679fb965078515aa7c517abc4b7abc38623b149242b754c",
+              "packages/ui/src/modal/demo/confirm.vue": "bd0360333a3017b5f7e0b2c8005ff437e5e83c63f3d4c6454b1e38338b878eb7",
+              "packages/ui/src/modal/demo/locale.vue": "1dd41ab7784c4c9d0ad43085be24a15086844b24840063f3898496db244641cf",
+              "packages/ui/src/modal/demo/mask.vue": "e518f4afa8f8038e9f28826468fe3184224c1152b38ea2924bc36709417ef99d",
+              "packages/ui/src/modal/demo/basic.vue": "1df90473676fb9928b00329ff93290b45aa75aeebd575d778c92aa9cff2cc564",
+              "packages/ui/src/modal/demo/loading.vue": "785f9baf4cf88904064573ddb98fddf0305b2b50fcdfc4f6b0b179660c754825",
+              "packages/ui/src/modal/demo/static-info.vue": "5a2ad25414fe45c177a4ad29bf3cf2a61c8c1b5d8c9dc0954845285674ac6a55",
+              "packages/ui/src/modal/demo/modal-render.vue": "fc0dca7bca12eebfd8ae08367b1b4d79079b3fd02cd053421d0cb32942626368",
+              "packages/ui/src/modal/demo/button-props.vue": "671b4a1f1d70d00da32c0f4d76b3f490e8080832714fd332c9812cd60fc07e95",
+              "packages/ui/src/modal/demo/custom-mouse-position.vue": "e99cf89cc990fa06e3850ab9a0d251a1e8e40a6f206c586ffc7b4e6ac84c0a96",
+              "packages/ui/src/modal/style/index.ts": "dd761162bbf9f46abbe93ccf319f806279d1259be3c80a78b6925ee6ff53f4b8",
+              "packages/ui/src/modal/style/token.ts": "0b350070c50d2afbb767a3f63d578bc05ed741b23a69ea837fe3bf3e187852d2",
+              "packages/ui/src/modal/components/ActionButton.ts": "a943d22803bec9efb91c5e7df054e79f5e334587b9b3fed9afd9e70cee452794",
+              "packages/ui/src/modal/components/NormalCancelBtn.ts": "8b0ac340cea08ec386284c18befabd0bc38fd1f55128e164d3c50dabdabbdf1a",
+              "packages/ui/src/modal/components/NormalOkBtn.ts": "caff58cd07e2d24ba3c4546acafed47e897760af8c8e7fa450d3b2d8125fdffb",
+              "packages/ui/src/modal/components/ConfirmOkBtn.ts": "e978ae8e68d040ac0eb1f3b982ad9dd035eb41cae7bbdbff11764c482a803524",
+              "packages/ui/src/modal/components/ConfirmCancelBtn.ts": "1e155d92f372bdbc2382a309034075e65b8a55a7ccae94d3569013f302a97def",
+              "packages/ui/src/modal/__tests__/a11y.test.ts": "0e729e39898b060d5e9359f43fcd677dbfdd211fe8abb3f118af0e531f6a8f21",
+              "packages/ui/src/modal/__tests__/native-contracts.test.ts": "ab73f8e92c7b3802232ef5c63530f8bb6010295b6598d0feb02185bde6b3a846",
+              "packages/ui/src/modal/__tests__/index.test.ts": "8b7e84554dc3e9a83af68ef27ecada407de4773b622ad64d00cd9b75f316e6d3",
+              "packages/ui/src/modal/__tests__/demo.test.ts": "9a71bc483dca7e40215126381d30f04d844179f183874922d2fc3b8ed7b587a0",
+              "packages/ui/src/modal/__tests__/s19-issue19.test.ts": "12ba3820f8b6fc3215340329fc2e4d421a87807dea72a6e43d2cc886e1738711",
+              "packages/ui/src/modal/__tests__/engine.test.ts": "e8215db5b3fcba8c9e5f349d99214531a8552b73f9c71936e673a28a94c5a630",
+              "packages/ui/src/modal/__tests__/type.test-d.ts": "2bbe29244b453e997b451d0422a1f39be260f11207a60d68ec7e1f41f99c5a64",
+              "packages/ui/src/modal/__tests__/theme.test.ts": "4d08be23f38a65954f0235a8550cea7f88066b015c8f7d31c25cb2f5a5a36054",
+              "packages/ui/src/modal/__tests__/semantic.test.ts": "a667018bb0e915bbe0c88d2a15cd0884631392f18913cba9e2616a3f54869c40",
+              "packages/ui/src/modal/engine/Panel.ts": "4645e6f39bd69fb3e52825356a43f508a7bdd0e33ab64b4e655def7c087bc6a3",
+              "packages/ui/src/modal/engine/context.ts": "e8471b5fbe32c2f318f0507e8bc59f28dff0c0f5b2478961063b5c6dfabbd192",
+              "packages/ui/src/modal/engine/Content.ts": "915f47e0d142d7670d3319d374b76cb9c720988e7c8837e753c002505c01df4e",
+              "packages/ui/src/modal/engine/interface.ts": "13f04c23761493adde2a76dfdd10bcc461d46294afa429338fcdd702907882b1",
+              "packages/ui/src/modal/engine/util.ts": "2bf93ef82d3e1152b1fb58e0b52469993adb7e57dcbf3ecc774d27f1737da2ae",
+              "packages/ui/src/modal/engine/Dialog.ts": "91d412f808563626a98d37b183a4991823aefa6f3fff8b35f75c13dde1cb0ae8",
+              "packages/ui/src/modal/engine/index.ts": "e9dfd1de34dd572dc662bca0def1049877a036250a251064d7cfb5b74fb128da",
+              "packages/ui/src/modal/engine/MemoChildren.ts": "6e298b79fac184bcfeb07e2f730fa420b040c211a38d1609618e577868bed5ad",
+              "packages/ui/src/modal/engine/DialogWrap.ts": "c5bfadcc1f7539928bf970521d890a7e6a5f0da798d706038454904b52e1c1cb",
+              "packages/ui/src/modal/engine/Mask.ts": "6368eb1e067baf44f4e5c47d316758c7adea358bb8f65f0e2aaac101cd9f23d4",
+              "packages/ui/src/modal/__tests__/fixtures/NativeModal.vue": "5df3e911ddf70c4963c0528f9e3113c64bd120b72fef89a204a855e1e5e1da60",
+              "packages/ui/src/index.ts": "9e88ecc14ed0239f178dadd46a65852eda22044a42c33a636a408c530534b0aa",
+              "packages/ui/src/app/App.ts": "0795817b6a47d6a30bd6e666caa9862dcbe01395ef4de6a6e20e96dd1388fd74",
+              "packages/ui/src/app/__tests__/s40-issue40.test.ts": "688038e9c1dbfc77e5822e752335e7574aa846f10764546a6c3c7f9dfe66a89b",
+              "packages/ui/src/config-provider/__tests__/locale-scope.test.ts": "484d8f1e48f932fac23a340e72cbf7dbee8c6f9d1c2f3c835b7ffac22d68a468",
+              "packages/ui/src/watermark/__tests__/fixtures/NativeWatermark.vue": "fcecff07f1a1f0f87a154a8f69b2a623b35174043b3286669abfa78225ed1647"
+            },
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-modal-tsconfig.json",
+            "updatedFiles": [
+              "packages/ui/src/modal/useModal.ts",
+              "packages/ui/src/modal/interface.ts",
+              "packages/ui/src/modal/util.ts",
+              "packages/ui/src/modal/components/NormalCancelBtn.ts",
+              "packages/ui/src/modal/components/NormalOkBtn.ts",
+              "packages/ui/src/modal/components/ConfirmOkBtn.ts",
+              "packages/ui/src/modal/components/ConfirmCancelBtn.ts",
+              "packages/ui/src/modal/__tests__/native-contracts.test.ts",
+              "packages/ui/src/modal/__tests__/type.test-d.ts",
+              "packages/ui/src/modal/engine/Panel.ts",
+              "packages/ui/src/config-provider/__tests__/locale-scope.test.ts"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 61016,
+            "log": "/tmp/apollo-modal-final-types.log",
+            "result": "Immutable complete Modal source, all native Ctor/h/SFC positive/negative cases and Demos, root exports and actual App/locale/Watermark source consumers; inherited strict/declaration:true unchanged."
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/app/__tests__/s40-issue40.test.ts packages/ui/src/config-provider/__tests__/locale-scope.test.ts --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 14026,
+            "log": "/tmp/apollo-modal-consumers-final.log",
+            "result": "Actual App and locale consumers, 12 passed; retains draft/ref isolation and adds current controlled value coverage."
+          },
+          {
+            "kind": "browser",
+            "command": "node packages/ui/src/watermark/__tests__/native-browser.mjs",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 8190,
+            "log": "/tmp/apollo-modal-watermark-final.log",
+            "result": "Actual Watermark/Modal source Chrome passed on final source with zero diagnostics; application marks/observers/frames released. Playwright document observer remains the explicitly captured harness baseline."
+          }
+        ],
+        "failedAttempts": [
+          {
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 5900,
+            "log": "/tmp/apollo-modal-native-red.log",
+            "result": "Initial four regressions all red before fixes"
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 18670,
+            "log": "/tmp/apollo-modal-core-first.log",
+            "result": "47 passed/2 failed: empty footer wrapper and accidentally omitted private visible/forceRender. Both corrected."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 23380,
+            "log": "/tmp/apollo-modal-core-second.log",
+            "result": "61 passed/1 failed wrong new Chinese text expectation; Demo collection separately blocked by active Slider missing module. Expectation corrected; Demo later passed after Slider completed module."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 5430,
+            "log": "/tmp/apollo-modal-unmount-red.log",
+            "result": "Open unmount failed trigger-focus restoration before local lifecycle fix"
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": null,
+            "log": "/tmp/apollo-modal-prefix-red.log",
+            "result": "Source Chrome custom-prefix responsive width actual 1068px vs required 600px; corrected actual CSS-variable namespace"
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 6010,
+            "log": "/tmp/apollo-modal-empty-text-red.log",
+            "result": "Explicit empty cancelText slot incorrectly fell back to prop; corrected presence branch"
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 5530,
+            "log": "/tmp/apollo-modal-config-loading-red.log",
+            "result": "Actual static instance.update(confirmLoading:true) failed to display spinner; fixed current ConfirmContent/OkBtn/ActionButton chain without adding loading state."
+          },
+          {
+            "kind": "types",
+            "executedBy": "root",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 34727,
+            "log": "/tmp/apollo-modal-types.log",
+            "result": "19 top-level diagnostics: actual Button legacy config boundary, VNodeChild children, Portal ShadowRoot container type causing h fallback cascade, uninitialized shallowRef overload in session declaration, overly exact listener return assertion. Owned boundary fixes frozen for recheck."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 5490,
+            "log": "/tmp/apollo-modal-button-boundary-red.log",
+            "result": "Declared type:danger in normal/imperative button config failed its real danger class before normalization."
+          },
+          {
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/app/__tests__/s40-issue40.test.ts packages/ui/src/config-provider/__tests__/locale-scope.test.ts --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 11512,
+            "log": "/tmp/apollo-modal-consumers.log",
+            "reason": "Prior locale fixture used a fixed controlled value as an uncontrolled initial value. Corrected to native defaultValue; all existing identity/draft assertions retained and current controlled value regression added. No production slot caching restored."
+          }
+        ],
+        "remaining": [
+          "Root-owned App/locale-scope/Watermark actual consumers and root type exports/COMPATIBILITY",
+          "Full library nine dimensions, coverage, visual matrix, dist/release consumers intentionally deferred to final frozen library run"
+        ],
+        "newLocalTypes": [
+          "ModalAction",
+          "ModalClose",
+          "ModalClosableConfig",
+          "ModalEmits",
+          "ModalSlots",
+          "ModalPanelRef",
+          "ModalRenderSlotProps",
+          "ModalFooterExtra",
+          "ModalHookInstance"
+        ],
+        "sourceFrozen": true,
+        "sourceHashes": {
+          "packages/ui/src/modal/confirm.ts": "e122e3b7efbfb0825186742e31cde8b9ad8c7299a042b5ca2ec4d71fb4c19d19",
+          "packages/ui/src/modal/useModal.ts": "791ba3fdc8ff98be5def52b7e55450c1e8deb230c08a99c75d6843fe715f8136",
+          "packages/ui/src/modal/PurePanel.ts": "a918938d836a926bc1c95357c676c887c6fbe19c5982edd4331d0f25957972ee",
+          "packages/ui/src/modal/use-modal-theme.ts": "80c33c2cea2b1755cfdabb7d9f787a7ebccabe941d136d8a0588f6c5c5d12390",
+          "packages/ui/src/modal/Modal.ts": "bcc1f2556484e7ef49e29f634f539c0f4339b840346fa50170e023b0dc607de5",
+          "packages/ui/src/modal/context.ts": "12b6bee22da6c2756920b5c1d3a3d26c388f6b1dc95df67a10642e1bb942fa1e",
+          "packages/ui/src/modal/ConfirmDialog.ts": "9e25075d835487fb2d3afeca4f84b11aff804c2d56f198eead45c4eb4395cb5b",
+          "packages/ui/src/modal/ModalPanel.ts": "d67559b645be154c03f847eb3043134be04c6f910c4fb8567be5ee19a962c1d4",
+          "packages/ui/src/modal/interface.ts": "f7257816fc52684067c2dfe5f7ef7810b9e5c66561b8b5d81121850ff29397e3",
+          "packages/ui/src/modal/util.ts": "42ac9a2572876ab9fe4a23322e63c8ac141d4846b65dcce1f32bb5b348a2a09c",
+          "packages/ui/src/modal/index.ts": "3c5abbef2843c0906e12c9bc06f9c659f031fd69f1e7d8578d4adb59d34cda2c",
+          "packages/ui/src/modal/destroyFns.ts": "cb29c626bd3dd7279bf5277e355765b113e4b136c244fe4f412d8350854897e3",
+          "packages/ui/src/modal/demo/position.vue": "053b1e2175d25440d1e65271dc605efc98038095ec04b2f6ffb92fce8fe3dcb2",
+          "packages/ui/src/modal/demo/nested.vue": "f73ca86dec1ec2014d0f2b825e281b2cafaff1f24dd741ffb4dd168dc6ef85e8",
+          "packages/ui/src/modal/demo/width.vue": "cff92ab28eb5f87ce1c431a4a09effa94e3a9fbe8b269af263a5f72d3a341368",
+          "packages/ui/src/modal/demo/dark.vue": "a34f5216f924ebb1240a347d24168591b8e2c9de3a76fb9a77ec13e06cc77ade",
+          "packages/ui/src/modal/demo/hooks.vue": "347c49cfddf303f857f81c31e770224efe4a032edc80bb6c8a34c4a7f48a886b",
+          "packages/ui/src/modal/demo/confirm-router.vue": "67979719084ecbfd38478a4eb986e6f04782612e1dd0cfb32d75b35f77e61c1b",
+          "packages/ui/src/modal/demo/async.vue": "8b217b13e6e38a193a38acdec919eb5ccc32c3d6121de19afb7dadf6d8952553",
+          "packages/ui/src/modal/demo/wireframe.vue": "bec7e6b7c9b32176a3df6810f7f09e480fcd0ae100f017b7de7dde4e99ecf784",
+          "packages/ui/src/modal/demo/footer.vue": "4994d9771f42d2244a2484d0ed089d66add80874a21bb59422e9f3d7e53d3dd8",
+          "packages/ui/src/modal/demo/render-panel.vue": "796b135fd285328594f8eefaed0671ee045f4efbcd5864074f2ba90016dbe4f8",
+          "packages/ui/src/modal/demo/component-token.vue": "cb356b194124dcb74280992f53eaf9a821cf5446579133d54db96182e2cadb04",
+          "packages/ui/src/modal/demo/manual.vue": "182c9e684912940ab6e78b05d6aed3fdfbae5732f1ee3d9cc0fa8a130823c3c3",
+          "packages/ui/src/modal/demo/footer-render.vue": "58f5dde0dcc0c70d6929eb2897a1e50f0bf0a7e7f7ce66b9335455d7b8bd1cb9",
+          "packages/ui/src/modal/demo/style-class.vue": "22ba2edfb7f4da882679fb965078515aa7c517abc4b7abc38623b149242b754c",
+          "packages/ui/src/modal/demo/confirm.vue": "bd0360333a3017b5f7e0b2c8005ff437e5e83c63f3d4c6454b1e38338b878eb7",
+          "packages/ui/src/modal/demo/locale.vue": "1dd41ab7784c4c9d0ad43085be24a15086844b24840063f3898496db244641cf",
+          "packages/ui/src/modal/demo/mask.vue": "e518f4afa8f8038e9f28826468fe3184224c1152b38ea2924bc36709417ef99d",
+          "packages/ui/src/modal/demo/basic.vue": "1df90473676fb9928b00329ff93290b45aa75aeebd575d778c92aa9cff2cc564",
+          "packages/ui/src/modal/demo/loading.vue": "785f9baf4cf88904064573ddb98fddf0305b2b50fcdfc4f6b0b179660c754825",
+          "packages/ui/src/modal/demo/static-info.vue": "5a2ad25414fe45c177a4ad29bf3cf2a61c8c1b5d8c9dc0954845285674ac6a55",
+          "packages/ui/src/modal/demo/modal-render.vue": "fc0dca7bca12eebfd8ae08367b1b4d79079b3fd02cd053421d0cb32942626368",
+          "packages/ui/src/modal/demo/button-props.vue": "671b4a1f1d70d00da32c0f4d76b3f490e8080832714fd332c9812cd60fc07e95",
+          "packages/ui/src/modal/demo/custom-mouse-position.vue": "e99cf89cc990fa06e3850ab9a0d251a1e8e40a6f206c586ffc7b4e6ac84c0a96",
+          "packages/ui/src/modal/style/index.ts": "dd761162bbf9f46abbe93ccf319f806279d1259be3c80a78b6925ee6ff53f4b8",
+          "packages/ui/src/modal/style/token.ts": "0b350070c50d2afbb767a3f63d578bc05ed741b23a69ea837fe3bf3e187852d2",
+          "packages/ui/src/modal/components/ActionButton.ts": "a943d22803bec9efb91c5e7df054e79f5e334587b9b3fed9afd9e70cee452794",
+          "packages/ui/src/modal/components/NormalCancelBtn.ts": "8b0ac340cea08ec386284c18befabd0bc38fd1f55128e164d3c50dabdabbdf1a",
+          "packages/ui/src/modal/components/NormalOkBtn.ts": "caff58cd07e2d24ba3c4546acafed47e897760af8c8e7fa450d3b2d8125fdffb",
+          "packages/ui/src/modal/components/ConfirmOkBtn.ts": "e978ae8e68d040ac0eb1f3b982ad9dd035eb41cae7bbdbff11764c482a803524",
+          "packages/ui/src/modal/components/ConfirmCancelBtn.ts": "1e155d92f372bdbc2382a309034075e65b8a55a7ccae94d3569013f302a97def",
+          "packages/ui/src/modal/__tests__/a11y.test.ts": "0e729e39898b060d5e9359f43fcd677dbfdd211fe8abb3f118af0e531f6a8f21",
+          "packages/ui/src/modal/__tests__/native-contracts.test.ts": "ab73f8e92c7b3802232ef5c63530f8bb6010295b6598d0feb02185bde6b3a846",
+          "packages/ui/src/modal/__tests__/index.test.ts": "8b7e84554dc3e9a83af68ef27ecada407de4773b622ad64d00cd9b75f316e6d3",
+          "packages/ui/src/modal/__tests__/demo.test.ts": "9a71bc483dca7e40215126381d30f04d844179f183874922d2fc3b8ed7b587a0",
+          "packages/ui/src/modal/__tests__/s19-issue19.test.ts": "12ba3820f8b6fc3215340329fc2e4d421a87807dea72a6e43d2cc886e1738711",
+          "packages/ui/src/modal/__tests__/engine.test.ts": "e8215db5b3fcba8c9e5f349d99214531a8552b73f9c71936e673a28a94c5a630",
+          "packages/ui/src/modal/__tests__/type.test-d.ts": "2bbe29244b453e997b451d0422a1f39be260f11207a60d68ec7e1f41f99c5a64",
+          "packages/ui/src/modal/__tests__/theme.test.ts": "4d08be23f38a65954f0235a8550cea7f88066b015c8f7d31c25cb2f5a5a36054",
+          "packages/ui/src/modal/__tests__/semantic.test.ts": "a667018bb0e915bbe0c88d2a15cd0884631392f18913cba9e2616a3f54869c40",
+          "packages/ui/src/modal/engine/Panel.ts": "4645e6f39bd69fb3e52825356a43f508a7bdd0e33ab64b4e655def7c087bc6a3",
+          "packages/ui/src/modal/engine/context.ts": "e8471b5fbe32c2f318f0507e8bc59f28dff0c0f5b2478961063b5c6dfabbd192",
+          "packages/ui/src/modal/engine/Content.ts": "915f47e0d142d7670d3319d374b76cb9c720988e7c8837e753c002505c01df4e",
+          "packages/ui/src/modal/engine/interface.ts": "13f04c23761493adde2a76dfdd10bcc461d46294afa429338fcdd702907882b1",
+          "packages/ui/src/modal/engine/util.ts": "2bf93ef82d3e1152b1fb58e0b52469993adb7e57dcbf3ecc774d27f1737da2ae",
+          "packages/ui/src/modal/engine/Dialog.ts": "91d412f808563626a98d37b183a4991823aefa6f3fff8b35f75c13dde1cb0ae8",
+          "packages/ui/src/modal/engine/index.ts": "e9dfd1de34dd572dc662bca0def1049877a036250a251064d7cfb5b74fb128da",
+          "packages/ui/src/modal/engine/MemoChildren.ts": "6e298b79fac184bcfeb07e2f730fa420b040c211a38d1609618e577868bed5ad",
+          "packages/ui/src/modal/engine/DialogWrap.ts": "c5bfadcc1f7539928bf970521d890a7e6a5f0da798d706038454904b52e1c1cb",
+          "packages/ui/src/modal/engine/Mask.ts": "6368eb1e067baf44f4e5c47d316758c7adea358bb8f65f0e2aaac101cd9f23d4",
+          "packages/ui/src/modal/__tests__/fixtures/NativeModal.vue": "5df3e911ddf70c4963c0528f9e3113c64bd120b72fef89a204a855e1e5e1da60",
+          "packages/ui/src/index.ts": "9e88ecc14ed0239f178dadd46a65852eda22044a42c33a636a408c530534b0aa",
+          "packages/ui/src/app/App.ts": "0795817b6a47d6a30bd6e666caa9862dcbe01395ef4de6a6e20e96dd1388fd74",
+          "packages/ui/src/app/__tests__/s40-issue40.test.ts": "688038e9c1dbfc77e5822e752335e7574aa846f10764546a6c3c7f9dfe66a89b",
+          "packages/ui/src/config-provider/__tests__/locale-scope.test.ts": "484d8f1e48f932fac23a340e72cbf7dbee8c6f9d1c2f3c835b7ffac22d68a468",
+          "packages/ui/src/watermark/__tests__/fixtures/NativeWatermark.vue": "fcecff07f1a1f0f87a154a8f69b2a623b35174043b3286669abfa78225ed1647"
+        },
+        "integrationSnapshot": {
+          "uiBarrelSha256": "9e88ecc14ed0239f178dadd46a65852eda22044a42c33a636a408c530534b0aa",
+          "sourceBase": "f463fc367124d2aa3812da3fc3f58b90a18849bd",
+          "boundary": "Other component WIP exports excluded; root stages exactly this passed Modal barrel increment. Slider adds only its separately checked HandleNodeProps later."
+        },
+        "recordedAt": "2026-10-31T01:11:02.105323+00:00"
       }
     },
     {

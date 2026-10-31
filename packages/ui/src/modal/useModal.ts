@@ -1,289 +1,160 @@
-/**
- * `useModal` —— antd `components/modal/useModal/index.tsx` + `HookModal.tsx` 的 Vue 版。
- *
- * ```
- * useModal() ⇒ [fns, contextHolder]
- *   fns = { info, success, error, warning, warn, confirm }
- *   每次调用：
- *     uuid++
- *     promise = new Promise(resolve => resolvePromise = resolve)
- *     modal = <HookModal key={`modal-${uuid}`} config modalRef afterClose isSilent onConfirm />
- *     closeFunc = holder.patchElement(modal)
- *     if (closeFunc) destroyFns.push(closeFunc)      ← ⚠️ 同样入队
- *     instance = { destroy, update, then }           ← thenable
- * ```
- *
- * 关键判据：
- *   1. **`then()` 会把 `silent = true`** —— `await Modal.confirm(...)` 之后关闭时
- *      **不触发 `onCancel`**（`isSilent()` 为真）；
- *   2. `destroy` / `update` 在 `HookModal` 还没就绪时入 `actionQueue`，就绪后回放；
- *   3. `afterClose` 里调 `closeFunc()` 把 vnode 从 holder 里摘掉；
- *   4. `okText` / `cancelText` 走 `fallbackProp(config.x, locale.x)`。
- *
- * ⚠️ 两处**必须的 Vue 化改写**（不是风格选择，是平台约束）：
- *   - `contextHolder` 是**无 ref 的 vnode**，holder 实例靠 `onReady` 回调拿回来 ——
- *     Vue 的 `normalizeRef` 用 `currentRenderingInstance` 当 owner，而 `setup()` 里
- *     `currentRenderingInstance` 是 `null` ⇒ 「在 setup 里创建带 ref 的 vnode」
- *     会报 `Missing ref owner context` 且 ref **永远不生效**；
- *   - `HookModal` 的实例句柄用 **prop 传 `Ref` 对象**（`modalRef`），不用 vnode 的 `ref`
- *     —— 同一个原因：`patchElement` 是在事件回调里建 vnode，没有渲染上下文。
- */
 import { defaultLocale, useLocale } from '@apollo-design/locale';
-import { isFunction } from '@apollo-design/utils';
 import {
   defineComponent,
   h,
+  onBeforeUnmount,
   onScopeDispose,
-  type PropType,
   type Ref,
   ref,
+  type ShallowRef,
   shallowRef,
   type VNode,
-  watch,
 } from 'vue';
-
 import { useConfigContext } from '../config-provider/context';
 import ConfirmDialog from './ConfirmDialog';
 import { withConfirm, withError, withInfo, withSuccess, withWarn } from './confirm';
 import destroyFns from './destroyFns';
-import type { ModalFuncProps, ModalHookAPI, ModalInstance } from './interface';
-import { fallbackNode } from './util';
+import type { ModalFuncProps, ModalHookAPI, ModalHookInstance } from './interface';
 
-let uuid = 0;
+/** The existing holder VNode renders current session data under its own Vue context. */
+export default function useModal(): [ModalHookAPI, VNode] {
+  let nextKey = 0;
+  let disposed = false;
+  const sessions = shallowRef<Array<ReturnType<typeof createSession>>>([]);
 
-/** 命令式实例的命令面（`HookModal` 写进传入的 `modalRef`）。 */
-interface HookModalRef {
-  destroy: (...args: unknown[]) => void;
-  update: (newConfig: Partial<ModalFuncProps> | ((prev: ModalFuncProps) => ModalFuncProps)) => void;
-}
-
-/** holder 的对外能力。 */
-interface HolderApi {
-  patchElement: (element: VNode) => () => void;
-}
-
-// ==============================================================================
-// ==                                ElementsHolder                            ==
-// ==============================================================================
-
-/** 承载所有 `HookModal` 的容器；`patchElement` 负责挂载与摘除。 */
-const ElementsHolder = defineComponent({
-  name: 'AModalElementsHolder',
-  props: {
-    onReady: { type: Function as PropType<(api: HolderApi) => void>, default: undefined },
-  },
-  setup(props) {
-    const elements = shallowRef<VNode[]>([]);
-
-    const patchElement = (element: VNode): (() => void) => {
-      elements.value = [...elements.value, element];
-      let exist = true;
-      return () => {
-        if (!exist) return;
-        exist = false;
-        elements.value = elements.value.filter((ele) => ele !== element);
-      };
-    };
-
-    // 在 setup 期把能力交回调用方（`useModal` 是纯函数，拿不到组件实例）
-    props.onReady?.({ patchElement });
-
-    return () => elements.value;
-  },
-});
-
-// ==============================================================================
-// ==                                 HookModal                                ==
-// ==============================================================================
-
-const HookModal = defineComponent({
-  name: 'AModalHookModal',
-  inheritAttrs: false,
-  props: {
-    config: { type: Object as PropType<ModalFuncProps>, required: true },
-    /** ⚠️ 用 prop 传 Ref 对象，不用 vnode 的 `ref`（见文件头）。 */
-    modalRef: {
-      type: Object as unknown as PropType<Ref<HookModalRef | null>>,
-      default: undefined,
-    },
-    afterClose: { type: Function as PropType<() => void>, default: undefined },
-    isSilent: { type: Function as PropType<() => boolean>, default: undefined },
-    onConfirm: { type: Function as PropType<(confirmed: boolean) => void>, default: undefined },
-  },
-  setup(props) {
+  function createSession(initial: ModalFuncProps): ModalHookInstance & {
+    key: number;
+    config: ShallowRef<ModalFuncProps>;
+    open: Ref<boolean>;
+    close: (...args: unknown[]) => void;
+    finish: () => void;
+    confirm: (value: boolean) => void;
+    isSilent: () => boolean;
+  } {
+    const config = shallowRef(initial);
     const open = ref(true);
-    // ⚠️ 用 `shallowRef` 而不是 `ref`：`ref<ModalFuncProps>` 会触发 Vue 的**深解包**
-    //    （`UnwrapRef`），而 `ModalFuncProps` 是个很深的联合类型 ⇒
-    //    读 `innerConfig.value.okText` 直接报 `TS2589: Type instantiation is excessively deep`。
-    //    语义上也该用 shallow：这里**永远整体替换**（`innerConfig.value = {...}`），
-    //    从不改嵌套字段。
-    const innerConfig = shallowRef<ModalFuncProps>(props.config);
-    const config = useConfigContext();
-
-    const afterClose = (): void => {
-      props.afterClose?.();
-      (innerConfig.value as { afterClose?: () => void }).afterClose?.();
+    let finished = false;
+    let silent = false;
+    let resolved = false;
+    let resolveResult: (value: boolean) => void = () => {};
+    const result = new Promise<boolean>((resolve) => {
+      resolveResult = resolve;
+    });
+    const confirm = (value: boolean) => {
+      if (resolved || finished) return;
+      resolved = true;
+      resolveResult(value);
     };
-
-    const close = (...args: unknown[]): void => {
+    const unregister = () => {
+      const index = destroyFns.indexOf(destroy);
+      if (index !== -1) destroyFns.splice(index, 1);
+    };
+    const finish = () => {
+      if (finished) return;
+      confirm(false);
+      finished = true;
+      unregister();
+      sessions.value = sessions.value.filter((item) => item !== session);
+      config.value.afterClose?.();
+    };
+    const close = (...args: unknown[]) => {
+      if (finished || !open.value) return;
       open.value = false;
       const triggerCancel = args.some(
-        (param) => (param as { triggerCancel?: boolean } | undefined)?.triggerCancel,
+        (value) =>
+          typeof value === 'object' &&
+          value !== null &&
+          'triggerCancel' in value &&
+          value.triggerCancel === true,
       );
-      if (triggerCancel) {
-        (innerConfig.value.onCancel as ((...a: unknown[]) => void) | undefined)?.(
-          (() => {}) as unknown,
-          ...args.slice(1),
-        );
-      }
+      if (triggerCancel) config.value.onCancel?.(close);
+      // There can be no leave motion before the holder mounts.
+      if (!holderMounted) finish();
     };
-
-    const update = (
-      newConfig: Partial<ModalFuncProps> | ((prev: ModalFuncProps) => ModalFuncProps),
-    ): void => {
-      innerConfig.value = {
-        ...innerConfig.value,
-        ...(isFunction(newConfig)
-          ? (newConfig as (prev: ModalFuncProps) => ModalFuncProps)(innerConfig.value)
-          : newConfig),
-      };
-    };
-
-    if (props.modalRef) props.modalRef.value = { destroy: close, update };
-    onScopeDispose(() => {
-      if (props.modalRef) props.modalRef.value = null;
-    });
-
-    const [contextLocale] = useLocale('Modal', defaultLocale.Modal);
-
-    return () => {
-      const mergedOkCancel = innerConfig.value.okCancel ?? innerConfig.value.type === 'confirm';
-      const prefixCls = config.getPrefixCls('modal');
-      const rootPrefixCls = config.getPrefixCls();
-
-      // ⚠️ 用**非泛型**的 `fallbackNode` —— `fallbackProp<VNodeChild>(...)` 会让 TS
-      //    在深联合上做泛型实例化并报 `TS2589: excessively deep`（见 `util.ts` 的说明）
-      const okTextNode = fallbackNode(
-        innerConfig.value.okText,
-        mergedOkCancel ? contextLocale.value.okText : contextLocale.value.justOkText,
-      );
-      const cancelTextNode = fallbackNode(
-        innerConfig.value.cancelText,
-        contextLocale.value.cancelText,
-      );
-
-      return h(ConfirmDialog, {
-        ...(innerConfig.value as unknown as Record<string, unknown>),
-        prefixCls,
-        rootPrefixCls,
-        close,
-        open: open.value,
-        afterClose,
-        okText: okTextNode,
-        cancelText: cancelTextNode,
-        direction: innerConfig.value.direction ?? config.direction,
-      } as never);
-    };
-  },
-});
-
-// ==============================================================================
-// ==                                  Export                                  ==
-// ==============================================================================
-
-export default function useModal(): [ModalHookAPI, VNode] {
-  let holder: HolderApi | null = null;
-  const actionQueue = ref<Array<() => void>>([]);
-
-  // 回放「holder 还没就绪时排下的 destroy / update」
-  watch(
-    actionQueue,
-    (queue) => {
-      if (!queue.length) return;
-      const cloneQueue = [...queue];
-      for (const action of cloneQueue) action();
-      actionQueue.value = [];
-    },
-    { flush: 'post' },
-  );
-
-  const getConfirmFunc = (withFunc: (props: ModalFuncProps) => ModalFuncProps) =>
-    function hookConfirm(config: ModalFuncProps): ModalInstance {
-      uuid += 1;
-      const modalRef = ref<HookModalRef | null>(null);
-
-      // 与 `onConfirm` 绑定的 Promise
-      let resolvePromise: (confirmed: boolean) => void = () => {};
-      const promise = new Promise<boolean>((resolve) => {
-        resolvePromise = resolve;
-      });
-
-      let silent = false;
-      let closeFunc: (() => void) | undefined;
-
-      const modal = h(HookModal, {
-        key: `modal-${uuid}`,
-        config: withFunc(config),
-        modalRef,
-        afterClose: () => {
-          closeFunc?.();
-        },
-        isSilent: () => silent,
-        onConfirm: (confirmed: boolean) => {
-          resolvePromise(confirmed);
-        },
-      });
-
-      closeFunc = holder?.patchElement(modal);
-      if (closeFunc) destroyFns.push(closeFunc);
-
-      const instance: ModalInstance & {
-        then?: (resolve: (value: unknown) => void) => unknown;
-      } = {
-        destroy: () => {
-          const destroyAction = (): void => {
-            modalRef.value?.destroy();
-          };
-          if (modalRef.value) destroyAction();
-          else actionQueue.value = [...actionQueue.value, destroyAction];
-        },
-        update: (newConfig) => {
-          const updateAction = (): void => {
-            modalRef.value?.update(newConfig);
-          };
-          if (modalRef.value) updateAction();
-          else actionQueue.value = [...actionQueue.value, updateAction];
-        },
-      };
-
-      // ⚠️ `then` 是**契约的一部分**（上游的 instance 就是 thenable：
-      //    `await Modal.confirm(...)` 拿到的是「确认结果」，且 `then` 会把 `silent` 置真
-      //    ⇒ 之后关闭不触发 `onCancel`）。这里**刻意**做成 thenable。
-      // biome-ignore lint/suspicious/noThenProperty: 刻意 thenable，与上游 `instance.then` 同契约
-      instance.then = (resolve) => {
+    function destroy() {
+      confirm(false);
+      close();
+    }
+    const session = {
+      key: nextKey++,
+      config,
+      open,
+      close,
+      finish,
+      confirm,
+      isSilent: () => silent,
+      destroy,
+      update(update: Parameters<ModalHookInstance['update']>[0]) {
+        if (finished || !open.value) return;
+        config.value = {
+          ...config.value,
+          ...(typeof update === 'function' ? update(config.value) : update),
+        };
+      },
+      // biome-ignore lint/suspicious/noThenProperty: hook commands intentionally implement PromiseLike<boolean>.
+      then<TResult1 = boolean, TResult2 = never>(
+        onfulfilled?: ((value: boolean) => TResult1 | PromiseLike<TResult1>) | null,
+        onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null,
+      ): PromiseLike<TResult1 | TResult2> {
         silent = true;
-        return promise.then(resolve);
-      };
-
-      return instance;
+        return result.then(onfulfilled, onrejected);
+      },
     };
+    destroyFns.push(destroy);
+    return session;
+  }
 
-  const fns: ModalHookAPI = {
-    info: getConfirmFunc(withInfo),
-    success: getConfirmFunc(withSuccess),
-    error: getConfirmFunc(withError),
-    warning: getConfirmFunc(withWarn),
-    warn: getConfirmFunc(withWarn),
-    confirm: getConfirmFunc(withConfirm),
-  };
-
-  // ⚠️ 这个 vnode **不能带 ref**（见文件头）；holder 实例靠 `onReady` 回调回来
-  const contextHolder = h(ElementsHolder, {
-    key: 'modal-holder',
-    onReady: (api: HolderApi) => {
-      holder = api;
+  let holderMounted = false;
+  const Holder = defineComponent({
+    name: 'AModalElementsHolder',
+    setup() {
+      holderMounted = true;
+      const config = useConfigContext();
+      const [locale] = useLocale('Modal', defaultLocale.Modal);
+      onBeforeUnmount(() => {
+        holderMounted = false;
+        for (const session of [...sessions.value]) session.finish();
+      });
+      return () =>
+        sessions.value.map((session) =>
+          h(ConfirmDialog, {
+            ...session.config.value,
+            key: session.key,
+            prefixCls: session.config.value.prefixCls ?? config.getPrefixCls('modal'),
+            rootPrefixCls: config.getPrefixCls(),
+            direction: session.config.value.direction ?? config.direction,
+            locale: locale.value,
+            open: session.open.value,
+            close: session.close,
+            afterClose: session.finish,
+            isSilent: session.isSilent,
+            onConfirm: session.confirm,
+          }),
+        );
     },
   });
-
-  return [fns, contextHolder];
+  onScopeDispose(() => {
+    disposed = true;
+    for (const session of [...sessions.value]) session.finish();
+  });
+  const method =
+    (withType: (props: ModalFuncProps) => ModalFuncProps) =>
+    (props: ModalFuncProps): ModalHookInstance => {
+      const session = createSession(withType(props));
+      if (disposed) session.finish();
+      else sessions.value = [...sessions.value, session];
+      return session;
+    };
+  const warning = method(withWarn);
+  return [
+    {
+      info: method(withInfo),
+      success: method(withSuccess),
+      error: method(withError),
+      warning,
+      warn: warning,
+      confirm: method(withConfirm),
+    },
+    h(Holder),
+  ];
 }

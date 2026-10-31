@@ -1,49 +1,24 @@
-/**
- * `Panel` —— `@rc-component/dialog@1.10.0` `es/Dialog/Content/Panel.js`（135 行）的 Vue 版。
- *
- * 渲染树（逐条对齐上游，L4 的判据）：
- *
- * ```
- * <div role="dialog" aria-modal="true" aria-labelledby={title ? ariaId : null}
- *      tabIndex={-1} ref={mergedRef}
- *      class="{p} [className]" style={{...style, width, height}}
- *      onMouseDown onMouseUp onFocus={e => ignoreElement(e.target)}>
- *   └─ MemoChildren(shouldUpdate = visible || forceRender)
- *      └─ (modalRender ? modalRender(content) : content)
- *         └─ <div class="{p}-container [classNames.container]" style={styles.container}>
- *            ├─ closable && <button type="button" aria-label="Close" {...ariaProps}
- *            │                class="{p}-close [classNames.close]" disabled={closeBtnIsDisabled}
- *            │                style={styles.close}>{closableObj.closeIcon}</button>
- *            ├─ title && <div class="{p}-header [classNames.header]" style={styles.header}>
- *            │             <div class="{p}-title [classNames.title]" id={ariaId} style={styles.title}>
- *            │               {title}
- *            ├─ <div class="{p}-body [classNames.body]" style={{...bodyStyle, ...styles.body}} {...bodyProps}>
- *            │    {children}
- *            └─ footer && <div class="{p}-footer [classNames.footer]" style={styles.footer}>{footer}</div>
- * ```
- *
- * 关键判据：
- *   1. **焦点陷阱**：`useLockFocus(visible && isFixedPos && focusTrap !== false, () => panel)`，
- *      返回的 `ignoreElement` 在 `onFocus` 里用 —— 焦点跑到面板外时拉回来；
- *   2. **`aria-modal="true"` 恒在**；`aria-labelledby` **只在有 title 时**挂（值是 `ariaId`）；
- *   3. `closable` 是对象 ⇒ **对象自己的 `closeIcon` 赢**；`closable === true` 才用 `closeIcon` prop；
- *   4. 宽高走 `contentStyle`（`width !== undefined` 才写）；⚠️ **必须过 `toCssSize`**
- *      （Vue 不给数字补 px，PITFALLS 170 / D94）；
- *   5. `bodyProps` 原样展开到 body div（antd 用它挂 `data-*`）。
- */
-import { pickAttrs, useLockFocus } from '@apollo-design/utils';
-import { computed, defineComponent, h, inject, type PropType, ref, type VNodeChild } from 'vue';
-
+import { isEmptyVNode, pickAttrs, useLockFocus } from '@apollo-design/utils';
+import type { SlotsType, StyleValue, VNodeChild } from 'vue';
+import {
+  type ComponentPublicInstance,
+  type CSSProperties,
+  computed,
+  defineComponent,
+  type FunctionalComponent,
+  h,
+  inject,
+  mergeProps,
+  type PropType,
+  ref,
+} from 'vue';
 import type { ModalSemanticType } from '../interface';
 import { dialogRefContextKey } from './context';
+import type { DialogClosable, DialogSlots, ModalPanelRef } from './interface';
 import MemoChildren from './MemoChildren';
 import { clsx, toCssSize } from './util';
 
-interface ClosableLike {
-  closeIcon?: VNodeChild;
-  disabled?: boolean;
-  [key: string]: unknown;
-}
+type ClosableLike = Exclude<DialogClosable, boolean | null>;
 
 export default defineComponent({
   name: 'ADialogPanel',
@@ -51,22 +26,18 @@ export default defineComponent({
   props: {
     prefixCls: { type: String, required: true },
     className: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    style: { type: [Object, Array, String] as PropType<StyleValue>, default: undefined },
     // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     ariaId: { type: String, default: undefined },
     // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     footer: { type: null as unknown as PropType<VNodeChild>, default: undefined },
-    closable: { type: [Boolean, Object] as PropType<boolean | ClosableLike>, default: true },
+    closable: { type: [Boolean, Object] as PropType<DialogClosable>, default: true },
     // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
     closeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     onClose: { type: Function as PropType<(e: Event) => void>, default: undefined },
-    bodyStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    bodyStyle: { type: Object as PropType<import('vue').CSSProperties>, default: undefined },
     bodyProps: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    modalRender: {
-      type: Function as PropType<(node: VNodeChild) => VNodeChild>,
-      default: undefined,
-    },
     visible: { type: Boolean, default: false },
     forceRender: { type: Boolean, default: false },
     width: { type: [String, Number] as PropType<string | number>, default: undefined },
@@ -80,22 +51,21 @@ export default defineComponent({
     isFixedPos: { type: Boolean, default: false },
     focusTrap: { type: Boolean, default: undefined },
     /** antd 的 `panelRef`（`composeRef(panelRef, innerPanelRef)`）。 */
-    panelRef: { type: [Object, Function] as PropType<unknown>, default: undefined },
+    panelRef: { type: [Object, Function] as PropType<ModalPanelRef>, default: undefined },
   },
+  slots: {} as SlotsType<DialogSlots>,
   setup(props, { attrs, slots }) {
     const internalRef = ref<HTMLElement | null>(null);
 
     // `Dialog` 通过 ref-context 把自己的面板元素引用交下来（焦点归还要 `focus()` 它）
     const refContext = inject(dialogRefContextKey, null);
 
-    const setRef = (el: unknown): void => {
-      internalRef.value = (el as HTMLElement | null) ?? null;
+    const setRef = (el: Element | ComponentPublicInstance | null): void => {
+      internalRef.value = el instanceof HTMLElement ? el : null;
       if (refContext?.panel) refContext.panel.value = internalRef.value;
       const external = props.panelRef;
-      if (typeof external === 'function') (external as (e: unknown) => void)(el);
-      else if (external && typeof external === 'object' && 'value' in (external as object)) {
-        (external as { value: unknown }).value = el;
-      }
+      if (typeof external === 'function') external(internalRef.value);
+      else if (external) external.value = internalRef.value;
     };
 
     // ------------------------------ 焦点陷阱 ------------------------------
@@ -106,14 +76,14 @@ export default defineComponent({
     );
 
     // ------------------------------ 样式 ------------------------------
-    const contentStyle = computed<Record<string, unknown>>(() => {
-      const style: Record<string, unknown> = {};
+    const contentStyle = computed<CSSProperties>(() => {
+      const style: CSSProperties = {};
       if (props.width !== undefined) style.width = toCssSize(props.width);
       if (props.height !== undefined) style.height = toCssSize(props.height);
       return style;
     });
 
-    return () => {
+    const ModalPanel: FunctionalComponent = () => {
       const prefixCls = props.prefixCls;
       const cn = props.classNames ?? {};
       const st = props.styles ?? {};
@@ -121,7 +91,7 @@ export default defineComponent({
       // >>> closable 归一化（上游逐字）
       const closableObj: ClosableLike =
         typeof props.closable === 'object' && props.closable !== null
-          ? (props.closable as ClosableLike)
+          ? props.closable
           : props.closable
             ? { closeIcon: props.closeIcon ?? h('span', { class: `${prefixCls}-close-x` }) }
             : {};
@@ -144,31 +114,29 @@ export default defineComponent({
               disabled: closeBtnIsDisabled,
               style: st.close,
             },
-            closableObj.closeIcon as never,
+            [closableObj.closeIcon],
           )
         : null;
 
-      const headerNode = props.title
+      const headerNode = !isEmptyVNode(props.title)
         ? h(
             'div',
             { class: clsx(`${prefixCls}-header`, cn.header), style: st.header },
             h(
               'div',
               { class: clsx(`${prefixCls}-title`, cn.title), id: props.ariaId, style: st.title },
-              props.title as never,
+              [props.title],
             ),
           )
         : null;
 
-      const footerNode = props.footer
-        ? h(
-            'div',
-            { class: clsx(`${prefixCls}-footer`, cn.footer), style: st.footer },
-            props.footer as never,
-          )
+      const footerNode = !isEmptyVNode(props.footer)
+        ? h('div', { class: clsx(`${prefixCls}-footer`, cn.footer), style: st.footer }, [
+            props.footer,
+          ])
         : null;
 
-      const content = h(
+      return h(
         'div',
         {
           class: clsx(`${prefixCls}-container`, cn.container),
@@ -179,41 +147,46 @@ export default defineComponent({
           headerNode,
           h(
             'div',
-            {
-              class: clsx(`${prefixCls}-body`, cn.body),
-              style: { ...props.bodyStyle, ...st.body },
-              ...props.bodyProps,
-            },
-            slots.default?.(),
+            mergeProps(
+              { class: clsx(`${prefixCls}-body`, cn.body), style: [props.bodyStyle, st.body] },
+              props.bodyProps ?? {},
+            ),
+            [slots.default?.()],
           ),
           footerNode,
         ],
       );
-
-      return h(
-        'div',
-        {
-          key: 'dialog-element',
-          role: 'dialog',
-          'aria-labelledby': props.title ? props.ariaId : null,
-          'aria-modal': 'true',
-          ref: setRef,
-          style: { ...props.style, ...contentStyle.value },
-          class: clsx(prefixCls, props.className),
-          tabIndex: -1,
-          onFocus: (e: FocusEvent) => {
-            ignoreElement(e.target as HTMLElement);
-          },
-          ...pickAttrs(attrs as Record<string, unknown>, { aria: true }),
-        },
-        h(
-          MemoChildren,
-          { shouldUpdate: props.visible || props.forceRender },
-          {
-            default: () => (props.modalRender ? (props.modalRender(content) as never) : content),
-          },
-        ),
-      );
     };
+
+    return () =>
+      h(
+        'div',
+        mergeProps(
+          {
+            key: 'dialog-element',
+            role: 'dialog',
+            'aria-labelledby': !isEmptyVNode(props.title) ? props.ariaId : undefined,
+            'aria-modal': 'true',
+            ref: setRef,
+            style: [props.style, contentStyle.value],
+            class: [props.prefixCls, props.className],
+            tabIndex: -1,
+            onFocus: (event: FocusEvent) => {
+              if (event.target instanceof HTMLElement) ignoreElement(event.target);
+            },
+          },
+          attrs,
+        ),
+        [
+          h(
+            MemoChildren,
+            { shouldUpdate: props.visible || props.forceRender },
+            {
+              default: () =>
+                slots.modalRender ? slots.modalRender({ ModalPanel }) : h(ModalPanel),
+            },
+          ),
+        ],
+      );
   },
 });

@@ -43,7 +43,7 @@ function namedLocale(name: string): Locale {
 
 function modal() {
   return h(Modal, { open: true, getContainer: false, mask: false, title: 'Locale consumer' }, () =>
-    h('input', { 'aria-label': 'Draft', value: 'seed' }),
+    h('input', { 'aria-label': 'Draft', defaultValue: 'seed' }),
   );
 }
 
@@ -85,6 +85,27 @@ describe('ConfigProvider and Modal locale ownership', () => {
     expect(getConfirmLocale().okText).toBe('Inner restored');
     wrapper.unmount();
     expect(getConfirmLocale()).toEqual(en_US.Modal);
+  });
+
+  it('consumes current controlled slot values when the locale changes', async () => {
+    const locale = shallowRef(namedLocale('First'));
+    const value = shallowRef('Initial controlled value');
+    const wrapper = render(() =>
+      h(ConfigProvider, { locale: locale.value }, () =>
+        h(Modal, { open: true, getContainer: false, mask: false, title: 'Controlled slot' }, () =>
+          h('input', { 'aria-label': 'Controlled draft', value: value.value }),
+        ),
+      ),
+    );
+    await settle();
+    const input = wrapper.get<HTMLInputElement>('input').element;
+    expect(input.value).toBe('Initial controlled value');
+    value.value = 'Parent update';
+    locale.value = namedLocale('Updated');
+    await settle();
+    expect(wrapper.get('input').element).toBe(input);
+    expect(input.value).toBe('Parent update');
+    expect(buttonTexts(wrapper)).toEqual(['Updated cancel', 'Updated']);
   });
 
   it('isolates actual Modal defaults between apps and restores the remaining static source', async () => {

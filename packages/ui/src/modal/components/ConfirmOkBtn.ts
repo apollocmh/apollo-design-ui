@@ -10,6 +10,7 @@
 import { defineComponent, h, type VNodeChild } from 'vue';
 
 import { useModalContext } from '../context';
+import { normalizeButtonProps } from '../util';
 import ActionButton from './ActionButton';
 
 export default defineComponent({
@@ -20,6 +21,7 @@ export default defineComponent({
     return () => {
       const {
         autoFocusButton,
+        confirmLoading,
         close,
         isSilent,
         okButtonProps,
@@ -27,7 +29,7 @@ export default defineComponent({
         okTextLocale,
         okType,
         onConfirm,
-        onOk,
+        actionOnOk,
         onClose,
       } = ctx.value;
 
@@ -36,7 +38,7 @@ export default defineComponent({
         {
           isSilent,
           type: okType || 'primary',
-          actionFn: onOk as never,
+          actionFn: actionOnOk,
           close: (...args: unknown[]) => {
             close?.(...args);
             onConfirm?.(true);
@@ -45,12 +47,13 @@ export default defineComponent({
           autoFocus: autoFocusButton === 'ok',
           // 根类名/样式走 Vue 原生 attrs；`className` / `rootClassName` 已被类型层拒绝。
           buttonProps: {
-            ...okButtonProps,
+            ...(confirmLoading ? { loading: true } : {}),
+            ...normalizeButtonProps(okButtonProps),
             class: okButtonProps?.class,
             style: okButtonProps?.style,
           },
           prefixCls: `${rootPrefixCls}-btn`,
-        } as never,
+        },
         { default: () => okTextLocale as VNodeChild },
       );
     };

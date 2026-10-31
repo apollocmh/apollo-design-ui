@@ -1,32 +1,3 @@
-/**
- * antd 侧的 `Modal` —— `components/modal/Modal.tsx`（335 行）的 Vue 版（壳）。
- *
- * 职责：把 antd 的语义（mask 合并 / 焦点 / zIndex / 语义槽 / closable / 响应式宽度 /
- * 9 条 deprecated）翻译成 rc 内核（`engine/DialogWrap`）的 props，并把 `ModalPanel`
- * （footer）与 children 交下去。
- *
- * 逐条对齐上游：
- *   1. `prefixCls = getPrefixCls('modal', customizePrefixCls)`；
- *   2. `closable` 是对象时摘出 `afterClose` / `onClose`（**不是** boolean 时才是）；
- *   3. `mask` 走 `useMergedMask`（props > `maskClosable` > context > true）；
- *   4. `focusable = { ...contextFocusable, ...props.focusable }`，
- *      默认 trap = mask 是否渲染，`focusTriggerAfterClose` 默认 true；
- *   5. `handleCancel` **在 `confirmLoading` 时直接 return**（不关、不回调）；
- *   6. `#footer` slot 非空且 !loading 才渲染 Footer —— `loading` 时 footer 强制不渲染；
- *      C8-R2：footer / closeIcon / title 的 ReactNode prop 已删除，一律 slot（文本
- *      title / okText / cancelText 保留 string prop，slot 优先）；
- *   7. `closable` 走 `useClosable`（Tag 建的那套三方合并），
- *      `closeIconRender` 把图标包成 `{p}-close-x`；
- *   8. `modalRender` 非空 ⇒ 面板多包一层 `{p}-render`，且 watermark 的选择器换成它；
- *   9. `width` 是对象 ⇒ 不写 `numWidth`，把每个断点写进内联 `--{p}-{bp}-width`；
- *  10. `centered` / rtl 通过 **wrapClassName** 表达（`{p}-centered` / `{p}-wrap-rtl`）；
- *  11. 9 条 deprecated 告警（dev）。
- *
- * ⚠️ 与上游的两处**架构差异**（静态 CSS，非行为差异）：
- *   - `useCSSVarCls` / `useStyle` 在零运行时架构下没有对应物（样式在构建期落盘）
- *     ⇒ 不产生 `css-var-*` 类，也不注入 hash 类；
- *   - `ContextIsolator`（form / space）本仓未落地（D36 同判）。
- */
 import { CloseOutlined } from '@apollo-design/icons';
 import { useLocale } from '@apollo-design/locale';
 import { useZIndex } from '@apollo-design/portal';
@@ -35,45 +6,46 @@ import {
   isEmptyVNode,
   isNumber,
   isPlainObject,
-  omit,
-  pickAttrs,
+  useControlledValue,
 } from '@apollo-design/utils';
 import {
-  type CSSProperties,
   computed,
   defineComponent,
   h,
+  normalizeClass,
+  normalizeStyle,
   type PropType,
+  type SlotsType,
   type VNodeChild,
 } from 'vue';
-import { pickClosable, useClosable } from '../_internal/use-closable';
+import { computeClosable } from '../_internal/use-closable';
 import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { type MaskType, useMergedMask } from '../_internal/use-merged-mask';
 import { useComponentConfig } from '../config-provider/context';
 import Skeleton from '../skeleton';
 import { usePanelRef } from '../watermark/context';
+import NormalCancelBtn from './components/NormalCancelBtn';
+import NormalOkBtn from './components/NormalOkBtn';
 import { modalContextKey } from './context';
 import DialogWrap from './engine/DialogWrap';
 import type {
-  ClosableType,
   FocusableConfig,
   ModalBreakpoint,
   ModalButtonProps,
   ModalGetContainer,
   ModalOkType,
+  ModalPanelRef,
   ModalProps,
   ModalSemanticType,
   ModalSemanticTypeInput,
+  ModalSlots,
   MousePosition,
 } from './interface';
 import ModalPanel, { renderCloseIcon } from './ModalPanel';
+import { useModalTheme } from './use-modal-theme';
 import { getTransitionName } from './util';
 
 const DEFAULT_WIDTH = 520;
-
-/** 语义槽的默认空对象（稳定引用，避免 computed 每次都新建）。 */
-const EMPTY_CLASS_NAMES: ModalSemanticType['classNames'] = {};
-const EMPTY_STYLES: ModalSemanticType['styles'] = {};
 
 /**
  * 最近一次点击位置 —— antd `Modal` 的 zoom 入场原点来源。
@@ -107,7 +79,7 @@ export default defineComponent({
   inheritAttrs: false,
   props: {
     prefixCls: { type: String, default: undefined },
-    open: { type: Boolean, default: false },
+    open: { type: Boolean, default: undefined },
     /** ⚠️ 默认 520。 */
     width: {
       type: [String, Number, Object] as PropType<
@@ -123,33 +95,25 @@ export default defineComponent({
     confirmLoading: { type: Boolean, default: undefined },
     okButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
     cancelButtonProps: { type: Object as PropType<ModalButtonProps>, default: undefined },
-    onOk: { type: Function as PropType<(e: Event) => void>, default: undefined },
-    onCancel: { type: Function as PropType<(e: Event) => void>, default: undefined },
-    afterClose: { type: Function as PropType<() => void>, default: undefined },
-    afterOpenChange: { type: Function as PropType<(open: boolean) => void>, default: undefined },
     centered: { type: Boolean, default: undefined },
     loading: { type: Boolean, default: false },
     closable: {
-      type: [Boolean, Object] as unknown as PropType<ModalProps['closable']>,
+      type: [Boolean, Object] as PropType<ModalProps['closable']>,
       default: undefined,
     },
-    mask: { type: [Boolean, Object] as unknown as PropType<MaskType>, default: undefined },
+    mask: { type: [Boolean, Object] as PropType<MaskType>, default: undefined },
     maskClosable: { type: Boolean, default: undefined },
-    maskStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    maskStyle: { type: Object as PropType<import('vue').CSSProperties>, default: undefined },
     maskProps: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    bodyStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    bodyStyle: { type: Object as PropType<import('vue').CSSProperties>, default: undefined },
     bodyProps: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    modalRender: {
-      type: Function as PropType<(node: VNodeChild) => VNodeChild>,
-      default: undefined,
-    },
     mousePosition: {
       type: Object as PropType<MousePosition>,
       default: undefined,
     },
     zIndex: { type: Number, default: undefined },
     getContainer: {
-      type: [String, Boolean, Function, Object] as unknown as PropType<ModalGetContainer>,
+      type: [String, Boolean, Function, Object] as PropType<ModalGetContainer>,
       default: undefined,
     },
     forceRender: { type: Boolean, default: false },
@@ -162,8 +126,7 @@ export default defineComponent({
     wrapProps: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     transitionName: { type: String, default: undefined },
     maskTransitionName: { type: String, default: undefined },
-    rootStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    rootStyle: { type: Object as PropType<import('vue').CSSProperties>, default: undefined },
     /**
      * 语义槽类名。
      *
@@ -172,17 +135,17 @@ export default defineComponent({
      *    所以这里用 `[Object, Function]` 放行（同 `_internal/use-merge-semantic` 的约定）。
      */
     classNames: {
-      type: [Object, Function] as unknown as PropType<ModalSemanticTypeInput['classNames']>,
+      type: [Object, Function] as PropType<ModalSemanticTypeInput['classNames']>,
       default: undefined,
     },
     /** 语义槽样式。⚠️ 同 `classNames`，运行时接受函数形态。 */
     styles: {
-      type: [Object, Function] as unknown as PropType<ModalSemanticTypeInput['styles']>,
+      type: [Object, Function] as PropType<ModalSemanticTypeInput['styles']>,
       default: undefined,
     },
     focusable: { type: Object as PropType<FocusableConfig>, default: undefined },
     focusTriggerAfterClose: { type: Boolean, default: undefined },
-    panelRef: { type: [Object, Function] as unknown as PropType<unknown>, default: null },
+    panelRef: { type: [Object, Function] as PropType<ModalPanelRef>, default: undefined },
     /** 内部：`ConfirmDialog` 用（从语义槽里摘掉若干键）。 */
     _semanticOmit: {
       type: Array as unknown as PropType<string[] | undefined>,
@@ -199,12 +162,28 @@ export default defineComponent({
       default: undefined,
     },
   },
-  setup(props, { attrs, slots }) {
+  slots: {} as SlotsType<ModalSlots>,
+  emits: {
+    'update:open': (_open: boolean) => true,
+    ok: (_event: Event) => true,
+    cancel: (_event: Event) => true,
+    afterClose: () => true,
+    afterOpenChange: (_open: boolean) => true,
+  },
+  setup(props, { attrs, slots, emit }) {
+    const theme = useModalTheme();
+    const [open, setOpen] = useControlledValue({
+      defaultValue: false,
+      getValue: () => props.open,
+      onChange: (value) => emit('update:open', value),
+    });
     const config = useComponentConfig<{
       className?: string;
-      style?: Record<string, unknown>;
-      classNames?: ModalSemanticType['classNames'];
-      styles?: ModalSemanticType['styles'];
+      style?: import('vue').CSSProperties;
+      classNames?: ModalProps['classNames'];
+      styles?: ModalProps['styles'];
+      closable?: ModalProps['closable'];
+      closeIcon?: VNodeChild;
       centered?: boolean;
       cancelButtonProps?: ModalButtonProps;
       okButtonProps?: ModalButtonProps;
@@ -220,14 +199,10 @@ export default defineComponent({
 
     // ============================ Closable ============================
     const closableAfterClose = computed(() =>
-      typeof props.closable === 'boolean'
-        ? undefined
-        : (props.closable as { afterClose?: () => void } | undefined)?.afterClose,
+      typeof props.closable === 'boolean' ? undefined : props.closable?.afterClose,
     );
     const closableOnClose = computed(() =>
-      typeof props.closable === 'boolean'
-        ? undefined
-        : (props.closable as { onClose?: () => void } | undefined)?.onClose,
+      typeof props.closable === 'boolean' ? undefined : props.closable?.onClose,
     );
 
     // ============================== Mask ==============================
@@ -249,11 +224,12 @@ export default defineComponent({
     // ============================== Open ==============================
     const handleCancel = (e: Event): void => {
       if (props.confirmLoading) return;
-      props.onCancel?.(e);
+      setOpen(false);
+      emit('cancel', e);
       closableOnClose.value?.();
     };
     const handleOk = (e: Event): void => {
-      props.onOk?.(e);
+      emit('ok', e);
       closableOnClose.value?.();
     };
 
@@ -287,137 +263,34 @@ export default defineComponent({
      * undefined。判空必须走 `isEmptyVNode` —— Vue 会把 slot 返回的 null / 空数组
      * 归一成 comment vnode，不能比 `null` / `length`（is.ts §空渲染判据）。
      */
-    const readSlot = (name: string): unknown => {
-      const fn = (slots as Record<string, unknown>)[name];
-      if (typeof fn !== 'function') return undefined;
-      const nodes = (fn as (...args: unknown[]) => unknown)();
-      if (nodes === undefined) return undefined;
-      return isEmptyVNode(nodes) ? null : nodes;
+    const readSlot = (name: 'title' | 'okText' | 'cancelText' | 'closeIcon'): VNodeChild => {
+      const nodes = slots[name]?.();
+      return nodes === undefined ? undefined : isEmptyVNode(nodes) ? null : nodes;
     };
 
     // =========================== Closable =============================
     // 关闭按钮的可访问名来自 locale（antd 逐字：`useLocale('global').close`）
     const [globalLocale] = useLocale('global');
-    const closableResult = useClosable(
-      pickClosable(() => ({
-        closable: props.closable as ClosableType,
-        closeIcon: readSlot('closeIcon'),
-      })),
-      pickClosable(
-        computed(() => ({
-          closable: (config as { closable?: ClosableType }).closable,
-          closeIcon: (config as { closeIcon?: unknown }).closeIcon,
-        })),
-      ),
-      // ⚠️ fallback 必须是 computed：兜底图标与 `closeIconRender` 都带 `prefixCls`
-      // （普通对象只在 setup 求值一次 ⇒ 换前缀后关闭图标类名停留旧值，Issue #19.2）。
-      computed(() => ({
-        closable: true,
-        // ⚠️ antd 的 `useClosable` hook 内部读 locale 的 `global.close` 作为
-        //    关闭按钮可访问名（en=`Close` / zh=`关闭`）；`'Close'` 只是纯函数
-        //    `computeClosable` 的兜底 —— composable 消费方必须自己接 locale。
-        closeLabel: globalLocale.value.close,
-        // ⚠️ 兜底图标必须是**真的图标**（`CloseOutlined`），不是空 span ——
-        //    `renderCloseIcon` 只在**没给** closeIcon 时才补图标，给一个空 span
-        //    会得到一个「有按钮、没有 ×」的面板（L6 抓到：desktop 0.008% 全是这个 ×）
-        closeIcon: h(CloseOutlined, { class: `${prefixCls.value}-close-icon` }),
-        closeIconRender: (icon: unknown) => renderCloseIcon(prefixCls.value, icon as VNodeChild),
-      })),
-    );
-
-    const mergedClosable = computed(() => {
-      const r = closableResult.value;
-      if (!r.closable) return false;
-      return {
-        disabled: r.closeBtnIsDisabled,
-        closeIcon: r.closeIconNode,
-        afterClose: closableAfterClose.value,
-        ...r.ariaProps,
-      };
-    });
-
-    // ========================= modalRender ============================
-    const mergedModalRender = computed(() =>
-      props.modalRender
-        ? (node: VNodeChild) =>
-            // ⚠️ 必须包成数组：`h` 的 children 重载不收 `null | undefined`
-            //    （而 `VNodeChild` 含它们）—— 上游的 `createElement` 没这个限制
-            h('div', { class: `${prefixCls.value}-render` }, [props.modalRender?.(node) as never])
-        : undefined,
-    );
-
     // ============================= Refs ==============================
-    const panelSelector = computed(
-      () => `.${prefixCls.value}-${props.modalRender ? 'render' : 'container'}`,
-    );
-    // ⚠️ 选择器随前缀变 ⇒ 传 computed（panelRef 在每次元素挂载时现读）
+    const panelSelector = () => `.${prefixCls.value}-${slots.modalRender ? 'render' : 'container'}`;
+    // The getter also tracks dynamic modalRender slot presence.
     const innerPanelRef = usePanelRef(panelSelector);
-    const mergedPanelRef = (el: unknown): void => {
+    const mergedPanelRef = (el: HTMLElement | null): void => {
       const external = props.panelRef;
-      if (typeof external === 'function') (external as (e: unknown) => void)(el);
-      else if (external && typeof external === 'object' && 'value' in (external as object)) {
-        (external as { value: unknown }).value = el;
-      }
-      innerPanelRef(el as HTMLElement | null);
+      if (typeof external === 'function') external(el);
+      else if (external) external.value = el;
+      innerPanelRef(el);
     };
 
     // =========================== 语义槽合并 ===========================
-    const mergedSemanticProps = computed<Record<string, unknown>>(() => ({
-      ...(props as unknown as Record<string, unknown>),
-      width: props.width,
-      focusTriggerAfterClose: mergedFocusable.value.focusTriggerAfterClose,
-      focusable: mergedFocusable.value,
-      mask: mask.enabled.value,
-      maskClosable: mask.closable.value,
-      zIndex: zIndex.value,
-    }));
-
     const semantic = useMergeSemantic<
-      Record<string, unknown>,
+      ModalProps,
       NonNullable<ModalSemanticType['classNames']>,
       NonNullable<ModalSemanticType['styles']>
     >(
-      [
-        () => config.classNames,
-        // ⚠️ 收敛成对象形态：函数形态由 `resolveSemantic` 在**运行时**处理，
-        //    而 `useMergeSemantic` 的 `SemanticInput` 对「参数逆变」很挑
-        //    （`ModalSemanticTypeInput` 的入参是 `Record<string, unknown>`，仍不兼容）
-        () => props.classNames as unknown as NonNullable<ModalSemanticType['classNames']>,
-        () => mask.classNames.value,
-      ],
-      [
-        () => config.styles,
-        () => props.styles as unknown as NonNullable<ModalSemanticType['styles']>,
-      ],
-      mergedSemanticProps.value,
-    );
-
-    const dialogClassNames = computed<ModalSemanticType['classNames']>(() => {
-      const merged = semantic.classNames.value;
-      return props._semanticOmit
-        ? (omit(
-            merged as Record<string, unknown>,
-            props._semanticOmit,
-          ) as ModalSemanticType['classNames'])
-        : (merged as ModalSemanticType['classNames']);
-    });
-    const dialogStyles = computed<ModalSemanticType['styles']>(() => {
-      const merged = semantic.styles.value;
-      return props._semanticOmit
-        ? (omit(
-            merged as Record<string, unknown>,
-            props._semanticOmit,
-          ) as ModalSemanticType['styles'])
-        : (merged as ModalSemanticType['styles']);
-    });
-
-    const semanticContent = computed<VNodeChild>(() =>
-      props._renderSemanticContent
-        ? props._renderSemanticContent({
-            classNames: semantic.classNames.value as ModalSemanticType['classNames'],
-            styles: semantic.styles.value as ModalSemanticType['styles'],
-          })
-        : slots.default?.(),
+      [() => config.classNames, () => props.classNames, () => mask.classNames.value],
+      [() => config.styles, () => props.styles],
+      () => props,
     );
 
     // ============================= Width ==============================
@@ -438,7 +311,7 @@ export default defineComponent({
         for (const breakpoint of Object.keys(width) as ModalBreakpoint[]) {
           const breakpointWidth = width[breakpoint];
           if (breakpointWidth !== undefined && breakpointWidth !== null) {
-            vars[`--${prefixCls.value}-${breakpoint}-width`] = isNumber(breakpointWidth)
+            vars[`--apollo-modal-${breakpoint}-width`] = isNumber(breakpointWidth)
               ? `${breakpointWidth}px`
               : breakpointWidth;
           }
@@ -447,33 +320,9 @@ export default defineComponent({
       return vars;
     });
 
-    // ============================ Title ==============================
-    const mergedTitle = computed<unknown>(() => {
-      const t = readSlot('title');
-      if (t !== undefined) return t;
-      return props.title;
-    });
-
-    // ============================ Footer ==============================
-    const dialogFooter = computed<VNodeChild>(() => {
-      if (props.loading) return null;
-      // 有 `#footer` slot ⇒ 用 slot 内容；空 slot（comment/空数组）等价「隐藏」
-      const footerSlot = readSlot('footer');
-      if (footerSlot !== undefined) return footerSlot as VNodeChild;
-      return h(ModalPanel, {
-        okText: readSlot('okText') ?? props.okText,
-        okType: props.okType,
-        cancelText: readSlot('cancelText') ?? props.cancelText,
-        confirmLoading: props.confirmLoading,
-        okButtonProps: { ...config.okButtonProps, ...props.okButtonProps },
-        cancelButtonProps: { ...config.cancelButtonProps, ...props.cancelButtonProps },
-        onOk: handleOk,
-        onCancel: handleCancel,
-      } as never);
-    });
-
     // ============================ Render ==============================
     return () => {
+      const { class: rootClass, style: nativeStyle, ...nativeAttrs } = attrs;
       const wrapClassNameExtended = [
         props.wrapClassName,
         (props.centered ?? config.centered) ? `${prefixCls.value}-centered` : undefined,
@@ -482,8 +331,50 @@ export default defineComponent({
         .filter(Boolean)
         .join(' ');
 
-      const cn = dialogClassNames.value ?? EMPTY_CLASS_NAMES;
-      const st = dialogStyles.value ?? EMPTY_STYLES;
+      const closableResult = computeClosable(
+        { closable: props.closable, closeIcon: readSlot('closeIcon') },
+        { closable: config.closable, closeIcon: config.closeIcon },
+        {
+          closable: true,
+          closeLabel: globalLocale.value.close,
+          closeIcon: h(CloseOutlined, { class: `${prefixCls.value}-close-icon` }),
+          closeIconRender: (icon: unknown) => renderCloseIcon(prefixCls.value, icon as VNodeChild),
+        },
+      );
+      const mergedClosable = closableResult.closable
+        ? {
+            disabled: closableResult.closeBtnIsDisabled,
+            closeIcon: closableResult.closeIconNode as VNodeChild,
+            afterClose: closableAfterClose.value,
+            ...closableResult.ariaProps,
+          }
+        : false;
+      const allCn = semantic.classNames.value;
+      const allSt = semantic.styles.value;
+      const cn = { ...allCn };
+      const st = { ...allSt };
+      if (props._semanticOmit?.includes('body')) {
+        delete cn.body;
+        delete st.body;
+      }
+      const footerContent = slots.footer?.({ OkBtn: NormalOkBtn, CancelBtn: NormalCancelBtn });
+      const footer =
+        props.loading || (slots.footer && isEmptyVNode(footerContent))
+          ? null
+          : h(
+              ModalPanel,
+              {
+                okText: slots.okText ? readSlot('okText') : props.okText,
+                okType: props.okType,
+                cancelText: slots.cancelText ? readSlot('cancelText') : props.cancelText,
+                confirmLoading: props.confirmLoading,
+                okButtonProps: { ...config.okButtonProps, ...props.okButtonProps },
+                cancelButtonProps: { ...config.cancelButtonProps, ...props.cancelButtonProps },
+                onOk: handleOk,
+                onCancel: handleCancel,
+              },
+              slots.footer ? { default: () => footerContent } : undefined,
+            );
 
       const bodyNode = props.loading
         ? h(Skeleton, {
@@ -493,26 +384,25 @@ export default defineComponent({
             // 根类名走 Vue 原生 `class`（Skeleton 已迁移：根 class 由 attrs 承接；
             // 其余多余属性仍按上游丢弃）
             class: `${prefixCls.value}-body-skeleton`,
-          } as never)
-        : (semanticContent.value as never);
+          })
+        : props._renderSemanticContent
+          ? props._renderSemanticContent({ classNames: allCn, styles: allSt })
+          : slots.default?.();
 
       return h(
         DialogWrap,
         {
-          ...(pickAttrs(attrs as Record<string, unknown>, { aria: true, data: true }) as Record<
-            string,
-            unknown
-          >),
+          ...nativeAttrs,
           prefixCls: prefixCls.value,
-          visible: props.open,
+          visible: open.value,
           zIndex: zIndex.value,
           getContainer:
             props.getContainer === undefined ? config.getPopupContainer : props.getContainer,
-          rootClassName: [config.className, cn.root].filter(Boolean).join(' ') || undefined,
-          rootStyle: { ...config.style, ...props.rootStyle, ...st.root },
-          footer: dialogFooter.value,
-          closable: mergedClosable.value,
-          closeIcon: closableResult.value.closeIconNode,
+          rootClassName: normalizeClass([config.className, cn.root]),
+          rootStyle: { ...theme.style.value, ...config.style, ...props.rootStyle, ...st.root },
+          footer,
+          closable: mergedClosable,
+          closeIcon: closableResult.closeIconNode as VNodeChild,
           // ⚠️ 动效名走 **rootPrefixCls**（`apollo-zoom` / `apollo-fade`），
           //    不是组件前缀 —— 见 `util.ts` 的 `getTransitionName`
           transitionName: getTransitionName(rootPrefixCls.value, 'zoom', props.transitionName),
@@ -533,11 +423,8 @@ export default defineComponent({
           scrollLock: props.scrollLock,
           keyboard: props.keyboard,
           // 调用方原生 class（位置与原先的 props.className 一致）
-          className: attrs.class,
-          style: {
-            ...((attrs.style as CSSProperties | undefined) ?? {}),
-            ...responsiveWidthVars.value,
-          },
+          className: normalizeClass(rootClass),
+          style: [theme.style.value, normalizeStyle(nativeStyle), responsiveWidthVars.value],
           classNames: {
             ...cn,
             wrapper: [cn.wrapper, wrapClassNameExtended].filter(Boolean).join(' ') || undefined,
@@ -546,20 +433,28 @@ export default defineComponent({
           panelRef: mergedPanelRef,
           forceRender: props.forceRender,
           destroyOnHidden: props.destroyOnHidden ?? props.destroyOnClose,
-          afterClose: props.afterClose,
-          afterOpenChange: props.afterOpenChange,
+          afterClose: () => emit('afterClose'),
+          afterOpenChange: (value: boolean) => emit('afterOpenChange', value),
           onClose: handleCancel,
-          title: mergedTitle.value,
+          title: slots.title ? readSlot('title') : props.title,
           bodyStyle: props.bodyStyle,
           bodyProps: props.bodyProps,
-          modalRender: mergedModalRender.value,
+
           width: numWidth.value,
           height: props.height,
           mousePosition: props.mousePosition ?? lastClickPosition,
           focusTriggerAfterClose: mergedFocusable.value.focusTriggerAfterClose,
           focusTrap: mergedFocusable.value.trap,
-        } as never,
-        { default: () => bodyNode },
+        },
+        {
+          default: () => bodyNode,
+          ...(slots.modalRender
+            ? {
+                modalRender: (scope: import('./interface').ModalRenderSlotProps) =>
+                  h('div', { class: `${prefixCls.value}-render` }, [slots.modalRender?.(scope)]),
+              }
+            : {}),
+        },
       );
     };
   },

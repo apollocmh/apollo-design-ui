@@ -1,125 +1,22 @@
-> 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
+# Modal
 
-> 历史实施记录：原勾选、当时结果和缺口保留。2026-10-30 起，本文的 G0–G14 / 逐组件 G13 全仓收口与旧 Registry 进度规则由仓库 `WORKFLOW.md`、`TESTING.md` 两阶段流程替代；当前任务状态只读 `registry/vue-native-audit.json`，不据本文重复派发或重跑已有效验证。
+Modal owns Vue events, slots and the current modal configuration. It shares the delivered Portal, Motion, Button and focus helpers; it does not import a React engine or a runtime style injector.
 
-# modal
+- `Modal.ts` resolves current mask, closable, focusable, width, semantic and theme inputs. Native attrs land once on the actual `role="dialog"` panel. `rootStyle` and `styles.root` target the outer root.
+- `engine/` renders Portal → root/mask/wrapper → motion → panel. Motion completion controls `afterClose`, `afterOpenChange`, focus restoration and hidden destruction. The 500ms motion deadline remains necessary for environments without animation events.
+- `ModalPanel.ts` supplies current locale/button configuration to the stable scoped `OkBtn` and `CancelBtn` components. Global disabled configuration does not disable these action buttons. Existing button override order is retained.
+- `ConfirmDialog.ts` renders programmatic data and services. Confirm `body` semantics land on `-confirm-content`. `modalRender` and functional `footer` remain programmatic configuration; ordinary Modal content uses slots.
+- `confirm.ts` owns a detached application's pending/open/closing/closed session. `useModal.ts` keeps `[api, holderVNode]`; the holder renders reactive session data in its actual Vue context. Setup-time commands, updates, close results and owner teardown use the same sessions. Closing/closed sessions reject later updates and cannot resurrect.
+- `PurePanel.ts` renders inline without Portal/motion/mask. Its title/content slots override text props; an existing default slot remains the confirm body input when `#content` is absent.
 
-> **层**：L3（`packages/ui`）｜ **优先级**：P3 ｜ **复杂度**：L ｜ **antd 版本**：6.6.4
->
-> 契约来源：antd `components/modal/`（Modal 335 / ConfirmDialog 331 / confirm 198 /  
-> PurePanel 117 / shared 100 / useModal ~150 / interface 200 / style 424）
->
-> - `@rc-component/dialog@1.10.0`（534 行 / 10 文件）。  
->   上游是**兼容性规格**，不是代码来源。
+Ordinary notifications are `ok`, `cancel`, `afterClose`, `afterOpenChange` and `update:open`. OK only notifies. Cancel, close button, mask and Escape request `open=false`; a controlled parent can refuse. With `open` withdrawn, the last accepted value remains. `confirmLoading` continues to block cancellation.
 
-## 1. 职责
+Use `#footer="{ OkBtn, CancelBtn }"` and `#modalRender="{ ModalPanel }"`; render scoped components with `<component :is="…" />`. Their identities remain stable while content changes. Empty slots hide content and zero is rendered. No focus/blur component methods are promised; `panelRef` receives the actual panel element and `null` when it is removed.
 
-模态对话框：遮罩与滚动锁、焦点陷阱与归还、zoom/fade 动效、语义化槽位、  
-以及**命令式路径**（`Modal.confirm/info/success/error/warning` + `destroyAll` + `useModal`）。
+Command `onOk(close)` / `onCancel(close)` remain services: a returned promise controls loading and successful closing; a rejection keeps the session open. Hook commands return `ModalHookInstance`, a `PromiseLike<boolean>`: accepted OK resolves `true`, cancellation/programmatic destruction/owner teardown resolves `false`. Static commands return `ModalInstance` without a thenable promise. Both paths remove their `destroyAll` registrations on completion.
 
-## 2. 文件布局与关键决策
+All six declared public tokens (`headerBg`, `footerBg`, `titleLineHeight`, `titleFontSize`, `titleColor`, `contentBg`) and their existing wireframe/default derivatives are projected from the current theme. Portal content and PurePanel receive the same variables; dynamic replacement/removal restores the appropriate defaults. Prefixes and locale are read from the current Provider.
 
+Retained behavior: default width 520 (confirm 416), responsive widths, mask-drag protection, top-layer Escape, scroll locking through leave motion, focus trap only for fixed wrappers, existing mask-gated restoration, and explicit `focusable.autoFocusButton:null` disabling button autofocus. Root motion names follow `rootPrefixCls`; custom component prefixes change classes without renaming the static CSS variable namespace.
 
-
-```
-modal/
-├── Modal.ts         # antd 侧壳：mask / focusable / zIndex / closable / 语义槽 / 响应式宽度 / loading
-├── ModalPanel.ts    # antd shared.tsx：renderCloseIcon + Footer（+ DisabledContext(false)）
-├── ConfirmDialog.ts # ConfirmContent + ConfirmDialog（5 种 type / autoFocusButton / mask.closable 默认 false）
-├── components/      # ActionButton（防重复点击 + 异步 onOk 的 loading + autoFocus）
-│                    #   + NormalOkBtn / NormalCancelBtn / ConfirmOkBtn / ConfirmCancelBtn
-├── confirm.ts       # 命令式：游离容器 + createApp + destroyFns 队列 + close/update
-├── useModal.ts      # ElementsHolder + HookModal + actionQueue + thenable instance
-├── PurePanel.ts     # _InternalPanelDoNotUseOrYouWillBeFired
-├── context.ts / destroyFns.ts / util.ts
-├── engine/          # ⭐ rc-dialog 的 Vue 自建
-│   ├── DialogWrap.ts  # Portal（autoLock / onEsc）+ destroyOnHidden 短路 + afterClose 三步
-│   ├── Dialog.ts      # root + mask + wrap + 焦点归还 + isFixedPos
-│   ├── Content.ts     # CSSMotion + transformOrigin
-│   ├── Panel.ts       # 三段结构 + 关闭按钮 + role/aria + 焦点陷阱
-│   ├── Mask.ts / MemoChildren.ts / context.ts / util.ts
-├── interface.ts / index.ts
-└── style/{token.ts,index.ts}
-```
-
-### 三条必须记住的实现判据
-
-1. **动效名前缀是 `rootPrefixCls`**（`apollo-zoom` / `apollo-fade`），**不是**组件前缀。  
-   antd 传 `getTransitionName(rootPrefixCls, 'zoom')` ⇒ `style/index.ts` 里那批  
-   `.apollo-zoom-*` / `.apollo-fade-*` **裸类**规则才命中。传错时动效**静默失效**。
-2. **`setup()` 里不能创建带 `ref` 的 vnode**（Vue 的 `normalizeRef` 用  
-   `currentRenderingInstance` 当 owner）⇒ `useModal` 的 holder 实例走 `onReady` 回调、  
-   `HookModal` 的句柄走 **prop 传 `Ref` 对象**。写成 vnode 的 `ref` 会得到  
-   `Missing ref owner context` 且 ref **永远不生效**（PITFALLS 178）。
-3. **关闭是异步的**：`close()` 只把 `open` 置假，卸载发生在**离场动效结束**的  
-   `afterClose` 里 ⇒ 测试必须轮询（PITFALLS 179）。
-
-### 其它易错点
-
-- **`Skeleton` 是 `inheritAttrs: false`** ⇒ 传 `className` **prop**，`class` 会被静默丢弃。
-- **`PurePanel` 的类名不含 `prefixCls`** —— `Panel` 的根类已经会加它。
-- **`MemoChildren` 缓存 slot 求值结果**（`!shouldUpdate` 时返回同一个 vnode）——  
-  Vue 的 `patch` 首行 `if (n1 === n2) return` 让这等价于 React 的 memo。
-- **`Content` 加了 `motionDeadline: 500`**（上游没有）：样式表没加载时 CSS 事件不来，  
-  没有 deadline 会卡在 active、`afterClose` 不触发（D104）。
-
-## 3. 与 antd 的差异
-
-登记于 `COMPATIBILITY.md` §9.2：**D100**（命令式宿主用游离 `div`，同 D96）、  
-**D101**（PurePanel 不包 `withPureRenderTheme`）、**D102**（L4 过滤器补 `css-var-*` 形态）、  
-**D103**（无 `ContextIsolator`，同 D36）、**D104**（`Content` 加 `motionDeadline` 兜底）；  
-§9.2.1 的 **U11**（`autoFocusButton` 的 `||` 吃掉 `null` —— 只有 deprecated 的顶层  
-`autoFocusButton: null` 能表达「不聚焦」）。
-
-## 4. Component Token 清单
-
-registry 数据：token 数 = **6**（公开面）。
-
-| token                   | 来源                   | 默认                 |
-| ----------------------- | -------------------- | ------------------ |
-| `headerBg` / `footerBg` | 字面量                  | `transparent`      |
-| `titleLineHeight`       | `lineHeightHeading5` | 1.5（**unitless**）  |
-| `titleFontSize`         | `fontSizeHeading5`   | 16                 |
-| `titleColor`            | `colorTextHeading`   | `rgba(0,0,0,0.88)` |
-| `contentBg`             | `colorBgElevated`    | `#ffffff`          |
-
-另有 **12 个 internal**（落 CSS 变量、不在公开类型面）：`contentPadding` /  
-`headerPadding` / `headerBorderBottom` / `headerMarginBottom` / `bodyPadding` /  
-`footerPadding` / `footerBorderTop` / `footerBorderRadius` / `footerMarginTop` /  
-`confirmBodyPadding` / `confirmIconMarginInlineEnd` / `confirmBtnsMarginTop`  
-—— 全部随 `wireframe` 切换两套值。
-
-以及 **9 个 `prepareToken` 派生**（`calc()` 内联，**不落** CSS 变量）：  
-`modalHeaderHeight` / `modalFooterBorder{ColorSplit,Style,Width}` /  
-`modalCloseIcon{Color,HoverColor}` / `modalCloseBtnSize` / `modalConfirmIconSize` /  
-`modalTitleHeight`。
-
-## 4.5 Wrapper 透传与前缀（Issue #19）
-
-1. 🚨 **`wrapStyle` / `wrapProps` 必须显式转交 `DialogWrap`** —— 两者是公开 prop，引擎
-   `Dialog` 的 wrapper 合并顺序是 `zIndex → wrapStyle → styles.wrapper → display`，
-   `wrapProps` **最后展开**（能盖到 `onClick`/`onMousedown`）。`styles.wrapper`、`maskProps`、
-   `bodyProps` 是不同层级/通道，**不能**当等价替代。
-2. 🚨 **`prefixCls` / `rootPrefixCls` 是 computed**：局部前缀或 ConfigProvider 全局前缀
-   运行时变更后，mask / wrap / panel / container / 动效名要跟着换。带前缀的派生面还有三处
-   容易漏：
-   - `useClosable` 的 **fallback**（兜底图标 `{p}-close-icon` + `closeIconRender`）⇒
-     fallback 传 computed（hook 的第三个参数收 `MaybeRefOrGetter`）；
-   - `usePanelRef` 的 **panelSelector**（`.{p}-container`）⇒ 传 computed，ref 回调里现读；
-   - `wrapClassName` 上的 `{p}-centered` / `{p}-wrap-rtl`。
-
-## 5. 已知缺口
-
-| #  | 缺口                                                    | 说明                                                          |
-| -- | ----------------------------------------------------- | ----------------------------------------------------------- |
-| P1 | `App.useApp()` 的 `modal` 实例                           | `app/App.ts` 里仍是 `stubModal`；本轮已提供 `useModal`，回填是 `app` 侧的事 |
-| P2 | ConfigProvider 组件级 `classNames` / `styles` / token 覆盖 | staged（同 image/message/notification）                        |
-| P3 | 函数式语义槽的**类型面**                                        | 运行时已支持（`useMergeSemantic`），类型按 D36 只声明对象形态                  |
-| P4 | `holderRender` / `warnContext`                        | D30 同源（D100）                                                |
-| P5 | `ContextIsolator`（form / space）                       | D36（D103）                                                   |
-
-## 6. 收口证据（G13）
-
-- L1/L2 24 / 内核 19 / L3 11 / L4 9（基线 `tests/compat/baselines/modal.dom.json`）/  
-  L5 35（含焦点三条）/ L7(theme) 17 / demo 23（`expectCount` 钉死）/ L6 9/9
-- registry 11 维 done，`status: completed`
+Stage-one evidence is recorded in `/tmp/apollo-modal-checks.json`. Historical Button content reference allowances, DOM baselines, S19 wrap/prefix regressions and static CSS token declarations remain unchanged. Full visual/coverage/release acceptance belongs to the final frozen library run.

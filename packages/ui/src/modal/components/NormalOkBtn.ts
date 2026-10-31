@@ -9,7 +9,7 @@ import { defineComponent, h, type VNodeChild } from 'vue';
 
 import Button from '../../button/Button.vue';
 import { useModalContext } from '../context';
-import { convertLegacyProps } from '../util';
+import { convertLegacyProps, normalizeButtonProps } from '../util';
 
 export default defineComponent({
   name: 'AModalNormalOkBtn',
@@ -25,8 +25,8 @@ export default defineComponent({
           ...convertLegacyProps(okType),
           loading: confirmLoading,
           onClick: onOk,
-          ...okButtonProps,
-        } as never,
+          ...normalizeButtonProps(okButtonProps),
+        },
         { default: () => okTextLocale as VNodeChild },
       );
     };

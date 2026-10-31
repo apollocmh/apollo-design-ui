@@ -242,3 +242,7 @@ Card 的 tabChange/update:activeTabKey 由 Vue emits 拥有，支持 v-model:act
 ### D-splitter-native-panels-and-resize
 
 Splitter 的 resizeStart/resize/resizeEnd/collapse/draggerDoubleClick 统一由 Vue emits 拥有，移除重复回调 prop 通道，模板仍使用自然的 @resize-start 等写法。Panel 保留真实 Vue 节点、原生 attrs/StyleValue、默认槽和可访问的 nativeElement，尺寸与折叠状态按 key 归属；受控拒绝不写入本地状态，撤控保留已接受值，布局顺序变化取消旧拖拽。补齐分隔条键盘和当前四个有效 Token，保留既有尺寸算法，详见[Splitter API](packages/ui/src/splitter/index.zh-CN.md)。
+
+### D-modal-native-content-and-sessions
+
+普通 Modal 的 ok/cancel/afterClose/afterOpenChange 改由 Vue emits 拥有，取消/关闭支持 open 模型请求，OK 保留业务通知职责。modalRender/footer 内容函数迁为 #modalRender={ModalPanel}、#footer={OkBtn,CancelBtn}，提供稳定可直接使用的组件；命令式确认的异步操作与程序内容配置保留。useModal 仍返回 [api,holderVNode]，结果以 ModalHookInstance 准确描述 PromiseLike<boolean>，修正早期调用、会话结算/注销、关闭后更新及当前 confirmLoading。删除从未生效的普通 focusTrap 和命令式 open 声明，分别使用 focusable.trap、destroy()；补齐实际 Portal 容器、当前配置/六 Token、原生 attrs、焦点与资源，详见[Modal API](packages/ui/src/modal/index.zh-CN.md)。

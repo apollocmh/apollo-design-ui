@@ -1515,33 +1515,40 @@ export type { ComponentToken as MessageComponentToken } from './message/style/to
 export { prepareComponentToken as prepareMessageComponentToken } from './message/style/token';
 export type {
   AutoFocusButton as ModalAutoFocusButton,
-  ClosableConfig as ModalClosableConfig,
-  ClosableType as ModalClosableType,
   FocusableConfig as ModalFocusableConfig,
   MaskConfig as ModalMaskConfig,
   MaskType as ModalMaskType,
+  ModalAction,
   ModalButtonProps,
+  ModalClosableConfig,
+  ModalClose,
+  ModalEmits,
+  ModalFooterExtra,
   ModalFuncProps,
   ModalGetContainer,
   ModalGlobalConfig,
   ModalHookAPI,
+  ModalHookInstance,
   ModalInstance,
   ModalLocale,
   ModalOkType,
+  ModalPanelRef,
   ModalProps,
   ModalPurePanelProps,
+  ModalRenderSlotProps,
   ModalSemanticType,
+  ModalSlots,
   ModalType,
   MousePosition,
 } from './modal';
+export type ModalClosableType = boolean | import('./modal').ModalClosableConfig | null;
 // ---------------------------------------------------------------------------
 // Modal —— 对话框（rc-dialog 的 Vue 自建：portal + 焦点陷阱 + 焦点归还）
 //
 // ⚠️ 静态方法：`Modal.confirm/info/success/error/warning/warn` 与 `Modal.destroyAll()`、
 //    `Modal.useModal()`；`_InternalPanelDoNotUseOrYouWillBeFired` 是私有面板（L4/L6 取证用）。
 //    `Modal.config` **已废弃**（请用 `ConfigProvider.config`）。
-// ⚠️ 焦点三条是硬要求：陷阱（`focusTrap`，默认跟 mask 走）、归还（`focusTriggerAfterClose`，
-//    默认 true）、`focusable.autoFocusButton`（confirm 默认 `'ok'`）。
+// 焦点通过 focusable.trap / focusable.focusTriggerAfterClose / autoFocusButton 配置。
 // ---------------------------------------------------------------------------
 export { default as Modal, ModalPurePanel } from './modal';
 export { genModalStyle, genModalTokenDecls } from './modal/style';

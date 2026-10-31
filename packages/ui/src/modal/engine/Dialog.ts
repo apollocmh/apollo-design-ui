@@ -1,45 +1,21 @@
-/**
- * `Dialog` —— `@rc-component/dialog@1.10.0` `es/Dialog/index.js`（175 行）的 Vue 版。
- *
- * 渲染树（逐条对齐上游，L4/L6 的判据）：
- *
- * ```
- * <div class="{p}-root [rootClassName]" style={rootStyle} {...data-*}>
- *   ├─ Mask(visible = mask && visible, motionName = {p}-{maskAnimation|maskTransitionName},
- *   │       style={{zIndex, ...maskStyle, ...styles.mask}}, className={classNames.mask})
- *   └─ <div class="{p}-wrap [wrapClassName] [classNames.wrapper]" ref={wrapperRef}
- *          style={{zIndex, ...wrapStyle, ...styles.wrapper, display: animatedVisible ? null : 'none'}}
- *          onClick={maskClosable ? onWrapperClick : null} onMouseDown={onWrapperMouseDown} {...wrapProps}>
- *        └─ Content(visible = visible && animatedVisible, motionName = {p}-{animation|transitionName},
- *                   onClose = onInternalClose, onVisibleChanged = onDialogVisibleChanged)
- * ```
- *
- * 关键判据：
- *   1. **`display: none` 而不是卸载**：`animatedVisible === false` 时 wrap 靠 inline
- *      `display: none` 隐藏 —— `afterClose` 之后节点仍在（除非 `destroyOnHidden`）；
- *   2. **`onWrapperClick` 三个条件**：`maskClosable` 且 `e.target === wrapper` 且
- *      `mouseDownOnMaskRef`（mousedown 也落在 wrap 上）—— **拖选文字后松开不关**；
- *   3. **mask 的可见性用原始 `visible`**（不是 `visible && animatedVisible`）；
- *   4. **`doClose` 的时序**：`animatedVisible=false` → 焦点归还 → `afterClose()`；
- *      ⚠️ 本仓把它做成**幂等**（`animatedVisible` 已假则直接返回），因为兜底路径也会调它；
- *   5. `isFixedPos` 读 wrap 的 `computedStyle.position === 'fixed'`，是**焦点陷阱的门控之一**；
- *      ⚠️ 它在渲染**之后**才可读 ⇒ 本仓在 `nextTick` 里同步（门是响应式的，晚一帧不影响）；
- *   6. `focusDialogContent` 只在 `onVisibleChanged(true)` 时调（开启动效结束才移焦点）。
- *
- * ⚠️ 与上游的一处**实现差异**（`focusDialogContent` 的 `preventScroll`）：
- *    上游的 `contentRef.current.focus()` 最终落到 Panel 的
- *    `internalRef.current.focus({ preventScroll: true })`；本仓的
- *    `useFocusRestore.focusContent()` 是裸 `focus()`（其契约文档已注明）。
- *    这里**不用** `focusContent()`，改为本地实现同一道门 + `preventScroll: true`，
- *    与 Panel 的行为逐字一致。
- */
 import { useFocusRestore } from '@apollo-design/a11y';
-import { contains, pickAttrs, useId } from '@apollo-design/utils';
-import { defineComponent, h, nextTick, onMounted, type PropType, provide, ref, watch } from 'vue';
-
+import { contains, useId } from '@apollo-design/utils';
+import type { SlotsType, StyleValue, VNodeChild } from 'vue';
+import {
+  defineComponent,
+  h,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  type PropType,
+  provide,
+  ref,
+  watch,
+} from 'vue';
 import type { ModalSemanticType } from '../interface';
 import Content from './Content';
 import { dialogRefContextKey } from './context';
+import type { DialogClosable, DialogSlots, ModalPanelRef } from './interface';
 import Mask from './Mask';
 import { clsx, getMotionName } from './util';
 
@@ -60,29 +36,28 @@ export default defineComponent({
     afterClose: { type: Function as PropType<() => void>, default: undefined },
     transitionName: { type: String, default: undefined },
     animation: { type: String, default: undefined },
-    closable: { type: [Boolean, Object] as PropType<unknown>, default: true },
+    closable: { type: [Boolean, Object] as PropType<DialogClosable>, default: true },
     // >>> Mask
     mask: { type: Boolean, default: true },
     maskTransitionName: { type: String, default: undefined },
     maskAnimation: { type: String, default: undefined },
     maskClosable: { type: Boolean, default: true },
-    maskStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    maskStyle: { type: Object as PropType<import('vue').CSSProperties>, default: undefined },
     maskProps: { type: Object as PropType<Record<string, unknown>>, default: undefined },
     // >>> 语义槽
     rootClassName: { type: String, default: undefined },
-    rootStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    rootStyle: { type: Object as PropType<import('vue').CSSProperties>, default: undefined },
     classNames: { type: Object as PropType<ModalSemanticType['classNames']>, default: undefined },
     styles: { type: Object as PropType<ModalSemanticType['styles']>, default: undefined },
     // >>> Content 侧透传
     // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
-    title: { type: null as unknown as PropType<unknown>, default: undefined },
+    title: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
-    footer: { type: null as unknown as PropType<unknown>, default: undefined },
+    footer: { type: null as unknown as PropType<VNodeChild>, default: undefined },
     // 内部：由命令式/程序化 API 驱动，无模板上下文，VNode prop 合法
-    closeIcon: { type: null as unknown as PropType<unknown>, default: undefined },
-    bodyStyle: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    closeIcon: { type: null as unknown as PropType<VNodeChild>, default: undefined },
+    bodyStyle: { type: Object as PropType<import('vue').CSSProperties>, default: undefined },
     bodyProps: { type: Object as PropType<Record<string, unknown>>, default: undefined },
-    modalRender: { type: Function as PropType<unknown>, default: undefined },
     width: { type: [String, Number] as PropType<string | number>, default: undefined },
     height: { type: [String, Number] as PropType<string | number>, default: undefined },
     forceRender: { type: Boolean, default: false },
@@ -92,10 +67,11 @@ export default defineComponent({
       default: undefined,
     },
     focusTrap: { type: Boolean, default: undefined },
-    panelRef: { type: [Object, Function] as PropType<unknown>, default: undefined },
+    panelRef: { type: [Object, Function] as PropType<ModalPanelRef>, default: undefined },
     className: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, unknown>>, default: undefined },
+    style: { type: [Object, Array, String] as PropType<StyleValue>, default: undefined },
   },
+  slots: {} as SlotsType<DialogSlots>,
   setup(props, { attrs, slots }) {
     const wrapperRef = ref<HTMLElement | null>(null);
     const panelElRef = ref<HTMLElement | null>(null);
@@ -118,20 +94,21 @@ export default defineComponent({
     const focusDialogContent = (): void => {
       const panel = panelElRef.value;
       if (!panel) return;
-      if (!contains(wrapperRef.value, document.activeElement)) {
+      if (!contains(wrapperRef.value, panel.ownerDocument.activeElement)) {
         panel.focus({ preventScroll: true });
       }
     };
 
     /** 幂等的关闭收尾（上游只在离场动效结束时调；本仓兜底路径也会调）。 */
     const doClose = (): void => {
-      if (!animatedVisible.value) return;
+      if (props.visible || !animatedVisible.value) return;
       animatedVisible.value = false;
       focusRestore.restore();
       props.afterClose?.();
     };
 
     const onDialogVisibleChanged = (newVisible: boolean): void => {
+      if (newVisible !== props.visible) return;
       if (newVisible) focusDialogContent();
       else doClose();
       props.afterOpenChange?.(newVisible);
@@ -153,7 +130,9 @@ export default defineComponent({
 
     const syncIsFixedPos = (): void => {
       if (!wrapperRef.value) return;
-      isFixedPos.value = getComputedStyle(wrapperRef.value).position === 'fixed';
+      isFixedPos.value =
+        wrapperRef.value.ownerDocument.defaultView?.getComputedStyle(wrapperRef.value).position ===
+        'fixed';
     };
 
     watch(
@@ -172,12 +151,14 @@ export default defineComponent({
           // 兜底：Content 的离场动效若没启动（例如受控在下一 tick 立刻关），
           // 它的 `onVisibleChanged` 不会来 —— 在本次 flush 之后补一次 doClose（幂等）。
           void nextTick(() => {
-            if (animatedVisible.value && !leaving.value) doClose();
+            if (!props.visible && animatedVisible.value && !leaving.value) doClose();
           });
         }
       },
       { immediate: true },
     );
+
+    onBeforeUnmount(() => focusRestore.restore());
 
     onMounted(() => {
       if (props.visible) void nextTick(syncIsFixedPos);
@@ -211,16 +192,16 @@ export default defineComponent({
       const contentNode = h(
         Content,
         {
+          ...attrs,
           prefixCls,
           title: props.title,
           ariaId,
           footer: props.footer,
-          closable: props.closable as never,
+          closable: props.closable,
           closeIcon: props.closeIcon,
           onClose: onInternalClose,
           bodyStyle: props.bodyStyle,
           bodyProps: props.bodyProps,
-          modalRender: props.modalRender as never,
           width: props.width,
           height: props.height,
           forceRender: props.forceRender,
@@ -239,8 +220,8 @@ export default defineComponent({
           onLeaveStart: () => {
             leaving.value = true;
           },
-        } as never,
-        { default: () => slots.default?.() },
+        },
+        slots,
       );
 
       return h(
@@ -248,7 +229,6 @@ export default defineComponent({
         {
           class: clsx(`${prefixCls}-root`, props.rootClassName),
           style: props.rootStyle,
-          ...pickAttrs(attrs as Record<string, unknown>, { data: true }),
         },
         [
           maskNode,

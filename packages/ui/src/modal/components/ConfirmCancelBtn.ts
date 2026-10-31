@@ -10,6 +10,7 @@
 import { defineComponent, h, type VNodeChild } from 'vue';
 
 import { useModalContext } from '../context';
+import { normalizeButtonProps } from '../util';
 import ActionButton from './ActionButton';
 
 export default defineComponent({
@@ -26,7 +27,7 @@ export default defineComponent({
         mergedOkCancel,
         rootPrefixCls,
         close,
-        onCancel,
+        actionOnCancel,
         onConfirm,
         onClose,
       } = ctx.value;
@@ -37,7 +38,7 @@ export default defineComponent({
         ActionButton,
         {
           isSilent,
-          actionFn: onCancel as never,
+          actionFn: actionOnCancel,
           close: (...args: unknown[]) => {
             close?.(...args);
             onConfirm?.(false);
@@ -46,12 +47,12 @@ export default defineComponent({
           autoFocus: autoFocusButton === 'cancel',
           // 根类名/样式走 Vue 原生 attrs；`className` / `rootClassName` 已被类型层拒绝。
           buttonProps: {
-            ...cancelButtonProps,
+            ...normalizeButtonProps(cancelButtonProps),
             class: cancelButtonProps?.class,
             style: cancelButtonProps?.style,
           },
           prefixCls: `${rootPrefixCls}-btn`,
-        } as never,
+        },
         { default: () => cancelTextLocale as VNodeChild },
       );
     };

@@ -136,3 +136,76 @@ describe('Modal · 类型', () => {
     void negative;
   });
 });
+
+// Actual constructor, native h(), scoped components and emitted listeners.
+import { h } from 'vue';
+import { Modal } from '../index';
+import type { ModalEmits, ModalHookInstance, ModalSlots } from '../interface';
+
+const nativeProps = {
+  open: true,
+  'onUpdate:open': (value: boolean) => value.valueOf(),
+  onOk: (event: Event) => event.preventDefault(),
+  onCancel: (event: Event) => event.type,
+  onAfterOpenChange: (open: boolean) => open.valueOf(),
+  onAfterClose: () => {},
+  styles: ({ props }: { props: ModalProps }) => ({ body: { opacity: props.loading ? 0.5 : 1 } }),
+} satisfies InstanceType<typeof Modal>['$props'];
+const nativeSlots: ModalSlots = {
+  default: () => 0,
+  footer: ({ OkBtn, CancelBtn }) => [h(CancelBtn), h(OkBtn)],
+  modalRender: ({ ModalPanel }) => h('section', [h(ModalPanel)]),
+};
+h(Modal, nativeProps, nativeSlots);
+expectTypeOf<NonNullable<InstanceType<typeof Modal>['$props']['onOk']>>().parameters.toEqualTypeOf<
+  [event: Event]
+>();
+expectTypeOf<ModalEmits['afterOpenChange']>().toEqualTypeOf<[open: boolean]>();
+expectTypeOf<Awaited<ModalHookInstance>>().toEqualTypeOf<boolean>();
+expectTypeOf<ModalProps>().not.toHaveProperty('onOk');
+expectTypeOf<ModalProps>().not.toHaveProperty('afterClose');
+expectTypeOf<ModalProps>().not.toHaveProperty('modalRender');
+expectTypeOf<InstanceType<typeof Modal>['$props']>().not.toHaveProperty('modalRender');
+expectTypeOf<InstanceType<typeof Modal>>().not.toHaveProperty('focus');
+
+const rejectedNativeContracts = () => {
+  // @ts-expect-error Ordinary Modal owns notifications through Vue emits.
+  const oldEvent: ModalProps = { onOk: () => {} };
+  // @ts-expect-error Pure content belongs in #modalRender.
+  const oldRender: ModalProps = { modalRender: () => null };
+  // @ts-expect-error The actual constructor's model remains boolean.
+  const wrongOpen: InstanceType<typeof Modal>['$props'] = { open: 'yes' };
+  // @ts-expect-error The actual constructor emits a native Event.
+  const wrongEvent: InstanceType<typeof Modal>['$props'] = { onOk: (_event: string) => {} };
+  return [oldEvent, oldRender, wrongOpen, wrongEvent];
+};
+void rejectedNativeContracts;
+
+const updatedInstanceContracts = (hook: ModalHookInstance) => {
+  const instance = Modal.confirm({ title: 'Initial' });
+  instance.update({ title: 'Current', content: 'Current content', confirmLoading: true });
+  instance.update((previous) => ({ ...previous, content: 'Function update' }));
+  hook.update({ content: 'Hook update', confirmLoading: false });
+  // @ts-expect-error Imperative sessions are opened by calling confirm, not by an open prop.
+  Modal.confirm({ open: true });
+  // @ts-expect-error Static update changes live content/configuration; destroy closes the session.
+  instance.update({ open: false });
+  // @ts-expect-error Hook update has the same single lifecycle owner.
+  hook.update({ open: false });
+  // @ts-expect-error Use the implemented focusable.trap input.
+  const staleFocusTrap: ModalProps = { focusTrap: false };
+  return staleFocusTrap;
+};
+void updatedInstanceContracts;
+
+expectTypeOf<InstanceType<typeof Modal>['$props']>().not.toHaveProperty('focusTrap');
+
+const nativeContainerContracts = (target: ShadowRoot) => {
+  h(Modal, { getContainer: target });
+  h(Modal, { getContainer: () => target });
+  const publicInput: ModalProps = { getContainer: target };
+  // @ts-expect-error Portal supports inline false, not a boolean true container.
+  const invalidContainer: InstanceType<typeof Modal>['$props'] = { getContainer: true };
+  return [publicInput, invalidContainer];
+};
+void nativeContainerContracts;
