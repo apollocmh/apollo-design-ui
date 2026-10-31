@@ -57,20 +57,33 @@ describe('Picker DatePicker bridge', () => {
       });
       await nextTick();
       const engine = wrapper.getComponent(PickerPanel);
-      const first = engine.get('td.apollo-picker-cell').element;
+      const first = engine.get<HTMLTableCellElement>('td.apollo-picker-cell').element;
+      first.focus();
+      await nextTick();
+      expect(document.activeElement).toBe(first);
       enabled.value = true;
       await nextTick();
       await nextTick();
+      expect(wrapper.getComponent(PickerPanel).vm.$.uid).toBe(engine.vm.$.uid);
+      expect(first.isConnected).toBe(true);
       expect(engine.find('.current-cell').exists()).toBe(true);
       expect(engine.get('td.apollo-picker-cell').element).toBe(first);
+      expect(document.activeElement).toBe(first);
+      for (const panel of wrapper.findAllComponents(PickerPanel)) {
+        expect(panel.find('.current-cell').exists()).toBe(true);
+      }
       empty.value = true;
       await nextTick();
       expect(engine.get('td.apollo-picker-cell').text()).toBe('');
+      expect(document.activeElement).toBe(first);
       enabled.value = false;
       await nextTick();
       await nextTick();
       expect(engine.get('td.apollo-picker-cell').text()).not.toBe('');
       expect(engine.find('.current-cell').exists()).toBe(false);
+      expect(wrapper.getComponent(PickerPanel).vm.$.uid).toBe(engine.vm.$.uid);
+      expect(engine.get('td.apollo-picker-cell').element).toBe(first);
+      expect(document.activeElement).toBe(first);
       wrapper.unmount();
     },
   );

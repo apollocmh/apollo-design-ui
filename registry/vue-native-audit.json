@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 237,
+  "revision": 238,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2587,6 +2587,78 @@
             }
           ],
           "boundary": "Current content validation only; complete docs build and browser validation remain in frozen acceptance."
+        },
+        {
+          "scope": [
+            "packages/ui/src/date-picker/DatePicker.vue",
+            "packages/ui/src/date-picker/RangePicker.vue",
+            "packages/picker/src/__tests__/consumer-bridge.test.ts"
+          ],
+          "change": "Fix the stable popup panel native slot chain so adding/removing current cell slots updates the existing single/range panel; keep panel identity, cells and focus, with no force update or remount.",
+          "checks": [
+            {
+              "kind": "bridge",
+              "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "argv": [
+                "node",
+                "node_modules/vitest/vitest.mjs",
+                "run",
+                "--project",
+                "unit",
+                "packages/picker/src/__tests__/consumer-bridge.test.ts",
+                "--maxWorkers=1"
+              ],
+              "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/picker/src/__tests__/consumer-bridge.test.ts --maxWorkers=1",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 6663,
+              "log": "/tmp/apollo-picker-popup-slots-bridge.log"
+            },
+            {
+              "kind": "slots-consumers",
+              "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "argv": [
+                "node",
+                "node_modules/vitest/vitest.mjs",
+                "run",
+                "--project",
+                "unit",
+                "packages/ui/src/date-picker/__tests__/native-contracts.test.ts",
+                "packages/ui/src/date-picker/__tests__/footer.test.ts",
+                "packages/ui/src/time-picker/__tests__/native-contracts.test.ts",
+                "--testNamePattern",
+                "renders declared wrapper slots|renderExtraFooter|显式空 extraFooter|forwards every applicable content|forwards current attrs, slots|updates native root attrs and isolates popup identity|allows readonly range selection|enters the real readonly date panel",
+                "--maxWorkers=1"
+              ],
+              "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/date-picker/__tests__/native-contracts.test.ts packages/ui/src/date-picker/__tests__/footer.test.ts packages/ui/src/time-picker/__tests__/native-contracts.test.ts --testNamePattern 'renders declared wrapper slots|renderExtraFooter|显式空 extraFooter|forwards every applicable content|forwards current attrs, slots|updates native root attrs and isolates popup identity|allows readonly range selection|enters the real readonly date panel' --maxWorkers=1",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 11361,
+              "log": "/tmp/apollo-picker-popup-slots-slots-consumers.log"
+            },
+            {
+              "kind": "types",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "node_modules/vue-tsc/bin/vue-tsc.js",
+                "--noEmit",
+                "-p",
+                "tsconfig.json"
+              ],
+              "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 119562,
+              "log": "/tmp/apollo-final-remediation-strict.log"
+            }
+          ],
+          "sourceHashes": {
+            "packages/ui/src/date-picker/DatePicker.vue": "61bd0cf73351ed8835821997037bd3f33531216197c24d8b814757b238eac568",
+            "packages/ui/src/date-picker/RangePicker.vue": "253e2a43d955f26fbfc2e70f5d25f610079fef6a97d4874263b64caf7d0e6395",
+            "packages/picker/src/__tests__/consumer-bridge.test.ts": "057510038c5a0d5d4ea20b280a5b5787578a052c3473dd3ad830cf1820ce4899"
+          },
+          "sourceView": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+          "boundary": "Focused remediation and whole-source strict check passed in the isolated candidate. Built-library and final frozen acceptance remain pending."
         }
       ]
     },
@@ -11891,18 +11963,134 @@
     "gates": [
       {
         "dimension": "api",
-        "status": "blocked",
-        "sourceCommit": "c43cf24f16d0207026825c1fd69cc1a324107cb6",
-        "reason": "Unified build prerequisite failed before API/artifact consumers: VirtualList SFC is not compiled by the old TS-only foundation pipeline; DatePicker document frontmatter is not at the start. Later nine-dimensional gates were not executed.",
-        "checks": [
-          {
-            "kind": "build",
-            "command": "node tests/build/run.mjs --strict",
-            "exitCode": 1,
-            "signal": null,
-            "log": "/tmp/apollo-final-acceptance-c43cf24f.log"
-          }
-        ]
+        "status": "in_progress",
+        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed."
+      },
+      {
+        "dimension": "tokens",
+        "status": "in_progress",
+        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed."
+      },
+      {
+        "dimension": "styles",
+        "status": "in_progress",
+        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed.",
+        "remainingBudget": {
+          "sourceCommit": "fdb00828d968d9166f553bde99cbcf56fa6177e7",
+          "command": "node tests/build/run.mjs --strict",
+          "exitCode": 1,
+          "signal": null,
+          "overBudgetEntries": 13,
+          "totalEntries": 73,
+          "note": "All packages/Docs built; only B6 budget failed. Budget values unchanged; continue other acceptance checks as instructed.",
+          "log": "/tmp/apollo-final-acceptance-fdb00828.log"
+        }
+      },
+      {
+        "dimension": "unit",
+        "status": "in_progress",
+        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed.",
+        "previousAttempt": {
+          "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+          "command": "pnpm run test:coverage",
+          "exitCode": 1,
+          "signal": null,
+          "report": "/tmp/apollo-final-acceptance-e064c4a9-runtime.json",
+          "log": "/tmp/apollo-final-acceptance-e064c4a9-runtime.log",
+          "durationMs": 1558688,
+          "failedFiles": 17,
+          "failedTests": 95,
+          "passedTests": 14296
+        }
+      },
+      {
+        "dimension": "interaction",
+        "status": "in_progress",
+        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed."
+      },
+      {
+        "dimension": "types",
+        "status": "in_progress",
+        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed.",
+        "previousAttempt": {
+          "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+          "passed": true,
+          "checks": [
+            {
+              "kind": "types",
+              "commit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "node_modules/vue-tsc/bin/vue-tsc.js",
+                "--noEmit",
+                "-p",
+                "tsconfig.json"
+              ],
+              "env": {
+                "NODE_OPTIONS": "--max-old-space-size=4096",
+                "PATH_prefix": "/Users/nanren/.nvm/versions/node/v22.22.2/bin"
+              },
+              "startedAt": "2026-10-31T07:11:59.619930+00:00",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 126747,
+              "log": "/tmp/apollo-final-vue-tsc-e064c4a9.log",
+              "gitStatusBefore": "",
+              "headAfter": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+              "gitStatusAfter": ""
+            },
+            {
+              "kind": "types",
+              "commit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "node_modules/vitest/vitest.mjs",
+                "run",
+                "--project",
+                "types",
+                "--reporter=json",
+                "--outputFile=/tmp/apollo-final-types-e064c4a9.json"
+              ],
+              "env": {
+                "NODE_OPTIONS": "--max-old-space-size=4096",
+                "PATH_prefix": "/Users/nanren/.nvm/versions/node/v22.22.2/bin"
+              },
+              "startedAt": "2026-10-31T07:14:24.075492+00:00",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 93557,
+              "log": "/tmp/apollo-final-types-e064c4a9.log",
+              "json": "/tmp/apollo-final-types-e064c4a9.json",
+              "gitStatusBefore": "",
+              "headAfter": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+              "gitStatusAfter": ""
+            }
+          ]
+        }
+      },
+      {
+        "dimension": "a11y",
+        "status": "in_progress",
+        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed."
+      },
+      {
+        "dimension": "visual",
+        "status": "not_started",
+        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed."
+      },
+      {
+        "dimension": "docs",
+        "status": "in_progress",
+        "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed."
       }
     ]
   }

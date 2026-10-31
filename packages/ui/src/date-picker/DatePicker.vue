@@ -62,6 +62,7 @@ import {
   isSame,
   type PanelCellRenderScope,
   type PanelDateType,
+  type PanelSlots,
   PickerPanel,
   type PickerPanelRef,
   type TimePanelConfig,
@@ -78,6 +79,7 @@ import {
   normalizeClass,
   normalizeStyle,
   ref,
+  type SlotsType,
   useAttrs,
   useId,
   type VNodeChild,
@@ -1549,11 +1551,8 @@ const selectorProps = computed(() => ({
   },
 }));
 /**
- * 面板/标签渲染通道：**同名 slot 优先于函数 prop**（registry `VNA-SLOT-01`）。
- *
- * ⚠️ 两者**入参形状不同**：prop 是 `(date, info)`，slot 收一个对象 `{ current, info }`
- * （Vue 插槽的惯例）⇒ 这里做一层适配。此前 `DatePickerSlots` 只在类型面上存在、
- * **运行时从不读取** ⇒ 写了 `#cellRender` 的模板什么也不会发生。
+ * 当前 cellRender 具名槽沿 PopupPanel 的原生槽链传入面板。
+ * 显式空内容保持为空；槽撤除后恢复当前格子的默认内容。
  */
 const mergedCellRender = ({ current, info }: PanelCellRenderScope): VNodeChild =>
   slots.cellRender ? slots.cellRender({ current, info }) : info.originNode;
@@ -1607,12 +1606,16 @@ const dropdownPrefixCls = computed(() => `${prefixCls.value}-dropdown`);
 /** 面板前缀（上游 `PickerInput/Popup` 的 `panelPrefixCls = `${prefixCls}-panel``）。 */
 const panelPrefixCls = computed(() => `${prefixCls.value}-panel`);
 /** 使用当前 props 和作用域槽构造面板；槽内容由面板渲染时调用。 */
+const popupPanelSlotTypes: SlotsType<PanelSlots> = {};
 const PopupPanel = defineComponent({
   name: 'ApolloDatePickerPopupPanel',
-  setup: () => () =>
-    h(PickerPanel, { ...panelProps.value, ref: panelRef }, { cellRender: mergedCellRender }),
+  slots: popupPanelSlotTypes,
+  setup:
+    (_props, { slots: panelSlots }) =>
+    () =>
+      h(PickerPanel, { ...panelProps.value, ref: panelRef }, panelSlots),
 });
-const panelVNode = () => h(PopupPanel);
+const panelVNode = () => h(PopupPanel, null, { cellRender: mergedCellRender });
 
 /**
  * 浮层内容 —— 面板外面**再套两层**（上游 `@rc-component/picker@1.12.2` 的

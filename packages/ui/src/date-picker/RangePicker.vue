@@ -47,6 +47,7 @@ import {
   offsetPanelDate,
   type PanelCellRenderScope,
   type PanelDateType,
+  type PanelSlots,
   type PickerMode,
   PickerPanel,
   type PickerPanelRef,
@@ -65,6 +66,7 @@ import {
   onScopeDispose,
   type Ref,
   ref,
+  type SlotsType,
   useAttrs,
   useId,
   type VNode,
@@ -934,32 +936,40 @@ const panelSlots = {
     slots.cellRender ? slots.cellRender({ current, info }) : info.originNode,
 };
 
+const popupPanelSlotTypes: SlotsType<PanelSlots> = {};
 const PopupPanel = defineComponent({
   name: 'ApolloRangePickerPopupPanel',
-  setup: () => () => {
-    const base = panelBaseProps.value;
-    const isTime = mergedPicker.value === 'time';
-    if (!multiplePanel.value) {
-      return h(PickerPanel, { ...base, ref: panelRef, hideHeader: isTime }, panelSlots);
-    }
-    // 🚨 双面板：左藏 next 侧、右藏 prev 侧（`PopupPanel.js:59-76`）
-    return h('div', { class: `${prefixCls.value}-panels` }, [
-      h(PickerPanel, { ...base, ref: panelRef, hideHeader: isTime, hideNext: true }, panelSlots),
-      h(
-        PickerPanel,
-        {
-          ...base,
-          hideHeader: isTime,
-          hidePrev: true,
-          pickerValue: secondPickerValue.value,
-          onPickerValueChange: onSecondPickerValueChange,
-        },
-        panelSlots,
-      ),
-    ]);
-  },
+  slots: popupPanelSlotTypes,
+  setup:
+    (_props, { slots: currentPanelSlots }) =>
+    () => {
+      const base = panelBaseProps.value;
+      const isTime = mergedPicker.value === 'time';
+      if (!multiplePanel.value) {
+        return h(PickerPanel, { ...base, ref: panelRef, hideHeader: isTime }, currentPanelSlots);
+      }
+      // 🚨 双面板：左藏 next 侧、右藏 prev 侧（`PopupPanel.js:59-76`）
+      return h('div', { class: `${prefixCls.value}-panels` }, [
+        h(
+          PickerPanel,
+          { ...base, ref: panelRef, hideHeader: isTime, hideNext: true },
+          currentPanelSlots,
+        ),
+        h(
+          PickerPanel,
+          {
+            ...base,
+            hideHeader: isTime,
+            hidePrev: true,
+            pickerValue: secondPickerValue.value,
+            onPickerValueChange: onSecondPickerValueChange,
+          },
+          currentPanelSlots,
+        ),
+      ]);
+    },
 });
-const panelVNode = () => h(PopupPanel);
+const panelVNode = () => h(PopupPanel, null, panelSlots);
 
 // ============================== 浮层 ==============================
 const mergedSuffixIcon = useSuffixIcon({
