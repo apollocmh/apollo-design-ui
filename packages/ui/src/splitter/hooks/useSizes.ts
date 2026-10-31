@@ -4,9 +4,9 @@
  */
 
 import { isNonNullable } from '@apollo-design/utils';
-import { computed, type Ref, ref } from 'vue';
+import { type Ref, shallowReactive, toRef } from 'vue';
 import { autoPtgSizes, getPtg, isPtg } from './sizeUtil';
-import type { SplitterItem } from './useItems';
+import type { PanelKey, SplitterItem } from './useItems';
 
 export interface UseSizesResult {
   /** SSR / 未测量容器时给开发者的原值；测量后为 px。 */
@@ -17,32 +17,44 @@ export interface UseSizesResult {
   ptgMaxSizes: Ref<number[]>;
   /** 非受控尺寸写入（拖拽 / 折叠后）。 */
   setInnerSizes: (sizes: (number | string | undefined)[]) => void;
+  rememberAccepted: () => void;
+  rememberInitial: (key: PanelKey, size: number | string | undefined) => void;
+  forget: (key: PanelKey) => void;
 }
 
 export function useSizes(
   items: Ref<SplitterItem[]>,
   containerSize: Ref<number | undefined>,
 ): UseSizesResult {
-  const innerSizes = ref<(number | string | undefined)[]>(
-    items.value.map((item) => item.defaultSize),
+  // Panel identity owns its accepted/local size; slot order is only the current layout.
+  const innerSizes = shallowReactive(new Map<PanelKey, number | string | undefined>());
+  const propSizes = toRef(() => items.value.map((item) => item.size));
+  const controlled = () => propSizes.value.some(isNonNullable);
+  const setInnerSizes = (sizes: (number | string | undefined)[]): void => {
+    if (controlled()) return;
+    items.value.forEach((item, index) => {
+      innerSizes.set(item.key, sizes[index]);
+    });
+  };
+  const rememberAccepted = (): void => {
+    if (!controlled()) return;
+    items.value.forEach((item) => {
+      if (!innerSizes.has(item.key) || innerSizes.get(item.key) !== item.size) {
+        innerSizes.set(item.key, item.size);
+      }
+    });
+  };
+  const itemsCount = toRef(() => items.value.length);
+  const mergedContainerSize = toRef(() => containerSize.value || 0);
+  const sizes = toRef((): (number | string | undefined)[] =>
+    controlled()
+      ? propSizes.value
+      : items.value.map((item) =>
+          innerSizes.has(item.key) ? innerSizes.get(item.key) : item.defaultSize,
+        ),
   );
 
-  const setInnerSizes = (sizes: (number | string | undefined)[]): void => {
-    innerSizes.value = sizes;
-  };
-
-  const propSizes = computed(() => items.value.map((item) => item.size));
-  const itemsCount = computed(() => items.value.length);
-  const mergedContainerSize = computed(() => containerSize.value || 0);
-
-  const sizes = computed<(number | string | undefined)[]>(() => {
-    // If any panel has a `size` passed as a prop, use `propSizes` and calculate
-    // all other panel sizes that don't have a `size` defined by the prop.
-    // If no panel has received a value for the `size` prop, use `innerSizes`.
-    return propSizes.value.some(isNonNullable) ? propSizes.value : innerSizes.value;
-  });
-
-  const postPercentMinSizes = computed<number[]>(() =>
+  const postPercentMinSizes = toRef((): number[] =>
     items.value.map((item) => {
       if (isPtg(item.min)) {
         return getPtg(item.min);
@@ -51,7 +63,7 @@ export function useSizes(
     }),
   );
 
-  const postPercentMaxSizes = computed<number[]>(() =>
+  const postPercentMaxSizes = toRef((): number[] =>
     items.value.map((item) => {
       if (isPtg(item.max)) {
         return getPtg(item.max);
@@ -64,7 +76,7 @@ export function useSizes(
   // 1. Convert all the px into percentage if not empty.
   // 2. Get rest percentage for exist percentage.
   // 3. Fill the rest percentage into empty item.
-  const postPercentSizes = computed<number[]>(() => {
+  const postPercentSizes = toRef((): number[] => {
     const ptgList: (number | undefined)[] = [];
     // Fill default percentage
     for (let i = 0; i < itemsCount.value; i += 1) {
@@ -84,12 +96,12 @@ export function useSizes(
     return autoPtgSizes(ptgList, postPercentMinSizes.value, postPercentMaxSizes.value);
   });
 
-  const postPxSizes = computed<number[]>(() =>
+  const postPxSizes = toRef((): number[] =>
     postPercentSizes.value.map((ptg) => ptg * mergedContainerSize.value),
   );
 
   // If ssr, we will use the size from developer config first.
-  const panelSizes = computed<(number | string | undefined)[]>(() =>
+  const panelSizes = toRef((): (number | string | undefined)[] =>
     containerSize.value ? postPxSizes.value : sizes.value,
   );
 
@@ -100,5 +112,10 @@ export function useSizes(
     ptgMinSizes: postPercentMinSizes,
     ptgMaxSizes: postPercentMaxSizes,
     setInnerSizes,
+    rememberAccepted,
+    rememberInitial: (key, size) => {
+      if (!innerSizes.has(key)) innerSizes.set(key, size);
+    },
+    forget: (key) => innerSizes.delete(key),
   };
 }

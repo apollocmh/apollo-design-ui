@@ -1,18 +1,5 @@
-/**
- * Splitter 的 Component Token（antd `prepareComponentToken` 全 **4 个字段**）。
- *
- * 契约来源：antd 6.6.4 `es/splitter/style/index.js`：
- *
- * ```js
- * const splitBarSize = token.splitBarSize || 2;
- * const splitTriggerSize = token.splitTriggerSize || 6;
- * const resizeSpinnerSize = token.resizeSpinnerSize || 20;
- * const splitBarDraggableSize = token.splitBarDraggableSize ?? resizeSpinnerSize;
- * ```
- *
- * `token.splitBarSize` 等在 alias 上不存在 ⇒ **恒取默认常量**，构建期解析值落地
- * （D50 同判；它们只参与几何 width/height）。
- */
+/** Existing Splitter defaults. Runtime component overrides use the same four tokens;
+ * resizeSpinnerSize is the fallback source of splitBarDraggableSize. */
 
 import type { AliasToken } from '@apollo-design/theme';
 

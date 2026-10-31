@@ -3,9 +3,9 @@
  * 契约来源：antd 6.6.4 `es/splitter/hooks/useResize.js`（逐行对拍）。
  */
 
-import { computed, type Ref, ref } from 'vue';
+import { computed, type Ref, ref, toRef } from 'vue';
 import { getPtg } from './sizeUtil';
-import type { SplitterItem } from './useItems';
+import type { PanelKey, SplitterItem } from './useItems';
 import type { ResizableInfo } from './useResizable';
 
 export interface MovingIndex {
@@ -21,6 +21,7 @@ export interface UseResizeResult {
   /** 折叠：返回折叠后的 pxSizes（type 来自 SplitBar 的折叠按钮方向）。 */
   onCollapse: (index: number, type: 'start' | 'end') => number[];
   movingIndex: Ref<number | undefined>;
+  forget: (key: PanelKey) => void;
 }
 
 export function useResize(
@@ -31,8 +32,8 @@ export function useResize(
   updateSizes: (sizes: (number | string | undefined)[]) => void,
   reverse: Ref<boolean>,
 ): UseResizeResult {
-  const limitSizes = computed(() => items.value.map((item) => [item.min, item.max]));
-  const mergedContainerSize = computed(() => containerSize.value || 0);
+  const limitSizes = toRef(() => items.value.map((item) => [item.min, item.max]));
+  const mergedContainerSize = toRef(() => containerSize.value || 0);
 
   function getLimitSize(str: number | string | undefined, defaultLimit: number): number {
     if (typeof str === 'string') {
@@ -43,7 +44,7 @@ export function useResize(
 
   // Real px sizes
   const cacheSizes = ref<number[]>([]);
-  const cacheCollapsedSize = ref<number[]>([]);
+  const cacheCollapsedSize = new Map<PanelKey, number>();
   const moving = ref<MovingIndex | null>(null);
 
   const getPxSizes = (): number[] =>
@@ -65,10 +66,7 @@ export function useResize(
         moving.value = { index, confirmed: true };
       } else {
         for (let i = index; i >= 0; i -= 1) {
-          if (
-            (cacheSizes.value[i] ?? 0) > 0 &&
-            (resizableInfos.value[i] as ResizableInfo | undefined)?.resizable
-          ) {
+          if ((cacheSizes.value[i] ?? 0) > 0 && resizableInfos.value[i]?.resizable) {
             confirmedIndex = i;
             moving.value = { index: i, confirmed: true };
             break;
@@ -130,7 +128,8 @@ export function useResize(
       // Collapse directly
       currentSizes[currentIndex] = 0;
       currentSizes[targetIndex] = targetSize + currentSize;
-      cacheCollapsedSize.value[index] = currentSize;
+      const currentKey = items.value[currentIndex]?.key;
+      if (currentKey !== undefined) cacheCollapsedSize.set(currentKey, currentSize);
     } else {
       const totalSize = currentSize + targetSize;
       const currentSizeMin = getLimitSize(limitSizes.value[currentIndex]?.[0], 0);
@@ -149,7 +148,9 @@ export function useResize(
 
       const halfOffset = targetSizeMin || (limitEnd - limitStart) / 2;
 
-      const targetCacheCollapsedSize = cacheCollapsedSize.value[index];
+      const targetKey = items.value[targetIndex]?.key;
+      const targetCacheCollapsedSize =
+        targetKey === undefined ? undefined : cacheCollapsedSize.get(targetKey);
       const currentCacheCollapsedSize = totalSize - (targetCacheCollapsedSize ?? 0);
 
       const shouldUseCache =
@@ -178,5 +179,6 @@ export function useResize(
     onOffsetEnd,
     onCollapse,
     movingIndex: computed(() => moving.value?.index),
+    forget: (key) => cacheCollapsedSize.delete(key),
   };
 }

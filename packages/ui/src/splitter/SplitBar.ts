@@ -22,6 +22,7 @@ import {
   type VNodeChild,
   watch,
 } from 'vue';
+import type { PanelKey } from './hooks/useItems';
 import type {
   ShowCollapsibleIconMode,
   SplitterDraggerClassNames,
@@ -35,10 +36,11 @@ const getValidNumber = (num: number): number =>
 
 export interface SplitBarProps {
   prefixCls: string;
-  rootPrefixCls: string;
   vertical: boolean;
   index: number;
   active: boolean;
+  reverse?: boolean;
+  panelKeys: readonly PanelKey[];
   ariaNow: number;
   ariaMin: number;
   ariaMax: number;
@@ -59,8 +61,9 @@ export const SplitBar = defineComponent({
   name: 'ASplitterSplitBar',
   props: {
     prefixCls: { type: String, required: true },
-    rootPrefixCls: { type: String, required: true },
     vertical: { type: Boolean, default: false },
+    reverse: { type: Boolean, default: false },
+    panelKeys: { type: Array as PropType<readonly PanelKey[]>, required: true },
     index: { type: Number, required: true },
     active: { type: Boolean, default: false },
     ariaNow: { type: Number, default: 0 },
@@ -87,27 +90,16 @@ export const SplitBar = defineComponent({
     },
     lazy: { type: Boolean, default: false },
     containerSize: { type: Number, default: 0 },
-    onOffsetStart: {
-      type: Function as PropType<(index: number) => void>,
-      required: true,
-    },
-    onOffsetUpdate: {
-      type: Function as PropType<
-        (index: number, offsetX: number, offsetY: number, lazyEnd?: boolean) => void
-      >,
-      required: true,
-    },
-    onOffsetEnd: { type: Function as PropType<(lazyEnd?: boolean) => void>, required: true },
-    onCollapse: {
-      type: Function as PropType<(index: number, type: 'start' | 'end') => void>,
-      required: true,
-    },
-    onDraggerDoubleClick: {
-      type: Function as PropType<(index: number) => void>,
-      default: undefined,
-    },
   },
-  setup(props) {
+  emits: {
+    offsetStart: (_index: number) => true,
+    offsetUpdate: (_index: number, _x: number, _y: number, _lazyEnd?: boolean) => true,
+    offsetEnd: (_lazyEnd?: boolean) => true,
+    offsetCancel: () => true,
+    collapse: (_index: number, _type: 'start' | 'end') => true,
+    draggerDoubleClick: (_index: number) => true,
+  },
+  setup(props, { emit }) {
     // ⚠️ 必须是 computed（Issue #33.2）：setup 期拼成的常量只求值一次 ⇒ 之后
     //    `prefixCls` 变化，bar / dragger / collapse 的类名全部停留在旧前缀。
     const splitBarPrefixCls = computed(() => `${props.prefixCls}-bar`);
@@ -118,6 +110,7 @@ export const SplitBar = defineComponent({
     const constrainedOffset = ref(0);
 
     const onMouseDown = (e: MouseEvent): void => {
+      if (e.button !== 0) return;
       e.stopPropagation();
       const currentTime = Date.now();
       const timeGap = currentTime - lastClickTime.value;
@@ -128,15 +121,16 @@ export const SplitBar = defineComponent({
       lastClickTime.value = currentTime;
       if (props.resizable) {
         startPos.value = [e.pageX, e.pageY];
-        props.onOffsetStart(props.index);
+        emit('offsetStart', props.index);
       }
     };
 
     const onTouchStart = (e: TouchEvent): void => {
       if (props.resizable && e.touches.length === 1) {
-        const touch = e.touches[0] as Touch;
+        const touch = e.touches[0];
+        if (!touch) return;
         startPos.value = [touch.pageX, touch.pageY];
-        props.onOffsetStart(props.index);
+        emit('offsetStart', props.index);
       }
     };
 
@@ -153,24 +147,28 @@ export const SplitBar = defineComponent({
     };
 
     const handleLazyMove = (offsetX: number, offsetY: number): void => {
-      constrainedOffset.value = getConstrainedOffset(props.vertical ? offsetY : offsetX);
+      const physical = props.vertical ? offsetY : offsetX;
+      const logical = props.reverse ? -physical : physical;
+      const constrained = getConstrainedOffset(logical);
+      constrainedOffset.value = props.reverse ? -constrained : constrained;
     };
 
     const handleLazyEnd = (): void => {
-      props.onOffsetUpdate(
+      emit(
+        'offsetUpdate',
         props.index,
         props.vertical ? 0 : constrainedOffset.value,
         props.vertical ? constrainedOffset.value : 0,
         true,
       );
       constrainedOffset.value = 0;
-      props.onOffsetEnd(true);
+      emit('offsetEnd', true);
     };
 
     const onCollapseKeyDown = (e: KeyboardEvent, type: 'start' | 'end'): void => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        props.onCollapse(props.index, type);
+        emit('collapse', props.index, type);
       }
     };
 
@@ -202,26 +200,27 @@ export const SplitBar = defineComponent({
         if (props.lazy) {
           handleLazyMove(offsetX, offsetY);
         } else {
-          props.onOffsetUpdate(props.index, offsetX, offsetY);
+          emit('offsetUpdate', props.index, offsetX, offsetY);
         }
       };
       const onMouseUp = (): void => {
         if (props.lazy) {
           handleLazyEnd();
         } else {
-          props.onOffsetEnd();
+          emit('offsetEnd');
         }
         startPos.value = null;
       };
       const handleTouchMove = (e: TouchEvent): void => {
         if (e.touches.length === 1) {
-          const touch = e.touches[0] as Touch;
+          const touch = e.touches[0];
+          if (!touch) return;
           const offsetX = touch.pageX - start[0];
           const offsetY = touch.pageY - start[1];
           if (props.lazy) {
             handleLazyMove(offsetX, offsetY);
           } else {
-            props.onOffsetUpdate(props.index, offsetX, offsetY);
+            emit('offsetUpdate', props.index, offsetX, offsetY);
           }
         }
       };
@@ -229,27 +228,81 @@ export const SplitBar = defineComponent({
         if (props.lazy) {
           handleLazyEnd();
         } else {
-          props.onOffsetEnd();
+          emit('offsetEnd');
         }
         startPos.value = null;
       };
-      const map: Record<string, (e: Event) => void> = {
-        mousemove: onMouseMove as (e: Event) => void,
-        mouseup: onMouseUp as (e: Event) => void,
-        touchmove: handleTouchMove as (e: Event) => void,
-        touchend: handleTouchEnd as (e: Event) => void,
+      const cancel = () => {
+        constrainedOffset.value = 0;
+        startPos.value = null;
+        emit('offsetCancel');
       };
-      for (const [event, handler] of Object.entries(map)) {
-        window.addEventListener(event, handler);
-        cleanups.push(() => window.removeEventListener(event, handler));
-      }
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+      window.addEventListener('touchmove', handleTouchMove);
+      window.addEventListener('touchend', handleTouchEnd);
+      window.addEventListener('touchcancel', cancel);
+      cleanups.push(
+        () => window.removeEventListener('mousemove', onMouseMove),
+        () => window.removeEventListener('mouseup', onMouseUp),
+        () => window.removeEventListener('touchmove', handleTouchMove),
+        () => window.removeEventListener('touchend', handleTouchEnd),
+        () => window.removeEventListener('touchcancel', cancel),
+      );
     };
-    watch(startPos, bindWindow);
-    onBeforeUnmount(() => {
-      while (cleanups.length) {
-        cleanups.pop()?.();
-      }
-    });
+    watch(startPos, bindWindow, { flush: 'sync' });
+    const cancelDrag = () => {
+      if (!startPos.value) return;
+      constrainedOffset.value = 0;
+      startPos.value = null;
+      emit('offsetCancel');
+    };
+    watch(
+      () => [props.resizable, props.vertical, props.reverse, props.index, props.lazy],
+      cancelDrag,
+      { flush: 'sync' },
+    );
+    watch(
+      () => props.panelKeys,
+      (next, previous) => {
+        if (next.length !== previous.length || next.some((key, index) => key !== previous[index])) {
+          cancelDrag();
+        }
+      },
+      { flush: 'sync' },
+    );
+    onBeforeUnmount(cancelDrag);
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (
+        !props.resizable ||
+        event.defaultPrevented ||
+        event.isComposing ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey
+      )
+        return;
+      const negative = props.vertical ? 'ArrowUp' : 'ArrowLeft';
+      const positive = props.vertical ? 'ArrowDown' : 'ArrowRight';
+      let physical: number;
+      if (event.key === negative || event.key === positive) {
+        physical = (event.key === positive ? 1 : -1) * (event.shiftKey ? 50 : 10);
+      } else if (event.key === 'Home' || event.key === 'End') {
+        const target = event.key === 'Home' ? props.ariaMin : props.ariaMax;
+        const logical = ((target - props.ariaNow) * props.containerSize) / 100;
+        physical = props.reverse ? -logical : logical;
+      } else return;
+      event.preventDefault();
+      emit('offsetStart', props.index);
+      emit(
+        'offsetUpdate',
+        props.index,
+        props.vertical ? 0 : physical,
+        props.vertical ? physical : 0,
+      );
+      emit('offsetEnd');
+    };
 
     return () => {
       const bar = splitBarPrefixCls.value;
@@ -282,7 +335,7 @@ export const SplitBar = defineComponent({
             class: [`${bar}-preview`, { [`${bar}-preview-active`]: !!constrainedOffset.value }],
             style: {
               // 组件作用域 CSS 变量（antd genCssVar(root,'splitter') 同名覆盖）
-              [`--${props.rootPrefixCls}-splitter-bar-preview-offset`]: `${constrainedOffset.value}px`,
+              [`--${props.prefixCls}-bar-preview-offset`]: `${constrainedOffset.value}px`,
             },
           }),
         );
@@ -294,7 +347,10 @@ export const SplitBar = defineComponent({
           'div',
           {
             key: 'dragger',
-            style: props.draggerStyle?.default,
+            style: [
+              props.draggerStyle?.default,
+              props.active ? props.draggerStyle?.active : undefined,
+            ],
             class: [
               `${bar}-dragger`,
               {
@@ -307,7 +363,9 @@ export const SplitBar = defineComponent({
             ],
             onMousedown: onMouseDown,
             onTouchstart: onTouchStart,
-            onDblclick: () => props.onDraggerDoubleClick?.(props.index),
+            onKeydown: onKeyDown,
+            tabindex: props.resizable ? 0 : -1,
+            onDblclick: () => emit('draggerDoubleClick', props.index),
             role: 'separator',
             'aria-disabled': !props.resizable,
             'aria-orientation': props.vertical ? 'horizontal' : 'vertical',
@@ -347,7 +405,7 @@ export const SplitBar = defineComponent({
             role: 'button',
             tabindex: 0,
             'aria-label': `Toggle ${type} panel`,
-            onClick: () => props.onCollapse(props.index, type),
+            onClick: () => emit('collapse', props.index, type),
             onKeydown: (e: KeyboardEvent) => onCollapseKeyDown(e, type),
           },
           [h('span', { class: [`${bar}-collapse-icon`, `${bar}-collapse-${type}`] }, [icon])],

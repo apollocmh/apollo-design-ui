@@ -1,59 +1,65 @@
-/**
- * `useItems` —— children(Panel vnode) → 归一化 items。
- * 契约来源：antd 6.6.4 `es/splitter/hooks/useItems.js`（逐行对拍）。
- */
-
-import { isPlainObject } from '@apollo-design/utils';
 import type { VNode } from 'vue';
-import { computed, type Ref } from 'vue';
 import type { ShowCollapsibleIconMode, SplitterPanelProps } from '../interface';
 
-/** 归一化后的 collapsible（`showCollapsibleIcon` 缺省 `'auto'`）。 */
 export interface NormalizedCollapsible {
   start: boolean;
   end: boolean;
   showCollapsibleIcon: ShowCollapsibleIconMode;
 }
 
-/** 归一化后的条目。 */
-export interface SplitterItem extends SplitterPanelProps {
+export type PanelKey = NonNullable<VNode['key']>;
+
+export interface SplitterItem
+  extends Pick<
+    SplitterPanelProps,
+    'min' | 'max' | 'size' | 'defaultSize' | 'resizable' | 'destroyOnHidden'
+  > {
+  key: PanelKey;
+  node: VNode;
   collapsible: NormalizedCollapsible;
 }
 
-/** boolean/undefined ⇒ 双向折叠；对象 ⇒ 补 `showCollapsibleIcon: 'auto'`。 */
 export function getCollapsible(collapsible: unknown): NormalizedCollapsible {
-  if (isPlainObject(collapsible)) {
-    const record = collapsible as Record<string, unknown>;
+  if (typeof collapsible === 'object' && collapsible !== null && !Array.isArray(collapsible)) {
+    const mode = 'showCollapsibleIcon' in collapsible ? collapsible.showCollapsibleIcon : undefined;
     return {
-      start: record.start === true,
-      end: record.end === true,
-      showCollapsibleIcon:
-        record.showCollapsibleIcon === undefined
-          ? 'auto'
-          : (record.showCollapsibleIcon as ShowCollapsibleIconMode),
+      start: 'start' in collapsible && collapsible.start === true,
+      end: 'end' in collapsible && collapsible.end === true,
+      showCollapsibleIcon: typeof mode === 'boolean' || mode === 'auto' ? mode : 'auto',
     };
   }
-  const mergedCollapsible = !!collapsible;
-  return {
-    start: mergedCollapsible,
-    end: mergedCollapsible,
-    showCollapsibleIcon: 'auto',
-  };
+  const enabled = collapsible === true || collapsible === '' || collapsible === 'collapsible';
+  return { start: enabled, end: enabled, showCollapsibleIcon: 'auto' };
 }
 
-/**
- * 从 slot vnodes 里收集 Splitter.Panel（renderless）的 props。
- * 注释/空白/非 Panel 元素全部过滤（descriptions 的 children 收集同范式）。
- */
-export function useItems(childrenRef: Ref<VNode[]>): Ref<SplitterItem[]> {
-  return computed(() =>
-    childrenRef.value.map((node) => {
-      const props = (node.props ?? {}) as SplitterPanelProps;
-      const { collapsible, ...restProps } = props;
-      return {
-        ...restProps,
-        collapsible: getCollapsible(collapsible),
-      } as SplitterItem;
-    }),
-  );
+const booleanProp = (value: unknown, name: string): boolean | undefined =>
+  value === undefined ? undefined : value === true || value === '' || value === name;
+
+const sizeProp = (value: unknown): number | string | undefined =>
+  typeof value === 'number' || typeof value === 'string' ? value : undefined;
+
+/** Only called during Splitter render, with the current complete Panel VNodes. */
+export function getItems(children: VNode[], unkeyed: symbol[]): SplitterItem[] {
+  return children.map((node, index) => {
+    const props: Record<string, unknown> = node.props ?? {};
+    let key = node.key ?? unkeyed[index];
+    if (key === undefined) {
+      key = Symbol(`panel-${index}`);
+      unkeyed[index] = key;
+    }
+    return {
+      min: sizeProp(props.min),
+      max: sizeProp(props.max),
+      size: sizeProp(props.size),
+      defaultSize: sizeProp(props.defaultSize ?? props['default-size']),
+      destroyOnHidden: booleanProp(
+        props.destroyOnHidden ?? props['destroy-on-hidden'],
+        'destroy-on-hidden',
+      ),
+      resizable: booleanProp(props.resizable, 'resizable'),
+      node,
+      key,
+      collapsible: getCollapsible(props.collapsible),
+    };
+  });
 }

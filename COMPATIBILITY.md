@@ -238,3 +238,7 @@ Watermark 的 remove 通知改由 Vue emits 拥有，模板使用 @remove，h() 
 ### D-card-native-content-and-tabs
 
 Card 的 tabChange/update:activeTabKey 由 Vue emits 拥有，支持 v-model:activeTabKey；h() 的 onTabChange 仍是自然监听器。Tabs 保留选择状态职责，tabProps 不再建立第二个受控来源。已有 actions 内容增加 #actions 入口；Meta 的默认槽作为 description 的后备，具名 description 槽（含空槽）优先，其次是显式 description 数据。修正条件内容身份与焦点、Card/Grid/Meta 原生 attrs/真实引用、当前配置和十三 Token，详见[Card API](packages/ui/src/card/index.zh-CN.md)。
+
+### D-splitter-native-panels-and-resize
+
+Splitter 的 resizeStart/resize/resizeEnd/collapse/draggerDoubleClick 统一由 Vue emits 拥有，移除重复回调 prop 通道，模板仍使用自然的 @resize-start 等写法。Panel 保留真实 Vue 节点、原生 attrs/StyleValue、默认槽和可访问的 nativeElement，尺寸与折叠状态按 key 归属；受控拒绝不写入本地状态，撤控保留已接受值，布局顺序变化取消旧拖拽。补齐分隔条键盘和当前四个有效 Token，保留既有尺寸算法，详见[Splitter API](packages/ui/src/splitter/index.zh-CN.md)。

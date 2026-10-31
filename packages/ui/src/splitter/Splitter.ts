@@ -1,113 +1,57 @@
-/**
- * Splitter —— 分割面板主组件。
- *
- * 契约来源：antd 6.6.4 `es/splitter/Splitter.js`（231 行，逐行对拍）。
- * 渲染函数选型（无 .vue）：items 的动态列表 + SplitBar 的事件接线 + mask 条件渲染
- * 由上游机械规则决定（见 docs/analysis/splitter.md §3）。
- *
- * ── 与 antd 的有意差异 ────────────────────────────────────────────────────────
- *
- * 1. 事件：onResizeStart/onResize/onResizeEnd/onCollapse/onDraggerDoubleClick ⇒
- *    `resize-start/resize/resize-end/collapse/dragger-double-click` emits（C19，I2）。
- * 2. `ref` ⇒ `expose({ nativeElement })`（I3）。
- * 3. `@rc-component/resize-observer` ⇒ utils 的 `useResizeObserver`（I4）。
- * 4. dragger 语义槽 string ⇒ `{default}` 展平手动归一化（I5）。
- */
-
-import { devUseWarning, useResizeObserver } from '@apollo-design/utils';
+/** Splitter layout: current Vue Panel VNodes, accepted sizes and owned notifications. */
+import { devUseWarning, toArray, useResizeObserver } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
+  Fragment,
+  getCurrentInstance,
   h,
+  onBeforeUnmount,
   type PropType,
   ref,
-  type VNode,
-  type VNodeChild,
-  watch,
+  type SlotsType,
+  toRef,
 } from 'vue';
-import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
+import { useMergeSemantic } from '../_internal/use-merge-semantic';
 import { useOrientation } from '../_internal/use-orientation';
 import { useComponentConfig, useConfigContext } from '../config-provider/context';
 import { getAriaBounds } from './hooks/ariaBounds';
-import { useItems } from './hooks/useItems';
+import { getItems, type SplitterItem } from './hooks/useItems';
 import { useResizable } from './hooks/useResizable';
 import { useResize } from './hooks/useResize';
 import { useSizes } from './hooks/useSizes';
 import type {
-  SplitterDraggerClassNames,
   SplitterProps,
   SplitterSemanticClassNames,
   SplitterSemanticStyles,
+  SplitterSlots,
 } from './interface';
 import { InternalPanel, SplitterPanel } from './Panel';
 import SplitBar from './SplitBar';
+import { useSplitterTheme } from './use-splitter-theme';
 
-/** antd 薄壳从 `useComponentConfig('splitter')` 读取的组件级配置。 */
 interface SplitterComponentConfig {
   className?: string;
-  style?: Record<string, string | number>;
-  classNames?: SplitterSemanticClassNames;
-  styles?: SplitterSemanticStyles;
+  style?: import('vue').CSSProperties;
+  classNames?: SplitterProps['classNames'];
+  styles?: SplitterProps['styles'];
 }
-
-/** 收集 slot 里的元素 vnode（跳过注释/文本，展开 Fragment —— descriptions 同范式）。 */
-const collectChildren = (nodes: VNodeChild[]): VNode[] => {
-  const out: VNode[] = [];
-  const walk = (list: VNodeChild[]): void => {
-    for (const node of list) {
-      if (!node || typeof node !== 'object') continue;
-      const v = node as VNode;
-      if (v.type.toString() === 'Symbol(v-cmt)') continue;
-      if (v.type.toString() === 'Symbol(v-fgt)') {
-        walk((v.children as VNodeChild[]) ?? []);
-        continue;
-      }
-      out.push(v);
-    }
-  };
-  walk(nodes);
-  return out;
-};
-
-/** dragger 语义槽展平：string ⇒ `{ default }`（antd `_default: 'default'` 语义）。 */
-const normalizeDraggerClassNames = (
-  input: SplitterSemanticClassNames['dragger'],
-): SplitterDraggerClassNames | undefined =>
-  input === undefined ? undefined : typeof input === 'string' ? { default: input } : input;
-
-/** Panel vnode 的 children 归一化：`h(Panel, …, () => …)` 的 children 是槽函数/槽对象。 */
-const renderPanelChildren = (raw: VNode | undefined): VNodeChild => {
-  const c = raw?.children as VNodeChild | { default?: () => VNodeChild } | undefined;
-  if (typeof c === 'function') {
-    return (c as () => VNodeChild)();
-  }
-  if (c && typeof c === 'object' && typeof (c as { default?: unknown }).default === 'function') {
-    return (c as { default: () => VNodeChild }).default();
-  }
-  if (Array.isArray(c)) return c;
-  // 其余对象形态（无 default 的槽对象）不可渲染 ⇒ null
-  return c === null || c === undefined ? null : (c as VNodeChild);
-};
 
 export const Splitter = defineComponent({
   name: 'ASplitter',
   inheritAttrs: false,
+  expose: ['nativeElement'],
+  slots: Object as SlotsType<SplitterSlots>,
   props: {
     prefixCls: { type: String, default: undefined },
-    classNames: { type: Object as PropType<SplitterSemanticClassNames>, default: undefined },
-    styles: { type: Object as PropType<SplitterSemanticStyles>, default: undefined },
-    collapsible: {
-      type: Object as PropType<SplitterProps['collapsible']>,
+    classNames: {
+      type: [Object, Function] as PropType<SplitterProps['classNames']>,
       default: undefined,
     },
-    layout: {
-      type: String as PropType<SplitterProps['layout']>,
-      default: undefined,
-    },
-    orientation: {
-      type: String as PropType<SplitterProps['orientation']>,
-      default: undefined,
-    },
+    styles: { type: [Object, Function] as PropType<SplitterProps['styles']>, default: undefined },
+    collapsible: { type: Object as PropType<SplitterProps['collapsible']>, default: undefined },
+    layout: { type: String as PropType<SplitterProps['layout']>, default: undefined },
+    orientation: { type: String as PropType<SplitterProps['orientation']>, default: undefined },
     vertical: { type: Boolean, default: undefined },
     destroyOnHidden: { type: Boolean, default: undefined },
     collapsibleIcon: {
@@ -115,279 +59,238 @@ export const Splitter = defineComponent({
       default: undefined,
     },
     lazy: { type: Boolean, default: undefined },
-    onResizeStart: {
-      type: Function as PropType<(sizes: number[]) => void>,
-      default: undefined,
-    },
-    onResize: { type: Function as PropType<(sizes: number[]) => void>, default: undefined },
-    onResizeEnd: { type: Function as PropType<(sizes: number[]) => void>, default: undefined },
-    onCollapse: {
-      type: Function as PropType<(collapsed: boolean[], sizes: number[]) => void>,
-      default: undefined,
-    },
-    onDraggerDoubleClick: {
-      type: Function as PropType<(index: number) => void>,
-      default: undefined,
-    },
   },
-  emits: ['resize-start', 'resize', 'resize-end', 'collapse', 'dragger-double-click'],
-  setup(props, { slots, emit, expose, attrs }) {
+  emits: {
+    resizeStart: (_sizes: number[]) => true,
+    resize: (_sizes: number[]) => true,
+    resizeEnd: (_sizes: number[]) => true,
+    collapse: (_collapsed: boolean[], _sizes: number[]) => true,
+    draggerDoubleClick: (_index: number) => true,
+  },
+  setup(props, { slots, emit, attrs }) {
     const context = useComponentConfig<SplitterComponentConfig>('splitter');
     const configContext = useConfigContext();
-
-    const rootRef = ref<HTMLDivElement | null>(null);
-    expose({ nativeElement: rootRef });
-
-    // ======================== Direct ========================
+    const instance = getCurrentInstance();
+    const nativeElement = ref<HTMLDivElement | null>(null);
+    let movedFocus: HTMLElement | null = null;
+    const captureFocus = () => {
+      const root = nativeElement.value;
+      const active = root?.ownerDocument.activeElement;
+      movedFocus = active instanceof HTMLElement && root?.contains(active) ? active : null;
+    };
+    const restoreFocus = () => {
+      const root = nativeElement.value;
+      if (
+        movedFocus?.isConnected &&
+        root?.contains(movedFocus) &&
+        root.ownerDocument.activeElement === root.ownerDocument.body
+      ) {
+        movedFocus.focus({ preventScroll: true });
+      }
+      movedFocus = null;
+    };
+    onBeforeUnmount(() => {
+      movedFocus = null;
+    });
     const orientationInfo = useOrientation(
       () => props.orientation,
       () => props.vertical,
       () => props.layout,
     );
-    const mergedOrientation = computed(() => orientationInfo.value[0]);
-    const isVertical = computed(() => orientationInfo.value[1]);
-    const isRTL = computed(() => configContext.direction === 'rtl');
-    const reverse = computed(() => !isVertical.value && isRTL.value);
+    const orientation = computed(() => orientationInfo.value[0]);
+    const vertical = computed(() => orientationInfo.value[1]);
+    const reverse = computed(() => !vertical.value && configContext.direction === 'rtl');
+    const prefix = computed(() => context.getPrefixCls('splitter', props.prefixCls));
+    const themeStyle = useSplitterTheme(() => prefix.value);
 
-    // ====================== Items Data ======================
-    const childrenRef = computed(() => collectChildren(slots.default?.() ?? []));
-    const items = useItems(childrenRef);
-
-    // >>> Warning for uncontrolled（antd 在 render 里同步发；这里 watch immediate 等价）
-    watch(
-      () => [items.value, props.onResize, props.layout, props.collapsibleIcon] as const,
-      ([nextItems, onResize, layout, collapsibleIcon]) => {
-        const warning = devUseWarning('Splitter');
-        const existSize = nextItems.some((item) => item.size !== undefined);
-        const existUndefinedSize = nextItems.some((item) => item.size === undefined);
-        if (existSize && existUndefinedSize && !onResize) {
-          warning(
-            false,
-            'When part of `Splitter.Panel` has `size`, `onResize` is required or change `size` to `defaultSize`.',
-          );
-        }
-        if (layout !== undefined) {
-          warning.deprecated(!layout, 'layout', 'orientation');
-        }
-        if (collapsibleIcon !== undefined) {
-          warning.deprecated(!collapsibleIcon, 'collapsibleIcon', 'collapsible.icon');
-        }
-      },
-      { immediate: true },
+    // The current render owns this plain metadata. Getter refs deliberately do not cache slots.
+    let currentItems: SplitterItem[] = [];
+    const unkeyed: symbol[] = [];
+    const items = toRef(() => currentItems);
+    const measured = ref({ width: 0, height: 0 });
+    const containerSize = computed(
+      () => (vertical.value ? measured.value.height : measured.value.width) || undefined,
     );
-
-    // ====================== Container =======================
-    const containerSize = ref<number | undefined>(undefined);
     useResizeObserver({
-      target: rootRef,
-      onResize: (info: { offsetWidth: number; offsetHeight: number }) => {
-        const nextSize = isVertical.value ? info.offsetHeight : info.offsetWidth;
-        // Skip when container has no size, Such as nested in a hidden tab panel
-        if (nextSize === 0) {
-          return;
-        }
-        containerSize.value = nextSize;
+      target: nativeElement,
+      onResize: (info) => {
+        if (!info.offsetWidth && !info.offsetHeight) return;
+        measured.value = { width: info.offsetWidth, height: info.offsetHeight };
       },
     });
-    // ========================= Size =========================
-    const { panelSizes, pxSizes, ptgSizes, ptgMinSizes, ptgMaxSizes, setInnerSizes } = useSizes(
-      items,
-      containerSize,
-    );
-
-    // ====================== Resizable =======================
-    const resizableInfos = useResizable(items, pxSizes, reverse);
+    const sizes = useSizes(items, containerSize);
+    const resizableInfos = useResizable(items, sizes.pxSizes, reverse);
     const resize = useResize(
       items,
       resizableInfos,
-      ptgSizes,
+      sizes.ptgSizes,
       containerSize,
-      setInnerSizes,
+      sizes.setInnerSizes,
       reverse,
     );
-
-    // ======================== Events ========================
-    /**
-     * 🚨 **只 `emit`，不要再手写 `props.onX?.(...)`。**
-     *
-     * Vue 的 `emit('resize')` 自己就会去找 `props.onResize` 并调用它
-     * （`toHandlerKey(event)` 的映射，读的是 `instance.vnode.props`）——
-     * 再手写一遍就是**每次回调都调两次**。
-     *
-     * 2026-10-01 实测（一次性探针：`props.onResize?.(x); emit('resize', x)` ⇒
-     * `onResize` 被调 **2** 次）。本文件原先 5 个回调全是这个形态。
-     * → PITFALLS 267
-     *
-     * 这一条 emit 同时满足两种写法：`<Splitter @resize>` 与 `:on-resize`。
-     */
-    const onInternalResizeStart = (index: number): void => {
+    const forget = (key: SplitterItem['key']) => {
+      sizes.forget(key);
+      resize.forget(key);
+    };
+    const onStart = (index: number) => {
       resize.onOffsetStart(index);
-      emit('resize-start', pxSizes.value);
+      emit('resizeStart', sizes.pxSizes.value);
     };
-    const onInternalResizeUpdate = (index: number, offset: number, lazyEnd?: boolean): void => {
-      const nextSizes = resize.onOffsetUpdate(index, offset);
-      if (lazyEnd) {
-        emit('resize-end', nextSizes);
-      } else {
-        emit('resize', nextSizes);
-      }
+    const onUpdate = (index: number, offsetX: number, offsetY: number, lazyEnd?: boolean) => {
+      let offset = vertical.value ? offsetY : offsetX;
+      if (reverse.value) offset = -offset;
+      const next = resize.onOffsetUpdate(index, offset);
+      emit('resize', next);
+      if (lazyEnd) emit('resizeEnd', next);
     };
-    const onInternalResizeEnd = (lazyEnd?: boolean): void => {
+    const onEnd = (lazyEnd?: boolean) => {
       resize.onOffsetEnd();
-      if (!lazyEnd) {
-        emit('resize-end', pxSizes.value);
-      }
+      if (!lazyEnd) emit('resizeEnd', sizes.pxSizes.value);
     };
-    const onInternalCollapse = (index: number, type: 'start' | 'end'): void => {
-      const nextSizes = resize.onCollapse(index, type);
-      emit('resize', nextSizes);
-      emit('resize-end', nextSizes);
-      const collapsed = nextSizes.map((size) => Math.abs(size) < Number.EPSILON);
-      emit('collapse', collapsed, nextSizes);
+    const onCollapse = (index: number, type: 'start' | 'end') => {
+      const next = resize.onCollapse(index, type);
+      emit('resize', next);
+      emit('resizeEnd', next);
+      emit(
+        'collapse',
+        next.map((size) => Math.abs(size) < Number.EPSILON),
+        next,
+      );
     };
-
-    // ======================== Semantic ========================
-    // ⚠️ antd 第四参 `{ dragger: { _default: 'default' } }`（`Splitter.js:130-134`，
-    //    §1.7b 已补）：把 string 形态 `classNames.dragger = 'a'` 归到 `dragger.default`，
-    //    字符串 + 对象混用不再产垃圾键；root/panel 等未声明键照常 clsx 平铺。
-    const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
-      Record<string, unknown>,
+    const semanticProps = computed<SplitterProps>(() => ({
+      ...props,
+      orientation: orientation.value,
+    }));
+    const { classNames, styles } = useMergeSemantic<
+      SplitterProps,
       SplitterSemanticClassNames,
       SplitterSemanticStyles
     >(
       [() => context.classNames, () => props.classNames],
       [
         () => context.styles,
-        () => semanticRootStyle(context.style as never) as never,
+        () => (context.style ? { root: context.style } : undefined),
         () => props.styles,
       ],
-      { props: props as unknown as Record<string, unknown> },
+      semanticProps,
       { dragger: { _default: 'default' } },
     );
-
-    return () => {
-      const getPrefixCls = context.getPrefixCls;
-      const prefixCls = getPrefixCls('splitter', props.prefixCls);
-      const rootPrefixCls = getPrefixCls();
-
-      const containerClassName = [
-        prefixCls,
-        `${prefixCls}-${mergedOrientation.value}`,
-        { [`${prefixCls}-rtl`]: isRTL.value },
-        mergedClassNames.value.root,
-        context.className,
-        attrs.class,
-      ];
-
-      const maskCls = `${prefixCls}-mask`;
-      const stackSizes: number[] = [];
-      let stack = 0;
-      const len = items.value.length;
-      for (let i = 0; i < len; i += 1) {
-        stack += ptgSizes.value[i] ?? 0;
-        stackSizes.push(stack);
-      }
-
-      const nodes: VNodeChild[] = [];
-      items.value.forEach((item, idx) => {
-        const raw = childrenRef.value[idx];
-        const panel = h(
-          InternalPanel,
-          {
-            prefixCls,
-            className: [mergedClassNames.value.panel, item.className].filter(Boolean).join(' '),
-            // ⚠️ Vue 原生 `class`（Issue #33.1）：上面只拼了 React 式的 `className`，
-            //    调用方写 `class="editor"` 会静默丢失。这里把原生 class 也传下去 ——
-            //    它落在 InternalPanel 的 attrs 上，由 Vue 自己归一（数组/对象/动态都行）
-            //    并合并到面板根 div，且保持响应式。
-            class: (item as unknown as { class?: unknown }).class,
-            style: { ...mergedStyles.value.panel, ...item.style },
-            size: panelSizes.value[idx],
-            supportMotion: !!props.collapsible?.motion && resize.movingIndex.value === undefined,
-            destroyOnHidden: item.destroyOnHidden ?? props.destroyOnHidden,
-          },
-          // children 是 `<Splitter.Panel>{content}</Splitter.Panel>` 的 element.children
-          { default: () => renderPanelChildren(raw) },
+    const warning = devUseWarning('Splitter');
+    const renderSplitter = () => {
+      currentItems = getItems(
+        toArray(slots.default?.()).filter((node) => node.type === SplitterPanel),
+        unkeyed,
+      );
+      const hasControlled = currentItems.some((item) => item.size !== undefined);
+      if (
+        hasControlled &&
+        currentItems.some((item) => item.size === undefined) &&
+        !instance?.vnode.props?.onResize
+      ) {
+        warning(
+          false,
+          'When part of `Splitter.Panel` has `size`, listen to `resize` or use `defaultSize`.',
         );
-        nodes.push(panel);
-
-        // Split Bar
-        const resizableInfo = resizableInfos.value[idx];
-        if (resizableInfo) {
-          // ARIA 上下界（antd `Splitter.js:181-201` 逐字）—— 抽到 `getAriaBounds`
-          // 以便在「已测量容器」下对拍 `min <= now <= max`（Issue #51）
-          const ariaBounds = getAriaBounds(stackSizes, ptgMinSizes.value, ptgMaxSizes.value, idx);
-          nodes.push(
-            h(SplitBar, {
-              key: `split-bar-${idx}`,
-              lazy: !!props.lazy,
-              index: idx,
-              active: resize.movingIndex.value === idx,
-              prefixCls,
-              rootPrefixCls,
-              vertical: isVertical.value,
-              resizable: resizableInfo.resizable,
-              draggerStyle: mergedStyles.value.dragger ?? {},
-              draggerClassName: normalizeDraggerClassNames(mergedClassNames.value.dragger) ?? {},
-              // 内部：由 Splitter 的 #draggerIcon slot 程序化传递（VNode prop 合法）
-              draggerIcon: slots.draggerIcon?.(),
-              collapsibleIcon: props.collapsible?.icon || props.collapsibleIcon || {},
-              ariaNow: ariaBounds.now,
-              ariaMin: ariaBounds.min,
-              ariaMax: ariaBounds.max,
-              startCollapsible: resizableInfo.startCollapsible,
-              endCollapsible: resizableInfo.endCollapsible,
-              showStartCollapsibleIcon: resizableInfo.showStartCollapsibleIcon,
-              showEndCollapsibleIcon: resizableInfo.showEndCollapsibleIcon,
-              onDraggerDoubleClick: (index: number) => {
-                // 同上：只 emit（`emit` 会连带调 `props.onDraggerDoubleClick`）
-                emit('dragger-double-click', index);
-              },
-              onOffsetStart: onInternalResizeStart,
-              onOffsetUpdate: (
-                index: number,
-                offsetX: number,
-                offsetY: number,
-                lazyEnd?: boolean,
-              ) => {
-                let offset = isVertical.value ? offsetY : offsetX;
-                if (reverse.value) {
-                  offset = -offset;
-                }
-                onInternalResizeUpdate(index, offset, lazyEnd);
-              },
-              onOffsetEnd: onInternalResizeEnd,
-              onCollapse: onInternalCollapse,
-              containerSize: containerSize.value || 0,
-            }),
-          );
-        }
+      }
+      if (props.layout !== undefined) warning.deprecated(false, 'layout', 'orientation');
+      if (props.collapsibleIcon !== undefined)
+        warning.deprecated(false, 'collapsibleIcon', 'collapsible.icon');
+      const cls = prefix.value;
+      const panelSizes = sizes.panelSizes.value;
+      const panelKeys = currentItems.map((item) => item.key);
+      const stack: number[] = [];
+      sizes.ptgSizes.value.forEach((value, index) => {
+        stack[index] = (stack[index - 1] ?? 0) + value;
       });
-
+      const content = currentItems.map((item, index) => {
+        const info = resizableInfos.value[index];
+        const aria = getAriaBounds(stack, sizes.ptgMinSizes.value, sizes.ptgMaxSizes.value, index);
+        const draggerClass = classNames.value.dragger;
+        return h(Fragment, { key: item.key }, [
+          h(
+            InternalPanel,
+            {
+              prefixCls: cls,
+              itemKey: item.key,
+              forget,
+              rememberAccepted: sizes.rememberAccepted,
+              rememberInitial: () => sizes.rememberInitial(item.key, item.defaultSize),
+              className: classNames.value.panel,
+              style: styles.value.panel,
+              size: panelSizes[index],
+              supportMotion: !!props.collapsible?.motion && resize.movingIndex.value === undefined,
+              destroyOnHidden: item.destroyOnHidden ?? props.destroyOnHidden,
+            },
+            { default: () => item.node },
+          ),
+          info
+            ? h(SplitBar, {
+                prefixCls: cls,
+                vertical: vertical.value,
+                reverse: reverse.value,
+                index,
+                panelKeys,
+                active: resize.movingIndex.value === index,
+                resizable: info.resizable,
+                lazy: !!props.lazy,
+                containerSize: containerSize.value ?? 0,
+                ariaNow: aria.now,
+                ariaMin: aria.min,
+                ariaMax: aria.max,
+                startCollapsible: info.startCollapsible,
+                endCollapsible: info.endCollapsible,
+                showStartCollapsibleIcon: info.showStartCollapsibleIcon,
+                showEndCollapsibleIcon: info.showEndCollapsibleIcon,
+                draggerIcon: slots.draggerIcon?.(),
+                draggerStyle: styles.value.dragger,
+                draggerClassName:
+                  typeof draggerClass === 'string' ? { default: draggerClass } : draggerClass,
+                collapsibleIcon: props.collapsible?.icon ?? props.collapsibleIcon,
+                onOffsetStart: onStart,
+                onOffsetUpdate: onUpdate,
+                onOffsetEnd: onEnd,
+                onOffsetCancel: resize.onOffsetEnd,
+                onCollapse,
+                onDraggerDoubleClick: (bar: number) => emit('draggerDoubleClick', bar),
+              })
+            : null,
+        ]);
+      });
       return h(
         'div',
         {
           ...attrs,
-          ref: rootRef,
-          style: [mergedStyles.value.root, attrs.style],
-          class: containerClassName,
+          ref: nativeElement,
+          onVnodeBeforeUpdate: captureFocus,
+          onVnodeUpdated: restoreFocus,
+          class: [
+            cls,
+            `${cls}-${orientation.value}`,
+            { [`${cls}-rtl`]: configContext.direction === 'rtl' },
+            context.className,
+            classNames.value.root,
+            attrs.class,
+          ],
+          style: [themeStyle.value, styles.value.root, attrs.style],
         },
         [
-          ...nodes,
-          // antd 的 `isNumber(movingIndex)` —— movingIndex 在拖拽期间才是 number
-          resize.movingIndex.value !== undefined && resize.movingIndex.value !== null
+          ...content,
+          resize.movingIndex.value !== undefined
             ? h('div', {
+                key: 'mask',
                 'aria-hidden': true,
-                class: [maskCls, `${maskCls}-${mergedOrientation.value}`],
+                class: [`${cls}-mask`, `${cls}-mask-${orientation.value}`],
               })
             : null,
         ],
       );
     };
+    return { nativeElement, renderSplitter };
+  },
+  render() {
+    return this.renderSplitter();
   },
 });
 
-/** 复合组件：`Splitter.Panel`（renderless，antd 的 `CompoundedComponent`）。 */
 export const SplitterWithPanel = Object.assign(Splitter, { Panel: SplitterPanel });
-
 export default SplitterWithPanel;

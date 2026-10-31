@@ -116,10 +116,10 @@ describe('Splitter · 组件（SSR 语义 / SSR 尺寸）', () => {
   });
 
   it('layout（deprecated）仍生效并告警', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warn = vi.spyOn(console, 'error').mockImplementation(() => {});
     const w = makeSplitter({ layout: 'vertical' });
     expect(w.find('.apollo-splitter-vertical').exists()).toBe(true);
-    expect(warn).toHaveBeenCalled();
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('`layout` is deprecated'));
     warn.mockRestore();
   });
 
@@ -176,7 +176,7 @@ describe('Splitter · 组件（SSR 语义 / SSR 尺寸）', () => {
     const w = makeSplitter({ 'data-probe': '1' } as Record<string, unknown>);
     expect(w.find('.apollo-splitter').attributes('data-probe')).toBe('1');
     // expose 的 nativeElement 是 ref ⇒ 通过 VM 代理取到元素
-    const exposed = (w.vm as unknown as { nativeElement?: HTMLElement | null }).nativeElement;
+    const exposed = w.vm.nativeElement;
     expect(exposed).toBeInstanceOf(HTMLElement);
   });
 

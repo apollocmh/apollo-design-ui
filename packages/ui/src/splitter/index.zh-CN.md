@@ -28,17 +28,19 @@ subtitle: 分割面板
 | collapsibleIcon | ⚠️ 已废弃：用 `collapsible.icon` | — | — |
 | lazy | 拖拽时只移动预览线，松手才提交尺寸 | `boolean` | — |
 | destroyOnHidden | 面板折叠后销毁内容（Panel 可覆盖） | `boolean` | — |
-| classNames / styles | 语义槽 `{ root, panel, dragger }`（dragger 支持 string 或 `{ default, active }`） | — | — |
+| classNames / styles | 当前对象或 `({ props: SplitterProps }) => 对象`；区域 `{ root, panel, dragger }`（dragger 类名支持 string 或 `{ default, active }`，样式支持 `{ default, active }`） | — | — |
 
 ### 事件
 
 | 事件 | 说明 | 回调参数 |
 |---|---|---|
-| resize-start | 拖拽开始 | `(sizes: number[])` |
+| resizeStart | 拖拽开始 | `(sizes: number[])` |
 | resize | 拖拽中 / 折叠后 | `(sizes: number[])` |
-| resize-end | 拖拽结束 | `(sizes: number[])` |
+| resizeEnd | 拖拽结束 | `(sizes: number[])` |
 | collapse | 折叠状态变化 | `(collapsed: boolean[], sizes: number[])` |
-| dragger-double-click | 双击把手 | `(index: number)` |
+| draggerDoubleClick | 双击把手 | `(index: number)` |
+
+事件由组件独占声明，`@resize-start` / `@resize-end` / `@dragger-double-click` 是模板的自然写法，`h()` 使用 `onResizeStart` / `onResizeEnd` / `onDraggerDoubleClick`。不再把通知声明为回调 prop，也不双发。`lazy` 在松手时各提交一次 `resize` 和 `resizeEnd`；取消拖拽不提交尚未接受的预览。
 
 ### 插槽
 
@@ -58,15 +60,25 @@ subtitle: 分割面板
 | resizable | 是否可拖拽调整 | `boolean` | `true` |
 | destroyOnHidden | 折叠后销毁内容 | `boolean` | — |
 
-### Ref
+### 状态、原生属性与引用
 
-`{ nativeElement: HTMLDivElement | null }`
+`size` 是受控提议：父级在 `resize` 中赋回新值才接受变化；拒绝提议后布局保持，撤回所有 `size` 从最后接受的尺寸继续。部分面板使用 `size` 时，其余尺寸由既有算法分配。`defaultSize` 只在该面板建立时生效；动态列表应给 Panel 稳定的业务 `key`，尺寸、折叠记忆与编辑器身份随 key 保留，移除面板会释放对应状态。
+
+Splitter 根和 Panel 根分别接收各自的原生 `class` / `style`、`data-*`、ARIA 与原生监听器，支持 Vue 样式字符串/数组。已有 Panel `className` 别名和内部 `classNames` / `styles` 保留。Panel 的默认槽完整渲染文本、0、数组和条件内容；折叠默认保留内容，`destroyOnHidden` 才销毁内容，Panel 可覆盖容器设置。
+
+Splitter 与实际 Panel 的 ref 均为 `{ nativeElement: HTMLDivElement | null }`，卸载后为 null。独立导出的 `SplitterPanel` 与复合 `Splitter.Panel` 是同一面板能力，应置于 Splitter 内。
+
+### 键盘与资源
+
+可调整 separator 通过 Tab 聚焦，沿当前布局轴的方向键调整 10px，Shift 加速为 50px；Home / End 到当前 min / max 边界，水平 RTL 镜像方向。禁用 separator 不进入 Tab 顺序。折叠按钮支持 Enter / Space；尺寸边界继续采用现有归一化和 ARIA 算法。拖拽中更改方向、lazy、禁用状态或面板 key 顺序会取消未提交的预览并释放窗口监听，卸载同时释放 ResizeObserver。动画仅为 CSS 过渡，遵循 reduced-motion。
 
 ## Theme（Component Token）
 
 4 个（CSS 变量 `--apollo-splitter-*`）：`splitBarSize`(2px 把手宽) /
 `splitTriggerSize`(6px 热区) / `resizeSpinnerSize`(20px) /
 `splitBarDraggableSize`(20px)。
+
+通过 `ConfigProvider :theme="{ components: { Splitter: { splitBarSize: 4, splitTriggerSize: 12, resizeSpinnerSize: 28 } } }"` 配置当前实例；替换、撤回和嵌套主题即时生效。未显式设置 `splitBarDraggableSize` 时继承 `resizeSpinnerSize`。原生 style 的显式 CSS 变量覆盖最后生效。前缀 DOM 响应更新，任意自定义前缀仍需预先提供对应静态 CSS。
 
 ## FAQ
 
@@ -77,4 +89,4 @@ subtitle: 分割面板
 
 **为什么 aria-valuenow 在 SSR 是 50？**
 
-未测量时容器尺寸为 0，百分比归一化仍然成立（50/50）——与 antd 一致。
+未测量时容器尺寸为 0，百分比归一化仍然成立（50/50）。

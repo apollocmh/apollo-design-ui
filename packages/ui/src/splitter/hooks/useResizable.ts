@@ -3,7 +3,7 @@
  * 契约来源：antd 6.6.4 `es/splitter/hooks/useResizable.js`（逐行对拍）。
  */
 
-import { computed, type Ref } from 'vue';
+import { type Ref, toRef } from 'vue';
 import type { ShowCollapsibleIconMode } from '../interface';
 import type { NormalizedCollapsible, SplitterItem } from './useItems';
 
@@ -42,11 +42,11 @@ export function useResizable(
   pxSizes: Ref<number[]>,
   reverse: Ref<boolean>,
 ): Ref<ResizableInfo[]> {
-  return computed<ResizableInfo[]>(() => {
+  return toRef((): ResizableInfo[] => {
     const infos: ResizableInfo[] = [];
-    for (let i = 0; i < items.value.length - 1; i += 1) {
-      const prevItem = items.value[i] as SplitterItem;
-      const nextItem = items.value[i + 1] as SplitterItem;
+    for (const [i, prevItem] of items.value.entries()) {
+      const nextItem = items.value[i + 1];
+      if (!nextItem) break;
       const prevSize = pxSizes.value[i] ?? 0;
       const nextSize = pxSizes.value[i + 1] ?? 0;
       const {

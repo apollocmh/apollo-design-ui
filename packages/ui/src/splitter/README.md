@@ -1,3 +1,5 @@
+> 2026-10-31 Vue 原生化增量：五个所属通知统一为 camelCase emits；模板 kebab 写法和 h 的 onX 监听器自然映射。Splitter 保留真实 Panel VNode，由私有布局 context 提供尺寸，Panel 的原生 attrs、完整当前默认槽和 nativeElement ref 由实际组件拥有。尺寸与折叠记忆归业务 key，受控拒绝不污染撤控状态，默认尺寸只在面板建立时使用。保留 sizeUtil / ARIA 算法和 s33/s51 场景。分隔条补齐键盘入口、当前 active 样式与取消/卸载监听释放；现有四 Token 读取当前主题，resizeSpinnerSize 继续作为未显式设置 draggable 尺寸的派生来源。当前契约见双语 API，以下旧实现记录保留其历史含义。
+
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
 # Splitter 实现说明

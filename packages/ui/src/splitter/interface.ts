@@ -3,7 +3,8 @@
  * `SplitBar.d.ts` **重新定义**，不复制）。
  */
 
-import type { VNodeChild } from 'vue';
+import type { CSSProperties, StyleValue, VNodeChild } from 'vue';
+import type { SemanticInput } from '../_internal/use-merge-semantic';
 import type { Orientation } from '../_internal/use-orientation';
 
 /** 折叠图标的显隐模式。 */
@@ -19,7 +20,7 @@ export interface PanelCollapsible {
 
 export interface SplitterPanelProps {
   className?: string | undefined;
-  style?: Record<string, string | number> | undefined;
+  style?: StyleValue | undefined;
   /** 面板最小尺寸（px 或 '%'）。 */
   min?: number | string | undefined;
   /** 面板最大尺寸（px 或 '%'）。 */
@@ -49,8 +50,8 @@ export interface SplitterDraggerClassNames {
 }
 
 export interface SplitterDraggerStyles {
-  default?: Record<string, string | number> | undefined;
-  active?: Record<string, string | number> | undefined;
+  default?: CSSProperties | undefined;
+  active?: CSSProperties | undefined;
 }
 
 export interface SplitterSemanticClassNames {
@@ -61,15 +62,15 @@ export interface SplitterSemanticClassNames {
 }
 
 export interface SplitterSemanticStyles {
-  root?: Record<string, string | number> | undefined;
-  panel?: Record<string, string | number> | undefined;
+  root?: CSSProperties | undefined;
+  panel?: CSSProperties | undefined;
   dragger?: SplitterDraggerStyles | undefined;
 }
 
 export interface SplitterProps {
   prefixCls?: string | undefined;
-  classNames?: SplitterSemanticClassNames | undefined;
-  styles?: SplitterSemanticStyles | undefined;
+  classNames?: SemanticInput<SplitterSemanticClassNames, SplitterProps> | undefined;
+  styles?: SemanticInput<SplitterSemanticStyles, SplitterProps> | undefined;
   /** 折叠全局配置：`motion: true` 开启折叠动画（时长走 Component Token）。 */
   collapsible?:
     | { motion?: boolean | undefined; icon?: SplitterCollapsibleIcon | undefined }
@@ -93,3 +94,25 @@ export interface SplitterProps {
 export interface SplitterRef {
   nativeElement: HTMLDivElement | null;
 }
+
+export interface SplitterPanelRef {
+  nativeElement: HTMLDivElement | null;
+}
+
+/** Vue-owned notifications; onX props above describe the natural JSX listeners. */
+export type SplitterEmits = {
+  resizeStart: [sizes: number[]];
+  resize: [sizes: number[]];
+  resizeEnd: [sizes: number[]];
+  collapse: [collapsed: boolean[], sizes: number[]];
+  draggerDoubleClick: [index: number];
+};
+
+export type SplitterSlots = {
+  default?: () => VNodeChild;
+  draggerIcon?: () => VNodeChild;
+};
+
+export type SplitterPanelSlots = {
+  default?: () => VNodeChild;
+};

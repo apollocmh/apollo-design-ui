@@ -25,12 +25,16 @@ export type {
   SplitterCollapsibleIcon,
   SplitterDraggerClassNames,
   SplitterDraggerStyles,
+  SplitterEmits,
   SplitterLegacyCollapsibleIcon,
   SplitterPanelProps,
+  SplitterPanelRef,
+  SplitterPanelSlots,
   SplitterProps,
   SplitterRef,
   SplitterSemanticClassNames,
   SplitterSemanticStyles,
+  SplitterSlots,
 } from './interface';
 
 /** 复合组件原样导出（含 `Panel`，**不带** `install` —— 供内部/测试直接用）。 */

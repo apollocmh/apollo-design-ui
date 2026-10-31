@@ -3,13 +3,18 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
+import { h } from 'vue';
 import { Splitter, SplitterPanel } from '../index';
 import type {
   PanelCollapsible,
   ShowCollapsibleIconMode,
+  SplitterEmits,
+  SplitterPanelRef,
+  SplitterPanelSlots,
   SplitterProps,
   SplitterRef,
   SplitterSemanticClassNames,
+  SplitterSlots,
 } from '../interface';
 
 describe('Splitter · 类型', () => {
@@ -62,5 +67,47 @@ describe('Splitter · 类型', () => {
     expectTypeOf<NonNullable<SplitterProps['onCollapse']>>()
       .parameter(0)
       .toEqualTypeOf<boolean[]>();
+  });
+
+  it('uses actual constructors for Vue slots, owned listeners and exposed native roots', () => {
+    const slots: SplitterSlots = {
+      default: () => [h(SplitterPanel, { style: ['padding:2px', { color: 'red' }] })],
+      draggerIcon: () => [0, h('b', 'Handle')],
+    };
+    const panelSlots: SplitterPanelSlots = { default: () => [0, h('input')] };
+    h(
+      Splitter,
+      {
+        onResizeStart: (sizes: number[]) => sizes.at(0),
+        onCollapse: (collapsed: boolean[], sizes: number[]) => [collapsed, sizes],
+      },
+      slots,
+    );
+    h(Splitter.Panel, { size: '40%' }, panelSlots);
+    expectTypeOf<InstanceType<typeof Splitter>['nativeElement']>().toEqualTypeOf<
+      SplitterRef['nativeElement']
+    >();
+    expectTypeOf<InstanceType<typeof SplitterPanel>['nativeElement']>().toEqualTypeOf<
+      SplitterPanelRef['nativeElement']
+    >();
+    expectTypeOf<SplitterEmits['resizeStart']>().toEqualTypeOf<[sizes: number[]]>();
+    expectTypeOf<keyof SplitterSlots>().toEqualTypeOf<'default' | 'draggerIcon'>();
+    const emit = (root: InstanceType<typeof Splitter>) => {
+      root.$emit('resizeStart', [100, 200]);
+      root.$emit('resizeEnd', [100, 200]);
+      root.$emit('collapse', [true, false], [0, 300]);
+      // @ts-expect-error Owned resize receives actual sizes, not a DOM Event.
+      root.$emit('resize', new Event('resize'));
+      // @ts-expect-error camelCase is the one owned event name; templates kebab-case naturally.
+      root.$emit('resize-start', [100, 200]);
+      // @ts-expect-error Collapsed state and sizes are two distinct required payloads.
+      root.$emit('collapse', [100, 200]);
+    };
+    void emit;
+    const invalid = () => {
+      // @ts-expect-error resize listeners receive numeric sizes, not a MouseEvent.
+      h(Splitter, { onResize: (_event: MouseEvent) => {} });
+    };
+    void invalid;
   });
 });

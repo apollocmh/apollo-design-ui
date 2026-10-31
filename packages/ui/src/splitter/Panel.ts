@@ -1,22 +1,38 @@
-/**
- * Splitter 的 Panel（复合组件）。
- *
- * 契约来源：antd 6.6.4 `es/splitter/Panel.js`（逐行对拍）：
- * - `Panel` 本体是 **renderless**（React 的 `Panel = () => null`）—— 它只是把
- *   props 传给 children 收集器；真正的渲染由 `InternalPanel` 承担。
- * - `InternalPanel`：`size===0`（或 '0%'）⇒ `-hidden`；`supportMotion` ⇒
- *   `-transition`；style 强制 `flexBasis: size ?? 'auto'` + `flexGrow: hasSize?0:1`
- *   （SSR 用 auto）。
- */
+import {
+  type CSSProperties,
+  defineComponent,
+  h,
+  type InjectionKey,
+  inject,
+  onBeforeUnmount,
+  type PropType,
+  provide,
+  ref,
+  type SlotsType,
+  watch,
+} from 'vue';
+import type { PanelKey } from './hooks/useItems';
+import type { SplitterPanelProps, SplitterPanelSlots } from './interface';
 
-import { defineComponent, h, type PropType } from 'vue';
-import type { SplitterPanelProps } from './interface';
+interface PanelLayout {
+  prefixCls: string;
+  className?: string | undefined;
+  style?: CSSProperties | undefined;
+  size?: number | string | undefined;
+  destroyOnHidden: boolean;
+  supportMotion: boolean;
+  rememberAccepted: () => void;
+}
+const panelLayoutKey: InjectionKey<PanelLayout> = Symbol('splitter-panel-layout');
 
+/** The public Panel remains the actual Vue owner of its attrs, slots and ref. */
 export const SplitterPanel = defineComponent({
   name: 'ASplitterPanel',
+  inheritAttrs: false,
+  expose: ['nativeElement'],
+  slots: Object as SlotsType<SplitterPanelSlots>,
   props: {
     className: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
     min: { type: [Number, String], default: undefined },
     max: { type: [Number, String], default: undefined },
     size: { type: [Number, String], default: undefined },
@@ -28,52 +44,74 @@ export const SplitterPanel = defineComponent({
     defaultSize: { type: [Number, String], default: undefined },
     destroyOnHidden: { type: Boolean, default: undefined },
   },
-  setup() {
-    // renderless：antd 的 `Panel = () => null`
-    return () => null;
+  setup(props, { slots, attrs }) {
+    const layout = inject(panelLayoutKey, undefined);
+    const nativeElement = ref<HTMLDivElement | null>(null);
+    watch(
+      () => props.size,
+      (size) => {
+        if (size !== undefined) layout?.rememberAccepted();
+      },
+      { immediate: true, flush: 'sync' },
+    );
+    const renderPanel = () => {
+      if (!layout) return null;
+      const size = layout.size;
+      const collapsed = size === 0 || (typeof size === 'string' && Number.parseFloat(size) === 0);
+      return h(
+        'div',
+        {
+          ...attrs,
+          ref: nativeElement,
+          class: [
+            `${layout.prefixCls}-panel`,
+            {
+              [`${layout.prefixCls}-panel-hidden`]: collapsed,
+              [`${layout.prefixCls}-panel-transition`]: layout.supportMotion,
+            },
+            layout.className,
+            props.className,
+            attrs.class,
+          ],
+          style: [
+            layout.style,
+            attrs.style,
+            {
+              flexBasis:
+                size === undefined ? 'auto' : typeof size === 'number' ? `${size}px` : size,
+              flexGrow: size === undefined ? 1 : 0,
+            },
+          ],
+        },
+        [!(layout.destroyOnHidden && collapsed) ? slots.default?.() : null],
+      );
+    };
+    return { nativeElement, renderPanel };
+  },
+  render() {
+    return this.renderPanel();
   },
 });
 
-/** 内部渲染单元（Splitter 主组件消费）。 */
+/** A DOM-free layout boundary around each real keyed Panel. */
 export const InternalPanel = defineComponent({
   name: 'ASplitterInternalPanel',
   props: {
     prefixCls: { type: String, required: true },
     className: { type: String, default: undefined },
-    style: { type: Object as PropType<Record<string, string | number>>, default: undefined },
+    style: { type: Object as PropType<CSSProperties>, default: undefined },
     size: { type: [Number, String], default: undefined },
     destroyOnHidden: { type: Boolean, default: false },
-    supportMotion: { type: Boolean, default: undefined },
+    supportMotion: { type: Boolean, default: false },
+    rememberAccepted: { type: Function as PropType<() => void>, required: true },
+    rememberInitial: { type: Function as PropType<() => void>, required: true },
+    itemKey: { type: [String, Number, Symbol] as PropType<PanelKey>, required: true },
+    forget: { type: Function as PropType<(key: PanelKey) => void>, required: true },
   },
   setup(props, { slots }) {
-    return () => {
-      const isCollapsed =
-        props.size === 0 || (typeof props.size === 'string' && Number.parseFloat(props.size) === 0);
-      const panelClassName = [
-        `${props.prefixCls}-panel`,
-        { [`${props.prefixCls}-panel-hidden`]: isCollapsed },
-        { [`${props.prefixCls}-panel-transition`]: props.supportMotion },
-        props.className,
-      ];
-      const hasSize = props.size !== undefined;
-      return h(
-        'div',
-        {
-          class: panelClassName,
-          style: {
-            ...props.style,
-            // Use auto when start from ssr
-            // ⚠️ 数字必须补 px（Vue 的 CSSOM 赋值不会自动加单位，CHECKLIST #52 同族）
-            flexBasis: hasSize
-              ? typeof props.size === 'number'
-                ? `${props.size}px`
-                : props.size
-              : 'auto',
-            flexGrow: hasSize ? 0 : 1,
-          },
-        },
-        [!(props.destroyOnHidden && isCollapsed) ? slots.default?.() : null],
-      );
-    };
+    props.rememberInitial();
+    provide(panelLayoutKey, props);
+    onBeforeUnmount(() => props.forget(props.itemKey));
+    return () => slots.default?.();
   },
 });

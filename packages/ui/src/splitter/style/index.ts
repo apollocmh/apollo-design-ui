@@ -71,8 +71,7 @@ export function genSplitterStyle(rootPrefixCls: string): string {
   const barCls = `${cls}-bar`;
   const maskCls = `${cls}-mask`;
   const panelCls = `${cls}-panel`;
-  const t = splitterTokenValues();
-  const halfTriggerSize = `${t.splitTriggerSize / 2}px`;
+  const halfTriggerSize = `calc(${sv(p, 'split-trigger-size')} / 2)`;
 
   const previewBase = [
     '  position:absolute;',
@@ -182,6 +181,7 @@ export function genSplitterStyle(rootPrefixCls: string): string {
     `  align-items:center;`,
     `  justify-content:center;`,
     `}`,
+    `${barCls}-dragger:focus-visible,`,
     `${barCls}-collapse-bar:focus-visible{`,
     FOCUS_OUTLINE,
     `}`,

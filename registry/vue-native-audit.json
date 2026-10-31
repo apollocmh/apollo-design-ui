@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 194,
+  "revision": 196,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -3962,18 +3962,16 @@
       "kind": "component",
       "ref": "splitter",
       "title": "Splitter",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/splitter"
       ],
-      "assignment": {
-        "owner": "native_form_core",
-        "baseRevision": 192,
-        "startedAt": "2026-10-31T00:26:03.550Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -3990,6 +3988,317 @@
           "packages/ui/src/splitter/README.md",
           "packages/ui/src/splitter/interface.ts"
         ]
+      },
+      "verification": {
+        "task": "CMP:splitter",
+        "owner": "native_form_core",
+        "baseRevision": "fd589dc8",
+        "passed": true,
+        "pending": [],
+        "scope": [
+          "packages/ui/src/splitter"
+        ],
+        "ready": true,
+        "summary": [
+          "Five typed camelCase owned emits; existing JSX onX listener types and natural kebab-case templates remain, no runtime callback-prop channel or duplicate dispatch. Private SplitBar notifications use emits too.",
+          "Actual keyed Panel VNodes own complete current slots, native attrs/styles/listeners and public refs. A private DOM-free context supplies layout only. Render reads current slots once and writes no reactive state; getter refs read current plain layout metadata.",
+          "Accepted/uncontrolled sizes and collapsed-size memory belong to business keys. Rejected proposals never contaminate release; defaults initialize once; actual template kebab props and Boolean attrs normalize at their real VNode boundary. Full layout-key changes cancel stale drag snapshots.",
+          "Existing sizeUtil and ariaBounds algorithms and s33/s51 assertions retained. Keyboard resize, bounds, current axis/RTL, lazy preview/commit, active styles and precise listener/observer cleanup verified.",
+          "Current Provider/semantic props and four existing tokens consumed by static CSS. resizeSpinnerSize remains the fallback for an unspecified splitBarDraggableSize. Root focus repair only restores a still-connected owned element after a keyed DOM move loses focus to body."
+        ],
+        "migration": [
+          "Programmatic event names are resizeStart / resize / resizeEnd / collapse / draggerDoubleClick. Template @resize-start / @resize-end / @dragger-double-click and h onResizeStart/onResizeEnd/onDraggerDoubleClick naturally map to those owned events.",
+          "Lazy release now proposes resize once before resizeEnd so existing controlled resize listeners can accept its committed sizes; cancellation discards the preview.",
+          "New exported types: SplitterEmits, SplitterSlots, SplitterPanelSlots, SplitterPanelRef. Local index updated; root owns the UI barrel and COMPATIBILITY.",
+          "Stable business keys retain panel size/collapse/editor identity across reorder; removing all size props retains the last accepted layout. Native Panel style accepts Vue strings/arrays. Existing layout, collapsibleIcon and Panel className aliases remain."
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "scope": [
+              "packages/ui/src/splitter/**"
+            ],
+            "command": "node node_modules/vitest/vitest.mjs run --project unit --project theme packages/ui/src/splitter/__tests__/native-contracts.test.ts packages/ui/src/splitter/__tests__/index.test.ts packages/ui/src/splitter/__tests__/s33-issue33.test.ts packages/ui/src/splitter/__tests__/s51-issue51.test.ts packages/ui/src/splitter/__tests__/demo.test.ts packages/ui/src/splitter/__tests__/theme.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "elapsedSeconds": 23.2,
+            "log": "/tmp/apollo-splitter-core-demo-theme-verified.log",
+            "result": "6 files, 81 passed on final runtime/source/type-boundary code: existing core/s33/s51, 15 native regressions, 10 actual Demo mounts, current Token/style checks."
+          },
+          {
+            "kind": "browser",
+            "scope": [
+              "packages/ui/src/splitter/**"
+            ],
+            "command": "node packages/ui/src/splitter/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "elapsedSeconds": 6.52,
+            "log": "/tmp/apollo-splitter-native-browser-final.log",
+            "report": "/tmp/apollo-splitter-native-browser.json",
+            "result": "10 real Chrome groups, zero diagnostics; exact listener deltas account for the identified persistent Playwright hit-target interceptors. Final following changes only annotate getter types and explicitly extract the same supported raw size values; valid-input runtime behavior is unchanged."
+          },
+          {
+            "kind": "lint",
+            "scope": [
+              "packages/ui/src/splitter/**"
+            ],
+            "command": "node node_modules/@biomejs/biome/bin/biome check packages/ui/src/splitter/Panel.ts packages/ui/src/splitter/SplitBar.ts packages/ui/src/splitter/Splitter.ts packages/ui/src/splitter/__tests__/fixtures/NativeSplitter.vue packages/ui/src/splitter/__tests__/index.test.ts packages/ui/src/splitter/__tests__/native-browser.mjs packages/ui/src/splitter/__tests__/native-contracts.test.ts packages/ui/src/splitter/__tests__/s33-issue33.test.ts packages/ui/src/splitter/__tests__/type.test-d.ts packages/ui/src/splitter/demo/control.vue packages/ui/src/splitter/hooks/useItems.ts packages/ui/src/splitter/hooks/useResizable.ts packages/ui/src/splitter/hooks/useResize.ts packages/ui/src/splitter/hooks/useSizes.ts packages/ui/src/splitter/index.ts packages/ui/src/splitter/interface.ts packages/ui/src/splitter/style/index.ts packages/ui/src/splitter/style/token.ts packages/ui/src/splitter/use-splitter-theme.ts",
+            "exitCode": 0,
+            "signal": null,
+            "elapsedSeconds": 0.134,
+            "log": "/tmp/apollo-splitter-format-verified.log",
+            "result": "19 changed owned TS/SFC/script files checked without writes."
+          },
+          {
+            "kind": "diff",
+            "scope": [
+              "packages/ui/src/splitter/**"
+            ],
+            "command": "git diff --check HEAD -- packages/ui/src/splitter",
+            "exitCode": 0,
+            "signal": null,
+            "elapsedSeconds": 0.02,
+            "log": "/tmp/apollo-splitter-diff-verified.log"
+          },
+          {
+            "kind": "types",
+            "stage": "architecture",
+            "scope": [
+              "packages/ui/src/splitter"
+            ],
+            "baseCommit": "13f2f500f5ee8587146c98c13dc4aa22d3481147",
+            "config": {
+              "extends": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/tsconfig.json",
+              "compilerOptions": {
+                "noEmit": true,
+                "incremental": false,
+                "composite": false
+              },
+              "include": [
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/packages/ui/src/splitter/**/*.ts",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/packages/ui/src/splitter/**/*.vue",
+                "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/packages/ui/src/index.ts"
+              ]
+            },
+            "sourceHashes": {
+              "packages/ui/src/splitter/Panel.ts": "dd8a1c7d5bef291bffba8c3bc29d3ff1eb2a5eb886fa226834ee78c0e8319e4f",
+              "packages/ui/src/splitter/use-splitter-theme.ts": "9264d36ee38b866b205040b2663f5a54dda654702efe156ec5620eb4a1432a58",
+              "packages/ui/src/splitter/SplitBar.ts": "45ba90001757833065458361f9ecca4377ee78edd04a3d7b803a7d0c070299b1",
+              "packages/ui/src/splitter/Splitter.ts": "4fe759182462916e78a5ba9438eca78eaa217c63ebd8865662b4d6bef017c995",
+              "packages/ui/src/splitter/interface.ts": "c44df700f1fa11ebddb6041e1766dc0459880ecee69979a37d773ba2466d073c",
+              "packages/ui/src/splitter/index.ts": "22b829fd151f559e41d4c702a0ff53b3e196bafec0f9eb5d6eab591ad7bdd7ce",
+              "packages/ui/src/splitter/demo/group.vue": "080b0ec38ee09e9df31288d8b0ef6f8ba7b026912ebeab67bf9f3e81942e76ce",
+              "packages/ui/src/splitter/demo/size.vue": "bfb68cfd03ccd530378ed0531cf6fcbb77d4606542ba9b87e3c0040e3edd78b8",
+              "packages/ui/src/splitter/demo/control.vue": "4d0a160f6cdb401a699d61427ce374ccd186cee823677c08f20d47cd0588c1aa",
+              "packages/ui/src/splitter/demo/vertical.vue": "ffe38bb08b00ec18eda290a71b88126668e99332e16b4062e36ec151844ddc58",
+              "packages/ui/src/splitter/demo/customize.vue": "0a3e298fb5183931f9923beda933357e5f5522c263a30c7d1d3188caf828fed0",
+              "packages/ui/src/splitter/demo/multiple.vue": "4ecf64704024b1632b586933f091e401f20411d7e4d2e77471b946744dba2fd4",
+              "packages/ui/src/splitter/demo/collapsible-icon.vue": "b681ac38424b26b875fa16a915c6eb4c65646e413ab96ee84af9890cbaa0eb52",
+              "packages/ui/src/splitter/demo/basic.vue": "912f0e3146a85175262cd888bd6a8e13a6b7a1a0acc50f068f61334ce986b474",
+              "packages/ui/src/splitter/demo/lazy.vue": "6e293a918724381d52c4732ca84b68ab0c6709275671589ddde8f740677a6bbc",
+              "packages/ui/src/splitter/demo/collapsible.vue": "f82b81a30ff9d2f5a7e440c735f7ab8eccda68dae6237dc836f8a58112dce2d9",
+              "packages/ui/src/splitter/style/index.ts": "773910a5ba84df515fd4e52a1a88cf5b7a0e0a88b3c0fa2d2179b50dc272f449",
+              "packages/ui/src/splitter/style/token.ts": "bf6916c322434e8324745629e8bdd6006627697fb574e1d1a4b4ac064f1dd0ec",
+              "packages/ui/src/splitter/__tests__/a11y.test.ts": "82d96d00419297da26d099b3fbf296ead1aef84618807ae018ef7a76ef5bdfa6",
+              "packages/ui/src/splitter/__tests__/native-contracts.test.ts": "e545fa80e94d57c200f2058da57502ca41de1f7102621af8468669f9afdd9481",
+              "packages/ui/src/splitter/__tests__/index.test.ts": "013a26543a8fad69a98b5b682f2718139368144107c57d248cfe1d34e568f6dd",
+              "packages/ui/src/splitter/__tests__/demo.test.ts": "f385f85d44866c2b1aec12e2a44a8e5924e7ad00d74fb1ba07d50103a0d9f9a0",
+              "packages/ui/src/splitter/__tests__/type.test-d.ts": "f9348ed31d93a52e2641e4d2990b2d8ddba01524fb1fe24adff561da18203651",
+              "packages/ui/src/splitter/__tests__/s33-issue33.test.ts": "d1d5d65d25d764910a62a3a601d52d6f657ece0ac0662b768c0963142ead24c1",
+              "packages/ui/src/splitter/__tests__/s51-issue51.test.ts": "b64b5e64c34a92ec572caf2c9ffbfbcc419f473212c1f2ea1098df19707aa1de",
+              "packages/ui/src/splitter/__tests__/theme.test.ts": "35885401c3cd708631b45108abbf159045b188c5b552658aa18e796d5942c514",
+              "packages/ui/src/splitter/__tests__/semantic.test.ts": "ce39a58562f34c79268d02de6c57192e58e41287f4dd12d5e714d50b5995aae9",
+              "packages/ui/src/splitter/hooks/useItems.ts": "c97601d7f9c762c577e402e0bda84acebc718943e40cf70d3e330ebe847ffcb8",
+              "packages/ui/src/splitter/hooks/useResize.ts": "5f347ae215ff0e1bd149ebf0fd7eaf1615f6a1506a5114e7e90381c51cd90dc3",
+              "packages/ui/src/splitter/hooks/ariaBounds.ts": "c3cd9718bf54e6cc64ddc481c65579a4e3eb9220433a6079ad5098dc7ff3c0fb",
+              "packages/ui/src/splitter/hooks/sizeUtil.ts": "a20375a6e6c7729bd27d61e5d8783418608995140ba8d13cf8cad43224a85307",
+              "packages/ui/src/splitter/hooks/useSizes.ts": "21c34216d05914ab732de68792b70bbe20fdce9b1a46f3193b6c6f3a8a8f3741",
+              "packages/ui/src/splitter/hooks/useResizable.ts": "269be7fe2377d50a4c2381cbe1cecad4a6162cd799784045a1e93755eaf28e70",
+              "packages/ui/src/splitter/__tests__/fixtures/NativeSplitter.vue": "b77cc4b67c1a0bc044e5fdd5d500ecc77edbe9009d5a2e6db2ef8b19432d1407",
+              "packages/ui/src/index.ts": "032f4a75072d6625c40c88b983af5ca810f5187c975a94a2385c1c2d43bd206e"
+            },
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-splitter-tsconfig.json",
+            "updatedFiles": [
+              "packages/ui/src/splitter/SplitBar.ts",
+              "packages/ui/src/splitter/Splitter.ts",
+              "packages/ui/src/splitter/__tests__/native-contracts.test.ts",
+              "packages/ui/src/splitter/hooks/useItems.ts",
+              "packages/ui/src/splitter/hooks/useSizes.ts",
+              "packages/ui/src/splitter/hooks/useResizable.ts"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 53306,
+            "log": "/tmp/apollo-splitter-final-types.log",
+            "result": "Immutable whole Splitter source/tests, all Demos, real h() and native SFC positives/negatives plus UI root exports passed. Inherited strict/declaration:true unchanged; noEmit/incremental/composite only overridden."
+          }
+        ],
+        "reproductions": [
+          {
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/splitter/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 5.33,
+            "log": "/tmp/apollo-splitter-native-measured-red.log",
+            "result": "8 failed against original source after correcting observer-registration timing: owned names, actual Panel/ref/attrs/current slots, controlled release, keyed sizes/collapse, keyboard, theme/active style."
+          },
+          {
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/splitter/__tests__/native-contracts.test.ts -t 'actual SFC Panel' --maxWorkers=1",
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 5.91,
+            "log": "/tmp/apollo-splitter-template-red.log",
+            "result": "Actual template default-size produced 266.67/266.67/266.67 instead of 200/200/400; bare collapsible attrs also need Vue Boolean semantics at the raw VNode boundary."
+          },
+          {
+            "command": "node packages/ui/src/splitter/__tests__/native-browser.mjs",
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 5.23,
+            "log": "/tmp/apollo-splitter-native-browser-focus.log",
+            "result": "Actual moved input retained DOM identity, draft and selection, but focused:false. Fixed by scoped same-element/body-only focus restoration."
+          },
+          {
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/splitter/__tests__/native-contracts.test.ts -t 'remote panel keys reorder' --maxWorkers=1",
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 5.42,
+            "log": "/tmp/apollo-splitter-active-order-red.log",
+            "result": "Active a/b drag was not canceled when remote c/d keys swapped, leaving a stale full-layout size snapshot. Final full-order identity comparison passes."
+          }
+        ],
+        "attemptsNotPassed": [
+          {
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 6.03,
+            "log": "/tmp/apollo-splitter-native-red.log",
+            "result": "Initial red probe measured before observer registration; corrected await nextTick and reran valid 8-case red reproduction."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 10.75,
+            "log": "/tmp/apollo-splitter-core-first.log",
+            "result": "48 cases passed, one old layout deprecation assertion watched console.warn and had accidentally observed the removed slot-outside-render warning. Updated it to the actual devUseWarning console.error message, preserving and strengthening the deprecation assertion."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 11.02,
+            "log": "/tmp/apollo-splitter-dom-theme-first.log",
+            "result": "All 9 original DOM cases passed with original compatibility JSON and exact D131 allows unchanged; overall command failed because the concurrently edited Carousel barrel referenced its then-missing theme module. Root coordinated that owner; final Splitter theme suite now passed in the clean core command. This aggregate command remains a failure."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 18.13,
+            "log": "/tmp/apollo-splitter-native-browser-first.log",
+            "result": "New SFC fixture used the same dynamic key expression across v-if branches; corrected to distinct actual a/b/c business keys."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 20.97,
+            "log": "/tmp/apollo-splitter-native-browser-second.log",
+            "result": "Actual SFC exposed the raw default-size/Boolean attribute defect; replaced by precise explicit external input extraction."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 6.16,
+            "log": "/tmp/apollo-splitter-native-browser-third.log",
+            "result": "Listener probe initially counted four persistent Playwright hit-target interceptors as component leaks. Inspected exact handler identities and changed to exact added-five/removed-five deltas without filtering component handlers."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 5.3,
+            "log": "/tmp/apollo-splitter-native-browser-fixed.log",
+            "result": "Browser probe read a live flex-basis transition before settling. Final probe waits for the actual expected computed geometry, retaining motion and all size assertions."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 20.24,
+            "log": "/tmp/apollo-splitter-native-browser-settled.log",
+            "result": "Biome had incorrectly changed actual template component imports used by typeof to import type; repaired with value aliases of the same real constructors, no fake types or any event annotations."
+          },
+          {
+            "exitCode": 1,
+            "signal": null,
+            "elapsedSeconds": 22.99,
+            "log": "/tmp/apollo-splitter-core-demo-theme-final.log",
+            "result": "79 cases passed; one new Provider probe read the Host Fragment instead of the actual .apollo-splitter root. Corrected the real target and reran the full affected command cleanly: final 81 passed."
+          },
+          {
+            "exitCode": 2,
+            "signal": null,
+            "elapsedSeconds": 37.567,
+            "log": "/tmp/apollo-splitter-types.log",
+            "result": "Root isolated strict/declaration snapshot: seven getter-toRef generic-value mistakes and one weak VNode props shape. Repaired exact return annotations and unknown-field extraction; awaiting root final verification."
+          }
+        ],
+        "remainingBlockingIssues": [],
+        "unverified": [
+          "Stage-two full library, coverage, build/published consumers, full visual/theme matrix and complete a11y acceptance were not run; no shared artifacts were rebuilt.",
+          "SSR regression uses the actual server renderer inside the established jsdom unit project; a separate no-DOM Node SSR process was not run.",
+          "Custom prefix DOM responsiveness retains s33 coverage and preview variable now follows the actual component prefix; arbitrary prefix static CSS still requires preloaded styles, no new runtime CSS strategy."
+        ],
+        "sourceHashes": {
+          "packages/ui/src/splitter/Panel.ts": "dd8a1c7d5bef291bffba8c3bc29d3ff1eb2a5eb886fa226834ee78c0e8319e4f",
+          "packages/ui/src/splitter/use-splitter-theme.ts": "9264d36ee38b866b205040b2663f5a54dda654702efe156ec5620eb4a1432a58",
+          "packages/ui/src/splitter/SplitBar.ts": "45ba90001757833065458361f9ecca4377ee78edd04a3d7b803a7d0c070299b1",
+          "packages/ui/src/splitter/Splitter.ts": "4fe759182462916e78a5ba9438eca78eaa217c63ebd8865662b4d6bef017c995",
+          "packages/ui/src/splitter/interface.ts": "c44df700f1fa11ebddb6041e1766dc0459880ecee69979a37d773ba2466d073c",
+          "packages/ui/src/splitter/index.ts": "22b829fd151f559e41d4c702a0ff53b3e196bafec0f9eb5d6eab591ad7bdd7ce",
+          "packages/ui/src/splitter/demo/group.vue": "080b0ec38ee09e9df31288d8b0ef6f8ba7b026912ebeab67bf9f3e81942e76ce",
+          "packages/ui/src/splitter/demo/size.vue": "bfb68cfd03ccd530378ed0531cf6fcbb77d4606542ba9b87e3c0040e3edd78b8",
+          "packages/ui/src/splitter/demo/control.vue": "4d0a160f6cdb401a699d61427ce374ccd186cee823677c08f20d47cd0588c1aa",
+          "packages/ui/src/splitter/demo/vertical.vue": "ffe38bb08b00ec18eda290a71b88126668e99332e16b4062e36ec151844ddc58",
+          "packages/ui/src/splitter/demo/customize.vue": "0a3e298fb5183931f9923beda933357e5f5522c263a30c7d1d3188caf828fed0",
+          "packages/ui/src/splitter/demo/multiple.vue": "4ecf64704024b1632b586933f091e401f20411d7e4d2e77471b946744dba2fd4",
+          "packages/ui/src/splitter/demo/collapsible-icon.vue": "b681ac38424b26b875fa16a915c6eb4c65646e413ab96ee84af9890cbaa0eb52",
+          "packages/ui/src/splitter/demo/basic.vue": "912f0e3146a85175262cd888bd6a8e13a6b7a1a0acc50f068f61334ce986b474",
+          "packages/ui/src/splitter/demo/lazy.vue": "6e293a918724381d52c4732ca84b68ab0c6709275671589ddde8f740677a6bbc",
+          "packages/ui/src/splitter/demo/collapsible.vue": "f82b81a30ff9d2f5a7e440c735f7ab8eccda68dae6237dc836f8a58112dce2d9",
+          "packages/ui/src/splitter/style/index.ts": "773910a5ba84df515fd4e52a1a88cf5b7a0e0a88b3c0fa2d2179b50dc272f449",
+          "packages/ui/src/splitter/style/token.ts": "bf6916c322434e8324745629e8bdd6006627697fb574e1d1a4b4ac064f1dd0ec",
+          "packages/ui/src/splitter/__tests__/a11y.test.ts": "82d96d00419297da26d099b3fbf296ead1aef84618807ae018ef7a76ef5bdfa6",
+          "packages/ui/src/splitter/__tests__/native-contracts.test.ts": "e545fa80e94d57c200f2058da57502ca41de1f7102621af8468669f9afdd9481",
+          "packages/ui/src/splitter/__tests__/index.test.ts": "013a26543a8fad69a98b5b682f2718139368144107c57d248cfe1d34e568f6dd",
+          "packages/ui/src/splitter/__tests__/demo.test.ts": "f385f85d44866c2b1aec12e2a44a8e5924e7ad00d74fb1ba07d50103a0d9f9a0",
+          "packages/ui/src/splitter/__tests__/type.test-d.ts": "f9348ed31d93a52e2641e4d2990b2d8ddba01524fb1fe24adff561da18203651",
+          "packages/ui/src/splitter/__tests__/s33-issue33.test.ts": "d1d5d65d25d764910a62a3a601d52d6f657ece0ac0662b768c0963142ead24c1",
+          "packages/ui/src/splitter/__tests__/s51-issue51.test.ts": "b64b5e64c34a92ec572caf2c9ffbfbcc419f473212c1f2ea1098df19707aa1de",
+          "packages/ui/src/splitter/__tests__/theme.test.ts": "35885401c3cd708631b45108abbf159045b188c5b552658aa18e796d5942c514",
+          "packages/ui/src/splitter/__tests__/semantic.test.ts": "ce39a58562f34c79268d02de6c57192e58e41287f4dd12d5e714d50b5995aae9",
+          "packages/ui/src/splitter/hooks/useItems.ts": "c97601d7f9c762c577e402e0bda84acebc718943e40cf70d3e330ebe847ffcb8",
+          "packages/ui/src/splitter/hooks/useResize.ts": "5f347ae215ff0e1bd149ebf0fd7eaf1615f6a1506a5114e7e90381c51cd90dc3",
+          "packages/ui/src/splitter/hooks/ariaBounds.ts": "c3cd9718bf54e6cc64ddc481c65579a4e3eb9220433a6079ad5098dc7ff3c0fb",
+          "packages/ui/src/splitter/hooks/sizeUtil.ts": "a20375a6e6c7729bd27d61e5d8783418608995140ba8d13cf8cad43224a85307",
+          "packages/ui/src/splitter/hooks/useSizes.ts": "21c34216d05914ab732de68792b70bbe20fdce9b1a46f3193b6c6f3a8a8f3741",
+          "packages/ui/src/splitter/hooks/useResizable.ts": "269be7fe2377d50a4c2381cbe1cecad4a6162cd799784045a1e93755eaf28e70",
+          "packages/ui/src/splitter/__tests__/fixtures/NativeSplitter.vue": "b77cc4b67c1a0bc044e5fdd5d500ecc77edbe9009d5a2e6db2ef8b19432d1407"
+        },
+        "dependencyHashes": {
+          "packages/utils/src/observers/use-resize-observer.ts": "2c6103335e753abf9d1c1f569d547ad6701fd04401a072ccf7cb42ce7b0283d0",
+          "packages/utils/src/children/to-array.ts": "e8099d80b4cf2dd0246be831566d40fa536f0780fb6be4d824ed8ea6bedbb21e",
+          "packages/ui/src/_internal/use-merge-semantic.ts": "6132279dd2558c1a78cd0ed6f7a181e096265524a9a2cd829b06007ef914db00",
+          "packages/ui/src/_internal/use-orientation.ts": "79539cc864c5693236185d52814be72c01de2489e37ccd12941bba44422e5d44",
+          "packages/ui/src/_internal/with-install.ts": "f0d258c74a1e7d8911f1958712e2df439b5da0ef2109333f6e0a6eb8c49a6a22",
+          "packages/ui/src/config-provider/context.ts": "0927c693129d61ba70f7416863108fd324c84e1f6ffd521a936afa09ca25fe4a",
+          "packages/ui/src/config-provider/ConfigProvider.ts": "39d582e770c837507fc883f5a6eca1bd633f6ca0c48b06e442e4a5db418b3400",
+          "packages/theme/src/vue.ts": "13d526128ea11b85bc7528ce34aa76085ee505f9a6c17e7bc84ac455174e7837",
+          "vitest.config.ts": "c77de38e67c3ce707645abf0cba77b222d3497ca09585e47ab4b2af573cc2521",
+          "vitest.setup.ts": "f7388877b2fa2f89bd6d2bedb4eec7c753065ad36218e41077008c750b0d929e"
+        },
+        "recordedAt": "2026-10-31T00:54:30.563308+00:00",
+        "timingBoundary": "Commands use real /usr/bin/time wall durations, lint uses Python monotonic subprocess duration. Analysis/implementation totals are unknown; assignment duration is not reported as implementation time.",
+        "batchBoundary": "Only CMP:splitter; no subagents, sixth task, outside writes, commit, index mutation or push.",
+        "stage": "architecture",
+        "sourceFrozen": true
       }
     },
     {

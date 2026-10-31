@@ -5,25 +5,18 @@ import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it } from 'vitest';
 import { defineComponent, h, nextTick, ref } from 'vue';
 import { Splitter } from '../index';
+import type { SplitterProps } from '../interface';
 
 const P = 'apollo-splitter';
 
-const mountSplitter = (props: Record<string, unknown> = {}) =>
+const mountSplitter = (props: SplitterProps = {}) =>
   mount(Splitter, {
     attachTo: document.body,
-    props: props as never,
+    props: props,
     slots: {
       default: () => [
-        h(
-          (Splitter as unknown as { Panel: never }).Panel as never,
-          { class: 'editor', defaultSize: '40%' } as never,
-          { default: () => 'A' },
-        ),
-        h(
-          (Splitter as unknown as { Panel: never }).Panel as never,
-          { class: 'preview', defaultSize: '60%' } as never,
-          { default: () => 'B' },
-        ),
+        h(Splitter.Panel, { class: 'editor', defaultSize: '40%' }, { default: () => 'A' }),
+        h(Splitter.Panel, { class: 'preview', defaultSize: '60%' }, { default: () => 'B' }),
       ],
     },
   });
@@ -47,16 +40,8 @@ describe('#33.1 Splitter.Panel 的原生 class 要落到面板节点', () => {
       attachTo: document.body,
       slots: {
         default: () => [
-          h(
-            (Splitter as unknown as { Panel: never }).Panel as never,
-            { class: ['arr-a', { 'arr-on': true }] } as never,
-            { default: () => 'A' },
-          ),
-          h(
-            (Splitter as unknown as { Panel: never }).Panel as never,
-            { class: { 'obj-a': true, 'obj-b': false } } as never,
-            { default: () => 'B' },
-          ),
+          h(Splitter.Panel, { class: ['arr-a', { 'arr-on': true }] }, { default: () => 'A' }),
+          h(Splitter.Panel, { class: { 'obj-a': true, 'obj-b': false } }, { default: () => 'B' }),
         ],
       },
     });
@@ -74,13 +59,17 @@ describe('#33.1 Splitter.Panel 的原生 class 要落到面板节点', () => {
       slots: {
         default: () => [
           h(
-            (Splitter as unknown as { Panel: never }).Panel as never,
-            { class: 'native-cls', className: 'legacy-cls' } as never,
+            Splitter.Panel,
+            { class: 'native-cls', className: 'legacy-cls' },
             { default: () => 'A' },
           ),
-          h((Splitter as unknown as { Panel: never }).Panel as never, {} as never, {
-            default: () => 'B',
-          }),
+          h(
+            Splitter.Panel,
+            {},
+            {
+              default: () => 'B',
+            },
+          ),
         ],
       },
     });
@@ -104,16 +93,28 @@ describe('#33.2 SplitBar 前缀要随 prefixCls 动态更新', () => {
     const prefixCls = ref<string | undefined>(undefined);
     const Host = defineComponent({
       setup: () => () =>
-        h(Splitter as never, { prefixCls: prefixCls.value } as never, {
-          default: () => [
-            h((Splitter as unknown as { Panel: never }).Panel as never, {} as never, {
-              default: () => 'A',
-            }),
-            h((Splitter as unknown as { Panel: never }).Panel as never, {} as never, {
-              default: () => 'B',
-            }),
-          ],
-        }),
+        h(
+          Splitter,
+          { prefixCls: prefixCls.value },
+          {
+            default: () => [
+              h(
+                Splitter.Panel,
+                {},
+                {
+                  default: () => 'A',
+                },
+              ),
+              h(
+                Splitter.Panel,
+                {},
+                {
+                  default: () => 'B',
+                },
+              ),
+            ],
+          },
+        ),
     });
     const w = mount(Host, { attachTo: document.body });
     await nextTick();
@@ -135,17 +136,16 @@ describe('#33.2 SplitBar 前缀要随 prefixCls 动态更新', () => {
   it('[B] 守卫：默认前缀下 collapse bar 的前缀一致', () => {
     const w = mount(Splitter, {
       attachTo: document.body,
-      props: { collapsible: true } as never,
       slots: {
         default: () => [
+          h(Splitter.Panel, { collapsible: true }, { default: () => 'A' }),
           h(
-            (Splitter as unknown as { Panel: never }).Panel as never,
-            { collapsible: true } as never,
-            { default: () => 'A' },
+            Splitter.Panel,
+            {},
+            {
+              default: () => 'B',
+            },
           ),
-          h((Splitter as unknown as { Panel: never }).Panel as never, {} as never, {
-            default: () => 'B',
-          }),
         ],
       },
     });

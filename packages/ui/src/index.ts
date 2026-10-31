@@ -1744,11 +1744,15 @@ export type {
   SplitterCollapsibleIcon,
   SplitterDraggerClassNames,
   SplitterDraggerStyles,
+  SplitterEmits,
   SplitterPanelProps,
+  SplitterPanelRef,
+  SplitterPanelSlots,
   SplitterProps,
   SplitterRef,
   SplitterSemanticClassNames,
   SplitterSemanticStyles,
+  SplitterSlots,
 } from './splitter';
 export { Splitter, SplitterPanel } from './splitter';
 export { genSplitterStyle, genTokenDecls as genSplitterTokenDecls } from './splitter/style';
