@@ -1,0 +1,54 @@
+{
+  "listy:basic": {
+    "reason": "Typed item/group key tags distinguish number/string values; grouped rows share one parent to preserve native editor state, with unique sticky headers and zero-size flow anchors. Complete migrated group trees are checked separately.",
+    "diff": [
+      "$/div[0]/div[0]: 属性 data-key 不同 \"item:0\" vs \"item:number:0\"",
+      "$/div[0]/div[1]: 属性 data-key 不同 \"item:1\" vs \"item:number:1\"",
+      "$/div[0]/div[2]: 属性 data-key 不同 \"item:2\" vs \"item:number:2\"",
+      "$/div[0]/div[3]: 属性 data-key 不同 \"item:3\" vs \"item:number:3\"",
+      "$/div[0]/div[4]: 属性 data-key 不同 \"item:4\" vs \"item:number:4\""
+    ]
+  },
+  "listy:empty-items": {
+    "reason": "Typed item/group key tags distinguish number/string values; grouped rows share one parent to preserve native editor state, with unique sticky headers and zero-size flow anchors. Complete migrated group trees are checked separately.",
+    "diff": []
+  },
+  "listy:group": {
+    "reason": "Typed item/group key tags distinguish number/string values; grouped rows share one parent to preserve native editor state, with unique sticky headers and zero-size flow anchors. Complete migrated group trees are checked separately.",
+    "diff": ["$/div[0]: 子节点数不同 2 vs 10"]
+  },
+  "listy:group-sticky": {
+    "reason": "Typed item/group key tags distinguish number/string values; grouped rows share one parent to preserve native editor state, with unique sticky headers and zero-size flow anchors. Complete migrated group trees are checked separately.",
+    "diff": ["$/div[0]: 子节点数不同 2 vs 10"]
+  },
+  "listy:rtl": {
+    "reason": "Typed item/group key tags distinguish number/string values; grouped rows share one parent to preserve native editor state, with unique sticky headers and zero-size flow anchors. Complete migrated group trees are checked separately.",
+    "diff": [
+      "$/div[0]/div[0]: 属性 data-key 不同 \"item:0\" vs \"item:number:0\"",
+      "$/div[0]/div[1]: 属性 data-key 不同 \"item:1\" vs \"item:number:1\"",
+      "$/div[0]/div[2]: 属性 data-key 不同 \"item:2\" vs \"item:number:2\"",
+      "$/div[0]/div[3]: 属性 data-key 不同 \"item:3\" vs \"item:number:3\"",
+      "$/div[0]/div[4]: 属性 data-key 不同 \"item:4\" vs \"item:number:4\""
+    ]
+  },
+  "listy:height": {
+    "reason": "Typed item/group key tags distinguish number/string values; grouped rows share one parent to preserve native editor state, with unique sticky headers and zero-size flow anchors. Complete migrated group trees are checked separately.",
+    "diff": [
+      "$/div[0]/div[0]: 属性 data-key 不同 \"item:0\" vs \"item:number:0\"",
+      "$/div[0]/div[1]: 属性 data-key 不同 \"item:1\" vs \"item:number:1\"",
+      "$/div[0]/div[2]: 属性 data-key 不同 \"item:2\" vs \"item:number:2\"",
+      "$/div[0]/div[3]: 属性 data-key 不同 \"item:3\" vs \"item:number:3\"",
+      "$/div[0]/div[4]: 属性 data-key 不同 \"item:4\" vs \"item:number:4\""
+    ]
+  },
+  "listy:semantic": {
+    "reason": "Typed item/group key tags distinguish number/string values; grouped rows share one parent to preserve native editor state, with unique sticky headers and zero-size flow anchors. Complete migrated group trees are checked separately.",
+    "diff": [
+      "$/div[0]/div[0]: 属性 data-key 不同 \"item:0\" vs \"item:number:0\"",
+      "$/div[0]/div[1]: 属性 data-key 不同 \"item:1\" vs \"item:number:1\"",
+      "$/div[0]/div[2]: 属性 data-key 不同 \"item:2\" vs \"item:number:2\"",
+      "$/div[0]/div[3]: 属性 data-key 不同 \"item:3\" vs \"item:number:3\"",
+      "$/div[0]/div[4]: 属性 data-key 不同 \"item:4\" vs \"item:number:4\""
+    ]
+  }
+}

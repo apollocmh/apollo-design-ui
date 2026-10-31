@@ -1,14 +1,4 @@
-/**
- * L4 · DOM 契约（与 antd 6.6.4 的实测 DOM 比对）—— Listy
- *
- * 基准：`tests/compat/baselines/listy.dom.json`（机械 oracle，7 个用例，
- * 产出者 `tests/compat/baseline/listy.mjs`）。`keepStyle: true`。
- *
- * ⚠️ 只覆盖 **Raw 路径**（antd 默认 virtual=false）。虚拟模式的 DOM 由
- *    @apollo-design/virtual-list 决定，与 rc-virtual-list 必然不同（foundation
- *    契约 §5.1 的 PLATFORM）—— 由 L1 行为测试覆盖。
- */
-
+/** Historical seven-case reference retained, with exact current Vue DOM differences. */
 import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
 import { defineComponent, h, provide, type VNodeChild } from 'vue';
 import baseline from '../../../../../tests/compat/baselines/listy.dom.json';
@@ -18,92 +8,127 @@ import {
   DEFAULT_CONFIG_CONTEXT,
 } from '../../config-provider/context';
 import { Listy } from '../index';
+import currentDelta from './fixtures/current-dom-delta.json';
 
-/** 在指定 ConfigProvider 上下文下渲染（empty semantic 同范式：provide 而非真挂 CP）。 */
 function withConfig(config: Partial<ConfigContextValue>, children: () => VNodeChild) {
   return defineComponent({
-    name: 'AListyCompatConfigProbe',
     setup() {
       provide(configContextKey, { ...DEFAULT_CONFIG_CONTEXT, ...config });
       return () => children();
     },
   });
 }
-
-const ITEMS = Array.from({ length: 5 }, (_, i) => ({ key: i, content: `Item ${i}` }));
-const GROUP_ITEMS = Array.from({ length: 6 }, (_, i) => ({
-  key: i,
-  group: `Group ${i % 2}`,
-  content: `Item ${i}`,
+const ITEMS = Array.from({ length: 5 }, (_, key) => ({ key, content: `Item ${key}` }));
+const GROUP_ITEMS = Array.from({ length: 6 }, (_, key) => ({
+  key,
+  group: `Group ${key % 2}`,
+  content: `Item ${key}`,
 }));
-const GROUP = {
-  key: (item: Record<string, unknown>) => item.group as string,
-  title: (key: unknown, groupItemsOfKey: Record<string, unknown>[]) =>
-    `${key} (${groupItemsOfKey.length})`,
+type Item = (typeof ITEMS)[number];
+type GroupItem = (typeof GROUP_ITEMS)[number];
+const GROUP = { key: (item: GroupItem) => item.group };
+const content = { default: ({ item }: { item: Item }) => item.content };
+const groupedContent = {
+  ...content,
+  groupHeader: ({ groupKey, items }: { groupKey: string; items: GroupItem[] }) =>
+    `${groupKey} (${items.length})`,
 };
-
-/** 项内容：props 面的 item 是 Record ⇒ 取 content（String 收敛 VNodeChild） */
-const renderContent = (item: unknown) => String((item as Record<string, unknown>).content);
-
-/** 用例规格表：id → Vue 侧渲染产物。必须覆盖基线里的每一个用例。 */
 const specs: Record<string, { render: () => DomRenderResult }> = {
-  'listy:basic': {
-    render: () => h(Listy, { items: ITEMS, rowKey: 'key', itemRender: renderContent }),
-  },
+  'listy:basic': { render: () => h(Listy<Item>, { items: ITEMS, rowKey: 'key' }, content) },
   'listy:empty-items': {
-    render: () => h(Listy, { items: [], rowKey: 'key', itemRender: () => null }),
+    render: () => h(Listy<Item>, { items: [], rowKey: 'key' }, { default: () => null }),
   },
-
   'listy:group': {
     render: () =>
-      h(Listy, {
-        items: GROUP_ITEMS,
-        rowKey: 'key',
-        group: GROUP,
-        itemRender: renderContent,
-      }),
+      h(
+        Listy<GroupItem, string>,
+        { items: GROUP_ITEMS, rowKey: 'key', group: GROUP },
+        groupedContent,
+      ),
   },
   'listy:group-sticky': {
     render: () =>
-      h(Listy, {
-        items: GROUP_ITEMS,
-        rowKey: 'key',
-        group: GROUP,
-        sticky: true,
-        itemRender: renderContent,
-      }),
+      h(
+        Listy<GroupItem, string>,
+        { items: GROUP_ITEMS, rowKey: 'key', group: GROUP, sticky: true },
+        groupedContent,
+      ),
   },
-
   'listy:rtl': {
     render: () =>
       withConfig({ direction: 'rtl' }, () =>
-        h(Listy, { items: ITEMS, rowKey: 'key', itemRender: renderContent }),
+        h(Listy<Item>, { items: ITEMS, rowKey: 'key' }, content),
       ),
   },
-
   'listy:height': {
-    render: () => h(Listy, { items: ITEMS, rowKey: 'key', height: 120, itemRender: renderContent }),
+    render: () => h(Listy<Item>, { items: ITEMS, rowKey: 'key', height: 120 }, content),
   },
-
   'listy:semantic': {
     render: () =>
-      h(Listy, {
-        items: ITEMS,
-        rowKey: 'key',
-        itemRender: renderContent,
-        classNames: { root: 'cls-root', item: 'cls-item', groupHeader: 'cls-header' },
-        styles: { item: { padding: '9px' } },
-      }),
+      h(
+        Listy<Item>,
+        {
+          items: ITEMS,
+          rowKey: 'key',
+          classNames: { root: 'cls-root', item: 'cls-item', groupHeader: 'cls-header' },
+          styles: { item: { padding: '9px' } },
+        },
+        content,
+      ),
   },
 };
 
 domContractTest('Listy', {
   baseline,
   keepStyle: true,
-  allow: {},
+  allow: currentDelta,
   render: (id) => {
     const spec = specs[id];
-    if (!spec) throw new Error(`[Listy L4] 用例 "${id}" 缺少 Vue 侧规格 —— baseline 与 specs 失配`);
+    if (!spec) throw new Error(`Missing Listy reference case: ${id}`);
+    return spec.render();
+  },
+});
+
+// Child-count differences stop the legacy projection descending into groups. Compare
+// both complete group trees too, changing only the explicitly migrated wrapper/key/anchor contract.
+function flatGroupReference(html: string): string {
+  const documentRoot = document.createElement('div');
+  documentRoot.innerHTML = html;
+  for (const section of documentRoot.querySelectorAll('.apollo-listy-group-section')) {
+    const groupTag = section.getAttribute('data-key');
+    const header = section.querySelector<HTMLElement>('.apollo-listy-group-header');
+    if (!header || !groupTag) throw new Error('Historical Listy group reference is incomplete');
+    const anchor = document.createElement('span');
+    anchor.setAttribute('aria-hidden', 'true');
+    Object.assign(anchor.style, {
+      display: 'block',
+      height: '0px',
+      padding: '0px',
+      margin: '0px',
+      border: '0px',
+    });
+    header.setAttribute('data-key', groupTag.replace('group:', 'group:string:'));
+    if (header.classList.contains('apollo-listy-group-header-sticky')) header.style.top = '0px';
+    section.replaceWith(anchor, ...section.children);
+  }
+  for (const row of documentRoot.querySelectorAll('[data-key^="item:"]')) {
+    row.setAttribute(
+      'data-key',
+      row.getAttribute('data-key')?.replace('item:', 'item:number:') ?? '',
+    );
+  }
+  return documentRoot.innerHTML;
+}
+domContractTest('Listy current complete grouped DOM', {
+  baseline: {
+    cases: baseline.cases
+      .filter((item) => item.id === 'listy:group' || item.id === 'listy:group-sticky')
+      .map((item) => ({ ...item, html: flatGroupReference(item.html) })),
+  },
+  keepStyle: true,
+  render: (id) => {
+    const spec = specs[id];
+    if (!spec) throw new Error(`Missing Listy group reference: ${id}`);
     return spec.render();
   },
 });

@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 213,
+  "revision": 215,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -2996,18 +2996,16 @@
       "kind": "component",
       "ref": "listy",
       "title": "Listy",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/listy"
       ],
-      "assignment": {
-        "owner": "native_picker",
-        "baseRevision": 209,
-        "startedAt": "2026-10-31T04:14:39.328Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -3025,6 +3023,224 @@
           "packages/ui/src/listy/Listy.ts",
           "docs/foundation/virtual-list-contract.md"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "scope": [
+          "packages/ui/src/listy"
+        ],
+        "component": "CMP:listy",
+        "owner": "native_picker",
+        "baseCommit": "3c78431f",
+        "passed": true,
+        "sourceFrozen": true,
+        "checks": [
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/listy/__tests__/index.test.ts packages/ui/src/listy/__tests__/s38-issue38.test.ts packages/ui/src/listy/__tests__/native-contracts.test.ts packages/ui/src/listy/__tests__/demo.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 16230,
+            "durationSource": "Vitest reported total",
+            "log": "/tmp/apollo-listy-core-final.log",
+            "result": "48 passed, all current core and 8 demos"
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project dom-contract --project theme --project a11y packages/ui/src/listy/__tests__/semantic.test.ts packages/ui/src/listy/__tests__/theme.test.ts packages/ui/src/listy/__tests__/a11y.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 22310,
+            "durationSource": "Vitest reported total",
+            "log": "/tmp/apollo-listy-dom-theme-a11y-final.log",
+            "result": "27 passed; original seven reference cases retained, both complete migrated group trees checked"
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/listy/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 3408,
+            "durationSource": "source browser script performance.now",
+            "log": "/tmp/apollo-listy-native-browser-final.log",
+            "result": "System Chrome; native holder PageDown, unique Raw header/focus/push, fixed and no-height page scrolling, nonzero virtual offsetY, own-holder scrollTo, regroup editor identity, unmount; diagnostics=0"
+          },
+          {
+            "kind": "lint",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/ui/src/listy",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 116,
+            "durationSource": "tool wall time",
+            "log": "/tmp/apollo-listy-biome-checked.log"
+          },
+          {
+            "kind": "types",
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/.apollo-listy-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 55048,
+            "log": "/tmp/apollo-listy-types.log",
+            "executor": "root isolated frozen source; strict source and public type contract check",
+            "resultFile": "/tmp/apollo-listy-types-result.json"
+          },
+          {
+            "kind": "consumer",
+            "runner": "root",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/config-provider/__tests__/s39-issue39.test.ts --maxWorkers=1",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7200,
+            "log": "/tmp/apollo-listy-provider-final.log"
+          }
+        ],
+        "failedAttempts": [
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/listy/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 4740,
+            "log": "/tmp/apollo-listy-native-red.log",
+            "result": "4 failed/1 passed: typed key collision, regroup identity/focus, own-holder scroll and tokens. Initial scroll behavior passed; owned event metadata was tightened subsequently."
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node packages/ui/src/listy/__tests__/native-browser.mjs",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": null,
+            "durationNote": "Initial red script exited before elapsed-time output was instrumented.",
+            "log": "/tmp/apollo-listy-native-browser-red.log",
+            "result": "Raw top16/page0; Virtual holder0/page53/focused outer root."
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project semantic packages/ui/src/listy/__tests__/semantic.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 514,
+            "log": "/tmp/apollo-listy-semantic-red.log",
+            "result": "Startup project name error; corrected to dom-contract, no tests ran."
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/listy/__tests__/capture-dom.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 2370,
+            "log": "/tmp/apollo-listy-current-dom-capture.log",
+            "result": "Temporary capture produced 6 expected legacy DOM differences; raw reference retained, exact deltas and complete migrated grouped trees now asserted. Capture utility removed after output was retained."
+          },
+          {
+            "kind": "core",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/listy/__tests__/native-contracts.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 5640,
+            "log": "/tmp/apollo-listy-native-resources.log",
+            "result": "Resource scenario reached final listener assertion: omitted native option was compared to explicit undefined. Corrected exact two-argument window listener assertion, all resource assertions retained."
+          },
+          {
+            "kind": "types",
+            "executor": "root",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 38656,
+            "diagnosticSummary": "Primitive homomorphic key-field inference, nullable VNodeChild h children and removed itemRender negative incorrectly treating native attrs as closed. Actual error diagnostics preserved in conversation; root reused canonical log path."
+          },
+          {
+            "kind": "types",
+            "executor": "root",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 35304,
+            "diagnosticSummary": "Only unused itemRender expect-error remained because Vue natural attrs are open. Changed real h consumer to satisfy actual exported ListyProps<Row>; wrong key and wrong callback h negatives preserved."
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/.apollo-listy-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 38656,
+            "log": "/tmp/apollo-listy-types-first-failed.log"
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/.apollo-listy-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 35304,
+            "log": "/tmp/apollo-listy-types-second-failed.log"
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-slider-integration-18cu5zf3/.apollo-listy-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 6051,
+            "log": "/tmp/apollo-listy-types-startup-failed.log"
+          }
+        ],
+        "implementation": [
+          "Real generic Vue SFC and thin install export retain arbitrary T, numeric/Symbol key fields and typed group K; no Record/any/forced constructor.",
+          "Only default({item,index}) and groupHeader({groupKey,items,sticky,fixed}) render content; group.key remains an algorithm; scroll is an owned native Event.",
+          "Typed tagged keys separate number/string and item/group. Flat Raw rows preserve real identity/editor/focus through reorder/regroup; unique original sticky headers use natural flow anchors and existing resize/RAF resources with exact cleanup.",
+          "Raw scrollTo changes only its holder; Virtual native interaction attrs reach its actual holder and fixed header compensates Filler offsetY. Current Provider, CSSProperties and both component tokens are reactive."
+        ],
+        "migration": [
+          "Remove itemRender; use #default={item,index}. Remove group.title; use #groupHeader={groupKey,items,sticky,fixed}.",
+          "Raw group wrappers removed to preserve keyed row identity; precise DOM delta retains original dated seven-case reference and complete migrated group-tree assertions.",
+          "Virtual tabindex/role/keyboard/focus target holder; ordinary root attrs/styles stay on outer root.",
+          "Root owns global six type exports and ConfigProvider s39 migration; actual external consumer passed twice, latest 6/6 exit0/7.200s."
+        ],
+        "boundaries": [
+          "No foundation source, global index, state, shared configuration or other component files changed by this owner.",
+          "Virtual offscreen items unmount normally; no persistent item cache or new virtualization layer.",
+          "Arbitrary CSS-unit padding initially estimates with current paddingSM; existing VirtualList measures real row size.",
+          "No full-library, coverage, visual matrix, artifact build or final nine-dimension acceptance was run; those remain final common-freeze work."
+        ],
+        "consumerEvidence": {
+          "executor": "root",
+          "resultFile": "/tmp/apollo-listy-provider-final-result.json",
+          "latestExitCode": 0,
+          "latestDurationMs": 7200,
+          "result": "6/6 existing virtual inheritance assertions retained"
+        },
+        "sourceHashes": {
+          "packages/ui/src/listy/Listy.vue": "571e0db29c31002dc28fa33f1ca8b273a073bb36be538c0f337a99d86bdc2a27",
+          "packages/ui/src/listy/use-listy-theme.ts": "ad939c0b5ec72acfa309b7004c28b279b07eed9977f11c313eb84197a674120b",
+          "packages/ui/src/listy/use-raw-sticky.ts": "18c92819871693dc2940a6a839ea08bb46ea141b0d11aa4b67c1787a58558755",
+          "packages/ui/src/listy/Listy.ts": "a91063e4aa90dce1df592c34471c73131e34f1797574088822283c3ebebc1905",
+          "packages/ui/src/listy/interface.ts": "fb669421e8d477dafaafd02200dddd8aabc30f49b0d1ef0dea40a529875eaa5d",
+          "packages/ui/src/listy/index.ts": "b49cd1446625c7092ac46752f5f3a17bb84859992d413ba3d93e8931f2c90fa8",
+          "packages/ui/src/listy/demo/group.vue": "01841e2a9df3617abc4070dcb25364fec1bdcfb4f3d1db3e246a1f7dca5a0453",
+          "packages/ui/src/listy/demo/rich.vue": "5e48f4168ee44cdc42a894821c30fa98bbbf2e1a74cae8edc236b8befbe8fc2b",
+          "packages/ui/src/listy/demo/scroll-to.vue": "12e7097cda2ba03af64f90ab1b176351814a69666b164f7619a85ee56b787125",
+          "packages/ui/src/listy/demo/item-render.vue": "9d2bbce807e42f6cb9f27614a7bdb4499edf361cb2458f47c6aa366dd79ef426",
+          "packages/ui/src/listy/demo/group-header.vue": "b2b45da7247a299378f5afbc7a2ef34689be6c892a648841b91297aa00d0498b",
+          "packages/ui/src/listy/demo/style-class.vue": "6a203be47eed434e7ff1cb217886cdc93a0be6696cbe7d572c83341f0c08ab62",
+          "packages/ui/src/listy/demo/virtual.vue": "8c9636b699e9c75873a6ee235d1ef53813c040b7c8589a549b29c4119684ac1e",
+          "packages/ui/src/listy/demo/basic.vue": "b8570ac9a40d58f4c95ddeebcffc3d9e3bcb996419e1995b5398d0d70967a2dd",
+          "packages/ui/src/listy/style/index.ts": "3e0f5f1e3c780cbdce4670bbf7fa934325b8ba845b520b191288bfec3d2c44b9",
+          "packages/ui/src/listy/style/token.ts": "a6dc6790a8dc09d77b6c08177e96a6c35345563528d2816477e230081b53e93f",
+          "packages/ui/src/listy/__tests__/a11y.test.ts": "6d46b3d34a8e153e9d6ad573359bbebf4e2b954499dc41ae11a284fc71609776",
+          "packages/ui/src/listy/__tests__/native-contracts.test.ts": "28ed76455616f8d8251c82411d44fb1c44801589fd694f6836f8b0c152138349",
+          "packages/ui/src/listy/__tests__/index.test.ts": "19594c3e8c97faaf56b072692dd7cb99f9e7db2cb2fe9301a61c704de3d999ce",
+          "packages/ui/src/listy/__tests__/demo.test.ts": "378e51a2f4a251cbfd1b13a580ae9f15b605edf15644ea6e7c9e9a121d86d72e",
+          "packages/ui/src/listy/__tests__/s38-issue38.test.ts": "bf42811391cbfdaab0dd243927a096ffd03fdb2e66996e35774af63ec879a865",
+          "packages/ui/src/listy/__tests__/type.test-d.ts": "acb31b51d8d6f051cfb24eedb30a2b68c8060d0f2bf7edde02ed267475d4dd86",
+          "packages/ui/src/listy/__tests__/theme.test.ts": "6ad717864950926073106868ba28ad6bb4f49ca3a2e9a8c93948fcc1f88482c5",
+          "packages/ui/src/listy/__tests__/semantic.test.ts": "f3e7aea8608bfc08416089135562641c159f750cb6686be06afd1d98ff9525d8",
+          "packages/ui/src/listy/engine/index.ts": "8a87c3a5031d0e03e2c3f3f8f9ebeb976402c6c6c4a1ea82727541723555053b",
+          "packages/ui/src/listy/__tests__/fixtures/NativeListy.vue": "6d29c148ac1132e3df304a2d04eea2102c9475a2eee46401f7217fcca3609d84",
+          "packages/ui/src/listy/__tests__/fixtures/NativeListyTypes.vue": "eb1cf9603a444f7036b53e8f9351b1f5c936414118e60ade33ef97d9387b9f55",
+          "packages/ui/src/index.ts": "c99997f040a31a9e690ac89fd3d4dd5c7e79cf8fd07ad5bbb3e778bbab416282",
+          "packages/ui/src/config-provider/__tests__/s39-issue39.test.ts": "d6198c05ccecbeb66362759a770f793c92fd6242a75a79f4a9487b612de26727"
+        },
+        "verifiedViewBase": "458559d4f4961199fe9d682ad5c8dc761df8e664",
+        "integrationSnapshot": {
+          "uiBarrelSha256": "3103a8979d3af83e1394e5c295617131f41524ca8957151dc05f171763a7ffae",
+          "result": "Owned TS/Vue, all8 Demo and actual migrated s39 bytes match checked source; root barrel only changes stale Listy comments after strict pass. Eight unrelated pending notice types excluded from this commit."
+        }
       }
     },
     {

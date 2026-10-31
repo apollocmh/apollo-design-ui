@@ -25,7 +25,8 @@ export type ListyKeyType = 'item' | 'group';
  * 类型标签键（`item:x` / `group:x`）——虚拟行键、滚动目标、Raw 的 `data-key`
  * 共用它，保证项键与组键永不冲突。只整体构造与比较，**永不解析回去**（上游如此）。
  */
-export const toTaggedKey = (oriKey: ListyKey, type: ListyKeyType): string => `${type}:${oriKey}`;
+export const toTaggedKey = (oriKey: ListyKey, type: ListyKeyType): string =>
+  `${type}:${typeof oriKey}:${oriKey}`;
 
 // ============================== group segments ==============================
 
@@ -39,11 +40,11 @@ export interface GroupSegmentItem<T> {
  * 组键 → 组内全部条目。**按 key 聚合、不要求同 key 连续**；Map 的插入顺序
  * （组首次出现顺序）即渲染顺序。
  */
-export function collectGroupSegments<T>(
+export function collectGroupSegments<T, K extends ListyKey>(
   data: T[],
-  group: ListyGroup<T, ListyKey> | undefined,
-): Map<ListyKey, GroupSegmentItem<T>[]> {
-  const map = new Map<ListyKey, GroupSegmentItem<T>[]>();
+  group: ListyGroup<T, K> | undefined,
+): Map<K, GroupSegmentItem<T>[]> {
+  const map = new Map<K, GroupSegmentItem<T>[]>();
   if (!group) {
     return map;
   }
@@ -62,37 +63,41 @@ export function collectGroupSegments<T>(
 
 /** 取项键（`rowKey` 是字段名或函数；antd `useItemKey`）。 */
 export function resolveItemKey<T>(rowKey: ListyRowKey<T>, item: T): ListyKey {
-  return typeof rowKey === 'function' ? rowKey(item) : (item as Record<string, ListyKey>)[rowKey];
+  const value = typeof rowKey === 'function' ? rowKey(item) : item[rowKey];
+  if (typeof value !== 'string' && typeof value !== 'number') {
+    throw new TypeError('Listy rowKey must resolve to a string or number');
+  }
+  return value;
 }
 
 // ============================== flatten rows ==============================
 
 /** 虚拟路径的扁平行。 */
-export type FlatRow<T> =
-  | { type: 'group'; groupKey: ListyKey; taggedKey: string }
+export type FlatRow<T, K extends ListyKey = ListyKey> =
+  | { type: 'group'; groupKey: K; taggedKey: string }
   | { type: 'item'; item: T; index: number; taggedKey: string };
 
 /**
  * 分组数据扁平化：组头行 + 项行（按组首次出现顺序，保留原始下标）。
  * 上游 `useFlattenRows`——注意 `groupKeyToItems` 的值是**原始项数组**（供 title 用）。
  */
-export function flattenRows<T>(
+export function flattenRows<T, K extends ListyKey>(
   data: T[],
-  group: ListyGroup<T, ListyKey> | undefined,
+  group: ListyGroup<T, K> | undefined,
   getItemKey: (item: T) => ListyKey,
 ): {
-  rows: FlatRow<T>[];
-  groupKeys: ListyKey[];
-  groupKeyToItems: Map<ListyKey, T[]>;
+  rows: FlatRow<T, K>[];
+  groupKeys: K[];
+  groupKeyToItems: Map<K, T[]>;
   /** 项行 taggedKey → 所属组键（吸顶偏移用；只记录扁平化时命中的组）。 */
-  itemKeyToGroupKey: Map<string, ListyKey>;
+  itemKeyToGroupKey: Map<string, K>;
 } {
-  const rows: FlatRow<T>[] = [];
-  const groupKeys: ListyKey[] = [];
-  const groupKeyToItems = new Map<ListyKey, T[]>();
-  const itemKeyToGroupKey = new Map<string, ListyKey>();
+  const rows: FlatRow<T, K>[] = [];
+  const groupKeys: K[] = [];
+  const groupKeyToItems = new Map<K, T[]>();
+  const itemKeyToGroupKey = new Map<string, K>();
 
-  const itemRow = (item: T, index: number): FlatRow<T> => {
+  const itemRow = (item: T, index: number): FlatRow<T, K> => {
     const taggedKey = toTaggedKey(getItemKey(item), 'item');
     return { type: 'item', item, index, taggedKey };
   };
@@ -123,27 +128,24 @@ export function flattenRows<T>(
 
 // ============================== raw scroll ==============================
 
-/** Raw 吸顶：量目标项所在 section 的 sticky 组头高度（上游 `getStickyHeaderHeight`）。 */
+/** Height of the preceding real group header in the flat Raw list. */
 export function getStickyHeaderHeight(
   targetElement: HTMLElement,
   prefixCls: string,
   stickyGroup: boolean,
 ): number {
-  if (!stickyGroup) {
-    return 0;
+  if (!stickyGroup) return 0;
+  let previous: Element | null = targetElement.previousElementSibling;
+  while (previous && !previous.classList.contains(`${prefixCls}-group-header`)) {
+    previous = previous.previousElementSibling;
   }
-  const groupSection = targetElement.closest(`.${CSS.escape(`${prefixCls}-group-section`)}`);
-  const groupHeader = groupSection?.querySelector(`.${CSS.escape(`${prefixCls}-group-header`)}`);
-  if (!groupHeader) {
-    return 0;
-  }
-  const rect = groupHeader.getBoundingClientRect();
-  const height = rect.height || rect.bottom - rect.top || (groupHeader as HTMLElement).offsetHeight;
-  return Number.isFinite(height) ? height : 0;
+  if (!(previous instanceof HTMLElement)) return 0;
+  return previous.getBoundingClientRect().height || previous.offsetHeight;
 }
 
-/** 用 scrollMargin 占位 + scrollIntoView 实现「滚动到目标」（上游 `scrollTargetIntoView`）。 */
+/** Scroll only this holder; scrollIntoView would also move outer scroll containers. */
 export function scrollTargetIntoView(
+  holder: HTMLElement,
   targetElement: HTMLElement,
   align: ListyScrollAlign,
   offset: number,
@@ -151,63 +153,58 @@ export function scrollTargetIntoView(
   prefixCls: string,
   stickyGroup: boolean,
 ): void {
-  const headerOffset =
+  const header =
     isItem && align !== 'bottom' ? getStickyHeaderHeight(targetElement, prefixCls, stickyGroup) : 0;
-  const prevTop = targetElement.style.scrollMarginTop;
-  const prevBottom = targetElement.style.scrollMarginBottom;
-  targetElement.style.scrollMarginTop = `${headerOffset + offset}px`;
-  targetElement.style.scrollMarginBottom = `${offset}px`;
-  targetElement.scrollIntoView({
-    block: align === 'bottom' ? 'end' : align === 'auto' ? 'nearest' : 'start',
-    inline: 'nearest',
-  });
-  targetElement.style.scrollMarginTop = prevTop;
-  targetElement.style.scrollMarginBottom = prevBottom;
+  // A sticky header's visual rect is no longer its natural scroll target.
+  const anchor = targetElement.classList.contains(`${prefixCls}-group-header`)
+    ? targetElement.previousElementSibling
+    : null;
+  const target = (anchor ?? targetElement).getBoundingClientRect();
+  const viewportTop = holder.getBoundingClientRect().top + holder.clientTop;
+  const top = target.top - viewportTop + holder.scrollTop;
+  const bottom = target.bottom - viewportTop + holder.scrollTop;
+  let next = holder.scrollTop;
+  if (align === 'top' || (align === 'auto' && top < next + header + offset)) {
+    next = top - header - offset;
+  } else if (
+    align === 'bottom' ||
+    (align === 'auto' && bottom > next + holder.clientHeight - offset)
+  ) {
+    next = bottom - holder.clientHeight + offset;
+  }
+  holder.scrollTop = Math.max(0, next);
 }
 
-/**
- * Raw 模式的 `scrollTo`（上游 `useRawListScroll` 的 scrollTo 主体）。
- * `config == null` ⇒ no-op。
- */
-export function scrollRawList(
+export function scrollRawList<K extends ListyKey>(
   holder: HTMLElement | null,
-  config: Exclude<import('../interface').ListyScrollToConfig, null> | null | undefined,
+  config: import('../interface').ListyScrollToConfig<K> | undefined,
   prefixCls: string,
   stickyGroup: boolean,
 ): void {
-  if (!holder || config == null) {
-    return;
-  }
+  if (!holder || config == null) return;
   if (typeof config === 'number') {
     holder.scrollTop = config;
     return;
   }
   if ('key' in config || 'groupKey' in config) {
-    const { align = 'auto', offset = 0 } = config;
-    const isItem = 'key' in config;
-    const targetKey = isItem
-      ? toTaggedKey((config as { key: ListyKey }).key, 'item')
-      : toTaggedKey((config as { groupKey: ListyKey }).groupKey, 'group');
-    const targetElement = holder.querySelector(`[data-key="${CSS.escape(targetKey)}"]`);
-    if (targetElement) {
+    const targetKey =
+      'key' in config ? toTaggedKey(config.key, 'item') : toTaggedKey(config.groupKey, 'group');
+    const target = holder.querySelector<HTMLElement>(`[data-key="${CSS.escape(targetKey)}"]`);
+    if (target) {
       scrollTargetIntoView(
-        targetElement as HTMLElement,
-        align,
-        offset,
-        isItem,
+        holder,
+        target,
+        config.align ?? 'auto',
+        config.offset ?? 0,
+        'key' in config,
         prefixCls,
         stickyGroup,
       );
     }
     return;
   }
-  const { left, top } = config as { left?: number; top?: number };
-  if (left !== undefined) {
-    holder.scrollLeft = left;
-  }
-  if (top !== undefined) {
-    holder.scrollTop = top;
-  }
+  if (config.left !== undefined) holder.scrollLeft = config.left;
+  if (config.top !== undefined) holder.scrollTop = config.top;
 }
 
 // ============================== virtual sticky ==============================
@@ -219,9 +216,9 @@ const HEADER_TOP_TOLERANCE = 1;
  * 视口顶所在组的下标（二分；上游 `findActiveHeaderIndex`）。
  * `getHeaderTop` 返回组头行的 top。
  */
-export function findActiveHeaderIndex(
-  groupKeys: ListyKey[],
-  getHeaderTop: (groupKey: ListyKey) => number,
+export function findActiveHeaderIndex<K extends ListyKey>(
+  groupKeys: K[],
+  getHeaderTop: (groupKey: K) => number,
   scrollTop: number,
 ): number {
   let left = 0;
@@ -229,7 +226,8 @@ export function findActiveHeaderIndex(
   let activeIndex = 0;
   while (left <= right) {
     const mid = Math.floor((left + right) / 2);
-    if (getHeaderTop(groupKeys[mid] as ListyKey) <= scrollTop + HEADER_TOP_TOLERANCE) {
+    const key = groupKeys[mid];
+    if (key !== undefined && getHeaderTop(key) <= scrollTop + HEADER_TOP_TOLERANCE) {
       activeIndex = mid;
       left = mid + 1;
     } else {

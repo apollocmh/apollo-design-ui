@@ -4,68 +4,65 @@ title: Listy
 subtitle: 轻量列表
 ---
 
-轻量列表：数据驱动渲染 + 可选分组（吸顶）+ 可选虚拟滚动。antd v6 新增组件。
-
-## 何时使用
-
-- 需要渲染大量条目的轻量只读列表（虚拟滚动由 `virtual` 开启）。
-- 需要按 `group.key` 聚合分组并吸顶展示组头。
+数据驱动的轻量列表，支持按键聚合分组、原生吸顶和虚拟滚动。项内容可以包含原生交互元素。
 
 ## 代码演示
 
-见 [`demo/`](./demo)（8 个示例，覆盖基础、分组、虚拟滚动、滚动定位与语义槽等场景）。
+见 [`demo/`](./demo) 的 8 个示例。
 
 ## API
 
+`T` 为真实数据类型，可以是普通接口或原始值；`K extends string | number` 为组键类型。
+
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-| items | 数据（undefined ⇒ 空数组） | `T[]` | `[]` |
-| rowKey | 行键（字段名或函数） | `keyof T \| ((item) => Key)` | —（必填） |
-| group | 分组配置：`{ key: (item)=>K; title: (groupKey, items)=>VNodeChild }`（同 key 不要求连续） | — | — |
-| sticky | 组头吸顶（Raw=CSS sticky；Virtual=定位克隆头） | `boolean` | — |
-| virtual | 虚拟滚动（⚠️ antd 默认 `false`；与 ConfigProvider 的 `virtual` 上下文合并） | `boolean` | `false` |
-| height | 容器高度（Raw ⇒ maxHeight；Virtual ⇒ 与估算行高一起启用虚拟化） | `number` | — |
-| classNames / styles | 语义槽 `{ root, item, groupHeader }`（对象或函数式） | — | — |
-| prefixCls | 类名前缀 | `string` | 从 ConfigProvider 取 |
-| class / style | **根元素原生 attrs**（不是 Props） | `string \| array \| object` / `CSSProperties` | — |
+| items | 数据；未传时为空列表 | `T[]` | `[]` |
+| rowKey | 稳定键字段或取键算法；字段值必须完整满足 `string \| number`，支持数字和 Symbol 字段名 | `ListyRowKey<T>` | 必填 |
+| group | 按键聚合；同组数据无需连续，组按首次出现顺序展示 | `{ key: (item: T) => K }` | — |
+| sticky | 组头吸顶；Raw 使用唯一原生组头，Virtual 使用固定组头 | `boolean` | — |
+| virtual | 是否虚拟滚动；未传时继承当前 ConfigProvider.virtual | `boolean` | `false` |
+| height | Raw 的 maxHeight；Virtual 的视口高度 | `number` | — |
+| prefixCls | 组件类名前缀 | `string` | 当前 ConfigProvider 前缀 |
+| classNames | 语义类名 | `Partial<Record<'root' \| 'item' \| 'groupHeader', string>>` | — |
+| styles | 语义样式，使用 Vue `CSSProperties` | `ListyStyles` | — |
 
-> ⚠️ `direction` **不是** Listy 的公开 prop（antd Omit）——文字方向由 ConfigProvider
-> 的 `direction` 控制。
->
-> ⚠️ 项内容用 **default 插槽**（作用域 `{ item, index }`）或 `itemRender` prop
-> （函数式）；两者都缺会发 dev 告警并渲染空内容。
+文字方向来自当前 ConfigProvider.direction。`class`、`style`、`id`、`data-*` 等原生 attrs 落到根元素；`style` 支持 Vue 原生字符串、对象和数组合并。在 Virtual 分支，`tabindex`、`role`、键盘和焦点监听落到真实 holder，ARIA 命名同时传给 holder，避免键盘滚动页面或形成两个 Tab 停靠点。根样式仍属于外壳，视口高度由 `height` 控制。
+
+### 插槽
+
+| 名称 | 对象作用域 | 说明 |
+|---|---|---|
+| default | `{ item: T, index: number }` | 项内容；index 始终为原始 items 下标 |
+| groupHeader | `{ groupKey: K, items: T[], sticky: boolean, fixed: boolean }` | 全组共享模板；未提供时显示组键，包含 `0` 和空字符串 |
+
+槽支持 `0`、空内容、多根数组和条件切换。Raw 的唯一组头在开启吸顶时 `sticky=true, fixed=false`；Virtual 普通组头为 `false,false`，固定副本为 `false,true`。相同项键在 Raw 的替换、排序与跨组移动中保留真实节点、编辑状态和焦点；Virtual 在项持续位于已挂载窗口内时同样复用，离开窗口的项正常卸载。
+
+### 事件
+
+| 名称 | 参数 | 说明 |
+|---|---|---|
+| scroll | `(event: Event)` | 真实滚动容器的原生事件，每次通知一次；`event.target` 是实际 holder |
+
+组件不构造合成事件，也不接管方向键、IME 或用户 `preventDefault`；原生滚动键和槽内控件保留浏览器行为。
 
 ### Ref
 
-| 名称 | 类型 |
-|---|---|
-| scrollTo | `(config?: ListyScrollToConfig) => void` |
+`ListyRef<K>` 只公开 `scrollTo(config?: ListyScrollToConfig<K>): void`。
 
-`ListyScrollToConfig`：
+- `number`：设置本列表的 scrollTop。
+- `{ key, align?, offset? }`：定位项键。`align` 为 `'top' | 'bottom' | 'auto'`，默认 `'auto'`；顶部定位会为当前吸顶组头让位。
+- `{ groupKey: K, align?, offset? }`：定位组头。
+- `{ left?, top? }`：本列表的绝对滚动坐标。
+- `null` / `undefined`：不指定新目标。
 
-- `number`：设置 `scrollTop`；
-- `{ key, align?, offset? }`：滚到某项（`align: 'top' | 'bottom' | 'auto'`，默认 `'auto'`；
-  Raw 用 `scrollIntoView`，Virtual 走虚拟列表迭代；sticky 时自动让过吸顶组头）；
-- `{ groupKey, align?, offset? }`：滚到某组；
-- `{ left?, top? }`：绝对坐标；
-- `null` / `undefined`：no-op。
+Raw 只修改自己的 holder，不调用会滚动外层页面的 `scrollIntoView`。Virtual 使用已有虚拟列表的测量和滚动迭代。数据键 `1` 与 `'1'`、项键与组键分别编码；`data-key` 为内部定位标识，不应自行解析。
 
-## Theme（Component Token）
+## 主题
 
-2 个，与 antd 逐字段对齐（CSS 变量形态 `--apollo-listy-*`）：
+当前 Provider 的 Listy 配置与两个 Component Token 都响应式消费：`itemPaddingBlock`（默认 `paddingSM`）与 `itemPaddingInline`（默认 `padding`），接受数字或 CSS 长度字符串。组件覆盖可动态撤回。
 
-- `itemPaddingBlock`（= `paddingSM`）
-- `itemPaddingInline`（= `padding`）
+Virtual 的初始估算为当前 `fontHeight + itemPaddingBlock * 2`；数字与 px 长度直接参与估算，其他 CSS 单位先采用当前 paddingSM，实际尺寸由已有 VirtualList 测量修正。未新增虚拟列表缓存或测量机制。
 
-## FAQ
+## 迁移
 
-**虚拟模式的估算行高是多少？**
-
-`fontHeight + (itemPaddingBlock ?? paddingSM) * 2`（与 antd 同公式）。⚠️ 本仓用默认
-主题的构建期解析值：通过 ThemeConfig 覆盖 `Listy.itemPaddingBlock` 不会反映到估算行高
-（实测项高仍以 DOM 测量为准，估算只影响滚动条与初始窗口）。
-
-**虚拟模式与 antd 的 DOM 有差异吗？**
-
-有：本仓虚拟滚动由 `@apollo-design/virtual-list` 提供（原生滚动、无自绘滚动条），
-与 rc-virtual-list 的 DOM 不同。滚动行为与吸顶语义对齐。
+`itemRender(item,index)` 改为 `#default="{ item, index }"`；`group.title(groupKey,items)` 改为 `#groupHeader="{ groupKey, items }"`。`group.key` 继续承担数据分组职责。旧模板函数入口已移除。

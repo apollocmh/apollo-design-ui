@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // 对齐 antd 的 `group` 用法：VNode 组头 + 吸顶 + 按 groupKey 滚动。
-import type { ListyProps, ListyRef } from '@apollo-design/ui';
+import type { ListyRef } from '@apollo-design/ui';
 import { Button, Listy, Tag, Text } from '@apollo-design/ui';
-import { h, ref } from 'vue';
+import { ref } from 'vue';
 
 const groupNames = ['Group A', 'Group B', 'Group C'];
 
@@ -14,14 +14,7 @@ const items = Array.from({ length: 36 }, (_, i) => ({
 
 const listyRef = ref<ListyRef>();
 
-const group: ListyProps['group'] = {
-  key: (item) => String(item.group),
-  title: (groupKey, groupItems) =>
-    h('div', { style: { display: 'flex', alignItems: 'center', gap: '8px' } }, [
-      h(Tag, { color: 'blue' }, () => String(groupKey)),
-      h(Text, { type: 'secondary' }, () => `${groupItems.length} items`),
-    ]),
-};
+const group = { key: (item: (typeof items)[number]) => item.group };
 
 const scrollToGroup = (key: string) => {
   listyRef.value?.scrollTo({ groupKey: key, align: 'top' });
@@ -36,6 +29,12 @@ const scrollToGroup = (key: string) => {
       </Button>
     </div>
     <Listy ref="listyRef" :items="items" row-key="key" :group="group" sticky :height="280">
+      <template #groupHeader="{ groupKey, items: groupItems }">
+        <div style="display: flex; align-items: center; gap: 8px">
+          <Tag color="blue">{{ groupKey }}</Tag>
+          <Text type="secondary">{{ groupItems.length }} items</Text>
+        </div>
+      </template>
       <template #default="{ item }">{{ item.content }}</template>
     </Listy>
   </div>

@@ -262,3 +262,7 @@ Tour 保留 open/current 模型与已有具名槽，拒绝请求不泄漏到撤�
 ### D-affix-anchor-native-scroll-and-links
 
 Anchor 与 Anchor.Link 的 click 使用所属 Vue emits，载荷为原生 MouseEvent 和链接信息，preventDefault() 可取消内部导航；change 保留原始 href。Anchor 默认槽是正式组合入口，Anchor.Link 的标题使用 #title 或 title，子链接使用默认槽，移除未消费的 children prop。原生链接交互落实际 a 元素，换容器、当前配置、指示条和卸载资源按真实节点维护；Affix 保留 updatePosition 与既有几何判据，显式未就绪目标会释放旧监听，固定内容尺寸变化同步占位。详见[Anchor API](packages/ui/src/anchor/index.zh-CN.md)和[Affix API](packages/ui/src/affix/index.zh-CN.md)。
+
+### D-listy-native-generics-and-content
+
+Listy 使用真实泛型 Vue 组件，保留任意数据类型与有效字符串/数字 key，rowKey 字段按其实际值类型约束。itemRender 迁为 #default={item,index}，group.title 迁为 #groupHeader={groupKey,items,sticky,fixed}，group.key 保留数据分组职责；类型贯穿模板、h()、插槽与 scrollTo 引用。toTaggedKey 的结果包含 key 的原始类型，数字和字符串不再碰撞；不要自行拼接旧格式。修正 Raw/Virtual 的真实滚动目标、跨分组节点身份、组头定位与资源释放，Provider 和当前两个 Token 实际消费，详见[Listy API](packages/ui/src/listy/index.zh-CN.md)。

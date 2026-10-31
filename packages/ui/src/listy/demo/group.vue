@@ -9,13 +9,13 @@ const items = Array.from({ length: 12 }, (_, i) => ({
 }));
 
 const group = {
-  key: (item: Record<string, unknown>) => item.group as string,
-  title: (key: unknown, groupItems: unknown[]) => `${key} (${groupItems.length})`,
+  key: (item: (typeof items)[number]) => item.group,
 };
 </script>
 
 <template>
   <Listy :items="items" row-key="key" :group="group" sticky :height="280">
+    <template #groupHeader="{ groupKey, items: groupItems }">{{ groupKey }} ({{ groupItems.length }})</template>
     <template #default="{ item }">{{ item.content }}</template>
   </Listy>
 </template>

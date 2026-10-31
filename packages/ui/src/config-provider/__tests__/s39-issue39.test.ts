@@ -40,6 +40,7 @@ const nested = (
 };
 
 const ITEMS = Array.from({ length: 30 }, (_, i) => ({ key: i, content: `Item ${i}` }));
+type Item = (typeof ITEMS)[number];
 
 /** 实际消费验证：Listy 在给定上下文下走 Raw（根直接出项）还是 Virtual（有 -holder）。 */
 const listyMode = (parentProps: Record<string, unknown>, childProps: Record<string, unknown>) => {
@@ -49,12 +50,11 @@ const listyMode = (parentProps: Record<string, unknown>, childProps: Record<stri
       default: () =>
         h(ConfigProvider, childProps as never, {
           default: () =>
-            h(Listy, {
-              items: ITEMS,
-              rowKey: 'key',
-              itemRender: (item: unknown) => (item as { content: string }).content,
-              height: 120,
-            }),
+            h(
+              Listy<Item>,
+              { items: ITEMS, rowKey: 'key', height: 120 },
+              { default: ({ item }: { item: Item; index: number }) => item.content },
+            ),
         }),
     },
     attachTo: document.body,

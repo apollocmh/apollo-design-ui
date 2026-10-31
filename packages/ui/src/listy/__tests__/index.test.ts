@@ -8,7 +8,7 @@
 
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import { nextTick } from 'vue';
+import { defineComponent, h, nextTick, ref, type VNodeChild } from 'vue';
 import {
   collectGroupSegments,
   findActiveHeaderIndex,
@@ -18,6 +18,7 @@ import {
   toTaggedKey,
 } from '../engine';
 import { Listy } from '../index';
+import type { ListyProps, ListyRef } from '../interface';
 import { itemHeightOf } from '../style';
 
 // ============================== fixtures ==============================
@@ -29,26 +30,38 @@ const GROUP_ITEMS = [
   { key: 3, group: 'B', content: 'three' },
   { key: 4, group: 'A', content: 'four' },
 ];
-const GROUP = {
-  key: (item: Record<string, unknown>) => item.group as string,
-  title: (key: unknown, items: Record<string, unknown>[]) => `${key}:${items.length}`,
-};
+type Item = (typeof ITEMS)[number];
+type GroupItem = (typeof GROUP_ITEMS)[number];
+const GROUP = { key: (item: GroupItem) => item.group };
+const groupHeader = ({ groupKey, items }: { groupKey: string; items: GroupItem[] }) =>
+  `${groupKey}:${items.length}`;
 
 const makeListy = (
-  props: Record<string, unknown> = {},
-  slot?: (scope: { item: { content: string; key: number } }) => unknown,
-) =>
-  mount(Listy, {
-    props: { items: ITEMS, rowKey: 'key', ...props },
-    slots: slot ? { default: slot as never } : undefined,
+  props: Partial<ListyProps<Item>> = {},
+  slot?: (scope: { item: Item; index: number }) => VNodeChild,
+) => {
+  const list = ref<ListyRef | null>(null);
+  const wrapper = mount(
+    defineComponent({
+      setup: () => () =>
+        h(
+          Listy<Item>,
+          { items: ITEMS, rowKey: 'key', ...props, ref: list },
+          slot ? { default: slot } : {},
+        ),
+    }),
+  );
+  return Object.assign(wrapper, {
+    scrollTo: (config?: Parameters<ListyRef['scrollTo']>[0]) => list.value?.scrollTo(config),
   });
+};
 
 // ============================== engine（纯函数） ==============================
 
 describe('Listy · engine', () => {
   it('toTaggedKey：item/group 前缀防冲突', () => {
-    expect(toTaggedKey(1, 'item')).toBe('item:1');
-    expect(toTaggedKey('1', 'group')).toBe('group:1');
+    expect(toTaggedKey(1, 'item')).toBe('item:number:1');
+    expect(toTaggedKey('1', 'group')).toBe('group:string:1');
   });
 
   it('collectGroupSegments：按 key 聚合、不要求连续、保首次出现顺序', () => {
@@ -70,7 +83,7 @@ describe('Listy · engine', () => {
   it('flattenRows：无分组 ⇒ 纯 item 行（tagged 键）', () => {
     const { rows, groupKeys, groupKeyToItems } = flattenRows(ITEMS, undefined, (i) => i.key);
     expect(rows).toHaveLength(ITEMS.length);
-    expect(rows[0]).toMatchObject({ type: 'item', index: 0, taggedKey: 'item:0' });
+    expect(rows[0]).toMatchObject({ type: 'item', index: 0, taggedKey: 'item:number:0' });
     expect(groupKeys).toEqual([]);
     expect(groupKeyToItems.size).toBe(0);
   });
@@ -81,10 +94,10 @@ describe('Listy · engine', () => {
       GROUP,
       (i) => i.key,
     );
-    expect(rows[0]).toMatchObject({ type: 'group', groupKey: 'B', taggedKey: 'group:B' });
+    expect(rows[0]).toMatchObject({ type: 'group', groupKey: 'B', taggedKey: 'group:string:B' });
     expect(groupKeys).toEqual(['B', 'A']);
     expect(groupKeyToItems.get('B')?.map((i) => i.content)).toEqual(['one', 'three']);
-    expect(itemKeyToGroupKey.get('item:2')).toBe('A');
+    expect(itemKeyToGroupKey.get('item:number:2')).toBe('A');
   });
 
   it('findActiveHeaderIndex：二分 + 1px 容差', () => {
@@ -112,34 +125,43 @@ describe('Listy · Raw（virtual 默认 false）', () => {
     const w = makeListy({}, () => 'X');
     const items = w.findAll('[data-key^="item:"]');
     expect(items).toHaveLength(30);
-    expect(items[0]!.attributes('data-key')).toBe('item:0');
+    expect(items[0]!.attributes('data-key')).toBe('item:number:0');
     expect(items[0]!.text()).toBe('X');
     expect(w.find('.apollo-listy').exists()).toBe(true);
   });
 
-  it('itemRender prop 与插槽等价（插槽优先）', () => {
-    const byProp = makeListy({ itemRender: (item: { content: string }) => item.content });
-    expect(byProp.find('[data-key="item:0"]').text()).toBe('Item 0');
+  it('default slot receives the actual item and original index', () => {
+    const byItem = makeListy({}, ({ item, index }) => `${index}:${item.content}`);
+    expect(byItem.find('[data-key="item:number:0"]').text()).toBe('0:Item 0');
     const bySlot = makeListy({}, () => 'SLOT');
-    expect(bySlot.find('[data-key="item:0"]').text()).toBe('SLOT');
+    expect(bySlot.find('[data-key="item:number:0"]').text()).toBe('SLOT');
   });
 
-  it('分组：section[data-key=group:k] + 组头 title(k, items)；不同 key 非连续也聚合', () => {
-    const w = mount(Listy, {
+  it('group headers and rows share a parent; non-contiguous groups still aggregate', () => {
+    const w = mount(Listy<GroupItem, string>, {
       props: { items: GROUP_ITEMS, rowKey: 'key', group: GROUP },
-      slots: { default: ({ item }: { item: { content: string } }) => item.content },
+      slots: { default: ({ item }: { item: GroupItem }) => item.content, groupHeader },
     });
-    const sections = w.findAll('.apollo-listy-group-section');
-    expect(sections).toHaveLength(2);
-    expect(sections[0]!.attributes('data-key')).toBe('group:B');
-    expect(sections[0]!.find('.apollo-listy-group-header').text()).toBe('B:2');
-    // B 组的项：key 1、3
-    const bKeys = sections[0]!.findAll('[data-key^="item:"]').map((n) => n.attributes('data-key'));
-    expect(bKeys).toEqual(['item:1', 'item:3']);
+    const headers = w.findAll('.apollo-listy-group-header');
+    expect(headers).toHaveLength(2);
+    expect(headers[0]?.attributes('data-key')).toBe('group:string:B');
+    expect(headers[0]?.text()).toBe('B:2');
+    const children = w.get('.apollo-listy').element.children;
+    expect([...children].map((node) => node.getAttribute('data-key')).filter(Boolean)).toEqual([
+      'group:string:B',
+      'item:number:1',
+      'item:number:3',
+      'group:string:A',
+      'item:number:2',
+      'item:number:4',
+    ]);
+    expect(headers[0]?.element.parentElement).toBe(
+      w.get('[data-key="item:number:1"]').element.parentElement,
+    );
   });
 
   it('sticky：组头带 -sticky 类（CSS 吸顶）', () => {
-    const w = mount(Listy, {
+    const w = mount(Listy<GroupItem, string>, {
       props: { items: GROUP_ITEMS, rowKey: 'key', group: GROUP, sticky: true },
       slots: { default: () => 'x' },
     });
@@ -165,30 +187,34 @@ describe('Listy · Raw（virtual 默认 false）', () => {
   it('ref.scrollTo(number) ⇒ 设置 scrollTop；null ⇒ no-op', async () => {
     const w = makeListy({ height: 100 }, () => 'x');
     await nextTick();
-    (w.vm as unknown as { scrollTo: (c?: unknown) => void }).scrollTo(50);
-    expect((w.find('.apollo-listy').element as HTMLElement).scrollTop).toBe(50);
-    expect(() =>
-      (w.vm as unknown as { scrollTo: (c?: unknown) => void }).scrollTo(null),
-    ).not.toThrow();
+    w.scrollTo(50);
+    expect(w.get<HTMLElement>('.apollo-listy').element.scrollTop).toBe(50);
+    expect(() => w.scrollTo(null)).not.toThrow();
   });
 
-  it('ref.scrollTo({key, align}) ⇒ scrollIntoView 到 data-key 目标', async () => {
+  it('ref.scrollTo({key, align}) offsets its own holder without scrolling ancestors', async () => {
     const w = makeListy({ height: 100 }, () => 'x');
     await nextTick();
-    const target = w.find('[data-key="item:10"]').element as HTMLElement;
-    // jsdom 未实现 scrollIntoView ⇒ 桩（vi.spyOn 要求已有属性）
+    const target = w.get<HTMLElement>('[data-key="item:number:10"]').element;
+    const holder = w.get<HTMLElement>('.apollo-listy').element;
+    target.getBoundingClientRect = () => ({
+      top: 200,
+      bottom: 220,
+      height: 20,
+      left: 0,
+      right: 100,
+      width: 100,
+      x: 0,
+      y: 200,
+      toJSON: () => ({}),
+    });
     const spy = vi.fn();
     Object.defineProperty(target, 'scrollIntoView', { value: spy, configurable: true });
-    (w.vm as unknown as { scrollTo: (c?: unknown) => void }).scrollTo({
-      key: 10,
-      align: 'top',
-      offset: 5,
-    });
-    expect(spy).toHaveBeenCalledWith({ block: 'start', inline: 'nearest' });
-    // scrollMargin 占位与恢复
+    w.scrollTo({ key: 10, align: 'top', offset: 5 });
+    expect(holder.scrollTop).toBe(195);
+    expect(spy).not.toHaveBeenCalled();
     expect(target.style.scrollMarginTop).toBe('');
     expect(target.style.scrollMarginBottom).toBe('');
-    spy.mockRestore();
   });
 });
 
@@ -202,7 +228,7 @@ describe('Listy · Virtual（virtual + height）', () => {
     );
     await nextTick();
     await nextTick();
-    const rendered = w.findAll('.apollo-listy-item');
+    const rendered = w.findAll<HTMLElement>('.apollo-listy-item');
     expect(rendered.length).toBeGreaterThan(0);
     expect(rendered.length).toBeLessThan(ITEMS.length);
   });
@@ -215,26 +241,26 @@ describe('Listy · Virtual（virtual + height）', () => {
     await nextTick();
     await nextTick();
     // jsdom 无布局：桩 holder 的 clientHeight（computeScrollTarget 需要）与项高
-    const holder = w.find('.apollo-listy-holder').element as HTMLElement;
+    const holder = w.get<HTMLElement>('.apollo-listy-holder').element;
     Object.defineProperty(holder, 'clientHeight', { value: 100, configurable: true });
     const itemHeight = itemHeightOf();
-    for (const node of w.findAll('.apollo-listy-item')) {
-      const el = node.element as HTMLElement;
+    for (const node of w.findAll<HTMLElement>('.apollo-listy-item')) {
+      const el = node.element;
       Object.defineProperty(el, 'offsetParent', { value: document.body, configurable: true });
       Object.defineProperty(el, 'offsetHeight', { value: itemHeight, configurable: true });
     }
-    (w.vm as unknown as { scrollTo: (c?: unknown) => void }).scrollTo({
+    w.scrollTo({
       key: 25,
       align: 'top',
     });
     await nextTick();
     await nextTick();
-    const texts = w.findAll('.apollo-listy-item').map((n) => n.text());
+    const texts = w.findAll<HTMLElement>('.apollo-listy-item').map((n) => n.text());
     expect(texts).toContain('Item 25');
   });
 
   it('virtual 虚拟分组：组头行参与扁平化', async () => {
-    const w = mount(Listy, {
+    const w = mount(Listy<GroupItem, string>, {
       props: { items: GROUP_ITEMS, rowKey: 'key', group: GROUP, virtual: true, height: 200 },
       slots: { default: () => 'x' },
     });

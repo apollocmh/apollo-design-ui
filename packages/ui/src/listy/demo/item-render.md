@@ -1,8 +1,8 @@
 ---
 order: 102
 title:
-  zh-CN: 函数式渲染
-  en-US: Item Render
+  zh-CN: 作用域插槽
+  en-US: Item Slot
 ---
 
-用 `itemRender` prop 渲染每一行，并通过 `onScroll` 实时反馈滚动位置与 `scrollTo` 定位。
+使用 `#default="{ item, index }"` 渲染可交互行，通过原生 `@scroll` 反馈滚动位置，并用公开 `scrollTo` 定位。

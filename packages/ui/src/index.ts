@@ -1395,24 +1395,29 @@ export { prepareComponentToken as prepareListComponentToken } from './list/style
 // Listy —— 轻量列表（antd v6 新增；引擎自建于 engine/，虚拟滚动复用
 // @apollo-design/virtual-list）
 //
-// ⚠️ 样式已注册进 `COMPONENT_STYLES`；Component Token **2** 个（纯别名引用 ⇒
-//    var() 形态，radio D46 同判）。`itemRender` = default slot（作用域
-//    `{ item, index }`）+ 同名 prop；`ref.scrollTo` 命令式定位（Raw 用
-//    scrollIntoView，Virtual 走 virtual-list 迭代）。
+// 两个 Component Token 读取当前主题；默认行槽为 `{ item, index }`，
+// 分组标题槽为 `{ groupKey, items, sticky, fixed }`。
+// `ref.scrollTo` 在实际滚动 holder 内定位，Virtual 复用 virtual-list。
 // ---------------------------------------------------------------------------
 export type {
   ListyClassNames,
+  ListyEmits,
   ListyGroup,
+  ListyGroupHeaderSlotProps,
   ListyGroupScrollToConfig,
+  ListyItemSlotProps,
   ListyKey,
   ListyKeyScrollToConfig,
   ListyPositionScrollToConfig,
   ListyProps,
   ListyRef,
   ListyRowKey,
+  ListyRowKeyField,
   ListyScrollAlign,
   ListyScrollToConfig,
   ListySemanticName,
+  ListySlots,
+  ListyStyleObject,
   ListyStyles,
 } from './listy';
 export { Listy } from './listy';

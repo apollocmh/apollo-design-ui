@@ -29,7 +29,7 @@ const ROOT_ATTRS = {
 };
 
 const mountListy = (virtual: boolean, extra: Record<string, unknown> = {}) =>
-  mount(Listy, {
+  mount(Listy<(typeof ITEMS)[number]>, {
     props: {
       items: ITEMS,
       rowKey: 'key',
@@ -37,7 +37,7 @@ const mountListy = (virtual: boolean, extra: Record<string, unknown> = {}) =>
       ...(virtual ? { height: 200 } : {}),
       ...ROOT_ATTRS,
       ...extra,
-    } as never,
+    },
   });
 
 const rootOf = (virtual: boolean, extra: Record<string, unknown> = {}) => {
@@ -48,21 +48,25 @@ const rootOf = (virtual: boolean, extra: Record<string, unknown> = {}) => {
 };
 
 describe('Listy · Issue #38 Virtual 分支的根 attrs 与 Raw 一致', () => {
-  it('[A] virtual=true 时 id / data-* / aria-* / tabindex 落在根上（核心回归）', () => {
+  it('[A] virtual keeps root identity/ARIA and puts tabindex on its actual holder', () => {
     const { w, root } = rootOf(true);
     expect(root.attributes('id')).toBe('the-id');
     expect(root.attributes('data-testid')).toBe('dt');
     expect(root.attributes('aria-label')).toBe('al');
-    expect(root.attributes('tabindex')).toBe('3');
+    expect(root.attributes('tabindex')).toBeUndefined();
+    expect(w.get('.apollo-listy-holder').attributes('tabindex')).toBe('3');
     w.unmount();
   });
 
   it('[B] 对拍：同一套 attrs 下 raw 与 virtual 的关键根属性一致', () => {
     const raw = rootOf(false);
     const virt = rootOf(true);
-    for (const key of ['id', 'data-testid', 'aria-label', 'tabindex']) {
+    for (const key of ['id', 'data-testid', 'aria-label']) {
       expect(virt.root.attributes(key)).toBe(raw.root.attributes(key));
     }
+    expect(virt.w.get('.apollo-listy-holder').attributes('tabindex')).toBe(
+      raw.root.attributes('tabindex'),
+    );
     raw.w.unmount();
     virt.w.unmount();
   });
@@ -80,11 +84,11 @@ describe('Listy · Issue #38 Virtual 分支的根 attrs 与 Raw 一致', () => {
 
   it('[D] style 合并：调用方 style 生效，且 virtual 的 position:relative 不被顶掉', () => {
     const raw = rootOf(false);
-    expect((raw.root.element as HTMLElement).style.margin).toBe('4px');
+    expect(raw.w.get<HTMLElement>('.apollo-listy').element.style.margin).toBe('4px');
     raw.w.unmount();
 
     const virt = rootOf(true);
-    const el = virt.root.element as HTMLElement;
+    const el = virt.w.get<HTMLElement>('.apollo-listy').element;
     expect(el.style.margin).toBe('4px');
     // VirtualList 的根自带 position:relative（展开顺序：attrs 在前、内部在后）
     expect(el.style.position).toBe('relative');

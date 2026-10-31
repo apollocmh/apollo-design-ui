@@ -1,3 +1,5 @@
+> 当前实现（2026-10-31）：公共契约见双语 API。项与组头分别使用 default / groupHeader 对象作用域槽；scroll 为 owned 原生 Event；真实泛型保留 primitive 与 number/Symbol 字段键；Raw 项同父级复用并保持唯一原生吸顶头，scrollTo 只操作自身 holder；Virtual 的 tabindex/键盘/焦点落真实 holder，固定头补偿 Filler offsetY；当前 Provider、两个 Token 与估算行高已响应式消费。以下旧说明保留当时原义，不再描述上述已修差额。最终类型结果由本轮统一冻结验收记录给出。
+
 > 规范范围：本文件保留实现说明与历史对照证据；上游同构、旧阶段与历史 Gate 要求不再生效。现行规则见 [项目规范](../../../../AGENTS.md)，公共行为以 Apollo 组件 API 文档与测试契约为准。
 
 # Listy 实现说明
