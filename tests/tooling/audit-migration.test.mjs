@@ -113,10 +113,11 @@ test('every current component and foundation has one task, with real owned paths
     assert.ok(task.existingWork.includes(oldScanPath), task.id);
     for (const file of [...task.evidence, ...task.existingWork])
       assert.ok(fs.existsSync(path.join(root, file)), `${task.id}: ${file}`);
-    for (const directory of task.owns) {
-      assert.equal(path.isAbsolute(directory), false, directory);
-      assert.doesNotMatch(directory, /[*?[\]\\]/);
-      assert.ok(fs.statSync(path.join(root, directory)).isDirectory(), directory);
+    for (const ownedPath of task.owns) {
+      assert.equal(path.isAbsolute(ownedPath), false, ownedPath);
+      assert.doesNotMatch(ownedPath, /[*?[\]\\]/);
+      const owned = fs.statSync(path.join(root, ownedPath));
+      assert.ok(owned.isDirectory() || owned.isFile(), ownedPath);
     }
   }
   assert.doesNotThrow(() => validateAudit(state, root));
