@@ -22,10 +22,8 @@ const Probe = defineComponent({
     const config = injectAppConfig();
     return () =>
       h('div', {
-        'data-max-count': String((config.message as Record<string, unknown>)?.maxCount ?? 'none'),
-        'data-placement': String(
-          (config.notification as Record<string, unknown>)?.placement ?? 'none',
-        ),
+        'data-max-count': String(config.message?.maxCount ?? 'none'),
+        'data-placement': String(config.notification?.placement ?? 'none'),
       });
   },
 });
@@ -37,13 +35,13 @@ afterEach(() => {
 describe('App · Issue #41 appConfig 必须随 props 更新', () => {
   it('[A] 改 App 的 message.maxCount ⇒ 后代注入的配置跟着变（核心回归）', async () => {
     const w = mount(App, {
-      props: { message: { maxCount: 1 } } as never,
+      props: { message: { maxCount: 1 } },
       slots: { default: () => h(Probe) },
       attachTo: document.body,
     });
     expect(w.find('[data-max-count="1"]').exists()).toBe(true);
 
-    await w.setProps({ message: { maxCount: 5 } } as never);
+    await w.setProps({ message: { maxCount: 5 } });
     expect(w.find('[data-max-count="5"]').exists()).toBe(true);
     expect(w.find('[data-max-count="1"]').exists()).toBe(false);
     w.unmount();
@@ -51,23 +49,22 @@ describe('App · Issue #41 appConfig 必须随 props 更新', () => {
 
   it('[B] 改 App 的 notification.placement ⇒ 后代注入的配置跟着变', async () => {
     const w = mount(App, {
-      props: { notification: { placement: 'topLeft' } } as never,
+      props: { notification: { placement: 'topLeft' } },
       slots: { default: () => h(Probe) },
       attachTo: document.body,
     });
     expect(w.find('[data-placement="topLeft"]').exists()).toBe(true);
 
-    await w.setProps({ notification: { placement: 'bottomRight' } } as never);
+    await w.setProps({ notification: { placement: 'bottomRight' } });
     expect(w.find('[data-placement="bottomRight"]').exists()).toBe(true);
     w.unmount();
   });
 
   it('[C] 嵌套 App：父级更新 ⇒ 内层合并结果跟着变（子覆盖父）', async () => {
     const w = mount(App, {
-      props: { message: { maxCount: 1 } } as never,
+      props: { message: { maxCount: 1 } },
       slots: {
-        default: () =>
-          h(App, { notification: { placement: 'top' } } as never, { default: () => h(Probe) }),
+        default: () => h(App, { notification: { placement: 'top' } }, { default: () => h(Probe) }),
       },
       attachTo: document.body,
     });
@@ -75,7 +72,7 @@ describe('App · Issue #41 appConfig 必须随 props 更新', () => {
     expect(w.find('[data-max-count="1"]').exists()).toBe(true);
     expect(w.find('[data-placement="top"]').exists()).toBe(true);
 
-    await w.setProps({ message: { maxCount: 9 } } as never);
+    await w.setProps({ message: { maxCount: 9 } });
     expect(w.find('[data-max-count="9"]').exists()).toBe(true);
     w.unmount();
   });
@@ -101,11 +98,11 @@ describe('App · Issue #41 appConfig 必须随 props 更新', () => {
       },
     });
     const w = mount(App, {
-      props: { message: { maxCount: 1 } } as never,
+      props: { message: { maxCount: 1 } },
       slots: { default: () => h(RefProbe) },
       attachTo: document.body,
     });
-    await w.setProps({ message: { maxCount: 3 } } as never);
+    await w.setProps({ message: { maxCount: 3 } });
 
     // 同一个探针只 inject 一次；若 App 每次 provide 新对象，子孙就拿不到新值
     // —— 这里钉的是「引用恒定」这条硬约束（用 identity 断言而非值断言）
@@ -116,7 +113,7 @@ describe('App · Issue #41 appConfig 必须随 props 更新', () => {
       },
     });
     const w2 = mount(App, {
-      props: { message: { maxCount: 3 } } as never,
+      props: { message: { maxCount: 3 } },
       slots: { default: () => h(again) },
       attachTo: document.body,
     });

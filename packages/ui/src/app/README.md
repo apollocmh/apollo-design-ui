@@ -4,6 +4,14 @@
 
 # app
 
+## 当前 Vue 契约（2026-10-31）
+
+保留 Issue #40 的真实服务接线及 #41 的恒定配置引用。AppConfig 和 UseAppProps 使用实际 hook 类型，静态 App.useApp 与具名方法保持同一精确签名；无 provider 明确失败。App 使用 typed 默认槽及原生宿主 attrs，当前 Provider 的 className/style 与局部样式合并，component=false 的开发诊断不再引用 React。
+
+配置对象由 shallowReactive 保持稳定注入，父级更新、本地替换和撤回均可传到真实 holder；服务 holder 不随 div/section/false/main 宿主切换而重挂。App 无所属事件、模型、命令式 ref 方法或自有 Token，全局主题别名继续由现有 Provider 作用域提供。公共契约与迁移见双语 API，新增核心组合用例保留实际 Teleport、焦点与资源清理断言。
+
+下面的旧阶段数字与对照说明是历史记录，不表示本轮重跑历史完整矩阵。
+
 > **层**：L3（`packages/ui`）｜ **优先级**：P3 ｜ **复杂度**：M ｜ **antd 版本**：6.6.4
 >
 > 契约来源：antd `components/app/`（App.tsx 122 行 / context / useApp / style 30 行）。
@@ -51,7 +59,7 @@ _internal/app-context.ts  # ⭐ 消环叶子模块：只含类型 + InjectionKey
 
 L6 视觉 3 张（1 variant × 3 viewport）**全部 0.000% exact**。
 
-## 4. 收口证据（G13）
+## 4. 历史收口证据（G13，非本轮复验）
 
 - L1 6 / L4 3（基线 `app.dom.json`）/ L5 2 / L7 3 / L3 3 / demo 2 /
   L6 **3/3 0.000% exact**

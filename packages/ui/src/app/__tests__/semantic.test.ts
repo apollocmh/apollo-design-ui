@@ -14,17 +14,20 @@ const BP = { prefixCls: 'apollo-app' };
 
 const specs: Record<string, { render: () => ReturnType<typeof h> }> = {
   'app:basic': {
-    render: () => h(App, { ...BP } as never, { default: () => h('span', 'content') }),
+    render: () => h(App, { ...BP }, { default: () => h('span', 'content') }),
   },
   'app:custom-component': {
-    render: () =>
-      h(App, { ...BP, component: 'section' } as never, { default: () => h('span', 'x') }),
+    render: () => h(App, { ...BP, component: 'section' }, { default: () => h('span', 'x') }),
   },
   'app:nested': {
     render: () =>
-      h(App, { ...BP, message: { maxCount: 1 } } as never, {
-        default: () => h(App, { ...BP } as never, { default: () => h('span', 'inner') }),
-      }),
+      h(
+        App,
+        { ...BP, message: { maxCount: 1 } },
+        {
+          default: () => h(App, { ...BP }, { default: () => h('span', 'inner') }),
+        },
+      ),
   },
 };
 

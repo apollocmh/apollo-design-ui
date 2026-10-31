@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "architecture",
-  "revision": 224,
+  "revision": 227,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -440,18 +440,16 @@
       "kind": "component",
       "ref": "app",
       "title": "App",
-      "architectureStatus": "in_progress",
+      "architectureStatus": "done",
       "acceptanceStatus": "not_started",
       "workDependencies": [],
       "owns": [
         "packages/ui/src/app"
       ],
-      "assignment": {
-        "owner": "native_select",
-        "baseRevision": 219,
-        "startedAt": "2026-10-31T05:15:02.700Z"
-      },
-      "evidence": [],
+      "assignment": null,
+      "evidence": [
+        "registry/vue-native-audit.json"
+      ],
       "existingWork": [
         "docs/history/vue-native-audit-2026-10-23.json",
         "docs/history/registry-implementation-2026-10-29/components.json"
@@ -468,6 +466,198 @@
           "packages/ui/src/app/App.ts",
           "packages/ui/src/_internal/app-context.ts"
         ]
+      },
+      "verification": {
+        "stage": "architecture",
+        "kind": "core",
+        "scope": [
+          "packages/ui/src/app"
+        ],
+        "baseCommit": "6965a725",
+        "owner": "native_select",
+        "passed": true,
+        "sourceFrozen": true,
+        "types": {
+          "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-app-tsconfig.json",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 54175,
+          "log": "/tmp/apollo-app-types.log",
+          "kind": "types",
+          "runner": "root"
+        },
+        "implemented": [
+          "Real static useApp constructor inference through Object.assign; typed default slot and complete Vue content without forced VNode/tag/API assertions",
+          "Current Provider app root class/style merged with native attrs, direction/prefix updates and removal",
+          "Stable shallow-reactive App config with parent/local precedence, replacement and withdrawal; holders remain siblings across native host changes",
+          "Actual h/SFC positive and negative fixtures and two working Demo; bilingual API/README migration"
+        ],
+        "rootSupport": [
+          "Exact AppConfig=Message ConfigOptions/NotificationConfig and UseAppProps=MessageInstance/NotificationInstance/ModalHookAPI",
+          "No provider or Vue context throws explicit Apollo error; injectAppConfig remains valid standalone",
+          "UI root AppSlots export and global migration/state handled by root"
+        ],
+        "preserved": [
+          "s40 real three-service wiring and nested instance isolation",
+          "s41 current stable injected config identity and parent updates",
+          "Existing Message/Notification/Modal algorithms, callbacks, holders and resource ownership; no engine changes",
+          "App has no owned events, models, imperative ref methods or own component tokens"
+        ],
+        "migration": [
+          "Old documented className/rootClassName use native class/style on actual host",
+          "useApp requires a descendant App injection context; empty fake API removed by root",
+          "Typed configuration/service fields replace placeholder records; component retains four native tags or false",
+          "component=false gives native attrs no target; development diagnostic reads current render"
+        ],
+        "checks": [
+          {
+            "kind": "core",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run packages/ui/src/app/__tests__/native-contracts.test.ts packages/ui/src/app/__tests__/index.test.ts packages/ui/src/app/__tests__/s40-issue40.test.ts packages/ui/src/app/__tests__/s41-issue41.test.ts --project unit --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 13235,
+            "log": "/tmp/apollo-app-core.log",
+            "result": "4 files, 24 passed; original s40/s41 retained"
+          },
+          {
+            "kind": "related",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run packages/ui/src/app/__tests__/demo.test.ts packages/ui/src/app/__tests__/semantic.test.ts packages/ui/src/app/__tests__/theme.test.ts packages/ui/src/app/__tests__/a11y.test.ts --project unit --project dom-contract --project theme --project a11y --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 19694,
+            "log": "/tmp/apollo-app-related.log",
+            "result": "4 files, 17 passed; both Demo plus DOM/theme/a11y"
+          },
+          {
+            "kind": "core",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run packages/ui/src/app/__tests__/native-contracts.test.ts packages/ui/src/app/__tests__/semantic.test.ts --project unit --project dom-contract --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11247,
+            "log": "/tmp/apollo-app-final-affected.log",
+            "result": "2 files, 8 passed after complete children array correction"
+          },
+          {
+            "kind": "browser",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node packages/ui/src/app/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7371,
+            "log": "/tmp/apollo-app-browser.log",
+            "result": "Chrome errors=[]; current Provider/theme/native host/config, notification+Modal focus/identity/selection, unmount/scroll-lock"
+          },
+          {
+            "kind": "core",
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/_internal/__tests__/app-context.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 2085,
+            "log": "/tmp/apollo-app-context-green.log",
+            "runner": "root",
+            "result": "2 missing-provider cases green after root leaf correction"
+          },
+          {
+            "kind": "format",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/@biomejs/biome/bin/biome check packages/ui/src/app",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": null,
+            "log": "/tmp/apollo-app-final-format.log"
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check -- packages/ui/src/app",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": null,
+            "log": null
+          },
+          {
+            "kind": "syntax",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node --check packages/ui/src/app/__tests__/native-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": null,
+            "log": null
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-app-tsconfig.json",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 54175,
+            "log": "/tmp/apollo-app-types.log",
+            "kind": "types",
+            "runner": "root"
+          }
+        ],
+        "failedAttempts": [
+          {
+            "kind": "core",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run packages/ui/src/app/__tests__/native-contracts.test.ts --project unit --maxWorkers=1",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 6266,
+            "log": "/tmp/apollo-app-native-red.log",
+            "result": "3 failed/2 passed: two true defects (Provider root style/config ignored and stale React/no-host diagnostic), one driver assumed immediate leave removal, now waits actual Motion termination"
+          },
+          {
+            "kind": "browser-driver",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node packages/ui/src/app/__tests__/native-browser.mjs",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 46822,
+            "log": "/tmp/apollo-app-browser-first.log",
+            "result": "Floating top-left notice covered fixture button; fixture page spacing fixed, production unchanged"
+          },
+          {
+            "command": "node /Users/nanren/Code/apollo-design-ui/node_modules/vue-tsc/bin/vue-tsc.js --noEmit -p /var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-interactive-integration-j_zadxak/.apollo-app-tsconfig.json",
+            "exitCode": 2,
+            "signal": null,
+            "durationMs": 36024,
+            "log": "/tmp/apollo-app-types-first-failed.log"
+          },
+          {
+            "command": "node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/_internal/__tests__/app-context.test.ts --maxWorkers=1",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 2152,
+            "log": "/tmp/apollo-app-context-red.log"
+          }
+        ],
+        "remainingBoundaries": [
+          "Native host replacement follows Vue subtree replacement; stable service holders do not imply preserving arbitrary page-local component state",
+          "Stage2 nine-dimension/full-library coverage/visual/release-consumer acceptance not run here; historical evidence not claimed as rerun"
+        ],
+        "noExternalActions": "Owner did not commit/push/build dist/write global state or change shared engines.",
+        "sourceHashes": {
+          "packages/ui/src/app/App.ts": "d7e4f974c19098b7795dc61eae5f8f498a9ecdda462d3f67a9cd439ed070a53f",
+          "packages/ui/src/app/useApp.ts": "1b30d2b67a967629babb915d86faf172395b859ef32e576f664a4fcd53114047",
+          "packages/ui/src/app/interface.ts": "add70d01ac3d98fbcf765211cc50ba0162e8522d811ca1230fd86f53aa268c11",
+          "packages/ui/src/app/index.ts": "ff6aac09ad10cb66741f810d4d02a20130e962d72bcc704862648074ef8e191f",
+          "packages/ui/src/app/demo/config.vue": "e73f9d6321828ab76fd78e7ee141efb260c1e821e8579c22dd07908262227ab3",
+          "packages/ui/src/app/demo/basic.vue": "8d65fe5443844ba4469d1819ef3a661765e103bf92ca8662393bb0f04aa1b36c",
+          "packages/ui/src/app/style/index.ts": "b1f58610c859d13415897f0e4e83cc0c9e9c36c0c2588b89a1f19619e6408154",
+          "packages/ui/src/app/style/token.ts": "3b9e6bafa1533df526a736754d6e2a8cb76068399b8974020794d92b1381446b",
+          "packages/ui/src/app/__tests__/a11y.test.ts": "e4f8d4e962c4666aca0108ee218482fcafbac4136d846788d4ac1f4b84befc4c",
+          "packages/ui/src/app/__tests__/native-contracts.test.ts": "1a0752ece4177973e3214a858f711a795ee19727a0852dcfd0bc8f3297886a28",
+          "packages/ui/src/app/__tests__/index.test.ts": "524b9a6b9caf55e79e2649f3870b550074531009954b920ccb676fccde643aec",
+          "packages/ui/src/app/__tests__/demo.test.ts": "eaef85cb17a15c64a6cebd6ed5a1a34aaf08f255e3cdf1f9caa8f5c93d5dd872",
+          "packages/ui/src/app/__tests__/type.test-d.ts": "62ffcb959804245f1e16164993e612da95708a2e2548a34760f2b5f47ff6707b",
+          "packages/ui/src/app/__tests__/s41-issue41.test.ts": "8eda4768116283b2a3a927b0c17e59e6bcef485bcd2a53b34c2dc724a730e62f",
+          "packages/ui/src/app/__tests__/s40-issue40.test.ts": "2716565a335db9f879e83ac8067cb122ad3368917e95162f7cc405798222817b",
+          "packages/ui/src/app/__tests__/theme.test.ts": "dc78d65757eb9636dd58b6ce87560a7d59da8b94d4649dfcaecc9fe4e9aaf382",
+          "packages/ui/src/app/__tests__/semantic.test.ts": "df52dd234d6e600c5efed776c777bc1984a74782b81ca2d38f7fee647194f840",
+          "packages/ui/src/app/__tests__/fixtures/NativeApp.vue": "4f73762ad10fea80fbaad4c7f1984b61c069df8c25c498045bd682655213c22d",
+          "packages/ui/src/index.ts": "516af93ad786f84c6c89afe33561aa7f8b400a4ec866565c099c43727ddf7f63",
+          "packages/ui/src/_internal/app-context.ts": "6aa9815d0c744a2a9a4888585bd2a0080d875d45dd7868f1a2f19bc36a6e5fac",
+          "packages/ui/src/_internal/__tests__/app-context.test.ts": "90f06f0de09d9cfd76b5ccda5c5d41804f4a725bc5867bf3e00c06fe2589b3ea",
+          "packages/ui/src/_internal/__tests__/app-context.test-d.ts": "5af3d45ba27c747440e8ad99295a295d2402b2044c863890a0dee30fe18ba967"
+        },
+        "verifiedViewBase": "b8b99abc29288b40ea85b27ea44f6e167abb0c68",
+        "remainingBlocking": [],
+        "integrationSnapshot": {
+          "result": "Every checked source byte matches current App, context, real h/SFC/Demo and UI public barrel; root strict/declaration0/54.175s."
+        }
       }
     },
     {
@@ -10038,7 +10228,7 @@
       "plan": {
         "goal": "保留Table真实根测量与Listy成果，收口泛型/原生槽/事件和实际滚动",
         "remaining": [
-          "盘清VirtualList/Filler/useHeights/纯算法/cache及公开Props/Slots/Emits/ref；修正未知数据和多参数行槽对Vue公共用法的牺牲，统一评估无效showScrollBar。",
+          "盘清VirtualList/Filler/useHeights/纯算法/cache及公开Props/Slots/Emits/ref；保留既有default对象作用域和extra槽，修正未知数据/旧RenderFunc与实际类型擦除差额，统一评估无效showScrollBar。",
           "核对raw/virtual切换、动态数据/key/尺寸、RTL/横向/scrollTo、实际holder attrs/identity和释放；根负责当前Table/Listy/Select等实际消费桥，保留已有单根Vue holder支持与原生滚动。"
         ],
         "effort": "large",

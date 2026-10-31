@@ -4,36 +4,45 @@ title: App
 subtitle: App
 ---
 
-新的包裹组件，提供重置样式与消费 context 的 hook。
+Provide independent Message, Notification and Modal services to descendants, with shared root styles for the page.
 
-## When To Use
+## Demos
 
-- Provide context instances for `message`, `notification`, `modal`. 
-- Provide unified root styles for the application.
+See [`demo/`](./demo) for service usage and replacement of current message/notification defaults.
 
 ## API
 
-### Props
-
-| 参数 | 说明 | 类型 | 默认值 |
+| Prop | Description | Type | Default |
 |---|---|---|---|
-| component | 渲染的根元素；`false` ⇒ 无包裹 | `'div' \| 'section' \| 'main' \| 'span' \| false` | `'div'` |
-| message | message 的配置（沿树合并） | `object` | — |
-| notification | notification 的配置（沿树合并） | `object` | — |
-| className / rootClassName / style | 根元素样式（antd 的 className 为 deprecated，用 rootClassName） | — | — |
+| prefixCls | Current host class prefix | `string` | `apollo-app` |
+| component | Native host; `false` renders content and service holders without a host | `'div' \| 'section' \| 'main' \| 'span' \| false` | `'div'` |
+| message | Message hook configuration, merged across nested Apps | `MessageConfigOptions` | — |
+| notification | Notification hook configuration, merged across nested Apps | `NotificationConfig` | — |
 
-### App.useApp()
+The default slot accepts complete Vue content, including `0`, arrays, conditional and empty content. App has no owned events, v-model or imperative component ref methods. Native `class`, `style`, attributes and event listeners target the actual host. Provider `components.app.className/style` is merged first; local native styles take precedence.
+
+With `component=false`, attributes have no host and produce a development diagnostic. They are not transferred to children or overlays. Host changes follow Vue's native subtree replacement rules; the three service holders remain stable siblings of the host.
+
+### useApp
+
+Call the named `useApp()` or `App.useApp()` in a **descendant component's setup**:
 
 ```ts
 const { message, notification, modal } = App.useApp();
+const close = message.loading('Working', 0);
+close.then((terminated) => console.log(terminated));
+const confirm = modal.confirm({ title: 'Continue?' });
+confirm.then((accepted) => console.log(accepted));
 ```
 
-`message` / `notification` / `modal` 由 `useMessage()` / `useNotification()` /
-`Modal.useModal()` 提供（PENDING-2 已关闭，见 README §3）：每个 `App` 实例自带一套
-通知容器，卸载 App 即销毁。
+The exact `UseAppProps` result contains `message: MessageInstance`, `notification: NotificationInstance` and `modal: ModalHookAPI`. Methods retain their hook's real return values and service callbacks. Commands issued during descendant setup enter the corresponding holder queues. Every App owns independent instances; nested consumers receive the closest provider. Unmounting App terminates its work and releases overlays and resources.
 
-## 设计说明
+Without an App provider or Vue injection context, `useApp()` throws `[Apollo App] useApp() requires an App provider.` instead of returning empty fake APIs. Use a descendant's setup; the parent creating App cannot inject a child provider that does not yet exist.
 
-- **消环**：context 抽到 `_internal/app-context.ts`（只含类型与 InjectionKey），
-  避免 App ↔ 三个反馈组件的循环依赖。
-- **配置合并**：嵌套 App 时 `AppConfig` 沿树浅合并（子覆盖父）。
+### Configuration, theme and migration
+
+Message and notification configurations are shallowly merged by field from parent App to local object. Local fields win. Replacing an object removes its former exclusive fields; removing a local prop restores the current parent configuration. The injected object retains its identity while descendants and holders read current values. Existing notices follow their respective service's update contract.
+
+App has no component tokens. Its CSS consumes the global `colorText`, `fontSize`, `lineHeight` and `fontFamily` variables. Current Provider direction, prefix and root style replacement/removal update the host.
+
+Replace the old documented `className/rootClassName` with native `class`; native `style` accepts StyleValue. AppConfig and useApp now expose actual configuration and service types. Type exports: `AppProps`, `AppComponentType`, `AppConfig`, `AppSlots`, `UseAppProps`.

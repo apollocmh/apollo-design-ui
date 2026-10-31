@@ -20,7 +20,7 @@ describe('App · L1 渲染', () => {
     });
     // ⚠️ App 现在是 **Fragment**（三个通知 holder + `<Component>` 同级，与 antd
     //    App.tsx 同构）⇒ `wrapper.element` 是 VTU 的宿主，真正的根是 `.apollo-app`。
-    const el = wrapper.find('.apollo-app').element as HTMLElement;
+    const el = wrapper.get<HTMLElement>('.apollo-app').element;
     expect(el.tagName).toBe('DIV');
     expect(el.className).toContain('apollo-app');
     expect(el.className).toContain('extra');
@@ -48,9 +48,7 @@ describe('App · L1 渲染', () => {
         return () =>
           h('div', {
             'data-has-api': api ? '1' : '0',
-            'data-message-max-count': String(
-              (config?.message as Record<string, unknown>)?.maxCount ?? null,
-            ),
+            'data-message-max-count': String(config?.message?.maxCount ?? null),
           });
       },
     });
@@ -68,12 +66,8 @@ describe('App · L1 渲染', () => {
         const config = inject(appConfigContextKey);
         return () =>
           h('div', {
-            'data-placement': String(
-              (config?.notification as Record<string, unknown>)?.placement ?? null,
-            ),
-            'data-max-count': String(
-              (config?.message as Record<string, unknown>)?.maxCount ?? null,
-            ),
+            'data-placement': String(config?.notification?.placement ?? null),
+            'data-max-count': String(config?.message?.maxCount ?? null),
           });
       },
     });
@@ -92,9 +86,9 @@ describe('App · L1 渲染', () => {
     const Caller = defineComponent({
       setup() {
         const { message } = App.useApp();
-        // ⚠️ 必须在 **holder 挂载之后**调用：setup 期内核实例还没就绪
+        // Mounted callers continue to use the real App-owned message service.
         onMounted(() => {
-          message.success?.('x' as never);
+          message.success('x');
         });
         return () => h('span');
       },

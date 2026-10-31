@@ -737,7 +737,7 @@ export { Anchor, AnchorLink, AnchorWithLink } from './anchor';
 export { genAnchorStyle, genTokenDecls as genAnchorTokenDecls } from './anchor/style';
 export type { ComponentToken as AnchorComponentToken } from './anchor/style/token';
 export { prepareComponentToken as prepareAnchorComponentToken } from './anchor/style/token';
-export type { AppComponentType, AppConfig, AppProps, UseAppProps } from './app';
+export type { AppComponentType, AppConfig, AppProps, AppSlots, UseAppProps } from './app';
 export { App } from './app';
 export { genAppStyle } from './app/style';
 export { useApp } from './app/useApp';

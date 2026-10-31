@@ -6,9 +6,12 @@
  * 或 `false`（antd 的 CustomComponent 泛型族收窄，H2）。
  */
 
+import type { VNodeChild } from 'vue';
 import type { AppConfig } from '../_internal/app-context';
 
 export type AppComponentType = 'div' | 'section' | 'main' | 'span' | false;
+
+export type AppSlots = { default?: () => VNodeChild };
 
 export interface AppProps extends AppConfig {
   prefixCls?: string;

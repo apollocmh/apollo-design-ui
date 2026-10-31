@@ -9,13 +9,10 @@ import AppComponent from './App';
 import { useApp } from './useApp';
 
 /** App 组件。注册名 `AApp`（COMPONENT-RULES.md 规则 R2）。 */
-export const App = withInstall(AppComponent);
-
-/** antd 的 `App.useApp` 静态属性（函数形态同时单独导出）。 */
-App.useApp = useApp;
+export const App = Object.assign(withInstall(AppComponent), { useApp });
 
 export type { AppConfig, UseAppProps } from '../_internal/app-context';
-export type { AppComponentType, AppProps } from './interface';
+export type { AppComponentType, AppProps, AppSlots } from './interface';
 export { useApp } from './useApp';
 
 export default App;

@@ -8,6 +8,7 @@
  * `Modal.useModal()` 提供，holder 与 `<Component>` 同级渲染 ⇒ 每个 App 实例
  * 自带一套通知容器（嵌套 App 互相隔离、随 App 卸载而销毁）。
  */
+import { useDevWarning } from '@apollo-design/utils';
 import {
   computed,
   defineComponent,
@@ -15,7 +16,8 @@ import {
   h,
   type PropType,
   provide,
-  reactive,
+  type SlotsType,
+  shallowReactive,
   type VNodeChild,
   watchEffect,
 } from 'vue';
@@ -26,11 +28,11 @@ import {
   injectAppConfig,
   type UseAppProps,
 } from '../_internal/app-context';
-import { useComponentConfig } from '../config-provider/context';
+import { type ComponentStyleConfig, useComponentConfig } from '../config-provider/context';
 import useMessage from '../message/useMessage';
 import useModal from '../modal/useModal';
 import useNotification from '../notification/useNotification';
-import type { AppComponentType, AppProps } from './interface';
+import type { AppComponentType, AppProps, AppSlots } from './interface';
 
 const App = defineComponent({
   name: 'AApp',
@@ -39,13 +41,15 @@ const App = defineComponent({
     prefixCls: { type: String, default: undefined },
     component: {
       type: [String, Boolean] as PropType<AppComponentType>,
-      default: 'div' as AppComponentType,
+      default: 'div',
     },
     message: { type: Object as PropType<AppProps['message']>, default: undefined },
     notification: { type: Object as PropType<AppProps['notification']>, default: undefined },
   },
+  slots: {} as SlotsType<AppSlots>,
   setup(props, { slots, attrs }) {
-    const config = useComponentConfig('app');
+    const config = useComponentConfig<ComponentStyleConfig>('app');
+    const warning = useDevWarning('App');
     const prefixCls = computed(() => props.prefixCls ?? config.getPrefixCls('app'));
 
     // AppConfig 沿树合并（antd 的 useMemo 同款浅合并）
@@ -64,7 +68,7 @@ const App = defineComponent({
      *    reactive 对象、内容由 `watchEffect` 打补丁 —— `inject` 只在 setup 期解析
      *    一次，「引用恒定」是硬约束。
      */
-    const appConfig = reactive<AppConfig>({ ...mergedAppConfig.value });
+    const appConfig = shallowReactive<AppConfig>({ ...mergedAppConfig.value });
     watchEffect(() => {
       Object.assign(appConfig, mergedAppConfig.value);
     });
@@ -88,48 +92,40 @@ const App = defineComponent({
       message: messageApi,
       notification: notificationApi,
       modal: modalApi,
-    } as unknown as UseAppProps;
+    };
     provide(appContextKey, api);
     provide(appConfigContextKey, appConfig);
 
-    // 根 `class` / `style` 是 Vue 原生 attrs（不再有 className/rootClassName/style Props）。
-    const hasRootProps = Boolean(attrs.class || attrs.style);
-    if (props.component === false && hasRootProps) {
-      console.error(
-        '[Warning] [antd: App] When using cssVar, ensure `component` is assigned a valid React component string.',
-      );
-    }
-
     return () => {
-      const children = [slots.default?.() as VNodeChild].filter(
-        (c) => c !== null && c !== undefined,
+      warning(
+        props.component !== false || Object.keys(attrs).length === 0,
+        '`component=false` renders without a host; native attributes have no target.',
       );
+      const children = slots.default?.();
 
       // ⚠️ 三个 holder 与 `<Component>` **同级**（上游 App.tsx 同结构）——
       //    放进去会污染 `<Component>` 的子节点契约（L4 会看到多出的节点）。
-      const nodes: VNodeChild[] = [
-        messageHolder() as VNodeChild,
-        notificationHolder() as VNodeChild,
-        modalHolder as VNodeChild,
-      ];
+      const nodes: VNodeChild[] = [messageHolder(), notificationHolder(), modalHolder];
 
       if (props.component === false) {
-        nodes.push(...children);
+        nodes.push(children);
         return h(Fragment, null, nodes);
       }
 
       nodes.push(
         h(
-          props.component as 'div',
+          props.component,
           {
             ...attrs,
             class: [
               prefixCls.value,
+              config.className,
               attrs.class,
               config.direction === 'rtl' ? `${prefixCls.value}-rtl` : undefined,
             ],
+            style: [config.style, attrs.style],
           },
-          children,
+          [children],
         ),
       );
       return h(Fragment, null, nodes);

@@ -13,36 +13,28 @@
 import { mount } from '@vue/test-utils';
 import { afterEach, describe, expect, it } from 'vitest';
 import { defineComponent, h, nextTick } from 'vue';
-import { useApp } from '../../_internal/app-context';
+import { type UseAppProps, useApp } from '../../_internal/app-context';
 import App from '../App';
-
-type AppApi = {
-  message: { success: (c: string) => void; destroy: (key?: string | number) => void };
-  notification: {
-    success: (config: { message: string }) => void;
-    destroy: (key?: string | number) => void;
-  };
-  modal: { info: (c: { title: string; content: string }) => unknown };
-};
+import type { AppProps } from '../interface';
 
 /** 抓取子树里 `useApp()` 拿到的 API。 */
 const createChild = () => {
-  const holder: { api: AppApi | null } = { api: null };
+  const holder: { api: UseAppProps | null } = { api: null };
   const Child = defineComponent({
     setup() {
-      holder.api = useApp() as unknown as AppApi;
+      holder.api = useApp();
       return () => h('span', { class: 'child' }, 'child');
     },
   });
   return { Child, holder };
 };
 
-const mountApp = (props: Record<string, unknown> = {}, nested = false) => {
+const mountApp = (props: AppProps = {}, nested = false) => {
   const { Child, holder } = createChild();
   const inner = () => h(Child);
   const tree = nested ? () => h(App, null, { default: inner }) : inner;
   const w = mount(App, {
-    props: props as never,
+    props,
     slots: { default: tree },
     attachTo: document.body,
   });
@@ -171,7 +163,7 @@ describe('App · Issue #40 useApp() 必须接到真实 HookAPI', () => {
   it('[H] 守卫：component=false 时仍不渲染根元素，但 API 照常可用', async () => {
     const { Child, holder } = createChild();
     const w = mount(App, {
-      props: { component: false } as never,
+      props: { component: false },
       slots: { default: () => h(Child) },
       attachTo: document.body,
     });

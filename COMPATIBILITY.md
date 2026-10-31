@@ -270,3 +270,7 @@ Listy 使用真实泛型 Vue 组件，保留任意数据类型与有效字符串
 ### D-notices-native-sessions-and-panels
 
 Message/Notification 保留命令式 API、有效服务回调和零参数 holder 工厂，提前调用进入实际挂载队列；Message 句柄在真正终止时结算，同 key 的各次等待均有效，手动关闭、销毁、淘汰和卸载不新增 public onClose 通知。关闭按钮和计时关闭仍调用当前 onClose；原始数字/字符串 key 分离，更新重置当前计时。单条配置中移除未消费的 classNames/styles.list 与 listContent，列表语义继续在 hook/全局配置中设置；PurePanel/PureList 使用准确类型、原生槽与事件。补齐当前十个 Token、Provider/关闭图标类型与真实容器消费，Modal/Tag 的共享关闭图标链同步验证，详见[Message API](packages/ui/src/message/index.zh-CN.md)和[Notification API](packages/ui/src/notification/index.zh-CN.md)。
+
+### D-app-native-services-and-host
+
+AppConfig 和 useApp() 改用真实通知配置及 MessageInstance、NotificationInstance、ModalHookAPI，静态 App.useApp 保留相同准确类型。useApp() 必须在真实 App 提供的 Vue 注入上下文中调用，缺少 Provider 时明确报错，不再返回伪造的空 API。保留原有四种宿主标签与 component=false、默认槽、嵌套配置和实例隔离；当前 Provider 根样式与原生 attrs 合并到实际宿主，动态切换宿主保留服务内容和生命周期。详见[App API](packages/ui/src/app/index.zh-CN.md)。
