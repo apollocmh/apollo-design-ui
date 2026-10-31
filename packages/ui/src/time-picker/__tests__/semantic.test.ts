@@ -34,6 +34,7 @@ import { h } from 'vue';
 config.global.stubs = { ...config.global.stubs, teleport: false };
 
 import baseline from '../../../../../tests/compat/baselines/time-picker.dom.json';
+import { nativeTriggerAllowances } from '../../date-picker/__tests__/native-semantic-allowances';
 import { TimePicker, TimeRangePicker } from '../index';
 
 const T = (s: string) => dayjs(s, 'HH:mm:ss');
@@ -81,7 +82,7 @@ const CASES: Record<string, () => DomRenderResult> = {
 domContractTest('TimePicker', {
   baseline,
   keepStyle: false,
-  allow: {},
+  allow: nativeTriggerAllowances(baseline.cases),
   render: (id) => {
     const build = CASES[id];
     if (!build) {

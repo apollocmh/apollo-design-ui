@@ -31,7 +31,7 @@
  *     ⇒ 由 L2 单测钉。
  */
 
-import { type DomRenderResult, domContractTest } from '@apollo-design/test-utils';
+import { type DomRenderResult, diffHtml, domContractTest } from '@apollo-design/test-utils';
 import dayjs from 'dayjs';
 import { h } from 'vue';
 
@@ -246,9 +246,49 @@ const CASES: Record<string, () => DomRenderResult> = {
     }),
 };
 
+/**
+ * Only the delivered native ARIA additions are applied to an immutable reference copy.
+ * Selection/disabled expectations come from the historical fixture, never the rendered component.
+ * The exact diff retains the original structure, classes and compared attributes.
+ */
+function nativeAriaReference(html: string): string {
+  const reference = document.createElement('div');
+  reference.innerHTML = html;
+  for (const cell of reference.querySelectorAll('td.apollo-picker-cell-disabled')) {
+    cell.setAttribute('aria-disabled', 'true');
+  }
+  for (const column of reference.querySelectorAll('ul.apollo-picker-time-panel-column')) {
+    const type = column.getAttribute('data-type');
+    if (!type) throw new Error('Historical Picker time column is missing data-type');
+    column.setAttribute('role', 'listbox');
+    column.setAttribute('aria-label', type);
+    for (const item of column.querySelectorAll('li.apollo-picker-time-panel-cell')) {
+      item.setAttribute('role', 'option');
+      item.setAttribute(
+        'aria-selected',
+        String(item.classList.contains('apollo-picker-time-panel-cell-selected')),
+      );
+      if (item.classList.contains('apollo-picker-time-panel-cell-disabled')) {
+        item.setAttribute('aria-disabled', 'true');
+      }
+    }
+  }
+  return reference.innerHTML;
+}
+
 domContractTest('PickerPanel', {
   baseline,
   keepStyle: false,
+  allow: Object.fromEntries(
+    baseline.cases.map(({ id, html }) => [
+      id,
+      {
+        reason:
+          'Apollo native keyboard contract: disabled date cells expose aria-disabled; time columns expose named listbox/option and accepted selection/disabled states. See picker-contract.md current keyboard follow-up.',
+        diff: diffHtml(html, nativeAriaReference(html), { keepStyle: false }),
+      },
+    ]),
+  ),
   render: (id) => {
     const factory = CASES[id];
     if (!factory) {

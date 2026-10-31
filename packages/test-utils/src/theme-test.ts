@@ -34,7 +34,7 @@ import {
   type ThemeConfig,
   ThemeProvider,
 } from '@apollo-design/theme';
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { h } from 'vue';
 import { assertAllowances } from './allowance';
 import { assertRenderCases, collectCountFailures, collectRenderCases, mountCase } from './render';
@@ -139,12 +139,23 @@ export function themeTest(name: string, options: ThemeTestOptions): void {
     }
 
     for (const variant of variants) {
-      it(`${variant} 态下渲染`, async () => {
-        const config = configFor(variant, tokenOverride);
-        const capture = captureWarnings();
+      describe(`${variant} 态下渲染`, () => {
+        let config: ThemeConfig;
+        let capture: ReturnType<typeof captureWarnings>;
+        beforeAll(() => {
+          config = configFor(variant, tokenOverride);
+          capture = captureWarnings();
+        });
+        afterAll(() => {
+          capture.restore();
+          // Allowances retain their existing scope across every demo in this variant.
+          assertNoUnexpectedWarnings(capture.records, options.allow, `${context} → ${variant}`);
+        });
 
-        try {
-          for (const testCase of cases) {
+        // Each demo keeps its own failure location and normal test deadline.
+        // The matrix still mounts, updates and disposes every original case.
+        for (const testCase of cases) {
+          it(testCase.id, async () => {
             const mounted = mountCase(testCase.render, {
               ...(options.global ? { global: options.global } : {}),
               // ThemeProvider 在**外**，调用方的 wrap 在**内**（见文件头）。
@@ -162,12 +173,8 @@ export function themeTest(name: string, options: ThemeTestOptions): void {
             } finally {
               mounted.destroy();
             }
-          }
-        } finally {
-          capture.restore();
+          });
         }
-
-        assertNoUnexpectedWarnings(capture.records, options.allow, `${context} → ${variant}`);
       });
     }
   });

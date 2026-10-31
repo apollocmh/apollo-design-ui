@@ -1,5 +1,5 @@
 ---
-category: Other
+category: 其他
 title: FloatButton
 subtitle: 悬浮按钮
 ---

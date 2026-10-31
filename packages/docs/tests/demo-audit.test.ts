@@ -32,11 +32,17 @@ const allDemos: Array<{ component: string; demo: DemoMeta }> = manifest.componen
 
 describe('全量 demo 审计', () => {
   // 阶段 2 补齐后 758 → 881，2026-10-21 余量补齐后 → 989；F01 新增标签/输入属性示例后 → 990，F02 条件选项示例后 → 991；新增 demo 时同步更新此数（它是管线重复/漏收的哨兵）。
-  it('数量与管线口径一致（1008，含原生Breadcrumb/Menu示例）', () => {
-    expect(allDemos.length).toBe(1008);
+  it('数量与管线口径一致（1009，含原生Breadcrumb/Menu及Select模型示例）', () => {
+    expect(allDemos.length).toBe(1009);
     expect(allDemos.map(({ demo }) => demo.id)).toEqual(
       expect.arrayContaining(['breadcrumb-demo-native', 'menu-demo-native-actions']),
     );
+    // 8f1a731f 新增的真实示例必须恰好出现一次，不能只靠总数掩盖漏收或重复。
+    expect(
+      allDemos
+        .filter(({ demo }) => demo.id === 'select-demo-native-models')
+        .map(({ component, demo }) => `${component}/${demo.name}`),
+    ).toEqual(['select/native-models']);
     expect(
       allDemos
         .map(({ demo }) => demo.id)
@@ -99,7 +105,16 @@ describe('全量 demo 审计', () => {
       .map(({ component, demo }) => `${component}/${demo.name}`);
     expect(viewportDemos).toContain('float-button/basic');
     expect(viewportDemos).toContain('float-button/group');
-    expect(viewportDemos).toContain('back-top/basic');
+    expect(viewportDemos).toContain('float-button/back-top');
+    const fixedBackTop = allDemos.find(
+      ({ component, demo }) => component === 'float-button' && demo.name === 'back-top',
+    );
+    expect(fixedBackTop?.demo.preview).toMatchObject({ mode: 'viewport', scrollable: true });
+    // 旧 BackTop 基本示例显式使用绝对定位和自身滚动容器，继续保留其 inline 场景。
+    const inlineBackTop = allDemos.find(
+      ({ component, demo }) => component === 'back-top' && demo.name === 'basic',
+    );
+    expect(inlineBackTop?.demo.preview.mode).toBe('inline');
   });
 
   it('每个 demo 的 .vue 文件真实存在（渲染器 glob 一定命中）', () => {

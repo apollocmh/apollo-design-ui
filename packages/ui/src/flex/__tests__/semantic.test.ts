@@ -190,7 +190,7 @@ domContractTest('Flex', {
     // 差异只存在于序列化路径（PLATFORM）。
     'flex:number': {
       reason: 'PLATFORM · CSSOM 把 flex 简写展开（1 → 1 1 0%），语义等价',
-      diff: ['$/div[0]: style 不同 [flex:1] vs [flex:110%]'],
+      diff: ['$/div[0]: style 不同 [flex:1] vs [flex:1 1 0%]'],
     },
     // 同上：CSSOM 把 `gap:0` 规范化为 `gap:0px`。语义等价，序列化路径差异（PLATFORM）。
     'gap:zero': {

@@ -144,20 +144,22 @@ domContractTest('Grid', {
       reason: 'D6 · 响应式 flex 的 CSS 变量名含根前缀（--ant-col-* vs --apollo-col-*）',
       deviationId: 'D6',
       diff: [
-        '$/div[0]: style 不同 [--ant-col-md-flex:00100px;--ant-col-sm-flex:11auto] vs [--apollo-col-md-flex:00100px;--apollo-col-sm-flex:11auto]',
+        '$/div[0]: style 不同 [--ant-col-md-flex:0 0 100px;--ant-col-sm-flex:1 1 auto] vs [--apollo-col-md-flex:0 0 100px;--apollo-col-sm-flex:1 1 auto]',
       ],
     },
     // 字符串 gutter 的 calc：React SSR 原样输出 `calc(1rem / -2)`；我们经真实 DOM 的
     // CSSOM 读回被化简为 `calc(-0.5rem)`。CSS 语义等价，序列化路径差异（PLATFORM）。
     'row:gutter-string': {
       reason: 'PLATFORM · CSSOM 化简 calc(1rem / -2) → calc(-0.5rem)，语义等价',
-      diff: ['$/div[0]: style 不同 [margin-inline:calc(1rem/-2)] vs [margin-inline:calc(-0.5rem)]'],
+      diff: [
+        '$/div[0]: style 不同 [margin-inline:calc(1rem / -2)] vs [margin-inline:calc(-0.5rem)]',
+      ],
     },
     // 同上：CSSOM 把 min-width:0 规范化为 0px（语义等价）。
     'grid:row-col-min-width-hack': {
       reason: 'PLATFORM · CSSOM 规范化 min-width:0 → 0px，语义等价',
       diff: [
-        '$/div[0]/div[0]: style 不同 [flex:11auto;min-width:0;padding-inline:8px] vs [flex:11auto;min-width:0px;padding-inline:8px]',
+        '$/div[0]/div[0]: style 不同 [flex:1 1 auto;min-width:0;padding-inline:8px] vs [flex:1 1 auto;min-width:0px;padding-inline:8px]',
       ],
     },
   },

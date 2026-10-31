@@ -1,23 +1,21 @@
 /**
  * L5 无障碍 —— picker 面板层的 axe 扫描与 role/ARIA 契约。
  *
- * ── 判据（`@rc-component/picker@1.12.2`）──────────────────────────────────────
+ * ── 当前 Apollo 原生键盘与 ARIA 契约 ─────────────────────────────────────────
  *
  * | 项 | 判据 |
  * |---|---|
  * | 根 | `div[tabindex]`（**没有 role**；`tabIndex` 默认 0，可由 prop 覆盖） |
- * | 四个方向键 | `button[type=button]` + `aria-label`（`locale.previousYear` 等） + **`tabIndex=-1`** |
+ * | 四个方向键 | `button[type=button]` + `aria-label`（`locale.previousYear` 等） + 原生 Tab 序 |
  * | 方向键禁用 | 越界时 `disabled` + 类名 `-disabled` |
- * | 三个标题按钮 | `button[aria-label]`（`yearSelect` / `monthSelect` / `decadeSelect`） + `tabIndex=-1` |
- * | 格子 | `td[title]`（日期面板给 `fieldDateFormat` 的值）；**没有** `role` / `aria-*` |
- * | 时间列 | `ul[data-type]` + `li[data-value]`；**没有** `role` / `aria-*` |
+ * | 三个标题按钮 | `button[aria-label]`（`yearSelect` / `monthSelect` / `decadeSelect`） |
+ * | 格子 | `td[title]` 保留原生表格语义；禁用格 `aria-disabled=true` 且不进 Tab 序 |
+ * | 时间列 | `ul[data-type][role=listbox]` + `li[data-value][role=option]`，含选中/禁用状态与游走焦点 |
  * | 周号格 | `td.-cell-week` + 列头里一个 `visibility:hidden` 的 `span`（文案 `locale.week`） |
  *
- * ⚠️ **本层的判据与「组件库」那类不同**：面板上游**完全不用 ARIA role**
- * （没有 `role=grid` / `role=listbox` / `aria-selected`），可访问名全靠
- * `locale` 文案 + `title`。所以这里钉的是「**别自作主张加 role**」——
- * 加了会让 L4 的 37 条 DOM 契约同时红，而那条更早发现。本层补的是：
- * ① axe 无 violation；② 可访问名**都在**（`aria-label` 非空）；③ 方向键**不参与 Tab 序**。
+ * 上游 `@rc-component/picker@1.12.2` 的原始 DOM 仍由 L4 基线保留；当前原生键盘
+ * 契约见 `native-keyboard.test.ts` 与 `docs/foundation/picker-contract.md` 顶部。
+ * 本层钉住 axe、可访问名、原生 Tab 序及时间选项状态，不以旧上游缺少 ARIA 为目标。
  *
  * ── 关于 axe 的说明 ─────────────────────────────────────────────────────────
  *
@@ -170,12 +168,12 @@ describe('PickerPanel · role / ARIA 契约（L5）', () => {
     w.unmount();
   });
 
-  it('⭐ 四个方向键的可访问名都在，且**都不参与 Tab 序**（`tabIndex=-1`）', () => {
+  it('⭐ 四个方向键的可访问名都在，且启用按钮使用原生 Tab 序', () => {
     const w = mountPanel({ picker: 'date', mode: 'date' });
     // ⚠️ 选择器必须是四个方向键的类名 —— `-header button` 会把两个标题按钮也算进来
     //    （它们在 `-header-view` 里，同样在 `-header` 子树内）。本条最初就是这么写错的。
     const buttons = [
-      ...w.element.querySelectorAll(
+      ...w.element.querySelectorAll<HTMLButtonElement>(
         `.${P}-header-super-prev-btn, .${P}-header-prev-btn, .${P}-header-next-btn, .${P}-header-super-next-btn`,
       ),
     ];
@@ -187,7 +185,9 @@ describe('PickerPanel · role / ARIA 契约（L5）', () => {
       locale.nextYear,
     ]);
     for (const button of buttons) {
-      expect(button.getAttribute('tabindex')).toBe('-1');
+      expect(button.type).toBe('button');
+      expect(button.disabled).toBe(false);
+      expect(button.tabIndex).toBe(0);
       // 可访问名非空（axe 的 `button-name` 也覆盖这条，这里显式钉住）
       expect(button.getAttribute('aria-label')?.length ?? 0).toBeGreaterThan(0);
       expect(button.textContent?.length ?? 0).toBeGreaterThan(0);
@@ -245,7 +245,7 @@ describe('PickerPanel · role / ARIA 契约（L5）', () => {
     w.unmount();
   });
 
-  it('禁用格仍带 `title`（`td[title]`），且 `-disabled` 只加类名、不加 `aria-disabled`', () => {
+  it('禁用格保留 title 与原生表格语义，声明禁用状态且不进 Tab 序', () => {
     const w = mountPanel({
       picker: 'date',
       mode: 'date',
@@ -255,8 +255,8 @@ describe('PickerPanel · role / ARIA 契约（L5）', () => {
     expect(disabledCells.length).toBeGreaterThan(0);
     for (const cell of disabledCells) {
       expect(cell.getAttribute('title')).toBeTruthy();
-      // ⚠️ 上游**不**给格子加 `aria-disabled`（它们不进 Tab 序，本来就不是可聚焦元素）
-      expect(cell.getAttribute('aria-disabled')).toBeNull();
+      expect(cell.getAttribute('aria-disabled')).toBe('true');
+      expect(cell.getAttribute('tabindex')).toBe('-1');
       expect(cell.getAttribute('role')).toBeNull();
     }
     w.unmount();
@@ -277,7 +277,7 @@ describe('PickerPanel · role / ARIA 契约（L5）', () => {
     w.unmount();
   });
 
-  it('时间列有 `data-type` / `data-value`（键盘与滚动定位靠它，不是靠 ARIA）', () => {
+  it('时间列保留 data 定位，并提供 listbox/option、选中状态与唯一可用 Tab 入口', () => {
     const w = mountPanel({
       picker: 'time',
       mode: 'time',
@@ -288,12 +288,22 @@ describe('PickerPanel · role / ARIA 契约（L5）', () => {
     const columns = [...w.element.querySelectorAll(`.${P}-time-panel-column`)];
     expect(columns).toHaveLength(1);
     expect(columns[0]?.getAttribute('data-type')).toBe('hour');
-    const items = [...w.element.querySelectorAll(`.${P}-time-panel-cell`)];
+    const items = [...w.element.querySelectorAll<HTMLLIElement>(`.${P}-time-panel-cell`)];
     expect(items).toHaveLength(24);
     expect(items[0]?.getAttribute('data-value')).toBe('0');
-    // ⚠️ 上游**不**给 `ul` / `li` 加 role（不是 listbox）
-    expect(columns[0]?.getAttribute('role')).toBeNull();
-    expect(items[0]?.getAttribute('role')).toBeNull();
+    expect(columns[0]?.getAttribute('role')).toBe('listbox');
+    expect(columns[0]?.getAttribute('aria-label')).toBe('hour');
+    const selectedHour = String(generateConfig.getHour(now));
+    for (const item of items) {
+      expect(item.getAttribute('role')).toBe('option');
+      expect(item.getAttribute('aria-selected')).toBe(
+        String(item.getAttribute('data-value') === selectedHour),
+      );
+      expect(item.getAttribute('aria-disabled')).toBeNull();
+    }
+    const tabItems = items.filter((item) => item.tabIndex === 0);
+    expect(tabItems).toHaveLength(1);
+    expect(tabItems[0]?.getAttribute('data-value')).toBe(selectedHour);
     w.unmount();
   });
 

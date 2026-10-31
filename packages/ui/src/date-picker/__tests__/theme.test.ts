@@ -323,7 +323,7 @@ describe('DatePicker · 纯函数性质', () => {
  * |---|---|---|
  * | A 声明 → 引用 | `genTokenDecls` 的**每条**都被规则引用 | 死变量（**允许**，与 tabs 的空值 token 同类，但数量要对） |
  * | B 引用 → 声明 | 规则引用的自有变量**都在** `genTokenDecls` 里 | **静默失效**（名字拼错） |
- * | C 数量 | 声明恰好 **45** 条、规则恰好 **257** 条 | 防静默漂移 |
+ * | C 数量 | 声明恰好 **45** 条、规则恰好 **261** 条 | 防静默漂移 |
  *
  * ⚠️ `--apollo-date-picker-affix-color` 是**规则内声明**的（不在 `genTokenDecls` 里，
  * 见 `README §4`）⇒ 方向 B 要把它白名单掉。
@@ -349,8 +349,8 @@ describe('DatePicker · B7 双向比对（token 声明 ↔ 规则引用）', () 
     expect(decls).toHaveLength(45);
   });
 
-  it('方向 C：规则恰好 257 条', () => {
-    expect(DATE_PICKER_RULES.split('\n').filter((l) => l.trim())).toHaveLength(257);
+  it('方向 C：规则恰好 261 条（含原生范围预览与焦点的四条新增规则）', () => {
+    expect(DATE_PICKER_RULES.split('\n').filter((l) => l.trim())).toHaveLength(261);
   });
 
   it('方向 B：规则引用的自有变量**全部**在声明清单里（拼错会在这里红）', () => {
@@ -364,26 +364,22 @@ describe('DatePicker · B7 双向比对（token 声明 ↔ 规则引用）', () 
   });
 
   /**
-   * 方向 A：死变量**恰好 4 个**。
+   * 方向 A：未引用变量**恰好 2 个**。
    *
    * ⚠️ 「死变量」在这里是**允许**的（与 tabs 的两个空值 token 同类）—— 上游
-   * `prepareComponentToken` 返回的键里，有一部分的值是**构建期算好后直接内联进规则**
-   * 的（`lighten` 的结果、`colorFillAlter` 的别名在 date-picker 里没用到），
-   * 声明出来只为「45 个逐字对齐」这条判据。
+   * `prepareComponentToken` 继承的两个字段尚无对应消费面。
+   * 原先未引用的 `cell-hover-with-range-bg` / `cell-range-border-color` 已由
+   * 8b262e5a 的原生范围预览规则消费，不能继续当作死变量。
    *
    * | 变量 | 为什么没被引用 |
    * |---|---|
    * | `addon-bg` | 来自 input 的 `SharedComponentToken`；**date-picker 没有 addon** |
-   * | `cell-hover-with-range-bg` | 构建期 `lighten(colorPrimary, 35%)` 的结果被内联进规则 |
-   * | `cell-range-border-color` | 同上（`lighten(colorPrimary, 20%)`） |
    * | `multiple-selector-bg-disabled` | `multiple` 禁用态的标签背景（上游规则用的是别的变量） |
    */
-  it('方向 A：死变量恰好 4 个（构建期值被内联 / date-picker 用不到的继承面）', () => {
+  it('方向 A：未引用变量恰好 2 个（date-picker 用不到的继承面）', () => {
     const dead = [...declared].filter((v) => !used.has(v)).sort();
     expect(dead).toEqual([
       '--apollo-date-picker-addon-bg',
-      '--apollo-date-picker-cell-hover-with-range-bg',
-      '--apollo-date-picker-cell-range-border-color',
       '--apollo-date-picker-multiple-selector-bg-disabled',
     ]);
   });
@@ -430,27 +426,61 @@ describe('DatePicker · B7 双向比对（token 声明 ↔ 规则引用）', () 
  * ⚠️ 拆分的**判据**（可复现的双向 oracle）在
  * `tests/visual/debug/classify-date-picker-rules.mjs`：取
  * 「date-picker 产物里 `.ant-picker-dropdown <X>`」∩「calendar 产物里
- * `.ant-picker-calendar <X>`」⇒ 83 条规则 / 119 个选择器。这里只钉**结果**。
+ * `.ant-picker-calendar <X>`」⇒ 当时的 83 条规则 / 119 个选择器。
+ * 8b262e5a 新增三条范围预览规则和一条原生焦点规则，当前面板共 87 条。
  */
-describe('DatePicker · 规则拆分不变量（TRIGGER 174 + PANEL 83 == 257）', () => {
+describe('DatePicker · 规则拆分不变量（TRIGGER 174 + PANEL 87 == 261）', () => {
   const lines = (s: string) => s.split('\n').filter((l) => l.trim());
   const all = lines(DATE_PICKER_RULES);
   const trigger = lines(TRIGGER_RULES);
   const panel = lines(PANEL_RULES);
+  const panelBodies = new Map(
+    panel.map((line): [string, string] => {
+      const open = line.indexOf('{');
+      return [line.slice(0, open).trim(), line.slice(open + 1, line.lastIndexOf('}'))];
+    }),
+  );
 
-  it('两侧计数：TRIGGER 174 · PANEL 83', () => {
+  it('两侧计数：TRIGGER 174 · PANEL 87', () => {
     expect(trigger).toHaveLength(174);
-    expect(panel).toHaveLength(83);
+    expect(panel).toHaveLength(87);
   });
 
-  it('恰好划分：并集 == 原 257 条，且**不重**（没有一条同时属于两侧）', () => {
-    // 原 257 条无重复行（实测去重后仍是 257）⇒ 并集大小必须**恰好** 257
+  it('恰好划分：并集 == 当前 261 条，且**不重**（没有一条同时属于两侧）', () => {
+    // 新增的四条只属于面板，当前 261 条仍不重不漏。
     const union = new Set([...trigger, ...panel]);
-    expect(union.size).toBe(257);
+    expect(union.size).toBe(261);
     expect([...union].sort()).toEqual([...new Set(all)].sort());
     // 两侧不相交
     const overlap = trigger.filter((l) => panel.includes(l));
     expect(overlap).toEqual([]);
+  });
+
+  it('新增的三条范围预览规则消费当前背景与边框 token，区分范围两端', () => {
+    const scope = '.apollo-picker-dropdown .apollo-picker-range-preview';
+    const range = ['in-range', 'range-start', 'range-end']
+      .map(
+        (state) =>
+          `${scope} .apollo-picker-cell-in-view.apollo-picker-cell-${state}:not(.apollo-picker-cell-disabled):before`,
+      )
+      .join(',');
+    expect(panelBodies.get(range)).toBe(
+      'background:var(--apollo-date-picker-cell-hover-with-range-bg);border-block:var(--apollo-line-width) dashed var(--apollo-date-picker-cell-range-border-color);',
+    );
+    expect(panelBodies.get(`${scope} .apollo-picker-cell-range-start:before`)).toBe(
+      'border-inline-start:var(--apollo-line-width) dashed var(--apollo-date-picker-cell-range-border-color);',
+    );
+    expect(panelBodies.get(`${scope} .apollo-picker-cell-range-end:before`)).toBe(
+      'border-inline-end:var(--apollo-line-width) dashed var(--apollo-date-picker-cell-range-border-color);',
+    );
+  });
+
+  it('新增的原生 focus-visible 规则同时为日期格与时间格提供主题焦点轮廓', () => {
+    const selectors =
+      '.apollo-picker-dropdown .apollo-picker-cell:focus-visible .apollo-picker-cell-inner,.apollo-picker-dropdown .apollo-picker-time-panel-cell:focus-visible .apollo-picker-time-panel-cell-inner';
+    expect(panelBodies.get(selectors)).toBe(
+      'outline:var(--apollo-line-width) solid var(--apollo-color-primary);outline-offset:1px;',
+    );
   });
 
   it('面板块在原文里**连续**且起始于第 43 条（下标 42）', () => {
@@ -460,10 +490,10 @@ describe('DatePicker · 规则拆分不变量（TRIGGER 174 + PANEL 83 == 257）
   });
 
   it('`DATE_PICKER_RULES` 的**顺序与条数**都不变（层叠顺序不能动）', () => {
-    expect(all).toHaveLength(257);
+    expect(all).toHaveLength(261);
     // 首尾各取一条钉住顺序没被重排
     expect(all[0]).toContain('.apollo-picker-footer{border-top');
-    expect(all[256]).toContain('.apollo-picker-compact-last-item');
+    expect(all[260]).toContain('.apollo-picker-compact-last-item');
   });
 
   it('`PANEL_RULES` 的每个逗号段都以 `.apollo-picker-dropdown ` 开头（换作用域安全的判据）', () => {
@@ -492,7 +522,7 @@ describe('DatePicker · 规则拆分不变量（TRIGGER 174 + PANEL 83 == 257）
 
   it('`genPanelRules()` 单参 = 只换作用域：行数不变、换净、body 逐字不变', () => {
     const swapped = genPanelRules('.apollo-picker-calendar');
-    expect(lines(swapped)).toHaveLength(83);
+    expect(lines(swapped)).toHaveLength(87);
     expect(swapped.includes('.apollo-picker-dropdown')).toBe(false);
     // ⚠️ 单参调用是**恒等变换**（token 命名空间不动）⇒ body 逐字不变
     const bodies = (s: string) => lines(s).map((l) => l.slice(l.indexOf('{')));
@@ -521,7 +551,7 @@ describe('DatePicker · 规则拆分不变量（TRIGGER 174 + PANEL 83 == 257）
     //    否则「声明了 --apollo-calendar-*、引用了 --apollo-date-picker-*」⇒ 静默回退。
     const swapped = genPanelRules('.apollo-picker-calendar', '--apollo-calendar');
     expect(swapped.includes('--apollo-date-picker-')).toBe(false);
-    expect(lines(swapped)).toHaveLength(83);
+    expect(lines(swapped)).toHaveLength(87);
     // 换名前后面板规则确实**引用了**自有变量（否则这条用例是空转）
     expect(PANEL_RULES.includes('--apollo-date-picker-')).toBe(true);
     // 换名只动变量前缀，选择器与其余文本逐字不变
@@ -579,12 +609,12 @@ describe('DatePicker · 前缀参数化（`gen(p)` 对每个前缀都要产出�
     expect(count(ANT, /\.ant-tag-blue/g)).toBe(count(APOLLO, /\.apollo-tag-blue/g));
     // 规则行数也必须一致
     // ⚠️ 用 `genDatePickerRules` 而不是整个 `genDatePickerStyle` ——
-    //    后者前面还有一行**声明块**（`.ant-picker,.ant-picker-css-var{…}`）⇒ 会数成 258
+    //    后者还有声明块与 keyframes，不能作为规则体计数。
     expect(
       genDatePickerRules('ant')
         .split('\n')
         .filter((l) => l.trim()),
-    ).toHaveLength(257);
+    ).toHaveLength(261);
   });
 
   it('🚨 **全局别名变量不动**（`tokens.css` 只声明 `--apollo-*`）', () => {

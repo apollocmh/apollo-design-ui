@@ -93,11 +93,14 @@ export function mountConsumerStack(target) {
         );
       case 'DatePicker':
       case 'RangePicker':
-        return h(active.value === 'DatePicker' ? DatePicker : RangePicker, {
-          open: true,
-          styles: { popup: { root: { zIndex } } },
-          renderExtraFooter: () => h(NestedLayer),
-        });
+        return h(
+          active.value === 'DatePicker' ? DatePicker : RangePicker,
+          {
+            open: true,
+            styles: { popup: { root: { zIndex } } },
+          },
+          { extraFooter: () => h(NestedLayer) },
+        );
       case 'TreeSelect':
         return h(TreeSelect, {
           open: true,

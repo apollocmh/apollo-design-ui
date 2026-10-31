@@ -15,13 +15,14 @@ import {
   darkAlgorithm,
   defaultAlgorithm,
   getDesignToken,
+  useTheme,
 } from '@apollo-design/theme';
-import { describe, expect, it } from 'vitest';
-import { h } from 'vue';
+import { afterAll, describe, expect, it } from 'vitest';
+import { defineComponent, h, onMounted, onUnmounted } from 'vue';
 
 import { AllowanceError } from '../allowance';
 import { configFor, type ThemeVariant, themeFingerprints, themeTest } from '../theme-test';
-import { ThemeProbeBox } from './fixture';
+import { demoModules, NoisyBox, PlainBox, ThemeProbeBox } from './fixture';
 
 const TOKEN = { colorPrimary: '#eb2f96', borderRadius: 2, controlHeight: 40 } as const;
 
@@ -123,4 +124,64 @@ themeTest('fixture-theme · 带 wrap', {
   render: () => h(ThemeProbeBox),
   variants: ['light'],
   wrap: (slot) => h('section', { class: 'theme-inner-wrap' }, [slot() as never]),
+});
+
+describe('themeTest · each demo has an independent themed lifecycle', () => {
+  const samples: Array<{
+    demo: string;
+    phase: 'mount' | 'unmount';
+    testName: string | undefined;
+    primary: string;
+  }> = [];
+  const demos = Object.fromEntries(
+    ['one.vue', 'two.vue'].map((demo) => [
+      demo,
+      {
+        default: defineComponent({
+          setup() {
+            const { token } = useTheme();
+            const record = (phase: 'mount' | 'unmount') =>
+              samples.push({
+                demo,
+                phase,
+                testName: expect.getState().currentTestName,
+                primary: token.value.colorPrimary,
+              });
+            onMounted(() => record('mount'));
+            onUnmounted(() => record('unmount'));
+            return () => h('div', { class: 'theme-matrix-case' }, demo);
+          },
+        }),
+      },
+    ]),
+  );
+
+  themeTest('matrix', { demos, variants: ['light', 'dark'], expectCount: 2 });
+
+  afterAll(() => {
+    const mounted = samples.filter((sample) => sample.phase === 'mount');
+    expect(new Set(mounted.map((sample) => sample.testName)).size).toBe(4);
+    const expectedColors = ['light', 'dark'].map(
+      (variant) =>
+        getDesignToken(configFor(variant === 'light' ? 'light' : 'dark', TOKEN)).colorPrimary,
+    );
+    for (const demo of ['one.vue', 'two.vue']) {
+      const current = mounted.filter((sample) => sample.demo === demo);
+      expect(current.map((sample) => sample.primary).sort()).toEqual([...expectedColors].sort());
+      for (const sample of current) expect(sample.testName).toContain(demo);
+      expect(
+        samples.filter((sample) => sample.demo === demo && sample.phase === 'unmount'),
+      ).toHaveLength(2);
+    }
+    expect(document.querySelector('.theme-matrix-case')).toBeNull();
+  });
+});
+
+themeTest('fixture-theme · warning allowance spans the selected demos', {
+  demos: demoModules({ 'a-quiet': PlainBox, 'z-noisy': NoisyBox }),
+  variants: ['light'],
+  allow: [
+    { match: 'Warning: fixture error', reason: 'The noisy fixture verifies warning capture.' },
+    { match: 'Note: fixture note', reason: 'The noisy fixture verifies warning capture.' },
+  ],
 });

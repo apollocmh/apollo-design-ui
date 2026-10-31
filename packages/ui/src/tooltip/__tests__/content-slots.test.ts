@@ -97,6 +97,7 @@ describe('F11 overlay content slots', () => {
     expect(onConfirm).toHaveBeenCalledWith(expect.any(MouseEvent));
     expect(onOpenChange).not.toHaveBeenCalled();
     expect(onPopupClick).toHaveBeenCalledTimes(1);
+    expect(onPopupClick).toHaveBeenCalledWith(expect.any(MouseEvent));
     buttons[1]?.click();
     expect(onConfirm).toHaveBeenCalledTimes(1);
     resolve?.();

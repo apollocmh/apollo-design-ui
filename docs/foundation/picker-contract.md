@@ -1,5 +1,16 @@
 > 证据范围：本文保留初期分析与回归来源。上游对齐、版本和阶段要求不是当前项目规范；现行规则见根目录 AGENTS.md 与 ADR 0005。有效的组件场景、算法契约及缺陷证据继续保留。
 
+## 2026-10-31 后续已交付的键盘与 ARIA 契约
+
+下方 2026-10-30 的范围说明及早期分析保留原义；其中“没有增加日期网格键盘能力”描述的是当时的 FND 交付边界。随后 DatePicker / TimePicker 的整改已接通真实面板键盘链，当前契约如下：
+
+- 启用的表头导航按钮使用原生 Tab 序，保留 `type="button"`、语言包可访问名及原生 disabled / visibility 状态。
+- 日期、月、季、年与十年面板以真实单元格焦点导航，跳过禁用格；Enter / Space 提议选值。日期格保留 `title` 与原生表格语义；禁用格声明 `aria-disabled="true"` 且 `tabindex="-1"`。
+- 时间列保留 `data-type` / `data-value` 定位。列是以类型命名的 `listbox`，档位是 `option`，`aria-selected` 表达当前接受值，禁用档位声明 `aria-disabled="true"`。每列仅一个可用档位进入 Tab 序，游走焦点与已选值分别维护。
+- DatePicker / TimePicker 及范围版的实际输入是 `combobox`，以 `aria-haspopup="dialog"`、`aria-expanded` 和打开时的 `aria-controls` 关联实际弹层。只读输入可用 ArrowDown 进入面板，方向键导航，Enter / Space 选值，Escape 关闭并返回原输入。
+
+行为依据为 `packages/picker/src/__tests__/native-keyboard.test.ts`、DatePicker / TimePicker 的 `native-contracts.test.ts` 及已交付的实际浏览器键盘回归。原始 37 / 21 / 21 条 DOM 参考基线继续保留，当前 semantic 测试只逐节点列明上述原生 ARIA 差异，不忽略整类 role / ARIA 属性，也不以当前渲染结果反推豁免。
+
 ## 2026-10-30 当前源码差额
 
 本轮范围为 `packages/picker` 的公开导出、13 个 Vue 面板组件及其实际 DatePicker、RangePicker、Calendar 消费桥。下文早期提取、覆盖率和上游对照保留原日期与原义，不代表本轮最终验收。

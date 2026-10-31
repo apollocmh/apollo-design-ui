@@ -32,6 +32,7 @@ config.global.stubs = { ...config.global.stubs, teleport: false };
 
 import baseline from '../../../../../tests/compat/baselines/date-picker.dom.json';
 import { DatePicker, RangePicker } from '../index';
+import { nativeTriggerAllowances } from './native-semantic-allowances';
 
 const D = (s: string) => dayjs(s);
 
@@ -77,7 +78,7 @@ const CASES: Record<string, () => DomRenderResult> = {
 domContractTest('DatePicker', {
   baseline,
   keepStyle: false,
-  allow: {},
+  allow: nativeTriggerAllowances(baseline.cases),
   render: (id) => {
     const build = CASES[id];
     if (!build) {

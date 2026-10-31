@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "round": "vue-native-2026-10",
   "phase": "acceptance",
-  "revision": 239,
+  "revision": 240,
   "dispatch": {
     "status": "running",
     "maxParallel": 5,
@@ -10940,7 +10940,118 @@
           }
         ],
         "boundary": "14个实现模块及现有公开helper按当前链路核对并修复：全VNodeChild、精确CSS/DOM语义、focus真实实例/receiver/最终焦点、活跃期root采样、RTL global、空执行集合、mount异常资源/孤儿effect、observer目标身份、nested收集器恢复与a11y挂载更新已验证。C11以公开entry与真实props AST判定，精确数据豁免/stale保留，Steps实际current模型补齐；没有豁免真实缺陷。全包unit280在修复后真实exit0，最终完整窄strict0；Empty真实专项54和Demo等消费保留。Canvas未实现诊断未屏蔽，不声称零日志；默认Teleport结构桩保留，实例身份场景仍用真实Teleport。类型工具typescript仅新增开发依赖，未新增发布依赖或通用框架。Steps仍保留同键监听器改undefined的非阻塞交互呈现边界，实际条件v-on增删已覆盖。全库/coverage/完整浏览器视觉矩阵、构建消费者及冻结九维未执行。"
-      }
+      },
+      "affectedChanges": [
+        {
+          "scope": [
+            "packages/test-utils/src/theme-test.ts",
+            "packages/test-utils/src/__tests__/theme-matrix.test.ts",
+            "packages/test-utils/src/__tests__/c11-vmodel.test.ts",
+            "packages/ui/src/__tests__/event-name-casing.test.ts"
+          ],
+          "change": "Give each existing demo/theme pair its own normal test deadline while retaining every original mount/update/unmount, fingerprint/count guard, and variant-wide warning/stale-allowance validation. Recognize the six real Vue VNode hooks and RadioButton option identity without weakening DOM-event or v-model guards.",
+          "checks": [
+            {
+              "kind": "core",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "node_modules/vitest/vitest.mjs",
+                "run",
+                "--project",
+                "unit",
+                "packages/test-utils/src",
+                "packages/ui/src/__tests__/event-name-casing.test.ts",
+                "--maxWorkers=1"
+              ],
+              "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 26709,
+              "log": "/tmp/apollo-final-shared-test-guards.log"
+            },
+            {
+              "kind": "theme",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "node_modules/vitest/vitest.mjs",
+                "run",
+                "--project",
+                "theme",
+                "packages/ui/src/image/__tests__/theme.test.ts",
+                "--maxWorkers=1"
+              ],
+              "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 23721,
+              "log": "/tmp/apollo-image-theme-remediation-core.log"
+            },
+            {
+              "kind": "types",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "node_modules/vue-tsc/bin/vue-tsc.js",
+                "--noEmit",
+                "-p",
+                "tsconfig.json"
+              ],
+              "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 119562,
+              "log": "/tmp/apollo-final-remediation-strict.log"
+            }
+          ],
+          "failedReproduction": {
+            "kind": "core",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "node_modules/vitest/vitest.mjs",
+              "run",
+              "--project",
+              "unit",
+              "packages/test-utils/src/__tests__/theme-matrix.test.ts",
+              "--maxWorkers=1"
+            ],
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 2372,
+            "log": "/tmp/apollo-theme-matrix-independent-red.log"
+          },
+          "scopedInstrumentation": {
+            "kind": "measurement",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "node_modules/vitest/vitest.mjs",
+              "run",
+              "--project",
+              "theme",
+              "packages/ui/src/image/__tests__/theme.test.ts",
+              "--coverage",
+              "--coverage.reporter=json-summary",
+              "--coverage.reportsDirectory=/tmp/apollo-image-theme-remediation-coverage",
+              "--reporter=json",
+              "--outputFile=/tmp/apollo-image-theme-remediation-tests.json",
+              "--maxWorkers=1"
+            ],
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+            "exitCode": 1,
+            "signal": null,
+            "durationMs": 36580,
+            "log": "/tmp/apollo-image-theme-remediation-coverage.log",
+            "scopeNote": "Focused instrumentation probe; global configured coverage thresholds remain unchanged. A threshold failure is not a passed command.",
+            "testSummary": {
+              "numPassedTests": 85,
+              "numFailedTests": 0,
+              "numPendingTests": 0,
+              "success": true
+            },
+            "maxCaseDurationMs": 1009.6957030000012
+          },
+          "boundary": "The focused instrumented Image matrix completed all original 72 demo/theme combinations within the unchanged deadline. That probe really exited 1 on global thresholds and is not a green whole-library coverage command. Final same-version full coverage is still required."
+        }
+      ]
     },
     {
       "id": "FND:theme",
@@ -12032,7 +12143,55 @@
           "totalEntries": 73,
           "note": "All packages/Docs built; only B6 budget failed. Budget values unchanged; continue other acceptance checks as instructed.",
           "log": "/tmp/apollo-final-acceptance-fdb00828.log"
-        }
+        },
+        "remediationChecks": [
+          {
+            "kind": "format",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "node_modules/@biomejs/biome/bin/biome",
+              "check",
+              "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr/packages/ui/src/date-picker/__tests__/theme.test.ts"
+            ],
+            "cwd": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 139,
+            "log": "/tmp/apollo-date-picker-theme-remediation-format.log"
+          },
+          {
+            "kind": "theme",
+            "command": [
+              "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+              "node_modules/vitest/vitest.mjs",
+              "run",
+              "--project",
+              "theme",
+              "packages/ui/src/date-picker/__tests__/theme.test.ts",
+              "--maxWorkers=1"
+            ],
+            "cwd": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 2595,
+            "log": "/tmp/apollo-date-picker-theme-remediation.log"
+          },
+          {
+            "kind": "diff",
+            "command": [
+              "git",
+              "diff",
+              "--check",
+              "--",
+              "packages/ui/src/date-picker/__tests__/theme.test.ts"
+            ],
+            "cwd": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 19,
+            "log": "/tmp/apollo-date-picker-theme-remediation-diff.log"
+          }
+        ]
       },
       {
         "dimension": "unit",
@@ -12050,13 +12209,78 @@
           "failedFiles": 17,
           "failedTests": 95,
           "passedTests": 14296
+        },
+        "remediation": {
+          "verificationTask": "FND:test-utils",
+          "note": "All original runtime scenarios and negative guards remain; only the observed grouping/contract-fixture problems were repaired. Full coverage not yet rerun."
         }
       },
       {
         "dimension": "interaction",
         "status": "in_progress",
         "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
-        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed."
+        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed.",
+        "remediationChecks": [
+          {
+            "kind": "semantic",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project dom-contract packages/picker/src/__tests__/semantic.test.ts packages/ui/src/date-picker/__tests__/semantic.test.ts packages/ui/src/time-picker/__tests__/semantic.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 15020,
+            "log": "/tmp/apollo-picker-final-remediation-semantic.log"
+          },
+          {
+            "kind": "a11y",
+            "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+            "command": "PATH=/Users/nanren/.nvm/versions/node/v22.22.2/bin:$PATH node node_modules/vitest/vitest.mjs run --project a11y packages/picker/src/__tests__/a11y.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 7612,
+            "log": "/tmp/apollo-picker-final-remediation-a11y.log"
+          },
+          {
+            "kind": "dom-contract",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run --project dom-contract packages/ui/src/grid/__tests__/semantic.test.ts packages/ui/src/flex/__tests__/semantic.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 5426,
+            "log": "/tmp/apollo-grid-flex-remediation-dom.log"
+          },
+          {
+            "kind": "core",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run --project unit packages/ui/src/_internal/__tests__/consumer-z-index.test.ts --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 10695,
+            "log": "/tmp/apollo-consumer-z-index-remediation-core.log"
+          },
+          {
+            "kind": "format",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/@biomejs/biome/bin/biome check packages/ui/src/grid/__tests__/semantic.test.ts packages/ui/src/flex/__tests__/semantic.test.ts packages/ui/src/_internal/__tests__/consumer-z-index.test.ts packages/ui/src/_internal/__tests__/fixtures/consumer-z-index-browser.mjs",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 172,
+            "log": "/tmp/apollo-grid-flex-zindex-remediation-biome.log"
+          },
+          {
+            "kind": "diff",
+            "command": "git diff --check",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 34,
+            "log": "/tmp/apollo-grid-flex-zindex-remediation-diff.log"
+          },
+          {
+            "kind": "core",
+            "cwd": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+            "command": "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node node_modules/vitest/vitest.mjs run packages/ui/src/tooltip/__tests__/content-slots.test.ts --project unit --maxWorkers=1",
+            "exitCode": 0,
+            "signal": null,
+            "durationMs": 11449,
+            "log": "/tmp/apollo-final-tooltip-callback-fixed-full.log"
+          }
+        ]
       },
       {
         "dimension": "types",
@@ -12117,6 +12341,53 @@
               "gitStatusAfter": ""
             }
           ]
+        },
+        "remediationStrict": {
+          "kind": "types",
+          "command": [
+            "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+            "node_modules/vue-tsc/bin/vue-tsc.js",
+            "--noEmit",
+            "-p",
+            "tsconfig.json"
+          ],
+          "cwd": "/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+          "exitCode": 0,
+          "signal": null,
+          "durationMs": 119562,
+          "log": "/tmp/apollo-final-remediation-strict.log",
+          "sourceHashes": {
+            "docs/foundation/picker-contract.md": "b33ab45e766aab7ab9091a9c51083c117cb5a6bdb2447bd5a3ca5619586bd224",
+            "docs/foundation/test-utils-contract.md": "8c6c119a526c21bdc637a627af8bd7414c805ded50730e05ebe4a1c2b14b1e13",
+            "packages/docs/tests/demo-audit.test.ts": "737b80cf24e9b5803f1ca11567c404e0f22ad001ffe3e38b671a2c03e2bbf742",
+            "packages/docs/tests/manifest.test.ts": "08a415b88e8d415f70ed83f8d35550d67e76207553fc99351ae338fe8c19bc38",
+            "packages/picker/src/__tests__/a11y.test.ts": "86dd2762987fefa4f677968ed8c14f53653ef9b657b0cbba57daea41423ec49b",
+            "packages/picker/src/__tests__/consumer-bridge.test.ts": "057510038c5a0d5d4ea20b280a5b5787578a052c3473dd3ad830cf1820ce4899",
+            "packages/picker/src/__tests__/semantic.test.ts": "9ce8311cc8d8d2d4b64b4633ac6469d518bc74bf8357ffef8f6fa04242517333",
+            "packages/picker/src/panel-header.ts": "8677feb3e8e05b37faa9375b54c68a79d0aa744416592680f6b905131a1065de",
+            "packages/test-utils/src/__tests__/c11-vmodel.test.ts": "f8bdcb8f6367edca110f5fa8684fb754a6b271749e8ac77286685d1040ddc8fb",
+            "packages/test-utils/src/__tests__/theme-matrix.test.ts": "27fe5212112ba064595ac09513958f625c076fe8dfd14a0f72b1a1c112b94f5d",
+            "packages/test-utils/src/theme-test.ts": "e56a60fe07deff987c1db1a26f9685b739aa592945941fe05695fa79582d8da9",
+            "packages/ui/src/__tests__/event-name-casing.test.ts": "04103573e694ab5a1cbab30de420ed79644171fc1a5818a7c4b65bcb1c3e4274",
+            "packages/ui/src/_internal/__tests__/consumer-z-index.test.ts": "769fffb8851fb55ae15e1bfd1bcd4316f67f74df879ec777076e9395e58c0c70",
+            "packages/ui/src/_internal/__tests__/fixtures/consumer-z-index-browser.mjs": "51bf3f4ae85412eaa327406876cede94cc681403575584a84377fdcb6f634587",
+            "packages/ui/src/date-picker/DatePicker.vue": "61bd0cf73351ed8835821997037bd3f33531216197c24d8b814757b238eac568",
+            "packages/ui/src/date-picker/RangePicker.vue": "253e2a43d955f26fbfc2e70f5d25f610079fef6a97d4874263b64caf7d0e6395",
+            "packages/ui/src/date-picker/__tests__/semantic.test.ts": "a2f1fa42d72864a978b9e406e0b099cb3261413b9b03bc4532b7bfce52f18d60",
+            "packages/ui/src/date-picker/__tests__/theme.test.ts": "267c5efe5b34b77a0d22f712c56f5c0f8e8128d1c9dd1753790ac4092c988c17",
+            "packages/ui/src/flex/__tests__/semantic.test.ts": "5b8fb230f813df47ff2c059f922cee7e8c3d6b388452a758168c9cd1458b8d9e",
+            "packages/ui/src/float-button/demo/back-top.md": "e0721dafbd969c08a43ddcdc8369b220313b7aef98ebb783610e7a78b53f7e01",
+            "packages/ui/src/float-button/index.zh-CN.md": "f1ff78669e1f28f1641a474491d03fbd8c15a4b939425d9f742e32019d1c593a",
+            "packages/ui/src/grid/__tests__/semantic.test.ts": "b1551ccbe2222f3dd59370adee7bacae26861b9a01d342b10d7536436bb8646a",
+            "packages/ui/src/radio/index.zh-CN.md": "603485345148b45ea74aabaa2e7bb8ddedc8684d54c5e4280d332b679a5be398",
+            "packages/ui/src/time-picker/__tests__/semantic.test.ts": "a988d606c7d1907fe2e8449d1ccb9f5e050274023c9a0c1ba1dd674e8768a67f",
+            "packages/ui/src/tooltip/__tests__/content-slots.test.ts": "40ab15b92956fb5acdaac16801cf26b5ec079392dd7d323e921044ae8deb1626",
+            "packages/ui/src/tooltip/__tests__/fixtures/ConfirmCallbacks.vue": "47b8b7b4cbef1714c4904973056a222f81020b0ad400c6fe59d78fdeca428baf",
+            "packages/ui/src/typography/Base.ts": "bd56cda7928e34db27a65e29285bfde9f97f233afad55d3ae977ef7aecfb043f",
+            "packages/ui/src/date-picker/__tests__/native-semantic-allowances.ts": "08b36918fab35e3a3f24aa34ac27e616424f48f5a77ebd3cbc193a54f2edae7b"
+          },
+          "sameInputs": true,
+          "postCheckNote": "One plain JSDoc sentence in the Picker semantic test corrected afterwards; executable code, types and assertions did not change."
         }
       },
       {
@@ -12135,7 +12406,143 @@
         "dimension": "docs",
         "status": "in_progress",
         "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
-        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed."
+        "note": "Candidate remediation is being integrated; no final pass on the new candidate is claimed.",
+        "remediation": {
+          "scope": [
+            "packages/docs/tests/demo-audit.test.ts",
+            "packages/docs/tests/manifest.test.ts",
+            "packages/ui/src/radio/index.zh-CN.md",
+            "packages/ui/src/float-button/index.zh-CN.md",
+            "packages/ui/src/float-button/demo/back-top.md"
+          ],
+          "sourceCommit": "e064c4a9c055b1f34596caea8903dabe4d4461ac",
+          "passed": true,
+          "checks": [
+            {
+              "kind": "format",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "node_modules/@biomejs/biome/bin/biome",
+                "check",
+                "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr/packages/docs/tests/demo-audit.test.ts",
+                "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr/packages/docs/tests/manifest.test.ts"
+              ],
+              "cwd": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 122,
+              "log": "/tmp/apollo-docs-final-remediation-format-final.log"
+            },
+            {
+              "kind": "content",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "packages/docs/tooling/content/build-manifest.mjs"
+              ],
+              "cwd": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 38101,
+              "log": "/tmp/apollo-docs-final-remediation-content.log"
+            },
+            {
+              "kind": "docs",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr/node_modules/vitest/vitest.mjs",
+                "run",
+                "--config",
+                "vitest.config.ts",
+                "tests/demo-audit.test.ts",
+                "tests/manifest.test.ts",
+                "--maxWorkers=1"
+              ],
+              "cwd": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr/packages/docs",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 3897,
+              "log": "/tmp/apollo-docs-final-remediation-tests.log"
+            },
+            {
+              "kind": "diff",
+              "command": [
+                "git",
+                "diff",
+                "--check",
+                "--",
+                "packages/docs/tests/demo-audit.test.ts",
+                "packages/docs/tests/manifest.test.ts",
+                "packages/ui/src/radio/index.zh-CN.md",
+                "packages/ui/src/float-button/index.zh-CN.md",
+                "packages/ui/src/float-button/demo/back-top.md"
+              ],
+              "cwd": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "exitCode": 0,
+              "signal": null,
+              "durationMs": 20,
+              "log": "/tmp/apollo-docs-final-remediation-diff.log"
+            }
+          ],
+          "sourceHashes": {
+            "packages/docs/tests/demo-audit.test.ts": "737b80cf24e9b5803f1ca11567c404e0f22ad001ffe3e38b671a2c03e2bbf742",
+            "packages/docs/tests/manifest.test.ts": "08a415b88e8d415f70ed83f8d35550d67e76207553fc99351ae338fe8c19bc38",
+            "packages/ui/src/radio/index.zh-CN.md": "603485345148b45ea74aabaa2e7bb8ddedc8684d54c5e4280d332b679a5be398",
+            "packages/ui/src/float-button/index.zh-CN.md": "f1ff78669e1f28f1641a474491d03fbd8c15a4b939425d9f742e32019d1c593a",
+            "packages/ui/src/float-button/demo/back-top.md": "e0721dafbd969c08a43ddcdc8369b220313b7aef98ebb783610e7a78b53f7e01"
+          },
+          "generatedRoot": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr/packages/docs/.generated",
+          "mainWorkspaceWrites": false,
+          "notes": [
+            "New +1 real demo select-demo-native-models traced to commit8f1a731f; both counts1009 and unique exact ID/name guards retained.",
+            "Translate only actual Chinese-frontmatter offenders Radio and FloatButton to existing standard categories. ColorPicker/BorderBeam Chinese source already correct; standard category list/order/pipeline unchanged.",
+            "BackTop/basic explicit absolute/custom-scroll remains inline; actual fixed FloatButton/back-top gets viewport+scrollable metadata and exact guard. No preview/production logic change."
+          ],
+          "failedAttempts": [
+            {
+              "kind": "format",
+              "command": [
+                "/Users/nanren/.nvm/versions/node/v22.22.2/bin/node",
+                "node_modules/@biomejs/biome/bin/biome",
+                "check",
+                "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr/packages/docs/tests/demo-audit.test.ts",
+                "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr/packages/docs/tests/manifest.test.ts"
+              ],
+              "cwd": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr",
+              "exitCode": 1,
+              "signal": null,
+              "durationMs": 126,
+              "log": "/tmp/apollo-docs-final-remediation-format.log"
+            }
+          ],
+          "result": "Fresh isolated content72components/1009demos/8guides; existing targeted Docs2files43/43 passed.",
+          "generatedMetadata": {
+            "manifest": "/private/var/folders/7g/4cd0t86s0hz4fh0vbvdw203m0000gn/T/apollo-final-remediation-ys1bvinr/packages/docs/.generated/manifest.json",
+            "categories": [
+              "通用",
+              "布局",
+              "导航",
+              "数据录入",
+              "数据展示",
+              "反馈",
+              "其他"
+            ],
+            "fixedBackTop": {
+              "mode": "viewport",
+              "viewportHeight": 320,
+              "scrollable": true
+            },
+            "inlineBackTop": {
+              "mode": "inline",
+              "scrollable": false
+            }
+          },
+          "remainingNonblockingNotes": [
+            "Content generator reported existing Menu component-token.md missing numeric order (filename ordering used); not expanded into Menu edits.",
+            "Biome exits0 with five pre-existing non-null assertion warnings in these test files; no new warnings or ignore directives added.",
+            "First format check exit1 was only wrapping of the new exact-ID assertion; retained under failedAttempts, corrected without changing the assertion.",
+            "No package/site build or published/browser validation performed; no stage/commit or main repository source/config/state writes."
+          ]
+        }
       }
     ]
   }

@@ -16,6 +16,10 @@ const VALUE_PROPS = ['value', 'checked', 'activeKey', 'current', 'fileList'] as 
 const EXEMPTED = new Map([
   ['checkbox/Checkbox.ts:value', 'Native option/form value; checked owns the model.'],
   ['radio/Radio.ts:value', 'Native option/form value; checked or the Group owns selection.'],
+  [
+    'radio/RadioButton.ts:value',
+    'Option/form value forwarded to Radio; checked or the Group owns selection.',
+  ],
   ['menu/Menu.ts:activeKey', 'Presentation focus input; selectedKeys/openKeys own public models.'],
   ['qr-code/QrCode.ts:value', 'Content to encode, not an editable model.'],
   [

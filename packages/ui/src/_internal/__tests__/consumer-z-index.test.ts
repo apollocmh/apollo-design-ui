@@ -58,11 +58,14 @@ const consumers: ConsumerCase[] = [
     base: 1050,
     offset: 50,
     render: (zIndex) =>
-      h(DatePicker, {
-        open: true,
-        styles: { popup: { root: { zIndex } } },
-        renderExtraFooter: () => h(Probe),
-      }),
+      h(
+        DatePicker,
+        {
+          open: true,
+          styles: { popup: { root: { zIndex } } },
+        },
+        { extraFooter: () => h(Probe) },
+      ),
   },
   {
     name: 'RangePicker',
@@ -70,11 +73,14 @@ const consumers: ConsumerCase[] = [
     base: 1050,
     offset: 50,
     render: (zIndex) =>
-      h(RangePicker, {
-        open: true,
-        styles: { popup: { root: { zIndex } } },
-        renderExtraFooter: () => h(Probe),
-      }),
+      h(
+        RangePicker,
+        {
+          open: true,
+          styles: { popup: { root: { zIndex } } },
+        },
+        { extraFooter: () => h(Probe) },
+      ),
   },
   {
     name: 'TreeSelect',

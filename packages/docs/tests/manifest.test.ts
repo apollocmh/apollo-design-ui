@@ -53,6 +53,8 @@ describe('manifest 骨架', () => {
       order.filter((o) => manifest.categories.some((c) => c.name === o)),
     );
     for (const c of manifest.categories) expect(order).toContain(c.name);
+    expect(manifest.components.find((c) => c.name === 'radio')?.category).toBe('数据录入');
+    expect(manifest.components.find((c) => c.name === 'float-button')?.category).toBe('其他');
   });
 
   it('分类里的 demoCount 与页面数据一致', () => {
@@ -159,11 +161,14 @@ describe('组件页数据', () => {
 });
 
 describe('demo 元数据', () => {
-  it('demo 全量可枚举（1008 个，含原生Breadcrumb/Menu示例）', () => {
-    expect(allDemos.length).toBe(1008);
+  it('demo 全量可枚举（1009 个，含原生Breadcrumb/Menu及Select模型示例）', () => {
+    expect(allDemos.length).toBe(1009);
     expect(allDemos.map((demo) => demo.id)).toEqual(
       expect.arrayContaining(['breadcrumb-demo-native', 'menu-demo-native-actions']),
     );
+    expect(
+      allDemos.filter((demo) => demo.id === 'select-demo-native-models').map((demo) => demo.name),
+    ).toEqual(['native-models']);
     expect(
       allDemos
         .map((demo) => demo.id)

@@ -67,8 +67,19 @@ const COMPOUND_EVENT = /^on[A-Z][a-z]*[A-Z]/;
  */
 const MODIFIER_SUFFIX = /(Once|Passive|Capture)$/;
 
+/** Vue consumes these VNode lifecycle hooks before DOM event handling. */
+const VNODE_HOOKS = new Set([
+  'onVnodeBeforeMount',
+  'onVnodeMounted',
+  'onVnodeBeforeUpdate',
+  'onVnodeUpdated',
+  'onVnodeBeforeUnmount',
+  'onVnodeUnmounted',
+]);
+
 /** 剥掉尾部修饰后缀后，是否仍是「复合词」⇒ 会被 hyphenate 成 `xxx-yyy` 而永不触发。 */
 function isDangerousEventKey(name: string): boolean {
+  if (VNODE_HOOKS.has(name)) return false;
   let n = name;
   let m = n.match(MODIFIER_SUFFIX);
   while (m !== null) {
@@ -280,7 +291,7 @@ const key = (h: { file: string; name: string }) => `${h.file}::${h.name}`;
 describe("复合词事件名（`h('原生标签')` 上写 `onXxxYyy` 会静默失效）", () => {
   const hits = scanRepo();
 
-  it('🚨 自证：扫描器能穿透 spread / 条件 / computed，且**不误报**三类合法写法', () => {
+  it('🚨 自证：扫描器能穿透 spread / 条件 / computed，且**不误报**合法事件与VNode钩子', () => {
     // ── A. 穿透能力：`collapse/Panel.ts` 的 bug 藏在
     //    `h('div', { ...(cond ? collapsibleProps.value : {}) })`，而
     //    `collapsibleProps = computed(() => ({ onKeydown: … }))`。
@@ -310,6 +321,18 @@ describe("复合词事件名（`h('原生标签')` 上写 `onXxxYyy` 会静默�
         'probe.ts',
       ),
     ).toHaveLength(0);
+
+    expect(
+      scanSource(
+        `h('div', {
+          onVnodeBeforeMount: () => {}, onVnodeMounted: () => {},
+          onVnodeBeforeUpdate: () => {}, onVnodeUpdated: () => {},
+          onVnodeBeforeUnmount: () => {}, onVnodeUnmounted: () => {},
+          onVnodeUnknown: () => {},
+        })`,
+        'probe.ts',
+      ).map((hit) => hit.name),
+    ).toEqual(['onVnodeUnknown']);
 
     // ── D. 不误报 ③：`x.y.value` 不能回溯到 `useSomeHook({…})` 的**配置实参**
     //    （`trigger.ts` 的 `onOpenChange` 是 `useOverlay` 的配置，不是落到 DOM 的 prop）
