@@ -69,7 +69,6 @@ const presets = genPresets({
   green: GREEN_PALETTE,
   cyan: CYAN_PALETTE,
 });
-
 </script>
 
 <template>

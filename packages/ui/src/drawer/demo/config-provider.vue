@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { Button, ConfigProvider, type ConfigProviderProps, Drawer, type DrawerClosable } from '@apollo-design/ui';
+import {
+  Button,
+  ConfigProvider,
+  type ConfigProviderProps,
+  Drawer,
+  type DrawerClosable,
+} from '@apollo-design/ui';
 import { computed, ref } from 'vue';
 
 const open = ref(false);

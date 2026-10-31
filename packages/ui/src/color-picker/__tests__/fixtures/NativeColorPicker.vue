@@ -28,7 +28,10 @@ function patch(kind: 'text' | 'styles' | 'theme' | 'unmount') {
   if (kind === 'theme') darkText.value = !darkText.value;
   if (kind === 'unmount') mounted.value = false;
 }
-defineExpose({ patch, events: () => ({ changes: changes.value, completes: completes.value, clears: clears.value }) });
+defineExpose({
+  patch,
+  events: () => ({ changes: changes.value, completes: completes.value, clears: clears.value }),
+});
 </script>
 
 <template>

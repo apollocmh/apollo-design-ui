@@ -3,21 +3,21 @@
 
 import { useControlledValue, useDevWarning } from '@apollo-design/utils';
 import {
-  type Component,
-  cloneVNode,
   Comment,
+  type Component,
   type CSSProperties,
+  cloneVNode,
   computed,
   defineComponent,
   Fragment,
   h,
   isVNode,
-  type PropType,
   normalizeStyle,
+  type PropType,
   ref,
   shallowRef,
-  useAttrs,
   Text,
+  useAttrs,
   type VNodeChild,
   watch,
 } from 'vue';
@@ -44,14 +44,20 @@ import type {
   ColorPickerSlots,
   ModeType,
 } from './interface';
-import { genAlphaColor, generateColor, getColorAlpha } from './util';
 import { useColorPickerTheme } from './use-color-picker-theme';
+import { genAlphaColor, generateColor, getColorAlpha } from './util';
 
 /** `children` 走默认插槽、`onXxx` 走 emits ⇒ 运行时 props 面要摘掉它们。 */
 type ColorPickerVueProps = Omit<
   ColorPickerProps,
-  'onChange' | 'onChangeComplete' | 'onOpenChange' | 'onFormatChange' | 'onClear' |
-  'onUpdate:value' | 'onUpdate:open' | 'onUpdate:format'
+  | 'onChange'
+  | 'onChangeComplete'
+  | 'onOpenChange'
+  | 'onFormatChange'
+  | 'onClear'
+  | 'onUpdate:value'
+  | 'onUpdate:open'
+  | 'onUpdate:format'
 >;
 
 defineOptions({ name: 'AColorPicker', inheritAttrs: false });
@@ -173,7 +179,7 @@ const { classNames: mergedClassNames, styles: mergedStyles } = useMergeSemantic<
   [() => context.classNames, () => props.classNames],
   [
     () => context.styles,
-    () => context.style ? { root: context.style } : undefined,
+    () => (context.style ? { root: context.style } : undefined),
     () => props.styles,
   ],
   mergedSemanticProps,
@@ -285,10 +291,7 @@ const joinCls = (...parts: Array<string | false | null | undefined>): string =>
 
 const mergedRootCls = computed<string[]>(() => {
   // Internal scoping classes; native class belongs to the actual trigger.
-  const list = [
-    'css-var-root',
-    `${prefixCls.value}-css-var`,
-  ];
+  const list = ['css-var-root', `${prefixCls.value}-css-var`];
   if (direction.value === 'rtl') {
     list.push(`${prefixCls.value}-rtl`);
   }
@@ -304,7 +307,9 @@ const mergedCls = computed(() =>
     ...mergedRootCls.value,
   ),
 );
-const mergedPopupCls = computed(() => joinCls(prefixCls.value, ...mergedRootCls.value, mergedClassNames.value.popup?.root));
+const mergedPopupCls = computed(() =>
+  joinCls(prefixCls.value, ...mergedRootCls.value, mergedClassNames.value.popup?.root),
+);
 
 /** 空样式对象要转成 `undefined`，否则 SSR 会渲染出 `style=""`。 */
 function nonEmpty(style: CSSProperties | undefined): CSSProperties | undefined {
@@ -331,7 +336,10 @@ const triggerAttrs = () => {
   const { class: _class, style: _style, ...rest } = attrs;
   return { ...rest, ...(mergedDisabled.value ? { disabled: true } : {}) };
 };
-const customTriggerAttrs = () => ({ ...triggerAttrs(), ...(mergedDisabled.value ? { 'aria-disabled': true } : {}) });
+const customTriggerAttrs = () => ({
+  ...triggerAttrs(),
+  ...(mergedDisabled.value ? { 'aria-disabled': true } : {}),
+});
 
 /** 判据 8。 */
 const mergedDestroyOnHidden = computed(() => props.destroyOnHidden ?? !!props.destroyTooltipOnHide);

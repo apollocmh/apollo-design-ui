@@ -39,7 +39,13 @@ const activeKey = ref('1');
 
 const currentPreset = computed(
   () =>
-    presets.find((item) => item.value === preset.value) ?? { inkBar: '#1677ff', selected: '#002c8c', hover: '#003eb3', fontSize: 14, gutter: 32 },
+    presets.find((item) => item.value === preset.value) ?? {
+      inkBar: '#1677ff',
+      selected: '#002c8c',
+      hover: '#003eb3',
+      fontSize: 14,
+      gutter: 32,
+    },
 );
 
 const theme = computed(() => ({

@@ -14,10 +14,19 @@ const targetKeys = ref<TransferKey[]>(['1', '3']);
 const customized = ref(true);
 const theme = computed((): ThemeConfig => {
   if (!customized.value) return {};
-  return { components: { Transfer: {
-    listWidth: 220, listHeight: 260, listWidthLG: 280, headerHeight: 48,
-    itemHeight: 40, itemPaddingBlock: 8, transferHeaderVerticalPadding: 11,
-  } } };
+  return {
+    components: {
+      Transfer: {
+        listWidth: 220,
+        listHeight: 260,
+        listWidthLG: 280,
+        headerHeight: 48,
+        itemHeight: 40,
+        itemPaddingBlock: 8,
+        transferHeaderVerticalPadding: 11,
+      },
+    },
+  };
 });
 </script>
 

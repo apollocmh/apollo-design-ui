@@ -17,22 +17,46 @@ const completed = ref<boolean[]>([]);
 const closes = ref<string[]>([]);
 const once = ref(0);
 const resize = ref<number>();
-const theme = computed(() => configured.value ? {
-  token: { colorText: '#123456' },
-  components: { Drawer: { zIndexPopup: 1450, footerPaddingBlock: 3, footerPaddingInline: 7, draggerSize: 9 } },
-} : {});
+const theme = computed(() =>
+  configured.value
+    ? {
+        token: { colorText: '#123456' },
+        components: {
+          Drawer: {
+            zIndexPopup: 1450,
+            footerPaddingBlock: 3,
+            footerPaddingInline: 7,
+            draggerSize: 9,
+          },
+        },
+      }
+    : {},
+);
 const components = computed((): NonNullable<ConfigProviderProps['components']> => {
   if (!configured.value) return {};
-  return { drawer: {
-    classNames: { root: 'provider-drawer', body: 'provider-body' },
-    styles: { body: { padding: '12px' } },
-  } };
+  return {
+    drawer: {
+      classNames: { root: 'provider-drawer', body: 'provider-body' },
+      styles: { body: { padding: '12px' } },
+    },
+  };
 });
 function close(event: Event) {
   closes.value.push(event.type);
   open.value = false;
 }
-function patch(kind: 'open' | 'clear' | 'trap' | 'restore' | 'no-restore' | 'unmount' | 'first' | 'second' | 'disable-resize') {
+function patch(
+  kind:
+    | 'open'
+    | 'clear'
+    | 'trap'
+    | 'restore'
+    | 'no-restore'
+    | 'unmount'
+    | 'first'
+    | 'second'
+    | 'disable-resize',
+) {
   if (kind === 'open') open.value = true;
   if (kind === 'clear') configured.value = false;
   if (kind === 'trap') trap.value = true;
@@ -47,7 +71,12 @@ defineExpose({
   patch,
   focus: () => drawer.value?.focus({ preventScroll: true }),
   refValid: () => drawer.value?.nativeElement === document.querySelector('.native-drawer'),
-  events: () => ({ completed: completed.value, closes: closes.value, once: once.value, resize: resize.value }),
+  events: () => ({
+    completed: completed.value,
+    closes: closes.value,
+    once: once.value,
+    resize: resize.value,
+  }),
 });
 </script>
 

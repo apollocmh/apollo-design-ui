@@ -255,7 +255,9 @@ for (const [oldProp, newProp] of Object.entries(DEPRECATED_PROPS)) {
 // ============================== 上下文归一 ==============================
 const context = useComponentConfig<DatePickerComponentConfig>(host.configKey ?? 'datePicker');
 /** 🚨 范围还有一份 `rangePicker` 配置（`className` / `style` / `separator`）。 */
-const rangePickerContext = useComponentConfig<DatePickerComponentConfig>(host.configKey ?? 'rangePicker');
+const rangePickerContext = useComponentConfig<DatePickerComponentConfig>(
+  host.configKey ?? 'rangePicker',
+);
 const { getPrefixCls } = context;
 
 interface DatePickerComponentConfig {

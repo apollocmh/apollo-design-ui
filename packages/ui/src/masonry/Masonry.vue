@@ -211,7 +211,9 @@ const collectItemSize = useDelay(() => {
 
 // Measure only after DOM refs exist; setItemRef also covers delayed motion mounts.
 onMounted(collectItemSize);
-watch([mergedItems, columnCount, horizontalGutter, verticalGutter], collectItemSize, { flush: 'post' });
+watch([mergedItems, columnCount, horizontalGutter, verticalGutter], collectItemSize, {
+  flush: 'post',
+});
 onUpdated(collectItemSize);
 
 // 根元素尺寸变化 ⇒ 重算（`ResizeObserver` 不产生 DOM，等价于上游包一层）

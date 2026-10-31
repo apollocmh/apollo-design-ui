@@ -40,12 +40,16 @@ try {
         throw new Error('SSR must not register an Escape callback');
       });
       return () =>
-        h(Portal, { open: false, autoLock: true }, {
-          default: () => {
-            slots++;
-            return h('input');
+        h(
+          Portal,
+          { open: false, autoLock: true },
+          {
+            default: () => {
+              slots++;
+              return h('input');
+            },
           },
-        });
+        );
     },
   });
   assert.equal(await renderToString(h(Source)), '<!---->');
@@ -76,11 +80,13 @@ window.portalNativeProbe={snapshot:()=>fixture.value.snapshot()};
   });
   await page.goto(server.resolvedUrls.local[0]);
   await page.getByRole('textbox', { name: 'Portal editor' }).waitFor();
-  const locks = () => page.evaluate(() =>
-    [...document.head.querySelectorAll('style')].filter((node) =>
-      node.textContent?.includes('overflow-y: hidden'),
-    ).length,
-  );
+  const locks = () =>
+    page.evaluate(
+      () =>
+        [...document.head.querySelectorAll('style')].filter((node) =>
+          node.textContent?.includes('overflow-y: hidden'),
+        ).length,
+    );
   const snapshot = () => page.evaluate(() => window.portalNativeProbe.snapshot());
   assert.equal(await locks(), 1);
   await page.getByRole('textbox', { name: 'Portal editor' }).press('Escape');
@@ -101,18 +107,24 @@ window.portalNativeProbe={snapshot:()=>fixture.value.snapshot()};
   assert.deepEqual(await snapshot(), { connected: false, shadowChildren: 0, escapes: 1 });
   assert.equal(await locks(), 0);
   assert.deepEqual(errors, []);
-  console.log(JSON.stringify({
-    result: 'passed',
-    browser: browser.version(),
-    checks: [
-      'source-SSR-without-DOM-or-eager-slots',
-      'SSR-hydration-and-mounted-open',
-      'closed-ShadowRoot-owned-container-close-reopen-unmount',
-      'scroll-lock-and-Escape-cleanup',
-      'strict-console',
-    ],
-    errors,
-  }, null, 2));
+  console.log(
+    JSON.stringify(
+      {
+        result: 'passed',
+        browser: browser.version(),
+        checks: [
+          'source-SSR-without-DOM-or-eager-slots',
+          'SSR-hydration-and-mounted-open',
+          'closed-ShadowRoot-owned-container-close-reopen-unmount',
+          'scroll-lock-and-Escape-cleanup',
+          'strict-console',
+        ],
+        errors,
+      },
+      null,
+      2,
+    ),
+  );
 } finally {
   await browser?.close();
   await server?.close();

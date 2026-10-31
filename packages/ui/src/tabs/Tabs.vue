@@ -7,13 +7,13 @@ import {
   computed,
   defineComponent,
   h,
-  onMounted,
   normalizeStyle,
+  onMounted,
   type PropType,
   ref,
   type SlotsType,
-  type VNodeChild,
   useId,
+  type VNodeChild,
   watch,
 } from 'vue';
 import { semanticRootStyle, useMergeSemantic } from '../_internal/use-merge-semantic';
@@ -288,9 +288,7 @@ export default defineComponent({
       getValue: () => props.activeKey,
       defaultValue: () => props.defaultActiveKey ?? tabs.value.find((tab) => !tab.disabled)?.key,
     });
-    const activeIndex = ref(
-      tabs.value.findIndex((tab) => tab.key === mergedActiveKey.value),
-    );
+    const activeIndex = ref(tabs.value.findIndex((tab) => tab.key === mergedActiveKey.value));
     watch(
       [() => tabs.value.map((tab) => tab.key), mergedActiveKey],
       () => {
@@ -300,9 +298,11 @@ export default defineComponent({
         } else if (props.activeKey === undefined) {
           const index = Math.max(0, Math.min(activeIndex.value, tabs.value.length - 1));
           const candidate = tabs.value[index];
-          const next = candidate && !candidate.disabled ? candidate
-            : tabs.value.slice(index).find((tab) => !tab.disabled)
-              ?? tabs.value.findLast((tab) => !tab.disabled);
+          const next =
+            candidate && !candidate.disabled
+              ? candidate
+              : (tabs.value.slice(index).find((tab) => !tab.disabled) ??
+                tabs.value.findLast((tab) => !tab.disabled));
           setActiveKey(next?.key);
           activeIndex.value = index;
         }
@@ -362,7 +362,9 @@ export default defineComponent({
       style: props.tabBarStyle,
       getPopupContainer: props.getPopupContainer,
       indicator: mergedIndicator.value,
-      popupClassName: [props.popupClassName, mergedClassNames.value.popup?.root].filter(Boolean).join(' ') || undefined,
+      popupClassName:
+        [props.popupClassName, mergedClassNames.value.popup?.root].filter(Boolean).join(' ') ||
+        undefined,
       popupStyle: { ...themeStyle.value, ...mergedStyles.value.popup?.root },
       popupZIndex: popupZIndex.value,
       prefixCls: prefixCls.value,
@@ -394,42 +396,47 @@ export default defineComponent({
         mergedClassNames.value.root,
       ];
 
-      const navProps = { ...tabBarProps.value, extra: resolveExtra() } satisfies TabsRenderTabBarProps;
+      const navProps = {
+        ...tabBarProps.value,
+        extra: resolveExtra(),
+      } satisfies TabsRenderTabBarProps;
       const navNode = slots.tabBar
         ? slots.tabBar(navProps)
-        : h(
-            TabNavList,
-            navProps,
-            slots.popupRender ? { popupRender: slots.popupRender } : {},
-          );
+        : h(TabNavList, navProps, slots.popupRender ? { popupRender: slots.popupRender } : {});
 
-      const panelNode = h(
-        TabPanelList,
-        {
-          prefixCls: prefixCls.value,
-          id: mergedId.value,
-          tabs: tabs.value,
-          activeKey: mergedActiveKey.value,
-          animated: mergedAnimated.value,
-          tabPosition: mergedPlacementValue,
-          destroyOnHidden: props.destroyOnHidden ?? props.destroyInactiveTabPane,
-          bodyStyle: mergedStyles.value.body,
-          bodyClassName: mergedClassNames.value.body,
-          contentStyle: mergedStyles.value.content,
-          contentClassName: mergedClassNames.value.content,
-        },
-      );
+      const panelNode = h(TabPanelList, {
+        prefixCls: prefixCls.value,
+        id: mergedId.value,
+        tabs: tabs.value,
+        activeKey: mergedActiveKey.value,
+        animated: mergedAnimated.value,
+        tabPosition: mergedPlacementValue,
+        destroyOnHidden: props.destroyOnHidden ?? props.destroyInactiveTabPane,
+        bodyStyle: mergedStyles.value.body,
+        bodyClassName: mergedClassNames.value.body,
+        contentStyle: mergedStyles.value.content,
+        contentClassName: mergedClassNames.value.content,
+      });
 
       const { class: _attrsClass, style: _attrsStyle, ...restAttrs } = attrs;
-      return h('div', {
-        ...restAttrs,
-        ref: rootRef,
-        id: props.id,
-        class: rootClass,
-        style: normalizeStyle([themeStyle.value, mergedStyles.value.root, attrs.style]),
-      }, [navNode, panelNode]);
+      return h(
+        'div',
+        {
+          ...restAttrs,
+          ref: rootRef,
+          id: props.id,
+          class: rootClass,
+          style: normalizeStyle([themeStyle.value, mergedStyles.value.root, attrs.style]),
+        },
+        [navNode, panelNode],
+      );
     };
-    return { get nativeElement() { return rootRef.value; }, renderTabs };
+    return {
+      get nativeElement() {
+        return rootRef.value;
+      },
+      renderTabs,
+    };
   },
   render() {
     return this.renderTabs();

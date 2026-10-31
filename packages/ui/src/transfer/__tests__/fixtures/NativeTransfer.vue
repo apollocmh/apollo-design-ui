@@ -18,21 +18,38 @@ const searches = ref<string[]>([]);
 const listeners = {
   selectChange: [() => selectionSignals.value++, () => selectionSignals.value++],
 };
-const theme = computed((): ThemeConfig => customized.value ? {
-  token: { colorText: '#123456' },
-  components: { Transfer: {
-    listWidth: 222, listHeight: 260, listWidthLG: 280, headerHeight: 48,
-    itemHeight: 40, itemPaddingBlock: 8, transferHeaderVerticalPadding: 11,
-  } },
-} : {});
+const theme = computed(
+  (): ThemeConfig =>
+    customized.value
+      ? {
+          token: { colorText: '#123456' },
+          components: {
+            Transfer: {
+              listWidth: 222,
+              listHeight: 260,
+              listWidthLG: 280,
+              headerHeight: 48,
+              itemHeight: 40,
+              itemPaddingBlock: 8,
+              transferHeaderVerticalPadding: 11,
+            },
+          },
+        }
+      : {},
+);
 const dataSource = Array.from({ length: 14 }, (_, index) => ({
-  key: String(index), title: `Item ${index + 1}`, disabled: index === 3,
+  key: String(index),
+  title: `Item ${index + 1}`,
+  disabled: index === 3,
 }));
 
 function inspect() {
   return {
-    targets: targets.value, selected: selected.value, selectionSignals: selectionSignals.value,
-    moves: moves.value, searches: searches.value,
+    targets: targets.value,
+    selected: selected.value,
+    selectionSignals: selectionSignals.value,
+    moves: moves.value,
+    searches: searches.value,
     validRef: instance.value?.nativeElement?.id === 'native-transfer',
   };
 }
@@ -42,7 +59,8 @@ function patch(kind: 'tokens' | 'disabled' | 'mount') {
   if (kind === 'mount') mounted.value = !mounted.value;
 }
 defineExpose({
-  inspect, patch,
+  inspect,
+  patch,
   focus: () => instance.value?.focus({ preventScroll: true }),
   blur: () => instance.value?.blur(),
 });

@@ -10,7 +10,9 @@ import PurePanel from '../../PurePanel';
 const RenderNode = (props: { node: VNodeChild }) => props.node;
 const open = ref(false);
 const hintOpen = ref(false);
-watch(open, (value) => { hintOpen.value = value; });
+watch(open, (value) => {
+  hintOpen.value = value;
+});
 const splitOpen = ref(false);
 const iconPhase = ref(0);
 const custom = ref(true);
@@ -21,13 +23,18 @@ const items = [
   { key: 'one', label: 'One action', icon: h('span', 'I') },
   { key: 'sub', label: 'Submenu', children: [{ key: 'two', label: 'Nested action' }] },
 ];
-const theme = computed(() => custom.value ? {
-  token: { marginXXS: 10, sizePopupArrow: 20 },
-  components: { Dropdown: { zIndexPopup: 2500, paddingBlock: 9 } },
-} : undefined);
+const theme = computed(() =>
+  custom.value
+    ? {
+        token: { marginXXS: 10, sizePopupArrow: 20 },
+        components: { Dropdown: { zIndexPopup: 2500, paddingBlock: 9 } },
+      }
+    : undefined,
+);
 const source = computed(() => ({
   dropdown: {
-    trigger: ['click'], arrow: true,
+    trigger: ['click'],
+    arrow: true,
     className: custom.value ? 'configured-dropdown' : undefined,
   },
 }));
@@ -38,11 +45,16 @@ defineExpose({
   async patch(kind: string) {
     if (kind === 'theme') custom.value = !custom.value;
     if (kind === 'icon') iconPhase.value = (iconPhase.value + 1) % 3;
-    if (kind === 'close') { open.value = false; splitOpen.value = false; }
-    await nextTick(); await nextTick();
+    if (kind === 'close') {
+      open.value = false;
+      splitOpen.value = false;
+    }
+    await nextTick();
+    await nextTick();
   },
   events: () => [...events],
-  refsValid: () => root.value?.nativeElement() === document.getElementById('native-dropdown-trigger') &&
+  refsValid: () =>
+    root.value?.nativeElement() === document.getElementById('native-dropdown-trigger') &&
     root.value?.popupElement() === document.querySelector('.main-dropdown') &&
     split.value?.nativeElement() === document.querySelector('.split-dropdown button:last-child'),
 });

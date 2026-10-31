@@ -4,9 +4,20 @@ import { computed, ref } from 'vue';
 
 const open = ref(false);
 const custom = ref(false);
-const theme = computed(() => custom.value ? {
-  components: { Drawer: { footerPaddingBlock: 20, footerPaddingInline: 32, draggerSize: 10, zIndexPopup: 1400 } },
-} : {});
+const theme = computed(() =>
+  custom.value
+    ? {
+        components: {
+          Drawer: {
+            footerPaddingBlock: 20,
+            footerPaddingInline: 32,
+            draggerSize: 10,
+            zIndexPopup: 1400,
+          },
+        },
+      }
+    : {},
+);
 </script>
 
 <template>

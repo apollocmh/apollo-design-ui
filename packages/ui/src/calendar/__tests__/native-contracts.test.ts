@@ -9,8 +9,8 @@ import ConfigProvider from '../../config-provider/ConfigProvider';
 import type { ConfigProviderProps } from '../../config-provider/interface';
 import { Calendar } from '../index';
 import type {
-  CalendarExpose,
   CalendarEmits,
+  CalendarExpose,
   CalendarHeaderRenderConfig,
   CalendarMode,
   CalendarProps,

@@ -83,7 +83,8 @@ const getPopupContainer = (current: HTMLElement): HTMLElement => current;
 
 /** `Select` 的 `change` 载荷是 `SelectValue`（宽）⇒ 形参写 `unknown` 再收窄。 */
 const onSelectFormatChange = (value: unknown): void => {
-  if (value === FORMAT_HEX || value === FORMAT_HSB || value === FORMAT_RGB) triggerFormatChange(value);
+  if (value === FORMAT_HEX || value === FORMAT_HSB || value === FORMAT_RGB)
+    triggerFormatChange(value);
 };
 
 const steppersComponent = computed(() => {

@@ -506,7 +506,10 @@ describe('越界告警', () => {
       });
       const External = defineComponent({
         setup() {
-          provide(ZINDEX_KEY, computed(() => 5000));
+          provide(
+            ZINDEX_KEY,
+            computed(() => 5000),
+          );
           return () => h(Child);
         },
       });
